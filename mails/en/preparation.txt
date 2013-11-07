@@ -3,8 +3,8 @@
 
 Hi {firstname} {lastname}, 
 
-Order {order_name} - Processing We are currently processing your
-{SHOP_NAME} order with the reference {ORDER_NAME}. 
+We are currently processing your {shop_name} order with the
+reference {order_name}. 
 
 You can review your order and download your invoice from the
 "Order history" [{history_url}] section of your

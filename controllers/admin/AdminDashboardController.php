@@ -49,7 +49,7 @@ class AdminDashboardControllerCore extends AdminController
 			_PS_JS_DIR_.'/admin-dashboard.js',
 		));
 		$this->addCSS(array(
-			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/nv.d3.css',
+			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/nv.d3.css',
 		));
 	}
 
@@ -86,7 +86,7 @@ class AdminDashboardControllerCore extends AdminController
 			{
 				$forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED'] = array(
 					'title' => $module->displayName,
-					'desc' => sprintf($this->l('Choose a fixed fee for each order placed in %s with %s.'), $currency->iso_code, $module->displayName),
+					'desc' => sprintf($this->l('Choose a fixed fee for each order placed in %1$s with %2$s.'), $currency->iso_code, $module->displayName),
 					'validation' => 'isPrice',
 					'cast' => 'floatval',
 					'type' => 'text',
@@ -95,7 +95,7 @@ class AdminDashboardControllerCore extends AdminController
 				);
 				$forms['payment']['fields']['CONF_'.strtoupper($module->name).'_VAR'] = array(
 					'title' => $module->displayName,
-					'desc' => sprintf($this->l('Choose a variable fee for each order placed in %s with %s. It will be applied on the total paid with taxes.'), $currency->iso_code, $module->displayName),
+					'desc' => sprintf($this->l('Choose a variable fee for each order placed in %1$s with %2$s. It will be applied on the total paid with taxes.'), $currency->iso_code, $module->displayName),
 					'validation' => 'isPercentage',
 					'cast' => 'floatval',
 					'type' => 'text',
@@ -325,6 +325,7 @@ class AdminDashboardControllerCore extends AdminController
 			{
 				if ($articles_limit > 0 && Validate::isCleanHtml((string)$item->title) && Validate::isCleanHtml((string)$item->description))
 					$return['rss'][] = array(
+						'date' => Tools::displayDate(date('Y-m-d', strtotime((string)$item->pubDate))),
 						'title' => (string)$item->title,
 						'short_desc' => substr((string)$item->description, 0, 100).'...',
 						'link' => (string)$item->link,
@@ -339,22 +340,36 @@ class AdminDashboardControllerCore extends AdminController
 	
 	public function ajaxProcessSaveDashConfig()
 	{
-		$return = array('has_errors' => false);
+		$return = array('has_errors' => false, 'errors' => array());
 		$module = Tools::getValue('module');
 		$hook = Tools::getValue('hook');
 		$configs = Tools::getValue('configs');
-
+		
+		$params = array(
+			'date_from' => $this->context->employee->stats_date_from,
+			'date_to' => $this->context->employee->stats_date_to
+		);
+		
 		if (Validate::isModuleName($module) && $module_obj = Module::getInstanceByName($module))
-			if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'saveDashConfig'))
-				$return['has_errors'] = $module_obj->saveDashConfig($configs);
+		{
+			if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'validateDashConfig'))
+				$return['errors'] = $module_obj->validateDashConfig($configs);
+			if (!count($return['errors']))
+			{
+				if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'saveDashConfig'))
+					$return['has_errors'] = $module_obj->saveDashConfig($configs);
+			}
+			else
+				$return['has_errors'] = true;
+		}
 		else if (is_array($configs) && count($configs))
 				foreach ($configs as $name => $value)
 					if (Validate::isConfigName($name))
 						Configuration::updateValue($name, $value);
 		
 		if (Validate::isHookName($hook) && method_exists($module_obj, $hook))
-			$return['widget_html'] = $module_obj->$hook(array());
-		
+			$return['widget_html'] = $module_obj->$hook($params);
+
 		die(Tools::jsonEncode($return));
 	}
 	

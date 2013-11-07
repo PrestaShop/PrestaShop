@@ -1917,6 +1917,14 @@ class AdminControllerCore extends Controller
 		
 		$this->helper = $helper;
 	}
+	
+	public function setDeprecatedMedia()
+	{
+		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
+		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-bootstrap-reset.css', 'all');
+		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-old.css', 'all');
+	}
 
 	public function setMedia()
 	{
@@ -1928,11 +1936,9 @@ class AdminControllerCore extends Controller
 
 		// Deprecated stylesheets + reset bootstrap style for the #nobootstrap field - Backward compatibility
 		if (!$this->bootstrap)
-		{
-			$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward/admin.css', 'all');
-			$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward/bootstrap_admin_reset.css', 'all');
-		}
+			$this->setDeprecatedMedia();
 		
+		//todo css for rtl support
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 
@@ -1946,6 +1952,7 @@ class AdminControllerCore extends Controller
 			_PS_JS_DIR_.'ajax.js',
 			_PS_JS_DIR_.'toolbar.js',
 		));
+
 		//loads specific javascripts for the admin theme, bootstrap.js should be moved into /js root directory
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.js');
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/admin-theme.js');
@@ -1970,14 +1977,13 @@ class AdminControllerCore extends Controller
 	 * @param boolean $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
 	 * @return string the translation if available, or the english default text.
 	 */
-	protected function l($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true)
+	protected function l($string, $class = null, $addslashes = false, $htmlentities = true)
 	{
-		// classname has changed, from AdminXXX to AdminXXXController
-		// So we remove 10 characters and we keep same keys
-		if (strtolower(substr($class, -10)) == 'controller')
-			$class = substr($class, 0, -10);
-		elseif ($class == 'AdminTab')
+		if ($class === null || $class == 'AdminTab')
 			$class = substr(get_class($this), 0, -10);
+		// classname has changed, from AdminXXX to AdminXXXController, so we remove 10 characters and we keep same keys
+		elseif (strtolower(substr($class, -10)) == 'controller')
+			$class = substr($class, 0, -10);
 		return Translate::getAdminTranslation($string, $class, $addslashes, $htmlentities);
 	}
 

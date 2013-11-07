@@ -61,7 +61,7 @@
 	$(document).ready(function() { $('.price_impact').each(function() { calcPrice($(this), false); }); });
 </script>
 
-{include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
+{include file="page_header_toolbar.tpl" toolbar_btn=$page_header_toolbar_btn title=$page_header_toolbar_title}
 <div class="leadin">{block name="leadin"}{/block}</div>
 
 {if $generate}<div class="module_confirmation conf confirm">{l s='%d product(s) successfully created.' sprintf=$combinations_size}</div>{/if}

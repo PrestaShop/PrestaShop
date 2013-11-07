@@ -4,8 +4,8 @@
 	padding:8px 10px 10px;
 	font-weight: bold;	
 	line-height:18px;
-	border:1px solid #d6d4d4;
-	background:#fbfbfb;
+	border:1px solid $base-border-color;
+	background:$base-box-bg;
 	margin:39px 0 22px
 }
 .comments_advices {
@@ -42,7 +42,7 @@ padding-top:2px;
 	-webkit-border-radius:50px;
     color: white;    
     display: inline-block;
-    font-family: FontAwesome;
+    font-family: $font-icon;
     font-size: 15px;
     font-weight: normal;
     height: 30px;
@@ -61,9 +61,9 @@ padding-top:2px;
 }
  a.reviews:before{content:""}
  a.open-comment-form:before{content:""}
- a:hover {color:#333}
+ a:hover {color:$base-text-color}
  a.reviews{
-  border-right:1px solid #d6d4d4;
+  border-right:1px solid $base-border-color;
   padding-right:30px;
   margin-right:9px;
  
@@ -80,7 +80,7 @@ padding-top:2px;
 #product_comments_block_extra{	
 	.comments_note {margin-bottom:5px}	
     .comments_note span,
-	.star_content {float:left;color:#333}	
+	.star_content {float:left;color:$base-text-color}	
 	.star_content {margin-top:1px}	
 	div.star {background: url(img/star.png) no-repeat 0 0}	
 	div.star_on {background: url(img/star.png) no-repeat 0 -13px}	
@@ -103,7 +103,7 @@ padding-top:2px;
 #new_comment_form {
 	width:465px;
 	overflow:hidden;
-	color: #333;
+	color: $base-text-color;
 	text-align: left;	
 	
     /*max 767px*/
@@ -115,9 +115,9 @@ padding-top:2px;
 			 .title {
 				padding:10px;
 				font-size: 13px;
-				color: #fff;
+				color: $light-text-color;
 				text-transform: uppercase;
-				background: #333
+				background: $dark-background
 			}
 			
 			 ul.grade_content {list-style-type:none}			 
@@ -128,7 +128,7 @@ padding-top:2px;
 			}
 			 .product .product_desc {									
 				line-height:18px;
-				color:#666
+				color:$description-color;
 			}
 			 .product .product_desc .product_name {
 				padding:10px 0 5px;
@@ -161,7 +161,7 @@ padding-top:2px;
 				height: 28px;
 				width: 100%;
 				border: 1px solid #ccc;
-				background: #fff;
+				background: $light-background;
 			}
 			 textarea {		
 				height: 80px;		
@@ -204,7 +204,7 @@ padding-top:2px;
 		 div.comment {
 			margin:0 0 14px;
 			padding-top:14px;		
-			border-top: 1px solid #d6d4d4;			
+			border-top: 1px solid $base-border-color;			
 		}
 		
 		div.comment:first-child{padding:0;border:none}		
@@ -225,7 +225,7 @@ padding-top:2px;
 		 div.star_on {background-position: 0 -13px}
 		 .comment_author_infos {clear:both;
 		 padding-top:9px;
-		 strong{display:block;color:#333}
+		 strong{display:block;color:$base-text-color}
 		  em {color:#adadad}
 		 
 		}
@@ -248,9 +248,9 @@ padding-top:2px;
 		 div.comment_details li {
 			padding:2px 0 2px;
 		&:before{
-			font-family:$font1;	
+			font-family:$font-icon;	
 			content:"";	
-			color:#333;
+			color:$base-text-color;
 			margin-right:8px
 			}
 		

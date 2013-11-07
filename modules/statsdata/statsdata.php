@@ -37,7 +37,8 @@ class StatsData extends Module
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-        parent::__construct();
+        $this->bootstrap = true;
+		parent::__construct();	
 		
         $this->displayName = $this->l('Data mining for statistics');
         $this->description = $this->l('This module must be enabled if you want to use statistics.');

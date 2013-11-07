@@ -36,6 +36,7 @@ class Gapi extends Module
 		$this->version = 0.9;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
+		$this->bootstrap = true;
 
 		parent::__construct();
 

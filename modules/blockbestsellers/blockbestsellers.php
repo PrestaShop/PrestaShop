@@ -41,7 +41,8 @@ class BlockBestSellers extends Module
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Top-seller block');
 		$this->description = $this->l('Add a block displaying your store\'s top-selling products.');

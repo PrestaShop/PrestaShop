@@ -40,7 +40,8 @@ class CarrierCompare extends Module
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Shipping Estimate');
 		$this->description = $this->l('Compares carrier choices before checkout.');

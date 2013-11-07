@@ -3,8 +3,8 @@
 
 Hi {firstname} {lastname}, 
 
-Order {order_name} - Order changed Your order with the reference
-{ORDER_NAME} from {SHOP_NAME} has been changed by the merchant.
+Your order with the reference {order_name} from {shop_name} has been
+changed by the merchant.
 
 You can check for it in the "TOOLS" > "LOGS" section of your Back
 Office. 

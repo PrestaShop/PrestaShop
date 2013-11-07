@@ -49,7 +49,12 @@ class Dashproducts extends Module
 
 	public function hookDashboardZoneTwo($params)
 	{
-		$this->context->smarty->assign(array('date_from' => Tools::displayDate($params['date_from']), 'date_to' => Tools::displayDate($params['date_to'])));
+		$this->context->smarty->assign(array(
+			'date_from' => Tools::displayDate($params['date_from']),
+			'date_to' => Tools::displayDate($params['date_to']),
+			'dashproducts_config_form' => $this->renderConfigForm(),
+			)
+		);
 		return $this->display(__FILE__, 'dashboard_zone_two.tpl');
 	}
 
@@ -82,7 +87,7 @@ class Dashproducts extends Module
 			array('title' => $this->l('Action'), 'class' => 'text-center'),
 		);
 
-		$orders = Order::getOrdersWithInformations(10);
+		$orders = Order::getOrdersWithInformations((int)Configuration::get('DASHPRODUCT_NBR_SHOW_LAST_ORDER', 10));
 
 		$body = array();
 		foreach ($orders as $order)
@@ -173,7 +178,7 @@ class Dashproducts extends Module
 		'.Shop::addSqlRestriction(false, 'o').'
 		GROUP BY product_id
 		ORDER BY total DESC
-		LIMIT 10');
+		LIMIT '.(int)Configuration::get('DASHPRODUCT_NBR_SHOW_BEST_SELLER', 10));
 
 		$body = array();
 		foreach ($products as $product)
@@ -262,7 +267,7 @@ class Dashproducts extends Module
 			)
 		);
 
-		$products = $this->getTotalViewed($date_from, $date_to);
+		$products = $this->getTotalViewed($date_from, $date_to, (int)Configuration::get('DASHPRODUCT_NBR_SHOW_MOST_VIEWED'));
 		$body = array();
 		if (is_array($products) && count($products))
 			foreach ($products as $product)
@@ -330,7 +335,7 @@ class Dashproducts extends Module
 			)
 		);
 
-		$terms = $this->getMostSearchTerms($date_from, $date_to);
+		$terms = $this->getMostSearchTerms($date_from, $date_to, (int)Configuration::get('DASHPRODUCT_NBR_SHOW_TOP_SEARCH'));
 		$body = array();
 		if (is_array($terms) && count($terms))
 			foreach ($terms as $term)
@@ -408,7 +413,7 @@ class Dashproducts extends Module
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 	}
 
-	public function getTotalViewed($date_from, $date_to)
+	public function getTotalViewed($date_from, $date_to, $limit = 10)
 	{
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
 		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
@@ -434,7 +439,8 @@ class Dashproducts extends Module
 			WHERE pt.`name` = \'product\'
 			'.Shop::addSqlRestriction(false, 'pv').'
 			AND dr.`time_start` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
-			AND dr.`time_end` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"');
+			AND dr.`time_end` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
+			LIMIT '.(int)$limit);
 	}
 
 	public function getMostSearchTerms($date_from, $date_to, $limit = 10)
@@ -447,5 +453,75 @@ class Dashproducts extends Module
 		GROUP BY ss.`keywords`
 		ORDER BY `count_keywords` DESC
 		LIMIT '.(int)$limit);
+	}
+	
+	public function renderConfigForm()
+	{
+		
+		$fields_form = array(
+			'form' => array(
+				'input' => array(),
+				'submit' => array(
+					'title' => $this->l('   Save   '),
+					'class' => 'btn btn-default submit_dash_config',
+					'reset' => array(
+						'title' => $this->l('Cancel'),
+						'class' => 'btn btn-default cancel_dash_config',
+					)
+				)
+			),
+		);
+			
+		$inputs = array(
+			array('label' => $this->l('Number of "Last orders" to display:'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_LAST_ORDER'),
+			array('label' => $this->l('Number of "Best Sellers" to display:'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_BEST_SELLER'),
+			array('label' => $this->l('Number of "Most Viewed" to display:'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_MOST_VIEWED'),
+			array('label' => $this->l('Number of "Top Search" to display:'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_TOP_SEARCH'),
+		);
+		
+		foreach($inputs as $input)
+			$fields_form['form']['input'][] = array(
+						'type' => 'select',
+						'label' => $input['label'],
+						'name' => $input['config_name'],
+						'options' => array(
+							'query' => array(
+								array('id' => 5, 'name' => 5),
+								array('id' => 10, 'name' => 10),
+								array('id' => 20, 'name' => 20),
+								array('id' => 50, 'name' => 50),
+								),
+							'id' => 'id',
+							'name' => 'name',
+						)
+					);
+				
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+		$helper->id = (int)Tools::getValue('id_carrier');
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitDashConfig';
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'DASHPRODUCT_NBR_SHOW_LAST_ORDER' => Configuration::get('DASHPRODUCT_NBR_SHOW_LAST_ORDER'),
+			'DASHPRODUCT_NBR_SHOW_BEST_SELLER' => Configuration::get('DASHPRODUCT_NBR_SHOW_BEST_SELLER'),
+			'DASHPRODUCT_NBR_SHOW_MOST_VIEWED' => Configuration::get('DASHPRODUCT_NBR_SHOW_MOST_VIEWED'),
+			'DASHPRODUCT_NBR_SHOW_TOP_SEARCH' => Configuration::get('DASHPRODUCT_NBR_SHOW_TOP_SEARCH'),
+		);
 	}
 }

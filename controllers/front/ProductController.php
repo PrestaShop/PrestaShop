@@ -46,7 +46,6 @@ class ProductControllerCore extends FrontController
 		if ($this->context->getMobileDevice() == false)
 		{
 			$this->addCSS(_THEME_CSS_DIR_.'product.css');
-			$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'screen');
 			$this->addJqueryPlugin(array('fancybox', 'idTabs', 'scrollTo', 'serialScroll'));
 			$this->addJS(array(
 				_THEME_JS_DIR_.'tools.js',

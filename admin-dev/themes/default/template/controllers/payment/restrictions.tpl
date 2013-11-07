@@ -30,95 +30,101 @@
 			{$list['title']}
 		</h3>
 		<p class="help-block">{$list['desc']}</p>
-		<div class="row table-responsive clearfix overflow-y">
-			<table class="table">
-				<tr>
-					<th width="40%"><span class="title_box">{$list['title']}<span></th>
-					{foreach $payment_modules as $module}
-						{if $module->active}
-							<th class="center">
-								{if $list['name_id'] != 'currency' || $module->currencies_mode == 'checkbox'}
-									<input type="hidden" id="checkedBox_{$list['name_id']}_{$module->name}" value="checked"/>
-									<a href="javascript:checkPaymentBoxes('{$list['name_id']}', '{$module->name}')">
-								{/if}
-								&nbsp;<img src="{$ps_base_uri}modules/{$module->name}/logo.gif" alt="{$module->name}" title="{$module->displayName}"/>
-								{if $list['name_id'] != 'currency' || $module->currencies_mode == 'checkbox'}
-									</a>
-								{/if}
-							</th>
-						{/if}
-					{/foreach}
-				</tr>
-				{foreach $list['items'] as $item}
-					<tr>
-						<td>
-							<span>{$item['name']}</span>
-						</td>
-						{foreach $payment_modules as $key_module => $module}
-							{if $module->active}
-								<td class="center">
-									{assign var='type' value='null'}
-									{if !$item['check_list'][$key_module]}
-										{* Keep $type to null *}
-									{elseif $list['name_id'] === 'currency'}
-										{if $module->currencies && $module->currencies_mode == 'checkbox'}
-											{$type = 'checkbox'}
-										{elseif $module->currencies && $module->currencies_mode == 'radio'}
-											{$type = 'radio'}
+		<div class="row table-responsive clearfix ">
+			<div class="overflow-y">
+				<table class="table">
+					<thead>
+						<tr>
+							<th width="40%"><span class="title_box">{$list['title']}<span></th>
+							{foreach $payment_modules as $module}
+								{if $module->active}
+									<th class="text-center">
+										{if $list['name_id'] != 'currency' || $module->currencies_mode == 'checkbox'}
+											<input type="hidden" id="checkedBox_{$list['name_id']}_{$module->name}" value="checked"/>
+											<a href="javascript:checkPaymentBoxes('{$list['name_id']}', '{$module->name}')">
 										{/if}
-									{else}
-										{$type = 'checkbox'}
-									{/if}
-									{if $type != 'null'}
-										<input type="{$type}" name="{$module->name}_{$list['name_id']}[]" value="{$item[$list['identifier']]}" {if $item['check_list'][$key_module] == 'checked'}checked="checked"{/if}/>
-									{else}
-										<input type="hidden" name="{$module->name}_{$list['name_id']}[]" value="{$item[$list['identifier']]}"/>--
-									{/if}
-								</td>
-							{/if}
-						{/foreach}
-					</tr>
-				{/foreach}
-				{if $list['name_id'] === 'currency'}
-					<tr>
-						<td>
-							<span>{l s='Customer currency'}</span>
-						</td>
-						{foreach $payment_modules as $module}
-							{if $module->active}
-								<td>
-									{if $module->currencies && $module->currencies_mode == 'radio'}
-										<input type="radio" name="{$module->name}_{$list['name_id']}[]" value="-1"{if in_array(-1, $module->$list['name_id'])} checked="checked"
-									{/if} />
-									{else}
-										--
-									{/if}
-								</td>
-							{/if}
-						{/foreach}
-					</tr>
-					<tr>
-						<td>
-							<span>{l s='Shop default currency'}</span>
-						</td>
-						{foreach $payment_modules as $module}
-							{if $module->active}
-								<td>
-									{if $module->currencies && $module->currencies_mode == 'radio'}
-										<input type="radio" name="{$module->name}_{$list['name_id']}[]" value="-2"{if in_array(-2, $module->$list['name_id'])} checked="checked"
-									{/if} 
-										/>
-									{else}
-										--
-									{/if}
-								</td>
-							{/if}
-						{/foreach}
-					</tr>
-				{/if}
-			</table>
+										{$module->displayName}
+										{if $list['name_id'] != 'currency' || $module->currencies_mode == 'checkbox'}
+											</a>
+										{/if}
+									</th>
+								{/if}
+							{/foreach}
+						</tr>
+					</thead>
+					<tbody>
+					{foreach $list['items'] as $item}
+						<tr>
+							<td>
+								<span>{$item['name']}</span>
+							</td>
+							{foreach $payment_modules as $key_module => $module}
+								{if $module->active}
+									<td class="text-center">
+										{assign var='type' value='null'}
+										{if !$item['check_list'][$key_module]}
+											{* Keep $type to null *}
+										{elseif $list['name_id'] === 'currency'}
+											{if $module->currencies && $module->currencies_mode == 'checkbox'}
+												{$type = 'checkbox'}
+											{elseif $module->currencies && $module->currencies_mode == 'radio'}
+												{$type = 'radio'}
+											{/if}
+										{else}
+											{$type = 'checkbox'}
+										{/if}
+										{if $type != 'null'}
+											<input type="{$type}" name="{$module->name}_{$list['name_id']}[]" value="{$item[$list['identifier']]}" {if $item['check_list'][$key_module] == 'checked'}checked="checked"{/if}/>
+										{else}
+											<input type="hidden" name="{$module->name}_{$list['name_id']}[]" value="{$item[$list['identifier']]}"/>--
+										{/if}
+									</td>
+								{/if}
+							{/foreach}
+						</tr>
+					{/foreach}
+					{if $list['name_id'] === 'currency'}
+						<tr>
+							<td>
+								<span>{l s='Customer currency'}</span>
+							</td>
+							{foreach $payment_modules as $module}
+								{if $module->active}
+									<td class="text-center">
+										{if $module->currencies && $module->currencies_mode == 'radio'}
+											<input type="radio" name="{$module->name}_{$list['name_id']}[]" value="-1"{if in_array(-1, $module->$list['name_id'])} checked="checked"
+										{/if} />
+										{else}
+											--
+										{/if}
+									</td>
+								{/if}
+							{/foreach}
+						</tr>
+						<tr>
+							<td>
+								<span>{l s='Shop default currency'}</span>
+							</td>
+							{foreach $payment_modules as $module}
+								{if $module->active}
+									<td class="text-center">
+										{if $module->currencies && $module->currencies_mode == 'radio'}
+											<input type="radio" name="{$module->name}_{$list['name_id']}[]" value="-2"{if in_array(-2, $module->$list['name_id'])} checked="checked"
+										{/if} 
+											/>
+										{else}
+											--
+										{/if}
+									</td>
+								{/if}
+							{/foreach}
+						</tr>
+					{/if}
+					</tbody>
+				</table>
+			</div>
 		</div>
-		<div class="row pull-right">
+		<div class="row">
 			<button type="submit" class="btn btn-default" name="submitModule{$list['name_id']}"> 
 				<i class="icon-save"></i>
 				{l s='Save restrictions'}

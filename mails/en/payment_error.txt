@@ -3,9 +3,9 @@
 
 Hi {firstname} {lastname}, 
 
-Order {order_name} - Payment processing error There is a problem with
-your payment for {SHOP_NAME} order with the reference {ORDER_NAME}.
-Please contact us at your earliest convenience.
+There is a problem with your payment for {shop_name} order with the
+reference {order_name}. Please contact us at your earliest
+convenience.
 
 WE CANNOT SHIP YOUR ORDER UNTIL WE RECEIVE YOUR PAYMENT. 
 

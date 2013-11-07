@@ -46,7 +46,8 @@ class Watermark extends Module
 		$this->version = '0.3';
 		$this->author = 'PrestaShop';
 		
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$config = Configuration::getMultiple(array('WATERMARK_TYPES', 'WATERMARK_Y_ALIGN', 'WATERMARK_X_ALIGN', 'WATERMARK_TRANSPARENCY'));
 		if (!isset($config['WATERMARK_TYPES']))

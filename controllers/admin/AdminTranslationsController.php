@@ -1294,7 +1294,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$helper->id = 'box-languages';
 		$helper->icon = 'icon-microphone';
 		$helper->color = 'color1';
-		$helper->title = $this->l('Enabled Languages');
+		$helper->title = $this->l('Enabled Languages', null, null, false);
 		if (ConfigurationKPI::get('ENABLED_LANGUAGES') !== false)
 			$helper->value = ConfigurationKPI::get('ENABLED_LANGUAGES');
 		if (ConfigurationKPI::get('ENABLED_LANGUAGES_EXPIRE') < $time)
@@ -1305,8 +1305,8 @@ class AdminTranslationsControllerCore extends AdminController
 		$helper->id = 'box-country';
 		$helper->icon = 'icon-home';
 		$helper->color = 'color2';
-		$helper->title = $this->l('Main Country');
-		$helper->subtitle = $this->l('30 Days');
+		$helper->title = $this->l('Main Country', null, null, false);
+		$helper->subtitle = $this->l('30 Days', null, null, false);
 		if (ConfigurationKPI::get('MAIN_COUNTRY', $this->context->language->id) !== false)
 			$helper->value = ConfigurationKPI::get('MAIN_COUNTRY', $this->context->language->id);
 		if (ConfigurationKPI::get('MAIN_COUNTRY_EXPIRE', $this->context->language->id) < $time)
@@ -1317,7 +1317,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$helper->id = 'box-translations';
 		$helper->icon = 'icon-list';
 		$helper->color = 'color3';
-		$helper->title = $this->l('Front Office Translations');
+		$helper->title = $this->l('Front Office Translations', null, null, false);
 		if (ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS') !== false)
 			$helper->value = ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS');
 		if (ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS_EXPIRE') < $time)
