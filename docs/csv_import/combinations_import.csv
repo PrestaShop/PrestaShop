@@ -1,4 +1,0 @@
-Id_product*;Group*;Attribute*;Supplier_reference;Reference;Ean13;Upc;Wholesale price;Impact on price;Ecotax;Quantity;Minimal quantity;Impact on weight;Default (0 = No, 1 = Yes);Image position;Image URL;Delete existing images (0 = No, 1 = Yes);ID / Name of shop
-1;Capacity:select:0, Color:color:1;16Go:0, Bleu:1;Ref suppplier 1;Ref 1;1234567891234;123456789123;0;None;0.000000;10;1;None;0;1;http://youdomain.com/img.jpg;0;1
-1;Capacity:select:0, Color:color:1;16Go:0, Red:1;Ref suppplier 2;Ref 2;1234567891235;123456789124;0;None;0.000000;10;1;None;0;2;http://youdomain.com/img.jpg;0;1
-
