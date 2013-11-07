@@ -1502,7 +1502,7 @@ class AdminControllerCore extends Controller
 		if (Validate::isLoadedObject($this->context->employee))
 		{
 			$accesses = Profile::getProfileAccesses($this->context->employee->id_profile, 'class_name');
-
+			$default_tab = new Tab((int)Context::getContext()->employee->default_tab);
 			/* Hooks are volontary out the initialize array (need those variables already assigned) */
 			$bo_color = empty($this->context->employee->bo_color) ? '#FFFFFF' : $this->context->employee->bo_color;
 			$this->context->smarty->assign(array(
@@ -1516,7 +1516,7 @@ class AdminControllerCore extends Controller
 				'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS') && $accesses['AdminCustomers']['view'],
 				'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && $accesses['AdminCustomerThreads']['view'],
 				'first_name' => Tools::substr($this->context->employee->firstname, 0, 1),
-				'last_name' => htmlentities($this->context->employee->lastname, ENT_COMPAT, 'UTF-8'),
+				'last_name' => Tools::safeOutput($this->context->employee->lastname),
 				'employee' => $this->context->employee,
 				'search_type' => Tools::getValue('bo_search_type'),
 				'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
@@ -1529,9 +1529,13 @@ class AdminControllerCore extends Controller
 				'tabs' => $tabs,
 				'is_multishop' => $is_multishop,
 				'multishop_context' => $this->multishop_context,
+				'default_tab_link' => $this->context->link->getAdminLink($default_tab->class_name),
 				'employee_avatar' => ImageManager::thumbnail($this->context->employee->getImage(), 'employee'.'_'.(int)$this->context->employee->id.'.'.$this->imageType, 150, $this->imageType, true, true)
 			));
 		}
+		else
+			$this->context->smarty->assign('default_tab_link', $this->context->link->getAdminLink('AdminDashboard'));
+
 		$this->context->smarty->assign(array(
 			'img_dir' => _PS_IMG_,
 			'iso' => $this->context->language->iso_code,

@@ -111,7 +111,7 @@
 				<i class="icon-reorder"></i>
 			</button>
 
-			<a id="header_shopname" href="{$link->getAdminLink('AdminDashboard')|escape:'htmlall':'UTF-8'}">
+			<a id="header_shopname" href="{$default_tab_link|escape:'htmlall':'UTF-8'}">
 				<img src="{$img_dir}prestashop-avatar.png" height="15" width="15" />
 				{$shop_name}
 			</a>
