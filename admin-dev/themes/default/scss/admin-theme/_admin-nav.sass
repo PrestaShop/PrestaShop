@@ -1,3 +1,68 @@
+#nav-mobile
+	position: absolute
+	top: 37px
+	left: 0
+	width: 50px
+	height: 50px
+	z-index: 500
+	li > a > i
+		display: inline-block
+		height: 30px
+		width: 30px
+		font-size: 20px
+		line-height: 30px
+		color: white
+		text-align: center
+		background: black
+		@include border-radius(40px)
+	#nav-mobile-submenu
+		z-index: 700
+	ul.menu
+		z-index: 600
+		display: none
+		position: absolute
+		top: 54px
+		background: $main-color
+		width: 480px
+		margin: 0 0 100px 0
+		padding: 0
+		border-top: 1px black solid
+		list-style: none
+		li
+			position: relative
+			a
+				display: block
+				position: relative
+				padding: 2px 0 2px 20px
+				border-bottom: 1px solid darken($main-color,10%)
+				font-size: 12px
+				line-height: 40px
+				height: 40px
+				$color: contrast-color($main-color, white, #333, 10%)
+				color: mix($main-color, $color, 30%)
+				background-color: $main-color
+				text-transform: uppercase
+				text-decoration: none
+				@include transition-property(background-color)
+				@include transition-duration(0.4s)
+				@include transition-timing-function(ease-out)
+				i
+					color: lighten($main-color,25%)
+					background-color: darken($main-color,25%)
+					@include transition-property(color)
+					@include transition-duration(0.4s)
+					@include transition-timing-function(ease-out)
+				&:hover
+					background-color: lighten($main-color,10%)
+					color: white
+					i
+						color: white
+	ul.submenu
+		display: none
+	a#nav-mobile-submenu-back
+		background-color: darken($main-color,5%)
+
+
 #nav-sidebar
 	position: fixed
 	width: 240px
@@ -120,7 +185,7 @@
 				color: contrast-color($brand-primary, white, #333, 10%)
 				background-color: $brand-primary
 				border-bottom: solid 1px darken($brand-primary,10%)
-	@media (max-width: $screen-tablet)
+	@media (max-width: $screen-phone)
 		display: none
 
 #nav-topbar
@@ -227,7 +292,7 @@
 	line-height: 55px
 	display: block
 	background-color: $main-color
-	border-bottom: 3px solid darken($main-color,10%)
+	border-bottom: 4px solid darken($main-color,10%)
 	color: darken($main-color,30%)
 
 .page-topbar
@@ -243,6 +308,9 @@
 		.page-head h2.page-title
 			padding: 0 0 0 20px
 
+.page-sidebar
+	#content
+		margin-left: 240px
 .page-sidebar-closed
 	#nav-sidebar
 		overflow: visible 
@@ -269,14 +337,13 @@
 				left: 50px
 				width: 200px!important
 	#content
-		margin-left: 50px
+		margin-left: 55px
 		.page-head h2.page-title
 			padding: 0 0 0 70px
-			@media (max-width: $screen-tablet)
+			@media (max-width: $screen-phone)
 				padding: 0 0 0 20px
-		@media (max-width: $screen-tablet)
+		@media (max-width: $screen-phone)
 			margin-left: 0
-			width: 100%
 	.submenu_expand
 		display: none
 
