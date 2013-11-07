@@ -1955,6 +1955,7 @@ class AdminControllerCore extends Controller
 
 		//loads specific javascripts for the admin theme, bootstrap.js should be moved into /js root directory
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.js');
+		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/enquire.js');
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/admin-theme.js');
 
 		if (!Tools::getValue('submitFormAjax'))
