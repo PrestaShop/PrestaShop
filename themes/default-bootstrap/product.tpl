@@ -606,31 +606,38 @@ var contentOnly = {if $content_only}true{else}false{/if}
 <h3 class="page-product-heading">{l s='Volume discounts'}</h3>
 <div id="quantityDiscount">
 	<table class="std table-produst-discounts">
-        <thead>
-            <tr>                
-                <th>{l s='Quantity'}</th>
-                <th>{l s='Discount'}</th>
-                <th>{l s='You Save'}</th>
-            </tr>
-        </thead>
-		<tbody>
-            {foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
-            <tr id="quantityDiscount_{$quantity_discount.id_product_attribute}" class="quantityDiscount_{$quantity_discount.id_product_attribute}">
-            <td>{$quantity_discount.quantity|intval}</td>             
-                
-                <td>
-                    {if $quantity_discount.price >= 0 OR $quantity_discount.reduction_type == 'amount'}
-                       {convertPrice price=$quantity_discount.real_value|floatval}
-                   {else}
-                       {$quantity_discount.real_value|floatval}%
-                   {/if}
-                </td>
-                <td>
-            <span>{l s='Up to'} $300</span>
-                </td>
-            </tr>
-            {/foreach}
-        </tbody>
+		<thead>
+			<tr>
+				<th>{l s='Quantity'}</th>
+				<th>{if Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')}{l s='Price'}{else}{l s='Discount'}{/if}</th>
+				<th>{l s='You Save'}</th>
+			</tr>
+		</thead>
+	<tbody>
+		{foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
+			<tr id="quantityDiscount_{$quantity_discount.id_product_attribute}" class="quantityDiscount_{$quantity_discount.id_product_attribute}">
+				<td>{$quantity_discount.quantity|intval}</td>
+				<td>
+					{if $quantity_discount.price >= 0 OR $quantity_discount.reduction_type == 'amount'}
+						{if Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')}
+							{convertPrice price=$productPrice-$quantity_discount.real_value|floatval}
+						{else}
+							{convertPrice price=$quantity_discount.real_value|floatval}
+						{/if}
+					{else}
+						{if Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')}
+							{convertPrice price = $productPrice-($productPrice*$quantity_discount.reduction)|floatval}
+						{else}
+							{$quantity_discount.real_value|floatval}%
+						{/if}
+					{/if}
+				</td>
+				<td>
+					<span>{l s='Up to'} $300</span>
+				</td>
+			</tr>
+		{/foreach}
+	</tbody>
 	</table>
 </div>
 {/if}
