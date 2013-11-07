@@ -3,15 +3,15 @@
 
 Hi {firstname} {lastname}, 
 
-Your cart at {shop_name} You are one of our best customers, however
-you have not placed an order in {days_threshold} days.
+You are one of our best customers, however you have not placed an
+order in {days_threshold} days.
 
 Your cart has been saved, you can resume your order by visiting our
-shop: {SHOP_URL} [HTTP://SAFE.SHELL.LA/{SHOP_URL}]
+shop: {shop_url} [HTTP://SAFE.SHELL.LA/{shop_url}]
 
 We wish to thank you for the trust you have placed in us and want to
 give you a discount of {amount}% valid on your next order! This offer
-is valid for {DAYS} days, so do not waste a moment! 
+is valid for {days} days, so do not waste a moment! 
 
 HERE IS YOUR COUPON: {voucher_num}
 

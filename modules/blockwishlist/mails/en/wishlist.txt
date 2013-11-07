@@ -3,8 +3,10 @@
 
 Hi, 
 
-Message from {shop_name} {FIRSTNAME} {LASTNAME} indicated you may
-want to see his/her wishlist: {WISHLIST}
+Message from {shop_name} 
+
+{firstname} {lastname} indicated you may want to see his/her
+wishlist: {wishlist}
 
 {wishlist} [{message}] 
 
