@@ -50,6 +50,11 @@
 		</div>
 	</div>
 {/if}
+{if isset($max_files) && $files|count >= $max_files}
+<div class="row">
+	<div class="alert alert-warning">{l s='You have reached the limit (%s) of files to upload, please remove files to continue uploading' sprintf=$max_files}</div>
+</div>
+{else}
 <div class="form-group">
 	<div class="col-lg-12">
 		<input id="{$id}" type="file" name="{$name}"{if isset($multiple) && $multiple} multiple="multiple"{/if} class="hide" />
@@ -72,10 +77,9 @@
 		</div>
 	</div>
 </div>
-
 <script type="text/javascript">
 	{if isset($multiple) && isset($max_files)}
-	var {$id}_max_files = {$max_files};
+	var {$id}_max_files = {$max_files - $files|count};
 	{/if}
 
 	$(document).ready(function(){
@@ -117,3 +121,4 @@
 		}
 	});
 </script>
+{/if}
