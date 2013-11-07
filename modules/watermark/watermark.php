@@ -174,7 +174,7 @@ class Watermark extends Module
 						</td>
 					</tr>
 					<tr>
-						<td width="270" style="height: 35px;">'.$this->l('Watermark transparency (0-100)').'</td>
+						<td width="270" style="height: 35px;">'.$this->l('Watermark transparency (1-100)').'</td>
 					    <td><input type="text" name="transparency" value="'.(float)Tools::getValue('transparency', Configuration::get('WATERMARK_TRANSPARENCY')).'" style="width: 30px;" /></td>
 					</tr>
 					<tr><td width="270" style="height: 35px;">'.$this->l('Watermark X align').'</td>
