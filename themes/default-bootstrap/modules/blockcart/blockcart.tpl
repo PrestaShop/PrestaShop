@@ -206,12 +206,12 @@ var generated_date = {$smarty.now|intval};
         <div class="layer_cart_cart col-xs-12 col-md-6">
             <h2><span>{l s='Cart:' mod='blockcart'}</span>&nbsp;<span class="ajax_cart_quantity">{$cart_qties}</span>&nbsp;<span class="ajax_cart_product_txt{if $cart_qties > 1} unvisible{/if}">{l s='item' mod='blockcart'}</span><span class="ajax_cart_product_txt_s{if $cart_qties < 2} unvisible{/if}">{l s='items' mod='blockcart'}</span></h2>
             <div class="layer_cart_row">
-                <strong class="dark">{l s='Total products' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax exclu.):' mod='blockcart'}{else}&nbsp;{l s='(tax incl.):' mod='blockcart'}{/if}</strong>
+                <strong class="dark">{l s='Total products' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax excl.):' mod='blockcart'}{else}&nbsp;{l s='(tax incl.):' mod='blockcart'}{/if}</strong>
                 <span class="ajax_block_products_total">{if $cart_qties > 0}{convertPrice price=$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS)}{/if}</span>
             </div>
             {if $show_wrapping}
             <div class="layer_cart_row">
-                        <strong class="dark">{l s='Wrapping' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax exclu.):' mod='blockcart'}{else}&nbsp;{l s='(tax incl.):' mod='blockcart'}{/if}</strong>
+                        <strong class="dark">{l s='Wrapping' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax excl.):' mod='blockcart'}{else}&nbsp;{l s='(tax incl.):' mod='blockcart'}{/if}</strong>
                         <span class="price cart_block_wrapping_cost">{if $priceDisplay == 1}{convertPrice price=$cart->getOrderTotal(false, Cart::ONLY_WRAPPING)}{else}{convertPrice price=$cart->getOrderTotal(true, Cart::ONLY_WRAPPING)}{/if}</span>
                     </div>
             {/if}
@@ -226,7 +226,7 @@ var generated_date = {$smarty.now|intval};
                 </div>
             {/if}
             <div class="layer_cart_row">	
-                <strong class="dark">{l s='Total' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax exclu.):' mod='blockcart'}{else}&nbsp;{l s='(tax incl.):' mod='blockcart'}{/if}</strong>
+                <strong class="dark">{l s='Total' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax excl.):' mod='blockcart'}{else}&nbsp;{l s='(tax incl.):' mod='blockcart'}{/if}</strong>
                 <span class="ajax_cart_total">{if $cart_qties > 0}{if $priceDisplay == 1}{convertPrice price=$cart->getOrderTotal(false)}{else}{convertPrice price=$cart->getOrderTotal(true)}{/if}{/if}</span>
             </div>
             <div class="button-container">	
