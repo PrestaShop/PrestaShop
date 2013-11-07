@@ -3,8 +3,10 @@
 
 Hi, 
 
-Message from {shop_name} {SHOP_NAME} invites you to send this link to
-your friends, so they can see your wishlist: {WISHLIST}
+Message from {shop_name} 
+
+{shop_name} invites you to send this link to your friends, so they
+can see your wishlist: {wishlist}
 
 {message} [{message}] 
 

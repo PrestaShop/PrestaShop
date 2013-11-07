@@ -32,7 +32,7 @@
 			{if $nbManufacturers == 0}{l s='There are no manufacturers.'}
 			{else}
 				{if $nbManufacturers == 1}
-					{l s='There is %d brand' sprintf=$nbManufacturers}
+					{l s='There is 1 brand'}
 				{else}
 					{l s='There are %d brands' sprintf=$nbManufacturers}
 				{/if}
