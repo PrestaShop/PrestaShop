@@ -140,9 +140,14 @@ class HelperFormCore extends Helper
 									'download_url' => isset($params['file'])?$params['file']:null
 								)));
 
-							$uploader->setThumb(isset($params['thumb'])?$params['thumb']:null);
-							$uploader->setTitle(isset($params['title'])?$params['title']:null);
+							if (isset($params['thumb']) && $params['thumb']) // Use for retrocompatibility							
+								$uploader->setFiles(array(
+									0 => array(
+									'type'       => HelperUploader::TYPE_IMAGE,
+									'image'      => isset($params['thumb'])?'<img src="'.$params['thumb'].'" alt="'.$params['title'].'" title="'.$params['title'].'" />':null,
+								)));
 
+							$uploader->setTitle(isset($params['title'])?$params['title']:null);
 							$params['file'] = $uploader->render();
 						break;
 

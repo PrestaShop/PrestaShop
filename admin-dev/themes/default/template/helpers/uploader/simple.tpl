@@ -43,13 +43,6 @@
 	</div>
 </div>
 {/if}
-{if isset($thumb) && $thumb}
-	<div class="form-group">
-		<div class="col-lg-12">
-			<img src="{$thumb}" alt="{$title}" title="{$title}" class="img-thumbnail" />
-		</div>
-	</div>
-{/if}
 {if isset($max_files) && $files|count >= $max_files}
 <div class="row">
 	<div class="alert alert-warning">{l s='You have reached the limit (%s) of files to upload, please remove files to continue uploading' sprintf=$max_files}</div>
