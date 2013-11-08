@@ -1,10 +1,13 @@
 #nav-mobile
-	position: absolute
-	top: 37px
+	position: fixed
+	top: 0
 	left: 0
-	width: 50px
-	height: 50px
-	z-index: 500
+	overflow: hidden
+	width: 100%
+	height: 38px
+	z-index: 1100
+	&.expanded
+		height: 100%
 	li > a > i
 		display: inline-block
 		height: 30px
@@ -15,25 +18,26 @@
 		text-align: center
 		background: black
 		@include border-radius(40px)
-	#nav-mobile-submenu
-		z-index: 700
 	ul.menu
-		z-index: 600
-		display: none
+		top: 37px
 		position: absolute
-		top: 54px
-		background: $main-color
+		display: none
 		width: 480px
+		height: 100%
+		background-color: rgba(black,0.8)
 		margin: 0 0 100px 0
 		padding: 0
 		border-top: 1px black solid
 		list-style: none
+		@include transition(all 0.35s ease-out)
+		@include animate(fadeInLeft, 0.3s)
 		li
+			background: $main-color
 			position: relative
 			a
 				display: block
 				position: relative
-				padding: 2px 0 2px 20px
+				padding: 2px 0 2px 10px
 				border-bottom: 1px solid darken($main-color,10%)
 				font-size: 12px
 				line-height: 40px
@@ -59,9 +63,24 @@
 						color: white
 	ul.submenu
 		display: none
+	#nav-mobile-submenu
+		z-index: 1200
+		a:not(#nav-mobile-submenu-back)
+			font-size: 1.2em
+			padding-left: 50px
+			text-transform: none
 	a#nav-mobile-submenu-back
 		background-color: darken($main-color,5%)
-
+		font-size: 1.5em
+	ul.menu.menu-close
+		@include animate(fadeOutLeft, 0.2s)
+	.menu-collapse
+		position: absolute
+		width: 50px
+		height: 37px
+		line-height: 1.3em
+		top: 0
+		right: 0
 
 #nav-sidebar
 	position: fixed
@@ -285,6 +304,7 @@
 		display: none
 
 .menu-collapse
+	cursor: pointer
 	height: 54px
 	width: 100%
 	font-size: 2em
@@ -377,3 +397,4 @@
 
 [class^="icon-Admin"]
 	margin-right: 6px
+

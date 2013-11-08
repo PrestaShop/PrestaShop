@@ -100,47 +100,64 @@ $( document ).ready(function() {
 
 	function mobileNav() {
 		//clean actual menu type
-		$('body').removeClass('page-sidebar').removeClass('page-topbar').removeClass('page-sidebar-closed');
+		//$('body').removeClass('page-sidebar').removeClass('page-topbar').removeClass('page-sidebar-closed');
 		// get it in navigation whatever type it is.
 		var navigation = $('#nav-sidebar,#nav-topbar');
 		var submenu = "";
 		// clean trigger
 		navigation.off().attr('id','nav-mobile');
 		$('span.menu-collapse').off();
-		navigation.on('click','span.menu-collapse',function(){
+		navigation.on('click.collapse','span.menu-collapse',function(){
 			if ($(this).hasClass('expanded')){
 				$(this).html('<i class="icon-align-justify"></i>');
 				navigation.find('ul.menu').hide();
+				navigation.removeClass('expanded');
 				$(this).removeClass('expanded');
+				//remove submenu when closing nav
+				$('#nav-mobile-submenu').remove();
 			}
 			else {
 				$(this).html('<i class="icon-remove"></i>');
-				navigation.find('ul.menu').show();
+				navigation.find('ul.menu').removeClass('menu-close').show();
+				navigation.addClass('expanded');
 				$(this).addClass('expanded');
 			}
 		});
 		//get click for item which has submenu
-		navigation.on('click','.maintab.has_submenu a.title', function(e){
+		navigation.on('click.submenu','.maintab.has_submenu a.title', function(e){
 			e.preventDefault();
-			navigation.find('.menu').hide();
+			navigation.find('.menu').addClass('menu-close');
 			$('#nav-mobile-submenu').remove();
 			//create submenu
-			submenu = $('<ul id="nav-mobile-submenu" class="menu"><li><a href="#" id="nav-mobile-submenu-back"><i class="icon-arrow-left"></i> Back</a></li></ul>');
+			submenu = $('<ul id="nav-mobile-submenu" class="menu"><li><a href="#" id="nav-mobile-submenu-back"><i class="icon-arrow-left"></i>'+ $(this).html() +'</a></li></ul>');
 			submenu.append($(this).closest('.maintab').find('.submenu').html());
 			//show submenu
 			navigation.append(submenu);
 			submenu.show();
 		});
-		navigation.on('click','#nav-mobile-submenu-back',function(e){
+		navigation.on('click.back','#nav-mobile-submenu-back',function(e){
 			e.preventDefault();
-			submenu.remove();
-			navigation.find('.menu').show();
+			navigation.find('.menu').removeClass('menu-close').show(submenu.addClass('menu-close'));
 		});
+	}
+
+	function removeMobileNav(){
+		navigation = $('#nav-mobile');
+		$('#nav-mobile-submenu').remove();
+		$('span.menu-collapse').html('<i class="icon-align-justify"></i>');
+		navigation.off();
+		if ($('body').hasClass('page-sidebar')){
+			navigation.attr('id',"nav-sidebar")
+			navSidebar();
+		} else if ($('body').hasClass('page-sidebar')){
+			navigation.attr('id',"nav-topbar")
+			navTopbar();
+		}
 	}
 
 	//nav switch - not used for now
 	function navSwitch(){
-		if ($('body').hasClass('page-sidebar')||$('body').hasClass('page-sidebar-closed')){
+		if ($('body').hasClass('page-sidebar')){
 			navTopbar();
 		} else {
 			navSidebar();
@@ -148,13 +165,16 @@ $( document ).ready(function() {
 	}
 
 	//init menu
-	if ($('body').hasClass('page-sidebar')){
-		navSidebar();
-	}
-	else if ($('body').hasClass('page-topbar')) {
-		navTopbar();
+	function initNav(){
+		if ($('body').hasClass('page-sidebar')){
+			navSidebar();
+		}
+		else if ($('body').hasClass('page-topbar')) {
+			navTopbar();
+		}
 	}
 
+	initNav();
 	//tooltip
 	$('.label-tooltip').tooltip();
 
@@ -192,7 +212,7 @@ $( document ).ready(function() {
 			mobileNav();
 		},
 		unmatch : function() {
-			
+			removeMobileNav();
 		}
 	});
 });
