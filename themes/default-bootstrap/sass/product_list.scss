@@ -167,16 +167,24 @@ ul.product_list.grid {
 					
 					&.wishlist { 
 						border-right:1px solid $base-border-color;
+						
+						a:before {
+							display:inline-block;
+							font-family:$font-icon;
+							content:"";
+							margin-right:3px;
+						}
+						a.ckecked:before {
+							content:"";	
+						}
 																		@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px
 																			border-right:0;
-																			
-																			i {display:none;}	
+																			a:before {display:none;}
 																		}
 						
 																		@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
-																			border-right:0;
-																			
-																			i {display:none;}	
+																			border-right:0;	
+																			a:before {display:none;}
 																		}
 					}
 					
@@ -360,8 +368,11 @@ ul.product_list.list {
 						font-weight:bold;
 						color:#777676;
 						cursor:pointer;
-						
-						i {
+					}
+					.wishlist {
+						a:before {
+							content:"";
+							font-family:$font-icon;
 							width:30px;
 							height:30px;
 							font-size:15px;
@@ -372,13 +383,20 @@ ul.product_list.list {
 							padding:7px 0 0 0;
 							@include border-radius(100px);
 							margin-right:3px;
+							font-weight:normal;
+							margin-right:7px;
 						}
-						&:hover {
+						a:hover {
 							color:$base-text-color;
 							
-								i {
-									background:$dark-background;	
+								&:before {
+									background:$dark-background;
 								}
+						}
+						a.ckecked {
+							&:before {
+								content:"";	
+							}
 						}
 					}
 					
