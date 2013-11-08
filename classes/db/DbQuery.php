@@ -35,6 +35,7 @@ class DbQueryCore
 	 * @var array list of data to build the query
 	 */
 	protected $query = array(
+		'type' => 'SELECT',
 		'select' => array(),
 		'from' => 	'',
 		'join' => 	array(),
@@ -44,6 +45,21 @@ class DbQueryCore
 		'order' => 	array(),
 		'limit' => 	array('offset' => 0, 'limit' => 0),
 	);
+	
+	/**
+	 * Set type of the query
+	 *
+	 * @param string $type SELECT|DELETE
+	 * @return DbQuery
+	 */
+	public function type($type)
+	{
+		$types = array('SELECT', 'DELETE');
+
+		if (!empty($type) && in_array($type, $types))
+			$this->query['type'] = $type;
+		return $this;
+	}
 
 	/**
 	 * Add fields in query selection
@@ -216,8 +232,11 @@ class DbQueryCore
 	 */
 	public function build()
 	{
-		$sql = 'SELECT '.((($this->query['select'])) ? implode(",\n", $this->query['select']) : '*')."\n";
-
+		if($this->query['type'] == 'SELECT')
+			$sql = 'SELECT '.((($this->query['select'])) ? implode(",\n", $this->query['select']) : '*')."\n";
+		else
+			$sql = $this->query['type'].' ';
+		
 		if (!$this->query['from'])
 			die('DbQuery->build() missing from clause');
 		$sql .= 'FROM '.implode(', ', $this->query['from'])."\n";
