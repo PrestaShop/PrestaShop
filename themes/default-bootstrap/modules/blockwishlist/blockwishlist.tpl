@@ -22,9 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script type="text/javascript">
-	var wishlistProductsIds = [];	
-</script>
 <div id="wishlist_block" class="block account">
 	<h4 class="title_block">
 		<a href="{$wishlist_link}" title="{l s='My wishlists' mod='blockwishlist'}" rel="nofollow">{l s='Wishlist' mod='blockwishlist'}</a>
@@ -34,7 +31,6 @@
 		{if $wishlist_products}
 			<dl class="products">
 			{foreach from=$wishlist_products item=product name=i}
-            	<script type="text/javascript">wishlistProductsIds.push({$product.id_product});</script>
 				<dt class="{if $smarty.foreach.i.first}first_item{elseif $smarty.foreach.i.last}last_item{else}item{/if}">
 					<span class="quantity-formated"><span class="quantity">{$product.quantity|intval}</span>x</span>
 					<a class="cart_block_product_name"
