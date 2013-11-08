@@ -123,7 +123,12 @@
         {else}
         	{assign var='productShowingStart' value=$n*$p-$n+1}
         {/if}
-    	{l s='Showing'} {$productShowingStart} - {$productShowing} {l s='of'} {$nb_products}{if $nb_products > 1} {l s='items'}{else} {l s='item'}{/if}
+
+        {if $nb_products > 1}
+    		{l s='Showing %1$d - %2$d of %3$d items' sprintf=[$productShowingStart, $productShowing, $nb_products]}
+    	{else}
+    		{l s='Showing %1$d - %2$d of 1 item' sprintf=[$productShowingStart, $productShowing]}
+    	{/if}
     </div>
 	<!-- /Pagination -->
 {/if}
