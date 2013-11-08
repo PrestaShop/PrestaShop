@@ -100,7 +100,6 @@ $( document ).ready(function() {
 
 	function mobileNav() {
 		//clean actual menu type
-		//$('body').removeClass('page-sidebar').removeClass('page-topbar').removeClass('page-sidebar-closed');
 		// get it in navigation whatever type it is.
 		var navigation = $('#nav-sidebar,#nav-topbar');
 		var submenu = "";
@@ -137,7 +136,8 @@ $( document ).ready(function() {
 		});
 		navigation.on('click.back','#nav-mobile-submenu-back',function(e){
 			e.preventDefault();
-			navigation.find('.menu').removeClass('menu-close').show(submenu.addClass('menu-close'));
+			submenu.remove();
+			navigation.find('.menu').removeClass('menu-close').show();
 		});
 	}
 
@@ -147,10 +147,10 @@ $( document ).ready(function() {
 		$('span.menu-collapse').html('<i class="icon-align-justify"></i>');
 		navigation.off();
 		if ($('body').hasClass('page-sidebar')){
-			navigation.attr('id',"nav-sidebar")
+			navigation.attr('id',"nav-sidebar");
 			navSidebar();
 		} else if ($('body').hasClass('page-sidebar')){
-			navigation.attr('id',"nav-topbar")
+			navigation.attr('id',"nav-topbar");
 			navTopbar();
 		}
 	}
