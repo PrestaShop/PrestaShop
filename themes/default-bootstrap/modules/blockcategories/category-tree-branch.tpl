@@ -23,18 +23,40 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<li {if isset($last) && $last == 'true'}class="last"{/if}>
+<li class="category_{$node.id}{if isset($last) && $last == 'true'} last{/if}">
 	<a href="{$node.link|escape:'htmlall':'UTF-8'}" {if isset($currentCategoryId) && $node.id == $currentCategoryId}class="selected"{/if}
 		title="{$node.desc|strip_tags|trim|escape:'htmlall':'UTF-8'}">{$node.name|escape:'htmlall':'UTF-8'}</a>
-	{if $node.children|@count > 0}
-		<ul>
-		{foreach from=$node.children item=child name=categoryTreeBranch}
-			{if $smarty.foreach.categoryTreeBranch.last}
-				{include file="$branche_tpl_path" node=$child last='true'}
+		
+		{if $node.children|@count > 0}
+			<ul>
+			{if $node.id_parent == Configuration::get('PS_HOME_CATEGORY')}
+				
+				{foreach from=$node.children item=child name=categoryTreeBranch}
+					{if $smarty.foreach.categoryTreeBranch.last}
+						{include file="$branche_tpl_path_top" node=$child last='true'}
+					{else}
+						{include file="$branche_tpl_path_top" node=$child last='false'}
+					{/if}
+				{/foreach}
+
+				<li class="category_thumb">
+					{for $thumbId=0 to 2}
+						{assign var="thumbPath" value="{$img_ps_dir}c/{$node.id}-{$thumbId}_thumb.jpg"} 				
+					  <img src="{$thumbPath}" alt="">
+					{/for}
+				</li>
+
 			{else}
-				{include file="$branche_tpl_path" node=$child last='false'}
-			{/if}
-		{/foreach}
-		</ul>
+
+				{foreach from=$node.children item=child name=categoryTreeBranch}
+					{if $smarty.foreach.categoryTreeBranch.last}
+						{include file="$branche_tpl_path" node=$child last='true'}
+					{else}
+						{include file="$branche_tpl_path" node=$child last='false'}
+					{/if}
+				{/foreach}
+
+			{/if}		
+		</ul>		
 	{/if}
 </li>
