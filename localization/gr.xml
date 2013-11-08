@@ -201,4 +201,59 @@
 		<unit type="base_distance" value="m" />
 		<unit type="long_distance" value="km" />
 	</units>
+	
+	<state>
+		<state name="Άγιο Όρος" iso_code="GR-69" country="GR" zone="Europe"/>
+		<state name="Αιτωλοακαρνανίας" iso_code="GR-01" country="GR" zone="Europe"/>
+		<state name="Αργολίδας" iso_code="GR-11" country="GR" zone="Europe"/>
+		<state name="Αρκαδίας" iso_code="GR-12" country="GR" zone="Europe"/>
+		<state name="Άρτας" iso_code="GR-31" country="GR" zone="Europe"/>
+		<state name="Αττικής" iso_code="GR-A1" country="GR" zone="Europe"/>
+		<state name="Αχαΐας" iso_code="GR-13" country="GR" zone="Europe"/>
+		<state name="Βοιωτίας" iso_code="GR-03" country="GR" zone="Europe"/>
+		<state name="Γρεβενών" iso_code="GR-51" country="GR" zone="Europe"/>
+		<state name="Δράμας" iso_code="GR-52" country="GR" zone="Europe"/>
+		<state name="Δωδεκανήσου" iso_code="GR-81" country="GR" zone="Europe"/>
+		<state name="Ευρυτανίας" iso_code="GR-05" country="GR" zone="Europe"/>
+		<state name="Εύβοιας" iso_code="GR-04" country="GR" zone="Europe"/>
+		<state name="Έβρου" iso_code="GR-71" country="GR" zone="Europe"/>
+		<state name="Ζακύνθου" iso_code="GR-21" country="GR" zone="Europe"/>
+		<state name="Ηλείας" iso_code="GR-14" country="GR" zone="Europe"/>
+		<state name="Ημαθίας" iso_code="GR-53" country="GR" zone="Europe"/>
+		<state name="Ηρακλείου" iso_code="GR-91" country="GR" zone="Europe"/>
+		<state name="Θεσπρωτίας" iso_code="GR-32" country="GR" zone="Europe"/>
+		<state name="Θεσσαλονίκης" iso_code="GR-54" country="GR" zone="Europe"/>
+		<state name="Ιωαννίνων" iso_code="GR-33" country="GR" zone="Europe"/>
+		<state name="Κέρκυρας" iso_code="GR-22" country="GR" zone="Europe"/>
+		<state name="Καβάλας" iso_code="GR-55" country="GR" zone="Europe"/>
+		<state name="Καρδίτσας" iso_code="GR-41" country="GR" zone="Europe"/>
+		<state name="Καστοριάς" iso_code="GR-56" country="GR" zone="Europe"/>
+		<state name="Κεφαλληνίας" iso_code="GR-23" country="GR" zone="Europe"/>
+		<state name="Κιλκίς" iso_code="GR-57" country="GR" zone="Europe"/>
+		<state name="Κοζάνης" iso_code="GR-58" country="GR" zone="Europe"/>
+		<state name="Κορινθίας" iso_code="GR-15" country="GR" zone="Europe"/>
+		<state name="Κυκλάδων" iso_code="GR-82" country="GR" zone="Europe"/>
+		<state name="Λάρισας" iso_code="GR-42" country="GR" zone="Europe"/>
+		<state name="Λέσβου" iso_code="GR-83" country="GR" zone="Europe"/>
+		<state name="Λακωνίας" iso_code="GR-16" country="GR" zone="Europe"/>
+		<state name="Λασιθίου" iso_code="GR-92" country="GR" zone="Europe"/>
+		<state name="Λευκάδας" iso_code="GR-24" country="GR" zone="Europe"/>
+		<state name="Μαγνησίας" iso_code="GR-43" country="GR" zone="Europe"/>
+		<state name="Μεσσηνίας" iso_code="GR-17" country="GR" zone="Europe"/>
+		<state name="Ξάνθης" iso_code="GR-72" country="GR" zone="Europe"/>
+		<state name="Πέλλας" iso_code="GR-59" country="GR" zone="Europe"/>
+		<state name="Πιερίας" iso_code="GR-61" country="GR" zone="Europe"/>
+		<state name="Πρέβεζας" iso_code="GR-34" country="GR" zone="Europe"/>
+		<state name="Ρεθύμνου" iso_code="GR-93" country="GR" zone="Europe"/>
+		<state name="Ροδόπης" iso_code="GR-73" country="GR" zone="Europe"/>
+		<state name="Σάμου" iso_code="GR-84" country="GR" zone="Europe"/>
+		<state name="Σερρών" iso_code="GR-62" country="GR" zone="Europe"/>
+		<state name="Τρικάλων" iso_code="GR-44" country="GR" zone="Europe"/>
+		<state name="Φθιώτιδας" iso_code="GR-06" country="GR" zone="Europe"/>
+		<state name="Φλώρινας" iso_code="GR-63" country="GR" zone="Europe"/>
+		<state name="Φωκίδας" iso_code="GR-07" country="GR" zone="Europe"/>
+		<state name="Χίου" iso_code="GR-85" country="GR" zone="Europe"/>
+		<state name="Χαλκιδικής" iso_code="GR-64" country="GR" zone="Europe"/>
+		<state name="Χανίων" iso_code="GR-94" country="GR" zone="Europe"/>
+	</state>
 </localizationPack>
