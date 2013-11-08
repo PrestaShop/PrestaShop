@@ -42,7 +42,6 @@ class HelperUploaderCore extends Uploader
 	protected $_template;
 	private   $_template_directory;
 	private   $_title;
-	private   $_thumb;
 	private   $_url;
 	private   $_use_ajax;
 
@@ -193,17 +192,6 @@ class HelperUploaderCore extends Uploader
 		return $this->_title;
 	}
 
-	public function setThumb($value)
-	{
-		$this->_thumb = $value;
-		return $this;
-	}
-
-	public function getThumb()
-	{
-		return $this->_thumb;
-	}
-
 	public function setUrl($value)
 	{
 		$this->_url = (string)$value;
@@ -280,7 +268,6 @@ class HelperUploaderCore extends Uploader
 			'url'           => $this->getUrl(),
 			'multiple'      => $this->isMultiple(),
 			'files'         => $this->getFiles(),
-			'thumb'         => $this->getThumb(),
 			'title'         => $this->getTitle(),
 			'max_files'     => $this->getMaxFiles(),
 			'post_max_size' => $this->getPostMaxSizeBytes()
