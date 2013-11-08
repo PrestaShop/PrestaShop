@@ -3538,7 +3538,6 @@ a.link-social:hover { text-decoration: none; }
 #nav-mobile ul.menu li a:hover { background-color: #686d7d; color: white; }
 #nav-mobile ul.menu li a:hover i { color: white; }
 #nav-mobile ul.submenu { display: none; }
-#nav-mobile #nav-mobile-submenu { z-index: 1200; }
 #nav-mobile #nav-mobile-submenu a:not(#nav-mobile-submenu-back) { font-size: 1.2em; padding-left: 50px; text-transform: none; }
 #nav-mobile a#nav-mobile-submenu-back { background-color: #454953; font-size: 1.5em; }
 #nav-mobile ul.menu.menu-close { -webkit-animation: fadeOutLeft 0.2s 0.2s ease both; -moz-animation: fadeOutLeft 0.2s 0.2s ease both; -ms-animation: fadeOutLeft 0.2s 0.2s ease both; -o-animation: fadeOutLeft 0.2s 0.2s ease both; animation: fadeOutLeft 0.2s 0.2s ease both; }
