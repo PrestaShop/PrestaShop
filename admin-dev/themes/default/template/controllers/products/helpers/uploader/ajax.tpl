@@ -22,39 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="form-group" style="display: none;">
-	<div class="col-lg-12" id="{$id}-images-thumbnails">
-		{if isset($files) && $files|count > 0}
-		{foreach $files as $file}
-		{if isset($file.image) && $file.type == 'image'}
-		<div class="img-thumbnail text-center">
-			<p>{$file.image}</p>
-			{if isset($file.size)}<p>{l s='File size'} {$file.size}kb</p>{/if}
-			{if isset($file.delete_url)}
-			<p>
-				<a class="btn btn-default" href="{$file.delete_url}">
-				<i class="icon-trash"></i> {l s='Delete'}
-				</a>
-			</p>
-			{/if}
-		</div>
-		{/if}
-		{/foreach}
-		{/if}
-	</div>
-</div>
-{if isset($max_files) && $files|count >= $max_files}
-<div class="row">
-	<div class="alert alert-warning">{l s='You have reached the limit (%s) of files to upload, please remove files to continue uploading' sprintf=$max_files}</div>
-</div>
-<script type="text/javascript">
-	$( document ).ready(function() {
-		{if isset($files) && $files}
-		$('#{$id}-images-thumbnails').parent().show();
-		{/if}
-	});
-</script>
-{else}
 <div class="form-group">
 	<div class="col-lg-12">
 		<input id="{$id}" type="file" name="{$name}[]"{if isset($url)} data-url="{$url}"{/if}{if isset($multiple) && $multiple} multiple="multiple"{/if} class="hide" />
@@ -110,7 +77,7 @@
 			autoUpload: false,
 			singleFileUploads: true,
 			maxFileSize: {$post_max_size},
-			start: function (e) {
+			start: function (e) {				
 				{$id}_upload_button.start();
 				$('#{$id}-upload-button').unbind('click'); //Important as we bind it for every elements in add function
 			},
@@ -121,19 +88,19 @@
 				if (data.result) {
 					if (typeof data.result.{$name} !== 'undefined') {
 						for (var i=0; i<data.result.{$name}.length; i++) {
-							if (data.result.{$name}[i] !== null) {
-								if (typeof data.result.{$name}[i].image !== 'undefined') {
-									var template = '<div class="img-thumbnail text-center">';
-									template += '<p>'+data.result.{$name}[i].image+'</p>';
-									
-									if (typeof data.result.{$name}[i].delete_url !== 'undefined') {
-										template += '<p><a class="btn btn-default" href="'+data.result.{$name}[i].delete_url+'"><i class="icon-trash"></i> {l s='Delete'}</a></p>';
-									}
 
-									template += '</div>';
-									$('#{$id}-images-thumbnails').html($('#{$id}-images-thumbnails').html()+template);
-									$('#{$id}-images-thumbnails').parent().show();
-								}
+							if (data.result.{$name}[i] !== null && data.result.{$name}[i].status == 'ok') {
+								var response = data.result.{$name}[i];
+								var cover = "icon-check-empty";
+
+								if (response.cover == "1")
+									cover = "icon-check-sign";
+
+								imageLine(response.id, response.path, response.position, cover, response.shops,
+									response.legend[{$default_language|intval}])
+								$("#countImage").html(parseInt($("#countImage").html()) + 1);
+								$("#img" + id).remove();
+								$("#imageTable").tableDnDUpdate();
 							}
 						}
 					}
@@ -190,6 +157,16 @@
 				$('#{$id}-errors').append('<div class="row"><strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error+'</div>').parent().show();
 				$(data.context).find('button').trigger('click');
 			}
+		}).on('fileuploadsubmit', function (e, data) {
+			var params = new Object();
+
+			$('input[id^="legend_"]').each(function()
+			{
+				id = $(this).prop("id").replace("legend_", "legend[") + "]";
+				params[id] = $(this).val();
+			});
+
+			data.formData = params;			
 		});
 
 		$('#{$id}-add-button').on('click', function() {
@@ -201,4 +178,3 @@
 		});
 	});
 </script>
-{/if}

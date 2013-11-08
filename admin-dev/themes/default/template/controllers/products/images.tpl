@@ -35,40 +35,52 @@
 <div class="row">
 	<div class="form-group">
 		<label class="control-label col-lg-3 file_upload_label">
+			
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='MB max.'}">
-				{if isset($id_image)}{l s='Edit this product image'}{else}{l s='Add a new image to this product'}{/if}
+				{if isset($id_image)}{l s='Edit this product image:'}{else}{l s='Add a new image to this product:'}{/if}
 			</span>
 		</label>
 		<div class="col-lg-9">
-			{l s='File:'}
-			<div id="file-uploader">
-				<noscript>
-					<p>{l s='Please enable JavaScript to use file uploader:'}</p>
-				</noscript>
-			</div>
-			<div id="progressBarImage" class="progressBarImage"></div>
-			<div id="showCounter" style="display:none;">
-				<span id="imageUpload">0</span><span id="imageTotal">0</span>
-			</div>
-			<input type="hidden" name="resizer" value="auto" />
-		{if Tools::getValue('id_image')}
-			<input type="hidden" name="id_image" value="{Tools::getValue('id_image')|intval}" />
-		{/if}
+			{$image_uploader}
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-lg-3">
-			{l s='Legend:'}
+			<span class="label-tooltip" data-toggle="tooltip"
+				title="{l s='Invalid characters:'} <>;=#{}">
+				{l s='Legend:'}
+			</span>			
 		</label>
-		<div class="col-lg-9 translatable">
-			{foreach from=$languages item=language}
-			<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if} float: left;">
-				<input class="updateCurrentText" type="text" {if !$product->id}disabled="disabled"{/if} id="legend_{$language.id_lang}" name="legend_{$language.id_lang}" value="{$product->name[$language.id_lang]|escape:'htmlall':'UTF-8'}"/>
-				<div class="help-block">{l s='Invalid characters:'} <>;=#{}</div>
+		{foreach from=$languages item=language}
+			{if $languages|count > 1}
+			<div class="translatable-field row lang-{$language.id_lang}">
+				<div class="col-lg-6">
+			{/if}
+					<input type="text"
+					id="legend_{$language.id_lang}"
+					{if isset($input_class)}class="{$input_class}"{/if}
+					name="legend_{$language.id_lang}"
+					value="{$product->name[$language.id_lang]|escape:'htmlall':'UTF-8'}"
+					{if !$product->id}disabled="disabled"{/if} />
+			{if $languages|count > 1}
+				</div>
+				<div class="col-lg-2">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+						{$language.iso_code}
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						{foreach from=$languages item=language}
+						<li>
+							<a href="javascript:hideOtherLanguage({$language.id_lang});">{$language.name}</a>
+						</li>
+						{/foreach}
+					</ul>
+				</div>
 			</div>
-			{/foreach}
-		</div>
+			{/if}
+		{/foreach}
 	</div>
 </div>
 
@@ -95,7 +107,7 @@
 	<tr id="image_id">
 		<td>
 			<a href="{$smarty.const._THEME_PROD_DIR_}image_path.jpg" class="fancybox">
-				<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-default-{$imageType}.jpg" alt="image_id" title="image_id" />
+				<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-default-{$imageType}.jpg" alt="legend" title="legend" />
 			</a>
 		</td>
 		<td>legend</td>
@@ -129,6 +141,28 @@
 	var current_shop_id = {$current_shop_id|intval};
 	{literal}
 	//Ready Function
+
+	function imageLine(id, path, position, cover, shops, legend)
+	{
+		line = $("#lineType").html();
+		line = line.replace(/image_id/g, id);			
+		line = line.replace(/[a-z]{0,2}-default-small_default/g, path+'-small_default');
+		line = line.replace(/image_path/g, path);
+		line = line.replace(/image_position/g, position);
+		line = line.replace(/legend/g, legend);
+		line = line.replace(/icon-check-empty/g, cover);
+		line = line.replace(/<tbody>/gi, "");
+		line = line.replace(/<\/tbody>/gi, "");
+		if (shops != false)
+		{
+			$.each(shops, function(key, value){
+				if (value == 1)
+					line = line.replace('id="' + key + '' + id + '"','id="' + key + '' + id + '" checked=checked');
+			});
+		}
+		$("#imageList").append(line);
+	}
+
 	$(document).ready(function(){
 		{/literal}
 		{foreach from=$images item=image}
@@ -163,66 +197,6 @@
 			image_up = image_up.slice(0, -1);
 			image_up += "}";
 			updateImagePosition(image_up);
-			}
-		});
-		var filecheck = 1;
-		var params = new Array;
-		params['id_product'] = {/literal}{$id_product|intval}{literal};
-		params['id_category'] = {/literal}{$id_category_default|intval}{literal};
-		params['token'] = "{/literal}{$token}{literal}";
-		params['tab'] = "AdminProducts";
-		params['action'] = "addImage";
-		params['ajax'] = 1;
-		uploader = new qq.FileUploader(
-		{
-			element: document.getElementById("file-uploader"),
-			action: "ajax-tab.php",
-			debug: false,
-			onComplete: function(id, fileName, responseJSON)
-			{
-				var percent = ((filecheck * 100) / nbfile);
-				$("#progressBarImage").progressbar({value: percent});
-				if (percent != 100)
-				{
-					$("#imageUpload").html(parseInt(filecheck));
-					$("#imageTotal").html(" / " + parseInt(nbfile) + " {/literal}{l s='Images'}{literal}");
-					$("#progressBarImage").show();
-					$("#showCounter").show();
-				}
-				else
-				{
-					$("#progressBarImage").progressbar({value: 0});
-					$("#progressBarImage").hide();
-					$("#showCounter").hide();
-					nbfile = 0;
-					filecheck = 0;
-				}
-				if (responseJSON.status == 'ok')
-				{
-					cover = "icon-check-empty";
-					if (responseJSON.cover == "1")
-						cover = "icon-check-sign";
-					imageLine(responseJSON.id, responseJSON.path, responseJSON.position, cover, responseJSON.shops, responseJSON.legend[{/literal}{$default_language|intval}{literal}])
-					$("#imageTable tr:last").after(responseJSON.html);
-					$("#countImage").html(parseInt($("#countImage").html()) + 1);
-					$("#img" + id).remove();
-					$("#imageTable").tableDnDUpdate();
-					showSuccessMessage(responseJSON.name + " " + success_add);
-				}
-				else
-					showErrorMessage(responseJSON.error);
-				filecheck++;
-			},
-			onSubmit: function(id, filename)
-			{
-				$('input[id^="legend_"]').each(function()
-				{
-					id = $(this).prop("id").replace("legend_", "legend[") + "]";
-					params[id] = $(this).val();
-				});
-				uploader.setParams(params);
-				$("#imageTable").show();
-				$("#listImage").append("<li id='img"+id+"'><div>" + filename + "</div></div><a href=\"javascript:delQueue(" + id +");\"><img src=\"../img/admin/disabled.gif\" ></a><p class=\"errorImg\"></p></li>");
 			}
 		});
 
@@ -327,28 +301,11 @@
 			$("#img" + id).remove();
 		}
 		
-		function imageLine(id, path, position, cover, shops, legend)
-		{
-			line = $("#lineType").html();
-			line = line.replace(/image_id/g, legend);			
-			line = line.replace(/[a-z]{0,2}-default-small_default/g, path+'-small_default');
-			line = line.replace(/image_path/g, path);
-			line = line.replace(/image_position/g, position);
-			line = line.replace(/legend/g, legend);
-			line = line.replace(/icon-check-empty/g, cover);
-			line = line.replace(/<tbody>/gi, "");
-			line = line.replace(/<\/tbody>/gi, "");
-			if (shops != false)
-			{
-				$.each(shops, function(key, value){
-					if (value == 1)
-						line = line.replace('id="' + key + '' + id + '"','id="' + key + '' + id + '" checked=checked');
-				});
-			}
-			$("#imageList").append(line);
-		}
+		
 		$('.fancybox').fancybox();
 	});
+
+	hideOtherLanguage(default_language);
 	{/literal}
 </script>
 </div>
