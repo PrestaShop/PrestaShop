@@ -674,7 +674,11 @@ class HomeSlider extends Module
 		$this->context->controller->addJS($this->_path.'js/homeslider.js');
 		return $this->display(__FILE__, 'homeslider.tpl', $this->getCacheId());
 	}
-
+	
+	public function hookTop()
+	{
+		return $this->hookDisplayHome();	
+	}
 	public function clearCache()
 	{
 		$this->_clearCache('homeslider.tpl');

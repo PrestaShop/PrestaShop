@@ -40,7 +40,17 @@
 		<meta http-equiv="content-language" content="{$meta_language}" />
 		<meta name="generator" content="PrestaShop" />
 		<meta name="robots" content="{if isset($nobots)}no{/if}index,{if isset($nofollow) && $nofollow}no{/if}follow" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />  
+        <meta name="viewport" content="width=device-width, minimum-scale=0.25, maximum-scale=1.6, initial-scale=1.0" /> 
+        <meta name="apple-mobile-web-app-capable" content="yes" /> 
+        <script>
+			if (navigator.userAgent.match(/Android/i)) {
+				var viewport = document.querySelector("meta[name=viewport]");
+				viewport.setAttribute('content', 'initial-scale=1.0,maximum-scale=1.0,user-scalable=0,width=device-width,height=device-height');
+			}
+				if(navigator.userAgent.match(/Android/i)){
+				window.scrollTo(0,1);
+			 }
+		</script>
 		<link rel="icon" type="image/vnd.microsoft.icon" href="{$favicon_url}?{$img_update_time}" />
 		<link rel="shortcut icon" type="image/x-icon" href="{$favicon_url}?{$img_update_time}" />
 		<script type="text/javascript">
