@@ -45,18 +45,7 @@ class BlockCategories extends Module
 
 	public function install()
 	{
-		// Prepare tab
-		$tab = new Tab();
-		$tab->active = 1;
-		$tab->class_name = "AdminBlockCategories";
-		$tab->name = array();
-		foreach (Language::getLanguages(true) as $lang)
-			$tab->name[$lang['id_lang']] = 'BlockCategories';
-		$tab->id_parent = -1;
-		$tab->module = $this->name;
-
-		if (!$tab->add() ||
-			!parent::install() ||
+		if (!parent::install() ||
 			!$this->registerHook('leftColumn') ||
 			!$this->registerHook('footer') ||
 			!$this->registerHook('header') ||
@@ -67,6 +56,8 @@ class BlockCategories extends Module
 			!$this->registerHook('actionAdminMetaControllerUpdate_optionsBefore') ||
 			!$this->registerHook('actionAdminLanguagesControllerStatusBefore') ||
 			!$this->registerHook('displayBackOfficeCategory') ||
+			!$this->registerHook('actionBackOfficeCategory') ||
+			!$this->registerHook('actionBackOfficeCategoryRemoveThumbnail') ||
 			!Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', 4) ||
 			!Configuration::updateValue('BLOCK_CATEG_DHTML', 1))
 			return false;
@@ -75,14 +66,6 @@ class BlockCategories extends Module
 
 	public function uninstall()
 	{
-		$id_tab = (int)Tab::getIdFromClassName('AdminBlockCategories');
-		
-		if ($id_tab)
-		{
-			$tab = new Tab($id_tab);
-			$tab->delete();
-		}
-
 		if (!parent::uninstall() ||
 			!Configuration::deleteByName('BLOCK_CATEG_MAX_DEPTH') ||
 			!Configuration::deleteByName('BLOCK_CATEG_DHTML'))
@@ -129,15 +112,16 @@ class BlockCategories extends Module
 
 		if (!isset($resultIds[$id_category]))
 			return false;
-		$return = array(
-			'id' => $id_category,
-			'link' => $this->context->link->getCategoryLink($id_category, $resultIds[$id_category]['link_rewrite']),
-			'name' => $resultIds[$id_category]['name'],
-			'desc'=> $resultIds[$id_category]['description'],
-			'children' => $children
-		);
-		return $return;
-	}
+			$return = array(
+				'id' => $id_category,
+				'link' => $this->context->link->getCategoryLink($id_category, $resultIds[$id_category]['link_rewrite']),
+				'id_parent' => $resultIds[$id_category]['id_parent'],
+				'name' => $resultIds[$id_category]['name'],
+				'desc'=> $resultIds[$id_category]['description'],
+				'children' => $children,
+			);
+			return $return;
+		}
 
 	public function hookDisplayBackOfficeCategory($params)
 	{
@@ -153,16 +137,91 @@ class BlockCategories extends Module
 			{
 				$files[$i]['type'] = HelperImageUploader::TYPE_IMAGE;
 				$files[$i]['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.(int)$category->id.'-'.$i.'_thumb.jpg', $this->context->controller->table.'_'.(int)$category->id.'-'.$i.'_thumb.jpg', 100, 'jpg', true, true);
-				$files[$i]['delete_url'] = Context::getContext()->link->getAdminLink('AdminBlockCategories').'&deleteThumb='.$i.'&id_category='.(int)$category->id;
+				$files[$i]['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories').'&deleteThumb='.$i.'&id_category='.(int)$category->id;
 			}
 		}
 
 		$helper = new HelperImageUploader();
 		$helper->setMultiple(true)->setUseAjax(true)->setName('thumbnail')->setFiles($files)->setMaxFiles(3)->setUrl(
-			Context::getContext()->link->getAdminLink('AdminBlockCategories').'&ajax=1&id_category='.$category->id
-			.'&action=uploadThumbnailImages');
+			Context::getContext()->link->getAdminLink('AdminCategories').'&ajax=1&id_category='.$category->id.'&action=uploadThumbnailImages');
 		$this->smarty->assign('helper', $helper->render());
 		return $this->display(__FILE__, 'views/blockcategories_admin.tpl');
+	}
+
+	public function hookActionBackOfficeCategory($params)
+	{		
+		$category = new Category((int)Tools::getValue('id_category'));
+
+		if (isset($_FILES['thumbnail']))
+		{
+			//Get total of image already present in directory
+			$files = scandir(_PS_CAT_IMG_DIR_);
+			$assigned_keys = array();
+			$allowed_keys  = array(0, 1, 2);
+
+			foreach ($files as $file) {
+				$matches = array();
+
+				if (preg_match('/'.$category->id.'-([0-9])?_thumb.jpg/i', $file, $matches) === 1)
+					$assigned_keys[] = (int)$matches[1];
+			}
+
+			$available_keys = array_diff($allowed_keys, $assigned_keys);
+			$helper = new HelperImageUploader('files');
+			$files  = $helper->setName('thumbnail')->process();
+			$total_errors = array();
+
+			if (count($available_keys) < count($files))
+			{
+				$total_errors[] = sprintf(Tools::displayError('You cannot upload more than %s files'), count($available_keys));
+				die();
+			}
+
+			foreach ($files as $key => &$file)
+			{
+				$id = array_shift($available_keys);
+				$errors = array();
+				// Evaluate the memory required to resize the image: if it's too much, you can't resize it.
+				if (!ImageManager::checkImageMemoryLimit($file['save_path']))
+					$errors[] = Tools::displayError('Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ');
+				// Copy new image
+				if (empty($errors) && !ImageManager::resize($file['save_path'], _PS_CAT_IMG_DIR_
+					.(int)Tools::getValue('id_category').'-'.$id.'_thumb.jpg'))
+					$errors[] = Tools::displayError('An error occurred while uploading the image.');
+
+				if (count($errors))
+					$total_errors = array_merge($total_errors, $errors);
+
+				unlink($file['save_path']);
+				//Necesary to prevent hacking
+				unset($file['save_path']);
+
+				//Add image preview and delete url
+				$file['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.(int)$category->id.'-'.$id.'_thumb.jpg',
+					$this->context->controller->table.'_'.(int)$category->id.'-'.$id.'_thumb.jpg', 100, 'jpg', true, true);
+				$file['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories').'&deleteThumb='
+					.$id.'&id_category='.(int)$category->id;
+				$id++;
+			}
+
+			if (count($total_errors))
+			$this->context->controller->errors = array_merge($this->context->controller->errors, $total_errors);
+
+			die(Tools::jsonEncode(array('thumbnail' => $files)));
+		}
+	}
+
+	public function hookActionBackOfficeCategoryRemoveThumbnail()
+	{
+		if (($id_thumb = Tools::getValue('deleteThumb', false)) !== false)
+		{
+			if (file_exists(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg')
+				&& !unlink(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg'))
+				$this->context->controller->errors[] = Tools::displayError('Error while delete');
+
+			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCategories').'&id_category='
+				.(int)Tools::getValue('id_category').'&updatecategory');
+		}
 	}
 
 	public function hookLeftColumn($params)
@@ -179,7 +238,7 @@ class BlockCategories extends Module
 
 			$category = new Category($this->context->cookie->last_visited_category, $this->context->language->id);
 		}
-	
+
 		$cacheId = $this->getCacheId($category ? $category->id : null);
 		if (!$this->isCached('blockcategories.tpl', $cacheId))
 		{
@@ -262,7 +321,7 @@ class BlockCategories extends Module
 				$resultParents[$row['id_parent']][] = &$row;
 				$resultIds[$row['id_category']] = &$row;
 			}
-			//$nbrColumns = Configuration::get('BLOCK_CATEG_NBR_COLUMNS_FOOTER');
+
 			$nbrColumns = Configuration::get('BLOCK_CATEG_NBR_COLUMN_FOOTER');
 			if (!$nbrColumns)
 				$nbrColumns = 3;
@@ -307,6 +366,89 @@ class BlockCategories extends Module
 		return $display;
 	}
 
+	public function hookTop($params)
+	{
+		if (!$this->isCached('blockcategories_top.tpl', $this->getCacheId()))
+		{
+			$maxdepth = Configuration::get('BLOCK_CATEG_MAX_DEPTH');
+			// Get all groups for this customer and concatenate them as a string: "1,2,3..."
+			$groups = implode(', ', Customer::getGroupsStatic((int)$this->context->customer->id));
+			if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+				SELECT DISTINCT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
+				FROM `'._DB_PREFIX_.'category` c
+				'.Shop::addSqlAssociation('category', 'c').'
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('cl').')
+				LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = c.`id_category`)
+				WHERE (c.`active` = 1 OR c.`id_category` = 1)
+				'.((int)($maxdepth) != 0 ? ' AND `level_depth` <= '.(int)($maxdepth) : '').'
+				AND cg.`id_group` IN ('.pSQL($groups).')
+				ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'category_shop.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC')))
+				return;
+			$resultParents = array();
+			$resultIds = array();
+
+			foreach ($result as &$row)
+			{
+				$resultParents[$row['id_parent']][] = &$row;
+				$resultIds[$row['id_category']] = &$row;
+			}
+
+			//$nbrColumns = Configuration::get('BLOCK_CATEG_NBR_COLUMNS_FOOTER');
+			$nbrColumns = Configuration::get('BLOCK_CATEG_NBR_COLUMN_FOOTER');
+			if (!$nbrColumns)
+				$nbrColumns = 3;
+			$numberColumn = abs(count($result) / $nbrColumns);
+			$widthColumn = floor(100 / $nbrColumns);
+			$this->smarty->assign('numberColumn', $numberColumn);
+			$this->smarty->assign('widthColumn', $widthColumn);
+
+			$blockCategTree = $this->getTree($resultParents, $resultIds, Configuration::get('BLOCK_CATEG_MAX_DEPTH'));
+			unset($resultParents, $resultIds);
+
+			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
+
+			$id_category = (int)Tools::getValue('id_category');
+			$id_product = (int)Tools::getValue('id_product');
+
+			
+			if (Tools::isSubmit('id_category'))
+			{
+				$this->context->cookie->last_visited_category = $id_category;
+				$this->smarty->assign('currentCategoryId', $this->context->cookie->last_visited_category);
+			}
+
+			if (Tools::isSubmit('id_product'))
+			{
+				if (!isset($this->context->cookie->last_visited_category) || !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $this->context->cookie->last_visited_category))))
+				{
+					$product = new Product($id_product);
+					if (isset($product) && Validate::isLoadedObject($product))
+						$this->context->cookie->last_visited_category = (int)($product->id_category_default);
+				}
+				$this->smarty->assign('currentCategoryId', (int)($this->context->cookie->last_visited_category));
+			}
+
+
+
+			$this->smarty->assign('blockCategTree', $blockCategTree);
+
+			if (file_exists(_PS_THEME_DIR_.'modules/blockcategories/blockcategories_top.tpl'))
+				$this->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
+			else
+				$this->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
+			$this->smarty->assign('isDhtml', $isDhtml);			
+
+			if (file_exists(_PS_THEME_DIR_.'modules/blockcategories/blockcategories_top.tpl'))
+				$this->smarty->assign('branche_tpl_path_top', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch-top.tpl');
+			else
+				$this->smarty->assign('branche_tpl_path_top', _PS_MODULE_DIR_.'blockcategories/category-tree-branch-top.tpl');
+			$this->smarty->assign('isDhtml', $isDhtml);
+		}
+		$display = $this->display(__FILE__, 'blockcategories_top.tpl', $this->getCacheId());
+
+		return $display;
+	}
+
 	public function hookRightColumn($params)
 	{
 		return $this->hookLeftColumn($params);
@@ -321,6 +463,7 @@ class BlockCategories extends Module
 	private function _clearBlockcategoriesCache()
 	{
 		$this->_clearCache('blockcategories.tpl');
+		$this->_clearCache('blockcategories_top.tpl');
 		$this->_clearCache('blockcategories_footer.tpl');
 	}
 
