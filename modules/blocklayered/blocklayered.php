@@ -1344,8 +1344,6 @@ class BlockLayered extends Module
 				}
 
 				$id_layered_filter = (int)$_POST['id_layered_filter'];
-				if (!$id_layered_filter)
-					$id_layered_filter = (int)Db::getInstance()->Insert_ID();
 
 				$shop_list = array();
 				if (isset($_POST['checkBoxShopAsso_layered_filter']))
@@ -1407,6 +1405,16 @@ class BlockLayered extends Module
 						$values_to_insert['id_layered_filter'] = (int)Tools::getValue('id_layered_filter');
 
 					Db::getInstance()->autoExecute(_DB_PREFIX_.'layered_filter', $values_to_insert, 'INSERT');
+                                        
+                                        if (!$id_layered_filter)
+                                            $id_layered_filter = (int)Db::getInstance()->Insert_ID();
+                                        
+                                        if (isset($assos))
+						foreach ($assos as $asso)
+							Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_filter_shop (`id_layered_filter`, `id_shop`)
+								VALUES('.$id_layered_filter.', '.(int)$asso['id_shop'].')');
+                                          
+                                        
 					$this->buildLayeredCategories();
 					
 					$html .= '<div class="conf">'.
