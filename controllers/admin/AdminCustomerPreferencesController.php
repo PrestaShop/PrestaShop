@@ -89,6 +89,13 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 						'type' => 'text',
 						'suffix' => $this->l('minutes')
 					),
+					'PS_CUST_ID_FO' => array(
+						'title' => $this->l('Display Customer number on Front-Office'),
+						'desc' => $this->l('Display customer number at My Account page'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
 					'PS_B2B_ENABLE' => array(
 						'title' => $this->l('Enable B2B mode'),
 						'desc' => $this->l('Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.'),

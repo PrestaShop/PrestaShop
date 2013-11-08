@@ -8,6 +8,11 @@
 	color:#666
 }
 
+#my-account .cust_id {
+	font-size: 13px;
+	font-weight: bold;
+}
+
 #my-account .myaccount_lnk_list {list-style-type:none}
 #my-account .myaccount_lnk_list li {
 	font-size:13px;

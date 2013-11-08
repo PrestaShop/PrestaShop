@@ -28,7 +28,10 @@
 
 <div data-role="content" id="content">
 		<p>{l s='Welcome to your account. Here you can manage al of your personal information and orders. '}</p>
-		
+		{if Configuration::get('PS_CUST_ID_FO')}
+		<p class="cust_id">{l s='Customer number'}: {$cust_id}</p>
+		{/if}
+
 		<ul data-role="listview" data-inset="true" id="list_myaccount">
 			{if $has_customer_an_address}
 			<li>

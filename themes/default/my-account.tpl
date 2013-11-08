@@ -27,6 +27,9 @@
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <h1>{l s='My account'}</h1>
+{if Configuration::get('PS_CUST_ID_FO')}
+<p class="cust_id">{l s='Customer number'}: {$cust_id}</p>
+{/if}
 {if isset($account_created)}
 	<p class="success">
 		{l s='Your account has been created.'}
