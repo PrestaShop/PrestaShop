@@ -70,9 +70,9 @@
 		<ul class="pagination">
 		{if $p != 1}
 			{assign var='p_previous' value=$p-1}
-			<li id="pagination_previous{if isset($paginationId)}_{$paginationId}{/if}" class="pagination_previous"><a {$no_follow_text} href="{$link->goPage($requestPage, $p_previous)}"><i class="icon-chevron-left"></i> {l s='Previous'}</a></li>
+			<li id="pagination_previous{if isset($paginationId)}_{$paginationId}{/if}" class="pagination_previous"><a {$no_follow_text} href="{$link->goPage($requestPage, $p_previous)}"><i class="icon-chevron-left"></i> <b>{l s='Previous'}</b></a></li>
 		{else}
-			<li id="pagination_previous{if isset($paginationId)}_{$paginationId}{/if}" class="disabled pagination_previous"><span><i class="icon-chevron-left"></i> {l s='Previous'}</span></li>
+			<li id="pagination_previous{if isset($paginationId)}_{$paginationId}{/if}" class="disabled pagination_previous"><span><i class="icon-chevron-left"></i> <b>{l s='Previous'}</b></span></li>
 		{/if}
 		{if $start==3}
 			<li><a {$no_follow_text}  href="{$link->goPage($requestPage, 1)}"><span>1</span></a></li>
@@ -105,9 +105,9 @@
 		{/if}
 		{if $pages_nb > 1 AND $p != $pages_nb}
 			{assign var='p_next' value=$p+1}
-			<li id="pagination_next{if isset($paginationId)}_{$paginationId}{/if}" class="pagination_next"><a {$no_follow_text} href="{$link->goPage($requestPage, $p_next)}">{l s='Next'} <i class="icon-chevron-right"></i></a></li>
+			<li id="pagination_next{if isset($paginationId)}_{$paginationId}{/if}" class="pagination_next"><a {$no_follow_text} href="{$link->goPage($requestPage, $p_next)}"><b>{l s='Next'}</b> <i class="icon-chevron-right"></i></a></li>
 		{else}
-			<li id="pagination_next{if isset($paginationId)}_{$paginationId}{/if}" class="disabled pagination_next"><span>{l s='Next'} <i class="icon-chevron-right"></i></span></li>
+			<li id="pagination_next{if isset($paginationId)}_{$paginationId}{/if}" class="disabled pagination_next"><span><b>{l s='Next'}</b> <i class="icon-chevron-right"></i></span></li>
 		{/if}
 		</ul>
 	{/if}
@@ -123,12 +123,11 @@
         {else}
         	{assign var='productShowingStart' value=$n*$p-$n+1}
         {/if}
-
         {if $nb_products > 1}
-    		{l s='Showing %1$d - %2$d of %3$d items' sprintf=[$productShowingStart, $productShowing, $nb_products]}
-    	{else}
-    		{l s='Showing %1$d - %2$d of 1 item' sprintf=[$productShowingStart, $productShowing]}
-    	{/if}
+        	{l s='Showing %1$d - %2$d of %3$d items' sprintf=[$productShowingStart, $productShowing, $nb_products]}
+		{else}
+        	{l s='Showing %1$d - %2$d of 1 item' sprintf=[$productShowingStart, $productShowing]}
+       	{/if}
     </div>
 	<!-- /Pagination -->
 {/if}

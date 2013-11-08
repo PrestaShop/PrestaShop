@@ -626,15 +626,15 @@ var contentOnly = {if $content_only}true{else}false{/if}
                    {/if}
                 </td>
                 <td>
-					<span>{l s='Up to'}</span>
-					{if $quantity_discount.price >= 0 OR $quantity_discount.reduction_type == 'amount'}
-						{$discountPrice=$productPrice-$quantity_discount.real_value|floatval}
-					{else}
-						{$discountPrice=$productPrice-($productPrice*$quantity_discount.reduction)|floatval}
-					{/if}
-					{$discountPrice=$discountPrice*$quantity_discount.quantity}
-					{$qtyProductPrice = $productPrice*$quantity_discount.quantity}
-					{convertPrice price=$qtyProductPrice-$discountPrice}
+                    <span>{l s='Up to'}</span>
+                    {if $quantity_discount.price >= 0 OR $quantity_discount.reduction_type == 'amount'}
+                        {$discountPrice=$productPrice-$quantity_discount.real_value|floatval}
+                    {else}
+                        {$discountPrice=$productPrice-($productPrice*$quantity_discount.reduction)|floatval}
+                    {/if}
+                    {$discountPrice=$discountPrice*$quantity_discount.quantity}
+                    {$qtyProductPrice = $productPrice*$quantity_discount.quantity}
+                    {convertPrice price=$qtyProductPrice-$discountPrice}
                 </td>
             </tr>
             {/foreach}
