@@ -90,7 +90,7 @@ class HelperUploaderCore extends Uploader
 
 	public function setMaxFiles($value)
 	{
-		$this->_max_files = intval($value);
+		$this->_max_files = isset($value) ? intval($value) : $value;
 		return $this;
 	}
 
