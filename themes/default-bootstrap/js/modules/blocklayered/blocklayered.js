@@ -219,7 +219,7 @@ function initLayered()
 	}
 }
 
-function paginationButton() {
+function paginationButton(nbProductsIn) {
 	$('div.pagination a').not(':hidden').each(function () {
 		if ($(this).prop('href').search('&p=') == -1) {
 			var page = 1;
@@ -248,10 +248,29 @@ function paginationButton() {
 			return false;
 		});
 	});
-}
-
-function showAllButton() {
 	
+	
+	//product count refresh
+	
+			// add variables
+			var productCountRow = $('.product-count').html();
+			var nbPage = parseInt($('div.pagination li.current').children().children().html());
+			var nbPerPage = parseInt($('#nb_item option:selected').val());
+			var nb_products = nbProductsIn;
+		
+			isNaN(nbPage) ? nbPage = 1 : nbPage = nbPage;
+			nbPerPage*nbPage < nb_products ? productShowing = nbPerPage*nbPage :productShowing = (nbPerPage*nbPage-nb_products-nbPerPage*nbPage)*-1;
+			nbPage==1 ? productShowingStart=1 : productShowingStart=nbPerPage*nbPage-nbPerPage+1;
+			
+			
+			//insert values into a .product-count
+			productCountRow = $.trim(productCountRow);
+			productCountRow = productCountRow.split(' ');
+			productCountRow[1] = productShowingStart;
+			productCountRow[3] = productShowing;
+			productCountRow[5] = nb_products;
+			productCountRow = productCountRow.join(' ');
+			$('.product-count').html(productCountRow);
 }
 
 function cancelFilter()
@@ -400,7 +419,7 @@ function reloadContent(params_plus)
 		{
 			$('#layered_block_left').replaceWith(utf8_decode(result.filtersBlock));
 			
-			$('.category-product-count').html(result.categoryCount);
+			$('.category-product-count, .heading-counter').html(result.categoryCount);
 			
 			if (result.productList)
 				$('.product_list').replaceWith(utf8_decode(result.productList));
@@ -438,7 +457,7 @@ function reloadContent(params_plus)
 				$('div.pagination').hide();
 			}
 			
-			paginationButton();
+			paginationButton(parseInt(result.categoryCount.replace(/[^0-9]/g,'')));
 			ajaxLoaderOn = 0;
 			
 			// On submiting nb items form, relaod with the good nb of items
@@ -535,7 +554,7 @@ function updateProductUrl()
 	// Adding the filters to URL product
 	if (typeof(param_product_url) != 'undefined' && param_product_url != '' && param_product_url !='#') {
 		$.each($('ul.product_list li.ajax_block_product .product_img_link,'+
-				'ul.product_list li.ajax_block_product h3 a,'+
+				'ul.product_list li.ajax_block_product h5 a,'+
 				'ul.product_list li.ajax_block_product .product_desc a,'+
 				'ul.product_list li.ajax_block_product .lnk_view'), function() {
 			$(this).prop('href', $(this).prop('href') + param_product_url);
