@@ -68,9 +68,10 @@ function getPush(refresh)
 				html += "<span class='pull-left'><i class='icon-time'></i></span>";
 				html += "<span class='media-body'>";
 				//html += "<p>" + new_customer_msg + "</p>";
-				html += "<p>" + customer_name_msg + "&nbsp;<strong>#" + value.customer_name + "</strong></p>";
+				html += "<p>" + customer_name_msg + "&nbsp;<strong>" + value.customer_name + "</strong></p>";
 				//html += "<p>" + see_customer_msg + "</p>";
-				html += "<small class='text-muted'>1 minute ago</small>";
+// 				html += "<small class='text-muted'>1 minute ago</small>";
+				html += "<small class='text-muted'>" + value.time_since + " ago</small>";
 				html += "</span></a>";
 			});						
 			if (parseInt(json.customer.total) > 0)
