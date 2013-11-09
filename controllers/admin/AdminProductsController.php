@@ -2527,7 +2527,7 @@ class AdminProductsControllerCore extends AdminController
 		
 		if ($this->display != 'list')
 			if (($product = $this->loadObject(true)) && Validate::isLoadedObject($product))
-				$this->toolbar_title[] = Tools::htmlentitiesUTF8($product->name[$this->context->employee->id_lang]);
+				$this->toolbar_title[] = '<br>' . Tools::htmlentitiesUTF8($product->name[$this->context->employee->id_lang]);
 	}
 
 	/**
