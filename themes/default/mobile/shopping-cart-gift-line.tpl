@@ -28,7 +28,7 @@
 <input type="hidden" id="cart_product_address_delivery_id_{$product.id_product}" value="{$product.id_address_delivery}"/>
 
 <div class="fl width-20">
-	<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small_default')}" class="img_product_cart" />
+	<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small_default')|escape:'html'}" class="img_product_cart" />
 </div>
 <div class="fl width-60 padding-left-5px">
 	<h3>{$product.name}</h3>

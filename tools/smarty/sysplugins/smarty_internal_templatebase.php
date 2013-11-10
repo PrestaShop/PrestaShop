@@ -278,7 +278,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
                 //
                 // render cached template
                 //
-                $_template->properties['unifunc']($_template);
+				$_template->properties['unifunc']($_template);
                 // any unclosed {capture} tags ?
                 if (isset($_template->_capture_stack[0][0])) {
                     $_template->capture_error();

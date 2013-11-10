@@ -25,7 +25,7 @@
 
 <script type="text/javascript">
 var Customer = new Object();
-var product_url = '{$link->getAdminLink('AdminProducts', true)}';
+var product_url = '{$link->getAdminLink('AdminProducts', true)|addslashes}';
 var ecotax_tax_excl = parseFloat({$ecotax_tax_excl});
 $(document).ready(function () {
 	Customer = {
@@ -56,7 +56,7 @@ $(document).ready(function () {
 			Customer.showLoader();
 			jQuery.ajax({
 				"type": "POST",
-				"url": "{$link->getAdminLink('AdminCustomers')}",
+				"url": "{$link->getAdminLink('AdminCustomers')|addslashes}",
 				"async": true,
 				"dataType": "json",
 				"data": {
@@ -178,7 +178,7 @@ $(document).ready(function () {
 	</tr>
 	<tr {if !$ps_use_ecotax} style="display:none;"{/if}>
 		<td class="col-left">
-			{include file="controllers/products/multishop/checkbox.tpl" field="ecot" type="default"}
+			{include file="controllers/products/multishop/checkbox.tpl" field="ecotax" type="default"}
 			<label>{l s='Eco-tax (tax incl.):'}</label>
 		</td>
 		<td>

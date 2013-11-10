@@ -1060,8 +1060,8 @@ class AdminStockManagementControllerCore extends AdminController
 					{
 						$helper->fields_value['id_warehouse_from'] = Tools::getValue('id_warehouse_from', '');
 						$helper->fields_value['id_warehouse_to'] = Tools::getValue('id_warehouse_to', '');
-						$helper->fields_value['usable_from'] = Tools::getValue('usable_from', '');
-						$helper->fields_value['usable_to'] = Tools::getValue('usable_to', '');
+						$helper->fields_value['usable_from'] = Tools::getValue('usable_from', '1');
+						$helper->fields_value['usable_to'] = Tools::getValue('usable_to', '1');
 					}
 
 					$this->content .= $helper->generateForm($this->fields_form);

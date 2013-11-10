@@ -1,6 +1,6 @@
 <div data-role="content" id="content">
 	
-	<form action="{$link->getPageLink('authentication', true)}" method="post" id="create-account_form" class="std login_form" data-ajax="false">
+	<form action="{$link->getPageLink('authentication', true)|escape:'html'}" method="post" id="create-account_form" class="std login_form" data-ajax="false">
 		<h2>{l s='Create an account'}</h2>
 		<div class="form_content clearfix">
 			<p class="title_block">{l s='Enter your email address to create an account'}.</p>
@@ -15,7 +15,7 @@
 
 	<hr/>
 
-	<form action="{$link->getPageLink('authentication', true)}" method="post" class="login_form">
+	<form action="{$link->getPageLink('authentication', true)|escape:'html'}" method="post" class="login_form">
 		<h2>{l s='Already registered?'}</h2>
 		<fieldset>
 			<input type="email" id="email" name="email" placeholder="{l s='Email address'}" value="{if isset($smarty.post.email)}{$smarty.post.email|escape:'htmlall':'UTF-8'|stripslashes}{/if}" class="account_input" />
@@ -23,7 +23,7 @@
 		
 		<fieldset>
 			<input type="password" id="passwd" name="passwd" placeholder="{l s='Password'}" value="{if isset($smarty.post.passwd)}{$smarty.post.passwd|escape:'htmlall':'UTF-8'|stripslashes}{/if}" class="account_input" />
-			<p class="forget_pwd"><a href="{$link->getPageLink('password')}" data-ajax="false">{l s='Forgot your password?'}</a></p>
+			<p class="forget_pwd"><a href="{$link->getPageLink('password')|escape:'html'}" data-ajax="false">{l s='Forgot your password?'}</a></p>
 		</fieldset>
 		<button type="submit" class="ui-btn-hidden submit_button" id="SubmitLogin" name="SubmitLogin" aria-disabled="false" data-theme="a">{l s='Login'}</button>
 	</form> 

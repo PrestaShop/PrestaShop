@@ -32,6 +32,9 @@ class AttachmentControllerCore extends FrontController
 		if (!$a->id)
 			Tools::redirect('index.php');
 
+		if (ob_get_level()) 
+			ob_end_clean();
+
 		header('Content-Transfer-Encoding: binary');
 		header('Content-Type: '.$a->mime);
 		header('Content-Length: '.filesize(_PS_DOWNLOAD_DIR_.$a->file));

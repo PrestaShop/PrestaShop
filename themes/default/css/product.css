@@ -171,11 +171,6 @@ span.view_scroll_spacer {
 
 .ie7 #pb-left-column #buy_block label {margin-right:5px;float:left}
 
-/* short description pack */
-.short_description_pack {
-	display:none;
-}
-
 /* color_picker */
 #pb-left-column #color_picker p {
 	padding-bottom:5px;
@@ -256,6 +251,7 @@ span.view_scroll_spacer {
 /* availability_statut */
 #availability_statut {
 	margin: 10px 0 0 0;
+	min-width: 255px;
 }
 
 #availability_statut span#availability_label, 
@@ -275,7 +271,7 @@ span.view_scroll_spacer {
 		text-transform: uppercase;
 		font-size:10px;
 		font-weight: bold;
-		display:inline;
+		display:inline-block;
 }
 
 #availability_statut #availability_value.warning_inline {

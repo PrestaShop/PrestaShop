@@ -40,7 +40,7 @@ class TagCore extends ObjectModel
 		'primary' => 'id_tag',
 		'fields' => array(
 			'id_lang' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+			'name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 		),
 	);
 
@@ -100,22 +100,24 @@ class TagCore extends ObjectModel
 	 		$tag_list = array_filter(array_unique(array_map('trim', preg_split('#\\'.$separator.'#', $tag_list, null, PREG_SPLIT_NO_EMPTY))));
 
 	 	$list = array();
-		foreach ($tag_list as $tag)
-		{
-	 	 	if (!Validate::isGenericName($tag))
-	 	 		return false;
-			$tag_obj = new Tag(null, trim($tag), (int)$id_lang);
-
-			/* Tag does not exist in database */
-			if (!Validate::isLoadedObject($tag_obj))
+		if (is_array($tag_list))
+			foreach ($tag_list as $tag)
 			{
-				$tag_obj->name = trim($tag);
-				$tag_obj->id_lang = (int)$id_lang;
-				$tag_obj->add();
+		 	 	if (!Validate::isGenericName($tag))
+		 	 		return false;
+				$tag = trim(substr($tag, 0, self::$definition['fields']['name']['size']));
+				$tag_obj = new Tag(null, $tag, (int)$id_lang);
+	
+				/* Tag does not exist in database */
+				if (!Validate::isLoadedObject($tag_obj))
+				{
+					$tag_obj->name = $tag;
+					$tag_obj->id_lang = (int)$id_lang;
+					$tag_obj->add();
+				}
+				if (!in_array($tag_obj->id, $list))
+					$list[] = $tag_obj->id;
 			}
-			if (!in_array($tag_obj->id, $list))
-				$list[] = $tag_obj->id;
-		}
 		$data = '';
 		foreach ($list as $tag)
 			$data .= '('.(int)$tag.','.(int)$id_product.'),';

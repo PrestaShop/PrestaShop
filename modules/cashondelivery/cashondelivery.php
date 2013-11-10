@@ -75,7 +75,8 @@ class CashOnDelivery extends PaymentModule
 		}
 
 		$smarty->assign(array(
-			'this_path' => $this->_path,
+			'this_path' => $this->_path, //keep for retro compat
+			'this_path_cod' => $this->_path,
 			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
 		));
 		return $this->display(__FILE__, 'payment.tpl');

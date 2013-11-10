@@ -34,8 +34,8 @@ $engineType = 'ENGINE_TYPE';
 // setting the memory limit to 128M only if current is lower
 $memory_limit = ini_get('memory_limit');
 if (substr($memory_limit,-1) != 'G'
-	AND ((substr($memory_limit,-1) == 'M' AND substr($memory_limit,0,-1) < 128)
-	OR is_numeric($memory_limit) AND (intval($memory_limit) < 131072))
+	AND ((substr($memory_limit,-1) == 'M' AND substr($memory_limit,0, -1) < 128)
+	OR is_numeric($memory_limit) AND (intval($memory_limit) < 131072) AND $memory_limit > 0)
 )
 	@ini_set('memory_limit','128M');
 

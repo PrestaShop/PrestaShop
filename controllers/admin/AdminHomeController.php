@@ -71,10 +71,15 @@ class AdminHomeControllerCore extends AdminController
 			$indexRebuiltAfterUpdate = 2;
 
 		$smartyOptimized = 0;
-		if (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_NO_COMPILE_)
+		// Forcing compilation is not good, really slow
+		if (in_array(Configuration::get('PS_SMARTY_FORCE_COMPILE'), array(_PS_SMARTY_CHECK_COMPILE_, _PS_SMARTY_NO_COMPILE_)))
 			++$smartyOptimized;
+		// Enabling cache is better
 		if (Configuration::get('PS_SMARTY_CACHE'))
 			++$smartyOptimized;
+		// If the console is enabled, not good for production
+		if (Configuration::get('PS_SMARTY_CONSOLE') != _PS_SMARTY_CONSOLE_CLOSE_)
+			$smartyOptimized = 0;
 
 		$cccOptimized = Configuration::get('PS_CSS_THEME_CACHE');
 		$cccOptimized += Configuration::get('PS_JS_THEME_CACHE');
@@ -170,10 +175,16 @@ class AdminHomeControllerCore extends AdminController
 
 		$shop = Context::getContext()->shop;
 		if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl && Tools::getValue('ajax') == false)
-			$this->displayWarning($this->l('You are currently connected under the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
-			$this->l('This is different from the main shop domain name set in the "Multistore" page under the "Advanced Parameters" menu:').' <span style="color: #CC0000;">'.$shop->domain.'</span><br />
-			<a href="index.php?controller=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#conf_id_domain">'.
-			$this->l('Click here if you want to modify your main shop\'s domain name.').'</a>');
+		{
+			$warning = $this->l('You are currently connected under the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />';
+			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
+				$warning .= sprintf($this->l('This is different from the shop domain name set in the Multistore settings: "%s".'), $shop->domain).'
+				'.preg_replace('@{link}(.*){/link}@', '<a href="index.php?controller=AdminShopUrl&id_shop_url='.(int)$shop->id.'&updateshop_url&token='.Tools::getAdminTokenLite('AdminShopUrl').'">$1</a>', $this->l('If this is your main domain, please {link}change it now{/link}.'));
+			else
+				$warning .= $this->l('This is different from the domain name set in the "SEO & URLs" tab.').'
+				'.preg_replace('@{link}(.*){/link}@', '<a href="index.php?controller=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#conf_id_domain">$1</a>', $this->l('If this is your main domain, please {link}change it now{/link}.'));
+			$this->displayWarning($warning);
+		}
 	}
 
 	protected function getQuickLinks()
@@ -377,12 +388,13 @@ class AdminHomeControllerCore extends AdminController
 		$chart = new Chart();
 		$chart->getCurve(1)->setType('bars');
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT total_paid / conversion_rate as total_converted, left(invoice_date, 10) as invoice_date
+			SELECT SUM(total_paid / conversion_rate) as total_converted, left(invoice_date, 10) as invoice_date
 			FROM '._DB_PREFIX_.'orders o
 			WHERE valid = 1
 			AND total_paid > 0
 			AND invoice_date BETWEEN \''.date('Y-m-d', strtotime('-7 DAYS', time())).' 00:00:00\' AND \''.date('Y-m-d H:i:s').'\'
-			'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER).' 
+			GROUP BY DATE(invoice_date)
 		');
 		foreach ($result as $row)
 			$chart->getCurve(1)->setPoint(strtotime($row['invoice_date'].' 02:00:00'), $row['total_converted']);
@@ -474,7 +486,7 @@ class AdminHomeControllerCore extends AdminController
 		$result = array();
 		$content = '';
 
-		$protocol = Tools::usingSecureMode() ? 'https' : 'http';
+		$protocol = Tools::getCurrentUrlProtocolPrefix();
 		$isoUser = Context::getContext()->language->iso_code;
 		$isoCountry = Context::getContext()->country->iso_code;
 		$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => 2)));
@@ -482,17 +494,15 @@ class AdminHomeControllerCore extends AdminController
 		// SCREENCAST
 		$result['screencast'] = 'OK';
 
-
 		// PREACTIVATION
 		$result['partner_preactivation'] = $this->getBlockPartners();
 
 		// DISCOVER PRESTASHOP
 		$result['discover_prestashop'] = '<div id="block_tips">'.$this->getBlockDiscover().'</div>';
-
-		$result['discover_prestashop'] .= '<div class="row-news"><div id="block_discover"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 100%; height:300px; overflow:hidden;" src="'.$protocol.'://api.prestashop.com/rss2/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe></div>';
+		$result['discover_prestashop'] .= '<div class="row-news"><div id="block_discover"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 100%; height:300px; overflow:hidden;" src="'.$protocol.'api.prestashop.com/rss2/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe></div>';
 
 		// SHOW TIPS OF THE DAY
-		$content = @file_get_contents($protocol.'://api.prestashop.com/partner/tipsoftheday/?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser), false, $stream_context);
+		$content = Tools::file_get_contents($protocol.'api.prestashop.com/partner/tipsoftheday/?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser), false, $stream_context);
 		$content = explode('|', $content);
 		if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
 			$result['discover_prestashop'] .= '<div id="block_partner_tips">'.$content[1].'</div></div>';
@@ -518,7 +528,7 @@ class AdminHomeControllerCore extends AdminController
 	{
 		// Init var
 		$return = '';
-		$protocol = Tools::getShopProtocol();
+		$protocol = Tools::getCurrentUrlProtocolPrefix();
 		$isoCountry = Context::getContext()->country->iso_code;
 		$isoUser = Context::getContext()->language->iso_code;
 
@@ -526,7 +536,7 @@ class AdminHomeControllerCore extends AdminController
 		if (is_writable('../config/xml/') && (!file_exists('../config/xml/preactivation.xml') || (time() - filemtime('../config/xml/preactivation.xml')) > 86400))
 		{
 			$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => AdminHomeController::TIPS_TIMEOUT)));
-			$content = Tools::file_get_contents('http://api.prestashop.com/partner/premium/get_partners.php?protocol='.$protocol.'&iso_country='.Tools::strtoupper($isoCountry).'&iso_lang='.Tools::strtolower($isoUser).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&host='.urlencode($_SERVER['HTTP_HOST']).'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')), false, $stream_context);
+			$content = Tools::file_get_contents($protocol.'api.prestashop.com/partner/premium/get_partners.php?iso_country='.Tools::strtoupper($isoCountry).'&iso_lang='.Tools::strtolower($isoUser).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&host='.urlencode($_SERVER['HTTP_HOST']), false, $stream_context);
 			@unlink('../config/xml/preactivation.xml');
 			file_put_contents('../config/xml/preactivation.xml', $content);
 		}
@@ -540,7 +550,7 @@ class AdminHomeControllerCore extends AdminController
 				// Cache the logo
 				if (!file_exists('../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png'))
 				{
-					$logo = @Tools::file_get_contents(htmlentities((string)$partner->logo));
+					$logo = Tools::file_get_contents(htmlentities((string)$partner->logo));
 					if (sizeof($logo) > 0)
 						file_put_contents('../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png', $logo);
 				}
@@ -566,12 +576,12 @@ class AdminHomeControllerCore extends AdminController
 							if (empty($optional_final) && (string)$optional->attributes()->iso == $isoUser)
 								$optional_final = (string)$optional;
 
-					$link = 'index.php?controller=adminmodules&install='.htmlentities((string)$partner->module).'&token='.Tools::getAdminTokenLite('AdminModules').'&module_name='.htmlentities((string)$partner->module).'&redirect=config';
+					$link = 'index.php?controller=adminmodules&install='.Tools::htmlentitiesUTF8((string)$partner->module).'&token='.Tools::getAdminTokenLite('AdminModules').'&module_name='.Tools::htmlentitiesUTF8((string)$partner->module).'&redirect=config';
 					$return .= '<div style="width:46.5%;min-height:85px;border:1px solid #cccccc;background-color:white;padding-left:5px;padding-right:5px;'.(empty($return) ? 'float:left' : 'float:right').'">
 						<p align="center">
-							<a href="'.$link.'" class="preactivationLink" rel="'.htmlentities((string)$partner->module).'"><img src="../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png" alt="'.htmlentities((string)$partner->name).'" border="0" /></a><br />
-							<b><a href="'.$link.'" class="preactivationLink" rel="'.htmlentities((string)$partner->module).'">'.htmlentities(utf8_decode((string)$label_final)).'</a></b>
-							'.(($optional_final != '') ? '<a href="'.$link.'" class="preactivationLink" rel="'.htmlentities((string)$partner->module).'"><img src="'.htmlentities((string)$optional_final).'" /></a>' : '').'
+							<a href="'.$link.'" class="preactivationLink" rel="'.Tools::htmlentitiesUTF8((string)$partner->module).'"><img src="../img/tmp/preactivation_'.Tools::htmlentitiesUTF8((string)$partner->module).'.png" alt="'.htmlentities((string)$partner->name).'" border="0" /></a><br />
+							<b><a href="'.$link.'" class="preactivationLink" rel="'.Tools::htmlentitiesUTF8((string)$partner->module).'">'.Tools::htmlentitiesUTF8($label_final).'</a></b>
+							'.(($optional_final != '') ? '<a href="'.$link.'" class="preactivationLink" rel="'.Tools::htmlentitiesUTF8((string)$partner->module).'"><img src="'.Tools::htmlentitiesUTF8((string)$optional_final).'" /></a>' : '').'
 						</p>
 					</div>';
 					$count++;
@@ -658,15 +668,12 @@ class AdminHomeControllerCore extends AdminController
 		$smarty->assign('protocol', $protocol);
 		$isoUser = $this->context->language->iso_code;
 		$smarty->assign('isoUser', $isoUser);
-		$upgrade = null;
 		$tpl_vars['refresh_check_version'] = 0;
-		if (@ini_get('allow_url_fopen'))
-		{
-			$upgrade = new Upgrader(true);
-			// if this information is outdated, the version will be checked after page loading
-			if (Configuration::get('PS_LAST_VERSION_CHECK') < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS))
-				$tpl_vars['refresh_check_version'] = 1;
-		}
+		$upgrade = new Upgrader(true);
+		
+		// if this information is outdated, the version will be checked after page loading
+		if (Configuration::get('PS_LAST_VERSION_CHECK') < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS))
+			$tpl_vars['refresh_check_version'] = 1;
 		
 		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
 			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));

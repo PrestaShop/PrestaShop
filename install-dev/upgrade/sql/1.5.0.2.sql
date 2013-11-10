@@ -345,11 +345,11 @@ INSERT INTO `PREFIX_order_invoice` (`id_order`, `number`, `total_discount_tax_ex
 ALTER TABLE `PREFIX_tab` ADD `active` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1';
 
 UPDATE `PREFIX_order_detail` od
-SET od.`id_order_invoice` = (
+SET od.`id_order_invoice` = IFNULL((
 	SELECT oi.`id_order_invoice`
 	FROM `PREFIX_order_invoice` oi
 	WHERE oi.`id_order` = od.`id_order`
-);
+), 0);
 
 INSERT INTO `PREFIX_order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `tracking_number`, `date_add`) (
 	SELECT `id_order`, `id_carrier`, (
@@ -411,7 +411,7 @@ ALTER TABLE `PREFIX_image_type` ADD `id_theme` INT(11) NOT NULL AFTER `id_image_
 ALTER TABLE `PREFIX_image_type` ADD UNIQUE (`id_theme` ,`name`);
 UPDATE `PREFIX_image_type` SET `id_theme`=1;
 
-CREATE TABLE `PREFIX_webservice_account_shop` (
+CREATE TABLE IF NOT EXISTS `PREFIX_webservice_account_shop` (
 `id_webservice_account` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
 PRIMARY KEY (`id_webservice_account` , `id_shop`),

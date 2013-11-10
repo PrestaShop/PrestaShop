@@ -73,7 +73,7 @@ class OrderDetailControllerCore extends FrontController
 						$ct->id_contact = 0;
 						$ct->id_customer = (int)$order->id_customer;
 						$ct->id_shop = (int)$this->context->shop->id;
-						if ($id_product = (int)Tools::getValue('id_product') && $order->orderContainProduct((int)$id_product))
+						if (($id_product = (int)Tools::getValue('id_product')) && $order->orderContainProduct((int)$id_product))
 							$ct->id_product = $id_product;
 						$ct->id_order = (int)$order->id;
 						$ct->id_lang = (int)$this->context->language->id;
@@ -114,6 +114,7 @@ class OrderDetailControllerCore extends FrontController
 					if (Tools::getValue('ajax') != 'true')
 						Tools::redirect('index.php?controller=order-detail&id_order='.(int)$idOrder);
 
+					$this->context->smarty->assign('message_confirmation', true);
 				}
 				else
 					$this->errors[] = Tools::displayError('Order not found');

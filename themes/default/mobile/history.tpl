@@ -27,7 +27,7 @@
 {include file='./page-title.tpl'}
 {include file="$tpl_dir./errors.tpl"}
 <div data-role="content" id="content">
-	<a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('my-account', true)}" data-ajax="false">{l s='My account'}</a>
+	<a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('my-account', true)|escape:'html'}" data-ajax="false">{l s='My account'}</a>
 
 	<p>{l s='Here are the orders you\'ve placed since your account was created.'}.</p>
 
@@ -39,7 +39,7 @@
 		{foreach from=$orders item=order name=myLoop}
 			<li>
 				{assign var="id_order" value={$order.id_order|intval}}
-				<a class="color-myaccount" id="order-{$id_order}" href="{$link->getPageLink('order-detail', true, null, "id_order=$id_order")}" data-ajax="false">
+				<a class="color-myaccount" id="order-{$id_order}" href="{$link->getPageLink('order-detail', true, null, "id_order=$id_order")|escape:'html'}" data-ajax="false">
 					{if isset($order.invoice) && $order.invoice && isset($order.virtual) && $order.virtual}<img src="{$img_dir}icon/download_product.gif" class="icon" alt="{l s='Products to download'}" title="{l s='Products to download'}" />{/if}
 					<h3>{l s='#'}{$order.id_order|string_format:"%06d"}</h3>
 					<p><strong>{l s='Total price'}</strong> {displayPrice price=$order.total_paid currency=$order.id_currency no_utf8=false convert=false}</p>
@@ -48,7 +48,7 @@
 					<span class="ui-li-aside">{dateFormat date=$order.date_add full=0}</span>
 				</a>
 				{if (isset($order.invoice) && $order.invoice && isset($order.invoice_number) && $order.invoice_number) && isset($invoiceAllowed) && $invoiceAllowed == true}
-				<a rel="external" data-iconshadow="false" href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order.id_order}")}" title="{l s='Invoice'}" data-ajax="false">
+				<a rel="external" data-iconshadow="false" href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order.id_order}")|escape:'html'}" title="{l s='Invoice'}" data-ajax="false">
 					{l s='PDF'}
 				</a>
 				{/if}

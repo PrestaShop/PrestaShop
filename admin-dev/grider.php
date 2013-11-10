@@ -50,6 +50,53 @@ if (!Validate::isModuleName($module))
 if (!Tools::file_exists_cache($module_path = dirname(__FILE__).'/../modules/'.$module.'/'.$module.'.php'))
 	die(Tools::displayError());
 
+	
+$shop_id = '';
+Shop::setContext(Shop::CONTEXT_ALL);
+if (Context::getContext()->cookie->shopContext)
+{
+	$split = explode('-', Context::getContext()->cookie->shopContext);
+	if (count($split) == 2)
+	{
+		if ($split[0] == 'g')
+		{
+			if (Context::getContext()->employee->hasAuthOnShopGroup($split[1]))
+				Shop::setContext(Shop::CONTEXT_GROUP, $split[1]);
+			else
+			{
+				$shop_id = Context::getContext()->employee->getDefaultShopID();
+				Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
+			}
+		}
+		else if (Shop::getShop($split[1]) && Context::getContext()->employee->hasAuthOnShop($split[1]))
+		{
+			$shop_id = $split[1];
+			Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
+		}
+		else
+		{
+			$shop_id = Context::getContext()->employee->getDefaultShopID();
+			Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
+		}
+	}
+}
+
+// Check multishop context and set right context if need
+if (Shop::getContext())
+{
+	if (Shop::getContext() == Shop::CONTEXT_SHOP && !Shop::CONTEXT_SHOP)
+		Shop::setContext(Shop::CONTEXT_GROUP, Shop::getContextShopGroupID());
+	if (Shop::getContext() == Shop::CONTEXT_GROUP && !Shop::CONTEXT_GROUP)
+		Shop::setContext(Shop::CONTEXT_ALL);
+}
+
+// Replace existing shop if necessary
+if (!$shop_id)
+	Context::getContext()->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+elseif (Context::getContext()->shop->id != $shop_id)
+	Context::getContext()->shop = new Shop($shop_id);
+	
+	
 require_once($module_path);
 
 $grid = new $module();

@@ -101,6 +101,16 @@ abstract class Controller extends ControllerCore
 		return '<span style="color:green">'.round($n, 2).' Mb</span>';
 	}
 
+	private function displayPeakMemoryColor($n)
+	{
+		$n /= 1048576;
+		if ($n > 16)
+			return '<span style="color:red">'.round($n, 1).' Mb</span>';
+		if ($n > 12)
+			return '<span style="color:orange">'.round($n, 1).' Mb</span>';
+		return '<span style="color:green">'.round($n, 1).' Mb</span>';
+	}
+
 	private function displaySQLQueries($n)
 	{
 		if ($n > 150)
@@ -178,10 +188,12 @@ abstract class Controller extends ControllerCore
 			return;
 
 		$this->_memory['config'] = memory_get_usage();
+		$this->_mempeak['config'] = memory_get_peak_usage();
 		$this->_time['config'] = microtime(true);
 
 		parent::__construct();
 		$this->_memory['constructor'] = memory_get_usage();
+		$this->_mempeak['constructor'] = memory_get_peak_usage();
 		$this->_time['constructor'] = microtime(true);
 	}
 
@@ -189,21 +201,25 @@ abstract class Controller extends ControllerCore
 	{
 		$this->init();
 		$this->_memory['init'] = memory_get_usage();
+		$this->_mempeak['init'] = memory_get_peak_usage();
 		$this->_time['init'] = microtime(true);
 
 		if ($this->checkAccess())
 		{
 			$this->_memory['checkAccess'] = memory_get_usage();
+			$this->_mempeak['checkAccess'] = memory_get_peak_usage();
 			$this->_time['checkAccess'] = microtime(true);
 
 			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
 				$this->setMedia();
 			$this->_memory['setMedia'] = memory_get_usage();
+			$this->_mempeak['setMedia'] = memory_get_peak_usage();
 			$this->_time['setMedia'] = microtime(true);
 
 			// postProcess handles ajaxProcess
 			$this->postProcess();
 			$this->_memory['postProcess'] = memory_get_usage();
+			$this->_mempeak['postProcess'] = memory_get_peak_usage();
 			$this->_time['postProcess'] = microtime(true);
 
 			if (!empty($this->redirect_after))
@@ -212,15 +228,18 @@ abstract class Controller extends ControllerCore
 			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
 				$this->initHeader();
 			$this->_memory['initHeader'] = memory_get_usage();
+			$this->_mempeak['initHeader'] = memory_get_peak_usage();
 			$this->_time['initHeader'] = microtime(true);
 
 			$this->initContent();
 			$this->_memory['initContent'] = memory_get_usage();
+			$this->_mempeak['initContent'] = memory_get_peak_usage();
 			$this->_time['initContent'] = microtime(true);
 
 			if (!$this->content_only && ($this->display_footer || (isset($this->className) && $this->className)))
 				$this->initFooter();
 			$this->_memory['initFooter'] = memory_get_usage();
+			$this->_mempeak['initFooter'] = memory_get_peak_usage();
 			$this->_time['initFooter'] = microtime(true);
 
 			// default behavior for ajax process is to use $_POST[action] or $_GET[action]
@@ -260,13 +279,24 @@ abstract class Controller extends ControllerCore
 				return (bool)(int)$b;
 		}
 	}
-
+	
 	private function sizeofvar($var)
 	{
 		$start_memory = memory_get_usage();
-		$tmp = Tools::unSerialize(serialize($var));
+		try {
+			$tmp = Tools::unSerialize(serialize($var));
+		} catch (Exception $e) {
+			$tmp = $this->getVarData($var);
+		}
 		$size = memory_get_usage() - $start_memory;
 		return $size;
+	}
+	
+	private function getVarData($var)
+	{
+		if (is_object($var))
+			return $var;
+		return (string)$var;
 	}
 
 	public function displayDebug()
@@ -275,11 +305,14 @@ abstract class Controller extends ControllerCore
 
 		$this->display();
 		$this->_memory['display'] = memory_get_usage();
+		$this->_mempeak['display'] = memory_get_peak_usage();
 		$this->_time['display'] = microtime(true);
 
 		if (!$this->ini_get_display_errors())
 			return;
 
+		$memory_peak_usage = memory_get_peak_usage();
+			
 		$hr = '<hr style="color:#F5F5F5;margin:2px" />';
 
 		$totalSize = 0;
@@ -337,14 +370,14 @@ abstract class Controller extends ControllerCore
 		echo '</ul>
 		</div>
 		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">
-			<b>Memory peak usage</b>: '.$this->displayMemoryColor(memory_get_peak_usage());
+			<b>Memory peak usage</b>: '.$this->displayPeakMemoryColor($memory_peak_usage);
 		if (self::$_footer)
 		{
 			echo '<ul>';
 			$last_memory = 0;
 			foreach ($this->_memory as $k => $memory)
 			{
-				echo '<li>'.$k.': '.$this->displayMemoryColor($memory - $last_memory).'</li>';
+				echo '<li>'.$k.': '.$this->displayMemoryColor($memory - $last_memory).' ('.$this->displayPeakMemoryColor($this->_mempeak[$k]).')</li>';
 				$last_memory = $memory;
 			}
 			echo '</ul>';
@@ -372,6 +405,32 @@ abstract class Controller extends ControllerCore
 		echo '</ul>
 		</div>';
 
+		$array_queries = array();
+		$queries = Db::getInstance()->queries;
+		uasort($queries, 'prestashop_querytime_sort');
+		foreach ($queries as $data)
+		{
+			$query_row = array(
+				'time' => $data['time'],
+				'query' => $data['query'],
+				'location' => $data['file'].':'.$data['line'],
+				'filesort' => false,
+				'rows' => 1,
+				'group_by' => false
+			);
+			if (preg_match('/^\s*select\s+/i', $data['query']))
+			{
+				$explain = Db::getInstance()->executeS('explain '.$data['query']);
+				if (stristr($explain[0]['Extra'], 'filesort'))
+					$query_row['filesort'] = true;
+				foreach ($explain as $row)
+					$query_row['rows'] *= $row['rows'];
+				if (stristr($data['query'], 'group by') && !preg_match('/(avg|count|min|max|group_concat|sum)\s*\(/i', $data['query']))
+					$query_row['group_by'] = true;
+			}
+			$array_queries[] = $query_row;
+		}
+
 		echo '
 		<div class="rte" style="text-align:left;padding:8px;clear:both;margin-top:20px">
 			<ul>
@@ -379,25 +438,32 @@ abstract class Controller extends ControllerCore
 				<li><a href="#doubles">Go to Doubles</a></li>
 				<li><a href="#tables">Go to Tables</a></li>
 				'.(isset(ObjectModel::$debug_list) ? '<li><a href="#objectModels">Go to ObjectModels</a></li>' : '').'
+				<li><a onclick="$(\'#queries_table\').toggle();" style="cursor:pointer">Display queries table</a></li>
 			</ul>
+		</div>
+		<div id="queries_table" style="display:none;margin:4px">
+			<table class="table std">
+				<tr><th>Time (ms)</th><th>Rows</th><th>Query</th><th>Location</th><th>Filesort</th><th>Group By</th></tr>';
+		foreach ($array_queries as $data)
+		{
+			$data['location'] = str_replace('\\', '/', substr($data['location'], strlen(_PS_ROOT_DIR_)));
+			$data['query'] = str_replace('SQL_NO_CACHE ', '', $data['query']);
+			echo '<tr><td>'.round(1000 * $data['time'], 3).'</td><td>'.$data['rows'].'</td><td>'.$data['query'].'</td><td>'.$data['location'].'</td><td>'.($data['filesort'] ? 'Yes' : '').'</td><td>'.($data['group_by'] ? 'Yes' : '').'</td></tr>';
+		}
+		echo '
+			</table>
 		</div>
 		<div class="rte" style="text-align:left;padding:8px">
 		<h3><a name="stopwatch">Stopwatch (with SQL_NO_CACHE) (total = '.count(Db::getInstance()->queries).')</a></h3>';
-		$queries = Db::getInstance()->queries;
-		uasort($queries, 'prestashop_querytime_sort');
-		foreach ($queries as $data)
+		foreach ($array_queries as $data)
 		{
-			echo $hr.'<b '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).' ms</b> '.htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false).'<br />in '.$data['file'].':'.$data['line'].'<br />';
+			echo $hr.'<b '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).' ms</b> '.htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false).'<br />in '.$data['location'].'<br />';
 			if (preg_match('/^\s*select\s+/i', $data['query']))
 			{
-				$explain = Db::getInstance()->executeS('explain '.$data['query']);
-				if (stristr($explain[0]['Extra'], 'filesort'))
+				if ($data['filesort'])
 					echo '<b '.$this->getTimeColor($data['time'] * 1000).'>USING FILESORT</b> - ';
-				$browsed_rows = 1;
-				foreach ($explain as $row)
-					$browsed_rows *= $row['rows'];
-				echo $this->displayRowsBrowsed($browsed_rows);
-				if (stristr($data['query'], 'group by') && !preg_match('/(avg|count|min|max|group_concat|sum)\s*\(/i', $data['query']))
+				echo $this->displayRowsBrowsed($data['rows']);
+				if ($data['group_by'])
 					echo '<br /><b>Useless GROUP BY need to be removed</b>';
 			}
 		}

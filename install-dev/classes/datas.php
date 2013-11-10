@@ -133,6 +133,11 @@ class Datas
 			'default' => 1,
 			'help' => 'get news from PrestaShop',
 		),
+		'send_email' => array(
+			'name' => 'send_email',
+			'default' => 1,
+			'help' => 'send an email to the administrator after installation',
+		),
 	);
 
 	protected $datas = array();

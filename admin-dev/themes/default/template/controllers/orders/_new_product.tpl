@@ -40,6 +40,7 @@
 	</td>
 	<td style="display:none;" align="center" class="productQuantity"><input type="text" name="add_product[product_quantity]" id="add_product_product_quantity" value="1" size="3" disabled="disabled" /></td>
 	{if ($order->hasBeenPaid())}<td style="display:none;" align="center" class="productQuantity">&nbsp;</td>{/if}
+	{if $display_warehouse}<td style="" align="center">&nbsp;</td>{/if}
 	{if ($order->hasBeenDelivered())}<td style="display:none;" align="center" class="productQuantity">&nbsp;</td>{/if}
 	<td style="display:none;" align="center" class="productQuantity" id="add_product_product_stock">0</td>
 	<td style="display:none;" align="center" id="add_product_product_total">{displayPrice price=0 currency=$currency->id}</td>

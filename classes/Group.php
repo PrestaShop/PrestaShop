@@ -70,6 +70,13 @@ class GroupCore extends ObjectModel
 
 	protected $webserviceParameters = array();
 
+	public function __construct($id = null, $id_lang = null, $id_shop = null)
+	{
+		parent::__construct($id, $id_lang, $id_shop);
+		if ($this->id && !isset(Group::$group_price_display_method[$this->id]))
+			self::$group_price_display_method[$this->id] = $this->price_display_method;
+	}
+	
 	public static function getGroups($id_lang, $id_shop = false)
 	{
 		$shop_criteria = '';

@@ -224,7 +224,7 @@ class importerosc extends ImportModule
 		$keyLanguage = 'id_lang';
 		$identifier = 'id_category';
 		$categories = $this->executeS('
-									SELECT c.categories_id as id_category, c.parent_id as id_parent, level as level_depth, cd.language_id as id_lang, cd.categories_name as name , 1 as active, categories_image as images
+									SELECT c.categories_id as id_category, c.parent_id as id_parent, level as level_depth, cd.language_id as id_lang, cd.categories_name as name , 1 as active, categories_image as images, c.date_added as date_add
 									FROM `'.bqSQL($this->prefix).'categories` c
 									LEFT JOIN `'.bqSQL($this->prefix).'categories_description` cd ON (c.categories_id = cd.categories_id)
 									WHERE cd.categories_name IS NOT NULL AND cd.language_id IS NOT NULL

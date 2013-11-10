@@ -53,6 +53,8 @@ class CategoryControllerCore extends FrontController
 
 	public function canonicalRedirection($canonicalURL = '')
 	{
+		if (Tools::getValue('live_edit'))
+			return ;
 		if (!Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop())
 		{
 			$this->redirect_after = '404';
@@ -204,6 +206,14 @@ class CategoryControllerCore extends FrontController
 		}
 
 		$this->context->smarty->assign('nb_products', $this->nbProducts);
+	}
+	
+	/**
+	 * Get instance of current category
+	 */
+	public function getCategory()
+	{
+		return $this->category;
 	}
 }
 

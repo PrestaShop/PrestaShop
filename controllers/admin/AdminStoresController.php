@@ -296,8 +296,12 @@ class AdminStoresControllerCore extends AdminController
 
 		if (!($obj = $this->loadObject(true)))
 			return;
+		
+		if (file_exists(_PS_TMP_IMG_DIR_.$this->table.'_'.(int)$obj->id.'.'.$this->imageType)) {
+			@unlink(_PS_TMP_IMG_DIR_.$this->table.'_'.(int)$obj->id.'.'.$this->imageType);
+		}
 
-		$image = ImageManager::thumbnail(_PS_STORE_IMG_DIR_.'/'.$obj->id.'.jpg', $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350, $this->imageType, true);
+		$image = ImageManager::thumbnail(_PS_STORE_IMG_DIR_.DIRECTORY_SEPARATOR.$obj->id.'.jpg', $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350, $this->imageType, true, true);
 
 		$days = array();
 		$days[1] = $this->l('Monday');
@@ -316,7 +320,7 @@ class AdminStoresControllerCore extends AdminController
 			'latitude' => $this->getFieldValue($obj, 'latitude') ? $this->getFieldValue($obj, 'latitude') : Configuration::get('PS_STORES_CENTER_LAT'),
 			'longitude' => $this->getFieldValue($obj, 'longitude') ? $this->getFieldValue($obj, 'longitude') : Configuration::get('PS_STORES_CENTER_LONG'),
 			'image' => $image ? $image : false,
-			'size' => $image ? filesize(_PS_STORE_IMG_DIR_.'/'.$obj->id.'.jpg') / 1000 : false,
+			'size' => $image ? filesize(_PS_STORE_IMG_DIR_.DIRECTORY_SEPARATOR.$obj->id.'.jpg') / 1000 : false,
 			'days' => $days,
 			'hours' => isset($hours_unserialized) ? $hours_unserialized : false
 		);

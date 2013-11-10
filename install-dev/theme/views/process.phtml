@@ -57,7 +57,10 @@ var process_steps = <?php echo Tools::jsonEncode($this->process_steps) ?>;
 			</tr>
 		</table>
 
-		<h3 class="infosBlock"><?php echo $this->l('WARNING: For security purposes, you must delete the "install" folder.') ?></h3>
+		<h3 class="infosBlock">
+			<?php echo $this->l('For security purposes, you must delete the "install" folder.') ?>
+			<a href="<?php echo $this->l('http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation') ?>" target="_blank"><img src="theme/img/help.png" /></a>
+		</h3>
 
 		<div id="boBlock" class="blockInfoEnd clearfix" onclick="window.open('../admin')">
 			<img src="theme/img/visu_boBlock.png" alt="" />

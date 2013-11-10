@@ -27,7 +27,7 @@
 {include file='./page-title.tpl'}
 
 <div data-role="content" id="content">
-	<a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('my-account', true)}" data-ajax="false">{l s='My account'}</a>
+	<a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('my-account', true)|escape:'html'}" data-ajax="false">{l s='My account'}</a>
 
 	{if isset($errorQuantity) && $errorQuantity}<p class="error">{l s='You do not have enough products to request an additional merchandise return.'}</p>{/if}
 	{if isset($errorMsg) && $errorMsg}<p class="error">{l s='Please provide an explanation for your RMA.'}</p>{/if}
@@ -51,14 +51,14 @@
 			<tbody>
 			{foreach from=$ordersReturn item=return name=myLoop}
 				<tr class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if} {if $smarty.foreach.myLoop.index % 2}alternate_item{/if}">
-					<td class="bold"><a class="color-myaccount" href="javascript:showOrder(0, {$return.id_order_return|intval}, '{$link->getPageLink('order-return')}');" data-ajax="false">{l s='#'}{$return.id_order_return|string_format:"%06d"}</a></td>
-					<td class="history_method"><a class="color-myaccount" href="javascript:showOrder(1, {$return.id_order|intval}, '{$link->getPageLink('order-detail')}');" data-ajax="false">{l s='#'}{$return.id_order|string_format:"%06d"}</a></td>
+					<td class="bold"><a class="color-myaccount" href="javascript:showOrder(0, {$return.id_order_return|intval}, '{$link->getPageLink('order-return')|escape:'html'}');" data-ajax="false">{l s='#'}{$return.id_order_return|string_format:"%06d"}</a></td>
+					<td class="history_method"><a class="color-myaccount" href="javascript:showOrder(1, {$return.id_order|intval}, '{$link->getPageLink('order-detail')|escape:'html'}');" data-ajax="false">{l s='#'}{$return.id_order|string_format:"%06d"}</a></td>
 					<td class="history_method"><span class="bold">{$return.state_name|escape:'htmlall':'UTF-8'}</span></td>
 					<td class="bold">{dateFormat date=$return.date_add full=0}</td>
 					<td class="history_invoice">
 					{if $return.state == 2}
-						<a href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$return.id_order_return|intval}")}" title="{l s='Order return'} {l s='#'}{$return.id_order_return|string_format:"%06d"}" data-ajax="false"><img src="{$img_dir}icon/pdf.gif" alt="{l s='Order return'} {l s='#'}{$return.id_order_return|string_format:"%06d"}" class="icon" /></a>
-						<a href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$return.id_order_return|intval}")}" title="{l s='Order return'} {l s='#'}{$return.id_order_return|string_format:"%06d"}" data-ajax="false">{l s='Print out'}</a>
+						<a href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$return.id_order_return|intval}")|escape:'html'}" title="{l s='Order return'} {l s='#'}{$return.id_order_return|string_format:"%06d"}" data-ajax="false"><img src="{$img_dir}icon/pdf.gif" alt="{l s='Order return'} {l s='#'}{$return.id_order_return|string_format:"%06d"}" class="icon" /></a>
+						<a href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$return.id_order_return|intval}")|escape:'html'}" title="{l s='Order return'} {l s='#'}{$return.id_order_return|string_format:"%06d"}" data-ajax="false">{l s='Print out'}</a>
 					{else}
 						--
 					{/if}

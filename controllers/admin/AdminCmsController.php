@@ -110,10 +110,10 @@ class AdminCmsControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Meta title:'),
 					'name' => 'meta_title',
-					'id' => 'name', // for copy2friendlyUrl compatibility
+					'id' => 'name', // for copyMeta2friendlyURL compatibility
 					'lang' => true,
 					'required' => true,
-					'class' => 'copy2friendlyUrl',
+					'class' => 'copyMeta2friendlyURL',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 					'size' => 50
 				),
@@ -220,11 +220,28 @@ class AdminCmsControllerCore extends AdminController
 		$this->displayListFooter($token);
 	}
 	
-	public function postProcess()
+	/**
+	* Modifying initial getList method to display position feature (drag and drop)
+	*/
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
 		if (Tools::isSubmit($this->table.'Orderby') || Tools::isSubmit($this->table.'Orderway'))
 			$this->filter = true;
 		
+		if ($order_by && $this->context->cookie->__get($this->table.'Orderby'))
+			$order_by = $this->context->cookie->__get($this->table.'Orderby');
+		else
+			$order_by = 'position';
+		
+		if (is_null($order_way))
+			$order_way = Tools::getValue($this->table.'Orderway', 'ASC');
+
+		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
+	}
+	
+	public function postProcess()
+	{
+	
 		if (Tools::isSubmit('viewcms') && ($id_cms = (int)Tools::getValue('id_cms')) && ($cms = new CMS($id_cms, $this->context->language->id)) && Validate::isLoadedObject($cms))
 		{
 			$redir = $this->context->link->getCMSLink($cms);

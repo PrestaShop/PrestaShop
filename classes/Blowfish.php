@@ -42,7 +42,7 @@ class BlowfishCore extends Crypt_Blowfish
 			$piece = substr($paddedtext, $x, 8);
 			$cipher_piece = parent::encrypt($piece);
 			$encoded = base64_encode($cipher_piece); 
-			$ciphertext = $ciphertext.$encoded;       
+			$ciphertext = $ciphertext.$encoded;
 		}
 	   return $ciphertext.sprintf('%06d', $length);  
 	}

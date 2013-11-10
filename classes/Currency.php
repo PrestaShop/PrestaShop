@@ -43,7 +43,7 @@ class CurrencyCore extends ObjectModel
 	/** @var int bool used for displaying blank between sign and price */
 	public $blank;
 
-	/** @var string Conversion rate from euros */
+	/** @var string exchange rate from euros */
 	public $conversion_rate;
 
 	/** @var boolean True if currency has been deleted (staying in database as deleted) */
@@ -81,6 +81,7 @@ class CurrencyCore extends ObjectModel
 
 	/** @var array Currency cache */
 	static protected $currencies = array();
+	protected static $countActiveCurrencies = array();
 
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'currencies',
@@ -187,8 +188,9 @@ class CurrencyCore extends ObjectModel
 			4 => array('left' => '', 'right' => &$formated_strings['right']),
 			5 => array('left' => '', 'right' => &$formated_strings['right'])
 		);
-
-		return ($formats[$this->format][$side]);
+		if (isset($formats[$this->format][$side]))
+			return ($formats[$this->format][$side]);
+		return $this->sign;
 	}
 
 	/**
@@ -326,23 +328,23 @@ class CurrencyCore extends ObjectModel
 	}
 
 	/**
-	 * Refresh the currency conversion rate
-	 * The XML file define conversion rate for each from a default currency ($isoCodeSource).
+	 * Refresh the currency exchange rate
+	 * The XML file define exchange rate for each from a default currency ($isoCodeSource).
 	 *
-	 * @param $data XML content which contains all the conversion rates
+	 * @param $data XML content which contains all the exchange rates
 	 * @param $isoCodeSource The default currency used in the XML file
 	 * @param $defaultCurrency The default currency object
 	 */
 	public function refreshCurrency($data, $isoCodeSource, $defaultCurrency)
 	{
-		// fetch the conversion rate of the default currency
-		$conversion_rate = 1;
+		// fetch the exchange rate of the default currency
+		$exchange_rate = 1;
 		if ($defaultCurrency->iso_code != $isoCodeSource)
 		{
 			foreach ($data->currency as $currency)
 				if ($currency['iso_code'] == $defaultCurrency->iso_code)
 				{
-					$conversion_rate = round((float)$currency['rate'], 6);
+					$exchange_rate = round((float)$currency['rate'], 6);
 					break;
 				}
 		}
@@ -364,7 +366,7 @@ class CurrencyCore extends ObjectModel
 			}
 
 			if (isset($rate))
-				$this->conversion_rate = round($rate / $conversion_rate, 6);
+				$this->conversion_rate = round($rate / $exchange_rate, 6);
 		}
 		$this->update();
 	}
@@ -414,5 +416,23 @@ class CurrencyCore extends ObjectModel
 			self::$currencies[(int)($id)] = new Currency($id);
 		return self::$currencies[(int)($id)];
 	}
-}
+	
+	public static function countActiveCurrencies($id_shop = null)
+	{
+		if ($id_shop === null)
+			$id_shop = (int)Context::getContext()->shop->id;
 
+		if (!isset(self::$countActiveCurrencies[$id_shop]))
+			self::$countActiveCurrencies[$id_shop] = Db::getInstance()->getValue('
+				SELECT COUNT(DISTINCT c.id_currency) FROM `'._DB_PREFIX_.'currency` c
+				LEFT JOIN '._DB_PREFIX_.'currency_shop cs ON (cs.id_currency = c.id_currency AND cs.id_shop = '.(int)$id_shop.')
+				WHERE c.`active` = 1
+			');
+		return self::$countActiveCurrencies[$id_shop];
+	}
+
+	public static function isMultiCurrencyActivated($id_shop = null)
+	{
+		return (Currency::countActiveCurrencies($id_shop) > 1);
+	}
+}

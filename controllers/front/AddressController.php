@@ -138,7 +138,7 @@ class AddressControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('This country requires you to chose a State.');
 
 			// US customer: normalize the address
-			if ($address->id_country == Country::getByIso('US'))
+			if ($address->id_country == Country::getByIso('US') && Configuration::get('PS_TAASC'))
 			{
 				include_once(_PS_TAASC_PATH_.'AddressStandardizationSolution.php');
 				$normalize = new AddressStandardizationSolution;
@@ -303,7 +303,9 @@ class AddressControllerCore extends FrontController
 			$selected_country = (int)$this->_address->id_country;
 		else if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
 		{
-			$array = preg_split('/,|-/', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+			// get all countries as language (xy) or language-country (wz-XY)
+			$array = array();
+			preg_match("#(?<=-)\w\w|\w\w(?!-)#",$_SERVER['HTTP_ACCEPT_LANGUAGE'],$array);
 			if (!Validate::isLanguageIsoCode($array[0]) || !($selected_country = Country::getByIso($array[0])))
 				$selected_country = (int)Configuration::get('PS_COUNTRY_DEFAULT');
 		}

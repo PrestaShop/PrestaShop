@@ -40,10 +40,6 @@
 
 					// if backspace is hit with no input, remove the last tag
 					if (pressed == 8) { // backspace
-						if ( $this.val() == "" ) {
-							self.remove();
-							return false;
-						}
 						return;
 					}
 				});

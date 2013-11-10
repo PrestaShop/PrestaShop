@@ -71,6 +71,7 @@ $(document).ready(function() {
 </script>
 
 {assign var='stateExist' value=false}
+{assign var='postCodeExist' value=false}
 {if !isset($email_create)}
 	{include file="./authentication-choice.tpl"}
 {else}

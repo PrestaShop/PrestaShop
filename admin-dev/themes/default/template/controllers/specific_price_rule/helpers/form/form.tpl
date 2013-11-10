@@ -41,7 +41,7 @@
 				<div class="margin-form">
 					<select id="id_category" name="id_category">
 						{foreach from=$categories item='category'}
-						<option value="{$category.id_category}">{$category.name}</option>
+						<option value="{$category.id_category|intval}">({$category.id_category|intval}) {$category.name}</option>
 						{/foreach}
 					</select>
 					<a class="button bt-icon" href="#" id="add_condition_category">
@@ -161,6 +161,13 @@ function add_condition(id_condition_group, type, value)
 function delete_condition(condition)
 {
 	delete conditions[condition];
+	
+	to_delete = $('#'+condition).prev();
+	if ($(to_delete).children().hasClass('btn_delete_condition'))
+		$(to_delete).remove();
+	else
+		$('#'+condition).next().remove();
+
 	$('#'+condition).remove();
 	return false;
 }
@@ -178,7 +185,7 @@ function new_condition_group()
 function appendConditionToGroup(html)
 {
 	if ($('#condition_group_'+current_id_condition_group+' table tbody tr').length > 0)
-		$('#condition_group_'+current_id_condition_group+' table tbody').append('<tr><td align="center" colspan="3"><b>{l s='AND' js=1}</b></td></tr>');
+		$('#condition_group_'+current_id_condition_group+' table tbody').append('<tr><td align="center" class="btn_delete_condition" colspan="3"><b>{l s='AND' js=1}</b></td></tr>');
 	$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
 }
 
@@ -284,7 +291,7 @@ $(document).ready(function() {
 				$('#id_attribute_group option[value="{$condition.id_attribute_group}"]').attr('selected', true);
 				$('#id_attribute_{$condition.id_attribute_group} option[value="{$condition.value}"]').attr('selected', true);
 			{elseif $condition.type == 'feature'}
-				$('#id_feature[value="{$condition.id_feature}"]').attr('selected', true);
+				$('#id_feature option[value="{$condition.id_feature}"]').attr('selected', true);
 				$('#id_feature_{$condition.id_feature} option[value="{$condition.value}"]').attr('selected', true);
 			{else}
 				$('#id_{$condition.type} option[value="{$condition.value}"]').attr('selected', true);

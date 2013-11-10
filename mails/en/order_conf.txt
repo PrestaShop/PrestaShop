@@ -9,6 +9,7 @@ Thank you for your order on {shop_name}!
 	Discounts: {total_discounts}
 	Shipping: {total_shipping}
 	Gift-wrapping: {total_wrapping}
+	Total Tax paid: {total_tax_paid}
 	Total paid: {total_paid}
 
 	Carrier: {carrier}

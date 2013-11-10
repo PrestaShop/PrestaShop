@@ -45,7 +45,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 		$this->address_supplier = new Address(Address::getAddressIdBySupplierId((int)$supply_order->id_supplier));
 
 		// header informations
-		$this->date = Tools::displayDate($supply_order->date_add, (int)$this->supply_order->id_lang);
+		$this->date = Tools::displayDate($supply_order->date_add);
 		$this->title = HTMLTemplateSupplyOrderForm::l('Supply order form');
 	}
 

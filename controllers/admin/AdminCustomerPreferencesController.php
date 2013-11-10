@@ -72,6 +72,14 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
+					'PS_CUSTOMER_CREATION_EMAIL' => array(
+						'title' => $this->l('Send an email after registration'),
+						'desc' => $this->l('Send an email with summary account (email, password) after registration.'),
+						'validation' => 'isUnsignedInt',
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
 					'PS_PASSWD_TIME_FRONT' => array(
 						'title' => $this->l('Regenerate password'),
 						'desc' => $this->l('Minimum time required to regenerate a password.'),

@@ -8,6 +8,7 @@ Carrier : {carrier}
 Payment: {payment}
 Discounts: {total_discounts}
 Shipping: {total_shipping}
+Total Tax paid: {total_tax_paid}
 Products: {total_products}
 Gift-wrapping: {total_wrapping}
 Total paid: {total_paid}

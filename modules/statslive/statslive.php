@@ -57,18 +57,37 @@ class StatsLive extends Module
 	 */
 	private function getCustomersOnline()
 	{
-		$sql = 'SELECT u.id_customer, u.firstname, u.lastname, pt.name as page
-				FROM `'._DB_PREFIX_.'connections` c
-				LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
-				LEFT JOIN `'._DB_PREFIX_.'page` p ON p.id_page = cp.id_page
-				LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON p.id_page_type = pt.id_page_type
-				INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
-				INNER JOIN `'._DB_PREFIX_.'customer` u ON u.id_customer = g.id_customer
-				WHERE cp.`time_end` IS NULL
-					'.Shop::addSqlRestriction(false, 'c').'
-					AND TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 900
-				GROUP BY c.id_connections
-				ORDER BY u.firstname, u.lastname';
+		if ($maintenance_ips = Configuration::get('PS_MAINTENANCE_IP'))
+			$maintenance_ips = implode(',', array_map('ip2long', array_map('trim', explode(',', $maintenance_ips))));
+		
+		if (Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
+		{
+			$sql = 'SELECT u.id_customer, u.firstname, u.lastname, pt.name as page
+					FROM `'._DB_PREFIX_.'connections` c
+					LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
+					LEFT JOIN `'._DB_PREFIX_.'page` p ON p.id_page = cp.id_page
+					LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON p.id_page_type = pt.id_page_type
+					INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
+					INNER JOIN `'._DB_PREFIX_.'customer` u ON u.id_customer = g.id_customer
+					WHERE cp.`time_end` IS NULL
+						'.Shop::addSqlRestriction(false, 'c').'
+						AND TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 900
+					'.($maintenance_ips ? 'AND c.ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '').'
+					GROUP BY u.id_customer
+					ORDER BY u.firstname, u.lastname';
+		}
+		else
+		{
+			$sql = 'SELECT u.id_customer, u.firstname, u.lastname, "-" as page
+					FROM `'._DB_PREFIX_.'connections` c
+					INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
+					INNER JOIN `'._DB_PREFIX_.'customer` u ON u.id_customer = g.id_customer
+					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), c.`date_add`)) < 900
+						'.Shop::addSqlRestriction(false, 'c').'
+					'.($maintenance_ips ? 'AND c.ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '').'
+					GROUP BY u.id_customer
+					ORDER BY u.firstname, u.lastname';
+		}
 		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		return array($results, Db::getInstance()->NumRows());
 	}
@@ -80,6 +99,9 @@ class StatsLive extends Module
 	 */
 	private function getVisitorsOnline()
 	{
+		if ($maintenance_ips = Configuration::get('PS_MAINTENANCE_IP'))
+			$maintenance_ips = implode(',', array_map('ip2long', array_map('trim', explode(',', $maintenance_ips))));
+
 		if (Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
 		{
 			$sql = 'SELECT c.id_guest, c.ip_address, c.date_add, c.http_referer, pt.name as page
@@ -91,18 +113,20 @@ class StatsLive extends Module
 					WHERE (g.id_customer IS NULL OR g.id_customer = 0)
 						'.Shop::addSqlRestriction(false, 'c').'
 						AND cp.`time_end` IS NULL
-			AND TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 900
+					AND TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 900
+					'.($maintenance_ips ? 'AND c.ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '').'
 					GROUP BY c.id_connections
 					ORDER BY c.date_add DESC';
 		}
 		else
 		{
-			$sql = 'SELECT c.id_guest, c.ip_address, c.date_add, c.http_referer
+			$sql = 'SELECT c.id_guest, c.ip_address, c.date_add, c.http_referer, "-" as page
 					FROM `'._DB_PREFIX_.'connections` c
 					INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
 					WHERE (g.id_customer IS NULL OR g.id_customer = 0)
 						'.Shop::addSqlRestriction(false, 'c').'
 						AND TIME_TO_SEC(TIMEDIFF(NOW(), c.`date_add`)) < 900
+					'.($maintenance_ips ? 'AND c.ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '').'
 					ORDER BY c.date_add DESC';
 		}
 
@@ -168,7 +192,12 @@ class StatsLive extends Module
 		}
 		else
 			$this->html .= $this->l('There are no visitors online.');
-		$this->html .= '</fieldset>';
+		$this->html .= '</fieldset>
+		<br />
+		<fieldset><legend>'.$this->l('Notice').'</legend>
+			'.$this->l('Maintenance IP(s) are excluded from the online visitors.').'<br />
+			<a href="index.php?controller=AdminMaintenance&token='.Tools::getAdminTokenLite('AdminMaintenance').'">'.$this->l('Add or remove an IP address.').'</a>
+		</fieldset>';
 
 		return $this->html;
 	}

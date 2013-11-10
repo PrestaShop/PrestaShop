@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}{l s='Guest tracking'}{/capture}
+{capture name=path}{l s='Guest Tracking'}{/capture}
 {include file="./breadcrumb.tpl"}
 
 <h1>{l s='Guest Tracking'}</h1>
@@ -66,7 +66,7 @@
 	{include file="$tpl_dir./errors.tpl"}
 	
 	{if isset($transformSuccess)}
-		<p class="success">{l s='Your guest account has been successfully transformed into a customer account. You can now login as a registered shopper. '} <a href="{$link->getPageLink('authentication', true)}">{l s='page.'}</a></p>
+		<p class="success">{l s='Your guest account has been successfully transformed into a customer account. You can now login as a registered shopper. '} <a href="{$link->getPageLink('authentication', true)|escape:'html'}">{l s='page.'}</a></p>
 	{else}
 		<form method="post" action="{$action|escape:'htmlall':'UTF-8'}#guestToCustomer" class="std">
 			<fieldset class="description_box">
@@ -92,7 +92,7 @@
 {else}
 	{include file="$tpl_dir./errors.tpl"}
 	{if isset($show_login_link) && $show_login_link}
-		<p><img src="{$img_dir}icon/userinfo.gif" alt="{l s='Information'}" class="icon" /><a href="{$link->getPageLink('my-account', true)}">{l s='Click here to login to your customer account.'}</a><br /><br /></p>
+		<p><img src="{$img_dir}icon/userinfo.gif" alt="{l s='Information'}" class="icon" /><a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='Click here to login to your customer account.'}</a><br /><br /></p>
 	{/if}
 	<form method="post" action="{$action|escape:'htmlall':'UTF-8'}" class="std">
 		<fieldset class="description_box">

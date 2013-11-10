@@ -137,6 +137,7 @@ class GroupReductionCore extends ObjectModel
 			SELECT `reduction`
 			FROM `'._DB_PREFIX_.'product_group_reduction_cache`
 			WHERE `id_product` = '.(int)$id_product.' AND `id_group` = '.(int)$id_group);
+		// Should return string (decimal in database) and not a float
 		return self::$reduction_cache[$id_product.'-'.$id_group];
 	}
 
@@ -216,13 +217,18 @@ class GroupReductionCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'product_group_reduction_cache` pgr
 			WHERE pgr.`id_product` = '.(int)$id_product_old
 		);
+
 		if (!$res)
 			return true;
+
+		$query = '';
+
 		foreach ($res as $row)
 		{
-			$query = 'INSERT INTO `'._DB_PREFIX_.'product_group_reduction_cache` (`id_product`, `id_group`, `reduction`) VALUES ';
-			$query .= '('.(int)$id_product.', '.(int)$row['id_group'].', '.(float)$row['reduction'].')';
+			$query .= 'INSERT INTO `'._DB_PREFIX_.'product_group_reduction_cache` (`id_product`, `id_group`, `reduction`) VALUES ';
+			$query .= '('.(int)$id_product.', '.(int)$row['id_group'].', '.(float)$row['reduction'].') ON DUPLICATE KEY UPDATE `reduction` = '.(float)$row['reduction'].';';
 		}
+
 		return Db::getInstance()->execute($query);
 	}
 

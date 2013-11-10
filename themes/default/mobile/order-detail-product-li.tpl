@@ -89,9 +89,9 @@
 		<h3>
 			{if $product.download_hash && $invoice && $product.display_filename != ''}
 				{if isset($is_guest) && $is_guest}
-				<a href="{$link->getPageLink('get-file', true, NULL, "key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}&amp;id_order={$order->id}&secure_key={$order->secure_key}")}" title="{l s='Download this product'}" data-ajax="false">
+				<a href="{$link->getPageLink('get-file', true, NULL, "key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}&amp;id_order={$order->id}&secure_key={$order->secure_key}")|escape:'html'}" title="{l s='Download this product'}" data-ajax="false">
 				{else}
-					<a href="{$link->getPageLink('get-file', true, NULL, "key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}")}" title="{l s='Download this product'}" data-ajax="false">
+					<a href="{$link->getPageLink('get-file', true, NULL, "key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}")|escape:'html'}" title="{l s='Download this product'}" data-ajax="false">
 				{/if}
 					<img src="{$img_dir}icon/download_product.gif" class="icon" alt="{l s='Download product'}" />
 					{$product.product_name|escape:'htmlall':'UTF-8'}

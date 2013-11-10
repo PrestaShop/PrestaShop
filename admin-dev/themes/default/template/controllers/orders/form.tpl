@@ -28,16 +28,21 @@
 	var changed_shipping_price = false;
 	var shipping_price_selected_carrier = '';
 	var current_index = '{$current}&token={$token}';
-	var admin_cart_link = '{$link->getAdminLink('AdminCarts')}';
+	var admin_cart_link = '{$link->getAdminLink('AdminCarts')|addslashes}';
 	var cart_quantity = new Array();
 	var currencies = new Array();
 	var id_currency = '';
 	var id_lang = '';
-	var txt_show_carts = '{l s='Show carts and orders for this customer.'}';
-	var txt_hide_carts = '{l s='Hide carts and orders for this customer.'}';
+	var txt_show_carts = '{l s='Show carts and orders for this customer.' js=1}';
+	var txt_hide_carts = '{l s='Hide carts and orders for this customer.' js=1}';
 	var defaults_order_state = new Array();
 	var customization_errors = false;
 	var pic_dir = '{$pic_dir}';
+	var currency_format = 5;
+	var currency_sign = '';
+	var currency_blank = false;
+	var priceDisplayPrecision = 2;
+	
 	{foreach from=$defaults_order_state key='module' item='id_order_state'}
 		defaults_order_state['{$module}'] = '{$id_order_state}';
 	{/foreach}
@@ -100,7 +105,7 @@
 		$('#show_old_carts').click();
 		$('#payment_module_name').change();
 		$.ajaxSetup({ type:"post" });
-		$("#voucher").autocomplete('{$link->getAdminLink('AdminCartRules')}', {
+		$("#voucher").autocomplete('{$link->getAdminLink('AdminCartRules')|addslashes}', {
 					minChars: 3,
 					max: 15,
 					width: 250,
@@ -117,7 +122,7 @@
 							$('#vouchers_err').hide();
 						var mytab = new Array();
 						for (var i = 0; i < data.vouchers.length; i++)
-							mytab[mytab.length] = { data: data.vouchers[i], value: data.vouchers[i].name+' - '+data.vouchers[i].description };
+							mytab[mytab.length] = { data: data.vouchers[i], value: data.vouchers[i].name + (data.vouchers[i].code.length > 0 ? ' - ' + data.vouchers[i].code : '')};
 						return mytab;
 					},
 					extraParams: {
@@ -157,7 +162,7 @@
 				free_shipping = 1;
 			$.ajax({
 				type:"POST",
-				url: "{$link->getAdminLink('AdminCarts')}",
+				url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 				async: true,
 				dataType: "json",
 				data : {
@@ -217,7 +222,7 @@
 			e.preventDefault();
 			$.ajax({
 				type:"POST",
-				url: "{$link->getAdminLink('AdminCarts')}",
+				url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 				async: true,
 				dataType: "json",
 				data : {
@@ -254,7 +259,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -288,7 +293,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -324,7 +329,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -351,7 +356,7 @@
 		$('#id_cart').val(id_cart);
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: false,
 			dataType: "json",
 			data : {
@@ -378,7 +383,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -401,7 +406,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -426,7 +431,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url : "{$link->getAdminLink('AdminOrders')}",
+			url : "{$link->getAdminLink('AdminOrders')|escape:'html'}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -468,7 +473,7 @@
 		$('#new_address').attr('href', address_link.replace(/id_customer=[0-9]+/, 'id_customer='+id_customer));
 		$.ajax({
 			type:"POST",
-			url : "{$link->getAdminLink('AdminCarts')}",
+			url : "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: false,
 			dataType: "json",
 			data : {
@@ -505,7 +510,6 @@
 				}
 				displaySummary(res);
 				resetBind();
-				updateCurrencySign();
 			}
 		});
 	}
@@ -534,7 +538,7 @@
 		$('#products_part').show();
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminOrders')}",
+			url: "{$link->getAdminLink('AdminOrders')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -652,26 +656,27 @@
 			var id_product = Number(this.id_product);
 			var id_product_attribute = Number(this.id_product_attribute);
 			cart_quantity[Number(this.id_product)+'_'+Number(this.id_product_attribute)+'_'+Number(this.id_customization)] = this.cart_quantity;
-			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" size="7" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="'+this.price+'" />&nbsp;<span class="currency_sign"></span></td><td>';
+			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" size="7" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="' + formatCurrency(parseFloat(this.price.replace(',', '.')), currency_format, currency_sign, currency_blank) + '" /></td><td>';
 			cart_content += (!this.id_customization ? '<div style="float:left;"><a href="#" class="increaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><img src="../img/admin/up.gif" /></a><br /><a href="#" class="decreaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'"><img src="../img/admin/down.gif" /></a></div>' : '');
 			cart_content += (!this.id_customization ? '<div style="float:left;"><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" class="cart_quantity" size="2" value="'+this.cart_quantity+'" />' : '');
 			cart_content += (!this.id_customization ? '<a href="#" class="delete_product" rel="delete_'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><img src="../img/admin/delete.gif" /></a></div>' : '');
-			cart_content += '</td><td>'+this.total+'&nbsp;<span class="currency_sign"></span></td></tr>';
+			cart_content += '</td><td>' + formatCurrency(parseFloat(this.total.replace(',', '.')), currency_format, currency_sign, currency_blank) + '</td></tr>';
+			
 			if (this.id_customization && this.id_customization != 0)
 			{
 				$.each(this.customized_datas[this.id_product][this.id_product_attribute][id_address_delivery], function() {
 					var customized_desc = '';
-					if(this.datas[1].length)
+					if (this.datas[1].length)
 					{
 						$.each(this.datas[1],function() {
-							customized_desc += this.name+':'+this.value+'<br />';
+							customized_desc += this.name + ': ' + this.value + '<br />';
 							id_customization = this.id_customization;
 						});
 					}
-					if(this.datas[0] && this.datas[0].length)
+					if (this.datas[0] && this.datas[0].length)
 					{
 						$.each(this.datas[0],function() {
-							customized_desc += this.name+':<img src="'+pic_dir+this.value+'_small" /><br />';
+							customized_desc += this.name + ': <img src="' + pic_dir + this.value + '_small" /><br />';
 							id_customization = this.id_customization;
 						});
 					}
@@ -694,17 +699,15 @@
 	function updateCartVouchers(vouchers)
 	{
 		var vouchers_html = '';
-		if (vouchers.length > 0)
-		{
-			$.each(vouchers, function() {
+		if (typeof(vouchers) == 'object')
+			$.each(vouchers, function(){
 				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+this.value_real+'</td><td><a href="#" class="delete_discount" rel="'+this.id_discount+'"><img src="../img/admin/delete.gif" /></a></td></tr>';
 			});
-			$('#voucher_list').show();
-		}
-		else
+		$('#voucher_list tbody').html($.trim(vouchers_html));
+		if ($('#voucher_list tbody').html().length == 0)
 			$('#voucher_list').hide();
-
-		$('#voucher_list tbody').html(vouchers_html);
+		else
+			$('#voucher_list').show();
 	}
 
 	function updateCartPaymentList(payment_list)
@@ -714,6 +717,11 @@
 
 	function displaySummary(jsonSummary)
 	{
+		currency_format = jsonSummary.currency.format;
+		currency_sign = jsonSummary.currency.sign;
+		currency_blank = jsonSummary.currency.blank;
+		priceDisplayPrecision = jsonSummary.currency.decimals ? 2 : 0;
+	
 		updateCartProducts(jsonSummary.summary.products, jsonSummary.summary.gift_products, jsonSummary.cart.id_address_delivery);
 		updateCartVouchers(jsonSummary.summary.discounts);
 		updateAddressesList(jsonSummary.addresses, jsonSummary.cart.id_address_delivery, jsonSummary.cart.id_address_invoice);
@@ -739,20 +747,19 @@
 			$('#free_shipping').removeAttr('checked');
 
 		$('#gift_message').html(jsonSummary.cart.gift_message);
-		if(!changed_shipping_price)
-			$('#shipping_price').html('<b>'+jsonSummary.summary.total_shipping+'</b>');
+		if (!changed_shipping_price)
+			$('#shipping_price').html('<b>' + formatCurrency(parseFloat(jsonSummary.summary.total_shipping), currency_format, currency_sign, currency_blank) + '</b>');
 		shipping_price_selected_carrier = jsonSummary.summary.total_shipping;
-
-		$('#total_vouchers').html(jsonSummary.summary.total_discounts_tax_exc);
-		$('#total_shipping').html(jsonSummary.summary.total_shipping_tax_exc);
-		$('#total_taxes').html(jsonSummary.summary.total_tax);
-		$('#total_without_taxes').html(jsonSummary.summary.total_price_without_tax);
-		$('#total_with_taxes').html(jsonSummary.summary.total_price);
-		$('#total_products').html(jsonSummary.summary.total_products);
+		
+		$('#total_vouchers').html(formatCurrency(parseFloat(jsonSummary.summary.total_discounts_tax_exc.replace(',', '.')), currency_format, currency_sign, currency_blank));
+		$('#total_shipping').html(formatCurrency(parseFloat(jsonSummary.summary.total_shipping_tax_exc.replace(',', '.')), currency_format, currency_sign, currency_blank));
+		$('#total_taxes').html(formatCurrency(parseFloat(jsonSummary.summary.total_tax.replace(',', '.')), currency_format, currency_sign, currency_blank));
+		$('#total_without_taxes').html(formatCurrency(parseFloat(jsonSummary.summary.total_price_without_tax.replace(',', '.')), currency_format, currency_sign, currency_blank));
+		$('#total_with_taxes').html(formatCurrency(parseFloat(jsonSummary.summary.total_price.replace(',', '.')), currency_format, currency_sign, currency_blank));
+		$('#total_products').html(formatCurrency(parseFloat(jsonSummary.summary.total_products.replace(',', '.')), currency_format, currency_sign, currency_blank));
 		id_currency = jsonSummary.cart.id_currency;
 		$('#id_currency option').removeAttr('selected');
 		$('#id_currency option[value="'+id_currency+'"]').attr('selected', true);
-		updateCurrencySign();
 		id_lang = jsonSummary.cart.id_lang;
 		$('#id_lang option').removeAttr('selected');
 		$('#id_lang option[value="'+id_lang+'"]').attr('selected', true);
@@ -766,7 +773,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -780,21 +787,21 @@
 				qty: qty,
 				id_customer: id_customer,
 				id_cart: id_cart,
-				},
+			},
 			success : function(res)
 			{
-					displaySummary(res);
-					var errors = '';
-					if(res.errors.length)
-					{
-						$.each(res.errors, function() {
-							errors += this+'<br />';
-						});
-						$('#products_err').show();
-					}
-					else
-						$('#products_err').hide();
-					$('#products_err').html(errors);
+				displaySummary(res);
+				var errors = '';
+				if (res.errors.length)
+				{
+					$.each(res.errors, function() {
+						errors += this + '<br />';
+					});
+					$('#products_err').show();
+				}
+				else
+					$('#products_err').hide();
+				$('#products_err').html(errors);
 			}
 		});
 	}
@@ -822,7 +829,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -845,7 +852,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -868,7 +875,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -890,16 +897,11 @@
 		});
 	}
 
-	function updateCurrencySign()
-	{
-		$('.currency_sign').html(currencies[id_currency]);
-	}
-
 	function sendMailToCustomer()
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminOrders')}",
+			url: "{$link->getAdminLink('AdminOrders')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -957,7 +959,7 @@
 	{
 		$.ajax({
 			type:"POST",
-			url: "{$link->getAdminLink('AdminCarts')}",
+			url: "{$link->getAdminLink('AdminCarts')|addslashes}",
 			async: true,
 			dataType: "json",
 			data : {
@@ -986,7 +988,7 @@
 	<label>{l s='Search customers'}</label>
 	<div class="margin-form">
 		<input type="text" id="customer" value="" />
-		<p>{l s='Search a customer by tapping the first letters of his/her name'}</p>
+		<p>{l s='Search a customer by typing the first letters of his/her name'}</p>
 		<a class="fancybox button" href="{$link->getAdminLink('AdminCustomers')|escape:'htmlall':'UTF-8'}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
 			<img src="../img/admin/add.gif" title="new"/><span>{l s='Add new customer'}</span>
 		</a>
@@ -1001,7 +1003,7 @@
 		<div class="margin-form">
 			<input type="hidden" value="" id="id_cart" name="id_cart" />
 			<input type="text" id="product" value="" />
-			<p>{l s='Search a product by tapping the first letters of his/her name.'}</p>
+			<p>{l s='Search a product by typing the first letters of his/her name.'}</p>
 		</div>
 		<div id="products_found">
 			<div id="product_list">
@@ -1186,7 +1188,7 @@
 				</select>
 			</p>
 			<p>
-				<label for="shipping_price">{l s='Shipping price'}</label> <span id="shipping_price"  name="shipping_price"></span>&nbsp;<span class="currency_sign"></span>&nbsp;
+				<label for="shipping_price">{l s='Shipping price'}</label> <span id="shipping_price"  name="shipping_price"></span>
 			</p>
 			<p>
 				<label for="free_shipping">{l s='Free shipping'}</label>
@@ -1210,12 +1212,12 @@
 	<div id="send_email_feedback"></div>
 	<div id="cart_summary" style="clear:both;float:left;">
 		<ul>
-			<li><span class="total_cart">{l s='Total products'}</span><span id="total_products"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total vouchers'}</span><span id="total_vouchers"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total shipping'}</span><span id="total_shipping"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total taxes'}</span><span id="total_taxes"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total without taxes'}</span><span id="total_without_taxes"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total with taxes'}</span><span id="total_with_taxes"></span><span class="currency_sign"></span></li>
+			<li><span class="total_cart">{l s='Total products'}</span><span id="total_products"></span></li>
+			<li><span class="total_cart">{l s='Total vouchers'}</span><span id="total_vouchers"></span></li>
+			<li><span class="total_cart">{l s='Total shipping'}</span><span id="total_shipping"></span></li>
+			<li><span class="total_cart">{l s='Total taxes'}</span><span id="total_taxes"></span></li>
+			<li><span class="total_cart">{l s='Total without taxes'}</span><span id="total_without_taxes"></span></li>
+			<li><span class="total_cart">{l s='Total with taxes'}</span><span id="total_with_taxes"></span></li>
 		</ul>
 	</div>
 	<div class="order_message_right">

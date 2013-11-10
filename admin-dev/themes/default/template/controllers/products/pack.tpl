@@ -24,8 +24,8 @@
 *}
 
 <script type="text/javascript">
-	var msg_select_one = "{l s="Please select at least one product." js=1}";
-	var msg_set_quantity = "{l s="Please set a quantity to add a product." js=1}";
+	var msg_select_one = "{l s='Please select at least one product.' js=1}";
+	var msg_set_quantity = "{l s='Please set a quantity to add a product.' js=1}";
 </script>
 <input type="hidden" name="submitted_tabs[]" value="Pack" />
 <h4>{l s='Pack'}</h4>

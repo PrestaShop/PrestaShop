@@ -58,7 +58,7 @@
 					</li>
 					{foreach from=$list_modules_categories item=module_category key=module_category_key}
 						<li {if isset($categoryFiltered[$module_category_key])}style="background-color:#EBEDF4"{/if} class="categoryModuleFilterLink">
-							<div class="categorieWidth"><a href="{$currentIndex}&token={$token}&{if isset($categoryFiltered[$module_category_key])}un{/if}filterCategory={$module_category_key}"><span>{$module_category.name}</span></a></div>
+							<div class="categorieWidth"><a href="{$currentIndex}&token={$token}&filterCategory={$module_category_key}"><span>{$module_category.name}</span></a></div>
 							<div class="count">{$module_category.nb}</div>
 						</li>
 					{/foreach}

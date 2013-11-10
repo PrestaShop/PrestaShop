@@ -230,11 +230,11 @@ function initLayered()
 
 function paginationButton() {
 	$('#pagination a').not(':hidden').each(function () {
-		if ($(this).attr('href').search('&p=') == -1) {
+		if ($(this).attr('href').search(/&|\?p=/) == -1) {
 			var page = 1;
 		}
 		else {
-			var page = $(this).attr('href').replace(/^.*&p=(\d+).*$/, '$1');
+			var page = $(this).attr('href').replace(/^.*[&|\?]p=(\d+).*$/, '$1');
 		}
 		var location = window.location.href.replace(/#.*$/, '');
 		$(this).attr('href', location+current_friendly_url.replace(/\/page-(\d+)/, '')+'/page-'+page);
@@ -538,7 +538,7 @@ function getUrlParams()
 function updateProductUrl()
 {
 	// Adding the filters to URL product
-	if (typeof(param_product_url) != 'undefined') {
+	if (typeof(param_product_url) != 'undefined' && param_product_url != '' && param_product_url !='#') {
 		$.each($('ul#product_list li.ajax_block_product .product_img_link,'+
 				'ul#product_list li.ajax_block_product h3 a,'+
 				'ul#product_list li.ajax_block_product .product_desc a,'+

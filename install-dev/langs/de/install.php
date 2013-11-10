@@ -2,6 +2,7 @@
 return array(
 	'informations' => array(
 		'phone' => '+33 (0)1.40.18.30.04',
+		'support' => 'https://www.prestashop.com/de/support',
 	),
 	'translations' => array(
 		'menu_welcome' => 'Sprachauswahl',
@@ -203,7 +204,7 @@ return array(
 		'Print my login information' => 'Meine Zugangsinformationen ausdrucken',
 		'We are currently checking PrestaShop compatibility with your system environment' => 'Wir überprüfen derzeit die Kompatibilität von PrestaShop mit Ihrer Systemumgebung.',
 		'Oops! Please correct the item(s) below, and then click "Refresh information" to test the compatibility of your new system.' => 'Bitte korrigieren Sie untenstehende(n) Punkt(e) und klicken Sie anschließend auf den Refresh-Button, um erneut die Kompatibilität Ihres Systems zu überprüfen.',
-		'The installation of PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 130,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'Die PrestaShop-Installation ist schnell und einfach. In nur wenigen Minuten werden Sie Teil einer Community aus über 130 000 Händlern und erstellen einen Onlineshop, der genau zu Ihnen passt und der einfach in der täglichen Verwaltung ist.',
+		'The installation of PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 150,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'Die PrestaShop-Installation ist schnell und einfach. In nur wenigen Minuten werden Sie Teil einer Community aus über 150 000 Händlern und erstellen einen Onlineshop, der genau zu Ihnen passt und der einfach in der täglichen Verwaltung ist.',
 		'Continue the installation in:' => 'Die Installation fortführen als:',
 		'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'Die untenstehende Sprachauswahl bezieht sich auf den Installationsassistenten. Sobald Ihr Shop installiert ist, können Sie aus %d Sprachen Ihre Shopsprache wählen!',
 		'An error occurred during logo copy.' => 'Beim Logo Copy ist ein Fehler aufgetreten.',
@@ -233,5 +234,16 @@ return array(
 		'PrestaShop compatibility with your system environment has been verified!' => 'Die Kompatibilität von PrestaShop mit Ihrem System wurde überprüft!',
 		'PrestaShop requires at least 32M of memory to run, please check the memory_limit directive in php.ini or contact your host provider' => 'Damit PrestaShop einwandfrei funktionieren kann, werden mindestens 32M Speicher benötigt. Bitte überprüfen Sie die  memory_limit directive in php.in oder kontaktieren Sie Ihrem Provider.',
 		'Your PHP sessions path is not writable - check with your hosting provider:' => 'Der Speicherungsordner ist nicht beschreibbar - bitte kontaktieren Sie Ihren Provider',
+		'Database is created' => 'Datenbank erstellt',
+		'Cannot create the database automatically' => 'Datenbank kann nicht automatisch erstellt werden',
+		'Install modules Addons' => 'Module Addons installieren',
+		'Files' => 'Dateien',
+		'All files are not successfuly uploaded on your server' => 'Es wurden nicht alle Dateien erfolgreich auf Ihren Server hochgeladen',
+		'Attempt to create the database automatically' => 'Versuchen, die Datenbank automatisch zu erstellen.',
+		'Country:' => 'Land:',
+		'Must be letters and numbers with at least 8 characters' => 'Zulässig sind Buchstaben und Nummern. Mindestens 8 Zeichen.',
+		'To install PrestaShop, you need to have JavaScript enabled in your browser.' => 'JavaScript muss in Ihrem Browser aktiviert sein, um PrestaShop zu installieren.',
+		'To enjoy the many features that are offered for free by PrestaShop, please read the license terms below. PrestaShop core is licensed under OSL 3.0, while the modules and themes are licensed under AFL 3.0.' => 'Um all die Vorteile zu nutzen, die Ihnen Prestashop bietet, lesen sie bitte die folgenden Bedingungen. Der PrestaShop ist unter OSL 3.0 lizensiert, die Module und Themen unter AFL 3.0.',
+		'For security purposes, you must delete the "install" folder.' => 'For security purposes, you must delete the "install" folder. - Aus Sicherheitsgründen sollten Sie das Verzeichnis “install” unbedingt löschen.',
 	),
 );

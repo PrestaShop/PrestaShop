@@ -35,7 +35,7 @@
 		{if isset($opc) && $opc}
 			{assign var='type_order' value="order-opc"}
 		{/if}
-		<a data-icon="refresh" data-role="button" data-theme="e" href="{$link->getPageLink({$type_order}, true, NULL, "submitReorder&id_order={$order->id|intval}")}" title="{l s='Reorder'}" data-ajax="false">
+		<a data-icon="refresh" data-role="button" data-theme="e" href="{$link->getPageLink({$type_order}, true, NULL, "submitReorder&id_order={$order->id|intval}")|escape:'html'}" title="{l s='Reorder'}" data-ajax="false">
 		{l s='Reorder'}
 		</a>
 	</div>
@@ -91,9 +91,9 @@
 <p>
 	<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
 	{if $is_guest}
-		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}&amp;secure_key=$order->secure_key")}" >{l s='Download your invoice as a PDF file.'}</a>
+		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}&amp;secure_key=$order->secure_key")|escape:'html'}" >{l s='Download your invoice as a PDF file.'}</a>
 	{else}
-		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}")}" >{l s='Download your invoice as a PDF file.'}</a>
+		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}")|escape:'html'}" >{l s='Download your invoice as a PDF file.'}</a>
 	{/if}
 </p>
 {/if}
@@ -143,7 +143,7 @@
 {*$HOOK_ORDERDETAILDISPLAYED*}
 {* / TO CHECK ==========================*}
 {if $return_allowed}<p>{l s='If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.'}</p>{/if}
-{if !$is_guest}<form action="{$link->getPageLink('order-follow', true)}" method="post">{/if}
+{if !$is_guest}<form action="{$link->getPageLink('order-follow', true)|escape:'html'}" method="post">{/if}
 <ul data-role="listview" data-inset="true">
 {foreach from=$products item=product name=products}
 	{if !isset($product.deleted)}
@@ -273,7 +273,7 @@
 		</div>
 	{/if}
 	{* / TO CHECK ==========================*}
-	<form action="{$link->getPageLink('order-detail', true)}" method="post" class="std" id="sendOrderMessage">
+	<form action="{$link->getPageLink('order-detail', true)|escape:'html'}" method="post" class="std" id="sendOrderMessage">
 		<h3 class="bg">{l s='Add a message'}</h3>
 		<p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
 		<fieldset>

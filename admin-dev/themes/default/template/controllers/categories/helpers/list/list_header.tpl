@@ -33,7 +33,7 @@
 			&nbsp;<img src="../img/admin/home.gif" alt="" />
 			{assign var=params_url value=""}
 		{else}
-			{assign var=params_url value="&id_category={$category.id_category}&viewcategory"}
+			{assign var=params_url value="&id_category={$category.id_category|intval}&viewcategory"}
 		{/if}
 		{if $category.id_category == $categories_tree_current_id}
 			{$category.name}
@@ -43,7 +43,7 @@
 	{/foreach}
 </div>
 	{if isset($delete_category) && $delete_category}
-		<form action="{$REQUEST_URI}" method="post">
+		<form action="{$REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">
 			<div class="warn">
 				<h2>
 					{if $need_delete_mode}
@@ -74,10 +74,10 @@
 					{if $key != 'deleteMode'}
 						{if is_array($value)}
 							{foreach $value as $val}
-								<input type="hidden" name="{$key}[]" value="{$val}" />
+								<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}[]" value="{$val|escape:'htmlall':'UTF-8'}" />
 							{/foreach}
 						{else}
-							<input type="hidden" name="{$key}" value="{$value}" />
+							<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}" value="{$value|escape:'htmlall':'UTF-8'}" />
 						{/if}
 					{/if}
 				{/foreach}

@@ -20,7 +20,7 @@
 						<input type="hidden" id="cart_product_address_delivery_id_{$product.id_product}" value="{$product.id_address_delivery}"/>
 
 						<div class="fl width-20">
-							<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small_default')}" class="img_product_cart" />
+							<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small_default')|escape:'html'}" class="img_product_cart" />
 						</div>
 						<div class="fl width-60 padding-left-5px">
 							<h3>{$product.name}</h3>
@@ -58,7 +58,7 @@
 							</tbody>
 						</table>
 					</a>
-					<a rel="nofollow" class="cart_quantity_delete" id="{$product.id_product}_{$product.id_product_attribute}_0_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")}" data-ajax="false">{l s='Delete'}</a>
+					<a rel="nofollow" class="cart_quantity_delete" id="{$product.id_product}_{$product.id_product_attribute}_0_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")|escape:'html'}" data-ajax="false">{l s='Delete'}</a>
 				</li>
 			{/foreach}
 			{assign var='last_was_odd' value=$product@iteration%2}
@@ -74,7 +74,7 @@
 						{* Display the gift product line *}
 						{include file="./shopping-cart-gift-line.tpl" productLast=$product@last productFirst=$product@first}
 					</a>
-					<a rel="nofollow" class="cart_quantity_delete" id="{$product.id_product}_{$product.id_product_attribute}_0_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")}" data-ajax="false" style="display:none">{l s='Delete'}</a>
+					<a rel="nofollow" class="cart_quantity_delete" id="{$product.id_product}_{$product.id_product_attribute}_0_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")|escape:'html'}" data-ajax="false" style="display:none">{l s='Delete'}</a>
 				</li>
 			{/foreach}
 		</ul>
@@ -205,11 +205,11 @@
 		</div><!-- /grid-a -->
 		<br />
 		{if $opc && $isLogged && !$isGuest}
-			<a href="{$link->getPageLink('index', true)}" data-role="button" data-theme="a" data-icon="back" data-ajax="false">{l s='Continue shopping'}</a>
+			<a href="{$link->getPageLink('index', true)|escape:'html'}" data-role="button" data-theme="a" data-icon="back" data-ajax="false">{l s='Continue shopping'}</a>
 		{else}
 			<ul data-role="listview" data-inset="true" id="list_myaccount">
 				<li data-theme="a" data-icon="back">
-					<a href="{$link->getPageLink('index', true)}" data-ajax="false">{l s='Continue shopping'}</a>
+					<a href="{$link->getPageLink('index', true)|escape:'html'}" data-ajax="false">{l s='Continue shopping'}</a>
 				</li>
 				<li data-theme="b" data-icon="check">
 					<a href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')}{else}{$link->getPageLink('order', true, NULL, 'step=1')}{/if}" data-ajax="false">{l s='Confirm order'}</a>

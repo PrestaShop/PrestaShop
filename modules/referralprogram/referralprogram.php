@@ -580,7 +580,7 @@ class ReferralProgram extends Module
 						<td class="center">'.((int)($friend['id_customer']) ? $friend['id_customer'] : '--').'</td>
 						<td>'.$friend['firstname'].' '.$friend['lastname'].'</td>
 						<td>'.$friend['email'].'</td>
-						<td>'.Tools::displayDate($friend['date_add'], $this->context->language->id, true).'</td>
+						<td>'.Tools::displayDate($friend['date_add'],null , true).'</td>
 						<td align="right">'.sizeof(ReferralProgramModule::getSponsorFriend($friend['id_customer'])).'</td>
 						<td align="right">'.($orders ? sizeof($orders) : 0).'</td>
 						<td align="center">'.((int)$friend['id_customer'] ? '<img src="'._PS_ADMIN_IMG_.'enabled.gif" />' : '<img src="'._PS_ADMIN_IMG_.'disabled.gif" />').'</td>
@@ -649,8 +649,7 @@ class ReferralProgram extends Module
 		{
 			$cartRule = new CartRule((int)$referralprogram->id_cart_rule_sponsor);
 			$currency = new Currency((int)$order->id_currency);
-			$discount_display = ReferralProgram::displayDiscount($cartRule->reduction_percent ? $cartRule->reduction_percent : $cartRule->reduction_amount, $cartRule->reduction_percent ? 1 : 2, $currency);
-			$data = array('{sponsored_firstname}' => $customer->firstname, '{sponsored_lastname}' => $customer->lastname, '{discount_display}' => $discount_display, '{discount_name}' => $cartRule->code);
+			$discount_display = ReferralProgram::displayDiscount( (float) $cartRule->reduction_percent ? (float) $cartRule->reduction_percent : (int) $cartRule->reduction_amount,  (float) $cartRule->reduction_percent ? 1 : 2, $currency);			$data = array('{sponsored_firstname}' => $customer->firstname, '{sponsored_lastname}' => $customer->lastname, '{discount_display}' => $discount_display, '{discount_name}' => $cartRule->code);
 			Mail::Send((int)$order->id_lang, 'referralprogram-congratulations', Mail::l('Congratulations!', (int)$order->id_lang), $data, $sponsor->email, $sponsor->firstname.' '.$sponsor->lastname, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
 			return true;
 		}

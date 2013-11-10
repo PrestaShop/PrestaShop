@@ -24,11 +24,11 @@
 *}
 <table class="table" width="100%" cellspacing="0" cellpadding="0" id="shipping_table">
 <colgroup>
-	<col width="15%">
-	<col width="15%">
-	<col width="">
-	<col width="10%">
-	<col width="20%">
+	<col width="15%"/>
+	<col width="15%"/>
+	<col width=""/>
+	<col width="10%"/>
+	<col width="20%"/>
 </colgroup>
 	<thead>
 	<tr>
@@ -46,7 +46,7 @@
 		<td>{dateFormat date=$line.date_add full=true}</td>
 		<td>{$line.type}</td>
 		<td>{$line.carrier_name}</td>
-		<td>{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</td>
+		<td class="weight">{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</td>
 		<td>
 			{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}
 				{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}
@@ -55,7 +55,7 @@
 			{/if}
 		</td>
 		<td>
-			<span id="shipping_number_show">{if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
+			<span id="shipping_number_show">{if $line.url && $line.tracking_number}<a target="_blank" href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
 			{if $line.can_edit}
 				<form style="display: inline;" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id|escape:'htmlall':'UTF-8'}">
 					<span class="shipping_number_edit" style="display:none;">

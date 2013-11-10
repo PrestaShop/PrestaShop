@@ -29,8 +29,8 @@ abstract class InstallControllerHttp
 	/**
 	 * @var array List of installer steps
 	 */
-	protected static $steps = array('welcome', 'license', 'system', 'database', 'configure', 'process');
-
+	protected static $steps = array('welcome', 'license', 'system', 'configure', 'database', 'process');
+	protected $phone;
 	protected static $instances = array();
 
 	/**
@@ -318,7 +318,14 @@ abstract class InstallControllerHttp
 	 */
 	public function getPhone()
 	{
-		return $this->language->getInformation('phone', false);
+		if ($this->phone === null)
+		{
+			$this->phone = $this->language->getInformation('phone', false);
+			if ($iframe = Tools::file_get_contents('http://api.prestashop.com/iframe/install.php?lang='.$this->language->getLanguageIso()))
+				if (preg_match('/<img.+alt="([^"]+)".*>/Ui', $iframe, $matches) && isset($matches[1]))
+					$this->phone = $matches[1];
+		}
+		return $this->phone;
 	}
 
 	/**

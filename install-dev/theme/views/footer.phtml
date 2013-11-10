@@ -30,7 +30,15 @@
 </ul>
 <script type="text/javascript">
 	if (typeof psuser_assistance != 'undefined')
-		psuser_assistance.setStep('install_<?php echo addslashes($this->step) ?>');
+	{
+		var errors = new Array();
+		$.each($('li.fail'), function(i, item){
+			errors.push($(this).text().trim());
+		});
+		psuser_assistance.setStep('install_<?php echo addslashes($this->step) ?>', {'error':errors});
+		if (errors.length)
+			$('#iframe_help').attr('src', $('#iframe_help').attr('src') + '&errors=' + encodeURI(errors.join(', ')));
+	}
 </script>
 </body>
 </html>

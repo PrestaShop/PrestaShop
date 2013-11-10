@@ -200,7 +200,7 @@ class StatsProduct extends ModuleGraph
 				foreach ($sales as $sale)
 					$this->html .= '
 					<tr>
-						<td>'.Tools::displayDate($sale['date_add'], (int)$this->context->language->id, false).'</td>
+						<td>'.Tools::displayDate($sale['date_add'],null , false).'</td>
 						<td align="center"><a href="?tab=AdminOrders&id_order='.$sale['id_order'].'&vieworder&token='.$tokenOrder.'">'.(int)($sale['id_order']).'</a></td>
 						<td align="center"><a href="?tab=AdminCustomers&id_customer='.$sale['id_customer'].'&viewcustomer&token='.$tokenCustomer.'">'.(int)($sale['id_customer']).'</a></td>
 						'.($hasAttribute ? '<td>'.$sale['product_name'].'</td>' : '').'

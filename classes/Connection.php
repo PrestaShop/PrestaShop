@@ -82,8 +82,12 @@ class ConnectionCore extends ObjectModel
 		// The connection is created if it does not exist yet and we get the current page id
 		if (!isset($cookie->id_connections) || !strstr(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', Tools::getHttpHost(false, false)))
 			$id_page = Connection::setNewConnection($cookie);
+		// If we do not track the pages, no need to get the page id
+		if (!Configuration::get('PS_STATSDATA_PAGESVIEWS') && !Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
+			return array();
 		if (!isset($id_page) || !$id_page)
 			$id_page = Page::getCurrentId();
+		// If we do not track the page views by customer, the id_page is the only information needed
 		if (!Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
 			return array('id_page' => $id_page);
 
@@ -93,7 +97,7 @@ class ConnectionCore extends ObjectModel
 			'id_connections' => (int)$cookie->id_connections,
 			'id_page' => (int)$id_page,
 			'time_start' => $time_start
-		));
+		), false, true, Db::INSERT_IGNORE);
 
 		// This array is serialized and used by the ajax request to identify the page
 		return array(
@@ -110,7 +114,7 @@ class ConnectionCore extends ObjectModel
 			// This is a bot and we have to retrieve its connection ID
 			$sql = 'SELECT `id_connections` FROM `'._DB_PREFIX_.'connections`
 					WHERE ip_address = '.ip2long(Tools::getRemoteAddr()).'
-						AND DATE_ADD(`date_add`, INTERVAL 30 MINUTE) > \''.pSQL(date('Y-m-d H:i:00')).'\'
+						AND `date_add` > \''.pSQL(date('Y-m-d H:i:00', time() - 1800)).'\'
 						'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 					ORDER BY `date_add` DESC';
 			if ($id_connections = Db::getInstance()->getValue($sql))
@@ -124,7 +128,7 @@ class ConnectionCore extends ObjectModel
 		$sql = 'SELECT `id_guest`
 				FROM `'._DB_PREFIX_.'connections`
 				WHERE `id_guest` = '.(int)$cookie->id_guest.'
-					AND DATE_ADD(`date_add`, INTERVAL 30 MINUTE) > \''.pSQL(date('Y-m-d H:i:00')).'\'
+					AND `date_add` > \''.pSQL(date('Y-m-d H:i:00', time() - 1800)).'\'
 					'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 				ORDER BY `date_add` DESC';
 		$result = Db::getInstance()->getRow($sql);

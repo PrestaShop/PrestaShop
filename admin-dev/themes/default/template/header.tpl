@@ -69,6 +69,7 @@
 		var token_admin_customers = '{getAdminToken tab='AdminCustomers' slashes=1}';
 		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads' slashes=1}';
 		var currentIndex = '{$currentIndex}';
+		var choose_language_translate = "{l s='Choose language' slashes=1 }";
 	</script>
 {/if}
 
@@ -204,7 +205,7 @@
 						<ul class="submenu">
 							{foreach from=$t.sub_tabs item=t2}
 								{if $t2.active}
-									<li><a href="{$t2.href|escape:'htmlall':'UTF-8'}">{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}</a></li>
+									<li{if $t2.current} class="active"{/if}><a href="{$t2.href|escape:'htmlall':'UTF-8'}">{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}</a></li>
 								{/if}
 							{/foreach}
 						</ul>

@@ -31,10 +31,10 @@
 				<td valign="top" width="32" align="center">
 					<img class="imgm" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}">
 				</td>
-				<td height="60" valign="top">
+				<td valign="top">
 					<div class="moduleDesc" id="anchor{$module->name|ucfirst}">
 						<h3>
-							{$module->displayName|truncate:40:'…'} {$module->version}
+							{$module->displayName|truncate:36:'…'} {$module->version}
 							{if isset($module->id) && $module->id gt 0 }
 								{if $module->active}
 									<span class="setup">{l s='Enabled'}</span>
@@ -52,7 +52,7 @@
 						</h3>
 						<p class="desc">
 							{if isset($module->description) && $module->description ne ''}
-								{$module->description|truncate:100:'…'}
+								{$module->description|truncate:86:'…'}
 							{else}
 								&nbsp;
 							{/if}

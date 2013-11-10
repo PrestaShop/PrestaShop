@@ -102,7 +102,14 @@ class CombinationCore extends ObjectModel
 			
 		// Removes the product from StockAvailable, for the current shop
 		StockAvailable::removeProductFromStockAvailable((int)$this->id_product, (int)$this->id);
-		
+
+		if ($specific_prices = SpecificPrice::getByProductId((int)$this->id_product, (int)$this->id))
+			foreach ($specific_prices as $specific_price)
+				{
+					$price = new SpecificPrice((int)$specific_price['id_specific_price']);
+					$price->delete();
+				}
+
 		if (!$this->hasMultishopEntries() && !$this->deleteAssociations())
 			return false;
 		return true;
@@ -128,6 +135,7 @@ class CombinationCore extends ObjectModel
 	{
 		$result = Db::getInstance()->delete('product_attribute_combination', '`id_product_attribute` = '.(int)$this->id);
 		$result &= Db::getInstance()->delete('cart_product', '`id_product_attribute` = '.(int)$this->id);
+		$result &= Db::getInstance()->delete('product_attribute_image', '`id_product_attribute` = '.(int)$this->id);
 
 		return $result;
 	}

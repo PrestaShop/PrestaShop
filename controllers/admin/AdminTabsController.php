@@ -159,22 +159,28 @@ class AdminTabsControllerCore extends AdminController
 					),
 					'desc' => $this->l('Show or hide menu.')
 				),
-				array(
-					'type' => 'select',
-					'label' => $this->l('Parent:'),
-					'name' => 'id_parent',
-					'options' => array(
-						'query' => $tabs,
-						'id' => 'id_tab',
-						'name' => 'name'
-					)
-				)
 			),
 			'submit' => array(
 				'title' => $this->l('   Save   '),
 				'class' => 'button'
 			)
 		);
+
+		$display_parent = true;
+		if (Validate::isLoadedObject($this->object) && !class_exists($this->object->class_name.'Controller'))
+			$display_parent = false;
+
+		if ($display_parent)
+			$this->fields_form['input'][] = array(
+				'type' => 'select',
+				'label' => $this->l('Parent:'),
+				'name' => 'id_parent',
+				'options' => array(
+					'query' => $tabs,
+					'id' => 'id_tab',
+					'name' => 'name'
+				)
+			);
 
 		return parent::renderForm();
 	}

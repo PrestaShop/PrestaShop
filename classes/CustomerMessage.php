@@ -104,6 +104,11 @@ class CustomerMessageCore extends ObjectModel
 				WHERE '.$where
 			);
 	}
-
+	
+	public function delete()
+	{
+		if (!empty($this->file_name))
+			@unlink(_PS_UPLOAD_DIR_.$this->file_name);
+		return parent::delete();
+	}  
 }
-

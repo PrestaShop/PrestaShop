@@ -43,18 +43,25 @@ function p1540_add_missing_columns()
 	if ($id_module)
 	{
 		$list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'layered_product_attribute`');
-		foreach ($list_fields as $k => $field)
-			$list_fields[$k] = $field['Field'];
-
-		if (!in_array('id_shop', $list_fields))
-			if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'layered_product_attribute` ADD `id_shop` INT( 10 ) UNSIGNED NOT NULL DEFAULT "1" AFTER `id_attribute_group`'))
-				$errors[] = Db::getInstance()->getMsgError();				
+		if(is_array($list_fields))
+		{
+			foreach ($list_fields as $k => $field)
+				$list_fields[$k] = $field['Field'];
+			if (!in_array('id_shop', $list_fields))
+				if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'layered_product_attribute` ADD `id_shop` INT( 10 ) UNSIGNED NOT NULL DEFAULT "1" AFTER `id_attribute_group`'))
+					$errors[] = Db::getInstance()->getMsgError();
+		}			
 	}
 	
 	$key_exists = Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'stock_available` WHERE KEY_NAME = "product_sqlstock"');;
-	if (is_array($key_exists))
+	if (is_array($key_exists) && count($key_exists))
 		if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'stock_available` DROP INDEX `product_sqlstock`'))
 			$errors[] = Db::getInstance()->getMsgError();
+			
+	$key_exists = Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'stock_available` WHERE KEY_NAME = "id_product_2"');;
+	if (is_array($key_exists) && count($key_exists))
+		if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'stock_available` DROP INDEX `id_product_2`'))
+			$errors[] = Db::getInstance()->getMsgError();			
 
 	if (count($errors))
 		return array('error' => 1, 'msg' => implode(',', $errors)) ;	

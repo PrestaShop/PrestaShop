@@ -110,14 +110,14 @@ $(document).ready(function() {
 		</ul>
 
 	<div id="partner_preactivation">
-		<p class="center"><img src="../img/loader.gif" alt="" /></p>
+		<p class="center"><img src="../img/loader.gif" alt="" /> {l s='Loading...'}</p>
 	</div>
 
 	<div class="separation"></div>
 
 
 	{$tips_optimization}
-	<div id="discover_prestashop"><p class="center"><img src="../img/loader.gif" alt="" />{l s='Loading...'}</p></div>
+	<div id="discover_prestashop"><p class="center"><img src="../img/loader.gif" alt="" /> {l s='Loading...'}</p></div>
 
 	{hook h="displayAdminHomeInfos"}
 	{hook h="displayBackOfficeHome"} {*old name of the hook*}
@@ -212,7 +212,7 @@ $(document).ready(function() {
 		{
 			// don't show/hide screencast if it's deactivated
 			{if $employee->bo_show_screencast}
-			$('#adminpresentation').fadeOut('slow');
+				$('#adminpresentation').fadeOut('slow');
 			{/if}
 			$('#partner_preactivation').fadeOut('slow');
 			$('#discover_prestashop').fadeOut('slow');
@@ -223,7 +223,7 @@ $(document).ready(function() {
 		$.fancybox(
 			this.href,
 			{
-				'width'				: 	660,
+				'width'				: 	920,
 				'height'			: 	384,
 				'transitionIn'		: 'none',
 				'transitionOut'		: 'none',

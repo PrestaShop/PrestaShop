@@ -161,7 +161,7 @@ function getHookableList() {
 	        	var errors = '';
 				for (error in jsonData.errors) //IE6 bug fix
 				if (error != 'indexOf')
-					errors += jsonData.errors[error] + "\n";
+					errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 				alert(errors);
         }
         else

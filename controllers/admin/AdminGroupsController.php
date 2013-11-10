@@ -30,6 +30,7 @@ class AdminGroupsControllerCore extends AdminController
 	{
 		$this->table = 'group';
 		$this->className = 'Group';
+		$this->list_id = 'group';
 		$this->lang = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('view');
@@ -153,6 +154,16 @@ class AdminGroupsControllerCore extends AdminController
 		if (Tools::isSubmit('changeShowPricesVal') && $this->id_object)
 			$this->action = 'change_show_prices_val';
 
+		if (Tools::getIsset('viewgroup'))
+		{
+			$this->list_id = 'customer_group';
+
+			if (isset($_POST['submitReset'.$this->list_id]))
+				$this->processResetFilters();
+		}
+		else
+			$this->list_id = 'group';
+
 		parent::initProcess();
 	}
 
@@ -181,30 +192,29 @@ class AdminGroupsControllerCore extends AdminController
 			$genders_icon[$gender->id] = '../genders/'.(int)$gender->id.'.jpg';
 			$genders[$gender->id] = $gender->name;
 		}
-		$customer_fields_display = (array(
-				'id_customer' => array('title' => $this->l('ID'), 'width' => 15, 'align' => 'center'),
+		$this->table = 'customer_group';
+		$this->lang = false;
+		$this->list_id = 'customer_group';
+		$this->actions = array();
+		$this->bulk_actions = false;
+		$this->no_link = true;
+		$this->fields_list = (array(
+				'id_customer' => array('title' => $this->l('ID'), 'width' => 15, 'align' => 'center', 'filter_key' => 'c!id_customer'),
 				'id_gender' => array('title' => $this->l('Titles'), 'align' => 'center', 'width' => 50,'icon' => $genders_icon, 'list' => $genders),
-				'firstname' => array('title' => $this->l('Name'), 'align' => 'center'),
-				'lastname' => array('title' => $this->l('Name'), 'align' => 'center'),
-				'email' => array('title' => $this->l('Email address'), 'width' => 150, 'align' => 'center'),
+				'firstname' => array('title' => $this->l('First name'), 'align' => 'center'),
+				'lastname' => array('title' => $this->l('Last name'), 'align' => 'center'),
+				'email' => array('title' => $this->l('Email address'), 'width' => 150, 'align' => 'center', 'filter_key' => 'c!email', 'orderby' => true),
 				'birthday' => array('title' => $this->l('Birth date'), 'width' => 150, 'align' => 'right', 'type' => 'date'),
 				'date_add' => array('title' => $this->l('Register date'), 'width' => 150, 'align' => 'right', 'type' => 'date'),
-				'orders' => array('title' => $this->l('Orders'), 'align' => 'center'),
 				'active' => array('title' => $this->l('Enabled'),'align' => 'center','width' => 20, 'active' => 'status','type' => 'bool')
 			));
 
-		$customer_list = $group->getCustomers(false, 0, 0, true);
-
-		$helper = new HelperList();
-		$helper->currentIndex = Context::getContext()->link->getAdminLink('AdminCustomers', false);
-		$helper->token = Tools::getAdminTokenLite('AdminCustomers');
-		$helper->shopLinkType = '';
-		$helper->table = 'customer';
-		$helper->identifier = 'id_customer';
-		$helper->actions = array('edit', 'view');
-		$helper->show_toolbar = false;
-
-		return $helper->generateList($customer_list, $customer_fields_display);
+		$this->_select = 'c.*';
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'customer` c ON (a.`id_customer` = c.`id_customer`)';
+		$this->_where = 'AND a.`id_group` = '.(int)$group->id.' AND c.`deleted` != 1';
+		self::$currentIndex = self::$currentIndex.'&viewgroup';
+		$this->processFilter();
+		return parent::renderList();
 	}
 
 	public function renderForm()
@@ -312,36 +322,32 @@ class AdminGroupsControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
-	protected function formatCategoryDiscountList($id)
+	protected function formatCategoryDiscountList($id_group)
 	{
-		$category = GroupReduction::getGroupReductions((int)$id, $this->context->language->id);
+		$group_reductions = GroupReduction::getGroupReductions((int)$id_group, $this->context->language->id);
 		$category_reductions = array();
 		$category_reduction = Tools::getValue('category_reduction');
 
-		foreach ($category as $category)
+		foreach ($group_reductions as $category)
 		{
 			if (is_array($category_reduction) && array_key_exists($category['id_category'], $category_reduction))
 				$category['reduction'] = $category_reduction[$category['id_category']];
 
-			$tmp = array();
-			$tmp['path'] = getPath(self::$currentIndex.'?tab=AdminCategories', (int)$category['id_category']);
-			$tmp['reduction'] = (float)$category['reduction'] * 100;
-			$tmp['id_category'] = (int)$category['id_category'];
-			$category_reductions[(int)$category['id_category']] = $tmp;
+			$category_reductions[(int)$category['id_category']] = array(
+				'path' => getPath(self::$currentIndex.'?tab=AdminCategories', (int)$category['id_category']),
+				'reduction' => (float)$category['reduction'] * 100,
+				'id_category' => (int)$category['id_category']
+			);
 		}
 
 		if (is_array($category_reduction))
 			foreach ($category_reduction as $key => $val)
-			{
 				if (!array_key_exists($key, $category_reductions))
-				{
-					$tmp = array();
-					$tmp['path'] = getPath(self::$currentIndex.'?tab=AdminCategories', $key);
-					$tmp['reduction'] = (float)$val * 100;
-					$tmp['id_category'] = (int)$key;
-					$category_reductions[(int)$category['id_category']] = $tmp;
-				}
-			}
+					$category_reductions[(int)$key] = array(
+						'path' => getPath(self::$currentIndex.'?tab=AdminCategories', $key),
+						'reduction' => (float)$val * 100,
+						'id_category' => (int)$key
+					);
 
 		return $category_reductions;
 	}

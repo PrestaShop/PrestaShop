@@ -22,20 +22,52 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {extends file="helpers/view/view.tpl"}
-
 {block name="override_tpl"}
 	<script type="text/javascript">
-		var errorEmpty = "{l s='Please name your matching configuration to save.'}"
+		var errorEmpty = '{l s='Please name your matching configuration to save.' js=1}';
 		var token = '{$token}';
+		var current = 0;
+		function showTable(nb)
+		{
+			$('#btn_left').disabled = null;
+			$('#btn_right').disabled = null;
+			if (nb <= 0)
+			{
+				nb = 0;
+				$('#btn_left').disabled = 'true';
+			}
+			if (nb >= {$nb_table} - 1)
+			{
+				nb = {$nb_table} - 1;
+				$('#btn_right').disabled = 'true';
+			}
+			$('#table' + current).hide();
+			current = nb;
+			$('#table' + current).show();
+		}
+		$(document).ready(function(){
+			var btn_save_import = $('span[class~="process-icon-save-import"]').parent();
+			var btn_submit_import = $('#import');
+			if (btn_save_import.length > 0 && btn_submit_import.length > 0)
+			{
+				btn_submit_import.hide();
+				btn_save_import.find('span').removeClass('process-icon-save-import');
+				btn_save_import.find('span').addClass('process-icon-save');
+				btn_save_import.click(function(){
+					btn_submit_import.before('<input type="hidden" name="' + btn_submit_import.attr("name") + '" value="1" />');
+					$('#import_form').submit();
+				});
+			}
+			showTable(current);
+		});
 	</script>
 	<div id="container-customer">
 	<h2>{l s='View your data'}</h2>
 	<div>
-		<b>{l s='Save and load your configuration for importing files'} : </b><br><br>
-		<input type="text" name="newImportMatchs" id="newImportMatchs">
-		<a id="saveImportMatchs" class="button" href="#">{l s='Save'}</a><br><br>
+		<b>{l s='Save and load your configuration for importing files'} : </b><br/><br/>
+		<input type="text" name="newImportMatchs" id="newImportMatchs" />
+		<a id="saveImportMatchs" class="button" href="#">{l s='Save'}</a><br /><br />
 		<div id="selectDivImportMatchs" {if !$import_matchs}style="display:none"{/if}>
 			<select id="valueImportMatchs">
 				{foreach $import_matchs as $match}
@@ -46,21 +78,18 @@
 			<a class="button" id="deleteImportMatchs" href="#">{l s='Delete'}</a>
 		</div>
 	</div>
-
 	<h3>{l s='Please set the value type of each column'}</h3>
-
 	<div id="error_duplicate_type" class="warning warn" style="display:none;">
 		<h3>{l s='Columns cannot have the same value type'}</h3>
 	</div>
-
 	<div id="required_column" class="warning warn" style="display:none;">
 		<h3>{l s='Column'} <span id="missing_column">&nbsp;</span> {l s='must be set'}</h3>
 	</div>
-
 	<form action="{$current}&token={$token}" method="post" id="import_form" name="import_form">
-		{l s='Skip'} <input type="text" size="2" name="skip" value="0" /> {l s='lines'}
+		{l s='Skip'} <input type="text" size="2" name="skip" value="1" /> {l s='lines'}
 		<input type="hidden" name="csv" value="{$fields_value.csv}" />
 		<input type="hidden" name="convert" value="{$fields_value.convert}" />
+		<input type="hidden" name="regenerate" value="{$fields_value.regenerate}" />
 		<input type="hidden" name="entity" value="{$fields_value.entity}" />
 		<input type="hidden" name="iso_lang" value="{$fields_value.iso_lang}" />
 		{if $fields_value.truncate}
@@ -72,49 +101,8 @@
 		{if $fields_value.match_ref}
 			<input type="hidden" name="match_ref" value="1" />
 		{/if}
-		<input type="hidden" name="separator" value="{$fields_value.separator}">
-		<input type="hidden" name="multiple_value_separator" value="{$fields_value.multiple_value_separator}">
-		<script type="text/javascript">
-			var current = 0;
-
-			function showTable(nb)
-			{
-				getE('btn_left').disabled = null;
-				getE('btn_right').disabled = null;
-				if (nb <= 0)
-				{
-					nb = 0;
-					getE('btn_left').disabled = 'true';
-				}
-				if (nb >= {$nb_table} - 1)
-				{
-					nb = {$nb_table} - 1;
-					getE('btn_right').disabled = 'true';
-				}
-				toggle(getE('table'+current), false);
-				current = nb;
-				toggle(getE('table'+current), true);
-			}
-
-			$(function() {
-				var btn_save_import = $('span[class~="process-icon-save-import"]').parent();
-				var btn_submit_import = $('#import');
-
-				if (btn_save_import.length > 0 && btn_submit_import.length > 0)
-				{
-					btn_submit_import.hide();
-					btn_save_import.find('span').removeClass('process-icon-save-import');
-					btn_save_import.find('span').addClass('process-icon-save');
-					btn_save_import.click(function() {
-						btn_submit_import.before('<input type="hidden" name="'+btn_submit_import.attr("name")+'" value="1" />');
-
-						$('#import_form').submit();
-					});
-				}
-			});
-
-		</script>
-
+		<input type="hidden" name="separator" value="{$fields_value.separator}" />
+		<input type="hidden" name="multiple_value_separator" value="{$fields_value.multiple_value_separator}" />
 		<table>
 			<tr>
 				<td colspan="3" align="center">
@@ -123,7 +111,7 @@
 			</tr>
 			<tr>
 				<td valign="top" align="center">
-					<input id="btn_left" value="{l s='<<'}" type="button" class="button" onclick="showTable(current - 1)" />
+					<input id="btn_left" value="{l s='<<'}" type="button" class="button" onclick="showTable(current - 1);" />
 				</td>
 				<td align="left">
 					{section name=nb_i start=0 loop=$nb_table step=1}
@@ -132,12 +120,10 @@
 					{/section}
 				</td>
 				<td valign="top" align="center">
-					<input id="btn_right" value="{l s='>>'}" type="button" class="button" onclick="showTable(current + 1)" />
+					<input id="btn_right" value="{l s='>>'}" type="button" class="button" onclick="showTable(current + 1);" />
 				</td>
 			</tr>
 		</table>
-		<script type="text/javascript">showTable(current);</script>
 	</form>
 	</div>
 {/block}
-

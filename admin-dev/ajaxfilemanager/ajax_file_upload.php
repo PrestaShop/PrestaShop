@@ -60,7 +60,7 @@
 									$tem[$k] = $v;
 								}
 								
-								$tem['path'] = backslashToSlash($path);		
+								$tem['path'] = addslashes(backslashToSlash($path));
 								$tem['type'] = "file";
 								$tem['size'] = transformFileSize($tem['size']);
 								$tem['ctime'] = date(DATE_TIME_FORMAT, $tem['ctime']);
@@ -73,7 +73,7 @@
 										$info .= sprintf(", %s:'%s'", $k, $v);									
 								}
 
-								$info .= sprintf(", url:'%s'",  getFileUrl($path));
+								$info .= sprintf(", url:'%s'",  addslashes(getFileUrl($path)));
 								$info .= sprintf(", tipedit:'%s'",  TIP_DOC_RENAME);		
 
 																				

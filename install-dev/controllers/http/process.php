@@ -78,7 +78,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	public function process()
 	{
 		if (file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE))
-			@require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
+			require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
 
 		if (!$this->session->process_validated)
 			$this->session->process_validated = array();
@@ -241,7 +241,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	public function processInstallAddonsModules()
 	{
 		$this->initializeContext();
-		if ($module = Tools::getValue('module') && $id_module = Tools::getValue('id_module'))
+		if (($module = Tools::getValue('module')) && $id_module = Tools::getValue('id_module'))
 			$result = $this->model_install->installModulesAddons(array('name' => $module, 'id_module' => $id_module));
 		else
 			$result = $this->model_install->installModulesAddons();
@@ -260,7 +260,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->initializeContext();
 
 		$this->model_install->xml_loader_ids = $this->session->xml_loader_ids;
-		if (!$this->model_install->installFixtures(Tools::getValue('entity')) || $this->model_install->getErrors())
+		if (!$this->model_install->installFixtures(Tools::getValue('entity', null), array('shop_activity' => $this->session->shop_activity, 'shop_country' => $this->session->shop_country)) || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
 		$this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
 		$this->ajaxJsonAnswer(true);

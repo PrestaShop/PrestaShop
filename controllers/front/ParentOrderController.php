@@ -56,8 +56,6 @@ class ParentOrderControllerCore extends FrontController
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 
 		$this->nbProducts = $this->context->cart->nbProducts();
-
-		global $isVirtualCart;
 		
 		if (!$this->context->customer->isLogged(true) && $this->context->getMobileDevice() && Tools::getValue('step'))
 			Tools::redirect($this->context->link->getPageLink('authentication', true, (int)$this->context->language->id, $params));
@@ -153,8 +151,8 @@ class ParentOrderControllerCore extends FrontController
 		$this->addJqueryPlugin('fancybox');
 		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')) || Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 		{
-			$this->addJS(_THEME_JS_DIR_.'cart-summary.js');
 			$this->addJqueryPlugin('typewatch');
+			$this->addJS(_THEME_JS_DIR_.'cart-summary.js');
 		}
 	}
 
@@ -372,6 +370,7 @@ class ParentOrderControllerCore extends FrontController
 			'currencyFormat' => $this->context->currency->format,
 			'currencyBlank' => $this->context->currency->blank,
 			'show_option_allow_separate_package' => $show_option_allow_separate_package,
+			'smallSize' => Image::getSize(ImageType::getFormatedName('small')),
 				
 		));
 
@@ -399,10 +398,12 @@ class ParentOrderControllerCore extends FrontController
 
 			// Getting a list of formated address fields with associated values
 			$formatedAddressFieldsValuesList = array();
-			foreach ($customerAddresses as $address)
-			{
-				$tmpAddress = new Address($address['id_address']);
 
+			foreach ($customerAddresses as $i => $address)
+			{
+				if (!Address::isCountryActiveById((int)($address['id_address'])))
+					unset($customerAddresses[$i]);										
+				$tmpAddress = new Address($address['id_address']);
 				$formatedAddressFieldsValuesList[$address['id_address']]['ordered_fields'] = AddressFormat::getOrderedAddressFields($address['id_country']);
 				$formatedAddressFieldsValuesList[$address['id_address']]['formated_fields_values'] = AddressFormat::getFormattedAddressFieldsValues(
 					$tmpAddress,
@@ -410,6 +411,10 @@ class ParentOrderControllerCore extends FrontController
 
 				unset($tmpAddress);
 			}
+
+			if (key($customerAddresses) != 0)
+				$customerAddresses = array_values($customerAddresses);
+
 			$this->context->smarty->assign(array(
 				'addresses' => $customerAddresses,
 				'formatedAddressFieldsValuesList' => $formatedAddressFieldsValuesList));
@@ -459,6 +464,8 @@ class ParentOrderControllerCore extends FrontController
 	{	
 		$address = new Address($this->context->cart->id_address_delivery);
 		$id_zone = Address::getZoneById($address->id);
+		if (!Address::isCountryActiveById((int)($this->context->cart->id_address_delivery)) || !Address::isCountryActiveById((int)($this->context->cart->id_address_invoice)))
+			Tools::redirect('index.php?controller=order&step=1');					
 		$carriers = $this->context->cart->simulateCarriersOutput();
 		$checked = $this->context->cart->simulateCarrierSelectedOutput();
 		$delivery_option_list = $this->context->cart->getDeliveryOptionList();
@@ -494,7 +501,7 @@ class ParentOrderControllerCore extends FrontController
 
 		// TOS
 		$cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
-		$this->link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, false);
+		$this->link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite);
 		if (!strpos($this->link_conditions, '?'))
 			$this->link_conditions .= '?content_only=1';
 		else

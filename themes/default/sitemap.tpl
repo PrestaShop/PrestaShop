@@ -31,27 +31,27 @@
 	<div class="sitemap_block">
 		<h3>{l s='Our offers'}</h3>
 		<ul>
-			<li><a href="{$link->getPageLink('new-products')}" title="{l s='View a new product'}">{l s='New products'}</a></li>
+			<li><a href="{$link->getPageLink('new-products')|escape:'html'}" title="{l s='View a new product'}">{l s='New products'}</a></li>
 			{if !$PS_CATALOG_MODE}
-			<li><a href="{$link->getPageLink('best-sales')}" title="{l s='View top-selling products'}">{l s='Best sellers'}</a></li>
-			<li><a href="{$link->getPageLink('prices-drop')}" title="{l s='View products with a price drop'}">{l s='Price drop'}</a></li>
+			<li><a href="{$link->getPageLink('best-sales')|escape:'html'}" title="{l s='View top-selling products'}">{l s='Best sellers'}</a></li>
+			<li><a href="{$link->getPageLink('prices-drop')|escape:'html'}" title="{l s='View products with a price drop'}">{l s='Price drop'}</a></li>
 			{/if}
-			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('manufacturer')}" title="{l s='View a list of manufacturers'}">{l s='Manufacturers:'}</a></li>{/if}
-			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('supplier')}" title="{l s='View a list of suppliers'}">{l s='Suppliers:'}</a></li>{/if}
+			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('manufacturer')|escape:'html'}" title="{l s='View a list of manufacturers'}">{l s='Manufacturers:'}</a></li>{/if}
+			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('supplier')|escape:'html'}" title="{l s='View a list of suppliers'}">{l s='Suppliers:'}</a></li>{/if}
 		</ul>
 	</div>
 	<div class="sitemap_block">
 		<h3>{l s='Your Account'}</h3>
 		<ul>
 		{if $logged}
-			<li><a href="{$link->getPageLink('my-account', true)}" title="{l s='Manage your customer account'}" rel="nofollow">{l s='Your Account'}</a></li>
-			<li><a href="{$link->getPageLink('identity', true)}" title="{l s='Manage your personal information'}" rel="nofollow">{l s='Personal information'}</a></li>
-			<li><a href="{$link->getPageLink('addresses', true)}" title="{l s='View a list of my addresses'}" rel="nofollow">{l s='Addresses'}</a></li>
-			{if $voucherAllowed}<li><a href="{$link->getPageLink('discount', true)}" title="{l s='View a list of my discounts'}" rel="nofollow">{l s='Discounts'}</a></li>{/if}
-			<li><a href="{$link->getPageLink('history', true)}" title="{l s='View a list of my orders'}" rel="nofollow">{l s='Order history'}</a></li>
+			<li><a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Manage your customer account'}" rel="nofollow">{l s='Your Account'}</a></li>
+			<li><a href="{$link->getPageLink('identity', true)|escape:'html'}" title="{l s='Manage your personal information'}" rel="nofollow">{l s='Personal information'}</a></li>
+			<li><a href="{$link->getPageLink('addresses', true)|escape:'html'}" title="{l s='View a list of my addresses'}" rel="nofollow">{l s='Addresses'}</a></li>
+			{if $voucherAllowed}<li><a href="{$link->getPageLink('discount', true)|escape:'html'}" title="{l s='View a list of my discounts'}" rel="nofollow">{l s='Discounts'}</a></li>{/if}
+			<li><a href="{$link->getPageLink('history', true)|escape:'html'}" title="{l s='View a list of my orders'}" rel="nofollow">{l s='Order history'}</a></li>
 		{else}
-			<li><a href="{$link->getPageLink('authentication', true)}" title="{l s='Authentication'}" rel="nofollow">{l s='Authentication'}</a></li>
-			<li><a href="{$link->getPageLink('authentication', true)}" title="{l s='Create new account'}" rel="nofollow">{l s='Create new account'}</a></li>
+			<li><a href="{$link->getPageLink('authentication', true)|escape:'html'}" title="{l s='Authentication'}" rel="nofollow">{l s='Authentication'}</a></li>
+			<li><a href="{$link->getPageLink('authentication', true)|escape:'html'}" title="{l s='Create new account'}" rel="nofollow">{l s='Create new account'}</a></li>
 		{/if}
 		{if $logged}
 			<li><a href="{$link->getPageLink('index')}?mylogout" title="{l s='Log out'}" rel="nofollow">{l s='Log out'}</a></li>
@@ -90,8 +90,8 @@
 			{foreach from=$categoriescmsTree.cms item=cms name=cmsTree}
 				<li><a href="{$cms.link|escape:'htmlall':'UTF-8'}" title="{$cms.meta_title|escape:'htmlall':'UTF-8'}">{$cms.meta_title|escape:'htmlall':'UTF-8'}</a></li>
 			{/foreach}
-			<li><a href="{$link->getPageLink('contact', true)}" title="{l s='Contact'}">{l s='Contact'}</a></li>
-			{if $display_store}<li class="last"><a href="{$link->getPageLink('stores')}" title="{l s='List of our stores'}">{l s='Our stores'}</a></li>{/if}
+			<li><a href="{$link->getPageLink('contact', true)|escape:'html'}" title="{l s='Contact'}">{l s='Contact'}</a></li>
+			{if $display_store}<li class="last"><a href="{$link->getPageLink('stores')|escape:'html'}" title="{l s='List of our stores'}">{l s='Our stores'}</a></li>{/if}
 		</ul>
 	</div>
 </div>

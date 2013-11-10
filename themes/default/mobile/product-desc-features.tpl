@@ -29,7 +29,7 @@
 			<h3>{l s='Download'}</h3>
 			<ul>
 				{foreach from=$attachments item=attachment}
-					<li><a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")}" data-ajax="false">{$attachment.name|escape:'htmlall':'UTF-8'}</a><br />{$attachment.description|escape:'htmlall':'UTF-8'}</li>
+					<li><a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")|escape:'html'}" data-ajax="false">{$attachment.name|escape:'htmlall':'UTF-8'}</a><br />{$attachment.description|escape:'htmlall':'UTF-8'}</li>
 				{/foreach}
 			</ul>
 		</div>
@@ -46,7 +46,7 @@
 						<a href="{$accessoryLink|escape:'htmlall':'UTF-8'}" data-ajax="false">
 							<div class="clearfix" >
 								<div class="col-left" style="width:{$mediumSize.width+10}px;">
-									<img src="{$link->getImageLink($accessory.link_rewrite, $accessory.id_image, 'medium_default')}" alt="{$accessory.legend|escape:'htmlall':'UTF-8'}" width="{$mediumSize.width}" height="{$mediumSize.height}" />
+									<img src="{$link->getImageLink($accessory.link_rewrite, $accessory.id_image, 'medium_default')|escape:'html'}" alt="{$accessory.legend|escape:'htmlall':'UTF-8'}" width="{$mediumSize.width}" height="{$mediumSize.height}" />
 								</div><!-- .col-left -->
 								<div class="col-right">
 									<div class="inner">
