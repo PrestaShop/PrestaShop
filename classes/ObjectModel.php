@@ -1234,11 +1234,16 @@ abstract class ObjectModelCore
 		if ($id_shop === null)
 			$id_shop = Context::getContext()->shop->id;
 
-		$sql = 'SELECT id_shop
-				FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_shop`
-				WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
-					AND id_shop = '.(int)$id_shop;
-		return (bool)Db::getInstance()->getValue($sql);
+		$cache_id = 'objectmodel_shop_'.$this->def['classname'].'_'.(int)$this->id.'-'.(int)$id_shop;
+		if (!Cache::isStored($cache_id))
+		{
+			$sql = 'SELECT id_shop
+					FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_shop`
+					WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
+						AND id_shop = '.(int)$id_shop;
+			Cache::store($cache_id, (bool)Db::getInstance()->getValue($sql));
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
