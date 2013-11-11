@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
+{if $page_name =='index'}
 <!-- Module HomeSlider -->
 {if isset($homeslider)}
 <script type="text/javascript">
@@ -56,3 +56,4 @@ var homeslider_pause = {$homeslider.pause};
 </div>
 {/if}
 <!-- /Module HomeSlider -->
+{/if}
