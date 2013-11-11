@@ -466,13 +466,19 @@ abstract class Controller extends ControllerCore
 					echo '<br /><b>Useless GROUP BY need to be removed</b>';
 			}
 		}
-		echo '</div>
-		<div class="rte" style="text-align:left;padding:8px">
-		<h3><a name="doubles">Doubles (IDs replaced by "XX") (total = '.count(Db::getInstance()->uniqQueries).')</a></h3>';
 		$queries = Db::getInstance()->uniqQueries;
 		arsort($queries);
+		$count = count(Db::getInstance()->uniqQueries);
+		foreach ($queries as $q => &$nb)
+		if ($nb == 1)
+			$count--;
+		if ($count)
+			echo '</div>
+			<div class="rte" style="text-align:left;padding:8px">
+			<h3><a name="doubles">Doubles (IDs replaced by "XX") (total = '.$count.')</a></h3>';
 		foreach ($queries as $q => $nb)
-			echo $hr.'<b '.$this->getQueryColor($nb).'>'.$nb.'</b> '.$q;
+			if($nb > 1)
+				echo $hr.'<b '.$this->getQueryColor($nb).'>'.$nb.'</b> '.$q;
 		echo '</div>
 		<div class="rte" style="text-align:left;padding:8px">
 		<h3><a name="tables">Tables stress</a></h3>';
