@@ -258,8 +258,8 @@ class OrderDeliveryDetailCore extends ObjectModel
 		$product_price_tax_excl = Tools::ps_round($this->unit_price_tax_excl);
 		$total_products_tax_incl = $product_price_tax_incl * $product['cart_quantity'];
 		$total_products_tax_excl = $product_price_tax_excl * $product['cart_quantity'];
-		$diff_price_tax_incl = $total_products_tax_incl - $this->total_price_tax_incl;
-		$diff_price_tax_excl = $total_products_tax_excl - $this->total_price_tax_excl;
+		$diff_price_tax_incl = $total_products_tax_incl - Tools::ps_round($this->total_price_tax_incl);
+		$diff_price_tax_excl = $total_products_tax_excl - Tools::ps_round($this->total_price_tax_excl);
 		
 		if ($use_taxes)
 			$this->tax_calculator = new TaxCalculator();

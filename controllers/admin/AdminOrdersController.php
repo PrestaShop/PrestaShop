@@ -1295,12 +1295,12 @@ class AdminOrdersControllerCore extends AdminController
 					{
 						if (Tools::getValue('edsQty') < 0)
 						{
-						$order_delivery->subtractDeliveryDetail($order,$edsProduct,Tools::getValue('edsQty'),$delivery_id);
+							$order_delivery->subtractDeliveryDetail($order,$edsProduct,Tools::getValue('edsQty'),$delivery_id);
 						}
 						else
 						{
-						$new_qty = $qty + Tools::getValue('edsQty');
-						$order_delivery->updateDeliveryDetail($order, $edsProduct, $new_qty, $delivery_id, Tools::getValue('edsWarehouse'));
+							$new_qty = $qty + Tools::getValue('edsQty');
+							$order_delivery->updateDeliveryDetail($order, $edsProduct, $new_qty, $delivery_id, Tools::getValue('edsWarehouse'));
 						}
 					}
 					else

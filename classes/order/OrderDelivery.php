@@ -339,49 +339,46 @@ class OrderDeliveryCore extends ObjectModel
 
 	public function subtractDeliveryDetail($order,$product_table,$qty,$delivery_id)
 	{
+		$product_quantity = abs((int)$qty); // convert negative to posetive
+
+		// Load objects needed
 		$id_order_invoice = $this->getInvoiceFromId($delivery_id);
 		$id_order_detail = $this->getOrderDetailId($product_table['product_id'], $product_table['product_attribute_id'], $delivery_id, $id_order_invoice, $order->id);
+
+		$order_invoice = new OrderInvoice((int)$id_order_invoice);
 		$order_delivery_detail = new OrderDeliveryDetail($id_order_detail);
-		$product_price_tax_incl = Tools::ps_round($order_delivery_detail->unit_price_tax_incl);
-		$product_price_tax_excl = Tools::ps_round($order_delivery_detail->unit_price_tax_excl);
-		$total_products_tax_incl = $product_price_tax_incl * $qty;
-		$total_products_tax_excl = $product_price_tax_excl * $qty;
-		$diff_price_tax_incl = $order_delivery_detail->total_price_tax_incl + $total_products_tax_incl; // total is negative so it's X + -Z
-		$diff_price_tax_excl = $order_delivery_detail->total_price_tax_excl + $total_products_tax_excl;
+		$product_quantity = $order_delivery_detail->product_quantity -  $product_quantity;
 
-		$order_invoice = new OrderInvoice($id_order_invoice);
-		$order_invoice->total_products = $diff_price_tax_excl;
-		$order_invoice->total_products_wt = $diff_price_tax_incl;
+		$product_price_tax_incl = Tools::ps_round($order_delivery_detail->unit_price_tax_incl, 2);
+		$product_price_tax_excl = Tools::ps_round($order_delivery_detail->unit_price_tax_excl, 2);
+		$total_products_tax_incl = $product_price_tax_incl * $product_quantity;
+		$total_products_tax_excl = $product_price_tax_excl * $product_quantity;
 
-		if ($order_invoice->total_shipping_tax_incl > 0)
-		{
-			$order_invoice->total_paid_tax_incl = $order_invoice->total_shipping_tax_incl + $diff_price_tax_incl;
-			$order_invoice->total_paid_tax_excl = $order_invoice->total_shipping_tax_excl + $diff_price_tax_excl;
-		}
-		else
-		{
-			$order_invoice->total_paid_tax_incl = $diff_price_tax_incl;
-			$order_invoice->total_paid_tax_excl = $diff_price_tax_excl;
-		}
+		// Calculate differences of price (Before / After)
+		$diff_price_tax_incl = $total_products_tax_incl - $order_delivery_detail->total_price_tax_incl;
+		$diff_price_tax_excl = $total_products_tax_excl - $order_delivery_detail->total_price_tax_excl;
 
+		$order_delivery_detail->unit_price_tax_excl = $product_price_tax_excl;
+		$order_delivery_detail->unit_price_tax_incl = $product_price_tax_incl;
+
+		$order_delivery_detail->total_price_tax_incl += $diff_price_tax_incl;
+		$order_delivery_detail->total_price_tax_excl += $diff_price_tax_excl;
+
+		// Apply changes on OrderInvoice
+		$order_invoice->total_products += $diff_price_tax_excl;
+		$order_invoice->total_products_wt += $diff_price_tax_incl;
+
+		$order_invoice->total_paid_tax_excl += $diff_price_tax_excl;
+		$order_invoice->total_paid_tax_incl += $diff_price_tax_incl;
+
+		$order_delivery_detail->product_quantity = $product_quantity;
+
+		// update taxes
+		$order_delivery_detail->updateTaxAmount($order);
+
+		// Save order detail
+		$order_delivery_detail->update();
 		$order_invoice->update();
-
-		$order_delivery_detail->product_quantity = $order_delivery_detail->product_quantity + $qty; // $qty is negative
-		if ($order_delivery_detail->product_quantity <= 0)
-		{
-			$order_delivery_detail->delete();
-		}
-		else
-		{
-			$order_delivery_detail->total_price_tax_incl = $diff_price_tax_incl;
-			$order_delivery_detail->total_price_tax_excl = $diff_price_tax_excl;
-
-			// update taxes
-			$order_delivery_detail->updateTaxAmount($order);
-
-			// Save order detail
-			$order_delivery_detail->update();
-		}
 	}
 
 	public function createDeliveryDetail($order, $product_table, $qty, $delivery_id, $id_warehouse, $order_invoice = false)
