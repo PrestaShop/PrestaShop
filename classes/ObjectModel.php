@@ -191,7 +191,7 @@ abstract class ObjectModelCore
 		if ($id)
 		{
 			// Load object from database if object id is present
-			$cache_id = 'objectmodel_'.$this->def['classname'].'_'.(int)$id.'_'.(int)$id_shop.'_'.(int)$id_lang;
+			$cache_id = 'objectmodel_'.$this->def['classname'].'_'.(int)$id.'_'.(int)$this->id_shop.'_'.(int)$id_lang;
 			if (!Cache::isStored($cache_id))
 			{
 				$sql = new DbQuery();
