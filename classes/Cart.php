@@ -364,16 +364,35 @@ class CartCore extends ObjectModel
 		return $result;
 	}
 
-	public function getDiscountsCustomer($id_cart_rule)
+	/* 
+	 * Oleacorner
+	 * manage a cache to have only one DB request per cart,
+	 * rather than one per id_cart_rule retrieved in the CartRule::getCustomerCartRules()
+	 * 
+	 */
+	public function getDiscountsCustomer($id_cart_rule, $refresh = null)
 	{
 		if (!CartRule::isFeatureActive())
 			return 0;
 
-		return Db::getInstance()->getValue('
-			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'cart_cart_rule`
-			WHERE `id_cart_rule` = '.(int)$id_cart_rule.' AND `id_cart` = '.(int)$this->id
-		);
+		static $_cache = null;
+		
+		if ($refresh || !isset($_cache[$this->id])) {
+			$_cache[$this->id] = array();
+			$res = Db::getInstance()->executeS('
+				SELECT COUNT(*) as qty, id_cart_rule
+				FROM `'._DB_PREFIX_.'cart_cart_rule`
+				WHERE  `id_cart` = '.(int)$this->id.'
+				GROUP BY id_cart_rule'
+			);
+			foreach ((array)$res as $info) {
+				$_cache[$this->id][$info['id_cart_rule']] = $info['qty'];
+			}
+		}
+		
+		return isset($_cache[$this->id][$id_cart_rule])
+					? $_cache[$this->id][$id_cart_rule]
+					: 0; 
 	}
 
 	public function getLastProduct()

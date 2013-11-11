@@ -719,13 +719,30 @@ class OrderCore extends ObjectModel
 		WHERE ocr.`id_order` = '.(int)$this->id);
 	}
 
-	public static function getDiscountsCustomer($id_customer, $id_cart_rule)
+	/*
+	 * Oleacorner
+	* manage a cache to have only one DB request per customet,
+	* rather than one per id_cart_rule retrieved in the CartRule::getCustomerCartRules()
+	*
+	*/
+	
+	public static function getDiscountsCustomer($id_customer, $id_cart_rule, $refresh = null)
 	{
-		return Db::getInstance()->getValue('
-		SELECT COUNT(*) FROM `'._DB_PREFIX_.'orders` o
-		LEFT JOIN '._DB_PREFIX_.'order_cart_rule ocr ON (ocr.id_order = o.id_order)
-		WHERE o.id_customer = '.(int)$id_customer.'
-		AND ocr.id_cart_rule = '.(int)$id_cart_rule);
+		static $_cache = null;
+		
+		if ($refresh || ! isset($_cache[$id_customer])) {
+			$_cache[$id_customer] = array();
+			$res = Db::getInstance()->executeS('
+						SELECT COUNT(*) as qty, id_cart_rule
+						FROM `'._DB_PREFIX_.'orders` o
+						LEFT JOIN '._DB_PREFIX_.'order_cart_rule ocr ON (ocr.id_order = o.id_order)
+						WHERE o.id_customer = '.(int)$id_customer.'
+						GROUP BY ocr.id_cart_rule');
+			foreach((array)$res as $info)
+				$_cache[$id_customer][$info['id_cart_rule']] = $info['qty'];
+		}
+		
+		return isset($_cache[$id_customer][$id_cart_rule]) ?$_cache[$id_customer][$id_cart_rule] :0;
 	}
 
 	/**
