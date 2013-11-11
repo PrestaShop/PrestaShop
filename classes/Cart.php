@@ -368,12 +368,16 @@ class CartCore extends ObjectModel
 	{
 		if (!CartRule::isFeatureActive())
 			return 0;
-
-		return Db::getInstance()->getValue('
-			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'cart_cart_rule`
-			WHERE `id_cart_rule` = '.(int)$id_cart_rule.' AND `id_cart` = '.(int)$this->id
-		);
+		$cache_id = __CLASS__.__FUNCTION__.(int)$this->id.'-'.(int)$id_cart_rule;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = (int)Db::getInstance()->getValue('
+				SELECT COUNT(*)
+				FROM `'._DB_PREFIX_.'cart_cart_rule`
+				WHERE `id_cart_rule` = '.(int)$id_cart_rule.' AND `id_cart` = '.(int)$this->id);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	public function getLastProduct()
