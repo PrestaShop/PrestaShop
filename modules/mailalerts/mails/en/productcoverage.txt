@@ -1,15 +1,10 @@
+Hi,
 
-[{shop_url}] 
+The product {product} is almost out of stock.
+The stock cover is now less than the specified minimum of {warning_coverage}.
+Current stock cover : {current_coverage}
 
-Hi, 
 
-{product} is almost out of stock. 
 
-The stock cover is now less than the specified minimum of:
-{warning_coverage}.
 
-CURRENT STOCK COVER: {current_coverage} 
-
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
-
+{shop_url} powered by PrestaShop™

@@ -106,6 +106,9 @@ ul.product_list.grid > li .product-container .product-image-container .content_p
 ul.product_list.grid > li .product-container .product-image-container .content_price span {
   color: white;
 }
+ul.product_list.grid > li .product-container .product-image-container .content_price span.old-price {
+  color: #b1b0b0;
+}
 ul.product_list.grid > li .product-container h5 {
   padding: 0 15px 7px 15px;
   min-height: 53px;
@@ -197,23 +200,27 @@ ul.product_list.grid > li .product-container .functional-buttons div.compare lab
   content: "";
 }
 @media (min-width: 1200px) {
-  ul.product_list.grid > li .product-container:hover {
+  ul.product_list.grid > li.hovered {
+    margin-bottom: -300px;
+    padding-bottom: 250px;
+  }
+  ul.product_list.grid > li.hovered .product-container {
     -webkit-box-shadow: rgba(0, 0, 0, 0.17) 0 0 13px;
     -moz-box-shadow: rgba(0, 0, 0, 0.17) 0 0 13px;
     box-shadow: rgba(0, 0, 0, 0.17) 0 0 13px;
     position: relative;
-    z-index: 2;
+    z-index: 10;
   }
-  ul.product_list.grid > li .product-container:hover .content_price {
+  ul.product_list.grid > li.hovered .product-container .content_price {
     display: none;
   }
-  ul.product_list.grid > li .product-container:hover .product-image-container .content_price {
+  ul.product_list.grid > li.hovered .product-container .product-image-container .content_price {
     display: block;
   }
-  ul.product_list.grid > li .product-container:hover .product-image-container .quick-view {
+  ul.product_list.grid > li.hovered .product-container .product-image-container .quick-view {
     display: block;
   }
-  ul.product_list.grid > li .product-container:hover .button-container, ul.product_list.grid > li .product-container:hover .functional-buttons {
+  ul.product_list.grid > li.hovered .product-container .functional-buttons, ul.product_list.grid > li.hovered .product-container .button-container {
     display: block;
   }
 }
@@ -224,6 +231,26 @@ ul.product_list.grid > li .product-container .functional-buttons div.compare lab
 }
 @media (min-width: 480px) and (max-width: 991px) {
   ul.product_list.grid > li.first-item-of-tablet-line {
+    clear: left;
+  }
+}
+
+@media (min-width: 1200px) {
+  #blockpack ul > li.last-line {
+    border: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  #blockpack ul > li.last-line.hovered {
+    margin-bottom: -289px;
+    padding-bottom: 250px;
+  }
+}
+@media (min-width: 480px) and (max-width: 767px) {
+  #blockpack ul > li.first-item-of-tablet-line {
+    clear: none;
+  }
+  #blockpack ul > li.first-item-of-mobile-line {
     clear: left;
   }
 }
@@ -439,6 +466,11 @@ ul.product_list.list > li .right-block .right-block-content .functional-buttons 
     margin-bottom: 50px;
   }
 }
+@media (min-width: 1200px) {
+  #index ul.product_list.tab-pane > li.hovered {
+    margin-bottom: -290px;
+  }
+}
 #index ul.product_list.tab-pane > li .availability {
   display: none;
 }
@@ -447,6 +479,10 @@ ul.product_list.list > li .right-block .right-block-content .functional-buttons 
     border: none;
     padding-bottom: 0;
     margin-bottom: 0;
+  }
+  #index ul.product_list.tab-pane > li.last-line.hovered {
+    margin-bottom: -290px;
+    padding-bottom: 250px;
   }
 }
 @media (min-width: 480px) and (max-width: 767px) {
