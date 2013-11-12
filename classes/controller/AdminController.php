@@ -1133,7 +1133,7 @@ class AdminControllerCore extends Controller
 						'href' => $back,
 						'desc' => $this->l('Back to list')
 					);
-				$obj = $this->loadObject();
+				$obj = $this->loadObject(true);
 				if (Validate::isLoadedObject($obj) && isset($obj->name) && !empty($obj->name))
 				{
 					array_pop($this->toolbar_title);
@@ -1159,7 +1159,7 @@ class AdminControllerCore extends Controller
 						'desc' => $this->l('Cancel')
 					);
 
-				$obj = $this->loadObject();
+				$obj = $this->loadObject(true);
 				if (Validate::isLoadedObject($obj) && isset($obj->name) && !empty($obj->name))
 				{
 					array_pop($this->toolbar_title);
