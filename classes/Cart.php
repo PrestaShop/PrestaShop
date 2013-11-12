@@ -325,7 +325,7 @@ class CartCore extends ObjectModel
 		if (!CartRule::isFeatureActive() || !$this->id)
 			return array();
 
-		$cache_key = __CLASS__.__FUNCTION__.$this->id.'-'.$filter;
+		$cache_key = 'Cart::getCartRules_'.$this->id.'-'.$filter;
 		if (!Cache::isStored($cache_key))
 		{
 			$result = Db::getInstance()->executeS('
@@ -368,7 +368,7 @@ class CartCore extends ObjectModel
 	{
 		if (!CartRule::isFeatureActive())
 			return 0;
-		$cache_id = __CLASS__.__FUNCTION__.(int)$this->id.'-'.(int)$id_cart_rule;
+		$cache_id = 'Cart::getDiscountsCustomer_'.(int)$this->id.'-'.(int)$id_cart_rule;
 		if (!Cache::isStored($cache_id))
 		{
 			$result = (int)Db::getInstance()->getValue('
@@ -636,7 +636,7 @@ class CartCore extends ObjectModel
 
 			if (!isset($row['pai_id_image']) || $row['pai_id_image'] == 0)
 			{
-				$cache_id = __CLASS__.__FUNCTION__.'-pai_id_image-'.(int)$row['id_product'].'-'.(int)$this->id_lang.'-'.(int)$row['id_shop'];
+				$cache_id = 'Cart::getProducts_'.'-pai_id_image-'.(int)$row['id_product'].'-'.(int)$this->id_lang.'-'.(int)$row['id_shop'];
 				if (!Cache::isStored($cache_id))
 				{ 
 					$row2 = Db::getInstance()->getRow('
@@ -1104,7 +1104,7 @@ class CartCore extends ObjectModel
 	 */
 	public function orderExists()
 	{
-		$cache_id = __CLASS__.__FUNCTION__.(int)$this->id;
+		$cache_id = 'Cart::orderExists_'.(int)$this->id;
 		if (!Cache::isStored($cache_id))
 		{
 			$result = (bool)Db::getInstance()->getValue('SELECT count(*) FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = '.(int)$this->id);

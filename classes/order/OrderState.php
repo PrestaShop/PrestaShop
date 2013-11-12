@@ -112,7 +112,7 @@ class OrderStateCore extends ObjectModel
 	*/
 	public static function getOrderStates($id_lang)
 	{
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_lang;
+		$cache_id = 'OrderState::getOrderStates_'.(int)$id_lang;
 		if (!Cache::isStored($cache_id))
 		{
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('

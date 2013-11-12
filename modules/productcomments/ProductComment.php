@@ -97,7 +97,7 @@ class ProductComment extends ObjectModel
 		if ($n != null && $n <= 0)
 			$n = 5;
 
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_product.'-'.(int)$p.'-'.(int)$n.'-'.(int)$id_customer.'-'.(bool)$validate;
+		$cache_id = 'ProductComment::getByProduct_'.(int)$id_product.'-'.(int)$p.'-'.(int)$n.'-'.(int)$id_customer.'-'.(bool)$validate;
 		if (!Cache::isStored($cache_id))
 		{
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -124,7 +124,7 @@ class ProductComment extends ObjectModel
 	 */
 	public static function getByCustomer($id_product, $id_customer, $get_last = false, $id_guest = false)
 	{
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_product.'-'.(int)$id_customer.'-'.(bool)$get_last.'-'.(int)$id_guest;
+		$cache_id = 'ProductComment::getByCustomer_'.(int)$id_product.'-'.(int)$id_customer.'-'.(bool)$get_last.'-'.(int)$id_guest;
 		if (!Cache::isStored($cache_id))
 		{
 			$results = Db::getInstance()->executeS('
@@ -214,7 +214,7 @@ class ProductComment extends ObjectModel
 		if (!Validate::isUnsignedId($id_product))
 			die(Tools::displayError());
 		$validate = (int)Configuration::get('PRODUCT_COMMENTS_MODERATE');
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_product.'-'.$validate;
+		$cache_id = 'ProductComment::getCommentNumber_'.(int)$id_product.'-'.$validate;
 		if (!Cache::isStored($cache_id))
 		{
 			$result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('

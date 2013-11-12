@@ -721,7 +721,7 @@ class OrderCore extends ObjectModel
 
 	public static function getDiscountsCustomer($id_customer, $id_cart_rule)
 	{
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_customer.'-'.(int)$id_cart_rule;
+		$cache_id = 'Order::getDiscountsCustomer_'.(int)$id_customer.'-'.(int)$id_cart_rule;
 		if (!Cache::isStored($cache_id))
 		{
 			$result = (int)Db::getInstance()->getValue('

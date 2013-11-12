@@ -277,7 +277,7 @@ class CarrierCore extends ObjectModel
 
 	public function getMaxDeliveryPriceByWeight($id_zone)
 	{
-		$cache_id = __CLASS__.__FUNCTION__.(int)$this->id.'-'.(int)$id_zone;
+		$cache_id = 'Carrier::getMaxDeliveryPriceByWeight_'.(int)$this->id.'-'.(int)$id_zone;
 		if (!Cache::isStored($cache_id))
 		{
 			$sql = 'SELECT d.`price`
@@ -360,7 +360,7 @@ class CarrierCore extends ObjectModel
 
 	public function getMaxDeliveryPriceByPrice($id_zone)
 	{
-		$cache_id = __CLASS__.__FUNCTION__.(int)$this->id.'-'.(int)$id_zone;
+		$cache_id = 'Carrier::getMaxDeliveryPriceByPrice_'.(int)$this->id.'-'.(int)$id_zone;
 		if (!Cache::isStored($cache_id))
 		{
 			$sql = 'SELECT d.`price`
@@ -455,7 +455,7 @@ class CarrierCore extends ObjectModel
 			GROUP BY c.`id_carrier`
 			ORDER BY c.`position` ASC';
 
-		$cache_id = __CLASS__.__FUNCTION__.md5($sql);
+		$cache_id = 'Carrier::getCarriers_'.md5($sql);
 		if (!Cache::isStored($cache_id))
 		{
 			$carriers = Db::getInstance()->executeS($sql);
@@ -1211,7 +1211,7 @@ class CarrierCore extends ObjectModel
 		$query->where('pc.id_product = '.(int)$product->id);
 		$query->where('pc.id_shop = '.(int)$id_shop);
 
-		$cache_id = __CLASS__.__FUNCTION__.(int)$product->id.'-'.(int)$id_shop;
+		$cache_id = 'Carrier::getAvailableCarrierList_'.(int)$product->id.'-'.(int)$id_shop;
 		if (!Cache::isStored($cache_id))
 		{
 			$carriers_for_product = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
