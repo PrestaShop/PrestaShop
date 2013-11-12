@@ -180,7 +180,7 @@ class WishList extends ObjectModel
 		else
 			$shop_restriction = '';
 
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_customer.'-'.(int)Shop::getContextShopID().'-'.(int)Shop::getContextShopGroupID();
+		$cache_id = 'WhishList::getByIdCustomer_'.(int)$id_customer.'-'.(int)Shop::getContextShopID().'-'.(int)Shop::getContextShopGroupID();
 		if (!Cache::isStored($cache_id))
 		{
 			$result = Db::getInstance()->executeS('
