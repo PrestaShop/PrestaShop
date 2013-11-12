@@ -80,13 +80,19 @@ class StateCore extends ObjectModel
 	 */
 	public static function getNameById($id_state)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT `name`
-			FROM `'._DB_PREFIX_.'state`
-			WHERE `id_state` = '.(int)$id_state
-		);
-
-		return $result['name'];
+		if (!$id_state)
+			return false;
+		$cache_id = __CLASS__.__FUNCTION__.(int)$id_state;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT `name`
+				FROM `'._DB_PREFIX_.'state`
+				WHERE `id_state` = '.(int)$id_state
+			);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -97,13 +103,19 @@ class StateCore extends ObjectModel
 	 */
 	public static function getIdByName($state)
 	{
-		$result = Db::getInstance()->getValue('
-			SELECT `id_state`
-			FROM `'._DB_PREFIX_.'state`
-			WHERE `name` LIKE \''.pSQL($state).'\'
-		');
-
-        return (int)$result;
+		if (empty($state))
+			return false;
+		$cache_id = __CLASS__.__FUNCTION__.pSQL($state);
+		if (!Cache::isStored($cache_id))
+		{
+			$result = (int)Db::getInstance()->getValue('
+				SELECT `id_state`
+				FROM `'._DB_PREFIX_.'state`
+				WHERE `name` LIKE \''.pSQL($state).'\'
+			');
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**

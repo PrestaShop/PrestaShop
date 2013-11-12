@@ -97,18 +97,24 @@ class ProductComment extends ObjectModel
 		if ($n != null && $n <= 0)
 			$n = 5;
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT pc.`id_product_comment`,
-		(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_usefulness` pcu WHERE pcu.`id_product_comment` = pc.`id_product_comment` AND pcu.`usefulness` = 1) as total_useful,
-		(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_usefulness` pcu WHERE pcu.`id_product_comment` = pc.`id_product_comment`) as total_advice, '.
-		((int)$id_customer ? '(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_usefulness` pcuc WHERE pcuc.`id_product_comment` = pc.`id_product_comment` AND pcuc.id_customer = '.(int)$id_customer.') as customer_advice, ' : '').
-		((int)$id_customer ? '(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_report` pcrc WHERE pcrc.`id_product_comment` = pc.`id_product_comment` AND pcrc.id_customer = '.(int)$id_customer.') as customer_report, ' : '').'
-		IF(c.id_customer, CONCAT(c.`firstname`, \' \',  LEFT(c.`lastname`, 1)), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pc.title
-		  FROM `'._DB_PREFIX_.'product_comment` pc
-		LEFT JOIN `'._DB_PREFIX_.'customer` c ON c.`id_customer` = pc.`id_customer`
-		WHERE pc.`id_product` = '.(int)($id_product).($validate == '1' ? ' AND pc.`validate` = 1' : '').'
-		ORDER BY pc.`date_add` DESC
-		'.($n ? 'LIMIT '.(int)(($p - 1) * $n).', '.(int)($n) : ''));
+		$cache_id = __CLASS__.__FUNCTION__.(int)$id_product.'-'.(int)$p.'-'.(int)$n.'-'.(int)$id_customer.'-'.(bool)$validate;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT pc.`id_product_comment`,
+			(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_usefulness` pcu WHERE pcu.`id_product_comment` = pc.`id_product_comment` AND pcu.`usefulness` = 1) as total_useful,
+			(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_usefulness` pcu WHERE pcu.`id_product_comment` = pc.`id_product_comment`) as total_advice, '.
+			((int)$id_customer ? '(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_usefulness` pcuc WHERE pcuc.`id_product_comment` = pc.`id_product_comment` AND pcuc.id_customer = '.(int)$id_customer.') as customer_advice, ' : '').
+			((int)$id_customer ? '(SELECT count(*) FROM `'._DB_PREFIX_.'product_comment_report` pcrc WHERE pcrc.`id_product_comment` = pc.`id_product_comment` AND pcrc.id_customer = '.(int)$id_customer.') as customer_report, ' : '').'
+			IF(c.id_customer, CONCAT(c.`firstname`, \' \',  LEFT(c.`lastname`, 1)), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pc.title
+			  FROM `'._DB_PREFIX_.'product_comment` pc
+			LEFT JOIN `'._DB_PREFIX_.'customer` c ON c.`id_customer` = pc.`id_customer`
+			WHERE pc.`id_product` = '.(int)($id_product).($validate == '1' ? ' AND pc.`validate` = 1' : '').'
+			ORDER BY pc.`date_add` DESC
+			'.($n ? 'LIMIT '.(int)(($p - 1) * $n).', '.(int)($n) : ''));
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -118,18 +124,24 @@ class ProductComment extends ObjectModel
 	 */
 	public static function getByCustomer($id_product, $id_customer, $get_last = false, $id_guest = false)
 	{
-		$results = Db::getInstance()->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'product_comment` pc
-			WHERE pc.`id_product` = '.(int)$id_product.'
-			AND '.(!$id_guest ? 'pc.`id_customer` = '.(int)$id_customer : 'pc.`id_guest` = '.(int)$id_guest).'
-			ORDER BY pc.`date_add` DESC '
-			.($get_last ? 'LIMIT 1' : '')
-		);
+		$cache_id = __CLASS__.__FUNCTION__.(int)$id_product.'-'.(int)$id_customer.'-'.(bool)$get_last.'-'.(int)$id_guest;
+		if (!Cache::isStored($cache_id))
+		{
+			$results = Db::getInstance()->executeS('
+				SELECT *
+				FROM `'._DB_PREFIX_.'product_comment` pc
+				WHERE pc.`id_product` = '.(int)$id_product.'
+				AND '.(!$id_guest ? 'pc.`id_customer` = '.(int)$id_customer : 'pc.`id_guest` = '.(int)$id_guest).'
+				ORDER BY pc.`date_add` DESC '
+				.($get_last ? 'LIMIT 1' : '')
+			);
 
-		if ($get_last)
-			$results = array_shift($results);
-		return $results;
+			if ($get_last && count($results))
+				$results = array_shift($results);
+
+			Cache::store($cache_id, $results);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -202,12 +214,16 @@ class ProductComment extends ObjectModel
 		if (!Validate::isUnsignedId($id_product))
 			die(Tools::displayError());
 		$validate = (int)Configuration::get('PRODUCT_COMMENTS_MODERATE');
-		if (($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT COUNT(`id_product_comment`) AS "nbr"
-		FROM `'._DB_PREFIX_.'product_comment` pc
-		WHERE `id_product` = '.(int)($id_product).($validate == '1' ? ' AND `validate` = 1' : ''))) === false)
-			return false;
-		return (int)($result['nbr']);
+		$cache_id = __CLASS__.__FUNCTION__.(int)$id_product.'-'.$validate;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT COUNT(`id_product_comment`) AS "nbr"
+			FROM `'._DB_PREFIX_.'product_comment` pc
+			WHERE `id_product` = '.(int)($id_product).($validate == '1' ? ' AND `validate` = 1' : ''));
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**

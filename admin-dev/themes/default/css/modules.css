@@ -34,7 +34,7 @@
 .toolbarBox .process-icon-new-module { background-image: url('../img/process-icon-new-module.png')}
 .toolbarBox .process-icon-new-module-addon { background-image: url('../img/process-icon-new-module-addon.png')}
 
-div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:1}
+div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:11}
 
 
 /*FILTER MODULE*/

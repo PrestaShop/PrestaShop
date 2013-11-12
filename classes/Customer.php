@@ -362,15 +362,18 @@ class CustomerCore extends ObjectModel
 	{
 		if (!Validate::isUnsignedId($id_customer))
 			return true;
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `id_customer`
-		FROM `'._DB_PREFIX_.'customer`
-		WHERE `id_customer` = \''.(int)$id_customer.'\'
-		AND active = 1
-		AND `deleted` = 0');
-		if (isset($result['id_customer']))
-			return false;
-		return true;
+		$cache_id = __CLASS__.__FUNCTION__.(int)$id_customer;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = (bool)!Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+			SELECT `id_customer`
+			FROM `'._DB_PREFIX_.'customer`
+			WHERE `id_customer` = \''.(int)$id_customer.'\'
+			AND active = 1
+			AND `deleted` = 0');
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -413,7 +416,7 @@ class CustomerCore extends ObjectModel
 	public static function customerHasAddress($id_customer, $id_address)
 	{
 		$key = (int)$id_customer.'-'.(int)$id_address;
-		if (!array_key_exists($id_address, self::$_customerHasAddress))
+		if (!array_key_exists($key, self::$_customerHasAddress))
 		{
 			self::$_customerHasAddress[$key] = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_address`
@@ -439,15 +442,22 @@ class CustomerCore extends ObjectModel
 	 */
 	public function getAddresses($id_lang)
 	{
-		$sql = 'SELECT DISTINCT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
-				FROM `'._DB_PREFIX_.'address` a
-				LEFT JOIN `'._DB_PREFIX_.'country` c ON (a.`id_country` = c.`id_country`)
-				LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
-				LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
-				'.(Context::getContext()->shop->getGroup()->share_order ? '' : Shop::addSqlAssociation('country', 'c')).' 
-				WHERE `id_lang` = '.(int)$id_lang.' AND `id_customer` = '.(int)$this->id.' AND a.`deleted` = 0';
+		$share_order = (bool)Context::getContext()->shop->getGroup()->share_order;
+		$cache_id = 'Customer::getAddresses'.(int)$this->id.'-'.(int)$id_lang.'-'.$share_order;
+		if (!Cache::isStored($cache_id))
+		{ 
+			$sql = 'SELECT DISTINCT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
+					FROM `'._DB_PREFIX_.'address` a
+					LEFT JOIN `'._DB_PREFIX_.'country` c ON (a.`id_country` = c.`id_country`)
+					LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
+					LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
+					'.($share_order ? '' : Shop::addSqlAssociation('country', 'c')).' 
+					WHERE `id_lang` = '.(int)$id_lang.' AND `id_customer` = '.(int)$this->id.' AND a.`deleted` = 0';
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -476,12 +486,17 @@ class CustomerCore extends ObjectModel
 	{
 		if (!Validate::isUnsignedId($id_customer) || !Validate::isMd5($passwd))
 			die (Tools::displayError());
-
-		$sql = 'SELECT `id_customer`
-				FROM `'._DB_PREFIX_.'customer`
-				WHERE `id_customer` = '.$id_customer.'
+		$cache_id = 'Customer::checkPassword'.(int)$id_customer.'-'.$passwd;
+		if (!Cache::isStored($cache_id))
+		{
+			$sql = 'SELECT `id_customer`
+					FROM `'._DB_PREFIX_.'customer`
+					WHERE `id_customer` = '.$id_customer.'
 					AND `passwd` = \''.$passwd.'\'';
-		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+			$result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -574,12 +589,16 @@ class CustomerCore extends ObjectModel
 
 	public static function customerIdExistsStatic($id_customer)
 	{
-		$row = Db::getInstance()->getRow('
-		SELECT `id_customer`
-		FROM '._DB_PREFIX_.'customer c
-		WHERE c.`id_customer` = '.(int)$id_customer);
-
-		return isset($row['id_customer']);
+		$cache_id = 'Customer::customerIdExistsStatic'.(int)$id_customer;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = (int)Db::getInstance()->getValue('
+			SELECT `id_customer`
+			FROM '._DB_PREFIX_.'customer c
+			WHERE c.`id_customer` = '.(int)$id_customer);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
