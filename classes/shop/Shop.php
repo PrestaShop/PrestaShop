@@ -187,7 +187,7 @@ class ShopCore extends ObjectModel
 
 	public function setUrl()
 	{
-		$cache_id = __CLASS__.__FUNCTION__.(int)$this->id;
+		$cache_id = 'Shop::setUrl_'.(int)$this->id;
 		if (!Cache::isStored($cache_id))
 		{
 			$row = Db::getInstance()->getRow('

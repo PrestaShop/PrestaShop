@@ -82,7 +82,7 @@ class StateCore extends ObjectModel
 	{
 		if (!$id_state)
 			return false;
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_state;
+		$cache_id = 'State::getNameById_'.(int)$id_state;
 		if (!Cache::isStored($cache_id))
 		{
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -105,7 +105,7 @@ class StateCore extends ObjectModel
 	{
 		if (empty($state))
 			return false;
-		$cache_id = __CLASS__.__FUNCTION__.pSQL($state);
+		$cache_id = 'State::getNameById_'.pSQL($state);
 		if (!Cache::isStored($cache_id))
 		{
 			$result = (int)Db::getInstance()->getValue('

@@ -1864,7 +1864,7 @@ abstract class ModuleCore
 	 */
 	public static function getModuleIdByName($name)
 	{
-		$cache_id = __CLASS__.__FUNCTION__.pSQL($name);
+		$cache_id = 'Module::getModuleIdByName_'.pSQL($name);
 		if (!Cache::isStored($cache_id))
 		{
 			$result = (int)Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');

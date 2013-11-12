@@ -124,7 +124,7 @@ class TaxRuleCore extends ObjectModel
 	*/
     public static function isTaxInUse($id_tax)
     {
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_tax;
+		$cache_id = 'TaxRule::isTaxInUse_'.(int)$id_tax;
 		if (!Cache::isStored($cache_id))
 		{
 			$result = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'tax_rule` WHERE `id_tax` = '.(int)$id_tax);

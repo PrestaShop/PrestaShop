@@ -362,7 +362,7 @@ class CustomerCore extends ObjectModel
 	{
 		if (!Validate::isUnsignedId($id_customer))
 			return true;
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_customer;
+		$cache_id = 'Customer::isBanned_'.(int)$id_customer;
 		if (!Cache::isStored($cache_id))
 		{
 			$result = (bool)!Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('

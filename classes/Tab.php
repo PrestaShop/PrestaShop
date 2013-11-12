@@ -190,7 +190,7 @@ class TabCore extends ObjectModel
 	 */
 	public static function getTab($id_lang, $id_tab)
 	{
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_lang.'-'.(int)$id_tab;
+		$cache_id = 'Tab::getTab_'.(int)$id_lang.'-'.(int)$id_tab;
 		if (!Cache::isStored($cache_id))
 		{
 			/* Tabs selection */

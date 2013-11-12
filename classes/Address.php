@@ -264,7 +264,7 @@ class AddressCore extends ObjectModel
 		if(!isset($id_address) || empty($id_address))
 			return false;
 
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_address;
+		$cache_id = 'Address::isCountryActiveById_'.(int)$id_address;
 		if (!Cache::isStored($cache_id))
 		{
 			$result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getvalue('
@@ -328,7 +328,7 @@ class AddressCore extends ObjectModel
 	{
 		if (!$id_customer)
 			return false;
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_customer.'-'.(bool)$active;
+		$cache_id = 'Address::getFirstCustomerAddressId_'.(int)$id_customer.'-'.(bool)$active;
 		if (!Cache::isStored($cache_id))
 		{
 			$result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('

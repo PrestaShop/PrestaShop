@@ -704,7 +704,7 @@ class CategoryCore extends ObjectModel
 		if (!Validate::isBool($active))
 			die(Tools::displayError());
 
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_parent.'-'.(int)$id_lang.'-'.(bool)$active.'-'.(int)$id_shop;
+		$cache_id = 'Category::getChildren_'.(int)$id_parent.'-'.(int)$id_lang.'-'.(bool)$active.'-'.(int)$id_shop;
 		if (!Cache::isStored($cache_id))
 		{
 			$query = 'SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`, category_shop.`id_shop`
@@ -1014,7 +1014,7 @@ class CategoryCore extends ObjectModel
 	public function getGroups()
 	{
 		$groups = array();
-		$cache_id = __CLASS__.__FUNCTION__.(int)$this->id;
+		$cache_id = 'Category::getGroups_'.(int)$this->id;
 		if (!Cache::isStored($cache_id))
 		{
 			$result = Db::getInstance()->executeS('
@@ -1048,7 +1048,7 @@ class CategoryCore extends ObjectModel
 	 */
 	public function checkAccess($id_customer)
 	{
-		$cache_id = __CLASS__.__FUNCTION__.(int)$this->id.'-'.$id_customer.(!$id_customer ? '-'.(int)Group::getCurrent()->id : '');
+		$cache_id = 'Category::checkAccess_'.(int)$this->id.'-'.$id_customer.(!$id_customer ? '-'.(int)Group::getCurrent()->id : '');
 		if (!Cache::isStored($cache_id))
 		{
 			if (!$id_customer)
@@ -1210,7 +1210,7 @@ class CategoryCore extends ObjectModel
 	 */
 	public static function getInterval($id)
 	{
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id;
+		$cache_id = 'Category::getInterval_'.(int)$id;
 		if (!Cache::isStored($cache_id))
 		{
 			$sql = 'SELECT nleft, nright, level_depth
@@ -1401,7 +1401,7 @@ class CategoryCore extends ObjectModel
 
 	public static function getCategoriesWithoutParent()
 	{
-		$cache_id = __CLASS__.__FUNCTION__.(int)Context::getContext()->language->id;
+		$cache_id = 'Category::getCategoriesWithoutParent_'.(int)Context::getContext()->language->id;
 		if (!Cache::isStored($cache_id))
 		{
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -1431,7 +1431,7 @@ class CategoryCore extends ObjectModel
 	{
 		if (is_null($id_lang))
 			$id_lang = (int)Context::getContext()->language->id;
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_lang;
+		$cache_id = 'Category::getTopCategory_'.(int)$id_lang;
 		if (!Cache::isStored($cache_id))
 		{
 			$id_category = (int)Db::getInstance()->getValue('

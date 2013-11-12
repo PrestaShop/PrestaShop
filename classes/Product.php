@@ -2440,7 +2440,7 @@ class ProductCore extends ObjectModel
 	{
 		if (!$context)
 			$context = Context::getContext();
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_product.'-'.(int)$context->shop->id;
+		$cache_id = 'Product::getOrderStates_'.(int)$id_product.'-'.(int)$context->shop->id;
 		if (!Cache::isStored($cache_id))
 		{
 			$sql = 'SELECT image_shop.`id_image`
@@ -2513,7 +2513,7 @@ class ProductCore extends ObjectModel
 		$cart_quantity = 0;
 		if ((int)$id_cart)
 		{
-			$cache_id = __CLASS__.__FUNCTION__.(int)$id_product.'-'.(int)$id_cart;
+			$cache_id = 'Product::getPriceStatic_'.(int)$id_product.'-'.(int)$id_cart;
 			if (!Cache::isStored($cache_id))
 			{ 
 				$sql = 'SELECT SUM(`quantity`)
@@ -4313,7 +4313,7 @@ class ProductCore extends ObjectModel
 
 	public function checkAccess($id_customer)
 	{
-		$cache_id = __CLASS__.__FUNCTION__.(int)$this->id.'-'.(int)$id_customer.(!$id_customer ? '-'.(int)Group::getCurrent()->id : '');
+		$cache_id = 'Product::checkAccess_'.(int)$this->id.'-'.(int)$id_customer.(!$id_customer ? '-'.(int)Group::getCurrent()->id : '');
 		if (!Cache::isStored($cache_id))
 		{
 			if (!$id_customer)
@@ -4893,7 +4893,7 @@ class ProductCore extends ObjectModel
 	{
 		$id_lang = (int)Context::getContext()->language->id;
 		$id_shop = (int)Context::getContext()->shop->id;
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_product.'-'.(int)$id_product_attribute.'-'.(int)$id_lang.'-'.(int)$id_shop;
+		$cache_id = 'Product::getAttributesParams_'.(int)$id_product.'-'.(int)$id_product_attribute.'-'.(int)$id_lang.'-'.(int)$id_shop;
 
 		// if blocklayered module is installed we check if user has set custom attribute name
 		if (Module::isInstalled('blocklayered') && Module::isEnabled('blocklayered'))

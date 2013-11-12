@@ -160,7 +160,7 @@ class ProductCommentCriterion extends ObjectModel
 			$alias = 'ps';
 		}
 
-		$cache_id = __CLASS__.__FUNCTION__.(int)$id_product.'-'.(int)$id_lang;
+		$cache_id = 'ProductCommentCriterion::getByProduct_'.(int)$id_product.'-'.(int)$id_lang;
 		if (!Cache::isStored($cache_id))
 		{
 			$result = Db::getInstance()->executeS('
