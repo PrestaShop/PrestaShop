@@ -405,7 +405,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
 			<div class="clear"></div>
 		</div>       
              
-       <div class="product_attributes">
+       <div class="product_attributes clearfix">
        
   <!-- quantity wanted -->
 			<p id="quantity_wanted_p"{if (!$allow_oosp && $product->quantity <= 0) OR $virtual OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>

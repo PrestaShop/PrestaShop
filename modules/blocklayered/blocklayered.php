@@ -3708,7 +3708,7 @@ class BlockLayered extends Module
 			$category_count = $smarty->fetch(_PS_THEME_DIR_.'category-count.tpl');
 		else
 			$category_count = '';
-
+			
 		if ($nb_products == 0)
 			$product_list = $this->display(__FILE__, 'blocklayered-no-products.tpl');
 		else

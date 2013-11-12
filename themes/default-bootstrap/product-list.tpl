@@ -31,8 +31,9 @@
     {else}
     	<script type="text/javascript">
 			$('document').ready(function(){
+				blockHover();
 				if (typeof reloadProductComparison != 'undefined')
-					reloadProductComparison()
+					reloadProductComparison();
 			});
 		</script>
     	{assign var='nbItemsPerLine' value=4}
@@ -132,7 +133,21 @@
 	</ul>
     
 <!-- Script for transformation Grid/List layouts -->
-
+<script type="text/javascript">
+	function blockHover(status) {
+		$('.product_list.grid li.ajax_block_product').each(function() {
+			$(this).find('.product-container').hover(
+			function(){
+				if ($('body').find('.container').width() == 1170)
+				$(this).parent().addClass('hovered'); 
+			},
+			function(){
+				if ($('body').find('.container').width() == 1170)
+				$(this).parent().removeClass('hovered');
+			}
+		)});	
+	}
+</script>
 {if $page_name !='index' && $page_name !='product'}  <!--// excluding page for Grid/List-->
 	<script type="text/javascript"><!--
 		function display(view) {
@@ -208,6 +223,7 @@
 					ajaxCart.overrideButtonsInThePage();
 				if (typeof quick_view != 'undefined') 	// qick view button reload
 					quick_view();
+				blockHover();
 			}	
 		}
 	view = $.totalStorage('display');

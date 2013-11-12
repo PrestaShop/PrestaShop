@@ -118,6 +118,7 @@ p.info-account {
 		}	
 	}
 }
+.label {white-space:normal; display:inline-block; padding:6px 10px;}
 .required {
 	
 	sup {
@@ -620,7 +621,7 @@ table.table_block  td {
 .price-percent-reduction {
 	background:#f13340;
 	border:1px solid #d02a2c;
-	font:600 21px/26px $font-custom;
+	font:600 21px/24px $font-custom;
 	color:$light-text-color;
 	padding:0 5px 0 3px;
 	display:inline-block;
@@ -774,6 +775,7 @@ table.table_block  td {
 ***************************************************************************************************/
 #home-page-tabs {
 	border:none;
+	background:$light-background;
 																		@media (min-width: $screen-sm) { // min 768px
 																			padding:10px 0;
 																			margin:0 0 0 -18px;	
@@ -883,7 +885,14 @@ table.table_block  td {
 			&:first-child {border-top:none;}
 		}
 		
-		.form-group { padding-top:20px; border-top:1px solid $base-border-color;}
+		.form-group { 
+			padding-top:20px;
+			border-top:1px solid $base-border-color;
+			
+			select {
+				max-width:270px;	
+			}
+		}
 		
 		.btn {margin-top:12px;}
 	}
@@ -1596,6 +1605,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 #header {
 	padding-bottom:21px;
 	position:relative;
+	background:$light-background;
 	
 	.header-row {
 		background:$dark-background;
@@ -1713,7 +1723,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 			position:absolute;
 			top:37px;
 			left:0;
-			width:166px;
+			width:157px;
 			background:$dark-background;
 			z-index:2;
 			
@@ -1772,7 +1782,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 	font-weight:bold;
 	font-size:12px;
 	line-height:24px;
-	height:26px;
+	min-height:26px;
 	@include border-radius(3px);
 	overflow:hidden;
 	margin-bottom:16px;
@@ -1780,19 +1790,16 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 	z-index:1;
 	
 	.navigation-pipe { 
-		float:left;
 		width:18px;
 		display:inline-block;
 		text-indent:-5000px;
 	}
-	.navigation_page { float:left;}
 	
 	a {
 		display:inline-block;
-		float:left;
 		background:$light-background;
 		padding:0 8px 0 22px;
-		margin-left:-20px;
+		margin-left:-26px;
 		position:relative;
 		z-index:2;
 		color:$base-text-color;
@@ -1807,16 +1814,23 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 			@include border-top-left-radius(3px);
 			@include border-bottom-left-radius(3px);
 			z-index:99;
+			line-height:22px;
+			display:inline-block;
+			height:24px;
+			
+			i {
+				vertical-align:-1px;	
+			}
 		}
 		
 		&:after {
 			display:inline-block;
 			content:".";
 			position:absolute;
-			right:-6px;
-			top:0;
-			width:24px;
-			height:24px;
+			right:-10px;
+			top:3px;
+			width:18px;
+			height:18px;
 			background:$light-background;
 			border-right:1px solid $base-border-color;
 			border-top:1px solid $base-border-color;

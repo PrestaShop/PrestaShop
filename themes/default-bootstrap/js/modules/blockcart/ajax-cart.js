@@ -163,15 +163,28 @@ var ajaxCart = {
 	},
 
 	// Update the cart information
-	updateCartInformation : function (jsonData, addedFromProductPage)
+	updateCartInformation : function (jsonData, addedFromProductPage, contentOnly)
 	{
-		ajaxCart.updateCart(jsonData);
 
+		// if added from Quick View
+		var contentOnly = contentOnly;
+		if (addedFromProductPage && typeof(contentOnly) != 'undefined' && (!jsonData.hasError || jsonData.hasError==false))
+			$.fancybox.close(),
+			ajaxCart.updateCart(jsonData),
+			$('.crossseling').html(jsonData.crossSelling);
+			
+		ajaxCart.updateCart(jsonData);
+		
 		//reactive the button when adding has finished
 		if (addedFromProductPage)
 			$('#add_to_cart button').removeAttr('disabled').removeClass('disabled');
 		else
 			$('.ajax_add_to_cart_button').removeAttr('disabled');
+	},
+	// close fancybox
+	updateFancyBox : function ()
+	{
+		
 	},
 
 	// add a product in the cart via ajax
@@ -207,69 +220,34 @@ var ajaxCart = {
 				// add appliance to whishlist module
 				if (whishlist && !jsonData.errors)
 					WishlistAddProductCart(whishlist[0], idProduct, idCombination, whishlist[1]);
-
-					// add the picture to the cart
-					var $element = $(callerElement).parents('.ajax_block_product').find('a.product_image img,a.product_img_link img');
-					if (!$element.length)
-						$element = $('#bigpic');
-					var $picture = $element.clone();
-					var pictureOffsetOriginal = $element.offset();
-					pictureOffsetOriginal.right = $(window).innerWidth() - pictureOffsetOriginal.left - $element.width();
-
-					if ($picture.length)
-					{
-						$picture.css({
-							position: 'absolute',
-							top: pictureOffsetOriginal.top,
-							right: pictureOffsetOriginal.right
-						});
-					}
-					if (typeof(contentOnly) != 'undefined') {
-						var $contentOnly = contentOnly;
-					}	
-					var pictureOffset = $picture.offset();
-					if (($contentOnly && $contentOnly !=true) || !$contentOnly) {
-						var cartBlock = $('#cart_block');
-						if (!$('#cart_block')[0] || !$('#cart_block').offset().top || !$('#cart_block').offset().left)
-							cartBlock = $('#shopping_cart');
-						var cartBlockOffset = cartBlock.offset();
-						cartBlockOffset.right = $(window).innerWidth() - cartBlockOffset.left - cartBlock.width();
-					}
-
-				// Check if the block cart is activated for the animation
-				if (cartBlockOffset != undefined && $picture.length && (($contentOnly && $contentOnly !=true) || !$contentOnly))
-				{
-					$picture.appendTo('body');
-					$picture
-						.css({
-							position: 'absolute',
-							top: pictureOffsetOriginal.top,
-							right: pictureOffsetOriginal.right,
-							zIndex: 4242
-						})
-						.animate({
-							width: $element.attr('width')*0.66,
-							height: $element.attr('height')*0.66,
-							opacity: 0.2,
-							top: cartBlockOffset.top + 30,
-							right: cartBlockOffset.right + 15
-						}, 1000)
-						.fadeOut(100, function() {
-							ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
-							$(this).remove();
-							if (!jsonData.hasError)
-							{
-								$('.crossseling').html(jsonData.crossSelling)
-								$(jsonData.products).each(function(){
-									if (this.id != undefined && this.id == parseInt(idProduct))
-										ajaxCart.updateLayer(this);
-								});
-							}
-						});
+				if (typeof(contentOnly) != 'undefined') {
+					var $contentOnly = contentOnly;
 				}
-				else if ($contentOnly && $contentOnly !=false) {
-					window.parent.ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
+				
+				//adding product to cart and update Layer Cart
+				if (($contentOnly && $contentOnly !=true) || !$contentOnly)
+				{
 					ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
+					if (!jsonData.hasError)
+					{
+						$('.crossseling').html(jsonData.crossSelling)
+						$(jsonData.products).each(function(){
+							if (this.id != undefined && this.id == parseInt(idProduct))
+								ajaxCart.updateLayer(this);
+						});
+					}
+				}
+				//adding product to cart and update Layer Cart (Quick View)
+				else if ($contentOnly && $contentOnly !=false) {
+					contentOnly = true;
+					window.parent.ajaxCart.updateCartInformation(jsonData, addedFromProductPage, contentOnly);
+					if (!jsonData.hasError)
+						$(jsonData.products).each(function(){
+							if (this.id != undefined && this.id == parseInt(idProduct))
+								window.parent.ajaxCart.updateLayer(this);
+						});
+					else 
+						$('#add_to_cart button').removeAttr('disabled').removeClass('disabled');
 				}
 				else {
 					ajaxCart.updateCartInformation(jsonData, addedFromProductPage);	
@@ -619,6 +597,7 @@ var ajaxCart = {
 		$('.layer_cart_overlay').css('height','100%');
 		$('.layer_cart_overlay').show();
 		$('#layer_cart').css({'top': n}).fadeIn('fast');
+		$.scrollTo('#layer_cart', 400);
 		crossselling_serialScroll();
 	},
 

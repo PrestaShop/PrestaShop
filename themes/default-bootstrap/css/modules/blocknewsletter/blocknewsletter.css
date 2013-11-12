@@ -63,6 +63,7 @@
   color: white;
   padding: 5px 43px 5px 12px;
   display: inline-block;
+  float: left;
 }
 #footer #newsletter_block_left .form-group .form-control:focus {
   -webkit-box-shadow: black 0px 0px 0px;
@@ -70,11 +71,12 @@
   box-shadow: black 0px 0px 0px;
 }
 #footer #newsletter_block_left .form-group .button-small {
-  margin-left: -41px;
+  margin-left: -42px;
   border: none;
   background: none;
   text-align: center;
   color: #908f8f;
+  padding: 8px;
 }
 #footer #newsletter_block_left .form-group .button-small:before {
   content: "";
@@ -89,8 +91,19 @@
   display: none;
 }
 #footer #newsletter_block_left .warning_inline {
-  display: inline-block;
+  display: block;
   color: #f13340;
   font-size: 13px;
   line-height: 26px;
+  clear: both;
+}
+@media (min-width: 1200px) {
+  #footer #newsletter_block_left .warning_inline {
+    display: inline-block;
+    position: relative;
+    top: -35px;
+    margin-bottom: -35px;
+    left: 15px;
+    clear: none;
+  }
 }
