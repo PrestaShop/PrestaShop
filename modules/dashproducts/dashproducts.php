@@ -33,7 +33,7 @@ class Dashproducts extends Module
 	{
 		$this->name = 'dashproducts';
 		$this->displayName = 'Dashboard Products';
-		$this->tab = '';
+		$this->tab = 'dashboard';
 		$this->version = '0.1';
 		$this->author = 'PrestaShop';
 		
