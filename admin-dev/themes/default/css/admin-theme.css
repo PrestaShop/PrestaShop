@@ -3767,7 +3767,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 
 .switch .slide-button, .toggle p span { display: none; }
 
-.switch { background-color: #d2d2d2; border-radius: 3px; }
+.switch { background-color: #e9e9e9; border-radius: 3px; }
 .switch label { padding: 0; cursor: pointer; }
 
 @media only screen { .toggle { position: relative; padding: 0; margin-left: 100px; }
@@ -3801,10 +3801,10 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
   .toggle input:checked ~ .slide-button { right: 50%; }
   .toggle input:focus ~ .slide-button, .switch input:focus + label { outline: 1px dotted #888888; }
   .switch, .toggle { -webkit-animation: bugfix infinite 1s; }
-  .prestashop-switch { min-width: 150px; color: #666666; text-align: center; border-radius: 3px; -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px 1px inset; box-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px 1px inset; }
+  .prestashop-switch { min-width: 150px; color: #999999; text-align: center; border-radius: 3px; -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px 1px inset; box-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px 1px inset; }
   .prestashop-switch label { padding-top: 0 !important; font-weight: 500; }
   .prestashop-switch input:checked + label { color: #333333 !important; text-shadow: rgba(255, 255, 255, 0.7) 1px 1px 0; }
-  .prestashop-switch input:not(:checked) + label i { color: #666666 !important; }
+  .prestashop-switch input:not(:checked) + label i { color: #999999 !important; }
   .prestashop-switch .slide-button { position: relative; margin-right: 3px; color: white; }
   .prestashop-switch p { color: #333333; }
   .prestashop-switch span { color: white; } }
