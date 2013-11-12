@@ -1141,7 +1141,6 @@ class AdminControllerCore extends Controller
 				}
 				break;
 			case 'add':
-			case 'edit':
 				// Default save button - action dynamically handled in javascript
 				$this->page_header_toolbar_btn['save'] = array(
 					'href' => '#',
@@ -1158,7 +1157,7 @@ class AdminControllerCore extends Controller
 						'href' => $back,
 						'desc' => $this->l('Cancel')
 					);
-
+			case 'edit':
 				$obj = $this->loadObject(true);
 				if (Validate::isLoadedObject($obj) && isset($obj->name) && !empty($obj->name))
 				{
