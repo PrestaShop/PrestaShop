@@ -168,17 +168,6 @@ class AdminCategoriesControllerCore extends AdminController
 				'desc' => $this->l('Add new category'),
 				'icon' => 'process-icon-new'
 			);
-
-		if ($this->display == 'view')
-		{
-			array_pop($this->toolbar_title);
-			$obj = $this->loadObject();
-
-			if (Validate::isLoadedObject($obj))
-				$this->toolbar_title[] = $obj->name[$this->context->employee->id_lang];
-
-			$this->page_header_toolbar_title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
-		}
 	}
 	
 	public function initContent()
