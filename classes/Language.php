@@ -628,7 +628,7 @@ class LanguageCore extends ObjectModel
 		// and 'YY' a country code identifying a variant of the language.
 		$lang_country = explode('-', $code);
 		// Get the language component of the code
-		$lang 		  = $lang_country[0];
+		$lang = $lang_country[0];
 
 		// Find the id_lang of the language.
 		// We look for anything with the correct language code
@@ -637,15 +637,15 @@ class LanguageCore extends ObjectModel
 		// or a close match.
 		$id_lang = Db::getInstance()->getValue(
 			'SELECT `id_lang` FROM ' 
-			.'`'._DB_PREFIX_.'lang` WHERE LOWER(LEFT(`language_code`,2)) = \''.pSQL(strtolower($lang)).'\' '
-			.'ORDER BY LOWER(language_code) = \''.pSQL(strtolower($code)).'\' DESC'
+			.'`'._DB_PREFIX_.'lang` WHERE LEFT(`language_code`,2) = \''.pSQL($lang).'\' '
+			.'ORDER BY language_code = \''.pSQL($code).'\' DESC'
 		);
 
 		// Instantiate the Language object if we found it.
 		if ($id_lang)
 			return new Language($id_lang);
-		else return false;
-
+		else
+			return false;
 	}
 
 	/**
