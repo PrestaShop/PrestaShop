@@ -3694,7 +3694,7 @@ td.actions { min-width: 200px; }
 
 label.control-label { font-size: 13px; font-weight: normal; color: #666666; }
 
-label.control-label span.label-tooltip { text-decoration: none; font-size: 13px; background-color: #ebebeb; border: none; border-bottom: solid 1px #dfdfdf; padding: 0 5px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
+label.control-label span.label-tooltip { text-decoration: none; font-size: 13px; color: #3586ae; background-color: #edf7fb; border: none; border-bottom: solid 1px #d8edf7; padding: 0 5px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
 
 label.required:before { content: "*"; color: red; font-size: 14px; position: relative; line-height: 12px; }
 
