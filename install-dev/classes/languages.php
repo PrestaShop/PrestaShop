@@ -138,7 +138,8 @@ class InstallLanguages
 		$args[0] = $translation;
 		if(count($args) > 1)
 			return call_user_func_array('sprintf', $args);
-		else return $translation;
+		else 
+			return $translation;
 	}
 
 	/**
