@@ -1,16 +1,4 @@
 @import '_theme_variables';
-@import 'bootstrap_lib/_mixins';
-
-@mixin border-radius($radius) {
-  -webkit-border-radius: $radius;
-     -moz-border-radius: $radius;
-      -ms-border-radius: $radius;
-       -o-border-radius: $radius;
-          border-radius: $radius;
-}
-
-
-
 /* ##################################################################################################
 	PRESTASHOP SCSS
 ################################################################################################## */
@@ -989,11 +977,14 @@ table.table_block  td {
 		.category_thumb{display: none;}
 	}
 } 
-#categories_block_left {	.block_content > ul {
-		border-top:1px solid $base-border-color;	
-	}	
+#categories_block_left {
+	
+	.block_content > ul {		border-top:1px solid $base-border-color;	
+	}
+	
 	li {
-		position:relative;		
+		position:relative;
+		
 		a {
 			font-weight:bold;
 			color:$base-text-color;
@@ -1002,7 +993,8 @@ table.table_block  td {
 			line-height:30px;
 			padding:0 30px 0 19px;
 			border-bottom:1px solid $base-border-color;
-		}		
+		}
+		
 		span.grower {
 			display:block;
 			background:#f6f6f6;
@@ -1012,8 +1004,10 @@ table.table_block  td {
 			cursor:pointer;
 			text-align:center;
 			font-family:$font-icon;
-			font-size:14px;			
-			&.OPEN, &.CLOSE {				
+			font-size:14px;
+			
+			&.OPEN, &.CLOSE {
+				
 				&:before {
 					content:"";
 					display:block;
@@ -1378,16 +1372,16 @@ ul.step {
 			border-left-width:1px;
 			border-left-color:#b7b7b7;
 																				@media (min-width: $screen-xs) { //min 480px
-																					border-top-left-radius:4px;
-																					border-bottom-left-radius:4px;
+																					@include border-top-left-radius(4px);
+																					@include border-bottom-left-radius(4px);
 																				}
 			
 			span, a {
 				z-index:5;
 				padding-left:13px !important;
 																				@media (min-width: $screen-xs) { //min 480px
-																					border-top-left-radius:4px;
-																					border-bottom-left-radius:4px;
+																					@include border-top-left-radius(4px);
+																					@include border-bottom-left-radius(4px);
 																				}
 			}
 		}
@@ -1405,12 +1399,12 @@ ul.step {
 				z-index:1;	
 			}
 																					@media (min-width: $screen-xs) { //min 480px
-																						border-top-right-radius:4px;
-																						border-bottom-right-radius:4px;
+																						@include border-top-right-radius(4px);
+																						@include border-bottom-right-radius(4px);
 																						
 																						span {
-																							border-top-right-radius:4px;
-																							border-bottom-right-radius:4px;
+																							@include border-top-right-radius(4px);
+																							@include border-bottom-right-radius(4px);
 																						}
 																					}
 		}
@@ -1809,8 +1803,8 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 			text-align:center;
 			padding:0;
 			margin:0;
-			border-top-left-radius:3px;
-			border-bottom-left-radius:3px;
+			@include border-top-left-radius(3px);
+			@include border-bottom-left-radius(3px);
 			z-index:99;
 		}
 		

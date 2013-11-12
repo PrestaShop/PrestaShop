@@ -117,9 +117,8 @@
                     {/if}
                 </div>
                 <div class="functional-buttons clearfix">
-                	<div class="wishlist">
-                		<a href="#" id="wishlist_button_{$product.id_product|intval}" rel="{$product.id_product|intval}" onclick="WishlistCart('wishlist_block_list', 'add', '{$product.id_product|intval}', false, 1); return false;" class="addToWishlist wishlistProd_{$product.id_product|intval}">Add to Wishlist</a>
-                    </div>                    {if isset($comparator_max_item) && $comparator_max_item}
+						{hook h='displayProductListFunctionalButtons' product=$product}
+                    {if isset($comparator_max_item) && $comparator_max_item}
                         <div class="compare">
                             <label for="comparator_item_{$product.id_product}">
                             <input type="checkbox" class="comparator hidden" id="comparator_item_{$product.id_product}" value="comparator_item_{$product.id_product}" {if isset($compared_products) && in_array($product.id_product, $compared_products)}checked="checked"{/if} autocomplete="off"/> 
