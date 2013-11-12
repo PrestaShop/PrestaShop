@@ -1089,7 +1089,7 @@ class CartCore extends ObjectModel
 		}
 
 		$query = 'INSERT INTO `'._DB_PREFIX_.'customized_data` (`id_customization`, `type`, `index`, `value`)
-			VALUES ('.(int)$id_customization.', '.(int)$type.', '.(int)$index.', \''.pSql($field).'\')';
+			VALUES ('.(int)$id_customization.', '.(int)$type.', '.(int)$index.', \''.pSql($field,true).'\')';
 
 		if (!Db::getInstance()->execute($query))
 			return false;
