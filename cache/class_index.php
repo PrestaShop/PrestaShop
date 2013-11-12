@@ -302,6 +302,8 @@
   'CustomerThreadCore' => 'classes/CustomerThread.php',
   'Customization' => '',
   'CustomizationCore' => 'classes/Customization.php',
+  'DashboardModule' => '',
+  'DashboardModuleCore' => 'classes/module/DashboardModule.php',
   'DateRange' => '',
   'DateRangeCore' => 'classes/DateRange.php',
   'Db' => '',

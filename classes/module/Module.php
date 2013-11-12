@@ -121,12 +121,7 @@ abstract class ModuleCore
 
 	/** @var currentSmartySubTemplate */	
 	protected $current_subtemplate = null;
-	
-	/** @var allow push */
-	public $allow_push;
-	
-	public $push_time_limit = 180;
-	
+		
 	const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 	
 	const CACHE_FILE_TAB_MODULES_LIST = '/config/xml/tab_modules_list.xml';

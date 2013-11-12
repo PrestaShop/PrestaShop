@@ -27,7 +27,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class Dashgoals extends Module
+class Dashgoals extends DashboardModule
 {
 	protected static $month_labels = array();
 	protected static $types = array('traffic', 'conversion', 'avg_cart_value');

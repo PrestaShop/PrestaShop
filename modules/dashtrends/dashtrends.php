@@ -27,7 +27,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class Dashtrends extends Module
+class Dashtrends extends DashboardModule
 {
 	protected $dashboard_data;
 	protected $dashboard_data_compare;

@@ -27,7 +27,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class Dashproducts extends Module
+class Dashproducts extends DashboardModule
 {
 	public function __construct()
 	{

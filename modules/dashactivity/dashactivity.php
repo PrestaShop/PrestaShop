@@ -27,7 +27,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class Dashactivity extends Module
+class Dashactivity extends DashboardModule
 {
 	public function __construct()
 	{
