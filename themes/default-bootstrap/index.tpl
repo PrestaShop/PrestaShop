@@ -23,8 +23,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{$HOOK_HOME}
 {if isset($HOOK_HOME_TAB_CONTENT)}
+	<div class="clearfix"></div>
     {if isset($HOOK_HOME_TAB)}
         <ul id="home-page-tabs" class="nav nav-tabs">{/if}{$HOOK_HOME_TAB}{if isset($HOOK_HOME_TAB)}</ul>
     {/if}
@@ -32,3 +32,6 @@
 		{$HOOK_HOME_TAB_CONTENT}
 	</div>
 {/if}
+<div class="clearfix">
+	{$HOOK_HOME}
+</div>

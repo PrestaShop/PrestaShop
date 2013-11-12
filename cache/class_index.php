@@ -366,6 +366,8 @@
   'HelperFormCore' => 'classes/helper/HelperForm.php',
   'HelperHelpAccess' => '',
   'HelperHelpAccessCore' => 'classes/helper/HelperHelpAccess.php',
+  'HelperImageUploader' => '',
+  'HelperImageUploaderCore' => 'classes/helper/HelperImageUploader.php',
   'HelperKpi' => '',
   'HelperKpiCore' => 'classes/helper/HelperKpi.php',
   'HelperKpiRow' => '',

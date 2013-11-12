@@ -61,7 +61,7 @@
 		<button class="btn btn-default" data-style="expand-right" data-size="s" type="button" id="{$id}-add-button">
 			<i class="icon-plus-sign"></i> {if isset($multiple) && $multiple}{l s='Add files'}{else}{l s='Add file'}{/if}
 		</button>
-		<button class="ladda-button" data-style="expand-right" data-size="s" type="button" id="{$id}-upload-button" style="display:none;">
+		<button class="ladda-button btn btn-default" data-style="expand-right" type="button" id="{$id}-upload-button" style="display:none;">
 			<i class="icon-cloud-upload"></i> <span class="ladda-label">{if isset($multiple) && $multiple}{l s='Upload files'}{else}{l s='Upload file'}{/if}</span>
 		</button>
 	</div>
@@ -195,7 +195,7 @@
 		$('#{$id}-add-button').on('click', function() {
 			$('#{$id}-success').html('').parent().hide();
 			$('#{$id}-errors').html('').parent().hide();
-			$('#{$id}-files-list').html('').parent().hide();
+			$('#{$id}-files-list').parent().hide();
 			{$id}_total_files = 0;
 			$('#{$id}').trigger('click');
 		});

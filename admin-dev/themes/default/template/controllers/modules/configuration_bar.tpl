@@ -32,7 +32,7 @@
 			</button>
 			<ul class="dropdown-menu">
 				{foreach from=$module_languages item=language}
-				<li><a href="{$tradlink}{$language['iso_code']}#{$module_name}"><img src="{$theme_language_dir}{$language['id_lang']}.jpg" alt=""> {$language.name}</a></li>
+				<li><a href="{$tradlink}{$language['iso_code']}#{$module_name}">{$language.name}</a></li>
 				{/foreach}
 			</ul>
 		</div>

@@ -36,6 +36,7 @@ class AdminMetaControllerCore extends AdminController
 		parent::__construct();
 
 		$this->bootstrap = true;
+		$this->identifier_name = 'page';
 		$this->ht_file = _PS_ROOT_DIR_.'/.htaccess';
 		$this->rb_file = _PS_ROOT_DIR_.'/robots.txt';
 		$this->sm_file = _PS_ROOT_DIR_.'/sitemap.xml';
