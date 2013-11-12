@@ -1135,11 +1135,10 @@ class AdminControllerCore extends Controller
 						'desc' => $this->l('Back to list')
 					);
 				$obj = $this->loadObject(true);
-				$id_name = $this->identifier_name;
-				if (Validate::isLoadedObject($obj) && isset($obj->$id_name) && !empty($obj->$id_name))
+				if (Validate::isLoadedObject($obj) && isset($obj->{$this->identifier_name}) && !empty($obj->{$this->identifier_name}))
 				{
 					array_pop($this->toolbar_title);
-					$this->toolbar_title[] = is_array($obj->$id_name) ? $obj->$id_name[$this->context->employee->id_lang] : $obj->$id_name;
+					$this->toolbar_title[] = is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name};
 				}
 				break;
 			case 'add':
@@ -1161,12 +1160,11 @@ class AdminControllerCore extends Controller
 					);
 			case 'edit':
 				$obj = $this->loadObject(true);
-				$id_name = $this->identifier_name;
-				if (Validate::isLoadedObject($obj) && isset($obj->$id_name) && !empty($obj->$id_name))
+				if (Validate::isLoadedObject($obj) && isset($obj->{$this->identifier_name}) && !empty($obj->{$this->identifier_name}))
 				{
 					array_pop($this->toolbar_title);
 					$this->toolbar_title[] = sprintf($this->l('Edit: %s'),
-						is_array($obj->$id_name) ? $obj->$id_name[$this->context->employee->id_lang] : $obj->$id_name);
+						is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name});
 				}
 				break;
 			case 'options':
