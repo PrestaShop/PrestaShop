@@ -316,7 +316,7 @@
 					{elseif $field_name eq "lastname"}
 					<p class="required text">
 						<label for="lastname_invoice">{l s='Last name'} <sup>*</sup></label>
-						<input type="text" class="text" id="lastname_invoice" name="lastname_invoice" value="{if isset($guestInformations) && $guestInformations.firstname_invoice}{$guestInformations.firstname_invoice}{/if}" />
+						<input type="text" class="text" id="lastname_invoice" name="lastname_invoice" value="{if isset($guestInformations) && $guestInformations.lastname_invoice}{$guestInformations.lastname_invoice}{/if}" />
 					</p>
 					{elseif $field_name eq "address1"}
 					<p class="required text">
