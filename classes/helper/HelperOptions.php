@@ -126,7 +126,13 @@ class HelperOptionsCore extends Helper
 							'download_url' => isset($field['file'])?$field['file']:null
 						)));
 
-					$uploader->setThumb(isset($field['thumb'])?$field['thumb']:null);
+					if (isset($field['thumb']) && $field['thumb']) // Use for retrocompatibility							
+						$uploader->setFiles(array(
+							0 => array(
+							'type'       => HelperUploader::TYPE_IMAGE,
+							'image'      => isset($field['thumb'])?'<img src="'.$field['thumb'].'" alt="'.$field['title'].'" title="'.$field['title'].'" />':null,
+						)));
+
 					$uploader->setTitle(isset($field['title'])?$field['title']:null);
 					$field['file'] = $uploader->render();
 				}

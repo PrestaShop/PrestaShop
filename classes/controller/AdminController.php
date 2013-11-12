@@ -52,6 +52,7 @@ class AdminControllerCore extends Controller
 
 	/** @var string Object identifier inside the associated table */
 	protected $identifier = false;
+	protected $identifier_name = 'name';
 
 	/** @var string Tab name */
 	public $className;
@@ -1119,8 +1120,6 @@ class AdminControllerCore extends Controller
 		if (!is_array($this->toolbar_title))
 			$this->toolbar_title = array($this->toolbar_title);
 
-		$title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
-
 		switch ($this->display)
 		{
 			case 'view':
@@ -1135,9 +1134,14 @@ class AdminControllerCore extends Controller
 						'href' => $back,
 						'desc' => $this->l('Back to list')
 					);
+				$obj = $this->loadObject(true);
+				if (Validate::isLoadedObject($obj) && isset($obj->{$this->identifier_name}) && !empty($obj->{$this->identifier_name}))
+				{
+					array_pop($this->toolbar_title);
+					$this->toolbar_title[] = is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name};
+				}
 				break;
 			case 'add':
-			case 'edit':
 				// Default save button - action dynamically handled in javascript
 				$this->page_header_toolbar_btn['save'] = array(
 					'href' => '#',
@@ -1154,6 +1158,14 @@ class AdminControllerCore extends Controller
 						'href' => $back,
 						'desc' => $this->l('Cancel')
 					);
+			case 'edit':
+				$obj = $this->loadObject(true);
+				if (Validate::isLoadedObject($obj) && isset($obj->{$this->identifier_name}) && !empty($obj->{$this->identifier_name}))
+				{
+					array_pop($this->toolbar_title);
+					$this->toolbar_title[] = sprintf($this->l('Edit: %s'),
+						is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name});
+				}
 				break;
 			case 'options':
 				// Default save button - action dynamically handled in javascript
@@ -1162,6 +1174,8 @@ class AdminControllerCore extends Controller
 					'desc' => $this->l('Save')
 				);
 		}
+
+		$title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
 
 		if (is_array($this->page_header_toolbar_btn)
 			&& $this->page_header_toolbar_btn instanceof Traversable
@@ -1959,8 +1973,8 @@ class AdminControllerCore extends Controller
 
 		//loads specific javascripts for the admin theme, bootstrap.js should be moved into /js root directory
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.js');
-		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/enquire.js');
-		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/admin-theme.js');
+		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.js');
+		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
 
 		if (!Tools::getValue('submitFormAjax'))
 		{

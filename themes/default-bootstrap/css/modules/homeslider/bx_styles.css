@@ -16,11 +16,20 @@
 #homepage-slider {
   padding-left: 0;
   padding-right: 0;
-  padding-top: 29px;
-  margin-bottom: 35px;
+  padding-top: 50px;
+  margin-bottom: 14px;
+  width: 66.6%;
   max-width: 779px;
   position: relative;
   z-index: 1;
+  float: left;
+}
+@media (max-width: 767px) {
+  #homepage-slider {
+    width: 100%;
+    max-width: 100%;
+    padding-top: 20px;
+  }
 }
 #homepage-slider #homeslider {
   margin: 0 auto;

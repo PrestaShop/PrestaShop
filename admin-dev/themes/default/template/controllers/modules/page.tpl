@@ -37,7 +37,7 @@
 						{l s='Module file'}
 					</span>
 				</label>
-				<div class="col-lg-12">
+				<div class="col-lg-9">
 					<div class="row">
 						<div class="col-lg-7">
 							<input id="file" type="file" name="file" class="hide" />

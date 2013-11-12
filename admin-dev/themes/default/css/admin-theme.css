@@ -3538,7 +3538,6 @@ a.link-social:hover { text-decoration: none; }
 #nav-mobile ul.menu li a:hover { background-color: #686d7d; color: white; }
 #nav-mobile ul.menu li a:hover i { color: white; }
 #nav-mobile ul.submenu { display: none; }
-#nav-mobile #nav-mobile-submenu { z-index: 1200; }
 #nav-mobile #nav-mobile-submenu a:not(#nav-mobile-submenu-back) { font-size: 1.2em; padding-left: 50px; text-transform: none; }
 #nav-mobile a#nav-mobile-submenu-back { background-color: #454953; font-size: 1.5em; }
 #nav-mobile ul.menu.menu-close { -webkit-animation: fadeOutLeft 0.2s 0.2s ease both; -moz-animation: fadeOutLeft 0.2s 0.2s ease both; -ms-animation: fadeOutLeft 0.2s 0.2s ease both; -o-animation: fadeOutLeft 0.2s 0.2s ease both; animation: fadeOutLeft 0.2s 0.2s ease both; }
@@ -3695,7 +3694,7 @@ td.actions { min-width: 200px; }
 
 label.control-label { font-size: 13px; font-weight: normal; color: #666666; }
 
-label.control-label span.label-tooltip { text-decoration: none; font-size: 13px; background-color: #ebebeb; border: none; border-bottom: solid 1px #dfdfdf; padding: 0 5px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
+label.control-label span.label-tooltip { text-decoration: none; font-size: 13px; color: #3586ae; background-color: #edf7fb; border: none; border-bottom: solid 1px #d8edf7; padding: 0 5px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
 
 label.required:before { content: "*"; color: red; font-size: 14px; position: relative; line-height: 12px; }
 
@@ -3768,7 +3767,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 
 .switch .slide-button, .toggle p span { display: none; }
 
-.switch { background-color: #d2d2d2; border-radius: 3px; }
+.switch { background-color: #e9e9e9; border-radius: 3px; }
 .switch label { padding: 0; cursor: pointer; }
 
 @media only screen { .toggle { position: relative; padding: 0; margin-left: 100px; }
@@ -3802,10 +3801,10 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
   .toggle input:checked ~ .slide-button { right: 50%; }
   .toggle input:focus ~ .slide-button, .switch input:focus + label { outline: 1px dotted #888888; }
   .switch, .toggle { -webkit-animation: bugfix infinite 1s; }
-  .prestashop-switch { min-width: 150px; color: #666666; text-align: center; border-radius: 3px; -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px 1px inset; box-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px 1px inset; }
+  .prestashop-switch { min-width: 150px; color: #999999; text-align: center; border-radius: 3px; -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px 1px inset; box-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px 1px inset; }
   .prestashop-switch label { padding-top: 0 !important; font-weight: 500; }
   .prestashop-switch input:checked + label { color: #333333 !important; text-shadow: rgba(255, 255, 255, 0.7) 1px 1px 0; }
-  .prestashop-switch input:not(:checked) + label i { color: #666666 !important; }
+  .prestashop-switch input:not(:checked) + label i { color: #999999 !important; }
   .prestashop-switch .slide-button { position: relative; margin-right: 3px; color: white; }
   .prestashop-switch p { color: #333333; }
   .prestashop-switch span { color: white; } }

@@ -150,6 +150,8 @@ class AdminEmployeesControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
+		parent::initPageHeaderToolbar();
+
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_employee'] = array(
 				'href' => self::$currentIndex.'&amp;addemployee&amp;token='.$this->token,
@@ -157,7 +159,16 @@ class AdminEmployeesControllerCore extends AdminController
 				'icon' => 'process-icon-new'
 			);
 
-		parent::initPageHeaderToolbar();
+		if ($this->display == 'edit')
+		{
+			$obj = $this->loadObject(true);
+			if (Validate::isLoadedObject($obj))
+			{
+				array_pop($this->toolbar_title);
+				$this->toolbar_title[] = sprintf($this->l('Edit: %1$s %2$s'), $obj->lastname, $obj->firstname);
+				$this->page_header_toolbar_title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
+			}
+		}
 	}
 
 	public function renderList()
