@@ -1088,7 +1088,6 @@ class CartCore extends ObjectModel
 			$id_customization = Db::getInstance()->Insert_ID();
 		}
 		
-		$field = preg_replace("/<br\s*\/?>/i", "\n", $field);
 		$query = 'INSERT INTO `'._DB_PREFIX_.'customized_data` (`id_customization`, `type`, `index`, `value`)
 			VALUES ('.(int)$id_customization.', '.(int)$type.', '.(int)$index.', \''.pSQL($field).'\')';
 
@@ -3059,7 +3058,6 @@ class CartCore extends ObjectModel
 	 */
 	public function addTextFieldToProduct($id_product, $index, $type, $text_value)
 	{
-		$text_value = str_replace(array("\n", "\r"), '', nl2br($text_value));
 		if (!_PS_MAGIC_QUOTES_GPC_){
 			$text_value = str_replace('\\', '\\\\', $text_value);
 			$text_value = str_replace('\'', '\\\'', $text_value);
