@@ -1119,8 +1119,6 @@ class AdminControllerCore extends Controller
 		if (!is_array($this->toolbar_title))
 			$this->toolbar_title = array($this->toolbar_title);
 
-		$title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
-
 		switch ($this->display)
 		{
 			case 'view':
@@ -1135,6 +1133,12 @@ class AdminControllerCore extends Controller
 						'href' => $back,
 						'desc' => $this->l('Back to list')
 					);
+				$obj = $this->loadObject();
+				if (Validate::isLoadedObject($obj) && isset($obj->name) && !empty($obj->name))
+				{
+					array_pop($this->toolbar_title);
+					$this->toolbar_title[] = is_array($obj->name) ? $obj->name[$this->context->employee->id_lang] : $obj->name;
+				}
 				break;
 			case 'add':
 			case 'edit':
@@ -1154,6 +1158,14 @@ class AdminControllerCore extends Controller
 						'href' => $back,
 						'desc' => $this->l('Cancel')
 					);
+
+				$obj = $this->loadObject();
+				if (Validate::isLoadedObject($obj) && isset($obj->name) && !empty($obj->name))
+				{
+					array_pop($this->toolbar_title);
+					$this->toolbar_title[] = sprintf($this->l('Edit: %s'),
+						is_array($obj->name) ? $obj->name[$this->context->employee->id_lang] : $obj->name);
+				}
 				break;
 			case 'options':
 				// Default save button - action dynamically handled in javascript
@@ -1162,6 +1174,8 @@ class AdminControllerCore extends Controller
 					'desc' => $this->l('Save')
 				);
 		}
+
+		$title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
 
 		if (is_array($this->page_header_toolbar_btn)
 			&& $this->page_header_toolbar_btn instanceof Traversable
