@@ -89,7 +89,6 @@ class ProductSaleCore
 		$ids = count($ids) > 0 ? implode(',', $ids) : 'NULL';
 		
 		//Main query
-		if ($order_by == 'date_add')
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
 					pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
