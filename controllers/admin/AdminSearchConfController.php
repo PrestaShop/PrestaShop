@@ -199,7 +199,7 @@ class AdminSearchConfControllerCore extends AdminController
 				'desc' => $this->l('Add new alias'),
 				'icon' => 'process-icon-new'
 			);
-		
+		$this->identifier_name = 'alias';
 		parent::initPageHeaderToolbar();
 	}
 

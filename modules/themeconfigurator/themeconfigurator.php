@@ -163,6 +163,27 @@ class ThemeConfigurator extends Module
 				'is_module' => true,
 			),
 			array(
+				'label' => $this->l('Display facebook block on the home page'),
+				'name' => 'blockfacebook',
+				'desc' => '<a href="#">'.$this->l('Configure').'</a>',
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockfacebook')) && $module->active),
+				'is_module' => true,
+			),
+			array(
+				'label' => $this->l('Customer cms information block'),
+				'name' => 'blockcmsinfo',
+				'desc' => '<a href="#">'.$this->l('Configure').'</a>',
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockcmsinfo')) && $module->active),
+				'is_module' => true,
+			),
+			array(
+				'label' => $this->l('Customer banner information block'),
+				'name' => 'tmhtmlcontent',
+				'desc' => '<a href="#">'.$this->l('Configure').'</a>',
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('tmhtmlcontent')) && $module->active),
+				'is_module' => true,
+			),
+			array(
 				'label' => $this->l('Enable Quick view'),
 				'name' => 'quick_view',
 				'value' => (int)Tools::getValue('PS_QUICK_VIEW', Configuration::get('PS_QUICK_VIEW'))
