@@ -86,6 +86,8 @@ class AdminSearchEnginesControllerCore extends AdminController
 				'desc' => $this->l('Add new search engine'),
 				'icon' => 'process-icon-new'
 			);
+
+		$this->identifier_name = 'server';
 		
 		parent::initPageHeaderToolbar();
 	}
