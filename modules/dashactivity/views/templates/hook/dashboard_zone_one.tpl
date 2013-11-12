@@ -64,7 +64,6 @@
 			</li>
 		</ul>			
 	</section>
-	{if $DASHACTIVITY_SHOW_PENDING}
 	<section id="dash_pending" class="loading">
 		<header><i class="icon-time"></i> {l s='Currently Pending' mod='dashactivity'}</header>
 		<ul class="data_list">
@@ -74,32 +73,26 @@
 					<span id="pending_orders"></span>
 				</span>
 			</li>
-			{if $DASHACTIVITY_SHOW_RETURNS}
 			<li>
 				<span class="data_label">{l s='Return/Exchanges' mod='dashactivity'}</span>
 				<span class="data_value size_l">
 					<span id="return_exchanges"></span>
 				</span>
 			</li>
-			{/if}
 			<li>
 				<span class="data_label">{l s='Abandoned Carts' mod='dashactivity'}</span>
 				<span class="data_value size_l">
 					<span id="abandoned_cart"></span>
 				</span>
 			</li>
-			{if $DASHACTIVITY_SHOW_STOCK}
 			<li>
 				<span class="data_label">{l s='Products Out of Stock' mod='dashactivity'}</span>
 				<span class="data_value size_l">
 					<span id="products_out_of_stock"></span>
 				</span>
 			</li>
-			{/if}
 		</ul>
 	</section>
-	{/if}
-	{if $DASHACTIVITY_SHOW_NOTIFICATION}
 	<section id="dash_notifications" class="loading">
 		<header><i class="icon-exclamation-sign"></i> {l s='Notifications' mod='dashactivity'}</header>
 		<ul class="data_list_vertical">
@@ -123,8 +116,6 @@
 			</li>
 		</ul>
 	</section>
-	{/if}
-	{if $DASHACTIVITY_SHOW_CUSTOMERS}
 	<section id="dash_customers" class="loading">
 		<header><i class="icon-user"></i> {l s='Customers & Newsletters' mod='dashactivity'} <span class="subtitle small" id="customers-newsletters-subtitle"><span></header>
 		<ul class="data_list">
@@ -148,8 +139,6 @@
 			</li>
 		</ul>		
 	</section>
-	{/if}
-	{if $DASHACTIVITY_SHOW_TRAFFIC}
 	<section id="dash_traffic" class="loading">
 		<header>
 			<i class="icon-globe"></i> {l s='Traffic' mod='dashactivity'}  <span class="subtitle small" id="traffic-subtitle"><span>
@@ -184,9 +173,7 @@
 			</li>
 		</ul>		
 	</section>
-	{/if}
 </section>
-
 <script type="text/javascript">
 	date_subtitle = "{$date_subtitle}";
 	date_format   = "{$date_format}";
