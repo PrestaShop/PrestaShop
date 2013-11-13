@@ -41,6 +41,7 @@ class BlockLayered extends Module
 		$this->version = '1.8.9';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
+		$this->bootstrap = true;
 
 		parent::__construct();
 
@@ -565,13 +566,8 @@ class BlockLayered extends Module
 	public function hookFeatureValueForm($params)
 	{
 		$languages = Language::getLanguages(false);
-		$default_form_language = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$default_form_language = (int)$this->context->controller->default_form_language;
 		$lang_value = array();
-		
-			$return = '
-				<script type="text/javascript">
-					flag_fields = \'\';
-				</script>';
 			
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
 		'SELECT url_name, meta_title, id_lang FROM '._DB_PREFIX_.'layered_indexable_feature_value_lang_value
@@ -579,39 +575,74 @@ class BlockLayered extends Module
 		if ($result)
 			foreach ($result as $data)
 				$lang_value[$data['id_lang']] = array('url_name' => $data['url_name'], 'meta_title' => $data['meta_title']);
-		$return .= '<div class="clear"></div>
-				<label>'.$this->l('URL:').'</label>
-				<div class="margin-form">
-				<script type="text/javascript">
-					flag_fields += \'¤url_name¤meta_title\';
-				</script>
-				<div class="translatable">';
-		foreach ($languages as $language)
-			$return .= '
-					<div class="lang_'.$language['id_lang'].'" id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
-						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
-						<p style="clear: both">'.$this->l('Specific URL format in block layered generation').'</p>
-					</div>';
 
-		$return .= '
-						</div>
-						<div class="clear"></div>
-					</div>
-					<label>'.$this->l('Meta title:').' </label>
-					<div class="margin-form">
-						<div class="translatable">';
+		$return = '<div class="form-group">
+				<label class="control-label col-lg-3">
+					<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="'.$this->l('Invalid characters:').' <>;=#{}_">
+						'.$this->l('URL:').'
+					</span>
+				</label>
+				<div class="col-lg-9">
+					<div class="form-group">';
 		foreach ($languages as $language)
+		{
 			$return .= '
-						<div class="lang_'.$language['id_lang'].'" id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
-							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
 						</div>';
+		}
 
-		$return .= '
-						</div>
-						<div class="clear"></div>
-					</div>';
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific URL format in block layered generation').'</p>
+					</div>
+				</div>					
+				</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3">'.$this->l('Meta title:').' </label>
+					<div class="col-lg-9">
+						<div class="form-group">';
+		foreach ($languages as $language)
+		{
+			$return .= '
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
+						</div>';
+		}
+
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific format for meta title').'</p>
+					</div>
+				</div>
+					
+				</div>
+				</div>';
 		return $return;
 	}
 	
@@ -646,53 +677,83 @@ class BlockLayered extends Module
 	public function hookAttributeForm($params)
 	{
 		$languages = Language::getLanguages(false);
-		$default_form_language = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$default_form_language = (int)$this->context->controller->default_form_language;
 		$lang_value = array();
-		
-		$return = '
-				<script type="text/javascript">
-					flag_fields = \'\';
-				</script>';
-		
+			
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
 		'SELECT url_name, meta_title, id_lang FROM '._DB_PREFIX_.'layered_indexable_attribute_lang_value
 		WHERE id_attribute = '.(int)$params['id_attribute']);
 		if ($result)
 			foreach ($result as $data)
 				$lang_value[$data['id_lang']] = array('url_name' => $data['url_name'], 'meta_title' => $data['meta_title']);
-		$return .= '<div class="clear"></div>
-				<label>'.$this->l('URL:').'</label>
-				<div class="margin-form">
-				<script type="text/javascript">
-					flag_fields += \'¤url_name¤meta_title\';
-				</script>
-				<div class="translatable">';
+			
+		$return = '<div class="form-group">
+				<label class="control-label col-lg-3">
+					<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="'.$this->l('Invalid characters:').' <>;=#{}_">
+						'.$this->l('URL:').'
+					</span>
+				</label>
+				<div class="col-lg-9">
+					<div class="form-group">';
 		foreach ($languages as $language)
+		{
 			$return .= '
-					<div class="lang_'.$language['id_lang'].'" id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
-						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
-						<p style="clear: both">'.$this->l('Specific URL format in block layered generation').'</p>
-					</div>';
-
-		$return .= '
-						</div>
-						<div class="clear"></div>
-					</div>
-					<label>'.$this->l('Meta title:').' </label>
-					<div class="margin-form">
-						<div class="translatable">';
-		foreach ($languages as $language)
-			$return .= '
-						<div class="lang_'.$language['id_lang'].'" id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
-							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
 						</div>';
+		}
 
-		$return .= '
-						</div>
-						<div class="clear"></div>
-					</div>';
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific URL format in block layered generation').'</p>
+					</div>
+				</div>					
+				</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3">'.$this->l('Meta title:').' </label>
+					<div class="col-lg-9">
+						<div class="form-group">';
+		foreach ($languages as $language)
+		{
+			$return .= '
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
+						</div>';
+		}
+
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific format for meta title').'</p>
+					</div>
+				</div>
+					
+				</div>
+				</div>';
 		return $return;
 	}
 	
@@ -760,7 +821,7 @@ class BlockLayered extends Module
 	public function hookAttributeGroupForm($params)
 	{
 		$languages = Language::getLanguages(false);
-		$default_form_language = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$default_form_language = (int)$this->context->controller->default_form_language;
 		$indexable = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT indexable FROM '._DB_PREFIX_.'layered_indexable_attribute_group
 		WHERE id_attribute_group = '.(int)$params['id_attribute_group']);
 		$lang_value = array();
@@ -777,51 +838,95 @@ class BlockLayered extends Module
 		else
 			$on = (bool)$indexable;
 
-		$return = '
-			<script type="text/javascript">
-				flag_fields = \'\';
-			</script>';
-		
-		$return .= '<div class="clear"></div>
-				<label>'.$this->l('URL:').'</label>
-				<div class="margin-form">
-				<script type="text/javascript">
-					flag_fields += \'¤url_name¤meta_title\';
-				</script>
-				<div class="translatable">';
+		$return = '<div class="form-group">
+				<label class="control-label col-lg-3">
+					<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="'.$this->l('Invalid characters:').' <>;=#{}_">
+						'.$this->l('URL:').'
+					</span>
+				</label>
+				<div class="col-lg-9">
+					<div class="form-group">';
 		foreach ($languages as $language)
+		{
 			$return .= '
-					<div class="lang_'.$language['id_lang'].'" id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
-						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
-						<p style="clear: both">'.$this->l('Specific URL format in block layered generation').'</p>
-					</div>';
-
-		$return .= '
-						</div>
-						<div class="clear"></div>
-					</div>
-					<label>'.$this->l('Meta title:').' </label>
-					<div class="margin-form">
-						<div class="translatable">';
-		foreach ($languages as $language)
-			$return .= '
-						<div class="lang_'.$language['id_lang'].'" id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
-							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
 						</div>';
+		}
 
-		$return .= '
-						</div>
-						<div class="clear"></div>
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific URL format in block layered generation').'</p>
 					</div>
-			<label>'.$this->l('Indexable:').' </label>
-				<div class="margin-form">
-					<input type="radio" '.(($on) ? 'checked="checked"' : '').' value="1" id="indexable_on" name="layered_indexable">
-					<label for="indexable_on" class="t"><img title="Yes" alt="Enabled" src="../img/admin/enabled.gif"></label>
-					<input type="radio" '.((!$on) ? 'checked="checked"' : '').' value="0" id="indexable_off" name="layered_indexable">
-					<label for="indexable_off" class="t"><img title="No" alt="Disabled" src="../img/admin/disabled.gif"></label>
-					<p>'.$this->l('Use this attribute in URL generated by the layered navigation module').'</p>
+				</div>					
+				</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3">'.$this->l('Meta title:').' </label>
+					<div class="col-lg-9">
+						<div class="form-group">';
+		foreach ($languages as $language)
+		{
+			$return .= '
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
+						</div>';
+		}
+
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific format for meta title').'</p>
+					</div>
+				</div>
+					
+				</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3" for="">'.$this->l('Indexable:').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="layered_indexable" id="indexable_on" value="1"'.(($on) ? ' checked="checked"' : '').'>
+									<label for="indexable_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="layered_indexable" id="indexable_off" value="0"'.((!$on) ? ' checked="checked"' : '').'>
+									<label for="indexable_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-9 col-lg-push-3">
+						<p class="help-block">'.$this->l('Use this attribute in URL generated by the layered navigation module').'</p>
+					</div>
 				</div>';
 		return $return;
 	}
@@ -829,7 +934,7 @@ class BlockLayered extends Module
 	public function hookFeatureForm($params)
 	{
 		$languages = Language::getLanguages(false);
-		$default_form_language = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$default_form_language = (int)$this->context->controller->default_form_language;
 		$indexable = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT indexable FROM '._DB_PREFIX_.'layered_indexable_feature WHERE id_feature = '.(int)$params['id_feature']);
 		$lang_value = array();
 		
@@ -845,52 +950,96 @@ class BlockLayered extends Module
 			$on = true;
 		else
 			$on = (bool)$indexable;
-		
-		$return = '
-			<script type="text/javascript">
-				flag_fields = \'\';
-			</script>';
-		
-		$return .= '<div class="clear"></div>
-				<label>'.$this->l('URL:').'</label>
-				<div class="margin-form">
-				<script type="text/javascript">
-					flag_fields += \'¤url_name¤meta_title\';
-				</script>
-				<div class="translatable">';
-		foreach ($languages as $language)
-			$return .= '
-					<div class="lang_'.$language['id_lang'].'" id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
-						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
-						<p style="clear: both">'.$this->l('Specific URL format in block layered generation').'</p>
-					</div>';
 
-		$return .= '
-						</div>
-						<div class="clear"></div>
-					</div>
-					<label>'.$this->l('Meta title:').' </label>
-					<div class="margin-form">
-						<div class="translatable">';
+		$return = '<div class="form-group">
+				<label class="control-label col-lg-3">
+					<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="'.$this->l('Invalid characters:').' <>;=#{}_">
+						'.$this->l('URL:').'
+					</span>
+				</label>
+				<div class="col-lg-9">
+					<div class="form-group">';
 		foreach ($languages as $language)
+		{
 			$return .= '
-						<div class="lang_'.$language['id_lang'].'" id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
-							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
 						</div>';
+		}
 
-		$return .= '
-						</div>
-						<div class="clear"></div>
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific URL format in block layered generation').'</p>
 					</div>
-			<label>'.$this->l('Indexable:').' </label>
-				<div class="margin-form">
-					<input type="radio" '.(($on) ? 'checked="checked"' : '').' value="1" id="indexable_on" name="layered_indexable">
-					<label for="indexable_on" class="t"><img title="Yes" alt="Enabled" src="../img/admin/enabled.gif"></label>
-					<input type="radio" '.((!$on) ? 'checked="checked"' : '').' value="0" id="indexable_off" name="layered_indexable">
-					<label for="indexable_off" class="t"><img title="No" alt="Disabled" src="../img/admin/disabled.gif"></label>
-					<p>'.$this->l('Use this attribute in URL generated by the layered navigation module').'</p>
+				</div>					
+				</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3">'.$this->l('Meta title:').' </label>
+					<div class="col-lg-9">
+						<div class="form-group">';
+		foreach ($languages as $language)
+		{
+			$return .= '
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
+						</div>';
+		}
+
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific format for meta title').'</p>
+					</div>
+				</div>
+					
+				</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3" for="">'.$this->l('Indexable:').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="layered_indexable" id="indexable_on" value="1"'.(($on) ? ' checked="checked"' : '').'>
+									<label for="indexable_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="layered_indexable" id="indexable_off" value="0"'.((!$on) ? ' checked="checked"' : '').'>
+									<label for="indexable_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-9 col-lg-push-3">
+						<p class="help-block">'.$this->l('Use this attribute in URL generated by the layered navigation module').'</p>
+					</div>
 				</div>';
 		return $return;
 	}
@@ -1442,16 +1591,15 @@ class BlockLayered extends Module
 		}
 
 		$html .= '
-		<div id="ajax-message-ok" class="conf ajax-message" style="display: none">
+		<div id="ajax-message-ok" class="conf ajax-message alert alert-success" style="display: none">
 			<span class="message"></span>
 		</div>
-		<div id="ajax-message-ko" class="error ajax-message" style="display: none">
+		<div id="ajax-message-ko" class="error ajax-message alert alert-danger" style="display: none">
 			<span class="message"></span>
 		</div>
-		<h2>'.$this->l('Layered navigation').'</h2>
-		<fieldset class="width4">
-			<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Indexes and caches').'</legend>
-			<span id="indexing-warning" style="display: none; color:red; font-weight: bold">'.$this->l('Indexing is in progress. Please do not leave this page').'<br/><br/></span>';
+		<div class="panel">
+			<h3><i class="icon-cogs"></i> '.$this->l('Indexes and caches').'</h3>
+			<div id="indexing-warning" class="alert alert-warning" style="display: none">'.$this->l('Indexing is in progress. Please do not leave this page').'</div>';
 
 		if (!Configuration::getGlobalValue('PS_LAYERED_INDEXED'))
 			$html .= '
@@ -1469,37 +1617,30 @@ class BlockLayered extends Module
 		
 		$domain = Tools::getProtocol(Tools::usingSecureMode()).$_SERVER['HTTP_HOST'];
 
-		$html .= '
-			<a class="bold ajaxcall-recurcive"
-			style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
+		$html .= '<div class="row">
+			<a class="ajaxcall-recurcive btn btn-default"
 			href="'.$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'">'.
 			$this->l('Index all missing prices').'</a>
-			<br />
-			<a class="bold ajaxcall-recurcive"
-			style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index"
+			<a class="ajaxcall-recurcive btn btn-default"
 			href="'.$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&full=1">'.
 			$this->l('Rebuild entire price index').'</a>
-			<br />
-			<a class="bold ajaxcall" id="attribute-indexer" rel="attribute"
-			style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index"
+			<a class="ajaxcall btn btn-default" id="attribute-indexer" rel="attribute"
 			href="'.$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-attribute-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'">'.
 			$this->l('Build attribute index').'</a>
-			<br />
-			<a class="bold ajaxcall" id="url-indexer" rel="price"
-			style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index"
+			<a class="ajaxcall btn btn-default" id="url-indexer" rel="price"
 			href="'.$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&truncate=1">'.
 			$this->l('Build URL index').'</a>
-			<br />
-			<br />
-			'.$this->l('You can set a cron job that will rebuild price index using the following URL:').'<br /><b>'.
-			$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&full=1</b>
-			<br />
-			'.$this->l('You can set a cron job that will rebuild URL index using the following URL:').'<br /><b>'.
-			$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&truncate=1</b>
-			<br />
-			'.$this->l('You can set a cron job that will rebuild attribute index using the following URL:').'<br /><b>'.
-			$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-attribute-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'</b>
 			<br /><br />
+			</div><div class="row">
+			<div class="alert alert-info">'.$this->l('You can set a cron job that will rebuild price index using the following URL:').'<br /><strong>'.
+			$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&full=1</strong>
+			</div></div><div class="row">
+			<div class="alert alert-info">'.$this->l('You can set a cron job that will rebuild URL index using the following URL:').'<br /><strong>'.
+			$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&truncate=1</strong>
+			</div></div><div class="row">
+			<div class="alert alert-info">'.$this->l('You can set a cron job that will rebuild attribute index using the following URL:').'<br /><strong>'.
+			$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-attribute-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'</strong>
+			</div></div><div class="row">
 			'.$this->l('A nightly rebuild is recommended.').'
 			<script type="text/javascript">
 				$(\'.ajaxcall\').click(function() {
@@ -1622,23 +1763,25 @@ class BlockLayered extends Module
 					});
 				});
 			</script>
-		</fieldset>
-		<br />
-		<fieldset class="width4">
-			<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Existing filter templates').'</legend>';
+			</div>
+		</div>
+		<div class="panel">
+			<h3><i class="icon-cogs"></i> '.$this->l('Existing filter templates').'</h3>';
 
 		$filters_templates = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM '._DB_PREFIX_.'layered_filter ORDER BY date_add DESC');
 		if (count($filters_templates))
 		{
-			$html .= '<p>'.count($filters_templates).' '.$this->l('filter templates are configured:').'</p>
-			<table id="table-filter-templates" class="table" style="width: 700px;">
-				<tr>
-					<th>'.$this->l('ID').'</th>
-					<th>'.$this->l('Name').'</th>
-					<th>'.$this->l('Categories').'</th>
-					<th>'.$this->l('Created on').'</th>
-					<th>'.$this->l('Actions').'</th>
-				</tr>';
+			$html .= '<p>'.sprintf($this->l('%s filter templates are configured:'), count($filters_templates)).'</p>
+			<table id="table-filter-templates" class="table">
+				<thead>
+					<tr>
+						<th class="fixed-width-xs"><span class="title_box">'.$this->l('ID').'</span></th>
+						<th class="text-left"><span class="title_box">'.$this->l('Name').'</span></th>
+						<th class="fixed-width-sm"><span class="title_box">'.$this->l('Categories').'</span></th>
+						<th><span class="title_box">'.$this->l('Created on').'</span></th>
+						<th><span class="title_box">'.$this->l('Actions').'</span></th>
+					</tr>
+				</thead>';
 
 			foreach ($filters_templates as $filters_template)
 			{
@@ -1648,8 +1791,8 @@ class BlockLayered extends Module
 				$html .= '
 				<tr>
 					<td>'.(int)$filters_template['id_layered_filter'].'</td>
-					<td style="text-align: left; padding-left: 10px; width: 270px;">'.$filters_template['name'].'</td>
-					<td style="text-align: center;">'.(int)$filters_template['n_categories'].'</td>
+					<td class="text-left">'.$filters_template['name'].'</td>
+					<td>'.(int)$filters_template['n_categories'].'</td>
 					<td>'.Tools::displayDate($filters_template['date_add'],null , true).'</td>
 					<td>
 						<a href="#" onclick="return updElements('.($filters_template['n_categories'] ? 0 : 1).', '.(int)$filters_template['id_layered_filter'].');">
@@ -1668,9 +1811,9 @@ class BlockLayered extends Module
 			$html .= $this->l('No filter template found.');
 
 		$html .= '
-		</fieldset><br />
-		<fieldset class="width4">
-			<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Build your own filter template').'</legend>
+		</div>
+		<div class="panel">
+			<h3><i class="icon-cogs"></i> '.$this->l('Build your own filter template').'</h3>
 			<link rel="stylesheet" href="'._PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css" />
 			<style type="text/css">
 				#error-filter-name { display: none; }
@@ -1986,9 +2129,9 @@ class BlockLayered extends Module
 				<input type="hidden" name="id_layered_filter" id="id_layered_filter" value="0" />
 				<input type="hidden" name="n_existing" id="n_existing" value="'.(int)count($filters_templates).'" />
 			</form>
-		</fieldset><br />
-		<fieldset class="width4">
-			<legend><img src="../img/admin/cog.gif" alt="" /> '.$this->l('Configuration').'</legend>
+		</div>
+		<div class="panel">
+			<h3><i class="icon-cogs"></i> '.$this->l('Configuration').'</h3>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">			
 				<table border="0" style="font-size: 11px; width: 100%; margin: 0 auto;" class="table">
 					<tr>
@@ -2076,7 +2219,7 @@ class BlockLayered extends Module
 				</table>
 				<p style="text-align: center;"><input type="submit" class="button" name="submitLayeredSettings" value="'.$this->l('Save configuration').'" /></p>
 			</form>
-		</fieldset>';
+		</div>';
 
 		return $html;
 	}
