@@ -52,6 +52,7 @@
 				{l s='Legend:'}
 			</span>			
 		</label>
+		<div class="col-lg-9">
 		{foreach from=$languages item=language}
 			{if $languages|count > 1}
 			<div class="translatable-field row lang-{$language.id_lang}">
@@ -81,6 +82,7 @@
 			</div>
 			{/if}
 		{/foreach}
+		</div>
 	</div>
 </div>
 

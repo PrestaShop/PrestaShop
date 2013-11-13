@@ -160,16 +160,14 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		if (empty($this->display))
-		{
+		parent::initPageHeaderToolbar();
+
+		if ($this->display != 'add')
 			$this->page_header_toolbar_btn['new_category'] = array(
 				'href' => self::$currentIndex.'&amp;addcategory&amp;token='.$this->token,
 				'desc' => $this->l('Add new category'),
 				'icon' => 'process-icon-new'
 			);
-		}
-
-		parent::initPageHeaderToolbar();
 	}
 	
 	public function initContent()

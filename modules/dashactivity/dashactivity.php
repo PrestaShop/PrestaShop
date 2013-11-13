@@ -87,7 +87,8 @@ class Dashactivity extends Module
 			'gapi_mode' => $gapi_mode,
 			'dashactivity_config_form' => $this->renderConfigForm(),
 			'date_subtitle' => $this->l('(from %s to %s)'),
-			'date_format' => $this->context->language->date_format_lite
+			'date_format' => $this->context->language->date_format_lite,
+			'link' => $this->context->link,
 		), $this->getConfigFieldsValues()));
 		return $this->display(__FILE__, 'dashboard_zone_one.tpl');
 	}
@@ -311,33 +312,49 @@ class Dashactivity extends Module
 			),
 		);
 			
-		$sub_widget = array(
-			array('label' => $this->l('Show Pending'), 'config_name' => 'DASHACTIVITY_SHOW_PENDING'),
-			array('label' => $this->l('Show Notifications'), 'config_name' => 'DASHACTIVITY_SHOW_NOTIFICATION'),
-			array('label' => $this->l('Show Clients'), 'config_name' => 'DASHACTIVITY_SHOW_CUSTOMERS'),
-			array('label' => $this->l('Show Newsletters'), 'config_name' => 'DASHACTIVITY_SHOW_NEWSLETTER'),
-			array('label' => $this->l('Show Traffic'), 'config_name' => 'DASHACTIVITY_SHOW_TRAFFIC'),
-		);
-		
-		foreach($sub_widget as $widget)
-			$fields_form['form']['input'][] = array(
-				'type' => 'switch',
-				'label' => $widget['label'],
-				'name' => $widget['config_name'],
-				'is_bool' => true,
-				'values' => array(
-					array(
-						'id' => 'active_on',
-						'value' => 1,
-						'label' => $this->l('Enabled')
+		$fields_form['form']['input'][] = array(
+			'label' => $this->l('Cart as active'),
+			'desc' => $this->l('Default time range to consider a Shopping cart as active (default 30, max 120)'),
+			'name' => 'DASHACTIVITY_CART_ACTIVE',
+			'type' => 'select',
+			'options' => array(
+				'query' => array(
+					array('id' => 15, 'name' => 15),
+					array('id' => 30, 'name' => 30),
+					array('id' => 45, 'name' => 45),
+					array('id' => 60, 'name' => 60),
+					array('id' => 90, 'name' => 90),
+					array('id' => 120, 'name' => 120),
 					),
-					array(
-						'id' => 'active_off',
-						'value' => 0,
-						'label' => $this->l('Disabled')
-					)
-				),
-			);
+				'id' => 'id',
+				'name' => 'name',
+			),
+		);
+		$fields_form['form']['input'][] = array(
+			'label' => $this->l('Visitor online'),
+			'desc' => $this->l('Default time range to consider a Visitor as online (default 30, max 120)'), 
+			'name' => 'DASHACTIVITY_VISITOR_ONLINE',
+			'type' => 'select',
+			'options' => array(
+				'query' => array(
+					array('id' => 15, 'name' => 15),
+					array('id' => 30, 'name' => 30),
+					array('id' => 45, 'name' => 45),
+					array('id' => 60, 'name' => 60),
+					array('id' => 90, 'name' => 90),
+					array('id' => 120, 'name' => 120),
+					),
+				'id' => 'id',
+				'name' => 'name',
+			),
+		);
+		$fields_form['form']['input'][] = array(
+				'label' => $this->l('Cart abandoned'),
+				'desc' => $this->l('Default time range to consider a Shopping cart as abandoned (default 24hrs)'),
+				'name' => 'DASHACTIVITY_CART_ABANDONED',
+				'type' => 'text',
+				'suffix' => $this->l('hrs'),
+				);
 		
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
@@ -361,13 +378,9 @@ class Dashactivity extends Module
 	public function getConfigFieldsValues()
 	{
 		return array(
-			'DASHACTIVITY_SHOW_STOCK' => Configuration::get('PS_STOCK_MANAGEMENT'),
-			'DASHACTIVITY_SHOW_RETURNS' => Configuration::get('PS_ORDER_RETURN'),
-			'DASHACTIVITY_SHOW_PENDING' => Tools::getValue('DASHACTIVITY_SHOW_PENDING', Configuration::get('DASHACTIVITY_SHOW_PENDING')),
-			'DASHACTIVITY_SHOW_NOTIFICATION' => Tools::getValue('DASHACTIVITY_SHOW_NOTIFICATION', Configuration::get('DASHACTIVITY_SHOW_NOTIFICATION')),
-			'DASHACTIVITY_SHOW_CUSTOMERS' => Tools::getValue('DASHACTIVITY_SHOW_CUSTOMERS', Configuration::get('DASHACTIVITY_SHOW_CUSTOMERS')),
-			'DASHACTIVITY_SHOW_NEWSLETTER' => Tools::getValue('DASHACTIVITY_SHOW_NEWSLETTER', Configuration::get('DASHACTIVITY_SHOW_NEWSLETTER')),
-			'DASHACTIVITY_SHOW_TRAFFIC' => Tools::getValue('DASHACTIVITY_SHOW_TRAFFIC', Configuration::get('DASHACTIVITY_SHOW_TRAFFIC')),
+			'DASHACTIVITY_CART_ACTIVE' => Tools::getValue('DASHACTIVITY_CART_ACTIVE', Configuration::get('DASHACTIVITY_CART_ACTIVE')),
+			'DASHACTIVITY_CART_ABANDONED' => Tools::getValue('DASHACTIVITY_CART_ABANDONED', Configuration::get('DASHACTIVITY_CART_ABANDONED')),
+			'DASHACTIVITY_VISITOR_ONLINE' => Tools::getValue('DASHACTIVITY_VISITOR_ONLINE', Configuration::get('DASHACTIVITY_VISITOR_ONLINE')),
 		);
 	}
 	

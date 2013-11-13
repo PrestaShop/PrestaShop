@@ -44,7 +44,7 @@
 				<div class="alert alert-warning" id="available_quantity_ajax_msg" style="display: none;"></div>
 				<div class="alert alert-danger" id="available_quantity_ajax_error_msg" style="display: none;"></div>
 				<div class="alert alert-success" id="available_quantity_ajax_success_msg" style="display: none;"></div>					
-				<div class="row" {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="row stockForVirtualProduct">
+				<div class="form-group" {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="row stockForVirtualProduct">
 					<div class="col-lg-9 col-lg-offset-3">
 						<p class="checkbox">
 							<label for="advanced_stock_management">
@@ -107,7 +107,7 @@
 						<p>{l s='Given the quantities of the products in this pack, the maximum quantity should be:'} {$pack_quantity}</p>
 					</div>	
 				{/if}
-				<div class="row">
+				<div class="form-group">
 					<div class="col-lg-9 col-lg-offset-3">
 						<table class="table">
 							<thead>
@@ -128,7 +128,7 @@
 						</table>
 					</div>
 				</div>
-				<div id="when_out_of_stock" class="row">
+				<div id="when_out_of_stock" class="form-group">
 					<label class="control-label col-lg-3">{l s='When out of stock:'}</label>
 					<div class="col-lg-9">
 						<p class="radio">
@@ -195,12 +195,10 @@
 					</span>
 				</label>
 				<div class="col-lg-9">
-					<div class="row">
-						{include file="controllers/products/input_text_lang.tpl"
-							languages=$languages
-							input_value=$product->available_now
-							input_name='available_now'}
-					</div>
+					{include file="controllers/products/input_text_lang.tpl"
+						languages=$languages
+						input_value=$product->available_now
+						input_name='available_now'}
 				</div>
 			</div>
 			<div class="form-group">
@@ -213,12 +211,10 @@
 					
 				</label>
 				<div class="col-lg-9">
-					<div class="row">
-						{include file="controllers/products/input_text_lang.tpl"
-							languages=$languages
-							input_value=$product->available_later
-							input_name='available_later'}
-					</div>
+					{include file="controllers/products/input_text_lang.tpl"
+						languages=$languages
+						input_value=$product->available_later
+						input_name='available_later'}
 				</div>
 			</div>
 			
