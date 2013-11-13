@@ -102,7 +102,7 @@
 		<!-- END Payment -->
 	{else}
 		{capture name=path}{l s='Your shopping cart'}{/capture}
-		<h2>{l s='Your shopping cart'}</h2>
+		<h2 class="page-heading">{l s='Your shopping cart'}</h2>
 		<p class="alert alert-warning">{l s='Your shopping cart is empty.'}</p>
 	{/if}
 {/if}

@@ -108,7 +108,15 @@
 			margin-right:10px;
 			
 			&#button_order_cart {
-				margin-right:0;	
+				margin-right:0;
+				background:#43b155;
+				border-color:#399b49 #369946 #208931 #369946;
+				
+				span {
+					border-color:#73ca77;	
+				}
+				
+				&:hover {background:#359144; color:$light-text-color;}
 			}
 		}
 	}
