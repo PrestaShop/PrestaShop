@@ -245,7 +245,7 @@ class HelperFormCore extends Helper
 	 *
 	 * @return string
 	 */
-	public function renderAssoShop($params, $disable_shared = false)
+	public function renderAssoShop($disable_shared = false, $template_directory = null)
 	{
 		if (!Shop::isFeatureActive())
 			return;
@@ -288,6 +288,8 @@ class HelperFormCore extends Helper
 		}*/
 
 		$tree = new HelperTreeShops('shop-tree', 'Shops');
+		if (isset($template_directory))
+			$tree->setTemplateDirectory($template_directory);
 		$tree->setSelectedShops($assos);
 		$tree->setAttribute('table', $this->table);
 		return $tree->render();
