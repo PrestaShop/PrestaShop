@@ -36,10 +36,10 @@ $(document).ready(function()
 	// Click on color
 	$('#layered_form input[type=button], #layered_form label.layered_color').live('click', function()
 	{
-		if (!$('input[name='+$(this).prop('name')+'][type=hidden]').length)
-			$('<input />').prop('type', 'hidden').prop('name', $(this).prop('name')).val($(this).prop('rel')).appendTo('#layered_form');
+		if (!$('input[name='+$(this).attr('name')+'][type=hidden]').length)
+			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).val($(this).attr('rel')).appendTo('#layered_form');
 		else
-			$('input[name='+$(this).prop('name')+'][type=hidden]').remove();
+			$('input[name='+$(this).attr('name')+'][type=hidden]').remove();
 		reloadContent();
 	});
 	
@@ -52,17 +52,17 @@ $(document).ready(function()
 	// Changing content of an input text
 	$('#layered_form input.layered_input_range').live('keyup', function()
 	{
-		if ($(this).prop('timeout_id'))
-			window.clearTimeout($(this).prop('timeout_id'));
+		if ($(this).attr('timeout_id'))
+			window.clearTimeout($(this).attr('timeout_id'));
 
 		// IE Hack, setTimeout do not acept the third parameter
 		var reference = this;
 		
-		$(this).prop('timeout_id', window.setTimeout(function(it) {
-			if (!$(it).prop('id'))
+		$(this).attr('timeout_id', window.setTimeout(function(it) {
+			if (!$(it).attr('id'))
 				it = reference;
 			
-			var filter = $(it).prop('id').replace(/^layered_(.+)_range_.*$/, '$1');
+			var filter = $(it).attr('id').replace(/^layered_(.+)_range_.*$/, '$1');
 			
 			var value_min = parseInt($('#layered_'+filter+'_range_min').val()); 
 			if (isNaN(value_min)) 
@@ -83,9 +83,9 @@ $(document).ready(function()
 	});
 
 	$('#layered_block_left .radio').live('click', function() {
-		var name = $(this).prop('name');
+		var name = $(this).attr('name');
 		$.each($(this).parent().parent().find('input[type=button]'), function (it, item) {
-			if ($(item).hasClass('on') && $(item).prop('name') != name) {
+			if ($(item).hasClass('on') && $(item).attr('name') != name) {
 				$(item).click();
 			}
 		});
@@ -95,7 +95,7 @@ $(document).ready(function()
 	// Click on label
 	$('#layered_block_left label a').live({
 		click: function() {
-			var disable = $(this).parent().parent().find('input').prop('disabled');
+			var disable = $(this).parent().parent().find('input').attr('disabled');
 			if (disable == ''
 			|| typeof(disable) == 'undefined'
 			|| disable == false)
@@ -109,13 +109,13 @@ $(document).ready(function()
 	
 	layered_hidden_list = {};
 	$('.hide-action').live('click', function() {
-		if (typeof(layered_hidden_list[$(this).parent().find('ul').prop('id')]) == 'undefined' || layered_hidden_list[$(this).parent().find('ul').prop('id')] == false)
+		if (typeof(layered_hidden_list[$(this).parent().find('ul').attr('id')]) == 'undefined' || layered_hidden_list[$(this).parent().find('ul').attr('id')] == false)
 		{
-			layered_hidden_list[$(this).parent().find('ul').prop('id')] = true;
+			layered_hidden_list[$(this).parent().find('ul').attr('id')] = true;
 		}
 		else
 		{
-			layered_hidden_list[$(this).parent().find('ul').prop('id')] = false;
+			layered_hidden_list[$(this).parent().find('ul').attr('id')] = false;
 		}
 		hideFilterValueAction(this);
 	});
@@ -128,10 +128,10 @@ $(document).ready(function()
 	while ($('#selectPrductSort').length) { // Because ids are duplicated
 		// Unbind event change on #selectPrductSort
 		$('#selectPrductSort').unbind('change');
-		$('#selectPrductSort').prop('onchange', '');
+		$('#selectPrductSort').attr('onchange', '');
 		$('#selectPrductSort').addClass('selectProductSort');
-		$('#selectPrductSort').prop('id', 'selectPrductSort'+id);
-		$('label[for=selectPrductSort]').prop('for', 'selectPrductSort'+id);
+		$('#selectPrductSort').attr('id', 'selectPrductSort'+id);
+		$('label[for=selectPrductSort]').attr('for', 'selectPrductSort'+id);
 		id++;
 	}
 	
@@ -145,20 +145,20 @@ $(document).ready(function()
 		reloadContent();
 	});
 	
-	$('.js-nb_item').unbind('change').prop('onchange', '');
+	$('.js-nb_item').unbind('change').attr('onchange', '');
 
 	$('.js-nb_item').live('change', function(event) {
 		$('.js-nb_item').val($(this).val());
 		reloadContent();
 	});
 	
-	paginationButton();
+	paginationButton(false);
 	initLayered();
 });
 	
 function hideFilterValueAction(it)
 {
-	if (typeof(layered_hidden_list[$(it).parent().find('ul').prop('id')]) == 'undefined' || layered_hidden_list[$(it).parent().find('ul').prop('id')] == false)
+	if (typeof(layered_hidden_list[$(it).parent().find('ul').attr('id')]) == 'undefined' || layered_hidden_list[$(it).parent().find('ul').attr('id')] == false)
 	{
 		$(it).parent().find('.hiddable').hide();
 		$(it).parent().find('.hide-action.less').hide();
@@ -219,16 +219,16 @@ function initLayered()
 	}
 }
 
-function paginationButton() {
+function paginationButton(nbProductsIn) {
 	$('div.pagination a').not(':hidden').each(function () {
-		if ($(this).prop('href').search('&p=') == -1) {
+		if ($(this).attr('href').search('&p=') == -1) {
 			var page = 1;
 		}
 		else {
-			var page = $(this).prop('href').replace(/^.*&p=(\d+).*$/, '$1');
+			var page = $(this).attr('href').replace(/^.*&p=(\d+).*$/, '$1');
 		}
 		var location = window.location.href.replace(/#.*$/, '');
-		$(this).prop('href', location+current_friendly_url.replace(/\/page-(\d+)/, '')+'/page-'+page);
+		$(this).attr('href', location+current_friendly_url.replace(/\/page-(\d+)/, '')+'/page-'+page);
 	});
 	$('div.pagination li').not('.current, .disabled').each(function () {
 		var nbPage = 0;
@@ -248,41 +248,67 @@ function paginationButton() {
 			return false;
 		});
 	});
-}
-
-function showAllButton() {
 	
+	
+	//product count refresh
+	if(nbProductsIn!=false){
+		if(isNaN(nbProductsIn) == 0) {
+			// add variables
+			var productCountRow = $('.product-count').html();
+			var nbPage = parseInt($('div.pagination li.current').children().children().html());
+			var nbPerPage = parseInt($('#nb_item option:selected').val());
+			var nb_products = nbProductsIn;
+		
+			isNaN(nbPage) ? nbPage = 1 : nbPage = nbPage;
+			nbPerPage*nbPage < nb_products ? productShowing = nbPerPage*nbPage :productShowing = (nbPerPage*nbPage-nb_products-nbPerPage*nbPage)*-1;
+			nbPage==1 ? productShowingStart=1 : productShowingStart=nbPerPage*nbPage-nbPerPage+1;
+			
+			
+			//insert values into a .product-count
+			productCountRow = $.trim(productCountRow);
+			productCountRow = productCountRow.split(' ');
+			productCountRow[1] = productShowingStart;
+			productCountRow[3] = productShowing;
+			productCountRow[5] = nb_products;
+			productCountRow = productCountRow.join(' ');
+			$('.product-count').html(productCountRow);
+			$('.product-count').show();
+		}
+		else {
+			$('.product-count').hide();
+		}
+	}
 }
 
 function cancelFilter()
 {
 	$('#enabled_filters a').live('click', function(e)
 	{
-		if ($(this).prop('rel').search(/_slider$/) > 0)
+		if ($(this).attr('rel').search(/_slider$/) > 0)
 		{
-			if ($('#'+$(this).prop('rel')).length)
+			if ($('#'+$(this).attr('rel')).length)
 			{
-				$('#'+$(this).prop('rel')).slider('values' , 0, $('#'+$(this).prop('rel')).slider('option' , 'min' ));
-				$('#'+$(this).prop('rel')).slider('values' , 1, $('#'+$(this).prop('rel')).slider('option' , 'max' ));
-				$('#'+$(this).prop('rel')).slider('option', 'slide')(0,{values:[$('#'+$(this).prop('rel')).slider( 'option' , 'min' ), $('#'+$(this).prop('rel')).slider( 'option' , 'max' )]});
+				$('#'+$(this).attr('rel')).slider('values' , 0, $('#'+$(this).attr('rel')).slider('option' , 'min' ));
+				$('#'+$(this).attr('rel')).slider('values' , 1, $('#'+$(this).attr('rel')).slider('option' , 'max' ));
+				$('#'+$(this).attr('rel')).slider('option', 'slide')(0,{values:[$('#'+$(this).attr('rel')).slider( 'option' , 'min' ), $('#'+$(this).attr('rel')).slider( 'option' , 'max' )]});
 			}
-			else if($('#'+$(this).prop('rel').replace(/_slider$/, '_range_min')).length)
+			else if($('#'+$(this).attr('rel').replace(/_slider$/, '_range_min')).length)
 			{
-				$('#'+$(this).prop('rel').replace(/_slider$/, '_range_min')).val($('#'+$(this).prop('rel').replace(/_slider$/, '_range_min')).prop('limitValue'));
-				$('#'+$(this).prop('rel').replace(/_slider$/, '_range_max')).val($('#'+$(this).prop('rel').replace(/_slider$/, '_range_max')).prop('limitValue'));
+				$('#'+$(this).attr('rel').replace(/_slider$/, '_range_min')).val($('#'+$(this).attr('rel').replace(/_slider$/, '_range_min')).attr('limitValue'));
+				$('#'+$(this).attr('rel').replace(/_slider$/, '_range_max')).val($('#'+$(this).attr('rel').replace(/_slider$/, '_range_max')).attr('limitValue'));
 			}
 		}
 		else
 		{
-			if ($('option#'+$(this).prop('rel')).length)
+			if ($('option#'+$(this).attr('rel')).length)
 			{
-				$('#'+$(this).prop('rel')).parent().val('');
+				$('#'+$(this).attr('rel')).parent().val('');
 			}
 			else
 			{
-				$('#'+$(this).prop('rel')).prop('checked', false);
-				$('.'+$(this).prop('rel')).prop('checked', false);
-				$('#layered_form input[type=hidden][name='+$(this).prop('rel')+']').remove();
+				$('#'+$(this).attr('rel')).attr('checked', false);
+				$('.'+$(this).attr('rel')).attr('checked', false);
+				$('#layered_form input[type=hidden][name='+$(this).attr('rel')+']').remove();
 			}
 		}
 		reloadContent();
@@ -296,13 +322,13 @@ function openCloseFilter()
 	{
 		if ($(this).html() == '&lt;')
 		{
-			$('#'+$(this).prop('rel')).show();
+			$('#'+$(this).attr('rel')).show();
 			$(this).html('v');
 			$(this).parent().removeClass('closed');
 		}
 		else
 		{
-			$('#'+$(this).prop('rel')).hide();
+			$('#'+$(this).attr('rel')).hide();
 			$(this).html('&lt;');
 			$(this).parent().addClass('closed');
 		}
@@ -335,7 +361,7 @@ function reloadContent(params_plus)
 		var sliderStart = $(this).slider('values', 0);
 		var sliderStop = $(this).slider('values', 1);
 		if (typeof(sliderStart) == 'number' && typeof(sliderStop) == 'number')
-			data += '&'+$(this).prop('id')+'='+sliderStart+'_'+sliderStop;
+			data += '&'+$(this).attr('id')+'='+sliderStart+'_'+sliderStop;
 	});
 
 	$(['price', 'weight']).each(function(it, sliderType)
@@ -347,9 +373,9 @@ function reloadContent(params_plus)
 	});
 	
 	$('#layered_form .select option').each( function () {
-		if($(this).prop('id') && $(this).parent().val() == $(this).val())
+		if($(this).attr('id') && $(this).parent().val() == $(this).val())
 		{
-			data += '&'+$(this).prop('id') + '=' + $(this).val();
+			data += '&'+$(this).attr('id') + '=' + $(this).val();
 		}
 	});
 	
@@ -400,7 +426,7 @@ function reloadContent(params_plus)
 		{
 			$('#layered_block_left').replaceWith(utf8_decode(result.filtersBlock));
 			
-			$('.category-product-count').html(result.categoryCount);
+			$('.category-product-count, .heading-counter').html(result.categoryCount);
 			
 			if (result.productList)
 				$('.product_list').replaceWith(utf8_decode(result.productList));
@@ -438,7 +464,7 @@ function reloadContent(params_plus)
 				$('div.pagination').hide();
 			}
 			
-			paginationButton();
+			paginationButton(parseInt(result.categoryCount.replace(/[^0-9]/g,'')));
 			ajaxLoaderOn = 0;
 			
 			// On submiting nb items form, relaod with the good nb of items
@@ -446,7 +472,7 @@ function reloadContent(params_plus)
 				val = $('div.pagination .js-nb_item').val();
 				$('div.pagination .js-nb_item').children().each(function(it, option) {
 					if (option.value == val)
-						$(option).prop('selected', true);
+						$(option).attr('selected', true);
 					else
 						$(option).removeAttr('selected');
 				});
@@ -535,10 +561,10 @@ function updateProductUrl()
 	// Adding the filters to URL product
 	if (typeof(param_product_url) != 'undefined' && param_product_url != '' && param_product_url !='#') {
 		$.each($('ul.product_list li.ajax_block_product .product_img_link,'+
-				'ul.product_list li.ajax_block_product h3 a,'+
+				'ul.product_list li.ajax_block_product h5 a,'+
 				'ul.product_list li.ajax_block_product .product_desc a,'+
 				'ul.product_list li.ajax_block_product .lnk_view'), function() {
-			$(this).prop('href', $(this).prop('href') + param_product_url);
+			$(this).attr('href', $(this).attr('href') + param_product_url);
 		});
 	}
 }
