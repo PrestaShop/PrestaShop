@@ -682,6 +682,10 @@ class AdminModulesControllerCore extends AdminController
 							if (!method_exists($module, $method))
 								throw new PrestaShopException('Method of module can\'t be found');
 
+							$this->bootstrap = (isset($module->bootstrap) && $module->bootstrap);
+							if (!$this->bootstrap)
+								$this->setDeprecatedMedia();
+								
 							// Get the return value of current method
 							$echo = $module->{$method}();
 
@@ -693,9 +697,6 @@ class AdminModulesControllerCore extends AdminController
 						// If the method called is "configure" (getContent method), we show the html code of configure page
 						if ($key == 'configure' && Module::isInstalled($module->name))
 						{
-							$this->bootstrap = (isset($module->bootstrap) && $module->bootstrap);
-							if (!$this->bootstrap)
-								$this->setDeprecatedMedia();
 							if (isset($module->multishop_context))
 								$this->multishop_context = $module->multishop_context;
 
