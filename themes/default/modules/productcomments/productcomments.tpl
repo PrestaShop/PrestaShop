@@ -92,7 +92,7 @@ var moderation_active = {$moderation_active};
 	{/if}	
 	</div>
 </div>
-
+{if isset($product) && $product}
 <!-- Fancybox -->
 <div style="display: none;">
 	<div id="new_comment_form">
@@ -157,3 +157,4 @@ var moderation_active = {$moderation_active};
 	</div>
 </div>
 <!-- End fancybox -->
+{/if}
