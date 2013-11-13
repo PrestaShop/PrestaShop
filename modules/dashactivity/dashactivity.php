@@ -46,7 +46,8 @@ class Dashactivity extends Module
 	public function install()
 	{
 		Configuration::updateValue('DASHACTIVITY_CART_ACTIVE', 30);
-		Configuration::updateValue('DASHACTIVITY_CART_ABANDONED', 30);
+		Configuration::updateValue('DASHACTIVITY_CART_ABANDONED_MIN', 24);
+		Configuration::updateValue('DASHACTIVITY_CART_ABANDONED_MAX', 48);
 		Configuration::updateValue('DASHACTIVITY_VISITOR_ONLINE', 24);
 		
 		if (!parent::install() 
@@ -125,14 +126,14 @@ class Dashactivity extends Module
 			$sql = 'SELECT COUNT(DISTINCT c.id_connections)
 					FROM `'._DB_PREFIX_.'connections` c
 					LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
-					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < 1800
+					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < '.((int)Configuration::get('DASHACTIVITY_VISITOR_ONLINE')*60).'
 					AND cp.`time_end` IS NULL
 					'.Shop::addSqlRestriction(false, 'c').'
 					'.($maintenance_ips ? 'AND c.ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '');
 		else
 			$sql = 'SELECT COUNT(*)
 					FROM `'._DB_PREFIX_.'connections`
-					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), `date_add`)) < 1800
+					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), `date_add`)) < '.((int)Configuration::get('DASHACTIVITY_VISITOR_ONLINE')*60).'
 					'.Shop::addSqlRestriction(false).'
 					'.($maintenance_ips ? 'AND ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '');
 		$online_visitor = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
@@ -147,7 +148,7 @@ class Dashactivity extends Module
 		$abandoned_cart = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(*)
 		FROM `'._DB_PREFIX_.'cart`
-		WHERE `date_upd` BETWEEN "'.pSQL(date('Y-m-d H:i:s', strtotime('-2 DAY'))).'" AND "'.pSQL(date('Y-m-d H:i:s', strtotime('-1 DAY'))).'"
+		WHERE `date_upd` BETWEEN "'.pSQL(date('Y-m-d H:i:s', strtotime('-'.(int)Configuration::get('DASHACTIVITY_CART_ABANDONED_MAX').' MIN'))).'" AND "'.pSQL(date('Y-m-d H:i:s', strtotime('-'.(int)Configuration::get('DASHACTIVITY_CART_ABANDONED_MIN').' MIN'))).'"
 		AND id_cart NOT IN (SELECT id_cart FROM `'._DB_PREFIX_.'orders`)
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
 		
@@ -170,7 +171,7 @@ class Dashactivity extends Module
 		$active_shopping_cart = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(*)
 		FROM `'._DB_PREFIX_.'cart`
-		WHERE date_upd > "'.pSQL(date('Y-m-d H:i:s', strtotime('-30 MIN'))).'"
+		WHERE date_upd > "'.pSQL(date('Y-m-d H:i:s', strtotime('-'.(int)Configuration::get('DASHACTIVITY_CART_ACTIVE').' MIN'))).'"
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
 
 		$new_customers = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -350,8 +351,15 @@ class Dashactivity extends Module
 			),
 		);
 		$fields_form['form']['input'][] = array(
-				'label' => $this->l('Cart abandoned'),
-				'desc' => $this->l('Default time range to consider a Shopping cart as abandoned (default 24hrs)'),
+				'label' => $this->l('Cart abandoned (min)'),
+				'desc' => $this->l('Default time range (min) to consider a Shopping cart as abandoned (default 24hrs)'),
+				'name' => 'DASHACTIVITY_CART_ABANDONED',
+				'type' => 'text',
+				'suffix' => $this->l('hrs'),
+				);
+		$fields_form['form']['input'][] = array(
+				'label' => $this->l('Cart abandoned (max)'),
+				'desc' => $this->l('Default time range (max) to consider a Shopping cart as abandoned (default 48hrs)'),
 				'name' => 'DASHACTIVITY_CART_ABANDONED',
 				'type' => 'text',
 				'suffix' => $this->l('hrs'),
@@ -380,7 +388,8 @@ class Dashactivity extends Module
 	{
 		return array(
 			'DASHACTIVITY_CART_ACTIVE' => Tools::getValue('DASHACTIVITY_CART_ACTIVE', Configuration::get('DASHACTIVITY_CART_ACTIVE')),
-			'DASHACTIVITY_CART_ABANDONED' => Tools::getValue('DASHACTIVITY_CART_ABANDONED', Configuration::get('DASHACTIVITY_CART_ABANDONED')),
+			'DASHACTIVITY_CART_ABANDONED_MIN' => Tools::getValue('DASHACTIVITY_CART_ABANDONED_MIN', Configuration::get('DASHACTIVITY_CART_ABANDONED_MIN')),
+			'DASHACTIVITY_CART_ABANDONED_MAX' => Tools::getValue('DASHACTIVITY_CART_ABANDONED_MAX', Configuration::get('DASHACTIVITY_CART_ABANDONED_MAX')),
 			'DASHACTIVITY_VISITOR_ONLINE' => Tools::getValue('DASHACTIVITY_VISITOR_ONLINE', Configuration::get('DASHACTIVITY_VISITOR_ONLINE')),
 		);
 	}
