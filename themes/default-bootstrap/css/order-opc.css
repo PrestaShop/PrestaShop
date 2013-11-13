@@ -14,6 +14,7 @@
 #order-opc .page-heading.step-num {
   position: relative;
   padding-left: 45px;
+  overflow: visible;
 }
 #order-opc .page-heading.step-num span {
   font-weight: bold;

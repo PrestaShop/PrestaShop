@@ -165,6 +165,12 @@ p.info-account {
   float: left;
 }
 
+.label {
+  white-space: normal;
+  display: inline-block;
+  padding: 6px 10px;
+}
+
 .required sup {
   color: #f13340;
   font-size: 13px;
@@ -697,7 +703,7 @@ table.table_block td {
 .price-percent-reduction {
   background: #f13340;
   border: 1px solid #d02a2c;
-  font: 600 21px/26px "Open Sans", sans-serif;
+  font: 600 21px/24px "Open Sans", sans-serif;
   color: white;
   padding: 0 5px 0 3px;
   display: inline-block;
@@ -889,6 +895,7 @@ table.table_block td {
 ***************************************************************************************************/
 #home-page-tabs {
   border: none;
+  background: white;
 }
 @media (min-width: 768px) {
   #home-page-tabs {
@@ -1005,6 +1012,9 @@ table.table_block td {
 .block .list-block .form-group {
   padding-top: 20px;
   border-top: 1px solid #d6d4d4;
+}
+.block .list-block .form-group select {
+  max-width: 270px;
 }
 .block .list-block .btn {
   margin-top: 12px;
@@ -1759,6 +1769,7 @@ div.star_hover a, div.star a:hover {
 #header {
   padding-bottom: 21px;
   position: relative;
+  background: white;
   /* languages/currencies */
 }
 #header .header-row {
@@ -1894,7 +1905,7 @@ div.star_hover a, div.star a:hover {
   position: absolute;
   top: 37px;
   left: 0;
-  width: 166px;
+  width: 157px;
   background: #333333;
   z-index: 2;
 }
@@ -1952,7 +1963,7 @@ div.star_hover a, div.star a:hover {
   font-weight: bold;
   font-size: 12px;
   line-height: 24px;
-  height: 26px;
+  min-height: 26px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -ms-border-radius: 3px;
@@ -1964,20 +1975,15 @@ div.star_hover a, div.star a:hover {
   z-index: 1;
 }
 .breadcrumb .navigation-pipe {
-  float: left;
   width: 18px;
   display: inline-block;
   text-indent: -5000px;
 }
-.breadcrumb .navigation_page {
-  float: left;
-}
 .breadcrumb a {
   display: inline-block;
-  float: left;
   background: white;
   padding: 0 8px 0 22px;
-  margin-left: -20px;
+  margin-left: -26px;
   position: relative;
   z-index: 2;
   color: #333333;
@@ -1996,15 +2002,21 @@ div.star_hover a, div.star a:hover {
   -webkit-border-bottom-left-radius: 3px;
   border-bottom-left-radius: 3px;
   z-index: 99;
+  line-height: 22px;
+  display: inline-block;
+  height: 24px;
+}
+.breadcrumb a.home i {
+  vertical-align: -1px;
 }
 .breadcrumb a:after {
   display: inline-block;
   content: ".";
   position: absolute;
-  right: -6px;
-  top: 0;
-  width: 24px;
-  height: 24px;
+  right: -10px;
+  top: 3px;
+  width: 18px;
+  height: 18px;
   background: white;
   border-right: 1px solid #d6d4d4;
   border-top: 1px solid #d6d4d4;
