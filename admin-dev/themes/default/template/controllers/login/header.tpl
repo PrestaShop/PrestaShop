@@ -47,4 +47,4 @@
 </head>
 <body class="page-topbar">
 	<div id="login">
-		<div id="content" class="page-content">
+		<div id="content">

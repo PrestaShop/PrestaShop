@@ -87,8 +87,5 @@
 		{/if}
 	</div>
 {/if}
-
-{if !$bootstrap}<div id="nobootstrap">{/if}
 {$page}
-{if !$bootstrap}</div>{/if}
 {$footer}
