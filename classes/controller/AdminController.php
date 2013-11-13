@@ -2343,7 +2343,7 @@ class AdminControllerCore extends Controller
 		$cookie = $this->context->cookie;
 		$this->allow_employee_form_lang = (int)Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG');
 		if ($this->allow_employee_form_lang && !$cookie->employee_form_lang)
-			$cookie->employee_form_lang = (int)$this->context->language->id;
+			$cookie->employee_form_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 		
 		$lang_exists = false;
 		$this->_languages = Language::getLanguages(false);
@@ -2351,7 +2351,7 @@ class AdminControllerCore extends Controller
 			if (isset($cookie->employee_form_lang) && $cookie->employee_form_lang == $lang['id_lang'])
 				$lang_exists = true;
 
-		$this->default_form_language = $lang_exists ? (int)$cookie->employee_form_lang : (int)$this->context->language->id;
+		$this->default_form_language = $lang_exists ? (int)$cookie->employee_form_lang : (int)Configuration::get('PS_LANG_DEFAULT');
 
 		foreach ($this->_languages as $k => $language)
 			$this->_languages[$k]['is_default'] = ((int)($language['id_lang'] == $this->default_form_language));
