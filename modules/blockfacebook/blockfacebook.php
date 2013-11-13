@@ -27,7 +27,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;	
 	
-class Blockfacebook extends Module
+class BlockFacebook extends Module
 {
 	public function __construct()
 	{
@@ -38,16 +38,16 @@ class Blockfacebook extends Module
 		$this->bootstrap = true;
 		parent::__construct();
 		$this->displayName = $this->l('Block Facebook');
-		$this->description = $this->l('Display block facebook on the home page');
+		$this->description = $this->l('Display a block for subscribe to your Facebook page');
 	}
 
 
-public function install()
+	public function install()
 	{
-		return parent::install()
-			&& Configuration::updateValue('blockfacebook_url', 'prestashop')
-			&& $this->registerHook('displayHome')
-			&& $this->registerHook('displayHeader');
+		return parent::install() &&
+			Configuration::updateValue('blockfacebook_url', 'prestashop') &&
+			$this->registerHook('displayHome') &&
+			$this->registerHook('displayHeader');
 	}
 	
 	public function uninstall()
@@ -63,31 +63,22 @@ public function install()
 		if (Tools::isSubmit('submitModule'))
 		{				
 			Configuration::updateValue('blockfacebook_url', Tools::getValue('blockfacebook_url'));
-			$this->_clearCache('blockfacebook.tpl');
 			$html .= $this->displayConfirmation($this->l('Configuration updated'));
+			$this->_clearCache('blockfacebook.tpl');
 		}
 
 		$html .= $this->renderForm();
 
 		return $html;
 	}
-
-	public function hookDisplayHeader()
-	{
-
-	}
 	
 	public function hookDisplayHome()
 	{
-		global $smarty;
 		if (!$this->isCached('blockfacebook.tpl', $this->getCacheId()))
-			$smarty->assign(array(
-				'facebookurl' => Configuration::get('blockfacebook_url'),
-			));
+			$this->context->smarty->assign('facebookurl', Configuration::get('blockfacebook_url'));
+
 		return $this->display(__FILE__, 'blockfacebook.tpl', $this->getCacheId());
 	}
-
-
 
 	public function renderForm()
 	{
@@ -130,14 +121,11 @@ public function install()
 
 		return $helper->generateForm(array($fields_form));
 	}
-	
+
 	public function getConfigFieldsValues()
 	{
 		return array(
 			'blockfacebook_url' => Tools::getValue('blockfacebook_url', Configuration::get('blockfacebook_url')),
 		);
 	}
-	
-	
-		
 }
