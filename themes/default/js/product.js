@@ -375,8 +375,16 @@ function updateDisplay()
 		productPriceDisplay = ps_round(productPriceDisplay * group_reduction, 2);
 
 		var ecotaxAmount = !displayPrice ? ps_round(selectedCombination['ecotax'] * (1 + ecotaxTax_rate / 100), 2) : selectedCombination['ecotax'];
-		productPriceDisplay += ecotaxAmount;
-		productPriceWithoutReductionDisplay += ecotaxAmount;
+
+		if (ecotaxAmount != default_eco_tax)
+			productPriceDisplay += ecotaxAmount - default_eco_tax;
+		else
+			productPriceDisplay += ecotaxAmount;
+
+		if (ecotaxAmount != default_eco_tax)
+			productPriceWithoutReductionDisplay += ecotaxAmount - default_eco_tax;
+		else
+			productPriceWithoutReductionDisplay += ecotaxAmount;
 
 		var our_price = '';
 		if (productPriceDisplay > 0) {
