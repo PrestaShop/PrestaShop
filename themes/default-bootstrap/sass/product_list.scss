@@ -117,6 +117,8 @@ ul.product_list.grid {
 					
 					span {
 						color:$light-text-color;
+						
+						&.old-price {color:#b1b0b0;}
 					}
 				}
 			}
@@ -204,27 +206,29 @@ ul.product_list.grid {
 					}
 				}
 			}
+		}
+	@media (min-width: $screen-lg) { // min 1200px
+		&.hovered {
+			margin-bottom:-300px;
+			padding-bottom:250px;
 			
-			@media (min-width: $screen-lg) { // min 1200px
-				&:hover {
-					@include box-shadow(rgba(black, 0.17) 0 0 13px);
-					position:relative;
-					z-index:2;
-					
-					.content_price { display:none;}
-					
-					.product-image-container {
-						.content_price {
-							display:block;	
-						}
-						.quick-view {display:block;}
+			.product-container {
+				@include box-shadow(rgba(black, 0.17) 0 0 13px);
+				position:relative;
+				z-index:10;
+				
+				.content_price { display:none;}
+				
+				.product-image-container {
+					.content_price {
+						display:block;	
 					}
-					
-					.button-container, .functional-buttons {display:block;}
+					.quick-view {display:block;}
 				}
+				.functional-buttons, .button-container {display:block}
 			}
 		}
-		
+	}
 	@media (min-width: $screen-md) { // min 991px
 		&.first-in-line {clear:left;}
 	}
@@ -234,7 +238,28 @@ ul.product_list.grid {
 	}
 	}
 }
-
+#blockpack {
+	ul {
+		>li {
+			@media (min-width: $screen-lg) { // min 1200px
+				&.last-line {
+					border:none;
+					padding-bottom:0;
+					margin-bottom:0;
+					
+					&.hovered {
+						margin-bottom:-289px;
+						padding-bottom:250px;	
+					}
+				}
+			}
+			@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
+				&.first-item-of-tablet-line {clear:none;}
+				&.first-item-of-mobile-line {clear:left;}
+			}
+		}
+	}
+}
 /*******************************************************
 			 Product list(List) Styles 
 ********************************************************/
@@ -456,13 +481,23 @@ ul.product_list.list {
 																			margin-bottom:50px;
 																		}
 			
+			@media (min-width: $screen-lg) { // min 1200px
+				&.hovered {
+					margin-bottom:-290px;
+				}
+			}
 			.availability {display:none;}
 			
 			@media (min-width: $screen-lg) { // min 1200px
 				&.last-line {
 					border:none;
 					padding-bottom:0;
-					margin-bottom:0;	
+					margin-bottom:0;
+					
+					&.hovered {
+						margin-bottom:-290px;
+						padding-bottom:250px;	
+					}
 				}
 			}
 			

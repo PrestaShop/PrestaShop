@@ -36,7 +36,8 @@ function tmDropDown (elementType, elementClick, elementSlide, activeClass){
 			var elementHide = $(elementClick).next(elementSlide);
 		else
 			var elementHide = $(elementClick).parents('#header').find(elementSlide);
-			$(elementHide).slideUp();
+			$(elementHide).slideUp(),
+			$(elementClick).removeClass('active')
 	})
 };
 $(document).ready(function(){ 

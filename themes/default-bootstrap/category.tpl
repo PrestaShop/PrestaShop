@@ -72,7 +72,7 @@
                   {/if}
             </div>
 		{/if}
-		<h1 class="page-heading product-listing">
+		<h1 class="page-heading{if (isset($subcategories) && !$products) || (isset($subcategories) && $products)} product-listing{/if}">
 			{strip}
 				{$category->name|escape:'htmlall':'UTF-8'}
 				{if isset($categoryNameComplement)}
