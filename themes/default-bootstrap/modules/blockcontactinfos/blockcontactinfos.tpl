@@ -28,11 +28,11 @@
 <section id="block_contact_infos" class="footer-block col-xs-12 col-sm-4">
 	<div>
         <h4>{l s='Store Information' mod='blockcontactinfos'}</h4>
-        <ul>
+        <ul class="toggle-footer">
             {if $blockcontactinfos_company != ''}<li><i class="icon-map-marker"></i>{$blockcontactinfos_company|escape:'htmlall':'UTF-8'}{if $blockcontactinfos_address != ''}, {$blockcontactinfos_address|escape:'htmlall':'UTF-8'}{/if}</li>{/if}
             {if $blockcontactinfos_phone != ''}<li><i class="icon-phone"></i>{l s='Call us now toll free:' mod='blockcontactinfos'} <span>{$blockcontactinfos_phone|escape:'htmlall':'UTF-8'}</span></li>{/if}
             {if $blockcontactinfos_email != ''}<li><i class="icon-envelope-alt"></i>{l s='Email:' mod='blockcontactinfos'} <span>{mailto address=$blockcontactinfos_email|escape:'htmlall':'UTF-8' encode="hex"}</span></li>{/if}
-            <li><i class="icon-skype"></i>{l s='Skype:' mod='blockcontactinfos'} <span></span></li>
+            <!--li><i class="icon-skype"></i>{l s='Skype:' mod='blockcontactinfos'} <span></span></li-->
         </ul>
     </div>
 </section>

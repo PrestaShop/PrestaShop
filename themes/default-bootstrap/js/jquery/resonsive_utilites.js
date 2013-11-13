@@ -44,3 +44,54 @@ $(document).ready(function(){
 	tmDropDown ('', '#header .current', 'ul.toogle_content', 'active');							// all of this should be defined or left empty brackets
 	//tmDropDown ('cart', 'li#shopping_cart > a', '#cart_block', 'active');			// all of this should be defined or left empty brackets
 });
+var responsiveflag = false;
+
+//   TOGGLE FOOTER
+
+function accordionFooter(status){
+		if(status == 'enable'){
+			$('#footer .footer-block h4').on('click', function(){
+				$(this).toggleClass('active').parent().find('.toggle-footer').stop().slideToggle('medium');
+			})
+			$('#footer').addClass('accordion').find('.toggle-footer').slideUp('fast');
+		}else{
+			$('.footer-block h4').removeClass('active').off().parent().find('.toggle-footer').removeAttr('style').slideDown('fast');
+			$('#footer').removeClass('accordion');
+		}
+	}
+
+//   TOGGLE COLUMNS
+
+function accordion(status){
+		leftColumnBlocks = $('#left_column');
+		if(status == 'enable'){
+			$('#left_column').remove();
+			$(leftColumnBlocks).insertAfter('#center_column').find('#categories_block_left ul.toggle_content').slideToggle('fast'); // replace left column under content
+			$('#right_column .title_block, #left_column .title_block, #left_column #newsletter_block_left').on('click', function(){
+				$(this).toggleClass('active').parent().find('.block_content').stop().slideToggle('medium');
+			})
+			$('#right_column, #left_column').addClass('accordion').find('.block_content').slideUp('fast');
+		}else{
+			$('#left_column').remove();
+			$(leftColumnBlocks).insertBefore('#center_column');																		 // replace left column before content
+			$('#right_column .title_block, #left_column .title_block').removeClass('active').off().parent().find('.block_content').removeAttr('style').slideDown('fast');
+			$('#left_column, #right_column').removeClass('accordion');
+		}
+	}
+
+
+function resposiveResize(){
+	   if ($(document).width() <= 767 && responsiveflag == false){
+	   		accordion('enable'),
+		    accordionFooter('enable'),
+			responsiveflag = true	
+		}
+		else if ($(document).width() >= 768){
+			accordion('disable'),
+			accordionFooter('disable'),
+	        responsiveflag = false
+		}
+}
+
+$(document).ready(resposiveResize);
+$(window).resize(resposiveResize);
