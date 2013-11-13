@@ -1,16 +1,76 @@
+//Compass is required to pre-compile this stylesheets to .css
 @import "compass"
+
 @import "admin-theme/admin-theme-colors"
 @import "admin-theme/_bootstrap-variables"
-@import "admin-theme/_bootstrap-init"
 @import "admin-theme/_font-awesome"
 @import "admin-theme/animate"
 
-html, body
+//Bootstrap from bower-components
+//some help about bower here.
+
+//Bootstrap Core : Variables + Mixins + Reset + Print
+@import "../bower_components/sass-bootstrap/lib/variables"
+@import "../bower_components/sass-bootstrap/lib/mixins"
+@import "../bower_components/sass-bootstrap/lib/normalize"
+@import "../bower_components/sass-bootstrap/lib/print"
+
+//bootstrap rules apply only on div#content.bootstrap, nav.bootstrap, header.bootstrap, footer.bootstrap
+.bootstrap
+	// Core CSS
+	@import "../bower_components/sass-bootstrap/lib/scaffolding"
+	@import "../bower_components/sass-bootstrap/lib/type"
+	@import "../bower_components/sass-bootstrap/lib/code"
+	@import "../bower_components/sass-bootstrap/lib/grid"
+	@import "../bower_components/sass-bootstrap/lib/tables"
+	@import "../bower_components/sass-bootstrap/lib/forms"
+	@import "../bower_components/sass-bootstrap/lib/buttons"
+	// Components
+	@import "../bower_components/sass-bootstrap/lib/component-animations"
+	@import "../bower_components/sass-bootstrap/lib/glyphicons"
+	@import "../bower_components/sass-bootstrap/lib/dropdowns"
+	@import "../bower_components/sass-bootstrap/lib/button-groups"
+	@import "../bower_components/sass-bootstrap/lib/input-groups"
+	@import "../bower_components/sass-bootstrap/lib/navs"
+	@import "../bower_components/sass-bootstrap/lib/navbar"
+	@import "../bower_components/sass-bootstrap/lib/breadcrumbs"
+	@import "../bower_components/sass-bootstrap/lib/pagination"
+	@import "../bower_components/sass-bootstrap/lib/pager"
+	@import "../bower_components/sass-bootstrap/lib/labels"
+	@import "../bower_components/sass-bootstrap/lib/badges"
+	@import "../bower_components/sass-bootstrap/lib/jumbotron"
+	@import "../bower_components/sass-bootstrap/lib/thumbnails"
+	@import "../bower_components/sass-bootstrap/lib/alerts"
+	@import "../bower_components/sass-bootstrap/lib/progress-bars"
+	@import "../bower_components/sass-bootstrap/lib/media"
+	@import "../bower_components/sass-bootstrap/lib/list-group"
+	@import "../bower_components/sass-bootstrap/lib/panels"
+	@import "../bower_components/sass-bootstrap/lib/wells"
+	@import "../bower_components/sass-bootstrap/lib/close"
+	// Components w/ JavaScript
+	@import "../bower_components/sass-bootstrap/lib/modals"
+	@import "../bower_components/sass-bootstrap/lib/tooltip"
+	@import "../bower_components/sass-bootstrap/lib/popovers"
+	@import "../bower_components/sass-bootstrap/lib/carousel"
+
+// Utility classes
+@import "../bower_components/sass-bootstrap/lib/utilities"
+@import "../bower_components/sass-bootstrap/lib/responsive-utilities"
+
+html
 	min-height: 100%
 	height: 100%
+	font-size: 62.5%
+	-webkit-tap-highlight-color: rgba(0,0,0,0)
+body
+	min-height: 100%
+	height: 100%
+	font-family: $font-family-base
+	font-size: $font-size-base
+	line-height: $line-height-base
+	color: $text-color
+	background-color: $body-bg
 
-#header
-	z-index: 20
 #main
 	z-index: 10
 	float: left
@@ -21,7 +81,7 @@ html, body
 	background-color: $bg-content-color
 	background-image: url('../img/patterns/bedge_grunge.png') // texture
 
-#content
+#content.bootstrap
 	padding: 80px 10px 0
 	@include transition-property(margin)
 	@include transition-duration(0.4s)
@@ -82,9 +142,6 @@ html, body
 		margin: 0
 		padding: 80px 5px 0
 
-//backward
-#nobootstrap
-	float: left
 
 //data-focus
 .data-focus
@@ -108,18 +165,24 @@ body.display-modal
 		background: #F8F8F8
 
 //todo: remove temp fix for bootstrap RC1 -> final
-input[type="text"],input[type="search"],input[type="password"], textarea, select
-	@extend .form-control
-
+.bootstrap
+	input[type="text"],input[type="search"],input[type="password"], textarea, select
+		@extend .form-control
+		
 //panels
-#content
+.bootstrap
 	.panel
 		.panel-footer
 			margin: 15px -20px -20px
 			height: 73px
-.panel-footer
-	.btn.pull-right
-		margin-left: 3px
+			.btn.pull-right
+				margin-left: 3px
+#header
+	.panel-footer
+		margin: 15px 0 0!important
+		height: 40px!important
+
+
 
 //colors
 .attributes-color-container
@@ -128,23 +191,24 @@ input[type="text"],input[type="search"],input[type="password"], textarea, select
 	display: block
 	border: solid 1px black
 
-//components
 @import "admin-theme/admin-header"
 @import "admin-theme/admin-footer"
 @import "admin-theme/admin-nav"
-@import "admin-theme/admin-commons"
-@import "admin-theme/admin-tables"
-@import "admin-theme/admin-tree"
-@import "admin-theme/admin-forms"
-@import "admin-theme/admin-kpi"
-@import "admin-theme/admin-switch"
-@import "admin-theme/admin-toolbar"
-@import "admin-theme/admin-date-range-picker"
-@import "admin-theme/ladda"
 
-//page specific
-@import "admin-theme/admin-login"
-@import "admin-theme/admin-carrier-wizard"
-@import "admin-theme/admin-modules"
-@import "admin-theme/admin-dashboard"
-@import "admin-theme/admin-search"
+.bootstrap
+	//components
+	@import "admin-theme/admin-commons"
+	@import "admin-theme/admin-tables"
+	@import "admin-theme/admin-tree"
+	@import "admin-theme/admin-forms"
+	@import "admin-theme/admin-kpi"
+	@import "admin-theme/admin-switch"
+	@import "admin-theme/admin-toolbar"
+	@import "admin-theme/admin-date-range-picker"
+	@import "admin-theme/ladda"
+	//page specific
+	@import "admin-theme/admin-login"
+	@import "admin-theme/admin-carrier-wizard"
+	@import "admin-theme/admin-modules"
+	@import "admin-theme/admin-dashboard"
+	@import "admin-theme/admin-search"

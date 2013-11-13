@@ -27,7 +27,7 @@
 </div>
 {if $display_footer}
 {hook h="displayBackOfficeFooter"}
-<div id="footer">
+<div id="footer" class="bootstrap">
 	<div class="col-sm-5 hidden-xs">
 		<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a> - <span>{l s='Load time: '} {number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
 	</div>

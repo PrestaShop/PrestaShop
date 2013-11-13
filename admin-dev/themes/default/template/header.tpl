@@ -102,11 +102,11 @@
 	{/if}
 </head>
 
+
 {if $display_header}
 	<body class="{if $employee->bo_menu}page-sidebar {* page-sidebar-closed *}{else}page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
-
-{* begin  HEADER *}
-	<header id="header">
+	{* begin  HEADER *}
+	<header id="header" class="bootstrap">
 		<nav id="header_infos" role="navigation">
 			<div class="navbar-header">
 			<button id="header_nav_toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-primary">
@@ -341,12 +341,15 @@
 	<div id="main">
 		{include file='nav.tpl'}
 
-		<div id="content" class="page-content">
+		<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}">
+		
+
 {if $install_dir_exists}
 			<div class="alert alert-warning">
 				{l s='For security reasons, you must also:'}&nbsp;{l s='delete the /install folder'}
 			</div>
 {/if}
+
 {if $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
 			<div class="panel multishop_toolbar">
 				<div class="col-lg-12 form-horizontal">
@@ -355,10 +358,10 @@
 				</div>
 			</div>
 {/if}
+{* end display_header*}
 
-{* end display_header*}	
 {else}
 	<body{if isset($lite_display) && $lite_display} class="display-modal"{/if}>
 		<div id="main">
-			<div id="content" class="page-content">
+			<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}">
 {/if}
