@@ -45,8 +45,9 @@ class Dashactivity extends Module
 
 	public function install()
 	{
-		foreach ($this->getConfigFieldsValues() as $conf_name => $conf)
-			Configuration::updateValue($conf_name, true);
+		Configuration::updateValue('DASHACTIVITY_CART_ACTIVE', 30);
+		Configuration::updateValue('DASHACTIVITY_CART_ABANDONED', 30);
+		Configuration::updateValue('DASHACTIVITY_VISITOR_ONLINE', 24);
 		
 		if (!parent::install() 
 			|| !$this->registerHook('dashboardZoneOne') 
