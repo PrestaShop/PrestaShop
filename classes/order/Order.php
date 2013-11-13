@@ -721,11 +721,17 @@ class OrderCore extends ObjectModel
 
 	public static function getDiscountsCustomer($id_customer, $id_cart_rule)
 	{
-		return Db::getInstance()->getValue('
-		SELECT COUNT(*) FROM `'._DB_PREFIX_.'orders` o
-		LEFT JOIN '._DB_PREFIX_.'order_cart_rule ocr ON (ocr.id_order = o.id_order)
-		WHERE o.id_customer = '.(int)$id_customer.'
-		AND ocr.id_cart_rule = '.(int)$id_cart_rule);
+		$cache_id = 'Order::getDiscountsCustomer_'.(int)$id_customer.'-'.(int)$id_cart_rule;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = (int)Db::getInstance()->getValue('
+			SELECT COUNT(*) FROM `'._DB_PREFIX_.'orders` o
+			LEFT JOIN '._DB_PREFIX_.'order_cart_rule ocr ON (ocr.id_order = o.id_order)
+			WHERE o.id_customer = '.(int)$id_customer.'
+			AND ocr.id_cart_rule = '.(int)$id_cart_rule);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**

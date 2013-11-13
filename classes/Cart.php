@@ -325,7 +325,7 @@ class CartCore extends ObjectModel
 		if (!CartRule::isFeatureActive() || !$this->id)
 			return array();
 
-		$cache_key = 'Cart::getCartRules'.$this->id.'-'.$filter;
+		$cache_key = 'Cart::getCartRules_'.$this->id.'-'.$filter;
 		if (!Cache::isStored($cache_key))
 		{
 			$result = Db::getInstance()->executeS('
@@ -368,12 +368,16 @@ class CartCore extends ObjectModel
 	{
 		if (!CartRule::isFeatureActive())
 			return 0;
-
-		return Db::getInstance()->getValue('
-			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'cart_cart_rule`
-			WHERE `id_cart_rule` = '.(int)$id_cart_rule.' AND `id_cart` = '.(int)$this->id
-		);
+		$cache_id = 'Cart::getDiscountsCustomer_'.(int)$this->id.'-'.(int)$id_cart_rule;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = (int)Db::getInstance()->getValue('
+				SELECT COUNT(*)
+				FROM `'._DB_PREFIX_.'cart_cart_rule`
+				WHERE `id_cart_rule` = '.(int)$id_cart_rule.' AND `id_cart` = '.(int)$this->id);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	public function getLastProduct()
@@ -632,14 +636,19 @@ class CartCore extends ObjectModel
 
 			if (!isset($row['pai_id_image']) || $row['pai_id_image'] == 0)
 			{
-				$row2 = Db::getInstance()->getRow('
-					SELECT image_shop.`id_image` id_image, il.`legend`
-					FROM `'._DB_PREFIX_.'image` i
-					JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (i.id_image = image_shop.id_image AND image_shop.cover=1 AND image_shop.id_shop='.(int)$row['id_shop'].')
-					LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
-					WHERE i.`id_product` = '.(int)$row['id_product'].' AND image_shop.`cover` = 1'
-				);
-
+				$cache_id = 'Cart::getProducts_'.'-pai_id_image-'.(int)$row['id_product'].'-'.(int)$this->id_lang.'-'.(int)$row['id_shop'];
+				if (!Cache::isStored($cache_id))
+				{ 
+					$row2 = Db::getInstance()->getRow('
+						SELECT image_shop.`id_image` id_image, il.`legend`
+						FROM `'._DB_PREFIX_.'image` i
+						JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (i.id_image = image_shop.id_image AND image_shop.cover=1 AND image_shop.id_shop='.(int)$row['id_shop'].')
+						LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
+						WHERE i.`id_product` = '.(int)$row['id_product'].' AND image_shop.`cover` = 122'
+					);
+					Cache::store($cache_id, $row2);
+				}
+				$row2 = Cache::retrieve($cache_id);
 				if (!$row2)
 					$row2 = array('id_image' => false, 'legend' => false);
 				else
@@ -727,7 +736,7 @@ class CartCore extends ObjectModel
 	 *
 	 * @result integer Products quantity
 	 */
-	public	function nbProducts()
+	public function nbProducts()
 	{
 		if (!$this->id)
 			return 0;
@@ -1078,9 +1087,9 @@ class CartCore extends ObjectModel
 			);
 			$id_customization = Db::getInstance()->Insert_ID();
 		}
-
+		
 		$query = 'INSERT INTO `'._DB_PREFIX_.'customized_data` (`id_customization`, `type`, `index`, `value`)
-			VALUES ('.(int)$id_customization.', '.(int)$type.', '.(int)$index.', \''.pSql($field).'\')';
+			VALUES ('.(int)$id_customization.', '.(int)$type.', '.(int)$index.', \''.pSQL($field).'\')';
 
 		if (!Db::getInstance()->execute($query))
 			return false;
@@ -1094,7 +1103,13 @@ class CartCore extends ObjectModel
 	 */
 	public function orderExists()
 	{
-		return (bool)Db::getInstance()->getValue('SELECT count(*) FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = '.(int)$this->id);
+		$cache_id = 'Cart::orderExists_'.(int)$this->id;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = (bool)Db::getInstance()->getValue('SELECT count(*) FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = '.(int)$this->id);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -2277,18 +2292,23 @@ class CartCore extends ObjectModel
 	public function getAddressCollection()
 	{
 		$collection = array();
-		$result = Db::getInstance()->executeS(
-			'SELECT DISTINCT `id_address_delivery`
-			FROM `'._DB_PREFIX_.'cart_product`
-			WHERE id_cart = '.(int)$this->id
-		);
+		$cache_id = 'Cart::getAddressCollection'.(int)$this->id;
+		if (!Cache::isStored($cache_id))
+		{ 
+			$result = Db::getInstance()->executeS(
+				'SELECT DISTINCT `id_address_delivery`
+				FROM `'._DB_PREFIX_.'cart_product`
+				WHERE id_cart = '.(int)$this->id
+			);
+			Cache::store($cache_id, $result);
+		}
+		$result = Cache::retrieve($cache_id);
 
 		$result[] = array('id_address_delivery' => (int)$this->id_address_delivery);
 
 		foreach ($result as $row)
 			if ((int)$row['id_address_delivery'] != 0)
 				$collection[(int)$row['id_address_delivery']] = new Address((int)$row['id_address_delivery']);
-
 		return $collection;
 	}
 
@@ -3038,7 +3058,6 @@ class CartCore extends ObjectModel
 	 */
 	public function addTextFieldToProduct($id_product, $index, $type, $text_value)
 	{
-		$text_value = str_replace(array("\n", "\r"), '', nl2br($text_value));
 		if (!_PS_MAGIC_QUOTES_GPC_){
 			$text_value = str_replace('\\', '\\\\', $text_value);
 			$text_value = str_replace('\'', '\\\'', $text_value);
@@ -3466,10 +3485,14 @@ class CartCore extends ObjectModel
 		)
 		WHERE `id_cart` = '.(int)$this->id.'
 		'.(Configuration::get('PS_ALLOW_MULTISHIPPING') ? ' AND `id_shop` = '.(int)$this->id_shop : '');
-	
-		$result = Db::getInstance()->execute($sql);
-		if ($result)
-			$emptyCache = true;
+
+		$cache_id = 'Cart::setNoMultishipping'.(int)$this->id.'-'.(int)$this->id_shop;
+		if (!Cache::isStored($cache_id))
+		{
+			if ($result = (bool)Db::getInstance()->execute($sql))
+				$emptyCache = true;
+			Cache::store($cache_id, $result);
+		}
 
 		if (Customization::isFeatureActive())
 			Db::getInstance()->execute('

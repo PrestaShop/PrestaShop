@@ -9,3 +9,5 @@ UPDATE `PREFIX_orders` SET conversion_rate = 1 WHERE conversion_rate = 0;
 ALTER TABLE `PREFIX_cms` ADD `indexation` tinyint(1) UNSIGNED NULL DEFAULT '1' AFTER `active`;
 
 /* PHP:update_order_messages(); */;
+
+ALTER TABLE `REFIX_group_reduction` CHANGE `reduction` `reduction` DECIMAL( 4, 4 ) NOT NULL;

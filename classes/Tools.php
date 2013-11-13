@@ -346,17 +346,12 @@ class ToolsCore
 		/* Automatically detect language if not already defined, detect_language is set in Cookie::update */
 		if ((!$cookie->id_lang || isset($cookie->detect_language)) && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
 		{
-			$array = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
-			if (Tools::strlen($array[0]) > 2)
+			$array  = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
+			$string = $array[0];
+			
+			if (Validate::isLanguageCode($string))
 			{
-				$tab = explode('-', $array[0]);
-				$string = $tab[0];
-			}
-			else
-				$string = $array[0];
-			if (Validate::isLanguageIsoCode($string))
-			{
-				$lang = new Language(Language::getIdByIso($string));
+				$lang = Language::getLanguageByIETFCode($string);
 				if (Validate::isLoadedObject($lang) && $lang->active && $lang->isAssociatedToShop())
 				{
 					Context::getContext()->language = $lang;
@@ -364,7 +359,7 @@ class ToolsCore
 				}
 			}
 		}
-		
+
 		if (isset($cookie->detect_language))
 			unset($cookie->detect_language);
 
@@ -374,7 +369,7 @@ class ToolsCore
 
 		$iso = Language::getIsoById((int)$cookie->id_lang);
 		@include_once(_PS_THEME_DIR_.'lang/'.$iso.'.php');
-
+		
 		return $iso;
 	}
 
@@ -689,9 +684,10 @@ class ToolsCore
 
 	public static function safePostVars()
 	{
-		if (!is_array($_POST))
-			return array();
-		$_POST = array_map(array('Tools', 'htmlentitiesUTF8'), $_POST);
+		if (!isset($_POST) || !is_array($_POST))
+			$_POST = array();
+		else
+			$_POST = array_map(array('Tools', 'htmlentitiesUTF8'), $_POST);
 	}
 
 	/**
