@@ -393,7 +393,7 @@ function showFees()
 			//enable only if zone is active
 			tr = $(this).parent('tr');
 			validate = $('tr.fees_all td:eq('+$(this).index()+')').hasClass('validated');
-			if ($(tr).index() > 2 && $(tr).find('td:eq(1) input').attr('checked') && validate || !$(tr).hasClass('range_sup') || !$(tr).hasClass('range_inf'))
+			if ($(tr).index() > 2 && $(tr).find('td:eq(1) input').prop('checked') && (validate || !$(tr).hasClass('range_sup') || !$(tr).hasClass('range_inf')))
 					$(this).find('input:text').removeAttr('disabled');
 			
 			$(this).find('input:text, button').css('background-color', '').css('border-color', '');

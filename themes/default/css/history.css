@@ -6,7 +6,7 @@
 	padding:15px 20px;
 	background:#ccc
 }
-#history #center_column .title_block  input {
+#history #center_column .title_block input {
 	position: relative;
    top: -8px;
 	float:right;
@@ -21,7 +21,6 @@
 	top:2px;
 	left:0
 }
-
 #order-list {
 	margin-bottom:20px;
 	width:100%;
@@ -36,7 +35,7 @@
 	background:url(../img/bg_table_th.png) repeat-x 0 0 #999
 }
 #order-list tr.alternate_item {background-color: #f3f3f3}
-#order-list  td {
+#order-list td {
 	padding:12px;
 	border-right:1px solid #e9e9e9;
 	border-bottom:1px solid #e9e9e9;
@@ -44,12 +43,15 @@
 	font-size:12px;
 	vertical-align:top
 }
-#order-list  td.history_detail {border-right:none;}
+#order-list td .price, #order-detail-content tbody .price {
+	white-space: nowrap;
+}
+#order-list td.history_detail {border-right:none;}
 
-#order-list .last_item  td {border-bottom:1px solid #999}
+#order-list .last_item td {border-bottom:1px solid #999}
 
 .adresses_bloc {margin-bottom:20px}
-.adresses_bloc  .item {margin-right:60px}
+.adresses_bloc .item {margin-right:60px}
 
 .detail_step_by_step {width:100%}
 .detail_step_by_step tr.last_item td {border-bottom:1px solid #999}
@@ -67,17 +69,3 @@
 	width:100%;
 	border:1px solid #999
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

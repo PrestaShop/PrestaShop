@@ -58,7 +58,7 @@ function WishlistCart(id, action, id_product, id_product_attribute, quantity)
 			if($('#' + id).length != 0)
 			{
 				$('#' + id).slideUp('normal');
-				document.getElementById(id).innerHTML = data;
+				$('#' + id).html(data);
 				$('#' + id).slideDown('normal');
 			}
 		}
@@ -81,7 +81,7 @@ function WishlistChangeDefault(id, id_wishlist)
 		success: function(data)
 		{
 			$('#' + id).slideUp('normal');
-			document.getElementById(id).innerHTML = data;
+			$('#' + id).html(data);
 			$('#' + id).slideDown('normal');
 		}
 	});
@@ -147,7 +147,7 @@ function WishlistManage(id, id_wishlist)
 		success: function(data)
 		{
 			$('#' + id).hide();
-			document.getElementById(id).innerHTML = data;
+			$('#' + id).html(data);
 			$('#' + id).fadeIn('slow');
 		}
 	});

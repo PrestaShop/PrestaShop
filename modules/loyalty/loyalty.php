@@ -453,7 +453,7 @@ class Loyalty extends Module
 					$points = (int)LoyaltyModule::getNbPointsByPrice(
 						$product->getPrice(
 							Product::getTaxCalculationMethod() == PS_TAX_EXC ? false : true,
-							(int)$product->getDefaultIdProductAttribute()
+							(int)$product->getIdProductAttributeMostExpensive()
 						)
 					);
 
