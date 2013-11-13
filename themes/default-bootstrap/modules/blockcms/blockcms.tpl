@@ -48,7 +48,7 @@
 	<!-- MODULE Block footer -->
 	<section class="footer-block col-xs-12 col-sm-2" id="block_various_links_footer">
 		<h4>{l s='Information' mod='blockcms'}</h4>
-		<ul>
+		<ul class="toggle-footer">
 			{if !$PS_CATALOG_MODE}<li class="first_item"><a href="{$link->getPageLink('prices-drop')|escape:'html'}" title="{l s='Specials' mod='blockcms'}">{l s='Specials' mod='blockcms'}</a></li>{/if}
 			<li class="{if $PS_CATALOG_MODE}first_{/if}item"><a href="{$link->getPageLink('new-products')|escape:'html'}" title="{l s='New products' mod='blockcms'}">{l s='New products' mod='blockcms'}</a></li>
 			{if !$PS_CATALOG_MODE}<li class="item"><a href="{$link->getPageLink('best-sales')|escape:'html'}" title="{l s='Top sellers' mod='blockcms'}">{l s='Top sellers' mod='blockcms'}</a></li>{/if}

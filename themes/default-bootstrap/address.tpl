@@ -242,3 +242,6 @@ $(function(){ldelim}
         </p>
     </form>
 </div>
+<ul class="footer_links clearfix">
+    <li><a class="btn btn-defaul button button-small" href="{$link->getPageLink('addresses', true)|escape:'html'}"><span><i class="icon-chevron-left"></i> {l s='Back to your addresses'}</span></a></li>
+</ul>
