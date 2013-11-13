@@ -955,7 +955,7 @@ class FrontControllerCore extends Controller
 	 *
 	 * @see Controller::addCSS()
 	 */
-	public function addCSS($css_uri, $css_media_type = 'all')
+	public function addCSS($css_uri, $css_media_type = 'all', $offset = null)
 	{
 		if (!is_array($css_uri))
 			$css_uri = array($css_uri => $css_media_type);
@@ -970,7 +970,7 @@ class FrontControllerCore extends Controller
 			$list_uri[$file] = $media;
 		}
 
-		return parent::addCSS($list_uri, $css_media_type);
+		return parent::addCSS($list_uri, $css_media_type, $offset);
 	}
 
 	/**
