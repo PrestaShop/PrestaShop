@@ -203,7 +203,7 @@ abstract class ModuleCore
 		}
 
 		// Check PS version compliancy
-		if (version_compare(_PS_VERSION_, $this->ps_versions_compliancy['min']) < 0 || version_compare(_PS_VERSION_, $this->ps_versions_compliancy['max']) >= 0)
+		if (version_compare(_PS_VERSION_, $this->ps_versions_compliancy['min']) < 0 || version_compare(_PS_VERSION_, $this->ps_versions_compliancy['max']) > 0)
 		{
 			$this->_errors[] = $this->l('The version of your module is not compliant with your PrestaShop version.');
 			return false;
