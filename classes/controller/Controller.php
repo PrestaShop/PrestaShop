@@ -233,29 +233,26 @@ abstract class ControllerCore
 	 * @param string $css_media_type
 	 * @return true
 	 */
-	public function addCSS($css_uri, $css_media_type = 'all')
+	public function addCSS($css_uri, $css_media_type = 'all', $offset = null)
 	{
-		if (is_array($css_uri))
-			foreach ($css_uri as $css_file => $media)
-			{
-				if (is_string($css_file) && strlen($css_file) > 1)
-				{
-					$css_path = Media::getCSSPath($css_file, $media);
-					if ($css_path && !in_array($css_path, $this->css_files))
-						$this->css_files = array_merge($this->css_files, $css_path);
-				}
-				else
-				{
-					$css_path = Media::getCSSPath($media, $css_media_type);
-					if ($css_path && !in_array($css_path, $this->css_files))
-						$this->css_files = array_merge($this->css_files, $css_path);
-				}
-			}
-		else if (is_string($css_uri) && strlen($css_uri) > 1)
+		if (!is_array($css_uri))
+			$css_uri = array($css_uri);
+
+		foreach ($css_uri as $css_file => $media)
 		{
-			$css_path = Media::getCSSPath($css_uri, $css_media_type);
-			if ($css_path)
-				$this->css_files = array_merge($this->css_files, $css_path);
+			if (is_string($css_file) && strlen($css_file) > 1)
+				$css_path = Media::getCSSPath($css_file, $media);
+			else
+				$css_path = Media::getCSSPath($media, $css_media_type);
+
+			if ($css_path && !in_array($css_path, $this->css_files))
+			{
+				$size = count($this->css_files);
+				if ($offset === null || $offset > $size || $offset < 0 || !is_numeric($offset))
+					$offset = $size;
+
+				$this->css_files = array_merge(array_slice($this->css_files, 0, $offset), $css_path, array_slice($this->css_files, $offset));
+			}
 		}
 	}
 

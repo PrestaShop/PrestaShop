@@ -1940,8 +1940,8 @@ class AdminControllerCore extends Controller
 	{
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
-		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-bootstrap-reset.css', 'all');
-		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-old.css', 'all');
+		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-bootstrap-reset.css', 'all', 1);
+		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-old.css', 'all', 1);
 	}
 
 	public function setMedia()
