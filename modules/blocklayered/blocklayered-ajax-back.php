@@ -19,7 +19,8 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
+
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registred Trademark & Property of PrestaShop SA
 */
@@ -31,9 +32,17 @@ require_once(dirname(__FILE__).'/../../init.php');
 if (substr(Tools::encrypt('blocklayered/index'),0,10) != Tools::getValue('layered_token') || !Module::isInstalled('blocklayered'))
 	die('Bad token');
 
+if (Tools::getValue('admin_dir', false))
+{
+	define('_PS_ADMIN_DIR_', base64_decode(Tools::getValue('admin_dir')));
+	define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
+}
+
+
 include(dirname(__FILE__).'/blocklayered.php');
 
 $category_box = Tools::getValue('categoryBox');
+
 
 /* Clean categoryBox before use */
 if (is_array($category_box))
