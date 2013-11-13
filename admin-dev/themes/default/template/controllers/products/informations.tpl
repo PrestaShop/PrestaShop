@@ -321,14 +321,12 @@
 			</span>
 		</label>
 		<div class="col-lg-9">
-			<div class="row">
 			{include
 				file="controllers/products/textarea_lang.tpl"
 				languages=$languages
 				input_name='description_short'
 				input_value=$product->description_short
 				max=$PS_PRODUCT_SHORT_DESC_LIMIT}
-			</div>
 		</div>
 	</div>
 
@@ -341,12 +339,10 @@
 			</span>
 		</label>
 		<div class="col-lg-9">
-			<div class="row">
 			{include
 				file="controllers/products/textarea_lang.tpl"
 				languages=$languages input_name='description'
 				input_value=$product->description}
-			</div>
 		</div>
 	</div>
 
