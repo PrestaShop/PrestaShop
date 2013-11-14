@@ -49,6 +49,9 @@
   line-height: 25px;
   border: none;
 }
+#footer #newsletter_block_left h4:after {
+  display: none;
+}
 #footer #newsletter_block_left .block_content {
   overflow: hidden;
 }
