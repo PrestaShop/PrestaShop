@@ -65,6 +65,11 @@
 #wishlist_block .lnk .form-group select {
   max-width: 192px;
 }
+@media (max-width: 767px) {
+  #wishlist_block .lnk .form-group select {
+    width: 192px;
+  }
+}
 #wishlist_block .ajax_cart_block_remove_link {
   font-size: 14px;
   line-height: 14px;

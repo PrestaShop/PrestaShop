@@ -77,7 +77,10 @@
 			margin-bottom:20px;
 			
 			select {
-				max-width:192px;	
+				max-width:192px;
+																		@media (max-width: $screen-xs-max) { // max 767px
+																			width:192px;
+																		}
 			}
 		}
 	}

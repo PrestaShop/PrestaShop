@@ -52,6 +52,7 @@
 			font-size:21px;
 			line-height:25px;
 			border:none;
+			&:after {display:none;}
 		}
 		
 		.block_content {

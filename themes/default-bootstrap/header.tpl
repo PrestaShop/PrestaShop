@@ -100,13 +100,6 @@
 		</div>
 		{/if}
 		<div id="page">
-			<div class="banner-top">
-                <div class="container">
-                    <a href="#">
-                        <img class="banner-top img-responsive" src="{$img_dir}top-banner.gif" alt="banner-top"/>
-                    </a>
-                </div>
-            </div>
 			<!-- Header -->
             <div class="header-container">
                 <header id="header">

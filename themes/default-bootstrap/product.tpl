@@ -493,15 +493,6 @@ var contentOnly = {if $content_only}true{else}false{/if}
 
         
         </div>
-        
-        {if !$content_only}
-        <div class="box-security">
-        <h5 class="product-heading-h5">{l s='Your Security Guaranteed'}</h5> 
-        		<img class="logo-payment" src="{$img_dir}payment-logo.png" alt="" />     
-                  
-        </div>
-        
-        {/if}
            
        </div>       
        
