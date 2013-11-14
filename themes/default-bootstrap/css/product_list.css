@@ -141,7 +141,7 @@ ul.product_list.grid > li .product-container .button-container .ajax_add_to_cart
   margin-right: 6px;
 }
 ul.product_list.grid > li .product-container .functional-buttons {
-  background: url(../img/functional-bt-shadow.png) repeat-x;
+  background: url(../img/functional-bt-shadow.png) no-repeat;
   padding: 11px 0 5px;
 }
 @media (min-width: 1200px) {
