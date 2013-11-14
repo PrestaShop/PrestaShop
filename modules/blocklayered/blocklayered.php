@@ -1878,8 +1878,8 @@ class BlockLayered extends Module
 		}
 
 		$html .= '</div>
-			<div id="error-treeview" class="error" style="display: none;">
-				<img src="../img/admin/error2.png" alt="" /> '.$this->l('Please select at least one specific category or select "All categories".').'
+			<div id="error-treeview" class="alert alert-danger" style="display: none;">
+				'.$this->l('Please select at least one specific category or select "All categories".').'
 			</div>
 			<div style="display: none;">
 				<div id="layered-categories-selection" style="padding: 10px; text-align: left;">
