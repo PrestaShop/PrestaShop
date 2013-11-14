@@ -304,6 +304,10 @@ input.button_large, input.button_large_disabled, input.exclusive_large, input.ex
   background-image: url('../img/button-large.png')*/
 }
 
+.btn.disabled, .btn[disabled]:hover {
+  opacity: 0.3;
+}
+
 .button.button-small {
   font: bold 13px/17px Arial, Helvetica, sans-serif;
   color: white;
@@ -954,6 +958,16 @@ table.table_block td {
 .block {
   margin-bottom: 30px;
 }
+@media (max-width: 767px) {
+  .block {
+    margin-bottom: 0px;
+  }
+}
+@media (max-width: 767px) {
+  .block .block_content {
+    margin-bottom: 20px;
+  }
+}
 
 .block .title_block, .block h4 {
   font: 600 18px/22px "Open Sans", sans-serif;
@@ -967,6 +981,26 @@ table.table_block td {
 @media (min-width: 768px) and (max-width: 991px) {
   .block .title_block, .block h4 {
     font-size: 14px;
+  }
+}
+@media (max-width: 767px) {
+  .block .title_block, .block h4 {
+    position: relative;
+  }
+  .block .title_block:after, .block h4:after {
+    display: block;
+    font-family: "FontAwesome";
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 15px;
+    height: 36px;
+    width: 36px;
+    font-size: 26px;
+    font-weight: normal;
+  }
+  .block .title_block.active:after, .block h4.active:after {
+    content: "";
   }
 }
 .block .title_block a, .block h4 a {
@@ -987,6 +1021,11 @@ table.table_block td {
 }
 .block .list-block {
   margin-top: -8px;
+}
+@media (max-width: 767px) {
+  .block .list-block {
+    margin-top: 0;
+  }
 }
 .block .list-block li {
   padding: 5px 0 6px 20px;
@@ -1012,9 +1051,15 @@ table.table_block td {
 .block .list-block .form-group {
   padding-top: 20px;
   border-top: 1px solid #d6d4d4;
+  margin-bottom: 0;
 }
 .block .list-block .form-group select {
   max-width: 270px;
+}
+@media (max-width: 767px) {
+  .block .list-block .form-group select {
+    width: 270px;
+  }
 }
 .block .list-block .btn {
   margin-top: 12px;
@@ -2051,6 +2096,11 @@ div.star_hover a, div.star a:hover {
 .footer-container #footer .footer-block {
   margin-top: 45px;
 }
+@media (max-width: 767px) {
+  .footer-container #footer .footer-block {
+    margin-top: 20px;
+  }
+}
 .footer-container #footer a {
   color: #777;
 }
@@ -2061,6 +2111,24 @@ div.star_hover a, div.star a:hover {
   font: 600 18px/22px "Open Sans", sans-serif;
   color: white;
   margin: 0 0 13px 0;
+}
+@media (max-width: 767px) {
+  .footer-container #footer h4 {
+    position: relative;
+    margin-bottom: 0;
+    padding-bottom: 13px;
+  }
+  .footer-container #footer h4:after {
+    display: block;
+    content: "";
+    font-family: "FontAwesome";
+    position: absolute;
+    right: 0;
+    top: 1px;
+  }
+  .footer-container #footer h4.active:after {
+    content: "";
+  }
 }
 .footer-container #footer h4 a {
   color: white;
@@ -3186,7 +3254,7 @@ div.star_hover a, div.star a:hover {
 .form-group.form-ok input, .form-group.form-ok textarea {
   border: 1px solid #46a74e;
   color: #35b33f;
-  background: url(../img/icon/form-ok.png) 98% 5px no-repeat #87f590;
+  background: url(../img/icon/form-ok.png) 98% 5px no-repeat #ddf9e1;
 }
 .form-group.form-error .form-control, .form-group.form-ok .form-control {
   padding-right: 30px;

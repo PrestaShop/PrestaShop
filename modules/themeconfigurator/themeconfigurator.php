@@ -37,6 +37,7 @@ class ThemeConfigurator extends Module
 		parent::__construct();	
 		$this->displayName = $this->l('Theme configurator');
 		$this->description = $this->l('Configure elements of your theme');
+		$this->bootstrap = true;
 	}
 	
 	
@@ -187,6 +188,20 @@ class ThemeConfigurator extends Module
 				'label' => $this->l('Enable Quick view'),
 				'name' => 'quick_view',
 				'value' => (int)Tools::getValue('PS_QUICK_VIEW', Configuration::get('PS_QUICK_VIEW'))
+			),		
+			array(
+				'label' => $this->l('Enable top banner'),
+				'name' => 'blockbanner',
+				'desc' => '<a href="#">'.$this->l('Configure').'</a>',
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockbanner')) && $module->active),
+				'is_module' => true,
+			),
+			array(
+				'label' => $this->l('Enable product payment logos'),
+				'name' => 'productpaymentlogos',
+				'desc' => '<a href="#">'.$this->l('Configure').'</a>',
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('productpaymentlogos')) && $module->active),
+				'is_module' => true,
 			)
 		);
 	}
