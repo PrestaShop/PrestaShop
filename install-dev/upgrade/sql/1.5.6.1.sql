@@ -10,4 +10,4 @@ ALTER TABLE `PREFIX_cms` ADD `indexation` tinyint(1) UNSIGNED NULL DEFAULT '1' A
 
 /* PHP:update_order_messages(); */;
 
-ALTER TABLE `REFIX_group_reduction` CHANGE `reduction` `reduction` DECIMAL( 4, 4 ) NOT NULL;
+ALTER TABLE `PREFIX_group_reduction` CHANGE `reduction` `reduction` DECIMAL( 4, 4 ) NOT NULL;
