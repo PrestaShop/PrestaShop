@@ -144,7 +144,7 @@ class HelperFormCore extends Helper
 								$uploader->setFiles(array(
 									0 => array(
 									'type'       => HelperUploader::TYPE_IMAGE,
-									'image'      => isset($params['thumb'])?'<img src="'.$params['thumb'].'" alt="'.$params['title'].'" title="'.$params['title'].'" />':null,
+									'image'      => isset($params['thumb'])?'<img src="'.$params['thumb'].'" alt="'.(isset($params['title']) ? $params['title'] : '').'" title="'.(isset($params['title']) ? $params['title'] : '').'" />':null,
 								)));
 
 							$uploader->setTitle(isset($params['title'])?$params['title']:null);

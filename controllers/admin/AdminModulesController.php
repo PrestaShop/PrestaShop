@@ -699,15 +699,22 @@ class AdminModulesControllerCore extends AdminController
 							if (isset($module->multishop_context))
 								$this->multishop_context = $module->multishop_context;
 
-							$backlink = self::$currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
-							$hooklink = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
-							$tradlink = 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=';
+							$back_link = self::$currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
+							$hook_link = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
+							$trad_link = 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=';
+							$disable_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&enable=0&tab_module='.$module->tab;
+							$uninstall_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&uninstall='.$module->name.'&tab_module='.$module->tab;
+							$reset_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&reset&tab_module='.$module->tab;
 
 							$this->context->smarty->assign(array(
 								'module_name' => $module->name,
-								'backlink' => $backlink,
-								'module_hooklink' => $hooklink,
-								'tradlink' => $tradlink,
+								'module_display_name' => $module->displayName,
+								'back_link' => $back_link,
+								'module_hook_link' => $hook_link,
+								'module_disable_link' => $disable_link,
+								'module_uninstall_link' => $uninstall_link,
+								'module_reset_link' => $reset_link,
+								'trad_link' => $trad_link,
 								'module_languages' => Language::getLanguages(false),
 								'theme_language_dir' => _THEME_LANG_DIR_
 							));
