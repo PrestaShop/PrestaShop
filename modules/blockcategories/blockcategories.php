@@ -128,12 +128,10 @@ class BlockCategories extends Module
 			foreach ($resultParents[$id_category] as $subcat)
 				$children[] = $this->getTree($resultParents, $resultIds, $maxDepth, $subcat['id_category'], $currentDepth + 1);
 
-		if (!isset($resultIds[$id_category]))
-			return false;
-
+		$category = new Category($id_category);
 		$thumbnails = array();
 
-		if ($currentDepth == 0)
+		if ($category->level_depth == 2)
 		{
 			$files = scandir(_PS_CAT_IMG_DIR_);
 
@@ -142,12 +140,12 @@ class BlockCategories extends Module
 					$thumbnails[] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.$file, 'category_'.$file, 100, 'jpg', true, true);
 
 		}
-
+		
 		$return = array(
 			'id' => $id_category,
-			'link' => $this->context->link->getCategoryLink($id_category, $resultIds[$id_category]['link_rewrite']),
-			'name' => $resultIds[$id_category]['name'],
-			'desc'=> $resultIds[$id_category]['description'],
+			'link' => $this->context->link->getCategoryLink($id_category, $category->link_rewrite[(int)$this->context->language->id]),
+			'name' =>  $category->name[(int)$this->context->language->id],
+			'desc'=>  $category->description[(int)$this->context->language->id],
 			'children' => $children,
 			'thumbnails' => $thumbnails
 		);
@@ -238,7 +236,7 @@ class BlockCategories extends Module
 				$resultIds[$row['id_category']] = &$row;
 			}
 
-			$blockCategTree = $this->getTree($resultParents, $resultIds, $maxdepth, ($category ? $category->id : null));
+			$blockCategTree = $this->getTree($resultParents, $resultIds, $maxdepth, ($category && (!isset($params['is_top_menu']) || !$params['is_top_menu']) ? $category->id : null));
 			$this->smarty->assign('blockCategTree', $blockCategTree);
 
 			if ($category)
