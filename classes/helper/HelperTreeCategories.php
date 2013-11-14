@@ -212,36 +212,37 @@ class HelperTreeCategoriesCore extends TreeCore
 			$this->setAttribute('use_search', $this->useSearch());
 		}
 
-		$this->addAction(new TreeToolbarLink(
+		$collapse_all = new TreeToolbarLink(
 			'Collapse All',
 			'#',
-			'$(\'#'.$this->getId().'\').tree(\'collapseAll\')',
-			'icon-collapse-alt')
-		);
-
-		$this->addAction(new TreeToolbarLink(
+			'$(\'#'.$this->getId().'\').tree(\'collapseAll\');$(\'#collapse-all-'.$this->getId().'\').hide();$(\'#expand-all-'.$this->getId().'\').show();',
+			'icon-collapse-alt');
+		$collapse_all->setAttribute('id', 'collapse-all-'.$this->getId());
+		$expand_all = new TreeToolbarLink(
 			'Expand All',
 			'#',
-			'$(\'#'.$this->getId().'\').tree(\'expandAll\')',
-			'icon-expand-alt')
-		);
+			'$(\'#'.$this->getId().'\').tree(\'expandAll\');$(\'#collapse-all-'.$this->getId().'\').show();$(\'#expand-all-'.$this->getId().'\').hide();',
+			'icon-expand-alt');
+		$expand_all->setAttribute('id', 'expand-all-'.$this->getId());
+		$this->addAction($collapse_all);
+		$this->addAction($expand_all);
 
 		if ($this->useCheckBox())
 		{
-			$checkAll = new TreeToolbarLink(
+			$check_all = new TreeToolbarLink(
 				'Check All',
 				'#',
 				'checkAllAssociatedCategories($(\'#'.$this->getId().'\'));',
 				'icon-check-sign');
-			$checkAll->setAttribute('id', 'check-all-'.$this->getId());
-			$unCheckAll = new TreeToolbarLink(
+			$check_all->setAttribute('id', 'check-all-'.$this->getId());
+			$uncheck_all = new TreeToolbarLink(
 				'Uncheck All',
 				'#',
 				'uncheckAllAssociatedCategories($(\'#'.$this->getId().'\'));',
 				'icon-check-empty');
-			$unCheckAll->setAttribute('id', 'uncheck-all-'.$this->getId());
-			$this->addAction($checkAll);
-			$this->addAction($unCheckAll);
+			$uncheck_all->setAttribute('id', 'uncheck-all-'.$this->getId());
+			$this->addAction($check_all);
+			$this->addAction($uncheck_all);
 			$this->setNodeFolderTemplate('tree_node_folder_checkbox.tpl');
 			$this->setNodeItemTemplate('tree_node_item_checkbox.tpl');
 			$this->setAttribute('use_checkbox', $this->useCheckBox());
