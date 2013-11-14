@@ -279,30 +279,10 @@ function saveDashConfig(widget_name) {
 	});
 }
 
-function preactivationLinkClick(module) {
-	$.ajax({
-		url : adminstats_ajax_url,
-		data : {
-			ajax : "1",
-			controller : "AdminDashboard",
-			action : "savePreactivationRequest",
-			module : module,
-		},
-		type: 'POST',
-		success : function(jsonData){
-
-		}
-	});
-}
-
 $(document).ready( function () {
 	$('#calendar_form input[type="submit"]').on('click', function(elt) {
 		elt.preventDefault();
 		setDashboardDateRange(elt.currentTarget.name);
-	});
-
-	$(".preactivationLink").on('click', function() {
-		preactivationLinkClick($(this).attr("rel"));
 	});
 
 	refreshDashboard(false, false);
