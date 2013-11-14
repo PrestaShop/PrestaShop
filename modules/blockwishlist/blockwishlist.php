@@ -38,7 +38,7 @@ class BlockWishList extends Module
 	{
 		$this->name = 'blockwishlist';
 		$this->tab = 'front_office_features';
-		$this->version = 0.2;
+		$this->version = 0.3;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		
@@ -62,13 +62,15 @@ class BlockWishList extends Module
 			if($query)
 				if(!Db::getInstance()->execute(trim($query)))
 					return false;
-		if (!parent::install() OR
-						!$this->registerHook('rightColumn') OR
-						!$this->registerHook('productActions') OR
-						!$this->registerHook('cart') OR
-						!$this->registerHook('customerAccount') OR
-						!$this->registerHook('header') OR
-						!$this->registerHook('adminCustomers')
+		if (!parent::install() ||
+						!$this->registerHook('rightColumn') ||
+						!$this->registerHook('productActions') ||
+						!$this->registerHook('cart') ||
+						!$this->registerHook('customerAccount') ||
+						!$this->registerHook('header') ||
+						!$this->registerHook('adminCustomers') ||
+						!$this->registerHook('displayProductListFunctionalButtons') ||
+						!$this->registerHook('top')
 					)
 			return false;
 		/* This hook is optional */
@@ -79,10 +81,10 @@ class BlockWishList extends Module
 	public function uninstall()
 	{
 		return (
-			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist') AND
-			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist_email') AND
-			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist_product') AND
-			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist_product_cart') AND 
+			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist') &&
+			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist_email') &&
+			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist_product') &&
+			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist_product_cart') && 
 			parent::uninstall()
 		);
 	}
@@ -105,6 +107,18 @@ class BlockWishList extends Module
 		
 		
 		return $this->_html;
+	}
+
+	public function hookDisplayProductListFunctionalButtons($params)
+	{
+		//TODO : Add cache
+		$this->smarty->assign('product', $params['product']);
+		return $this->display(__FILE__, 'blockwishlist_button.tpl');
+	}
+
+	public function hookTop($params)
+	{
+		return $this->display(__FILE__, 'blockwishlist_top.tpl');
 	}
 
 	public function hookHeader($params)
