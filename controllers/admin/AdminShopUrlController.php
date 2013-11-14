@@ -293,7 +293,7 @@ class AdminShopUrlControllerCore extends AdminController
 		$this->list_simple_header = true;
 		parent::initContent();
 
-		$this->addJqueryPlugin('cookie-plugin');
+		$this->addJqueryPlugin('cooki-plugin');
 		$this->addJqueryPlugin('jstree');
 		$this->addCSS(_PS_JS_DIR_.'jquery/plugins/jstree/themes/classic/style.css');
 
