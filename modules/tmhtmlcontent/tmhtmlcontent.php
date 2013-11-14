@@ -15,6 +15,7 @@ class TmHtmlContent extends Module {
 		$this->author = 'TemplateMonster';      // Defines module author
 		$this->version = '1.0';       // Defines module version
 		$this->secure_key = Tools::encrypt($this->name);
+		$this->bootstrap = true;
 		
 		$this->_defaultLanguage = Language::getLanguage(Configuration::get('PS_LANG_DEFAULT'));
 		$this->_languages = Language::getLanguages();

@@ -51,11 +51,11 @@
                 </div>
             </li>
 		</ul>
-		<p>
+		<div>
 			<a class="btn btn-default button button-small" href="{$link->getPageLink('prices-drop')|escape:'html'}" title="{l s='All specials' mod='blockspecials'}"><span>{l s='All specials' mod='blockspecials'}<i class="icon-chevron-right right"></i></span></a>
-		</p>
+		</div>
 {else}
-		<p>{l s='No specials at this time' mod='blockspecials'}</p>
+		<div>{l s='No specials at this time' mod='blockspecials'}</div>
 {/if}
 	</div>
 </div>

@@ -1,6 +1,6 @@
 jQuery(document).ready(function() {
 	$('.button.new-item').click(function() {
-		var item_container = $(this).parent('.new-item');
+		var item_container = $(this).parent().parent('.new-item');
 		item_container.toggleClass('active').children('.item-container').slideToggle();
 	});
 	$('.button-edit').click(function() {
