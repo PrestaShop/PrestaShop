@@ -289,4 +289,18 @@ $(document).ready( function () {
 	getBlogRss();
 	bindSubmitDashConfig();
 	bindCancelDashConfig();
+
+	$('.ps_dashboard_simulation').change(function(e) {
+		$.ajax({
+			url : dashboard_ajax_url,
+			data : {
+				ajax:true,
+				action:'setSimulationMode',
+				PS_DASHBOARD_SIMULATION: $(this).val()
+			},
+			success : function(result) {
+				refreshDashboard(false, false);
+			}
+		});
+	});
 });
