@@ -284,8 +284,7 @@ class StatsProduct extends ModuleGraph
 				'.$this->l('After choosing a category and selecting a product, informational graphs will appear.').'
 				<ul>
 					<li class="bullet">'.$this->l('If you notice that a product is often purchased but viewed infrequently, you should display it more prominently in your Front Office. ').'</li>
-					<li class="bullet">'.$this->l('On the other hand, if a product has many viewings but is not often purchased,
-						we advise you to check or modify this product\'s information, description and photography again.').'
+					<li class="bullet">'.$this->l('On the other hand, if a product has many viewings but is not often purchased, we advise you to check or modify this product\'s information, description and photography again.').'
 					</li>
 				</ul>
 			</p>
