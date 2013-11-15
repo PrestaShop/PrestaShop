@@ -886,7 +886,7 @@ class AdminOrdersControllerCore extends AdminController
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 				}
 				else
-					$this->errors[] = Tools::displayErrror('This address can\'t be loaded');
+					$this->errors[] = Tools::displayError('This address can\'t be loaded');
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
