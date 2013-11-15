@@ -35,6 +35,7 @@ class AddShareThis extends Module
 		$this->author = 'Custom';
 		$this->tab = 'front_office_features';
 		$this->need_instance = 0;
+		$this->version = '0.1';
 		$this->bootstrap = true;
 		$this->_directory = dirname(__FILE__);
 		parent::__construct();	
