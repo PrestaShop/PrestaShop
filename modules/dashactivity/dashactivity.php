@@ -97,6 +97,45 @@ class Dashactivity extends Module
 	
 	public function hookDashboardData($params)
 	{
+		if (Configuration::get('PS_DASHBOARD_SIMULATION'))
+		{
+			$days = round((strtotime($params['date_to']) - strtotime($params['date_from'])) / 3600 / 24);
+			$online_visitor = round(rand(10, 50));
+			$visits = round(rand(200, 2000) * $days);
+
+			return array(
+				'data_value' => array(
+					'pending_orders' => round(rand(0, 5)),
+					'return_exchanges' => round(rand(0, 5)),
+					'abandoned_cart' => round(rand(5, 50)),
+					'products_out_of_stock' => round(rand(1, 10)),
+					'new_messages' => round(rand(1, 10) * $days),
+					'order_inquires' => 42,
+					'product_reviews' => round(rand(5, 50) * $days),
+					'new_customers' => round(rand(1, 5) * $days),
+					'online_visitor' => $online_visitor,
+					'active_shopping_cart' => round($online_visitor / 10),
+					'new_registrations' => round(rand(1, 5) * $days),
+					'total_suscribers' => round(rand(200, 2000)),
+					'visits' => $visits,
+					'unique_visitors' => round($visits * 0.6),
+				),
+				'data_trends' => array(
+					'orders_trends' => array('way' => 'down', 'value' => 0.42),
+				),
+				'data_list_small' => array(
+					'dash_traffic_source' => array('prestashop.com' => round($visits / 2), 'google.com' => round($visits / 3), 'Direct Traffic' => round($visits / 4))
+				),
+				'data_chart' => array(
+					'dash_trends_chart1' => array('chart_type' => 'pie_chart_trends', 'data' => array(
+						array('key' => 'prestashop.com', 'y' => round($visits / 2)),
+						array('key' => 'google.com', 'y' => round($visits / 3)),
+						array('key' => 'Direct Traffic', 'y' => round($visits / 4))
+					))
+				)
+			);
+		}
+
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
 		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{
@@ -353,14 +392,14 @@ class Dashactivity extends Module
 		$fields_form['form']['input'][] = array(
 				'label' => $this->l('Cart abandoned (min)'),
 				'desc' => $this->l('Default time range (min) to consider a Shopping cart as abandoned (default 24hrs)'),
-				'name' => 'DASHACTIVITY_CART_ABANDONED_MIN',
+				'name' => 'DASHACTIVITY_CART_ABANDONED',
 				'type' => 'text',
 				'suffix' => $this->l('hrs'),
 				);
 		$fields_form['form']['input'][] = array(
 				'label' => $this->l('Cart abandoned (max)'),
 				'desc' => $this->l('Default time range (max) to consider a Shopping cart as abandoned (default 48hrs)'),
-				'name' => 'DASHACTIVITY_CART_ABANDONED_MAX',
+				'name' => 'DASHACTIVITY_CART_ABANDONED',
 				'type' => 'text',
 				'suffix' => $this->l('hrs'),
 				);

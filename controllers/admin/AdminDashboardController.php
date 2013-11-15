@@ -309,7 +309,13 @@ class AdminDashboardControllerCore extends AdminController
 		
 		die(Tools::jsonEncode(Hook::exec('dashboardData', $params, $id_module, true, true, (int)Tools::getValue('dashboard_use_push'))));
 	}
-	
+
+	public function ajaxProcessSetSimulationMode()
+	{
+		Configuration::updateValue('PS_DASHBOARD_SIMULATION', (int)Tools::getValue('PS_DASHBOARD_SIMULATION'));
+		die ('k'.Configuration::get('PS_DASHBOARD_SIMULATION').'k');
+	}
+
 	public function ajaxProcessGetBlogRss()
 	{
 		$return = array('has_errors' => false, 'rss' => array());
