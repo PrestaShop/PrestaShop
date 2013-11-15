@@ -567,19 +567,22 @@ class AdminPerformanceControllerCore extends AdminController
 		$php_lang = in_array($this->context->language->iso_code, $php_dot_net_supported_langs) ?
 			$this->context->language->iso_code : 'en';
 
-		if (!extension_loaded('memcache'))
+		if (_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcache' && !CacheMemcache::getMemcachedServers())
+			$this->warnings[] = $this->l('To use Memcached, you must configure memcached servers.');
+
+		if (_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcache' && !extension_loaded('memcache'))
 			$this->warnings[] = $this->l('To use Memcached, you must install the Memcache PECL extension on your server.').'
 				<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcache.installation.php" target="_blank">
 					http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcache.installation.php
 				</a>';
-		if (!extension_loaded('apc'))
+		if (_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'apc' && !extension_loaded('apc'))
 		{
 			$this->warnings[] = $this->l('To use APC, you must install the APC PECL extension on your server.').'
 				<a href="http://php.net/manual/'.substr($php_lang, 0, 2).'/apc.installation.php" target="_blank">
 					http://php.net/manual/'.substr($php_lang, 0, 2).'/apc.installation.php
 				</a>';
 		}
-		if (!extension_loaded('xcache'))
+		if (_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'xcache' && !extension_loaded('xcache'))
 			$this->warnings[] = $this->l('To use Xcache, you must install the Xcache extension on your server.').'
 				<a href="http://xcache.lighttpd.net" target="_blank">http://xcache.lighttpd.net</a>';
 
@@ -808,7 +811,7 @@ class AdminPerformanceControllerCore extends AdminController
 						'define(\'_PS_CACHING_SYSTEM_\', \''.$caching_system.'\');',
 						$new_settings
 					);
-					
+
 				if ($cache_active && $caching_system == 'CacheMemcache' && !extension_loaded('memcache'))
 					$this->errors[] = Tools::displayError('To use Memcached, you must install the Memcache PECL extension on your server.').'
 						<a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
