@@ -178,8 +178,10 @@ class AddShareThis extends Module
 	public function hookExtraRight($params)
 	{
 		$cache_id = 'addsharethis_content|'.(int)$this->context->shop->id;
+
 		if (!$this->isCached('addsharethis.tpl', $cache_id))
 		{
+			$data = array();
 			if (Configuration::get('ADDTHISSHARE_TWITTER'))
 				$data['twitter'] = '<span class="st_twitter_hcount sharebtn" displayText="Tweet"></span>';
 
