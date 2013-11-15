@@ -35,6 +35,7 @@ class AddShareThis extends Module
 		$this->author = 'Custom';
 		$this->tab = 'front_office_features';
 		$this->need_instance = 0;
+		$this->bootstrap = true;
 		$this->_directory = dirname(__FILE__);
 		parent::__construct();	
 		$this->displayName = $this->l('Add Sharethis');
@@ -74,7 +75,7 @@ class AddShareThis extends Module
 	
 	public function getContent()
 	{
-		$this->_html .= '<h2>'.$this->displayName.'<span style=" float:right;"></span></h2><div class="clear"></div>';
+		$this->_html = '<h2><img src="'.$this->_path.'logo.png" alt="" title="" /> '.$this->displayName.'</h2>';
 		if (Tools::isSubmit('submitCog'))
 		{
 			$this->updateCog();
@@ -82,34 +83,49 @@ class AddShareThis extends Module
 		}
 
 		$this->_html .= '
-		<fieldset class="space" id="cogField">
-			<legend><img src="'.$this->_path.'logo.png" alt="" title="" /> '.$this->l('Configuration').'</legend>
-			<form id="cogForm" name="cogForm" method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">
-			<br/>
-			<em>'.$this->l('(Key in your account statistic http://sharethis.com)').'</em>
-				<div class="clearfix"></div><br/><br/>
-				<label>'.$this->l('Publisher Pub Key:').'</label>
-				<div class="margin-form">
-					<input type="text" name="conf_row" value="1" id="conf_row" size="60" value="'.Tools::safeOutput(Tools::getValue('conf_row', Configuration::get('CONF_ROW'))).'" />
-				</div><br/><br/>
-				<div class="margin-form">
-					<input style="margin:-8px 20px 0 0;" value="1" type="checkbox" name="Twitter" id="Twitter"'.(Configuration::get('ADDTHISSHARE_TWITTER') ? ' checked="checked"' : '').' />
-					<img  src="'.$this->_path.'img/twitter.gif" />
+		<div class="panel" id="cogField">
+			<h3><i class="icon-cogs"></i> '.$this->l('Configuration').'</h3>
+			<form id="cogForm" name="cogForm" method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" class="form-horizontal">
+				<br/><br/>
+				<div class="form-group">
+					<label class="control-label col-lg-3">'.$this->l('Publisher Pub Key:').'</label>
+					<div class="col-lg-9">
+						<input type="text" name="conf_row" value="1" id="conf_row" size="60" value="'.Tools::safeOutput(Tools::getValue('conf_row', Configuration::get('CONF_ROW'))).'" />
 					</div>
-				<div class="margin-form">
-					<input style="margin:-8px 20px 0 0;" value="1" type="checkbox" name="Google" id="Google"'.(Configuration::get('ADDTHISSHARE_GOOGLE') ? ' checked="checked"' : '').' />
-					<img src="'.$this->_path.'img/google.gif" />
+				</div>
+				<div class="form-group">
+					<div class="col-lg-9 col-lg-push-3">
+						<p class="help-block">'.$this->l('Key in your account statistic http://sharethis.com').'</p>
 					</div>
-				<div class="margin-form">
-					<input style="margin:-8px 20px 0 0;" value="1" type="checkbox" name="Pinterest" id="Pinterest" '.(Configuration::get('ADDTHISSHARE_PINTEREST') ? ' checked="checked"' : '').' />
-					<img src="'.$this->_path.'img/pinterest.gif" />
+				</div>
+				<div class="form-group">
+					<div class="col-lg-9 col-lg-push-3">
+						<input style="margin:-8px 20px 0 0;" value="1" type="checkbox" name="Twitter" id="Twitter"'.(Configuration::get('ADDTHISSHARE_TWITTER') ? ' checked="checked"' : '').' />
+						<img  src="'.$this->_path.'img/twitter.gif" />
 					</div>
-				<div class="margin-form">
-					<input style="margin:-8px 20px 0 0;" value="1" type="checkbox" name="Facebook" id="Facebook"'.(Configuration::get('ADDTHISSHARE_FACEBOOK') ? ' checked="checked"' : '').' />
-					<img src="'.$this->_path.'img/facebook.gif" />
+				</div>
+				<div class="form-group">
+					<div class="col-lg-9 col-lg-push-3">
+						<input style="margin:-8px 20px 0 0;" value="1" type="checkbox" name="Google" id="Google"'.(Configuration::get('ADDTHISSHARE_GOOGLE') ? ' checked="checked"' : '').' />
+						<img src="'.$this->_path.'img/google.gif" />
 					</div>
-				<br/><br/><div class="margin-form">
-					<input type="submit" class="button" name="submitCog" id="submitCog" value="'.$this->l('Save').'" />
+				</div>
+				<div class="form-group">
+					<div class="col-lg-9 col-lg-push-3">
+						<input style="margin:-8px 20px 0 0;" value="1" type="checkbox" name="Pinterest" id="Pinterest" '.(Configuration::get('ADDTHISSHARE_PINTEREST') ? ' checked="checked"' : '').' />
+						<img src="'.$this->_path.'img/pinterest.gif" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-9 col-lg-push-3">
+						<input style="margin:-8px 20px 0 0;" value="1" type="checkbox" name="Facebook" id="Facebook"'.(Configuration::get('ADDTHISSHARE_FACEBOOK') ? ' checked="checked"' : '').' />
+						<img src="'.$this->_path.'img/facebook.gif" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-9 col-lg-push-3">
+						<button type="submit" class="btn btn-default" name="submitCog" id="submitCog"><i class="icon-save"></i> '.$this->l('Save').'</button>
+					</div>
 				</div>
 			</form>
 		</fieldset>';
