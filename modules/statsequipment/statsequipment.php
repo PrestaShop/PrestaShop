@@ -143,10 +143,7 @@ class StatsEquipment extends ModuleGraph
 		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
 		<h2>'.$this->l('Ensure that your website is accessible to all.').'</h2>
 			<p>
-				'.$this->l('When managing Websites, it is important to keep track of software used by visitors in order to be sure that the site displays the same way for everyone. 
-					PrestaShop was built in order to be compatible with most recent Web browsers and computer operating systems (OS). 
-					However, because you may end up adding advanced features to your Website or even modify the core PrestaShop code, these additions may not be accessible by everyone. 
-					That is why it is a good idea to keep tabs on the percentage of users for each type of software before adding or changing something that only a limited number of users will be able to access.').'
+				'.$this->l('When managing Websites, it is important to keep track of software used by visitors in order to be sure that the site displays the same way for everyone. PrestaShop was built in order to be compatible with most recent Web browsers and computer operating systems (OS). However, because you may end up adding advanced features to your Website or even modify the core PrestaShop code, these additions may not be accessible by everyone. That is why it is a good idea to keep tabs on the percentage of users for each type of software before adding or changing something that only a limited number of users will be able to access.').'
 			</p><br />
 			
 		</div>';
