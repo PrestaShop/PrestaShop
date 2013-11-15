@@ -116,6 +116,7 @@ class CategoryControllerCore extends FrontController
 
 		$this->context->smarty->assign(array(
 			'category' => $this->category,
+			'description_short' => Tools::truncateString($this->category->description),
 			'products' => (isset($this->cat_products) && $this->cat_products) ? $this->cat_products : null,
 			'id_category' => (int)$this->category->id,
 			'id_category_parent' => (int)$this->category->id_parent,
