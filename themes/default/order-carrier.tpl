@@ -211,7 +211,6 @@
 										{/if}
 										{* This foreach is on one line, to avoid tabulation in the title attribute of the acronym *}
 										{foreach $carrier.product_list as $product}
-{}
 										{if $product@index == 4}<acronym title="{/if}{if $product@index >= 4}{$product.name}{if isset($product.attributes) && $product.attributes} {$product.attributes|escape:'htmlall':'UTF-8'}{/if}{if !$product@last}, {else}">...</acronym>){/if}{else}{$product.name}{if isset($product.attributes) && $product.attributes} {$product.attributes|escape:'htmlall':'UTF-8'}{/if}{if !$product@last}, {else}){/if}{/if}{/foreach}
 									{/if}
 								</td>
