@@ -67,7 +67,6 @@ class BlockCategories extends Module
 			!$this->registerHook('actionAdminMetaControllerUpdate_optionsBefore') ||
 			!$this->registerHook('actionAdminLanguagesControllerStatusBefore') ||
 			!$this->registerHook('displayBackOfficeCategory') ||
-			!$this->registerHook('displayTop') ||
 			!Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', 4) ||
 			!Configuration::updateValue('BLOCK_CATEG_DHTML', 1))
 			return false;
@@ -128,26 +127,15 @@ class BlockCategories extends Module
 			foreach ($resultParents[$id_category] as $subcat)
 				$children[] = $this->getTree($resultParents, $resultIds, $maxDepth, $subcat['id_category'], $currentDepth + 1);
 
-		$category = new Category($id_category);
-		$thumbnails = array();
-
-		if ($category->level_depth == 2)
-		{
-			$files = scandir(_PS_CAT_IMG_DIR_);
-
-			foreach ($files as $file)
-				if (preg_match('/'.$id_category.'-([0-9])?_thumb.jpg/i', $file) === 1)
-					$thumbnails[] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.$file, 'category_'.$file, 100, 'jpg', true, true);
-
-		}
+		if (!isset($resultIds[$id_category]))
+			return false;
 		
 		$return = array(
 			'id' => $id_category,
-			'link' => $this->context->link->getCategoryLink($id_category, $category->link_rewrite[(int)$this->context->language->id]),
-			'name' =>  $category->name[(int)$this->context->language->id],
-			'desc'=>  $category->description[(int)$this->context->language->id],
-			'children' => $children,
-			'thumbnails' => $thumbnails
+			'link' => $this->context->link->getCategoryLink($id_category, $resultIds[$id_category]['link_rewrite']),
+			'name' =>  $resultIds[$id_category]['name'],
+			'desc'=>  $resultIds[$id_category]['description'],
+			'children' => $children
 		);
 
 		return $return;
@@ -179,13 +167,6 @@ class BlockCategories extends Module
 		return $this->display(__FILE__, 'views/blockcategories_admin.tpl');
 	}
 
-	public function hookDisplayTop($params)
-	{
-		$params['is_top_menu'] = true;
-		$this->smarty->assign('numberColumn', 3);
-		return $this->hookLeftColumn($params);
-	}
-
 	public function hookLeftColumn($params)
 	{
 		$category = false;
@@ -202,7 +183,7 @@ class BlockCategories extends Module
 		}
 	
 		$cacheId = $this->getCacheId($category ? $category->id : null);
-		if (!$this->isCached('blockcategories'.((isset($params['is_top_menu']) && $params['is_top_menu']) ? '_top' : '').'.tpl', $cacheId))
+		if (!$this->isCached('blockcategories.tpl', $cacheId))
 		{
 			$range = '';
 			$maxdepth = Configuration::get('BLOCK_CATEG_MAX_DEPTH');
@@ -248,7 +229,7 @@ class BlockCategories extends Module
 			else
 				$this->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
 		}
-		return $this->display(__FILE__, 'blockcategories'.((isset($params['is_top_menu']) && $params['is_top_menu']) ? '_top' : '').'.tpl', $cacheId);
+		return $this->display(__FILE__, 'blockcategories.tpl', $cacheId);
 	}
 
 	protected function getCacheId($name = null)
