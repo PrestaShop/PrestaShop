@@ -1215,6 +1215,134 @@ class ToolsCore
 	 	return (utf8_encode(substr($str, 0, $max_length - Tools::strlen($suffix)).$suffix));
 	}
 
+	/*Copied from CakePHP String utility file*/
+	public static function truncateString($text, $length = 120, $options = array())
+	{
+		$default = array(
+			'ellipsis' => '...', 'exact' => true, 'html' => true
+		);
+
+		if (isset($options['ending']))
+			$default['ellipsis'] = $options['ending'];
+		elseif (!empty($options['html']) && Configure::read('App.encoding') === 'UTF-8')
+			$default['ellipsis'] = "\xe2\x80\xa6";
+
+		$options = array_merge($default, $options);
+		extract($options);
+
+		if ($html)
+		{
+			if (Tools::strlen(preg_replace('/<.*?>/', '', $text)) <= $length) 
+				return $text;
+
+			$totalLength = Tools::strlen(strip_tags($ellipsis));
+			$openTags = array();
+			$truncate = '';
+			preg_match_all('/(<\/?([\w+]+)[^>]*>)?([^<>]*)/', $text, $tags, PREG_SET_ORDER);
+
+			foreach ($tags as $tag)
+			{
+				if (!preg_match('/img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param/s', $tag[2]))
+				{
+					if (preg_match('/<[\w]+[^>]*>/s', $tag[0]))
+						array_unshift($openTags, $tag[2]);
+					elseif (preg_match('/<\/([\w]+)[^>]*>/s', $tag[0], $closeTag))
+					{
+						$pos = array_search($closeTag[1], $openTags);
+						if ($pos !== false)
+							array_splice($openTags, $pos, 1);
+					}
+				}
+				$truncate .= $tag[1];
+				$contentLength = Tools::strlen(preg_replace('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', ' ', $tag[3]));
+
+				if ($contentLength + $totalLength > $length)
+				{
+					$left = $length - $totalLength;
+					$entitiesLength = 0;
+
+					if (preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $tag[3], $entities, PREG_OFFSET_CAPTURE))
+					{
+						foreach ($entities[0] as $entity)
+						{
+							if ($entity[1] + 1 - $entitiesLength <= $left)
+							{
+								$left--;
+								$entitiesLength += Tools::strlen($entity[0]);
+							}
+							else
+								break;
+						}
+					}
+
+					$truncate .= Tools::substr($tag[3], 0, $left + $entitiesLength);
+					break;
+				}
+				else
+				{
+					$truncate .= $tag[3];
+					$totalLength += $contentLength;
+				}
+
+				if ($totalLength >= $length)
+					break;
+			}
+		}
+		else
+		{
+			if (Tools::strlen($text) <= $length)
+				return $text;
+
+			$truncate = Tools::substr($text, 0, $length - Tools::strlen($ellipsis));
+		}
+
+		if (!$exact)
+		{
+			$spacepos = mb_strrpos($truncate, ' ');
+			if ($html)
+			{
+				$truncateCheck = Tools::substr($truncate, 0, $spacepos);
+				$lastOpenTag = Tools::strrpos($truncateCheck, '<');
+				$lastCloseTag =  Tools::strrpos($truncateCheck, '>');
+
+				if ($lastOpenTag > $lastCloseTag)
+				{
+					preg_match_all('/<[\w]+[^>]*>/s', $truncate, $lastTagMatches);
+					$lastTag = array_pop($lastTagMatches[0]);
+					$spacepos =  Tools::strrpos($truncate, $lastTag) + Tools::strlen($lastTag);
+				}
+
+				$bits = Tools::substr($truncate, $spacepos);
+				preg_match_all('/<\/([a-z]+)>/', $bits, $droppedTags, PREG_SET_ORDER);
+
+				if (!empty($droppedTags))
+				{
+					if (!empty($openTags))
+					{
+						foreach ($droppedTags as $closingTag)
+							if (!in_array($closingTag[1], $openTags))
+								array_unshift($openTags, $closingTag[1]);
+					}
+					else
+					{
+						foreach ($droppedTags as $closingTag)
+							$openTags[] = $closingTag[1];
+					}
+				}
+			}
+
+			$truncate = Tools::substr($truncate, 0, $spacepos);
+		}
+
+		$truncate .= $ellipsis;
+
+		if ($html)
+			foreach ($openTags as $tag)
+				$truncate .= '</' . $tag . '>';
+
+		return $truncate;
+	}
+
 	/**
 	* Generate date form
 	*
@@ -1312,6 +1440,13 @@ class ToolsCore
 			return mb_substr($str, (int)$start, ($length === false ? Tools::strlen($str) : (int)$length), $encoding);
 		return substr($str, $start, ($length === false ? Tools::strlen($str) : (int)$length));
 	}
+
+	public static function strrpos($str, $find, $offset = 0, $encoding = 'utf-8')
+	{
+		if (function_exists('mb_strrpos'))
+			return mb_strrpos($str, $find, $offset, $encoding);
+		return strrpos($str, $find, $offset);
+	}	
 
 	public static function ucfirst($str)
 	{
