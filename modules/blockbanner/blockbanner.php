@@ -64,7 +64,8 @@ class BlockBanner extends Module
 	{
 		if (!$this->isCached('blockbanner.tpl', $this->getCacheId()))
 		{
-			$this->smarty->assign('banner_img', Configuration::get('BLOCKBANNER_IMG'));
+			if (file_exists(_PS_MODULE_DIR_.'blockbanner'.DIRECTORY_SEPARATOR.Configuration::get('BLOCKBANNER_IMG')))
+				$this->smarty->assign('banner_img', Configuration::get('BLOCKBANNER_IMG'));
 			$this->smarty->assign('banner_link', Configuration::get('BLOCKBANNER_LINK'));
 			$this->smarty->assign('banner_desc', Configuration::get('BLOCKBANNER_DESC'));
 			$sql = 'SELECT COUNT(*)

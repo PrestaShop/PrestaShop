@@ -26,11 +26,15 @@
 <!-- Block stores module -->
 <div id="banner_block_top">
 	<div class="banner-top">
-    <div class="container">
-      <a href="{$banner_link}" title="{$banner_desc}">
-        <img src="{$module_dir}{$banner_img}" alt="{$banner_desc}"/>
-      </a>
-    </div>
+	<div class="container">
+	  <a href="{$banner_link}" title="{$banner_desc}">
+		{if isset($banner_img)}
+			<img src="{$module_dir}{$banner_img}" alt=""/>
+		{else}
+			{$banner_desc}
+		{/if}
+	  </a>
+	</div>
   </div>
 </div>
 <!-- /Block stores module -->
