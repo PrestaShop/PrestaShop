@@ -353,14 +353,14 @@ class Dashactivity extends Module
 		$fields_form['form']['input'][] = array(
 				'label' => $this->l('Cart abandoned (min)'),
 				'desc' => $this->l('Default time range (min) to consider a Shopping cart as abandoned (default 24hrs)'),
-				'name' => 'DASHACTIVITY_CART_ABANDONED',
+				'name' => 'DASHACTIVITY_CART_ABANDONED_MIN',
 				'type' => 'text',
 				'suffix' => $this->l('hrs'),
 				);
 		$fields_form['form']['input'][] = array(
 				'label' => $this->l('Cart abandoned (max)'),
 				'desc' => $this->l('Default time range (max) to consider a Shopping cart as abandoned (default 48hrs)'),
-				'name' => 'DASHACTIVITY_CART_ABANDONED',
+				'name' => 'DASHACTIVITY_CART_ABANDONED_MAX',
 				'type' => 'text',
 				'suffix' => $this->l('hrs'),
 				);
