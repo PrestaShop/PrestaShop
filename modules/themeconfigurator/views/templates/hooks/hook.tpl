@@ -1,7 +1,7 @@
-{if isset($htmlitems.items) && $htmlitems.items}
-<div id="htmlcontent_home">
+{if isset($htmlitems) && $htmlitems}
+<div id="htmlcontent_{$hook}">
     <ul class="htmlcontent-home clearfix row">
-        {foreach name=items from=$htmlitems.items item=hItem}
+        {foreach name=items from=$htmlitems item=hItem}
         	<li class="htmlcontent-item col-xs-4">
             	{if $hItem.url}
                 	<a href="{$hItem.url}" class="item-link"{if $hItem.target == 1} target="_blank"{/if}>
