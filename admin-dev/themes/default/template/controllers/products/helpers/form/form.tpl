@@ -106,7 +106,6 @@
 
 		$(document).ready(function()
 		{
-			$('#product-tab-content-wait').show();
 			//product_type = $("input[name=type_product]:checked").val();
 			if (product_type == product_type_pack)
 			{
