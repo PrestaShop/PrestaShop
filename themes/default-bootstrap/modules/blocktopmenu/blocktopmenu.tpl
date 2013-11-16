@@ -61,7 +61,7 @@
 			}
 		}
 		
-		function resposiveMenu(){
+		function responsiveMenu(){
 		   if ($(document).width() <= 767 && responsiveflagMenu == false){
 				menuChange('enable'),
 				responsiveflagMenu = true	
@@ -71,8 +71,8 @@
 				responsiveflagMenu = false
 			}
 		}
-		$(document).ready(resposiveMenu);
-		$(window).resize(resposiveMenu);
+		$(document).ready(responsiveMenu);
+		$(window).resize(responsiveMenu);
 	</script>
      {/literal}
 {/if}
