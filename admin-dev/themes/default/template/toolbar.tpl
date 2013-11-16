@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="toolbar-placeholder">
+<div id="{$table}_toolbar" class="toolbar-placeholder">
 	<div class="toolbarBox {if $toolbar_scroll}toolbarHead{/if}">
 		{block name=toolbarBox}
 			<ul class="cc_button">
@@ -52,7 +52,7 @@
 				var modules_list_loaded = false;
 				$(function() {
 					//get reference on save link
-					btn_save = $('span[class~="process-icon-save"]').parent();
+					btn_save = $('#{$table}_toolbar span[class~="process-icon-save"]').parent();
 
 					//get reference on form submit button
 					btn_submit = $('#{$table}_form_submit_btn');
@@ -93,6 +93,9 @@
 						//submit the form
 						{block name=formSubmit}
 							btn_save.click(function() {
+								// Vars
+								var btn_submit = $('#{$table}_form_submit_btn');
+
 								// Avoid double click
 								if (submited)
 									return false;
