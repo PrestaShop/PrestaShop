@@ -90,6 +90,7 @@ $(document).ready(function() {
 {include file="$tpl_dir./errors.tpl"}
 {assign var='stateExist' value=false}
 {assign var="postCodeExist" value=false}
+{assign var="dniExist" value=false}
 {if !isset($email_create)}
 	<script type="text/javascript">
 	{literal}
@@ -315,7 +316,9 @@ $(document).ready(function() {
 								<input type="text" class="text" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{/if}" />
 							</p>
 						</div>
-						<p class="required text dni">
+					{elseif $field_name eq "dni"}
+					{assign var='dniExist' value=true}
+						<p class="text">
 							<label for="dni">{l s='Identification number'}</label>
 							<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{/if}" />
 							<span class="form_info">{l s='DNI / NIF / NIE'}</span>
@@ -359,6 +362,12 @@ $(document).ready(function() {
 						</p>
 					{/if}
 				{/foreach}
+				{if $postCodeExist eq false}
+					<p class="required postcode text hidden">
+						<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
+						<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());" />
+					</p>
+				{/if}
 				{if $stateExist eq false}
 					<p class="required id_state select hidden">
 						<label for="id_state">{l s='State'} <sup>*</sup></label>
@@ -367,11 +376,12 @@ $(document).ready(function() {
 						</select>
 					</p>
 				{/if}
-				{if $postCodeExist eq false}
-					<p class="required postcode text hidden">
-						<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
-						<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());" />
-					</p>
+				{if $dniExist eq false}
+				<p class="required text dni">
+					<label for="dni">{l s='Identification number'} <sup>*</sup></label>
+					<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{/if}" />
+					<span class="form_info">{l s='DNI / NIF / NIE'}</span>
+				</p>
 				{/if}
 				<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}text">
 					<label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
@@ -386,6 +396,7 @@ $(document).ready(function() {
 				<div id="opc_invoice_address" class="hidden">
 					{assign var=stateExist value=false}
 					{assign var=postCodeExist value=false}
+					{assign var=dniExist value=false}
 					<h3>{l s='Invoice address'}</h3>
 					{foreach from=$inv_all_fields item=field_name}
 					{if $field_name eq "company" &&  $b2b_enable}
@@ -400,8 +411,10 @@ $(document).ready(function() {
 							<input type="text" class="text" id="vat_number_invoice" name="vat_number_invoice" value="{if isset($smarty.post.vat_number_invoice)}{$smarty.post.vat_number_invoice}{/if}" />
 						</p>
 					</div>
-					<p class="required text dni_invoice">
-						<label for="dni">{l s='Identification number'}</label>
+					{elseif $field_name eq "dni"}
+					{assign var=dniExist value=true}
+					<p class="text">
+						<label for="dni_invoice">{l s='Identification number'}</label>
 						<input type="text" class="text" name="dni_invoice" id="dni_invoice" value="{if isset($smarty.post.dni_invoice)}{$smarty.post.dni_invoice}{/if}" />
 						<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 					</p>
@@ -463,6 +476,13 @@ $(document).ready(function() {
 						<select name="id_state_invoice" id="id_state_invoice">
 							<option value="">-</option>
 						</select>
+					</p>
+					{/if}
+					{if !$dniExist}
+					<p class="required text dni_invoice">
+						<label for="dni_invoice">{l s='Identification number'} <sup>*</sup></label>
+						<input type="text" class="text" name="dni_invoice" id="dni_invoice" value="{if isset($smarty.post.dni_invoice)}{$smarty.post.dni_invoice}{/if}" />
+						<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 					</p>
 					{/if}
 					<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}text">
