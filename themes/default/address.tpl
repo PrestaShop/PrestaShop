@@ -89,14 +89,18 @@ $(function(){ldelim}
 <form action="{$link->getPageLink('address', true)|escape:'html'}" method="post" class="std" id="add_address">
 	<fieldset>
 		<h3>{if isset($id_address)}{l s='Your address'}{else}{l s='New address'}{/if}</h3>
-		<p class="required text dni">
-			<label for="dni">{l s='Identification number'} <sup>*</sup></label>
+	{assign var="stateExist" value=false}
+	{assign var="postCodeExist" value=false}
+	{assign var="dniExist" value=false}
+	{foreach from=$ordered_adr_fields item=field_name}
+		{if $field_name eq 'dni'}
+		{assign var="dniExist" value=true}
+		<p class="text">
+			<label for="dni">{l s='Identification number'}</label>
 			<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{else}{if isset($address->dni)}{$address->dni|escape:'html'}{/if}{/if}" />
 			<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 		</p>
-	{assign var="stateExist" value=false}
-	{assign var="postCodeExist" value=false}
-	{foreach from=$ordered_adr_fields item=field_name}
+		{/if}
 		{if $field_name eq 'company'}
 		<p class="text">
 			<label for="company">{l s='Company'}</label>
@@ -208,6 +212,13 @@ $(function(){ldelim}
 			<select name="id_state" id="id_state">
 				<option value="">-</option>
 			</select>
+		</p>
+		{/if}
+		{if !$dniExist}
+		<p class="required text dni">
+			<label for="dni">{l s='Identification number'} <sup>*</sup></label>
+			<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{else}{if isset($address->dni)}{$address->dni|escape:'html'}{/if}{/if}" />
+			<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 		</p>
 		{/if}
 		<p class="textarea">

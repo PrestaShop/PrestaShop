@@ -182,12 +182,27 @@
 				<h3>{l s='Delivery address'}</h3>
 				{$stateExist = false}
 				{$postCodeExist = false}
+				{$dniExist = false}
 				{foreach from=$dlv_all_fields item=field_name}
 				{if $field_name eq "company" && $b2b_enable}
+				<p class="text">
+					<label for="company">{l s='Company'}</label>
+					<input type="text" class="text" id="company" name="company" value="{if isset($guestInformations) && $guestInformations.company}{$guestInformations.company}{/if}" />
+				</p>
+				{elseif $field_name eq "vat_number"}	
+				<div id="vat_number_block" style="display:none;">
 					<p class="text">
-						<label for="company">{l s='Company'}</label>
-						<input type="text" class="text" id="company" name="company" value="{if isset($guestInformations) && $guestInformations.company}{$guestInformations.company}{/if}" />
+						<label for="vat_number">{l s='VAT number'}</label>
+						<input type="text" class="text" name="vat_number" id="vat_number" value="{if isset($guestInformations) && $guestInformations.vat_number}{$guestInformations.vat_number}{/if}" />
 					</p>
+				</div>
+				{elseif $field_name eq "dni"}
+				{assign var='dniExist' value=true}
+				<p class="text">
+					<label for="dni">{l s='Identification number'}</label>
+					<input type="text" class="text" name="dni" id="dni" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
+					<span class="form_info">{l s='DNI / NIF / NIE'}</span>
+				</p>
 				{elseif $field_name eq "firstname"}
 				<p class="required text">
 					<label for="firstname">{l s='First name'} <sup>*</sup></label>
@@ -228,13 +243,6 @@
 						{/foreach}
 					</select>
 				</p>
-				{elseif $field_name eq "vat_number"}	
-				<div id="vat_number_block" style="display:none;">
-					<p class="text">
-						<label for="vat_number">{l s='VAT number'}</label>
-						<input type="text" class="text" name="vat_number" id="vat_number" value="{if isset($guestInformations) && $guestInformations.vat_number}{$guestInformations.vat_number}{/if}" />
-					</p>
-				</div>
 				{elseif $field_name eq "state" || $field_name eq 'State:name'}
 				{$stateExist = true}
 				<p class="required id_state select" style="display:none;">
@@ -245,11 +253,6 @@
 				</p>
 				{/if}
 				{/foreach}
-				<p class="required text dni">
-					<label for="dni">{l s='Identification number'} <sup>*</sup></label>
-					<input type="text" class="text" name="dni" id="dni" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
-					<span class="form_info">{l s='DNI / NIF / NIE'}</span>
-				</p>
 				{if !$postCodeExist}
 				<p class="required postcode text hidden">
 					<label for="postcode">{l s='Zip / Postal code'} <sup>*</sup></label>
@@ -263,7 +266,14 @@
 						<option value="">-</option>
 					</select>
 				</p>
-				{/if}				
+				{/if}
+				{if !$dniExist}
+				<p class="required text dni">
+					<label for="dni">{l s='Identification number'} <sup>*</sup></label>
+					<input type="text" class="text" name="dni" id="dni" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
+					<span class="form_info">{l s='DNI / NIF / NIE'}</span>
+				</p>
+				{/if}
 				<p class="textarea is_customer_param">
 					<label for="other">{l s='Additional information'}</label>
 					<textarea name="other" id="other" cols="26" rows="3"></textarea>
@@ -289,6 +299,7 @@
 				<div id="opc_invoice_address" class="is_customer_param">
 					{assign var=stateExist value=false}
 					{assign var=postCodeExist value=false}
+					{assign var=dniExist value=false}
 					<h3>{l s='Invoice address'}</h3>
 					{foreach from=$inv_all_fields item=field_name}
 					{if $field_name eq "company" &&  $b2b_enable}
@@ -303,8 +314,10 @@
 							<input type="text" class="text" id="vat_number_invoice" name="vat_number_invoice" value="" />
 						</p>
 					</div>
-					<p class="required text dni_invoice">
-						<label for="dni">{l s='Identification number'} <sup>*</sup></label>
+					{elseif $field_name eq "dni"}
+					{assign var='dniExist' value=true}
+					<p class="text">
+						<label for="dni_invoice">{l s='Identification number'}</label>
 						<input type="text" class="text" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni_invoice}{$guestInformations.dni_invoice}{/if}" />
 						<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 					</p>
@@ -371,6 +384,13 @@
 						<select name="id_state_invoice" id="id_state_invoice">
 							<option value="">-</option>
 						</select>
+					</p>
+					{/if}
+					{if !$dniExist}
+					<p class="required text dni_invoice">
+						<label for="dni_invoice">{l s='Identification number'} <sup>*</sup></label>
+						<input type="text" class="text" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni_invoice}{$guestInformations.dni_invoice}{/if}" />
+						<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 					</p>
 					{/if}
 					<p class="textarea is_customer_param">
