@@ -257,13 +257,13 @@ function wishlistProductsIdsRemove(id){
         wishlistProductsIds.splice($.inArray(parseInt(id),wishlistProductsIds), 1)
 }
 function wishlistRefreshStatus(){
-        $('.addToWishlist').each(function() {
-                if ($.inArray(parseInt($(this).prop('rel')),wishlistProductsIds)!= -1){
-                        $(this).addClass('ckecked');
-                }
-                else
-                        $(this).removeClass('ckecked');
-    });        
+$('.addToWishlist').each(function() {
+	if ($.inArray(parseInt($(this).prop('rel')),wishlistProductsIds)!= -1){
+		$(this).addClass('checked');
+	}
+	else
+		$(this).removeClass('checked');
+	});        
 }
 $(document).ready(function() {
         if (typeof wishlistProductsIds == 'undefined') {
