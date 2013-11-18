@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<entity_category>
+  <category id="Women" id_shop="1">
+    <name>Women</name>
+    <description></description>
+    <link_rewrite>women</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Coats_and_Jackets" id_shop="1">
+    <name>Coats and Jackets</name>
+    <description></description>
+    <link_rewrite>coats-jackets</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Coats" id_shop="1">
+    <name>Coats</name>
+    <description></description>
+    <link_rewrite>coats</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Jackets" id_shop="1">
+    <name>Jackets</name>
+    <description></description>
+    <link_rewrite>jackets</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Blazers" id_shop="1">
+    <name>Blazers</name>
+    <description></description>
+    <link_rewrite>blazers</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Puffer_Jackets" id_shop="1">
+    <name>Puffer Jackets</name>
+    <description></description>
+    <link_rewrite>puffer-jackets</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Leather_Jackets" id_shop="1">
+    <name>Leather Jackets</name>
+    <description></description>
+    <link_rewrite>leather-jackets</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Tops" id_shop="1">
+    <name>Tops</name>
+    <description></description>
+    <link_rewrite>tops</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="T-shirts" id_shop="1">
+    <name>T-shirts</name>
+    <description></description>
+    <link_rewrite>tshirts</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Tops_2" id_shop="1">
+    <name>Tops</name>
+    <description></description>
+    <link_rewrite>top</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Blouses" id_shop="1">
+    <name>Blouses</name>
+    <description></description>
+    <link_rewrite>blouses</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Pants" id_shop="1">
+    <name>Pants</name>
+    <description></description>
+    <link_rewrite>pants</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Skinny_Cut" id_shop="1">
+    <name>Skinny Cut</name>
+    <description></description>
+    <link_rewrite>skinny-cut</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category><category id="Straight_Cut" id_shop="1">
+    <name>Straight Cut</name>
+    <description></description>
+    <link_rewrite>straight-cut</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category><category id="Dresses" id_shop="1">
+    <name>Dresses</name>
+    <description></description>
+    <link_rewrite>dresses</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Casual_Dresses" id_shop="1">
+    <name>Casual Dresses</name>
+    <description></description>
+    <link_rewrite>casual-dresses</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Evening_Dresses" id_shop="1">
+    <name>Evening Dresses</name>
+    <description></description>
+    <link_rewrite>evening-dresses</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Summer_Dresses" id_shop="1">
+    <name>Summer Dresses</name>
+    <description></description>
+    <link_rewrite>summer-dresses</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Accessories" id_shop="1">
+    <name>Accessories</name>
+    <description></description>
+    <link_rewrite>accessories</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Belts" id_shop="1">
+    <name>Belts</name>
+    <description></description>
+    <link_rewrite>belts</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Hats" id_shop="1">
+    <name>Hats</name>
+    <description></description>
+    <link_rewrite>hats</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Handbags" id_shop="1">
+    <name>Handbags</name>
+    <description></description>
+    <link_rewrite>handbags</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Shoes" id_shop="1">
+    <name>Shoes</name>
+    <description></description>
+    <link_rewrite>shoes</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+<category id="Men" id_shop="1">
+    <name>Men</name>
+    <description></description>
+    <link_rewrite>men</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>  
+</entity_category>
