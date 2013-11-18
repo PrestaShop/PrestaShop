@@ -41,10 +41,10 @@
 			  <i class="icon-caret-down pull-right"></i> 
 			</p>
 		</div>
-		{if isset($themes_colors)}
+		{if isset($themes)}
 		<div id="color-box">
 			<ul>
-				{foreach $themes_colors as $theme}
+				{foreach $themes as $theme}
 				<li class="{$theme}">
 					<div class="color-theme1 color1"></div>
 					<div class="color-theme2 color2"> </div>
@@ -60,20 +60,8 @@
 			</p>
 		</div>
 		<div id="font-box">
-			<p>{l s='Text page' mod='themeconfigurator'}</p>
+			<p>{l s='Global' mod='themeconfigurator'}</p>
 			<select name="text-page-font" class="font-list">
-				{foreach $themes_fonts as $key => $font}
-				<option value="{$key}">{$font}</option>
-				{/foreach}
-			</select>
-			<p>{l s='Text menu parrent normal' mod='themeconfigurator'}</p>
-			<select name="text-menu-font" class="font-list">
-				{foreach $themes_fonts as $key => $font}
-				<option value="{$key}">{$font}</option>
-				{/foreach}
-			</select>
-			<p>{l s='Product name' mod='themeconfigurator'}</p>
-			<select name="product-name-font" class="font-list">
 				{foreach $themes_fonts as $key => $font}
 				<option value="{$key}">{$font}</option>
 				{/foreach}
