@@ -29,7 +29,7 @@
 	<div class="container">
 	  <a href="{$banner_link}" title="{$banner_desc}">
 		{if isset($banner_img)}
-			<img src="{$module_dir}{$banner_img}" alt=""/>
+			<img class="img-responsive" src="{$module_dir}{$banner_img}" alt=""/>
 		{else}
 			{$banner_desc}
 		{/if}

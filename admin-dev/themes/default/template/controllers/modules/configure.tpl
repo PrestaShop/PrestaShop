@@ -24,7 +24,7 @@
 *}
 <div class="page-head">
 	<h2 class="page-title">
-		{l s='Configure'} : {$module_display_name} ({$module_name}}
+		{l s='Configure:'} {$module_display_name} ({$module_name})
 	</h2>
 	<div class="page-bar toolbarBox">
 		<div class="btn-toolbar">
