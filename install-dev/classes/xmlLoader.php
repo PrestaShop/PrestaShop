@@ -84,7 +84,7 @@ class InstallXmlLoader
 	public function setFixturesPath($path = null)
 	{
 		if ($path === null)
-			$path = _PS_INSTALL_FIXTURES_PATH_.'apple/';
+			$path = _PS_INSTALL_FIXTURES_PATH_.'fashion/';
 
 		$this->path_type = 'fixture';
 		$this->data_path = $path.'data/';
@@ -595,7 +595,7 @@ class InstallXmlLoader
 			$dst_path =  _PS_IMG_DIR_.$p.'/';
 			$entity_id = $this->retrieveId($entity, $identifier);
 
-			if (!copy($from_path.$identifier.'.'.$extension, $dst_path.$entity_id.'.'.$extension))
+			if (!@copy($from_path.$identifier.'.'.$extension, $dst_path.$entity_id.'.'.$extension))
 			{
 				$this->setError($this->language->l('Cannot create image "%1$s" for entity "%2$s"', $identifier, $entity));
 				return;

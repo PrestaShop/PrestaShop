@@ -6,7 +6,7 @@
   </fields>
   <entities>
     <image id="51714665" id_product="Fur_Coat" cover="1"/>
-    <image id="51714391" id_product="Fut_Coat" cover="0"/>
+    <image id="51714391" id_product="Fur_Coat" cover="0"/>
 	<image id="52168484" id_product="Textured_Trench_Coat" cover="1"/>
     <image id="52168280" id_product="Textured_Trench_Coat" cover="0"/>
 	<image id="47282631" id_product="Slim_Cut_Coat" cover="1"/>

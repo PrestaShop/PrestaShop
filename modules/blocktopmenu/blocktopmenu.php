@@ -66,7 +66,7 @@ class Blocktopmenu extends Module
 	{
 		if (!parent::install() ||
 			!$this->registerHook('displayTop') ||
-			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_ITEMS', 'CAT1,CMS1,CMS2,PRD1') ||
+			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_ITEMS', 'CAT3,CAT26') ||
 			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_SEARCH', '1') ||
 			!$this->registerHook('actionObjectCategoryUpdateAfter') ||
 			!$this->registerHook('actionObjectCategoryDeleteAfter') ||

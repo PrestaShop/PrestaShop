@@ -7,11 +7,11 @@
   <entities>
     <category id="Women" id_parent="Home" active="1"/>    
     <category id="Coats_and_Jackets" id_parent="Women" active="1"/>
-    <category id="Coats" id_parent="Coats and Jackets" active="1"/>
-    <category id="Jackets" id_parent="Coats and Jackets" active="1"/>
-    <category id="Blazers" id_parent="Coats and Jackets" active="1"/>
-    <category id="Puffer_Jackets" id_parent="Coats and Jackets" active="1"/>
-    <category id="Leather_Jackets" id_parent="Coats and Jackets" active="1"/>
+    <category id="Coats" id_parent="Coats_and_Jackets" active="1"/>
+    <category id="Jackets" id_parent="Coats_and_Jackets" active="1"/>
+    <category id="Blazers" id_parent="Coats_and_Jackets" active="1"/>
+    <category id="Puffer_Jackets" id_parent="Coats_and_Jackets" active="1"/>
+    <category id="Leather_Jackets" id_parent="Coats_and_Jackets" active="1"/>
     <category id="Tops" id_parent="Women" active="1"/>
     <category id="T-shirts" id_parent="Tops" active="1"/>
     <category id="Tops_2" id_parent="Tops" active="1"/>
@@ -28,6 +28,6 @@
     <category id="Hats" id_parent="Accessories" active="1"/>
     <category id="Handbags" id_parent="Accessories" active="1"/>
     <category id="Shoes" id_parent="Accessories" active="1"/>
-	<category id="Men" id_parent="Home" active="1"/>
+	<category id="Men" id_parent="Home" active="0"/>
   </entities>
 </entity_category>
