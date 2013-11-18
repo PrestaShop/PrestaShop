@@ -103,7 +103,7 @@
 						<select name="{$list_id}_pagination" onchange="submit()">
 							{* Choose number of results per page *}
 							{foreach $pagination AS $value}
-								<option value="{$value|intval}"{if $selected_pagination == $value} selected="selected" {elseif $selected_pagination == NULL && $value == $pagination[1]} selected="selected2"{/if}>{$value|intval}</option>
+								<option value="{$value|intval}"{if $selected_pagination == $value && $selected_pagination != NULL} selected="selected"{elseif $selected_pagination == NULL && $value == $pagination[1]} selected="selected2"{/if}>{$value|intval}</option>
 							{/foreach}
 						</select>
 						/ {$list_total} {l s='result(s)'}
@@ -188,8 +188,8 @@
 										{if $params.type == 'bool'}
 											<select onchange="$('#submitFilterButton{$list_id}').focus();$('#submitFilterButton{$list_id}').click();" name="{$list_id}Filter_{$key}">
 												<option value="">-</option>
-												<option value="1" {if $params.value == 1} selected="selected" {/if}>{l s='Yes'}</option>
-												<option value="0" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>{l s='No'}</option>
+												<option value="1"{if $params.value == 1} selected="selected"{/if}>{l s='Yes'}</option>
+												<option value="0"{if $params.value == 0 && $params.value != ''} selected="selected"{/if}>{l s='No'}</option>
 											</select>
 										{elseif $params.type == 'date' || $params.type == 'datetime'}
 											{l s='From'} <input type="text" class="filter datepicker" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}"{if isset($params.width)} style="width:70px"{/if}/><br />
@@ -197,10 +197,10 @@
 										{elseif $params.type == 'select'}
 											{if isset($params.filter_key)}
 												<select onchange="$('#submitFilterButton{$list_id}').focus();$('#submitFilterButton{$list_id}').click();" name="{$list_id}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
-													<option value="" {if $params.value == ''} selected="selected" {/if}>-</option>
+													<option value=""{if $params.value == ''} selected="selected"{/if}>-</option>
 													{if isset($params.list) && is_array($params.list)}
 														{foreach $params.list AS $option_value => $option_display}
-															<option value="{$option_value}" {if $option_display == $params.value ||  $option_value == $params.value} selected="selected"{/if}>{$option_display}</option>
+															<option value="{$option_value}"{if $option_display == $params.value ||  $option_value == $params.value} selected="selected"{/if}>{$option_display}</option>
 														{/foreach}
 													{/if}
 												</select>
