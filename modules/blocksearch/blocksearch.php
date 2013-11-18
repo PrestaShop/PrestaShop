@@ -53,6 +53,7 @@ class BlockSearch extends Module
 	public function hookdisplayMobileTopSiteMap($params)
 	{
 		$this->smarty->assign(array('hook_mobile' => true, 'instantsearch' => false));
+		$params['hook_mobile'] = true;
 		return $this->hookTop($params);
 	}
 	
@@ -80,7 +81,6 @@ public function hookDisplayMobileHeader($params)
 
 	public function hookRightColumn($params)
 	{
-		
 		if (Tools::getValue('search_query') || !$this->isCached('blocksearch.tpl', $this->getCacheId()))
 		{
 			$this->calculHookCommon($params);
@@ -95,7 +95,8 @@ public function hookDisplayMobileHeader($params)
 
 	public function hookTop($params)
 	{
-		if (Tools::getValue('search_query') || !$this->isCached('blocksearch-top.tpl', $this->getCacheId('blocksearch-top')))
+		$key = $this->getCacheId('blocksearch-top'.((!isset($params['hook_mobile']) || !$params['hook_mobile']) ? '' : '-hook_mobile'));
+		if (Tools::getValue('search_query') || !$this->isCached('blocksearch-top.tpl', $key))
 		{
 			$this->calculHookCommon($params);
 			$this->smarty->assign(array(
@@ -105,8 +106,8 @@ public function hookDisplayMobileHeader($params)
 			);
 			
 		}
-
-		return $this->display(__FILE__, 'blocksearch-top.tpl', Tools::getValue('search_query') ? null : $this->getCacheId('blocksearch-top'));
+d($key);
+		return $this->display(__FILE__, 'blocksearch-top.tpl', Tools::getValue('search_query') ? null : $key);
 	}
 
 	/**
