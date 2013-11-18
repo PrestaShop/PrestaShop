@@ -597,8 +597,8 @@ class InstallXmlLoader
 
 			if (!@copy($from_path.$identifier.'.'.$extension, $dst_path.$entity_id.'.'.$extension))
 			{
-				//$this->setError($this->language->l('Cannot create image "%1$s" for entity "%2$s"', $identifier, $entity));
-				continue;//return;
+				$this->setError($this->language->l('Cannot create image "%1$s" for entity "%2$s"', $identifier, $entity));
+				return;
 			}
 
 			foreach ($types as $type)

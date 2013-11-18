@@ -63,8 +63,8 @@ class HomeSlider extends Module
 		if (parent::install() && $this->registerHook('displayHome') && $this->registerHook('actionShopDataDuplication'))
 		{
 			/* Sets up configuration */
-			$res = Configuration::updateValue('HOMESLIDER_WIDTH', '535');
-			$res &= Configuration::updateValue('HOMESLIDER_HEIGHT', '300');
+			$res = Configuration::updateValue('HOMESLIDER_WIDTH', '779');
+			$res &= Configuration::updateValue('HOMESLIDER_HEIGHT', '448');
 			$res &= Configuration::updateValue('HOMESLIDER_SPEED', '500');
 			$res &= Configuration::updateValue('HOMESLIDER_PAUSE', '3000');
 			$res &= Configuration::updateValue('HOMESLIDER_LOOP', '1');
@@ -86,7 +86,7 @@ class HomeSlider extends Module
 	private function installSamples()
 	{
 		$languages = Language::getLanguages(false);
-		for ($i = 1; $i <= 5; ++$i)
+		for ($i = 1; $i <= 3; ++$i)
 		{
 			$slide = new HomeSlide();
 			$slide->position = $i;

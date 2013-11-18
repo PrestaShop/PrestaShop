@@ -392,4 +392,3 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->displayTemplate('process');
 	}
 }
-
