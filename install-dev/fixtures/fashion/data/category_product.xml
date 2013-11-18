@@ -6,16 +6,47 @@
     <field name="position"/>
   </fields>
   <entities>
-    <category_product id="category_product_2_1" id_category="Home" id_product="iPod_Nano" position="0"/>
-    <category_product id="category_product_2_2" id_category="Home" id_product="iPod_shuffle" position="1"/>
-    <category_product id="category_product_2_4" id_category="Home" id_product="MacBook" position="2"/>
-    <category_product id="category_product_2_5" id_category="Home" id_product="iPod_touch" position="3"/>
-    <category_product id="category_product_3_1" id_category="iPods" id_product="iPod_Nano" position="0"/>
-    <category_product id="category_product_3_2" id_category="iPods" id_product="iPod_shuffle" position="1"/>
-    <category_product id="category_product_3_5" id_category="iPods" id_product="iPod_touch" position="2"/>
-    <category_product id="category_product_4_6" id_category="Accessories" id_product="Belkin_Leather_Folio_for_iPod_nano_-_Black_Chocolate" position="0"/>
-    <category_product id="category_product_4_7" id_category="Accessories" id_product="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone" position="1"/>
-    <category_product id="category_product_5_3" id_category="Laptops" id_product="MacBook_Air" position="0"/>
-    <category_product id="category_product_5_4" id_category="Laptops" id_product="MacBook" position="1"/>
+    <category_product id="category_product_2_1" id_category="Coats" id_product="Fur_Coat" position="0"/>
+    <category_product id="category_product_2_2" id_category="Coats" id_product="Textured_Trench_Coat" position="1"/>
+    <category_product id="category_product_2_3" id_category="Coats" id_product="Slim_Cut_Coat" position="2"/>
+	<category_product id="category_product_3_1" id_category="Jackets" id_product="Quilted_Jacket" position="0"/>
+	<category_product id="category_product_4_1" id_category="Blazers" id_product="Suit_Blazer" position="0"/>
+    <category_product id="category_product_4_2" id_category="Blazers" id_product="Short_Blazer" position="1"/>
+	<category_product id="category_product_5_1" id_category="Puffer_Jackets" id_product="Puffer_Jacket" position="0"/>
+	<category_product id="category_product_6_1" id_category="Leather_Jackets" id_product="Leather_Jacket_1" position="0"/>
+    <category_product id="category_product_6_2" id_category="Leather_Jackets" id_product="Leather_Jacket_2" position="1"/>
+    <category_product id="category_product_6_3" id_category="Leather_Jackets" id_product="Leather_Jacket_3" position="2"/>
+	<category_product id="category_product_7_1" id_category="T-shirts" id_product="Short_Sleeve_T-shirts" position="0"/>
+    <category_product id="category_product_7_2" id_category="T-shirts" id_product="Faded_Short_Sleeve_T-shirts" position="1"/>
+	<category_product id="category_product_8_1" id_category="Tops_2" id_product="Cami_Tank_Top" position="0"/>
+	<category_product id="category_product_9_1" id_category="Blouses" id_product="Blouse" position="0"/>
+    <category_product id="category_product_9_2" id_category="Blouses" id_product="Leapoard_Printed_Blouse" position="1"/>
+	<category_product id="category_product_10_1" id_category="Skinny_Cut" id_product="Faded_Jeans" position="0"/>
+	<category_product id="category_product_11_1" id_category="Straight_Cut" id_product="5_Pocket_Jean_1" position="0"/>
+    <category_product id="category_product_11_2" id_category="Straight_Cut" id_product="5_Pocket_Jean_2" position="1"/>
+	<category_product id="category_product_12_1" id_category="Casual_Dresses" id_product="Dress_Gathered_At_The_Waist" position="0"/>
+    <category_product id="category_product_12_2" id_category="Casual_Dresses" id_product="Printed_Dress" position="1"/>
+    <category_product id="category_product_12_3" id_category="Casual_Dresses" id_product="Floral_Dress" position="2"/>
+	<category_product id="category_product_13_1" id_category="Evening_Dresses" id_product="Strapless_Dress_1" position="0"/>
+    <category_product id="category_product_13_2" id_category="Evening_Dresses" id_product="Long_Evening_Dress" position="1"/>
+    <category_product id="category_product_13_3" id_category="Evening_Dresses" id_product="Short_Evening_Dress" position="2"/>
+	<category_product id="category_product_13_4" id_category="Evening_Dresses" id_product="Strapless_Dress_2" position="3"/>
+    <category_product id="category_product_13_5" id_category="Evening_Dresses" id_product="Dress_with_Sleeves" position="4"/>
+    <category_product id="category_product_13_6" id_category="Evening_Dresses" id_product="Printed_Dress_2" position="5"/>
+	<category_product id="category_product_14_1" id_category="Summer_Dresses" id_product="Printed_Summer_Dress_1" position="0"/>
+    <category_product id="category_product_14_2" id_category="Summer_Dresses" id_product="Long_Printed_Dress" position="1"/>
+    <category_product id="category_product_14_3" id_category="Summer_Dresses" id_product="Printed_Summer_Dress_2" position="2"/>
+	<category_product id="category_product_14_4" id_category="Summer_Dresses" id_product="Printed_Chiffon_Dress" position="3"/>
+	<category_product id="category_product_15_1" id_category="Belts" id_product="Studded_Leather_Belt" position="0"/>
+    <category_product id="category_product_15_2" id_category="Belts" id_product="Braided_Belt" position="1"/>
+	<category_product id="category_product_16_1" id_category="Hats" id_product="Bucket_Hat" position="0"/>
+    <category_product id="category_product_16_2" id_category="Hats" id_product="Floppy_Hat" position="1"/>
+    <category_product id="category_product_16_3" id_category="Hats" id_product="Men_Straw_Hat" position="2"/>
+	<category_product id="category_product_17_1" id_category="Handbags" id_product="Bowling_Bag" position="0"/>
+    <category_product id="category_product_17_2" id_category="Handbags" id_product="Leather_Bag" position="1"/>
+    <category_product id="category_product_17_3" id_category="Handbags" id_product="Snake_Skin_Bag" position="2"/>
+	<category_product id="category_product_17_4" id_category="Handbags" id_product="Quilted_Bag" position="3"/>
+    <category_product id="category_product_17_5" id_category="Handbags" id_product="Suede_Bag" position="4"/>
+	<category_product id="category_product_18_1" id_category="Shoes" id_product="Wedge_Shoe" position="0"/>
   </entities>
 </entity_category_product>
