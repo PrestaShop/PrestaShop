@@ -22,23 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{if isset($HOOK_HOME_TAB_CONTENT)}
-	<div class="clearfix"></div>
-    {if isset($HOOK_HOME_TAB)}
-        <ul id="home-page-tabs" class="nav nav-tabs">{/if}{$HOOK_HOME_TAB}{if isset($HOOK_HOME_TAB)}</ul>
-    {/if}
-    <script type="text/javascript">
-		$('document').ready(function(){
-			blockHover();
-			if (typeof reloadProductComparison != 'undefined')
-				reloadProductComparison();
-		});
-	</script>
-	<div class="tab-content">
-		{$HOOK_HOME_TAB_CONTENT}
-	</div>
-{/if}
-<div class="clearfix">
-	{$HOOK_HOME}
-</div>
+<script type="text/javascript">
+	var isLoggedWishlist = {if $logged}true{else}false{/if};
+	var wishlistProductsIds = [];
+</script>
+{foreach from=$wishlist_products item=product name=i}
+	<script type="text/javascript">wishlistProductsIds.push({$product.id_product});</script>
+{/foreach}

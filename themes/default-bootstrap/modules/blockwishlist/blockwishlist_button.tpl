@@ -23,22 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if isset($HOOK_HOME_TAB_CONTENT)}
-	<div class="clearfix"></div>
-    {if isset($HOOK_HOME_TAB)}
-        <ul id="home-page-tabs" class="nav nav-tabs">{/if}{$HOOK_HOME_TAB}{if isset($HOOK_HOME_TAB)}</ul>
-    {/if}
-    <script type="text/javascript">
-		$('document').ready(function(){
-			blockHover();
-			if (typeof reloadProductComparison != 'undefined')
-				reloadProductComparison();
-		});
-	</script>
-	<div class="tab-content">
-		{$HOOK_HOME_TAB_CONTENT}
-	</div>
-{/if}
-<div class="clearfix">
-	{$HOOK_HOME}
+<div class="wishlist">
+<a href="#" id="wishlist_button_{$product.id_product|intval}" rel="{$product.id_product|intval}" onclick="WishlistCart('wishlist_block_list', 'add', '{$product.id_product|intval}', false, 1); return false;" class="addToWishlist wishlistProd_{$product.id_product|intval}">{l s="Add to Wishlist"}</a>
 </div>
