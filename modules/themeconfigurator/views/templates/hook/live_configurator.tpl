@@ -61,8 +61,8 @@
 		</div>
 		<div id="font-box">
 			<p>{l s='Global' mod='themeconfigurator'}</p>
-			<select name="text-page-font" class="font-list">
-				{foreach $themes_fonts as $key => $font}
+			<select name="font" class="font-list">
+				{foreach $fonts as $key => $font}
 				<option value="{$key}">{$font}</option>
 				{/foreach}
 			</select>
