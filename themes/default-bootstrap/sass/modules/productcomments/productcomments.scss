@@ -14,8 +14,7 @@ padding-top:2px;
 	li{display:inline-block;
 	line-height:30px;
 	
-	/*min 768px max 991px*/
-	@media (min-width: $screen-sm) and (max-width: $screen-sm-max) {	
+	@media (min-width: $screen-sm) and (max-width: $screen-sm-max) {	//min 768px max 991px
 	display:block;	
 	line-height:20px
 	}
@@ -29,8 +28,7 @@ padding-top:2px;
 	padding:0;
 	display:inline-block;	
 		
-	/*min 768px max 991px*/
-	@media (min-width: $screen-sm) and (max-width: $screen-md-max) {	
+	@media (min-width: $screen-sm) and (max-width: $screen-md-max) { //min 768px max 991px
 	float:none;
 	line-height:20px;
 	}	
@@ -67,8 +65,7 @@ padding-top:2px;
   padding-right:30px;
   margin-right:9px;
  
-	 /* min 768px max 991px*/
-	@media (min-width: $screen-sm) and (max-width: $screen-sm-max) {	
+	@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
 	margin-right:0;
 	padding:0;
 	border:none
@@ -80,10 +77,29 @@ padding-top:2px;
 #product_comments_block_extra{	
 	.comments_note {margin-bottom:5px}	
     .comments_note span,
-	.star_content {float:left;color:$base-text-color}	
-	.star_content {margin-top:1px}	
-	div.star {background: url(img/star.png) no-repeat 0 0}	
-	div.star_on {background: url(img/star.png) no-repeat 0 -13px}	
+	.star_content {
+		float:left;
+		color:$base-text-color;
+	}	
+	.star_content {
+		margin-top:1px;
+	}	
+	div.star {
+		&:after {
+			content:"";
+			font-family:$font-icon;
+			display:inline-block;
+			color:#777676;
+		}
+	}
+	div.star_on {
+		&:after {
+			content:"";
+			font-family:$font-icon;
+			display:inline-block;
+			color:#ef8743;	
+		}
+	}	
 	.comments_advices {clear:both;}
 }
 
@@ -106,8 +122,7 @@ padding-top:2px;
 	color: $base-text-color;
 	text-align: left;	
 	
-    /*max 767px*/
-	@media (max-width: $screen-xs-max) {
+	@media (max-width: $screen-xs-max) { //max 767px
 	width:275px;
 	}
 	
@@ -218,11 +233,22 @@ padding-top:2px;
 			float:left;
 		}
 		 div.comment .star_content {margin: 0 0 0 5px}
-		 div.star,
+		 div.star {
+			&:after {
+				content:"";
+				font-family:$font-icon;
+				display:inline-block;
+				color:#777676;	
+			} 
+		 }
 		 div.star_on {
-			background: url(img/star.png) no-repeat 0 0
+			&:after {
+				content:"";
+				font-family:$font-icon;
+				display:inline-block;
+				color:#ef8743;	
+			}
 		}
-		 div.star_on {background-position: 0 -13px}
 		 .comment_author_infos {clear:both;
 		 padding-top:9px;
 		 strong{display:block;color:$base-text-color}
@@ -234,8 +260,7 @@ padding-top:2px;
 			overflow:hidden;
 			border-left:$main_border;	
 					
-			/*max 767px */
-			@media (max-width: $screen-sm-max) {				
+			@media (max-width: $screen-sm-max) { //max 767px
 			 border-left: none					
 			}
 			
