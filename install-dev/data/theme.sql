@@ -41,7 +41,7 @@ UPDATE `PREFIX_configuration` SET value = '4' WHERE name = 'BLOCK_CATEG_MAX_DEPT
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'MANUFACTURER_DISPLAY_FORM';
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'MANUFACTURER_DISPLAY_TEXT';
 UPDATE `PREFIX_configuration` SET value = '5' WHERE name = 'MANUFACTURER_DISPLAY_TEXT_NB';
-UPDATE `PREFIX_configuration` SET value = '5' WHERE name = 'NEW_PRODUCTS_NBR';
+UPDATE `PREFIX_configuration` SET value = '8' WHERE name = 'NEW_PRODUCTS_NBR';
 UPDATE `PREFIX_configuration` SET value = '10' WHERE name = 'BLOCKTAGS_NBR';
 UPDATE `PREFIX_configuration` SET value = '0_3|0_4' WHERE name = 'FOOTER_CMS';
 UPDATE `PREFIX_configuration` SET value = '0_3|0_4' WHERE name = 'FOOTER_BLOCK_ACTIVATION';
@@ -92,6 +92,18 @@ AND id_hook = @id_hook;
 
 UPDATE `PREFIX_hook_module` SET position = 5
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'homeslider')
+AND id_hook = @id_hook;
+
+UPDATE `PREFIX_hook_module` SET position = 6
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'themeconfigurator')
+AND id_hook = @id_hook;
+
+UPDATE `PREFIX_hook_module` SET position = 7
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockwhislist')
+AND id_hook = @id_hook;
+
+UPDATE `PREFIX_hook_module` SET position = 8
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockbanner')
 AND id_hook = @id_hook;
 
 /* displayHomeTab && displayHomeTabContent */
