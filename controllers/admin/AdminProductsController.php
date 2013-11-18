@@ -2488,15 +2488,6 @@ class AdminProductsControllerCore extends AdminController
 		$this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);
 	}
 
-	public function initToolbarTitle()
-	{
-		parent::initToolbarTitle();
-		
-		if ($this->display != 'list')
-			if (($product = $this->loadObject(true)) && Validate::isLoadedObject($product))
-				$this->toolbar_title[] = Tools::htmlentitiesUTF8($product->name[$this->context->employee->id_lang]);
-	}
-
 	/**
 	 * renderForm contains all necessary initialization needed for all tabs
 	 *
