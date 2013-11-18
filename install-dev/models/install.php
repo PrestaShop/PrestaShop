@@ -509,6 +509,7 @@ class InstallModelInstall extends InstallAbstractModel
 		{
 			// @todo THIS CODE NEED TO BE REMOVED WHEN MODULES API IS COMMITED
 			$modules = array(
+				'blockbanner',
 				'bankwire',
 				'blockadvertising',
 				'blockbestsellers',
@@ -540,8 +541,8 @@ class InstallModelInstall extends InstallAbstractModel
 				'dashproducts',
 				'graphnvd3',
 				'gridhtml',
-				'homefeatured',
 				'homeslider',
+				'homefeatured',
 				'pagesnotfound',
 				'sekeywords',
 				'statsbestcategories',
