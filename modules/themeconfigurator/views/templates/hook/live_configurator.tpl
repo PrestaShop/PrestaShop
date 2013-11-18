@@ -28,63 +28,63 @@
 </div>
 <form action="" method="post">
 	<input type="hidden" name="theme" id="theme" />
-<div id="tool_customization">
-	<p>
-		{l s='The customization tool allows you to make color and font changes in your theme.' mod='themeconfigurator'}<br /><br />
-		<span>
-			{l s='Only you, as a merchant can see this tool (as you are currently logged in your Back-office), your visitors will not see this tool.' mod='themeconfigurator'}
-		</span>
-	</p>
-	<div class="list-tools">
+	<div id="tool_customization">
 		<p>
-		  {l s='Color theme' mod='themeconfigurator'} 
-		  <i class="icon-caret-down pull-right"></i> 
+			{l s='The customization tool allows you to make color and font changes in your theme.' mod='themeconfigurator'}<br /><br />
+			<span>
+				{l s='Only you, as a merchant can see this tool (as you are currently logged in your Back-office), your visitors will not see this tool.' mod='themeconfigurator'}
+			</span>
 		</p>
+		<div class="list-tools">
+			<p id="theme-title">
+			  {l s='Color theme' mod='themeconfigurator'} 
+			  <i class="icon-caret-down pull-right"></i> 
+			</p>
+		</div>
+		{if isset($themes_colors)}
+		<div id="color-box">
+			<ul>
+				{foreach $themes_colors as $theme}
+				<li class="{$theme}">
+					<div class="color-theme1 color1"></div>
+					<div class="color-theme2 color2"> </div>
+				</li>
+				{/foreach}
+			</ul>
+		</div>
+		{/if}
+		<div class="list-tools">
+			<p id="font-title">
+			  {l s='Font' mod='themeconfigurator'} 
+			  <i class="icon-caret-down pull-right"></i> 
+			</p>
+		</div>
+		<div id="font-box">
+			<p>{l s='Text page' mod='themeconfigurator'}</p>
+			<select name="text-page-font" class="font-list">
+				{foreach $themes_fonts as $key => $font}
+				<option value="{$key}">{$font}</option>
+				{/foreach}
+			</select>
+			<p>{l s='Text menu parrent normal' mod='themeconfigurator'}</p>
+			<select name="text-menu-font" class="font-list">
+				{foreach $themes_fonts as $key => $font}
+				<option value="{$key}">{$font}</option>
+				{/foreach}
+			</select>
+			<p>{l s='Product name' mod='themeconfigurator'}</p>
+			<select name="product-name-font" class="font-list">
+				{foreach $themes_fonts as $key => $font}
+				<option value="{$key}">{$font}</option>
+				{/foreach}
+			</select>
+		</div>
+		<div class="btn-tools">
+			<button type="reset" class="btn btn-1">{l s='Reset' mod='themeconfigurator'}</button>
+			<button type="submit" class="btn btn-2" name="submitLiveConfigurator">{l s='Save' mod='themeconfigurator'}</button>
+		</div>
+		<div id="block-advertisement">
+			<img src="{$advertisement_image}" alt="{$advertisement_text}" />
+		</div>
 	</div>
-	{if isset($themes_colors)}
-	<div id="color-box">
-		<ul>
-			{foreach $themes_colors as $theme}
-			<li class="{$theme}">
-				<div class="color-theme1 color1"></div>
-				<div class="color-theme2 color2"> </div>
-			</li>
-			{/foreach}
-		</ul>
-	</div>
-	{/if}
-	<div class="list-tools">
-		<p>
-		  {l s='Font' mod='themeconfigurator'} 
-		  <i class="icon-caret-down pull-right"></i> 
-		</p>
-	</div>
-	<div id="font-box">
-		<p>{l s='Text page' mod='themeconfigurator'}</p>
-		<select name="text-page-font" class="font-list">
-			{foreach $themes_fonts as $key => $font}
-			<option value="{$key}">{$font}</option>
-			{/foreach}
-		</select>
-		<p>{l s='Text menu parrent normal' mod='themeconfigurator'}</p>
-		<select name="text-menu-font" class="font-list">
-			{foreach $themes_fonts as $key => $font}
-			<option value="{$key}">{$font}</option>
-			{/foreach}
-		</select>
-		<p>{l s='Product name' mod='themeconfigurator'}</p>
-		<select name="product-name-font" class="font-list">
-			{foreach $themes_fonts as $key => $font}
-			<option value="{$key}">{$font}</option>
-			{/foreach}
-		</select>
-	</div>
-	<div class="btn-tools">
-		<button type="reset" class="btn btn-1">{l s='Reset' mod='themeconfigurator'}</button>
-		<button type="submit" class="btn btn-2" name="submitLiveConfigurator">{l s='Save' mod='themeconfigurator'}</button>
-	</div>
-	<div id="block-advertisement">
-		<img src="{$advertisement_image}" alt="{$advertisement_text}" />
-	</div>
-</div>
 </form>
