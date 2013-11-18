@@ -80,7 +80,7 @@ class ThemeConfigurator extends Module
 			$this->context->controller->addJS($this->_path.'js/live_configurator.js');
 
 			$this->smarty->assign(array(
-				'themes_colors' => unserialize(Configuration::get('PS_TC_THEMES_COLORS')),
+				'themes' => unserialize(Configuration::get('PS_TC_THEMES')),
 				'themes_fonts' => unserialize(Configuration::get('PS_TC_THEMES_FONTS')),
 				'advertisement_image' => $this->_path.'/img/'.$this->context->language->iso_code.'/advertisement.png',
 				'advertisement_text'  => $this->l('Over 500+ PrestaShop Premium Templates! Browse Now!')
