@@ -80,7 +80,7 @@ class ThemeConfigurator extends Module
             !$this->registerHook('displayBackOfficeHeader') ||
 			
 			!Configuration::updateValue('PS_TC_THEMES', serialize($themes_colors)) ||
-			!Configuration::updateValue('PS_TC_THEMES_FONTS', serialize($themes_fonts)))
+			!Configuration::updateValue('PS_TC_FONTS', serialize($themes_fonts)))
 			return false;
 
 		return true;
@@ -147,9 +147,7 @@ class ThemeConfigurator extends Module
 				if (Tools::isSubmit('submitLiveConfigurator'))
 				{
 					Configuration::updateValue('PS_TC_THEME', Tools::getValue('theme'));
-					Configuration::updateValue('PS_TC_TEXT_PAGE_FONT', Tools::getValue('text-page-font'));
-					Configuration::updateValue('PS_TC_TEXT_MENU_FONT', Tools::getValue('text-menu-font'));
-					Configuration::updateValue('PS_TC_PRODUCT_NAME_FONT', Tools::getValue('product-name-font'));
+					Configuration::updateValue('PS_TC_FONT', Tools::getValue('font'));
 				}
 
 				$this->context->controller->addCSS($this->_path.'css/live_configurator.css');
@@ -157,7 +155,7 @@ class ThemeConfigurator extends Module
 
 				$this->smarty->assign(array(
 					'themes' => unserialize(Configuration::get('PS_TC_THEMES')),
-					'themes_fonts' => unserialize(Configuration::get('PS_TC_THEMES_FONTS')),
+					'fonts' => unserialize(Configuration::get('PS_TC_FONTS')),
 					'advertisement_image' => $this->_path.'/img/'.$this->context->language->iso_code.'/advertisement.png',
 					'advertisement_text'  => $this->l('Over 500+ PrestaShop Premium Templates! Browse Now!')
 				));
