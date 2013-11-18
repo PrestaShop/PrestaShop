@@ -96,7 +96,7 @@ class ThemeConfigurator extends Module
 			Configuration::updateValue('PS_QUICK_VIEW', (int)Tools::getValue('quick_view'));
 			foreach($this->getConfigurableModules() as $module)
 			{
-				if (!isset($module['is_module']) || !$module['is_module'] || !Validate::isModuleName($module['name']))
+				if (!isset($module['is_module']) || !$module['is_module'] || !Validate::isModuleName($module['name']) || !Tools::isSubmit($module['name']))
 					continue;
 
 				$module_instance = Module::getInstanceByName($module['name']);
@@ -186,49 +186,49 @@ class ThemeConfigurator extends Module
 				'label' => $this->l('Display the reinsurance block'),
 				'name' => 'blockreinsurance',
 				'desc' => '<a href="#">'.$this->l('Configure the reinsurance block').'</a>',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockreinsurance')) && $module->active),
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockreinsurance')) && $module->isEnabledForShopContext()),
 				'is_module' => true,
 			),
 			array(
 				'label' => $this->l('Display the social following links'),
 				'name' => 'blocksocial',
 				'desc' => '<a href="#">'.$this->l('Configure the social following links').'</a>',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blocksocial')) && $module->active),
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blocksocial')) && $module->isEnabledForShopContext()),
 				'is_module' => true,
 			),
 			array(
 				'label' => $this->l('Display contact information'),
 				'name' => 'blockcontactinfos',
 				'desc' => '<a href="#">'.$this->l('Configure the contact information of your store').'</a>',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockcontactinfos')) && $module->active),
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockcontactinfos')) && $module->isEnabledForShopContext()),
 				'is_module' => true,
 			),
 			array(
 				'label' => $this->l('Display social buttons on the products page'),
 				'name' => 'addsharethis',
 				'desc' => '<a href="#">'.$this->l('Configure').'</a>',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('addsharethis')) && $module->active),
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('addsharethis')) && $module->isEnabledForShopContext()),
 				'is_module' => true,
 			),
 			array(
 				'label' => $this->l('Display facebook block on the home page'),
 				'name' => 'blockfacebook',
 				'desc' => '<a href="#">'.$this->l('Configure').'</a>',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockfacebook')) && $module->active),
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockfacebook')) && $module->isEnabledForShopContext()),
 				'is_module' => true,
 			),
 			array(
 				'label' => $this->l('Customer cms information block'),
 				'name' => 'blockcmsinfo',
 				'desc' => '<a href="#">'.$this->l('Configure').'</a>',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockcmsinfo')) && $module->active),
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockcmsinfo')) && $module->isEnabledForShopContext()),
 				'is_module' => true,
 			),
 			array(
 				'label' => $this->l('Customer banner information block'),
 				'name' => 'tmhtmlcontent',
 				'desc' => '<a href="#">'.$this->l('Configure').'</a>',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('tmhtmlcontent')) && $module->active),
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('tmhtmlcontent')) && $module->isEnabledForShopContext()),
 				'is_module' => true,
 			),
 			array(
@@ -240,14 +240,14 @@ class ThemeConfigurator extends Module
 				'label' => $this->l('Enable top banner'),
 				'name' => 'blockbanner',
 				'desc' => '<a href="#">'.$this->l('Configure').'</a>',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockbanner')) && $module->active),
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockbanner')) && $module->isEnabledForShopContext()),
 				'is_module' => true,
 			),
 			array(
 				'label' => $this->l('Enable product payment logos'),
 				'name' => 'productpaymentlogos',
 				'desc' => '<a href="#">'.$this->l('Configure').'</a>',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('productpaymentlogos')) && $module->active),
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('productpaymentlogos')) && $module->isEnabledForShopContext()),
 				'is_module' => true,
 			)
 		);
