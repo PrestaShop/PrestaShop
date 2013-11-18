@@ -705,7 +705,6 @@ class AdminModulesControllerCore extends AdminController
 							$disable_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&enable=0&tab_module='.$module->tab;
 							$uninstall_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&uninstall='.$module->name.'&tab_module='.$module->tab;
 							$reset_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&reset&tab_module='.$module->tab;
-							$update_link = $this->context->link->getAdminLink('AdminModules').'&check_and_update='.$module->name.'&module_name='.$module->name.'&reset&tab_module='.$module->tab;
 
 							$this->context->smarty->assign(array(
 								'module_name' => $module->name,
@@ -715,7 +714,7 @@ class AdminModulesControllerCore extends AdminController
 								'module_disable_link' => $disable_link,
 								'module_uninstall_link' => $uninstall_link,
 								'module_reset_link' => $reset_link,
-								'module_update_link' => (Module::needUpgrade($module) ? $update_link : null),
+								'module_update_link' => null //TODO,
 								'trad_link' => $trad_link,
 								'module_languages' => Language::getLanguages(false),
 								'theme_language_dir' => _THEME_LANG_DIR_
@@ -751,7 +750,7 @@ class AdminModulesControllerCore extends AdminController
 							// Display module configuration
 							$header = $this->context->smarty->fetch('controllers/modules/configure.tpl');
 							$configuration_bar = $this->context->smarty->fetch('controllers/modules/configuration_bar.tpl');
-							$this->context->smarty->assign('module_content', $header.$configuration_bar.$echo );
+							$this->context->smarty->assign('module_content', $header.$echo.$configuration_bar );
 						}
 						elseif ($echo === true)
 						{
