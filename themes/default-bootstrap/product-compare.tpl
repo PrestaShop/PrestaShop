@@ -29,6 +29,9 @@
 // <![CDATA[
 	var min_item = '{l s='Please select at least one product' js=1}';
 	var max_item = "{l s='You cannot add more than %d product(s) to the product comparison' sprintf=$comparator_max_item js=1}";
+	var comparator_max_item = {$comparator_max_item};
+	var comparedProductsIds = [];
+	{foreach from=$compared_products item=product name=products}comparedProductsIds.push({$product.id_product});{/foreach};
 //]]>
 </script>
 {/if}

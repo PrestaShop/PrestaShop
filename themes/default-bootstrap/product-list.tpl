@@ -52,8 +52,8 @@
                 	<div class="product-image-container">
                     	<a href="{$product.link|escape:'htmlall':'UTF-8'}" class="product_img_link" title="{$product.name|escape:'htmlall':'UTF-8'}">
                             <img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html'}" alt="{$product.legend|escape:'htmlall':'UTF-8'}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} />
-                            {if isset($quick_view) && $quick_view}<a href="#" rel="{$product.link|escape:'htmlall':'UTF-8'}" class="quick-view"><span>Quick view</span></a>{/if}
                         </a>
+                        {if isset($quick_view) && $quick_view}<a href="#" rel="{$product.link|escape:'htmlall':'UTF-8'}" class="quick-view"><span>Quick view</span></a>{/if}
                         {if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
                         	<div class="content_price">
                             	{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}
@@ -112,12 +112,10 @@
                     {/if}
                 </div>
                 <div class="functional-buttons clearfix">
-						{hook h='displayProductListFunctionalButtons' product=$product}
+					{hook h='displayProductListFunctionalButtons' product=$product}
                     {if isset($comparator_max_item) && $comparator_max_item}
                         <div class="compare">
-                            <label for="comparator_item_{$product.id_product}">
-                            <input type="checkbox" class="comparator hidden" id="comparator_item_{$product.id_product}" value="comparator_item_{$product.id_product}" {if isset($compared_products) && in_array($product.id_product, $compared_products)}checked="checked"{/if} autocomplete="off"/> 
-                            {l s='Add to Compare'}</label>
+                            <a href="#" rel="{$product.id_product}" class="addToCompare" onClick="addToCompare('{$product.id_product|intval}'); return false;">{l s='Add to Compare'}</a>
                         </div>
                     {/if}
                 </div>
@@ -125,14 +123,14 @@
 		</li>
 	{/foreach}
 	</ul>
-    
 <!-- Script for transformation Grid/List layouts -->
 {if $page_name == 'product'}
 	<script type="text/javascript">
+		var comparator_max_item = {$comparator_max_item};
+		var comparedProductsIds = [];
+		{foreach from=$compared_products item=product name=products}comparedProductsIds.push({$product.id_product});{/foreach};
         $('document').ready(function(){
             blockHover();
-            if (typeof reloadProductComparison != 'undefined')
-                reloadProductComparison();
         });
     </script>
 {/if}
@@ -192,8 +190,6 @@
 				$('.display').find('li#list').addClass('selected');
 				$('.display').find('li#grid').removeAttr('class');
 				$.totalStorage('display', 'list');
-				if (typeof reloadProductComparison != 'undefined') // compare button reload
-					reloadProductComparison();
 				if (typeof ajaxCart != 'undefined')      // cart button reload
 					ajaxCart.overrideButtonsInThePage();
 				if (typeof quick_view != 'undefined') 	// qick view button reload
@@ -233,9 +229,7 @@
 				});
 				$('.display').find('li#grid').addClass('selected');
 				$('.display').find('li#list').removeAttr('class');
-				$.totalStorage('display', 'grid');
-				if (typeof reloadProductComparison != 'undefined')// compare button reload
-					reloadProductComparison();				
+				$.totalStorage('display', 'grid');			
 				if (typeof ajaxCart != 'undefined') 	// cart button reload
 					ajaxCart.overrideButtonsInThePage();
 				if (typeof quick_view != 'undefined') 	// qick view button reload

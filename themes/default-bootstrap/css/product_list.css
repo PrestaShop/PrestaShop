@@ -192,7 +192,7 @@ ul.product_list.grid > li .product-container .functional-buttons div.wishlist a:
   content: "";
   margin-right: 3px;
 }
-ul.product_list.grid > li .product-container .functional-buttons div.wishlist a.ckecked:before {
+ul.product_list.grid > li .product-container .functional-buttons div.wishlist a.checked:before {
   content: "";
 }
 @media (min-width: 992px) and (max-width: 1199px) {
@@ -211,28 +211,29 @@ ul.product_list.grid > li .product-container .functional-buttons div.wishlist a.
     display: none;
   }
 }
-ul.product_list.grid > li .product-container .functional-buttons div.compare label:before {
+ul.product_list.grid > li .product-container .functional-buttons div.compare a:before {
   content: "";
   display: inline-block;
   font-family: "FontAwesome";
+  margin-right: 3px;
 }
 @media (min-width: 992px) and (max-width: 1199px) {
-  ul.product_list.grid > li .product-container .functional-buttons div.compare label:before {
+  ul.product_list.grid > li .product-container .functional-buttons div.compare a:before {
     display: none;
   }
 }
 @media (min-width: 480px) and (max-width: 767px) {
-  ul.product_list.grid > li .product-container .functional-buttons div.compare label:before {
+  ul.product_list.grid > li .product-container .functional-buttons div.compare a:before {
     display: none;
   }
 }
-ul.product_list.grid > li .product-container .functional-buttons div.compare label.checked:before {
+ul.product_list.grid > li .product-container .functional-buttons div.compare a.checked:before {
   content: "";
 }
 @media (min-width: 1200px) {
   ul.product_list.grid > li.hovered {
     margin-bottom: -300px;
-    padding-bottom: 250px;
+    padding-bottom: 226px;
   }
   ul.product_list.grid > li.hovered .product-container {
     -webkit-box-shadow: rgba(0, 0, 0, 0.17) 0 0 13px;
@@ -415,7 +416,7 @@ ul.product_list.list > li .right-block .right-block-content .button-container .b
     display: none !important;
   }
 }
-ul.product_list.list > li .right-block .right-block-content .functional-buttons a, ul.product_list.list > li .right-block .right-block-content .functional-buttons label {
+ul.product_list.list > li .right-block .right-block-content .functional-buttons a {
   font-weight: bold;
   color: #777676;
   cursor: pointer;
@@ -446,13 +447,13 @@ ul.product_list.list > li .right-block .right-block-content .functional-buttons 
 ul.product_list.list > li .right-block .right-block-content .functional-buttons .wishlist a:hover:before {
   background: #333333;
 }
-ul.product_list.list > li .right-block .right-block-content .functional-buttons .wishlist a.ckecked:before {
+ul.product_list.list > li .right-block .right-block-content .functional-buttons .wishlist a.checked:before {
   content: "";
 }
 ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare {
   padding-top: 10px;
 }
-ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare label:before {
+ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare a:before {
   content: "";
   display: inline-block;
   font-family: "FontAwesome";
@@ -470,13 +471,13 @@ ul.product_list.list > li .right-block .right-block-content .functional-buttons 
   padding: 6px 0 0 0;
   color: white;
 }
-ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare label:hover {
+ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare a:hover {
   color: #333333;
 }
-ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare label:hover:before {
+ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare a:hover:before {
   background: #333333;
 }
-ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare label.checked:before {
+ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare a.checked:before {
   background: white;
   border: 1px solid #929292;
   color: #929292;
@@ -522,7 +523,7 @@ ul.product_list.list > li .right-block .right-block-content .functional-buttons 
   }
   #index ul.product_list.tab-pane > li.last-line.hovered {
     margin-bottom: -300px;
-    padding-bottom: 230px;
+    padding-bottom: 235px;
   }
 }
 @media (min-width: 480px) and (max-width: 767px) {

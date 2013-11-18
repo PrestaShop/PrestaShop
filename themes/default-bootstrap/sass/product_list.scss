@@ -194,7 +194,7 @@ ul.product_list.grid {
 							margin-right:3px;
 		            }
 		
-		            a.ckecked:before {
+		            a.checked:before {
 		              content:"";  
 		            }
 																		@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px
@@ -211,11 +211,12 @@ ul.product_list.grid {
 					}
 					
 					&.compare {
-						label	{
+						a {
 							&:before {
 								content:"";
 								display:inline-block;
 								font-family:$font-icon;
+								margin-right:3px;
 																			@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px
 																				display:none;
 																			}
@@ -238,7 +239,7 @@ ul.product_list.grid {
 	@media (min-width: $screen-lg) { // min 1200px
 		&.hovered {
 			margin-bottom:-300px;
-			padding-bottom:250px;
+			padding-bottom:226px;
 			
 			.product-container {
 				@include box-shadow(rgba(black, 0.17) 0 0 13px);
@@ -412,7 +413,7 @@ ul.product_list.list {
 																				i, &:before {display:none !important;}
 																			}
 																		}
-					a, label {
+					a {
 							font-weight:bold;
 							color:#777676;
 							cursor:pointer;
@@ -441,7 +442,7 @@ ul.product_list.list {
 													background:$dark-background;
 											}
 							}
-							a.ckecked {
+							a.checked {
 									&:before {
 											content:"";        
 									}
@@ -451,7 +452,7 @@ ul.product_list.list {
 					.compare {
 						padding-top:10px;
 						
-						label {
+						a {
 							
 							&:before {
 								content:"";
@@ -475,13 +476,13 @@ ul.product_list.list {
 									background:$dark-background;	
 								}
 							}
-							&.checked {
-								&:before {
-									background:$light-background;
-									border:1px solid #929292;
-									color:#929292;
-									padding-top:5px;
-								}
+						}
+						a.checked {
+							&:before {
+								background:$light-background;
+								border:1px solid #929292;
+								color:#929292;
+								padding-top:5px;
 							}
 						}
 					}
@@ -537,7 +538,7 @@ ul.product_list.list {
 					
 					&.hovered {
 						margin-bottom:-300px;
-						padding-bottom:230px;	
+						padding-bottom:235px;	
 					}
 				}
 			}
