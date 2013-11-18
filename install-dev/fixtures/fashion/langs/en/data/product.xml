@@ -2,12 +2,12 @@
 <entity_product>
   <product id="Fur_Coat" id_shop="1">
     <description></description>
-    <description_short>This stylish short sleeve faux fur coat will keep you warm this winter. The thick knit collar adds an orginal touch to this elegant coat.</description_short>
-    <link_rewrite>fur-coat</link_rewrite>
+    <description_short>This stylish short sleeve winter coat will keep you warm this winter. The thick knit collar adds an orginal touch to this elegant coat.</description_short>
+    <link_rewrite>winter-coat</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Fur Coat</name>
+    <name>Winter Coat</name>
     <available_now>In stock</available_now>
     <available_later/>
   </product>
