@@ -510,6 +510,7 @@ class LinkCore
 
 	public function goPage($url, $p)
 	{
+		$url = rtrim(str_replace('?&', '?', $url), '?');
 		return $url.($p == 1 ? '' : (!strstr($url, '?') ? '?' : '&amp;').'p='.(int)$p);
 	}
 
