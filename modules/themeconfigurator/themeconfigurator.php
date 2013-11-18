@@ -189,7 +189,18 @@ class ThemeConfigurator extends Module
 
         public function hookdisplayHeader($params)
         {
-                $this->context->controller->addCss($this->_path.'views/css/hooks.css', 'all');
+            $this->context->controller->addCss($this->_path.'views/css/hooks.css', 'all');
+
+            if ((int)Tools::getValue('live_configurator', 0) == 1)
+            {
+                if (Tools::getValue('theme'))
+                    $this->context->controller->addCss($this->smarty->smarty->tpl_vars['css_dir']->value.Tools::getValue('theme').'.css', 'all');
+            }
+            else
+            {
+                if (Configuration::get('PS_TC_THEME') != '')
+                    $this->context->controller->addCss($this->smarty->smarty->tpl_vars['css_dir']->value.Tools::getValue('theme').'.css', 'all');
+            }
         }
 
         public function hookDisplayTop()
@@ -208,6 +219,7 @@ class ThemeConfigurator extends Module
 				$this->smarty->assign(array(
 					'themes' => unserialize(Configuration::get('PS_TC_THEMES')),
 					'fonts' => unserialize(Configuration::get('PS_TC_FONTS')),
+                    'theme' => Tools::getValue('theme', ''),
 					'advertisement_image' => $this->_path.'/img/'.$this->context->language->iso_code.'/advertisement.png',
 					'advertisement_text'  => $this->l('Over 500+ PrestaShop Premium Templates! Browse Now!')
 				));
@@ -532,6 +544,12 @@ class ThemeConfigurator extends Module
                                                 ),
                                 );
                 }
+
+                $inputs[] = array(
+                    'type'  => 'free',
+                    'label' => $this->l('Live configurator'),
+                    'name'  => 'live-conf'
+                );
                 
                 $fields_form = array(
                         'form' => array(
@@ -559,7 +577,8 @@ class ThemeConfigurator extends Module
                 $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
                 $helper->token = Tools::getAdminTokenLite('AdminModules');
                 $helper->tpl_vars = array(
-                        'fields_value' => $this->getConfigFieldsValues(),
+                        'fields_value' => array_merge($this->getConfigFieldsValues(),
+                            array('live-conf' => '<a href="'.$this->context->link->getPageLink('index').'?live_configurator=1" class="btn btn-default" onclick="return !window.open($(this).attr(\'href\'));"><i class="icon-cogs"></i> Live configurator</a>')),
                         'languages' => $this->context->controller->getLanguages(),
                         'id_language' => $this->context->language->id
                 );
