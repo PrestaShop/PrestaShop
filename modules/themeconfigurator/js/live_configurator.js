@@ -32,5 +32,53 @@ $(document).ready(
 				$('#theme').val($(this).attr('class'));
 			}
 		);
+
+		$('#gear-right').click(
+			function()
+			{
+				if ($(this).css('left') == '215px')
+				{
+					$('#tool_customization').animate({left : '-215px'}, 500);
+					$(this).animate({left : '0px'}, 500);
+				}
+				else
+				{
+					$('#tool_customization').animate({left : '0px'}, 500);
+					$(this).animate({left : '215px'}, 500);
+				}
+			}
+		);
+
+		$('#font-title').click(
+			function()
+			{
+				if ($(this).children('i').hasClass('icon-caret-down'))
+				{
+					$(this).children('i').removeClass('icon-caret-down').addClass('icon-caret-up');
+					$('#font-box').slideUp();
+				}
+				else
+				{
+					$(this).children('i').removeClass('icon-caret-up').addClass('icon-caret-down');
+					$('#font-box').slideDown();
+				}
+			}
+		);
+
+		$('#theme-title').click(
+			function()
+			{
+				if ($(this).children('i').hasClass('icon-caret-down'))
+				{
+					$(this).children('i').removeClass('icon-caret-down').addClass('icon-caret-up');
+					$('#color-box').slideUp();
+				}
+				else
+				{
+					$(this).children('i').removeClass('icon-caret-up').addClass('icon-caret-down');
+					$('#color-box').slideDown();
+				}
+			}
+		);
 	}
 );
