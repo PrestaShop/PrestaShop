@@ -709,6 +709,7 @@ class ProductComments extends Module
 		$this->smarty->assign(array(
 			'product' => $params['product'],
 			'averageTotal' => round($average['grade']),
+			'nbComments' => (int)(ProductComment::getCommentNumber((int)$params['product']['id_product']))
 		));
 		return $this->display(__FILE__, 'productcomments_reviews.tpl');
 	}

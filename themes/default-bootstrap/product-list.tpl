@@ -29,13 +29,6 @@
         {assign var='nbItemsPerLineTablet' value=2}
         {assign var='nbItemsPerLineMobile' value=3}
     {else}
-    	<script type="text/javascript">
-			$('document').ready(function(){
-				blockHover();
-				if (typeof reloadProductComparison != 'undefined')
-					reloadProductComparison();
-			});
-		</script>
     	{assign var='nbItemsPerLine' value=4}
         {assign var='nbItemsPerLineTablet' value=3}
         {assign var='nbItemsPerLineMobile' value=2}
@@ -78,6 +71,7 @@
                 </div>
                 <div class="right-block">
                 	<h5>{if isset($product.pack_quantity) && $product.pack_quantity}{$product.pack_quantity|intval|cat:' x '}{/if}<a class="product-name" href="{$product.link|escape:'htmlall':'UTF-8'}" title="{$product.name|escape:'htmlall':'UTF-8'}">{$product.name|truncate:45:'...'|escape:'htmlall':'UTF-8'}</a></h5>
+                    {hook h='displayProductListReviews' product=$product}
                     <p class="product-desc">{$product.description_short|strip_tags:'UTF-8'|truncate:360:'...'}</p>
                     {if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
                     <div class="content_price">
@@ -91,7 +85,6 @@
                     </div>
                     {/if}
                     <div class="button-container">
-                    	{hook h='displayProductListReviews' product=$product}
                         {if ($product.id_product_attribute == 0 || (isset($add_prod_display) && ($add_prod_display == 1))) && $product.available_for_order && !isset($restricted_country_mode) && $product.minimal_quantity <= 1 && $product.customizable != 2 && !$PS_CATALOG_MODE}
                             {if ($product.allow_oosp || $product.quantity > 0)}
                                 {if isset($static_token)}
@@ -134,6 +127,15 @@
 	</ul>
     
 <!-- Script for transformation Grid/List layouts -->
+{if $page_name == 'product'}
+	<script type="text/javascript">
+        $('document').ready(function(){
+            blockHover();
+            if (typeof reloadProductComparison != 'undefined')
+                reloadProductComparison();
+        });
+    </script>
+{/if}
 <script type="text/javascript">
 	function blockHover(status) {
 		$('.product_list.grid li.ajax_block_product').each(function() {
@@ -162,8 +164,15 @@
 						html += '<div class="center-block col-xs-4 col-xs-7 col-md-4">';
 							html += '<div class="product-flags">'+ $(element).find('.product-flags').html() + '</div>';
 							html += '<h5>'+ $(element).find('h5').html() + '</h5>';
+							var rating = $(element).find('.comments_note').html(); // check : rating
+							if (rating != null) { 
+								html += '<div class="comments_note">'+ rating + '</div>';
+							}
 							html += '<p class="product-desc">'+ $(element).find('.product-desc').html() + '</p>';
-							html += '<div class="color-list-container">'+ $(element).find('.color-list-container').html() +'</div>';
+							var colorList = $(element).find('.color-list-container').html();
+							if (colorList != null) {
+								html += '<div class="color-list-container">'+ colorList +'</div>';
+							}
 							var availability = $(element).find('.availability').html();	// check : catalog mode is enabled
 							if (availability != null) {
 								html += '<span class="availability">'+ availability +'</span>';
@@ -199,13 +208,20 @@
 					html += '<div class="right-block">';
 						html += '<div class="product-flags">'+ $(element).find('.product-flags').html() + '</div>';
 						html += '<h5>'+ $(element).find('h5').html() + '</h5>';
+						var rating = $(element).find('.comments_note').html(); // check : rating
+							if (rating != null) { 
+								html += '<div class="comments_note">'+ rating + '</div>';
+							}
 						html += '<p class="product-desc">'+ $(element).find('.product-desc').html() + '</p>';
 						var price = $(element).find('.content_price').html(); // check : catalog mode is enabled
 							if (price != null) { 
 								html += '<div class="content_price">'+ price + '</div>';
 							}
 						html += '<div class="button-container">'+ $(element).find('.button-container').html() +'</div>';
-						html += '<div class="color-list-container">'+ $(element).find('.color-list-container').html() +'</div>';
+						var colorList = $(element).find('.color-list-container').html();
+						if (colorList != null) {
+							html += '<div class="color-list-container">'+ colorList +'</div>';
+						}
 						var availability = $(element).find('.availability').html(); // check : catalog mode is enabled
 						if (availability != null) {
 							html += '<span class="availability">'+ availability +'</span>';
