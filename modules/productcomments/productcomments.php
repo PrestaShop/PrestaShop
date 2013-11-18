@@ -41,7 +41,7 @@ class ProductComments extends Module
 	{
 		$this->name = 'productcomments';
 		$this->tab = 'front_office_features';
-		$this->version = '2.3';
+		$this->version = '2.4';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->secure_key = Tools::encrypt($this->name);
@@ -70,6 +70,8 @@ class ProductComments extends Module
 			!$this->registerHook('productTabContent') ||
 			!$this->registerHook('header') ||
 			!$this->registerHook('productOutOfStock') ||
+			!$this->registerHook('displayProductListReviews') ||
+			!$this->registerHook('top') ||
 			!Configuration::updateValue('PRODUCT_COMMENTS_MINIMAL_TIME', 30) ||
 			!Configuration::updateValue('PRODUCT_COMMENTS_ALLOW_GUESTS', 0) ||
 			!Configuration::updateValue('PRODUCT_COMMENTS_MODERATE', 1))
@@ -87,7 +89,9 @@ class ProductComments extends Module
 			!$this->unregisterHook('productOutOfStock') ||
 			!$this->unregisterHook('productTabContent') ||
 			!$this->unregisterHook('header') ||
-			!$this->unregisterHook('productTab'))
+			!$this->unregisterHook('productTab') ||
+			!$this->unregisterHook('top') ||
+			!$this->unregisterHook('displayProductListReviews'))
 				return false;
 		return true;
 	}
@@ -689,6 +693,24 @@ class ProductComments extends Module
 		));
 
 		return ($this->display(__FILE__, '/tab.tpl'));
+	}
+
+	public function hookTop($params)
+	{
+		$this->context->controller->addJS($this->_path.'js/jquery.rating.pack.js');
+		return $this->display(__FILE__, 'productcomments_top.tpl');
+	}
+
+	public function hookDisplayProductListReviews($params)
+	{
+		require_once(dirname(__FILE__).'/ProductComment.php');
+		
+		$average = ProductComment::getAverageGrade((int)$params['product']['id_product']);
+		$this->smarty->assign(array(
+			'product' => $params['product'],
+			'averageTotal' => round($average['grade']),
+		));
+		return $this->display(__FILE__, 'productcomments_reviews.tpl');
 	}
 
 	public function hookproductOutOfStock($params)

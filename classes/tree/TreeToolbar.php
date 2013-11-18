@@ -40,12 +40,13 @@ class TreeToolbarCore implements ITreeToolbarCore
 		return $this->render();
 	}
 
-	public function setActions($value)
+	public function setActions($actions)
 	{
-		if (!is_array($value) && !$value instanceof Traversable)
+		if (!is_array($actions) && !$actions instanceof Traversable)
 			throw new PrestaShopException('Action value must be an traversable array');
 
-		$this->_actions = $value;
+		foreach($actions as $action)
+			$this->addAction($action);
 	}
 
 	public function getActions()
@@ -164,6 +165,9 @@ class TreeToolbarCore implements ITreeToolbarCore
 
 		if (!isset($this->_actions))
 			$this->_actions = array();
+
+		if (isset($this->_template_directory))
+			$action->setTemplateDirectory($this->getTemplateDirectory());
 
 		$this->_actions[] = $action;
 		return $this;

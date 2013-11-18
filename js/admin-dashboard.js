@@ -279,34 +279,28 @@ function saveDashConfig(widget_name) {
 	});
 }
 
-function preactivationLinkClick(module) {
-	$.ajax({
-		url : adminstats_ajax_url,
-		data : {
-			ajax : "1",
-			controller : "AdminDashboard",
-			action : "savePreactivationRequest",
-			module : module,
-		},
-		type: 'POST',
-		success : function(jsonData){
-
-		}
-	});
-}
-
 $(document).ready( function () {
 	$('#calendar_form input[type="submit"]').on('click', function(elt) {
 		elt.preventDefault();
 		setDashboardDateRange(elt.currentTarget.name);
 	});
 
-	$(".preactivationLink").on('click', function() {
-		preactivationLinkClick($(this).attr("rel"));
-	});
-
 	refreshDashboard(false, false);
 	getBlogRss();
 	bindSubmitDashConfig();
 	bindCancelDashConfig();
+
+	$('.ps_dashboard_simulation').change(function(e) {
+		$.ajax({
+			url : dashboard_ajax_url,
+			data : {
+				ajax:true,
+				action:'setSimulationMode',
+				PS_DASHBOARD_SIMULATION: $(this).val()
+			},
+			success : function(result) {
+				refreshDashboard(false, false);
+			}
+		});
+	});
 });

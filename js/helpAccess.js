@@ -25,8 +25,10 @@ function displayHelpButton(label, iso_user, country_iso_code, _PS_VERSION_){
             if(msg.content != 'none' && msg.content != '')
             {
                 $('ul.cc_button').append(msg.content);
-                $('.help-context-'+help_class_name).fadeIn("fast").show();
+                $('.help-context-'+help_class_name);
             }
+            else
+                $('.help-context-'+help_class_name).attr('disabled', 'disabled');
         },
 		beforeSend: function(data)
  		{

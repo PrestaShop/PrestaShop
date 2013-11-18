@@ -44,6 +44,8 @@ $(document).ready(function(){
 	tmDropDown ('', '#header .current', 'ul.toogle_content', 'active');							// all of this should be defined or left empty brackets
 	//tmDropDown ('cart', 'li#shopping_cart > a', '#cart_block', 'active');			// all of this should be defined or left empty brackets
 });
+
+
 var responsiveflag = false;
 
 //   TOGGLE FOOTER
@@ -65,22 +67,18 @@ function accordionFooter(status){
 function accordion(status){
 		leftColumnBlocks = $('#left_column');
 		if(status == 'enable'){
-			$('#left_column').remove();
-			$(leftColumnBlocks).insertAfter('#center_column').find('#categories_block_left ul.toggle_content').slideToggle('fast'); // replace left column under content
-			$('#right_column .title_block, #left_column .title_block, #left_column #newsletter_block_left').on('click', function(){
+			$('#right_column .block:not(#layered_block_left) .title_block, #left_column .block:not(#layered_block_left) .title_block, #left_column #newsletter_block_left h4').on('click', function(){
 				$(this).toggleClass('active').parent().find('.block_content').stop().slideToggle('medium');
 			})
-			$('#right_column, #left_column').addClass('accordion').find('.block_content').slideUp('fast');
+			$('#right_column, #left_column').addClass('accordion').find('.block:not(#layered_block_left) .block_content').slideUp('fast');
 		}else{
-			$('#left_column').remove();
-			$(leftColumnBlocks).insertBefore('#center_column');																		 // replace left column before content
-			$('#right_column .title_block, #left_column .title_block').removeClass('active').off().parent().find('.block_content').removeAttr('style').slideDown('fast');
+			$('#right_column .block:not(#layered_block_left) .title_block, #left_column .block:not(#layered_block_left) .title_block, #left_column #newsletter_block_left h4').removeClass('active').off().parent().find('.block_content').removeAttr('style').slideDown('fast');
 			$('#left_column, #right_column').removeClass('accordion');
 		}
 	}
 
 
-function resposiveResize(){
+function responsiveResize(){
 	   if ($(document).width() <= 767 && responsiveflag == false){
 	   		accordion('enable'),
 		    accordionFooter('enable'),
@@ -93,5 +91,12 @@ function resposiveResize(){
 		}
 }
 
-$(document).ready(resposiveResize);
-$(window).resize(resposiveResize);
+$(document).ready(responsiveResize);
+$(window).resize(responsiveResize);
+
+//replace top banner to top of page, before #header
+$(document).ready(function(){
+	topBanner = $('body').find('#banner_block_top');
+	topBanner.remove();
+	topBanner.insertBefore('#header');
+});

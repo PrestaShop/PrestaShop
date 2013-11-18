@@ -240,6 +240,9 @@ input.button_large, input.button_large_disabled, input.exclusive_large, input.ex
 	/*width: 180px;
 	background-image: url('../img/button-large.png')*/
 }
+.btn.disabled, .btn[disabled]:hover {
+	opacity:0.3;	
+}
 .button.button-small {
 	font:bold 13px/17px $font-famaly;
 	color:$button-text-color;
@@ -824,8 +827,20 @@ table.table_block  td {
 		margin-bottom:34px;	
 	}
 }
-.block {margin-bottom:30px}
-.block { 
+.block {
+	margin-bottom:30px;
+																		@media (max-width: $screen-xs-max) { // max 767px
+																			margin-bottom:0px;
+																		}
+	.block_content {
+																		@media (max-width: $screen-xs-max) { // max 767px
+																			margin-bottom:20px;
+																		}
+	}
+																		
+}
+.block {
+	
 
 	.title_block, h4 {
 		font:600 18px/22px $font-custom;
@@ -837,7 +852,27 @@ table.table_block  td {
 		margin-bottom:20px;
 																		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) {
 																			font-size:14px;
-																		}																	
+																		}
+																		// heading style for devices smaller that 767px width
+																		@media (max-width: $screen-xs-max) { // max 767px
+																			position:relative;
+																			
+																			&:after {
+																				display:block;
+																				font-family:$font-icon;
+																				content:"";
+																				position:absolute;
+																				right:0;
+																				top:15px;
+																				height:36px;
+																				width:36px;
+																				font-size:26px;
+																				font-weight:normal;
+																			}
+																			&.active:after {
+																				content:"";	
+																			}
+																		}															
 		
 		a {
 			color:$base-heading-color;
@@ -860,6 +895,9 @@ table.table_block  td {
 	}
 	.list-block {
 		margin-top:-8px;
+																		@media (max-width: $screen-xs-max) { // max 767px
+																			margin-top:0;
+																		}
 		
 		li {
 			padding:5px 0 6px 20px;
@@ -888,9 +926,13 @@ table.table_block  td {
 		.form-group { 
 			padding-top:20px;
 			border-top:1px solid $base-border-color;
+			margin-bottom:0;
 			
 			select {
-				max-width:270px;	
+				max-width:270px;
+																		@media (max-width: $screen-xs-max) { // max 767px
+																			width:270px;
+																		}
 			}
 		}
 		
@@ -1858,7 +1900,10 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 		color:#777;
 		position:relative;
 		.footer-block {
-			margin-top:45px;	
+			margin-top:45px;
+																		@media (max-width: $screen-xs-max) { // max 767px
+																			margin-top:20px;
+																		}
 		}
 		
 		a {
@@ -1873,6 +1918,23 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 			font:600 18px/22px $font-custom;
 			color:$light-text-color;
 			margin:0 0 13px 0;
+																		@media (max-width: $screen-xs-max) { // max 767px
+																			position:relative;
+																			margin-bottom:0;
+																			padding-bottom:13px;
+																			
+																			&:after {
+																				display:block;
+																				content:"";
+																				font-family:$font-icon;
+																				position:absolute;
+																				right:0;
+																				top:1px;
+																			}
+																			&.active:after {
+																				content:"";	
+																			}
+																		}
 			
 			a {color:$light-text-color;}
 		}
@@ -2946,7 +3008,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -13px }
 		input, textarea {
 			border:1px solid #46a74e;
 			color:#35b33f;
-			background: url(../img/icon/form-ok.png) 98% 5px no-repeat #87f590;	
+			background: url(../img/icon/form-ok.png) 98% 5px no-repeat #ddf9e1;	
 		}
 	}
 	&.form-error, &.form-ok {
