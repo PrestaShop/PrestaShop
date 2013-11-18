@@ -70,7 +70,8 @@ class ThemeConfigurator extends Module
 		);
 
 		if (!parent::install() ||
-			!$this->installDB() ||
+			!$this->installDB() ||            
+            !$this->installFixtures() ||
             !$this->registerHook('displayHeader') ||
             !$this->registerHook('displayTop') ||
             !$this->registerHook('displayLeftColumn') ||
@@ -78,7 +79,6 @@ class ThemeConfigurator extends Module
             !$this->registerHook('displayHome') ||
             !$this->registerHook('displayFooter') ||
             !$this->registerHook('displayBackOfficeHeader') ||
-			
 			!Configuration::updateValue('PS_TC_THEMES', serialize($themes_colors)) ||
 			!Configuration::updateValue('PS_TC_FONTS', serialize($themes_fonts)))
 			return false;
@@ -112,6 +112,58 @@ class ThemeConfigurator extends Module
 
 	    return true;
 	}
+
+    public function installFixtures()
+    {
+        $result = true;
+
+        for ($i = 1; $i < 6; $i++)
+        {
+            $result &= Db::getInstance()->Execute('
+                INSERT INTO `'._DB_PREFIX_.'themeconfigurator` ( 
+                        `id_shop`, `id_lang`, `item_order`, `title`, `title_use`, `hook`, `url`, `target`, `image`, `image_w`, `image_h`, `html`, `active`
+                ) VALUES ( 
+                    \''.(int)$this->context->shop->id.'\',
+                    \''.(int)$this->context->language->id.'\',
+                    \''.(int)$i.'\',
+                    \'\',
+                    \'0\',
+                    \'home\',
+                    \'\',
+                    \'\',
+                    \'banner-img'.$i.'.jpg\',
+                    \'\',
+                    \'\',
+                    \'\',
+                    1)
+                ');
+        }
+
+        for ($i = 6; $i < 8; $i++)
+        {
+            $result &= Db::getInstance()->Execute('
+                INSERT INTO `'._DB_PREFIX_.'themeconfigurator` ( 
+                        `id_shop`, `id_lang`, `item_order`, `title`, `title_use`, `hook`, `url`, `target`, `image`, `image_w`, `image_h`, `html`, `active`
+                ) VALUES ( 
+                    \''.(int)$this->context->shop->id.'\',
+                    \''.(int)$this->context->language->id.'\',
+                    \''.(int)$i.'\',
+                    \'\',
+                    \'0\',
+                    \'top\',
+                    \'\',
+                    \'\',
+                    \'banner-img'.$i.'.jpg\',
+                    \'\',
+                    \'\',
+                    \'\',
+                    1)
+                ');
+        }
+
+
+        return $result;
+    }
 
 	 public function uninstall() 
         {
@@ -166,7 +218,7 @@ class ThemeConfigurator extends Module
                         'htmlitems'=> $this->getItemsFromHook('top'),
                         'hook' => 'top'
                 ));
-                 return $this->display(__FILE__, 'views/templates/hooks/hook.tpl');
+                 return $this->display(__FILE__, 'hook.tpl');
         }
 
         public function hookDisplayHome() 
@@ -175,7 +227,7 @@ class ThemeConfigurator extends Module
                         'htmlitems'=> $this->getItemsFromHook('home'),
                         'hook' => 'home'
                 ));
-                 return $this->display(__FILE__, 'views/templates/hooks/hook.tpl');
+                 return $this->display(__FILE__, 'hook.tpl');
         }
 
         public function hookDisplayLeftColumn() 
@@ -184,7 +236,7 @@ class ThemeConfigurator extends Module
                         'htmlitems'=> $this->getItemsFromHook('left'),
                         'hook' => 'left'
                 ));
-                 return $this->display(__FILE__, 'views/templates/hooks/hook.tpl');
+                 return $this->display(__FILE__, 'hook.tpl');
         }
         
         public function hookDisplayRightColumn() 
@@ -193,7 +245,7 @@ class ThemeConfigurator extends Module
                         'htmlitems'=> $this->getItemsFromHook('right'),
                         'hook' => 'right'
                 ));
-                 return $this->display(__FILE__, 'views/templates/hooks/hook.tpl');
+                 return $this->display(__FILE__, 'hook.tpl');
         }  
         
         public function hookDisplayFooter() 
@@ -202,7 +254,7 @@ class ThemeConfigurator extends Module
                         'htmlitems'=> $this->getItemsFromHook('footer'),
                         'hook' => 'footer'
                 ));
-                 return $this->display(__FILE__, 'views/templates/hooks/hook.tpl');
+                 return $this->display(__FILE__, 'hook.tpl');
         }  
 
         protected function getItemsFromHook($hook)

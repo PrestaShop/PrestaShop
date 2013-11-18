@@ -60,7 +60,7 @@ class HomeSlider extends Module
 	public function install()
 	{
 		/* Adds Module */
-		if (parent::install() && $this->registerHook('displayHome') && $this->registerHook('actionShopDataDuplication'))
+		if (parent::install() && $this->registerHook('displayTop') && $this->registerHook('actionShopDataDuplication'))
 		{
 			/* Sets up configuration */
 			$res = Configuration::updateValue('HOMESLIDER_WIDTH', '779');
@@ -660,7 +660,7 @@ class HomeSlider extends Module
 		return true;
 	}
 
-	public function hookDisplayHome()
+	public function hookDisplayTop()
 	{
 		if(!$this->_prepareHook())
 			return;
@@ -680,11 +680,6 @@ class HomeSlider extends Module
 		if ($name === null && isset($this->context->smarty->tpl_vars['page_name']))
 			return parent::getCacheId($this->context->smarty->tpl_vars['page_name']->value);
 		return parent::getCacheId($name);
-	}
-	
-	public function hookTop()
-	{
-		return $this->hookDisplayHome();	
 	}
 	
 	public function clearCache()
