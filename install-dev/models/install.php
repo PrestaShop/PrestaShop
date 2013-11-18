@@ -646,8 +646,8 @@ class InstallModelInstall extends InstallAbstractModel
 	 */
 	public function installFixtures($entity = null, array $data = array())
 	{
-		$fixtures_path = _PS_INSTALL_FIXTURES_PATH_.'apple/';
-		$fixtures_name = 'apple';
+		$fixtures_path = _PS_INSTALL_FIXTURES_PATH_.'fashion/';
+		$fixtures_name = 'fashion';
 		$zip_file = _PS_ROOT_DIR_.'/download/fixtures.zip';
 		$temp_dir = _PS_ROOT_DIR_.'/download/fixtures/';
 
