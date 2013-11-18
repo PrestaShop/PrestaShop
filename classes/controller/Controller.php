@@ -313,12 +313,12 @@ abstract class ControllerCore
 	/**
 	 * Add a new javascript file in page header.
 	 *
-	 * @param mixed $js_uri
+	 * @param mixed $name
+	 * @param mixed $folder
 	 * @return void
 	 */
 	public function addJqueryPlugin($name, $folder = null)
 	{
-		$plugin_path = array();
 		if (is_array($name))
 		{
 			foreach ($name as $plugin)
@@ -334,10 +334,10 @@ abstract class ControllerCore
 		{
 			$plugin_path = Media::getJqueryPluginPath($name, $folder);
 
-		if(!empty($plugin_path['css']))
-			$this->addCSS($plugin_path['css']);
-		if(!empty($plugin_path['js']))
-			$this->addJS($plugin_path['js']);
+			if(!empty($plugin_path['css']))
+				$this->addCSS($plugin_path['css']);
+			if(!empty($plugin_path['js']))
+				$this->addJS($plugin_path['js']);
 		}
 	}
 

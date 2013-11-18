@@ -60,11 +60,11 @@ class HomeSlider extends Module
 	public function install()
 	{
 		/* Adds Module */
-		if (parent::install() && $this->registerHook('displayHome') && $this->registerHook('actionShopDataDuplication'))
+		if (parent::install() && $this->registerHook('displayTop') && $this->registerHook('actionShopDataDuplication'))
 		{
 			/* Sets up configuration */
-			$res = Configuration::updateValue('HOMESLIDER_WIDTH', '535');
-			$res &= Configuration::updateValue('HOMESLIDER_HEIGHT', '300');
+			$res = Configuration::updateValue('HOMESLIDER_WIDTH', '779');
+			$res &= Configuration::updateValue('HOMESLIDER_HEIGHT', '448');
 			$res &= Configuration::updateValue('HOMESLIDER_SPEED', '500');
 			$res &= Configuration::updateValue('HOMESLIDER_PAUSE', '3000');
 			$res &= Configuration::updateValue('HOMESLIDER_LOOP', '1');
@@ -86,7 +86,7 @@ class HomeSlider extends Module
 	private function installSamples()
 	{
 		$languages = Language::getLanguages(false);
-		for ($i = 1; $i <= 5; ++$i)
+		for ($i = 1; $i <= 3; ++$i)
 		{
 			$slide = new HomeSlide();
 			$slide->position = $i;
@@ -660,7 +660,7 @@ class HomeSlider extends Module
 		return true;
 	}
 
-	public function hookDisplayHome()
+	public function hookDisplayTop()
 	{
 		if(!$this->_prepareHook())
 			return;
@@ -675,10 +675,13 @@ class HomeSlider extends Module
 		return $this->display(__FILE__, 'homeslider.tpl', $this->getCacheId());
 	}
 	
-	public function hookTop()
+	public function getCacheId($name = null)
 	{
-		return $this->hookDisplayHome();	
+		if ($name === null && isset($this->context->smarty->tpl_vars['page_name']))
+			return parent::getCacheId($this->context->smarty->tpl_vars['page_name']->value);
+		return parent::getCacheId($name);
 	}
+	
 	public function clearCache()
 	{
 		$this->_clearCache('homeslider.tpl');

@@ -30,6 +30,7 @@ $(document).ready(
 			function()
 			{
 				$('#theme').val($(this).attr('class'));
+				$(this).closest('form').submit();
 			}
 		);
 
@@ -78,6 +79,21 @@ $(document).ready(
 					$(this).children('i').removeClass('icon-caret-up').addClass('icon-caret-down');
 					$('#color-box').slideDown();
 				}
+			}
+		);
+
+		$('#font').change(
+			function()
+			{
+				$(document).find('*:not(i)').css('font-family', $('#font option:selected').text());
+			}
+		);
+
+		$('#reset').click(
+			function()
+			{
+				$('#theme').val('');
+				$(this).closest('form').submit();
 			}
 		);
 	}

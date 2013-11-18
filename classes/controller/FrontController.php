@@ -273,7 +273,7 @@ class FrontControllerCore extends Controller
 		else
 		{
 			$page_name = Dispatcher::getInstance()->getController();
-			$page_name = (preg_match('/^[0-9]/', $page_name)) ? 'page_'.$page_name : $page_name;
+			$page_name = (preg_match('/^[0-9]/', $page_name) ? 'page_'.$page_name : $page_name);
 		}
 
 		$this->context->smarty->assign(Meta::getMetaTags($this->context->language->id, $page_name));
@@ -346,7 +346,8 @@ class FrontControllerCore extends Controller
 			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT'),
 			'quick_view' => Configuration::get('PS_QUICK_VIEW'),
 			'shop_phone' => Configuration::get('PS_SHOP_PHONE'),
-			'compared_products' => is_array($compared_products) ? $compared_products : array()
+			'compared_products' => is_array($compared_products) ? $compared_products : array(),
+			'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM')
 		));
 
 		// Add the tpl files directory for mobile
@@ -757,6 +758,8 @@ class FrontControllerCore extends Controller
 			$this->addjqueryPlugin('fancybox');
 			$this->addJS(_THEME_JS_DIR_.'quick-view.js');
 		}
+		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
+				$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 
 		// Execute Hook FrontController SetMedia
 		Hook::exec('actionFrontControllerSetMedia', array());

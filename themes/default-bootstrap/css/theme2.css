@@ -1,0 +1,200 @@
+body {
+  background: #232323;
+}
+
+.header-container,
+.columns-container {
+  background: #333333;
+}
+
+#header {
+  background: none;
+}
+#header .header-row {
+  background: #545454;
+}
+#header .header-row .shop-phone {
+  color: white;
+  text-shadow: 0 1px #404040;
+}
+#header .header-row .shop-phone i,
+#header .header-row .shop-phone strong {
+  color: #aaaaaa;
+  text-shadow: 0 1px #404040;
+}
+#header #currencies-block-top,
+#header #languages-block-top,
+#header .header-row #header_user_info {
+  border-color: #656565;
+}
+#header #currencies-block-top div.current,
+#header #languages-block-top div.current,
+#header .header-row #header_user_info a {
+  color: white;
+}
+#header #currencies-block-top div.current:hover, #header #currencies-block-top div.current.active,
+#header #languages-block-top div.current:hover,
+#header #languages-block-top div.current.active,
+#header .header-row #header_user_info a:hover,
+#header .header-row #header_user_info a.active {
+  color: white;
+}
+#header #currencies-block-top div.current,
+#header #languages-block-top div.current {
+  padding-bottom: 11px;
+}
+#header #currencies-block-top div.current strong, #header #currencies-block-top div.current:after,
+#header #languages-block-top div.current strong,
+#header #languages-block-top div.current:after {
+  color: white;
+}
+#header #currencies-block-top div.current:hover strong, #header #currencies-block-top div.current:hover:after, #header #currencies-block-top div.current.active strong, #header #currencies-block-top div.current.active:after,
+#header #languages-block-top div.current:hover strong,
+#header #languages-block-top div.current:hover:after,
+#header #languages-block-top div.current.active strong,
+#header #languages-block-top div.current.active:after {
+  background: #2b2b2b;
+  color: white;
+}
+#header #contact-link {
+  border-color: #656565;
+}
+#header #contact-link a {
+  color: white;
+}
+#header #contact-link a:hover, #header #contact-link a.active {
+  background: #2b2b2b;
+  color: white;
+}
+
+#search_block_top .btn.button-search {
+  background: #666666;
+}
+#search_block_top .btn.button-search:hover {
+  color: white;
+  background: #333333;
+}
+
+#search_block_top #search_query_top {
+  background: white;
+  color: #333333;
+}
+
+#header_right #header_user #shopping_cart a {
+  background: #666666;
+  color: white;
+}
+#header_right #header_user #shopping_cart a:after {
+  color: white;
+}
+#header_right #header_user #shopping_cart a:hover {
+  color: white;
+  background: #333333;
+}
+
+.sf-menu {
+  background: white;
+  border: 1px solid #f2f2f2;
+  border-bottom: 3px solid #f2f2f2;
+}
+.sf-menu > li {
+  border-right: 1px solid #d6d4d4;
+}
+.sf-menu > li a {
+  border-bottom: 3px solid #f2f2f2;
+}
+.sf-menu > li.sfHover > a, .sf-menu > li > a:hover, .sf-menu > li.sfHoverForce > a {
+  color: #fff;
+  background: #666666;
+  border-bottom-color: #666666;
+}
+
+#home-page-tabs {
+  background: white;
+}
+#home-page-tabs > li.active a,
+#home-page-tabs > li a:hover {
+  background: #333333;
+  color: white;
+}
+
+.new,
+.sale {
+  background: #f44051;
+}
+.new:before, .new:after,
+.sale:before,
+.sale:after {
+  border-color: #f44051  transparent   transparent transparent;
+}
+
+ul.product_list.grid > li .product-container {
+  background: white;
+}
+ul.product_list.grid > li .product-container .product-image-container {
+  background: #474747;
+}
+ul.product_list.grid > li .product-container .product-image-container .product_img_link {
+  background: #474747;
+}
+ul.product_list.grid > li .product-container .product-image-container .product_img_link img {
+  background: #474747;
+}
+
+ul.product_list.grid > li:hover .product-container {
+  background: #5c5c5c;
+}
+ul.product_list.grid > li:hover .product-container .product-name {
+  color: #aaa;
+}
+ul.product_list.grid > li:hover .product-container .functional-buttons div a, ul.product_list.grid > li:hover .product-container ul.product_list.grid > li .product-container .functional-buttons div label {
+  color: #aaa;
+}
+ul.product_list.grid > li:hover .product-container .functional-buttons div a:hover, ul.product_list.grid > li:hover .product-container ul.product_list.grid > li .product-container .functional-buttons div label:hover {
+  color: #fff;
+}
+
+#cmsinfo_block em {
+  background: #666666;
+}
+
+#facebook_block, #cmsinfo_block {
+  background: #454545;
+}
+#facebook_block h4, #cmsinfo_block h4 {
+  color: white;
+}
+
+#cmsinfo_block h3,
+#cmsinfo_block .dark {
+  color: white;
+}
+
+#cmsinfo_block,
+#cmsinfo_block > div + div {
+  border-color: #1b1b1b;
+}
+
+.footer-container {
+  background: #1b1b1b;
+}
+@media (min-width: 768px) {
+  .footer-container {
+    background: url(../img/footer-bg1.gif) repeat-x;
+  }
+}
+
+.footer-container #footer #social_block {
+  background: #1b1b1b;
+}
+
+#footer #newsletter_block_left .form-group .form-control {
+  background: #1b1b1b;
+}
+#footer #newsletter_block_left .form-group .button-small {
+  color: #666666;
+}
+
+.footer-container #footer #social_block ul li a:hover {
+  color: white;
+}

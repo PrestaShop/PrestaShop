@@ -69,7 +69,7 @@ class Blockcmsinfo extends Module
 				`text` text NOT NULL,
 				PRIMARY KEY (`id_info`, `id_lang`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
-		
+
 		return $return;
 	}
 
@@ -299,8 +299,29 @@ class Blockcmsinfo extends Module
 	{
 		$return = true;
 		$tab_texts = array(
-			array('text' => $this->l('Custom text.')),
-			array('text' => $this->l('Custom text.')),
+			array('text' => '<ul>
+<li><em class="icon-truck"></em>
+<div class="type-text">
+<h3>Free Shipping</h3>
+<p>Lorem ipsum dolor sit amet conse ctetur voluptate velit esse cillum dolore eu</p>
+</div>
+</li>
+<li><em class="icon-phone"></em>
+<div class="type-text">
+<h3>Call us: (800)2345-6789</h3>
+<p>Lorem ipsum dolor sit amet conse ctetur voluptate velit esse cillum dolore eu</p>
+</div>
+</li>
+<li><em class="icon-credit-card"></em>
+<div class="type-text">
+<h3>Gift cards</h3>
+<p>Lorem ipsum dolor sit amet conse ctetur voluptate velit esse cillum dolore eu</p>
+</div>
+</li>
+</ul>'),
+			array('text' => '<h3>Custom Block</h3>
+<p><strong class="dark">Lorem ipsum dolor sit amet conse ctetu</strong></p>
+<p>Sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.</p>'),
 		);
 		foreach($tab_texts as $tab)
 		{
