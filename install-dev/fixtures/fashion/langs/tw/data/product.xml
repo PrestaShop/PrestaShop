@@ -1,0 +1,464 @@
+<?xml version="1.0"?>
+<entity_product>
+  <product id="Fur_Coat" id_shop="1">
+    <description></description>
+    <description_short>This stylish short sleeve winter coat will keep you warm this winter. The thick knit collar adds an orginal touch to this elegant coat.</description_short>
+    <link_rewrite>winter-coat</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Winter Coat</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Textured_Trench_Coat" id_shop="1">
+    <description></description>
+    <description_short>This flattering fitted trench coat is the ideal piece for the season. The warm collar will keep you warm for any winter occasion.</description_short>
+    <link_rewrite>textured-trench-coat</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Textured Trench Coat</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Slim_Cut_Coat" id_shop="1">
+    <description></description>
+    <description_short>A stylish double-breasted coat with a high collar. Slim cut and belted to emphasize your waist and your femininity!</description_short>
+    <link_rewrite>slim-cut-coat</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Slim Cut Coat</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Quilted_Jacket" id_shop="1">
+    <description></description>
+    <description_short>This quilted jacket with zipper detail and built-in hood is perfect for Fall. Comfortable fit with silver sleeves and shoulders.</description_short>
+    <link_rewrite>quilted-jacket</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Quilted Jacket</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Suit_Blazer" id_shop="1">
+    <description></description>
+    <description_short>Suit style blazer with structured shoulders and front side gold engraved buttons. Ideal for the mid-season.</description_short>
+    <link_rewrite>suit-blazer</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Suit Blazer</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Short_Blazer" id_shop="1">
+    <description></description>
+    <description_short>Short cotton blazer with black and white polka dots. Front side button closures and three quarter length sleeves. Complete the look with a delicate necklace.</description_short>
+    <link_rewrite>short-blazer</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Short Blazer</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Puffer_Jacket" id_shop="1">
+    <description></description>
+    <description_short>Puffer jacket with treated fabric and a removable faur fux hood. Flattering fit with a belt buckle and loops. Fitting for winter fashion.</description_short>
+    <link_rewrite>Puffer_Jacket</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Puffer Jacket</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Leather_Jacket_1" id_shop="1">
+    <description></description>
+    <description_short>Biker style jacket with asymmetrical zipper front. Side pockets and zippered cuffs.</description_short>
+    <link_rewrite>leather-jacket</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Leather Jacket</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Leather_Jacket_2" id_shop="1">
+    <description></description>
+    <description_short>Zip up biker inspired leather jacket with collar. The two zippered pockets on the front gives this jacket rock style flare.</description_short>
+    <link_rewrite>leather-jacket</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Leather Jacket</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Leather_Jacket_3" id_shop="1">
+    <description></description>
+    <description_short>Biker leather jacket with padded and tie-up detailed sleeves. The structured shoulders makes this jacket super stylish.</description_short>
+    <link_rewrite>leather-jacket</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Leather Jacket</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Short_Sleeve_T-shirts" id_shop="1">
+    <description></description>
+    <description_short>Soft stretch jersey v-neck tee with short sleeves. A delightful green for a colorful summer.</description_short>
+    <link_rewrite>short-sleeve-tshirts</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Short Sleeve T-shirts</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Faded_Short_Sleeve_T-shirts" id_shop="1">
+    <description></description>
+    <description_short>Faded short sleeve t-shirt with high neckline. Soft and stretchy material for a comfortable fit. Accessorize with a straw hat and you're ready for summer!</description_short>
+    <link_rewrite>faded-short-sleeve-tshirts</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Faded Short Sleeve T-shirts</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Cami_Tank_Top" id_shop="1">
+    <description></description>
+    <description_short>Pure cotton printed top with waist elastic band for a perfect fit. The thin straps will highlight chest on a hot summer day.</description_short>
+    <link_rewrite>Cami_Tank_Top</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Cami Tank Top</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product><product id="Blouse" id_shop="1">
+    <description></description>
+    <description_short>Short sleeved blouse with feminine draped sleeve detail. </description_short>
+    <link_rewrite>blouse</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Blouse</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Leapoard_Printed_Blouse" id_shop="1">
+    <description></description>
+    <description_short>Elegant leopard print silky blouse with chiffon puffed sleeves.</description_short>
+    <link_rewrite>leapoard_printed_blouse</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Leapoard Printed Blouse</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Faded_Jeans" id_shop="1">
+    <description></description>
+    <description_short>5-pocket washed denim stretchy jeans with low waist and just the right cut.</description_short>
+    <link_rewrite>faded-jeans</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Faded Jeans</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="5_Pocket_Jean_1" id_shop="1">
+    <description></description>
+    <description_short>5-pocket blue jean with zipper and button closure. Straight cut fit.</description_short>
+    <link_rewrite>5-pocket-jean</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>5 Pocket Jean</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="5_Pocket_Jean_2" id_shop="1">
+    <description></description>
+    <description_short>5-pocket blue jean with zipper and button closure. Straight cut fit.</description_short>
+    <link_rewrite>5-pocket-jean</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>5 Pocket Jean</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Dress_Gathered_At_The_Waist" id_shop="1">
+    <description></description>
+    <description_short>V-neck cut dress gathered at the waist for a flattering waistline. 3/4 sleeves and draped.</description_short>
+    <link_rewrite>Dress_Gathered_At_The_Waist</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Dress gathered at the waist</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Printed_Dress" id_shop="1">
+    <description></description>
+    <description_short>100% cotton double printed dress. Black and white striped top and orange high waisted skater skirt bottom.</description_short>
+    <link_rewrite>printed-dress</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Printed Dress</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Floral_Dress" id_shop="1">
+    <description></description>
+    <description_short>Lace embroidered dress with floral detail. Tie-up spaghetti straps .</description_short>
+    <link_rewrite>floral-dress</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Floral Dress</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Strapless_Dress_1" id_shop="1">
+    <description></description>
+    <description_short>Strapless cinched waist dress with floral print.</description_short>
+    <link_rewrite>strapless-dress</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Strapless Dress</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Long_Evening_Dress" id_shop="1">
+    <description></description>
+    <description_short>Long sleeve jersey dress. Mid knee length.</description_short>
+    <link_rewrite>long-evening-dress</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Long Evening Dress</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Short_Evening_Dress" id_shop="1">
+    <description></description>
+    <description_short>Short baby doll dress with neckline bow. Detailed finishes at the bottom of the dress.</description_short>
+    <link_rewrite>short-evening-dress</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Short Evening Dress</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Strapless_Dress_2" id_shop="1">
+    <description></description>
+    <description_short>Ruffle strapless dress with floral prints and knotted blue waist belt.</description_short>
+    <link_rewrite>strapless-dress</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Strapless Dress</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Dress_with_Sleeves" id_shop="1">
+    <description></description>
+    <description_short>Black evening dress with puffed sleeve accents. Leather lining on frontside of the dress.</description_short>
+    <link_rewrite>dress-with-sleeves</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Dress with Sleeves</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Printed_Dress_2" id_shop="1">
+    <description></description>
+    <description_short>Printed evening dress with straight sleeves with black thin waist belt and ruffled linings.</description_short>
+    <link_rewrite>printed-dress</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Printed Dress</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Printed_Summer_Dress_1" id_shop="1">
+    <description></description>
+    <description_short>Long printed dress with thin adjustable straps. V-neckline and wiring under the bust with ruffles at the bottom of the dress.</description_short>
+    <link_rewrite>printed-summer-dress</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Printed Summer Dress</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Long_Printed_Dress" id_shop="1">
+    <description></description>
+    <description_short>Long printed empire waist dress with behind the neck tie straps.</description_short>
+    <link_rewrite>long-printed-dress</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Long Printed Dress</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Printed_Summer_Dress_2" id_shop="1">
+    <description></description>
+    <description_short>Sleeveless knee-length chiffon dress. V-neckline with elastic under the bust lining.</description_short>
+    <link_rewrite>printed-summer-dress</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Printed Summer Dress</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Printed_Chiffon_Dress" id_shop="1">
+    <description></description>
+    <description_short>Printed chiffon knee length dress with tank straps. Deep v-neckline.</description_short>
+    <link_rewrite>printed-chiffon-dress</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Printed Chiffon Dress</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Studded_Leather_Belt" id_shop="1">
+    <description></description>
+    <description_short>Brown accent studded belt with gold buckle</description_short>
+    <link_rewrite>studded-leather-belt</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Studded Leather Belt</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Braided_Belt" id_shop="1">
+    <description></description>
+    <description_short>Black and gold braided leather belt</description_short>
+    <link_rewrite>braided-belt</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Braided Belt</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Bucket_Hat" id_shop="1">
+    <description></description>
+    <description_short>Soft felted knit bucket hat</description_short>
+    <link_rewrite>bucket-hat</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Bucket Hat</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Floppy_Hat" id_shop="1">
+    <description></description>
+    <description_short>Black straw floppy hat</description_short>
+    <link_rewrite>floppy-hat</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Floppy Hat</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Men_Straw_Hat" id_shop="1">
+    <description></description>
+    <description_short>Men's beige straw fedora</description_short>
+    <link_rewrite>men-straw-hat</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Men Straw Hat</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Bowling_Bag" id_shop="1">
+    <description></description>
+    <description_short>Red bowling style bag. Fancy lining with metal buckle strap</description_short>
+    <link_rewrite>bowling-bag</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Bowling Bag</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Leather_Bag" id_shop="1">
+    <description></description>
+    <description_short>Genuine leather bag with leather handles and adjustable and removable shoulder strap.</description_short>
+    <link_rewrite>leather-bag</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Leather Bag</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Snake_Skin_Bag" id_shop="1">
+    <description></description>
+    <description_short>Snake skin shoulder bag with straps and handle. Front pocket with gold flap buckle.</description_short>
+    <link_rewrite>Snake_Skin_Bag</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Snake Skin Bag</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Quilted_Bag" id_shop="1">
+    <description></description>
+    <description_short>Quilted leather bag with silver braided straps. Adjustable long handle and zipper on top and side pocket.</description_short>
+    <link_rewrite>quilted-bag</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Quilted Bag</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Suede_Bag" id_shop="1">
+    <description></description>
+    <description_short>Suede camel colored bag with belted front flap.</description_short>
+    <link_rewrite>Suede_Bag</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Suede Bag</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Wedge_Shoe" id_shop="1">
+    <description></description>
+    <description_short>High heeled cork wedge with cross over leather straps.</description_short>
+    <link_rewrite>Wedge_Shoe</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Wedge Shoe</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+</entity_product>
