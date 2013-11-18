@@ -29,7 +29,7 @@
   height: 50px;
   left: 215px;
   position: fixed;
-  top: 90px;
+  top: 150px;
   width: 50px;
   z-index: 20;
 }
@@ -43,7 +43,7 @@
 #tool_customization{
   position: fixed;
   left: 0;
-  top: 90px;
+  top: 150px;
   z-index: 20; 
   height: auto;
   width: 215px;
