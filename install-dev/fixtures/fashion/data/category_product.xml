@@ -6,6 +6,12 @@
     <field name="position"/>
   </fields>
   <entities>
+    <category_product id="category_product_1_1" id_category="Home" id_product="Dress_with_Sleeves" position="0"/>
+    <category_product id="category_product_1_2" id_category="Home" id_product="Fur_Coat" position="1"/>
+    <category_product id="category_product_1_3" id_category="Home" id_product="5_Pocket_Jean_1" position="2"/>
+	<category_product id="category_product_1_4" id_category="Home" id_product="Short_Blazer" position="3"/>
+    <category_product id="category_product_1_5" id_category="Home" id_product="5_Pocket_Jean_2" position="4"/>
+    <category_product id="category_product_1_6" id_category="Home" id_product="Printed_Chiffon_Dress" position="5"/>
     <category_product id="category_product_2_1" id_category="Coats" id_product="Fur_Coat" position="0"/>
     <category_product id="category_product_2_2" id_category="Coats" id_product="Textured_Trench_Coat" position="1"/>
     <category_product id="category_product_2_3" id_category="Coats" id_product="Slim_Cut_Coat" position="2"/>
