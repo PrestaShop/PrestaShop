@@ -273,7 +273,7 @@ class FrontControllerCore extends Controller
 		else
 		{
 			$page_name = Dispatcher::getInstance()->getController();
-			$page_name = (preg_match('/^[0-9]/', $page_name)) ? 'page_'.$page_name : $page_name;
+			$page_name = (preg_match('/^[0-9]/', $page_name) ? 'page_'.$page_name : $page_name);
 		}
 
 		$this->context->smarty->assign(Meta::getMetaTags($this->context->language->id, $page_name));
