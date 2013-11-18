@@ -34,6 +34,6 @@
             {/if}
         {/section}
         </div>
-        <span class="nb-comments">{l s='%s Review(s)'|sprintf:$nbComments mod='productcomments'}&nbsp</span>
+        <span class="nb-comments">{l s='%s Review(s)'|sprintf:$nbComments mod='productcomments'}</span>
     </div>
 {/if}
