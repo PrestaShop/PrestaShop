@@ -568,6 +568,7 @@ class InstallModelInstall extends InstallAbstractModel
 				'statssearch',
 				'statsstock',
 				'statsvisits',
+				'themeconfigurator',
 			);
 		}
 		return $modules;
