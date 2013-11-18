@@ -217,7 +217,7 @@ class BlockCategories extends Module
 				$resultIds[$row['id_category']] = &$row;
 			}
 
-			$blockCategTree = $this->getTree($resultParents, $resultIds, $maxdepth, ($category && (!isset($params['is_top_menu']) || !$params['is_top_menu']) ? $category->id : null));
+			$blockCategTree = $this->getTree($resultParents, $resultIds, $maxdepth, ($category ? $category->id : null));
 			$this->smarty->assign('blockCategTree', $blockCategTree);
 
 			if ($category)
