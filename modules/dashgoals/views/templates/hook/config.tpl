@@ -29,10 +29,10 @@
 		<table class="table table-condensed table-striped table-bordered">
 			<thead>
 				<tr>
-					<th>{$goals_year}</th>
-					<th>{l s='Traffic' mod='dashgoals'}</th>
-					<th>{l s='Conversion Rate' mod='dashgoals'}</th>
-					<th>{l s='Average Cart Value' mod='dashgoals'}</th>
+					<th class="fixed-width-md">{$goals_year}</th>
+					<th class="fixed-width-md">{l s='Traffic' mod='dashgoals'}</th>
+					<th class="fixed-width-md">{l s='Conversion Rate' mod='dashgoals'}</th>
+					<th class="fixed-width-lg">{l s='Average Cart Value' mod='dashgoals'}</th>
 					<th>{l s='Sales' mod='dashgoals'}</th>
 				</tr>
 			</thead>

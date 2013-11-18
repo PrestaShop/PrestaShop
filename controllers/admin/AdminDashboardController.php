@@ -309,7 +309,13 @@ class AdminDashboardControllerCore extends AdminController
 		
 		die(Tools::jsonEncode(Hook::exec('dashboardData', $params, $id_module, true, true, (int)Tools::getValue('dashboard_use_push'))));
 	}
-	
+
+	public function ajaxProcessSetSimulationMode()
+	{
+		Configuration::updateValue('PS_DASHBOARD_SIMULATION', (int)Tools::getValue('PS_DASHBOARD_SIMULATION'));
+		die ('k'.Configuration::get('PS_DASHBOARD_SIMULATION').'k');
+	}
+
 	public function ajaxProcessGetBlogRss()
 	{
 		$return = array('has_errors' => false, 'rss' => array());
@@ -371,19 +377,7 @@ class AdminDashboardControllerCore extends AdminController
 			$return['widget_html'] = $module_obj->$hook($params);
 
 		die(Tools::jsonEncode($return));
-	}
-	
-	public function ajaxProcessSavePreactivationRequest()
-	{
-		$isoUser = Context::getContext()->language->iso_code;
-		$isoCountry = Context::getContext()->country->iso_code;
-		$employee = new Employee((int)Context::getContext()->cookie->id_employee);
-		$firstname = $employee->firstname;
-		$lastname = $employee->lastname;
-		$email = $employee->email;
-		$return = @Tools::file_get_contents('http://api.prestashop.com/partner/premium/set_request.php?iso_country='.strtoupper($isoCountry).'&iso_lang='.strtolower($isoUser).'&host='.urlencode($_SERVER['HTTP_HOST']).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&partner='.htmlentities(Tools::getValue('module')).'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&email='.urlencode($email).'&firstname='.urlencode($firstname).'&lastname='.urlencode($lastname).'&type=home');
-		die($return);
-	}
+	}	
 }
 
 

@@ -155,7 +155,7 @@
 	</div>
 	<div class="col-lg-3">
 		<div class="panel">
-			<h3><i class="icon-eye-open"></i> {l s='LiveEdit'}</h3>
+			<h3><i class="icon-eye-open"></i> {l s='Live Edit'}</h3>
 			{if $live_edit}
 				<p>{l s='You have to select a shop to use LiveEdit'}</p>
 			{else}

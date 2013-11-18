@@ -1,4 +1,4 @@
-<li class="help-context-{$label|escape:'htmlall':'UTF-8'}" style="display:none">
+<li class="help-context-{$label|escape:'htmlall':'UTF-8'}">
     <a id="desc-{$label|escape:'htmlall':'UTF-8'}-help"
        class="toolbar_btn"
        href="#"

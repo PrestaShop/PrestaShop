@@ -129,13 +129,15 @@ class BlockCategories extends Module
 
 		if (!isset($resultIds[$id_category]))
 			return false;
+		
 		$return = array(
 			'id' => $id_category,
 			'link' => $this->context->link->getCategoryLink($id_category, $resultIds[$id_category]['link_rewrite']),
-			'name' => $resultIds[$id_category]['name'],
-			'desc'=> $resultIds[$id_category]['description'],
+			'name' =>  $resultIds[$id_category]['name'],
+			'desc'=>  $resultIds[$id_category]['description'],
 			'children' => $children
 		);
+
 		return $return;
 	}
 
@@ -215,7 +217,7 @@ class BlockCategories extends Module
 				$resultIds[$row['id_category']] = &$row;
 			}
 
-			$blockCategTree = $this->getTree($resultParents, $resultIds, $maxdepth, ($category ? $category->id : null));
+			$blockCategTree = $this->getTree($resultParents, $resultIds, $maxdepth, ($category && (!isset($params['is_top_menu']) || !$params['is_top_menu']) ? $category->id : null));
 			$this->smarty->assign('blockCategTree', $blockCategTree);
 
 			if ($category)

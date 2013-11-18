@@ -553,7 +553,17 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 			case 'editAttributes':
 				if ($this->id_attribute)
-					$bread_extended[] = $this->l('Edit Value');
+				{
+					if (($id = Tools::getValue('id_attribute_group')))
+					{
+						if (Validate::isLoadedObject($obj = new AttributeGroup((int)$id)))
+							$bread_extended[] = '<a href="'.Context::getContext()->link->getAdminLink('AdminAttributesGroups').'&id_attribute_group='.$id.'&viewattribute_group">'.$obj->name[$this->context->employee->id_lang].'</a>';
+						if (Validate::isLoadedObject($obj = new Attribute((int)$this->id_attribute)))
+							$bread_extended[] =  sprintf($this->l('Edit: %s'), $obj->name[$this->context->employee->id_lang]);
+					}
+					else
+						$bread_extended[] = $this->l('Edit Value');
+				}
 				else
 					$bread_extended[] = $this->l('Add New Values');
 				break;

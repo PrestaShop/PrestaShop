@@ -25,19 +25,37 @@
 <div class="bootstrap">
 	<div class="page-head">
 		<h2 class="page-title">
-			{l s='Configure'} : {$module_name}
+			{l s='Configure:'} {$module_display_name} ({$module_name})
 		</h2>
 		<div class="page-bar toolbarBox">
 			<div class="btn-toolbar">
 				<ul class="cc_button nav nav-pills pull-right">
 					<li>
-						<a id="desc-module-hook" class="toolbar_btn" href="{$module_hooklink}" title="{l s='Manage hooks'}">
+						<a id="desc-module-hook" class="toolbar_btn" href="{$module_disable_link}" title="{l s='Disable'}">
+							<i class="process-icon-off"></i>
+							<div>{l s='Disable'}</div>
+						</a>
+					</li>
+					<li>
+						<a id="desc-module-hook" class="toolbar_btn" href="{$module_uninstall_link}" title="{l s='Uninstall'}">
+							<i class="process-icon-minus-sign-alt"></i>
+							<div>{l s='Uninstall'}</div>
+						</a>
+					</li>
+					<li>
+						<a id="desc-module-hook" class="toolbar_btn" href="{$module_reset_link}" title="{l s='Reset'}">
+							<i class="process-icon-share-alt"></i>
+							<div>{l s='Reset'}</div>
+						</a>
+					</li>
+					<li>
+						<a id="desc-module-hook" class="toolbar_btn" href="{$module_hook_link}" title="{l s='Manage hooks'}">
 							<i class="process-icon-anchor"></i>
 							<div>{l s='Manage hooks'}</div>
 						</a>
 					</li>
 					<li>
-						<a id="desc-module-back" class="toolbar_btn" href="{$backlink}" title="{l s='Back'}">
+						<a id="desc-module-back" class="toolbar_btn" href="{$back_link}" title="{l s='Back'}">
 							<i class="process-icon-back" ></i>
 							<div>{l s='Back'}</div>
 						</a>

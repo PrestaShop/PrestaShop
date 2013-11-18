@@ -87,13 +87,13 @@
 			<input type="hidden" name="lang" value="{$lang}" />
 			<input type="hidden" name="type" value="{$type}" />
 			<input type="hidden" name="theme" value="{$theme}" />
-			<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
+			<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default">{l s='Update translations'}</button>
 			<br />
 
 			{foreach $modules_translations as $theme_name => $theme}
 				{if $theme_name}<h2>&gt;{l s='Theme:'} <a name="{$theme_name}">{$theme_name}</h2>{/if}
 				{foreach $theme as $module_name => $module}
-					<h3>{l s='Module:'} <a name="{$module_name}">{$module_name}</a></h3>
+					<h2>{l s='Module:'} <a name="{$module_name}">{$module_name}</a></h2>
 					{foreach $module as $template_name => $newLang}
 						{if !empty($newLang)}
 							{assign var=occurrences value=0}

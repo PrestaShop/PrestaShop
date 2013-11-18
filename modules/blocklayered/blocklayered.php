@@ -61,7 +61,8 @@ class BlockLayered extends Module
 		&& $this->registerHook('afterSaveProduct') && $this->registerHook('productListAssign') && $this->registerHook('postProcessAttributeGroup')
 		&& $this->registerHook('postProcessFeature') && $this->registerHook('featureValueForm') && $this->registerHook('postProcessFeatureValue')
 		&& $this->registerHook('afterDeleteFeatureValue') && $this->registerHook('afterSaveFeatureValue') && $this->registerHook('attributeForm')
-		&& $this->registerHook('postProcessAttribute') && $this->registerHook('afterDeleteAttribute') && $this->registerHook('afterSaveAttribute'))
+		&& $this->registerHook('postProcessAttribute') && $this->registerHook('afterDeleteAttribute') && $this->registerHook('afterSaveAttribute')
+		&& $this->registerHook('displayBackOfficeHeader'))
 		{
 			Configuration::updateValue('PS_LAYERED_HIDE_0_VALUES', 1);
 			Configuration::updateValue('PS_LAYERED_SHOW_QTIES', 1);
@@ -686,7 +687,7 @@ class BlockLayered extends Module
 		if ($result)
 			foreach ($result as $data)
 				$lang_value[$data['id_lang']] = array('url_name' => $data['url_name'], 'meta_title' => $data['meta_title']);
-			
+
 		$return = '<div class="form-group">
 				<label class="control-label col-lg-3">
 					<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="'.$this->l('Invalid characters:').' <>;=#{}_">
@@ -1281,6 +1282,17 @@ class BlockLayered extends Module
 		return $this->hookLeftColumn($params);
 	}
 
+	public function hookDisplayBackOfficeHeader()
+	{
+		if (method_exists($this->context->controller, 'addJquery'))
+		{
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+				$this->context->controller->addCSS($this->_path.'views/css/blocklayered_bt.css');
+			else
+				$this->context->controller->addCSS($this->_path.'views/css/blocklayered.css');
+		}
+	}
+
 	public function hookHeader($params)
 	{
 		global $smarty, $cookie;
@@ -1337,6 +1349,7 @@ class BlockLayered extends Module
 		$this->context->controller->addJS(($this->_path).'blocklayered.js');
 		$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
 		$this->context->controller->addJQueryUI('ui.slider');
+		$this->context->controller->addCSS(_PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css"');		
 		$this->context->controller->addCSS(($this->_path).'blocklayered-15.css', 'all');
 		$this->context->controller->addJQueryPlugin('scrollTo');
 
@@ -1776,10 +1789,10 @@ class BlockLayered extends Module
 				<thead>
 					<tr>
 						<th class="fixed-width-xs"><span class="title_box">'.$this->l('ID').'</span></th>
-						<th class="text-left"><span class="title_box">'.$this->l('Name').'</span></th>
+						<th><span class="title_box text-left">'.$this->l('Name').'</span></th>
 						<th class="fixed-width-sm"><span class="title_box">'.$this->l('Categories').'</span></th>
 						<th><span class="title_box">'.$this->l('Created on').'</span></th>
-						<th><span class="title_box">'.$this->l('Actions').'</span></th>
+						<th><span class="title_box text-right">'.$this->l('Actions').'</span></th>
 					</tr>
 				</thead>';
 
@@ -1794,12 +1807,25 @@ class BlockLayered extends Module
 					<td class="text-left">'.$filters_template['name'].'</td>
 					<td>'.(int)$filters_template['n_categories'].'</td>
 					<td>'.Tools::displayDate($filters_template['date_add'],null , true).'</td>
-					<td>
-						<a href="#" onclick="return updElements('.($filters_template['n_categories'] ? 0 : 1).', '.(int)$filters_template['id_layered_filter'].');">
-						<img src="../img/admin/edit.gif" alt="" title="'.$this->l('Edit').'" /></a> 
-						<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&deleteFilterTemplate=1&id_layered_filter='.(int)$filters_template['id_layered_filter'].'"
+					<td class="text-right">
+						<div class="btn-group-action">
+							<div class="btn-group">
+								<a href="#" class="btn btn-default" onclick="return updElements('.($filters_template['n_categories'] ? 0 : 1).', '.(int)$filters_template['id_layered_filter'].');">
+									<i class="icon-pencil"></i> '.$this->l('Edit').'
+								</a> 
+								<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									<span class="caret"></span>&nbsp;
+								</button>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&deleteFilterTemplate=1&id_layered_filter='.(int)$filters_template['id_layered_filter'].'"
 						onclick="return confirm(\''.addslashes(sprintf($this->l('Delete filter template #%d?'), (int)$filters_template['id_layered_filter'])).'\');">
-						<img src="../img/admin/delete.gif" alt="" title="'.$this->l('Delete').'" /></a>
+											<i class="icon-trash"></i> '.$this->l('Delete').'
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
 					</td>
 				</tr>';
 			}
@@ -1814,52 +1840,25 @@ class BlockLayered extends Module
 		</div>
 		<div class="panel">
 			<h3><i class="icon-cogs"></i> '.$this->l('Build your own filter template').'</h3>
-			<link rel="stylesheet" href="'._PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css" />
-			<style type="text/css">
-				#error-filter-name { display: none; }
-				#layered_container_left ul, #layered_container_right ul { list-style-type: none; padding-left: 0px; }
-				.ui-effects-transfer { border: 1px solid #CCC; }
-				.ui-state-highlight { height: 1.5em; line-height: 1.2em; }
-				ul#selected_filters, #layered_container_right ul { list-style-type: none; margin: 0; padding: 0; }
-				ul#selected_filters li, #layered_container_right ul li { width: 326px; font-size: 11px; padding: 8px 9px 7px 20px; height: 14px; margin-bottom: 5px; }
-				ul#selected_filters li span.ui-icon { position: absolute; margin-top: -2px; margin-left: -18px; }
-				#layered_container_right ul li span { display: none; }
-				#layered_container_right ul li { padding-left: 8px; position: relative; }
-				#layered_container_left ul li { cursor: move; position: relative; }
-				#layered-cat-counter { display: none; }
-				#layered-step-2, #layered-step-3 { display: none; }
-				#layered-step-2 h3 { margin-top: 0; }
-				#table-filter-templates tr th, #table-filter-templates tr td { text-align: center; }
-				.filter_type { width: 70px; position: absolute; right: 53px; top: 5px;}
-				.filter_show_limit { position: absolute; width: 40px; right: 5px; top: 5px; }
-				#layered-step-3 .alert { width: auto; }
-				#fancybox-content {
-					height: 400px !important;
-					overflow: auto !important;
-				}
-			</style>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" onsubmit="return checkForm();">';
 			
 		$html .= '
-			<h2>'.$this->l('Step 1/3 - Select categories').'</h2>
-			<p style="margin-top: 20px;">
-				<span style="color: #585A69;display: block;float: left;font-weight: bold;text-align: right;width: 200px;" >'.$this->l('Use this template for:').'</span>
-				<input type="radio" id="scope_1" name="scope" value="1" style="margin-left: 15px;" onclick="$(\'#error-treeview\').hide(); $(\'#layered-step-2\').show(); updElements(1, 0);" /> 
-				<label for="scope_1" style="float: none;">'.$this->l('All categories').'</label>
-				<input type="radio" id="scope_2" name="scope" value="2" style="margin-left: 15px;" class="layered-category-selection" onclick="$(\'label a#inline\').click(); $(\'#layered-step-2\').show();" /> 
-				<style>
-					.link {
-						color: black;
-						cursor: pointer;
-						text-decoration: underline;
-					}
-					.link:hover {
-						color: gray;
-					}
-				</style>
-				<label for="scope_2" style="float: none;"><a id="inline" href="#layered-categories-selection" style="text-decoration: underline;"></a>'.preg_replace('/\*([^*]+)\*/Usi', '<span class="link">$1</span>', $this->l('*Specific* categories')).'
-				(<span id="layered-cat-counter"></span> '.$this->l('selected').')</label>
-			</p>';
+			<h4>'.$this->l('Step 1/3 - Select categories').'</h4>
+			<hr />
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="control-label col-lg-3">'.$this->l('Use this template for:').'</label>
+					<div class="col-lg-9">
+						<p class="radio">
+							<input type="radio" id="scope_1" name="scope" value="1" onclick="$(\'#error-treeview\').hide(); $(\'#layered-step-2\').show(); updElements(1, 0);" /> 
+							<label for="scope_1">'.$this->l('All categories').'</label>
+						</p>
+						<p class="radio">
+							<input type="radio" id="scope_2" name="scope" value="2" class="layered-category-selection" onclick="$(\'label a#inline\').click(); $(\'#layered-step-2\').show();" /> 
+							<label for="scope_2"><a id="inline" href="#layered-categories-selection">'.sprintf($this->l('Specific categories (%s selected)'), '<span id="layered-cat-counter"></span>').'</a></label>
+						</p>
+					</div>
+				</div>';
 		
 		$shops = Shop::getShops(true, null, true);
 		if (count($shops) > 1)
@@ -1871,14 +1870,16 @@ class BlockLayered extends Module
 			
 			if (Shop::isFeatureActive())
 			{
-				$html .= '<span style="color: #585A69;display: block;float: left;font-weight: bold;text-align: right;width: 200px;" >'.$this->l('Choose shop association:').'</span>';
-				$html .= '<div id="shop_association" style="width: 300px;margin-left: 215px;">'.$helper->renderAssoShop().'</div>';
+				$html .= '<div class="form-group">
+					<label class="control-label col-lg-3">'.$this->l('Choose shop association:').'</label>
+					<div class="col-lg-9">'.$helper->renderAssoShop().'</div>
+				</div>';
 			}
 		}
-		
-		$html .= '
-			<div id="error-treeview" class="error" style="display: none;">
-				<img src="../img/admin/error2.png" alt="" /> '.$this->l('Please select at least one specific category or select "All categories".').'
+
+		$html .= '</div>
+			<div id="error-treeview" class="alert alert-danger" style="display: none;">
+				'.$this->l('Please select at least one specific category or select "All categories".').'
 			</div>
 			<div style="display: none;">
 				<div id="layered-categories-selection" style="padding: 10px; text-align: left;">
@@ -1903,24 +1904,22 @@ class BlockLayered extends Module
 			
 			$html .= '
 					<br />
-					<center><input type="button" class="button" value="'.$this->l('Save this selection').'" onclick="$.fancybox.close();" /></center>
+					<button type="button" class="btn btn-default" onclick="$.fancybox.close();">'.$this->l('Save this selection').'</button>
 				</div>
 			</div>
-			<div id="layered-step-2">
-				<hr size="1" noshade />
-				<h2>'.$this->l('Step 2/3 - Select filters').'</h2>
+			<div id="layered-step-2" class="row" style="display:none">
+				<h4>'.$this->l('Step 2/3 - Select filters').'</h4>
+				<hr />				
 				<div id="layered_container">
-					<div id="layered_container_left" style="width: 360px; float: left; height: 200px; overflow-y: auto;">
-						<h3>'.$this->l('Selected filters').' <span id="num_sel_filters">(0)</span></h3>
+					<div id="layered_container_left" class="col-lg-6">
+						<h4><strong>'.$this->l('Selected filters').' <span id="num_sel_filters">(0)</span></strong></h4>
 						<p id="no-filters">'.$this->l('No filters selected yet.').'</p>
-						<ul id="selected_filters"></ul>
+						<ul id="selected_filters" style="height: 200px; overflow-y: auto;"></ul>
 					</div>
-					<div id="layered-ajax-refresh">
+					<div id="layered-ajax-refresh" class="col-lg-6">
 					'.$this->ajaxCallBackOffice().'
 					</div>
-				</div>
-				<div class="clear"></div>
-				<hr size="1" noshade />';
+				</div>';
 				
 			$this->context->controller->addJQueryPlugin('fancybox');
 			$this->context->controller->addJQueryUI('ui.sortable');
@@ -1985,7 +1984,7 @@ class BlockLayered extends Module
 						$.ajax(
 						{
 							type: \'POST\',
-							url: \''.__PS_BASE_URI__.'\' + \'modules/blocklayered/blocklayered-ajax-back.php\',
+							url: \''.__PS_BASE_URI__.'\' + \'modules/blocklayered/blocklayered-ajax-back.php?admin_dir='.base64_encode(_PS_ADMIN_DIR_).'\',
 							data: \'layered_token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&id_lang='.$id_lang.'&\'
 								+(all ? \'\' : $(\'input[name="categoryBox[]"]\').serialize()+\'&\')
 								+(id_layered_filter ? \'id_layered_filter=\'+parseInt(id_layered_filter) : \'\')
@@ -2110,21 +2109,16 @@ class BlockLayered extends Module
 					});
 				</script>
 			</div>
-			<div id="layered-step-3">
-				<div id="error-filter-name" class="error">
-					<img src="../img/admin/error.png" alt="" title="" />'.$this->l('Errors:').'
-					<ul>
-						<li>'.$this->l('Filter template name required (cannot be empty)').'</li>
-					</ul>
-				</div>
-				<h2>'.$this->l('Step 3/3 - Name your template').'</h2>
+			<div class="clearfix">&nbsp;</div>
+			<div id="layered-step-3" class="row">
+				<div id="error-filter-name" class="alert alert-danger">'.$this->l('Filter template name required (cannot be empty)').'</div>
+				<h4>'.$this->l('Step 3/3 - Name your template').'</h4>
+				<hr />
 				<p>'.$this->l('Template name:').' <input type="text" id="layered_tpl_name" onkeyup="if ($(this).val() != \'\')
 				{ $(\'#error-filter-name\').hide(); } else { $(\'#error-filter-name\').show(); }" name="layered_tpl_name" maxlength="64" value="'.sprintf($this->l('My template %s'), date('Y-m-d')).'"
 				style="width: 200px; font-size: 11px;" /> <span style="font-size: 10px; font-style: italic;">('.$this->l('only as a reminder').')</span></p>
-				<hr size="1" noshade />
-				<p class="alert">'.$this->l('No filters selected, the blocklayered will be disable for the categories seleted.').'</p>
-				<br />
-				<center><input type="submit" class="button" name="SubmitFilter" value="'.$this->l('Save this filter template').'" /></center>
+				<div class="alert alert-warning">'.$this->l('No filters selected, the blocklayered will be disable for the categories seleted.').'</div>
+				<button type="submit" class="btn btn-default" name="SubmitFilter"><i class="icon-save"></i> '.$this->l('Save this filter template').'</button>
 			</div>
 				<input type="hidden" name="id_layered_filter" id="id_layered_filter" value="0" />
 				<input type="hidden" name="n_existing" id="n_existing" value="'.(int)count($filters_templates).'" />
@@ -2132,92 +2126,178 @@ class BlockLayered extends Module
 		</div>
 		<div class="panel">
 			<h3><i class="icon-cogs"></i> '.$this->l('Configuration').'</h3>
-			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">			
-				<table border="0" style="font-size: 11px; width: 100%; margin: 0 auto;" class="table">
-					<tr>
-						<th style="text-align: center;">'.$this->l('Option').'</th>
-						<th style="text-align: center; width: 200px;">'.$this->l('Value').'</th>
-					</tr>
-					<tr>
-						<td style="text-align: right;">'.$this->l('Hide filter values with no product is matching').'</td>
-						<td style="text-align: center;">
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_hide_0_values" value="1" '.(Configuration::get('PS_LAYERED_HIDE_0_VALUES') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_hide_0_values" value="0" '.(!Configuration::get('PS_LAYERED_HIDE_0_VALUES') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-					<tr>
-						<td style="text-align: right;">'.$this->l('Show the number of matching products').'</td>
-						<td style="text-align: center;">
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_show_qties" value="1" '.(Configuration::get('PS_LAYERED_SHOW_QTIES') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_show_qties" value="0" '.(!Configuration::get('PS_LAYERED_SHOW_QTIES') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-					<tr>
-						<td style="text-align: right;">'.$this->l('Show products from subcategories').'</td>
-						<td style="text-align: center;">
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_full_tree" value="1" '.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_full_tree" value="0" '.(!Configuration::get('PS_LAYERED_FULL_TREE') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-					<tr style="text-align: center;">
-						<td style="text-align: right;">'.$this->l('Category filter depth (0 for no limits, 1 by default)').'</td>
-						<td>
+			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" class="form-horizontal">
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Hide filter values with no product is matching').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_hide_0_values" id="ps_layered_hide_0_values_on" value="1"'.(Configuration::get('PS_LAYERED_HIDE_0_VALUES') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_hide_0_values_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_hide_0_values" id="ps_layered_hide_0_values_off" value="0"'.(!Configuration::get('PS_LAYERED_HIDE_0_VALUES') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_hide_0_values_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Show the number of matching products').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_show_qties" id="ps_layered_show_qties_on" value="1"'.(Configuration::get('PS_LAYERED_SHOW_QTIES') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_show_qties_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_show_qties" id="ps_layered_show_qties_off" value="0"'.(!Configuration::get('PS_LAYERED_SHOW_QTIES') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_show_qties_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Show products from subcategories').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_full_tree" id="ps_layered_full_tree_on" value="1"'.(Configuration::get('PS_LAYERED_FULL_TREE') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_hide_0_values_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_full_tree" id="ps_layered_full_tree_off" value="0"'.(!Configuration::get('PS_LAYERED_FULL_TREE') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_full_tree_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Category filter depth (0 for no limits, 1 by default)').'</label>
+					<div class="col-lg-9">
 							<input type="text" name="ps_layered_filter_category_depth" value="'.((Configuration::get('PS_LAYERED_FILTER_CATEGORY_DEPTH') !== false) ? Configuration::get('PS_LAYERED_FILTER_CATEGORY_DEPTH') : 1).'" />
-						</td>
-					</tr>
-					<tr style="text-align: center;">
-						<td style="text-align: right;">'.$this->l('Use tax to filter price').'</td>
-						<td>
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_filter_price_usetax" value="1" '.(Configuration::get('PS_LAYERED_FILTER_PRICE_USETAX') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_filter_price_usetax" value="0" '.(!Configuration::get('PS_LAYERED_FILTER_PRICE_USETAX') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-					<tr style="text-align: center;">
-						<td style="text-align: right;">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use condition filter').'</td>
-						<td>
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_filter_index_condition" value="1" '.(Configuration::get('PS_LAYERED_FILTER_INDEX_CDT') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_filter_index_condition" value="0" '.(!Configuration::get('PS_LAYERED_FILTER_INDEX_CDT') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-					<tr style="text-align: center;">
-						<td style="text-align: right;">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use availability filter').'</td>
-						<td>
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_filter_index_availability" value="1" '.(Configuration::get('PS_LAYERED_FILTER_INDEX_QTY') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_filter_index_availability" value="0" '.(!Configuration::get('PS_LAYERED_FILTER_INDEX_QTY') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-					<tr style="text-align: center;">
-						<td style="text-align: right;">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use manufacturer filter').'</td>
-						<td>
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_filter_index_manufacturer" value="1" '.(Configuration::get('PS_LAYERED_FILTER_INDEX_MNF') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_filter_index_manufacturer" value="0" '.(!Configuration::get('PS_LAYERED_FILTER_INDEX_MNF') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-					<tr style="text-align: center;">
-						<td style="text-align: right;">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use category filter').'</td>
-						<td>
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_filter_index_category" value="1" '.(Configuration::get('PS_LAYERED_FILTER_INDEX_CAT') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_filter_index_category" value="0" '.(!Configuration::get('PS_LAYERED_FILTER_INDEX_CAT') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-				</table>
-				<p style="text-align: center;"><input type="submit" class="button" name="submitLayeredSettings" value="'.$this->l('Save configuration').'" /></p>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Use tax to filter price').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_filter_price_usetax" id="ps_layered_filter_price_usetax_on" value="1"'.(Configuration::get('PS_LAYERED_FILTER_PRICE_USETAX') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_price_usetax_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_filter_price_usetax" id="ps_layered_filter_price_usetax_off" value="0"'.(!Configuration::get('PS_LAYERED_FILTER_PRICE_USETAX') ? ' checked="checked"' : '').'>
+									<label for="pps_layered_filter_price_usetax_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use condition filter').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_filter_index_condition" id="ps_layered_filter_index_condition_on" value="1"'.(Configuration::get('PS_LAYERED_FILTER_INDEX_CDT') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_condition_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_filter_index_condition" id="ps_layered_filter_index_condition_off" value="0"'.(!Configuration::get('PS_LAYERED_FILTER_INDEX_CDT') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_condition_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use availability filter').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_filter_index_availability" id="ps_layered_filter_index_availability_on" value="1"'.(Configuration::get('PS_LAYERED_FILTER_INDEX_QTY') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_availability_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_filter_index_availability" id="ps_layered_filter_index_availability_off" value="0"'.(!Configuration::get('PS_LAYERED_FILTER_INDEX_QTY') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_availability_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use manufacturer filter').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_filter_index_manufacturer" id="ps_layered_filter_index_manufacturer_on" value="1"'.(Configuration::get('PS_LAYERED_FILTER_INDEX_MNF') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_manufacturer_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_filter_index_manufacturer" id="ps_layered_filter_index_manufacturer_off" value="0"'.(!Configuration::get('PS_LAYERED_FILTER_INDEX_MNF') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_manufacturer_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use category filter').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_filter_index_category" id="ps_layered_filter_index_category_on" value="1"'.(Configuration::get('PS_LAYERED_FILTER_INDEX_CAT') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_category_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_filter_index_category" id="ps_layered_filter_index_category_off" value="0"'.(!Configuration::get('PS_LAYERED_FILTER_INDEX_CAT') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_category_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-9 col-lg-offset-3">
+						<button type="submit" class="btn btn-default" name="submitLayeredSettings"><i class="icon-save"></i> '.$this->l('Save configuration').'</button>
+					</div>
+				</div>
 			</form>
 		</div>';
 
@@ -3497,12 +3577,11 @@ class BlockLayered extends Module
 			$n_elements = 20;
 		
 		$html = '
-		<div id="layered_container_right" style="width: 360px; float: left; margin-left: 20px; height: '.(int)(30 + $n_elements * 38).'px; overflow-y: auto;">
-			<h3>'.$this->l('Available filters').' <span id="num_avail_filters">(0)</span></h3>
+		<div id="layered_container_right" style="height: 200px; overflow-y: auto;">
+			<h4><strong>'.$this->l('Available filters').' <span id="num_avail_filters">(0)</span></strong></h4>
 			<ul id="all_filters"></ul>
 			<ul>
 				<li class="ui-state-default layered_right">
-					<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
 					<input type="checkbox" id="layered_selection_subcategories" name="layered_selection_subcategories" />
 					<span class="position"></span>'.$this->l('Sub-categories filter').'
 					
@@ -3791,9 +3870,9 @@ class BlockLayered extends Module
 					$helper->table = 'layered_filter';
 					$helper->identifier = 'id_layered_filter';
 					$helper->base_folder = Tools::getValue('base_folder').'/themes/default/template/helpers/form/';
-				
+
 					$html .= '
-					<div id="shop_association_ajax">'.$helper->renderAssoShop().'</div>
+					<div id="shop_association_ajax">'.$helper->renderAssoShop(false, Tools::getValue('base_folder').'/themes/default/template/helpers/tree/').'</div>
 					<script type="text/javascript">
 						$(document).ready(function() {
 							$(\'#shop_association\').html($(\'#shop_association_ajax\').html());

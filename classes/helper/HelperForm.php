@@ -144,7 +144,7 @@ class HelperFormCore extends Helper
 								$uploader->setFiles(array(
 									0 => array(
 									'type'       => HelperUploader::TYPE_IMAGE,
-									'image'      => isset($params['thumb'])?'<img src="'.$params['thumb'].'" alt="'.$params['title'].'" title="'.$params['title'].'" />':null,
+									'image'      => isset($params['thumb'])?'<img src="'.$params['thumb'].'" alt="'.(isset($params['title']) ? $params['title'] : '').'" title="'.(isset($params['title']) ? $params['title'] : '').'" />':null,
 								)));
 
 							$uploader->setTitle(isset($params['title'])?$params['title']:null);
@@ -245,7 +245,7 @@ class HelperFormCore extends Helper
 	 *
 	 * @return string
 	 */
-	public function renderAssoShop($params, $disable_shared = false)
+	public function renderAssoShop($disable_shared = false, $template_directory = null)
 	{
 		if (!Shop::isFeatureActive())
 			return;
@@ -288,6 +288,8 @@ class HelperFormCore extends Helper
 		}*/
 
 		$tree = new HelperTreeShops('shop-tree', 'Shops');
+		if (isset($template_directory))
+			$tree->setTemplateDirectory($template_directory);
 		$tree->setSelectedShops($assos);
 		$tree->setAttribute('table', $this->table);
 		return $tree->render();

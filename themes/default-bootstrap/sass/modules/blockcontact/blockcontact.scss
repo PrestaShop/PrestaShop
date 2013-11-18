@@ -1,7 +1,9 @@
 @import '../../_theme_variables';
 /* block CONTACT ******************************************************************************* */
 #contact_block {
-	
+																	@media (max-width: $screen-xs-max) { // max 767px
+																		margin-bottom:20px;
+																	}
 	.label {display: none}
 	
 	.block_content {
