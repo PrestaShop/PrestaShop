@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<entity_category>
+  <category id="Women" id_shop="1">
+    <name>Women</name>
+    <description>You will find here all woman fashion collections. This category includes all the basics of your wardrobe and much more: shoes, accessories, printed t-shirts, feminine dresses, women's jeans!</description>
+    <link_rewrite>women</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Coats_and_Jackets" id_shop="1">
+    <name>Coats and Jackets</name>
+    <description>Coats, jackets, blazers, puffer jackets and leather jackets! Enjoy our wide choice of coat to pick the one who will keep you warm during winter. </description>
+    <link_rewrite>coats-jackets</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Coats" id_shop="1">
+    <name>Coats</name>
+    <description>Choose the perfect coat that best suits your style. Casual, classic, modern, timeless coats you will find everyting here!</description>
+    <link_rewrite>coats</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Jackets" id_shop="1">
+    <name>Jackets</name>
+    <description>Get your wardrobe covered with our wide range of jackets!</description>
+    <link_rewrite>jackets</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Blazers" id_shop="1">
+    <name>Blazers</name>
+    <description>Opt for a modern silhouette by selecting from our wide range of blazers.</description>
+    <link_rewrite>blazers</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Puffer_Jackets" id_shop="1">
+    <name>Puffer Jackets</name>
+    <description>The must have of winter, find the perfect puffer jacket to keep you warm and stylish during winter.</description>
+    <link_rewrite>puffer-jackets</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Leather_Jackets" id_shop="1">
+    <name>Leather Jackets</name>
+    <description>Perfect for the beginning of the season, the leather jacket will give you a rock style for any occasion.</description>
+    <link_rewrite>leather-jackets</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Tops" id_shop="1">
+    <name>Tops</name>
+    <description>Choose from t-shirts, tops, blouses, short sleeves, long sleeves, tank tops, 3/4 sleeves and more. Find the cut that suits you the best!</description>
+    <link_rewrite>tops</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="T-shirts" id_shop="1">
+    <name>T-shirts</name>
+    <description>The must have of your wardrobe, take a look at our different colors, shapes and style of our collection!</description>
+    <link_rewrite>tshirts</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Tops_2" id_shop="1">
+    <name>Tops</name>
+    <description>Choose the top that best suits you from the wide variety of tops we have. </description>
+    <link_rewrite>top</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Blouses" id_shop="1">
+    <name>Blouses</name>
+    <description>Match your favorites blouses with the right accessories for the perfect look.</description>
+    <link_rewrite>blouses</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Pants" id_shop="1">
+    <name>Pants</name>
+    <description>How to choose a fashion woman pants? Skinny cut, straight cut, benefit from a wide choice and choose your pants here!</description>
+    <link_rewrite>pants</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Skinny_Cut" id_shop="1">
+    <name>Skinny Cut</name>
+    <description>To get the perfect minimalist silhouette, take a look to our skinny cut jeans!</description>
+    <link_rewrite>skinny-cut</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category><category id="Straight_Cut" id_shop="1">
+    <name>Straight Cut</name>
+    <description>Opt for a straight cut jean to have the perfect classic look;</description>
+    <link_rewrite>straight-cut</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category><category id="Dresses" id_shop="1">
+    <name>Dresses</name>
+    <description>Find your favorites dresses from our wide choice of evening, casual or summer dresses! We offer dresses for every day, every style and every occasion.</description>
+    <link_rewrite>dresses</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Casual_Dresses" id_shop="1">
+    <name>Casual Dresses</name>
+    <description>You are looking for a dress for every day? Take a look at our selection of dresses to find one that suits you.</description>
+    <link_rewrite>casual-dresses</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Evening_Dresses" id_shop="1">
+    <name>Evening Dresses</name>
+    <description>Browse our different dresses to choose the perfect dress for an unforgettable evening!</description>
+    <link_rewrite>evening-dresses</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Summer_Dresses" id_shop="1">
+    <name>Summer Dresses</name>
+    <description>Short dress, long dress, silk dress, printed dress, you will find the perfect dress for summer.</description>
+    <link_rewrite>summer-dresses</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Accessories" id_shop="1">
+    <name>Accessories</name>
+    <description>Shoes, bags, belts, hats... Our range of accessories will enhance your silhouette and make you more feminine</description>
+    <link_rewrite>accessories</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Belts" id_shop="1">
+    <name>Belts</name>
+    <description> thin skinny belts, leather waist belts and hip belts... Choose among our wide collection to accessorize your outfit. </description>
+    <link_rewrite>belts</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Hats" id_shop="1">
+    <name>Hats</name>
+    <description>Accessorize your look with our range of hats. In every color, style, shape and size, you're sure to find your perfect topper outfit here.</description>
+    <link_rewrite>hats</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Handbags" id_shop="1">
+    <name>Handbags</name>
+    <description>The bag is an essential accessory in the wardrobe of a woman. Find a bag that will go perfectly with your outfit of the day!</description>
+    <link_rewrite>handbags</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Shoes" id_shop="1">
+    <name>Shoes</name>
+    <description>A wide variety of women's shoes is available. You will find boots, shoes, slippers, sandals and sneakers to go with your outfit of the day.</description>
+    <link_rewrite>shoes</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+<category id="Men" id_shop="1">
+    <name>Men</name>
+    <description></description>
+    <link_rewrite>men</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>  
+</entity_category>
