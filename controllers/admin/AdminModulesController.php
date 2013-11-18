@@ -705,6 +705,7 @@ class AdminModulesControllerCore extends AdminController
 							$disable_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&enable=0&tab_module='.$module->tab;
 							$uninstall_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&uninstall='.$module->name.'&tab_module='.$module->tab;
 							$reset_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&reset&tab_module='.$module->tab;
+							$update_link = $this->context->link->getAdminLink('AdminModules').'&check_and_update='.$module->name.'&module_name='.$module->name.'&reset&tab_module='.$module->tab;
 
 							$this->context->smarty->assign(array(
 								'module_name' => $module->name,
@@ -714,6 +715,7 @@ class AdminModulesControllerCore extends AdminController
 								'module_disable_link' => $disable_link,
 								'module_uninstall_link' => $uninstall_link,
 								'module_reset_link' => $reset_link,
+								'module_update_link' => (Module::needUpgrade($module) ? $update_link : null),
 								'trad_link' => $trad_link,
 								'module_languages' => Language::getLanguages(false),
 								'theme_language_dir' => _THEME_LANG_DIR_
@@ -790,8 +792,13 @@ class AdminModulesControllerCore extends AdminController
 			Tools::redirectAdmin(self::$currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : '').$params);
 		}
 
-		if (isset($_GET['update']))
+		if (Tools::getValue('update'))
 			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : ''));
+		
+		if (Tools::getValue('check_and_update'))
+		{
+			//TODO
+		}
 	}
 	
 	public function postProcess()
