@@ -40,7 +40,55 @@ class ThemeConfigurator extends Module
 		$this->bootstrap = true;
 	}
 	
-	
+	public function install()
+	{
+		$themes_colors = array('theme1', 'theme2', 'theme3', 'theme4', 'theme5', 'theme6', 'theme7', 'theme8', 'theme9');
+		$themes_fonts = array(
+			'Georgia, serif',
+			'"Palatino Linotype", "Book Antiqua", Palatino, serif',
+			'"Times New Roman", Times, serif',
+			'Arial, Helvetica, sans-serif',
+			'"Arial Black", Gadget, sans-serif',
+			'Impact, Charcoal, sans-serif',
+			'"Lucida Sans Unicode", "Lucida Grande", sans-serif',
+			'Tahoma, Geneva, sans-serif',
+			'"Trebuchet MS", Helvetica, sans-serif',
+			'Verdana, Geneva, sans-serif',
+			'"Courier New", Courier, monospace',
+			'"Lucida Console", Monaco, monospace'
+		);
+
+		return (parent::install()
+			&& $this->registerHook('top')
+			&& Configuration::updateValue('PS_TC_THEMES', serialize($themes_colors))
+			&& Configuration::updateValue('PS_TC_THEMES_FONTS', serialize($themes_fonts)));
+	}
+
+	public function hookTop($params)
+	{
+		if ((int)Tools::getValue('live_configurator', 0) == 1)
+		{
+			if (Tools::isSubmit('submitLiveConfigurator'))
+			{
+				Configuration::updateValue('PS_TC_THEME', Tools::getValue('theme'));
+				Configuration::updateValue('PS_TC_TEXT_PAGE_FONT', Tools::getValue('text-page-font'));
+				Configuration::updateValue('PS_TC_TEXT_MENU_FONT', Tools::getValue('text-menu-font'));
+				Configuration::updateValue('PS_TC_PRODUCT_NAME_FONT', Tools::getValue('product-name-font'));
+			}
+
+			$this->context->controller->addCSS($this->_path.'css/live_configurator.css');
+			$this->context->controller->addJS($this->_path.'js/live_configurator.js');
+
+			$this->smarty->assign(array(
+				'themes_colors' => unserialize(Configuration::get('PS_TC_THEMES_COLORS')),
+				'themes_fonts' => unserialize(Configuration::get('PS_TC_THEMES_FONTS')),
+				'advertisement_image' => $this->_path.'/img/'.$this->context->language->iso_code.'/advertisement.png',
+				'advertisement_text'  => $this->l('Over 500+ PrestaShop Premium Templates! Browse Now!')
+			));
+			return $this->display(__FILE__, 'live_configurator.tpl');
+		}
+	}
+
 	public function getContent()
 	{
 		if (Tools::isSubmit('submitModule'))
@@ -76,7 +124,6 @@ class ThemeConfigurator extends Module
 
 	public function renderForm()
 	{
-
 		$inputs = array();
 		foreach ($this->getConfigurableModules() as $module)
 			$inputs[] = array(
@@ -107,7 +154,7 @@ class ThemeConfigurator extends Module
 				'input' => $inputs,
 				'submit' => array(
 					'title' => $this->l('Save'),
-					'class' => 'btn btn-primary')
+					'class' => 'btn btn-default')
 				),
 		);
 		
