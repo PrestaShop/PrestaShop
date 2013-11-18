@@ -5278,7 +5278,10 @@ class ProductCore extends ObjectModel
 				WHERE id_product='.(int)$this->id.Shop::addSqlRestriction()
 			);
 		else
+		{
+			$this->setFieldsToUpdate(array('advanced_stock_management' => true));
 			$this->save();
+		}
 	}
 
 	/**
