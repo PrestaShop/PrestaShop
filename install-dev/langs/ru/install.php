@@ -212,7 +212,7 @@ return array(
 		'Contact us' => 'Свяжитесь с нами',
 		'PrestaShop Installation Assistant' => 'Помощник установки PrestaShop',
 		'Installation Assistant' => 'Помощник установки',
-		'License Agreements' => 'Лицензионное соглшение',
+		'License Agreements' => 'Лицензионное соглашение',
 		'Print my login information' => 'Распечатать информацию о моем аккаунте',
 		'To use PrestaShop, you must <a href="http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Creatingadatabaseforyourshop" target="_blank">create a database</a> to collect all of your store\'s data-related activities.' => 'Для использования PrestaShop, Вам следует <a href="http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Creatingadatabaseforyourshop" target="_blank">создать базу данных </a>, чтобы сгруппировать информацию Вашего магазина.',
 		'Please complete the fields below in order for PrestaShop to connect to your database. ' => 'Заполните поля ниже, чтобы  PrestaShop смог установить соединение с Вашей с базой данных.',
