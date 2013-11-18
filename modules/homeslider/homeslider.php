@@ -675,10 +675,18 @@ class HomeSlider extends Module
 		return $this->display(__FILE__, 'homeslider.tpl', $this->getCacheId());
 	}
 	
+	public function getCacheId($name = null)
+	{
+		if ($name === null && isset($this->context->smarty->tpl_vars['page_name']))
+			return parent::getCacheId($this->context->smarty->tpl_vars['page_name']->value);
+		return parent::getCacheId($name);
+	}
+	
 	public function hookTop()
 	{
 		return $this->hookDisplayHome();	
 	}
+	
 	public function clearCache()
 	{
 		$this->_clearCache('homeslider.tpl');

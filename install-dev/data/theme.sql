@@ -50,7 +50,7 @@ UPDATE `PREFIX_configuration` SET value = 'http://www.prestashop.com' WHERE name
 UPDATE `PREFIX_configuration` SET value = 'store.jpg' WHERE name = 'BLOCKSTORE_IMG';
 UPDATE `PREFIX_configuration` SET value = 'jpg' WHERE name = 'BLOCKADVERT_IMG_EXT';
 UPDATE `PREFIX_configuration` SET value = 'CAT3,CAT26' WHERE name = 'MOD_BLOCKTOPMENU_ITEMS';
-UPDATE `PREFIX_configuration` SET value = '' WHERE name = 'MOD_BLOCKTOPMENU_SEARCH';
+UPDATE `PREFIX_configuration` SET value = '0' WHERE name = 'MOD_BLOCKTOPMENU_SEARCH';
 UPDATE `PREFIX_configuration` SET value = 'http://www.facebook.com/prestashop' WHERE name = 'blocksocial_facebook';
 UPDATE `PREFIX_configuration` SET value = 'http://www.twitter.com/prestashop' WHERE name = 'blocksocial_twitter';
 UPDATE `PREFIX_configuration` SET value = 'http://www.prestashop.com/blog/en/feed/' WHERE name = 'blocksocial_rss';
