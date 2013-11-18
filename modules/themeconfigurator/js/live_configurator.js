@@ -85,7 +85,7 @@ $(document).ready(
 		$('#font').change(
 			function()
 			{
-				$(document.body).css('font-family', $('#font option:selected').text());
+				$(document).find('*:not(i)').css('font-family', $('#font option:selected').text());
 			}
 		);
 
