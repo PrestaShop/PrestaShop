@@ -1589,11 +1589,10 @@ ul.step {
 	margin:0 1px 0 0;
 	width: 16px;
 	height: 16px;
-	text-indent: -999em;
 	cursor: pointer
 }
 .cancel, .cancel a { background: url(../../../modules/productcomments/img/delete.gif) no-repeat 0 -16px !important }
-.star, .star a { background: url(modules/productcomments/img/star.png) no-repeat 0 0; }
+.star, .star a {  }
 .cancel a, .star a {
 	display: block;
 	width: 100%;
@@ -2966,17 +2965,46 @@ form#sendComment h3 {font-size:14px;}
 
 .star {
 	position: relative;
-	top:2px;
+	top:-1px;
 	float: left;
-	height: 12px;
-	width: 12px;
+	width: 14px;
 	overflow: hidden;
-	text-indent: -999em;
-	cursor: pointer
+	cursor: pointer;
+	font-size:14px;
+	font-weight:normal;
 }
-.star, .star a { background: url(modules/productcomments/img/star.png) no-repeat 0 0;}
-div.star_on a { background-position: 0 -13px }
-div.star_hover a, div.star a:hover { background-position: 0 -13px }
+.star, .star a {
+	display:block;
+}
+.star a {
+	position:absolute;
+	text-indent:-5000px;
+}
+div.star {
+	&:after {
+		content:"";
+		font-family:$font-icon;
+		display:inline-block;
+		color:#777676;	
+	}
+}
+div.star.star_on {
+	display:block;
+	&:after {
+		content:"";
+		font-family:$font-icon;
+		display:inline-block;
+		color:#ef8743;	
+	}
+}
+div.star.star_hover {
+	&:after {
+		content:"";
+		font-family:$font-icon;
+		display:inline-block;
+		color:#ef8743;	
+	}
+}
 
 
 /* ************************************************************************************************
