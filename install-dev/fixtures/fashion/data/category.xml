@@ -28,6 +28,6 @@
     <category id="Hats" id_parent="Accessories" active="1"/>
     <category id="Handbags" id_parent="Accessories" active="1"/>
     <category id="Shoes" id_parent="Accessories" active="1"/>
-	<category id="Men" id_parent="Home" active="1"/>
+	<category id="Men" id_parent="Home" active="0"/>
   </entities>
 </entity_category>
