@@ -106,7 +106,6 @@ public function hookDisplayMobileHeader($params)
 			);
 			
 		}
-d($key);
 		return $this->display(__FILE__, 'blocksearch-top.tpl', Tools::getValue('search_query') ? null : $key);
 	}
 
