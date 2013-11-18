@@ -49,7 +49,7 @@ UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'FOOTER_POWEREDBY';
 UPDATE `PREFIX_configuration` SET value = 'http://www.prestashop.com' WHERE name = 'BLOCKADVERT_LINK';
 UPDATE `PREFIX_configuration` SET value = 'store.jpg' WHERE name = 'BLOCKSTORE_IMG';
 UPDATE `PREFIX_configuration` SET value = 'jpg' WHERE name = 'BLOCKADVERT_IMG_EXT';
-UPDATE `PREFIX_configuration` SET value = 'CAT2,CAT3,CAT4' WHERE name = 'MOD_BLOCKTOPMENU_ITEMS';
+UPDATE `PREFIX_configuration` SET value = 'CAT3,CAT26' WHERE name = 'MOD_BLOCKTOPMENU_ITEMS';
 UPDATE `PREFIX_configuration` SET value = '' WHERE name = 'MOD_BLOCKTOPMENU_SEARCH';
 UPDATE `PREFIX_configuration` SET value = 'http://www.facebook.com/prestashop' WHERE name = 'blocksocial_facebook';
 UPDATE `PREFIX_configuration` SET value = 'http://www.twitter.com/prestashop' WHERE name = 'blocksocial_twitter';
@@ -90,9 +90,14 @@ UPDATE `PREFIX_hook_module` SET position = 4
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcart')
 AND id_hook = @id_hook;
 
+UPDATE `PREFIX_hook_module` SET position = 5
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'homeslider')
+AND id_hook = @id_hook;
+
 /* displayHomeTab && displayHomeTabContent */
 SET @id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHomeTab');
 SET @id_hook2 = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHomeTabContent');
+
 UPDATE `PREFIX_hook_module` SET position = 1
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocknewproducts')
 AND id_hook IN (@id_hook, @id_hook2);
