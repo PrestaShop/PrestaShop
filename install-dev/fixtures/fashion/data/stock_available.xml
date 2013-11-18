@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_stock_available>
+  <fields class="StockAvailable">
+    <field name="id_product" relation="product"/>
+    <field name="id_product_attribute" relation="product_attribute"/>
+    <field name="id_shop"/>
+    <field name="id_shop_group"/>
+    <field name="quantity"/>
+    <field name="depends_on_stock"/>
+    <field name="out_of_stock"/>
+  </fields>
+  <entities>
+    <stock_available id="stock_available_2" id_product="iPod_Nano" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="160" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_1" id_product="iPod_Nano" id_product_attribute="product_attribute_25" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_3" id_product="iPod_Nano" id_product_attribute="product_attribute_26" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_4" id_product="iPod_Nano" id_product_attribute="product_attribute_27" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_5" id_product="iPod_Nano" id_product_attribute="product_attribute_28" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_6" id_product="iPod_Nano" id_product_attribute="product_attribute_29" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_7" id_product="iPod_Nano" id_product_attribute="product_attribute_30" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_8" id_product="iPod_Nano" id_product_attribute="product_attribute_31" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_9" id_product="iPod_Nano" id_product_attribute="product_attribute_32" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_10" id_product="iPod_Nano" id_product_attribute="product_attribute_33" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_11" id_product="iPod_Nano" id_product_attribute="product_attribute_34" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_12" id_product="iPod_Nano" id_product_attribute="product_attribute_35" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_13" id_product="iPod_Nano" id_product_attribute="product_attribute_36" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_14" id_product="iPod_Nano" id_product_attribute="product_attribute_39" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_15" id_product="iPod_Nano" id_product_attribute="product_attribute_40" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_16" id_product="iPod_Nano" id_product_attribute="product_attribute_41" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_17" id_product="iPod_Nano" id_product_attribute="product_attribute_42" id_shop="1" id_shop_group="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_19" id_product="MacBook_Air" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="400" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_18" id_product="MacBook_Air" id_product_attribute="product_attribute_12" id_shop="1" id_shop_group="0" quantity="100" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_20" id_product="MacBook_Air" id_product_attribute="product_attribute_13" id_shop="1" id_shop_group="0" quantity="100" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_21" id_product="MacBook_Air" id_product_attribute="product_attribute_14" id_shop="1" id_shop_group="0" quantity="100" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_22" id_product="MacBook_Air" id_product_attribute="product_attribute_15" id_shop="1" id_shop_group="0" quantity="100" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_23" id_product="Belkin_Leather_Folio_for_iPod_nano_-_Black_Chocolate" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="25" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_25" id_product="iPod_shuffle" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="120" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_24" id_product="iPod_shuffle" id_product_attribute="product_attribute_7" id_shop="1" id_shop_group="0" quantity="30" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_26" id_product="iPod_shuffle" id_product_attribute="product_attribute_8" id_shop="1" id_shop_group="0" quantity="30" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_27" id_product="iPod_shuffle" id_product_attribute="product_attribute_9" id_shop="1" id_shop_group="0" quantity="30" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_28" id_product="iPod_shuffle" id_product_attribute="product_attribute_10" id_shop="1" id_shop_group="0" quantity="30" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_29" id_product="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="15" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_30" id_product="MacBook" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="75" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_32" id_product="iPod_touch" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="120" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_31" id_product="iPod_touch" id_product_attribute="product_attribute_19" id_shop="1" id_shop_group="0" quantity="40" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_33" id_product="iPod_touch" id_product_attribute="product_attribute_22" id_shop="1" id_shop_group="0" quantity="40" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_34" id_product="iPod_touch" id_product_attribute="product_attribute_23" id_shop="1" id_shop_group="0" quantity="40" depends_on_stock="0" out_of_stock="0"/>
+  </entities>
+</entity_stock_available>
