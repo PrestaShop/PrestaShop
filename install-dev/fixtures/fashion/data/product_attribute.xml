@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_product_attribute>
+  <fields class="Combination">
+    <field name="id_product" relation="product"/>
+    <field name="reference"/>
+    <field name="supplier_reference"/>
+    <field name="location"/>
+    <field name="ean13"/>
+    <field name="upc"/>
+    <field name="wholesale_price"/>
+    <field name="price"/>
+    <field name="ecotax"/>
+    <field name="quantity"/>
+    <field name="weight"/>
+    <field name="unit_price_impact"/>
+    <field name="default_on"/>
+    <field name="minimal_quantity"/>
+    <field name="available_date"/>
+  </fields>
+  <entities>
+    <product_attribute id="product_attribute_7" id_product="iPod_shuffle" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="10" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_8" id_product="iPod_shuffle" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="20" weight="0" unit_price_impact="0.00" default_on="1" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_9" id_product="iPod_shuffle" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="30" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_10" id_product="iPod_shuffle" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="40" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_12" id_product="MacBook_Air" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="751.672241" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_13" id_product="MacBook_Air" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="1" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_14" id_product="MacBook_Air" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="225.752508" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_15" id_product="MacBook_Air" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="977.424749" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_19" id_product="iPod_touch" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="1" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_22" id_product="iPod_touch" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="75.250836" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_23" id_product="iPod_touch" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="150.501672" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_25" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="41.806020" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="4" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_26" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_27" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="41.806020" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_28" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_29" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="41.806020" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_30" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_31" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="41.806020" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="1" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_32" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_33" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="41.806020" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_34" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_35" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="41.806020" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_36" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_39" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="41.806020" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_40" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_41" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="41.806020" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+    <product_attribute id="product_attribute_42" id_product="iPod_Nano" reference="" supplier_reference="" ean13="" upc="" wholesale_price="0.000000" price="0.000000" ecotax="0.000000" quantity="0" weight="0" unit_price_impact="0.00" default_on="0" minimal_quantity="1" available_date="0000-00-00">
+      <location/>
+    </product_attribute>
+  </entities>
+</entity_product_attribute>
