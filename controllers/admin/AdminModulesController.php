@@ -714,7 +714,7 @@ class AdminModulesControllerCore extends AdminController
 								'module_disable_link' => $disable_link,
 								'module_uninstall_link' => $uninstall_link,
 								'module_reset_link' => $reset_link,
-								'module_update_link' => null //TODO,
+								'module_update_link' => null, //TODO
 								'trad_link' => $trad_link,
 								'module_languages' => Language::getLanguages(false),
 								'theme_language_dir' => _THEME_LANG_DIR_
