@@ -490,13 +490,13 @@ class Blocktopmenu extends Module
 				if ($category->level_depth == 2)
 				{
 					$files = scandir(_PS_CAT_IMG_DIR_);
-					$this->_menu .= '<div id="category-thumbnail">';
+					$this->_menu .= '<li id="category-thumbnail">';
 
 					foreach ($files as $file)
 						if (preg_match('/'.$category->id.'-([0-9])?_thumb.jpg/i', $file) === 1)
 							$this->_menu .= '<div>'.ImageManager::thumbnail(_PS_CAT_IMG_DIR_.$file, 'category_'.$file, 100, 'jpg', true, true).'</div>';
 
-					$this->_menu .= '</div>';
+					$this->_menu .= '</li>';
 				}
 
 				$this->_menu .= '</ul>';

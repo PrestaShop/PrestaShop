@@ -78,7 +78,7 @@ function accordion(status){
 	}
 
 
-function resposiveResize(){
+function responsiveResize(){
 	   if ($(document).width() <= 767 && responsiveflag == false){
 	   		accordion('enable'),
 		    accordionFooter('enable'),
@@ -91,8 +91,8 @@ function resposiveResize(){
 		}
 }
 
-$(document).ready(resposiveResize);
-$(window).resize(resposiveResize);
+$(document).ready(responsiveResize);
+$(window).resize(responsiveResize);
 
 //replace top banner to top of page, before #header
 $(document).ready(function(){

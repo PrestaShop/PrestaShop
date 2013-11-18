@@ -67,6 +67,7 @@ UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'BLOCK_CATEG_NBR_COLU
 UPDATE `PREFIX_configuration` SET value = '' WHERE name = 'UPGRADER_BACKUPDB_FILENAME';
 UPDATE `PREFIX_configuration` SET value = '' WHERE name = 'UPGRADER_BACKUPFILES_FILENAME';
 UPDATE `PREFIX_configuration` SET value = '40' WHERE name = 'CONF_AVERAGE_PRODUCT_MARGIN';
+UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'PS_DASHBOARD_SIMULATION';
 
 /* No right column */
 DELETE FROM `PREFIX_hook_module` WHERE id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn');
