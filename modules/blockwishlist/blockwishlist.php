@@ -118,6 +118,38 @@ class BlockWishList extends Module
 
 	public function hookTop($params)
 	{
+		
+		global $errors;
+
+		require_once(dirname(__FILE__).'/WishList.php');
+		if ($this->context->customer->isLogged())
+		{
+			$wishlists = Wishlist::getByIdCustomer($this->context->customer->id);
+			if (empty($this->context->cookie->id_wishlist) === true ||
+				WishList::exists($this->context->cookie->id_wishlist, $this->context->customer->id) === false)
+			{
+				if (!sizeof($wishlists))
+					$id_wishlist = false;
+				else
+				{
+					$id_wishlist = (int)($wishlists[0]['id_wishlist']);
+					$this->context->cookie->id_wishlist = (int)($id_wishlist);
+				}
+			}
+			else
+				$id_wishlist = $this->context->cookie->id_wishlist;
+				
+				
+			$this->smarty->assign(array(
+				'id_wishlist' => $id_wishlist,
+				'isLogged' => true,
+				'wishlist_products' => ($id_wishlist == false ? false : WishList::getProductByIdCustomer($id_wishlist, $this->context->customer->id, $this->context->language->id, null, true)),
+				'wishlists' => $wishlists,
+				'ptoken' => Tools::getToken(false)));
+		}
+		else
+			$this->smarty->assign(array('wishlist_products' => false, 'wishlists' => false));
+	
 		return $this->display(__FILE__, 'blockwishlist_top.tpl');
 	}
 

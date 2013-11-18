@@ -1,4 +1,4 @@
-{*
+ {*
 * 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -19,26 +19,21 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2013 PrestaShop SA
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{if isset($HOOK_HOME_TAB_CONTENT)}
-	<div class="clearfix"></div>
-    {if isset($HOOK_HOME_TAB)}
-        <ul id="home-page-tabs" class="nav nav-tabs">{/if}{$HOOK_HOME_TAB}{if isset($HOOK_HOME_TAB)}</ul>
-    {/if}
-    <script type="text/javascript">
-		$('document').ready(function(){
-			blockHover();
-			if (typeof reloadProductComparison != 'undefined')
-				reloadProductComparison();
-		});
-	</script>
-	<div class="tab-content">
-		{$HOOK_HOME_TAB_CONTENT}
-	</div>
+{if isset($nbComments) && $nbComments > 0}
+    <div class="comments_note">	
+        <div class="star_content clearfix">
+        {section name="i" start=0 loop=5 step=1}
+            {if $averageTotal le $smarty.section.i.index}
+                <div class="star"></div>
+            {else}
+                <div class="star star_on"></div>
+            {/if}
+        {/section}
+        </div>
+        <span class="nb-comments">{l s='%s Review(s)'|sprintf:$nbComments mod='productcomments'}&nbsp</span>
+    </div>
 {/if}
-<div class="clearfix">
-	{$HOOK_HOME}
-</div>
