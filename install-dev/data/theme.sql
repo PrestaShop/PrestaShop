@@ -28,8 +28,8 @@ UPDATE `PREFIX_configuration` SET value = '0' WHERE name = 'PS_BLOCK_SPECIALS_DI
 UPDATE `PREFIX_configuration` SET value = '0' WHERE name = 'PS_TAX_DISPLAY';
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'PS_STORES_DISPLAY_CMS';
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'PS_STORES_DISPLAY_FOOTER';
-UPDATE `PREFIX_configuration` SET value = '500' WHERE name = 'SHOP_LOGO_WIDTH';
-UPDATE `PREFIX_configuration` SET value = '141' WHERE name = 'SHOP_LOGO_HEIGHT';
+UPDATE `PREFIX_configuration` SET value = '350' WHERE name = 'SHOP_LOGO_WIDTH';
+UPDATE `PREFIX_configuration` SET value = '99' WHERE name = 'SHOP_LOGO_HEIGHT';
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'PS_DISPLAY_SUPPLIERS';
 UPDATE `PREFIX_configuration` SET value = '0' WHERE name = 'PS_LEGACY_IMAGES';
 UPDATE `PREFIX_configuration` SET value = 'jpg' WHERE name = 'PS_IMAGE_QUALITY';
