@@ -28,8 +28,8 @@ UPDATE `PREFIX_configuration` SET value = '0' WHERE name = 'PS_BLOCK_SPECIALS_DI
 UPDATE `PREFIX_configuration` SET value = '0' WHERE name = 'PS_TAX_DISPLAY';
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'PS_STORES_DISPLAY_CMS';
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'PS_STORES_DISPLAY_FOOTER';
-UPDATE `PREFIX_configuration` SET value = '209' WHERE name = 'SHOP_LOGO_WIDTH';
-UPDATE `PREFIX_configuration` SET value = '52' WHERE name = 'SHOP_LOGO_HEIGHT';
+UPDATE `PREFIX_configuration` SET value = '350' WHERE name = 'SHOP_LOGO_WIDTH';
+UPDATE `PREFIX_configuration` SET value = '99' WHERE name = 'SHOP_LOGO_HEIGHT';
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'PS_DISPLAY_SUPPLIERS';
 UPDATE `PREFIX_configuration` SET value = '0' WHERE name = 'PS_LEGACY_IMAGES';
 UPDATE `PREFIX_configuration` SET value = 'jpg' WHERE name = 'PS_IMAGE_QUALITY';
@@ -41,7 +41,7 @@ UPDATE `PREFIX_configuration` SET value = '4' WHERE name = 'BLOCK_CATEG_MAX_DEPT
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'MANUFACTURER_DISPLAY_FORM';
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'MANUFACTURER_DISPLAY_TEXT';
 UPDATE `PREFIX_configuration` SET value = '5' WHERE name = 'MANUFACTURER_DISPLAY_TEXT_NB';
-UPDATE `PREFIX_configuration` SET value = '5' WHERE name = 'NEW_PRODUCTS_NBR';
+UPDATE `PREFIX_configuration` SET value = '8' WHERE name = 'NEW_PRODUCTS_NBR';
 UPDATE `PREFIX_configuration` SET value = '10' WHERE name = 'BLOCKTAGS_NBR';
 UPDATE `PREFIX_configuration` SET value = '0_3|0_4' WHERE name = 'FOOTER_CMS';
 UPDATE `PREFIX_configuration` SET value = '0_3|0_4' WHERE name = 'FOOTER_BLOCK_ACTIVATION';
@@ -68,9 +68,24 @@ UPDATE `PREFIX_configuration` SET value = '' WHERE name = 'UPGRADER_BACKUPDB_FIL
 UPDATE `PREFIX_configuration` SET value = '' WHERE name = 'UPGRADER_BACKUPFILES_FILENAME';
 UPDATE `PREFIX_configuration` SET value = '40' WHERE name = 'CONF_AVERAGE_PRODUCT_MARGIN';
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'PS_DASHBOARD_SIMULATION';
+UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'QUICK_VIEW';
 
 /* No right column */
 DELETE FROM `PREFIX_hook_module` WHERE id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn');
+
+/* displayHome */
+SET @id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHome');
+UPDATE `PREFIX_hook_module` SET position = 1
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'themeconfigurator')
+AND id_hook = @id_hook;
+
+UPDATE `PREFIX_hook_module` SET position = 2
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockfacebook')
+AND id_hook = @id_hook;
+
+UPDATE `PREFIX_hook_module` SET position = 3
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcmsinfo')
+AND id_hook = @id_hook;
 
 /* displayTop */
 SET @id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop');
@@ -92,6 +107,18 @@ AND id_hook = @id_hook;
 
 UPDATE `PREFIX_hook_module` SET position = 5
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'homeslider')
+AND id_hook = @id_hook;
+
+UPDATE `PREFIX_hook_module` SET position = 6
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'themeconfigurator')
+AND id_hook = @id_hook;
+
+UPDATE `PREFIX_hook_module` SET position = 7
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockwhislist')
+AND id_hook = @id_hook;
+
+UPDATE `PREFIX_hook_module` SET position = 8
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockbanner')
 AND id_hook = @id_hook;
 
 /* displayHomeTab && displayHomeTabContent */
