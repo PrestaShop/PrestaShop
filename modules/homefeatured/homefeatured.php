@@ -120,7 +120,7 @@ class HomeFeatured extends Module
 		{
 			$category = new Category(Context::getContext()->shop->getCategory(), (int)Context::getContext()->language->id);
 			$nb = (int)Configuration::get('HOME_FEATURED_NBR');
-			$products = $category->getProducts((int)Context::getContext()->language->id, 1, ($nb ? $nb : 8));
+			$products = $category->getProducts((int)Context::getContext()->language->id, 1, ($nb ? $nb : 8), "position");
 
 			$this->smarty->assign(array(
 				'products' => $products,
