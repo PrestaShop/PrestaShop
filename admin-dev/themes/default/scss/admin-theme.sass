@@ -2,12 +2,11 @@
 @import "compass"
 
 @import "admin-theme/admin-theme-colors"
-@import "admin-theme/_bootstrap-variables"
-@import "admin-theme/_font-awesome"
-@import "admin-theme/animate"
+@import "admin-theme/bootstrap-variables"
+@import "admin-theme/font-awesome"
+@import "admin-theme/vendor/animate"
 
 //Bootstrap from bower-components
-//some help about bower here.
 
 //Bootstrap Core : Variables + Mixins + Reset + Print
 @import "../bower_components/sass-bootstrap/lib/variables"
@@ -57,10 +56,12 @@
 @import "../bower_components/sass-bootstrap/lib/utilities"
 @import "../bower_components/sass-bootstrap/lib/responsive-utilities"
 
+//PrestaShop Elements
 @import "admin-theme/admin-content"
 @import "admin-theme/admin-header"
 @import "admin-theme/admin-footer"
 @import "admin-theme/admin-nav"
+@import "admin-theme/admin-login"
 
 .bootstrap
 	//components
@@ -74,7 +75,6 @@
 	@import "admin-theme/admin-date-range-picker"
 	@import "admin-theme/ladda"
 	//page specific
-	@import "admin-theme/admin-login"
 	@import "admin-theme/admin-carrier-wizard"
 	@import "admin-theme/admin-modules"
 	@import "admin-theme/admin-dashboard"
