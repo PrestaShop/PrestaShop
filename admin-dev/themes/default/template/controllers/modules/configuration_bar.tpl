@@ -22,11 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="panel">
+<div class="bootstrap">
 	<h3><i class="icon-cogs"></i> {l s='Configuration'}</h3>
 	<div class="row">
 		<div class="input-group">
 			<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+				<i class="icon-flag"></i>
 				{l s='Manage translations'}
 				<span class="caret"></span>
 			</button>

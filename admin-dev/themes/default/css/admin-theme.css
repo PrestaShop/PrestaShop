@@ -190,13 +190,13 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-zoom-out:before { content: "\f010"; }
 
-.icon-power-off:before, .icon-off:before { content: "\f011"; }
+.icon-power-off:before, .icon-off:before, .bootstrap .process-icon-off:before { content: "\f011"; }
 
 .icon-signal:before { content: "\f012"; }
 
 .icon-gear:before, .icon-cog:before, .icon-AdminAdmin:before, .bootstrap .process-icon-configure:before { content: "\f013"; }
 
-.icon-trash:before, .bootstrap .process-icon-delete:before { content: "\f014"; }
+.icon-trash:before, .bootstrap .process-icon-delete:before, .bootstrap .process-icon-uninstall:before { content: "\f014"; }
 
 .icon-home:before { content: "\f015"; }
 
@@ -558,7 +558,7 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-linkedin:before { content: "\f0e1"; }
 
-.icon-rotate-left:before, .icon-undo:before { content: "\f0e2"; }
+.icon-rotate-left:before, .bootstrap .process-icon-reset:before, .icon-undo:before { content: "\f0e2"; }
 
 .icon-legal:before { content: "\f0e3"; }
 
@@ -2306,7 +2306,7 @@ table { border-collapse: collapse; border-spacing: 0; }
 .bootstrap .dropdown-menu.pull-right, #content.bootstrap h3:not(.modal-title) .dropdown-menu.panel-heading-action, #content.bootstrap .panel-heading .dropdown-menu.panel-heading-action, #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .dropdown-menu.panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header .dropdown-menu.panel-heading-action { right: 0; left: auto; }
 .bootstrap .dropdown-menu .divider { height: 1px; margin: 7.5px 0; overflow: hidden; background-color: #e5e5e5; }
 .bootstrap .dropdown-menu > li > a { display: block; padding: 3px 20px; clear: both; font-weight: normal; line-height: 1.42857; color: #333333; white-space: nowrap; }
-.bootstrap .dropdown-menu > li > a:hover, .bootstrap .dropdown-menu > li > a:focus { text-decoration: none; color: #262626; background-color: whitesmoke; }
+.bootstrap .dropdown-menu > li > a:hover, .bootstrap .dropdown-menu > li > a:focus { text-decoration: none; color: white; background-color: #1ba6e5; }
 .bootstrap .dropdown-menu > .active > a, .bootstrap .dropdown-menu > .active > a:hover, .bootstrap .dropdown-menu > .active > a:focus { color: white; text-decoration: none; outline: 0; background-color: #1ba6e5; }
 .bootstrap .dropdown-menu > .disabled > a, .bootstrap .dropdown-menu > .disabled > a:hover, .bootstrap .dropdown-menu > .disabled > a:focus { color: #999999; }
 .bootstrap .dropdown-menu > .disabled > a:hover, .bootstrap .dropdown-menu > .disabled > a:focus { text-decoration: none; background-color: transparent; background-image: none; filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); cursor: not-allowed; }
@@ -2906,9 +2906,9 @@ th.hidden-lg, td.hidden-lg { display: table-cell !important; }
   .hidden-print, tr.hidden-print, th.hidden-print, td.hidden-print { display: none !important; } }
 html { min-height: 100%; height: 100%; font-size: 62.5%; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 
-body { min-height: 100%; height: 100%; font-family: "Open Sans", Helvetica, Arial, sans-serif; font-size: 12px; line-height: 1.42857; color: #555555; background-color: #515561; }
+body { min-height: 100%; height: 100%; font: 400 12px/1.42857 "Open Sans", Helvetica, Arial, sans-serif; color: #555555; background-color: #515561; }
 
-#main { z-index: 10; float: left; width: 100%; min-height: 100%; padding: 36px 0 60px; margin: 0 0 -60px 0; background-color: #f8f8f8; background-image: url("../img/patterns/bedge_grunge.png"); }
+#main { z-index: 10; float: left; width: 100%; min-height: 100%; padding: 36px 0 60px; margin: 0 0 -60px 0; background-color: #f8f8f8; }
 
 #content.bootstrap { padding: 80px 10px 0; -webkit-transition-property: margin; transition-property: margin; -webkit-transition-duration: 0.4s; transition-duration: 0.4s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; }
 #content.bootstrap .panel, #content.bootstrap #header_notifs_icon_wrapper .notifs_panel, #header_notifs_icon_wrapper #content.bootstrap .notifs_panel, #content.bootstrap #dash_version { padding: 20px; margin-bottom: 20px; border: solid 1px #dfdfdf; background-color: white; -webkit-border-radius: 5px; -moz-border-radius: 5px; -ms-border-radius: 5px; -o-border-radius: 5px; border-radius: 5px; -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset; box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset; }
@@ -3523,3 +3523,5 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap #dash_version { padding: 0 !important; overflow: hidden; }
 .bootstrap #dash_version iframe { height: 80px; width: 100%; }
 .bootstrap .adminsearch #content .panel .panel, .bootstrap .adminsearch #content #header_notifs_icon_wrapper .notifs_panel .panel, #header_notifs_icon_wrapper .bootstrap .adminsearch #content .notifs_panel .panel, .bootstrap .adminsearch #content #dash_version .panel, .bootstrap .adminsearch #content .panel #header_notifs_icon_wrapper .notifs_panel, #header_notifs_icon_wrapper .bootstrap .adminsearch #content .panel .notifs_panel, .bootstrap .adminsearch #content #header_notifs_icon_wrapper .notifs_panel .notifs_panel, #header_notifs_icon_wrapper .bootstrap .adminsearch #content .notifs_panel .notifs_panel, .bootstrap .adminsearch #content #dash_version #header_notifs_icon_wrapper .notifs_panel, #header_notifs_icon_wrapper .bootstrap .adminsearch #content #dash_version .notifs_panel, .bootstrap .adminsearch #content .panel #dash_version, .bootstrap .adminsearch #content #header_notifs_icon_wrapper .notifs_panel #dash_version, #header_notifs_icon_wrapper .bootstrap .adminsearch #content .notifs_panel #dash_version, .bootstrap .adminsearch #content #dash_version #dash_version { padding: 0; margin: 0; border: none; -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0; border-radius: 0; -webkit-box-shadow: 0; box-shadow: 0; }
+
+#content.nobootstrap { background-color: white; width: 1200px; padding: 80px 40px; }
