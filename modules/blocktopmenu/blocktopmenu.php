@@ -241,7 +241,7 @@ class Blocktopmenu extends Module
 
 		$id_lang = (int)$this->context->language->id;
 		$id_shop = (int)Shop::getContextShopID();
-		$html = '<select multiple="multiple" name="items[]" id="items" style="width: 300px; height: 160px;">';
+		$html = '<select multiple="multiple" name="items[]" id="items" style="width: 100%; height: 160px;">';
 		foreach ($menu_item as $item)
 		{
 			if (!$item)
@@ -916,7 +916,7 @@ class Blocktopmenu extends Module
 	{
 		$spacer = str_repeat('&nbsp;', $this->spacer_size);
 		
-		$html = '<select multiple="multiple" id="availableItems" style="width: 300px; height: 160px;">';
+		$html = '<select multiple="multiple" id="availableItems" style="width: 100%; height: 160px;">';
 		$html .= '<optgroup label="'.$this->l('CMS').'">';
 		$html .= $this->getCMSOptions(0, 1, $this->context->language->id);
 		$html .= '</optgroup>';
