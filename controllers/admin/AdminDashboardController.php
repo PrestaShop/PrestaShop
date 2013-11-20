@@ -78,7 +78,7 @@ class AdminDashboardControllerCore extends AdminController
 		{
 			$form['icon'] = 'tab-preferences';
 			$form['fields'] = array();
-			$form['submit'] = array('title' => $this->l('Save'), 'class' => 'button');
+			$form['submit'] = array('title' => $this->l('Save'), 'class' => 'btn btn-default');
 		}
 
 		foreach ($modules as $module)
