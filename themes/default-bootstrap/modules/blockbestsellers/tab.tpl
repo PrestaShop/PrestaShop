@@ -22,4 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<li><a data-toggle="tab" href=".blockbestsellers" class="blockbestsellers">{l s='Best Sellers' mod='blockbestsellers'}</a></li>
+
+{if is_array($best_sellers) && count($best_sellers)}
+	<li><a data-toggle="tab" href=".blockbestsellers" class="blockbestsellers">{l s='Best Sellers' mod='blockbestsellers'}</a></li>
+{/if}
