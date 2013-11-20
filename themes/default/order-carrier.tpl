@@ -171,13 +171,14 @@
 								<td>
 								<div class="delivery_option_price">
 									{if $option.total_price_with_tax && (!isset($free_shipping) || (isset($free_shipping) && !$free_shipping))}
-
 										{if $use_taxes == 1}
 											{if $priceDisplay == 1}
 												{convertPrice price=$option.total_price_without_tax} {l s='(tax excl.)'}
 											{else}
 												{convertPrice price=$option.total_price_with_tax} {l s='(tax incl.)'}
 											{/if}
+										{else}
+											{convertPrice price=$option.total_price_without_tax}
 										{/if}
 									{else}
 										{l s='Free'}
