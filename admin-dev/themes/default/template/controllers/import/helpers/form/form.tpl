@@ -29,45 +29,44 @@
 	{l s='Your .CSV file has been sucessfully imported into your shop. Don\'t forget to Re-build the products search index.'}
 </div>
 {/if}
-<div style="display: none">
-	<div id="upload_file_import">
-		<div class="alert alert-info">{l s='Only UTF-8 and ISO-8859-1 encoding are allowed'}</div>
-		<form action="{$current}&token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
-			<div class="panel">
-				<div class="form-group">
-					<label class="control-label col-lg-3">{l s='Select your CSV file'}</label>
-					<div class="col-lg-9">
-						<div class="row">
-							<div class="col-lg-7">
-								<input id="file" type="file" name="file" class="hide" />
-								<div class="dummyfile input-group">
-									<span class="input-group-addon"><i class="icon-file"></i></span>
-									<input id="file-name" type="text" class="disabled" name="filename" readonly />
-									<span class="input-group-btn">
-										<button id="file-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
-											<i class="icon-folder-open"></i> {l s='Choose a file'}
-										</button>
-									</span>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-lg-7">
-								<p class="help-block">
-									{l s='You can also upload your file via FTP to the following directory:'} {$path_import}.
-								</p>
+<div id="upload_file_import" style="display: none">
+	<div class="alert alert-info">{l s='Only UTF-8 and ISO-8859-1 encoding are allowed'}</div>
+	<form action="{$current}&token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
+		<div class="panel">
+			<div class="clearfix">&nbsp;</div>
+			<div class="form-group">
+				<label class="control-label col-lg-3">{l s='Select your CSV file'}</label>
+				<div class="col-lg-9">
+					<div class="row">
+						<div class="col-lg-7">
+							<input id="file" type="file" name="file" class="hide" />
+							<div class="dummyfile input-group">
+								<span class="input-group-addon"><i class="icon-file"></i></span>
+								<input id="file-name" type="text" class="disabled" name="filename" readonly />
+								<span class="input-group-btn">
+									<button id="file-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
+										<i class="icon-folder-open"></i> {l s='Choose a file'}
+									</button>
+								</span>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-lg-9 col-lg-offset-3">
-						<input type="submit" name="submitFileUpload" value="{l s='Upload'}" class="btn btn-default" />
+					<div class="row">
+						<div class="col-lg-7">
+							<p class="help-block">
+								{l s='You can also upload your file via FTP to the following directory:'} {$path_import}.
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>
-		</form>
-	</div>
+			<div class="form-group">
+				<div class="col-lg-9 col-lg-offset-3">
+					<button type="submit" name="submitFileUpload" class="btn btn-default"><i class="icon-upload"></i> {l s='Upload'}</button>
+				</div>
+			</div>
+		</div>
+	</form>
 </div>
 
 {* Import fieldset *}
@@ -93,6 +92,7 @@
 							<option value="{$filename}"{if $csv_selected == $filename} selected="selected"{/if}>{$filename|escape:'htmlall':'UTF-8'}</option>
 						{/foreach}
 					</select>
+				<div class="clearfix">&nbsp;</div>
 				{/if}
 
 				<a href="#upload_file_import" id="upload_file_import_link" class="btn btn-default">
@@ -132,10 +132,10 @@
 					</a>
 				</p>
 
-				<ul id="csv_files_import" style="display:none;">
+				<ul id="csv_files_import" style="display:none;" class="list-group">
 					{foreach $files_to_import AS $filename}
 					<li>
-						<a href="{$current}&token={$token}&csvfilename={$filename|@base64_encode}">{$filename}</a>
+						<a href="{$current}&token={$token}&csvfilename={$filename|@base64_encode}">{$filename}</a>&nbsp;&nbsp;
 						<a href="{$current}&token={$token}&csvfilename={$filename|@base64_encode}&delete=1" class="btn btn-default">
 							<i class="icon-trash"></i> {l s='Delete'}
 						</a>
@@ -232,7 +232,7 @@
 				<input type="submit" name="submitImportFile" id="submitImportFile" value="{l s='Next step'}" class="btn btn-default" {if empty($files_to_import)}disabled{/if}/>
 			</div>
 		</div>
-		
+
 		{if empty($files_to_import)}
 		<div class="alert alert-info">{l s='You must upload a file in order to proceed to the next step'}</div>
 		{/if}
@@ -274,7 +274,11 @@
 		$("a#upload_file_import_link").fancybox({
 				'titleShow' : false,
 				'transitionIn' : 'elastic',
-				'transitionOut' : 'elastic'
+				'transitionOut' : 'elastic',
+				'autoDimensions' : false,
+				'autoSize'   : false,
+				'width' : 700,
+				'height' : 300
 		});
 
 		$('#preview_import').submit(function(e){
