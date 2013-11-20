@@ -38,13 +38,13 @@
 					</li>
 					<li>
 						<a id="desc-module-hook" class="toolbar_btn" href="{$module_uninstall_link}" title="{l s='Uninstall'}">
-							<i class="process-icon-minus-sign-alt"></i>
+							<i class="process-icon-uninstall"></i>
 							<div>{l s='Uninstall'}</div>
 						</a>
 					</li>
 					<li>
 						<a id="desc-module-hook" class="toolbar_btn" href="{$module_reset_link}" title="{l s='Reset'}">
-							<i class="process-icon-share-alt"></i>
+							<i class="process-icon-reset"></i>
 							<div>{l s='Reset'}</div>
 						</a>
 					</li>

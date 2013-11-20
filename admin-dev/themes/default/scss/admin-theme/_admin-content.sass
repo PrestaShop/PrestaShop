@@ -1,0 +1,128 @@
+html
+	min-height: 100%
+	height: 100%
+	font-size: 62.5%
+	-webkit-tap-highlight-color: rgba(0,0,0,0)
+body
+	min-height: 100%
+	height: 100%
+	font: 400 #{$font-size-base}/#{$line-height-base} $font-family-base
+	color: $text-color
+	background-color: $body-bg
+
+#main
+	z-index: 10
+	float: left
+	width: 100%
+	min-height: 100%
+	padding: 36px 0 60px
+	margin: 0 0 -60px 0
+	background-color: $bg-content-color
+	//background-image: url('../img/patterns/bedge_grunge.png') // texture
+
+#content.bootstrap
+	padding: 80px 10px 0
+	@include transition-property(margin)
+	@include transition-duration(0.4s)
+	@include transition-timing-function(ease-out)
+	.panel
+		padding: 20px
+		margin-bottom: 20px
+		border: solid 1px darken($bg-content-color,10%)
+		background-color: lighten($bg-content-color,20%)
+		@include border-radius(5px)
+		@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
+	.panel-heading
+		@extend h3
+	h3:not(.modal-title), .panel-heading
+		border: none
+		padding: 0 5px
+		margin: -16px -16px 15px -16px
+		color: contrasted($bg-panel-heading-color)	
+		font-size: 1.2em
+		line-height: 30px
+		font-weight: 300
+		text-transform: uppercase
+		background-color: white
+		border-bottom: solid 1px #ccc
+		i, a
+			color: contrasted($bg-panel-heading-color)
+		.badge
+			background-color: $brand-primary
+			+border-radius(0)
+			height: 29px
+			line-height: 25px
+			font-size: 1.3em
+			margin-right: 7px
+			font-weight: 300
+			float: left
+			margin-left: -5px
+		.panel-heading-action
+			@extend .pull-right
+			margin-right: -5px
+			a.list-toolbar-btn
+				float: left
+				height: 30px
+				width: 30px
+				color: $brand-primary
+				border-left: solid 1px #ccc
+				&:hover
+					text-decoration: none
+					color: black
+				i
+					text-align: center
+					font-size: 1.3em
+					line-height: 30px
+	.panel-danger .panel-heading
+		background-color: $badge-notif-color!important
+	form .alert
+		clear: both		
+	@media (max-width: $screen-phone)
+		margin: 0
+		padding: 80px 5px 0
+
+//data-focus
+.data-focus
+	&.data-focus-primary
+		background-color: $brand-primary
+		color: white
+		@include border-radius(10px)
+
+//orders
+#customer_part
+	.customerCard
+		&.selected-customer .panel
+			color: $brand-success
+			border: solid 2px $brand-success
+
+//modal 
+body.display-modal
+	#content, #main
+		margin: 0
+		padding: 0
+		background: #F8F8F8
+
+//todo: remove temp fix for bootstrap RC1 -> final
+.bootstrap
+	input[type="text"],input[type="search"],input[type="password"], textarea, select
+		@extend .form-control
+		
+//panels
+.bootstrap
+	.panel
+		.panel-footer
+			margin: 15px -20px -20px
+			height: 73px
+			.btn.pull-right
+				margin-left: 3px
+#header
+	.panel-footer
+		margin: 15px 0 0!important
+		height: 40px!important
+
+//colors
+.attributes-color-container
+	width: 40px
+	height: 25px
+	display: block
+	border: solid 1px black
