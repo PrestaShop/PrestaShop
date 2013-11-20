@@ -29,28 +29,23 @@ if (!defined('_PS_VERSION_'))
 	
 class BlockBestSellers extends Module
 {
-	private $_html = '';
-	private $_postErrors = array();
+	protected static $cache_best_sellers;
 
 	public function __construct()
 	{
-
 		$this->name = 'blockbestsellers';
 		$this->tab = 'front_office_features';
-		$this->version = '1.3';
+		$this->version = '1.4';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-
 		$this->bootstrap = true;
+
 		parent::__construct();	
 
 		$this->displayName = $this->l('Top-seller block');
 		$this->description = $this->l('Add a block displaying your store\'s top-selling products.');
 	}
 
-	/**
-	 * @see ModuleCore::install()
-	 */
 	public function install()
 	{
 		$this->_clearCache('blockbestsellers.tpl');
@@ -81,21 +76,25 @@ class BlockBestSellers extends Module
 	public function hookAddProduct($params)
 	{
 		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('tab.tpl');
 	}
 
 	public function hookUpdateProduct($params)
 	{
 		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('tab.tpl');
 	}
 
 	public function hookDeleteProduct($params)
 	{
 		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('tab.tpl');
 	}
 
 	public function hookActionOrderStatusPostUpdate($params)
 	{
 		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('tab.tpl');
 	}
 
 	/**
@@ -127,23 +126,24 @@ class BlockBestSellers extends Module
 						'name' => 'PS_BLOCK_BESTSELLERS_DISPLAY',
 						'is_bool' => true,
 						'values' => array(
-									array(
-										'id' => 'active_on',
-										'value' => 1,
-										'label' => $this->l('Enabled')
-									),
-									array(
-										'id' => 'active_off',
-										'value' => 0,
-										'label' => $this->l('Disabled')
-									)
-								),
-						)
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						),
+					)
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
-			),
+				'submit' => array(
+					'title' => $this->l('Save'),
+					'class' => 'btn btn-default'
+				)
+			)
 		);
 		
 		$helper = new HelperForm();
@@ -159,7 +159,7 @@ class BlockBestSellers extends Module
 		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
 		$helper->token = Tools::getAdminTokenLite('AdminModules');
 		$helper->tpl_vars = array(
-			'fields_value' => $this->getConfigFieldsValues(),
+			'fields_value' => array('PS_BLOCK_BESTSELLERS_DISPLAY' => Tools::getValue('PS_BLOCK_BESTSELLERS_DISPLAY', Configuration::get('PS_BLOCK_BESTSELLERS_DISPLAY'))),
 			'languages' => $this->context->controller->getLanguages(),
 			'id_language' => $this->context->language->id
 		);
@@ -176,39 +176,38 @@ class BlockBestSellers extends Module
 
 	public function hookDisplayHomeTab($params)
 	{
+		if (!$this->isCached('tab.tpl', $this->getCacheId('blockbestsellers-tab')))
+		{
+			BlockBestSellers::$cache_best_sellers = $this->getBestSellers($params);
+			$this->smarty->assign('best_sellers', BlockBestSellers::$cache_best_sellers);
+		}
 		return $this->display(__FILE__, 'tab.tpl', $this->getCacheId('blockbestsellers-tab'));
 	}
 
 	public function hookdisplayHomeTabContent($params)
 	{
-		if (!$this->isCached('blockbestsellers.tpl', $this->getCacheId()))
+		if (!$this->isCached('blockbestsellers.tpl', $this->getCacheId('blockbestsellers-home')))
 		{
-			$best_sellers = $this->getBestSellers($params);
-			if ($best_sellers === false)
-				return;
-
 			$this->smarty->assign(array(
-				'best_sellers' => $best_sellers,
+				'best_sellers' => BlockBestSellers::$cache_best_sellers,
 				'homeSize' => Image::getSize(ImageType::getFormatedName('home'))));
 		}
-		return $this->display(__FILE__, 'blockbestsellers.tpl', $this->getCacheId());
+		return $this->display(__FILE__, 'blockbestsellers.tpl', $this->getCacheId('blockbestsellers-home'));
 	}
 
 	public function hookRightColumn($params)
 	{
-		if (!$this->isCached('blockbestsellers.tpl', $this->getCacheId()))
+		if (!$this->isCached('blockbestsellers.tpl', $this->getCacheId('blockbestsellers-col')))
 		{
-			$best_sellers = $this->getBestSellers($params);
-			if ($best_sellers === false)
-				return;
-
+			if (BlockBestSellers::$cache_best_sellers === null)
+				BlockBestSellers::$cache_best_sellers = $this->getBestSellers($params);
 			$this->smarty->assign(array(
-				'best_sellers' => $best_sellers,
+				'best_sellers' => BlockBestSellers::$cache_best_sellers,
 				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 				'smallSize' => Image::getSize(ImageType::getFormatedName('small'))
 			));
 		}
-		return $this->display(__FILE__, 'blockbestsellers.tpl', $this->getCacheId());
+		return $this->display(__FILE__, 'blockbestsellers.tpl', $this->getCacheId('blockbestsellers-col'));
 	}
 		
 	public function hookLeftColumn($params)
@@ -224,18 +223,10 @@ class BlockBestSellers extends Module
 		if (!($result = ProductSale::getBestSalesLight((int)$params['cookie']->id_lang, 0, 8)))
 			return (Configuration::get('PS_BLOCK_BESTSELLERS_DISPLAY') ? array() : false);
 
-		$bestsellers = array();
 		$currency = new Currency($params['cookie']->id_currency);
 		$usetax = (Product::getTaxCalculationMethod((int)$this->context->customer->id) != PS_TAX_EXC);
 		foreach ($result as &$row)
 			$row['price'] = Tools::displayPrice(Product::getPriceStatic((int)$row['id_product'], $usetax), $currency);
 		return $result;
-	}
-	
-	public function getConfigFieldsValues()
-	{
-		return array(
-			'PS_BLOCK_BESTSELLERS_DISPLAY' => Tools::getValue('PS_BLOCK_BESTSELLERS_DISPLAY', Configuration::get('PS_BLOCK_BESTSELLERS_DISPLAY')),
-		);
 	}
 }
