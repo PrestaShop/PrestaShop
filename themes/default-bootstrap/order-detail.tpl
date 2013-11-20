@@ -355,19 +355,19 @@
 		<thead>
 			<tr>
 				<th class="first_item">{l s='Date'}</th>
-				<th class="item">{l s='Carrier'}</th>
+				<th class="item" data-sort-ignore="true">{l s='Carrier'}</th>
 				<th data-hide="phone" class="item">{l s='Weight'}</th>
 				<th data-hide="phone" class="item">{l s='Shipping cost'}</th>
-				<th data-hide="phone" class="last_item">{l s='Tracking number'}</th>
+				<th data-hide="phone" class="last_item" data-sort-ignore="true">{l s='Tracking number'}</th>
 			</tr>
 		</thead>
 		<tbody>
 			{foreach from=$order->getShipping() item=line}
 			<tr class="item">
-				<td>{dateFormat date=$line.date_add full=0}</td>
+				<td data-value="{$line.date_add|regex_replace:"/[\-\:\ ]/":""}">{dateFormat date=$line.date_add full=0}</td>
 				<td>{$line.carrier_name}</td>
-				<td>{if $line.weight > 0}{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}{else}-{/if}</td>
-				<td>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}{else}{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}{/if}</td>
+				<td data-value="{if $line.weight > 0}{$line.weight|string_format:"%.3f"}{else}0{/if}">{if $line.weight > 0}{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}{else}-{/if}</td>
+				<td data-value="{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}{$line.shipping_cost_tax_incl}{else}{$line.shipping_cost_tax_excl}{/if}">{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}{else}{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}{/if}</td>
 				<td>
 					<span id="shipping_number_show">{if $line.tracking_number}{if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}{else}-{/if}</span>
 				</td>

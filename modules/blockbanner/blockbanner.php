@@ -46,7 +46,7 @@ class BlockBanner extends Module
 
 	public function install()
 	{
-		Configuration::updateValue('BLOCKBANNER_IMG', 'store.jpg');
+		Configuration::updateValue('BLOCKBANNER_IMG', 'sale70.gif');
 		Configuration::updateValue('BLOCKBANNER_LINK', '');
 		Configuration::updateValue('BLOCKBANNER_DESC', '');
 		return parent::install() && $this->registerHook('displayTop') && $this->registerHook('header');

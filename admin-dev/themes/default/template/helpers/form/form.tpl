@@ -53,8 +53,7 @@
 									<label for="{if isset($input.id)}{$input.id}{if isset($input.lang) AND $input.lang}_{$current_id_lang}{/if}{else}{$input.name}{if isset($input.lang) AND $input.lang}_{$current_id_lang}{/if}{/if}" class="control-label col-lg-3 {if isset($input.required) && $input.required && $input.type != 'radio'}required{/if}">
 										{if isset($input.hint)}
 										<span class="label-tooltip" data-toggle="tooltip" data-html="true"
-											title="
-												{if is_array($input.hint)}
+											title="{if is_array($input.hint)}
 													{foreach $input.hint as $hint}
 														{if is_array($hint)}
 															{$hint.text}
@@ -64,8 +63,7 @@
 													{/foreach}
 												{else}
 													{$input.hint}
-												{/if}
-											">
+												{/if}">
 										{/if}
 										{$input.label}
 										{if isset($input.hint)}
@@ -437,7 +435,7 @@
 									{/foreach}
 
 									{else}
-										<textarea name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" cols="{$input.cols}" rows="{$input.rows}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte {if isset($input.class)}{$input.class}{/if}{else}textarea-autosize{/if}">{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}</textarea>
+										<textarea name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" {if isset($input.cols)}cols="{$input.cols}"{/if} {if isset($input.rows)}rows="{$input.rows}"{/if} class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte {if isset($input.class)}{$input.class}{/if}{else}textarea-autosize{/if}">{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}</textarea>
 									{/if}
 
 								{elseif $input.type == 'checkbox'}

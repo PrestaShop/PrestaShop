@@ -14,7 +14,6 @@
 .comments_advices li {
   display: inline-block;
   line-height: 30px;
-  /*min 768px max 991px*/
 }
 @media (min-width: 768px) and (max-width: 991px) {
   .comments_advices li {
@@ -30,7 +29,6 @@
   line-height: 30px;
   padding: 0;
   display: inline-block;
-  /*min 768px max 991px*/
 }
 @media (min-width: 768px) and (max-width: 1199px) {
   .comments_advices a {
@@ -73,7 +71,6 @@
   border-right: 1px solid #d6d4d4;
   padding-right: 30px;
   margin-right: 9px;
-  /* min 768px max 991px*/
 }
 @media (min-width: 768px) and (max-width: 991px) {
   .comments_advices a.reviews {
@@ -94,11 +91,17 @@
 #product_comments_block_extra .star_content {
   margin-top: 1px;
 }
-#product_comments_block_extra div.star {
-  background: url(img/star.png) no-repeat 0 0;
+#product_comments_block_extra div.star:after {
+  content: "";
+  font-family: "FontAwesome";
+  display: inline-block;
+  color: #777676;
 }
-#product_comments_block_extra div.star_on {
-  background: url(img/star.png) no-repeat 0 -13px;
+#product_comments_block_extra div.star_on:after {
+  content: "";
+  font-family: "FontAwesome";
+  display: inline-block;
+  color: #ef8743;
 }
 #product_comments_block_extra .comments_advices {
   clear: both;
@@ -125,7 +128,6 @@
   overflow: hidden;
   color: #333333;
   text-align: left;
-  /*max 767px*/
 }
 @media (max-width: 767px) {
   #new_comment_form {
@@ -252,12 +254,17 @@
 #product_comments_block_tab div.comment .star_content {
   margin: 0 0 0 5px;
 }
-#product_comments_block_tab div.star,
-#product_comments_block_tab div.star_on {
-  background: url(img/star.png) no-repeat 0 0;
+#product_comments_block_tab div.star:after {
+  content: "";
+  font-family: "FontAwesome";
+  display: inline-block;
+  color: #777676;
 }
-#product_comments_block_tab div.star_on {
-  background-position: 0 -13px;
+#product_comments_block_tab div.star_on:after {
+  content: "";
+  font-family: "FontAwesome";
+  display: inline-block;
+  color: #ef8743;
 }
 #product_comments_block_tab .comment_author_infos {
   clear: both;
@@ -273,7 +280,6 @@
 #product_comments_block_tab div.comment div.comment_details {
   overflow: hidden;
   border-left: 1px solid #d6d4d4;
-  /*max 767px */
 }
 @media (max-width: 991px) {
   #product_comments_block_tab div.comment div.comment_details {

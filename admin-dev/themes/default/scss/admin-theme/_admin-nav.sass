@@ -169,17 +169,20 @@
 						color: white
 			span.submenu_expand
 				position: absolute
-				right: 10px
-				top: 2px
+				right: 0
+				top: 0
+				width: 28px
+				height: 36px
+				text-align: center
 				cursor: pointer
 				font-family: FontAwesome
 				font-size: 24px
 				font-weight: 100
 				color: black
-				background-color: transparent
 				@extend .icon-angle-down
 				@include text-shadow(lighten($main-color,10%) 1px 1px 0)
 				&:hover
+					background: rgba(black,0.1)
 					color: white
 					@include text-shadow(darken($main-color,20%) -1px -1px 0)
 	ul.submenu
@@ -396,4 +399,3 @@
 
 [class^="icon-Admin"]
 	margin-right: 6px
-
