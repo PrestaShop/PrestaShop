@@ -88,6 +88,7 @@
 <script src="{$js_dir}/jquery/highdpi.js"></script>
 <script src="{$js_dir}/jquery/jquery.bxslider.js"></script>
 <script src="{$js_dir}/jquery/footable.js"></script>
+<script src="{$js_dir}/jquery/footable.sort.js"></script>
 <script src="{$js_dir}/jquery/resonsive_utilites.js"></script>
 		{$HOOK_HEADER}
 	</head>

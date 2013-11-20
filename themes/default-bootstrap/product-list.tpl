@@ -128,7 +128,7 @@
 	<script type="text/javascript">
 		var comparator_max_item = {$comparator_max_item};
 		var comparedProductsIds = [];
-		{foreach from=$compared_products item=product name=products}comparedProductsIds.push({$product.id_product});{/foreach};
+		{foreach from=$compared_products key=k item=product}comparedProductsIds.push({$product});{/foreach}
         $('document').ready(function(){
             blockHover();
         });

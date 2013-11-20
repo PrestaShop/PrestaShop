@@ -32,10 +32,10 @@
 	<table id="order-list" class="table table-bordered footab">
 		<thead>
 			<tr>
-				<th class="first_item">{l s='Credit slip'}</th>
-				<th class="item">{l s='Order'}</th>
+				<th data-sort-ignore="true" class="first_item">{l s='Credit slip'}</th>
+				<th data-sort-ignore="true" class="item">{l s='Order'}</th>
 				<th class="item">{l s='Date issued'}</th>
-				<th data-hide="phone" class="last_item">{l s='View credit slip'}</th>
+				<th data-sort-ignore="true" data-hide="phone" class="last_item">{l s='View credit slip'}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -43,7 +43,7 @@
 			<tr class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if} {if $smarty.foreach.myLoop.index % 2}alternate_item{/if}">
 				<td class="bold"><span class="color-myaccount">{l s='#%s' sprintf=$slip.id_order_slip|string_format:"%06d"}</span></td>
 				<td class="history_method"><a class="color-myaccount" href="javascript:showOrder(1, {$slip.id_order|intval}, '{$link->getPageLink('order-detail')|escape:'html'}');">{l s='#%s' sprintf=$slip.id_order|string_format:"%06d"}</a></td>
-				<td class="bold">{dateFormat date=$slip.date_add full=0}</td>
+				<td class="bold"  date-value="{$slip.date_add|regex_replace:"/[\-\:\ ]/":""}">{dateFormat date=$slip.date_add full=0}</td>
 				<td class="history_invoice">
 					<a class="link-button" href="{$link->getPageLink('pdf-order-slip', true, NULL, "id_order_slip={$slip.id_order_slip|intval}")|escape:'html'}" title="{l s='Credit slip'} {l s='#%s' sprintf=$slip.id_order_slip|string_format:"%06d"}"><i class="icon-file-text large"></i>{l s='PDF'}</a>
 				</td>
@@ -56,7 +56,7 @@
 		<p class="alert alert-warning">{l s='You have not received any credit slips.'}</p>
 	{/if}
 </div>
-<ul class="footer_links">
+<ul class="footer_links clearfix">
 	<li><a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html'}"><span><i class="icon-chevron-left"></i> {l s='Back to your account'}</span></a></li>
 	<li><a class="btn btn-default button button-small" href="{$base_dir}"><span><i class="icon-chevron-left"></i> {l s='Home'}</span></a></li>
 </ul>
