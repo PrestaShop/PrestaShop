@@ -1,150 +1,84 @@
+//Compass is required to pre-compile this stylesheets to .css
 @import "compass"
+
 @import "admin-theme/admin-theme-colors"
-@import "admin-theme/_bootstrap-variables"
-@import "admin-theme/_bootstrap-init"
-@import "admin-theme/_font-awesome"
-@import "admin-theme/animate"
+@import "admin-theme/bootstrap-variables"
+@import "admin-theme/font-awesome"
+@import "admin-theme/vendor/animate"
 
-html, body
-	min-height: 100%
-	height: 100%
+//Bootstrap from bower-components
 
-#header
-	z-index: 20
-#main
-	z-index: 10
-	float: left
-	width: 100%
-	min-height: 100%
-	padding: 36px 0 60px
-	margin: 0 0 -60px 0
-	background-color: $bg-content-color
-	background-image: url('../img/patterns/bedge_grunge.png') // texture
+//Bootstrap Core : Variables + Mixins + Reset + Print
+@import "../bower_components/sass-bootstrap/lib/variables"
+@import "../bower_components/sass-bootstrap/lib/mixins"
+@import "../bower_components/sass-bootstrap/lib/normalize"
+@import "../bower_components/sass-bootstrap/lib/print"
 
-#content
-	padding: 80px 10px 0
-	@include transition-property(margin)
-	@include transition-duration(0.4s)
-	@include transition-timing-function(ease-out)
-	.panel
-		padding: 20px
-		margin-bottom: 20px
-		border: solid 1px darken($bg-content-color,10%)
-		background-color: lighten($bg-content-color,20%)
-		@include border-radius(5px)
-		@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
-	.panel-heading
-		@extend h3
-	h3:not(.modal-title), .panel-heading
-		border: none
-		padding: 0 5px
-		margin: -16px -16px 15px -16px
-		color: contrasted($bg-panel-heading-color)	
-		font-size: 1.2em
-		line-height: 30px
-		font-weight: 300
-		text-transform: uppercase
-		background-color: white
-		border-bottom: solid 1px #ccc
-		i, a
-			color: contrasted($bg-panel-heading-color)
-		.badge
-			background-color: $brand-primary
-			+border-radius(0)
-			height: 29px
-			line-height: 25px
-			font-size: 1.3em
-			margin-right: 7px
-			font-weight: 300
-			float: left
-			margin-left: -5px
-		.panel-heading-action
-			@extend .pull-right
-			margin-right: -5px
-			a.list-toolbar-btn
-				float: left
-				height: 30px
-				width: 30px
-				color: $brand-primary
-				border-left: solid 1px #ccc
-				&:hover
-					text-decoration: none
-					color: black
-				i
-					text-align: center
-					font-size: 1.3em
-					line-height: 30px
-	.panel-danger .panel-heading
-		background-color: $badge-notif-color!important
-	form .alert
-		clear: both		
-	@media (max-width: $screen-phone)
-		margin: 0
-		padding: 80px 5px 0
+//bootstrap rules apply only on div#content.bootstrap, nav.bootstrap, header.bootstrap, footer.bootstrap
+.bootstrap
+	// Core CSS
+	@import "../bower_components/sass-bootstrap/lib/scaffolding"
+	@import "../bower_components/sass-bootstrap/lib/type"
+	@import "../bower_components/sass-bootstrap/lib/code"
+	@import "../bower_components/sass-bootstrap/lib/grid"
+	@import "../bower_components/sass-bootstrap/lib/tables"
+	@import "../bower_components/sass-bootstrap/lib/forms"
+	@import "../bower_components/sass-bootstrap/lib/buttons"
+	// Components
+	@import "../bower_components/sass-bootstrap/lib/component-animations"
+	@import "../bower_components/sass-bootstrap/lib/glyphicons"
+	@import "../bower_components/sass-bootstrap/lib/dropdowns"
+	@import "../bower_components/sass-bootstrap/lib/button-groups"
+	@import "../bower_components/sass-bootstrap/lib/input-groups"
+	@import "../bower_components/sass-bootstrap/lib/navs"
+	@import "../bower_components/sass-bootstrap/lib/navbar"
+	@import "../bower_components/sass-bootstrap/lib/breadcrumbs"
+	@import "../bower_components/sass-bootstrap/lib/pagination"
+	@import "../bower_components/sass-bootstrap/lib/pager"
+	@import "../bower_components/sass-bootstrap/lib/labels"
+	@import "../bower_components/sass-bootstrap/lib/badges"
+	@import "../bower_components/sass-bootstrap/lib/jumbotron"
+	@import "../bower_components/sass-bootstrap/lib/thumbnails"
+	@import "../bower_components/sass-bootstrap/lib/alerts"
+	@import "../bower_components/sass-bootstrap/lib/progress-bars"
+	@import "../bower_components/sass-bootstrap/lib/media"
+	@import "../bower_components/sass-bootstrap/lib/list-group"
+	@import "../bower_components/sass-bootstrap/lib/panels"
+	@import "../bower_components/sass-bootstrap/lib/wells"
+	@import "../bower_components/sass-bootstrap/lib/close"
+	// Components w/ JavaScript
+	@import "../bower_components/sass-bootstrap/lib/modals"
+	@import "../bower_components/sass-bootstrap/lib/tooltip"
+	@import "../bower_components/sass-bootstrap/lib/popovers"
+	@import "../bower_components/sass-bootstrap/lib/carousel"
 
-//backward
-#nobootstrap
-	float: left
+// Utility classes
+@import "../bower_components/sass-bootstrap/lib/utilities"
+@import "../bower_components/sass-bootstrap/lib/responsive-utilities"
 
-//data-focus
-.data-focus
-	&.data-focus-primary
-		background-color: $brand-primary
-		color: white
-		@include border-radius(10px)
-
-//orders
-#customer_part
-	.customerCard
-		&.selected-customer .panel
-			color: $brand-success
-			border: solid 2px $brand-success
-
-//modal 
-body.display-modal
-	#content, #main
-		margin: 0
-		padding: 0
-		background: #F8F8F8
-
-//todo: remove temp fix for bootstrap RC1 -> final
-input[type="text"],input[type="search"],input[type="password"], textarea, select
-	@extend .form-control
-
-//panels
-#content
-	.panel
-		.panel-footer
-			margin: 15px -20px -20px
-			height: 73px
-.panel-footer
-	.btn.pull-right
-		margin-left: 3px
-
-//colors
-.attributes-color-container
-	width: 40px
-	height: 25px
-	display: block
-	border: solid 1px black
-
-//components
+//PrestaShop Elements
+@import "admin-theme/admin-content"
 @import "admin-theme/admin-header"
 @import "admin-theme/admin-footer"
 @import "admin-theme/admin-nav"
-@import "admin-theme/admin-commons"
-@import "admin-theme/admin-tables"
-@import "admin-theme/admin-tree"
-@import "admin-theme/admin-forms"
-@import "admin-theme/admin-kpi"
-@import "admin-theme/admin-switch"
-@import "admin-theme/admin-toolbar"
-@import "admin-theme/admin-date-range-picker"
-@import "admin-theme/ladda"
-
-//page specific
 @import "admin-theme/admin-login"
-@import "admin-theme/admin-carrier-wizard"
-@import "admin-theme/admin-modules"
-@import "admin-theme/admin-dashboard"
-@import "admin-theme/admin-search"
+
+.bootstrap
+	//components
+	@import "admin-theme/admin-commons"
+	@import "admin-theme/admin-tables"
+	@import "admin-theme/admin-tree"
+	@import "admin-theme/admin-forms"
+	@import "admin-theme/admin-kpi"
+	@import "admin-theme/admin-switch"
+	@import "admin-theme/admin-toolbar"
+	@import "admin-theme/admin-date-range-picker"
+	@import "admin-theme/ladda"
+	//page specific
+	@import "admin-theme/admin-carrier-wizard"
+	@import "admin-theme/admin-modules"
+	@import "admin-theme/admin-dashboard"
+	@import "admin-theme/admin-search"
+
+//backward compatibility
+@import "admin-theme/admin-backward"
