@@ -437,6 +437,7 @@ class Blocktopmenu extends Module
 	{
 		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
 		$category = new Category((int)$id_category, (int)$id_lang, (int)$id_shop);
+        $output = '';
 
 		if (is_null($category->id))
 			return;
@@ -448,13 +449,15 @@ class Blocktopmenu extends Module
 		}
 
 		$shop = (object) Shop::getShop((int)$category->getShopID());
-		$this->_html .= '<option value="CAT'.(int)$category->id.'">'.(isset($spacer) ? $spacer : '').$category->name.' ('.$shop->name.')</option>';
+		$output .= '<option value="CAT'.(int)$category->id.'">'.(isset($spacer) ? $spacer : '').$category->name.' ('.$shop->name.')</option>';
 
 		if (isset($children) && count($children))
 			foreach ($children as $child)
 			{
-				$this->getCategoryOption((int)$child['id_category'], (int)$id_lang, (int)$child['id_shop']);
+                $output .= $this->getCategoryOption((int)$child['id_category'], (int)$id_lang, (int)$child['id_shop']);
 			}
+
+        return $output;
 	}
 
 	private function getCategory($id_category, $id_lang = false, $id_shop = false)
@@ -551,15 +554,18 @@ class Blocktopmenu extends Module
 		$pages = $this->getCMSPages((int)$parent, false, (int)$id_lang);
 
 		$spacer = str_repeat('&nbsp;', $this->spacer_size * (int)$depth);
+        $output = '';
 
 		foreach ($categories as $category)
 		{
-			$this->_html .= '<option value="CMS_CAT'.$category['id_cms_category'].'" style="font-weight: bold;">'.$spacer.$category['name'].'</option>';
-			$this->getCMSOptions($category['id_cms_category'], (int)$depth + 1, (int)$id_lang);
+			$output .= '<option value="CMS_CAT'.$category['id_cms_category'].'" style="font-weight: bold;">'.$spacer.$category['name'].'</option>';
+			$output .= $this->getCMSOptions($category['id_cms_category'], (int)$depth + 1, (int)$id_lang);
 		}
 
 		foreach ($pages as $page)
-			$this->_html .= '<option value="CMS'.$page['id_cms'].'">'.$spacer.$page['meta_title'].'</option>';
+            $output .= '<option value="CMS'.$page['id_cms'].'">'.$spacer.$page['meta_title'].'</option>';
+
+        return $output;
 	}
 	
 	protected function getCacheId($name = null)
@@ -912,7 +918,7 @@ class Blocktopmenu extends Module
 		
 		$html = '<select multiple="multiple" id="availableItems" style="width: 300px; height: 160px;">';
 		$html .= '<optgroup label="'.$this->l('CMS').'">';
-		$this->getCMSOptions(0, 1, $this->context->language->id);
+		$html .= $this->getCMSOptions(0, 1, $this->context->language->id);
 		$html .= '</optgroup>';
 
 		// BEGIN SUPPLIER
@@ -935,7 +941,7 @@ class Blocktopmenu extends Module
 
 		// BEGIN Categories
 		$html .= '<optgroup label="'.$this->l('Categories').'">';
-		$this->getCategoryOption(1, (int)$this->context->language->id, (int)Shop::getContextShopID());
+		$html .= $this->getCategoryOption(1, (int)$this->context->language->id, (int)Shop::getContextShopID());
 		$html .= '</optgroup>';
 		
 		// BEGIN Shops
