@@ -787,5 +787,8 @@ Country</value>
     <configuration id="PS_DASHBOARD_SIMULATION" name="PS_DASHBOARD_SIMULATION">
     	<value>1</value>
     </configuration>
+    <configuration id="QUICK_VIEW" name="QUICK_VIEW">
+    	<value>1</value>
+    </configuration>
   </entities>
 </entity_configuration>

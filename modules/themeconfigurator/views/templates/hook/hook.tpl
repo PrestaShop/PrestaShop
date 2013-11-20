@@ -1,8 +1,9 @@
+{if $page_name =='index'}
 {if isset($htmlitems) && $htmlitems}
 <div id="htmlcontent_{$hook}">
     <ul class="htmlcontent-home clearfix row">
         {foreach name=items from=$htmlitems item=hItem}
-        	<li class="htmlcontent-item col-xs-4">
+        	<li class="htmlcontent-item-{$smarty.foreach.items.iteration} col-xs-4">
             	{if $hItem.url}
                 	<a href="{$hItem.url}" class="item-link"{if $hItem.target == 1} target="_blank"{/if}>
                 {/if}
@@ -24,4 +25,5 @@
         {/foreach}
     </ul>
 </div>
+{/if}
 {/if}
