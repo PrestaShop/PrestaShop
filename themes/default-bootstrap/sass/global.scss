@@ -47,6 +47,7 @@ textarea {resize:none;}
 	.columns-container {background:$light-background;}
 	#columns {
 		z-index:1;
+		position:relative;
 		padding-bottom:50px;
 	}
 		#left_column {}
