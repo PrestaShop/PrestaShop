@@ -355,7 +355,7 @@
 				<form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote();return false;" >
 					<div class="row">
 						<div class="col-lg-12">
-							<textarea name="note" id="noteContent" onkeydown="$('#submitCustomerNote').removeAttr('disabled');">{$customer_note}</textarea>
+							<textarea name="note" id="noteContent" onkeyup="$(this).val().length > 0 ? $('#submitCustomerNote').removeAttr('disabled') : $('#submitCustomerNote').attr('disabled', 'disabled')">{$customer_note}</textarea>
 						</div>
 					</div>
 					<div class="row">
