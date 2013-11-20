@@ -3022,8 +3022,8 @@ a.link-social:hover { text-decoration: none; }
 #nav-sidebar ul.menu li.maintab a.title i { color: #9094a2; background-color: #17181c; -webkit-transition-property: color; transition-property: color; -webkit-transition-duration: 0.4s; transition-duration: 0.4s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; }
 #nav-sidebar ul.menu li.maintab a.title:hover { background-color: #686d7d; color: white; }
 #nav-sidebar ul.menu li.maintab a.title:hover i { color: white; }
-#nav-sidebar ul.menu li.maintab span.submenu_expand { position: absolute; right: 10px; top: 2px; cursor: pointer; font-family: FontAwesome; font-size: 24px; font-weight: 100; color: black; background-color: transparent; text-shadow: #686d7d 1px 1px 0; }
-#nav-sidebar ul.menu li.maintab span.submenu_expand:hover { color: white; text-shadow: #232429 -1px -1px 0; }
+#nav-sidebar ul.menu li.maintab span.submenu_expand { position: absolute; right: 0; top: 0; width: 28px; height: 36px; text-align: center; cursor: pointer; font-family: FontAwesome; font-size: 24px; font-weight: 100; color: black; text-shadow: #686d7d 1px 1px 0; }
+#nav-sidebar ul.menu li.maintab span.submenu_expand:hover { background: rgba(0, 0, 0, 0.1); color: white; text-shadow: #232429 -1px -1px 0; }
 #nav-sidebar ul.submenu { list-style: none; padding: 0; }
 #nav-sidebar ul.submenu li a { display: block; padding: 4px 5px 4px 10px; font-size: 12px; border: none; border-bottom: solid 1px #eeeeee; background-color: white; }
 #nav-sidebar ul.submenu li a:hover { color: #515561; background-color: #edeeef; text-decoration: none; }
