@@ -24,25 +24,21 @@
 *}
 <div class="bootstrap">
 	<h3><i class="icon-cogs"></i> {l s='Configuration'}</h3>
-	<div class="row">
-		<div class="input-group">
-			<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
-				<i class="icon-flag"></i>
-				{l s='Manage translations'}
-				<span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-				{foreach from=$module_languages item=language}
-				<li><a href="{$trad_link}{$language['iso_code']}#{$module_name}">{$language.name}</a></li>
-				{/foreach}
-			</ul>
-		</div>
+	<div class="input-group">
+		<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+			<i class="icon-flag"></i>
+			{l s='Manage translations'}
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+			{foreach from=$module_languages item=language}
+			<li><a href="{$trad_link}{$language['iso_code']}#{$module_name}">{$language.name}</a></li>
+			{/foreach}
+		</ul>
 	</div>
 	{if isset($display_multishop_checkbox) && $display_multishop_checkbox}
-	<div class="row">
-		<input type="checkbox" name="activateModule" value="1"{if $module->active} checked="checked"{/if} 
-			onclick="location.href = '{$current_url}&enable='+(($(this).attr('checked')) ? 1 : 0)" />
-			{l s='Activate module for '}{$shop_context}
-	</div>
+	<input type="checkbox" name="activateModule" value="1"{if $module->active} checked="checked"{/if} 
+		onclick="location.href = '{$current_url}&enable='+(($(this).attr('checked')) ? 1 : 0)" />
+		{l s='Activate module for '}{$shop_context}
 	{/if}
 </div>

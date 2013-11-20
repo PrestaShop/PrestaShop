@@ -3076,6 +3076,53 @@ a.link-social:hover { text-decoration: none; }
 
 [class^="icon-Admin"] { margin-right: 6px; }
 
+#login { height: 100%; background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 40, color-stop(10%, rgba(104, 128, 138, 0.4)), color-stop(40%, rgba(138, 114, 76, 0))), -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(57, 173, 219, 0.25)), color-stop(100%, rgba(42, 60, 87, 0.4))), -webkit-gradient(linear, 0% 0%, 100% 100%, color-stop(0%, #670d10), color-stop(100%, #092756)); background: -webkit-radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), -webkit-linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), -webkit-linear-gradient(left top, #670d10, #092756); background: -moz-radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), -moz-linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), -moz-linear-gradient(left top, #670d10, #092756); background: -o-radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), -o-linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), -o-linear-gradient(left top, #670d10, #092756); background: radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), linear-gradient(left top, #670d10, #092756); }
+
+#login-header { padding-top: 40px; margin-bottom: 30px; color: white; }
+#login-header h1, #login-header h4 { margin: 0; padding: 0; }
+
+#login-panel { margin: 0 auto; width: 420px; }
+#login-panel .panel, #login-panel #header_notifs_icon_wrapper .notifs_panel, #header_notifs_icon_wrapper #login-panel .notifs_panel, #login-panel .bootstrap #dash_version, .bootstrap #login-panel #dash_version { -webkit-box-shadow: rgba(255, 255, 255, 0.45) 0 0 0 6px; box-shadow: rgba(255, 255, 255, 0.45) 0 0 0 6px; }
+#login-panel .panel-footer, #login-panel #header_notifs_icon_wrapper .notifs_panel .notifs_panel_footer, #header_notifs_icon_wrapper .notifs_panel #login-panel .notifs_panel_footer { margin: 0 -20px -20px; }
+#login-panel .flip-container { -webkit-perspective: 1000px; -moz-perspective: 1000px; perspective: 1000px; height: 370px; }
+#login-panel .flip-container.flip .flipper { -webkit-transform: rotateY(180deg); -ms-transform: rotateY(180deg); transform: rotateY(180deg); }
+#login-panel .flipper { -webkit-transition-duration: 0.6s; transition-duration: 0.6s; -webkit-transform-style: preserve-3d; -moz-transform-style: preserve-3d; -ms-transform-style: preserve-3d; -o-transform-style: preserve-3d; transform-style: preserve-3d; position: relative; }
+#login-panel .front, #login-panel .back { -webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; backface-visibility: hidden; width: 420px; padding: 20px; position: absolute; top: 0; left: 0; }
+#login-panel .front { z-index: 2; }
+#login-panel .back { -webkit-transform: rotateY(180deg); -ms-transform: rotateY(180deg); transform: rotateY(180deg); }
+
+#login-footer a { color: #a0aab5; }
+
+.animated { -webkit-animation-duration: 1s; -moz-animation-duration: 1s; -o-animation-duration: 1s; animation-duration: 1s; -webkit-animation-fill-mode: both; -moz-animation-fill-mode: both; -o-animation-fill-mode: both; animation-fill-mode: both; }
+
+@-webkit-keyframes fadeInDown { 0% { opacity: 0; -webkit-transform: translateY(-20px); }
+  100% { opacity: 1; -webkit-transform: translateY(0); } }
+
+@-moz-keyframes fadeInDown { 0% { opacity: 0; -moz-transform: translateY(-20px); }
+  100% { opacity: 1; -moz-transform: translateY(0); } }
+
+@-o-keyframes fadeInDown { 0% { opacity: 0; -o-transform: translateY(-20px); }
+  100% { opacity: 1; -o-transform: translateY(0); } }
+
+@keyframes fadeInDown { 0% { opacity: 0; transform: translateY(-20px); }
+  100% { opacity: 1; transform: translateY(0); } }
+
+.animated.fadeInDown { -webkit-animation-name: fadeInDown; -moz-animation-name: fadeInDown; -o-animation-name: fadeInDown; }
+
+@-webkit-keyframes fadeIn { 0% { opacity: 0; }
+  100% { opacity: 1; } }
+
+@-moz-keyframes fadeIn { 0% { opacity: 0; }
+  100% { opacity: 1; } }
+
+@-o-keyframes fadeIn { 0% { opacity: 0; }
+  100% { opacity: 1; } }
+
+@keyframes fadeIn { 0% { opacity: 0; }
+  100% { opacity: 1; } }
+
+.animated.fadeIn { -webkit-animation-name: fadeIn; -moz-animation-name: fadeIn; -o-animation-name: fadeIn; }
+
 .bootstrap { @-webkit-keyframes one { 0% { background-color: #00a4e7; }
   100% { background-color: white; } }
  @-webkit-keyframes two { 0% { -webkit-box-shadow: #00a4e7 0 0 0 20px inset; box-shadow: #00a4e7 0 0 0 20px inset; }
@@ -3086,23 +3133,7 @@ a.link-social:hover { text-decoration: none; }
  * MIT licensed
  *
  * Copyright (C) 2013 Hakim El Hattab, http://hakim.se
- */ @-webkit-keyframes fadeInDown { 0% { opacity: 0; -webkit-transform: translateY(-20px); }
-  100% { opacity: 1; -webkit-transform: translateY(0); } }
- @-moz-keyframes fadeInDown { 0% { opacity: 0; -moz-transform: translateY(-20px); }
-  100% { opacity: 1; -moz-transform: translateY(0); } }
- @-o-keyframes fadeInDown { 0% { opacity: 0; -o-transform: translateY(-20px); }
-  100% { opacity: 1; -o-transform: translateY(0); } }
- @keyframes fadeInDown { 0% { opacity: 0; transform: translateY(-20px); }
-  100% { opacity: 1; transform: translateY(0); } }
- @-webkit-keyframes fadeIn { 0% { opacity: 0; }
-  100% { opacity: 1; } }
- @-moz-keyframes fadeIn { 0% { opacity: 0; }
-  100% { opacity: 1; } }
- @-o-keyframes fadeIn { 0% { opacity: 0; }
-  100% { opacity: 1; } }
- @keyframes fadeIn { 0% { opacity: 0; }
-  100% { opacity: 1; } }
- @-webkit-keyframes bounceG { 0% { opacity: 0; filter: alpha(opacity=0); -webkit-transform: scale(0.1); -ms-transform: scale(0.1); transform: scale(0.1); }
+ */ @-webkit-keyframes bounceG { 0% { opacity: 0; filter: alpha(opacity=0); -webkit-transform: scale(0.1); -ms-transform: scale(0.1); transform: scale(0.1); }
   100% { opacity: 1; filter: alpha(opacity=100); -webkit-transform: scale(1); -ms-transform: scale(1); transform: scale(1); } }
  @-moz-keyframes bounceG { 0% { opacity: 0; filter: alpha(opacity=0); -webkit-transform: scale(0.1); -ms-transform: scale(0.1); transform: scale(0.1); }
   100% { opacity: 1; filter: alpha(opacity=100); -webkit-transform: scale(1); -ms-transform: scale(1); transform: scale(1); } }
@@ -3404,21 +3435,6 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .ladda-button[data-size=s] .ladda-label { font-size: 0.9em; }
 .bootstrap .ladda-button[data-size=l] .ladda-label { font-size: 1.2em; }
 .bootstrap .ladda-button[data-size=xl] .ladda-label { font-size: 1.5em; }
-.bootstrap #login { height: 100%; background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 40, color-stop(10%, rgba(104, 128, 138, 0.4)), color-stop(40%, rgba(138, 114, 76, 0))), -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(57, 173, 219, 0.25)), color-stop(100%, rgba(42, 60, 87, 0.4))), -webkit-gradient(linear, 0% 0%, 100% 100%, color-stop(0%, #670d10), color-stop(100%, #092756)); background: -webkit-radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), -webkit-linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), -webkit-linear-gradient(left top, #670d10, #092756); background: -moz-radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), -moz-linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), -moz-linear-gradient(left top, #670d10, #092756); background: -o-radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), -o-linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), -o-linear-gradient(left top, #670d10, #092756); background: radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), linear-gradient(left top, #670d10, #092756); }
-.bootstrap #login-header { margin: 0 0 60px 0; color: white; }
-.bootstrap #login-panel { margin: 0 auto; width: 420px; }
-.bootstrap #login-panel .panel, .bootstrap #login-panel #header_notifs_icon_wrapper .notifs_panel, #header_notifs_icon_wrapper .bootstrap #login-panel .notifs_panel, .bootstrap #login-panel #dash_version { -webkit-box-shadow: rgba(255, 255, 255, 0.45) 0 0 0 6px; box-shadow: rgba(255, 255, 255, 0.45) 0 0 0 6px; }
-.bootstrap #login-panel .panel-footer, .bootstrap #login-panel #header_notifs_icon_wrapper .notifs_panel .notifs_panel_footer, #header_notifs_icon_wrapper .notifs_panel .bootstrap #login-panel .notifs_panel_footer { margin: 0 -20px -20px; }
-.bootstrap #login-panel .flip-container { -webkit-perspective: 1000px; -moz-perspective: 1000px; perspective: 1000px; height: 370px; }
-.bootstrap #login-panel .flip-container.flip .flipper { -webkit-transform: rotateY(180deg); -ms-transform: rotateY(180deg); transform: rotateY(180deg); }
-.bootstrap #login-panel .flipper { -webkit-transition-duration: 0.6s; transition-duration: 0.6s; -webkit-transform-style: preserve-3d; -moz-transform-style: preserve-3d; -ms-transform-style: preserve-3d; -o-transform-style: preserve-3d; transform-style: preserve-3d; position: relative; }
-.bootstrap #login-panel .front, .bootstrap #login-panel .back { -webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; backface-visibility: hidden; width: 420px; position: absolute; top: 0; left: 0; }
-.bootstrap #login-panel .front { z-index: 2; }
-.bootstrap #login-panel .back { -webkit-transform: rotateY(180deg); -ms-transform: rotateY(180deg); transform: rotateY(180deg); }
-.bootstrap #login-footer a { color: #a0aab5; }
-.bootstrap .animated { -webkit-animation-duration: 1s; -moz-animation-duration: 1s; -o-animation-duration: 1s; animation-duration: 1s; -webkit-animation-fill-mode: both; -moz-animation-fill-mode: both; -o-animation-fill-mode: both; animation-fill-mode: both; }
-.bootstrap .animated.fadeInDown { -webkit-animation-name: fadeInDown; -moz-animation-name: fadeInDown; -o-animation-name: fadeInDown; animation-name: fadeInDown; }
-.bootstrap .animated.fadeIn { -webkit-animation-name: fadeIn; -moz-animation-name: fadeIn; -o-animation-name: fadeIn; animation-name: fadeIn; }
 .bootstrap #carrier_wizard { position: relative; display: block; }
 .bootstrap #carrier_wizard .stepContainer { position: relative; display: block; clear: both; }
 .bootstrap #carrier_wizard .stepContainer div.content { position: absolute; display: block; width: 100%; clear: both; }
