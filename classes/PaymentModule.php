@@ -369,7 +369,9 @@ abstract class PaymentModuleCore extends Module
 									$customization_text .= sprintf(Tools::displayError('%d image(s)'), count($customization['datas'][Product::CUSTOMIZE_FILE])).'<br />';
 								$customization_text .= '---<br />';
 							}
-							$customization_text = rtrim($customization_text, '---<br />');
+							if(substr($customization_text, -9) == '---<br />'){
+								$customization_text = substr($customization_text, 0, -9);
+							}
 
 							$customization_quantity = (int)$product['customization_quantity'];
 							$products_list .=
