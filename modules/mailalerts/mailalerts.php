@@ -579,6 +579,7 @@ class MailAlerts extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro compat 1.5
 						'label' => $this->l('Product availability:'),
 						'name' => 'MA_CUSTOMER_QTY',
 						'desc' => $this->l('Gives the customer the option of receiving a notification for an available product if this one is out of stock.'),
@@ -613,6 +614,7 @@ class MailAlerts extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro compat 1.5
 						'label' => $this->l('New order:'),
 						'name' => 'MA_MERCHANT_ORDER',
 						'desc' => $this->l('Receive a notification when an order is placed'),
@@ -631,6 +633,7 @@ class MailAlerts extends Module
 					),
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro compat 1.5
 						'label' => $this->l('Out of stock:'),
 						'name' => 'MA_MERCHANT_OOS',
 						'desc' => $this->l('Receive a notification if the available quantity of a product is below the following threshold'),
@@ -656,6 +659,7 @@ class MailAlerts extends Module
 					),
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro compat 1.5
 						'label' => $this->l('Coverage warning:'),
 						'name' => 'MA_MERCHANT_COVERAGE',
 						'desc' => $this->l('Receive a notification when an order is placed'),
@@ -701,6 +705,7 @@ class MailAlerts extends Module
 		$helper->table =  $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 		$helper->default_form_language = $lang->id;
+		$helper->module = $this;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
 		$helper->identifier = $this->identifier;
 		$helper->submit_action = 'submitMailAlert';
