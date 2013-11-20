@@ -89,6 +89,7 @@ textarea {
 
 #columns {
   z-index: 1;
+  position: relative;
   padding-bottom: 50px;
 }
 

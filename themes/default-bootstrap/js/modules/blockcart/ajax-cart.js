@@ -591,13 +591,14 @@ var ajaxCart = {
 		var h = parseInt($(window).height());
 		var s = parseInt($(window).scrollTop());
 		var t = $('#layer_cart').outerHeight(true);
+		//alert(h+' '+s+' '+t);
 		if (t < h)
-			var n = parseInt(((h-t) / 2) + s) + 'px';
+			var n = parseInt(((h-t) / 2) + s - t/2) + 'px';
 		$('.layer_cart_overlay').css('width','100%');
 		$('.layer_cart_overlay').css('height','100%');
 		$('.layer_cart_overlay').show();
 		$('#layer_cart').css({'top': n}).fadeIn('fast');
-		$.scrollTo('#layer_cart', 400);
+		//$.scrollTo('#layer_cart', 400);
 		crossselling_serialScroll();
 	},
 
