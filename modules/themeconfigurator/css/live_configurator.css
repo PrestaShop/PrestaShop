@@ -102,26 +102,30 @@
   top: -26px;
 }
 
+#tool_customization #color-box ul li.theme1{display:none}
+
+#tool_customization #color-box ul li{cursor:pointer}
+
 #tool_customization #color-box .theme1 .color1{border:13px solid #ffffff;}
 #tool_customization #color-box .theme1 .color2{background: #484848;}
 
 #tool_customization #color-box .theme2 .color1{border:13px solid #f6f6f6;}
 #tool_customization #color-box .theme2 .color2{background: #f2404e;}
 
-#tool_customization #color-box .theme3 .color1{border:13px solid #333333;}
-#tool_customization #color-box .theme3 .color2{background: #545454;}
+#tool_customization #color-box .theme3 .color1{border:13px solid #cbccbe;}
+#tool_customization #color-box .theme3 .color2{background: #584336;}
 
-#tool_customization #color-box .theme4 .color1{border:13px solid #272727;}
-#tool_customization #color-box .theme4 .color2{background: #eac22d;}
+#tool_customization #color-box .theme4 .color1{border:13px solid #fdfdfd;}
+#tool_customization #color-box .theme4 .color2{background: #eac12d;}
 
 #tool_customization #color-box .theme5 .color1{border:13px solid #ffffff;}
 #tool_customization #color-box .theme5 .color2{background: #729f42;}
 
-#tool_customization #color-box .theme6 .color1{border:13px solid #f5f1e8;}
-#tool_customization #color-box .theme6 .color2{background: #b04444;}
+#tool_customization #color-box .theme6 .color1{border:13px solid #f1f1f1;}
+#tool_customization #color-box .theme6 .color2{background: #317081;}
 
-#tool_customization #color-box .theme7 .color1{border:13px solid #f1f1f1;}
-#tool_customization #color-box .theme7 .color2{background: #317081;}
+#tool_customization #color-box .theme7 .color1{border:13px solid #f5f1e8;}
+#tool_customization #color-box .theme7 .color2{background: #b04444;}
 
 #tool_customization #color-box .theme8 .color1{border:13px solid #fcfcfc;}
 #tool_customization #color-box .theme8 .color2{background: #43bebc;}
