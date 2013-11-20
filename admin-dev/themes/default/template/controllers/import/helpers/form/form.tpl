@@ -201,11 +201,11 @@
 				</p>
 			</div>
 		</div>
-		<div class="form-group">
-			<label for="match_ref" class="control-label col-lg-3" style="display: none">{l s='Use product reference as key?'}</label>
+		<div class="form-group" style="display: none">
+			<label for="match_ref" class="control-label col-lg-3">{l s='Use product reference as key?'}</label>
 			<div class="col-lg-6">
 				<p class="checkbox">
-					<input name="match_ref" id="match_ref" type="checkbox" style="display:none"/>
+					<input name="match_ref" id="match_ref" type="checkbox" />
 				</p>
 			</div>
 		</div>
@@ -228,22 +228,22 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="match_ref" class="control-label col-lg-3" style="display: none">{l s='Use product reference as key?'}</label>
-			<div class="col-lg-6">
-				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="btn btn-default" {if empty($files_to_import)}disabled{/if}/>
+			<div class="col-lg-6 col-lg-push-3">
+				<input type="submit" name="submitImportFile" id="submitImportFile" value="{l s='Next step'}" class="btn btn-default" {if empty($files_to_import)}disabled{/if}/>
 			</div>
+		</div>
+		
+		{if empty($files_to_import)}
+		<div class="alert alert-info">{l s='You must upload a file in order to proceed to the next step'}</div>
+		{/if}
 
-			{if empty($files_to_import)}
-			<div class="alert alert-info">{l s='You must upload a file in order to proceed to the next step'}</div>
-			{/if}
-
-			<div class="alert alert-warning import_products_categories">
-				<p>{l s='Note that the category import does not support categories of the same name.'}</p>
-				<p>{l s='Note that you can have several products with the same reference.'}</p>
-			</div>
-			<div class="alert alert-warning import_supply_orders_details">
-				<p>{l s='Importing Supply Order Details will reset products ordered, if there are any.'}</p>
-			</div>
+		<div class="alert alert-warning import_products_categories">
+			<p>{l s='Note that the category import does not support categories of the same name.'}</p>
+			<p>{l s='Note that you can have several products with the same reference.'}</p>
+		</div>
+		<div class="alert alert-warning import_supply_orders_details">
+			<p>{l s='Importing Supply Order Details will reset products ordered, if there are any.'}</p>
+		</div>
 		{if !count($files_to_import)}
 			<div class="alert alert-warning">
 				<p>{l s='There is no CSV file available. Please upload one using the \'Upload\' button above.'}</p>
@@ -305,9 +305,9 @@
 				$('input[name=multiple_value_separator]').val('{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected}{else},{/if}');
 			}
 			if ($("#entity > option:selected").val() == 1)
-				$("label[for=match_ref], #match_ref").show();
+				$("#match_ref").closest('.form-group.').show();
 			else
-				$("label[for=match_ref], #match_ref").hide();
+				$("#match_ref").closest('.form-group.').hide();
 
 			if ($("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 0)
 				$(".import_products_categories").show();
@@ -316,14 +316,14 @@
 
 			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || 
 				$("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6)
-				$("label[for=regenerate], #regenerate").show()
+				$("#regenerate").closest('.form-group.').show();
 			else
-				$("label[for=regenerate], #regenerate").hide();
+				$("#regenerate").closest('.form-group.').hide();
 
 			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6 || $("#entity > option:selected").val() == 7)
-				$("label[for=forceIDs], #forceIDs").show();
+				$("#forceIDs").closest('.form-group.').show();
 			else
-				$("label[for=forceIDs], #forceIDs").hide();
+				$("#forceIDs").closest('.form-group.').hide();
 			$("#entitie").html($("#entity > option:selected").text().toLowerCase());
 			$.ajax({
 				url: 'ajax.php',
