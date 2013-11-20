@@ -235,7 +235,9 @@
 														</div>
 														<div class="col-lg-2">
 															<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-																<!-- name -->
+																{foreach $languages as $language}
+																	{if $language.id_lang == $id_lang}{$language.iso_code}{/if}
+																{/foreach}
 																<span class="caret"></span>
 															</button>
 															<ul class="dropdown-menu">
@@ -263,7 +265,9 @@
 														</div>
 														<div class="col-lg-2">
 															<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-																<!-- name -->
+																{foreach $languages as $language}
+																	{if $language.id_lang == $id_lang}{$language.iso_code}{/if}
+																{/foreach}
 																<span class="caret"></span>
 															</button>
 															<ul class="dropdown-menu">
