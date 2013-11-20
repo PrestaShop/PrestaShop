@@ -71,7 +71,7 @@ function getPush(refresh)
 				html += "<p>" + customer_name_msg + "&nbsp;<strong>" + value.customer_name + "</strong></p>";
 				//html += "<p>" + see_customer_msg + "</p>";
 // 				html += "<small class='text-muted'>1 minute ago</small>";
-				html += "<small class='text-muted'>" + value.time_since + " ago</small>";
+				html += "<small class='text-muted'>" + value.time_since + "</small>";
 				html += "</span></a>";
 			});						
 			if (parseInt(json.customer.total) > 0)
