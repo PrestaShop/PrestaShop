@@ -352,7 +352,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
 
 			<div class="price">
 				<p class="our_price_display" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                <link itemprop="availability" href="http://schema.org/InStock">
+                <link itemprop="availability" {if $product->quantity <= 0}href="http://schema.org/OutOfStock"{else}href="http://schema.org/InStock"{/if}>
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
 					<span id="our_price_display" itemprop="price">{convertPrice price=$productPrice}</span>
 					<!--{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) OR !isset($display_tax_label))}
