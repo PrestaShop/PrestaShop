@@ -48,18 +48,22 @@
 
 	<div class="col-sm-5">
 		<a href="http://www.prestashop.com/en/contact_us?utm_source=backoffice_footer" target="_blank" class="footer_link">
+			<i class="icon-envelope"></i>
 			{l s='Contact'}
 		</a>
-		|&nbsp;
+		//&nbsp;
 		<a href="http://forge.prestashop.com/?utm_source=backoffice_footer" target="_blank" class="footer_link">
+			<i class="icon-bug"></i>
 			{l s='Bug Tracker'}
 		</a>
-		|&nbsp;
+		//&nbsp;
 		<a href="http://www.prestashop.com/forums/?utm_source=backoffice_footer" target="_blank" class="footer_link">
+			<i class="icon-comments"></i>
 			{l s='Forum'}
 		</a>
-		|&nbsp;
+		//&nbsp;
 		<a href="http://addons.prestashop.com/?utm_source=backoffice_footer" target="_blank" class="footer_link">
+			<i class="icon-puzzle-piece"></i>
 			{l s='Addons'}
 		</a>
 		{if $iso_is_fr}
