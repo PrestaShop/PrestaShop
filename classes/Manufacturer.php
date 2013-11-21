@@ -159,7 +159,7 @@ class ManufacturerCore extends ObjectModel
 	{
 		if (!$id_lang)
 			$id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-		if (!Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		if (!Group::isFeatureActive())
 			$all_group = true;
 
 		$sql = 'SELECT m.*, ml.`description`, ml.`short_description`

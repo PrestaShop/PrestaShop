@@ -1677,7 +1677,8 @@ abstract class ModuleCore
 			$cache_array[] = (int)Tools::usingSecureMode();
 		if (Shop::isFeatureActive())
 			$cache_array[] = (int)$this->context->shop->id;
-		$cache_array[] = (int)Group::getCurrent()->id;
+		if (Group::isFeatureActive())
+			$cache_array[] = (int)Group::getCurrent()->id;
 		if (Language::isMultiLanguageActivated())
 			$cache_array[] = (int)$this->context->language->id;
 		if (Currency::isMultiCurrencyActivated())

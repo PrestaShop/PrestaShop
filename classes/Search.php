@@ -230,7 +230,7 @@ class SearchCore
 			) position';
 
 		$sql_groups = '';
-		if (Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		if (Group::isFeatureActive())
 		{
 			$groups = FrontController::getCurrentCustomerGroups();
 			$sql_groups = 'AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
@@ -239,7 +239,7 @@ class SearchCore
 		$results = $db->executeS('
 		SELECT cp.`id_product`
 		FROM `'._DB_PREFIX_.'category_product` cp
-		'.(Configuration::get('PS_GROUP_FEATURE_ACTIVE') ? 'INNER JOIN `'._DB_PREFIX_.'category_group` cg ON cp.`id_category` = cg.`id_category`' : '').'
+		'.(Group::isFeatureActive() ? 'INNER JOIN `'._DB_PREFIX_.'category_group` cg ON cp.`id_category` = cg.`id_category`' : '').'
 		INNER JOIN `'._DB_PREFIX_.'category` c ON cp.`id_category` = c.`id_category`
 		INNER JOIN `'._DB_PREFIX_.'product` p ON cp.`id_product` = p.`id_product`
 		'.Shop::addSqlAssociation('product', 'p', false).'
@@ -641,7 +641,7 @@ class SearchCore
 		$id_shop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
 		
 		$sql_groups = '';
-		if (Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		if (Group::isFeatureActive())
 		{
 			$groups = FrontController::getCurrentCustomerGroups();
 			$sql_groups = 'AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
@@ -657,7 +657,7 @@ class SearchCore
 			LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
 			LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
-			'.(Configuration::get('PS_GROUP_FEATURE_ACTIVE') ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
+			'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
 			WHERE product_shop.`active` = 1
 			AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
 			'.$sql_groups.'
@@ -686,7 +686,7 @@ class SearchCore
 				LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
 				LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
-				'.(Configuration::get('PS_GROUP_FEATURE_ACTIVE') ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
+				'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
 				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cg.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 				'.Product::sqlStock('p', 0).'
 				WHERE product_shop.`active` = 1

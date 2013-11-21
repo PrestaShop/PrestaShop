@@ -73,7 +73,7 @@ class ProductSaleCore
 		if (is_null($order_way) || $order_by == 'sales') $order_way = 'DESC';
 
 		$sql_groups = '';
-		if (Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		if (Group::isFeatureActive())
 		{
 			$groups = FrontController::getCurrentCustomerGroups();
 			$sql_groups = 'WHERE cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
@@ -152,7 +152,7 @@ class ProductSaleCore
 		if ($nb_products < 1) $nb_products = 10;
 
 		$sql_groups = '';
-		if (Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		if (Group::isFeatureActive())
 		{
 			$groups = FrontController::getCurrentCustomerGroups();
 			$sql_groups = 'AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
