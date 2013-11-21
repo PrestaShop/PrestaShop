@@ -318,7 +318,7 @@ class MailAlerts extends Module
 					$customization_text .= '---<br />';
 				}
 
-				$customization_text = rtrim($customization_text, '---<br />');
+				$customization_text = Tools::rtrimString($customization_text, '---<br />');
 			}
 
 			$items_table .=

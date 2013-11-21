@@ -2739,6 +2739,20 @@ exit;
 		}
 		return $fileAttachment;
 	}
+
+	/**
+	 * Delete a substring from another one starting from the right
+	 * @param string $str
+	 * @param string $str_search
+	 * @return string
+	 */
+	public static function rtrimString($str, $str_search)
+	{
+		$length_str = strlen($str_search);
+		if (strlen($str) >= $length_str && substr($str, -$length_str) == $str_search)
+			$str = substr($str, 0, -$length_str);
+		return $str;
+	}
 }
 
 /**
