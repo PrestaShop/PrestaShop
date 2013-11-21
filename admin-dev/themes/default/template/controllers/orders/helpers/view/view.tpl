@@ -65,22 +65,22 @@
 		<div class="row">
 			<div class="col-lg-3 box-stats color3" >
 				<i class="icon-calendar-empty"></i>
-				<span class="title">{l s='Date'}<br /><small>{l s='subtitle'}</small></span>
+				<span class="title">{l s='Date'}<br /><small>&nbsp;</small></span>
 				<span class="value">{dateFormat date=$order->date_add full=false}</span>
 			</div>
 			<div class="col-lg-3 box-stats color2" >
 				<i class="icon-comments"></i>
-				<span class="title">{l s='Messages'}<br /><small>{l s='subtitle'}</small></span>
+				<span class="title">{l s='Messages'}<br /><small>&nbsp;</small></span>
 				<span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'htmlall':'UTF-8'}">{sizeof($customer_thread_message)}</a></span>
 			</div>
 			<div class="col-lg-3 box-stats color1" >
 				<i class="icon-ok"></i>
-				<span class="title">{l s='Products'}<br /><small>{l s='subtitle'}</small></span>
+				<span class="title">{l s='Products'}<br /><small>&nbsp;</small></span>
 				<span class="value">{sizeof($products)}</span>
 			</div>
 			<div class="col-lg-3 box-stats color4" >
 				<i class="icon-money"></i>
-				<span class="title">{l s='Total'}<br /><small>{l s='subtitle'}</small></span>
+				<span class="title">{l s='Total'}<br /><small>&nbsp;</small></span>
 				<span class="value">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
 			</div>
 		</div>
