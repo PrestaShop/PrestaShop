@@ -130,8 +130,18 @@ class TagCore extends ObjectModel
 
 	public static function getMainTags($id_lang, $nb = 10)
 	{
-		$groups = FrontController::getCurrentCustomerGroups();
-		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
+		$sql_groups = '';
+		if (Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		{
+			$groups = FrontController::getCurrentCustomerGroups();
+			$sql_groups = '
+			AND p.`id_product` IN (
+				SELECT cp.`id_product`
+				FROM `'._DB_PREFIX_.'category_product` cp
+				LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category`)
+				WHERE cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').'
+			)';
+		}
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT t.name, COUNT(pt.id_tag) AS times
@@ -141,15 +151,10 @@ class TagCore extends ObjectModel
 		'.Shop::addSqlAssociation('product', 'p').'
 		WHERE t.`id_lang` = '.(int)$id_lang.'
 		AND product_shop.`active` = 1
-		AND product_shop.`id_product` IN (
-			SELECT cp.`id_product`
-			FROM `'._DB_PREFIX_.'category_group` cg
-			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-			WHERE cg.`id_group` '.$sql_groups.'
-		)
+		'.$sql_groups.'
 		GROUP BY t.id_tag
 		ORDER BY times DESC
-		LIMIT 0, '.(int)$nb);
+		LIMIT '.(int)$nb);
 	}
 
 	public static function getProductTags($id_product)

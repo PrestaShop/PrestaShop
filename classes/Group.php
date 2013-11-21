@@ -151,17 +151,21 @@ class GroupCore extends ObjectModel
 
 	public function add($autodate = true, $null_values = false)
 	{
+		Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', '1');
 		if (parent::add($autodate, $null_values))
 		{
 			Category::setNewGroupForHome((int)$this->id);
-			
 			Carrier::assignGroupToAllCarriers((int)$this->id);
-
-			// Set cache of feature detachable to true
-			Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', '1');
 			return true;
 		}
 		return false;
+	}
+
+	public function update($autodate = true, $null_values = false)
+	{
+		if (!Configuration::getGlobalValue('PS_GROUP_FEATURE_ACTIVE') && $this->reduction > 0)
+			Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', 1);
+		return parent::update($autodate, $null_values);
 	}
 
 	public function delete()
@@ -176,10 +180,6 @@ class GroupCore extends ObjectModel
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'group_reduction` WHERE `id_group` = '.(int)$this->id);
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_group` = '.(int)$this->id);
 			$this->truncateModulesRestrictions($this->id);
-
-			// Refresh cache of feature detachable
-			if (!Configuration::getGlobalValue('PS_GROUP_FEATURE_ACTIVE') && Group::isCurrentlyUsed())
-				Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', 1);
 
 			// Add default group (id 3) to customers without groups
 			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_group` (

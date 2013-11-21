@@ -484,8 +484,10 @@ class AdminGroupsControllerCore extends AdminController
 			DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache`
 			WHERE `id_group` = '.(int)Tools::getValue('id_group')
 		);
-		if (is_array($category_reduction))
+		if (is_array($category_reduction) && count($category_reduction))
 		{
+			if (!Configuration::getGlobalValue('PS_GROUP_FEATURE_ACTIVE'))
+				Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', 1);
 			foreach ($category_reduction as $cat => $reduction)
 			{
 				if (!Validate::isUnsignedId($cat) || !$this->validateDiscount($reduction))
