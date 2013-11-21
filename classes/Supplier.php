@@ -107,6 +107,8 @@ class SupplierCore extends ObjectModel
 	{
 		if (!$id_lang)
 			$id_lang = Configuration::get('PS_LANG_DEFAULT');
+		if (!Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+			$all_groups = true;
 
 		$query = new DbQuery();
 		$query->select('s.*, sl.`description`');
@@ -130,6 +132,7 @@ class SupplierCore extends ObjectModel
 				$groups = FrontController::getCurrentCustomerGroups();
 				$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 			}
+
 			foreach ($suppliers as $key => $supplier)
 			{
 				$sql = '
@@ -206,31 +209,31 @@ class SupplierCore extends ObjectModel
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
 			die (Tools::displayError());
 
-		$groups = FrontController::getCurrentCustomerGroups();
-		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
+		$sql_groups = '';
+		if (Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		{
+			$groups = FrontController::getCurrentCustomerGroups();
+			$sql_groups = 'WHERE cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
+		}
 
 		/* Return only the number of products */
 		if ($get_total)
-		{
-			$sql = '
-				SELECT DISTINCT(ps.`id_product`)
-				FROM `'._DB_PREFIX_.'product_supplier` ps
-				JOIN `'._DB_PREFIX_.'product` p ON (ps.`id_product`= p.`id_product`)
-				'.Shop::addSqlAssociation('product', 'p').'
-				WHERE ps.`id_supplier` = '.(int)$id_supplier.'
-				AND ps.id_product_attribute = 0'.
-				($active ? ' AND product_shop.`active` = 1' : '').'
-				'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-				AND p.`id_product` IN (
-					SELECT cp.`id_product`
-					FROM `'._DB_PREFIX_.'category_group` cg
-					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)'.
-					($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
-					WHERE cg.`id_group` '.$sql_groups.'
-				)';
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-			return (int)count($result);
-		}
+			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT COUNT(DISTINCT ps.`id_product`)
+			FROM `'._DB_PREFIX_.'product_supplier` ps
+			JOIN `'._DB_PREFIX_.'product` p ON (ps.`id_product`= p.`id_product`)
+			'.Shop::addSqlAssociation('product', 'p').'
+			WHERE ps.`id_supplier` = '.(int)$id_supplier.'
+			AND ps.id_product_attribute = 0
+			'.($active ? ' AND product_shop.`active` = 1' : '').'
+			'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
+			AND p.`id_product` IN (
+				SELECT cp.`id_product`
+				FROM `'._DB_PREFIX_.'category_product` cp
+				'.(Configuration::get('PS_GROUP_FEATURE_ACTIVE') ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category`)' : '').'
+				'.($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
+				'.$sql_groups.'
+			)');
 
 		$nb_days_new_product = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
 
@@ -277,15 +280,15 @@ class SupplierCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'supplier` s ON s.`id_supplier` = p.`id_supplier`
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
 				'.Product::sqlStock('p').'
-				WHERE ps.`id_supplier` = '.(int)$id_supplier.
-					($active ? ' AND product_shop.`active` = 1' : '').'
+				WHERE ps.`id_supplier` = '.(int)$id_supplier.'
+					'.($active ? ' AND product_shop.`active` = 1' : '').'
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
-						FROM `'._DB_PREFIX_.'category_group` cg
-						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)'.
-						($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
-						WHERE cg.`id_group` '.$sql_groups.'
+						FROM `'._DB_PREFIX_.'category_product` cp
+						'.(Configuration::get('PS_GROUP_FEATURE_ACTIVE') ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category`)' : '').'
+						'.($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
+						'.$sql_groups.'
 					)
 				GROUP BY product_shop.id_product
 				ORDER BY '.$alias.pSQL($order_by).' '.pSQL($order_way).'
