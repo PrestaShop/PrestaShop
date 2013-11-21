@@ -86,6 +86,7 @@
 	</div>
 </div>
 
+
 <table class="table tableDnD" id="imageTable">
 	<thead>
 		<tr class="nodrag nodrop"> 
@@ -104,6 +105,7 @@
 	<tbody id="imageList">
 	</tbody>
 </table>
+
 
 <table id="lineType" style="display:none;">
 	<tr id="image_id">
@@ -284,7 +286,7 @@
 				"ajax" : 1 
 			});
 		});
-
+		
 		function updateImagePosition(json)
 		{
 			doAdminAjax(

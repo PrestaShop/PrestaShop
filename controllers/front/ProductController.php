@@ -551,7 +551,7 @@ class ProductControllerCore extends FrontController
 			$path = Tools::getPath((int)$this->context->shop->id_category, $this->product->name);
 		$this->context->smarty->assign('path', $path);
 		
-		$this->context->smarty->assign('categories', Category::getHomeCategories($this->context->language->id));
+		$this->context->smarty->assign('categories', Category::getHomeCategories($this->context->language->id, true, (int)$this->context->shop->id));
 		$this->context->smarty->assign(array('HOOK_PRODUCT_FOOTER' => Hook::exec('displayFooterProduct', array('product' => $this->product, 'category' => $this->category))));
 	}
 

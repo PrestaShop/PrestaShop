@@ -254,7 +254,8 @@ class CartRuleCore extends ObjectModel
 			}
 			else
 				$cart_rule['quantity_for_user'] = 0;
-
+		unset($cart_rule);
+		
 		foreach ($result as $cart_rule)
 			if ($cart_rule['shop_restriction'])
 			{

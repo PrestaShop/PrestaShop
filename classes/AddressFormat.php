@@ -99,6 +99,7 @@ class AddressFormatCore extends ObjectModel
 		'outstanding_allow_amount',
 		'call_prefix',
 		'definition',
+		'debug_list'
 	);
 
 	public static $forbiddenClassList = array(

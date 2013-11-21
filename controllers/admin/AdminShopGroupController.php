@@ -109,7 +109,7 @@ class AdminShopGroupControllerCore extends AdminController
 			);
 		}
 
-		$this->addJqueryPlugin('cookie-plugin');
+		$this->addJqueryPlugin('cooki-plugin');
 		$this->addJqueryPlugin('jstree');
 		$this->addCSS(_PS_JS_DIR_.'jquery/plugins/jstree/themes/classic/style.css');
 

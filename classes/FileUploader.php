@@ -105,8 +105,10 @@ class QqUploadedFileForm
 			$legends = Tools::getValue('legend');
 			if (is_array($legends))
 				foreach ($legends as $key => $legend)
-					if (!empty($legend))
+					if (!empty($legend) && Validate::isGenericName($legend))
 						$image->legend[(int)$key] = $legend;
+					else
+						return array('error' => sprintf(Tools::displayError('Error on image legend "%1s." is not a valid legend.'), Tools::safeOutput($legend)));
 			if (!Image::getCover($image->id_product))
 				$image->cover = 1;
 			else
@@ -192,8 +194,10 @@ class QqUploadedFileXhr
 			$legends = Tools::getValue('legend');
 			if (is_array($legends))
 				foreach ($legends as $key => $legend)
-					if (!empty($legend))
+					if (!empty($legend) && Validate::isGenericName($legend))
 						$image->legend[(int)$key] = $legend;
+					else
+						return array('error' => sprintf(Tools::displayError('Error on image legend "%1s." is not a valid legend.'), Tools::safeOutput($legend)));
 			if (!Image::getCover($image->id_product))
 				$image->cover = 1;
 			else

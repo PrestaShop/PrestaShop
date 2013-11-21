@@ -91,41 +91,40 @@ class ProductSaleCore
 		foreach ($products as $product)
 			$ids[$product['id_product']] = 1;
 		$ids = array_keys($ids);
+		$ids = array_filter($ids);
 		sort($ids);
 		$ids = count($ids) > 0 ? implode(',', $ids) : 'NULL';
 		
-		// Main query
-		if ($order_by == 'date_add')
-		$sql = '
-		SELECT
-			p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
-			pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
-			pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
-			m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
-			MAX(image_shop.`id_image`) id_image, il.`legend`,
-			ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
-			DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.$interval.' DAY)) > 0 AS new
-		FROM `'._DB_PREFIX_.'product_sale` ps
-		LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
-		'.Shop::addSqlAssociation('product', 'p', false).'
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
-			ON p.`id_product` = pl.`id_product`
-			AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
-		Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
-		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`)
-			AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
-			AND tr.`id_state` = 0
-		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
-		'.Product::sqlStock('p').'
-		WHERE product_shop.`active` = 1
-			AND p.`visibility` != \'none\'
-			AND p.`id_product` IN ('.$ids.')
-		GROUP BY product_shop.id_product
-		ORDER BY '.(!empty($order_table) ? '`'.pSQL($order_table).'`.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).'
-		LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
+		//Main query
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
+					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
+					pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
+					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
+					MAX(image_shop.`id_image`) id_image, il.`legend`,
+					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
+					DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
+					INTERVAL '.$interval.' DAY)) > 0 AS new
+				FROM `'._DB_PREFIX_.'product_sale` ps
+				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
+				'.Shop::addSqlAssociation('product', 'p', false).'
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+					ON p.`id_product` = pl.`id_product`
+					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
+				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
+				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
+				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`)
+					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
+					AND tr.`id_state` = 0
+				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+				'.Product::sqlStock('p').'
+				WHERE product_shop.`active` = 1
+					AND p.`visibility` != \'none\'
+					AND p.`id_product` IN ('.$ids.')
+				GROUP BY product_shop.id_product
+				ORDER BY '.(!empty($order_table) ? '`'.pSQL($order_table).'`.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).'
+				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
@@ -170,6 +169,7 @@ class ProductSaleCore
 			$ids[$product['id_product']] = 1;
 		$ids = array_keys($ids);
 		sort($ids);
+		$ids = array_filter($ids);
 		$ids = count($ids) > 0 ? implode(',', $ids) : 'NULL';
 
 		//Main query

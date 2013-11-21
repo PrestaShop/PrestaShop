@@ -175,6 +175,7 @@
 			{/if}
 		</div>
 {/if}
+
 {if $simple_header}
 <div class="panel col-lg-12">
 	{if isset($title)}<h3>{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end}{else}{$title}{/if}</h3>{/if}
@@ -247,7 +248,6 @@
 							--
 						{/if}
 					</th>
-
 					{* Filters (input, select, date or bool) *}
 					{foreach $fields_display AS $key => $params}
 					<th {if isset($params.align)} class="{$params.align}" {/if}>

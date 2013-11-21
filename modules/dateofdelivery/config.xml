@@ -2,7 +2,7 @@
         <module>
             <name>dateofdelivery</name>
             <displayName><![CDATA[Date of delivery]]></displayName>
-            <version><![CDATA[1.1]]></version>
+            <version><![CDATA[1.2]]></version>
             <description><![CDATA[Displays an approximate date of delivery]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[shipping_logistics]]></tab>

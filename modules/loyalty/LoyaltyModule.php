@@ -101,9 +101,9 @@ class LoyaltyModule extends ObjectModel
 			{
 				$cartProductsNew['id_product'] = (int)$newProduct->id;
 				if ($taxesEnabled == PS_TAX_EXC)
-					$cartProductsNew['price'] = number_format($newProduct->getPrice(false, (int)$newProduct->getDefaultIdProductAttribute()), 2, '.', '');
+					$cartProductsNew['price'] = number_format($newProduct->getPrice(false, (int)$newProduct->getIdProductAttributeMostExpensive()), 2, '.', '');
 				else
-					$cartProductsNew['price_wt'] = number_format($newProduct->getPrice(true, (int)$newProduct->getDefaultIdProductAttribute()), 2, '.', '');
+					$cartProductsNew['price_wt'] = number_format($newProduct->getPrice(true, (int)$newProduct->getIdProductAttributeMostExpensive()), 2, '.', '');
 				$cartProductsNew['cart_quantity'] = 1;
 				$cartProducts[] = $cartProductsNew;
 			}

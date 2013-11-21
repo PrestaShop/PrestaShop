@@ -102,8 +102,7 @@
 					}
 					else
 					{
-						$('#group_discount_category_table').append('<tr class="alt_row" id="'+jsonData.id_category+'"><td>'+jsonData.catPath+'</td><td>{l s='Discount:'}'+jsonData.discount+'{l s='%'}</td><td><a href="#" onclick="deleteCategoryReduction('+jsonData.id_category+');" class="btn btn-default"><i class="icon-trash"></i> {l s='Delete'}</a></td></tr>');
-						
+						$('#group_discount_category_table').append('<tr class="alt_row" id="'+jsonData.id_category+'"><td>'+jsonData.catPath+'</td><td>{l s='Discount:'}' + ' ' + jsonData.discount+'{l s='%'}</td><td><a href="#" onclick="deleteCategoryReduction('+jsonData.id_category+');" class="btn btn-default"><i class="icon-trash"></i> {l s='Delete'}</a></td></tr>');
 						var input_hidden = document.createElement("input");
 						input_hidden.setAttribute('type', 'hidden');
 						input_hidden.setAttribute('value', jsonData.discount);
@@ -132,7 +131,7 @@
 				{foreach $input['values'] key=key item=category }
 					<tr class="alt_row" id="{$category.id_category}">
 						<td>{$category.path}</td>
-						<td>{l s='Discount: %d%%' sprintf=$category.reduction}</td>
+						<td>{l s='Discount: %.2f%%' sprintf=$category.reduction}</td>
 						<td>
 							<a href="#" onclick="deleteCategoryReduction({$category.id_category});"class="btn btn-default">
 								<i class="icon-trash"></i> {l s='Delete'}

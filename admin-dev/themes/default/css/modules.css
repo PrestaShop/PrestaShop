@@ -1,0 +1,84 @@
+
+.path_bar {display:none;}
+#notifs_icon_wrapper {float: left;position: relative;margin:15px 10px 0; width:90px;}
+.notifs { float: left;position: relative;cursor: pointer;margin:0; padding:5px; width: 18px;height: 16px;}
+#orders_notif {background: url('../img/notif_order.png') no-repeat center top;}
+#customers_notif {background: url('../img/notif_customer.png') no-repeat center top;}
+#messages_notif {background: url('../img/notif_message.png') no-repeat center top;}
+#orders_notif.open_notifs,
+#customers_notif.open_notifs,
+#messages_notif.open_notifs { background-color: #FFFFFF;border: 1px solid #000000; position: relative; display: block; background-position:center bottom; }
+
+/*toolbarBox*/
+.toolbarBox { background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 10px 0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;}
+.toolbarBox .pageTitle { margin-left:10px; line-height:48px}
+.toolbarBox .pageTitle h3 {font-size: 2em; font-weight: bold; line-height: 48px; margin: 0; padding: 0}
+.toolbarBox ul.cc_button {float:right;margin:0;padding:0}
+.toolbarBox ul.cc_button li {color: #666666; float: left; height: 48px; list-style: none outside none; padding: 1px 1px 3px 4px; text-align: center}
+.toolbarBox a.toolbar_btn {   border-width: 1px;font-size:11px;cursor: pointer; display: block; float: left; padding: 1px 5px; white-space: nowrap; text-shadow: 0 1px 0 #ffffff}
+.toolbarBox a.toolbar_btn:hover {}
+.toolbarBox .toolbar_btn span{ display: block;float: none;height: 32px;margin: 0 auto;width: 32px}
+.toolbarBox .process-icon-delete { background-image: url('../img/process-icon-delete.png')}
+.toolbarBox .process-icon-duplicate { background-image: url('../img/process-icon-duplicate.png')}
+.toolbarBox .process-icon-preview { background-image: url('../img/process-icon-preview.png')}
+.toolbarBox .process-icon-stats { background-image: url('../img/process-icon-stats.png')}
+.toolbarBox .process-icon-cancel { background-image: url('../img/process-icon-cancel.png')}
+.toolbarBox .process-icon-new, .toolbarBox .process-icon-newAttributes{ background-image: url('../img/process-icon-new.png')}
+.toolbarBox .process-icon-save, .toolbarBox .process-icon-save-settings { background-image: url('../img/process-icon-save.png')}
+.toolbarBox .process-icon-save-and-stay { background-image: url('../img/process-icon-save-and-stay.png')}
+.toolbarBox .process-icon-edit { background-image: url('../img/process-icon-edit.png')}
+.toolbarBox .process-icon-back { background-image: url('../img/process-icon-back.png')}
+.toolbarBox .process-icon-refresh-index  { background-image: url('../img/process-icon-refresh-index.png')}
+.toolbarBox .process-icon-refresh-cache  { background-image: url('../img/process-icon-refresh-cache.png')}
+.toolbarBox .process-icon-save-calendar { background-image: url('../img/process-icon-save-calendar.png')}
+.toolbarBox .process-icon-new-module { background-image: url('../img/process-icon-new-module.png')}
+.toolbarBox .process-icon-new-module-addon { background-image: url('../img/process-icon-new-module-addon.png')}
+
+div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:11}
+
+
+/*FILTER MODULE*/
+.filter-module { background-color:#ebedf4; border:1px solid #c2c4d9; padding:10px; display:block; min-height:35px;}
+.filter-module #filternameForm {float:left; margin-right:30px;}
+.filter-module label {width:auto;}
+.filter-module .select-filter { float:left;}
+.filter-module .button-filter { float:right;}
+
+/*SIDEBAR*/
+.sidebar { position:relative; float:left; width:220px; display:inline;}
+.sidebar h3 { background-color:#ebedf4; font-weight:bold; display:block; padding:5px;}
+.sidebar .subHeadline { font-weight:bold; float:right; margin-top:-28px; margin-right:5px;}
+.sidebar ul.categorieList {}
+.sidebar ul.categorieList li { border-top:1px solid #ccc; position:relative; line-height:20px;}
+.sidebar ul.categorieList li:first-child { border-top:none;}
+.sidebar ul.categorieList li a {color:#3a6ea7;}
+.sidebar ul.categorieList li div.categorieWidth { text-indent:5px; overflow:hidden;}
+.sidebar ul.categorieList li div.count{ position:absolute; top:0; right:5px;}
+
+/*MODULECONTAINER*/
+#moduleContainer { margin-left:220px; padding:13px 0 0 20px;}
+#moduleContainer .table tr th { height:40px;}
+#moduleContainer .table tr td { font-size:12px; vertical-align:top; padding: 5px 7px 0; border-top:1px solid #ccc; border-bottom:none;}
+#moduleContainer .table tr:first-child {border-top:1px solid #ccc}
+#moduleContainer .table tr:hover { background-color:#FFF1B5;}
+#moduleContainer .moduleDesc { font-size:12px; position:relative; margin-bottom:10px;}
+#moduleContainer .moduleDesc h3 { color:#3A6EA7; margin:0;}
+#moduleContainer .moduleDesc .metadata  { float:left; display:block; margin:5px 0;}
+#moduleContainer .moduleDesc .metadata dl { float:left; margin:0; padding-right:10px;}
+#moduleContainer .moduleDesc .metadata dl dt, .moduleDesc .metadata dl dd { float:left; margin:0; padding:0;}
+#moduleContainer .moduleDesc .metadata dl dd { padding-right:10px;}
+#moduleContainer .moduleDesc .metadata dl dt { font-weight:bold; padding-right:5px;}
+#moduleContainer .moduleDesc p.desc { color:#666; font-size:12px; display:block; clear:both;}
+#moduleContainer .setup  {background-color:#6db300; font-size:10px; color:#fff; text-transform:uppercase; position:relative; left:10px; padding:0px 4px; display: inline-block; border-radius:3px;}
+#moduleContainer .setup.non-install { border: solid 1px #ec7000; background-color: #ffedb1; color: #ec7000}
+#moduleContainer .setup.must-have { background-color: #ec7000;}
+#moduleContainer .setup.off{ background-color:#ccc;}
+#moduleContainer .row-actions-module span { padding-right:5px;}
+#moduleContainer .row-actions-module span a { font-size:12px;}
+#moduleContainer .button.uninstalled,
+#moduleContainer .button.installed { float:right; display: inline-block; margin-top:15px; font-size:12px;}
+#moduleContainer .button.updated {  margin-top:15px; display: inline-block; font-size:12px;}
+#list-action-button{width:175px}
+#list-action-button li{margin-left:10px;display: inline;float: left;}
+#moduleContainer .moduleName {font-size:12px; color:#3A6EA7;font-weight:bold;}
+#moduleContainer .moduleFavDesc { font-family:Georgia; font-style:italic; color:#666;}

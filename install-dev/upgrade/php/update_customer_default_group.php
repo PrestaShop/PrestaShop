@@ -68,7 +68,7 @@ function update_customer_default_group()
 		if($result && file_exists($filename_old))
 		{
 			unlink($filename_old);
-			chmod($filename, 0664);
+			@chmod($filename, 0664);
 		}
 	}
 	return $result;
