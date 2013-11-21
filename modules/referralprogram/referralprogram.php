@@ -536,6 +536,7 @@ class ReferralProgram extends Module
 						'type' => 'radio',
 						'label' => $this->l('Voucher type :'),
 						'name' => 'discount_type',
+						'class' => 't',
 						'values' => array(
 							array(
 								'id' => 'discount_type1',

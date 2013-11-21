@@ -43,7 +43,7 @@ class AdminLanguagesControllerCore extends AdminController
  				'dir' => 'l'
  			),
  			array(
- 				'name' => 'no-picture',
+ 				'name' => 'no_picture',
  				'dir' => 'p'
  			)
  		);
@@ -165,7 +165,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'label' => $this->l('Date format:'),
 					'name' => 'date_format_lite',
 					'required' => true,
-					'hint' => $this->l('Short date format (e.g., %s)')
+					'hint' => sprintf($this->l('Short date format (e.g., %s)'), 'Y-m-d')
 					/* TO DO - ajouter les liens dans le hint ? */
 					/*'desc' => sprintf($this->l('Short date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d</a>')*/
 				),
@@ -174,7 +174,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'label' => $this->l('Date format (full):'),
 					'name' => 'date_format_full',
 					'required' => true,
-					'hint' => $this->l('Full date format (e.g., %s)')
+					'hint' => sprintf($this->l('Full date format (e.g., %s)'), 'Y-m-d H:i:s')
 					/* TO DO - ajouter les liens dans le hint ? */
 					/*'desc' => sprintf($this->l('Full date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d H:i:s</a>')*/
 				),
@@ -188,7 +188,7 @@ class AdminLanguagesControllerCore extends AdminController
 				array(
 					'type' => 'file',
 					'label' => $this->l('"No-picture" image:'),
-					'name' => 'no-picture',
+					'name' => 'no_picture',
 					'hint' => $this->l('Image is displayed when "no picture is found"')
 				),
 				array(
@@ -385,11 +385,11 @@ class AdminLanguagesControllerCore extends AdminController
 	{
 		if (isset($_POST['iso_code']) && !empty($_POST['iso_code']) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Language::getIdByIso($_POST['iso_code']))
 			$this->errors[] = Tools::displayError('This ISO code is already linked to another language.');
-		if ((!empty($_FILES['no-picture']['tmp_name']) || !empty($_FILES['flag']['tmp_name'])) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
+		if ((!empty($_FILES['no_picture']['tmp_name']) || !empty($_FILES['flag']['tmp_name'])) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
 		{
-			if ($_FILES['no-picture']['error'] == UPLOAD_ERR_OK)
+			if ($_FILES['no_picture']['error'] == UPLOAD_ERR_OK)
 				$this->copyNoPictureImage(strtolower(Tools::getValue('iso_code')));
-			unset($_FILES['no-picture']);
+			unset($_FILES['no_picture']);
 		}
 		else
 			$this->errors[] = Tools::displayError('Flag and "No picture" image fields are required.');
@@ -399,13 +399,13 @@ class AdminLanguagesControllerCore extends AdminController
 
 	public function processUpdate()
 	{
-		if (( isset($_FILES['no-picture']) && !$_FILES['no-picture']['error'] || isset($_FILES['flag']) && !$_FILES['flag']['error'])
+		if (( isset($_FILES['no_picture']) && !$_FILES['no_picture']['error'] || isset($_FILES['flag']) && !$_FILES['flag']['error'])
 				&& Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
 			{
-				if ($_FILES['no-picture']['error'] == UPLOAD_ERR_OK)
+				if ($_FILES['no_picture']['error'] == UPLOAD_ERR_OK)
 					$this->copyNoPictureImage(strtolower(Tools::getValue('iso_code')));
-						// class AdminTab deal with every $_FILES content, don't do that for no-picture
-					unset($_FILES['no-picture']);
+						// class AdminTab deal with every $_FILES content, don't do that for no_picture
+					unset($_FILES['no_picture']);
 			}
 			$object = $this->loadObject();
 			if (Tools::getValue('active') != (int)$object->active)
@@ -419,16 +419,16 @@ class AdminLanguagesControllerCore extends AdminController
 	/**
 	 * Copy a no-product image
 	 *
-	 * @param string $language Language iso_code for no-picture image filename
+	 * @param string $language Language iso_code for no_picture image filename
 	 */
 	public function copyNoPictureImage($language)
 	{
-		if (isset($_FILES['no-picture']) && $_FILES['no-picture']['error'] === 0)
-			if ($error = ImageManager::validateUpload($_FILES['no-picture'], Tools::getMaxUploadSize()))
+		if (isset($_FILES['no_picture']) && $_FILES['no_picture']['error'] === 0)
+			if ($error = ImageManager::validateUpload($_FILES['no_picture'], Tools::getMaxUploadSize()))
 				$this->errors[] = $error;
 			else
 			{
-				if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['no-picture']['tmp_name'], $tmp_name))
+				if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['no_picture']['tmp_name'], $tmp_name))
 					return false;
 				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'.jpg'))
 					$this->errors[] = Tools::displayError('An error occurred while copying "No Picture" image to your product folder.');

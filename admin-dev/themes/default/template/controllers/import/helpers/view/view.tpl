@@ -51,7 +51,7 @@
 			var btn_submit_import = $('#import');
 			if (btn_save_import.length > 0 && btn_submit_import.length > 0)
 			{
-				btn_submit_import.hide();
+				btn_submit_import.closest('.form-group').hide();
 				btn_save_import.find('span').removeClass('process-icon-save-import');
 				btn_save_import.find('span').addClass('process-icon-save');
 				btn_save_import.click(function(){
@@ -62,31 +62,43 @@
 			showTable(current);
 		});
 	</script>
-	<div id="container-customer">
-	<h2>{l s='View your data'}</h2>
-	<div>
-		<b>{l s='Save and load your configuration for importing files'} : </b><br/><br/>
-		<input type="text" name="newImportMatchs" id="newImportMatchs" />
-		<a id="saveImportMatchs" class="button" href="#">{l s='Save'}</a><br /><br />
-		<div id="selectDivImportMatchs" {if !$import_matchs}style="display:none"{/if}>
-			<select id="valueImportMatchs">
-				{foreach $import_matchs as $match}
-					<option id="{$match.id_import_match}" value="{$match.match}">{$match.name}</option>
-				{/foreach}
-			</select>
-			<a class="button" id="loadImportMatchs" href="#">{l s='Load'}</a>
-			<a class="button" id="deleteImportMatchs" href="#">{l s='Delete'}</a>
+	<div id="container-customer" class="panel">
+	<h3><i class="icon-list-alt"></i> {l s='View your data'}</h3>
+	<div class="form-horizontal">
+		<div class="form-group">
+			<label class="control-label col-lg-3">{l s='Save and load your configuration for importing files'} : </label>
+			<div class="col-lg-7">
+				<input type="text" name="newImportMatchs" id="newImportMatchs" />		
+			</div>
+			<div class="col-lg-2">
+				<a id="saveImportMatchs" class="btn btn-default" href="#"><i class="icon-save"></i> {l s='Save'}</a>
+			</div>
+		</div>
+		<div class="form-group" {if !$import_matchs}style="display:none"{/if}>
+			<label class="control-label col-lg-3">{l s='Matches'} : </label>
+			<div id="selectDivImportMatchs" class="col-lg-7">
+				<select id="valueImportMatchs">
+					{foreach $import_matchs as $match}
+						<option id="{$match.id_import_match}" value="{$match.match}">{$match.name}</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="col-lg-2">
+				<a id="loadImportMatchs" href="#" class="btn btn-default"><i class="icon-cogs"></i> {l s='Load'}</a>
+				<a id="deleteImportMatchs" href="#" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a>
+			</div>
 		</div>
 	</div>
-	<h3>{l s='Please set the value type of each column'}</h3>
-	<div id="error_duplicate_type" class="warning warn" style="display:none;">
-		<h3>{l s='Columns cannot have the same value type'}</h3>
+	<div class="row">
+		<p>{l s='Please set the value type of each column'}</p>
 	</div>
-	<div id="required_column" class="warning warn" style="display:none;">
-		<h3>{l s='Column'} <span id="missing_column">&nbsp;</span> {l s='must be set'}</h3>
+	<div id="error_duplicate_type" class="alert alert-warning" style="display:none;">
+		{l s='Columns cannot have the same value type'}
 	</div>
-	<form action="{$current}&token={$token}" method="post" id="import_form" name="import_form">
-		{l s='Skip'} <input type="text" size="2" name="skip" value="1" /> {l s='lines'}
+	<div id="required_column" class="alert alert-warning" style="display:none;">
+		{l s='Column'} <span id="missing_column">&nbsp;</span> {l s='must be set'}
+	</div>
+	<form action="{$current}&token={$token}" method="post" id="import_form" name="import_form" class="form-horizontal">
 		<input type="hidden" name="csv" value="{$fields_value.csv}" />
 		<input type="hidden" name="convert" value="{$fields_value.convert}" />
 		<input type="hidden" name="regenerate" value="{$fields_value.regenerate}" />
@@ -103,27 +115,37 @@
 		{/if}
 		<input type="hidden" name="separator" value="{$fields_value.separator}" />
 		<input type="hidden" name="multiple_value_separator" value="{$fields_value.multiple_value_separator}" />
-		<table>
-			<tr>
-				<td colspan="3" align="center">
-					<input name="import" type="submit" onclick="return (validateImportation(new Array({$res})));" id="import" value="{l s='Import .CSV data'}" class="button" />
-				</td>
-			</tr>
-			<tr>
-				<td valign="top" align="center">
-					<input id="btn_left" value="{l s='<<'}" type="button" class="button" onclick="showTable(current - 1);" />
-				</td>
-				<td align="left">
-					{section name=nb_i start=0 loop=$nb_table step=1}
-						{assign var=i value=$smarty.section.nb_i.index}
-						{$data.$i}
-					{/section}
-				</td>
-				<td valign="top" align="center">
-					<input id="btn_right" value="{l s='>>'}" type="button" class="button" onclick="showTable(current + 1);" />
-				</td>
-			</tr>
-		</table>
+		<div class="form-group">
+			<label class="control-label col-lg-3">{l s='Lines to skip'}</label>
+			<div class="col-lg-9">
+				<input type="text" size="2" name="skip" value="1" />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-lg-12">
+				<table class="table">
+					<tr>
+						<td valign="top" align="center">
+							<button id="btn_left" type="button" class="btn btn-default" onclick="showTable(current - 1);">{l s='<<'}</button>
+						</td>
+						<td align="left">
+							{section name=nb_i start=0 loop=$nb_table step=1}
+								{assign var=i value=$smarty.section.nb_i.index}
+								{$data.$i}
+							{/section}
+						</td>
+						<td valign="top" align="center">
+							<button id="btn_right" type="button" class="btn btn-default" onclick="showTable(current + 1);">{l s='>>'}</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-lg-12">
+				<button name="import" type="submit" onclick="return (validateImportation(new Array({$res})));" id="import" class="btn btn-default pull-right"><i class="icon-cloud-upload"></i> {l s='Import .CSV data'}</button>
+			</div>
+		</div>
 	</form>
 	</div>
 {/block}

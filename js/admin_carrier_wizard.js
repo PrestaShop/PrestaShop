@@ -175,14 +175,14 @@ function displaySummary()
 	$('#summary_zones').html('');
 	$('.input_zone').each(function(){
 		if ($(this).attr('checked'))
-			$('#summary_zones').html($('#summary_zones').html() + '<li><strong>' + $(this).closest().prev().text() + '</strong></li>');
+			$('#summary_zones').html($('#summary_zones').html() + '<li><strong>' + $(this).closest('tr').find('label').text() + '</strong></li>');
 	});
 	
 	// Group restrictions
 	$('#summary_groups').html('');
 	$('input[name$="groupBox[]"]').each(function(){
 		if ($(this).attr('checked'))
-			$('#summary_groups').html($('#summary_groups').html() + '<li><strong>' + $(this).closest().next().next().text() + '</strong></li>');
+			$('#summary_groups').html($('#summary_groups').html() + '<li><strong>' + $(this).closest('tr').find('td:eq(2)').text() + '</strong></li>');
 	});
 	
 	// shop restrictions

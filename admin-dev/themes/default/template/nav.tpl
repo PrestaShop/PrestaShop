@@ -1,4 +1,4 @@
-<nav id="nav-sidebar" role="navigation">
+<nav id="nav-sidebar" class="bootstrap" role="navigation">
 {if !$tab}
 	<div class="mainsubtablist" style="display:none"></div>
 {/if}

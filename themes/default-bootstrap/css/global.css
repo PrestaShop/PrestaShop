@@ -89,6 +89,7 @@ textarea {
 
 #columns {
   z-index: 1;
+  position: relative;
   padding-bottom: 50px;
 }
 
@@ -228,37 +229,6 @@ span.exclusive_mini, span.exclusive_small, span.exclusive, span.exclusive_large,
   border: none;
 }
 
-/* input button */
-input.button_mini, input.button_small, input.button, input.button_large,
-input.button_mini_disabled, input.button_small_disabled, input.button_disabled, input.button_large_disabled,
-input.exclusive_mini, input.exclusive_small, input.exclusive, input.exclusive_large,
-input.exclusive_mini_disabled, input.exclusive_small_disabled, input.exclusive_disabled, input.exclusive_large_disabled {
-  /*padding-bottom: 2px*/
-}
-
-/* disabled button */
-input.button_mini_disabled, input.button_small_disabled, input.button_disabled, input.button_large_disabled,
-input.exclusive_mini_disabled, input.exclusive_small_disabled, input.exclusive_disabled, input.exclusive_large_disabled,
-span.button_mini, span.button_small, span.button, span.button_large,
-span.exclusive_mini, span.exclusive_small, span.exclusive, span.exclusive_large, span.exclusive_large_disabled {
-  /*background-position: left -36px;
-  cursor: default;
-  color: #888!important*/
-}
-
-/* exclusive button */
-input.exclusive_mini, input.exclusive_small, input.exclusive, input.exclusive_large,
-input.exclusive_mini_disabled, input.exclusive_small_disabled, input.exclusive_disabled, input.exclusive_large_disabled,
-a.exclusive_mini, a.exclusive_small, a.exclusive, a.exclusive_large,
-span.exclusive_mini, span.exclusive_small, span.exclusive, span.exclusive_large, span.exclusive_large_disabled {
-  /*color: white!important*/
-}
-
-/* exclusive disabled button */
-input.exclusive_mini_disabled, input.exclusive_small_disabled, input.exclusive_disabled, input.exclusive_large_disabled, span.exclusive_mini, span.exclusive_small, span.exclusive, span.exclusive_large {
-  /*color: #488c40!important*/
-}
-
 /* hover button */
 input.button_mini:hover, input.button_small:hover, input.button:hover, input.button_large:hover,
 input.exclusive_mini:hover, input.exclusive_small:hover, input.exclusive:hover, input.exclusive_large:hover,
@@ -266,11 +236,6 @@ a.button_mini:hover, a.button_small:hover, a.button:hover, a.button_large:hover,
 a.exclusive_mini:hover, a.exclusive_small:hover, a.exclusive:hover, a.exclusive_large:hover {
   text-decoration: none;
   background-position: left -50px;
-}
-
-/* exclusive hover button */
-input.exclusive_mini:hover, input.exclusive_small:hover, input.exclusive:hover, input.exclusive_large:hover, a.exclusive_mini:hover, a.exclusive_small:hover, a.exclusive:hover, a.exclusive_large:hover {
-  /*color: white!important*/
 }
 
 /* active button */
@@ -281,27 +246,11 @@ a.exclusive_mini:active, a.exclusive_small:active, a.exclusive:active, a.exclusi
   background-position: left -100px;
 }
 
-/* classic buttons */
-input.button_mini, input.button_mini_disabled, input.exclusive_mini, input.exclusive_mini_disabled, a.button_mini, a.exclusive_mini, span.button_mini, span.exclusive_mini {
-  /*width: 30px;
-  background-image: url('../img/button-mini.png')*/
-}
-
-input.button_small, input.button_small_disabled, input.exclusive_small, input.exclusive_small_disabled, a.button_small, a.exclusive_small, span.button_small, span.exclusive_small {
-  /*width: 60px;
-  background-image: url('../img/button-small.png')*/
-}
-
 input.button_disabled, input.exclusive_disabled, span.exclusive {
   border: 1px solid #ccc;
   color: #999;
   background: url(../img/bg_bt_2.gif) repeat-x 0 0 #cccccc;
   cursor: default;
-}
-
-input.button_large, input.button_large_disabled, input.exclusive_large, input.exclusive_large_disabled, a.button_large, a.exclusive_large, span.button_large, span.exclusive_large, span.exclusive_large_disabled {
-  /*width: 180px;
-  background-image: url('../img/button-large.png')*/
 }
 
 .btn.disabled, .btn[disabled]:hover {
@@ -2971,14 +2920,6 @@ p.cheque-indent {
 }
 #manufacturer .bottom-pagination-content, #manufacturer .top-pagination-content, #supplier .bottom-pagination-content, #supplier .top-pagination-content {
   min-height: 69px;
-}
-#manufacturer .bottom-pagination-content #pagination .showall, #manufacturer .top-pagination-content #pagination .showall, #supplier .bottom-pagination-content #pagination .showall, #supplier .top-pagination-content #pagination .showall {
-  margin-right: 0;
-}
-@media (min-width: 1200px) {
-  #manufacturer .bottom-pagination-content #pagination .showall, #manufacturer .top-pagination-content #pagination .showall, #supplier .bottom-pagination-content #pagination .showall, #supplier .top-pagination-content #pagination .showall {
-    margin-right: 201px;
-  }
 }
 #manufacturer .top-pagination-content.bottom-line, #supplier .top-pagination-content.bottom-line {
   border-bottom: 1px solid #d6d4d4;

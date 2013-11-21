@@ -46,5 +46,5 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
 </head>
 <body class="page-topbar">
-	<div id="login">
-		<div id="content" class="page-content">
+	<div id="login" class="bootstrap">
+		<div id="content">
