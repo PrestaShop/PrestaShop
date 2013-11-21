@@ -237,8 +237,9 @@ class TabCore extends ObjectModel
 		if (!isset(self::$_cache_tabs[$id_lang]))
 		{
 			self::$_cache_tabs[$id_lang] = array();
+			// Keep t.*, tl.name instead of only * because if translations are missing, the join on tab_lang will overwrite the id_tab in the results
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT *
+			SELECT t.*, tl.name
 			FROM `'._DB_PREFIX_.'tab` t
 			LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
 			ORDER BY t.`position` ASC');
