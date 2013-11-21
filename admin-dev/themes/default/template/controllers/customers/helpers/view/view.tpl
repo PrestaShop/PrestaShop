@@ -215,7 +215,7 @@
 									<th>{l s='State'}</th>
 									<th>{l s='Products'}</th>
 									<th>{l s='Total spent'}</th>
-									<th class="center">{l s='Actions'}</th>
+									<th class="text-right">{l s='Actions'}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -227,7 +227,7 @@
 									<td>{$order['order_state']}</td>
 									<td align="right">{$order['nb_products']}</td>
 									<td align="right">{$order['total_paid_real']}</td>
-									<td align="center">
+									<td class="text-right">
 										<a class="btn btn-default" href="?tab=AdminOrders&id_order={$order['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}">
 											<i class='icon-eye-open'></i> {l s='View'}
 										</a>
@@ -248,7 +248,7 @@
 									<th>{l s='State'}</th>
 									<th>{l s='Products'}</th>
 									<th>{l s='Total spent'}</th>
-									<th class="center">{l s='Actions'}</th>
+									<th class="text-right">{l s='Actions'}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -260,7 +260,7 @@
 									<td>{$order['order_state']}</td>
 									<td align="right">{$order['nb_products']}</td>
 									<td align="right">{$order['total_paid_real']}</td>
-									<td align="center">
+									<td class="text-right">
 										<a class="btn btn-default" href="?tab=AdminOrders&id_order={$order['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}">
 											<i class='icon-eye-open'></i> {l s='View'}
 										</a>
@@ -287,7 +287,7 @@
 								<th>{l s='Date'}</th>
 								<th>{l s='Carrier'}</th>
 								<th>{l s='Total'}</th>
-								<th class="center">{l s='Actions'}</th>
+								<th class="text-right">{l s='Actions'}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -297,7 +297,7 @@
 								<td>{dateFormat date=$cart['date_upd'] full=0}</td>
 								<td>{$cart['name']}</td>
 								<td align="right">{$cart['total_price']}</td>
-								<td align="center">
+								<td class="text-right">
 									<a class="btn btn-default" href="index.php?tab=AdminCarts&id_cart={$cart['id_cart']}&viewcart&token={getAdminToken tab='AdminCarts'}">
 										<i class='icon-eye-open'></i> {l s='View'}
 									</a>
@@ -322,7 +322,7 @@
 							<th class="center">{l s='Date'}</th>
 							<th class="center">{l s='Name'}</th>
 							<th class="center">{l s='Quantity'}</th>
-							<th class="center">{l s='Actions'}</th>
+							<th class="text-right">{l s='Actions'}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -331,7 +331,7 @@
 							<td>{dateFormat date=$order['date_add'] full=0}</td>
 							<td>{$product['product_name']}</td>
 							<td align="right">{$product['product_quantity']}</td>
-							<td align="center">
+							<td class="text-right">
 								<a class="btn btn-default" href="?tab=AdminOrders&id_order={$product['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}">
 									<i class='icon-eye-open'></i> {l s='View'}
 								</a>
@@ -407,7 +407,7 @@
 								<th>{l s='Code'}</th>
 								<th>{l s='Name'}</th>
 								<th>{l s='Status'}</th>
-								<th>{l s='Actions'}</th>
+								<th class="text-right">{l s='Actions'}</th>
 							<tr/>
 						</thead>
 						<tbody>
@@ -419,7 +419,7 @@
 								<td align="center">
 									<img src="../img/admin/{if $discount['active']}enabled.gif{else}disabled.gif{/if}" alt="{l s='Status'}" title="{l s='Status'}" />
 								</td>
-								<td align="center">
+								<td class="text-right">
 									<a href="?tab=AdminCartRules&id_cart_rule={$discount['id_cart_rule']}&addcart_rule&token={getAdminToken tab='AdminCartRules'}">
 										<img src="../img/admin/edit.gif" />
 									</a>
@@ -476,7 +476,7 @@
 						<tr>
 							<th>{l s='ID'}</th>
 							<th>{l s='Name'}</th>
-							<th class="center">{l s='Actions'}</th>
+							<th class="text-right">{l s='Actions'}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -484,7 +484,7 @@
 						<tr onclick="document.location = '?tab=AdminGroups&id_group={$group['id_group']}&viewgroup&token={getAdminToken tab='AdminGroups'}'">
 							<td>{$group['id_group']}</td>
 							<td>{$group['name']}</td>
-							<td class="center">
+							<td class="text-right">
 								<a class="btn btn-default" href="?tab=AdminGroups&id_group={$group['id_group']}&viewgroup&token={getAdminToken tab='AdminGroups'}">
 									<i class='icon-eye-open'></i> {l s='View'}
 								</a>
@@ -514,7 +514,7 @@
 						<tr>
 							<th>{l s='ID'}</th>
 							<th>{l s='Name'}</th>
-							<th class="center">{l s='Actions'}</th>
+							<th class="text-right">{l s='Actions'}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -522,7 +522,7 @@
 						<tr onclick="document.location = '{$p['url']}'">
 							<td>{$p['id']}</td>
 							<td>{$p['name']}</td>
-							<td align="center">
+							<td class="text-right">
 								<a class="btn btn-default" href="{$p['url']}">
 									<i class='icon-eye-open'></i> {l s='View'}
 								</a>
@@ -580,7 +580,7 @@
 								<th>{l s='Address'}</th>
 								<th>{l s='Country'}</th>
 								<th>{l s='Phone number(s)'}</th>
-								<th class="center">{l s='Actions'}</th>
+								<th class="text-right">{l s='Actions'}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -598,7 +598,7 @@
 										{if $address['phone_mobile']}<br />{$address['phone_mobile']}{else}--{/if}
 									{/if}
 								</td>
-								<td>
+								<td class="text-right">
 									<div class="btn-group">
 										<a class="btn btn-default" data-toggle="dropdown" href="?tab=AdminAddresses&id_address={$address['id_address']}&addaddress&token={getAdminToken tab='AdminAddresses'}">
 											<i class="icon-edit"></i> {l s='Edit'}
