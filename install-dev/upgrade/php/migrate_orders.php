@@ -86,11 +86,9 @@ function migrate_orders()
 			SELECT od.*
 			FROM `'._DB_PREFIX_.'order_detail` od
 			WHERE od.`id_order` = '.(int)$order['id_order']);
+
 			while ($order_details = Db::getInstance()->nextRow($order_details_list))
 			{
-				$values_order_detail = array();
-				$values_order = array();
-				$col_order_detail = array();
 				// we don't want to erase order_details data in order to create the insert query
 				$products = mo_setProductPrices($order_details, $price_display_method);
 				$tax_rate = 1 + ((float)$products['tax_rate'] / 100);
@@ -107,6 +105,7 @@ function migrate_orders()
 				$order_details['total_price_tax_excl'] = (float)$products['total_price'];
 				$order_details['unit_price_tax_incl'] = (float)$products['product_price_wt'];
 				$order_details['unit_price_tax_excl'] = (float)$products['product_price'];
+
 				foreach (array_keys($order_details) as $k)
 					if (!in_array($k, $col_order_detail))
 						unset($order_details[$k]);
@@ -121,7 +120,7 @@ function migrate_orders()
 					$values_order_detail[] = '(\''.implode('\', \'', $order_details).'\')';
 				unset($order_details);
 			}
-	
+
 			$average_tax_used = 1;
 			if ($sum_total_products > 0)
 				$average_tax_used +=  $sum_tax_amount / $sum_total_products;
@@ -187,6 +186,10 @@ function migrate_orders()
 		$res = false;
 		$array_errors[] = '[insert order 4] - '.Db::getInstance()->getMsgError();
 	}
+	if (isset($values_order))
+		unset($values_order);
+	if (isset($values_order_detail))
+		unset($values_order_detail);
 	if (!mo_renameTables())
 	{
 		$res = false;
