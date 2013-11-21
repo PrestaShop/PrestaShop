@@ -85,6 +85,7 @@ class ProductSaleCore
 		foreach ($products as $product)
 			$ids[$product['id_product']] = 1;
 		$ids = array_keys($ids);
+		$ids = array_filter($ids);
 		sort($ids);
 		$ids = count($ids) > 0 ? implode(',', $ids) : 'NULL';
 		
@@ -157,6 +158,7 @@ class ProductSaleCore
 			$ids[$product['id_product']] = 1;
 		$ids = array_keys($ids);
 		sort($ids);
+		$ids = array_filter($ids);
 		$ids = count($ids) > 0 ? implode(',', $ids) : 'NULL';
 
 		//Main query
