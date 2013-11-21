@@ -58,7 +58,7 @@ $( document ).ready(function() {
 	//nav top bar
 	function navTopbar(){
 		//$('body').removeClass('page-sidebar').addClass('page-topbar').removeClass('page-sidebar-closed');
-		//$('#nav-sidebar').attr('id','nav-topbar');
+		$('#nav-sidebar').attr('id','nav-topbar');
 		var topbar = $('#nav-topbar');
 		topbar.off();
 		$('span.submenu_expand').remove();

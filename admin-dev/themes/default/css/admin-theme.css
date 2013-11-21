@@ -3031,7 +3031,7 @@ a.link-social:hover { text-decoration: none; }
 #nav-sidebar ul.submenu li.active a { color: white; background-color: #1ba6e5; border-bottom: solid 1px #1585b8; }
 @media (max-width: 480px) { #nav-sidebar { display: none; } }
 
-#nav-topbar { position: fixed; height: 28px; top: 38px; left: 80; width: 100%; padding: 0 40px 0 0; z-index: 600; background-color: white; }
+#nav-topbar { position: fixed; height: 28px; top: 37px; width: 100%; padding: 0 40px 0 0; z-index: 600; background-color: white; }
 #nav-topbar ul.menu { margin: 0; padding: 0; display: block; list-style: none; }
 #nav-topbar ul.menu li.maintab, #nav-topbar ul.menu li.subtab { height: 28px; padding: 0; margin: 0; list-style: none; position: relative; float: left; }
 #nav-topbar ul.menu li.maintab > a, #nav-topbar ul.menu li.subtab > a { display: block; line-height: 30px; color: #515561; padding: 0 6px; margin: 0; font-size: 12px; }
@@ -3055,9 +3055,8 @@ a.link-social:hover { text-decoration: none; }
 .menu-collapse { cursor: pointer; height: 54px; width: 100%; font-size: 2em; text-align: center; line-height: 55px; display: block; background-color: #515561; border-bottom: 4px solid #3a3d45; color: #0b0c0e; }
 
 .page-topbar #main { padding-top: 64px; }
-.page-topbar #nav-sidebar { display: none; }
-.page-topbar .page-head { top: 66px; }
-.page-topbar #content { margin-left: 0; width: 100%; }
+.page-topbar #content { margin-left: 0; }
+.page-topbar #content .page-head { top: 65px; }
 .page-topbar #content .page-head h2.page-title { padding: 0 0 0 20px; }
 
 .page-sidebar #content { margin-left: 240px; }
