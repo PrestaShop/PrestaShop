@@ -27,14 +27,8 @@
 class ProductControllerCore extends FrontController
 {
 	public $php_self = 'product';
-	/**
-	 * @var Product
-	 */
-	protected $product;
 
-	/**
-	 * @var Category
-	 */
+	protected $product;
 	protected $category;
 
 	public function setMedia()
@@ -667,5 +661,10 @@ class ProductControllerCore extends FrontController
 	public function getProduct()
 	{
 	    return $this->product;
+	}
+	
+	public function getCategory()
+	{
+	    return $this->category;
 	}
 }
