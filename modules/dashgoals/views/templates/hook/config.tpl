@@ -68,6 +68,6 @@
 				{/foreach}
 			</tbody>
 		</table>
-		<input class="btn btn-default" name="submitDashGoals" type="submit" value="{l s='Save' mod='dashgoals'}" />
+		<button class="btn btn-default" name="submitDashGoals" type="submit"><i class="icon-save"></i> {l s='Save' mod='dashgoals'}</button>
 	</form>
 </section>

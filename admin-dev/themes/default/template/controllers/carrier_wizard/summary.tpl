@@ -37,24 +37,26 @@
 
 <div class="defaultForm">
 	<div class="panel">
-		{l s='Carrier name:'} <strong id="summary_name"></strong>
-		<div id="summary_meta_informations"></div>
-		<div id="summary_shipping_cost"></div>
-		<div id="summary_range"></div>
-		<div>
+		<div class="panel-heading">{l s='Carrier name:'} <strong id="summary_name"></strong></div>
+		<div class="panel-body">
+			<p id="summary_meta_informations"></p>
+			<p id="summary_shipping_cost"></p>
+			<p id="summary_range"></p>
+			<div>
 			{l s='This carrier will be proposed for those delivery zones:'}
-			<ul id="summary_zones"></ul>
+				<ul id="summary_zones"></ul>
+			</div>
+			<div>
+				{l s='And it will be proposed for those client groups:'}
+				<ul id="summary_groups"></ul>
+			</div>
+			{if $is_multishop}
+			<div>
+				{l s='Finally, this carrier will be proposed in those shops:'}
+				<ul id="summary_shops"></ul>
+			</div>
+			{/if}
 		</div>
-		<div>
-			{l s='And it will be proposed for those client groups:'}
-			<ul id="summary_groups"></ul>
-		</div>
-		{if $is_multishop}
-		<div>
-			{l s='Finally, this carrier will be proposed in those shops:'}
-			<ul id="summary_shops"></ul>
-		</div>
-		{/if}
-		{$active_form}
 	</div>
+	{$active_form}
 </div>

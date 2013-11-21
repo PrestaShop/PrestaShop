@@ -59,11 +59,11 @@
 	<table id="order-list" class="table table-bordered footab">
 		<thead>
 			<tr>
-				<th class="first_item">{l s='Return'}</th>
-				<th class="item">{l s='Order'}</th>
+				<th data-sort-ignore="true" class="first_item">{l s='Return'}</th>
+				<th data-sort-ignore="true" class="item">{l s='Order'}</th>
 				<th data-hide="phone"class="item">{l s='Package status'}</th>
 				<th data-hide="phone,tablet" class="item">{l s='Date issued'}</th>
-				<th data-hide="phone,tablet" class="last_item">{l s='Return slip'}</th>
+				<th data-sort-ignore="true" data-hide="phone,tablet" class="last_item">{l s='Return slip'}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -71,8 +71,8 @@
 			<tr class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if} {if $smarty.foreach.myLoop.index % 2}alternate_item{/if}">
 				<td class="bold"><a class="color-myaccount" href="javascript:showOrder(0, {$return.id_order_return|intval}, '{$link->getPageLink('order-return', true)|escape:'html'}');">{l s='#'}{$return.id_order_return|string_format:"%06d"}</a></td>
 				<td class="history_method"><a class="color-myaccount" href="javascript:showOrder(1, {$return.id_order|intval}, '{$link->getPageLink('order-detail', true)|escape:'html'}');">{l s='#'}{$return.id_order|string_format:"%06d"}</a></td>
-				<td class="history_method"><span class="label label-info">{$return.state_name|escape:'htmlall':'UTF-8'}</span></td>
-				<td class="bold">{dateFormat date=$return.date_add full=0}</td>
+				<td class="history_method" data-value="{$return.state}"><span class="label label-info">{$return.state_name|escape:'htmlall':'UTF-8'}</span></td>
+				<td class="bold" data-value="{$return.date_add|regex_replace:"/[\-\:\ ]/":""}">{dateFormat date=$return.date_add full=0}</td>
 				<td class="history_invoice">
 				{if $return.state == 2}
 					<a class="link-button" href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$return.id_order_return|intval}")|escape:'html'}" title="{l s='Order return'} {l s='#'}{$return.id_order_return|string_format:"%06d"}"><i class="icon-file-text"></i> {l s='Print out'}</a>

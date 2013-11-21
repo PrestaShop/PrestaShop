@@ -131,12 +131,7 @@ class AdminLocalizationControllerCore extends AdminController
 			);
 	}
 
-	public function initPageHeaderToolbar()
-	{
-		parent::initPageHeaderToolbar();
 
-		$this->page_header_toolbar_title = $this->l('Localization');
-	}
 
 	public function postProcess()
 	{

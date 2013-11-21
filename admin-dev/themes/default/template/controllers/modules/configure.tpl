@@ -22,52 +22,54 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="page-head">
-	<h2 class="page-title">
-		{l s='Configure:'} {$module_display_name} ({$module_name})
-	</h2>
-	<div class="page-bar toolbarBox">
-		<div class="btn-toolbar">
-			<ul class="cc_button nav nav-pills pull-right">
-				<li>
-					<a id="desc-module-hook" class="toolbar_btn" href="{$module_disable_link}" title="{l s='Disable'}">
-						<i class="process-icon-off"></i>
-						<div>{l s='Disable'}</div>
-					</a>
-				</li>
-				<li>
-					<a id="desc-module-hook" class="toolbar_btn" href="{$module_uninstall_link}" title="{l s='Uninstall'}">
-						<i class="process-icon-minus-sign-alt"></i>
-						<div>{l s='Uninstall'}</div>
-					</a>
-				</li>
-				<li>
-					<a id="desc-module-hook" class="toolbar_btn" href="{$module_reset_link}" title="{l s='Reset'}">
-						<i class="process-icon-share-alt"></i>
-						<div>{l s='Reset'}</div>
-					</a>
-				</li>
-				{if isset($module_update_link)}
-				<li>
-					<a id="desc-module-hook" class="toolbar_btn" href="{$module_update_link}" title="{l s='Update'}">
-						<i class="process-icon-refresh"></i>
-						<div>{l s='Update'}</div>
-					</a>
-				</li>
-				{/if}
-				<li>
-					<a id="desc-module-hook" class="toolbar_btn" href="{$module_hook_link}" title="{l s='Manage hooks'}">
-						<i class="process-icon-anchor"></i>
-						<div>{l s='Manage hooks'}</div>
-					</a>
-				</li>
-				<li>
-					<a id="desc-module-back" class="toolbar_btn" href="{$back_link}" title="{l s='Back'}">
-						<i class="process-icon-back" ></i>
-						<div>{l s='Back'}</div>
-					</a>
-				</li>
-			</ul>
+<div class="bootstrap">
+	<div class="page-head">
+		<h2 class="page-title">
+			{l s='Configure:'} {$module_display_name} ({$module_name})
+		</h2>
+		<div class="page-bar toolbarBox">
+			<div class="btn-toolbar">
+				<ul class="cc_button nav nav-pills pull-right">
+					<li>
+						<a id="desc-module-hook" class="toolbar_btn" href="{$module_disable_link}" title="{l s='Disable'}">
+							<i class="process-icon-off"></i>
+							<div>{l s='Disable'}</div>
+						</a>
+					</li>
+					<li>
+						<a id="desc-module-hook" class="toolbar_btn" href="{$module_uninstall_link}" title="{l s='Uninstall'}">
+							<i class="process-icon-uninstall"></i>
+							<div>{l s='Uninstall'}</div>
+						</a>
+					</li>
+					<li>
+						<a id="desc-module-hook" class="toolbar_btn" href="{$module_reset_link}" title="{l s='Reset'}">
+							<i class="process-icon-reset"></i>
+							<div>{l s='Reset'}</div>
+						</a>
+					</li>
+					{if isset($module_update_link)}
+					<li>
+						<a id="desc-module-hook" class="toolbar_btn" href="{$module_update_link}" title="{l s='Update'}">
+							<i class="process-icon-refresh"></i>
+							<div>{l s='Update'}</div>
+						</a>
+					</li>
+					{/if}
+					<li>
+						<a id="desc-module-hook" class="toolbar_btn" href="{$module_hook_link}" title="{l s='Manage hooks'}">
+							<i class="process-icon-anchor"></i>
+							<div>{l s='Manage hooks'}</div>
+						</a>
+					</li>
+					<li>
+						<a id="desc-module-back" class="toolbar_btn" href="{$back_link}" title="{l s='Back'}">
+							<i class="process-icon-back" ></i>
+							<div>{l s='Back'}</div>
+						</a>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </div>

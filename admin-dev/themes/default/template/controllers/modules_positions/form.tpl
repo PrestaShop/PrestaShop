@@ -26,7 +26,6 @@
 <div class="leadin">{block name="leadin"}{/block}</div>
 
 <form action="{$url_submit}" id="{$table}_form" method="post" class="form-horizontal">
-
 	{if $display_key}
 		<input type="hidden" name="show_modules" value="{$display_key}" />
 	{/if}
@@ -35,9 +34,9 @@
 			<i class="icon-paste"></i>
 			{l s='Transplant a module'}
 		</h3>
-		<div class="row">
+		<div class="form-group">
 			<label class="control-label col-lg-3 required"> {l s='Module:'}</label>
-			<div class="col-lg-6">
+			<div class="col-lg-9">
 				<select name="id_module" {if $edit_graft} disabled="disabled"{/if}>
 					{foreach $modules as $module}
 						<option value="{$module->id}" {if $id_module == $module->id || (!$id_module && $show_modules == $module->id)}selected="selected"{/if}>{$module->displayName|stripslashes}</option>
@@ -45,9 +44,9 @@
 				</select>
 			</div>
 		</div>
-		<div class="row">
+		<div class="form-group">
 			<label class="control-label col-lg-3 required"> {l s='Hook into'} :</label>
-			<div class="col-lg-6">
+			<div class="col-lg-9">
 				<select name="id_hook" {if $edit_graft} disabled="disabled"{/if}>
 					{foreach $hooks as $hook}
 						<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}</option>
@@ -55,10 +54,10 @@
 				</select>
 			</div>
 		</div>
-		<div class="row">
+		<div class="form-group">
 			<label class="control-label col-lg-3">{l s='Exceptions'} :</label>
-			<div class="col-lg-6">
-				<div class="alert alert-warning">
+			<div class="col-lg-9">
+				<div class="well">
 					<p>
 						{l s='Please specify the files for which you do not want the module to be displayed.'}<br />
 						{l s='Please input each filename, separated by a comma.'}<br />
@@ -73,22 +72,18 @@
 				</div>
 			</div>
 		</div>
-
-		<div class="row">
-			<div class="col-lg-12">
-				{if $edit_graft}
-					<input type="hidden" name="id_module" value="{$id_module}" />
-					<input type="hidden" name="id_hook" value="{$id_hook}" />
-				{/if}
-				<input type="submit" value="{l s='Save'}" name="{if $edit_graft}submitEditGraft{else}submitAddToHook{/if}" id="{$table}_form_submit_btn" class="btn btn-default" />
-			</div>
+		<div class="panel-footer">
+			{if $edit_graft}
+				<input type="hidden" name="id_module" value="{$id_module}" />
+				<input type="hidden" name="id_hook" value="{$id_hook}" />
+			{/if}
+			<input type="submit" value="{l s='Save'}" name="{if $edit_graft}submitEditGraft{else}submitAddToHook{/if}" id="{$table}_form_submit_btn" class="btn btn-default" />
 		</div>
 	</div>
 </form>
 <script type="text/javascript">
 	//<![CDATA
-	function position_exception_textchange()
-	{
+	function position_exception_textchange() {
 		// TODO : Add & Remove automatically the "custom pages" in the "em_list_x"
 		var obj = $(this);
 		var shopID = obj.attr('id').replace(/\D/g, '');
@@ -100,21 +95,16 @@
 		for (var i = 0; i < len; i++)
 			list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);
 	}
-
-	function position_exception_listchange()
-	{
-
+	function position_exception_listchange() {
 		var obj = $(this);
 		var shopID = obj.attr('id').replace(/\D/g, '');
 		var str = obj.val().join(', ');
 		obj.closest('form').find('#em_text_' + shopID).val(str);
 	}
-	
 	$(document).ready(function(){
 		$('form[id="hook_module_form"] input[id^="em_text_"]').each(function(){
 			$(this).change(position_exception_textchange).change();
 		});
-
 		$('form[id="hook_module_form"] select[id^="em_list_"]').each(function(){
 			$(this).change(position_exception_listchange);
 		});

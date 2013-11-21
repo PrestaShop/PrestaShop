@@ -59,3 +59,16 @@
 .footable .footable-row-detail-value {
   display: table-cell;
 }
+.footable .footable-sortable .footable-sort-indicator:after {
+  float: right;
+  margin: 0px 0px 0 0;
+  content: "";
+  font-family: "FontAwesome";
+  display: block;
+}
+.footable .footable-sortable.footable-sorted .footable-sort-indicator:after {
+  content: "";
+}
+.footable .footable-sortable.footable-sorted-desc .footable-sort-indicator:after {
+  content: "";
+}
