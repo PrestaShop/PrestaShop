@@ -131,7 +131,7 @@ class TagCore extends ObjectModel
 	public static function getMainTags($id_lang, $nb = 10)
 	{
 		$sql_groups = '';
-		if (Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		if (Group::isFeatureActive())
 		{
 			$groups = FrontController::getCurrentCustomerGroups();
 			$sql_groups = '

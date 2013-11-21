@@ -107,7 +107,7 @@ class SupplierCore extends ObjectModel
 	{
 		if (!$id_lang)
 			$id_lang = Configuration::get('PS_LANG_DEFAULT');
-		if (!Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		if (!Group::isFeatureActive())
 			$all_groups = true;
 
 		$query = new DbQuery();
@@ -210,7 +210,7 @@ class SupplierCore extends ObjectModel
 			die (Tools::displayError());
 
 		$sql_groups = '';
-		if (Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		if (Group::isFeatureActive())
 		{
 			$groups = FrontController::getCurrentCustomerGroups();
 			$sql_groups = 'WHERE cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
@@ -230,7 +230,7 @@ class SupplierCore extends ObjectModel
 			AND p.`id_product` IN (
 				SELECT cp.`id_product`
 				FROM `'._DB_PREFIX_.'category_product` cp
-				'.(Configuration::get('PS_GROUP_FEATURE_ACTIVE') ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category`)' : '').'
+				'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category`)' : '').'
 				'.($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
 				'.$sql_groups.'
 			)');
@@ -286,7 +286,7 @@ class SupplierCore extends ObjectModel
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_product` cp
-						'.(Configuration::get('PS_GROUP_FEATURE_ACTIVE') ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category`)' : '').'
+						'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category`)' : '').'
 						'.($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
 						'.$sql_groups.'
 					)

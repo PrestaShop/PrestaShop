@@ -2009,7 +2009,7 @@ class ProductCore extends ObjectModel
 			die(Tools::displayError());
 
 		$sql_groups = '';
-		if (Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		if (Group::isFeatureActive())
 		{
 			$groups = FrontController::getCurrentCustomerGroups();
 			$sql_groups = 'AND p.`id_product` IN (
@@ -2061,7 +2061,7 @@ class ProductCore extends ObjectModel
 		if ($front)
 			$sql->where('product_shop.`visibility` IN ("both", "catalog")');
 		$sql->where('product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'"');
-		if (Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		if (Group::isFeatureActive())
 			$sql->where('p.`id_product` IN (
 				SELECT cp.`id_product`
 				FROM `'._DB_PREFIX_.'category_group` cg
@@ -2241,7 +2241,7 @@ class ProductCore extends ObjectModel
 			$front = false;
 
 		$sql_groups = '';
-		if (Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		if (Group::isFeatureActive())
 		{
 			$groups = FrontController::getCurrentCustomerGroups();
 			$sql_groups = 'AND p.`id_product` IN (
@@ -4342,7 +4342,7 @@ class ProductCore extends ObjectModel
 
 	public function checkAccess($id_customer)
 	{
-		if (!Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		if (!Group::isFeatureActive())
 			return true;
 
 		if (!$id_customer)
