@@ -178,7 +178,8 @@ class GroupCore extends ObjectModel
 			$this->truncateModulesRestrictions($this->id);
 
 			// Refresh cache of feature detachable
-			Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', Group::isCurrentlyUsed());
+			if (!Configuration::getGlobalValue('PS_GROUP_FEATURE_ACTIVE') && Group::isCurrentlyUsed())
+				Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', 1);
 
 			// Add default group (id 3) to customers without groups
 			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_group` (
@@ -213,7 +214,7 @@ class GroupCore extends ObjectModel
 	}
 
 	/**
-	 * This method is allow to know if a Discount entity is currently used
+	 * This method is allow to know if there are other groups than the default ones
 	 * @since 1.5.0.1
 	 * @param $table
 	 * @param $has_active_column
@@ -221,12 +222,7 @@ class GroupCore extends ObjectModel
 	 */
 	public static function isCurrentlyUsed($table = null, $has_active_column = false)
 	{
-		// We don't use the parent method, for specific clause reason (id_group != 3)
-		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `id_group`
-			FROM `'._DB_PREFIX_.'group`
-			WHERE `id_group` != '.(int)Configuration::get('PS_CUSTOMER_GROUP').'
-		');
+		return (bool)(Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'group`') > 3);
 	}
 
 	/**

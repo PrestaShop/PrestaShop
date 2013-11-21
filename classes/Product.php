@@ -1988,8 +1988,7 @@ class ProductCore extends ObjectModel
 	* @param integer $nbProducts Number of products to return (optional)
 	* @return array New products
 	*/
-	public static function getNewProducts($id_lang, $page_number = 0, $nb_products = 10,
-		$count = false, $order_by = null, $order_way = null, Context $context = null)
+	public static function getNewProducts($id_lang, $page_number = 0, $nb_products = 10, $count = false, $order_by = null, $order_way = null, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -2009,14 +2008,25 @@ class ProductCore extends ObjectModel
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
 			die(Tools::displayError());
 
-		$groups = FrontController::getCurrentCustomerGroups();
-		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
+		$sql_groups = '';
+		if (Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		{
+			$groups = FrontController::getCurrentCustomerGroups();
+			$sql_groups = 'AND p.`id_product` IN (
+				SELECT cp.`id_product`
+				FROM `'._DB_PREFIX_.'category_group` cg
+				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+				WHERE cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').'
+			)';
+		}
+
 		if (strpos($order_by, '.') > 0)
 		{
 			$order_by = explode('.', $order_by);
 			$order_by_prefix = $order_by[0];
 			$order_by = $order_by[1];
 		}
+
 		if ($count)
 		{
 			$sql = 'SELECT COUNT(p.`id_product`) AS nb
@@ -2025,12 +2035,7 @@ class ProductCore extends ObjectModel
 					WHERE product_shop.`active` = 1
 					AND product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'"
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-					AND p.`id_product` IN (
-						SELECT cp.`id_product`
-						FROM `'._DB_PREFIX_.'category_group` cg
-						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-						WHERE cg.`id_group` '.$sql_groups.'
-					)';
+					'.$sql_groups;
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
 
@@ -2056,12 +2061,13 @@ class ProductCore extends ObjectModel
 		if ($front)
 			$sql->where('product_shop.`visibility` IN ("both", "catalog")');
 		$sql->where('product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'"');
-		$sql->where('p.`id_product` IN (
-			SELECT cp.`id_product`
-			FROM `'._DB_PREFIX_.'category_group` cg
-			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-			WHERE cg.`id_group` '.$sql_groups.'
-		)');
+		if (Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+			$sql->where('p.`id_product` IN (
+				SELECT cp.`id_product`
+				FROM `'._DB_PREFIX_.'category_group` cg
+				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+				WHERE cg.`id_group` '.$sql_groups.'
+			)');
 		$sql->groupBy('product_shop.id_product');
 
 		$sql->orderBy((isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way));
@@ -2234,76 +2240,79 @@ class ProductCore extends ObjectModel
 		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
 			$front = false;
 
-		$groups = FrontController::getCurrentCustomerGroups();
-		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
+		$sql_groups = '';
+		if (Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+		{
+			$groups = FrontController::getCurrentCustomerGroups();
+			$sql_groups = 'AND p.`id_product` IN (
+				SELECT cp.`id_product`
+				FROM `'._DB_PREFIX_.'category_group` cg
+				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+				WHERE cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').'
+			)';
+		}
 
 		if ($count)
 		{
-			$sql = 'SELECT COUNT(DISTINCT p.`id_product`) AS nb
-					FROM `'._DB_PREFIX_.'product` p
-					'.Shop::addSqlAssociation('product', 'p').'
-					WHERE product_shop.`active` = 1
-						AND product_shop.`show_price` = 1
-						'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-						'.((!$beginning && !$ending) ? 'AND p.`id_product` IN('.((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0).')' : '').'
-						AND p.`id_product` IN (
-							SELECT cp.`id_product`
-							FROM `'._DB_PREFIX_.'category_group` cg
-							LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-							WHERE cg.`id_group` '.$sql_groups.'
-						)';
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-			return (int)$result['nb'];
+			return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT COUNT(DISTINCT p.`id_product`)
+			FROM `'._DB_PREFIX_.'product` p
+			'.Shop::addSqlAssociation('product', 'p').'
+			WHERE product_shop.`active` = 1
+			AND product_shop.`show_price` = 1
+			'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
+			'.((!$beginning && !$ending) ? 'AND p.`id_product` IN('.((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0).')' : '').'
+			'.$sql_groups);
 		}
+		
 		if (strpos($order_by, '.') > 0)
 		{
 			$order_by = explode('.', $order_by);
 			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
 		}
-		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, MAX(product_attribute_shop.id_product_attribute) id_product_attribute,
-					pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
-					pl.`name`, MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` AS manufacturer_name,
-					DATEDIFF(
-						p.`date_add`,
-						DATE_SUB(
-							NOW(),
-							INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
-						)
-					) > 0 AS new
-				FROM `'._DB_PREFIX_.'product` p
-				'.Shop::addSqlAssociation('product', 'p').'
-				LEFT JOIN '._DB_PREFIX_.'product_attribute pa ON (pa.id_product = p.id_product)
-				'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.default_on=1').'
-				'.Product::sqlStock('p', 0, false, $context->shop).'
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
-					p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
+
+		$sql = '
+		SELECT
+			p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`,
+			MAX(product_attribute_shop.id_product_attribute) id_product_attribute,
+			pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
+			pl.`name`, MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` AS manufacturer_name,
+			DATEDIFF(
+				p.`date_add`,
+				DATE_SUB(
+					NOW(),
+					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
 				)
-				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
-				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
-				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-				WHERE product_shop.`active` = 1
-				AND product_shop.`show_price` = 1
-				'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
-				'.((!$beginning && !$ending) ? ' AND p.`id_product` IN ('.((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0).')' : '').'
-				AND p.`id_product` IN (
-					SELECT cp.`id_product`
-					FROM `'._DB_PREFIX_.'category_group` cg
-					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-					WHERE cg.`id_group` '.$sql_groups.'
-				)
-				GROUP BY product_shop.id_product
-				ORDER BY '.(isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').pSQL($order_by).' '.pSQL($order_way).'
-				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
+			) > 0 AS new
+		FROM `'._DB_PREFIX_.'product` p
+		'.Shop::addSqlAssociation('product', 'p').'
+		LEFT JOIN '._DB_PREFIX_.'product_attribute pa ON (pa.id_product = p.id_product)
+		'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.default_on=1').'
+		'.Product::sqlStock('p', 0, false, $context->shop).'
+		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
+			p.`id_product` = pl.`id_product`
+			AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
+		)
+		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
+		Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
+		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
+		WHERE product_shop.`active` = 1
+		AND product_shop.`show_price` = 1
+		'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
+		'.((!$beginning && !$ending) ? ' AND p.`id_product` IN ('.((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0).')' : '').'
+		'.$sql_groups.'
+		GROUP BY product_shop.id_product
+		ORDER BY '.(isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').pSQL($order_by).' '.pSQL($order_way).'
+		LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-		if ($order_by == 'price')
-			Tools::orderbyPrice($result, $order_way);
-
 		if (!$result)
 			return false;
+
+		if ($order_by == 'price')
+			Tools::orderbyPrice($result, $order_way);
 
 		return Product::getProductsProperties($id_lang, $result);
 	}
@@ -4333,6 +4342,9 @@ class ProductCore extends ObjectModel
 
 	public function checkAccess($id_customer)
 	{
+		if (!Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+			return true;
+
 		if (!$id_customer)
 			return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT ctg.`id_group`

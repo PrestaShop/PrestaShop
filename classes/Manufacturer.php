@@ -155,11 +155,12 @@ class ManufacturerCore extends ObjectModel
 	  * @param boolean $get_nb_products [optional] return products numbers for each
 	  * @return array Manufacturers
 	  */
-	public static function getManufacturers($get_nb_products = false, $id_lang = 0, $active = true, $p = false,
-		$n = false, $all_group = false)
+	public static function getManufacturers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_group = false)
 	{
 		if (!$id_lang)
 			$id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+		if (!Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+			$all_group = true;
 
 		$sql = 'SELECT m.*, ml.`description`, ml.`short_description`
 			FROM `'._DB_PREFIX_.'manufacturer` m

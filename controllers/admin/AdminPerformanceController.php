@@ -239,12 +239,33 @@ class AdminPerformanceControllerCore extends AdminController
 						)
 					),
 					'hint' => $this->l('These features will be disabled')
+				),
+				array(
+					'type' => 'switch',
+					'label' => $this->l('Customer Groups'),
+					'name' => 'customer_group',
+					'is_bool' => true,
+					'disabled' => Group::isCurrentlyUsed(),
+					'values' => array(
+						array(
+							'id' => 'group_1',
+							'value' => 1,
+							'label' => $this->l('Yes'),
+						),
+						array(
+							'id' => 'group_0',
+							'value' => 0,
+							'label' => $this->l('No')
+						)
+					),
+					'hint' => $this->l('These features will be disabled')
 				)
 			)
 		);
 
 		$this->fields_value['combination'] = Combination::isFeatureActive();
 		$this->fields_value['feature'] = Feature::isFeatureActive();
+		$this->fields_value['customer_group'] = Group::isFeatureActive();
 	}
 
 	public function initFieldsetCCC()
@@ -646,8 +667,10 @@ class AdminPerformanceControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				if (!Combination::isCurrentlyUsed())
+				if (Tools::getValue('combination') || !Combination::isCurrentlyUsed())
 					Configuration::updateValue('PS_COMBINATION_FEATURE_ACTIVE', Tools::getValue('combination'));
+				if (Tools::getValue('group') || !Group::isCurrentlyUsed())
+					Configuration::updateValue('PS_GROUP_FEATURE_ACTIVE', Tools::getValue('group'));
 				Configuration::updateValue('PS_FEATURE_FEATURE_ACTIVE', Tools::getValue('feature'));
 				$redirectAdmin = true;
 			}
