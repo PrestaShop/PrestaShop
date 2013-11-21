@@ -536,11 +536,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		switch ($this->display)
 		{
 			case 'edit':
-				$bread_extended[] = $this->l('Edit New Attributes');
+				$bread_extended[] = $this->l('Edit New Attribute');
 				break;
 
 			case 'add':
-				$bread_extended[] = $this->l('Add New Attributes');
+				$bread_extended[] = $this->l('Add New Attribute');
 				break;
 
 			case 'view':
@@ -568,7 +568,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						$bread_extended[] = $this->l('Edit Value');
 				}
 				else
-					$bread_extended[] = $this->l('Add New Values');
+					$bread_extended[] = $this->l('Add New Value');
 				break;
 		}
 
