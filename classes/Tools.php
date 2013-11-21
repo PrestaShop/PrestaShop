@@ -2645,6 +2645,88 @@ exit;
 			usleep(300);
 		}
 	}
+
+	/**
+	* @param integer a number of seconds
+	* @param integer Unix timestamp
+	* @return integer
+	*/
+	public static function getTimeSince($time)
+	{
+		$now = time();
+		$now_day = date("j", $now);
+		$now_month = date("n", $now);
+		$now_year = date("Y", $now);
+
+		$time_day = date("j", $time);
+		$time_month = date("n", $time);
+		$time_year = date("Y", $time);
+		$time_since = "";
+
+		switch(TRUE)
+		{
+			case ($time == 0):
+				$time_since =  Translate::getAdminTranslation('Never');
+				break;
+			case ($now-$time < 60):
+				// RETURNS SECONDS
+				$seconds = $now-$time;
+	                        // Append "s" if plural
+				$time_since = $seconds > 1 ? "$seconds ".Translate::getAdminTranslation('seconds') : "$seconds ".Translate::getAdminTranslation('second');
+				break;
+			case ($now-$time < 3600):
+				// RETURNS MINUTES
+				$minutes = round(($now-$time)/60);
+				$time_since = $minutes > 1 ? "$minutes ".Translate::getAdminTranslation('minutes') : "$minutes ".Translate::getAdminTranslation('minute');
+				break;
+			case ($now-$time < 86400):
+				// RETURNS HOURS
+				$hours = round(($now-$time)/3600);
+				$time_since = $hours > 1 ? "$hours ".Translate::getAdminTranslation('hours') : "$hours ".Translate::getAdminTranslation('hour');
+				break;
+			case ($now-$time < 1209600):
+				 // RETURNS DAYS
+				 $days = round(($now-$time)/86400);
+				 $time_since = $days > 1 ? $days.' '.Translate::getAdminTranslation('days', 'Tools', false, false) : $days.' '.Translate::getAdminTranslation('day', 'Tools', false. false);
+				 break;
+			case (mktime(0, 0, 0, $now_month-1, $now_day, $now_year) < mktime(0, 0, 0, $time_month, $time_day, $time_year)):
+				 // RETURNS WEEKS
+				 $weeks = round(($now-$time)/604800);
+				 $time_since = "$weeks ".Translate::getAdminTranslation('weeks');
+				 break;
+			case (mktime(0, 0, 0, $now_month, $now_day, $now_year-1) < mktime(0, 0, 0, $time_month, $time_day, $time_year)):
+				 // RETURNS MONTHS
+				 if($now_year == $time_year) { $subtract = 0; } else { $subtract = 12; }
+				 $months = round($now_month-$time_month+$subtract);
+				 $time_since = "$months ".Translate::getAdminTranslation('months');
+				 break;
+			default:
+			// RETURNS YEARS
+				if ($now_month < $time_month)
+				{
+					$subtract = 1;
+				}
+				elseif ($now_month == $time_month)
+				{
+					if ($now_day < $time_day)
+					{
+						$subtract = 1;
+					}
+					else
+					{
+						$subtract = 0;
+					}
+				}
+				else
+				{
+					$subtract = 0;
+				}
+				$years = $now_year-$time_year-$subtract;
+				$time_since = "$years ".Translate::getAdminTranslation('years');
+				break;
+		}
+		return $time_since.' '.Translate::getAdminTranslation('ago');
+	}
 }
 
 /**

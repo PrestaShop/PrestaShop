@@ -117,7 +117,8 @@ class NotificationCore
 				'id_customer_message' => ((!empty($value['id_customer_message'])) ? (int)$value['id_customer_message'] : 0),
 				'id_customer_thread' => ((!empty($value['id_customer_thread'])) ? (int)$value['id_customer_thread'] : 0),
 				'total_paid' => ((!empty($value['total_paid'])) ? Tools::displayPrice((float)$value['total_paid'], (int)$value['id_currency'], false) : 0),
-				'customer_name' => $customer_name
+				'customer_name' => $customer_name,
+				'time_since' => Tools::getTimeSince(strtotime($value["date_add"])),
 			);
 		}
 

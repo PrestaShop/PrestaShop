@@ -1023,7 +1023,8 @@ class AdminTranslationsControllerCore extends AdminController
 						_PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_.'controllers/admin/'),
 						_PS_CLASS_DIR_.'helper/' => scandir(_PS_CLASS_DIR_.'helper/'),
 						_PS_CLASS_DIR_.'controller/' => array('AdminController.php'),
-						_PS_CLASS_DIR_ => array('PaymentModule.php')
+						_PS_CLASS_DIR_ => array('PaymentModule.php'),
+						_PS_CLASS_DIR_ => array('Tools.php'),
 					),
 					'tpl' => $this->listFiles(_PS_ADMIN_DIR_.'/themes/'),
 					'specific' => array(
@@ -1033,7 +1034,7 @@ class AdminTranslationsControllerCore extends AdminController
 							'index.php',
 							'functions.php'
 						)
-					)
+					),
 				);
 
 				// For translate the template which are overridden
@@ -1789,6 +1790,8 @@ class AdminTranslationsControllerCore extends AdminController
 
 					if ($prefix_key == 'PaymentModule.php')
 						$prefix_key = 'PaymentModule';
+					if ($prefix_key == 'Tools.php')
+						$prefix_key = 'Tools';
 
 					// Get content for this file
 					$content = file_get_contents($file_path);
