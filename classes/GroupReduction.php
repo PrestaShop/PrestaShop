@@ -132,6 +132,9 @@ class GroupReductionCore extends ObjectModel
 
 	public static function getValueForProduct($id_product, $id_group)
 	{
+		if (!Configuration::get('PS_GROUP_FEATURE_ACTIVE'))
+			return 0;
+	
 		if (!isset(self::$reduction_cache[$id_product.'-'.$id_group]))
 			self::$reduction_cache[$id_product.'-'.$id_group] = Db::getInstance()->getValue('
 			SELECT `reduction`
