@@ -38,7 +38,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.8.9';
+		$this->version = '1.9.0';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -1347,9 +1347,7 @@ class BlockLayered extends Module
 
 
 		$this->context->controller->addJS(($this->_path).'blocklayered.js');
-		$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
-		$this->context->controller->addJQueryUI('ui.slider');
-		$this->context->controller->addCSS(_PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css"');		
+		$this->context->controller->addJQueryUI('ui.slider');		
 		$this->context->controller->addCSS(($this->_path).'blocklayered-15.css', 'all');
 		$this->context->controller->addJQueryPlugin('scrollTo');
 
