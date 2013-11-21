@@ -190,14 +190,20 @@ class TabCore extends ObjectModel
 	 */
 	public static function getTab($id_lang, $id_tab)
 	{
-		/* Tabs selection */
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT *
-			FROM `'._DB_PREFIX_.'tab` t
-			LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl
-				ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
-			WHERE t.`id_tab` = '.(int)$id_tab
-		);
+		$cache_id = 'Tab::getTab_'.(int)$id_lang.'-'.(int)$id_tab;
+		if (!Cache::isStored($cache_id))
+		{
+			/* Tabs selection */
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+				SELECT *
+				FROM `'._DB_PREFIX_.'tab` t
+				LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl
+					ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
+				WHERE t.`id_tab` = '.(int)$id_tab
+			);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**

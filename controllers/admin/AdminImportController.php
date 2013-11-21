@@ -2019,7 +2019,7 @@ class AdminImportControllerCore extends AdminController
 						$myGroup = new Group();
 						$myGroup->name = Array($id_lang => $group);
 						if ($id_lang != $default_language_id)
-							$myGroup->name = array_merge($myGroup->name, array($default_language_id => $group));
+							$myGroup->name = $myGroup->name + array($default_language_id => $group);
 						$myGroup->price_display_method = 1;
 						$myGroup->add();
 						if (Validate::isLoadedObject($myGroup))

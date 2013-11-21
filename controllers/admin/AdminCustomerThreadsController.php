@@ -309,12 +309,15 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				$cm = new CustomerMessage();
 				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = (int)Tools::getValue('id_customer_thread');
-				$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
+				$cm->ip_address = ip2long(Tools::getRemoteAddr());
 				$current_employee = $this->context->employee;
 				$id_employee = (int)Tools::getValue('id_employee_forward');
 				$employee = new Employee($id_employee);
 				$email = Tools::getValue('email');
-				if ($id_employee && $employee && Validate::isLoadedObject($employee))
+				$message = Tools::getValue('message_forward');
+				if (($error = $cm->validateField('message', $message, null, array(), true)) !== true)
+					$this->errors[] = $error;
+				elseif ($id_employee && $employee && Validate::isLoadedObject($employee))
 				{
 					$params = array(
 					'{messages}' => Tools::nl2br(stripslashes($output)),
@@ -333,7 +336,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						null, null, _PS_MAIL_DIR_, true))
 					{
 						$cm->private = 1;
-						$cm->message = $this->l('Message forwarded to').' '.$employee->firstname.' '.$employee->lastname."\n".$this->l('Comment:').' '.$_POST['message_forward'];
+						$cm->message = $this->l('Message forwarded to').' '.$employee->firstname.' '.$employee->lastname."\n".$this->l('Comment:').' '.$message;
 						$cm->add();
 					}
 				}
@@ -352,7 +355,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						$current_employee->email, $current_employee->firstname.' '.$current_employee->lastname,
 						null, null, _PS_MAIL_DIR_, true))
 					{
-						$cm->message = $this->l('Message forwarded to').' '.$email."\n".$this->l('Comment:').' '.$_POST['message_forward'];
+						$cm->message = $this->l('Message forwarded to').' '.$email."\n".$this->l('Comment:').' '.$message;
 						$cm->add();
 					}
 				}
@@ -368,10 +371,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				$cm = new CustomerMessage();
 				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = $ct->id;
-				
+				$cm->ip_address = ip2long(Tools::getRemoteAddr());
 				$cm->message = Tools::getValue('reply_message');
-				$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
-				if (isset($_FILES) && !empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0)
+				if (($error = $cm->validateField('message', $cm->message, null, array(), true)) !== true)
+					$this->errors[] = $error;
+				elseif (isset($_FILES) && !empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0)
 					$this->errors[] = Tools::displayError('An error occurred during the file upload process.');
 				elseif ($cm->add())
 				{

@@ -264,13 +264,17 @@ class AddressCore extends ObjectModel
 		if(!isset($id_address) || empty($id_address))
 			return false;
 
-		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT c.`active`
-		FROM `'._DB_PREFIX_.'address` a
-		LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
-		WHERE a.`id_address` = '.(int)$id_address))
-			return false;
-		return ($result['active']);
+		$cache_id = 'Address::isCountryActiveById_'.(int)$id_address;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getvalue('
+			SELECT c.`active`
+			FROM `'._DB_PREFIX_.'address` a
+			LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
+			WHERE a.`id_address` = '.(int)$id_address);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -324,12 +328,17 @@ class AddressCore extends ObjectModel
 	{
 		if (!$id_customer)
 			return false;
-
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `id_address`
-			FROM `'._DB_PREFIX_.'address`
-			WHERE `id_customer` = '.(int)$id_customer.' AND `deleted` = 0'.($active ? ' AND `active` = 1' : '')
-		);
+		$cache_id = 'Address::getFirstCustomerAddressId_'.(int)$id_customer.'-'.(bool)$active;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT `id_address`
+				FROM `'._DB_PREFIX_.'address`
+				WHERE `id_customer` = '.(int)$id_customer.' AND `deleted` = 0'.($active ? ' AND `active` = 1' : '')
+			);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -380,4 +389,3 @@ class AddressCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 }
-

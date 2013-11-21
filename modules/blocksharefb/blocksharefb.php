@@ -37,7 +37,7 @@ class blocksharefb extends Module
 			$this->tab = 'front_office_features';
 		else
 			$this->tab = 'Blocks';
-		$this->version = '1.0';
+		$this->version = '1.1';
 
 		parent::__construct();
 

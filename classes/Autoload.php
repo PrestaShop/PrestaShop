@@ -137,25 +137,17 @@ class Autoload
 
 		// Write classes index on disc to cache it
 		$filename = $this->root_dir.Autoload::INDEX_FILE;
-		if ((file_exists($filename) && !is_writable($filename)) || !is_writable(dirname($filename)))
+		$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
+		if ($filename_tmp !== false && file_put_contents($filename_tmp, $content, LOCK_EX) !== false)
 		{
-			header('HTTP/1.1 503 temporarily overloaded');
-			// Cannot use PrestaShopException in this context
-			die('/cache/class_index.php is not writable, please give write permissions (chmod 666) on this file.');
-		}
-		else
-		{
-			$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
-			if ($filename_tmp !== false && file_put_contents($filename_tmp, $content, LOCK_EX) !== false)
-			{
-				if (!@rename($filename_tmp, $filename))
-					unlink($filename_tmp);
-				@chmod($filename, 0666);
-			}
-			// $filename_tmp couldn't be written. $filename should be there anyway (even if outdated), no need to die.
+			if (!rename($filename_tmp, $filename))
+				unlink($filename_tmp);
 			else
-				error_log('Cannot write temporary file '.$filename_tmp);
-		}	
+				@chmod($filename, 0666);
+		}
+		// $filename_tmp couldn't be written. $filename should be there anyway (even if outdated), no need to die.
+		else
+			error_log('Cannot write temporary file '.$filename_tmp);
 		$this->index = $classes;
 	}
 

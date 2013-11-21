@@ -38,13 +38,14 @@ if (file_exists(_PS_THEME_DIR_.'mobile/'))
 {
 	define('_PS_THEME_MOBILE_DIR_', _PS_THEME_DIR_.'mobile/');
 	define('_THEME_MOBILE_DIR_', _THEMES_DIR_._THEME_NAME_.'/mobile/');
-	define('_PS_THEME_MOBILE_OVERRIDE_DIR_', _PS_THEME_MOBILE_DIR_.'override/');
 }
 else
 {
 	define('_PS_THEME_MOBILE_DIR_', _PS_ROOT_DIR_.'/themes/default/mobile/');
 	define('_THEME_MOBILE_DIR_', __PS_BASE_URI__.'themes/default/mobile/');
 }
+define('_PS_THEME_MOBILE_OVERRIDE_DIR_', _PS_THEME_MOBILE_DIR_.'override/');
+
 define('_THEME_MOBILE_IMG_DIR_', _THEME_MOBILE_DIR_.'img/');
 define('_THEME_MOBILE_CSS_DIR_', _THEME_MOBILE_DIR_.'css/');
 define('_THEME_MOBILE_JS_DIR_', _THEME_MOBILE_DIR_.'js/');

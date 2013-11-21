@@ -346,17 +346,12 @@ class ToolsCore
 		/* Automatically detect language if not already defined, detect_language is set in Cookie::update */
 		if ((!$cookie->id_lang || isset($cookie->detect_language)) && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
 		{
-			$array = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
-			if (Tools::strlen($array[0]) > 2)
+			$array  = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
+			$string = $array[0];
+			
+			if (Validate::isLanguageCode($string))
 			{
-				$tab = explode('-', $array[0]);
-				$string = $tab[0];
-			}
-			else
-				$string = $array[0];
-			if (Validate::isLanguageIsoCode($string))
-			{
-				$lang = new Language(Language::getIdByIso($string));
+				$lang = Language::getLanguageByIETFCode($string);
 				if (Validate::isLoadedObject($lang) && $lang->active && $lang->isAssociatedToShop())
 				{
 					Context::getContext()->language = $lang;
@@ -364,7 +359,7 @@ class ToolsCore
 				}
 			}
 		}
-		
+
 		if (isset($cookie->detect_language))
 			unset($cookie->detect_language);
 
@@ -374,7 +369,7 @@ class ToolsCore
 
 		$iso = Language::getIsoById((int)$cookie->id_lang);
 		@include_once(_PS_THEME_DIR_.'lang/'.$iso.'.php');
-
+		
 		return $iso;
 	}
 
@@ -672,10 +667,8 @@ class ToolsCore
 	public static function htmlentitiesUTF8($string, $type = ENT_QUOTES)
 	{
 		if (is_array($string))
-		{
-			$string = array_map(array('Tools', 'htmlentitiesUTF8'), $string);
-			return (string)array_shift($string);
-		}
+			return array_map(array('Tools', 'htmlentitiesUTF8'), $string);
+
 		return htmlentities((string)$string, $type, 'utf-8');
 	}
 
@@ -691,9 +684,10 @@ class ToolsCore
 
 	public static function safePostVars()
 	{
-		if (!is_array($_POST))
-			return array();
-		$_POST = array_map(array('Tools', 'htmlentitiesUTF8'), $_POST);
+		if (!isset($_POST) || !is_array($_POST))
+			$_POST = array();
+		else
+			$_POST = array_map(array('Tools', 'htmlentitiesUTF8'), $_POST);
 	}
 
 	/**
@@ -1222,6 +1216,129 @@ class ToolsCore
 	 	return (utf8_encode(substr($str, 0, $max_length - Tools::strlen($suffix)).$suffix));
 	}
 
+	/*Copied from CakePHP String utility file*/
+	public static function truncateString($text, $length = 120, $options = array())
+	{
+		$default = array(
+			'ellipsis' => '...', 'exact' => true, 'html' => true
+		);
+
+		$options = array_merge($default, $options);
+		extract($options);
+
+		if ($html)
+		{
+			if (Tools::strlen(preg_replace('/<.*?>/', '', $text)) <= $length) 
+				return $text;
+
+			$totalLength = Tools::strlen(strip_tags($ellipsis));
+			$openTags = array();
+			$truncate = '';
+			preg_match_all('/(<\/?([\w+]+)[^>]*>)?([^<>]*)/', $text, $tags, PREG_SET_ORDER);
+
+			foreach ($tags as $tag)
+			{
+				if (!preg_match('/img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param/s', $tag[2]))
+				{
+					if (preg_match('/<[\w]+[^>]*>/s', $tag[0]))
+						array_unshift($openTags, $tag[2]);
+					elseif (preg_match('/<\/([\w]+)[^>]*>/s', $tag[0], $closeTag))
+					{
+						$pos = array_search($closeTag[1], $openTags);
+						if ($pos !== false)
+							array_splice($openTags, $pos, 1);
+					}
+				}
+				$truncate .= $tag[1];
+				$contentLength = Tools::strlen(preg_replace('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', ' ', $tag[3]));
+
+				if ($contentLength + $totalLength > $length)
+				{
+					$left = $length - $totalLength;
+					$entitiesLength = 0;
+
+					if (preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $tag[3], $entities, PREG_OFFSET_CAPTURE))
+					{
+						foreach ($entities[0] as $entity)
+						{
+							if ($entity[1] + 1 - $entitiesLength <= $left)
+							{
+								$left--;
+								$entitiesLength += Tools::strlen($entity[0]);
+							}
+							else
+								break;
+						}
+					}
+
+					$truncate .= Tools::substr($tag[3], 0, $left + $entitiesLength);
+					break;
+				}
+				else
+				{
+					$truncate .= $tag[3];
+					$totalLength += $contentLength;
+				}
+
+				if ($totalLength >= $length)
+					break;
+			}
+		}
+		else
+		{
+			if (Tools::strlen($text) <= $length)
+				return $text;
+
+			$truncate = Tools::substr($text, 0, $length - Tools::strlen($ellipsis));
+		}
+
+		if (!$exact)
+		{
+			$spacepos = mb_strrpos($truncate, ' ');
+			if ($html)
+			{
+				$truncateCheck = Tools::substr($truncate, 0, $spacepos);
+				$lastOpenTag = Tools::strrpos($truncateCheck, '<');
+				$lastCloseTag =  Tools::strrpos($truncateCheck, '>');
+
+				if ($lastOpenTag > $lastCloseTag)
+				{
+					preg_match_all('/<[\w]+[^>]*>/s', $truncate, $lastTagMatches);
+					$lastTag = array_pop($lastTagMatches[0]);
+					$spacepos =  Tools::strrpos($truncate, $lastTag) + Tools::strlen($lastTag);
+				}
+
+				$bits = Tools::substr($truncate, $spacepos);
+				preg_match_all('/<\/([a-z]+)>/', $bits, $droppedTags, PREG_SET_ORDER);
+
+				if (!empty($droppedTags))
+				{
+					if (!empty($openTags))
+					{
+						foreach ($droppedTags as $closingTag)
+							if (!in_array($closingTag[1], $openTags))
+								array_unshift($openTags, $closingTag[1]);
+					}
+					else
+					{
+						foreach ($droppedTags as $closingTag)
+							$openTags[] = $closingTag[1];
+					}
+				}
+			}
+
+			$truncate = Tools::substr($truncate, 0, $spacepos);
+		}
+
+		$truncate .= $ellipsis;
+
+		if ($html)
+			foreach ($openTags as $tag)
+				$truncate .= '</' . $tag . '>';
+
+		return $truncate;
+	}
+
 	/**
 	* Generate date form
 	*
@@ -1319,6 +1436,13 @@ class ToolsCore
 			return mb_substr($str, (int)$start, ($length === false ? Tools::strlen($str) : (int)$length), $encoding);
 		return substr($str, $start, ($length === false ? Tools::strlen($str) : (int)$length));
 	}
+
+	public static function strrpos($str, $find, $offset = 0, $encoding = 'utf-8')
+	{
+		if (function_exists('mb_strrpos'))
+			return mb_strrpos($str, $find, $offset, $encoding);
+		return strrpos($str, $find, $offset);
+	}	
 
 	public static function ucfirst($str)
 	{
@@ -2644,6 +2768,20 @@ exit;
 			clearstatcache();
 			usleep(300);
 		}
+	}
+	
+	/**
+	 * Delete a substring from another one starting from the right
+	 * @param string $str
+	 * @param string $str_search
+	 * @return string
+	 */
+	public static function rtrimString($str, $str_search)
+	{
+		$length_str = strlen($str_search);
+		if (strlen($str) >= $length_str && substr($str, -$length_str) == $str_search)
+			$str = substr($str, 0, -$length_str);
+		return $str;
 	}
 }
 

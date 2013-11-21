@@ -230,12 +230,11 @@ function initLayered()
 
 function paginationButton() {
 	$('#pagination a').not(':hidden').each(function () {
-		if ($(this).attr('href').search(/&|\?p=/) == -1) {
-			var page = 1;
-		}
-		else {
-			var page = $(this).attr('href').replace(/^.*[&|\?]p=(\d+).*$/, '$1');
-		}
+		if ($(this).attr('href').search(/[&|\?]p=/) == -1)
+		    var page = 1;
+		else
+		    var page = $(this).attr('href').replace(/^.*[&|\?]p=(\d+).*$/, '$1');
+
 		var location = window.location.href.replace(/#.*$/, '');
 		$(this).attr('href', location+current_friendly_url.replace(/\/page-(\d+)/, '')+'/page-'+page);
 	});

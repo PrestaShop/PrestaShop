@@ -39,7 +39,7 @@ $(document).ready(function() {
 		if (typeof(productPrice) == 'undefined' || typeof(productPriceWithoutReduction) == 'undefined')
 			return;
 		
-		var points = Math.round(productPrice / point_rate);
+		var points = {$points};
 		var total_points = points_in_cart + points;
 		var voucher = total_points * point_value;
 		if (!none_award && productPriceWithoutReduction != productPrice) {

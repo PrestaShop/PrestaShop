@@ -793,7 +793,7 @@ class AdminPerformanceControllerCore extends AdminController
 			{
 				$new_settings = $prev_settings = file_get_contents(_PS_ROOT_DIR_.'/config/settings.inc.php');
 				$cache_active = (bool)Tools::getValue('cache_active');
-
+				
 				if ($caching_system = Tools::getValue('caching_system'))
 				{
 					$new_settings = preg_replace(
@@ -807,7 +807,6 @@ class AdminPerformanceControllerCore extends AdminController
 					$cache_active = false;
 					$this->errors[] = Tools::displayError('The caching system is missing.');
 				}
-				
 				if ($cache_active)
 				{
 					if ($caching_system == 'CacheMemcache' && !extension_loaded('memcache'))
@@ -912,5 +911,4 @@ class AdminPerformanceControllerCore extends AdminController
 		}
 		die;
     }
-
 }

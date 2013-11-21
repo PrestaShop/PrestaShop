@@ -93,6 +93,8 @@ class ReferralProgramModule extends ObjectModel
 		$cartRule->date_to = date('Y-m-d H:i:s', time() + 31536000); // + 1 year
 		$cartRule->code = $this->getDiscountPrefix().Tools::passwdGen(6);
 		$cartRule->name = Configuration::getInt('REFERRAL_DISCOUNT_DESCRIPTION');
+		if (empty($cartRule->name))
+			$cartRule->name = 'Referral reward';
 		$cartRule->id_customer = (int)$id_customer;
 		$cartRule->reduction_currency = (int)$id_currency;
 

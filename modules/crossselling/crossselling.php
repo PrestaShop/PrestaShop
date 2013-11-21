@@ -35,7 +35,7 @@ class CrossSelling extends Module
 	{
 		$this->name = 'crossselling';
 		$this->tab = 'front_office_features';
-		$this->version = 0.7;
+		$this->version = 0.8;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -44,9 +44,6 @@ class CrossSelling extends Module
 
 		$this->displayName = $this->l('Cross Selling');
 		$this->description = $this->l('Customers who bought this product also bought:');
-
-		if (!$this->isRegisteredInHook('header'))
-			$this->registerHook('header');
 	}
 
 	public function install()

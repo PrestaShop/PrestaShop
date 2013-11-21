@@ -2688,6 +2688,10 @@ class AdminProductsControllerCore extends AdminController
 					$product_supplier->id_product = $product->id;
 					$product_supplier->id_product_attribute = 0;
 					$product_supplier->id_supplier = $id;
+					if ($this->context->currency->id)
+						$product_supplier->id_currency = (int)$this->context->currency->id;
+					else
+						$product_supplier->id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
 					$product_supplier->save();
 
 					$associated_suppliers[] = $product_supplier;
