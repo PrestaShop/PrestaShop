@@ -1440,14 +1440,23 @@ class OrderCore extends ObjectModel
 	}
 
 	/**
-	 * Gennerate a unique reference for orders generated with the same cart id
+	 * Generate a unique reference for orders generated with the same cart id
 	 * This references, is usefull for check payment
 	 *
 	 * @return String
 	 */
-	public static function generateReference()
+	public static function generateReference($id_order,$id_shop)
 	{
-		return strtoupper(Tools::passwdGen(9, 'NO_NUMERIC'));
+		if (Configuration::get('PS_USE_ORDER_ID'))
+		{
+			$order_number = sprintf('%06d', $id_order);
+			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
+				$order_number = $id_shop.$order_number;
+
+			return $order_number;
+		}
+		else
+			return strtoupper(Tools::passwdGen(9, 'NO_NUMERIC'));
 	}
 
 	public function orderContainProduct($id_product)

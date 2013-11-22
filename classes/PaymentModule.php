@@ -170,8 +170,6 @@ abstract class PaymentModuleCore extends Module
 
 			$order_list = array();
 			$order_detail_list = array();
-			$reference = Order::generateReference();
-			$this->currentOrderReference = $reference;
 
 			$order_creation_failed = false;
 			$cart_total_paid = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(true, Cart::BOTH), 2);
@@ -218,7 +216,6 @@ abstract class PaymentModuleCore extends Module
 					$order->id_currency = $this->context->currency->id;
 					$order->id_lang = (int)$this->context->cart->id_lang;
 					$order->id_cart = (int)$this->context->cart->id;
-					$order->reference = $reference;
 					$order->id_shop = (int)$this->context->shop->id;
 					$order->id_shop_group = (int)$this->context->shop->id_shop_group;
 
@@ -261,6 +258,13 @@ abstract class PaymentModuleCore extends Module
 
 					// Creating order
 					$result = $order->add();
+
+					if(!isset($reference))
+						$reference = Order::generateReference($order->id, $order->id_shop);
+
+					$this->currentOrderReference = $reference;
+					$order->reference = $reference;
+					$order->update();
 
 					if (!$result)
 						throw new PrestaShopException('Can\'t save Order');
