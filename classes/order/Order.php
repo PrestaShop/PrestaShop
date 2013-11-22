@@ -1381,6 +1381,7 @@ class OrderCore extends ObjectModel
 		$this->invoice_number = $res['invoice_number'];
 		$this->delivery_date = $res['delivery_date'];
 		$this->delivery_number = $res['delivery_number'];
+		$this->current_state = $id_order_state;
 		$this->update();
 
 		$history->addWithemail();		
