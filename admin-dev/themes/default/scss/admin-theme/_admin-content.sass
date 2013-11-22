@@ -48,15 +48,15 @@ body
 		i, a
 			color: contrasted($bg-panel-heading-color)
 		.badge
-			background-color: $brand-primary
-			+border-radius(0)
-			height: 29px
-			line-height: 25px
-			font-size: 1.3em
-			margin-right: 7px
-			font-weight: 300
-			float: left
-			margin-left: -5px
+			background: white
+			border: solid 2px lighten($brand-primary,35%)
+			+border-radius(20px)
+			color: $brand-primary
+			line-height: 1.2em
+			font-size: 1em
+			padding: 0 10px
+			font-weight: 700
+			margin-left: 10px
 		.panel-heading-action
 			@extend .pull-right
 			margin-right: -5px

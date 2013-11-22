@@ -58,24 +58,25 @@
 	<div class="row">
 		{*left*}
 		<div class="col-lg-6">
-			<div class="panel">
-				<div class="panel-heading text-center">
+			<div class="panel clearfix">
+				<div class="panel-heading">
 					<i class="icon-user"></i>
 					{$customer->firstname}
 					{$customer->lastname}
+					[{$customer->id|string_format:"%06d"}]
+					-
+					<a href="mailto:{$customer->email}"><i class="icon-envelope"></i>
+						{$customer->email}
+					</a>
+					<a class="btn btn-default pull-right" href="{$current}&updatecustomer&id_customer={$customer->id}&token={$token}">
+						<i class="icon-edit"></i>
+						{l s='Edit'}
+					</a>
 				</div>
 				<ul class="list-unstyled col-lg-6">
 					<li>
 						{l s='Title:'}
 						<span>{$gender->name}</span>
-					</li>
-					<li>
-						{l s='Email:'}
-						<a href="mailto:{$customer->email}">{$customer->email}</a>
-					</li>
-					<li>
-						{l s='ID:'}
-						<span>{$customer->id|string_format:"%06d"}</span>
 					</li>
 					<li>
 						{l s='Registration date:'}
@@ -96,7 +97,6 @@
 						{/if}
 					</li>
 				</ul>
-
 				<ul class="list-unstyled col-lg-6">
 					<li>
 						{l s='Language:'}
@@ -109,27 +109,28 @@
 						</span>
 					</li>
 					<li>
-						{l s='Newsletter:'} {if $customer->newsletter}
+						 {if $customer->newsletter}
 							<span class="label label-success">
-								<i class="icon-check-sign"></i> {l s='Registered'}
+								<i class="icon-check-sign"></i>
+								{l s='Newsletter'}
 							</span>
 						{else}
 							<span class="label label-warning">
-								<i class="icon-ban-circle"></i> {l s='Unregistered'}
+								<i class="icon-ban-circle"></i>
+								{l s='Newsletter'}
 							</span>
 						{/if}
 					</li>
 					<li>
-						{l s='Opt in:'}
 						{if $customer->optin}
 						<span class="label label-success">
 							<i class="icon-check-sign"></i>
-							{l s='Registered'}
+							{l s='Opt in'}
 						</span>
 						{else}
 						<span class="label label-warning">
 							<i class="icon-ban-circle"></i>
-							{l s='Unregistered'}
+							{l s='Opt in'}
 						</span>
 						{/if}
 					</li>
@@ -160,9 +161,7 @@
 						{/if}
 					</li>
 				</ul>
-
 				{if $customer->isGuest()}
-				<div>
 					{l s='This customer is registered as.'} <b>{l s='Guest'}</b>
 					{if !$customer_exists}
 					<form method="post" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
@@ -173,34 +172,31 @@
 						{l s='This feature generates a random password before sending an email to your customer.'}
 					</form>
 					{else}
-				</div>
-				<div>
-					{l s='A registered customer account using the defined email address already exists. '}
+					<p class="text-muted text-center">
+						{l s='A registered customer account using the defined email address already exists. '}
+					</p>
 					{/if}
-				</div>
 				{/if}
-				<a class="btn btn-default" href="{$current}&updatecustomer&id_customer={$customer->id}&token={$token}">
-					<i class="icon-edit"></i> {l s='Edit'}
-				</a>
 			</div>
 			<div class="panel">
 				<div class="panel-heading">
 					<i class="icon-file"></i> {l s='Orders'} <span class="badge">{count($orders)}</span>
 				</div>
 				{if $orders AND count($orders)}
-
 					{assign var=count_ok value=count($orders_ok)}
 					{assign var=count_ko value=count($orders_ko)}
-
 					<div class="panel">
 						<div class="row">
 							<div class="col-lg-6">
 								<i class="icon-ok-circle icon-big"></i>
-								{l s='Valid orders:'} <span class="label label-success">{$count_ok}</span> {l s='for'} {$total_ok}
+								{l s='Valid orders:'}
+								<span class="label label-success">{$count_ok}</span>
+								{l s='for'} {$total_ok}
 							</div>
 							<div class="col-lg-6">
 								<i class="icon-exclamation-sign icon-big"></i>
-								{l s='Invalid orders:'} <span class="label label-danger">{$count_ko}</span>
+								{l s='Invalid orders:'}
+								<span class="label label-danger">{$count_ko}</span>
 							</div>
 						</div>
 					</div>
@@ -209,13 +205,13 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th class="center">{l s='ID'}</th>
-									<th>{l s='Date'}</th>
-									<th>{l s='Payment: '}</th>
-									<th>{l s='State'}</th>
-									<th>{l s='Products'}</th>
-									<th>{l s='Total spent'}</th>
-									<th class="text-right">{l s='Actions'}</th>
+									<th class="center"><span class="title_box ">{l s='ID'}</span></th>
+									<th><span class="title_box">{l s='Date'}</span></th>
+									<th><span class="title_box">{l s='Payment'}</span></th>
+									<th><span class="title_box">{l s='State'}</span></th>
+									<th><span class="title_box">{l s='Products'}</span></th>
+									<th><span class="title_box ">{l s='Total spent'}</span></th>
+									<th></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -229,7 +225,7 @@
 									<td align="right">{$order['total_paid_real']}</td>
 									<td class="text-right">
 										<a class="btn btn-default" href="?tab=AdminOrders&id_order={$order['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}">
-											<i class='icon-eye-open'></i> {l s='View'}
+											<i class='icon-search'></i> {l s='View'}
 										</a>
 									</td>
 								</tr>
@@ -242,36 +238,32 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th>{l s='ID'}</th>
-									<th>{l s='Date'}</th>
-									<th>{l s='Payment: '}</th>
-									<th>{l s='State'}</th>
-									<th>{l s='Products'}</th>
-									<th>{l s='Total spent'}</th>
-									<th class="text-right">{l s='Actions'}</th>
+									<th><span class="title_box ">{l s='ID'}</span></th>
+									<th><span class="title_box ">{l s='Date'}</span></th>
+									<th><span class="title_box ">{l s='Payment'}</span></th>
+									<th><span class="title_box ">{l s='State'}</span></th>
+									<th><span class="title_box ">{l s='Products'}</span></th>
+									<th><span class="title_box ">{l s='Total spent'}</span></th>
 								</tr>
 							</thead>
 							<tbody>
 								{foreach $orders_ko AS $key => $order}
 								<tr onclick="document.location = '?tab=AdminOrders&id_order={$order['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}'">
 									<td>{$order['id_order']}</td>
-									<td>{dateFormat date=$order['date_add'] full=0}</td>
+									<td><a href="?tab=AdminOrders&id_order={$order['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}">{dateFormat date=$order['date_add'] full=0}</a></td>
 									<td>{$order['payment']}</td>
 									<td>{$order['order_state']}</td>
-									<td align="right">{$order['nb_products']}</td>
-									<td align="right">{$order['total_paid_real']}</td>
-									<td class="text-right">
-										<a class="btn btn-default" href="?tab=AdminOrders&id_order={$order['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}">
-											<i class='icon-eye-open'></i> {l s='View'}
-										</a>
-									</td>
+									<td>{$order['nb_products']}</td>
+									<td>{$order['total_paid_real']}</td>
 								</tr>
 								{/foreach}
 							</tbody>
 						</table>	
 					{/if}
 				{else}
+				<p class="text-muted text-center">
 					{l s='%1$s %2$s has not placed any orders yet' sprintf=[$customer->firstname, $customer->lastname]}
+				</p>
 				{/if}
 			</div>
 
@@ -283,90 +275,110 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th>{l s='ID'}</th>
-								<th>{l s='Date'}</th>
-								<th>{l s='Carrier'}</th>
-								<th>{l s='Total'}</th>
-								<th class="text-right">{l s='Actions'}</th>
+								<th><span class="title_box ">{l s='ID'}</span></th>
+								<th><span class="title_box ">{l s='Date'}</a></span></th>
+								<th><span class="title_box ">{l s='Carrier'}</span></th>
+								<th><span class="title_box ">{l s='Total'}</span></th>
 							</tr>
 						</thead>
 						<tbody>
 						{foreach $carts AS $key => $cart}
 							<tr onclick="document.location = '?tab=AdminCarts&id_cart={$cart['id_cart']}&viewcart&token={getAdminToken tab='AdminCarts'}'">
 								<td>{$cart['id_cart']}</td>
-								<td>{dateFormat date=$cart['date_upd'] full=0}</td>
-								<td>{$cart['name']}</td>
-								<td align="right">{$cart['total_price']}</td>
-								<td class="text-right">
-									<a class="btn btn-default" href="index.php?tab=AdminCarts&id_cart={$cart['id_cart']}&viewcart&token={getAdminToken tab='AdminCarts'}">
-										<i class='icon-eye-open'></i> {l s='View'}
+								<td>
+									<a href="index.php?tab=AdminCarts&id_cart={$cart['id_cart']}&viewcart&token={getAdminToken tab='AdminCarts'}">
+										{dateFormat date=$cart['date_upd'] full=0}
 									</a>
 								</td>
+								<td>{$cart['name']}</td>
+								<td>{$cart['total_price']}</td>
 							</tr>
 						{/foreach}
 						</tbody>
 					</table>
 				{else}
-					{l s='No cart is available'}.
+				<p class="text-muted text-center">
+					{l s='No cart is available'}
+				</p>
 				{/if}
 			</div>
-
 			{if $products AND count($products)}
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-archive"></i> {l s='Products:'} <span class="badge">{count($products)}</span>
+					<i class="icon-archive"></i> {l s='Purchased products'} <span class="badge">{count($products)}</span>
 				</div>
 				<table class="table">
 					<thead>
 						<tr>
-							<th class="center">{l s='Date'}</th>
-							<th class="center">{l s='Name'}</th>
-							<th class="center">{l s='Quantity'}</th>
-							<th class="text-right">{l s='Actions'}</th>
+							<th><span class="title_box">{l s='Date'}</span></th>
+							<th><span class="title_box">{l s='Name'}</span></th>
+							<th><span class="title_box">{l s='Quantity'}</span></th>
 						</tr>
 					</thead>
 					<tbody>
 						{foreach $products AS $key => $product}
 						<tr onclick="document.location = '?tab=AdminOrders&id_order={$product['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}'">
 							<td>{dateFormat date=$order['date_add'] full=0}</td>
-							<td>{$product['product_name']}</td>
-							<td align="right">{$product['product_quantity']}</td>
-							<td class="text-right">
+							<td>
 								<a class="btn btn-default" href="?tab=AdminOrders&id_order={$product['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}">
-									<i class='icon-eye-open'></i> {l s='View'}
+									{$product['product_name']}
 								</a>
 							</td>
+							<td>{$product['product_quantity']}</td>
 						</tr>
 						{/foreach}
 					</tbody>
 				</table>
 			</div>
 			{/if}
+			{if count($interested)}
+			<div class="panel">
+				<div class="panel-heading">
+					<i class="icon-archive"></i> {l s='Purchased products'} <span class="badge">{count($interested)}</span>
+				</div>
+				<table class="table">
+					<thead>
+						<tr>
+							<th><span class="title_box ">{l s='ID'}</span></th>
+							<th><span class="title_box ">{l s='Name'}</span></th>
+						</tr>
+					</thead>
+					<tbody>
+					{foreach $interested as $key => $p}
+						<tr onclick="document.location = '{$p['url']}'">
+							<td>{$p['id']}</td>
+							<td><a href="{$p['url']}">{$p['name']}</a></td>
+						</tr>
+					{/foreach}
+					</tbody>
+				</table>
+			</div>
+			{/if}
 		</div>
-
 		{*right*}
 		<div class="col-lg-6">
-
 			<div class="panel">
 				<div class="panel-heading">
 					<i class="icon-eye-close"></i> {l s='Add a private note'}
 				</div>
 				<div class="alert alert-info">{l s='This note will be displayed to all employees but not to customers.'}</div>
 				<form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote();return false;" >
-					<div class="row">
+					<div class="form-group">
 						<div class="col-lg-12">
 							<textarea name="note" id="noteContent" onkeyup="$(this).val().length > 0 ? $('#submitCustomerNote').removeAttr('disabled') : $('#submitCustomerNote').attr('disabled', 'disabled')">{$customer_note}</textarea>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-lg-12">
-							<button type="submit" id="submitCustomerNote" class="btn btn-default pull-right" disabled="disabled" /><i class="icon-save"></i> {l s='Save'}</button>
+							<button type="submit" id="submitCustomerNote" class="btn btn-default pull-right" disabled="disabled" />
+								<i class="icon-save"></i>
+								{l s='Save'}
+							</button>
 						</div>
 					</div>
 					<span id="note_feedback"></span>
 				</form>
 			</div>
-
 			<div class="panel">
 				<div class="panel-heading">
 					<i class="icon-envelope"></i> {l s='Messages'} <span class="badge">{count($messages)}</span>
@@ -374,9 +386,9 @@
 				{if count($messages)}
 					<table class="table">
 						<thead>
-							<th>{l s='Status'}</th>
-							<th>{l s='Message'}</th>
-							<th>{l s='Sent on'}</th>
+							<th><span class="title_box">{l s='Status'}</span></th>
+							<th><span class="title_box">{l s='Message'}</span></th>
+							<th><span class="title_box">{l s='Sent on'}</span></th>
 						</thead>
 						{foreach $messages AS $message}
 							<tr>
@@ -391,10 +403,11 @@
 						{/foreach}
 					</table>
 				{else}
+				<p class="text-muted text-center">
 					{l s='%1$s %2$s has never contacted you' sprintf=[$customer->firstname, $customer->lastname]}
+				</p>
 				{/if}
 			</div>
-
 			<div class="panel">
 				<div class="panel-heading">
 					<i class="icon-ticket"></i> {l s='Vouchers'} <span class="badge">{count($discounts)}</span>
@@ -403,28 +416,31 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th>{l s='ID'}</th>
-								<th>{l s='Code'}</th>
-								<th>{l s='Name'}</th>
-								<th>{l s='Status'}</th>
-								<th class="text-right">{l s='Actions'}</th>
+								<th><span class="title_box ">{l s='ID'}</span></th>
+								<th><span class="title_box ">{l s='Code'}</span></th>
+								<th><span class="title_box ">{l s='Name'}</span></th>
+								<th><span class="title_box ">{l s='Status'}</span></th>
 							<tr/>
 						</thead>
 						<tbody>
 					{foreach $discounts AS $key => $discount}
 							<tr>
-								<td align="center">{$discount['id_cart_rule']}</td>
+								<td>{$discount['id_cart_rule']}</td>
 								<td>{$discount['code']}</td>
 								<td>{$discount['name']}</td>
-								<td align="center">
-									<img src="../img/admin/{if $discount['active']}enabled.gif{else}disabled.gif{/if}" alt="{l s='Status'}" title="{l s='Status'}" />
+								<td>
+									{if $discount['active']}
+										<i class="icon-ok"></i>
+									{else}
+										<i class="icon-remove"></i>
+									{/if}
 								</td>
-								<td class="text-right">
+								<td>
 									<a href="?tab=AdminCartRules&id_cart_rule={$discount['id_cart_rule']}&addcart_rule&token={getAdminToken tab='AdminCartRules'}">
-										<img src="../img/admin/edit.gif" />
+										<i class="icon-pencil"></i>
 									</a>
 									<a href="?tab=AdminCartRules&id_cart_rule={$discount['id_cart_rule']}&deletecart_rule&token={getAdminToken tab='AdminCartRules'}">
-										<img src="../img/admin/delete.gif" />
+										<i class="icon-remove"></i>
 									</a>
 								</td>
 							</tr>
@@ -432,7 +448,9 @@
 					{/foreach}
 					</table>
 				{else}
-					{l s='%1$s %2$s has no discount vouchers' sprintf=[$customer->firstname, $customer->lastname]}.
+				<p class="text-muted text-center">
+					{l s='%1$s %2$s has no discount vouchers' sprintf=[$customer->firstname, $customer->lastname]}
+				</p>
 				{/if}
 			</div>
 
@@ -444,11 +462,11 @@
 				<table class="table">
 					<thead>
 					<tr>
-						<th>{l s='Date'}</th>
-						<th>{l s='Pages viewed'}</th>
-						<th>{l s='Total time'}</th>
-						<th>{l s='Origin'}</th>
-						<th>{l s='IP Address'}</th>
+						<th><span class="title_box">{l s='Date'}</span></th>
+						<th><span class="title_box">{l s='Pages viewed'}</span></th>
+						<th><span class="title_box">{l s='Total time'}</span></th>
+						<th><span class="title_box">{l s='Origin'}</span></th>
+						<th><span class="title_box">{l s='IP Address'}</span></th>
 					</tr>
 					</thead>
 					<tbody>
@@ -468,25 +486,28 @@
 
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-group"></i> {l s='Groups'} <span class="badge">{count($groups)}</span>
+					<i class="icon-group"></i>
+					{l s='Groups'}
+					<span class="badge">{count($groups)}</span>
+					<a class="btn btn-default pull-right" href="{$current}&updatecustomer&id_customer={$customer->id}&token={$token}">
+						<i class="icon-edit"></i> {l s='Edit'}
+					</a>
 				</div>
 				{if $groups AND count($groups)}
 				<table class="table">
 					<thead>
 						<tr>
-							<th>{l s='ID'}</th>
-							<th>{l s='Name'}</th>
-							<th class="text-right">{l s='Actions'}</th>
+							<th><span class="title_box ">{l s='ID'}</span></th>
+							<th><span class="title_box ">{l s='Name'}</span></th>
 						</tr>
 					</thead>
 					<tbody>
 						{foreach $groups AS $key => $group}
 						<tr onclick="document.location = '?tab=AdminGroups&id_group={$group['id_group']}&viewgroup&token={getAdminToken tab='AdminGroups'}'">
 							<td>{$group['id_group']}</td>
-							<td>{$group['name']}</td>
-							<td class="text-right">
-								<a class="btn btn-default" href="?tab=AdminGroups&id_group={$group['id_group']}&viewgroup&token={getAdminToken tab='AdminGroups'}">
-									<i class='icon-eye-open'></i> {l s='View'}
+							<td>
+								<a href="?tab=AdminGroups&id_group={$group['id_group']}&viewgroup&token={getAdminToken tab='AdminGroups'}">
+									{$group['name']}
 								</a>
 							</td>
 						</tr>
@@ -494,45 +515,13 @@
 					</tbody>
 				</table>
 				{/if}
-				<a class="btn btn-default" href="{$current}&updatecustomer&id_customer={$customer->id}&token={$token}">
-					<i class="icon-edit"></i> {l s='Edit'}
-				</a>
 			</div>
 		</div>
 	</div>
 
 	<div class="row">
 		<div class="col-lg-6">
-			{*todo add next elements*}
-			{if count($interested)}
-			<div class="panel">
-				<div class="panel-heading">
-					<i class="icon-archive"></i> {l s='Products:'} <span class="badge">{count($interested)}</span>
-				</div>
-				<table class="table">
-					<thead>
-						<tr>
-							<th>{l s='ID'}</th>
-							<th>{l s='Name'}</th>
-							<th class="text-right">{l s='Actions'}</th>
-						</tr>
-					</thead>
-					<tbody>
-					{foreach $interested as $key => $p}
-						<tr onclick="document.location = '{$p['url']}'">
-							<td>{$p['id']}</td>
-							<td>{$p['name']}</td>
-							<td class="text-right">
-								<a class="btn btn-default" href="{$p['url']}">
-									<i class='icon-eye-open'></i> {l s='View'}
-								</a>
-							</td>
-						</tr>
-					{/foreach}
-					</tbody>
-				</table>
-			</div>
-			{/if}
+			
 		</div>
 		<div class="col-lg-6">
 			{if count($referrers)}
@@ -543,8 +532,8 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th>{l s='Date'}</th>
-							<th>{l s='Name'}</th>
+							<th><span class="title_box ">{l s='Date'}</span></th>
+							<th><span class="title_box ">{l s='Name'}</span></th>
 							{if $shop_is_feature_active}<th>{l s='Shop'}</th>{/if}
 						</tr>
 					</thead>
@@ -575,12 +564,12 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th>{l s='Company'}</th>
-								<th>{l s='Name'}</th>
-								<th>{l s='Address'}</th>
-								<th>{l s='Country'}</th>
-								<th>{l s='Phone number(s)'}</th>
-								<th class="text-right">{l s='Actions'}</th>
+								<th><span class="title_box ">{l s='Company'}</span></th>
+								<th><span class="title_box ">{l s='Name'}</span></th>
+								<th><span class="title_box ">{l s='Address'}</span></th>
+								<th><span class="title_box ">{l s='Country'}</span></th>
+								<th><span class="title_box ">{l s='Phone number(s)'}</span></th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -607,9 +596,12 @@
 											<span class="caret"></span>
 										</button>
 										<ul class="dropdown-menu">
-											<li><a href="?tab=AdminAddresses&id_address={$address['id_address']}&deleteaddress&token={getAdminToken tab='AdminAddresses'}">
-											<i class="icon-trash"></i> {l s='Delete'}
-										</a></li>
+											<li>
+												<a href="?tab=AdminAddresses&id_address={$address['id_address']}&deleteaddress&token={getAdminToken tab='AdminAddresses'}">
+													<i class="icon-trash"></i>
+													{l s='Delete'}
+												</a>
+											</li>
 										</ul>
 									</div>
 								</td>
@@ -618,7 +610,9 @@
 						</tbody>
 					</table>
 				{else}
-					{l s='%1$s %2$s has not registered any addresses yet' sprintf=[$customer->firstname, $customer->lastname]}
+					<p class="text-muted text-center">
+						{l s='%1$s %2$s has not registered any addresses yet' sprintf=[$customer->firstname, $customer->lastname]}
+					</p>
 				{/if}
 			</div>
 		</div>
