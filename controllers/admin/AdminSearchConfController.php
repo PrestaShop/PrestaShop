@@ -201,6 +201,10 @@ class AdminSearchConfControllerCore extends AdminController
 			);
 		$this->identifier_name = 'alias';
 		parent::initPageHeaderToolbar();
+			$this->toolbar_btn['import'] = array(
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=alias',
+				'desc' => $this->l('Import')
+			);
 	}
 
 	public function initProcess()
