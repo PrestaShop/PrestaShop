@@ -2482,6 +2482,11 @@ class AdminProductsControllerCore extends AdminController
 				'class' => 'toolbar-new'
 			);
 		}
+		else
+			$this->toolbar_btn['import'] = array(
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=products',
+				'desc' => $this->l('Import')
+			);
 		
 		$this->context->smarty->assign('toolbar_scroll', 1);
 		$this->context->smarty->assign('show_toolbar', 1);
