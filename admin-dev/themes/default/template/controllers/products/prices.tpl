@@ -173,7 +173,7 @@ $(document).ready(function () {
 					</select>
 				</div>
 				<div class="col-lg-2">
-					<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminTaxRulesGroup')|escape:'htmlall':'UTF-8'}&addtax_rules_group&id_product={$product->id}" {if $tax_exclude_taxe_option}disabled="disabled"{/if}>
+					<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminTaxRulesGroup')|escape:'html':'UTF-8'}&addtax_rules_group&id_product={$product->id}" {if $tax_exclude_taxe_option}disabled="disabled"{/if}>
 						<i class="icon-plus-sign"></i>  {l s='Create new tax'} <i class="icon-external-link-sign"></i>
 					</a>
 				</div>
@@ -186,7 +186,7 @@ $(document).ready(function () {
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert">
 				{l s='Taxes are currently disabled'} :
-				<a href="{$link->getAdminLink('AdminTaxes')|escape:'htmlall':'UTF-8'}">{l s='Tax options'}</a>
+				<a href="{$link->getAdminLink('AdminTaxes')|escape:'html':'UTF-8'}">{l s='Tax options'}</a>
 				<input type="hidden" value="{$product->getIdTaxRulesGroup()}" name="id_tax_rules_group" />
 			</div>
 		</div>

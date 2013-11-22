@@ -36,7 +36,7 @@
 		<p>{l s='Please choose the warehouses associated with this product. You must also select a default warehouse. '}</p>
 	</div>	
 	<div class="row">
-		<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminWarehouses')|escape:'htmlall':'UTF-8'}&addwarehouse">{l s='Create a new warehouse'} <i class="icon-external-link-sign"></i></a>
+		<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminWarehouses')|escape:'html':'UTF-8'}&addwarehouse">{l s='Create a new warehouse'} <i class="icon-external-link-sign"></i></a>
 	</div>
 	<div class="row">
 		<div class="panel-group" id="warehouse-accordion">
@@ -76,7 +76,7 @@
 										<td>{$product_designation[$attribute['id_product_attribute']]}</td>
 										<td><input type="text"
 											name="location_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
-											value="{$location|escape:'htmlall':'UTF-8'}"
+											value="{$location|escape:'html':'UTF-8'}"
 											size="20" />
 										</td>
 									</tr>

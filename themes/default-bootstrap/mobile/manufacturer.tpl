@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture assign='page_title'}{$manufacturer->name|escape:'htmlall':'UTF-8'}{/capture}
+{capture assign='page_title'}{$manufacturer->name|escape:'html':'UTF-8'}{/capture}
 {include file='./page-title.tpl'}
 
 {include file="$tpl_dir./errors.tpl"}

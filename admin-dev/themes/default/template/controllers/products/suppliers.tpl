@@ -53,7 +53,7 @@
 		{/foreach}
 		</tbody>
 	</table>
-	<a class="btn btn-link bt-icon confirm_leave" href="{$link->getAdminLink('AdminSuppliers')|escape:'htmlall':'UTF-8'}&addsupplier">
+	<a class="btn btn-link bt-icon confirm_leave" href="{$link->getAdminLink('AdminSuppliers')|escape:'html':'UTF-8'}&addsupplier">
 		<i class="icon-plus"></i> {l s='Create a new supplier'} <i class="icon-external-link-sign"></i>
 	</a>
 </div>
@@ -103,7 +103,7 @@
 							<tr {if $index is odd}class="alt_row"{/if}>
 								<td>{$product_designation[$attribute['id_product_attribute']]}</td>
 								<td>
-									<input type="text" value="{$reference|escape:'htmlall':'UTF-8'}" name="supplier_reference_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}" />
+									<input type="text" value="{$reference|escape:'html':'UTF-8'}" name="supplier_reference_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}" />
 								</td>
 								<td>
 									<input type="text" value="{$price_te|htmlentities}" name="product_price_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}" />

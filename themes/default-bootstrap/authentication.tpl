@@ -170,7 +170,7 @@ $(document).ready(function() {
                                 <input type="text" class="is_required validate account_input form-control" data-validate="isEmail" id="email_create" name="email_create" value="{if isset($smarty.post.email_create)}{$smarty.post.email_create|stripslashes}{/if}" />
                             </div>
                             <div class="submit">
-                                {if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
+                                {if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'html':'UTF-8'}" />{/if}
                                 <button class="btn btn-default button button-medium exclusive" type="submit" id="SubmitCreate" name="SubmitCreate"><span><i class="icon-user left"></i>{l s='Create an account'}</span></button>
                                 <input type="hidden" class="hidden" name="SubmitCreate" value="{l s='Create an account'}" />
                             </div>
@@ -193,7 +193,7 @@ $(document).ready(function() {
                         </div>
                         <p class="lost_password form-group"><a href="{$link->getPageLink('password')|escape:'html'}" title="{l s='Recover your forgotten password'}" rel="nofollow">{l s='Forgot your password?'}</a></p>
                         <p class="submit">
-                            {if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
+                            {if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'html':'UTF-8'}" />{/if}
                             <button type="submit" id="SubmitLogin" name="SubmitLogin" class="button btn btn-default button-medium"><span><i class="icon-lock left"></i>{l s='Sign in'}</span></button>
                         </p>
                     </div>
@@ -624,7 +624,7 @@ $(document).ready(function() {
         <div class="submit clearfix">
             <input type="hidden" name="email_create" value="1" />
             <input type="hidden" name="is_new_customer" value="1" />
-            {if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
+            {if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'html':'UTF-8'}" />{/if}
             <button type="submit" name="submitAccount" id="submitAccount" class="btn btn-default button button-medium"><span>{l s='Register'}<i class="icon-chevron-right right"></i></span></button>
             <p class="pull-right required"><span><sup>*</sup>{l s='Required field'}</span></p>
         </div>

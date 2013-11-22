@@ -89,7 +89,7 @@
 				{if count($files_to_import)}
 					<select name="csv">
 						{foreach $files_to_import AS $filename}
-							<option value="{$filename}"{if $csv_selected == $filename} selected="selected"{/if}>{$filename|escape:'htmlall':'UTF-8'}</option>
+							<option value="{$filename}"{if $csv_selected == $filename} selected="selected"{/if}>{$filename|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				<div class="clearfix">&nbsp;</div>
@@ -183,14 +183,14 @@
 			<label class="control-label col-lg-3">{l s='Field separator'} </label>
 			<div class="col-lg-6 input-group">
 				<span class="input-group-addon">{l s='e.g. '}"1; Ipod; 129.90; 5"</span>
-				<input type="text" size="2" value="{if isset($separator_selected)}{$separator_selected|escape:'htmlall':'UTF-8'}{else};{/if}" name="separator"/>
+				<input type="text" size="2" value="{if isset($separator_selected)}{$separator_selected|escape:'html':'UTF-8'}{else};{/if}" name="separator"/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3">{l s='Multiple value separator'} </label>
 			<div class="col-lg-6 input-group">
 				<span class="input-group-addon">{l s='e.g. '}"Ipod; red.jpg, blue.jpg, green.jpg; 129.90"</span>
-				<input type="text" size="2" value="{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected|escape:'htmlall':'UTF-8'}{else},{/if}" name="multiple_value_separator"/>
+				<input type="text" size="2" value="{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected|escape:'html':'UTF-8'}{else},{/if}" name="multiple_value_separator"/>
 			</div>
 		</div>
 		<div class="form-group">

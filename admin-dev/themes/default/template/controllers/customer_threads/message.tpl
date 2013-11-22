@@ -156,7 +156,7 @@
 			</dl>
 			<dl class="dl-horizontal">
 				<dt>{l s='Message:'}</dt>
-				<dd>{$message.message|escape:'htmlall':'UTF-8'|nl2br}</dd>
+				<dd>{$message.message|escape:'html':'UTF-8'|nl2br}</dd>
 			</dl>
 		</div>
 	</div>
