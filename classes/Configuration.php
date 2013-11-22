@@ -232,10 +232,10 @@ class ConfigurationCore extends ObjectModel
 	{
 		$id_lang = (int)$id_lang;
 		if ($id_shop)
-			return isset(self::$_CONF[$id_lang]['shop'][$id_shop]) && array_key_exists($key, self::$_CONF[$id_lang]['shop'][$id_shop]);
+			return isset(self::$_CONF[$id_lang]['shop'][$id_shop][$key]) || (isset(self::$_CONF[$id_lang]['shop'][$id_shop]) && array_key_exists($key, self::$_CONF[$id_lang]['shop'][$id_shop]));
 		elseif ($id_shop_group)
-			return isset(self::$_CONF[$id_lang]['group'][$id_shop_group]) && array_key_exists($key, self::$_CONF[$id_lang]['group'][$id_shop_group]);
-		return isset(self::$_CONF[$id_lang]['global']) && array_key_exists($key, self::$_CONF[$id_lang]['global']);
+			return isset(self::$_CONF[$id_lang]['group'][$id_shop_group][$key]) || (isset(self::$_CONF[$id_lang]['group'][$id_shop_group]) && array_key_exists($key, self::$_CONF[$id_lang]['group'][$id_shop_group]));
+		return isset(self::$_CONF[$id_lang]['global'][$key]) || (isset(self::$_CONF[$id_lang]['global']) && array_key_exists($key, self::$_CONF[$id_lang]['global']));
 	}
 
 	/**
