@@ -2672,28 +2672,88 @@ class CartCore extends ObjectModel
 
 		$configuration = Configuration::getMultiple(array(
 			'PS_SHIPPING_FREE_PRICE',
+			'PS_SHIPPING_FREE_PRICE_END',
 			'PS_SHIPPING_HANDLING',
 			'PS_SHIPPING_METHOD',
-			'PS_SHIPPING_FREE_WEIGHT'
+			'PS_SHIPPING_FREE_WEIGHT',
+			'PS_SHIPPING_FREE_WEIGHT_END',
+			'PS_SHIPPING_FREE_TYPE',
 		));
 
 		// Free fees
 		$free_fees_price = 0;
-		if (isset($configuration['PS_SHIPPING_FREE_PRICE']))
-			$free_fees_price = Tools::convertPrice((float)$configuration['PS_SHIPPING_FREE_PRICE'], Currency::getCurrencyInstance((int)$this->id_currency));
-		$orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false);
-		if ($orderTotalwithDiscounts >= (float)($free_fees_price) && (float)($free_fees_price) > 0)
-		{
-			Cache::store($cache_id, $shipping_cost);
-			return $shipping_cost;
+               // Use free shipping only if price AND weight is matched
+		if($configuration['PS_SHIPPING_FREE_TYPE'] == 1) {
+			if (isset($configuration['PS_SHIPPING_FREE_PRICE']))
+				$free_fees_price = Tools::convertPrice((float)$configuration['PS_SHIPPING_FREE_PRICE'], Currency::getCurrencyInstance((int)$this->id_currency));
+			$orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false);
+			if ($orderTotalwithDiscounts >= (float)($free_fees_price) &&
+				(float)($free_fees_price) > 0 &&
+				isset($configuration['PS_SHIPPING_FREE_WEIGHT']) &&
+				$this->getTotalWeight() >= (float)$configuration['PS_SHIPPING_FREE_WEIGHT'] &&
+				(float)$configuration['PS_SHIPPING_FREE_WEIGHT'] > 0)
+			{
+				$free_fees_price_end = Tools::convertPrice((float)$configuration['PS_SHIPPING_FREE_PRICE_END'] , Currency::getCurrencyInstance((int)$this->id_currency));
+				$PE = $free_fees_price_end; 
+				$WE = (float)$configuration['PS_SHIPPING_FREE_WEIGHT_END'] ;
+				if($PE == 0 && $WE == 0) {
+					// If end not set, then shipping is free
+					Cache::store($cache_id, $shipping_cost);
+					return $shipping_cost;
+				} elseif(($orderTotalwithDiscounts > $PE && $PE > 0) || ($this->getTotalWeight() > $WE && $WE > 0)) {
+					// if price or weight is over the limit, don't return anything, beacuse shipping is not free
+				} elseif($orderTotalwithDiscounts <= $PE && $this->getTotalWeight() <= $WE) {
+					// if price and weight is still within limit, then shipping is free
+					Cache::store($cache_id, $shipping_cost);
+					return $shipping_cost;
+				} elseif (($PE == 0 && $this->getTotalWeight() <= $WE) || ($WE == 0 && $orderTotalwithDiscounts <= $PE) ) {
+					// if price end not set, but weight under limit OR weight end not set, but price under limit
+					Cache::store($cache_id, $shipping_cost);
+					return $shipping_cost;
+				}
+			}
 		}
 
-		if (isset($configuration['PS_SHIPPING_FREE_WEIGHT'])
-			&& $this->getTotalWeight() >= (float)$configuration['PS_SHIPPING_FREE_WEIGHT']
-			&& (float)$configuration['PS_SHIPPING_FREE_WEIGHT'] > 0)
-		{
-			Cache::store($cache_id, $shipping_cost);
-			return $shipping_cost;
+		if($configuration['PS_SHIPPING_FREE_TYPE'] == 0) {
+			if (isset($configuration['PS_SHIPPING_FREE_PRICE']))
+				$free_fees_price = Tools::convertPrice((float)$configuration['PS_SHIPPING_FREE_PRICE'], Currency::getCurrencyInstance((int)$this->id_currency));
+			$orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false);
+			if ($orderTotalwithDiscounts >= (float)($free_fees_price) && (float)($free_fees_price) > 0)
+			{
+				$free_fees_price_end = Tools::convertPrice((float)$configuration['PS_SHIPPING_FREE_PRICE_END'] , Currency::getCurrencyInstance((int)$this->id_currency));
+				$PE = $free_fees_price_end; 
+
+				if($PE == 0) {
+					// If end not set, then shipping is free
+					Cache::store($cache_id, $shipping_cost);
+					return $shipping_cost;
+				} elseif($orderTotalwithDiscounts > $PE) {
+					// if price is over the limit, don't return anything, beacuse shipping is not free
+				} elseif($orderTotalwithDiscounts <= $PE) {
+					// if price is still within limit, then shipping is free
+					Cache::store($cache_id, $shipping_cost);
+					return $shipping_cost;
+				}
+				
+			}
+
+			if (isset($configuration['PS_SHIPPING_FREE_WEIGHT'])
+				&& $this->getTotalWeight() >= (float)$configuration['PS_SHIPPING_FREE_WEIGHT']
+				&& (float)$configuration['PS_SHIPPING_FREE_WEIGHT'] > 0)
+			{
+				$WE = (float)$configuration['PS_SHIPPING_FREE_WEIGHT_END'];
+				if($WE == 0) {
+					// If end not set, then shipping is free
+					Cache::store($cache_id, $shipping_cost);
+					return $shipping_cost;
+				} elseif($this->getTotalWeight() > $WE) {
+					// if weight is over the limit, don't return anything, beacuse shipping is not free
+				} elseif($this->getTotalWeight() <= $WE) {
+					// if weight is still within limit, then shipping is free
+					Cache::store($cache_id, $shipping_cost);
+					return $shipping_cost;
+				}
+			}
 		}
 
 		// Get shipping cost using correct method
