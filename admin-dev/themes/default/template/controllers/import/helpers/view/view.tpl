@@ -25,7 +25,7 @@
 {extends file="helpers/view/view.tpl"}
 {block name="override_tpl"}
 	<script type="text/javascript">
-		var errorEmpty = '{l s='Please name your matching configuration to save.' js=1}';
+		var errorEmpty = '{l s='Please name your mapping configuration in order to save it.' js=1}';
 		var token = '{$token}';
 		var current = 0;
 		function showTable(nb)
@@ -64,18 +64,12 @@
 	</script>
 	<div id="container-customer" class="panel">
 	<h3><i class="icon-list-alt"></i> {l s='View your data'}</h3>
+	<div class="alert alert-info">
+		<p>{l s='Please map each column of your source CSV file to one of the destination columns.'}</p>
+	</div>
 	<div class="form-horizontal">
-		<div class="form-group">
-			<label class="control-label col-lg-3">{l s='Save and load your configuration for importing files'} : </label>
-			<div class="col-lg-7">
-				<input type="text" name="newImportMatchs" id="newImportMatchs" />		
-			</div>
-			<div class="col-lg-2">
-				<a id="saveImportMatchs" class="btn btn-default" href="#"><i class="icon-save"></i> {l s='Save'}</a>
-			</div>
-		</div>
 		<div class="form-group" {if !$import_matchs}style="display:none"{/if}>
-			<label class="control-label col-lg-3">{l s='Matches'} : </label>
+			<label class="control-label col-lg-3">{l s='Load a mapping configuration'}</label>
 			<div id="selectDivImportMatchs" class="col-lg-7">
 				<select id="valueImportMatchs">
 					{foreach $import_matchs as $match}
@@ -88,9 +82,15 @@
 				<a id="deleteImportMatchs" href="#" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a>
 			</div>
 		</div>
-	</div>
-	<div class="row">
-		<p>{l s='Please set the value type of each column'}</p>
+		<div class="form-group">
+			<label class="control-label col-lg-3">{l s='Save your mapping configuration'}</label>
+			<div class="col-lg-7">
+				<input type="text" name="newImportMatchs" id="newImportMatchs" />		
+			</div>
+			<div class="col-lg-2">
+				<a id="saveImportMatchs" class="btn btn-default" href="#"><i class="icon-save"></i> {l s='Save'}</a>
+			</div>
+		</div>
 	</div>
 	<div id="error_duplicate_type" class="alert alert-warning" style="display:none;">
 		{l s='Columns cannot have the same value type'}
@@ -117,8 +117,9 @@
 		<input type="hidden" name="multiple_value_separator" value="{$fields_value.multiple_value_separator}" />
 		<div class="form-group">
 			<label class="control-label col-lg-3">{l s='Lines to skip'}</label>
-			<div class="col-lg-9">
+			<div class="col-lg-7">
 				<input type="text" size="2" name="skip" value="1" />
+				<p class="help-block">{l s='This number indicates how many of the first lines of your CSV file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.'}</p>
 			</div>
 		</div>
 		<div class="form-group">
