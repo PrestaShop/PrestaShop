@@ -983,18 +983,17 @@ class CartRuleCore extends ObjectModel
 				OR '.(int)$this->id.' = id_cart_rule_2
 			)
 		)');
+
 		$array['unselected'] = Db::getInstance()->executeS('
 		SELECT cr.*, crl.*, 1 as selected
 		FROM '._DB_PREFIX_.'cart_rule cr
-		LEFT JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)Context::getContext()->language->id.')
+		INNER JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)Context::getContext()->language->id.')
+		LEFT JOIN '._DB_PREFIX_.'cart_rule_combination crc1 ON (cr.id_cart_rule = crc1.id_cart_rule_1 AND crc1.id_cart_rule_2 = '.(int)$this->id.')
+		LEFT JOIN '._DB_PREFIX_.'cart_rule_combination crc2 ON (cr.id_cart_rule = crc2.id_cart_rule_2 AND crc2.id_cart_rule_1 = '.(int)$this->id.')
 		WHERE cr.cart_rule_restriction = 1
 		AND cr.id_cart_rule != '.(int)$this->id.'
-		AND cr.id_cart_rule NOT IN (
-			SELECT IF(id_cart_rule_1 = '.(int)$this->id.', id_cart_rule_2, id_cart_rule_1)
-			FROM '._DB_PREFIX_.'cart_rule_combination
-			WHERE '.(int)$this->id.' = id_cart_rule_1
-			OR '.(int)$this->id.' = id_cart_rule_2
-		)');
+		AND crc1.id_cart_rule_1 IS NULL
+		AND crc2.id_cart_rule_1 IS NULL');
 		return $array;
 	}
 
