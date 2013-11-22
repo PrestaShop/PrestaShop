@@ -1,4 +1,3 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 /* block top search */
 #search_block_top {
   position: absolute;
@@ -46,6 +45,8 @@
   display: block;
   font-family: "FontAwesome";
   font-size: 17px;
+  width: 100%;
+  text-align: center;
 }
 #search_block_top .btn.button-search:hover {
   color: #6f6f6f;
@@ -53,6 +54,7 @@
 #search_block_top #search_query_top {
   padding: 0 13px;
   height: 45px;
+  line-height: 45px;
   width: 271px;
   background: #fbfbfb;
   float: left;
