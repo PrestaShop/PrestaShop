@@ -83,7 +83,12 @@ ul.product_list {
 		.nb-comments {overflow:hidden; font-style:italic;}
 	}
 }
-
+.ie8 {
+	.quick-view	 {
+		background:#fff;
+		border:1px solid $base-border-color;	
+	}
+}
 /*******************************************************
 			 Product list(Grid) Styles 
 ********************************************************/

@@ -1,4 +1,3 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 /* Special style for block cart*/
 /*******************************************************************
 					Cart Block Styles
@@ -169,6 +168,9 @@
 }
 #header #cart_block #cart-buttons {
   background: url(../../../img/cart-shadow.png) repeat-x #333333;
+}
+#header .block_content {
+  margin-bottom: 0;
 }
 
 #cart_block #cart_block_summary, #cart_block .title_block span, #header #cart_block h4, #header #cart_block .title_block, #header #cart_block h4 {

@@ -67,7 +67,8 @@
         <link href="{$css_dir}/jquery/uniform.default.css" rel="stylesheet" type="text/css" media="all" />
         <link href="{$css_dir}/highdpi.css" rel="stylesheet" media="only screen and (-webkit-min-device-pixel-ratio: 2)" />
         <link href="{$css_dir}/jquery/footable.core.css" rel="stylesheet" type="text/css" media="all" />
-        <link href="{$css_dir}jquery/jquery.bxslider.css" rel="stylesheet" type="text/css" media="all" /> 
+        <link href="{$css_dir}jquery/jquery.bxslider.css" rel="stylesheet" type="text/css" media="all" />
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css' />
 {if isset($css_files)}
 	{foreach from=$css_files key=css_uri item=media}
 	<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
@@ -79,7 +80,7 @@
 	{/foreach}
 {/if}
 <script src="{$js_dir}/tools/bootstrap.min.js"></script>
-<!--[if IE 7]><html class="no-js lt-ie9 ie8" lang="{$lang_iso}">
+<!--[if IE 8]><html class="no-js lt-ie9 ie8" lang="{$lang_iso}">
 	 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
 <![endif]-->
