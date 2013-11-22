@@ -507,6 +507,26 @@ class AdminPerformanceControllerCore extends AdminController
 					'desc' => $this->l('Enable or disable caching system.')
 				),
 				array(
+					'type' => 'radio',
+					'label' => $this->l('Cache for smarty'),
+					'name' => 'smarty_cache_replace',
+					'class' => 't',
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'smarty_cache_replace_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'smarty_cache_replace_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					),
+					'desc' => $this->l('Selected caching system will be used instead default smarty caching')
+				),
+				array(
 					'type' => 'select',
 					'label' => $this->l('Caching system'),
 					'name' => 'caching_system',
@@ -532,6 +552,7 @@ class AdminPerformanceControllerCore extends AdminController
 
 		$depth = Configuration::get('PS_CACHEFS_DIRECTORY_DEPTH');
 		$this->fields_value['active'] = _PS_CACHE_ENABLED_;
+		$this->fields_value['smarty_cache_replace'] = Configuration::get('PS_SMARTY_CACHE_REPLACE');
 		$this->fields_value['caching_system'] = _PS_CACHING_SYSTEM_;
 		$this->fields_value['ps_cache_fs_directory_depth'] = $depth ? $depth : 1;
 
@@ -796,6 +817,7 @@ class AdminPerformanceControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
+				Configuration::updateValue('PS_SMARTY_CACHE_REPLACE', Tools::getValue('smarty_cache_replace', 0));
 				$prev_settings = file_get_contents(dirname(__FILE__).'/../../config/settings.inc.php');
 				$new_settings = $prev_settings;
 				if (!Tools::getValue('active'))

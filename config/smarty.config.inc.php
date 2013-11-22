@@ -28,8 +28,79 @@ define('_PS_SMARTY_DIR_', _PS_TOOL_DIR_.'smarty/');
 
 require_once(_PS_SMARTY_DIR_.'Smarty.class.php');
 
+class Smarty_CacheResource_Presta extends Smarty_CacheResource_KeyValueStore
+{
+	/**
+	 * memcache instance
+	 * @var Memcache
+	 */
+	protected $cache_instance = null;
+
+	public function __construct()
+	{
+		$this->cache_instance = Cache::getInstance();
+	}
+
+	/**
+	 * Read values for a set of keys from cache
+	 *
+	 * @param array $keys list of keys to fetch
+	 * @return array list of values with the given keys used as indexes
+	 * @return boolean true on success, false on failure
+	 */
+	protected function read(array $keys)
+	{
+		$res = array();
+		foreach ($keys as $key) {
+			$res[$key] = $this->cache_instance->get($key);
+		}
+		return $res;
+	}
+
+	/**
+	 * Save values for a set of keys to cache
+	 *
+	 * @param array $keys list of values to save
+	 * @param int $expire expiration time
+	 * @return boolean true on success, false on failure
+	 */
+	protected function write(array $keys, $expire=null)
+	{
+		foreach ($keys as $k => $v) {
+			$this->cache_instance->set($k, $v, $expire);
+		}
+		return true;
+	}
+
+	/**
+	 * Remove values from cache
+	 *
+	 * @param array $keys list of keys to delete
+	 * @return boolean true on success, false on failure
+	 */
+	protected function delete(array $keys)
+	{
+		foreach ($keys as $k) {
+			$this->cache_instance->delete($k);
+		}
+		return true;
+	}
+
+	/**
+	 * Remove *all* values from cache
+	 *
+	 * @return boolean true on success, false on failure
+	 */
+	protected function purge()
+	{
+		return $this->cache_instance->flush();
+	}
+}
+
 global $smarty;
 $smarty = new Smarty();
+if(_PS_CACHE_ENABLED_&&Configuration::get('PS_SMARTY_CACHE_REPLACE'))
+	$smarty->caching_type = 'presta';
 $smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
 $smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
 if (!Tools::getSafeModeStatus())
