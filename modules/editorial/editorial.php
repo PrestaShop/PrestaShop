@@ -49,7 +49,7 @@ class Editorial extends Module
 
 	public function install()
 	{
-		if (!parent::install() || !$this->registerHook('displayHome') || !$this->registerHook('displayHeader'))
+		if (!parent::install() || !$this->registerHook('displayHome') || !$this->registerHook('displayHeader') || !$this->registerHook('displayEditorial'))
 			return false;
 
 		$res = Db::getInstance()->execute('
@@ -281,12 +281,17 @@ class Editorial extends Module
 
 	public function hookDisplayHome($params)
 	{
+		$this->hookDisplayEditorial($params);
+	}
+
+	public function hookDisplayEditorial($params)
+	{
 		if (!$this->isCached('editorial.tpl', $this->getCacheId()))
 		{
 			$id_shop = (int)$this->context->shop->id;
 			$editorial = EditorialClass::getByIdShop($id_shop);
 			if (!$editorial)
-				return;			
+				return;
 			$editorial = new EditorialClass((int)$editorial->id, $this->context->language->id);
 			if (!$editorial)
 				return;
