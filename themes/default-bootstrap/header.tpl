@@ -109,9 +109,9 @@
                         	 <!-- User info -->
                         	<div id="header_user_info">
                                 {if $logged}
-                                    <a href="{$link->getPageLink('index', true, NULL, "mylogout")|escape:'html'}" title="{l s='Log me out' mod='blockuserinfo'}" class="logout" rel="nofollow">{l s='Sign out' mod='blockuserinfo'}</a>
+                                    <a href="{$link->getPageLink('index', true, NULL, "mylogout")|escape:'html'}" title="{l s='Log me out'}" class="logout" rel="nofollow">{l s='Sign out'}</a>
                                 {else}
-                                    <a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Login to your customer account' mod='blockuserinfo'}" class="login" rel="nofollow">{l s='Sign in' mod='blockuserinfo'}</a>
+                                    <a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Login to your customer account'}" class="login" rel="nofollow">{l s='Sign in'}</a>
                                 {/if}
                             </div>
                             <!-- /User info -->
@@ -168,7 +168,7 @@
                                         <div class="current">
                                             <input type="hidden" name="id_currency" id="id_currency" value=""/>
                                             <input type="hidden" name="SubmitCurrency" value="" />
-                                            <span class="cur-label">{l s='Currency' mod='blockcurrencies'} :</span>
+                                            <span class="cur-label">{l s='Currency'} :</span>
                                             {foreach from=$currencies key=k item=f_currency}
                                                 {if $cookie->id_currency == $f_currency.id_currency}<strong>{$f_currency.iso_code}</strong>{/if}
                                             {/foreach}
@@ -186,7 +186,7 @@
 							<!-- /Currencies -->
                             <!--Contact link-->
                             <div id="contact-link">
-                                <a href="{$link->getPageLink('contact', true)|escape:'html'}" title="{l s='contact' mod='blockpermanentlinks'}">{l s='Contact Us' mod='blockpermanentlinks'}</a>
+                                <a href="{$link->getPageLink('contact', true)|escape:'html'}" title="{l s='contact'}">{l s='Contact Us'}</a>
                             </div>
                             <span class="shop-phone"><i class="icon-phone"></i>{l s='Call us now toll free:'} <strong>{$shop_phone}(800) 2345-6789</strong></span>
                         </div>
