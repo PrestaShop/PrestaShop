@@ -129,9 +129,68 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->fields_value['smarty_console_key'] = Configuration::get('PS_SMARTY_CONSOLE_KEY');
 	}
 
-	public function initFieldsetFeaturesDetachables()
+	public function initFieldsetDebugMode()
 	{
 		$this->fields_form[1]['form'] = array(
+			'legend' => array(
+				'title' => $this->l('Debug mode'),
+				'icon' => 'icon-bug'
+			),
+			'input' => array(
+				array(
+					'type' => 'switch',
+					'label' => $this->l('Disable non PrestaShop modules'),
+					'name' => 'native_module',
+					'class' => 't',
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'native_module_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'native_module_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					),
+					'hint' => $this->l('Enable or disable non PrestaShop Modules.')
+				),
+				array(
+					'type' => 'switch',
+					'label' => $this->l('Disable all overrides'),
+					'name' => 'overrides',
+					'class' => 't',
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'overrides_module_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'overrides_module_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					),
+					'hint' => $this->l('Enable or disable all classes and controllers overrides')
+				),
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			),
+		);
+
+		$this->fields_value['native_module'] = Configuration::get('PS_DISABLE_NON_NATIVE_MODULE');
+		$this->fields_value['overrides'] = Configuration::get('PS_DISABLE_OVERRIDES');
+	}
+
+	public function initFieldsetFeaturesDetachables()
+	{
+		$this->fields_form[2]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Optional features'),
 				'icon' => 'icon-puzzle-piece'
@@ -180,17 +239,38 @@ class AdminPerformanceControllerCore extends AdminController
 						)
 					),
 					'hint' => $this->l('These features will be disabled')
+				),
+				array(
+					'type' => 'switch',
+					'label' => $this->l('Customer Groups'),
+					'name' => 'customer_group',
+					'is_bool' => true,
+					'disabled' => Group::isCurrentlyUsed(),
+					'values' => array(
+						array(
+							'id' => 'group_1',
+							'value' => 1,
+							'label' => $this->l('Yes'),
+						),
+						array(
+							'id' => 'group_0',
+							'value' => 0,
+							'label' => $this->l('No')
+						)
+					),
+					'hint' => $this->l('These features will be disabled')
 				)
 			)
 		);
 
 		$this->fields_value['combination'] = Combination::isFeatureActive();
 		$this->fields_value['feature'] = Feature::isFeatureActive();
+		$this->fields_value['customer_group'] = Group::isFeatureActive();
 	}
 
 	public function initFieldsetCCC()
 	{
-		$this->fields_form[2]['form'] = array(
+		$this->fields_form[3]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('CCC (Combine, Compress and Cache)'),
 				'icon' => 'icon-fullscreen'
@@ -300,7 +380,7 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function initFieldsetMediaServer()
 	{
-		$this->fields_form[3]['form'] = array(
+		$this->fields_form[4]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Media servers (use only with CCC)'),
 				'icon' => 'icon-link'
@@ -346,7 +426,8 @@ class AdminPerformanceControllerCore extends AdminController
 		$warning_mcrypt = str_replace('[a]', '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/book.mcrypt.php" target="_blank">', $warning_mcrypt);
 		$warning_mcrypt = str_replace('[/a]', '</a>', $warning_mcrypt);
 	
-		$this->fields_form[4]['form'] = array(
+		$this->fields_form[5]['form'] = array(
+
 			'legend' => array(
 				'title' => $this->l('Ciphering'),
 				'icon' => 'icon-desktop'
@@ -399,7 +480,7 @@ class AdminPerformanceControllerCore extends AdminController
 
 		$warning_fs = ' '.sprintf($this->l('(the directory %s must be writable)'), realpath(_PS_CACHEFS_DIRECTORY_));
 
-		$this->fields_form[5]['form'] = array(
+		$this->fields_form[6]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Caching'),
 				'icon' => 'icon-desktop'
@@ -462,10 +543,6 @@ class AdminPerformanceControllerCore extends AdminController
 					'name' => 'ps_cache_fs_directory_depth'
 				),
 			),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default'
-			),
 			'memcachedServers' => true
 		);
 
@@ -481,11 +558,18 @@ class AdminPerformanceControllerCore extends AdminController
 	{
 		// Initialize fieldset for a form
 		$this->initFieldsetSmarty();
+
+		if (_PS_MODE_DEV_)
+			$this->initFieldsetDebugMode();
+
 		$this->initFieldsetFeaturesDetachables();
 		$this->initFieldsetCCC();
 		$this->initFieldsetMediaServer();
 		$this->initFieldsetCiphering();
 		$this->initFieldsetCaching();
+
+		// Reindex fields
+		$this->fields_form = array_values($this->fields_form);
 
 		// Activate multiple fieldset
 		$this->multiple_fieldsets = true;
@@ -583,8 +667,10 @@ class AdminPerformanceControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				if (!Combination::isCurrentlyUsed())
+				if (Tools::getValue('combination') || !Combination::isCurrentlyUsed())
 					Configuration::updateValue('PS_COMBINATION_FEATURE_ACTIVE', Tools::getValue('combination'));
+				if (Tools::getValue('group') || !Group::isCurrentlyUsed())
+					Configuration::updateValue('PS_GROUP_FEATURE_ACTIVE', Tools::getValue('group'));
 				Configuration::updateValue('PS_FEATURE_FEATURE_ACTIVE', Tools::getValue('feature'));
 				$redirectAdmin = true;
 			}
@@ -707,7 +793,7 @@ class AdminPerformanceControllerCore extends AdminController
 			{
 				$new_settings = $prev_settings = file_get_contents(_PS_ROOT_DIR_.'/config/settings.inc.php');
 				$cache_active = (bool)Tools::getValue('cache_active');
-
+				
 				if ($caching_system = Tools::getValue('caching_system'))
 				{
 					$new_settings = preg_replace(
@@ -721,7 +807,6 @@ class AdminPerformanceControllerCore extends AdminController
 					$cache_active = false;
 					$this->errors[] = Tools::displayError('The caching system is missing.');
 				}
-				
 				if ($cache_active)
 				{
 					if ($caching_system == 'CacheMemcache' && !extension_loaded('memcache'))
@@ -781,6 +866,17 @@ class AdminPerformanceControllerCore extends AdminController
 			Autoload::getInstance()->generateIndex();
 		}
 
+		if (Tools::isSubmit('submitAddconfiguration') && _PS_MODE_DEV_)
+		{
+			Configuration::updateGlobalValue('PS_DISABLE_NON_NATIVE_MODULE', (int)Tools::getValue('native_module'));
+			Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', (int)Tools::getValue('overrides'));
+
+			if (Tools::getValue('overrides'))
+				Autoload::getInstance()->_include_override_path = false;
+
+			Autoload::getInstance()->generateIndex();
+		}
+
 		if ($redirectAdmin && (!isset($this->errors) || !count($this->errors)))
 		{
 			Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => ''));
@@ -815,5 +911,4 @@ class AdminPerformanceControllerCore extends AdminController
 		}
 		die;
     }
-
 }

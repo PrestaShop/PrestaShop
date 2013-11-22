@@ -42,10 +42,11 @@ class HomeSlider extends Module
 	{
 		$this->name = 'homeslider';
 		$this->tab = 'front_office_features';
-		$this->version = '1.2.1';
+		$this->version = '1.2.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->secure_key = Tools::encrypt($this->name);
+		$this->bootstrap = true;
 
 		parent::__construct();
 
@@ -59,11 +60,11 @@ class HomeSlider extends Module
 	public function install()
 	{
 		/* Adds Module */
-		if (parent::install() && $this->registerHook('displayHome') && $this->registerHook('actionShopDataDuplication'))
+		if (parent::install() && $this->registerHook('displayTop') && $this->registerHook('actionShopDataDuplication'))
 		{
 			/* Sets up configuration */
-			$res = Configuration::updateValue('HOMESLIDER_WIDTH', '535');
-			$res &= Configuration::updateValue('HOMESLIDER_HEIGHT', '300');
+			$res = Configuration::updateValue('HOMESLIDER_WIDTH', '779');
+			$res &= Configuration::updateValue('HOMESLIDER_HEIGHT', '448');
 			$res &= Configuration::updateValue('HOMESLIDER_SPEED', '500');
 			$res &= Configuration::updateValue('HOMESLIDER_PAUSE', '3000');
 			$res &= Configuration::updateValue('HOMESLIDER_LOOP', '1');
@@ -85,7 +86,7 @@ class HomeSlider extends Module
 	private function installSamples()
 	{
 		$languages = Language::getLanguages(false);
-		for ($i = 1; $i <= 5; ++$i)
+		for ($i = 1; $i <= 3; ++$i)
 		{
 			$slide = new HomeSlide();
 			$slide->position = $i;
@@ -659,7 +660,7 @@ class HomeSlider extends Module
 		return true;
 	}
 
-	public function hookDisplayHome()
+	public function hookDisplayTop()
 	{
 		if(!$this->_prepareHook())
 			return;
@@ -673,7 +674,14 @@ class HomeSlider extends Module
 		$this->context->controller->addJS($this->_path.'js/homeslider.js');
 		return $this->display(__FILE__, 'homeslider.tpl', $this->getCacheId());
 	}
-
+	
+	public function getCacheId($name = null)
+	{
+		if ($name === null && isset($this->context->smarty->tpl_vars['page_name']))
+			return parent::getCacheId($this->context->smarty->tpl_vars['page_name']->value);
+		return parent::getCacheId($name);
+	}
+	
 	public function clearCache()
 	{
 		$this->_clearCache('homeslider.tpl');
@@ -716,7 +724,7 @@ class HomeSlider extends Module
 					cursor: "move",
 					update: function() {
 						var order = $(this).sortable("serialize") + "&action=updateSlidesPosition";
-						$.post("'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/ajax_'.$this->name.'.php?secure_key='.$this->secure_key.'", order);
+						$.post("'.$this->context->shop->physical_uri.$this->context->shop->virtual_uri.'modules/'.$this->name.'/ajax_'.$this->name.'.php?secure_key='.$this->secure_key.'", order);
 						}
 					});
 				$mySlides.hover(function() {

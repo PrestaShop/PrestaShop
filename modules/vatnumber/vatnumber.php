@@ -39,7 +39,8 @@ class VatNumber extends TaxManagerModule
 
 		$this->tax_manager_class = 'VATNumberTaxManager';
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 		$id_country = (int)Configuration::get('VATNUMBER_COUNTRY');
 
 		if ($id_country == 0)

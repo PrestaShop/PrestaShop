@@ -689,7 +689,7 @@
 			var id_product = Number(this.id_product);
 			var id_product_attribute = Number(this.id_product_attribute);
 			cart_quantity[Number(this.id_product)+'_'+Number(this.id_product_attribute)+'_'+Number(this.id_customization)] = this.cart_quantity;
-			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="' + formatCurrency(parseFloat(this.price.replace(',', '.')), currency_format, currency_sign, currency_blank) + '" /></td><td>';
+			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="' + this.numeric_price + '" /></td><td>';
 			cart_content += (!this.id_customization ? '<div class="input-group fixed-width-md"><div class="input-group-btn"><a href="#" class="btn btn-default increaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><i class="icon-caret-up"></i></a><a href="#" class="btn btn-default decreaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'"><i class="icon-caret-down"></i></a></div>' : '');
 			cart_content += (!this.id_customization ? '<input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" class="cart_quantity" value="'+this.cart_quantity+'" />' : '');
 			cart_content += (!this.id_customization ? '<div class="input-group-btn"><a href="#" class="delete_product btn btn-default" rel="delete_'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><i class="icon-remove text-danger"></i></a></div></div>' : '');
@@ -748,6 +748,16 @@
 		$('#payment_list').html(payment_list);
 	}
 
+	function fixPriceFormat(price)
+	{
+		if(price.indexOf(',') > 0 && price.indexOf('.') > 0) // if contains , and .
+			if(price.indexOf(',') < price.indexOf('.')) // if , is before .
+				price = price.replace(',','');  // remove ,
+		price = price.replace(' ',''); // remove any spaces
+		price = price.replace(',','.'); // remove , if price did not cotain both , and .
+		return price;
+	}
+
 	function displaySummary(jsonSummary)
 	{
 		currency_format = jsonSummary.currency.format;
@@ -783,13 +793,13 @@
 		if (!changed_shipping_price)
 			$('#shipping_price').html('<b>' + formatCurrency(parseFloat(jsonSummary.summary.total_shipping), currency_format, currency_sign, currency_blank) + '</b>');
 		shipping_price_selected_carrier = jsonSummary.summary.total_shipping;
-		
-		$('#total_vouchers').html(formatCurrency(parseFloat(jsonSummary.summary.total_discounts_tax_exc.replace(',', '.')), currency_format, currency_sign, currency_blank));
-		$('#total_shipping').html(formatCurrency(parseFloat(jsonSummary.summary.total_shipping_tax_exc.replace(',', '.')), currency_format, currency_sign, currency_blank));
-		$('#total_taxes').html(formatCurrency(parseFloat(jsonSummary.summary.total_tax.replace(',', '.')), currency_format, currency_sign, currency_blank));
-		$('#total_without_taxes').html(formatCurrency(parseFloat(jsonSummary.summary.total_price_without_tax.replace(',', '.')), currency_format, currency_sign, currency_blank));
-		$('#total_with_taxes').html(formatCurrency(parseFloat(jsonSummary.summary.total_price.replace(',', '.')), currency_format, currency_sign, currency_blank));
-		$('#total_products').html(formatCurrency(parseFloat(jsonSummary.summary.total_products.replace(',', '.')), currency_format, currency_sign, currency_blank));
+
+		$('#total_vouchers').html(formatCurrency(parseFloat(fixPriceFormat(jsonSummary.summary.total_discounts_tax_exc)), currency_format, currency_sign, currency_blank));
+		$('#total_shipping').html(formatCurrency(parseFloat(fixPriceFormat(jsonSummary.summary.total_shipping_tax_exc)), currency_format, currency_sign, currency_blank));
+		$('#total_taxes').html(formatCurrency(parseFloat(fixPriceFormat(jsonSummary.summary.total_tax)), currency_format, currency_sign, currency_blank));
+		$('#total_without_taxes').html(formatCurrency(parseFloat(fixPriceFormat(jsonSummary.summary.total_price_without_tax)), currency_format, currency_sign, currency_blank));
+		$('#total_with_taxes').html(formatCurrency(parseFloat(fixPriceFormat(jsonSummary.summary.total_price)), currency_format, currency_sign, currency_blank));
+		$('#total_products').html(formatCurrency(parseFloat(fixPriceFormat(jsonSummary.summary.total_products)), currency_format, currency_sign, currency_blank));
 		id_currency = jsonSummary.cart.id_currency;
 		$('#id_currency option').removeAttr('selected');
 		$('#id_currency option[value="'+id_currency+'"]').attr('selected', true);
@@ -1065,7 +1075,7 @@
 					</div>
 					<div class="col-lg-6">
 						<span class="form-control-static">{l s='Or'}&nbsp;</span>
-						<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCustomers')|escape:'htmlall':'UTF-8'}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
+						<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
 							<i class="icon-plus-sign-alt"></i>
 							{l s='Add new customer'}
 						</a>
@@ -1134,7 +1144,7 @@
 	</div>
 
 
-<form class="form-horizontal" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&submitAdd{$table}=1" method="post" autocomplete="off">
+<form class="form-horizontal" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&submitAdd{$table}=1" method="post" autocomplete="off">
 	<div class="panel" id="products_part" style="display:none;">
 		<h3>
 			<i class="icon-shopping-cart"></i>
@@ -1277,7 +1287,7 @@
 					</div>
 					<div class="col-lg-6">
 						<span class="form-control-static">{l s='Or'}&nbsp;</span>
-						<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCartRules')|escape:'htmlall':'UTF-8'}&addcart_rule&liteDisplaying=1&submitFormAjax=1#">
+						<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCartRules')|escape:'html':'UTF-8'}&addcart_rule&liteDisplaying=1&submitFormAjax=1#">
 							<i class="icon-plus-sign-alt"></i>
 							{l s='Add new voucher'}
 						</a>
@@ -1337,7 +1347,7 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-12">
-				<a class="fancybox btn btn-default" id="new_address" href="{$link->getAdminLink('AdminAddresses')|escape:'htmlall':'UTF-8'}&addaddress&id_customer=42&liteDisplaying=1&submitFormAjax=1#">
+				<a class="fancybox btn btn-default" id="new_address" href="{$link->getAdminLink('AdminAddresses')|escape:'html':'UTF-8'}&addaddress&id_customer=42&liteDisplaying=1&submitFormAjax=1#">
 					<i class="icon-plus-sign-alt"></i>
 					{l s='Add a new address'}
 				</a>

@@ -14,7 +14,6 @@
 #stores .address-input {
   float: left;
   margin-right: 19px;
-  /* max 767px */
 }
 @media (max-width: 767px) {
   #stores .address-input {
@@ -79,9 +78,6 @@
 #stores #stores-table tbody td.num {
   background: #fbfbfb;
   width: 46px;
-}
-#stores #stores-table tbody td.name {
-  /* max 767px */
 }
 #stores #stores-table tbody td.name span {
   padding-left: 15px;

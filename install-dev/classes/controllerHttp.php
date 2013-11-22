@@ -95,6 +95,10 @@ abstract class InstallControllerHttp
 
 	final public static function execute()
 	{
+		$session = InstallSession::getInstance();
+		if (!$session->last_step || $session->last_step == 'welcome')
+			Autoload::getInstance()->generateIndex();
+
 		if (Tools::getValue('compile_templates'))
 		{
 			require_once (_PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php');
@@ -111,7 +115,6 @@ abstract class InstallControllerHttp
 			self::$instances[$step] = new $classname($step);
 		}
 
-		$session = InstallSession::getInstance();
 		if (!$session->last_step || !in_array($session->last_step, self::$steps))
 			$session->last_step = self::$steps[0];
 
@@ -318,13 +321,16 @@ abstract class InstallControllerHttp
 	 */
 	public function getPhone()
 	{
+		if (InstallSession::getInstance()->support_phone != null)
+			return InstallSession::getInstance()->support_phone;
 		if ($this->phone === null)
 		{
 			$this->phone = $this->language->getInformation('phone', false);
-			if ($iframe = Tools::file_get_contents('http://api.prestashop.com/iframe/install.php?lang='.$this->language->getLanguageIso()))
+			if ($iframe = Tools::file_get_contents('http://api.prestashop.com/iframe/install.php?lang='.$this->language->getLanguageIso(), false, null, 3))
 				if (preg_match('/<img.+alt="([^"]+)".*>/Ui', $iframe, $matches) && isset($matches[1]))
 					$this->phone = $matches[1];
 		}
+		InstallSession::getInstance()->support_phone = $this->phone;
 		return $this->phone;
 	}
 

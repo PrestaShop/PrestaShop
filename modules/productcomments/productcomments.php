@@ -41,7 +41,7 @@ class ProductComments extends Module
 	{
 		$this->name = 'productcomments';
 		$this->tab = 'front_office_features';
-		$this->version = '2.3';
+		$this->version = '2.4';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->secure_key = Tools::encrypt($this->name);
@@ -70,6 +70,8 @@ class ProductComments extends Module
 			!$this->registerHook('productTabContent') ||
 			!$this->registerHook('header') ||
 			!$this->registerHook('productOutOfStock') ||
+			!$this->registerHook('displayProductListReviews') ||
+			!$this->registerHook('top') ||
 			!Configuration::updateValue('PRODUCT_COMMENTS_MINIMAL_TIME', 30) ||
 			!Configuration::updateValue('PRODUCT_COMMENTS_ALLOW_GUESTS', 0) ||
 			!Configuration::updateValue('PRODUCT_COMMENTS_MODERATE', 1))
@@ -87,7 +89,9 @@ class ProductComments extends Module
 			!$this->unregisterHook('productOutOfStock') ||
 			!$this->unregisterHook('productTabContent') ||
 			!$this->unregisterHook('header') ||
-			!$this->unregisterHook('productTab'))
+			!$this->unregisterHook('productTab') ||
+			!$this->unregisterHook('top') ||
+			!$this->unregisterHook('displayProductListReviews'))
 				return false;
 		return true;
 	}
@@ -561,7 +565,7 @@ class ProductComments extends Module
 					<div class="margin-form">
 ">
 						<select name="id_product_comment_criterion" id="id_product_comment_criterion" onchange="window.location=\''.Tools::safeOutput($this->_baseUrl).'&updateCriterion=\'+$(\'#id_product_comment_criterion option:selected\').val()">
-							<option value="--">-- '.$this->l('Choose a criterion').' --</option>';
+							<option value="-">- '.$this->l('Choose a criterion').' -</option>';
 						foreach ($criterions as $foo)
 								$this->_html .= '<option value="'.(int)($foo['id_product_comment_criterion']).'" '.($foo['id_product_comment_criterion'] == $id_criterion ? 'selected="selected"' : '').'>'.$foo['name'].'</option>';
 			$this->_html .= '</select>
@@ -680,15 +684,37 @@ class ProductComments extends Module
 	{
     	require_once(dirname(__FILE__).'/ProductComment.php');
 		require_once(dirname(__FILE__).'/ProductCommentCriterion.php');
+		
+		$average = ProductComment::getAverageGrade((int)Tools::getValue('id_product'));
 
 		$this->context->smarty->assign(array(
 			'allow_guests' => (int)Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS'),
 			'comments' => ProductComment::getByProduct((int)(Tools::getValue('id_product'))),
 			'criterions' => ProductCommentCriterion::getByProduct((int)(Tools::getValue('id_product')), $this->context->language->id),
+			'averageTotal' => round($average['grade']),
 			'nbComments' => (int)(ProductComment::getCommentNumber((int)(Tools::getValue('id_product'))))
 		));
 
 		return ($this->display(__FILE__, '/tab.tpl'));
+	}
+
+	public function hookTop($params)
+	{
+		$this->context->controller->addJS($this->_path.'js/jquery.rating.pack.js');
+		return $this->display(__FILE__, 'productcomments_top.tpl');
+	}
+
+	public function hookDisplayProductListReviews($params)
+	{
+		require_once(dirname(__FILE__).'/ProductComment.php');
+		
+		$average = ProductComment::getAverageGrade((int)$params['product']['id_product']);
+		$this->smarty->assign(array(
+			'product' => $params['product'],
+			'averageTotal' => round($average['grade']),
+			'nbComments' => (int)(ProductComment::getCommentNumber((int)$params['product']['id_product']))
+		));
+		return $this->display(__FILE__, 'productcomments_reviews.tpl');
 	}
 
 	public function hookproductOutOfStock($params)
@@ -705,7 +731,7 @@ class ProductComments extends Module
 
 		$this->context->smarty->assign(array(
 			'id_product_comment_form' => (int)Tools::getValue('id_product'),
-			'product' => new Product((int)Tools::getValue('id_product'), false, $this->context->language->id),
+			'product' => $this->context->controller->getProduct(),
 			'secure_key' => $this->secure_key,
 			'logged' => (int)$this->context->customer->isLogged(true),
 			'allow_guests' => (int)Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS'),

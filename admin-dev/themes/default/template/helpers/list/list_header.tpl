@@ -74,7 +74,7 @@
 
 <div class="alert alert-warning" id="{$list_id}-empty-filters-alert" style="display:none;">{l s='Please fill at least one field to perform a search in this list.'}</div>
 {block name="startForm"}
-<form method="post" action="{$action}" class="form-horizontal clearfix">
+<form method="post" action="{$action}" class="form-horizontal clearfix" id="{$list_id}">
 {/block}
 {if !$simple_header}
 	<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
@@ -175,6 +175,7 @@
 			{/if}
 		</div>
 {/if}
+
 {if $simple_header}
 <div class="panel col-lg-12">
 	{if isset($title)}<h3>{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end}{else}{$title}{/if}</h3>{/if}
@@ -214,7 +215,7 @@
 								{$params.title}
 							{/if}
 
-							{if (!isset($params.orderby) || $params.orderby) && !$simple_header}
+							{if (!isset($params.orderby) || $params.orderby) && !$simple_header && $show_filters}
 							<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}class="active"{/if}  href="{$currentIndex}&{$list_id}Orderby={$key|urlencode}&{$list_id}Orderway=desc&token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
 								<i class="icon-caret-down"></i>
 							</a>
@@ -247,7 +248,6 @@
 							--
 						{/if}
 					</th>
-
 					{* Filters (input, select, date or bool) *}
 					{foreach $fields_display AS $key => $params}
 					<th {if isset($params.align)} class="{$params.align}" {/if}>
@@ -256,7 +256,7 @@
 						{else}
 							{if $params.type == 'bool'}
 								<select class="filter fixed-width-sm" onchange="$('#submitFilterButton{$list_id}').focus();$('#submitFilterButton{$list_id}').click();" name="{$list_id}Filter_{$key}">
-									<option value="">--</option>
+									<option value="">-</option>
 									<option value="1" {if $params.value == 1} selected="selected" {/if}>{l s='Yes'}</option>
 									<option value="0" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>{l s='No'}</option>
 								</select>
@@ -278,7 +278,7 @@
 							{elseif $params.type == 'select'}
 								{if isset($params.filter_key)}
 									<select class="filter" onchange="$('#submitFilterButton{$list_id}').focus();$('#submitFilterButton{$list_id}').click();" name="{$list_id}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
-										<option value="" {if $params.value == ''} selected="selected" {/if}>--</option>
+										<option value="" {if $params.value == ''} selected="selected" {/if}>-</option>
 										{if isset($params.list) && is_array($params.list)}
 											{foreach $params.list AS $option_value => $option_display}
 												<option value="{$option_value}" {if (string)$option_display === (string)$params.value ||  (string)$option_value === (string)$params.value} selected="selected"{/if}>{$option_display}</option>
@@ -287,7 +287,7 @@
 									</select>
 								{/if}
 							{else}
-								<input type="text" class="filter" name="{$list_id}Filter_{if isset($params.filter_key)}{$params.filter_key}{else}{$key}{/if}" value="{$params.value|escape:'htmlall':'UTF-8'}" {if isset($params.width) && $params.width != 'auto'} style="width:{$params.width}px"{/if} />
+								<input type="text" class="filter" name="{$list_id}Filter_{if isset($params.filter_key)}{$params.filter_key}{else}{$key}{/if}" value="{$params.value|escape:'html':'UTF-8'}" {if isset($params.width) && $params.width != 'auto'} style="width:{$params.width}px"{/if} />
 							{/if}
 						{/if}
 					</th>

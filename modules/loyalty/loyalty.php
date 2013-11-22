@@ -42,11 +42,12 @@ class Loyalty extends Module
 	{
 		$this->name = 'loyalty';
 		$this->tab = 'pricing_promotion';
-		$this->version = '1.8';
+		$this->version = '1.9';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Customer loyalty and rewards');
 		$this->description = $this->l('Provide a loyalty program to your customers.');
@@ -277,7 +278,7 @@ class Loyalty extends Module
 					$points = (int)LoyaltyModule::getNbPointsByPrice(
 						$product->getPrice(
 							Product::getTaxCalculationMethod() == PS_TAX_EXC ? false : true,
-							(int)$product->getDefaultIdProductAttribute()
+							(int)$product->getIdProductAttributeMostExpensive()
 						)
 					);
 
@@ -506,5 +507,218 @@ class Loyalty extends Module
 		'Not available on discounts.' => $this->l('Not available on discounts.'));
 
 		return (array_key_exists($key, $translations)) ? $translations[$key] : $key;
+	}
+	
+	public function renderForm()
+	{
+		$order_states = OrderState::getOrderStates($this->context->language->id);
+		$currency = new Currency((int)(Configuration::get('PS_CURRENCY_DEFAULT')));
+		
+		$root_category = Category::getRootCategory();
+		$root_category = array('id_category' => $root_category->id, 'name' => $root_category->name);
+		
+		if (Tools::getValue('categoryBox'))
+			$selected_categories = Tools::getValue('categoryBox');
+		else
+			$selected_categories = explode(',', Configuration::get('PS_LOYALTY_VOUCHER_CATEGORY'));
+
+		$fields_form_1 = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Ratio'),
+						'name' => 'point_rate',
+						'prefix' => $currency->sign,
+						'suffix' => $this->l('= 1 reward point.'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('1 point ='),
+						'name' => 'point_value',
+						'prefix' => $currency->sign,
+						'suffix' => $this->l('for the discount.'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Voucher details'),
+						'name' => 'voucher_details',
+						'lang' => true,
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Minimum amount in which the voucher can be used'),
+						'name' => 'minimal',
+						'prefix' => $currency->sign,
+						'class' => 'fixed-width-sm',
+					),
+					array(
+						'type' => 'select',
+						'label' => $this->l('Points are awarded when the order is'),
+						'name' => 'id_order_state_validation',
+						'options' => array(
+							'query' => $order_states,
+							'id' => 'id_order_state',
+							'name' => 'name',
+						)
+					),
+					array(
+						'type' => 'select',
+						'label' => $this->l('Points are cancelled when the order is'),
+						'name' => 'id_order_state_cancel',
+						'options' => array(
+							'query' => $order_states,
+							'id' => 'id_order_state',
+							'name' => 'name',
+						)
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Give points on discounted products'),
+						'name' => 'PS_LOYALTY_NONE_AWARD',
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						)
+					),
+					array(
+						'type' => 'categories',
+						'label' => $this->l('Vouchers created by the loyalty system can be used in the following categories :'),
+						'name' => 'categoryBox',
+						'desc' => $this->l('Mark the box(es) of categories in which loyalty vouchers are usable.'),
+						'tree' => array(
+							'use_search' => false,
+							'id' => 'categoryBox',
+							'use_checkbox' => true,
+							'selected_categories' => $selected_categories,
+							),
+					//retro compat 1.5 for category tree
+					'values' => array(
+						'trads' => array(
+							 'Root' => $root_category,
+							 'selected' => $this->l('Selected'),
+							 'Collapse All' => $this->l('Collapse All'),
+							 'Expand All' => $this->l('Expand All'),
+							 'Check All' => $this->l('Check All'),
+							 'Uncheck All' => $this->l('Uncheck All')
+							),
+						'selected_cat' => $selected_categories,
+						'input_name' => 'categoryBox',
+						'use_radio' => false,
+						'use_search' => false,
+						'disabled_categories' => array(),
+						'top_category' => Category::getTopCategory(),
+						'use_context' => true,
+						)
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+					'class' => 'btn btn-primary')
+			),
+		);
+		
+		
+					
+		
+		
+		$fields_form_2 = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Loyalty points progression'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Initial'),
+						'name' => 'default_loyalty_state',
+						'lang' => true,
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Unavailable'),
+						'name' => 'none_award_loyalty_state',
+						'lang' => true,
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Converted'),
+						'name' => 'convert_loyalty_state',
+						'lang' => true,
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Validation'),
+						'name' => 'validation_loyalty_state',
+						'lang' => true,
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Cancelled'),
+						'name' => 'cancel_loyalty_state',
+						'lang' => true,
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+					'class' => 'btn btn-primary')
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitLoyalty';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+		return $helper->generateForm(array($fields_form_1, $fields_form_2));
+	}
+	
+	public function getConfigFieldsValues()
+	{	
+		$fields_values = array(
+			'point_rate' => Tools::getValue('PS_LOYALTY_POINT_RATE', Configuration::get('PS_LOYALTY_POINT_RATE')),
+			'point_value' => Tools::getValue('PS_LOYALTY_POINT_VALUE', Configuration::get('PS_LOYALTY_POINT_VALUE')),
+			'PS_LOYALTY_NONE_AWARD' => Tools::getValue('PS_LOYALTY_NONE_AWARD', Configuration::get('PS_LOYALTY_NONE_AWARD')),
+			'minimal' => Tools::getValue('PS_LOYALTY_MINIMAL', Configuration::get('PS_LOYALTY_MINIMAL')),
+			'id_order_state_validation' => Tools::getValue('id_order_state_validation', $this->loyaltyStateValidation->id_order_state),
+			'id_order_state_cancel' => Tools::getValue('id_order_state_cancel', $this->loyaltyStateCancel->id_order_state),
+			
+		);
+	
+		$languages = Language::getLanguages(false);
+		
+		foreach ($languages as $lang)
+		{
+			$fields_values['voucher_details'][$lang['id_lang']] = Tools::getValue('voucher_details_'.(int)$lang['id_lang'], Configuration::get('PS_LOYALTY_VOUCHER_DETAILS', (int)$lang['id_lang']));
+			$fields_values['default_loyalty_state'][$lang['id_lang']] = Tools::getValue('default_loyalty_state_'.(int)$lang['id_lang'], $this->loyaltyStateDefault->name[(int)($lang['id_lang'])]);
+			$fields_values['validation_loyalty_state'][$lang['id_lang']] = Tools::getValue('validation_loyalty_state_'.(int)$lang['id_lang'], $this->loyaltyStateValidation->name[(int)($lang['id_lang'])]);
+			$fields_values['cancel_loyalty_state'][$lang['id_lang']] = Tools::getValue('cancel_loyalty_state_'.(int)$lang['id_lang'], $this->loyaltyStateCancel->name[(int)($lang['id_lang'])]);
+			$fields_values['convert_loyalty_state'][$lang['id_lang']] = Tools::getValue('convert_loyalty_state_'.(int)$lang['id_lang'], $this->loyaltyStateConvert->name[(int)($lang['id_lang'])]);
+			$fields_values['none_award_loyalty_state'][$lang['id_lang']] = Tools::getValue('none_award_loyalty_state_'.(int)$lang['id_lang'], $this->loyaltyStateNoneAward->name[(int)($lang['id_lang'])]);
+		}
+		return $fields_values;
 	}
 }

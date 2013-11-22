@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "dependencies": {
     "font-awesome": "~3.2.1",
-    "sass-bootstrap": "~3.0.0"
+    "sass-bootstrap": "~3.0.0",
+    "enquire": "2.1.0"
   },
   "devDependencies": {}
 }

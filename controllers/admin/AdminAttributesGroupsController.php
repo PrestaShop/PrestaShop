@@ -323,6 +323,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'class' => 'button'
 		);
 
+		$this->fields_value['id_attribute_group'] = (int)Tools::getValue('id_attribute_group');
+
 		// Override var of Controller
 		$this->table = 'attribute';
 		$this->className = 'Attribute';
@@ -464,18 +466,18 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	public function initPageHeaderToolbar()
 	{
 		if (empty($this->display))
-		{
 			$this->page_header_toolbar_btn['new_attribute_group'] = array(
 				'href' => self::$currentIndex.'&amp;addattribute_group&amp;token='.$this->token,
 				'desc' => $this->l('Add new attribute'),
 				'icon' => 'process-icon-new'
 			);
+
+		if ($this->display == 'view')
 			$this->page_header_toolbar_btn['new_value'] = array(
-				'href' => self::$currentIndex.'&amp;updateattribute&amp;token='.$this->token,
+				'href' => self::$currentIndex.'&amp;updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&amp;token='.$this->token,
 				'desc' => $this->l('Add new value'),
 				'icon' => 'process-icon-new'
 			);
-		}		
 
 		parent::initPageHeaderToolbar();
 	}
@@ -508,6 +510,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				);
 				break;
 			case 'view':
+				$this->toolbar_btn['newAttributes'] = array(
+						'href' => self::$currentIndex.'&amp;updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&amp;token='.$this->token,
+						'desc' => $this->l('Add New Values'),
+						'class' => 'toolbar-new'
+					);
+
 				$this->toolbar_btn['back'] = array(
 					'href' => self::$currentIndex.'&token='.$this->token,
 					'desc' => $this->l('Back to list')
@@ -517,11 +525,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				$this->toolbar_btn['new'] = array(
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
 					'desc' => $this->l('Add New Attributes')
-				);
-				$this->toolbar_btn['newAttributes'] = array(
-					'href' => self::$currentIndex.'&amp;updateattribute&amp;token='.$this->token,
-					'desc' => $this->l('Add New Values'),
-					'class' => 'toolbar-new'
 				);
 		}
 	}
@@ -533,11 +536,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		switch ($this->display)
 		{
 			case 'edit':
-				$bread_extended[] = $this->l('Edit New Attributes');
+				$bread_extended[] = $this->l('Edit New Attribute');
 				break;
 
 			case 'add':
-				$bread_extended[] = $this->l('Add New Attributes');
+				$bread_extended[] = $this->l('Add New Attribute');
 				break;
 
 			case 'view':
@@ -553,9 +556,19 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 			case 'editAttributes':
 				if ($this->id_attribute)
-					$bread_extended[] = $this->l('Edit Value');
+				{
+					if (($id = Tools::getValue('id_attribute_group')))
+					{
+						if (Validate::isLoadedObject($obj = new AttributeGroup((int)$id)))
+							$bread_extended[] = '<a href="'.Context::getContext()->link->getAdminLink('AdminAttributesGroups').'&id_attribute_group='.$id.'&viewattribute_group">'.$obj->name[$this->context->employee->id_lang].'</a>';
+						if (Validate::isLoadedObject($obj = new Attribute((int)$this->id_attribute)))
+							$bread_extended[] =  sprintf($this->l('Edit: %s'), $obj->name[$this->context->employee->id_lang]);
+					}
+					else
+						$bread_extended[] = $this->l('Edit Value');
+				}
 				else
-					$bread_extended[] = $this->l('Add New Values');
+					$bread_extended[] = $this->l('Add New Value');
 				break;
 		}
 

@@ -17,10 +17,9 @@
   padding: 23px 0 0 0;
   margin-bottom: 30px;
   background: url(../img/contact-form.png) repeat-x white;
-  -webkit-box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
-  -moz-box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
-  box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
-  /* min 992px max 1199px */
+  -webkit-box-shadow: rgba(0, 0, 0, 0.17) 0px 5px 13px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.17) 0px 5px 13px;
+  box-shadow: rgba(0, 0, 0, 0.17) 0px 5px 13px;
 }
 .contact-form-box fieldset {
   padding: 0 19px 21px 19px;
@@ -37,7 +36,6 @@
 }
 .contact-form-box .col-md-3 {
   padding-left: 0;
-  /* max 991px */
 }
 @media (max-width: 991px) {
   .contact-form-box .col-md-3 {
@@ -46,7 +44,6 @@
 }
 .contact-form-box .col-md-9 {
   padding-right: 0;
-  /* max 991px */
 }
 @media (max-width: 991px) {
   .contact-form-box .col-md-9 {

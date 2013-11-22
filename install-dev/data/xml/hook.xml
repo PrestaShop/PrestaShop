@@ -283,8 +283,8 @@
     <hook id="displayBackOfficeCategory" live_edit="0">
       <name>displayBackOfficeCategory</name><title>Display new elements in the Back Office, tab AdminCategories</title><description>This hook launches modules when the AdminCategories tab is displayed in the Back Office</description>
     </hook>
-     <hook id="actionBackOfficeCategory" live_edit="0">
-      <name>actionBackOfficeCategory</name><title>Process new elements in the Back Office, tab AdminCategories</title><description>This hook process modules when the AdminCategories tab is displayed in the Back Office</description>
+    <hook id="displayProductListFunctionalButtons" live_edit="0">
+      <name>displayProductListFunctionalButtons</name><title>Display new elements in the Front Office, products list</title><description>This hook launches modules when the products list is displayed in the Front Office</description>
     </hook>
   </entities>
 </entity_hook>

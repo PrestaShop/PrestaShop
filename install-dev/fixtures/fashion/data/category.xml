@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<entity_category>
+  <fields id="name" class="Category" sql="a.id_category &gt; 2" image="c">
+    <field name="id_parent" relation="category"/>
+    <field name="active"/>
+  </fields>
+  <entities>
+    <category id="Women" id_parent="Home" active="1"/>    
+    <category id="Coats_and_Jackets" id_parent="Women" active="1"/>
+    <category id="Coats" id_parent="Coats_and_Jackets" active="1"/>
+    <category id="Jackets" id_parent="Coats_and_Jackets" active="1"/>
+    <category id="Blazers" id_parent="Coats_and_Jackets" active="1"/>
+    <category id="Puffer_Jackets" id_parent="Coats_and_Jackets" active="1"/>
+    <category id="Leather_Jackets" id_parent="Coats_and_Jackets" active="1"/>
+    <category id="Tops" id_parent="Women" active="1"/>
+    <category id="T-shirts" id_parent="Tops" active="1"/>
+    <category id="Tops_2" id_parent="Tops" active="1"/>
+    <category id="Blouses" id_parent="Tops" active="1"/>
+    <category id="Pants" id_parent="Women" active="1"/>
+    <category id="Skinny_Cut" id_parent="Pants" active="1"/>
+    <category id="Straight_Cut" id_parent="Pants" active="1"/>
+    <category id="Dresses" id_parent="Women" active="1"/>
+    <category id="Casual_Dresses" id_parent="Dresses" active="1"/>
+    <category id="Evening_Dresses" id_parent="Dresses" active="1"/>
+    <category id="Summer_Dresses" id_parent="Dresses" active="1"/>
+    <category id="Accessories" id_parent="Women" active="1"/>
+    <category id="Belts" id_parent="Accessories" active="1"/>
+    <category id="Hats" id_parent="Accessories" active="1"/>
+    <category id="Handbags" id_parent="Accessories" active="1"/>
+    <category id="Shoes" id_parent="Accessories" active="1"/>
+	<category id="Men" id_parent="Home" active="0"/>
+  </entities>
+</entity_category>

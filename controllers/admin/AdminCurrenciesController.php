@@ -64,7 +64,7 @@ class AdminCurrenciesControllerCore extends AdminController
 				'title' =>	$this->l('Automatically update currency rates'),
 				'image' => '../img/admin/tab-tools.gif',
 				'info' => '<div class="alert alert-block"><p>'.$this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, rates are provided as-is. You can place this URL in the crontab,or access it manually.').':</p>
-					<p><strong>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</strong></p></div>',
+					<p><strong><a href="'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'" onclick="return !window.open($(this).attr(\'href\'));">'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</a></strong></p></div>',
 			)
 		);
 
@@ -339,6 +339,8 @@ class AdminCurrenciesControllerCore extends AdminController
 		}
 		if (Tools::isSubmit('submitAddcurrency') && !Tools::getValue('id_currency') && Currency::exists(Tools::getValue('iso_code'), Tools::getValue('iso_code_num')))
 				$this->errors[] = Tools::displayError('This currency already exists.');
+		if (Tools::isSubmit('submitAddcurrency') && (float)Tools::getValue('conversion_rate') <= 0)
+				$this->errors[] = Tools::displayError('The currency conversion rate can not be equal to 0.');
 		parent::initProcess();
 	}
 

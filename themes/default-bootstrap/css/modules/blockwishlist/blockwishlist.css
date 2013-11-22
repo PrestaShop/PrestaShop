@@ -6,8 +6,8 @@
 }
 #primary_block #wishlist_button:before {
   content: "";
-  font-family: FontAwesome;
-  color: #fff;
+  font-family: "FontAwesome";
+  color: white;
   font-size: 15px;
   line-height: 31px;
   border-radius: 50px;
@@ -65,6 +65,11 @@
 #wishlist_block .lnk .form-group select {
   max-width: 192px;
 }
+@media (max-width: 767px) {
+  #wishlist_block .lnk .form-group select {
+    width: 192px;
+  }
+}
 #wishlist_block .ajax_cart_block_remove_link {
   font-size: 14px;
   line-height: 14px;
@@ -107,7 +112,7 @@
 }
 #module-blockwishlist-mywishlist .wishlistLinkTop ul.display_list a {
   display: inline-block;
-  color: #333;
+  color: #333333;
   margin: 10px 10px 10px 0px;
   font-weight: bold;
 }

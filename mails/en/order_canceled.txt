@@ -3,8 +3,8 @@
 
 Hi {firstname} {lastname}, 
 
-Order {order_name} - Order cancelled Your order with the reference
-{ORDER_NAME} from {SHOP_NAME} has been cancelled.
+Your order with the reference {order_name} from {shop_name} has been
+cancelled.
 
 You can check for it in the "TOOLS" > "LOGS" section of your Back
 Office. 

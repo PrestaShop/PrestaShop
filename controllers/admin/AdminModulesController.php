@@ -693,18 +693,29 @@ class AdminModulesControllerCore extends AdminController
 						// If the method called is "configure" (getContent method), we show the html code of configure page
 						if ($key == 'configure' && Module::isInstalled($module->name))
 						{
+							$this->bootstrap = (isset($module->bootstrap) && $module->bootstrap);
+							if (!$this->bootstrap)
+								$this->setDeprecatedMedia();
 							if (isset($module->multishop_context))
 								$this->multishop_context = $module->multishop_context;
 
-							$backlink = self::$currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
-							$hooklink = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
-							$tradlink = 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=';
+							$back_link = self::$currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
+							$hook_link = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
+							$trad_link = 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=';
+							$disable_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&enable=0&tab_module='.$module->tab;
+							$uninstall_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&uninstall='.$module->name.'&tab_module='.$module->tab;
+							$reset_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&reset&tab_module='.$module->tab;
 
 							$this->context->smarty->assign(array(
 								'module_name' => $module->name,
-								'backlink' => $backlink,
-								'module_hooklink' => $hooklink,
-								'tradlink' => $tradlink,
+								'module_display_name' => $module->displayName,
+								'back_link' => $back_link,
+								'module_hook_link' => $hook_link,
+								'module_disable_link' => $disable_link,
+								'module_uninstall_link' => $uninstall_link,
+								'module_reset_link' => $reset_link,
+								'module_update_link' => null, //TODO
+								'trad_link' => $trad_link,
 								'module_languages' => Language::getLanguages(false),
 								'theme_language_dir' => _THEME_LANG_DIR_
 							));
@@ -739,7 +750,7 @@ class AdminModulesControllerCore extends AdminController
 							// Display module configuration
 							$header = $this->context->smarty->fetch('controllers/modules/configure.tpl');
 							$configuration_bar = $this->context->smarty->fetch('controllers/modules/configuration_bar.tpl');
-							$this->context->smarty->assign('module_content', $header.$configuration_bar.$echo );
+							$this->context->smarty->assign('module_content', $header.$echo.$configuration_bar );
 						}
 						elseif ($echo === true)
 						{
@@ -780,8 +791,13 @@ class AdminModulesControllerCore extends AdminController
 			Tools::redirectAdmin(self::$currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : '').$params);
 		}
 
-		if (isset($_GET['update']))
+		if (Tools::getValue('update'))
 			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : ''));
+		
+		if (Tools::getValue('check_and_update'))
+		{
+			//TODO
+		}
 	}
 	
 	public function postProcess()
@@ -829,7 +845,7 @@ class AdminModulesControllerCore extends AdminController
 
 		if (count($module_errors))
 		{
-			$html_error = '<ul style="line-height:20px">';
+			$html_error = '<ul>';
 			foreach ($module_errors as $module_error)
 			{
 				$html_error_description = '';
@@ -986,7 +1002,7 @@ class AdminModulesControllerCore extends AdminController
 		$helper->id = 'box-installed-modules';
 		$helper->icon = 'icon-puzzle-piece';
 		$helper->color = 'color1';
-		$helper->title = html_entity_decode($this->l('Installed Modules'));
+		$helper->title = $this->l('Installed Modules', null, null, false);
 		if (ConfigurationKPI::get('INSTALLED_MODULES') !== false)
 			$helper->value = ConfigurationKPI::get('INSTALLED_MODULES');
 		if (ConfigurationKPI::get('INSTALLED_MODULES_EXPIRE') < $time)
@@ -997,7 +1013,7 @@ class AdminModulesControllerCore extends AdminController
 		$helper->id = 'box-disabled-modules';
 		$helper->icon = 'icon-off';
 		$helper->color = 'color2';
-		$helper->title = html_entity_decode($this->l('Disabled Modules'));
+		$helper->title = $this->l('Disabled Modules', null, null, false);
 		if (ConfigurationKPI::get('DISABLED_MODULES') !== false)
 			$helper->value = ConfigurationKPI::get('DISABLED_MODULES');
 		if (ConfigurationKPI::get('DISABLED_MODULES_EXPIRE') < $time)
@@ -1008,7 +1024,7 @@ class AdminModulesControllerCore extends AdminController
 		$helper->id = 'box-update-modules';
 		$helper->icon = 'icon-refresh';
 		$helper->color = 'color3';
-		$helper->title = html_entity_decode($this->l('Modules to update'));
+		$helper->title = $this->l('Modules to update', null, null, false);
 		if (ConfigurationKPI::get('UPDATE_MODULES') !== false)
 			$helper->value = ConfigurationKPI::get('UPDATE_MODULES');
 		if (ConfigurationKPI::get('UPDATE_MODULES_EXPIRE') < $time)
@@ -1022,9 +1038,6 @@ class AdminModulesControllerCore extends AdminController
 	
 	public function initContent()
 	{
-		// Adding Css
-		//$this->addCSS(__PS_BASE_URI__.str_replace(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR, '', _PS_ADMIN_DIR_).'/themes/'.$this->bo_theme.'/css/modules.css', 'all');
-
 		// If we are on a module configuration, no need to load all modules
 		if (Tools::getValue('configure') != '')
 			return true;

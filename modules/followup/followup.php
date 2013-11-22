@@ -45,7 +45,8 @@ class Followup extends Module
 		'PS_FOLLOW_UP_DAYS_THRESHOLD_4',
 		'PS_FOLLOW_UP_CLEAN_DB');
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Customer follow-up');
 		$this->description = $this->l('Follow-up with your customers with daily customized e-mails.');

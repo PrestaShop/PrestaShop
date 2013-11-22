@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 #compare_shipping .form-group {
   line-height: normal;
   margin-bottom: 10px;
@@ -15,10 +16,10 @@
   margin-bottom: 3px;
 }
 #compare_shipping .table {
-  background: #fff;
+  background: white;
 }
 #compare_shipping .table thead tr th {
-  background: #fff;
+  background: white;
   padding: 4px 10px 3px 10px;
 }
 #compare_shipping .table tbody td {

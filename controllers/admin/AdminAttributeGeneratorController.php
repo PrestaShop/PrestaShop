@@ -196,9 +196,12 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		));
 	}
 
-	public function initToolbar()
+	public function initPageHeaderToolbar()
 	{
-		$this->toolbar_btn['back'] = array(
+		parent::initPageHeaderToolbar();
+
+		$this->page_header_toolbar_title = $this->l('Attributes generator');
+		$this->page_header_toolbar_btn['back'] = array(
 			'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&key_tab=Combinations',
 			'desc' => $this->l('Back to the product')
 		);
@@ -215,8 +218,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		}
 
 		// Init toolbar
-		$this->initToolbarTitle();
-		$this->initToolbar();
+		$this->initPageHeaderToolbar();
 		$this->initGroupTable();
 
 		$attributes = Attribute::getAttributes(Context::getContext()->language->id, true);
@@ -239,7 +241,9 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 			'attribute_js' => $attribute_js,
 			'toolbar_btn' => $this->toolbar_btn,
 			'toolbar_scroll' => true,
-			'title' => $this->toolbar_title,
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 	}
 }

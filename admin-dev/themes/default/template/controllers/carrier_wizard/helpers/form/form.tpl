@@ -58,6 +58,18 @@
 					{l s='Current size:'} <span id="carrier_logo_size">{l s='undefined'}</span>.
 			</p>
 		</div>
+		<script>
+			$(document).ready(function(){
+				$('#attachement_fileselectbutton').click(function(e){
+					$('#carrier_logo_input').trigger('click');
+				});
+				$('#carrier_logo_input').change(function(e){
+					var val = $(this).val();
+					var file = val.split(/[\\/]/);
+					$('#attachement_filename').val(file[file.length-1]);
+				});
+			});
+		</script>
 	{/if}
 	{$smarty.block.parent}
 {/block}

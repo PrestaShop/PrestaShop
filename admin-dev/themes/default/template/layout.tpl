@@ -47,10 +47,12 @@
 {if isset($informations) && count($informations) && $informations}
 	<div class="alert alert-info">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		{if $informations|count > 4}
 		<a id="see_more_infos" href="#" class="btn btn-link" onclick="$('#see_more_infos').hide(); $('#infos_block').show();return false;">
 			<i class="icon-info-sign"></i> {l s='Click here to see more informations'}
 		</a>
-		<ul id="infos_block" class="list-unstyled" style="display:none;">
+		{/if}
+		<ul id="infos_block" class="list-unstyled"{if $informations|count > 4} style="display:none;"{/if}>
 			{foreach $informations as $info}
 				<li>{$info}</li>
 			{/foreach}
@@ -87,8 +89,5 @@
 		{/if}
 	</div>
 {/if}
-
-{if !$bootstrap}<div id="nobootstrap">{/if}
 {$page}
-{if !$bootstrap}</div>{/if}
 {$footer}

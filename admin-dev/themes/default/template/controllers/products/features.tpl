@@ -61,7 +61,7 @@
 				{else}
 					<input type="hidden" name="feature_{$available_feature.id_feature}_value" value="0" />
 					<span>{l s='N/A'} - 
-						<a href="{$link->getAdminLink('AdminFeatures')|escape:'htmlall':'UTF-8'}&amp;addfeature_value&id_feature={$available_feature.id_feature}"
+						<a href="{$link->getAdminLink('AdminFeatures')|escape:'html':'UTF-8'}&amp;addfeature_value&id_feature={$available_feature.id_feature}"
 					 	class="confirm_leave btn btn-link"><i class="icon-plus-sign"></i> {l s='Add pre-defined values first'} <i class="icon-external-link-sign"></i></a>
 					</span>
 				{/if}
@@ -77,7 +77,7 @@
 								name="custom_{$available_feature.id_feature}_{$language.id_lang}"
 								cols="40"
 								rows="1"
-								onkeyup="if (isArrowKey(event)) return ;$('#feature_{$available_feature.id_feature}_value').val(0);" >{$available_feature.val[$k].value|escape:'htmlall':'UTF-8'|default:""}</textarea>
+								onkeyup="if (isArrowKey(event)) return ;$('#feature_{$available_feature.id_feature}_value').val(0);" >{$available_feature.val[$k].value|escape:'html':'UTF-8'|default:""}</textarea>
 					{if $languages|count > 1}
 						</div>
 						<div class="col-lg-3">
@@ -107,12 +107,12 @@
 		</tbody>
 	</table>
 
-	<a href="{$link->getAdminLink('AdminFeatures')|escape:'htmlall':'UTF-8'}&amp;addfeature" class="btn btn-link confirm_leave button">
+	<a href="{$link->getAdminLink('AdminFeatures')|escape:'html':'UTF-8'}&amp;addfeature" class="btn btn-link confirm_leave button">
 		<i class="icon-plus-sign"></i> {l s='Add a new feature'} <i class="icon-external-link-sign"></i>
 	</a>
 </div>
 {/if}
 <script type="text/javascript">
-	hideOtherLanguage({$default_language});
+	hideOtherLanguage(default_language);
 	$(".textarea-autosize").autosize();
 </script>

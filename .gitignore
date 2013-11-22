@@ -44,6 +44,12 @@ themes/default/modules/*/*.php
 !themes/default/modules/*/index.php
 themes/default/lang/*.php
 !themes/default/lang/index.php
+themes/default-bootstrap/cache/*.js
+themes/default-bootstrap/cache/*.css
+themes/default-bootstrap/modules/*/*.php
+!themes/default-bootstrap/modules/*/index.php
+themes/default-bootstrap/lang/*.php
+!themes/default-bootstrap/lang/index.php
 modules/*/translations/*.php
 !modules/*/translations/index.php
 mails/*

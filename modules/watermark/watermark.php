@@ -43,10 +43,11 @@ class Watermark extends Module
 	{
 		$this->name = 'watermark';
 		$this->tab = 'administration';
-		$this->version = '0.3';
+		$this->version = '0.4';
 		$this->author = 'PrestaShop';
 		
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$config = Configuration::getMultiple(array('WATERMARK_TYPES', 'WATERMARK_Y_ALIGN', 'WATERMARK_X_ALIGN', 'WATERMARK_TRANSPARENCY'));
 		if (!isset($config['WATERMARK_TYPES']))
@@ -300,7 +301,7 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Watermark transparency (0-100)'),
+						'label' => $this->l('Watermark transparency (1-100)'),
 						'name' => 'transparency',
 						'class' => 'fixed-width-md',
 					),

@@ -24,9 +24,9 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
-{block name="field"}
+{block name="input_row"}
 	{$smarty.block.parent}
-	{if $input.name == 'id_feature'}
+	{if $input.name == 'value'}
 		{hook h="displayFeatureValueForm" id_feature_value=$feature_value->id}
 	{/if}
 {/block}

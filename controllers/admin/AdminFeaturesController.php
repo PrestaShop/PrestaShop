@@ -84,17 +84,6 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->addRowAction('view');
 		$this->_defaultOrderBy = 'position';
 
-		// Added specific button in toolbar
-		$this->toolbar_btn['newAttributes'] = array(
-			'href' => self::$currentIndex.'&amp;addfeature_value&amp;token='.$this->token,
-			'desc' => $this->l('Add new feature values')
-		);
-
-		$this->toolbar_btn['new'] = array(
-			'href' => self::$currentIndex.'&amp;addfeature&amp;token='.$this->token,
-			'desc' => $this->l('Add a new feature')
-		);
-
 		return parent::renderList();
 	}
 
@@ -201,19 +190,18 @@ class AdminFeaturesControllerCore extends AdminController
 	public function initPageHeaderToolbar()
 	{
 		if (empty($this->display))
-		{
-			$this->page_header_toolbar_title = $this->l('Features');
 			$this->page_header_toolbar_btn['new_feature'] = array(
 				'href' => self::$currentIndex.'&amp;addfeature&amp;token='.$this->token,
 				'desc' => $this->l('Add new feature'),
 				'icon' => 'process-icon-new'
 			);
+
+		if ($this->display == 'view')
 			$this->page_header_toolbar_btn['new_feature_value'] = array(
-				'href' => self::$currentIndex.'&amp;addfeature_value&amp;token='.$this->token,
+				'href' => self::$currentIndex.'&addfeature_value&id_feature='.(int)Tools::getValue('id_feature').'&token='.$this->token,
 				'desc' => $this->l('Add new feature value'),
 				'icon' => 'process-icon-new'
 			);
-		}
 
 		parent::initPageHeaderToolbar();
 	}
@@ -253,12 +241,16 @@ class AdminFeaturesControllerCore extends AdminController
 				);
 			break;
 			case 'view':
+				$this->toolbar_btn['newAttributes'] = array(
+					'href' => self::$currentIndex.'&addfeature_value&id_feature='.(int)Tools::getValue('id_feature').'&token='.$this->token,
+					'desc' => $this->l('Add new feature values')
+				);
 				$this->toolbar_btn['back'] = array(
 					'href' => self::$currentIndex.'&token='.$this->token,
 					'desc' => $this->l('Back to the list')
 				);
-
-			default:
+				break;
+			default:				
 				parent::initToolbar();
 		}
 	}
@@ -269,15 +261,34 @@ class AdminFeaturesControllerCore extends AdminController
 
 		switch ($this->display)
 		{
+			case 'edit':
+				$bread_extended[] = $this->l('Edit New Feature');
+				break;
+
+			case 'add':
+				$bread_extended[] = $this->l('Add New Feature');
+				break;
+
 			case 'view':
-				if (Tools::getIsset('viewfeature'))
+				$bread_extended[] = $this->feature_name[$this->context->employee->id_lang];
+				break;
+
+			case 'editFeatureValue':
+				if (($id_feature_value = Tools::getValue('id_feature_value')))
 				{
 					if (($id = Tools::getValue('id_feature')))
+					{
 						if (Validate::isLoadedObject($obj = new Feature((int)$id)))
-							$bread_extended[] = $obj->name[$this->context->employee->id_lang];
+							$bread_extended[] = '<a href="'.Context::getContext()->link->getAdminLink('AdminFeatures').'&id_feature='.$id.'&viewfeature">'.$obj->name[$this->context->employee->id_lang].'</a>';
+						
+						if (Validate::isLoadedObject($obj = new FeatureValue((int)Tools::getValue('id_feature_value'))))
+							$bread_extended[] =  sprintf($this->l('Edit: %s'), $obj->value[$this->context->employee->id_lang]);
+					}
+					else
+						$bread_extended[] = $this->l('Edit Value');
 				}
 				else
-					$bread_extended[] = $this->attribute_name[$this->context->employee->id_lang];
+					$bread_extended[] = $this->l('Add New Value');
 				break;
 		}
 
@@ -299,15 +310,6 @@ class AdminFeaturesControllerCore extends AdminController
 			),
 			'input' => array(
 				array(
-					'type' => 'text',
-					'label' => $this->l('Value:'),
-					'name' => 'value',
-					'lang' => true,
-					'size' => 33,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'required' => true
-				),
-				array(
 					'type' => 'select',
 					'label' => $this->l('Feature:'),
 					'name' => 'id_feature',
@@ -317,13 +319,24 @@ class AdminFeaturesControllerCore extends AdminController
 						'name' => 'name'
 					),
 					'required' => true
-				)
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Value:'),
+					'name' => 'value',
+					'lang' => true,
+					'size' => 33,
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'required' => true
+				),
 			),
 			'submit' => array(
 				'title' => $this->l('   Save   '),
 				'class' => 'button'
 			)
 		);
+
+		$this->fields_value['id_feature'] = (int)Tools::getValue('id_feature');
 
 		// Create Object FeatureValue
 		$feature_value = new FeatureValue(Tools::getValue('id_feature_value'));

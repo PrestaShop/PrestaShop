@@ -14,13 +14,14 @@
 #order-opc .page-heading.step-num {
   position: relative;
   padding-left: 45px;
+  overflow: visible;
 }
 #order-opc .page-heading.step-num span {
   font-weight: bold;
   font-size: 42px;
   line-height: 51px;
   font-style: italic;
-  color: #333;
+  color: #333333;
   position: absolute;
   left: 10px;
   top: -14px;
@@ -41,7 +42,7 @@
 }
 #order-opc .title_block {
   font-weight: bold;
-  color: #333;
+  color: #333333;
   padding: 3px 0 6px;
 }
 #order-opc .opc-button {

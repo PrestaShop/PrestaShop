@@ -41,7 +41,8 @@ class Blockrss extends Module
  	 	$this->tab = 'front_office_features';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('RSS feed block');
 		$this->description = $this->l('Adds a block displaying an RSS feed.');

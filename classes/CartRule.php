@@ -254,6 +254,17 @@ class CartRuleCore extends ObjectModel
 			}
 			else
 				$cart_rule['quantity_for_user'] = 0;
+		unset($cart_rule);
+		
+		foreach ($result as $cart_rule)
+			if ($cart_rule['shop_restriction'])
+			{
+				$cartRuleShops = Db::getInstance()->executeS('SELECT id_shop FROM '._DB_PREFIX_.'cart_rule_shop WHERE id_cart_rule = '.(int)$cart_rule['id_cart_rule']);
+				foreach ($cartRuleShops as $cartRuleShop)
+					if (Shop::isFeatureActive() && ($cartRuleShop['id_shop'] == Context::getContext()->shop->id))
+						continue 2;
+				unset($result[$key]);
+			}
 
 		// Retrocompatibility with 1.4 discounts
 		foreach ($result as &$cart_rule)

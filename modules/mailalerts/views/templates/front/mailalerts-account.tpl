@@ -65,9 +65,9 @@ $('document').ready(function()
 		<div>
 			{foreach from=$mailAlerts item=mailAlert}
 			<div class="mailalert clearfix">
-				<a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)}" title="{$mailAlert.name|escape:'htmlall':'UTF-8'}" class="product_img_link"><img src="{$link->getImageLink($mailAlert.link_rewrite, $mailAlert.cover, 'small_default')|escape:'html'}" alt=""/></a>
-				<h3><a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)|escape:'html'}" title="{$mailAlert.name|escape:'htmlall':'UTF-8'}">{$mailAlert.name|escape:'htmlall':'UTF-8'}</a></h3>
-				<div class="product_desc">{$mailAlert.attributes_small|escape:'htmlall':'UTF-8'}</div>
+				<a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)}" title="{$mailAlert.name|escape:'html':'UTF-8'}" class="product_img_link"><img src="{$link->getImageLink($mailAlert.link_rewrite, $mailAlert.cover, 'small_default')|escape:'html'}" alt=""/></a>
+				<h3><a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)|escape:'html'}" title="{$mailAlert.name|escape:'html':'UTF-8'}">{$mailAlert.name|escape:'html':'UTF-8'}</a></h3>
+				<div class="product_desc">{$mailAlert.attributes_small|escape:'html':'UTF-8'}</div>
 
 				<div class="remove">
 					<img rel="ajax_id_mailalert_{$mailAlert.id_product}_{$mailAlert.id_product_attribute}" src="{$img_dir}icon/delete.gif" alt="{l s='Remove' mod='mailalerts'}" class="icon" />

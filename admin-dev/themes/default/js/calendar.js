@@ -378,8 +378,13 @@ $( document ).ready(function() {
 	}
 
 	$('#datepickerExpand').on('click',function() {
-		$('#datepicker').removeClass('hide');
-		$('#date-start').focus();
+		if ($('#datepicker').hasClass('hide'))
+		{
+			$('#datepicker').removeClass('hide');
+			$('#date-start').focus();
+		}
+		else
+			$('#datepicker').addClass('hide');
 	});
 
 	$('.submitDateDay').on('click',function(e){

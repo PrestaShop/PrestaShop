@@ -71,7 +71,6 @@
 			{/foreach}
 			</div>
 		</div>
-
 		<script type="text/javascript">
 			var token = '{$token}';
 			var id_product = {if isset($product->id)}{$product->id}{else}0{/if};
@@ -104,8 +103,6 @@
 			$(document).ready(function()
 			{
 				hideOtherLanguage(default_language);
-				
-				$('#product-tab-content-wait').show();
 
 				if (product_type == product_type_pack)
 				{

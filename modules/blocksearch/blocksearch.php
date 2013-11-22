@@ -33,7 +33,7 @@ class BlockSearch extends Module
 	{
 		$this->name = 'blocksearch';
 		$this->tab = 'search_filter';
-		$this->version = 1.2;
+		$this->version = 1.3;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -53,6 +53,7 @@ class BlockSearch extends Module
 	public function hookdisplayMobileTopSiteMap($params)
 	{
 		$this->smarty->assign(array('hook_mobile' => true, 'instantsearch' => false));
+		$params['hook_mobile'] = true;
 		return $this->hookTop($params);
 	}
 	
@@ -80,24 +81,32 @@ public function hookDisplayMobileHeader($params)
 
 	public function hookRightColumn($params)
 	{
-		
 		if (Tools::getValue('search_query') || !$this->isCached('blocksearch.tpl', $this->getCacheId()))
 		{
 			$this->calculHookCommon($params);
-			$this->smarty->assign('blocksearch_type', 'block');
+			$this->smarty->assign(array(
+				'blocksearch_type' => 'block',
+				'search_query' => (string)Tools::getValue('search_query')
+				)
+			);
 		}
 		return $this->display(__FILE__, 'blocksearch.tpl', Tools::getValue('search_query') ? null : $this->getCacheId());
 	}
 
 	public function hookTop($params)
 	{
-		if (Tools::getValue('search_query') || !$this->isCached('blocksearch-top.tpl', $this->getCacheId('blocksearch-top')))
+		$key = $this->getCacheId('blocksearch-top'.((!isset($params['hook_mobile']) || !$params['hook_mobile']) ? '' : '-hook_mobile'));
+		if (Tools::getValue('search_query') || !$this->isCached('blocksearch-top.tpl', $key))
 		{
 			$this->calculHookCommon($params);
-			$this->smarty->assign('blocksearch_type', 'top');
+			$this->smarty->assign(array(
+				'blocksearch_type' => 'top',
+				'search_query' => (string)Tools::getValue('search_query')
+				)
+			);
+			
 		}
-
-		return $this->display(__FILE__, 'blocksearch-top.tpl', Tools::getValue('search_query') ? null : $this->getCacheId('blocksearch-top'));
+		return $this->display(__FILE__, 'blocksearch-top.tpl', Tools::getValue('search_query') ? null : $key);
 	}
 
 	/**

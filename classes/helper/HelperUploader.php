@@ -30,16 +30,18 @@ class HelperUploaderCore extends Uploader
 	const DEFAULT_TEMPLATE           = 'simple.tpl';
 	const DEFAULT_AJAX_TEMPLATE      = 'ajax.tpl';
 
+	const TYPE_IMAGE                 = 'image';
+	const TYPE_FILE                  = 'file';
+
 	private   $_context;
 	private   $_id;
-	private   $_images;
+	private   $_files;
 	private   $_name;
+	private   $_max_files;
 	private   $_multiple;
-	private   $_file;
 	protected $_template;
 	private   $_template_directory;
 	private   $_title;
-	private   $_thumb;
 	private   $_url;
 	private   $_use_ajax;
 
@@ -71,29 +73,29 @@ class HelperUploaderCore extends Uploader
 		return $this->_id;
 	}
 
-	public function setImages($value)
+	public function setFiles($value)
 	{
-		$this->_images = $value;
+		$this->_files = $value;
 		return $this;
 	}
 
-	public function getImages()
+	public function getFiles()
 	{
-		if (!isset($this->_images))
-			$this->_images = array();
+		if (!isset($this->_files))
+			$this->_files = array();
 
-		return $this->_images;
+		return $this->_files;
 	}
 
-	public function setName($value)
+	public function setMaxFiles($value)
 	{
-		$this->_name = (string)$value;
+		$this->_max_files = isset($value) ? intval($value) : $value;
 		return $this;
 	}
 
-	public function getName()
+	public function getMaxFiles()
 	{
-		return $this->_name;
+		return $this->_max_files;
 	}
 
 	public function setMultiple($value)
@@ -106,6 +108,17 @@ class HelperUploaderCore extends Uploader
 	{
 		$this->_template = $value;
 		return $this;
+	}
+
+	public function setName($value)
+	{
+		$this->_name = (string)$value;
+		return $this;
+	}
+
+	public function getName()
+	{
+		return $this->_name;
 	}
 
 	public function getTemplate()
@@ -168,17 +181,6 @@ class HelperUploaderCore extends Uploader
 			return $this->getTemplateDirectory().$template;
 	}
 
-	public function setFile($value)
-	{
-		$this->_file = $value;
-		return $this;
-	}
-
-	public function getFile()
-	{
-		return $this->_file;
-	}
-
 	public function setTitle($value)
 	{
 		$this->_title = $value;
@@ -188,17 +190,6 @@ class HelperUploaderCore extends Uploader
 	public function getTitle()
 	{
 		return $this->_title;
-	}
-
-	public function setThumb($value)
-	{
-		$this->_thumb = $value;
-		return $this;
-	}
-
-	public function getThumb()
-	{
-		return $this->_thumb;
 	}
 
 	public function setUrl($value)
@@ -223,12 +214,6 @@ class HelperUploaderCore extends Uploader
 		return (isset($this->_multiple) && $this->_multiple);
 	}
 
-	public function process()
-	{
-		$files = parent::process();
-		die(Tools::jsonEncode(array($this->getName() => $files)));
-	}
-
 	public function render()
 	{
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
@@ -246,24 +231,28 @@ class HelperUploaderCore extends Uploader
 				.'/themes/'.$bo_theme.'/js/vendor/jquery.ui.widget.js"></script>';
 			$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
 				.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js"></script>';
-				$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+			$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
 				.'/themes/'.$bo_theme.'/js/jquery.fileupload.js"></script>';
+				$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+				.'/themes/'.$bo_theme.'/js/jquery.fileupload-process.js"></script>';
+			$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+				.'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js"></script>';
 		}
 		else
 		{
 			$html = '';
 			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
 				.'/themes/'.$bo_theme.'/js/vendor/jquery.ui.widget.js');
-			//$context->controller->addJs('http://blueimp.github.io/JavaScript-Load-Image/js/load-image.min.js');
 			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
 				.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
 			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
 				.'/themes/'.$bo_theme.'/js/jquery.fileupload.js');
-			/*$context->controller->addJs(__PS_BASE_URI__.$admin_webpath
-				.'/themes/'.$bo_theme.'/js/jquery.fileupload-image.js');*/
-
-			$this->getContext()->controller->addJs(__PS_BASE_URI__.'/js/vendor/spin.js');
-			$this->getContext()->controller->addJs(__PS_BASE_URI__.'/js/vendor/ladda.js');
+			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
+				.'/themes/'.$bo_theme.'/js/jquery.fileupload-process.js');
+			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
+				.'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js');			
+			$this->getContext()->controller->addJs('js/vendor/spin.js');
+			$this->getContext()->controller->addJs('js/vendor/ladda.js');
 		}
 
 		if ($this->useAjax())
@@ -278,10 +267,10 @@ class HelperUploaderCore extends Uploader
 			'name'          => $this->getName(),
 			'url'           => $this->getUrl(),
 			'multiple'      => $this->isMultiple(),
-			'images'        => $this->getImages(),
-			'thumb'         => $this->getThumb(),
-			'file'          => $this->getFile(),
-			'title'         => $this->getTitle()
+			'files'         => $this->getFiles(),
+			'title'         => $this->getTitle(),
+			'max_files'     => $this->getMaxFiles(),
+			'post_max_size' => $this->getPostMaxSizeBytes()
 		));
 
 		$html .= $template->fetch();

@@ -36,10 +36,13 @@
 		});
 	});
 </script>
-<div class="panel-heading">
-	<input type="checkbox" id="filter-by-category" {if $is_category_filter}checked="checked"{/if} />
-	{l s=$title}
-	<div id="category-tree-toolbar" class="tree-actions"{if !$is_category_filter} style="display:none"{/if}>
+
+<div class="tree-panel-heading-controls clearfix">
+	<div id="category-tree-toolbar" {if !$is_category_filter}style="display:none;"{/if}>
 		{if isset($toolbar)}{$toolbar}{/if}
 	</div>
+	<label class="pull-left">
+		<input type="checkbox" id="filter-by-category" {if $is_category_filter}checked="checked"{/if} />
+		{l s=$title}
+	</label>
 </div>

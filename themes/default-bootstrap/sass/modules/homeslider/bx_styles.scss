@@ -1,3 +1,4 @@
+@import '../../_theme_variables';
 /**
  * BxSlider v4.0 - Fully loaded, responsive content slider
  * http://bxslider.com
@@ -18,11 +19,18 @@
 #homepage-slider {
 	padding-left:0;
 	padding-right:0;
-	padding-top:29px;
-	margin-bottom:35px;
+	padding-top:50px;
+	margin-bottom:14px;
+	width:66.6%;
 	max-width:779px;
 	position:relative;
 	z-index:1;
+	float:left;
+																		@media (max-width: $screen-xs-max) { // max 767px
+																			width:100%;
+																			max-width:100%;
+																			padding-top:20px;
+																		}
 	
 	#homeslider {
 		margin:0 auto;
@@ -68,7 +76,7 @@
 
 .bx-wrapper .bx-loading {
 	min-height: 50px;
-	background: url(images/bx_loader.gif) center center no-repeat #fff;
+	background: url(images/bx_loader.gif) center center no-repeat $light-background;
 	height: 100%;
 	width: 100%;
 	position: absolute;
@@ -82,7 +90,7 @@
 .bx-wrapper .bx-pager {
 	text-align: center;
 	font-size: .85em;
-	font-family: Arial;
+	font-family: $font-famaly;
 	font-weight: bold;
 	color: #666;
 	padding-top: 20px;
@@ -139,13 +147,13 @@
 	height: 52px;
 	text-indent: -9999px;
 	z-index: 9999;
-	border:2px solid #fff;
+	border:2px solid $light-border-color;
 	
 	&:before {
 		height:48px;
 		width:48px;
 		display:block;
-		background:#fff;
+		background:$light-background;
 		content:".";
 		opacity:0.14;
 		text-indent:-9999px;
@@ -159,11 +167,11 @@
 		display:block;
 		width:48px;
 		height:48px;
-		color:#fff;
+		color:$light-text-color;
 		text-indent:0;
 		text-align:center;
 		font-size:21px;
-		font-family:"FontAwesome";
+		font-family:$font-icon;
 		position:absolute;
 		top:0;
 		left:0;
@@ -174,7 +182,7 @@
 	&:hover {
 		
 		&:before {
-			background:#333;
+			background:$dark-background;
 			opacity:0.83;	
 		}
 	}
@@ -244,8 +252,8 @@
 }
 
 .bx-wrapper .bx-caption span {
-	color: #fff;
-	font-family: Arial;
+	color: $light-text-color;
+	font-family: $font-famaly;
 	display: block;
 	font-size: .85em;
 	padding: 10px;

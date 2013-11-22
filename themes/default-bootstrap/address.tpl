@@ -114,9 +114,11 @@ $(function(){ldelim}
             {/if}
             {if $field_name eq 'firstname'}
             <div class="required form-group">
+            
                 <label for="firstname">{l s='First name'} <sup>*</sup></label>
                 <input class="is_required validate form-control" data-validate="{$address_validation.$field_name.validate}" type="text" name="firstname" id="firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{else}{if isset($address->firstname)}{$address->firstname|escape:'html'}{/if}{/if}" />
-            </div>    
+            </div>
+    
             {/if}
             {if $field_name eq 'lastname'}
             <div class="required form-group">
@@ -240,3 +242,6 @@ $(function(){ldelim}
         </p>
     </form>
 </div>
+<ul class="footer_links clearfix">
+    <li><a class="btn btn-defaul button button-small" href="{$link->getPageLink('addresses', true)|escape:'html'}"><span><i class="icon-chevron-left"></i> {l s='Back to your addresses'}</span></a></li>
+</ul>

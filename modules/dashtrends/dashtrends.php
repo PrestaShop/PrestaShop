@@ -75,11 +75,30 @@ class Dashtrends extends Module
 			'total_expenses' => array()
 		);
 
-		$tmp_data['visits'] = AdminStatsControllerCore::getVisits(false, $date_from, $date_to, 'day');
-		$tmp_data['orders'] = AdminStatsControllerCore::getOrders($date_from, $date_to, 'day');
-		$tmp_data['total_paid_tax_excl'] = AdminStatsControllerCore::getTotalSales($date_from, $date_to, 'day');
-		$tmp_data['total_purchases'] = AdminStatsControllerCore::getPurchases($date_from, $date_to, 'day');
-		$tmp_data['total_expenses'] = AdminStatsControllerCore::getExpenses($date_from, $date_to, 'day');
+		if (Configuration::get('PS_DASHBOARD_SIMULATION'))
+		{
+			$from = strtotime($date_from.' 00:00:00');
+			$to = min(time(), strtotime($date_to.' 23:59:59'));
+			for ($date = $from; $date <= $to; $date = strtotime('+1 day', $date))
+			{
+				$tmp_data['visits'][$date] = round(rand(2000, 20000));
+				$tmp_data['conversion_rate'][$date] = rand(80, 250) / 100;
+				$tmp_data['average_cart_value'][$date] = round(rand(60, 200), 2);
+				$tmp_data['orders'][$date] = round($tmp_data['visits'][$date] * $tmp_data['conversion_rate'][$date] / 100);
+				$tmp_data['total_paid_tax_excl'][$date] = $tmp_data['orders'][$date] * $tmp_data['average_cart_value'][$date];
+				$tmp_data['total_purchases'][$date] = $tmp_data['total_paid_tax_excl'][$date] * rand(50, 70) / 100;
+				$tmp_data['total_expenses'][$date] = $tmp_data['total_paid_tax_excl'][$date] * rand(0, 10) / 100;
+			}
+		}
+		else
+		{
+			$tmp_data['visits'] = AdminStatsControllerCore::getVisits(false, $date_from, $date_to, 'day');
+			$tmp_data['orders'] = AdminStatsControllerCore::getOrders($date_from, $date_to, 'day');
+			$tmp_data['total_paid_tax_excl'] = AdminStatsControllerCore::getTotalSales($date_from, $date_to, 'day');
+			$tmp_data['total_purchases'] = AdminStatsControllerCore::getPurchases($date_from, $date_to, 'day');
+			$tmp_data['total_expenses'] = AdminStatsControllerCore::getExpenses($date_from, $date_to, 'day');
+		}
+
 		return $tmp_data;
 	}
 
@@ -93,7 +112,10 @@ class Dashtrends extends Module
 			'conversion_rate' => array(),
 			'net_profits' => array()
 		);
-		$from = max(strtotime(_PS_CREATION_DATE_.' 00:00:00'), strtotime($date_from.' 00:00:00'));
+
+		$from = strtotime($date_from.' 00:00:00');
+		if (!Configuration::get('PS_DASHBOARD_SIMULATION'))
+			$from = max(strtotime(_PS_CREATION_DATE_.' 00:00:00'), $from);
 		$to = min(time(), strtotime($date_to.' 23:59:59'));
 		for ($date = $from; $date <= $to; $date = strtotime('+1 day', $date))
 		{

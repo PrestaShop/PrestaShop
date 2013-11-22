@@ -92,12 +92,13 @@ var moderation_active = {$moderation_active};
 	{/if}	
 	</div>
 </div>
-
+{if isset($product) && $product}
 <!-- Fancybox -->
 <div style="display: none;">
 	<div id="new_comment_form">
 		<form id="id_new_comment_form" action="#">
 			<h2 class="title">{l s='Write your review' mod='productcomments'}</h2>
+			{if isset($product) && $product}
 			<div class="product clearfix">
 				<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home_default')|escape:'html'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
 				<div class="product_desc">
@@ -105,7 +106,7 @@ var moderation_active = {$moderation_active};
 					{$product->description_short}
 				</div>
 			</div>
-
+			{/if}
 			<div class="new_comment_form_content">
 				<h2>{l s='Write your review' mod='productcomments'}</h2>
 
@@ -156,3 +157,4 @@ var moderation_active = {$moderation_active};
 	</div>
 </div>
 <!-- End fancybox -->
+{/if}

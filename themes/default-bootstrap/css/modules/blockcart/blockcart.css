@@ -90,6 +90,15 @@
 }
 #cart_block #cart-buttons a#button_order_cart {
   margin-right: 0;
+  background: #43b155;
+  border-color: #399b49 #369946 #208931 #369946;
+}
+#cart_block #cart-buttons a#button_order_cart span {
+  border-color: #73ca77;
+}
+#cart_block #cart-buttons a#button_order_cart:hover {
+  background: #359144;
+  color: white;
 }
 
 /*******************************************************************
@@ -104,16 +113,28 @@
   height: auto;
   width: 270px;
   background: #484848;
-  color: #fff;
+  color: white;
+}
+@media (min-width: 480px) and (max-width: 767px) {
+  #header #cart_block {
+    top: 69px;
+  }
+}
+@media (max-width: 479px) {
+  #header #cart_block {
+    top: 44px;
+    left: 50%;
+    margin-left: -135px;
+  }
 }
 #header #cart_block a {
-  color: #fff;
+  color: white;
 }
 #header #cart_block a:hover {
   color: #9c9b9b;
 }
 #header #cart_block #cart_block_list .remove_link a, #header #cart_block #cart_block_list .ajax_cart_block_remove_link {
-  color: #fff;
+  color: white;
   outline: none;
   text-decoration: none;
 }
@@ -121,7 +142,7 @@
   color: #9c9b9b;
 }
 #header #cart_block .price {
-  color: #fff;
+  color: white;
 }
 #header #cart_block dt {
   background: url(../../../img/cart-shadow.png) repeat-x;
@@ -140,7 +161,7 @@
   color: #9c9b9b;
 }
 #header #cart_block .product-atributes a:hover {
-  color: #fff;
+  color: white;
 }
 #header #cart_block #cart-prices {
   border: none;
@@ -205,7 +226,7 @@
 }
 
 #layer_cart {
-  background-color: #fff;
+  background-color: white;
   position: absolute;
   display: none;
   z-index: 99;
@@ -304,7 +325,7 @@
 }
 #layer_cart .layer_cart_cart h2 {
   font: 400 23px/29px Arial, Helvetica, sans-serif;
-  color: #333;
+  color: #333333;
   border-bottom: 1px solid #d6d4d4;
   padding-bottom: 13px;
   margin-bottom: 17px;
@@ -341,7 +362,7 @@
   width: 25px;
   height: 25px;
   cursor: pointer;
-  color: #333;
+  color: #333333;
   z-index: 2;
 }
 #layer_cart .cross:before {
@@ -411,7 +432,7 @@
   line-height: 20px;
   width: 20px;
   height: 20px;
-  color: #333;
+  color: #333333;
   text-indent: -5000px;
   position: absolute;
   top: 45%;

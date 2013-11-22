@@ -29,12 +29,16 @@
 // <![CDATA[
 	var min_item = '{l s='Please select at least one product' js=1}';
 	var max_item = "{l s='You cannot add more than %d product(s) to the product comparison' sprintf=$comparator_max_item js=1}";
+	var comparator_max_item = {$comparator_max_item};
+	var comparedProductsIds = [];
+	{foreach from=$compared_products key=k item=product}comparedProductsIds.push({$product});{/foreach}
 //]]>
 </script>
 {/if}
 	<form method="post" action="{$link->getPageLink('products-comparison')|escape:'html'}" onsubmit="true" class="compare-form">
 		<div>
-        <button type="submit" id="bt_compare{if isset($paginationId)}_{$paginationId}{/if}" class="btn btn-default button button-medium bt_compare"><span>{l s='Compare'} (0)<i class="icon-chevron-right right"></i></span></button>
+        <button type="submit" id="bt_compare{if isset($paginationId)}_{$paginationId}{/if}" class="btn btn-default button button-medium bt_compare"><span>{l s='Compare'} (<strong class="total-compare-val">{count($compared_products)}</strong>)<i class="icon-chevron-right right"></i></span></button>
+         <input type="hidden" name="compare_product_count" class="compare_product_count" value="{count($compared_products)}" />
 		<input type="hidden" name="compare_product_list" class="compare_product_list" value="" />
 		</div>
 	</form>

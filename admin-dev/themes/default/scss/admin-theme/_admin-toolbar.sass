@@ -1,0 +1,126 @@
+.page-head
+	width: 100%
+	height: 55px
+	padding: 0 10px 0 0
+	margin: 0
+	border-bottom: 4px solid darken($secondary-color,10%)
+	position: fixed
+	top: 36px
+	left: 0px
+	z-index: 499
+	background-color: $secondary-color
+	@include box-shadow(rgba(black,0.15) 0 7px 0)
+	h2.page-title
+		@extend .pull-left
+		padding: 0 0 0 260px
+		font-size: 18px
+		color: white
+		text-transform: uppercase
+		@media (max-width: $screen-tablet)
+			padding: 0 0 0 20px
+		a
+			border-bottom: dotted 1px white
+			&:hover
+				color: black
+				border-color: black
+	a
+		color: white
+		text-decoration: none
+
+	.btn-toolbar
+		margin: 0
+		padding: 3px 0 0 0
+		.nav-tabs
+			margin: 0
+		.nav-tabs > li > a
+			color: #333
+
+.toolbar_btn
+	position: relative
+	padding: 2px 5px !important
+	margin-right: 3px
+	font-size: 12px
+	font-weight: 600
+	color: white
+	text-align: center
+	text-shadow: none
+	&:hover
+		color: $secondary-color
+		border-color: white
+		background-color: white!important
+		
+[class^="process-icon-"], [class*=" process-icon-"]
+	height: 25px
+	min-width: 32px
+	background-position: center
+	background-repeat: no-repeat
+	display: block
+	font-family: FontAwesome
+	font-weight: normal
+	font-style: normal
+	font-size: 25px
+	line-height: 25px
+	text-decoration: inherit
+	-webkit-font-smoothing: antialiased
+	*margin-right: .3em
+
+.page-header-toolbar-back
+	border: none!important
+	display: inline-block
+
+.process-icon-save, .process-icon-save-and-stay, .process-icon-save-and-preview
+	@extend .icon-save
+.process-icon-cancel
+	@extend .icon-remove
+.process-icon-back
+	@extend .icon-circle-arrow-left
+.process-icon-help
+	@extend .icon-question-sign
+.process-icon-export
+	@extend .icon-cloud-download
+.process-icon-import
+	@extend .icon-cloud-upload
+.process-icon-help-new
+	@extend .icon-question-sign
+.process-icon-edit
+	@extend .icon-edit
+.process-icon-newAttributes, .process-icon-new, .process-icon-new-url
+	@extend .icon-plus-sign-alt
+.process-icon-modules-list
+	@extend .icon-puzzle-piece
+.process-icon-save-date
+	@extend .icon-download
+.process-icon-save-status
+	@extend .icon-download
+.process-icon-new-module
+	@extend .icon-plus
+.process-icon-delete
+	@extend .icon-trash
+.process-icon-update
+	@extend icon-refresh
+.process-icon-preview, .process-icon-previewURL
+	@extend .icon-eye-open
+.process-icon-stats
+	@extend .icon-bar-chart
+.process-icon-duplicate
+	@extend .icon-copy
+.process-icon-newCombination.toolbar-new
+	@extend .icon-plus-sign
+.process-icon-newCombination.toolbar-cancel
+	@extend .icon-minus-sign
+.process-icon-partial_refund
+	@extend .icon-exchange
+.process-icon-anchor
+	@extend .icon-anchor
+.process-icon-refresh
+	@extend .icon-refresh
+.process-icon-configure
+	@extend .icon-cog
+.process-icon-uninstall
+	@extend .icon-trash
+.process-icon-off
+	@extend .icon-off
+.process-icon-reset
+	@extend .icon-rotate-left
+
+

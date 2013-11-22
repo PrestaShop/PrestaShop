@@ -104,18 +104,35 @@ class HelperOptionsCore extends Helper
 					$uploader->setUrl(isset($field['url'])?$field['url']:null);
 					$uploader->setMultiple(isset($field['multiple'])?$field['multiple']:false);
 					$uploader->setUseAjax(isset($field['ajax'])?$field['ajax']:false);
+					$uploader->setMaxFiles(isset($field['max_files'])?$field['max_files']:null);
 
-					if (isset($field['images']))
-						$uploader->setImages($field['images']);
-					elseif (isset($field['image'])) // Use for retrocompatibility							
-						$uploader->setImages(array(
+					if (isset($field['files']) && $field['files'])
+						$uploader->setFiles($field['files']);
+					elseif (isset($field['image']) && $field['image']) // Use for retrocompatibility							
+						$uploader->setFiles(array(
 							0 => array(
+							'type'       => HelperUploader::TYPE_IMAGE,
 							'image'      => isset($field['image'])?$field['image']:null,
 							'size'       => isset($field['size'])?$field['size']:null,
 							'delete_url' => isset($field['delete_url'])?$field['delete_url']:null
 						)));
 
-					$uploader->setThumb(isset($field['thumb'])?$field['thumb']:null);
+					if (isset($field['file']) && $field['file']) // Use for retrocompatibility							
+						$uploader->setFiles(array(
+							0 => array(
+							'type'       => HelperUploader::TYPE_FILE,
+							'size'       => isset($field['size'])?$field['size']:null,
+							'delete_url' => isset($field['delete_url'])?$field['delete_url']:null,
+							'download_url' => isset($field['file'])?$field['file']:null
+						)));
+
+					if (isset($field['thumb']) && $field['thumb']) // Use for retrocompatibility							
+						$uploader->setFiles(array(
+							0 => array(
+							'type'       => HelperUploader::TYPE_IMAGE,
+							'image'      => isset($field['thumb'])?'<img src="'.$field['thumb'].'" alt="'.$field['title'].'" title="'.$field['title'].'" />':null,
+						)));
+
 					$uploader->setTitle(isset($field['title'])?$field['title']:null);
 					$field['file'] = $uploader->render();
 				}

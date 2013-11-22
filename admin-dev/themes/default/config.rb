@@ -1,11 +1,11 @@
 # Require any additional compass plugins here.
 http_path = "/"
 css_dir = "css"
-sass_dir = "css"
+sass_dir = "scss"
 images_dir = "img"
 javascripts_dir = "js"
 fonts_dir = "font"
-output_style = :compressed
+output_style = :compact
 environment = :production
 
 # To enable relative paths to assets via compass helper functions. Uncomment:

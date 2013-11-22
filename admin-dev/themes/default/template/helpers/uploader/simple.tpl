@@ -22,17 +22,17 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if isset($images) && $images}
+{if isset($files) && $files|count > 0}
 <div class="form-group">
-	<div class="col-lg-12">
-		{foreach $images as $image}
-		{if isset($image.image)}
+	<div class="col-lg-12" id="{$id}-images-thumbnails">
+		{foreach $files as $file}
+		{if isset($file.image) && $file.type == 'image'}
 		<div class="img-thumbnail text-center">
-			<p>{$image.image}</p>
-			{if isset($image.size)}<p>{l s='File size'} {$image.size}kb</p>{/if}
-			{if isset($image.delete_url)}
+			<p>{$file.image}</p>
+			{if isset($file.size)}<p>{l s='File size'} {$file.size}kb</p>{/if}
+			{if isset($file.delete_url)}
 			<p>
-				<a class="btn btn-default" href="{$image.delete_url}">
+				<a class="btn btn-default" href="{$file.delete_url}">
 				<i class="icon-trash"></i> {l s='Delete'}
 				</a>
 			</p>
@@ -43,13 +43,11 @@
 	</div>
 </div>
 {/if}
-{if isset($thumb) && $thumb}
-	<div class="form-group">
-		<div class="col-lg-12">
-			<img src="{$thumb}" alt="{$title}" title="{$title}" class="img-thumbnail" />
-		</div>
-	</div>
-{/if}
+{if isset($max_files) && $files|count >= $max_files}
+<div class="row">
+	<div class="alert alert-warning">{l s='You have reached the limit (%s) of files to upload, please remove files to continue uploading' sprintf=$max_files}</div>
+</div>
+{else}
 <div class="form-group">
 	<div class="col-lg-12">
 		<input id="{$id}" type="file" name="{$name}"{if isset($multiple) && $multiple} multiple="multiple"{/if} class="hide" />
@@ -60,8 +58,8 @@
 				<button id="{$id}-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
 					<i class="icon-folder-open"></i> {if isset($multiple) && $multiple}{l s='Add files'}{else}{l s='Add file'}{/if}
 				</button>
-				{if isset($file)}
-				<a href="{$file}">
+				{if (!isset($multiple) || !$multiple) && isset($files) && $files|count == 1 && isset($files[0].download_url)}
+				<a href="{$files[0].download_url}">
 					<button type="button" class="btn btn-default">
 						<i class="icon-cloud-download"></i>
 						{if isset($size)}{l s='Download current file (%skb)' sprintf=$size}{else}{l s='Download current file'}{/if}
@@ -72,8 +70,11 @@
 		</div>
 	</div>
 </div>
-
 <script type="text/javascript">
+	{if isset($multiple) && isset($max_files)}
+	var {$id}_max_files = {$max_files - $files|count};
+	{/if}
+
 	$(document).ready(function(){
 		$('#{$id}-selectbutton').click(function(e) {
 			$('#{$id}').trigger('click');
@@ -101,5 +102,16 @@
 				$('#{$id}-name').val(name[name.length-1]);
 			}
 		});
+
+		if (typeof {$id}_max_files !== 'undefined')
+		{
+			$('#{$id}').closest('form').on('submit', function(e) {
+				if ($('#{$id}')[0].files.length > {$id}_max_files) {
+					e.preventDefault();
+					alert('{l s='You can upload a maximum of %s files'|sprintf:$max_files}');
+				}
+			});
+		}
 	});
 </script>
+{/if}

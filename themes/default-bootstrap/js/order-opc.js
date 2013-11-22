@@ -441,6 +441,7 @@ $(function() {
 				updateState();
 				updateNeedIDNumber();
 				updateZipCode();
+				$("select.form-control,input[type='checkbox'],input[type='radio']").uniform(); 
 			});
 			$('#opc_guestCheckout').click(function() {
 				$('.is_customer_param').hide();
@@ -452,6 +453,7 @@ $(function() {
 				updateState();
 				updateNeedIDNumber();
 				updateZipCode();
+				$("select.form-control,input[type='checkbox']").uniform(); 
 			});
 		}
 		else if (isGuest)
@@ -667,7 +669,7 @@ $(function() {
 			$('#submitAccount').show();
 		}
 	});
-	
+	$("select.form-control,input[type='checkbox']").uniform();  
 });
 
 function bindCheckbox()
@@ -683,6 +685,7 @@ function bindCheckbox()
 	}
 	else
 		$('#opc_invoice_address').slideUp('slow');
+	$("select.form-control,input[type='checkbox']").uniform();  
 }
 
 function bindInputs()
@@ -718,6 +721,7 @@ function bindInputs()
 				$('#opc_delivery_methods-overlay').fadeOut('slow');
 			}
 		});
+		$("select.form-control,input[type='checkbox']").uniform();  
 	});
 	
 	// Recyclable checkbox
@@ -736,6 +740,7 @@ function bindInputs()
 	
 	if ($('#gift').is(':checked'))
 		$('#gift_div').show();
+		
 	else
 		$('#gift_div').hide();
 
@@ -748,6 +753,7 @@ function bindInputs()
 	$('#cgv').click(function() {
 		updatePaymentMethodsDisplay();
 	});
+	$("select.form-control,input[type='checkbox']").uniform();
 }
 
 function multishippingMode(it)
@@ -854,6 +860,7 @@ function multishippingMode(it)
 			}
 		});
 	}
+	$("select.form-control,input[type='checkbox']").uniform();  
 }
 
 $(document).ready(function() {
@@ -867,4 +874,5 @@ $(document).ready(function() {
 	}
 	if (typeof(open_multishipping_fancybox) !== 'undefined' && open_multishipping_fancybox)
 		$('#link_multishipping_form').click();
+		$("select.form-control,input[type='checkbox']").uniform();  
 });

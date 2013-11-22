@@ -164,6 +164,26 @@ class AdminCmsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
+					'label' => $this->l('Indexation (by search engines):'),
+					'name' => 'indexation',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'indexation_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'indexation_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					),
+				),
+				array(
+					'type' => 'switch',
 					'label' => $this->l('Displayed:'),
 					'name' => 'active',
 					'required' => false,

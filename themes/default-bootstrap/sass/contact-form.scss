@@ -19,7 +19,7 @@
 .contact-form-box {
 	padding:23px 0 0 0;
 	margin-bottom:30px;
-	background:url(../img/contact-form.png) repeat-x #fff;
+	background:url(../img/contact-form.png) repeat-x $light-background;
 	@include box-shadow(rgba(black, 0.17) 0px 5px 13px);
 	
 	fieldset {
@@ -40,20 +40,16 @@
 	
 	.col-md-3 {
 		padding-left:0;
-		
-		/* max 991px */
-		@media (max-width: $screen-sm-max) {
-			padding-right:0;
-		}
+																		@media (max-width: $screen-sm-max) { // max 991px
+																			padding-right:0;
+																		}
 	}
 	
 	.col-md-9 {
 		padding-right:0;
-		
-		/* max 991px */
-		@media (max-width: $screen-sm-max) {
-			padding-left:0;
-		}
+																		@media (max-width: $screen-sm-max) { // max 991px
+																			padding-left:0;
+																		}
 	}
 	
 	#desc_contact0 {display:none;}
@@ -75,8 +71,7 @@
 	input.form-control {
 		max-width:270px;	
 	}
-	/* min 992px max 1199px */
-	@media (min-width: $screen-md) and (max-width: $screen-md-max) {
+	@media (min-width: $screen-md) and (max-width: $screen-md-max) {// min 992px max 1199px
 		div.uploader span.filename {
 			width:114px;	
 		}
@@ -92,7 +87,7 @@
 		
 		li {
 			padding:0px 0 3px 0;
-			font:600 18px/22px 'Open Sans', sans-serif;
+			font:600 18px/22px $font-custom;
 			color:#555454;
 			
 			i {

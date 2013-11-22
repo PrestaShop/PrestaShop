@@ -46,12 +46,12 @@
 
 
 <ul class="info-order" data-role="listview">
-	{if $carrier->id}<li><strong>{l s='Carrier'}</strong> {if $carrier->name == "0"}{$shop_name|escape:'htmlall':'UTF-8'}{else}{$carrier->name|escape:'htmlall':'UTF-8'}{/if}</li>{/if}
-	<li><strong>{l s='Payment method'}</strong> <span class="color-myaccount">{$order->payment|escape:'htmlall':'UTF-8'}</span></li>
+	{if $carrier->id}<li><strong>{l s='Carrier'}</strong> {if $carrier->name == "0"}{$shop_name|escape:'html':'UTF-8'}{else}{$carrier->name|escape:'html':'UTF-8'}{/if}</li>{/if}
+	<li><strong>{l s='Payment method'}</strong> <span class="color-myaccount">{$order->payment|escape:'html':'UTF-8'}</span></li>
 	{if $invoice AND $invoiceAllowed}
 	<li>
 		<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
-		<a href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}" data-ajax="false">{l s='Download your invoice as a PDF file.'}</li>
+		<a href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}" data-ajax="false">{l s='Download your invoice as a PDF file.'}</a>
 	</li>
 	{/if}
 	{if $order->recyclable}
@@ -68,7 +68,7 @@
 <ul data-role="listview" >
 	{foreach from=$order_history item=state name="orderStates"}
 	<li>
-		{$state.ostate_name|escape:'htmlall':'UTF-8'}
+		{$state.ostate_name|escape:'html':'UTF-8'}
 		<span class="ui-li-aside">{dateFormat date=$state.date_add full=1}</span>
 	</li>
 	{/foreach}
@@ -79,7 +79,7 @@
 {* > TO CHECK ==========================*}
 {if isset($followup)}
 <p class="bold">{l s='Click the following link to track the delivery of your order'}</p>
-<a href="{$followup|escape:'htmlall':'UTF-8'}" data-ajax="false">{$followup|escape:'htmlall':'UTF-8'}</a>
+<a href="{$followup|escape:'html':'UTF-8'}" data-ajax="false">{$followup|escape:'html':'UTF-8'}</a>
 {/if}
 {* / TO CHECK ==========================*}
 
@@ -112,12 +112,12 @@
 	<li data-role="list-divider">{l s='Invoice'}</li>
 	<li>
 	{foreach from=$inv_adr_fields name=inv_loop item=field_item}
-		{if $field_item eq "company" && isset($address_invoice->company)}<p class="address_company">{$address_invoice->company|escape:'htmlall':'UTF-8'}</p>
-		{elseif $field_item eq "address2" && $address_invoice->address2}<p class="address_address2">{$address_invoice->address2|escape:'htmlall':'UTF-8'}</p>
-		{elseif $field_item eq "phone_mobile" && $address_invoice->phone_mobile}<p class="address_phone_mobile">{$address_invoice->phone_mobile|escape:'htmlall':'UTF-8'}</p>
+		{if $field_item eq "company" && isset($address_invoice->company)}<p class="address_company">{$address_invoice->company|escape:'html':'UTF-8'}</p>
+		{elseif $field_item eq "address2" && $address_invoice->address2}<p class="address_address2">{$address_invoice->address2|escape:'html':'UTF-8'}</p>
+		{elseif $field_item eq "phone_mobile" && $address_invoice->phone_mobile}<p class="address_phone_mobile">{$address_invoice->phone_mobile|escape:'html':'UTF-8'}</p>
 		{else}
 				{assign var=address_words value=" "|explode:$field_item}
-				<p>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$invoiceAddressFormatedValues[$word_item|replace:',':'']|escape:'htmlall':'UTF-8'}</span>{/foreach}</p>
+				<p>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$invoiceAddressFormatedValues[$word_item|replace:',':'']|escape:'html':'UTF-8'}</span>{/foreach}</p>
 		{/if}
 	{/foreach}
 	</li>
@@ -125,12 +125,12 @@
 	<li data-role="list-divider" >{l s='Delivery'}</li>
 	<li>
 	{foreach from=$dlv_adr_fields name=dlv_loop item=field_item}
-		{if $field_item eq "company" && isset($address_delivery->company)}<p class="address_company">{$address_delivery->company|escape:'htmlall':'UTF-8'}</p>
-		{elseif $field_item eq "address2" && $address_delivery->address2}<p class="address_address2">{$address_delivery->address2|escape:'htmlall':'UTF-8'}</p>
-		{elseif $field_item eq "phone_mobile" && $address_delivery->phone_mobile}<p class="address_phone_mobile">{$address_delivery->phone_mobile|escape:'htmlall':'UTF-8'}</p>
+		{if $field_item eq "company" && isset($address_delivery->company)}<p class="address_company">{$address_delivery->company|escape:'html':'UTF-8'}</p>
+		{elseif $field_item eq "address2" && $address_delivery->address2}<p class="address_address2">{$address_delivery->address2|escape:'html':'UTF-8'}</p>
+		{elseif $field_item eq "phone_mobile" && $address_delivery->phone_mobile}<p class="address_phone_mobile">{$address_delivery->phone_mobile|escape:'html':'UTF-8'}</p>
 		{else}
 				{assign var=address_words value=" "|explode:$field_item} 
-				<p>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$deliveryAddressFormatedValues[$word_item|replace:',':'']|escape:'htmlall':'UTF-8'}</span>{/foreach}</p>
+				<p>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$deliveryAddressFormatedValues[$word_item|replace:',':'']|escape:'html':'UTF-8'}</span>{/foreach}</p>
 		{/if}
 	{/foreach}
 	</li>
@@ -160,8 +160,8 @@
 {* > TO CHECK ==========================*}
 {foreach from=$discounts item=discount}
 	<li class="item">
-		<h3>{$discount.name|escape:'htmlall':'UTF-8'}</h3>
-		<p>{l s='Voucher'} {$discount.name|escape:'htmlall':'UTF-8'}</p>
+		<h3>{$discount.name|escape:'html':'UTF-8'}</h3>
+		<p>{l s='Voucher'} {$discount.name|escape:'html':'UTF-8'}</p>
 		<p><span class="order_qte_span editable">1</span></p>
 		<p>&nbsp;</p>
 		<p>{if $discount.value != 0.00}{l s='-'}{/if}{convertPriceWithCurrency price=$discount.value currency=$currency}</p>
@@ -246,11 +246,11 @@
 				<tr class="{if $smarty.foreach.messageList.first}first_item{elseif $smarty.foreach.messageList.last}last_item{/if} {if $smarty.foreach.messageList.index % 2}alternate_item{else}item{/if}">
 					<td>
 						{if isset($message.ename) && $message.ename}
-							{$message.efirstname|escape:'htmlall':'UTF-8'} {$message.elastname|escape:'htmlall':'UTF-8'}
+							{$message.efirstname|escape:'html':'UTF-8'} {$message.elastname|escape:'html':'UTF-8'}
 						{elseif $message.clastname}
-							{$message.cfirstname|escape:'htmlall':'UTF-8'} {$message.clastname|escape:'htmlall':'UTF-8'}
+							{$message.cfirstname|escape:'html':'UTF-8'} {$message.clastname|escape:'html':'UTF-8'}
 						{else}
-							<b>{$shop_name|escape:'htmlall':'UTF-8'}</b>
+							<b>{$shop_name|escape:'html':'UTF-8'}</b>
 						{/if}
 						<br />
 						{dateFormat date=$message.date_add full=1}
@@ -278,7 +278,7 @@
 		<p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
 		<fieldset>
 			<label for="id_product">{l s='Product'}</label>
-			<select name="id_product" style="width:300px;">
+			<select name="id_product">
 				<option value="0">{l s='-- Choose --'}</option>
 				{foreach from=$products item=product name=products}
 					<option value="{$product.product_id}">{$product.product_name}</option>

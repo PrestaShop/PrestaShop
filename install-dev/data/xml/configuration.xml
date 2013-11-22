@@ -15,7 +15,7 @@
       <value>1</value>
     </configuration>
     <configuration id="PS_GROUP_FEATURE_ACTIVE" name="PS_GROUP_FEATURE_ACTIVE">
-      <value>1</value>
+      <value>0</value>
     </configuration>
     <configuration id="PS_CURRENCY_DEFAULT" name="PS_CURRENCY_DEFAULT">
       <value>1</value>
@@ -780,6 +780,15 @@ Country</value>
     </configuration>
     <configuration id="PS_ATTRIBUTE_ANCHOR_SEPARATOR" name="PS_ATTRIBUTE_ANCHOR_SEPARATOR">
     	<value>-</value>
+    </configuration>
+    <configuration id="CONF_AVERAGE_PRODUCT_MARGIN" name="CONF_AVERAGE_PRODUCT_MARGIN">
+    	<value>40</value>
+    </configuration>
+    <configuration id="PS_DASHBOARD_SIMULATION" name="PS_DASHBOARD_SIMULATION">
+    	<value>1</value>
+    </configuration>
+    <configuration id="QUICK_VIEW" name="QUICK_VIEW">
+    	<value>1</value>
     </configuration>
   </entities>
 </entity_configuration>

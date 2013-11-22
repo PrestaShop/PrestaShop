@@ -52,10 +52,11 @@ class Blocktopmenu extends Module
 	{
 		$this->name = 'blocktopmenu';
 		$this->tab = 'front_office_features';
-		$this->version = 1.6;
+		$this->version = 1.7;
 		$this->author = 'PrestaShop';
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Top horizontal menu');
 		$this->description = $this->l('Add a new horizontal menu to the top of your e-commerce website.');
@@ -65,7 +66,7 @@ class Blocktopmenu extends Module
 	{
 		if (!parent::install() ||
 			!$this->registerHook('displayTop') ||
-			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_ITEMS', 'CAT1,CMS1,CMS2,PRD1') ||
+			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_ITEMS', 'CAT3,CAT26') ||
 			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_SEARCH', '1') ||
 			!$this->registerHook('actionObjectCategoryUpdateAfter') ||
 			!$this->registerHook('actionObjectCategoryDeleteAfter') ||
@@ -336,7 +337,7 @@ class Blocktopmenu extends Module
 			switch (substr($item, 0, strlen($value[1])))
 			{
 				case 'CAT':
-					$this->getCategory((int)$id);
+					$this->getCategory($id, $id_lang, $id_shop);
 					break;
 
 				case 'PRD':
@@ -451,9 +452,7 @@ class Blocktopmenu extends Module
 
 		if (isset($children) && count($children))
 			foreach ($children as $child)
-			{
 				$this->getCategoryOption((int)$child['id_category'], (int)$id_lang, (int)$child['id_shop']);
-			}
 	}
 
 	private function getCategory($id_category, $id_lang = false, $id_shop = false)
@@ -486,8 +485,21 @@ class Blocktopmenu extends Module
 				foreach ($children as $child)
 					$this->getCategory((int)$child['id_category'], (int)$id_lang, (int)$child['id_shop']);
 
+				if ($category->level_depth == 2)
+				{
+					$files = scandir(_PS_CAT_IMG_DIR_);
+					$this->_menu .= '<li id="category-thumbnail">';
+
+					foreach ($files as $file)
+						if (preg_match('/'.$category->id.'-([0-9])?_thumb.jpg/i', $file) === 1)
+							$this->_menu .= '<div>'.ImageManager::thumbnail(_PS_CAT_IMG_DIR_.$file, 'category_'.$file, 100, 'jpg', true, true).'</div>';
+
+					$this->_menu .= '</li>';
+				}
+
 				$this->_menu .= '</ul>';
 			}
+
 			$this->_menu .= '</li>';
 		}
 	}

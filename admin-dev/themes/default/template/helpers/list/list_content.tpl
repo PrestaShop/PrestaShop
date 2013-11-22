@@ -27,10 +27,11 @@
 {foreach $list AS $index => $tr}
 	<tr
 	{if $position_identifier}id="tr_{$id_category}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if}
-	class="{if isset($tr.class)} {$tr.class}{/if}"
+	class="{if isset($tr.class)} {$tr.class}{/if} {if $tr@iteration is odd by 1}odd{/if}"
 	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
+
 	>
-		<td class="center">
+		<td class="text-center">
 			{if $bulk_actions && $has_bulk_actions}
 				{if isset($list_skip_actions.delete)}
 					{if !in_array($tr.$identifier, $list_skip_actions.delete)}
@@ -40,6 +41,7 @@
 					<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
 				{/if}
 			{/if}
+
 		</td>
 		{foreach $fields_display AS $key => $params}
 			{block name="open_td"}
@@ -49,6 +51,7 @@
 					{/if}
 					class="{if !$no_link}pointer{/if}
 					{if isset($params.position) && $order_by == 'position'  && $order_way != 'DESC'} dragHandle{/if}
+					{if isset($params.class)} {$params.class}{/if}
 					{if isset($params.align)} {$params.align}{/if}"
 					{if (!isset($params.position) && !$no_link && !isset($params.remove_onclick))}
 						onclick="document.location = '{$current_index}&{$identifier}={$tr.$identifier}{if $view}&view{else}&update{/if}{$table}&token={$token}'">
@@ -107,15 +110,15 @@
 						{$tr.$key} {l s='%'}
 					{* If type is 'editable', an input is created *}
 					{elseif isset($params.type) && $params.type == 'editable' && isset($tr.id)}
-						<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'htmlall':'UTF-8'}" class="{$key}" />
+						<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'html':'UTF-8'}" class="{$key}" />
 					{elseif isset($params.callback)}
 						{$tr.$key}
 					{elseif $key == 'color'}
 						<div style="background-color: {$tr.$key};" class="attributes-color-container"></div>
 					{elseif isset($params.maxlength) && Tools::strlen($tr.$key) > $params.maxlength}
-						<span title="{$tr.$key|escape:'htmlall':'UTF-8'}">{$tr.$key|truncate:$params.maxlength:'...'|escape:'htmlall':'UTF-8'}</span>
+						<span title="{$tr.$key|escape:'html':'UTF-8'}">{$tr.$key|truncate:$params.maxlength:'...'|escape:'html':'UTF-8'}</span>
 					{else}
-						{$tr.$key|escape:'htmlall':'UTF-8'}
+						{$tr.$key|escape:'html':'UTF-8'}
 					{/if}
 				{else}
 					{block name="default_field"}--{/block}

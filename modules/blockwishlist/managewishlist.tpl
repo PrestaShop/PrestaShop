@@ -39,7 +39,7 @@
 			</li>
 			{/if}
 		</ul>
-		<p class="wishlisturl">{l s='Permalink' mod='blockwishlist'}: <input type="text" value="{$base_dir_ssl}modules/blockwishlist/view.php?token={$token_wish|escape:'htmlall':'UTF-8'}" style="width:540px;" readonly="readonly" /></p>
+		<p class="wishlisturl">{l s='Permalink' mod='blockwishlist'}: <input type="text" value="{$base_dir_ssl}modules/blockwishlist/view.php?token={$token_wish|escape:'html':'UTF-8'}" style="width:540px;" readonly="readonly" /></p>
 		<p class="submit">
 			<a href="#" id="showSendWishlist" class="button_account exclusive" onclick="WishlistVisibility('wl_send', 'SendWishlist'); return false;" title="{l s='Send this wishlist' mod='blockwishlist'}">{l s='Send this wishlist' mod='blockwishlist'}</a>
 		</p>
@@ -52,14 +52,14 @@
 				<div class="clearfix">
 					<div class="product_image">
 						<a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='Product detail' mod='blockwishlist'}">
-							<img src="{$link->getImageLink($product.link_rewrite, $product.cover, 'medium_default')|escape:'html'}" alt="{$product.name|escape:'htmlall':'UTF-8'}" />
+							<img src="{$link->getImageLink($product.link_rewrite, $product.cover, 'medium_default')|escape:'html'}" alt="{$product.name|escape:'html':'UTF-8'}" />
 						</a>
 					</div>
 					<div class="product_infos">
-						<p id="s_title" class="product_name">{$product.name|truncate:30:'...'|escape:'htmlall':'UTF-8'}</p>
+						<p id="s_title" class="product_name">{$product.name|truncate:30:'...'|escape:'html':'UTF-8'}</p>
 						<span class="wishlist_product_detail">
 						{if isset($product.attributes_small)}
-							<a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='Product detail' mod='blockwishlist'}">{$product.attributes_small|escape:'htmlall':'UTF-8'}</a>
+							<a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='Product detail' mod='blockwishlist'}">{$product.attributes_small|escape:'html':'UTF-8'}</a>
 						{/if}
 							<br />{l s='Quantity' mod='blockwishlist'}:<input type="text" id="quantity_{$product.id_product}_{$product.id_product_attribute}" value="{$product.quantity|intval}" size="3"  />
 							<br /><br />
@@ -116,11 +116,11 @@
 			{if $bought.quantity > 0}
 				<tr>
 					<td class="first_item">
-						<span style="float:left;"><img src="{$link->getImageLink($product.link_rewrite, $product.cover, 'small')|escape:'html'}" alt="{$product.name|escape:'htmlall':'UTF-8'}" /></span>			
+						<span style="float:left;"><img src="{$link->getImageLink($product.link_rewrite, $product.cover, 'small')|escape:'html'}" alt="{$product.name|escape:'html':'UTF-8'}" /></span>			
 						<span style="float:left;">
-							{$product.name|truncate:40:'...'|escape:'htmlall':'UTF-8'}
+							{$product.name|truncate:40:'...'|escape:'html':'UTF-8'}
 						{if isset($product.attributes_small)}
-							<br /><i>{$product.attributes_small|escape:'htmlall':'UTF-8'}</i>
+							<br /><i>{$product.attributes_small|escape:'html':'UTF-8'}</i>
 						{/if}
 						</span>
 					</td>

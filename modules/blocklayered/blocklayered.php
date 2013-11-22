@@ -38,9 +38,10 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.8.9';
+		$this->version = '1.9.0';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
+		$this->bootstrap = true;
 
 		parent::__construct();
 
@@ -60,7 +61,8 @@ class BlockLayered extends Module
 		&& $this->registerHook('afterSaveProduct') && $this->registerHook('productListAssign') && $this->registerHook('postProcessAttributeGroup')
 		&& $this->registerHook('postProcessFeature') && $this->registerHook('featureValueForm') && $this->registerHook('postProcessFeatureValue')
 		&& $this->registerHook('afterDeleteFeatureValue') && $this->registerHook('afterSaveFeatureValue') && $this->registerHook('attributeForm')
-		&& $this->registerHook('postProcessAttribute') && $this->registerHook('afterDeleteAttribute') && $this->registerHook('afterSaveAttribute'))
+		&& $this->registerHook('postProcessAttribute') && $this->registerHook('afterDeleteAttribute') && $this->registerHook('afterSaveAttribute')
+		&& $this->registerHook('displayBackOfficeHeader'))
 		{
 			Configuration::updateValue('PS_LAYERED_HIDE_0_VALUES', 1);
 			Configuration::updateValue('PS_LAYERED_SHOW_QTIES', 1);
@@ -565,13 +567,8 @@ class BlockLayered extends Module
 	public function hookFeatureValueForm($params)
 	{
 		$languages = Language::getLanguages(false);
-		$default_form_language = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$default_form_language = (int)$this->context->controller->default_form_language;
 		$lang_value = array();
-		
-			$return = '
-				<script type="text/javascript">
-					flag_fields = \'\';
-				</script>';
 			
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
 		'SELECT url_name, meta_title, id_lang FROM '._DB_PREFIX_.'layered_indexable_feature_value_lang_value
@@ -579,39 +576,74 @@ class BlockLayered extends Module
 		if ($result)
 			foreach ($result as $data)
 				$lang_value[$data['id_lang']] = array('url_name' => $data['url_name'], 'meta_title' => $data['meta_title']);
-		$return .= '<div class="clear"></div>
-				<label>'.$this->l('URL:').'</label>
-				<div class="margin-form">
-				<script type="text/javascript">
-					flag_fields += \'¤url_name¤meta_title\';
-				</script>
-				<div class="translatable">';
-		foreach ($languages as $language)
-			$return .= '
-					<div class="lang_'.$language['id_lang'].'" id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
-						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
-						<p style="clear: both">'.$this->l('Specific URL format in block layered generation').'</p>
-					</div>';
 
-		$return .= '
-						</div>
-						<div class="clear"></div>
-					</div>
-					<label>'.$this->l('Meta title:').' </label>
-					<div class="margin-form">
-						<div class="translatable">';
+		$return = '<div class="form-group">
+				<label class="control-label col-lg-3">
+					<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="'.$this->l('Invalid characters:').' <>;=#{}_">
+						'.$this->l('URL:').'
+					</span>
+				</label>
+				<div class="col-lg-9">
+					<div class="form-group">';
 		foreach ($languages as $language)
+		{
 			$return .= '
-						<div class="lang_'.$language['id_lang'].'" id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
-							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
 						</div>';
+		}
 
-		$return .= '
-						</div>
-						<div class="clear"></div>
-					</div>';
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific URL format in block layered generation').'</p>
+					</div>
+				</div>					
+				</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3">'.$this->l('Meta title:').' </label>
+					<div class="col-lg-9">
+						<div class="form-group">';
+		foreach ($languages as $language)
+		{
+			$return .= '
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
+						</div>';
+		}
+
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific format for meta title').'</p>
+					</div>
+				</div>
+					
+				</div>
+				</div>';
 		return $return;
 	}
 	
@@ -646,53 +678,83 @@ class BlockLayered extends Module
 	public function hookAttributeForm($params)
 	{
 		$languages = Language::getLanguages(false);
-		$default_form_language = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$default_form_language = (int)$this->context->controller->default_form_language;
 		$lang_value = array();
-		
-		$return = '
-				<script type="text/javascript">
-					flag_fields = \'\';
-				</script>';
-		
+			
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
 		'SELECT url_name, meta_title, id_lang FROM '._DB_PREFIX_.'layered_indexable_attribute_lang_value
 		WHERE id_attribute = '.(int)$params['id_attribute']);
 		if ($result)
 			foreach ($result as $data)
 				$lang_value[$data['id_lang']] = array('url_name' => $data['url_name'], 'meta_title' => $data['meta_title']);
-		$return .= '<div class="clear"></div>
-				<label>'.$this->l('URL:').'</label>
-				<div class="margin-form">
-				<script type="text/javascript">
-					flag_fields += \'¤url_name¤meta_title\';
-				</script>
-				<div class="translatable">';
-		foreach ($languages as $language)
-			$return .= '
-					<div class="lang_'.$language['id_lang'].'" id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
-						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
-						<p style="clear: both">'.$this->l('Specific URL format in block layered generation').'</p>
-					</div>';
 
-		$return .= '
-						</div>
-						<div class="clear"></div>
-					</div>
-					<label>'.$this->l('Meta title:').' </label>
-					<div class="margin-form">
-						<div class="translatable">';
+		$return = '<div class="form-group">
+				<label class="control-label col-lg-3">
+					<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="'.$this->l('Invalid characters:').' <>;=#{}_">
+						'.$this->l('URL:').'
+					</span>
+				</label>
+				<div class="col-lg-9">
+					<div class="form-group">';
 		foreach ($languages as $language)
+		{
 			$return .= '
-						<div class="lang_'.$language['id_lang'].'" id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
-							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
 						</div>';
+		}
 
-		$return .= '
-						</div>
-						<div class="clear"></div>
-					</div>';
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific URL format in block layered generation').'</p>
+					</div>
+				</div>					
+				</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3">'.$this->l('Meta title:').' </label>
+					<div class="col-lg-9">
+						<div class="form-group">';
+		foreach ($languages as $language)
+		{
+			$return .= '
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
+						</div>';
+		}
+
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific format for meta title').'</p>
+					</div>
+				</div>
+					
+				</div>
+				</div>';
 		return $return;
 	}
 	
@@ -760,7 +822,7 @@ class BlockLayered extends Module
 	public function hookAttributeGroupForm($params)
 	{
 		$languages = Language::getLanguages(false);
-		$default_form_language = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$default_form_language = (int)$this->context->controller->default_form_language;
 		$indexable = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT indexable FROM '._DB_PREFIX_.'layered_indexable_attribute_group
 		WHERE id_attribute_group = '.(int)$params['id_attribute_group']);
 		$lang_value = array();
@@ -777,51 +839,95 @@ class BlockLayered extends Module
 		else
 			$on = (bool)$indexable;
 
-		$return = '
-			<script type="text/javascript">
-				flag_fields = \'\';
-			</script>';
-		
-		$return .= '<div class="clear"></div>
-				<label>'.$this->l('URL:').'</label>
-				<div class="margin-form">
-				<script type="text/javascript">
-					flag_fields += \'¤url_name¤meta_title\';
-				</script>
-				<div class="translatable">';
+		$return = '<div class="form-group">
+				<label class="control-label col-lg-3">
+					<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="'.$this->l('Invalid characters:').' <>;=#{}_">
+						'.$this->l('URL:').'
+					</span>
+				</label>
+				<div class="col-lg-9">
+					<div class="form-group">';
 		foreach ($languages as $language)
+		{
 			$return .= '
-					<div class="lang_'.$language['id_lang'].'" id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
-						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
-						<p style="clear: both">'.$this->l('Specific URL format in block layered generation').'</p>
-					</div>';
-
-		$return .= '
-						</div>
-						<div class="clear"></div>
-					</div>
-					<label>'.$this->l('Meta title:').' </label>
-					<div class="margin-form">
-						<div class="translatable">';
-		foreach ($languages as $language)
-			$return .= '
-						<div class="lang_'.$language['id_lang'].'" id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
-							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
 						</div>';
+		}
 
-		$return .= '
-						</div>
-						<div class="clear"></div>
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific URL format in block layered generation').'</p>
 					</div>
-			<label>'.$this->l('Indexable:').' </label>
-				<div class="margin-form">
-					<input type="radio" '.(($on) ? 'checked="checked"' : '').' value="1" id="indexable_on" name="layered_indexable">
-					<label for="indexable_on" class="t"><img title="Yes" alt="Enabled" src="../img/admin/enabled.gif"></label>
-					<input type="radio" '.((!$on) ? 'checked="checked"' : '').' value="0" id="indexable_off" name="layered_indexable">
-					<label for="indexable_off" class="t"><img title="No" alt="Disabled" src="../img/admin/disabled.gif"></label>
-					<p>'.$this->l('Use this attribute in URL generated by the layered navigation module').'</p>
+				</div>					
+				</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3">'.$this->l('Meta title:').' </label>
+					<div class="col-lg-9">
+						<div class="form-group">';
+		foreach ($languages as $language)
+		{
+			$return .= '
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
+						</div>';
+		}
+
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific format for meta title').'</p>
+					</div>
+				</div>
+					
+				</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3" for="">'.$this->l('Indexable:').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="layered_indexable" id="indexable_on" value="1"'.(($on) ? ' checked="checked"' : '').'>
+									<label for="indexable_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="layered_indexable" id="indexable_off" value="0"'.((!$on) ? ' checked="checked"' : '').'>
+									<label for="indexable_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-9 col-lg-push-3">
+						<p class="help-block">'.$this->l('Use this attribute in URL generated by the layered navigation module').'</p>
+					</div>
 				</div>';
 		return $return;
 	}
@@ -829,7 +935,7 @@ class BlockLayered extends Module
 	public function hookFeatureForm($params)
 	{
 		$languages = Language::getLanguages(false);
-		$default_form_language = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$default_form_language = (int)$this->context->controller->default_form_language;
 		$indexable = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT indexable FROM '._DB_PREFIX_.'layered_indexable_feature WHERE id_feature = '.(int)$params['id_feature']);
 		$lang_value = array();
 		
@@ -845,52 +951,96 @@ class BlockLayered extends Module
 			$on = true;
 		else
 			$on = (bool)$indexable;
-		
-		$return = '
-			<script type="text/javascript">
-				flag_fields = \'\';
-			</script>';
-		
-		$return .= '<div class="clear"></div>
-				<label>'.$this->l('URL:').'</label>
-				<div class="margin-form">
-				<script type="text/javascript">
-					flag_fields += \'¤url_name¤meta_title\';
-				</script>
-				<div class="translatable">';
-		foreach ($languages as $language)
-			$return .= '
-					<div class="lang_'.$language['id_lang'].'" id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
-						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
-						<p style="clear: both">'.$this->l('Specific URL format in block layered generation').'</p>
-					</div>';
 
-		$return .= '
-						</div>
-						<div class="clear"></div>
-					</div>
-					<label>'.$this->l('Meta title:').' </label>
-					<div class="margin-form">
-						<div class="translatable">';
+		$return = '<div class="form-group">
+				<label class="control-label col-lg-3">
+					<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="'.$this->l('Invalid characters:').' <>;=#{}_">
+						'.$this->l('URL:').'
+					</span>
+				</label>
+				<div class="col-lg-9">
+					<div class="form-group">';
 		foreach ($languages as $language)
+		{
 			$return .= '
-						<div class="lang_'.$language['id_lang'].'" id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
-							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
-							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="url_name_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['url_name'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
 						</div>';
+		}
 
-		$return .= '
-						</div>
-						<div class="clear"></div>
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific URL format in block layered generation').'</p>
 					</div>
-			<label>'.$this->l('Indexable:').' </label>
-				<div class="margin-form">
-					<input type="radio" '.(($on) ? 'checked="checked"' : '').' value="1" id="indexable_on" name="layered_indexable">
-					<label for="indexable_on" class="t"><img title="Yes" alt="Enabled" src="../img/admin/enabled.gif"></label>
-					<input type="radio" '.((!$on) ? 'checked="checked"' : '').' value="0" id="indexable_off" name="layered_indexable">
-					<label for="indexable_off" class="t"><img title="No" alt="Disabled" src="../img/admin/disabled.gif"></label>
-					<p>'.$this->l('Use this attribute in URL generated by the layered navigation module').'</p>
+				</div>					
+				</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3">'.$this->l('Meta title:').' </label>
+					<div class="col-lg-9">
+						<div class="form-group">';
+		foreach ($languages as $language)
+		{
+			$return .= '
+						<div class="translatable-field lang-'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').';">
+							<div class="col-lg-9">
+								<input type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$lang_value[$language['id_lang']]['meta_title'], true).'" />
+							</div>
+							<div class="col-lg-2">
+								<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+									'.$language['iso_code'].'
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">';
+			foreach ($languages as $language)
+				$return .= '<li><a href="javascript:hideOtherLanguage('.$language['id_lang'].');" tabindex="-1">'.$language['name'].'</a></li>';
+			
+			$return .= '</ul>
+							</div>
+						</div>';
+		}
+
+		$return .= '<div class="col-lg-9">
+						<p class="help-block">'.$this->l('Specific format for meta title').'</p>
+					</div>
+				</div>
+					
+				</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3" for="">'.$this->l('Indexable:').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="layered_indexable" id="indexable_on" value="1"'.(($on) ? ' checked="checked"' : '').'>
+									<label for="indexable_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="layered_indexable" id="indexable_off" value="0"'.((!$on) ? ' checked="checked"' : '').'>
+									<label for="indexable_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-9 col-lg-push-3">
+						<p class="help-block">'.$this->l('Use this attribute in URL generated by the layered navigation module').'</p>
+					</div>
 				</div>';
 		return $return;
 	}
@@ -1132,6 +1282,17 @@ class BlockLayered extends Module
 		return $this->hookLeftColumn($params);
 	}
 
+	public function hookDisplayBackOfficeHeader()
+	{
+		if (method_exists($this->context->controller, 'addJquery'))
+		{
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+				$this->context->controller->addCSS($this->_path.'views/css/blocklayered_bt.css');
+			else
+				$this->context->controller->addCSS($this->_path.'views/css/blocklayered.css');
+		}
+	}
+
 	public function hookHeader($params)
 	{
 		global $smarty, $cookie;
@@ -1186,8 +1347,7 @@ class BlockLayered extends Module
 
 
 		$this->context->controller->addJS(($this->_path).'blocklayered.js');
-		$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
-		$this->context->controller->addJQueryUI('ui.slider');
+		$this->context->controller->addJQueryUI('ui.slider');		
 		$this->context->controller->addCSS(($this->_path).'blocklayered-15.css', 'all');
 		$this->context->controller->addJQueryPlugin('scrollTo');
 
@@ -1442,16 +1602,15 @@ class BlockLayered extends Module
 		}
 
 		$html .= '
-		<div id="ajax-message-ok" class="conf ajax-message" style="display: none">
+		<div id="ajax-message-ok" class="conf ajax-message alert alert-success" style="display: none">
 			<span class="message"></span>
 		</div>
-		<div id="ajax-message-ko" class="error ajax-message" style="display: none">
+		<div id="ajax-message-ko" class="error ajax-message alert alert-danger" style="display: none">
 			<span class="message"></span>
 		</div>
-		<h2>'.$this->l('Layered navigation').'</h2>
-		<fieldset class="width4">
-			<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Indexes and caches').'</legend>
-			<span id="indexing-warning" style="display: none; color:red; font-weight: bold">'.$this->l('Indexing is in progress. Please do not leave this page').'<br/><br/></span>';
+		<div class="panel">
+			<h3><i class="icon-cogs"></i> '.$this->l('Indexes and caches').'</h3>
+			<div id="indexing-warning" class="alert alert-warning" style="display: none">'.$this->l('Indexing is in progress. Please do not leave this page').'</div>';
 
 		if (!Configuration::getGlobalValue('PS_LAYERED_INDEXED'))
 			$html .= '
@@ -1469,37 +1628,30 @@ class BlockLayered extends Module
 		
 		$domain = Tools::getProtocol(Tools::usingSecureMode()).$_SERVER['HTTP_HOST'];
 
-		$html .= '
-			<a class="bold ajaxcall-recurcive"
-			style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
+		$html .= '<div class="row">
+			<a class="ajaxcall-recurcive btn btn-default"
 			href="'.$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'">'.
 			$this->l('Index all missing prices').'</a>
-			<br />
-			<a class="bold ajaxcall-recurcive"
-			style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index"
+			<a class="ajaxcall-recurcive btn btn-default"
 			href="'.$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&full=1">'.
 			$this->l('Rebuild entire price index').'</a>
-			<br />
-			<a class="bold ajaxcall" id="attribute-indexer" rel="attribute"
-			style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index"
+			<a class="ajaxcall btn btn-default" id="attribute-indexer" rel="attribute"
 			href="'.$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-attribute-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'">'.
 			$this->l('Build attribute index').'</a>
-			<br />
-			<a class="bold ajaxcall" id="url-indexer" rel="price"
-			style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index"
+			<a class="ajaxcall btn btn-default" id="url-indexer" rel="price"
 			href="'.$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&truncate=1">'.
 			$this->l('Build URL index').'</a>
-			<br />
-			<br />
-			'.$this->l('You can set a cron job that will rebuild price index using the following URL:').'<br /><b>'.
-			$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&full=1</b>
-			<br />
-			'.$this->l('You can set a cron job that will rebuild URL index using the following URL:').'<br /><b>'.
-			$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&truncate=1</b>
-			<br />
-			'.$this->l('You can set a cron job that will rebuild attribute index using the following URL:').'<br /><b>'.
-			$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-attribute-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'</b>
 			<br /><br />
+			</div><div class="row">
+			<div class="alert alert-info">'.$this->l('You can set a cron job that will rebuild price index using the following URL:').'<br /><strong>'.
+			$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&full=1</strong>
+			</div></div><div class="row">
+			<div class="alert alert-info">'.$this->l('You can set a cron job that will rebuild URL index using the following URL:').'<br /><strong>'.
+			$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&truncate=1</strong>
+			</div></div><div class="row">
+			<div class="alert alert-info">'.$this->l('You can set a cron job that will rebuild attribute index using the following URL:').'<br /><strong>'.
+			$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-attribute-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'</strong>
+			</div></div><div class="row">
 			'.$this->l('A nightly rebuild is recommended.').'
 			<script type="text/javascript">
 				$(\'.ajaxcall\').click(function() {
@@ -1622,23 +1774,25 @@ class BlockLayered extends Module
 					});
 				});
 			</script>
-		</fieldset>
-		<br />
-		<fieldset class="width4">
-			<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Existing filter templates').'</legend>';
+			</div>
+		</div>
+		<div class="panel">
+			<h3><i class="icon-cogs"></i> '.$this->l('Existing filter templates').'</h3>';
 
 		$filters_templates = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM '._DB_PREFIX_.'layered_filter ORDER BY date_add DESC');
 		if (count($filters_templates))
 		{
-			$html .= '<p>'.count($filters_templates).' '.$this->l('filter templates are configured:').'</p>
-			<table id="table-filter-templates" class="table" style="width: 700px;">
-				<tr>
-					<th>'.$this->l('ID').'</th>
-					<th>'.$this->l('Name').'</th>
-					<th>'.$this->l('Categories').'</th>
-					<th>'.$this->l('Created on').'</th>
-					<th>'.$this->l('Actions').'</th>
-				</tr>';
+			$html .= '<p>'.sprintf($this->l('%s filter templates are configured:'), count($filters_templates)).'</p>
+			<table id="table-filter-templates" class="table">
+				<thead>
+					<tr>
+						<th class="fixed-width-xs"><span class="title_box">'.$this->l('ID').'</span></th>
+						<th><span class="title_box text-left">'.$this->l('Name').'</span></th>
+						<th class="fixed-width-sm"><span class="title_box">'.$this->l('Categories').'</span></th>
+						<th><span class="title_box">'.$this->l('Created on').'</span></th>
+						<th><span class="title_box text-right">'.$this->l('Actions').'</span></th>
+					</tr>
+				</thead>';
 
 			foreach ($filters_templates as $filters_template)
 			{
@@ -1648,15 +1802,28 @@ class BlockLayered extends Module
 				$html .= '
 				<tr>
 					<td>'.(int)$filters_template['id_layered_filter'].'</td>
-					<td style="text-align: left; padding-left: 10px; width: 270px;">'.$filters_template['name'].'</td>
-					<td style="text-align: center;">'.(int)$filters_template['n_categories'].'</td>
+					<td class="text-left">'.$filters_template['name'].'</td>
+					<td>'.(int)$filters_template['n_categories'].'</td>
 					<td>'.Tools::displayDate($filters_template['date_add'],null , true).'</td>
-					<td>
-						<a href="#" onclick="return updElements('.($filters_template['n_categories'] ? 0 : 1).', '.(int)$filters_template['id_layered_filter'].');">
-						<img src="../img/admin/edit.gif" alt="" title="'.$this->l('Edit').'" /></a> 
-						<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&deleteFilterTemplate=1&id_layered_filter='.(int)$filters_template['id_layered_filter'].'"
+					<td class="text-right">
+						<div class="btn-group-action">
+							<div class="btn-group">
+								<a href="#" class="btn btn-default" onclick="return updElements('.($filters_template['n_categories'] ? 0 : 1).', '.(int)$filters_template['id_layered_filter'].');">
+									<i class="icon-pencil"></i> '.$this->l('Edit').'
+								</a> 
+								<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									<span class="caret"></span>&nbsp;
+								</button>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&deleteFilterTemplate=1&id_layered_filter='.(int)$filters_template['id_layered_filter'].'"
 						onclick="return confirm(\''.addslashes(sprintf($this->l('Delete filter template #%d?'), (int)$filters_template['id_layered_filter'])).'\');">
-						<img src="../img/admin/delete.gif" alt="" title="'.$this->l('Delete').'" /></a>
+											<i class="icon-trash"></i> '.$this->l('Delete').'
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
 					</td>
 				</tr>';
 			}
@@ -1668,55 +1835,28 @@ class BlockLayered extends Module
 			$html .= $this->l('No filter template found.');
 
 		$html .= '
-		</fieldset><br />
-		<fieldset class="width4">
-			<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Build your own filter template').'</legend>
-			<link rel="stylesheet" href="'._PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css" />
-			<style type="text/css">
-				#error-filter-name { display: none; }
-				#layered_container_left ul, #layered_container_right ul { list-style-type: none; padding-left: 0px; }
-				.ui-effects-transfer { border: 1px solid #CCC; }
-				.ui-state-highlight { height: 1.5em; line-height: 1.2em; }
-				ul#selected_filters, #layered_container_right ul { list-style-type: none; margin: 0; padding: 0; }
-				ul#selected_filters li, #layered_container_right ul li { width: 326px; font-size: 11px; padding: 8px 9px 7px 20px; height: 14px; margin-bottom: 5px; }
-				ul#selected_filters li span.ui-icon { position: absolute; margin-top: -2px; margin-left: -18px; }
-				#layered_container_right ul li span { display: none; }
-				#layered_container_right ul li { padding-left: 8px; position: relative; }
-				#layered_container_left ul li { cursor: move; position: relative; }
-				#layered-cat-counter { display: none; }
-				#layered-step-2, #layered-step-3 { display: none; }
-				#layered-step-2 h3 { margin-top: 0; }
-				#table-filter-templates tr th, #table-filter-templates tr td { text-align: center; }
-				.filter_type { width: 70px; position: absolute; right: 53px; top: 5px;}
-				.filter_show_limit { position: absolute; width: 40px; right: 5px; top: 5px; }
-				#layered-step-3 .alert { width: auto; }
-				#fancybox-content {
-					height: 400px !important;
-					overflow: auto !important;
-				}
-			</style>
+		</div>
+		<div class="panel">
+			<h3><i class="icon-cogs"></i> '.$this->l('Build your own filter template').'</h3>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" onsubmit="return checkForm();">';
 			
 		$html .= '
-			<h2>'.$this->l('Step 1/3 - Select categories').'</h2>
-			<p style="margin-top: 20px;">
-				<span style="color: #585A69;display: block;float: left;font-weight: bold;text-align: right;width: 200px;" >'.$this->l('Use this template for:').'</span>
-				<input type="radio" id="scope_1" name="scope" value="1" style="margin-left: 15px;" onclick="$(\'#error-treeview\').hide(); $(\'#layered-step-2\').show(); updElements(1, 0);" /> 
-				<label for="scope_1" style="float: none;">'.$this->l('All categories').'</label>
-				<input type="radio" id="scope_2" name="scope" value="2" style="margin-left: 15px;" class="layered-category-selection" onclick="$(\'label a#inline\').click(); $(\'#layered-step-2\').show();" /> 
-				<style>
-					.link {
-						color: black;
-						cursor: pointer;
-						text-decoration: underline;
-					}
-					.link:hover {
-						color: gray;
-					}
-				</style>
-				<label for="scope_2" style="float: none;"><a id="inline" href="#layered-categories-selection" style="text-decoration: underline;"></a>'.preg_replace('/\*([^*]+)\*/Usi', '<span class="link">$1</span>', $this->l('*Specific* categories')).'
-				(<span id="layered-cat-counter"></span> '.$this->l('selected').')</label>
-			</p>';
+			<h4>'.$this->l('Step 1/3 - Select categories').'</h4>
+			<hr />
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="control-label col-lg-3">'.$this->l('Use this template for:').'</label>
+					<div class="col-lg-9">
+						<p class="radio">
+							<input type="radio" id="scope_1" name="scope" value="1" onclick="$(\'#error-treeview\').hide(); $(\'#layered-step-2\').show(); updElements(1, 0);" /> 
+							<label for="scope_1">'.$this->l('All categories').'</label>
+						</p>
+						<p class="radio">
+							<input type="radio" id="scope_2" name="scope" value="2" class="layered-category-selection" onclick="$(\'label a#inline\').click(); $(\'#layered-step-2\').show();" /> 
+							<label for="scope_2"><a id="inline" href="#layered-categories-selection">'.sprintf($this->l('Specific categories (%s selected)'), '<span id="layered-cat-counter"></span>').'</a></label>
+						</p>
+					</div>
+				</div>';
 		
 		$shops = Shop::getShops(true, null, true);
 		if (count($shops) > 1)
@@ -1728,14 +1868,16 @@ class BlockLayered extends Module
 			
 			if (Shop::isFeatureActive())
 			{
-				$html .= '<span style="color: #585A69;display: block;float: left;font-weight: bold;text-align: right;width: 200px;" >'.$this->l('Choose shop association:').'</span>';
-				$html .= '<div id="shop_association" style="width: 300px;margin-left: 215px;">'.$helper->renderAssoShop().'</div>';
+				$html .= '<div class="form-group">
+					<label class="control-label col-lg-3">'.$this->l('Choose shop association:').'</label>
+					<div class="col-lg-9">'.$helper->renderAssoShop().'</div>
+				</div>';
 			}
 		}
-		
-		$html .= '
-			<div id="error-treeview" class="error" style="display: none;">
-				<img src="../img/admin/error2.png" alt="" /> '.$this->l('Please select at least one specific category or select "All categories".').'
+
+		$html .= '</div>
+			<div id="error-treeview" class="alert alert-danger" style="display: none;">
+				'.$this->l('Please select at least one specific category or select "All categories".').'
 			</div>
 			<div style="display: none;">
 				<div id="layered-categories-selection" style="padding: 10px; text-align: left;">
@@ -1760,24 +1902,22 @@ class BlockLayered extends Module
 			
 			$html .= '
 					<br />
-					<center><input type="button" class="button" value="'.$this->l('Save this selection').'" onclick="$.fancybox.close();" /></center>
+					<button type="button" class="btn btn-default" onclick="$.fancybox.close();">'.$this->l('Save this selection').'</button>
 				</div>
 			</div>
-			<div id="layered-step-2">
-				<hr size="1" noshade />
-				<h2>'.$this->l('Step 2/3 - Select filters').'</h2>
+			<div id="layered-step-2" class="row" style="display:none">
+				<h4>'.$this->l('Step 2/3 - Select filters').'</h4>
+				<hr />				
 				<div id="layered_container">
-					<div id="layered_container_left" style="width: 360px; float: left; height: 200px; overflow-y: auto;">
-						<h3>'.$this->l('Selected filters').' <span id="num_sel_filters">(0)</span></h3>
+					<div id="layered_container_left" class="col-lg-6">
+						<h4><strong>'.$this->l('Selected filters').' <span id="num_sel_filters">(0)</span></strong></h4>
 						<p id="no-filters">'.$this->l('No filters selected yet.').'</p>
-						<ul id="selected_filters"></ul>
+						<ul id="selected_filters" style="height: 200px; overflow-y: auto;"></ul>
 					</div>
-					<div id="layered-ajax-refresh">
+					<div id="layered-ajax-refresh" class="col-lg-6">
 					'.$this->ajaxCallBackOffice().'
 					</div>
-				</div>
-				<div class="clear"></div>
-				<hr size="1" noshade />';
+				</div>';
 				
 			$this->context->controller->addJQueryPlugin('fancybox');
 			$this->context->controller->addJQueryUI('ui.sortable');
@@ -1842,7 +1982,7 @@ class BlockLayered extends Module
 						$.ajax(
 						{
 							type: \'POST\',
-							url: \''.__PS_BASE_URI__.'\' + \'modules/blocklayered/blocklayered-ajax-back.php\',
+							url: \''.__PS_BASE_URI__.'\' + \'modules/blocklayered/blocklayered-ajax-back.php?admin_dir='.base64_encode(_PS_ADMIN_DIR_).'\',
 							data: \'layered_token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&id_lang='.$id_lang.'&\'
 								+(all ? \'\' : $(\'input[name="categoryBox[]"]\').serialize()+\'&\')
 								+(id_layered_filter ? \'id_layered_filter=\'+parseInt(id_layered_filter) : \'\')
@@ -1967,116 +2107,197 @@ class BlockLayered extends Module
 					});
 				</script>
 			</div>
-			<div id="layered-step-3">
-				<div id="error-filter-name" class="error">
-					<img src="../img/admin/error.png" alt="" title="" />'.$this->l('Errors:').'
-					<ul>
-						<li>'.$this->l('Filter template name required (cannot be empty)').'</li>
-					</ul>
-				</div>
-				<h2>'.$this->l('Step 3/3 - Name your template').'</h2>
+			<div class="clearfix">&nbsp;</div>
+			<div id="layered-step-3" class="row">
+				<div id="error-filter-name" class="alert alert-danger">'.$this->l('Filter template name required (cannot be empty)').'</div>
+				<h4>'.$this->l('Step 3/3 - Name your template').'</h4>
+				<hr />
 				<p>'.$this->l('Template name:').' <input type="text" id="layered_tpl_name" onkeyup="if ($(this).val() != \'\')
 				{ $(\'#error-filter-name\').hide(); } else { $(\'#error-filter-name\').show(); }" name="layered_tpl_name" maxlength="64" value="'.sprintf($this->l('My template %s'), date('Y-m-d')).'"
 				style="width: 200px; font-size: 11px;" /> <span style="font-size: 10px; font-style: italic;">('.$this->l('only as a reminder').')</span></p>
-				<hr size="1" noshade />
-				<p class="alert">'.$this->l('No filters selected, the blocklayered will be disable for the categories seleted.').'</p>
-				<br />
-				<center><input type="submit" class="button" name="SubmitFilter" value="'.$this->l('Save this filter template').'" /></center>
+				<div class="alert alert-warning">'.$this->l('No filters selected, the blocklayered will be disable for the categories seleted.').'</div>
+				<button type="submit" class="btn btn-default" name="SubmitFilter"><i class="icon-save"></i> '.$this->l('Save this filter template').'</button>
 			</div>
 				<input type="hidden" name="id_layered_filter" id="id_layered_filter" value="0" />
 				<input type="hidden" name="n_existing" id="n_existing" value="'.(int)count($filters_templates).'" />
 			</form>
-		</fieldset><br />
-		<fieldset class="width4">
-			<legend><img src="../img/admin/cog.gif" alt="" /> '.$this->l('Configuration').'</legend>
-			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">			
-				<table border="0" style="font-size: 11px; width: 100%; margin: 0 auto;" class="table">
-					<tr>
-						<th style="text-align: center;">'.$this->l('Option').'</th>
-						<th style="text-align: center; width: 200px;">'.$this->l('Value').'</th>
-					</tr>
-					<tr>
-						<td style="text-align: right;">'.$this->l('Hide filter values with no product is matching').'</td>
-						<td style="text-align: center;">
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_hide_0_values" value="1" '.(Configuration::get('PS_LAYERED_HIDE_0_VALUES') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_hide_0_values" value="0" '.(!Configuration::get('PS_LAYERED_HIDE_0_VALUES') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-					<tr>
-						<td style="text-align: right;">'.$this->l('Show the number of matching products').'</td>
-						<td style="text-align: center;">
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_show_qties" value="1" '.(Configuration::get('PS_LAYERED_SHOW_QTIES') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_show_qties" value="0" '.(!Configuration::get('PS_LAYERED_SHOW_QTIES') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-					<tr>
-						<td style="text-align: right;">'.$this->l('Show products from subcategories').'</td>
-						<td style="text-align: center;">
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_full_tree" value="1" '.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_full_tree" value="0" '.(!Configuration::get('PS_LAYERED_FULL_TREE') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-					<tr style="text-align: center;">
-						<td style="text-align: right;">'.$this->l('Category filter depth (0 for no limits, 1 by default)').'</td>
-						<td>
+		</div>
+		<div class="panel">
+			<h3><i class="icon-cogs"></i> '.$this->l('Configuration').'</h3>
+			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" class="form-horizontal">
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Hide filter values with no product is matching').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_hide_0_values" id="ps_layered_hide_0_values_on" value="1"'.(Configuration::get('PS_LAYERED_HIDE_0_VALUES') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_hide_0_values_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_hide_0_values" id="ps_layered_hide_0_values_off" value="0"'.(!Configuration::get('PS_LAYERED_HIDE_0_VALUES') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_hide_0_values_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Show the number of matching products').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_show_qties" id="ps_layered_show_qties_on" value="1"'.(Configuration::get('PS_LAYERED_SHOW_QTIES') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_show_qties_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_show_qties" id="ps_layered_show_qties_off" value="0"'.(!Configuration::get('PS_LAYERED_SHOW_QTIES') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_show_qties_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Show products from subcategories').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_full_tree" id="ps_layered_full_tree_on" value="1"'.(Configuration::get('PS_LAYERED_FULL_TREE') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_hide_0_values_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_full_tree" id="ps_layered_full_tree_off" value="0"'.(!Configuration::get('PS_LAYERED_FULL_TREE') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_full_tree_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Category filter depth (0 for no limits, 1 by default)').'</label>
+					<div class="col-lg-9">
 							<input type="text" name="ps_layered_filter_category_depth" value="'.((Configuration::get('PS_LAYERED_FILTER_CATEGORY_DEPTH') !== false) ? Configuration::get('PS_LAYERED_FILTER_CATEGORY_DEPTH') : 1).'" />
-						</td>
-					</tr>
-					<tr style="text-align: center;">
-						<td style="text-align: right;">'.$this->l('Use tax to filter price').'</td>
-						<td>
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_filter_price_usetax" value="1" '.(Configuration::get('PS_LAYERED_FILTER_PRICE_USETAX') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_filter_price_usetax" value="0" '.(!Configuration::get('PS_LAYERED_FILTER_PRICE_USETAX') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-					<tr style="text-align: center;">
-						<td style="text-align: right;">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use condition filter').'</td>
-						<td>
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_filter_index_condition" value="1" '.(Configuration::get('PS_LAYERED_FILTER_INDEX_CDT') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_filter_index_condition" value="0" '.(!Configuration::get('PS_LAYERED_FILTER_INDEX_CDT') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-					<tr style="text-align: center;">
-						<td style="text-align: right;">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use availability filter').'</td>
-						<td>
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_filter_index_availability" value="1" '.(Configuration::get('PS_LAYERED_FILTER_INDEX_QTY') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_filter_index_availability" value="0" '.(!Configuration::get('PS_LAYERED_FILTER_INDEX_QTY') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-					<tr style="text-align: center;">
-						<td style="text-align: right;">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use manufacturer filter').'</td>
-						<td>
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_filter_index_manufacturer" value="1" '.(Configuration::get('PS_LAYERED_FILTER_INDEX_MNF') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_filter_index_manufacturer" value="0" '.(!Configuration::get('PS_LAYERED_FILTER_INDEX_MNF') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-					<tr style="text-align: center;">
-						<td style="text-align: right;">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use category filter').'</td>
-						<td>
-							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
-							'.$this->l('Yes').' <input type="radio" name="ps_layered_filter_index_category" value="1" '.(Configuration::get('PS_LAYERED_FILTER_INDEX_CAT') ? 'checked="checked"' : '').' />
-							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
-							'.$this->l('No').' <input type="radio" name="ps_layered_filter_index_category" value="0" '.(!Configuration::get('PS_LAYERED_FILTER_INDEX_CAT') ? 'checked="checked"' : '').' />
-						</td>
-					</tr>
-				</table>
-				<p style="text-align: center;"><input type="submit" class="button" name="submitLayeredSettings" value="'.$this->l('Save configuration').'" /></p>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Use tax to filter price').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_filter_price_usetax" id="ps_layered_filter_price_usetax_on" value="1"'.(Configuration::get('PS_LAYERED_FILTER_PRICE_USETAX') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_price_usetax_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_filter_price_usetax" id="ps_layered_filter_price_usetax_off" value="0"'.(!Configuration::get('PS_LAYERED_FILTER_PRICE_USETAX') ? ' checked="checked"' : '').'>
+									<label for="pps_layered_filter_price_usetax_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use condition filter').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_filter_index_condition" id="ps_layered_filter_index_condition_on" value="1"'.(Configuration::get('PS_LAYERED_FILTER_INDEX_CDT') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_condition_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_filter_index_condition" id="ps_layered_filter_index_condition_off" value="0"'.(!Configuration::get('PS_LAYERED_FILTER_INDEX_CDT') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_condition_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use availability filter').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_filter_index_availability" id="ps_layered_filter_index_availability_on" value="1"'.(Configuration::get('PS_LAYERED_FILTER_INDEX_QTY') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_availability_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_filter_index_availability" id="ps_layered_filter_index_availability_off" value="0"'.(!Configuration::get('PS_LAYERED_FILTER_INDEX_QTY') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_availability_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use manufacturer filter').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_filter_index_manufacturer" id="ps_layered_filter_index_manufacturer_on" value="1"'.(Configuration::get('PS_LAYERED_FILTER_INDEX_MNF') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_manufacturer_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_filter_index_manufacturer" id="ps_layered_filter_index_manufacturer_off" value="0"'.(!Configuration::get('PS_LAYERED_FILTER_INDEX_MNF') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_manufacturer_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use category filter').'</label>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="input-group col-lg-2">
+								<span class="switch prestashop-switch">
+									<input type="radio" name="ps_layered_filter_index_category" id="ps_layered_filter_index_category_on" value="1"'.(Configuration::get('PS_LAYERED_FILTER_INDEX_CAT') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_category_on" class="radioCheck">
+										<i class="icon-check-sign color_success"></i> '.$this->l('Yes').'
+									</label>
+									<input type="radio" name="ps_layered_filter_index_category" id="ps_layered_filter_index_category_off" value="0"'.(!Configuration::get('PS_LAYERED_FILTER_INDEX_CAT') ? ' checked="checked"' : '').'>
+									<label for="ps_layered_filter_index_category_off" class="radioCheck">
+										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
+									</label>
+									<span class="slide-button btn btn-default"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-9 col-lg-offset-3">
+						<button type="submit" class="btn btn-default" name="submitLayeredSettings"><i class="icon-save"></i> '.$this->l('Save configuration').'</button>
+					</div>
+				</div>
 			</form>
-		</fieldset>';
+		</div>';
 
 		return $html;
 	}
@@ -3167,7 +3388,6 @@ class BlockLayered extends Module
 				
 			$smarty->assign($filter_block);
 			$smarty->assign('hide_0_values', Configuration::get('PS_LAYERED_HIDE_0_VALUES'));
-			
 			return $this->display(__FILE__, 'blocklayered.tpl');
 		}
 		else
@@ -3355,12 +3575,11 @@ class BlockLayered extends Module
 			$n_elements = 20;
 		
 		$html = '
-		<div id="layered_container_right" style="width: 360px; float: left; margin-left: 20px; height: '.(int)(30 + $n_elements * 38).'px; overflow-y: auto;">
-			<h3>'.$this->l('Available filters').' <span id="num_avail_filters">(0)</span></h3>
+		<div id="layered_container_right" style="height: 200px; overflow-y: auto;">
+			<h4><strong>'.$this->l('Available filters').' <span id="num_avail_filters">(0)</span></strong></h4>
 			<ul id="all_filters"></ul>
 			<ul>
 				<li class="ui-state-default layered_right">
-					<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
 					<input type="checkbox" id="layered_selection_subcategories" name="layered_selection_subcategories" />
 					<span class="position"></span>'.$this->l('Sub-categories filter').'
 					
@@ -3649,9 +3868,9 @@ class BlockLayered extends Module
 					$helper->table = 'layered_filter';
 					$helper->identifier = 'id_layered_filter';
 					$helper->base_folder = Tools::getValue('base_folder').'/themes/default/template/helpers/form/';
-				
+
 					$html .= '
-					<div id="shop_association_ajax">'.$helper->renderAssoShop().'</div>
+					<div id="shop_association_ajax">'.$helper->renderAssoShop(false, Tools::getValue('base_folder').'/themes/default/template/helpers/tree/').'</div>
 					<script type="text/javascript">
 						$(document).ready(function() {
 							$(\'#shop_association\').html($(\'#shop_association_ajax\').html());

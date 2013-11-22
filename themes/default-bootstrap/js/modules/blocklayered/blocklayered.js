@@ -152,7 +152,7 @@ $(document).ready(function()
 		reloadContent();
 	});
 	
-	paginationButton();
+	paginationButton(false);
 	initLayered();
 });
 	
@@ -219,7 +219,7 @@ function initLayered()
 	}
 }
 
-function paginationButton() {
+function paginationButton(nbProductsIn) {
 	$('div.pagination a').not(':hidden').each(function () {
 		if ($(this).attr('href').search('&p=') == -1) {
 			var page = 1;
@@ -233,9 +233,9 @@ function paginationButton() {
 	$('div.pagination li').not('.current, .disabled').each(function () {
 		var nbPage = 0;
 		if ($(this).hasClass('pagination_next'))
-			nbPage = parseInt($('div.pagination li.current').children().html())+ 1;
+			nbPage = parseInt($('div.pagination li.current').children().children().html())+ 1;
 		else if ($(this).hasClass('pagination_previous'))
-			nbPage = parseInt($('div.pagination li.current').children().html())- 1;
+			nbPage = parseInt($('div.pagination li.current').children().children().html())- 1;
 	
 		$(this).children().children().click(function () {
 			if (nbPage == 0)
@@ -248,6 +248,36 @@ function paginationButton() {
 			return false;
 		});
 	});
+	
+	
+	//product count refresh
+	if(nbProductsIn!=false){
+		if(isNaN(nbProductsIn) == 0) {
+			// add variables
+			var productCountRow = $('.product-count').html();
+			var nbPage = parseInt($('div.pagination li.current').children().children().html());
+			var nbPerPage = parseInt($('#nb_item option:selected').val());
+			var nb_products = nbProductsIn;
+		
+			isNaN(nbPage) ? nbPage = 1 : nbPage = nbPage;
+			nbPerPage*nbPage < nb_products ? productShowing = nbPerPage*nbPage :productShowing = (nbPerPage*nbPage-nb_products-nbPerPage*nbPage)*-1;
+			nbPage==1 ? productShowingStart=1 : productShowingStart=nbPerPage*nbPage-nbPerPage+1;
+			
+			
+			//insert values into a .product-count
+			productCountRow = $.trim(productCountRow);
+			productCountRow = productCountRow.split(' ');
+			productCountRow[1] = productShowingStart;
+			productCountRow[3] = productShowing;
+			productCountRow[5] = nb_products;
+			productCountRow = productCountRow.join(' ');
+			$('.product-count').html(productCountRow);
+			$('.product-count').show();
+		}
+		else {
+			$('.product-count').hide();
+		}
+	}
 }
 
 function cancelFilter()
@@ -321,8 +351,8 @@ function reloadContent(params_plus)
 	
 	if (!ajaxLoaderOn)
 	{
-		$('#product_list').prepend($('#layered_ajax_loader').html());
-		$('#product_list').css('opacity', '0.7');
+		$('.product_list').prepend($('#layered_ajax_loader').html());
+		$('.product_list').css('opacity', '0.7');
 		ajaxLoaderOn = 1;
 	}
 	
@@ -396,16 +426,16 @@ function reloadContent(params_plus)
 		{
 			$('#layered_block_left').replaceWith(utf8_decode(result.filtersBlock));
 			
-			$('.category-product-count').html(result.categoryCount);
+			$('.category-product-count, .heading-counter').html(result.categoryCount);
 			
 			if (result.productList)
-				$('#product_list').replaceWith(utf8_decode(result.productList));
+				$('.product_list').replaceWith(utf8_decode(result.productList));
 			else
-				$('#product_list').html('');
+				$('.product_list').html('');
 
-			$('#product_list').css('opacity', '1');
+			$('.product_list').css('opacity', '1');
 			if ($.browser.msie) // Fix bug with IE8 and aliasing
-				$('#product_list').css('filter', '');
+				$('.product_list').css('filter', '');
 
 			if (result.pagination.search(/[^\s]/) >= 0) {
 				if ($(result.pagination).find('ul.pagination').length)
@@ -434,7 +464,7 @@ function reloadContent(params_plus)
 				$('div.pagination').hide();
 			}
 			
-			paginationButton();
+			paginationButton(parseInt(result.categoryCount.replace(/[^0-9]/g,'')));
 			ajaxLoaderOn = 0;
 			
 			// On submiting nb items form, relaod with the good nb of items
@@ -485,7 +515,7 @@ function reloadContent(params_plus)
 			lockLocationChecking = true;
 			
 			if(slideUp)
-				$.scrollTo('#product_list', 400);
+				$.scrollTo('.product_list', 400);
 			updateProductUrl();
 			
 			$('.hide-action').each(function() {
@@ -530,10 +560,10 @@ function updateProductUrl()
 {
 	// Adding the filters to URL product
 	if (typeof(param_product_url) != 'undefined' && param_product_url != '' && param_product_url !='#') {
-		$.each($('ul#product_list li.ajax_block_product .product_img_link,'+
-				'ul#product_list li.ajax_block_product h3 a,'+
-				'ul#product_list li.ajax_block_product .product_desc a,'+
-				'ul#product_list li.ajax_block_product .lnk_view'), function() {
+		$.each($('ul.product_list li.ajax_block_product .product_img_link,'+
+				'ul.product_list li.ajax_block_product h5 a,'+
+				'ul.product_list li.ajax_block_product .product_desc a,'+
+				'ul.product_list li.ajax_block_product .lnk_view'), function() {
 			$(this).attr('href', $(this).attr('href') + param_product_url);
 		});
 	}

@@ -9,6 +9,10 @@
 			max-width:222px;
 			display:inline-block;
 			margin-right:6px;
+																		@media (min-width: $screen-sm) and (max-width: $screen-md-max) { // min 768px max 1199px
+																			margin-bottom:10px;
+																			margin-right:0;
+																		}
 		}
 	}
 	
@@ -35,6 +39,10 @@
 		float:left;
 		padding:13px 15px 7px 15px;
 		margin-bottom:0;
+																		@media (max-width: $screen-xs-max) { // max 767px
+																			background:#3F3F3F;
+																			width:100%;
+																		}
 		
 		h4 {
 			background:none;
@@ -43,10 +51,13 @@
 			text-transform:none;
 			font-size:21px;
 			line-height:25px;
-			border:none;	
+			border:none;
+			&:after {display:none;}
 		}
 		
-		.block_content {overflow:hidden;}
+		.block_content {
+			overflow:hidden;
+		}
 		
 		.form-group {
 			margin-bottom:0;
@@ -56,9 +67,10 @@
 				max-width:267px;
 				background:#3c3c3c;
 				border-color:#515151;
-				color:#fff;
+				color:$light-text-color;
 				padding:5px 43px 5px 12px;
 				display:inline-block;
+				float:left;
 				
 				&:focus {
 					@include box-shadow(black 0px 0px 0px);
@@ -66,21 +78,22 @@
 			}
 			
 			.button-small {
-				margin-left:-41px;
+				margin-left:-42px;
 				border:none;
 				background:none;
 				text-align:center;
 				color:#908f8f;
+				padding:8px;
 				
 				&:before {
 					content:"";
-					font-family:'FontAwesome';
+					font-family:$font-icon;
 					font-size:28px;
 					line-height:28px;
 				}
 				
 				&:hover {
-					color:#fff !important;
+					color:$light-text-color !important;
 				}
 					
 				span{display:none;}	
@@ -88,10 +101,19 @@
 		}
 		
 		.warning_inline {
-			display:inline-block;
+			display:block;
 			color:#f13340;
 			font-size:13px;
-			line-height:26px;	
+			line-height:26px;
+			clear:both;
+																		@media (min-width: $screen-lg) { // min 1200px
+																			display:inline-block;
+																			position:relative;
+																			top:-35px;
+																			margin-bottom:-35px;
+																			left:15px;
+																			clear:none;
+																		}
 		}
 	}
 }

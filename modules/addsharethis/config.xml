@@ -2,7 +2,7 @@
         <module>
             <name>addsharethis</name>
             <displayName><![CDATA[Add Sharethis]]></displayName>
-            <version><![CDATA[]]></version>
+            <version><![CDATA[0.1]]></version>
             <description><![CDATA[Display social count button on the home page]]></description>
             <author><![CDATA[Custom]]></author>
             <tab><![CDATA[front_office_features]]></tab>

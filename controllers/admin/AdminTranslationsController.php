@@ -207,8 +207,8 @@ class AdminTranslationsControllerCore extends AdminController
 		$packs_to_update = array();
 		$token = Tools::getAdminToken('AdminLanguages'.(int)Tab::getIdFromClassName('AdminLanguages').(int)$this->context->employee->id);
 		$file_name = $this->link_lang_pack.'?version='._PS_VERSION_;
-		$array_stream_context = array('http' => array('method' => 'GET', 'timeout' => 5));
-		if ($lang_packs = Tools::file_get_contents($file_name, false, @stream_context_create($array_stream_context)))
+		$array_stream_context = @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 8)));
+		if ($lang_packs = Tools::file_get_contents($file_name, false, $array_stream_context))
 			// Notice : for php < 5.2 compatibility, Tools::jsonDecode. The second parameter to true will set us
 			if ($lang_packs != '' && $lang_packs = Tools::jsonDecode($lang_packs, true))
 				foreach ($lang_packs as $key => $lang_pack)
@@ -768,7 +768,8 @@ class AdminTranslationsControllerCore extends AdminController
 		$arr_import_lang = explode('|', Tools::getValue('params_import_language')); /* 0 = Language ISO code, 1 = PS version */
 		if (Validate::isLangIsoCode($arr_import_lang[0]))
 		{
-			$content = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.Tools::strtolower($arr_import_lang[0]).'.gzip');
+			$array_stream_context = @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 10)));
+			$content = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.Tools::strtolower($arr_import_lang[0]).'.gzip', false, $array_stream_context);
 			if ($content)
 			{
 				$file = _PS_TRANSLATIONS_DIR_.$arr_import_lang[0].'.gzip';
@@ -1259,6 +1260,8 @@ class AdminTranslationsControllerCore extends AdminController
 		// Set the path of selected theme
 		if ($this->theme_selected)
 			define('_PS_THEME_SELECTED_DIR_', _PS_ROOT_DIR_.'/themes/'.$this->theme_selected.'/');
+		else
+			define('_PS_THEME_SELECTED_DIR_', '');
 
 		// Get type of translation
 		if (($type = Tools::getValue('type')) && !is_array($type))
@@ -1292,7 +1295,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$helper->id = 'box-languages';
 		$helper->icon = 'icon-microphone';
 		$helper->color = 'color1';
-		$helper->title = $this->l('Enabled Languages');
+		$helper->title = $this->l('Enabled Languages', null, null, false);
 		if (ConfigurationKPI::get('ENABLED_LANGUAGES') !== false)
 			$helper->value = ConfigurationKPI::get('ENABLED_LANGUAGES');
 		if (ConfigurationKPI::get('ENABLED_LANGUAGES_EXPIRE') < $time)
@@ -1303,8 +1306,8 @@ class AdminTranslationsControllerCore extends AdminController
 		$helper->id = 'box-country';
 		$helper->icon = 'icon-home';
 		$helper->color = 'color2';
-		$helper->title = $this->l('Main Country');
-		$helper->subtitle = $this->l('30 Days');
+		$helper->title = $this->l('Main Country', null, null, false);
+		$helper->subtitle = $this->l('30 Days', null, null, false);
 		if (ConfigurationKPI::get('MAIN_COUNTRY', $this->context->language->id) !== false)
 			$helper->value = ConfigurationKPI::get('MAIN_COUNTRY', $this->context->language->id);
 		if (ConfigurationKPI::get('MAIN_COUNTRY_EXPIRE', $this->context->language->id) < $time)
@@ -1315,7 +1318,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$helper->id = 'box-translations';
 		$helper->icon = 'icon-list';
 		$helper->color = 'color3';
-		$helper->title = $this->l('Front Office Translations');
+		$helper->title = $this->l('Front Office Translations', null, null, false);
 		if (ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS') !== false)
 			$helper->value = ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS');
 		if (ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS_EXPIRE') < $time)

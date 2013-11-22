@@ -52,6 +52,7 @@ class AdminControllerCore extends Controller
 
 	/** @var string Object identifier inside the associated table */
 	protected $identifier = false;
+	protected $identifier_name = 'name';
 
 	/** @var string Tab name */
 	public $className;
@@ -1119,8 +1120,6 @@ class AdminControllerCore extends Controller
 		if (!is_array($this->toolbar_title))
 			$this->toolbar_title = array($this->toolbar_title);
 
-		$title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
-
 		switch ($this->display)
 		{
 			case 'view':
@@ -1135,9 +1134,14 @@ class AdminControllerCore extends Controller
 						'href' => $back,
 						'desc' => $this->l('Back to list')
 					);
+				$obj = $this->loadObject(true);
+				if (Validate::isLoadedObject($obj) && isset($obj->{$this->identifier_name}) && !empty($obj->{$this->identifier_name}))
+				{
+					array_pop($this->toolbar_title);
+					$this->toolbar_title[] = is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name};
+				}
 				break;
 			case 'add':
-			case 'edit':
 				// Default save button - action dynamically handled in javascript
 				$this->page_header_toolbar_btn['save'] = array(
 					'href' => '#',
@@ -1154,6 +1158,14 @@ class AdminControllerCore extends Controller
 						'href' => $back,
 						'desc' => $this->l('Cancel')
 					);
+			case 'edit':
+				$obj = $this->loadObject(true);
+				if (Validate::isLoadedObject($obj) && isset($obj->{$this->identifier_name}) && !empty($obj->{$this->identifier_name}))
+				{
+					array_pop($this->toolbar_title);
+					$this->toolbar_title[] = sprintf($this->l('Edit: %s'),
+						is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name});
+				}
 				break;
 			case 'options':
 				// Default save button - action dynamically handled in javascript
@@ -1162,6 +1174,8 @@ class AdminControllerCore extends Controller
 					'desc' => $this->l('Save')
 				);
 		}
+
+		$title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
 
 		if (is_array($this->page_header_toolbar_btn)
 			&& $this->page_header_toolbar_btn instanceof Traversable
@@ -1502,7 +1516,7 @@ class AdminControllerCore extends Controller
 		if (Validate::isLoadedObject($this->context->employee))
 		{
 			$accesses = Profile::getProfileAccesses($this->context->employee->id_profile, 'class_name');
-
+			$default_tab = new Tab((int)Context::getContext()->employee->default_tab);
 			/* Hooks are volontary out the initialize array (need those variables already assigned) */
 			$bo_color = empty($this->context->employee->bo_color) ? '#FFFFFF' : $this->context->employee->bo_color;
 			$this->context->smarty->assign(array(
@@ -1516,7 +1530,7 @@ class AdminControllerCore extends Controller
 				'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS') && $accesses['AdminCustomers']['view'],
 				'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && $accesses['AdminCustomerThreads']['view'],
 				'first_name' => Tools::substr($this->context->employee->firstname, 0, 1),
-				'last_name' => htmlentities($this->context->employee->lastname, ENT_COMPAT, 'UTF-8'),
+				'last_name' => Tools::safeOutput($this->context->employee->lastname),
 				'employee' => $this->context->employee,
 				'search_type' => Tools::getValue('bo_search_type'),
 				'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
@@ -1529,9 +1543,13 @@ class AdminControllerCore extends Controller
 				'tabs' => $tabs,
 				'is_multishop' => $is_multishop,
 				'multishop_context' => $this->multishop_context,
+				'default_tab_link' => $this->context->link->getAdminLink($default_tab->class_name),
 				'employee_avatar' => ImageManager::thumbnail($this->context->employee->getImage(), 'employee'.'_'.(int)$this->context->employee->id.'.'.$this->imageType, 150, $this->imageType, true, true)
 			));
 		}
+		else
+			$this->context->smarty->assign('default_tab_link', $this->context->link->getAdminLink('AdminDashboard'));
+
 		$this->context->smarty->assign(array(
 			'img_dir' => _PS_IMG_,
 			'iso' => $this->context->language->iso_code,
@@ -1543,7 +1561,7 @@ class AdminControllerCore extends Controller
 			'link' => $this->context->link,
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
 			'base_url' => $this->context->shop->getBaseURL(),
-			'tab' => $tab, // Deprecated, this tab is declared in the foreach, so it's the last tab in the foreach
+			'tab' => isset($tab) ? $tab : null, // Deprecated, this tab is declared in the foreach, so it's the last tab in the foreach
 			'current_parent_id' => (int)Tab::getCurrentParentId(),
 			'tabs' => $tabs,
 			'install_dir_exists' => file_exists(_PS_ADMIN_DIR_.'/../install'),
@@ -1689,12 +1707,14 @@ class AdminControllerCore extends Controller
 		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
 			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
 		
+		libxml_use_internal_errors(true);
 		$country_module_list = file_get_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
-		if (!empty($country_module_list) && $country_module_list_xml = simplexml_load_string($country_module_list))
+		if (!empty($country_module_list) && is_string($country_module_list) && $country_module_list_xml = simplexml_load_string($country_module_list))
 		{
 			$country_module_list_array = array();
-			foreach ($country_module_list_xml->module as $k => $m)
-				$country_module_list_array[] = (string)$m->name;
+			if (is_array($country_module_list_xml->module))
+				foreach ($country_module_list_xml->module as $k => $m)
+					$country_module_list_array[] = (string)$m->name;
 			$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $country_module_list_array);
 		}
 		
@@ -1917,24 +1937,29 @@ class AdminControllerCore extends Controller
 		
 		$this->helper = $helper;
 	}
+	
+	public function setDeprecatedMedia()
+	{
+		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
+		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+		//$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-old.css', 'all', 1);
+		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-bootstrap-reset.css', 'all', 2);
+		
+	}
 
 	public function setMedia()
 	{
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 
-		// Deprecated stylesheets
+		//Bootstrap v3.01 + Specific Admin Theme
+		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css', 'all', 0);
+
+		// Deprecated stylesheets + reset bootstrap style for the #nobootstrap field - Backward compatibility
 		if (!$this->bootstrap)
-		{
-			$this->addCSS(_PS_CSS_DIR_.'admin.css', 'all');
-			$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward/admin.css', 'all');
-		}
-		//Bootstrap v3.00 + Specific Admin Theme
-		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css', 'all');
-
-		// Reset bootstrap style for the #nobootstrap field - Backward compatibility
-		$this->addCSS(_PS_CSS_DIR_.'bootstrap_admin_reset.css', 'all');
-
+			$this->setDeprecatedMedia();
+		
+		//todo css for rtl support
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 
@@ -1948,9 +1973,11 @@ class AdminControllerCore extends Controller
 			_PS_JS_DIR_.'ajax.js',
 			_PS_JS_DIR_.'toolbar.js',
 		));
+
 		//loads specific javascripts for the admin theme, bootstrap.js should be moved into /js root directory
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.js');
-		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/admin-theme.js');
+		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.js');
+		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
 
 		if (!Tools::getValue('submitFormAjax'))
 		{
@@ -1972,14 +1999,13 @@ class AdminControllerCore extends Controller
 	 * @param boolean $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
 	 * @return string the translation if available, or the english default text.
 	 */
-	protected function l($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true)
+	protected function l($string, $class = null, $addslashes = false, $htmlentities = true)
 	{
-		// classname has changed, from AdminXXX to AdminXXXController
-		// So we remove 10 characters and we keep same keys
-		if (strtolower(substr($class, -10)) == 'controller')
-			$class = substr($class, 0, -10);
-		elseif ($class == 'AdminTab')
+		if ($class === null || $class == 'AdminTab')
 			$class = substr(get_class($this), 0, -10);
+		// classname has changed, from AdminXXX to AdminXXXController, so we remove 10 characters and we keep same keys
+		elseif (strtolower(substr($class, -10)) == 'controller')
+			$class = substr($class, 0, -10);
 		return Translate::getAdminTranslation($string, $class, $addslashes, $htmlentities);
 	}
 
@@ -2120,7 +2146,10 @@ class AdminControllerCore extends Controller
 			$this->context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 		elseif ($this->context->shop->id != $shop_id)
 			$this->context->shop = new Shop($shop_id);
-
+		
+		// Replace current default country		
+		$this->context->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+				
 		$this->initBreadcrumbs();
 	}
 
@@ -2379,8 +2408,10 @@ class AdminControllerCore extends Controller
 		if (preg_match('/[.!]/', $order_by))
 		{
 			$order_by_split = preg_split('/[.!]/', $order_by);
-			$order_by = pSQL($order_by_split[0]).'.`'.pSQL($order_by_split[1]).'`';
+			$order_by = bqSQL($order_by_split[0]).'.`'.bqSQL($order_by_split[1]).'`';
 		}
+		elseif ($order_by)
+			$order_by = '`'.bqSQL($order_by).'`';
 
 		$this->_orderWay = Tools::strtoupper($order_way);
 
@@ -2474,7 +2505,7 @@ class AdminControllerCore extends Controller
 		(isset($this->_filter) ? $this->_filter : '').$where_shop.'
 		'.(isset($this->_group) ? $this->_group.' ' : '').'
 		'.$having_clause.'
-		ORDER BY '.(($order_by == $this->identifier) ? 'a.' : '').pSQL($order_by).' '.pSQL($order_way).
+		ORDER BY '.((str_replace('`', '', $order_by) == $this->identifier) ? 'a.' : '').$order_by.' '.pSQL($order_way).
 		($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
 		(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
@@ -2526,22 +2557,20 @@ class AdminControllerCore extends Controller
 	public function getLanguages()
 	{
 		$cookie = $this->context->cookie;
-		$this->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->allow_employee_form_lang = (int)Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG');
 		if ($this->allow_employee_form_lang && !$cookie->employee_form_lang)
 			$cookie->employee_form_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-		$use_lang_from_cookie = false;
+		
+		$lang_exists = false;
 		$this->_languages = Language::getLanguages(false);
-		if ($this->allow_employee_form_lang)
-			foreach ($this->_languages as $lang)
-				if ($cookie->employee_form_lang == $lang['id_lang'])
-					$use_lang_from_cookie = true;
-		if (!$use_lang_from_cookie)
-			$this->default_form_language = (int)Configuration::get('PS_LANG_DEFAULT');
-		else
-			$this->default_form_language = (int)$cookie->employee_form_lang;
+		foreach ($this->_languages as $lang)
+			if (isset($cookie->employee_form_lang) && $cookie->employee_form_lang == $lang['id_lang'])
+				$lang_exists = true;
+
+		$this->default_form_language = $lang_exists ? (int)$cookie->employee_form_lang : (int)Configuration::get('PS_LANG_DEFAULT');
 
 		foreach ($this->_languages as $k => $language)
-			$this->_languages[$k]['is_default'] = (int)($language['id_lang'] == $this->default_form_language);
+			$this->_languages[$k]['is_default'] = ((int)($language['id_lang'] == $this->default_form_language));
 
 		return $this->_languages;
 	}
@@ -3262,8 +3291,8 @@ class AdminControllerCore extends Controller
 		{
 			if ($module->id)
 				$return[] = '<a href="'.$link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'"
-				onclick="'.$option['onclick'].'"
-				title="'.$option['title'].'">
+				onclick="'.(isset($module->onclick_option_content['desactive']) ? $module->onclick_option_content['desactive'] : '').'"
+				title="'.$this->translationsTab['Uninstall'].'">
 				<i class="icon-minus-sign-alt"></i>&nbsp;'.$this->translationsTab['Uninstall'].'</a>';
 		}
 

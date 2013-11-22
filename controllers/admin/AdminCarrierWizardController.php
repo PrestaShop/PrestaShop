@@ -149,10 +149,10 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$this->toolbar_title = $bread_extended;
 	}
 
-	public function initToolbar()
+	public function initPageHeaderToolbar()
 	{
-		parent::initToolbar();
-		$this->toolbar_btn['back']['href'] = $this->context->link->getAdminLink('AdminCarriers');
+		parent::initPageHeaderToolbar();
+		$this->page_header_toolbar_btn['back']['href'] = $this->context->link->getAdminLink('AdminCarriers');
 	}
 
 	public function renderStepOne($carrier)
@@ -254,7 +254,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					),
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Apply shipping cost:'),
+						'label' => $this->l('Free Shipping:'),
 						'name' => 'is_free',
 						'required' => false,
 						'class' => 't',
@@ -270,7 +270,6 @@ class AdminCarrierWizardControllerCore extends AdminController
 								'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
 							)
 						),
-						'hint' => $this->l('Apply both regular shipping cost and product-specific shipping costs.')
 					),
 					array(
 						'type' => 'radio',
@@ -877,7 +876,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$step_number = Tools::getValue('step_number');
 
 		if ($step_number == 4 && !Shop::isFeatureActive() || $step_number == 5 && Shop::isFeatureActive())
-			return array();
+			return array('fields' => array());
 
 		$step_fields = array(
 			1 => array('name', 'delay', 'grade', 'url'),
@@ -896,7 +895,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		foreach ($definition['fields'] as $field => $def)
 			if (!in_array($field, $step_fields[$step_number]))
 				unset($definition['fields'][$field]);
-		
+
 		return $definition;
 	}
 

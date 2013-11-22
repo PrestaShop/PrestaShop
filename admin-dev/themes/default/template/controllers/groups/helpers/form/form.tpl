@@ -27,11 +27,11 @@
 
 {block name="label"}
 	{if $input['type'] == 'modules'}
-		<div style="{if !$form_id}display:none{/if}">
+		<div {if !$form_id}class="hide"{/if}>
 			<label class="control-label col-lg-3">{l s='Authorized modules:'}</label>
 		</div>
 	{elseif $input['type'] == 'group_discount_category'}
-		<div style="{if !$form_id}display:none{/if}">
+		<div {if !$form_id}class="hide"{/if}>
 			{$smarty.block.parent}
 		</div>
 	{else}
@@ -39,10 +39,9 @@
 	{/if}
 {/block}
 
-
 {block name="field"}
 	{if $input['type'] == 'group_discount_category'}
-	<div style="{if !$form_id}display:none{/if}">
+	<div {if !$form_id}class="hide"{/if}>
 		<script type="text/javascript">
 		$(document).ready(function() {
 			$("#group_discount_category").fancybox({
@@ -103,8 +102,7 @@
 					}
 					else
 					{
-						$('#group_discount_category_table').append('<tr class="alt_row" id="'+jsonData.id_category+'"><td>'+jsonData.catPath+'</td><td>{l s='Discount:'}'+jsonData.discount+'{l s='%'}</td><td><a href="#" onclick="deleteCategoryReduction('+jsonData.id_category+');" class="btn btn-default"><i class="icon-trash"></i> {l s='Delete'}</a></td></tr>');
-						
+						$('#group_discount_category_table').append('<tr class="alt_row" id="'+jsonData.id_category+'"><td>'+jsonData.catPath+'</td><td>{l s='Discount:'}' + ' ' + jsonData.discount+'{l s='%'}</td><td><a href="#" onclick="deleteCategoryReduction('+jsonData.id_category+');" class="btn btn-default"><i class="icon-trash"></i> {l s='Delete'}</a></td></tr>');
 						var input_hidden = document.createElement("input");
 						input_hidden.setAttribute('type', 'hidden');
 						input_hidden.setAttribute('value', jsonData.discount);
@@ -133,7 +131,7 @@
 				{foreach $input['values'] key=key item=category }
 					<tr class="alt_row" id="{$category.id_category}">
 						<td>{$category.path}</td>
-						<td>{l s='Discount: %d%%' sprintf=$category.reduction}</td>
+						<td>{l s='Discount: %.2f%%' sprintf=$category.reduction}</td>
 						<td>
 							<a href="#" onclick="deleteCategoryReduction({$category.id_category});"class="btn btn-default">
 								<i class="icon-trash"></i> {l s='Delete'}
@@ -143,7 +141,7 @@
 					</tr>
 				{/foreach}
 			</table>
-		
+		</div>
 		<div style="display:none" id="group_discount_category_fancybox">
 			<div class="panel form-horizontal">
 				<div class="col-lg-12">
@@ -168,8 +166,7 @@
 		</div>
 	</div>
 	{elseif $input['type'] == 'modules'}
-	<div style="{if !$form_id}display:none{/if}">
-		<div class="margin-form">
+	<div {if !$form_id}class="hide"{/if}>
 		<script type="text/javascript">
 			$(document).ready(function() {
 				$('#authorized-modules').find('[value="0"]').click(function() {
@@ -185,7 +182,7 @@
 		<div class="col-lg-9" id="authorized-modules">			
 			{foreach $input['values']['auth_modules'] key=key item=module }
 			<div class="form-group">
-				<label class="control-label col-lg-2"><img src="../modules/{$module->name}/logo.gif"> {$module->displayName}</label>
+				<label class="control-label col-lg-4"><img src="../modules/{$module->name}/logo.gif"> {$module->displayName}</label>
 				<div class="input-group col-lg-2">
 					<span class="switch prestashop-switch">
 						<input type="radio" name="{$module->name}" id="{$module->name}_on" value="1" checked="checked">
@@ -200,7 +197,7 @@
 			{/foreach}
 			{foreach $input['values']['unauth_modules'] key=key item=module }
 			<div class="form-group">
-				<label class="control-label col-lg-2"><img src="../modules/{$module->name}/logo.gif"> {$module->displayName}</label>
+				<label class="control-label col-lg-4"><img src="../modules/{$module->name}/logo.gif"> {$module->displayName}</label>
 				<div class="input-group col-lg-2">
 					<span class="switch prestashop-switch">
 						<input type="radio" name="{$module->name}" id="{$module->name}_on" value="1">

@@ -33,34 +33,65 @@
 </h3>
 
 <div class="row">
-	<label class="control-label col-lg-5 file_upload_label">
-		<span class="label-tooltip" data-toggle="tooltip"
-			title="{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='MB max.'}">
-			{if isset($id_image)}{l s='Edit this product image'}{else}{l s='Add a new image to this product'}{/if}
-		</span>
-	</label>
-	<div class="col-lg-7">
-		{l s='File:'}
-		<div id="file-uploader">
-			<noscript>
-				<p>{l s='Please enable JavaScript to use file uploader:'}</p>
-			</noscript>
+	<div class="form-group">
+		<label class="control-label col-lg-3 file_upload_label">
+			
+			<span class="label-tooltip" data-toggle="tooltip"
+				title="{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='MB max.'}">
+				{if isset($id_image)}{l s='Edit this product image:'}{else}{l s='Add a new image to this product:'}{/if}
+			</span>
+		</label>
+		<div class="col-lg-9">
+			{$image_uploader}
 		</div>
-		<div id="progressBarImage" class="progressBarImage"></div>
-		<div id="showCounter" style="display:none;">
-			<span id="imageUpload">0</span><span id="imageTotal">0</span>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-lg-3">
+			<span class="label-tooltip" data-toggle="tooltip"
+				title="{l s='Invalid characters:'} <>;=#{}">
+				{l s='Legend:'}
+			</span>			
+		</label>
+		<div class="col-lg-9">
+		{foreach from=$languages item=language}
+			{if $languages|count > 1}
+			<div class="translatable-field row lang-{$language.id_lang}">
+				<div class="col-lg-6">
+			{/if}
+					<input type="text"
+					id="legend_{$language.id_lang}"
+					{if isset($input_class)}class="{$input_class}"{/if}
+					name="legend_{$language.id_lang}"
+					value="{$product->name[$language.id_lang]|escape:'html':'UTF-8'}"
+					{if !$product->id}disabled="disabled"{/if} />
+			{if $languages|count > 1}
+				</div>
+				<div class="col-lg-2">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+						{$language.iso_code}
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						{foreach from=$languages item=language}
+						<li>
+							<a href="javascript:hideOtherLanguage({$language.id_lang});">{$language.name}</a>
+						</li>
+						{/foreach}
+					</ul>
+				</div>
+			</div>
+			{/if}
+		{/foreach}
 		</div>
-		<input type="hidden" name="resizer" value="auto" />
-	{if Tools::getValue('id_image')}
-		<input type="hidden" name="id_image" value="{Tools::getValue('id_image')|intval}" />
-	{/if}
 	</div>
 </div>
+
 
 <table class="table tableDnD" id="imageTable">
 	<thead>
 		<tr class="nodrag nodrop"> 
 			<th class="fixed-width-sm"><span class="title_box">{l s='Image'}</span></th>
+			<th class="fixed-width-lg"><span class="title_box">{l s='Legend'}</span></th>
 			<th class="center fixed-width-xs"><span class="title_box">{l s='Position'}</span></th>
 			{if $shops}
 			{foreach from=$shops item=shop}
@@ -75,13 +106,15 @@
 	</tbody>
 </table>
 
+
 <table id="lineType" style="display:none;">
 	<tr id="image_id">
 		<td>
 			<a href="{$smarty.const._THEME_PROD_DIR_}image_path.jpg" class="fancybox">
-				<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-default-small_default.jpg" alt="image_id" title="image_id" />
+				<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-default-{$imageType}.jpg" alt="legend" title="legend" />
 			</a>
 		</td>
+		<td>legend</td>
 		<td id="td_image_id" class="pointer dragHandle center positionImage">
 			image_position
 		</td>
@@ -112,6 +145,28 @@
 	var current_shop_id = {$current_shop_id|intval};
 	{literal}
 	//Ready Function
+
+	function imageLine(id, path, position, cover, shops, legend)
+	{
+		line = $("#lineType").html();
+		line = line.replace(/image_id/g, id);			
+		line = line.replace(/[a-z]{0,2}-default/g, path);
+		line = line.replace(/image_path/g, path);
+		line = line.replace(/image_position/g, position);
+		line = line.replace(/legend/g, legend);
+		line = line.replace(/icon-check-empty/g, cover);
+		line = line.replace(/<tbody>/gi, "");
+		line = line.replace(/<\/tbody>/gi, "");
+		if (shops != false)
+		{
+			$.each(shops, function(key, value){
+				if (value == 1)
+					line = line.replace('id="' + key + '' + id + '"','id="' + key + '' + id + '" checked=checked');
+			});
+		}
+		$("#imageList").append(line);
+	}
+
 	$(document).ready(function(){
 		{/literal}
 		{foreach from=$images item=image}
@@ -129,7 +184,7 @@
 			}
 			else
 				assoc = false;
-			imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}icon-check-sign{else}icon-check-empty{/if}", assoc);
+			imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}icon-check-sign{else}icon-check-empty{/if}", assoc, "{$image->legend[$default_language]|@addcslashes:'\"'}");
 		{/foreach}
 		{literal}
 		$("#imageTable").tableDnD(
@@ -146,61 +201,6 @@
 			image_up = image_up.slice(0, -1);
 			image_up += "}";
 			updateImagePosition(image_up);
-			}
-		});
-		var filecheck = 1;
-		var uploader = new qq.FileUploader(
-		{
-			element: document.getElementById("file-uploader"),
-			action: "ajax-tab.php",
-			debug: false,
-			params: {
-				id_product : {/literal}{$id_product}{literal},
-				id_category : {/literal}{$id_category_default}{literal},
-				token : "{/literal}{$token}{literal}",
-				tab : "AdminProducts",
-				action : 'addImage',
-				ajax: 1
-			},
-			onComplete: function(id, fileName, responseJSON)
-			{
-				var percent = ((filecheck * 100) / nbfile);
-				$("#progressBarImage").progressbar({value: percent});
-				if (percent != 100)
-				{
-					$("#imageUpload").html(parseInt(filecheck));
-					$("#imageTotal").html(" / " + parseInt(nbfile) + " {/literal}{l s='Images'}{literal}");
-					$("#progressBarImage").show();
-					$("#showCounter").show();
-				}
-				else
-				{
-					$("#progressBarImage").progressbar({value: 0});
-					$("#progressBarImage").hide();
-					$("#showCounter").hide();
-					nbfile = 0;
-					filecheck = 0;
-				}
-				if (responseJSON.status == 'ok')
-				{
-					cover = "icon-check-empty";
-					if (responseJSON.cover == "1")
-						cover = "icon-check-sign";
-					imageLine(responseJSON.id, responseJSON.path, responseJSON.position, cover, responseJSON.shops)
-					$("#imageTable tr:last").after(responseJSON.html);
-					$("#countImage").html(parseInt($("#countImage").html()) + 1);
-					$("#img" + id).remove();
-					$("#imageTable").tableDnDUpdate();
-					showSuccessMessage(responseJSON.name + " " + success_add);
-				}
-				else
-					showErrorMessage(responseJSON.error);
-				filecheck++;
-			},
-			onSubmit: function(id, filename)
-			{
-				$("#imageTable").show();
-				$("#listImage").append("<li id='img"+id+"'><div>" + filename + "</div></div><a href=\"javascript:delQueue(" + id +");\"><img src=\"../img/admin/disabled.gif\" ></a><p class=\"errorImg\"></p></li>");
 			}
 		});
 
@@ -287,7 +287,6 @@
 			});
 		});
 		
-		//function	
 		function updateImagePosition(json)
 		{
 			doAdminAjax(
@@ -306,27 +305,11 @@
 			$("#img" + id).remove();
 		}
 		
-		function imageLine(id, path, position, cover, shops)
-		{
-			line = $("#lineType").html();
-			line = line.replace(/image_id/g, id);			
-			line = line.replace(/[a-z]{2}-default-small_default/g, path+'-small_default');
-			line = line.replace(/image_path/g, path);
-			line = line.replace(/image_position/g, position);
-			line = line.replace(/icon-check-empty/g, cover);
-			line = line.replace(/<tbody>/gi, "");
-			line = line.replace(/<\/tbody>/gi, "");
-			if (shops != false)
-			{
-				$.each(shops, function(key, value){
-					if (value == 1)
-						line = line.replace('id="' + key + '' + id + '"','id="' + key + '' + id + '" checked=checked');
-				});
-			}
-			$("#imageList").append(line);
-		}
+		
 		$('.fancybox').fancybox();
 	});
+
+	hideOtherLanguage(default_language);
 	{/literal}
 </script>
 </div>

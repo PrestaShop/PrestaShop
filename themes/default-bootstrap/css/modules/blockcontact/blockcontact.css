@@ -1,4 +1,10 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 /* block CONTACT ******************************************************************************* */
+@media (max-width: 767px) {
+  #contact_block {
+    margin-bottom: 20px;
+  }
+}
 #contact_block .label {
   display: none;
 }
@@ -11,7 +17,7 @@
 }
 #contact_block p.tel {
   font: 400 17px/21px Arial, Helvetica, sans-serif;
-  color: #fff;
+  color: white;
   margin-bottom: 6px;
 }
 #contact_block p.tel i {

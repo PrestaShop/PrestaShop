@@ -64,6 +64,8 @@ class HelperListCore extends Helper
 
 	public $position_identifier;
 
+	public $table_id;
+
 	/**
 	 * @var string Customize list display
 	 *
@@ -455,13 +457,13 @@ class HelperListCore extends Helper
 			self::$cache_lang['Delete'] = $this->l('Delete', 'Helper');
 
 		if (!array_key_exists('DeleteItem', self::$cache_lang))
-			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item?', 'Helper', false, false);
+			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item?', 'Helper', true, false);
 
 		if (!array_key_exists('Name', self::$cache_lang))
-			self::$cache_lang['Name'] = $this->l('Name:', 'Helper', false, false);
+			self::$cache_lang['Name'] = $this->l('Name:', 'Helper', true, false);
 
 		if (!is_null($name))
-			$name = '\n\n'.self::$cache_lang['Name'].' '.$name;
+			$name = addcslashes('\n\n'.self::$cache_lang['Name'].' '.$name, '\'');
 
 		$data = array(
 			$this->identifier => $id,
@@ -470,7 +472,8 @@ class HelperListCore extends Helper
 		);
 
 		if ($this->specificConfirmDelete !== false)
-			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : Tools::safeOutput(addcslashes(self::$cache_lang['DeleteItem'].$name, '\''));
+			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : Tools::safeOutput(self::$cache_lang['DeleteItem'].$name);
+		
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
 
 		return $tpl->fetch();
@@ -523,7 +526,7 @@ class HelperListCore extends Helper
 		if (Tools::getIsset($this->table.'Orderby'))
 			$order = '&'.$this->table.'Orderby='.urlencode($this->orderBy).'&'.$this->table.'Orderway='.urlencode(strtolower($this->orderWay));
 
-		$action = $this->currentIndex.$identifier.'&token='.$token.$order.'#'.$this->table;
+		$action = $this->currentIndex.$identifier.'&token='.$token.'#'.$this->list_id;
 
 		/* Determine current page number */
 		$page = (int)Tools::getValue('submitFilter'.$this->list_id);
@@ -535,8 +538,8 @@ class HelperListCore extends Helper
 			isset($this->context->cookie->{$this->list_id.'_pagination'}) ? $this->context->cookie->{$this->list_id.'_pagination'} : null
 		);
 
-		if ($this->position_identifier && (int)Tools::getValue($this->position_identifier, 1))
-			$table_id = substr($this->identifier, 3, strlen($this->identifier));
+		if (!isset($this->table_id) && $this->position_identifier && (int)Tools::getValue($this->position_identifier, 1))
+			$this->table_id = substr($this->identifier, 3, strlen($this->identifier));
 
 		if ($this->position_identifier && ($this->orderBy == 'position' && $this->orderWay != 'DESC'))
 			$table_dnd = true;
@@ -627,7 +630,7 @@ class HelperListCore extends Helper
 			'id_cat' => $id_cat,
 			'shop_link_type' => $this->shopLinkType,
 			'has_actions' => !empty($this->actions),
-			'table_id' => isset($table_id) ? $table_id : null,
+			'table_id' => isset($this->table_id) ? $this->table_id : null,
 			'table_dnd' => isset($table_dnd) ? $table_dnd : null,
 			'name' => isset($name) ? $name : null,
 			'name_id' => isset($name_id) ? $name_id : null,

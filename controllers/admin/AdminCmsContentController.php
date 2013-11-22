@@ -116,11 +116,35 @@ class AdminCmsContentControllerCore extends AdminController
 	public function renderPageHeaderToolbar()
 	{
 		$id_cms_category = (int)Tools::getValue('id_cms_category');
+		$id_cms_page = Tools::getValue('id_cms');
 
 		if (!$id_cms_category)
 			$id_cms_category = 1;
 
-		$this->page_header_toolbar_title = 'CMS';
+		$cms_category = new CMSCategory($id_cms_category);
+		$this->toolbar_title[] = 'CMS';
+
+		if ($this->display == 'edit_category')
+		{
+			if (Tools::getValue('addcms_category') !== false)
+				$this->toolbar_title[] =$this->l('Add new');
+			else
+				$this->toolbar_title[] = sprintf($this->l('Edit: %s'), $cms_category->name[$this->context->employee->id_lang]);
+		}
+		elseif ($this->display == 'edit_page')
+		{
+			$this->toolbar_title[] = $cms_category->name[$this->context->employee->id_lang];
+
+			if (Tools::getValue('addcms') !== false)
+				$this->toolbar_title[] = $this->l('Add new');
+			elseif ($id_cms_page)
+			{
+				$cms_page = new CMS($id_cms_page);
+				$this->toolbar_title[] = sprintf($this->l('Edit: %s'), $cms_page->meta_title[$this->context->employee->id_lang]);
+			}
+		}
+		else
+			$this->toolbar_title[] = $cms_category->name[$this->context->employee->id_lang];
 
 		if ($this->display == 'list')
 		{
@@ -142,6 +166,8 @@ class AdminCmsContentControllerCore extends AdminController
 				'desc' => $this->l('Cancel')
 			);
 		}
+
+		$this->page_header_toolbar_title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
 
 		if (is_array($this->page_header_toolbar_btn)
 			&& $this->page_header_toolbar_btn instanceof Traversable

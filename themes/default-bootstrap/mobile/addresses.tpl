@@ -43,7 +43,7 @@
 						{foreach from=$address.ordered name=adr_loop item=pattern}
 							{assign var=addressKey value=" "|explode:$pattern}
 							{foreach from=$addressKey item=key name="word_loop"}
-								{$address.formated[$key|replace:',':'']|escape:'htmlall':'UTF-8'}
+								{$address.formated[$key|replace:',':'']|escape:'html':'UTF-8'}
 							{/foreach}
 							<br />
 						{/foreach}

@@ -365,6 +365,7 @@ CREATE TABLE `PREFIX_cms` (
   `id_cms_category` int(10) unsigned NOT NULL,
   `position` int(10) unsigned NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL default '0',
+  `indexation` tinyint(1) unsigned NOT NULL default '1',
   PRIMARY KEY (`id_cms`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 

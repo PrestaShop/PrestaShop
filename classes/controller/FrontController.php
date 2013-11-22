@@ -273,7 +273,7 @@ class FrontControllerCore extends Controller
 		else
 		{
 			$page_name = Dispatcher::getInstance()->getController();
-			$page_name = (preg_match('/^[0-9]/', $page_name)) ? 'page_'.$page_name : $page_name;
+			$page_name = (preg_match('/^[0-9]/', $page_name) ? 'page_'.$page_name : $page_name);
 		}
 
 		$this->context->smarty->assign(Meta::getMetaTags($this->context->language->id, $page_name));
@@ -303,6 +303,10 @@ class FrontControllerCore extends Controller
 		$meta_language = array();
 		foreach ($languages as $lang)
 			$meta_language[] = $lang['iso_code'];
+
+		$compared_products = array();
+		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') && isset($this->context->cookie->id_compare))
+			$compared_products = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
 
 		$this->context->smarty->assign(array(
 			// Usefull for layout.tpl
@@ -342,6 +346,8 @@ class FrontControllerCore extends Controller
 			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT'),
 			'quick_view' => Configuration::get('PS_QUICK_VIEW'),
 			'shop_phone' => Configuration::get('PS_SHOP_PHONE'),
+			'compared_products' => is_array($compared_products) ? $compared_products : array(),
+			'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM')
 		));
 
 		// Add the tpl files directory for mobile
@@ -743,7 +749,6 @@ class FrontControllerCore extends Controller
 			$this->addJqueryUI('ui.sortable');
 			$this->addjqueryPlugin('fancybox');
 			$this->addJS(_PS_JS_DIR_.'hookLiveEdit.js');
-			$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'all'); // @TODO
 		}
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
@@ -753,6 +758,8 @@ class FrontControllerCore extends Controller
 			$this->addjqueryPlugin('fancybox');
 			$this->addJS(_THEME_JS_DIR_.'quick-view.js');
 		}
+		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
+				$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 
 		// Execute Hook FrontController SetMedia
 		Hook::exec('actionFrontControllerSetMedia', array());
@@ -858,7 +865,7 @@ class FrontControllerCore extends Controller
 		if (!is_numeric(Tools::getValue('p', 1)) || Tools::getValue('p', 1) < 0)
 			Tools::redirect(self::$link->getPaginationLink(false, false, $this->n, false, 1, false));
 
-		$current_url = tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']);
+		$current_url = Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']);
 		//delete parameter page
 		$current_url = preg_replace('/(\?)?(&amp;)?p=\d+/', '$1', $current_url);
 
@@ -927,7 +934,7 @@ class FrontControllerCore extends Controller
 		$ips = array_map('trim', $ips);
 		if (is_array($ips) && count($ips))
 			foreach ($ips as $ip)
-				if (!empty($ip) && strpos($user_ip, $ip) === 0)
+				if (!empty($ip) && preg_match('/^'.$ip.'.*/', $user_ip))
 					$allowed = true;
 		return $allowed;
 	}
@@ -951,7 +958,7 @@ class FrontControllerCore extends Controller
 	 *
 	 * @see Controller::addCSS()
 	 */
-	public function addCSS($css_uri, $css_media_type = 'all')
+	public function addCSS($css_uri, $css_media_type = 'all', $offset = null)
 	{
 		if (!is_array($css_uri))
 			$css_uri = array($css_uri => $css_media_type);
@@ -966,7 +973,7 @@ class FrontControllerCore extends Controller
 			$list_uri[$file] = $media;
 		}
 
-		return parent::addCSS($list_uri, $css_media_type);
+		return parent::addCSS($list_uri, $css_media_type, $offset);
 	}
 
 	/**

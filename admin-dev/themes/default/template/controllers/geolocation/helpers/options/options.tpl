@@ -39,7 +39,7 @@
 					{foreach $field['list'] as $country}
 						<tr>
 							<td><input type="checkbox" name="countries[]" value="{$country[$field['identifier']]}" {if in_array(strtoupper($country['iso_code']), $allowed_countries)}checked="checked"{/if} /></td>
-							<td>{$country['name']|escape:'htmlall':'UTF-8'}</td>
+							<td>{$country['name']|escape:'html':'UTF-8'}</td>
 						</tr>
 					{/foreach}
 				</tbody>
@@ -53,7 +53,7 @@
 {block name="input"}
 	{if $field['type'] == 'textarea_newlines'}
 		<div class="col-lg-9">
-			<textarea name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|replace:';':"\n"|escape:'htmlall':'UTF-8'}</textarea>
+			<textarea name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|replace:';':"\n"|escape:'html':'UTF-8'}</textarea>
 		</div>
 	{else}
 		{$smarty.block.parent}

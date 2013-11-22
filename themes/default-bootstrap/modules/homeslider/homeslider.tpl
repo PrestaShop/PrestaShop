@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
+{if $page_name =='index'}
 <!-- Module HomeSlider -->
 {if isset($homeslider)}
 <script type="text/javascript">
@@ -46,8 +46,8 @@ var homeslider_pause = {$homeslider.pause};
     {foreach from=$homeslider_slides item=slide}
         {if $slide.active}
             <li>
-                <a href="{$slide.url|escape:'htmlall':'UTF-8'}" title="{$slide.description|escape:'htmlall':'UTF-8'}">
-                <img src="{$smarty.const._MODULE_DIR_}homeslider/images/{$slide.image|escape:'htmlall':'UTF-8'}" alt="{$slide.legend|escape:'htmlall':'UTF-8'}"  />
+                <a href="{$slide.url|escape:'html':'UTF-8'}" title="{$slide.description|escape:'html':'UTF-8'}">
+                <img src="{$smarty.const._MODULE_DIR_}homeslider/images/{$slide.image|escape:'html':'UTF-8'}" alt="{$slide.legend|escape:'html':'UTF-8'}"  />
                 </a>
             </li>
         {/if}
@@ -56,3 +56,4 @@ var homeslider_pause = {$homeslider.pause};
 </div>
 {/if}
 <!-- /Module HomeSlider -->
+{/if}
