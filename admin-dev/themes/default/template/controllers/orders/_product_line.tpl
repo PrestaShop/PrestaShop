@@ -170,6 +170,7 @@
 				{if !$order->hasBeenDelivered()} <th style="width: 8%;text-align:center;">&nbsp;</th>{/if}
 
 			{foreach from=$product.pack_items item=pack_item}
+				{if !empty($pack_item.active)}
 				<tr{if isset($pack_item.image) && $pack_item.image->id && isset($pack_item.image_size)} height="{$pack_item['image_size'][1] + 7}"{/if} >
 					<td>{l s='Package Item'}</td>
 					<td align="center">{if isset($pack_item.image) && $pack_item.image->id}{$pack_item.image_tag}{/if}</td>
@@ -187,6 +188,7 @@
 					<td>&nbsp;<!--Total--></td>
 					<td>&nbsp;<!--Action--></td>
 				</tr>
+				{/if}
 			{/foreach}
 			</table>
 		</td>
