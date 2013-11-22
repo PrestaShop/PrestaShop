@@ -26,9 +26,9 @@
 <script>
 	var dashboard_ajax_url = '{$link->getAdminLink('AdminDashboard')}';
 	var adminstats_ajax_url = '{$link->getAdminLink('AdminStats')}';
-	var no_results_translation = '{l s='No result' js='1'}';
+	var no_results_translation = '{l s='No result' js=1}';
 	var dashboard_use_push = '{$dashboard_use_push|intval}';
-	var read_more = '{l s='Read more' js='1'}';
+	var read_more = '{l s='Read more' js=1}';
 </script>
 
 <div id="dashboard">
