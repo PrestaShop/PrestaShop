@@ -181,7 +181,7 @@
 					{if isset($errors_discount) && $errors_discount}
 						<ul class="alert alert-danger">
 						{foreach from=$errors_discount key=k item=error}
-							<li>{$error|escape:'htmlall':'UTF-8'}</li>
+							<li>{$error|escape:'html':'UTF-8'}</li>
 						{/foreach}
 						</ul>
 					{/if}

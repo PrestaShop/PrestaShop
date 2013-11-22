@@ -30,9 +30,9 @@
 	{if $category->id AND $category->active}
 		<h1>
 			{strip}
-				{$category->name|escape:'htmlall':'UTF-8'}
+				{$category->name|escape:'html':'UTF-8'}
 				{if isset($categoryNameComplement)}
-					{$categoryNameComplement|escape:'htmlall':'UTF-8'}
+					{$categoryNameComplement|escape:'html':'UTF-8'}
 				{/if}
 			{/strip}
 		</h1>
@@ -50,7 +50,7 @@
 				<!-- Category image -->
 				{if $category->id_image}
 				<div class="align_center">
-					<img src="{$link->getCatImageLink($category->link_rewrite, $category->id_image, 'category_default')|escape:'html'}" alt="{$category->name|escape:'htmlall':'UTF-8'}" title="{$category->name|escape:'htmlall':'UTF-8'}" id="categoryImage" width="{$categorySize.width}" height="{$categorySize.height}" />
+					<img src="{$link->getCatImageLink($category->link_rewrite, $category->id_image, 'category_default')|escape:'html'}" alt="{$category->name|escape:'html':'UTF-8'}" title="{$category->name|escape:'html':'UTF-8'}" id="categoryImage" width="{$categorySize.width}" height="{$categorySize.height}" />
 				</div>
 				{/if}
 			{/if}
@@ -75,14 +75,14 @@
 			<ul class="inline_list">
 			{foreach from=$subcategories item=subcategory}
 				<li class="clearfix">
-					<a href="{$link->getCategoryLink($subcategory.id_category, $subcategory.link_rewrite)|escape:'htmlall':'UTF-8'}" title="{$subcategory.name|escape:'htmlall':'UTF-8'}" class="img">
+					<a href="{$link->getCategoryLink($subcategory.id_category, $subcategory.link_rewrite)|escape:'html':'UTF-8'}" title="{$subcategory.name|escape:'html':'UTF-8'}" class="img">
 						{if $subcategory.id_image}
 							<img src="{$link->getCatImageLink($subcategory.link_rewrite, $subcategory.id_image, 'medium_default')|escape:'html'}" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
 						{else}
 							<img src="{$img_cat_dir}default-medium_default.jpg" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
 						{/if}
 					</a>
-					<a href="{$link->getCategoryLink($subcategory.id_category, $subcategory.link_rewrite)|escape:'htmlall':'UTF-8'}" class="cat_name">{$subcategory.name|escape:'htmlall':'UTF-8'}</a>
+					<a href="{$link->getCategoryLink($subcategory.id_category, $subcategory.link_rewrite)|escape:'html':'UTF-8'}" class="cat_name">{$subcategory.name|escape:'html':'UTF-8'}</a>
 					{if $subcategory.description}
 						<p class="cat_desc">{$subcategory.description}</p>
 					{/if}

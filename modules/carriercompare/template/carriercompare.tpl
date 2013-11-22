@@ -49,7 +49,7 @@ PS_SE_HandleEvent();
 			<label for="id_country">{l s='Country' mod='carriercompare'}</label>
 			<select name="id_country" id="id_country">
 				{foreach from=$countries item=country}
-					<option value="{$country.id_country}" {if $id_country == $country.id_country}selected="selected"{/if}>{$country.name|escape:'htmlall':'UTF-8'}</option>
+					<option value="{$country.id_country}" {if $id_country == $country.id_country}selected="selected"{/if}>{$country.name|escape:'html':'UTF-8'}</option>
 				{/foreach}
 			</select>
 		</p>
@@ -61,7 +61,7 @@ PS_SE_HandleEvent();
 		</p>
 		<p>
 			<label for="zipcode">{l s='Zip Code' mod='carriercompare'}</label>
-			<input type="text" name="zipcode" id="zipcode" value="{$zipcode|escape:'htmlall':'UTF-8'}"/> ({l s='Needed for certain carriers.' mod='carriercompare'})
+			<input type="text" name="zipcode" id="zipcode" value="{$zipcode|escape:'html':'UTF-8'}"/> ({l s='Needed for certain carriers.' mod='carriercompare'})
 		</p>
 		<div id="carriercompare_errors" style="display: none;">
 			<ul id="carriercompare_errors_list"></ul><br />

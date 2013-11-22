@@ -77,8 +77,8 @@ $(function() {
 			<tbody>
 			{foreach $modules key=key item=module}
 				<tr>
-					<td><a href="{$module->linkto|escape:'htmlall':'UTF-8'}"><strong>{$module->displayName}</strong></a></td>
-					<td><a href="{$module->linkto|escape:'htmlall':'UTF-8'}">{$module->description}</a></td>
+					<td><a href="{$module->linkto|escape:'html':'UTF-8'}"><strong>{$module->displayName}</strong></a></td>
+					<td><a href="{$module->linkto|escape:'html':'UTF-8'}">{$module->description}</a></td>
 				</tr>
 			{/foreach}
 		</tbody>
@@ -157,8 +157,8 @@ $(function() {
 			<tbody>
 			{foreach $addons key=key item=addon}
 				<tr>
-					<td><a href="{$addon.href|escape:'htmlall':'UTF-8'}" target="_blank"><strong><i class="icon-external-link-sign"></i> {$addon.title|escape:'htmlall':'UTF-8'}</strong></a></td>
-					<td><a href="{$addon.href|escape:'htmlall':'UTF-8'}" target="_blank">{$addon.description|truncate:256:'...'|escape:'htmlall':'UTF-8'}</a></td>
+					<td><a href="{$addon.href|escape:'html':'UTF-8'}" target="_blank"><strong><i class="icon-external-link-sign"></i> {$addon.title|escape:'html':'UTF-8'}</strong></a></td>
+					<td><a href="{$addon.href|escape:'html':'UTF-8'}" target="_blank">{$addon.description|truncate:256:'...'|escape:'html':'UTF-8'}</a></td>
 				</tr>
 			{/foreach}
 		</tbody>

@@ -38,7 +38,7 @@
 			<div id="category_block">
 				{$category_tree}
 			</div>
-			<a class="btn btn-link bt-icon confirm_leave" href="{$link->getAdminLink('AdminCategories')|escape:'htmlall':'UTF-8'}&addcategory">
+			<a class="btn btn-link bt-icon confirm_leave" href="{$link->getAdminLink('AdminCategories')|escape:'html':'UTF-8'}&addcategory">
 				<i class="icon-plus-sign"></i> {l s='Create new category'} <i class="icon-external-link-sign"></i>
 			</a>
 		</div>
@@ -68,7 +68,7 @@
 		</label>
 		<div class="col-lg-5">
 			<input type="hidden" name="inputAccessories" id="inputAccessories" value="{foreach from=$accessories item=accessory}{$accessory.id_product}-{/foreach}" />
-			<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|escape:'htmlall':'UTF-8'}¤{/foreach}" />
+			<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|escape:'html':'UTF-8'}¤{/foreach}" />
 			<div id="ajax_choose_product">
 				<div class="input-group">
 					<input type="text" value="" id="product_autocomplete_input" />
@@ -82,7 +82,7 @@
 				<button type="button" class="btn btn-default delAccessory" name="{$accessory.id_product}">
 					<i class="icon-remove text-danger"></i>
 				</button>
-				{$accessory.name|escape:'htmlall':'UTF-8'}{if !empty($accessory.reference)}{$accessory.reference}{/if}
+				{$accessory.name|escape:'html':'UTF-8'}{if !empty($accessory.reference)}{$accessory.reference}{/if}
 			</div>
 			{/foreach}
 			</div>
@@ -100,7 +100,7 @@
 			</select>
 		</div>
 		<div class="col-lg-4">
-			<a class="btn btn-link bt-icon confirm_leave" style="margin-bottom:0" href="{$link->getAdminLink('AdminManufacturers')|escape:'htmlall':'UTF-8'}&addmanufacturer">
+			<a class="btn btn-link bt-icon confirm_leave" style="margin-bottom:0" href="{$link->getAdminLink('AdminManufacturers')|escape:'html':'UTF-8'}&addmanufacturer">
 				<i class="icon-plus-sign"></i> {l s='Create new manufacturer'} <i class="icon-external-link-sign"></i>
 			</a>
 		</div>

@@ -105,7 +105,7 @@
 <div id="apply_discount_to_product_div" class="form-group">
 	<label class="control-label col-lg-3">{l s='Product'}</label>
 	<div class="input-group col-lg-5">
-		<input type="text" id="reductionProductFilter" name="reductionProductFilter" value="{$reductionProductFilter|escape:'htmlall':'UTF-8'}" />
+		<input type="text" id="reductionProductFilter" name="reductionProductFilter" value="{$reductionProductFilter|escape:'html':'UTF-8'}" />
 		<input type="hidden" id="reduction_product" name="reduction_product" value="{$currentTab->getFieldValue($currentObject, 'reduction_product')|intval}" />
 		<span class="input-group-addon"><i class="icon-search"></i></span>
 	</div>

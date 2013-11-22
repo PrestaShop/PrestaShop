@@ -54,7 +54,7 @@ $('document').ready(function()
 </script>
 
 {capture name=path}
-	<a href="{$link->getPageLink('my-account', true)|escape:'htmlall':'UTF-8'}">
+	<a href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}">
 		{l s='My account' mod='favoriteproducts'}</a>
 		<span class="navigation-pipe">{$navigationPipe}</span><span class="navigation_page">{l s='My favorite products' mod='favoriteproducts'}</span>
 {/capture}
@@ -66,10 +66,10 @@ $('document').ready(function()
 			{foreach from=$favoriteProducts item=favoriteProduct}
 			<li class="col-xs-12">
             	<div class="favoriteproduct clearfix inner-content">
-                    <a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)|escape:'htmlall':'UTF-8'}" class="product_img_link">
-                        <img src="{$link->getImageLink($favoriteProduct.link_rewrite, $favoriteProduct.image, 'medium_default')|escape:'htmlall':'UTF-8'}" alt=""/></a>
-                    <p class="s_title_block"><a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)|escape:'htmlall':'UTF-8'}">{$favoriteProduct.name|escape:'htmlall':'UTF-8'}</a></p>
-                    <div class="product_desc">{$favoriteProduct.description_short|strip_tags|escape:'htmlall':'UTF-8'}</div>
+                    <a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)|escape:'html':'UTF-8'}" class="product_img_link">
+                        <img src="{$link->getImageLink($favoriteProduct.link_rewrite, $favoriteProduct.image, 'medium_default')|escape:'html':'UTF-8'}" alt=""/></a>
+                    <p class="s_title_block"><a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)|escape:'html':'UTF-8'}">{$favoriteProduct.name|escape:'html':'UTF-8'}</a></p>
+                    <div class="product_desc">{$favoriteProduct.description_short|strip_tags|escape:'html':'UTF-8'}</div>
                     <div class="remove">
                     	<a href="#" onclick="return false" rel="ajax_id_favoriteproduct_{$favoriteProduct.id_product}"><i class="icon-remove"></i></a>
                     </div>
@@ -83,6 +83,6 @@ $('document').ready(function()
 
 	<ul class="footer_links clearfix">
 		<li>
-			<a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'htmlall':'UTF-8'}"><span><i class="icon-chevron-left"></i>{l s='Back to your account' mod='favoriteproducts'}</span></a></li>
+			<a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}"><span><i class="icon-chevron-left"></i>{l s='Back to your account' mod='favoriteproducts'}</span></a></li>
 	</ul>
 </div>

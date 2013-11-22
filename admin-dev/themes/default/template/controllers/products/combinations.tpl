@@ -73,7 +73,7 @@
 				<select name="attribute_group" id="attribute_group" onchange="populate_attrs();">
 				{if isset($attributes_groups)}
 					{foreach from=$attributes_groups key=k item=attribute_group}
-					<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name|escape:'htmlall':'UTF-8'}&nbsp;&nbsp;</option>
+					<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name|escape:'html':'UTF-8'}&nbsp;&nbsp;</option>
 					{/foreach}
 				{/if}
 				</select>
@@ -318,7 +318,7 @@
 					<li>
 						<input type="checkbox" name="id_image_attr[]" value="{$image.id_image}" id="id_image_attr_{$image.id_image}" />
 						<label for="id_image_attr_{$image.id_image}">
-							<img src="{$smarty.const._THEME_PROD_DIR_}{$image.obj->getExistingImgPath()}-{$imageType}.jpg" alt="{$image.legend|escape:'htmlall':'UTF-8'}" title="{$image.legend|escape:'htmlall':'UTF-8'}" />
+							<img src="{$smarty.const._THEME_PROD_DIR_}{$image.obj->getExistingImgPath()}-{$imageType}.jpg" alt="{$image.legend|escape:'html':'UTF-8'}" title="{$image.legend|escape:'html':'UTF-8'}" />
 						</label>
 					</li>
 					{/foreach}

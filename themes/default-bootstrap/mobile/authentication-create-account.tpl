@@ -31,7 +31,7 @@
 			<select id="days" name="days">
 				<option value="">-</option>
 				{foreach from=$days item=day}
-					<option value="{$day|escape:'htmlall':'UTF-8'}" {if ($sl_day == $day)} selected="selected"{/if}>{$day|escape:'htmlall':'UTF-8'}&nbsp;&nbsp;</option>
+					<option value="{$day|escape:'html':'UTF-8'}" {if ($sl_day == $day)} selected="selected"{/if}>{$day|escape:'html':'UTF-8'}&nbsp;&nbsp;</option>
 				{/foreach}
 			</select>
 			{*
@@ -51,13 +51,13 @@
 			<select id="months" name="months">
 				<option value="">-</option>
 				{foreach from=$months key=k item=month}
-					<option value="{$k|escape:'htmlall':'UTF-8'}" {if ($sl_month == $k)} selected="selected"{/if}>{l s=$month}&nbsp;</option>
+					<option value="{$k|escape:'html':'UTF-8'}" {if ($sl_month == $k)} selected="selected"{/if}>{l s=$month}&nbsp;</option>
 				{/foreach}
 			</select>
 			<select id="years" name="years">
 				<option value="">-</option>
 				{foreach from=$years item=year}
-					<option value="{$year|escape:'htmlall':'UTF-8'}" {if ($sl_year == $year)} selected="selected"{/if}>{$year|escape:'htmlall':'UTF-8'}&nbsp;&nbsp;</option>
+					<option value="{$year|escape:'html':'UTF-8'}" {if ($sl_year == $year)} selected="selected"{/if}>{$year|escape:'html':'UTF-8'}&nbsp;&nbsp;</option>
 				{/foreach}
 			</select>
 		</p>
@@ -152,7 +152,7 @@
 					<select name="id_country" id="id_country">
 						<option value="">-</option>
 						{foreach from=$countries item=v}
-						<option value="{$v.id_country}" {if ($sl_country == $v.id_country)} selected="selected"{/if}>{$v.name|escape:'htmlall':'UTF-8'}</option>
+						<option value="{$v.id_country}" {if ($sl_country == $v.id_country)} selected="selected"{/if}>{$v.name|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				</p>
@@ -211,7 +211,7 @@
 	<p class="cart_navigation required submit">
 		<input type="hidden" name="email_create" value="1" />
 		<input type="hidden" name="is_new_customer" value="1" />
-		{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
+		{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'html':'UTF-8'}" />{/if}
 		<input type="submit" name="submitAccount" id="submitAccount" value="{l s='Register'}" class="exclusive btn btn-default" />
 		<span><sup>*</sup>{l s='Required field'}</span>
 	</p>
