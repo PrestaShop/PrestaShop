@@ -658,6 +658,69 @@ class AdminControllerCore extends Controller
 		$this->layout = 'layout-export.tpl';
 	}
 
+	public function processExportExcel()
+	{
+		// clean buffer
+		if (ob_get_level() && ob_get_length() > 0)
+			ob_clean();
+		$this->getList($this->context->language->id);
+		if (!count($this->_list))
+			return;
+    
+    if (!extension_loaded('zip')) {
+      $this->displayWarning($this->l('Module php_zip must be enabled in order to use Excel export feature.'));
+      return;
+    }
+
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8');
+		header('Cache-Control: no-store, no-cache');
+		header('Content-disposition: attachment; filename="'.$this->table.'_'.date('Y-m-d_His').'.xlsx"');
+
+		$headers = array();
+		foreach ($this->fields_list as $datas)
+			$headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
+		$content = array();
+		foreach ($this->_list as $i => $row)
+		{
+			$content[$i] = array();
+			$path_to_image = false;
+			foreach ($this->fields_list as $key => $params)
+			{
+				$field_value = isset($row[$key]) ? Tools::htmlentitiesDecodeUTF8($row[$key]) : '';
+				if ($key == 'image')
+				{
+					if ($params['image'] != 'p' || Configuration::get('PS_LEGACY_IMAGES'))
+						$path_to_image = Tools::getShopDomain(true)._PS_IMG_.$params['image'].'/'.$row['id_'.$this->table].(isset($row['id_image']) ? '-'.(int)$row['id_image'] : '').'.'.$this->imageType;
+					else
+						$path_to_image = Tools::getShopDomain(true)._PS_IMG_.$params['image'].'/'.Image::getImgFolderStatic($row['id_image']).(int)$row['id_image'].'.'.$this->imageType;
+					if ($path_to_image)
+						$field_value = $path_to_image;  
+				}
+				$content[$i][] = $field_value;
+			}
+		}
+
+    require_once(_PS_ROOT_DIR_.'/tools/phpexcel/PHPExcel.php');
+    /** Create a new PHPExcel Object **/
+    $objPHPExcel = new PHPExcel();
+    $worksheet = $objPHPExcel->getSheet(0);
+    
+    $worksheet->fromArray(
+        $headers,   // The data to set
+        NULL,        // Array values with this value will not be set
+        'A1'         // Top left coordinate of the worksheet range where
+                     //    we want to set these values (default is A1)
+    );
+    $worksheet->fromArray(
+        $content,
+        NULL,
+        'A2'
+    );
+    $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+    $objWriter->save('php://output');
+    die();
+	}
+
 	/**
 	 * Object Delete
 	 */
@@ -1126,11 +1189,16 @@ class AdminControllerCore extends Controller
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
 					'desc' => $this->l('Add new')
 				);
-				if ($this->allow_export)
+				if ($this->allow_export) {
 					$this->toolbar_btn['export'] = array(
 						'href' => self::$currentIndex.'&amp;export'.$this->table.'&amp;token='.$this->token,
 						'desc' => $this->l('Export')
 					);
+					$this->toolbar_btn['export-excel'] = array(
+						'href' => self::$currentIndex.'&amp;export-excel'.$this->table.'&amp;token='.$this->token,
+						'desc' => $this->l('Export (Excel)')
+					);
+        }
 		}
 		$this->addToolBarModulesListButton();
 	}
@@ -2061,6 +2129,11 @@ class AdminControllerCore extends Controller
 		{
 			if ($this->tabAccess['view'] === '1')
 				$this->action = 'export';
+		}
+		elseif (isset($_GET['export-excel'.$this->table]))
+		{
+			if ($this->tabAccess['view'] === '1')
+				$this->action = 'exportExcel';
 		}
 		/* Cancel all filters for this tab */
 		elseif (isset($_POST['submitReset'.$this->list_id]))
