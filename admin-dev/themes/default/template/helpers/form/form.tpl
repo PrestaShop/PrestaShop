@@ -536,7 +536,22 @@
 											</span>
 										</div>
 									</div>
-
+								{elseif $input.type == 'datetime'}
+									<div class="row">
+										<div class="input-group col-lg-4">
+											<input
+												id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
+												type="text"
+												data-hex="true"
+												{if isset($input.class)}class="{$input.class}"
+												{else}class="datetimepicker"{/if}
+												name="{$input.name}"
+												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
+											<span class="input-group-addon">
+												<i class="icon-calendar-empty"></i>
+											</span>
+										</div>
+									</div>
 								{elseif $input.type == 'free'}
 									{$fields_value[$input.name]}
 								{/if}
@@ -680,6 +695,25 @@
 					nextText: '',
 					dateFormat: 'yy-mm-dd'
 				});
+
+			if ($(".datetimepicker").length > 0)
+			$('.datetimepicker').datetimepicker({
+				prevText: '',
+				nextText: '',
+				dateFormat: 'yy-mm-dd',
+				// Define a custom regional settings in order to use PrestaShop translation tools
+				currentText: '{l s='Now'}',
+				closeText: '{l s='Done'}',
+				ampm: false,
+				amNames: ['AM', 'A'],
+				pmNames: ['PM', 'P'],
+				timeFormat: 'hh:mm:ss tt',
+				timeSuffix: '',
+				timeOnlyTitle: '{l s='Choose Time'}',
+				timeText: '{l s='Time'}',
+				hourText: '{l s='Hour'}',
+				minuteText: '{l s='Minute'}',
+			});
 			{if isset($use_textarea_autosize)}
 			$(".textarea-autosize").autosize();
 			{/if}
