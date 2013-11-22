@@ -40,7 +40,8 @@ class BlockViewed extends Module
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Viewed products block.');
 		$this->description = $this->l('Adds a block displaying recently viewed products.');

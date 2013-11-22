@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_image>
+  <fields id="legend" class="Image" image="p">
+    <field name="id_product" relation="product"/>
+    <field name="cover"/>
+  </fields>
+  <entities>
+    <image id="51714665" id_product="Fur_Coat" cover="1"/>
+    <image id="51714391" id_product="Fur_Coat" cover="0"/>
+	<image id="52168484" id_product="Textured_Trench_Coat" cover="1"/>
+    <image id="52168280" id_product="Textured_Trench_Coat" cover="0"/>
+	<image id="47282631" id_product="Slim_Cut_Coat" cover="1"/>
+    <image id="47282630" id_product="Slim_Cut_Coat" cover="0"/>
+	<image id="51752064" id_product="Quilted_Jacket" cover="1"/>
+    <image id="51749203" id_product="Quilted_Jacket" cover="0"/>
+	<image id="44516625" id_product="Suit_Blazer" cover="1"/>
+    <image id="44516622" id_product="Suit_Blazer" cover="0"/>
+    <image id="44516564" id_product="Suit_Blazer" cover="0"/>
+	<image id="49074621" id_product="Short_Blazer" cover="1"/>
+	<image id="46735661" id_product="Puffer_Jacket" cover="1"/>
+    <image id="46735663" id_product="Puffer_Jacket" cover="0"/>
+    <image id="46735662" id_product="Puffer_Jacket" cover="0"/>
+	<image id="46579225" id_product="Leather_Jacket_1" cover="1"/>
+    <image id="44777244" id_product="Leather_Jacket_1" cover="0"/>
+	<image id="51704249" id_product="Leather_Jacket_2" cover="1"/>
+    <image id="51704300" id_product="Leather_Jacket_2" cover="0"/>
+    <image id="53012881" id_product="Leather_Jacket_2" cover="0"/>
+	<image id="58060821" id_product="Leather_Jacket_3" cover="1"/>
+    <image id="58060809" id_product="Leather_Jacket_3" cover="0"/>
+	<image id="56578228" id_product="Short_Sleeve_T-shirts" cover="1"/>
+    <image id="56578167" id_product="Short_Sleeve_T-shirts" cover="0"/>
+	<image id="51748593" id_product="Faded_Short_Sleeve_T-shirts" cover="1"/>
+    <image id="51748591" id_product="Faded_Short_Sleeve_T-shirts" cover="0"/>
+    <image id="51748557" id_product="Faded_Short_Sleeve_T-shirts" cover="0"/>
+    <image id="51748562" id_product="Faded_Short_Sleeve_T-shirts" cover="0"/>
+	<image id="51746995" id_product="Cami_Tank_Top" cover="1"/>
+    <image id="51747077" id_product="Cami_Tank_Top" cover="0"/>
+    <image id="51747076" id_product="Cami_Tank_Top" cover="0"/>
+	<image id="51746996" id_product="Blouse" cover="1"/>
+    <image id="51746998" id_product="Blouse" cover="0"/>
+    <image id="44775785" id_product="Blouse" cover="0"/>
+	<image id="51747764" id_product="Leapoard_Printed_Blouse" cover="1"/>
+    <image id="51747825" id_product="Leapoard_Printed_Blouse" cover="0"/>
+	<image id="46581333" id_product="Faded_Jeans" cover="1"/>
+    <image id="46581331" id_product="Faded_Jeans" cover="0"/>
+	<image id="50073550" id_product="5_Pocket_Jean_1" cover="1"/>
+    <image id="50144042" id_product="5_Pocket_Jean_1" cover="0"/>
+    <image id="49218038" id_product="5_Pocket_Jean_1" cover="0"/>
+	<image id="56302389" id_product="5_Pocket_Jean_2" cover="1"/>
+    <image id="56302388" id_product="5_Pocket_Jean_2" cover="0"/>
+	<image id="46581237" id_product="Dress_Gathered_At_The_Waist" cover="1"/>
+    <image id="46581143" id_product="Dress_Gathered_At_The_Waist" cover="0"/>
+	<image id="53803858" id_product="Printed_Dress" cover="1"/>
+    <image id="53840339" id_product="Printed_Dress" cover="0"/>
+	<image id="51746910" id_product="Floral_Dress" cover="1"/>
+    <image id="46547668" id_product="Floral_Dress" cover="0"/>
+    <image id="51746908" id_product="Floral_Dress" cover="0"/>
+	<image id="51746913" id_product="Strapless_Dress_1" cover="1"/>
+    <image id="51746688" id_product="Strapless_Dress_1" cover="0"/>
+	<image id="47520772" id_product="Long_Evening_Dress" cover="1"/>
+    <image id="47520692" id_product="Long_Evening_Dress" cover="0"/>
+	<image id="51747209" id_product="Short_Evening_Dress" cover="1"/>
+    <image id="46578558" id_product="Short_Evening_Dress" cover="0"/>
+	<image id="55982428" id_product="Strapless_Dress_2" cover="1"/>
+    <image id="55982424" id_product="Strapless_Dress_2" cover="0"/>
+	<image id="46578616" id_product="Dress_with_Sleeves" cover="1"/>
+    <image id="44775751" id_product="Dress_with_Sleeves" cover="0"/>
+	<image id="56766964" id_product="Printed_Dress_2" cover="1"/>
+    <image id="56766814" id_product="Printed_Dress_2" cover="0"/>
+	<image id="51747941" id_product="Printed_Summer_Dress_1" cover="1"/>
+    <image id="51747942" id_product="Printed_Summer_Dress_1" cover="0"/>
+    <image id="46579412" id_product="Printed_Summer_Dress_1" cover="0"/>
+    <image id="46579411" id_product="Printed_Summer_Dress_1" cover="0"/>
+	<image id="44185464" id_product="Long_Printed_Dress" cover="1"/>
+    <image id="44185465" id_product="Long_Printed_Dress" cover="0"/>
+	<image id="46581062" id_product="Printed_Summer_Dress_2" cover="1"/>
+    <image id="46579408" id_product="Printed_Summer_Dress_2" cover="0"/>
+    <image id="46579410" id_product="Printed_Summer_Dress_2" cover="0"/>
+    <image id="46547412" id_product="Printed_Summer_Dress_2" cover="0"/>
+	<image id="51747994" id_product="Printed_Chiffon_Dress" cover="1"/>
+    <image id="46581032" id_product="Printed_Chiffon_Dress" cover="0"/>
+    <image id="46581029" id_product="Printed_Chiffon_Dress" cover="0"/>
+    <image id="46578775" id_product="Printed_Chiffon_Dress" cover="0"/>
+	<image id="48628295" id_product="Studded_Leather_Belt" cover="1"/>
+    <image id="48628300" id_product="Studded_Leather_Belt" cover="0"/>
+	<image id="52817654" id_product="Braided_Belt" cover="1"/>
+	<image id="52817951" id_product="Bucket_Hat" cover="1"/>
+	<image id="50728708" id_product="Floppy_Hat" cover="1"/>
+	<image id="52817893" id_product="Men_Straw_Hat" cover="1"/>
+	<image id="47637687" id_product="Bowling_Bag" cover="1"/>
+	<image id="49753531" id_product="Leather_Bag" cover="1"/>
+	<image id="48552647" id_product="Snake_Skin_Bag" cover="1"/>
+	<image id="56505660" id_product="Quilted_Bag" cover="1"/>
+	<image id="57204709" id_product="Suede_Bag" cover="1"/>
+	<image id="48526078" id_product="Wedge_Shoe" cover="1"/>
+  </entities>
+</entity_image>

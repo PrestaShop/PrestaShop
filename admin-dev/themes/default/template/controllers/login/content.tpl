@@ -71,7 +71,7 @@
 									type="text"
 									id="email"
 									class="form-control"
-									value="{if isset($email)}{$email|escape:'htmlall':'UTF-8'}{/if}"
+									value="{if isset($email)}{$email|escape:'html':'UTF-8'}{/if}"
 									autofocus="autofocus"
 									tabindex="1"
 									placeholder="test@example.com" />
@@ -167,7 +167,7 @@
 					{/if}
 				</ul>
 				<p>
-					<a href="{$adminUrl|escape:'htmlall':'UTF-8'}">
+					<a href="{$adminUrl|escape:'html':'UTF-8'}">
 						{l s='Please then access this page by the new URL (e.g. %s)' sprintf=$adminUrl}
 					</a>
 				</p>
@@ -177,7 +177,7 @@
 	</div>
 	<div id="login-footer" class="animated fadeIn">
 		<p class="text-center text-muted">
-			<a href="http://www.prestashop.com/">
+			<a href="http://www.prestashop.com/" onclick="return !window.open(this.href);">
 				&copy; PrestaShop&#8482; 2005-{$smarty.now|date_format:"%Y"} - All rights reserved
 			</a>
 		</p>

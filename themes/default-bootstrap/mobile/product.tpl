@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture assign='page_title'}{$product->name|escape:'htmlall':'UTF-8'}{/capture}
+{capture assign='page_title'}{$product->name|escape:'html':'UTF-8'}{/capture}
 {include file='./page-title.tpl'}
 
 {include file='./product-js.tpl'}
@@ -49,7 +49,7 @@
 			<h3>{l s='Pack content'}</h3>
 			{foreach from=$packItems item=packItem}
 			<div class="pack_content">
-				{$packItem.pack_quantity} x <a href="{$link->getProductLink($packItem.id_product, $packItem.link_rewrite, $packItem.category)|escape:'html'}" data-ajax="false">{$packItem.name|escape:'htmlall':'UTF-8'}</a>
+				{$packItem.pack_quantity} x <a href="{$link->getProductLink($packItem.id_product, $packItem.link_rewrite, $packItem.category)|escape:'html'}" data-ajax="false">{$packItem.name|escape:'html':'UTF-8'}</a>
 				<p>{$packItem.description_short}</p>
 			</div>
 			{/foreach}
@@ -73,7 +73,7 @@
 			<div id="product_reference" {if isset($groups) OR !$product->reference}style="display: none;"{/if}>
 				<br />
 				<label>{l s='Reference:'} </label>
-				<span class="editable">{$product->reference|escape:'htmlall':'UTF-8'}</span>
+				<span class="editable">{$product->reference|escape:'html':'UTF-8'}</span>
 				<br />
 			</div>
 			

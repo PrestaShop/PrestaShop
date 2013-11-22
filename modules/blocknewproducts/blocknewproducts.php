@@ -37,7 +37,8 @@ class BlockNewProducts extends Module
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('New products block');
 		$this->description = $this->l('Displays a block featuring your store\'s newest products.');
@@ -90,12 +91,12 @@ class BlockNewProducts extends Module
 		if (!$this->isCached('blocknewproducts.tpl', $this->getCacheId()))
 		{
 			if (!Configuration::get('NEW_PRODUCTS_NBR'))
-					return;
+				return;
 			$newProducts = false;
 			if (Configuration::get('PS_NB_DAYS_NEW_PRODUCT'))
-					$newProducts = Product::getNewProducts((int) $params['cookie']->id_lang, 0, (int)Configuration::get('NEW_PRODUCTS_NBR'));
+				$newProducts = Product::getNewProducts((int) $params['cookie']->id_lang, 0, (int)Configuration::get('NEW_PRODUCTS_NBR'));
 			if (!$newProducts && !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
-					return;
+				return;
 			$this->smarty->assign(array(
 				'new_products' => $newProducts,
 				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
@@ -145,7 +146,7 @@ class BlockNewProducts extends Module
 	{
 		$this->_clearCache('blocknewproducts.tpl');
 	}
-	
+
 	public function renderForm()
 	{
 		$fields_form = array(

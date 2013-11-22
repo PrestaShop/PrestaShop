@@ -54,7 +54,7 @@
 #crossselling_list .bx-wrapper .bx-pager, .accessories-block .block_content .bx-wrapper .bx-pager, #productscategory_list .bx-wrapper .bx-pager {
   text-align: center;
   font-size: .85em;
-  font-family: Arial;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
   color: #666;
   padding-top: 20px;
@@ -101,12 +101,12 @@
 #crossselling_list .bx-wrapper .bx-controls-direction a:before, .accessories-block .block_content .bx-wrapper .bx-controls-direction a:before, #productscategory_list .bx-wrapper .bx-controls-direction a:before {
   padding-left: 2px;
   color: #c0c0c0;
-  font-family: FontAwesome;
+  font-family: "FontAwesome";
   font-size: 20px;
   line-height: 22px;
 }
 #crossselling_list .bx-wrapper .bx-controls-direction a:hover:before, .accessories-block .block_content .bx-wrapper .bx-controls-direction a:hover:before, #productscategory_list .bx-wrapper .bx-controls-direction a:hover:before {
-  color: #333;
+  color: #333333;
 }
 #crossselling_list .bx-next, .accessories-block .block_content .bx-next, #productscategory_list .bx-next {
   right: 10px;
@@ -173,8 +173,8 @@
   width: 100%;
 }
 #crossselling_list .bx-wrapper .bx-caption span, .accessories-block .block_content .bx-wrapper .bx-caption span, #productscategory_list .bx-wrapper .bx-caption span {
-  color: #fff;
-  font-family: Arial;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
   display: block;
   font-size: .85em;
   padding: 10px;

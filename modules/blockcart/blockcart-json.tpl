@@ -34,7 +34,7 @@
 		"quantity":      {$product.cart_quantity|intval},
 		"priceByLine":   "{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total}{else}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total_wt}{/if}",
 		"image":         "{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|addslashes|replace:'\\\'':'\''}",		
-		"name":          "{$product.name|html_entity_decode:2:'UTF-8'|truncate:15:'...':true|escape:'htmlall'}",
+		"name":          "{$product.name|html_entity_decode:2:'UTF-8'|truncate:15:'...':true|escape:'html'}",
 		"price":         "{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total}{else}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total_wt}{/if}",
 		"price_float":   "{$product.total}",
 		"idCombination": {if isset($product.attributes_small)}{$productAttributeId}{else}0{/if},
@@ -62,8 +62,8 @@
 					{foreach from=$datas key='index' item='data' name='datas'}
 						{ldelim}
 						"index":			{$index},
-						"value":			"{$data.value|addslashes|replace: '\\\'':'\''}",
-						"truncatedValue":	"{$data.value|truncate:28:'...'|addslashes|replace: '\\\'':'\''}"
+						"value":			"{Tools::nl2br($data.value|addslashes|replace: '\\\'':'\'')}",
+						"truncatedValue":	"{Tools::nl2br($data.value|truncate:28:'...'|addslashes|replace: '\\\'':'\'')}"
 						{rdelim}{if !$smarty.foreach.datas.last},{/if}
 					{/foreach}]
 				{rdelim}{if !$smarty.foreach.customization.last},{/if}

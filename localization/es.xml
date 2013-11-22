@@ -170,4 +170,59 @@
 		<unit type="base_distance" value="m" />
 		<unit type="long_distance" value="km" />
 	</units>
+
+      <states>
+            <state name="A Coruña" iso_code="ES-C" country="ES" zone="Europe"/>
+            <state name="Álava" iso_code="ES-VI" country="ES" zone="Europe"/>
+            <state name="Albacete" iso_code="ES-AB" country="ES" zone="Europe"/>
+            <state name="Alacant" iso_code="ES-A" country="ES" zone="Europe"/>
+            <state name="Almería" iso_code="ES-AL" country="ES" zone="Europe"/>
+            <state name="Asturias" iso_code="ES-O" country="ES" zone="Europe"/>
+            <state name="Ávila" iso_code="ES-AV" country="ES" zone="Europe"/>
+            <state name="Badajoz" iso_code="ES-BA" country="ES" zone="Europe"/>
+            <state name="Balears" iso_code="ES-PM" country="ES" zone="Europe"/>
+            <state name="Barcelona" iso_code="ES-B" country="ES" zone="Europe"/>
+            <state name="Burgos" iso_code="ES-BU" country="ES" zone="Europe"/>
+            <state name="Cáceres" iso_code="ES-CC" country="ES" zone="Europe"/>
+            <state name="Cádiz" iso_code="ES-CA" country="ES" zone="Europe"/>
+            <state name="Cantabria" iso_code="ES-S" country="ES" zone="Europe"/>
+            <state name="Castelló" iso_code="ES-CS" country="ES" zone="Europe"/>
+            <state name="Ciudad Real" iso_code="ES-CR" country="ES" zone="Europe"/>
+            <state name="Córdoba" iso_code="ES-CO" country="ES" zone="Europe"/>
+            <state name="Cuenca" iso_code="ES-CU" country="ES" zone="Europe"/>
+            <state name="Girona" iso_code="ES-GI" country="ES" zone="Europe"/>
+            <state name="Granada" iso_code="ES-GR" country="ES" zone="Europe"/>
+            <state name="Guadalajara" iso_code="ES-GU" country="ES" zone="Europe"/>
+            <state name="Gipuzkoa" iso_code="ES-SS" country="ES" zone="Europe"/>
+            <state name="Huelva" iso_code="ES-H" country="ES" zone="Europe"/>
+            <state name="Huesca" iso_code="ES-HU" country="ES" zone="Europe"/>
+            <state name="Jaén" iso_code="ES-J" country="ES" zone="Europe"/>
+            <state name="La Rioja" iso_code="ES-LO" country="ES" zone="Europe"/>
+            <state name="Las Palmas" iso_code="ES-GC" country="ES" zone="Europe"/>
+            <state name="León" iso_code="ES-LE" country="ES" zone="Europe"/>
+            <state name="Lleida" iso_code="ES-L" country="ES" zone="Europe"/>
+            <state name="Lugo" iso_code="ES-LU" country="ES" zone="Europe"/>
+            <state name="Madrid" iso_code="ES-M" country="ES" zone="Europe"/>
+            <state name="Málaga" iso_code="ES-MA" country="ES" zone="Europe"/>
+            <state name="Murcia" iso_code="ES-MU" country="ES" zone="Europe"/>
+            <state name="Nafarroa" iso_code="ES-NA" country="ES" zone="Europe"/>
+            <state name="Ourense" iso_code="ES-OR" country="ES" zone="Europe"/>
+            <state name="Palencia" iso_code="ES-P" country="ES" zone="Europe"/>
+            <state name="Pontevedra" iso_code="ES-PO" country="ES" zone="Europe"/>
+            <state name="Salamanca" iso_code="ES-SA" country="ES" zone="Europe"/>
+            <state name="Santa Cruz de Tenerife" iso_code="ES-TF" country="ES" zone="Europe"/>
+            <state name="Segovia" iso_code="ES-SG" country="ES" zone="Europe"/>
+            <state name="Sevilla" iso_code="ES-SE" country="ES" zone="Europe"/>
+            <state name="Soria" iso_code="ES-SO" country="ES" zone="Europe"/>
+            <state name="Tarragona" iso_code="ES-T" country="ES" zone="Europe"/>
+            <state name="Teruel" iso_code="ES-TE" country="ES" zone="Europe"/>
+            <state name="Toledo" iso_code="ES-TO" country="ES" zone="Europe"/>
+            <state name="València" iso_code="ES-V" country="ES" zone="Europe"/>
+            <state name="Valladolid" iso_code="ES-VA" country="ES" zone="Europe"/>
+            <state name="Bizkaia" iso_code="ES-BI" country="ES" zone="Europe"/>
+            <state name="Zamora" iso_code="ES-ZA" country="ES" zone="Europe"/>
+            <state name="Zaragoza" iso_code="ES-Z" country="ES" zone="Europe"/>
+            <state name=" Ceuta" iso_code="ES-CE" country="ES" zone="Europe"/>
+            <state name=" Melilla" iso_code="ES-ML" country="ES" zone="Europe"/>
+      </states>
 </localizationPack>

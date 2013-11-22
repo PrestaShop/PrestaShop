@@ -66,7 +66,7 @@ var currentDate = '{$smarty.now|date_format:'%Y-%m-%d %H:%M:%S'}';
 var maxQuantityToAllowDisplayOfLastQuantityMessage = {$last_qties};
 var noTaxForThisProduct = {if $no_tax == 1}true{else}false{/if};
 var displayPrice = {$priceDisplay};
-var productReference = '{$product->reference|escape:'htmlall':'UTF-8'}';
+var productReference = '{$product->reference|escape:'html':'UTF-8'}';
 var productAvailableForOrder = {if (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE}'0'{else}'{$product->available_for_order}'{/if};
 var productShowPrice = '{if !$PS_CATALOG_MODE}{$product->show_price}{else}0{/if}';
 var productUnitPriceRatio = '{$product->unit_price_ratio}';
@@ -158,7 +158,8 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 var contentOnly = {if $content_only}true{else}false{/if}
 //]]>
 </script>
-<div id="primary_block" class="row">
+<div id="primary_block" class="row" itemscope itemtype="http://schema.org/Product">
+
 
 {if !$content_only}<div class="container"><div class="top-hr"></div></div>{/if}
 
@@ -166,8 +167,8 @@ var contentOnly = {if $content_only}true{else}false{/if}
 	<div id="admin-action">
 		<p>{l s='This product is not visible to your customers.'}
 		<input type="hidden" id="admin-action-product-id" value="{$product->id}" />
-		<input type="submit" value="{l s='Publish'}" class="exclusive" onclick="submitPublishProduct('{$base_dir}{$smarty.get.ad|escape:'htmlall':'UTF-8'}', 0, '{$smarty.get.adtoken|escape:'htmlall':'UTF-8'}')"/>
-		<input type="submit" value="{l s='Back'}" class="exclusive" onclick="submitPublishProduct('{$base_dir}{$smarty.get.ad|escape:'htmlall':'UTF-8'}', 1, '{$smarty.get.adtoken|escape:'htmlall':'UTF-8'}')"/>
+		<input type="submit" value="{l s='Publish'}" class="exclusive" onclick="submitPublishProduct('{$base_dir}{$smarty.get.ad|escape:'html':'UTF-8'}', 0, '{$smarty.get.adtoken|escape:'html':'UTF-8'}')"/>
+		<input type="submit" value="{l s='Back'}" class="exclusive" onclick="submitPublishProduct('{$base_dir}{$smarty.get.ad|escape:'html':'UTF-8'}', 1, '{$smarty.get.adtoken|escape:'html':'UTF-8'}')"/>
 		</p>
 		<p id="admin-action-result"></p>
 		</p>
@@ -187,6 +188,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
         
 		<div id="image-block">
 
+                       
       	{if $product->on_sale}
 		<span class="sale-box"><span class="sale">{l s='Sale!'}</span></span>
 		{elseif $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutReduction > $productPrice}
@@ -195,12 +197,12 @@ var contentOnly = {if $content_only}true{else}false{/if}
         
 		{if $have_image}
 			<span id="view_full_size">
-				<img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html'}"{if $jqZoomEnabled && $have_image} class="jqzoom"{/if} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}"/>
+				<img itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html'}"{if $jqZoomEnabled && $have_image} class="jqzoom"{/if} title="{$product->name|escape:'html':'UTF-8'}" alt="{$product->name|escape:'html':'UTF-8'}" id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}"/>
 				{if !$content_only}<span class="span_link">{l s='View larger'}</span>{/if}
 			</span>
 		{else}
 			<span id="view_full_size">
-				<img src="{$img_prod_dir}{$lang_iso}-default-large_default.jpg" id="bigpic" alt="" title="{$product->name|escape:'htmlall':'UTF-8'}" width="{$largeSize.width}" height="{$largeSize.height}" />
+				<img itemprop="image" src="{$img_prod_dir}{$lang_iso}-default-large_default.jpg" id="bigpic" alt="" title="{$product->name|escape:'html':'UTF-8'}" width="{$largeSize.width}" height="{$largeSize.height}" />
 				{if !$content_only}<span class="span_link">{l s='View larger'}</span>{/if}
 			</span>
 		{/if}
@@ -239,15 +241,15 @@ var contentOnly = {if $content_only}true{else}false{/if}
 			<p class="online_only">{l s='Online only'}</p>
 			{/if}
     
-		<h1>{$product->name|escape:'htmlall':'UTF-8'}</h1>
+		<h1 itemprop="name">{$product->name|escape:'html':'UTF-8'}</h1>
 			<p id="product_reference" {if isset($groups) OR !$product->reference}style="display: none;"{/if}>
 				<label>{l s='Model'} </label>
-				<span class="editable">{$product->reference|escape:'htmlall':'UTF-8'}</span>
+				<span class="editable" itemprop="sku">{$product->reference|escape:'html':'UTF-8'}</span>
 			</p>
 		{if $product->description_short OR $packItems|@count > 0}
 		<div id="short_description_block">
 			{if $product->description_short}
-				<div id="short_description_content" class="rte align_justify">{$product->description_short}</div>
+				<div id="short_description_content" class="rte align_justify" itemprop="description">{$product->description_short}</div>
 			{/if}
 			{if $product->description}
 			<p class="buttons_bottom_block"><a href="javascript:{ldelim}{rdelim}" class="button">{l s='More details'}</a></p>
@@ -259,7 +261,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
 				{foreach from=$packItems item=packItem}
                 
 				<div class="pack_content">
-					{$packItem.pack_quantity} x <a href="{$link->getProductLink($packItem.id_product, $packItem.link_rewrite, $packItem.category)|escape:'html'}">{$packItem.name|escape:'htmlall':'UTF-8'}</a>
+					{$packItem.pack_quantity} x <a href="{$link->getProductLink($packItem.id_product, $packItem.link_rewrite, $packItem.category)|escape:'html'}">{$packItem.name|escape:'html':'UTF-8'}</a>
 					<p>{$packItem.description_short}</p>
 				</div>
 				{/foreach}
@@ -349,9 +351,10 @@ var contentOnly = {if $content_only}true{else}false{/if}
             {if $product->show_price AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE}		
 
 			<div class="price">
-				<p class="our_price_display">
+				<p class="our_price_display" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                <link itemprop="availability" {if $product->quantity <= 0}href="http://schema.org/OutOfStock"{else}href="http://schema.org/InStock"{/if}>
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
-					<span id="our_price_display">{convertPrice price=$productPrice}</span>
+					<span id="our_price_display" itemprop="price">{convertPrice price=$productPrice}</span>
 					<!--{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) OR !isset($display_tax_label))}
 						{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
 					{/if}-->
@@ -394,7 +397,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
 			{/if}
 			{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
 				 {math equation="pprice / punit_price"  pprice=$productPrice  punit_price=$product->unit_price_ratio assign=unit_price}
-				<p class="unit-price"><span id="unit_price_display">{convertPrice price=$unit_price}</span> {l s='per'} {$product->unity|escape:'htmlall':'UTF-8'}</p>
+				<p class="unit-price"><span id="unit_price_display">{convertPrice price=$unit_price}</span> {l s='per'} {$product->unity|escape:'html':'UTF-8'}</p>
 			{/if}
 			{*close if for show price*}
 			{/if}  
@@ -402,7 +405,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
 			<div class="clear"></div>
 		</div>       
              
-       <div class="product_attributes">
+       <div class="product_attributes clearfix">
        
   <!-- quantity wanted -->
 			<p id="quantity_wanted_p"{if (!$allow_oosp && $product->quantity <= 0) OR $virtual OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
@@ -434,13 +437,13 @@ var contentOnly = {if $content_only}true{else}false{/if}
 				{foreach from=$groups key=id_attribute_group item=group}
 					{if $group.attributes|@count}
 						<fieldset class="attribute_fieldset">
-							<label class="attribute_label" for="group_{$id_attribute_group|intval}">{$group.name|escape:'htmlall':'UTF-8'} :&nbsp;</label>
+							<label class="attribute_label" for="group_{$id_attribute_group|intval}">{$group.name|escape:'html':'UTF-8'} :&nbsp;</label>
 							{assign var="groupName" value="group_$id_attribute_group"}
 							<div class="attribute_list">
 							{if ($group.group_type == 'select')}
 								<select name="{$groupName}" id="group_{$id_attribute_group|intval}" class="form-control attribute_select" onchange="findCombination();getProductAttribute();">
 									{foreach from=$group.attributes key=id_attribute item=group_attribute}
-										<option value="{$id_attribute|intval}"{if (isset($smarty.get.$groupName) && $smarty.get.$groupName|intval == $id_attribute) || $group.default == $id_attribute} selected="selected"{/if} title="{$group_attribute|escape:'htmlall':'UTF-8'}">{$group_attribute|escape:'htmlall':'UTF-8'}</option>
+										<option value="{$id_attribute|intval}"{if (isset($smarty.get.$groupName) && $smarty.get.$groupName|intval == $id_attribute) || $group.default == $id_attribute} selected="selected"{/if} title="{$group_attribute|escape:'html':'UTF-8'}">{$group_attribute|escape:'html':'UTF-8'}</option>
 									{/foreach}
 								</select>
 							{elseif ($group.group_type == 'color')}
@@ -465,7 +468,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
 									{foreach from=$group.attributes key=id_attribute item=group_attribute}
 										<li>
 											<input type="radio" class="attribute_radio" name="{$groupName}" value="{$id_attribute}" {if ($group.default == $id_attribute)} checked="checked"{/if} onclick="findCombination();getProductAttribute();" />
-											<span>{$group_attribute|escape:'htmlall':'UTF-8'}</span>
+											<span>{$group_attribute|escape:'html':'UTF-8'}</span>
 										</li>
 									{/foreach}
 								</ul>
@@ -490,15 +493,6 @@ var contentOnly = {if $content_only}true{else}false{/if}
 
         
         </div>
-        
-        {if !$content_only}
-        <div class="box-security">
-        <h5 class="product-heading-h5">{l s='Your Security Guaranteed'}</h5> 
-        		<img class="logo-payment" src="{$img_dir}payment-logo.png" alt="" />     
-                  
-        </div>
-        
-        {/if}
            
        </div>       
        
@@ -529,7 +523,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
 		{foreach from=$features item=feature}
         <tr class="{cycle values="odd,even"}">
             {if isset($feature.value)}			    
-                <td>{$feature.name|escape:'htmlall':'UTF-8'}</td><td> {$feature.value|escape:'htmlall':'UTF-8'}</td>
+                <td>{$feature.name|escape:'html':'UTF-8'}</td><td> {$feature.value|escape:'html':'UTF-8'}</td>
             {/if}
 		</tr>
         {/foreach}
@@ -561,15 +555,15 @@ var contentOnly = {if $content_only}true{else}false{/if}
 							<li class="item product-box ajax_block_product{if $smarty.foreach.accessories_list.first} first_item{elseif $smarty.foreach.accessories_list.last} last_item{else} item{/if} product_accessories_description">
 						
 								<div class="product_desc">
-								<a href="{$accessoryLink|escape:'htmlall':'UTF-8'}" title="{$accessory.legend|escape:'htmlall':'UTF-8'}" class="product-image product_image"><img src="{$link->getImageLink($accessory.link_rewrite, $accessory.id_image, 'home_default')|escape:'html'}" alt="{$accessory.legend|escape:'htmlall':'UTF-8'}" width="{$homeSize.width}" height="{$homeSize.height}" class="lazyOwl" /></a>
+								<a href="{$accessoryLink|escape:'html':'UTF-8'}" title="{$accessory.legend|escape:'html':'UTF-8'}" class="product-image product_image"><img src="{$link->getImageLink($accessory.link_rewrite, $accessory.id_image, 'home_default')|escape:'html'}" alt="{$accessory.legend|escape:'html':'UTF-8'}" width="{$homeSize.width}" height="{$homeSize.height}" class="lazyOwl" /></a>
                                 
                                 		<div class="block_description">                                    
-										<a href="{$accessoryLink|escape:'htmlall':'UTF-8'}" title="{l s='More'}" class="product_description">{$accessory.description_short|strip_tags|truncate:25:'...'}</a>
+										<a href="{$accessoryLink|escape:'html':'UTF-8'}" title="{l s='More'}" class="product_description">{$accessory.description_short|strip_tags|truncate:25:'...'}</a>
 									</div>								
 								</div>
 								
                              		<div class="s_title_block">
-									<h5 class="product-name"><a href="{$accessoryLink|escape:'htmlall':'UTF-8'}">      {$accessory.name|truncate:20:'...':true|escape:'htmlall':'UTF-8'}</a></h5>
+									<h5 class="product-name"><a href="{$accessoryLink|escape:'html':'UTF-8'}">      {$accessory.name|truncate:20:'...':true|escape:'html':'UTF-8'}</a></h5>
                                     
 									{if $accessory.show_price AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE}
                                     <span class="price">{if $priceDisplay != 1}{displayWtPrice p=$accessory.price}{else}{displayWtPrice p=$accessory.price_tax_exc}{/if}</span>{/if}
@@ -623,7 +617,15 @@ var contentOnly = {if $content_only}true{else}false{/if}
                    {/if}
                 </td>
                 <td>
-            <span>{l s='Up to'} $300</span>
+                    <span>{l s='Up to'}</span>
+                    {if $quantity_discount.price >= 0 OR $quantity_discount.reduction_type == 'amount'}
+                        {$discountPrice=$productPrice-$quantity_discount.real_value|floatval}
+                    {else}
+                        {$discountPrice=$productPrice-($productPrice*$quantity_discount.reduction)|floatval}
+                    {/if}
+                    {$discountPrice=$discountPrice*$quantity_discount.quantity}
+                    {$qtyProductPrice = $productPrice*$quantity_discount.quantity}
+                    {convertPrice price=$qtyProductPrice-$discountPrice}
                 </td>
             </tr>
             {/foreach}
@@ -645,7 +647,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
     <section class="page-product-box">
     	<h3 class="page-product-heading">{l s='Download'}</h3>
 		{foreach from=$attachments item=attachment}
-		<a  href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")|escape:'html'}"><span>{$attachment.name|escape:'htmlall':'UTF-8'}</span></a><br />{$attachment.description|escape:'htmlall':'UTF-8'}
+		<a  href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")|escape:'html'}"><span>{$attachment.name|escape:'html':'UTF-8'}</span></a><br />{$attachment.description|escape:'html':'UTF-8'}
 		{/foreach}	
         
 </section>    

@@ -187,14 +187,19 @@ class ShopCore extends ObjectModel
 
 	public function setUrl()
 	{
-		$row = Db::getInstance()->getRow('
-		SELECT su.physical_uri, su.virtual_uri, su.domain, su.domain_ssl, t.id_theme, t.name, t.directory
-		FROM '._DB_PREFIX_.'shop s
-		LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
-		LEFT JOIN '._DB_PREFIX_.'theme t ON (t.id_theme = s.id_theme)
-		WHERE s.id_shop = '.(int)$this->id.'
-		AND s.active = 1 AND s.deleted = 0 AND su.main = 1');
-			
+		$cache_id = 'Shop::setUrl_'.(int)$this->id;
+		if (!Cache::isStored($cache_id))
+		{
+			$row = Db::getInstance()->getRow('
+			SELECT su.physical_uri, su.virtual_uri, su.domain, su.domain_ssl, t.id_theme, t.name, t.directory
+			FROM '._DB_PREFIX_.'shop s
+			LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
+			LEFT JOIN '._DB_PREFIX_.'theme t ON (t.id_theme = s.id_theme)
+			WHERE s.id_shop = '.(int)$this->id.'
+			AND s.active = 1 AND s.deleted = 0 AND su.main = 1');
+			Cache::store($cache_id, $row);
+		}
+		$row = Cache::retrieve($cache_id);
 		if (!$row)
 			return false;
 
@@ -799,7 +804,7 @@ class ShopCore extends ObjectModel
 	{
 		if (Shop::getContext() == Shop::CONTEXT_SHOP)
 			$list = ($share) ? Shop::getSharedShops(Shop::getContextShopID(), $share) : array(Shop::getContextShopID());
-		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
+		elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
 			$list = Shop::getShops(true, Shop::getContextShopGroupID(), true);
 		else
 			$list = Shop::getShops(true, null, true);

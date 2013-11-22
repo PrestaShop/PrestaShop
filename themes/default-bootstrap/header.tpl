@@ -29,7 +29,7 @@
 <!--[if gt IE 8]> <html class="no-js ie9" lang="{$lang_iso}"> <![endif]-->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{$lang_iso}">
 	<head>
-		<title>{$meta_title|escape:'htmlall':'UTF-8'}</title>
+		<title>{$meta_title|escape:'html':'UTF-8'}</title>
 {if isset($meta_description) AND $meta_description}
 		<meta name="description" content="{$meta_description|escape:html:'UTF-8'}" />
 {/if}
@@ -40,7 +40,17 @@
 		<meta http-equiv="content-language" content="{$meta_language}" />
 		<meta name="generator" content="PrestaShop" />
 		<meta name="robots" content="{if isset($nobots)}no{/if}index,{if isset($nofollow) && $nofollow}no{/if}follow" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />  
+        <meta name="viewport" content="width=device-width, minimum-scale=0.25, maximum-scale=1.6, initial-scale=1.0" /> 
+        <meta name="apple-mobile-web-app-capable" content="yes" /> 
+        <script>
+			if (navigator.userAgent.match(/Android/i)) {
+				var viewport = document.querySelector("meta[name=viewport]");
+				viewport.setAttribute('content', 'initial-scale=1.0,maximum-scale=1.0,user-scalable=0,width=device-width,height=device-height');
+			}
+				if(navigator.userAgent.match(/Android/i)){
+				window.scrollTo(0,1);
+			 }
+		</script>
 		<link rel="icon" type="image/vnd.microsoft.icon" href="{$favicon_url}?{$img_update_time}" />
 		<link rel="shortcut icon" type="image/x-icon" href="{$favicon_url}?{$img_update_time}" />
 		<script type="text/javascript">
@@ -69,15 +79,21 @@
 	{/foreach}
 {/if}
 <script src="{$js_dir}/tools/bootstrap.min.js"></script>
+<!--[if IE 7]><html class="no-js lt-ie9 ie8" lang="{$lang_iso}">
+	 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+<![endif]-->
 <script src="{$js_dir}/tools/jquery.total-storage.min.js"></script>
 <script src="{$js_dir}/jquery/jquery.uniform-modify.js"></script>
 <script src="{$js_dir}/jquery/highdpi.js"></script>
 <script src="{$js_dir}/jquery/jquery.bxslider.js"></script>
 <script src="{$js_dir}/jquery/footable.js"></script>
+<script src="{$js_dir}/jquery/footable.sort.js"></script>
+<script src="{$js_dir}/jquery/resonsive_utilites.js"></script>
 		{$HOOK_HEADER}
 	</head>
 	
-	<body {if isset($page_name)}id="{$page_name|escape:'htmlall':'UTF-8'}"{/if} class="{if $hide_left_column}hide-left-column {/if} {if $hide_right_column}hide-right-column {/if} {if $content_only} content_only {/if}lang_{$lang_iso}">
+	<body {if isset($page_name)}id="{$page_name|escape:'html':'UTF-8'}"{/if} class="{if $hide_left_column}hide-left-column {/if} {if $hide_right_column}hide-right-column {/if} {if $content_only} content_only {/if}lang_{$lang_iso}">
 	{if !$content_only}
 		{if isset($restricted_country_mode) && $restricted_country_mode}
 		<div id="restricted-country">
@@ -85,13 +101,6 @@
 		</div>
 		{/if}
 		<div id="page">
-			<div class="banner-top">
-                <div class="container">
-                    <a href="#">
-                        <img class="banner-top img-responsive" src="{$img_dir}top-banner.gif" alt="banner-top"/>
-                    </a>
-                </div>
-            </div>
 			<!-- Header -->
             <div class="header-container">
                 <header id="header">
@@ -117,7 +126,7 @@
                                             </div>
                                         {/if}
                                     {/foreach}
-                                    <ul id="first-languages" class="countries_ul">
+                                    <ul id="first-languages" class="countries_ul toogle_content">
                                     {foreach from=$languages key=k item=language name="languages"}
                                         <li {if $language.iso_code == $lang_iso}class="selected"{/if}>
                                         {if $language.iso_code != $lang_iso}
@@ -159,12 +168,12 @@
                                         <div class="current">
                                             <input type="hidden" name="id_currency" id="id_currency" value=""/>
                                             <input type="hidden" name="SubmitCurrency" value="" />
-                                            {l s='Currency' mod='blockcurrencies'} :
+                                            <span class="cur-label">{l s='Currency' mod='blockcurrencies'} :</span>
                                             {foreach from=$currencies key=k item=f_currency}
                                                 {if $cookie->id_currency == $f_currency.id_currency}<strong>{$f_currency.iso_code}</strong>{/if}
                                             {/foreach}
                                         </div>
-                                        <ul id="first-currencies" class="currencies_ul">
+                                        <ul id="first-currencies" class="currencies_ul toogle_content">
                                             {foreach from=$currencies key=k item=f_currency}
                                                 <li {if $cookie->id_currency == $f_currency.id_currency}class="selected"{/if}>
                                                     <a href="javascript:setCurrency({$f_currency.id_currency});" title="{$f_currency.name}" rel="nofollow">{$f_currency.name}</a>
@@ -183,8 +192,8 @@
                         </div>
                     </div>
                 	<div class="container header-row-2">
-                        <a id="header_logo" href="{$base_dir}" title="{$shop_name|escape:'htmlall':'UTF-8'}">
-                            <img class="logo" src="{$logo_url}" alt="{$shop_name|escape:'htmlall':'UTF-8'}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}" {/if}/>
+                        <a id="header_logo" href="{$base_dir}" title="{$shop_name|escape:'html':'UTF-8'}">
+                            <img class="logo img-responsive" src="{$logo_url}" alt="{$shop_name|escape:'html':'UTF-8'}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}" {/if}/>
                         </a>
                         <div id="header_right">
                             {$HOOK_TOP}

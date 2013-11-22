@@ -37,7 +37,6 @@
 <div id="search_block_top">
 	<form method="get" action="{$link->getPageLink('search')|escape:'html'}" id="searchbox">
 		<div>
-			<label for="search_query_top"><!-- image on background --></label>
 			<input type="hidden" name="controller" value="search" />
 			<input type="hidden" name="orderby" value="position" />
 			<input type="hidden" name="orderway" value="desc" />

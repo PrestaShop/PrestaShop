@@ -35,7 +35,7 @@ product_tabs['Customization'] = new function(){
 product_tabs['Combinations'] = new function(){
 	var self = this;
 	this.bindEdit = function(){
-		$('table[name=list_table]').delegate('a.edit', 'click', function(e){
+		$('table[id=combinations-list]').delegate('a.edit', 'click', function(e){
 			e.preventDefault();
 			editProductAttribute(this.href, $(this).closest('tr'));
 		});
@@ -143,7 +143,7 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.bindDefault = function(){
-		$('table[name=list_table]').delegate('a.default', 'click', function(e){
+		$('table[id=combinations-list]').delegate('a.default', 'click', function(e){
 			e.preventDefault();
 			console.log('ok');
 			self.defaultProductAttribute(this.href, this);
@@ -175,7 +175,7 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.bindDelete = function() {
-		$('table[name=list_table]').delegate('a.delete', 'click', function(e){
+		$('table[id=combinations-list]').delegate('a.delete', 'click', function(e){
 			e.preventDefault();
 			self.deleteProductAttribute(this.href, $(this).closest('tr'));
 		});
@@ -1118,6 +1118,12 @@ product_tabs['Pack'] = new function(){
 
 	this.onReady = function(){
 		self.bindPackEvents();
+	}
+}
+
+product_tabs['Images'] = new function(){
+	this.onReady = function(){
+		displayFlags(languages, id_language, allowEmployeeFormLang);
 	}
 }
 

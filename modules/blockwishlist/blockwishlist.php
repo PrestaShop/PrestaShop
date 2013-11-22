@@ -38,11 +38,12 @@ class BlockWishList extends Module
 	{
 		$this->name = 'blockwishlist';
 		$this->tab = 'front_office_features';
-		$this->version = 0.2;
+		$this->version = 0.3;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 		
 		$this->displayName = $this->l('Wishlist block');
 		$this->description = $this->l('Adds a block containing the customer\'s wishlists.');
@@ -61,13 +62,15 @@ class BlockWishList extends Module
 			if($query)
 				if(!Db::getInstance()->execute(trim($query)))
 					return false;
-		if (!parent::install() OR
-						!$this->registerHook('rightColumn') OR
-						!$this->registerHook('productActions') OR
-						!$this->registerHook('cart') OR
-						!$this->registerHook('customerAccount') OR
-						!$this->registerHook('header') OR
-						!$this->registerHook('adminCustomers')
+		if (!parent::install() ||
+						!$this->registerHook('rightColumn') ||
+						!$this->registerHook('productActions') ||
+						!$this->registerHook('cart') ||
+						!$this->registerHook('customerAccount') ||
+						!$this->registerHook('header') ||
+						!$this->registerHook('adminCustomers') ||
+						!$this->registerHook('displayProductListFunctionalButtons') ||
+						!$this->registerHook('top')
 					)
 			return false;
 		/* This hook is optional */
@@ -78,10 +81,10 @@ class BlockWishList extends Module
 	public function uninstall()
 	{
 		return (
-			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist') AND
-			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist_email') AND
-			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist_product') AND
-			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist_product_cart') AND 
+			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist') &&
+			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist_email') &&
+			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist_product') &&
+			Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'wishlist_product_cart') && 
 			parent::uninstall()
 		);
 	}
@@ -104,6 +107,50 @@ class BlockWishList extends Module
 		
 		
 		return $this->_html;
+	}
+
+	public function hookDisplayProductListFunctionalButtons($params)
+	{
+		//TODO : Add cache
+		$this->smarty->assign('product', $params['product']);
+		return $this->display(__FILE__, 'blockwishlist_button.tpl');
+	}
+
+	public function hookTop($params)
+	{
+		
+		global $errors;
+
+		require_once(dirname(__FILE__).'/WishList.php');
+		if ($this->context->customer->isLogged())
+		{
+			$wishlists = Wishlist::getByIdCustomer($this->context->customer->id);
+			if (empty($this->context->cookie->id_wishlist) === true ||
+				WishList::exists($this->context->cookie->id_wishlist, $this->context->customer->id) === false)
+			{
+				if (!sizeof($wishlists))
+					$id_wishlist = false;
+				else
+				{
+					$id_wishlist = (int)($wishlists[0]['id_wishlist']);
+					$this->context->cookie->id_wishlist = (int)($id_wishlist);
+				}
+			}
+			else
+				$id_wishlist = $this->context->cookie->id_wishlist;
+				
+				
+			$this->smarty->assign(array(
+				'id_wishlist' => $id_wishlist,
+				'isLogged' => true,
+				'wishlist_products' => ($id_wishlist == false ? false : WishList::getProductByIdCustomer($id_wishlist, $this->context->customer->id, $this->context->language->id, null, true)),
+				'wishlists' => $wishlists,
+				'ptoken' => Tools::getToken(false)));
+		}
+		else
+			$this->smarty->assign(array('wishlist_products' => false, 'wishlists' => false));
+	
+		return $this->display(__FILE__, 'blockwishlist_top.tpl');
 	}
 
 	public function hookHeader($params)

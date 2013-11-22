@@ -317,7 +317,7 @@ class AdminOrdersControllerCore extends AdminController
 							'{shipping_number}' => $order->shipping_number,
 							'{order_name}' => $order->getUniqReference()
 						);
-						if (@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit'), $templateVars,
+						if (@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit', (int)$order->id_lang), $templateVars,
 							$customer->email, $customer->firstname.' '.$customer->lastname, null, null, null, null,
 							_PS_MAIL_DIR_, true, (int)$order->id_shop))
 						{
@@ -715,7 +715,7 @@ class AdminOrdersControllerCore extends AdminController
 								@Mail::Send(
 									(int)$order->id_lang,
 									'credit_slip',
-									Mail::l('New credit slip regarding your order', $order->id_lang),
+									Mail::l('New credit slip regarding your order', (int)$order->id_lang),
 									$params,
 									$customer->email,
 									$customer->firstname.' '.$customer->lastname,
@@ -897,7 +897,7 @@ class AdminOrdersControllerCore extends AdminController
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 				}
 				else
-					$this->errors[] = Tools::displayErrror('This address can\'t be loaded');
+					$this->errors[] = Tools::displayError('This address can\'t be loaded');
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
@@ -1263,8 +1263,8 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->icon = 'icon-sort-by-attributes-alt';
 		//$helper->chart = true;
 		$helper->color = 'color1';
-		$helper->title = $this->l('Conversion Rate');
-		$helper->subtitle = $this->l('30 days');
+		$helper->title = $this->l('Conversion Rate', null, null, false);
+		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('CONVERSION_RATE') !== false)
 			$helper->value = ConfigurationKPI::get('CONVERSION_RATE');
 		if (ConfigurationKPI::get('CONVERSION_RATE_CHART') !== false)
@@ -1277,8 +1277,8 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->id = 'box-carts';
 		$helper->icon = 'icon-shopping-cart';
 		$helper->color = 'color2';
-		$helper->title = $this->l('Abandoned Carts');
-		$helper->subtitle = $this->l('Today');
+		$helper->title = $this->l('Abandoned Carts', null, null, false);
+		$helper->subtitle = $this->l('Today', null, null, false);
 		$helper->href = $this->context->link->getAdminLink('AdminCarts');
 		if (ConfigurationKPI::get('ABANDONED_CARTS') !== false)
 			$helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
@@ -1290,8 +1290,8 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->id = 'box-average-order';
 		$helper->icon = 'icon-money';
 		$helper->color = 'color3';
-		$helper->title = $this->l('Average Order Value');
-		$helper->subtitle = $this->l('30 days');
+		$helper->title = $this->l('Average Order Value', null, null, false);
+		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('AVG_ORDER_VALUE') !== false)
 			$helper->value = ConfigurationKPI::get('AVG_ORDER_VALUE');
 		if (ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < $time)
@@ -1302,8 +1302,8 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->id = 'box-net-profit-visitor';
 		$helper->icon = 'icon-user';
 		$helper->color = 'color4';
-		$helper->title = $this->l('Net Profit per Visitor');
-		$helper->subtitle = $this->l('30 days');
+		$helper->title = $this->l('Net Profit per Visitor', null, null, false);
+		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('NETPROFIT_VISITOR') !== false)
 			$helper->value = ConfigurationKPI::get('NETPROFIT_VISITOR');
 		if (ConfigurationKPI::get('NETPROFIT_VISITOR_EXPIRE') < $time)
@@ -1884,7 +1884,7 @@ class AdminOrdersControllerCore extends AdminController
 		Mail::Send(
 			(int)$order->id_lang,
 			'order_changed',
-			Mail::l('Your order has been changed', $order->id_lang),
+			Mail::l('Your order has been changed', (int)$order->id_lang),
 			$data,
 			$order->getCustomer()->email,
 			$order->getCustomer()->firstname.' '.$order->getCustomer()->lastname,

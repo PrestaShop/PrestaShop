@@ -116,6 +116,7 @@ class CategoryControllerCore extends FrontController
 
 		$this->context->smarty->assign(array(
 			'category' => $this->category,
+			'description_short' => Tools::truncateString($this->category->description),
 			'products' => (isset($this->cat_products) && $this->cat_products) ? $this->cat_products : null,
 			'id_category' => (int)$this->category->id,
 			'id_category_parent' => (int)$this->category->id_parent,
@@ -199,6 +200,10 @@ class CategoryControllerCore extends FrontController
 			// Pagination must be call after "getProducts"
 			$this->pagination($this->nbProducts);
 
+		Hook::exec('actionProductListModifier', array(
+			'nb_products' => &$this->nbProducts,
+			'cat_products' => &$this->cat_products,
+		));
 
 		foreach ($this->cat_products as &$product)
 			if ($product['id_product_attribute'] && isset($product['product_attribute_minimal_quantity']))

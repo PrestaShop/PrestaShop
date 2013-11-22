@@ -37,7 +37,6 @@ echo '
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="robots" content="NOFOLLOW, NOINDEX" />
 		<link type="text/css" rel="stylesheet" href="'._PS_JS_DIR_.'jquery/ui/themes/base/jquery.ui.datepicker.css" />
-		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'admin.css" />
 		<link type="text/css" rel="stylesheet" href="'._PS_JS_DIR_.'jquery/plugins/cluetip/jquery.cluetip.css" />
 		<link type="text/css" rel="stylesheet" href="themes/'.Context::getContext()->employee->bo_theme.'/css/backward/admin.css" />
 		<link type="text/css" rel="stylesheet" href="'._PS_JS_DIR_.'jquery/plugins/chosen/jquery.chosen.css" />
@@ -56,9 +55,6 @@ echo '
 		<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/plugins/chosen/jquery.chosen.js"></script>
 		<link rel="shortcut icon" href="'._PS_IMG_.'favicon.ico" />
 		'.Hook::exec('displayBackOfficeHeader').'
-		<!--[if IE]>
-		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'admin-ie.css" />
-		<![endif]-->
 		<style type="text/css">
 			div#header_infos, div#header_infos a#header_shopname, div#header_infos a#header_logout, div#header_infos a#header_foaccess {
 				color:'.(Tools::getBrightness(empty(Context::getContext()->employee->bo_color) ? '#FFFFFF' : Context::getContext()->employee->bo_color) < 128 ? 'white' : '#383838').'

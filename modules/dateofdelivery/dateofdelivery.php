@@ -35,11 +35,12 @@ class DateOfDelivery extends Module
 	{
 		$this->name = 'dateofdelivery';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 		
 		$this->displayName = $this->l('Date of delivery');
 		$this->description = $this->l('Displays an approximate date of delivery');
@@ -200,8 +201,8 @@ class DateOfDelivery extends Module
 
 		$id_carrier = (int)OrderInvoice::getCarrierId($order_invoice->id);
 		$return = '';
-		if ($datesDelivery = $this->_getDatesOfDelivery($id_carrier, $oos, $order_invoice->date_add))
-			$return = sprintf($this->l('Approximate date of delivery is between %1$s and %2$s'), $datesDelivery[0], $datesDelivery[1]);
+		if (($datesDelivery = $this->_getDatesOfDelivery($id_carrier, $oos, $order_invoice->date_add)) && isset($datesDelivery[0][0]) && isset($datesDelivery[1][0]))
+			$return = sprintf($this->l('Approximate date of delivery is between %1$s and %2$s'), $datesDelivery[0][0], $datesDelivery[1][0]);
 
 		return $return;
 	}

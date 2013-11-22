@@ -35,17 +35,15 @@ class CrossSelling extends Module
 	{
 		$this->name = 'crossselling';
 		$this->tab = 'front_office_features';
-		$this->version = 0.7;
+		$this->version = 0.8;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Cross Selling');
 		$this->description = $this->l('Customers who bought this product also bought:');
-
-		if (!$this->isRegisteredInHook('header'))
-			$this->registerHook('header');
 	}
 
 	public function install()
@@ -99,6 +97,7 @@ class CrossSelling extends Module
 	{
 		$this->context->controller->addCSS(($this->_path).'crossselling.css', 'all');
 		$this->context->controller->addJS(($this->_path).'js/crossselling.js');
+		$this->context->controller->addJqueryPlugin(array('scrollTo', 'serialScroll'));
 	}
 
 	/**

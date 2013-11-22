@@ -118,21 +118,36 @@ class HelperFormCore extends Helper
 							$uploader->setUrl(isset($params['url'])?$params['url']:null);
 							$uploader->setMultiple(isset($params['multiple'])?$params['multiple']:false);
 							$uploader->setUseAjax(isset($params['ajax'])?$params['ajax']:false);
+							$uploader->setMaxFiles(isset($params['max_files'])?$params['max_files']:null);
 
-							if (isset($params['images']))
-								$uploader->setImages($params['images']);
-							elseif (isset($params['image'])) // Use for retrocompatibility							
-								$uploader->setImages(array(
+							if (isset($params['files']) && $params['files'])
+								$uploader->setFiles($params['files']);
+							elseif (isset($params['image']) && $params['image']) // Use for retrocompatibility							
+								$uploader->setFiles(array(
 									0 => array(
+									'type'       => HelperUploader::TYPE_IMAGE,
 									'image'      => isset($params['image'])?$params['image']:null,
 									'size'       => isset($params['size'])?$params['size']:null,
 									'delete_url' => isset($params['delete_url'])?$params['delete_url']:null
 								)));
 
-							$uploader->setThumb(isset($params['thumb'])?$params['thumb']:null);
-							$uploader->setFile(isset($params['file'])?$params['file']:null);
-							$uploader->setTitle(isset($params['title'])?$params['title']:null);
+							if (isset($params['file']) && $params['file']) // Use for retrocompatibility							
+								$uploader->setFiles(array(
+									0 => array(
+									'type'       => HelperUploader::TYPE_FILE,
+									'size'       => isset($params['size'])?$params['size']:null,
+									'delete_url' => isset($params['delete_url'])?$params['delete_url']:null,
+									'download_url' => isset($params['file'])?$params['file']:null
+								)));
 
+							if (isset($params['thumb']) && $params['thumb']) // Use for retrocompatibility							
+								$uploader->setFiles(array(
+									0 => array(
+									'type'       => HelperUploader::TYPE_IMAGE,
+									'image'      => isset($params['thumb'])?'<img src="'.$params['thumb'].'" alt="'.(isset($params['title']) ? $params['title'] : '').'" title="'.(isset($params['title']) ? $params['title'] : '').'" />':null,
+								)));
+
+							$uploader->setTitle(isset($params['title'])?$params['title']:null);
 							$params['file'] = $uploader->render();
 						break;
 
@@ -230,7 +245,7 @@ class HelperFormCore extends Helper
 	 *
 	 * @return string
 	 */
-	public function renderAssoShop($params, $disable_shared = false)
+	public function renderAssoShop($disable_shared = false, $template_directory = null)
 	{
 		if (!Shop::isFeatureActive())
 			return;
@@ -273,6 +288,8 @@ class HelperFormCore extends Helper
 		}*/
 
 		$tree = new HelperTreeShops('shop-tree', 'Shops');
+		if (isset($template_directory))
+			$tree->setTemplateDirectory($template_directory);
 		$tree->setSelectedShops($assos);
 		$tree->setAttribute('table', $this->table);
 		return $tree->render();

@@ -181,12 +181,6 @@ class SearchCore
 			$context = Context::getContext();
 		$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
 
-		// Only use cookie if id_customer is not present
-		if ($use_cookie)
-			$id_customer = $context->customer->id;
-		else
-			$id_customer = 0;
-
 		// TODO : smart page management
 		if ($page_number < 1) $page_number = 1;
 		if ($page_size < 1) $page_size = 1;
@@ -235,21 +229,25 @@ class SearchCore
 					AND ('.implode(' OR ', $score_array).')
 			) position';
 
-		$sql = 'SELECT cp.`id_product`
-				FROM `'._DB_PREFIX_.'category_group` cg
-				INNER JOIN `'._DB_PREFIX_.'category_product` cp ON cp.`id_category` = cg.`id_category`
-				INNER JOIN `'._DB_PREFIX_.'category` c ON cp.`id_category` = c.`id_category`
-				INNER JOIN `'._DB_PREFIX_.'product` p ON cp.`id_product` = p.`id_product`
-				'.Shop::addSqlAssociation('product', 'p', false).'
-				WHERE c.`active` = 1
-					AND product_shop.`active` = 1
-					AND product_shop.`visibility` IN ("both", "search")
-					AND product_shop.indexed = 1
-					AND cg.`id_group` '.(!$id_customer ?  '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : 'IN (
-						SELECT id_group FROM '._DB_PREFIX_.'customer_group
-						WHERE id_customer = '.(int)$id_customer.'
-					)');
-		$results = $db->executeS($sql);
+		$sql_groups = '';
+		if (Group::isFeatureActive())
+		{
+			$groups = FrontController::getCurrentCustomerGroups();
+			$sql_groups = 'AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
+		}
+
+		$results = $db->executeS('
+		SELECT cp.`id_product`
+		FROM `'._DB_PREFIX_.'category_product` cp
+		'.(Group::isFeatureActive() ? 'INNER JOIN `'._DB_PREFIX_.'category_group` cg ON cp.`id_category` = cg.`id_category`' : '').'
+		INNER JOIN `'._DB_PREFIX_.'category` c ON cp.`id_category` = c.`id_category`
+		INNER JOIN `'._DB_PREFIX_.'product` p ON cp.`id_product` = p.`id_product`
+		'.Shop::addSqlAssociation('product', 'p', false).'
+		WHERE c.`active` = 1
+		AND product_shop.`active` = 1
+		AND product_shop.`visibility` IN ("both", "search")
+		AND product_shop.indexed = 1
+		'.$sql_groups);
 
 		$eligible_products = array();
 		foreach ($results as $row)
@@ -641,23 +639,29 @@ class SearchCore
 
 		$id = Context::getContext()->shop->id;
 		$id_shop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
+		
+		$sql_groups = '';
+		if (Group::isFeatureActive())
+		{
+			$groups = FrontController::getCurrentCustomerGroups();
+			$sql_groups = 'AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
+		}
+
 		if ($count)
 		{
-			$sql = 'SELECT COUNT(DISTINCT pt.`id_product`) nb
-					FROM `'._DB_PREFIX_.'product` p
-					'.Shop::addSqlAssociation('product', 'p').'
-					LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
-					LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
-					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
-					LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
-					LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
-					WHERE product_shop.`active` = 1
-						AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
-						AND cg.`id_group` '.(!$id_customer ?  '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : 'IN (
-							SELECT id_group FROM '._DB_PREFIX_.'customer_group
-							WHERE id_customer = '.(int)$id_customer.')').'
-						AND t.`name` LIKE \'%'.pSQL($tag).'%\'';
-			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+			'SELECT COUNT(DISTINCT pt.`id_product`) nb
+			FROM `'._DB_PREFIX_.'product` p
+			'.Shop::addSqlAssociation('product', 'p').'
+			LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
+			LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
+			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
+			LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
+			'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
+			WHERE product_shop.`active` = 1
+			AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
+			'.$sql_groups.'
+			AND t.`name` LIKE \'%'.pSQL($tag).'%\'');
 		}
 
 		$sql = 'SELECT DISTINCT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description_short`, pl.`link_rewrite`, pl.`name`,
@@ -682,14 +686,12 @@ class SearchCore
 				LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
 				LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
-				LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
+				'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
 				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cg.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 				'.Product::sqlStock('p', 0).'
 				WHERE product_shop.`active` = 1
 					AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
-					AND cg.`id_group` '.(!$id_customer ?  '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : 'IN (
-						SELECT id_group FROM '._DB_PREFIX_.'customer_group
-						WHERE id_customer = '.(int)$id_customer.')').'
+					'.$sql_groups.'
 					AND t.`name` LIKE \'%'.pSQL($tag).'%\'
 					GROUP BY product_shop.id_product
 				ORDER BY position DESC'.($orderBy ? ', '.$orderBy : '').($orderWay ? ' '.$orderWay : '').'

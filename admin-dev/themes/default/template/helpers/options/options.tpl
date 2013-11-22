@@ -179,25 +179,25 @@
 										</div>
 									{elseif $field['type'] == 'text'}
 										<div class="col-lg-9 {if isset($field['suffix'])}input-group{/if}">
+											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'html':'UTF-8'}" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if}/>
 											{if isset($field['suffix'])}
 											<span class="input-group-addon">
 												{$field['suffix']|strval}
 											</span>
 											{/if}
-											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if}/>
 										</div>
 									{elseif $field['type'] == 'password'}
 										<div class="col-lg-9 {if isset($field['suffix'])}input-group{/if}">
+											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if} />
 											{if isset($field['suffix'])}
 											<span class="input-group-addon">
 												{$field['suffix']|strval}
 											</span>
 											{/if}
-											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if} />
 										</div>
 									{elseif $field['type'] == 'textarea'}
 										<div class="col-lg-9">
-											<textarea class="textarea-autosize" name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|escape:'htmlall':'UTF-8'}</textarea>
+											<textarea class="textarea-autosize" name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|escape:'html':'UTF-8'}</textarea>
 										</div>
 									{elseif $field['type'] == 'file'}
 										<div class="col-lg-9">{$field['file']}</div>
@@ -205,14 +205,14 @@
 										<div class="col-lg-2">
 											<div class="row">
 												<div class="input-group">
-									              <input type="color" size="{$field['size']}" data-hex="true" {if isset($input.class)}class="{$field['class']}" {else}class="color mColorPickerInput"{/if} name="{$field['name']}" class="{if isset($field['class'])}{$field['class']}{/if}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />
+									              <input type="color" size="{$field['size']}" data-hex="true" {if isset($input.class)}class="{$field['class']}" {else}class="color mColorPickerInput"{/if} name="{$field['name']}" class="{if isset($field['class'])}{$field['class']}{/if}" value="{$field['value']|escape:'html':'UTF-8'}" />
 									            </div>
 									        </div>
 							            </div>
 									{elseif $field['type'] == 'price'}
 										<div class="input-group col-lg-9">
 											<span class="input-group-addon">{$currency_left_sign}{$currency_right_sign} {l s='(tax excl.)'}</span>
-											<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />
+											<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'html':'UTF-8'}" />
 										</div>
 									{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang' || $field['type'] == 'selectLang'}
 
@@ -228,14 +228,16 @@
 													{/if}
 															<input type="text"
 																name="{$key}_{$id_lang}"
-																value="{$value|escape:'htmlall':'UTF-8'}"
+																value="{$value|escape:'html':'UTF-8'}"
 																{if isset($input.class)}class="{$input.class}"{/if}
 															/>
 													{if $field['languages']|count > 1}
 														</div>
 														<div class="col-lg-2">
 															<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-																<!-- name -->
+																{foreach $languages as $language}
+																	{if $language.id_lang == $id_lang}{$language.iso_code}{/if}
+																{/foreach}
 																<span class="caret"></span>
 															</button>
 															<ul class="dropdown-menu">
@@ -263,7 +265,9 @@
 														</div>
 														<div class="col-lg-2">
 															<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-																<!-- name -->
+																{foreach $languages as $language}
+																	{if $language.id_lang == $id_lang}{$language.iso_code}{/if}
+																{/foreach}
 																<span class="caret"></span>
 															</button>
 															<ul class="dropdown-menu">

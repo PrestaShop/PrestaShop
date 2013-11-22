@@ -39,7 +39,7 @@
 	var currency_blank = "{$currency->blank}";
 	var priceDisplayPrecision = 2;
 	var use_taxes = {if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}true{else}false{/if};
-	var token = "{$smarty.get.token|escape:'htmlall':'UTF-8'}";
+	var token = "{$smarty.get.token|escape:'html':'UTF-8'}";
 	var stock_management = {$stock_management|intval};
 	var txt_add_product_stock_issue = "{l s='Are you sure you want to add this quantity?' js=1}";
 	var txt_add_product_new_invoice = "{l s='Are you sure you want to create a new invoice?' js=1}";
@@ -65,28 +65,26 @@
 		<div class="row">
 			<div class="col-lg-3 box-stats color3" >
 				<i class="icon-calendar-empty"></i>
-				<span class="title">{l s='Date'}<br /><small>sous-titre</small></span>
+				<span class="title">{l s='Date'}<br /><small>&nbsp;</small></span>
 				<span class="value">{dateFormat date=$order->date_add full=false}</span>
 			</div>
 			<div class="col-lg-3 box-stats color2" >
 				<i class="icon-comments"></i>
-				<span class="title">{l s='Messages'}<br /><small>sous-titre</small></span>
-				<!-- <span class="value">{sizeof($messages)}</span> -->
-				<span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'htmlall':'UTF-8'}">{sizeof($customer_thread_message)}</a></span>
+				<span class="title">{l s='Messages'}<br /><small>&nbsp;</small></span>
+				<span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}">{sizeof($customer_thread_message)}</a></span>
 			</div>
 			<div class="col-lg-3 box-stats color1" >
 				<i class="icon-ok"></i>
-				<span class="title">{l s='Products'}<br /><small>sous-titre</small></span>
+				<span class="title">{l s='Products'}<br /><small>&nbsp;</small></span>
 				<span class="value">{sizeof($products)}</span>
 			</div>
 			<div class="col-lg-3 box-stats color4" >
 				<i class="icon-money"></i>
-				<span class="title">{l s='Total'}<br /><small>sous-titre</small></span>
+				<span class="title">{l s='Total'}<br /><small>&nbsp;</small></span>
 				<span class="value">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
 			</div>
 		</div>
 	</div>
-
 
 	<!-- Todo : Be smart and find the best place for Admin order hook -->
 	{hook h="displayAdminOrder" id_order=$order->id}
@@ -94,12 +92,12 @@
 		<div class="col-lg-6">
 			<div class="panel">
 				<h3 class="text-center">
-					<a class="btn btn-default pull-left" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
+					<a class="btn btn-default pull-left" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
 						<i class="icon-chevron-left"></i>
 						{l s='Prev'}
 						</a>
 					{l s='Order'} : <strong>#{$order->id} - {$order->reference}</strong>
-					<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$nextOrder}" {if !$nextOrder}disabled{/if}>
+					<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$nextOrder}" {if !$nextOrder}disabled{/if}>
 						{l s='Next'}
 						<i class="icon-chevron-right"></i>
 					</a> 
@@ -108,7 +106,7 @@
 				<div class="well">
 					<div class="row row-margin-bottom">
 						{if (count($invoices_collection))}
-						<a class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}" target="_blank">
+						<a class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}" target="_blank">
 							<i class="icon-file"></i>
 							{l s='View invoice'}
 						</a>
@@ -120,7 +118,7 @@
 							{l s='No invoice'}
 						{/if}
 						{if (($currentState && $currentState->delivery) || $order->delivery_number)}
-						<a class="btn btn-default"  href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order={$order->id}" target="_blank">
+						<a class="btn btn-default"  href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order={$order->id}" target="_blank">
 							<i class="icon-truck"></i>
 							{l s='View delivery slip'}
 						</a>
@@ -327,7 +325,7 @@
 										<td>
 											<span id="shipping_number_show">{if isset($line.url) && isset($line.tracking_number)}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{elseif isset($line.tracking_number)}{$line.tracking_number}{/if}</span>
 											{if $line.can_edit}
-											<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}&id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|escape:'htmlall':'UTF-8'}{else}0{/if}&id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'htmlall':'UTF-8'}{else}0{/if}">
+											<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$order->id}&id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|escape:'html':'UTF-8'}{else}0{/if}&id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'html':'UTF-8'}{else}0{/if}">
 												<span class="shipping_number_edit" style="display:none;">
 													<button type="button" name="tracking_number">
 														{$line.tracking_number|htmlentities}
@@ -378,7 +376,7 @@
 					<i class="icon-user"></i>
 					{l s='Customer'} :
 					<a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}">
-						{$gender->name|escape:'htmlall':'UTF-8'}
+						{$gender->name|escape:'html':'UTF-8'}
 						{$customer->firstname}
 						{$customer->lastname}
 					</a>
@@ -434,7 +432,7 @@
 						{if !$order->isVirtual()}
 						<!-- Shipping address -->
 							{if $can_edit}
-							<form class="form-horizontal" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}">
+							<form class="form-horizontal" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$order->id}">
 								<div class="form-group">
 									<div class="col-lg-9">
 										<select name="id_address">
@@ -477,7 +475,7 @@
 					<div class="tab-pane" id="addressInvoice">
 						<!-- Invoice address -->						
 						{if $can_edit}
-						<form class="form-horizontal" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}">
+						<form class="form-horizontal" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$order->id}">
 							<div class="form-group">
 								<div class="col-lg-9">
 									<select name="id_address">
@@ -534,9 +532,9 @@
 							<label class="control-label col-lg-3">{l s='Choose a standard message'}</label>
 							<div class="col-lg-9">
 								<select name="order_message" id="order_message" onchange="orderOverwriteMessage(this, '{l s='Do you want to overwrite your existing message?'}')">
-									<option value="0" selected="selected">--</option>
+									<option value="0" selected="selected">-</option>
 									{foreach from=$orderMessages item=orderMessage}
-									<option value="{$orderMessage['message']|escape:'htmlall':'UTF-8'}">{$orderMessage['name']}</option>
+									<option value="{$orderMessage['message']|escape:'html':'UTF-8'}">{$orderMessage['name']}</option>
 									{/foreach}
 								</select>
 							</div>
@@ -568,7 +566,7 @@
 						<div class="form-group">
 							<label class="control-label col-lg-3">{l s='Message'}</label>
 							<div class="col-lg-9">
-								<textarea id="txt_msg" class="textarea-autosize" name="message">{Tools::getValue('message')|escape:'htmlall':'UTF-8'}</textarea>
+								<textarea id="txt_msg" class="textarea-autosize" name="message">{Tools::getValue('message')|escape:'html':'UTF-8'}</textarea>
 								<p id="nbchars"></p>
 							</div>
 						</div>
@@ -593,7 +591,7 @@
 							<i class="icon-envelope"></i>
 							{l s='New message'}
 						</button>
-						<a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'htmlall':'UTF-8'}">
+						<a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}">
 							<b>{l s='Click here'}</b> {l s='to see all messages.'}
 							<i class="icon-external-link"></i>
 						</a>
@@ -626,14 +624,14 @@
 								<br />{l s='This warning also concerns the next orders:'}
 							{/if}
 						{/if}
-						<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+						<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">
 							#{'%06d'|sprintf:$brother_order->id}
 						</a>
 					{/foreach}
 				</p>
 				{/if}
 
-				<form id="formAddPayment" method="post" action="{$current_index}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+				<form id="formAddPayment" method="post" action="{$current_index}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">
 					<table class="table">
 						<thead>
 							<tr>
@@ -758,7 +756,7 @@
 					</table>
 				</form>
 				{if (!$order->valid && sizeof($currencies) > 1)}
-				<form class="form-horizontal well" method="post" action="{$currentIndex}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+				<form class="form-horizontal well" method="post" action="{$currentIndex}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">
 					<div class="row">
 						<label class="control-label col-lg-3">{l s='Change currency'}</label>
 						<div class="col-lg-6">
@@ -829,7 +827,7 @@
 						{foreach $order->getBrother() as $brother_order}
 						<tr>
 							<td>
-								<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">#{'%06d'|sprintf:$brother_order->id}</a>
+								<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">#{'%06d'|sprintf:$brother_order->id}</a>
 							</td>
 							<td>
 								{$brother_order->getCurrentOrderState()->name[$current_id_lang]}
@@ -838,7 +836,7 @@
 								{displayPrice price=$brother_order->total_paid_tax_incl currency=$currency->id}
 							</td>
 							<td>
-								<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+								<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">
 									<i class="icon-eye-open"></i>
 									{l s='See the order'}
 								</a>
@@ -851,10 +849,6 @@
 			{/if}
 		</div>
 	</div>
-
-		
-
-		
 
 	<form class="container-command-top-spacing" action="{$current_index}&vieworder&token={$smarty.get.token}&id_order={$order->id}" method="post" onsubmit="return orderDeleteProduct('{l s='This product cannot be returned.'}', '{l s='Quantity to cancel is greater than quantity available.'}');">
 		<input type="hidden" name="id_order" value="{$order->id}" />
@@ -994,7 +988,7 @@
 									</td>
 									{if $can_edit}
 									<td>
-										<a href="{$current_index}&submitDeleteVoucher&id_order_cart_rule={$discount['id_order_cart_rule']}&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+										<a href="{$current_index}&submitDeleteVoucher&id_order_cart_rule={$discount['id_order_cart_rule']}&id_order={$order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">
 											<i class="icon-minus-sign"></i>
 											{l s='Delete voucher'}
 										</a>
@@ -1114,8 +1108,6 @@
 		</div>
 	</form>
 
-	
-
 	{if (sizeof($messages))}
 	<div class="panel">
 		<h3>
@@ -1130,11 +1122,11 @@
 				</a>
 			{/if}
 			{l s='At'} <i>{dateFormat date=$message['date_add']}</i> 
-			{l s='from'} <b>{if ($message['elastname']|escape:'htmlall':'UTF-8')}{$message['efirstname']|escape:'htmlall':'UTF-8'} {$message['elastname']|escape:'htmlall':'UTF-8'}{else}{$message['cfirstname']|escape:'htmlall':'UTF-8'} {$message['clastname']|escape:'htmlall':'UTF-8'}{/if}</b>
+			{l s='from'} <b>{if ($message['elastname']|escape:'html':'UTF-8')}{$message['efirstname']|escape:'html':'UTF-8'} {$message['elastname']|escape:'html':'UTF-8'}{else}{$message['cfirstname']|escape:'html':'UTF-8'} {$message['clastname']|escape:'html':'UTF-8'}{/if}</b>
 			{if ($message['private'] == 1)}
 				<span style="color:red; font-weight:bold;">{l s='Private'}</span>
 			{/if}
-			<p>{$message['message']|escape:'htmlall':'UTF-8'|nl2br}</p>
+			<p>{$message['message']|escape:'html':'UTF-8'|nl2br}</p>
 			</div>
 		{/foreach}
 	</div>

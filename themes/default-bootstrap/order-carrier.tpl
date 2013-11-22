@@ -256,7 +256,7 @@
 		</p>
 		<p id="gift_div" class="form-group">
 			<label for="gift_message">{l s='If you\'d like, you can add a note to the gift:'}</label>
-			<textarea rows="5" cols="35" id="gift_message" class="form-control" name="gift_message">{$cart->gift_message|escape:'htmlall':'UTF-8'}</textarea>
+			<textarea rows="5" cols="35" id="gift_message" class="form-control" name="gift_message">{$cart->gift_message|escape:'html':'UTF-8'}</textarea>
 		</p>
 		{/if}
 	{/if}
@@ -285,7 +285,7 @@
         <p><strong class="dark">{l s='Leave a message'}</strong></p>
         <div class="form-group">
             <p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
-            <textarea class="form-control" cols="120" rows="2" name="message" id="message">{if isset($oldMessage)}{$oldMessage|escape:'htmlall':'UTF-8'}{/if}</textarea>
+            <textarea class="form-control" cols="120" rows="2" name="message" id="message">{if isset($oldMessage)}{$oldMessage|escape:'html':'UTF-8'}{/if}</textarea>
         </div>
     </div>
 	<p class="cart_navigation clearfix">
@@ -309,7 +309,7 @@
 	<p><strong class="dark">{l s='Leave a message'}</strong></p>
 	<div>
 		<p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
-		<textarea class="form-control" cols="120" rows="2" name="message" id="message">{if isset($oldMessage)}{$oldMessage|escape:'htmlall':'UTF-8'}{/if}</textarea>
+		<textarea class="form-control" cols="120" rows="2" name="message" id="message">{if isset($oldMessage)}{$oldMessage|escape:'html':'UTF-8'}{/if}</textarea>
 	</div>
 </div>
 {/if}

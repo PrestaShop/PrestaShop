@@ -73,7 +73,7 @@ class CurrencyCore extends ObjectModel
 			'sign' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 8),
 			'format' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'decimals' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
-			'conversion_rate' =>array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true, 'shop' => true),
+			'conversion_rate' =>array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
 			'deleted' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'active' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
@@ -107,14 +107,23 @@ class CurrencyCore extends ObjectModel
 		$this->suffix =	$this->format % 2 == 0 ? ' '.$this->sign : '';
 	}
 	/**
-	 * Overriding check if currency with the same iso code already exists.
-	 * If it's true, currency is doesn't added.
+	 * Overriding check if currency rate is not empty and if currency with the same iso code already exists.
+	 * If it's true, currency is not added.
 	 *
 	 * @see ObjectModelCore::add()
 	 */
 	public function add($autodate = true, $nullValues = false)
 	{
-		return Currency::exists($this->iso_code, $this->iso_code_num) ? false : parent::add();
+		if ((float)$this->conversion_rate <= 0)
+			return false;
+		return Currency::exists($this->iso_code, $this->iso_code_num) ? false : parent::add($autodate, $nullValues);
+	}
+
+	public function update($autodate = true, $nullValues = false)
+	{
+		if ((float)$this->conversion_rate <= 0)
+			return false;
+		return parent::update($autodate, $nullValues);
 	}
 
 	/**
@@ -287,10 +296,16 @@ class CurrencyCore extends ObjectModel
 	 */
 	public static function getIdByIsoCode($iso_code, $id_shop = 0)
 	{
-		$query = Currency::getIdByQuery($id_shop);
-		$query->where('iso_code = \''.pSQL($iso_code).'\'');
-
-		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+		$cache_id = 'Currency::getIdByIsoCode_'.pSQL($iso_code).'-'.(int)$id_shop;
+		if (!Cache::isStored($cache_id))
+		{
+			$query = Currency::getIdByQuery($id_shop);
+			$query->where('iso_code = \''.pSQL($iso_code).'\'');
+	
+			$result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
     /**

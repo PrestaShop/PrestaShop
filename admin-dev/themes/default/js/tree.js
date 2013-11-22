@@ -11,6 +11,8 @@ Tree.prototype =
 
 	init: function ()
 	{
+		var that = $(this);
+
 		this.$element.find("label.tree-toggler").click(
 			function ()
 			{
@@ -19,12 +21,16 @@ Tree.prototype =
 					$(this).parent().children(".icon-folder-open")
 						.removeClass("icon-folder-open")
 						.addClass("icon-folder-close");
+
+					that.trigger('collapse');
 				}
 				else
 				{
 					$(this).parent().children(".icon-folder-close")
 						.removeClass("icon-folder-close")
 						.addClass("icon-folder-open");
+
+					that.trigger('expand');
 				}
 				$(this).parent().parent().children("ul.tree").toggle(300);
 			}
@@ -36,6 +42,8 @@ Tree.prototype =
 				$('li input:checked').parent().addClass("tree-selected");
 			}
 		);
+
+		return $(this);
 	},
 	
 	collapseAll : function($speed)
@@ -49,6 +57,8 @@ Tree.prototype =
 				$(this).parent().parent().children("ul.tree").hide($speed);
 			}
 		);
+
+		return $(this);
 	},
 
 	expandAll : function($speed)
@@ -62,6 +72,8 @@ Tree.prototype =
 				$(this).parent().parent().children("ul.tree").show($speed);
 			}
 		);
+
+		return $(this);
 	},
 };
 

@@ -172,9 +172,13 @@
 								<div class="delivery_option_price">
 									{if $option.total_price_with_tax && (!isset($free_shipping) || (isset($free_shipping) && !$free_shipping))}
 										{if $use_taxes == 1}
-											{convertPrice price=$option.total_price_with_tax} {l s='(tax incl.)'}
+											{if $priceDisplay == 1}
+												{convertPrice price=$option.total_price_without_tax} {l s='(tax excl.)'}
+											{else}
+												{convertPrice price=$option.total_price_with_tax} {l s='(tax incl.)'}
+											{/if}
 										{else}
-											{convertPrice price=$option.total_price_without_tax} {l s='(tax excl.)'}
+											{convertPrice price=$option.total_price_without_tax}
 										{/if}
 									{else}
 										{l s='Free'}
@@ -208,7 +212,7 @@
 										{/if}
 										{* This foreach is on one line, to avoid tabulation in the title attribute of the acronym *}
 										{foreach $carrier.product_list as $product}
-										{if $product@index == 4}<acronym title="{/if}{if $product@index >= 4}{$product.name}{if !$product@last}, {else}">...</acronym>){/if}{else}{$product.name}{if !$product@last}, {else}){/if}{/if}{/foreach}
+										{if $product@index == 4}<acronym title="{/if}{if $product@index >= 4}{$product.name}{if isset($product.attributes) && $product.attributes} {$product.attributes|escape:'html':'UTF-8'}{/if}{if !$product@last}, {else}">...</acronym>){/if}{else}{$product.name}{if isset($product.attributes) && $product.attributes} {$product.attributes|escape:'html':'UTF-8'}{/if}{if !$product@last}, {else}){/if}{/if}{/foreach}
 									{/if}
 								</td>
 							</tr>
@@ -257,7 +261,7 @@
 		</p>
 		<p id="gift_div" class="textarea">
 			<label for="gift_message">{l s='If you\'d like, you can add a note to the gift:'}</label>
-			<textarea rows="5" cols="35" id="gift_message" name="gift_message">{$cart->gift_message|escape:'htmlall':'UTF-8'}</textarea>
+			<textarea rows="5" cols="35" id="gift_message" name="gift_message">{$cart->gift_message|escape:'html':'UTF-8'}</textarea>
 		</p>
 		{/if}
 	{/if}
@@ -303,7 +307,7 @@
 	<h3>{l s='Leave a message'}</h3>
 	<div>
 		<p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
-		<p><textarea cols="120" rows="3" name="message" id="message">{if isset($oldMessage)}{$oldMessage|escape:'htmlall':'UTF-8'}{/if}</textarea></p>
+		<p><textarea cols="120" rows="3" name="message" id="message">{if isset($oldMessage)}{$oldMessage|escape:'html':'UTF-8'}{/if}</textarea></p>
 	</div>
 </div>
 {/if}

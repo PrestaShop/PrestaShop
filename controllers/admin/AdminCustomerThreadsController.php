@@ -309,12 +309,15 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				$cm = new CustomerMessage();
 				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = (int)Tools::getValue('id_customer_thread');
-				$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
+				$cm->ip_address = ip2long(Tools::getRemoteAddr());
 				$current_employee = $this->context->employee;
 				$id_employee = (int)Tools::getValue('id_employee_forward');
 				$employee = new Employee($id_employee);
 				$email = Tools::getValue('email');
-				if ($id_employee && $employee && Validate::isLoadedObject($employee))
+				$message = Tools::getValue('message_forward');
+				if (($error = $cm->validateField('message', $message, null, array(), true)) !== true)
+					$this->errors[] = $error;
+				elseif ($id_employee && $employee && Validate::isLoadedObject($employee))
 				{
 					$params = array(
 					'{messages}' => Tools::nl2br(stripslashes($output)),
@@ -333,7 +336,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						null, null, _PS_MAIL_DIR_, true))
 					{
 						$cm->private = 1;
-						$cm->message = $this->l('Message forwarded to').' '.$employee->firstname.' '.$employee->lastname."\n".$this->l('Comment:').' '.$_POST['message_forward'];
+						$cm->message = $this->l('Message forwarded to').' '.$employee->firstname.' '.$employee->lastname."\n".$this->l('Comment:').' '.$message;
 						$cm->add();
 					}
 				}
@@ -352,7 +355,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						$current_employee->email, $current_employee->firstname.' '.$current_employee->lastname,
 						null, null, _PS_MAIL_DIR_, true))
 					{
-						$cm->message = $this->l('Message forwarded to').' '.$email."\n".$this->l('Comment:').' '.$_POST['message_forward'];
+						$cm->message = $this->l('Message forwarded to').' '.$email."\n".$this->l('Comment:').' '.$message;
 						$cm->add();
 					}
 				}
@@ -368,10 +371,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				$cm = new CustomerMessage();
 				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = $ct->id;
-				
+				$cm->ip_address = ip2long(Tools::getRemoteAddr());
 				$cm->message = Tools::getValue('reply_message');
-				$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
-				if (isset($_FILES) && !empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0)
+				if (($error = $cm->validateField('message', $cm->message, null, array(), true)) !== true)
+					$this->errors[] = $error;
+				elseif (isset($_FILES) && !empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0)
 					$this->errors[] = Tools::displayError('An error occurred during the file upload process.');
 				elseif ($cm->add())
 				{
@@ -393,7 +397,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					$contact = new Contact((int)$ct->id_contact, (int)$ct->id_lang);
 					if (Validate::isLoadedObject($contact))
 					{
-						$from_name = $contact->name[(int)$ct->id_lang];
+						$from_name = $contact->name;
 						$from_email = $contact->email;
 					}
 					else
@@ -401,6 +405,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						$from_name = null;
 						$from_email = null;
 					}
+
 					if (Mail::Send(
 						(int)$ct->id_lang,
 						'reply_msg',
@@ -477,7 +482,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$helper->id = 'box-pending-messages';
 		$helper->icon = 'icon-envelope';
 		$helper->color = 'color1';
-		$helper->title = $this->l('Pending Messages');
+		$helper->title = $this->l('Pending Messages', null, null, false);
 		if (ConfigurationKPI::get('PENDING_MESSAGES') !== false)
 			$helper->value = ConfigurationKPI::get('PENDING_MESSAGES');
 		if (ConfigurationKPI::get('PENDING_MESSAGES_EXPIRE') < $time)
@@ -488,8 +493,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$helper->id = 'box-age';
 		$helper->icon = 'icon-time';
 		$helper->color = 'color2';
-		$helper->title = $this->l('Average Response Time');
-		$helper->subtitle = $this->l('30 days');
+		$helper->title = $this->l('Average Response Time', null, null, false);
+		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME') !== false)
 			$helper->value = ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME');
 		if (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME_EXPIRE') < $time)
@@ -500,8 +505,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$helper->id = 'box-messages-per-thread';
 		$helper->icon = 'icon-copy';
 		$helper->color = 'color3';
-		$helper->title = $this->l('Messages per Thread');
-		$helper->subtitle = $this->l('30 day');
+		$helper->title = $this->l('Messages per Thread', null, null, false);
+		$helper->subtitle = $this->l('30 day', null, null, false);
 		if (ConfigurationKPI::get('MESSAGES_PER_THREAD') !== false)
 			$helper->value = ConfigurationKPI::get('MESSAGES_PER_THREAD');
 		if (ConfigurationKPI::get('MESSAGES_PER_THREAD_EXPIRE') < $time)
@@ -641,6 +646,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			ENT_QUOTES, 'UTF-8')
 		);
 
+		$is_valid_order_id = true;
+		$order = new Order((int)$message['id_order']);
+
+		if (!Validate::isLoadedObject($order))
+			$is_valid_order_id = false;
+
 		$tpl->assign(array(
 			'current' => self::$currentIndex,
 			'token' => $this->token,
@@ -651,7 +662,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			'PS_SHOP_NAME' => Configuration::get('PS_SHOP_NAME'),
 			'file_name' => file_exists(_PS_UPLOAD_DIR_.$message['file_name']),
 			'contacts' => $contacts,
-			'PS_CUSTOMER_SERVICE_SIGNATURE' => str_replace('\r\n', "\n", Configuration::get('PS_CUSTOMER_SERVICE_SIGNATURE', $message['id_lang']))
+			'PS_CUSTOMER_SERVICE_SIGNATURE' => str_replace('\r\n', "\n", Configuration::get('PS_CUSTOMER_SERVICE_SIGNATURE', $message['id_lang'])),
+			'is_valid_order_id' => $is_valid_order_id
 		));
 
 		return $tpl->fetch();

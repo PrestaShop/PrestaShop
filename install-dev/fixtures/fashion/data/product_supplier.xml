@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<entity_product_supplier>
+  <fields class="ProductSupplier">
+    <field name="id_product" relation="product"/>
+    <field name="id_product_attribute" relation="product_attribute"/>
+    <field name="id_supplier" relation="supplier"/>
+    <field name="product_supplier_reference"/>
+    <field name="product_supplier_price_te"/>
+  </fields>
+  <entities>
+    <product_supplier id="product_supplier_1" id_product="iPod_Nano" id_product_attribute="" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_2" id_product="iPod_Nano" id_product_attribute="product_attribute_25" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_3" id_product="iPod_Nano" id_product_attribute="product_attribute_26" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_4" id_product="iPod_Nano" id_product_attribute="product_attribute_27" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_5" id_product="iPod_Nano" id_product_attribute="product_attribute_28" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_6" id_product="iPod_Nano" id_product_attribute="product_attribute_29" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_7" id_product="iPod_Nano" id_product_attribute="product_attribute_30" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_8" id_product="iPod_Nano" id_product_attribute="product_attribute_31" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_9" id_product="iPod_Nano" id_product_attribute="product_attribute_32" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_10" id_product="iPod_Nano" id_product_attribute="product_attribute_33" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_11" id_product="iPod_Nano" id_product_attribute="product_attribute_34" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_12" id_product="iPod_Nano" id_product_attribute="product_attribute_35" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_13" id_product="iPod_Nano" id_product_attribute="product_attribute_36" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_14" id_product="iPod_Nano" id_product_attribute="product_attribute_39" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_15" id_product="iPod_Nano" id_product_attribute="product_attribute_40" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_16" id_product="iPod_Nano" id_product_attribute="product_attribute_41" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_17" id_product="iPod_Nano" id_product_attribute="product_attribute_42" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_18" id_product="MacBook_Air" id_product_attribute="" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_19" id_product="MacBook_Air" id_product_attribute="product_attribute_12" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_20" id_product="MacBook_Air" id_product_attribute="product_attribute_13" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_21" id_product="MacBook_Air" id_product_attribute="product_attribute_14" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_22" id_product="MacBook_Air" id_product_attribute="product_attribute_15" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_23" id_product="Belkin_Leather_Folio_for_iPod_nano_-_Black_Chocolate" id_product_attribute="" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_24" id_product="iPod_shuffle" id_product_attribute="" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_25" id_product="iPod_shuffle" id_product_attribute="product_attribute_7" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_26" id_product="iPod_shuffle" id_product_attribute="product_attribute_8" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_27" id_product="iPod_shuffle" id_product_attribute="product_attribute_9" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_28" id_product="iPod_shuffle" id_product_attribute="product_attribute_10" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_30" id_product="MacBook" id_product_attribute="" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_31" id_product="iPod_touch" id_product_attribute="" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_32" id_product="iPod_touch" id_product_attribute="product_attribute_19" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_33" id_product="iPod_touch" id_product_attribute="product_attribute_22" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_34" id_product="iPod_touch" id_product_attribute="product_attribute_23" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+    <product_supplier id="product_supplier_35" id_product="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone" id_product_attribute="" id_supplier="Shure_Online_Store" product_supplier_reference="" product_supplier_price_te="0.000000"/>
+  </entities>
+</entity_product_supplier>

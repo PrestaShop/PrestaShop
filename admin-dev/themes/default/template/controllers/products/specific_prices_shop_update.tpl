@@ -23,5 +23,5 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {foreach from=$option_list item='row'}
-	<option value="{$row[$key_id]|intval}">{$row[$key_value]|escape:'htmlall':'UTF-8'}</option>
+	<option value="{$row[$key_id]|intval}">{$row[$key_value]|escape:'html':'UTF-8'}</option>
 {/foreach}

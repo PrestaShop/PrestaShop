@@ -26,48 +26,47 @@
 <div class="leadin">{block name="leadin"}{/block}</div>
 {if $module_confirmation}
 <div class="module_confirmation conf confirm">
-	{l s='Your .CSV file has been sucessfully imported into your shop.'}
+	{l s='Your .CSV file has been sucessfully imported into your shop. Don\'t forget to Re-build the products search index.'}
 </div>
 {/if}
-<div style="display: none">
-	<div id="upload_file_import">
-		<div class="alert alert-info">{l s='Only UTF-8 and ISO-8859-1 encoding are allowed'}</div>
-		<form action="{$current}&token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
-			<div class="panel">
-				<div class="form-group">
-					<label class="control-label col-lg-3">{l s='Select your CSV file'}</label>
-					<div class="col-lg-9">
-						<div class="row">
-							<div class="col-lg-7">
-								<input id="file" type="file" name="file" class="hide" />
-								<div class="dummyfile input-group">
-									<span class="input-group-addon"><i class="icon-file"></i></span>
-									<input id="file-name" type="text" class="disabled" name="filename" readonly />
-									<span class="input-group-btn">
-										<button id="file-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
-											<i class="icon-folder-open"></i> {l s='Choose a file'}
-										</button>
-									</span>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-lg-7">
-								<p class="help-block">
-									{l s='You can also upload your file via FTP to the following directory:'} {$path_import}.
-								</p>
+<div id="upload_file_import" style="display: none">
+	<div class="alert alert-info">{l s='Only UTF-8 and ISO-8859-1 encoding are allowed'}</div>
+	<form action="{$current}&token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
+		<div class="panel">
+			<div class="clearfix">&nbsp;</div>
+			<div class="form-group">
+				<label class="control-label col-lg-3">{l s='Select your CSV file'}</label>
+				<div class="col-lg-9">
+					<div class="row">
+						<div class="col-lg-7">
+							<input id="file" type="file" name="file" class="hide" />
+							<div class="dummyfile input-group">
+								<span class="input-group-addon"><i class="icon-file"></i></span>
+								<input id="file-name" type="text" class="disabled" name="filename" readonly />
+								<span class="input-group-btn">
+									<button id="file-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
+										<i class="icon-folder-open"></i> {l s='Choose a file'}
+									</button>
+								</span>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-lg-9 col-lg-offset-3">
-						<input type="submit" name="submitFileUpload" value="{l s='Upload'}" class="btn btn-default" />
+					<div class="row">
+						<div class="col-lg-7">
+							<p class="help-block">
+								{l s='You can also upload your file via FTP to the following directory:'} {$path_import}.
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>
-		</form>
-	</div>
+			<div class="form-group">
+				<div class="col-lg-9 col-lg-offset-3">
+					<button type="submit" name="submitFileUpload" class="btn btn-default"><i class="icon-upload"></i> {l s='Upload'}</button>
+				</div>
+			</div>
+		</div>
+	</form>
 </div>
 
 {* Import fieldset *}
@@ -90,9 +89,10 @@
 				{if count($files_to_import)}
 					<select name="csv">
 						{foreach $files_to_import AS $filename}
-							<option value="{$filename}"{if $csv_selected == $filename} selected="selected"{/if}>{$filename|escape:'htmlall':'UTF-8'}</option>
+							<option value="{$filename}"{if $csv_selected == $filename} selected="selected"{/if}>{$filename|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>
+				<div class="clearfix">&nbsp;</div>
 				{/if}
 
 				<a href="#upload_file_import" id="upload_file_import_link" class="btn btn-default">
@@ -118,6 +118,7 @@
 					<a class="list-group-item" href="../docs/csv_import/addresses_import.csv" target="_blank">{l s='Sample Addresses file'}</a>
 					<a class="list-group-item" href="../docs/csv_import/manufacturers_import.csv" target="_blank">{l s='Sample Manufacturers file'}</a>
 					<a class="list-group-item" href="../docs/csv_import/suppliers_import.csv" target="_blank">{l s='Sample Suppliers file'}</a>
+					<a class="list-group-item" href="../docs/csv_import/alias_import.csv" target="_blank">{l s='Sample Alias file'}</a>
 					{if $PS_ADVANCED_STOCK_MANAGEMENT}
 						<a class="list-group-item" href="../docs/csv_import/supply_orders_import.csv" target="_blank">{l s='Supply Orders sample file'}</a>
 						<a class="list-group-item" href="../docs/csv_import/supply_orders_details_import.csv" target="_blank">{l s='Supply Orders Details sample file'}</a>
@@ -131,10 +132,10 @@
 					</a>
 				</p>
 
-				<ul id="csv_files_import" style="display:none;">
+				<ul id="csv_files_import" style="display:none;" class="list-group">
 					{foreach $files_to_import AS $filename}
 					<li>
-						<a href="{$current}&token={$token}&csvfilename={$filename|@base64_encode}">{$filename}</a>
+						<a href="{$current}&token={$token}&csvfilename={$filename|@base64_encode}">{$filename}</a>&nbsp;&nbsp;
 						<a href="{$current}&token={$token}&csvfilename={$filename|@base64_encode}&delete=1" class="btn btn-default">
 							<i class="icon-trash"></i> {l s='Delete'}
 						</a>
@@ -182,14 +183,14 @@
 			<label class="control-label col-lg-3">{l s='Field separator'} </label>
 			<div class="col-lg-6 input-group">
 				<span class="input-group-addon">{l s='e.g. '}"1; Ipod; 129.90; 5"</span>
-				<input type="text" size="2" value="{if isset($separator_selected)}{$separator_selected|escape:'htmlall':'UTF-8'}{else};{/if}" name="separator"/>
+				<input type="text" size="2" value="{if isset($separator_selected)}{$separator_selected|escape:'html':'UTF-8'}{else};{/if}" name="separator"/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3">{l s='Multiple value separator'} </label>
 			<div class="col-lg-6 input-group">
 				<span class="input-group-addon">{l s='e.g. '}"Ipod; red.jpg, blue.jpg, green.jpg; 129.90"</span>
-				<input type="text" size="2" value="{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected|escape:'htmlall':'UTF-8'}{else},{/if}" name="multiple_value_separator"/>
+				<input type="text" size="2" value="{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected|escape:'html':'UTF-8'}{else},{/if}" name="multiple_value_separator"/>
 			</div>
 		</div>
 		<div class="form-group">
@@ -200,11 +201,11 @@
 				</p>
 			</div>
 		</div>
-		<div class="form-group">
-			<label for="match_ref" class="control-label col-lg-3" style="display: none">{l s='Use product reference as key?'}</label>
+		<div class="form-group" style="display: none">
+			<label for="match_ref" class="control-label col-lg-3">{l s='Use product reference as key?'}</label>
 			<div class="col-lg-6">
 				<p class="checkbox">
-					<input name="match_ref" id="match_ref" type="checkbox" style="display:none"/>
+					<input name="match_ref" id="match_ref" type="checkbox" />
 				</p>
 			</div>
 		</div>
@@ -227,22 +228,22 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="match_ref" class="control-label col-lg-3" style="display: none">{l s='Use product reference as key?'}</label>
-			<div class="col-lg-6">
-				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="btn btn-default" {if empty($files_to_import)}disabled{/if}/>
+			<div class="col-lg-6 col-lg-push-3">
+				<input type="submit" name="submitImportFile" id="submitImportFile" value="{l s='Next step'}" class="btn btn-default" {if empty($files_to_import)}disabled{/if}/>
 			</div>
+		</div>
 
-			{if empty($files_to_import)}
-			<div class="alert alert-info">{l s='You must upload a file in order to proceed to the next step'}</div>
-			{/if}
+		{if empty($files_to_import)}
+		<div class="alert alert-info">{l s='You must upload a file in order to proceed to the next step'}</div>
+		{/if}
 
-			<div class="alert alert-warning import_products_categories">
-				<p>{l s='Note that the category import does not support categories of the same name.'}</p>
-				<p>{l s='Note that you can have several products with the same reference.'}</p>
-			</div>
-			<div class="alert alert-warning import_supply_orders_details">
-				<p>{l s='Importing Supply Order Details will reset products ordered, if there are any.'}</p>
-			</div>
+		<div class="alert alert-warning import_products_categories">
+			<p>{l s='Note that the category import does not support categories of the same name.'}</p>
+			<p>{l s='Note that you can have several products with the same reference.'}</p>
+		</div>
+		<div class="alert alert-warning import_supply_orders_details">
+			<p>{l s='Importing Supply Order Details will reset products ordered, if there are any.'}</p>
+		</div>
 		{if !count($files_to_import)}
 			<div class="alert alert-warning">
 				<p>{l s='There is no CSV file available. Please upload one using the \'Upload\' button above.'}</p>
@@ -273,7 +274,11 @@
 		$("a#upload_file_import_link").fancybox({
 				'titleShow' : false,
 				'transitionIn' : 'elastic',
-				'transitionOut' : 'elastic'
+				'transitionOut' : 'elastic',
+				'autoDimensions' : false,
+				'autoSize'   : false,
+				'width' : 700,
+				'height' : 300
 		});
 
 		$('#preview_import').submit(function(e){
@@ -291,33 +296,38 @@
 		});
 
 		$("select#entity").change(function(){
-			if ($("#entity > option:selected").val() == 7 || $("#entity > option:selected").val() == 8)
+			if ($("#entity > option:selected").val() == 8 || $("#entity > option:selected").val() == 9)
 				$("label[for=truncate],#truncate").hide();
 			else
 				$("label[for=truncate],#truncate").show();
 	
-			if ($("#entity > option:selected").val() == 8)
-			{
+			if ($("#entity > option:selected").val() == 9)
 				$(".import_supply_orders_details").show();
-				$('input[name=multiple_value_separator]').val('|');
-			}
 			else
 			{
 				$(".import_supply_orders_details").hide();
 				$('input[name=multiple_value_separator]').val('{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected}{else},{/if}');
 			}
 			if ($("#entity > option:selected").val() == 1)
-				$("label[for=match_ref], #match_ref, label[for=regenerate], #regenerate").show();
+				$("#match_ref").closest('.form-group.').show();
 			else
-				$("label[for=match_ref], #match_ref, label[for=regenerate], #regenerate").hide();
+				$("#match_ref").closest('.form-group.').hide();
+
 			if ($("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 0)
-				$(".import_products_categories, label[for=regenerate], #regenerate").show();
+				$(".import_products_categories").show();
 			else
-				$(".import_products_categories, label[for=regenerate], #regenerate").hide();
-			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6)
-				$("label[for=forceIDs], #forceIDs").show();
+				$(".import_products_categories").hide();
+
+			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || 
+				$("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6)
+				$("#regenerate").closest('.form-group.').show();
 			else
-				$("label[for=forceIDs], #forceIDs").hide();
+				$("#regenerate").closest('.form-group.').hide();
+
+			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6 || $("#entity > option:selected").val() == 7)
+				$("#forceIDs").closest('.form-group.').show();
+			else
+				$("#forceIDs").closest('.form-group.').hide();
 			$("#entitie").html($("#entity > option:selected").text().toLowerCase());
 			$.ajax({
 				url: 'ajax.php',

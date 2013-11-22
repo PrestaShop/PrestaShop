@@ -27,14 +27,8 @@
 class ProductControllerCore extends FrontController
 {
 	public $php_self = 'product';
-	/**
-	 * @var Product
-	 */
-	protected $product;
 
-	/**
-	 * @var Category
-	 */
+	protected $product;
 	protected $category;
 
 	public function setMedia()
@@ -46,7 +40,6 @@ class ProductControllerCore extends FrontController
 		if ($this->context->getMobileDevice() == false)
 		{
 			$this->addCSS(_THEME_CSS_DIR_.'product.css');
-			$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'screen');
 			$this->addJqueryPlugin(array('fancybox', 'idTabs', 'scrollTo', 'serialScroll'));
 			$this->addJS(array(
 				_THEME_JS_DIR_.'tools.js',
@@ -552,7 +545,7 @@ class ProductControllerCore extends FrontController
 			$path = Tools::getPath((int)$this->context->shop->id_category, $this->product->name);
 		$this->context->smarty->assign('path', $path);
 		
-		$this->context->smarty->assign('categories', Category::getHomeCategories($this->context->language->id));
+		$this->context->smarty->assign('categories', Category::getHomeCategories($this->context->language->id, true, (int)$this->context->shop->id));
 		$this->context->smarty->assign(array('HOOK_PRODUCT_FOOTER' => Hook::exec('displayFooterProduct', array('product' => $this->product, 'category' => $this->category))));
 	}
 
@@ -668,5 +661,10 @@ class ProductControllerCore extends FrontController
 	public function getProduct()
 	{
 	    return $this->product;
+	}
+	
+	public function getCategory()
+	{
+	    return $this->category;
 	}
 }

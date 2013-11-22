@@ -34,11 +34,12 @@ class PSCleaner extends Module
 	{
 		$this->name = 'pscleaner';
 		$this->tab = 'administration';
-		$this->version = '0.9';
+		$this->version = '1.0';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('PrestaShop Cleaner');
 		$this->description = $this->l('Check and fix functional integrity constraints and remove default data');
@@ -117,7 +118,7 @@ class PSCleaner extends Module
 		// Remove inexisting or monolanguage configuration value from configuration_lang
 		$query = 'DELETE FROM `'._DB_PREFIX_.'configuration_lang`
 		WHERE `id_configuration` NOT IN (SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration`)
-		OR `id_configuration` IN (SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE name IS NOT NULL AND name != "")';
+		OR `id_configuration` IN (SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE name IS NULL OR name = "")';
 		if ($db->Execute($query))
 			if ($affected_rows = $db->Affected_Rows())
 				$logs[$query] = $affected_rows;
@@ -266,8 +267,6 @@ class PSCleaner extends Module
 			array('stock', 'id_warehouse', 'warehouse', 'id_warehouse'),
 			array('stock', 'id_product', 'product', 'id_product'),
 			array('stock_available', 'id_product', 'product', 'id_product'),
-			array('stock_available', 'id_shop', 'shop', 'id_shop'),
-			array('stock_available', 'id_shop_group', 'shop_group', 'id_shop_group'),
 			array('stock_mvt', 'id_stock', 'stock', 'id_stock'),
 			array('tab_module_preference', 'id_employee', 'employee', 'id_employee'),
 			array('tab_module_preference', 'id_tab', 'tab', 'id_tab'),
@@ -333,7 +332,13 @@ class PSCleaner extends Module
 				if ($affected_rows = $db->Affected_Rows())
 					$logs[$query] = $affected_rows;
 		}
-		
+
+		// stock_available
+		$query = 'DELETE FROM `'._DB_PREFIX_.'stock_available` WHERE `id_shop` NOT IN (SELECT `id_shop` FROM `'._DB_PREFIX_.'shop`) AND `id_shop_group` NOT IN (SELECT `id_shop_group` FROM `'._DB_PREFIX_.'shop_group`)';
+		if ($db->Execute($query))
+			if ($affected_rows = $db->Affected_Rows())
+				$logs[$query] = $affected_rows;
+
 		Category::regenerateEntireNtree();
 
 		// @Todo: Remove attachment files, images...

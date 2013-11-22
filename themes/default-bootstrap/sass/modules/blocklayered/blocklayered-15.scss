@@ -5,19 +5,19 @@
 	margin-bottom:16px;
 	
 	span.layered_subtitle {
-		color:#fff;
+		color:$light-text-color;
 		display:block;
 		padding-bottom:11px;
 	}
 	
 	li {
-		padding:1px 0;
+		padding:1px 15px 1px 0;
 		color:#9c9b9b;
 		cursor:pointer;
 		position:relative;
 		
 		&:hover, &:hover a {
-			color:#fff;
+			color:$light-text-color;
 		}
 		
 		a {
@@ -32,7 +32,7 @@
 			&:before {
 				content:"";
 				display:block;
-				font-family:"FontAwesome";
+				font-family:$font-icon;
 				width:12px;
 				height:12px;
 			
@@ -49,7 +49,7 @@
 		margin-bottom:8px;
 		font-weight:bold;
 		position:relative;
-		color:#333333;
+		color:$base-text-color;
 		
 		.layered_close {
 			position:absolute;
@@ -77,7 +77,7 @@
 					position:absolute;
 					top:0px;
 					left:0;
-					font-family:'FontAwesome';
+					font-family:$font-icon;
 					vertical-align:1px;
 				}
 				
@@ -104,6 +104,10 @@
 	
 	.layered_filter_ul {
 		padding:0 20px 5px;
+																		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
+																			padding-left:0;
+																			padding-right:0;
+																		}
 		
 		li {
 			padding-bottom:7px;
@@ -115,7 +119,7 @@
 				a {
 					font-weight:normal;
 					
-					&:hover {color:#333;}
+					&:hover {color:$base-text-color;}
 				}
 			} 
 		}
@@ -179,15 +183,15 @@
 					Range Slider Styles
 ***************************************************************************************/
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-	background:#fbfbfb;
-	border-color:#d6d4d4;
+	background:$base-box-bg;
+	border-color:$base-border-color;
 	@include border-radius(0px);
 	width:15px;
 	height:15px;
 	
 	&.ui-state-hover {
 		background:#555454;
-		border-color:#333;
+		border-color:$dark-border-color;
 	}	
 }
 .ui-slider .ui-slider-range {

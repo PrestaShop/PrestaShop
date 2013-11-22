@@ -87,20 +87,20 @@
 			</h3>	
 			{if count($uname)}
 			<p>
-				<strong>{l s='Server information'}:</strong> {$uname|escape:'htmlall':'UTF-8'}
+				<strong>{l s='Server information'}:</strong> {$uname|escape:'html':'UTF-8'}
 			</p>
 			{/if}
 			<p>
-				<strong>{l s='Server software version'}:</strong> {$version.server|escape:'htmlall':'UTF-8'}
+				<strong>{l s='Server software version'}:</strong> {$version.server|escape:'html':'UTF-8'}
 			</p>
 			<p>
-				<strong>{l s='PHP version'}:</strong> {$version.php|escape:'htmlall':'UTF-8'}
+				<strong>{l s='PHP version'}:</strong> {$version.php|escape:'html':'UTF-8'}
 			</p>
 			<p>
-				<strong>{l s='Memory limit'}:</strong> {$version.memory_limit|escape:'htmlall':'UTF-8'}
+				<strong>{l s='Memory limit'}:</strong> {$version.memory_limit|escape:'html':'UTF-8'}
 			</p>
 			<p>
-				<strong>{l s='Max execution time'}:</strong> {$version.max_execution_time|escape:'htmlall':'UTF-8'}
+				<strong>{l s='Max execution time'}:</strong> {$version.max_execution_time|escape:'html':'UTF-8'}
 			</p>
 			{if $apache_instaweb}
 				<p>{l s='PageSpeed module for Apache installed (mod_instaweb)'}</p>
@@ -113,13 +113,13 @@
 				{l s='Database information'}
 			</h3>
 			<p>
-				<strong>{l s='MySQL version'}:</strong> {$database.version|escape:'htmlall':'UTF-8'}
+				<strong>{l s='MySQL version'}:</strong> {$database.version|escape:'html':'UTF-8'}
 			</p>
 			<p>
-				<strong>{l s='MySQL engine'}:</strong> {$database.engine|escape:'htmlall':'UTF-8'}
+				<strong>{l s='MySQL engine'}:</strong> {$database.engine|escape:'html':'UTF-8'}
 			</p>
 			<p>
-				<strong>{l s='Tables prefix'}:</strong> {$database.prefix|escape:'htmlall':'UTF-8'}
+				<strong>{l s='Tables prefix'}:</strong> {$database.prefix|escape:'html':'UTF-8'}
 			</p>
 		</div>
 	</div>
@@ -131,13 +131,13 @@
 				{l s='Store information'}
 			</h3>
 			<p>
-				<strong>{l s='PrestaShop version'}:</strong> {$shop.ps|escape:'htmlall':'UTF-8'}
+				<strong>{l s='PrestaShop version'}:</strong> {$shop.ps|escape:'html':'UTF-8'}
 			</p>
 			<p>
-				<strong>{l s='Shop URL'}:</strong> {$shop.url|escape:'htmlall':'UTF-8'}
+				<strong>{l s='Shop URL'}:</strong> {$shop.url|escape:'html':'UTF-8'}
 			</p>
 			<p>
-				<strong>{l s='Current theme in use'}:</strong> {$shop.theme|escape:'htmlall':'UTF-8'}
+				<strong>{l s='Current theme in use'}:</strong> {$shop.theme|escape:'html':'UTF-8'}
 			</p>
 		</div>
 
@@ -154,7 +154,7 @@
 		{else}
 			{l s='You are using your own SMTP parameters.'}</p>
 			<p>
-				<strong>{l s='SMTP server'}:</strong> {$smtp.server|escape:'htmlall':'UTF-8'}
+				<strong>{l s='SMTP server'}:</strong> {$smtp.server|escape:'html':'UTF-8'}
 			</p>
 			<p>
 				<strong>{l s='SMTP user'}:</strong>
@@ -173,10 +173,10 @@
 				{/if}
 			</p>
 			<p>
-				<strong>{l s='Encryption'}:</strong> {$smtp.encryption|escape:'htmlall':'UTF-8'}
+				<strong>{l s='Encryption'}:</strong> {$smtp.encryption|escape:'html':'UTF-8'}
 			</p>
 			<p>
-				<strong>{l s='Port'}:</strong> {$smtp.port|escape:'htmlall':'UTF-8'}
+				<strong>{l s='Port'}:</strong> {$smtp.port|escape:'html':'UTF-8'}
 			</p>
 		{/if}
 		</div>
@@ -187,7 +187,7 @@
 				{l s='Your information'}
 			</h3>
 			<p>
-				<strong>{l s='Your web browser'}:</strong> {$user_agent|escape:'htmlall':'UTF-8'}
+				<strong>{l s='Your web browser'}:</strong> {$user_agent|escape:'html':'UTF-8'}
 			</p>
 		</div>
 

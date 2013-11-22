@@ -364,15 +364,20 @@ class BlockCMSModel extends ObjectModel
 		return Db::getInstance()->executeS($sql);
 	}
 
-	public static function getCMSBlockPages($id_block)
+	public static function getCMSBlockPages($id_block, $id_shop = false)
 	{
+        $id_shop = ($id_shop !== false) ? $id_shop : Context::getContext()->shop->id;
+
 		$sql = 'SELECT cl.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
 			FROM `'._DB_PREFIX_.'cms_block_page` bcp
 			INNER JOIN `'._DB_PREFIX_.'cms_lang` cl
 			ON (bcp.`id_cms` = cl.`id_cms`)
 			INNER JOIN `'._DB_PREFIX_.'cms` c
 			ON (bcp.`id_cms` = c.`id_cms`)
+			INNER JOIN `'._DB_PREFIX_.'cms_shop` cs
+			ON (c.`id_cms` = cs.`id_cms`)
 			WHERE bcp.`id_cms_block` = '.(int)$id_block.'
+			AND cs.`id_shop` = '.(int)$id_shop.'
 			AND cl.`id_lang` = '.(int)Context::getContext()->language->id.'
 			AND bcp.`is_category` = 0
 			AND c.`active` = 1
@@ -534,8 +539,7 @@ class BlockCMSModel extends ObjectModel
 			{
 				$key = (int)$cmsCategory['id_cms_block'];
 				$content[$key]['display_store'] = $cmsCategory['display_store'];
-				$content[$key]['cms'] = BlockCMSModel::getCMSBlockPages($cmsCategory['id_cms_block']);
-
+				$content[$key]['cms'] = BlockCMSModel::getCMSBlockPages($cmsCategory['id_cms_block'], $id_shop);
 				$links = array();
 				if (count($content[$key]['cms']))
 				{

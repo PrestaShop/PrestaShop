@@ -191,7 +191,7 @@ abstract class ObjectModelCore
 		if ($id)
 		{
 			// Load object from database if object id is present
-			$cache_id = 'objectmodel_'.$this->def['classname'].'_'.(int)$id.'_'.(int)$id_shop.'_'.(int)$id_lang;
+			$cache_id = 'objectmodel_'.$this->def['classname'].'_'.(int)$id.'_'.(int)$this->id_shop.'_'.(int)$id_lang;
 			if (!Cache::isStored($cache_id))
 			{
 				$sql = new DbQuery();
@@ -1139,7 +1139,7 @@ abstract class ObjectModelCore
 			{
 				$vars = get_class_vars($class_name);
 				foreach ($vars['shopIDs'] as $id_shop)
-					$or[] = ' main.id_shop = '.(int)$id_shop.' ';
+					$or[] = '(main.id_shop = '.(int)$id_shop.(isset($this->def['fields']['id_shop_group']) ? ' OR (id_shop = 0 AND id_shop_group='.(int)Shop::getGroupFromShop((int)$id_shop).')' : '').')';
 				
 				$prepend = '';
 				if (count($or))
@@ -1234,11 +1234,16 @@ abstract class ObjectModelCore
 		if ($id_shop === null)
 			$id_shop = Context::getContext()->shop->id;
 
-		$sql = 'SELECT id_shop
-				FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_shop`
-				WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
-					AND id_shop = '.(int)$id_shop;
-		return (bool)Db::getInstance()->getValue($sql);
+		$cache_id = 'objectmodel_shop_'.$this->def['classname'].'_'.(int)$this->id.'-'.(int)$id_shop;
+		if (!Cache::isStored($cache_id))
+		{
+			$sql = 'SELECT id_shop
+					FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_shop`
+					WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
+						AND id_shop = '.(int)$id_shop;
+			Cache::store($cache_id, (bool)Db::getInstance()->getValue($sql));
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**

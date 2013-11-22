@@ -46,11 +46,12 @@ class MailAlerts extends Module
 	{
 		$this->name = 'mailalerts';
 		$this->tab = 'administration';
-		$this->version = '2.5';
+		$this->version = '2.8';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		if ($this->id)
 			$this->init();
@@ -194,6 +195,21 @@ class MailAlerts extends Module
 		$this->init();
 	}
 
+	public function getAllMessages($id)
+	{
+		$messages = Db::getInstance()->executeS('
+			SELECT `message`
+			FROM `'._DB_PREFIX_.'message`
+			WHERE `id_order` = '.(int)$id.'
+			ORDER BY `id_message` ASC
+		');
+		$result = array();
+		foreach ($messages as $message) {
+			$result[] = $message['message'];
+		}
+		return implode('<br/>', $result);
+	}
+
 	public function hookActionValidateOrder($params)
 	{
 		if (!$this->_merchant_order || empty($this->_merchant_mails))
@@ -209,9 +225,9 @@ class MailAlerts extends Module
 		$configuration = Configuration::getMultiple(array('PS_SHOP_EMAIL', 'PS_MAIL_METHOD', 'PS_MAIL_SERVER', 'PS_MAIL_USER', 'PS_MAIL_PASSWD', 'PS_SHOP_NAME', 'PS_MAIL_COLOR'), $id_lang, null, $id_shop);
 		$delivery = new Address((int)$order->id_address_delivery);
 		$invoice = new Address((int)$order->id_address_invoice);
-		$order_date_text = Tools::displayDate($order->date_add, (int)$id_lang);
+		$order_date_text = Tools::displayDate($order->date_add);
 		$carrier = new Carrier((int)$order->id_carrier);
-		$message = $order->getFirstMessage();
+		$message = $this->getAllMessages($order->id);
 
 		if (!$message || empty($message))
 			$message = $this->l('No message');
@@ -240,7 +256,7 @@ class MailAlerts extends Module
 					$customization_text .= '---<br />';
 				}
 
-				$customization_text = rtrim($customization_text, '---<br />');
+				$customization_text = Tools::rtrimString($customization_text, '---<br />');
 			}
 
 			$items_table .=
@@ -305,7 +321,7 @@ class MailAlerts extends Module
 			'{invoice_state}' => $invoice->id_state ? $invoice_state->name : '',
 			'{invoice_phone}' => $invoice->phone ? $invoice->phone : $invoice->phone_mobile,
 			'{invoice_other}' => $invoice->other,
-			'{order_name}' => sprintf('%06d', $order->id),
+			'{order_name}' => $order->reference,
 			'{shop_name}' => $configuration['PS_SHOP_NAME'],
 			'{date}' => $order_date_text,
 			'{carrier}' => (($carrier->name == '0') ? $configuration['PS_SHOP_NAME'] : $carrier->name),
@@ -315,6 +331,7 @@ class MailAlerts extends Module
 			'{total_products}' => Tools::displayPrice($order->getTotalProductsWithTaxes(), $currency),
 			'{total_discounts}' => Tools::displayPrice($order->total_discounts, $currency),
 			'{total_shipping}' => Tools::displayPrice($order->total_shipping, $currency),
+			'{total_tax_paid}' => Tools::displayPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $currency, false),
 			'{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $currency),
 			'{currency}' => $currency->sign,
 			'{message}' => $message
@@ -374,16 +391,20 @@ class MailAlerts extends Module
 	public function hookActionUpdateQuantity($params)
 	{
 		$id_product = (int)$params['id_product'];
+		$product = new Product($id_product);
+		$product_has_attributes = $product->hasAttributes();
 		$id_product_attribute = (int)$params['id_product_attribute'];
 		$quantity = (int)$params['quantity'];
 		$context = Context::getContext();
 		$id_shop = (int)$context->shop->id;
 		$id_lang = (int)$context->language->id;
 		$product = new Product($id_product, true, $id_lang, $id_shop, $context);
-		$configuration = Configuration::getMultiple(array('MA_LAST_QTIES', 'PS_STOCK_MANAGEMENT', 'PS_SHOP_EMAIL', 'PS_SHOP_NAME'), $id_lang, null, $id_shop);
+		$configuration = Configuration::getMultiple(array('MA_LAST_QTIES', 'PS_STOCK_MANAGEMENT', 'PS_SHOP_EMAIL', 'PS_SHOP_NAME'), null, null, $id_shop);
 		$ma_last_qties = (int)$configuration['MA_LAST_QTIES'];
-
-		if ($product->active == 1 && (int)$quantity <= $ma_last_qties && !(!$this->_merchant_oos || empty($this->_merchant_mails)) && $configuration['PS_STOCK_MANAGEMENT'])
+		
+		$check_oos = ($product_has_attributes && $id_product_attribute) || (!$product_has_attributes && !$id_product_attribute);
+		
+		if ($check_oos && $product->active == 1 && (int)$quantity <= $ma_last_qties && !(!$this->_merchant_oos || empty($this->_merchant_mails)) && $configuration['PS_STOCK_MANAGEMENT'])
 		{
 			$iso = Language::getIsoById($id_lang);
 			$product_name = Product::getProductName($id_product, $id_product_attribute, $id_lang);
@@ -558,6 +579,7 @@ class MailAlerts extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro compat 1.5
 						'label' => $this->l('Product availability:'),
 						'name' => 'MA_CUSTOMER_QTY',
 						'desc' => $this->l('Gives the customer the option of receiving a notification for an available product if this one is out of stock.'),
@@ -592,6 +614,7 @@ class MailAlerts extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro compat 1.5
 						'label' => $this->l('New order:'),
 						'name' => 'MA_MERCHANT_ORDER',
 						'desc' => $this->l('Receive a notification when an order is placed'),
@@ -610,6 +633,7 @@ class MailAlerts extends Module
 					),
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro compat 1.5
 						'label' => $this->l('Out of stock:'),
 						'name' => 'MA_MERCHANT_OOS',
 						'desc' => $this->l('Receive a notification if the available quantity of a product is below the following threshold'),
@@ -635,6 +659,7 @@ class MailAlerts extends Module
 					),
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro compat 1.5
 						'label' => $this->l('Coverage warning:'),
 						'name' => 'MA_MERCHANT_COVERAGE',
 						'desc' => $this->l('Receive a notification when an order is placed'),
@@ -662,8 +687,7 @@ class MailAlerts extends Module
 						'type' => 'textarea',
 						'label' => $this->l('E-mail addresses:'),
 						'name' => 'MA_MERCHANT_MAILS',
-						'desc' => $this->l('One e-mail address per line (e.g. bob@example.com)
-'),
+						'desc' => $this->l('One e-mail address per line (e.g. bob@example.com)'),
 					),
 				),
 			'submit' => array(
@@ -681,6 +705,7 @@ class MailAlerts extends Module
 		$helper->table =  $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 		$helper->default_form_language = $lang->id;
+		$helper->module = $this;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
 		$helper->identifier = $this->identifier;
 		$helper->submit_action = 'submitMailAlert';

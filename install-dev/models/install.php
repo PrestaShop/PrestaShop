@@ -509,14 +509,17 @@ class InstallModelInstall extends InstallAbstractModel
 		{
 			// @todo THIS CODE NEED TO BE REMOVED WHEN MODULES API IS COMMITED
 			$modules = array(
+				'blockbanner',
 				'bankwire',
 				'blockadvertising',
 				'blockbestsellers',
 				'blockcart',
 				'blocksocial',
 				'blockcategories',
+				'blockfacebook',
 				'blocklayered',
 				'blockcms',
+				'blockcmsinfo',
 				'blockcontact',
 				'blockcontactinfos',
 				'blockmanufacturer',
@@ -540,8 +543,8 @@ class InstallModelInstall extends InstallAbstractModel
 				'dashproducts',
 				'graphnvd3',
 				'gridhtml',
-				'homefeatured',
 				'homeslider',
+				'homefeatured',
 				'pagesnotfound',
 				'sekeywords',
 				'statsbestcategories',
@@ -565,6 +568,7 @@ class InstallModelInstall extends InstallAbstractModel
 				'statssearch',
 				'statsstock',
 				'statsvisits',
+				'themeconfigurator',
 			);
 		}
 		return $modules;
@@ -646,8 +650,8 @@ class InstallModelInstall extends InstallAbstractModel
 	 */
 	public function installFixtures($entity = null, array $data = array())
 	{
-		$fixtures_path = _PS_INSTALL_FIXTURES_PATH_.'apple/';
-		$fixtures_name = 'apple';
+		$fixtures_path = _PS_INSTALL_FIXTURES_PATH_.'fashion/';
+		$fixtures_name = 'fashion';
 		$zip_file = _PS_ROOT_DIR_.'/download/fixtures.zip';
 		$temp_dir = _PS_ROOT_DIR_.'/download/fixtures/';
 

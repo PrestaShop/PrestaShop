@@ -30,18 +30,18 @@
 	{if $group.attributes|@count}
 	<div class="attributes_group">
 		{capture assign='groupName'}group_{$id_attribute_group|intval}{/capture}
-		<label class="attribute_label" for="{$groupName}">{$group.name|escape:'htmlall':'UTF-8'} :</label>
+		<label class="attribute_label" for="{$groupName}">{$group.name|escape:'html':'UTF-8'} :</label>
 		{if ($group.group_type == 'select' || $group.group_type == 'color')}
 			<select name="{$groupName}" id="{$groupName}" class="attribute_select{if ($group.group_type == 'color')} select_color{/if}">
 				{foreach from=$group.attributes key=id_attribute item=group_attribute}
-					<option value="{$id_attribute|intval}" title="{$group_attribute|escape:'htmlall':'UTF-8'}"{if (isset($smarty.get.$groupName) && $smarty.get.$groupName|intval == $id_attribute) || $group.default == $id_attribute} selected="selected"{/if}>{$group_attribute|escape:'htmlall':'UTF-8'}</option>
+					<option value="{$id_attribute|intval}" title="{$group_attribute|escape:'html':'UTF-8'}"{if (isset($smarty.get.$groupName) && $smarty.get.$groupName|intval == $id_attribute) || $group.default == $id_attribute} selected="selected"{/if}>{$group_attribute|escape:'html':'UTF-8'}</option>
 				{/foreach}
 			</select>
 		{elseif ($group.group_type == 'radio')}
 			<fieldset data-role="controlgroup">
 			{foreach from=$group.attributes key=id_attribute item=group_attribute}
 				<input type="radio" class="attribute_radio" name="{$groupName}" id="{$groupName}_{$id_attribute}" value="{$id_attribute}" {if ($group.default == $id_attribute)} checked="checked"{/if}>
-				<label for="{$groupName}_{$id_attribute}">{$group_attribute|escape:'htmlall':'UTF-8'}</label>
+				<label for="{$groupName}_{$id_attribute}">{$group_attribute|escape:'html':'UTF-8'}</label>
 			{/foreach}
 			</fieldset>
 		{/if}

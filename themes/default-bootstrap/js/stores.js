@@ -80,8 +80,9 @@ function clearLocations(n)
 			option.innerHTML = '1'+' '+translation_2;
 		else
 			option.innerHTML = n+' '+translation_3;
-	}
+	} 
 	locationSelect.appendChild(option);
+	$("select#locationSelect").uniform();
 	$('#stores-table tr.node').remove();
 }
 
@@ -95,6 +96,7 @@ function searchLocationsNear(center)
 		var bounds = new google.maps.LatLngBounds();
 
 		clearLocations(markerNodes.length);
+		$('table#stores-table').find('tbody tr').remove();
 		for (var i = 0; i < markerNodes.length; i++)
 		{
 			var name = markerNodes[i].getAttribute('name');
@@ -112,7 +114,6 @@ function searchLocationsNear(center)
 			createOption(name, distance, i);
 			createMarker(latlng, name, address, other, id_store, has_store_picture);
 			bounds.extend(latlng);
-
 			$('table#stores-table').find('tbody').append('<tr ><td class="num">'+parseInt(i + 1)+'</td><td class="name">'+(has_store_picture == 1 ? '<img src="'+img_store_dir+parseInt(id_store)+'-stores_default.jpg" alt="" />' : '')+'<span>'+name+'</span></td><td class="address">'+address+(phone !== '' ? ''+translation_4+' '+phone : '')+'</td><td class="distance">'+distance+' '+distance_unit+'</td></tr>');
 			$('#stores-table').show();
 		}

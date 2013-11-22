@@ -49,7 +49,7 @@ class AdminDashboardControllerCore extends AdminController
 			_PS_JS_DIR_.'/admin-dashboard.js',
 		));
 		$this->addCSS(array(
-			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/nv.d3.css',
+			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/nv.d3.css',
 		));
 	}
 
@@ -78,7 +78,7 @@ class AdminDashboardControllerCore extends AdminController
 		{
 			$form['icon'] = 'tab-preferences';
 			$form['fields'] = array();
-			$form['submit'] = array('title' => $this->l('Save'), 'class' => 'button');
+			$form['submit'] = array('title' => $this->l('Save'), 'class' => 'btn btn-default');
 		}
 
 		foreach ($modules as $module)
@@ -86,7 +86,7 @@ class AdminDashboardControllerCore extends AdminController
 			{
 				$forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED'] = array(
 					'title' => $module->displayName,
-					'desc' => sprintf($this->l('Choose a fixed fee for each order placed in %s with %s.'), $currency->iso_code, $module->displayName),
+					'desc' => sprintf($this->l('Choose a fixed fee for each order placed in %1$s with %2$s.'), $currency->iso_code, $module->displayName),
 					'validation' => 'isPrice',
 					'cast' => 'floatval',
 					'type' => 'text',
@@ -95,7 +95,7 @@ class AdminDashboardControllerCore extends AdminController
 				);
 				$forms['payment']['fields']['CONF_'.strtoupper($module->name).'_VAR'] = array(
 					'title' => $module->displayName,
-					'desc' => sprintf($this->l('Choose a variable fee for each order placed in %s with %s. It will be applied on the total paid with taxes.'), $currency->iso_code, $module->displayName),
+					'desc' => sprintf($this->l('Choose a variable fee for each order placed in %1$s with %2$s. It will be applied on the total paid with taxes.'), $currency->iso_code, $module->displayName),
 					'validation' => 'isPercentage',
 					'cast' => 'floatval',
 					'type' => 'text',
@@ -303,12 +303,19 @@ class AdminDashboardControllerCore extends AdminController
 			'date_to' => $this->context->employee->stats_date_to,
 			'compare_from' => $this->context->employee->stats_compare_from,
 			'compare_to' => $this->context->employee->stats_compare_to,
-			'dashboard_use_push' => (int)Tools::getValue('dashboard_use_push')
+			'dashboard_use_push' => (int)Tools::getValue('dashboard_use_push'),
+			'extra' => (int)Tools::getValue('extra')
 		);
 		
 		die(Tools::jsonEncode(Hook::exec('dashboardData', $params, $id_module, true, true, (int)Tools::getValue('dashboard_use_push'))));
 	}
-	
+
+	public function ajaxProcessSetSimulationMode()
+	{
+		Configuration::updateValue('PS_DASHBOARD_SIMULATION', (int)Tools::getValue('PS_DASHBOARD_SIMULATION'));
+		die ('k'.Configuration::get('PS_DASHBOARD_SIMULATION').'k');
+	}
+
 	public function ajaxProcessGetBlogRss()
 	{
 		$return = array('has_errors' => false, 'rss' => array());
@@ -324,6 +331,7 @@ class AdminDashboardControllerCore extends AdminController
 			{
 				if ($articles_limit > 0 && Validate::isCleanHtml((string)$item->title) && Validate::isCleanHtml((string)$item->description))
 					$return['rss'][] = array(
+						'date' => Tools::displayDate(date('Y-m-d', strtotime((string)$item->pubDate))),
 						'title' => (string)$item->title,
 						'short_desc' => substr((string)$item->description, 0, 100).'...',
 						'link' => (string)$item->link,
@@ -338,36 +346,38 @@ class AdminDashboardControllerCore extends AdminController
 	
 	public function ajaxProcessSaveDashConfig()
 	{
-		$return = array('has_errors' => false);
+		$return = array('has_errors' => false, 'errors' => array());
 		$module = Tools::getValue('module');
 		$hook = Tools::getValue('hook');
 		$configs = Tools::getValue('configs');
-
+		
+		$params = array(
+			'date_from' => $this->context->employee->stats_date_from,
+			'date_to' => $this->context->employee->stats_date_to
+		);
+		
 		if (Validate::isModuleName($module) && $module_obj = Module::getInstanceByName($module))
-			if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'saveDashConfig'))
-				$return['has_errors'] = $module_obj->saveDashConfig($configs);
+		{
+			if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'validateDashConfig'))
+				$return['errors'] = $module_obj->validateDashConfig($configs);
+			if (!count($return['errors']))
+			{
+				if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'saveDashConfig'))
+					$return['has_errors'] = $module_obj->saveDashConfig($configs);
+			}
+			else
+				$return['has_errors'] = true;
+		}
 		else if (is_array($configs) && count($configs))
 				foreach ($configs as $name => $value)
 					if (Validate::isConfigName($name))
 						Configuration::updateValue($name, $value);
 		
 		if (Validate::isHookName($hook) && method_exists($module_obj, $hook))
-			$return['widget_html'] = $module_obj->$hook(array());
-		
+			$return['widget_html'] = $module_obj->$hook($params);
+
 		die(Tools::jsonEncode($return));
-	}
-	
-	public function ajaxProcessSavePreactivationRequest()
-	{
-		$isoUser = Context::getContext()->language->iso_code;
-		$isoCountry = Context::getContext()->country->iso_code;
-		$employee = new Employee((int)Context::getContext()->cookie->id_employee);
-		$firstname = $employee->firstname;
-		$lastname = $employee->lastname;
-		$email = $employee->email;
-		$return = @Tools::file_get_contents('http://api.prestashop.com/partner/premium/set_request.php?iso_country='.strtoupper($isoCountry).'&iso_lang='.strtolower($isoUser).'&host='.urlencode($_SERVER['HTTP_HOST']).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&partner='.htmlentities(Tools::getValue('module')).'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&email='.urlencode($email).'&firstname='.urlencode($firstname).'&lastname='.urlencode($lastname).'&type=home');
-		die($return);
-	}
+	}	
 }
 
 

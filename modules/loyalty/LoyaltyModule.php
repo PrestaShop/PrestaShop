@@ -88,7 +88,9 @@ class LoyaltyModule extends ObjectModel
 			$currentContext = Context::getContext();
 			$context = clone $currentContext;
 			$context->cart = $cart;
-			$context->customer = new Customer($context->cart->id_customer);
+			// if customer is logged we do not recreate it
+			if(!$context->customer->isLogged(true))
+				$context->customer = new Customer($context->cart->id_customer);
 			$context->language = new Language($context->cart->id_lang);
 			$context->shop = new Shop($context->cart->id_shop);
 			$context->currency = new Currency($context->cart->id_currency, null, $context->shop->id);
@@ -99,9 +101,9 @@ class LoyaltyModule extends ObjectModel
 			{
 				$cartProductsNew['id_product'] = (int)$newProduct->id;
 				if ($taxesEnabled == PS_TAX_EXC)
-					$cartProductsNew['price'] = number_format($newProduct->getPrice(false, (int)$newProduct->getDefaultIdProductAttribute()), 2, '.', '');
+					$cartProductsNew['price'] = number_format($newProduct->getPrice(false, (int)$newProduct->getIdProductAttributeMostExpensive()), 2, '.', '');
 				else
-					$cartProductsNew['price_wt'] = number_format($newProduct->getPrice(true, (int)$newProduct->getDefaultIdProductAttribute()), 2, '.', '');
+					$cartProductsNew['price_wt'] = number_format($newProduct->getPrice(true, (int)$newProduct->getIdProductAttributeMostExpensive()), 2, '.', '');
 				$cartProductsNew['cart_quantity'] = 1;
 				$cartProducts[] = $cartProductsNew;
 			}

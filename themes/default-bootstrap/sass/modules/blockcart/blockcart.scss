@@ -20,7 +20,7 @@
 			&:before {
 				display:inline-block;
 				content:"";
-				font-family:"FontAwesome";
+				font-family:$font-icon;
 				font-size:18px;
 				line-height:18px;
 			}
@@ -108,7 +108,15 @@
 			margin-right:10px;
 			
 			&#button_order_cart {
-				margin-right:0;	
+				margin-right:0;
+				background:#43b155;
+				border-color:#399b49 #369946 #208931 #369946;
+				
+				span {
+					border-color:#73ca77;	
+				}
+				
+				&:hover {background:#359144; color:$light-text-color;}
 			}
 		}
 	}
@@ -127,10 +135,18 @@
 		height: auto;
 		width: 270px;
 		background:#484848;
-		color:#fff;
+		color:$light-text-color;
+																		@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
+																			top:69px;
+																		}
+																		@media (max-width: $screen-xs - 1) { // max 479px 
+																			top:44px;
+																			left:50%;
+																			margin-left:270px/2*-1;
+																		}
 		
 		a {
-			color:#fff;
+			color:$light-text-color;
 			
 			&:hover {color:#9c9b9b;}
 		}
@@ -138,7 +154,7 @@
 		#cart_block_list  {
 			
 			.remove_link a, .ajax_cart_block_remove_link {
-				color:#fff;
+				color:$light-text-color;
 				outline:none;
 				text-decoration:none;
 				
@@ -147,7 +163,7 @@
 		}
 		
 		.price {
-			color:#fff;	
+			color:$light-text-color;	
 		}
 			
 		dt {
@@ -165,7 +181,7 @@
 			a {
 				color:#9c9b9b;
 				
-				&:hover {color:#fff;}
+				&:hover {color:$light-text-color;}
 			}
 		}
 		
@@ -175,7 +191,7 @@
 		}
 		
 		#cart-buttons {
-			background:url(../../../img/cart-shadow.png) repeat-x #333333;
+			background:url(../../../img/cart-shadow.png) repeat-x $dark-background;
 		}
 	}
 }
@@ -231,7 +247,7 @@
 	margin-left:-160px;
 }
 #layer_cart {
-	background-color:#fff;
+	background-color:$light-background;
 	position:absolute;
 	display:none;
 	z-index:99;
@@ -246,7 +262,7 @@
 		position:static;
 		
 		h2 {
-			font:400 23px/29px Arial, Helvetica, sans-serif;
+			font:400 23px/29px $font-famaly;
 			color:#46a74e;
 			margin-bottom:22px;
 			padding-right:100px;
@@ -315,8 +331,8 @@
 																				}
 		
 		h2 {
-			font:400 23px/29px Arial, Helvetica, sans-serif;
-			color:#333;
+			font:400 23px/29px $font-famaly;
+			color:$base-text-color;
 			border-bottom:1px solid $base-border-color;	
 			padding-bottom:13px;
 			margin-bottom:17px;
@@ -355,13 +371,13 @@
 		width:25px;
 		height:25px;
 		cursor:pointer;
-		color:#333;
+		color:$base-text-color;
 		z-index:2;
 		
 		&:before {
 			content:"";
 			display:block;
-			font-family:"FontAwesome";
+			font-family:$font-icon;
 			font-size:25px;
 			line-height:25px;
 		}
@@ -389,8 +405,8 @@
 		}
 		
 		h2 {
-			font:400 23px/26px Arial, Helvetica, sans-serif;
-			color:#333333;
+			font:400 23px/26px $font-famaly;
+			color:$base-text-color;
 			margin-bottom:25px;
 		}
 		
@@ -427,12 +443,12 @@
 			
 			a.bx-prev, a.bx-next {
 				display:block;
-				font-family:"FontAwesome";
+				font-family:$font-icon;
 				font-size:20px;
 				line-height:20px;
 				width:20px;
 				height:20px;
-				color:#333;
+				color:$base-text-color;
 				text-indent:-5000px;
 				position:absolute;
 				top:45%;

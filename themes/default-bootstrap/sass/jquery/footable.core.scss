@@ -9,7 +9,7 @@
         border-bottom:none;
 
         & > span.footable-toggle:before {
-			font-family:"FontAwesome";
+			font-family:$font-icon;
           	content: "";
         }
       }
@@ -25,7 +25,7 @@
 
       > td > span.footable-toggle {
         display: inline-block;
-        font-family: "FontAwesome";
+        font-family: $font-icon;
         speak: none;
         font-style: normal;
         font-weight: normal;
@@ -36,7 +36,7 @@
         font-size:14px;
 
         &:before {
-          font-family:"FontAwesome";
+          font-family:$font-icon;
           content: "";
         }
       }
@@ -78,4 +78,34 @@
 	.footable-row-detail-value {
 		display: table-cell;
 	}
+	.footable-sortable {
+		
+		.footable-sort-indicator {
+			
+			&:after {
+				float:right;
+				margin:0px 0px 0 0;
+				content:"";
+				font-family:$font-icon;
+				display:block;
+			}
+		}
+	}
+	.footable-sortable.footable-sorted {
+		
+		.footable-sort-indicator {
+			
+			&:after {
+				content:"";
+			}
+		}
+	}
+	.footable-sortable.footable-sorted-desc {
+		.footable-sort-indicator {
+			
+			&:after {
+				content:"";
+			}
+		}
+	}	
 }

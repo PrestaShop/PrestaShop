@@ -33,10 +33,11 @@ class ReferralProgram extends Module
 	{
 		$this->name = 'referralprogram';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.5.1';
+		$this->version = '1.5.2';
 		$this->author = 'PrestaShop';
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->confirmUninstall = $this->l('All sponsors and friends will be deleted. Are you sure you want to uninstall this module?');
 		$this->displayName = $this->l('Customer referral program');
@@ -535,6 +536,7 @@ class ReferralProgram extends Module
 						'type' => 'radio',
 						'label' => $this->l('Voucher type :'),
 						'name' => 'discount_type',
+						'class' => 't',
 						'values' => array(
 							array(
 								'id' => 'discount_type1',

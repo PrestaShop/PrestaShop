@@ -28,15 +28,15 @@
 {include file="$tpl_dir./errors.tpl"}
 <div data-role="content" id="content">
 	{if isset($confirmation) && $confirmation == 1}
-	<p class="success">{l s='Your password has been successfully reset and a confirmation has been sent to your email address:'} {$email|escape:'htmlall':'UTF-8'}</p>
+	<p class="success">{l s='Your password has been successfully reset and a confirmation has been sent to your email address:'} {$email|escape:'html':'UTF-8'}</p>
 	{elseif isset($confirmation) && $confirmation == 2}
-	<p class="success">{l s='A confirmation email has been sent to your address:'} {$email|escape:'htmlall':'UTF-8'}</p>
+	<p class="success">{l s='A confirmation email has been sent to your address:'} {$email|escape:'html':'UTF-8'}</p>
 	{else}
 	<p>{l s='Please enter the email address you used to register. We will then send you a new password. '}</p>
-	<form action="{$request_uri|escape:'htmlall':'UTF-8'}" method="post" class="std" id="form_forgotpassword">
+	<form action="{$request_uri|escape:'html':'UTF-8'}" method="post" class="std" id="form_forgotpassword">
 		<fieldset>
 			<label for="email">{l s='Email'}</label>
-			<input type="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email|escape:'htmlall':'UTF-8'|stripslashes}{/if}" />
+			<input type="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email|escape:'html':'UTF-8'|stripslashes}{/if}" />
 			<input type="submit" class="button" data-theme="a" value="{l s='Retrieve Password'}" />
 		</fieldset>
 	</form>

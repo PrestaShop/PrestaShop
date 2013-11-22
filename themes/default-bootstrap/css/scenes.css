@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 /*TMP*/
 #scenes .cluetip span {
   background: transparent url(../img/icon/cible.gif) no-repeat scroll center center;
@@ -83,7 +84,7 @@
   -webkit-border-radius: 3px;
   border-radius: 3px;
   text-align: left;
-  background: #fff;
+  background: white;
   opacity: 0.95;
 }
 
@@ -137,7 +138,7 @@
   padding: 1px 5px;
   font-weight: bold;
   font-size: 10px;
-  color: #fff;
+  color: white;
   text-transform: uppercase;
   background: none repeat scroll 0 0 #9b0000;
 }

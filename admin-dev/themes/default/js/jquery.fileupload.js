@@ -562,6 +562,7 @@
             var options = $.extend({}, this.options, data);
             this._initFormSettings(options);
             this._initDataSettings(options);
+            options.url = options.url+'&rand=' + new Date().getTime();
             return options;
         },
 

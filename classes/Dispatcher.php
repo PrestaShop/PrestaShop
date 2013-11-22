@@ -205,7 +205,13 @@ class DispatcherCore
 		{
 			$this->front_controller = self::FC_ADMIN;
 			$this->controller_not_found = 'adminnotfound';
-			$this->default_controller = 'admindashboard';
+			if (isset(Context::getContext()->employee) && Validate::isLoadedObject(Context::getContext()->employee) && isset(Context::getContext()->employee->default_tab))
+			{
+				$tab = new Tab((int)Context::getContext()->employee->default_tab);
+				$this->default_controller = $tab->class_name;
+			}
+			else		
+				$this->default_controller = 'admindashboard';
 		}
 		elseif (Tools::getValue('fc') == 'module')
 		{
@@ -369,7 +375,7 @@ class DispatcherCore
 
 		// If there are several languages, get language from uri
 		if ($this->use_routes && Language::isMultiLanguageActivated())
-			if (preg_match('#^/([a-z]{2})/?#', $this->request_uri, $m))
+			if (preg_match('#^/([a-z]{2})(?:/.*)?$#', $this->request_uri, $m))
 			{
 				$_GET['isolang'] = $m[1];
 				$this->request_uri = substr($this->request_uri, 3);
