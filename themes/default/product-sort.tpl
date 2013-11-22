@@ -56,8 +56,8 @@ $(document).ready(function(){
 {/if}
 <form id="productsSortForm{if isset($paginationId)}_{$paginationId}{/if}" action="{$request|escape:'htmlall':'UTF-8'}" class="productsSortForm">
 	<p class="select">
-		<label for="selectPrductSort{if isset($paginationId)}_{$paginationId}{/if}">{l s='Sort by'}</label>
-		<select id="selectPrductSort{if isset($paginationId)}_{$paginationId}{/if}" class="selectProductSort">
+		<label for="selectProductSort{if isset($paginationId)}_{$paginationId}{/if}">{l s='Sort by'}</label>
+		<select id="selectProductSort{if isset($paginationId)}_{$paginationId}{/if}" class="selectProductSort">
 			<option value="{$orderbydefault|escape:'htmlall':'UTF-8'}:{$orderwaydefault|escape:'htmlall':'UTF-8'}" {if $orderby eq $orderbydefault}selected="selected"{/if}>{l s='--'}</option>
 			{if !$PS_CATALOG_MODE}
 				<option value="price:asc" {if $orderby eq 'price' AND $orderway eq 'asc'}selected="selected"{/if}>{l s='Price: Lowest first'}</option>
