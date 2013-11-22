@@ -244,3 +244,13 @@
 .hide-action:hover {
 	font-weight: bold;
 }
+#ul_layered_price_0, #ul_layered_weight_0 {
+	.col-xs-6 {
+		padding-top:10px;
+																		@media (min-width: $screen-lg) { // min 1200px
+																				padding-top:0;
+																				padding-left:0;
+																				padding-right:0;
+																			}
+	}
+}

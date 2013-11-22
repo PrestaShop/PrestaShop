@@ -37,6 +37,8 @@
 			display:block;
 			font-family:$font-icon;
 			font-size:17px;
+			width:100%;
+			text-align:center;
 		}
 		
 		&:hover {color:#6f6f6f}
@@ -45,6 +47,7 @@
 	#search_query_top {
 		padding:0 13px;
 		height:45px;
+		line-height:45px;
 		width:271px;
 		background:$base-box-bg;
 		float: left;

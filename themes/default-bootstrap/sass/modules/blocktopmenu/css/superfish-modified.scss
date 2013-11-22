@@ -174,7 +174,7 @@ ul.sf-menu li li li.sfHover ul {
 		}	
 	}
 }
-.sf-menu > li > ul > li:not(#category-thumbnail) {
+.sf-menu > li > ul > li {
 	float:left;
 	width:20%;
 	padding-right:15px;
@@ -192,9 +192,11 @@ ul.sf-menu li li li.sfHover ul {
 																	}
 }
 .sf-menu > li > ul > li#category-thumbnail {
-	width:100%;
+	width:100% !important;
+	float:none;
 	clear:both;
 	overflow:hidden;
+	padding-right:0;
 	
 	> div {
 		float:left;
@@ -225,8 +227,8 @@ ul.sf-menu li li li.sfHover ul {
 																		display:			block;
 																		padding:			17px 20px;
 																		border-bottom:		3px solid #e9e9e9;
-																		background:		#f6f6f6;
-																		position:relative;
+																		background:		    #f6f6f6;
+																		position:           relative;
 																		
 																		&:hover {
 																			background:				$dark-background;
