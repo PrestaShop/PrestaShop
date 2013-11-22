@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="bootstrap.php" processIsolation="true">
+	<filter>
+  		<blacklist>
+    		<directory suffix=".php">vendor</directory>
+  		</blacklist>
+	</filter>
+    <testsuites>
+        <testsuite name="PrestaShop">
+            <directory>.</directory>
+            <exclude>vendor</exclude>
+            <exclude>src</exclude>
+        </testsuite>
+    </testsuites>
+</phpunit>
