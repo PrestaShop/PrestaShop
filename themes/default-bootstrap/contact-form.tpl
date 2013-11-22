@@ -139,29 +139,30 @@
 <div class="row contact-banners">
 	<div class="col-xs-12 col-sm-4">
     	<div class="box">
-        	<h3 class="page-subheading">Call us now toll free:</h3>
+        	<h3 class="page-subheading">{l s='Call us now toll free:'}</h3>
             <ul class="list-1">
-                <li><i class="icon-phone"></i>(800) 2345-6789</li>
-                <li><i class="icon-phone"></i>(800) 2345-6790</li>
+                <li><i class="icon-phone"></i>{l s='(800) 2345-6789'}</li>
+                <li><i class="icon-phone"></i>{l s='(800) 2345-6790'}</li>
             </ul>
-            <span>Hours: 9am-9pm PST Mon - Sun</span>
+            <span>{l s='Hours: 9am-9pm PST Mon - Sun'}</span>
         </div>
     </div>
     <div class="col-xs-12 col-sm-4">
     	<div class="box">
-        	<h3 class="page-subheading">Our company</h3>
+        	<h3 class="page-subheading">{l s='Our company'}</h3>
             <ul class="list-2">
-            	<li><i class="icon-ok"></i>Top quality products</li>
-                <li><i class="icon-ok"></i>Best customer service</li>
-                <li><i class="icon-ok"></i>30-days money back guarantee</li>
+            	<li><i class="icon-ok"></i>{l s='Top quality products'}</li>
+                <li><i class="icon-ok"></i>{l s='Best customer service'}</li>
+                <li><i class="icon-ok"></i>{l s='30-days money back guarantee'}</li>
             </ul>
         </div>
     </div>
     <div class="col-xs-12 col-sm-4">
     	<div class="box box-last">
-        	<h3 class="page-subheading">Free Shipping</h3>
-			<p><i class="icon-truck"></i><strong class="dark">Free Shipping on orders over $199</strong></p>
-            <span>This offer is valid on all our store items. </span>
+        	<h3 class="page-subheading">{l s='Free Shipping'}</h3>
+			<p><i class="icon-truck"></i><strong class="dark">{l s='Free Shipping on orders over $199'}</strong></p>
+            <span>{l s='This offer is valid on all our store items.'}</span>
         </div>
     </div>
 </div>
+
