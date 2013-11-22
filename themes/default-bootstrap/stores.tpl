@@ -42,7 +42,7 @@
 	{foreach $stores as $store}
 		<tr class="store-small">
         	
-			<td class="logo">{if $store.has_picture}<div class="store-image"><img src="{$img_store_dir}{$store.id_store}-stores_default.jpg" alt="" /></div>{/if}</td>
+			<td class="logo">{if $store.has_picture}<div class="store-image"><img src="{$img_store_dir}{$store.id_store}.jpg" alt="" /></div>{/if}</td>
 			<td class="name">{$store.name|escape:'html':'UTF-8'}</td>
             <td class="address">
 				{$store.address1|escape:'html':'UTF-8'}

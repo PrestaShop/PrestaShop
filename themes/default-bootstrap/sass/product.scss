@@ -64,30 +64,31 @@ img{
 		#view_full_size {
 			display:block;
 			cursor:pointer;
-			.span_link {
-			position:absolute;
-			bottom:20px;
-			left:50%;
-			margin-left:-68px;
-			display:block;
-			padding:10px 0;	
-			text-align:center;
-			line-height:22px;
-			color:#777676;
-			width:136px;	
-			text-align:center;
-			font-weight:bold;
-			background:rgba(255,255,255,0.5);
-			@include box-shadow(0 2px 8px rgba(0,0,0,0.16));
 			
-			&:after{
-				font-family:$font-icon;
-				color:#c0c0c0;
-				font-size:20px;
+			.span_link {
+				position:absolute;
+				bottom:20px;
+				left:50%;
+				margin-left:-68px;
+				display:block;
+				padding:10px 0;	
+				text-align:center;
 				line-height:22px;
-				content:"";
-				font-weight:normal;
-				margin:0 0 0 4px
+				color:#777676;
+				width:136px;	
+				text-align:center;
+				font-weight:bold;
+				background:rgba(255,255,255,0.5);
+				@include box-shadow(0 2px 8px rgba(0,0,0,0.16));
+				
+				&:after{
+					font-family:$font-icon;
+					color:#c0c0c0;
+					font-size:20px;
+					line-height:22px;
+					content:"";
+					font-weight:normal;
+					margin:0 0 0 4px
 				}
 				
 			&:hover:after{color:$base-text-color}
@@ -95,7 +96,19 @@ img{
 	}
 }
 }
-
+.ie8 #pb-right-column {
+	
+	#image-block {
+		
+		#view_full_size {
+			
+			.span_link {
+				background:#fff;
+				border:1px solid $base-border-color;	
+			}
+		}
+	}	
+}
 /* miniatures */
 #pb-right-column #views_block {	
 	margin-top:10px
@@ -224,6 +237,7 @@ span.view_scroll_spacer {
 	}
 
 	#view_scroll_left {
+		margin-top:0;
 		&:before{
 			content:"";
 			padding-right:2px;
@@ -240,7 +254,12 @@ span.view_scroll_spacer {
 	}
 
 
-
+.view_scroll_spacer {
+	margin-top:38px;
+																		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { //min 768px max 991px
+																			margin-top:28px;
+																		}
+}
 /* link list */
 #usefull_link_block {
 	list-style-type:none;
@@ -511,31 +530,33 @@ padding:18px 19px 12px;
     border-bottom:1px solid #012740; 
     @include border-radius(5px);
 	position:relative;
-	display:block;	
+	display:block;
+	@include background-image(linear-gradient(#009ad0, #007ab7)); 
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#009ad0', endColorstr='#007ab7',GradientType=0 );
 
-	  &:before{
-		  font-family:$font-icon;
-		  position:absolute;
-		  top:0;
-		  left:0;
-		  bottom:0;	  
-		  color:$light-text-color;
-		  font-size:25px;
-		  line-height:47px;
-		  text-shadow:0 1px #015883;
-		  content:"";
-		  z-index:2;
-		  width:51px;
-		  text-align:center;
-		  border:1px solid #06b2e6;
-		  @include border-radius(5px 0 0 5px);	 
+	&:before{
+		font-family:$font-icon;
+		position:absolute;
+		top:0;
+		left:0;
+		bottom:0;	  
+		color:$light-text-color;
+		font-size:25px;
+		line-height:47px;
+		text-shadow:0 1px #015883;
+		content:"";
+		z-index:2;
+		width:51px;
+		text-align:center;
+		border:1px solid #06b2e6;
+		@include border-radius(5px 0 0 5px);	 
 																		@media (max-width: $screen-sm-max) { //max 991px
 																			display:none	
 																		} 	
 	 
-     }
+    }
 	 
-    &:after{
+	&:after{
 		background:url(../img/border-1.gif) repeat-y 0 0;
 		position:absolute;
 		top:0;
@@ -544,16 +565,14 @@ padding:18px 19px 12px;
 		content:"";
 		width:1px;
 		z-index:2;
-
+		
 																		@media (max-width: $screen-sm-max) { // max 991px
 																			display:none	
 																		} 
 	
+	}
 }
-}
-.box-info-product .exclusive span{	
-	@include background-image(linear-gradient(#009ad0, #007ab7)); 
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#009ad0', endColorstr='#007ab7',GradientType=0 );
+.box-info-product .exclusive span{
 	@include border-radius(5px);
 	font-weight:bold;
 	font-size:20px; 
@@ -578,7 +597,7 @@ padding:18px 19px 12px;
 															
       
 }
-.box-info-product .exclusive:hover span{
+.box-info-product .exclusive:hover{
 	@include background-image(linear-gradient(#007ab7, #009ad0)); 
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#007ab7', endColorstr='#009ad0',GradientType=0 );
 	background-position:0 0
@@ -686,6 +705,7 @@ table.table-produst-discounts{
 		padding:0 6px;
 		float:left;
 		border:$main_border;
+		line-height:27px;
 	}
 	
 	.btn{
@@ -755,6 +775,11 @@ table.table-produst-discounts{
     padding:19px 19px 6px ;
     @include background-image(linear-gradient(#fff, #fbfbfb)); 
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fff', endColorstr='#fbfbfb',GradientType=0 );
+}
+.ie8 {
+	.box-security {
+		filter:none;
+	}	
 }
 /* prices */
 .content_prices {
