@@ -281,31 +281,11 @@ class CartCore extends ObjectModel
 		if (!Configuration::get('PS_TAX'))
 			return 0;
 
-		$products = $cart->getProducts();
-		$total_products_moy = 0;
-		$ratio_tax = 0;
+		$grand_total_wt = $cart->getOrderTotal(true);
+		$grand_total    = $cart->getOrderTotal(false);
 
-		if (!count($products))
-			return 0;
-
-		foreach ($products as $product) // products refer to the cart details
-		{
-			if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice')
-				$address_id = (int)$cart->id_address_invoice;
-			else
-				$address_id = (int)$product['id_address_delivery']; // Get delivery address of the product from the cart
-			if (!Address::addressExists($address_id))
-				$address_id = null;
-			
-			$total_products_moy += $product['total_wt'];
-			$ratio_tax += $product['total_wt'] * Tax::getProductTaxRate(
-				(int)$product['id_product'],
-				(int)$address_id
-			);
-		}
-
-		if ($total_products_moy > 0)
-			return $ratio_tax / $total_products_moy;
+		if ($grand_total > 0)
+			return (($grand_total_wt / $grand_total) * 100) - 100;
 
 		return 0;
 	}
