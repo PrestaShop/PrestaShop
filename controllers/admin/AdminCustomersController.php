@@ -55,7 +55,7 @@ class AdminCustomersControllerCore extends AdminController
 
 		$genders = array();
 		$genders_icon = array();
-		$genders_icon[] = array('src' => '../genders/Unknown.jpg', 'alt' => '');		
+		$genders_icon[] = array('src' => '../genders/Unknown.jpg', 'alt' => '');
 		foreach (Gender::getGenders() as $gender)
 		{
 			$gender_file = 'genders/'.$gender->id.'.jpg';
@@ -654,7 +654,7 @@ class AdminCustomersControllerCore extends AdminController
 			$connections[$i]['date_add'] = Tools::displayDate($connections[$i]['date_add'],null , true);
 			$connections[$i]['http_referer'] = $connections[$i]['http_referer'] ? preg_replace('/^www./', '', parse_url($connections[$i]['http_referer'], PHP_URL_HOST)) : $this->l('Direct link');
 		}
-		
+
 		$referrers = Referrer::getReferrers($customer->id);
 		$total_referrers = count($referrers);
 		for ($i = 0; $i < $total_referrers; $i++)
@@ -700,7 +700,7 @@ class AdminCustomersControllerCore extends AdminController
 			'addresses' => $customer->getAddresses($this->default_form_language),
 
 			// Discounts
-			'discounts' => CartRule::getCustomerCartRules($this->default_form_language, $customer->id, false, false),
+			'discounts' => CartRule::getCustomerCartRules($this->default_form_language, $customer->id, false, false, false, null, $this->context),
 
 			// Carts
 			'carts' => $carts,
@@ -724,7 +724,7 @@ class AdminCustomersControllerCore extends AdminController
 		$this->_setDeletedMode();
 		parent::processDelete();
 	}
-	
+
 	protected function _setDeletedMode()
 	{
 		if ($this->delete_mode == 'real')
@@ -737,7 +737,7 @@ class AdminCustomersControllerCore extends AdminController
 			return;
 		}
 	}
-		
+
 	protected function processBulkDelete()
 	{
 		$this->_setDeletedMode();
@@ -914,10 +914,10 @@ class AdminCustomersControllerCore extends AdminController
 
 		$this->content = Tools::jsonEncode($to_return);
 	}
-	
+
 	/**
 	 * Uodate the customer note
-	 * 
+	 *
 	 * @return void
 	 */
 	public function ajaxProcessUpdateCustomerNote()
