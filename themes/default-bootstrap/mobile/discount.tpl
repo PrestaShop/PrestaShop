@@ -50,7 +50,7 @@
 				<td class="discount_quantity">{$discountDetail.quantity_for_user}</td>
 				<td class="discount_value">
 					{if $discountDetail.id_discount_type == 1}
-						{$discountDetail.value|escape:'htmlall':'UTF-8'}%
+						{$discountDetail.value|escape:'html':'UTF-8'}%
 					{elseif $discountDetail.id_discount_type == 2}
 						{convertPrice price=$discountDetail.value}
 					{else}

@@ -110,15 +110,15 @@
 						{$tr.$key} {l s='%'}
 					{* If type is 'editable', an input is created *}
 					{elseif isset($params.type) && $params.type == 'editable' && isset($tr.id)}
-						<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'htmlall':'UTF-8'}" class="{$key}" />
+						<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'html':'UTF-8'}" class="{$key}" />
 					{elseif isset($params.callback)}
 						{$tr.$key}
 					{elseif $key == 'color'}
 						<div style="background-color: {$tr.$key};" class="attributes-color-container"></div>
 					{elseif isset($params.maxlength) && Tools::strlen($tr.$key) > $params.maxlength}
-						<span title="{$tr.$key|escape:'htmlall':'UTF-8'}">{$tr.$key|truncate:$params.maxlength:'...'|escape:'htmlall':'UTF-8'}</span>
+						<span title="{$tr.$key|escape:'html':'UTF-8'}">{$tr.$key|truncate:$params.maxlength:'...'|escape:'html':'UTF-8'}</span>
 					{else}
-						{$tr.$key|escape:'htmlall':'UTF-8'}
+						{$tr.$key|escape:'html':'UTF-8'}
 					{/if}
 				{else}
 					{block name="default_field"}--{/block}

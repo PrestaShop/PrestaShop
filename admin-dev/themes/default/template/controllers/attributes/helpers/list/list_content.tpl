@@ -89,7 +89,7 @@
 				{$tr.$key}
 			{* If type is 'editable', an input is created *}
 			{elseif isset($params.type) && $params.type == 'editable' && isset($tr.id)}
-				<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'htmlall':'UTF-8'}" class="{$key}" />
+				<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'html':'UTF-8'}" class="{$key}" />
 			{elseif isset($params.callback)}
 				{$tr.$key}
 			{elseif isset($tr.$key) && $key == 'color'}
@@ -99,7 +99,7 @@
 					<div style="float: left; width: 18px; height: 12px; border: 1px solid #996633; background-color: {$tr.$key}; margin-right: 4px;"></div>
 				{/if}
 			{elseif isset($tr.$key)}
-				{$tr.$key|escape:'htmlall':'UTF-8'}
+				{$tr.$key|escape:'html':'UTF-8'}
 			{else}
 				--
 			{/if}

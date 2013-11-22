@@ -52,13 +52,13 @@
     {if $nb_products > $products_per_page && $start!=$stop}
 		<form action="{if !is_array($requestNb)}{$requestNb}{else}{$requestNb.requestUrl}{/if}" method="get" class="showall">
 			<div>
-				{if isset($search_query) AND $search_query}<input type="hidden" name="search_query" value="{$search_query|escape:'htmlall':'UTF-8'}" />{/if}
-				{if isset($tag) AND $tag AND !is_array($tag)}<input type="hidden" name="tag" value="{$tag|escape:'htmlall':'UTF-8'}" />{/if}
+				{if isset($search_query) AND $search_query}<input type="hidden" name="search_query" value="{$search_query|escape:'html':'UTF-8'}" />{/if}
+				{if isset($tag) AND $tag AND !is_array($tag)}<input type="hidden" name="tag" value="{$tag|escape:'html':'UTF-8'}" />{/if}
                 <button type="submit" class="btn btn-default button exclusive-medium"><span>{l s='Show all'}</span></button>
 				{if is_array($requestNb)}
 					{foreach from=$requestNb item=requestValue key=requestKey}
 						{if $requestKey != 'requestUrl'}
-							<input type="hidden" name="{$requestKey|escape:'htmlall':'UTF-8'}" value="{$requestValue|escape:'htmlall':'UTF-8'}" />
+							<input type="hidden" name="{$requestKey|escape:'html':'UTF-8'}" value="{$requestValue|escape:'html':'UTF-8'}" />
 						{/if}
 					{/foreach}
 				{/if}
@@ -87,9 +87,9 @@
 		{/if}
 		{section name=pagination start=$start loop=$stop+1 step=1}
 			{if $p == $smarty.section.pagination.index}
-				<li class="active current"><span><span>{$p|escape:'htmlall':'UTF-8'}</span></span></li>
+				<li class="active current"><span><span>{$p|escape:'html':'UTF-8'}</span></span></li>
 			{else}
-				<li><a {$no_follow_text} href="{$link->goPage($requestPage, $smarty.section.pagination.index)}"><span>{$smarty.section.pagination.index|escape:'htmlall':'UTF-8'}</span></a></li>
+				<li><a {$no_follow_text} href="{$link->goPage($requestPage, $smarty.section.pagination.index)}"><span>{$smarty.section.pagination.index|escape:'html':'UTF-8'}</span></a></li>
 			{/if}
 		{/section}
 		{if $pages_nb>$stop+2}

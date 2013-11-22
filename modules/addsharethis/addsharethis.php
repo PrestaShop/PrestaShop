@@ -96,7 +96,7 @@ class AddShareThis extends Module
 				</div>
 				<div class="form-group">
 					<div class="col-lg-9 col-lg-push-3">
-						<p class="help-block">'.$this->l('Key in your account statistic http://sharethis.com').'</p>
+						<p class="help-block">'.$this->l('You will find this key in your account settings on http://sharethis.com.').'</p>
 					</div>
 				</div>
 				<div class="form-group">

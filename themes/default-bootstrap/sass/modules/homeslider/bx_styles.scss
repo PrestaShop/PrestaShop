@@ -187,7 +187,6 @@
 		}
 	}
 }
-
 .bx-wrapper .bx-controls-direction a.disabled {
 	display: none;
 }
@@ -258,4 +257,14 @@
 	font-size: .85em;
 	padding: 10px;
 }
+}
+.ie8 {
+	#homepage-slider{
+		
+		.bx-wrapper .bx-controls-direction a {
+			&:before {
+				background:$dark-background;
+			}
+		}
+	}
 }

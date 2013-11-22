@@ -38,7 +38,7 @@ countriesNeedZipCode = new Array();
 		{if isset($country.states) && $country.contains_states}
 			countries[{$country.id_country|intval}] = new Array();
 			{foreach from=$country.states item='state' name='states'}
-				countries[{$country.id_country|intval}].push({ldelim}'id' : '{$state.id_state}', 'name' : '{$state.name|escape:'htmlall':'UTF-8'}'{rdelim});
+				countries[{$country.id_country|intval}].push({ldelim}'id' : '{$state.id_state}', 'name' : '{$state.name|escape:'html':'UTF-8'}'{rdelim});
 			{/foreach}
 		{/if}
 		{if $country.need_identification_number}
@@ -50,7 +50,7 @@ countriesNeedZipCode = new Array();
 	{/foreach}
 {/if}
 $(function(){ldelim}
-	$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}{if isset($address)}{$address->id_state|escape:'htmlall':'UTF-8'}{/if}{/if}]').attr('selected', 'selected');
+	$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}{if isset($address)}{$address->id_state|escape:'html':'UTF-8'}{/if}{/if}]').attr('selected', 'selected');
 {rdelim});
 //]]>
 {literal}

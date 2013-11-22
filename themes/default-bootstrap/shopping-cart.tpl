@@ -60,10 +60,10 @@
 		<div class="cart_last_product_header">
 			<div class="left">{l s='Last product added'}</div>
 		</div>
-		<a  class="cart_last_product_img" href="{$link->getProductLink($lastProductAdded.id_product, $lastProductAdded.link_rewrite, $lastProductAdded.category, null, null, $lastProductAdded.id_shop)|escape:'htmlall':'UTF-8'}"><img src="{$link->getImageLink($lastProductAdded.link_rewrite, $lastProductAdded.id_image, 'small_default')|escape:'html'}" alt="{$lastProductAdded.name|escape:'htmlall':'UTF-8'}"/></a>
+		<a  class="cart_last_product_img" href="{$link->getProductLink($lastProductAdded.id_product, $lastProductAdded.link_rewrite, $lastProductAdded.category, null, null, $lastProductAdded.id_shop)|escape:'html':'UTF-8'}"><img src="{$link->getImageLink($lastProductAdded.link_rewrite, $lastProductAdded.id_image, 'small_default')|escape:'html'}" alt="{$lastProductAdded.name|escape:'html':'UTF-8'}"/></a>
 		<div class="cart_last_product_content">
-			<p class="product-name"><a href="{$link->getProductLink($lastProductAdded.id_product, $lastProductAdded.link_rewrite, $lastProductAdded.category, null, null, null, $lastProductAdded.id_product_attribute)|escape:'htmlall':'UTF-8'}">{$lastProductAdded.name|escape:'htmlall':'UTF-8'}</a></p>
-			{if isset($lastProductAdded.attributes) && $lastProductAdded.attributes}<small><a href="{$link->getProductLink($lastProductAdded.id_product, $lastProductAdded.link_rewrite, $lastProductAdded.category, null, null, null, $lastProductAdded.id_product_attribute)|escape:'htmlall':'UTF-8'}">{$lastProductAdded.attributes|escape:'htmlall':'UTF-8'}</a></small>{/if}
+			<p class="product-name"><a href="{$link->getProductLink($lastProductAdded.id_product, $lastProductAdded.link_rewrite, $lastProductAdded.category, null, null, null, $lastProductAdded.id_product_attribute)|escape:'html':'UTF-8'}">{$lastProductAdded.name|escape:'html':'UTF-8'}</a></p>
+			{if isset($lastProductAdded.attributes) && $lastProductAdded.attributes}<small><a href="{$link->getProductLink($lastProductAdded.id_product, $lastProductAdded.link_rewrite, $lastProductAdded.category, null, null, null, $lastProductAdded.id_product_attribute)|escape:'html':'UTF-8'}">{$lastProductAdded.attributes|escape:'html':'UTF-8'}</a></small>{/if}
 		</div>
 	</div>
 {/if}
@@ -92,7 +92,7 @@
                                 {if isset($errors_discount) && $errors_discount}
                                     <ul class="alert alert-danger">
                                     {foreach $errors_discount as $k=>$error}
-                                        <li>{$error|escape:'htmlall':'UTF-8'}</li>
+                                        <li>{$error|escape:'html':'UTF-8'}</li>
                                     {/foreach}
                                     </ul>
                                 {/if}
@@ -124,7 +124,7 @@
                                 {if isset($errors_discount) && $errors_discount}
                                     <ul class="alert alert-danger">
                                     {foreach $errors_discount as $k=>$error}
-                                        <li>{$error|escape:'htmlall':'UTF-8'}</li>
+                                        <li>{$error|escape:'html':'UTF-8'}</li>
                                     {/foreach}
                                     </ul>
                                 {/if}
@@ -157,7 +157,7 @@
                             {if isset($errors_discount) && $errors_discount}
                                 <ul class="alert alert-danger">
                                 {foreach $errors_discount as $k=>$error}
-                                    <li>{$error|escape:'htmlall':'UTF-8'}</li>
+                                    <li>{$error|escape:'html':'UTF-8'}</li>
                                 {/foreach}
                                 </ul>
                             {/if}
@@ -422,12 +422,12 @@
         <div class="col-xs-12 col-sm-6">
 			<ul id="delivery_address" class="address item box">
 			<li><h3 class="page-subheading">{l s='Delivery address'}&nbsp;<span class="address_alias">({$delivery->alias})</span></h3></li>
-			{if $delivery->company}<li class="address_company">{$delivery->company|escape:'htmlall':'UTF-8'}</li>{/if}
-			<li class="address_name">{$delivery->firstname|escape:'htmlall':'UTF-8'} {$delivery->lastname|escape:'htmlall':'UTF-8'}</li>
-			<li class="address_address1">{$delivery->address1|escape:'htmlall':'UTF-8'}</li>
-			{if $delivery->address2}<li class="address_address2">{$delivery->address2|escape:'htmlall':'UTF-8'}</li>{/if}
-			<li class="address_city">{$delivery->postcode|escape:'htmlall':'UTF-8'} {$delivery->city|escape:'htmlall':'UTF-8'}</li>
-			<li class="address_country">{$delivery->country|escape:'htmlall':'UTF-8'} {if $delivery_state}({$delivery_state|escape:'htmlall':'UTF-8'}){/if}</li>
+			{if $delivery->company}<li class="address_company">{$delivery->company|escape:'html':'UTF-8'}</li>{/if}
+			<li class="address_name">{$delivery->firstname|escape:'html':'UTF-8'} {$delivery->lastname|escape:'html':'UTF-8'}</li>
+			<li class="address_address1">{$delivery->address1|escape:'html':'UTF-8'}</li>
+			{if $delivery->address2}<li class="address_address2">{$delivery->address2|escape:'html':'UTF-8'}</li>{/if}
+			<li class="address_city">{$delivery->postcode|escape:'html':'UTF-8'} {$delivery->city|escape:'html':'UTF-8'}</li>
+			<li class="address_country">{$delivery->country|escape:'html':'UTF-8'} {if $delivery_state}({$delivery_state|escape:'html':'UTF-8'}){/if}</li>
 		</ul>
         </div>
 		{/if}
@@ -435,12 +435,12 @@
         <div class="col-xs-12 col-sm-6">
 			<ul id="invoice_address" class="address alternate_item box">
 			<li><h3 class="page-subheading">{l s='Invoice address'}&nbsp;<span class="address_alias">({$invoice->alias})</span></h3></li>
-			{if $invoice->company}<li class="address_company">{$invoice->company|escape:'htmlall':'UTF-8'}</li>{/if}
-			<li class="address_name">{$invoice->firstname|escape:'htmlall':'UTF-8'} {$invoice->lastname|escape:'htmlall':'UTF-8'}</li>
-			<li class="address_address1">{$invoice->address1|escape:'htmlall':'UTF-8'}</li>
-			{if $invoice->address2}<li class="address_address2">{$invoice->address2|escape:'htmlall':'UTF-8'}</li>{/if}
-			<li class="address_city">{$invoice->postcode|escape:'htmlall':'UTF-8'} {$invoice->city|escape:'htmlall':'UTF-8'}</li>
-			<li class="address_country">{$invoice->country|escape:'htmlall':'UTF-8'} {if $invoice_state}({$invoice_state|escape:'htmlall':'UTF-8'}){/if}</li>
+			{if $invoice->company}<li class="address_company">{$invoice->company|escape:'html':'UTF-8'}</li>{/if}
+			<li class="address_name">{$invoice->firstname|escape:'html':'UTF-8'} {$invoice->lastname|escape:'html':'UTF-8'}</li>
+			<li class="address_address1">{$invoice->address1|escape:'html':'UTF-8'}</li>
+			{if $invoice->address2}<li class="address_address2">{$invoice->address2|escape:'html':'UTF-8'}</li>{/if}
+			<li class="address_city">{$invoice->postcode|escape:'html':'UTF-8'} {$invoice->city|escape:'html':'UTF-8'}</li>
+			<li class="address_country">{$invoice->country|escape:'html':'UTF-8'} {if $invoice_state}({$invoice_state|escape:'html':'UTF-8'}){/if}</li>
 		</ul>
         </div>
 		{/if}
@@ -455,7 +455,7 @@
 					{foreach $addressKey as $key}
 						<span class="{if isset($addresses_style[$key])}{$addresses_style[$key]}{/if}">
 							{if isset($address.formated[$key])}
-								{$address.formated[$key]|escape:'htmlall':'UTF-8'}
+								{$address.formated[$key]|escape:'html':'UTF-8'}
 							{/if}
 						</span>
 					{/foreach}
@@ -475,7 +475,7 @@
 			<a href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')}{else}{$link->getPageLink('order', true, NULL, 'step=1')}{/if}&amp;multi-shipping=1" class="multishipping-button multishipping-checkout button btn btn-default button-medium" title="{l s='Proceed to checkout'}"><span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span></a>
 		{/if}
 	{/if}
-	<a href="{if (isset($smarty.server.HTTP_REFERER) && strstr($smarty.server.HTTP_REFERER, 'order.php')) || isset($smarty.server.HTTP_REFERER) && strstr($smarty.server.HTTP_REFERER, 'order-opc') || !isset($smarty.server.HTTP_REFERER)}{$link->getPageLink('index')}{else}{$smarty.server.HTTP_REFERER|escape:'htmlall':'UTF-8'|secureReferrer}{/if}" class="button-exclusive btn btn-default" title="{l s='Continue shopping'}"><i class="icon-chevron-left"></i>{l s='Continue shopping'}</a>
+	<a href="{if (isset($smarty.server.HTTP_REFERER) && strstr($smarty.server.HTTP_REFERER, 'order.php')) || isset($smarty.server.HTTP_REFERER) && strstr($smarty.server.HTTP_REFERER, 'order-opc') || !isset($smarty.server.HTTP_REFERER)}{$link->getPageLink('index')}{else}{$smarty.server.HTTP_REFERER|escape:'html':'UTF-8'|secureReferrer}{/if}" class="button-exclusive btn btn-default" title="{l s='Continue shopping'}"><i class="icon-chevron-left"></i>{l s='Continue shopping'}</a>
 </p>
 	{if !empty($HOOK_SHOPPING_CART_EXTRA)}
 		<div class="clear"></div>

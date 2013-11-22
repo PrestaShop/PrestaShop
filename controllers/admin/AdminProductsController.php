@@ -1294,8 +1294,6 @@ class AdminProductsControllerCore extends AdminController
 				'ui.core',
 				'ui.widget',
 				'ui.accordion',
-				'ui.slider',
-				'ui.datepicker'
 			));
 
 			$this->addjQueryPlugin(array(
@@ -1321,7 +1319,6 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.edit.js',
 				_PS_JS_DIR_.'admin-categories-tree.js',
 				_PS_JS_DIR_.'jquery/ui/jquery.ui.progressbar.min.js',
-				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js',
 				_PS_JS_DIR_.'vendor/spin.js',
 				_PS_JS_DIR_.'vendor/ladda.js'
 			));

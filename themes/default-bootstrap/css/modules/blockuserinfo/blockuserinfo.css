@@ -1,4 +1,3 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 /* block top user information */
 #header_right #header_user {
   clear: both;
@@ -22,7 +21,7 @@
 #header_right #header_user #shopping_cart a {
   padding: 7px 10px 14px 16px;
   background: #333333;
-  min-width: 270px;
+  width: 270px;
   display: block;
   font-weight: bold;
   color: #777777;
@@ -31,7 +30,7 @@
 }
 @media (min-width: 768px) and (max-width: 991px) {
   #header_right #header_user #shopping_cart a {
-    min-width: 190px;
+    width: 190px;
   }
 }
 @media (min-width: 768px) and (max-width: 991px) {

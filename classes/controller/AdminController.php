@@ -1966,12 +1966,18 @@ class AdminControllerCore extends Controller
 		$this->addJquery();
 		$this->addjQueryPlugin(array('cluetip', 'hoverIntent', 'scrollTo', 'alerts', 'chosen'));
 
+		$this->addJqueryUI(array(
+			'ui.slider',
+			'ui.datepicker'
+		));
+
 		$this->addJS(array(
 			_PS_JS_DIR_.'admin.js',
 			_PS_JS_DIR_.'toggle.js',
 			_PS_JS_DIR_.'tools.js',
 			_PS_JS_DIR_.'ajax.js',
 			_PS_JS_DIR_.'toolbar.js',
+			_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js',
 		));
 
 		//loads specific javascripts for the admin theme, bootstrap.js should be moved into /js root directory

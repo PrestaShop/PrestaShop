@@ -78,9 +78,9 @@
 					<select multiple name="attributes[]" id="attribute_group" style="height: 500px">
 						{foreach $attribute_groups as $k => $attribute_group}
 							{if isset($attribute_js[$attribute_group['id_attribute_group']])}
-								<optgroup name="{$attribute_group['id_attribute_group']}" id="{$attribute_group['id_attribute_group']}" label="{$attribute_group['name']|escape:'htmlall':'UTF-8'}">
+								<optgroup name="{$attribute_group['id_attribute_group']}" id="{$attribute_group['id_attribute_group']}" label="{$attribute_group['name']|escape:'html':'UTF-8'}">
 									{foreach $attribute_js[$attribute_group['id_attribute_group']] as $k => $v}
-										<option name="{$k}" id="attr_{$k}" value="{$v|escape:'htmlall':'UTF-8'}" title="{$v|escape:'htmlall':'UTF-8'}">{$v|escape:'htmlall':'UTF-8'}</option>
+										<option name="{$k}" id="attr_{$k}" value="{$v|escape:'html':'UTF-8'}" title="{$v|escape:'html':'UTF-8'}">{$v|escape:'html':'UTF-8'}</option>
 									{/foreach}
 								</optgroup>
 							{/if}
@@ -95,7 +95,7 @@
 			<div class="col-lg-8 col-lg-offset-1">
 				<div class="alert alert-info">{l s='The Combinations Generator is a tool that allows you to easily create a series of combinations by selecting the related attributes. For example, if you\'re selling t-shirts in three different sizes and two different colors, the generator will create six combinations for you.'}</div>
 
-				<div class="alert alert-info">{l s='You\'re currently generating combinations for the following product:'} <b>{$product_name|escape:'htmlall':'UTF-8'}</b></div>
+				<div class="alert alert-info">{l s='You\'re currently generating combinations for the following product:'} <b>{$product_name|escape:'html':'UTF-8'}</b></div>
 
 				<div class="alert alert-info"><strong>{l s='Step 1: On the left side, select the attributes you want to use (Hold down the "Ctrl" key on your keyboard and validate by clicking on "Add")'}</strong></div>
 
@@ -105,7 +105,7 @@
 						<table class="table" style="display: none;">
 							<thead>
 								<tr>
-									<th id="tab_h1" class="fixed-width-md"><span class="title_box">{$attribute_group['name']|escape:'htmlall':'UTF-8'}</span></th>
+									<th id="tab_h1" class="fixed-width-md"><span class="title_box">{$attribute_group['name']|escape:'html':'UTF-8'}</span></th>
 									<th id="tab_h2" colspan="2"><span class="title_box">{l s='Impact on the product price'} ({$currency_sign})</span></th>
 									<th><span class="title_box">{l s='Impact on the product weight'} ({$weight_unit})</span></th>
 								</tr>
@@ -134,7 +134,7 @@
 						</tr>
 						<tr>
 							<td>{l s='Default Reference:'}</td>
-							<td><input type="text" name="reference" value="{$product_reference|escape:'htmlall':'UTF-8'}" /></td>
+							<td><input type="text" name="reference" value="{$product_reference|escape:'html':'UTF-8'}" /></td>
 						</tr>
 					</tbody>
 				</table>

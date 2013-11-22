@@ -40,7 +40,7 @@
 {else}
 	<p class="contact-title"><i class="icon-comment-alt"></i>{l s='For questions about an order or for more information about our products'}.</p>
 	{include file="$tpl_dir./errors.tpl"}
-	<form action="{$request_uri|escape:'htmlall':'UTF-8'}" method="post" class="contact-form-box" enctype="multipart/form-data">
+	<form action="{$request_uri|escape:'html':'UTF-8'}" method="post" class="contact-form-box" enctype="multipart/form-data">
 		<fieldset>
         <h3 class="page-subheading">{l s='send a message'}</h3>
         <div class="clearfix">
@@ -51,7 +51,7 @@
                 {if isset($customerThread.id_contact)}
                     {foreach from=$contacts item=contact}
                         {if $contact.id_contact == $customerThread.id_contact}
-                            <input type="text" class="form-control" id="contact_name" name="contact_name" value="{$contact.name|escape:'htmlall':'UTF-8'}" readonly="readonly" />
+                            <input type="text" class="form-control" id="contact_name" name="contact_name" value="{$contact.name|escape:'html':'UTF-8'}" readonly="readonly" />
                             <input type="hidden" name="id_contact" value="{$contact.id_contact}" />
                         {/if}
                     {/foreach}
@@ -60,23 +60,23 @@
                     <select id="id_contact" class="form-control" name="id_contact" onchange="showElemFromSelect('id_contact', 'desc_contact')">
                         <option value="0">{l s='-- Choose --'}</option>
                     {foreach from=$contacts item=contact}
-                        <option value="{$contact.id_contact|intval}" {if isset($smarty.request.id_contact) && $smarty.request.id_contact == $contact.id_contact}selected="selected"{/if}>{$contact.name|escape:'htmlall':'UTF-8'}</option>
+                        <option value="{$contact.id_contact|intval}" {if isset($smarty.request.id_contact) && $smarty.request.id_contact == $contact.id_contact}selected="selected"{/if}>{$contact.name|escape:'html':'UTF-8'}</option>
                     {/foreach}
                     </select>
                 </div>
                 <p id="desc_contact0" class="desc_contact">&nbsp;</p>
                     {foreach from=$contacts item=contact}
                         <p id="desc_contact{$contact.id_contact|intval}" class="desc_contact" style="display:none;">
-                            {$contact.description|escape:'htmlall':'UTF-8'}
+                            {$contact.description|escape:'html':'UTF-8'}
                         </p>
                     {/foreach}
                 {/if}
                 <p class="form-group">
                     <label for="email">{l s='Email address'}</label>
                     {if isset($customerThread.email)}
-                        <input class="form-control grey" type="text" id="email" name="from" value="{$customerThread.email|escape:'htmlall':'UTF-8'}" readonly="readonly" />
+                        <input class="form-control grey" type="text" id="email" name="from" value="{$customerThread.email|escape:'html':'UTF-8'}" readonly="readonly" />
                     {else}
-                        <input class="form-control grey" type="text" id="email" name="from" value="{$email|escape:'htmlall':'UTF-8'}" />
+                        <input class="form-control grey" type="text" id="email" name="from" value="{$email|escape:'html':'UTF-8'}" />
                     {/if}
                 </p>
             {if !$PS_CATALOG_MODE}
@@ -87,7 +87,7 @@
                         <select name="id_order" class="form-control">
                             <option value="0">{l s='-- Choose --'}</option>
                             {foreach from=$orderList item=order}
-                                <option value="{$order.value|intval}" {if $order.selected|intval}selected="selected"{/if}>{$order.label|escape:'htmlall':'UTF-8'}</option>
+                                <option value="{$order.value|intval}" {if $order.selected|intval}selected="selected"{/if}>{$order.label|escape:'html':'UTF-8'}</option>
                             {/foreach}
                         </select>
                     {elseif !isset($customerThread.id_order) && !isset($isLogged)}
@@ -105,7 +105,7 @@
                         <select name="id_product" id="{$id_order}_order_products" class="product_select form-control" style="{if !$smarty.foreach.products.first} display:none; {/if}" {if !$smarty.foreach.products.first}disabled="disabled" {/if}>
                             <option value="0">{l s='-- Choose --'}</option>
                             {foreach from=$products item=product}
-                                <option value="{$product.value|intval}">{$product.label|escape:'htmlall':'UTF-8'}</option>
+                                <option value="{$product.value|intval}">{$product.label|escape:'html':'UTF-8'}</option>
                             {/foreach}
                         </select>
                     {/foreach}
@@ -126,7 +126,7 @@
             <div class="col-xs-12 col-md-9">
                 <div class="form-group">
                     <label for="message">{l s='Message'}</label>
-                    <textarea class="form-control" id="message" name="message">{if isset($message)}{$message|escape:'htmlall':'UTF-8'|stripslashes}{/if}</textarea>
+                    <textarea class="form-control" id="message" name="message">{if isset($message)}{$message|escape:'html':'UTF-8'|stripslashes}{/if}</textarea>
                 </div>
             </div>
         </div>

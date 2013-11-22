@@ -42,13 +42,13 @@
 	{foreach $stores as $store}
 		<tr class="store-small">
         	
-			<td class="logo">{if $store.has_picture}<div class="store-image"><img src="{$img_store_dir}{$store.id_store}-stores_default.jpg" alt="" /></div>{/if}</td>
-			<td class="name">{$store.name|escape:'htmlall':'UTF-8'}</td>
+			<td class="logo">{if $store.has_picture}<div class="store-image"><img src="{$img_store_dir}{$store.id_store}.jpg" alt="" /></div>{/if}</td>
+			<td class="name">{$store.name|escape:'html':'UTF-8'}</td>
             <td class="address">
-				{$store.address1|escape:'htmlall':'UTF-8'}
-				{if $store.address2}{$store.address2|escape:'htmlall':'UTF-8'}{/if}
-				{$store.postcode} {$store.city|escape:'htmlall':'UTF-8'}{if $store.state}, {$store.state}{/if}
-				{$store.country|escape:'htmlall':'UTF-8'}
+				{$store.address1|escape:'html':'UTF-8'}
+				{if $store.address2}{$store.address2|escape:'html':'UTF-8'}{/if}
+				{$store.postcode} {$store.city|escape:'html':'UTF-8'}{if $store.state}, {$store.state}{/if}
+				{$store.country|escape:'html':'UTF-8'}
 				{if $store.phone}{l s='Phone:' js=0} {$store.phone}{/if}
 			</td>
             <td class="store-hours">
