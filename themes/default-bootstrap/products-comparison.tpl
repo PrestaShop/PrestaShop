@@ -61,7 +61,7 @@
                         {/if}
                     {/if}
                 </div>
-				<h5><a class="product-name" href="{$product->getLink()}" title="{$product->name|truncate:32:'...'|escape:'htmlall':'UTF-8'}">{$product->name|truncate:45:'...'|escape:'htmlall':'UTF-8'}</a></h5>
+				<h5><a class="product-name" href="{$product->getLink()}" title="{$product->name|truncate:32:'...'|escape:'html':'UTF-8'}">{$product->name|truncate:45:'...'|escape:'html':'UTF-8'}</a></h5>
                 <div class="prices-container">
 					{if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
 						<span class="price product-price">{convertPrice price=$product->getPrice($taxes_behavior)}</span>
@@ -83,7 +83,7 @@
 
 						{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
 							{math equation="pprice / punit_price"  pprice=$product->getPrice($taxes_behavior)  punit_price=$product->unit_price_ratio assign=unit_price}
-							<span class="comparison_unit_price">&nbsp;{convertPrice price=$unit_price} {l s='per %s' sprintf=$product->unity|escape:'htmlall':'UTF-8'}</span>
+							<span class="comparison_unit_price">&nbsp;{convertPrice price=$unit_price} {l s='per %s' sprintf=$product->unity|escape:'html':'UTF-8'}</span>
 						{else}
 						{/if}
 					{/if}
@@ -98,12 +98,12 @@
 						<span id="availability_value"{if $product->quantity <= 0} class="warning-inline"{/if}>
 							{if $product->quantity <= 0}
 								{if $allow_oosp}
-									{$product->available_later|escape:'htmlall':'UTF-8'}
+									{$product->available_later|escape:'html':'UTF-8'}
 								{else}
 									{l s='This product is no longer in stock.'}
 								{/if}
 							{else}
-								{$product->available_now|escape:'htmlall':'UTF-8'}
+								{$product->available_now|escape:'html':'UTF-8'}
 							{/if}
 						</span>
 					{/if}
@@ -132,7 +132,7 @@
 		<tr>
 			{cycle values='comparison_feature_odd,comparison_feature_even' assign='classname'}
 			<td class="{$classname} feature-name" >
-				<strong>{$feature.name|escape:'htmlall':'UTF-8'}</strong>
+				<strong>{$feature.name|escape:'html':'UTF-8'}</strong>
 			</td>
 
 			{foreach from=$products item=product name=for_products}
@@ -140,7 +140,7 @@
 				{assign var='feature_id' value=$feature.id_feature}
 				{if isset($product_features[$product_id])}
 					{assign var='tab' value=$product_features[$product_id]}
-					<td  width="{$width}%" class="{$classname} comparison_infos">{if (isset($tab[$feature_id]))}{$tab[$feature_id]|escape:'htmlall':'UTF-8'}{/if}</td>
+					<td  width="{$width}%" class="{$classname} comparison_infos">{if (isset($tab[$feature_id]))}{$tab[$feature_id]|escape:'html':'UTF-8'}{/if}</td>
 				{else}
 					<td  width="{$width}%" class="{$classname} comparison_infos"></td>
 				{/if}

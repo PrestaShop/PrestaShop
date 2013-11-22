@@ -194,6 +194,9 @@
 			background:url(../../../img/cart-shadow.png) repeat-x $dark-background;
 		}
 	}
+	.block_content {
+		margin-bottom:0;	
+	}
 }
 #cart_block #cart_block_summary, #cart_block .title_block  span, #header  #cart_block h4, #header  #cart_block .title_block, #header  #cart_block h4 {display:none}
 #cart_block #cart_block_shipping_cost,

@@ -67,7 +67,8 @@
         <link href="{$css_dir}/jquery/uniform.default.css" rel="stylesheet" type="text/css" media="all" />
         <link href="{$css_dir}/highdpi.css" rel="stylesheet" media="only screen and (-webkit-min-device-pixel-ratio: 2)" />
         <link href="{$css_dir}/jquery/footable.core.css" rel="stylesheet" type="text/css" media="all" />
-        <link href="{$css_dir}jquery/jquery.bxslider.css" rel="stylesheet" type="text/css" media="all" /> 
+        <link href="{$css_dir}jquery/jquery.bxslider.css" rel="stylesheet" type="text/css" media="all" />
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css' />
 {if isset($css_files)}
 	{foreach from=$css_files key=css_uri item=media}
 	<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
@@ -79,7 +80,7 @@
 	{/foreach}
 {/if}
 <script src="{$js_dir}/tools/bootstrap.min.js"></script>
-<!--[if IE 7]><html class="no-js lt-ie9 ie8" lang="{$lang_iso}">
+<!--[if IE 8]><html class="no-js lt-ie9 ie8" lang="{$lang_iso}">
 	 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
 <![endif]-->
@@ -93,7 +94,7 @@
 		{$HOOK_HEADER}
 	</head>
 	
-	<body {if isset($page_name)}id="{$page_name|escape:'htmlall':'UTF-8'}"{/if} class="{if $hide_left_column}hide-left-column {/if} {if $hide_right_column}hide-right-column {/if} {if $content_only} content_only {/if}lang_{$lang_iso}">
+	<body {if isset($page_name)}id="{$page_name|escape:'html':'UTF-8'}"{/if} class="{if $hide_left_column}hide-left-column {/if} {if $hide_right_column}hide-right-column {/if} {if $content_only} content_only {/if}lang_{$lang_iso}">
 	{if !$content_only}
 		{if isset($restricted_country_mode) && $restricted_country_mode}
 		<div id="restricted-country">
@@ -109,9 +110,9 @@
                         	 <!-- User info -->
                         	<div id="header_user_info">
                                 {if $logged}
-                                    <a href="{$link->getPageLink('index', true, NULL, "mylogout")|escape:'html'}" title="{l s='Log me out' mod='blockuserinfo'}" class="logout" rel="nofollow">{l s='Sign out' mod='blockuserinfo'}</a>
+                                    <a href="{$link->getPageLink('index', true, NULL, "mylogout")|escape:'html'}" title="{l s='Log me out'}" class="logout" rel="nofollow">{l s='Sign out'}</a>
                                 {else}
-                                    <a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Login to your customer account' mod='blockuserinfo'}" class="login" rel="nofollow">{l s='Sign in' mod='blockuserinfo'}</a>
+                                    <a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Login to your customer account'}" class="login" rel="nofollow">{l s='Sign in'}</a>
                                 {/if}
                             </div>
                             <!-- /User info -->
@@ -168,7 +169,7 @@
                                         <div class="current">
                                             <input type="hidden" name="id_currency" id="id_currency" value=""/>
                                             <input type="hidden" name="SubmitCurrency" value="" />
-                                            <span class="cur-label">{l s='Currency' mod='blockcurrencies'} :</span>
+                                            <span class="cur-label">{l s='Currency'} :</span>
                                             {foreach from=$currencies key=k item=f_currency}
                                                 {if $cookie->id_currency == $f_currency.id_currency}<strong>{$f_currency.iso_code}</strong>{/if}
                                             {/foreach}
@@ -186,14 +187,14 @@
 							<!-- /Currencies -->
                             <!--Contact link-->
                             <div id="contact-link">
-                                <a href="{$link->getPageLink('contact', true)|escape:'html'}" title="{l s='contact' mod='blockpermanentlinks'}">{l s='Contact Us' mod='blockpermanentlinks'}</a>
+                                <a href="{$link->getPageLink('contact', true)|escape:'html'}" title="{l s='contact'}">{l s='Contact Us'}</a>
                             </div>
                             <span class="shop-phone"><i class="icon-phone"></i>{l s='Call us now toll free:'} <strong>{$shop_phone}(800) 2345-6789</strong></span>
                         </div>
                     </div>
                 	<div class="container header-row-2">
-                        <a id="header_logo" href="{$base_dir}" title="{$shop_name|escape:'htmlall':'UTF-8'}">
-                            <img class="logo img-responsive" src="{$logo_url}" alt="{$shop_name|escape:'htmlall':'UTF-8'}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}" {/if}/>
+                        <a id="header_logo" href="{$base_dir}" title="{$shop_name|escape:'html':'UTF-8'}">
+                            <img class="logo img-responsive" src="{$logo_url}" alt="{$shop_name|escape:'html':'UTF-8'}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}" {/if}/>
                         </a>
                         <div id="header_right">
                             {$HOOK_TOP}

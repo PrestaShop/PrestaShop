@@ -73,16 +73,16 @@
             	<div class="left-side">
 					<!-- logo -->
 					<div class="logo">
-						{if $manufacturer.nb_products > 0}<a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'htmlall':'UTF-8'}" title="{$manufacturer.name|escape:'htmlall':'UTF-8'}" class="lnk_img">{/if}
-						<img src="{$img_manu_dir}{$manufacturer.image|escape:'htmlall':'UTF-8'}-medium_default.jpg" alt="" />
+						{if $manufacturer.nb_products > 0}<a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}" title="{$manufacturer.name|escape:'html':'UTF-8'}" class="lnk_img">{/if}
+						<img src="{$img_manu_dir}{$manufacturer.image|escape:'html':'UTF-8'}-medium_default.jpg" alt="" />
 						{if $manufacturer.nb_products > 0}</a>{/if}
 					</div>
 				</div>
 				<div class="middle-side">
                 	<!-- name -->
 					<h3>
-						{if $manufacturer.nb_products > 0}<a class="product-name" href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'htmlall':'UTF-8'}">{/if}
-							{$manufacturer.name|truncate:60:'...'|escape:'htmlall':'UTF-8'}
+						{if $manufacturer.nb_products > 0}<a class="product-name" href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}">{/if}
+							{$manufacturer.name|truncate:60:'...'|escape:'html':'UTF-8'}
 						{if $manufacturer.nb_products > 0}</a>{/if}
 					</h3>
 					<div class="description rte">
@@ -92,12 +92,12 @@
 				<div class="right-side">
                 	<div class="right-side-content">
                         <p class="product-counter">
-                            {if $manufacturer.nb_products > 0}<a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'htmlall':'UTF-8'}">{/if}
+                            {if $manufacturer.nb_products > 0}<a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}">{/if}
                             {if $manufacturer.nb_products == 1}{l s='%d product' sprintf=$manufacturer.nb_products|intval}{else}{l s='%d products' sprintf=$manufacturer.nb_products|intval}{/if}
                             {if $manufacturer.nb_products > 0}</a>{/if}
                         </p>
                     {if $manufacturer.nb_products > 0}
-                        <a class="btn btn-default button exclusive-medium" href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'htmlall':'UTF-8'}"><span>{l s='view products'} <i class="icon-chevron-right right"></i></span></a>
+                        <a class="btn btn-default button exclusive-medium" href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}"><span>{l s='view products'} <i class="icon-chevron-right right"></i></span></a>
                     {/if}
                     </div>
                 </div>

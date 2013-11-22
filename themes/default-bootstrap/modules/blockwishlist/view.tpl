@@ -55,16 +55,16 @@
                 	<div class="col-xs-6 col-sm-12">
                        <div class="product_image">
                             <a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='Product detail' mod='blockwishlist'}">
-                                <img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.cover, 'home_default')|escape:'html'}" alt="{$product.name|escape:'htmlall':'UTF-8'}" />
+                                <img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.cover, 'home_default')|escape:'html'}" alt="{$product.name|escape:'html':'UTF-8'}" />
                             </a>
                         </div>
                     </div>
                     <div class="col-xs-6 col-sm-12">
                    		<div class="product_infos">
                             <p id="s_title" class="product-name">
-                            	{$product.name|truncate:30:'...'|escape:'htmlall':'UTF-8'}
+                            	{$product.name|truncate:30:'...'|escape:'html':'UTF-8'}
                             	{if isset($product.attributes_small)}
-                                	<a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='Product detail' mod='blockwishlist'}"><small>{$product.attributes_small|escape:'htmlall':'UTF-8'}</small></a>
+                                	<a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='Product detail' mod='blockwishlist'}"><small>{$product.attributes_small|escape:'html':'UTF-8'}</small></a>
                             {/if}
                             </p>
                         <div class="wishlist_product_detail">
@@ -92,7 +92,7 @@
                                         </p>
                                     </form>
                                 {/if}
-                                <a href="javascript:;" class="button ajax_add_to_cart_button btn btn-default" onclick="WishlistBuyProduct('{$token|escape:'htmlall':'UTF-8'}', '{$product.id_product}', '{$product.id_product_attribute}', '{$product.id_product}_{$product.id_product_attribute}', this, {$ajax});" title="{l s='Add to cart' mod='homefeatured'}" rel="nofollow"><span>{l s='Add to cart' mod='blockwishlist'}</span></a>
+                                <a href="javascript:;" class="button ajax_add_to_cart_button btn btn-default" onclick="WishlistBuyProduct('{$token|escape:'html':'UTF-8'}', '{$product.id_product}', '{$product.id_product_attribute}', '{$product.id_product}_{$product.id_product_attribute}', this, {$ajax});" title="{l s='Add to cart' mod='homefeatured'}" rel="nofollow"><span>{l s='Add to cart' mod='blockwishlist'}</span></a>
                             {else}
                                 <span class="button ajax_add_to_cart_button btn btn-default disabled"><span>{l s='Add to cart' mod='blockwishlist'}</span></span>
                             {/if}

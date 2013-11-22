@@ -73,9 +73,9 @@
 				<!-- logo -->
 				<div class="logo">
 					{if $supplier.nb_products > 0}
-						<a href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'htmlall':'UTF-8'}" title="{$supplier.name|escape:'htmlall':'UTF-8'}">
+						<a href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html':'UTF-8'}" title="{$supplier.name|escape:'html':'UTF-8'}">
 					{/if}
-					<img src="{$img_sup_dir}{$supplier.image|escape:'htmlall':'UTF-8'}-medium_default.jpg" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
+					<img src="{$img_sup_dir}{$supplier.image|escape:'html':'UTF-8'}-medium_default.jpg" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
 					{if $supplier.nb_products > 0}
 						</a>
 					{/if}
@@ -85,9 +85,9 @@
 				<!-- name -->
 				<h3>
 					{if $supplier.nb_products > 0}
-						<a class="product-name" href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'htmlall':'UTF-8'}">
+						<a class="product-name" href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html':'UTF-8'}">
 					{/if}
-					{$supplier.name|truncate:60:'...'|escape:'htmlall':'UTF-8'}
+					{$supplier.name|truncate:60:'...'|escape:'html':'UTF-8'}
 					{if $supplier.nb_products > 0}
 						</a>
 					{/if}
@@ -100,7 +100,7 @@
             	<div class="right-side-content">
                     <p class="product-counter">
                         {if $supplier.nb_products > 0}
-                            <a href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'htmlall':'UTF-8'}">
+                            <a href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html':'UTF-8'}">
                         {/if}
                         {if $supplier.nb_products == 1}{l s='%d product' sprintf=$supplier.nb_products|intval}{else}{l s='%d products' sprintf=$supplier.nb_products|intval}{/if}
                     	{if $supplier.nb_products > 0}
@@ -108,7 +108,7 @@
                     	{/if}
                     </p>
                     {if $supplier.nb_products > 0}
-                        <a class="btn btn-default button exclusive-medium" href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'htmlall':'UTF-8'}"><span>{l s='View products'} <i class="icon-chevron-right right"></i></span></a>
+                        <a class="btn btn-default button exclusive-medium" href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html':'UTF-8'}"><span>{l s='View products'} <i class="icon-chevron-right right"></i></span></a>
                     {/if}
                 </div>
 			</div>

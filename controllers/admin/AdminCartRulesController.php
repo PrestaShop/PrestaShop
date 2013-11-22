@@ -595,7 +595,7 @@ class AdminCartRulesControllerCore extends AdminController
 	public function displayAjaxSearchCartRuleVouchers()
 	{
 		$found = false;
-		if ($vouchers = CartRule::getCartsRuleByCode(Tools::getValue('q'), (int)$this->context->language->id))
+		if ($vouchers = CartRule::getCartsRuleByCode(Tools::getValue('q'), (int)$this->context->language->id, true))
 			$found = true;
 		echo Tools::jsonEncode(array('found' => $found, 'vouchers' => $vouchers));
 	}

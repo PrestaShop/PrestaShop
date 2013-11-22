@@ -64,7 +64,7 @@
 		</span>
 		{/if}
 	</td>
-	{if $display_warehouse}<td align="center">{$product.warehouse_name|escape:'htmlall':'UTF-8'}</td>{/if}
+	{if $display_warehouse}<td align="center">{$product.warehouse_name|escape:'html':'UTF-8'}</td>{/if}
 	{if ($order->hasBeenPaid())}
 		<td class="productQuantity">
 			{$product['product_quantity_refunded']}

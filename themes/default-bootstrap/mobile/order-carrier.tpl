@@ -216,7 +216,7 @@
 				</p>
 				<p id="gift_div" class="textarea">
 					<label for="gift_message">{l s='If you\'d like, you can add a note to the gift:'}</label>
-					<textarea rows="5" cols="35" id="gift_message" name="gift_message">{$cart->gift_message|escape:'htmlall':'UTF-8'}</textarea>
+					<textarea rows="5" cols="35" id="gift_message" name="gift_message">{$cart->gift_message|escape:'html':'UTF-8'}</textarea>
 				</p>
 				{/if}
 			{/if}

@@ -20,8 +20,8 @@
 					{foreach from=$t.sub_tabs item=t2}
 						{if $t2.active}
 						<li {if $t2.current} class="active"{/if}>
-							<a href="{$t2.href|escape:'htmlall':'UTF-8'}">
-								{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}
+							<a href="{$t2.href|escape:'html':'UTF-8'}">
+								{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'html':'UTF-8'}{/if}
 							</a>
 						</li>
 						{/if}

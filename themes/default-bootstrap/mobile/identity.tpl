@@ -34,7 +34,7 @@
 {if isset($confirmation) && $confirmation}
 	<p class="success">
 		{l s='Your personal information has been successfully updated.'}
-		{if isset($pwd_changed)}<br />{l s='Your password has been sent to your email:'} {$email|escape:'htmlall':'UTF-8'}{/if}
+		{if isset($pwd_changed)}<br />{l s='Your password has been sent to your email:'} {$email|escape:'html':'UTF-8'}{/if}
 	</p>
 {else}
 	<h3>{l s='Please be sure to update your personal information if it has changed.'}</h3>
@@ -76,19 +76,19 @@
 			<select name="days" id="days">
 				<option value="">-</option>
 				{foreach from=$days item=v}
-					<option value="{$v|escape:'htmlall':'UTF-8'}" {if ($sl_day == $v)}selected="selected"{/if}>{$v|escape:'htmlall':'UTF-8'}&nbsp;&nbsp;</option>
+					<option value="{$v|escape:'html':'UTF-8'}" {if ($sl_day == $v)}selected="selected"{/if}>{$v|escape:'html':'UTF-8'}&nbsp;&nbsp;</option>
 				{/foreach}
 			</select>
 			<select id="months" name="months">
 				<option value="">-</option>
 				{foreach from=$months key=k item=v}
-					<option value="{$k|escape:'htmlall':'UTF-8'}" {if ($sl_month == $k)}selected="selected"{/if}>{l s=$v}&nbsp;</option>
+					<option value="{$k|escape:'html':'UTF-8'}" {if ($sl_month == $k)}selected="selected"{/if}>{l s=$v}&nbsp;</option>
 				{/foreach}
 			</select>
 			<select id="years" name="years">
 				<option value="">-</option>
 				{foreach from=$years item=v}
-					<option value="{$v|escape:'htmlall':'UTF-8'}" {if ($sl_year == $v)}selected="selected"{/if}>{$v|escape:'htmlall':'UTF-8'}&nbsp;&nbsp;</option>
+					<option value="{$v|escape:'html':'UTF-8'}" {if ($sl_year == $v)}selected="selected"{/if}>{$v|escape:'html':'UTF-8'}&nbsp;&nbsp;</option>
 				{/foreach}
 			</select>
 		</fieldset>

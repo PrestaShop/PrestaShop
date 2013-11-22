@@ -52,9 +52,9 @@
                             <div class="cat_desc">
                             <h1 class="category-name">
                                 {strip}
-                                    {$category->name|escape:'htmlall':'UTF-8'}
+                                    {$category->name|escape:'html':'UTF-8'}
                                     {if isset($categoryNameComplement)}
-                                        {$categoryNameComplement|escape:'htmlall':'UTF-8'}
+                                        {$categoryNameComplement|escape:'html':'UTF-8'}
                                     {/if}
                                 {/strip}
                             </h1>
@@ -72,11 +72,11 @@
                   {/if}
             </div>
 		{/if}
-		<h1 class="page-heading{if (isset($subcategories) && !$products) || (isset($subcategories) && $products)} product-listing{/if}">
+		<h1 class="page-heading{if (isset($subcategories) && !$products) || (isset($subcategories) && $products) || !isset($subcategories) && $products} product-listing{/if}">
 			{strip}
-				{$category->name|escape:'htmlall':'UTF-8'}
+				{$category->name|escape:'html':'UTF-8'}
 				{if isset($categoryNameComplement)}
-					{$categoryNameComplement|escape:'htmlall':'UTF-8'}
+					{$categoryNameComplement|escape:'html':'UTF-8'}
 				{/if}
 			{/strip}
             <span class="heading-counter">{include file="$tpl_dir./category-count.tpl"}</span>
@@ -91,7 +91,7 @@
 			{foreach from=$subcategories item=subcategory}
 				<li>
                 	<div class="subcategory-image">
-						<a href="{$link->getCategoryLink($subcategory.id_category, $subcategory.link_rewrite)|escape:'htmlall':'UTF-8'}" title="{$subcategory.name|escape:'htmlall':'UTF-8'}" class="img">
+						<a href="{$link->getCategoryLink($subcategory.id_category, $subcategory.link_rewrite)|escape:'html':'UTF-8'}" title="{$subcategory.name|escape:'html':'UTF-8'}" class="img">
 						{if $subcategory.id_image}
 							<img class="replace-2x" src="{$link->getCatImageLink($subcategory.link_rewrite, $subcategory.id_image, 'medium_default')|escape:'html'}" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
 						{else}
@@ -99,7 +99,7 @@
 						{/if}
 					</a>
                    	</div>
-					<h5><a class="subcategory-name" href="{$link->getCategoryLink($subcategory.id_category, $subcategory.link_rewrite)|escape:'htmlall':'UTF-8'}">{$subcategory.name|truncate:25:'...'|escape:'htmlall':'UTF-8'|truncate:350}</a></h5>
+					<h5><a class="subcategory-name" href="{$link->getCategoryLink($subcategory.id_category, $subcategory.link_rewrite)|escape:'html':'UTF-8'}">{$subcategory.name|truncate:25:'...'|escape:'html':'UTF-8'|truncate:350}</a></h5>
 					{if $subcategory.description}
 						<div class="cat_desc">{$subcategory.description}</div>
 					{/if}

@@ -223,7 +223,7 @@ $(document).ready(function() {
 				</p>
 				<p class="lost_password"><a href="{$link->getPageLink('password')|escape:'html'}" title="{l s='Recover your forgotten password'}" rel="nofollow">{l s='Forgot your password?'}</a></p>
 				<p class="submit">
-					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
+					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'html':'UTF-8'}" />{/if}
 					<input type="submit" id="SubmitLogin" name="SubmitLogin" class="button" value="{l s='Authentication'}" />
 				</p>
 			</div>
@@ -450,7 +450,7 @@ $(document).ready(function() {
 						<select name="id_country_invoice" id="id_country_invoice">
 							<option value="">-</option>
 							{foreach from=$countries item=v}
-							<option value="{$v.id_country}"{if (isset($smarty.post.id_country_invoice) && $smarty.post.id_country_invoice == $v.id_country) OR (!isset($smarty.post.id_country_invoice) && $sl_country == $v.id_country)} selected="selected"{/if}>{$v.name|escape:'htmlall':'UTF-8'}</option>
+							<option value="{$v.id_country}"{if (isset($smarty.post.id_country_invoice) && $smarty.post.id_country_invoice == $v.id_country) OR (!isset($smarty.post.id_country_invoice) && $sl_country == $v.id_country)} selected="selected"{/if}>{$v.name|escape:'html':'UTF-8'}</option>
 							{/foreach}
 						</select>
 					</p>
@@ -733,7 +733,7 @@ $(document).ready(function() {
 	<p class="cart_navigation required submit">
 		<input type="hidden" name="email_create" value="1" />
 		<input type="hidden" name="is_new_customer" value="1" />
-		{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
+		{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'html':'UTF-8'}" />{/if}
 		<input type="submit" name="submitAccount" id="submitAccount" value="{l s='Register'}" class="exclusive" />
 		<span><sup>*</sup>{l s='Required field'}</span>
 	</p>
