@@ -230,11 +230,11 @@ class SpecificPriceCore extends ObjectModel
 				)
 				AND id_cart IN (0, '.(int)$id_cart.') ';
 
+			$qty_to_use = $id_cart ? (int)$quantity : (int)$real_quantity;
 			if ($real_quantity != 0 && !Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION'))
-				$query .= ' AND IF(`from_quantity` > 1, `from_quantity`, 0) <= IF(id_product_attribute=0,'.(int)$quantity.' ,'.(int)$real_quantity.')';
+				$query .= ' AND IF(`from_quantity` > 1, `from_quantity`, 0) <= IF(id_product_attribute=0,'.(int)qty_to_use.' ,'.(int)$real_quantity.')';
 			else
 			{
-				$qty_to_use = $id_cart ? (int)$quantity : (int)$real_quantity;
 				$query .= 'AND `from_quantity` <= '.max(1, $qty_to_use);
 			}
 
