@@ -639,20 +639,20 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				$value = AdminStatsController::getCustomerMainGender();
 				
 				if ($value === false)
-					$value = $this->l('No customers');
+					$value = $this->l('No customers', null, null, false);
 				elseif ($value['type'] == 'male')
-					$value = sprintf($this->l('%d%% Men Customers'), $value['value']);
+					$value = sprintf($this->l('%d%% Men Customers', null, null, false), $value['value']);
 				elseif ($value['type'] == 'female')
-					$value = sprintf($this->l('%d%% Women Customers'), $value['value']);
+					$value = sprintf($this->l('%d%% Women Customers', null, null, false), $value['value']);
 				else
-					$value = sprintf($this->l('%d%% Neutral Customers'), $value['value']);
+					$value = sprintf($this->l('%d%% Neutral Customers', null, null, false), $value['value']);
 				
 				ConfigurationKPI::updateValue('CUSTOMER_MAIN_GENDER', $value);
 				ConfigurationKPI::updateValue('CUSTOMER_MAIN_GENDER_EXPIRE', strtotime('+1 day'));
 				break;
 
 			case 'avg_customer_age':
-				$value = sprintf($this->l('%d years'), AdminStatsController::getAverageCustomerAge(), 1);
+				$value = sprintf($this->l('%d years', null, null, false), AdminStatsController::getAverageCustomerAge(), 1);
 				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE', $value);
 				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE_EXPIRE', strtotime('+1 day'));
 				break;
@@ -664,7 +664,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				break;
 
 			case 'avg_msg_response_time':
-				$value = sprintf($this->l('%.1f hours'), AdminStatsController::getAverageMessageResponseTime(date('Y-m-d', strtotime('-31 day')), date('Y-m-d', strtotime('-1 day'))));
+				$value = sprintf($this->l('%.1f hours', null, null, false), AdminStatsController::getAverageMessageResponseTime(date('Y-m-d', strtotime('-31 day')), date('Y-m-d', strtotime('-1 day'))));
 				ConfigurationKPI::updateValue('AVG_MSG_RESPONSE_TIME', $value);
 				ConfigurationKPI::updateValue('AVG_MSG_RESPONSE_TIME_EXPIRE', strtotime('+4 hour'));
 				break;
@@ -721,11 +721,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
 			case 'main_country':
 				if (!($row = AdminStatsController::getMainCountry(date('Y-m-d', strtotime('-30 day')), date('Y-m-d'))))
-					$value = $this->l('No orders');
+					$value = $this->l('No orders', null, null, false);
 				else
 				{
 					$country = new Country($row['id_country'], $this->context->language->id);
-					$value = sprintf($this->l('%d%% %s'), $row['orders'], $country->name);
+					$value = sprintf($this->l('%d%% %s', null, null, false), $row['orders'], $country->name);
 				}
 
 				ConfigurationKPI::updateValue('MAIN_COUNTRY', array($this->context->language->id => $value));				
@@ -795,7 +795,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 					
 				case 'top_category':
 					if (!($id_category = AdminStatsController::getBestCategory(date('Y-m-d', strtotime('-1 month')), date('Y-m-d'))))
-						$value = $this->l('No category');
+						$value = $this->l('No category', null, null, false);
 					else
 					{
 						$category = new Category($id_category, $this->context->language->id);
