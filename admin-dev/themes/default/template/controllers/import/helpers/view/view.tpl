@@ -144,7 +144,7 @@
 		</div>
 		<div class="form-group">
 			<div class="col-lg-12">
-				<button name="import" type="submit" onclick="return (validateImportation(new Array({$res})));" id="import" class="btn btn-default pull-right"><i class="icon-cloud-upload"></i> {l s='Import .CSV data'}</button>
+				<input name="import" type="submit" onclick="return (validateImportation(new Array({$res})));" id="import" class="btn btn-default pull-right"><i class="icon-cloud-upload"></i> {l s='Import .CSV data'}</>
 			</div>
 		</div>
 	</form>
