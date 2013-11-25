@@ -30,10 +30,9 @@
 </div>
 {/if}
 <div id="upload_file_import" style="display: none">
-	<div class="alert alert-info">{l s='Only UTF-8 and ISO-8859-1 encoding are allowed'}</div>
+	<div>{l s='Only UTF-8 and ISO-8859-1 encoding are allowed'}</div>
 	<form action="{$current}&token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div class="panel">
-			<div class="clearfix">&nbsp;</div>
 			<div class="form-group">
 				<label class="control-label col-lg-3">{l s='Select your CSV file'}</label>
 				<div class="col-lg-9">
@@ -92,9 +91,7 @@
 							<option value="{$filename}"{if $csv_selected == $filename} selected="selected"{/if}>{$filename|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>
-				<div class="clearfix">&nbsp;</div>
 				{/if}
-
 				<a href="#upload_file_import" id="upload_file_import_link" class="btn btn-default">
 					<i class="icon-plus-sign-alt"></i>
 					{l s='Upload'}
@@ -102,31 +99,60 @@
 
 			</div>
 		</div>
-
 		<div class="form-group">
 			<div class="col-lg-6">
-				<p class="alert alert-info">
+				<p class="panel">
 					<a href="#" onclick="$('#sample_files_import').slideToggle(); return false;">
 						{l s='Click to view our sample import csv files.'}
 					</a>
 				</p>
 				<div id="sample_files_import" style="display:none" class="list-group">
-					<a class="list-group-item" href="../docs/csv_import/categories_import.csv" target="_blank">{l s='Sample Categories file'}</a>
-					<a class="list-group-item" href="../docs/csv_import/products_import.csv" target="_blank">{l s='Sample Products file'}</a>
-					<a class="list-group-item" href="../docs/csv_import/combinations_import.csv" target="_blank">{l s='Sample Combinations file'}</a>
-					<a class="list-group-item" href="../docs/csv_import/customers_import.csv" target="_blank">{l s='Sample Customers file'}</a>
-					<a class="list-group-item" href="../docs/csv_import/addresses_import.csv" target="_blank">{l s='Sample Addresses file'}</a>
-					<a class="list-group-item" href="../docs/csv_import/manufacturers_import.csv" target="_blank">{l s='Sample Manufacturers file'}</a>
-					<a class="list-group-item" href="../docs/csv_import/suppliers_import.csv" target="_blank">{l s='Sample Suppliers file'}</a>
-					<a class="list-group-item" href="../docs/csv_import/alias_import.csv" target="_blank">{l s='Sample Alias file'}</a>
+					<a class="list-group-item" href="../docs/csv_import/categories_import.csv" target="_blank">
+						<i class="icon-download"></i>
+						{l s='Sample Categories file'}
+					</a>
+					<a class="list-group-item" href="../docs/csv_import/products_import.csv" target="_blank">
+						<i class="icon-download"></i>
+						{l s='Sample Products file'}
+					</a>
+					<a class="list-group-item" href="../docs/csv_import/combinations_import.csv" target="_blank">
+						<i class="icon-download"></i>
+						{l s='Sample Combinations file'}
+					</a>
+					<a class="list-group-item" href="../docs/csv_import/customers_import.csv" target="_blank">
+						<i class="icon-download"></i>
+						{l s='Sample Customers file'}
+					</a>
+					<a class="list-group-item" href="../docs/csv_import/addresses_import.csv" target="_blank">
+						<i class="icon-download"></i>
+						{l s='Sample Addresses file'}
+					</a>
+					<a class="list-group-item" href="../docs/csv_import/manufacturers_import.csv" target="_blank">
+						<i class="icon-download"></i>
+						{l s='Sample Manufacturers file'}
+					</a>
+					<a class="list-group-item" href="../docs/csv_import/suppliers_import.csv" target="_blank">
+						<i class="icon-download"></i>
+						{l s='Sample Suppliers file'}
+					</a>
+					<a class="list-group-item" href="../docs/csv_import/alias_import.csv" target="_blank">
+						<i class="icon-download"></i>
+						{l s='Sample Alias file'}
+					</a>
 					{if $PS_ADVANCED_STOCK_MANAGEMENT}
-						<a class="list-group-item" href="../docs/csv_import/supply_orders_import.csv" target="_blank">{l s='Supply Orders sample file'}</a>
-						<a class="list-group-item" href="../docs/csv_import/supply_orders_details_import.csv" target="_blank">{l s='Supply Orders Details sample file'}</a>
+						<a class="list-group-item" href="../docs/csv_import/supply_orders_import.csv" target="_blank">
+							<i class="icon-download"></i>
+							{l s='Supply Orders sample file'}
+						</a>
+						<a class="list-group-item" href="../docs/csv_import/supply_orders_details_import.csv" target="_blank">
+							<i class="icon-download"></i>
+							{l s='Supply Orders Details sample file'}
+						</a>
 					{/if}
 				</div>
 			</div>
 			<div class="col-lg-6">
-				<p class="alert alert-info">
+				<p class="panel">
 					<a href="#" onclick="$('#csv_files_import').slideToggle(); return false;">
 						{l s='Click to view your csv files.'}
 					</a>
@@ -147,7 +173,7 @@
 
 		<div class="form-group">
 			<label class="control-label col-lg-3">{l s='What kind of entity would you like to import?'} </label>
-			<div class="col-lg-6">
+			<div class="col-lg-9">
 				<select name="entity" id="entity">
 					{foreach $entities AS $entity => $i}
 						<option value="{$i}"{if $entity_selected == $i} selected="selected"{/if}>
@@ -163,50 +189,65 @@
 					{l s='Language of the file'}
 				</span>
 			</label>
-			<div class="col-lg-6">
+			<div class="col-lg-9">
 				<select name="iso_lang">
 					{foreach $languages AS $lang}
 						<option value="{$lang.iso_code}" {if $lang.id_lang == $id_language} selected="selected"{/if}>{$lang.name}</option>
 					{/foreach}
 				</select>
 			</div>
-		</div>
+		</div>			
 		<div class="form-group">
 			<label for="convert" class="control-label col-lg-3">{l s='ISO-8859-1 encoded file?'} </label>
-			<div class="col-lg-6">
-				<p class="checkbox">
+			<div class="col-lg-9">
+				<label class="switch-light prestashop-switch fixed-width-lg">
 					<input name="convert" id="convert" type="checkbox" />
-				</p>
+					<span>
+						<span>{l s='Yes'}</span>
+						<span>{l s='No'}</span>
+					</span>
+					<a class="slide-button btn btn-default"></a>
+				</label>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3">{l s='Field separator'} </label>
-			<div class="col-lg-6 input-group">
-				<span class="input-group-addon">{l s='e.g. '}"1; Ipod; 129.90; 5"</span>
-				<input type="text" size="2" value="{if isset($separator_selected)}{$separator_selected|escape:'html':'UTF-8'}{else};{/if}" name="separator"/>
+			<div class="col-lg-9">
+				<input type="text" value="{if isset($separator_selected)}{$separator_selected|escape:'html':'UTF-8'}{else};{/if}" name="separator"/>
+				<div class="help-block">{l s='e.g. '} 1; Ipod; 129.90; 5</div>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3">{l s='Multiple value separator'} </label>
-			<div class="col-lg-6 input-group">
-				<span class="input-group-addon">{l s='e.g. '}"Ipod; red.jpg, blue.jpg, green.jpg; 129.90"</span>
-				<input type="text" size="2" value="{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected|escape:'html':'UTF-8'}{else},{/if}" name="multiple_value_separator"/>
+			<div class="col-lg-9">
+				<input type="text" value="{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected|escape:'html':'UTF-8'}{else},{/if}" name="multiple_value_separator"/>
+				<div class="help-block">{l s='e.g. '} Ipod; red.jpg, blue.jpg, green.jpg; 129.90</div>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="truncate" class="control-label col-lg-3">{l s='Delete all'} <span id="entitie">{l s='categories'}</span> {l s='before import?'} </label>
-			<div class="col-lg-6">
-				<p class="checkbox">
+			<div class="col-lg-9">
+				<label class="switch-light prestashop-switch fixed-width-lg">
 					<input name="truncate" id="truncate" type="checkbox"/>
-				</p>
+					<span>
+						<span>{l s='Yes'}</span>
+						<span>{l s='No'}</span>
+					</span>
+					<a class="slide-button btn btn-default"></a>
+				</label>
 			</div>
 		</div>
 		<div class="form-group" style="display: none">
 			<label for="match_ref" class="control-label col-lg-3">{l s='Use product reference as key?'}</label>
-			<div class="col-lg-6">
-				<p class="checkbox">
+			<div class="col-lg-9">
+				<label class="switch-light prestashop-switch fixed-width-lg">
 					<input name="match_ref" id="match_ref" type="checkbox" />
-				</p>
+					<span>
+						<span>{l s='Yes'}</span>
+						<span>{l s='No'}</span>
+					</span>
+					<a class="slide-button btn btn-default"></a>
+				</label>
 			</div>
 		</div>
 		<div class="form-group">
@@ -221,15 +262,23 @@
 					{l s='Force all ID\'s during import?'} 
 				</span>
 			</label>
-			<div class="col-lg-6">
-				<p class="checkbox">
-					<input name="forceIDs" id="forceIDs" type="checkbox"/> 
-				</p>
+			<div class="col-lg-9">
+				<label class="switch-light prestashop-switch fixed-width-lg">
+					<input name="forceIDs" id="forceIDs" type="checkbox"/>
+					<span>
+						<span>{l s='Yes'}</span>
+						<span>{l s='No'}</span>
+					</span>
+					<a class="slide-button btn btn-default"></a>
+				</label>
 			</div>
 		</div>
 		<div class="form-group">
 			<div class="col-lg-6 col-lg-push-3">
-				<input type="submit" name="submitImportFile" id="submitImportFile" value="{l s='Next step'}" class="btn btn-default" {if empty($files_to_import)}disabled{/if}/>
+				<button type="submit" name="submitImportFile" id="submitImportFile" class="btn btn-default" {if empty($files_to_import)}disabled{/if}>
+					<i class="icon-circle-arrow-right"></i>
+					{l s='Next step'}
+				</button>
 			</div>
 		</div>
 
@@ -247,7 +296,7 @@
 		{if !count($files_to_import)}
 			<div class="alert alert-warning">
 				<p>{l s='There is no CSV file available. Please upload one using the \'Upload\' button above.'}</p>
-				<ul class="nav">
+				<ul>
 					<li>{l s='You can read information on CSV import at:'} <a href="http://doc.prestashop.com/display/PS14/Troubleshooting#Troubleshooting-HowtocorrectlyimportaccentuatedcontentusingaCSVfile%3F" target="_blank">http://doc.prestashop.com/display/PS14/Troubleshooting</a>
 					<li>{l s='Read more about CSV format at:'} <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a>
 				</ul>

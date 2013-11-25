@@ -920,7 +920,7 @@ class BlockLayered extends Module
 									<label for="indexable_off" class="radioCheck">
 										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
 									</label>
-									<span class="slide-button btn btn-default"></span>
+									<a class="slide-button btn btn-default"></a>
 								</span>
 							</div>
 						</div>
@@ -1033,7 +1033,7 @@ class BlockLayered extends Module
 									<label for="indexable_off" class="radioCheck">
 										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
 									</label>
-									<span class="slide-button btn btn-default"></span>
+									<a class="slide-button btn btn-default"></a>
 								</span>
 							</div>
 						</div>
@@ -2139,7 +2139,7 @@ class BlockLayered extends Module
 									<label for="ps_layered_hide_0_values_off" class="radioCheck">
 										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
 									</label>
-									<span class="slide-button btn btn-default"></span>
+									<a class="slide-button btn btn-default"></a>
 								</span>
 							</div>
 						</div>
@@ -2159,7 +2159,7 @@ class BlockLayered extends Module
 									<label for="ps_layered_show_qties_off" class="radioCheck">
 										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
 									</label>
-									<span class="slide-button btn btn-default"></span>
+									<a class="slide-button btn btn-default"></a>
 								</span>
 							</div>
 						</div>
@@ -2179,7 +2179,7 @@ class BlockLayered extends Module
 									<label for="ps_layered_full_tree_off" class="radioCheck">
 										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
 									</label>
-									<span class="slide-button btn btn-default"></span>
+									<a class="slide-button btn btn-default"></a>
 								</span>
 							</div>
 						</div>
@@ -2205,7 +2205,7 @@ class BlockLayered extends Module
 									<label for="pps_layered_filter_price_usetax_off" class="radioCheck">
 										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
 									</label>
-									<span class="slide-button btn btn-default"></span>
+									<a class="slide-button btn btn-default"></a>
 								</span>
 							</div>
 						</div>
@@ -2225,7 +2225,7 @@ class BlockLayered extends Module
 									<label for="ps_layered_filter_index_condition_off" class="radioCheck">
 										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
 									</label>
-									<span class="slide-button btn btn-default"></span>
+									<a class="slide-button btn btn-default"></a>
 								</span>
 							</div>
 						</div>
@@ -2245,7 +2245,7 @@ class BlockLayered extends Module
 									<label for="ps_layered_filter_index_availability_off" class="radioCheck">
 										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
 									</label>
-									<span class="slide-button btn btn-default"></span>
+									<a class="slide-button btn btn-default"></a>
 								</span>
 							</div>
 						</div>
@@ -2265,7 +2265,7 @@ class BlockLayered extends Module
 									<label for="ps_layered_filter_index_manufacturer_off" class="radioCheck">
 										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
 									</label>
-									<span class="slide-button btn btn-default"></span>
+									<a class="slide-button btn btn-default"></a>
 								</span>
 							</div>
 						</div>
@@ -2285,7 +2285,7 @@ class BlockLayered extends Module
 									<label for="ps_layered_filter_index_category_off" class="radioCheck">
 										<i class="icon-ban-circle color_danger"></i> '.$this->l('No').'
 									</label>
-									<span class="slide-button btn btn-default"></span>
+									<a class="slide-button btn btn-default"></a>
 								</span>
 							</div>
 						</div>

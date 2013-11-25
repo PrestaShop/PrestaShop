@@ -2,166 +2,161 @@
 // Licensed under Unlicense 
 // https://github.com/ghinda/css-toggle-switch
 
-//Hide by default
-.switch .slide-button, .toggle p span
-	display: none
-.switch
-	background-color: #E9E9E9
-	border-radius: 3px
-	label
-		padding: 0
-		cursor: pointer
-//Toggle Switches
-//We can't test for a specific feature, so we only target browsers with support for media queries.
-//Position the label over all the elements, except the slide-button
-//Clicking anywhere on the label will change the switch-state
-// Don't hide the input from screen-readers and keyboard access
-@media only screen 
-	// Checkbox
-	.toggle
-		position: relative
-		padding: 0
-		margin-left: 100px
-		label
-			position: relative
-			z-index: 3
-			display: block
-			width: 100%
-		input
-			position: absolute
-			opacity: 0
-			z-index: 5
-		p
-			position: absolute
-			left: -100px
-			width: 100%
-			margin: 0
-			padding-right: 100px
-			text-align: left
-		p span
-			position: absolute
-			top: 0
-			left: 0
-			z-index: 5
-			display: block
-			width: 50%
-			margin-left: 100px
-			text-align: center
-		&:last-child
-			left: 50%
-		.slide-button
-			position: absolute
-			right: 0
-			top: 0
-			z-index: 4
-			display: block
-			width: 50%
-			height: 100%
-			padding: 0
-	// Radio Switch
-	.switch
-		position: relative
-		padding: 0
-		input
-			position: absolute
-			opacity: 0
-		label
-			position: relative
-			z-index: 2
-			float: left
-			width: 50%
-			height: 100%
-			margin: 0
-			text-align: center
-		.slide-button 
-			position: absolute
-			top: 0
-			left: 0
-			padding: 0
-			z-index: 1
-			width: 50%
-			height: 100%
-		input:last-of-type:checked ~ .slide-button
-			left: 50%
-		// Switch with 3 items
-		&.switch-three label, &.switch-three .slide-button
-			width: 33.3%
-		&.switch-three input:checked:nth-of-type(2) ~ .slide-button	
-			left: 33.3%
-		&.switch-three input:checked:last-of-type ~ .slide-button
-			left: 66.6%
-		// Switch with 4 items
-		&.switch-four label, &.switch-four .slide-button
-			width: 25%
-		&.switch-four input:checked:nth-of-type(2) ~ .slide-button
-			left: 25%
-		&.switch-four input:checked:nth-of-type(3) ~ .slide-button
-			left: 50%
-		&.switch-four input:checked:last-of-type ~ .slide-button
-			left: 75%
-		// Switch with 5 items
-		&.switch-five label, &.switch-five .slide-button
-			width: 20%
-		&.switch-five input:checked:nth-of-type(2) ~ .slide-button	
-			left: 20%
-		&.switch-five input:checked:nth-of-type(3) ~ .slide-button
-			left: 40%
-		&.switch-five input:checked:nth-of-type(4) ~ .slide-button
-			left: 60%
-		&.switch-five input:checked:last-of-type ~ .slide-button
-			left: 80%
-	// Shared
-	.toggle, .switch
+@mixin switch-shared()
+	display: block
+	height: 26px
+	*
+		@include box-sizing(border-box)
+	a
 		display: block
-		height: $input-height-base
-	.switch *, .toggle *
-		-webkit-box-sizing: border-box
-		-moz-box-sizing: border-box
-		-ms-box-sizing: border-box
-		-o-box-sizing: border-box
-		box-sizing: border-box
-	.switch .slide-button, .toggle .slide-button
-		display: block
-		-webkit-transition: all 0.3s ease-out
-		-moz-transition: all 0.3s ease-out
-		-ms-transition: all 0.3s ease-out
-		-o-transition: all 0.3s ease-out
-		transition: all 0.3s ease-out
-	.toggle label, .toggle p, .switch label
-		line-height: $input-height-base
+		@include transition(all 0.3s ease-out)
+	label,
+	> span
+		line-height: 26px
 		vertical-align: middle
-	.toggle input:checked ~ .slide-button
-		right: 50%
 	// Outline the toggles when the inputs are focused
-	.toggle input:focus ~ .slide-button, .switch input:focus + label
-		outline: 1px dotted #888
-	// Bugfix for older Webkit, including mobile Webkit. Adapted from:
-	// http://css-tricks.com/webkit-sibling-bug/
-	.switch, .toggle
-		-webkit-animation: bugfix infinite 1s
-	//@-webkit-keyframes bugfix { from { position: relative; } to { position: relative; } }
 
-	// Prestashop Theme
+@mixin switch-light()
+	@include switch-shared()
+	position: relative
+	overflow: visible
+	padding: 0
+	// Position the label over all the elements, except the slide-button (<a>)
+	// Clicking anywhere on the label will change the switch-state
+	label
+		position: relative
+		z-index: 3
+		display: block
+		width: 100%
+	// Don't hide the input from screen-readers and keyboard access
+	input
+		position: absolute
+		opacity: 0
+		z-index: 5
+		&:checked ~ a
+			left: 0%
+	> span
+		position: absolute
+		left: 0
+		width: 100%
+		margin: 0
+		text-align: left
+		span
+			position: absolute
+			top: 0
+			left: 0
+			z-index: 5
+			display: block
+			width: 50%
+			text-align: center
+			&:last-child
+				left: 50%
+	a
+		position: absolute
+		left: 50%
+		top: 0
+		z-index: 4
+		display: block
+		width: 50%
+		height: 100%
+		padding: 0
+
+
+// Radio Switch
+@mixin switch-toggle()
+	@include switch-shared()
+	position: relative
+	// For callout panels in foundation
+	padding: 0 !important
+	input
+		position: absolute
+		opacity: 0
+	label
+		position: relative
+		z-index: 2
+		float: left
+		width: 50%
+		height: 100%
+		margin: 0
+		text-align: center
+	a
+		position: absolute
+		top: 0
+		left: 0
+		padding: 0
+		z-index: 1
+		width: 50%
+		height: 100%
+	input:last-of-type:checked ~ a
+		left: 50%
+	//Generate styles for the multiple states
+	@for $i from 1 through 3
+		$state: $i + 2
+		$width: 100 / ($i + 2)
+		&.switch-#{$state}
+			label,
+			a
+				width: $width * 1%
+		@for $j from 2 through ($i + 1)
+			&.switch-#{$state} input:checked:nth-of-type(#{$j}) ~ a
+				left: $width * ($j - 1) * 1%
+		&.switch-#{$state} input:checked:last-of-type ~ a
+			left: 100 - $width * 1%
+
+
+.switch a,
+.switch-light span span
+	display: none
+
+@media only screen
+	.switch-light
+		@include switch-light()
+
+	.switch
+		@include switch-toggle()
+
 	.prestashop-switch
 		min-width: 150px
-		color: #999
-		text-align: center
+		background-color: #eee
 		border-radius: 3px
-		@include box-shadow(rgba(black,0.2) 0 2px 5px 1px inset)
+		color: #333
+		text-align: center
+		font-weight: 400
+		@include box-shadow(rgba(black,0.15) 0 1px 3px 1px inset)
+		* 
+			outline: 0!important
 		label
-			padding-top: 0!important
-			font-weight: 500
+			text-transform: uppercase
+			color: #bbb
+			font-weight: 400
+			cursor: pointer
+			@include transition(color 0.2s ease-out)
 		input:checked + label
-			color: #333!important
-			@include text-shadow(rgba(white,0.7) 1px 1px 0)
+			color: #666
 		input:not(:checked) + label
 			i
 				color: #999!important
-		.slide-button
-			position: relative
-			margin-right: 3px
-			color: lighten($bg-content-color,50%)
-		p
-			color: #333
-		span
-			color: #fff
+		> span
+			color: #666
+			text-transform: uppercase
+			cursor: pointer
+		&.switch-light input:checked
+			~ a
+				border: solid 1px $brand-success
+				background-color: lighten($brand-success,10%)
+				@include box-shadow($brand-success 0 -1px 0 inset)
+			~ span span
+				&:first-of-type
+					color: white
+				&:last-of-type
+					color: #ccc
+		&.switch-light input
+			~ a
+				border: solid 1px $brand-danger
+				background-color: lighten($brand-danger,10%)
+				@include box-shadow($brand-danger 0 -1px 0 inset)
+			~ span span
+				&:first-of-type
+					color: #ccc
+				&:last-of-type
+					color: white

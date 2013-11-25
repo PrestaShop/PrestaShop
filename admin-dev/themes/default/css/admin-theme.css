@@ -3167,7 +3167,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .alert.alert-info:before, .bootstrap #carrier_wizard .alert-info.wizard_error:before { position: absolute; top: 0; left: 10px; display: block; min-height: 25px; min-width: 25px; font-family: FontAwesome; font-weight: normal; font-style: normal; font-size: 35px; text-decoration: inherit; -webkit-font-smoothing: antialiased; content: "\F05A"; }
 .bootstrap .overflow-y { max-height: 200px; margin-bottom: 15px; overflow-y: auto; }
 .bootstrap .table { border-collapse: separate; border-spacing: 0 2px 0 0; margin-bottom: 5px; }
-.bootstrap .table thead > tr > th { border: none; font-weight: normal; vertical-align: top; border-bottom: solid 1px #8bc6e7; }
+.bootstrap .table thead > tr > th { border: none; font-weight: normal; vertical-align: top; background: white; border-bottom: solid 1px #8bc6e7; }
 .bootstrap .table thead > tr > th span.title_box { color: black; font-size: 1.1em; font-weight: bold; display: block; word-wrap: nowrap; white-space: nowrap; }
 .bootstrap .table thead > tr > th span.title_box.active { font-weight: bold; }
 .bootstrap .table thead > tr > th span.title_box a { text-decoration: none; }
@@ -3246,47 +3246,50 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .data_chart line { stroke: black; }
 .bootstrap .data_chart .area { fill: rgba(255, 255, 255, 0.3); stroke-width: 0; }
 .bootstrap .icon-big { font-size: 4em; color: #c5c5c5; }
-.bootstrap .switch .slide-button, .bootstrap .toggle p span { display: none; }
-.bootstrap .switch { background-color: #e9e9e9; border-radius: 3px; }
-.bootstrap .switch label { padding: 0; cursor: pointer; }
-@media only screen { .bootstrap .toggle { position: relative; padding: 0; margin-left: 100px; }
-  .bootstrap .toggle label { position: relative; z-index: 3; display: block; width: 100%; }
-  .bootstrap .toggle input { position: absolute; opacity: 0; z-index: 5; }
-  .bootstrap .toggle p { position: absolute; left: -100px; width: 100%; margin: 0; padding-right: 100px; text-align: left; }
-  .bootstrap .toggle p span { position: absolute; top: 0; left: 0; z-index: 5; display: block; width: 50%; margin-left: 100px; text-align: center; }
-  .bootstrap .toggle:last-child { left: 50%; }
-  .bootstrap .toggle .slide-button { position: absolute; right: 0; top: 0; z-index: 4; display: block; width: 50%; height: 100%; padding: 0; }
-  .bootstrap .switch { position: relative; padding: 0; }
+.bootstrap .switch a, .bootstrap .switch-light span span { display: none; }
+@media only screen { .bootstrap .switch-light { display: block; height: 26px; position: relative; overflow: visible; padding: 0; }
+  .bootstrap .switch-light * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+  .bootstrap .switch-light a { display: block; -webkit-transition: all 0.3s ease-out; transition: all 0.3s ease-out; }
+  .bootstrap .switch-light label, .bootstrap .switch-light > span { line-height: 26px; vertical-align: middle; }
+  .bootstrap .switch-light label { position: relative; z-index: 3; display: block; width: 100%; }
+  .bootstrap .switch-light input { position: absolute; opacity: 0; z-index: 5; }
+  .bootstrap .switch-light input:checked ~ a { left: 0%; }
+  .bootstrap .switch-light > span { position: absolute; left: 0; width: 100%; margin: 0; text-align: left; }
+  .bootstrap .switch-light > span span { position: absolute; top: 0; left: 0; z-index: 5; display: block; width: 50%; text-align: center; }
+  .bootstrap .switch-light > span span:last-child { left: 50%; }
+  .bootstrap .switch-light a { position: absolute; left: 50%; top: 0; z-index: 4; display: block; width: 50%; height: 100%; padding: 0; }
+  .bootstrap .switch { display: block; height: 26px; position: relative; padding: 0 !important; }
+  .bootstrap .switch * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+  .bootstrap .switch a { display: block; -webkit-transition: all 0.3s ease-out; transition: all 0.3s ease-out; }
+  .bootstrap .switch label, .bootstrap .switch > span { line-height: 26px; vertical-align: middle; }
   .bootstrap .switch input { position: absolute; opacity: 0; }
   .bootstrap .switch label { position: relative; z-index: 2; float: left; width: 50%; height: 100%; margin: 0; text-align: center; }
-  .bootstrap .switch .slide-button { position: absolute; top: 0; left: 0; padding: 0; z-index: 1; width: 50%; height: 100%; }
-  .bootstrap .switch input:last-of-type:checked ~ .slide-button { left: 50%; }
-  .bootstrap .switch.switch-three label, .bootstrap .switch.switch-three .slide-button { width: 33.3%; }
-  .bootstrap .switch.switch-three input:checked:nth-of-type(2) ~ .slide-button { left: 33.3%; }
-  .bootstrap .switch.switch-three input:checked:last-of-type ~ .slide-button { left: 66.6%; }
-  .bootstrap .switch.switch-four label, .bootstrap .switch.switch-four .slide-button { width: 25%; }
-  .bootstrap .switch.switch-four input:checked:nth-of-type(2) ~ .slide-button { left: 25%; }
-  .bootstrap .switch.switch-four input:checked:nth-of-type(3) ~ .slide-button { left: 50%; }
-  .bootstrap .switch.switch-four input:checked:last-of-type ~ .slide-button { left: 75%; }
-  .bootstrap .switch.switch-five label, .bootstrap .switch.switch-five .slide-button { width: 20%; }
-  .bootstrap .switch.switch-five input:checked:nth-of-type(2) ~ .slide-button { left: 20%; }
-  .bootstrap .switch.switch-five input:checked:nth-of-type(3) ~ .slide-button { left: 40%; }
-  .bootstrap .switch.switch-five input:checked:nth-of-type(4) ~ .slide-button { left: 60%; }
-  .bootstrap .switch.switch-five input:checked:last-of-type ~ .slide-button { left: 80%; }
-  .bootstrap .toggle, .bootstrap .switch { display: block; height: 27px; }
-  .bootstrap .switch *, .bootstrap .toggle * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -ms-box-sizing: border-box; -o-box-sizing: border-box; box-sizing: border-box; }
-  .bootstrap .switch .slide-button, .bootstrap .toggle .slide-button { display: block; -webkit-transition: all 0.3s ease-out; -moz-transition: all 0.3s ease-out; -ms-transition: all 0.3s ease-out; -o-transition: all 0.3s ease-out; transition: all 0.3s ease-out; }
-  .bootstrap .toggle label, .bootstrap .toggle p, .bootstrap .switch label { line-height: 27px; vertical-align: middle; }
-  .bootstrap .toggle input:checked ~ .slide-button { right: 50%; }
-  .bootstrap .toggle input:focus ~ .slide-button, .bootstrap .switch input:focus + label { outline: 1px dotted #888888; }
-  .bootstrap .switch, .bootstrap .toggle { -webkit-animation: bugfix infinite 1s; }
-  .bootstrap .prestashop-switch { min-width: 150px; color: #999999; text-align: center; border-radius: 3px; -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px 1px inset; box-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px 1px inset; }
-  .bootstrap .prestashop-switch label { padding-top: 0 !important; font-weight: 500; }
-  .bootstrap .prestashop-switch input:checked + label { color: #333333 !important; text-shadow: rgba(255, 255, 255, 0.7) 1px 1px 0; }
+  .bootstrap .switch a { position: absolute; top: 0; left: 0; padding: 0; z-index: 1; width: 50%; height: 100%; }
+  .bootstrap .switch input:last-of-type:checked ~ a { left: 50%; }
+  .bootstrap .switch.switch-3 label, .bootstrap .switch.switch-3 a { width: 33.33333%; }
+  .bootstrap .switch.switch-3 input:checked:nth-of-type(2) ~ a { left: 33.33333%; }
+  .bootstrap .switch.switch-3 input:checked:last-of-type ~ a { left: 66.66667%; }
+  .bootstrap .switch.switch-4 label, .bootstrap .switch.switch-4 a { width: 25%; }
+  .bootstrap .switch.switch-4 input:checked:nth-of-type(2) ~ a { left: 25%; }
+  .bootstrap .switch.switch-4 input:checked:nth-of-type(3) ~ a { left: 50%; }
+  .bootstrap .switch.switch-4 input:checked:last-of-type ~ a { left: 75%; }
+  .bootstrap .switch.switch-5 label, .bootstrap .switch.switch-5 a { width: 20%; }
+  .bootstrap .switch.switch-5 input:checked:nth-of-type(2) ~ a { left: 20%; }
+  .bootstrap .switch.switch-5 input:checked:nth-of-type(3) ~ a { left: 40%; }
+  .bootstrap .switch.switch-5 input:checked:nth-of-type(4) ~ a { left: 60%; }
+  .bootstrap .switch.switch-5 input:checked:last-of-type ~ a { left: 80%; }
+  .bootstrap .prestashop-switch { min-width: 150px; background-color: #eeeeee; border-radius: 3px; color: #333333; text-align: center; font-weight: 400; -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 1px 3px 1px inset; box-shadow: rgba(0, 0, 0, 0.15) 0 1px 3px 1px inset; }
+  .bootstrap .prestashop-switch * { outline: 0 !important; }
+  .bootstrap .prestashop-switch label { text-transform: uppercase; color: #bbbbbb; font-weight: 400; cursor: pointer; -webkit-transition: color 0.2s ease-out; transition: color 0.2s ease-out; }
+  .bootstrap .prestashop-switch input:checked + label { color: #666666; }
   .bootstrap .prestashop-switch input:not(:checked) + label i { color: #999999 !important; }
-  .bootstrap .prestashop-switch .slide-button { position: relative; margin-right: 3px; color: white; }
-  .bootstrap .prestashop-switch p { color: #333333; }
-  .bootstrap .prestashop-switch span { color: white; } }
+  .bootstrap .prestashop-switch > span { color: #666666; text-transform: uppercase; cursor: pointer; }
+  .bootstrap .prestashop-switch.switch-light input:checked ~ a { border: solid 1px #5cb85c; background-color: #80c780; -webkit-box-shadow: #5cb85c 0 -1px 0 inset; box-shadow: #5cb85c 0 -1px 0 inset; }
+  .bootstrap .prestashop-switch.switch-light input:checked ~ span span:first-of-type { color: white; }
+  .bootstrap .prestashop-switch.switch-light input:checked ~ span span:last-of-type { color: #cccccc; }
+  .bootstrap .prestashop-switch.switch-light input ~ a { border: solid 1px #d9534f; background-color: #e27c79; -webkit-box-shadow: #d9534f 0 -1px 0 inset; box-shadow: #d9534f 0 -1px 0 inset; }
+  .bootstrap .prestashop-switch.switch-light input ~ span span:first-of-type { color: #cccccc; }
+  .bootstrap .prestashop-switch.switch-light input ~ span span:last-of-type { color: white; } }
 .bootstrap .page-head { width: 100%; height: 55px; padding: 0 10px 0 0; margin: 0; border-bottom: 4px solid #75a139; position: fixed; top: 36px; left: 0px; z-index: 499; background-color: #8fc04d; -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; }
 .bootstrap .page-head h2.page-title { padding: 0 0 0 260px; font-size: 18px; color: white; text-transform: uppercase; }
 @media (max-width: 768px) { .bootstrap .page-head h2.page-title { padding: 0 0 0 20px; } }

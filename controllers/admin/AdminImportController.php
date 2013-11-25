@@ -625,21 +625,20 @@ class AdminImportControllerCore extends AdminController
 
 	protected function generateContentTable($current_table, $nb_column, $handle, $glue)
 	{
-		$html = '<table id="table'.$current_table.'" style="display: none;" class="table" cellspacing="0" cellpadding="0">
-					<tr>';
+		$html = '<table id="table'.$current_table.'" style="display: none;" class="table">
+					<thead><tr>';
 
 		// Header
 		for ($i = 0; $i < $nb_column; $i++)
 			if (MAX_COLUMNS * (int)$current_table <= $i && (int)$i < MAX_COLUMNS * ((int)$current_table + 1))
-				$html .= '<th style="width: '.(900 / MAX_COLUMNS).'px; vertical-align: top; padding: 4px">
-							<select style="width: '.(900 / MAX_COLUMNS).'px;"
-								id="type_value['.$i.']"
+				$html .= '<th>
+							<select id="type_value['.$i.']"
 								name="type_value['.$i.']"
 								class="type_value">
 								'.$this->getTypeValuesOptions($i).'
 							</select>
 						</th>';
-		$html .= '</tr>';
+		$html .= '</tr></thead><tbody>';
 
 		AdminImportController::setLocale();
 		for ($current_line = 0; $current_line < 10 && $line = fgetcsv($handle, MAX_LINE_SIZE, $glue); $current_line++)
@@ -647,13 +646,13 @@ class AdminImportControllerCore extends AdminController
 			/* UTF-8 conversion */
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
-			$html .= '<tr id="table_'.$current_table.'_line_'.$current_line.'" style="padding: 4px">';
+			$html .= '<tr id="table_'.$current_table.'_line_'.$current_line.'">';
 			foreach ($line as $nb_c => $column)
 				if ((MAX_COLUMNS * (int)$current_table <= $nb_c) && ((int)$nb_c < MAX_COLUMNS * ((int)$current_table + 1)))
 					$html .= '<td>'.htmlentities(Tools::substr($column, 0, 200), ENT_QUOTES, 'UTF-8').'</td>';
 			$html .= '</tr>';
 		}
-		$html .= '</table>';
+		$html .= '</tbody></table>';
 		AdminImportController::rewindBomAware($handle);
 		return $html;
 	}
@@ -783,13 +782,13 @@ class AdminImportControllerCore extends AdminController
 			if ($k === 'no')
 				continue;
 			if ($k === 'price_tin')
-				$fields[$i - 1] = '<div>'.$this->available_fields[$keys[$i - 1]]['label'].' '.$this->l('or').' '.$field['label'].'<span style="margin-left:16px"></span></div>';
+				$fields[$i - 1] = '<div>'.$this->available_fields[$keys[$i - 1]]['label'].' '.$this->l('or').' '.$field['label'].'</div>';
 			else
 			{
 				if (isset($field['help']))
 					$html = '&nbsp;<a href="#" class="info_import" title="'.$this->l('Info').'|'.$field['help'].'"><i class="icon-info-sign"></i></a>';
 				else
-					$html = '<span style="margin-left:16px"></span>';
+					$html = '';
 				$fields[] = '<div>'.$field['label'].$html.'</div>';
 			}
 			++$i;

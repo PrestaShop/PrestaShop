@@ -47,7 +47,7 @@
 									<label class="t radio" for="tracking_dt_off"> 
 										<i class="icon-ban-circle color_danger"></i> {l s='No'}
 									</label>
-									<span class="slide-button btn btn-default"></span>
+									<a class="slide-button btn btn-default"></a>
 								</span>
 							</div>
 						</div>

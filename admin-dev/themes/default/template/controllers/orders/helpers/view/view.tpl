@@ -556,7 +556,7 @@
 												<i class="icon-ban-circle text-danger"></i>
 												{l s='No'}
 											</label>
-											<span class="slide-button btn btn-default"></span>
+											<a class="slide-button btn btn-default"></a>
 										</span>
 									</div>
 								</div>				
