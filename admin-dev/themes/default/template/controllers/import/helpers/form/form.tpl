@@ -73,7 +73,7 @@
 	
 	<div class="panel">
 		<h3>
-			<i class="icon-download"></i>
+			<i class="icon-upload"></i>
 			{l s='Import'}
 		</h3>
 		<div class="form-group">
@@ -297,8 +297,12 @@
 			<div class="alert alert-warning">
 				<p>{l s='There is no CSV file available. Please upload one using the \'Upload\' button above.'}</p>
 				<ul>
-					<li>{l s='You can read information on CSV import at:'} <a href="http://doc.prestashop.com/display/PS14/Troubleshooting#Troubleshooting-HowtocorrectlyimportaccentuatedcontentusingaCSVfile%3F" target="_blank">http://doc.prestashop.com/display/PS14/Troubleshooting</a>
-					<li>{l s='Read more about CSV format at:'} <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a>
+					<li>{l s='You can read information on CSV import at:'}
+						<a href="http://doc.prestashop.com/display/PS16/CSV+Import+Parameters" target="_blank">http://doc.prestashop.com/display/PS16/CSV+Import+Parameters</a>
+					</li>
+					<li>{l s='Read more about CSV format at:'}
+						<a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a>
+					</li>
 				</ul>
 			</div>
 		{/if}
