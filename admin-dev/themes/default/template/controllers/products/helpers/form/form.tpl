@@ -146,9 +146,6 @@
 					// if the tab has not already been loaded, load it now
 					tabs_manager.display(id, true);
 
-					if (btn_name == 'Associations')
-						handleSaveButtons();
-
 					tabs_manager.onLoad(id, function(){
 						$("#product-tab-content-"+id).show(0, function(){
 							$(this).trigger('displayed');
@@ -172,7 +169,7 @@
 					{
 						$('#desc-product-newCombination').hide();
 						// if pack is enabled, save button are visible only if pack is valid
-						if (btn_name != 'Informations')
+						if ($("input[name='id_product']").val() != 0 || btn_name != 'Informations')
 							handleSaveButtons();
 					}
 					hideOtherLanguage(default_language);
@@ -184,6 +181,11 @@
 				// disable save if Associations tab is not loaded
 				if ($('#product-tab-content-Associations').hasClass('not-loaded'))
 					disableSave();
+
+				tabs_manager.onLoad('Associations', function(){
+					if ($("input[name='id_product']").val() != 0)
+						handleSaveButtons();
+				});
 
 				$('.confirm_leave').live('click', function(){
 					// Double quotes are necessary when the translated string has single quotes
