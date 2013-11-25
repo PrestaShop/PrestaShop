@@ -108,6 +108,10 @@ class StockAvailableCore extends ObjectModel
 	
 	public static function getStockAvailableIdByProductId($id_product, $id_product_attribute = null, $id_shop = null)
 	{
+		// if null, it's a product without attributes
+		if ($id_product_attribute === null)
+			$id_product_attribute = 0;
+    
 		if (!Validate::isUnsignedId($id_product))
 			return false;
 
@@ -115,9 +119,7 @@ class StockAvailableCore extends ObjectModel
 		$query->select('id_stock_available');
 		$query->from('stock_available');
 		$query->where('id_product = '.(int)$id_product);
-
-		if ($id_product_attribute !== null)
-			$query->where('id_product_attribute = '.(int)$id_product_attribute);
+		$query->where('id_product_attribute = '.(int)$id_product_attribute);
 
 		$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
@@ -172,7 +174,7 @@ class StockAvailableCore extends ObjectModel
 					if ($order_id_shop != null && !count(array_intersect($allowed_warehouse_for_product_clean, $order_warehouses)))
 						continue;
 
-					$product_quantity = $manager->getProductRealQuantities($id_product, null, $allowed_warehouse_for_product_clean, true);
+					$product_quantity = $manager->getProductRealQuantities($id_product, 0, $allowed_warehouse_for_product_clean, true);
 					
 					Hook::exec('actionUpdateQuantity',
 									array(

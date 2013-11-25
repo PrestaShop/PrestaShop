@@ -423,6 +423,10 @@ class StockManagerCore implements StockManagerInterface
 	 */
 	public function getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
 	{
+		// if null, it's a product without attributes
+		if ($id_product_attribute === null)
+			$id_product_attribute = 0;
+    
 		if (!is_null($ids_warehouse))
 		{
 			// in case $ids_warehouse is not an array
@@ -441,8 +445,7 @@ class StockManagerCore implements StockManagerInterface
 		$query->select('SUM('.($usable ? 's.usable_quantity' : 's.physical_quantity').')');
 		$query->from('stock', 's');
 		$query->where('s.id_product = '.(int)$id_product);
-		if (0 != $id_product_attribute)
-			$query->where('s.id_product_attribute = '.(int)$id_product_attribute);
+		$query->where('s.id_product_attribute = '.(int)$id_product_attribute);
 
 		if (count($ids_warehouse))
 			$query->where('s.id_warehouse IN('.implode(', ', $ids_warehouse).')');
@@ -455,6 +458,10 @@ class StockManagerCore implements StockManagerInterface
 	 */
 	public function getProductRealQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
 	{
+		// if null, it's a product without attributes
+		if ($id_product_attribute === null)
+			$id_product_attribute = 0;
+    
 		if (!is_null($ids_warehouse))
 		{
 			// in case $ids_warehouse is not an array
