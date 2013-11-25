@@ -466,11 +466,18 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	public function initPageHeaderToolbar()
 	{
 		if (empty($this->display))
+		{
 			$this->page_header_toolbar_btn['new_attribute_group'] = array(
 				'href' => self::$currentIndex.'&amp;addattribute_group&amp;token='.$this->token,
 				'desc' => $this->l('Add new attribute'),
 				'icon' => 'process-icon-new'
 			);
+			$this->page_header_toolbar_btn['new_value'] = array(
+				'href' => self::$currentIndex.'&amp;updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&amp;token='.$this->token,
+				'desc' => $this->l('Add new value'),
+				'icon' => 'process-icon-new'
+			);
+		}
 
 		if ($this->display == 'view')
 			$this->page_header_toolbar_btn['new_value'] = array(
