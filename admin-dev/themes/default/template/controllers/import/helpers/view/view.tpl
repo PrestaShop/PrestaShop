@@ -83,7 +83,7 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3">{l s='Save your mapping configuration'}</label>
+			<label class="control-label col-lg-3" for="newImportMatchs">{l s='Save your mapping configuration'}</label>
 			<div class="col-lg-7">
 				<input type="text" name="newImportMatchs" id="newImportMatchs" />		
 			</div>
@@ -116,35 +116,33 @@
 		<input type="hidden" name="separator" value="{$fields_value.separator}" />
 		<input type="hidden" name="multiple_value_separator" value="{$fields_value.multiple_value_separator}" />
 		<div class="form-group">
-			<label class="control-label col-lg-3">{l s='Lines to skip'}</label>
+			<label class="control-label col-lg-3" for="skip">{l s='Lines to skip'}</label>
 			<div class="col-lg-7">
-				<input type="text" size="2" name="skip" value="1" />
+				<input type="text" name="skip" id="skip" value="1" />
 				<p class="help-block">{l s='This number indicates how many of the first lines of your CSV file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.'}</p>
 			</div>
 		</div>
 		<div class="form-group">
 			<div class="col-lg-12">
-				<table class="table">
-					<tr>
-						<td valign="top" align="center">
-							<button id="btn_left" type="button" class="btn btn-default" onclick="showTable(current - 1);">{l s='<<'}</button>
-						</td>
-						<td align="left">
-							{section name=nb_i start=0 loop=$nb_table step=1}
-								{assign var=i value=$smarty.section.nb_i.index}
-								{$data.$i}
-							{/section}
-						</td>
-						<td valign="top" align="center">
-							<button id="btn_right" type="button" class="btn btn-default" onclick="showTable(current + 1);">{l s='>>'}</button>
-						</td>
-					</tr>
-				</table>
+				{section name=nb_i start=0 loop=$nb_table step=1}
+					{assign var=i value=$smarty.section.nb_i.index}
+					{$data.$i}
+				{/section}
+				<button id="btn_left" type="button" class="btn btn-default pull-left" onclick="showTable(current - 1);">
+					<i class="icon-chevron-sign-left"></i>
+				</button>
+				<button id="btn_right" type="button" class="btn btn-default pull-right" onclick="showTable(current + 1);">
+					<i class="icon-chevron-sign-right"></i>
+				</button>
 			</div>
 		</div>
+		<hr>
 		<div class="form-group">
 			<div class="col-lg-12">
-				<button name="import" type="submit" onclick="return (validateImportation(new Array({$res})));" id="import" class="btn btn-default pull-right"><i class="icon-cloud-upload"></i> {l s='Import .CSV data'}</button>
+				<button name="import" type="submit" onclick="return (validateImportation(new Array({$res})));" id="import" class="btn btn-default pull-right">
+					<i class="icon-ok text-success"></i>
+					{l s='Import .CSV data'}
+				</button>
 			</div>
 		</div>
 	</form>

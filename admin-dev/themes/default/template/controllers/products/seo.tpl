@@ -63,8 +63,8 @@
 			}
 		</div>
 	</div>
-
-	<div class="form-group">
+	{* Removed for simplicity *}
+	<div class="form-group hide">
 		<label class="control-label col-lg-3" for="meta_keywords_{$id_lang}">
 			{include file="controllers/products/multishop/checkbox.tpl" field="meta_keywords" type="default" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"

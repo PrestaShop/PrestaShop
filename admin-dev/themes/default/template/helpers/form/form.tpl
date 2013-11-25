@@ -399,7 +399,7 @@
 													{/if}
 												</label>
 												{/foreach}
-												<span class="slide-button btn btn-default"></span>
+												<a class="slide-button btn btn-default"></a>
 											</span>
 										</div>
 									</div>

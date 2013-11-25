@@ -194,7 +194,7 @@
 					<i class="icon-ban-circle text-danger"></i>
 					{l s='Disabled'}
 				</label>
-				<span class="slide-button btn btn-default"></span>
+				<a class="slide-button btn btn-default"></a>
 			</span>
 		</div>
 	</div>
