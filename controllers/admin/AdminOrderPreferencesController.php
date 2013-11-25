@@ -114,6 +114,13 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'list' => $cms_tab,
 						'identifier' => 'id',
 						'cast' => 'intval'
+					),
+					'PS_ORDER_LIST_COUNTRY' => array(
+						'title' => $this->l('Dislay country in order list'),
+						'desc' => $this->l('In order list. display delivery address country.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
 					)
 				)
 			),
