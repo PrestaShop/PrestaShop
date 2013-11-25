@@ -251,8 +251,8 @@ class HelperUploaderCore extends Uploader
 				.'/themes/'.$bo_theme.'/js/jquery.fileupload-process.js');
 			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
 				.'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js');			
-			$this->getContext()->controller->addJs('js/vendor/spin.js');
-			$this->getContext()->controller->addJs('js/vendor/ladda.js');
+			$this->getContext()->controller->addJs(__PS_BASE_URI__.'js/vendor/spin.js');
+			$this->getContext()->controller->addJs(__PS_BASE_URI__.'js/vendor/ladda.js');
 		}
 
 		if ($this->useAjax())
