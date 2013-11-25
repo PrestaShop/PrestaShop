@@ -69,13 +69,13 @@
 						{if get_class($document) eq 'OrderInvoice'}
 
 							{if isset($document->is_delivery)}
-							<a target="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id}">
+							<a target="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id}">
 						   	{else}
-							<a target="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}">
+							<a target="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}">
 						   {/if}
 
 						{elseif get_class($document) eq 'OrderSlip'}
-							<a target="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateOrderSlipPDF&id_order_slip={$document->id}">
+							<a target="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateOrderSlipPDF&id_order_slip={$document->id}">
 						{/if}
 
 						{if get_class($document) eq 'OrderInvoice'}
@@ -142,11 +142,11 @@
 				{if !isset($document->is_delivery)}
 				<tr id="invoiceNote{$document->id}" style="display:none">
 					<td colspan="5">
-						<form action="{$current_index}&viewOrder&id_order={$order->id}{if isset($smarty.get.token)}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}{/if}" method="post">
+						<form action="{$current_index}&viewOrder&id_order={$order->id}{if isset($smarty.get.token)}&token={$smarty.get.token|escape:'html':'UTF-8'}{/if}" method="post">
 							<p>
 								<label for="editNote{$document->id}" class="t">{l s='Note'}</label>
 								<input type="hidden" name="id_order_invoice" value="{$document->id}" />
-								<textarea name="note" id="editNote{$document->id}" class="edit-note textarea-autosize">{$document->note|escape:'htmlall':'UTF-8'}</textarea>
+								<textarea name="note" id="editNote{$document->id}" class="edit-note textarea-autosize">{$document->note|escape:'html':'UTF-8'}</textarea>
 							</p>
 							<p>
 								<button type="submit" name="submitEditNote" class="btn btn-default"> 
@@ -168,7 +168,7 @@
 				<td colspan="5" class="text-center">
 					<i class="icon-warning-sign"></i> {l s='No documents are available'}
 					{if isset($invoice_management_active) && $invoice_management_active}
-						<a class="btn btn-link" href="{$current_index}&viewOrder&submitGenerateInvoice&id_order={$order->id}{if isset($smarty.get.token)}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}{/if}">
+						<a class="btn btn-link" href="{$current_index}&viewOrder&submitGenerateInvoice&id_order={$order->id}{if isset($smarty.get.token)}&token={$smarty.get.token|escape:'html':'UTF-8'}{/if}">
 							<i class="icon-repeat"></i>
 							{l s='Generate invoice'}
 						</a>

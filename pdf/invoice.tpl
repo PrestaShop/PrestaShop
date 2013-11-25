@@ -133,11 +133,11 @@
 					<td style="text-align: left; width: {if !$tax_excluded_display}35%{else}45%{/if}">{$order_detail.product_name}</td>
 					<!-- unit price tax excluded is mandatory -->
 					{if !$tax_excluded_display}
-						<td style="text-align: right; width: 20%">
+						<td style="text-align: right; width: 20%; white-space: nowrap;">
 						{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl}
 						</td>
 					{/if}
-					<td style="text-align: right; width: 10%">
+					<td style="text-align: right; width: 10%; white-space: nowrap;">
 					{if $tax_excluded_display}
 						{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl}
 					{else}
@@ -154,7 +154,7 @@
 					{/if}
 					</td>
 					<td style="text-align: center; width: 10%">{$order_detail.product_quantity}</td>
-					<td style="text-align: right;  width: {if !$tax_excluded_display}15%{else}25%{/if}">
+					<td style="text-align: right;  width: {if !$tax_excluded_display}15%{else}25%{/if}; white-space: nowrap;">
 					{if $tax_excluded_display}
 						{displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl}
 					{else}

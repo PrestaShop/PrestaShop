@@ -35,9 +35,9 @@
 			<fieldset>
 				<h3 class="page-subheading">{l s='New wishlist' mod='blockwishlist'}</h3>
 				<div class="form-group">
-					<input type="hidden" name="token" value="{$token|escape:'htmlall':'UTF-8'}" />
+					<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 					<label class="align_right" for="name">{l s='Name' mod='blockwishlist'}</label>
-					<input type="text" id="name" name="name" class="inputTxt form-control" value="{if isset($smarty.post.name) and $errors|@count > 0}{$smarty.post.name|escape:'htmlall':'UTF-8'}{/if}" />
+					<input type="text" id="name" name="name" class="inputTxt form-control" value="{if isset($smarty.post.name) and $errors|@count > 0}{$smarty.post.name|escape:'html':'UTF-8'}{/if}" />
 				</div>
 				<p class="submit">
                     <button type="submit" name="submitWishlist" id="submitWishlist" class="btn btn-default button button-medium"><span>{l s='Save' mod='blockwishlist'}<i class="icon-chevron-right right"></i></span></button>
@@ -61,7 +61,7 @@
 				{section name=i loop=$wishlists}
 					<tr id="wishlist_{$wishlists[i].id_wishlist|intval}">
 						<td style="width:200px;">
-							<a href="javascript:;" onclick="javascript:WishlistManage('block-order-detail', '{$wishlists[i].id_wishlist|intval}');">{$wishlists[i].name|truncate:30:'...'|escape:'htmlall':'UTF-8'}</a>
+							<a href="javascript:;" onclick="javascript:WishlistManage('block-order-detail', '{$wishlists[i].id_wishlist|intval}');">{$wishlists[i].name|truncate:30:'...'|escape:'html':'UTF-8'}</a>
 						</td>
 						<td class="bold align_center">
 							{assign var=n value=0}

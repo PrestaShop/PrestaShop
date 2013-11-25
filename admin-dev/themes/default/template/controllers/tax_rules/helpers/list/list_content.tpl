@@ -101,10 +101,10 @@
 						{if $tr.$key == '0 - 0'}
 							--
 						{else}
-							{$tr.$key|escape:'htmlall':'UTF-8'}
+							{$tr.$key|escape:'html':'UTF-8'}
 						{/if}
 					{else}
-						{$tr.$key|escape:'htmlall':'UTF-8'}
+						{$tr.$key|escape:'html':'UTF-8'}
 					{/if}
 				{else}
 					--

@@ -523,13 +523,13 @@ abstract class DbCore
 			$this->last_cached = true;
 			return $result;
 		}
-
 		$this->result = $this->query($sql);
 		if (!$this->result)
 			return false;
-
 		$this->last_cached = false;
 		$result = $this->nextRow($this->result);
+		if (is_null($result))
+			$result = false;
 		if ($use_cache && $this->is_cache_enabled)
 			Cache::getInstance()->setQuery($sql, $result);
 		return $result;

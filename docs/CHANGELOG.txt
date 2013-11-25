@@ -24,6 +24,225 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.5.6.1 - (2013-11-18)  #
+####################################
+
+	Fixed bugs:
+
+	[-] Project : missing ui.menu in jquery_ui_dependencies.
+
+	[-] FO : Fix bug #PSCFV-11043, bad cache id from module template
+	[-] FO : Missing sup for DNI field
+	[-] FO : Fix bug #PSCFV-10911, doubles in cart rules highlight
+	[-] FO : Bad value for back when controller name is sent
+	[-] FO : FixBug #PSCFV-9291 - Ecotax increment display price in product combination
+	[-] FO : fix contact-form id_order input when customer is not logged
+	[-] Fo : Call  Gmaps on https if required
+	[-] FO : Wordwrap on prices in history
+	[-] FO : Fixed errors when calculating most selled products from footer link
+	[-] FO : #PSCFV-10978 firstname displayed instead of lastname in invoice address
+	[-] FO : Customized meesage with carriage return follow up #962
+	[-] FO : getTaxCalculator bad cache key again // sorry about that
+	[-] FO : getTaxCalculator bad cache key
+	[-] FO : Prevents warning in safePostVars when $_POST has been unset
+	[-] FO : in multistore payment module restrictions by customer group was not applied to specific shop
+	[-] FO : Fix bug #PSCFV-10892, getCMSPages by id_shop thnaks @jd440
+	[-] FO : FixBug Categories description
+	[-] FO : Fix bug #PSCFV-10889 wrong color when oos product
+	[-] FO : CustomerMessage ip_address to string
+	[-] FO : Fix bug #PSCFV-10851, no shop restriction in vouchers display in cart
+	[-] FO: fixed bug #PSCFV-10654 - TinyMCE editor: List of products by manufacturer, products by supplier - Long description is not hidden.
+	[-] FO: Fix bug #PSCFV-10623 blocknewproducts shows products when PS_NB_DAYS_NEW_PRODUCT == 0
+	[-] FO: Fix bug #PSCFV-10230, Blockspecials still caching when files cache limit is 0
+	[-] FO: Fix bug #PSCFV-10625 Js error on carriers step if AjaxCart disabled
+	[-] FO : Follow up https://github.com/PrestaShop/PrestaShop/pull/879
+	[-] FO: removed width on message product select    Limiting select could make the user think the select is not working if they click to much to the left on bigger screens
+	[-] FO : Prevent fatal error on getUniqReference when order not loaded
+	[-] FO: Don't auto detect language if it not associated to the shop #PSCFV-10273
+	[-] FO : Could not redirect back to url in adress.php
+	[-] FO : $back value twice escaped
+	[-] FO : #PSCFV-10640 again, bad assignement
+	[-] Fo : Fix bug #PSCFV-10640, redirect loop when country address is not among active countries in OPC
+	[-] FO : Fix bug #PSCFV-10688, bad priceDisplay in order-carrier
+	[-] FO : Fix #PSCFV-10690 again, change just on directories
+	[-] FO : Fix bug #PSCFV-10690 could not index a category beacause of robot.txt
+	[-] FO : Copuld not load datepicker in trackingfront stats.php
+	[-] FO : Fix bug #PSCFV-10497 cart_block hooked on column disappearing
+	[-] FO : Fix bug #PSCFV-10606 could not have correct taxCalculationMethod when vat number in customer address
+
+	[-] BO : Fix bug #PNM-1594, selected value error in helper list
+	[-] BO: product price was changed on changing to advanced stock management #PSCFV-10996
+	[-] BO : Fix warning when no memcached servers
+	[-] BO : Fix #PSCFV-11016 typo
+	[-] BO : Model return html error messagae instead of json while image uploading
+	[-] BO : Product final price can not be hidden on loading tab, report of https://github.com/PrestaShop/PrestaShop/commit/6c6c3b240ee2249b7f99be1a112905cd0edbee46
+	[-] BO : test on xml string follow up https://github.com/PrestaShop/PrestaShop/pull/690#issuecomment-28542506
+	[-] BO : 406 when mod_security follow up https://github.com/PrestaShop/PrestaShop/commit/034e6a7e7f391e3a8861248db45a4a376b19633c
+	[-] BO : AdminImport, execption when creating groups
+	[-] BO : Fix bug #PSCFV-10990 bad version comparison for ps_versions_compliancy
+	[-] BO : Fix bug #PSCFV-10982 reduction group truncated
+	[-] BO : Could not check all modules after ajax call
+	[-] BO : Fix css bug #PSCFV-10899, fixed fix-toolbar z-index
+	[-] BO : Fix bug #PSCFV-10932, ranges input disabled on load
+	[-] BO : getCMSPages to associated shop in cmscontroller
+	[-] BO : Fix bug #PSCFV-10666 product_supllier currency set to 0
+	[-] BO : Fix bug #PSCFV-10937, bad escaping for var product_prices in prices.tpl
+	[-] BO : Cart was not using order reference, corrected syntax
+	[-] BO : Cart was not using order reference
+	[-] BO : Could not change image position
+	[-] BO: Fix from name when replying to customer threads
+	[-] BO : Do not enable rewrite url for index
+	[-] BO: Fix empty group list on changing opt or newsletter on customers listing
+	[-] BO : AdminImport withdraw separator changed in js
+	[-] BO : AdminImport wrong group by default
+	[-] BO : FixBug #PSCFV-10882 - Add json encode and decode smarty modifier via tools class
+	[-] Bo : AdminImport customer group default
+	[-] BO : Fix bug #PSCFV-10872 AdminImport could not import supllier orders
+	[-] BO: fix the checkbox of shop activation on modules configuration
+	[-] BO : Adminimport default customers group
+	[-] BO : tagify call twice if field is not translatable
+	[-] BO : Stats are empty when no conversion rate
+	[-] BO : Order-follow displayed order id instead of order reference
+	[-] BO : hide stmp options when selecting never send emails
+	[-] BO : FixBug #PSCFV-10866 - Tagify system not working
+	[-] BO : FixBug #PSCFV-9319 - display only valid order id
+	[-] BO : Do not delete other default jpg when _deleteOldImages and type defined
+	[-] BO : AdminImport, fix bug from https://github.com/indesign47/PrestaShop/commit/84454bbc1c7a315e232245c5e43b300b8f153473#commitcomment-4418502
+	[-] BO : Fix bug #10689, could not set image legend in back office
+	[-] BO : Fixed bug PSCFV-9910 using basic queries to prevent locking errors
+	[-] BO : Fix bug #PSCFV-10718 AdminAttachments old file not deleted on update
+	[-] BO : FixBug #PSCFV-10600 - Unmatched Boundary with mod_security
+	[-] BO : fix #PSCFV-10728, prices incorrectly formatted when creating new order from BO
+	[-] BO : FIx bug #PSCFV-10736 again, fixing query when product is not in base
+	[-] BO : FIx bug #PSCFV-10736, could not load a product given from getBoughtProducts
+	[-] BO : Fix bug #PSCFV-10790, Customer group names not exploded
+	[-] BO: product listing should call Product::getPriceStatic() with the product default shop in the context when it is not a shop context
+	[-] BO: Synchronize stock available after receipt supply order items #PSCFV-10724
+	[-] BO : Fix bug #PSCFV-10638, Admin Import by reference moves products to home category
+	[-] BO : Fix bug #PSCFV-7907 AdminImport, add custom field to features
+	[-] BO : Fix bug #PSCFV-10767, could not retrieve feature value when product IDs not forced
+	[-] BO : Fix bug #PSCFV-10607 one upload name
+	[-] BO : wrong csv files name
+	[-] BO : Report of https://github.com/PrestaShop/PrestaShop/commit/fd86a29c5c369ec5da0f91bbe97c584a00d02d0d
+	[-] BO: Default country should be overriden in the context in multishop
+	[-] BO : Fix bug #PSCFV-10709 rename root category with slashes in it
+	[-] BO : Could not order by reserved words like 'key'
+	[-] BO : AdminImport, wrong default separators
+	[-] BO : Fix bug #PSCFV-10692, AdminImport bad utf8 cars for subst
+	[-] BO : Fix #PSCFV-10678 warning in chrome
+	[-] BO : FixBug #PSCFV-10671 - remove htmlentities on customer message
+	[-] BO : Could not insert referrer id_connections_source can not be null
+	[-] Bo :  Could not update mailalert 2.5 with id_lang missing
+	[-] Bo :  Could not update mailarler 2.5 with id_mlang
+	[-] BO: Fixbug #PSCFV-10671 - Double htmlentities.
+	[-] BO : AdminImport, fix Group searchByName
+	[-] BO : Adminimport, id_specific key_price not defined
+	[-] BO : FixBug - Remove second email in recipient
+	[-] BO : Fix bug #PSCFV-10660, could not delete csv file on NT
+	[-] BO : FixBug #PSCFV-9957 - Duplicate order invoice number
+	[-] BO : fixed bug #PSCFV-10637 PS_CARRIER_DEFAULT is not updated after edit default carrier
+	[-] BO : AdminImport no default value for separators
+	[-] BO : pass correct typed parameter to setCurrency
+
+	[-] Classes : Hook - Installer & context shop id
+	[-] Classes : Modules listing and case insensitive
+
+	[-] Core: Group::getCurrent() return the default customer group of the shop if default customer group is not associated to shop
+	[-] CORE : invalid method name in displayAjax method of Controller action
+	[-] CORE : Fix bug #PSCFV-10901 warnings on htmlentities
+	[-] CORE : Currency conversion rate can not be 0
+	[-] CORE : SetEnv in if statement
+	[-] CORE : SetEnv not available on all config // @todo curl request on dummy .htacces
+	[-] CORE : Fix bug #PSCFV-10687 again, #PSCFV-10752 replaceAccentedChars() // sorry for that
+	[-] CORE : error_get_last > PHP 5.1
+	[-] Core: Out of stock status should be setted after the first order history
+	[-] Core: Product::getPriceStatic called with 1 quantity return the specific price for 1 qty if called with id_cart = 0
+	[-] CORE : Fix bug #PSCFV-10687 bad conversion for accentuated Y and W, thanks @mike15
+	[-] CORE : $smarty->compile_check is not set to false, thanks @prestamodule
+
+	[-] MO : Referralprogram Prevent Exception when badly configured
+	[-] MO : Missinag closing href
+	[-] MO :Fixed #PNM-1654 (Loyalty module) by using most expensive attribute instead of default one
+	[-] MO : Mailalert was not using order reference
+	[-] MO : Blocklayered follow up https://github.com/PrestaShop/PrestaShop/commit/a6e67b078e067445eef358e907649e843a1dc26a#commitcomment-4538556
+	[-] MO : Fixed #PNM-1600 by modifying getPageLink()
+	[-] MO : Blockcategories last_visited_category must not be cached
+	[-] MO : Could not translate in transit mail, revert from https://github.com/viger-creator/PrestaShop/commit/3213b5dffb266ddb0639b94f72babd892328ffa2
+	[-] MO : mailalert - Fix deprecated warning on displayDate
+	[-] MO : Blockwishlist no product image when id_product_attribute is defined, thanks @Broceliande
+	[-] MO : Fix NetworkError 404 Not Found on admin in blocklayered.php    These files not exists :     - /js/jquery/jquery-ui-1.8.10.custom.min.js     - /css/jquery-ui-1.8.10.custom.css
+	[-] MO : Fix bug #PSCFV-10841, blockcart hides on product page when last product is removed from cart
+	[-] MO : Fixbug #PSCFV-10679 dateofdelivery PDF invoice array and array
+	[-] MO : Fixed bug PNM-1431 - referralprogram  Lack the % sign
+	[-] MO : Fix bug #PSCFV-10787, cms associated to all shops
+	[-] MO : if customer is logged we do not recreate it
+	[-] MO : Fix bug #PSCFV-10775, could not upload .jpeg in TinyMCE
+	[-] MO : ScrollTo not loaded
+	[-] MO : Trackingfront, could not load employee stats date
+
+	[-] WS: Fix bug #PSCFV-10970 use configuration for uploaded images quality
+	[-] WS: Fix stockavailables list when stock is shared between shops #PSCFV-10793
+	[-] WS: Fix #PSCFV-10672 order by ID for non multishop entities
+
+	Improved/changed features:
+
+	[*] FO : DNI can be not required
+	[*] FO : Fix #PSCFV-8715 add product.attributes in carrier tpl
+	[*] FO : set at least a class to body
+	[*] FO : addTextFieldToProduct without Line feed, follow up https://github.com/PrestaShop/PrestaShop/pull/962#issuecomment-28294571
+	[*] FO : https on TOS in fancybox, follow up https://github.com/PrestaShop/PrestaShop/pull/956
+	[*] FO : Redirect to address.tpl when !Address::isCountryActiveById
+	[*] FO : Cache on getDiscountsCustomer, follow up https://github.com/PrestaShop/PrestaShop/pull/960
+	[*] FO : Set cache for StockAvailable::getQuantityAvailableByProduct
+	[*] FO : Added posibilty to display new price instead of quantity discount
+	[*] FO: Follow up https://github.com/PrestaShop/PrestaShop/commit/e86c56172dad2892d5c7e7dbb0908b0f4ffbaae0
+	[*] FO: Can not establish purchase total when tax incl.
+	[*] FO : Fix bug #PSCFV-10689 handle image legend
+	[*] FO: Removed missplaced </li> on mobile theme
+
+	[*] BO : AdminPerformances Hide warnings message when not necessary
+	[*] BO : add class on TD in standard List    Back office :    Add a class on TD in list created by getList()    In fields_list array of AdminController, we can add a new parameter('class')    example :    		'name' => array(    			'title' => $this->l('Name'),    			'width' => 150,    			'class' => 'ma_classe',    			'filter_key' => 'b!name'    		),    This parameter can be used for javascript effect, ...    Thanks.
+	[*] BO : New import csv files
+	[*] BO : Manual merge of https://github.com/PrestaShop/PrestaShop/pull/891 1/2
+	[*] BO : AdminProducts find smallest images
+	[*] BO : improved unicode characters replacement in URLs (Russian and Ukrainian characters added)
+	[*] BO : AdminImport add img manufacturers-suppliers
+	[*] BO : AdminImport add img suppliers
+	[*] BO : AdminImport add img manufacturers
+	[*] BO : chmod 664 to config.xml file
+	[*] BO : Adding a title tag to display the module name on hover like PS 1.4
+
+	[*] CORE : Remove duplicate SQL queries
+	[*] CORE : Profiling hide non doubles
+	[*] CORE : Cache store for isAssociatedToShop::isAssociatedToShop
+	[*] CORE : Manual merge of https://github.com/PrestaShop/PrestaShop/ thanks @kpodemski
+	[*] CORE: Add phone_mobile to address format    I honestly do not know why you decided by default to show only the first field of the phone :)    Users often ask me why they don't see their mobile phone on orders in BO.
+
+	[*] MO : Remove calls to isRegisteredInHook in crossselling and productscategory
+	[*] MO : New modules version since 1.5.6.0
+	[*] MO: blocksharefb optimization
+	[*] MO: productcomments optimization
+
+	[*] LO : Fix PSCFV-10876: use IETF code to set language of shop, not 'iso' code, allows to distinguish between chinese variants etc.
+	[*] LO : Added states to Spanish localization pack
+	[*] LO : Fixed a few bugs with currency formats in Back-Office orders
+	[*] LO : set correct currency format for CHF
+
+	Added Features:
+
+	[+] BO : Add debug mode system
+	[+] BO : AdminImport add entity Alias
+
+	[+] CORE : Fixed cache_id
+
+	[+] MO : Blockcart - Add error handler on ajax function
+
+	Deprecated methods:
+
+	[~] BO : Export DeliverySlip    The dates range wasn't using the correct sql fields.
+
+
+####################################
 #   v1.5.6.0 - (2013-10-07)  #
 ####################################
 

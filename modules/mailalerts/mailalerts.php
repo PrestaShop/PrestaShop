@@ -46,7 +46,7 @@ class MailAlerts extends Module
 	{
 		$this->name = 'mailalerts';
 		$this->tab = 'administration';
-		$this->version = '2.7';
+		$this->version = '2.8';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -256,7 +256,7 @@ class MailAlerts extends Module
 					$customization_text .= '---<br />';
 				}
 
-				$customization_text = rtrim($customization_text, '---<br />');
+				$customization_text = Tools::rtrimString($customization_text, '---<br />');
 			}
 
 			$items_table .=
@@ -321,7 +321,7 @@ class MailAlerts extends Module
 			'{invoice_state}' => $invoice->id_state ? $invoice_state->name : '',
 			'{invoice_phone}' => $invoice->phone ? $invoice->phone : $invoice->phone_mobile,
 			'{invoice_other}' => $invoice->other,
-			'{order_name}' => sprintf('%06d', $order->id),
+			'{order_name}' => $order->reference,
 			'{shop_name}' => $configuration['PS_SHOP_NAME'],
 			'{date}' => $order_date_text,
 			'{carrier}' => (($carrier->name == '0') ? $configuration['PS_SHOP_NAME'] : $carrier->name),

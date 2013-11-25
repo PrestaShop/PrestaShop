@@ -237,12 +237,12 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'date',
+					'type' => 'datetime',
 					'label' => $this->l('From'),
 					'name' => 'from'
 				),
 				array(
-					'type' => 'date',
+					'type' => 'datetime',
 					'label' => $this->l('To'),
 					'name' => 'to'
 				),

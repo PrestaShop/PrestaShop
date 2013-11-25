@@ -179,6 +179,8 @@ function setDayPeriod() {
 	$('#date-start').trigger('change');
 
 	updatePickerFromInput();
+	$('#datepickerFrom').val($("#date-start").val());
+	$('#datepickerTo').val($("#date-end").val());
 	$('button[name="submitDateRange"]').click();
 }
 
@@ -190,6 +192,8 @@ function setPreviousDayPeriod() {
 	$('#date-start').trigger('change');
 
 	updatePickerFromInput();
+	$('#datepickerFrom').val($("#date-start").val());
+	$('#datepickerTo').val($("#date-end").val());
 	$('button[name="submitDateRange"]').click();
 }
 
@@ -201,6 +205,8 @@ function setMonthPeriod() {
 	$('#date-start').trigger('change');	
 
 	updatePickerFromInput();
+	$('#datepickerFrom').val($("#date-start").val());
+	$('#datepickerTo').val($("#date-end").val());
 	$('button[name="submitDateRange"]').click();
 }
 
@@ -213,6 +219,8 @@ function setPreviousMonthPeriod() {
 	$('#date-start').trigger('change');	
 
 	updatePickerFromInput();
+	$('#datepickerFrom').val($("#date-start").val());
+	$('#datepickerTo').val($("#date-end").val());
 	$('button[name="submitDateRange"]').click();
 }
 
@@ -224,6 +232,8 @@ function setYearPeriod() {
 	$('#date-start').trigger('change');
 
 	updatePickerFromInput();
+	$('#datepickerFrom').val($("#date-start").val());
+	$('#datepickerTo').val($("#date-end").val());
 	$('button[name="submitDateRange"]').click();
 }
 
@@ -236,6 +246,8 @@ function setPreviousYearPeriod() {
 	$('#date-start').trigger('change');
 
 	updatePickerFromInput();
+	$('#datepickerFrom').val($("#date-start").val());
+	$('#datepickerTo').val($("#date-end").val());
 	$('button[name="submitDateRange"]').click();
 }
 

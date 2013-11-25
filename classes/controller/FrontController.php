@@ -865,7 +865,7 @@ class FrontControllerCore extends Controller
 		if (!is_numeric(Tools::getValue('p', 1)) || Tools::getValue('p', 1) < 0)
 			Tools::redirect(self::$link->getPaginationLink(false, false, $this->n, false, 1, false));
 
-		$current_url = tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']);
+		$current_url = Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']);
 		//delete parameter page
 		$current_url = preg_replace('/(\?)?(&amp;)?p=\d+/', '$1', $current_url);
 
@@ -934,7 +934,7 @@ class FrontControllerCore extends Controller
 		$ips = array_map('trim', $ips);
 		if (is_array($ips) && count($ips))
 			foreach ($ips as $ip)
-				if (!empty($ip) && strpos($user_ip, $ip) === 0)
+				if (!empty($ip) && preg_match('/^'.$ip.'.*/', $user_ip))
 					$allowed = true;
 		return $allowed;
 	}

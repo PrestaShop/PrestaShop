@@ -2,7 +2,7 @@
         <module>
             <name>loyalty</name>
             <displayName><![CDATA[Customer loyalty and rewards]]></displayName>
-            <version><![CDATA[1.8]]></version>
+            <version><![CDATA[1.9]]></version>
             <description><![CDATA[Provide a loyalty program to your customers.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[pricing_promotion]]></tab>

@@ -1707,12 +1707,14 @@ class AdminControllerCore extends Controller
 		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
 			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
 		
+		libxml_use_internal_errors(true);
 		$country_module_list = file_get_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
-		if (!empty($country_module_list) && $country_module_list_xml = simplexml_load_string($country_module_list))
+		if (!empty($country_module_list) && is_string($country_module_list) && $country_module_list_xml = simplexml_load_string($country_module_list))
 		{
 			$country_module_list_array = array();
-			foreach ($country_module_list_xml->module as $k => $m)
-				$country_module_list_array[] = (string)$m->name;
+			if (is_array($country_module_list_xml->module))
+				foreach ($country_module_list_xml->module as $k => $m)
+					$country_module_list_array[] = (string)$m->name;
 			$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $country_module_list_array);
 		}
 		
@@ -1964,12 +1966,18 @@ class AdminControllerCore extends Controller
 		$this->addJquery();
 		$this->addjQueryPlugin(array('cluetip', 'hoverIntent', 'scrollTo', 'alerts', 'chosen'));
 
+		$this->addJqueryUI(array(
+			'ui.slider',
+			'ui.datepicker'
+		));
+
 		$this->addJS(array(
 			_PS_JS_DIR_.'admin.js',
 			_PS_JS_DIR_.'toggle.js',
 			_PS_JS_DIR_.'tools.js',
 			_PS_JS_DIR_.'ajax.js',
 			_PS_JS_DIR_.'toolbar.js',
+			_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js',
 		));
 
 		//loads specific javascripts for the admin theme, bootstrap.js should be moved into /js root directory
@@ -2557,7 +2565,7 @@ class AdminControllerCore extends Controller
 		$cookie = $this->context->cookie;
 		$this->allow_employee_form_lang = (int)Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG');
 		if ($this->allow_employee_form_lang && !$cookie->employee_form_lang)
-			$cookie->employee_form_lang = (int)$this->context->language->id;
+			$cookie->employee_form_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 		
 		$lang_exists = false;
 		$this->_languages = Language::getLanguages(false);
@@ -2565,7 +2573,7 @@ class AdminControllerCore extends Controller
 			if (isset($cookie->employee_form_lang) && $cookie->employee_form_lang == $lang['id_lang'])
 				$lang_exists = true;
 
-		$this->default_form_language = $lang_exists ? (int)$cookie->employee_form_lang : (int)$this->context->language->id;
+		$this->default_form_language = $lang_exists ? (int)$cookie->employee_form_lang : (int)Configuration::get('PS_LANG_DEFAULT');
 
 		foreach ($this->_languages as $k => $language)
 			$this->_languages[$k]['is_default'] = ((int)($language['id_lang'] == $this->default_form_language));

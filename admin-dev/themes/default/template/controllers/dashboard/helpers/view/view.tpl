@@ -26,9 +26,9 @@
 <script>
 	var dashboard_ajax_url = '{$link->getAdminLink('AdminDashboard')}';
 	var adminstats_ajax_url = '{$link->getAdminLink('AdminStats')}';
-	var no_results_translation = '{l s='No result' js='1'}';
+	var no_results_translation = '{l s='No result' js=1}';
 	var dashboard_use_push = '{$dashboard_use_push|intval}';
-	var read_more = '{l s='Read more' js='1'}';
+	var read_more = '{l s='Read more' js=1}';
 </script>
 
 <div id="dashboard">
@@ -69,10 +69,10 @@
 								<button id="datepickerExpand" class="btn btn-default" type="button">
 									<i class="icon-calendar-empty"></i>
 									{l s='From'}
-									<strong class="text-info">{$datepickerFrom|escape}</strong>
-									- {l s='To'}
-									<strong class="text-info">{$datepickerTo|escape}</strong>
-									- 13 Days
+									<strong class="text-info" id="datepicker-from-info">{$datepickerFrom|escape}</strong>
+									{l s='To'}
+									<strong class="text-info" id="datepicker-to-info">{$datepickerTo|escape}</strong>
+									<strong class="text-info" id="datepicker-diff-info"></strong>
 									<i class="icon-caret-down"></i>
 								</button>
 
@@ -132,15 +132,15 @@
 			<section class="dash_simulation panel">
 				<h3><i class="icon-link"></i> {l s="Simulation Mode"}</h3>
 				<span class="switch prestashop-switch">
-					<input id="PS_DASHBOARD_SIMULATION_on" class="ps_dashboard_simulation" type="radio" checked="checked" value="1" name="PS_DASHBOARD_SIMULATION">
+					<input id="PS_DASHBOARD_SIMULATION_on" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 1}checked="checked"{/if} value="1" name="PS_DASHBOARD_SIMULATION">
 					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_on">
 						<i class="icon-check-sign color_success"></i> {l s='Yes'}
 					</label>
-					<input id="PS_DASHBOARD_SIMULATION_off" class="ps_dashboard_simulation" type="radio" value="0" name="PS_DASHBOARD_SIMULATION">
+					<input id="PS_DASHBOARD_SIMULATION_off" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 0}checked="checked"{/if} value="0" name="PS_DASHBOARD_SIMULATION">
 					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_off">
 						<i class="icon-ban-circle color_danger"></i> {l s='No'}
 					</label>
-					<span class="slide-button btn btn-default"></span>
+					<a class="slide-button btn btn-default"></a>
 				</span>
 			</section>
 			

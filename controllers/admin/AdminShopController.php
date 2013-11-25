@@ -148,7 +148,7 @@ class AdminShopControllerCore extends AdminController
 	{
 		parent::initContent();
 
-		$this->addJqueryPlugin('cookie-plugin');
+		$this->addJqueryPlugin('cooki-plugin');
 		$this->addJqueryPlugin('jstree');
 		$this->addCSS(_PS_JS_DIR_.'jquery/plugins/jstree/themes/classic/style.css');
 
@@ -203,8 +203,9 @@ class AdminShopControllerCore extends AdminController
 			$children = Category::getChildren($root_category['id_category'], $this->context->language->id);
 			foreach ($children as $child)
 				$selected_cat[] = $child['id_category'];
-			$helper = new Helper();
-			$this->content = $helper->renderCategoryTree($root_category, $selected_cat);
+
+			$helper = new HelperTreeCategories('categories-tree', null, $root_category['id_category']);
+			$this->content = $helper->setSelectedCategories($selected_cat)->setUseSearch(true)->setUseCheckBox(true)->render();
 		}
 		parent::displayAjax();
 	}

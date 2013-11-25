@@ -1294,8 +1294,6 @@ class AdminProductsControllerCore extends AdminController
 				'ui.core',
 				'ui.widget',
 				'ui.accordion',
-				'ui.slider',
-				'ui.datepicker'
 			));
 
 			$this->addjQueryPlugin(array(
@@ -1321,7 +1319,6 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.edit.js',
 				_PS_JS_DIR_.'admin-categories-tree.js',
 				_PS_JS_DIR_.'jquery/ui/jquery.ui.progressbar.min.js',
-				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js',
 				_PS_JS_DIR_.'vendor/spin.js',
 				_PS_JS_DIR_.'vendor/ladda.js'
 			));
@@ -2482,6 +2479,11 @@ class AdminProductsControllerCore extends AdminController
 				'class' => 'toolbar-new'
 			);
 		}
+		else
+			$this->toolbar_btn['import'] = array(
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=products',
+				'desc' => $this->l('Import')
+			);
 		
 		$this->context->smarty->assign('toolbar_scroll', 1);
 		$this->context->smarty->assign('show_toolbar', 1);
@@ -2688,6 +2690,10 @@ class AdminProductsControllerCore extends AdminController
 					$product_supplier->id_product = $product->id;
 					$product_supplier->id_product_attribute = 0;
 					$product_supplier->id_supplier = $id;
+					if ($this->context->currency->id)
+						$product_supplier->id_currency = (int)$this->context->currency->id;
+					else
+						$product_supplier->id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
 					$product_supplier->save();
 
 					$associated_suppliers[] = $product_supplier;

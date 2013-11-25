@@ -23,14 +23,14 @@
 			a {
 				padding:7px 10px 14px 16px;
 				background:$dark-background;
-				min-width: 270px;
+				width: 270px;
 				display:block;
 				font-weight:bold;
 				color:#777777;
 				text-shadow:1px 1px rgba(0,0,0,0.2);
 				overflow:hidden;
 																		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
-																			min-width:190px;
+																			width:190px;
 																		}
 				span.ajax_cart_product_txt, span.ajax_cart_product_txt_s {
 																		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px

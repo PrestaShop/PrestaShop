@@ -25,7 +25,7 @@
 <!DOCTYPE html>
 <html lang="{$lang_iso}">
 	<head>
-		<title>{$meta_title|escape:'htmlall':'UTF-8'}</title>
+		<title>{$meta_title|escape:'html':'UTF-8'}</title>
 		{*<meta name="viewport" content="width=device-width, initial-scale=1">*}
 		<meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
 {if isset($meta_description) AND $meta_description}
@@ -59,12 +59,12 @@
 {/if}
 	{$HOOK_MOBILE_HEADER}
 	</head>
-	<body {if isset($page_name)}id="{$page_name|escape:'htmlall':'UTF-8'}"{/if}>
+	<body {if isset($page_name)}id="{$page_name|escape:'html':'UTF-8'}"{/if}>
 	<div data-role="page" {if isset($wrapper_id)}id="{$wrapper_id}"{/if} class="type-interior prestashop-page">
 		<div data-role="header" id="header" class="ui-body-c">
 			<div class="ui-grid-a">
 				<div class="ui-block-a">
-					<a href="{$base_dir}" title="{$shop_name|escape:'htmlall':'UTF-8'}" data-ajax="false"><img src="{$logo_url}" alt="{$shop_name|escape:'htmlall':'UTF-8'}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}" {/if} /></a>
+					<a href="{$base_dir}" title="{$shop_name|escape:'html':'UTF-8'}" data-ajax="false"><img src="{$logo_url}" alt="{$shop_name|escape:'html':'UTF-8'}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}" {/if} /></a>
 				</div>
 				<div class="ui-block-b">
 					<div id="block_cart" class="clearfix">

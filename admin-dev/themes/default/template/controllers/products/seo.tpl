@@ -63,8 +63,8 @@
 			}
 		</div>
 	</div>
-
-	<div class="form-group">
+	{* Removed for simplicity *}
+	<div class="form-group hide">
 		<label class="control-label col-lg-3" for="meta_keywords_{$id_lang}">
 			{include file="controllers/products/multishop/checkbox.tpl" field="meta_keywords" type="default" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"
@@ -104,7 +104,7 @@
 			{foreach from=$languages item=language}
 			<div class="alert alert-warning translatable-field lang-{$language.id_lang}">
 				<i class="icon-link"></i> {l s='The product link will look like this:'}<br/>
-				<strong>{$curent_shop_url|escape:'htmlall':'UTF-8'}lang/{if isset($product->id)}{$product->id}{else}id_product{/if}-<span id="friendly-url_{$language.id_lang}">{$product->link_rewrite[$default_language]}</span>.html</strong>
+				<strong>{$curent_shop_url|escape:'html':'UTF-8'}lang/{if isset($product->id)}{$product->id}{else}id_product{/if}-<span id="friendly-url_{$language.id_lang}">{$product->link_rewrite[$default_language]}</span>.html</strong>
 			</div>
 			{/foreach}
 		</div>

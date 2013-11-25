@@ -35,7 +35,7 @@ class DateOfDelivery extends Module
 	{
 		$this->name = 'dateofdelivery';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		
@@ -128,13 +128,12 @@ class DateOfDelivery extends Module
 						$package = $package_list[$id_address][$id_package];
 						$oos = false; // For out of stock management
 						foreach ($package['product_list'] as $product)
-							if (StockAvailable::getQuantityAvailableByProduct($product['id_product'], $product['id_product_attribute']) <= 0)
+							if (StockAvailable::getQuantityAvailableByProduct($product['id_product'], ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), (int)$this->context->shop->id) <= 0)
 							{
 								$oos = true;
 								break;
 							}
-
-						$available_date = Product::getAvailableDate($product['id_product'], $product['id_product_attribute']);
+						$available_date = Product::getAvailableDate($product['id_product'], ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), (int)$this->context->shop->id);
 						$date_range = $this->_getDatesOfDelivery($id_carrier, $oos, $available_date);
 						if (is_null($date_from) || $date_from < $date_range[0])
 						{
@@ -150,7 +149,6 @@ class DateOfDelivery extends Module
 				}
 			}
 		}
-		
 		$this->smarty->assign(array(
 			'nbPackages' => $params['cart']->getNbOfPackages(),
 			'datesDelivery' => $datesDelivery,

@@ -57,7 +57,7 @@
 							},
 							function(res)
 							{
-								$('#categories-treeview').parent().html(res);
+								$('#categories-tree').parent().parent().html(res);
 							}
 						);
 					});
@@ -86,7 +86,7 @@
 					<label class="radio" for="{$field.name}_off">
 						<i class="icon-ban-circle color_danger"></i> {l s='No'}
 					</label>
-					<span class="slide-button btn btn-default"></span>
+					<a class="slide-button btn btn-default"></a>
 				</span>
 			</div>
 		{elseif $key == 'select'}

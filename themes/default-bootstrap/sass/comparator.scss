@@ -101,4 +101,7 @@ table#product_comparison {
 		font-style:italic;	
 	}
 }
+.ie8 table#product_comparison .product-image-block .product_image img {
+	width:auto;
+}
 .footer_link { margin-bottom:20px;}

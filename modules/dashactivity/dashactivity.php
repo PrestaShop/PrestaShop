@@ -354,7 +354,7 @@ class Dashactivity extends Module
 		);
 			
 		$fields_form['form']['input'][] = array(
-			'label' => $this->l('Cart as active'),
+			'label' => $this->l('Cart active'),
 			'desc' => $this->l('Default time range to consider a Shopping cart as active (default 30, max 120)'),
 			'name' => 'DASHACTIVITY_CART_ACTIVE',
 			'type' => 'select',

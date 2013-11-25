@@ -16,7 +16,7 @@
 			<ul>
 				{foreach from=$features item=feature}
 				{if isset($feature.value)}
-					<li><span>{$feature.name|escape:'htmlall':'UTF-8'}</span> {$feature.value|escape:'htmlall':'UTF-8'}</li>
+					<li><span>{$feature.name|escape:'html':'UTF-8'}</span> {$feature.value|escape:'html':'UTF-8'}</li>
 				{/if}
 			{/foreach}
 			</ul>
@@ -29,7 +29,7 @@
 			<h3>{l s='Download'}</h3>
 			<ul>
 				{foreach from=$attachments item=attachment}
-					<li><a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")|escape:'html'}" data-ajax="false">{$attachment.name|escape:'htmlall':'UTF-8'}</a><br />{$attachment.description|escape:'htmlall':'UTF-8'}</li>
+					<li><a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")|escape:'html'}" data-ajax="false">{$attachment.name|escape:'html':'UTF-8'}</a><br />{$attachment.description|escape:'html':'UTF-8'}</li>
 				{/foreach}
 			</ul>
 		</div>
@@ -43,14 +43,14 @@
 				{foreach from=$accessories item=accessory name=accessories_list}
 					{assign var='accessoryLink' value=$link->getProductLink($accessory.id_product, $accessory.link_rewrite, $accessory.category)}
 					<li class="ajax_block_product {if $smarty.foreach.accessories_list.last}last_item{else}item{/if} product_accessories_description clearfix">
-						<a href="{$accessoryLink|escape:'htmlall':'UTF-8'}" data-ajax="false">
+						<a href="{$accessoryLink|escape:'html':'UTF-8'}" data-ajax="false">
 							<div class="clearfix" >
 								<div class="col-left" style="width:{$mediumSize.width+10}px;">
-									<img src="{$link->getImageLink($accessory.link_rewrite, $accessory.id_image, 'medium_default')|escape:'html'}" alt="{$accessory.legend|escape:'htmlall':'UTF-8'}" width="{$mediumSize.width}" height="{$mediumSize.height}" />
+									<img src="{$link->getImageLink($accessory.link_rewrite, $accessory.id_image, 'medium_default')|escape:'html'}" alt="{$accessory.legend|escape:'html':'UTF-8'}" width="{$mediumSize.width}" height="{$mediumSize.height}" />
 								</div><!-- .col-left -->
 								<div class="col-right">
 									<div class="inner">
-										<p class="s_title_block">{$accessory.name|escape:'htmlall':'UTF-8'}</p>
+										<p class="s_title_block">{$accessory.name|escape:'html':'UTF-8'}</p>
 										<p>{$accessory.description_short|strip_tags|truncate:70:'...'}</p>
 									</div>
 								</div>
@@ -62,7 +62,7 @@
 							</div>
 						{/if}
 						<div class="btn-row">
-							<a class="" data-theme="a" data-role="button" data-mini="true" data-inline="true" data-icon="arrow-r" href="{$accessoryLink|escape:'htmlall':'UTF-8'}" title="{l s='View'}" data-ajax="false">{l s='View'}</a>
+							<a class="" data-theme="a" data-role="button" data-mini="true" data-inline="true" data-icon="arrow-r" href="{$accessoryLink|escape:'html':'UTF-8'}" title="{l s='View'}" data-ajax="false">{l s='View'}</a>
 							{assign var="btn_more" value=""}
 							{assign var="btn_href" value=""}
 							{assign var="btn_class" value=""}

@@ -33,7 +33,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
-	<title>{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'htmlall':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if}</title>
+	<title>{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'html':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if}</title>
 	{if $display_header}
 	<script type="text/javascript">
 
@@ -113,7 +113,7 @@
 				<i class="icon-reorder"></i>
 			</button>
 
-			<a id="header_shopname" href="{$default_tab_link|escape:'htmlall':'UTF-8'}">
+			<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">
 				<img src="{$img_dir}prestashop-avatar.png" height="15" width="15" />
 				{$shop_name}
 			</a>
@@ -298,7 +298,7 @@
 					<a href="#" id="quick_select" class="dropdown-toggle" data-toggle="dropdown">{l s='Quick Access'} <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 					{foreach $quick_access as $quick}
-						<li><a href="{$quick.link|escape:'htmlall':'UTF-8'}" {if $quick.new_window} target="_blank"{/if}><i class="icon-chevron-right"></i> {$quick.name}</a></li>
+						<li><a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window} target="_blank"{/if}><i class="icon-chevron-right"></i> {$quick.name}</a></li>
 					{/foreach}
 					</ul>
 				</li>
@@ -322,7 +322,7 @@
 					<ul id="employee_links" class="dropdown-menu">
 						<li><span class="employee_avatar">{$employee_avatar}</span></li>
 						<li class="divider"></li>
-						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'htmlall':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
+						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
 						<li class="divider"></li>
 						<li><a id="header_logout" href="index.php?logout"><i class="icon-signout"></i> {l s='Log out'}</a></li>
 					</ul>

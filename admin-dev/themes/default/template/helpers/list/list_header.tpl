@@ -83,6 +83,7 @@
 		<div class="panel-heading">
 			{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end}{else}{$title}{/if}
 			{if isset($toolbar_btn) && count($toolbar_btn) >0}
+			<span class="badge">{$list_total}</span>
 			<span class="panel-heading-action">
 			{foreach from=$toolbar_btn item=btn key=k}
 				{if $k != 'modules-list' && $k != 'back'}
@@ -175,6 +176,7 @@
 			{/if}
 		</div>
 {/if}
+
 {if $simple_header}
 <div class="panel col-lg-12">
 	{if isset($title)}<h3>{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end}{else}{$title}{/if}</h3>{/if}
@@ -247,7 +249,6 @@
 							--
 						{/if}
 					</th>
-
 					{* Filters (input, select, date or bool) *}
 					{foreach $fields_display AS $key => $params}
 					<th {if isset($params.align)} class="{$params.align}" {/if}>
@@ -287,7 +288,7 @@
 									</select>
 								{/if}
 							{else}
-								<input type="text" class="filter" name="{$list_id}Filter_{if isset($params.filter_key)}{$params.filter_key}{else}{$key}{/if}" value="{$params.value|escape:'htmlall':'UTF-8'}" {if isset($params.width) && $params.width != 'auto'} style="width:{$params.width}px"{/if} />
+								<input type="text" class="filter" name="{$list_id}Filter_{if isset($params.filter_key)}{$params.filter_key}{else}{$key}{/if}" value="{$params.value|escape:'html':'UTF-8'}" {if isset($params.width) && $params.width != 'auto'} style="width:{$params.width}px"{/if} />
 							{/if}
 						{/if}
 					</th>

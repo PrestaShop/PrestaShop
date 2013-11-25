@@ -15,7 +15,7 @@
       <value>1</value>
     </configuration>
     <configuration id="PS_GROUP_FEATURE_ACTIVE" name="PS_GROUP_FEATURE_ACTIVE">
-      <value>1</value>
+      <value>0</value>
     </configuration>
     <configuration id="PS_CURRENCY_DEFAULT" name="PS_CURRENCY_DEFAULT">
       <value>1</value>

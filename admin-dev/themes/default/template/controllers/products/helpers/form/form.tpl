@@ -71,7 +71,6 @@
 			{/foreach}
 			</div>
 		</div>
-
 		<script type="text/javascript">
 			var token = '{$token}';
 			var id_product = {if isset($product->id)}{$product->id}{else}0{/if};
@@ -104,8 +103,6 @@
 			$(document).ready(function()
 			{
 				hideOtherLanguage(default_language);
-				
-				$('#product-tab-content-wait').show();
 
 				if (product_type == product_type_pack)
 				{
@@ -172,7 +169,8 @@
 					{
 						$('#desc-product-newCombination').hide();
 						// if pack is enabled, save button are visible only if pack is valid
-						handleSaveButtons();
+						if ($("input[name='id_product']").val() != 0 || btn_name != 'Informations')
+							handleSaveButtons();
 					}
 					hideOtherLanguage(default_language);
 					$('.label-tooltip').tooltip();
@@ -185,7 +183,8 @@
 					disableSave();
 
 				tabs_manager.onLoad('Associations', function(){
-					handleSaveButtons();
+					if ($("input[name='id_product']").val() != 0)
+						handleSaveButtons();
 				});
 
 				$('.confirm_leave').live('click', function(){

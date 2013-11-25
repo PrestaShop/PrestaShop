@@ -198,7 +198,7 @@
 			$('#smarty_up').val(1);
 		});
 
-		$('input[name="combination"], input[name="feature"]').change(function(){
+		$('input[name="combination"], input[name="feature"], input[name="group"]').change(function(){
 			$('#features_detachables_up').val('true');
 		});
 

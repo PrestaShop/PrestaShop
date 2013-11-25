@@ -51,6 +51,7 @@
 					{/if}
 					class="{if !$no_link}pointer{/if}
 					{if isset($params.position) && $order_by == 'position'  && $order_way != 'DESC'} dragHandle{/if}
+					{if isset($params.class)} {$params.class}{/if}
 					{if isset($params.align)} {$params.align}{/if}"
 					{if (!isset($params.position) && !$no_link && !isset($params.remove_onclick))}
 						onclick="document.location = '{$current_index}&{$identifier}={$tr.$identifier}{if $view}&view{else}&update{/if}{$table}&token={$token}'">
@@ -109,15 +110,15 @@
 						{$tr.$key} {l s='%'}
 					{* If type is 'editable', an input is created *}
 					{elseif isset($params.type) && $params.type == 'editable' && isset($tr.id)}
-						<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'htmlall':'UTF-8'}" class="{$key}" />
+						<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'html':'UTF-8'}" class="{$key}" />
 					{elseif isset($params.callback)}
 						{$tr.$key}
 					{elseif $key == 'color'}
 						<div style="background-color: {$tr.$key};" class="attributes-color-container"></div>
 					{elseif isset($params.maxlength) && Tools::strlen($tr.$key) > $params.maxlength}
-						<span title="{$tr.$key|escape:'htmlall':'UTF-8'}">{$tr.$key|truncate:$params.maxlength:'...'|escape:'htmlall':'UTF-8'}</span>
+						<span title="{$tr.$key|escape:'html':'UTF-8'}">{$tr.$key|truncate:$params.maxlength:'...'|escape:'html':'UTF-8'}</span>
 					{else}
-						{$tr.$key|escape:'htmlall':'UTF-8'}
+						{$tr.$key|escape:'html':'UTF-8'}
 					{/if}
 				{else}
 					{block name="default_field"}--{/block}
@@ -178,6 +179,6 @@
 	</tr>
 {/foreach}
 {else}
-	<tr><td class="center" colspan="{count($fields_display) + 2}"><i class="icon-warning-sign"></i> {l s='No records found'}</td></tr>
+	<tr><td class="center text-muted" colspan="{count($fields_display) + 2}"><i class="icon-warning-sign"></i> {l s='No records found'}</td></tr>
 {/if}
 </tbody>

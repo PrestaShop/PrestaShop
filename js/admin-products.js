@@ -145,7 +145,6 @@ product_tabs['Combinations'] = new function(){
 	this.bindDefault = function(){
 		$('table[id=combinations-list]').delegate('a.default', 'click', function(e){
 			e.preventDefault();
-			console.log('ok');
 			self.defaultProductAttribute(this.href, this);
 		});
 	};
@@ -412,10 +411,10 @@ function handleSaveButtons(e)
 
 	// common for all products
 	$("#disableSaveMessage").remove();
+
 	if ($("#name_" + id_lang_default).val() == "" && (!display_multishop_checkboxes || $('input[name=\'multishop_check[name][' + id_lang_default + ']\']').prop('checked')))
-	{
 		msg[i++] = empty_name_msg;
-	}
+
 	// check friendly_url_[defaultlangid] only if name is ok
 	else if ($("#link_rewrite_" + id_lang_default).val() == "" && (!display_multishop_checkboxes || $('input[name=\'link_rewrite[name][' + id_lang_default + ']\']').prop('checked')))
 		msg[i++] = empty_link_rewrite_msg;

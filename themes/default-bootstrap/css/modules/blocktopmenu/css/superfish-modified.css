@@ -1,4 +1,3 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 /*** ESSENTIAL STYLES ***/
 .sf-contener {
   clear: both;
@@ -198,36 +197,38 @@ ul.sf-menu li li li.sfHover ul {
   color: #515151;
 }
 
-.sf-menu > li > ul > li:not(#category-thumbnail) {
+.sf-menu > li > ul > li {
   float: left;
   width: 20%;
   padding-right: 15px;
 }
 @media (max-width: 767px) {
-  .sf-menu > li > ul > li:not(#category-thumbnail) {
+  .sf-menu > li > ul > li {
     width: 50%;
   }
 }
 @media (max-width: 479px) {
-  .sf-menu > li > ul > li:not(#category-thumbnail) {
+  .sf-menu > li > ul > li {
     width: 100%;
   }
 }
 @media (min-width: 768px) {
-  .sf-menu > li > ul > li:not(#category-thumbnail).first-in-line-lg {
+  .sf-menu > li > ul > li.first-in-line-lg {
     clear: left;
   }
 }
 @media (min-width: 480px) and (max-width: 767px) {
-  .sf-menu > li > ul > li:not(#category-thumbnail).first-in-line-xs {
+  .sf-menu > li > ul > li.first-in-line-xs {
     clear: left;
   }
 }
 
 .sf-menu > li > ul > li#category-thumbnail {
-  width: 100%;
+  width: 100% !important;
+  float: none;
   clear: both;
   overflow: hidden;
+  padding-right: 0;
 }
 .sf-menu > li > ul > li#category-thumbnail > div {
   float: left;

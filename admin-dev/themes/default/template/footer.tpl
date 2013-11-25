@@ -29,7 +29,9 @@
 {hook h="displayBackOfficeFooter"}
 <div id="footer" class="bootstrap">
 	<div class="col-sm-5 hidden-xs">
-		<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a> - <span>{l s='Load time: '} {number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
+		<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a>
+		-
+		<span id="footer-load-time"><i class="icon-time"></i> {l s='Load time: '} {number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
 	</div>
 	<div class="col-sm-2 hidden-xs social-networks">
 		<a class="link-social link-twitter" href="https://twitter.com/PrestaShop" target="_blank" title="Twitter">
@@ -48,18 +50,22 @@
 
 	<div class="col-sm-5">
 		<a href="http://www.prestashop.com/en/contact_us?utm_source=backoffice_footer" target="_blank" class="footer_link">
+			<i class="icon-envelope"></i>
 			{l s='Contact'}
 		</a>
-		|&nbsp;
+		//&nbsp;
 		<a href="http://forge.prestashop.com/?utm_source=backoffice_footer" target="_blank" class="footer_link">
+			<i class="icon-bug"></i>
 			{l s='Bug Tracker'}
 		</a>
-		|&nbsp;
+		//&nbsp;
 		<a href="http://www.prestashop.com/forums/?utm_source=backoffice_footer" target="_blank" class="footer_link">
+			<i class="icon-comments"></i>
 			{l s='Forum'}
 		</a>
-		|&nbsp;
+		//&nbsp;
 		<a href="http://addons.prestashop.com/?utm_source=backoffice_footer" target="_blank" class="footer_link">
+			<i class="icon-puzzle-piece"></i>
 			{l s='Addons'}
 		</a>
 		{if $iso_is_fr}

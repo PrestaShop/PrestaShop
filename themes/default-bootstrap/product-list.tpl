@@ -50,10 +50,10 @@
         	<div class="product-container">
                 <div class="left-block">
                 	<div class="product-image-container">
-                    	<a href="{$product.link|escape:'htmlall':'UTF-8'}" class="product_img_link" title="{$product.name|escape:'htmlall':'UTF-8'}">
-                            <img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html'}" alt="{$product.legend|escape:'htmlall':'UTF-8'}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} />
+                    	<a href="{$product.link|escape:'html':'UTF-8'}" class="product_img_link" title="{$product.name|escape:'html':'UTF-8'}">
+                            <img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html'}" alt="{$product.legend|escape:'html':'UTF-8'}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} />
                         </a>
-                        {if isset($quick_view) && $quick_view}<a href="#" rel="{$product.link|escape:'htmlall':'UTF-8'}" class="quick-view"><span>Quick view</span></a>{/if}
+                        {if isset($quick_view) && $quick_view}<a href="#" rel="{$product.link|escape:'html':'UTF-8'}" class="quick-view"><span>Quick view</span></a>{/if}
                         {if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
                         	<div class="content_price">
                             	{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}
@@ -70,7 +70,7 @@
                    	</div>
                 </div>
                 <div class="right-block">
-                	<h5>{if isset($product.pack_quantity) && $product.pack_quantity}{$product.pack_quantity|intval|cat:' x '}{/if}<a class="product-name" href="{$product.link|escape:'htmlall':'UTF-8'}" title="{$product.name|escape:'htmlall':'UTF-8'}">{$product.name|truncate:45:'...'|escape:'htmlall':'UTF-8'}</a></h5>
+                	<h5>{if isset($product.pack_quantity) && $product.pack_quantity}{$product.pack_quantity|intval|cat:' x '}{/if}<a class="product-name" href="{$product.link|escape:'html':'UTF-8'}" title="{$product.name|escape:'html':'UTF-8'}">{$product.name|truncate:45:'...'|escape:'html':'UTF-8'}</a></h5>
                     {hook h='displayProductListReviews' product=$product}
                     <p class="product-desc">{$product.description_short|strip_tags:'UTF-8'|truncate:360:'...'}</p>
                     {if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
@@ -96,7 +96,7 @@
                                 <span class="button ajax_add_to_cart_button btn btn-default disabled"><span>{l s='Add to cart'}</span></span>
                             {/if}
                         {/if}
-                        <a class="button lnk_view btn btn-default" href="{$product.link|escape:'htmlall':'UTF-8'}" title="{l s='View'}"><span>{l s='More'}</span></a>
+                        <a class="button lnk_view btn btn-default" href="{$product.link|escape:'html':'UTF-8'}" title="{l s='View'}"><span>{l s='More'}</span></a>
                     </div>
                     
                     {if isset($product.color_list)}<div class="color-list-container">{$product.color_list} </div>{/if}

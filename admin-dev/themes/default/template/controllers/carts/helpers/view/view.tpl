@@ -52,7 +52,7 @@
 					{else}
 					<i class="icon-question"></i> 
 					{/if}
-					<a href="{$link->getAdminLink('AdminCustomers')|escape:'htmlall':'UTF-8'}&id_customer={$customer->id}&viewcustomer">{$customer->firstname} {$customer->lastname}</a></h2>
+					<a href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&id_customer={$customer->id}&viewcustomer">{$customer->firstname} {$customer->lastname}</a></h2>
 				<div class="form-horizontal">
 					<div class="form-group">
 						<label class="col-lg-3 control-label">{l s='Account registration date:'}</label>
@@ -76,12 +76,12 @@
 		<div class="panel">
 			<h3><i class="icon-shopping-cart"></i> {l s='Order information'}</h3>
 			{if $order->id}
-				<h2><a href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&id_order={$order->id}&vieworder"> {l s='Order #%d' sprintf=$order->id|string_format:"%06d"}</a></h2>
+				<h2><a href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&id_order={$order->id}&vieworder"> {l s='Order #%d' sprintf=$order->id|string_format:"%06d"}</a></h2>
 				{l s='Made on:'} {dateFormat date=$order->date_add}
 			{else}
 				<h2>{l s='No order was created from this cart.'}</h2>
 				{if $customer->id}
-					<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&id_cart={$cart->id}&addorder"><i class="icon-shopping-cart"></i> {l s='Create an order from this cart.'}</a>
+					<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&id_cart={$cart->id}&addorder"><i class="icon-shopping-cart"></i> {l s='Create an order from this cart.'}</a>
 				{/if}
 			{/if}
 		</div>
@@ -105,7 +105,7 @@
 				{if isset($customized_datas[$product.id_product][$product.id_product_attribute][$product.id_address_delivery])}
 					<tr>
 						<td>{$product.image}</td>
-						<td><a href="{$link->getAdminLink('AdminProducts')|escape:'htmlall':'UTF-8'}&id_product={$product.id_product}&updateproduct">
+						<td><a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}&id_product={$product.id_product}&updateproduct">
 									<span class="productName">{$product.name}</span>{if isset($product.attributes)}<br />{$product.attributes}{/if}<br />
 								{if $product.reference}{l s='Ref:'} {$product.reference}{/if}
 								{if $product.reference && $product.supplier_reference} / {$product.supplier_reference}{/if}
@@ -150,7 +150,7 @@
 					<tr>
 						<td>{$product.image}</td>
 						<td>
-							<a href="{$link->getAdminLink('AdminProducts')|escape:'htmlall':'UTF-8'}&id_product={$product.id_product}&updateproduct">
+							<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}&id_product={$product.id_product}&updateproduct">
 							<span class="productName">{$product.name}</span>{if isset($product.attributes)}<br />{$product.attributes}{/if}<br />
 							{if $product.reference}{l s='Ref:'} {$product.reference}{/if}
 							{if $product.reference && $product.supplier_reference} / {$product.supplier_reference}{/if}
@@ -200,7 +200,7 @@
 		</tr>
 		{foreach from=$discounts item='discount'}
 			<tr>
-				<td><a href="{$link->getAdminLink('AdminDiscounts')|escape:'htmlall':'UTF-8'}&id_discount={$discount.id_discount}&updatediscount">{$discount.name}</a></td>
+				<td><a href="{$link->getAdminLink('AdminDiscounts')|escape:'html':'UTF-8'}&id_discount={$discount.id_discount}&updatediscount">{$discount.name}</a></td>
 				<td align="center">- {displayWtPriceWithCurrency price=$discount.value_real currency=$currency}</td>
 			</tr>
 		{/foreach}

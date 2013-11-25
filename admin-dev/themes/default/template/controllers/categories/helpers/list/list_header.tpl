@@ -86,10 +86,10 @@
 				{if $key != 'deleteMode'}
 					{if is_array($value)}
 						{foreach $value as $val}
-							<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}[]" value="{$val|escape:'htmlall':'UTF-8'}" />
+							<input type="hidden" name="{$key|escape:'html':'UTF-8'}[]" value="{$val|escape:'html':'UTF-8'}" />
 						{/foreach}
 					{else}
-						<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}" value="{$value|escape:'htmlall':'UTF-8'}" />
+						<input type="hidden" name="{$key|escape:'html':'UTF-8'}" value="{$value|escape:'html':'UTF-8'}" />
 					{/if}
 				{/if}
 			{/foreach}

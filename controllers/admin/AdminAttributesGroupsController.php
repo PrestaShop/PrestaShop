@@ -323,6 +323,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'class' => 'button'
 		);
 
+		$this->fields_value['id_attribute_group'] = (int)Tools::getValue('id_attribute_group');
+
 		// Override var of Controller
 		$this->table = 'attribute';
 		$this->className = 'Attribute';
@@ -471,11 +473,18 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				'icon' => 'process-icon-new'
 			);
 			$this->page_header_toolbar_btn['new_value'] = array(
-				'href' => self::$currentIndex.'&amp;updateattribute&amp;token='.$this->token,
+				'href' => self::$currentIndex.'&amp;updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&amp;token='.$this->token,
 				'desc' => $this->l('Add new value'),
 				'icon' => 'process-icon-new'
 			);
-		}		
+		}
+
+		if ($this->display == 'view')
+			$this->page_header_toolbar_btn['new_value'] = array(
+				'href' => self::$currentIndex.'&amp;updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&amp;token='.$this->token,
+				'desc' => $this->l('Add new value'),
+				'icon' => 'process-icon-new'
+			);
 
 		parent::initPageHeaderToolbar();
 	}
@@ -508,6 +517,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				);
 				break;
 			case 'view':
+				$this->toolbar_btn['newAttributes'] = array(
+						'href' => self::$currentIndex.'&amp;updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&amp;token='.$this->token,
+						'desc' => $this->l('Add New Values'),
+						'class' => 'toolbar-new'
+					);
+
 				$this->toolbar_btn['back'] = array(
 					'href' => self::$currentIndex.'&token='.$this->token,
 					'desc' => $this->l('Back to list')
@@ -518,12 +533,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
 					'desc' => $this->l('Add New Attributes')
 				);
-				$this->toolbar_btn['newAttributes'] = array(
-					'href' => self::$currentIndex.'&amp;updateattribute&amp;token='.$this->token,
-					'desc' => $this->l('Add New Values'),
-					'class' => 'toolbar-new'
-				);
 		}
+			$this->toolbar_btn['import'] = array(
+					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=combinations',
+					'desc' => $this->l('Import')
+				);
 	}
 
 	public function initToolbarTitle()
@@ -533,11 +547,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		switch ($this->display)
 		{
 			case 'edit':
-				$bread_extended[] = $this->l('Edit New Attributes');
+				$bread_extended[] = $this->l('Edit New Attribute');
 				break;
 
 			case 'add':
-				$bread_extended[] = $this->l('Add New Attributes');
+				$bread_extended[] = $this->l('Add New Attribute');
 				break;
 
 			case 'view':
@@ -565,7 +579,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						$bread_extended[] = $this->l('Edit Value');
 				}
 				else
-					$bread_extended[] = $this->l('Add New Values');
+					$bread_extended[] = $this->l('Add New Value');
 				break;
 		}
 

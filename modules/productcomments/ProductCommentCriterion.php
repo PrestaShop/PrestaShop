@@ -159,26 +159,33 @@ class ProductCommentCriterion extends ObjectModel
 			$table = '_shop';
 			$alias = 'ps';
 		}
-		return Db::getInstance()->executeS('
-			SELECT pcc.`id_product_comment_criterion`, pccl.`name`
-			FROM `'._DB_PREFIX_.'product_comment_criterion` pcc
-			LEFT JOIN `'._DB_PREFIX_.'product_comment_criterion_lang` pccl
-				ON (pcc.id_product_comment_criterion = pccl.id_product_comment_criterion)
-			LEFT JOIN `'._DB_PREFIX_.'product_comment_criterion_product` pccp
-				ON (pcc.`id_product_comment_criterion` = pccp.`id_product_comment_criterion` AND pccp.`id_product` = '.(int)$id_product.')
-			LEFT JOIN `'._DB_PREFIX_.'product_comment_criterion_category` pccc
-				ON (pcc.`id_product_comment_criterion` = pccc.`id_product_comment_criterion`)
-			LEFT JOIN `'._DB_PREFIX_.'product'.$table.'` '.$alias.'
-				ON ('.$alias.'.id_category_default = pccc.id_category AND '.$alias.'.id_product = '.(int)$id_product.')
-			WHERE pccl.`id_lang` = '.(int)($id_lang).'
-			AND (
-				pccp.id_product IS NOT NULL
-				OR ps.id_product IS NOT NULL
-				OR pcc.id_product_comment_criterion_type = 1
-			)
-			AND pcc.active = 1
-			GROUP BY pcc.id_product_comment_criterion
-		');
+
+		$cache_id = 'ProductCommentCriterion::getByProduct_'.(int)$id_product.'-'.(int)$id_lang;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = Db::getInstance()->executeS('
+				SELECT pcc.`id_product_comment_criterion`, pccl.`name`
+				FROM `'._DB_PREFIX_.'product_comment_criterion` pcc
+				LEFT JOIN `'._DB_PREFIX_.'product_comment_criterion_lang` pccl
+					ON (pcc.id_product_comment_criterion = pccl.id_product_comment_criterion)
+				LEFT JOIN `'._DB_PREFIX_.'product_comment_criterion_product` pccp
+					ON (pcc.`id_product_comment_criterion` = pccp.`id_product_comment_criterion` AND pccp.`id_product` = '.(int)$id_product.')
+				LEFT JOIN `'._DB_PREFIX_.'product_comment_criterion_category` pccc
+					ON (pcc.`id_product_comment_criterion` = pccc.`id_product_comment_criterion`)
+				LEFT JOIN `'._DB_PREFIX_.'product'.$table.'` '.$alias.'
+					ON ('.$alias.'.id_category_default = pccc.id_category AND '.$alias.'.id_product = '.(int)$id_product.')
+				WHERE pccl.`id_lang` = '.(int)($id_lang).'
+				AND (
+					pccp.id_product IS NOT NULL
+					OR ps.id_product IS NOT NULL
+					OR pcc.id_product_comment_criterion_type = 1
+				)
+				AND pcc.active = 1
+				GROUP BY pcc.id_product_comment_criterion
+			');
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
