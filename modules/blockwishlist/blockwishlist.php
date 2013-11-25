@@ -38,7 +38,7 @@ class BlockWishList extends Module
 	{
 		$this->name = 'blockwishlist';
 		$this->tab = 'front_office_features';
-		$this->version = 0.3;
+		$this->version = 0.4;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		
@@ -258,7 +258,7 @@ class BlockWishList extends Module
 				$this->_html .= '
 				<tr>
 					<td class="first_item">
-						<img src="'.$this->context->link->getImageLink($product['link_rewrite'], $product['cover'], 'small').'" alt="'.htmlentities($product['name'], ENT_COMPAT, 'UTF-8').'" style="float:left;" />
+						<img src="'.$this->context->link->getImageLink($product['link_rewrite'], $product['cover'], ImageType::getFormatedName('small')).'" alt="'.htmlentities($product['name'], ENT_COMPAT, 'UTF-8').'" style="float:left;" />
 						'.$product['name'];
 				if (isset($product['attributes_small']))
 					$this->_html .= '<br /><i>'.htmlentities($product['attributes_small'], ENT_COMPAT, 'UTF-8').'</i>';
@@ -409,7 +409,7 @@ class BlockWishList extends Module
 		foreach ($products as $key => $val)
 		{
 			$image = Image::getCover($val['id_product']);
-			$products[$key]['image'] = $this->context->link->getImageLink($val['link_rewrite'], $image['id_image'], 'small');
+			$products[$key]['image'] = $this->context->link->getImageLink($val['link_rewrite'], $image['id_image'], ImageType::getFormatedName('small'));
 		}
 		
 		$fields_list = array(

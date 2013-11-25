@@ -1347,7 +1347,9 @@ class BlockLayered extends Module
 
 
 		$this->context->controller->addJS(($this->_path).'blocklayered.js');
-		$this->context->controller->addJQueryUI('ui.slider');		
+		$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
+		$this->context->controller->addJQueryUI('ui.slider');
+		$this->context->controller->addCSS(_PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css"');		
 		$this->context->controller->addCSS(($this->_path).'blocklayered-15.css', 'all');
 		$this->context->controller->addJQueryPlugin('scrollTo');
 
@@ -1435,7 +1437,7 @@ class BlockLayered extends Module
 				//<![CDATA[
 				$(document).ready(function()
 				{
-					$(\'#selectPrductSort\').unbind(\'change\').bind(\'change\', function()
+					$(\'#selectProductSort\').unbind(\'change\').bind(\'change\', function()
 					{
 						reloadContent();
 					})
@@ -2863,7 +2865,7 @@ class BlockLayered extends Module
 					AND '.$alias.'.active = 1 AND '.$alias.'.`visibility` IN ("both", "catalog")';
 					$sql_query['group'] = ') count_products
 					FROM '._DB_PREFIX_.'category c
-					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category AND cl.id_lang = '.$id_lang.')
+					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category AND cl.`id_shop` = '.(int)Context::getContext()->shop->id.' and cl.id_lang = '.$id_lang.')
 					WHERE c.nleft > '.(int)$parent->nleft.'
 					AND c.nright < '.(int)$parent->nright.'
 					'.($depth ? 'AND c.level_depth <= '.($parent->level_depth+(int)$depth) : '').'
@@ -3166,6 +3168,23 @@ class BlockLayered extends Module
 							if (isset($selected_filters['id_feature'][$feature['id_feature_value']]))
 								$feature_array[$feature['id_feature']]['values'][$feature['id_feature_value']]['checked'] = true;
 						}
+
+						//Natural sort
+						foreach ($feature_array as $key => $value)
+						{
+							$temp = array();
+							foreach ($feature_array[$key]['values'] as $keyint => $valueint)
+								$temp[$keyint] = $valueint['name'];
+
+							natcasesort($temp);
+							$temp2 = array();
+
+							foreach ($temp as $keytemp => $valuetemp)
+								$temp2[$keytemp] = $feature_array[$key]['values'][$keytemp];
+
+							$feature_array[$key]['values'] = $temp2;
+						}
+
 						$filter_blocks = array_merge($filter_blocks, $feature_array);
 					}
 					break;

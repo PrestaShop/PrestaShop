@@ -1,4 +1,4 @@
-Product ID*;Attribute (Name:Type:Position)*;Value (Value:Position)*;Supplier reference;Reference;EAN13;UPC;Wholesale price;Impact on price;Ecotax;Quantity;Minimal quantity;Impact on weight;Default (0 = No, 1 = Yes);Image position;Image URL;Delete existing images (0 = No, 1 = Yes);ID / Name of shop 
+Product ID*;Attribute (Name:Type:Position)*;Value (Value:Position)*;Supplier reference;Reference;EAN13;UPC;Wholesale price;Impact on price;Ecotax;Quantity;Minimal quantity;Impact on weight;Default (0 = No, 1 = Yes);Image position;Image URL;Delete existing images (0 = No, 1 = Yes);ID / Name of shop
 1;Color:color:0, Disk space:select:1;Blue:0, 16GB:1;RF-Nano-Blue-16GB;RP-Nano-Blue-16GB;0000080446392;;100;40;;10;1;0;0;1;http://youdomain.com/img.jpg;1;
 1;Color:color:0, Disk space:select:1;Blue:0, 8GB:1;RF-Nano-Blue-8GB;RP-Nano-Blue-8GB;0000080446393;;80;0;;10;1;0;0;2;http://youdomain.com/img.jpg;1;
 1;Color:color:0, Disk space:select:1;Yellow:0, 16GB:1;RF-Nano-Yellow-16GB;RP-Nano-Yellow-16GB;0000080446394;;100;40;;10;1;0;0;3;http://youdomain.com/img.jpg;1;

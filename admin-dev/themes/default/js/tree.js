@@ -13,7 +13,7 @@ Tree.prototype =
 	{
 		var that = $(this);
 
-		this.$element.find("label.tree-toggler").click(
+		this.$element.find("label.tree-toggler, .icon-folder-close, .icon-folder-open").click(
 			function ()
 			{
 				if ($(this).parent().parent().children("ul.tree").is(":visible"))

@@ -123,7 +123,7 @@ $(document).ready(function()
 		hideFilterValueAction(this);
 	});
 
-	// To be sure there is no other events attached to the selectPrductSort, change the ID
+	// To be sure there is no other events attached to the selectProductSort, change the ID
 	var id = 1;
 	while ($('#selectPrductSort').length) { // Because ids are duplicated
 		// Unbind event change on #selectPrductSort
@@ -132,6 +132,16 @@ $(document).ready(function()
 		$('#selectPrductSort').addClass('selectProductSort');
 		$('#selectPrductSort').attr('id', 'selectPrductSort'+id);
 		$('label[for=selectPrductSort]').attr('for', 'selectPrductSort'+id);
+		id++;
+	}
+
+	while ($('#selectProductSort').length) { // Because ids are duplicated
+		// Unbind event change on #selectProductSort
+		$('#selectProductSort').unbind('change');
+		$('#selectProductSort').attr('onchange', '');
+		$('#selectProductSort').addClass('selectProductSort');
+		$('#selectProductSort').attr('id', 'selectProductSort'+id);
+		$('label[for=selectProductSort]').attr('for', 'selectProductSort'+id);
 		id++;
 	}
 	
