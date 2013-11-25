@@ -61,6 +61,7 @@
 			var priceDisplayPrecision = {$priceDisplayPrecision*$currency->decimals};
 			var priceDisplayMethod = {$priceDisplay};
 			var roundMode = {$roundMode};
+			var isUserLogged = {if $logged}true{else}false{/if};
 		</script>
        	<link href="{$css_dir}bootstrap_lib/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
         <link href="{$css_dir}font-awesome.css" rel="stylesheet" type="text/css" media="all" />
