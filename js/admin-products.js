@@ -145,7 +145,6 @@ product_tabs['Combinations'] = new function(){
 	this.bindDefault = function(){
 		$('table[id=combinations-list]').delegate('a.default', 'click', function(e){
 			e.preventDefault();
-			console.log('ok');
 			self.defaultProductAttribute(this.href, this);
 		});
 	};
