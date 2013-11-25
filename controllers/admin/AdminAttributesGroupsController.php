@@ -527,6 +527,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'desc' => $this->l('Add New Attributes')
 				);
 		}
+			$this->toolbar_btn['import'] = array(
+					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=combinations',
+					'desc' => $this->l('Import')
+				);
 	}
 
 	public function initToolbarTitle()

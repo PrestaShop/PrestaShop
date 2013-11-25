@@ -132,11 +132,11 @@
 			<section class="dash_simulation panel">
 				<h3><i class="icon-link"></i> {l s="Simulation Mode"}</h3>
 				<span class="switch prestashop-switch">
-					<input id="PS_DASHBOARD_SIMULATION_on" class="ps_dashboard_simulation" type="radio" checked="checked" value="1" name="PS_DASHBOARD_SIMULATION">
+					<input id="PS_DASHBOARD_SIMULATION_on" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 1}checked="checked"{/if} value="1" name="PS_DASHBOARD_SIMULATION">
 					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_on">
 						<i class="icon-check-sign color_success"></i> {l s='Yes'}
 					</label>
-					<input id="PS_DASHBOARD_SIMULATION_off" class="ps_dashboard_simulation" type="radio" value="0" name="PS_DASHBOARD_SIMULATION">
+					<input id="PS_DASHBOARD_SIMULATION_off" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 0}checked="checked"{/if} value="0" name="PS_DASHBOARD_SIMULATION">
 					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_off">
 						<i class="icon-ban-circle color_danger"></i> {l s='No'}
 					</label>

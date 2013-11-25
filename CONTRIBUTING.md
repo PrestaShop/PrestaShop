@@ -1,7 +1,7 @@
 Contributing
 ------------
 
-PrestaShop is an open-source e-commerce solution - To contribute to our project, you can make pull requests on the development branch.  
+PrestaShop is an open-source e-commerce solution - To contribute to our project, you can make pull requests on the bootstrap branch.  
 If you need some help to make a [pull-request][1]  
 All contributions must respect [the coding norm][2] and [the commit norm][3] in your pull-request.  
 All core files you commit in your pull request must have Open Software License (OSL 3.0)  
