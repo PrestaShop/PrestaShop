@@ -288,22 +288,22 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 				<div class="clear"></div>
 				{foreach from=$groups key=id_attribute_group item=group}
 					{if $group.attributes|@count}
-						<fieldset class="attribute_fieldset">
+						<fieldset class="attribute_fieldset js-attribute">
 							<label class="attribute_label" for="group_{$id_attribute_group|intval}">{$group.name|escape:'htmlall':'UTF-8'} :&nbsp;</label>
 							{assign var="groupName" value="group_$id_attribute_group"}
 							<div class="attribute_list">
 							{if ($group.group_type == 'select')}
-								<select name="{$groupName}" id="group_{$id_attribute_group|intval}" class="attribute_select" onchange="findCombination();getProductAttribute();">
+								<select name="{$groupName}" id="group_{$id_attribute_group|intval}" class="attribute_select">
 									{foreach from=$group.attributes key=id_attribute item=group_attribute}
 										<option value="{$id_attribute|intval}"{if (isset($smarty.get.$groupName) && $smarty.get.$groupName|intval == $id_attribute) || $group.default == $id_attribute} selected="selected"{/if} title="{$group_attribute|escape:'htmlall':'UTF-8'}">{$group_attribute|escape:'htmlall':'UTF-8'}</option>
 									{/foreach}
 								</select>
 							{elseif ($group.group_type == 'color')}
-								<ul id="color_to_pick_list" class="clearfix">
+								<ul id="color_to_pick_list_{$id_attribute_group|intval}" class="clearfix">
 									{assign var="default_colorpicker" value=""}
 									{foreach from=$group.attributes key=id_attribute item=group_attribute}
-									<li{if $group.default == $id_attribute} class="selected"{/if}>
-										<a id="color_{$id_attribute|intval}" class="color_pick{if ($group.default == $id_attribute)} selected{/if}" style="background: {$colors.$id_attribute.value};" title="{$colors.$id_attribute.name}" onclick="colorPickerClick(this);getProductAttribute();">
+									<li class="js-attribute_color {if $group.default == $id_attribute} selected{/if}" id="color_{$id_attribute|intval}">
+										<a class="color_pick" style="background: {$colors.$id_attribute.value};" title="{$colors.$id_attribute.name}">
 											{if file_exists($col_img_dir|cat:$id_attribute|cat:'.jpg')}
 												<img src="{$img_col_dir}{$id_attribute}.jpg" alt="{$colors.$id_attribute.name}" width="20" height="20" /><br />
 											{/if}
@@ -314,12 +314,12 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 									{/if}
 									{/foreach}
 								</ul>
-								<input type="hidden" class="color_pick_hidden" name="{$groupName}" value="{$default_colorpicker}" />
+								<input type="hidden" class="js-attribute_color_hidden" name="{$groupName}" value="{$default_colorpicker}" />
 							{elseif ($group.group_type == 'radio')}
 								<ul>
 									{foreach from=$group.attributes key=id_attribute item=group_attribute}
 										<li>
-											<input type="radio" class="attribute_radio" name="{$groupName}" value="{$id_attribute}" {if ($group.default == $id_attribute)} checked="checked"{/if} onclick="findCombination();getProductAttribute();" />
+											<input type="radio" class="attribute_radio" name="{$groupName}" value="{$id_attribute}" {if ($group.default == $id_attribute)} checked="checked"{/if} />
 											<span>{$group_attribute|escape:'htmlall':'UTF-8'}</span>
 										</li>
 									{/foreach}
