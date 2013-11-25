@@ -128,6 +128,7 @@ class AdminInvoicesControllerCore extends AdminController
 
 		$this->table = 'invoice_date';
 		$this->toolbar_title = $this->l('Print PDF invoices');
+		$this->show_toolbar = true;
 		return parent::renderForm();
 	}
 
@@ -186,10 +187,42 @@ class AdminInvoicesControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
+	public function initInvoiceFind()
+	{
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('Search order by invoice id'),
+				'image' => '../img/admin/details.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Invoice ID'),
+					'name' => 'id_order_invoice',
+					'size' => 20,
+					'maxlength' => 12,
+					'required' => true,
+					'desc' => $this->l('Invoice id to find. Order will be automatically loaded, Prefix and 0\'s will be automatically stripped.'),
+				),
+			),
+			'submit' => array(
+				'title' => $this->l('Find order by invoice id'),
+				'class' => 'button',
+				'id' => 'submitFind'
+			)
+		);
+
+		$this->table = 'invoice_search';
+		$this->toolbar_title = $this->l('Find invoice');
+		$this->show_toolbar = false;
+		return parent::renderForm();
+	}
+
 	public function initContent()
 	{
 		$this->display = 'edit';
 		$this->initToolbar();
+		$this->content .= $this->initInvoiceFind();
 		$this->content .= $this->initFormByDate();
 		$this->content .= $this->initFormByStatus();
 		$this->table = 'invoice';
@@ -232,7 +265,7 @@ class AdminInvoicesControllerCore extends AdminController
 				$this->errors[] = $this->l('No invoice has been found for this period.');
 			}
 		}
-		else if (Tools::isSubmit('submitAddinvoice_status'))
+		elseif (Tools::isSubmit('submitAddinvoice_status'))
 		{
 			if (!is_array($status_array = Tools::getValue('id_order_state')) || !count($status_array))
 				$this->errors[] = $this->l('You must select at least one order status.');
@@ -244,6 +277,26 @@ class AdminInvoicesControllerCore extends AdminController
 
 				$this->errors[] = $this->l('No invoice has been found for this status.');
 			}
+		}
+		elseif (Tools::isSubmit('submitAddinvoice_search'))
+		{
+			if (Tools::getValue('id_order_invoice'))
+			{
+				$id_order_invoice = Tools::getValue('id_order_invoice');
+				$languages = Language::getLanguages(true,Tools::getValue('id_shop')); // get all lanuges for shop
+				foreach($languages as $lang)
+					foreach(Shop::getShops() as $shop)
+					$id_order_invoice = str_replace(Configuration::get('PS_INVOICE_PREFIX', $lang['id_lang'], null, $shop['id_shop']),'',$id_order_invoice);
+				$id_order_invoice = str_replace('#','',$id_order_invoice);
+				$id_order_invoice = ltrim($id_order_invoice, '0');
+				$order_invoice = new OrderInvoice($id_order_invoice);
+				if (!Validate::isLoadedObject($order_invoice))
+					$this->errors[] = $this->l('This invoice id does not exist in your database');
+				else
+					Tools::redirectAdmin($this->context->link->getAdminLink('AdminOrders').'&id_order='.$order_invoice->id_order.'&vieworder') ;
+			}
+			else
+				$this->errors[] = $this->l('No invoice id');
 		}
 		else
 			parent::postProcess();
