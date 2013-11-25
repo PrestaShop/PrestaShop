@@ -329,7 +329,7 @@ class ProductComments extends Module
 	{
 		$this->_html = '<script type="text/javascript" src="'.$this->_path.'js/moderate.js"></script>
 			<fieldset class="width2">
-				<legend><img src="../img/admin/cog.gif" alt="" title="" />'.$this->l('Configuration').'</legend>
+				<legend><img src="../img/admin/cog.gif" alt="" title="" /> '.$this->l('Configuration').'</legend>
 				<form action="'.Tools::safeOutput($this->_baseUrl).'" method="post" name="comment_configuration">
 					<label style="padding-top: 0;">'.$this->l('All comments must be validated by an employee').'</label>
 					<div class="margin-form">
@@ -375,7 +375,10 @@ class ProductComments extends Module
 					<tr>
 						<th><input class="noborder" type="checkbox" onclick="checkDelBoxes(this.form, \'id_product_comment[]\', this.checked)" /></th>
 						<th style="width:150px;">'.$this->l('Author').'</th>
+						<th style="width:150px;">'.$this->l('Title').'</th>
 						<th style="width:550px;">'.$this->l('Comment').'</th>
+						<th style="width:150px;">'.$this->l('Date').'</th>
+						<th style="width:50px;">'.$this->l('Grade').'</th>
 						<th style="width:150px;">'.$this->l('Product name').'</th>
 						<th style="width:30px;">'.$this->l('Actions').'</th>
 					</tr>
@@ -385,14 +388,17 @@ class ProductComments extends Module
 						$this->_html .= '<tr>
 						<td><input class="noborder" type="checkbox" value="'.$comment['id_product_comment'].'" name="id_product_comment[]" /></td>
 						<td>'.htmlspecialchars($comment['customer_name'], ENT_COMPAT, 'UTF-8').'.</td>
+						<td>'.htmlspecialchars($comment['title'], ENT_COMPAT, 'UTF-8').'</td>
 						<td>'.htmlspecialchars($comment['content'], ENT_COMPAT, 'UTF-8').'</td>
+						<td>'.htmlspecialchars($comment['date_add'], ENT_COMPAT, 'UTF-8').'</td>
+						<td>'.htmlspecialchars($comment['grade'], ENT_COMPAT, 'UTF-8').'</td>
 						<td>'.$comment['id_product'].' - '.htmlspecialchars($comment['name'], ENT_COMPAT, 'UTF-8').'</td>
 						<td><a href="javascript:;" onclick="acceptComment(\''.(int)($comment['id_product_comment']).'\');"><img src="'.$this->_path.'img/accept.png" alt="'.$this->l('Accept').'" title="'.$this->l('Accept').'" /></a>
 							<a href="javascript:;" onclick="deleteComment(\''.(int)($comment['id_product_comment']).'\');"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
 						</tr>';
 						$this->_html .= '
 						<tr>
-							<td colspan="4" style="font-weight:bold;text-align:right">'.$this->l('Selection:').'</td>
+							<td colspan="7" style="font-weight:bold;text-align:right">'.$this->l('Selection:').'</td>
 							<td><a href="javascript:;" onclick="acceptComment(0);"><img src="'.$this->_path.'img/accept.png" alt="'.$this->l('Accept').'" title="'.$this->l('Accept').'" /></a>
 							<a href="javascript:;" onclick="deleteComment(0);"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
 						</tr>
@@ -409,7 +415,7 @@ class ProductComments extends Module
 	private function _displayFormReported()
 	{
 		$this->_html .= '<fieldset class="width2">
-				<legend><img src="'.$this->_path.'img/comments_delete.png" alt="" title="" />'.$this->l('Reported Comments').'</legend>';
+				<legend><img src="'.$this->_path.'img/comments_delete.png" alt="" title="" /> '.$this->l('Reported Comments').'</legend>';
 
 				require_once(dirname(__FILE__).'/ProductComment.php');
 				$comments = ProductComment::getReportedComments();
@@ -558,7 +564,7 @@ class ProductComments extends Module
 		{
 			$this->_html .= '
 			<fieldset class="width2">
-				<legend><img src="'.$this->_path.'img/note_go.png" alt="" title="" />'.$this->l('Manage criterions scope').'</legend>
+				<legend><img src="'.$this->_path.'img/note_go.png" alt="" title="" /> '.$this->l('Manage criterions scope').'</legend>
 				<p style="margin-bottom: 15px;">'.$this->l('Only criterions restricted to categories or products can be configured below:').'</p>
 				<form action="'.Tools::safeOutput($this->_baseUrl).'" method="post" name="product_criterion_form">
 					<label>'.$this->l('Criterion').'</label>
@@ -613,7 +619,7 @@ class ProductComments extends Module
 	{
 		$this->_html .= '
 			<fieldset class="width2">
-				<legend><img src="'.$this->_path.'img/comments_delete.png" alt="" title="" />'.$this->l('Manage Comments').'</legend>';
+				<legend><img src="'.$this->_path.'img/comments_delete.png" alt="" title="" /> '.$this->l('Manage Comments').'</legend>';
 
 				require_once(dirname(__FILE__).'/ProductComment.php');
 				$comments = ProductComment::getAll();
@@ -628,7 +634,11 @@ class ProductComments extends Module
 					<tr>
 						<th><input class="noborder" type="checkbox" name="delete_id_product_comment[]" onclick="checkDelBoxes(this.form, \'delete_id_product_comment[]\', this.checked)" /></th>
 						<th style="width:150px;">'.$this->l('Author').'</th>
+						<th style="width:150px;">'.$this->l('Title').'</th>
 						<th style="width:550px;">'.$this->l('Comment').'</th>
+						<th style="width:150px;">'.$this->l('Date').'</th>
+						<th style="width:50px;">'.$this->l('Grade').'</th>
+						<th style="width:150px;">'.$this->l('Product name').'</th>
 						<th style="width:30px;">'.$this->l('Actions').'</th>
 					</tr>
 					</thead>
@@ -637,12 +647,16 @@ class ProductComments extends Module
 						$this->_html .= '<tr>
 						<td><input class="noborder" type="checkbox" value="'.$comment['id_product_comment'].'" name="delete_id_product_comment[]" /></td>
 						<td>'.htmlspecialchars($comment['customer_name'], ENT_COMPAT, 'UTF-8').'.</td>
+						<td>'.htmlspecialchars($comment['title'], ENT_COMPAT, 'UTF-8').'</td>
 						<td>'.htmlspecialchars($comment['content'], ENT_COMPAT, 'UTF-8').'</td>
+						<td>'.htmlspecialchars($comment['date_add'], ENT_COMPAT, 'UTF-8').'</td>
+						<td>'.htmlspecialchars($comment['grade'], ENT_COMPAT, 'UTF-8').'</td>
+						<td>'.$comment['id_product'].' - '.htmlspecialchars($comment['name'], ENT_COMPAT, 'UTF-8').'</td>
 						<td><a href="javascript:;" onclick="delComment(\''.(int)($comment['id_product_comment']).'\',\''.$this->l('Are you sure?').'\');"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
 						</tr>';
 						$this->_html .= '
 						<tr>
-							<td colspan="3" style="font-weight:bold;text-align:right">'.$this->l('Selection:').'</td>
+							<td colspan="7" style="font-weight:bold;text-align:right">'.$this->l('Selection:').'</td>
 							<td><a href="javascript:;" onclick="delComment(0);"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
 						</tr>
 						</tbody>
