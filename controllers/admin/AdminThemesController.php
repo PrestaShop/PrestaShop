@@ -101,7 +101,6 @@ class AdminThemesControllerCore extends AdminController
 
 	public function init()
 	{
-
 		// No cache for auto-refresh uploaded logo
 		header('Cache-Control: no-cache, must-revalidate');
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
@@ -123,8 +122,6 @@ class AdminThemesControllerCore extends AdminController
 					),
 				),
 			),
-
-			/* TO DO - DESC à revoir*/
 			'appearance' => array(
 				'title' =>	$this->l('Appearance'),
 				'icon' =>	'icon-html5',
