@@ -3172,14 +3172,14 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .table thead > tr > th span.title_box.active { font-weight: bold; }
 .bootstrap .table thead > tr > th span.title_box a { text-decoration: none; }
 .bootstrap .table thead > tr > th span.title_box a.active { color: black; }
+.bootstrap .table thead > tr.filter > th { background-color: #dfeff8; }
+.bootstrap .table thead > tr.filter > th input[type="text"].filter, .bootstrap .table thead > tr.filter > th input[type="password"].filter, .bootstrap .table thead > tr.filter > th select.filter { font-size: 12px; border-color: #a0d0eb; }
 .bootstrap .table input, .bootstrap .table select { margin: 0; }
 .bootstrap .table tbody > tr > td { border-top: none; background-color: white; padding: 3px 7px; vertical-align: middle; word-wrap: nowrap; font-size: 12px; border-bottom: solid 1px #eeeeee; }
 .bootstrap .table tbody > tr.odd > td { background-color: #f9f9f9; }
 .bootstrap .table tbody > tr:hover > td { background-color: #e6e8e3; }
 .bootstrap .table td.center, .bootstrap .table th.center { text-align: center; }
 .bootstrap .table td.pointer { cursor: pointer; }
-.bootstrap tr.filter { background-color: #dfeff8; }
-.bootstrap tr.filter input[type="text"].filter, .bootstrap tr.filter input[type="password"].filter, .bootstrap tr.filter select.filter { font-size: 12px; border-color: #a0d0eb; }
 .bootstrap tr.highlighted td { background-color: #1ba6e5 !important; color: white; }
 .bootstrap td.actions { min-width: 200px; }
 .bootstrap .bulk-actions { margin: 17px 0 0 0; }

@@ -21,6 +21,11 @@
 				text-decoration: none
 			a.active
 				color: black
+	thead > tr.filter > th
+		background-color: lighten(#CAE5F4,5%)
+		input[type="text"].filter, input[type="password"].filter, select.filter
+			font-size: 12px
+			border-color: darken(#CAE5F4,10%)
 	input, select
 		margin: 0
 	tbody
@@ -41,12 +46,6 @@
 		text-align: center
 	td.pointer
 		cursor: pointer
-
-tr.filter
-	background-color: lighten(#CAE5F4,5%)
-	input[type="text"].filter, input[type="password"].filter, select.filter
-		font-size: 12px
-		border-color: darken(#CAE5F4,10%)
 
 tr.highlighted td
 	background-color: $brand-primary!important
