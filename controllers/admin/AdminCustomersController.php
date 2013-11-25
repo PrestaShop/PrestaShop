@@ -60,8 +60,11 @@ class AdminCustomersControllerCore extends AdminController
 			$titles_array[$gender->id_gender] = $gender->name;
 
 		$this->_select = '
-		a.date_add, gl.name as title,
-		IF (YEAR(`birthday`) = 0, "-", (YEAR(CURRENT_DATE)-YEAR(`birthday`)) - (RIGHT(CURRENT_DATE, 5) < RIGHT(birthday, 5))) AS `age`, (
+		a.date_add, gl.name as title, (
+			SELECT SUM(total_paid_tax_excl / conversion_rate) FROM '._DB_PREFIX_.'orders o
+			WHERE o.id_customer = a.id_customer
+			AND active = 1
+		) as total_spent, (
 			SELECT c.date_add FROM '._DB_PREFIX_.'guest g
 			LEFT JOIN '._DB_PREFIX_.'connections c ON c.id_guest = g.id_guest
 			WHERE g.id_customer = a.id_customer
@@ -92,10 +95,12 @@ class AdminCustomersControllerCore extends AdminController
 			'email' => array(
 				'title' => $this->l('Email address')
 			),
-			'age' => array(
-				'title' => $this->l('Age'),
+			'total_spent' => array(
+				'title' => $this->l('Sales'),
+				'type' => 'price',
 				'search' => false,
-				'align' => 'center'
+				'havingFilter' => true,
+				'align' => 'right'
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
