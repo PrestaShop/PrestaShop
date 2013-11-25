@@ -2,7 +2,7 @@
         <module>
             <name>blockwishlist</name>
             <displayName><![CDATA[Wishlist block]]></displayName>
-            <version><![CDATA[0.3]]></version>
+            <version><![CDATA[0.4]]></version>
             <description><![CDATA[Adds a block containing the customer&#039;s wishlists.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
