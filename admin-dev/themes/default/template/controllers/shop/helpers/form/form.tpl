@@ -57,7 +57,7 @@
 							},
 							function(res)
 							{
-								$('#categories-treeview').parent().html(res);
+								$('#categories-tree').parent().parent().html(res);
 							}
 						);
 					});
