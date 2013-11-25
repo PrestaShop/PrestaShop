@@ -69,10 +69,10 @@
 								<button id="datepickerExpand" class="btn btn-default" type="button">
 									<i class="icon-calendar-empty"></i>
 									{l s='From'}
-									<strong class="text-info">{$datepickerFrom|escape}</strong>
-									- {l s='To'}
-									<strong class="text-info">{$datepickerTo|escape}</strong>
-									- 13 Days
+									<strong class="text-info" id="datepicker-from-info">{$datepickerFrom|escape}</strong>
+									{l s='To'}
+									<strong class="text-info" id="datepicker-to-info">{$datepickerTo|escape}</strong>
+									<strong class="text-info" id="datepicker-diff-info"></strong>
 									<i class="icon-caret-down"></i>
 								</button>
 
