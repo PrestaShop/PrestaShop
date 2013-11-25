@@ -38,6 +38,10 @@ class AdminWarehousesControllerCore extends AdminController
 		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->fields_list = array(
+			'id_warehouse'	=> array(
+				'title' => $this->l('ID'),
+				'width' => 50,
+			),
 			'reference'	=> array(
 				'title' => $this->l('Reference'),
 				'width' => 150,
