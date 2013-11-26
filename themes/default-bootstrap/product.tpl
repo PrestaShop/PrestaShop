@@ -358,6 +358,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
 					<!--{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) OR !isset($display_tax_label))}
 						{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
 					{/if}-->
+				<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
 				{/if}
 				</p>
 
