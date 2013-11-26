@@ -363,39 +363,37 @@ if (typeof helpboxes != 'undefined' && helpboxes)
 		if ($('input'))
 		{
 			//Display by rollover
-			$('input').mouseover(function() {
-			$(this).parent().find('.hint:first').css('display', 'block');
-			});
-			$('input').mouseout(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
+			$('input').focusin(function(){$(this).parent().find('.hint:first').css('display', 'block');});
+			$('input').focusout(function(){$(this).parent().find('.hint:first').css('display', 'none');});
 
 			//display when you press the tab key
-			$('input').keydown(function (e) {
-				if ( e.keyCode === 9 ){
-					$('input').focus(function() { $(this).parent().find('.hint:first').css('display', 'block'); });
-					$('input').blur(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
+			$('input').keydown(function(e){
+				if (e.keyCode === 9)
+				{
+					$('input').focus(function() {$(this).parent().find('.hint:first').css('display', 'block');});
+					$('input').blur(function() {$(this).parent().find('.hint:first').css('display', 'none');});
 				}
 			});
 		}
 		if ($('select'))
 		{
 			//Display by rollover
-			$('select').mouseover(function() {
-			$(this).parent().find('.hint:first').css('display', 'block');
-			});
-			$('select').mouseout(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
+			$('select').focusin(function(){$(this).parent().find('.hint:first').css('display', 'block');});
+			$('select').focusout(function(){$(this).parent().find('.hint:first').css('display', 'none');});
 
 			//display when you press the tab key
-			$('select').keydown(function (e) {
-				if ( e.keyCode === 9 ){
-					$('select').focus(function() { $(this).parent().find('.hint:first').css('display', 'block'); });
-					$('select').blur(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
+			$('select').keydown(function (e){
+				if (e.keyCode === 9)
+				{
+					$('select').focus(function(){$(this).parent().find('.hint:first').css('display', 'block');});
+					$('select').blur(function(){$(this).parent().find('.hint:first').css('display', 'none');});
 				}
 			});
 		}
 		if ($('span.title_box'))
 		{
 			//Display by rollover
-			$('span.title_box').mouseover(function() {
+			$('span.title_box').focusin(function() {
 				//get reference to the hint box
 				var parent = $(this).parent();
 				var box = parent.find('.hint:first');
@@ -419,7 +417,7 @@ if (typeof helpboxes != 'undefined' && helpboxes)
 					box.css('display', 'block');
 				}
 			});
-			$('span.title_box').mouseout(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
+			$('span.title_box').focusout(function(){$(this).parent().find('.hint:first').css('display', 'none');});
 		}
 	});
 }
