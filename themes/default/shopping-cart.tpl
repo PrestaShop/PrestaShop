@@ -394,15 +394,21 @@
 				<li class="address_title">{if $k eq 'invoice'}{l s='Invoice address'}{elseif $k eq 'delivery' && $delivery->id}{l s='Delivery address'}{/if}{if isset($address.object.alias)}&nbsp;<span class="address_alias">({$address.object.alias})</span>{/if}</li>
 				{foreach $address.ordered as $pattern}
 					{assign var=addressKey value=" "|explode:$pattern}
-					<li>
-					{foreach $addressKey as $key}
-						<span class="{if isset($addresses_style[$key])}{$addresses_style[$key]}{/if}">
-							{if isset($address.formated[$key])}
-								{$address.formated[$key]|escape:'htmlall':'UTF-8'}
-							{/if}
-						</span>
-					{/foreach}
-					</li>
+					{assign var=addedli value=false}
+                                	{foreach from=$addressKey item=key name=foo}
+                                    		{if isset($address.formated[$key]) && $address.formated[$key] != ''}
+		                                    {if (!$addedli)}
+		                                        {assign var=addedli value=true}
+		                                         <li>
+		                                        <span class="{if isset($addresses_style[$key])}{$addresses_style[$key]}{/if}">
+		                                    {/if}
+		                                    {$address.formated[$key]|escape:'htmlall':'UTF-8'}
+		                                 {/if}
+		                                 {if ($smarty.foreach.foo.last && $addedli)}
+		                                     </span>
+		                                     </li>
+		                                 {/if}
+                                	{/foreach}
 				{/foreach}
 				</ul>
 		{/foreach}
