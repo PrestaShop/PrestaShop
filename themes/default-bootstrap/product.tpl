@@ -197,8 +197,9 @@ var contentOnly = {if $content_only}true{else}false{/if}
         
 		{if $have_image}
 			<span id="view_full_size">
-				<img itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html'}"{if $jqZoomEnabled && $have_image} class="jqzoom"{/if} title="{$product->name|escape:'html':'UTF-8'}" alt="{$product->name|escape:'html':'UTF-8'}" id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}"/>
+				<img itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html'}"{if $jqZoomEnabled && $have_image} class="jqzoom"{/if} title="{if !empty($cover.legend)}{$cover.legend|escape:'html'}{else}{$product->name|escape:'html'}{/if}" alt="{if !empty($cover.legend)}{$cover.legend|escape:'html'}{else}{$product->name|escape:'html'}{/if}" id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}"/>
 				{if !$content_only}<span class="span_link">{l s='View larger'}</span>{/if}
+	
 			</span>
 		{else}
 			<span id="view_full_size">
@@ -213,16 +214,21 @@ var contentOnly = {if $content_only}true{else}false{/if}
 		{if isset($images) && count($images) > 3}<span class="view_scroll_spacer"><a id="view_scroll_left" class="" title="{l s='Other views'}" href="javascript:{ldelim}{rdelim}">{l s='Previous'}</a></span>{/if}
 		<div id="thumbs_list">
 			<ul id="thumbs_list_frame">
-				{if isset($images)}
-					{foreach from=$images item=image name=thumbnails}
+			{if isset($images)}
+				{foreach from=$images item=image name=thumbnails}
 					{assign var=imageIds value="`$product->id`-`$image.id_image`"}
-					<li id="thumbnail_{$image.id_image}" {if $smarty.foreach.thumbnails.last} class="last"{/if} >
-						<a href="{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html'}" rel="other-views" class="thickbox{if $smarty.foreach.thumbnails.first} shown{/if}" title="{$image.legend|htmlspecialchars}">
-							<img id="thumb_{$image.id_image}" src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')|escape:'html'}" alt="{$image.legend|htmlspecialchars}" height="{$mediumSize.height}" width="{$mediumSize.width}" />
+					{if !empty($image.legend)}
+						{assign var=imageTitlte value=$image.legend|escape:'html'}
+					{else}
+						{assign var=imageTitlte value=$product->name|escape:'html'}
+					{/if}
+					<li id="thumbnail_{$image.id_image}"{if $smarty.foreach.thumbnails.last} class="last"{/if}>
+						<a href="{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html'}" rel="other-views" class="thickbox{if $smarty.foreach.thumbnails.first} shown{/if}" title="{$imageTitlte}">
+							<img class="img-responsive" id="thumb_{$image.id_image}" src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')|escape:'html'}" alt="{$imageTitlte}" title="{$imageTitlte}" height="{$mediumSize.height}" width="{$mediumSize.width}" itemprop="image" />
 						</a>
 					</li>
-					{/foreach}
-				{/if}
+				{/foreach}
+			{/if}
 			</ul>
 		</div>
 		{if isset($images) && count($images) > 3}<a id="view_scroll_right" title="{l s='Other views'}" href="javascript:{ldelim}{rdelim}">{l s='Next'}</a>{/if}

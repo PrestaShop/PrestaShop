@@ -51,7 +51,7 @@
                 <div class="left-block">
                 	<div class="product-image-container">
                     	<a href="{$product.link|escape:'html':'UTF-8'}" class="product_img_link" title="{$product.name|escape:'html':'UTF-8'}">
-                            <img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html'}" alt="{$product.legend|escape:'html':'UTF-8'}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} />
+                            <img itemprop="image" class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html'}" alt="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" title="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} />
                         </a>
                         {if isset($quick_view) && $quick_view}<a href="#" rel="{$product.link|escape:'html':'UTF-8'}" class="quick-view"><span>Quick view</span></a>{/if}
                         {if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
