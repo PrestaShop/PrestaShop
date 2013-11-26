@@ -293,6 +293,12 @@ function closeAddProduct()
 	current_product = null;
 }
 
+function TogglePackage(detail)
+{
+	var pack = $('#pack_items_' + detail);
+	pack.css('display', (pack.css('display') == 'block') ? "none" : "block");
+}
+
 /**
  * This method allow to initialize all events
  */

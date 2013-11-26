@@ -37,7 +37,9 @@
 		<span class="productName">{$product['product_name']}</span><br />
 		{if $product.product_reference}{l s='Ref:'} {$product.product_reference}<br />{/if}
 		{if $product.product_supplier_reference}{l s='Ref Supplier:'} {$product.product_supplier_reference}{/if}
-	</a></td>
+		</a>
+	{if isset($product.pack_items) && $product.pack_items|@count > 0}<br><button name="package" type="submit" onclick="TogglePackage('{$product['id_order_detail']}'); return false;" value="{$product['id_order_detail']}">{l s='Package content'}</button>{/if}
+	</td>
 	<td align="center">
 		<span class="product_price_show">{displayPrice price=$product_price currency=$currency->id}</span>
 		{if $can_edit}
@@ -151,4 +153,45 @@
 	</td>
 	{/if}
 </tr>
+	{if isset($product.pack_items) && $product.pack_items|@count > 0}
+	<tr>
+		<td colspan="7">
+			<table style="width: 100%; display:none;" cellspacing="0" cellpadding="0" class="table" id="pack_items_{$product['id_order_detail']}">
+				<th height="39" style="width: 10%; text-align: center"></th>
+				<th align="center" style="width: 7%">&nbsp;</th>
+				<th style="width: 50%; text-align: center">{l s='Product'}</th>
+				<th style="width: 15%; text-align: center">&nbsp;</th>
+				<th style="width: 4%; text-align: center">{l s='Qty'}</th>
+				{if $display_warehouse}<th style="text-align: center">&nbsp;</th>{/if}
+				{if ($order->hasBeenPaid())}<th style="width: 3%; text-align: center">&nbsp;</th>{/if}
+				{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<th style="width: 3%; text-align: center">&nbsp;</th>{/if}
+				{if $stock_management}<th style="width: 10%; text-align: center">{l s='Available quantity'}</th>{/if}
+				<th style="width: 10%; text-align: center">&nbsp;</th>
+				{if !$order->hasBeenDelivered()} <th style="width: 8%;text-align:center;">&nbsp;</th>{/if}
+
+			{foreach from=$product.pack_items item=pack_item}
+				{if !empty($pack_item.active)}
+				<tr{if isset($pack_item.image) && $pack_item.image->id && isset($pack_item.image_size)} height="{$pack_item['image_size'][1] + 7}"{/if} >
+					<td>{l s='Package Item'}</td>
+					<td align="center">{if isset($pack_item.image) && $pack_item.image->id}{$pack_item.image_tag}{/if}</td>
+					<td>
+						<span class="productName">{$pack_item.name}</span><br />
+						{if $pack_item.reference}{l s='Ref:'} {$pack_item.reference}<br />{/if}
+						{if $pack_item.supplier_reference}{l s='Ref Supplier:'} {$pack_item.supplier_reference}{/if}
+					</td>
+					<td>&nbsp;</td>
+					<td align="center" >{$pack_item.pack_quantity}</td>
+					{if $stock_management}<td align="center" c>{$pack_item['current_stock']}</td>{/if}
+					{if $display_warehouse}<td></td>{/if}
+					{if ($order->hasBeenPaid())}<td></td>{/if}
+					{if $order->hasBeenDelivered() || $order->hasProductReturned()}<td align="center"></td>{/if}
+					<td>&nbsp;<!--Total--></td>
+					<td>&nbsp;<!--Action--></td>
+				</tr>
+				{/if}
+			{/foreach}
+			</table>
+		</td>
+	</tr>
+	{/if}
 {/if}
