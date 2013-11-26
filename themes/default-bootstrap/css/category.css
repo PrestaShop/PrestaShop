@@ -6,10 +6,10 @@
   color: #d7d7d7;
   line-height: 19px;
   margin-bottom: 26px;
+	background-color: #464646 !important;
 }
 .content_scene_cat .content_scene_cat_bg {
   padding: 18px 10px 10px 42px;
-  background-color: #464646 !important;
 }
 @media (max-width: 1199px) {
   .content_scene_cat .content_scene_cat_bg {
@@ -19,7 +19,7 @@
 .content_scene_cat h1.category-name {
   font: 600 42px/51px "Open Sans", sans-serif;
   color: white;
-  margin-bottom: 12px;
+  padding-left: 10px;
 }
 @media (max-width: 1199px) {
   .content_scene_cat h1.category-name {
@@ -39,13 +39,13 @@
 .content_scene_cat .content_scene {
   color: #777777;
 }
-.content_scene_cat .content_scene .cat_desc {
-  padding-top: 20px;
+.content_scene_cat .cat_desc {
+  padding: 5px;
 }
-.content_scene_cat .content_scene .cat_desc a {
+.content_scene_cat .cat_desc a {
   color: #777777;
 }
-.content_scene_cat .content_scene .cat_desc a:hover {
+.content_scene_cat .cat_desc a:hover {
   color: #515151;
 }
 
