@@ -134,7 +134,7 @@
 				{foreach $order_details as $order_detail}
 				{cycle values='#FFF,#DDD' assign=bgcolor}
 				<tr style="line-height:6px;background-color:{$bgcolor};">
-					<td style="text-align: left; width: 45%">{$order_detail.product_name}</td>
+					<td style="text-align: left; width: 45%">{$order_detail.product_name}{if isset($order_detail.product_reference) && !empty($order_detail.product_reference)} ({l s='Reference :' pdf='true'} {$order_detail.product_reference}){/if}</td>
                     <!-- unit price tax excluded is mandatory -->
 					{if !$tax_excluded_display}
 					    <td style="text-align: right; width: 10%">
