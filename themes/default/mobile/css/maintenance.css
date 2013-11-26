@@ -1,0 +1,20 @@
+#maintenance {
+	margin:0 auto;
+	width:100%;
+	font:normal 20px Arial, Verdana, sans-serif;
+	font-weight: bold;
+	color:#333;
+}
+#maintenance #store {
+	text-align:center;
+}
+#maintenance #message {
+	margin:20px 20px;
+	text-align:center;
+}
+#maintenance #prestashop {
+	background:url(../img/bg_maintenance.png) no-repeat 100% 0 #fff;
+	background-position:center bottom;
+	height:360px;
+	margin: 60px;
+}

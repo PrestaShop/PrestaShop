@@ -1,0 +1,93 @@
+#orderopc  #left_column {display:none}
+#orderopc #center_column{width:757px}
+#orderopc  #left_column h2 {margin-top:20px}
+#opc_account_choice {padding:0 15px;}
+#opc_account_choice .opc_float {
+	float:left;
+	width:350px
+}
+#opc_account_choice .opc_float ul {margin:0 0 20px 30px}
+#new_account_form  fieldset {
+		padding:0 0 15px 0;
+		border:1px solid #ccc;
+		background:#f8f8f8
+}
+#new_account_form  h3 {
+	margin:0 0 15px 0;
+	padding:8px;
+	font-size:14px;
+	color:#fff;
+	text-transform:uppercase;
+	background:url(../img/bg_form_h3.png) repeat-x 0 0 #989898
+}
+#center_column #new_account_form p {margin:0; padding:0 0 10px 0;}
+#new_account_form p.required {color:#222;}
+#new_account_form p.required  sup {color:#990000;}
+
+#new_account_form p.radio label {
+	padding-right:10px;
+	font-size:14px;
+}
+#new_account_form p.radio span,
+#new_account_form p.text label,
+#new_account_form p.password label,
+#new_account_form p.select label,
+#new_account_form p.select span,
+#new_account_form p.textarea label {
+	display:inline-block;
+	padding:6px 15px;
+	width:230px;/* 260 */
+	font-size:14px;
+	text-align:right
+}
+#new_account_form p.checkbox label {
+	font-size:12px;
+}
+#new_account_form p.text input,
+#new_account_form p.password input,
+#new_account_form p.select input {
+	padding:0 5px;
+	height:22px;
+	width:360px;/* 370 */
+	border:1px solid #ccc;
+	font-size: 12px;
+	color:#666
+}
+#new_account_form p.checkbox input {
+	margin-left:260px;
+}
+#new_account_form p.select select {
+	margin-right:10px;
+	border:1px solid #ccc;
+	font-size: 12px;
+	color:#666
+}
+#new_account_form p.textarea textarea {
+	height:80px;
+	width:370px;
+	border:1px solid #ccc;
+	font-size: 12px;
+	color:#666
+}
+#new_account_form span.form_info,
+#new_account_form span.inline-infos, #new_account_form p.inline-infos {
+	display:block;
+	margin:5px 0 0 265px!important;
+	color:#666
+}
+#new_account_form .id_state, #new_account_form .dni, #new_account_form .postcode {
+	display: none;
+}
+#opc_account_errors {
+	margin: 10px;
+	margin-bottom: 15px;
+}
+#center_column #new_account_form p#opc_account_saved {
+	color: green;
+	float: right;
+	margin-right: 20px;
+	padding: 0;
+}
+#address_invoice_form {
+	padding: 0px;
+}
