@@ -375,8 +375,16 @@ function updateDisplay()
 		productPriceDisplay = ps_round(productPriceDisplay * group_reduction, 2);
 
 		var ecotaxAmount = !displayPrice ? ps_round(selectedCombination['ecotax'] * (1 + ecotaxTax_rate / 100), 2) : selectedCombination['ecotax'];
-		productPriceDisplay += ecotaxAmount;
-		productPriceWithoutReductionDisplay += ecotaxAmount;
+
+		if (ecotaxAmount != default_eco_tax)
+			productPriceDisplay += ecotaxAmount - default_eco_tax;
+		else
+			productPriceDisplay += ecotaxAmount;
+
+		if (ecotaxAmount != default_eco_tax)
+			productPriceWithoutReductionDisplay += ecotaxAmount - default_eco_tax;
+		else
+			productPriceWithoutReductionDisplay += ecotaxAmount;
 
 		var our_price = '';
 		if (productPriceDisplay > 0) {
@@ -417,14 +425,20 @@ function displayImage(domAAroundImgThumb, no_animation)
 {
 	if (typeof(no_animation) == 'undefined')
 		no_animation = false;
-	if (domAAroundImgThumb.attr('href'))
+	if (domAAroundImgThumb.prop('href'))
 	{
-		var newSrc = domAAroundImgThumb.attr('href').replace('thickbox', 'large');
-		if ($('#bigpic').attr('src') != newSrc)
+		var new_src = domAAroundImgThumb.prop('href').replace('thickbox', 'large');
+		var new_title = domAAroundImgThumb.prop('title');
+		var new_href = domAAroundImgThumb.prop('href');
+		if ($('#bigpic').prop('src') != new_src)
 		{
-			$('#bigpic').attr('src', newSrc).load(function() {
+			$('#bigpic').prop({
+				'src' : new_src, 
+				'alt' : new_title, 
+				'title' : new_title
+			}).load(function(){
 				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-					$(this).attr('rel', domAAroundImgThumb.attr('href'));
+					$(this).prop('rel', new_href);
 			}); 
 		}
 		$('#views_block li a').removeClass('shown');
@@ -490,8 +504,7 @@ function refreshProductImages(id_product_attribute)
 			$('#wrapResetImages').hide('slow');
 	}
 
-		var thumb_width = $('#thumbs_list_frame >li').width() + parseInt($('#thumbs_list_frame >li').css('marginRight')) + 1;
-
+	var thumb_width = $('#thumbs_list_frame >li').width() + parseInt($('#thumbs_list_frame >li').css('marginRight'));
 	$('#thumbs_list_frame').width((parseInt((thumb_width) * $('#thumbs_list_frame >li').length)) + 'px');
 	$('#thumbs_list').trigger('goto', 0);
 	serialScrollFixLock('', '', '', '', 0);// SerialScroll Bug on goto 0 ?
@@ -511,7 +524,7 @@ $(document).ready(function()
 		stop:true,
 		onBefore:serialScrollFixLock,
 		duration:700,
-		step: 1,
+		step: 2,
 		lazy: true,
 		lock: false,
 		force:false,
@@ -570,14 +583,14 @@ $(document).ready(function()
 	$('#resetImages').click(function() {
 		refreshProductImages(0);
 	});
-   if (contentOnly == false)
+	if (contentOnly == false)
 		$('.thickbox').fancybox({
 			'hideOnContentClick': true,
 			'transitionIn'	: 'elastic',
 			'transitionOut'	: 'elastic'
 		});
-	else 
-		$('.thickbox').click(function(){return false})
+	else
+		$('.thickbox').click(function(){return false});
 });
 
 function saveCustomization()
