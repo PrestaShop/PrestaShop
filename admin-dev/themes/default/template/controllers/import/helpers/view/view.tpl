@@ -63,88 +63,92 @@
 		});
 	</script>
 	<div id="container-customer" class="panel">
-	<h3><i class="icon-list-alt"></i> {l s='View your data'}</h3>
-	<div class="alert alert-info">
-		<p>{l s='Please map each column of your source CSV file to one of the destination columns.'}</p>
-	</div>
-	<div class="form-horizontal">
-		<div class="form-group" {if !$import_matchs}style="display:none"{/if}>
-			<label class="control-label col-lg-3">{l s='Load a mapping configuration'}</label>
-			<div id="selectDivImportMatchs" class="col-lg-7">
-				<select id="valueImportMatchs">
-					{foreach $import_matchs as $match}
-						<option id="{$match.id_import_match}" value="{$match.match}">{$match.name}</option>
-					{/foreach}
-				</select>
+		<h3><i class="icon-list-alt"></i> {l s='View your data'}</h3>
+		<div class="alert alert-info">
+			<p>{l s='Please map each column of your source CSV file to one of the destination columns.'}</p>
+		</div>
+		<div class="form-horizontal">
+			<div class="form-group" {if !$import_matchs}style="display:none"{/if}>
+				<label class="control-label col-lg-3">{l s='Load a mapping configuration'}</label>
+				<div id="selectDivImportMatchs" class="col-lg-7">
+					<select id="valueImportMatchs">
+						{foreach $import_matchs as $match}
+							<option id="{$match.id_import_match}" value="{$match.match}">{$match.name}</option>
+						{/foreach}
+					</select>
+				</div>
+				<div class="col-lg-2">
+					<a id="loadImportMatchs" href="#" class="btn btn-default"><i class="icon-cogs"></i> {l s='Load'}</a>
+					<a id="deleteImportMatchs" href="#" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a>
+				</div>
 			</div>
-			<div class="col-lg-2">
-				<a id="loadImportMatchs" href="#" class="btn btn-default"><i class="icon-cogs"></i> {l s='Load'}</a>
-				<a id="deleteImportMatchs" href="#" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a>
+			<div class="form-group">
+				<label class="control-label col-lg-3" for="newImportMatchs">{l s='Save your mapping configuration'}</label>
+				<div class="col-lg-7">
+					<input type="text" name="newImportMatchs" id="newImportMatchs" />		
+				</div>
+				<div class="col-lg-2">
+					<a id="saveImportMatchs" class="btn btn-default" href="#"><i class="icon-save"></i> {l s='Save'}</a>
+				</div>
 			</div>
 		</div>
-		<div class="form-group">
-			<label class="control-label col-lg-3" for="newImportMatchs">{l s='Save your mapping configuration'}</label>
-			<div class="col-lg-7">
-				<input type="text" name="newImportMatchs" id="newImportMatchs" />		
-			</div>
-			<div class="col-lg-2">
-				<a id="saveImportMatchs" class="btn btn-default" href="#"><i class="icon-save"></i> {l s='Save'}</a>
-			</div>
+		<div id="error_duplicate_type" class="alert alert-warning" style="display:none;">
+			{l s='Columns cannot have the same value type'}
 		</div>
-	</div>
-	<div id="error_duplicate_type" class="alert alert-warning" style="display:none;">
-		{l s='Columns cannot have the same value type'}
-	</div>
-	<div id="required_column" class="alert alert-warning" style="display:none;">
-		{l s='Column'} <span id="missing_column">&nbsp;</span> {l s='must be set'}
-	</div>
-	<form action="{$current}&token={$token}" method="post" id="import_form" name="import_form" class="form-horizontal">
-		<input type="hidden" name="csv" value="{$fields_value.csv}" />
-		<input type="hidden" name="convert" value="{$fields_value.convert}" />
-		<input type="hidden" name="regenerate" value="{$fields_value.regenerate}" />
-		<input type="hidden" name="entity" value="{$fields_value.entity}" />
-		<input type="hidden" name="iso_lang" value="{$fields_value.iso_lang}" />
-		{if $fields_value.truncate}
-			<input type="hidden" name="truncate" value="1" />
-		{/if}
-		{if $fields_value.forceIDs}
-			<input type="hidden" name="forceIDs" value="1" />
-		{/if}
-		{if $fields_value.match_ref}
-			<input type="hidden" name="match_ref" value="1" />
-		{/if}
-		<input type="hidden" name="separator" value="{$fields_value.separator}" />
-		<input type="hidden" name="multiple_value_separator" value="{$fields_value.multiple_value_separator}" />
-		<div class="form-group">
-			<label class="control-label col-lg-3" for="skip">{l s='Lines to skip'}</label>
-			<div class="col-lg-7">
-				<input type="text" name="skip" id="skip" value="1" />
-				<p class="help-block">{l s='This number indicates how many of the first lines of your CSV file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.'}</p>
-			</div>
+		<div id="required_column" class="alert alert-warning" style="display:none;">
+			{l s='Column'} <span id="missing_column">&nbsp;</span> {l s='must be set'}
 		</div>
-		<div class="form-group">
-			<div class="col-lg-12">
-				{section name=nb_i start=0 loop=$nb_table step=1}
-					{assign var=i value=$smarty.section.nb_i.index}
-					{$data.$i}
-				{/section}
-				<button id="btn_left" type="button" class="btn btn-default pull-left" onclick="showTable(current - 1);">
-					<i class="icon-chevron-sign-left"></i>
-				</button>
-				<button id="btn_right" type="button" class="btn btn-default pull-right" onclick="showTable(current + 1);">
-					<i class="icon-chevron-sign-right"></i>
-				</button>
+		<form action="{$current}&token={$token}" method="post" id="import_form" name="import_form" class="form-horizontal">
+			<input type="hidden" name="csv" value="{$fields_value.csv}" />
+			<input type="hidden" name="convert" value="{$fields_value.convert}" />
+			<input type="hidden" name="regenerate" value="{$fields_value.regenerate}" />
+			<input type="hidden" name="entity" value="{$fields_value.entity}" />
+			<input type="hidden" name="iso_lang" value="{$fields_value.iso_lang}" />
+			{if $fields_value.truncate}
+				<input type="hidden" name="truncate" value="1" />
+			{/if}
+			{if $fields_value.forceIDs}
+				<input type="hidden" name="forceIDs" value="1" />
+			{/if}
+			{if $fields_value.match_ref}
+				<input type="hidden" name="match_ref" value="1" />
+			{/if}
+			<input type="hidden" name="separator" value="{$fields_value.separator}" />
+			<input type="hidden" name="multiple_value_separator" value="{$fields_value.multiple_value_separator}" />
+			<div class="form-group">
+				<label class="control-label col-lg-3" for="skip">{l s='Lines to skip'}</label>
+				<div class="col-lg-7">
+					<input type="text" name="skip" id="skip" value="1" />
+					<p class="help-block">{l s='This number indicates how many of the first lines of your CSV file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.'}</p>
+				</div>
 			</div>
-		</div>
-		<hr>
-		<div class="form-group">
-			<div class="col-lg-12">
-				<button name="import" type="submit" onclick="return (validateImportation(new Array({$res})));" id="import" class="btn btn-default pull-right">
-					<i class="icon-ok text-success"></i>
-					{l s='Import .CSV data'}
-				</button>
+			<div class="form-group">
+				<div class="col-lg-12">
+					{section name=nb_i start=0 loop=$nb_table step=1}
+						{assign var=i value=$smarty.section.nb_i.index}
+						{$data.$i}
+					{/section}
+					<button id="btn_left" type="button" class="btn btn-default pull-left" onclick="showTable(current - 1);">
+						<i class="icon-chevron-sign-left"></i>
+					</button>
+					<button id="btn_right" type="button" class="btn btn-default pull-right" onclick="showTable(current + 1);">
+						<i class="icon-chevron-sign-right"></i>
+					</button>
+				</div>
 			</div>
-		</div>
-	</form>
+			<hr>
+			<div class="form-group">
+				<div class="col-lg-12">
+					<button type="button" class="btn btn-default">
+						<i class="icon-remove text-danger"></i>
+						{l s='Cancel'}
+					</button>
+					<button id="import" name="import" type="submit" onclick="return (validateImportation(new Array({$res})));"  class="btn btn-default pull-right">
+						<i class="icon-ok text-success"></i>
+						{l s='Import .CSV data'}
+					</button>
+				</div>
+			</div>
+		</form>
 	</div>
 {/block}
