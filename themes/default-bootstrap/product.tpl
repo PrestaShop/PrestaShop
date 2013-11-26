@@ -218,7 +218,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
 					{assign var=imageIds value="`$product->id`-`$image.id_image`"}
 					<li id="thumbnail_{$image.id_image}" {if $smarty.foreach.thumbnails.last} class="last"{/if} >
 						<a href="{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html'}" rel="other-views" class="thickbox{if $smarty.foreach.thumbnails.first} shown{/if}" title="{$image.legend|htmlspecialchars}">
-							<img id="thumb_{$image.id_image}" src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')|escape:'html'}" alt="{$image.legend|htmlspecialchars}" height="{$mediumSize.height}" width="{$mediumSize.width}" />
+							<img id="thumb_{$image.id_image}" src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')|escape:'html'}" alt="{$image.legend|htmlspecialchars}" height="{$mediumSize.height}" width="{$mediumSize.width}" itemprop="image"/>
 						</a>
 					</li>
 					{/foreach}
