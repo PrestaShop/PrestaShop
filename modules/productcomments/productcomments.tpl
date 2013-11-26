@@ -101,7 +101,7 @@ var moderation_active = {$moderation_active};
 			<h2 class="title">{l s='Write your review' mod='productcomments'}</h2>
 			{if isset($product) && $product}
 			<div class="product clearfix">
-				<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home_default')|escape:'html'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
+				<img src="{$productcomment_cover}" height="{$mediumSize.height}" width="{$mediumSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
 				<div class="product_desc">
 					<p class="product_name"><strong>{$product->name}</strong></p>
 					{$product->description_short}
