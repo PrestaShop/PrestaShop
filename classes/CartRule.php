@@ -132,7 +132,12 @@ class CartRuleCore extends ObjectModel
 	public function update($null_values = false)
 	{
 		Cache::clean('getContextualValue_'.$this->id.'_*');
-		return parent::update($null_values);	
+		if (!parent::update($null_values))
+			return false;
+
+		Configuration::updateGlobalValue('PS_CART_RULE_FEATURE_ACTIVE', CartRule::isCurrentlyUsed($this->def['table'], true));
+
+		return true;
 	}
 
 	/**
