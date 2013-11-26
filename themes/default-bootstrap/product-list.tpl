@@ -115,7 +115,7 @@
 					{hook h='displayProductListFunctionalButtons' product=$product}
                     {if isset($comparator_max_item) && $comparator_max_item}
                         <div class="compare">
-                            <a href="#" rel="{$product.id_product}" class="addToCompare" onClick="addToCompare('{$product.id_product|intval}'); return false;">{l s='Add to Compare'}</a>
+                            <a href="#" rel="{$product.id_product}" class="addToCompare" onClick="addToCompare('{$product.id_product|intval}'); return false;"title="{$product.name|escape:'html':'UTF-8'} - {l s='Add to Compare'}">{l s='Add to Compare'}</a>
                         </div>
                     {/if}
                 </div>
