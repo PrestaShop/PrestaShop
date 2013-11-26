@@ -152,7 +152,11 @@ class CartCore extends ObjectModel
 
 	public function __construct($id = null, $id_lang = null)
 	{
-		parent::__construct($id, $id_lang);
+		parent::__construct($id);
+
+		if ($id_lang !== null)
+			$this->id_lang = (Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
+		
 		if ($this->id_customer)
 		{
 			if (isset(Context::getContext()->customer) && Context::getContext()->customer->id == $this->id_customer)

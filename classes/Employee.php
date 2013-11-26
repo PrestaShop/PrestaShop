@@ -110,8 +110,11 @@ class EmployeeCore extends ObjectModel
 
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
-		parent::__construct($id, $id_lang, $id_shop);
-
+		parent::__construct($id, null, $id_shop);
+		
+		if ($id_lang !== null)
+			$this->id_lang = (Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
+		
 		if ($this->id)
 			$this->associated_shops = $this->getAssociatedShops();
 	}
