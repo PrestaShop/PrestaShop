@@ -372,11 +372,11 @@ class MailCore
 
 		$file_core = _PS_ROOT_DIR_.'/mails/'.$iso_code.'/lang.php';
 		if (Tools::file_exists_cache($file_core) && empty($_LANGMAIL))
-			include_once($file_core);
+			include($file_core);
 
 		$file_theme = _PS_THEME_DIR_.'mails/'.$iso_code.'/lang.php';
 		if (Tools::file_exists_cache($file_theme))
-			include_once($file_theme);
+			include($file_theme);
 
 		if (!is_array($_LANGMAIL))
 			return (str_replace('"', '&quot;', $string));
