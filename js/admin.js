@@ -363,10 +363,10 @@ if (typeof helpboxes != 'undefined' && helpboxes)
 		if ($('input'))
 		{
 			//Display by rollover
-			$('input').mouseover(function() {
+			$('input').focusin(function() {
 			$(this).parent().find('.hint:first').css('display', 'block');
 			});
-			$('input').mouseout(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
+			$('input').focusout(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
 
 			//display when you press the tab key
 			$('input').keydown(function (e) {
