@@ -63,7 +63,8 @@ class AdminCustomersControllerCore extends AdminController
 		a.date_add, gl.name as title, (
 			SELECT SUM(total_paid_tax_excl / conversion_rate) FROM '._DB_PREFIX_.'orders o
 			WHERE o.id_customer = a.id_customer
-			AND active = 1
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
+			AND a.active = 1
 		) as total_spent, (
 			SELECT c.date_add FROM '._DB_PREFIX_.'guest g
 			LEFT JOIN '._DB_PREFIX_.'connections c ON c.id_guest = g.id_guest

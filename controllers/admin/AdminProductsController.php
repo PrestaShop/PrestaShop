@@ -3648,6 +3648,9 @@ class AdminProductsControllerCore extends AdminController
 				else
 					$image->cover = 0;
 
+				if (isset($file['error']))
+					continue;
+
 				if (!$image->add())
 					$file['error'] = Tools::displayError('Error while creating additional image');
 				else
