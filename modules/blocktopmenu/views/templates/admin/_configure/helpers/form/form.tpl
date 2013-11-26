@@ -72,12 +72,12 @@ function serialize()
 {block name="input"}
     {if $input.type == 'link_choice'}
 	    <div class="row">
-	    	<div class="col-lg-4">{$selected_links}</div>
-	    	<div class="col-lg-4">{$choices}</div>
+	    	<div class="col-lg-6">{$selected_links}</div>
+	    	<div class="col-lg-6">{$choices}</div>
 	    </div>
 	    <div class="row">
-	    	<div class="col-lg-4"><a href="#" id="removeItem" class="btn btn-primary"><i class="icon-arrow-right"></i> {l s='Remove'}</a></div>
-	    	<div class="col-lg-4"><a href="#" id="addItem" class="btn btn-primary"><i class="icon-arrow-left"></i> {l s='Add'}</a></div>
+	    	<div class="col-lg-6"><a href="#" id="removeItem" class="btn btn-primary"><i class="icon-arrow-right"></i> {l s='Remove'}</a></div>
+	    	<div class="col-lg-6"><a href="#" id="addItem" class="btn btn-primary"><i class="icon-arrow-left"></i> {l s='Add'}</a></div>
 	    </div>
 	{else}
 		{$smarty.block.parent}
