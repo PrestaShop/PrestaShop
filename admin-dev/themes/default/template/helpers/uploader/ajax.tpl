@@ -122,25 +122,32 @@
 					if (typeof data.result.{$name} !== 'undefined') {
 						for (var i=0; i<data.result.{$name}.length; i++) {
 							if (data.result.{$name}[i] !== null) {
-								if (typeof data.result.{$name}[i].image !== 'undefined') {
-									var template = '<div class="img-thumbnail text-center">';
-									template += '<p>'+data.result.{$name}[i].image+'</p>';
-									
-									if (typeof data.result.{$name}[i].delete_url !== 'undefined') {
-										template += '<p><a class="btn btn-default" href="'+data.result.{$name}[i].delete_url+'"><i class="icon-trash"></i> {l s='Delete'}</a></p>';
-									}
+								if (typeof data.result.{$name}[i].error !== 'undefined' && data.result.{$name}[i].error != '') {
+									$('#{$id}-errors').html('<strong>'+data.result.{$name}[i].name+'</strong> : '+data.result.{$name}[i].error).parent().show();
+								}
+								else 
+								{
+									$(data.context).appendTo($('#{$id}-success'));
+									$('#{$id}-success').parent().show();
 
-									template += '</div>';
-									$('#{$id}-images-thumbnails').html($('#{$id}-images-thumbnails').html()+template);
-									$('#{$id}-images-thumbnails').parent().show();
+									if (typeof data.result.{$name}[i].image !== 'undefined')
+									{
+										var template = '<div class="img-thumbnail text-center">';
+										template += '<p>'+data.result.{$name}[i].image+'</p>';
+										
+										if (typeof data.result.{$name}[i].delete_url !== 'undefined')
+											template += '<p><a class="btn btn-default" href="'+data.result.{$name}[i].delete_url+'"><i class="icon-trash"></i> {l s='Delete'}</a></p>';
+
+										template += '</div>';
+										$('#{$id}-images-thumbnails').html($('#{$id}-images-thumbnails').html()+template);
+										$('#{$id}-images-thumbnails').parent().show();
+									}
 								}
 							}
 						}
 					}
 
-					$(data.context).find('button').remove();
-					$(data.context).appendTo($('#{$id}-success'));
-					$('#{$id}-success').parent().show();
+					$(data.context).find('button').remove();					
 				}
 			},
 		}).on('fileuploadalways', function (e, data) {
