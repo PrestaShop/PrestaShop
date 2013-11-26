@@ -158,7 +158,7 @@ var isLoggedWishlist = {if $logged}true{else}false{/if};
 var contentOnly = {if $content_only}true{else}false{/if}
 //]]>
 </script>
-<div id="primary_block" class="row" itemscope itemtype="http://schema.org/Product">
+<div id="primary_block" class="row">
 
 
 {if !$content_only}<div class="container"><div class="top-hr"></div></div>{/if}
