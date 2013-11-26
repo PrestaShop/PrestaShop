@@ -6,10 +6,10 @@
   color: #d7d7d7;
   line-height: 19px;
   margin-bottom: 26px;
+	background-color: #464646 !important;
 }
 .content_scene_cat .content_scene_cat_bg {
   padding: 18px 10px 10px 42px;
-  background-color: #464646 !important;
 }
 @media (max-width: 1199px) {
   .content_scene_cat .content_scene_cat_bg {
@@ -17,7 +17,6 @@
   }
 }
 .content_scene_cat h1.category-name {
-	background: #464646;
   font: 600 42px/51px "Open Sans", sans-serif;
   color: white;
   padding-left: 10px;
@@ -42,7 +41,6 @@
 }
 .content_scene_cat .cat_desc {
   padding: 5px;
-  background: #464646;
 }
 .content_scene_cat .cat_desc a {
   color: #777777;
