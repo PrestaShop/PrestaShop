@@ -55,14 +55,14 @@
 					{if (isset($module->id) && $module->id > 0) || !isset($module->type) || $module->type != 'addonsMustHave'}
 					<input type="checkbox" name="modules" value="{$module->name}"
 						{if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)}rel="false"{else}rel="{$module->confirmUninstall|addslashes}"{/if}
-						class="noborder">
+						class="noborder" title="{l s='Module %1s '|sprintf:$module->name}" />
 					{/if}
 				</td>
 				<td>
-					<img width="32" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}" />
+					<img width="32" alt="{$module->displayName}" title="{$module->displayName}" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}" />
 				</td>
 				<td>
-					<div id="anchor{$module->name|ucfirst}">
+					<div id="anchor{$module->name|ucfirst}" title="{$module->displayName}">
 						<div class="text-muted">
 							{$module->categoryName}
 						</div>
