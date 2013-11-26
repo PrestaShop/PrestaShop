@@ -168,25 +168,24 @@ class UploaderCore
 				file_put_contents($file_path, fopen('php://input', 'r'));
 			}
 			
-			$file_size = $this->_getFileSize($file_path);
+			$file_size = $this->_getFileSize($file_path, true);
 
 			if ($file_size === $file['size'])
 			{
 				$file['save_path'] = $file_path;
-				//TODO do image processing
 			}
 			else
 			{
 				$file['size'] = $file_size;
 				unlink($file_path);
-				$file['error'] = 'abort';
+				$file['error'] = Tools::displayError('Server file size is different from local file size');
 			}
 		}
-		
+
 		return $file;
 	}
 
-	protected function validate($file)
+	protected function validate(&$file)
 	{
 		$post_max_size = $this->getPostMaxSizeBytes();
 

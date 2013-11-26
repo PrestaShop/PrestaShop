@@ -203,7 +203,7 @@
 								</a>
 							</div>
 							<div class="panel-footer text-small">
-								<a href="index.php?tab=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a>
+								<a href="index.php?controller=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a>
 							</div>
 						</section>
 					</div>

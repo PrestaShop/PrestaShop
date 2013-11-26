@@ -1,0 +1,138 @@
+/*
+	Variable Grid System.
+	Learn more ~ http://www.spry-soft.com/grids/
+	Based on 960 Grid System - http://960.gs/
+
+	Licensed under GPL and MIT.
+*/
+
+/* Containers
+----------------------------------------------------------------------------------------------------*/
+.container_9 {
+	margin:0 auto;
+	width: 980px;
+}
+
+
+/* Grid >> Global
+----------------------------------------------------------------------------------------------------*/
+.grid_1,
+.grid_2,
+.grid_3,
+.grid_4,
+.grid_5,
+.grid_6,
+.grid_7,
+.grid_8,
+.grid_9 {
+	display:inline;
+	float: left;
+	position: relative;
+	margin-right: 20px;
+}
+
+
+/* Grid >> Children (Alpha ~ First, Omega ~ Last)
+----------------------------------------------------------------------------------------------------*/
+.alpha {margin-left: 0;}
+.omega {margin-right: 0;}
+
+
+/* Grid >> 9 Columns
+----------------------------------------------------------------------------------------------------*/
+.container_9 .grid_1 {width:91px;}
+.container_9 .grid_2 {width:202px;}
+.container_9 .grid_3 {width:313px;}
+.container_9 .grid_4 {width:424px;}
+.container_9 .grid_5 {width:535px;}
+.container_9 .grid_6 {width:646px;}
+.container_9 .grid_7 {width:757px;}
+.container_9 .grid_8 {width:868px;}
+.container_9 .grid_9 {width:980px;}
+
+
+/* Prefix Extra Space >> 9 Columns
+----------------------------------------------------------------------------------------------------*/
+.container_9 .prefix_1 {padding-left:111px;}
+.container_9 .prefix_2 {padding-left:222px;}
+.container_9 .prefix_3 {padding-left:333px;}
+.container_9 .prefix_4 {padding-left:444px;}
+.container_9 .prefix_5 {padding-left:555px;}
+.container_9 .prefix_6 {padding-left:666px;}
+.container_9 .prefix_7 {padding-left:777px;}
+.container_9 .prefix_8 {padding-left:888px;}
+
+
+/* Suffix Extra Space >> 9 Columns
+----------------------------------------------------------------------------------------------------*/
+.container_9 .suffix_1 {padding-right:111px;}
+.container_9 .suffix_2 {padding-right:222px;}
+.container_9 .suffix_3 {padding-right:333px;}
+.container_9 .suffix_4 {padding-right:444px;}
+.container_9 .suffix_5 {padding-right:555px;}
+.container_9 .suffix_6 {padding-right:666px;}
+.container_9 .suffix_7 {padding-right:777px;}
+.container_9 .suffix_8 {padding-right:888px;}
+
+
+/* Push Space >> 9 Columns
+----------------------------------------------------------------------------------------------------*/
+.container_9 .push_1 {left:111px;}
+.container_9 .push_2 {left:222px;}
+.container_9 .push_3 {left:333px;}
+.container_9 .push_4 {left:444px;}
+.container_9 .push_5 {left:555px;}
+.container_9 .push_6 {left:666px;}
+.container_9 .push_7 {left:777px;}
+.container_9 .push_8 {left:888px;}
+
+
+/* Pull Space >> 9 Columns
+----------------------------------------------------------------------------------------------------*/
+.container_9 .pull_1 {left:-111px;}
+.container_9 .pull_2 {left:-222px;}
+.container_9 .pull_3 {left:-333px;}
+.container_9 .pull_4 {left:-444px;}
+.container_9 .pull_5 {left:-555px;}
+.container_9 .pull_6 {left:-666px;}
+.container_9 .pull_7 {left:-777px;}
+.container_9 .pull_8 {left:-888px;}
+
+
+/* Clear Floated Elements
+----------------------------------------------------------------------------------------------------*/
+
+/* http://sonspring.com/journal/clearing-floats */
+.clear {
+	/*clear: both;
+	display: block;
+	overflow: hidden;
+	visibility: hidden;
+	width: 0;
+	height: 0;*/
+}
+
+/* http://perishablepress.com/press/2008/02/05/lessons-learned-concerning-the-clearfix-css-hack
+
+.clearfix:after {
+	clear: both;
+	content: ' ';
+	display: block;
+	font-size: 0;
+	line-height: 0;
+	visibility: hidden;
+	width: 0;
+	height: 0;
+}
+
+.clearfix {	display: inline-block;
+}
+
+* html .clearfix {
+	height: 1%;
+}
+
+.clearfix {
+	display: block;
+}
+ */

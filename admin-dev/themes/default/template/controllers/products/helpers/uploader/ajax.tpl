@@ -88,26 +88,34 @@
 				if (data.result) {
 					if (typeof data.result.{$name} !== 'undefined') {
 						for (var i=0; i<data.result.{$name}.length; i++) {
-
-							if (data.result.{$name}[i] !== null && data.result.{$name}[i].status == 'ok') {
-								var response = data.result.{$name}[i];
-								var cover = "icon-check-empty";
-
-								if (response.cover == "1")
-									cover = "icon-check-sign";
-
-								imageLine(response.id, response.path, response.position, cover, response.shops,
-									response.legend[{$default_language|intval}])
-								$("#countImage").html(parseInt($("#countImage").html()) + 1);
-								$("#img" + id).remove();
-								$("#imageTable").tableDnDUpdate();
+							if (typeof data.result.{$name}[i].error !== 'undefined' && data.result.{$name}[i].error != '') {
+								$('#{$id}-errors').html('<strong>'+data.result.{$name}[i].name+'</strong> : '+data.result.{$name}[i].error).parent().show();
 							}
+							else 
+							{
+								$(data.context).appendTo($('#{$id}-success'));
+								$('#{$id}-success').parent().show();
+
+								if (data.result.{$name}[i] !== null && data.result.{$name}[i].status == 'ok')
+								{
+									var response = data.result.{$name}[i];
+									var cover = "icon-check-empty";
+
+									if (response.cover == "1")
+										cover = "icon-check-sign";
+
+									imageLine(response.id, response.path, response.position, cover, response.shops,
+										response.legend[{$default_language|intval}])
+									$("#countImage").html(parseInt($("#countImage").html()) + 1);
+									$("#img" + id).remove();
+									$("#imageTable").tableDnDUpdate();
+								}
+							}
+							
 						}
 					}
 
 					$(data.context).find('button').remove();
-					$(data.context).appendTo($('#{$id}-success'));
-					$('#{$id}-success').parent().show();
 				}
 			},
 		}).on('fileuploadalways', function (e, data) {
