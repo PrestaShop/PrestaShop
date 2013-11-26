@@ -699,11 +699,12 @@ class AdminTranslationsControllerCore extends AdminController
 			if (Validate::isLangIsoCode($iso_code))
 			{
 				$themes_selected = Tools::getValue('theme', array(self::DEFAULT_THEME_NAME));
-				$files_list = $gz->listContent();
-				
+				$files_list = AdminTranslationsController::filterTranslationFiles($gz->listContent());
+				$files_paths = AdminTranslationsController::filesListToPaths($files_list);
+
 				$uniqid = uniqid();
 				$sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
-				if ($gz->extract($sandbox, false))
+				if ($gz->extractList($files_paths, $sandbox))
 				{
 					foreach ($files_list as $file2check)
 					{
@@ -725,7 +726,7 @@ class AdminTranslationsControllerCore extends AdminController
 				if (count($this->errors))
 					return false;
 
-				if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
+				if ($gz->extractList($files_paths, _PS_TRANSLATIONS_DIR_.'../'))
 				{
 					foreach ($files_list as $file2check)
 						if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_.'../'.$file2check['filename'], Tools::getDefaultIndexContent()))
@@ -763,6 +764,47 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 	}
 
+	/**
+	* Filter the translation files contained in a .gzip pack
+	* and return only the ones that we want.
+	*
+	* Right now the function only needs to check that
+	* the modules for which we want to add translations
+	* are present on the shop (installed or not).
+	*
+	* $list is the output of Archive_Tar::listContent()
+	*/
+	public static function filterTranslationFiles($list)
+	{
+		$kept = array();
+		foreach ($list as $file)
+		{
+			$m = array();
+			if (preg_match('#^modules/([^/]+)/#', $file['filename'], $m))
+			{
+				if (is_dir(_PS_MODULE_DIR_.$m[1]))
+					$kept[] = $file;
+			}
+			else
+				$kept[] = $file;
+		}
+		return $kept;
+	}
+
+	/**
+	* Turn the list returned by 
+	* AdminTranslationsController::filterTranslationFiles()
+	* into a list of paths that can be passed to 
+	* Archive_Tar::extractList()
+	*/
+	public static function filesListToPaths($list)
+	{
+		$paths = array();
+		foreach ($list as $item)
+			$paths[] = $item['filename'];
+		return $paths;
+	}
+
 	public function submitAddLang()
 	{
 		$arr_import_lang = explode('|', Tools::getValue('params_import_language')); /* 0 = Language ISO code, 1 = PS version */
@@ -776,8 +818,8 @@ class AdminTranslationsControllerCore extends AdminController
 				if ((bool)@file_put_contents($file, $content))
 				{
 					$gz = new Archive_Tar($file, true);
-					$files_list = $gz->listContent();
-					if ($error = $gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
+					$files_list = AdminTranslationsController::filterTranslationFiles($gz->listContent());
+					if ($error = $gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../'))
 					{
 						if (is_object($error) && !empty($error->message))
 							$this->errors[] = Tools::displayError('The archive cannot be extracted.'). ' '.$error->message;

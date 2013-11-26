@@ -72,7 +72,7 @@ class Dashactivity extends Module
 				$this->context->controller->addJquery();
 
 			$this->context->controller->addJs($this->_path.'views/js/'.$this->name.'.js');
-			$this->context->controller->addJs(_PS_JS_DIR_.'date.js');
+			$this->context->controller->addJs(array(_PS_JS_DIR_.'date.js', _PS_JS_DIR_.'tools.js'));
 		}
 	}
 
