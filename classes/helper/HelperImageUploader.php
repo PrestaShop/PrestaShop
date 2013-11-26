@@ -42,7 +42,7 @@ class HelperImageUploaderCore extends HelperUploader
 		return tempnam($this->getSavePath(), $this->getUniqueFileName());
 	}
 
-	protected function validate($file)
+	protected function validate(&$file)
 	{
 		$post_max_size = $this->getPostMaxSizeBytes();
 
@@ -62,7 +62,10 @@ class HelperImageUploaderCore extends HelperUploader
 		}
 
 		if ($error = ImageManager::validateUpload($file, Tools::getMaxUploadSize($this->getMaxSize())))
+		{
 			$file['error'] = $error;
+			return false;
+		}
 
 		if ($file['size'] > $this->getMaxSize())
 		{
