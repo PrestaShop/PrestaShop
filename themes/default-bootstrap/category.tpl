@@ -47,9 +47,6 @@
                         </div>
                     {else}
                     <!-- Category image -->
-                    <div class="content_scene_cat_bg" {if $category->id_image}style="background:url({$link->getCatImageLink($category->link_rewrite, $category->id_image, 'category_default')|escape:'html'}) 0 bottom no-repeat; background-size:contain; min-height:{$categorySize.height}px;" {/if}>
-                        {if $category->description}
-                            <div class="cat_desc">
                             <h1 class="category-name">
                                 {strip}
                                     {$category->name|escape:'html':'UTF-8'}
@@ -58,17 +55,20 @@
                                     {/if}
                                 {/strip}
                             </h1>
+                    <div class="content_scene_cat_bg" {if $category->id_image}style="background:url({$link->getCatImageLink($category->link_rewrite, $category->id_image, 'category_default')|escape:'html'}) 0 bottom no-repeat; background-size:contain; min-height:{$categorySize.height}px;   background-position: center;" {/if}>
+                    </div>
+                        {if $category->description}
+                            <div class="cat_desc">
                             {if strlen($category->description) > 350}
                                 <div id="category_description_short">{$category->description|truncate:350}</div>
                                 <div id="category_description_full" style="display:none">{$category->description}</div>
                                 <a href="#" onclick="$('#category_description_short').hide(); $('#category_description_full').show(); $(this).hide(); return false;" class="lnk_more">{l s='More'}</a>
                             {else}
-                                <div>{$category->description}</div>
+                                {$category->description}
                             {/if}
                             </div>
                         {/if}
                      
-                     </div>
                   {/if}
             </div>
 		{/if}
