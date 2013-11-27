@@ -38,6 +38,17 @@
 				<i class="icon-upload"></i>
 				{l s='Import'}
 			</h3>
+			<div class="alert alert-info">		
+				<ul class="list-unstyled">
+					<li>{l s='You can read information on CSV import at:'}
+						<a href="http://doc.prestashop.com/display/PS16/CSV+Import+Parameters" target="_blank">http://doc.prestashop.com/display/PS16/CSV+Import+Parameters</a>
+					</li>
+					<li>{l s='Read more about CSV format at:'}
+						<a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a>
+					</li>
+				</ul>
+			</div>
+			<hr>
 			<!-- <div id="upload_file_import">
 				<form action="{$current}&token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
 					<button type="submit" name="submitFileUpload" class="btn btn-default">
@@ -50,7 +61,7 @@
 				<div class="form-group">
 					<label class="control-label col-lg-4">{l s='What kind of entity would you like to import?'} </label>
 					<div class="col-lg-8">
-						<select name="entity" id="entity">
+						<select name="entity" id="entity" class="fixed-width-xl">
 							{foreach $entities AS $entity => $i }
 							<option value="{$i}"{if $entity_selected == $i} selected="selected"{/if}>
 								{$entity}
@@ -59,14 +70,26 @@
 						</select>
 					</div>
 				</div>
+
+				<div class="alert alert-warning import_products_categories">
+					<ul>
+						<li>{l s='Note that the category import does not support categories of the same name.'}</li>
+						<li>{l s='Note that you can have several products with the same reference.'}</li>
+					</ul>
+				</div>
+
+				<div class="alert alert-warning import_supply_orders_details">
+					<p>{l s='Importing Supply Order Details will reset products ordered, if there are any.'}</p>
+				</div>
+
 				<hr>
-				<div class="form-group" id="csv_file_uploader">
+				<!--<div class="form-group" id="csv_file_uploader">
 					<label class="control-label col-lg-4">{l s='Select your CSV file'}</label>
 					<div class="col-lg-8">
 						<input id="file" type="file" name="file" class="hide" />
 						<div class="dummyfile input-group">
 							<span class="input-group-addon"><i class="icon-file"></i></span>
-							<input id="file-name" type="text" class="disabled" name="filename" readonly />
+							<input id="file-name" name="filename" type="text" class="disabled"  readonly />
 							<span class="input-group-btn">
 								<button id="file-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
 									<i class="icon-folder-open"></i> {l s='Choose a file'}
@@ -78,11 +101,141 @@
 							<a href="#" onclick="$('#csv_files_history').slideToggle();$('#csv_file_uploader').slideToggle(); return false;">Click here</a>.
 						</p>
 					</div>
-					<!-- <div class="alert alert-info">
+					 <div class="alert alert-info">
 						{l s='Only UTF-8 and ISO-8859-1 encoding are allowed'}.<br/>
 						{l s='You can also upload your file via FTP to the following directory:'} {$path_import}.
-					</div> -->
+					</div> 
+				</div>-->
+
+				<div class="form-group" id="csv_file_uploader">
+					<label class="control-label col-lg-4">{l s='Select your CSV file'}</label>
+					<div class="col-lg-8">
+						<input id="filename" type="file" name="filename[]" data-url="{$current}&token={$token}&ajax=1&action=uploadCsv" class="hide" />
+						<button class="btn btn-default" data-style="expand-right" data-size="s" type="button" id="filename-add-button">
+							<i class="icon-plus-sign"></i> {l s='Add file'}
+						</button>
+						<button class="ladda-button btn btn-default" data-style="expand-right" type="button" id="filename-upload-button" style="display:none;">
+							<i class="icon-cloud-upload"></i> <span class="ladda-label">{l s='Upload file'}</span>
+						</button>
+						<p class="help-block">
+							{l s="You can also use a file that you already have uploaded."}
+							<a href="#" onclick="$('#csv_files_history').slideToggle();$('#csv_file_uploader').slideToggle(); return false;">{l s="Show history / FTP"}</a>.
+						</p>
+					</div>
 				</div>
+				<div class="row" style="display:none">
+					<div class="alert alert-info" id="filename-files-list"></div>
+				</div>
+				<div class="row" style="display:none">
+					<div class="alert alert-success" id="filename-success"></div>
+				</div>
+				<div class="row" style="display:none">
+					<div class="alert alert-danger" id="filename-errors"></div>
+				</div>
+				<script type="text/javascript">
+					function humanizeSize(bytes)
+					{
+						if (typeof bytes !== 'number') {
+							return '';
+						}
+
+						if (bytes >= 1000000000) {
+							return (bytes / 1000000000).toFixed(2) + ' GB';
+						}
+
+						if (bytes >= 1000000) {
+							return (bytes / 1000000).toFixed(2) + ' MB';
+						}
+
+						return (bytes / 1000).toFixed(2) + ' KB';
+					}
+
+					$( document ).ready(function() {
+						var filename_upload_button = Ladda.create( document.querySelector('#filename-upload-button' ));
+						var filename_total_files = 0;
+
+						$('#filename').fileupload({
+							dataType: 'json',
+							autoUpload: false,
+							singleFileUploads: true,
+							maxFileSize: {$post_max_size},
+							start: function (e) {
+								filename_upload_button.start();
+								$('#filename-upload-button').unbind('click'); //Important as we bind it for every elements in add function
+							},
+							fail: function (e, data) {
+								$('#filename-errors').html(data.errorThrown.message).parent().show();
+							},
+							done: function (e, data) {
+								if (data.result) {
+									if (typeof data.result.filename !== 'undefined') {
+										for (var i=0; i<data.result.filename.length; i++) {
+											if (data.result.filename[i] !== null) {
+												if (typeof data.result.filename[i].error !== 'undefined' && data.result.filename[i].error != '') {
+													$('#filename-errors').html('<strong>'+data.result.filename[i].name+'</strong> : '+data.result.filename[i].error).parent().show();
+												}
+												else 
+												{
+													$(data.context).appendTo($('#filename-success'));
+													$('#filename-success').parent().show();
+												}
+											}
+										}
+									}
+
+									$(data.context).find('button').remove();					
+								}
+							},
+						}).on('fileuploadalways', function (e, data) {
+								filename_total_files--;
+
+								if (filename_total_files == 0)
+								{
+									filename_upload_button.stop();
+									$('#filename-upload-button').unbind('click');
+									$('#filename-files-list').parent().hide();
+								}
+						}).on('fileuploadadd', function(e, data) {
+							data.context = $('<div/>').addClass('row').appendTo($('#filename-files-list'));
+							var file_name = $('<span/>').append('<strong>'+data.files[0].name+'</strong> ('+humanizeSize(data.files[0].size)+')').appendTo(data.context);
+
+							var button = $('<button/>').addClass('btn btn-default pull-right').prop('type', 'button').html('<i class="icon-trash"></i> {l s='Remove file'}').appendTo(data.context).on('click', function() {
+								filename_total_files--;
+								data.files = null;
+								
+								var total_elements = $(this).parent().siblings('div.row').length;
+								$(this).parent().remove();
+
+								if (total_elements == 0) {
+									$('#filename-files-list').html('').parent().hide();
+								}
+							});
+
+							$('#filename-files-list').parent().show();
+							$('#filename-upload-button').show().bind('click', function () {
+								if (data.files != null)
+									data.submit();						
+							});
+
+							filename_total_files++;
+						}).on('fileuploadprocessalways', function (e, data) {
+							var index = data.index,	file = data.files[index];
+							
+							if (file.error) {
+								$('#filename-errors').append('<div class="row"><strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error+'</div>').parent().show();
+								$(data.context).find('button').trigger('click');
+							}
+						});
+
+						$('#filename-add-button').on('click', function() {
+							$('#filename-success').html('').parent().hide();
+							$('#filename-errors').html('').parent().hide();
+							$('#filename-files-list').parent().hide();
+							filename_total_files = 0;
+							$('#filename').trigger('click');
+						});
+					});
+				</script>
 				<!-- <div class="form-group">
 					<label class="control-label col-lg-3">
 						{if count($files_to_import) > 1}
@@ -156,7 +309,7 @@
 						</span>
 					</label>
 					<div class="col-lg-8">
-						<select name="iso_lang">
+						<select name="iso_lang" class="fixed-width-xl">
 							{foreach $languages AS $lang}
 								<option value="{$lang.iso_code}" {if $lang.id_lang == $id_language} selected="selected"{/if}>{$lang.name}</option>
 							{/foreach}
@@ -257,32 +410,13 @@
 					</div>
 				</div>
 
-				{if empty($files_to_import)}
+				<!-- {if empty($files_to_import)}
 				<div class="alert alert-info">{l s='You must upload a file in order to proceed to the next step'}</div>
-				{/if}
+				{/if} -->
 
-				<div class="alert alert-warning import_products_categories">
-					<p>{l s='Note that the category import does not support categories of the same name.'}</p>
-					<p>{l s='Note that you can have several products with the same reference.'}</p>
-				</div>
-
-				<div class="alert alert-warning import_supply_orders_details">
-					<p>{l s='Importing Supply Order Details will reset products ordered, if there are any.'}</p>
-				</div>
-
-				{if !count($files_to_import)}
-					<div class="alert alert-warning">
-						<p>{l s='There is no CSV file available. Please upload one using the \'Upload\' button above.'}</p>
-						<ul>
-							<li>{l s='You can read information on CSV import at:'}
-								<a href="http://doc.prestashop.com/display/PS16/CSV+Import+Parameters" target="_blank">http://doc.prestashop.com/display/PS16/CSV+Import+Parameters</a>
-							</li>
-							<li>{l s='Read more about CSV format at:'}
-								<a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a>
-							</li>
-						</ul>
-					</div>
-				{/if}
+				<!--{if !count($files_to_import)}
+				 <p>{l s='There is no CSV file available. Please upload one using the \'Upload\' button above.'}</p> 
+				{/if}-->
 			</form>
 		</div>
 	</div>
@@ -436,13 +570,13 @@
 		$('#file-selectbutton').click(function(e){
 			$('#file').trigger('click');
 		});
-		$('#file-name').click(function(e){
+		$('#filename').click(function(e){
 			$('#file').trigger('click');
 		});
 		$('#file').change(function(e){
 			var val = $(this).val();
 			var file = val.split(/[\\/]/);
-			$('#file-name').val(file[file.length-1]);
+			$('#filename').val(file[file.length-1]);
 		});
 	});
 </script>
