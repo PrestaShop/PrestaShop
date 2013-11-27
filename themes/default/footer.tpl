@@ -25,14 +25,14 @@
 
 		{if !$content_only}
 				</div>
-
-<!-- Right -->
+			{if isset($right_column) && !empty($right_column)}
+				<!-- Right -->
 				<div id="right_column" class="column grid_2 omega">
 					{$HOOK_RIGHT_COLUMN}
 				</div>
+			{/if}
 			</div>
-
-<!-- Footer -->
+			<!-- Footer -->
 			<div id="footer" class="grid_9 alpha omega clearfix">
 				{$HOOK_FOOTER}
 				{if $PS_ALLOW_MOBILE_DEVICE}
@@ -40,6 +40,6 @@
 				{/if}
 			</div>
 		</div>
-	{/if}
+		{/if}
 	</body>
 </html>
