@@ -3634,89 +3634,89 @@ class AdminProductsControllerCore extends AdminController
 		$files = $image_uploader->process();
 
 		foreach ($files as &$file)
+		{
+			$image = new Image();
+			$image->id_product = (int)($product->id);
+			$image->position = Image::getHighestPosition($product->id) + 1;
+
+			foreach ($legends as $key => $legend)
+				if (!empty($legend))
+					$image->legend[(int)$key] = $legend;
+
+			if (!Image::getCover($image->id_product))
+				$image->cover = 1;
+			else
+				$image->cover = 0;
+
+			if (isset($file['error']) && (int)$file['error'] != 0)
+				continue;
+
+			if (!$image->add())
+				$file['error'] = Tools::displayError('Error while creating additional image');
+			else
 			{
-				$image = new Image();
-				$image->id_product = (int)($product->id);
-				$image->position = Image::getHighestPosition($product->id) + 1;
-
-				foreach ($legends as $key => $legend)
-					if (!empty($legend))
-						$image->legend[(int)$key] = $legend;
-
-				if (!Image::getCover($image->id_product))
-					$image->cover = 1;
-				else
-					$image->cover = 0;
-
-				if (isset($file['error']))
+				if (!$new_path = $image->getPathForCreation())
+				{
+					$file['error'] = Tools::displayError('An error occurred during new folder creation');
 					continue;
+				}
 
-				if (!$image->add())
-					$file['error'] = Tools::displayError('Error while creating additional image');
+				if (!ImageManager::resize($file['save_path'], $new_path.'.'.$image->image_format))
+				{
+					$file['error'] = Tools::displayError('An error occurred while copying image.');
+					continue;
+				}
 				else
 				{
-					if (!$new_path = $image->getPathForCreation())
+					$imagesTypes = ImageType::getImagesTypes('products');
+					foreach ($imagesTypes as $imageType)
 					{
-						$file['error'] = Tools::displayError('An error occurred during new folder creation');
-						continue;
-					}
-
-					if (!ImageManager::resize($file['save_path'], $new_path.'.'.$image->image_format))
-					{
-						$file['error'] = Tools::displayError('An error occurred while copying image.');
-						continue;
-					}
-					else
-					{
-						$imagesTypes = ImageType::getImagesTypes('products');
-						foreach ($imagesTypes as $imageType)
+						/*
+							$theme = (Shop::isFeatureActive() ? '-'.$imageType['id_theme'] : '');
+							if (!ImageManager::resize($tmpName, $new_path.'-'.stripslashes($imageType['name']).$theme.'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
+								return array('error' => Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']));
+						*/
+						if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
 						{
-							/*
-								$theme = (Shop::isFeatureActive() ? '-'.$imageType['id_theme'] : '');
-								if (!ImageManager::resize($tmpName, $new_path.'-'.stripslashes($imageType['name']).$theme.'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
-									return array('error' => Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']));
-							*/
-							if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
-							{
-								$file['error'] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
-								continue;
-							}
+							$file['error'] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
+							continue;
 						}
 					}
-
-					unlink($file['save_path']);
-					//Necesary to prevent hacking
-					unset($file['save_path']);
-					Hook::exec('actionWatermark', array('id_image' => $image->id, 'id_product' => $product->id));
-
-					if (!$image->update())
-					{
-						$file['error'] = Tools::displayError('Error while updating status');
-						continue;
-					}
-
-					// Associate image to shop from context
-					$shops = Shop::getContextListShopID();
-					$image->associateTo($shops);
-					$json_shops = array();
-
-					foreach ($shops as $id_shop)
-						$json_shops[$id_shop] = true;
-
-					$file['status']   = 'ok';
-					$file['id']       = $image->id;
-					$file['position'] = $image->position;
-					$file['cover']    = $image->cover;
-					$file['legend']   = $image->legend;					
-					$file['path']     = $image->getExistingImgPath();					
-					$file['shops']    = $json_shops;
-
-					@unlink(_PS_TMP_IMG_DIR_.'product_'.(int)$product->id.'.jpg');
-					@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$product->id.'_'.$this->context->shop->id.'.jpg');
 				}
-			}
 
-			die(Tools::jsonEncode(array($image_uploader->getName() => $files)));
+				unlink($file['save_path']);
+				//Necesary to prevent hacking
+				unset($file['save_path']);
+				Hook::exec('actionWatermark', array('id_image' => $image->id, 'id_product' => $product->id));
+
+				if (!$image->update())
+				{
+					$file['error'] = Tools::displayError('Error while updating status');
+					continue;
+				}
+
+				// Associate image to shop from context
+				$shops = Shop::getContextListShopID();
+				$image->associateTo($shops);
+				$json_shops = array();
+
+				foreach ($shops as $id_shop)
+					$json_shops[$id_shop] = true;
+
+				$file['status']   = 'ok';
+				$file['id']       = $image->id;
+				$file['position'] = $image->position;
+				$file['cover']    = $image->cover;
+				$file['legend']   = $image->legend;
+				$file['path']     = $image->getExistingImgPath();
+				$file['shops']    = $json_shops;
+
+				@unlink(_PS_TMP_IMG_DIR_.'product_'.(int)$product->id.'.jpg');
+				@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$product->id.'_'.$this->context->shop->id.'.jpg');
+			}
+		}
+
+		die(Tools::jsonEncode(array($image_uploader->getName() => $files)));
 	}
 
 	public function initFormImages($obj)
