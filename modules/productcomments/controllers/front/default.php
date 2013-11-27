@@ -124,6 +124,29 @@ class ProductCommentsDefaultModuleFrontController extends ModuleFrontController
 					$comment->save();
 				}
 				$result = true;
+				//send mail
+				$data = array(
+					'{texte}' => $module_instance->l('New comment available'),
+					'{id_product}' => $comment->id_product,
+					'{id_customer}' => $comment->id_customer,
+					'{id_guest}' => $comment->id_guest,
+					'{title}' => $comment->title,
+					'{content}' => $comment->content,
+					'{customer_name}' => $comment->customer_name,
+					'{grade}' => $comment->grade,
+					'{validate}' => $comment->validate
+				);
+				Mail::Send((int)Context::getContext()->language->id,
+						'new_comment',
+						'New comment',
+						$data,
+						Configuration::get('PS_SHOP_EMAIL'),
+						null,
+						null,
+						null,
+						null,
+						null,
+						dirname(__FILE__).'/../../mails/');
 			}
 			else
 			{
