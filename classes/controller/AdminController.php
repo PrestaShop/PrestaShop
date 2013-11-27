@@ -1984,6 +1984,7 @@ class AdminControllerCore extends Controller
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.js');
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.js');
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
+		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/jquery-timeago/jquery.timeago.js');
 
 		if (!Tools::getValue('submitFormAjax'))
 		{

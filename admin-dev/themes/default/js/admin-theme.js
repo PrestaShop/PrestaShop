@@ -215,4 +215,7 @@ $( document ).ready(function() {
 			removeMobileNav();
 		}
 	});
+
+	//show time elapsed
+	$("abbr.timeago").timeago();
 });
