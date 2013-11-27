@@ -64,7 +64,6 @@
 {/if}
 		{$HOOK_HEADER}
 	</head>
-	
 	<body {if isset($page_name)}id="{$page_name|escape:'html':'UTF-8'}"{/if} class="{if isset($page_name)}{$page_name|escape:'html':'UTF-8'}{/if}{if $hide_left_column} hide-left-column{/if}{if $hide_right_column} hide-right-column{/if}{if $content_only} content_only{/if}">
 	{if !$content_only}
 		{if isset($restricted_country_mode) && $restricted_country_mode}
@@ -73,7 +72,6 @@
 		</div>
 		{/if}
 		<div id="page" class="container_9 clearfix">
-
 			<!-- Header -->
 			<div id="header" class="grid_9 alpha omega">
 				<a id="header_logo" href="{$base_dir}" title="{$shop_name|escape:'html':'UTF-8'}">
@@ -83,13 +81,16 @@
 					{$HOOK_TOP}
 				</div>
 			</div>
-
+			{assign var='left_column' value=false}{assign var='right_column' value=false}
+			{if isset($HOOK_LEFT_COLUMN) && $HOOK_LEFT_COLUMN|trim && !$hide_left_column}{$left_column = true}{/if}
+			{if isset($HOOK_RIGHT_COLUMN) && $HOOK_RIGHT_COLUMN|trim && !$hide_right_column}{$right_column = true}{/if}
 			<div id="columns" class="grid_9 alpha omega clearfix">
+				{if isset($left_column) && !empty($left_column)}
 				<!-- Left -->
 				<div id="left_column" class="column grid_2 alpha">
 					{$HOOK_LEFT_COLUMN}
 				</div>
-
+				{/if}
 				<!-- Center -->
 				<div id="center_column" class=" grid_5">
 	{/if}

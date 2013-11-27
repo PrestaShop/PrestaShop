@@ -25,8 +25,7 @@
 
 		{if !$content_only}
                     </div>
-    {if isset($HOOK_RIGHT_COLUMN) && (str_replace(" ","",$HOOK_RIGHT_COLUMN)) !=''}{assign var='RightColumn' value=3}{/if}
-    {if isset($RightColumn) && $RightColumn !=0}
+    {if isset($right_column) && !empty($right_column)}
     <!-- Right -->
         <div id="right_column" class="col-xs-12 col-sm-3 column">
             {$HOOK_RIGHT_COLUMN}

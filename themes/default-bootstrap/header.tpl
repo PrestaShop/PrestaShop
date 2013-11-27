@@ -94,8 +94,7 @@
 <script src="{$js_dir}jquery/resonsive_utilites.js"></script>
 		{$HOOK_HEADER}
 	</head>
-	
-	<body {if isset($page_name)}id="{$page_name|escape:'html':'UTF-8'}"{/if} class="{if $hide_left_column}hide-left-column {/if} {if $hide_right_column}hide-right-column {/if} {if $content_only} content_only {/if}lang_{$lang_iso}">
+	<body {if isset($page_name)}id="{$page_name|escape:'html':'UTF-8'}"{/if} class="{if isset($page_name)}{$page_name|escape:'html':'UTF-8'}{/if}{if $hide_left_column} hide-left-column{/if}{if $hide_right_column} hide-right-column{/if}{if $content_only} content_only{/if} lang_{$lang_iso}">
 	{if !$content_only}
 		{if isset($restricted_country_mode) && $restricted_country_mode}
 		<div id="restricted-country">
@@ -209,16 +208,15 @@
                         {include file="$tpl_dir./breadcrumb.tpl"}
                     {/if}
                     <div class="row">
-                        {assign var='LeftColumn' value=0}
-                        {assign var='RightColumn' value=0}
-                        {if isset($HOOK_LEFT_COLUMN) && (str_replace(" ","",$HOOK_LEFT_COLUMN)) !=''}{assign var='LeftColumn' value=3}{/if}
-                        {if isset($HOOK_RIGHT_COLUMN) && (str_replace(" ","",$HOOK_RIGHT_COLUMN)) !=''}{assign var='RightColumn' value=3}{/if}
-                    <!-- Left -->
-                        {if isset($LeftColumn) && $LeftColumn !=0}
-                            <div id="left_column" class="column col-xs-12 col-sm-3">
-                                {$HOOK_LEFT_COLUMN}
-                            </div>
-                        {/if}
-                    <!-- Center -->
-                    	<div id="center_column" class="center_column col-xs-12 col-sm-{12 - $LeftColumn - $RightColumn}">
+						{assign var='left_column' value=0}{assign var='right_column' value=0}
+						{if isset($HOOK_LEFT_COLUMN) && $HOOK_LEFT_COLUMN|trim && !$hide_left_column}{$left_column = 3}{/if}
+						{if isset($HOOK_RIGHT_COLUMN) && $HOOK_RIGHT_COLUMN|trim && !$hide_right_column}{$right_column = 3}{/if}
+						{if isset($left_column) && !empty($left_column)}
+						<!-- Left -->
+                        <div id="left_column" class="column col-xs-12 col-sm-3">
+							{$HOOK_LEFT_COLUMN}
+                        </div>
+						{/if}
+                    	<!-- Center -->
+                    	<div id="center_column" class="center_column col-xs-12 col-sm-{12 - $left_column - $right_column}">
 	{/if}

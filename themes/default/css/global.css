@@ -85,8 +85,8 @@ h3 {
 	font-size:14px
 }
 
-.hide-left-column #left_column {display:none}
-.hide-left-column #center_column {width:757px}
+.hide-left-column #left_column, .hide-right-column #right_column {display:none}
+.hide-left-column #center_column, .hide-right-column #center_column {width:757px}
 
 /* text **************************************************************************************** */
 p {padding-bottom:20px}
