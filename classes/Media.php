@@ -69,7 +69,7 @@ class MediaCore
 		{
 			//set an alphabetical order for args
 			$html_content = preg_replace_callback(
-				'/(<[a-zA-Z0-9]+)((\s\t?[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']\s\t?)*)>/',
+				'/(<[a-zA-Z0-9]+)((\s*[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']\s*)*)>/',
 				array('Media', 'minifyHTMLpregCallback'),
 				$html_content,
 				Media::getBackTrackLimit());
