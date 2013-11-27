@@ -1077,4 +1077,11 @@ $(window).load(function () {
 	$("#uniform-selectProductSort1 span").innerWidth(0);
 });
 
+// refresh uniform selects on document width change
+$(window).resize(
+	function () {
+		$.uniform.update("select.form-control, input[type='file']");
+	}
+);
+
 

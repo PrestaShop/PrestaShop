@@ -26,7 +26,7 @@
 	<div class="col-xs-12 col-md-6">
         <p class="payment_module">
             <a class="cheque" href="{$link->getModuleLink('cheque', 'payment', [], true)|escape:'html'}" title="{l s='Pay by check.' mod='cheque'}">
-                {l s='Pay by check (order processing will take more time).' mod='cheque'}
+                {l s='Pay by check' mod='cheque'} <span>({l s='order processing will take more time' mod='cheque'})</span>
             </a>
         </p>
     </div>
