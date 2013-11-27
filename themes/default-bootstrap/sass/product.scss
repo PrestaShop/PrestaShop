@@ -555,6 +555,11 @@ padding:18px 19px 12px;
 																		} 	
 	 
     }
+	&.disabled {
+		&:before {
+			content:"";	
+		}
+	}
 	 
 	&:after{
 		background:url(../img/border-1.gif) repeat-y 0 0;

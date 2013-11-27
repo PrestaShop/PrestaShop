@@ -190,7 +190,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
 
                        
       	{if $product->on_sale}
-		<span class="sale-box"><span class="sale">{l s='Sale!'}</span></span>
+		<span class="sale-box"><span class="sale-label">{l s='Sale!'}</span></span>
 		{elseif $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutReduction > $productPrice}
 		<span class="discount">{l s='Reduced price!'}</span>
 		{/if} 
