@@ -263,11 +263,16 @@ class ProductControllerCore extends FrontController
 				'currencyBlank' => $this->context->currency->blank,
 				'jqZoomEnabled' => Configuration::get('PS_DISPLAY_JQZOOM'),
 				'ENT_NOQUOTES' => ENT_NOQUOTES,
-				'outOfStockAllowed' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK')
+				'outOfStockAllowed' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK'),
+				'errors' => $this->errors,
+				'body_classes' => array(
+					$this->php_self.'-'.$this->product->id, 
+					$this->php_self.'-'.$this->product->link_rewrite,
+					'category-'.$this->category->id,
+					'category-'.$this->category->link_rewrite
+				)
 			));
 		}
-
-		$this->context->smarty->assign('errors', $this->errors);
 		$this->setTemplate(_PS_THEME_DIR_.'product.tpl');
 	}
 
