@@ -32,6 +32,8 @@ class AttachmentControllerCore extends FrontController
 		if (!$a->id)
 			Tools::redirect('index.php');
 
+		Hook::exec('actionDownloadAttachment', array('attachment' => &$a);
+
 		if (ob_get_level()) 
 			ob_end_clean();
 

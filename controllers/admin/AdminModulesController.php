@@ -394,7 +394,7 @@ class AdminModulesControllerCore extends AdminController
 		foreach($zip_folders as $folder)
 			if (!in_array($folder, array('.', '..', '.svn', '.git', '__MACOSX')) && !Module::getInstanceByName($folder))
 			{
-				$this->errors[] = Tools::displayError('The \'.$folder.\' you uploaded is not a module');
+				$this->errors[] = sprintf(Tools::displayError('The folder %1$s you uploaded is not a module.'), $folder);
 				$this->recursiveDeleteOnDisk(_PS_MODULE_DIR_.$folder);
 			}
 			
