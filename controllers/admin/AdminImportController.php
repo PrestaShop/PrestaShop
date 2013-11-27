@@ -589,7 +589,8 @@ class AdminImportControllerCore extends AdminController
 
 	public function ajaxProcessuploadCsv()
 	{
-		$path = _PS_ADMIN_DIR_.'/import/'.date('YmdHis').'-';
+		$path = _PS_ADMIN_DIR_.'/import/';
+		$filename_prefix = date('YmdHis').'-';
 
 		if (isset($_FILES['file']) && !empty($_FILES['file']['error']))
 		{
@@ -619,10 +620,13 @@ class AdminImportControllerCore extends AdminController
 		elseif (!preg_match('/.*\.csv$/i', $_FILES['file']['name']))
 			$_FILES['file']['error'] = Tools::displayError('The extension of your file should be .csv.');
 		elseif (!file_exists($_FILES['file']['tmp_name']) ||
-			!@move_uploaded_file($_FILES['file']['tmp_name'], $path.$_FILES['file']['name']))
+			!@move_uploaded_file($_FILES['file']['tmp_name'], $path.$filename_prefix.$_FILES['file']['name']))
 			$_FILES['file']['error'] = $this->l('An error occurred while uploading / copying the file.');
 		else
-			@chmod($path.$_FILES['file']['name'], 0664);
+		{
+			@chmod($path.$filename_prefix.$_FILES['file']['name'], 0664);
+			$_FILES['file']['filename'] = $filename_prefix.$_FILES['file']['name'];
+		}
 
 		die(Tools::jsonEncode($_FILES));
 	}
