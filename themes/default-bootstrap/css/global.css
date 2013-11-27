@@ -686,7 +686,7 @@ table.table_block td {
   right: -5px;
 }
 
-.new {
+.new-label {
   font: 700 15px/18px Arial, Helvetica, sans-serif;
   color: white;
   background: #6ad4ff;
@@ -706,7 +706,7 @@ table.table_block td {
   top: 6px;
   z-index: 1;
 }
-.new:before {
+.new-label:before {
   position: absolute;
   bottom: -3px;
   right: 5px;
@@ -723,7 +723,7 @@ table.table_block td {
   -o-transform: rotate(225deg);
   transform: rotate(225deg);
 }
-.new:after {
+.new-label:after {
   position: absolute;
   bottom: -3px;
   left: 4px;
@@ -741,7 +741,7 @@ table.table_block td {
   transform: rotate(145deg);
 }
 
-.sale {
+.sale-label {
   font: 700 15px/18px Arial, Helvetica, sans-serif;
   color: white;
   background: #f13340;
@@ -761,7 +761,7 @@ table.table_block td {
   top: 6px;
   z-index: 1;
 }
-.sale:before {
+.sale-label:before {
   position: absolute;
   bottom: -3px;
   right: 4px;
@@ -778,7 +778,7 @@ table.table_block td {
   -o-transform: rotate(225deg);
   transform: rotate(225deg);
 }
-.sale:after {
+.sale-label:after {
   position: absolute;
   bottom: -3px;
   left: 5px;
@@ -796,28 +796,28 @@ table.table_block td {
   transform: rotate(136deg);
 }
 
-.ie8 .new {
+.ie8 .new-label {
   left: 0px;
   top: 0px;
   width: auto;
   padding: 5px 15px;
 }
-.ie8 .new:after {
+.ie8 .new-label:after {
   display: none;
 }
-.ie8 .new:before {
+.ie8 .new-label:before {
   display: none;
 }
-.ie8 .sale {
+.ie8 .sale-label {
   right: 0px;
   top: 0px;
   width: auto;
   padding: 5px 15px;
 }
-.ie8 .sale:after {
+.ie8 .sale-label:after {
   display: none;
 }
-.ie8 .sale:before {
+.ie8 .sale-label:before {
   display: none;
 }
 .ie8 .new-box {
@@ -927,7 +927,7 @@ table.table_block td {
 }
 @media (min-width: 768px) {
   #home-page-tabs > li.active a, #home-page-tabs > li a:hover {
-    margin: -10px 0;
+    margin: -9px 0;
   }
 }
 
@@ -2365,12 +2365,10 @@ a.price_discount_delete:hover {
 
 #cart_summary tbody td.cart_product {
   padding: 19px;
+  width: 137px;
 }
 #cart_summary tbody td.cart_product img {
   border: 1px solid #d6d4d4;
-}
-#cart_summary tbody td.cart_unit {
-  text-align: center;
 }
 #cart_summary tbody td.cart_unit .price span {
   display: block;
@@ -2381,6 +2379,9 @@ a.price_discount_delete:hover {
 }
 #cart_summary tbody td.cart_unit .price span.old-price {
   text-decoration: line-through;
+}
+#cart_summary tbody td.cart_description {
+  width: 480px;
 }
 #cart_summary tbody td.cart_description small {
   display: block;
@@ -2682,6 +2683,10 @@ p.payment_module a.cheque:after, p.payment_module a.bankwire:after {
 }
 p.payment_module a:hover {
   background-color: #f6f6f6;
+}
+p.payment_module a span {
+  font-weight: bold;
+  color: #777777;
 }
 
 .payment_module.box {

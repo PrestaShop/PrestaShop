@@ -100,6 +100,11 @@ table#product_comparison {
 		color:$product-price-color;
 		font-style:italic;	
 	}
+	.product-rating {
+		width:80px;
+		margin:0 auto;
+		overflow:hidden;	
+	}
 }
 .ie8 table#product_comparison .product-image-block .product_image img {
 	width:auto;

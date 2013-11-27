@@ -602,7 +602,7 @@ table.table_block  td {
 .sale-box {
 	right:-5px;	
 }
-.new {
+.new-label {
 	font:700 15px/18px $font-famaly;
 	color:$light-text-color;
 	background:#6ad4ff;
@@ -646,7 +646,7 @@ table.table_block  td {
 		@include rotate(145deg);
 	}
 }
-.sale {
+.sale-label {
 	font:700 15px/18px $font-famaly;
 	color:$light-text-color;
 	background:#f13340;
@@ -689,7 +689,7 @@ table.table_block  td {
 	}
 }
 .ie8 {
-	.new {
+	.new-label {
 		left:0px;
 		top:0px;
 		width:auto;
@@ -702,7 +702,7 @@ table.table_block  td {
 			display:none;	
 		}
 	}
-	.sale {
+	.sale-label {
 		right:0px;
 		top:0px;
 		width:auto;
@@ -804,7 +804,7 @@ table.table_block  td {
 		color:$light-text-color;
 		padding:10px;
 																		@media (min-width: $screen-sm) { // min 768px
-																			margin:-10px 0;
+																			margin:-9px 0;
 																		}
 	}
 }
@@ -2174,12 +2174,12 @@ a.price_discount_delete {
 		td {
 			&.cart_product {
 				padding:19px;
+				width:137px;
 				img {
 					border:1px solid $table-border-color;	
 				}
 			}
 			&.cart_unit {
-				text-align:center;
 				
 				.price {
 					span {
@@ -2195,11 +2195,14 @@ a.price_discount_delete {
 				}
 			}
 			&.cart_description {
-				
+				width:480px;
 				small {
 					display:block;
 					padding:5px 0 0 0;	
 				}
+			}
+			&.cart_avail {
+				
 			}
 		}
 	}
@@ -2481,7 +2484,11 @@ p.payment_module {
 					color:$link-color;
 				}
 			}
-		&:hover { background-color:#f6f6f6}	
+		&:hover { background-color:#f6f6f6}
+		span {
+			font-weight:bold;
+			color:$base-body-color;
+		}
 	}
 }
 .payment_module.box { margin-top:20px;}
