@@ -387,7 +387,7 @@ class ProductComments extends Module
 					foreach ($comments as $comment)
 						$this->_html .= '<tr>
 						<td><input class="noborder" type="checkbox" value="'.$comment['id_product_comment'].'" name="id_product_comment[]" /></td>
-						<td>'.htmlspecialchars($comment['customer_name'], ENT_COMPAT, 'UTF-8').'.</td>
+						<td>'.htmlspecialchars($comment['customer_name'], ENT_COMPAT, 'UTF-8').'</td>
 						<td>'.htmlspecialchars($comment['title'], ENT_COMPAT, 'UTF-8').'</td>
 						<td>'.htmlspecialchars($comment['content'], ENT_COMPAT, 'UTF-8').'</td>
 						<td>'.htmlspecialchars($comment['date_add'], ENT_COMPAT, 'UTF-8').'</td>
@@ -430,7 +430,10 @@ class ProductComments extends Module
 					<tr>
 						<th><input class="noborder" type="checkbox" name="id_product_comment[]" onclick="checkDelBoxes(this.form, \'id_product_comment[]\', this.checked)" /></th>
 						<th style="width:150px;">'.$this->l('Author').'</th>
+						<th style="width:150px;">'.$this->l('Title').'</th>
 						<th style="width:550px;">'.$this->l('Comment').'</th>
+						<th style="width:150px;">'.$this->l('Date').'</th>
+						<th style="width:50px;">'.$this->l('Grade').'</th>
 						<th style="width:150px;">'.$this->l('Product name').'</th>
 						<th style="width:30px;">'.$this->l('Actions').'</th>
 					</tr>
@@ -439,15 +442,18 @@ class ProductComments extends Module
 					foreach ($comments as $comment)
 						$this->_html .= '<tr>
 						<td><input class="noborder" type="checkbox" value="'.$comment['id_product_comment'].'" name="id_product_comment[]" /></td>
-						<td>'.htmlspecialchars($comment['customer_name'], ENT_COMPAT, 'UTF-8').'.</td>
+						<td>'.htmlspecialchars($comment['customer_name'], ENT_COMPAT, 'UTF-8').'</td>
+						<td>'.htmlspecialchars($comment['title'], ENT_COMPAT, 'UTF-8').'</td>
 						<td>'.htmlspecialchars($comment['content'], ENT_COMPAT, 'UTF-8').'</td>
+						<td>'.htmlspecialchars($comment['date_add'], ENT_COMPAT, 'UTF-8').'</td>
+						<td>'.htmlspecialchars($comment['grade'], ENT_COMPAT, 'UTF-8').'</td>
 						<td>'.$comment['id_product'].' - '.htmlspecialchars($comment['name'], ENT_COMPAT, 'UTF-8').'</td>
 						<td><a href="javascript:;" onclick="acceptComment(\''.(int)($comment['id_product_comment']).'\');"><img src="'.$this->_path.'img/accept.png" alt="'.$this->l('Accept').'" title="'.$this->l('Accept').'" /></a>
 							<a href="javascript:;" onclick="deleteComment(\''.(int)($comment['id_product_comment']).'\');"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
 						</tr>';
 						$this->_html .= '
 						<tr>
-							<td colspan="4" style="font-weight:bold;text-align:right">'.$this->l('Selection:').'</td>
+							<td colspan="7" style="font-weight:bold;text-align:right">'.$this->l('Selection:').'</td>
 							<td><a href="javascript:;" onclick="acceptComment(0);"><img src="'.$this->_path.'img/accept.png" alt="'.$this->l('Accept').'" title="'.$this->l('Accept').'" /></a>
 							<a href="javascript:;" onclick="deleteComment(0);"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
 						</tr>
@@ -646,7 +652,7 @@ class ProductComments extends Module
 					foreach ($comments as $comment)
 						$this->_html .= '<tr>
 						<td><input class="noborder" type="checkbox" value="'.$comment['id_product_comment'].'" name="delete_id_product_comment[]" /></td>
-						<td>'.htmlspecialchars($comment['customer_name'], ENT_COMPAT, 'UTF-8').'.</td>
+						<td>'.htmlspecialchars($comment['customer_name'], ENT_COMPAT, 'UTF-8').'</td>
 						<td>'.htmlspecialchars($comment['title'], ENT_COMPAT, 'UTF-8').'</td>
 						<td>'.htmlspecialchars($comment['content'], ENT_COMPAT, 'UTF-8').'</td>
 						<td>'.htmlspecialchars($comment['date_add'], ENT_COMPAT, 'UTF-8').'</td>
