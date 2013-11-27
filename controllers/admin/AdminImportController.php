@@ -480,6 +480,28 @@ class AdminImportControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function setMedia()
+	{
+		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
+		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+		$bo_theme = ((Validate::isLoadedObject($this->context->employee)
+			&& $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
+
+		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
+			.'template'))
+			$bo_theme = 'default';
+
+		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/vendor/jquery.ui.widget.js');
+		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
+		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload.js');
+		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload-process.js');
+		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js');			
+		$this->addJs(__PS_BASE_URI__.'js/vendor/spin.js');
+		$this->addJs(__PS_BASE_URI__.'js/vendor/ladda.js');
+
+		return parent::setMedia();
+	}
+
 	public function renderForm()
 	{
 		if (!is_writable(_PS_ADMIN_DIR_.'/import/'))
@@ -533,7 +555,20 @@ class AdminImportControllerCore extends AdminController
 		if (isset($this->context->cookie->multiple_value_separator_selected) && $this->context->cookie->multiple_value_separator_selected)
 			$multiple_value_separator_selected = base64_decode($this->context->cookie->multiple_value_separator_selected);
 
+		//get post max size
+		$post_max_size = ini_get('post_max_size');
+		$bytes         = trim($post_max_size);
+		$last          = strtolower($post_max_size[strlen($post_max_size) - 1]);
+
+		switch ($last)
+		{
+			case 'g': $bytes *= 1024;
+			case 'm': $bytes *= 1024;
+			case 'k': $bytes *= 1024;
+		}
+
 		$this->tpl_form_vars = array(
+			'post_max_size' => $bytes, 
 			'module_confirmation' => (Tools::getValue('import')) && (isset($this->warnings) && !count($this->warnings)),
 			'path_import' => _PS_ADMIN_DIR_.'/import/',
 			'entities' => $this->entities,
@@ -550,6 +585,46 @@ class AdminImportControllerCore extends AdminController
 		);
 
 		return parent::renderForm();
+	}
+
+	public function ajaxProcessuploadCsv()
+	{
+		$path = _PS_ADMIN_DIR_.'/import/'.date('YmdHis').'-';
+
+		if (isset($_FILES['file']) && !empty($_FILES['file']['error']))
+		{
+			switch ($_FILES['file']['error'])
+			{
+				case UPLOAD_ERR_INI_SIZE:
+					$_FILES['file']['error'] = Tools::displayError('The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.');
+					break;
+				case UPLOAD_ERR_FORM_SIZE:
+					$_FILES['file']['error'] = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini.
+						If your server configuration allows it, you may add a directive in your .htaccess, for example:')
+					.'<br/><a href="'.$this->context->link->getAdminLink('AdminMeta').'" >
+					<code>php_value post_max_size 20M</code> '.
+					Tools::displayError('(click to open "Generators" page)').'</a>';
+					break;
+				break;
+				case UPLOAD_ERR_PARTIAL:
+					$_FILES['file']['error'] = Tools::displayError('The uploaded file was only partially uploaded.');
+					break;
+				break;
+				case UPLOAD_ERR_NO_FILE:
+					$_FILES['file']['error'] = Tools::displayError('No file was uploaded.');
+					break;
+				break;
+			}
+		}
+		elseif (!preg_match('/.*\.csv$/i', $_FILES['file']['name']))
+			$_FILES['file']['error'] = Tools::displayError('The extension of your file should be .csv.');
+		elseif (!file_exists($_FILES['file']['tmp_name']) ||
+			!@move_uploaded_file($_FILES['file']['tmp_name'], $path.$_FILES['file']['name']))
+			$_FILES['file']['error'] = $this->l('An error occurred while uploading / copying the file.');
+		else
+			@chmod($path.$_FILES['file']['name'], 0664);
+
+		die(Tools::jsonEncode($_FILES));
 	}
 
 	public function renderView()
@@ -2950,46 +3025,7 @@ class AdminImportControllerCore extends AdminController
 		}
 		/* PrestaShop demo mode*/
 
-		if (Tools::isSubmit('submitFileUpload'))
-		{
-			$path = _PS_ADMIN_DIR_.'/import/'.date('YmdHis').'-';
-			if (isset($_FILES['file']) && !empty($_FILES['file']['error']))
-			{
-				switch ($_FILES['file']['error'])
-				{
-					case UPLOAD_ERR_INI_SIZE:
-						$this->errors[] = Tools::displayError('The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.');
-						break;
-					case UPLOAD_ERR_FORM_SIZE:
-						$this->errors[] = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini.
-							If your server configuration allows it, you may add a directive in your .htaccess, for example:')
-						.'<br/><a href="'.$this->context->link->getAdminLink('AdminMeta').'" >
-						<code>php_value post_max_size 20M</code> '.
-						Tools::displayError('(click to open "Generators" page)').'</a>';
-						break;
-					break;
-					case UPLOAD_ERR_PARTIAL:
-						$this->errors[] = Tools::displayError('The uploaded file was only partially uploaded.');
-						break;
-					break;
-					case UPLOAD_ERR_NO_FILE:
-						$this->errors[] = Tools::displayError('No file was uploaded.');
-						break;
-					break;
-				}
-			}
-			elseif (!preg_match('/.*\.csv$/i', $_FILES['file']['name']))
-				$this->errors[] = Tools::displayError('The extension of your file should be .csv.');
-			elseif (!file_exists($_FILES['file']['tmp_name']) ||
-				!@move_uploaded_file($_FILES['file']['tmp_name'], $path.$_FILES['file']['name']))
-				$this->errors[] = $this->l('An error occurred while uploading / copying the file.');
-			else
-			{
-				@chmod($path.$_FILES['file']['name'], 0664);
-				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=18');
-			}
-		}
-		elseif (Tools::getValue('import'))
+		if (Tools::getValue('import'))
 		{
 			// Check if the CSV file exist
 			if (Tools::getValue('csv'))
