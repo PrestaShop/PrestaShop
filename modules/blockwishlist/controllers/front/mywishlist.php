@@ -29,13 +29,13 @@
  */
 class BlockWishListMyWishListModuleFrontController extends ModuleFrontController
 {
+	public $ssl = true;
+	public $display_column_left = false;
+
 	public function __construct()
 	{
 		parent::__construct();
-
 		$this->context = Context::getContext();
-		$this->ssl = true;
-
 		include_once($this->module->getLocalPath().'WishList.php');
 	}
 
@@ -44,9 +44,7 @@ class BlockWishListMyWishListModuleFrontController extends ModuleFrontController
 	 */
 	public function initContent()
 	{
-		$this->display_column_left = false;
 		parent::initContent();
-
 		$this->assign();
 	}
 

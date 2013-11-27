@@ -29,6 +29,9 @@
  */
 class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 {
+	public $ssl = true;
+	public $display_column_left = false;
+
 	public function __construct()
 	{
 		$this->auth = true;
@@ -154,7 +157,6 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 	 */
 	public function initContent()
 	{
-		$this->display_column_left = false;
 		parent::initContent();
 		$this->context->controller->addJqueryPlugin(array('dimensions', 'cluetip'));
 
