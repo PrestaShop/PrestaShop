@@ -65,8 +65,8 @@
                                 {/if}
                             </div>
                         {/if}
-                        {if isset($product.new) && $product.new == 1}<span class="new-box"><span class="new">{l s='New'}</span></span>{/if}
-                   		{if isset($product.on_sale) && $product.on_sale && isset($product.show_price) && $product.show_price && !$PS_CATALOG_MODE}<span class="sale-box"><span class="sale">{l s='Sale!'}</span></span>{/if}
+                        {if isset($product.new) && $product.new == 1}<span class="new-box"><span class="new-label">{l s='New'}</span></span>{/if}
+                   		{if isset($product.on_sale) && $product.on_sale && isset($product.show_price) && $product.show_price && !$PS_CATALOG_MODE}<span class="sale-box"><span class="sale-label">{l s='Sale!'}</span></span>{/if}
                    	</div>
                 </div>
                 <div class="right-block">

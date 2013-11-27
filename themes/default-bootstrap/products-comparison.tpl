@@ -57,7 +57,7 @@
                     </a>
                     {if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
                     	{if $product->on_sale}
-                        	<div class="sale-box"><span class="sale">{l s='Sale!'}</span></div>
+                        	<div class="sale-box"><span class="sale-label">{l s='Sale!'}</span></div>
                         {/if}
                     {/if}
                 </div>
