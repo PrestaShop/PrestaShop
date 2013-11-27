@@ -110,12 +110,9 @@
 				<div class="form-group" id="csv_file_uploader">
 					<label class="control-label col-lg-4">{l s='Select your CSV file'}</label>
 					<div class="col-lg-8">
-						<input id="filename" type="file" name="filename[]" data-url="{$current}&token={$token}&ajax=1&action=uploadCsv" class="hide" />
-						<button class="btn btn-default" data-style="expand-right" data-size="s" type="button" id="filename-add-button">
+						<input id="file" type="file" name="file" data-url="{$current}&token={$token}&ajax=1&action=uploadCsv" class="hide" />
+						<button class="ladda-button btn btn-default" data-style="expand-right" data-size="s" type="button" id="file-add-button">
 							<i class="icon-plus-sign"></i> {l s='Add file'}
-						</button>
-						<button class="ladda-button btn btn-default" data-style="expand-right" type="button" id="filename-upload-button" style="display:none;">
-							<i class="icon-cloud-upload"></i> <span class="ladda-label">{l s='Upload file'}</span>
 						</button>
 						<p class="help-block">
 							{l s="You can also use a file that you already have uploaded."}
@@ -124,115 +121,82 @@
 					</div>
 				</div>
 				<div class="row" style="display:none">
-					<div class="alert alert-info" id="filename-files-list"></div>
+					<div class="alert alert-success" id="file-success">{l s='File uploaded'}</div>
 				</div>
 				<div class="row" style="display:none">
-					<div class="alert alert-success" id="filename-success"></div>
-				</div>
-				<div class="row" style="display:none">
-					<div class="alert alert-danger" id="filename-errors"></div>
+					<div class="alert alert-danger" id="file-errors"></div>
 				</div>
 				<script type="text/javascript">
 					function humanizeSize(bytes)
 					{
-						if (typeof bytes !== 'number') {
+						if (typeof bytes !== 'number')
 							return '';
-						}
 
-						if (bytes >= 1000000000) {
+						if (bytes >= 1000000000)
 							return (bytes / 1000000000).toFixed(2) + ' GB';
-						}
 
-						if (bytes >= 1000000) {
+						if (bytes >= 1000000)
 							return (bytes / 1000000).toFixed(2) + ' MB';
-						}
 
 						return (bytes / 1000).toFixed(2) + ' KB';
 					}
 
-					$( document ).ready(function() {
-						var filename_upload_button = Ladda.create( document.querySelector('#filename-upload-button' ));
-						var filename_total_files = 0;
+					$( document ).ready(
+					function()
+					{
+						var file_add_button = Ladda.create( document.querySelector('#file-add-button' ));
+						var file_total_files = 0;
 
-						$('#filename').fileupload({
+						$('#file').fileupload({
 							dataType: 'json',
-							autoUpload: false,
+							autoUpload: true,
+							acceptFileTypes: /(\.|\/)(csv)$/i,
 							singleFileUploads: true,
 							maxFileSize: {$post_max_size},
-							start: function (e) {
-								filename_upload_button.start();
-								$('#filename-upload-button').unbind('click'); //Important as we bind it for every elements in add function
+							start: function (e)
+							{
+								file_add_button.start();
 							},
-							fail: function (e, data) {
-								$('#filename-errors').html(data.errorThrown.message).parent().show();
+							fail: function (e, data)
+							{
+								$('#file-errors').html(data.errorThrown.message).parent().show();
 							},
-							done: function (e, data) {
-								if (data.result) {
-									if (typeof data.result.filename !== 'undefined') {
-										for (var i=0; i<data.result.filename.length; i++) {
-											if (data.result.filename[i] !== null) {
-												if (typeof data.result.filename[i].error !== 'undefined' && data.result.filename[i].error != '') {
-													$('#filename-errors').html('<strong>'+data.result.filename[i].name+'</strong> : '+data.result.filename[i].error).parent().show();
-												}
-												else 
-												{
-													$(data.context).appendTo($('#filename-success'));
-													$('#filename-success').parent().show();
-												}
-											}
+							done: function (e, data)
+							{
+								if (data.result)
+								{
+									if (typeof data.result.file !== 'undefined')
+									{
+										if (typeof data.result.file.error !== 'undefined' && data.result.file.error != '')
+											$('#file-errors').html('<strong>'+data.result.file.name+'</strong> : '+data.result.file.error).parent().show();
+										else 
+										{
+											$('#file-success').parent().show();
 										}
 									}
 
 									$(data.context).find('button').remove();					
 								}
 							},
-						}).on('fileuploadalways', function (e, data) {
-								filename_total_files--;
-
-								if (filename_total_files == 0)
-								{
-									filename_upload_button.stop();
-									$('#filename-upload-button').unbind('click');
-									$('#filename-files-list').parent().hide();
-								}
-						}).on('fileuploadadd', function(e, data) {
-							data.context = $('<div/>').addClass('row').appendTo($('#filename-files-list'));
-							var file_name = $('<span/>').append('<strong>'+data.files[0].name+'</strong> ('+humanizeSize(data.files[0].size)+')').appendTo(data.context);
-
-							var button = $('<button/>').addClass('btn btn-default pull-right').prop('type', 'button').html('<i class="icon-trash"></i> {l s='Remove file'}').appendTo(data.context).on('click', function() {
-								filename_total_files--;
-								data.files = null;
-								
-								var total_elements = $(this).parent().siblings('div.row').length;
-								$(this).parent().remove();
-
-								if (total_elements == 0) {
-									$('#filename-files-list').html('').parent().hide();
-								}
-							});
-
-							$('#filename-files-list').parent().show();
-							$('#filename-upload-button').show().bind('click', function () {
-								if (data.files != null)
-									data.submit();						
-							});
-
-							filename_total_files++;
-						}).on('fileuploadprocessalways', function (e, data) {
+						}).on('fileuploadalways', function (e, data)
+						{
+							file_add_button.stop();
+						}).on('fileuploadprocessalways', function (e, data)
+						{
 							var index = data.index,	file = data.files[index];
 							
-							if (file.error) {
-								$('#filename-errors').append('<div class="row"><strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error+'</div>').parent().show();
+							if (file.error)
+							{
+								$('#file-errors').append('<div class="row"><strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error+'</div>').parent().show();
 								$(data.context).find('button').trigger('click');
 							}
 						});
 
-						$('#filename-add-button').on('click', function() {
-							$('#filename-success').html('').parent().hide();
-							$('#filename-errors').html('').parent().hide();
-							$('#filename-files-list').parent().hide();
-							filename_total_files = 0;
-							$('#filename').trigger('click');
+						$('#file-add-button').on('click', function()
+						{
+							$('#file-success').parent().hide();
+							$('#file-errors').html('').parent().hide();
+							$('#file').trigger('click');
 						});
 					});
 				</script>
