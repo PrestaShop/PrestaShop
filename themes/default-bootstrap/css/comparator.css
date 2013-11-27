@@ -81,6 +81,11 @@ table#product_comparison .comparison_unit_price {
   color: #333333;
   font-style: italic;
 }
+table#product_comparison .product-rating {
+  width: 80px;
+  margin: 0 auto;
+  overflow: hidden;
+}
 
 .ie8 table#product_comparison .product-image-block .product_image img {
   width: auto;

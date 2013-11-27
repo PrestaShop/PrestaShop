@@ -569,6 +569,9 @@ span.view_scroll_spacer {
     display: none;
   }
 }
+.box-info-product .exclusive.disabled:before {
+  content: "";
+}
 .box-info-product .exclusive:after {
   background: url(../img/border-1.gif) repeat-y 0 0;
   position: absolute;
