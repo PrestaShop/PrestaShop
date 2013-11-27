@@ -99,6 +99,8 @@ class AdminCustomersControllerCore extends AdminController
 			'total_spent' => array(
 				'title' => $this->l('Sales'),
 				'type' => 'price',
+				'prefix' => '<span class="badge badge-success">',
+				'suffix' => '</span>',
 				'search' => false,
 				'havingFilter' => true,
 				'align' => 'right'
