@@ -7,10 +7,10 @@
 		<language iso_code="si" />
 	</languages>
 	<taxes>
-		<tax id="1" name="DDV SI 20%" rate="20" />
-		<tax id="2" name="DDV SI 8.5%" rate="8.5" />
+		<tax id="1" name="DDV SI 22%" rate="22" />
+		<tax id="2" name="DDV SI 9.5%" rate="9.5" />
 		
-		<taxRulesGroup name="SI Standard Rate (20%)">
+		<taxRulesGroup name="SI Standard Rate (22%)">
 			<taxRule iso_code_country="be" id_tax="1" />
 			<taxRule iso_code_country="bg" id_tax="1" />
 			<taxRule iso_code_country="cz" id_tax="1" />
@@ -40,7 +40,7 @@
 			<taxRule iso_code_country="uk" id_tax="1" />
 		</taxRulesGroup>
 
-		<taxRulesGroup name="SI Reduced Rate (8.5%)">
+		<taxRulesGroup name="SI Reduced Rate (9.5%)">
 			<taxRule iso_code_country="be" id_tax="2" />
 			<taxRule iso_code_country="bg" id_tax="2" />
 			<taxRule iso_code_country="cz" id_tax="2" />
@@ -70,7 +70,7 @@
 			<taxRule iso_code_country="uk" id_tax="2" />
 		</taxRulesGroup>
 
-		<taxRulesGroup name="SI Foodstuff Rate (8.5%)">
+		<taxRulesGroup name="SI Foodstuff Rate (9.5%)">
 			<taxRule iso_code_country="be" id_tax="2" />
 			<taxRule iso_code_country="bg" id_tax="2" />
 			<taxRule iso_code_country="cz" id_tax="2" />
@@ -100,7 +100,7 @@
 			<taxRule iso_code_country="uk" id_tax="2" />
 		</taxRulesGroup>
 
-		<taxRulesGroup name="SI Books Rate (8.5%)">
+		<taxRulesGroup name="SI Books Rate (9.5%)">
 			<taxRule iso_code_country="be" id_tax="2" />
 			<taxRule iso_code_country="bg" id_tax="2" />
 			<taxRule iso_code_country="cz" id_tax="2" />
