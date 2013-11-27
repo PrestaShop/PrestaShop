@@ -476,7 +476,7 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-circle-arrow-left:before, .bootstrap .process-icon-back:before { content: "\f0a8"; }
 
-.icon-circle-arrow-right:before { content: "\f0a9"; }
+.icon-circle-arrow-right:before, .bootstrap .process-icon-next:before { content: "\f0a9"; }
 
 .icon-circle-arrow-up:before { content: "\f0aa"; }
 
@@ -1966,10 +1966,10 @@ table { border-collapse: collapse; border-spacing: 0; }
 .bootstrap .table-bordered > thead > tr > th, .bootstrap .table-bordered > thead > tr > td, .bootstrap .table-bordered > tbody > tr > th, .bootstrap .table-bordered > tbody > tr > td, .bootstrap .table-bordered > tfoot > tr > th, .bootstrap .table-bordered > tfoot > tr > td { border: 1px solid #dddddd; }
 .bootstrap .table-bordered > thead > tr > th, .bootstrap .table-bordered > thead > tr > td { border-bottom-width: 2px; }
 .bootstrap .table-striped > tbody > tr:nth-child(odd) > td, .bootstrap .table-striped > tbody > tr:nth-child(odd) > th { background-color: #f9f9f9; }
-.bootstrap .table-hover > tbody > tr:hover > td, .bootstrap .table-hover > tbody > tr:hover > th { background-color: #e6e8e3; }
+.bootstrap .table-hover > tbody > tr:hover > td, .bootstrap .table-hover > tbody > tr:hover > th { background-color: #edf7fb; }
 .bootstrap table col[class*="col-"] { float: none; display: table-column; }
 .bootstrap table td[class*="col-"], .bootstrap table th[class*="col-"] { float: none; display: table-cell; }
-.bootstrap .table > thead > tr > td.active, .bootstrap .table > thead > tr > th.active, .bootstrap .table > thead > tr.active > td, .bootstrap .table > thead > tr.active > th, .bootstrap .table > tbody > tr > td.active, .bootstrap .table > tbody > tr > th.active, .bootstrap .table > tbody > tr.active > td, .bootstrap .table > tbody > tr.active > th, .bootstrap .table > tfoot > tr > td.active, .bootstrap .table > tfoot > tr > th.active, .bootstrap .table > tfoot > tr.active > td, .bootstrap .table > tfoot > tr.active > th { background-color: #e6e8e3; }
+.bootstrap .table > thead > tr > td.active, .bootstrap .table > thead > tr > th.active, .bootstrap .table > thead > tr.active > td, .bootstrap .table > thead > tr.active > th, .bootstrap .table > tbody > tr > td.active, .bootstrap .table > tbody > tr > th.active, .bootstrap .table > tbody > tr.active > td, .bootstrap .table > tbody > tr.active > th, .bootstrap .table > tfoot > tr > td.active, .bootstrap .table > tfoot > tr > th.active, .bootstrap .table > tfoot > tr.active > td, .bootstrap .table > tfoot > tr.active > th { background-color: #edf7fb; }
 .bootstrap .table > thead > tr > td.success, .bootstrap .table > thead > tr > th.success, .bootstrap .table > thead > tr.success > td, .bootstrap .table > thead > tr.success > th, .bootstrap .table > tbody > tr > td.success, .bootstrap .table > tbody > tr > th.success, .bootstrap .table > tbody > tr.success > td, .bootstrap .table > tbody > tr.success > th, .bootstrap .table > tfoot > tr > td.success, .bootstrap .table > tfoot > tr > th.success, .bootstrap .table > tfoot > tr.success > td, .bootstrap .table > tfoot > tr.success > th { background-color: #dff0d8; }
 .bootstrap .table-hover > tbody > tr > td.success:hover, .bootstrap .table-hover > tbody > tr > th.success:hover, .bootstrap .table-hover > tbody > tr.success:hover > td, .bootstrap .table-hover > tbody > tr.success:hover > th { background-color: #d0e9c6; }
 .bootstrap .table > thead > tr > td.danger, .bootstrap .table > thead > tr > th.danger, .bootstrap .table > thead > tr.danger > td, .bootstrap .table > thead > tr.danger > th, .bootstrap .table > tbody > tr > td.danger, .bootstrap .table > tbody > tr > th.danger, .bootstrap .table > tbody > tr.danger > td, .bootstrap .table > tbody > tr.danger > th, .bootstrap .table > tfoot > tr > td.danger, .bootstrap .table > tfoot > tr > th.danger, .bootstrap .table > tfoot > tr.danger > td, .bootstrap .table > tfoot > tr.danger > th { background-color: #f2dede; }
@@ -2560,7 +2560,7 @@ table { border-collapse: collapse; border-spacing: 0; }
 .bootstrap .label-warning[href]:hover, .bootstrap .label-warning[href]:focus { background-color: #ec971f; }
 .bootstrap .label-danger { background-color: #d9534f; }
 .bootstrap .label-danger[href]:hover, .bootstrap .label-danger[href]:focus { background-color: #c9302c; }
-.bootstrap .badge, .bootstrap #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper .bootstrap .notifs_badge, .bootstrap .badge.badge-success, .bootstrap .badge.badge-error { display: inline-block; min-width: 10px; padding: 3px 7px; font-size: 11px; font-weight: bold; color: white; line-height: 1; vertical-align: baseline; white-space: nowrap; text-align: center; background-color: #999999; border-radius: 10px; }
+.bootstrap .badge, .bootstrap #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper .bootstrap .notifs_badge { display: inline-block; min-width: 10px; padding: 3px 7px; font-size: 11px; font-weight: bold; color: white; line-height: 1; vertical-align: baseline; white-space: nowrap; text-align: center; background-color: #999999; border-radius: 10px; }
 .bootstrap .badge:empty, .bootstrap #header_notifs_icon_wrapper .notifs_badge:empty, #header_notifs_icon_wrapper .bootstrap .notifs_badge:empty { display: none; }
 .bootstrap a.badge:hover, .bootstrap #header_notifs_icon_wrapper a.notifs_badge:hover, #header_notifs_icon_wrapper .bootstrap a.notifs_badge:hover, .bootstrap a.badge:focus, .bootstrap #header_notifs_icon_wrapper a.notifs_badge:focus, #header_notifs_icon_wrapper .bootstrap a.notifs_badge:focus { color: white; text-decoration: none; cursor: pointer; }
 .bootstrap .btn .badge, .bootstrap .btn #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper .bootstrap .btn .notifs_badge { position: relative; top: -1px; }
@@ -3153,9 +3153,9 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .row-padding-top { padding-top: 15px; }
 .bootstrap .thumbnail, .bootstrap .img-thumbnail, .bootstrap .thumbnail { background-color: white; border-color: #cccccc !important; }
 .bootstrap .highlight { background-color: yellow; }
-.bootstrap .badge, .bootstrap #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper .bootstrap .notifs_badge, .bootstrap .badge.badge-success, .bootstrap .badge.badge-error { background-color: #8fc04d; }
-.bootstrap #header_notifs_icon_wrapper .badge-success.notifs_badge, #header_notifs_icon_wrapper .bootstrap .badge-success.notifs_badge, .bootstrap .badge-success.badge { background-color: #5cb85c; }
-.bootstrap #header_notifs_icon_wrapper .badge-error.notifs_badge, #header_notifs_icon_wrapper .bootstrap .badge-error.notifs_badge, .bootstrap .badge-error.badge { background-color: #d9534f; }
+.bootstrap .badge, .bootstrap #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper .bootstrap .notifs_badge { font-weight: normal; font-size: 1.1em; letter-spacing: 0.0625em; background-color: #1ba6e5; }
+.bootstrap .badge.badge-success, .bootstrap #header_notifs_icon_wrapper .badge-success.notifs_badge, #header_notifs_icon_wrapper .bootstrap .badge-success.notifs_badge { background-color: #5cb85c; }
+.bootstrap .badge.badge-error, .bootstrap #header_notifs_icon_wrapper .badge-error.notifs_badge, #header_notifs_icon_wrapper .bootstrap .badge-error.notifs_badge { background-color: #d9534f; }
 .bootstrap .nav-tabs { border-bottom: none; }
 .bootstrap .nav-tabs li a { font-size: 1.1em; font-family: "Ubuntu", sans-serif; text-transform: uppercase; font-weight: 300; }
 .bootstrap .nav-tabs li.active a, .bootstrap .nav-tabs li.active a:hover, .bootstrap .nav-tabs li.active a:focus { background-color: white; }
@@ -3177,7 +3177,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .table input, .bootstrap .table select { margin: 0; }
 .bootstrap .table tbody > tr > td { border-top: none; background-color: white; padding: 3px 7px; vertical-align: middle; word-wrap: nowrap; font-size: 12px; border-bottom: solid 1px #eeeeee; }
 .bootstrap .table tbody > tr.odd > td { background-color: #f9f9f9; }
-.bootstrap .table tbody > tr:hover > td { background-color: #e6e8e3; }
+.bootstrap .table tbody > tr:hover > td { background-color: #edf7fb; }
 .bootstrap .table td.center, .bootstrap .table th.center { text-align: center; }
 .bootstrap .table td.pointer { cursor: pointer; }
 .bootstrap tr.highlighted td { background-color: #1ba6e5 !important; color: white; }
@@ -3372,7 +3372,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .ladda-button .ladda-label { position: relative; z-index: 3; }
 .bootstrap .ladda-button .ladda-progress { position: absolute; width: 0; height: 100%; left: 0; top: 0; background: rgba(0, 0, 0, 0.2); visibility: hidden; opacity: 0; -webkit-transition: 0.1s linear all !important; -moz-transition: 0.1s linear all !important; -ms-transition: 0.1s linear all !important; -o-transition: 0.1s linear all !important; transition: 0.1s linear all !important; }
 .bootstrap .ladda-button .ladda-progress[data-loading] .ladda-progress { opacity: 1; visibility: visible; }
-.bootstrap .ladda-button, .bootstrap .ladda-button .ladda-spinner, .bootstrap .ladda-button .ladda-label { -webkit-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all !important; -moz-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all !important; -ms-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all !important; -o-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all !important; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all !important; }
+.bootstrap .ladda-button, .bootstrap .ladda-button .ladda-spinner, .bootstrap .ladda-button .ladda-label { -webkit-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) background-color !important; -moz-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) background-color !important; -ms-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) background-color !important; -o-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) background-color !important; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) background-color !important; }
 .bootstrap .ladda-button[data-style=zoom-in], .bootstrap .ladda-button[data-style=zoom-in] .ladda-spinner, .bootstrap .ladda-button[data-style=zoom-in] .ladda-label, .bootstrap .ladda-button[data-style=zoom-out], .bootstrap .ladda-button[data-style=zoom-out] .ladda-spinner, .bootstrap .ladda-button[data-style=zoom-out] .ladda-label { -webkit-transition: 0.3s ease all !important; -moz-transition: 0.3s ease all !important; -ms-transition: 0.3s ease all !important; -o-transition: 0.3s ease all !important; transition: 0.3s ease all !important; }
 .bootstrap .ladda-button[data-style=expand-right] .ladda-spinner { right: 14px; }
 .bootstrap .ladda-button[data-style=expand-right][data-size="s"] .ladda-spinner, .bootstrap .ladda-button[data-style=expand-right][data-size="xs"] .ladda-spinner { right: 4px; }

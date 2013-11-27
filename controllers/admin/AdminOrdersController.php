@@ -88,8 +88,8 @@ class AdminOrdersControllerCore extends AdminController
 		'total_paid_tax_incl' => array(
 			'title' => $this->l('Total'),
 			'align' => 'right',
-			'prefix' => '<b>',
-			'suffix' => '</b>',
+			'prefix' => '<span class="badge">',
+			'suffix' => '</span>',
 			'type' => 'price',
 			'currency' => true
 		),

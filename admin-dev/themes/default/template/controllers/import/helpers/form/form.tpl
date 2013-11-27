@@ -114,9 +114,13 @@
 						<button class="ladda-button btn btn-default" data-style="expand-right" data-size="s" type="button" id="file-add-button">
 							<i class="icon-plus-sign"></i> {l s='Add file'}
 						</button>
+						or
+						<button class="btn btn-default" href="#" onclick="$('#csv_files_history').slideToggle();$('#csv_file_uploader').slideToggle(); return false;">
+							<i class="icon-folder-close"></i> {l s="Choose from history / FTP"}
+						</button>
 						<p class="help-block">
-							{l s="You can also use a file that you already have uploaded."}
-							<a href="#" onclick="$('#csv_files_history').slideToggle();$('#csv_file_uploader').slideToggle(); return false;">{l s="Show history / FTP"}</a>.
+							{l s='Only UTF-8 and ISO-8859-1 encoding are allowed'}.<br/>
+							{l s='You can also upload your file via FTP to the following directory:'} {$path_import}.
 						</p>
 					</div>
 				</div>
@@ -127,23 +131,30 @@
 					<div class="alert alert-danger" id="file-errors"></div>
 				</div>
 				<script type="text/javascript">
-					function humanizeSize(bytes)
-					{
+					function humanizeSize(bytes) {
 						if (typeof bytes !== 'number')
 							return '';
-
 						if (bytes >= 1000000000)
 							return (bytes / 1000000000).toFixed(2) + ' GB';
-
 						if (bytes >= 1000000)
 							return (bytes / 1000000).toFixed(2) + ' MB';
-
 						return (bytes / 1000).toFixed(2) + ' KB';
 					}
 
-					$( document ).ready(
-					function()
-					{
+					function csv_select(filename) {
+						$('#csv_selected_value').val(filename);
+						$('#csv_selected_filename').html(filename);
+						$('#csv_file_selected').show();
+					}
+
+					$(document).ready(function() {
+
+						$('#csv_uploaded_history').on('click', 'button', function(e){
+							e.preventDefault();
+							var filename = $(this).data('filename');
+							csv_select(filename);
+						});
+
 						var file_add_button = Ladda.create( document.querySelector('#file-add-button' ));
 						var file_total_files = 0;
 
@@ -152,7 +163,7 @@
 							autoUpload: true,
 							acceptFileTypes: /(\.|\/)(csv)$/i,
 							singleFileUploads: true,
-							maxFileSize: {$post_max_size},
+							{if isset ($post_max_size)}maxFileSize: {$post_max_size},{/if}
 							start: function (e)
 							{
 								file_add_button.start();
@@ -174,8 +185,11 @@
 											$('#file-success').parent().show();
 										}
 									}
-
-									$(data.context).find('button').remove();					
+									$(data.context).find('button').remove();
+									$('#csv_uploaded_history').append($('#csv_uploaded_history tr:first').clone());
+									$('#csv_uploaded_history tr:last td:first').html(data.result.file.filename);
+									$('#csv_uploaded_history tr:last button').data('filename', data.result.file.filename);
+									csv_select(data.result.file.filename);
 								}
 							},
 						}).on('fileuploadalways', function (e, data)
@@ -228,7 +242,7 @@
 								<i class="icon-remove"></i>
 							</button>
 						</div>
-						<table class="table">
+						<table id="csv_uploaded_history" class="table">
 							{foreach $files_to_import AS $filename}
 							<tr >
 								<td>
@@ -236,7 +250,7 @@
 								</td>
 								<td>
 									<div class="btn-group pull-right">
-										<button type="button" class="btn btn-default">
+										<button type="button" data-filename="{$filename|escape:'html':'UTF-8'}" class="btn btn-default">
 											<i class="icon-ok"></i>
 											{l s='Use'}
 										</button>
@@ -263,6 +277,23 @@
 							</tr>
 							{/foreach}
 						</table>
+					</div>
+				</div>
+
+				<div class="form-group" id="csv_file_selected"{if empty($csv_selected)} style="display :none;"{/if}>
+					<div class="alert alert-success clearfix">
+						<input type="hidden" value="{$filename}" name="csv" id="csv_selected_value">
+						<div class="col-lg-8">
+							<span id="csv_selected_filename">{$csv_selected|escape:'html':'UTF-8'}</span>
+						</div>
+						<div class="col-lg-4">
+							<div class="btn-group pull-right">
+								<button type="button" class="btn btn-default">
+									<i class="icon-refresh"></i>
+									{l s='Change'}
+								</button>
+							</div>
+						</div>
 					</div>
 				</div>
 				<hr>
@@ -350,7 +381,7 @@
 				<div class="form-group">
 					<label for="forceIDs" class="control-label col-lg-4">
 						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If you don\'t use this option, all ID\'s will be auto-incremented.'}">
-							{l s='Force all ID\'s during import?'} 
+							{l s='Force all ID'} 
 						</span>
 					</label>
 					<div class="col-lg-8">
@@ -364,7 +395,7 @@
 						</label>
 					</div>
 				</div>
-				<hr>
+<!-- 				<hr>
 				<div class="form-group">
 					<div class="col-lg-9 col-lg-push-3">
 						<button type="submit" name="submitImportFile" id="submitImportFile" class="btn btn-default pull-right" {if empty($files_to_import)}disabled{/if}>
@@ -372,7 +403,7 @@
 							<i class="icon-circle-arrow-right"></i>
 						</button>
 					</div>
-				</div>
+				</div> -->
 
 				<!-- {if empty($files_to_import)}
 				<div class="alert alert-info">{l s='You must upload a file in order to proceed to the next step'}</div>
@@ -381,6 +412,11 @@
 				<!--{if !count($files_to_import)}
 				 <p>{l s='There is no CSV file available. Please upload one using the \'Upload\' button above.'}</p> 
 				{/if}-->
+				<div class="panel-footer">
+					<button type="submit" name="submitImportFile" id="submitImportFile" class="btn btn-default pull-right">
+						<i class="process-icon-next"></i> <span>{l s='Next step'}</span>
+					</button>
+				</div>
 			</form>
 		</div>
 	</div>
