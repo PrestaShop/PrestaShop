@@ -30,6 +30,7 @@
 class CashondeliveryValidationModuleFrontController extends ModuleFrontController
 {
 	public $ssl = true;
+	public $display_column_left = false;
 
 	public function postProcess()
 	{
@@ -65,7 +66,6 @@ class CashondeliveryValidationModuleFrontController extends ModuleFrontControlle
 	 */
 	public function initContent()
 	{
-		$this->display_column_left = false;
 		parent::initContent();
 
 		$this->context->smarty->assign(array(
