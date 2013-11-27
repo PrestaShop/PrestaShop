@@ -627,23 +627,23 @@ class AdminModulesControllerCore extends AdminController
 							{
 								$file = $f['file'];
 								$content = Tools::file_get_contents(_PS_ROOT_DIR_.$file);
-								$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
-								foreach ($xml->module as $modaddons)
-									if ($name == $modaddons->name && isset($modaddons->id) && ($this->logged_on_addons || $f['loggedOnAddons'] == 0))
-									{
-										$download_ok = false;
-										if ($f['loggedOnAddons'] == 0)
-											if (file_put_contents(_PS_MODULE_DIR_.$modaddons->name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($modaddons->id)))))
-												$download_ok = true;
-										elseif ($f['loggedOnAddons'] == 1 && $this->logged_on_addons)
-											if (file_put_contents(_PS_MODULE_DIR_.$modaddons->name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($modaddons->id), 'username_addons' => pSQL(trim($this->context->cookie->username_addons)), 'password_addons' => pSQL(trim($this->context->cookie->password_addons))))))
-												$download_ok = true;
+								if ($xml = @simplexml_load_string($content, null, LIBXML_NOCDATA))
+									foreach ($xml->module as $modaddons)
+										if ($name == $modaddons->name && isset($modaddons->id) && ($this->logged_on_addons || $f['loggedOnAddons'] == 0))
+										{
+											$download_ok = false;
+											if ($f['loggedOnAddons'] == 0)
+												if (file_put_contents(_PS_MODULE_DIR_.$modaddons->name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($modaddons->id)))))
+													$download_ok = true;
+											elseif ($f['loggedOnAddons'] == 1 && $this->logged_on_addons)
+												if (file_put_contents(_PS_MODULE_DIR_.$modaddons->name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($modaddons->id), 'username_addons' => pSQL(trim($this->context->cookie->username_addons)), 'password_addons' => pSQL(trim($this->context->cookie->password_addons))))))
+													$download_ok = true;
 
-										if (!$download_ok)
-											$this->errors[] = $this->l('Error on downloading the lastest version');
-										elseif (!$this->extractArchive(_PS_MODULE_DIR_.$modaddons->name.'.zip', false))
-											$this->errors[] = $this->l(sprintf("Module %s can't be upgraded: ", $modaddons->name));
-									}
+											if (!$download_ok)
+												$this->errors[] = $this->l('Error on downloading the lastest version');
+											elseif (!$this->extractArchive(_PS_MODULE_DIR_.$modaddons->name.'.zip', false))
+												$this->errors[] = $this->l(sprintf("Module %s can't be upgraded: ", $modaddons->name));
+										}
 							}
 					}
 
