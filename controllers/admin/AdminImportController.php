@@ -567,8 +567,11 @@ class AdminImportControllerCore extends AdminController
 			case 'k': $bytes *= 1024;
 		}
 
+		if (!isset($bytes) || $bytes == '')
+			$bytes = 20971520; // 20Mb
+
 		$this->tpl_form_vars = array(
-			'post_max_size' => $bytes, 
+			'post_max_size' => (int)$bytes, 
 			'module_confirmation' => (Tools::getValue('import')) && (isset($this->warnings) && !count($this->warnings)),
 			'path_import' => _PS_ADMIN_DIR_.'/import/',
 			'entities' => $this->entities,
