@@ -46,7 +46,7 @@ $(function () {ldelim}
 				<div id="scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}" style="display:none;">
 					{if !$PS_CATALOG_MODE AND $product.details->show_price}
 					<div class="prices">
-						{if isset($product.details->new) AND $product.details->new}<span class="new">{l s='New'}</span>{/if}
+						{if isset($product.details->new) AND $product.details->new}<span class="new-label">{l s='New'}</span>{/if}
 						<p class="price">{if $priceDisplay}{convertPrice price=$product.details->getPrice(false, $product.details->getDefaultAttribute($product.id_product))}{else}{convertPrice price=$product.details->getPrice(true, $product.details->getDefaultAttribute($product.id_product))}{/if}</p>
 							{if $product.details->on_sale}
 							<span class="on_sale">{l s='On sale!'}</span>
