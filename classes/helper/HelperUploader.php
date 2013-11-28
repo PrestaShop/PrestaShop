@@ -34,6 +34,7 @@ class HelperUploaderCore extends Uploader
 	const TYPE_FILE                  = 'file';
 
 	private   $_context;
+	private   $_drop_zone;
 	private   $_id;
 	private   $_files;
 	private   $_name;
@@ -57,6 +58,20 @@ class HelperUploaderCore extends Uploader
 			$this->_context = Context::getContext();
 
 		return $this->_context;
+	}
+
+	public function setDropZone($value)
+	{
+		$this->_drop_zone = $value;
+		return $this;
+	}
+
+	public function getDropZone()
+	{
+		if (!isset($this->_drop_zone))
+			$this->setDropZone('$(document)');
+
+		return $this->_drop_zone;
 	}
 
 	public function setId($value)
@@ -270,7 +285,8 @@ class HelperUploaderCore extends Uploader
 			'files'         => $this->getFiles(),
 			'title'         => $this->getTitle(),
 			'max_files'     => $this->getMaxFiles(),
-			'post_max_size' => $this->getPostMaxSizeBytes()
+			'post_max_size' => $this->getPostMaxSizeBytes(),
+			'drop_zone'     => $this->getDropZone()
 		));
 
 		$html .= $template->fetch();

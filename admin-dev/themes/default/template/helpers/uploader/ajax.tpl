@@ -109,7 +109,8 @@
 			dataType: 'json',
 			autoUpload: false,
 			singleFileUploads: true,
-			maxFileSize: {$post_max_size},
+			{if isset($post_max_size)}maxFileSize: {$post_max_size},{/if}
+			{if isset($drop_zone)}dropZone: {$drop_zone},{/if}
 			start: function (e) {
 				{$id}_upload_button.start();
 				$('#{$id}-upload-button').unbind('click'); //Important as we bind it for every elements in add function

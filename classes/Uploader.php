@@ -110,6 +110,9 @@ class UploaderCore
 			case 'k': $bytes *= 1024;
 		}
 
+		if ($bytes == '')
+			$bytes = null;
+
 		return $bytes;
 	}
 
