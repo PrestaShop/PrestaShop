@@ -1373,10 +1373,21 @@ class AdminControllerCore extends Controller
 			$sub_tabs = Tab::getTabs($this->context->language->id, $tab['id_tab']);
 			foreach ($sub_tabs as $index2 => $sub_tab)
 			{
+				//allow adding subtabs from Modules Configuration page
+				$isConf = false;
+				if (strpos($sub_tab['class_name'],'&configure') !== false) { //configure parameter exists, split it!
+					$s = explode("&configure",$sub_tab['class_name']);
+					$classname = $s[0];
+					$parameter = $s[1];
+					$isConf = true;
+				}
 				// class_name is the name of the class controller
 				if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'] && $sub_tab['class_name'] != 'AdminCarrierWizard')
 				{
-					$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
+					if ($isConf){ //if configure parameter exists
+						$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($classname).'&configure'.$parameter; //append configure parameter after getting the url
+					} else
+						$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
 					$sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this));
 				}
 				else
