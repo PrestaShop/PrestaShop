@@ -1,7 +1,18 @@
 function bar_chart_goals(widget_name, chart_details)
 {
 	nv.addGraph(function() {
-		var chart = nv.models.multiBarChart().stacked(false).showControls(false);
+		var chart = nv.models.multiBarChart()
+			.stacked(false)
+			.showControls(false)
+			.tooltipContent(function(key, y, e, graph) {
+				var perf = parseInt(e) - 100;
+				if (perf > 0)
+					return '<section class="panel"><header class="panel-heading">' + key + '</header><span class="dash_trend dash_trend_up">+' + perf + '%</span></section>';
+				else if (perf < 0)
+					return '<section class="panel"><header class="panel-heading">' + key + '</header><span class="dash_trend dash_trend_down">' + perf + '%</span></section>';
+				else
+					return '<section class="panel"><header class="panel-heading">' + key + '</header><span class="dash_trend dash_trend_right">-</span></section>';
+			});
 
 		chart.yAxis.tickFormat(d3.format('%'));
 
