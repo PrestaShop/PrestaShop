@@ -36,8 +36,9 @@
 
 <section id="dashgoals" class="panel widget">
 	<header class="panel-heading">
-		<i class="icon-bar-chart"></i> <span id="dashgoals_title">{l s='Your %s Forecast' mod='dashgoals' sprintf=$goals_year}</span>
+		<i class="icon-bar-chart"></i> {l s='Your forecast' mod='dashgoals'}
 		<a href="javascript:void(0);" onclick="dashgoals_changeYear('backward');" class="icon-backward"></a>
+		<span id="dashgoals_title">{$goals_year}</span>
 		<a href="javascript:void(0);" onclick="dashgoals_changeYear('forward');" class="icon-forward"></a>
 		<span class="panel-heading-action">
 			<a class="list-toolbar-btn" href="javascript:void(0);" onclick="toggleDashConfig('dashgoals');" title="configure">
