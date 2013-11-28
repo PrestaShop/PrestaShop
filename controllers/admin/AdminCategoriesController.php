@@ -477,9 +477,8 @@ class AdminCategoriesControllerCore extends AdminController
 					'display_image' => true,
 					'image' => $image_url ? $image_url : false,
 					'size' => $image_size,
-					'delete_url' => self::$currentIndex.'&'.$this->identifier.'='.$this->id.'&token='.$this->token.'&deleteImage=1',
+					'delete_url' => self::$currentIndex.'&'.$this->identifier.'='.$this->_category->id.'&token='.$this->token.'&deleteImage=1',
 					'hint' => $this->l('Upload a category logo from your computer.'),
-					'col' => 4
 				),
 				array(
 					'type' => 'text',
@@ -602,7 +601,7 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		if (!in_array($this->display, array('edit', 'add')))
 			$this->multishop_context_group = false;
-		if (Tools::isSubmit('forcedeleteImage') || (isset($_FILES['image']) && $_FILES['image']['size'] > 0))
+		if (Tools::isSubmit('forcedeleteImage') || (isset($_FILES['image']) && $_FILES['image']['size'] > 0) || Tools::getValue('deleteImage'))
 		{
 			$this->processForceDeleteImage();
 			if (Tools::isSubmit('forcedeleteImage'))
