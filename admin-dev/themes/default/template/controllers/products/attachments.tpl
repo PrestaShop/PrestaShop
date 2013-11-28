@@ -47,12 +47,14 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="attachment_description_{$id_lang}">{l s='Description:'} </label>
 		<div class="col-lg-9">
+			<div class="row">
 			{include
 				file="controllers/products/textarea_lang.tpl"
 				languages=$languages
 				input_name="attachment_description"
 				input_value=$attachment_description
 			}
+			</div>
 		</div>
 	</div>
 
@@ -63,38 +65,91 @@
 				{l s='File:'}
 			</span>
 		</label>
-		<div class="col-lg-7">
-			<div class="col-lg-8">
-				<input id="attachement_file" type="file" name="attachment_file" class="hide" />
-				<div class="dummyfile input-group">
-					<span class="input-group-addon"><i class="icon-file"></i></span>
-					<input id="attachement_filename" type="text" class="disabled" name="filename" readonly />
-					<span class="input-group-btn">
-						<button id="attachement_fileselectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
-							<i class="icon-folder-open"></i> {l s='Choose a file'}
-						</button>
-					</span>
-				</div>
-			</div>
-			<div class="col-lg-4">
-				<button type="submit" name="submitAddAttachments" class="btn btn-default">
-					<i class="icon-cloud-upload"></i> {l s='Upload attachment file'}
-				</button>
-			</div>
+		<div class="col-lg-8">
+			<input id="attachment_file" type="file" name="attachment_file" data-url="{$current}&token={$token}&id_product={$obj->id}&ajax=1&action=AddAttachment" class="hide" />
+			<button class="ladda-button btn btn-default" data-style="expand-right" data-size="s" type="button" id="attachment_file-add-button">
+				<i class="icon-folder-open"></i>
+				{l s='Add file'}
+			</button>
+			<div class="alert alert-danger" id="attachment_file-errors" style="display:none"></div>
+			<div class="alert alert-success" id="attachment_file-success" style="display:none">{l s='Upload successful'}</div>
 		</div>
-		<script>
-			$(document).ready(function(){
-				$('#attachement_fileselectbutton').click(function(e){
-					$('#attachement_file').trigger('click');
-				});
-				$('#attachement_file').change(function(e){
-					var val = $(this).val();
-					var file = val.split(/[\\/]/);
-					$('#attachement_filename').val(file[file.length-1]);
-				});
-			});
-		</script>
 	</div>
+
+	<script type="text/javascript">
+		function humanizeSize(bytes) {
+			if (typeof bytes !== 'number')
+				return '';
+			if (bytes >= 1000000000)
+				return (bytes / 1000000000).toFixed(2) + ' GB';
+			if (bytes >= 1000000)
+				return (bytes / 1000000).toFixed(2) + ' MB';
+			return (bytes / 1000).toFixed(2) + ' KB';
+		}
+
+		$(document).ready(function() {
+			var attachment_file_add_button = Ladda.create( document.querySelector('#attachment_file-add-button' ));
+			var attachment_file_total_files = 0;
+
+			$('#attachment_file').fileupload({
+				dataType: 'json',
+				autoUpload: true,
+				singleFileUploads: true,
+				{if isset ($post_max_size)}maxFileSize: {$post_max_size},{/if}
+				start: function (e) {
+					attachment_file_add_button.start();
+				},
+				fail: function (e, data) {
+					$('#attachment_file-errors').html(data.errorThrown.message).show();
+				},
+				done: function (e, data) {
+					if (data.result) {
+						if (typeof data.result.attachment_file !== 'undefined') {
+							if (typeof data.result.attachment_file.error !== 'undefined' && data.result.attachment_file.error.length > 0)
+								$.each(data.result.attachment_file.error, function(index, error) {
+									$('#attachment_file-errors').append('<p><strong>'+data.result.attachment_file.name+'</strong> : '+error+'</p>').show();
+								});
+							else {
+								$('#attachment_file-success').show();
+								$('#selectAttachment1').append('<option value="'+data.result.attachment_file.id_attachment+'">'+data.result.attachment_file.filename+'</option>');
+							}
+						}
+					}
+				},
+			}).on('fileuploadalways', function (e, data) {
+				attachment_file_add_button.stop();
+			}).on('fileuploadprocessalways', function (e, data) {
+				var index = data.index,	file = data.files[index];
+				
+				if (file.error) {
+					$('#attachment_file-errors').append('<strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error).show();
+				}
+			}).on('fileuploadsubmit', function (e, data) {
+				var params = new Object();
+
+				$('input[id^="attachment_name_"]').each(function()
+				{
+					id = $(this).prop("id").replace("attachment_name_", "attachment_name[") + "]";
+					params[id] = $(this).val();
+				});
+
+				$('textarea[id^="attachment_description_"]').each(function()
+				{
+					id = $(this).prop("id").replace("attachment_description_", "attachment_description[") + "]";
+					params[id] = $(this).val();
+				});
+
+				data.formData = params;
+			});
+
+			$('#attachment_file-add-button').on('click', function(e) {
+				e.preventDefault();
+				$('#attachment_file-success').hide();
+				$('#attachment_file-errors').html('').hide();
+				$('#attachment_file').trigger('click');
+			});
+		});
+	</script>
 
 	<hr/>
 
