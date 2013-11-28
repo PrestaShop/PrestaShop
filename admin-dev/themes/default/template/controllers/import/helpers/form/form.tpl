@@ -112,24 +112,22 @@
 					<div class="col-lg-8">
 						<input id="file" type="file" name="file" data-url="{$current}&token={$token}&ajax=1&action=uploadCsv" class="hide" />
 						<button class="ladda-button btn btn-default" data-style="expand-right" data-size="s" type="button" id="file-add-button">
-							<i class="icon-plus-sign"></i> {l s='Add file'}
+							<i class="icon-folder-open"></i>
+							{l s='Add file'}
 						</button>
-						or
-						<button class="btn btn-default" href="#" onclick="$('#csv_files_history').slideToggle();$('#csv_file_uploader').slideToggle(); return false;">
-							<i class="icon-folder-close"></i> {l s="Choose from history / FTP"}
+						{l s='or'}
+						<button class="btn btn-default" type="button" onclick="$('#csv_files_history').slideToggle();$('#csv_file_uploader').slideToggle(); return false;">
+							<span class="csv-history-nb badge">{$files_to_import|count}</span>
+							{l s="Choose from history / FTP"}
 						</button>
 						<p class="help-block">
 							{l s='Only UTF-8 and ISO-8859-1 encoding are allowed'}.<br/>
 							{l s='You can also upload your file via FTP to the following directory:'} {$path_import}.
 						</p>
 					</div>
+					<div class="alert alert-danger" id="file-errors" style="display:none"></div>
 				</div>
-				<div class="row" style="display:none">
-					<div class="alert alert-success" id="file-success">{l s='File uploaded'}</div>
-				</div>
-				<div class="row" style="display:none">
-					<div class="alert alert-danger" id="file-errors"></div>
-				</div>
+
 				<script type="text/javascript">
 					function humanizeSize(bytes) {
 						if (typeof bytes !== 'number')
@@ -145,15 +143,20 @@
 						$('#csv_selected_value').val(filename);
 						$('#csv_selected_filename').html(filename);
 						$('#csv_file_selected').show();
+						$('#csv_file_uploader').hide();
+						$('#csv_files_history').hide();
+					}
+					function csv_unselect() {
+						$('#csv_file_selected').hide();
+						$('#csv_file_uploader').show();
+					}
+
+					function init_selected() {
+						$('#csv_file_selected').show();
+						$('#csv_file_uploader').hide();
 					}
 
 					$(document).ready(function() {
-
-						$('#csv_uploaded_history').on('click', 'button', function(e){
-							e.preventDefault();
-							var filename = $(this).data('filename');
-							csv_select(filename);
-						});
 
 						var file_add_button = Ladda.create( document.querySelector('#file-add-button' ));
 						var file_total_files = 0;
@@ -164,54 +167,59 @@
 							acceptFileTypes: /(\.|\/)(csv)$/i,
 							singleFileUploads: true,
 							{if isset ($post_max_size)}maxFileSize: {$post_max_size},{/if}
-							start: function (e)
-							{
+							start: function (e) {
 								file_add_button.start();
 							},
-							fail: function (e, data)
-							{
-								$('#file-errors').html(data.errorThrown.message).parent().show();
+							fail: function (e, data) {
+								$('#file-errors').html(data.errorThrown.message).show();
 							},
-							done: function (e, data)
-							{
-								if (data.result)
-								{
-									if (typeof data.result.file !== 'undefined')
-									{
+							done: function (e, data) {
+								if (data.result) {
+									if (typeof data.result.file !== 'undefined') {
 										if (typeof data.result.file.error !== 'undefined' && data.result.file.error != '')
-											$('#file-errors').html('<strong>'+data.result.file.name+'</strong> : '+data.result.file.error).parent().show();
-										else 
-										{
-											$('#file-success').parent().show();
+											$('#file-errors').html('<strong>'+data.result.file.name+'</strong> : '+data.result.file.error).show();
+										else {
+											//$('#file-success').show();
+											$(data.context).find('button').remove();
+											$('#csv_uploaded_history').append($('#csv_uploaded_history tr:first').clone());
+											$('#csv_uploaded_history tr:last td:first').html(data.result.file.filename);
+											$('#csv_uploaded_history tr:last button').data('filename', data.result.file.filename);
+											csv_select(data.result.file.filename);
 										}
 									}
-									$(data.context).find('button').remove();
-									$('#csv_uploaded_history').append($('#csv_uploaded_history tr:first').clone());
-									$('#csv_uploaded_history tr:last td:first').html(data.result.file.filename);
-									$('#csv_uploaded_history tr:last button').data('filename', data.result.file.filename);
-									csv_select(data.result.file.filename);
 								}
 							},
-						}).on('fileuploadalways', function (e, data)
-						{
+						}).on('fileuploadalways', function (e, data) {
 							file_add_button.stop();
-						}).on('fileuploadprocessalways', function (e, data)
-						{
+						}).on('fileuploadprocessalways', function (e, data) {
 							var index = data.index,	file = data.files[index];
 							
-							if (file.error)
-							{
-								$('#file-errors').append('<div class="row"><strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error+'</div>').parent().show();
+							if (file.error) {
+								$('#file-errors').append('<strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error).show();
 								$(data.context).find('button').trigger('click');
 							}
 						});
-
-						$('#file-add-button').on('click', function()
-						{
-							$('#file-success').parent().hide();
-							$('#file-errors').html('').parent().hide();
+						$('#csv_uploaded_history').on('click', 'button', function(e){
+							e.preventDefault();
+							var filename = $(this).data('filename');
+							csv_select(filename);
+						});
+						$('#file-add-button').on('click', function(e) {
+							e.preventDefault();
+							$('#file-success').hide();
+							$('#file-errors').html('').hide();
 							$('#file').trigger('click');
 						});
+						$('#file-remove-button').on('click', function(e) {
+							e.preventDefault();
+							csv_unselect();
+						});
+
+						var selected = '{$csv_selected}';
+						console.log(selected);
+						if(selected){
+							init_selected();
+						}
 					});
 				</script>
 				<!-- <div class="form-group">
@@ -237,8 +245,8 @@
 						<div class="panel-heading">
 							<!-- {l s='Click to view your csv files.'} -->
 							{l s='History of uploaded .CSV'}
-							<span class="badge">{$files_to_import|count}</span>
-							<button type="button" class="btn btn-link pull-right" onclick="$('#csv_files_history').slideToggle();$('#csv_file_uploader').slideToggle(); return false;">
+							<span class="csv-history-nb badge">{$files_to_import|count}</span>
+							<button type="button" class="btn btn-link pull-right" onclick="$('#csv_files_history').toggle();$('#csv_file_uploader').toggle(); return false;">
 								<i class="icon-remove"></i>
 							</button>
 						</div>
@@ -279,8 +287,7 @@
 						</table>
 					</div>
 				</div>
-
-				<div class="form-group" id="csv_file_selected"{if empty($csv_selected)} style="display :none;"{/if}>
+				<div class="form-group" id="csv_file_selected" style="display: none;">
 					<div class="alert alert-success clearfix">
 						<input type="hidden" value="{$filename}" name="csv" id="csv_selected_value">
 						<div class="col-lg-8">
@@ -288,7 +295,7 @@
 						</div>
 						<div class="col-lg-4">
 							<div class="btn-group pull-right">
-								<button type="button" class="btn btn-default">
+								<button id="file-remove-button" type="button" class="btn btn-default">
 									<i class="icon-refresh"></i>
 									{l s='Change'}
 								</button>
