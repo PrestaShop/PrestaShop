@@ -124,7 +124,7 @@ modules/editorial
 modules/favoriteproducts
 modules/feeder
 modules/followup
-modules/gapi -modules/1.6 only
+modules/gapi
 modules/loyalty
 modules/mailalerts
 modules/newsletter
