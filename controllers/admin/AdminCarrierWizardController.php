@@ -129,9 +129,13 @@ class AdminCarrierWizardControllerCore extends AdminController
 			array_splice($this->tpl_view_vars['wizard_contents']['contents'], 1, 0, array(0 => $this->renderStepTwo($carrier)));
 
 		$this->context->smarty->assign(array(
-				'carrier_logo' => (Validate::isLoadedObject($carrier) && file_exists(_PS_SHIP_IMG_DIR_.$carrier->id.'.jpg') ? _THEME_SHIP_DIR_.$carrier->id.'.jpg' : false)
-			));
-		$this->content .= $this->createTemplate('logo.tpl')->fetch();
+				'carrier_logo' => (Validate::isLoadedObject($carrier) && file_exists(_PS_SHIP_IMG_DIR_.$carrier->id.'.jpg') ? _THEME_SHIP_DIR_.$carrier->id.'.jpg' : false),
+ 			));
+ 			
+ 		$this->context->smarty->assign(array(
+ 			'logo_content' => $this->createTemplate('logo.tpl')->fetch()
+ 		));
+ 		
 		$this->addjQueryPlugin(array('ajaxfileupload'));
 
 		return parent::renderView();
