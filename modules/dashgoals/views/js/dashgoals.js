@@ -1,7 +1,7 @@
 function bar_chart_goals(widget_name, chart_details)
 {
 	nv.addGraph(function() {
-		var chart = nv.models.multiBarChart();
+		var chart = nv.models.multiBarChart().stacked(false).showControls(false);
 
 		chart.yAxis.tickFormat(d3.format('%'));
 
