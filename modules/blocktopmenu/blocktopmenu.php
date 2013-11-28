@@ -344,21 +344,21 @@ class Blocktopmenu extends Module
 					$selected = ($this->page_name == 'product' && (Tools::getValue('id_product') == $id)) ? ' class="sfHover"' : '';
 					$product = new Product((int)$id, true, (int)$id_lang);
 					if (!is_null($product->id))
-						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($product->getLink()).'">'.$product->name.'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($product->getLink()).'" title="'.$product->name.'">'.$product->name.'</a></li>'.PHP_EOL;
 					break;
 
 				case 'CMS':
 					$selected = ($this->page_name == 'cms' && (Tools::getValue('id_cms') == $id)) ? ' class="sfHover"' : '';
 					$cms = CMS::getLinks((int)$id_lang, array($id));
 					if (count($cms))
-						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($cms[0]['link']).'">'.$cms[0]['meta_title'].'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($cms[0]['link']).'" title="'.$cms[0]['meta_title'].'">'.$cms[0]['meta_title'].'</a></li>'.PHP_EOL;
 					break;
 
 				case 'CMS_CAT':
 					$category = new CMSCategory((int)$id, (int)$id_lang);
 					if (count($category))
 					{
-						$this->_menu .= '<li><a href="'.Tools::HtmlEntitiesUTF8($category->getLink()).'">'.$category->name.'</a>';
+						$this->_menu .= '<li><a href="'.Tools::HtmlEntitiesUTF8($category->getLink()).'" title="'.$category->name.'">'.$category->name.'</a>';
 						$this->getCMSMenuItems($category->id);
 						$this->_menu .= '</li>'.PHP_EOL;
 					}
@@ -367,10 +367,10 @@ class Blocktopmenu extends Module
 				// Case to handle the option to show all Manufacturers
 				case 'ALLMAN':
 					$link = new Link;
-					$this->_menu .= '<li><a href="'.$link->getPageLink('manufacturer').'">'.$this->l('All manufacturers').'</a><ul>'.PHP_EOL;
+					$this->_menu .= '<li><a href="'.$link->getPageLink('manufacturer').'" title="'.$this->l('All manufacturers').'">'.$this->l('All manufacturers').'</a><ul>'.PHP_EOL;
 					$manufacturers = Manufacturer::getManufacturers();
 					foreach ($manufacturers as $key => $manufacturer)
-						$this->_menu .= '<li><a href="'.$link->getManufacturerLink((int)$manufacturer['id_manufacturer'], $manufacturer['link_rewrite']).'">'.$manufacturer['name'].'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li><a href="'.$link->getManufacturerLink((int)$manufacturer['id_manufacturer'], $manufacturer['link_rewrite']).'" title="'.$manufacturer['name'].'">'.$manufacturer['name'].'</a></li>'.PHP_EOL;
 					$this->_menu .= '</ul>';
 					break;
 
@@ -384,17 +384,17 @@ class Blocktopmenu extends Module
 						else
 							$manufacturer->link_rewrite = 0;
 						$link = new Link;
-						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($link->getManufacturerLink((int)$id, $manufacturer->link_rewrite)).'">'.$manufacturer->name.'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($link->getManufacturerLink((int)$id, $manufacturer->link_rewrite)).'" title="'.$manufacturer->name.'">'.$manufacturer->name.'</a></li>'.PHP_EOL;
 					}
 					break;
 
 				// Case to handle the option to show all Suppliers
 				case 'ALLSUP':
 					$link = new Link;
-					$this->_menu .= '<li><a href="'.$link->getPageLink('supplier').'">'.$this->l('All suppliers').'</a><ul>'.PHP_EOL;
+					$this->_menu .= '<li><a href="'.$link->getPageLink('supplier').'" title="'.$this->l('All suppliers').'">'.$this->l('All suppliers').'</a><ul>'.PHP_EOL;
 					$suppliers = Supplier::getSuppliers();
 					foreach ($suppliers as $key => $supplier)
-						$this->_menu .= '<li><a href="'.$link->getSupplierLink((int)$supplier['id_supplier'], $supplier['link_rewrite']).'">'.$supplier['name'].'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li><a href="'.$link->getSupplierLink((int)$supplier['id_supplier'], $supplier['link_rewrite']).'" title="'.$supplier['name'].'">'.$supplier['name'].'</a></li>'.PHP_EOL;
 					$this->_menu .= '</ul>';
 					break;
 
@@ -404,7 +404,7 @@ class Blocktopmenu extends Module
 					if (!is_null($supplier->id))
 					{
 						$link = new Link;
-						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($link->getSupplierLink((int)$id, $supplier->link_rewrite)).'">'.$supplier->name.'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($link->getSupplierLink((int)$id, $supplier->link_rewrite)).'" title="'.$supplier->name.'">'.$supplier->name.'</a></li>'.PHP_EOL;
 					}
 					break;
 
@@ -414,7 +414,7 @@ class Blocktopmenu extends Module
 					if (Validate::isLoadedObject($shop))
 					{
 						$link = new Link;
-						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($shop->getBaseURL()).'">'.$shop->name.'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($shop->getBaseURL()).'" title="'.$shop->name.'">'.$shop->name.'</a></li>'.PHP_EOL;
 					}
 					break;
 				case 'LNK':
@@ -426,7 +426,7 @@ class Blocktopmenu extends Module
 							$default_language = Configuration::get('PS_LANG_DEFAULT');
 							$link = MenuTopLinks::get($link[0]['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
 						}
-						$this->_menu .= '<li><a href="'.Tools::HtmlEntitiesUTF8($link[0]['link']).'"'.(($link[0]['new_window']) ? ' target="_blank"': '').'>'.$link[0]['label'].'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li><a href="'.Tools::HtmlEntitiesUTF8($link[0]['link']).'"'.(($link[0]['new_window']) ? ' target="_blank"': '').' title="'.$link[0]['label'].'">'.$link[0]['label'].'</a></li>'.PHP_EOL;
 					}
 					break;
 			}
@@ -476,7 +476,7 @@ class Blocktopmenu extends Module
 		if (!empty($is_intersected))
 		{
 			$this->_menu .= '<li '.$selected.'>';
-			$this->_menu .= '<a href="'.Tools::HtmlEntitiesUTF8($category_link).'">'.$category->name.'</a>';
+			$this->_menu .= '<a href="'.Tools::HtmlEntitiesUTF8($category_link).'" title="'.$category->name.'">'.$category->name.'</a>';
 
 			if (count($children))
 			{
