@@ -344,7 +344,7 @@ class ToolsCore
 		}
 
 		/* Automatically detect language if not already defined, detect_language is set in Cookie::update */
-		if ((!$cookie->id_lang || isset($cookie->detect_language)) && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+		if ((!$cookie->id_lang && (isset($cookie->detect_language)) && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])))
 		{
 			$array  = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
 			$string = $array[0];
@@ -397,6 +397,7 @@ class ToolsCore
 			|| (($id_lang == $configuration_id_lang) && Validate::isUnsignedId($id_lang) && $id_lang != $cookie_id_lang))
 		{
 			$context->cookie->id_lang = $id_lang;
+
 			$language = new Language($id_lang);
 			if (Validate::isLoadedObject($language) && $language->active)
 				$context->language = $language;
