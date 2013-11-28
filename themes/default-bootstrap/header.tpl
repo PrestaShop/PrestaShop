@@ -202,7 +202,7 @@
                     </div>
                 </header>
             </div>
-            <div class="columns-container">
+            <div class="columns-container" {if $page_name=='product'}itemscope itemtype="http://schema.org/Product"{/if}>
                 <div id="columns" class="container">
                     {if $page_name !='index' && $page_name !='pagenotfound'}
                         {include file="$tpl_dir./breadcrumb.tpl"}
