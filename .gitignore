@@ -114,4 +114,23 @@ modules/uspscarrier
 modules/wexpay
 modules/yotpo
 modules/zingaya
+modules/bankwire
+modules/blockwishlist
+modules/carriercompare
+modules/cashondelivery
+modules/cheque
+modules/dateofdelivery
+modules/editorial
+modules/favoriteproducts
+modules/feeder
+modules/followup
+modules/gapi -modules/1.6 only
+modules/loyalty
+modules/mailalerts
+modules/newsletter
+modules/productcomments
+modules/pscleaner
+modules/referralprogram
+modules/sendtoafriend
+modules/watermark
 admin-dev/themes/default/bower_components
