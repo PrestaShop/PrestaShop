@@ -602,7 +602,8 @@
             ob_start();
             phpinfo();
             $buffer = ob_get_contents();
-            ob_end_clean();
+			if (ob_get_level() && ob_get_length() > 0)
+				ob_end_clean();
             foreach (explode("\n", $buffer) as $line) {
                 $line = array_map('trim', (explode('|', strip_tags(str_replace('</td>', '|', $line)))));
                 if (isset($gd[$line[0]])) {
