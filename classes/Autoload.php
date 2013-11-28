@@ -99,7 +99,9 @@ class Autoload
 
 				// Since the classname does not exists (we only have a classCore class), we have to emulate the declaration of this class
 				$class_infos = new ReflectionClass($classname.'Core');
-				eval(($class_infos->isAbstract() ? 'abstract ' : '').'class '.$classname.' extends '.$classname.'Core {}');
+
+				if (!$class_infos->isInterface())
+					eval(($class_infos->isAbstract() ? 'abstract ' : '').'class '.$classname.' extends '.$classname.'Core {}');
 			}
 			else
 			{
