@@ -93,13 +93,15 @@ $context = Context::getContext();
 try 
 {
 	$context->shop = Shop::initialize();
+	if (Tools::isEmpty($theme_name = $context->shop->getTheme()) || !file_exists(_PS_ALL_THEMES_DIR_.$theme_name))
+		throw new PrestaShopException('No theme selected');
 }
 catch (PrestaShopException $e)
 {
 	$e->displayMessage();
 }
 
-define('_THEME_NAME_', $context->shop->getTheme());
+define('_THEME_NAME_', $theme_name);
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
 /* Include all defines related to base uri and theme name */
