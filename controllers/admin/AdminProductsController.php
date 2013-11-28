@@ -444,6 +444,120 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
+	public function ajaxProcessAddAttachment()
+	{
+		if (isset($_FILES['attachment_file']))
+		{
+			if ((int)$_FILES['attachment_file']['error'] === 1)
+			{
+				$_FILES['attachment_file']['error'] = array();
+
+				$max_upload = (int)ini_get('upload_max_filesize');
+				$max_post = (int)ini_get('post_max_size');
+				$upload_mb = min($max_upload, $max_post);
+				$_FILES['attachment_file']['error'][] = sprintf(
+					$this->l('The file %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.'),
+					'<b>'.$_FILES['attachment_file']['name'].'</b> ',
+					'<b>'.$upload_mb.'</b>'
+				);
+			}
+
+			$_FILES['attachment_file']['error'] = array();
+
+			$is_attachment_name_valid = false;
+			$attachment_names = Tools::getValue('attachment_name');
+			$attachment_descriptions = Tools::getValue('attachment_description');
+
+			if (!isset($attachment_names) || !$attachment_names)
+				$attachment_names = array();
+
+			if (!isset($attachment_descriptions) || !$attachment_descriptions)
+				$attachment_descriptions = array();
+
+			foreach ($attachment_names as $lang => $name)
+			{
+				if (Tools::strlen($name) > 0)
+					$is_attachment_name_valid = true;
+
+				if (!Validate::isGenericName($name))
+					$_FILES['attachment_file']['error'][] = sprintf(Tools::displayError('Invalid name for %s language'), Language::getLanguage((int)$lang)['name']);
+				elseif (Tools::strlen($name) > 32)
+					$_FILES['attachment_file']['error'][] = sprintf(Tools::displayError('The name for %1s language is too long (%2d chars max).'), Language::getLanguage((int)$lang)['name'], 32);
+			}
+
+			foreach ($attachment_descriptions as $lang => $description)
+				if (!Validate::isCleanHtml($description))
+					$_FILES['attachment_file']['error'][] = sprintf(Tools::displayError('Invalid description for %s language'), Language::getLanguage((int)$lang)['name']);
+
+			if (!$is_attachment_name_valid)
+				$_FILES['attachment_file']['error'][] = Tools::displayError('An attachment name is required.');
+
+			if (empty($_FILES['attachment_file']['error']))
+			{
+				if (is_uploaded_file($_FILES['attachment_file']['tmp_name']))
+				{
+					if ($_FILES['attachment_file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
+						$_FILES['attachment_file']['error'][] = sprintf(
+							$this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you\'re trying to upload is: %2$d kB.'),
+							(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
+							number_format(($_FILES['attachment_file']['size'] / 1024), 2, '.', '')
+						);
+					else
+					{
+						do $uniqid = sha1(microtime());
+						while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
+						if (!copy($_FILES['attachment_file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid))
+							$_FILES['attachment_file']['error'][] = $this->l('File copy failed');
+						@unlink($_FILES['attachment_file']['tmp_name']);
+					}
+				}
+				else
+					$_FILES['attachment_file']['error'][] = Tools::displayError('The file is missing.');
+
+				if (empty($_FILES['attachment_file']['error']) && isset($uniqid))
+				{
+					$attachment = new Attachment();
+
+					foreach ($attachment_names as $lang => $name)
+						$attachment->name[(int)$lang] = $name;
+
+					foreach ($attachment_descriptions as $lang => $description)
+						$attachment->description[(int)$lang] = $description;
+
+					$attachment->file = $uniqid;
+					$attachment->mime = $_FILES['attachment_file']['type'];
+					$attachment->file_name = $_FILES['attachment_file']['name'];
+
+					if (empty($attachment->mime) || Tools::strlen($attachment->mime) > 128)
+						$_FILES['attachment_file']['error'][] = Tools::displayError('Invalid file extension');
+					if (!Validate::isGenericName($attachment->file_name))
+						$_FILES['attachment_file']['error'][] = Tools::displayError('Invalid file name');
+					if (Tools::strlen($attachment->file_name) > 128)
+						$_FILES['attachment_file']['error'][] = Tools::displayError('The file name is too long.');
+					if (empty($this->errors))
+					{
+						$res = $attachment->add();
+						if (!$res)
+							$_FILES['attachment_file']['error'][] = Tools::displayError('This attachment was unable to be loaded into the database.');
+						else
+						{
+							$_FILES['attachment_file']['id_attachment'] = $attachment->id;
+							$_FILES['attachment_file']['filename'] = $attachment->name[$this->context->employee->id_lang];
+							$id_product = (int)Tools::getValue($this->identifier);
+							$res = $attachment->attachProduct($id_product);
+							if (!$res)
+								$_FILES['attachment_file']['error'][] = Tools::displayError('We were unable to associate this attachment to a product.');
+						}
+					}
+					else
+						$_FILES['attachment_file']['error'][] = Tools::displayError('Invalid file');
+				}
+			}
+
+			die(Tools::jsonEncode($_FILES));
+		}
+	}
+
 	/**
 	 * Upload new attachment
 	 *
@@ -3472,7 +3586,8 @@ class AdminProductsControllerCore extends AdminController
 					'default_form_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
 					'attachment_name' => $attachment_name,
 					'attachment_description' => $attachment_description,
-					'PS_ATTACHMENT_MAXIMUM_SIZE' => Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')
+					'PS_ATTACHMENT_MAXIMUM_SIZE' => Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE'),
+					'post_max_size' => (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)
 				));
 			}
 			else
@@ -3481,7 +3596,27 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->displayWarning($this->l('You must save this product before adding attachements.'));
 
-		$this->tpl_form_vars['custom_form'] = $data->fetch();
+		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
+		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+		$bo_theme = ((Validate::isLoadedObject($this->context->employee)
+			&& $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
+
+		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
+			.'template'))
+			$bo_theme = 'default';
+
+		$html = '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+			.'/themes/'.$bo_theme.'/js/vendor/jquery.ui.widget.js"></script>';
+		$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+			.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js"></script>';
+		$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+			.'/themes/'.$bo_theme.'/js/jquery.fileupload.js"></script>';
+			$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+			.'/themes/'.$bo_theme.'/js/jquery.fileupload-process.js"></script>';
+		$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+			.'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js"></script>';
+
+		$this->tpl_form_vars['custom_form'] = $html.$data->fetch();
 	}
 
 	public function initFormInformations($product)
