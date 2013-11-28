@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<localizationPack name="PE">
+<localizationPack name="Peru">
   <currencies>
     <currency name="Nuevo Sol" iso_code="PEN" iso_code_num="604" sign="S/." blank="1" conversion_rate="2.784499" format="1" decimals="0"/>
   </currencies>
