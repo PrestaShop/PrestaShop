@@ -40,4 +40,5 @@ require_once(_PS_ROOT_DIR_.'/config/smarty.config.inc.php');
 $smarty->setTemplateDir($directory);
 ob_start();
 $smarty->compileAllTemplates('.tpl', false);
-ob_end_clean();
+if (ob_get_level() && ob_get_length() > 0)
+	ob_end_clean();

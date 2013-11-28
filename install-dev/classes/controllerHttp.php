@@ -417,7 +417,8 @@ abstract class InstallControllerHttp
 		if ($get_output)
 		{
 			$content = ob_get_contents();
-			ob_end_clean();
+			if (ob_get_level() && ob_get_length() > 0)
+				ob_end_clean();
 			return $content;
 		}
 	}

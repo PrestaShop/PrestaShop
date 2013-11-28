@@ -3120,7 +3120,8 @@ class AdminImportControllerCore extends AdminController
 						$mimeType = $mimeTypes[$bName];
 					else
 						$mimeType = 'application/octet-stream';
-					if (ob_get_level()) 
+					
+					if (ob_get_level() && ob_get_length() > 0)
 						ob_end_clean();
 	
 					header('Content-Transfer-Encoding: binary');

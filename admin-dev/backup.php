@@ -64,7 +64,8 @@ if ($fp === false)
 header('Content-Type: '.$contentType);
 header('Content-Disposition: attachment; filename="'.Tools::getValue('filename'). '"');
 
-ob_clean();
+if (ob_get_level() && ob_get_length() > 0)
+	ob_clean();
 $ret = @fpassthru($fp);
 
 fclose($fp);
