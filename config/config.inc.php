@@ -93,14 +93,13 @@ $context = Context::getContext();
 try 
 {
 	$context->shop = Shop::initialize();
-	if (Tools::isEmpty($theme_name = $context->shop->getTheme()) || !file_exists(_PS_ALL_THEMES_DIR_.$theme_name))
-		throw new PrestaShopException('No theme selected');
+	if (Tools::isEmpty($theme_name = $context->shop->getTheme()) && !defined('_PS_ADMIN_DIR_'))
+		throw new PrestaShopException(Tools::displayError('Current theme unselected. Please check your theme configuration.'));
 }
 catch (PrestaShopException $e)
 {
 	$e->displayMessage();
 }
-
 define('_THEME_NAME_', $theme_name);
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
