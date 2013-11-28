@@ -146,6 +146,7 @@
 						$('#csv_file_uploader').hide();
 						$('#csv_files_history').hide();
 					}
+					
 					function csv_unselect() {
 						$('#csv_file_selected').hide();
 						$('#csv_file_uploader').show();
