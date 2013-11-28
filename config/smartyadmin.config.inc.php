@@ -66,7 +66,12 @@ function smartyTranslate($params, &$smarty)
 		{
 	// Split by \ and / to get the folder tree for the file
 		$folder_tree = preg_split('#[/\\\]#', $filename);
+				
 		$key = array_search('controllers', $folder_tree);
+		if (strpos($filename,'override')&&($key!==false)) {
+			$key += 3;
+		}
+
 
 		// If there was a match, construct the class name using the child folder name
 		// Eg. xxx/controllers/customers/xxx => AdminCustomers
