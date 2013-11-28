@@ -28,17 +28,14 @@
 		var errorEmpty = '{l s='Please name your mapping configuration in order to save it.' js=1}';
 		var token = '{$token}';
 		var current = 0;
-		function showTable(nb)
-		{
+		function showTable(nb) {
 			$('#btn_left').disabled = null;
 			$('#btn_right').disabled = null;
-			if (nb <= 0)
-			{
+			if (nb <= 0) {
 				nb = 0;
 				$('#btn_left').disabled = 'true';
 			}
-			if (nb >= {$nb_table} - 1)
-			{
+			if (nb >= {$nb_table} - 1) {
 				nb = {$nb_table} - 1;
 				$('#btn_right').disabled = 'true';
 			}
@@ -46,11 +43,10 @@
 			current = nb;
 			$('#table' + current).show();
 		}
-		$(document).ready(function(){
+		$(document).ready(function() {
 			var btn_save_import = $('span[class~="process-icon-save-import"]').parent();
 			var btn_submit_import = $('#import');
-			if (btn_save_import.length > 0 && btn_submit_import.length > 0)
-			{
+			if (btn_save_import.length > 0 && btn_submit_import.length > 0) {
 				btn_submit_import.closest('.form-group').hide();
 				btn_save_import.find('span').removeClass('process-icon-save-import');
 				btn_save_import.find('span').addClass('process-icon-save');
@@ -117,8 +113,8 @@
 			<input type="hidden" name="multiple_value_separator" value="{$fields_value.multiple_value_separator}" />
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="skip">{l s='Lines to skip'}</label>
-				<div class="col-lg-7">
-					<input type="text" name="skip" id="skip" value="1" />
+				<div class="col-lg-9">
+					<input class="fixed-width-sm" type="text" name="skip" id="skip" value="1" />
 					<p class="help-block">{l s='This number indicates how many of the first lines of your CSV file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.'}</p>
 				</div>
 			</div>
@@ -136,18 +132,15 @@
 					</button>
 				</div>
 			</div>
-			<hr>
-			<div class="form-group">
-				<div class="col-lg-12">
-					<button type="button" class="btn btn-default">
-						<i class="icon-remove text-danger"></i>
-						{l s='Cancel'}
-					</button>
-					<button id="import" name="import" type="submit" onclick="return (validateImportation(new Array({$res})));"  class="btn btn-default pull-right">
-						<i class="icon-ok text-success"></i>
-						{l s='Import .CSV data'}
-					</button>
-				</div>
+			<div class="panel-footer">
+				<button type="button" class="btn btn-default" onclick="window.history.back();">
+					<i class="process-icon-cancel text-danger"></i>
+					{l s='Cancel'}
+				</button>
+				<button id="import" name="import" type="submit" onclick="return (validateImportation(new Array({$res})));"  class="btn btn-default pull-right">
+					<i class="process-icon-ok text-success"></i>
+					{l s='Import .CSV data'}
+				</button>
 			</div>
 		</form>
 	</div>

@@ -709,9 +709,7 @@ class AdminImportControllerCore extends AdminController
 
 	protected function generateContentTable($current_table, $nb_column, $handle, $glue)
 	{
-		$html = '<table id="table'.$current_table.'" style="display: none;" class="table">
-					<thead><tr>';
-
+		$html = '<table id="table'.$current_table.'" style="display: none;" class="table table-bordered"><thead><tr>';
 		// Header
 		for ($i = 0; $i < $nb_column; $i++)
 			if (MAX_COLUMNS * (int)$current_table <= $i && (int)$i < MAX_COLUMNS * ((int)$current_table + 1))
