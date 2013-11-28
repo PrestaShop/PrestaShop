@@ -59,9 +59,15 @@
 			</p>
 		</div>
 		<script>
+			var attachement_clicked = false;
 			$(document).ready(function(){
 				$('#attachement_fileselectbutton').click(function(e){
-					$('#carrier_logo_input').trigger('click');
+					if (!attachement_clicked)
+					{
+						$('#carrier_logo_input').trigger('click');
+						attachement_clicked = true;
+					}
+					return false;
 				});
 				$('#carrier_logo_input').change(function(e){
 					var val = $(this).val();
