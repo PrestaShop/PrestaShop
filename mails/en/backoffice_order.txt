@@ -1,6 +1,6 @@
 Hi {firstname} {lastname},
 
-A new command has been generated to you.
+A new order has been generated to you.
 
 Go on {order_link} to finalize the payment.
 
