@@ -46,16 +46,29 @@ class AdminInvoicesControllerCore extends AdminController
 				'title' => $this->l('Order Reference'),
 				'align' => 'center'
 			),
+			'firstname' => array(
+				'title' => $this->l('Firstname')
+			),
+			'lastname' => array(
+				'title' => $this->l('Lastname')
+			),
 			'total_paid_tax_incl' => array(
 				'title' => $this->l('Total Incl'),
-				'align' => 'center',
+				'align' => 'right',
 				'orderby' => false
 			),
 			'amount' => array(
 				'title' => $this->l('Paid amount'),
+				'prefix' => '<span style="color:green;">',
+				'sufix' => '</span>',
+				'align' => 'right',
+				'orderby' => false
+			),
+			'unpaid_amount' => array(
+				'title' => $this->l('Unpaid amount'),
 				'prefix' => '<span style="color:red;">',
 				'sufix' => '</span>',
-				'align' => 'center',
+				'align' => 'right',
 				'orderby' => false
 			),
 			'date_add' => array(
@@ -68,9 +81,17 @@ class AdminInvoicesControllerCore extends AdminController
 
 		$this->_select = 'o.`reference` as order_reference, o.`id_order`,
 					a.`total_paid_tax_incl`,a.`id_order_invoice`, a.`date_add`,
-					op.`amount`';
+					c.`firstname`,c.`lastname`,
+					SUM(op.`amount`) as amount,
+					IF(
+						IFNULL(op.`amount`,0),
+						a.`total_paid_tax_incl`- SUM(op.`amount`),
+						a.`total_paid_tax_incl`
+					)
+					as unpaid_amount';
 
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = a.`id_order`)
+		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = o.`id_customer`)
 		LEFT JOIN `'._DB_PREFIX_.'order_invoice_payment` oip ON (oip.`id_order_invoice`= a.`id_order_invoice`)
 		LEFT JOIN `'._DB_PREFIX_.'order_payment` op ON (op.`id_order_payment`= oip.`id_order_payment`)';
 
@@ -82,8 +103,10 @@ class AdminInvoicesControllerCore extends AdminController
 		)';
 
 		// Force sort by date, with the earlies invoice first
-		$this->orderBy = 'date_add';
-		$this->orderWay = 'asc';
+		$this->_orderBy = 'date_add';
+		$this->_orderWay = 'asc';
+
+		$this->_group = 'GROUP BY a.`id_order_invoice`';
 
 		$this->fields_options = array(
 			'general' => array(
