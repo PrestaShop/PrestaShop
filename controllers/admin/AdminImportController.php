@@ -540,8 +540,10 @@ class AdminImportControllerCore extends AdminController
 			$entity_selected = (int)$this->context->cookie->entity_selected;
 
 		$csv_selected = '';
-		if (isset($this->context->cookie->csv_selected))
+		if (isset($this->context->cookie->csv_selected) && file_exists(_PS_ADMIN_DIR_.'/import/'.$this->context->cookie->csv_selected))
 			$csv_selected = base64_decode($this->context->cookie->csv_selected);
+		else
+			$this->context->cookie->csv_selected = $csv_selected;
 
 		$id_lang_selected = '';
 		if (isset($this->context->cookie->iso_lang_selected) && $this->context->cookie->iso_lang_selected)
