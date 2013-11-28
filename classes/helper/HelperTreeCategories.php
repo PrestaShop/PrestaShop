@@ -57,7 +57,7 @@ class HelperTreeCategoriesCore extends TreeCore
 	{
 		if (!isset($this->_data))
 			$this->setData(Category::getNestedCategories(
-				$this->getRootCategory(), $this->getLang()));
+				$this->getRootCategory(), $this->getLang(), false));
 
 		return $this->_data;
 	}
