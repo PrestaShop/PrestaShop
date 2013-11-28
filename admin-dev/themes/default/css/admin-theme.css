@@ -182,7 +182,7 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-th-list:before { content: "\f00b"; }
 
-.icon-ok:before { content: "\f00c"; }
+.icon-ok:before, .bootstrap .process-icon-ok:before { content: "\f00c"; }
 
 .icon-remove:before, .bootstrap .process-icon-cancel:before { content: "\f00d"; }
 
