@@ -27,6 +27,14 @@
 
 {block name="script"}
 $(document).ready(function(){
+$('#menuOrderUp').click(function(e){
+	e.preventDefault();
+    move(true);
+});
+$('#menuOrderDown').click(function(e){
+    e.preventDefault();
+    move();
+});
 $("#addItem").click(add);
 $("#availableItems").dblclick(add);
 $("#removeItem").click(remove);
@@ -66,16 +74,45 @@ function serialize()
 	});
 	$("#itemsInput").val(options.substr(0, options.length - 1));
 }
+function move(up)
+{
+        var tomove = $('#items option:selected');
+        if (tomove.length >1)
+        {
+                alert('{l s="Please select just one item"}');
+                return false;
+        }
+        if (up)
+                tomove.prev().insertAfter(tomove);
+        else
+                tomove.next().insertBefore(tomove);
+        serialize();
+        return false;
+}
 });
 {/block}
 
 {block name="input"}
     {if $input.type == 'link_choice'}
 	    <div class="row">
-	    	<div class="col-lg-4">{$selected_links}</div>
-	    	<div class="col-lg-4">{$choices}</div>
+	    	<div class="col-lg-1">
+	    		<h4 style="margin-top:5px;">{l s="Change position"}</h4> 
+                <a href="#" id="menuOrderUp" class="btn btn-default" style="font-size:20px;display:block;"><i class="icon-chevron-up"></i></a><br/>
+                <a href="#" id="menuOrderDown" class="btn btn-default" style="font-size:20px;display:block;"><i class="icon-chevron-down"></i></a><br/>
+	    	</div>
+	    	<div class="col-lg-4">
+	    		<h4 style="margin-top:5px;">{l s="Selected items"}</h4>
+	    		{$selected_links}
+	    	</div>
+	    	<div class="col-lg-4">
+	    		<h4 style="margin-top:5px;">{l s="Available items"}</h4>
+	    		{$choices}
+	    	</div>
+	    	
 	    </div>
+	    <br/>
 	    <div class="row">
+	    	<div class="col-lg-1"></div>
 	    	<div class="col-lg-4"><a href="#" id="removeItem" class="btn btn-primary"><i class="icon-arrow-right"></i> {l s='Remove'}</a></div>
 	    	<div class="col-lg-4"><a href="#" id="addItem" class="btn btn-primary"><i class="icon-arrow-left"></i> {l s='Add'}</a></div>
 	    </div>
