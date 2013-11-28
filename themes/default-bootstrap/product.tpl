@@ -258,7 +258,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
 				<div id="short_description_content" class="rte align_justify" itemprop="description">{$product->description_short}</div>
 			{/if}
 			{if $product->description}
-			<p class="buttons_bottom_block"><a href="javascript:{ldelim}{rdelim}" class="button">{l s='More details'}</a></p>
+			<p class="buttons_bottom_block"><a href="javascript:{ldelim}{rdelim}" class="button" title="{$product->name|escape:'htmlall':'UTF-8'} - {l s='More details'}">{l s='More details'}</a></p>
 			{/if}
 		<!--	{if $packItems|@count > 0}
             
