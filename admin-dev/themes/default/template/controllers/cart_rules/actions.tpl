@@ -3,11 +3,11 @@
 	<div class="input-group col-lg-2">
 		<span class="switch prestashop-switch">
 			<input type="radio" name="free_shipping" id="free_shipping_on" value="1" {if $currentTab->getFieldValue($currentObject, 'free_shipping')|intval}checked="checked"{/if} />
-			<label class="t radio" for="free_shipping_on">
+			<label class="t" for="free_shipping_on">
 				<i class="icon-check-sign color_success"></i> {l s='Yes'}
 			</label>
 			<input type="radio" name="free_shipping" id="free_shipping_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'free_shipping')|intval}checked="checked"{/if} />
-			<label class="t radio" for="free_shipping_off">
+			<label class="t" for="free_shipping_off">
 				<i class="icon-ban-circle color_danger"></i> {l s='No'}
 			</label>
 			<a class="slide-button btn btn-default"></a>
@@ -116,11 +116,11 @@
 	<div class="input-group col-lg-2">
 		<span class="switch prestashop-switch">
 			<input type="radio" name="free_gift" id="free_gift_on" value="1" {if $currentTab->getFieldValue($currentObject, 'gift_product')|intval}checked="checked"{/if} />
-			<label class="t radio" for="free_gift_on">
+			<label class="t" for="free_gift_on">
 				<i class="icon-check-sign color_success"></i> {l s='Yes'}
 			</label>
 			<input type="radio" name="free_gift" id="free_gift_off" value="0" {if !$currentTab->getFieldValue($currentObject, 'gift_product')|intval}checked="checked"{/if} />
-			<label class="t radio" for="free_gift_off">
+			<label class="t" for="free_gift_off">
 				<i class="icon-ban-circle color_danger"></i> {l s='No'}
 			</label>
 			<a class="slide-button btn btn-default"></a>
