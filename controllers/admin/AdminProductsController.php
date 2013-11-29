@@ -267,6 +267,28 @@ class AdminProductsControllerCore extends AdminController
 				'position' => 'position'
 			);
 	}
+
+	public function setMedia()
+	{
+		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
+		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+		$bo_theme = ((Validate::isLoadedObject($this->context->employee)
+			&& $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
+
+		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
+			.'template'))
+			$bo_theme = 'default';
+
+		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/vendor/jquery.ui.widget.js');
+		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
+		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload.js');
+		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload-process.js');
+		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js');			
+		$this->addJs(__PS_BASE_URI__.'js/vendor/spin.js');
+		$this->addJs(__PS_BASE_URI__.'js/vendor/ladda.js');
+
+		return parent::setMedia();
+	}
 	
 	protected function _cleanMetaKeywords($keywords)
 	{
@@ -3573,6 +3595,12 @@ class AdminProductsControllerCore extends AdminController
 				$iso_tiny_mce = $this->context->language->iso_code;
 				$iso_tiny_mce = (file_exists(_PS_JS_DIR_.'tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
 
+				$attachment_uploader = new HelperUploader('attachment_file');
+				$attachment_uploader->setMultiple(false)->setUseAjax(true)->setUrl(
+					Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$obj->id
+					.'&action=AddAttachment')->setPostMaxSize((Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
+					->setTemplate('attachment_ajax.tpl');
+
 				$data->assign(array(
 					'obj' => $obj,
 					'table' => $this->table,
@@ -3587,7 +3615,7 @@ class AdminProductsControllerCore extends AdminController
 					'attachment_name' => $attachment_name,
 					'attachment_description' => $attachment_description,
 					'PS_ATTACHMENT_MAXIMUM_SIZE' => Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE'),
-					'post_max_size' => (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)
+					'attachment_uploader' => $attachment_uploader->render()
 				));
 			}
 			else
@@ -3596,27 +3624,7 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->displayWarning($this->l('You must save this product before adding attachements.'));
 
-		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
-		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
-		$bo_theme = ((Validate::isLoadedObject($this->context->employee)
-			&& $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
-
-		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
-			.'template'))
-			$bo_theme = 'default';
-
-		$html = '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
-			.'/themes/'.$bo_theme.'/js/vendor/jquery.ui.widget.js"></script>';
-		$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
-			.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js"></script>';
-		$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
-			.'/themes/'.$bo_theme.'/js/jquery.fileupload.js"></script>';
-			$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
-			.'/themes/'.$bo_theme.'/js/jquery.fileupload-process.js"></script>';
-		$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
-			.'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js"></script>';
-
-		$this->tpl_form_vars['custom_form'] = $html.$data->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	public function initFormInformations($product)
