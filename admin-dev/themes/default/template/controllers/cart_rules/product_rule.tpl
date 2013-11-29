@@ -19,7 +19,7 @@
 			</div>
 		</div>
 	</td>
-	<td>
+	<td class="text-right">
 		<a class="btn btn-default" href="javascript:removeProductRule({$product_rule_group_id|intval}, {$product_rule_id|intval});">
 			<i class="icon-remove"></i>
 		</a>

@@ -569,8 +569,15 @@ span.view_scroll_spacer {
     display: none;
   }
 }
-.box-info-product .exclusive.disabled:before {
+.box-info-product .exclusive.added:before {
+  content: "";
+}
+.box-info-product .exclusive.added.disabled:before, .box-info-product .exclusive.disabled:before {
   content: "";
+  animation: 2s linear 0s normal none infinite spin;
+  -webkit-animation: 2s linear 0s normal none infinite spin;
+  -moz-animation: 2s linear 0s normal none infinite spin;
+  border: none;
 }
 .box-info-product .exclusive:after {
   background: url(../img/border-1.gif) repeat-y 0 0;

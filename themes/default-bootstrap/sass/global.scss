@@ -2230,6 +2230,70 @@ a.price_discount_delete {
 		}
 	}
 }
+@media (max-width: 767px) {
+  #order-detail-content{
+    #cart_summary{
+      table, thead, tbody, th, td, tr{display: block;}
+      thead tr{
+        position: absolute;
+        top: -9999px;
+        left: -9999px;        
+      }
+      tr{
+        border-bottom: 1px solid #ccc;
+        overflow: hidden;
+      }
+      td{
+        border: none;
+        position: relative;
+        width: 50%;
+        float: left;
+        white-space: normal;
+        &.cart_product{}
+        &.cart_description{}
+        &.cart_avail{clear: both;}
+        &.cart_unit{}
+        &.cart_quantity{
+          clear: both;
+          padding: 9px 8px 11px 18px;
+        }
+        &.cart_total{}
+        &.cart_delete{
+          width: 100%;
+          clear: both;
+          text-align: right;
+          &:before{
+            display: inline-block;
+            padding-right: 0.5em;
+            position: relative;
+            top: -3px;
+          }
+          div{display: inline;}
+        }
+      }
+      td:before {
+        content: attr(data-title);
+        display: block;
+      }
+      tfoot{
+        td{
+          float: none;
+          width: 100%;
+          &:before{
+            display: inline;
+          }
+        }
+        tr{
+          .text-right, .price{
+            display: block;
+            float: left;
+            width: 50%;
+          }
+        }
+      }
+    }
+  }
+}
 .cart_voucher {
 	vertical-align:top !important;
 	h4 {
@@ -3200,5 +3264,12 @@ div.star.star_hover {
 .ie8 {
 	#facebook_block, #cmsinfo_block {
 		height:344px;
+	}
+}
+
+/************************* Zoom ******************************/
+@media  (max-width: $screen-md-max) { // max 1199px 
+	.zoomdiv {
+		display:none !important;
 	}
 }

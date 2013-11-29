@@ -80,6 +80,9 @@
 							return false;
 						submited = true;
 
+						if ($(this).attr('href').replace('#', '').replace(/\s/g, '') != '')
+							return true;
+
 						//add hidden input to emulate submit button click when posting the form -> field name posted
 						btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'" value="1" />');
 
@@ -90,6 +93,9 @@
 					if (btn_save_and_stay)
 					{
 						btn_save_and_stay.click(function() {
+							if ($(this).attr('href').replace('#', '').replace(/\s/g, '') != '')
+								return true;
+
 							//add hidden input to emulate submit button click when posting the form -> field name posted
 							btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'AndStay" value="1" />');
 

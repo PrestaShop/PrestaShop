@@ -295,7 +295,6 @@
 					</tr>
 				</table>
 			</div>
-		</div>
 		{/if}
 	</div>
 </div>
