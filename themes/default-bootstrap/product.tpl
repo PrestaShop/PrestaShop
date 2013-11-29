@@ -275,6 +275,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
             
 			{/if}-->
 		</div>
+		{if !empty($product->manufacturer_name)}<meta itemprop="brand" content="{$product->manufacturer_name}" />{/if}
 		{/if}
 
 			<!-- number of item in stock -->
