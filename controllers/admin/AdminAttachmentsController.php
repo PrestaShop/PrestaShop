@@ -92,7 +92,9 @@ class AdminAttachmentsControllerCore extends AdminController
 		if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj))
 		{
 			$link = $this->context->link->getPageLink('attachment', true, NULL, 'id_attachment='.$obj->id);
-			$size = round(filesize(_PS_DOWNLOAD_DIR_.$obj->file) / 1024);
+
+			if (file_exists(_PS_DOWNLOAD_DIR_.$obj->file))
+				$size = round(filesize(_PS_DOWNLOAD_DIR_.$obj->file) / 1024);
 		}
 
 		$this->fields_form = array(
