@@ -207,16 +207,15 @@ class CurrencyCore extends ObjectModel
 	 *
 	 * @return array Currencies
 	 */
-	public static function getCurrencies($object = false, $active = 1)
+	public static function getCurrencies($object = false, $active = true)
 	{
-		$sql = 'SELECT *
-				FROM `'._DB_PREFIX_.'currency` c
-				'.Shop::addSqlAssociation('currency', 'c').'
-				WHERE `deleted` = 0'
-					.($active == 1 ? ' AND c.`active` = 1' : '').'
-				GROUP BY c.id_currency
-				ORDER BY `name` ASC';
-		$tab = Db::getInstance()->executeS($sql);
+		$tab = Db::getInstance()->executeS('
+		SELECT *
+		FROM `'._DB_PREFIX_.'currency` c
+		'.Shop::addSqlAssociation('currency', 'c').'
+		WHERE `deleted` = 0
+		'.($active ? ' AND c.`active` = 1' : '').'
+		ORDER BY `name` ASC');
 		if ($object)
 			foreach ($tab as $key => $currency)
 				$tab[$key] = Currency::getCurrencyInstance($currency['id_currency']);
@@ -225,14 +224,12 @@ class CurrencyCore extends ObjectModel
 
 	public static function getCurrenciesByIdShop($id_shop = 0)
 	{
-		$sql = 'SELECT *
-				FROM `'._DB_PREFIX_.'currency` c
-				LEFT JOIN `'._DB_PREFIX_.'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
-				'.($id_shop != 0 ? ' WHERE cs.`id_shop` = '.(int)$id_shop : '').'
-				GROUP BY c.id_currency
-				ORDER BY `name` ASC';
-
-		return Db::getInstance()->executeS($sql);
+		return Db::getInstance()->executeS('
+		SELECT *
+		FROM `'._DB_PREFIX_.'currency` c
+		LEFT JOIN `'._DB_PREFIX_.'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
+		'.($id_shop ? ' WHERE cs.`id_shop` = '.(int)$id_shop : '').'
+		ORDER BY `name` ASC');
 	}
 
 

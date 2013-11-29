@@ -119,7 +119,6 @@ class SupplierCore extends ObjectModel
 			$query->where('s.`active` = 1');
 		$query->orderBy(' s.`name` ASC');
 		$query->limit($n, ($p - 1) * $n);
-		$query->groupBy('s.id_supplier');
 
 		$suppliers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		if ($suppliers === false)
@@ -159,10 +158,7 @@ class SupplierCore extends ObjectModel
 		$nb_suppliers = count($suppliers);
 		$rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS');
 		for ($i = 0; $i < $nb_suppliers; $i++)
-			if ($rewrite_settings)
-				$suppliers[$i]['link_rewrite'] = Tools::link_rewrite($suppliers[$i]['name']);
-			else
-				$suppliers[$i]['link_rewrite'] = 0;
+				$suppliers[$i]['link_rewrite'] = ($rewrite_settings ? Tools::link_rewrite($suppliers[$i]['name']) : 0);
 		return $suppliers;
 	}
 
