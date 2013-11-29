@@ -152,16 +152,15 @@ function doAjaxForgot() {
 	$('#error').hide();
 	$('#forgot_password_form').fadeIn('slow', function() {
 		$.ajax({
-			type: "POST",
-			headers: { "cache-control": "no-cache" },
-			url: "ajax-tab.php" + '?rand=' + new Date().getTime(),
+			type: 'POST',
+			headers: {'cache-control': 'no-cache'},
+			url: 'ajax-tab.php' + '?rand=' + new Date().getTime(),
 			async: true,
-			dataType: "json",
+			dataType: 'json',
 			data: {
-				ajax: "1",
-				token: "",
-				controller: "AdminLogin",
-				submitForgot: "1",
+				ajax: 1,
+				controller: 'AdminLogin',
+				submitForgot: 1,
 				email_forgot: $('#email_forgot').val()
 			},
 			success: function(jsonData) {
@@ -174,8 +173,7 @@ function doAjaxForgot() {
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				$('#error').html('<h3>TECHNICAL ERROR:</h3><p>Details: Error thrown: ' + XMLHttpRequest + '</p><p>Text status: ' + textStatus + '</p>').show();
-				$('#forgot_password_form').fadeOut('slow');
+				$('#error').html(XMLHttpRequest.responseText).removeClass('hide').fadeIn('slow');
 			}
 		});
 	});
