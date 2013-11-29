@@ -107,7 +107,7 @@
 		});
 
 		$('#{$id}-add-button').on('click', function() {
-			$('#{$id}-success').html('').hide();
+			$('#{$id}-success').hide();
 			$('#{$id}-errors').html('').hide();
 			{$id}_total_files = 0;
 			$('#{$id}').trigger('click');
