@@ -347,15 +347,15 @@ class AdminEmployeesControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		if (Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee'))
+		/* PrestaShop demo mode */
+		if ((Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee') || Tools::isSubmit('submitAddemployee')) && _PS_MODE_DEMO_)
 		{
-			/* PrestaShop demo mode */
-			if (_PS_MODE_DEMO_ && $id_employee = Tools::getValue('id_employee') && (int)$id_employee == _PS_DEMO_MAIN_BO_ACCOUNT_)
-			{
 				$this->errors[] = Tools::displayError('This functionality has been disabled.');
 				return;
-			}
+		}
 
+		if (Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee'))
+		{
 			if ($this->context->employee->id == Tools::getValue('id_employee'))
 			{
 				$this->errors[] = Tools::displayError('You cannot disable or delete your own account.');
