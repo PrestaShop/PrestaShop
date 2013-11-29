@@ -138,7 +138,7 @@
 								</td>
 								<td>
 									<div class="btn-group pull-right">
-										<button type="button" data-filename="{$filename|escape:'html':'UTF-8'}" class="btn btn-default">
+										<button type="button" data-filename="{$filename|escape:'html':'UTF-8'}" class="csv-use-btn btn btn-default">
 											<i class="icon-ok"></i>
 											{l s='Use'}
 										</button>
@@ -362,6 +362,7 @@
 </div>
 
 <script type="text/javascript">
+
 	function humanizeSize(bytes) {
 		if (typeof bytes !== 'number')
 			return '';
@@ -371,7 +372,7 @@
 			return (bytes / 1000000).toFixed(2) + ' MB';
 		return (bytes / 1000).toFixed(2) + ' KB';
 	}
-
+	// when user select a .csv
 	function csv_select(filename) {
 		$('#csv_selected_value').val(filename);
 		$('#csv_selected_filename').html(filename);
@@ -379,17 +380,33 @@
 		$('#csv_file_uploader').hide();
 		$('#csv_files_history').hide();
 	}
-
+	// when user unselect the .csv
 	function csv_unselect() {
 		$('#csv_file_selected').hide();
 		$('#csv_file_uploader').show();
+	}
+
+	function activeClueTip() {
+		$('.info_import').cluetip({
+			splitTitle: '|',
+			showTitle: false
+		});
+	};
+
+	// add a disabled state when empty history
+	function enableHistory(){
+		if($('.csv-history-nb').text() == 0){
+			$('button.csv-history-btn').attr('disabled','disabled');
+		} else {
+			$('button.csv-history-btn').attr('disabled',false);
+		}
 	}
 
 	$(document).ready(function() {
 
 		var file_add_button = Ladda.create( document.querySelector('#file-add-button' ));
 		var file_total_files = 0;
-
+		
 		$('#file').fileupload({
 			dataType: 'json',
 			autoUpload: true,
@@ -409,16 +426,20 @@
 							$('#file-errors').html('<strong>'+data.result.file.name+'</strong> : '+data.result.file.error).show();
 						else {
 							$(data.context).find('button').remove();
+
+							var name = encodeURIComponent(data.result.file.name);
 							var row = $('#csv_uploaded_history tr:first').clone();
+
 							$('#csv_uploaded_history').append(row);
 							row.removeClass('hide');
 							row.find('td:first').html(data.result.file.filename);
 							row.find('button.csv-use-btn').data('filename', data.result.file.filename);
-							row.find('a.csv-download-link').attr('href','{$current}&token={$token}&csvfilename='+data.result.file.name);
-							row.find('a.csv-delete-link').attr('href','{$current}&token={$token}&csvfilename='+data.result.file.name+'&delete=1');
+							row.find('a.csv-download-link').attr('href','{$current}&token={$token}&csvfilename='+name);
+							row.find('a.csv-delete-link').attr('href','{$current}&token={$token}&csvfilename='+name+'&delete=1');
 							csv_select(data.result.file.filename);
 							var items = $('#csv_uploaded_history tr').length -1;
 							$('.csv-history-nb').html(items);
+							enableHistory();
 						}
 					}
 				}
@@ -461,12 +482,11 @@
 			$('#csv_file_selected').show();
 			$('#csv_file_uploader').hide();
 		}
-	});
-</script>
 
-<script type="text/javascript">
-	$(document).ready(function(){
 		var truncateAuthorized = {$truncateAuthorized|intval};
+
+		enableHistory();
+
 		activeClueTip();
 		
 		$('#preview_import').submit(function(e) {
@@ -547,14 +567,7 @@
 			});
 		});
 
-		$("select#entity").trigger('change');
-
-		function activeClueTip() {
-			$('.info_import').cluetip({
-				splitTitle: '|',
-			    showTitle: false
-		 	});
-		};	
+		$("select#entity").trigger('change');	
 
 		$('#file-selectbutton').click(function(e){
 			$('#file').trigger('click');
