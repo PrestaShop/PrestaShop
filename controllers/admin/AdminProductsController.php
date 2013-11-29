@@ -498,18 +498,24 @@ class AdminProductsControllerCore extends AdminController
 
 			foreach ($attachment_names as $lang => $name)
 			{
+				$language = Language::getLanguage((int)$lang);
+
 				if (Tools::strlen($name) > 0)
 					$is_attachment_name_valid = true;
 
 				if (!Validate::isGenericName($name))
-					$_FILES['attachment_file']['error'][] = sprintf(Tools::displayError('Invalid name for %s language'), Language::getLanguage((int)$lang)['name']);
+					$_FILES['attachment_file']['error'][] = sprintf(Tools::displayError('Invalid name for %s language'), $language['name']);
 				elseif (Tools::strlen($name) > 32)
-					$_FILES['attachment_file']['error'][] = sprintf(Tools::displayError('The name for %1s language is too long (%2d chars max).'), Language::getLanguage((int)$lang)['name'], 32);
+					$_FILES['attachment_file']['error'][] = sprintf(Tools::displayError('The name for %1s language is too long (%2d chars max).'), $language['name'], 32);
 			}
 
 			foreach ($attachment_descriptions as $lang => $description)
+			{
+				$language = Language::getLanguage((int)$lang);
+
 				if (!Validate::isCleanHtml($description))
-					$_FILES['attachment_file']['error'][] = sprintf(Tools::displayError('Invalid description for %s language'), Language::getLanguage((int)$lang)['name']);
+					$_FILES['attachment_file']['error'][] = sprintf(Tools::displayError('Invalid description for %s language'), $language['name']);
+			}
 
 			if (!$is_attachment_name_valid)
 				$_FILES['attachment_file']['error'][] = Tools::displayError('An attachment name is required.');
