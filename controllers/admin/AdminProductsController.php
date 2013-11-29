@@ -580,101 +580,6 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
-	/**
-	 * Upload new attachment
-	 *
-	 * @return void
-	 */
-	public function processAddAttachments()
-	{
-		$languages = Language::getLanguages(false);
-		$is_attachment_name_valid = false;
-		foreach ($languages as $language)
-		{
-			$attachment_name_lang = Tools::getValue('attachment_name_'.(int)($language['id_lang']));
-			if (Tools::strlen($attachment_name_lang ) > 0)
-				$is_attachment_name_valid = true;
-
-			if (!Validate::isGenericName(Tools::getValue('attachment_name_'.(int)($language['id_lang']))))
-				$this->errors[] = Tools::displayError('Invalid Name');
-			elseif (Tools::strlen(Tools::getValue('attachment_name_'.(int)($language['id_lang']))) > 32)
-				$this->errors[] = sprintf(Tools::displayError('The name is too long (%d chars max).'), 32);
-			if (!Validate::isCleanHtml(Tools::getValue('attachment_description_'.(int)($language['id_lang']))))
-				$this->errors[] = Tools::displayError('Invalid description');
-		}
-		if (!$is_attachment_name_valid)
-			$this->errors[] = Tools::displayError('An attachment name is required.');
-
-		if (empty($this->errors))
-		{
-			if (isset($_FILES['attachment_file']) && is_uploaded_file($_FILES['attachment_file']['tmp_name']))
-			{
-				if ($_FILES['attachment_file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
-					$this->errors[] = sprintf(
-						$this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you\'re trying to upload is: %2$d kB.'),
-						(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
-						number_format(($_FILES['attachment_file']['size'] / 1024), 2, '.', '')
-					);
-				else
-				{
-					do $uniqid = sha1(microtime());
-					while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
-					if (!copy($_FILES['attachment_file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid))
-						$this->errors[] = $this->l('File copy failed');
-					@unlink($_FILES['attachment_file']['tmp_name']);
-				}
-			}
-			elseif ((int)$_FILES['attachment_file']['error'] === 1)
-			{
-				$max_upload = (int)ini_get('upload_max_filesize');
-				$max_post = (int)ini_get('post_max_size');
-				$upload_mb = min($max_upload, $max_post);
-				$this->errors[] = sprintf(
-					$this->l('The file %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.'),
-					'<b>'.$_FILES['attachment_file']['name'].'</b> ',
-					'<b>'.$upload_mb.'</b>'
-				);
-			}
-			else
-				$this->errors[] = Tools::displayError('The file is missing.');
-
-			if (empty($this->errors) && isset($uniqid))
-			{
-				$attachment = new Attachment();
-				foreach ($languages as $language)
-				{
-					if (Tools::getIsset('attachment_name_'.(int)$language['id_lang']))
-						$attachment->name[(int)$language['id_lang']] = Tools::getValue('attachment_name_'.(int)$language['id_lang']);
-					if (Tools::getIsset('attachment_description_'.(int)$language['id_lang']))
-						$attachment->description[(int)$language['id_lang']] = Tools::getValue('attachment_description_'.(int)$language['id_lang']);
-				}
-				$attachment->file = $uniqid;
-				$attachment->mime = $_FILES['attachment_file']['type'];
-				$attachment->file_name = $_FILES['attachment_file']['name'];
-				if (empty($attachment->mime) || Tools::strlen($attachment->mime) > 128)
-					$this->errors[] = Tools::displayError('Invalid file extension');
-				if (!Validate::isGenericName($attachment->file_name))
-					$this->errors[] = Tools::displayError('Invalid file name');
-				if (Tools::strlen($attachment->file_name) > 128)
-					$this->errors[] = Tools::displayError('The file name is too long.');
-				if (empty($this->errors))
-				{
-					$res = $attachment->add();
-					if (!$res)
-						$this->errors[] = Tools::displayError('This attachment was unable to be loaded into the database.');
-					else
-					{
-						$id_product = (int)Tools::getValue($this->identifier);
-						$res = $attachment->attachProduct($id_product);
-						if (!$res)
-							$this->errors[] = Tools::displayError('We were unable to associate this attachment to a product.');
-					}
-				}
-				else
-					$this->errors[] = Tools::displayError('Invalid file');
-			}
-		}
-	}
 
 	/**
 	 * Attach an existing attachment to the product
@@ -1287,18 +1192,6 @@ class AdminProductsControllerCore extends AdminController
 				$this->id_object = Tools::getValue('id_product');
 				$this->object = new Product((int)Tools::getValue('id_product'));
 			}
-		}
-		// Update attachments
-		elseif (Tools::isSubmit('submitAddAttachments'))
-		{
-			if ($this->tabAccess['add'] === '1')
-			{
-				$this->action = 'addAttachments';
-				$this->tab_display = 'attachments';
-				$this->display = 'edit';
-			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to add this.');
 		}
 		elseif (Tools::isSubmit('submitAttachments'))
 		{
@@ -3600,7 +3493,7 @@ class AdminProductsControllerCore extends AdminController
 					Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$obj->id
 					.'&action=AddAttachment')->setPostMaxSize((Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
 					->setTemplate('attachment_ajax.tpl');
-
+ 
 				$data->assign(array(
 					'obj' => $obj,
 					'table' => $this->table,
