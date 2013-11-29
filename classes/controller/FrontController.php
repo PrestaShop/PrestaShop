@@ -1165,7 +1165,7 @@ class FrontControllerCore extends Controller
 	
 	protected function addColorsToProductList(&$products)
 	{
-		if (!is_array($products) || !count($products))
+		if (!is_array($products) || !count($products) || !file_exists(_PS_THEME_DIR_.'product-list-colors.tpl'))
 			return;
 
 		$products_need_cache = array();
