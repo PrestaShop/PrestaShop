@@ -42,6 +42,9 @@
 		<meta name="robots" content="{if isset($nobots)}no{/if}index,{if isset($nofollow) && $nofollow}no{/if}follow" />
         <meta name="viewport" content="width=device-width, minimum-scale=0.25, maximum-scale=1.6, initial-scale=1.0" /> 
         <meta name="apple-mobile-web-app-capable" content="yes" /> 
+{if $page_name != 'product'}
+        <meta property="og:image" content="{$base_uri|stripslashes}{$logo_url}" />
+{/if}
         <script>
 			if (navigator.userAgent.match(/Android/i)) {
 				var viewport = document.querySelector("meta[name=viewport]");
