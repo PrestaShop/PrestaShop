@@ -360,12 +360,16 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		$helper->identifier = 'id_tax_rule';
 		$helper->id = $obj->id;
 		$helper->toolbar_scroll = true;
-		$helper->show_toolbar = false;
+		$helper->show_toolbar = true;
 		$helper->languages = $this->_languages;
 		$helper->default_form_language = $this->default_form_language;
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 		$helper->fields_value = $this->getFieldsValue($this->object);
-		$helper->toolbar_btn = null;
+		$helper->toolbar_btn['save'] = array(
+			'href' => self::$currentIndex.'&amp;id_tax_rules_group='.$obj->id.'&amp;updatetax_rules_group&amp;token='.$this->token,
+			'desc' => 'Save tax rule',
+			'class' => 'process-icon-save'
+		);
 		$helper->submit_action = 'create_rule';
 
 		return $helper->generateForm($this->fields_form);
