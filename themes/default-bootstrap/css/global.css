@@ -2405,6 +2405,64 @@ a.price_discount_delete:hover {
   background: white;
 }
 
+@media (max-width: 767px) {
+  #order-detail-content #cart_summary table, #order-detail-content #cart_summary thead, #order-detail-content #cart_summary tbody, #order-detail-content #cart_summary th, #order-detail-content #cart_summary td, #order-detail-content #cart_summary tr {
+    display: block;
+  }
+  #order-detail-content #cart_summary thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  #order-detail-content #cart_summary tr {
+    border-bottom: 1px solid #ccc;
+    overflow: hidden;
+  }
+  #order-detail-content #cart_summary td {
+    border: none;
+    position: relative;
+    width: 50%;
+    float: left;
+    white-space: normal;
+  }
+  #order-detail-content #cart_summary td.cart_avail {
+    clear: both;
+  }
+  #order-detail-content #cart_summary td.cart_quantity {
+    clear: both;
+    padding: 9px 8px 11px 18px;
+  }
+  #order-detail-content #cart_summary td.cart_delete {
+    width: 100%;
+    clear: both;
+    text-align: right;
+  }
+  #order-detail-content #cart_summary td.cart_delete:before {
+    display: inline-block;
+    padding-right: 0.5em;
+    position: relative;
+    top: -3px;
+  }
+  #order-detail-content #cart_summary td.cart_delete div {
+    display: inline;
+  }
+  #order-detail-content #cart_summary td:before {
+    content: attr(data-title);
+    display: block;
+  }
+  #order-detail-content #cart_summary tfoot td {
+    float: none;
+    width: 100%;
+  }
+  #order-detail-content #cart_summary tfoot td:before {
+    display: inline;
+  }
+  #order-detail-content #cart_summary tfoot tr .text-right, #order-detail-content #cart_summary tfoot tr .price {
+    display: block;
+    float: left;
+    width: 50%;
+  }
+}
 .cart_voucher {
   vertical-align: top !important;
 }
@@ -3450,4 +3508,11 @@ div.star.star_hover:after {
 
 .ie8 #facebook_block, .ie8 #cmsinfo_block {
   height: 344px;
+}
+
+/************************* Zoom ******************************/
+@media (max-width: 1199px) {
+  .zoomdiv {
+    display: none !important;
+  }
 }

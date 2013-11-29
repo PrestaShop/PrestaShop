@@ -555,9 +555,18 @@ padding:18px 19px 12px;
 																		} 	
 	 
     }
-	&.disabled {
+	&.added {
 		&:before {
-			content:"";	
+			content:"";	
+		}
+	}
+	&.added.disabled, &.disabled {
+		&:before {
+			content:"";
+			animation:2s linear 0s normal none infinite spin;
+			-webkit-animation:2s linear 0s normal none infinite spin;
+			-moz-animation:2s linear 0s normal none infinite spin;
+			border:none;
 		}
 	}
 	 
