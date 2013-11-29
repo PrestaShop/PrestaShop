@@ -147,14 +147,14 @@
 										</button>
 										<ul class="dropdown-menu" role="menu">
 											<li>
-												<a href="{$current}&token={$token}&csvfilename={$filename|@base64_encode}" target="_blank">
+												<a href="{$current}&token={$token}&csvfilename={$filename|@urlencode}" target="_blank">
 													<i class="icon-download"></i>
 													{l s='Download'}
 												</a>
 											</li>
 											<li class="divider"></li>
 											<li>
-												<a href="{$current}&token={$token}&csvfilename={$filename|@base64_encode}&delete=1">
+												<a href="{$current}&token={$token}&csvfilename={$filename|@urlencode}&delete=1">
 													<i class="icon-trash"></i>
 													{l s='Delete'}
 												</a>
@@ -404,7 +404,7 @@
 
 	$(document).ready(function() {
 
-		var file_add_button = Ladda.create( document.querySelector('#file-add-button' ));
+		var file_add_button = Ladda.create(document.querySelector('#file-add-button'));
 		var file_total_files = 0;
 		
 		$('#file').fileupload({
@@ -427,15 +427,16 @@
 						else {
 							$(data.context).find('button').remove();
 
-							var name = encodeURIComponent(data.result.file.name);
+							console.log(data.result.file);
+							var filename = encodeURIComponent(data.result.file.filename);
 							var row = $('#csv_uploaded_history tr:first').clone();
 
 							$('#csv_uploaded_history').append(row);
 							row.removeClass('hide');
 							row.find('td:first').html(data.result.file.filename);
 							row.find('button.csv-use-btn').data('filename', data.result.file.filename);
-							row.find('a.csv-download-link').attr('href','{$current}&token={$token}&csvfilename='+name);
-							row.find('a.csv-delete-link').attr('href','{$current}&token={$token}&csvfilename='+name+'&delete=1');
+							row.find('a.csv-download-link').attr('href','{$current}&token={$token}&csvfilename='+filename);
+							row.find('a.csv-delete-link').attr('href','{$current}&token={$token}&csvfilename='+filename+'&delete=1');
 							csv_select(data.result.file.filename);
 							var items = $('#csv_uploaded_history tr').length -1;
 							$('.csv-history-nb').html(items);
