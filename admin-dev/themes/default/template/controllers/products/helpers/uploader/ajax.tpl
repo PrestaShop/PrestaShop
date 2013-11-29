@@ -29,7 +29,7 @@
 			<i class="icon-plus-sign"></i> {if isset($multiple) && $multiple}{l s='Add files'}{else}{l s='Add file'}{/if}
 		</button>
 		<button class="ladda-button btn btn-default" data-style="expand-right" type="button" id="{$id}-upload-button" style="display:none;">
-			<i class="icon-cloud-upload"></i> <span class="ladda-label">{if isset($multiple) && $multiple}{l s='Upload files'}{else}{l s='Upload file'}{/if}</span>
+			<i class="icon-cloud-upload text-success"></i> <span class="ladda-label text-success">{if isset($multiple) && $multiple}{l s='Upload files'}{else}{l s='Upload file'}{/if}</span>
 		</button>
 	</div>
 </div>
