@@ -15,7 +15,7 @@
                 {foreach name=items from=$hookItems item=hItem}
                     <li id="item-{$hItem.id_item}" class="item panel">
                         <span class="item-order">{if $hItem.item_order le 9}0{/if}{$hItem.item_order}</span>
-                        <!--<i class="icon-sort"></i>-->
+                        {if $hItem.image}<span><img src="{$module_dir}images/{$hItem.image}" alt="" title="" class="preview" /></span>{/if}
                         <span class="item-title">{$hItem.title}</span>
                         <span class="button btn btn-default button-edit pull-right"><i class="icon-edit"></i>{l s='Edit' mod='themeconfigurator'}</span>
                         <span class="button btn btn-default button-close pull-right"><i class="icon-remove"></i>{l s='Close' mod='themeconfigurator'}</span>

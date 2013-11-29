@@ -176,8 +176,15 @@ var ajaxCart = {
 		ajaxCart.updateCart(jsonData);
 		
 		//reactive the button when adding has finished
-		if (addedFromProductPage)
+		if (addedFromProductPage) {
 			$('#add_to_cart button').removeAttr('disabled').removeClass('disabled');
+			if (!jsonData.hasError || jsonData.hasError==false) {
+				$('#add_to_cart button').addClass('added');
+			}
+			else {
+				$('#add_to_cart button').removeClass('added');
+			}
+		}
 		else
 			$('.ajax_add_to_cart_button').removeAttr('disabled');
 	},
