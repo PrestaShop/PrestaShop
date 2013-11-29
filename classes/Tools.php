@@ -676,10 +676,8 @@ class ToolsCore
 	public static function htmlentitiesDecodeUTF8($string)
 	{
 		if (is_array($string))
-		{
-			$string = array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $string);
-			return (string)array_shift($string);
-		}
+			return array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $string);
+
 		return html_entity_decode((string)$string, ENT_QUOTES, 'utf-8');
 	}
 
