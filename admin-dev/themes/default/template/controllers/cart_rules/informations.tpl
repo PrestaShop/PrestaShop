@@ -70,9 +70,9 @@
 	<div class="input-group col-lg-2">
 		<span class="switch prestashop-switch">
 			<input type="radio" name="highlight" id="highlight_on" value="1" {if $currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if}/>
-			<label class="t radio" for="highlight_on"><i class="icon-check-sign color_success"></i> {l s='Yes'}</label>
+			<label class="t" for="highlight_on"><i class="icon-check-sign color_success"></i> {l s='Yes'}</label>
 			<input type="radio" name="highlight" id="highlight_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if} />
-			<label class="t radio" for="highlight_off"><i class="icon-ban-circle color_danger"></i> {l s='No'}</label>
+			<label class="t" for="highlight_off"><i class="icon-ban-circle color_danger"></i> {l s='No'}</label>
 			<a class="slide-button btn btn-default"></a>
 		</span>
 	</div>
@@ -89,9 +89,9 @@
 	<div class="input-group col-lg-2">
 		<span class="switch prestashop-switch">
 			<input type="radio" name="partial_use" id="partial_use_on" value="1" {if $currentTab->getFieldValue($currentObject, 'partial_use')|intval}checked="checked"{/if} />
-			<label class="t radio" for="partial_use_on"><i class="icon-check-sign color_success"></i> {l s='Yes'}</label>
+			<label class="t" for="partial_use_on"><i class="icon-check-sign color_success"></i> {l s='Yes'}</label>
 			<input type="radio" name="partial_use" id="partial_use_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'partial_use')|intval}checked="checked"{/if} />
-			<label class="t radio" for="partial_use_off"><i class="icon-ban-circle color_danger"></i> {l s='No'}</label>
+			<label class="t" for="partial_use_off"><i class="icon-ban-circle color_danger"></i> {l s='No'}</label>
 			<a class="slide-button btn btn-default"></a>
 		</span>
 	</div>
@@ -114,9 +114,9 @@
 	<div class="input-group col-lg-2">
 		<span class="switch prestashop-switch">
 			<input type="radio" name="active" id="active_on" value="1" {if $currentTab->getFieldValue($currentObject, 'active')|intval}checked="checked"{/if} />
-			<label class="t radio" for="active_on"><i class="icon-check-sign color_success"></i> {l s='Yes'}</label>
+			<label class="t" for="active_on"><i class="icon-check-sign color_success"></i> {l s='Yes'}</label>
 			<input type="radio" name="active" id="active_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'active')|intval}checked="checked"{/if} />
-			<label class="t radio" for="active_off"><i class="icon-ban-circle color_danger"></i> {l s='No'}</label>
+			<label class="t" for="active_off"><i class="icon-ban-circle color_danger"></i> {l s='No'}</label>
 			<a class="slide-button btn btn-default"></a>
 		</span>
 	</div>
