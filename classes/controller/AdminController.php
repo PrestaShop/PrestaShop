@@ -1828,6 +1828,7 @@ class AdminControllerCore extends Controller
 
 		if (Tools::getValue('submitFormAjax'))
 			$this->content .= $this->context->smarty->fetch('form_submit_ajax.tpl');
+
 		if ($this->fields_form && is_array($this->fields_form))
 		{
 			if (!$this->multiple_fieldsets)
@@ -1837,9 +1838,17 @@ class AdminControllerCore extends Controller
 			if (is_array($this->fields_form_override) && !empty($this->fields_form_override))
 				$this->fields_form[0]['form']['input'][] = $this->fields_form_override;
 
+			$fields_value = $this->getFieldsValue($this->object);
+
+			Hook::exec('action'.$this->controller_name.'FormModifier', array(
+				'fields' => &$this->fields_form,
+				'fields_value' => &$fields_value,
+				'form_vars' => &$this->tpl_form_vars,
+			));
+
 			$helper = new HelperForm($this);
 			$this->setHelperDisplay($helper);
-			$helper->fields_value = $this->getFieldsValue($this->object);
+			$helper->fields_value = $fields_value;
 			$helper->tpl_vars = $this->tpl_form_vars;
 			!is_null($this->base_tpl_form) ? $helper->base_tpl = $this->base_tpl_form : '';
 			if ($this->tabAccess['view'])
@@ -1864,6 +1873,11 @@ class AdminControllerCore extends Controller
 	 */
 	public function renderOptions()
 	{
+		Hook::exec('action'.$this->controller_name.'OptionsModifier', array(
+			'options' => &$this->fields_options,
+			'option_vars' => &$this->tpl_option_vars,
+		));
+
 		if ($this->fields_options && is_array($this->fields_options))
 		{
 			if (isset($this->display) && $this->display != 'options' && $this->display != 'list')
@@ -2338,6 +2352,15 @@ class AdminControllerCore extends Controller
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
+		Hook::exec('action'.$this->controller_name.'ListingFieldsModifier', array(
+			'select' => &$this->_select,
+			'join' => &$this->_join,
+			'where' => &$this->_where,
+			'group_by' => &$this->_groupBy,
+			'order_by' => &$this->_orderBy,
+			'order_way' => &$this->_orderWay,
+			'fields' => &$this->fields_list,
+		));
 
 		if (!isset($this->list_id))
 			$this->list_id = $this->table;
@@ -2521,6 +2544,12 @@ class AdminControllerCore extends Controller
 			$this->_list_error = Db::getInstance()->getMsgError();
 		else
 			$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
+
+		Hook::exec('action'.$this->controller_name.'ListingResultsModifier', array(
+			'list' => &$this->_list,
+			'list_total' => &$this->_listTotal,
+		));
+
 	}
 	
 	public function getModulesList($filter_modules_list)
