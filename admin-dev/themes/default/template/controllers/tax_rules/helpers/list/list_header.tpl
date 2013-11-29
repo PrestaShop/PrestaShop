@@ -75,6 +75,8 @@
 								<i class="icon-eraser"></i> {l s='Reset'}
 							</button>
 						</th>
+					{else}
+						<th class="actions text-right"></th>
 					{/if}
 				</tr>
 				</thead>
