@@ -162,7 +162,7 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		parent::initPageHeaderToolbar();
 
-		if ($this->display != 'add')
+		if ($this->display != 'edit' && $this->display != 'add')
 			$this->page_header_toolbar_btn['new_category'] = array(
 				'href' => self::$currentIndex.'&amp;addcategory&amp;token='.$this->token,
 				'desc' => $this->l('Add new category'),
