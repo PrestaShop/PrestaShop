@@ -162,22 +162,14 @@ class ManufacturerCore extends ObjectModel
 		if (!Group::isFeatureActive())
 			$all_group = true;
 
-		$sql = 'SELECT m.*, ml.`description`, ml.`short_description`
-			FROM `'._DB_PREFIX_.'manufacturer` m
-			LEFT JOIN `'._DB_PREFIX_.'manufacturer_lang` ml ON (
-				m.`id_manufacturer` = ml.`id_manufacturer`
-				AND ml.`id_lang` = '.(int)$id_lang.'
-			)
-			'.Shop::addSqlAssociation('manufacturer', 'm');
-			if ($active)
-				$sql .= '
-			WHERE m.`active` = 1';
-			$sql .= '
-			GROUP BY m.id_manufacturer
-			ORDER BY m.`name` ASC'.
-			($p ? ' LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n : '');
-
-		$manufacturers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+		$manufacturers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT m.*, ml.`description`, ml.`short_description`
+		FROM `'._DB_PREFIX_.'manufacturer` m
+		'.Shop::addSqlAssociation('manufacturer', 'm').'
+		INNER JOIN `'._DB_PREFIX_.'manufacturer_lang` ml ON (m.`id_manufacturer` = ml.`id_manufacturer` AND ml.`id_lang` = '.(int)$id_lang.')
+		'.($active ? 'WHERE m.`active` = 1' : '').'
+		ORDER BY m.`name` ASC
+		'.($p ? ' LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n : ''));
 		if ($manufacturers === false)
 			return false;
 
@@ -192,35 +184,26 @@ class ManufacturerCore extends ObjectModel
 
 			foreach ($manufacturers as $key => $manufacturer)
 			{
-				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-					'SELECT p.`id_product`
-					FROM `'._DB_PREFIX_.'product` p
-					'.Shop::addSqlAssociation('product', 'p').'
-					LEFT JOIN `'._DB_PREFIX_.'manufacturer` as m ON (m.`id_manufacturer`= p.`id_manufacturer`)
-					WHERE m.`id_manufacturer` = '.(int)$manufacturer['id_manufacturer'].
-					($active ? ' AND product_shop.`active` = 1 ' : '').
-					' AND product_shop.`visibility` NOT IN ("none")'.
-					($all_group ? '' : ' AND p.`id_product` IN (
-						SELECT cp.`id_product`
-						FROM `'._DB_PREFIX_.'category_group` cg
-						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-						WHERE cg.`id_group` '.$sql_groups.'
-					)')
-				);
-
-				$manufacturers[$key]['nb_products'] = count($result);
+				$manufacturers[$key]['nb_products'] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT COUNT(DISTINCT p.`id_product`)
+				FROM `'._DB_PREFIX_.'product` p
+				'.Shop::addSqlAssociation('product', 'p').'
+				WHERE p.`id_manufacturer` = '.(int)$manufacturer['id_manufacturer'].'
+				AND product_shop.`visibility` NOT IN ("none")
+				'.($active ? ' AND product_shop.`active` = 1 ' : '').'
+				'.($all_group ? '' : ' AND p.`id_product` IN (
+					SELECT cp.`id_product`
+					FROM `'._DB_PREFIX_.'category_group` cg
+					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+					WHERE cg.`id_group` '.$sql_groups.'
+				)'));
 			}
 		}
 
 		$total_manufacturers = count($manufacturers);
 		$rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS');
-
 		for ($i = 0; $i < $total_manufacturers; $i++)
-			if ($rewrite_settings)
-				$manufacturers[$i]['link_rewrite'] = Tools::link_rewrite($manufacturers[$i]['name']);
-			else
-				$manufacturers[$i]['link_rewrite'] = 0;
-
+			$manufacturers[$i]['link_rewrite'] = ($rewrite_settings ? Tools::link_rewrite($manufacturers[$i]['name']) : 0);
 		return $manufacturers;
 	}
 
