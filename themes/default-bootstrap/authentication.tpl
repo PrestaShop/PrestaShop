@@ -82,9 +82,6 @@ $(document).ready(function() {
 	<script type="text/javascript">
 	{literal}
 	$(document).ready(function(){
-		// Retrocompatibility with 1.4
-		if (typeof baseUri === "undefined" && typeof baseDir !== "undefined")
-		baseUri = baseDir;
 		$('#create-account_form').submit(function(){
 			submitFunction();
 			return false;
