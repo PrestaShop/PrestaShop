@@ -66,7 +66,7 @@ class ParentOrderControllerCore extends FrontController
 			
 		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 && Dispatcher::getInstance()->getController() != 'orderopc')
 		{
-			if (isset($_GET['step']) && $_GET['step'] == 3)
+			if (Tools::getIsset('step') && Tools::getValue('step') == 3)
 				Tools::redirect('index.php?controller=order-opc&isPaymentStep=true');
 			Tools::redirect('index.php?controller=order-opc');
 		}
@@ -210,10 +210,10 @@ class ParentOrderControllerCore extends FrontController
 		$this->context->cart->gift = (int)(Tools::getValue('gift'));
 		if ((int)(Tools::getValue('gift')))
 		{
-			if (!Validate::isMessage($_POST['gift_message']))
+			if (!Validate::isMessage(Tools::getValue('gift_message'))
 				$this->errors[] = Tools::displayError('Invalid gift message.');
 			else
-				$this->context->cart->gift_message = strip_tags($_POST['gift_message']);
+				$this->context->cart->gift_message = strip_tags(Tools::getValue('gift_message'));
 		}
 
 		if (isset($this->context->customer->id) && $this->context->customer->id)
