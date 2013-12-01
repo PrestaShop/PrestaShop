@@ -2828,14 +2828,18 @@ class AdminControllerCore extends Controller
 			}
 
 		/* Multilingual fields */
-		$rules = call_user_func(array(get_class($object), 'getValidationRules'), get_class($object));
-		if (count($rules['validateLang']))
-		{
-			$languages = Language::getLanguages(false);
-			foreach ($languages as $language)
-				foreach (array_keys($rules['validateLang']) as $field)
-					if (isset($_POST[$field.'_'.(int)$language['id_lang']]))
+		$languages = Language::getLanguages(false);
+		$class = get_class($object);
+		$fields = $class::$definition['fields'];
+
+		foreach ($fields as $field => $params) {
+			if (array_key_exists('lang', $params) && $params['lang']) {
+				foreach ($languages as $language) {
+					if (isset($_POST[$field.'_'.(int)$language['id_lang']])) {
 						$object->{$field}[(int)$language['id_lang']] = $_POST[$field.'_'.(int)$language['id_lang']];
+					}
+				}
+			}
 		}
 	}
 
