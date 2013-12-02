@@ -18,7 +18,6 @@ body
 	padding: 36px 0 60px
 	margin: 0 0 -60px 0
 	background-color: $bg-content-color
-	//background-image: url('../img/patterns/bedge_grunge.png') // texture
 
 #content.bootstrap
 	padding: 80px 10px 0
@@ -113,8 +112,8 @@ body.display-modal
 		.panel-footer
 			margin: 15px -20px -20px
 			height: 73px
-			.btn.pull-right
-				margin-left: 3px
+			.btn.pull-right:not(:first-child)
+				margin-left: 5px
 #header
 	.panel-footer
 		margin: 15px 0 0!important
