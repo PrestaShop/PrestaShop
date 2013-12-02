@@ -136,7 +136,7 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	 * Move translations files after editiing language iso code
+	 * Move translations files after editing language iso code
 	 */
 	public function moveToIso($newIso)
 	{
