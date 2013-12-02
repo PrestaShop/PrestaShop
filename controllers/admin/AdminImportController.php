@@ -3030,9 +3030,8 @@ class AdminImportControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 			return;
 		}
-		/* PrestaShop demo mode*/
 
-		if (Tools::getValue('import'))
+		if (Tools::getValue('submitImportFile'))
 		{
 			// Check if the CSV file exist
 			if (Tools::getValue('csv'))
