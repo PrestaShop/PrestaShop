@@ -77,7 +77,7 @@
 							</td>
 							<td>
 								{assign var="module_name" value=$module->name}
-								<select name="t_{$module->name}" multiple="multiple">
+								<select name="t_{$module->name}" multiple="multiple" class="chosen moduleTabPreferencesChoise">
 									{foreach $tabs AS $t}
 										{if $t.active}
 											<option {if isset($tab_modules_preferences.$module_name) && in_array($t.id_tab, $tab_modules_preferences.$module_name)} selected="selected" {/if} class="group" value="{$t.id_tab}">{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}</option>
