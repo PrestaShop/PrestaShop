@@ -96,6 +96,13 @@ img {
 #pb-right-column #image-block #view_full_size .span_link:hover:after {
   color: #333333;
 }
+#pb-right-column #image-block a.jqzoom div div img {
+  width: auto;
+  max-width: 10000px;
+}
+#pb-right-column #image-block a.jqzoom div div .zoomWrapper {
+  border: none;
+}
 
 .ie8 #pb-right-column #image-block #view_full_size .span_link {
   background: #fff;
@@ -145,7 +152,7 @@ img {
   width: 90px;
   cursor: pointer;
   border: 1px solid #dbdbdb;
-  margin-right: 9px;
+  margin-right: 8px;
   line-height: 0;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
