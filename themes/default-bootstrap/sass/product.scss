@@ -46,7 +46,6 @@ img{
 
 /* pb-right-column ***************************************************************************** */
 #pb-right-column {
-	margin-bottom:15px;
 
 	#image-block {
 		position:relative;
@@ -93,6 +92,17 @@ img{
 				}
 				
 			&:hover:after{color:$base-text-color}
+		}
+	}
+	a.jqzoom {
+		div div {
+			img {
+				width:auto;
+				max-width:10000px;
+			}
+			.zoomWrapper {
+				border:none;	
+			}
 		}
 	}
 }
@@ -152,7 +162,7 @@ img{
 		width:90px;
 		cursor:pointer;
 		border:1px solid $product-image-border;
-		margin-right:9px;
+		margin-right:8px;
 		line-height:0;
 		@include box-sizing(border-box);
 																		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { //min 768px max 991px
@@ -713,7 +723,6 @@ table.table-produst-discounts{
 
 /* quantity_wanted */
 #quantity_wanted_p{
-	width:100%;
 
 	input {
 		width:78px;

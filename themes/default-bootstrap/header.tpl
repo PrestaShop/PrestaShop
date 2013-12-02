@@ -208,15 +208,12 @@
                         {include file="$tpl_dir./breadcrumb.tpl"}
                     {/if}
                     <div class="row">
-						{assign var='left_column' value=0}{assign var='right_column' value=0}
-						{if isset($HOOK_LEFT_COLUMN) && $HOOK_LEFT_COLUMN|trim && !$hide_left_column}{$left_column=3}{/if}
-						{if isset($HOOK_RIGHT_COLUMN) && $HOOK_RIGHT_COLUMN|trim && !$hide_right_column}{$right_column=3}{/if}
-						{if isset($left_column) && !empty($left_column)}
+						{if isset($left_column_size) && !empty($left_column_size)}
 						<!-- Left -->
                         <div id="left_column" class="column col-xs-12 col-sm-3">
 							{$HOOK_LEFT_COLUMN}
                         </div>
 						{/if}
                     	<!-- Center -->
-                    	<div id="center_column" class="center_column col-xs-12 col-sm-{12 - $left_column - $right_column}">
+                    	<div id="center_column" class="center_column col-xs-12 col-sm-{12 - $left_column_size - $right_column_size}">
 	{/if}

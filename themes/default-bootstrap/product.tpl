@@ -186,7 +186,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
    <div id="pb-right-column" class="col-xs-12 col-sm-4 col-md-5">
 		<!-- product img-->        
         
-		<div id="image-block">
+		<div id="image-block" class="clearfix">
 
                        
       	{if $product->on_sale}
@@ -197,9 +197,14 @@ var contentOnly = {if $content_only}true{else}false{/if}
         
 		{if $have_image}
 			<span id="view_full_size">
-				<img itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html'}"{if $jqZoomEnabled && $have_image} class="jqzoom"{/if} title="{if !empty($cover.legend)}{$cover.legend|escape:'html'}{else}{$product->name|escape:'html'}{/if}" alt="{if !empty($cover.legend)}{$cover.legend|escape:'html'}{else}{$product->name|escape:'html'}{/if}" id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}"/>
-				{if !$content_only}<span class="span_link">{l s='View larger'}</span>{/if}
-	
+				{if $jqZoomEnabled && $have_image && !$content_only}
+                <a class="jqzoom" title="{if !empty($cover.legend)}{$cover.legend|escape:'html'}{else}{$product->name|escape:'html'}{/if}" rel="gal1" href="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')|escape:'html'}">
+                	<img itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html'}" title="{if !empty($cover.legend)}{$cover.legend|escape:'html'}{else}{$product->name|escape:'html'}{/if}" alt="{if !empty($cover.legend)}{$cover.legend|escape:'html'}{else}{$product->name|escape:'html'}{/if}"/>
+                </a>
+                {else}
+                	<img itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html'}" title="{if !empty($cover.legend)}{$cover.legend|escape:'html'}{else}{$product->name|escape:'html'}{/if}" alt="{if !empty($cover.legend)}{$cover.legend|escape:'html'}{else}{$product->name|escape:'html'}{/if}" id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}"/>
+					{if !$content_only}<span class="span_link">{l s='View larger'}</span>{/if}
+                {/if}
 			</span>
 		{else}
 			<span id="view_full_size">
@@ -223,7 +228,7 @@ var contentOnly = {if $content_only}true{else}false{/if}
 						{assign var=imageTitlte value=$product->name|escape:'html'}
 					{/if}
 					<li id="thumbnail_{$image.id_image}"{if $smarty.foreach.thumbnails.last} class="last"{/if}>
-						<a href="{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html'}" rel="other-views" class="thickbox{if $smarty.foreach.thumbnails.first} shown{/if}" title="{$imageTitlte}">
+						<a {if $jqZoomEnabled && $have_image && !$content_only} href="javascript:void(0);" rel="{literal}{{/literal}gallery: 'gal1', smallimage: '{$link->getImageLink($product->link_rewrite, $imageIds, 'large_default')|escape:'html'}',largeimage: '{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html'}'{literal}}{/literal}" {else} href="{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html'}" rel="other-views" class="thickbox{if $smarty.foreach.thumbnails.first} shown{/if}"{/if} title="{$imageTitlte}">
 							<img class="img-responsive" id="thumb_{$image.id_image}" src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')|escape:'html'}" alt="{$imageTitlte}" title="{$imageTitlte}" height="{$mediumSize.height}" width="{$mediumSize.width}" itemprop="image" />
 						</a>
 					</li>
@@ -439,7 +444,8 @@ var contentOnly = {if $content_only}true{else}false{/if}
        
 				{if isset($groups)}
 				<!-- attributes -->
-				<div id="attributes" class="clearfix">
+				<div id="attributes">
+				<div class="clear"></div>
 				{foreach from=$groups key=id_attribute_group item=group}
 					{if $group.attributes|@count}
 						<fieldset class="attribute_fieldset">

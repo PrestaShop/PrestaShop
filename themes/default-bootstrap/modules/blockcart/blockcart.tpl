@@ -81,7 +81,7 @@ var generated_date = {$smarty.now|intval};
                 </a>
                 <div class="cart-info">
                 	<div class="product-name">
-                   		<a class="cart_block_product_name" href="{$link->getProductLink($product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'html'}" title="{$product.name|escape:html:'UTF-8'}">{$product.name|truncate:150:'...'|escape:html:'UTF-8'}</a>
+                   		<a class="cart_block_product_name" href="{$link->getProductLink($product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'html'}" title="{$product.name|escape:html:'UTF-8'}">{$product.name|truncate:40:'...'|escape:html:'UTF-8'}</a>
                     </div>
                     {if isset($product.attributes_small)}
                     	<div class="product-atributes">
