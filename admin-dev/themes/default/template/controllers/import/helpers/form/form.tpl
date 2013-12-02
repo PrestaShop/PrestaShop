@@ -309,11 +309,12 @@
 			<p>{l s='* Required field'}</p>
 		</div>
 		<div class="panel">
-			<a href="#" onclick="$('#sample_files_import').slideToggle(); return false;">
-				<i class="icon-info-sign"></i> {l s='Click to view our sample import csv files.'}
-			</a>
-
-			<div id="sample_files_import" class="list-group" style="display:none">
+			<div class="panel-heading">
+				<i class="icon-info-sign"></i>
+				{l s='Download sample csv files.'}
+			</div>
+			
+			<div class="list-group">
 				<a class="list-group-item" href="../docs/csv_import/categories_import.csv" target="_blank">
 					<i class="icon-download"></i>
 					{l s='Sample Categories file'}
