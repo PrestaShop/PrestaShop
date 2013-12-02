@@ -24,7 +24,7 @@
 *}
 
 {if $show_toolbar}
-<div class="panel-footer">
+<div class="panel-footer" id="toolbar-footer">
 	{foreach from=$toolbar_btn item=btn key=k}
 		{if $k != 'modules-list'}
 			<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="btn btn-default{if $k=='save' || $k=='save-and-stay'} pull-right{/if}" {if isset($btn.href)}href="{$btn.href}"{/if} {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
