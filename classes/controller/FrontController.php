@@ -855,7 +855,7 @@ class FrontControllerCore extends Controller
 		elseif (!$this->context)
 			$this->context = Context::getContext();
 
-		$nArray = (int)Configuration::get('PS_PRODUCTS_PER_PAGE') != 10 ? array((int)Configuration::get('PS_PRODUCTS_PER_PAGE'), 10, 20, 50) : array(10, 20, 50);
+		$nArray = (int)Configuration::get('PS_PRODUCTS_PER_PAGE') != 10 ? array((int)Configuration::get('PS_PRODUCTS_PER_PAGE'), (int)Configuration::get('PS_PRODUCTS_PER_PAGE')*2, (int)Configuration::get('PS_PRODUCTS_PER_PAGE')*4) : array(10, 20, 50);
 		// Clean duplicate values
 		$nArray = array_unique($nArray);
 		asort($nArray);
