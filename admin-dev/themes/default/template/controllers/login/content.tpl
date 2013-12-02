@@ -78,9 +78,6 @@
 							</div>
 						</div>
 						<div class="form-group">
-								<a href="#" class="show-forgot-password pull-right" >
-									{l s='Lost password'}
-								</a>
 							<label class="control-label" for="passwd">
 								{l s='Password'}
 							</label>
@@ -96,15 +93,17 @@
 									placeholder="{l s='Password'}" />
 							</div>
 						</div>
-						<div class="form-group">
-							<div class="checkbox">
+						<div class="form-group clearfix">
+							<div id="remind-me" class="checkbox pull-left">
 								<label for="stay_logged_in">
 									<input name="stay_logged_in" type="checkbox" id="stay_logged_in" value="1"	tabindex="3"/>
 									{l s='Keep me logged in'}
 								</label>
 							</div>
+							<a href="#" class="show-forgot-password pull-right" >
+								{l s='Lost password'}
+							</a>
 						</div>
-						<hr/>
 						<div class="panel-footer">
 							<button name="submitLogin" type="submit" tabindex="4" class="btn btn-default btn-lg btn-block ladda-button" data-style="slide-up" data-spinner-color="black" >
 								<span class="ladda-label">
