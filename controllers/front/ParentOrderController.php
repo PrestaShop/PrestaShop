@@ -210,7 +210,7 @@ class ParentOrderControllerCore extends FrontController
 		$this->context->cart->gift = (int)(Tools::getValue('gift'));
 		if ((int)(Tools::getValue('gift')))
 		{
-			if (!Validate::isMessage(Tools::getValue('gift_message'))
+			if (!Validate::isMessage(Tools::getValue('gift_message')))
 				$this->errors[] = Tools::displayError('Invalid gift message.');
 			else
 				$this->context->cart->gift_message = strip_tags(Tools::getValue('gift_message'));
