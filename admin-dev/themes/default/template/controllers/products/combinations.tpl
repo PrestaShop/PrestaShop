@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($product->id) && !$product->is_virtual}
-<div class="panel">
+<div id="product-combinations" class="panel product-tab">
 	<script type="text/javascript">
 		var msg_combination_1 = '{l s='Please choose an attribute.'}';
 		var msg_combination_2 = '{l s='Please choose a value.'}';

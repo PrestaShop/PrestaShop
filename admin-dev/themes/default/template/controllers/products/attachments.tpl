@@ -24,7 +24,7 @@
 *}
 
 {if isset($obj->id)}
-<div class="panel">
+<div id="product-attachements" class="panel product-tab">
 	<input type="hidden" name="submitted_tabs[]" value="Attachments" />
 	<h3>{l s='Attachment'}</h3>
 

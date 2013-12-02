@@ -28,7 +28,7 @@
 	{assign var=class_input_ajax value=''}
 {/if}
 
-<div class="panel">
+<div id="product-informations" class="panel product-tab">
 	<input type="hidden" name="submitted_tabs[]" value="Informations" />
 	<h3 class="tab">{l s='Information'}</h3>
 	<script type="text/javascript">

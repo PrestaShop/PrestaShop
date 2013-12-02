@@ -24,7 +24,7 @@
 *}
 
 {if isset($product->id)}
-	<div class="panel">
+	<div id="product-quantities" class="panel product-tab">
 		<input type="hidden" name="submitted_tabs[]" value="Quantities" />
 		<h3>{l s='Available quantities for sale'}</h3>
 		{if !$ps_stock_management}
