@@ -48,12 +48,14 @@ class Dashtrends extends Module
 
 	public function install()
 	{
-		if (!parent::install() || !$this->registerHook('dashboardZoneTwo') || !$this->registerHook('dashboardData') || !$this->registerHook('displayBackOfficeHeader'))
-			return false;
-		return true;
+		return (parent::install()
+			&& $this->registerHook('dashboardZoneTwo')
+			&& $this->registerHook('dashboardData')
+			&& $this->registerHook('actionAdminControllerSetMedia')
+		);
 	}
 	
-	public function hookDisplayBackOfficeHeader()
+	public function hookActionAdminControllerSetMedia()
 	{
 		if (get_class($this->context->controller) == 'AdminDashboardController')
 			$this->context->controller->addJs($this->_path.'views/js/'.$this->name.'.js');

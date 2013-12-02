@@ -50,21 +50,19 @@ class Dashactivity extends Module
 		Configuration::updateValue('DASHACTIVITY_CART_ABANDONED_MAX', 48);
 		Configuration::updateValue('DASHACTIVITY_VISITOR_ONLINE', 24);
 		
-		if (!parent::install() 
-			|| !$this->registerHook('dashboardZoneOne') 
-			|| !$this->registerHook('dashboardData')
-			|| !$this->registerHook('actionObjectOrderAddAfter')
-			|| !$this->registerHook('actionObjectCustomerAddAfter')
-			|| !$this->registerHook('actionObjectCustomerMessageAddAfter')
-			|| !$this->registerHook('actionObjectCustomerThreadAddAfter')
-			|| !$this->registerHook('actionObjectOrderReturnAddAfter')
-			|| !$this->registerHook('displayBackOfficeHeader')
-		)
-			return false;
-		return true;
+		return (parent::install() 
+			&& $this->registerHook('dashboardZoneOne') 
+			&& $this->registerHook('dashboardData')
+			&& $this->registerHook('actionObjectOrderAddAfter')
+			&& $this->registerHook('actionObjectCustomerAddAfter')
+			&& $this->registerHook('actionObjectCustomerMessageAddAfter')
+			&& $this->registerHook('actionObjectCustomerThreadAddAfter')
+			&& $this->registerHook('actionObjectOrderReturnAddAfter')
+			&& $this->registerHook('actionAdminControllerSetMedia')
+		);
 	}
 	
-	public function hookDisplayBackOfficeHeader()
+	public function hookActionAdminControllerSetMedia()
 	{
 		if (get_class($this->context->controller) == 'AdminDashboardController')
 		{
@@ -78,20 +76,20 @@ class Dashactivity extends Module
 
 	public function hookDashboardZoneOne($params)
 	{
+		$gapi_mode = 'configure';
 		if (!Module::isInstalled('gapi'))
 			$gapi_mode = 'install';
 		elseif (($gapi = Module::getInstanceByName('gapi')) && Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 			$gapi_mode = false;
-		else
-			$gapi_mode = 'configure';
 
-		$this->context->smarty->assign(array_merge(array(
+		$this->context->smarty->assign($this->getConfigFieldsValues());
+		$this->context->smarty->assign(array(
 			'gapi_mode' => $gapi_mode,
 			'dashactivity_config_form' => $this->renderConfigForm(),
 			'date_subtitle' => $this->l('(from %s to %s)'),
 			'date_format' => $this->context->language->date_format_lite,
 			'link' => $this->context->link,
-		), $this->getConfigFieldsValues()));
+		));
 		return $this->display(__FILE__, 'dashboard_zone_one.tpl');
 	}
 	
