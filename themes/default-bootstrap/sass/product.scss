@@ -94,6 +94,17 @@ img{
 			&:hover:after{color:$base-text-color}
 		}
 	}
+	a.jqzoom {
+		div div {
+			img {
+				width:auto;
+				max-width:10000px;
+			}
+			.zoomWrapper {
+				border:none;	
+			}
+		}
+	}
 }
 }
 .ie8 #pb-right-column {
@@ -151,7 +162,7 @@ img{
 		width:90px;
 		cursor:pointer;
 		border:1px solid $product-image-border;
-		margin-right:9px;
+		margin-right:8px;
 		line-height:0;
 		@include box-sizing(border-box);
 																		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { //min 768px max 991px
