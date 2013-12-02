@@ -491,7 +491,10 @@ function refreshProductImages(id_product_attribute)
 		$('#thumbs_list li').hide();
 		$('#thumbs_list').trigger('goto', 0);
 		for (var i = 0; i < combinationImages[id_product_attribute].length; i++)
-			$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show();
+			if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
+				$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show().children('a.shown').trigger('click');
+			else
+				$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show();
 		if (parseInt($('#thumbs_list_frame >li:visible').length) < parseInt($('#thumbs_list_frame >li').length))
 			$('#wrapResetImages').show('slow');
 		else
@@ -543,12 +546,13 @@ $(document).ready(function()
 	//set jqZoom parameters if needed
 	if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
 	{
-		$('#bigpic').attr('rel', $('#bigpic').attr('src').replace('large', 'thickbox'));
-		$('img.jqzoom').jqueryzoom({
-			xzoom: 600, //zooming div default width(default width value is 200)
-			yzoom: 600, //zooming div default width(default height value is 200)
-			offset: 21 //zooming div default offset(default offset value is 10)
-			//position: "right" //zooming div position(default position value is "right")
+		$('.jqzoom').jqzoom({
+			zoomType: 'innerzoom', //innerzoom/standard/reverse/drag
+			zoomWidth: 458, //zooming div default width(default width value is 200)
+			zoomHeight: 458, //zooming div default width(default height value is 200)
+			xOffset: 21, //zooming div default offset(default offset value is 10)
+			yOffset: 0,
+			title: false
 		});
 	}
 	//add a link on the span 'view full size' and on the big image
