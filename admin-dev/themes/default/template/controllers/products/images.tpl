@@ -24,7 +24,7 @@
 *}
 
 {if isset($id_product) && isset($product)}
-<div class="panel">
+<div id="product-images" class="panel product-tab">
 <input type="hidden" name="submitted_tabs[]" value="Images" />
 	
 <h3 class="tab" >

@@ -103,7 +103,7 @@ $(document).ready(function () {
 	Customer.init();
 });
 </script>
-<div class="panel">
+<div id="product-prices" class="panel product-tab">
 	<input type="hidden" name="submitted_tabs[]" value="Prices" />
 	<h3>{l s='Product price'}</h3>
 
