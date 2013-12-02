@@ -95,6 +95,7 @@
 			{l s='Column'} <span id="missing_column">&nbsp;</span> {l s='must be set'}
 		</div>
 		<form action="{$current}&token={$token}" method="post" id="import_form" name="import_form" class="form-horizontal">
+			<input type="hidden" name="submitImportFile" value="1" />
 			<input type="hidden" name="csv" value="{$fields_value.csv}" />
 			<input type="hidden" name="convert" value="{$fields_value.convert}" />
 			<input type="hidden" name="regenerate" value="{$fields_value.regenerate}" />
