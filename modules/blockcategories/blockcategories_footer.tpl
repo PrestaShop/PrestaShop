@@ -23,8 +23,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<!-- Block categories module -->
 <div class="blockcategories_footer">
+<!-- Block categories module -->
 	<h4 class="title_block">{l s='Categories' mod='blockcategories'}</h4>
 <div class="category_footer" style="float:left;clear:none;width:{$widthColumn}%">
 	<div style="float:left" class="list">
@@ -51,5 +51,5 @@
 	</div>
 </div>
 <br class="clear"/>
-</div>
 <!-- /Block categories module -->
+</div>
