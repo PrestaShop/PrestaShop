@@ -3062,10 +3062,6 @@ class CartCore extends ObjectModel
 	 */
 	public function addTextFieldToProduct($id_product, $index, $type, $text_value)
 	{
-		if (!_PS_MAGIC_QUOTES_GPC_){
-			$text_value = str_replace('\\', '\\\\', $text_value);
-			$text_value = str_replace('\'', '\\\'', $text_value);
-		}
 		return $this->_addCustomization($id_product, 0, $index, $type, $text_value, 0);
 	}
 
