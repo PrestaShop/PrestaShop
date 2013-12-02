@@ -92,7 +92,8 @@ class CompareControllerCore extends FrontController
 		elseif (isset($this->context->cookie->id_compare))
 		{
 			$ids = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
-			Tools::redirect($this->context->link->getPageLink('products-comparison', null, $this->context->language->id, array('compare_product_list' => implode('|', $ids))));
+			if (count($ids))
+				Tools::redirect($this->context->link->getPageLink('products-comparison', null, $this->context->language->id, array('compare_product_list' => implode('|', $ids))));
 		}
 
 		if ($ids)
