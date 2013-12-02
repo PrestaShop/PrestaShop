@@ -3082,13 +3082,14 @@ a.link-social:hover { text-decoration: none; }
 
 #login-panel { margin: 0 auto; width: 420px; }
 #login-panel .panel, #login-panel #header_notifs_icon_wrapper .notifs_panel, #header_notifs_icon_wrapper #login-panel .notifs_panel, #login-panel .bootstrap #dash_version, .bootstrap #login-panel #dash_version { -webkit-box-shadow: rgba(255, 255, 255, 0.45) 0 0 0 6px; box-shadow: rgba(255, 255, 255, 0.45) 0 0 0 6px; }
-#login-panel .panel-footer, #login-panel #header_notifs_icon_wrapper .notifs_panel .notifs_panel_footer, #header_notifs_icon_wrapper .notifs_panel #login-panel .notifs_panel_footer { margin: 0 -20px -20px; }
+#login-panel .panel-footer, #login-panel #header_notifs_icon_wrapper .notifs_panel .notifs_panel_footer, #header_notifs_icon_wrapper .notifs_panel #login-panel .notifs_panel_footer { height: inherit; margin: 0 -20px -20px; }
 #login-panel .flip-container { -webkit-perspective: 1000px; -moz-perspective: 1000px; perspective: 1000px; height: 370px; }
 #login-panel .flip-container.flip .flipper { -webkit-transform: rotateY(180deg); -ms-transform: rotateY(180deg); transform: rotateY(180deg); }
 #login-panel .flipper { -webkit-transition-duration: 0.6s; transition-duration: 0.6s; -webkit-transform-style: preserve-3d; -moz-transform-style: preserve-3d; -ms-transform-style: preserve-3d; -o-transform-style: preserve-3d; transform-style: preserve-3d; position: relative; }
 #login-panel .front, #login-panel .back { -webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; backface-visibility: hidden; width: 420px; padding: 20px; position: absolute; top: 0; left: 0; }
 #login-panel .front { z-index: 2; }
 #login-panel .back { -webkit-transform: rotateY(180deg); -ms-transform: rotateY(180deg); transform: rotateY(180deg); }
+#login-panel #remind-me { margin-top: 0; }
 
 #login-footer a { color: #a0aab5; }
 
