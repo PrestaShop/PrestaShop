@@ -94,7 +94,7 @@
 				</td>
 				<td>
 					<div class="btn-group-action">
-						<div class="btn-group">
+						<div class="btn-group pull-right">
 							{if isset($module->type) && $module->type == 'addonsMustHave'}
 								<a class="btn btn-default" href="{$module->addons_buy_url}" target="_blank">
 									<i class="icon-shopping-cart"></i> &nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}

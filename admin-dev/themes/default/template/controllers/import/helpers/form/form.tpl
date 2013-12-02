@@ -310,50 +310,40 @@
 		</div>
 		<div class="panel">
 			<div class="panel-heading">
-				<i class="icon-info-sign"></i>
-				{l s='Download sample csv files.'}
+				<i class="icon-download"></i>
+				{l s='Download sample csv files'}
 			</div>
 			
 			<div class="list-group">
 				<a class="list-group-item" href="../docs/csv_import/categories_import.csv" target="_blank">
-					<i class="icon-download"></i>
 					{l s='Sample Categories file'}
 				</a>
 				<a class="list-group-item" href="../docs/csv_import/products_import.csv" target="_blank">
-					<i class="icon-download"></i>
 					{l s='Sample Products file'}
 				</a>
 				<a class="list-group-item" href="../docs/csv_import/combinations_import.csv" target="_blank">
-					<i class="icon-download"></i>
 					{l s='Sample Combinations file'}
 				</a>
 				<a class="list-group-item" href="../docs/csv_import/customers_import.csv" target="_blank">
-					<i class="icon-download"></i>
 					{l s='Sample Customers file'}
 				</a>
 				<a class="list-group-item" href="../docs/csv_import/addresses_import.csv" target="_blank">
-					<i class="icon-download"></i>
 					{l s='Sample Addresses file'}
 				</a>
 				<a class="list-group-item" href="../docs/csv_import/manufacturers_import.csv" target="_blank">
-					<i class="icon-download"></i>
 					{l s='Sample Manufacturers file'}
 				</a>
 				<a class="list-group-item" href="../docs/csv_import/suppliers_import.csv" target="_blank">
-					<i class="icon-download"></i>
 					{l s='Sample Suppliers file'}
 				</a>
 				<a class="list-group-item" href="../docs/csv_import/alias_import.csv" target="_blank">
-					<i class="icon-download"></i>
 					{l s='Sample Alias file'}
 				</a>
 				{if $PS_ADVANCED_STOCK_MANAGEMENT}
 				<a class="list-group-item" href="../docs/csv_import/supply_orders_import.csv" target="_blank">
-					<i class="icon-download"></i>
 					{l s='Supply Orders sample file'}
 				</a>
 				<a class="list-group-item" href="../docs/csv_import/supply_orders_details_import.csv" target="_blank">
-					<i class="icon-download"></i>
 					{l s='Supply Orders Details sample file'}
 				</a>
 				{/if}
