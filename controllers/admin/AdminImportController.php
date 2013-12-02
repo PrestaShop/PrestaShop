@@ -540,22 +540,22 @@ class AdminImportControllerCore extends AdminController
 			$entity_selected = (int)$this->context->cookie->entity_selected;
 
 		$csv_selected = '';
-		if (isset($this->context->cookie->csv_selected) && file_exists(_PS_ADMIN_DIR_.'/import/'.base64_decode($this->context->cookie->csv_selected)))
-			$csv_selected = base64_decode($this->context->cookie->csv_selected);
+		if (isset($this->context->cookie->csv_selected) && file_exists(_PS_ADMIN_DIR_.'/import/'.urldecode($this->context->cookie->csv_selected)))
+			$csv_selected = urldecode($this->context->cookie->csv_selected);
 		else
 			$this->context->cookie->csv_selected = $csv_selected;
 
 		$id_lang_selected = '';
 		if (isset($this->context->cookie->iso_lang_selected) && $this->context->cookie->iso_lang_selected)
-			$id_lang_selected = (int)Language::getIdByIso(base64_decode($this->context->cookie->iso_lang_selected));
+			$id_lang_selected = (int)Language::getIdByIso(urldecode($this->context->cookie->iso_lang_selected));
 
 		$separator_selected = $this->separator;
 		if (isset($this->context->cookie->separator_selected) && $this->context->cookie->separator_selected)
-			$separator_selected = base64_decode($this->context->cookie->separator_selected);
+			$separator_selected = urldecode($this->context->cookie->separator_selected);
 
 		$multiple_value_separator_selected = $this->multiple_value_separator;
 		if (isset($this->context->cookie->multiple_value_separator_selected) && $this->context->cookie->multiple_value_separator_selected)
-			$multiple_value_separator_selected = base64_decode($this->context->cookie->multiple_value_separator_selected);
+			$multiple_value_separator_selected = urldecode($this->context->cookie->multiple_value_separator_selected);
 
 		//get post max size
 		$post_max_size = ini_get('post_max_size');
@@ -653,10 +653,10 @@ class AdminImportControllerCore extends AdminController
 			$data[$i] = $this->generateContentTable($i, $nb_column, $handle, $this->separator);
 
 		$this->context->cookie->entity_selected = (int)Tools::getValue('entity');
-		$this->context->cookie->iso_lang_selected = base64_encode(Tools::getValue('iso_lang'));
-		$this->context->cookie->separator_selected = base64_encode($this->separator);
-		$this->context->cookie->multiple_value_separator_selected = base64_encode($this->multiple_value_separator);
-		$this->context->cookie->csv_selected = base64_encode(Tools::getValue('csv'));
+		$this->context->cookie->iso_lang_selected = urlencode(Tools::getValue('iso_lang'));
+		$this->context->cookie->separator_selected = urlencode($this->separator);
+		$this->context->cookie->multiple_value_separator_selected = urlencode($this->multiple_value_separator);
+		$this->context->cookie->csv_selected = urlencode(Tools::getValue('csv'));
 
 		$this->tpl_view_vars = array(
 			'import_matchs' => Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'import_match'),
@@ -3101,7 +3101,7 @@ class AdminImportControllerCore extends AdminController
 		}
 		elseif ($filename = Tools::getValue('csvfilename'))
 		{
-			$filename = base64_decode($filename);
+			$filename = urldecode($filename);
 			$file =  _PS_ADMIN_DIR_.'/import/'.basename($filename);
 			if (realpath(dirname($file)) != _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'import')
 				exit();
@@ -3135,7 +3135,7 @@ class AdminImportControllerCore extends AdminController
 				}
 			}	
 		}
-		parent::postProcess();
+		return parent::postProcess();
 	}
 
 	public static function setLocale()

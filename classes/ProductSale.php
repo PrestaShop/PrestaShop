@@ -89,7 +89,8 @@ class ProductSaleCore
 	
 		$ids = array();
 		foreach ($products as $product)
-			$ids[$product['id_product']] = 1;
+			if (Validate::isUnsignedId($product['id_product']))
+				$ids[$product['id_product']] = 1;
 		$ids = array_keys($ids);
 		$ids = array_filter($ids);
 		sort($ids);

@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="bootstrap">
+<div class="bootstrap panel">
 	<h3><i class="icon-cogs"></i> {l s='Configuration'}</h3>
 	<div class="input-group">
 		<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
@@ -39,6 +39,6 @@
 	{if isset($display_multishop_checkbox) && $display_multishop_checkbox}
 	<input type="checkbox" name="activateModule" value="1"{if $module->active} checked="checked"{/if} 
 		onclick="location.href = '{$current_url}&enable='+(($(this).attr('checked')) ? 1 : 0)" />
-		{l s='Activate module for '}{$shop_context}
+	{l s='Activate module for'} {$shop_context}
 	{/if}
 </div>
