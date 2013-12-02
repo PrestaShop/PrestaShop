@@ -189,7 +189,7 @@
                             <div id="contact-link">
                                 <a href="{$link->getPageLink('contact', true)|escape:'html'}" title="{l s='contact'}">{l s='Contact Us'}</a>
                             </div>
-                            <span class="shop-phone"><i class="icon-phone"></i>{l s='Call us now toll free:'} <strong>{$shop_phone}(800) 2345-6789</strong></span>
+                           {if $shop_phone}<span class="shop-phone"><i class="icon-phone"></i>{l s='Call us now toll free:'} <strong>{$shop_phone}</strong></span>{/if}
                         </div>
                     </div>
                 	<div class="container header-row-2">
