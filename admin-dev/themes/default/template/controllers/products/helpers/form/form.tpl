@@ -124,10 +124,8 @@
 				{* submenu binding *}
 				$(".productTabs a").click(function(e){
 					e.preventDefault();
-
 					// currentId is the current product tab id
 					currentId = $(".productTabs a.active").attr('id').substr(5);
-					//console.log(currentId);
 					// id is the wanted producttab id
 					id = $(this).attr('id').substr(5);
 
@@ -190,6 +188,12 @@
 				$('.confirm_leave').live('click', function(){
 					// Double quotes are necessary when the translated string has single quotes
 					return confirm("{l s='You will lose all unsaved modifications. Are you sure that you\'d like to proceed?' js=1}");
+				});
+
+				$('#toolbar-footer').appendTo($('#product-tab-content-Informations').children('.product-tab'));
+
+				$('.product-tab-content').on('displayed', function(e) {
+					$('#toolbar-footer').appendTo($(this).children('.product-tab'));
 				});
 
 			});
