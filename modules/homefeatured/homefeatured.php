@@ -125,7 +125,7 @@ class HomeFeatured extends Module
 	/* Retro Compatibility < 1.6.0.1 */
 	public function hookDisplayHome($params)
 	{
-		return $this->hookDisplayHomeTabContent();
+		return $this->hookDisplayHomeTabContent($params);
 	}
 
 	public function hookAddProduct($params)

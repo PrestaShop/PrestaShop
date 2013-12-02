@@ -47,9 +47,10 @@ class Dashproducts extends Module
 		Configuration::updateValue('DASHPRODUCT_NBR_SHOW_MOST_VIEWED', 10);
 		Configuration::updateValue('DASHPRODUCT_NBR_SHOW_TOP_SEARCH', 10);
 		
-		if (!parent::install() || !$this->registerHook('dashboardZoneTwo') || !$this->registerHook('dashboardData'))
-			return false;
-		return true;
+		return (parent::install()
+			&& $this->registerHook('dashboardZoneTwo')
+			&& $this->registerHook('dashboardData')
+		);
 	}
 
 	public function hookDashboardZoneTwo($params)

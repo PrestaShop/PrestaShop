@@ -44,39 +44,27 @@ function create_multistore()
 	$all_themes_dir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'themes';
 	$themes = scandir($all_themes_dir);
 	foreach ($themes AS $theme)
-		if (is_dir($all_themes_dir.DIRECTORY_SEPARATOR.$theme.DIRECTORY_SEPARATOR) 
-				&& $theme[0] != '.' 
-				&& $theme != 'prestashop')
-		{
-			$sql = 'INSERT INTO 
-				'._DB_PREFIX_.'theme (`id_theme`, name) 
-				VALUES("", "'.Db::getInstance()->escape($theme).'")';
-			$res &= Db::getInstance()->execute($sql);
-		}
-	$res &= Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'shop 
-		SET
-			name = (SELECT value 
-				FROM '._DB_PREFIX_.'configuration 
-				WHERE name = "PS_SHOP_NAME"
-			),
-			id_theme = (SELECT id_theme FROM '._DB_PREFIX_.'theme WHERE name="'.Db::getInstance()->escape(_THEME_NAME_).'") 
-		WHERE id_shop = 1');
-	$shop_domain = Db::getInstance()->getValue('SELECT `value`
-															FROM `'._DB_PREFIX_.'configuration` 
-															WHERE `name`="PS_SHOP_DOMAIN"');
-	$shop_domain_ssl = Db::getInstance()->getValue('SELECT `value`
-															FROM `'._DB_PREFIX_.'configuration` 
-															WHERE `name`="PS_SHOP_DOMAIN_SSL"');
-	if(empty($shop_domain))
-	{
-		$shop_domain = create_multistore_getHttpHost();
+		if (is_dir($all_themes_dir.DIRECTORY_SEPARATOR.$theme.DIRECTORY_SEPARATOR) && $theme[0] != '.' && $theme != 'prestashop')
+			$res &= Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'theme (`id_theme`, name) VALUES("", "'.Db::getInstance()->escape($theme).'")');
+	$res &= Db::getInstance()->execute('
+	UPDATE '._DB_PREFIX_.'shop 
+	SET
+		name = (SELECT value FROM '._DB_PREFIX_.'configuration WHERE name = "PS_SHOP_NAME"),
+		id_theme = (SELECT id_theme FROM '._DB_PREFIX_.'theme WHERE name = "'.Db::getInstance()->escape(_THEME_NAME_).'")
+	WHERE id_shop = 1');
+	$shop_domain = Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = "PS_SHOP_DOMAIN"');
+	$shop_domain_ssl = Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = "PS_SHOP_DOMAIN_SSL"');
+	if (empty($shop_domain))
+		$shop_domain = $shop_domain_ssl = create_multistore_getHttpHost();
+	if (empty($shop_domain_ssl))
 		$shop_domain_ssl = create_multistore_getHttpHost();
-	}
 
-	$_PS_DIRECTORY_ = trim(str_replace(' ', '%20', $INSTALLER__PS_BASE_URI), DIRECTORY_SEPARATOR);
-	$_PS_DIRECTORY_ = ($_PS_DIRECTORY_) ? '/'.$_PS_DIRECTORY_.DIRECTORY_SEPARATOR : DIRECTORY_SEPARATOR;
-	$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'shop_url` (`id_shop`, `domain`, `domain_ssl`, `physical_uri`, `virtual_uri`, `main`, `active`) 
-																			VALUES(1, \''.pSQL($shop_domain).'\', \''.pSQL($shop_domain_ssl).'\', \''.pSQL($_PS_DIRECTORY_).'\', \'\', 1, 1)');
+	$physical_uri = str_replace(' ', '%20', $INSTALLER__PS_BASE_URI);
+	$physical_uri = trim($physical_uri, '/\\');
+	$physical_uri = ($physical_uri ? '/'.$physical_uri.'/' : '/');
+	$res &= Db::getInstance()->execute('
+	INSERT INTO `'._DB_PREFIX_.'shop_url` (`id_shop`, `domain`, `domain_ssl`, `physical_uri`, `virtual_uri`, `main`, `active`) 
+	VALUES(1, \''.pSQL($shop_domain).'\', \''.pSQL($shop_domain_ssl).'\', \''.pSQL($physical_uri).'\', \'\', 1, 1)');
 
 	// Stock conversion
 	$sql = 'INSERT INTO `'._DB_PREFIX_.'stock` (`id_product`, `id_product_attribute`, `id_group_shop`, `id_shop`, `quantity`)
