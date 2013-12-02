@@ -22,9 +22,8 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<!-- Block categories module -->
 {if $blockCategTree && $blockCategTree.children|@count}
+<!-- Block categories module -->
 <div id="categories_block_left" class="block">
 	<p class="title_block">{if isset($currentCategory)}{$currentCategory->name|escape}{else}{l s='Categories' mod='blockcategories'}{/if}</p>
 	<div class="block_content">
@@ -46,5 +45,5 @@
 		</script>
 	</div>
 </div>
-{/if}
 <!-- /Block categories module -->
+{/if}
