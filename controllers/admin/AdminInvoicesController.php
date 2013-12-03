@@ -38,7 +38,7 @@ class AdminInvoicesControllerCore extends AdminController
 		$this->className = 'OrderInvoice';
 			$this->fields_list = array(
 			'id_order_invoice' => array(
-				'title' => $this->l('ID'),
+				'title' => $this->l('Invoice'),
 				'align' => 'center',
 				'orderby' => false
 			),
@@ -82,8 +82,10 @@ class AdminInvoicesControllerCore extends AdminController
 			),
 		);
 
+		$prefix = Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, (int)Context::getContext()->shop->id);
+
 		$this->_select = 'o.`reference` as order_reference, o.`id_order`,
-					a.`total_paid_tax_incl`,a.`id_order_invoice`, a.`date_add`,
+					a.`total_paid_tax_incl`, CONCAT("'.$prefix.'",LPAD(a.`id_order_invoice`,6,"0")) as id_order_invoice, a.`date_add`,
 					c.`firstname`,c.`lastname`,
 					SUM(op.`amount`) as amount,
 					IF(
