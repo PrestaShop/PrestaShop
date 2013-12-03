@@ -960,13 +960,25 @@ class AdminThemesControllerCore extends AdminController
 			{
 				foreach ($hooks as $hook)
 				{
+
 					$sql_hook_module = 'INSERT INTO `' . _DB_PREFIX_ . 'hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
 									VALUES (' . (int)$id_module . ', ' . (int)$id_shop . ', ' . (int)Hook::getIdByName($hook['hook']) . ', ' . (int)$hook['position'] . ')';
 
+					if (count($hook['exceptions'])>0)
+					{
+						foreach($hook['exceptions'] as $exception)
+						{
+							$sql_hook_module_except = 'INSERT INTO `'._DB_PREFIX_.'hook_module_exceptions` (`id_module`, `id_hook`, `file_name`) VALUES ('.(int)$id_module.', '.(int)Hook::getIdByName($hook['hook']).', "'.pSQL($exception).'")';
+
+							Db::getInstance()->execute($sql_hook_module_except);
+						}
+					}
 					Db::getInstance()->execute($sql_hook_module);
 				}
 			}
+
 		}
+
 	}
 
 	public function processThemeInstall()
@@ -987,11 +999,8 @@ class AdminThemesControllerCore extends AdminController
 			$xml = simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/default.xml');
 		}
 
-
 		if ($xml)
 		{
-
-
 			$moduleHook = array();
 
 			foreach ($xml->modules->hooks->hook as $row)
@@ -1007,7 +1016,7 @@ class AdminThemesControllerCore extends AdminController
 
 			foreach ($_POST as $key => $value)
 			{
-				if (substr($key, 0, strlen('to_install')) == "to_install")
+				if (strncmp($key, 'to_install', strlen('to_install')) == 0)
 				{
 					if (file_exists(_PS_MODULE_DIR_ . $value))
 					{
@@ -1016,20 +1025,19 @@ class AdminThemesControllerCore extends AdminController
 
 						if (class_exists($value))
 						{
-							$module = new $value;
-
+							$module = Module::getInstanceByName($value);
 							if (!Module::isInstalled($module->name))
 							{
 								$module->install();
 
-								if ((int)$module->id > 0)
+								if ((int)$module->id > 0 && isset($moduleHook[$module->name]))
 									$this->hookModule($module->id, $moduleHook[$module->name], $shops);
 							}
 						}
 						unset($moduleHook[$module->name]);
 					}
 
-				} else if (substr($key, 0, strlen('to_enable') == "to_enable"))
+				} else if (strncmp($key, 'to_enable', strlen('to_enable')) == 0)
 				{
 					if (file_exists(_PS_MODULE_DIR_ . $value))
 					{
@@ -1038,18 +1046,20 @@ class AdminThemesControllerCore extends AdminController
 
 						if (class_exists($value))
 						{
-							$module = new $value;
-							if (!Module::isEnabled($module->name))
-							{
+							$module = Module::getInstanceByName($value);
+
+							if (!Module::isInstalled($module->name))
+								$module->install();
+							else if (!Module::isEnabled($module->name))
 								$module->enable();
 
-								if ((int)$module->id > 0)
-									$this->hookModule($module->id, $moduleHook[$module->name], $shops);
-							}
+							if ((int)$module->id > 0 && isset($moduleHook[$module->name]))
+								$this->hookModule($module->id, $moduleHook[$module->name], $shops);
+
 							unset($moduleHook[$module->name]);
 						}
 					}
-				} else if (substr($key, 0, strlen('to_disable') == "to_disable"))
+				} else if (strncmp($key, 'to_disable', strlen('to_disable')) == 0)
 				{
 					if (file_exists(_PS_MODULE_DIR_ . $value))
 					{
