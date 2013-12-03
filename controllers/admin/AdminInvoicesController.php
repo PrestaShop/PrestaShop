@@ -357,7 +357,9 @@ class AdminInvoicesControllerCore extends AdminController
 
 	public function redirectToOrder()
 	{
-		$invoice = new OrderInvoice(Tools::getValue('id_order_invoice'));
+		$prefix = Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, (int)Context::getContext()->shop->id);
+		$id = ltrim(str_replace($prefix,'',Tools::getValue('id_order_invoice')),'0');
+		$invoice = new OrderInvoice($id);
 		if (!Validate::isLoadedObject($invoice))
 			throw new PrestaShopException('Invoice object can\'t be loaded');
 
