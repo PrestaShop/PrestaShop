@@ -289,7 +289,7 @@ function bind_inputs()
 			});
 		}
 		else
-			$(this).closest('tr').find('td').find('div.input-group input:text').attr('disabled', 'disabled');
+			$(this).closest('tr').find('td').find('div.input-group input:text').attr('disabled', 'disabled').val('');
 			
 		return false;
 	});
