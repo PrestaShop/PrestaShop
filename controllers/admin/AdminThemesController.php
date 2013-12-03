@@ -747,22 +747,27 @@ class AdminThemesControllerCore extends AdminController
 				return $natives;
 		}
 
-		return array(
-			'autoupgrade', 'bankwire', 'birthdaypresent', 'blockadvertising', 'blockbestsellers', 'blockcart',
-			'blockcategories', 'blockcms', 'blockcontact', 'blockcontactinfos', 'blockcurrencies', 'blockcustomerprivacy',
-			'blocklanguages', 'blocklayered', 'blocklink', 'blockmanufacturer', 'blockmyaccount', 'blockmyaccountfooter', 'blocknewproducts',
-			'blocknewsletter', 'blockpaymentlogo', 'blockpermanentlinks', 'blockreinsurance', 'blockrss', 'blocksearch',
-			'blocksharefb', 'blocksocial', 'blockspecials', 'blockstore', 'blocksupplier', 'blocktags', 'blocktopmenu',
-			'blockuserinfo', 'blockviewed', 'blockwishlist', 'cashondelivery', 'carriercompare', 'cheque', 'crossselling',
-			'dateofdelivery', 'editorial', 'favoriteproducts', 'feeder', 'followup', 'gadsense', 'ganalytics', 'gcheckout',
-			'graphartichow', 'graphgooglechart', 'graphvisifire', 'graphxmlswfcharts', 'gridhtml', 'gsitemap', 'homefeatured',
-			'homeslider', 'importerosc', 'livezilla', 'loyalty', 'mailalerts', 'newsletter', 'pagesnotfound', 'prestafraud',
-			'productcomments', 'productscategory', 'producttooltip', 'referralprogram', 'sekeywords', 'sendtoafriend',
-			'shopimporter', 'statsbestcategories', 'statsbestcustomers', 'statsbestmanufacturers', 'statsbestproducts',
-			'statsbestsuppliers', 'statsbestvouchers', 'statscarrier', 'statscatalog', 'statscheckup', 'statsdata',
-			'statsequipment', 'statsforecast', 'statsgeolocation', 'statslive', 'statsnewsletter', 'statsorigin',
-			'statspersonalinfos', 'statsproduct', 'statsregistrations', 'statssales', 'statssearch', 'statsstock',
-			'statsvisits', 'themeinstallator', 'tm4b', 'trackingfront', 'upscarrier', 'vatnumber', 'watermark'
+		return array('addsharethis', 'bankwire', 'blockadvertising', 'blockbanner',
+			'blockbestsellers', 'blockcart', 'blockcategories', 'blockcms', 'blockcmsinfo',
+			'blockcontact', 'blockcontactinfos', 'blockcurrencies', 'blockcustomerprivacy',
+			'blockfacebook', 'blocklanguages', 'blocklayered', 'blocklink', 'blockmanufacturer',
+			'blockmyaccount', 'blockmyaccountfooter', 'blocknewproducts', 'blocknewsletter',
+			'blockpaymentlogo', 'blockpermanentlinks', 'blockreinsurance', 'blockrss',
+			'blocksearch', 'blocksharefb', 'blocksocial', 'blockspecials', 'blockstore',
+			'blocksupplier', 'blocktags', 'blocktopmenu', 'blockuserinfo', 'blockviewed',
+			'blockwishlist', 'carriercompare', 'cashondelivery', 'cheque', 'crossselling',
+			'dashactivity', 'dashgoals', 'dashproducts', 'dashtrends', 'dateofdelivery',
+			'editorial', 'favoriteproducts', 'feeder', 'followup', 'gapi', 'graphnvd3',
+			'gridhtml', 'homefeatured', 'homeslider', 'loyalty', 'mailalerts', 'newsletter',
+			'pagesnotfound', 'productcomments', 'productpaymentlogos', 'productscategory',
+			'producttooltip', 'pscleaner', 'referralprogram', 'sekeywords', 'sendtoafriend',
+			'statsbestcategories', 'statsbestcustomers', 'statsbestmanufacturers',
+			'statsbestproducts', 'statsbestsuppliers', 'statsbestvouchers',
+			'statscarrier', 'statscatalog', 'statscheckup', 'statsdata',
+			'statsequipment', 'statsforecast', 'statslive', 'statsnewsletter',
+			'statsorigin', 'statspersonalinfos', 'statsproduct', 'statsregistrations',
+			'statssales', 'statssearch', 'statsstock', 'statsvisits',
+			'themeconfigurator', 'trackingfront', 'vatnumber', 'watermark'
 		);
 	}
 
