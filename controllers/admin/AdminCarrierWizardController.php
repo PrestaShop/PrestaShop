@@ -686,13 +686,14 @@ class AdminCarrierWizardControllerCore extends AdminController
 				$price_list = array();
 				if (is_array($fees) && count($fees))
 				{
+					$price = isset($fee[$key]) ? (float)$fee[$key] : 0;
 					foreach ($fees as $id_zone => $fee)
 						$price_list[] = array(
 							'id_range_price' => ($range_type == Carrier::SHIPPING_METHOD_PRICE ? (int)$range->id : null),
 							'id_range_weight' => ($range_type == Carrier::SHIPPING_METHOD_WEIGHT ? (int)$range->id : null),
 							'id_carrier' => (int)$carrier->id,
 							'id_zone' => (int)$id_zone,
-							'price' => (float)$fee[$key]
+							'price' => $price,
 						);
 				}
 
