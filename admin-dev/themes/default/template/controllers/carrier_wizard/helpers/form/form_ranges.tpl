@@ -1,14 +1,14 @@
 		<script>var zones_nbr = {$zones|count +3} ; /*corresponds to the third input text (max, min and all)*/</script>
-		<div id="zone_ranges">
+		<div id="zone_ranges" style="overflow:auto">
 			<h4>{l s='Tranches'}</h4>
-			<table id="zones_table" class="table">
+			<table id="zones_table" class="table" style="width:100%">
 				<tbody>
 					<tr class="range_inf">
 						<td class="range_type"></td>
 						<td class="border_left border_bottom range_sign">&gt;=</th>
 						{foreach from=$ranges key=r item=range}
 						<td class="border_bottom">
-							<div class="input-group">
+							<div class="input-group fixed-width-md">
 								<span class="input-group-addon weight_unit">{$PS_WEIGHT_UNIT}</span>
 								<span class="input-group-addon price_unit">{$currency_sign}</span>
 								<input class="form-control" name="range_inf[{$range.id_range|intval}]" type="text" value="{$range.delimiter1|string_format:"%.6f"}" />
@@ -16,7 +16,7 @@
 						</td>
 						{foreachelse}
 						<td class="border_bottom">
-							<div class="input-group">
+							<div class="input-group fixed-width-md">
 								<span class="input-group-addon weight_unit">{$PS_WEIGHT_UNIT}</span>
 								<span class="input-group-addon price_unit">{$currency_sign}</span>
 								<input name="form-control range_inf[{$range.id_range|intval}]" type="text" />
