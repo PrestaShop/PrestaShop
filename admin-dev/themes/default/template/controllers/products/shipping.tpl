@@ -34,7 +34,7 @@
 		<label class="control-label col-lg-3" for="width">{$bullet_common_field} {l s='Width (package):'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_dimension_unit}</span>
-			<input maxlength="21" id="width" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />			
+			<input maxlength="14" id="width" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />			
 		</div>
 	</div>
 
@@ -42,7 +42,7 @@
 		<label class="control-label col-lg-3" for="height">{$bullet_common_field} {l s='Height (package):'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_dimension_unit}</span>
-			<input maxlength="21" id="height" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+			<input maxlength="14" id="height" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		</div>
 	</div>
 	
@@ -50,7 +50,7 @@
 		<label class="control-label col-lg-3" for="depth">{$bullet_common_field} {l s='Depth (package):'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_dimension_unit}</span>
-			<input maxlength="21" id="depth" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+			<input maxlength="14" id="depth" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		</div>
 	</div>
 
@@ -58,7 +58,7 @@
 		<label class="control-label col-lg-3" for="weight">{$bullet_common_field} {l s='Weight (package):'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_weight_unit}</span>
-			<input maxlength="21" id="weight" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+			<input maxlength="14" id="weight" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		</div>
 	</div>
 
