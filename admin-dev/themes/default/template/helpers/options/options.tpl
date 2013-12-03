@@ -56,28 +56,30 @@
 			{/if}
 
 			{if !$categoryData['hide_multishop_checkbox'] && $use_multishop}
-			<div class="row alert alert-info">
+			<div class="well clearfix">
 				<label class="control-label col-lg-3">
 					<i class="icon-sitemap"></i> {l s='Multistore'}
 				</label>
 				<div class="col-lg-9">
 					<div class="row">
-						<div class="col-lg-2">
+						<div class="col-lg-6">
 							<span class="switch prestashop-switch">
 								<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_on" value="1" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), true)">
-								<label class="radio" for="{$table}_multishop_{$category}_on">
+								<label for="{$table}_multishop_{$category}_on">
 									<i class="icon-check-sign color_success"></i> {l s='Yes'}
 								</label>
 								<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_off" value="0" checked="checked" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), false)">
-								<label class="radio" for="{$table}_multishop_{$category}_off">
+								<label for="{$table}_multishop_{$category}_off">
 									<i class="icon-ban-circle color_danger"></i> {l s='No'}
 								</label>
 								<a class="slide-button btn btn-default"></a>
 							</span>
 						</div>
-						<div class="col-lg-7">
-							<p class="form-control-static"><strong>{l s='Check / Uncheck all'}</strong> {l s='(Check boxes if you want to set a custom value for this shop or group shop context)'}</p>
-						</div>
+												<p class="help-block">
+							<strong>{l s='Check / Uncheck all'}</strong>
+							{l s='(Check boxes if you want to set a custom value for this shop or group shop context)'}
+						</p>
+
 					</div>
 				</div>
 			</div>

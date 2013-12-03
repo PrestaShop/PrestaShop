@@ -351,7 +351,7 @@
 {/if}
 
 {if $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
-			<div class="panel multishop_toolbar">
+			<div class="panel multishop_toolbar clearfix">
 				<div class="col-lg-12 form-horizontal">
 					<label class="control-label col-lg-3"><i class="icon-sitemap"></i> {l s='Multistore configuration for'}</label>
 					<div class="col-lg-9">{$shop_list}</div>
