@@ -228,9 +228,10 @@ class AdminMetaControllerCore extends AdminController
 		$files = Meta::getPages(true, ($this->object->page ? $this->object->page : false));
 		
 		$is_index = false;
-		foreach ($this->object->url_rewrite as $rewrite)
-			if($is_index != true)
-				$is_index = ($this->object->page == 'index' && empty($rewrite)) ? true : false;
+		if (is_array($this->object))
+			foreach ($this->object->url_rewrite as $rewrite)
+				if($is_index != true)
+					$is_index = ($this->object->page == 'index' && empty($rewrite)) ? true : false;
 
 		$pages = array(
 			'common' => array(
