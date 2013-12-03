@@ -346,6 +346,7 @@ function formSubmit(e, button)
 	key = window.event ? window.event.keyCode : e.which;
 	if (key == 13)
 	{
+		e.preventDefault();
 		getE(button).focus();
 		getE(button).click();
 	}
