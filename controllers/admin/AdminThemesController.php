@@ -415,9 +415,9 @@ class AdminThemesControllerCore extends AdminController
 		parent::initPageHeaderToolbar();
 	}
 
-	private function checkXmlFields()
+	private function checkXmlFields($sandbox)
 	{
-		if (!file_exists(_PS_ADMIN_DIR_.'/import/theme/uploaded/Config.xml') || !$xml = simplexml_load_file(_PS_ADMIN_DIR_.'/import/theme/uploaded/Config.xml'))
+		if (!file_exists($sandbox.'uploaded/Config.xml') || !$xml = simplexml_load_file($sandbox.'uploaded/Config.xml'))
 			return false;
 		if (!$xml['version'] || !$xml['name'])
 			return false;
@@ -448,23 +448,6 @@ class AdminThemesControllerCore extends AdminController
 		rmdir($dirname);
 	}
 
-	private function deleteTmpFiles()
-	{
-		$files = scandir(_PS_ADMIN_DIR_.'/import/theme/uploaded/');
-
-		foreach($files as $file)
-		{
-			if ($file == '.' || $file == '..')
-				continue;
-
-			if (is_dir(_PS_ADMIN_DIR_.'/import/theme/uploaded/'.$file))
-				$this->deleteDirectory(_PS_ADMIN_DIR_.'/import/theme/uploaded/'.$file);
-			else
-				unlink(_PS_ADMIN_DIR_.'/import/theme/uploaded/'.$file);
-		}
-		unlink(_PS_ADMIN_DIR_.'/import/theme/uploaded.zip');
-	}
-
 	private function recurseCopy($src, $dst)
 	{
 		if (!$dir = opendir($src))
@@ -486,11 +469,12 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$this->display = "importtheme";
 
+
 		if (isset($_FILES['themearchive']))
 		{
-
 			$uniqid = uniqid();
 			$sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
+			mkdir($sandbox);
 			$archive_uploaded = false;
 			if ($_FILES['themearchive']['error'] || !file_exists($_FILES['themearchive']['tmp_name']))
 				$this->errors[] = sprintf($this->l('An error has occurred during the file upload (%s)'), $_FILES['themearchive']['error']);
@@ -505,18 +489,19 @@ class AdminThemesControllerCore extends AdminController
 
 			if ($archive_uploaded)
 			{
+
 				if (!Tools::ZipExtract($sandbox.'/uploaded.zip', $sandbox.'uploaded/'))
 				{
 					$this->errors[] = $this->l('Error during zip extraction');
 				}
 				else
 				{
-					if (!$this->checkXmlFields())
+					if (!$this->checkXmlFields($sandbox))
 						$this->errors[] = $this->l('Bad configuration file');
 					else
 					{
 						$iso = $this->context->language->iso_code;
-						$xml = simplexml_load_file($sandbox.'Config.xml');
+						$xml = simplexml_load_file($sandbox.'uploaded/Config.xml');
 						$this->xml = $xml;
 
 						$theme_directory = strval($xml->variations->variation[0]['directory']);
@@ -526,23 +511,11 @@ class AdminThemesControllerCore extends AdminController
 						$name = strval($xml->variations->variation[0]['name']);
 
 						foreach($themes as $theme_object)
-						{
 							if ($theme_object->name == $name)
-							{
 								$this->errors[] = $this->l('Theme already installed.');
-								$this->deleteTmpFiles();
-								return;
-							}
-						}
-
-//						_PS_ROOT_DIR_.'/config/xml'
 
 						if (!copy($sandbox.'uploaded/Config.xml', _PS_ROOT_DIR_.'/config/xml/'.$theme_directory.'.xml'))
-						{
 							$this->errors[] = $this->l('Can\'t copy configuration file');
-							$this->deleteTmpFiles();
-							return;
-						}
 
 						$new_theme = new Theme();
 						$new_theme->name = $name;
@@ -559,8 +532,11 @@ class AdminThemesControllerCore extends AdminController
 				}
 
 			}
-			Tools::deleteDirectory($sandbox, true);
-			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes'));
+			$this->deleteDirectory($sandbox);
+			if (count($this->errors)>0)
+				$this->display = 'importtheme';
+			else
+				Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes'));
 		}
 	}
 
@@ -974,23 +950,23 @@ class AdminThemesControllerCore extends AdminController
 
 	private function hookModule($id_module, $moduleHooks, $shops)
 	{
-		var_dump($moduleHooks);
 		foreach ($shops as $id_shop)
 		{
 			Db::getInstance()->execute('INSERT IGNORE INTO ' . _DB_PREFIX_ . 'module_shop (id_module, id_shop) VALUES(' . $id_module . ', ' . (int)$id_shop . ')');
 
 			Db::getInstance()->execute($sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.pSQL($id_module).' AND id_shop = '.(int)$id_shop);
 
-			foreach ($moduleHooks as $hook)
+			foreach ($moduleHooks as $hooks)
 			{
+				foreach($hooks as $hook)
+				{
 				$sql_hook_module = 'INSERT INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
 									VALUES ('.(int)$id_module.', '.(int)$id_shop.', '.(int)Hook::getIdByName($hook['hook']).', '.(int)$hook['position'].')';
 
 				Db::getInstance()->execute($sql_hook_module);
+				}
 			}
 		}
-
-//		var_dump($moduleHooks);
 	}
 
 	public function processThemeInstall()
@@ -1045,7 +1021,9 @@ class AdminThemesControllerCore extends AdminController
 							if (!Module::isInstalled($module->name))
 							{
 								$module->install();
-								$this->hookModule($module->id, $moduleHook[$module->name], $shops);
+
+								if ((int)$module->id > 0)
+									$this->hookModule($module->id, $moduleHook[$module->name], $shops);
 							}
 						}
 						unset($moduleHook[$module->name]);
@@ -1064,7 +1042,9 @@ class AdminThemesControllerCore extends AdminController
 							if (!Module::isEnabled($module->name))
 							{
 								$module->enable();
-								$this->hookModule($module->id, $moduleHook[$module->name], $shops);
+
+								if ((int)$module->id > 0)
+									$this->hookModule($module->id, $moduleHook[$module->name], $shops);
 							}
 							unset($moduleHook[$module->name]);
 						}
