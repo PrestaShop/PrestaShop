@@ -74,10 +74,10 @@
 		</taxRulesGroup>
 	</taxes>
 	<units>
-		<unit type="weight" value="lb"/>
-		<unit type="volume" value="gal"/>
-		<unit type="short_distance" value="in"/>
-		<unit type="base_distance" value="ft"/>
+		<unit type="weight" value="Kg"/>
+		<unit type="volume" value="L"/>
+		<unit type="short_distance" value="cm"/>
+		<unit type="base_distance" value="m"/>
 		<unit type="long_distance" value="mi"/>
 	</units>
 </localizationPack>
