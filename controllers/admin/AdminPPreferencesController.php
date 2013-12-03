@@ -93,6 +93,14 @@ class AdminPPreferencesControllerCore extends AdminController
 							0 => $this->l('Products:'),
 							1 => $this->l('Combinations')
 						)
+					),
+					'PS_FORCE_FRIENDLY_PRODUCT' => array(
+						'title' => $this->l('Force update of friendly url'),
+						'hint' => $this->l('When active, friendly url will be updated on every save'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'required' => false,
+						'type' => 'bool'
 					)
 				),
 			),
