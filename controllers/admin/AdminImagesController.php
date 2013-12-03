@@ -516,6 +516,8 @@ class AdminImagesControllerCore extends AdminController
 					$errors = true;
 					$this->errors[] = Tools::displayError(sprintf('Original image is missing or empty (%s)', $existing_img));
 				}
+				if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
+					return 'timeout';
 			}
 		}
 
