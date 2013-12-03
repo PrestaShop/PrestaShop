@@ -150,7 +150,10 @@ class AdminControllerCore extends Controller
 	protected $_tmpTableFilter = '';
 
 	/** @var array Number of results in list per page (used in select field) */
-	protected $_pagination = array(20, 50, 100, 300);
+	protected $_pagination = array(20, 50, 100, 300, 1000);
+
+	/** @var integer Default number of results in list per page */
+	protected $_default_pagination = 50;
 
 	/** @var string ORDER BY clause determined by field/arrows in list header */
 	protected $_orderBy;
@@ -497,20 +500,35 @@ class AdminControllerCore extends Controller
 			$this->list_id = $this->table;
 
 		$prefix = str_replace(array('admin', 'controller'), '', Tools::strtolower(get_class($this)));
-		// Filter memorization
-		if (isset($_POST) && !empty($_POST) && isset($this->list_id))
+
+		if (isset($this->list_id))
+		{
 			foreach ($_POST as $key => $value)
 			{
-				if (stripos($key, $this->list_id.'Filter_') === 0)
+				if (empty($value))
+					unset($this->context->cookie->{$prefix.$key});
+				elseif (stripos($key, $this->list_id.'Filter_') === 0)
 					$this->context->cookie->{$prefix.$key} = !is_array($value) ? $value : serialize($value);
-				elseif(stripos($key, 'submitFilter') === 0)
+				elseif (stripos($key, 'submitFilter') === 0)
 					$this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
 			}
 
-		if (isset($_GET) && !empty($_GET) && isset($this->list_id))
 			foreach ($_GET as $key => $value)
-				if (stripos($key, $this->list_id.'OrderBy') === 0 || stripos($key, $this->list_id.'Orderway') === 0)
-					$this->context->cookie->{$prefix.$key} = $value;
+				if (stripos($key, $this->list_id.'OrderBy') === 0)
+				{
+					if (empty($value) || $value == $this->_defaultOrderBy)
+						unset($this->context->cookie->{$prefix.$key});
+					else
+						$this->context->cookie->{$prefix.$key} = $value;
+				}
+				elseif (stripos($key, $this->list_id.'Orderway') === 0)
+				{
+					if (empty($value) || $value == $this->_defaultOrderWay)
+						unset($this->context->cookie->{$prefix.$key});
+					else
+						$this->context->cookie->{$prefix.$key} = $value;
+				}
+		}
 
 		$filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
 
@@ -959,32 +977,28 @@ class AdminControllerCore extends Controller
 	 */
 	public function processResetFilters($list_id = null)
 	{
-		if (!isset($list_id))
+		if ($list_id === null)
 			$list_id = isset($this->list_id) ? $this->list_id : $this->table;
 
 		$prefix = str_replace(array('admin', 'controller'), '', Tools::strtolower(get_class($this)));
 		$filters = $this->context->cookie->getFamily($prefix.$list_id.'Filter_');
-
 		foreach ($filters as $cookie_key => $filter)
 			if (strncmp($cookie_key, $prefix.$list_id.'Filter_', 7 + Tools::strlen($prefix.$list_id)) == 0)
 			{
 				$key = substr($cookie_key, 7 + Tools::strlen($prefix.$list_id));
-
 				if (is_array($this->fields_list) && array_key_exists($key, $this->fields_list))
 					$this->context->cookie->$cookie_key = null;
-					unset($this->context->cookie->$cookie_key);
+				unset($this->context->cookie->$cookie_key);
 			}
 
 		if (isset($this->context->cookie->{'submitFilter'.$list_id}))
 			unset($this->context->cookie->{'submitFilter'.$list_id});
-
 		if (isset($this->context->cookie->{$prefix.$list_id.'Orderby'}))
 			unset($this->context->cookie->{$prefix.$list_id.'Orderby'});
-
 		if (isset($this->context->cookie->{$prefix.$list_id.'Orderway'}))
 			unset($this->context->cookie->{$prefix.$list_id.'Orderway'});
 
-		unset($_POST);
+		$_POST = array();
 		$this->_filter = false;
 		unset($this->_filterHaving);
 		unset($this->_having);
@@ -2374,7 +2388,7 @@ class AdminControllerCore extends Controller
 			if (isset($this->context->cookie->{$this->list_id.'_pagination'}) && $this->context->cookie->{$this->list_id.'_pagination'})
 				$limit = $this->context->cookie->{$this->list_id.'_pagination'};
 			else
-				$limit = $this->_pagination[1];
+				$limit = $this->_default_pagination;
 		}
 
 		if (!Validate::isTableOrIdentifier($this->table))
@@ -2401,7 +2415,10 @@ class AdminControllerCore extends Controller
 		}
 
 		$limit = (int)Tools::getValue($this->list_id.'_pagination', $limit);
-		$this->context->cookie->{$this->list_id.'_pagination'} = $limit;
+		if (in_array($limit, $this->_pagination) && $limit != $this->_default_pagination)
+			$this->context->cookie->{$this->list_id.'_pagination'} = $limit;
+		else
+			unset($this->context->cookie->{$this->list_id.'_pagination'});
 
 		/* Check params validity */
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way)
@@ -2416,20 +2433,17 @@ class AdminControllerCore extends Controller
 			$order_by = $this->fields_list[$order_by]['order_key'];
 
 		/* Determine offset from current page */
-
-		
-		if ((isset($_POST['submitFilter'.$this->list_id]) ||
-		isset($_POST['submitFilter'.$this->list_id.'_x']) ||
-		isset($_POST['submitFilter'.$this->list_id.'_y'])) &&
-		!empty($_POST['submitFilter'.$this->list_id]) &&
-		is_numeric($_POST['submitFilter'.$this->list_id]))
-			$start = ((int)$_POST['submitFilter'.$this->list_id] - 1) * $limit;
+		$start = 0;
+		if ((int)Tools::getValue('submitFilter'.$this->list_id))
+			$start = ((int)Tools::getValue('submitFilter'.$this->list_id) - 1) * $limit;
 		elseif (empty($start) && isset($this->context->cookie->{$this->list_id.'_start'}) && Tools::isSubmit('export'.$this->table))
 			$start = $this->context->cookie->{$this->list_id.'_start'};
-		else
-			$start = 0;
 
-		$this->context->cookie->{$this->list_id.'_start'} = $start;
+		// Either save or reset the offset in the cookie
+		if ($start)
+			$this->context->cookie->{$this->list_id.'_start'} = $start;
+		elseif (isset($this->context->cookie->{$this->list_id.'_start'}))
+			unset($this->context->cookie->{$this->list_id.'_start'});
 
 		/* Cache */
 		$this->_lang = (int)$id_lang;
@@ -2549,7 +2563,6 @@ class AdminControllerCore extends Controller
 			'list' => &$this->_list,
 			'list_total' => &$this->_listTotal,
 		));
-
 	}
 	
 	public function getModulesList($filter_modules_list)
