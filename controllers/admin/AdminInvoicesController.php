@@ -29,9 +29,89 @@ class AdminInvoicesControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->bootstrap = true;
-		$this->table = 'invoice';
+		$this->table = 'order_invoice';
+		$this->addRowAction('view');
+		$this->explicitSelect = true;
 
 		parent::__construct();
+
+		$this->className = 'OrderInvoice';
+			$this->fields_list = array(
+			'id_order_invoice' => array(
+				'title' => $this->l('Invoice'),
+				'align' => 'center',
+				'orderby' => false
+			),
+			'order_reference' => array(
+				'title' => $this->l('Order Reference'),
+				'align' => 'center'
+			),
+			'firstname' => array(
+				'title' => $this->l('Firstname')
+			),
+			'lastname' => array(
+				'title' => $this->l('Lastname')
+			),
+			'total_paid_tax_incl' => array(
+				'title' => $this->l('Total Incl'),
+				'align' => 'right',
+				'orderby' => false,
+				'search' => false,
+			),
+			'amount' => array(
+				'title' => $this->l('Paid amount'),
+				'prefix' => '<span style="color:green;">',
+				'sufix' => '</span>',
+				'align' => 'right',
+				'orderby' => false,
+				'search' => false,
+			),
+			'unpaid_amount' => array(
+				'title' => $this->l('Unpaid amount'),
+				'prefix' => '<span style="color:red;">',
+				'sufix' => '</span>',
+				'align' => 'right',
+				'orderby' => false,
+				'search' => false,
+			),
+			'date_add' => array(
+				'title' => $this->l('Date'),
+				'align' => 'right',
+				'type' => 'datetime',
+				'filter_key' => 'a!date_add'
+			),
+		);
+
+		$prefix = Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, (int)Context::getContext()->shop->id);
+
+		$this->_select = 'o.`reference` as order_reference, o.`id_order`,
+					a.`total_paid_tax_incl`, CONCAT("'.$prefix.'",LPAD(a.`id_order_invoice`,6,"0")) as id_order_invoice, a.`date_add`,
+					c.`firstname`,c.`lastname`,
+					SUM(op.`amount`) as amount,
+					IF(
+						IFNULL(op.`amount`,0),
+						a.`total_paid_tax_incl`- SUM(op.`amount`),
+						a.`total_paid_tax_incl`
+					)
+					as unpaid_amount';
+
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = a.`id_order`)
+		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = o.`id_customer`)
+		LEFT JOIN `'._DB_PREFIX_.'order_invoice_payment` oip ON (oip.`id_order_invoice`= a.`id_order_invoice`)
+		LEFT JOIN `'._DB_PREFIX_.'order_payment` op ON (op.`id_order_payment`= oip.`id_order_payment`)';
+
+		// This where allows partaily paid and unpaid invoices to be listed
+		$this->_where = 'AND (
+		(a.`id_order_invoice` = oip.`id_order_invoice` AND op.`amount` < a.`total_paid_tax_incl`)
+		OR
+		a.`id_order_invoice` NOT IN (SELECT id_order_invoice FROM `'._DB_PREFIX_.'order_invoice_payment`)
+		)';
+
+		// Force sort by date, with the earlies invoice first
+		$this->_orderBy = 'date_add';
+		$this->_orderWay = 'asc';
+
+		$this->_group = 'GROUP BY a.`id_order_invoice`';
 
 		$this->fields_options = array(
 			'general' => array(
@@ -190,6 +270,11 @@ class AdminInvoicesControllerCore extends AdminController
 
 	public function initContent()
 	{
+		if ($this->display == 'view')
+		{
+			$this->redirectToOrder();
+		}
+
 		$this->display = 'edit';
 		$this->initToolbar();
 		$this->initPageHeaderToolbar();
@@ -197,6 +282,17 @@ class AdminInvoicesControllerCore extends AdminController
 		$this->content .= $this->initFormByStatus();
 		$this->table = 'invoice';
 		$this->content .= $this->renderOptions();
+
+		$this->table = 'order_invoice';
+		$this->toolbar_btn['export'] = array(
+			'href' => self::$currentIndex.'&amp;export'.$this->table.'&amp;token='.$this->token,
+			'desc' => $this->l('Export')
+		);
+		$this->toolbar_title = $this->l('Unpaid invoices');
+		unset($this->toolbar_btn['save']);
+		unset($this->toolbar_btn['cancel']);
+
+		$this->content .= $this->renderList();
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
@@ -257,6 +353,21 @@ class AdminInvoicesControllerCore extends AdminController
 	{
 		if ((int)Tools::getValue('PS_INVOICE_START_NUMBER') != 0 && (int)Tools::getValue('PS_INVOICE_START_NUMBER') <= Order::getLastInvoiceNumber())
 			$this->errors[] = $this->l('Invalid invoice number.').Order::getLastInvoiceNumber().')';
+	}
+
+	public function redirectToOrder()
+	{
+		$prefix = Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, (int)Context::getContext()->shop->id);
+		$id = ltrim(str_replace($prefix,'',Tools::getValue('id_order_invoice')),'0');
+		$invoice = new OrderInvoice($id);
+		if (!Validate::isLoadedObject($invoice))
+			throw new PrestaShopException('Invoice object can\'t be loaded');
+
+		$order = new Order($invoice->id_order);
+		if (!Validate::isLoadedObject($order))
+			throw new PrestaShopException('Order object can\'t be loaded');
+
+		Tools::redirectAdmin($this->context->link->getAdminLink('AdminOrders').'&id_order='.$order->id.'&vieworder');
 	}
 
 	protected function getInvoicesModels()
