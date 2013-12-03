@@ -53,27 +53,6 @@ $(function () {
 	if (nb_move_available < 2)
 		$('#scenes .next').hide();
 	
-	/* set cluetip parameters */
-	$('a.cluetip')
-		.cluetip({
-			local:true,
-			cursor: 'pointer',
-			attribute:'accesskey',
-			cluetipClass: 'product_scene',
-			dropShadow: false,
-			dropShadowSteps: 0,
-			showTitle: false,
-			tracking: true,
-			sticky: false,
-			mouseOutClose: true,
-			closeText: i18n_scene_close,
-			fx: {             
-		    open:       'fadeIn',
-		    openSpeed:  'fast'
-		  }
-		})
-		.css('opacity', 0.8);
-	
 	/* set serialscroll parameters */
 	$('#scenes_list').serialScroll({
 		items:'a',
