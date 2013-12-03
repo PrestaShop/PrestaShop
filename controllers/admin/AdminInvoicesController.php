@@ -55,21 +55,24 @@ class AdminInvoicesControllerCore extends AdminController
 			'total_paid_tax_incl' => array(
 				'title' => $this->l('Total Incl'),
 				'align' => 'right',
-				'orderby' => false
+				'orderby' => false,
+				'search' => false,
 			),
 			'amount' => array(
 				'title' => $this->l('Paid amount'),
 				'prefix' => '<span style="color:green;">',
 				'sufix' => '</span>',
 				'align' => 'right',
-				'orderby' => false
+				'orderby' => false,
+				'search' => false,
 			),
 			'unpaid_amount' => array(
 				'title' => $this->l('Unpaid amount'),
 				'prefix' => '<span style="color:red;">',
 				'sufix' => '</span>',
 				'align' => 'right',
-				'orderby' => false
+				'orderby' => false,
+				'search' => false,
 			),
 			'date_add' => array(
 				'title' => $this->l('Date'),
@@ -279,6 +282,10 @@ class AdminInvoicesControllerCore extends AdminController
 		$this->content .= $this->renderOptions();
 
 		$this->table = 'order_invoice';
+		$this->toolbar_btn['export'] = array(
+			'href' => self::$currentIndex.'&amp;export'.$this->table.'&amp;token='.$this->token,
+			'desc' => $this->l('Export')
+		);
 		$this->toolbar_title = $this->l('Unpaid invoices');
 		unset($this->toolbar_btn['save']);
 		unset($this->toolbar_btn['cancel']);
