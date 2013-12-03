@@ -32,6 +32,11 @@
 	<input type="hidden" name="submitted_tabs[]" value="Informations" />
 	<h3 class="tab">{l s='Information'}</h3>
 	<script type="text/javascript">
+		{if isset($ps_force_friendly_product) && $ps_force_friendly_product}
+			var ps_force_friendly_product = 1;
+		{else}
+			var ps_force_friendly_product = 0;
+		{/if}
 		{if isset($PS_ALLOW_ACCENTED_CHARS_URL) && $PS_ALLOW_ACCENTED_CHARS_URL}
 			var PS_ALLOW_ACCENTED_CHARS_URL = 1;
 		{else}
@@ -131,7 +136,7 @@
 		<div class="col-lg-5">
 			{include file="controllers/products/input_text_lang.tpl"
 				languages=$languages
-				input_class="{$class_input_ajax}{if !$product->id}copy2friendlyUrl{/if} updateCurrentText"
+				input_class="{$class_input_ajax}{if !$product->id || Configuration::get('PS_FORCE_FRIENDLY_PRODUCT')}copy2friendlyUrl{/if} updateCurrentText"
 				input_value=$product->name
 				input_name="name"
 			}
