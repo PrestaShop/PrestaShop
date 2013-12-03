@@ -2577,6 +2577,8 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['post_data'] = Tools::jsonEncode($_POST);
 		$this->tpl_form_vars['save_error'] = !empty($this->errors);
 
+		$this->tpl_form_vars['ps_force_friendly_product'] = Configuration::get('PS_FORCE_FRIENDLY_PRODUCT');
+
 		// autoload rich text editor (tiny mce)
 		$this->tpl_form_vars['tinymce'] = true;
 		$iso = $this->context->language->iso_code;
@@ -3576,7 +3578,7 @@ class AdminProductsControllerCore extends AdminController
 			$product->$prop = $this->getFieldValue($product, $prop);
 
 		$product->name['class'] = 'updateCurrentText';
-		if (!$product->id)
+		if (!$product->id || Configuration::get('PS_FORCE_FRIENDLY_PRODUCT'))
 			$product->name['class'] .= ' copy2friendlyUrl';
 
 		$images = Image::getImages($this->context->language->id, $product->id);
