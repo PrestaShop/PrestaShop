@@ -61,6 +61,7 @@ if (Tools::getValue('transform-points') == 'true' AND $customerPoints > 0)
 	$cartRule->reduction_amount = LoyaltyModule::getVoucherValue((int)$customerPoints);
 	$cartRule->quantity = 1;
 	$cartRule->quantity_per_user = 1;
+	$cartRule->reduction_tax = 1;
 
 	/* If merchandise returns are allowed, the voucher musn't be usable before this max return date */
 	$dateFrom = Db::getInstance()->getValue('
