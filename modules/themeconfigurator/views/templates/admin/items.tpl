@@ -14,12 +14,33 @@
             <ul id="items">
                 {foreach name=items from=$hookItems item=hItem}
                     <li id="item-{$hItem.id_item}" class="item panel">
-                        <span class="item-order">{if $hItem.item_order le 9}0{/if}{$hItem.item_order}</span>
-                        {if $hItem.image}<span><img src="{$module_dir}images/{$hItem.image}" alt="" title="" class="preview" /></span>{/if}
+                    	<div class="clearfix">
+                        <span class="item-order pull-left">{if $hItem.item_order le 9}0{/if}{$hItem.item_order}</span>
+                        {if $hItem.image}
+                        	
+                        	<span class="pull-left">
+                            	<img width="130" src="{$module_dir}images/{$hItem.image}" rel="#comments_{$hItem.id_item}" alt="" title="" class="preview" />
+                            	<br /><small class="normal">{l s='Click image to enlarge/reduce' mod='themeconfigurator'}</small>
+                            </span>
+                            <script type="text/javascript">
+								$(document).ready(function() {
+									var htmlContent = $('#comments_{$hItem.id_item}').html();
+									$("[rel=#comments_{$hItem.id_item}]").popover({
+										placement : 'bottom', //placement of the popover. also can use top, bottom, left or right
+										title : false, //this is the top title bar of the popover. add some basic css
+										html: 'true', //needed to show html of course
+										content : htmlContent  //this is the content of the html box. add the image here or anything you want really.
+									});
+								});
+							</script>
+                            <div style="display:none" id="comments_{$hItem.id_item}">   
+                            	<img class="img-responsive" src="{$module_dir}images/{$hItem.image}" alt="" title="" class="preview" />
+                            </div>
+                        {/if}
                         <span class="item-title">{$hItem.title}</span>
                         <span class="button btn btn-default button-edit pull-right"><i class="icon-edit"></i>{l s='Edit' mod='themeconfigurator'}</span>
                         <span class="button btn btn-default button-close pull-right"><i class="icon-remove"></i>{l s='Close' mod='themeconfigurator'}</span>
-                        
+                        </div>
                         <div class="item-container">
                             <form method="post" action="{$htmlitems.postAction}" enctype="multipart/form-data" class="item-form defaultForm  form-horizontal">
                             	 <input type="hidden" name="id_lang" value="{$lang}" />
