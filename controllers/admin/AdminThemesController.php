@@ -488,21 +488,24 @@ class AdminThemesControllerCore extends AdminController
 
 		if (isset($_FILES['themearchive']))
 		{
+
+			$uniqid = uniqid();
+			$sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
 			$archive_uploaded = false;
 			if ($_FILES['themearchive']['error'] || !file_exists($_FILES['themearchive']['tmp_name']))
 				$this->errors[] = sprintf($this->l('An error has occurred during the file upload (%s)'), $_FILES['themearchive']['error']);
 			elseif (substr($_FILES['themearchive']['name'], -4) != '.zip')
 				$this->errors[] = $this->l('Only zip files are allowed');
-			elseif (!move_uploaded_file($_FILES['themearchive']['tmp_name'], _PS_ADMIN_DIR_.'/import/theme/uploaded.zip'))
+			elseif (!move_uploaded_file($_FILES['themearchive']['tmp_name'], $sandbox.'uploaded.zip'))
 				$this->errors[] = $this->l('An error has occurred during the file copy.');
-			elseif (Tools::ZipTest(_PS_ADMIN_DIR_.'/import/theme/uploaded.zip'))
+			elseif (Tools::ZipTest($sandbox.'uploaded.zip'))
 				$archive_uploaded = true;
 			else
 				$this->errors[] = $this->l('Zip file seems to be broken');
 
 			if ($archive_uploaded)
 			{
-				if (!Tools::ZipExtract(_PS_ADMIN_DIR_.'/import/theme/uploaded.zip', _PS_ADMIN_DIR_.'/import/theme/uploaded/'))
+				if (!Tools::ZipExtract($sandbox.'/uploaded.zip', $sandbox.'uploaded/'))
 				{
 					$this->errors[] = $this->l('Error during zip extraction');
 				}
@@ -513,7 +516,7 @@ class AdminThemesControllerCore extends AdminController
 					else
 					{
 						$iso = $this->context->language->iso_code;
-						$xml = simplexml_load_file(_PS_ADMIN_DIR_.'/import/theme/uploaded/Config.xml');
+						$xml = simplexml_load_file($sandbox.'Config.xml');
 						$this->xml = $xml;
 
 						$theme_directory = strval($xml->variations->variation[0]['directory']);
@@ -534,7 +537,7 @@ class AdminThemesControllerCore extends AdminController
 
 //						_PS_ROOT_DIR_.'/config/xml'
 
-						if (!copy(_PS_ADMIN_DIR_.'/import/theme/uploaded/Config.xml', _PS_ROOT_DIR_.'/config/xml/'.$theme_directory.'.xml'))
+						if (!copy($sandbox.'uploaded/Config.xml', _PS_ROOT_DIR_.'/config/xml/'.$theme_directory.'.xml'))
 						{
 							$this->errors[] = $this->l('Can\'t copy configuration file');
 							$this->deleteTmpFiles();
@@ -550,13 +553,13 @@ class AdminThemesControllerCore extends AdminController
 
 						$target_dir = _PS_ALL_THEMES_DIR_.$theme_directory;
 
-						$this->recurseCopy(_PS_ADMIN_DIR_.'/import/theme/uploaded/themes/'.$theme_directory, $target_dir);
-						$this->recurseCopy(_PS_ADMIN_DIR_.'/import/theme/uploaded/modules/', _PS_MODULE_DIR_);
+						$this->recurseCopy($sandbox.'uploaded/themes/'.$theme_directory, $target_dir);
+						$this->recurseCopy($sandbox.'uploaded/modules/', _PS_MODULE_DIR_);
 					}
 				}
 
 			}
-			$this->deleteTmpFiles();
+			Tools::deleteDirectory($sandbox, true);
 			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes'));
 		}
 	}
@@ -575,11 +578,11 @@ class AdminThemesControllerCore extends AdminController
 					'title' => $this->l('Theme'),
 					'icon'  => 'icon-picture'
 				),
-				'input'   => array(
+				'input' => array(
 					array(
 						'type'     => 'file',
 						'label'    => $this->l('Zip of the theme:'),
-						'name'=> 'themearchive',
+						'name'     => 'themearchive',
 						'required' => true,
 						'hint'     => $this->l('Invalid characters:') . ' <>;=#{}',
 					),
@@ -832,95 +835,101 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$theme = New Theme((int)Tools::getValue('id_theme'));
 
-		if (file_exists(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml'))
+		$xml = false;
+		if (file_exists(_PS_ROOT_DIR_ . '/config/xml/' . $theme->directory . '.xml'))
 		{
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml');
+			$xml = simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/' . $theme->directory . '.xml');
+		} elseif (file_exists(_PS_ROOT_DIR_ . '/config/xml/default.xml'))
+		{
+			$xml = simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/default.xml');
+		}
+
+		if ($xml)
+		{
 
 			$theme_module = $this->getModules($xml);
 
 
-		$toolbar_btn['save'] = array(
-			'href' => '#',
-			'desc' => $this->l('Save')
-		);
+			$toolbar_btn['save'] = array(
+				'href' => '#',
+				'desc' => $this->l('Save')
+			);
 
 
-		$to_install = $this->formatHelperArray($theme_module['to_install']);
-		$to_enable = $this->formatHelperArray($theme_module['to_enable']);
-		$to_disable = $this->formatHelperArray($theme_module['to_disable']);
+			$to_install = $this->formatHelperArray($theme_module['to_install']);
+			$to_enable  = $this->formatHelperArray($theme_module['to_enable']);
+			$to_disable = $this->formatHelperArray($theme_module['to_disable']);
 
-		$fields_value = $this->formatHelperValuesArray($theme_module);
+			$fields_value = $this->formatHelperValuesArray($theme_module);
 
-		$fields_value['id_theme'] = (int)Tools::getValue('id_theme');
-		$fields_form = array(
-			'form' => array(
-				'tinymce' => false,
-				'legend'  => array(
-					'title' => $this->l('Modules to install'),
-					'icon'  => 'icon-picture'
-				),
-				'input'   => array(
-					array('type' => 'shop',
-						  'label' => $this->l('Shop association:'),
-						  'name' => 'checkBoxShopAsso'),
-					array(
-						'type' => 'hidden',
-						'name' => 'id_theme',
+			$fields_value['id_theme'] = (int)Tools::getValue('id_theme');
+			$fields_form              = array(
+				'form' => array(
+					'tinymce' => false,
+					'legend'  => array(
+						'title' => $this->l('Modules to install'),
+						'icon'  => 'icon-picture'
 					),
-					array(
-						'type'     => 'checkbox',
-						'label'    => $this->l('Select the theme\'s modules you wish to install:'),
-						'values' => array(
-							'query' => $to_install,
-							'id' => 'id',
-							'name' => 'name'
+					'input'   => array(
+						array('type'  => 'shop',
+							  'label' => $this->l('Shop association:'),
+							  'name'  => 'checkBoxShopAsso'),
+						array(
+							'type' => 'hidden',
+							'name' => 'id_theme',
 						),
-						'name'     => 'to_install',
+						array(
+							'type'   => 'checkbox',
+							'label'  => $this->l('Select the theme\'s modules you wish to install:'),
+							'values' => array(
+								'query' => $to_install,
+								'id'    => 'id',
+								'name'  => 'name'
+							),
+							'name'   => 'to_install',
+						),
+						array(
+							'type'   => 'checkbox',
+							'label'  => $this->l('Select the theme\'s modules you wish to enable:'),
+							'values' => array(
+								'query' => $to_enable,
+								'id'    => 'id',
+								'name'  => 'name'
+							),
+							'name'   => 'to_enable',
+						),
+						array(
+							'type'   => 'checkbox',
+							'label'  => $this->l('Select the theme\'s modules you wish to disable:'),
+							'values' => array(
+								'query' => $to_disable,
+								'id'    => 'id',
+								'name'  => 'name'
+							),
+							'name'   => 'to_disable',
+						)
 					),
-					array(
-						'type'     => 'checkbox',
-						'label'    => $this->l('Select the theme\'s modules you wish to enable:'),
-						'values' => array(
-							'query' => $to_enable,
-							'id' => 'id',
-							'name' => 'name'
-						),
-						'name'     => 'to_enable',
-					),
-					array(
-						'type'     => 'checkbox',
-						'label'    => $this->l('Select the theme\'s modules you wish to disable:'),
-						'values' => array(
-							'query' => $to_disable,
-							'id' => 'id',
-							'name' => 'name'
-						),
-						'name'     => 'to_disable',
-					)
-				),
-				'submit'  => array(
-					'title' => $this->l('Save'),
-					'class' => 'button'
-				))
-		);
+					'submit'  => array(
+						'title' => $this->l('Save'),
+						'class' => 'button'
+					))
+			);
 
-		$helper = new HelperForm();
+			$helper = new HelperForm();
 
-		$helper->currentIndex = $this->context->link->getAdminLink('AdminThemes', false).'&action=ThemeInstall';
-		$helper->token = Tools::getAdminTokenLite('AdminThemes');
-		$helper->show_toolbar = true;
-		$helper->toolbar_btn = $toolbar_btn;
-		$helper->fields_value = $fields_value;
+			$helper->currentIndex = $this->context->link->getAdminLink('AdminThemes', false) . '&action=ThemeInstall';
+			$helper->token        = Tools::getAdminTokenLite('AdminThemes');
+			$helper->show_toolbar = true;
+			$helper->toolbar_btn  = $toolbar_btn;
+			$helper->fields_value = $fields_value;
 
 
-		$helper->override_folder = $this->tpl_folder;
+			$helper->override_folder = $this->tpl_folder;
 
 
-
-
-
-		return $helper->generateForm(array($fields_form));
+			return $helper->generateForm(array($fields_form));
 		}
+
 		Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes'));
 	}
 
@@ -980,6 +989,7 @@ class AdminThemesControllerCore extends AdminController
 				Db::getInstance()->execute($sql_hook_module);
 			}
 		}
+
 //		var_dump($moduleHooks);
 	}
 
@@ -991,9 +1001,20 @@ class AdminThemesControllerCore extends AdminController
 		if (tools::isSubmit('checkBoxShopAsso_theme'))
 			$shops = Tools::getValue('checkBoxShopAsso_theme');
 
+		$xml = false;
 		if (file_exists(_PS_ROOT_DIR_ . '/config/xml/' . $theme->directory . '.xml'))
 		{
 			$xml = simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/' . $theme->directory . '.xml');
+		}
+		elseif(file_exists(_PS_ROOT_DIR_ . '/config/xml/default.xml'))
+		{
+			$xml = simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/default.xml');
+		}
+
+
+		if ($xml)
+		{
+
 
 			$moduleHook = array();
 
@@ -1078,6 +1099,7 @@ class AdminThemesControllerCore extends AdminController
 			$shop->id_theme = (int)Tools::getValue('id_theme');
 			$shop->save();
 		}
+		Tools::clearCache($this->context->smarty);
 
 		$this->themeName = $theme->name;
 
@@ -1092,24 +1114,8 @@ class AdminThemesControllerCore extends AdminController
 			'back_link' => Context::getContext()->link->getAdminLink('AdminThemes')
 		);
 
-//		var_dump($this->imgError);
 		return parent::renderView();
 	}
-/*
-	public function renderThemeSummary()
-	{
-		$helperView  = New HelperView();
-
-
-
-		var_dump($tpl_folder);
-		$this->override_folder = $this->tpl_folder;
-
-//		var_dump($this->base_folder);
-
-		echo $helperView->generateView();
-//		var_dump($this->imgError);
-	}*/
 
 	/**
 	 * This functions make checks about AdminThemes configuration edition only.
@@ -1118,6 +1124,7 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function postProcess()
 	{
+
 		if (Tools::isSubmit('id_theme') && !Tools::isSubmit('deletetheme') && Tools::getValue('action') != 'ThemeInstall')
 		{
 			$this->display = "ChooseThemeModule";
