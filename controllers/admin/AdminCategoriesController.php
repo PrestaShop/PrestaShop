@@ -383,7 +383,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->id = 'box-products-per-category';
 		$helper->icon = 'icon-search';
 		$helper->color = 'color4';
-		$helper->title = $this->l('Average number of products per category');
+		$helper->title = $this->l('Average number of products per category', null, null, false);
 		if (ConfigurationKPI::get('PRODUCTS_PER_CATEGORY') !== false)
 			$helper->value = ConfigurationKPI::get('PRODUCTS_PER_CATEGORY');
 		if (ConfigurationKPI::get('PRODUCTS_PER_CATEGORY_EXPIRE') < $time)
