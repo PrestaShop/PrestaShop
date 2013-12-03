@@ -116,7 +116,7 @@ abstract class AdminTabCore
 	protected $_tmpTableFilter = '';
 
 	/** @var array Number of results in list per page (used in select field) */
-	protected $_pagination = array(20, 50, 100, 300);
+	protected $_pagination = array(20, 50, 100, 300, 1000);
 
 	/** @var string ORDER BY clause determined by field/arrows in list header */
 	protected $_orderBy;

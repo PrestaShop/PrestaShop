@@ -39,7 +39,10 @@ class HelperListCore extends Helper
 	protected $_filter;
 
 	/** @var array Number of results in list per page (used in select field) */
-	protected $_pagination = array(20, 50, 100, 300);
+	protected $_pagination = array(20, 50, 100, 300, 1000);
+	
+	/** @var integer Default number of results in list per page */
+	protected $_default_pagination = 50;
 
 	/** @var string ORDER BY clause determined by field/arrows in list header */
 	public $orderBy;
@@ -511,15 +514,13 @@ class HelperListCore extends Helper
 			$token = $this->token;
 
 		/* Determine total page number */
-		if (isset($this->context->cookie->{$this->list_id.'_pagination'}) && $this->context->cookie->{$this->list_id.'_pagination'})
-			$default_pagination = $this->context->cookie->{$this->list_id.'_pagination'};
-		else
-			$default_pagination = $this->_pagination[0];
+		$pagination = $this->_default_pagination;
+		if (in_array((int)Tools::getValue($this->list_id.'_pagination'), $this->_pagination))
+			$pagination = (int)Tools::getValue($this->list_id.'_pagination');
+		elseif (isset($this->context->cookie->{$this->list_id.'_pagination'}) && $this->context->cookie->{$this->list_id.'_pagination'})
+			$pagination = $this->context->cookie->{$this->list_id.'_pagination'};
 
-		$total_pages = ceil($this->listTotal / Tools::getValue($this->list_id.'_pagination', ($default_pagination)));
-
-		if (!$total_pages) 
-			$total_pages = 1;
+		$total_pages = max(1, ceil($this->listTotal / $pagination));
 
 		$identifier = Tools::getIsset($this->identifier) ? '&'.$this->identifier.'='.(int)Tools::getValue($this->identifier) : '';
 		$order = '';
@@ -535,7 +536,7 @@ class HelperListCore extends Helper
 
 		/* Choose number of results per page */
 		$selected_pagination = Tools::getValue($this->list_id.'_pagination',
-			isset($this->context->cookie->{$this->list_id.'_pagination'}) ? $this->context->cookie->{$this->list_id.'_pagination'} : null
+			isset($this->context->cookie->{$this->list_id.'_pagination'}) ? $this->context->cookie->{$this->list_id.'_pagination'} : $this->_default_pagination
 		);
 
 		if (!isset($this->table_id) && $this->position_identifier && (int)Tools::getValue($this->position_identifier, 1))
