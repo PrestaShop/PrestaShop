@@ -958,12 +958,12 @@ class AdminThemesControllerCore extends AdminController
 
 			foreach ($moduleHooks as $hooks)
 			{
-				foreach($hooks as $hook)
+				foreach ($hooks as $hook)
 				{
-				$sql_hook_module = 'INSERT INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
-									VALUES ('.(int)$id_module.', '.(int)$id_shop.', '.(int)Hook::getIdByName($hook['hook']).', '.(int)$hook['position'].')';
+					$sql_hook_module = 'INSERT INTO `' . _DB_PREFIX_ . 'hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
+									VALUES (' . (int)$id_module . ', ' . (int)$id_shop . ', ' . (int)Hook::getIdByName($hook['hook']) . ', ' . (int)$hook['position'] . ')';
 
-				Db::getInstance()->execute($sql_hook_module);
+					Db::getInstance()->execute($sql_hook_module);
 				}
 			}
 		}
