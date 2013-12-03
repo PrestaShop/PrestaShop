@@ -3123,36 +3123,6 @@ a.link-social:hover { text-decoration: none; }
 
 .animated.fadeIn { -webkit-animation-name: fadeIn; -moz-animation-name: fadeIn; -o-animation-name: fadeIn; }
 
-.hide { display: none; }
-
-.text-right { text-align: right; }
-
-.text-left { text-align: left; }
-
-.text-center { text-align: center; }
-
-.gamification-tip { width: 100%; margin: 0 0 20px 0; position: relative; background-color: #f8f8f8; }
-.gamification-tip div.gamification-tip-title { position: absolute; top: 0; left: 0; height: 40px; line-height: 40px; width: 90px; padding: 0 0 0 40px; background: url("http://gamification.prestashop.com/images/interface/gamification-lightbulb.png") 10px 5px no-repeat; color: #556e26; font-size: 14px; font-weight: bold; }
-.gamification-tip div.gamification-tip-description-container { height: 40px; padding: 0 130px; display: table-cell; vertical-align: middle; font-size: 13px; color: #666666; background: url("http://gamification.prestashop.com/images/interface/gamification-tip-bg.png") 100px top no-repeat; }
-.gamification-tip div.gamification-tip-description-container span.gamification-tip-description { display: inline-block; font-size: 0.9em; line-height: 15px; max-height: 30px; overflow: hidden; }
-.gamification-tip span.gamification-tip-cta { position: absolute; line-height: 42px; height: 40px; top: 0; right: 0; padding: 0 10px 0 30px; background: url("http://gamification.prestashop.com/images/interface/gamification-cta-bg.png") left top no-repeat #a6c964; }
-.gamification-tip span.gamification-tip-cta a { display: inline-block; width: 100%; padding: 0 35px 0 0; font-size: 14px; text-transform: uppercase; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.5) 0 1px 0; color: #556e26; background: url("http://gamification.prestashop.com/images/interface/gamification-popin.png") right 10px no-repeat; }
-
-.gamification-tip-infobox { padding: 0 20px 20px 20px; position: relative; }
-.gamification-tip-infobox .gamification-tip-infobox-title { display: inline-block; margin: 0 0 20px -20px; width: 100%; padding: 10px 20px 5px; border-bottom: solid 3px #739334; font: 800 18px/20px arial; text-transform: uppercase; color: #556e26; background-color: #e7f0d6; }
-.gamification-tip-infobox .gamification-tip-infobox-title span.gamification-tip-infobox-title-prefix2 { display: inline-block; height: 40px; padding-left: 30px; line-height: 40px; text-transform: none; font-size: 16px; font-weight: 500; margin-right: 10px; background: url("http://gamification.prestashop.com/images/interface/gamification-lightbulb.png") left top no-repeat; }
-.gamification-tip-infobox .gamification-tip-infobox-content { display: block; width: 100%; }
-.gamification-tip-infobox .gamification-tip-infobox-content .gamification-tip-infobox-content-image { float: left; width: 215px; height: 200px; background: url("http://gamification.prestashop.com/images/interface/gamification-infobox-separator.png") no-repeat right center; }
-.gamification-tip-infobox .gamification-tip-infobox-content .gamification-tip-infobox-content-description { float: left; width: 335px; padding: 0 0 25px 25px; }
-.gamification-tip-infobox .gamification-tip-infobox-content .gamification-tip-infobox-content-description p { line-height: 20px; }
-.gamification-tip-infobox .gamification-tip-infobox-content .gamification-tip-infobox-content-description p ul li { padding: 0 0 0 20px; line-height: 25px; background: url("http://gamification.prestashop.com/images/interface/gamification-bullet-check.png") left center no-repeat; }
-.gamification-tip-infobox .gamification-tip-infobox-content .gamification-tip-infobox-content-controls { padding: 20px 0 0 0; }
-.gamification-tip-infobox .gamification-tip-infobox-content .gamification-tip-infobox-content-controls a.button { display: inline-block; height: 30px; padding: 0 20px; margin-right: 10px; border: none; line-height: 33px; text-transform: uppercase; font-weight: bold; color: #929292; border-radius: 3px; background: #d2d2d2; }
-.gamification-tip-infobox .gamification-tip-infobox-content .gamification-tip-infobox-content-controls a.button.success { color: #384819; background: #a6c964; border-color: #739334; }
-.gamification-tip-infobox .gamification-tip-infobox-content .gamification-tip-infobox-content-controls a.button:hover { color: #f8f8f8; background: #5f5f5f; border-color: #2c2c2c; }
-.gamification-tip-infobox .gamification-tip-infobox-content .gamification-tip-infobox-content-controls a.button:active { color: white; background: #2c2c2c; border-color: black; }
-.gamification-tip-infobox a.infobox-close { display: inline-block; width: 14px; height: 14px; position: absolute; top: 20px; right: 20px; text-indent: -9999px; background: url("http://gamification.prestashop.com/images/interface/gamification-infobox-close.png") no-repeat; }
-
 .bootstrap { @-webkit-keyframes one { 0% { background-color: #00a4e7; }
   100% { background-color: white; } }
  @-webkit-keyframes two { 0% { -webkit-box-shadow: #00a4e7 0 0 0 20px inset; box-shadow: #00a4e7 0 0 0 20px inset; }
