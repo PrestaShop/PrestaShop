@@ -818,15 +818,14 @@ class AdminThemesControllerCore extends AdminController
 
 		$xml = false;
 		if (file_exists(_PS_ROOT_DIR_ . '/config/xml/' . $theme->directory . '.xml'))
-		{
 			$xml = simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/' . $theme->directory . '.xml');
-		} elseif (file_exists(_PS_ROOT_DIR_ . '/config/xml/default.xml'))
-		{
+		elseif (file_exists(_PS_ROOT_DIR_ . '/config/xml/default.xml'))
 			$xml = simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/default.xml');
-		}
 
 		if ($xml)
 		{
+
+
 
 			$theme_module = $this->getModules($xml);
 
@@ -841,9 +840,6 @@ class AdminThemesControllerCore extends AdminController
 			$to_enable  = $this->formatHelperArray($theme_module['to_enable']);
 			$to_disable = $this->formatHelperArray($theme_module['to_disable']);
 
-			$fields_value = $this->formatHelperValuesArray($theme_module);
-
-			$fields_value['id_theme'] = (int)Tools::getValue('id_theme');
 			$fields_form              = array(
 				'form' => array(
 					'tinymce' => false,
@@ -895,6 +891,48 @@ class AdminThemesControllerCore extends AdminController
 						'class' => 'button'
 					))
 			);
+
+			$shops = array();
+			$shop = New Shop(Configuration::get('PS_SHOP_DEFAULT'));
+			$tmp['id_shop'] = $shop->id;
+			$tmp['id_theme'] = $shop->id_theme;
+			$shops[] = $tmp;
+
+			if (Shop::isFeatureActive())
+				$shops = Shop::getShops();
+
+			$currentShop = Context::getContext()->shop->id;
+
+			foreach($shops as $shop)
+			{
+				$shopTheme = New Theme((int)$shop['id_theme']);
+				if ((int)Tools::getValue('id_theme') == (int)$shop['id_theme'])
+					continue;
+
+				if (file_exists(_PS_ROOT_DIR_ . '/config/xml/' . $shopTheme->directory . '.xml'))
+				{
+					$shopXml = simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/' . $shopTheme->directory . '.xml');
+					$theme_shop_module = $this->getModules($shopXml);
+					$to_shop_uninstall = $this->formatHelperArray($theme_shop_module['to_install']);
+
+					$fields_form['form']['input'][] = array('type'   => 'checkbox',
+															'label'  => $this->l('Select the old theme\'s modules you wish to disable:'),
+															'values' => array(
+																'query' => $to_shop_uninstall,
+																'id'    => 'id',
+																'name'  => 'name'
+															),
+															'name'   => 'to_disable_shop'.$shop['id_shop']
+					);
+
+					if ($shop['id_shop'] == $currentShop)
+						$theme_module['to_disable_shop'.$shop['id_shop']] = $theme_shop_module['to_install'];
+				}
+			}
+
+			$fields_value = $this->formatHelperValuesArray($theme_module);
+
+			$fields_value['id_theme'] = (int)Tools::getValue('id_theme');
 
 			$helper = new HelperForm();
 
@@ -988,6 +1026,13 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processThemeInstall()
 	{
+		if (Shop::isFeatureActive() && !Tools::getIsset('checkBoxShopAsso_theme'))
+		{
+			$this->errors[] = $this->l('You must choose at least one shop.');
+			$this->display = 'ChooseThemeModule';
+			return;
+		}
+
 		$theme = New Theme((int)Tools::getValue('id_theme'));
 
 		$shops = array(Configuration::get('PS_SHOP_DEFAULT'));
