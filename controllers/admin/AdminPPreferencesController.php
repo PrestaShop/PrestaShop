@@ -198,7 +198,7 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_DISPLAY_DISCOUNT_PRICE' => array(
 						'title' => $this->l('Display discounted price'),
-						'desc' => $this->l('Instead of showing the discount (-5%) it will instead show the new price with the discount applied'),
+						'hint' => $this->l('Instead of showing the discount (-5%) it will instead show the new price with the discount applied'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
