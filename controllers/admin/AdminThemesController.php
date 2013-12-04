@@ -792,10 +792,21 @@ class AdminThemesControllerCore extends AdminController
 		$fmtArr = array();
 		foreach($originArr as $module)
 		{
+			$name = $module;
+
+			if (!class_exists($module) && file_exists(_PS_MODULE_DIR_.$module.'/'.$module.'.php'))
+				require(_PS_MODULE_DIR_.$module.'/'.$module.'.php');
+
+			if (class_exists($module))
+			{
+				$moduleClass = New $module;
+				$name        = $moduleClass->displayName;
+			}
+
 			$tmp = array();
 			$tmp['id'] = 'module'.$module;
 			$tmp['val'] = $module;
-			$tmp['name'] = $module;
+			$tmp['name'] = $name;
 			$fmtArr[] = $tmp;
 		}
 		return $fmtArr;
@@ -824,17 +835,12 @@ class AdminThemesControllerCore extends AdminController
 
 		if ($xml)
 		{
-
-
-
 			$theme_module = $this->getModules($xml);
-
 
 			$toolbar_btn['save'] = array(
 				'href' => '#',
 				'desc' => $this->l('Save')
 			);
-
 
 			$to_install = $this->formatHelperArray($theme_module['to_install']);
 			$to_enable  = $this->formatHelperArray($theme_module['to_enable']);
@@ -916,7 +922,7 @@ class AdminThemesControllerCore extends AdminController
 					$to_shop_uninstall = $this->formatHelperArray($theme_shop_module['to_install']);
 
 					$fields_form['form']['input'][] = array('type'   => 'checkbox',
-															'label'  => $this->l('Select the old theme\'s modules you wish to disable:'),
+															'label'  => sprintf($this->l('Select the old %1s theme\'s modules you wish to disable:'), $shopTheme->directory),
 															'values' => array(
 																'query' => $to_shop_uninstall,
 																'id'    => 'id',
