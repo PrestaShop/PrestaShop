@@ -215,7 +215,7 @@ var generated_date = {$smarty.now|intval};
                     </div>
             {/if}
             <div class="layer_cart_row">
-                <strong class="dark">{l s='Total shipping (tax exclu.):' mod='blockcart'}</strong>
+                <strong class="dark">{l s='Total shipping (tax excl.):' mod='blockcart'}</strong>
                 <span class="ajax_cart_shipping_cost">{if $shipping_cost_float == 0}{l s='Free shipping!' mod='blockcart'}{else}{$shipping_cost}{/if}</span>
             </div>
             {if $show_tax && isset($tax_cost)}
