@@ -36,7 +36,6 @@
 	<title>{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'html':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if}</title>
 	{if $display_header}
 	<script type="text/javascript">
-
 		var help_class_name = '{$controller_name|@addcslashes:'\''}';
 		var iso_user = '{$iso_user|@addcslashes:'\''}';
 		var country_iso_code = '{$country_iso_code|@addcslashes:'\''}';
@@ -44,13 +43,13 @@
 		var helpboxes = {$help_box|intval};
 		var roundMode = {$round_mode|intval};
 {if isset($shop_context)}
-{if $shop_context == Shop::CONTEXT_ALL}
+	{if $shop_context == Shop::CONTEXT_ALL}
 		var youEditFieldFor = '{l s='A modification of this field will be applied for all shops' js=1}';
-{elseif $shop_context == Shop::CONTEXT_GROUP}
+	{elseif $shop_context == Shop::CONTEXT_GROUP}
 		var youEditFieldFor = '{l s='A modification of this field will be applied for all shops of group' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
-{else}
+	{else}
 		var youEditFieldFor = '{l s='A modification of this field will be applied for the shop' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
-{/if}
+	{/if}
 {else}
 		var youEditFieldFor = '';
 {/if}
@@ -101,7 +100,6 @@
 	-->
 	{/if}
 </head>
-
 
 {if $display_header}
 	<body class="{if $employee->bo_menu}page-sidebar {* page-sidebar-closed *}{else}page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
@@ -314,7 +312,7 @@
 				</li>
 {/if}
 				<li id="employee_infos" class="dropdown">
-					<a href='#' class="employee_name dropdown-toggle" data-toggle="dropdown">
+					<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
 						<span class="employee_avatar_small">{$employee_avatar}</span>
 						{$first_name}&nbsp;{$last_name}
 						<i class="caret"></i>
