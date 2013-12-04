@@ -4,11 +4,11 @@ jQuery(document).ready(function() {
 		item_container.toggleClass('active').children('.item-container').slideToggle();
 	});
 	$('.button-edit').click(function() {
-		var item_container = $(this).parent('.item');
+		var item_container = $(this).parents('.item');
 		item_container.toggleClass('active').children('.item-container').slideToggle();
 	});
 	$('.button-close').click(function() {
-		var item_container = $(this).parent('.item');
+		var item_container = $(this).parents('.item');
 		item_container.toggleClass('active').children('.item-container').slideToggle();
 	});	
 	
