@@ -2,10 +2,13 @@ function bar_chart_goals(widget_name, chart_details)
 {
 	nv.addGraph(function() {
 		var chart = nv.models.multiBarChart()
-			.stacked(false)
+			.stacked(true)
 			.showControls(false)
 			.tooltipContent(function(key, y, e, graph) {
 				var perf = parseInt(e) - 100;
+
+				return '/modules/dashgoals/views/js/dashgoals.js : Deprecated, now we need to retrieve the content with ajax';
+
 				if (perf > 0)
 					return '<section class="panel"><header class="panel-heading">' + key + '</header><span class="dash_trend dash_trend_up">+' + perf + '%</span></section>';
 				else if (perf < 0)
