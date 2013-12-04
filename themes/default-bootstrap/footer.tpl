@@ -23,24 +23,23 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 		{if !$content_only}
-                    </div> <!-- #center_column -->
-                    {if isset($right_column_size) && !empty($right_column_size)}
-                    <!-- Right -->
-                        <div id="right_column" class="col-xs-12 col-sm-3 column">
-                            {$HOOK_RIGHT_COLUMN}
-                        </div>
-                    {/if}
-                	</div> <!-- .row -->
+					</div> <!-- #center_column -->
+					{if isset($right_column_size) && !empty($right_column_size)}
+						<div id="right_column" class="col-xs-12 col-sm-3 column">
+							{$HOOK_RIGHT_COLUMN}
+						</div>
+					{/if}
+					</div> <!-- .row -->
 				</div> <!-- #columns -->
-            </div> <!-- .columns-container -->
+			</div> <!-- .columns-container -->
 <!-- Footer -->
 			<div class="footer-container">
-            	<div class="container">
-                    <footer id="footer" class="row">
-                        {$HOOK_FOOTER}
-                    </footer>
-                </div>
-            </div> <!-- .footer-container -->
+				<div class="container">
+					<footer id="footer" class="row">
+						{$HOOK_FOOTER}
+					</footer>
+				</div>
+			</div> <!-- .footer-container -->
 		</div> <!-- #page -->
 	{/if}
 	</body>

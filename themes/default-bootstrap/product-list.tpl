@@ -51,31 +51,32 @@
 			<div class="product-container" itemscope itemtype="http://schema.org/Product">
 				<div class="left-block">
 					<div class="product-image-container">
-						<a 
-						itemprop="url" 
-						href="{$product.link|escape:'html':'UTF-8'}" class="product_img_link" 
-						title="{$product.name|escape:'html':'UTF-8'}">
+						<a
+							class="product_img_link"
+							href="{$product.link|escape:'html':'UTF-8'}"  
+							title="{$product.name|escape:'html':'UTF-8'}"
+							itemprop="url">
 							<img 
-							itemprop="image" 
-							class="replace-2x img-responsive" 
-							src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html'}" 
-							alt="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" 
-							title="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" 
-							{if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} />
+								class="replace-2x img-responsive" 
+								src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html'}" 
+								alt="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" 
+								title="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" 
+								{if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if}
+								itemprop="image" />
 						</a>
 						{if isset($quick_view) && $quick_view}
-							<a 
-							href="#" 
-							rel="{$product.link|escape:'html':'UTF-8'}" 
-							class="quick-view">
-								<span>Quick view</span>
+							<a  
+								class="quick-view"
+								href="#" 
+								rel="{$product.link|escape:'html':'UTF-8'}">
+									<span>Quick view</span>
 							</a>
 						{/if}
 						{if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
 							<div 
-							itemprop="offers" 
-							itemscope itemtype="http://schema.org/Offer" 
-							class="content_price">
+								class="content_price"
+								itemprop="offers" 
+								itemscope itemtype="http://schema.org/Offer">
 								{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}
 									<span itemprop="price" class="price product-price">
 										{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}
@@ -108,10 +109,10 @@
 					<h5 itemprop="name">
 						{if isset($product.pack_quantity) && $product.pack_quantity}{$product.pack_quantity|intval|cat:' x '}{/if}
 						<a 
-						class="product-name" 
-						itemprop="url" 
-						href="{$product.link|escape:'html':'UTF-8'}" 
-						title="{$product.name|escape:'html':'UTF-8'}">
+							class="product-name" 
+							href="{$product.link|escape:'html':'UTF-8'}" 
+							title="{$product.name|escape:'html':'UTF-8'}"
+							itemprop="url" >
 							{$product.name|truncate:45:'...'|escape:'html':'UTF-8'}
 						</a>
 					</h5>
@@ -147,24 +148,28 @@
 								{if isset($static_token)}
 									<a
 										class="button ajax_add_to_cart_button btn btn-default" 
+										href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;
 										rel="nofollow"
+										title="{l s='Add to cart'}"
 										data-id-product="{$product.id_product|intval}"
-										href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", false)|escape:'html'}"
-										title="{l s='Add to cart'}">
+										token={$static_token}", false)|escape:'html'}">
 										<span>{l s='Add to cart'}</span>
 									</a>
 								{else}
 									<a
 										class="button ajax_add_to_cart_button btn btn-default"
-										rel="nofollow"
-										data-id-product="{$product.id_product|intval}"
 										href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}", false)|escape:'html'}"
-										title="{l s='Add to cart'}">
+										rel="nofollow"
+
+										title="{l s='Add to cart'}"
+										data-id-product="{$product.id_product|intval}">
 										<span>{l s='Add to cart'}</span>
 									</a>
 								{/if}						
 							{else}
-								<span class="button ajax_add_to_cart_button btn btn-default disabled"><span>{l s='Add to cart'}</span></span>
+								<span class="button ajax_add_to_cart_button btn btn-default disabled">
+									<span>{l s='Add to cart'}</span>
+								</span>
 							{/if}
 						{/if}
 						<a itemprop="url" class="button lnk_view btn btn-default" href="{$product.link|escape:'html':'UTF-8'}" title="{l s='View'}">
@@ -214,7 +219,7 @@
 					{hook h='displayProductListFunctionalButtons' product=$product}
 					{if isset($comparator_max_item) && $comparator_max_item}
 						<div class="compare">
-							<a href="#" data-id-product="{$product.id_product}" class="addToCompare" onClick="addToCompare('{$product.id_product|intval}'); return false;">{l s='Add to Compare'}</a>
+							<a class="addToCompare" href="#" data-id-product="{$product.id_product}" onClick="addToCompare('{$product.id_product|intval}'); return false;">{l s='Add to Compare'}</a>
 						</div>
 					{/if}
 				</div>
