@@ -37,18 +37,8 @@
 <div class="products_block table-responsive">
 	<table id="product_comparison" class="table table-bordered">
     	<tr>
-			<td width="20%" class="td_empty">
-            	<div class="share">
-                	<strong class="dark">{l s='Share this comparison whith your friends:'}</strong>
-                	{literal}
-                		<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-						<script type="text/javascript">stLight.options({publisher: "064cc95a-8054-4d07-966a-693ce7b9fd4b",nativeCount:false, doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
-                    {/literal}
-                	<div class='st_twitter_hcount' displayText='Tweet'></div>
-                    <div class='st_googleplus_hcount' displayText='Google +'></div>
-                    <div class='st_pinterest_hcount' displayText='Pinterest'></div>
-                    <div class='st_facebook_hcount' displayText='Facebook'></div>
-                </div>
+			<td width="20%" class="td_empty compare_extra_information">
+					{$HOOK_COMPARE_EXTRA_INFORMATION}
             	<span>{l s='Features:'}</span>
             </td>
 			{assign var='taxes_behavior' value=false}
