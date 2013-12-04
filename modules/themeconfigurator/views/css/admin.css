@@ -56,7 +56,7 @@
 }
 .lang-items {
 	position:relative;
-	z-index:0;
+	z-index:1;
 	background:#f4f4f4;
 	border:1px solid #e9e9e9;
 	margin-top:-1px;
@@ -168,3 +168,4 @@ h4.hook-title {
 .item .displayed_flag, .new-item .displayed_flag {
 	margin:0 0 0 10px;
 }
+.item .normal { font-weight:normal;}
