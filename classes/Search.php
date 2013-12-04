@@ -394,16 +394,47 @@ class SearchCore
 		return $features;
 	}
 
-	protected static function getProductsToIndex($total_languages, $id_product = false, $limit = 50)
+	protected static function getProductsToIndex($total_languages, $id_product = false, $limit = 50, $weight_array = array())
 	{
 		// Adjust the limit to get only "whole" products, in every languages (and at least one)
 		$max_possibilities = $total_languages * count(Shop::getShops(true));
 		$limit = max($max_possibilities, floor($limit / $max_possibilities) * $max_possibilities);
 
-		return Db::getInstance()->executeS('
-			SELECT p.id_product, pl.id_lang, pl.id_shop, pl.name pname, p.reference, p.ean13, p.upc,
-				pl.description_short, pl.description, cl.name cname, m.name mname, l.iso_code
-			FROM '._DB_PREFIX_.'product p
+		$sql = 'SELECT p.id_product, pl.id_lang, pl.id_shop, pl.name pname, p.reference, p.ean13, p.upc,
+				pl.description_short, pl.description, cl.name cname, m.name mname, l.iso_code';
+
+		if (is_array($weight_array))
+			foreach($weight_array as $key => $weight)
+				if ((int)$weight)
+					switch($key)
+					{
+						case 'pname':
+							$sql .= ', pl.name pname';
+						break;
+						case 'reference':
+							$sql .= ', p.reference';
+						break;
+						case 'ean13':
+							$sql .= ', p.ean13';
+						break;
+						case 'upc':
+							$sql .= ', p.upc';
+						break;
+						case 'description_short':
+							$sql .= ', pl.description_short';
+						break;
+						case 'description':
+							$sql .= ', pl.description';
+						break;
+						case 'cname':
+							$sql .= ', cl.name cname';
+						break;
+						case 'mname':
+							$sql .= ', m.name mname';
+						break;
+					}
+
+		$sql .= ' FROM '._DB_PREFIX_.'product p
 			LEFT JOIN '._DB_PREFIX_.'product_lang pl
 				ON p.id_product = pl.id_product
 			'.Shop::addSqlAssociation('product', 'p').'
@@ -416,8 +447,8 @@ class SearchCore
 			WHERE product_shop.indexed = 0
 			AND product_shop.visibility IN ("both", "search")
 			'.($id_product ? 'AND p.id_product = '.(int)$id_product : '').'
-			LIMIT '.(int)$limit
-		);
+			LIMIT '.(int)$limit;
+		return Db::getInstance()->executeS($sql);
 	}
 
 	public static function indexation($full = false, $id_product = false)
@@ -490,15 +521,18 @@ class SearchCore
 		$total_languages = count(Language::getLanguages(false));
 
 		// Products are processed 50 by 50 in order to avoid overloading MySQL
-		while (($products = Search::getProductsToIndex($total_languages, $id_product, 50)) && (count($products) > 0))
+		while (($products = Search::getProductsToIndex($total_languages, $id_product, 50, $weight_array)) && (count($products) > 0))
 		{
 			$products_array = array();
 			// Now each non-indexed product is processed one by one, langage by langage
 			foreach ($products as $product)
 			{
-				$product['tags'] = Search::getTags($db, (int)$product['id_product'], (int)$product['id_lang']);
-				$product['attributes'] = Search::getAttributes($db, (int)$product['id_product'], (int)$product['id_lang']);
-				$product['features'] = Search::getFeatures($db, (int)$product['id_product'], (int)$product['id_lang']);
+ 				if ((int)$weight_array['tags'])
+					$product['tags'] = Search::getTags($db, (int)$product['id_product'], (int)$product['id_lang']);
+ 				if ((int)$weight_array['attributes'])
+					$product['attributes'] = Search::getAttributes($db, (int)$product['id_product'], (int)$product['id_lang']);
+ 				if ((int)$weight_array['features'])
+					$product['features'] = Search::getFeatures($db, (int)$product['id_product'], (int)$product['id_lang']);
 
 				// Data must be cleaned of html, bad characters, spaces and anything, then if the resulting words are long enough, they're added to the array
 				$product_array = array();

@@ -27,22 +27,37 @@
 <!--[if IE 7]><html class="no-js lt-ie9 lt-ie8 ie7" lang="{$lang_iso}"> <![endif]-->
 <!--[if IE 8]><html class="no-js lt-ie9 ie8" lang="{$lang_iso}"> <![endif]-->
 <!--[if gt IE 8]> <html class="no-js ie9" lang="{$lang_iso}"> <![endif]-->
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{$lang_iso}">
+<html lang="{$lang_iso}">
 	<head>
 		<title>{$meta_title|escape:'html':'UTF-8'}</title>
-{if isset($meta_description) AND $meta_description}
-		<meta name="description" content="{$meta_description|escape:html:'UTF-8'}" />
-{/if}
-{if isset($meta_keywords) AND $meta_keywords}
-		<meta name="keywords" content="{$meta_keywords|escape:html:'UTF-8'}" />
-{/if}
-		<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
-		<meta http-equiv="content-language" content="{$meta_language}" />
+		{if isset($meta_description) AND $meta_description}
+		  <meta name="description" content="{$meta_description|escape:html:'UTF-8'}" />
+		{/if}
+		{if isset($meta_keywords) AND $meta_keywords}
+		  <meta name="keywords" content="{$meta_keywords|escape:html:'UTF-8'}" />
+		{/if}
+		<meta charset="utf-8" />
 		<meta name="generator" content="PrestaShop" />
 		<meta name="robots" content="{if isset($nobots)}no{/if}index,{if isset($nofollow) && $nofollow}no{/if}follow" />
-        <meta name="viewport" content="width=device-width, minimum-scale=0.25, maximum-scale=1.6, initial-scale=1.0" /> 
-        <meta name="apple-mobile-web-app-capable" content="yes" /> 
-        <script>
+		<meta name="viewport" content="width=device-width, minimum-scale=0.25, maximum-scale=1.6, initial-scale=1.0" /> 
+		<meta name="apple-mobile-web-app-capable" content="yes" /> 
+		
+		<link rel="icon" type="image/vnd.microsoft.icon" href="{$favicon_url}?{$img_update_time}" />
+		<link rel="shortcut icon" type="image/x-icon" href="{$favicon_url}?{$img_update_time}" />
+		<link href="{$css_dir}bootstrap_lib/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="{$css_dir}font-awesome.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="{$css_dir}jquery/uniform.default.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="{$css_dir}highdpi.css" rel="stylesheet" media="only screen and (-webkit-min-device-pixel-ratio: 2)" />
+		<link href="{$css_dir}jquery/footable.core.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="{$css_dir}jquery/jquery.bxslider.css" rel="stylesheet" type="text/css" media="all" />
+		<link href='//fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css' />
+		{if isset($css_files)}
+			{foreach from=$css_files key=css_uri item=media}
+				<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
+			{/foreach}
+		{/if}
+
+		<script>
 			if (navigator.userAgent.match(/Android/i)) {
 				var viewport = document.querySelector("meta[name=viewport]");
 				viewport.setAttribute('content', 'initial-scale=1.0,maximum-scale=1.0,user-scalable=0,width=device-width,height=device-height');
@@ -51,8 +66,6 @@
 				window.scrollTo(0,1);
 			 }
 		</script>
-		<link rel="icon" type="image/vnd.microsoft.icon" href="{$favicon_url}?{$img_update_time}" />
-		<link rel="shortcut icon" type="image/x-icon" href="{$favicon_url}?{$img_update_time}" />
 		<script type="text/javascript">
 			var baseDir = '{$content_dir|addslashes}';
 			var baseUri = '{$base_uri|addslashes}';
@@ -63,35 +76,23 @@
 			var roundMode = {$roundMode};
 			var isUserLogged = {if $logged}true{else}false{/if};
 		</script>
-       	<link href="{$css_dir}bootstrap_lib/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
-        <link href="{$css_dir}font-awesome.css" rel="stylesheet" type="text/css" media="all" />
-        <link href="{$css_dir}jquery/uniform.default.css" rel="stylesheet" type="text/css" media="all" />
-        <link href="{$css_dir}highdpi.css" rel="stylesheet" media="only screen and (-webkit-min-device-pixel-ratio: 2)" />
-        <link href="{$css_dir}jquery/footable.core.css" rel="stylesheet" type="text/css" media="all" />
-        <link href="{$css_dir}jquery/jquery.bxslider.css" rel="stylesheet" type="text/css" media="all" />
-        <link href='//fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css' />
-{if isset($css_files)}
-	{foreach from=$css_files key=css_uri item=media}
-	<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
-	{/foreach}
-{/if}
-{if isset($js_files)}
-	{foreach from=$js_files item=js_uri}
-	<script type="text/javascript" src="{$js_uri}"></script>
-	{/foreach}
-{/if}
-<script src="{$js_dir}tools/bootstrap.min.js"></script>
-<!--[if IE 8]><html class="no-js lt-ie9 ie8" lang="{$lang_iso}">
-	 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-<![endif]-->
-<script src="{$js_dir}tools/jquery.total-storage.min.js"></script>
-<script src="{$js_dir}jquery/jquery.uniform-modify.js"></script>
-<script src="{$js_dir}jquery/highdpi.js"></script>
-<script src="{$js_dir}jquery/jquery.bxslider.js"></script>
-<script src="{$js_dir}jquery/footable.js"></script>
-<script src="{$js_dir}jquery/footable.sort.js"></script>
-<script src="{$js_dir}jquery/resonsive_utilites.js"></script>
+		{if isset($js_files)}
+			{foreach from=$js_files item=js_uri}
+			   <script type="text/javascript" src="{$js_uri}"></script>
+			{/foreach}
+		{/if}
+		<script src="{$js_dir}tools/bootstrap.min.js"></script>
+		<!--[if IE 8]><html class="no-js lt-ie9 ie8" lang="{$lang_iso}">
+			 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			 <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+		<![endif]-->
+		<script src="{$js_dir}tools/jquery.total-storage.min.js"></script>
+		<script src="{$js_dir}jquery/jquery.uniform-modify.js"></script>
+		<script src="{$js_dir}jquery/highdpi.js"></script>
+		<script src="{$js_dir}jquery/jquery.bxslider.js"></script>
+		<script src="{$js_dir}jquery/footable.js"></script>
+		<script src="{$js_dir}jquery/footable.sort.js"></script>
+		<script src="{$js_dir}jquery/resonsive_utilites.js"></script>
 		{$HOOK_HEADER}
 	</head>
 	<body{if isset($page_name)} id="{$page_name|escape:'html':'UTF-8'}"{/if} class="{if isset($page_name)}{$page_name|escape:'html':'UTF-8'}{/if}{if isset($body_classes) && $body_classes|@count} {implode value=$body_classes separator=' '}{/if}{if $hide_left_column} hide-left-column{/if}{if $hide_right_column} hide-right-column{/if}{if $content_only} content_only{/if} lang_{$lang_iso}">
@@ -103,117 +104,124 @@
 		{/if}
 		<div id="page">
 			<!-- Header -->
-            <div class="header-container">
-                <header id="header">
-                	<div class="header-row">
-                        <div class="container clearfix">
-                        	 <!-- User info -->
-                        	<div id="header_user_info">
-                                {if $logged}
-                                    <a href="{$link->getPageLink('index', true, NULL, "mylogout")|escape:'html'}" title="{l s='Log me out'}" class="logout" rel="nofollow">{l s='Sign out'}</a>
-                                {else}
-                                    <a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Login to your customer account'}" class="login" rel="nofollow">{l s='Sign in'}</a>
-                                {/if}
-                            </div>
-                            <!-- /User info -->
-                            <!-- languages -->
-                            {if count($languages) > 1}
-                            <div id="languages-block-top">
-                                <div id="countries">
-                                    {foreach from=$languages key=k item=language name="languages"}
-                                        {if $language.iso_code == $lang_iso}
-                                            <div class="current">
-                                                <span>{$language.name}</span>
-                                            </div>
-                                        {/if}
-                                    {/foreach}
-                                    <ul id="first-languages" class="countries_ul toogle_content">
-                                    {foreach from=$languages key=k item=language name="languages"}
-                                        <li {if $language.iso_code == $lang_iso}class="selected"{/if}>
-                                        {if $language.iso_code != $lang_iso}
-                                            {assign var=indice_lang value=$language.id_lang}
-                                            {if isset($lang_rewrite_urls.$indice_lang)}
-                                                <a href="{$lang_rewrite_urls.$indice_lang|escape:htmlall}" title="{$language.name}">
-                                            {else}
-                                                <a href="{$link->getLanguageLink($language.id_lang)|escape:htmlall}" title="{$language.name}">
-                            
-                                            {/if}
-                                        {/if}
-                                                <span>{$language.name}</span>
-                                        {if $language.iso_code != $lang_iso}
-                                            </a>
-                                        {/if}
-                                        </li>
-                                    {/foreach}
-                                    </ul>
-                                </div>
-                            </div>
-                            <script type="text/javascript">
-								$(document).ready(function(){
-									$('#countries .current span, #countries .countries_ul li span').each(function() {
-										var h = $(this).html();
-										var index = h.indexOf(' ');
-											if(index == -1) {
-												index = h.length;
-											}
-										$(this).html('<span class="firstWord">'+ h.substring(index, h.length) + '</span>' + h.substring(0, index));
-									});
-								}); 
-							</script>
-                            {/if}
-                            <!-- /languages -->
-                            <!-- Currencies -->
-                            {if count($currencies) > 1}
-                                <div id="currencies-block-top">
-                                    <form id="setCurrency" action="{$request_uri}" method="post">
-                                        <div class="current">
-                                            <input type="hidden" name="id_currency" id="id_currency" value=""/>
-                                            <input type="hidden" name="SubmitCurrency" value="" />
-                                            <span class="cur-label">{l s='Currency'} :</span>
-                                            {foreach from=$currencies key=k item=f_currency}
-                                                {if $cookie->id_currency == $f_currency.id_currency}<strong>{$f_currency.iso_code}</strong>{/if}
-                                            {/foreach}
-                                        </div>
-                                        <ul id="first-currencies" class="currencies_ul toogle_content">
-                                            {foreach from=$currencies key=k item=f_currency}
-                                                <li {if $cookie->id_currency == $f_currency.id_currency}class="selected"{/if}>
-                                                    <a href="javascript:setCurrency({$f_currency.id_currency});" title="{$f_currency.name}" rel="nofollow">{$f_currency.name}</a>
-                                                </li>
-                                            {/foreach}
-                                        </ul>
-                                    </form>
-                                </div>
-                            {/if}
-							<!-- /Currencies -->
-                            <!--Contact link-->
-                            <div id="contact-link">
-                                <a href="{$link->getPageLink('contact', true)|escape:'html'}" title="{l s='contact'}">{l s='Contact Us'}</a>
-                            </div>
-                           {if $shop_phone}<span class="shop-phone"><i class="icon-phone"></i>{l s='Call us now toll free:'} <strong>{$shop_phone}</strong></span>{/if}
-                        </div>
-                    </div>
-                	<div class="container header-row-2">
-                        <a id="header_logo" href="{$base_dir}" title="{$shop_name|escape:'html':'UTF-8'}">
-                            <img class="logo img-responsive" src="{$logo_url}" alt="{$shop_name|escape:'html':'UTF-8'}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}" {/if}/>
-                        </a>
-                        <div id="header_right">
-                            {$HOOK_TOP}
-                        </div>
-                    </div>
-                </header>
-            </div>
-            <div class="columns-container">
-                <div id="columns" class="container">
-                    {if $page_name !='index' && $page_name !='pagenotfound'}
-                        {include file="$tpl_dir./breadcrumb.tpl"}
-                    {/if}
-                    <div class="row">
+			<div class="header-container">
+				<header id="header">
+					<div class="header-row">
+						<nav class="container clearfix">
+							 
+							<div id="header_user_info">
+								{if $logged}
+									<a href="{$link->getPageLink('index', true, NULL, "mylogout")|escape:'html'}" title="{l s='Log me out'}" class="logout" rel="nofollow">{l s='Sign out'}</a>
+								{else}
+									<a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Login to your customer account'}" class="login" rel="nofollow">{l s='Sign in'}</a>
+								{/if}
+							</div> <!-- #header_user_info -->
+
+							{if count($languages) > 1}
+								<div id="languages-block-top">
+									<div id="countries">
+										{foreach from=$languages key=k item=language name="languages"}
+											{if $language.iso_code == $lang_iso}
+												<div class="current">
+													<span>{$language.name}</span>
+												</div>
+											{/if}
+										{/foreach}
+										<ul id="first-languages" class="countries_ul toogle_content">
+										{foreach from=$languages key=k item=language name="languages"}
+											<li {if $language.iso_code == $lang_iso}class="selected"{/if}>
+											{if $language.iso_code != $lang_iso}
+												{assign var=indice_lang value=$language.id_lang}
+												{if isset($lang_rewrite_urls.$indice_lang)}
+													<a href="{$lang_rewrite_urls.$indice_lang|escape:htmlall}" title="{$language.name}">
+												{else}
+													<a href="{$link->getLanguageLink($language.id_lang)|escape:htmlall}" title="{$language.name}">
+								
+												{/if}
+											{/if}
+													<span>{$language.name}</span>
+											{if $language.iso_code != $lang_iso}
+												</a>
+											{/if}
+											</li>
+										{/foreach}
+										</ul>
+									</div>
+								</div> <!-- #languages-block-top -->
+
+								<script type="text/javascript">
+									$(document).ready(function(){
+										$('#countries .current span, #countries .countries_ul li span').each(function() {
+											var h = $(this).html();
+											var index = h.indexOf(' ');
+												if(index == -1) {
+													index = h.length;
+												}
+											$(this).html('<span class="firstWord">'+ h.substring(index, h.length) + '</span>' + h.substring(0, index));
+										});
+									}); 
+								</script>
+							{/if}
+
+							{if count($currencies) > 1}
+								<div id="currencies-block-top">
+									<form id="setCurrency" action="{$request_uri}" method="post">
+										<div class="current">
+											<input type="hidden" name="id_currency" id="id_currency" value=""/>
+											<input type="hidden" name="SubmitCurrency" value="" />
+											<span class="cur-label">{l s='Currency'} :</span>
+											{foreach from=$currencies key=k item=f_currency}
+												{if $cookie->id_currency == $f_currency.id_currency}<strong>{$f_currency.iso_code}</strong>{/if}
+											{/foreach}
+										</div>
+										<ul id="first-currencies" class="currencies_ul toogle_content">
+											{foreach from=$currencies key=k item=f_currency}
+												<li {if $cookie->id_currency == $f_currency.id_currency}class="selected"{/if}>
+													<a href="javascript:setCurrency({$f_currency.id_currency});" title="{$f_currency.name}" rel="nofollow">{$f_currency.name}</a>
+												</li>
+											{/foreach}
+										</ul>
+									</form>
+								</div> <!-- #currencies-block-top -->
+							{/if}
+
+							<div id="contact-link">
+								<a href="{$link->getPageLink('contact', true)|escape:'html'}" title="{l s='contact'}">{l s='Contact Us'}</a>
+							</div> <!-- #contact-link -->
+
+						   {if $shop_phone}
+								<span class="shop-phone">
+									<i class="icon-phone"></i>{l s='Call us now toll free:'} <strong>{$shop_phone}</strong>
+								</span>
+							{/if}
+
+						</nav><!-- .container-row -->
+					</div> <!-- .header-row -->
+
+					<div class="container header-row-2">
+						<a id="header_logo" href="{$base_dir}" title="{$shop_name|escape:'html':'UTF-8'}">
+							<img class="logo img-responsive" src="{$logo_url}" alt="{$shop_name|escape:'html':'UTF-8'}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}" {/if}/>
+						</a>
+						<div id="header_right">
+							{$HOOK_TOP}
+						</div>
+					</div> <!-- .header-row-2 -->
+
+				</header> <!-- #header -->
+			</div> <!-- .header-container -->
+			
+			<div class="columns-container">
+				<div id="columns" class="container">
+					{if $page_name !='index' && $page_name !='pagenotfound'}
+						{include file="$tpl_dir./breadcrumb.tpl"}
+					{/if}
+					<div class="row">
 						{if isset($left_column_size) && !empty($left_column_size)}
 						<!-- Left -->
-                        <div id="left_column" class="column col-xs-12 col-sm-3">
+						<div id="left_column" class="column col-xs-12 col-sm-3">
 							{$HOOK_LEFT_COLUMN}
-                        </div>
+						</div>
 						{/if}
-                    	<!-- Center -->
-                    	<div id="center_column" class="center_column col-xs-12 col-sm-{12 - $left_column_size - $right_column_size}">
+						<!-- Center -->
+						<div id="center_column" class="center_column col-xs-12 col-sm-{12 - $left_column_size - $right_column_size}">
 	{/if}
