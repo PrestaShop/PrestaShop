@@ -215,7 +215,7 @@ var generated_date = {$smarty.now|intval};
                     </div>
             {/if}
             <div class="layer_cart_row">
-                <strong class="dark">{l s='Total shipping (tax exclu.):' mod='blockcart'}</strong>
+                <strong class="dark">{l s='Total shipping (tax excl.):' mod='blockcart'}</strong>
                 <span class="ajax_cart_shipping_cost">{if $shipping_cost_float == 0}{l s='Free shipping!' mod='blockcart'}{else}{$shipping_cost}{/if}</span>
             </div>
             {if $show_tax && isset($tax_cost)}
@@ -230,7 +230,7 @@ var generated_date = {$smarty.now|intval};
             </div>
             <div class="button-container">	
                 <span class="continue btn btn-default button exclusive-medium" title="{l s='Continue shopping' mod='blockcart'}"><span><i class="icon-chevron-left left"></i>{l s='Continue shopping' mod='blockcart'}</span></span>
-                <a class="btn btn-default button button-medium" href="{$link->getPageLink("$order_process", true)|escape:'html'}" title="{l s='Procedd to checkout' mod='blockcart'}" rel="nofollow"><span>{l s='Proceed to checkout' mod='blockcart'}<i class="icon-chevron-right right"></i></span></a>	
+                <a class="btn btn-default button button-medium" href="{$link->getPageLink("$order_process", true)|escape:'html'}" title="{l s='Proceed to checkout' mod='blockcart'}" rel="nofollow"><span>{l s='Proceed to checkout' mod='blockcart'}<i class="icon-chevron-right right"></i></span></a>	
             </div>
         </div>
     </div>

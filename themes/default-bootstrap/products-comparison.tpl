@@ -49,37 +49,37 @@
 			{assign var='replace_id' value=$product->id|cat:'|'}
 
 			<td width="{$width}%" class="ajax_block_product comparison_infos product-block">
-            	<div class="remove">
-                	<a class="cmp_remove" href="{$link->getPageLink('products-comparison', true)|escape:'html'}" title="{l s='Remove'}" rel="ajax_id_product_{$product->id}"><i class="icon-trash"></i></a>
-                </div>
-                <div class="product-image-block">
-                    <a href="{$product->getLink()}" title="{$product->name|escape:html:'UTF-8'}" class="product_image" >
-                        <img class="img-responsive" src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')|escape:'html'}" alt="{$product->name|escape:html:'UTF-8'}" />
-                    </a>
-                    {if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
-                    	{if $product->on_sale}
-                        	<div class="sale-box"><span class="sale-label">{l s='Sale!'}</span></div>
-                        {/if}
-                    {/if}
-                </div>
+				<div class="remove">
+					<a class="cmp_remove" href="{$link->getPageLink('products-comparison', true)|escape:'html'}" title="{l s='Remove'}" data-id-product="{$product->id}"><i class="icon-trash"></i></a>
+				</div>
+				<div class="product-image-block">
+					<a href="{$product->getLink()}" title="{$product->name|escape:html:'UTF-8'}" class="product_image" >
+						<img class="img-responsive" src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')|escape:'html'}" alt="{$product->name|escape:html:'UTF-8'}" />
+					</a>
+					{if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
+						{if $product->on_sale}
+							<div class="sale-box"><span class="sale-label">{l s='Sale!'}</span></div>
+						{/if}
+					{/if}
+				</div>
 				<h5><a class="product-name" href="{$product->getLink()}" title="{$product->name|truncate:32:'...'|escape:'html':'UTF-8'}">{$product->name|truncate:45:'...'|escape:'html':'UTF-8'}</a></h5>
-                <div class="prices-container">
+				<div class="prices-container">
 					{if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
 						<span class="price product-price">{convertPrice price=$product->getPrice($taxes_behavior)}</span>
 						{if isset($product->specificPrice) && $product->specificPrice}
-                        	{if {$product->specificPrice.reduction_type == 'percentage'}}
-                            	<span class="old-price product-price">{displayWtPrice p=$product->getPrice($taxes_behavior)+($product->getPrice($taxes_behavior)* $product->specificPrice.reduction)}</span>
-                        		<span class="price-percent-reduction">-{$product->specificPrice.reduction*100|floatval}%</span>
-                            {else}
-                            	<span class="old-price product-price">{convertPrice price=($product->getPrice($taxes_behavior) + $product->specificPrice.reduction)}</span>
-                            	<span class="price-percent-reduction">-{convertPrice price=$product->specificPrice.reduction}</span>
-                            {/if}
-                        {/if}
+							{if {$product->specificPrice.reduction_type == 'percentage'}}
+								<span class="old-price product-price">{displayWtPrice p=$product->getPrice($taxes_behavior)+($product->getPrice($taxes_behavior)* $product->specificPrice.reduction)}</span>
+								<span class="price-percent-reduction">-{$product->specificPrice.reduction*100|floatval}%</span>
+							{else}
+								<span class="old-price product-price">{convertPrice price=($product->getPrice($taxes_behavior) + $product->specificPrice.reduction)}</span>
+								<span class="price-percent-reduction">-{convertPrice price=$product->specificPrice.reduction}</span>
+							{/if}
+						{/if}
 						{if $product->on_sale}
 						{elseif $product->specificPrice AND $product->specificPrice.reduction}
-                            <div class="product_discount">
-                                <span class="reduced-price">{l s='Reduced price!'}</span>
-                            </div>
+							<div class="product_discount">
+								<span class="reduced-price">{l s='Reduced price!'}</span>
+							</div>
 						{/if}
 
 						{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
@@ -109,22 +109,28 @@
 						</span>
 					{/if}
 				</p>
-                <div class="clearfix">
-                	<div class="button-container">
-                            {if (!$product->hasAttributes() OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product->minimal_quantity == 1 AND $product->customizable != 2 AND !$PS_CATALOG_MODE}
-                                {if ($product->quantity > 0 OR $product->allow_oosp)}
-                                    <a class="button ajax_add_to_cart_button btn btn-default" rel="ajax_id_product_{$product->id}" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html'}" title="{l s='Add to cart'}"><span>{l s='Add to cart'}</span></a>
-                                {else}
-                                    <span class="ajax_add_to_cart_button button btn btn-default disabled"><span>{l s='Add to cart'}</span></span>
-                                {/if}
-                            {else}
-                                
-                            {/if}
-                            <a class="button lnk_view btn btn-default" href="{$product->getLink()}" title="{l s='View'}"><span>{l s='View'}</span></a>
-                        </div>
-                </div>
-                     
-               </div>
+				<div class="clearfix">
+					<div class="button-container">
+							{if (!$product->hasAttributes() OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product->minimal_quantity == 1 AND $product->customizable != 2 AND !$PS_CATALOG_MODE}
+								{if ($product->quantity > 0 OR $product->allow_oosp)}
+									<a
+										class="button ajax_add_to_cart_button btn btn-default"
+										data-id-product="{$product->id}"
+										href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html'}"
+										title="{l s='Add to cart'}">
+										<span>{l s='Add to cart'}</span>
+									</a>
+								{else}
+									<span class="ajax_add_to_cart_button button btn btn-default disabled"><span>{l s='Add to cart'}</span></span>
+								{/if}
+							{else}
+								
+							{/if}
+							<a class="button lnk_view btn btn-default" href="{$product->getLink()}" title="{l s='View'}"><span>{l s='View'}</span></a>
+						</div>
+				</div>
+					 
+				</div>
 			</td>
 		{/foreach}
 		</tr>
@@ -164,4 +170,3 @@
 <ul class="footer_link">
 	<li><a class="button lnk_view btn btn-default" href="{$base_dir}"><span><i class="icon-chevron-left left"></i>{l s='Continue Shopping'}</span></a></li>
 </ul>
-
