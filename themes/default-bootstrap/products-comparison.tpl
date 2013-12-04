@@ -37,7 +37,8 @@
 <div class="products_block table-responsive">
 	<table id="product_comparison" class="table table-bordered">
     	<tr>
-			<td width="20%" class="td_empty">
+			<td width="20%" class="td_empty compare_extra_information">
+					{$HOOK_COMPARE_EXTRA_INFORMATION}
             	<span>{l s='Features:'}</span>
             </td>
 			{assign var='taxes_behavior' value=false}
