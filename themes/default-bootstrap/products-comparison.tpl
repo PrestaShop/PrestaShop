@@ -112,9 +112,17 @@
                 	<div class="button-container">
                             {if (!$product->hasAttributes() OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product->minimal_quantity == 1 AND $product->customizable != 2 AND !$PS_CATALOG_MODE}
                                 {if ($product->quantity > 0 OR $product->allow_oosp)}
+					{if $product.pre_order || ($product.quantity <= 0 && Configuration::get('PS_AUTO_PREORDER_NO_STOCK'))}
+						<a class="button ajax_add_to_cart_button btn btn-default" rel="ajax_id_product_{$product->id}" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html'}" title="{l s='Pre-order'}"><span>{l s='Pre-order'}</span></a>
+					{else}
                                     <a class="button ajax_add_to_cart_button btn btn-default" rel="ajax_id_product_{$product->id}" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html'}" title="{l s='Add to cart'}"><span>{l s='Add to cart'}</span></a>
+					{/if}
                                 {else}
+					{if $product.pre_order || ($product.quantity <= 0 && Configuration::get('PS_AUTO_PREORDER_NO_STOCK'))}
+						<span class="ajax_add_to_cart_button button btn btn-default disabled"><span>{l s='Pre-ordert'}</span></span>
+					{else}
                                     <span class="ajax_add_to_cart_button button btn btn-default disabled"><span>{l s='Add to cart'}</span></span>
+					{/if}
                                 {/if}
                             {else}
                                 

@@ -498,7 +498,11 @@ var contentOnly = {if $content_only}true{else}false{/if}
         <div class="box-cart-bottom">        
         
      <p id="add_to_cart" {if (!$allow_oosp && $product->quantity <= 0) OR !$product->available_for_order OR (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE}style="display:none"{/if} class="buttons_bottom_block">	
+	{if $product->pre_order || ($product->quantity <= 0 && Configuration::get('PS_AUTO_PREORDER_NO_STOCK'))}
+		<button type="submit" name="Submit" class="exclusive"><span>{l s='Pre-order'}</span> </button>
+	{else}
     	<button type="submit" name="Submit" class="exclusive"><span>{l s='Add to cart'}</span> </button>
+	{/if}
 	</p>	
 
 	{if isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS}{$HOOK_PRODUCT_ACTIONS}{/if}<strong></strong>
@@ -586,7 +590,11 @@ var contentOnly = {if $content_only}true{else}false{/if}
 <div>
 <div>
 <div>
+	{if $accessory->pre_order || ($accessory->quantity <= 0 && Configuration::get('PS_AUTO_PREORDER_NO_STOCK'))}
+		<a class="exclusive button ajax_add_to_cart_button" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$accessory.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html'}" rel="ajax_id_product_{$accessory.id_product|intval}" title="{l s='Pre-order'}"><span>{l s='Pre-order'}</span></a> </div> </div> </div>
+	{else}
 	<a class="exclusive button ajax_add_to_cart_button" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$accessory.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html'}" rel="ajax_id_product_{$accessory.id_product|intval}" title="{l s='Add to cart'}"><span>{l s='Add to cart'}</span></a> </div> </div> </div>
+	{/if}
                                
                                     
 									{/if}
