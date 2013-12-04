@@ -947,6 +947,39 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
+	  * Search with Pathes for categories
+	  *
+	  * @param integer $id_lang Language ID
+	  * @param string $path of category
+	  * @param boolean $object_to_create a category
+* 	  * @param boolean $method_to_create a category
+	  * @return array Corresponding categories
+	  */
+	public static function searchByPath($id_lang, $path, $object_to_create = false, $method_to_create = false)
+	{
+		$categories = explode('/', trim($path));
+		$category = $id_parent_category = false;
+
+		if (is_array($categories) && count($categories))
+			foreach($categories as $category_name)
+			{
+				if ($id_parent_category)
+					$category = Category::searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category);
+				else
+					$category = Category::searchByName($id_lang,$category_name,true);
+
+				if (!$category && $object_to_create && $method_to_create)
+				{
+					call_user_func_array(array($object_to_create, $method_to_create), array($id_lang, $category_name , $id_parent_category));
+					$category = Category::searchByPath($id_lang, $category_name);
+		     	}
+				if (isset($category['id_category']) && $category['id_category'])
+					$id_parent_category = (int)$category['id_category'];
+			}
+		return $category;
+	}
+
+	/**
 	 * Get Each parent category of this category until the root category
 	 *
 	 * @param integer $id_lang Language ID
