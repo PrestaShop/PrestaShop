@@ -151,14 +151,13 @@
 										href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", false)|escape:'html'}"
 										rel="nofollow"
 										title="{l s='Add to cart'}"
-										data-id-product="{$product.id_product|intval}"
-										token={$static_token}", false)|escape:'html'}">
+										data-id-product="{$product.id_product|intval}">
 										<span>{l s='Add to cart'}</span>
 									</a>
 								{else}
 									<a
 										class="button ajax_add_to_cart_button btn btn-default"
-										href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}", false)|escape:'html'}"
+										href="{$link->getPageLink('cart',false, NULL, 'add=1&amp;id_product={$product.id_product|intval}', false)|escape:'html'}"
 										rel="nofollow"
 										title="{l s='Add to cart'}"
 										data-id-product="{$product.id_product|intval}">
