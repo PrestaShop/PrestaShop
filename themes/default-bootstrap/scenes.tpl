@@ -24,7 +24,7 @@
 *}
 
 {if scenes}
-<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/cluetip/jquery.cluetip.js"></script>
+
 <script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/jquery.scrollTo.js"></script>
 <script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/jquery.serialScroll.js"></script>
 <script type="text/javascript">// <![CDATA[
@@ -40,24 +40,38 @@ $(function () {ldelim}
 		<div class="screen_scene" id="screen_scene_{$scene->id}" style="background:transparent url({$base_dir}img/scenes/{$scene->id}-scene_default.jpg); height:{$largeSceneImageType.height}px; width:{$largeSceneImageType.width}px; {if !$scene@first} display:none;{/if}">
 			{foreach $scene->products as $product_key=>$product}
 			{assign var=imageIds value="`$product.id_product`-`$product.id_image`"}
-				<a href="{$product.link|escape:'html':'UTF-8'}" accesskey="#scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}" class="cluetip" style="width:{$product.zone_width}px; height:{$product.zone_height}px; margin-left:{$product.x_axis}px ;margin-top:{$product.y_axis}px;">
-					<span style="margin-top:{math equation='a/2 -10' a=$product.zone_height}px; margin-left:{math equation='a/2 -10' a=$product.zone_width}px;">&nbsp;</span>
+				<a href="{$product.link|escape:'html':'UTF-8'}" rel="#scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}" class="popover-button" style="width:{$product.zone_width}px; height:{$product.zone_height}px; margin-left:{$product.x_axis}px ;margin-top:{$product.y_axis}px;">
+					<span style="margin-top:{math equation='a/2 -10' a=$product.zone_height}px; margin-left:{math equation='a/2 -10' a=$product.zone_width}px;"></span>
 				</a>
+                <script type="text/javascript">
+					$(document).ready(function() {
+						var htmlContent = $('#scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}').html();
+						$("[rel=#scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}]").popover({
+							placement : 'bottom', //placement of the popover. also can use top, bottom, left or right
+							trigger:'hover',
+							title : false, //this is the top title bar of the popover. add some basic css
+							html: 'true', //needed to show html of course
+							content : htmlContent  //this is the content of the html box. add the image here or anything you want really.
+						});
+					});
+				</script>
 				<div id="scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}" style="display:none;">
-					{if !$PS_CATALOG_MODE AND $product.details->show_price}
+                	<div class="product-image-container">
+						<img class="img-responsive replace-2x" src="{$link->getImageLink($product.id_product, $imageIds, 'home_default')|escape:'html'}" alt="" />
+                    </div>
+					<p class="product-name"><span class="product_name">{$product.details->name}</span></p>
+					<div class="description">{$product.details->description_short|strip_tags|truncate:170:'...'}</div>
+                    {if !$PS_CATALOG_MODE AND $product.details->show_price}
 					<div class="prices">
-						{if isset($product.details->new) AND $product.details->new}<span class="new-label">{l s='New'}</span>{/if}
-						<p class="price">{if $priceDisplay}{convertPrice price=$product.details->getPrice(false, $product.details->getDefaultAttribute($product.id_product))}{else}{convertPrice price=$product.details->getPrice(true, $product.details->getDefaultAttribute($product.id_product))}{/if}</p>
+						{if isset($product.details->new) AND $product.details->new}<span class="new-box"><span class="new-label">{l s='New'}</span></span>{/if}
+						<p class="price product-price">{if $priceDisplay}{convertPrice price=$product.details->getPrice(false, $product.details->getDefaultAttribute($product.id_product))}{else}{convertPrice price=$product.details->getPrice(true, $product.details->getDefaultAttribute($product.id_product))}{/if}</p>
 							{if $product.details->on_sale}
-							<span class="on_sale">{l s='On sale!'}</span>
+							<span class="sale-box"><span class="sale-label">{l s='Sale'}</span></span>
 						{elseif isset($product.reduction) && $product.reduction}
 							<span class="discount">{l s='Reduced price!'}</span>
 						{/if}
 					</div>
 					{/if}
-					<img src="{$link->getImageLink($product.id_product, $imageIds, 'medium_default')|escape:'html'}" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
-					<p class="title_block"><span class="product_name">{$product.details->name}</span></p>
-					<p class="description">{$product.details->description_short|strip_tags|truncate:170:'...'}</p>
 				</div>
 			{/foreach}
 		</div>

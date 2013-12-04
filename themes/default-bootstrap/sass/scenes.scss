@@ -1,24 +1,24 @@
 @import '_theme_variables';
 /*TMP*/
-#scenes .cluetip span{
-	background:transparent url(../img/icon/cible.gif) no-repeat scroll center center;
-	color:black;
+#scenes .popover-button span{
 	display:block;
-	font-size:1.1em;
-	font-weight:bold;
-	height:23px;
-	padding-top:5px;
+	font-size:28px;
 	text-align:center;
-	width:23px;
+	&:before {
+		content:"";
+		font-family:$font-icon;
+		display:block;	
+		vertical-align:5px;
+	}
 }
 /*TMP*/
 .thumbs_banner{
 	margin:10px auto;
-	padding:2px 0;
-	height: 60px !important;
+	padding:0px 0;
+	height: 62px !important;
 	width:100%;
-	border-top:1px solid #ccc;
-	border-bottom:1px solid #ccc;
+	border-top:1px solid $base-border-color;
+	border-bottom:1px solid $base-border-color;
 }
 
 .thumbs_banner .space-keeper{
@@ -31,15 +31,22 @@
 .thumbs_banner .space-keeper a.prev{
 	display:none;
 	width:21px;
-	text-align:center;
-	font-size:1.5em;
+	background:$base-box-bg;
 	text-decoration:none;
-	background:url(../img/icon/serial_scroll_left.gif) no-repeat 0 0 #eee;
+	color:$base-text-color;
+	
+	&:before {
+		font-family:$font-icon;
+		content:"";
+		vertical-align:middle;
+		padding-top:35px;
+		padding-left:5px;
+	}	
 }
 #scenes_list{
 	overflow:hidden;
 	float:left;
-	width:478px;
+	width:828px;
 }
 #scenes_list ul{
 	list-style-type:none;
@@ -57,92 +64,47 @@
 	float:left;
 	display:block;
 	width:21px;
-	text-align:center;
-	font-size:1.5em;
+	width:21px;
+	background:$base-box-bg;
 	text-decoration:none;
-	background:url(../img/icon/serial_scroll_right.gif) no-repeat 0 0 #ddd;
+	color:$base-text-color;
+	
+	&:before {
+		font-family:$font-icon;
+		content:"";
+		vertical-align:middle;
+		padding-top:35px;
+		padding-left:5px;
+	}
 }
 
-/* Cluetip design ****************************************************************************** */
-#scenes .screen_scene {
-	margin:0 auto;
-}
-
-#scenes a.cluetip{
+#scenes a.popover-button {
 	display:block;
 	position:absolute;
 	text-decoration:none;
 }
 
-.cluetip-product_scene {
-	padding:10px;
-	border:7px solid #999;
-	-moz-border-radius:3px;
-	-webkit-border-radius:3px;
-   border-radius:3px;
-	text-align:left;
-	background:$light-background;
-	opacity:0.95;
+#scenes {
+	.popover {
+		@include border-radius(0);
+		border-color:$base-border-color;
+	}
+	.product-image-container, .product-name {
+		margin-bottom:15px;	
+	}
+	div.description {
+		margin-bottom:15px;	
+	}
+	.button-container {
+		margin-bottom:15px;
+		a {text-decoration:none;}
+	}
+	.price {
+		margin-bottom:10px;	
+	}
 }
-
-.cluetip-product_scene #cluetip-close{
-	text-align:right;
-	float:right;
+@media  (max-width: $screen-md-max) { // max 1199px 
+	#scenes {
+		display:none;	
+	}
 }
-
-.cluetip-product_scene img {
-	float:left;
-	margin-right:10px;
-	border:1px solid #ccc
-}
-.cluetip-product_scene .title_block {
-	display:inline-block;
-	margin-bottom:5px;
-	padding:0 !important;
-	font-size:12px;
-}
-
-.cluetip-product_scene .clear {margin:0; padding:0}
-.cluetip-product_scene .clear a {
-	/*float:left;*/
-	margin-top:2px;
-}
-
-.cluetip-product_scene p.description{
-	float:left;
-	padding:0;
-	width:140px;
-	color:$description-color;
-}
-
-.cluetip-product_scene div.prices{
-	float:right;
-	position:relative;
-	width:65px;
-	text-align:right;
-}
-.cluetip-product_scene .new {
-	position:absolute;
-	top:0;
-	right:0;
-   display: inline-block;
-   padding: 1px 5px;
-   font-weight: bold;
-   font-size: 10px;
-   color: $light-text-color;
-   text-transform: uppercase;
-	background: none repeat scroll 0 0 #9B0000
-}
-.cluetip-product_scene .price{
-	padding-top:18px;
-	font-weight:bold;
-	font-size:13px;
-	color:#990000
-}
-.cluetip-product_scene .on_sale, .cluetip-product_scene .discount {
-	display:block;
-	font-weight:bold;
-	color:#DA0F00;
-	text-transform:uppercase;
-}
-/* END Cluetip design */
