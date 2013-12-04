@@ -962,6 +962,7 @@ class Blocktopmenu extends Module
 		{
 			if ($link['label'] == '')
 			{
+				$default_language = Configuration::get('PS_LANG_DEFAULT');
 				$link = MenuTopLinks::get($link['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
 				$html .= '<option value="LNK'.(int)$link[0]['id_linksmenutop'].'">'.$spacer.$link[0]['label'].'</option>';
 			}
