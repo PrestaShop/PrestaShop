@@ -36,10 +36,11 @@
 </script>
 <div class="products_block table-responsive">
 	<table id="product_comparison" class="table table-bordered">
-		<tr>
-			<td width="20%" class="td_empty">
-				<span>{l s='Features:'}</span>
-			</td>
+    	<tr>
+			<td width="20%" class="td_empty compare_extra_information">
+					{$HOOK_COMPARE_EXTRA_INFORMATION}
+            	<span>{l s='Features:'}</span>
+            </td>
 			{assign var='taxes_behavior' value=false}
 			{if $use_taxes && (!$priceDisplay  || $priceDisplay == 2)}
 				{assign var='taxes_behavior' value=true}
@@ -169,4 +170,3 @@
 <ul class="footer_link">
 	<li><a class="button lnk_view btn btn-default" href="{$base_dir}"><span><i class="icon-chevron-left left"></i>{l s='Continue Shopping'}</span></a></li>
 </ul>
-
