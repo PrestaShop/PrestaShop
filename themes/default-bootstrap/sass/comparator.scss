@@ -30,11 +30,11 @@ table#product_comparison {
 			td.td_empty {
 				vertical-align:bottom;
 				
-				span {
+				> span {
 					font:600 18px/22px $font-custom;
 					text-transform:uppercase;
 					color:#555454;	
-				}
+				}	
 			}
 		}
 	}
@@ -110,8 +110,46 @@ table#product_comparison {
 	width:auto;
 }
 .footer_link { margin-bottom:20px;}
-
-
+#stOCClose {
+	width:29px !important;
+	height:29px !important;	
+}
+.stButton .stFb, .stButton .stTwbutton, .stButton .stMainServices {
+	height:22px !important;
+}
+.stButton .stButton_gradient {
+	height:22px !important;	
+}
+@media (min-width: $screen-lg) { // min 1200px
+	.share {
+		margin-bottom:315px;	
+	}
+}
+@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px
+	.share {
+			margin-bottom:315px;	
+	}
+}
+@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
+	.share {
+			margin-bottom:315px;	
+	}
+}
+.share {
+	strong {
+		display:block;
+		margin-bottom:10px;	
+	}
+}
+.share > div {
+	margin-bottom:8px;
+}
+.stArrow {
+	display:none !important;	
+}
+.stButton {
+	margin-left:0 !important;	
+}
 #product_comparison{
     .comparison_feature{
       .product_name{display: none;}
