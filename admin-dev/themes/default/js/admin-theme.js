@@ -23,6 +23,39 @@
 */
 
 $( document ).ready(function() {
+/*
+    // chooseThemeModule
+    var shopTree = $("#shop-tree");
+    console.log(shopTree);
+//    var input = shopTree.find('input');
+    shopTree.find('input').each(function(){
+       console.log($(this));
+    });
+*/
+    $("[name^='checkBoxShopAsso_theme']").click(function(){
+        var id = $(this).attr('value');
+        var checked = $(this).prop('checked');
+
+//        console.log($(this).attr('value'));
+//        console.log($(this).prop('checked'));
+
+
+        var formGroup = $("[for='to_disable_shop"+id+"']").parent();
+        if (checked == true)
+        {
+            formGroup.removeClass('hide');
+
+            console.log(formGroup.find('input'));
+            formGroup.find('input').each(function(){$(this).prop('checked', 'checked');});
+        }
+        else
+        {
+            formGroup.addClass('hide');
+            formGroup.find('input').each(function(){$(this).prop('checked', '');});
+        }
+    });
+//    console.log($("[name^='checkBoxShopAsso_theme']"));
+//    console.log(input);
 
 	//nav side bar
 	function navSidebar(){
