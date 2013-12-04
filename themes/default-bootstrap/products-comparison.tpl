@@ -50,7 +50,7 @@
 
 			<td width="{$width}%" class="ajax_block_product comparison_infos product-block">
 				<div class="remove">
-					<a class="cmp_remove" href="{$link->getPageLink('products-comparison', true)|escape:'html'}" title="{l s='Remove'}" rel="ajax_id_product_{$product->id}"><i class="icon-trash"></i></a>
+					<a class="cmp_remove" href="{$link->getPageLink('products-comparison', true)|escape:'html'}" title="{l s='Remove'}" data-id-product="{$product->id}"><i class="icon-trash"></i></a>
 				</div>
 				<div class="product-image-block">
 					<a href="{$product->getLink()}" title="{$product->name|escape:html:'UTF-8'}" class="product_image" >
@@ -115,7 +115,7 @@
 								{if ($product->quantity > 0 OR $product->allow_oosp)}
 									<a
 										class="button ajax_add_to_cart_button btn btn-default"
-										data-id-product="ajax_id_product_{$product->id}"
+										data-id-product="{$product->id}"
 										href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html'}"
 										title="{l s='Add to cart'}">
 										<span>{l s='Add to cart'}</span>

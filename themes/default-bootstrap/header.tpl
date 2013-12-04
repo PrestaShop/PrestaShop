@@ -44,12 +44,12 @@
 		
 		<link rel="icon" type="image/vnd.microsoft.icon" href="{$favicon_url}?{$img_update_time}" />
 		<link rel="shortcut icon" type="image/x-icon" href="{$favicon_url}?{$img_update_time}" />
-		<link href="{$css_dir}bootstrap_lib/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
-		<link href="{$css_dir}font-awesome.css" rel="stylesheet" type="text/css" media="all" />
-		<link href="{$css_dir}jquery/uniform.default.css" rel="stylesheet" type="text/css" media="all" />
-		<link href="{$css_dir}highdpi.css" rel="stylesheet" media="only screen and (-webkit-min-device-pixel-ratio: 2)" />
-		<link href="{$css_dir}jquery/footable.core.css" rel="stylesheet" type="text/css" media="all" />
-		<link href="{$css_dir}jquery/jquery.bxslider.css" rel="stylesheet" type="text/css" media="all" />
+		<link rel="stylesheet" href="{$css_dir}bootstrap_lib/bootstrap.css" type="text/css" media="all" />
+		<link rel="stylesheet" href="{$css_dir}font-awesome.css" type="text/css" media="all" />
+		<link rel="stylesheet" href="{$css_dir}jquery/uniform.default.css" type="text/css" media="all" />
+		<link rel="stylesheet" href="{$css_dir}highdpi.css" media="only screen and (-webkit-min-device-pixel-ratio: 2)" />
+		<link rel="stylesheet" href="{$css_dir}jquery/footable.core.css" type="text/css" media="all" />
+		<link rel="stylesheet" href="{$css_dir}jquery/jquery.bxslider.css" type="text/css" media="all" />
 		<link href='//fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css' />
 		{if isset($css_files)}
 			{foreach from=$css_files key=css_uri item=media}
@@ -62,11 +62,10 @@
 				var viewport = document.querySelector("meta[name=viewport]");
 				viewport.setAttribute('content', 'initial-scale=1.0,maximum-scale=1.0,user-scalable=0,width=device-width,height=device-height');
 			}
-				if(navigator.userAgent.match(/Android/i)){
+			if(navigator.userAgent.match(/Android/i)){
 				window.scrollTo(0,1);
-			 }
-		</script>
-		<script type="text/javascript">
+			}
+
 			var baseDir = '{$content_dir|addslashes}';
 			var baseUri = '{$base_uri|addslashes}';
 			var static_token = '{$static_token|addslashes}';
@@ -111,9 +110,9 @@
 							 
 							<div id="header_user_info">
 								{if $logged}
-									<a href="{$link->getPageLink('index', true, NULL, "mylogout")|escape:'html'}" title="{l s='Log me out'}" class="logout" rel="nofollow">{l s='Sign out'}</a>
+									<a class="logout" href="{$link->getPageLink('index', true, NULL, "mylogout")|escape:'html'}" rel="nofollow" title="{l s='Log me out'}">{l s='Sign out'}</a>
 								{else}
-									<a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Login to your customer account'}" class="login" rel="nofollow">{l s='Sign in'}</a>
+									<a class="login" href="{$link->getPageLink('my-account', true)|escape:'html'}" rel="nofollow" title="{l s='Login to your customer account'}">{l s='Sign in'}</a>
 								{/if}
 							</div> <!-- #header_user_info -->
 
@@ -128,23 +127,23 @@
 											{/if}
 										{/foreach}
 										<ul id="first-languages" class="countries_ul toogle_content">
-										{foreach from=$languages key=k item=language name="languages"}
-											<li {if $language.iso_code == $lang_iso}class="selected"{/if}>
-											{if $language.iso_code != $lang_iso}
-												{assign var=indice_lang value=$language.id_lang}
-												{if isset($lang_rewrite_urls.$indice_lang)}
-													<a href="{$lang_rewrite_urls.$indice_lang|escape:htmlall}" title="{$language.name}">
-												{else}
-													<a href="{$link->getLanguageLink($language.id_lang)|escape:htmlall}" title="{$language.name}">
-								
+											{foreach from=$languages key=k item=language name="languages"}
+												<li {if $language.iso_code == $lang_iso}class="selected"{/if}>
+												{if $language.iso_code != $lang_iso}
+													{assign var=indice_lang value=$language.id_lang}
+													{if isset($lang_rewrite_urls.$indice_lang)}
+														<a href="{$lang_rewrite_urls.$indice_lang|escape:htmlall}" title="{$language.name}">
+													{else}
+														<a href="{$link->getLanguageLink($language.id_lang)|escape:htmlall}" title="{$language.name}">
+									
+													{/if}
 												{/if}
-											{/if}
-													<span>{$language.name}</span>
-											{if $language.iso_code != $lang_iso}
-												</a>
-											{/if}
-											</li>
-										{/foreach}
+														<span>{$language.name}</span>
+												{if $language.iso_code != $lang_iso}
+													</a>
+												{/if}
+												</li>
+											{/foreach}
 										</ul>
 									</div>
 								</div> <!-- #languages-block-top -->
@@ -177,7 +176,7 @@
 										<ul id="first-currencies" class="currencies_ul toogle_content">
 											{foreach from=$currencies key=k item=f_currency}
 												<li {if $cookie->id_currency == $f_currency.id_currency}class="selected"{/if}>
-													<a href="javascript:setCurrency({$f_currency.id_currency});" title="{$f_currency.name}" rel="nofollow">{$f_currency.name}</a>
+													<a href="javascript:setCurrency({$f_currency.id_currency});" rel="nofollow" title="{$f_currency.name}">{$f_currency.name}</a>
 												</li>
 											{/foreach}
 										</ul>
