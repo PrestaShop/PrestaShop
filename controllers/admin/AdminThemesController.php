@@ -921,8 +921,19 @@ class AdminThemesControllerCore extends AdminController
 					$theme_shop_module = $this->getModules($shopXml);
 					$to_shop_uninstall = $this->formatHelperArray($theme_shop_module['to_install']);
 
+					$class = '';
+					if ($shop['id_shop'] == $currentShop)
+					{
+						$theme_module['to_disable_shop'.$shop['id_shop']] = $theme_shop_module['to_install'];
+
+					}
+					else
+						$class = 'hide';
+
+//					'formGroupClass' => 'hide',
 					$fields_form['form']['input'][] = array('type'   => 'checkbox',
 															'label'  => sprintf($this->l('Select the old %1s theme\'s modules you wish to disable:'), $shopTheme->directory),
+															'formGroupClass' => $class,
 															'values' => array(
 																'query' => $to_shop_uninstall,
 																'id'    => 'id',
@@ -931,8 +942,7 @@ class AdminThemesControllerCore extends AdminController
 															'name'   => 'to_disable_shop'.$shop['id_shop']
 					);
 
-					if ($shop['id_shop'] == $currentShop)
-						$theme_module['to_disable_shop'.$shop['id_shop']] = $theme_shop_module['to_install'];
+
 				}
 			}
 
@@ -997,13 +1007,12 @@ class AdminThemesControllerCore extends AdminController
 		return $return;
 	}
 
-	private function hookModule($id_module, $moduleHooks, $shops)
+	private function hookModule($id_module, $moduleHooks, $shop)
 	{
-		foreach ($shops as $id_shop)
-		{
-			Db::getInstance()->execute('INSERT IGNORE INTO ' . _DB_PREFIX_ . 'module_shop (id_module, id_shop) VALUES(' . $id_module . ', ' . (int)$id_shop . ')');
 
-			Db::getInstance()->execute($sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.pSQL($id_module).' AND id_shop = '.(int)$id_shop);
+			Db::getInstance()->execute('INSERT IGNORE INTO ' . _DB_PREFIX_ . 'module_shop (id_module, id_shop) VALUES(' . $id_module . ', ' . (int)$shop . ')');
+
+			Db::getInstance()->execute($sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.pSQL($id_module).' AND id_shop = '.(int)$shop);
 
 			foreach ($moduleHooks as $hooks)
 			{
@@ -1011,7 +1020,7 @@ class AdminThemesControllerCore extends AdminController
 				{
 
 					$sql_hook_module = 'INSERT INTO `' . _DB_PREFIX_ . 'hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
-									VALUES (' . (int)$id_module . ', ' . (int)$id_shop . ', ' . (int)Hook::getIdByName($hook['hook']) . ', ' . (int)$hook['position'] . ')';
+									VALUES (' . (int)$id_module . ', ' . (int)$shop . ', ' . (int)Hook::getIdByName($hook['hook']) . ', ' . (int)$hook['position'] . ')';
 
 					if (count($hook['exceptions'])>0)
 					{
@@ -1026,7 +1035,6 @@ class AdminThemesControllerCore extends AdminController
 				}
 			}
 
-		}
 
 	}
 
@@ -1070,81 +1078,85 @@ class AdminThemesControllerCore extends AdminController
 
 			$this->imgError = $this->updateImages($xml);
 
-			foreach ($_POST as $key => $value)
+			foreach ($shops as $shop)
 			{
-				if (strncmp($key, 'to_install', strlen('to_install')) == 0)
-				{
-					if (file_exists(_PS_MODULE_DIR_ . $value))
-					{
-						if (!class_exists($value))
-							require(_PS_MODULE_DIR_ . $value . '/' . $value . '.php');
 
-						if (class_exists($value))
+				foreach ($_POST as $key => $value)
+				{
+					if (strncmp($key, 'to_install', strlen('to_install')) == 0)
+					{
+						if (file_exists(_PS_MODULE_DIR_ . $value))
 						{
-							$module = Module::getInstanceByName($value);
-							if (!Module::isInstalled($module->name))
+							if (!class_exists($value))
+								require(_PS_MODULE_DIR_ . $value . '/' . $value . '.php');
+
+							if (class_exists($value))
 							{
-								$module->install();
+								$module = Module::getInstanceByName($value);
+								if (!Module::isInstalled($module->name))
+									$module->install();
+								else
+									$module->enable();
 
 								if ((int)$module->id > 0 && isset($moduleHook[$module->name]))
-									$this->hookModule($module->id, $moduleHook[$module->name], $shops);
+									$this->hookModule($module->id, $moduleHook[$module->name], $shop);
+							}
+							unset($moduleHook[$module->name]);
+						}
+
+					} else if (strncmp($key, 'to_enable', strlen('to_enable')) == 0)
+					{
+						if (file_exists(_PS_MODULE_DIR_ . $value))
+						{
+							if (!class_exists($value))
+								require(_PS_MODULE_DIR_ . $value . '/' . $value . '.php');
+
+							if (class_exists($value))
+							{
+								$module = Module::getInstanceByName($value);
+
+								if (!Module::isInstalled($module->name))
+									$module->install();
+								else if (!Module::isEnabled($module->name))
+									$module->enable();
+
+								if ((int)$module->id > 0 && isset($moduleHook[$module->name]))
+									$this->hookModule($module->id, $moduleHook[$module->name], $shop);
+
+								unset($moduleHook[$module->name]);
 							}
 						}
-						unset($moduleHook[$module->name]);
-					}
-
-				} else if (strncmp($key, 'to_enable', strlen('to_enable')) == 0)
-				{
-					if (file_exists(_PS_MODULE_DIR_ . $value))
+					} else if (strncmp($key, 'to_disable', strlen('to_disable')) == 0)
 					{
-						if (!class_exists($value))
-							require(_PS_MODULE_DIR_ . $value . '/' . $value . '.php');
+						$id_shop = (int)substr($key, 15, 1);
 
-						if (class_exists($value))
+						if ((int)$id_shop>0 && $id_shop != (int)$shop)
+							continue;
+
+						if (file_exists(_PS_MODULE_DIR_ . $value))
 						{
-							$module = Module::getInstanceByName($value);
+							if (!class_exists($value))
+								require(_PS_MODULE_DIR_ . $value . '/' . $value . '.php');
 
-							if (!Module::isInstalled($module->name))
-								$module->install();
-							else if (!Module::isEnabled($module->name))
-								$module->enable();
-
-							if ((int)$module->id > 0 && isset($moduleHook[$module->name]))
-								$this->hookModule($module->id, $moduleHook[$module->name], $shops);
-
+							if (class_exists($value))
+							{
+								$module = new $value;
+								if (Module::isEnabled($module->name))
+								{
+									$module->disable();
+								}
+							}
 							unset($moduleHook[$module->name]);
 						}
 					}
-				} else if (strncmp($key, 'to_disable', strlen('to_disable')) == 0)
-				{
-					if (file_exists(_PS_MODULE_DIR_ . $value))
-					{
-						if (!class_exists($value))
-							require(_PS_MODULE_DIR_ . $value . '/' . $value . '.php');
-
-						if (class_exists($value))
-						{
-							$module = new $value;
-							if (Module::isEnabled($module->name))
-							{
-								$module->disable();
-							}
-						}
-						unset($moduleHook[$module->name]);
-					}
 				}
+
+				$shop = New Shop((int)$shop);
+				$shop->id_theme = (int)Tools::getValue('id_theme');
+				$shop->save();
 			}
-
-
 		}
 
-
-		foreach($shops as $id_shop)
-		{
-			$shop = New Shop((int)$id_shop);
-			$shop->id_theme = (int)Tools::getValue('id_theme');
-			$shop->save();
-		}
 		Tools::clearCache($this->context->smarty);
 
 		$this->themeName = $theme->name;
