@@ -23,39 +23,29 @@
 */
 
 $( document ).ready(function() {
-/*
-    // chooseThemeModule
-    var shopTree = $("#shop-tree");
-    console.log(shopTree);
-//    var input = shopTree.find('input');
-    shopTree.find('input').each(function(){
-       console.log($(this));
+
+    $("[name^='checkBoxShopGroupAsso_theme']").change(function(){
+
+        var truc = $(this).parents('.tree-folder').find("[name^='checkBoxShopAsso_theme']").each(function(){
+            var id = $(this).attr('value');
+            var checked = $(this).prop('checked');
+            console.log(id);
+            console.log(checked);
+            toggleShopModuleCheckbox(id, checked);
+        });
+//        console.log(truc);
+//console.log(parent);
+//        var children = parent.children('.tree');
+//
+//        console.log(children);
     });
-*/
+
     $("[name^='checkBoxShopAsso_theme']").click(function(){
         var id = $(this).attr('value');
         var checked = $(this).prop('checked');
+        toggleShopModuleCheckbox(id, checked);
 
-//        console.log($(this).attr('value'));
-//        console.log($(this).prop('checked'));
-
-
-        var formGroup = $("[for='to_disable_shop"+id+"']").parent();
-        if (checked == true)
-        {
-            formGroup.removeClass('hide');
-
-            console.log(formGroup.find('input'));
-            formGroup.find('input').each(function(){$(this).prop('checked', 'checked');});
-        }
-        else
-        {
-            formGroup.addClass('hide');
-            formGroup.find('input').each(function(){$(this).prop('checked', '');});
-        }
     });
-//    console.log($("[name^='checkBoxShopAsso_theme']"));
-//    console.log(input);
 
 	//nav side bar
 	function navSidebar(){
@@ -163,6 +153,21 @@ $( document ).ready(function() {
 		animateGoTop();
 	});
 });
+
+function toggleShopModuleCheckbox(id_shop, toggle)
+{
+    var formGroup = $("[for='to_disable_shop"+id_shop+"']").parent();
+    if (toggle == true)
+    {
+        formGroup.removeClass('hide');
+        formGroup.find('input').each(function(){$(this).prop('checked', 'checked');});
+    }
+    else
+    {
+        formGroup.addClass('hide');
+        formGroup.find('input').each(function(){$(this).prop('checked', '');});
+    }
+}
 
 function openModulesList() {
 	if (!modules_list_loaded)
