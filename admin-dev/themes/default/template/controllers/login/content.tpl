@@ -142,7 +142,7 @@
 							</div>
 						</div>
 						<div class="panel-footer">
-							<button href="#" class="btn btn-default show-login-form" tabindex="7">
+							<button type="button" href="#" class="btn btn-default show-login-form" tabindex="7">
 								<i class="icon-caret-left"></i>
 								{l s='Back to login'}
 							</button>

@@ -247,10 +247,10 @@
 			catch(e){}
 			return false;
 		}
-		$('#module_type_filter').change(function() { setFilter(); });
-		$('#module_install_filter').change(function() { setFilter(); });
-		$('#module_status_filter').change(function() { setFilter(); });
-		$('#country_module_value_filter').change(function() { setFilter(); });
+
+		$(document).on('change', '#module_type_filter, #module_install_filter, #module_status_filter, #country_module_value_filter', function() { 
+			setFilter(); 
+		});
 
 		$('.moduleTabPreferencesChoise').change(function()
 		{			
