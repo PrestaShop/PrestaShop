@@ -194,6 +194,9 @@ class ProductCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
+	/** @var boolean Pre-Order product */
+	public $pre_order;
+
 	/*** @var array Tags */
 	public $tags;
 
@@ -296,6 +299,7 @@ class ProductCore extends ObjectModel
 			'advanced_stock_management' => 	array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
 			'date_add' => 					array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
 			'date_upd' => 					array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
+			'pre_order' => 					array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
 
 			/* Lang fields */
 			'meta_description' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),

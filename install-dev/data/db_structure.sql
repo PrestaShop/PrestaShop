@@ -1423,6 +1423,7 @@ CREATE TABLE `PREFIX_product` (
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   `advanced_stock_management` tinyint(1) default '0' NOT NULL,
+  `pre_order` tinyint( 1 ) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_product`),
   KEY `product_supplier` (`id_supplier`),
   KEY `product_manufacturer` (`id_manufacturer`),
@@ -1461,6 +1462,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `advanced_stock_management` tinyint(1) default '0' NOT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
+  `pre_order` tinyint( 1 ) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_product`, `id_shop`),
   KEY `id_category_default` (`id_category_default`),
   KEY `date_add` (`date_add` , `active` , `visibility`)
