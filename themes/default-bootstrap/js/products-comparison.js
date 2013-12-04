@@ -58,11 +58,12 @@ function addToCompare(productId){
 
 function compareButtonsStatusRefresh(){
 	$('.addToCompare').each(function() {
-		if ($.inArray(parseInt($(this).prop('rel')),comparedProductsIds)!= -1){
+		console.log($(this).data('id-product'));
+		if ($.inArray(parseInt($(this).data('id-product')),comparedProductsIds)!= -1){
 			$(this).addClass('checked');
 		}
 		else {
-			$(this).removeClass('checked');	
+			$(this).removeClass('checked');
 		}
 	})
 }
@@ -74,19 +75,19 @@ function totalValue(value) {
 reloadProductComparison = function() {
 	$('a.cmp_remove').click(function(){
 
-		var idProduct = $(this).prop('rel').replace('ajax_id_product_', '');
+		var idProduct = $(this).data('id-product');
 
 		$.ajax({
-  			url: 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
- 			async: false,
- 			cache: false,
-  			success: function(){
+			url: 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
+			async: false,
+			cache: false,
+			success: function(){
 				return true;
 			}
-		});	
+		});
 	});
 }
 
 $(document).ready(function() {
-    compareButtonsStatusRefresh();
+	compareButtonsStatusRefresh();
 });
