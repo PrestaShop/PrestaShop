@@ -2463,6 +2463,9 @@ a.price_discount_delete:hover {
     width: 50%;
   }
 }
+.update_cart {
+		text-align: center;
+}
 .cart_voucher {
   vertical-align: top !important;
 }

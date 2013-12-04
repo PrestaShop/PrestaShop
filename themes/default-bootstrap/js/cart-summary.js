@@ -25,10 +25,13 @@
 
 $(document).ready(function()
 {
-	$('.cart_quantity_up').unbind('click').live('click', function(){upQuantity($(this).attr('id').replace('cart_quantity_up_', '')); return false;});
-	$('.cart_quantity_down').unbind('click').live('click', function(){downQuantity($(this).attr('id').replace('cart_quantity_down_', '')); return false;});
+	if (!cart_single_update)
+	{
+		$('.cart_quantity_up').unbind('click').live('click', function(){upQuantity($(this).attr('id').replace('cart_quantity_up_', '')); return false;});
+		$('.cart_quantity_down').unbind('click').live('click', function(){downQuantity($(this).attr('id').replace('cart_quantity_down_', '')); return false;});
+		$('.cart_quantity_input').typeWatch({highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, true, this.el);}});
+	}
 	$('.cart_quantity_delete' ).unbind('click').live('click', function(){deleteProductFromSummary($(this).attr('id')); return false;});
-	$('.cart_quantity_input').typeWatch({highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, true, this.el);}});
 	$('.cart_address_delivery').live('change', function(){changeAddressDelivery($(this));});
 	cleanSelectAddressDelivery();
 });

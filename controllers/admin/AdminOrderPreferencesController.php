@@ -82,6 +82,13 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'cast' => 'floatval',
 						'type' => 'price'
 					),
+					'PS_CART_SINGLE_UPDATE' => array(
+						'title' => $this->l('Enable Update cart button'),
+						'hint' => $this->l('Update cart with one single button, the +/- is removed'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
 					'PS_ALLOW_MULTISHIPPING' => array(
 						'title' => $this->l('Allow multishipping'),
 						'hint' => $this->l('Allow the customer to ship orders to multiple addresses. This option will convert the customer\'s cart into one or more orders.'),

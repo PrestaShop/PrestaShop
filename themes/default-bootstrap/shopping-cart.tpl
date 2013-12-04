@@ -52,6 +52,7 @@
 	var txtProduct = "{l s='product' js=1}";
 	var txtProducts = "{l s='products' js=1}";
 	var deliveryAddress = {$cart->id_address_delivery|intval};
+	var cart_single_update = '{$cart_single_update|intval}';
 	// ]]>
 	</script>
 	<p style="display:none" id="emptyCartWarning" class="alert alert-warning">{l s='Your shopping cart is empty.'}</p>
@@ -71,6 +72,7 @@
 {assign var='use_show_taxes' value="{if $use_taxes && $show_taxes}2{else}0{/if}"}
 {assign var='total_wrapping_taxes_num' value="{if $total_wrapping != 0}1{else}0{/if}"}
 <div id="order-detail-content" class="table_block table-responsive">
+	<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="updatecart">
 	<table id="cart_summary" class="table table-bordered">
 		<thead>
 			<tr>
@@ -84,6 +86,14 @@
 			</tr>
 		</thead>
 		<tfoot>
+		{if $cart_single_update}
+			<tr>
+				<td colspan="4">&nbsp;</td>
+				<td colspan="3" class="update_cart">
+					<button type="submit" name="submitUpdateCart" value="1" class="button btn btn-default button-small"/><span>{l s='Update shopping cart'}</span></button>
+				</td>
+			</tr>
+		{/if}
             {if $use_taxes}
                 {if $priceDisplay}
                     <tr class="cart_total_price">
@@ -321,6 +331,7 @@
 							{else}
                             	<input type="hidden" value="{$customization.quantity}" name="quantity_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}_hidden"/>
 								<input size="2" type="text" value="{$customization.quantity}" class="cart_quantity_input form-control grey" name="quantity_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"/>
+								{if !$cart_single_update}
 								<div class="cart_quantity_button clearfix">
 								{if $product.minimal_quantity < ($customization.quantity -$quantityDisplayed) OR $product.minimal_quantity <= 1}
 								<a rel="nofollow" class="cart_quantity_down btn btn-default button-minus" id="cart_quantity_down_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery}&amp;id_customization={$id_customization}&amp;op=down&amp;token={$token_cart}")|escape:'html'}" title="{l s='Subtract'}">
@@ -333,6 +344,7 @@
 								{/if}
                                 <a rel="nofollow" class="cart_quantity_up btn btn-default button-plus" id="cart_quantity_up_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery}&amp;id_customization={$id_customization}&amp;token={$token_cart}")|escape:'html'}" title="{l s='Add'}"><span><i class="icon-plus"></i></span></a>
 								</div>
+								{/if}
 							{/if}
 						</td>
 						<td class="cart_delete">
@@ -382,6 +394,7 @@
 		</tbody>
 	{/if}
 	</table>
+	</form>
 </div>
 
 {if $show_option_allow_separate_package}

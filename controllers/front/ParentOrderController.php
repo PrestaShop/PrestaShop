@@ -91,6 +91,25 @@ class ParentOrderControllerCore extends FrontController
 				Tools::redirect('index.php?controller=order');
 			}
 		}
+		if (Tools::isSubmit('submitUpdateCart'))
+		{
+			$products = $this->context->cart->getProducts();
+			foreach ($products as $product)
+			{
+				$qty = $_POST["quantity_" . $product['id_product'] . "_" . ($product['id_product_attribute'] ? $product['id_product_attribute'] : 0 ) . "_" . ($product['id_customization'] ? $product['id_customization'] : 0) . "_" . ($product['id_address_delivery'] ? $product['id_address_delivery'] : 0)];
+				$old_qty = $_POST["quantity_" . $product['id_product'] . "_" . ($product['id_product_attribute'] ? $product['id_product_attribute'] : 0 ) . "_" . ($product['id_customization'] ? $product['id_customization'] : 0) . "_" . ($product['id_address_delivery'] ? $product['id_address_delivery'] : 0) . "_hidden"];
+				$op = 'up';
+				$new_qty = $qty - $old_qty;
+				if ($old_qty > $qty)
+				{
+					$op = 'down';
+					$new_qty = $old_qty - $qty;
+				}
+				if ($new_qty != 0)
+					$this->context->cart->updateQty($new_qty, $product['id_product'], $product['id_product_attribute'], false, $op);
+			}
+			$this->context->cart->update();
+		}
 
 		if ($this->nbProducts)
 		{
@@ -371,6 +390,7 @@ class ParentOrderControllerCore extends FrontController
 			'currencyBlank' => $this->context->currency->blank,
 			'show_option_allow_separate_package' => $show_option_allow_separate_package,
 			'smallSize' => Image::getSize(ImageType::getFormatedName('small')),
+			'cart_single_update' => Configuration::get('PS_CART_SINGLE_UPDATE'),
 				
 		));
 
