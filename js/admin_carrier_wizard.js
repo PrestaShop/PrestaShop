@@ -547,13 +547,13 @@ function add_new_range()
 	
 	last_sup_val = $('tr.range_sup td:last input').val();
 	//add new rand sup input
-	$('tr.range_sup td:last').after('<td class="range_data"><div class="input-group"><span class="input-group-addon weight_unit" style="display: none;">'+PS_WEIGHT_UNIT+'</span><span class="input-group-addon price_unit" style="display: none;">'+currency_sign+'</span><input class="form-control" name="range_sup[]" type="text" /></div></td>');
+	$('tr.range_sup td:last').after('<td class="range_data"><div class="input-group fixed-width-md"><span class="input-group-addon weight_unit" style="display: none;">'+PS_WEIGHT_UNIT+'</span><span class="input-group-addon price_unit" style="display: none;">'+currency_sign+'</span><input class="form-control" name="range_sup[]" type="text" /></div></td>');
 	//add new rand inf input
-	$('tr.range_inf td:last').after('<td class="border_bottom"><div class="input-group"><span class="input-group-addon weight_unit" style="display: none;">'+PS_WEIGHT_UNIT+'</span><span class="input-group-addon price_unit" style="display: none;">'+currency_sign+'</span><input class="form-control" name="range_inf[]" type="text" value="'+last_sup_val+'" /></div></td>');
-	$('tr.fees_all td:last').after('<td class="border_top border_bottom"><div class="input-group"><span class="input-group-addon currency_sign" style="display:none" >'+currency_sign+'</span><input class="form-control" style="display:none" type="text" /></div></td>');
+	$('tr.range_inf td:last').after('<td class="border_bottom"><div class="input-group fixed-width-md"><span class="input-group-addon weight_unit" style="display: none;">'+PS_WEIGHT_UNIT+'</span><span class="input-group-addon price_unit" style="display: none;">'+currency_sign+'</span><input class="form-control" name="range_inf[]" type="text" value="'+last_sup_val+'" /></div></td>');
+	$('tr.fees_all td:last').after('<td class="border_top border_bottom"><div class="input-group fixed-width-md"><span class="input-group-addon currency_sign" style="display:none" >'+currency_sign+'</span><input class="form-control" style="display:none" type="text" /></div></td>');
 
 	$('tr.fees').each(function () {
-		$(this).find('td:last').after('<td><div class="input-group"><span class="input-group-addon currency_sign">'+currency_sign+'</span><input class="form-control" disabled="disabled" name="fees['+$(this).data('zoneid')+'][]" type="text" /></div></td>');
+		$(this).find('td:last').after('<td><div class="input-group fixed-width-md"><span class="input-group-addon currency_sign">'+currency_sign+'</span><input class="form-control" disabled="disabled" name="fees['+$(this).data('zoneid')+'][]" type="text" /></div></td>');
 	});
 	$('tr.delete_range td:last').after('<td><button class="btn btn-default">'+labelDelete+'</button</td>');
 	
