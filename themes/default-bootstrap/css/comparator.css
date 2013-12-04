@@ -20,7 +20,7 @@ table#product_comparison tbody tr td.comparison_infos div.center {
 table#product_comparison tbody tr td.td_empty {
   vertical-align: bottom;
 }
-table#product_comparison tbody tr td.td_empty span {
+table#product_comparison tbody tr td.td_empty > span {
   font: 600 18px/22px "Open Sans", sans-serif;
   text-transform: uppercase;
   color: #555454;
@@ -93,6 +93,51 @@ table#product_comparison .product-rating {
 
 .footer_link {
   margin-bottom: 20px;
+}
+
+#stOCClose {
+  width: 29px !important;
+  height: 29px !important;
+}
+
+.stButton .stFb, .stButton .stTwbutton, .stButton .stMainServices {
+  height: 22px !important;
+}
+
+.stButton .stButton_gradient {
+  height: 22px !important;
+}
+
+@media (min-width: 1200px) {
+  .share {
+    margin-bottom: 315px;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .share {
+    margin-bottom: 315px;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .share {
+    margin-bottom: 315px;
+  }
+}
+.share strong {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.share > div {
+  margin-bottom: 8px;
+}
+
+.stArrow {
+  display: none !important;
+}
+
+.stButton {
+  margin-left: 0 !important;
 }
 
 #product_comparison .comparison_feature .product_name {
