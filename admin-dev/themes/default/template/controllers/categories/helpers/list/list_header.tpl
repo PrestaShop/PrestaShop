@@ -94,7 +94,7 @@
 				{/if}
 			{/foreach}
 				<div class="panel-footer">
-					<button type="button" name="cancel" class="btn btn-default">
+					<button type="submit" name="cancel" class="btn btn-default">
 						<i class="icon-remove"></i>
 						{l s='Cancel'}
 					</button>
