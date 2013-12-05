@@ -197,7 +197,8 @@
 								class="jqzoom"
 								title="{if !empty($cover.legend)}{$cover.legend|escape:'html'}{else}{$product->name|escape:'html'}{/if}"
 								rel="gal1"
-								href="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')|escape:'html'}">
+								href="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')|escape:'html'}"
+								itemprop="url">
 								<img
 									itemprop="image"
 									src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html'}"
