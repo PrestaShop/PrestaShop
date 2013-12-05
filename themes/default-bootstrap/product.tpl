@@ -344,7 +344,6 @@
 				</div> <!-- end short_description_block -->
 			{/if}
 
-			
 			{if ($display_qties == 1 && !$PS_CATALOG_MODE && $product->available_for_order)}
 				<!-- number of item in stock -->
 				<p id="pQuantityAvailable"{if $product->quantity <= 0} style="display: none;"{/if}>
@@ -371,31 +370,6 @@
 			<div id="oosHook"{if $product->quantity > 0} style="display: none;"{/if}>
 				{$HOOK_PRODUCT_OOS}
 			</div>
-
-			{* {if isset($colors) && $colors}
-				<!-- colors -->
-				<div id="color_picker">
-					<p>{l s='Pick a color:' js=1}</p>
-					<div class="clear"></div>
-					<ul id="color_to_pick_list" class="clearfix">
-					{foreach from=$colors key='id_attribute' item='color'}
-					<li>
-						<a
-							id="color_{$id_attribute|intval}"
-							class="color_pick"
-							style="background: {$color.value};"
-							onclick="updateColorSelect({$id_attribute|intval});$('#wrapResetImages').show('slow');"
-							title="{$color.name}">
-								{if file_exists($col_img_dir|cat:$id_attribute|cat:'.jpg')}
-								<img src="{$img_col_dir}{$id_attribute}.jpg" alt="{$color.name}" width="20" height="20" />
-								{/if}
-						</a>
-					</li>
-					{/foreach}
-					</ul>
-					<div class="clear"></div>
-				</div>
-			{/if} *}
 		
 			{if ($product->show_price AND !isset($restricted_country_mode)) OR isset($groups) OR $product->reference OR (isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS)}
 				<!-- add to cart form-->
@@ -424,7 +398,6 @@
 					{if $have_image && !$jqZoomEnabled}{/if}
 				</ul>
 			{/if}
-
 		</div>
 		<!-- end left infos-->
 		
@@ -675,19 +648,19 @@
 										</div>
 										<div class="clearfix" style="margin-top:5px">
 											{if !$PS_CATALOG_MODE && ($accessory.allow_oosp || $accessory.quantity > 0)}
-											<div>
 												<div>
 													<div>
-														<a
-															class="exclusive button ajax_add_to_cart_button"
-															href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$accessory.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html'}"
-															data-id-product="{$accessory.id_product|intval}"
-															title="{l s='Add to cart'}">
-															<span>{l s='Add to cart'}</span>
-														</a>
+														<div>
+															<a
+																class="exclusive button ajax_add_to_cart_button"
+																href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$accessory.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html'}"
+																data-id-product="{$accessory.id_product|intval}"
+																title="{l s='Add to cart'}">
+																<span>{l s='Add to cart'}</span>
+															</a>
+														</div>
 													</div>
 												</div>
-											</div>
 											{/if}
 										</div>
 									</li>
@@ -699,12 +672,11 @@
 			</section>
 			<!--end Accessories -->
 		{/if}
-		
 
 		{if (isset($quantity_discounts) && count($quantity_discounts) > 0)}
 			<!-- quantity discount -->
 			<section class="page-product-box">
-			<h3 class="page-product-heading">{l s='Volume discounts'}</h3>
+				<h3 class="page-product-heading">{l s='Volume discounts'}</h3>
 				<div id="quantityDiscount">
 					<table class="std table-produst-discounts">
 						<thead>
