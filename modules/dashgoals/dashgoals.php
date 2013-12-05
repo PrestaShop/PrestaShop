@@ -235,7 +235,9 @@ class Dashgoals extends Module
 			$fullfilment = round($value / $month_goal, 2);
 
 		// Base rate is essential here : it determines the value of the goal compared to the "100%" of the chart legend
-		$base_rate = $month_goal / $average_goal;
+		$base_rate = 0;
+		if ($average_goal && $month_goal)
+			$base_rate = $month_goal / $average_goal;
 
 		// Fullfilment of 1 means that we performed exactly anticipated
 		if ($fullfilment == 1)
