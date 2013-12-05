@@ -61,7 +61,10 @@ class blocksocial extends Module
 		{	
 			Configuration::updateValue('blocksocial_facebook', (($_POST['blocksocial_facebook'] != '') ? $_POST['blocksocial_facebook']: ''));
 			Configuration::updateValue('blocksocial_twitter', (($_POST['blocksocial_twitter'] != '') ? $_POST['blocksocial_twitter']: ''));		
-			Configuration::updateValue('blocksocial_rss', (($_POST['blocksocial_rss'] != '') ? $_POST['blocksocial_rss']: ''));				
+			Configuration::updateValue('blocksocial_rss', (($_POST['blocksocial_rss'] != '') ? $_POST['blocksocial_rss']: ''));
+			Configuration::updateValue('blocksocial_youtube', (($_POST['blocksocial_youtube'] != '') ? $_POST['blocksocial_youtube']: ''));
+			Configuration::updateValue('blocksocial_google_plus', (($_POST['blocksocial_google_plus'] != '') ? $_POST['blocksocial_google_plus']: ''));
+			Configuration::updateValue('blocksocial_pinterest', (($_POST['blocksocial_pinterest'] != '') ? $_POST['blocksocial_pinterest']: ''));				
 			$this->_clearCache('blocksocial.tpl');
 			$output .= $this->displayConfirmation($this->l('Configuration updated'));
 		}
@@ -80,7 +83,10 @@ class blocksocial extends Module
 			$this->smarty->assign(array(
 				'facebook_url' => Configuration::get('blocksocial_facebook'),
 				'twitter_url' => Configuration::get('blocksocial_twitter'),
-				'rss_url' => Configuration::get('blocksocial_rss')
+				'rss_url' => Configuration::get('blocksocial_rss'),
+				'youtube_url' => Configuration::get('blocksocial_youtube'),
+				'google_plus_url' => Configuration::get('blocksocial_google_plus'),
+				'pinterest_url' => Configuration::get('blocksocial_pinterest'),
 			));
 
 		return $this->display(__FILE__, 'blocksocial.tpl', $this->getCacheId());
@@ -112,6 +118,24 @@ class blocksocial extends Module
 						'label' => $this->l('RSS URL:'),
 						'name' => 'blocksocial_rss',
 						'desc' => $this->l('Number of threads displayed by the block (default value: 5)'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Youtube URL:'),
+						'name' => 'blocksocial_youtube',
+						'desc' => $this->l('Youtube Url'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Google Plus URL:'),
+						'name' => 'blocksocial_google_plus',
+						'desc' => $this->l('Google Plus Url'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Pinterest URL:'),
+						'name' => 'blocksocial_pinterest',
+						'desc' => $this->l('Pinterest Url'),
 					),
 				),
 			'submit' => array(
@@ -145,6 +169,9 @@ class blocksocial extends Module
 			'blocksocial_facebook' => Tools::getValue('blocksocial_facebook', Configuration::get('blocksocial_facebook')),
 			'blocksocial_twitter' => Tools::getValue('blocksocial_twitter', Configuration::get('blocksocial_twitter')),
 			'blocksocial_rss' => Tools::getValue('blocksocial_rss', Configuration::get('blocksocial_rss')),
+			'blocksocial_youtube' => Tools::getValue('blocksocial_youtube', Configuration::get('blocksocial_youtube')),
+			'blocksocial_google_plus' => Tools::getValue('blocksocial_google_plus', Configuration::get('blocksocial_google_plus')),
+			'blocksocial_pinterest' => Tools::getValue('blocksocial_pinterest', Configuration::get('blocksocial_pinterest')),
 		);
 	}
 

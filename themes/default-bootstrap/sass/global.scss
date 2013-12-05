@@ -1998,13 +1998,18 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 				li {
 					float:left;
 					width:40px;
+																		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
+																			width:30px;
+																		}
 					text-align:center;
 					
 					a {
 						display:inline-block;
 						color:#908f8f;
 						font-size:28px;
-						
+																		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
+																			font-size:20px;
+																		}
 						span {display:none;}
 						
 						&:before {
@@ -2032,6 +2037,24 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 						
 						a {
 							&:before {content:"";}	
+						}
+					}
+					&.youtube {
+						
+						a {
+							&:before {content:"";}	
+						}
+					}
+					&.google-plus {
+						
+						a {
+							&:before {content:"";}	
+						}
+					}
+					&.pinterest {
+						
+						a {
+							&:before {content:"";}	
 						}
 					}
 				}
