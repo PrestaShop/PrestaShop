@@ -31,7 +31,6 @@ $(document).ready(function() {
 	if (parseInt($('input[name="is_free"]:checked').val()))
 		is_freeClick($('input[name="is_free"]:checked'));
 	displayRangeType();
-	checkAllZones();
 });
 
 function initCarrierWizard()
