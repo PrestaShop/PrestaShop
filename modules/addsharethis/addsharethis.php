@@ -48,6 +48,7 @@ class AddShareThis extends Module
 		return (
 			parent::install() &&
 			$this->registerHook('Extraright') &&
+			$this->registerHook('displayCompareExtraInformation') &&
 			$this->registerHook('header') &&
 			$this->registerHook('actionObjectProductUpdateAfter') &&
 			$this->registerHook('actionObjectProductDeleteAfter') &&
@@ -147,32 +148,32 @@ class AddShareThis extends Module
 	{
 		if ($this->context->controller->php_self != 'product')
 			return;
-
-		$product = $this->context->controller->getProduct();
-		$cache_id = 'addsharethis_header|'.(int)$product->id.'|'.(int)Tools::usingSecureMode().'|'.(int)$this->context->shop->id.'|'.(int)$this->context->language->id;
-		if (!$this->isCached('addsharethis_header.tpl', $cache_id))
-		{
-			$id_lang = (int)$this->context->language->id;
-			$images = $product->getImages((int)$id_lang);
-			foreach ($images AS $k => $image)
-				if ($image['cover'])
-				{
-					$cover['id_image'] = (int)$product->id.'-'.(int)$image['id_image'];
-					$cover['legend'] = $image['legend'];
-					break;
-				}
-
-			if (!isset($cover))
-				$cover = array('id_image' => Language::getIsoById((int)$id_lang).'-default', 'legend' => 'No picture');
-
-			$this->context->smarty->assign(array(
-				'cover' => $cover,
-				'product' => $product,
-				'this_path' => $this->_path
-				)
-			);
-		}
-		return $this->display(__FILE__, 'addsharethis_header.tpl', $cache_id);
+			
+		  $product = $this->context->controller->getProduct();
+		  $cache_id = 'addsharethis_header|'.(int)$product->id.'|'.(int)Tools::usingSecureMode().'|'.(int)$this->context->shop->id.'|'.(int)$this->context->language->id;
+		  if (!$this->isCached('addsharethis_header.tpl', $cache_id))
+		  {
+			  $id_lang = (int)$this->context->language->id;
+			  $images = $product->getImages((int)$id_lang);
+			  foreach ($images AS $k => $image)
+				  if ($image['cover'])
+				  {
+					  $cover['id_image'] = (int)$product->id.'-'.(int)$image['id_image'];
+					  $cover['legend'] = $image['legend'];
+					  break;
+				  }
+  
+			  if (!isset($cover))
+				  $cover = array('id_image' => Language::getIsoById((int)$id_lang).'-default', 'legend' => 'No picture');
+  
+			  $this->context->smarty->assign(array(
+				  'cover' => $cover,
+				  'product' => $product,
+				  'this_path' => $this->_path
+				  )
+			  );
+		  }
+		  return $this->display(__FILE__, 'addsharethis_header.tpl', $cache_id);
 	}
 
 	public function hookExtraRight($params)
@@ -202,7 +203,37 @@ class AddShareThis extends Module
 		}
 
 		return $this->display(__FILE__, 'addsharethis.tpl', $cache_id);
-	} 
+	}
+	
+	public function hookDisplayCompareExtraInformation($params)
+	{
+		$cache_id = 'addsharethis_compare_content|'.(int)$this->context->shop->id;
+		
+		if (!$this->isCached('addsharethis_compare.tpl', $cache_id))
+		{
+			$data = array();
+			
+			if (Configuration::get('ADDTHISSHARE_TWITTER'))
+				$data['twitter'] = '<div class="st_twitter_hcount sharebtn" displayText="Tweet"></div>';
+
+			if (Configuration::get('ADDTHISSHARE_GOOGLE'))
+				$data['google'] = '<div class="st_googleplus_hcount" displayText="Google +"></div>';
+
+			if (Configuration::get('ADDTHISSHARE_PINTEREST'))
+				$data['pinterest'] = '<div class="st_pinterest_hcount sharebtn" displayText="Pinterest"></div>';
+
+			if (Configuration::get('ADDTHISSHARE_FACEBOOK'))
+				$data['facebook'] = '<div class="st_facebook_hcount sharebtn" displayText="Facebook"></div>';
+				
+			$this->context->smarty->assign(array(
+				'addsharethis_data' => $data,
+				'conf_row' => Configuration::get('CONF_ROW')
+				)
+			);
+		}
+		
+		return $this->display(__FILE__, 'addsharethis_compare.tpl');
+	}
 		
 	public function hookLeftColumn($params)
 	{
