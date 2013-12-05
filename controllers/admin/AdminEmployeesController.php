@@ -348,7 +348,7 @@ class AdminEmployeesControllerCore extends AdminController
 	public function postProcess()
 	{
 		/* PrestaShop demo mode */
-		if ((Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee') || Tools::isSubmit('submitAddemployee')) && _PS_MODE_DEMO_)
+		if ((Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee') || Tools::isSubmit('submitAddemployee')) && _PS_MODE_DEMO_)
 		{
 				$this->errors[] = Tools::displayError('This functionality has been disabled.');
 				return;
