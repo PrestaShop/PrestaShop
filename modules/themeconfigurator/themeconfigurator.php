@@ -687,6 +687,12 @@ class ThemeConfigurator extends Module
                                 'name' => 'productpaymentlogos',
                                 'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('productpaymentlogos')) && $module->isEnabledForShopContext()),
                                 'is_module' => true,
+                        ),
+						array(
+                                'label' => $this->l('Display social buttons on the comparision page'),
+                                'name' => 'blocksharecompare',
+                                'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blocksharecompare')) && $module->isEnabledForShopContext()),
+                                'is_module' => true,
                         )
                 );
         }
