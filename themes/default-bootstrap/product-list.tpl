@@ -116,13 +116,10 @@
 							{$product.name|truncate:45:'...'|escape:'html':'UTF-8'}
 						</a>
 					</h5>
-
 					{hook h='displayProductListReviews' product=$product}
-
 					<p class="product-desc" itemprop="description">
 						{$product.description_short|strip_tags:'UTF-8'|truncate:360:'...'}
 					</p>
-
 					{if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
 					<div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="content_price">
 						{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}
@@ -141,7 +138,6 @@
 						{/if}
 					</div>
 					{/if}
-
 					<div class="button-container">
 						{if ($product.id_product_attribute == 0 || (isset($add_prod_display) && ($add_prod_display == 1))) && $product.available_for_order && !isset($restricted_country_mode) && $product.minimal_quantity <= 1 && $product.customizable != 2 && !$PS_CATALOG_MODE}
 							{if ($product.allow_oosp || $product.quantity > 0)}
@@ -190,7 +186,6 @@
 								<span class="discount">{l s='Reduced price!'}</span>
 							{/if}
 					</div>
-
 					{if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
 						{if isset($product.available_for_order) && $product.available_for_order && !isset($restricted_country_mode)}
 							<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="availability">
@@ -210,9 +205,7 @@
 							</span>
 						{/if}
 					{/if}
-					
 				</div>
-
 				<div class="functional-buttons clearfix">
 					{hook h='displayProductListFunctionalButtons' product=$product}
 					{if isset($comparator_max_item) && $comparator_max_item}
@@ -251,7 +244,6 @@
 		)});	
 	}
 </script>
-
 {if $page_name !='index' && $page_name !='product'}  <!--// excluding page for Grid/List-->
 	<script type="text/javascript"><!--
 		function display(view) {
