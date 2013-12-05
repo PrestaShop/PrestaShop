@@ -255,7 +255,6 @@ class AdminImportControllerCore extends AdminController
 					'uploadable_files' => array('label' => $this->l('Uploadable files (0 = No, 1 = Yes)')),
 					'text_fields' => array('label' => $this->l('Text fields (0 = No, 1 = Yes)')),
 					'out_of_stock' => array('label' => $this->l('Action when out of stock')),
-					'advanced_stock_management' => array('label' => $this->l('Advanced stock management')),
 					'shop' => array(
 						'label' => $this->l('ID / Name of shop'),
 						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
@@ -1739,7 +1738,7 @@ class AdminImportControllerCore extends AdminController
 						$warehouse_location_entity->id_product_attribute =  0;
 						$warehouse_location_entity->id_warehouse = $product->warehouse;
 						$warehouse_location_entity->save();
-						StockAvailable::synchronize($product->id); // Don't know if it is needed, but it can't hurt
+						StockAvailable::synchronize($product->id);
 					}
 					else
 						$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exists, can not set on product %1$s '),$product->name[$default_language_id]);
@@ -1946,11 +1945,11 @@ class AdminImportControllerCore extends AdminController
 						else
 							$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
 	
-						// fils groups attributes
+						// fills groups attributes
 						$id_attribute_group = $obj->id;
 						$groups_attributes[$key]['id'] = $id_attribute_group;
 					}
-					else // alreay exists
+					else // already exists
 					{
 						$id_attribute_group = $groups[$group];
 						$groups_attributes[$key]['id'] = $id_attribute_group;
