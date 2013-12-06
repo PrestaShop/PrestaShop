@@ -25,48 +25,146 @@
 
 {capture name=path}{l s='Sitemap'}{/capture}
 
-<h1 class="page-heading">{l s='Sitemap'}</h1>
+<h1 class="page-heading">
+    {l s='Sitemap'}
+</h1>
 <div id="sitemap_content" class="row">
 	<div class="col-xs-12 col-sm-6">
 		<div class="sitemap_block box">
-		<h3 class="page-subheading">{l s='Our offers'}</h3>
-		<ul>
-			<li><a href="{$link->getPageLink('new-products')|escape:'html'}" title="{l s='View a new product'}">{l s='New products'}</a></li>
-			{if !$PS_CATALOG_MODE}
-			<li><a href="{$link->getPageLink('best-sales')|escape:'html'}" title="{l s='View top-selling products'}">{l s='Best sellers'}</a></li>
-			<li><a href="{$link->getPageLink('prices-drop')|escape:'html'}" title="{l s='View products with a price drop'}">{l s='Price drop'}</a></li>
-			{/if}
-			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('manufacturer')|escape:'html'}" title="{l s='View a list of manufacturers'}">{l s='Manufacturers:'}</a></li>{/if}
-			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('supplier')|escape:'html'}" title="{l s='View a list of suppliers'}">{l s='Suppliers:'}</a></li>{/if}
-		</ul>
-	</div>
+    		<h3 class="page-subheading">{l s='Our offers'}</h3>
+    		<ul>
+    			<li>
+                    <a 
+                    href="{$link->getPageLink('new-products')|escape:'html'}" 
+                    title="{l s='View a new product'}">
+                        {l s='New products'}
+                    </a>
+                </li>
+    			{if !$PS_CATALOG_MODE}
+        			<li>
+                        <a 
+                        href="{$link->getPageLink('best-sales')|escape:'html'}" 
+                        title="{l s='View top-selling products'}">
+                            {l s='Best sellers'}
+                        </a>
+                    </li>
+        			<li>
+                        <a 
+                        href="{$link->getPageLink('prices-drop')|escape:'html'}" 
+                        title="{l s='View products with a price drop'}">
+                            {l s='Price drop'}
+                        </a>
+                    </li>
+    			{/if}
+    			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}
+                    <li>
+                        <a 
+                        href="{$link->getPageLink('manufacturer')|escape:'html'}" 
+                        title="{l s='View a list of manufacturers'}">
+                            {l s='Manufacturers:'}
+                        </a>
+                    </li>
+                {/if}
+    			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}
+                    <li>
+                        <a 
+                        href="{$link->getPageLink('supplier')|escape:'html'}" 
+                        title="{l s='View a list of suppliers'}">
+                            {l s='Suppliers:'}
+                        </a>
+                    </li>
+                {/if}
+    		</ul>
+	   </div>
     </div>
     <div class="col-xs-12 col-sm-6">
 		<div class="sitemap_block box">
-		<h3 class="page-subheading">{l s='Your Account'}</h3>
-		<ul>
-		{if $logged}
-			<li><a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Manage your customer account'}" rel="nofollow">{l s='Your Account'}</a></li>
-			<li><a href="{$link->getPageLink('identity', true)|escape:'html'}" title="{l s='Manage your personal information'}" rel="nofollow">{l s='Personal information'}</a></li>
-			<li><a href="{$link->getPageLink('addresses', true)|escape:'html'}" title="{l s='View a list of my addresses'}" rel="nofollow">{l s='Addresses'}</a></li>
-			{if $voucherAllowed}<li><a href="{$link->getPageLink('discount', true)|escape:'html'}" title="{l s='View a list of my discounts'}" rel="nofollow">{l s='Discounts'}</a></li>{/if}
-			<li><a href="{$link->getPageLink('history', true)|escape:'html'}" title="{l s='View a list of my orders'}" rel="nofollow">{l s='Order history'}</a></li>
-		{else}
-			<li><a href="{$link->getPageLink('authentication', true)|escape:'html'}" title="{l s='Authentication'}" rel="nofollow">{l s='Authentication'}</a></li>
-			<li><a href="{$link->getPageLink('authentication', true)|escape:'html'}" title="{l s='Create new account'}" rel="nofollow">{l s='Create new account'}</a></li>
-		{/if}
-		{if $logged}
-			<li><a href="{$link->getPageLink('index')}?mylogout" title="{l s='Log out'}" rel="nofollow">{l s='Log out'}</a></li>
-		{/if}
-		</ul>
-	</div>
+    		<h3 class="page-subheading">
+                {l s='Your Account'}
+            </h3>
+    		<ul>
+        		{if $logged}
+        			<li>
+                        <a 
+                        href="{$link->getPageLink('my-account', true)|escape:'html'}" 
+                        rel="nofollow" 
+                        title="{l s='Manage your customer account'}">
+                            {l s='Your Account'}
+                        </a>
+                    </li>
+        			<li>
+                        <a 
+                        href="{$link->getPageLink('identity', true)|escape:'html'}" 
+                        rel="nofollow" 
+                        title="{l s='Manage your personal information'}">
+                            {l s='Personal information'}
+                        </a>
+                    </li>
+        			<li>
+                        <a 
+                        href="{$link->getPageLink('addresses', true)|escape:'html'}" 
+                        rel="nofollow" 
+                        title="{l s='View a list of my addresses'}">
+                            {l s='Addresses'}
+                        </a>
+                    </li>
+        			{if $voucherAllowed}
+                        <li>
+                            <a 
+                            href="{$link->getPageLink('discount', true)|escape:'html'}" 
+                            rel="nofollow" 
+                            title="{l s='View a list of my discounts'}">
+                                {l s='Discounts'}
+                            </a>
+                        </li>
+                        {/if}
+        			<li>
+                        <a 
+                        href="{$link->getPageLink('history', true)|escape:'html'}" 
+                        rel="nofollow"
+                        title="{l s='View a list of my orders'}" >
+                            {l s='Order history'}
+                        </a>
+                    </li>
+        		{else}
+        			<li>
+                        <a 
+                        href="{$link->getPageLink('authentication', true)|escape:'html'}" 
+                        rel="nofollow"
+                        title="{l s='Authentication'}" >
+                            {l s='Authentication'}
+                        </a>
+                    </li>
+        			<li>
+                        <a 
+                        href="{$link->getPageLink('authentication', true)|escape:'html'}"
+                        rel="nofollow" 
+                        title="{l s='Create new account'}" >
+                            {l s='Create new account'}
+                        </a>
+                    </li>
+        		{/if}
+        		{if $logged}
+        			<li>
+                        <a 
+                        href="{$link->getPageLink('index')}?mylogout" 
+                        rel="nofollow"
+                        title="{l s='Log out'}" >
+                            {l s='Log out'}
+                        </a>
+                    </li>
+        		{/if}
+    		</ul>
+    	</div>
     </div>
 </div>
 <div id="listpage_content" class="row">
 	<div class="col-xs-12 col-sm-6">
 		<div class="categTree box">
             <h3 class="page-subheading">{l s='Categories'}</h3>
-            <div class="tree_top"><a href="{$base_dir_ssl}" title="{$categoriesTree.name|escape:'html':'UTF-8'}"></a></div>
+            <div class="tree_top">
+                <a href="{$base_dir_ssl}" title="{$categoriesTree.name|escape:'html':'UTF-8'}"></a>
+            </div>
             <ul class="tree">
             {if isset($categoriesTree.children)}
                 {foreach $categoriesTree.children as $child}
@@ -84,7 +182,11 @@
 		<div class="sitemap_block box">
             <h3 class="page-subheading">{l s='Pages'}</h3>
             <ul>
-            	<li><a href="{$categoriescmsTree.link}" title="{$categoriescmsTree.name|escape:'html':'UTF-8'}">{$categoriescmsTree.name|escape:'html':'UTF-8'}</a></li>
+            	<li>
+                    <a href="{$categoriescmsTree.link|escape:'html':'UTF-8'}" title="{$categoriescmsTree.name|escape:'html':'UTF-8'}">
+                        {$categoriescmsTree.name|escape:'html':'UTF-8'}
+                    </a>
+                </li>
                 {if isset($categoriescmsTree.children)}
                     {foreach $categoriescmsTree.children as $child}
                         {if (isset($child.children) && $child.children|@count > 0) || $child.cms|@count > 0}
@@ -93,10 +195,24 @@
                     {/foreach}
                 {/if}
                 {foreach from=$categoriescmsTree.cms item=cms name=cmsTree}
-                    <li><a href="{$cms.link|escape:'html':'UTF-8'}" title="{$cms.meta_title|escape:'html':'UTF-8'}">{$cms.meta_title|escape:'html':'UTF-8'}</a></li>
+                    <li>
+                        <a href="{$cms.link|escape:'html':'UTF-8'}" title="{$cms.meta_title|escape:'html':'UTF-8'}">
+                            {$cms.meta_title|escape:'html':'UTF-8'}
+                        </a>
+                    </li>
                 {/foreach}
-                <li><a href="{$link->getPageLink('contact', true)|escape:'html'}" title="{l s='Contact'}">{l s='Contact'}</a></li>
-                {if $display_store}<li class="last"><a href="{$link->getPageLink('stores')|escape:'html'}" title="{l s='List of our stores'}">{l s='Our stores'}</a></li>{/if}
+                <li>
+                    <a href="{$link->getPageLink('contact', true)|escape:'html'}" title="{l s='Contact'}">
+                        {l s='Contact'}
+                    </a>
+                </li>
+                {if $display_store}
+                    <li class="last">
+                        <a href="{$link->getPageLink('stores')|escape:'html'}" title="{l s='List of our stores'}">
+                            {l s='Our stores'}
+                        </a>
+                    </li>
+                {/if}
             </ul>
         </div>
     </div>
