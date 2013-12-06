@@ -156,7 +156,7 @@ class HelperTreeShopsCore extends TreeCore
 				$html .= $this->getContext()->smarty->createTemplate(
 					$this->getTemplateFile($this->getNodeFolderTemplate()),
 					$this->getContext()->smarty
-				)->assign(array(
+				)->assign($this->getAttributes())->assign(array(
 					'children' => $this->renderNodes($item['shops']),
 					'node'     => $item
 				))->fetch();
@@ -164,7 +164,7 @@ class HelperTreeShopsCore extends TreeCore
 				$html .= $this->getContext()->smarty->createTemplate(
 					$this->getTemplateFile($this->getNodeItemTemplate()),
 					$this->getContext()->smarty
-				)->assign(array(
+				)->assign($this->getAttributes())->assign(array(
 					'node' => $item
 				))->fetch();
 		}
