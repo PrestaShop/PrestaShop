@@ -73,7 +73,7 @@ class ThemeConfigurator extends Module
 			!$this->installDB() ||            
             !$this->installFixtures() ||
             !$this->registerHook('displayHeader') ||
-            !$this->registerHook('displayTop') ||
+            !$this->registerHook('displayTopColumn') ||
             !$this->registerHook('displayLeftColumn') ||
             !$this->registerHook('displayRightColumn') ||
             !$this->registerHook('displayHome') ||
@@ -130,7 +130,7 @@ class ThemeConfigurator extends Module
                     \'0\',
                     \'home\',
                     \'\',
-                    \'\',
+                    \'0\',
                     \'banner-img'.$i.'.jpg\',
                     \'\',
                     \'\',
@@ -152,7 +152,7 @@ class ThemeConfigurator extends Module
                     \'0\',
                     \'top\',
                     \'\',
-                    \'\',
+                    \'0\',
                     \'banner-img'.$i.'.jpg\',
                     \'\',
                     \'\',
@@ -203,7 +203,7 @@ class ThemeConfigurator extends Module
             }
         }
 
-        public function hookDisplayTop()
+        public function hookdisplayTopColumn()
         {
         	if ((int)Tools::getValue('live_configurator', 0) == 1)
 			{
@@ -285,8 +285,8 @@ class ThemeConfigurator extends Module
         protected function deleteImage($image) 
         {
                 $file_name = $this->uploads_path.$image;
-                if (realpath(dirname($file_name)) != $this->uploads_path)
-                        die;
+                if (realpath(dirname($file_name)).DIRECTORY_SEPARATOR != $this->uploads_path)
+                        Tools::dieOrLog(sprintf('Could not find upload directory'));
 
                 if ($image != '' && is_file($file_name))
                         unlink($file_name);

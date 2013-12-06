@@ -60,7 +60,7 @@ function addToCompare(productId) {
 	});
 }
 
-function compareButtonsStatusRefresh() {
+function compareButtonsStatusRefresh(){
 	$('.addToCompare').each(function() {
 		if ($.inArray(parseInt($(this).data('id-product')),comparedProductsIds)!== -1) {
 			$(this).addClass('checked');
