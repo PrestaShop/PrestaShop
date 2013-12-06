@@ -517,6 +517,9 @@ class AdminImportControllerCore extends AdminController
 			.'template'))
 			$bo_theme = 'default';
 
+		// We need to set parent media first, so that jQuery is loaded before the dependant plugins
+		parent::setMedia();
+
 		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/vendor/jquery.ui.widget.js');
 		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
 		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload.js');
@@ -524,8 +527,6 @@ class AdminImportControllerCore extends AdminController
 		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js');			
 		$this->addJs(__PS_BASE_URI__.'js/vendor/spin.js');
 		$this->addJs(__PS_BASE_URI__.'js/vendor/ladda.js');
-
-		return parent::setMedia();
 	}
 
 	public function renderForm()

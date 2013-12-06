@@ -30,11 +30,12 @@
 
 /* Top hook CSS */
 #htmlcontent_top {
-  float: left;
-  padding-top: 40px;
-  width: 33.4%;
-  max-width: 391px;
-  padding-left: 10px;
+	float: left;
+	padding-top: 40px;
+	width: 33.4%;
+	max-width: 391px;
+	padding-left: 10px;
+	margin-bottom: 16px;
 }
 @media (max-width: 767px) {
   #htmlcontent_top {
