@@ -120,15 +120,20 @@ p.info-account {
 	}
 }
 .label {white-space:normal; display:inline-block; padding:6px 10px;}
-.required {
-	
-	sup {
-		color:#f13340;
-		font-size:13px;
-		font-weight:bold;
-		top:0;
+
+label{
+	&.required {
+		&:before {
+			content: "*"; 
+			color: red; 
+			font-size: 14px; 
+			position: relative; 
+			line-height: 12px; 
+		}
 	}
 }
+
+
 .unvisible { display:none;}
 label {color:$base-title-color;}
 .checkbox {
@@ -724,6 +729,8 @@ table.table_block  td {
 		top:-1px;
 	}
 }
+
+
 /************************************* BOXES *****************************************************/
 .box {
 	background:$base-box-bg;
