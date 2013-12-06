@@ -276,7 +276,7 @@ class GetFileControllerCore extends FrontController
 		/* Set headers for download */
 		header('Content-Transfer-Encoding: binary');
 		header('Content-Type: '.$mimeType);
-		header('Content-Length: '.filesize($file));
+		header('Content-Length: '.sprintf('%u', filesize($file)));
 		header('Content-Disposition: attachment; filename="'.$filename.'"');
 		$fp = fopen($file, 'rb');
 		while (!feof($fp))
