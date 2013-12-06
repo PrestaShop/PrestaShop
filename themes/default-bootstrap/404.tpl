@@ -36,7 +36,7 @@
 	<form action="{$link->getPageLink('search')|escape:'html'}" method="post" class="std">
 		<fieldset>
 			<div>
-				<label for="search">{l s='Search our product catalog:'}</label>
+				<label for="search_query">{l s='Search our product catalog:'}</label>
 				<input id="search_query" name="search_query" type="text" class="form-control grey" />
                 <button type="submit" name="Submit" value="OK" class="btn btn-default button button-small"><span>{l s='Ok'}</span></button>
 			</div>
