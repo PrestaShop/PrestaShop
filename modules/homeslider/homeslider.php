@@ -26,7 +26,7 @@
 
 /**
  * @since 1.5.0
- * @version 1.2 (2012-03-14)
+ * @version 1.3 (2012-03-14)
  */
 
 if (!defined('_PS_VERSION_'))
@@ -42,7 +42,7 @@ class HomeSlider extends Module
 	{
 		$this->name = 'homeslider';
 		$this->tab = 'front_office_features';
-		$this->version = '1.2.2';
+		$this->version = '1.2.3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->secure_key = Tools::encrypt($this->name);
@@ -60,7 +60,7 @@ class HomeSlider extends Module
 	public function install()
 	{
 		/* Adds Module */
-		if (parent::install() && $this->registerHook('displayTop') && $this->registerHook('actionShopDataDuplication'))
+		if (parent::install() && $this->registerHook('displayTopColumn') && $this->registerHook('actionShopDataDuplication'))
 		{
 			/* Sets up configuration */
 			$res = Configuration::updateValue('HOMESLIDER_WIDTH', '779');
@@ -660,18 +660,17 @@ class HomeSlider extends Module
 		return true;
 	}
 
-	public function hookDisplayTop()
+	public function hookdisplayTopColumn()
 	{
-		if(!$this->_prepareHook())
-			return;
-
-		// Check if not a mobile theme
-		if ($this->context->getMobileDevice() != false)
+		if ($this->context->smarty->tpl_vars['page_name'] != 'index' || $this->context->getMobileDevice() != false)
 			return false;
 
+		if(!$this->_prepareHook())
+			return false;
 		$this->context->controller->addJS($this->_path.'js/jquery.bxSlider.min.js');
 		$this->context->controller->addCSS($this->_path.'bx_styles.css');
 		$this->context->controller->addJS($this->_path.'js/homeslider.js');
+
 		return $this->display(__FILE__, 'homeslider.tpl', $this->getCacheId());
 	}
 	

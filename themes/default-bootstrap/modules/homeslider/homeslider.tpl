@@ -25,21 +25,6 @@
 *}
 {if $page_name =='index'}
 <!-- Module HomeSlider -->
-{if isset($homeslider)}
-<script type="text/javascript">
-{if isset($homeslider_slides) && $homeslider_slides|@count > 1}
-	{if $homeslider.loop == 1}
-		var homeslider_loop = true;
-	{else}
-		var homeslider_loop = false;
-	{/if}
-{else}
-	var homeslider_loop = false;
-{/if}
-var homeslider_speed = {$homeslider.speed};
-var homeslider_pause = {$homeslider.pause};
-</script>
-{/if}
 {if isset($homeslider_slides)}
 <div id="homepage-slider">
     <ul id="homeslider">
@@ -54,6 +39,21 @@ var homeslider_pause = {$homeslider.pause};
     {/foreach}
     </ul>
 </div>
+{if isset($homeslider)}
+<script type="text/javascript">
+{if $homeslider_slides|@count > 1}
+{if $homeslider.loop == 1}
+	var homeslider_loop = true;
+{else}
+	var homeslider_loop = false;
+{/if}
+{else}
+	var homeslider_loop = false;
+{/if}
+	var homeslider_speed = {$homeslider.speed};
+	var homeslider_pause = {$homeslider.pause};
+</script>
+{/if}
 {/if}
 <!-- /Module HomeSlider -->
 {/if}
