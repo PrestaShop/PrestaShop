@@ -106,8 +106,8 @@ $(function(){ldelim}
                 <div id="vat_area">
                     <div id="vat_number">
                         <div class="form-group">
-                            <label for="vat_number">{l s='VAT number'}</label>
-                            <input type="text" class="form-control" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{else}{if isset($address->vat_number)}{$address->vat_number|escape:'html'}{/if}{/if}" onkeyup="if($(this).val().length) { if (validate_{$address_validation.$field_name.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok'); }" />
+                            <label for="vat-number">{l s='VAT number'}</label>
+                            <input type="text" class="form-control" id="vat-number" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{else}{if isset($address->vat_number)}{$address->vat_number|escape:'html'}{/if}{/if}" onkeyup="if($(this).val().length) { if (validate_{$address_validation.$field_name.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok'); }" />
                         </div>
                     </div>
                 </div>

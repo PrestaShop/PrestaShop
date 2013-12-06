@@ -44,16 +44,18 @@
 		
 		<link rel="icon" type="image/vnd.microsoft.icon" href="{$favicon_url}?{$img_update_time}" />
 		<link rel="shortcut icon" type="image/x-icon" href="{$favicon_url}?{$img_update_time}" />
+
+		<link rel="stylesheet" href="{$css_dir}highdpi.css" type="text/css" media="screen" />
 		<link rel="stylesheet" href="{$css_dir}bootstrap_lib/bootstrap.css" type="text/css" media="all" />
 		<link rel="stylesheet" href="{$css_dir}font-awesome.css" type="text/css" media="all" />
 		<link rel="stylesheet" href="{$css_dir}jquery/uniform.default.css" type="text/css" media="all" />
-		<link rel="stylesheet" href="{$css_dir}highdpi.css" media="only screen and (-webkit-min-device-pixel-ratio: 2)" />
 		<link rel="stylesheet" href="{$css_dir}jquery/footable.core.css" type="text/css" media="all" />
 		<link rel="stylesheet" href="{$css_dir}jquery/jquery.bxslider.css" type="text/css" media="all" />
-		<link href='//fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css' />
+
+		<link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic'  type='text/css' />
 		{if isset($css_files)}
 			{foreach from=$css_files key=css_uri item=media}
-				<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
+				<link rel="stylesheet" href="{$css_uri}" type="text/css" media="{$media}" />
 			{/foreach}
 		{/if}
 
@@ -62,10 +64,9 @@
 				var viewport = document.querySelector("meta[name=viewport]");
 				viewport.setAttribute('content', 'initial-scale=1.0,maximum-scale=1.0,user-scalable=0,width=device-width,height=device-height');
 			}
-			if(navigator.userAgent.match(/Android/i)){
+			if(navigator.userAgent.match(/Android/i)) {
 				window.scrollTo(0,1);
 			}
-
 			var baseDir = '{$content_dir|addslashes}';
 			var baseUri = '{$base_uri|addslashes}';
 			var static_token = '{$static_token|addslashes}';
