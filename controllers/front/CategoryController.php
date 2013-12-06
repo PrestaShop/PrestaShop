@@ -111,7 +111,7 @@ class CategoryControllerCore extends FrontController
 		
 		$this->assignScenes();
 		$this->assignSubcategories();
-		if ($this->category->id != 1)
+		if (!in_array($this->category->id, array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'))))
 			$this->assignProductList();
 
 		$this->context->smarty->assign(array(
