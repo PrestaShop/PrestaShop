@@ -24,5 +24,5 @@
 *}
 
 {if is_array($best_sellers) && count($best_sellers)}
-	<li><a data-toggle="tab" href=".blockbestsellers" class="blockbestsellers">{l s='Best Sellers' mod='blockbestsellers'}</a></li>
+	<li><a data-toggle="tab" href="{$link->getPageLink('best-sales')|escape:'html'}" class="blockbestsellers">{l s='Best Sellers' mod='blockbestsellers'}</a></li>
 {/if}
