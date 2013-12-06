@@ -116,7 +116,6 @@
 									<a class="login" href="{$link->getPageLink('my-account', true)|escape:'html'}" rel="nofollow" title="{l s='Login to your customer account'}">{l s='Sign in'}</a>
 								{/if}
 							</div> <!-- #header_user_info -->
-
 							{if count($languages) > 1}
 								<div id="languages-block-top">
 									<div id="countries">
@@ -136,7 +135,6 @@
 														<a href="{$lang_rewrite_urls.$indice_lang|escape:htmlall}" title="{$language.name}">
 													{else}
 														<a href="{$link->getLanguageLink($language.id_lang)|escape:htmlall}" title="{$language.name}">
-									
 													{/if}
 												{/if}
 														<span>{$language.name}</span>
@@ -148,7 +146,6 @@
 										</ul>
 									</div>
 								</div> <!-- #languages-block-top -->
-
 								<script type="text/javascript">
 									$(document).ready(function(){
 										$('#countries .current span, #countries .countries_ul li span').each(function() {
@@ -162,7 +159,6 @@
 									}); 
 								</script>
 							{/if}
-
 							{if count($currencies) > 1}
 								<div id="currencies-block-top">
 									<form id="setCurrency" action="{$request_uri}" method="post">
@@ -184,20 +180,16 @@
 									</form>
 								</div> <!-- #currencies-block-top -->
 							{/if}
-
 							<div id="contact-link">
 								<a href="{$link->getPageLink('contact', true)|escape:'html'}" title="{l s='contact'}">{l s='Contact Us'}</a>
 							</div> <!-- #contact-link -->
-
 						   {if $shop_phone}
 								<span class="shop-phone">
 									<i class="icon-phone"></i>{l s='Call us now toll free:'} <strong>{$shop_phone}</strong>
 								</span>
 							{/if}
-
 						</nav><!-- .container-row -->
 					</div> <!-- .header-row -->
-
 					<div class="container header-row-2">
 						<a id="header_logo" href="{$base_dir}" title="{$shop_name|escape:'html':'UTF-8'}">
 							<img class="logo img-responsive" src="{$logo_url}" alt="{$shop_name|escape:'html':'UTF-8'}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}" {/if}/>
@@ -206,16 +198,17 @@
 							{$HOOK_TOP}
 						</div>
 					</div> <!-- .header-row-2 -->
-
 				</header> <!-- #header -->
 			</div> <!-- .header-container -->
-			
 			<div class="columns-container">
 				<div id="columns" class="container">
 					{if $page_name !='index' && $page_name !='pagenotfound'}
 						{include file="$tpl_dir./breadcrumb.tpl"}
 					{/if}
 					<div class="row">
+						<div id="top_column" class="center_column col-xs-12 col-sm-12">
+							{$HOOK_TOP_COLUMN}
+						</div>
 						{if isset($left_column_size) && !empty($left_column_size)}
 						<!-- Left -->
 						<div id="left_column" class="column col-xs-12 col-sm-3">

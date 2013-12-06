@@ -280,6 +280,9 @@
     <hook id="displayHomeTabContent" live_edit="1">
       <name>displayHomeTabContent</name><title>Home Page Tabs Content</title><description>This hook displays new elements on the homepage tabs content</description>
     </hook>
+	<hook id="displayTopColumn" live_edit="1">
+       <name>displayTopColumn</name><title>Top column blocks</title><description>This hook displays new elements in the top of columns</description>
+    </hook>
     <hook id="displayBackOfficeCategory" live_edit="0">
       <name>displayBackOfficeCategory</name><title>Display new elements in the Back Office, tab AdminCategories</title><description>This hook launches modules when the AdminCategories tab is displayed in the Back Office</description>
     </hook>

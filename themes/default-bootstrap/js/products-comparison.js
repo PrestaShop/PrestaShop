@@ -57,14 +57,12 @@ function addToCompare(productId){
 }
 
 function compareButtonsStatusRefresh(){
-	$('.addToCompare').each(function() {
-		console.log($(this).data('id-product'));
-		if ($.inArray(parseInt($(this).data('id-product')),comparedProductsIds)!= -1){
+	$('.addToCompare').each(function()
+	{
+		if ($.inArray(parseInt($(this).data('id-product')),comparedProductsIds)!= -1)
 			$(this).addClass('checked');
-		}
-		else {
+		else
 			$(this).removeClass('checked');
-		}
 	})
 }
 
