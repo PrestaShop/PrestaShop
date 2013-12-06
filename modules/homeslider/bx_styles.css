@@ -4,13 +4,11 @@
  * To change the color scheme of slider change each 
  * background property for each of the five styles below
  */
-
 .bx-window {margin-bottom:20px;}
 .bx-wrapper {
 	margin-bottom:20px;
 	height:300px
 }
- 
 /*next button*/
 .bx-next {
 	display:none;
@@ -21,11 +19,9 @@
 	width: 30px;
 	height: 30px;
 	text-indent: -999999px;
-	background: url(gray_next.png) no-repeat 0 -30px;
+	background: url(../images/gray_next.png) no-repeat 0 -30px;
 }
-
 /*previous button*/
-
 .bx-prev {
 	display:none;
 	position:absolute;
@@ -35,9 +31,8 @@
 	width: 30px;
 	height: 30px;
 	text-indent: -999999px;
-	background: url(gray_prev.png) no-repeat 0 -30px;
+	background: url(../images/gray_prev.png) no-repeat 0 -30px;
 }
-
 /*pager links*/
 .bx-pager {
    position: absolute;
@@ -60,20 +55,17 @@
 	font-size: 11px;
 	color:#000;
 	text-decoration:none;
-	background:url(gray_pager.png) no-repeat 0 -20px;
+	background:url(../images/gray_pager.png) no-repeat 0 -20px;
 }
 
 /*
  * End color scheme styles
  */
-
-
 /*next/prev button hover state*/
 .bx-next:hover,
 .bx-prev:hover {
 	background-position: 0 0;
 }
-
 /*pager links hover and active states*/
 .bx-pager .pager-active,
 .bx-pager a:hover {
@@ -81,7 +73,6 @@
 	text-decoration:none;
 	background-position: 0 0;
 }
-
 /*captions*/
 .bx-captions {
 	text-align:center;
@@ -89,13 +80,11 @@
 	padding: 7px 0;
 	color: #666;
 }
-
 /*auto controls*/
 .bx-auto {
 	text-align: center;
 	padding-top: 15px;
 }
-
 .bx-auto a {
 	color: #666;
 	font-size: 12px;
