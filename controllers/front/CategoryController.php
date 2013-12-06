@@ -55,7 +55,7 @@ class CategoryControllerCore extends FrontController
 	{
 		if (Tools::getValue('live_edit'))
 			return ;
-		if (!Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop())
+		if (!Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop() || in_array($this->category->id, array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'))))
 		{
 			$this->redirect_after = '404';
 			$this->redirect();
@@ -111,8 +111,7 @@ class CategoryControllerCore extends FrontController
 		
 		$this->assignScenes();
 		$this->assignSubcategories();
-		if (!in_array($this->category->id, array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'))))
-			$this->assignProductList();
+		$this->assignProductList();
 
 		$this->context->smarty->assign(array(
 			'category' => $this->category,
