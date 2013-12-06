@@ -31,7 +31,6 @@ $(document).ready(function() {
 	if (parseInt($('input[name="is_free"]:checked').val()))
 		is_freeClick($('input[name="is_free"]:checked'));
 	displayRangeType();
-	checkAllZones();
 });
 
 function initCarrierWizard()
@@ -673,7 +672,7 @@ function checkAllZones(elt)
 	else
 	{
 		$('.input_zone').removeAttr('checked');
-		$('.fees div.input-group input:text, .fees_all div.input-group input:text').attr('disabled', 'disabled').val('');
+		$('.fees div.input-group input:text, .fees_all div.input-group input:text').attr('disabled', 'disabled');
 	}
 	
 }
