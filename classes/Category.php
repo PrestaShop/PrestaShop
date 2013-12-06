@@ -155,8 +155,8 @@ class CategoryCore extends ObjectModel
 		if (!isset($this->level_depth))
 			$this->level_depth = $this->calcLevelDepth();
 
-		if ($this->is_root_category)
-			$this->id_parent = (int)Configuration::get('PS_ROOT_CATEGORY');
+		if ($this->is_root_category && ($id_root_category = (int)Configuration::get('PS_ROOT_CATEGORY')))
+			$this->id_parent = $id_root_category;
 
 		$ret = parent::add($autodate, $null_values);
 		if (Tools::isSubmit('checkBoxShopAsso_category'))
