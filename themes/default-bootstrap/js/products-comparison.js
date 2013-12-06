@@ -23,49 +23,52 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function addToCompare(productId){
-	
+function addToCompare(productId) {
 	var totalValueNow = parseInt($('.bt_compare').next('.compare_product_count').val());
-	
-	$.inArray(parseInt(productId),comparedProductsIds) == -1?action = 'add':action = 'remove';
-	
+	var action, totalVal;
+	if($.inArray(parseInt(productId),comparedProductsIds) === -1){
+		action = 'add';
+	}
+	else {
+		action = 'remove';
+	}
+
 	$.ajax({
 		url: 'index.php?controller=products-comparison&ajax=1&action='+action+'&id_product=' + productId,
 		async: true,
 		cache: false,
-		success: function(data){
-			if (action == 'add' && comparedProductsIds.length < comparator_max_item) {
+		success: function(data) {
+			if (action === 'add' && comparedProductsIds.length < comparator_max_item) {
 				comparedProductsIds.push(parseInt(productId)),
 				compareButtonsStatusRefresh(),
 				totalVal = totalValueNow +1,
 				$('.bt_compare').next('.compare_product_count').val(totalVal),
-				totalValue(totalVal)
+				totalValue(totalVal);
 			}
-			else if (action == 'remove') {
+			else if (action === 'remove') {
 				comparedProductsIds.splice($.inArray(parseInt(productId),comparedProductsIds), 1),
 				compareButtonsStatusRefresh(),
 				totalVal = totalValueNow -1,
 				$('.bt_compare').next('.compare_product_count').val(totalVal),
-				totalValue(totalVal)	
+				totalValue(totalVal);
 			}
 			else {
-				alert(max_item)
+				alert(max_item);
 			}
 		},
 		error: function(){}
 	});
 }
 
-function compareButtonsStatusRefresh(){
+function compareButtonsStatusRefresh() {
 	$('.addToCompare').each(function() {
-		console.log($(this).data('id-product'));
-		if ($.inArray(parseInt($(this).data('id-product')),comparedProductsIds)!= -1){
+		if ($.inArray(parseInt($(this).data('id-product')),comparedProductsIds)!== -1) {
 			$(this).addClass('checked');
 		}
 		else {
 			$(this).removeClass('checked');
 		}
-	})
+	});
 }
 
 function totalValue(value) {
@@ -73,10 +76,8 @@ function totalValue(value) {
 }
 
 reloadProductComparison = function() {
-	$('a.cmp_remove').click(function(){
-
+	$('a.cmp_remove').click(function() {
 		var idProduct = $(this).data('id-product');
-
 		$.ajax({
 			url: 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
 			async: false,
@@ -86,7 +87,7 @@ reloadProductComparison = function() {
 			}
 		});
 	});
-}
+};
 
 $(document).ready(function() {
 	compareButtonsStatusRefresh();
