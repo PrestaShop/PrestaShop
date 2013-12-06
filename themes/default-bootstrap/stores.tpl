@@ -25,13 +25,19 @@
 
 {capture name=path}{l s='Our stores'}{/capture}
 
-<h1 class="page-heading">{l s='Our stores'}</h1>
+<h1 class="page-heading">
+	{l s='Our stores'}
+</h1>
 
 {if $simplifiedStoresDiplay}
 	{if $stores|@count}
-	<p class="store-title"><strong class="dark">{l s='Here you can find our store locations. Please feel free to contact us:'}</strong></p>
-    <table class="table table-bordered">
-    	<thead>
+		<p class="store-title">
+			<strong class="dark">
+				{l s='Here you can find our store locations. Please feel free to contact us:'}
+			</strong>
+		</p>
+	    <table class="table table-bordered">
+	    	<thead>
             	<tr>
                 	<th class="logo">{l s='Logo'}</th>
                     <th class="name">{l s='Store name'}</th>
@@ -39,24 +45,31 @@
                     <th class="store-hours">{l s='Working hours'}</th>
                 </tr>
             </thead>
-	{foreach $stores as $store}
-		<tr class="store-small">
-        	
-			<td class="logo">{if $store.has_picture}<div class="store-image"><img src="{$img_store_dir}{$store.id_store}.jpg" alt="" /></div>{/if}</td>
-			<td class="name">{$store.name|escape:'html':'UTF-8'}</td>
-            <td class="address">
-				{$store.address1|escape:'html':'UTF-8'}
-				{if $store.address2}{$store.address2|escape:'html':'UTF-8'}{/if}
-				{$store.postcode} {$store.city|escape:'html':'UTF-8'}{if $store.state}, {$store.state}{/if}
-				{$store.country|escape:'html':'UTF-8'}
-				{if $store.phone}{l s='Phone:' js=0} {$store.phone}{/if}
-			</td>
-            <td class="store-hours">
-				{if isset($store.working_hours)}{$store.working_hours}{/if}
-            </td>
-		</tr>
-	{/foreach}
-    </table>
+			{foreach $stores as $store}
+				<tr class="store-small">
+					<td class="logo">
+						{if $store.has_picture}
+							<div class="store-image">
+								<img src="{$img_store_dir}{$store.id_store}.jpg" alt="" />
+							</div>
+						{/if}
+					</td>
+					<td class="name">
+						{$store.name|escape:'html':'UTF-8'}
+					</td>
+		            <td class="address">
+						{$store.address1|escape:'html':'UTF-8'}
+						{if $store.address2}{$store.address2|escape:'html':'UTF-8'}{/if}
+						{$store.postcode} {$store.city|escape:'html':'UTF-8'}{if $store.state}, {$store.state}{/if}
+						{$store.country|escape:'html':'UTF-8'}
+						{if $store.phone}{l s='Phone:' js=0} {$store.phone}{/if}
+					</td>
+		            <td class="store-hours">
+						{if isset($store.working_hours)}{$store.working_hours}{/if}
+		            </td>
+				</tr>
+			{/foreach}
+	    </table>
 	{/if}
 {else}
 	<script type="text/javascript">
@@ -85,7 +98,11 @@
 		//]]>
 	</script>
 	<div id="map"></div>
-	<p class="store-title"><strong class="dark">{l s='Enter a location (e.g. zip/postal code, address, city or country) in order to find the nearest stores.'}</strong></p>
+	<p class="store-title">
+		<strong class="dark">
+			{l s='Enter a location (e.g. zip/postal code, address, city or country) in order to find the nearest stores.'}
+		</strong>
+	</p>
     <div class="store-content">
         <div class="address-input">
             <label for="addressInput">{l s='Your location:'}</label>
@@ -102,12 +119,20 @@
             <img src="{$img_ps_dir}loader.gif" class="middle" alt="" id="stores_loader" />
         </div>
         <div>
-            <button onclick="searchLocations();" class="button btn btn-default button-small"><span>{l s='Search'}<i class="icon-chevron-right right"></i></span></button>
+            <button onclick="searchLocations();" class="button btn btn-default button-small">
+            	<span>
+            		{l s='Search'}<i class="icon-chevron-right right"></i>
+            	</span>
+            </button>
         </div>
     </div>
-    <div class="store-content-select selector3"><select id="locationSelect" class="form-control"><option></option></select></div>
+    <div class="store-content-select selector3">
+    	<select id="locationSelect" class="form-control">
+    		<option>-</option>
+    	</select>
+    </div>
 
-	<table cellpadding="0" cellspacing="0" border="0" id="stores-table" class="table table-bordered">
+	<table id="stores-table" class="table table-bordered">
     	<thead>
 			<tr>
                 <th class="num">{l s='#'}</th>
