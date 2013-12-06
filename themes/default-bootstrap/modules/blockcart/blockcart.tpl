@@ -76,8 +76,8 @@ var generated_date = {$smarty.now|intval};
 			{assign var='productId' value=$product.id_product}
 			{assign var='productAttributeId' value=$product.id_product_attribute}
 			<dt id="cart_block_product_{$product.id_product}_{if $product.id_product_attribute}{$product.id_product_attribute}{else}0{/if}_{if $product.id_address_delivery}{$product.id_address_delivery}{else}0{/if}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
-            	<a class="cart-images" href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category)}">
-                    <img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')}" alt=""  title="{$product.name|escape:htmlall:'UTF-8'|truncate:20}" />
+            	<a class="cart-images" href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category)|escape:htmlall:'UTF-8'}" title="{$product.name|escape:htmlall:'UTF-8'|truncate:20}">
+                    <img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')}" alt="{$product.name|escape:htmlall:'UTF-8'}" />
                 </a>
                 <div class="cart-info">
                 	<div class="product-name">

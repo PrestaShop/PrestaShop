@@ -50,7 +50,7 @@
 	<!-- Pagination -->
 	<div id="pagination{if isset($paginationId)}_{$paginationId}{/if}" class="pagination clearfix">
     {if $nb_products > $products_per_page && $start!=$stop}
-		<form action="{if !is_array($requestNb)}{$requestNb}{else}{$requestNb.requestUrl}{/if}" method="get" class="showall">
+		<form action="{if !is_array($requestNb)}{$requestNb|escape:htmlall:'UTF-8'}{else}{$requestNb.requestUrl|escape:htmlall:'UTF-8'}{/if}" method="get" class="showall">
 			<div>
 				{if isset($search_query) AND $search_query}<input type="hidden" name="search_query" value="{$search_query|escape:'html':'UTF-8'}" />{/if}
 				{if isset($tag) AND $tag AND !is_array($tag)}<input type="hidden" name="tag" value="{$tag|escape:'html':'UTF-8'}" />{/if}

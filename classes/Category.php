@@ -153,6 +153,10 @@ class CategoryCore extends ObjectModel
 	{
 		if (!isset($this->level_depth))
 			$this->level_depth = $this->calcLevelDepth();
+
+		if ($this->is_root_category)
+			$this->id_parent = (int)Configuration::get('PS_ROOT_CATEGORY');
+
 		$ret = parent::add($autodate, $null_values);
 		if (Tools::isSubmit('checkBoxShopAsso_category'))
 			foreach (Tools::getValue('checkBoxShopAsso_category') as $id_shop => $value)
@@ -185,6 +189,10 @@ class CategoryCore extends ObjectModel
 	{
 		if ($this->id_parent == $this->id)
 			throw new PrestaShopException('a category cannot be it\'s own parent');
+
+		if ($this->is_root_category)
+			$this->id_parent = (int)Configuration::get('PS_ROOT_CATEGORY');
+		
 		// Update group selection
 		$this->updateGroup($this->groupBox);
 		$this->level_depth = $this->calcLevelDepth();

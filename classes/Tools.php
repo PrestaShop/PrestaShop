@@ -421,28 +421,27 @@ class ToolsCore
 				if (is_object($currency) && $currency->id && !$currency->deleted && $currency->isAssociatedToShop())
 					$cookie->id_currency = (int)$currency->id;
 			}
-
-		if ((int)$cookie->id_currency)
-		{
-			$currency = Currency::getCurrencyInstance((int)$cookie->id_currency);
-			if (is_object($currency) && (int)$currency->id && (int)$currency->deleted != 1 && $currency->active)
-				if ($currency->isAssociatedToShop())
-					return $currency;
-				else
-				{
-					// get currency from context
-					$currency = Shop::getEntityIds('currency', Context::getContext()->shop->id);
-					if (isset($currency[0]) && $currency[0]['id_currency'])
-					{
-						$cookie->id_currency = $currency[0]['id_currency'];
-						return Currency::getCurrencyInstance((int)$cookie->id_currency);
-					}
-				}
-		}
+		
 		$currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
-		if (is_object($currency) && $currency->id)
-			$cookie->id_currency = (int)$currency->id;
+		if ((int)$cookie->id_currency)
+			$currency = Currency::getCurrencyInstance((int)$cookie->id_currency);
 
+		if (is_object($currency) && (int)$currency->id && (int)$currency->deleted != 1 && $currency->active)
+		{
+			$cookie->id_currency = (int)$currency->id;
+			if ($currency->isAssociatedToShop())
+				return $currency;
+			else
+			{
+				// get currency from context
+				$currency = Shop::getEntityIds('currency', Context::getContext()->shop->id, true, true);
+				if (isset($currency[0]) && $currency[0]['id_currency'])
+				{
+					$cookie->id_currency = $currency[0]['id_currency'];
+					return Currency::getCurrencyInstance((int)$cookie->id_currency);
+				}
+			}
+		}
 		return $currency;
 	}
 
@@ -2679,7 +2678,7 @@ exit;
 			'iso_lang' => Tools::strtolower(isset($params['iso_lang']) ? $params['iso_lang'] : Context::getContext()->language->iso_code),
 			'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country'] : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
 			'shop_url' => isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain(),
-			'mail' => isset($params['email']) ? $params['email'] : Configuration::get('email')
+			'mail' => isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL')
 		));
 
 		$protocols = array('https');
