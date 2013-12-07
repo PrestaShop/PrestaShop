@@ -44,6 +44,12 @@ function initMarkers()
 			createMarker(latlng, name, address, other, id_store, has_store_picture);
 			bounds.extend(latlng);
 		}
+		map.fitBounds(bounds);
+		var zoomOverride = map.getZoom();
+        if(zoomOverride > 10) {
+        zoomOverride = 10;
+        }
+		map.setZoom(zoomOverride);
 	});
 }
 
