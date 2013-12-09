@@ -206,14 +206,14 @@
 						{/if}
 					{/if}
 				</div>
-				<div class="functional-buttons clearfix">
+<!-- 				<div class="functional-buttons clearfix">
 					{hook h='displayProductListFunctionalButtons' product=$product}
 					{if isset($comparator_max_item) && $comparator_max_item}
 						<div class="compare">
 							<a class="addToCompare" href="#" data-id-product="{$product.id_product}" onClick="addToCompare('{$product.id_product|intval}'); return false;">{l s='Add to Compare'}</a>
 						</div>
 					{/if}
-				</div>
+				</div> -->
 			</div><!-- .product-container> -->
 		</li>
 	{/foreach}

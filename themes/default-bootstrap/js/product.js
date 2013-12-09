@@ -730,7 +730,7 @@ function checkUrl()
 						$('#color_' + attributesCombinations[a]['id_attribute']).addClass('selected');
 						$('#color_' + attributesCombinations[a]['id_attribute']).parent().addClass('selected');
 						$('input:radio[value=' + attributesCombinations[a]['id_attribute'] + ']').attr('checked', true);
-						$('input:hidden[name=group_' + attributesCombinations[a]['id_attribute_group'] + ']').val(attributesCombinations[a]['id_attribute']);
+						$('input[type=hidden][name=group_' + attributesCombinations[a]['id_attribute_group'] + ']').val(attributesCombinations[a]['id_attribute']);
 						$('select[name=group_' + attributesCombinations[a]['id_attribute_group'] + ']').val(attributesCombinations[a]['id_attribute']);
 					}
 			// find combination
@@ -750,7 +750,7 @@ $(document).ready(function(){
     // The button to increment the product value
     $('.product_quantity_up').click(function(e){
         e.preventDefault();
-        fieldName = $(this).attr('rel');
+        fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name='+fieldName+']').val());
 		if (quantityAvailable > 0) {
 				quantityAvailableT = quantityAvailable;
@@ -767,7 +767,7 @@ $(document).ready(function(){
 	 // The button to decrement the product value
     $(".product_quantity_down").click(function(e) {
         e.preventDefault();
-        fieldName = $(this).attr('rel');
+        fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name='+fieldName+']').val());
         if (!isNaN(currentVal) && currentVal > 1) {
             $('input[name='+fieldName+']').val(currentVal - 1).trigger('keyup');
