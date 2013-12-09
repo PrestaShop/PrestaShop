@@ -750,7 +750,7 @@ $(document).ready(function(){
     // The button to increment the product value
     $('.product_quantity_up').click(function(e){
         e.preventDefault();
-        fieldName = $(this).attr('rel');
+        fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name='+fieldName+']').val());
 		if (quantityAvailable > 0) {
 				quantityAvailableT = quantityAvailable;
@@ -767,7 +767,7 @@ $(document).ready(function(){
 	 // The button to decrement the product value
     $(".product_quantity_down").click(function(e) {
         e.preventDefault();
-        fieldName = $(this).attr('rel');
+        fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name='+fieldName+']').val());
         if (!isNaN(currentVal) && currentVal > 1) {
             $('input[name='+fieldName+']').val(currentVal - 1).trigger('keyup');
