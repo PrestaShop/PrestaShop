@@ -279,7 +279,7 @@ class GetFileControllerCore extends FrontController
 		header('Content-Length: '.filesize($file));
 		header('Content-Disposition: attachment; filename="'.$filename.'"');
 		//prevents max execution timeout, when reading large files
-		set_time_limit(0);
+		@set_time_limit(0);
 		$fp = fopen($file, 'rb');
 		while (!feof($fp))
 			echo fgets($fp, 16384);
