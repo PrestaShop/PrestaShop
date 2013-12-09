@@ -265,7 +265,7 @@
 											rel="{literal}{{/literal}gallery: 'gal1', smallimage: '{$link->getImageLink($product->link_rewrite, $imageIds, 'large_default')|escape:'html'}',largeimage: '{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html'}'{literal}}{/literal}"
 										{else}
 											href="{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html'}"
-											rel="other-views"
+											data-fancybox-group="other-views"
 											class="thickbox{if $smarty.foreach.thumbnails.first} shown{/if}"
 										{/if}
 										title="{$imageTitlte}">
@@ -482,10 +482,10 @@
 							value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}"
 							maxlength="3"
 							{if $product->minimal_quantity > 1}onkeyup="checkMinimalQuantity({$product->minimal_quantity});"{/if} />
-						<a href="#"  rel="qty" class="btn btn-default button-minus product_quantity_down">
+						<a href="#"  data-field-qty="qty" class="btn btn-default button-minus product_quantity_down">
 							<span><i class="icon-minus"></i></span>
 						</a>
-						<a href="#"  rel="qty" class="btn btn-default button-plus product_quantity_up ">
+						<a href="#"  data-field-qty="qty" class="btn btn-default button-plus product_quantity_up ">
 							<span><i class="icon-plus"></i></span>
 						</a>
 						<span class="clearfix"></span>
@@ -507,7 +507,7 @@
 							{foreach from=$groups key=id_attribute_group item=group}
 								{if $group.attributes|@count}
 									<fieldset class="attribute_fieldset">
-										<label class="attribute_label" for="group_{$id_attribute_group|intval}">{$group.name|escape:'html':'UTF-8'} :&nbsp;</label>
+										<label class="attribute_label" {if $group.group_type != 'color' and $group.group_type != 'radio'}for="group_{$id_attribute_group|intval}"{/if}>{$group.name|escape:'html':'UTF-8'} :&nbsp;</label>
 										{assign var="groupName" value="group_$id_attribute_group"}
 										<div class="attribute_list">
 											{if ($group.group_type == 'select')}
@@ -520,16 +520,16 @@
 												<ul id="color_to_pick_list" class="clearfix">
 													{assign var="default_colorpicker" value=""}
 													{foreach from=$group.attributes key=id_attribute item=group_attribute}
-													<li{if $group.default == $id_attribute} class="selected"{/if}>
-														<a id="color_{$id_attribute|intval}" class="color_pick{if ($group.default == $id_attribute)} selected{/if}" style="background: {$colors.$id_attribute.value};" title="{$colors.$id_attribute.name}" onclick="colorPickerClick(this);getProductAttribute();">
-															{if file_exists($col_img_dir|cat:$id_attribute|cat:'.jpg')}
-																<img src="{$img_col_dir}{$id_attribute}.jpg" alt="{$colors.$id_attribute.name}" width="20" height="20" /><br />
-															{/if}
-														</a>
-													</li>
-													{if ($group.default == $id_attribute)}
-														{$default_colorpicker = $id_attribute}
-													{/if}
+														<li{if $group.default == $id_attribute} class="selected"{/if}>
+															<a id="color_{$id_attribute|intval}" class="color_pick{if ($group.default == $id_attribute)} selected{/if}" style="background: {$colors.$id_attribute.value};" title="{$colors.$id_attribute.name}" onclick="colorPickerClick(this);getProductAttribute();">
+																{if file_exists($col_img_dir|cat:$id_attribute|cat:'.jpg')}
+																	<img src="{$img_col_dir}{$id_attribute}.jpg" alt="{$colors.$id_attribute.name}" width="20" height="20" />
+																{/if}
+															</a>
+														</li>
+														{if ($group.default == $id_attribute)}
+															{$default_colorpicker = $id_attribute}
+														{/if}
 													{/foreach}
 												</ul>
 												<input type="hidden" class="color_pick_hidden" name="{$groupName}" value="{$default_colorpicker}" />
