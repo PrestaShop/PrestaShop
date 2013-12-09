@@ -1,4 +1,4 @@
-{$message}
+{if isset($message)}{$message}{/if}
 <div id="ajax-message-ok" class="conf ajax-message alert alert-success" style="display: none">
 	<span class="message"></span>
 </div>
