@@ -1,4 +1,4 @@
-{$message}
+{if isset($message)}{$message}{/if}
 <div class="panel" id="new-filters-template">
 	<h3><i class="icon-cogs"></i> {l s='New filters template' mod='blocklayered'}</h3>
 	<form action="{$current_url}" method="post" class="form-horizontal" onsubmit="return checkForm();">
