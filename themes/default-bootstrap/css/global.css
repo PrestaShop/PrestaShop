@@ -1,4 +1,4 @@
-@charset "CP850";
+@charset "UTF-8";
 /* ##################################################################################################
 	PRESTASHOP SCSS
 ################################################################################################## */
@@ -2535,19 +2535,19 @@ table#cart_summary .gift-icon {
 
 /* step 4 - paiement ************************************************************************** */
 /* line 2421, ../sass/global.scss */
-#order .delivery_option label, #order-opc .delivery_option label {
+#order .delivery_option > div, #order-opc .delivery_option > div {
   display: block;
   margin-bottom: 20px;
   font-weight: normal; }
   /* line 2425, ../sass/global.scss */
-  #order .delivery_option label > table, #order-opc .delivery_option label > table {
+  #order .delivery_option > div > table, #order-opc .delivery_option > div > table {
     background: white;
     margin-bottom: 0; }
     /* line 2428, ../sass/global.scss */
-    #order .delivery_option label > table.resume, #order-opc .delivery_option label > table.resume {
+    #order .delivery_option > div > table.resume, #order-opc .delivery_option > div > table.resume {
       height: 53px; }
     /* line 2431, ../sass/global.scss */
-    #order .delivery_option label > table.delivery_option_carrier, #order-opc .delivery_option label > table.delivery_option_carrier {
+    #order .delivery_option > div > table.delivery_option_carrier, #order-opc .delivery_option > div > table.delivery_option_carrier {
       margin-top: 10px;
       width: 100%;
       background: #5192f3;
@@ -2555,25 +2555,25 @@ table#cart_summary .gift-icon {
       border: 1px solid #4b80c3;
       font-weight: bold; }
       /* line 2438, ../sass/global.scss */
-      #order .delivery_option label > table.delivery_option_carrier td, #order-opc .delivery_option label > table.delivery_option_carrier td {
+      #order .delivery_option > div > table.delivery_option_carrier td, #order-opc .delivery_option > div > table.delivery_option_carrier td {
         padding: 8px 11px 7px 11px; }
         /* line 2440, ../sass/global.scss */
-        #order .delivery_option label > table.delivery_option_carrier td i, #order-opc .delivery_option label > table.delivery_option_carrier td i {
+        #order .delivery_option > div > table.delivery_option_carrier td i, #order-opc .delivery_option > div > table.delivery_option_carrier td i {
           font-size: 20px;
           margin-right: 7px;
           vertical-align: -2px; }
     /* line 2448, ../sass/global.scss */
-    #order .delivery_option label > table td.delivery_option_radio, #order-opc .delivery_option label > table td.delivery_option_radio {
+    #order .delivery_option > div > table td.delivery_option_radio, #order-opc .delivery_option > div > table td.delivery_option_radio {
       width: 54px;
       padding-left: 0;
       padding-right: 0;
       text-align: center; }
     /* line 2454, ../sass/global.scss */
-    #order .delivery_option label > table td.delivery_option_logo, #order-opc .delivery_option label > table td.delivery_option_logo {
+    #order .delivery_option > div > table td.delivery_option_logo, #order-opc .delivery_option > div > table td.delivery_option_logo {
       width: 97px;
       padding-left: 21px; }
     /* line 2458, ../sass/global.scss */
-    #order .delivery_option label > table td.delivery_option_price, #order-opc .delivery_option label > table td.delivery_option_price {
+    #order .delivery_option > div > table td.delivery_option_price, #order-opc .delivery_option > div > table td.delivery_option_price {
       width: 162px; }
 
 /* line 2463, ../sass/global.scss */

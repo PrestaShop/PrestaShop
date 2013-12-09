@@ -126,7 +126,7 @@
 									<div class="delivery_options">
 										{foreach $option_list as $key => $option}
 											<div class="delivery_option {if ($option@index % 2)}alternate_{/if}item">
-												<label for="delivery_option_{$id_address}_{$option@index}">
+												<div>
 													<table class="resume table table-bordered">
 														<tr>
 															<td class="delivery_option_radio">
@@ -199,7 +199,7 @@
 																		{$carrier.instance->name}
 																	</td>
 																{/if}
-																<td {if $option.unique_carrier}class="first_item" colspan="2"{/if}>
+																<td {if $option.unique_carrier}class="first_item" {/if}>
 																	<input type="hidden" value="{$carrier.instance->id}" name="id_carrier" />
 																	{if isset($carrier.instance->delay[$cookie->id_lang])}
 																		<i class="icon-info-sign"></i>{$carrier.instance->delay[$cookie->id_lang]}
@@ -234,7 +234,7 @@
 															</tr>
 														{/foreach}
 													</table>
-												</label>
+												</div>
 											</div> <!-- end delivery_option -->
 										{/foreach}
 									</div> <!-- end delivery_options -->
@@ -298,7 +298,7 @@
 							<p class="checkbox">
 								<input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} />
 								<label for="cgv">{l s='I agree to the terms of service and will adhere to them unconditionally.'}</label>
-								<a href="{$link_conditions}" class="iframe" rel="nofollow">{l s='(Read the Terms of Service)'}</a>
+								<a href="{$link_conditions|escape:'html':'UTF-8'}" class="iframe" rel="nofollow">{l s='(Read the Terms of Service)'}</a>
 							</p>
 							<script type="text/javascript">
 								$(document).ready(function() {
