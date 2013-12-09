@@ -2418,7 +2418,7 @@ table#cart_summary .gift-icon {
 }
 /* step 4 - paiement ************************************************************************** */
 #order .delivery_option, #order-opc .delivery_option {
-	label {
+	>div {
 		display: block;
 		margin-bottom:20px;
 		font-weight:normal;	
