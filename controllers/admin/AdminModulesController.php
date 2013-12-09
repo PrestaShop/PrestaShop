@@ -531,7 +531,26 @@ class AdminModulesControllerCore extends AdminController
 			// UPLOAD_ERR_CANT_WRITE: 7
 			// UPLOAD_ERR_EXTENSION: 8
 			// UPLOAD_ERR_PARTIAL: 3
-			if (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name']))
+
+			if (isset($_FILES['file']['error']))
+				switch($_FILES['file']['error']) {
+					case UPLOAD_ERR_OK:
+						break;
+		            case UPLOAD_ERR_INI_SIZE:
+		            case UPLOAD_ERR_FORM_SIZE:
+		                $this->errors[] = sprintf($this->l('File too large (limit of %s bytes).'), Tools::getMaxUploadSize());
+		                break;
+		            case UPLOAD_ERR_PARTIAL:
+		                $this->errors[] = $this->l('File upload was not completed.');
+		                break;
+		            case UPLOAD_ERR_NO_FILE:
+		                $this->errors[] = $this->l('Zero-length file uploaded.');
+		                break;
+		            default:
+		                $this->errors[] = sprintf($this->l('Internal error #%s'), $_FILES['newfile']['error']);
+		                break;
+		        }
+		    elseif (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name']))
 				$this->errors[] = $this->l('No file has been selected');
 			elseif (substr($_FILES['file']['name'], -4) != '.tar' && substr($_FILES['file']['name'], -4) != '.zip'
 				&& substr($_FILES['file']['name'], -4) != '.tgz' && substr($_FILES['file']['name'], -7) != '.tar.gz')
