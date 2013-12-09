@@ -532,10 +532,8 @@ class AdminModulesControllerCore extends AdminController
 			// UPLOAD_ERR_EXTENSION: 8
 			// UPLOAD_ERR_PARTIAL: 3
 
-			if (isset($_FILES['file']['error']))
+			if (isset($_FILES['file']['error']) && $_FILES['file']['error'] != UPLOAD_ERR_OK)
 				switch($_FILES['file']['error']) {
-					case UPLOAD_ERR_OK:
-						break;
 		            case UPLOAD_ERR_INI_SIZE:
 		            case UPLOAD_ERR_FORM_SIZE:
 		                $this->errors[] = sprintf($this->l('File too large (limit of %s bytes).'), Tools::getMaxUploadSize());
@@ -555,7 +553,7 @@ class AdminModulesControllerCore extends AdminController
 			elseif (substr($_FILES['file']['name'], -4) != '.tar' && substr($_FILES['file']['name'], -4) != '.zip'
 				&& substr($_FILES['file']['name'], -4) != '.tgz' && substr($_FILES['file']['name'], -7) != '.tar.gz')
 				$this->errors[] = Tools::displayError('Unknown archive type.');
-			elseif (!@copy($_FILES['file']['tmp_name'], _PS_MODULE_DIR_.$_FILES['file']['name']))
+			elseif (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_MODULE_DIR_.$_FILES['file']['name']))
 				$this->errors[] = Tools::displayError('An error occurred while copying archive to the module directory.');
 			else
 				$this->extractArchive(_PS_MODULE_DIR_.$_FILES['file']['name']);
