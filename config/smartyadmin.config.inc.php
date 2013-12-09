@@ -28,9 +28,8 @@ global $smarty;
 $smarty->debugging = false;
 $smarty->debugging_ctrl = 'NONE';
 
-/* Smarty should be in compile check mode in the BackOffice */
-$smarty->force_compile = false;
-$smarty->compile_check = true;
+$smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
+$smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') >= _PS_SMARTY_CHECK_COMPILE_) ? true : false;
 
 function smartyTranslate($params, &$smarty)
 {
