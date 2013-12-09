@@ -38,7 +38,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.9.0';
+		$this->version = '1.10.0';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -73,6 +73,7 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_CDT', 0);
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_MNF', 0);
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_CAT', 0);
+			Configuration::updateValue('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-');
 			
 			$this->rebuildLayeredStructure();
 			
