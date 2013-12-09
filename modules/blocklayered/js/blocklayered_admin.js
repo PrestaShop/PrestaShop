@@ -58,7 +58,7 @@ $(document).ready(
 				if (this.running == true)
 					return false;
 			
-				$('.ajax-message').hide();			
+				$('.ajax-message').hide();
 				this.running = true;
 				
 				if (typeof(this.restartAllowed) == 'undefined' || this.restartAllowed)

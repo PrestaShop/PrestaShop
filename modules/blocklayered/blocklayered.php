@@ -1495,36 +1495,64 @@ class BlockLayered extends Module
 			$this->context->smarty->assign('asso_shops', $helper->renderAssoShop());
 		}
 
-		$tree_categories_helper = new HelperTreeCategories('categories-treeview');
-		$tree_categories_helper->setRootCategory((Shop::getContext() == Shop::CONTEXT_SHOP ? Category::getRootCategory()->id_category : 0))
-			->setUseCheckBox(true);
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+		{
+			$tree_categories_helper = new HelperTreeCategories('categories-treeview');
+			$tree_categories_helper->setRootCategory((Shop::getContext() == Shop::CONTEXT_SHOP ? Category::getRootCategory()->id_category : 0))
+				->setUseCheckBox(true);
+		}
+		else
+		{
+			if (Shop::getContext() == Shop::CONTEXT_SHOP)
+			{
+				$root_category = Category::getRootCategory();
+				$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
+			}
+			else
+				$root_category = array('id_category' => '0', 'name' => $this->l('Root'));
+
+			$tree_categories_helper = new Helper();
+		}
 
 		$module_url = Tools::getProtocol(Tools::usingSecureMode()).$_SERVER['HTTP_HOST'].$this->getPathUri();
 
 		if (method_exists($this->context->controller, 'addJquery'))
 		{
 			$this->context->controller->addJS($this->_path.'js/blocklayered_admin.js');
-			$this->context->controller->addJS(_PS_JS_DIR_.'vendor/jquery.sortable.js');
+
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+				$this->context->controller->addJS(_PS_JS_DIR_.'vendor/jquery.sortable.js');
+			else
+				$this->context->controller->addJS($this->_path.'js/jquery.sortable.js');
 		}
 
 		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
-			$this->context->controller->addCSS($this->_path.'css/blocklayered_admin_bt.css');
-		/*else
-			$this->context->controller->addCSS($this->_path.'css/blocklayered_admin.css');*/
+			$this->context->controller->addCSS($this->_path.'css/blocklayered_admin_1.6.css');
+		else
+			$this->context->controller->addCSS($this->_path.'css/blocklayered_admin.css');
 
 		if (Tools::getValue('add_new_filters_template'))
 		{
 			$this->context->smarty->assign(array(
 				'current_url' => $this->context->link->getAdminLink('AdminModules').'&configure=blocklayered&tab_module=front_office_features&module_name=blocklayered',
+				'uri' => $this->getPathUri(),
 				'id_layered_filter' => 0,
 				'template_name' => sprintf($this->l('My template - %s'), date('Y-m-d')),
 				'attribute_groups' => $attribute_groups,
 				'features' => $features,
-				'total_filters' => 6+count($attribute_groups)+count($features),
-				'categories_tree' => $tree_categories_helper->render(),
+				'total_filters' => 6+count($attribute_groups)+count($features)
 			));
 
-			return $this->display(__FILE__, 'views/templates/admin/add.tpl');
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+				$this->context->smarty->assign('categories_tree', $tree_categories_helper->render());
+			else
+				$this->context->smarty->assign('categories_tree', $tree_categories_helper->renderCategoryTree(
+					$root_category, array(), 'categoryBox', false, false, array(), true));
+
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+				return $this->display(__FILE__, 'views/templates/admin/add_1.6.tpl');
+			else
+				return $this->display(__FILE__, 'views/templates/admin/add.tpl');
 		}
 		else if (Tools::getValue('edit_filters_template'))
 		{
@@ -1535,28 +1563,41 @@ class BlockLayered extends Module
 			);
 
 			$filters = unserialize($template['filters']);
-			$tree_categories_helper->setSelectedCategories($filters['categories']);
+
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			{
+				$tree_categories_helper->setSelectedCategories($filters['categories']);
+				$this->context->smarty->assign('categories_tree', $tree_categories_helper->render());
+			}
+			else
+				$this->context->smarty->assign('categories_tree',$tree_categories_helper->renderCategoryTree(
+					$root_category, $filters['categories'], 'categoryBox', false, false, array(), true));
+
 			$select_shops = $filters['shop_list'];			
 			unset($filters['categories']);
 			unset($filters['shop_list']);
 
 			$this->context->smarty->assign(array(
 				'current_url' => $this->context->link->getAdminLink('AdminModules').'&configure=blocklayered&tab_module=front_office_features&module_name=blocklayered',
+				'uri' => $this->getPathUri(),
 				'id_layered_filter' => (int)Tools::getValue('id_layered_filter'),
 				'template_name' => $template['name'],
 				'attribute_groups' => $attribute_groups,
 				'features' => $features,
 				'filters' => Tools::jsonEncode($filters),
-				'total_filters' => 6+count($attribute_groups)+count($features),
-				'categories_tree' => $tree_categories_helper->render(),
+				'total_filters' => 6+count($attribute_groups)+count($features)
 			));
 
-			return $this->display(__FILE__, 'views/templates/admin/add.tpl');
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+				return $this->display(__FILE__, 'views/templates/admin/add_1.6.tpl');
+			else
+				return $this->display(__FILE__, 'views/templates/admin/add.tpl');
 		}
 		else
 		{
 			$this->context->smarty->assign(array(
 				'message' => $message,
+				'uri' => $this->getPathUri(),
 				'PS_LAYERED_INDEXED' => Configuration::getGlobalValue('PS_LAYERED_INDEXED'),
 				'current_url' => Tools::safeOutput(preg_replace('/&deleteFilterTemplate=[0-9]*&id_layered_filter=[0-9]*/', '', $_SERVER['REQUEST_URI'])),
 				'id_lang' => Context::getContext()->cookie->id_lang,
@@ -1577,8 +1618,11 @@ class BlockLayered extends Module
 				'index_mnf' => Configuration::get('PS_LAYERED_FILTER_INDEX_MNF'),
 				'index_cat' => Configuration::get('PS_LAYERED_FILTER_INDEX_CAT')
 			));
-
-			return $this->display(__FILE__, 'views/templates/admin/view.tpl');
+			
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+				return $this->display(__FILE__, 'views/templates/admin/view_1.6.tpl');
+			else
+				return $this->display(__FILE__, 'views/templates/admin/view.tpl');
 		}
 	}
 
