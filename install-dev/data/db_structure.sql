@@ -527,6 +527,8 @@ CREATE TABLE `PREFIX_country` (
   `need_identification_number` tinyint(1) NOT NULL default '0',
   `need_zip_code` tinyint(1) NOT NULL default '1',
   `zip_code_format` varchar(12) NOT NULL default '',
+  `siret_code_format` varchar(14) NOT NULL default '',
+  `ape_code_format` varchar(14) NOT NULL default '',
   `display_tax_label` BOOLEAN NOT NULL,
   PRIMARY KEY (`id_country`),
   KEY `country_iso_code` (`iso_code`),

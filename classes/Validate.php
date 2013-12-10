@@ -570,6 +570,12 @@ class ValidateCore
 			return preg_match('/^[NLCnlc 0-9-]+$/', $zip_code);
 		return true;
 	}
+	public static function isCodeFormat($code)
+	{
+		if (!empty($code))
+			return preg_match('/^[NLCnlc 0-9-]+$/', $code);
+		return true;
+	}
 
 	/**
 	 * Check for table or identifier validity
