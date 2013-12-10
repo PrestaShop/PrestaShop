@@ -22,84 +22,43 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registred Trademark & Property of PrestaShop SA
 *}
-<div class="form-group">
-	<label class="control-label col-lg-3">
-		<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="'.$this->l('Invalid characters:').' <>;=#{}_">{l s='URL:' mod='blockfacette'}</span>
-	</label>
-	<div class="col-lg-9">
-		<div class="row">
-			{foreach $languages as $language}
-			<div class="translatable-field lang-{$language['id_lang']}" style="display: {if $language['id_lang'] == $default_form_language}block{else}none{/if};">
-				<div class="col-lg-9">
-					<input type="text" size="64" name="url_name_{$language['id_lang']}" value="{if isset($values[$language['id_lang']]) && isset($values[$language['id_lang']]['url_name'])}{$values[$language['id_lang']]['url_name']|escape:'htmlall':'UTF-8'}{/if}" />
-				</div>
-				<div class="col-lg-2">
-					<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
-						{$language['iso_code']}
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu">
-						{foreach $languages as $language}
-						<li><a href="javascript:hideOtherLanguage({$language['id_lang']});" tabindex="-1">{$language['name']}</a></li>
-						{/foreach}
-					</ul>
-				</div>
+<label>
+	{l s='URL:' mod='blockfacette'}
+</label>
+<div class="margin-form">
+	<div class="translatable">
+		{foreach $languages as $language}
+			<div class="lang_{$language.id_lang}" style="display:{if $language.id_lang == $default_form_language}block{else}none{/if}; float: left;">
+				<input type="text" name="url_name_{$language.id_lang}" id="url_name_{$language.id_lang}" value="{if isset($values[$language['id_lang']]) && isset($values[$language['id_lang']]['url_name'])}{$values[$language['id_lang']]['url_name']|escape:'htmlall':'UTF-8'}{/if}" size="64" maxlength="64" />
+				<p class="preference_description">{l s='Specific URL format in block layered generation' mod='blockfacette'}</p>
+				<span class="hint" name="help_box">{l s='Invalid characters: <>;=#{}_' mod='blockfacette'}<span class="hint-pointer">&nbsp;</span></span>
 			</div>
-			{/foreach}
-			<div class="col-lg-9">
-				<p class="help-block">{l s='Specific URL format in block layered generation' mod='blockfacette'}</p>
-			</div>
-		</div>
+		{/foreach}
 	</div>
 </div>
-<div class="form-group">
-	<label class="control-label col-lg-3">{l s='Meta title:' mod='blockfacette'}</label>
-	<div class="col-lg-9">
-		<div class="row">
-			{foreach $languages as $language}
-			<div class="translatable-field lang-{$language['id_lang']}" style="display: {if $language['id_lang'] == $default_form_language}block{else}none{/if};">
-				<div class="col-lg-9">
-					<input type="text" size="70" name="meta_title_{$language['id_lang']}" value="{if isset($values[$language['id_lang']]) && isset($values[$language['id_lang']]['meta_title'])}{$values[$language['id_lang']]['meta_title']|escape:'htmlall':'UTF-8'}{/if}" />
-				</div>
-				<div class="col-lg-2">
-					<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
-						{$language['iso_code']}
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu">';
-						{foreach $languages as $language}
-						<li><a href="javascript:hideOtherLanguage({$language['id_lang']});" tabindex="-1">{$language['name']}</a></li>
-						{/foreach}
-					</ul>
-				</div>
+<div class="clear"></div>
+<label>
+	{l s='Meta title:' mod='blockfacette'}
+</label>
+<div class="margin-form">
+	<div class="translatable">
+		{foreach $languages as $language}
+			<div class="lang_{$language.id_lang}" style="display:{if $language.id_lang == $default_form_language}block{else}none{/if}; float: left;">
+				<input type="text" name="meta_title_{$language.id_lang}" id="meta_title_{$language.id_lang}" value="{if isset($values[$language['id_lang']]) && isset($values[$language['id_lang']]['meta_title'])}{$values[$language['id_lang']]['meta_title']|escape:'htmlall':'UTF-8'}{/if}" size="70" maxlength="70" />
+				<p class="preference_description">{l s='Specific format for meta title' mod='blockfacette'}</p>
 			</div>
-			{/foreach}
-			<div class="col-lg-9">
-				<p class="help-block">{l s='Specific format for meta title' mod='blockfacette'}</p>
-			</div>
-		</div>
+		{/foreach}
 	</div>
 </div>
-<div class="form-group">
-	<label class="control-label col-lg-3" for="">{l s='Indexable:' mod='blockfacette'}</label>
-	<div class="col-lg-9">
-		<div class="row">
-			<div class="input-group col-lg-2">
-				<span class="switch prestashop-switch">
-					<input type="radio" name="layered_indexable" id="indexable_on" value="1"{if $is_indexable} checked="checked"{/if}>
-					<label for="indexable_on">
-						<i class="icon-check-sign color_success"></i> {l s='Yes' mod='blockfacette'}
-					</label>
-					<input type="radio" name="layered_indexable" id="indexable_off" value="0"{if !$is_indexable} checked="checked"{/if}>
-					<label for="indexable_off">
-						<i class="icon-ban-circle color_danger"></i> {l s='No' mod='blockfacette'}
-					</label>
-					<a class="slide-button btn btn-default"></a>
-				</span>
-			</div>
-		</div>
-	</div>
-	<div class="col-lg-9 col-lg-push-3">
-		<p class="help-block">{l s='Use this attribute in URL generated by the layered navigation module' mod='blockfacette'}</p>
-	</div>
+<div class="clear"></div>
+<label>{l s='Indexable:' mod='blockfacette'}</label>
+<div class="margin-form">			
+	<label class="t" for="layered_indexable_on"><img src="../img/admin/enabled.gif" alt="{l s='Yes' mod='blockfacette'}" title="{l s='Yes' mod='blockfacette'}"></label>
+	<input type="radio" name="layered_indexable" id="layered_indexable_on" value="1"{if $is_indexable} checked="checked"{/if} />
+	<label class="t" for="layered_indexable_on"> {l s='Yes' mod='blockfacette'}</label>
+	<label class="t" for="layered_indexable_off"><img src="../img/admin/disabled.gif" alt="{l s='No' mod='blockfacette'}" title="{l s='No' mod='blockfacette'}" style="margin-left: 10px;"></label>
+	<input type="radio" name="layered_indexable" id="layered_indexable_off" value="0"{if !$is_indexable} checked="checked"{/if}>
+	<label class="t" for="layered_indexable_off"> {l s='No' mod='blockfacette'}</label>
+	<p class="preference_description">{l s='Use this attribute in URL generated by the layered navigation module' mod='blockfacette'}</p>
 </div>
+<div class="clear"></div>
