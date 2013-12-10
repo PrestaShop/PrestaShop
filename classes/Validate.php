@@ -1034,17 +1034,22 @@ class ValidateCore
 	 */
 	public static function isSiret($siret)
 	{
-		if (Tools::strlen($siret) != 14)
-			return false;
-		$sum = 0;
-		for ($i = 0; $i != 14; $i++)
+		if(Configuration::get('PS_VALIDATE_SIRET'))
 		{
-			$tmp = ((($i + 1) % 2) + 1) * intval($siret[$i]);
-			if ($tmp >= 10)
-				$tmp -= 9;
-			$sum += $tmp;
+			if (Tools::strlen($siret) != 14)
+				return false;
+			$sum = 0;
+			for ($i = 0; $i != 14; $i++)
+			{
+				$tmp = ((($i + 1) % 2) + 1) * intval($siret[$i]);
+				if ($tmp >= 10)
+					$tmp -= 9;
+				$sum += $tmp;
+			}
+			return ($sum % 10 === 0);
 		}
-		return ($sum % 10 === 0);
+		else
+			return true;
 	}
 
 	/**
@@ -1055,7 +1060,10 @@ class ValidateCore
 	 */
 	public static function isApe($ape)
 	{
-		return (bool)preg_match('/^[0-9]{3,4}[a-zA-Z]{1}$/s', $ape);
+		if(Configuration::get('PS_VALIDATE_SIRET'))
+			return (bool)preg_match('/^[0-9]{3,4}[a-zA-Z]{1}$/s', $ape);
+		else
+			return true;
 	}
 	
 	public static function isControllerName($name)
