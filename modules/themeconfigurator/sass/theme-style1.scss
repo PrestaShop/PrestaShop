@@ -24,13 +24,13 @@ body{background:#282828}
 	
 	 #currencies-block-top, 
 	 #languages-block-top,
-	 .header-row #header_user_info{
+	 .header-row .header_user_info{
 	 border-color:#c6c6c6;  
 	 }
   
    #currencies-block-top div.current, 
   #languages-block-top div.current,
-  .header-row #header_user_info a
+  .header-row .header_user_info a
   {
 	 color:$color1-style1; 
 	  &:hover, &.active {
@@ -74,7 +74,7 @@ body{background:#282828}
     	background:$color1-style1}
 	}
 
-     #header_right #header_user #shopping_cart a{
+     #header_user #shopping_cart a{
 		background:$color-style1; 
 		color:white;
 		 &:after{color:white}

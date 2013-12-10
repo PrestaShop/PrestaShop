@@ -1648,6 +1648,8 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 	
 	.header-row {
 		background:$dark-background;
+
+		.container {background:none; position:relative; z-index:1;}
 		
 		.shop-phone {
 			display:block;
@@ -1665,9 +1667,12 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 			
 			strong {color:$light-text-color;}
 		}
+
+  		.header-row nav {
+			float: right; }
 		
-		#header_user_info {
-			float:right;
+		.header_user_info {
+			float:left;
 			border-left:1px solid #515151;
 			border-right:1px solid #515151;
 																		@media (max-width: $screen-xs - 1) { // max 479px
@@ -1685,7 +1690,6 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 			}
 		}
 	}
-	.header-row-2 { position:relative; z-index:1;}
 	#header_logo {
 		position: absolute;
 		left:0;
@@ -1706,9 +1710,6 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 																			margin-left:-100px;
 																			top:20px;
 																		}
-	}
-	#header_right {
-		position:relative;
 	}
 	/* languages/currencies */
 	#currencies-block-top, #languages-block-top {
@@ -1803,7 +1804,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 																		}	
 		}
 	}
-	#contact-link a, .header-row #header_user_info a, #currencies-block-top div.current, #languages-block-top div.current {
+	#contact-link a, .header-row .header_user_info a, #currencies-block-top div.current, #languages-block-top div.current {
 		cursor:pointer;
 		
 		&:hover, &.active {

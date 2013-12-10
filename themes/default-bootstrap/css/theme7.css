@@ -22,19 +22,19 @@ body {
 }
 #header #currencies-block-top,
 #header #languages-block-top,
-#header .header-row #header_user_info {
+#header .header-row .header_user_info {
   border-color: #515151;
 }
 #header #currencies-block-top div.current,
 #header #languages-block-top div.current,
-#header .header-row #header_user_info a {
+#header .header-row .header_user_info a {
   color: white;
 }
 #header #currencies-block-top div.current:hover, #header #currencies-block-top div.current.active,
 #header #languages-block-top div.current:hover,
 #header #languages-block-top div.current.active,
-#header .header-row #header_user_info a:hover,
-#header .header-row #header_user_info a.active {
+#header .header-row .header_user_info a:hover,
+#header .header-row .header_user_info a.active {
   background: #327082;
   color: white;
 }
@@ -85,15 +85,15 @@ body {
   color: #686666;
 }
 
-#header_right #header_user #shopping_cart a {
+#header_user #shopping_cart a {
   background: #327082;
   color: white;
   text-shadow: 0 1px #265563;
 }
-#header_right #header_user #shopping_cart a:after {
+#header_user #shopping_cart a:after {
   color: white;
 }
-#header_right #header_user #shopping_cart a:hover {
+#header_user #shopping_cart a:hover {
   color: white;
   text-shadow: 0 1px #333;
   background: #333333;

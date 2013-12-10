@@ -5295,6 +5295,7 @@ div.star a:hover {
   background: white; }
   #header .header-row {
     background: #333333; }
+  	#header .header-row.container {background:none; position:relative; z-index:1;}
     #header .header-row .shop-phone {
       display: block;
       padding: 5px 0 10px; }
@@ -5308,21 +5309,23 @@ div.star a:hover {
         padding-right: 7px; }
       #header .header-row .shop-phone strong {
         color: white; }
-    #header .header-row #header_user_info {
-      float: right;
+    #header .header-row nav { 
+	float: right; }
+    #header .header-row .header_user_info {
+      float: left;
       border-left: 1px solid #515151;
       border-right: 1px solid #515151; }
       @media (max-width: 479px) {
-        #header .header-row #header_user_info {
+        #header .header-row .header_user_info {
           width: 25%;
           text-align: center; } }
-      #header .header-row #header_user_info a {
+      #header .header-row .header_user_info a {
         color: white;
         font-weight: bold;
         display: block;
         padding: 8px 9px 11px 8px; }
         @media (max-width: 479px) {
-          #header .header-row #header_user_info a {
+          #header .header-row .header_user_info a {
             font-size: 11px; } }
   #header .header-row-2 {
     position: relative;
@@ -5347,8 +5350,6 @@ div.star a:hover {
         left: 50%;
         margin-left: -100px;
         top: 20px; } }
-  #header #header_right {
-    position: relative; }
   #header #currencies-block-top,
   #header #languages-block-top {
     float: right;
@@ -5440,13 +5441,13 @@ div.star a:hover {
           padding-left: 5px;
           padding-right: 5px; } }
   #header #contact-link a,
-  #header .header-row #header_user_info a,
+  #header .header-row .header_user_info a,
   #header #currencies-block-top div.current,
   #header #languages-block-top div.current {
     cursor: pointer; }
     #header #contact-link a:hover, #header #contact-link a.active,
-    #header .header-row #header_user_info a:hover,
-    #header .header-row #header_user_info a.active,
+    #header .header-row .header_user_info a:hover,
+    #header .header-row .header_user_info a.active,
     #header #currencies-block-top div.current:hover,
     #header #currencies-block-top div.current.active,
     #header #languages-block-top div.current:hover,
