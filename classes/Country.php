@@ -54,6 +54,8 @@ class CountryCore extends ObjectModel
 
 	/** @var string Zip Code Format */
 	public $zip_code_format;
+	public $siret_code_format;
+	public $ape_code_format;
 
 	/** @var boolean Display or not the tax incl./tax excl. mention in the front office */
 	public $display_tax_label = true;
@@ -80,6 +82,8 @@ class CountryCore extends ObjectModel
 			'need_identification_number' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 			'need_zip_code' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'zip_code_format' => 			array('type' => self::TYPE_STRING, 'validate' => 'isZipCodeFormat'),
+			'siret_code_format' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCodeFormat'),
+			'ape_code_format' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCodeFormat'),
 			'display_tax_label' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 
 			/* Lang fields */
@@ -348,6 +352,42 @@ class CountryCore extends ObjectModel
 		return (bool)preg_match($zip_regexp, $zip_code);
 	}
 	
+	public function checkSiretCode($siret)
+	{
+		if ($this->siret_code_format != '')
+		{
+			$siret_regexp = '/^'.$this->siret_code_format.'$/ui';
+			$siret_regexp = str_replace(' ', '( |)', $siret_regexp);
+			$siret_regexp = str_replace('-', '(-|)', $siret_regexp);
+			$siret_regexp = str_replace('N', '[0-9]', $siret_regexp);
+			$siret_regexp = str_replace('L', '[a-zA-Z]', $siret_regexp);
+			$siret_regexp = str_replace('C', $this->iso_code, $siret_regexp);
+
+			return (bool)preg_match($siret_regexp, $siret);
+		}
+		else
+			// return true if siret code format is empty
+			return true;
+	}
+
+	public function checkApeCode($ape)
+	{
+		if ($this->ape_code_format != '')
+		{
+			$ape_regexp = '/^'.$this->ape_code_format.'$/ui';
+			$ape_regexp = str_replace(' ', '( |)', $ape_regexp);
+			$ape_regexp = str_replace('-', '(-|)', $ape_regexp);
+			$ape_regexp = str_replace('N', '[0-9]', $ape_regexp);
+			$ape_regexp = str_replace('L', '[a-zA-Z]', $ape_regexp);
+			$ape_regexp = str_replace('C', $this->iso_code, $ape_regexp);
+
+			return (bool)preg_match($ape_regexp, $ape);
+		}
+		else
+			// return true if ape code format is empty
+			return true;
+	}
+
 	public static function addModuleRestrictions(array $shops = array(), array $countries = array(), array $modules = array())
 	{
 		if (!count($shops))

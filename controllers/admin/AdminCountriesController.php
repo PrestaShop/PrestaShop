@@ -260,6 +260,18 @@ class AdminCountriesControllerCore extends AdminController
 					'hint' => $this->l('Zip Code format (L for a letter, N for a number and C for the ISO code). For example, NNNNN for the United States. No verification if undefined.')
 				),
 				array(
+					'type' => 'text',
+					'label' => $this->l('Siret code format:'),
+					'name' => 'siret_code_format',
+					'hint' => $this->l('Siret code format (L for a letter, N for a number and C for the ISO code). For example, NNNNN for the United States. No verification if undefined, unless france, then verification that it is siret will be made.')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('APE code format:'),
+					'name' => 'ape_code_format',
+					'hint' => $this->l('APE code format (L for a letter, N for a number and C for the ISO code). For example, NNNNN for the United States. No verification if undefined, unless france, then verification that it is APE will be made.')
+				),
+				array(
 					'type' => 'address_layout',
 					'label' => $this->l('Address format:'),
 					'name' => 'address_layout',

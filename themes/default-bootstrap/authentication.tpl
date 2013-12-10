@@ -284,6 +284,35 @@
 								{l s='Receive special offers from our partners!'}</label>
 							</div>
 						{/if}
+						{if $b2b_enable}
+							<h3 class="page-heading bottom-indent top-indent">{l s='Your company information'}</h3>
+								<div class="form-group">
+									<label for="">{l s='Company'}</label>
+									<input type="text" class="form-control" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
+								</div>
+								<div class="select form-group">
+									<label for="b2b_id_country">{l s='Country'} <sup>*</sup></label>
+									<select name="b2b_id_country" id="b2b_id_country" class="form-control">
+										<option value="">-</option>
+										{foreach from=$countries item=v}
+										<option value="{$v.id_country}" {if ($sl_country == $v.id_country)} selected="selected"{/if}>{$v.name}</option>
+										{/foreach}
+									</select>
+								</div>
+								<div class="form-group">
+									<label for="siret">{l s='SIRET'}</label>
+									<input type="text" class="form-control" id="siret" name="siret" value="{if isset($smarty.post.siret)}{$smarty.post.siret}{/if}" />
+								</div>
+								<div class="form-group">
+									<label for="ape">{l s='APE'}</label>
+									<input type="text" class="form-control" id="ape" name="ape" value="{if isset($smarty.post.ape)}{$smarty.post.ape}{/if}" />
+								</div>
+								<div class="form-group">
+									<label for="website">{l s='Website'}</label>
+									<input type="text" class="form-control" id="website" name="website" value="{if isset($smarty.post.website)}{$smarty.post.website}{/if}" />
+								</div>
+							</h3>
+						{/if}
 						<h3 class="page-heading bottom-indent top-indent">{l s='Delivery address'}</h3>
 						{foreach from=$dlv_all_fields item=field_name}
 							{if $field_name eq "company"}
@@ -488,6 +517,15 @@
 				<p class="form-group">
 					<label for="">{l s='Company'}</label>
 					<input type="text" class="form-control" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
+				</p>
+				<p class="select form-group">
+					<label for="b2b_id_country">{l s='Country'} <sup>*</sup></label>
+					<select name="b2b_id_country" id="b2b_id_country" class="form-control">
+						<option value="">-</option>
+						{foreach from=$countries item=v}
+						<option value="{$v.id_country}" {if ($sl_country == $v.id_country)} selected="selected"{/if}>{$v.name}</option>
+						{/foreach}
+					</select>
 				</p>
 				<p class="form-group">
 					<label for="siret">{l s='SIRET'}</label>

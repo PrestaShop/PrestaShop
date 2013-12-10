@@ -419,6 +419,23 @@ class AuthControllerCore extends FrontController
 		if ($error_phone)
 			$this->errors[] = Tools::displayError('You must register at least one phone number.');
 
+		/* Check siret and ape format */
+		$country_id = (int)Tools::getValue('b2b_id_country');
+		if (!($country = new Country($country_id)) || !Validate::isLoadedObject($country))
+			$this->errors[] = Tools::displayError('Country cannot be loaded with b2b country_id');
+
+		$siret = Tools::getValue('siret');
+		if ($country->iso_code != 'FR' && $siret != '' && !$country->checkSiretCode($siret))
+			$this->errors[] = sprintf(Tools::displayError('The siret code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->siret_code_format))));
+		elseif($country->iso_code == 'FR' && $siret != '' && Validate::isSiret($siret))
+			$this->errors[] = Tools::displayError('Siret is invalid');
+
+		$ape = Tools::getValue('ape');
+		if ($country->iso_code != 'FR' && $ape != '' && !$country->checkApeCode($ape))
+			$this->errors[] = sprintf(Tools::displayError('The ape code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->ape_code_format))));
+		elseif($country->iso_code == 'FR' && $ape != '' && Validate::isApe($ape))
+			$this->errors[] = Tools::displayError('APE is invalid');
+
 		$this->errors = array_unique(array_merge($this->errors, $customer->validateController()));
 
 		// Check the requires fields which are settings in the BO
