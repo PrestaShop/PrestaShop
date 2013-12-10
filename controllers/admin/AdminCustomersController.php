@@ -37,6 +37,8 @@ class AdminCustomersControllerCore extends AdminController
 		$this->bootstrap = true;
 		$this->required_database = true;
 		$this->required_fields = array('newsletter','optin');
+		if((int)Configuration::get('PS_B2B_ENABLE'))
+			$this->required_fields = array('newsletter','optin','siret','ape');
 		$this->table = 'customer';
 		$this->className = 'Customer';
 		$this->lang = false;
