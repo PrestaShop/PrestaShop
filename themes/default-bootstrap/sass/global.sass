@@ -1,8 +1,33 @@
 @import compass
 @import compass/reset
-@import _theme_variables
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic)
+@import theme_variables
+@import bootstrap
 
-//struture
+@import ../css/font-awesome.css
+
+
+a:hover
+	text-decoration: none
+
+@media only screen and (min-width: 1200px)
+	.container
+		padding-left: 0
+		padding-right: 0
+
+body
+	min-width: 320px
+	height: 100%
+	background: $dark-background
+	line-height: 18px
+	font-size: 13px
+	color: $base-body-color
+	&.content_only
+		background: none
+textarea
+	resize: none
+
+//structure
 #page
 #header
 	z-index: 10
@@ -20,8 +45,10 @@
 //title
 #center_column
 	.page_product_box
-	h3
-		@include sub-heading
+		h3
+			@include sub-heading
+
+
 
 //text
 p.info-title
@@ -500,7 +527,7 @@ table.table_block  td
 		tr
 			background: $table-background
 
-/******************** product elements ****************/
+//product elements
 .product-name
 	font-size: 17px
 	line-height: 23px
@@ -1167,7 +1194,7 @@ ul.footer_links
 		// max 479px
 		@media (max-width: $screen-xs - 1)
 			float: left
-			width: 00%
+			width: 100%
 			text-align: left
 			padding-bottom: 10px
 			clear: both
@@ -1733,8 +1760,7 @@ div.star a:hover
 		#social_block
 			float: left
 			width: 50%
-			padding: 23px 30px 16px 0
-			background: #3F3F3F
+			padding: 22px 15px 0 15px
 			// max 767px 
 			@media (max-width: $screen-xs-max)
 				width: 100%
@@ -1772,17 +1798,17 @@ div.star a:hover
 						a
 							&:before
 								content: ""
-				h4
-					float: right
-					margin-bottom: 0
-					font-size: 21px
-					line-height: 25px
-					text-transform: none
-					padding: 0 10px 0 0
-					// max 767px 
-					@media (max-width: $screen-xs-max)
-						display: none
-						text-align: center
+			h4
+				float: right
+				margin-bottom: 0
+				font-size: 21px
+				line-height: 25px
+				text-transform: none
+				padding: 0 10px 0 0
+				// max 767px 
+				@media (max-width: $screen-xs-max)
+					display: none
+					text-align: center
 		.bottom-footer
 			position: absolute
 			bottom: -55px
@@ -1852,24 +1878,24 @@ div.star a:hover
 	text-align: center
 	width: 57px
 
-.table tbody > tr > td
-	vertical-align: middle
-	&.cart_quantity
-		padding: 41px 14px 25px
-		width: 88px
-		.cart_quantity_button 
-			margin-top: 3px
-			a
-				float: left
-				margin-right: 3px
-				&+ a
-					margin-right: 0
-	&.cart_delete,
-	&.price_discount_del
-		padding: 5px
-.table tfoot > tr > td
-	vertical-align: middle
-
+.table
+	tbody > tr > td
+		vertical-align: middle
+		&.cart_quantity
+			padding: 41px 14px 25px
+			width: 88px
+			.cart_quantity_button 
+				margin-top: 3px
+				a
+					float: left
+					margin-right: 3px
+					&+ a
+						margin-right: 0
+		&.cart_delete,
+		&.price_discount_del
+			padding: 5px
+	tfoot > tr > td
+		vertical-align: middle
 
 .cart_delete a.cart_quantity_delete,
 a.price_discount_delete
@@ -1919,57 +1945,57 @@ a.price_discount_delete
 				background: $light-background
 
 @media (max-width: 767px)
-#order-detail-content
-	#cart_summary
-		table, thead, tbody, th, td, tr
-			display: block
-		thead tr
-			position: absolute
-			top: -9999px
-			left: -9999px
-		tr
-			border-bottom: 1px solid #ccc
-			overflow: hidden
-		td
-			border: none
-			position: relative
-			width: 50%
-			float: left
-			white-space: normal
-			&.cart_product
-			&.cart_description
-			&.cart_avail
-				clear: both
-			&.cart_unit
-			&.cart_quantity
-				clear: both
-				padding: 9px 8px 11px 18px
-			&.cart_total
-			&.cart_delete
-				width: 100%
-				clear: both
-				text-align: right
-				&:before
-					display: inline-block
-					padding-right: 0.5em
-					position: relative
-					top: -3px
-			div
-				display: inline
-		td:before
-			content: attr(data-title)
-			display: block
-		tfoot
-			td
-				float: none
-				width: 100%
-				&:before
-					display: inline
+	#order-detail-content
+		#cart_summary
+			table, thead, tbody, th, td, tr
+				display: block
+			thead tr
+				position: absolute
+				top: -9999px
+				left: -9999px
 			tr
-				.text-right, .price
-					display: block
-					float: left
-					width: 50%
+				border-bottom: 1px solid #ccc
+				overflow: hidden
+			td
+				border: none
+				position: relative
+				width: 50%
+				float: left
+				white-space: normal
+				&.cart_product
+				&.cart_description
+				&.cart_avail
+					clear: both
+				&.cart_unit
+				&.cart_quantity
+					clear: both
+					padding: 9px 8px 11px 18px
+				&.cart_total
+				&.cart_delete
+					width: 100%
+					clear: both
+					text-align: right
+					&:before
+						display: inline-block
+						padding-right: 0.5em
+						position: relative
+						top: -3px
+				div
+					display: inline
+			td:before
+				content: attr(data-title)
+				display: block
+			tfoot
+				td
+					float: none
+					width: 100%
+					&:before
+						display: inline
+				tr
+					.text-right, .price
+						display: block
+						float: left
+						width: 50%
 
 .cart_voucher
 	vertical-align: top !important
