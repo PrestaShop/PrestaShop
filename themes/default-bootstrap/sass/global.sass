@@ -1,13 +1,13 @@
 @import compass
-@compass/reset
-@import '_theme_variables'
+@import compass/reset
+@import _theme_variables
 
 //struture
 #page
 #header
 	z-index: 10
 .columns-container
-	background:$light-background
+	background: $light-background
 #columns
 	z-index: 1
 	position: relative
@@ -24,7 +24,6 @@
 		@include sub-heading
 
 //text
-
 p.info-title
 	font-weight: bold
 	color: $base-text-color
@@ -51,12 +50,12 @@ p.info-account
 		text-shadow: 1px 1px rgba(0,0,0,0.1)
 		&:before
 			font-family: $font-icon
-			content:""
+			content: ""
 			font-size: 20px
 			vertical-align: -2px
 			padding-right: 7px
 	&.alert-danger
-		text-shadow:1px 1px rgba(0,0,0,0.1)
+		text-shadow: 1px 1px rgba(0,0,0,0.1)
 		&:before
 			font-family: $font-icon
 			content: ""
@@ -230,7 +229,7 @@ span.exclusive
 				margin-right: 0
 				margin-left: 5px
 		&:hover
-			background:$button-small-hover-bg
+			background: $button-small-hover-bg
 			border-color: #303030 #303030 #666666 #444444
 
 .button.button-medium
@@ -246,7 +245,7 @@ span.exclusive
 	background: -o-linear-gradient(top,  rgba(67,183,84,1) 0%,rgba(65,183,87,1) 2%,rgba(65,184,84,1) 4%,rgba(67,183,86,1) 6%,rgba(65,179,84,1) 38%,rgba(68,179,85,1) 40%,rgba(69,175,85,1) 66%,rgba(65,174,83,1) 74%,rgba(66,172,82,1) 91%,rgba(65,174,85,1) 94%,rgba(67,171,84,1) 96%,rgba(66,172,82,1) 100%)
 	background: -ms-linear-gradient(top,  rgba(67,183,84,1) 0%,rgba(65,183,87,1) 2%,rgba(65,184,84,1) 4%,rgba(67,183,86,1) 6%,rgba(65,179,84,1) 38%,rgba(68,179,85,1) 40%,rgba(69,175,85,1) 66%,rgba(65,174,83,1) 74%,rgba(66,172,82,1) 91%,rgba(65,174,85,1) 94%,rgba(67,171,84,1) 96%,rgba(66,172,82,1) 100%)
 	background: linear-gradient(to bottom,  rgba(67,183,84,1) 0%,rgba(65,183,87,1) 2%,rgba(65,184,84,1) 4%,rgba(67,183,86,1) 6%,rgba(65,179,84,1) 38%,rgba(68,179,85,1) 40%,rgba(69,175,85,1) 66%,rgba(65,174,83,1) 74%,rgba(66,172,82,1) 91%,rgba(65,174,85,1) 94%,rgba(67,171,84,1) 96%,rgba(66,172,82,1) 100%)
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#43b754', endColorstr='#42ac52',GradientType=0 );
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#43b754', endColorstr='#42ac52',GradientType=0 )
 	border: 1px solid
 	border-color: #399a49 #247f32 #1a6d27 #399a49
 	@include border-radius(0)
@@ -268,13 +267,13 @@ span.exclusive
 				display: inline-block
 				// max 480px
 				@media (max-width: $screen-xs)
-					margin-right:5px
+					margin-right: 5px
 			&.right
 				margin-right: 0
 				margin-left: 9px
 				// max 480px
 				@media (max-width: $screen-xs)
-					margin-left:5px
+					margin-left: 5px
 	&:hover
 		background: rgb(58,160,76)
 		background: -moz-linear-gradient(top,  rgba(58,160,76,1) 0%, rgba(58,160,74,1) 100%)
@@ -284,7 +283,7 @@ span.exclusive
 		background: -ms-linear-gradient(top,  rgba(58,160,76,1) 0%,rgba(58,160,74,1) 100%)
 		background: linear-gradient(to bottom,  rgba(58,160,76,1) 0%,rgba(58,160,74,1) 100%)
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3aa04c', endColorstr='#3aa04a',GradientType=0 )
-		border-color: #196f28 #399a49 #399a49 #258033;
+		border-color: #196f28 #399a49 #399a49 #258033
 
 .button.button-medium.exclusive
 	border-color: #db8600 #d98305 #c86d26 #d98305
@@ -308,7 +307,7 @@ span.exclusive
 .link-button
 	font-weight: bold
 	i
-		margin-right:5px;
+		margin-right: 5px
 		&.large
 			font-size: 26px
 			line-height: 26px
@@ -317,13 +316,13 @@ span.exclusive
 
 .btn.button-plus,
 .btn.button-minus
-	font-size:14px
-	line-height:14px
-	color:$button-pm-color
-	text-shadow:1px -1px rgba(0,0,0,0.05)
-	padding:0
-	border:1px solid
-	border-color:#dedcdc #c1bfbf #b5b4b4 #dad8d8
+	font-size: 14px
+	line-height: 14px
+	color: $button-pm-color
+	text-shadow: 1px -1px rgba(0,0,0,0.05)
+	padding: 0
+	border: 1px solid
+	border-color: #dedcdc #c1bfbf #b5b4b4 #dad8d8
 	@include border-radius(0)
 	span
 		display: block
@@ -370,14 +369,14 @@ span.exclusive
 		background: -o-linear-gradient(top, rgba(247,247,247,1) 0%,rgba(237,237,237,1) 100%)
 		background: -ms-linear-gradient(top, rgba(247,247,247,1) 0%,rgba(237,237,237,1) 100%)
 		background: linear-gradient(to bottom, rgba(247,247,247,1) 0%,rgba(237,237,237,1) 100%)
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#ededed',GradientType=0 )
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#ededed',GradientType=0)
 		// max 480px
 		@media (max-width: $screen-xs)
 			font-size: 15px
 			padding-right: 7px
 			padding-left: 7px
 		&:hover
-			border-color:#9e9e9e #c2c2c2 #c8c8c8 #c2c2c2
+			border-color: #9e9e9e #c2c2c2 #c8c8c8 #c2c2c2
 			span 
 				background: rgb(231,231,231)
 				background: -moz-linear-gradient(top,  rgba(231,231,231,1) 0%, rgba(231,231,231,1) 0%)
@@ -386,7 +385,7 @@ span.exclusive
 				background: -o-linear-gradient(top,  rgba(231,231,231,1) 0%,rgba(231,231,231,1) 0%)
 				background: -ms-linear-gradient(top,  rgba(231,231,231,1) 0%,rgba(231,231,231,1) 0%)
 				background: linear-gradient(to bottom,  rgba(231,231,231,1) 0%,rgba(231,231,231,1) 0%)
-				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e7e7e7', endColorstr='#e7e7e7',GradientType=0 )
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e7e7e7', endColorstr='#e7e7e7',GradientType=0)
 
 .button.ajax_add_to_cart_button
 	font: 700 17px/21px $font-famaly
@@ -436,15 +435,15 @@ span.exclusive
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#ededed',GradientType=0)
 	&:hover
 		border-color: #9e9e9e #9e9e9e #c8c8c8 #9e9e9e
-			span
-				filter: none
-				background: #e7e7e7
+		span
+			filter: none
+			background: #e7e7e7
 	i.left
 		padding-right: 8px
 		color: #777777
 
 //form
-.form-control {
+.form-control
 	padding: 3px 5px
 	height: 27px
 	@include box-shadow(none)
@@ -466,7 +465,7 @@ table.table_block th
 	padding: 14px 12px
 	font-size: 12px
 	color: $light-text-color
-	 font-weight: bold
+	font-weight: bold
 	text-transform: uppercase
 	text-shadow: 0 1px 0 #000
 	background: #999
@@ -541,7 +540,7 @@ table.table_block  td
 	display: inline-block
 	&.small
 		font: 700 14px/17px $font-famaly
-    	padding: 1px 6px
+		padding: 1px 6px
 
 
 //Labels New/Sale
@@ -629,7 +628,7 @@ table.table_block  td
 		text-indent: -5000px
 		@include rotate(225deg)
 	&:after
-		position:absolute
+		position: absolute
 		bottom: -3px
 		left: 5px
 		width: 0px
@@ -638,7 +637,7 @@ table.table_block  td
 		border-width: 4px 4px 0px 4px
 		border-color: #ad2b34 transparent transparent transparent
 		content: "."
-		text-indent:-5000px
+		text-indent: -5000px
 		@include rotate(136deg)
 
 .ie8
@@ -947,7 +946,7 @@ table.table_block  td
 		& span.grower:hover + a,
 		a:hover,
 		a.selected 
-			background:#f6f6f6
+			background: #f6f6f6
 		li
 			a
 				font-weight: normal
@@ -973,7 +972,7 @@ table.table_block  td
 		float: right
 		color: $base-text-color
 		text-transform: none
-		@media (max-width:$screen-xs)
+		@media (max-width: $screen-xs)
 			float: none
 			display: block
 			padding-top: 5px
@@ -1007,7 +1006,7 @@ ul.footer_links
 	li
 		float: left
 		&+li
-			margin-left:10px
+			margin-left: 10px
 
 // barre comparaison / tri
 .content_sortPagiBar
@@ -1023,7 +1022,7 @@ ul.footer_links
 				max-width: 192px
 				float: left
 				@media (max-width: $screen-sm-max)
-					max-width:160px
+					max-width: 160px
 			.selector
 				float: left 
 		.nbrItemPage
@@ -1054,23 +1053,23 @@ ul.footer_links
 			padding-left: 12px
 			text-align: center
 			a
-				color:$GL-text-color
-				font-size:11px
-				line-height:14px
+				color: $GL-text-color
+				font-size: 11px
+				line-height: 14px
 				i
 					display: block
 					font-size: 24px
 					height: 24px
 					line-height: 24px
 					margin-bottom: -3px
-					color: $GL-icon-color			
+					color: $GL-icon-color	
 			a:hover,
 			&.selected
 				i
 					color: $GL-icon-color-hover
 			&.selected
 				a 
-					cursor:default
+					cursor: default
 			&.display-title
 				font-weight: bold
 				color: $base-text-color
@@ -1099,10 +1098,10 @@ ul.footer_links
 			margin: 8px 53px 8px 14px
 			// min 992px max 1199px
 			@media (min-width: $screen-md) and (max-width: $screen-md-max)
-				margin-right:11px
+				margin-right: 11px
 			// max 991px
 			@media (max-width: $screen-sm-max)
-				margin-right:0
+				margin-right: 0
 			.btn
 				span
 					font-size: 13px
@@ -1112,7 +1111,7 @@ ul.footer_links
 		margin: 8px 0px 8px 0
 		// max 991px
 		@media (max-width: $screen-sm-max)
-			float:left
+			float: left
 		li
 			display: inline-block
 			float: left
@@ -1247,7 +1246,7 @@ ul.step
 					@include border-bottom-left-radius(4px)
 		&.second
 			span, a
-				z-index:4
+				z-index: 4
 		&.third
 			span, a
 				z-index: 3
@@ -1311,7 +1310,7 @@ ul.step
 					&:after
 						background: url(../img/order-step-current.png) right 0 no-repeat
 		&.step_done
-			border-color:#666666 #5f5f5f #292929 #5f5f5f
+			border-color: #666666 #5f5f5f #292929 #5f5f5f
 			background: rgb(114,113,113)
 			background: -moz-linear-gradient(top,  rgba(114,113,113,1) 0%, rgba(102,102,102,1) 100%)
 			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(114,113,113,1)), color-stop(100%,rgba(102,102,102,1)))
@@ -1327,9 +1326,9 @@ ul.step
 				border-color: #8b8a8a
 				// min 991px
 				@media (min-width: $screen-md)
-					padding-left:38px
+					padding-left: 38px
 					&:after
-						background:url(../img/order-step-done.png) right 0 no-repeat
+						background: url(../img/order-step-done.png) right 0 no-repeat
 		&.step_done.step_done_last
 		// min 991px
 			@media (min-width: $screen-md)
@@ -1367,7 +1366,7 @@ ul.step
 .cancel, .star
 	overflow: hidden
 	float: left
-	margin:0 1px 0 0
+	margin: 0 1px 0 0
 	width: 16px
 	height: 16px
 	cursor: pointer
@@ -1416,7 +1415,7 @@ div.star a:hover
 	display: block
 	font-weight: bold
 	font-size: 12px
-	color:$base-text-color
+	color: $base-text-color
 
 .listcomment .txtcomment
 	display: block
@@ -1547,16 +1546,16 @@ div.star a:hover
 			background: $dark-background
 			z-index: 2
 			li 
-				color:$light-text-color
-				line-height:35px
-				font-size:13px
+				color: $light-text-color
+				line-height: 35px
+				font-size: 13px
 				a,
 				> span 
-					padding:0 10px 0 12px
-					display:block
-					color:$light-text-color
+					padding: 0 10px 0 12px
+					display: block
+					color: $light-text-color
 				&.selected, &:hover a 
-					background:#484848
+					background: #484848
 				
 			
 		
@@ -1588,7 +1587,7 @@ div.star a:hover
 			background: #2b2b2b
 
 .ie8 #header #header_logo
-	width:350px
+	width: 350px
 
 
 // BREADCRUMB
@@ -1662,19 +1661,19 @@ div.star a:hover
 	padding: 0 0 100px 0
 	// min 768px
 	@media (min-width: $screen-sm)
-		background:url(../img/footer-bg.gif) repeat-x
+		background: url(../img/footer-bg.gif) repeat-x
 	#footer
 		color: #777
-		position: elative
+		position: relative
 		.footer-block
 			margin-top: 45px
 			// max 767px
 			@media (max-width: $screen-xs-max)
 				margin-top: 20px
 		a
-			color:#777
+			color: #777
 			&:hover
-				color:$light-text-color
+				color: $light-text-color
 		h4
 			font: 600 18px/22px $font-custom
 			color: $light-text-color
@@ -1695,7 +1694,7 @@ div.star a:hover
 				&.active:after
 					content: ""
 			a
-				color:$light-text-color
+				color: $light-text-color
 		ul
 			li
 				padding-bottom: 8px
@@ -1774,12 +1773,12 @@ div.star a:hover
 							&:before
 								content: ""
 				h4
-					float:right
-					margin-bottom:0
-					font-size:21px
-					line-height:25px
-					text-transform:none
-					padding:0 10px 0 0
+					float: right
+					margin-bottom: 0
+					font-size: 21px
+					line-height: 25px
+					text-transform: none
+					padding: 0 10px 0 0
 					// max 767px 
 					@media (max-width: $screen-xs-max)
 						display: none
@@ -1808,1199 +1807,969 @@ div.star a:hover
 // PAIMENT - PAGE ORDER
 
 //nav bottom
-.cart_navigation {
-	margin:0 0 20px;
-	
-	.button-medium {
-		float:right;
-		@include border-radius(4px);
-		font-size:20px;
-		line-height:24px;
-		
-		span {
-			@include border-radius(4px);
-			padding:11px 15px 10px 15px;
-		}
-		
-		i.right {
-			font-size:25px;
-			line-height:25px;
-			vertical-align:-4px;
-			margin-left:6px;
-		}
-	}
-	.button-exclusive {
-		border:none;
-		background:none;
-		padding:0;
-		font-size:17px;
-		font-weight:bold;
-		color:$base-text-color;
-		margin:9px 0 0 0;
-			
-		i {
-			color:#777777;
-			margin-right:8px;	
-		}
-		
-		&:hover, &:focus, &:active {
-			color:$link-hover-color;
-			@include box-shadow(none);
-		}
-	}
-	
-	@media (max-width:$screen-xs){
-		> span {
-			display:block;
-			width:100%;
-			padding-bottom:15px;	
-		}
-	}
-}
+.cart_navigation
+	margin: 0 0 20px
+	.button-medium
+		float: right
+		@include border-radius(4px)
+		font-size: 20px
+		line-height: 24px
+		span
+			@include border-radius(4px)
+			padding: 11px 15px 10px 15px
+		i.right
+			font-size: 25px
+			line-height: 25px
+			vertical-align: -4px
+			margin-left: 6px
+	.button-exclusive
+		border: none
+		background: none
+		padding: 0
+		font-size: 17px
+		font-weight: bold
+		color: $base-text-color
+		margin: 9px 0 0 0
+		i
+			color: #777777
+			margin-right: 8px
+		&:hover, &:focus, &:active 
+			color: $link-hover-color
+			@include box-shadow(none)
+	@media (max-width: $screen-xs)
+		> span
+			display: block
+			width: 100%
+			padding-bottom: 15px
+
+// step 1 - cart
+.cart_last_product
+	display: none
+.cart_quantity .cart_quantity_input
+	height: 27px
+	line-height: 27px
+	padding: 0
+	text-align: center
+	width: 57px
+
+.table tbody > tr > td
+	vertical-align: middle
+	&.cart_quantity
+		padding: 41px 14px 25px
+		width: 88px
+		.cart_quantity_button 
+			margin-top: 3px
+			a
+				float: left
+				margin-right: 3px
+				&+ a
+					margin-right: 0
+	&.cart_delete,
+	&.price_discount_del
+		padding: 5px
+.table tfoot > tr > td
+	vertical-align: middle
 
 
-/* step 1 - cart ******************************************************************************* */
-.cart_last_product {display:none}
-.cart_quantity .cart_quantity_input {
-	height: 27px;
-    line-height: 27px;
-    padding: 0;
-    text-align: center;
-    width: 57px;
-}
-.table tbody > tr > td {
-	vertical-align:middle;
-	
-		&.cart_quantity {
-			padding:41px 14px 25px;
-			width:88px;
-			.cart_quantity_button {
-				margin-top:3px;
-					a {
-						float:left;
-						margin-right:3px;
-						&+ a {
-							margin-right:0;
-						}
-					}
-			}
-		}
-		&.cart_delete, &.price_discount_del {
-			padding:5px;
-		}
-}
-.table tfoot > tr > td {
-	vertical-align:middle;	
-}
 .cart_delete a.cart_quantity_delete,
-a.price_discount_delete {
-	font-size:23px;
-	color:$base-text-color;
-		&:hover {
-			color:#c0c0c0;	
-		}
-}
-#cart_summary {
-	tbody {
-		td {
-			&.cart_product {
-				padding:19px;
-				width:137px;
-				img {
-					border:1px solid $table-border-color;	
-				}
-			}
-			&.cart_unit {
-				
-				.price {
-					span {
-						display:block;
-						
-						&.price-percent-reduction {
-							margin:5px auto;
-							display:inline-block;
-						}
-						
-						&.old-price { text-decoration:line-through;}	
-					}
-				}
-			}
-			&.cart_description {
-				width:480px;
-				small {
-					display:block;
-					padding:5px 0 0 0;	
-				}
-			}
-			&.cart_avail {
-				
-			}
-		}
-	}
-	tfoot {
-		td {
-			&.text-right {
-				font-weight:bold;
-				color:$base-text-color;	
-			}
-			&.price {
-				text-align:right;
-			}	
-			&.total_price_container {
-				span {
-					font:600 18px/22px $font-custom;
-					color:#555454;
-					text-transform:uppercase;	
-				}
-			}
-			&#total_price_container {
-				font:600 21px/25px $font-custom;
-				color:$product-price-color;
-				background:$light-background;	
-			}
-		}
-	}
-}
-@media (max-width: 767px) {
-  #order-detail-content{
-    #cart_summary{
-      table, thead, tbody, th, td, tr{display: block;}
-      thead tr{
-        position: absolute;
-        top: -9999px;
-        left: -9999px;        
-      }
-      tr{
-        border-bottom: 1px solid #ccc;
-        overflow: hidden;
-      }
-      td{
-        border: none;
-        position: relative;
-        width: 50%;
-        float: left;
-        white-space: normal;
-        &.cart_product{}
-        &.cart_description{}
-        &.cart_avail{clear: both;}
-        &.cart_unit{}
-        &.cart_quantity{
-          clear: both;
-          padding: 9px 8px 11px 18px;
-        }
-        &.cart_total{}
-        &.cart_delete{
-          width: 100%;
-          clear: both;
-          text-align: right;
-          &:before{
-            display: inline-block;
-            padding-right: 0.5em;
-            position: relative;
-            top: -3px;
-          }
-          div{display: inline;}
-        }
-      }
-      td:before {
-        content: attr(data-title);
-        display: block;
-      }
-      tfoot{
-        td{
-          float: none;
-          width: 100%;
-          &:before{
-            display: inline;
-          }
-        }
-        tr{
-          .text-right, .price{
-            display: block;
-            float: left;
-            width: 50%;
-          }
-        }
-      }
-    }
-  }
-}
-.cart_voucher {
-	vertical-align:top !important;
-	h4 {
-		font:600 18px/22px $font-custom;
-		color:$base-heading-color;
-		text-transform:uppercase;
-		padding:7px 0 10px 0;
-	}
-	.title-offers {
-		color:$base-text-color;
-		font-weight:bold;
-		margin-bottom:6px;
-	}
-	fieldset {
-		margin-bottom:10px;
-		#discount_name {
-			float:left;
-			width:219px;
-			margin-right:11px;	
-		}
-	}
-	#display_cart_vouchers {
-		span {
-			font-weight:bold;
-			cursor:pointer;
-			color:$link-color;
-				
-				&:hover {color:$link-hover-color;}	
-		}
-	}	
-}
-.enable-multishipping {
-	margin:-13px 0 17px;
-	label {font-weight:normal;}
-}
-#HOOK_SHOPPING_CART {
-	#loyalty {
-		i {
-			font-size:26px;
-			line-height:26px;
-			color:#cfcccc;	
-		}
-	}
-}
-#order_carrier {
-	clear:both;
-	margin-top:20px;
-	border:1px solid #999;
-	background:$light-background
-}
-#order_carrier .title_block  {
-	padding:0 15px;
-	height: 29px;
-	font-weight: bold;
-	line-height:29px;
-	color:$light-text-color;
-	font-weight:bold;
-	text-transform:uppercase;
-	background:url(../img/bg_table_th.png) repeat-x 0 -10px #999
-}
-#order_carrier span {
-	display:block;
-	padding:15px;
-	font-weight:bold
-}
-.multishipping_close_container {
-	text-align: center;
-}
+a.price_discount_delete
+	font-size: 23px
+	color: $base-text-color
+	&:hover
+		color: #c0c0c0
 
-table#cart_summary .gift-icon {
-	color: white;
-	background: #0088CC;
-	line-height: 20px;
-	padding: 2px 5px;
-	border-radius: 5px;
-}
-/* step 3 - address ************************************************************************** */
-#multishipping_mode_box {
-	padding-top:12px;
-	padding-bottom:19px;
-	.title {
-		font-weight:bold;
-		color:$base-text-color;
-		margin-bottom:15px;
-	}
-}
-#multishipping_mode_box .description_off {
-	display: none;
-}
-#multishipping_mode_box .description_off div {
-	margin-bottom: 10px;
-}
-#multishipping_mode_box .description_off a:hover, #multishipping_mode_box .description a:hover {
-	background: #f3f3f3;
-	border: 1px solid #ccc;
-}
-#multishipping_mode_box.on .description_off {
-	display: block;
-}
-.multishipping-cart {
-	.cart_address_delivery {
-		&.form-control {
-			width:198px;
-		}
-	}
-}
-#order .address_add.submit { margin-bottom:20px;}
-#ordermsg { margin-bottom:30px;}
-#id_address_invoice.form-control, #id_address_delivery.form-control {
-	width:269px;	
-}
-.checkbox.addressesAreEquals {
-	margin:0 0 25px 0;	
-}
-/* step 4 - paiement ************************************************************************** */
-#order .delivery_option, #order-opc .delivery_option {
-	>div {
-		display: block;
-		margin-bottom:20px;
-		font-weight:normal;	
-			>table {
-				background:$light-background;
-				margin-bottom:0;
-				&.resume {
-					height:53px;
-				}
-					&.delivery_option_carrier {
-						margin-top:10px;
-						width:100%;
-						background:$state-info-bg;
-						color:$state-info-text;
-						border:1px solid $state-info-border;
-						font-weight:bold;
-							td {
-								padding:8px 11px 7px 11px;
-								i {
-									font-size:20px;
-									margin-right:7px;
-									vertical-align:-2px;
-								}	
-							}	
-					}
-					td {
-						&.delivery_option_radio {
-							width:54px;
-							padding-left:0;
-							padding-right:0;
-							text-align:center;
-						}	
-						&.delivery_option_logo {
-							width:97px;
-							padding-left:21px;	
-						}
-						&.delivery_option_price { width:162px;}
-					}
-			}
-	}
-}
-.order_carrier_content {
-	line-height:normal;
-	padding-bottom:16px;
-	.carrier_title {
-		font-weight:bold;
-		color:$base-text-color;	
-	}
-	.checkbox {
-		input { margin-top:2px;}
-	}
-	.delivery_options_address {
-		.carrier_title {
-			margin-bottom:17px;	
-		}
-	}
-	& + div {
-		padding-bottom:15px;	
-	}
-}
+#cart_summary
+	tbody
+		td
+			&.cart_product
+				padding: 19px
+				width: 137px
+				img
+					border: 1px solid $table-border-color
+			&.cart_unit
+				.price
+					span
+						display: block
+						&.price-percent-reduction
+							margin: 5px auto
+							display: inline-block
+						&.old-price
+							text-decoration: line-through
+			&.cart_description
+				width: 480px
+				small
+					display: block
+					padding: 5px 0 0 0
+			&.cart_avail
+	tfoot
+		td
+			&.text-right
+				font-weight: bold
+				color: $base-text-color	
+			&.price
+				text-align: right
+			&.total_price_container
+				span
+					font: 600 18px/22px $font-custom
+					color: #555454
+					text-transform: uppercase
+			&#total_price_container
+				font: 600 21px/25px $font-custom
+				color: $product-price-color
+				background: $light-background
 
-#carrierTable {
-	border:1px solid #999;
-	border-bottom:none;
-	background:$light-background
-}
+@media (max-width: 767px)
+#order-detail-content
+	#cart_summary
+		table, thead, tbody, th, td, tr
+			display: block
+		thead tr
+			position: absolute
+			top: -9999px
+			left: -9999px
+		tr
+			border-bottom: 1px solid #ccc
+			overflow: hidden
+		td
+			border: none
+			position: relative
+			width: 50%
+			float: left
+			white-space: normal
+			&.cart_product
+			&.cart_description
+			&.cart_avail
+				clear: both
+			&.cart_unit
+			&.cart_quantity
+				clear: both
+				padding: 9px 8px 11px 18px
+			&.cart_total
+			&.cart_delete
+				width: 100%
+				clear: both
+				text-align: right
+				&:before
+					display: inline-block
+					padding-right: 0.5em
+					position: relative
+					top: -3px
+			div
+				display: inline
+		td:before
+			content: attr(data-title)
+			display: block
+		tfoot
+			td
+				float: none
+				width: 100%
+				&:before
+					display: inline
+			tr
+				.text-right, .price
+					display: block
+					float: left
+					width: 50%
 
-#carrierTable tbody{
-	border-bottom:1px solid #999;
-}
-#carrierTable  th {
-	padding:0 15px;
-	height: 29px;
-	font-weight: bold;
-	line-height:29px;
-	color:$light-text-color;
-	text-transform:uppercase;
-	background:url(../img/bg_table_th.png) repeat-x 0 -10px #999
-}
-#carrierTable  td {
-	padding:15px;
-	font-weight:bold;
-	border-right:1px solid #e9e9e9
-}
-#carrierTable  td.carrier_price {border:none}
-p.checkbox.gift { margin-bottom:10px;}
-#gift_div {
-	display:none;
-	margin-top:5px;
-	margin-bottom:10px;
-}
+.cart_voucher
+	vertical-align: top !important
+	h4
+		font: 600 18px/22px $font-custom
+		color: $base-heading-color
+		text-transform: uppercase
+		padding: 7px 0 10px 0
+	.title-offers
+		color: $base-text-color
+		font-weight: bold
+		margin-bottom: 6px
+	fieldset
+		margin-bottom: 10px
+		#discount_name
+			float: left
+			width: 219px
+			margin-right: 11px
+	#display_cart_vouchers
+		span
+			font-weight: bold
+			cursor: pointer
+			color: $link-color
+			&:hover
+				color: $link-hover-color
 
-a.iframe {
-	color:$base-text-color;
-	text-decoration:underline;
-		&:hover {
-			text-decoration:none;
-		}
-}
+.enable-multishipping
+	margin: -13px 0 17px
+	label
+		font-weight: normal
 
-/* step 5 - paiement ************************************************************************** */
-p.payment_module {
-	margin-bottom:10px;
-	a {
-		display:block;
-		border:1px solid $table-border-color;
-		@include border-radius(4px);
-		font-size:17px;
-		line-height:23px;
-		color:$base-text-color;
-		font-weight:bold;
-		padding:33px 40px 34px 99px;
-		letter-spacing:-1px;
-		position:relative;
-			
-			&.bankwire {
-				background:url(../img/bankwire.png) 15px 12px no-repeat $base-box-bg;
-			}
-			&.cheque {
-				background:url(../img/cheque.png) 15px 15px no-repeat $base-box-bg;	
-			}
-			
-			&.cheque, &.bankwire {
-				&:after {
-					display:block;
-					content:"";
-					position:absolute;
-					right:20px;
-					margin-top:-11px;
-					top:50%;
-					font-family:$font-icon;
-					font-size:25px;
-					height:22px;
-					width:14px;
-					color:$link-color;
-				}
-			}
-		&:hover { background-color:#f6f6f6}
-		span {
-			font-weight:bold;
-			color:$base-body-color;
-		}
-	}
-}
-.payment_module.box { margin-top:20px;}
-p.cheque-indent {
-	margin-bottom:9px;
-}	
-.cheque-box {
-	.form-group { 
-		margin-bottom:10px;
-		
-			.form-control {width:269px;}
-	}	
-}
-.order-confirmation.box { line-height:29px; a {text-decoration:underline; &:hover {text-decoration:none;}}}
-/* ************************************************************************************************
-		PAGE ORDER-OPC
-************************************************************************************************ */
-.delivery_option_carrier td {width:200px}
-.delivery_option_carrier td + td {width:280px;}
-.delivery_option_carrier td + td + td {width:200px}
-.delivery_option_carrier tr td {
-	padding: 5px;
-}
-.delivery_option_carrier.selected {
-	display: table;
-}
-.delivery_option_carrier.not-displayable {
-	display: none;
-}
-/* ************************************************************************************************
-		PAGES ADRESSES, IDENTITY
-************************************************************************************************ */
-#address, #identity, #account-creation_form, #new_account_form, #opc_account_form, #authentication {
-	.box { padding-bottom:20px; line-height:20px;}
-	p.required { 
-		color:#f13340;
-		margin:9px 0 16px 0;
-	}	
-	p.inline-infos {
-		color:#f00;
-	}
-	.form-group { 
-		margin-bottom:4px;
-		
-			.form-control { max-width:271px;}
-			&#adress_alias {
-				margin-bottom:20px;	
-			}
-		&.phone-number {
-																		@media (min-width: $screen-lg) { 	// min 1200px 
-																			float:left;
-																			width:270px;
-																			margin-right:13px;
-																		}
-			+ p {
-																		@media (min-width: $screen-lg) { 	// min 1200px 
-																			padding:23px 0 0 0px;
-																			margin-bottom:0;
-																		}
-			}
-		}
-	}
-	.gender-line {
-		margin-bottom:4px;
-		padding-top:4px;
-		> label {
-			margin-right:10px;
-			margin-bottom:0;	
-		}
-		.radio-inline {
-			
-			  label {
-				  font-weight:normal;
-				  color:#777;
-			  }
-		  }
-	}	
-}
-#identity, #authentication, #order-opc {
-	#center_column {
-		form.std {
-			.row {
-				margin-left:-5px;
-				margin-right:-5px;
-					.col-xs-4 {
-						padding-left:5px;
-						padding-right:5px;
-						max-width:94px;
-							.form-control {max-width:84px;}	
-					}
-			}
-		}
-		.footer_links {
-			border:none;
-			padding-top:0;	
-		}
-	}	
-}
-#new_account_form .box { 
-	line-height:20px;
-	.date-select { padding-bottom:10px;}
-	.top-indent {padding-top:10px;}
-	.customerprivacy { padding-top:15px;}
-}
-#authentication {
-	fieldset.account_creation { margin-bottom:20px;}	
-}
-/**************************************************************************************************
-		PASSWORD
-**************************************************************************************************/
-#password {
-	.box {
-		p {
-			margin-bottom:9px;	
-		}
-		.form-group {
-			margin-bottom:20px;
-			
-			.form-control {
-				width:263px;	
-			}
-		}
-	}
-	.footer_links {padding-top:0; border:none;}
-}
-/* ************************************************************************************************
-		PAGE SEARCH
-************************************************************************************************ */
-#instant_search_results {
-	a.close {
-		font-size:13px;
-		font-weight:600;
-		opacity:1;
-		line-height:inherit;
-		text-transform:none;
-		font-family:$font-famaly;
-			&:hover {
-				color:$link-hover-color;	
-			}
-	}
-}
-/* ************************************************************************************************
-		MANUFACTURERS/SUPPLIERS
-************************************************************************************************ */
-#manufacturers_list, #suppliers_list {
-	
-	h3 {
-		font-size:17px;
-		line-height:23px;	
-	}
-	
-	.description {
-		line-height:18px;	
-	}
-	
-	.product-counter {
-		
-		a {
-			font-weight:bold;
-			color:$base-text-color;
-			
-			&:hover {
-				color:$link-hover-color;	
-			}
-		}
-	}
-	
-	&.list {
-		
-		li {
-			.mansup-container {
-				border-top:1px solid $base-border-color;
-				padding:31px 0 30px 0;
-																		@media (max-width: $screen-xs-max){ // < 768 
-																			text-align:center;
-																		}
-			}
-			
-			&:first-child {
-				
-				.mansup-container {
-					border-top:0;
-				}
-			}
-			
-			.left-side {text-align:center;}
-			
-			h3 { 
-				margin-top:-5px;
-				padding-bottom:8px;
-			}
-			
-			.middle-side { 
-				padding-left:0;
-																		@media (max-width: $screen-xs-max){ // < 768
-																			padding-right:15px;
-																			padding-left:15px;
-																		}
-			}
-			
-			.right-side-content {
-				border-left:1px solid $base-border-color;
-				padding:0 0 32px 31px;
-				min-height:108px;
-																		@media (max-width: $screen-xs-max){ // < 768
-																			min-height:1px;
-																			padding:0;
-																			border:none;
-																		}
-				
-				.product-counter {
-					position:relative; 
-					top:-6px;
-					margin-bottom:12px;
-					
-																		@media (max-width: $screen-xs-max){ // < 768
-																			top:0;
-																		}
-				}
-			}	
-		}
-	}
-	
-	&.grid {
-		
-		li {
-			text-align:center;
-			
-			.product-container {
-				padding-top:40px;
-				padding-bottom:20px;
-				border-bottom:1px solid $base-border-color;
-				
-				.left-side {
-					padding-bottom:42px;	
-				}
-				h3 {padding-bottom:10px;}
-				.product-counter { margin-bottom:12px;}
-			}
-		}
-		@media (min-width: $screen-lg) { // > 1199 
-			li.first-in-line { clear:left;}
-			li.last-line { .product-container {border-bottom:none;}}
-		}
-		
-		@media (min-width: $screen-sm) and  (max-width: $screen-md-max) { //768 -> 1199
-			li.first-item-of-tablet-line {clear:left;}
-			li.last-tablet-line { .product-container {border-bottom:none;}}
-		}
-		
-		@media (max-width: $screen-xs-max) { // < 768 
-			li.item-last { .product-container {border-bottom:none;}}	
-		}
-	}
-}
-#manufacturer, #supplier {
-	
-	.description_box {
-		padding-top:20px;
-		padding-bottom:20px;
-		border-top:1px solid $base-border-color;
-		
-		.hide_desc { display:none;}
-	}
-	.bottom-pagination-content, .top-pagination-content {
-		min-height:69px;
-	}
-	
-	.top-pagination-content.bottom-line {
-		border-bottom:1px solid $base-border-color;
-	}
-}
-/*****************************************************************************************************
-								DISCOUNT PAGE
-******************************************************************************************************/
-table.discount {
-	
-	i {
-		font-size:20px;
-		line-height:20px;
-		vertical-align:-2px;
-		
-		&.icon-ok {
-			color:#46a74e;
-		}
-		
-		&.icon-remove {
-			color:#f13340;	
-		}
-	}
-}
-/*****************************************************************************************************
-								GUEST TRACKING
-******************************************************************************************************/
-#guestTracking {
-	.form-control {
-		max-width:271px;
-	}
-	@media (min-width: $screen-lg) { // > 1200px 
-		.form-group {
-			overflow:hidden;
-			i { padding-left:10px;}
-		}
-		.form-control {
-			float:left;	
-		}
-		label {float:left; clear:both; width:100%;}
-	}
-}
-/*****************************************************************************************************
-								PAGE 404
-******************************************************************************************************/
-#pagenotfound {
-	.pagenotfound {
-		max-width:824px;
-		margin:0 auto;
-		text-align:center;
-		
-		.img-404 {
-			padding:8px 0 27px 0;
-			
-			img {
-				max-width:100%;	
-			}
-		}
-		
-		h1 {
-			font:600 28px/34px $font-custom;
-			color:$base-text-color;
-			text-transform:uppercase;
-			margin-bottom:7px;
-		}
-		
-		p {
-			font:600 16px/20px $font-custom;	
-			color:#555454;
-			text-transform:uppercase;
-			border-bottom:1px solid $base-border-color;
-			padding-bottom:19px;
-			margin-bottom:20px;
-		}
-		
-		h3 {
-			font-weight:bold;
-			color:$base-text-color;
-			font-size:13px;
-			line-height:normal;	
-			margin-bottom:18px;
-		}
-		
-		label {
-			font-weight:normal;
-			@media (max-width: $screen-xs-max) {
-				display:block;
-			}
-		}
-		
-		.form-control {
-			max-width:293px;
-			display:inline-block;
-			margin-right:5px;
-			
-																		@media (max-width: $screen-xs-max) { // max 767px
-																			margin:0 auto 15px auto;
-																			display:block;
-																		}
-		}
-			
-		.buttons {
-			padding:48px 0 20px 0;
-			
-			.button-medium {
-				
-				i.left {
-					font-size:17px;	
-				}
-			}
-		}
-	}
-}
-/* ************************************************************************************************
-		addon RerversoForm
-************************************************************************************************ */
-#account-creation_form fieldset.reversoform {padding:10px !important}
-#account-creation_form fieldset.reversoform  .text label{
-	display:block;
-	padding:0 0 10px 0;
-	width:100%;
-	text-align:left;
-}
-#account-creation_form fieldset.reversoform .infos-sup {
-	padding:0 !important;
-	font-size:10px;
-	font-style:italic;
-	text-align:right
-}
-/* ************************************************************************************************
-		addon customer privacy
-************************************************************************************************ */
-#account-creation_form fieldset.customerprivacy label, fieldset.customerprivacy label{
-	cursor:pointer
-}
+#HOOK_SHOPPING_CART
+	#loyalty
+		i
+			font-size: 26px
+			line-height: 26px
+			color: #cfcccc
+#order_carrier
+	clear: both
+	margin-top: 20px
+	border: 1px solid #999
+	background: $light-background
+#order_carrier .title_block
+	padding: 0 15px
+	height: 29px
+	font-weight: bold
+	line-height: 29px
+	color: $light-text-color
+	font-weight: bold
+	text-transform: uppercase
+	background: url(../img/bg_table_th.png) repeat-x 0 -10px #999
+#order_carrier span
+	display: block
+	padding: 15px
+	font-weight: bold
+.multishipping_close_container
+	text-align: center
+table#cart_summary .gift-icon
+	color: white
+	background: #0088CC
+	line-height: 20px
+	padding: 2px 5px
+	border-radius: 5px
 
-/* ************************************************************************************************
-		addon referralprogram
-************************************************************************************************ */
-.tab-content { margin-top:20px;}
-/* ************************************************************************************************
-		addon Livezilla
-************************************************************************************************ */
-#livezilla_lnk  {
-	margin:10px 0;
+// step 3 - address
+#multishipping_mode_box
+	padding-top: 12px
+	padding-bottom: 19px
+	.title
+		font-weight: bold
+		color: $base-text-color
+		margin-bottom: 15px
+
+	.description_off
+		display: none
+		div
+			margin-bottom: 10px
+
+	.description_off a:hover,
+	.description a:hover
+		background: #f3f3f3
+		border: 1px solid #ccc
+
+#multishipping_mode_box.on .description_off
+	display: block
+
+.multishipping-cart
+	.cart_address_delivery 
+		&.form-control
+			width: 198px
+
+#order .address_add.submit
+	margin-bottom: 20px
+#ordermsg
+	margin-bottom: 30px
+
+#id_address_invoice.form-control,
+#id_address_delivery.form-control
+	width: 269px
+.checkbox.addressesAreEquals
+	margin: 0 0 25px 0
+
+// step 4 - paiement
+#order .delivery_option,
+#order-opc .delivery_option
+	> div
+		display: block
+		margin-bottom: 20px
+		font-weight: normal
+		> table
+			background: $light-background
+			margin-bottom: 0
+			&.resume
+				height: 53px
+				&.delivery_option_carrier
+					margin-top: 10px
+					width: 100%
+					background: $state-info-bg
+					color: $state-info-text
+					border: 1px solid $state-info-border
+					font-weight: bold
+					td
+						padding: 8px 11px 7px 11px
+						i
+							font-size: 20px
+							margin-right: 7px
+							vertical-align: -2px
+				td
+					&.delivery_option_radio
+						width: 54px
+						padding-left: 0
+						padding-right: 0
+						text-align: center
+					&.delivery_option_logo
+						width: 97px
+						padding-left: 21px
+					&.delivery_option_price
+						width: 162px
+
+.order_carrier_content
+	line-height: normal
+	padding-bottom: 16px
+	.carrier_title
+		font-weight: bold
+		color: $base-text-color
+	.checkbox
+		input
+			margin-top: 2px
+	.delivery_options_address
+		.carrier_title
+			margin-bottom: 17px
+	& + div
+		padding-bottom: 15px	
+
+#carrierTable
+	border: 1px solid #999
+	border-bottom: none
+	background: $light-background
+
+#carrierTable tbody
+	border-bottom: 1px solid #999
+
+#carrierTable th
+	padding: 0 15px
+	height: 29px
+	font-weight: bold
+	line-height: 29px
+	color: $light-text-color
+	text-transform: uppercase
+	background: url(../img/bg_table_th.png) repeat-x 0 -10px #999
+#carrierTable td
+	padding: 15px
+	font-weight: bold
+	border-right: 1px solid #e9e9e9
+
+#carrierTable  td.carrier_price
+	border: none
+p.checkbox.gift
+	margin-bottom: 10px
+
+#gift_div
+	display: none
+	margin-top: 5px
+	margin-bottom: 10px
+
+a.iframe
+	color: $base-text-color
+	text-decoration: underline
+	&:hover
+		text-decoration: none
+
+//step 5 - paiement
+p.payment_module
+	margin-bottom: 10px
+	a
+		display: block
+		border: 1px solid $table-border-color
+		@include border-radius(4px)
+		font-size: 17px
+		line-height: 23px
+		color: $base-text-color
+		font-weight: bold
+		padding: 33px 40px 34px 99px
+		letter-spacing: -1px
+		position: relative
+		&.bankwire
+			background: url(../img/bankwire.png) 15px 12px no-repeat $base-box-bg
+		&.cheque
+			background: url(../img/cheque.png) 15px 15px no-repeat $base-box-bg
+		&.cheque, &.bankwire
+			&:after
+				display: block
+				content: ""
+				position: absolute
+				right: 0px
+				margin-top: -11px
+				top: 50%
+				font-family: $font-icon
+				font-size: 25px
+				height: 22px
+				width: 14px
+				color: $link-color
+		&:hover
+			background-color: #f6f6f6
+		span
+			font-weight: bold
+			color: $base-body-color
+
+.payment_module.box
+	margin-top: 20px
+p.cheque-indent
+	margin-bottom: 9px
+.cheque-box
+	.form-group
+		margin-bottom: 0px
+		.form-control
+			width: 269px
+
+.order-confirmation.box
+	line-height: 29px
+	a
+		text-decoration: underline
+		&:hover
+			text-decoration: none
+
+//PAGE ORDER-OPC
+.delivery_option_carrier td
+	width: 200px
+.delivery_option_carrier td + td
+	width: 280px
+.delivery_option_carrier td + td + td
+	width: 200px
+.delivery_option_carrier tr td
+	padding: 5px
+.delivery_option_carrier.selected
+	display: table
+.delivery_option_carrier.not-displayable
+	display: none
+
+
+//PAGES ADRESSES, IDENTITY
+#address,
+#identity,
+#account-creation_form,
+#new_account_form,
+#opc_account_form,
+#authentication
+	.box
+	padding-bottom: 20px
+	line-height: 20px
+	p.required
+		color: #f13340
+		margin: 9px 0 16px 0
+	p.inline-infos
+		color: #f00
+	.form-group 
+		margin-bottom: 4px
+		.form-control
+			max-width: 271px
+			&#adress_alias
+				margin-bottom: 20px
+		&.phone-number
+			// min 1200px
+			@media (min-width: $screen-lg)	
+				float: left
+				width: 270px
+				margin-right: 13px
+			+ p
+				@media (min-width: $screen-lg)	
+					padding: 23px 0 0 0px
+					margin-bottom: 0
+	.gender-line
+		margin-bottom: 4px
+		padding-top: 4px
+		> label
+			margin-right: 10px
+			margin-bottom: 0	
+		.radio-inline
+			label
+				font-weight: normal
+				color: #777
+#identity,
+#authentication,
+#order-opc
+	#center_column
+		form.std
+			.row
+				margin-left: -5px
+				margin-right: -5px
+				.col-xs-4
+					padding-left: 5px
+					padding-right: 5px
+					max-width: 94px
+					.form-control
+						max-width: 84px
+		.footer_links
+			border: none
+			padding-top: 0
+
+#new_account_form .box
+	line-height: 20px
+	.date-select
+		padding-bottom: 10px
+	.top-indent
+		padding-top: 10px
+	.customerprivacy
+		padding-top: 15px
+
+#authentication
+	fieldset.account_creation
+	margin-bottom: 20px
+
+// PASSWORD
+#password
+	.box
+		p
+			margin-bottom: 9px
+		.form-group
+			margin-bottom: 20px
+			.form-control
+				width: 263px
+	.footer_links
+	padding-top: 0
+	border: none
+
+//PAGE SEARCH
+#instant_search_results
+	a.close
+		font-size: 13px
+		font-weight: 600
+		opacity: 1
+		line-height: inherit
+		text-transform: none
+		font-family: $font-famaly
+		&:hover
+			color: $link-hover-color
+
+// MANUFACTURERS/SUPPLIERS
+#manufacturers_list,
+#suppliers_list
+	h3
+		font-size: 17px
+		line-height: 23px	
+	.description
+		line-height: 18px
+	.product-counter
+		a
+			font-weight: bold
+			color: $base-text-color
+			&:hover
+				color: $link-hover-color	
+	&.list
+		li
+			.mansup-container
+				border-top: 1px solid $base-border-color
+				padding: 31px 0 30px 0
+				// < 768 
+				@media (max-width: $screen-xs-max)
+					text-align: center
+			&:first-child
+				.mansup-container
+					border-top: 0
+			.left-side
+				text-align: center
+			
+			h3
+				margin-top: -5px
+				padding-bottom: 8px
+			.middle-side
+				padding-left: 0
+				// < 768
+				@media (max-width: $screen-xs-max)
+					padding-right: 15px
+					padding-left: 15px
+			.right-side-content
+				border-left: 1px solid $base-border-color
+				padding: 0 0 32px 31px
+				min-height: 108px
+				// < 768
+				@media (max-width: $screen-xs-max)
+					min-height: 1px
+					padding: 0
+					border: none
+				.product-counter
+					position: relative
+					top: -6px
+					margin-bottom: 12px
+					// < 768
+					@media (max-width: $screen-xs-max)
+						top: 0
+	&.grid
+		li
+			text-align: center
+			
+			.product-container
+				padding-top: 40px
+				padding-bottom: 20px
+				border-bottom: 1px solid $base-border-color
+				.left-side
+					padding-bottom: 42px
+				h3
+					padding-bottom: 10px
+				.product-counter
+					margin-bottom: 12px
+		// > 1199 
+		@media (min-width: $screen-lg)
+			li.first-in-line
+				clear: left
+			li.last-line
+				.product-container
+					border-bottom: none
+		//768 -> 1199
+		@media (min-width: $screen-sm) and  (max-width: $screen-md-max)
+			li.first-item-of-tablet-line
+				clear: left
+			li.last-tablet-line
+				.product-container
+					border-bottom: none
+		// < 768 
+		@media (max-width: $screen-xs-max)
+			li.item-last
+			.product-container
+				border-bottom: none
+
+#manufacturer,
+#supplier
+	.description_box
+		padding-top: 20px
+		padding-bottom: 20px
+		border-top: 1px solid $base-border-color
+		.hide_desc
+			display: none
+	.bottom-pagination-content,
+	.top-pagination-content
+		min-height: 69px
+	.top-pagination-content.bottom-line
+		border-bottom: 1px solid $base-border-color
+
+//DISCOUNT PAGE
+table.discount
+	i
+		font-size: 20px
+		line-height: 20px
+		vertical-align: -2px
+		&.icon-ok
+			color: #46a74e
+		&.icon-remove
+			color: #f13340
+
+//GUEST TRACKING
+#guestTracking
+	.form-control
+		max-width: 271px
+	// > 1200px 
+	@media (min-width: $screen-lg)
+		.form-group
+			overflow: hidden
+			i
+				padding-left: 10px
+		.form-control
+			float: left
+		label
+			float: left
+			clear: both
+			width: 100%
+
+//PAGE 404
+#pagenotfound
+	.pagenotfound
+		max-width: 824px
+		margin: 0 auto
+		text-align: center
+		.img-404
+			padding: 8px 0 27px 0
+			img
+				max-width: 100%
+		h1
+			font: 600 28px/34px $font-custom
+			color: $base-text-color
+			text-transform: uppercase
+			margin-bottom: 7px
+		p
+			font: 600 16px/20px $font-custom	
+			color: #555454
+			text-transform: uppercase
+			border-bottom: 1px solid $base-border-color
+			padding-bottom: 19px
+			margin-bottom: 20px
+		h3
+			font-weight: bold
+			color: $base-text-color
+			font-size: 13px
+			line-height: normal
+			margin-bottom: 18px
+		
+		label
+			font-weight: normal
+			@media (max-width: $screen-xs-max)
+				display: block
+		.form-control
+			max-width: 293px
+			display: inline-block
+			margin-right: 5px
+			// max 767px
+			@media (max-width: $screen-xs-max)
+				margin: 0 auto 15px auto
+				display: block												
+		.buttons
+			padding: 48px 0 20px 0
+			.button-medium
+				i.left
+					font-size: 17px
+
+//addon RerversoForm
+#account-creation_form fieldset.reversoform
+	padding: 10px !important
+#account-creation_form fieldset.reversoform .text label
+	display: block
+	padding: 0 0 10px 0
+	width: 100%
+	text-align: left
+
+#account-creation_form fieldset.reversoform .infos-sup
+	padding: 0 !important
+	font-size: 10px
+	font-style: italic
 	text-align: right
-}
-#livezilla_lnk a {
-	display:inline-block;
-	padding:6px 8px 8px 8px;
-	-moz-border-radius:3px;
-	-webkit-border-radius:3px;
-	border-radius:3px;
-	font:bold 10px $font-famaly;
-	color:$light-text-color;
-	text-shadow: 0 -1px 0 #000;
-	background: url(../img/bg_bt_compare.gif) repeat-x scroll 0 0 #000
-}
-#livezilla_lnk a:hover {text-decoration:none}
 
-/* ************************************************************************************************
-		addons comments products
-************************************************************************************************ */
-form#sendComment  fieldset{
-	padding:10px;
-	border:1px solid #ccc;
-	background:#eee
-}
-form#sendComment h3 {font-size:14px;}
-#new_comment_form p.text {
-	 margin-bottom: 0;
-	 padding-bottom: 0;
-}
+//addon customer privacy
+#account-creation_form fieldset.customerprivacy label,
+fieldset.customerprivacy label
+	cursor: pointer
+
+//addon referralprogram
+.tab-content
+	margin-top: 20px
+
+//addons comments products
+form#sendComment fieldset
+	padding: 10px
+	border: 1px solid #ccc
+	background: #eee
+
+form#sendComment h3
+	font-size: 14px
+#new_comment_form p.text
+	margin-bottom: 0
+	padding-bottom: 0
+
 #sendComment p.text label,
-#sendComment p.textarea label {
-	display: block;
-	margin: 12px 0 4px;
-	font-weight: bold;
-	font-size: 12px;
-}
-#sendComment p.text input {
-	padding: 0 5px;
-	height: 28px;
-	width: 498px;
-	border: 1px solid #ccc;
-	background: url(../img/bg_input.png) repeat-x 0 0 $light-background;
-}
-#sendComment p.textarea textarea {
-	height:80px;
-	width:508px;
-	border:1px solid #ccc;
-}
-#sendComment p.submit {
-	padding:0;
-	text-align:right
-}
+#sendComment p.textarea label
+	display: block
+	margin: 12px 0 4px
+	font-weight: bold
+	font-size: 12px
 
-#sendComment p.closeform {
-	float:right;
-	padding:0;
-	height:12px;
-	width:12px;
-	text-indent:-5000px;
-	background:url(../img/icon/delete.gif) no-repeat 0 0
-}
+#sendComment p.text input
+	padding: 0 5px
+	height: 28px
+	width: 498px
+	border: 1px solid #ccc
+	background: url(../img/bg_input.png) repeat-x 0 0 $light-background
 
-.star {
-	position: relative;
-	top:-1px;
-	float: left;
-	width: 14px;
-	overflow: hidden;
-	cursor: pointer;
-	font-size:14px;
-	font-weight:normal;
-}
-.star, .star a {
-	display:block;
-}
-.star a {
-	position:absolute;
-	text-indent:-5000px;
-}
-div.star {
-	&:after {
-		content:"";
-		font-family:$font-icon;
-		display:inline-block;
-		color:#777676;	
-	}
-}
-div.star.star_on {
-	display:block;
-	&:after {
-		content:"";
-		font-family:$font-icon;
-		display:inline-block;
-		color:#ef8743;	
-	}
-}
-div.star.star_hover {
-	&:after {
-		content:"";
-		font-family:$font-icon;
-		display:inline-block;
-		color:#ef8743;	
-	}
-}
+#sendComment p.textarea textarea
+	height: 80px
+	width: 508px
+	border: 1px solid #ccc
+
+#sendComment p.submit
+	padding: 0
+	text-align: right
+
+#sendComment p.closeform
+	float: right
+	padding: 0
+	height: 12px
+	width: 12px
+	text-indent: -5000px
+	background: url(../img/icon/delete.gif) no-repeat 0 0
+.star
+	position: relative
+	top: -1px
+	float: left
+	width: 14px
+	overflow: hidden
+	cursor: pointer
+	font-size: 14px
+	font-weight: normal
+.star
+	display: block
+	a
+		display: block
+		position: absolute
+		text-indent: -5000px
+div.star
+	&:after
+		content: ""
+		font-family: $font-icon
+		display: inline-block
+		color: #777676
+
+div.star.star_on
+	display: block
+	&:after
+		content: ""
+		font-family: $font-icon
+		display: inline-block
+		color: #ef8743	
+
+div.star.star_hover
+	&:after
+		content: ""
+		font-family: $font-icon
+		display: inline-block
+		color: #ef8743
 
 
-/* ************************************************************************************************
-		xxxxx
-************************************************************************************************ */
-/* ************************************************************************************************
-		CSS Modules
-************************************************************************************************ */
+//CSS Modules
+//IMPORTANT - Internet Explorer can read 31 CSS files max. Some CSS have been put here and erased from their own module folder.
 
-/******* IMPORTANT - Internet Explorer can read 31 CSS files max. Some CSS have been put here and erased from their own module folder.************/
+//Block ADVERTISING
+.advertising_block
+	width: 191px
+	margin-bottom: 1em
+	text-align: center
 
-/*************** Block ADVERTISING ***************/
-.advertising_block { width: 191px; margin-bottom: 1em; text-align: center }
+//footer
+.blockcategories_footer ul ul
+	display: none !important
 
-/* footer */
-.blockcategories_footer ul ul {display:none !important}
-/******************************************************************
-				Form validate
-*******************************************************************/
-.form-group {
-	&.form-error {
-		input, textarea {
-			border:1px solid #f13340;
-			color:#f13340;
-			background: url(../img/icon/form-error.png) 98% 5px no-repeat #fff1f2;
-		}
-	}
-	&.form-ok {
-		input, textarea {
-			border:1px solid #46a74e;
-			color:#35b33f;
-			background: url(../img/icon/form-ok.png) 98% 5px no-repeat #ddf9e1;	
-		}
-	}
-	&.form-error, &.form-ok {
-		 .form-control {
-			padding-right:30px;	
-		}
-	}
-}
-/*********************************************************************
-				uniform
-*********************************************************************/
-.radio-inline, .checkbox {
-	padding-left:0;
-	.checker {
-		float:left;
-		span {
-			top:0px;
-		}
-	}
-	div.radio {
-		display:inline-block;
-		span {
-			float:left;
-			top:0px;
-		}
-	}
-}
-.fancybox-skin {
-	background:$light-background !important;
-}
-.fancybox-skin .fancybox-close {
-	top:8px;
-	right:8px;
-	width:28px;
-	height:28px;
-	background:none;
-	font-size:28px;
-	line-height:28px;
-	color:$base-text-color;
-	text-align:center;
-	
-	&:hover {
-		color:$link-hover-color;	
-	}
-	&:after {
-		content:"";
-		font-family:$font-icon;	
-	}
-}
+//Form validate
+.form-group
+	&.form-error
+		input, textarea
+			border: 1px solid #f13340
+			color: #f13340
+			background: url(../img/icon/form-error.png) 98% 5px no-repeat #fff1f2
+	&.form-ok
+		input, textarea
+			border: 1px solid #46a74e
+			color: #35b33f
+			background: url(../img/icon/form-ok.png) 98% 5px no-repeat #ddf9e1
+	&.form-error, &.form-ok
+		.form-control
+			padding-right: 30px
 
-/********************************************* Homepage pre-footer *****************************************/
-#facebook_block, #cmsinfo_block {
-	margin-top:40px;
-	overflow:hidden;
-	background:$homepage-footer-bg;
-	min-height:344px;	
-	padding-right:29px;
-	padding-left:29px;
-																			@media (max-width: $screen-sm-max) { // max 991px 
-																				padding-left:15px;
-																				padding-right:15px;
-																			}
-																			@media (max-width: $screen-xs-max) { // max 767px
-																				width:100%;
-																				min-height:1px;
-																			}
-	
-	h4 {
-		font:600 21px/25px $font-custom;
-		color:$base-heading-color;
-		margin-bottom:26px;
-																			@media (max-width: $screen-sm-max) { // max 991px 
-																				font-size:16px;
-																			}
-																			@media (max-width: $screen-xs-max) { // max 767px
-																				padding-top:20px !important;
-																			}
-	}
-}
-#facebook_block {
-	h4 {
-		padding-top:44px;	
-	}
-	.facebook-fanbox {
-		background:$light-background;
-		border:1px solid #aaaaaa;
-		padding-bottom:10px;	
-	}
-}
-#cmsinfo_block {
-	border-left:1px solid $homepage-footer-border;
-																			@media (max-width: $screen-xs-max) { // max 767px
-																				border:none;
-																				margin-top:10px;
-																			}	
-	> div {
-		padding-top:45px;
-		padding-left:0;	
-																			@media (max-width: $screen-xs-max) { // max 767px
-																				padding-top:20px;
-																			}
-																			@media (max-width: $screen-xs - 1) { // max 479px
-																				width:100%;
-																				border-top:1px solid $homepage-footer-border; 
-																			}
-	}
-	> div + div {
-		border-left:1px solid $homepage-footer-border;
-		min-height:344px;
-		padding-left:29px;
-																			@media (max-width: $screen-xs - 1) { // max 479px
-																				border-left:none;
-																				padding-left:10px;
-																				min-height:1px;
-																				padding-bottom:15px;
-																			}
-		h3 {
-			margin-bottom:12px;
-		}
-	}
-	
-	em {
-		float:left;	
-		font-size:35px;
-		color:$light-text-color;
-		width:59px;
-		height:59px;
-		line-height:59px;
-		text-align:center;
-		background:$dark-background;
-		@include border-radius(100px);
-		margin:3px 10px 0 0;
-																			@media (max-width: $screen-sm-max) { // max 991px 
-																				width:30px;
-																				height:30px;
-																				line-height:30px;
-																				font-size:20px;
-																			}
-	}
-	.type-text {
-		overflow:hidden;	
-	}
-	h3 {
-		font:600 21px/25px $font-custom;
-		color:$base-heading-color;
-																			@media  (max-width: $screen-md-max) { // max 1199px
-																				font-size:18px;
-																			}
-	}
-	ul {
-		li {
-			padding-bottom:22px;
-																			@media  (max-width: $screen-md-max) { // max 1199px
-																				padding-bottom:10px;
-																			}
-																			@media (max-width: $screen-sm-max) { // max 991px 
-																				padding-bottom:0;
-																			}
-		}
-	}
-}
-.ie8 {
-	#facebook_block, #cmsinfo_block {
-		height:344px;
-	}
-}
+//uniform
+.radio-inline, .checkbox 
+	padding-left: 0
+	.checker
+		float: left
+		span
+			top: 0px
+	div.radio
+		display: inline-block
+		span
+			float: left
+			top: 0px
 
-/************************* Zoom ******************************/
-@media  (max-width: $screen-md-max) { // max 1199px 
-	.zoomdiv {
-		display:none !important;
-	}
-}
+.fancybox-skin
+	background: $light-background !important
+
+.fancybox-skin .fancybox-close
+	top: 8px
+	right: 8px
+	width: 28px
+	height: 28px
+	background: none
+	font-size: 28px
+	line-height: 28px
+	color: $base-text-color
+	text-align: center
+	&:hover 
+		color: $link-hover-color
+	&:after
+		content: ""
+		font-family: $font-icon
+
+//Homepage pre-footer
+#facebook_block,
+#cmsinfo_block
+	margin-top: 40px
+	overflow: hidden
+	background: $homepage-footer-bg
+	min-height: 344px
+	padding-right: 29px
+	padding-left: 29px
+	// max 991px
+	@media (max-width: $screen-sm-max)
+		padding-left: 15px
+		padding-right: 15px
+	// max 767px
+	@media (max-width: $screen-xs-max)
+		width: 100%
+		min-height: 1px
+	h4
+		font: 600 21px/25px $font-custom
+		color: $base-heading-color
+		margin-bottom: 26px
+		// max 991px 
+		@media (max-width: $screen-sm-max)
+			font-size: 16px
+		// max 767px
+		@media (max-width: $screen-xs-max)
+			padding-top: 20px !important
+#facebook_block
+	h4
+		padding-top: 44px
+	.facebook-fanbox
+		background: $light-background
+		border: 1px solid #aaaaaa
+		padding-bottom: 10px
+#cmsinfo_block
+	border-left: 1px solid $homepage-footer-border
+	// max 767px
+	@media (max-width: $screen-xs-max)
+		border: none
+		margin-top: 10px
+	> div
+		padding-top: 45px
+		padding-left: 0
+		// max 767px
+		@media (max-width: $screen-xs-max)
+			padding-top: 20px
+		// max 479px
+		@media (max-width: $screen-xs - 1)
+			width: 100%
+			border-top: 1px solid $homepage-footer-border
+	> div + div
+		border-left: 1px solid $homepage-footer-border
+		min-height: 344px
+		padding-left: 29px
+		// max 479px
+		@media (max-width: $screen-xs - 1)
+			border-left: none
+			padding-left: 10px
+			min-height: 1px
+			padding-bottom: 15px
+		h3
+			margin-bottom: 12px
+	em
+		float: left
+		font-size: 35px
+		color: $light-text-color
+		width: 59px
+		height: 59px
+		line-height: 59px
+		text-align: center
+		background: $dark-background
+		@include border-radius(100px)
+		margin: 3px 10px 0 0
+		// max 991px 
+		@media (max-width: $screen-sm-max)
+			width: 30px
+			height: 30px
+			line-height: 30px
+			font-size: 20px
+	.type-text
+		overflow: hidden
+	h3
+		font: 600 21px/25px $font-custom
+		color: $base-heading-color
+		// max 1199px
+		@media (max-width: $screen-md-max)
+			font-size: 18px
+	ul
+		li
+			padding-bottom: 22px
+			// max 1199px
+			@media  (max-width: $screen-md-max)
+				padding-bottom: 10px
+			// max 991px 
+			@media (max-width: $screen-sm-max)
+				padding-bottom: 0
+.ie8
+	#facebook_block,
+	#cmsinfo_block
+		height: 344px
+//Zoom
+// max 1199px 
+@media  (max-width: $screen-md-max)
+	.zoomdiv
+		display: none !important
