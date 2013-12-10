@@ -39,7 +39,7 @@ class BlockCms extends Module
 	{
 		$this->name = 'blockcms';
 		$this->tab = 'front_office_features';
-		$this->version = '1.3';
+		$this->version = '1.4';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -61,6 +61,7 @@ class BlockCms extends Module
 			|| !$this->registerHook('actionObjectCmsUpdateAfter')
 			|| !$this->registerHook('actionObjectCmsDeleteAfter')
 			|| !$this->registerHook('actionShopDataDuplication')
+			|| !$this->registerHook('actionAdminStoresControllerUpdate_optionsAfter')
 			|| !BlockCMSModel::createTables()
 			|| !Configuration::updateValue('FOOTER_CMS', '')
 			|| !Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', 1)
@@ -682,6 +683,12 @@ class BlockCms extends Module
 	protected function getCacheId($name = null)
 	{
 		return parent::getCacheId('blockcms|'.$name);
+	}
+
+	public function hookActionAdminStoresControllerUpdate_optionsAfter()
+	{
+		if (Tools::getIsset('PS_STORES_DISPLAY_FOOTER'))
+			$this->_clearCache('blockcms.tpl');
 	}
 
 	public function hookActionObjectCmsUpdateAfter()
