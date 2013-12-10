@@ -3,7 +3,6 @@
 	<h3><i class="icon-cogs"></i> {l s='New filters template' mod='blocklayered'}</h3>
 	<form action="{$current_url}" method="post" class="form-horizontal" onsubmit="return checkForm();">
 		<input type="hidden" name="id_layered_filter" id="id_layered_filter" value="{$id_layered_filter}" />
-		<input type="hidden" name="n_existing" id="n_existing" value="{$filters_templates|count}" />
 		<div class="form-group">
 			<label class="control-label col-lg-3">{l s='Template name:' mod='blocklayered'}</label>
 			<div class="col-lg-9">
