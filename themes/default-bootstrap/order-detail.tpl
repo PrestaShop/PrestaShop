@@ -350,6 +350,20 @@
 		</tbody>
 	</table>
 </div>
+{if $return_allowed}
+	<div id="returnOrderMessage">
+		<h3 class="page-heading bottom-indent">{l s='Merchandise return'}</h3>
+		<p>{l s='If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.'}</p>
+		<p class="form-group">
+			<textarea class="form-control" cols="67" rows="3" name="returnText"></textarea>
+		</p>
+		<p class="form-group">
+            <button type="submit" name="submitReturnMerchandise" class="btn btn-default button button-small"><span>{l s='Make an RMA slip'}<i class="icon-chevron-right right"></i></span></button>
+			<input type="hidden" class="hidden" value="{$order->id|intval}" name="id_order" />
+		</p>
+	</div>
+{/if}
+</form>
 {if $order->getShipping()|count > 0}
 	<table class="table table-bordered footab">
 		<thead>
@@ -376,20 +390,6 @@
 		</tbody>
 	</table>
 {/if}
-	{if $return_allowed}
-	<div id="returnOrderMessage">
-		<h3 class="page-heading bottom-indent">{l s='Merchandise return'}</h3>
-		<p>{l s='If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.'}</p>
-		<p class="form-group">
-			<textarea class="form-control" cols="67" rows="3" name="returnText"></textarea>
-		</p>
-		<p class="form-group">
-            <button type="submit" name="submitReturnMerchandise" class="btn btn-default button button-small"><span>{l s='Make an RMA slip'}<i class="icon-chevron-right right"></i></span></button>
-			<input type="hidden" class="hidden" value="{$order->id|intval}" name="id_order" />
-		</p>
-	</div>
-	{/if}
-	</form>
 {if !$is_guest}
 	{if count($messages)}
 	<h3 class="page-heading">{l s='Messages'}</h3>
