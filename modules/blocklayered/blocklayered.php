@@ -346,7 +346,10 @@ class BlockLayered extends Module
 			'is_indexable' =>(bool)$is_indexable
 		));
 		
-		return $this->display(__FILE__, 'attribute_group_form.tpl');
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			return $this->display(__FILE__, 'attribute_group_form_1.6.tpl');
+		else
+			return $this->display(__FILE__, 'attribute_group_form.tpl');
 	}
 
 	//ATTRIBUTES
@@ -421,8 +424,11 @@ class BlockLayered extends Module
 			'default_form_language' => (int)$this->context->controller->default_form_language,
 			'values' => $values
 		));
-		
-		return $this->display(__FILE__, 'attribute_form.tpl');
+
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			return $this->display(__FILE__, 'attribute_form_1.6.tpl');
+		else
+			return $this->display(__FILE__, 'attribute_form.tpl');
 	}
 
 	//FEATURES
@@ -514,8 +520,11 @@ class BlockLayered extends Module
 			'values' => $values,
 			'is_indexable' =>(bool)$is_indexable
 		));
-		
-		return $this->display(__FILE__, 'feature_form.tpl');
+
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			return $this->display(__FILE__, 'feature_form_1.6.tpl');
+		else
+			return $this->display(__FILE__, 'feature_form.tpl');
 	}
 
 	//FEATURES VALUE
@@ -591,8 +600,11 @@ class BlockLayered extends Module
 			'default_form_language' => (int)$this->context->controller->default_form_language,
 			'values' => $values
 		));
-		
-		return $this->display(__FILE__, 'feature_value_form.tpl');
+
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			return $this->display(__FILE__, 'feature_value_form_1.6.tpl');
+		else
+			return $this->display(__FILE__, 'feature_value_form.tpl');
 	}
 
 	public function hookProductListAssign($params)

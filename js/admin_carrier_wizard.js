@@ -31,6 +31,33 @@ $(document).ready(function() {
 	if (parseInt($('input[name="is_free"]:checked').val()))
 		is_freeClick($('input[name="is_free"]:checked'));
 	displayRangeType();
+
+	$('#attachement_fileselectbutton').click(function(e) {
+		$('#carrier_logo_input').trigger('click');
+	});
+
+	$('#attachement_filename').click(function(e) {
+		$('#carrier_logo_input').trigger('click');
+	});
+
+	$('#carrier_logo_input').change(function(e) {
+		if ($(this)[0].files !== undefined)
+		{
+			var files = $(this)[0].files;
+			var name  = '';
+
+			$.each(files, function(index, value) {
+				name += value.name+', ';
+			});
+
+			$('#attachement_filename').val(name.slice(0, -2));
+		}
+		else // Internet Explorer 9 Compatibility
+		{
+			var name = $(this).val().split(/[\\/]/);
+			$('#attachement_filename').val(name[name.length-1]);
+		}
+	});
 });
 
 function initCarrierWizard()
