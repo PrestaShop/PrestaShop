@@ -439,7 +439,7 @@ var ProductDisplay = (function()
 				$('#availability_value').text(ProductFn.doesntExistNoMore + (ProductFn.globalQuantity > 0 ? ' ' + ProductFn.doesntExistNoMoreBut : '')).addClass('warning_inline');
 			else
 			{
-				$('#availability_value').text(doesntExist).addClass('warning_inline');
+				$('#availability_value').text(ProductFn.doesntExist).addClass('warning_inline');
 				$('#oosHook').hide();
 			}
 			$('#availability_statut:hidden').show();
