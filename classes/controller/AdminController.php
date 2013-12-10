@@ -1726,7 +1726,7 @@ class AdminControllerCore extends Controller
 		if (!empty($country_module_list) && is_string($country_module_list) && $country_module_list_xml = simplexml_load_string($country_module_list))
 		{
 			$country_module_list_array = array();
-			if (is_array($country_module_list_xml->module))
+			if (is_object($country_module_list_xml->module))
 				foreach ($country_module_list_xml->module as $k => $m)
 					$country_module_list_array[] = (string)$m->name;
 			$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $country_module_list_array);
