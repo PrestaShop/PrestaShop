@@ -198,13 +198,13 @@ class Dashgoals extends Module
 				$streams['traffic'][$stream_zone]['values'][] = $stream_values[$stream_zone];
 
 			$month_goal = ConfigurationKPI::get('DASHGOALS_CONVERSION_'.$i.'_'.$year);
-			$value = 100 * ((isset($visits[$timestamp]) && $visits[$timestamp]) ? ($orders[$timestamp] / $visits[$timestamp]) : 0);
+			$value = 100 * ((isset($visits[$timestamp]) && $visits[$timestamp] && isset($orders[$timestamp]) && $orders[$timestamp]) ? ($orders[$timestamp] / $visits[$timestamp]) : 0);
 			$stream_values = $this->getValuesFromGoals($average_goals['conversion'], $month_goal, $value, Dashgoals::$month_labels[$i]);
 			foreach ($stream_zones as $stream_zone)
 				$streams['conversion'][$stream_zone]['values'][] = $stream_values[$stream_zone];
 
 			$month_goal = ConfigurationKPI::get('DASHGOALS_AVG_CART_VALUE_'.$i.'_'.$year);
-			$value = ((isset($orders[$timestamp]) && $orders[$timestamp]) ? ($sales[$timestamp] / $orders[$timestamp]) : 0);
+			$value = ((isset($orders[$timestamp]) && $orders[$timestamp] && isset($sales[$timestamp]) && $sales[$timestamp]) ? ($sales[$timestamp] / $orders[$timestamp]) : 0);
 			$stream_values = $this->getValuesFromGoals($average_goals['avg_cart_value'], $month_goal, $value, Dashgoals::$month_labels[$i]);
 			foreach ($stream_zones as $stream_zone)
 				$streams['avg_cart_value'][$stream_zone]['values'][] = $stream_values[$stream_zone];
