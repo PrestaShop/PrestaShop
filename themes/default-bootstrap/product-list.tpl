@@ -39,7 +39,7 @@
 	{math equation="nbLi/nbItemsPerLine" nbLi=$nbLi nbItemsPerLine=$nbItemsPerLine assign=nbLines}
 	{math equation="nbLi/nbItemsPerLineTablet" nbLi=$nbLi nbItemsPerLineTablet=$nbItemsPerLineTablet assign=nbLinesTablet}
 	<!-- Products list -->
-	<ul class="product_list grid row {if isset($class) && $class} {$class}{/if}">
+	<ul{if isset($id) && $id} id="{$id}" {/if} class="product_list grid row{if isset($class) && $class} {$class}{/if}">
 	{foreach from=$products item=product name=products}
 		{math equation="(total%perLine)" total=$smarty.foreach.products.total perLine=$nbItemsPerLine assign=totModulo}
 		{math equation="(total%perLineT)" total=$smarty.foreach.products.total perLineT=$nbItemsPerLineTablet assign=totModuloTablet}
@@ -206,14 +206,16 @@
 						{/if}
 					{/if}
 				</div>
-<!-- 				<div class="functional-buttons clearfix">
-					{hook h='displayProductListFunctionalButtons' product=$product}
-					{if isset($comparator_max_item) && $comparator_max_item}
-						<div class="compare">
-							<a class="addToCompare" href="#" data-id-product="{$product.id_product}" onClick="addToCompare('{$product.id_product|intval}'); return false;">{l s='Add to Compare'}</a>
-						</div>
-					{/if}
-				</div> -->
+				{if $page_name != 'index'}
+	 				<div class="functional-buttons clearfix">
+						{hook h='displayProductListFunctionalButtons' product=$product}
+						{if isset($comparator_max_item) && $comparator_max_item}
+							<div class="compare">
+								<a class="addToCompare" href="#" data-id-product="{$product.id_product}" onClick="addToCompare('{$product.id_product|intval}'); return false;">{l s='Add to Compare'}</a>
+							</div>
+						{/if}
+					</div>
+				{/if}
 			</div><!-- .product-container> -->
 		</li>
 	{/foreach}
