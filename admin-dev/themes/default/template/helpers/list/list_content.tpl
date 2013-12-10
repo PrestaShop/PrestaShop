@@ -114,7 +114,11 @@
 					{elseif isset($params.callback)}
 						{$tr.$key}
 					{elseif $key == 'color'}
+						{if !is_array($tr.$key)}
 						<div style="background-color: {$tr.$key};" class="attributes-color-container"></div>
+						{else} {*TEXTURE*}
+						<img src="{$tr.$key.texture}" alt="{$tr.name}" class="attributes-color-container" />
+						{/if}
 					{elseif isset($params.maxlength) && Tools::strlen($tr.$key) > $params.maxlength}
 						<span title="{$tr.$key|escape:'html':'UTF-8'}">{$tr.$key|truncate:$params.maxlength:'...'|escape:'html':'UTF-8'}</span>
 					{else}
