@@ -1,15 +1,18 @@
-{if !$opc}
-	<script type="text/javascript">
-		// <![CDATA[
-		var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';
-		var currencyRate = '{$currencyRate|floatval}';
-		var currencyFormat = '{$currencyFormat|intval}';
-		var currencyBlank = '{$currencyBlank|intval}';
-		var txtProduct = "{l s='product' js=1}";
-		var txtProducts = "{l s='products' js=1}";
-		// ]]>
-	</script>
-{/if}
+<script type="text/javascript">
+        // <![CDATA[
+        {if !$opc}
+                var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';
+                var currencyRate = '{$currencyRate|floatval}';
+                var currencyFormat = '{$currencyFormat|intval}';
+                var currencyBlank = '{$currencyBlank|intval}';
+                var txtProduct = "{l s='product' js=1}";
+                var txtProducts = "{l s='products' js=1}";
+        {/if}
+        $(function() {
+                $("p.payment_module > a").attr("data-ajax", "false");
+        });     
+        // ]]>
+</script>
 
 {if isset($empty)}
 <p class="warning">{l s='Your shopping cart is empty.'}</p>
