@@ -37,7 +37,7 @@
 {/if}
 	<form method="post" action="{$link->getPageLink('products-comparison')|escape:htmlall:'UTF-8'}" onsubmit="true" class="compare-form">
 		<div>
-        <button type="submit" id="bt_compare{if isset($paginationId)}_{$paginationId}{/if}" class="btn btn-default button button-medium bt_compare"><span>{l s='Compare'} (<strong class="total-compare-val">{count($compared_products)}</strong>)<i class="icon-chevron-right right"></i></span></button>
+        <button type="submit" class="btn btn-default button button-medium bt_compare{if isset($paginationId)}_{$paginationId}{/if}"><span>{l s='Compare'} (<strong class="total-compare-val">{count($compared_products)}</strong>)<i class="icon-chevron-right right"></i></span></button>
          <input type="hidden" name="compare_product_count" class="compare_product_count" value="{count($compared_products)}" />
 		<input type="hidden" name="compare_product_list" class="compare_product_list" value="" />
 		</div>

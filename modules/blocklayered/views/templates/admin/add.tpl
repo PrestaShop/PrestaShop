@@ -3,7 +3,6 @@
 	<legend><img src="{$uri}/img/cogs.gif" alt="{l s='Configuration' mod='blocklayered'}" /> {l s='New filters template' mod='blocklayered'}</legend>
 	<form action="{$current_url}" method="post" class="form-horizontal" onsubmit="return checkForm();">
 		<input type="hidden" name="id_layered_filter" id="id_layered_filter" value="{$id_layered_filter}" />
-		<input type="hidden" name="n_existing" id="n_existing" value="{$filters_templates|count}" />
 		<table class="table-configurations">
 			<tbody>
 				<tr>
