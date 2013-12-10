@@ -45,14 +45,12 @@
 		<link rel="icon" type="image/vnd.microsoft.icon" href="{$favicon_url}?{$img_update_time}" />
 		<link rel="shortcut icon" type="image/x-icon" href="{$favicon_url}?{$img_update_time}" />
 
-		<link rel="stylesheet" href="{$css_dir}highdpi.css" type="text/css" media="screen" />
-		<link rel="stylesheet" href="{$css_dir}bootstrap_lib/bootstrap.css" type="text/css" media="all" />
-		<link rel="stylesheet" href="{$css_dir}font-awesome.css" type="text/css" media="all" />
+		<!-- <link rel="stylesheet" href="{$css_dir}highdpi.css" type="text/css" media="screen" /> -->
+
 		<link rel="stylesheet" href="{$css_dir}jquery/uniform.default.css" type="text/css" media="all" />
 		<link rel="stylesheet" href="{$css_dir}jquery/footable.core.css" type="text/css" media="all" />
 		<link rel="stylesheet" href="{$css_dir}jquery/jquery.bxslider.css" type="text/css" media="all" />
 
-		<link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic'  type='text/css' />
 		{if isset($css_files)}
 			{foreach from=$css_files key=css_uri item=media}
 				<link rel="stylesheet" href="{$css_uri}" type="text/css" media="{$media}" />
@@ -98,17 +96,15 @@
 	<body{if isset($page_name)} id="{$page_name|escape:'html':'UTF-8'}"{/if} class="{if isset($page_name)}{$page_name|escape:'html':'UTF-8'}{/if}{if isset($body_classes) && $body_classes|@count} {implode value=$body_classes separator=' '}{/if}{if $hide_left_column} hide-left-column{/if}{if $hide_right_column} hide-right-column{/if}{if $content_only} content_only{/if} lang_{$lang_iso}">
 	{if !$content_only}
 		{if isset($restricted_country_mode) && $restricted_country_mode}
-		<div id="restricted-country">
-			<p>{l s='You cannot place a new order from your country.'} <span class="bold">{$geolocation_country}</span></p>
-		</div>
+			<div id="restricted-country">
+				<p>{l s='You cannot place a new order from your country.'} <span class="bold">{$geolocation_country}</span></p>
+			</div>
 		{/if}
 		<div id="page">
-			<!-- Header -->
 			<div class="header-container">
 				<header id="header">
 					<div class="header-row">
 						<nav class="container clearfix">
-							 
 							<div id="header_user_info">
 								{if $logged}
 									<a class="logout" href="{$link->getPageLink('index', true, NULL, "mylogout")|escape:'html'}" rel="nofollow" title="{l s='Log me out'}">{l s='Sign out'}</a>
@@ -182,13 +178,13 @@
 							{/if}
 							<div id="contact-link">
 								<a href="{$link->getPageLink('contact', true)|escape:'html'}" title="{l s='contact'}">{l s='Contact Us'}</a>
-							</div> <!-- #contact-link -->
+							</div>
 						   {if $shop_phone}
 								<span class="shop-phone">
 									<i class="icon-phone"></i>{l s='Call us now toll free:'} <strong>{$shop_phone}</strong>
 								</span>
 							{/if}
-						</nav><!-- .container-row -->
+						</nav>
 					</div> <!-- .header-row -->
 					<div class="container header-row-2">
 						<a id="header_logo" href="{$base_dir}" title="{$shop_name|escape:'html':'UTF-8'}">
@@ -198,7 +194,7 @@
 							{$HOOK_TOP}
 						</div>
 					</div> <!-- .header-row-2 -->
-				</header> <!-- #header -->
+				</header>
 			</div> <!-- .header-container -->
 			<div class="columns-container">
 				<div id="columns" class="container">
