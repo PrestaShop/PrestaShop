@@ -62,7 +62,7 @@
     <div class="content_sortPagiBar">
     	<div class="bottom-pagination-content clearfix">
         	{include file="./product-compare.tpl"}
-        	{if !isset($instant_search) || (isset($instant_search) && !$instant_search)}{include file="$tpl_dir./pagination.tpl"}{/if}
+        	{if !isset($instant_search) || (isset($instant_search) && !$instant_search)}{include file="$tpl_dir./pagination.tpl" paginationId='bottom'}{/if}
         </div>
     </div>
 {/if}
