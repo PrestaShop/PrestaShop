@@ -103,6 +103,7 @@ class AdminThemesControllerCore extends AdminController
 	public function init()
 	{
 
+		define('MAX_NAME_LENGTH', 128);
 		// No cache for auto-refresh uploaded logo
 		header('Cache-Control: no-cache, must-revalidate');
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
@@ -411,8 +412,383 @@ class AdminThemesControllerCore extends AdminController
 				'desc' => $this->l('import new theme'),
 				'icon' => 'process-icon-new'
 			);
+			$this->page_header_toolbar_btn['export_theme'] = array(
+				'href' => self::$currentIndex . '&amp;action=exporttheme&amp;token=' . $this->token,
+				'desc' => $this->l('export theme'),
+				'icon' => 'process-icon-new'
+			);
 		}
 		parent::initPageHeaderToolbar();
+	}
+
+	private function checkParentClass($name)
+	{
+		if (!$obj = Module::getInstanceByName($name))
+			return false;
+		if (is_callable(array($obj, 'validateOrder')))
+			return false;
+		if (is_callable(array($obj, 'getDateBetween')))
+			return false;
+		if (is_callable(array($obj, 'getGridEngines')))
+			return false;
+		if (is_callable(array($obj, 'getGraphEngines')))
+			return false;
+		if (is_callable(array($obj, 'hookAdminStatsModules')))
+			return false;
+		else
+			return true;
+		return false;
+	}
+
+	private function checkNames()
+	{
+		$author = Tools::getValue('name');
+		$themeName = Tools::getValue('theme_name');
+		$count = 0;
+
+		if (!$author || !Validate::isGenericName($author) || strlen($author) > MAX_NAME_LENGTH)
+			$this->errors[] = $this->l('Please enter a valid author name');
+		elseif (!$themeName || !Validate::isGenericName($themeName) || strlen($themeName) > MAX_NAME_LENGTH)
+			$this->errors[] = $this->l('Please enter a valid theme name');
+
+		/*
+		while ($this->error === false && Tools::isSubmit('myvar_'.++$count))
+		{
+			if ((int)Tools::getValue('myvar_'.$count) == -1)
+				continue;
+			$name = Tools::getValue('themevariationname_'.$count);
+			if (!$name || !Validate::isGenericName($name) || strlen($name) > MAX_NAME_LENGTH)
+				$this->_html .= parent::displayError($this->l('Please enter a valid theme variation name'));
+		}*/
+		if (count($this->errors) > 0)
+			return false;
+		return true;
+	}
+
+	private function checkDocumentation()
+	{
+		$extensions = array('.pdf', '.txt');
+
+		if (isset($_FILES['documentation']))
+		{
+			$extension = strrchr($_FILES['documentation']['name'], '.');
+			$name = Tools::getValue('documentationName');
+
+			if (!in_array($extension, $extensions))
+				$this->errors[] = $this->l('File extension must be .txt or .pdf');
+			elseif ($_FILES['documentation']['error'] > 0 || $_FILES['documentation']['size'] > 1048576)
+				$this->errors[] = $this->l('An error occurred during documentation upload');
+			elseif (!$name || !Validate::isGenericName($name) || strlen($name) > MAX_NAME_LENGTH)
+				$this->errors[] = $this->l('Please enter a valid documentation name');
+		}
+
+		if (count($this->errors) > 0)
+			return false;
+		return true;
+	}
+
+	private function checkVersionsAndCompatibility()
+	{
+		$count = 0;
+		$exp = '#^[0-9]+[.]+[0-9.]*[0-9]$#';
+
+		if (!preg_match('#^[0-9][.][0-9]$#', Tools::getValue('theme_version')) ||
+			!preg_match($exp, Tools::getValue('compa_from')) || !preg_match($exp, Tools::getValue('compa_to')) ||
+			version_compare(Tools::getValue('compa_from'), Tools::getValue('compa_to')) == 1)
+			$this->errors[] = $this->l('Syntax error on version field. Only digits and points are allowed and the compatibility should be increasing or equal.');
+
+		/*
+		while ($this->error === false && Tools::isSubmit('myvar_'.++$count))
+		{
+			if ((int)Tools::getValue('myvar_'.$count) == -1)
+				continue;
+			$from = Tools::getValue('compafrom_'.$count);
+			$to = Tools::getValue('compato_'.$count);
+			if (!preg_match($exp, $from) || !preg_match($exp, $to) || version_compare($from, $to) == 1)
+				$this->errors[] = $this->l('Syntax error on version. Only digits and points are allowed and compatibility should be increasing or equal.');
+		}
+		if ($this->errors[] == true)
+			return false;
+
+		*/
+		if (count($this->errors) > 0)
+			return false;
+		return true;
+	}
+
+	private function checkPostedDatas()
+	{
+		$mail = Tools::getValue('email');
+		$website = Tools::getValue('website');
+
+		if ($mail && !preg_match('#^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}$#', $mail))
+			$this->errors[] = $this->l('There is an error in your e-mail syntax!');
+		elseif ($website && (!Validate::isURL($website) || !Validate::isAbsoluteUrl($website)))
+			$this->errors[] = $this->l('There is an error in your URL syntax!');
+		elseif (!$this->checkVersionsAndCompatibility() || !$this->checkNames() || !$this->checkDocumentation())
+			return false;
+		else
+			return true;
+		return false;
+	}
+
+	public function processExportTheme()
+	{
+		if (Tools::isSubmit('name'))
+		{
+//			var_dump($_POST);
+//			die();
+			if ($this->checkPostedDatas())
+			{
+				$filename = Tools::htmlentitiesUTF8($_FILES['documentation']['name']);
+				$name = Tools::htmlentitiesUTF8(Tools::getValue('documentationName'));
+				$user_doc = $name.'¤doc/'.$filename;
+
+				var_dump($_POST);
+			}
+			else
+				$this->display='exporttheme';
+			var_dump($this->errors);
+			die();
+		}
+		else
+			$this->display='exporttheme';
+	}
+
+	private function renderExportTheme1()
+	{
+		$module_list = Db::getInstance()->executeS('
+				SELECT m.`id_module`, m.`name`, m.`active`, ms.`id_shop`
+				FROM `' . _DB_PREFIX_ . 'module` m
+				LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms On (m.`id_module` = ms.`id_module`)
+				WHERE ms.`id_shop` = ' . (int)$this->context->shop->id . '
+			');
+
+		// Select the list of hook for this shop
+		$hook_list = Db::getInstance()->executeS('
+				SELECT h.`id_hook`, h.`name` as name_hook, hm.`position`, hm.`id_module`, m.`name` as name_module, GROUP_CONCAT(hme.`file_name`, ",") as exceptions
+				FROM `' . _DB_PREFIX_ . 'hook` h
+				LEFT JOIN `' . _DB_PREFIX_ . 'hook_module` hm ON hm.`id_hook` = h.`id_hook`
+				LEFT JOIN `' . _DB_PREFIX_ . 'module` m ON hm.`id_module` = m.`id_module`
+				LEFT OUTER JOIN `' . _DB_PREFIX_ . 'hook_module_exceptions` hme ON (hme.`id_module` = hm.`id_module` AND hme.`id_hook` = h.`id_hook`)
+				WHERE hm.`id_shop` = ' . (int)$this->context->shop->id . '
+				GROUP BY `id_module`, `id_hook`
+				ORDER BY `name_module`
+			');
+
+		foreach ($hook_list as &$row)
+			$row['exceptions'] = trim(preg_replace('/(,,+)/', ',', $row['exceptions']), ',');
+
+		$native_modules = $this->getNativeModule();
+
+		foreach ($module_list as $array)
+		{
+			if (!self::checkParentClass($array['name']))
+				continue;
+			if (in_array($array['name'], $native_modules))
+			{
+				if ($array['active'] == 1)
+					$to_enable[] = $array['name'];
+				else
+					$to_disable[] = $array['name'];
+			} elseif ($array['active'] == 1)
+				$to_install[] = $array['name'];
+		}
+		foreach ($native_modules as $str)
+		{
+			$flag = 0;
+			if (!$this->checkParentClass($str))
+				continue;
+			foreach ($module_list as $tmp)
+				if (in_array($str, $tmp))
+				{
+					$flag = 1;
+					break;
+				}
+			if ($flag == 0)
+				$to_disable[] = $str;
+		}
+
+		$employee = $this->context->employee;
+		$mail     = Tools::getValue('email') ? Tools::htmlentitiesUTF8(Tools::getValue('email')) : Tools::htmlentitiesUTF8($employee->email);
+		$author   = Tools::getValue('author_name') ? Tools::htmlentitiesUTF8(Tools::getValue('author_name')) : Tools::htmlentitiesUTF8(($employee->firstname) . ' ' . $employee->lastname);
+		$website  = Tools::getValue('website') ? Tools::htmlentitiesUTF8(Tools::getValue('website')) : Tools::getHttpHost(true);
+
+		$this->formatHelperArray($to_install);
+
+		$theme = New Theme(Tools::getValue('id_theme_export'));
+
+		$fields_form = array(
+			'form' => array(
+				'tinymce' => false,
+				'legend'  => array(
+					'title' => $this->l('Theme'),
+					'icon'  => 'icon-picture'
+				),
+				'input' => array(
+					array(
+						'type'  => 'text',
+						'name'  => 'name',
+						'label' => $this->l('Name'),
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'email',
+						'label' => $this->l('Email'),
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'website',
+						'label' => $this->l('Website'),
+					),
+					array(
+						'type'   => 'checkbox',
+						'label'  => $this->l('Select the theme\'s modules you wish to export:'),
+						'values' => array(
+							'query' => $this->formatHelperArray($to_install),
+							'id'    => 'id',
+							'name'  => 'name'
+						),
+						'name'   => 'modulesToExport',
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'theme_name',
+						'label' => $this->l('Theme name'),
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'theme_directory',
+						'label' => $this->l('Theme directory'),
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'body_title',
+
+						'lang'  => true,
+						'label' => $this->l('Description'),
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'theme_version',
+						'label' => $this->l('Theme version'),
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'compa_from',
+						'label' => $this->l('Compatible from'),
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'compa_to',
+						'label' => $this->l('Compatible to'),
+					),
+					array(
+						'type'  => 'file',
+						'name'  => 'documentation',
+						'label' => $this->l('Documentation'),
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'documentationName',
+						'label' => $this->l('Documentation name'),
+					),
+				),
+				'submit'  => array(
+					'title' => $this->l('Save'),
+					'class' => 'button'
+				))
+		);
+
+		$default_language = (int)$this->context->language->id;
+		$languages = Language::getLanguages();
+
+		foreach($languages as $language)
+			$fields_value['body_title'][$language['id_lang']] = '';
+
+		$helper = new HelperForm();
+		$helper->languages = $languages;
+		$helper->default_form_language = $default_language;
+		$fields_value['name'] = $author;
+		$fields_value['email'] = $mail;
+		$fields_value['website'] = $website;
+		$fields_value['theme_name'] = $theme->name;
+		$fields_value['theme_directory'] = $theme->directory;
+		$fields_value['theme_version'] = '1.0';
+		$fields_value['compa_from'] = _PS_VERSION_;
+		$fields_value['compa_to'] = _PS_VERSION_;
+		$fields_value['documentationName'] = $this->l('documentation');
+
+		$toolbar_btn['save'] = array(
+			'href' => $this->context->link->getAdminLink('AdminThemes', false).'&action=exporttheme',
+			'desc' => $this->l('Save')
+		);
+
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminThemes', false).'&action=exporttheme';
+		$helper->token = Tools::getAdminTokenLite('AdminThemes');
+		$helper->show_toolbar = true;
+		$helper->fields_value = $fields_value;
+		$helper->toolbar_btn = $toolbar_btn;
+
+
+		$helper->override_folder = $this->tpl_folder;
+
+		return $helper->generateForm(array($fields_form));
+	}
+
+	public function renderExportTheme()
+	{
+		if (Tools::getIsset('id_theme_export') && (int)Tools::getValue('id_theme_export') > 0)
+		{
+			return $this->renderExportTheme1();
+//		var_dump($_POST);
+//			return;
+		}
+		$theme_list = Theme::getThemes();
+
+		$toolbar_btn['save'] = array(
+			'href' => $this->context->link->getAdminLink('AdminThemes', false).'&action=exporttheme',
+			'desc' => $this->l('Save')
+		);
+
+		$fields_form = array(
+			'form' => array(
+				'tinymce' => false,
+				'legend'  => array(
+					'title' => $this->l('Theme'),
+					'icon'  => 'icon-picture'
+				),
+				'input' => array(
+					array(
+						'type' => 'select',
+						'name' => 'id_theme_export',
+						'label' => $this->l('Copy missing files from existing theme:'),
+						'hint' => $this->l('If you create a new theme, it\'s recommended that you use default theme files.'),
+						'options' => array(
+							'id' => 'id', 'name' => 'name',
+							'query' => $theme_list,
+						)
+
+					),
+				),
+				'submit'  => array(
+					'title' => $this->l('Save'),
+					'class' => 'button'
+				))
+		);
+
+		$fields_value['id_theme_export'] = array();
+		$helper = new HelperForm();
+
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminThemes', false).'&action=exporttheme';
+		$helper->token = Tools::getAdminTokenLite('AdminThemes');
+		$helper->show_toolbar = true;
+		$helper->fields_value = $fields_value;
+		$helper->toolbar_btn = $toolbar_btn;
+
+		$helper->override_folder = $this->tpl_folder;
+
+		return $helper->generateForm(array($fields_form));
 	}
 
 	private function checkXmlFields($sandbox)
@@ -514,20 +890,23 @@ class AdminThemesControllerCore extends AdminController
 							if ($theme_object->name == $name)
 								$this->errors[] = $this->l('Theme already installed.');
 
-						if (!copy($sandbox.'uploaded/Config.xml', _PS_ROOT_DIR_.'/config/xml/'.$theme_directory.'.xml'))
-							$this->errors[] = $this->l('Can\'t copy configuration file');
+						if (count($this->errors) > 0)
+						{
+							if (!copy($sandbox . 'uploaded/Config.xml', _PS_ROOT_DIR_ . '/config/xml/' . $theme_directory . '.xml'))
+								$this->errors[] = $this->l('Can\'t copy configuration file');
 
-						$new_theme = new Theme();
-						$new_theme->name = $name;
+							$new_theme       = new Theme();
+							$new_theme->name = $name;
 
-						$new_theme->directory = $theme_directory;
+							$new_theme->directory = $theme_directory;
 
-						$new_theme->add();
+							$new_theme->add();
 
-						$target_dir = _PS_ALL_THEMES_DIR_.$theme_directory;
+							$target_dir = _PS_ALL_THEMES_DIR_ . $theme_directory;
 
-						$this->recurseCopy($sandbox.'uploaded/themes/'.$theme_directory, $target_dir);
-						$this->recurseCopy($sandbox.'uploaded/modules/', _PS_MODULE_DIR_);
+							$this->recurseCopy($sandbox . 'uploaded/themes/' . $theme_directory, $target_dir);
+							$this->recurseCopy($sandbox . 'uploaded/modules/', _PS_MODULE_DIR_);
+						}
 					}
 				}
 
