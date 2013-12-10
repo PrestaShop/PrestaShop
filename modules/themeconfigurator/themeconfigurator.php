@@ -203,7 +203,12 @@ class ThemeConfigurator extends Module
             }
         }
 
-        public function hookdisplayTopColumn()
+        public function hookdisplayTopColumn($params)
+        {
+ 			return $this->hookdisplayTop($params);
+        }
+
+        public function hookdisplayTop($params)
         {
         	if ((int)Tools::getValue('live_configurator', 0) == 1)
 			{
