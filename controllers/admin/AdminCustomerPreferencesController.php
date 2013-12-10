@@ -97,6 +97,13 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
+					'PS_VALIDATE_SIRET' => array(
+						'title' => $this->l('Validate siret and ape'),
+						'hint' => $this->l('Only available if B2B. Enable or disable validation check on siret and ape'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
 				),
 				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),
 			),
