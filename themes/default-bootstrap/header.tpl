@@ -89,7 +89,7 @@
 		<script src="{$js_dir}jquery/jquery.bxslider.js"></script>
 		<script src="{$js_dir}jquery/footable.js"></script>
 		<script src="{$js_dir}jquery/footable.sort.js"></script>
-		<script src="{$js_dir}jquery/resonsive_utilites.js"></script>
+		<script src="{$js_dir}jquery/responsive_utilites.js"></script>
 		{$HOOK_HEADER}
 	</head>
 	<body{if isset($page_name)} id="{$page_name|escape:'html':'UTF-8'}"{/if} class="{if isset($page_name)}{$page_name|escape:'html':'UTF-8'}{/if}{if isset($body_classes) && $body_classes|@count} {implode value=$body_classes separator=' '}{/if}{if $hide_left_column} hide-left-column{/if}{if $hide_right_column} hide-right-column{/if}{if $content_only} content_only{/if} lang_{$lang_iso}">
