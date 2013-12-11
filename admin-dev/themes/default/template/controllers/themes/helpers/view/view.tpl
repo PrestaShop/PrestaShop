@@ -2,6 +2,13 @@
     {l s='The theme %1s has been successfully installed.' sprintf=$themeName}
 </div>
 
+{if $doc|count > 0}
+    <ul>
+        {foreach $doc as $key => $item}
+        <li><i><a target="_blank" href="{$item}">{$key}</a></i>
+        {/foreach}
+    </ul>
+{/if}
 {if isset($imgError['error'])}
     <div class="alert alert-warning">
         {l s='Warning: Copy/Paste your errors if you want to manually set the image type (in the "Images" page under the "Preferences" menu):'}
@@ -31,4 +38,6 @@
     </div>
 {/if}
 
-<a href="{$back_link}"><button class="btn btn-default">{l s='Finish'}</button></a>
+<a href="{$back_link}">
+    <button class="btn btn-default">{l s='Finish'}</button>
+</a>

@@ -1107,12 +1107,15 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$this->display = "importtheme";
 
-		if (isset($_FILES['themearchive']))
+		if (isset($_FILES['themearchive']) && isset($_POST['filename']))
 		{
 			$uniqid = uniqid();
 			$sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
 			mkdir($sandbox);
 			$archive_uploaded = false;
+
+			if (Tools::getValue('filename') != '')
+			{
 			if ($_FILES['themearchive']['error'] || !file_exists($_FILES['themearchive']['tmp_name']))
 				$this->errors[] = sprintf($this->l('An error has occurred during the file upload (%s)'), $_FILES['themearchive']['error']);
 			elseif (substr($_FILES['themearchive']['name'], -4) != '.zip')
@@ -1124,6 +1127,20 @@ class AdminThemesControllerCore extends AdminController
 			else
 				$this->errors[] = $this->l('Zip file seems to be broken');
 
+			}
+			elseif(Tools::getValue('themearchiveUrl') != '')
+			{
+				if (!Validate::isModuleUrl($url = Tools::getValue('themearchiveUrl'), $this->errors)) // $tmp is not used, because we don't care about the error output of isModuleUrl
+					$this->errors[] = $this->l('Only zip files are allowed');
+				elseif (!move_uploaded_file($url, $sandbox.'uploaded.zip'))
+					$this->errors[] = $this->l('Error during the file download');
+				elseif (Tools::ZipTest($sandbox.'uploaded.zip'))
+					$archive_uploaded = true;
+				else
+					$this->errors[] = $this->l('Zip file seems to be broken');
+			}
+			else
+				$this->errors[] = $this->l('You must upload or enter a location of your zip');
 			if ($archive_uploaded)
 			{
 
@@ -1165,19 +1182,24 @@ class AdminThemesControllerCore extends AdminController
 
 							$target_dir = _PS_ALL_THEMES_DIR_ . $theme_directory;
 
+							$themeDocDir = $target_dir.'/docs/';
+							if (file_exists($themeDocDir))
+								Tools::deleteDirectory($themeDocDir, true);
+
 							$this->recurseCopy($sandbox . 'uploaded/themes/' . $theme_directory, $target_dir);
+							$this->recurseCopy($sandbox . 'uploaded/doc/', $themeDocDir);
 							$this->recurseCopy($sandbox . 'uploaded/modules/', _PS_MODULE_DIR_);
 						}
 					}
 				}
 
 			}
-			$this->deleteDirectory($sandbox);
+			Tools::deleteDirectory($sandbox, true);
 			if (count($this->errors)>0)
 				$this->display = 'importtheme';
 			else
 			{
-				Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes'));
+				Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=18');
 			}
 		}
 	}
@@ -1200,9 +1222,12 @@ class AdminThemesControllerCore extends AdminController
 					array(
 						'type'     => 'file',
 						'label'    => $this->l('Zip of the theme:'),
-						'name'     => 'themearchive',
-						'required' => true,
-						'hint'     => $this->l('Invalid characters:') . ' <>;=#{}',
+						'name'     => 'themearchive'
+					),
+					array(
+						'type'     => 'text',
+						'label'    => $this->l('Archive URL:'),
+						'name'     => 'themearchiveUrl'
 					),
 				),
 				'submit'  => array(
@@ -1217,6 +1242,7 @@ class AdminThemesControllerCore extends AdminController
 		$helper->token = Tools::getAdminTokenLite('AdminThemes');
 		$helper->show_toolbar = true;
 		$helper->toolbar_btn = $toolbar_btn;
+		$helper->fields_value['themearchiveUrl']='';
 
 		$helper->override_folder = $this->tpl_folder;
 
@@ -1729,7 +1755,7 @@ class AdminThemesControllerCore extends AdminController
 					{
 						if (file_exists(_PS_MODULE_DIR_ . $value))
 						{
-							if (!class_exists($value))
+							if (!class_exists($value) && file_exists(_PS_MODULE_DIR_ . $value . '/' . $value . '.php'))
 								require(_PS_MODULE_DIR_ . $value . '/' . $value . '.php');
 
 							if (class_exists($value))
@@ -1750,7 +1776,7 @@ class AdminThemesControllerCore extends AdminController
 					{
 						if (file_exists(_PS_MODULE_DIR_ . $value))
 						{
-							if (!class_exists($value))
+							if (!class_exists($value) && file_exists(_PS_MODULE_DIR_ . $value . '/' . $value . '.php'))
 								require(_PS_MODULE_DIR_ . $value . '/' . $value . '.php');
 
 							if (class_exists($value))
@@ -1797,6 +1823,13 @@ class AdminThemesControllerCore extends AdminController
 				$shop->id_theme = (int)Tools::getValue('id_theme');
 				$shop->save();
 			}
+
+			$this->doc = array();
+
+			foreach ($xml->docs->doc as $row)
+			{
+				$this->doc[strval($row['name'])] = '../themes/'.$theme->directory.'/docs/'.basename(strval($row['path']));
+			}
 		}
 
 		Tools::clearCache($this->context->smarty);
@@ -1809,6 +1842,7 @@ class AdminThemesControllerCore extends AdminController
 	public function renderView()
 	{
 		$this->tpl_view_vars = array(
+			'doc' => $this->doc,
 			'themeName' => $this->themeName,
 			'imgError' => $this->imgError,
 			'back_link' => Context::getContext()->link->getAdminLink('AdminThemes')
