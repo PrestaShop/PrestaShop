@@ -24,6 +24,10 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
+{block name="script"}
+	var ps_force_friendly_product = false;
+{/block}
+
 {block name="input"}
 	{if $input.name == "link_rewrite"}
 		<script type="text/javascript">
