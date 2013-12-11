@@ -80,7 +80,17 @@
 		});
 	{/if}
 	$(document).ready(function () {
-		$("#{$id}").tree("collapseAll");
+		var tree = $("#{$id}").tree("collapseAll");
+
+		tree.on('collapse', function() {
+			$('#expand-all-{$id}').show();
+		});
+
+		tree.on('expand', function() {
+			$('#collapse-all-{$id}').show();
+		});
+
+		$('#collapse-all-{$id}').hide();
 		$("#{$id}").find(":input[type=radio]").click(
 			function()
 			{

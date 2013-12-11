@@ -3,36 +3,39 @@
 	<div class="input-group col-lg-2">
 		<span class="switch prestashop-switch">
 			<input type="radio" name="free_shipping" id="free_shipping_on" value="1" {if $currentTab->getFieldValue($currentObject, 'free_shipping')|intval}checked="checked"{/if} />
-			<label class="t radio" for="free_shipping_on">
+			<label class="t" for="free_shipping_on">
 				<i class="icon-check-sign color_success"></i> {l s='Yes'}
 			</label>
 			<input type="radio" name="free_shipping" id="free_shipping_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'free_shipping')|intval}checked="checked"{/if} />
-			<label class="t radio" for="free_shipping_off">
+			<label class="t" for="free_shipping_off">
 				<i class="icon-ban-circle color_danger"></i> {l s='No'}
 			</label>
-			<span class="slide-button btn btn-default"></span>
+			<a class="slide-button btn btn-default"></a>
 		</span>
 	</div>
 </div>
 
 <div class="form-group">
 	<label class="control-label col-lg-3">{l s='Apply a discount'}</label>
-	<div class="input-group col-lg-8">
-		<span class="switch prestashop-switch switch-three">
-			<input type="radio" name="apply_discount" id="apply_discount_percent" value="percent" {if $currentTab->getFieldValue($currentObject, 'reduction_percent')|floatval > 0}checked="checked"{/if} />
-			<label class="t radio" for="apply_discount_percent">
-				 <i class="icon-check-sign color_success"></i> {l s='Percent (%)'}
+	<div class="col-lg-9">
+		<div class="radio">
+			<label for="apply_discount_percent">
+				<input type="radio" name="apply_discount" id="apply_discount_percent" value="percent" {if $currentTab->getFieldValue($currentObject, 'reduction_percent')|floatval > 0}checked="checked"{/if} />
+				{l s='Percent (%)'}
 			</label>
-			<input type="radio" name="apply_discount" id="apply_discount_amount" value="amount" {if $currentTab->getFieldValue($currentObject, 'reduction_amount')|floatval > 0}checked="checked"{/if} />
-			<label class="t radio" for="apply_discount_amount">
-				 <i class="icon-check-sign color_success"></i> {l s='Amount'}
+		</div>
+		<div class="radio">
+			<label for="apply_discount_amount">
+				<input type="radio" name="apply_discount" id="apply_discount_amount" value="amount" {if $currentTab->getFieldValue($currentObject, 'reduction_amount')|floatval > 0}checked="checked"{/if} />
+				{l s='Amount'}
 			</label>
-			<input type="radio" name="apply_discount" id="apply_discount_off" value="off" {if !$currentTab->getFieldValue($currentObject, 'reduction_amount')|floatval > 0 && !$currentTab->getFieldValue($currentObject, 'reduction_percent')|floatval > 0}checked="checked"{/if} />
-			<label class="t radio" for="apply_discount_off">
-				 <i class="icon-ban-circle color_danger"></i> {l s='None'}
+		</div>
+		<div class="radio">
+			<label for="apply_discount_off">
+				<input type="radio" name="apply_discount" id="apply_discount_off" value="off" {if !$currentTab->getFieldValue($currentObject, 'reduction_amount')|floatval > 0 && !$currentTab->getFieldValue($currentObject, 'reduction_percent')|floatval > 0}checked="checked"{/if} />
+				<i class="icon-ban-circle color_danger"></i> {l s='None'}
 			</label>
-			<span class="slide-button btn btn-default"></span>
-		</span>
+		</div>
 	</div>
 </div>
 
@@ -102,7 +105,7 @@
 <div id="apply_discount_to_product_div" class="form-group">
 	<label class="control-label col-lg-3">{l s='Product'}</label>
 	<div class="input-group col-lg-5">
-		<input type="text" id="reductionProductFilter" name="reductionProductFilter" value="{$reductionProductFilter|escape:'htmlall':'UTF-8'}" />
+		<input type="text" id="reductionProductFilter" name="reductionProductFilter" value="{$reductionProductFilter|escape:'html':'UTF-8'}" />
 		<input type="hidden" id="reduction_product" name="reduction_product" value="{$currentTab->getFieldValue($currentObject, 'reduction_product')|intval}" />
 		<span class="input-group-addon"><i class="icon-search"></i></span>
 	</div>
@@ -113,14 +116,14 @@
 	<div class="input-group col-lg-2">
 		<span class="switch prestashop-switch">
 			<input type="radio" name="free_gift" id="free_gift_on" value="1" {if $currentTab->getFieldValue($currentObject, 'gift_product')|intval}checked="checked"{/if} />
-			<label class="t radio" for="free_gift_on">
+			<label class="t" for="free_gift_on">
 				<i class="icon-check-sign color_success"></i> {l s='Yes'}
 			</label>
 			<input type="radio" name="free_gift" id="free_gift_off" value="0" {if !$currentTab->getFieldValue($currentObject, 'gift_product')|intval}checked="checked"{/if} />
-			<label class="t radio" for="free_gift_off">
+			<label class="t" for="free_gift_off">
 				<i class="icon-ban-circle color_danger"></i> {l s='No'}
 			</label>
-			<span class="slide-button btn btn-default"></span>
+			<a class="slide-button btn btn-default"></a>
 		</span>
 	</div>
 </div>

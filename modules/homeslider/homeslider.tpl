@@ -23,34 +23,37 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
+{if $page_name =='index'}
 <!-- Module HomeSlider -->
+{if isset($homeslider_slides)}
+<div id="homepage-slider">
+    <ul id="homeslider">
+    {foreach from=$homeslider_slides item=slide}
+        {if $slide.active}
+            <li>
+                <a href="{$slide.url|escape:'html':'UTF-8'}" title="{$slide.description|escape:'html':'UTF-8'}">
+                <img src="{$smarty.const._MODULE_DIR_}homeslider/images/{$slide.image|escape:'html':'UTF-8'}" alt="{$slide.legend|escape:'html':'UTF-8'}"  />
+                </a>
+            </li>
+        {/if}
+    {/foreach}
+    </ul>
+</div>
 {if isset($homeslider)}
 <script type="text/javascript">
-{if isset($homeslider_slides) && $homeslider_slides|@count > 1}
-	{if $homeslider.loop == 1}
-		var homeslider_loop = true;
-	{else}
-		var homeslider_loop = false;
-	{/if}
+{if $homeslider_slides|@count > 1}
+{if $homeslider.loop == 1}
+	var homeslider_loop = true;
 {else}
 	var homeslider_loop = false;
 {/if}
-var homeslider_speed = {$homeslider.speed};
-var homeslider_pause = {$homeslider.pause};
+{else}
+	var homeslider_loop = false;
+{/if}
+	var homeslider_speed = {$homeslider.speed};
+	var homeslider_pause = {$homeslider.pause};
 </script>
 {/if}
-{if isset($homeslider_slides)}
-<ul id="homeslider">
-{foreach from=$homeslider_slides item=slide}
-	{if $slide.active}
-		<li>
-			<a href="{$slide.url|escape:'htmlall':'UTF-8'}" title="{$slide.description|escape:'htmlall':'UTF-8'}">
-			<img src="{$smarty.const._MODULE_DIR_}homeslider/images/{$slide.image|escape:'htmlall':'UTF-8'}" alt="{$slide.legend|escape:'htmlall':'UTF-8'}" height="{$homeslider.height|intval}" width="{$homeslider.width|intval}" />
-			</a>
-		</li>
-	{/if}
-{/foreach}
-</ul>
 {/if}
 <!-- /Module HomeSlider -->
+{/if}

@@ -70,11 +70,13 @@
 							{/if}
 						</th>
 					{/if}
-					{if $has_actions}
+					{if $has_actions && $filters_has_value}
 						<th class="actions text-right"><button type="submit" name="submitReset{$list_id}" class="btn btn-warning">
 								<i class="icon-eraser"></i> {l s='Reset'}
 							</button>
 						</th>
+					{else}
+						<th class="actions text-right"></th>
 					{/if}
 				</tr>
 				</thead>

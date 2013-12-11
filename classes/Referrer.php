@@ -252,6 +252,7 @@ class ReferrerCore extends ObjectModel
 	 *
 	 * @param array $referrers
 	 * @param int $employee
+	 * @return true
 	 */
 	public static function refreshCache($referrers = null, $employee = null)
 	{
@@ -265,7 +266,6 @@ class ReferrerCore extends ObjectModel
 				if (!$referrer->isAssociatedToShop($shop_id))
 					continue;
 
-				$shop = new Shop($shop_id);
 				$stats_visits = $referrer->getStatsVisits(null, $employee);
 				$registrations = $referrer->getRegistrations(null, $employee);
 				$stats_sales = $referrer->getStatsSales(null, $employee);

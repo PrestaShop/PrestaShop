@@ -71,7 +71,6 @@
 			{/foreach}
 			</div>
 		</div>
-
 		<script type="text/javascript">
 			var token = '{$token}';
 			var id_product = {if isset($product->id)}{$product->id}{else}0{/if};
@@ -104,8 +103,6 @@
 			$(document).ready(function()
 			{
 				hideOtherLanguage(default_language);
-				
-				$('#product-tab-content-wait').show();
 
 				if (product_type == product_type_pack)
 				{
@@ -127,10 +124,8 @@
 				{* submenu binding *}
 				$(".productTabs a").click(function(e){
 					e.preventDefault();
-
 					// currentId is the current product tab id
 					currentId = $(".productTabs a.active").attr('id').substr(5);
-					//console.log(currentId);
 					// id is the wanted producttab id
 					id = $(this).attr('id').substr(5);
 
@@ -172,7 +167,8 @@
 					{
 						$('#desc-product-newCombination').hide();
 						// if pack is enabled, save button are visible only if pack is valid
-						handleSaveButtons();
+						if ($("input[name='id_product']").val() != 0 || btn_name != 'Informations')
+							handleSaveButtons();
 					}
 					hideOtherLanguage(default_language);
 					$('.label-tooltip').tooltip();
@@ -185,12 +181,19 @@
 					disableSave();
 
 				tabs_manager.onLoad('Associations', function(){
-					handleSaveButtons();
+					if ($("input[name='id_product']").val() != 0)
+						handleSaveButtons();
 				});
 
 				$('.confirm_leave').live('click', function(){
 					// Double quotes are necessary when the translated string has single quotes
 					return confirm("{l s='You will lose all unsaved modifications. Are you sure that you\'d like to proceed?' js=1}");
+				});
+
+				$('#toolbar-footer').appendTo($('#product-tab-content-Informations').children('.product-tab'));
+
+				$('.product-tab-content').on('displayed', function(e) {
+					$('#toolbar-footer').appendTo($(this).children('.product-tab'));
 				});
 
 			});

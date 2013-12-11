@@ -76,7 +76,7 @@ function verifyMail(testMsg, testSubject)
 				else
 				{
 					mailIsOk = false;
-					$("#mailResultCheck").addClass("alert-success").removeClass("alert-danger").removeClass('userInfos').html(textSendError + '<br />' + ret);
+					$("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(textSendError + '<br />' + ret);
 				}
 		   }
 		 }

@@ -1,44 +1,10 @@
-{for $foo=0 to 2}
 <div class="form-group">
-	<input id="{$name}-{$foo}" type="file" name="{$name}-{$foo}" class="hide"/>
-	<div class="dummyfile input-group">
-		<span class="input-group-addon"><i class="icon-file"></i></span>
-		<input id="{$name}-name-{$foo}" type="text" class="disabled" readonly/>
-		<span class="input-group-btn">
-			<button id="{$name}-selectbutton-{$foo}" type="button" class="btn btn-default">
-				<i class="icon-folder-open"></i> {l s='Choose a file'}
-			</button>
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="{l s='You can upload a maximum of 3 images'}">
+			{l s='Thumbnails:'}
 		</span>
+	</label>
+	<div class="col-lg-4">
+		{$helper}
 	</div>
-{if isset($images.$foo) && $images.$foo}
-	<div class="clearfix">&nbsp;</div>
-	<div id="image" class="img-thumbnail">
-		{$images.$foo}
-		<div class="text-center">
-			<a class="btn btn-default" href="{$current}&token={$token}&deleteThumb={$foo|intval}&id_category={$smarty.get.id_category|intval}">
-				<i class="icon-remove text-danger"></i> {l s='Delete'}
-			</a>
-		</div>
-	</div>
-{/if}
 </div>
-{/for}
-
-<script>
-	$(document).ready(function() {
-		$('button[id|="{$name}-selectbutton"]').click(function(e) {			
-			var id = $(this).prop('id').replace('{$name}-selectbutton-', '');
-			$('#{$name}-'+id).trigger('click');
-		});
-		$('input[id|="{$name}-name"]').click(function(e){
-			var id = $(this).prop('id').replace('{$name}-name-', '');
-			$('#{$name}-'+id).trigger('click');
-		});
-		$('input[id|="{$name}"]').change(function(e){
-			var val = $(this).val();
-			var id = $(this).prop('id').replace('{$name}-', '');
-			var file = val.split(/[\\/]/);
-			$('#{$name}-name-'+id).val(file[file.length-1]);
-		});
-	});
-</script>

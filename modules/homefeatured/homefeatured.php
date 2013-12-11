@@ -40,7 +40,8 @@ class HomeFeatured extends Module
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Featured products on the homepage.');
 		$this->description = $this->l('Displays featured products in the middle of your homepage.');
@@ -110,7 +111,7 @@ class HomeFeatured extends Module
 		{
 			$category = new Category(Context::getContext()->shop->getCategory(), (int)Context::getContext()->language->id);
 			$nb = (int)Configuration::get('HOME_FEATURED_NBR');
-			$products = $category->getProducts((int)Context::getContext()->language->id, 1, ($nb ? $nb : 8));
+			$products = $category->getProducts((int)Context::getContext()->language->id, 1, ($nb ? $nb : 8), "position");
 
 			$this->smarty->assign(array(
 				'products' => $products,
@@ -124,7 +125,7 @@ class HomeFeatured extends Module
 	/* Retro Compatibility < 1.6.0.1 */
 	public function hookDisplayHome($params)
 	{
-		return $this->hookDisplayHomeTabContent();
+		return $this->hookDisplayHomeTabContent($params);
 	}
 
 	public function hookAddProduct($params)

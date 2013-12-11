@@ -35,7 +35,8 @@ class Blockcontact extends Module
 		$this->tab = 'front_office_features';
 		$this->version = '1.0';
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Contact Block');
 		$this->description = $this->l('Allows you to add additional information about your store\'s customer service.');

@@ -1,7 +1,9 @@
+/* line 1, ../sass/rtl.scss */
 * {
   direction: rtl !important;
 }
 
+/* line 2, ../sass/rtl.scss */
 #page {
   text-align: right !important;
 }

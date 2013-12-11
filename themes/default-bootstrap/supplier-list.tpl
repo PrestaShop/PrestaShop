@@ -46,11 +46,12 @@
 {if $nbSuppliers > 0}
 	<div class="content_sortPagiBar">
         <div class="sortPagiBar clearfix">
-            <ul class="display">
+            <ul class="display hidden-xs">
                 <li class="display-title">{l s='View:'}</li>
                 <li id="grid"><a onclick="display('grid');"><i class="icon-th-large"></i>{l s='Grid'}</a></li>
                 <li id="list"><a onclick="display('list');"><i class="icon-th-list"></i>{l s='List'}</a></li>
             </ul>
+            {include file="./nbr-product-page.tpl"}
         </div>
         <div class="top-pagination-content clearfix bottom-line">
             {include file="$tpl_dir./pagination.tpl"}
@@ -72,9 +73,9 @@
 				<!-- logo -->
 				<div class="logo">
 					{if $supplier.nb_products > 0}
-						<a href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'htmlall':'UTF-8'}" title="{$supplier.name|escape:'htmlall':'UTF-8'}">
+						<a href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html':'UTF-8'}" title="{$supplier.name|escape:'html':'UTF-8'}">
 					{/if}
-					<img src="{$img_sup_dir}{$supplier.image|escape:'htmlall':'UTF-8'}-medium_default.jpg" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
+					<img src="{$img_sup_dir}{$supplier.image|escape:'html':'UTF-8'}-medium_default.jpg" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
 					{if $supplier.nb_products > 0}
 						</a>
 					{/if}
@@ -84,9 +85,9 @@
 				<!-- name -->
 				<h3>
 					{if $supplier.nb_products > 0}
-						<a class="product-name" href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'htmlall':'UTF-8'}">
+						<a class="product-name" href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html':'UTF-8'}">
 					{/if}
-					{$supplier.name|truncate:60:'...'|escape:'htmlall':'UTF-8'}
+					{$supplier.name|truncate:60:'...'|escape:'html':'UTF-8'}
 					{if $supplier.nb_products > 0}
 						</a>
 					{/if}
@@ -99,7 +100,7 @@
             	<div class="right-side-content">
                     <p class="product-counter">
                         {if $supplier.nb_products > 0}
-                            <a href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'htmlall':'UTF-8'}">
+                            <a href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html':'UTF-8'}">
                         {/if}
                         {if $supplier.nb_products == 1}{l s='%d product' sprintf=$supplier.nb_products|intval}{else}{l s='%d products' sprintf=$supplier.nb_products|intval}{/if}
                     	{if $supplier.nb_products > 0}
@@ -107,7 +108,7 @@
                     	{/if}
                     </p>
                     {if $supplier.nb_products > 0}
-                        <a class="btn btn-default button exclusive-medium" href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'htmlall':'UTF-8'}"><span>{l s='View products'} <i class="icon-chevron-right right"></i></span></a>
+                        <a class="btn btn-default button exclusive-medium" href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html':'UTF-8'}"><span>{l s='View products'} <i class="icon-chevron-right right"></i></span></a>
                     {/if}
                 </div>
 			</div>
@@ -123,13 +124,13 @@
 		function display(view) {
 			if (view == 'list') {
 				$('#suppliers_list').attr('class', 'list row');
-				$('#suppliers_list > li').removeClass('col-xs-12 col-md-6 col-lg-4').addClass('col-xs-12');
+				$('#suppliers_list > li').removeClass('col-xs-12 col-sm-6 col-lg-4').addClass('col-xs-12');
 				$('#suppliers_list > li').each(function(index, element) {
 					html = '';
 					html = '<div class="mansup-container"><div class="row">';
-						html += '<div class="left-side col-xs-12 col-md-3">' + $(element).find('.left-side').html() + '</div>';
-						html += '<div class="middle-side col-xs-12 col-md-5">'+ $(element).find('.middle-side').html() +'</div>';	
-						html += '<div class="right-side col-xs-12 col-md-4"><div class="right-side-content">'+ $(element).find('.right-side-content').html() + '</div></div>'; 
+						html += '<div class="left-side col-xs-12 col-sm-3">' + $(element).find('.left-side').html() + '</div>';
+						html += '<div class="middle-side col-xs-12 col-sm-5">'+ $(element).find('.middle-side').html() +'</div>';	
+						html += '<div class="right-side col-xs-12 col-sm-4"><div class="right-side-content">'+ $(element).find('.right-side-content').html() + '</div></div>'; 
 					html += '</div></div>';
 				$(element).html(html);
 				});		
@@ -138,7 +139,7 @@
 				$.totalStorage('display', 'list'); 
 			} else {
 				$('#suppliers_list').attr('class', 'grid row');
-				$('#suppliers_list > li').removeClass('col-xs-12').addClass('col-xs-12 col-md-6 col-lg-4');
+				$('#suppliers_list > li').removeClass('col-xs-12').addClass('col-xs-12 col-sm-6 col-lg-4');
 				$('#suppliers_list > li').each(function(index, element) {
 				html = '';
 				html += '<div class="product-container">';

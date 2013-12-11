@@ -28,11 +28,15 @@
 	{assign var=class_input_ajax value=''}
 {/if}
 
-<div class="panel">
+<div id="product-informations" class="panel product-tab">
 	<input type="hidden" name="submitted_tabs[]" value="Informations" />
 	<h3 class="tab">{l s='Information'}</h3>
-	<div class="alert alert-info">{l s='Product global information'}</div>
 	<script type="text/javascript">
+		{if isset($ps_force_friendly_product) && $ps_force_friendly_product}
+			var ps_force_friendly_product = 1;
+		{else}
+			var ps_force_friendly_product = 0;
+		{/if}
 		{if isset($PS_ALLOW_ACCENTED_CHARS_URL) && $PS_ALLOW_ACCENTED_CHARS_URL}
 			var PS_ALLOW_ACCENTED_CHARS_URL = 1;
 		{else}
@@ -132,7 +136,7 @@
 		<div class="col-lg-5">
 			{include file="controllers/products/input_text_lang.tpl"
 				languages=$languages
-				input_class="{$class_input_ajax}{if !$product->id}copy2friendlyUrl{/if} updateCurrentText"
+				input_class="{$class_input_ajax}{if !$product->id || Configuration::get('PS_FORCE_FRIENDLY_PRODUCT')}copy2friendlyUrl{/if} updateCurrentText"
 				input_value=$product->name
 				input_name="name"
 			}
@@ -195,7 +199,7 @@
 					<i class="icon-ban-circle text-danger"></i>
 					{l s='Disabled'}
 				</label>
-				<span class="slide-button btn btn-default"></span>
+				<a class="slide-button btn btn-default"></a>
 			</span>
 		</div>
 	</div>
@@ -322,14 +326,12 @@
 			</span>
 		</label>
 		<div class="col-lg-9">
-			<div class="row">
 			{include
 				file="controllers/products/textarea_lang.tpl"
 				languages=$languages
 				input_name='description_short'
 				input_value=$product->description_short
 				max=$PS_PRODUCT_SHORT_DESC_LIMIT}
-			</div>
 		</div>
 	</div>
 
@@ -342,12 +344,10 @@
 			</span>
 		</label>
 		<div class="col-lg-9">
-			<div class="row">
 			{include
 				file="controllers/products/textarea_lang.tpl"
 				languages=$languages input_name='description'
 				input_value=$product->description}
-			</div>
 		</div>
 	</div>
 
@@ -430,11 +430,22 @@
 			<div class="row">
 			{/if}
 				{foreach from=$languages item=language}
+					{literal}
+					<script type="text/javascript">
+						$().ready(function () {
+							var input_id = '{/literal}tags_{$language.id_lang}{literal}';
+							$('#'+input_id).tagify({delimiters: [13,44], addTagPrompt: '{/literal}{l s='Add tag' js=1}{literal}'});
+							$({/literal}'#{$table}{literal}_form').submit( function() {
+								$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
+							});
+						});
+					</script>
+					{/literal}
 				{if $languages|count > 1}
 				<div class="translatable-field lang-{$language.id_lang}">
 					<div class="col-lg-9">
 				{/if}
-						<input type="text" id="tags_{$language.id_lang}" class=" updateCurrentText" name="tags_{$language.id_lang}" value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}" />
+						<input type="text" id="tags_{$language.id_lang}" class="tagify updateCurrentText" name="tags_{$language.id_lang}" value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}" />
 				{if $languages|count > 1}
 					</div>
 					<div class="col-lg-2">

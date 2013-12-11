@@ -36,11 +36,12 @@ class BlockSpecials extends Module
     {
         $this->name = 'blockspecials';
         $this->tab = 'pricing_promotion';
-        $this->version = '0.9';
+        $this->version = '1.0';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Specials block');
 		$this->description = $this->l('Adds a block displaying current product specials.');
@@ -99,7 +100,7 @@ class BlockSpecials extends Module
 			));
 		}
 
-		return $this->display(__FILE__, 'blockspecials.tpl', $this->getCacheId('blockspecials|'.$random));
+		return $this->display(__FILE__, 'blockspecials.tpl', (Configuration::get('BLOCKSPECIALS_NB_CACHES') ? $this->getCacheId('blockspecials|'.$random) : null));
 	}
 
 	public function hookLeftColumn($params)

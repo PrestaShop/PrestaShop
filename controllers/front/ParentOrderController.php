@@ -66,7 +66,7 @@ class ParentOrderControllerCore extends FrontController
 			
 		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 && Dispatcher::getInstance()->getController() != 'orderopc')
 		{
-			if (isset($_GET['step']) && $_GET['step'] == 3)
+			if (Tools::getIsset('step') && Tools::getValue('step') == 3)
 				Tools::redirect('index.php?controller=order-opc&isPaymentStep=true');
 			Tools::redirect('index.php?controller=order-opc');
 		}
@@ -149,7 +149,7 @@ class ParentOrderControllerCore extends FrontController
 		if ((Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 && Tools::getValue('step') == 1) || Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 			$this->addJS(_THEME_JS_DIR_.'order-address.js');
 		$this->addJqueryPlugin('fancybox');
-		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')) || Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
+		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')) || Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 || Tools::getValue('step') == 2)
 		{
 			$this->addJqueryPlugin('typewatch');
 			$this->addJS(_THEME_JS_DIR_.'cart-summary.js');
@@ -210,10 +210,10 @@ class ParentOrderControllerCore extends FrontController
 		$this->context->cart->gift = (int)(Tools::getValue('gift'));
 		if ((int)(Tools::getValue('gift')))
 		{
-			if (!Validate::isMessage($_POST['gift_message']))
+			if (!Validate::isMessage(Tools::getValue('gift_message')))
 				$this->errors[] = Tools::displayError('Invalid gift message.');
 			else
-				$this->context->cart->gift_message = strip_tags($_POST['gift_message']);
+				$this->context->cart->gift_message = strip_tags(Tools::getValue('gift_message'));
 		}
 
 		if (isset($this->context->customer->id) && $this->context->customer->id)
@@ -415,6 +415,17 @@ class ParentOrderControllerCore extends FrontController
 			if (key($customerAddresses) != 0)
 				$customerAddresses = array_values($customerAddresses);
 
+			if (!count($customerAddresses))
+			{
+				$bad_delivery = false;
+				if (($bad_delivery = (bool)!Address::isCountryActiveById((int)$this->context->cart->id_address_delivery)) || (!Address::isCountryActiveById((int)$this->context->cart->id_address_invoice)))
+				{
+					$back_url = $this->context->link->getPageLink('order', true, (int)$this->context->language->id, array('step' => Tools::getValue('step'), 'multi-shipping' => (int)Tools::getValue('multi-shipping')));
+					$params = array('multi-shipping' => (int)Tools::getValue('multi-shipping'), 'id_address' => ($bad_delivery ? (int)$this->context->cart->id_address_delivery : (int)$this->context->cart->id_address_invoice), 'back' => $back_url);
+					Tools::redirect($this->context->link->getPageLink('address', true, (int)$this->context->language->id, $params));
+				}
+			}
+
 			$this->context->smarty->assign(array(
 				'addresses' => $customerAddresses,
 				'formatedAddressFieldsValuesList' => $formatedAddressFieldsValuesList));
@@ -465,16 +476,6 @@ class ParentOrderControllerCore extends FrontController
 		$address = new Address($this->context->cart->id_address_delivery);
 		$id_zone = Address::getZoneById($address->id);
 		$bad_delivery = false;
-		if ($bad_delivery = !Address::isCountryActiveById((int)$this->context->cart->id_address_delivery) || !Address::isCountryActiveById((int)$this->context->cart->id_address_invoice))
-		{
-			if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 && Dispatcher::getInstance()->getController() != 'order-opc')
-				{
-					$back_url = $this->context->link->getPageLink('order', true, (int)$this->context->language->id, array('step' => Tools::getValue('step'), 'multi-shipping' => (int)Tools::getValue('multi-shipping')));
-					$params = array('multi-shipping' => (int)Tools::getValue('multi-shipping'), 'id_address' => ($bad_delivery ? (int)$this->context->cart->id_address_delivery : (int)$this->context->cart->id_address_invoice), 'back' => $back_url);
-					Tools::redirect($this->context->link->getPageLink('address', true, (int)$this->context->language->id, $params));
-				}
-			Tools::redirect('index.php?controller=order&step=1');
-		}
 		$carriers = $this->context->cart->simulateCarriersOutput();
 		$checked = $this->context->cart->simulateCarrierSelectedOutput();
 		$delivery_option_list = $this->context->cart->getDeliveryOptionList();
@@ -510,7 +511,7 @@ class ParentOrderControllerCore extends FrontController
 
 		// TOS
 		$cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
-		$this->link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite);
+		$this->link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool)Configuration::get('PS_SSL_ENABLED'));
 		if (!strpos($this->link_conditions, '?'))
 			$this->link_conditions .= '?content_only=1';
 		else

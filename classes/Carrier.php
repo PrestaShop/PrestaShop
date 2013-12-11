@@ -277,17 +277,20 @@ class CarrierCore extends ObjectModel
 
 	public function getMaxDeliveryPriceByWeight($id_zone)
 	{
-		$sql = 'SELECT d.`price`
-				FROM `'._DB_PREFIX_.'delivery` d
-				INNER JOIN `'._DB_PREFIX_.'range_weight` w ON d.`id_range_weight` = w.`id_range_weight`
-				WHERE d.`id_zone` = '.(int)$id_zone.'
-					AND d.`id_carrier` = '.(int)$this->id.'
-					'.Carrier::sqlDeliveryRangeShop('range_weight').'
-				ORDER BY w.`delimiter2` DESC LIMIT 1';
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-		if (!isset($result[0]['price']))
-			return false;
-		return $result[0]['price'];
+		$cache_id = 'Carrier::getMaxDeliveryPriceByWeight_'.(int)$this->id.'-'.(int)$id_zone;
+		if (!Cache::isStored($cache_id))
+		{
+			$sql = 'SELECT d.`price`
+					FROM `'._DB_PREFIX_.'delivery` d
+					INNER JOIN `'._DB_PREFIX_.'range_weight` w ON d.`id_range_weight` = w.`id_range_weight`
+					WHERE d.`id_zone` = '.(int)$id_zone.'
+						AND d.`id_carrier` = '.(int)$this->id.'
+						'.Carrier::sqlDeliveryRangeShop('range_weight').'
+					ORDER BY w.`delimiter2` DESC';
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -357,17 +360,20 @@ class CarrierCore extends ObjectModel
 
 	public function getMaxDeliveryPriceByPrice($id_zone)
 	{
-		$sql = 'SELECT d.`price`
-				FROM `'._DB_PREFIX_.'delivery` d
-				INNER JOIN `'._DB_PREFIX_.'range_price` r ON d.`id_range_price` = r.`id_range_price`
-				WHERE d.`id_zone` = '.(int)$id_zone.'
-					AND d.`id_carrier` = '.(int)$this->id.'
-					'.Carrier::sqlDeliveryRangeShop('range_price').'
-				ORDER BY r.`delimiter2` DESC LIMIT 1';
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-		if (!isset($result[0]['price']))
-			return false;
-		return $result[0]['price'];
+		$cache_id = 'Carrier::getMaxDeliveryPriceByPrice_'.(int)$this->id.'-'.(int)$id_zone;
+		if (!Cache::isStored($cache_id))
+		{
+			$sql = 'SELECT d.`price`
+					FROM `'._DB_PREFIX_.'delivery` d
+					INNER JOIN `'._DB_PREFIX_.'range_price` r ON d.`id_range_price` = r.`id_range_price`
+					WHERE d.`id_zone` = '.(int)$id_zone.'
+						AND d.`id_carrier` = '.(int)$this->id.'
+						'.Carrier::sqlDeliveryRangeShop('range_price').'
+					ORDER BY r.`delimiter2` DESC';
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -440,11 +446,17 @@ class CarrierCore extends ObjectModel
 		}
 		$sql .= ' GROUP BY c.`id_carrier` ORDER BY c.`position` ASC';
 
-		$carriers = Db::getInstance()->executeS($sql);
+
+		$cache_id = 'Carrier::getCarriers_'.md5($sql);
+		if (!Cache::isStored($cache_id))
+		{
+			$carriers = Db::getInstance()->executeS($sql);
+			Cache::store($cache_id, $carriers);
+		}
+		$carriers = Cache::retrieve($cache_id);
 		foreach ($carriers as $key => $carrier)
 			if ($carrier['name'] == '0')
 				$carriers[$key]['name'] = Configuration::get('PS_SHOP_NAME');
-
 		return $carriers;
 	}
 
@@ -1184,7 +1196,14 @@ class CarrierCore extends ObjectModel
 		$query->where('pc.id_product = '.(int)$product->id);
 		$query->where('pc.id_shop = '.(int)$id_shop);
 
-		$carriers_for_product = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+		$cache_id = 'Carrier::getAvailableCarrierList_'.(int)$product->id.'-'.(int)$id_shop;
+		if (!Cache::isStored($cache_id))
+		{
+			$carriers_for_product = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+			Cache::store($cache_id, $carriers_for_product);
+		}
+		$carriers_for_product = Cache::retrieve($cache_id);
+
 		$carrier_list = array();
 		if (!empty($carriers_for_product))
 		{				

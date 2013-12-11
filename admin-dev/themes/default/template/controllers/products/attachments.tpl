@@ -24,7 +24,7 @@
 *}
 
 {if isset($obj->id)}
-<div class="panel">
+<div id="product-attachements" class="panel product-tab">
 	<input type="hidden" name="submitted_tabs[]" value="Attachments" />
 	<h3>{l s='Attachment'}</h3>
 
@@ -47,12 +47,14 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="attachment_description_{$id_lang}">{l s='Description:'} </label>
 		<div class="col-lg-9">
+			<div class="row">
 			{include
 				file="controllers/products/textarea_lang.tpl"
 				languages=$languages
 				input_name="attachment_description"
 				input_value=$attachment_description
 			}
+			</div>
 		</div>
 	</div>
 
@@ -63,37 +65,7 @@
 				{l s='File:'}
 			</span>
 		</label>
-		<div class="col-lg-7">
-			<div class="col-lg-8">
-				<input id="attachement_file" type="file" name="attachment_file" class="hide" />
-				<div class="dummyfile input-group">
-					<span class="input-group-addon"><i class="icon-file"></i></span>
-					<input id="attachement_filename" type="text" class="disabled" name="filename" readonly />
-					<span class="input-group-btn">
-						<button id="attachement_fileselectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
-							<i class="icon-folder-open"></i> {l s='Choose a file'}
-						</button>
-					</span>
-				</div>
-			</div>
-			<div class="col-lg-4">
-				<button type="submit" name="submitAddAttachments" class="btn btn-default">
-					<i class="icon-cloud-upload"></i> {l s='Upload attachment file'}
-				</button>
-			</div>
-		</div>
-		<script>
-			$(document).ready(function(){
-				$('#attachement_fileselectbutton').click(function(e){
-					$('#attachement_file').trigger('click');
-				});
-				$('#attachement_file').change(function(e){
-					var val = $(this).val();
-					var file = val.split(/[\\/]/);
-					$('#attachement_filename').val(file[file.length-1]);
-				});
-			});
-		</script>
+		{$attachment_uploader}
 	</div>
 
 	<hr/>

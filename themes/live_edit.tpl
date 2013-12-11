@@ -42,7 +42,7 @@
 <form id="liveEdit-action-form" action="./{$ad}/index.php" method="post">
 	<input type="hidden" name="ajax" value="1" />
 	<input type="hidden" name="id_shop" value="{$id_shop}" />
-	<input type="hidden" name="token" value="{$smarty.get.liveToken|escape:'htmlall':'UTF-8'}" />
+	<input type="hidden" name="token" value="{$smarty.get.liveToken|escape:'html':'UTF-8'}" />
 	<input type="hidden" name="tab" value="AdminModulesPositions" />
 	<input type="hidden" name="action" value="saveHook" />
 	{foreach from=$hook_list key=hook_id item=hook_name}

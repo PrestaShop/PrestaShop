@@ -334,11 +334,6 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 					'label' => $this->l('Description:'),
 					'name' => 'description',
 				)
-			),
-			'submit' => array(
-				'title' => $this->l('Save and stay'),
-				'class' => 'btn btn-default',
-				'stay' => true
 			)
 		);
 
@@ -360,12 +355,16 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		$helper->identifier = 'id_tax_rule';
 		$helper->id = $obj->id;
 		$helper->toolbar_scroll = true;
-		$helper->show_toolbar = false;
+		$helper->show_toolbar = true;
 		$helper->languages = $this->_languages;
 		$helper->default_form_language = $this->default_form_language;
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 		$helper->fields_value = $this->getFieldsValue($this->object);
-		$helper->toolbar_btn = null;
+		$helper->toolbar_btn['save_new_rule'] = array(
+			'href' => self::$currentIndex.'&amp;id_tax_rules_group='.$obj->id.'&amp;action=create_rule&amp;token='.$this->token,
+			'desc' => 'Save tax rule',
+			'class' => 'process-icon-save'
+		);
 		$helper->submit_action = 'create_rule';
 
 		return $helper->generateForm($this->fields_form);

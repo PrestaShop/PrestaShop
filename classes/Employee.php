@@ -122,10 +122,15 @@ class EmployeeCore extends ObjectModel
 
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
-		parent::__construct($id, $id_lang, $id_shop);
+		parent::__construct($id, null, $id_shop);
+
+		if (!is_null($id_lang))
+			$this->id_lang = (int)(Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
 
 		if ($this->id)
 			$this->associated_shops = $this->getAssociatedShops();
+
+		$this->image_dir = _PS_EMPLOYEE_IMG_DIR_;
 	}
 
 	/**
@@ -346,5 +351,12 @@ class EmployeeCore extends ObjectModel
 	public function isSuperAdmin()
 	{
 		return $this->id_profile == _PS_ADMIN_PROFILE_;
+	}
+	
+	public function getImage()
+	{
+		if (!isset($this->id) || empty($this->id) || !file_exists($this->image_dir.$this->id.'.jpg'))
+			return _PS_IMG_DIR_.'prestashop-avatar.png';
+		return $this->image_dir.$this->id.'.jpg';
 	}
 }

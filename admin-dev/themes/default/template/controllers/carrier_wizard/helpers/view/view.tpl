@@ -45,26 +45,31 @@
 </script>
 
 <div class="row">
-	<div id="carrier_wizard" class="panel swMain">
-		<ul class="steps nbr_steps_{$wizard_steps.steps|count}">
-		{foreach from=$wizard_steps.steps key=step_nbr item=step}
-			<li>
-				<a href="#step-{$step_nbr + 1}">
-					<span class="stepNumber">{$step_nbr + 1}</span>
-					<span class="stepDesc">
-						{$step.title}<br />
-						{if isset($step.desc)}<small>{$step.desc}</small>{/if}
-					</span>
-					<span class="chevron"></span>
-				</a>
-			</li>
-		{/foreach}
-		</ul>
-		{foreach from=$wizard_contents.contents key=step_nbr item=content}
-			<div id="step-{$step_nbr + 1}" class="step_container"> 	
-				{$content}
-			</div>
-		{/foreach}
+	<div class="col-lg-10">
+		<div id="carrier_wizard" class="panel swMain">
+			<ul class="steps nbr_steps_{$wizard_steps.steps|count}">
+			{foreach from=$wizard_steps.steps key=step_nbr item=step}
+				<li>
+					<a href="#step-{$step_nbr + 1}">
+						<span class="stepNumber">{$step_nbr + 1}</span>
+						<span class="stepDesc">
+							{$step.title}<br />
+							{if isset($step.desc)}<small>{$step.desc}</small>{/if}
+						</span>
+						<span class="chevron"></span>
+					</a>
+				</li>
+			{/foreach}
+			</ul>
+			{foreach from=$wizard_contents.contents key=step_nbr item=content}
+				<div id="step-{$step_nbr + 1}" class="step_container"> 	
+					{$content}
+				</div>
+			{/foreach}
+		</div>
+	</div>
+	<div class="col-lg-2">
+		{$logo_content}
 	</div>
 </div>
 {/block}

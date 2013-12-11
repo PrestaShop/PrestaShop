@@ -22,31 +22,25 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 		{if !$content_only}
-                    </div>
-    {if isset($HOOK_RIGHT_COLUMN) && (str_replace(" ","",$HOOK_RIGHT_COLUMN)) !=''}{assign var='RightColumn' value=3}{/if}
-    {if isset($RightColumn) && $RightColumn !=0}
-    <!-- Right -->
-        <div id="right_column" class="col-xs-12 col-sm-3 column">
-            {$HOOK_RIGHT_COLUMN}
-        </div>
-    {/if}
-                	</div>
-				</div>
-            </div>
+					</div> <!-- #center_column -->
+					{if isset($right_column_size) && !empty($right_column_size)}
+						<div id="right_column" class="col-xs-12 col-sm-3 column">
+							{$HOOK_RIGHT_COLUMN}
+						</div>
+					{/if}
+					</div> <!-- .row -->
+				</div> <!-- #columns -->
+			</div> <!-- .columns-container -->
 <!-- Footer -->
 			<div class="footer-container">
-            	<div class="container">
-                    <footer id="footer" class="row">
-                        {$HOOK_FOOTER}
-                        {if $PS_ALLOW_MOBILE_DEVICE}
-                            <p class="text-center"><a href="{$link->getPageLink('index', true)}?mobile_theme_ok">{l s='Browse the mobile site'}</a></p>
-                        {/if}
-                    </footer>
-                </div>
-            </div>
-		</div>
+				<div class="container">
+					<footer id="footer" class="row">
+						{$HOOK_FOOTER}
+					</footer>
+				</div>
+			</div> <!-- .footer-container -->
+		</div> <!-- #page -->
 	{/if}
 	</body>
 </html>

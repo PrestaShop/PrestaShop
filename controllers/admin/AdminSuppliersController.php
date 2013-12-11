@@ -88,6 +88,11 @@ class AdminSuppliersControllerCore extends AdminController
 		if (!($obj = $this->loadObject(true)))
 			return;
 
+		$image = _PS_SUPP_IMG_DIR_.$obj->id.'.jpg';
+		$image_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350,
+			$this->imageType, true, true);
+		$image_size = file_exists($image) ? filesize($image) / 1000 : false;
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Suppliers'),
@@ -103,6 +108,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Name'),
 					'name' => 'name',
 					'required' => true,
+					'col' => 4,
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}',
 				),
 				array(
@@ -121,6 +127,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Phone:'),
 					'name' => 'phone',
 					'maxlength' => 16,
+					'col' => 4,
 					'hint' => $this->l('Phone number for this supplier')
 				),
 				array(
@@ -128,12 +135,14 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Address:'),
 					'name' => 'address',
 					'maxlength' => 128,
+					'col' => 6,
 					'required' => true
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Address:').' (2)',
 					'name' => 'address2',
+					'col' => 6,
 					'maxlength' => 128,
 				),
 				array(
@@ -141,6 +150,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Postal Code/Zip Code:'),
 					'name' => 'postcode',
 					'maxlength' => 12,
+					'col' => 2,
 					'required' => true,
 				),
 				array(
@@ -148,6 +158,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('City:'),
 					'name' => 'city',
 					'maxlength' => 32,
+					'col' => 4,
 					'required' => true,
 				),
 				array(
@@ -155,6 +166,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Country:'),
 					'name' => 'id_country',
 					'required' => true,
+					'col' => 4,
 					'default_value' => (int)$this->context->country->id,
 					'options' => array(
 						'query' => Country::getCountries($this->context->language->id, false),
@@ -166,6 +178,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'select',
 					'label' => $this->l('State'),
 					'name' => 'id_state',
+					'col' => 4,
 					'options' => array(
 						'id' => 'id_state',
 						'query' => array(),
@@ -177,6 +190,8 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Logo:'),
 					'name' => 'logo',
 					'display_image' => true,
+					'image' => $image_url ? $image_url : false,
+					'size' => $image_size,
 					'hint' => $this->l('Upload a supplier logo from your computer')
 				),
 				array(
@@ -184,6 +199,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Meta title:'),
 					'name' => 'meta_title',
 					'lang' => true,
+					'col' => 4,
 					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
 				array(
@@ -191,6 +207,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Meta description:'),
 					'name' => 'meta_description',
 					'lang' => true,
+					'col' => 6,
 					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
 				array(
@@ -198,6 +215,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Meta keywords:'),
 					'name' => 'meta_keywords',
 					'lang' => true,
+					'col' => 6,
 					'hint' => array(
 						$this->l('To add "tags" click in the field, write something and then press "Enter"'),
 						$this->l('Forbidden characters:').' &lt;&gt;;=#{}'
@@ -270,11 +288,6 @@ class AdminSuppliersControllerCore extends AdminController
 			);
 		}
 
-		// set logo image
-		$image = ImageManager::thumbnail(_PS_SUPP_IMG_DIR_.'/'.$this->object->id.'.jpg', $this->table.'_'.(int)$this->object->id.'.'.$this->imageType, 350, $this->imageType, true);
-		$this->fields_value['image'] = $image ? $image : false;
-		$this->fields_value['size'] = $image ? filesize(_PS_SUPP_IMG_DIR_.'/'.$this->object->id.'.jpg') / 1000 : false;
-
 		return parent::renderForm();
 	}
 
@@ -285,15 +298,13 @@ class AdminSuppliersControllerCore extends AdminController
 	 */
 	public function initToolbar()
 	{
-		switch ($this->display)
-		{
-			default:
-				parent::initToolbar();
-				$this->toolbar_btn['import'] = array(
-					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
-					'desc' => $this->l('Import')
-				);
-		}
+		parent::initToolbar();
+
+		if (empty($this->display))
+			$this->toolbar_btn['import'] = array(
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
+				'desc' => $this->l('Import')
+			);
 	}
 
 	public function renderView()

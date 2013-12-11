@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
+{$header}
 {if isset($conf)}
 	<div class="alert alert-success">
 		{$conf}
@@ -47,10 +47,12 @@
 {if isset($informations) && count($informations) && $informations}
 	<div class="alert alert-info">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		{if $informations|count > 4}
 		<a id="see_more_infos" href="#" class="btn btn-link" onclick="$('#see_more_infos').hide(); $('#infos_block').show();return false;">
 			<i class="icon-info-sign"></i> {l s='Click here to see more informations'}
 		</a>
-		<ul id="infos_block" class="list-unstyled" style="display:none;">
+		{/if}
+		<ul id="infos_block" class="list-unstyled"{if $informations|count > 4} style="display:none;"{/if}>
 			{foreach $informations as $info}
 				<li>{$info}</li>
 			{/foreach}
@@ -68,26 +70,14 @@
 	<div class="alert alert-warning">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
 		{if count($warnings) > 1}
-			{l s='There are %d warnings.' sprintf=count($warnings)}
-			<span id="labelSeeMore">
-				<a id="linkSeeMore" href="#" class="btn btn-default"><i class="icon-plus-sign-alt"></i> {l s='Click here to see more'}</a>
-				<a id="linkHide" href="#" class="btn btn-default" style="display:none"><i class="icon-minus-sign-alt"></i> {l s='Hide warning'}</a>
-			</span>
-			<ul {if count($warnings) > 1}style="display:none;"{/if} id="seeMore" class="list-unstyled">
-			{foreach $warnings as $warning}
-				<li>{$warning}</li>
-			{/foreach}
-			</ul>
-		{else}
-			<ul class="list-unstyled">
-			{foreach $warnings as $warning}
-				<li>{$warning}</li>
-			{/foreach}
-			</ul>
+			<strong>{l s='There are %d warnings:' sprintf=count($warnings)}</strong>
 		{/if}
+		<ul class="list-unstyled">
+			{foreach $warnings as $warning}
+				<li>{$warning}</li>
+			{/foreach}
+		</ul>
 	</div>
 {/if}
-
-{if !$bootstrap}<div id="nobootstrap">{/if}
 {$page}
-{if !$bootstrap}</div>{/if}
+{$footer}

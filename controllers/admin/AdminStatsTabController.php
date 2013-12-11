@@ -103,7 +103,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		$action .= ($identifier && $id ? '&'.Tools::safeOutput($identifier).'='.(int)$id : '');
 		$module = Tools::getValue('module');
 		$action .= ($module ? '&module='.Tools::safeOutput($module) : '');
-		$action .= ($id_product = Tools::getValue('id_product') ? '&id_product='.Tools::safeOutput($id_product) : '');
+		$action .= (($id_product = Tools::getValue('id_product')) ? '&id_product='.Tools::safeOutput($id_product) : '');
 		$tpl->assign(array(
 			'current' => self::$currentIndex,
 			'token' => $token,
@@ -166,7 +166,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 		$tpl->assign(array(
 			'current' => self::$currentIndex,
-			'current_module_name' => Tools::getValue('module'),
+			'current_module_name' => Tools::getValue('module', 'statsforecast'),
 			'token' => $this->token,
 			'modules' => $modules,
 			'module_instance' => $module_instance

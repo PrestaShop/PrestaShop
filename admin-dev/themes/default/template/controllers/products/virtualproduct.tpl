@@ -58,6 +58,7 @@
 						$('#file_missing').hide();
 						$('#virtual_product_name').attr('value', fileName);
 						$("#upload-confirmation .error").remove();
+						$('#upload-confirmation div').find('span').remove();
 						$('#upload-confirmation div').prepend('<span>{l s='The file'}&nbsp;"<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'">'+fileName+'</a>"&nbsp;{l s='has successfully been uploaded'}' +
 							'<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="' + msg + '" /></span>');
 						$("#upload-confirmation").show();
@@ -187,7 +188,7 @@
 							<label for="virtual_product_name" class="t">{l s='Filename'}</label>
 						</td>
 						<td class="col-right">
-							<input type="text" id="virtual_product_name" name="virtual_product_name" style="width:200px" value="{$product->productDownload->display_filename|escape:'htmlall':'UTF-8'}" />
+							<input type="text" id="virtual_product_name" name="virtual_product_name" style="width:200px" value="{$product->productDownload->display_filename|escape:'html':'UTF-8'}" />
 							<p class="preference_description" name="help_box">{l s='The full filename with its extension (e.g. Book.pdf)'}</p>
 						</td>
 					</tr>

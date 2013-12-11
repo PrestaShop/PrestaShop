@@ -205,7 +205,13 @@ class DispatcherCore
 		{
 			$this->front_controller = self::FC_ADMIN;
 			$this->controller_not_found = 'adminnotfound';
-			$this->default_controller = 'admindashboard';
+			if (isset(Context::getContext()->employee) && Validate::isLoadedObject(Context::getContext()->employee) && isset(Context::getContext()->employee->default_tab))
+			{
+				$tab = new Tab((int)Context::getContext()->employee->default_tab);
+				$this->default_controller = $tab->class_name;
+			}
+			else		
+				$this->default_controller = 'admindashboard';
 		}
 		elseif (Tools::getValue('fc') == 'module')
 		{
@@ -369,7 +375,7 @@ class DispatcherCore
 
 		// If there are several languages, get language from uri
 		if ($this->use_routes && Language::isMultiLanguageActivated())
-			if (preg_match('#^/([a-z]{2})/?#', $this->request_uri, $m))
+			if (preg_match('#^/([a-z]{2})(?:/.*)?$#', $this->request_uri, $m))
 			{
 				$_GET['isolang'] = $m[1];
 				$this->request_uri = substr($this->request_uri, 3);
@@ -396,8 +402,10 @@ class DispatcherCore
 						$this->default_routes[$route] = array_merge($this->default_routes[$route], $route_details);
 					}
 		
+		if (!in_array($context->language->id, $languages = Language::getLanguages()))
+			$languages[] = (int)$context->language->id;
 		// Set default routes
-		foreach (Language::getLanguages() as $lang)
+		foreach ($languages as $lang)
 			foreach ($this->default_routes as $id => $route)
 				$this->addRoute(
 					$id,
@@ -441,7 +449,10 @@ class DispatcherCore
 			// Load custom routes
 			foreach ($this->default_routes as $route_id => $route_data)
 				if ($custom_route = Configuration::get('PS_ROUTE_'.$route_id, null, null, $id_shop))
-					foreach (Language::getLanguages() as $lang)
+				{
+					if (!in_array($context->language->id, $languages = Language::getLanguages()))
+						$languages[] = (int)$context->language->id;
+					foreach ($languages as $lang)
 						$this->addRoute(
 							$route_id,
 							$custom_route,
@@ -451,6 +462,7 @@ class DispatcherCore
 							isset($route_data['params']) ? $route_data['params'] : array(),
 							$id_shop
 						);
+				}
 		}
 	}
 
@@ -593,7 +605,7 @@ class DispatcherCore
 			$id_lang = (int)Context::getContext()->language->id;
 		if ($id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
-		
+
 		if (!isset($this->routes[$id_shop]))
 			$this->loadRoutes($id_shop);
 
@@ -704,7 +716,7 @@ class DispatcherCore
 			$controller = $this->controller_not_found;
 			
 			// If the request_uri matches a static file, then there is no need to check the routes, we keep "controller_not_found" (a static file should not go through the dispatcher) 
-			if (!preg_match('/\.(gif|jpe?g|png|css|js|ico)$/i', $this->request_uri))
+			if (!preg_match('/\.(gif|jpe?g|png|css|js|ico)$/i', parse_url($this->request_uri, PHP_URL_PATH)))
 			{
 				// Add empty route as last route to prevent this greedy regexp to match request uri before right time
 				if ($this->empty_route)

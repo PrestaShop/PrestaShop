@@ -112,7 +112,7 @@
 				<label class="control-label col-lg-3">{l s='Filter by product:'}</label>
 				<div class="col-lg-9">
 					<select id="selectProduct" name="selectProduct" style="width: 200px;" onfocus="fillProducts();" onchange="updateConversionRate(this.value);">
-						<option value="0" selected="selected">-- {l s='All'} --</option>
+						<option value="0" selected="selected">- {l s='All'} -</option>
 					</select>
 				</div>
 			</div>
@@ -127,6 +127,4 @@
 	<script type="text/javascript">
 		updateConversionRate(0);
 	</script>
-	
 {/block}
-

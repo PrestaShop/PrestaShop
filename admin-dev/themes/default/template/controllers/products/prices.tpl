@@ -103,7 +103,7 @@ $(document).ready(function () {
 	Customer.init();
 });
 </script>
-<div class="panel">
+<div id="product-prices" class="panel product-tab">
 	<input type="hidden" name="submitted_tabs[]" value="Prices" />
 	<h3>{l s='Product price'}</h3>
 
@@ -173,7 +173,7 @@ $(document).ready(function () {
 					</select>
 				</div>
 				<div class="col-lg-2">
-					<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminTaxRulesGroup')|escape:'htmlall':'UTF-8'}&addtax_rules_group&id_product={$product->id}" {if $tax_exclude_taxe_option}disabled="disabled"{/if}>
+					<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminTaxRulesGroup')|escape:'html':'UTF-8'}&addtax_rules_group&id_product={$product->id}" {if $tax_exclude_taxe_option}disabled="disabled"{/if}>
 						<i class="icon-plus-sign"></i>  {l s='Create new tax'} <i class="icon-external-link-sign"></i>
 					</a>
 				</div>
@@ -186,7 +186,7 @@ $(document).ready(function () {
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert">
 				{l s='Taxes are currently disabled'} :
-				<a href="{$link->getAdminLink('AdminTaxes')|escape:'htmlall':'UTF-8'}">{l s='Tax options'}</a>
+				<a href="{$link->getAdminLink('AdminTaxes')|escape:'html':'UTF-8'}">{l s='Tax options'}</a>
 				<input type="hidden" value="{$product->getIdTaxRulesGroup()}" name="id_tax_rules_group" />
 			</div>
 		</div>
@@ -305,14 +305,14 @@ $(document).ready(function () {
 	<script type="text/javascript">
 		var product_prices = new Array();
 		{foreach from=$combinations item='combination'}
-			product_prices['{$combination.id_product_attribute}'] = '{$combination.price}';
+			product_prices['{$combination.id_product_attribute}'] = '{$combination.price|@addcslashes:'\''}';
 		{/foreach}
 	</script>
 
-	<div id="add_specific_price" class="well" style="display: none;">
+	<div id="add_specific_price" class="well clearfix" style="display: none;">
 		<div class="col-lg-12">
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="{if !$multi_shop}spm_currency_0{else}sp_id_shop{/if}">{l s='For'}</label>
+				<label class="control-label col-lg-2" for="{if !$multi_shop}spm_currency_0{else}sp_id_shop{/if}">{l s='For'}</label>
 				<div class="col-lg-9">
 					<div class="row">
 					{if !$multi_shop}
@@ -356,8 +356,8 @@ $(document).ready(function () {
 			</div>
 
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="customer">{l s='Customer'}</label>
-				<div class="col-lg-9">
+				<label class="control-label col-lg-2" for="customer">{l s='Customer'}</label>
+				<div class="col-lg-4">
 					<input type="hidden" name="sp_id_customer" id="id_customer" value="0" />
 					<div class="input-group">
 						<input type="text" name="customer" value="{l s='All customers'}" id="customer" autocomplete="off" />
@@ -371,7 +371,7 @@ $(document).ready(function () {
 
 			{if $combinations|@count != 0}
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="sp_id_product_attribute">{l s='Combination:'}</label>
+				<label class="control-label col-lg-2" for="sp_id_product_attribute">{l s='Combination:'}</label>
 				<div class="col-lg-4">
 					<select id="sp_id_product_attribute" name="sp_id_product_attribute">
 						<option value="0">{l s='Apply to all combinations'}</option>
@@ -384,17 +384,17 @@ $(document).ready(function () {
 			{/if}
 
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="sp_from">{l s='Available'}</label>
+				<label class="control-label col-lg-2" for="sp_from">{l s='Available'}</label>
 				<div class="col-lg-9">
 					<div class="row">
-						<div class="col-lg-6">
+						<div class="col-lg-4">
 							<div class="input-group">
 								<span class="input-group-addon">{l s='from'}</span>
 								<input class="datepicker" type="text" name="sp_from" value="" style="text-align: center" id="sp_from" />
 								<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
 							</div>
 						</div>
-						<div class="col-lg-6">
+						<div class="col-lg-4">
 							<div class="input-group">
 								<span class="input-group-addon">{l s='to'}</span>
 								<input class="datepicker" type="text" name="sp_to" value="" style="text-align: center" id="sp_to" />
@@ -406,7 +406,7 @@ $(document).ready(function () {
 			</div>
 
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="sp_from_quantity">{l s='Starting at'}</label>
+				<label class="control-label col-lg-2" for="sp_from_quantity">{l s='Starting at'}</label>
 				<div class="input-group col-lg-4">
 					<span class="input-group-addon">{l s='unit'}</span>
 					<input type="text" name="sp_from_quantity" id="sp_from_quantity" value="1" />
@@ -414,7 +414,7 @@ $(document).ready(function () {
 			</div>
 
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="sp_price">{l s='Product price'}
+				<label class="control-label col-lg-2" for="sp_price">{l s='Product price'}
 					{if $country_display_tax_label}
 						{l s='(tax excl.):'}
 					{/if}
@@ -436,7 +436,7 @@ $(document).ready(function () {
 			</div>
 
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="sp_reduction">{l s='Apply a discount of:'}</label>
+				<label class="control-label col-lg-2" for="sp_reduction">{l s='Apply a discount of:'}</label>
 				<div class="col-lg-4">
 					<div class="row">
 						<div class="col-lg-6">
@@ -444,7 +444,7 @@ $(document).ready(function () {
 						</div>
 						<div class="col-lg-6">
 							<select name="sp_reduction_type" id="sp_reduction_type">
-								<option selected="selected">---</option>
+								<option selected="selected">-</option>
 								<option value="amount">{l s='Amount'}</option>
 								<option value="percentage">{l s='Percentage'}</option>
 							</select>
@@ -453,7 +453,6 @@ $(document).ready(function () {
 				</div>
 				<p class="help-block">{l s='The discount is applied after the tax'}</p>
 			</div>
-
 		</div>
 	</div>
 	<script type="text/javascript">

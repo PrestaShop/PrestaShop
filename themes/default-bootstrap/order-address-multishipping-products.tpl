@@ -29,13 +29,14 @@
 	QtyChanged = '{l s='Some product quantities have changed. Please check them' js=1}';
 	ShipToAnOtherAddress = '{l s='Ship to multiple addresses' js=1}';
 </script>
-<div id="order-detail-content" class="table_block">
+<div id="order-detail-content" class="table_block table-responsive">
 	<table id="cart_summary" class="table table-bordered multishipping-cart">
 		<thead>
 			<tr>
 				<th class="cart_product first_item">{l s='Product'}</th>
 				<th class="cart_description item">{l s='Description'}</th>
 				<th class="cart_ref item">{l s='Ref.'}</th>
+                <th class="cart_avail item">{l s='Avail.'}</th>
 				<th class="cart_quantity item">{l s='Qty'}</th>
 				<th class="shipping_address last_item">{l s='Shipping address'}</th>
 			</tr>

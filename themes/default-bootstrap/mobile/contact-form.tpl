@@ -29,11 +29,11 @@
 	<div data-role="content" id="content">
 		<p class="bold">{l s='For questions about an order or for more information about our products'}.</p>
 		{include file="./errors.tpl"}
-		<form action="{$request_uri|escape:'htmlall':'UTF-8'}" method="post" class="std" enctype="multipart/form-data">
+		<form action="{$request_uri|escape:'html':'UTF-8'}" method="post" class="std" enctype="multipart/form-data">
 			{if isset($customerThread.id_contact)}
 				{foreach from=$contacts item=contact}
 					{if $contact.id_contact == $customerThread.id_contact}
-						<input type="text" id="contact_name" name="contact_name" value="{$contact.name|escape:'htmlall':'UTF-8'}" readonly="readonly" />
+						<input type="text" id="contact_name" name="contact_name" value="{$contact.name|escape:'html':'UTF-8'}" readonly="readonly" />
 						<input type="hidden" name="id_contact" value="{$contact.id_contact}" />
 					{/if}
 				{/foreach}
@@ -41,14 +41,14 @@
 				<select id="id_contact" name="id_contact" onchange="showElemFromSelect('id_contact', 'desc_contact')">
 					<option value="0">-- {l s='Subject Heading'} --</option>
 				{foreach from=$contacts item=contact}
-					<option value="{$contact.id_contact|intval}" {if isset($smarty.post.id_contact) && $smarty.post.id_contact == $contact.id_contact}selected="selected"{/if}>{$contact.name|escape:'htmlall':'UTF-8'}</option>
+					<option value="{$contact.id_contact|intval}" {if isset($smarty.post.id_contact) && $smarty.post.id_contact == $contact.id_contact}selected="selected"{/if}>{$contact.name|escape:'html':'UTF-8'}</option>
 				{/foreach}
 				</select>
 
 			<p id="desc_contact0" class="desc_contact">&nbsp;</p>
 				{foreach from=$contacts item=contact}
 					<p id="desc_contact{$contact.id_contact|intval}" class="desc_contact" style="display:none;">
-						<label>&nbsp;</label>{$contact.description|escape:'htmlall':'UTF-8'}
+						<label>&nbsp;</label>{$contact.description|escape:'html':'UTF-8'}
 					</p>
 				{/foreach}
 			{/if}
@@ -67,7 +67,7 @@
 					{if !isset($customerThread.id_order) && isset($isLogged) && $isLogged == 1}
 						<select name="id_order" ><option value="0">-- {l s='Order ID'} --</option>
 						{foreach from=$orderList item=order}
-							<option value="{$order.value|intval}" {if $order.selected|intval}selected="selected"{/if}>{$order.label|escape:'htmlall':'UTF-8'}</option>
+							<option value="{$order.value|intval}" {if $order.selected|intval}selected="selected"{/if}>{$order.label|escape:'html':'UTF-8'}</option>
 						{/foreach}
 						</select>
 					{elseif !isset($customerThread.id_order) && !isset($isLogged)}
@@ -84,7 +84,7 @@
 						{foreach from=$orderedProductList key=id_order item=products name=products}
 							<select name="id_product"><option value="0">-- {l s='Product'} --</option>
 								{foreach from=$products item=product}
-									<option value="{$product.value|intval}">{$product.label|escape:'htmlall':'UTF-8'}</option>
+									<option value="{$product.value|intval}">{$product.label|escape:'html':'UTF-8'}</option>
 								{/foreach}
 							</select>
 						{/foreach}
@@ -96,7 +96,7 @@
 			{/if}
 			
 			<fieldset>
-				<textarea id="message" name="message" placeholder="{l s='Your message'}" rows="15" cols="10">{if isset($message) && $message != ''}{$message|escape:'htmlall':'UTF-8'|stripslashes}{/if}</textarea>
+				<textarea id="message" name="message" placeholder="{l s='Your message'}" rows="15" cols="10">{if isset($message) && $message != ''}{$message|escape:'html':'UTF-8'|stripslashes}{/if}</textarea>
 			</fieldset>
 			
 			<fieldset>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<entity_attribute>
+  <fields id="name" class="Attribute">
+    <field name="id_attribute_group" relation="attribute_group"/>
+    <field name="color"/>
+  </fields>
+  <entities>
+    <attribute id="S" id_attribute_group="Size" color=""/>
+    <attribute id="M" id_attribute_group="Size" color=""/>
+    <attribute id="L" id_attribute_group="Size" color=""/>
+    <attribute id="One_size" id_attribute_group="Size" color=""/>
+    <attribute id="Grey" id_attribute_group="Color" color="#575757"/>
+    <attribute id="Taupe" id_attribute_group="Color" color="#483C32"/>
+    <attribute id="Beige" id_attribute_group="Color" color="#f5f5dc"/>
+    <attribute id="White" id_attribute_group="Color" color="#ffffff"/>
+    <attribute id="Off_White" id_attribute_group="Color" color="#faebd7"/>
+    <attribute id="Red" id_attribute_group="Color" color="#ff0000"/>
+    <attribute id="Black" id_attribute_group="Color" color="#000000"/>
+    <attribute id="Camel" id_attribute_group="Color" color="#FD9812"/>
+    <attribute id="Orange" id_attribute_group="Color" color="#ffa500"/>
+    <attribute id="Blue" id_attribute_group="Color" color="#0000ff"/>
+    <attribute id="Green" id_attribute_group="Color" color="#008000"/>
+    <attribute id="Yellow" id_attribute_group="Color" color="#ffff00"/>
+    <attribute id="Brown" id_attribute_group="Color" color="#a52a2a"/>
+    <attribute id="35" id_attribute_group="Shoes_Size" color=""/>
+    <attribute id="36" id_attribute_group="Shoes_Size" color=""/>
+    <attribute id="37" id_attribute_group="Shoes_Size" color=""/>
+    <attribute id="38" id_attribute_group="Shoes_Size" color=""/>
+    <attribute id="39" id_attribute_group="Shoes_Size" color=""/>
+    <attribute id="40" id_attribute_group="Shoes_Size" color=""/>
+  </entities>
+</entity_attribute>

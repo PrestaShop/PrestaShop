@@ -26,15 +26,15 @@
 {capture name=path}{l s='Manufacturers:'}{/capture}
 
 <h1 class="page-heading product-listing">
-	{l s='Manufacturers:'}
+	{l s='Brands'}
     {strip}
 		<span class="heading-counter">
 			{if $nbManufacturers == 0}{l s='There are no manufacturers.'}
 			{else}
 				{if $nbManufacturers == 1}
-					{l s='There is %d manufacturer.' sprintf=$nbManufacturers}
+					{l s='There is 1 brand'}
 				{else}
-					{l s='There are %d manufacturers.' sprintf=$nbManufacturers}
+					{l s='There are %d brands' sprintf=$nbManufacturers}
 				{/if}
 			{/if}
 		</span>
@@ -47,11 +47,12 @@
 	{if $nbManufacturers > 0}
     	<div class="content_sortPagiBar">
         	<div class="sortPagiBar clearfix">
-            	<ul class="display">
+            	<ul class="display hidden-xs">
                     <li class="display-title">{l s='View:'}</li>
                     <li id="grid"><a onclick="display('grid');"><i class="icon-th-large"></i>{l s='Grid'}</a></li>
                     <li id="list"><a onclick="display('list');"><i class="icon-th-list"></i>{l s='List'}</a></li>
                 </ul>
+                {include file="./nbr-product-page.tpl"}
             </div>
         	<div class="top-pagination-content clearfix bottom-line">
 				{include file="$tpl_dir./pagination.tpl"}
@@ -68,20 +69,20 @@
             {math equation="(total%perLineT)" total=$smarty.foreach.manufacturers.total perLineT=$nbItemsPerLineTablet assign=totModuloTablet}
             {if $totModulo == 0}{assign var='totModulo' value=$nbItemsPerLine}{/if}
             {if $totModuloTablet == 0}{assign var='totModuloTablet' value=$nbItemsPerLineTablet}{/if}
-			<li class="{if $smarty.foreach.manufacturers.iteration%$nbItemsPerLine == 0} last-in-line{elseif $smarty.foreach.manufacturers.iteration%$nbItemsPerLine == 1} first-in-line{/if} {if $smarty.foreach.manufacturers.iteration > ($smarty.foreach.manufacturers.total - $totModulo)}last-line{/if} {if $smarty.foreach.manufacturers.iteration%$nbItemsPerLineTablet == 0}last-item-of-tablet-line{elseif $smarty.foreach.manufacturers.iteration%$nbItemsPerLineTablet == 1}first-item-of-tablet-line{/if} {if $smarty.foreach.manufacturers.iteration > ($smarty.foreach.manufacturers.total - $totModuloTablet)}last-tablet-line{/if}"> 
+			<li class="{if $smarty.foreach.manufacturers.iteration%$nbItemsPerLine == 0} last-in-line{elseif $smarty.foreach.manufacturers.iteration%$nbItemsPerLine == 1} first-in-line{/if} {if $smarty.foreach.manufacturers.iteration > ($smarty.foreach.manufacturers.total - $totModulo)}last-line{/if} {if $smarty.foreach.manufacturers.iteration%$nbItemsPerLineTablet == 0}last-item-of-tablet-line{elseif $smarty.foreach.manufacturers.iteration%$nbItemsPerLineTablet == 1}first-item-of-tablet-line{/if} {if $smarty.foreach.manufacturers.iteration > ($smarty.foreach.manufacturers.total - $totModuloTablet)}last-tablet-line{/if}{if $smarty.foreach.manufacturers.last} item-last{/if}"> 
             	<div class="left-side">
 					<!-- logo -->
 					<div class="logo">
-						{if $manufacturer.nb_products > 0}<a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'htmlall':'UTF-8'}" title="{$manufacturer.name|escape:'htmlall':'UTF-8'}" class="lnk_img">{/if}
-						<img src="{$img_manu_dir}{$manufacturer.image|escape:'htmlall':'UTF-8'}-medium_default.jpg" alt="" />
+						{if $manufacturer.nb_products > 0}<a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}" title="{$manufacturer.name|escape:'html':'UTF-8'}" class="lnk_img">{/if}
+						<img src="{$img_manu_dir}{$manufacturer.image|escape:'html':'UTF-8'}-medium_default.jpg" alt="" />
 						{if $manufacturer.nb_products > 0}</a>{/if}
 					</div>
 				</div>
 				<div class="middle-side">
                 	<!-- name -->
 					<h3>
-						{if $manufacturer.nb_products > 0}<a class="product-name" href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'htmlall':'UTF-8'}">{/if}
-							{$manufacturer.name|truncate:60:'...'|escape:'htmlall':'UTF-8'}
+						{if $manufacturer.nb_products > 0}<a class="product-name" href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}">{/if}
+							{$manufacturer.name|truncate:60:'...'|escape:'html':'UTF-8'}
 						{if $manufacturer.nb_products > 0}</a>{/if}
 					</h3>
 					<div class="description rte">
@@ -91,12 +92,12 @@
 				<div class="right-side">
                 	<div class="right-side-content">
                         <p class="product-counter">
-                            {if $manufacturer.nb_products > 0}<a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'htmlall':'UTF-8'}">{/if}
+                            {if $manufacturer.nb_products > 0}<a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}">{/if}
                             {if $manufacturer.nb_products == 1}{l s='%d product' sprintf=$manufacturer.nb_products|intval}{else}{l s='%d products' sprintf=$manufacturer.nb_products|intval}{/if}
                             {if $manufacturer.nb_products > 0}</a>{/if}
                         </p>
                     {if $manufacturer.nb_products > 0}
-                        <a class="btn btn-default button exclusive-medium" href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'htmlall':'UTF-8'}"><span>{l s='view products'} <i class="icon-chevron-right right"></i></span></a>
+                        <a class="btn btn-default button exclusive-medium" href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}"><span>{l s='view products'} <i class="icon-chevron-right right"></i></span></a>
                     {/if}
                     </div>
                 </div>
@@ -112,13 +113,13 @@
 		function display(view) {
 			if (view == 'list') {
 				$('#manufacturers_list').attr('class', 'list row');
-				$('#manufacturers_list > li').removeClass('col-xs-12 col-md-6 col-lg-4').addClass('col-xs-12');
+				$('#manufacturers_list > li').removeClass('col-xs-12 col-sm-6 col-lg-4').addClass('col-xs-12');
 				$('#manufacturers_list > li').each(function(index, element) {
 					html = '';
 					html = '<div class="mansup-container"><div class="row">';
-						html += '<div class="left-side col-xs-12 col-md-3">' + $(element).find('.left-side').html() + '</div>';
-						html += '<div class="middle-side col-xs-12 col-md-5">'+ $(element).find('.middle-side').html() +'</div>';	
-						html += '<div class="right-side col-xs-12 col-md-4"><div class="right-side-content">'+ $(element).find('.right-side-content').html() + '</div></div>'; 
+						html += '<div class="left-side col-xs-12 col-sm-3">' + $(element).find('.left-side').html() + '</div>';
+						html += '<div class="middle-side col-xs-12 col-sm-5">'+ $(element).find('.middle-side').html() +'</div>';	
+						html += '<div class="right-side col-xs-12 col-sm-4"><div class="right-side-content">'+ $(element).find('.right-side-content').html() + '</div></div>'; 
 					html += '</div></div>';
 				$(element).html(html);
 				});		
@@ -127,7 +128,7 @@
 				$.totalStorage('display', 'list'); 
 			} else {
 				$('#manufacturers_list').attr('class', 'grid row');
-				$('#manufacturers_list > li').removeClass('col-xs-12').addClass('col-xs-12 col-md-6 col-lg-4');
+				$('#manufacturers_list > li').removeClass('col-xs-12').addClass('col-xs-12 col-sm-6 col-lg-4');
 				$('#manufacturers_list > li').each(function(index, element) {
 				html = '';
 				html += '<div class="product-container">';

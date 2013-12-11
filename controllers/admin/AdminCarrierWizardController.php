@@ -129,9 +129,13 @@ class AdminCarrierWizardControllerCore extends AdminController
 			array_splice($this->tpl_view_vars['wizard_contents']['contents'], 1, 0, array(0 => $this->renderStepTwo($carrier)));
 
 		$this->context->smarty->assign(array(
-				'carrier_logo' => (Validate::isLoadedObject($carrier) && file_exists(_PS_SHIP_IMG_DIR_.$carrier->id.'.jpg') ? _THEME_SHIP_DIR_.$carrier->id.'.jpg' : false)
-			));
-		$this->content .= $this->createTemplate('logo.tpl')->fetch();
+				'carrier_logo' => (Validate::isLoadedObject($carrier) && file_exists(_PS_SHIP_IMG_DIR_.$carrier->id.'.jpg') ? _THEME_SHIP_DIR_.$carrier->id.'.jpg' : false),
+ 			));
+ 			
+ 		$this->context->smarty->assign(array(
+ 			'logo_content' => $this->createTemplate('logo.tpl')->fetch()
+ 		));
+ 		
 		$this->addjQueryPlugin(array('ajaxfileupload'));
 
 		return parent::renderView();
@@ -149,10 +153,10 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$this->toolbar_title = $bread_extended;
 	}
 
-	public function initToolbar()
+	public function initPageHeaderToolbar()
 	{
-		parent::initToolbar();
-		$this->toolbar_btn['back']['href'] = $this->context->link->getAdminLink('AdminCarriers');
+		parent::initPageHeaderToolbar();
+		$this->page_header_toolbar_btn['back']['href'] = $this->context->link->getAdminLink('AdminCarriers');
 	}
 
 	public function renderStepOne($carrier)
@@ -254,7 +258,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					),
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Apply shipping cost:'),
+						'label' => $this->l('Free Shipping:'),
 						'name' => 'is_free',
 						'required' => false,
 						'class' => 't',
@@ -270,7 +274,6 @@ class AdminCarrierWizardControllerCore extends AdminController
 								'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
 							)
 						),
-						'hint' => $this->l('Apply both regular shipping cost and product-specific shipping costs.')
 					),
 					array(
 						'type' => 'radio',
@@ -684,15 +687,17 @@ class AdminCarrierWizardControllerCore extends AdminController
 				if (is_array($fees) && count($fees))
 				{
 					foreach ($fees as $id_zone => $fee)
+					{
 						$price_list[] = array(
 							'id_range_price' => ($range_type == Carrier::SHIPPING_METHOD_PRICE ? (int)$range->id : null),
 							'id_range_weight' => ($range_type == Carrier::SHIPPING_METHOD_WEIGHT ? (int)$range->id : null),
 							'id_carrier' => (int)$carrier->id,
 							'id_zone' => (int)$id_zone,
-							'price' => (float)$fee[$key]
+							'price' => isset($fee[$key]) ? (float)$fee[$key] : 0,
 						);
+					}
 				}
-
+				
 				if (count($price_list) && !$carrier->addDeliveryPrice($price_list, true))
 					return false;
 			}
@@ -877,7 +882,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$step_number = Tools::getValue('step_number');
 
 		if ($step_number == 4 && !Shop::isFeatureActive() || $step_number == 5 && Shop::isFeatureActive())
-			return array();
+			return array('fields' => array());
 
 		$step_fields = array(
 			1 => array('name', 'delay', 'grade', 'url'),
@@ -896,7 +901,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		foreach ($definition['fields'] as $field => $def)
 			if (!in_array($field, $step_fields[$step_number]))
 				unset($definition['fields'][$field]);
-		
+
 		return $definition;
 	}
 

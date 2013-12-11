@@ -31,7 +31,7 @@ function deactivate_custom_modules()
 	$modules = scandir(_PS_MODULE_DIR_);
 	foreach ($modules AS $name)
 	{
-		if (is_dir(_PS_MODULE_DIR_.$name) && file_exists(_PS_MODULE_DIR_.$name.'/'.$name.'.php'))
+		if (is_dir(_PS_MODULE_DIR_.$name.'/') && file_exists(_PS_MODULE_DIR_.$name.'/'.$name.'.php'))
 		{
 			if (!preg_match('/^[a-zA-Z0-9_-]+$/', $name))
 				die(Tools::displayError().' (Module '.$name.')');

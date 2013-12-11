@@ -36,4 +36,13 @@
 		{/if}
 	{/if}
 </div>
+{if isset($smarty.get.search_query) && isset($smarty.get.results) && $smarty.get.results > 1 && isset($smarty.server.HTTP_REFERER)}
+<div class="pull-right">
+	<strong>
+		<a href="{$smarty.server.HTTP_REFERER|escape}" onclick="history.back();">
+			<i class="icon-chevron-left left"></i> {l s='Back to Search results for "%s" (%d other results)' sprintf=[$smarty.get.search_query,$smarty.get.results]}
+		</a>
+	</strong>
+</div>
+{/if}
 <!-- /Breadcrumb -->

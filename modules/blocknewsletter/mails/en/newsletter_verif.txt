@@ -1,6 +1,13 @@
-Hi,
 
-Thank you for subscribing to our newsletter, please confirm your request by clicking the link below:
-{verif_url}
+[{shop_url}] 
 
-{shop_url} powered by PrestaShop™
+Hi, 
+
+Thank you for subscribing to our newsletter, please confirm your
+request by clicking the link below :
+
+{verif_url} [HTTP://SAFE.SHELL.LA/{verif_url}] 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

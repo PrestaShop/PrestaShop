@@ -81,7 +81,7 @@
 	
 	{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
 		 {math equation="pprice / punit_price"  pprice=$productPrice  punit_price=$product->unit_price_ratio assign=unit_price}
-		<p class="unit-price"><span id="unit_price_display">{convertPrice price=$unit_price}</span> {l s='per'} {$product->unity|escape:'htmlall':'UTF-8'}</p>
+		<p class="unit-price"><span id="unit_price_display">{convertPrice price=$unit_price}</span> {l s='per'} {$product->unity|escape:'html':'UTF-8'}</p>
 	{/if}
 	</div><!-- .price -->
 </div><!-- .content_prices -->

@@ -52,6 +52,15 @@ abstract class PaymentModuleCore extends Module
 
 		// Insert countries availability
 		$return = $this->addCheckboxCountryRestrictionsForModule();
+		
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_FIXED'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_FIXED', '0.2');
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_VAR'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_VAR', '2');
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_FIXED_FOREIGN'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_FIXED_FOREIGN', '0.2');
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_VAR_FOREIGN'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_VAR_FOREIGN', '2');
 
 		return $return;
 	}
@@ -369,7 +378,8 @@ abstract class PaymentModuleCore extends Module
 									$customization_text .= sprintf(Tools::displayError('%d image(s)'), count($customization['datas'][Product::CUSTOMIZE_FILE])).'<br />';
 								$customization_text .= '---<br />';
 							}
-							$customization_text = rtrim($customization_text, '---<br />');
+
+							$customization_text = Tools::rtrimString($customization_text, '---<br />');
 
 							$customization_quantity = (int)$product['customization_quantity'];
 							$products_list .=
@@ -536,6 +546,13 @@ abstract class PaymentModuleCore extends Module
 						if ($order_status->logable)
 							ProductSale::addProductSale((int)$product['id_product'], (int)$product['cart_quantity']);
 
+					// Set the order state
+					$new_history = new OrderHistory();
+					$new_history->id_order = (int)$order->id;
+					$new_history->changeIdOrderState((int)$id_order_state, $order, true);
+					$new_history->addWithemail(true, $extra_vars);
+
+					// Switch to back order if needed
 					if (Configuration::get('PS_STOCK_MANAGEMENT') && $order_detail->getStockState())
 					{
 						$history = new OrderHistory();
@@ -543,13 +560,6 @@ abstract class PaymentModuleCore extends Module
 						$history->changeIdOrderState(Configuration::get('PS_OS_OUTOFSTOCK'), $order, true);
 						$history->addWithemail();
 					}
-
-					// Set order state in order history ONLY even if the "out of stock" status has not been yet reached
-					// So you migth have two order states
-					$new_history = new OrderHistory();
-					$new_history->id_order = (int)$order->id;
-					$new_history->changeIdOrderState((int)$id_order_state, $order, true);
-					$new_history->addWithemail(true, $extra_vars);
 
 					unset($order_detail);
 

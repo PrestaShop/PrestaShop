@@ -64,6 +64,7 @@ class LocalizationPackCore
 
 			if ($install_mode && $res && isset($this->iso_currency))
 			{
+				Cache::clean('Currency::getIdByIsoCode_*');
 				$res &= Configuration::updateValue('PS_CURRENCY_DEFAULT', (int)Currency::getIdByIsoCode($this->iso_currency));
 				Currency::refreshCurrencies();
 			}

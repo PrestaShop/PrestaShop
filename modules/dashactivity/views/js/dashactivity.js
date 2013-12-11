@@ -8,11 +8,14 @@ function pie_chart_trends(widget_name, chart_details)
 			.donut(true)
 			.showLabels(false)
 			.showLegend(false);
-		  d3.select("#dash_traffic_chart2 svg")
+
+		d3.select("#dash_traffic_chart2 svg")
 			.datum(chart_details.data)
 			.transition().duration(1200)
 			.call(chart);
+			
 		nv.utils.windowResize(chart.update);
+
 		return chart;
 	});	
 }
@@ -99,11 +102,11 @@ Date.prototype.format = function(format) {
 }
 
 $(document).ready(function() {
-	if (date_subtitle === undefined)
-		date_subtitle = 'From %s to %s';
+	if (typeof date_subtitle === "undefined")
+		var date_subtitle = '(from %s to %s)';
 
-	if (date_format === undefined)
-		date_format = 'Y-m-d';
+	if (typeof date_format === "undefined")
+		var date_format = 'Y-m-d';
 
 	$('#date-start').change(function() {
 		start = Date.parseDate($('#date-start').val(), 'Y-m-d');

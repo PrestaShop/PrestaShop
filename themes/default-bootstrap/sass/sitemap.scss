@@ -19,7 +19,7 @@
 				&:before {
 					content:"";
 					display:inline-block;
-					font-family:'FontAwesome';
+					font-family:$font-icon;
 					padding-right:10px;	
 				}
 				
@@ -40,9 +40,9 @@
 		&:before {
 			content:"";
 			display:inline-block;
-			font-family:"FontAwesome";
+			font-family:$font-icon;
 			font-size:20px;
-			color:#333;
+			color:$base-text-color;
 		}
 		
 		&:hover {

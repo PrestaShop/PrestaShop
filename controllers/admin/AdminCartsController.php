@@ -37,6 +37,7 @@ class AdminCartsControllerCore extends AdminController
 		$this->addRowAction('view');
 		$this->addRowAction('delete');
 		$this->allow_export = true;
+		$this->_orderWay = 'DESC';
 
 		$this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier, o.id_order, IF(co.id_guest, 1, 0) id_guest';
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'customer c ON (c.id_customer = a.id_customer)
@@ -566,6 +567,8 @@ class AdminCartsControllerCore extends AdminController
 		if (count($summary['products']))
 			foreach ($summary['products'] as &$product)
 			{
+				$product['numeric_price'] = $product['price'];
+				$product['numeric_total'] = $product['total'];
 				$product['price'] = str_replace($currency->sign, '', Tools::displayPrice($product['price'], $currency));
 				$product['total'] = str_replace($currency->sign, '', Tools::displayPrice($product['total'], $currency));
 				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default');

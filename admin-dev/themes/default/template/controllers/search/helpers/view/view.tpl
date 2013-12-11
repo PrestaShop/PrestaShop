@@ -25,101 +25,150 @@
 
 <script type="text/javascript">
 $(function() {
-	$('body').highlight('{$query}');
+	$('#content .panel').highlight('{$query}');
 });
 </script>
 
-{if isset($features)}
-	<div class="panel">
-	{if !$features}
-		<h3>{l s='No features matching your query'} : {$query}</h3>
+{if !isset($nb_results) || !$nb_results}
+	<h2>{l s='There are no results matching your query "%s".' sprintf=$query}</h2>
+{else}
+	<h2>
+	{if $nb_results == 1}
+		{l s='1 result matches your query "%s".' sprintf=$query}
 	{else}
-		<h3>{l s='Features matching your query'} : {$query}</h3>
+		{l s='%d results match your query "%s".' sprintf=[$nb_results|intval, $query]}
+	{/if}
+	</h2>
+
+	{if isset($features)}
+	<div class="panel">
+		<h3>
+			{if $features|@count == 1}
+				{l s='1 feature'}
+			{else}
+				{l s='%d features' sprintf=$features|@count}
+			{/if}
+		</h3>
 		<table class="table">
 			<tbody>
 			{foreach $features key=key item=feature}
 				{foreach $feature key=k item=val name=feature_list}
 					<tr>
-						<td><strong>{if $smarty.foreach.feature_list.first}{$key}{/if}</strong></td>
-
-						<td>
-							<a href="{$val.link}">{$val.value}</a>
-						</td>
+						<td><a href="{$val.link}"{if $smarty.foreach.feature_list.first}><strong>{$key}</strong>{/if}</a></td>
+						<td><a href="{$val.link}">{$val.value}</a></td>
 					</tr>
 				{/foreach}
 			{/foreach}
 			</tbody>
 		</table>
-	{/if}
 	</div>
-{/if}
+	{/if}
 
-{if isset($modules)}
+	{if isset($modules) && $modules}
 	<div class="panel">
-	{if !$modules}
-		<h3>{l s='No modules matching your query'} : {$query}</h3>
-	{else}
-		<h3>{l s='Modules matching your query'} : {$query}</h3>
+		<h3>
+			{if $modules|@count == 1}
+				{l s='1 module'}
+			{else}
+				{l s='%d modules' sprintf=$modules|@count}
+			{/if}
+		</h3>
 		<table class="table">
 			<tbody>
 			{foreach $modules key=key item=module}
 				<tr>
-					<td><strong><a href="{$module->linkto|escape:'htmlall':'UTF-8'}">{$module->displayName}</a></strong></td>
-					<td><a href="{$module->linkto|escape:'htmlall':'UTF-8'}">{$module->description}</a></td>
+					<td><a href="{$module->linkto|escape:'html':'UTF-8'}"><strong>{$module->displayName}</strong></a></td>
+					<td><a href="{$module->linkto|escape:'html':'UTF-8'}">{$module->description}</a></td>
 				</tr>
 			{/foreach}
 		</tbody>
 		</table>
-	{/if}
 	</div>
-{/if}
+	{/if}
 
-{if isset($categories)}
+	{if isset($categories) && $categories}
 	<div class="panel">
-	{if !$categories}
-		<h3>{l s='No categories matching your query'} : {$query}</h3>
-	{else}
-		<h3>{l s='Categories matching your query'} : {$query}</h3>
+		<h3>
+			{if $categories|@count == 1}
+				{l s='1 category'}
+			{else}
+				{l s='%d categories' sprintf=$categories|@count}
+			{/if}
+		</h3>
 		<table cellspacing="0" cellpadding="0" class="table">
 			{foreach $categories key=key item=category}
-				<tr class="alt_row">
+				<tr>
 					<td>{$category}</td>
 				</tr>
 			{/foreach}
 		</table>
-	{/if}
 	</div>
-{/if}
+	{/if}
 
-{if isset($products)}
+	{if isset($products) && $products}
 	<div class="panel">
-	{if !$products}
-		<h3>{l s='There are no products matching your query'} : {$query}</h3>
-	{else}
-		<h3>{l s='Products matching your query'} : {$query}</h3>
+		<h3>
+			{if $products|@count == 1}
+				{l s='1 product'}
+			{else}
+				{l s='%d products' sprintf=$products|@count}
+			{/if}
+		</h3>
 		{$products}
-	{/if}
 	</div>
-{/if}
+	{/if}
 
-{if isset($customers)}
+	{if isset($customers) && $customers}
 	<div class="panel">
-	{if !$customers}
-		<h3>{l s='There are no customers matching your query'} : {$query}</h3>
-	{else}
-		<h3>{l s='Customers matching your query'} : {$query}</h3>
+		<h3>
+			{if $customers|@count == 1}
+				{l s='1 customer'}
+			{else}
+				{l s='%d customers' sprintf=$customers|@count}
+			{/if}
+		</h3>
 		{$customers}
-	{/if}
 	</div>
-{/if}
+	{/if}
 
-{if isset($orders)}
+	{if isset($orders) && $orders}
 	<div class="panel">
-	{if !$orders}
-		<h3>{l s='There are no orders matching your query'} : {$query}</h3>
-	{else}
-		<h3>{l s='Orders matching your query'} : {$query}</h3>
+		<h3>
+			{if $orders|@count == 1}
+				{l s='1 order'}
+			{else}
+				{l s='%d orders' sprintf=$orders|@count}
+			{/if}
+		</h3>
 		{$orders}
-	{/if}
 	</div>
+	{/if}
+
+	{if isset($addons) && $addons}
+	<div class="panel">
+		<h3>
+			{if $addons|@count == 1}
+				{l s='1 addon'}
+			{else}
+				{l s='%d addons' sprintf=$addons|@count}
+			{/if}
+		</h3>
+		<table class="table">
+			<tbody>
+			{foreach $addons key=key item=addon}
+				<tr>
+					<td><a href="{$addon.href|escape:'html':'UTF-8'}" target="_blank"><strong><i class="icon-external-link-sign"></i> {$addon.title|escape:'html':'UTF-8'}</strong></a></td>
+					<td><a href="{$addon.href|escape:'html':'UTF-8'}" target="_blank">{$addon.description|truncate:256:'...'|escape:'html':'UTF-8'}</a></td>
+				</tr>
+			{/foreach}
+		</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="2" class="text-center"><a href="http://addons.prestashop.com/search.php?search_query={$query|urlencode}" target="_blank"><strong>{l s='Show more results...'}</strong></a></td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+	{/if}
+
 {/if}

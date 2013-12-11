@@ -25,7 +25,7 @@
 {if isset($fields.title)}<h3>{$fields.title}</h3>{/if}
 
 {block name="defaultForm"}
-<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'htmlall':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{/if}" class="defaultForm {$name_controller} form-horizontal" action="{$current}&{if !empty($submit_action)}{$submit_action}=1{/if}&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
+<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{/if}" class="defaultForm {$name_controller} form-horizontal" action="{$current}&{if !empty($submit_action)}{$submit_action}=1{/if}&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
@@ -35,8 +35,8 @@
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
 					<h3>
-						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'htmlall':'UTF-8'}" />{/if}
-						{if isset($field.icon)}<i class="{$field.icon}"/></i>{/if}
+						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'html':'UTF-8'}" />{/if}
+						{if isset($field.icon)}<i class="{$field.icon}"></i>{/if}
 						{$field.title}
 					</h3>
 				{elseif $key == 'description' && $field}
@@ -46,15 +46,14 @@
 						{block name="input_row"}
 						<div class="form-group {if $input.type == 'hidden'}hide{/if}" {if $input.name == 'id_state'}id="contains_states"{if !$contains_states}style="display:none;"{/if}{/if}>
 						{if $input.type == 'hidden'}
-							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
+							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 						{else}
 							{block name="label"}
 								{if isset($input.label)}
 									<label for="{if isset($input.id)}{$input.id}{if isset($input.lang) AND $input.lang}_{$current_id_lang}{/if}{else}{$input.name}{if isset($input.lang) AND $input.lang}_{$current_id_lang}{/if}{/if}" class="control-label col-lg-3 {if isset($input.required) && $input.required && $input.type != 'radio'}required{/if}">
 										{if isset($input.hint)}
 										<span class="label-tooltip" data-toggle="tooltip" data-html="true"
-											title="
-												{if is_array($input.hint)}
+											title="{if is_array($input.hint)}
 													{foreach $input.hint as $hint}
 														{if is_array($hint)}
 															{$hint.text}
@@ -64,8 +63,7 @@
 													{/foreach}
 												{else}
 													{$input.hint}
-												{/if}
-											">
+												{/if}">
 										{/if}
 										{$input.label}
 										{if isset($input.hint)}
@@ -76,7 +74,7 @@
 							{/block}
 
 							{block name="field"}
-								<div class="col-lg-9{if !isset($input.label)} col-lg-offset-3{/if}">
+								<div class="col-lg-{if isset($input.col)}{$input.col|intval}{else}9{/if} {if !isset($input.label)}col-lg-offset-3{/if}">
 								{block name="input"}
 								{if $input.type == 'text' || $input.type == 'tags'}
 									{if isset($input.lang) AND $input.lang}
@@ -94,7 +92,7 @@
 														<script type="text/javascript">
 															$().ready(function () {
 																var input_id = '{/literal}{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}{literal}';
-																$('#'+input_id).tagify({addTagPrompt: '{/literal}{l s='Add tag' js=1}{literal}'});
+																$('#'+input_id).tagify({delimiters: [13,44], addTagPrompt: '{/literal}{l s='Add tag' js=1}{literal}'});
 																$({/literal}'#{$table}{literal}_form').submit( function() {
 																	$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
 																});
@@ -119,7 +117,7 @@
 													id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
 													name="{$input.name}_{$language.id_lang}"
 													class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
-													value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
+													value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'html':'UTF-8'}{else}{$value_text|escape:'html':'UTF-8'}{/if}"
 													onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();"
 													{if isset($input.size)} size="{$input.size}"{/if}
 													{if isset($input.maxchar)} data-maxchar="{$input.maxchar}"{/if}
@@ -178,8 +176,7 @@
 											<script type="text/javascript">
 												$().ready(function () {
 													var input_id = '{/literal}{if isset($input.id)}{$input.id}{else}{$input.name}{/if}{literal}';
-													$('#'+input_id).tagify();
-													$('#'+input_id).tagify({addTagPrompt: '{/literal}{l s='Add tag'}{literal}'});
+													$('#'+input_id).tagify({delimiters: [13,44], addTagPrompt: '{/literal}{l s='Add tag'}{literal}'});
 													$({/literal}'#{$table}{literal}_form').submit( function() {
 														$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
 													});
@@ -202,7 +199,7 @@
 										<input type="text"
 											name="{$input.name}"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
-											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
+											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'html':'UTF-8'}{else}{$value_text|escape:'html':'UTF-8'}{/if}"
 											class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
 											{if isset($input.size)} size="{$input.size}"{/if}
 											{if isset($input.maxchar)} data-maxchar="{$input.maxchar}"{/if}
@@ -250,7 +247,7 @@
 										<input type="text"
 											name="{$input.name}"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
-											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
+											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'html':'UTF-8'}{else}{$value_text|escape:'html':'UTF-8'}{/if}"
 											class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
 											{if isset($input.size)} size="{$input.size}"{/if}
 											{if isset($input.maxchar)} data-maxchar="{$input.maxchar}"{/if}
@@ -337,7 +334,7 @@
 															{/if}
 														>{$option->$input.options.name}</option>
 													{elseif $option == "-"}
-														<option value="">--</option>
+														<option value="">-</option>
 													{else}
 														<option value="{$option[$input.options.id]}"
 															{if isset($input.multiple)}
@@ -362,7 +359,7 @@
 									{foreach $input.values as $value}
 										<div class="radio {if isset($input.class)}"{$input.class}"{/if}">
 											<label>
-											<input type="radio"	name="{$input.name}" id="{$value.id}" value="{$value.value|escape:'htmlall':'UTF-8'}"
+											<input type="radio"	name="{$input.name}" id="{$value.id}" value="{$value.value|escape:'html':'UTF-8'}"
 												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
 												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
 												{$value.label}
@@ -388,7 +385,6 @@
 													{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
 												/>
 												<label
-													class="radio"
 													{if $value.value == 1}
 														for="{$input.name}_on"
 													{else}
@@ -402,7 +398,7 @@
 													{/if}
 												</label>
 												{/foreach}
-												<span class="slide-button btn btn-default"></span>
+												<a class="slide-button btn btn-default"></a>
 											</span>
 										</div>
 									</div>
@@ -417,7 +413,7 @@
 
 										<div class="col-lg-9">
 									{/if}
-											<textarea name="{$input.name}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte {if isset($input.class)}{$input.class}{/if}{else}textarea-autosize{/if}" >{$fields_value[$input.name][$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
+											<textarea name="{$input.name}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte {if isset($input.class)}{$input.class}{/if}{else}textarea-autosize{/if}" >{$fields_value[$input.name][$language.id_lang]|escape:'html':'UTF-8'}</textarea>
 									{if $languages|count > 1}	
 										</div>
 										<div class="col-lg-2">
@@ -438,7 +434,7 @@
 									{/foreach}
 
 									{else}
-										<textarea name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" cols="{$input.cols}" rows="{$input.rows}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte {if isset($input.class)}{$input.class}{/if}{else}textarea-autosize{/if}">{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}</textarea>
+										<textarea name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" {if isset($input.cols)}cols="{$input.cols}"{/if} {if isset($input.rows)}rows="{$input.rows}"{/if} class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte {if isset($input.class)}{$input.class}{/if}{else}textarea-autosize{/if}">{$fields_value[$input.name]|escape:'html':'UTF-8'}</textarea>
 									{/if}
 
 								{elseif $input.type == 'checkbox'}
@@ -450,62 +446,12 @@
 													name="{$id_checkbox}"
 													id="{$id_checkbox}"
 													class="{if isset($input.class)}{$input.class}{/if}"
-													{if isset($value.val)}value="{$value.val|escape:'htmlall':'UTF-8'}"{/if}
+													{if isset($value.val)}value="{$value.val|escape:'html':'UTF-8'}"{/if}
 													{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
 												{$value[$input.values.name]}
 											</label>
 										</div>
 									{/foreach}
-								{elseif $input.type == 'file'}
-									{if isset($input.display_image) && $input.display_image}
-										{if isset($fields_value[$input.name].image) && $fields_value[$input.name].image}
-											<div id="image">
-												{$fields_value[$input.name].image}
-												<p>{l s='File size'} {$fields_value[$input.name].size}kb</p>
-												<a class="btn btn-default" href="{$current}&{$identifier}={$form_id}&token={$token}&deleteImage=1">
-													<i class="icon-trash"></i> {l s='Delete'}
-												</a>
-											</div>
-										{/if}
-									{/if}
-									{if isset($input['thumb']) && $input['thumb']}
-										<div class="row">
-											<div class="col-lg-7">
-												<img src="{$input['thumb']}" alt="{$input['name']}" title="{$input['name']}" />
-												<br/><br/>
-											</div>
-										</div>
-									{/if}
-									<div class="row">
-										<div class="col-lg-7">
-											<input id="{$input.name}" type="file" name="{$input.name}" class="hide" />
-											<div class="dummyfile input-group">
-												<span class="input-group-addon"><i class="icon-file"></i></span>
-												<input id="{$input.name}-name" type="text" class="disabled" name="filename" readonly />
-												<span class="input-group-btn">
-													<button id="{$input.name}-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
-														<i class="icon-folder-open"></i> {l s='Choose a file'}
-													</button>
-												</span>
-											</div>
-										</div>
-									</div>
-
-									<script>
-										$(document).ready(function(){
-											$('#{$input.name}-selectbutton').click(function(e){
-												$('#{$input.name}').trigger('click');
-											});
-											$('#{$input.name}-name').click(function(e){
-												$('#{$input.name}').trigger('click');
-											});
-											$('#{$input.name}').change(function(e){
-												var val = $(this).val();
-												var file = val.split(/[\\/]/);
-												$('#{$input.name}-name').val(file[file.length-1]);
-											});
-										});
-									</script>
 								{elseif $input.type == 'password'}
 									<input type="password"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
@@ -516,7 +462,7 @@
 								{elseif $input.type == 'birthday'}
 								<div class="form-group">
 									{foreach $input.options as $key => $select}
-									<div class="col-lg-4">
+									<div class="col-lg-2">
 										<select name="{$key}" class="{if isset($input.class)}{$input.class}{/if}">
 											<option value="">-</option>
 											{if $key == 'months'}
@@ -554,20 +500,24 @@
 									{$input.html}
 								{elseif $input.type == 'categories'}
 									{$categories_tree}
+								{elseif $input.type == 'file'}
+									{$input.file}
 								{elseif $input.type == 'categories_select'}
 									{$input.category_tree}
 								{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
-										{$asso_shop}
+									{$asso_shop}
 								{elseif $input.type == 'color'}
-								<div class="col-lg-2">
-									<div class="row">
-										<div class="input-group">
-											<input type="color"
-											data-hex="true"
-											{if isset($input.class)}class="{$input.class}"
-											{else}class="color mColorPickerInput"{/if}
-											name="{$input.name}"
-											value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
+								<div class="form-group">
+									<div class="col-lg-2">
+										<div class="row">
+											<div class="input-group">
+												<input type="color"
+												data-hex="true"
+												{if isset($input.class)}class="{$input.class}"
+												{else}class="color mColorPickerInput"{/if}
+												name="{$input.name}"
+												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
+											</div>
 										</div>
 									</div>
 								</div>
@@ -581,13 +531,28 @@
 												{if isset($input.class)}class="{$input.class}"
 												{else}class="datepicker"{/if}
 												name="{$input.name}"
-												value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
+												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 											<span class="input-group-addon">
 												<i class="icon-calendar-empty"></i>
 											</span>
 										</div>
 									</div>
-
+								{elseif $input.type == 'datetime'}
+									<div class="row">
+										<div class="input-group col-lg-4">
+											<input
+												id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
+												type="text"
+												data-hex="true"
+												{if isset($input.class)}class="{$input.class}"
+												{else}class="datetimepicker"{/if}
+												name="{$input.name}"
+												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
+											<span class="input-group-addon">
+												<i class="icon-calendar-empty"></i>
+											</span>
+										</div>
+									</div>
 								{elseif $input.type == 'free'}
 									{$fields_value[$input.name]}
 								{/if}
@@ -650,7 +615,7 @@
 						{if is_array($field)}
 							{foreach $field as $k => $p}
 								{if is_array($p)}
-									<span id="{$p.id}">{$p.text}</span><br />
+									<span{if isset($p.id)} id="{$p.id}"{/if}>{$p.text}</span><br />
 								{else}
 									{$p}
 									{if isset($field[$k+1])}<br />{/if}
@@ -731,6 +696,25 @@
 					nextText: '',
 					dateFormat: 'yy-mm-dd'
 				});
+
+			if ($(".datetimepicker").length > 0)
+			$('.datetimepicker').datetimepicker({
+				prevText: '',
+				nextText: '',
+				dateFormat: 'yy-mm-dd',
+				// Define a custom regional settings in order to use PrestaShop translation tools
+				currentText: '{l s='Now'}',
+				closeText: '{l s='Done'}',
+				ampm: false,
+				amNames: ['AM', 'A'],
+				pmNames: ['PM', 'P'],
+				timeFormat: 'hh:mm:ss tt',
+				timeSuffix: '',
+				timeOnlyTitle: '{l s='Choose Time'}',
+				timeText: '{l s='Time'}',
+				hourText: '{l s='Hour'}',
+				minuteText: '{l s='Minute'}',
+			});
 			{if isset($use_textarea_autosize)}
 			$(".textarea-autosize").autosize();
 			{/if}

@@ -19,7 +19,7 @@
 				</p>
                 <a href="{$link->getPageLink('password', true)|escape:'html'}" class="lost_password">{l s='Forgot your password?'}</a>
 				<p class="submit">
-					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
+					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'html':'UTF-8'}" />{/if}
                     <button type="submit" id="SubmitLogin" name="SubmitLogin" class="button btn btn-default button-medium"><span><i class="icon-lock left"></i>{l s='Login'}</span></button>
 				</p>
 			</div>
@@ -59,7 +59,7 @@
 						{if isset($country.states) && $country.contains_states}
 							countries[{$country.id_country|intval}] = new Array();
 							{foreach from=$country.states item='state' name='states'}
-								countries[{$country.id_country|intval}].push({ldelim}'id' : '{$state.id_state}', 'name' : '{$state.name|escape:'htmlall':'UTF-8'}'{rdelim});
+								countries[{$country.id_country|intval}].push({ldelim}'id' : '{$state.id_state}', 'name' : '{$state.name|escape:'html':'UTF-8'}'{rdelim});
 							{/foreach}
 						{/if}
 						{if $country.need_identification_number}
@@ -116,8 +116,8 @@
 					<input type="password" class="text form-control" name="passwd" id="passwd" />
 					<span class="form_info">{l s='(five characters min.)'}</span>
 				</div>
-				<div class="required clearfix">
-					<label>{l s='Title'}</label><br />
+				<div class="required clearfix gender-line">
+					<label>{l s='Title'}</label>
 					{foreach from=$genders key=k item=gender}	
                     	<div class="radio-inline">
                     	<label for="id_gender{$gender->id_gender}" class="top">
@@ -140,7 +140,7 @@
                             	<select id="days" name="days" class="form-control">
                                 <option value="">-</option>
                                 {foreach from=$days item=day}
-                                    <option value="{$day|escape:'htmlall':'UTF-8'}" {if isset($guestInformations) && ($guestInformations.sl_day == $day)} selected="selected"{/if}>{$day|escape:'htmlall':'UTF-8'}&nbsp;&nbsp;</option>
+                                    <option value="{$day|escape:'html':'UTF-8'}" {if isset($guestInformations) && ($guestInformations.sl_day == $day)} selected="selected"{/if}>{$day|escape:'html':'UTF-8'}&nbsp;&nbsp;</option>
                                 {/foreach}
                             </select>
                             {*
@@ -162,7 +162,7 @@
                         	<select id="months" name="months" class="form-control">
                             <option value="">-</option>
                             {foreach from=$months key=k item=month}
-                                <option value="{$k|escape:'htmlall':'UTF-8'}" {if isset($guestInformations) && ($guestInformations.sl_month == $k)} selected="selected"{/if}>{l s=$month}&nbsp;</option>
+                                <option value="{$k|escape:'html':'UTF-8'}" {if isset($guestInformations) && ($guestInformations.sl_month == $k)} selected="selected"{/if}>{l s=$month}&nbsp;</option>
                             {/foreach}
                         </select>
                         </div>
@@ -170,7 +170,7 @@
                             <select id="years" name="years" class="form-control">
                                 <option value="">-</option>
                                 {foreach from=$years item=year}
-                                    <option value="{$year|escape:'htmlall':'UTF-8'}" {if isset($guestInformations) && ($guestInformations.sl_year == $year)} selected="selected"{/if}>{$year|escape:'htmlall':'UTF-8'}&nbsp;&nbsp;</option>
+                                    <option value="{$year|escape:'html':'UTF-8'}" {if isset($guestInformations) && ($guestInformations.sl_year == $year)} selected="selected"{/if}>{$year|escape:'html':'UTF-8'}&nbsp;&nbsp;</option>
                                 {/foreach}
                             </select>
                         </div>
@@ -233,7 +233,7 @@
 					<label for="id_country">{l s='Country'} <sup>*</sup></label>
 					<select name="id_country" id="id_country" class="form-control">
 						{foreach from=$countries item=v}
-						<option value="{$v.id_country}"{if (isset($guestInformations) AND $guestInformations.id_country == $v.id_country) OR (!isset($guestInformations) && $sl_country == $v.id_country)} selected="selected"{/if}>{$v.name|escape:'htmlall':'UTF-8'}</option>
+						<option value="{$v.id_country}"{if (isset($guestInformations) AND $guestInformations.id_country == $v.id_country) OR (!isset($guestInformations) && $sl_country == $v.id_country)} selected="selected"{/if}>{$v.name|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				</div>
@@ -355,7 +355,7 @@
 						<select name="id_country_invoice" id="id_country_invoice" class="form-control">
 							<option value="">-</option>
 							{foreach from=$countries item=v}
-							<option value="{$v.id_country}"{if (isset($guestInformations) AND $guestInformations.id_country_invoice == $v.id_country) OR (!isset($guestInformations) && $sl_country == $v.id_country)} selected="selected"{/if}>{$v.name|escape:'htmlall':'UTF-8'}</option>
+							<option value="{$v.id_country}"{if (isset($guestInformations) AND $guestInformations.id_country_invoice == $v.id_country) OR (!isset($guestInformations) && $sl_country == $v.id_country)} selected="selected"{/if}>{$v.name|escape:'html':'UTF-8'}</option>
 							{/foreach}
 						</select>
 					</div>

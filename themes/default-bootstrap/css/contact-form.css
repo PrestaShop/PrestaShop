@@ -1,4 +1,3 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 /**************************************************************************
 					Contact Page Styles
 **************************************************************************/
@@ -17,9 +16,9 @@
   padding: 23px 0 0 0;
   margin-bottom: 30px;
   background: url(../img/contact-form.png) repeat-x white;
-  -webkit-box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
-  -moz-box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
-  box-shadow: rgba(0, 0, 0, 0) 0px 5px 13px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.17) 0px 5px 13px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.17) 0px 5px 13px;
+  box-shadow: rgba(0, 0, 0, 0.17) 0px 5px 13px;
 }
 .contact-form-box fieldset {
   padding: 0 19px 21px 19px;
@@ -37,8 +36,18 @@
 .contact-form-box .col-md-3 {
   padding-left: 0;
 }
+@media (max-width: 991px) {
+  .contact-form-box .col-md-3 {
+    padding-right: 0;
+  }
+}
 .contact-form-box .col-md-9 {
   padding-right: 0;
+}
+@media (max-width: 991px) {
+  .contact-form-box .col-md-9 {
+    padding-left: 0;
+  }
 }
 .contact-form-box #desc_contact0 {
   display: none;
@@ -55,6 +64,14 @@
 .contact-form-box select.form-control {
   max-width: 270px;
   width: 100%;
+}
+.contact-form-box input.form-control {
+  max-width: 270px;
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .contact-form-box div.uploader span.filename {
+    width: 114px;
+  }
 }
 
 /**************************************************************************

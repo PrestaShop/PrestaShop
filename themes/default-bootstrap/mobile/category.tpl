@@ -27,9 +27,9 @@
 	{if $category->id AND $category->active}
 {capture assign='page_title'}
 	{strip}
-		{$category->name|escape:'htmlall':'UTF-8'}
+		{$category->name|escape:'html':'UTF-8'}
 		{if isset($categoryNameComplement)}
-			{$categoryNameComplement|escape:'htmlall':'UTF-8'}
+			{$categoryNameComplement|escape:'html':'UTF-8'}
 		{/if}
 	{/strip}
 {/capture}

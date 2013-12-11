@@ -29,7 +29,7 @@ define ('TEXTAREA_SIZED', 70);
 class AdminTranslationsControllerCore extends AdminController
 {
 	/** Name of theme by default */
-	const DEFAULT_THEME_NAME = 'default';
+	const DEFAULT_THEME_NAME = 'default-bootstrap';
 
 	/** @var string : Link which list all pack of language */
 	protected $link_lang_pack = 'http://www.prestashop.com/download/lang_packs/get_each_language_pack.php';
@@ -154,6 +154,28 @@ class AdminTranslationsControllerCore extends AdminController
 		return $this->{$method_name}();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+
+		if (Tools::getValue('lang'))
+		{
+			$this->page_header_toolbar_btn['save-and-stay'] = array(
+				'short' => 'SaveAndStay',
+				'href' => '#',
+				'desc' => $this->l('Save and stay'),
+			);
+			$this->page_header_toolbar_btn['save'] = array(
+				'href' => '#',
+				'desc' => $this->l('Update translations')
+			);
+			$this->page_header_toolbar_btn['cancel'] = array(
+				'href' => self::$currentIndex.'&token='.$this->token,
+				'desc' => $this->l('Cancel')
+			);
+		}
+	}
+
 	/**
 	 * AdminController::initToolbar() override
 	 * @see AdminController::initToolbar()
@@ -185,8 +207,8 @@ class AdminTranslationsControllerCore extends AdminController
 		$packs_to_update = array();
 		$token = Tools::getAdminToken('AdminLanguages'.(int)Tab::getIdFromClassName('AdminLanguages').(int)$this->context->employee->id);
 		$file_name = $this->link_lang_pack.'?version='._PS_VERSION_;
-		$array_stream_context = array('http' => array('method' => 'GET', 'timeout' => 5));
-		if ($lang_packs = Tools::file_get_contents($file_name, false, @stream_context_create($array_stream_context)))
+		$array_stream_context = @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 8)));
+		if ($lang_packs = Tools::file_get_contents($file_name, false, $array_stream_context))
 			// Notice : for php < 5.2 compatibility, Tools::jsonDecode. The second parameter to true will set us
 			if ($lang_packs != '' && $lang_packs = Tools::jsonDecode($lang_packs, true))
 				foreach ($lang_packs as $key => $lang_pack)
@@ -677,11 +699,12 @@ class AdminTranslationsControllerCore extends AdminController
 			if (Validate::isLangIsoCode($iso_code))
 			{
 				$themes_selected = Tools::getValue('theme', array(self::DEFAULT_THEME_NAME));
-				$files_list = $gz->listContent();
-				
+				$files_list = AdminTranslationsController::filterTranslationFiles($gz->listContent());
+				$files_paths = AdminTranslationsController::filesListToPaths($files_list);
+
 				$uniqid = uniqid();
 				$sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
-				if ($gz->extract($sandbox, false))
+				if ($gz->extractList($files_paths, $sandbox))
 				{
 					foreach ($files_list as $file2check)
 					{
@@ -703,7 +726,7 @@ class AdminTranslationsControllerCore extends AdminController
 				if (count($this->errors))
 					return false;
 
-				if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
+				if ($gz->extractList($files_paths, _PS_TRANSLATIONS_DIR_.'../'))
 				{
 					foreach ($files_list as $file2check)
 						if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_.'../'.$file2check['filename'], Tools::getDefaultIndexContent()))
@@ -741,20 +764,62 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 	}
 
+	/**
+	* Filter the translation files contained in a .gzip pack
+	* and return only the ones that we want.
+	*
+	* Right now the function only needs to check that
+	* the modules for which we want to add translations
+	* are present on the shop (installed or not).
+	*
+	* $list is the output of Archive_Tar::listContent()
+	*/
+	public static function filterTranslationFiles($list)
+	{
+		$kept = array();
+		foreach ($list as $file)
+		{
+			$m = array();
+			if (preg_match('#^modules/([^/]+)/#', $file['filename'], $m))
+			{
+				if (is_dir(_PS_MODULE_DIR_.$m[1]))
+					$kept[] = $file;
+			}
+			else
+				$kept[] = $file;
+		}
+		return $kept;
+	}
+
+	/**
+	* Turn the list returned by 
+	* AdminTranslationsController::filterTranslationFiles()
+	* into a list of paths that can be passed to 
+	* Archive_Tar::extractList()
+	*/
+	public static function filesListToPaths($list)
+	{
+		$paths = array();
+		foreach ($list as $item)
+			$paths[] = $item['filename'];
+		return $paths;
+	}
+
 	public function submitAddLang()
 	{
 		$arr_import_lang = explode('|', Tools::getValue('params_import_language')); /* 0 = Language ISO code, 1 = PS version */
 		if (Validate::isLangIsoCode($arr_import_lang[0]))
 		{
-			$content = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.Tools::strtolower($arr_import_lang[0]).'.gzip');
+			$array_stream_context = @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 10)));
+			$content = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.Tools::strtolower($arr_import_lang[0]).'.gzip', false, $array_stream_context);
 			if ($content)
 			{
 				$file = _PS_TRANSLATIONS_DIR_.$arr_import_lang[0].'.gzip';
 				if ((bool)@file_put_contents($file, $content))
 				{
 					$gz = new Archive_Tar($file, true);
-					$files_list = $gz->listContent();
-					if ($error = $gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
+					$files_list = AdminTranslationsController::filterTranslationFiles($gz->listContent());
+					if ($error = $gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../'))
 					{
 						if (is_object($error) && !empty($error->message))
 							$this->errors[] = Tools::displayError('The archive cannot be extracted.'). ' '.$error->message;
@@ -1237,6 +1302,8 @@ class AdminTranslationsControllerCore extends AdminController
 		// Set the path of selected theme
 		if ($this->theme_selected)
 			define('_PS_THEME_SELECTED_DIR_', _PS_ROOT_DIR_.'/themes/'.$this->theme_selected.'/');
+		else
+			define('_PS_THEME_SELECTED_DIR_', '');
 
 		// Get type of translation
 		if (($type = Tools::getValue('type')) && !is_array($type))
@@ -1270,7 +1337,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$helper->id = 'box-languages';
 		$helper->icon = 'icon-microphone';
 		$helper->color = 'color1';
-		$helper->title = $this->l('Enabled Languages');
+		$helper->title = $this->l('Enabled Languages', null, null, false);
 		if (ConfigurationKPI::get('ENABLED_LANGUAGES') !== false)
 			$helper->value = ConfigurationKPI::get('ENABLED_LANGUAGES');
 		if (ConfigurationKPI::get('ENABLED_LANGUAGES_EXPIRE') < $time)
@@ -1281,8 +1348,8 @@ class AdminTranslationsControllerCore extends AdminController
 		$helper->id = 'box-country';
 		$helper->icon = 'icon-home';
 		$helper->color = 'color2';
-		$helper->title = $this->l('Main Country');
-		$helper->subtitle = $this->l('30 Days');
+		$helper->title = $this->l('Main Country', null, null, false);
+		$helper->subtitle = $this->l('30 Days', null, null, false);
 		if (ConfigurationKPI::get('MAIN_COUNTRY', $this->context->language->id) !== false)
 			$helper->value = ConfigurationKPI::get('MAIN_COUNTRY', $this->context->language->id);
 		if (ConfigurationKPI::get('MAIN_COUNTRY_EXPIRE', $this->context->language->id) < $time)
@@ -1293,7 +1360,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$helper->id = 'box-translations';
 		$helper->icon = 'icon-list';
 		$helper->color = 'color3';
-		$helper->title = $this->l('Front Office Translations');
+		$helper->title = $this->l('Front Office Translations', null, null, false);
 		if (ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS') !== false)
 			$helper->value = ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS');
 		if (ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS_EXPIRE') < $time)
@@ -2030,7 +2097,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 				$class_name = substr($file, 0, -4);	
 
-				if (!class_exists($class_name, false))
+				if (!class_exists($class_name, false) && !class_exists($class_name.'Core', false))
 					Autoload::getInstance()->load($class_name);
 
 				if (!is_subclass_of($class_name.'Core', 'ObjectModel'))

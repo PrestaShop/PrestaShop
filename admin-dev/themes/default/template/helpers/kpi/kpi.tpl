@@ -22,9 +22,9 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<{if $href}a style="display:block" href="{$href|escape}"{else}div{/if} id="{$id|escape}" class="box-stats {$color|escape}" >
-	{if $icon}<i class="{$icon|escape}"></i>{/if}
-	{if $chart}
+<{if isset($href) && $href}a style="display:block" href="{$href|escape}"{else}div{/if} id="{$id|escape}" class="box-stats {$color|escape}" >
+	{if isset($icon) && $icon}<i class="{$icon|escape}"></i>{/if}
+	{if isset($chart) && $chart}
 	<div class="boxchart-overlay">
 		<div class="boxchart">
 		</div>
@@ -32,9 +32,9 @@
 	{/if}
 	<span class="title">{$title|escape}<br /><small>{$subtitle|escape}</small></span>
 	<span class="value">{$value|escape}</span>
-</{if $href}a{else}div{/if}>
+</{if isset($href) && $href}a{else}div{/if}>
 
-{if $source != ''}
+{if isset($source) && $source != ''}
 <script>
 	$.ajax({
 		url: '{$source|addslashes}' + '&rand=' + new Date().getTime(),

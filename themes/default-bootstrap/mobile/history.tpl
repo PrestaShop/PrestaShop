@@ -43,8 +43,8 @@
 					{if isset($order.invoice) && $order.invoice && isset($order.virtual) && $order.virtual}<img src="{$img_dir}icon/download_product.gif" class="icon" alt="{l s='Products to download'}" title="{l s='Products to download'}" />{/if}
 					<h3>{l s='#'}{$order.id_order|string_format:"%06d"}</h3>
 					<p><strong>{l s='Total price'}</strong> {displayPrice price=$order.total_paid currency=$order.id_currency no_utf8=false convert=false}</p>
-					<p><strong>{l s='Payment: '}</strong> {$order.payment|escape:'htmlall':'UTF-8'}</p>
-					<p><strong>{l s='Status'}</strong> {if isset($order.order_state)}{$order.order_state|escape:'htmlall':'UTF-8'}{/if}</p>
+					<p><strong>{l s='Payment: '}</strong> {$order.payment|escape:'html':'UTF-8'}</p>
+					<p><strong>{l s='Status'}</strong> {if isset($order.order_state)}{$order.order_state|escape:'html':'UTF-8'}{/if}</p>
 					<span class="ui-li-aside">{dateFormat date=$order.date_add full=0}</span>
 				</a>
 				{if (isset($order.invoice) && $order.invoice && isset($order.invoice_number) && $order.invoice_number) && isset($invoiceAllowed) && $invoiceAllowed == true}

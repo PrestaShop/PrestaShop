@@ -37,7 +37,8 @@ class BlockStore extends Module
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Store locator block');
 		$this->description = $this->l('Displays a store locator link directly on your webiste.');

@@ -52,7 +52,8 @@ class Cheque extends PaymentModule
 		if (isset($config['CHEQUE_ADDRESS']))
 			$this->address = $config['CHEQUE_ADDRESS'];
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Payments by check');
 		$this->description = $this->l('This module allows you to accept payments by check.');

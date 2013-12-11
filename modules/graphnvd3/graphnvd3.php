@@ -66,7 +66,7 @@ class GraphNvD3 extends ModuleGraphEngine
 			_PS_JS_DIR_.'/vendor/d3.js',
 			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->context->employee->bo_theme.'/js/vendor/nv.d3.min.js',
 		));
-		$this->context->controller->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->context->employee->bo_theme.'/css/nv.d3.css');
+		$this->context->controller->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->context->employee->bo_theme.'/css/vendor/nv.d3.css');
 	}
 
 	public static function hookGraphEngine($params, $drawer)

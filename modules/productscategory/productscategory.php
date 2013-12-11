@@ -34,18 +34,16 @@ class productsCategory extends Module
 	public function __construct()
  	{
  	 	$this->name = 'productscategory';
- 	 	$this->version = '1.4';
+ 	 	$this->version = '1.5';
 		$this->author = 'PrestaShop';
  	 	$this->tab = 'front_office_features';
 		$this->need_instance = 0;
 		
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 		
 		$this->displayName = $this->l('Products Category');
 		$this->description = $this->l('Display products of the same category on the product page.');
-		
-		if (!$this->isRegisteredInHook('header'))
-			$this->registerHook('header');
  	}
 
 	public function install()
@@ -174,7 +172,7 @@ class productsCategory extends Module
 	{
 		$this->context->controller->addCSS($this->_path.'productscategory.css', 'all');
 		$this->context->controller->addJS($this->_path.'productscategory.js');
-		$this->context->controller->addJqueryPlugin('serialScroll');
+		$this->context->controller->addJqueryPlugin(array('scrollTo', 'serialScroll'));
 	}
 
 	public function hookAddProduct($params)

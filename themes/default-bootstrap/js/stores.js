@@ -44,6 +44,12 @@ function initMarkers()
 			createMarker(latlng, name, address, other, id_store, has_store_picture);
 			bounds.extend(latlng);
 		}
+		map.fitBounds(bounds);
+		var zoomOverride = map.getZoom();
+        if(zoomOverride > 10) {
+        zoomOverride = 10;
+        }
+		map.setZoom(zoomOverride);
 	});
 }
 
@@ -80,8 +86,9 @@ function clearLocations(n)
 			option.innerHTML = '1'+' '+translation_2;
 		else
 			option.innerHTML = n+' '+translation_3;
-	}
+	} 
 	locationSelect.appendChild(option);
+	$("select#locationSelect").uniform();
 	$('#stores-table tr.node').remove();
 }
 
@@ -95,6 +102,7 @@ function searchLocationsNear(center)
 		var bounds = new google.maps.LatLngBounds();
 
 		clearLocations(markerNodes.length);
+		$('table#stores-table').find('tbody tr').remove();
 		for (var i = 0; i < markerNodes.length; i++)
 		{
 			var name = markerNodes[i].getAttribute('name');
@@ -112,8 +120,7 @@ function searchLocationsNear(center)
 			createOption(name, distance, i);
 			createMarker(latlng, name, address, other, id_store, has_store_picture);
 			bounds.extend(latlng);
-
-			$('table#stores-table').find('tbody').append('<tr ><td class="num">'+parseInt(i + 1)+'</td><td class="name">'+(has_store_picture == 1 ? '<img src="'+img_store_dir+parseInt(id_store)+'-stores_default.jpg" alt="" />' : '')+'<span>'+name+'</span></td><td class="address">'+address+(phone !== '' ? ''+translation_4+' '+phone : '')+'</td><td class="distance">'+distance+' '+distance_unit+'</td></tr>');
+			$('table#stores-table').find('tbody').append('<tr ><td class="num">'+parseInt(i + 1)+'</td><td class="name">'+(has_store_picture == 1 ? '<img src="'+img_store_dir+parseInt(id_store)+'.jpg" alt="" />' : '')+'<span>'+name+'</span></td><td class="address">'+address+(phone !== '' ? ''+translation_4+' '+phone : '')+'</td><td class="distance">'+distance+' '+distance_unit+'</td></tr>');
 			$('#stores-table').show();
 		}
 
@@ -136,7 +143,7 @@ function searchLocationsNear(center)
 
 function createMarker(latlng, name, address, other, id_store, has_store_picture)
 {
-	var html = '<b>'+name+'</b><br/>'+address+(has_store_picture === 1 ? '<br /><br /><img src="'+img_store_dir+parseInt(id_store)+'-medium_default.jpg" alt="" />' : '')+other+'<br /><a href="http://maps.google.com/maps?saddr=&daddr='+latlng+'" target="_blank">'+translation_5+'<\/a>';
+	var html = '<b>'+name+'</b><br/>'+address+(has_store_picture === 1 ? '<br /><br /><img src="'+img_store_dir+parseInt(id_store)+'.jpg" alt="" />' : '')+other+'<br /><a href="http://maps.google.com/maps?saddr=&daddr='+latlng+'" target="_blank">'+translation_5+'<\/a>';
 	var image = new google.maps.MarkerImage(img_ps_dir+logo_store);
 	var marker = '';
 

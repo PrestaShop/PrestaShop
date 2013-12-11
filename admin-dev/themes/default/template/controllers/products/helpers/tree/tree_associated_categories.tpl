@@ -38,6 +38,14 @@
 				function()
 				{
 					$(this).prop("checked", true);
+
+					$('select#id_category_default').append('<option value="'+$(this).val()+'">'+($(this).val() !=1 ? $(this).parent().find('label').html() : home)+'</option>');
+					if ($('select#id_category_default option').length > 0)
+					{
+						$('select#id_category_default').closest('.form-group').show();
+						$('#no_default_category').hide();
+					}
+
 					$(this).parent().addClass("tree-selected");
 				}
 			);
@@ -49,6 +57,14 @@
 				function()
 				{
 					$(this).prop("checked", false);
+
+					$('select#id_category_default option[value='+$(this).val()+']').remove();
+					if ($('select#id_category_default option').length == 0)
+					{
+						$('select#id_category_default').closest('.form-group').hide();
+						$('#no_default_category').show();
+					}
+
 					$(this).parent().removeClass("tree-selected");
 				}
 			);
@@ -112,5 +128,29 @@
 				}
 			);
 		{/if}
+
+		$("#{$id}").find(":input[type=checkbox]").click(
+			function()
+			{
+				if ($(this).prop("checked"))
+				{
+					$('select#id_category_default').append('<option value="'+$(this).val()+'">'+($(this).val() !=1 ? $(this).parent().find('label').html() : home)+'</option>');
+					if ($('select#id_category_default option').length > 0)
+					{
+						$('select#id_category_default').closest('.form-group').show();
+						$('#no_default_category').hide();
+					}
+				}
+				else
+				{
+					$('select#id_category_default option[value='+$(this).val()+']').remove();
+					if ($('select#id_category_default option').length == 0)
+					{
+						$('select#id_category_default').closest('.form-group').hide();
+						$('#no_default_category').show();
+					}
+				}
+			}
+		);
 	});
 </script>

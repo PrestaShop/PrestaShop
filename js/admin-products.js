@@ -35,7 +35,7 @@ product_tabs['Customization'] = new function(){
 product_tabs['Combinations'] = new function(){
 	var self = this;
 	this.bindEdit = function(){
-		$('table[name=list_table]').delegate('a.edit', 'click', function(e){
+		$('table[id=combinations-list]').delegate('a.edit', 'click', function(e){
 			e.preventDefault();
 			editProductAttribute(this.href, $(this).closest('tr'));
 		});
@@ -143,9 +143,8 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.bindDefault = function(){
-		$('table[name=list_table]').delegate('a.default', 'click', function(e){
+		$('table[id=combinations-list]').delegate('a.default', 'click', function(e){
 			e.preventDefault();
-			console.log('ok');
 			self.defaultProductAttribute(this.href, this);
 		});
 	};
@@ -175,7 +174,7 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.bindDelete = function() {
-		$('table[name=list_table]').delegate('a.delete', 'click', function(e){
+		$('table[id=combinations-list]').delegate('a.delete', 'click', function(e){
 			e.preventDefault();
 			self.deleteProductAttribute(this.href, $(this).closest('tr'));
 		});
@@ -412,10 +411,10 @@ function handleSaveButtons(e)
 
 	// common for all products
 	$("#disableSaveMessage").remove();
+
 	if ($("#name_" + id_lang_default).val() == "" && (!display_multishop_checkboxes || $('input[name=\'multishop_check[name][' + id_lang_default + ']\']').prop('checked')))
-	{
 		msg[i++] = empty_name_msg;
-	}
+
 	// check friendly_url_[defaultlangid] only if name is ok
 	else if ($("#link_rewrite_" + id_lang_default).val() == "" && (!display_multishop_checkboxes || $('input[name=\'link_rewrite[name][' + id_lang_default + ']\']').prop('checked')))
 		msg[i++] = empty_link_rewrite_msg;
@@ -884,7 +883,7 @@ product_tabs['Informations'] = new function(){
 			});
 
 			product_type = $(this).val();
-
+			$('#warn_virtual_combinations').hide();
 			// until a product is added in the pack
 			// if product is PTYPE_PACK, save buttons will be disabled
 			if (product_type == product_type_pack)
@@ -1118,6 +1117,12 @@ product_tabs['Pack'] = new function(){
 
 	this.onReady = function(){
 		self.bindPackEvents();
+	}
+}
+
+product_tabs['Images'] = new function(){
+	this.onReady = function(){
+		displayFlags(languages, id_language, allowEmployeeFormLang);
 	}
 }
 
