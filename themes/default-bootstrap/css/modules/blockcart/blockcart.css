@@ -82,11 +82,11 @@
 					Cart Block(Header) Styles
 ********************************************************************/
 #header #cart_block {
+  position: absolute;
+  top: 95px;
+  right: 0;
   z-index: 10;
   display: none;
-  position: absolute;
-  right: 0;
-  top: 95px;
   height: auto;
   width: 270px;
   background: #484848;

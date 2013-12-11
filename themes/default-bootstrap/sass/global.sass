@@ -42,38 +42,49 @@ textarea
 #right_column
 #footer
 
-
-
 header
 	z-index: 1
 	position: relative
 	background: $light-background
+	padding-bottom: 20px
 	#banner-row
 		background: black
 	#nav-row
 		background: $dark-background
 		nav
-			float: right
+			width: 100%
+			.shop-phone
+				float: left
+			.header_user_info
+				float: right
+			#contact-link
+				float: right
+			#languages-block-top
+				float: right
+			#currencies-block-top
+				float: right
 	#header-row
 		position: relative
+		> .container
+			position: relative
 		#header_logo
-		// min 768px max 991px
-		@media (min-width: $screen-sm) and (max-width: $screen-sm-max)
-			width: 250px
-			top: 35px
-		// min 480px max 767px
-		@media (min-width: $screen-xs) and (max-width: $screen-xs-max)
-			width: 174px
-			left: 15px
-			top: 48px
-		// max 479px
-		@media (max-width: $screen-xs - 1)
-			width: 200px
-			left: 50%
-			margin-left: -100px
-			top: 20px
+			// min 768px max 991px
+			@media (min-width: $screen-sm) and (max-width: $screen-sm-max)
+				width: 250px
+				top: 35px
+			// min 480px max 767px
+			@media (min-width: $screen-xs) and (max-width: $screen-xs-max)
+				width: 174px
+				left: 15px
+				top: 48px
+			// max 479px
+			@media (max-width: $screen-xs - 1)
+				width: 200px
+				left: 50%
+				margin-left: -100px
+				top: 20px
+
 	.header_user_info
-		float: left
 		border-left: 1px solid #515151
 		border-right: 1px solid #515151
 		// max 479px
@@ -89,7 +100,6 @@ header
 			@media (max-width: $screen-xs - 1)
 				font-size: 11px
 	.shop-phone
-		display: block
 		padding: 5px 0 10px
 		// max 767px
 		@media (max-width: $screen-xs-max)
@@ -102,11 +112,9 @@ header
 		strong
 			color: $light-text-color
 	
-
 	//languages/currencies 
 	#currencies-block-top,
-	#languages-block-top 
-		float: right
+	#languages-block-top
 		border-left: 1px solid #515151
 		position: relative
 		// max 479px
@@ -164,7 +172,6 @@ header
 				&.selected, &:hover a 
 					background: #484848
 	#contact-link
-		float: right
 		border-left: 1px solid #515151
 		// max 479px
 		@media (max-width: $screen-xs - 1)
