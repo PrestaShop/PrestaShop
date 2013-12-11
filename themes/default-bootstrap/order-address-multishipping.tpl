@@ -132,7 +132,7 @@
 
 {include file="$tpl_dir./order-address-multishipping-products.tpl"}
 
-<form action="{$link->getPageLink('order', true, NULL, 'multi-shipping=1')|escape:'html'}" method="post">
+<form action="{$link->getPageLink('order', true, NULL, 'multi-shipping=1')|escape:'html':'UTF-8'}" method="post">
 {else}
 <div id="opc_account" class="opc-main-block">
 	<div id="opc_account-overlay" class="opc-overlay" style="display: none;"></div>
@@ -151,7 +151,7 @@
 			</select>
         </div>
 		{else}
-			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back}{/if}")|escape:'html'}" title="{l s='Add'}" class="button button-small btn btn-default"><span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span></a>
+			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back}{/if}")|escape:'html':'UTF-8'}" title="{l s='Add'}" class="button button-small btn btn-default"><span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span></a>
 		{/if}
 		</p>
 		<div class="row">
@@ -161,7 +161,7 @@
             </div>
 		</div>
 		<p class="address_add submit">
-			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")|escape:'html'}" title="{l s='Add'}" class="button button-small btn btn-default"><span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span></a>
+			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")|escape:'html':'UTF-8'}" title="{l s='Add'}" class="button button-small btn btn-default"><span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span></a>
 		</p>
 		{if !$opc}
 		<div id="ordermsg" class="form-group">
@@ -175,9 +175,9 @@
 		<input type="hidden" class="hidden" name="step" value="2" />
 		<input type="hidden" name="back" value="{$back}" />
 		{if $back}
-			<a href="{$link->getPageLink('order', true, NULL, "step=0&amp;back={$back}")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
+			<a href="{$link->getPageLink('order', true, NULL, "step=0&amp;back={$back}")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
 		{else}
-			<a href="{$link->getPageLink('order', true, NULL, "step=0")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
+			<a href="{$link->getPageLink('order', true, NULL, "step=0")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
 		{/if}
         <button type="submit" name="processAddress" class="button btn btn-default button-medium"><span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span></button>
 	</p>

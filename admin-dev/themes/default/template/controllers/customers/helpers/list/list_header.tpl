@@ -27,7 +27,7 @@
 {block name='override_header'}
 {if $submit_form_ajax}
 	<script type="text/javascript">
-		$('#customer', window.parent.document).val('{$new_customer->email|escape:htmlall}');
+		$('#customer', window.parent.document).val('{$new_customer->email|escape:'html'}');
 		parent.setupCustomer({$new_customer->id|intval});
 		parent.$.fancybox.close();
 	</script>

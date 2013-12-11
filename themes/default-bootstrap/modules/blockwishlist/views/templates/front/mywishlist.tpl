@@ -24,7 +24,7 @@
 *}
 
 <div id="mywishlist">
-	{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='My account' mod='blockwishlist'}</a><span class="navigation-pipe">{$navigationPipe}</span><span class="navigation_page">{l s='My wishlists' mod='blockwishlist'}</span>{/capture}
+	{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}">{l s='My account' mod='blockwishlist'}</a><span class="navigation-pipe">{$navigationPipe}</span><span class="navigation_page">{l s='My wishlists' mod='blockwishlist'}</span>{/capture}
 
 	<h1 class="page-heading">{l s='My wishlists' mod='blockwishlist'}</h1>
 
@@ -92,7 +92,7 @@
 	{/if}
 
 	<ul class="footer_links clearfix">
-		<li><a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html'}"><span><i class="icon-chevron-left"></i>{l s='Back to Your Account' mod='blockwishlist'}</span></a></li>
+		<li><a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}"><span><i class="icon-chevron-left"></i>{l s='Back to Your Account' mod='blockwishlist'}</span></a></li>
 		<li><a class="btn btn-default button button-small" href="{$base_dir}"><span><i class="icon-chevron-left"></i>{l s='Home' mod='blockwishlist'}</span></a></li>
 	</ul>
 </div>

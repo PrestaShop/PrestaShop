@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='My account'}</a><span class="navigation-pipe">{$navigationPipe}</span><span class="navigation_page">{l s='Credit slips'}</span>{/capture}
+{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}">{l s='My account'}</a><span class="navigation-pipe">{$navigationPipe}</span><span class="navigation_page">{l s='Credit slips'}</span>{/capture}
 
 <h1 class="page-heading bottom-indent">
 	{l s='Credit slips'}
@@ -51,7 +51,7 @@
 							</span>
 						</td>
 						<td class="history_method">
-							<a class="color-myaccount" href="javascript:showOrder(1, {$slip.id_order|intval}, '{$link->getPageLink('order-detail')|escape:'html'}');">
+							<a class="color-myaccount" href="javascript:showOrder(1, {$slip.id_order|intval}, '{$link->getPageLink('order-detail')|escape:'html':'UTF-8'}');">
 								{l s='#%s' sprintf=$slip.id_order|string_format:"%06d"}
 							</a>
 						</td>
@@ -59,7 +59,7 @@
 							{dateFormat date=$slip.date_add full=0}
 						</td>
 						<td class="history_invoice">
-							<a class="link-button" href="{$link->getPageLink('pdf-order-slip', true, NULL, "id_order_slip={$slip.id_order_slip|intval}")|escape:'html'}" title="{l s='Credit slip'} {l s='#%s' sprintf=$slip.id_order_slip|string_format:"%06d"}">
+							<a class="link-button" href="{$link->getPageLink('pdf-order-slip', true, NULL, "id_order_slip={$slip.id_order_slip|intval}")|escape:'html':'UTF-8'}" title="{l s='Credit slip'} {l s='#%s' sprintf=$slip.id_order_slip|string_format:"%06d"}">
 								<i class="icon-file-text large"></i>{l s='PDF'}
 							</a>
 						</td>
@@ -75,7 +75,7 @@
 
 <ul class="footer_links clearfix">
 	<li>
-		<a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html'}">
+		<a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}">
 			<span>
 				<i class="icon-chevron-left"></i> {l s='Back to your account'}
 			</span>

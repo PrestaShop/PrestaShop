@@ -51,7 +51,7 @@
 						<div class="remove">
 							<a 
 							class="cmp_remove" 
-							href="{$link->getPageLink('products-comparison', true)|escape:'html'}" 
+							href="{$link->getPageLink('products-comparison', true)|escape:'html':'UTF-8'}" 
 							title="{l s='Remove'}" 
 							data-id-product="{$product->id}">
 								<i class="icon-trash"></i>
@@ -60,12 +60,12 @@
 						<div class="product-image-block">
 							<a
 							class="product_image" 
-							href="{$product->getLink()|escape:html:'UTF-8'}" 
-							title="{$product->name|escape:html:'UTF-8'}">
+							href="{$product->getLink()|escape:'html':'UTF-8'}" 
+							title="{$product->name|escape:'html':'UTF-8'}">
 								<img 
 								class="img-responsive" 
-								src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')|escape:'html'}" 
-								alt="{$product->name|escape:html:'UTF-8'}" />
+								src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')|escape:'html':'UTF-8'}" 
+								alt="{$product->name|escape:'html':'UTF-8'}" />
 							</a>
 							{if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
 								{if $product->on_sale}
@@ -78,7 +78,7 @@
 						<h5>
 							<a 
 							class="product-name" 
-							href="{$product->getLink()|escape:html:'UTF-8'}" 
+							href="{$product->getLink()|escape:'html':'UTF-8'}" 
 							title="{$product->name|truncate:32:'...'|escape:'html':'UTF-8'}">
 								{$product->name|truncate:45:'...'|escape:'html':'UTF-8'}
 							</a>
@@ -147,7 +147,7 @@
 											<a
 												class="button ajax_add_to_cart_button btn btn-default"
 												data-id-product="{$product->id}"
-												href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html'}"
+												href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html':'UTF-8'}"
 												title="{l s='Add to cart'}">
 												<span>{l s='Add to cart'}</span>
 											</a>
@@ -159,7 +159,7 @@
 									{/if}
 									<a 
 									class="button lnk_view btn btn-default" 
-									href="{$product->getLink()|escape:html:'UTF-8'}" 
+									href="{$product->getLink()|escape:'html':'UTF-8'}" 
 									title="{l s='View'}">
 										<span>{l s='View'}</span>
 									</a>
