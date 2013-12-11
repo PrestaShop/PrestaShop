@@ -1647,6 +1647,8 @@ class AdminControllerCore extends Controller
 		}
 		elseif ($this->display != false && method_exists($this, 'render'.$this->display))
 			$this->content .= $this->{'render'.$this->display}();
+		elseif ($this->display != false && method_exists($this, 'render'.$this->display))
+			$this->content .= $this->{'render'.$this->display}();
 		elseif (!$this->ajax)
 		{
 			$this->content .= $this->renderModulesList();
@@ -2329,6 +2331,8 @@ class AdminControllerCore extends Controller
 		{
 			$this->action = Tools::getValue('action');
 		}
+		elseif (Tools::getValue('action') && method_exists($this, 'process'.ucfirst(Tools::toCamelCase(Tools::getValue('action')))))
+			$this->action = Tools::getValue('action');
 		elseif (Tools::isSubmit('submitFields') && $this->required_database && $this->tabAccess['add'] === '1' && $this->tabAccess['delete'] === '1')
 			$this->action = 'update_fields';
 		elseif (is_array($this->bulk_actions))

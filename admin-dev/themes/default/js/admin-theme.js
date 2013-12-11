@@ -257,4 +257,3 @@ function toggleShopModuleCheckbox(id_shop, toggle)
 
 	//show time elapsed
 	$("abbr.timeago").timeago();
-});

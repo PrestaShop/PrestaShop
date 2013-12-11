@@ -20,9 +20,9 @@
     <div class="alert alert-success">
         {l s='Images have been correctly updated in database:'}
         <ul>
-            {foreach $imgError['error'] as $error}
+            {foreach $imgError['ok'] as $error}
                 <li>
-                    {l s='Name image type:'} <strong>{$error['name']}</strong> {l s='Width:'} {$error['width']}
+                    {l s='Image type:'} <strong>{$error['name']}</strong> {l s='Width:'} {$error['width']}
                     px {l s='Height:'} {$error['height']}px
                 </li>
             {/foreach}
