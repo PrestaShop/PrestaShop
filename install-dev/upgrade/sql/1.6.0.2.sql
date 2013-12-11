@@ -6,3 +6,5 @@ INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
 	WHERE m.name IN ('dashgoals', 'dashactivity', 'dashtrends', 'dashproducts')
 	AND h.name IN ('actionAdminControllerSetMedia')
 );
+
+ALTER TABLE  `PREFIX_configuration` CHANGE  `name`  `name` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
