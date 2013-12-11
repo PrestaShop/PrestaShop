@@ -1,4 +1,5 @@
-@import '../../_theme_variables';
+@import "compass";
+@import "theme_variables";
 /* block CONTACT ******************************************************************************* */
 #contact_block {
 																	@media (max-width: $screen-xs-max) { // max 767px
