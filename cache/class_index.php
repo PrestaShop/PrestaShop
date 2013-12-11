@@ -523,7 +523,7 @@
   'PricesDropController' => '',
   'PricesDropControllerCore' => 'controllers/front/PricesDropController.php',
   'Product' => '',
-  'ProductController' => 'override/controllers/front/ProductController.php',
+  'ProductController' => '',
   'ProductControllerCore' => 'controllers/front/ProductController.php',
   'ProductCore' => 'classes/Product.php',
   'ProductDownload' => '',
