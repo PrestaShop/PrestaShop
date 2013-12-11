@@ -123,13 +123,13 @@
 		<div class="button_multishipping_mode box" id="multishipping_mode_box">
 			<div class="title">{l s='Multi-shipping'}</div>
 			<div class="description">
-				<a class="btn btn-default button exclusive-medium" href="{$link->getPageLink('order', true, NULL, 'step=1&multi-shipping=1')|escape:'html'}"/>
+				<a class="btn btn-default button exclusive-medium" href="{$link->getPageLink('order', true, NULL, 'step=1&multi-shipping=1')|escape:'html':'UTF-8'}"/>
 					<span>{l s='Specify a delivery address for each product ordered.'}</span>
 				</a>
 			</div>
 		</div>
 	{/if}
-	<form action="{$link->getPageLink($back_order_page, true)|escape:'html'}" method="post">
+	<form action="{$link->getPageLink($back_order_page, true)|escape:'html':'UTF-8'}" method="post">
 {else}
 	{if {Configuration::get('PS_ALLOW_MULTISHIPPING')} && !$cart->isVirtualCart()}
 		<div class="address-form-multishipping">
@@ -142,7 +142,7 @@
 					</label>
 				</div>
 				<div class="description_off">
-					<a class="btn btn-default button exclusive-medium" href="{$link->getPageLink('order-opc', true, NULL, 'ajax=1&multi-shipping=1&method=multishipping')|escape:'html'}" id="link_multishipping_form" title="{l s='Choose the delivery address(es)'}">
+					<a class="btn btn-default button exclusive-medium" href="{$link->getPageLink('order-opc', true, NULL, 'ajax=1&multi-shipping=1&method=multishipping')|escape:'html':'UTF-8'}" id="link_multishipping_form" title="{l s='Choose the delivery address(es)'}">
 						<span>{l s='Specify a delivery address for each product.'}</span>
 					</a>
 				</div>
@@ -191,7 +191,7 @@
 					{/section}
 					</select>
 				{else}
-					<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1&select_address=1{if $back}&mod={$back}{/if}")|escape:'html'}" title="{l s='Add'}" class="button button-small btn btn-default">
+					<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1&select_address=1{if $back}&mod={$back}{/if}")|escape:'html':'UTF-8'}" title="{l s='Add'}" class="button button-small btn btn-default">
 						<span>
 							{l s='Add a new address'}
 							<i class="icon-chevron-right right"></i>
@@ -212,7 +212,7 @@
 		</div>
 	</div> <!-- end row -->
 	<p class="address_add submit">
-		<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")|escape:'html'}" title="{l s='Add'}" class="button button-small btn btn-default">
+		<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")|escape:'html':'UTF-8'}" title="{l s='Add'}" class="button button-small btn btn-default">
 			<span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span>
 		</a>
 	</p>
@@ -228,7 +228,7 @@
 		<p class="cart_navigation clearfix">
 			<input type="hidden" class="hidden" name="step" value="2" />
 			<input type="hidden" name="back" value="{$back}" />
-			<a href="{$link->getPageLink($back_order_page, true, NULL, "step=0{if $back}&back={$back}{/if}")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default">
+			<a href="{$link->getPageLink($back_order_page, true, NULL, "step=0{if $back}&back={$back}{/if}")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default">
 				<i class="icon-chevron-left"></i>
 				{l s='Continue Shopping'}
 			</a>

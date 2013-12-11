@@ -39,7 +39,7 @@
 	{math equation="nbLi/nbItemsPerLine" nbLi=$nbLi nbItemsPerLine=$nbItemsPerLine assign=nbLines}
 	{math equation="nbLi/nbItemsPerLineTablet" nbLi=$nbLi nbItemsPerLineTablet=$nbItemsPerLineTablet assign=nbLinesTablet}
 	<!-- Products list -->
-	<ul{if isset($id) && $id} id="{$id}" {/if} class="product_list grid row{if isset($class) && $class} {$class}{/if}">
+	<ul{if isset($id) && $id} id="{$id}"{/if} class="product_list grid row{if isset($class) && $class} {$class}{/if}">
 	{foreach from=$products item=product name=products}
 		{math equation="(total%perLine)" total=$smarty.foreach.products.total perLine=$nbItemsPerLine assign=totModulo}
 		{math equation="(total%perLineT)" total=$smarty.foreach.products.total perLineT=$nbItemsPerLineTablet assign=totModuloTablet}
@@ -58,7 +58,7 @@
 							itemprop="url">
 							<img 
 								class="replace-2x img-responsive" 
-								src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html'}" 
+								src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html':'UTF-8'}" 
 								alt="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" 
 								title="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" 
 								{if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if}
@@ -144,7 +144,7 @@
 								{if isset($static_token)}
 									<a
 										class="button ajax_add_to_cart_button btn btn-default" 
-										href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", false)|escape:'html'}"
+										href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", false)|escape:'html':'UTF-8'}"
 										rel="nofollow"
 										title="{l s='Add to cart'}"
 										data-id-product="{$product.id_product|intval}">
@@ -153,7 +153,7 @@
 								{else}
 									<a
 										class="button ajax_add_to_cart_button btn btn-default"
-										href="{$link->getPageLink('cart',false, NULL, 'add=1&amp;id_product={$product.id_product|intval}', false)|escape:'html'}"
+										href="{$link->getPageLink('cart',false, NULL, 'add=1&amp;id_product={$product.id_product|intval}', false)|escape:'html':'UTF-8'}"
 										rel="nofollow"
 										title="{l s='Add to cart'}"
 										data-id-product="{$product.id_product|intval}">

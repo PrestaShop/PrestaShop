@@ -35,7 +35,7 @@
 {else}
 
 
-<form action="{$link->getModuleLink('bankwire', 'validation', [], true)|escape:'html'}" method="post">
+<form action="{$link->getModuleLink('bankwire', 'validation', [], true)|escape:'html':'UTF-8'}" method="post">
 <div class="box cheque-box">
     <h3 class="page-subheading">{l s='Bank-wire payment.' mod='bankwire'}</h3>
     <p class="cheque-indent"><strong class="dark">{l s='You have chosen to pay by bank wire.' mod='bankwire'} {l s='Here is a short summary of your order:' mod='bankwire'}</strong></p>
@@ -70,7 +70,7 @@
     </p>
 </div>
 <p class="cart_navigation clearfix" id="cart_navigation">
-	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Other payment methods' mod='bankwire'}</a>
+	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html':'UTF-8'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Other payment methods' mod='bankwire'}</a>
     <button type="submit" class="button btn btn-default button-medium"><span>{l s='I confirm my order' mod='bankwire'}<i class="icon-chevron-right right"></i></span></button>
 </p>
 </form>

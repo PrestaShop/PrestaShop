@@ -66,7 +66,7 @@
 				<div class="left">{l s='Last product added'}</div>
 			</div>
 			<a class="cart_last_product_img" href="{$link->getProductLink($lastProductAdded.id_product, $lastProductAdded.link_rewrite, $lastProductAdded.category, null, null, $lastProductAdded.id_shop)|escape:'html':'UTF-8'}">
-				<img src="{$link->getImageLink($lastProductAdded.link_rewrite, $lastProductAdded.id_image, 'small_default')|escape:'html'}" alt="{$lastProductAdded.name|escape:'html':'UTF-8'}"/>
+				<img src="{$link->getImageLink($lastProductAdded.link_rewrite, $lastProductAdded.id_image, 'small_default')|escape:'html':'UTF-8'}" alt="{$lastProductAdded.name|escape:'html':'UTF-8'}"/>
 			</a>
 			<div class="cart_last_product_content">
 				<p class="product-name">
@@ -357,7 +357,7 @@
 												<a
 													id="cart_quantity_down_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"
 													class="cart_quantity_down btn btn-default button-minus"
-													href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery}&amp;id_customization={$id_customization}&amp;op=down&amp;token={$token_cart}")|escape:'html'}"
+													href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery}&amp;id_customization={$id_customization}&amp;op=down&amp;token={$token_cart}")|escape:'html':'UTF-8'}"
 													rel="nofollow"
 													title="{l s='Subtract'}">
 													<span><i class="icon-minus"></i></span>
@@ -374,7 +374,7 @@
 											<a
 												id="cart_quantity_up_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"
 												class="cart_quantity_up btn btn-default button-plus"
-												href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery}&amp;id_customization={$id_customization}&amp;token={$token_cart}")|escape:'html'}"
+												href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery}&amp;id_customization={$id_customization}&amp;token={$token_cart}")|escape:'html':'UTF-8'}"
 												rel="nofollow"
 												title="{l s='Add'}">
 												<span><i class="icon-plus"></i></span>
@@ -389,7 +389,7 @@
 											<a
 												id="{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"
 												class="cart_quantity_delete"
-												href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;id_address_delivery={$product.id_address_delivery}&amp;token={$token_cart}")|escape:'html'}"
+												href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;id_address_delivery={$product.id_address_delivery}&amp;token={$token_cart}")|escape:'html':'UTF-8'}"
 												rel="nofollow"
 												title="{l s='Delete'}">
 												<i class=" icon-trash"></i>
@@ -551,14 +551,14 @@
 	<p class="cart_navigation clearfix">
 		{if !$opc}
 			<a
-				href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')|escape:html:'UTF-8'}{else}{$link->getPageLink('order', true, NULL, 'step=1')|escape:html:'UTF-8'}{/if}"
+				href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')|escape:'html':'UTF-8'}{else}{$link->getPageLink('order', true, NULL, 'step=1')|escape:'html':'UTF-8'}{/if}"
 				class="button btn btn-default standard-checkout button-medium"
 				title="{l s='Proceed to checkout'}">
 				<span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span>
 			</a>
 			{if Configuration::get('PS_ALLOW_MULTISHIPPING')}
 				<a
-					href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')|escape:html:'UTF-8'}{else}{$link->getPageLink('order', true, NULL, 'step=1')|escape:html:'UTF-8'}{/if}&amp;multi-shipping=1"
+					href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')|escape:'html':'UTF-8'}{else}{$link->getPageLink('order', true, NULL, 'step=1')|escape:'html':'UTF-8'}{/if}&amp;multi-shipping=1"
 					class="multishipping-button multishipping-checkout button btn btn-default button-medium"
 					title="{l s='Proceed to checkout'}">
 					<span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span>

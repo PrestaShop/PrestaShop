@@ -52,7 +52,7 @@
 	    {if $nb_products > $products_per_page && $start!=$stop}
 			<form
 			class="showall" 
-			action="{if !is_array($requestNb)}{$requestNb|escape:htmlall:'UTF-8'}{else}{$requestNb.requestUrl|escape:htmlall:'UTF-8'}{/if}" 
+			action="{if !is_array($requestNb)}{$requestNb|escape:'html':'UTF-8'}{else}{$requestNb.requestUrl|escape:'html':'UTF-8'}{/if}" 
 			method="get">
 				<div>
 					{if isset($search_query) AND $search_query}
