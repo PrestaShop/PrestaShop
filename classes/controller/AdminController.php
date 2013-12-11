@@ -1155,6 +1155,13 @@ class AdminControllerCore extends Controller
 					$this->toolbar_title[] = is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name};
 				}
 				break;
+			case 'list':
+				// Default save button - action dynamically handled in javascript
+				$this->page_header_toolbar_btn['save'] = array(
+					'href' => '#',
+					'desc' => $this->l('Save')
+				);
+				break;
 			case 'add':
 				// Default save button - action dynamically handled in javascript
 				$this->page_header_toolbar_btn['save'] = array(
@@ -1167,6 +1174,7 @@ class AdminControllerCore extends Controller
 					$back = self::$currentIndex.'&token='.$this->token;
 				if (!Validate::isCleanHtml($back))
 					die(Tools::displayError());
+			
 				if (!$this->lite_display)
 					$this->page_header_toolbar_btn['cancel'] = array(
 						'href' => $back,
