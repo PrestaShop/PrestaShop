@@ -52,7 +52,7 @@ class Blocktopmenu extends Module
 	{
 		$this->name = 'blocktopmenu';
 		$this->tab = 'front_office_features';
-		$this->version = 1.7;
+		$this->version = 1.8;
 		$this->author = 'PrestaShop';
 
 		$this->bootstrap = true;
@@ -910,7 +910,9 @@ class Blocktopmenu extends Module
 		
 		$html = '<select multiple="multiple" id="availableItems" style="width: 300px; height: 160px;">';
 		$html .= '<optgroup label="'.$this->l('CMS').'">';
+		$this->_html = '';
 		$this->getCMSOptions(0, 1, $this->context->language->id);
+		$html .= $this->_html;
 		$html .= '</optgroup>';
 
 		// BEGIN SUPPLIER
@@ -933,7 +935,10 @@ class Blocktopmenu extends Module
 
 		// BEGIN Categories
 		$html .= '<optgroup label="'.$this->l('Categories').'">';
-		$this->getCategoryOption(1, (int)$this->context->language->id, (int)Shop::getContextShopID());
+		$this->_html = '';
+		$shop = new Shop((int)Shop::getContextShopID());
+		$this->getCategoryOption($shop->getCategory(), (int)$this->context->language->id, (int)Shop::getContextShopID());
+		$html .= $this->_html;
 		$html .= '</optgroup>';
 		
 		// BEGIN Shops
