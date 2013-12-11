@@ -58,6 +58,10 @@ $(document).ready(function() {
 			$('#attachement_filename').val(name[name.length-1]);
 		}
 	});
+
+	$('#carrier_logo_remove').click(function(e) {
+		$('#attachement_filename').val('');
+	});
 });
 
 function initCarrierWizard()
