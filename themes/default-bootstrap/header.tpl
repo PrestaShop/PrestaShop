@@ -101,19 +101,16 @@
 		{/if}
 		<div id="page">
 			<header id="header">
-
 				<div id="banner-row">
 					{hook h="displayBanner"}
 				</div>
-
 				<div id="nav-row">
 					<div class="container">
 						<nav>
 							{hook h="displayNav"}
 						</nav>
 					</div>
-				</div>
-
+				</div> <!-- #end nav-row -->
 				<div id="header-row">
 					<div class="container">
 						<a id="header_logo" href="{$base_dir}" title="{$shop_name|escape:'html':'UTF-8'}">
@@ -121,8 +118,7 @@
 						</a>
 						{if isset($HOOK_TOP)}{$HOOK_TOP}{/if}
 					</div>
-				</div>
-
+				</div> <!-- end #header-row -->
 			</header>
 
 			<div class="columns-container">

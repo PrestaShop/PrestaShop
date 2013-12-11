@@ -1,11 +1,11 @@
-@import '../../_theme_variables';
-/* block top user information */
+@import "compass";
+@import "theme_variables";
 
 #header_user {
-	
-	clear:both;
-	float: right;
-	margin-top:50px;
+	position: absolute;
+	top: 50px;
+	right: 0;
+
 																	@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
 																		margin-top:25px;
 																	}
