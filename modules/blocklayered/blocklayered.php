@@ -1458,7 +1458,10 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_MNF', (int)Tools::getValue('ps_layered_filter_index_manufacturer'));
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_CAT', (int)Tools::getValue('ps_layered_filter_index_category'));
 
-			$message = '<div class="conf">'.$this->l('Settings saved successfully').'</div>';
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+				$message = '<div class="alert alert-success">'.$this->l('Settings saved successfully').'</div>';
+			else
+				$message = '<div class="conf">'.$this->l('Settings saved successfully').'</div>';
 		}
 		else if (Tools::getValue('deleteFilterTemplate'))
 		{
