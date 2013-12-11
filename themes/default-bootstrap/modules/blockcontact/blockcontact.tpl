@@ -23,5 +23,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div id="contact-link">
-	<a href="{$link->getPageLink('contact', true)|escape:'html':'UTF-8'}" title="{l s='contact'}">{l s='Contact Us'}</a>
+	<a href="{$link->getPageLink('contact', true)|escape:'html':'UTF-8'}" title="{l s='contact' mod='blockcontact'}">{l s='Contact Us' mod='blockcontact'}</a>
 </div>
+{if $shop_phone}
+	<span class="shop-phone">
+		<i class="icon-phone"></i>{l s='Call us now toll free:'} <strong>{$shop_phone}</strong>
+	</span>
+{/if}
