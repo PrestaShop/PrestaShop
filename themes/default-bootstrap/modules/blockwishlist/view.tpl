@@ -54,8 +54,8 @@
 					<div class="row">
 						<div class="col-xs-6 col-sm-12">
 						   <div class="product_image">
-								<a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='Product detail' mod='blockwishlist'}">
-									<img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.cover, 'home_default')|escape:'html'}" alt="{$product.name|escape:'html':'UTF-8'}" />
+								<a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html':'UTF-8'}" title="{l s='Product detail' mod='blockwishlist'}">
+									<img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.cover, 'home_default')|escape:'html':'UTF-8'}" alt="{$product.name|escape:'html':'UTF-8'}" />
 								</a>
 							</div>
 						</div>
@@ -64,7 +64,7 @@
 								<p id="s_title" class="product-name">
 									{$product.name|truncate:30:'...'|escape:'html':'UTF-8'}
 									{if isset($product.attributes_small)}
-										<a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='Product detail' mod='blockwishlist'}"><small>{$product.attributes_small|escape:'html':'UTF-8'}</small></a>
+										<a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html':'UTF-8'}" title="{l s='Product detail' mod='blockwishlist'}"><small>{$product.attributes_small|escape:'html':'UTF-8'}</small></a>
 									{/if}
 								</p>
 								<div class="wishlist_product_detail">
@@ -83,7 +83,7 @@
 									<div class="btn_action">
 										{if isset($product.attribute_quantity) AND $product.attribute_quantity >= 1 OR !isset($product.attribute_quantity) AND $product.product_quantity >= 1}
 											{if !$ajax}
-												<form id="addtocart_{$product.id_product|intval}_{$product.id_product_attribute|intval}" action="{$link->getPageLink('cart')|escape:'html'}" method="post">
+												<form id="addtocart_{$product.id_product|intval}_{$product.id_product_attribute|intval}" action="{$link->getPageLink('cart')|escape:'html':'UTF-8'}" method="post">
 													<p class="hidden">
 														<input type="hidden" name="id_product" value="{$product.id_product|intval}" id="product_page_product_id" />
 														<input type="hidden" name="add" value="1" />
@@ -105,7 +105,7 @@
 										{/if}
 										<a 
 											class="button lnk_view btn btn-default"
-											href="{$link->getProductLink($product.id_product,  $product.link_rewrite, $product.category_rewrite)|escape:'html'}"
+											href="{$link->getProductLink($product.id_product,  $product.link_rewrite, $product.category_rewrite)|escape:'html':'UTF-8'}"
 											title="{l s='View' mod='blockwishlist'}"
 											rel="nofollow">
 											<span>{l s='View' mod='blockwishlist'}</span>

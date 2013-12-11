@@ -28,7 +28,7 @@
 <div id="newsletter_block_left" class="block">
 	<h4>{l s='Newsletter' mod='blocknewsletter'}</h4>
 	<div class="block_content">
-		<form action="{$link->getPageLink('index')|escape:'html'}" method="post">
+		<form action="{$link->getPageLink('index')|escape:'html':'UTF-8'}" method="post">
 			<div class="form-group">
 				<input class="inputNew form-control grey" id="newsletter-input" type="text" name="email" size="18" value="{if isset($value) && $value}{$value}{else}{l s='Enter your e-mail' mod='blocknewsletter'}{/if}" />
                 <button type="submit" name="submitNewsletter" class="btn btn-default button button-small"><span>{l s='Ok' mod='blocknewsletter'}</span></button>

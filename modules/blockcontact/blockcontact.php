@@ -33,7 +33,7 @@ class Blockcontact extends Module
 	{
 		$this->name = 'blockcontact';
 		$this->tab = 'front_office_features';
-		$this->version = '1.0';
+		$this->version = '1.1';
 
 		$this->bootstrap = true;
 		parent::__construct();	
@@ -47,7 +47,7 @@ class Blockcontact extends Module
 		return parent::install()
 			&& Configuration::updateValue('blockcontact_telnumber', '')
 			&& Configuration::updateValue('blockcontact_email', '')
-			&& $this->registerHook('displayRightColumn')
+			&& $this->registerHook('displayNav')
 			&& $this->registerHook('displayHeader');
 	}
 	
@@ -74,12 +74,12 @@ class Blockcontact extends Module
 		return $html;
 	}
 
-	public function hookDisplayHeader()
+	public function hookDisplayHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockcontact.css', 'all');
 	}
 	
-	public function hookDisplayRightColumn()
+	public function hookDisplayRightColumn($params)
 	{
 		global $smarty;
 		if (!$this->isCached('blockcontact.tpl', $this->getCacheId()))
@@ -90,9 +90,15 @@ class Blockcontact extends Module
 		return $this->display(__FILE__, 'blockcontact.tpl', $this->getCacheId());
 	}
 	
-	public function hookDisplayLeftColumn()
+	public function hookDisplayLeftColumn($params)
 	{
-		return $this->hookDisplayRightColumn();
+		return $this->hookDisplayRightColumn($params);
+	}
+
+	public function hookDisplayNav($params)
+	{
+
+		return $this->hookDisplayRightColumn($params);
 	}
 	
 	public function renderForm()

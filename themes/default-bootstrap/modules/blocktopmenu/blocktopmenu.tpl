@@ -7,7 +7,7 @@
 			{$MENU}
 			{if $MENU_SEARCH}
 				<li class="sf-search noBack" style="float:right">
-					<form id="searchbox" action="{$link->getPageLink('search')|escape:'html'}" method="get">
+					<form id="searchbox" action="{$link->getPageLink('search')|escape:'html':'UTF-8'}" method="get">
 						<p>
 							<input type="hidden" name="controller" value="search" />
 							<input type="hidden" value="position" name="orderby"/>

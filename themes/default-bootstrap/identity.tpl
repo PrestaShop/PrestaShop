@@ -24,7 +24,7 @@
 *}
 
 {capture name=path}
-    <a href="{$link->getPageLink('my-account', true)|escape:'html'}">
+    <a href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}">
         {l s='My account'}
     </a>
     <span class="navigation-pipe">
@@ -53,7 +53,7 @@
         <p class="required">
             <sup>*</sup>{l s='Required field'}
         </p>
-        <form action="{$link->getPageLink('identity', true)|escape:'html'}" method="post" class="std">
+        <form action="{$link->getPageLink('identity', true)|escape:'html':'UTF-8'}" method="post" class="std">
             <fieldset>
                 <div class="clearfix">
                     <label>{l s='Title'}</label>

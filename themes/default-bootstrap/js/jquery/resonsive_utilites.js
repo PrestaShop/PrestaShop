@@ -93,10 +93,3 @@ function responsiveResize(){
 
 $(document).ready(responsiveResize);
 $(window).resize(responsiveResize);
-
-//replace top banner to top of page, before #header
-$(document).ready(function(){
-	topBanner = $('body').find('#banner_block_top');
-	topBanner.remove();
-	topBanner.insertBefore('#header');
-});
