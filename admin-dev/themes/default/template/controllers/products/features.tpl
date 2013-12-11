@@ -24,7 +24,7 @@
 *}
 
 {if isset($product->id)}
-<div id="product-features" class="panel product-tab">
+<div class="panel">
 	<input type="hidden" name="submitted_tabs[]" value="Features" />
 	<h3>{l s='Assign features to this product:'}</h3>
 
@@ -61,23 +61,48 @@
 				{else}
 					<input type="hidden" name="feature_{$available_feature.id_feature}_value" value="0" />
 					<span>{l s='N/A'} - 
-						<a href="{$link->getAdminLink('AdminFeatures')|escape:'html':'UTF-8'}&amp;addfeature_value&id_feature={$available_feature.id_feature}"
+						<a href="{$link->getAdminLink('AdminFeatures')|escape:'htmlall':'UTF-8'}&amp;addfeature_value&id_feature={$available_feature.id_feature}"
 					 	class="confirm_leave btn btn-link"><i class="icon-plus-sign"></i> {l s='Add pre-defined values first'} <i class="icon-external-link-sign"></i></a>
 					</span>
 				{/if}
 				</td>
 				<td>
-					{foreach from=$languages key=k item=language}
+				
+				<div class="row lang-0" style='display: none;'>
+					<div class="col-lg-9">
+						<textarea class="custom_{$available_feature.id_feature}_ALL textarea-autosize"	name="custom_{$available_feature.id_feature}_ALL"
+								cols="40" style='background-color:#CCF'	rows="1" onkeyup="{foreach from=$languages key=k item=language}$('.custom_{$available_feature.id_feature}_{$language.id_lang}').val($(this).val());{/foreach}" >{$available_feature.val[1].value|escape:'htmlall':'UTF-8'|default:""}</textarea>
+								
+					</div>
+					{if $languages|count > 1}
+						<div class="col-lg-3">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+										{l s='ALL'}
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								{foreach from=$languages item=language}
+									<li>
+										<a href="javascript:ze=1;" onclick="restore_lng($(this),{$language.id_lang});">{$language.iso_code}</a>
+									</li>
+								{/foreach}
+							</ul>
+						</div>
+					{/if}
+				</div>
+			
+				{foreach from=$languages key=k item=language}
 					{if $languages|count > 1}
 					<div class="row translatable-field lang-{$language.id_lang}">
 						<div class="col-lg-9">
-					{/if}
-							<textarea
+						{/if}
+						<textarea
 								class="custom_{$available_feature.id_feature}_{$language.id_lang} textarea-autosize"
 								name="custom_{$available_feature.id_feature}_{$language.id_lang}"
 								cols="40"
 								rows="1"
-								onkeyup="if (isArrowKey(event)) return ;$('#feature_{$available_feature.id_feature}_value').val(0);" >{$available_feature.val[$k].value|escape:'html':'UTF-8'|default:""}</textarea>
+								onkeyup="if (isArrowKey(event)) return ;$('#feature_{$available_feature.id_feature}_value').val(0);" >{$available_feature.val[$k].value|escape:'htmlall':'UTF-8'|default:""}</textarea>
+								
 					{if $languages|count > 1}
 						</div>
 						<div class="col-lg-3">
@@ -86,6 +111,13 @@
 								<span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu">
+								<li><a href="javascript:ze=1;" onclick="tous($(this));">{l s='ALL'}</a></li>
+								<!--
+								.addClass('notranslate').removeClass('translatable-field')
+								$(this).parents('td').first('.lang-0').show()
+								$(this).parent().parent().parent().parent().parent().parent().first('.lang-0').hide();$(this).parent().parent().parent().parent().parent().hide();
+								parent.find('.lang-0').show()
+								$(this).parents('.translatable-field').hide();-->
 								{foreach from=$languages item=language}
 								<li>
 									<a href="javascript:hideOtherLanguage({$language.id_lang});">{$language.iso_code}</a>
@@ -107,12 +139,40 @@
 		</tbody>
 	</table>
 
-	<a href="{$link->getAdminLink('AdminFeatures')|escape:'html':'UTF-8'}&amp;addfeature" class="btn btn-link confirm_leave button">
+	<a href="{$link->getAdminLink('AdminFeatures')|escape:'htmlall':'UTF-8'}&amp;addfeature" class="btn btn-link confirm_leave button">
 		<i class="icon-plus-sign"></i> {l s='Add a new feature'} <i class="icon-external-link-sign"></i>
 	</a>
 </div>
 {/if}
+{literal}
 <script type="text/javascript">
 	hideOtherLanguage(default_language);
 	$(".textarea-autosize").autosize();
-</script>
+
+function tous(pos)
+{
+{/literal}
+
+{foreach from=$languages key=k item=language}
+pos.parents('td').find('.lang-{$language.id_lang}').addClass('nolang-{$language.id_lang}').removeClass('lang-{$language.id_lang}');
+
+{/foreach}
+pos.parents('td').find('.translatable-field').hide();
+pos.parents('td').find('.lang-0').show();
+{literal}
+
+
+}
+function restore_lng(pos,i)
+{
+{/literal}
+{foreach from=$languages key=k item=language}
+pos.parents('td').find('.nolang-{$language.id_lang}').addClass('lang-{$language.id_lang}').removeClass('nolang-{$language.id_lang}');
+
+{/foreach}
+
+{literal}
+pos.parents('td').find('.lang-0').hide();
+hideOtherLanguage(i);
+}
+</script>{/literal}
