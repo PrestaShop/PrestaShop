@@ -76,7 +76,8 @@
 							<div 
 								class="content_price"
 								itemprop="offers" 
-								itemscope itemtype="http://schema.org/Offer">
+								itemscope 
+								itemtype="http://schema.org/Offer">
 								{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}
 									<span itemprop="price" class="price product-price">
 										{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}
@@ -258,10 +259,10 @@
 						html += '<div class="left-block col-xs-4 col-xs-5 col-md-4">' + $(element).find('.left-block').html() + '</div>';
 						html += '<div class="center-block col-xs-4 col-xs-7 col-md-4">';
 							html += '<div class="product-flags">'+ $(element).find('.product-flags').html() + '</div>';
-							html += '<h5>'+ $(element).find('h5').html() + '</h5>';
+							html += '<h5 itemprop="name">'+ $(element).find('h5').html() + '</h5>';
 							var rating = $(element).find('.comments_note').html(); // check : rating
 							if (rating != null) { 
-								html += '<div class="comments_note">'+ rating + '</div>';
+								html += '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="comments_note">'+ rating + '</div>';
 							}
 							html += '<p class="product-desc">'+ $(element).find('.product-desc').html() + '</p>';
 							var colorList = $(element).find('.color-list-container').html();
@@ -300,17 +301,17 @@
 					html += '<div class="left-block">' + $(element).find('.left-block').html() + '</div>';
 					html += '<div class="right-block">';
 						html += '<div class="product-flags">'+ $(element).find('.product-flags').html() + '</div>';
-						html += '<h5>'+ $(element).find('h5').html() + '</h5>';
+						html += '<h5 itemprop="name">'+ $(element).find('h5').html() + '</h5>';
 						var rating = $(element).find('.comments_note').html(); // check : rating
 							if (rating != null) { 
-								html += '<div class="comments_note">'+ rating + '</div>';
+								html += '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="comments_note">'+ rating + '</div>';
 							}
-						html += '<p class="product-desc">'+ $(element).find('.product-desc').html() + '</p>';
+						html += '<p itemprop="description" class="product-desc">'+ $(element).find('.product-desc').html() + '</p>';
 						var price = $(element).find('.content_price').html(); // check : catalog mode is enabled
 							if (price != null) { 
 								html += '<div class="content_price">'+ price + '</div>';
 							}
-						html += '<div class="button-container">'+ $(element).find('.button-container').html() +'</div>';
+						html += '<div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="button-container">'+ $(element).find('.button-container').html() +'</div>';
 						var colorList = $(element).find('.color-list-container').html();
 						if (colorList != null) {
 							html += '<div class="color-list-container">'+ colorList +'</div>';
