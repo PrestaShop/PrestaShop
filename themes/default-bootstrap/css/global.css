@@ -5297,7 +5297,7 @@ div.star a:hover {
     position: relative; }
     #header .header-row:first-child {
       background-color: #333333; }
-    #header .header-row .container {
+    #header .header-row > .container {
       position: relative; }
     #header .header-row .shop-phone {
       display: block;
