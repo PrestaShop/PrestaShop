@@ -1211,7 +1211,28 @@ class AdminThemesControllerCore extends AdminController
 			'desc' => $this->l('Save')
 		);
 
-		$fields_form = array(
+
+		$fields_form[0] = array(
+			'form' => array(
+				'tinymce' => false,
+				'legend'  => array(
+					'title' => $this->l('Theme'),
+					'icon'  => 'icon-picture'
+				),
+				'input' => array(
+					array(
+						'type'     => 'text',
+						'label'    => $this->l('Archive URL:'),
+						'name'     => 'themearchiveUrl'
+					),
+				),
+				'submit'  => array(
+					'title' => $this->l('Save'),
+					'class' => 'button'
+				)),
+		);
+
+		$fields_form[1] = array(
 			'form' => array(
 				'tinymce' => false,
 				'legend'  => array(
@@ -1224,18 +1245,15 @@ class AdminThemesControllerCore extends AdminController
 						'label'    => $this->l('Zip of the theme:'),
 						'name'     => 'themearchive'
 					),
-					array(
-						'type'     => 'text',
-						'label'    => $this->l('Archive URL:'),
-						'name'     => 'themearchiveUrl'
-					),
 				),
 				'submit'  => array(
+					'id' => 'zip',
 					'title' => $this->l('Save'),
-					'class' => 'button'
-				))
+					'class' => 'button hide'
+				)),
 		);
 
+//		$fields_formtmp =  array(array('form' => $fields_form));
 		$helper = new HelperForm();
 
 		$helper->currentIndex = $this->context->link->getAdminLink('AdminThemes', false).'&action=importtheme';
@@ -1243,14 +1261,11 @@ class AdminThemesControllerCore extends AdminController
 		$helper->show_toolbar = true;
 		$helper->toolbar_btn = $toolbar_btn;
 		$helper->fields_value['themearchiveUrl']='';
+		$helper->multiple_fieldsets = true;
 
 		$helper->override_folder = $this->tpl_folder;
 
-
-
-
-
-		return $helper->generateForm(array($fields_form));
+		return $helper->generateForm($fields_form);
 	}
 
 	public function initContent()
