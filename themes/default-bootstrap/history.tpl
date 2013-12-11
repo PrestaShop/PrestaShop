@@ -87,7 +87,7 @@
 						<td class="history_method">{$order.payment|escape:'html':'UTF-8'}</td>
 						<td data-value="{$order.id_order_state}" class="history_state">
 							{if isset($order.order_state)}
-								<span class="label{if $order.id_order_state == 1 || $order.id_order_state == 10 || $order.id_order_state == 11} label-info{elseif $order.id_order_state == 5 || $order.id_order_state == 2 || $order.id_order_state == 12} label-success{elseif $order.id_order_state == 6 || $order.id_order_state == 7 || $order.id_order_state == 8} label-danger{elseif $order.id_order_state == 3 || $order.id_order_state == 9 || $order.id_order_state == 4} label-warning{/if}">
+								<span class="label{if $order.id_order_state == 1 || $order.id_order_state == 10 || $order.id_order_state == 11} label-info{elseif $order.id_order_state == 5 || $order.id_order_state == 2 || $order.id_order_state == 12} label-success{elseif $order.id_order_state == 6 || $order.id_order_state == 7 || $order.id_order_state == 8} label-danger{elseif $order.id_order_state == 3 || $order.id_order_state == 9 || $order.id_order_state == 4} label-warning{/if}" {if $order.id_order_state > 12}style="background-color:{$order.order_state_color};"{/if}>
 									{$order.order_state|escape:'html':'UTF-8'}
 								</span>
 							{/if}
