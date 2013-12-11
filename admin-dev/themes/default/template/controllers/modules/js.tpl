@@ -315,6 +315,8 @@
 	      var value_pref = el.data('value');
 	      var module_pref = el.data('module');
 	      var action_pref = 'f';
+	      var total_favorites = parseInt($('#favorite-count').html());
+
 	      try
 	      {
 	        resAjax = $.ajax({
@@ -336,6 +338,12 @@
 	              if (data == 'OK')
 	              {
 	                el.parent('li').find('.toggle_favorite').toggle();
+
+
+					if (value_pref)
+						$('#favorite-count').html(total_favorites+1);
+					else
+						$('#favorite-count').html(total_favorites-1);
 	              }
 	                
 	            },

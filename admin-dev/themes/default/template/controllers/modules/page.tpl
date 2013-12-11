@@ -95,7 +95,7 @@
 						</div>
 					</form>
 					<a class="categoryModuleFilterLink list-group-item {if isset($categoryFiltered.favorites)}active{/if}" href="{$currentIndex}&token={$token}&filterCategory=favorites">
-						{l s='Favorites'} <span class="badge pull-right">{$nb_modules_favorites}</span>
+						{l s='Favorites'} <span id="favorite-count" class="badge pull-right">{$nb_modules_favorites}</span>
 					</a>
 					<a class="categoryModuleFilterLink list-group-item {if count($categoryFiltered) lte 0}active{/if}" href="{$currentIndex}&token={$token}&unfilterCategory=yes">
 						{l s='All'} <span class="badge pull-right">{$nb_modules}</span>
