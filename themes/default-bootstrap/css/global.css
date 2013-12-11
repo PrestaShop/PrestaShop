@@ -3856,7 +3856,7 @@ p.info-account {
     text-shadow: 1px 1px rgba(0, 0, 0, 0.1); }
     .alert.alert-success:before {
       font-family: "FontAwesome";
-      content: "";
+      content: "\f058";
       font-size: 20px;
       vertical-align: -2px;
       padding-right: 7px; }
@@ -3864,7 +3864,7 @@ p.info-account {
     text-shadow: 1px 1px rgba(0, 0, 0, 0.1); }
     .alert.alert-danger:before {
       font-family: "FontAwesome";
-      content: "";
+      content: "\f057";
       font-size: 20px;
       vertical-align: -2px;
       padding-right: 7px;
@@ -4744,7 +4744,7 @@ table.table_block td {
     font-family: "FontAwesome";
     font-size: 14px; }
     #categories_block_left li span.grower.OPEN:before, #categories_block_left li span.grower.CLOSE:before {
-      content: "";
+      content: "\f068";
       display: block;
       vertical-align: middle;
       width: 30px;
@@ -4753,7 +4753,7 @@ table.table_block td {
       line-height: 30px;
       text-align: center; }
     #categories_block_left li span.grower.CLOSE:before {
-      content: "";
+      content: "\f067";
       color: silver; }
   #categories_block_left li span.grower:hover + a,
   #categories_block_left li a:hover,
@@ -4763,7 +4763,7 @@ table.table_block td {
     font-weight: normal;
     color: #777777; }
     #categories_block_left li li a:before {
-      content: "";
+      content: "\f105";
       font-family: "FontAwesome";
       line-height: 29px;
       padding-right: 8px; }
@@ -5294,8 +5294,11 @@ div.star a:hover {
   position: relative;
   background: white; }
   #header .header-row {
-    background: #333333; }
-  	#header .header-row.container {background:none; position:relative; z-index:1;}
+    position: relative; }
+    #header .header-row:first-child {
+      background-color: #333333; }
+    #header .header-row .container {
+      position: relative; }
     #header .header-row .shop-phone {
       display: block;
       padding: 5px 0 10px; }
@@ -5309,8 +5312,8 @@ div.star a:hover {
         padding-right: 7px; }
       #header .header-row .shop-phone strong {
         color: white; }
-    #header .header-row nav { 
-	float: right; }
+    #header .header-row nav {
+      float: right; }
     #header .header-row .header_user_info {
       float: left;
       border-left: 1px solid #515151;
@@ -5327,9 +5330,6 @@ div.star a:hover {
         @media (max-width: 479px) {
           #header .header-row .header_user_info a {
             font-size: 11px; } }
-  #header .header-row-2 {
-    position: relative;
-    z-index: 1; }
   #header #header_logo {
     position: absolute;
     left: 0;
@@ -5379,7 +5379,7 @@ div.star a:hover {
         color: #777777; }
       #header #currencies-block-top div.current:after,
       #header #languages-block-top div.current:after {
-        content: "";
+        content: "\f0d7";
         font-family: "FontAwesome";
         font-size: 18px;
         line-height: 18px;
@@ -5560,13 +5560,13 @@ div.star a:hover {
           padding-bottom: 13px; }
           .footer-container #footer h4:after {
             display: block;
-            content: "";
+            content: "\f055";
             font-family: "FontAwesome";
             position: absolute;
             right: 0;
             top: 1px; }
           .footer-container #footer h4.active:after {
-            content: ""; } }
+            content: "\f056"; } }
       .footer-container #footer h4 a {
         color: white; }
     .footer-container #footer ul li {
@@ -5632,11 +5632,11 @@ div.star a:hover {
             .footer-container #footer #social_block ul li a:hover {
               color: white; }
           .footer-container #footer #social_block ul li.facebook a:before {
-            content: ""; }
+            content: "\f09a"; }
           .footer-container #footer #social_block ul li.twitter a:before {
-            content: ""; }
+            content: "\f099"; }
           .footer-container #footer #social_block ul li.rss a:before {
-            content: ""; }
+            content: "\f09e"; }
       .footer-container #footer #social_block h4 {
         float: right;
         margin-bottom: 0;
@@ -6039,7 +6039,7 @@ p.payment_module {
       background: url(../img/cheque.png) 15px 15px no-repeat #fbfbfb; }
     p.payment_module a.cheque:after, p.payment_module a.bankwire:after {
       display: block;
-      content: "";
+      content: "\f054";
       position: absolute;
       right: 0px;
       margin-top: -11px;
@@ -6495,7 +6495,7 @@ form#sendComment h3 {
     text-indent: -5000px; }
 
 div.star:after {
-  content: "";
+  content: "\f006";
   font-family: "FontAwesome";
   display: inline-block;
   color: #777676; }
@@ -6503,13 +6503,13 @@ div.star:after {
 div.star.star_on {
   display: block; }
   div.star.star_on:after {
-    content: "";
+    content: "\f005";
     font-family: "FontAwesome";
     display: inline-block;
     color: #ef8743; }
 
 div.star.star_hover:after {
-  content: "";
+  content: "\f005";
   font-family: "FontAwesome";
   display: inline-block;
   color: #ef8743; }
@@ -6561,7 +6561,7 @@ div.star.star_hover:after {
   .fancybox-skin .fancybox-close:hover {
     color: #515151; }
   .fancybox-skin .fancybox-close:after {
-    content: "";
+    content: "\f057";
     font-family: "FontAwesome"; }
 
 #facebook_block,
