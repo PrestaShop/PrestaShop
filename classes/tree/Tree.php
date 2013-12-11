@@ -61,7 +61,7 @@ class TreeCore
 		if (!isset($this->_toolbar))
 			$this->setToolbar(new TreeToolbarCore());
 
-		$this->getToolbar()->setActions($value);
+		$this->getToolbar()->setTemplateDirectory($this->getTemplateDirectory())->setActions($value);
 		return $this;
 	}
 
@@ -70,7 +70,7 @@ class TreeCore
 		if (!isset($this->_toolbar))
 			$this->setToolbar(new TreeToolbarCore());
 
-		return $this->getToolbar()->getActions();
+		return $this->getToolbar()->setTemplateDirectory($this->getTemplateDirectory())->getActions();
 	}
 
 	public function setAttribute($name, $value)
@@ -293,7 +293,7 @@ class TreeCore
 		if (!isset($this->_toolbar))
 			$this->setToolbar(new TreeToolbarCore());
 
-		$this->getToolbar()->addAction($action);
+		$this->getToolbar()->setTemplateDirectory($this->getTemplateDirectory())->addAction($action);
 		return $this;
 	}
 

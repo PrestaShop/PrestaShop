@@ -41,7 +41,7 @@ class StatsStock extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Stats on available quantities.');
+		$this->displayName = $this->l('Stats on available quantities');
 		$this->description = '';
 	}
 
@@ -84,6 +84,7 @@ class StatsStock extends Module
 
 		$this->html .= '
 		<script type="text/javascript">$(\'#calendar\').slideToggle();</script>
+
 		<div class="panel-heading">'
 			.$this->l('Evaluation of available quantities for sale.').
 		'</div>
@@ -92,7 +93,7 @@ class StatsStock extends Module
 				<label class="control-label col-lg-3">'.$this->l('Category').'</label>
 				<div class="col-lg-6">
 					<select name="statsstock_id_category" onchange="this.form.submit();">
-						<option value="0">-- '.$this->l('All').' --</option>';
+						<option value="0">- '.$this->l('All').' -</option>';
 				foreach (Category::getSimpleCategories($this->context->language->id) as $category)
 					$this->html .= '<option value="'.(int)$category['id_category'].'" '.
 						($this->context->cookie->statsstock_id_category == $category['id_category'] ? 'selected="selected"' : '').'>'.
@@ -143,7 +144,7 @@ class StatsStock extends Module
 					<tr>
 						<th colspan="3"></th>
 						<th><span class="title_box active">'.$this->l('Total quantities').'</span></th>
-						<th><span class="title_box active">'.$this->l('Avg price').'</span></th>
+						<th><span class="title_box active">'.$this->l('Average price').'</span></th>
 						<th><span class="title_box active">'.$this->l('Total value').'</span></th>
 					</tr>
 					<tr>

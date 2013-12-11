@@ -25,18 +25,18 @@
 {extends file="helpers/form/form.tpl"}
 
 {block name="other_fieldsets"}
-<div id="conditions" class="Bloc">
-	<div id="condition_group_list">
+<div id="conditions">
+	<div id="condition_group_list"></div>
 </div>
 
 <a class="btn btn-default" href="#" id="add_condition_group">
 	<i class="icon-plus-sign"></i> {l s='Add a new condition group'}
 </a>
 <div class="clearfix">&nbsp;</div>
-<div class="panel">
+<div class="panel" id="conditions-panel" style="display:none;">
 	<h3><i class="icon-tasks"></i> {l s='Conditions'}</h3>
 	<form class="form-horizontal">
-		<div class="row">
+		<div class="form-group">
 			<label for="id_category" class="control-label col-lg-3">{l s='Category'}</label>
 			<div class="col-lg-9">
 				<div class="col-lg-8">
@@ -53,7 +53,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="form-group">
 			<label for="id_manufacturer" class="control-label col-lg-3">{l s='Manufacturer'}</label>
 			<div class="col-lg-9">
 				<div class="col-lg-8">
@@ -70,7 +70,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="form-group">
 			<label for="id_supplier" class="control-label col-lg-3">{l s='Supplier'}</label>
 			<div class="col-lg-9">
 				<div class="col-lg-8">
@@ -87,7 +87,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="form-group">
 			<label for="id_attribute" class="control-label col-lg-3">{l s='Attributes'}</label>
 			<div class="col-lg-9">
 				<div class="col-lg-4">
@@ -114,7 +114,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="form-group">
 			<label for="id_attribute" class="control-label col-lg-3">{l s='Features'}</label>
 			<div class="col-lg-9">
 				<div class="col-lg-4">
@@ -191,10 +191,16 @@ function delete_condition(condition)
 
 function new_condition_group()
 {
+	$('#conditions-panel').show();
+	var html = '';
+
+	if (last_condition_group > 0)
+		html += '<div class="row condition_separator text-center">{l s='OR'}</div><div class="clearfix">&nbsp;</div>';
+
 	last_condition_group++;
-	var html = '<div id="condition_group_'+last_condition_group+'" class="panel condition_group alert-info"><h3><i class="icon-tasks"></i> {l s='Condition group'} '+last_condition_group+'</h3>';
+	html += '<div id="condition_group_'+last_condition_group+'" class="panel condition_group alert-info"><h3><i class="icon-tasks"></i> {l s='Condition group'} '+last_condition_group+'</h3>';
 		html += '<table class="table alert-info"><thead><tr><th class="fixed-width-md"><span class="title_box">{l s='Type'}</span></th><th><span class="title_box">{l s='Value'}</span></th><th></th></tr></thead><tbody></tbody></table>';
-		html += '</div><div class="row condition_separator text-center">{l s='OR'}</div><div class="clearfix">&nbsp;</div>';
+		html += '</div>';
 	$('#condition_group_list').append(html);
 	toggle_condition_group(last_condition_group);
 }
@@ -296,10 +302,6 @@ $(document).ready(function() {
 		toggle_condition_group(id[2]);
 		return false;
 	});
-
-	{if $conditions|@count == 0}
-		new_condition_group();
-	{/if}
 
 	{foreach from=$conditions key='id_group_condition' item='condition_group'}
 		new_condition_group();

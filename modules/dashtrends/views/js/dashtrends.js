@@ -5,18 +5,15 @@ function line_chart_trends(widget_name, chart_details)
 {
 	nv.addGraph(function() {  
 		var chart = nv.models.lineChart()
-				 .useInteractiveGuideline(true)
-				 .x(function(d) { return d[0] })
-				 .y(function(d) { return d[1]/100 })
-				 .color(d3.scale.category10().range());
+			.useInteractiveGuideline(true)
+			.x(function(d) { return (d !== undefined ? d[0] : 0); })
+			.y(function(d) { return (d !== undefined ? d[1] : 0); })
 	
-		chart.xAxis
-			.tickFormat(function(d) {
-				return d3.time.format('%m/%d/%y')(new Date(d))
-			});
+		chart.xAxis.tickFormat(function(d) {
+			return d3.time.format('%m/%d/%y')(new Date(d))
+		});
 	
-		chart.yAxis
-			.tickFormat(d3.format(',.1%'));
+		chart.yAxis.tickFormat(d3.format('%'));
 
 		dashtrends_data = chart_details.data;
 		dashtrends_chart = chart;

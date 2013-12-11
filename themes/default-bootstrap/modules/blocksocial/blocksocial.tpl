@@ -26,9 +26,10 @@
 
 <section id="social_block">
 	<ul>
-		{if $facebook_url != ''}<li class="facebook"><a href="{$facebook_url|escape:html:'UTF-8'}"><span>{l s='Facebook' mod='blocksocial'}</span></a></li>{/if}
-		{if $twitter_url != ''}<li class="twitter"><a href="{$twitter_url|escape:html:'UTF-8'}"><span>{l s='Twitter' mod='blocksocial'}</span></a></li>{/if}
-		{if $rss_url != ''}<li class="rss"><a href="{$rss_url|escape:html:'UTF-8'}"><span>{l s='RSS' mod='blocksocial'}</span></a></li>{/if}
+		{if $facebook_url != ''}<li class="facebook"><a target="_blank" href="{$facebook_url|escape:html:'UTF-8'}"><span>{l s='Facebook' mod='blocksocial'}</span></a></li>{/if}
+		{if $twitter_url != ''}<li class="twitter"><a target="_blank" href="{$twitter_url|escape:html:'UTF-8'}"><span>{l s='Twitter' mod='blocksocial'}</span></a></li>{/if}
+		{if $rss_url != ''}<li class="rss"><a target="_blank" href="{$rss_url|escape:html:'UTF-8'}"><span>{l s='RSS' mod='blocksocial'}</span></a></li>{/if}
 	</ul>
     <h4>{l s='Follow us:' mod='blocksocial'}</h4>
 </section>
+<div class="clearfix"></div>

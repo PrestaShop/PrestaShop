@@ -67,7 +67,7 @@
 	{if isset($transformSuccess)}
 		<p class="alert alert-success">{l s='Your guest account has been successfully transformed into a customer account. You can now login as a registered shopper. '} <a href="{$link->getPageLink('authentication', true)|escape:'html'}">{l s='page.'}</a></p>
 	{else}
-		<form method="post" action="{$action|escape:'htmlall':'UTF-8'}#guestToCustomer" class="std">
+		<form method="post" action="{$action|escape:'html':'UTF-8'}#guestToCustomer" class="std">
 			<fieldset class="description_box box">
             	
                 <p><strong class="dark">{l s='Transform your guest account into a customer account and enjoy:'}</strong></p>
@@ -85,9 +85,9 @@
                     </div>
                 </div>
 				
-				<input type="hidden" name="id_order" value="{if isset($order->id)}{$order->id}{else}{if isset($smarty.get.id_order)}{$smarty.get.id_order|escape:'htmlall':'UTF-8'}{else}{if isset($smarty.post.id_order)}{$smarty.post.id_order|escape:'htmlall':'UTF-8'}{/if}{/if}{/if}" />
-				<input type="hidden" name="order_reference" value="{if isset($smarty.get.order_reference)}{$smarty.get.order_reference|escape:'htmlall':'UTF-8'}{else}{if isset($smarty.post.order_reference)}{$smarty.post.order_reference|escape:'htmlall':'UTF-8'}{/if}{/if}" />
-				<input type="hidden" name="email" value="{if isset($smarty.get.email)}{$smarty.get.email|escape:'htmlall':'UTF-8'}{else}{if isset($smarty.post.email)}{$smarty.post.email|escape:'htmlall':'UTF-8'}{/if}{/if}" />
+				<input type="hidden" name="id_order" value="{if isset($order->id)}{$order->id}{else}{if isset($smarty.get.id_order)}{$smarty.get.id_order|escape:'html':'UTF-8'}{else}{if isset($smarty.post.id_order)}{$smarty.post.id_order|escape:'html':'UTF-8'}{/if}{/if}{/if}" />
+				<input type="hidden" name="order_reference" value="{if isset($smarty.get.order_reference)}{$smarty.get.order_reference|escape:'html':'UTF-8'}{else}{if isset($smarty.post.order_reference)}{$smarty.post.order_reference|escape:'html':'UTF-8'}{/if}{/if}" />
+				<input type="hidden" name="email" value="{if isset($smarty.get.email)}{$smarty.get.email|escape:'html':'UTF-8'}{else}{if isset($smarty.post.email)}{$smarty.post.email|escape:'html':'UTF-8'}{/if}{/if}" />
 				
 				<p>
                     <button type="submit" name="submitTransformGuestToCustomer" class="button button-medium btn btn-default"><span>{l s='Send'}<i class="icon-chevron-right right"></i></span></button>
@@ -100,17 +100,17 @@
 	{if isset($show_login_link) && $show_login_link}
 		<p><img src="{$img_dir}icon/userinfo.gif" alt="{l s='Information'}" class="icon" /><a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='Click here to login to your customer account.'}</a><br /><br /></p>
 	{/if}
-	<form method="post" action="{$action|escape:'htmlall':'UTF-8'}" class="std" id="guestTracking">
+	<form method="post" action="{$action|escape:'html':'UTF-8'}" class="std" id="guestTracking">
 		<fieldset class="description_box box">
 			<h2 class="page-subheading">{l s='To track your order, please enter the following information:'}</h2>
                     <div class="text form-group">
                         <label>{l s='Order Reference:'} </label>
-                        <input class="form-control" type="text" name="order_reference" value="{if isset($smarty.get.id_order)}{$smarty.get.id_order|escape:'htmlall':'UTF-8'}{else}{if isset($smarty.post.id_order)}{$smarty.post.id_order|escape:'htmlall':'UTF-8'}{/if}{/if}" size="8" />
+                        <input class="form-control" type="text" name="order_reference" value="{if isset($smarty.get.id_order)}{$smarty.get.id_order|escape:'html':'UTF-8'}{else}{if isset($smarty.post.id_order)}{$smarty.post.id_order|escape:'html':'UTF-8'}{/if}{/if}" size="8" />
                         <i>{l s='For example: QIIXJXNUI or QIIXJXNUI#1'}</i>
                     </div>
                     <div class="text form-group">
-                        <label>{l s='Email'}</label>
-                        <input class="form-control" type="text" name="email" value="{if isset($smarty.get.email)}{$smarty.get.email|escape:'htmlall':'UTF-8'}{else}{if isset($smarty.post.email)}{$smarty.post.email|escape:'htmlall':'UTF-8'}{/if}{/if}" />
+                        <label>{l s='Email:'}</label>
+                        <input class="form-control" type="text" name="email" value="{if isset($smarty.get.email)}{$smarty.get.email|escape:'html':'UTF-8'}{else}{if isset($smarty.post.email)}{$smarty.post.email|escape:'html':'UTF-8'}{/if}{/if}" />
                     </div>
 			<p>
                 <button type="submit" name="submitGuestTracking" class="button btn btn-default button-medium"><span>{l s='Send'}<i class="icon-chevron-right right"></i></span></button>

@@ -36,7 +36,7 @@ $(document).ready(function(){
 	}); // end bind
 
 	// if count errors
-	$('#hideError').live('click', function(e)
+	$('#hideError').on('click', function(e)
 	{
 		e.preventDefault();
 		$('.error').hide('slow', function (){
@@ -46,21 +46,21 @@ $(document).ready(function(){
 	});
 
 	// if count warnings
-	$('#linkSeeMore').live('click', function(e){
+	$(document).on('click', '#linkSeeMore', function(e){
 		e.preventDefault();
 		$('#seeMore').show();
 		$(this).hide();
 		$('#linkHide').show();
 		return false;
 	});
-	$('#linkHide').live('click', function(e){
+	$(document).on('click', '#linkHide', function(e){
 		e.preventDefault();
 		$('#seeMore').hide();
 		$(this).hide();
 		$('#linkSeeMore').show();
 		return false;
 	});
-	$('#hideWarn').live('click', function(e){
+	$(document).on('click', '#hideWarn', function(e){
 		e.preventDefault();
 		$('.warn').hide('slow', function (){
 			$('.warn').remove();

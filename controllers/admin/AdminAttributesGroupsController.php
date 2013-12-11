@@ -185,6 +185,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'name' => 'name',
 					'lang' => true,
 					'required' => true,
+					'col' => '4',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
@@ -193,6 +194,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'name' => 'public_name',
 					'lang' => true,
 					'required' => true,
+					'col' => '4',
 					'hint' => $this->l('Group name displayed to the customer').'&nbsp;'.$this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
@@ -205,6 +207,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						'id' => 'id',
 						'name' => 'name'
 					),
+					'col' => '2',
 					'hint' => $this->l('Choose the type of the attribute')
 				)
 			)
@@ -319,6 +322,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'title' => $this->l('Save   '),
 			'class' => 'button'
 		);
+
+		$this->fields_value['id_attribute_group'] = (int)Tools::getValue('id_attribute_group');
 
 		// Override var of Controller
 		$this->table = 'attribute';
@@ -468,11 +473,18 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				'icon' => 'process-icon-new'
 			);
 			$this->page_header_toolbar_btn['new_value'] = array(
-				'href' => self::$currentIndex.'&amp;updateattribute&amp;token='.$this->token,
+				'href' => self::$currentIndex.'&amp;updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&amp;token='.$this->token,
 				'desc' => $this->l('Add new value'),
 				'icon' => 'process-icon-new'
 			);
-		}		
+		}
+
+		if ($this->display == 'view')
+			$this->page_header_toolbar_btn['new_value'] = array(
+				'href' => self::$currentIndex.'&amp;updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&amp;token='.$this->token,
+				'desc' => $this->l('Add new value'),
+				'icon' => 'process-icon-new'
+			);
 
 		parent::initPageHeaderToolbar();
 	}
@@ -505,6 +517,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				);
 				break;
 			case 'view':
+				$this->toolbar_btn['newAttributes'] = array(
+						'href' => self::$currentIndex.'&amp;updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&amp;token='.$this->token,
+						'desc' => $this->l('Add New Values'),
+						'class' => 'toolbar-new'
+					);
+
 				$this->toolbar_btn['back'] = array(
 					'href' => self::$currentIndex.'&token='.$this->token,
 					'desc' => $this->l('Back to list')
@@ -515,12 +533,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
 					'desc' => $this->l('Add New Attributes')
 				);
-				$this->toolbar_btn['newAttributes'] = array(
-					'href' => self::$currentIndex.'&amp;updateattribute&amp;token='.$this->token,
-					'desc' => $this->l('Add New Values'),
-					'class' => 'toolbar-new'
-				);
 		}
+			$this->toolbar_btn['import'] = array(
+					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=combinations',
+					'desc' => $this->l('Import')
+				);
 	}
 
 	public function initToolbarTitle()
@@ -530,11 +547,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		switch ($this->display)
 		{
 			case 'edit':
-				$bread_extended[] = $this->l('Edit New Attributes');
+				$bread_extended[] = $this->l('Edit New Attribute');
 				break;
 
 			case 'add':
-				$bread_extended[] = $this->l('Add New Attributes');
+				$bread_extended[] = $this->l('Add New Attribute');
 				break;
 
 			case 'view':
@@ -550,9 +567,19 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 			case 'editAttributes':
 				if ($this->id_attribute)
-					$bread_extended[] = $this->l('Edit Value');
+				{
+					if (($id = Tools::getValue('id_attribute_group')))
+					{
+						if (Validate::isLoadedObject($obj = new AttributeGroup((int)$id)))
+							$bread_extended[] = '<a href="'.Context::getContext()->link->getAdminLink('AdminAttributesGroups').'&id_attribute_group='.$id.'&viewattribute_group">'.$obj->name[$this->context->employee->id_lang].'</a>';
+						if (Validate::isLoadedObject($obj = new Attribute((int)$this->id_attribute)))
+							$bread_extended[] =  sprintf($this->l('Edit: %s'), $obj->name[$this->context->employee->id_lang]);
+					}
+					else
+						$bread_extended[] = $this->l('Edit Value');
+				}
 				else
-					$bread_extended[] = $this->l('Add New Values');
+					$bread_extended[] = $this->l('Add New Value');
 				break;
 		}
 
@@ -584,7 +611,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	
 	protected function setTypeAttribute()
 	{
-		if (Tools::getValue('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitBulkdeleteattribute'))
+		if (Tools::isSubmit('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitBulkdeleteattribute'))
 		{
 			$this->table = 'attribute';
 			$this->className = 'Attribute';

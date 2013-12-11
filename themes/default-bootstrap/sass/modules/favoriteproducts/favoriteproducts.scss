@@ -1,13 +1,15 @@
+@import '../../_theme_variables';
+
 #favoriteproducts_block_account .favoriteproduct {
 	position:relative;
-   margin-bottom: 14px;
-   padding: 12px 8px;
-	border: 1px solid #eee;
-   border-radius: 3px 3px 3px 3px;
+	margin-bottom: 14px;
+	padding: 12px 8px;
+	border: 1px solid $base-border-color;
+	border-radius: 3px 3px 3px 3px;
 }
 
 .favoriteproduct a.product_img_link {
-    border: 1px solid #CCCCCC;
+    border: 1px solid $base-border-color;
     display: block;
     float: left;
     margin-right: 14px;

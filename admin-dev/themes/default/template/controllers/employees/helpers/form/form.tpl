@@ -37,19 +37,19 @@
 					{else}
 						{if $fields_value[$input.name] == $option}selected="selected"{/if}
 					{/if}
-				>{$option|escape:'htmlall':'UTF-8'}</option>
+				>{$option|escape:'html':'UTF-8'}</option>
 			{/foreach}
 		</select>
 	{elseif $input.type == 'default_tab'}
 	<select name="{$input.name}" id="{$input.name}">
 		{foreach $input.options AS $option}
 			{if isset($option.children) && $option.children|@count}
-				<optgroup label="{$option.name|escape:'htmlall':'UTF-8'}"></optgroup>
+				<optgroup label="{$option.name|escape:'html':'UTF-8'}"></optgroup>
 				{foreach $option.children AS $children}
-					<option value="{$children.id_tab}" {if $fields_value[$input.name] == $children.id_tab}selected="selected"{/if}>&nbsp;&nbsp;{$children.name|escape:'htmlall':'UTF-8'}</option>
+					<option value="{$children.id_tab}" {if $fields_value[$input.name] == $children.id_tab}selected="selected"{/if}>&nbsp;&nbsp;{$children.name|escape:'html':'UTF-8'}</option>
 				{/foreach}
 			{else}
-				<option value="{$option.id_tab}" {if $fields_value[$input.name] == $option.id_tab}selected="selected"{/if}>&nbsp;&nbsp;{$option.name|escape:'htmlall':'UTF-8'}</option>
+				<option value="{$option.id_tab}" {if $fields_value[$input.name] == $option.id_tab}selected="selected"{/if}>&nbsp;&nbsp;{$option.name|escape:'html':'UTF-8'}</option>
 			{/if}
 		{/foreach}
 	</select>

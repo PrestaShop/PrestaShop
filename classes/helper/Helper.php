@@ -87,9 +87,9 @@ class HelperCore
 				$override_tpl_path = _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/_configure/'.$this->override_folder.$this->base_folder.$tpl_name;
 			else
 			{
-				if (file_exists($this->context->smarty->getTemplateDir(1).DIRECTORY_SEPARATOR.$this->override_folder.$this->base_folder.$tpl_name))
-					$override_tpl_path = $this->context->smarty->getTemplateDir(1).DIRECTORY_SEPARATOR.$this->override_folder.$this->base_folder.$tpl_name;
-				else if (file_exists($this->context->smarty->getTemplateDir(0).DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$this->base_folder.$tpl_name))
+				if (file_exists($this->context->smarty->getTemplateDir(1).$this->override_folder.$this->base_folder.$tpl_name))
+					$override_tpl_path = $this->context->smarty->getTemplateDir(1).$this->override_folder.$this->base_folder.$tpl_name;
+				else if (file_exists($this->context->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$this->base_folder.$tpl_name))
 					$override_tpl_path = $this->context->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$this->base_folder.$tpl_name;
 
 			}
@@ -214,20 +214,18 @@ class HelperCore
 
 		$html = '
 		<script type="text/javascript">
-			var inputName = "'.$input_name.'";
-		';
+			var inputName = \''.addcslashes($input_name, '\'').'\';'."\n";
 		if (count($selected_cat) > 0)
 		{
 			if (isset($selected_cat[0]))
-				$html .= 'var selectedCat = "'.implode(',', $selected_cat).'";';
+				$html .= '			var selectedCat = '.(int)implode(',', $selected_cat).';'."\n";
 			else
-				$html .= 'var selectedCat = "'.implode(',', array_keys($selected_cat)).'";';
+				$html .= '			var selectedCat = '.(int)implode(',', array_keys($selected_cat)).';'."\n";
 		}
 		else
-			$html .= 'var selectedCat = "";';
-		$html .= '
-			var selectedLabel = \''.$translations['selected'].'\';
-			var home = \''.$root['name'].'\';
+			$html .= '			var selectedCat = \'\';'."\n";
+		$html .= '			var selectedLabel = \''.$translations['selected'].'\';
+			var home = \''.addcslashes($root['name'], '\'').'\';
 			var use_radio = '.(int)$use_radio.';';
 		if (!$use_in_popup)
 			$html .= '

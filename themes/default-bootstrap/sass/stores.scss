@@ -19,6 +19,10 @@
 	.address-input {
 		float:left;
 		margin-right:19px;
+																		@media (max-width: $screen-xs-max) { // max 767px
+																			width:100%;
+																			margin:0 0 20px 0;
+																		}
 		label { margin-right:5px;}
 	}
 	
@@ -66,7 +70,7 @@
 	
 	label {
 		font-weight:normal;
-		color:#777777;
+		color:$base-body-color;
 	}
 	
 	#stores_loader {
@@ -75,7 +79,7 @@
 	}
 	
 	#locationSelect {
-   		width:356px;
+   		max-width:356px;
 		visibility: hidden;
 	}
 	
@@ -88,7 +92,7 @@
 				padding:20px;
 				
 				&.num {
-					background:#fbfbfb;
+					background:$table-background;
 					width:46px;	
 				}
 				
@@ -97,8 +101,16 @@
 					span {
 						padding-left:15px;	
 					}
+					
+					@media (max-width: $screen-xs-max) { // max 767px
+						img {display:none;}
+					}
 				}
 			}
 		}
 	}
+}
+.store-image img {
+	width:100%;
+	min-width:100px;
 }

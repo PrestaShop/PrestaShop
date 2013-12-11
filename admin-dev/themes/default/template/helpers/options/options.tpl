@@ -56,28 +56,30 @@
 			{/if}
 
 			{if !$categoryData['hide_multishop_checkbox'] && $use_multishop}
-			<div class="row alert alert-info">
+			<div class="well clearfix">
 				<label class="control-label col-lg-3">
 					<i class="icon-sitemap"></i> {l s='Multistore'}
 				</label>
 				<div class="col-lg-9">
 					<div class="row">
-						<div class="col-lg-2">
+						<div class="col-lg-6">
 							<span class="switch prestashop-switch">
 								<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_on" value="1" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), true)">
-								<label class="radio" for="{$table}_multishop_{$category}_on">
+								<label for="{$table}_multishop_{$category}_on">
 									<i class="icon-check-sign color_success"></i> {l s='Yes'}
 								</label>
 								<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_off" value="0" checked="checked" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), false)">
-								<label class="radio" for="{$table}_multishop_{$category}_off">
+								<label for="{$table}_multishop_{$category}_off">
 									<i class="icon-ban-circle color_danger"></i> {l s='No'}
 								</label>
-								<span class="slide-button btn btn-default"></span>
+								<a class="slide-button btn btn-default"></a>
 							</span>
 						</div>
-						<div class="col-lg-7">
-							<p class="form-control-static"><strong>{l s='Check / Uncheck all'}</strong> {l s='(Check boxes if you want to set a custom value for this shop or group shop context)'}</p>
-						</div>
+												<p class="help-block">
+							<strong>{l s='Check / Uncheck all'}</strong>
+							{l s='(Check boxes if you want to set a custom value for this shop or group shop context)'}
+						</p>
+
 					</div>
 				</div>
 			</div>
@@ -148,7 +150,7 @@
 														<label for="{$key}_off" class="radioCheck">
 															<i class="icon-ban-circle color_danger"></i> {l s='No'}
 														</label>
-														<span class="slide-button btn btn-default"></span>
+														<a class="slide-button btn btn-default"></a>
 													</span>
 												</div>
 											</div>
@@ -179,47 +181,40 @@
 										</div>
 									{elseif $field['type'] == 'text'}
 										<div class="col-lg-9 {if isset($field['suffix'])}input-group{/if}">
+											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'html':'UTF-8'}" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if}/>
 											{if isset($field['suffix'])}
 											<span class="input-group-addon">
 												{$field['suffix']|strval}
 											</span>
 											{/if}
-											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if}/>
 										</div>
 									{elseif $field['type'] == 'password'}
 										<div class="col-lg-9 {if isset($field['suffix'])}input-group{/if}">
+											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if} />
 											{if isset($field['suffix'])}
 											<span class="input-group-addon">
 												{$field['suffix']|strval}
 											</span>
 											{/if}
-											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if} />
 										</div>
 									{elseif $field['type'] == 'textarea'}
 										<div class="col-lg-9">
-											<textarea class="textarea-autosize" name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|escape:'htmlall':'UTF-8'}</textarea>
+											<textarea class="textarea-autosize" name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|escape:'html':'UTF-8'}</textarea>
 										</div>
 									{elseif $field['type'] == 'file'}
-										{if isset($field['thumb']) && $field['thumb']}
-											<div class="col-lg-3">
-												<img src="{$field['thumb']}" alt="{$field['title']}" title="{$field['title']}" />
-											</div>
-										{/if}
-										<div class="col-lg-5">
-											<input type="file" name="{$key}" />
-										</div>
+										<div class="col-lg-9">{$field['file']}</div>
 						            {elseif $field['type'] == 'color'}
 										<div class="col-lg-2">
 											<div class="row">
 												<div class="input-group">
-									              <input type="color" size="{$field['size']}" data-hex="true" {if isset($input.class)}class="{$field['class']}" {else}class="color mColorPickerInput"{/if} name="{$field['name']}" class="{if isset($field['class'])}{$field['class']}{/if}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />
+									              <input type="color" size="{$field['size']}" data-hex="true" {if isset($input.class)}class="{$field['class']}" {else}class="color mColorPickerInput"{/if} name="{$field['name']}" class="{if isset($field['class'])}{$field['class']}{/if}" value="{$field['value']|escape:'html':'UTF-8'}" />
 									            </div>
 									        </div>
 							            </div>
 									{elseif $field['type'] == 'price'}
 										<div class="input-group col-lg-9">
 											<span class="input-group-addon">{$currency_left_sign}{$currency_right_sign} {l s='(tax excl.)'}</span>
-											<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />
+											<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'html':'UTF-8'}" />
 										</div>
 									{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang' || $field['type'] == 'selectLang'}
 
@@ -235,14 +230,16 @@
 													{/if}
 															<input type="text"
 																name="{$key}_{$id_lang}"
-																value="{$value|escape:'htmlall':'UTF-8'}"
+																value="{$value|escape:'html':'UTF-8'}"
 																{if isset($input.class)}class="{$input.class}"{/if}
 															/>
 													{if $field['languages']|count > 1}
 														</div>
 														<div class="col-lg-2">
 															<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-																<!-- name -->
+																{foreach $languages as $language}
+																	{if $language.id_lang == $id_lang}{$language.iso_code}{/if}
+																{/foreach}
 																<span class="caret"></span>
 															</button>
 															<ul class="dropdown-menu">
@@ -270,7 +267,9 @@
 														</div>
 														<div class="col-lg-2">
 															<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-																<!-- name -->
+																{foreach $languages as $language}
+																	{if $language.id_lang == $id_lang}{$language.iso_code}{/if}
+																{/foreach}
 																<span class="caret"></span>
 															</button>
 															<ul class="dropdown-menu">

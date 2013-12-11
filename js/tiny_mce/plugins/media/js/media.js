@@ -413,7 +413,7 @@
 				var html = "";
 
 				html += '<select id="linklist" name="linklist" style="width: 250px" onchange="this.form.src.value=this.options[this.selectedIndex].value;Media.formToData(\'src\');">';
-				html += '<option value="">---</option>';
+				html += '<option value="">-</option>';
 
 				for (var i=0; i<tinyMCEMediaList.length; i++)
 					html += '<option value="' + tinyMCEMediaList[i][1] + '">' + tinyMCEMediaList[i][0] + '</option>';

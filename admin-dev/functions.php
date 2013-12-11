@@ -544,7 +544,8 @@ function runAdminTab($tab, $ajaxMode = false)
 					if($ajaxMode)
 					{
 						// If this is an XSS attempt, then we should only display a simple, secure page
-						ob_clean();
+						if (ob_get_level() && ob_get_length() > 0)
+							ob_clean();
 
 						// ${1} in the replacement string of the regexp is required, because the token may begin with a number and mix up with it (e.g. $17)
 						$url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$adminObj->token.'$2', $_SERVER['REQUEST_URI']);
@@ -559,7 +560,8 @@ function runAdminTab($tab, $ajaxMode = false)
 					else
 					{
 						// If this is an XSS attempt, then we should only display a simple, secure page
-						ob_clean();
+						if (ob_get_level() && ob_get_length() > 0)
+							ob_clean();
 
 						// ${1} in the replacement string of the regexp is required, because the token may begin with a number and mix up with it (e.g. $17)
 						$url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$adminObj->token.'$2', $_SERVER['REQUEST_URI']);

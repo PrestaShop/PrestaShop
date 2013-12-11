@@ -49,7 +49,8 @@ class BlockAdvertising extends Module
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Block advertising');
 		$this->description = $this->l('Adds an advertisement block to selected sections of your e-commerce webiste.');

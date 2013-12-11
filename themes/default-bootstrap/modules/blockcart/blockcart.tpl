@@ -76,8 +76,8 @@ var generated_date = {$smarty.now|intval};
 			{assign var='productId' value=$product.id_product}
 			{assign var='productAttributeId' value=$product.id_product_attribute}
 			<dt id="cart_block_product_{$product.id_product}_{if $product.id_product_attribute}{$product.id_product_attribute}{else}0{/if}_{if $product.id_address_delivery}{$product.id_address_delivery}{else}0{/if}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
-            	<a class="cart-images" href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category)}">
-                    <img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')}" alt=""  title="{$product.name|escape:htmlall:'UTF-8'|truncate:20}" />
+            	<a class="cart-images" href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category)|escape:htmlall:'UTF-8'}" title="{$product.name|escape:htmlall:'UTF-8'|truncate:20}">
+                    <img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')}" alt="{$product.name|escape:htmlall:'UTF-8'}" />
                 </a>
                 <div class="cart-info">
                 	<div class="product-name">
@@ -99,9 +99,12 @@ var generated_date = {$smarty.now|intval};
                 </div>
                 <span class="remove_link">{if !isset($customizedDatas.$productId.$productAttributeId) && (!isset($product.is_gift) || !$product.is_gift)}<a rel="nofollow" class="ajax_cart_block_remove_link" href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product}&amp;ipa={$product.id_product_attribute}&amp;id_address_delivery={$product.id_address_delivery}&amp;token={$static_token}", true)|escape:'html'}" title="{l s='remove this product from my cart' mod='blockcart'}">&nbsp;</a>{/if}</span>
 			</dt>
-			{if isset($product.attributes_small) && isset($customizedDatas.$productId.$productAttributeId[$product.id_address_delivery])}
+			{if isset($product.attributes_small)}
 			<dd id="cart_block_combination_of_{$product.id_product}{if $product.id_product_attribute}_{$product.id_product_attribute}{/if}_{$product.id_address_delivery|intval}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
+			{/if}
+
 			<!-- Customizable datas -->
+			{if isset($customizedDatas.$productId.$productAttributeId[$product.id_address_delivery])}
 				{if !isset($product.attributes_small)}<dd id="cart_block_combination_of_{$product.id_product}_{if $product.id_product_attribute}{$product.id_product_attribute}{else}0{/if}_{if $product.id_address_delivery}{$product.id_address_delivery}{else}0{/if}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">{/if}
 				<ul class="cart_block_customizations" id="customization_{$productId}_{$productAttributeId}">
 					{foreach from=$customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] key='id_customization' item='customization' name='customizations'}
@@ -130,7 +133,7 @@ var generated_date = {$smarty.now|intval};
 				{if $discount.value_real > 0}
 				<tr class="bloc_cart_voucher" id="bloc_cart_voucher_{$discount.id_discount}">
 					<td class="quantity">1x</td>
-					<td class="name" title="{$discount.description}">{$discount.name|cat:' : '|cat:$discount.description|truncate:18:'...'|escape:'htmlall':'UTF-8'}</td>
+					<td class="name" title="{$discount.description}">{$discount.name|cat:' : '|cat:$discount.description|truncate:18:'...'|escape:'html':'UTF-8'}</td>
 					<td class="price">-{if $priceDisplay == 1}{convertPrice price=$discount.value_tax_exc}{else}{convertPrice price=$discount.value_real}{/if}</td>
 					<td class="delete">
 						{if strlen($discount.code)}
@@ -179,58 +182,58 @@ var generated_date = {$smarty.now|intval};
 			{/if}
 		{/if}
 		<p id="cart-buttons">
-			{if $order_process == 'order'}<a href="{$link->getPageLink("$order_process", true)|escape:'html'}" class="btn btn-default button button-small" title="{l s='View my shopping cart' mod='blockcart'}" rel="nofollow"><span>{l s='Cart' mod='blockcart'}<i class="icon-chevron-right right"></i></span></a>{/if}
 			<a href="{$link->getPageLink("$order_process", true)|escape:'html'}" id="button_order_cart" class="btn btn-default button button-small" title="{l s='Check out' mod='blockcart'}" rel="nofollow"><span>{l s='Check out' mod='blockcart'}<i class="icon-chevron-right right"></i></span></a>
 		</p>
 	</div>
 	</div>
 </div>
 <div id="layer_cart">
-	<div class="layer_cart_product col-xs-12 col-md-6">
-		<h2><i class="icon-ok"></i>{l s='Product successfully added to your shopping cart' mod='blockcart'}</h2>
-        <div class="product-image-container">
-            <img class="layer_cart_img img-responsive" alt="img" src="{$base_dir}img/404.gif"/>
-        </div>
-        <div class="layer_cart_product_info">
-            <span id="layer_cart_product_title" class="product-name"></span>
-            <span id="layer_cart_product_attributes"></span>
-            <div><strong class="dark">{l s='Quantity:' mod='blockcart'}</strong><span id="layer_cart_product_quantity"></span></div>
-            <div><strong class="dark">{l s='Total:' mod='blockcart'}</strong><span id="layer_cart_product_price"></span></div>
-        </div>
-	</div>
-	<div class="layer_cart_cart col-xs-12 col-md-6">
-		<span class="cross" title="{l s='Close window' mod='blockcart'}"></span>
-		<h2><span>{l s='Cart:' mod='blockcart'}</span>&nbsp;<span class="ajax_cart_quantity">{$cart_qties}</span>&nbsp;<span class="ajax_cart_product_txt{if $cart_qties > 1} unvisible{/if}">{l s='item' mod='blockcart'}</span><span class="ajax_cart_product_txt_s{if $cart_qties < 2} unvisible{/if}">{l s='items' mod='blockcart'}</span></h2>
-        <div class="layer_cart_row">
-			<strong class="dark">{l s='Total products' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax exclu.):' mod='blockcart'}{else}&nbsp;{l s='(tax incl.):' mod='blockcart'}{/if}</strong>
-        	<span class="ajax_block_products_total">{if $cart_qties > 0}{convertPrice price=$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS)}{/if}</span>
-        </div>
-        {if $show_wrapping}
-        <div class="layer_cart_row">
-                    <strong class="dark">{l s='Wrapping' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax exclu.):' mod='blockcart'}{else}&nbsp;{l s='(tax incl.):' mod='blockcart'}{/if}</strong>
-                    <span class="price cart_block_wrapping_cost">{if $priceDisplay == 1}{convertPrice price=$cart->getOrderTotal(false, Cart::ONLY_WRAPPING)}{else}{convertPrice price=$cart->getOrderTotal(true, Cart::ONLY_WRAPPING)}{/if}</span>
-                </div>
-        {/if}
-        <div class="layer_cart_row">
-            <strong class="dark">{l s='Total shipping (tax exclu.):' mod='blockcart'}</strong>
-            <span class="ajax_cart_shipping_cost">{if $shipping_cost_float == 0}{l s='Free shipping!' mod='blockcart'}{else}{$shipping_cost}{/if}</span>
-        </div>
-        {if $show_tax && isset($tax_cost)}
-            <div class="layer_cart_row">
-                <strong class="dark">{l s='Tax' mod='blockcart'}</strong>
-                <span id="cart_block_tax_cost" class="price ajax_cart_tax_cost">{$tax_cost}</span>
+	<div class="clearfix">
+        <div class="layer_cart_product col-xs-12 col-md-6">
+        	<span class="cross" title="{l s='Close window' mod='blockcart'}"></span>
+            <h2><i class="icon-ok"></i>{l s='Product successfully added to your shopping cart' mod='blockcart'}</h2>
+            <div class="product-image-container">
+                <img class="layer_cart_img img-responsive" alt="img" src="{$base_dir}img/404.gif"/>
             </div>
-        {/if}
-        <div class="layer_cart_row">	
-            <strong class="dark">{l s='Total' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax exclu.):' mod='blockcart'}{else}&nbsp;{l s='(tax incl.):' mod='blockcart'}{/if}</strong>
-            <span class="ajax_cart_total">{if $cart_qties > 0}{if $priceDisplay == 1}{convertPrice price=$cart->getOrderTotal(false)}{else}{convertPrice price=$cart->getOrderTotal(true)}{/if}{/if}</span>
+            <div class="layer_cart_product_info">
+                <span id="layer_cart_product_title" class="product-name"></span>
+                <span id="layer_cart_product_attributes"></span>
+                <div><strong class="dark">{l s='Quantity:' mod='blockcart'}</strong><span id="layer_cart_product_quantity"></span></div>
+                <div><strong class="dark">{l s='Total:' mod='blockcart'}</strong><span id="layer_cart_product_price"></span></div>
+            </div>
         </div>
-		<span class="freeshipping{if $cart_qties > 0 && ($free_shipping <= 0 || $shipping_cost_float == 0)} unvisible{/if}"><span>{l s='Spend just' mod='blockcart'}</span>&nbsp;<span class="ajax_cart_free_shipping">{convertPrice price=$free_shipping}</span><span>&nbsp;{l s='more and get' mod='blockcart'}</span>&nbsp;<span>{l s='FREE SHIPPING!' mod='blockcart'}</span></span>
-        <div class="button-container">	
-            <span class="continue btn btn-default button exclusive-medium" title="{l s='Continue shopping' mod='blockcart'}"><span><i class="icon-chevron-left left"></i>{l s='Continue shopping' mod='blockcart'}</span></span>
-            <a class="btn btn-default button button-medium" href="{$link->getPageLink("$order_process", true)|escape:'html'}" title="{l s='Procedd to checkout' mod='blockcart'}" rel="nofollow"><span>{l s='Procedd to checkout' mod='blockcart'}<i class="icon-chevron-right right"></i></span></a>	
+        <div class="layer_cart_cart col-xs-12 col-md-6">
+            <h2><span>{l s='Cart:' mod='blockcart'}</span>&nbsp;<span class="ajax_cart_quantity">{$cart_qties}</span>&nbsp;<span class="ajax_cart_product_txt{if $cart_qties > 1} unvisible{/if}">{l s='item' mod='blockcart'}</span><span class="ajax_cart_product_txt_s{if $cart_qties < 2} unvisible{/if}">{l s='items' mod='blockcart'}</span></h2>
+            <div class="layer_cart_row">
+                <strong class="dark">{l s='Total products' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax excl.):' mod='blockcart'}{else}&nbsp;{l s='(tax incl.):' mod='blockcart'}{/if}</strong>
+                <span class="ajax_block_products_total">{if $cart_qties > 0}{convertPrice price=$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS)}{/if}</span>
+            </div>
+            {if $show_wrapping}
+            <div class="layer_cart_row">
+                        <strong class="dark">{l s='Wrapping' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax excl.):' mod='blockcart'}{else}&nbsp;{l s='(tax incl.):' mod='blockcart'}{/if}</strong>
+                        <span class="price cart_block_wrapping_cost">{if $priceDisplay == 1}{convertPrice price=$cart->getOrderTotal(false, Cart::ONLY_WRAPPING)}{else}{convertPrice price=$cart->getOrderTotal(true, Cart::ONLY_WRAPPING)}{/if}</span>
+                    </div>
+            {/if}
+            <div class="layer_cart_row">
+                <strong class="dark">{l s='Total shipping (tax excl.):' mod='blockcart'}</strong>
+                <span class="ajax_cart_shipping_cost">{if $shipping_cost_float == 0}{l s='Free shipping!' mod='blockcart'}{else}{$shipping_cost}{/if}</span>
+            </div>
+            {if $show_tax && isset($tax_cost)}
+                <div class="layer_cart_row">
+                    <strong class="dark">{l s='Tax' mod='blockcart'}</strong>
+                    <span id="cart_block_tax_cost" class="price ajax_cart_tax_cost">{$tax_cost}</span>
+                </div>
+            {/if}
+            <div class="layer_cart_row">	
+                <strong class="dark">{l s='Total' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax excl.):' mod='blockcart'}{else}&nbsp;{l s='(tax incl.):' mod='blockcart'}{/if}</strong>
+                <span class="ajax_cart_total">{if $cart_qties > 0}{if $priceDisplay == 1}{convertPrice price=$cart->getOrderTotal(false)}{else}{convertPrice price=$cart->getOrderTotal(true)}{/if}{/if}</span>
+            </div>
+            <div class="button-container">	
+                <span class="continue btn btn-default button exclusive-medium" title="{l s='Continue shopping' mod='blockcart'}"><span><i class="icon-chevron-left left"></i>{l s='Continue shopping' mod='blockcart'}</span></span>
+                <a class="btn btn-default button button-medium" href="{$link->getPageLink("$order_process", true)|escape:'html'}" title="{l s='Proceed to checkout' mod='blockcart'}" rel="nofollow"><span>{l s='Proceed to checkout' mod='blockcart'}<i class="icon-chevron-right right"></i></span></a>	
+            </div>
         </div>
-	</div>
+    </div>
 	<div class="crossseling"></div>
 </div>
 <div class="layer_cart_overlay"></div>

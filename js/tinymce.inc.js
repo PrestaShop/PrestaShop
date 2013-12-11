@@ -32,7 +32,11 @@ function tinySetup(config)
 		file_browser_callback : "ajaxfilemanager",
 		entity_encoding: "raw",
 		convert_urls : false,
-		language : iso
+		language : iso,
+		style_formats : [
+	        {title : 'Bold text', inline : 'b'},
+	        {title : 'header', block : 'h1'},
+	    ]
 	}
 
 	$.each(default_config, function(index, el)

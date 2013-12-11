@@ -176,7 +176,6 @@ abstract class Controller extends ControllerCore
 
 	public function __construct()
 	{
-		parent::__construct();
 
 		// error management
 		set_error_handler('developpementErrorHandler');
@@ -415,10 +414,11 @@ abstract class Controller extends ControllerCore
 			$query_row = array(
 				'time' => $data['time'],
 				'query' => $data['query'],
-				'location' => $data['file'].':'.$data['line'],
+				'location' => $data['stack'][0]['file'].':'.$data['stack'][0]['line'],
 				'filesort' => false,
 				'rows' => 1,
-				'group_by' => false
+				'group_by' => false,
+				'stack' => $data['stack']
 			);
 			if (preg_match('/^\s*select\s+/i', $data['query']))
 			{
@@ -446,7 +446,7 @@ abstract class Controller extends ControllerCore
 		<div id="queries_table" style="display:none;margin:4px">
 			<table class="table std">
 				<tr><th>Time (ms)</th><th>Rows</th><th>Query</th><th>Location</th><th>Filesort</th><th>Group By</th></tr>';
-		foreach ($array_queries as $data)
+		foreach ($array_queries as &$data)
 		{
 			$data['location'] = str_replace('\\', '/', substr($data['location'], strlen(_PS_ROOT_DIR_)));
 			$data['query'] = str_replace('SQL_NO_CACHE ', '', $data['query']);
@@ -457,9 +457,18 @@ abstract class Controller extends ControllerCore
 		</div>
 		<div class="rte" style="text-align:left;padding:8px">
 		<h3><a name="stopwatch">Stopwatch (with SQL_NO_CACHE) (total = '.count(Db::getInstance()->queries).')</a></h3>';
+		$i = 1;
 		foreach ($array_queries as $data)
 		{
-			echo $hr.'<b '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).' ms</b> '.htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false).'<br />in '.$data['location'].'<br />';
+			$echo_stack = '';
+			array_shift($data['stack']);
+			foreach ($data['stack'] as $call)
+				$echo_stack .= 'from '.str_replace('\\', '/', substr($call['file'], strlen(_PS_ROOT_DIR_))).':'.$call['line'].'<br />';
+
+			echo $hr.'<div onclick="$(\'#qbt'.$i.'\').toggle();"><b '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).' ms</b>
+			'.htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false).'<br />
+			in '.$data['location'].'<br />
+			<div id="qbt'.($i++).'" style="display:none">'.$echo_stack.'</div>';
 			if (preg_match('/^\s*select\s+/i', $data['query']))
 			{
 				if ($data['filesort'])
@@ -468,14 +477,21 @@ abstract class Controller extends ControllerCore
 				if ($data['group_by'])
 					echo '<br /><b>Useless GROUP BY need to be removed</b>';
 			}
+			echo '</div>';
 		}
-		echo '</div>
-		<div class="rte" style="text-align:left;padding:8px">
-		<h3><a name="doubles">Doubles (IDs replaced by "XX") (total = '.count(Db::getInstance()->uniqQueries).')</a></h3>';
 		$queries = Db::getInstance()->uniqQueries;
 		arsort($queries);
+		$count = count(Db::getInstance()->uniqQueries);
+		foreach ($queries as $q => &$nb)
+		if ($nb == 1)
+			$count--;
+		if ($count)
+			echo '</div>
+			<div class="rte" style="text-align:left;padding:8px">
+			<h3><a name="doubles">Doubles (IDs replaced by "XX") (total = '.$count.')</a></h3>';
 		foreach ($queries as $q => $nb)
-			echo $hr.'<b '.$this->getQueryColor($nb).'>'.$nb.'</b> '.$q;
+			if($nb > 1)
+				echo $hr.'<b '.$this->getQueryColor($nb).'>'.$nb.'</b> '.$q;
 		echo '</div>
 		<div class="rte" style="text-align:left;padding:8px">
 		<h3><a name="tables">Tables stress</a></h3>';

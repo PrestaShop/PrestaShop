@@ -66,11 +66,11 @@
 				<i class="icon-file-text"></i>
 				{l s='Modify translations'}
 			</h3>
-			<p class="alert alert-warning">
+			<p class="alert alert-info">
 				{l s='Here you can modify translations for every line of code inside PrestaShop.'}<br />
 				{l s='First, select a section (such as Back Office or Installed modules), and then click the flag representing the language you want to edit.'}
 			</p>
-			<div class="row">
+			<div class="form-group">
 				<input type="hidden" name="controller" value="AdminTranslations" />
 				<input type="hidden" name="lang" id="translation_lang" value="0" />
 				<label class="control-label col-lg-3" for="type">{l s='Type of translation:'}</label>
@@ -82,7 +82,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="theme">{l s='Choose your theme:'}</label>
 				<div class="col-lg-4">
 					<select name="theme" id="theme">
@@ -93,7 +93,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="language-button">{l s='Select your language:'}</label>
 				<div class="input-group col-lg-4">
 					<button type="button" id="language-button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -104,8 +104,7 @@
 						{foreach $languages as $language}
 						<li>
 							<a href="javascript:chooseTypeTranslation('{$language['iso_code']}');">
-								<img src="{$theme_lang_dir}{$language['id_lang']}.jpg" alt="{$language['iso_code']}" title="{$language['iso_code']}" />
-								{$language['iso_code']}
+								{$language['name']}
 							</a>
 						</li>
 						{/foreach}
@@ -121,28 +120,39 @@
 				<i class="icon-download"></i>
 				{l s='Add / Update a language'}
 			</h3>
-			<div id="submitAddLangContent" class="row">
-				<p class="alert alert-warning">
+			<div id="submitAddLangContent" class="form-group">
+				<p class="alert alert-info">
 					{l s='You can add or update a language directly from the PrestaShop website here:'}<br/>
 					{l s='If you choose to update an existing language pack, all of your previous customization\'s in the theme named "Default" will be lost. This includes Front Office expressions and default email templates.'}
 				</p>
 				{if $packs_to_update || $packs_to_install}
 					<label class="control-label col-lg-3" for="params_import_language">{l s='Please select the language you want to add or update:'}</label>
-					<div class="col-lg-4">
-						<select id="params_import_language" name="params_import_language">
-							<optgroup label="{l s='Update a language'}">
-								{foreach $packs_to_update as $lang_pack}
-									<option value="{$lang_pack['iso_code']}|{$lang_pack['version']}">{$lang_pack['name']}</option>
-								{/foreach}
-							</optgroup>
-							<optgroup label="{l s='Add a language'}">		
-								{foreach $packs_to_install as $lang_pack}
-									<option value="{$lang_pack['iso_code']}|{$lang_pack['version']}">{$lang_pack['name']}</option>
-								{/foreach}
-							</optgroup>
-						</select> 
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="col-sm-8">
+								<select id="params_import_language" name="params_import_language">
+								<optgroup label="{l s='Update a language'}">
+									{foreach $packs_to_update as $lang_pack}
+										<option value="{$lang_pack['iso_code']}|{$lang_pack['version']}">{$lang_pack['name']}</option>
+									{/foreach}
+								</optgroup>
+								<optgroup label="{l s='Add a language'}">		
+									{foreach $packs_to_install as $lang_pack}
+										<option value="{$lang_pack['iso_code']}|{$lang_pack['version']}">{$lang_pack['name']}</option>
+									{/foreach}
+								</optgroup>
+							</select> 
+							</div>
+							<div class="col-sm-4">
+								<button type="submit" name="submitAddLanguage" class="btn btn-default">
+									<i class="icon-plus"></i>
+									{l s='Add or update a language'}
+								</button>
+							</div>
+							
+						</div>
 					</div>
-					<input type="submit" value="{l s='Add or update a language'}" name="submitAddLanguage" class="btn btn-default" />
+					
 				{else}
 					<p class="text-danger">{l s='Cannot connect to the PrestaShop website to get the language list.'}</p>
 				{/if}				
@@ -156,17 +166,30 @@
 				<i class="icon-download"></i>
 				{l s='Import a language pack manually'}
 			</h3>
-			<p class="alert alert-warning">
+			<p class="alert alert-info">
 				{l s='If the language file format is: isocode.gzip (e.g. us.gzip), and the language corresponding to this package does not exist, it will automatically be created.'}
 				{l s='Warning: This will replace all of the existing data inside the destination language.'}
 			</p>
-			<div class="row">
+			<div class="form-group">
 				<label for="importLanguage" class="control-label col-lg-3" for="importLanguage">{l s='Language pack to import:'}</label>
 				<div class="col-lg-4">
-					<input type="file" name="file" id="importLanguage"/>
+					<div class="form-group">
+						<div class="col-lg-12">
+							<input id="importLanguage" type="file" name="file" class="hide" />
+							<div class="dummyfile input-group">
+								<span class="input-group-addon"><i class="icon-file"></i></span>
+								<input id="file-name" type="text" class="disabled" name="filename" readonly />
+								<span class="input-group-btn">
+									<button id="file-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
+										<i class="icon-folder-open"></i> {l s='Add file'}
+									</button>
+								</span>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="row">
+			<div class="form-group">
 				<label for="selectThemeForImport" class="control-label col-lg-3" for="selectThemeForImport">{l s='Select your theme:'}</label>
 				<div class="col-lg-4">
 					<select name="theme[]" id="selectThemeForImport" {if count($themes) > 1}multiple="multiple"{/if} >
@@ -176,7 +199,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="row">
+			<div class="form-group">
 				<div class="col-lg-9 pull-right">
 					<input type="submit" value="{l s='   Import   '}" name="submitImport" class="btn btn-default" />
 				</div>
@@ -190,11 +213,11 @@
 				<i class="icon-upload"></i>
 				{l s='Export a language'}
 			</h3>
-			<p class="alert alert-warning">
+			<p class="alert alert-info">
 				{l s='Export data from one language to a file (language pack).'}<br />
 				{l s='Choose which theme you\'d like to export your translations to. '}
 			</p>
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="iso_code">{l s='Language:'}</label>
 				<div class="col-lg-4">
 					<select name="iso_code" id="iso_code">
@@ -204,7 +227,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="export-theme">{l s='Choose your theme:'}</label>
 				<div class="col-lg-4">
 					<select name="theme" id="export-theme">
@@ -214,7 +237,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="row">
+			<div class="form-group">
 				<div class="col-lg-9 pull-right">
 					<input type="submit" class="btn btn-default" name="submitExport" value="{l s='Export'}" />
 				</div>
@@ -228,12 +251,12 @@
 				<i class="icon-copy"></i>
 				{l s='Copy'}
 			</h3>
-			<p class="alert alert-warning">
+			<p class="alert alert-info">
 				{l s='Copies data from one language to another.'}<br />
 				{l s='Warning: This will replace all of the existing data inside the destination language.'}<br />
 				{l s='If necessary'}, <b><a href="{$url_create_language}" class="btn btn-link"><i class="icon-external-link-sign"></i> {l s='you must first create a new language.'}</a></b>.
 			</p>
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3 required" for="fromLang"> {l s='From:'}</label>
 				<div class="col-lg-4">
 					<select name="fromLang" id="fromLang">
@@ -250,7 +273,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="row">
+			<div class="form-group">
 				<label class="control-label col-lg-3" for="toLang">{l s='To:'}</label>
 				<div class="col-lg-4">
 					<select name="toLang" id="toLang">
@@ -267,12 +290,12 @@
 					</select>
 				</div>			
 			</div>
-			<div class="row">
+			<div class="form-group">
 				<div class="col-lg-9 pull-right">
 					<input type="submit" value="{l s='Copy'}" name="submitCopyLang" class="btn btn-default" />
 				</div>
 			</div>
-			<div class="row">
+			<div class="form-group">
 				<p class="col-lg-12 text-muted required">
 					<span class="text-danger">*</span>
 					{l s='Language files must be complete to allow copying of translations.'}
@@ -280,4 +303,34 @@
 			</div>
 		</div>
 	</form>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#file-selectbutton').click(function(e) {
+			$('#importLanguage').trigger('click');
+		});
+
+		$('#file-name').click(function(e) {
+			$('#importLanguage').trigger('click');
+		});
+
+		$('#importLanguage').change(function(e) {
+			if ($(this)[0].files !== undefined)
+			{
+				var files = $(this)[0].files;
+				var name  = '';
+
+				$.each(files, function(index, value) {
+					name += value.name+', ';
+				});
+
+				$('#file-name').val(name.slice(0, -2));
+			}
+			else // Internet Explorer 9 Compatibility
+			{
+				var name = $(this).val().split(/[\\/]/);
+				$('#file-name').val(name[name.length-1]);
+			}
+		});
+	});
+</script>
 {/block}

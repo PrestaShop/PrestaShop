@@ -24,10 +24,10 @@
 *}
 
 {if $show_toolbar}
-<div class="panel-footer">
+<div class="panel-footer" id="toolbar-footer">
 	{foreach from=$toolbar_btn item=btn key=k}
 		{if $k != 'modules-list'}
-			<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="btn btn-default" {if isset($btn.href)}href="{$btn.href}"{/if} {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
+			<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="btn btn-default{if $k=='save' || $k=='save-and-stay'} pull-right{/if}" {if isset($btn.href)}href="{$btn.href}"{/if} {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
 				<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i> <span {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc}</span>
 			</a>
 		{/if}
@@ -69,7 +69,7 @@
 				btn_submit.hide();
 				//bind enter key press to validate form
 				$('#{$table}_form').find('input').keypress(function (e) {
-					if (e.which == 13 && e.target.localName != 'textarea')
+					if (e.which == 13 && e.target.localName != 'textarea' && !$(e.target).parent().hasClass('tagify-container'))
 						$('#desc-{$table}-save').click();
 				});
 				//submit the form
@@ -79,6 +79,9 @@
 						if (submited)
 							return false;
 						submited = true;
+
+						if ($(this).attr('href').replace('#', '').replace(/\s/g, '') != '')
+							return true;
 
 						//add hidden input to emulate submit button click when posting the form -> field name posted
 						btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'" value="1" />');
@@ -90,6 +93,9 @@
 					if (btn_save_and_stay)
 					{
 						btn_save_and_stay.click(function() {
+							if ($(this).attr('href').replace('#', '').replace(/\s/g, '') != '')
+								return true;
+
 							//add hidden input to emulate submit button click when posting the form -> field name posted
 							btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'AndStay" value="1" />');
 

@@ -60,8 +60,12 @@ class AdminCustomersControllerCore extends AdminController
 			$titles_array[$gender->id_gender] = $gender->name;
 
 		$this->_select = '
-		a.date_add, gl.name as title,
-		IF (YEAR(`birthday`) = 0, "-", (YEAR(CURRENT_DATE)-YEAR(`birthday`)) - (RIGHT(CURRENT_DATE, 5) < RIGHT(birthday, 5))) AS `age`, (
+		a.date_add, gl.name as title, (
+			SELECT SUM(total_paid_tax_excl / conversion_rate) FROM '._DB_PREFIX_.'orders o
+			WHERE o.id_customer = a.id_customer
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
+			AND a.active = 1
+		) as total_spent, (
 			SELECT c.date_add FROM '._DB_PREFIX_.'guest g
 			LEFT JOIN '._DB_PREFIX_.'connections c ON c.id_guest = g.id_guest
 			WHERE g.id_customer = a.id_customer
@@ -92,10 +96,14 @@ class AdminCustomersControllerCore extends AdminController
 			'email' => array(
 				'title' => $this->l('Email address')
 			),
-			'age' => array(
-				'title' => $this->l('Age'),
+			'total_spent' => array(
+				'title' => $this->l('Sales'),
+				'type' => 'price',
+				'prefix' => '<span class="badge badge-success">',
+				'suffix' => '</span>',
 				'search' => false,
-				'align' => 'center'
+				'havingFilter' => true,
+				'align' => 'right'
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
@@ -284,6 +292,7 @@ class AdminCustomersControllerCore extends AdminController
 					'label' => $this->l('First name:'),
 					'name' => 'firstname',
 					'required' => true,
+					'col' => '4',
 					'hint' => $this->l('Forbidden characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:'
 				),
 				array(
@@ -291,12 +300,14 @@ class AdminCustomersControllerCore extends AdminController
 					'label' => $this->l('Last name:'),
 					'name' => 'lastname',
 					'required' => true,
+					'col' => '4',
 					'hint' => $this->l('Invalid characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:'
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Email address:'),
 					'name' => 'email',
+					'col' => '4',
 					'required' => true
 				),
 				array(
@@ -304,7 +315,8 @@ class AdminCustomersControllerCore extends AdminController
 					'label' => $this->l('Password:'),
 					'name' => 'passwd',
 					'required' => ($obj->id ? false : true),
-					'hint' => ($obj->id ? $this->l('Leave  this field blank if there\'s no change') : $this->l('Minimum of five characters (only letters and numbers).').' -_')
+					'col' => '4',
+					'hint' => ($obj->id ? $this->l('Leave  this field blank if there\'s no change') : $this->l('Minimum of five characters'))
 				),
 				array(
 					'type' => 'birthday',
@@ -392,32 +404,35 @@ class AdminCustomersControllerCore extends AdminController
 					unset($groups[$key]);
 		}
 
-		$this->fields_form['input'] = array_merge($this->fields_form['input'],
+		$this->fields_form['input'] = array_merge(
+			$this->fields_form['input'],
+			array(
 				array(
-					array(
-						'type' => 'group',
-						'label' => $this->l('Group access:'),
-						'name' => 'groupBox',
-						'values' => $groups,
-						'required' => true,
-						'hint' => $this->l('Select all the groups that you would like to apply to this customer.')
-							),
-					array(
-						'type' => 'select',
-						'label' => $this->l('Default customer group:'),
-						'name' => 'id_default_group',
-						'options' => array(
-							'query' => $groups,
-							'id' => 'id_group',
-							'name' => 'name'
-						),
-						'hint' => array(
-							$this->l('The group will be as applied by default.'),
-							$this->l('Apply the discount\'s price of this group.')
-							)
-						)
+					'type' => 'group',
+					'label' => $this->l('Group access:'),
+					'name' => 'groupBox',
+					'values' => $groups,
+					'required' => true,
+					'col' => '6',
+					'hint' => $this->l('Select all the groups that you would like to apply to this customer.')
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('Default customer group:'),
+					'name' => 'id_default_group',
+					'options' => array(
+						'query' => $groups,
+						'id' => 'id_group',
+						'name' => 'name'
+					),
+					'col' => '4',
+					'hint' => array(
+						$this->l('The group will be as applied by default.'),
+						$this->l('Apply the discount\'s price of this group.')
 					)
-				);
+				)
+			)
+		);
 
 		// if customer is a guest customer, password hasn't to be there
 		if ($obj->id && ($obj->is_guest && $obj->id_default_group == Configuration::get('PS_GUEST_GROUP')))
@@ -538,8 +553,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->id = 'box-gender';
 		$helper->icon = 'icon-male';
 		$helper->color = 'color1';
-		$helper->title = $this->l('Customers');
-		$helper->subtitle = $this->l('All Time');
+		$helper->title = $this->l('Customers', null, null, false);
+		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER') !== false)
 			$helper->value = ConfigurationKPI::get('CUSTOMER_MAIN_GENDER');
 		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER_EXPIRE') < $time)
@@ -550,8 +565,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->id = 'box-age';
 		$helper->icon = 'icon-calendar';
 		$helper->color = 'color2';
-		$helper->title = $this->l('Average Age');
-		$helper->subtitle = $this->l('All Time');
+		$helper->title = $this->l('Average Age', 'AdminTab', null, false);
+		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('AVG_CUSTOMER_AGE') !== false)
 			$helper->value = ConfigurationKPI::get('AVG_CUSTOMER_AGE');
 		if (ConfigurationKPI::get('AVG_CUSTOMER_AGE_EXPIRE') < $time)
@@ -562,8 +577,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->id = 'box-orders';
 		$helper->icon = 'icon-retweet';
 		$helper->color = 'color3';
-		$helper->title = $this->l('Orders per Customer');
-		$helper->subtitle = $this->l('All Time');
+		$helper->title = $this->l('Orders per Customer', null, null, false);
+		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('ORDERS_PER_CUSTOMER') !== false)
 			$helper->value = ConfigurationKPI::get('ORDERS_PER_CUSTOMER');
 		if (ConfigurationKPI::get('ORDERS_PER_CUSTOMER_EXPIRE') < $time)
@@ -574,8 +589,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->id = 'box-newsletter';
 		$helper->icon = 'icon-envelope';
 		$helper->color = 'color4';
-		$helper->title = $this->l('Newsletter Registrations');
-		$helper->subtitle = $this->l('All Time');
+		$helper->title = $this->l('Newsletter Registrations', null, null, false);
+		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS') !== false)
 			$helper->value = ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS');
 		if (ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS_EXPIRE') < $time)
@@ -593,7 +608,7 @@ class AdminCustomersControllerCore extends AdminController
 			return;
 
 		$this->context->customer = $customer;
-		$gender = new Gender($customer->id_gender);
+		$gender = new Gender($customer->id_gender, $this->context->language->id);
 		$gender_image = $gender->getImage();
 
 		$customer_stats = $customer->getStats();
@@ -671,9 +686,10 @@ class AdminCustomersControllerCore extends AdminController
 			$carts[$i]['name'] = $carrier->name;
 		}
 
-		$sql = 'SELECT DISTINCT id_product, c.id_cart, c.id_shop, cp.id_shop AS cp_id_shop
+		$sql = 'SELECT DISTINCT cp.id_product, c.id_cart, c.id_shop, cp.id_shop AS cp_id_shop
 				FROM '._DB_PREFIX_.'cart_product cp
 				JOIN '._DB_PREFIX_.'cart c ON (c.id_cart = cp.id_cart)
+				JOIN '._DB_PREFIX_.'product p ON (cp.id_product = p.id_product)
 				WHERE c.id_customer = '.(int)$customer->id.'
 					AND cp.id_product NOT IN (
 							SELECT product_id
@@ -686,6 +702,8 @@ class AdminCustomersControllerCore extends AdminController
 		for ($i = 0; $i < $total_interested; $i++)
 		{
 			$product = new Product($interested[$i]['id_product'], false, $this->default_form_language, $interested[$i]['id_shop']);
+			if (!Validate::isLoadedObject($product))
+				continue;
 			$interested[$i]['url'] = $this->context->link->getProductLink(
 				$product->id,
 				$product->link_rewrite,
@@ -699,15 +717,15 @@ class AdminCustomersControllerCore extends AdminController
 		}
 
 		$connections = $customer->getLastConnections();
+		if (!is_array($connections))
+			$connections = array();
 		$total_connections = count($connections);
 		for ($i = 0; $i < $total_connections; $i++)
 		{
 			$connections[$i]['date_add'] = Tools::displayDate($connections[$i]['date_add'],null , true);
-			$connections[$i]['http_referer'] = $connections[$i]['http_referer'] ?
-													preg_replace('/^www./', '', parse_url($connections[$i]['http_referer'], PHP_URL_HOST)) :
-														$this->l('Direct link');
+			$connections[$i]['http_referer'] = $connections[$i]['http_referer'] ? preg_replace('/^www./', '', parse_url($connections[$i]['http_referer'], PHP_URL_HOST)) : $this->l('Direct link');
 		}
-
+		
 		$referrers = Referrer::getReferrers($customer->id);
 		$total_referrers = count($referrers);
 		for ($i = 0; $i < $total_referrers; $i++)
@@ -716,6 +734,7 @@ class AdminCustomersControllerCore extends AdminController
 		$shop = new Shop($customer->id_shop);
 		$this->tpl_view_vars = array(
 			'customer' => $customer,
+			'gender' => $gender,
 			'gender_image' => $gender_image,
 
 			// General information of the customer

@@ -375,8 +375,16 @@ function updateDisplay()
 		productPriceDisplay = ps_round(productPriceDisplay * group_reduction, 2);
 
 		var ecotaxAmount = !displayPrice ? ps_round(selectedCombination['ecotax'] * (1 + ecotaxTax_rate / 100), 2) : selectedCombination['ecotax'];
-		productPriceDisplay += ecotaxAmount;
-		productPriceWithoutReductionDisplay += ecotaxAmount;
+
+		if (ecotaxAmount != default_eco_tax)
+			productPriceDisplay += ecotaxAmount - default_eco_tax;
+		else
+			productPriceDisplay += ecotaxAmount;
+
+		if (ecotaxAmount != default_eco_tax)
+			productPriceWithoutReductionDisplay += ecotaxAmount - default_eco_tax;
+		else
+			productPriceWithoutReductionDisplay += ecotaxAmount;
 
 		var our_price = '';
 		if (productPriceDisplay > 0) {
@@ -417,14 +425,20 @@ function displayImage(domAAroundImgThumb, no_animation)
 {
 	if (typeof(no_animation) == 'undefined')
 		no_animation = false;
-	if (domAAroundImgThumb.attr('href'))
+	if (domAAroundImgThumb.prop('href'))
 	{
-		var newSrc = domAAroundImgThumb.attr('href').replace('thickbox', 'large');
-		if ($('#bigpic').attr('src') != newSrc)
+		var new_src = domAAroundImgThumb.prop('href').replace('thickbox', 'large');
+		var new_title = domAAroundImgThumb.prop('title');
+		var new_href = domAAroundImgThumb.prop('href');
+		if ($('#bigpic').prop('src') != new_src)
 		{
-			$('#bigpic').attr('src', newSrc).load(function() {
+			$('#bigpic').prop({
+				'src' : new_src, 
+				'alt' : new_title, 
+				'title' : new_title
+			}).load(function(){
 				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-					$(this).attr('rel', domAAroundImgThumb.attr('href'));
+					$(this).prop('rel', new_href);
 			}); 
 		}
 		$('#views_block li a').removeClass('shown');
@@ -477,7 +491,10 @@ function refreshProductImages(id_product_attribute)
 		$('#thumbs_list li').hide();
 		$('#thumbs_list').trigger('goto', 0);
 		for (var i = 0; i < combinationImages[id_product_attribute].length; i++)
-			$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show();
+			if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
+				$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show().children('a.shown').trigger('click');
+			else
+				$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show();
 		if (parseInt($('#thumbs_list_frame >li:visible').length) < parseInt($('#thumbs_list_frame >li').length))
 			$('#wrapResetImages').show('slow');
 		else
@@ -490,8 +507,7 @@ function refreshProductImages(id_product_attribute)
 			$('#wrapResetImages').hide('slow');
 	}
 
-		var thumb_width = $('#thumbs_list_frame >li').width() + parseInt($('#thumbs_list_frame >li').css('marginRight')) + 1;
-
+	var thumb_width = $('#thumbs_list_frame >li').width() + parseInt($('#thumbs_list_frame >li').css('marginRight'));
 	$('#thumbs_list_frame').width((parseInt((thumb_width) * $('#thumbs_list_frame >li').length)) + 'px');
 	$('#thumbs_list').trigger('goto', 0);
 	serialScrollFixLock('', '', '', '', 0);// SerialScroll Bug on goto 0 ?
@@ -530,12 +546,13 @@ $(document).ready(function()
 	//set jqZoom parameters if needed
 	if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
 	{
-		$('#bigpic').attr('rel', $('#bigpic').attr('src').replace('large', 'thickbox'));
-		$('img.jqzoom').jqueryzoom({
-			xzoom: 200, //zooming div default width(default width value is 200)
-			yzoom: 200, //zooming div default width(default height value is 200)
-			offset: 21 //zooming div default offset(default offset value is 10)
-			//position: "right" //zooming div position(default position value is "right")
+		$('.jqzoom').jqzoom({
+			zoomType: 'innerzoom', //innerzoom/standard/reverse/drag
+			zoomWidth: 458, //zooming div default width(default width value is 200)
+			zoomHeight: 458, //zooming div default width(default height value is 200)
+			xOffset: 21, //zooming div default offset(default offset value is 10)
+			yOffset: 0,
+			title: false
 		});
 	}
 	//add a link on the span 'view full size' and on the big image
@@ -570,12 +587,14 @@ $(document).ready(function()
 	$('#resetImages').click(function() {
 		refreshProductImages(0);
 	});
-
-	$('.thickbox').fancybox({
-		'hideOnContentClick': true,
-		'transitionIn'	: 'elastic',
-		'transitionOut'	: 'elastic'
-	});
+	if (contentOnly == false)
+		$('.thickbox').fancybox({
+			'hideOnContentClick': true,
+			'transitionIn'	: 'elastic',
+			'transitionOut'	: 'elastic'
+		});
+	else
+		$('.thickbox').click(function(){return false});
 });
 
 function saveCustomization()
@@ -711,7 +730,7 @@ function checkUrl()
 						$('#color_' + attributesCombinations[a]['id_attribute']).addClass('selected');
 						$('#color_' + attributesCombinations[a]['id_attribute']).parent().addClass('selected');
 						$('input:radio[value=' + attributesCombinations[a]['id_attribute'] + ']').attr('checked', true);
-						$('input:hidden[name=group_' + attributesCombinations[a]['id_attribute_group'] + ']').val(attributesCombinations[a]['id_attribute']);
+						$('input[type=hidden][name=group_' + attributesCombinations[a]['id_attribute_group'] + ']').val(attributesCombinations[a]['id_attribute']);
 						$('select[name=group_' + attributesCombinations[a]['id_attribute_group'] + ']').val(attributesCombinations[a]['id_attribute']);
 					}
 			// find combination
@@ -726,3 +745,35 @@ function checkUrl()
 		}
 	}
 }
+// product quantity change buttons
+$(document).ready(function(){
+    // The button to increment the product value
+    $('.product_quantity_up').click(function(e){
+        e.preventDefault();
+        fieldName = $(this).data('field-qty');
+        var currentVal = parseInt($('input[name='+fieldName+']').val());
+		if (quantityAvailable > 0) {
+				quantityAvailableT = quantityAvailable;
+		} else {
+				quantityAvailableT = 100000000;
+		}
+        if (!isNaN(currentVal) && currentVal < quantityAvailableT) {
+            $('input[name='+fieldName+']').val(currentVal + 1).trigger('keyup');
+        } else {
+            $('input[name='+fieldName+']').val(quantityAvailableT);
+        }
+		return false;
+    });
+	 // The button to decrement the product value
+    $(".product_quantity_down").click(function(e) {
+        e.preventDefault();
+        fieldName = $(this).data('field-qty');
+        var currentVal = parseInt($('input[name='+fieldName+']').val());
+        if (!isNaN(currentVal) && currentVal > 1) {
+            $('input[name='+fieldName+']').val(currentVal - 1).trigger('keyup');
+        } else {
+            $('input[name='+fieldName+']').val(1);
+        }
+		return false;
+    });
+});

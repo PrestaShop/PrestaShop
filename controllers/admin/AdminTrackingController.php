@@ -285,6 +285,7 @@ class AdminTrackingControllerCore extends AdminController
 	{
 		$this->table = '';
 		$this->actions = array();
+		$this->list_skip_actions = array();
 		$this->lang = false;
 		$this->identifier = '';
 		$this->_orderBy = '';

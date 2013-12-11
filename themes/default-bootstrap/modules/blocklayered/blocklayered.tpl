@@ -187,11 +187,11 @@ param_product_url = '';
 								</script>
 							{else}
 								{if $filter.filter_type == 1}
-								<li class="nomargin">
-									{l s='From' mod='blocklayered'} <input class="layered_{$filter.type}_range layered_input_range_min layered_input_range form-control grey" id="layered_{$filter.type}_range_min" type="text" value="{$filter.values[0]}"/>
-									<span class="layered_{$filter.type}_range_unit">{$filter.unit}</span>
-									{l s='to' mod='blocklayered'} <input class="layered_{$filter.type}_range layered_input_range_max layered_input_range form-control grey" id="layered_{$filter.type}_range_max" type="text" value="{$filter.values[1]}"/>
-									<span class="layered_{$filter.type}_range_unit">{$filter.unit}</span>
+								<li class="nomargin row">
+                                        <div class="col-xs-6 col-sm-12 col-lg-6 first-item">{l s='From' mod='blocklayered'} <input class="layered_{$filter.type}_range layered_input_range_min layered_input_range form-control grey" id="layered_{$filter.type}_range_min" type="text" value="{$filter.values[0]}"/>
+                                        <span class="layered_{$filter.type}_range_unit">{$filter.unit}</span></div>
+                                        <div class="col-xs-6 col-sm-12 col-lg-6">{l s='to' mod='blocklayered'} <input class="layered_{$filter.type}_range layered_input_range_max layered_input_range form-control grey" id="layered_{$filter.type}_range_max" type="text" value="{$filter.values[1]}"/>
+                                        <span class="layered_{$filter.type}_range_unit">{$filter.unit}</span></div>
 									<span class="layered_{$filter.type}_format" style="display:none;">{$filter.format}</span>
 									<script type="text/javascript">
 									{literal}

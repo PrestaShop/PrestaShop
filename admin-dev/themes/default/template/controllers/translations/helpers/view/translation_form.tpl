@@ -61,7 +61,7 @@
 				<input type="hidden" name="lang" value="{$lang}" />
 				<input type="hidden" name="type" value="{$type}" />
 				<input type="hidden" name="theme" value="{$theme}" />
-				<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="btn btn-default" />
+				<button type="button" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default">{l s='Update translations'}</button>
 
 				<script type="text/javascript">
 					$(document).ready(function(){

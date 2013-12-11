@@ -36,8 +36,8 @@
 						{include file="./category-tree-branch.tpl" node=$categoriesTree.children.$i}
 				{else}
 				<li data-icon="arrow-d">
-					<a href="{$categoriesTree.children.$i.link|escape:'htmlall':'UTF-8'}" title="{$categoriesTree.children.$i.desc|escape:'htmlall':'UTF-8'}">
-						{$categoriesTree.children.$i.name|escape:'htmlall':'UTF-8'}
+					<a href="{$categoriesTree.children.$i.link|escape:'html':'UTF-8'}" title="{$categoriesTree.children.$i.desc|escape:'html':'UTF-8'}">
+						{$categoriesTree.children.$i.name|escape:'html':'UTF-8'}
 					</a>
 				</li>
 				{/if}
@@ -88,7 +88,7 @@
 				{/foreach}
 			{/if}
 			{foreach from=$categoriescmsTree.cms item=cms name=cmsTree}
-				<li><a href="{$cms.link|escape:'htmlall':'UTF-8'}" title="{$cms.meta_title|escape:'htmlall':'UTF-8'}">{$cms.meta_title|escape:'htmlall':'UTF-8'}</a></li>
+				<li><a href="{$cms.link|escape:'html':'UTF-8'}" title="{$cms.meta_title|escape:'html':'UTF-8'}">{$cms.meta_title|escape:'html':'UTF-8'}</a></li>
 			{/foreach}
 			<li><a href="{$link->getPageLink('contact', true)|escape:'html'}" title="{l s='Contact'}">{l s='Contact'}</a></li>
 			{if $display_store}<li><a href="{$link->getPageLink('stores')|escape:'html'}" title="{l s='Our stores'}">{l s='Our stores'}</a></li>{/if}

@@ -36,11 +36,13 @@
 			margin-left:14px;	
 		}
 	}
-	
+	td.step-by-step-date {
+		width:105px;	
+	}
 	tfoot {
 		
 		strong {
-			color:#333;	
+			color:$base-text-color;	
 		}
 	}
 }

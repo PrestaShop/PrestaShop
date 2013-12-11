@@ -138,6 +138,7 @@
 </table>
 <input type="hidden" name="token" value="{$token}" />
 </div>
+</div>
 </form>
 <script type="text/javascript">
 	var confirmation = new Array();

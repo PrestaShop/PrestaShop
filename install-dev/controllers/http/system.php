@@ -74,6 +74,9 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 		if (!isset($this->tests['optional']))
 			$this->tests['optional'] = $this->model_system->checkOptionalTests();
 
+		if (!is_callable('getenv') || !($user = @getenv('APACHE_RUN_USER')))
+			$user = 'Apache';
+
 		// Generate display array
 		$this->tests_render = array(
 			'required' => array(
@@ -96,21 +99,21 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 					)
 				),
 				array(
-					'title' => $this->l('Recursive write permissions on files and folders:'),
+					'title' => $this->l('Permissions on files and folders'),
 					'success' => 1,
 					'checks' => array(
-						'config_dir' => '~/config/',
-						'cache_dir' => '~/cache/',
-						'log_dir' => '~/log/',
-						'img_dir' => '~/img/',
-						'mails_dir' => '~/mails/',
-						'module_dir' => '~/modules/',
-						'theme_lang_dir' => '~/themes/default/lang/',
-						'theme_pdf_lang_dir' => '~/themes/default/pdf/lang/',
-						'theme_cache_dir' => '~/themes/default/cache/',
-						'translations_dir' => '~/translations/',
-						'customizable_products_dir' => '~/upload/',
-						'virtual_products_dir' => '~/download/'
+						'config_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/config/'),
+						'cache_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/cache/'),
+						'log_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/log/'),
+						'img_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/img/'),
+						'mails_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/mails/'),
+						'module_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/modules/'),
+						'theme_lang_dir' => $this->l('Recursive write permissions  for %1$s user on %2$s', $user, '~/themes/default/lang/'),
+						'theme_pdf_lang_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/themes/default/pdf/lang/'),
+						'theme_cache_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/themes/default/cache/'),
+						'translations_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/translations/'),
+						'customizable_products_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/upload/'),
+						'virtual_products_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/download/')
 					)
 				),
 			),

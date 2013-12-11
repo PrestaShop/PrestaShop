@@ -22,4 +22,4 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<li><a data-toggle="tab" href=".homefeatured" class="homefeatured">{l s='Popular' mod='homefeatured'}</a></li>
+<li><a data-toggle="tab" href="{$link->getPageLink('index')|escape:'html'}" class="homefeatured">{l s='Popular' mod='homefeatured'}</a></li>

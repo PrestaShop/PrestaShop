@@ -160,16 +160,14 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		if (empty($this->display))
-		{
+		parent::initPageHeaderToolbar();
+
+		if ($this->display != 'edit' && $this->display != 'add')
 			$this->page_header_toolbar_btn['new_category'] = array(
 				'href' => self::$currentIndex.'&amp;addcategory&amp;token='.$this->token,
 				'desc' => $this->l('Add new category'),
 				'icon' => 'process-icon-new'
 			);
-		}
-
-		parent::initPageHeaderToolbar();
 	}
 	
 	public function initContent()
@@ -351,7 +349,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->id = 'box-disabled-categories';
 		$helper->icon = 'icon-off';
 		$helper->color = 'color1';
-		$helper->title = $this->l('Disabled Categories');
+		$helper->title = $this->l('Disabled Categories', null, null, false);
 		if (ConfigurationKPI::get('DISABLED_CATEGORIES') !== false)
 			$helper->value = ConfigurationKPI::get('DISABLED_CATEGORIES');
 		if (ConfigurationKPI::get('DISABLED_CATEGORIES_EXPIRE') < $time)
@@ -362,11 +360,34 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->id = 'box-empty-categories';
 		$helper->icon = 'icon-bookmark-empty';
 		$helper->color = 'color2';
-		$helper->title = $this->l('Empty Categories');
+		$helper->title = $this->l('Empty Categories', null, null, false);
 		if (ConfigurationKPI::get('EMPTY_CATEGORIES') !== false)
 			$helper->value = ConfigurationKPI::get('EMPTY_CATEGORIES');
 		if (ConfigurationKPI::get('EMPTY_CATEGORIES_EXPIRE') < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=empty_categories';
+		$kpis[] = $helper->generate();
+		
+		$helper = new HelperKpi();
+		$helper->id = 'box-top-category';
+		$helper->icon = 'icon-money';
+		$helper->color = 'color3';
+		$helper->title = $this->l('Top Category', null, null, false);
+		$helper->subtitle = $this->l('30 days', null, null, false);
+		if (ConfigurationKPI::get('TOP_CATEGORY', $this->context->employee->id_lang) !== false)
+			$helper->value = ConfigurationKPI::get('TOP_CATEGORY', $this->context->employee->id_lang);
+		if (ConfigurationKPI::get('TOP_CATEGORY_EXPIRE', $this->context->employee->id_lang) < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=top_category';
+		$kpis[] = $helper->generate();
+		
+		$helper = new HelperKpi();
+		$helper->id = 'box-products-per-category';
+		$helper->icon = 'icon-search';
+		$helper->color = 'color4';
+		$helper->title = $this->l('Average number of products per category', null, null, false);
+		if (ConfigurationKPI::get('PRODUCTS_PER_CATEGORY') !== false)
+			$helper->value = ConfigurationKPI::get('PRODUCTS_PER_CATEGORY');
+		if (ConfigurationKPI::get('PRODUCTS_PER_CATEGORY_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=products_per_category';
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
@@ -387,6 +408,14 @@ class AdminCategoriesControllerCore extends AdminController
 		$unidentified_group_information = sprintf($this->l('%s - All people without a valid customer account.'), '<b>'.$unidentified->name[$this->context->language->id].'</b>');
 		$guest_group_information = sprintf($this->l('%s - Customer who placed an order with the guest checkout.'), '<b>'.$guest->name[$this->context->language->id].'</b>');
 		$default_group_information = sprintf($this->l('%s - All people who have created an account on this site.'), '<b>'.$default->name[$this->context->language->id].'</b>');
+
+		if (!($obj = $this->loadObject(true)))
+			return;
+
+		$image = _PS_CAT_IMG_DIR_.$obj->id.'.jpg';
+		$image_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350,
+			$this->imageType, true, true);
+		$image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
 		$this->fields_form = array(
 			'tinymce' => true,
@@ -446,7 +475,10 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Image:'),
 					'name' => 'image',
 					'display_image' => true,
-					'hint' => $this->l('Upload a category logo from your computer.')
+					'image' => $image_url ? $image_url : false,
+					'size' => $image_size,
+					'delete_url' => self::$currentIndex.'&'.$this->identifier.'='.$this->_category->id.'&token='.$this->token.'&deleteImage=1',
+					'hint' => $this->l('Upload a category logo from your computer.'),
 				),
 				array(
 					'type' => 'text',
@@ -569,14 +601,12 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		if (!in_array($this->display, array('edit', 'add')))
 			$this->multishop_context_group = false;
-		if (Tools::isSubmit('forcedeleteImage') || (isset($_FILES['image']) && $_FILES['image']['size'] > 0))
+		if (Tools::isSubmit('forcedeleteImage') || (isset($_FILES['image']) && $_FILES['image']['size'] > 0) || Tools::getValue('deleteImage'))
 		{
 			$this->processForceDeleteImage();
 			if (Tools::isSubmit('forcedeleteImage'))
 				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=7');
 		}
-
-		Hook::exec('actionBackOfficeCategory');
 		
 		return parent::postProcess();
 	}

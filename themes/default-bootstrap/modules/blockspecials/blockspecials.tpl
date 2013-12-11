@@ -30,7 +30,7 @@
 {if $special}
 		<ul>
         	<li class="clearfix">
-            	<a class="products-block-image" href="{$special.link|escape:'html'}"><img src="{$link->getImageLink($special.link_rewrite, $special.id_image, 'small_default')|escape:'html'}" alt="{$special.legend|escape:html:'UTF-8'}" title="{$special.name|escape:html:'UTF-8'}" /></a>
+            	<a class="products-block-image" href="{$special.link|escape:'html'}"><img class="replace-2x img-responsive" src="{$link->getImageLink($special.link_rewrite, $special.id_image, 'small_default')|escape:'html'}" alt="{$special.legend|escape:html:'UTF-8'}" title="{$special.name|escape:html:'UTF-8'}" /></a>
                 <div class="product-content">
                 	<h5><a class="product-name" href="{$special.link|escape:'html'}" title="{$special.name|escape:html:'UTF-8'}">{$special.name|escape:html:'UTF-8'}</a></h5>
                     {if isset($special.description_short) && $special.description_short}
@@ -51,11 +51,11 @@
                 </div>
             </li>
 		</ul>
-		<p>
+		<div>
 			<a class="btn btn-default button button-small" href="{$link->getPageLink('prices-drop')|escape:'html'}" title="{l s='All specials' mod='blockspecials'}"><span>{l s='All specials' mod='blockspecials'}<i class="icon-chevron-right right"></i></span></a>
-		</p>
+		</div>
 {else}
-		<p>{l s='No specials at this time' mod='blockspecials'}</p>
+		<div>{l s='No specials at this time' mod='blockspecials'}</div>
 {/if}
 	</div>
 </div>

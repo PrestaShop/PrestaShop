@@ -26,7 +26,7 @@
 {capture assign='page_title'}
 	{l s='Search'}
 	{if $nbProducts > 0}
-		"{if isset($search_query) && $search_query}{$search_query|escape:'htmlall':'UTF-8'}{elseif $search_tag}{$search_tag|escape:'htmlall':'UTF-8'}{elseif $ref}{$ref|escape:'htmlall':'UTF-8'}{/if}"
+		"{if isset($search_query) && $search_query}{$search_query|escape:'html':'UTF-8'}{elseif $search_tag}{$search_tag|escape:'html':'UTF-8'}{elseif $ref}{$ref|escape:'html':'UTF-8'}{/if}"
 	{/if}
 {/capture}
 {include file='./page-title.tpl'}
@@ -57,9 +57,9 @@
 {else}
 	<p class="warning">
 		{if isset($search_query) && $search_query}
-			{l s='No results were found for your search'}&nbsp;"{if isset($search_query)}{$search_query|escape:'htmlall':'UTF-8'}{/if}"
+			{l s='No results were found for your search'}&nbsp;"{if isset($search_query)}{$search_query|escape:'html':'UTF-8'}{/if}"
 		{elseif isset($search_tag) && $search_tag}
-			{l s='No results were found for your search'}&nbsp;"{$search_tag|escape:'htmlall':'UTF-8'}"
+			{l s='No results were found for your search'}&nbsp;"{$search_tag|escape:'html':'UTF-8'}"
 		{else}
 			{l s='Please enter a search keyword'}
 		{/if}

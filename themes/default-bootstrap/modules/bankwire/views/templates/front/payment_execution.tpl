@@ -66,12 +66,12 @@
     <p>
         - {l s='Bank wire account information will be displayed on the next page.' mod='bankwire'}
         <br />
-        - {l s='Please confirm your order by clicking "Place my order."' mod='bankwire'}.
+        - {l s='Please confirm your order by clicking "I confirm my order."' mod='bankwire'}.
     </p>
 </div>
 <p class="cart_navigation clearfix" id="cart_navigation">
 	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Other payment methods' mod='bankwire'}</a>
-    <button type="submit" class="button btn btn-default button-medium"><span>{l s='Place my order' mod='bankwire'}<i class="icon-chevron-right right"></i></span></button>
+    <button type="submit" class="button btn btn-default button-medium"><span>{l s='I confirm my order' mod='bankwire'}<i class="icon-chevron-right right"></i></span></button>
 </p>
 </form>
 {/if}

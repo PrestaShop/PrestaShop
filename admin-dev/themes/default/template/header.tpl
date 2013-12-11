@@ -33,67 +33,64 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
-	<title>{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'htmlall':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if}</title>
+	<title>{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'html':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if}</title>
 	{if $display_header}
 	<script type="text/javascript">
-		var help_class_name = '{$controller_name}';
-		var iso_user = '{$iso_user}';
-		var country_iso_code = '{$country_iso_code}';
-		var _PS_VERSION_ = '{$smarty.const._PS_VERSION_}';
-		var helpboxes = {$help_box};
-		var roundMode = {$round_mode};
-			{if isset($shop_context)}
-				{if $shop_context == Shop::CONTEXT_ALL}
-				var youEditFieldFor = "{l s='A modification of this field will be applied for all shops' slashes=1 }";
-					{elseif $shop_context == Shop::CONTEXT_GROUP}
-				var youEditFieldFor = "{l s='A modification of this field will be applied for all shops of group ' slashes=1 }<b>{$shop_name}</b>";
-					{else}
-				var youEditFieldFor = "{l s='A modification of this field will be applied for the shop ' slashes=1 }<b>{$shop_name}</b>";
-				{/if}
-				{else}
-			var youEditFieldFor = '';
-			{/if}
-		{* Notifications vars *}
-		var autorefresh_notifications = '{$autorefresh_notifications}';
-		var new_order_msg = '{l s='A new order has been placed on your shop.' slashes=1}';
-		var order_number_msg = '{l s='Order number: ' slashes=1}';
-		var total_msg = '{l s='Total: ' slashes=1}';
-		var from_msg = '{l s='From: ' slashes=1}';
-		var see_order_msg = '{l s='View this order' slashes=1}';
-		var new_customer_msg = '{l s='A new customer registered on your shop.' slashes=1}';
-		var customer_name_msg = '{l s='Customer name: ' slashes=1}';
-		var see_customer_msg = '{l s='View this customer' slashes=1}';
-		var new_msg = '{l s='A new message posted on your shop.' slashes=1}';
-		var excerpt_msg = '{l s='Excerpt: ' slashes=1}';
-		var see_msg = '{l s='Read this message' slashes=1}';
-		var token_admin_orders = '{getAdminToken tab='AdminOrders' slashes=1}';
-		var token_admin_customers = '{getAdminToken tab='AdminCustomers' slashes=1}';
-		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads' slashes=1}';
-		var currentIndex = '{$currentIndex}';
+		var help_class_name = '{$controller_name|@addcslashes:'\''}';
+		var iso_user = '{$iso_user|@addcslashes:'\''}';
+		var country_iso_code = '{$country_iso_code|@addcslashes:'\''}';
+		var _PS_VERSION_ = '{$smarty.const._PS_VERSION_|@addcslashes:'\''}';
+		var helpboxes = {$help_box|intval};
+		var roundMode = {$round_mode|intval};
+{if isset($shop_context)}
+	{if $shop_context == Shop::CONTEXT_ALL}
+		var youEditFieldFor = '{l s='A modification of this field will be applied for all shops' js=1}';
+	{elseif $shop_context == Shop::CONTEXT_GROUP}
+		var youEditFieldFor = '{l s='A modification of this field will be applied for all shops of group' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
+	{else}
+		var youEditFieldFor = '{l s='A modification of this field will be applied for the shop' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
+	{/if}
+{else}
+		var youEditFieldFor = '';
+{/if}
+		var autorefresh_notifications = '{$autorefresh_notifications|@addcslashes:'\''}';
+		var new_order_msg = '{l s='A new order has been placed on your shop.' js=1}';
+		var order_number_msg = '{l s='Order number: ' js=1}';
+		var total_msg = '{l s='Total: ' js=1}';
+		var from_msg = '{l s='From: ' js=1}';
+		var see_order_msg = '{l s='View this order' js=1}';
+		var new_customer_msg = '{l s='A new customer registered on your shop.' js=1}';
+		var customer_name_msg = '{l s='Customer name: ' js=1}';
+		var see_customer_msg = '{l s='View this customer' js=1}';
+		var new_msg = '{l s='A new message posted on your shop.' js=1}';
+		var excerpt_msg = '{l s='Excerpt: ' js=1}';
+		var see_msg = '{l s='Read this message' js=1}';
+		var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
+		var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
+		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads'}';
+		var currentIndex = '{$currentIndex|@addcslashes:'\''}';
+		var choose_language_translate = '{l s='Choose language' js=1}';
 		var default_language = '{$default_language|intval}';
-		var choose_language_translate = "{l s='Choose language' slashes=1}";
 		var admin_modules_link = '{$link->getAdminLink("AdminModules")|addslashes}';
 		var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
 	</script>
-	{/if}
-	{if isset($css_files)}
-		{foreach from=$css_files key=css_uri item=media}
-		<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
-		{/foreach}
-	{/if}
-	{if isset($js_files)}
-	{foreach from=$js_files item=js_uri}
-		<script type="text/javascript" src="{$js_uri}"></script>
-	{/foreach}
-	{/if}
+{/if}
+{if isset($css_files)}
+{foreach from=$css_files key=css_uri item=media}
+	<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
+{/foreach}
+{/if}
+{if isset($js_files)}
+{foreach from=$js_files item=js_uri}
+	<script type="text/javascript" src="{$js_uri}"></script>
+{/foreach}
+{/if}
+
 	<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_dir}favicon.ico" />
 	<link rel="shortcut icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
 	{if isset($displayBackOfficeHeader)}
 		{$displayBackOfficeHeader}
 	{/if}
-	<!--[if IE]>
-	<link type="text/css" rel="stylesheet" href="{$base_url}css/admin-ie.css" />
-	<![endif]-->
 	{if isset($brightness)}
 	<!--
 		/// todo multishop
@@ -105,17 +102,16 @@
 </head>
 
 {if $display_header}
-	<body class="{if $employee->bo_menu}page-sidebar {* page-sidebar-closed *}{else}page-topbar{/if}">
-
-{* begin  HEADER *}
-	<header id="header">
+	<body class="{if $employee->bo_menu}page-sidebar {* page-sidebar-closed *}{else}page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
+	{* begin  HEADER *}
+	<header id="header" class="bootstrap">
 		<nav id="header_infos" role="navigation">
 			<div class="navbar-header">
 			<button id="header_nav_toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-primary">
 				<i class="icon-reorder"></i>
 			</button>
 
-			<a id="header_shopname" href="{$link->getAdminLink('AdminDashboard')|escape:'htmlall':'UTF-8'}">
+			<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">
 				<img src="{$img_dir}prestashop-avatar.png" height="15" width="15" />
 				{$shop_name}
 			</a>
@@ -131,9 +127,9 @@
 					</a>
 					<div class="dropdown-menu notifs_dropdown">
 						<section id="orders_notif_wrapper" class="notifs_panel">
-							<header class="notifs_panel_header">
+							<div class="notifs_panel_header">
 								<h3>{l s='Latest Orders'}</h3>
-							</header>
+							</div>
 							<div id="list_orders_notif" class="list-group">
 								<a href="#" class="media list-group-item no_notifs">
 									<span class="pull-left">
@@ -144,9 +140,9 @@
 									</span>
 								</a>
 							</div>
-							<footer class="notifs_panel_footer">
+							<div class="notifs_panel_footer">
 								<a href="index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a>
-							</footer>
+							</div>
 						</section>
 					</div>
 				</li>
@@ -161,9 +157,9 @@
 					</a>
 					<div class="dropdown-menu notifs_dropdown">
 						<section id="customers_notif_wrapper" class="notifs_panel">
-							<header class="notifs_panel_header">
+							<div class="notifs_panel_header">
 								<h3>{l s='Latest Registrations'}</h3>
-							</header>
+							</div>
 							<div id="list_customers_notif" class="list-group">
 								<a href="#" class="media list-group-item no_notifs">
 									<span class="pull-left">
@@ -174,9 +170,9 @@
 									</span>
 								</a>
 							</div>
-							<footer class="panel-footer">
+							<div class="panel-footer">
 								<a href="index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'}</a>
-							</footer>
+							</div>
 						</section>
 					</div>
 				</li>
@@ -191,9 +187,9 @@
 					</a>
 					<div class="dropdown-menu notifs_dropdown">
 						<section id="customer_messages_notif_wrapper" class="notifs_panel">
-							<header class="notifs_panel_header">
+							<div class="notifs_panel_header">
 								<h3>{l s='Latest Messages'}</h3>
-							</header>
+							</div>
 							<div id="list_orders_notif" class="list-group">
 								<a href="#" class="media list-group-item no_notifs">
 									<span class="pull-left">
@@ -204,9 +200,9 @@
 									</span>
 								</a>
 							</div>
-							<footer class="panel-footer text-small">
-								<a href="index.php?tab=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a>
-							</footer>
+							<div class="panel-footer text-small">
+								<a href="index.php?controller=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a>
+							</div>
 						</section>
 					</div>
 				</li>
@@ -224,39 +220,42 @@
 								<i class="icon-caret-down"></i>
 							</button>
 							<ul id="header_search_options" class="dropdown-menu">
-								<li class="search-all search-option active"><a href="#" data-value="0" data-placeholder="{l s='TODO'}"><i class="icon-search"></i> {l s='Everywhere'}</a></li>
+								<li class="search-all search-option active">
+									<a href="#" data-value="0" data-placeholder="{l s='What are you looking for?'}" data-icon="icon-reorder">
+										<i class="icon-search"></i> {l s='Everywhere'}</a>
+								</li>
 								<li class="divider"></li>
 								<li class="search-book search-option">
-									<a href="#" data-value="1" data-placeholder="{l s='TODO'}" data-icon="icon-book">
+									<a href="#" data-value="1" data-placeholder="{l s='Product name, SKU, reference...'}" data-icon="icon-book">
 										<i class="icon-book"></i> {l s='Catalog'}
 									</a>
 								</li>
 								<li class="search-customers-name search-option">
-									<a href="#" data-value="2" data-placeholder="{l s='TODO'}" data-icon="icon-group">
+									<a href="#" data-value="2" data-placeholder="{l s='Email, name...'}" data-icon="icon-group">
 										<i class="icon-group"></i> {l s='Customers'} {l s='by name'}
 									</a>
 								</li>
 								<li class="search-customers-addresses search-option">
-									<a href="#" data-value="6" data-placeholder="{l s='TODO'}" data-icon="icon-desktop">
+									<a href="#" data-value="6" data-placeholder="{l s='123.45.67.89'}" data-icon="icon-desktop">
 										<i class="icon-desktop"></i> {l s='Customers'} {l s='by ip address'}</a>
 								</li>
 								<li class="search-orders search-option">
-									<a href="#" data-value="3" data-placeholder="{l s='TODO'}" data-icon="icon-credit-card">
+									<a href="#" data-value="3" data-placeholder="{l s='Order ID'}" data-icon="icon-credit-card">
 										<i class="icon-credit-card"></i> {l s='Orders'}
 									</a>
 								</li>
 								<li class="search-invoices search-option">
-									<a href="#" data-value="4" data-placeholder="{l s='TODO'}" data-icon="icon-book">
+									<a href="#" data-value="4" data-placeholder="{l s='Invoice Number'}" data-icon="icon-book">
 										<i class="icon-book"></i> {l s='Invoices'}
 									</a>
 								</li>
 								<li class="search-carts search-option">
-									<a href="#" data-value="5" data-placeholder="{l s='TODO'}" data-icon="icon-shopping-cart">
+									<a href="#" data-value="5" data-placeholder="{l s='Cart ID'}" data-icon="icon-shopping-cart">
 										<i class="icon-shopping-cart"></i> {l s='Carts'}
 									</a>
 								</li>
 								<li class="search-modules search-option">
-									<a href="#" data-value="7" data-placeholder="{l s='TODO'}" data-icon="icon-puzzle-piece">
+									<a href="#" data-value="7" data-placeholder="{l s='Module name'}" data-icon="icon-puzzle-piece">
 										<i class="icon-puzzle-piece"></i> {l s='Modules'}
 									</a>
 								</li>
@@ -283,24 +282,12 @@
 						$('#bo_query').attr("placeholder",$(this).data('placeholder'));
 						$('#bo_query').focus();
 					});
+					{if isset($search_type) && $search_type}
+						$(document).ready(function() {
+							$('.search-option a[data-value='+{$search_type|intval}+']').click();
+						});
+					{/if}
 				</script>
-
-			<!-- js 
-					OK - size up search field on focus
-					- prevent blank search
-					OK - dropdown menu as select
-					OK - fill input hidden field with data value from list item
-					OK - change icon in suffix
-					OK - set active on right list item
-					OK - focus input field
-					OK - change place holder
-					- use change for first init
-					- clear search
-					(?) - keep focus state when keyword exists
-
-					old code sample:
-					<option value="1" {if {$search_type} == 1} selected="selected" {/if}>{l s='catalog'}</option>
-			-->
 			</form>
 
 {if count($quick_access) > 0}
@@ -309,7 +296,7 @@
 					<a href="#" id="quick_select" class="dropdown-toggle" data-toggle="dropdown">{l s='Quick Access'} <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 					{foreach $quick_access as $quick}
-						<li><a href="{$quick.link|escape:'htmlall':'UTF-8'}" {if $quick.new_window} target="_blank"{/if}><i class="icon-chevron-right"></i> {$quick.name}</a></li>
+						<li><a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window} target="_blank"{/if}><i class="icon-chevron-right"></i> {$quick.name}</a></li>
 					{/foreach}
 					</ul>
 				</li>
@@ -325,13 +312,16 @@
 				</li>
 {/if}
 				<li id="employee_infos" class="dropdown">
-					<a href='#' class="employee_name dropdown-toggle" data-toggle="dropdown">
-						<img src="{$img_dir}prestashop-avatar.png" height="15" width="15" />
+					<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
+						<span class="employee_avatar_small">{$employee_avatar}</span>
 						{$first_name}&nbsp;{$last_name}
 						<i class="caret"></i>
 					</a>
 					<ul id="employee_links" class="dropdown-menu">
-						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'htmlall':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
+						<li><span class="employee_avatar">{$employee_avatar}</span></li>
+						<li class="divider"></li>
+						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
+						<li class="divider"></li>
 						<li><a id="header_logout" href="index.php?logout"><i class="icon-signout"></i> {l s='Log out'}</a></li>
 					</ul>
 				</li>
@@ -349,24 +339,27 @@
 	<div id="main">
 		{include file='nav.tpl'}
 
-		<div id="content" class="page-content">
+		<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}">
+		
+
 {if $install_dir_exists}
 			<div class="alert alert-warning">
 				{l s='For security reasons, you must also:'}&nbsp;{l s='delete the /install folder'}
 			</div>
 {/if}
+
 {if $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
-			<div class="panel multishop_toolbar">
+			<div class="panel multishop_toolbar clearfix">
 				<div class="col-lg-12 form-horizontal">
 					<label class="control-label col-lg-3"><i class="icon-sitemap"></i> {l s='Multistore configuration for'}</label>
 					<div class="col-lg-9">{$shop_list}</div>
 				</div>
 			</div>
 {/if}
+{* end display_header*}
 
-{* end display_header*}	
 {else}
 	<body{if isset($lite_display) && $lite_display} class="display-modal"{/if}>
 		<div id="main">
-			<div id="content" class="page-content">
+			<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}">
 {/if}

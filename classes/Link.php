@@ -423,6 +423,15 @@ class LinkCore
 	 */
 	public function getPageLink($controller, $ssl = null, $id_lang = null, $request = null, $request_url_encode = false, $id_shop = null)
 	{
+		
+		//If $controller contains '&' char, it means that $controller contains request data and must be parsed first
+		$p = strpos($controller, '&');
+		if ($p !== false) {
+			$request = substr($controller, $p + 1);
+			$request_url_encode = false;
+			$controller = substr($controller, 0, $p);
+		}
+		
 		$controller = Tools::strReplaceFirst('.php', '', $controller);
 		if (!$id_lang)
 			$id_lang = (int)Context::getContext()->language->id;
@@ -501,6 +510,7 @@ class LinkCore
 
 	public function goPage($url, $p)
 	{
+		$url = rtrim(str_replace('?&', '?', $url), '?');
 		return $url.($p == 1 ? '' : (!strstr($url, '?') ? '?' : '&amp;').'p='.(int)$p);
 	}
 

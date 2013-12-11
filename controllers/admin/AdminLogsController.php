@@ -35,14 +35,47 @@ class AdminLogsControllerCore extends AdminController
 		$this->noLink = true;
 
 		$this->fields_list = array(
-			'id_log' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-			'employee' => array('title' => $this->l('Employee'), 'align' => 'center', 'havingFilter' => true),
-			'severity' => array('title' => $this->l('Severity (1-4)'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-			'message' => array('title' => $this->l('Message')),
-			'object_type' => array('title' => $this->l('Object type'), 'class' => 'fixed-width-sm'),
-			'object_id' => array('title' => $this->l('Object ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-			'error_code' => array('title' => $this->l('Error code'), 'align' => 'center', 'prefix' => '0x', 'class' => 'fixed-width-xs'),
-			'date_add' => array('title' => $this->l('Date'), 'width' => 150, 'align' => 'right', 'type' => 'datetime')
+			'id_log' => array(
+				'title' => $this->l('ID'), 
+				'align' => 'center', 
+				'class' => 'fixed-width-xs'
+			),
+			'employee' => array(
+				'title' => $this->l('Employee'), 
+				'align' => 'left', 
+				'havingFilter' => true,
+				'callback' => 'displayEmployee',
+				'callback_object' => $this
+			),
+			'severity' => array(
+				'title' => $this->l('Severity (1-4)'), 
+				'align' => 'center', 
+				'class' => 'fixed-width-xs'
+			),
+			'message' => array(
+				'title' => $this->l('Message')
+			),
+			'object_type' => array(
+				'title' => $this->l('Object type'), 
+				'class' => 'fixed-width-sm'
+			),
+			'object_id' => array(
+				'title' => $this->l('Object ID'), 
+				'align' => 'center', 
+				'class' => 'fixed-width-xs'
+			),
+			'error_code' => array(
+				'title' => $this->l('Error code'), 
+				'align' => 'center', 
+				'prefix' => '0x', 
+				'class' => 'fixed-width-xs'
+			),
+			'date_add' => array(
+				'title' => $this->l('Date'), 
+				'width' => 150, 
+				'align' => 'right', 
+				'type' => 'datetime'
+			)
 		);
 
 		$this->fields_options = array(
@@ -80,6 +113,12 @@ class AdminLogsControllerCore extends AdminController
 			'js' => 'if (confirm(\''.$this->l('Are you sure?').'\')) document.location = \''.$this->context->link->getAdminLink('AdminLogs').'&amp;token='.$this->token.'&deletelog=1\';'
 		);
 		unset($this->toolbar_btn['new']);
+	}
+	
+	public function displayEmployee($value, $tr)
+	{
+		$employee = new Employee((int)$tr['id_employee']);
+		return ImageManager::thumbnail($employee->getImage(), $this->table.'_mini_'.$value.'_'.$this->context->shop->id.'.'.$this->imageType, 45, $this->imageType).' '.$value;
 	}
 }
 

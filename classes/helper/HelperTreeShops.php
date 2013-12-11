@@ -115,22 +115,22 @@ class HelperTreeShopsCore extends TreeCore
 			new TreeToolbarLink(
 				'Collapse All',
 				'#',
-				'$(\'#'.$this->getId().'\').tree(\'collapseAll\')',
+				'$(\'#'.$this->getId().'\').tree(\'collapseAll\'); return false;',
 				'icon-collapse-alt'),
 			new TreeToolbarLink(
 				'Expand All',
 				'#',
-				'$(\'#'.$this->getId().'\').tree(\'expandAll\')',
+				'$(\'#'.$this->getId().'\').tree(\'expandAll\'); return false;',
 				'icon-expand-alt'),
 			new TreeToolbarLink(
 				'Check All',
 				'#',
-				'checkAllAssociatedShops($(\'#'.$this->getId().'\'));',
+				'checkAllAssociatedShops($(\'#'.$this->getId().'\')); return false;',
 				'icon-check-sign'),
 			new TreeToolbarLink(
 				'Uncheck All',
 				'#',
-				'uncheckAllAssociatedShops($(\'#'.$this->getId().'\'));',
+				'uncheckAllAssociatedShops($(\'#'.$this->getId().'\')); return false;',
 				'icon-check-empty')
 			)
 		);
@@ -156,7 +156,7 @@ class HelperTreeShopsCore extends TreeCore
 				$html .= $this->getContext()->smarty->createTemplate(
 					$this->getTemplateFile($this->getNodeFolderTemplate()),
 					$this->getContext()->smarty
-				)->assign(array(
+				)->assign($this->getAttributes())->assign(array(
 					'children' => $this->renderNodes($item['shops']),
 					'node'     => $item
 				))->fetch();
@@ -164,7 +164,7 @@ class HelperTreeShopsCore extends TreeCore
 				$html .= $this->getContext()->smarty->createTemplate(
 					$this->getTemplateFile($this->getNodeItemTemplate()),
 					$this->getContext()->smarty
-				)->assign(array(
+				)->assign($this->getAttributes())->assign(array(
 					'node' => $item
 				))->fetch();
 		}

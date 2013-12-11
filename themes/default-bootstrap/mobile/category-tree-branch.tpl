@@ -25,10 +25,10 @@
 
 <li {if $node.children|@count > 0}data-icon="more"{/if}>
 	{if $node.children|@count > 0}
-		{$node.name|escape:'htmlall':'UTF-8'}
+		{$node.name|escape:'html':'UTF-8'}
 		<ul data-inset="true">
 			<li>
-				<a href="{$node.link|escape:'htmlall':'UTF-8'}" title="{$node.desc|escape:'htmlall':'UTF-8'}" data-ajax="false">
+				<a href="{$node.link|escape:'html':'UTF-8'}" title="{$node.desc|escape:'html':'UTF-8'}" data-ajax="false">
 					{l s='See products'}
 				</a>
 			</li>
@@ -37,8 +37,8 @@
 		{/foreach}
 		</ul>
 	{else}
-		<a href="{$node.link|escape:'htmlall':'UTF-8'}" title="{$node.desc|escape:'htmlall':'UTF-8'}" data-ajax="false">
-			{$node.name|escape:'htmlall':'UTF-8'}
+		<a href="{$node.link|escape:'html':'UTF-8'}" title="{$node.desc|escape:'html':'UTF-8'}" data-ajax="false">
+			{$node.name|escape:'html':'UTF-8'}
 		</a>
 	{/if}
 </li>

@@ -25,11 +25,11 @@
 
 		<div style="width: 800px; height: 75px; background-color: #8AB50E; margin: 0 auto; color: white; font-family: arial; border-bottom: 5px solid #567500;">
 			<div style="float: left; font-size: 36px;  margin-left: 20px; font-weight: bold; height: 75px; line-height: 75px; vertical-align: middle;">{l s='Affiliation space' mod='trackingfront'}</div>
-			<div style="float: right; font-size: 18px; margin-right: 20px; font-weight: bold; height: 75px; line-height: 75px; vertical-align: middle;"><a href="{$smarty.server.PHP_SELF|escape:'htmlall':'UTF-8'}?logout_tracking">{l s='Logout' mod='trackingfront'}</a></div>
+			<div style="float: right; font-size: 18px; margin-right: 20px; font-weight: bold; height: 75px; line-height: 75px; vertical-align: middle;"><a href="{$smarty.server.PHP_SELF|escape:'html':'UTF-8'}?logout_tracking">{l s='Logout' mod='trackingfront'}</a></div>
 		</div>
 		<div style="width: 800px; height: 250px; background-color: #EEEEEE; margin: 0 auto; font-family: arial;">
 			<div style="float:left; margin: 25px 0 0 50px;">
-				<form action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">
+				<form action="{$smarty.server.REQUEST_URI|escape:'html':'UTF-8'}" method="post">
 					<input type="submit" name="submitDateToday" class="button" value="{l s='Today' mod='trackingfront'}">
 					<input type="submit" name="submitDateMonth" class="button" value="{l s='Month' mod='trackingfront'}">
 					<input type="submit" name="submitDateYear" class="button" value="{l s='Year' mod='trackingfront'}">

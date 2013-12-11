@@ -35,13 +35,13 @@ var ajaxCart = {
 	overrideButtonsInThePage : function(){
 		//for every 'add' buttons...
 		$('.ajax_add_to_cart_button').unbind('click').click(function(){
-			var idProduct =  $(this).attr('rel').replace('nofollow', '').replace('ajax_id_product_', '');
+			var idProduct =  $(this).data('id-product');
 			if ($(this).attr('disabled') != 'disabled')
 				ajaxCart.add(idProduct, null, false, this);
 			return false;
 		});
 		//for product page 'add' button...
-		$('#add_to_cart input').unbind('click').click(function(){
+		$('#add_to_cart button').unbind('click').click(function(){
 			ajaxCart.add( $('#product_page_product_id').val(), $('#idCombination').val(), true, null, $('#quantity_wanted').val(), null);
 			return false;
 		});
@@ -163,15 +163,35 @@ var ajaxCart = {
 	},
 
 	// Update the cart information
-	updateCartInformation : function (jsonData, addedFromProductPage)
+	updateCartInformation : function (jsonData, addedFromProductPage, contentOnly)
 	{
-		ajaxCart.updateCart(jsonData);
 
+		// if added from Quick View
+		var contentOnly = contentOnly;
+		if (addedFromProductPage && typeof(contentOnly) != 'undefined' && (!jsonData.hasError || jsonData.hasError==false))
+			$.fancybox.close(),
+			ajaxCart.updateCart(jsonData),
+			$('.crossseling').html(jsonData.crossSelling);
+			
+		ajaxCart.updateCart(jsonData);
+		
 		//reactive the button when adding has finished
-		if (addedFromProductPage)
-			$('#add_to_cart input').removeAttr('disabled').addClass('exclusive').removeClass('exclusive_disabled');
+		if (addedFromProductPage) {
+			$('#add_to_cart button').removeAttr('disabled').removeClass('disabled');
+			if (!jsonData.hasError || jsonData.hasError==false) {
+				$('#add_to_cart button').addClass('added');
+			}
+			else {
+				$('#add_to_cart button').removeClass('added');
+			}
+		}
 		else
 			$('.ajax_add_to_cart_button').removeAttr('disabled');
+	},
+	// close fancybox
+	updateFancyBox : function ()
+	{
+		
 	},
 
 	// add a product in the cart via ajax
@@ -185,7 +205,7 @@ var ajaxCart = {
 		//disabled the button when adding to not double add if user double click
 		if (addedFromProductPage)
 		{
-			$('#add_to_cart input').attr('disabled', true).removeClass('exclusive').addClass('exclusive_disabled');
+			$('#add_to_cart button').attr('disabled', true).addClass('disabled');
 			$('.filled').removeClass('filled');
 		}
 		else
@@ -207,71 +227,45 @@ var ajaxCart = {
 				// add appliance to whishlist module
 				if (whishlist && !jsonData.errors)
 					WishlistAddProductCart(whishlist[0], idProduct, idCombination, whishlist[1]);
-
-				// add the picture to the cart
-				var $element = $(callerElement).parents('.ajax_block_product').find('a.product_image img,a.product_img_link img');
-				if (!$element.length)
-					$element = $('#bigpic');
-				var $picture = $element.clone();
-				var pictureOffsetOriginal = $element.offset();
-				pictureOffsetOriginal.right = $(window).innerWidth() - pictureOffsetOriginal.left - $element.width();
-
-				if ($picture.length)
-				{
-					$picture.css({
-						position: 'absolute',
-						top: pictureOffsetOriginal.top,
-						right: pictureOffsetOriginal.right
-					});
+				if (typeof(contentOnly) != 'undefined') {
+					var $contentOnly = contentOnly;
 				}
-
-				var pictureOffset = $picture.offset();
-				var cartBlock = $('#cart_block');
-				if (!$('#cart_block')[0] || !$('#cart_block').offset().top || !$('#cart_block').offset().left)
-					cartBlock = $('#shopping_cart');
-				var cartBlockOffset = cartBlock.offset();
-				cartBlockOffset.right = $(window).innerWidth() - cartBlockOffset.left - cartBlock.width();
-
-				// Check if the block cart is activated for the animation
-				if (cartBlockOffset != undefined && $picture.length)
+				
+				//adding product to cart and update Layer Cart
+				if (($contentOnly && $contentOnly !=true) || !$contentOnly)
 				{
-					$picture.appendTo('body');
-					$picture
-						.css({
-							position: 'absolute',
-							top: pictureOffsetOriginal.top,
-							right: pictureOffsetOriginal.right,
-							zIndex: 4242
-						})
-						.animate({
-							width: $element.attr('width')*0.66,
-							height: $element.attr('height')*0.66,
-							opacity: 0.2,
-							top: cartBlockOffset.top + 30,
-							right: cartBlockOffset.right + 15
-						}, 1000)
-						.fadeOut(100, function() {
-							ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
-							$(this).remove();
-							if (!jsonData.hasError)
-							{
-								$('.crossseling').html(jsonData.crossSelling)
-								$(jsonData.products).each(function(){
-									if (this.id != undefined && this.id == parseInt(idProduct))
-										ajaxCart.updateLayer(this);
-								});
-							}
-						});
-				}
-				else
 					ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
+					if (!jsonData.hasError)
+					{
+						$('.crossseling').html(jsonData.crossSelling)
+						$(jsonData.products).each(function(){
+							if (this.id != undefined && this.id == parseInt(idProduct))
+								ajaxCart.updateLayer(this);
+						});
+					}
+				}
+				//adding product to cart and update Layer Cart (Quick View)
+				else if ($contentOnly && $contentOnly !=false) {
+					contentOnly = true;
+					window.parent.ajaxCart.updateCartInformation(jsonData, addedFromProductPage, contentOnly);
+					if (!jsonData.hasError)
+						$(jsonData.products).each(function(){
+							if (this.id != undefined && this.id == parseInt(idProduct))
+								window.parent.ajaxCart.updateLayer(this);
+						});
+					else 
+						$('#add_to_cart button').removeAttr('disabled').removeClass('disabled');
+				}
+				else {
+					ajaxCart.updateCartInformation(jsonData, addedFromProductPage);	
+				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown)
 			{
 				alert("Impossible to add the product to the cart.\n\ntextStatus: '" + textStatus + "'\nerrorThrown: '" + errorThrown + "'\nresponseText:\n" + XMLHttpRequest.responseText);
 				//reactive the button when adding has finished
 				if (addedFromProductPage)
-					$('#add_to_cart input').removeAttr('disabled').addClass('exclusive').removeClass('exclusive_disabled');
+					$('#add_to_cart button').removeAttr('disabled').removeClass('disabled');
 				else
 					$(callerElement).removeAttr('disabled');
 			}
@@ -487,7 +481,7 @@ var ajaxCart = {
 						content += '<span class="remove_link"></span>';
 					content += '</dt>';
 					if (this.hasAttributes)
-						  content += '<dd id="cart_block_combination_of_' + domIdProduct + '" class="unvisible">';
+						content += '<dd id="cart_block_combination_of_' + domIdProduct + '" class="unvisible">';
 					if (this.hasCustomizedDatas)
 						content += ajaxCart.displayNewCustomizedDatas(this);
 					if (this.hasAttributes) content += '</dd>';
@@ -604,12 +598,14 @@ var ajaxCart = {
 		var h = parseInt($(window).height());
 		var s = parseInt($(window).scrollTop());
 		var t = $('#layer_cart').outerHeight(true);
+		//alert(h+' '+s+' '+t);
 		if (t < h)
-			var n = parseInt(((h-t) / 2) + s) + 'px';
-		$('.layer_cart_overlay').css('width',$('body').width());
-		$('.layer_cart_overlay').css('height',$('body').height());
+			var n = parseInt(((h-t) / 2) + s - t/2) + 'px';
+		$('.layer_cart_overlay').css('width','100%');
+		$('.layer_cart_overlay').css('height','100%');
 		$('.layer_cart_overlay').show();
 		$('#layer_cart').css({'top': n}).fadeIn('fast');
+		$.scrollTo('#layer_cart', 400);
 		crossselling_serialScroll();
 	},
 
@@ -771,12 +767,13 @@ $(document).ready(function()
 	});
 
 	$('#cart_navigation input').click(function(){
-		$(this).attr('disabled', true).removeClass('exclusive').addClass('exclusive_disabled');
+		$(this).attr('disabled', true).addClass('disabled');
 		$(this).closest("form").get(0).submit();
 	});
 
 	$('#layer_cart .cross, #layer_cart .continue, .layer_cart_overlay').click(function(){
-		$('.layer_cart_overlay').hide(); $('#layer_cart').fadeOut('fast'); return false;
+		$('.layer_cart_overlay').hide();
+		$('#layer_cart').fadeOut('fast'); return false;
 	});
 });
 
@@ -795,35 +792,16 @@ function HoverWatcher(selector){
 	})
 }
 
-function crossselling_serialScrollFixLock(event, targeted, scrolled, items, position)
-{
-	serialScrollNbImages = $('#blockcart_list li:visible').length;
-	serialScrollNbImagesDisplayed = 4;
-	
-	var leftArrow = position == 0 ? true : false;
-	var rightArrow = position + serialScrollNbImagesDisplayed >= serialScrollNbImages ? true : false;
-	
-	$('#blockcart_scroll_left').css('cursor', leftArrow ? 'default' : 'pointer').css('display', leftArrow ? 'none' : 'block').fadeTo(0, leftArrow ? 0 : 1);		
-	$('#blockcart_scroll_right').css('cursor', rightArrow ? 'default' : 'pointer').fadeTo(0, rightArrow ? 0 : 1).css('display', rightArrow ? 'none' : 'block');
-	return true;
-}
-
 function crossselling_serialScroll()
 {
-	$('#blockcart_list').serialScroll({
-		items:'li:visible',
-		prev:'#blockcart_scroll_left',
-		next:'#blockcart_scroll_right',
-		axis:'x',
-		offset:0,
-		start:0,
-		stop:true,
-		onBefore:crossselling_serialScrollFixLock,
-		duration:300,
-		step: 1,
-		lazy: true,
-		lock: false,
-		force:false
+	$('#blockcart_caroucel').bxSlider({
+		minSlides: 2,
+		maxSlides: 4,
+		slideWidth: 178,
+		slideMargin: 20,
+		moveSlides: 1,
+		infiniteLoop: false,
+  		hideControlOnEnd: true,
+		pager: false
 	});
-	$('#blockcart_list').trigger('goto', 0);
 }

@@ -75,7 +75,7 @@
 		});
 
 		// Method to check / uncheck all modules checkbox
-		$('#checkme').click(function()
+		$('#moduleContainer').on("click", "#checkme", function()
 		{
 			if ($(this).attr("rel") == 'false')
 			{
@@ -94,8 +94,8 @@
 		// Method to reload filter in ajax
 		$('.categoryModuleFilterLink').click(function()
 		{
-			$('.categoryModuleFilterLink').css('background-color', 'white');
-			$(this).css('background-color', '#EBEDF4');
+			$('.categoryModuleFilterLink').removeClass('active');
+			$(this).addClass('active');
 			try
 			{
 				resAjax = $.ajax({
@@ -247,10 +247,10 @@
 			catch(e){}
 			return false;
 		}
-		$('#module_type_filter').change(function() { setFilter(); });
-		$('#module_install_filter').change(function() { setFilter(); });
-		$('#module_status_filter').change(function() { setFilter(); });
-		$('#country_module_value_filter').change(function() { setFilter(); });
+
+		$(document).on('change', '#module_type_filter, #module_install_filter, #module_status_filter, #country_module_value_filter', function() { 
+			setFilter(); 
+		});
 
 		$('.moduleTabPreferencesChoise').change(function()
 		{			
@@ -308,8 +308,8 @@
 			catch(e){}
 			return false;
 		});
-		
-		$('.toggle_favorite').live('click', function(event)
+
+		$('#moduleContainer').on("click", ".toggle_favorite", function()
 	    {
 	      var el = $(this);
 	      var value_pref = el.data('value');

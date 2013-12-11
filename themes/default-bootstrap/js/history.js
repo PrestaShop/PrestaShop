@@ -34,6 +34,7 @@ function showOrder(mode, var_content, file)
 			$('#block-order-detail').fadeOut('slow', function()
 			{
 				$(this).html(data);
+				$('.footab').footable();
 				/* if return is allowed*/
 				if ($('#order-detail-content .order_cb').length > 0)
 				{

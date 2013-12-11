@@ -346,7 +346,7 @@ if (empty($fail_result))
 					if (strpos($phpString, '::') === false)
 					{
 						$func_name = str_replace($pattern[0], '', $php[0]);
-						require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.$func_name.'.php');
+						require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.Tools::strtolower($func_name).'.php');
 						$phpRes = call_user_func_array($func_name, $parameters);
 					}
 					/* Or an object method */

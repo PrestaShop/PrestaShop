@@ -1,4 +1,3 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 /********************************************************
 			One-Page Checkout Styles
 ********************************************************/
@@ -14,13 +13,14 @@
 #order-opc .page-heading.step-num {
   position: relative;
   padding-left: 45px;
+  overflow: visible;
 }
 #order-opc .page-heading.step-num span {
   font-weight: bold;
   font-size: 42px;
   line-height: 51px;
   font-style: italic;
-  color: #333;
+  color: #333333;
   position: absolute;
   left: 10px;
   top: -14px;
@@ -29,7 +29,7 @@
   margin-bottom: 2px;
 }
 #order-opc .form-group .form-control {
-  width: 271px;
+  max-width: 271px;
 }
 #order-opc .lost_password {
   display: inline-block;
@@ -41,7 +41,7 @@
 }
 #order-opc .title_block {
   font-weight: bold;
-  color: #333;
+  color: #333333;
   padding: 3px 0 6px;
 }
 #order-opc .opc-button {

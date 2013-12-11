@@ -1,3 +1,4 @@
+@import '../../_theme_variables';
 /**
  * BxSlider v4.0 - Fully loaded, responsive content slider
  * http://bxslider.com
@@ -18,16 +19,30 @@
 #homepage-slider {
 	padding-left:0;
 	padding-right:0;
-	padding-top:30px;
-	margin-bottom:30px;
+	padding-top:50px;
+	margin-bottom:14px;
+	width:66.6%;
 	max-width:779px;
+	position:relative;
+	z-index:1;
+	float:left;
+																		@media (max-width: $screen-xs-max) { // max 767px
+																			width:100%;
+																			max-width:100%;
+																			padding-top:20px;
+																		}
+	
+	#homeslider {
+		margin:0 auto;
+		padding:0;
+	}
 }
 /*****************************************************************************
 						BXSlider Styles
 ********************************************************************************/
 /** RESET AND LAYOUT
 ===================================*/
-
+#homepage-slider {
 .bx-wrapper {
 	position: relative;
 	padding: 0;
@@ -38,7 +53,6 @@
 	img {
 		display: block;	
 		max-width: 100%;
-		height:auto;
 	}
 }
 
@@ -62,7 +76,7 @@
 
 .bx-wrapper .bx-loading {
 	min-height: 50px;
-	background: url(images/bx_loader.gif) center center no-repeat #fff;
+	background: url(images/bx_loader.gif) center center no-repeat $light-background;
 	height: 100%;
 	width: 100%;
 	position: absolute;
@@ -76,7 +90,7 @@
 .bx-wrapper .bx-pager {
 	text-align: center;
 	font-size: .85em;
-	font-family: Arial;
+	font-family: $font-famaly;
 	font-weight: bold;
 	color: #666;
 	padding-top: 20px;
@@ -110,34 +124,69 @@
 /* DIRECTION CONTROLS (NEXT / PREV) */
 
 .bx-wrapper .bx-prev {
-	left: 10px;
-	background: url(images/controls.png) no-repeat 0 -32px;
+	right: 60px;
+	
+	&:after {
+		content:"";	
+	}
 }
 
 .bx-wrapper .bx-next {
 	right: 10px;
-	background: url(images/controls.png) no-repeat -43px -32px;
-}
-
-.bx-wrapper .bx-prev:hover {
-	background-position: 0 0;
-}
-
-.bx-wrapper .bx-next:hover {
-	background-position: -43px 0;
+	
+	&:after {
+		content:"";	
+	}
 }
 
 .bx-wrapper .bx-controls-direction a {
 	position: absolute;
-	top: 50%;
-	margin-top: -16px;
+	bottom: 10px;
 	outline: 0;
-	width: 32px;
-	height: 32px;
+	width: 52px;
+	height: 52px;
 	text-indent: -9999px;
 	z-index: 9999;
+	border:2px solid $light-border-color;
+	
+	&:before {
+		height:48px;
+		width:48px;
+		display:block;
+		background:$light-background;
+		content:".";
+		opacity:0.14;
+		text-indent:-9999px;
+		position:absolute;
+		left:0;
+		top:0;
+		z-index:1;
+	}
+	
+	&:after { 
+		display:block;
+		width:48px;
+		height:48px;
+		color:$light-text-color;
+		text-indent:0;
+		text-align:center;
+		font-size:21px;
+		font-family:$font-icon;
+		position:absolute;
+		top:0;
+		left:0;
+		z-index:2;
+		padding:16px 0 0 0;
+	}
+	
+	&:hover {
+		
+		&:before {
+			background:$dark-background;
+			opacity:0.83;	
+		}
+	}
 }
-
 .bx-wrapper .bx-controls-direction a.disabled {
 	display: none;
 }
@@ -202,9 +251,20 @@
 }
 
 .bx-wrapper .bx-caption span {
-	color: #fff;
-	font-family: Arial;
+	color: $light-text-color;
+	font-family: $font-famaly;
 	display: block;
 	font-size: .85em;
 	padding: 10px;
+}
+}
+.ie8 {
+	#homepage-slider{
+		
+		.bx-wrapper .bx-controls-direction a {
+			&:before {
+				background:$dark-background;
+			}
+		}
+	}
 }

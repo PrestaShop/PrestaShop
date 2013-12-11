@@ -74,13 +74,15 @@ function check_all_shop() {
 </script>
 
 <div class="assoShop">
-	<table class="table" cellpadding="0" cellspacing="0" width="100%">
+	<table class="table">
 		<tr>
 			<th>{l s='Shop'}</th>
 		</tr>
 		<tr>
 			<td>
-				<label class="t"><input class="input_all_shop" type="checkbox" /> <b>{l s='All shops'}</b></label>
+				<label>
+					<input class="input_all_shop" type="checkbox" />{l s='All shops'}
+				</label>
 			</td>
 		</tr>
 		{foreach $input.values as $groupID => $groupData}
@@ -88,13 +90,13 @@ function check_all_shop() {
 			<tr {if $input.type == 'shop'}class="alt_row"{/if}>
 				<td>
 					<img style="vertical-align:middle;" alt="" src="../img/admin/lv2_b.gif" />
-					<label class="t">
+					<label>
 						<input class="input_shop_group"
 							type="checkbox"
 							name="checkBoxShopGroupAsso_{$table}[{$groupID}]"
 							value="{$groupID}"
 							{if $groupChecked} checked="checked"{/if} />
-						<b>{l s='Group:'} {$groupData['name']}</b>
+						{l s='Group:'} {$groupData['name']}
 					</label>
 				</td>
 			</tr>

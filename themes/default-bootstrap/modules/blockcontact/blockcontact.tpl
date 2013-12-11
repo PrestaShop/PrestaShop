@@ -27,7 +27,7 @@
 	<p class="title_block">{l s='Contact us' mod='blockcontact'}</p>
 	<div class="block_content clearfix">
 			<p><strong>{l s='Our support hotline is available 24/7' mod='blockcontact'}</strong></p>
-			{if $telnumber != ''}<p class="tel"><span class="label">{l s='Phone:' mod='blockcontact'}</span><i class="icon-phone"></i>{$telnumber|escape:'htmlall':'UTF-8'}</p>{/if}
-			{if $email != ''}<a class="btn btn-default button button-small" href="mailto:{$email|escape:'htmlall':'UTF-8'}"><span>{l s='Contact our expert support team!' mod='blockcontact'}</span></a>{/if}
+			{if $telnumber != ''}<p class="tel"><span class="label">{l s='Phone:' mod='blockcontact'}</span><i class="icon-phone"></i>{$telnumber|escape:'html':'UTF-8'}</p>{/if}
+			{if $email != ''}<a class="btn btn-default button button-small" href="mailto:{$email|escape:'html':'UTF-8'}"><span>{l s='Contact our expert support team!' mod='blockcontact'}</span></a>{/if}
 	</div>
 </div>

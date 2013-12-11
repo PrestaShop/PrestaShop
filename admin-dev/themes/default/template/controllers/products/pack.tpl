@@ -28,7 +28,7 @@
 	var msg_set_quantity = "{l s='Please set a quantity to add a product.' js=1}";
 </script>
 
-<div class="panel">
+<div id="product-pack" class="panel product-tab">
 	<input type="hidden" name="submitted_tabs[]" value="Pack" />
 	<h3>{l s='Pack'}</h3>
 	<div class="alert alert-info">{l s='You cannot add combinations to a pack.'}</div>

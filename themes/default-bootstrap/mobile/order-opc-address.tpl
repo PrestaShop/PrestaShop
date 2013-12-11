@@ -32,16 +32,16 @@
 			<h3 class="bg">{l s='Delivery address'}</h3>
 			{if isset($delivery)}
 				<ul class="adress">
-					<li class="address_name">{$delivery->firstname|escape:'htmlall':'UTF-8'} {$delivery->lastname|escape:'htmlall':'UTF-8'}</li>
+					<li class="address_name">{$delivery->firstname|escape:'html':'UTF-8'} {$delivery->lastname|escape:'html':'UTF-8'}</li>
 					{if $delivery->company}
-						<li class="address_company">{$delivery->company|escape:'htmlall':'UTF-8'}</li>
+						<li class="address_company">{$delivery->company|escape:'html':'UTF-8'}</li>
 					{/if}
-					<li class="address_address1">{$delivery->address1|escape:'htmlall':'UTF-8'}</li>
+					<li class="address_address1">{$delivery->address1|escape:'html':'UTF-8'}</li>
 					{if $delivery->address2}
-						<li class="address_address2">{$delivery->address2|escape:'htmlall':'UTF-8'}</li>
+						<li class="address_address2">{$delivery->address2|escape:'html':'UTF-8'}</li>
 					{/if}
-					<li class="address_city">{$delivery->postcode|escape:'htmlall':'UTF-8'} {$delivery->city|escape:'htmlall':'UTF-8'}</li>
-					<li class="address_country">{$delivery->country|escape:'htmlall':'UTF-8'} {if $delivery_state}({$delivery_state|escape:'htmlall':'UTF-8'}){/if}</li>
+					<li class="address_city">{$delivery->postcode|escape:'html':'UTF-8'} {$delivery->city|escape:'html':'UTF-8'}</li>
+					<li class="address_country">{$delivery->country|escape:'html':'UTF-8'} {if $delivery_state}({$delivery_state|escape:'html':'UTF-8'}){/if}</li>
 				</ul>
 			{/if}
 			<label for="delivery-address-choice" class="select">{l s='Change address:'}</label>
@@ -61,16 +61,16 @@
 			<h3 class="bg">{l s='Invoice address'}</h3>
 			{if isset($invoice)}
 				<ul class="adress">
-					<li class="address_name">{$invoice->firstname|escape:'htmlall':'UTF-8'} {$invoice->lastname|escape:'htmlall':'UTF-8'}</li>
+					<li class="address_name">{$invoice->firstname|escape:'html':'UTF-8'} {$invoice->lastname|escape:'html':'UTF-8'}</li>
 					{if $invoice->company}
-						<li class="address_company">{$invoice->company|escape:'htmlall':'UTF-8'}</li>
+						<li class="address_company">{$invoice->company|escape:'html':'UTF-8'}</li>
 					{/if}
-					<li class="address_address1">{$invoice->address1|escape:'htmlall':'UTF-8'}</li>
+					<li class="address_address1">{$invoice->address1|escape:'html':'UTF-8'}</li>
 					{if $invoice->address2}
-						<li class="address_address2">{$invoice->address2|escape:'htmlall':'UTF-8'}</li>
+						<li class="address_address2">{$invoice->address2|escape:'html':'UTF-8'}</li>
 					{/if}
-					<li class="address_city">{$invoice->postcode|escape:'htmlall':'UTF-8'} {$invoice->city|escape:'htmlall':'UTF-8'}</li>
-					<li class="address_country">{$invoice->country|escape:'htmlall':'UTF-8'} {if $invoice_state}({$invoice_state|escape:'htmlall':'UTF-8'}){/if}</li>
+					<li class="address_city">{$invoice->postcode|escape:'html':'UTF-8'} {$invoice->city|escape:'html':'UTF-8'}</li>
+					<li class="address_country">{$invoice->country|escape:'html':'UTF-8'} {if $invoice_state}({$invoice_state|escape:'html':'UTF-8'}){/if}</li>
 				</ul>
 			{else}
 				<p class="warning">{l s='You must specify your delivery and invoice address'}</p>

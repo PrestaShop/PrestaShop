@@ -28,8 +28,9 @@ global $smarty;
 $smarty->debugging = false;
 $smarty->debugging_ctrl = 'NONE';
 
-/* Smarty should be in compile check mode in the BackOffice */
-$smarty->force_compile = false;
+// Let user choose to force compilation
+$smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
+// But force compile_check since the performance impact is small and it is better for debugging
 $smarty->compile_check = true;
 
 function smartyTranslate($params, &$smarty)

@@ -15,10 +15,10 @@
   margin-bottom: 3px;
 }
 #compare_shipping .table {
-  background: #fff;
+  background: white;
 }
 #compare_shipping .table thead tr th {
-  background: #fff;
+  background: white;
   padding: 4px 10px 3px 10px;
 }
 #compare_shipping .table tbody td {

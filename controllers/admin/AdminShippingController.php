@@ -112,8 +112,7 @@ class AdminShippingControllerCore extends AdminController
 						'identifier' => 'value',
 						'list' => $carrier_default_order
 					),
-				),
-				'submit' => array()
+				)
 			)
 		);		
 	}

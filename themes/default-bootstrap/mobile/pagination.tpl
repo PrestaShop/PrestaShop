@@ -64,9 +64,9 @@
 		{/if}
 		{section name=pagination start=$start loop=$stop+1 step=1}
 			{if $p == $smarty.section.pagination.index}
-				<li class="current"><a href="#" data-role="button" class="ui-btn-active" data-ajax="false">{$p|escape:'htmlall':'UTF-8'}</a></li>
+				<li class="current"><a href="#" data-role="button" class="ui-btn-active" data-ajax="false">{$p|escape:'html':'UTF-8'}</a></li>
 			{else}
-				<li><a data-role="button" {$no_follow_text} href="{$link->goPage($requestPage, $smarty.section.pagination.index)|escape:'html'}" data-ajax="false">{$smarty.section.pagination.index|escape:'htmlall':'UTF-8'}</a></li>
+				<li><a data-role="button" {$no_follow_text} href="{$link->goPage($requestPage, $smarty.section.pagination.index)|escape:'html'}" data-ajax="false">{$smarty.section.pagination.index|escape:'html':'UTF-8'}</a></li>
 			{/if}
 		{/section}
 		{if $pages_nb>$stop+2}

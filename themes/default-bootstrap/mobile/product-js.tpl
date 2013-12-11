@@ -66,7 +66,7 @@ function initProductPage()
 	ProductFn.maxQuantityToAllowDisplayOfLastQuantityMessage = {$last_qties};
 	{if $no_tax == 1}ProductFn.noTaxForThisProduct = true;{/if}
 	ProductFn.displayPrice = {$priceDisplay};
-	ProductFn.productReference = '{$product->reference|escape:'htmlall':'UTF-8'}';
+	ProductFn.productReference = '{$product->reference|escape:'html':'UTF-8'}';
 	ProductFn.productAvailableForOrder = {if (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE}'0'{else}'{$product->available_for_order}'{/if};
 	{if !$PS_CATALOG_MODE}ProductFn.productShowPrice = '{$product->show_price}';{/if}
 	ProductFn.productUnitPriceRatio = '{$product->unit_price_ratio}';

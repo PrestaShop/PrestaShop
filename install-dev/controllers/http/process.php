@@ -358,7 +358,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 				$install_modules['subtasks'][] = array('module' => $module);
 		$this->process_steps[] = $install_modules;
 		
-		$install_modules = array('key' => 'installModulesAddons', 'lang' => $this->l('Install modules Addons'));
+		$install_modules = array('key' => 'installModulesAddons', 'lang' => $this->l('Install Addons modules'));
 
 		$params = array('iso_lang' => $this->language->getLanguageIso(), 
 							'iso_country' => $this->session->shop_country, 
@@ -392,4 +392,3 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->displayTemplate('process');
 	}
 }
-

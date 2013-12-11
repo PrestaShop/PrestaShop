@@ -25,7 +25,7 @@
 <div class="row">
 	<div class="col-xs-12 col-md-6">
         <p class="payment_module">
-            <a class="bankwire" href="{$link->getModuleLink('bankwire', 'payment')|escape:'html'}" title="{l s='Pay by bank wire' mod='bankwire'}">{l s='Pay by bank wire (order process will be longer)' mod='bankwire'}</a>
+            <a class="bankwire" href="{$link->getModuleLink('bankwire', 'payment')|escape:'html'}" title="{l s='Pay by bank wire' mod='bankwire'}">{l s='Pay by bank wire' mod='bankwire'} <span>({l s='order process will be longer' mod='bankwire'})</span></a>
         </p>
     </div>
 </div>

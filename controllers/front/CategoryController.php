@@ -55,7 +55,7 @@ class CategoryControllerCore extends FrontController
 	{
 		if (Tools::getValue('live_edit'))
 			return ;
-		if (!Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop())
+		if (!Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop() || in_array($this->category->id, array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'))))
 		{
 			$this->redirect_after = '404';
 			$this->redirect();
@@ -111,11 +111,11 @@ class CategoryControllerCore extends FrontController
 		
 		$this->assignScenes();
 		$this->assignSubcategories();
-		if ($this->category->id != 1)
-			$this->assignProductList();
+		$this->assignProductList();
 
 		$this->context->smarty->assign(array(
 			'category' => $this->category,
+			'description_short' => Tools::truncateString($this->category->description),
 			'products' => (isset($this->cat_products) && $this->cat_products) ? $this->cat_products : null,
 			'id_category' => (int)$this->category->id,
 			'id_category_parent' => (int)$this->category->id_parent,
@@ -128,7 +128,8 @@ class CategoryControllerCore extends FrontController
 			'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
 			'allow_oosp' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK'),
 			'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'),
-			'suppliers' => Supplier::getSuppliers()
+			'suppliers' => Supplier::getSuppliers(),
+			'body_classes' => array($this->php_self.'-'.$this->category->id, $this->php_self.'-'.$this->category->link_rewrite)
 		));
 	}
 
@@ -199,6 +200,10 @@ class CategoryControllerCore extends FrontController
 			// Pagination must be call after "getProducts"
 			$this->pagination($this->nbProducts);
 
+		Hook::exec('actionProductListModifier', array(
+			'nb_products' => &$this->nbProducts,
+			'cat_products' => &$this->cat_products,
+		));
 
 		foreach ($this->cat_products as &$product)
 			if ($product['id_product_attribute'] && isset($product['product_attribute_minimal_quantity']))

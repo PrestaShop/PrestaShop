@@ -44,7 +44,7 @@ class ValidateCore
 	 */
 	public static function isEmail($email)
 	{
-		return !empty($email) && preg_match(Tools::cleanNonUnicodeSupport('/^[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+$/ui'), $email);
+		return !empty($email) && preg_match(Tools::cleanNonUnicodeSupport('/^[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z\p{L}0-9]+$/ui'), $email);
 	}
 
 	/**
@@ -1066,5 +1066,10 @@ class ValidateCore
 	public static function isPrestaShopVersion($version)
 	{
 		return (preg_match('/^[0-1]\.[0-9]{1,2}(\.[0-9]{1,2}){0,2}$/', $version) && ip2long($version));
+	}
+
+	public static function isOrderInvoiceNumber($id)
+	{
+		return (preg_match('/^['.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).']*([0-9]+)?/i', $id));
 	}
 }

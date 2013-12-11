@@ -1,22 +1,21 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 #enabled_filters {
   background: #484848;
   padding: 16px 20px;
   margin-bottom: 16px;
 }
 #enabled_filters span.layered_subtitle {
-  color: #fff;
+  color: white;
   display: block;
   padding-bottom: 11px;
 }
 #enabled_filters li {
-  padding: 1px 0;
+  padding: 1px 15px 1px 0;
   color: #9c9b9b;
   cursor: pointer;
   position: relative;
 }
 #enabled_filters li:hover, #enabled_filters li:hover a {
-  color: #fff;
+  color: white;
 }
 #enabled_filters li a {
   position: absolute;
@@ -69,7 +68,7 @@
   position: absolute;
   top: 0px;
   left: 0;
-  font-family: 'FontAwesome';
+  font-family: "FontAwesome";
   vertical-align: 1px;
 }
 #layered_block_left .layered_subtitle_heading .layered_close a:hover {
@@ -85,6 +84,12 @@
 #layered_block_left .layered_filter_ul {
   padding: 0 20px 5px;
 }
+@media (min-width: 768px) and (max-width: 991px) {
+  #layered_block_left .layered_filter_ul {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
 #layered_block_left .layered_filter_ul li {
   padding-bottom: 7px;
 }
@@ -98,7 +103,7 @@
   font-weight: normal;
 }
 #layered_block_left .layered_filter_ul li label a:hover {
-  color: #333;
+  color: #333333;
 }
 
 #layered_block_left ul li label {
@@ -168,7 +173,7 @@
 }
 .ui-state-default.ui-state-hover, .ui-widget-content .ui-state-default.ui-state-hover, .ui-widget-header .ui-state-default.ui-state-hover {
   background: #555454;
-  border-color: #333;
+  border-color: #333333;
 }
 
 .ui-slider .ui-slider-range {
@@ -238,4 +243,15 @@
 
 .hide-action:hover {
   font-weight: bold;
+}
+
+#ul_layered_price_0 .col-xs-6, #ul_layered_weight_0 .col-xs-6 {
+  padding-top: 10px;
+}
+@media (min-width: 1200px) {
+  #ul_layered_price_0 .col-xs-6, #ul_layered_weight_0 .col-xs-6 {
+    padding-top: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
 }

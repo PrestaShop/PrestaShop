@@ -23,4 +23,4 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="tree-panel-heading-controls">{if isset($toolbar)}{$toolbar}{/if}</div>
+<div class="tree-panel-heading-controls clearfix">{if isset($toolbar)}{$toolbar}{/if}</div>

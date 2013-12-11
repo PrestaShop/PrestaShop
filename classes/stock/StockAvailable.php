@@ -53,6 +53,8 @@ class StockAvailableCore extends ObjectModel
 	/** @var bool determine if a product is out of stock - it was previously in Product class */
 	public $out_of_stock = false;
 
+	protected static $cache_quantity_available;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -343,18 +345,23 @@ class StockAvailableCore extends ObjectModel
 		if ($id_product_attribute === null)
 			$id_product_attribute = 0;
 
-		$query = new DbQuery();
-		$query->select('SUM(quantity)');
-		$query->from('stock_available');
+		$key = (int)$id_product.'-'.(int)$id_product_attribute.'-'.(int)$id_shop;
+		if (!isset(self::$cache_quantity_available[$key]))
+		{
+			$query = new DbQuery();
+			$query->select('SUM(quantity)');
+			$query->from('stock_available');
+	
+			// if null, it's a product without attributes
+			if ($id_product !== null)
+				$query->where('id_product = '.(int)$id_product);
+	
+			$query->where('id_product_attribute = '.(int)$id_product_attribute);
+			$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
 
-		// if null, it's a product without attributes
-		if ($id_product !== null)
-			$query->where('id_product = '.(int)$id_product);
-
-		$query->where('id_product_attribute = '.(int)$id_product_attribute);
-		$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
-
-		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+			self::$cache_quantity_available[$key] = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+		}
+		return self::$cache_quantity_available[$key];
 	}
 
 	/**

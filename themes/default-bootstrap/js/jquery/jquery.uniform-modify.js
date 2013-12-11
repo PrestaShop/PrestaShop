@@ -1073,6 +1073,15 @@ $(window).load(function () {
 	$("select.form-control,input[type='checkbox']:not(.comparator), input[type='radio'],input#id_carrier2, input[type='file']").uniform(); 
 	$("#uniform-selectPrductSort1").innerWidth(0);
 	$("#uniform-selectPrductSort1 span").innerWidth(0);
+	$("#uniform-selectProductSort1").innerWidth(0);
+	$("#uniform-selectProductSort1 span").innerWidth(0);
 });
+
+// refresh uniform selects on document width change
+$(window).resize(
+	function () {
+		$.uniform.update("select.form-control, input[type='file']");
+	}
+);
 
 

@@ -180,7 +180,7 @@ class AdminProductsControllerCore extends AdminController
 				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.$id_shop.') 
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')';
 		
-		$this->_select .= 'shop.name as shopname, ';
+		$this->_select .= 'shop.name as shopname, a.id_shop_default, ';
 		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
 		
 		if ($join_category)
@@ -267,6 +267,28 @@ class AdminProductsControllerCore extends AdminController
 				'position' => 'position'
 			);
 	}
+
+	public function setMedia()
+	{
+		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
+		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+		$bo_theme = ((Validate::isLoadedObject($this->context->employee)
+			&& $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
+
+		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
+			.'template'))
+			$bo_theme = 'default';
+
+		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/vendor/jquery.ui.widget.js');
+		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
+		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload.js');
+		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload-process.js');
+		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js');			
+		$this->addJs(__PS_BASE_URI__.'js/vendor/spin.js');
+		$this->addJs(__PS_BASE_URI__.'js/vendor/ladda.js');
+
+		return parent::setMedia();
+	}
 	
 	protected function _cleanMetaKeywords($keywords)
 	{
@@ -331,12 +353,17 @@ class AdminProductsControllerCore extends AdminController
 		$nb = count($this->_list);
 		if ($this->_list)
 		{
+			$context = $this->context->cloneContext();
+			$context->shop = clone($context->shop);
 			/* update product final price */
 			for ($i = 0; $i < $nb; $i++)
 			{
+				if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP)
+					$context->shop = new Shop((int)$this->_list[$i]['id_shop_default']);
+
 				// convert price with the currency from context
 				$this->_list[$i]['price'] = Tools::convertPrice($this->_list[$i]['price'], $this->context->currency, true, $this->context);
-				$this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null, 2, null, false, true, 1, true);
+				$this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null, 2, null, false, true, 1, true, null, null, null, $nothing, true, true, $context);
 			}
 		}
 
@@ -367,9 +394,9 @@ class AdminProductsControllerCore extends AdminController
 				{
 					if (is_array($default_product->$field_name))
 						foreach ($default_product->$field_name as $key => $value)
-							$this->object->{$field_name}[$key] = ObjectModel::formatValue($value, $def['fields'][$field_name]['type']);
+							$this->object->{$field_name}[$key] = $value;
 					else
-						$this->object->$field_name = ObjectModel::formatValue($default_product->$field_name, $def['fields'][$field_name]['type']);
+						$this->object->$field_name = $default_product->$field_name;
 				}
 			}
 			$this->object->loadStockData();
@@ -439,101 +466,126 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
-	/**
-	 * Upload new attachment
-	 *
-	 * @return void
-	 */
-	public function processAddAttachments()
+	public function ajaxProcessAddAttachment()
 	{
-		$languages = Language::getLanguages(false);
-		$is_attachment_name_valid = false;
-		foreach ($languages as $language)
+		if (isset($_FILES['attachment_file']))
 		{
-			$attachment_name_lang = Tools::getValue('attachment_name_'.(int)($language['id_lang']));
-			if (Tools::strlen($attachment_name_lang ) > 0)
-				$is_attachment_name_valid = true;
-
-			if (!Validate::isGenericName(Tools::getValue('attachment_name_'.(int)($language['id_lang']))))
-				$this->errors[] = Tools::displayError('Invalid Name');
-			elseif (Tools::strlen(Tools::getValue('attachment_name_'.(int)($language['id_lang']))) > 32)
-				$this->errors[] = sprintf(Tools::displayError('The name is too long (%d chars max).'), 32);
-			if (!Validate::isCleanHtml(Tools::getValue('attachment_description_'.(int)($language['id_lang']))))
-				$this->errors[] = Tools::displayError('Invalid description');
-		}
-		if (!$is_attachment_name_valid)
-			$this->errors[] = Tools::displayError('An attachment name is required.');
-
-		if (empty($this->errors))
-		{
-			if (isset($_FILES['attachment_file']) && is_uploaded_file($_FILES['attachment_file']['tmp_name']))
+			if ((int)$_FILES['attachment_file']['error'] === 1)
 			{
-				if ($_FILES['attachment_file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
-					$this->errors[] = sprintf(
-						$this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you\'re trying to upload is: %2$d kB.'),
-						(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
-						number_format(($_FILES['attachment_file']['size'] / 1024), 2, '.', '')
-					);
-				else
-				{
-					do $uniqid = sha1(microtime());
-					while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
-					if (!copy($_FILES['attachment_file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid))
-						$this->errors[] = $this->l('File copy failed');
-					@unlink($_FILES['attachment_file']['tmp_name']);
-				}
-			}
-			elseif ((int)$_FILES['attachment_file']['error'] === 1)
-			{
+				$_FILES['attachment_file']['error'] = array();
+
 				$max_upload = (int)ini_get('upload_max_filesize');
 				$max_post = (int)ini_get('post_max_size');
 				$upload_mb = min($max_upload, $max_post);
-				$this->errors[] = sprintf(
+				$_FILES['attachment_file']['error'][] = sprintf(
 					$this->l('The file %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.'),
 					'<b>'.$_FILES['attachment_file']['name'].'</b> ',
 					'<b>'.$upload_mb.'</b>'
 				);
 			}
-			else
-				$this->errors[] = Tools::displayError('The file is missing.');
 
-			if (empty($this->errors) && isset($uniqid))
+			$_FILES['attachment_file']['error'] = array();
+
+			$is_attachment_name_valid = false;
+			$attachment_names = Tools::getValue('attachment_name');
+			$attachment_descriptions = Tools::getValue('attachment_description');
+
+			if (!isset($attachment_names) || !$attachment_names)
+				$attachment_names = array();
+
+			if (!isset($attachment_descriptions) || !$attachment_descriptions)
+				$attachment_descriptions = array();
+
+			foreach ($attachment_names as $lang => $name)
 			{
-				$attachment = new Attachment();
-				foreach ($languages as $language)
+				$language = Language::getLanguage((int)$lang);
+
+				if (Tools::strlen($name) > 0)
+					$is_attachment_name_valid = true;
+
+				if (!Validate::isGenericName($name))
+					$_FILES['attachment_file']['error'][] = sprintf(Tools::displayError('Invalid name for %s language'), $language['name']);
+				elseif (Tools::strlen($name) > 32)
+					$_FILES['attachment_file']['error'][] = sprintf(Tools::displayError('The name for %1s language is too long (%2d chars max).'), $language['name'], 32);
+			}
+
+			foreach ($attachment_descriptions as $lang => $description)
+			{
+				$language = Language::getLanguage((int)$lang);
+
+				if (!Validate::isCleanHtml($description))
+					$_FILES['attachment_file']['error'][] = sprintf(Tools::displayError('Invalid description for %s language'), $language['name']);
+			}
+
+			if (!$is_attachment_name_valid)
+				$_FILES['attachment_file']['error'][] = Tools::displayError('An attachment name is required.');
+
+			if (empty($_FILES['attachment_file']['error']))
+			{
+				if (is_uploaded_file($_FILES['attachment_file']['tmp_name']))
 				{
-					if (Tools::getIsset('attachment_name_'.(int)$language['id_lang']))
-						$attachment->name[(int)$language['id_lang']] = Tools::getValue('attachment_name_'.(int)$language['id_lang']);
-					if (Tools::getIsset('attachment_description_'.(int)$language['id_lang']))
-						$attachment->description[(int)$language['id_lang']] = Tools::getValue('attachment_description_'.(int)$language['id_lang']);
-				}
-				$attachment->file = $uniqid;
-				$attachment->mime = $_FILES['attachment_file']['type'];
-				$attachment->file_name = $_FILES['attachment_file']['name'];
-				if (empty($attachment->mime) || Tools::strlen($attachment->mime) > 128)
-					$this->errors[] = Tools::displayError('Invalid file extension');
-				if (!Validate::isGenericName($attachment->file_name))
-					$this->errors[] = Tools::displayError('Invalid file name');
-				if (Tools::strlen($attachment->file_name) > 128)
-					$this->errors[] = Tools::displayError('The file name is too long.');
-				if (empty($this->errors))
-				{
-					$res = $attachment->add();
-					if (!$res)
-						$this->errors[] = Tools::displayError('This attachment was unable to be loaded into the database.');
+					if ($_FILES['attachment_file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
+						$_FILES['attachment_file']['error'][] = sprintf(
+							$this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you\'re trying to upload is: %2$d kB.'),
+							(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
+							number_format(($_FILES['attachment_file']['size'] / 1024), 2, '.', '')
+						);
 					else
 					{
-						$id_product = (int)Tools::getValue($this->identifier);
-						$res = $attachment->attachProduct($id_product);
-						if (!$res)
-							$this->errors[] = Tools::displayError('We were unable to associate this attachment to a product.');
+						do $uniqid = sha1(microtime());
+						while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
+						if (!copy($_FILES['attachment_file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid))
+							$_FILES['attachment_file']['error'][] = $this->l('File copy failed');
+						@unlink($_FILES['attachment_file']['tmp_name']);
 					}
 				}
 				else
-					$this->errors[] = Tools::displayError('Invalid file');
+					$_FILES['attachment_file']['error'][] = Tools::displayError('The file is missing.');
+
+				if (empty($_FILES['attachment_file']['error']) && isset($uniqid))
+				{
+					$attachment = new Attachment();
+
+					foreach ($attachment_names as $lang => $name)
+						$attachment->name[(int)$lang] = $name;
+
+					foreach ($attachment_descriptions as $lang => $description)
+						$attachment->description[(int)$lang] = $description;
+
+					$attachment->file = $uniqid;
+					$attachment->mime = $_FILES['attachment_file']['type'];
+					$attachment->file_name = $_FILES['attachment_file']['name'];
+
+					if (empty($attachment->mime) || Tools::strlen($attachment->mime) > 128)
+						$_FILES['attachment_file']['error'][] = Tools::displayError('Invalid file extension');
+					if (!Validate::isGenericName($attachment->file_name))
+						$_FILES['attachment_file']['error'][] = Tools::displayError('Invalid file name');
+					if (Tools::strlen($attachment->file_name) > 128)
+						$_FILES['attachment_file']['error'][] = Tools::displayError('The file name is too long.');
+					if (empty($this->errors))
+					{
+						$res = $attachment->add();
+						if (!$res)
+							$_FILES['attachment_file']['error'][] = Tools::displayError('This attachment was unable to be loaded into the database.');
+						else
+						{
+							$_FILES['attachment_file']['id_attachment'] = $attachment->id;
+							$_FILES['attachment_file']['filename'] = $attachment->name[$this->context->employee->id_lang];
+							$id_product = (int)Tools::getValue($this->identifier);
+							$res = $attachment->attachProduct($id_product);
+							if (!$res)
+								$_FILES['attachment_file']['error'][] = Tools::displayError('We were unable to associate this attachment to a product.');
+						}
+					}
+					else
+						$_FILES['attachment_file']['error'][] = Tools::displayError('Invalid file');
+				}
 			}
+
+			die(Tools::jsonEncode($_FILES));
 		}
 	}
+
 
 	/**
 	 * Attach an existing attachment to the product
@@ -1147,18 +1199,6 @@ class AdminProductsControllerCore extends AdminController
 				$this->object = new Product((int)Tools::getValue('id_product'));
 			}
 		}
-		// Update attachments
-		elseif (Tools::isSubmit('submitAddAttachments'))
-		{
-			if ($this->tabAccess['add'] === '1')
-			{
-				$this->action = 'addAttachments';
-				$this->tab_display = 'attachments';
-				$this->display = 'edit';
-			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to add this.');
-		}
 		elseif (Tools::isSubmit('submitAttachments'))
 		{
 			if ($this->tabAccess['edit'] === '1')
@@ -1285,20 +1325,19 @@ class AdminProductsControllerCore extends AdminController
 
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
+			$this->addJqueryUI(array(
+				'ui.core',
+				'ui.widget',
+				'ui.accordion',
+			));
+
 			$this->addjQueryPlugin(array(
 				'autocomplete',
 				'tablednd',
 				'thickbox',
 				'ajaxfileupload',
-				'date'
-			));
-
-			$this->addJqueryUI(array(
-				'ui.core',
-				'ui.widget',
-				'ui.accordion',
-				'ui.slider',
-				'ui.datepicker'
+				'date',
+				'tagify'
 			));
 
 			$this->addJS(array(
@@ -1315,7 +1354,8 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.edit.js',
 				_PS_JS_DIR_.'admin-categories-tree.js',
 				_PS_JS_DIR_.'jquery/ui/jquery.ui.progressbar.min.js',
-				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js'
+				_PS_JS_DIR_.'vendor/spin.js',
+				_PS_JS_DIR_.'vendor/ladda.js'
 			));
 
 			$this->addCSS(array(
@@ -1323,42 +1363,6 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.css',
 			));
 		}
-	}
-
-	/* @todo rename to processaddproductimage */
-	public function ajaxProcessAddImage()
-	{
-		self::$currentIndex = 'index.php?tab=AdminProducts';
-		$allowedExtensions = array('jpeg', 'gif', 'png', 'jpg');
-		// max file size in bytes
-		$uploader = new FileUploader($allowedExtensions, $this->max_image_size);
-		$result = $uploader->handleUpload();
-		if (isset($result['success']))
-		{
-			$obj = new Image((int)$result['success']['id_image']);
-
-			// Associate image to shop from context
-			$shops = Shop::getContextListShopID();
-			$obj->associateTo($shops);
-			$json_shops = array();
-			foreach ($shops as $id_shop)
-				$json_shops[$id_shop] = true;
-
-			$json = array(
-				'name' => $result['success']['name'],
-				'status' => 'ok',
-				'id'=>$obj->id,
-				'path' => $obj->getExistingImgPath(),
-				'position' => $obj->position,
-				'cover' => $obj->cover,
-				'shops' => $json_shops,
-			);
-			@unlink(_PS_TMP_IMG_DIR_.'product_'.(int)$obj->id_product.'.jpg');
-			@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$obj->id_product.'_'.$this->context->shop->id.'.jpg');
-			die(Tools::jsonEncode($json));
-		}
-		else
-			die(Tools::jsonEncode($result));
 	}
 
 	public function ajaxProcessDeleteProductAttribute()
@@ -2305,7 +2309,7 @@ class AdminProductsControllerCore extends AdminController
 			$helper->id = 'box-products-stock';
 			$helper->icon = 'icon-archive';
 			$helper->color = 'color1';
-			$helper->title = $this->l('Items in Stock');
+			$helper->title = $this->l('Items in Stock', null, null, false);
 			if (ConfigurationKPI::get('PERCENT_PRODUCT_STOCK') !== false)
 				$helper->value = ConfigurationKPI::get('PERCENT_PRODUCT_STOCK');
 			if (ConfigurationKPI::get('PERCENT_PRODUCT_STOCK_EXPIRE') < $time)
@@ -2317,7 +2321,7 @@ class AdminProductsControllerCore extends AdminController
 		$helper->id = 'box-avg-gross-margin';
 		$helper->icon = 'icon-tags';
 		$helper->color = 'color2';
-		$helper->title = $this->l('Average Gross Margin');
+		$helper->title = $this->l('Average Gross Margin', null, null, false);
 		if (ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN') !== false)
 			$helper->value = ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN');
 		if (ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN_EXPIRE') < $time)
@@ -2328,8 +2332,8 @@ class AdminProductsControllerCore extends AdminController
 		$helper->id = 'box-8020-sales-catalog';
 		$helper->icon = 'icon-beaker';
 		$helper->color = 'color3';
-		$helper->title = $this->l('80% of your sales');
-		$helper->subtitle = $this->l('30 days');
+		$helper->title = $this->l('80% of your sales', null, null, false);
+		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('8020_SALES_CATALOG') !== false)
 			$helper->value = ConfigurationKPI::get('8020_SALES_CATALOG');
 		if (ConfigurationKPI::get('8020_SALES_CATALOG_EXPIRE') < $time)
@@ -2340,7 +2344,7 @@ class AdminProductsControllerCore extends AdminController
 		$helper->id = 'box-disabled-products';
 		$helper->icon = 'icon-off';
 		$helper->color = 'color4';
-		$helper->title = $this->l('Disabled Products');
+		$helper->title = $this->l('Disabled Products', null, null, false);
 		if (ConfigurationKPI::get('DISABLED_PRODUCTS') !== false)
 			$helper->value = ConfigurationKPI::get('DISABLED_PRODUCTS');
 		if (ConfigurationKPI::get('DISABLED_PRODUCTS_EXPIRE') < $time)
@@ -2430,11 +2434,59 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_product'] = array(
-				'href' => self::$currentIndex.'&amp;addproduct&amp;token='.$this->token,
-				'desc' => $this->l('Add new product'),
-				'icon' => 'process-icon-new'
-			);
+					'href' => self::$currentIndex.'&amp;addproduct&amp;token='.$this->token,
+					'desc' => $this->l('Add new product'),
+					'icon' => 'process-icon-new'
+				);
+		if ($this->display == 'edit' || $this->display == 'add')
+		{
+			if (($product = $this->loadObject(true)))
+			{
+				// adding button for duplicate this product
+				if ($this->tabAccess['add'] && $this->display != 'add')
+					$this->page_header_toolbar_btn['duplicate'] = array(
+						'short' => 'Duplicate',
+						'href' => '#',
+						'desc' => $this->l('Duplicate'),
+						'confirm' => 1,
+						'js' => 'if (confirm(\''.$this->l('Also copy images').' ?\')) document.location = \''.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;duplicateproduct\'; else document.location = \''.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;duplicateproduct&amp;noimage=1\';'
+					);
 
+				// adding button for preview this product
+				if ($url_preview = $this->getPreviewUrl($product))
+					$this->page_header_toolbar_btn['preview'] = array(
+						'short' => 'Preview',
+						'href' => $url_preview,
+						'desc' => $this->l('Preview'),
+						'target' => true,
+						'class' => 'previewUrl'
+					);
+
+				// adding button for preview this product statistics
+				if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php') && $this->display != 'add')
+					$this->page_header_toolbar_btn['stats'] = array(
+					'short' => 'Statistics',
+					'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsproduct&amp;id_product='.(int)$product->id,
+					'desc' => $this->l('Product sales'),
+				);
+				
+				// adding button for delete this product
+				if ($this->tabAccess['delete'] && $this->display != 'add')
+					$this->page_header_toolbar_btn['delete'] = array(
+						'short' => 'Delete',
+						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;deleteproduct',
+						'desc' => $this->l('Delete this product'),
+						'confirm' => 1,
+						'js' => 'if (confirm(\''.$this->l('Delete product?').'\')){return true;}else{event.preventDefault();}'
+					);
+
+				$this->page_header_toolbar_btn['save-and-stay'] = array(
+					'short' => 'SaveAndStay',
+					'href' => '#',
+					'desc' => $this->l('Save and stay'),
+				);	
+			}
+		}
 		parent::initPageHeaderToolbar();
 	}
 
@@ -2443,89 +2495,34 @@ class AdminProductsControllerCore extends AdminController
 		parent::initToolbar();
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
-			if ($product = $this->loadObject(true))
-			{
-				if ($this->tabAccess['edit'])
-				{
-					$this->toolbar_btn['save'] = array(
-						'short' => 'Save',
-						'href' => '#',
-						'desc' => $this->l('Save'),
-					);
+			$this->toolbar_btn['save'] = array(
+				'short' => 'Save',
+				'href' => '#',
+				'desc' => $this->l('Save'),
+			);
 
-					$this->toolbar_btn['save-and-stay'] = array(
-						'short' => 'SaveAndStay',
-						'href' => '#',
-						'desc' => $this->l('Save and stay'),
-					);
-				}
+			$this->toolbar_btn['save-and-stay'] = array(
+				'short' => 'SaveAndStay',
+				'href' => '#',
+				'desc' => $this->l('Save and stay'),
+			);
 
-				if ((bool)$product->id)
-				{
-					// adding button for duplicate this product
-					if ($this->tabAccess['add'] && $this->display != 'add')
-						$this->toolbar_btn['duplicate'] = array(
-							'short' => 'Duplicate',
-							'desc' => $this->l('Duplicate'),
-							'confirm' => 1,
-							'js' => 'if (confirm(\''.$this->l('Also copy images').' ?\')) document.location = \''.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;duplicateproduct\'; else document.location = \''.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;duplicateproduct&amp;noimage=1\';'
-						);
-
-					// adding button for preview this product
-					if ($url_preview = $this->getPreviewUrl($product))
-						$this->toolbar_btn['preview'] = array(
-							'short' => 'Preview',
-							'href' => $url_preview,
-							'desc' => $this->l('Preview'),
-							'target' => true,
-							'class' => 'previewUrl'
-						);
-
-					// adding button for preview this product statistics
-					if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php') && $this->display != 'add')
-						$this->toolbar_btn['stats'] = array(
-						'short' => 'Statistics',
-						'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsproduct&amp;id_product='.(int)$product->id,
-						'desc' => $this->l('Product sales'),
-					);
-
-					// adding button for adding a new combination in Combination tab
-					$this->toolbar_btn['newCombination'] = array(
-						'short' => 'New combination',
-						'desc' => $this->l('New combination'),
-						'class' => 'toolbar-new'
-					);
-				
-					// adding button for delete this product
-					if ($this->tabAccess['delete'] && $this->display != 'add')
-						$this->toolbar_btn['delete'] = array(
-							'short' => 'Delete',
-							'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;deleteproduct',
-							'desc' => $this->l('Delete this product'),
-							'confirm' => 1,
-							'js' => 'if (confirm(\''.$this->l('Delete product?').'\')){return true;}else{event.preventDefault();}'
-						);
-				}				
-			}
+			// adding button for adding a new combination in Combination tab
+			$this->toolbar_btn['newCombination'] = array(
+				'short' => 'New combination',
+				'desc' => $this->l('New combination'),
+				'class' => 'toolbar-new'
+			);
 		}
 		else
 			$this->toolbar_btn['import'] = array(
-					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=products',
-					'desc' => $this->l('Import')
-				);
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=products',
+				'desc' => $this->l('Import')
+			);
 		
 		$this->context->smarty->assign('toolbar_scroll', 1);
 		$this->context->smarty->assign('show_toolbar', 1);
 		$this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);
-	}
-
-	public function initToolbarTitle()
-	{
-		parent::initToolbarTitle();
-		
-		if ($this->display != 'list')
-			if (($product = $this->loadObject(true)) && Validate::isLoadedObject($product))
-				$this->toolbar_title[] = Tools::htmlentitiesUTF8($product->name[$this->context->employee->id_lang]);
 	}
 
 	/**
@@ -2579,6 +2576,8 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
 		$this->tpl_form_vars['post_data'] = Tools::jsonEncode($_POST);
 		$this->tpl_form_vars['save_error'] = !empty($this->errors);
+
+		$this->tpl_form_vars['ps_force_friendly_product'] = Configuration::get('PS_FORCE_FRIENDLY_PRODUCT');
 
 		// autoload rich text editor (tiny mce)
 		$this->tpl_form_vars['tinymce'] = true;
@@ -2728,6 +2727,10 @@ class AdminProductsControllerCore extends AdminController
 					$product_supplier->id_product = $product->id;
 					$product_supplier->id_product_attribute = 0;
 					$product_supplier->id_supplier = $id;
+					if ($this->context->currency->id)
+						$product_supplier->id_currency = (int)$this->context->currency->id;
+					else
+						$product_supplier->id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
 					$product_supplier->save();
 
 					$associated_suppliers[] = $product_supplier;
@@ -3418,12 +3421,12 @@ class AdminProductsControllerCore extends AdminController
 		$template = $this->context->smarty->createTemplate('controllers/products/input_text_lang.tpl',
 			$this->context->smarty);
 		return '<div class="form-group"><div class="input-group">'
+			.'<span class="input-group-addon"><span class="checkbox"><input type="checkbox" name="require_'.$type.'_'.(int)($id_customization_field).'" id="require_'.$type.'_'.(int)($id_customization_field).'" value="1" '.($required ? 'checked="checked"' : '').'/><label for="require_'.$type.'_'.(int)($id_customization_field).'"> '.$this->l('Required').'</label></span></span>'
 			.$template->assign(array(
 				'languages' => $languages,
 				'input_name'  => 'label_'.$type.'_'.(int)($id_customization_field),
 				'input_value' => $input_value
 			))->fetch()
-			.'<span class="input-group-addon"><span class="checkbox"><input type="checkbox" name="require_'.$type.'_'.(int)($id_customization_field).'" id="require_'.$type.'_'.(int)($id_customization_field).'" value="1" '.($required ? 'checked="checked"' : '').'/><label for="require_'.$type.'_'.(int)($id_customization_field).'"> '.$this->l('Required').'</label></span></span>'
 			.'</div></div>';
 	}
 
@@ -3493,6 +3496,12 @@ class AdminProductsControllerCore extends AdminController
 				$iso_tiny_mce = $this->context->language->iso_code;
 				$iso_tiny_mce = (file_exists(_PS_JS_DIR_.'tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
 
+				$attachment_uploader = new HelperUploader('attachment_file');
+				$attachment_uploader->setMultiple(false)->setUseAjax(true)->setUrl(
+					Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$obj->id
+					.'&action=AddAttachment')->setPostMaxSize((Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
+					->setTemplate('attachment_ajax.tpl');
+ 
 				$data->assign(array(
 					'obj' => $obj,
 					'table' => $this->table,
@@ -3506,7 +3515,8 @@ class AdminProductsControllerCore extends AdminController
 					'default_form_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
 					'attachment_name' => $attachment_name,
 					'attachment_description' => $attachment_description,
-					'PS_ATTACHMENT_MAXIMUM_SIZE' => Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')
+					'PS_ATTACHMENT_MAXIMUM_SIZE' => Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE'),
+					'attachment_uploader' => $attachment_uploader->render()
 				));
 			}
 			else
@@ -3568,7 +3578,7 @@ class AdminProductsControllerCore extends AdminController
 			$product->$prop = $this->getFieldValue($product, $prop);
 
 		$product->name['class'] = 'updateCurrentText';
-		if (!$product->id)
+		if (!$product->id || Configuration::get('PS_FORCE_FRIENDLY_PRODUCT'))
 			$product->name['class'] .= ' copy2friendlyUrl';
 
 		$images = Image::getImages($this->context->language->id, $product->id);
@@ -3648,6 +3658,111 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
+	public function ajaxProcessaddProductImage()
+	{
+		self::$currentIndex = 'index.php?tab=AdminProducts';
+		$product = new Product((int)Tools::getValue('id_product'));
+		$legends = Tools::getValue('legend');
+
+		if (!is_array($legends))
+			$legends = (array)$legends;
+
+		if (!Validate::isLoadedObject($product))
+		{
+			$files = array();
+			$files[0]['error'] = Tools::displayError('Cannot add image because product creation failed.');
+		}
+
+		$image_uploader = new HelperImageUploader('file');
+		$image_uploader->setAcceptTypes(array('jpeg', 'gif', 'png', 'jpg'))->setMaxSize($this->max_image_size);
+		$files = $image_uploader->process();
+
+		foreach ($files as &$file)
+		{
+			$image = new Image();
+			$image->id_product = (int)($product->id);
+			$image->position = Image::getHighestPosition($product->id) + 1;
+
+			foreach ($legends as $key => $legend)
+				if (!empty($legend))
+					$image->legend[(int)$key] = $legend;
+
+			if (!Image::getCover($image->id_product))
+				$image->cover = 1;
+			else
+				$image->cover = 0;
+
+			if (isset($file['error']) && (int)$file['error'] != 0)
+				continue;
+
+			if (!$image->add())
+				$file['error'] = Tools::displayError('Error while creating additional image');
+			else
+			{
+				if (!$new_path = $image->getPathForCreation())
+				{
+					$file['error'] = Tools::displayError('An error occurred during new folder creation');
+					continue;
+				}
+
+				if (!ImageManager::resize($file['save_path'], $new_path.'.'.$image->image_format))
+				{
+					$file['error'] = Tools::displayError('An error occurred while copying image.');
+					continue;
+				}
+				else
+				{
+					$imagesTypes = ImageType::getImagesTypes('products');
+					foreach ($imagesTypes as $imageType)
+					{
+						/*
+							$theme = (Shop::isFeatureActive() ? '-'.$imageType['id_theme'] : '');
+							if (!ImageManager::resize($tmpName, $new_path.'-'.stripslashes($imageType['name']).$theme.'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
+								return array('error' => Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']));
+						*/
+						if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
+						{
+							$file['error'] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
+							continue;
+						}
+					}
+				}
+
+				unlink($file['save_path']);
+				//Necesary to prevent hacking
+				unset($file['save_path']);
+				Hook::exec('actionWatermark', array('id_image' => $image->id, 'id_product' => $product->id));
+
+				if (!$image->update())
+				{
+					$file['error'] = Tools::displayError('Error while updating status');
+					continue;
+				}
+
+				// Associate image to shop from context
+				$shops = Shop::getContextListShopID();
+				$image->associateTo($shops);
+				$json_shops = array();
+
+				foreach ($shops as $id_shop)
+					$json_shops[$id_shop] = true;
+
+				$file['status']   = 'ok';
+				$file['id']       = $image->id;
+				$file['position'] = $image->position;
+				$file['cover']    = $image->cover;
+				$file['legend']   = $image->legend;
+				$file['path']     = $image->getExistingImgPath();
+				$file['shops']    = $json_shops;
+
+				@unlink(_PS_TMP_IMG_DIR_.'product_'.(int)$product->id.'.jpg');
+				@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$product->id.'_'.$this->context->shop->id.'.jpg');
+			}
+		}
+
+		die(Tools::jsonEncode(array($image_uploader->getName() => $files)));
+	}
+
 	public function initFormImages($obj)
 	{
 		$data = $this->createTemplate($this->tpl_form);
@@ -3679,12 +3794,17 @@ class AdminProductsControllerCore extends AdminController
 				foreach ($images as $k => $image)
 					$images[$k] = new Image($image['id_image']);
 
+
 				if ($this->context->shop->getContext() == Shop::CONTEXT_SHOP)
 					$current_shop_id = (int)$this->context->shop->id;
 				else
 					$current_shop_id = 0;
 
 				$languages = Language::getLanguages(true);
+				$image_uploader = new HelperImageUploader('file');
+				$image_uploader->setMultiple(true)->setUseAjax(true)->setUrl(
+					Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$obj->id
+					.'&action=addProductImage');
 					
 				$data->assign(array(
 						'countImages' => $count_images,
@@ -3697,8 +3817,17 @@ class AdminProductsControllerCore extends AdminController
 						'max_image_size' => $this->max_image_size / 1024 / 1024,
 						'up_filename' => (string)Tools::getValue('virtual_product_filename_attribute'),
 						'currency' => $this->context->currency,
-						'current_shop_id' => $current_shop_id
+						'current_shop_id' => $current_shop_id,
+						'languages' => $this->_languages,
+						'default_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
+						'image_uploader' => $image_uploader->render()
 				));
+
+				$type = ImageType::getByNameNType('%', 'products', 'height');
+				if (isset($type['name']))
+					$data->assign('imageType', $type['name']);
+				else
+					$data->assign('imageType', 'small_default');
 			}
 			else
 				$this->displayWarning($this->l('You must save the product in this shop before adding images.'));	
@@ -3755,7 +3884,11 @@ class AdminProductsControllerCore extends AdminController
 					$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities($this->getFieldValue($product, 'available_date'), $this->context->language->id)) : '0000-00-00');
 
 					$i = 0;
-					$data->assign('imageType', ImageType::getByNameNType('small_default', 'products'));
+					$type = ImageType::getByNameNType('%', 'products', 'height');
+					if (isset($type['name']))
+						$data->assign('imageType', $type['name']);
+					else
+						$data->assign('imageType', 'small_default');
 					$data->assign('imageWidth', (isset($image_type['width']) ? (int)($image_type['width']) : 64) + 25);
 					foreach ($images as $k => $image)
 					{
@@ -3868,6 +4001,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$helper = new HelperList();
 		$helper->identifier = 'id_product_attribute';
+		$helper->table_id = 'combinations-list';
 		$helper->token = $this->token;
 		$helper->currentIndex = self::$currentIndex;
 		$helper->no_link = true;

@@ -153,6 +153,8 @@ class CacheMemcacheCore extends Cache
 	 */
 	protected function _writeKeys()
 	{
+		if (!$this->is_connected)
+			return false;
 		$this->memcache->set(_COOKIE_IV_, $this->keys);
 	}
 
