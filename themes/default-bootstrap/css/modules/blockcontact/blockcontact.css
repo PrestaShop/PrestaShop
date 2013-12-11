@@ -1,26 +1,19 @@
 /* block CONTACT ******************************************************************************* */
 @media (max-width: 767px) {
   #contact_block {
-    margin-bottom: 20px;
-  }
-}
+    margin-bottom: 20px; } }
 #contact_block .label {
-  display: none;
-}
+  display: none; }
 #contact_block .block_content {
   color: #888888;
-  padding: 0 20px 20px;
-}
+  padding: 0 20px 20px; }
 #contact_block p {
-  margin-bottom: 4px;
-}
+  margin-bottom: 4px; }
 #contact_block p.tel {
   font: 400 17px/21px Arial, Helvetica, sans-serif;
   color: white;
-  margin-bottom: 6px;
-}
-#contact_block p.tel i {
-  font-size: 25px;
-  vertical-align: -2px;
-  padding-right: 10px;
-}
+  margin-bottom: 6px; }
+  #contact_block p.tel i {
+    font-size: 25px;
+    vertical-align: -2px;
+    padding-right: 10px; }

@@ -24,7 +24,7 @@
 *}
 
 {capture name=path}
-	<a href="{$link->getPageLink('my-account', true)|escape:'html'}">
+	<a href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}">
 		{l s='My account'}
 	</a>
 	<span class="navigation-pipe">{$navigationPipe}</span>
@@ -72,7 +72,7 @@
 							{/if}
 							<a 
 							class="color-myaccount" 
-							href="javascript:showOrder(1, {$order.id_order|intval}, '{$link->getPageLink('order-detail', true)|escape:'html'}');">
+							href="javascript:showOrder(1, {$order.id_order|intval}, '{$link->getPageLink('order-detail', true)|escape:'html':'UTF-8'}');">
 								{Order::getUniqReferenceOf($order.id_order)}
 							</a>
 						</td>
@@ -96,7 +96,7 @@
 							{if (isset($order.invoice) && $order.invoice && isset($order.invoice_number) && $order.invoice_number) && isset($invoiceAllowed) && $invoiceAllowed == true}
 								<a 
 								class="link-button" 
-								href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order.id_order}")|escape:'html'}" 
+								href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order.id_order}")|escape:'html':'UTF-8'}" 
 								title="{l s='Invoice'}" 
 								target="_blank">
 									<i class="icon-file-text large"></i>{l s='PDF'}
@@ -108,7 +108,7 @@
 						<td class="history_detail">
 							<a 
 							class="btn btn-default button button-small" 
-							href="javascript:showOrder(1, {$order.id_order|intval}, '{$link->getPageLink('order-detail', true)|escape:'html'}');">
+							href="javascript:showOrder(1, {$order.id_order|intval}, '{$link->getPageLink('order-detail', true)|escape:'html':'UTF-8'}');">
 								<span>
 									{l s='Details'}<i class="icon-chevron-right right"></i>
 								</span>
@@ -116,12 +116,12 @@
 							{if isset($opc) && $opc}
 								<a 
 								class="link-button" 
-								href="{$link->getPageLink('order-opc', true, NULL, "submitReorder&id_order={$order.id_order}")|escape:'html'}" 
+								href="{$link->getPageLink('order-opc', true, NULL, "submitReorder&id_order={$order.id_order}")|escape:'html':'UTF-8'}" 
 								title="{l s='Reorder'}">
 							{else}
 								<a 
 								class="link-button" 
-								href="{$link->getPageLink('order', true, NULL, "submitReorder&id_order={$order.id_order}")|escape:'html'}" 
+								href="{$link->getPageLink('order', true, NULL, "submitReorder&id_order={$order.id_order}")|escape:'html':'UTF-8'}" 
 								title="{l s='Reorder'}">
 							{/if}
 		                        <i class="icon-refresh"></i>{l s='Reorder'}
@@ -154,7 +154,7 @@
 
 <ul class="footer_links clearfix">
 	<li>
-		<a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html'}">
+		<a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}">
 			<span>
 				<i class="icon-chevron-left"></i> {l s='Back to Your Account'}
 			</span>

@@ -33,19 +33,19 @@ class BlockLanguages extends Module
 	{
 		$this->name = 'blocklanguages';
 		$this->tab = 'front_office_features';
-		$this->version = 1.1;
+		$this->version = 1.2;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
 		parent::__construct();
 
 		$this->displayName = $this->l('Language block');
-		$this->description = $this->l('Adds a block allowing customers to select a website language. ');
+		$this->description = $this->l('Adds a block allowing customers to select a website language.');
 	}
 
 	public function install()
 	{
-		return (parent::install() && $this->registerHook('top') && $this->registerHook('header'));
+		return (parent::install() && $this->registerHook('displayNav') && $this->registerHook('displayHeader'));
 	}
 
 	private function _prepareHook($params)
@@ -94,14 +94,20 @@ class BlockLanguages extends Module
 	* @param array $params Parameters
 	* @return string Content
 	*/
-	public function hookTop($params)
+	public function hookDisplayTop($params)
 	{
 		if (!$this->_prepareHook($params))
 			return;
 		return $this->display(__FILE__, 'blocklanguages.tpl');
 	}
 
-	public function hookHeader($params)
+	public function hookDisplayNav($params)
+	{
+
+		return $this->hookDisplayTop($params);
+	}
+
+	public function hookDisplayHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'blocklanguages.css', 'all');
 	}

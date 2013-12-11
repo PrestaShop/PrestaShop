@@ -67,7 +67,7 @@ $('document').ready(function(){
 			
             <div class="row">
             <div class="product clearfix col-xs-12 col-sm-6">
-				<img src="{$link->getImageLink($stf_product->link_rewrite, $stf_product_cover, 'home_default')|escape:'html'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$stf_product->name|escape:html:'UTF-8'}" />
+				<img src="{$link->getImageLink($stf_product->link_rewrite, $stf_product_cover, 'home_default')|escape:'html':'UTF-8'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$stf_product->name|escape:'html':'UTF-8'}" />
 				<div class="product_desc">
 					<p class="product_name"><strong>{$stf_product->name}</strong></p>
 					{$stf_product->description_short}

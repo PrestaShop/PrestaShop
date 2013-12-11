@@ -57,7 +57,7 @@ $(function () {ldelim}
 				</script>
 				<div id="scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}" style="display:none;">
                 	<div class="product-image-container">
-						<img class="img-responsive replace-2x" src="{$link->getImageLink($product.id_product, $imageIds, 'home_default')|escape:'html'}" alt="" />
+						<img class="img-responsive replace-2x" src="{$link->getImageLink($product.id_product, $imageIds, 'home_default')|escape:'html':'UTF-8'}" alt="" />
                     </div>
 					<p class="product-name"><span class="product_name">{$product.details->name}</span></p>
 					<div class="description">{$product.details->description_short|strip_tags|truncate:170:'...'}</div>

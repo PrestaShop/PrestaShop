@@ -195,23 +195,23 @@
 						{if $jqZoomEnabled && $have_image && !$content_only}
 							<a
 								class="jqzoom"
-								title="{if !empty($cover.legend)}{$cover.legend|escape:'html'}{else}{$product->name|escape:'html'}{/if}"
+								title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}"
 								rel="gal1"
-								href="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')|escape:'html'}"
+								href="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')|escape:'html':'UTF-8'}"
 								itemprop="url">
 								<img
 									itemprop="image"
-									src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html'}"
-									title="{if !empty($cover.legend)}{$cover.legend|escape:'html'}{else}{$product->name|escape:'html'}{/if}"
-									alt="{if !empty($cover.legend)}{$cover.legend|escape:'html'}{else}{$product->name|escape:'html'}{/if}"/>
+									src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html':'UTF-8'}"
+									title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}"
+									alt="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}"/>
 							</a>
 						{else}
 							<img
 								id="bigpic"
 								itemprop="image"
-								src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html'}"
-								title="{if !empty($cover.legend)}{$cover.legend|escape:'html'}{else}{$product->name|escape:'html'}{/if}"
-								alt="{if !empty($cover.legend)}{$cover.legend|escape:'html'}{else}{$product->name|escape:'html'}{/if}"
+								src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html':'UTF-8'}"
+								title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}"
+								alt="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}"
 								width="{$largeSize.width}"
 								height="{$largeSize.height}"/>
 							{if !$content_only}
@@ -254,17 +254,17 @@
 							{foreach from=$images item=image name=thumbnails}
 								{assign var=imageIds value="`$product->id`-`$image.id_image`"}
 								{if !empty($image.legend)}
-									{assign var=imageTitlte value=$image.legend|escape:'html'}
+									{assign var=imageTitlte value=$image.legend|escape:'html':'UTF-8'}
 								{else}
-									{assign var=imageTitlte value=$product->name|escape:'html'}
+									{assign var=imageTitlte value=$product->name|escape:'html':'UTF-8'}
 								{/if}
 								<li id="thumbnail_{$image.id_image}"{if $smarty.foreach.thumbnails.last} class="last"{/if}>
 									<a 
 										{if $jqZoomEnabled && $have_image && !$content_only}
 											href="javascript:void(0);"
-											rel="{literal}{{/literal}gallery: 'gal1', smallimage: '{$link->getImageLink($product->link_rewrite, $imageIds, 'large_default')|escape:'html'}',largeimage: '{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html'}'{literal}}{/literal}"
+											rel="{literal}{{/literal}gallery: 'gal1', smallimage: '{$link->getImageLink($product->link_rewrite, $imageIds, 'large_default')|escape:'html':'UTF-8'}',largeimage: '{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html':'UTF-8'}'{literal}}{/literal}"
 										{else}
-											href="{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html'}"
+											href="{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html':'UTF-8'}"
 											data-fancybox-group="other-views"
 											class="thickbox{if $smarty.foreach.thumbnails.first} shown{/if}"
 										{/if}
@@ -272,7 +272,7 @@
 										<img
 											class="img-responsive"
 											id="thumb_{$image.id_image}"
-											src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')|escape:'html'}"
+											src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')|escape:'html':'UTF-8'}"
 											alt="{$imageTitlte}"
 											title="{$imageTitlte}"
 											height="{$mediumSize.height}"
@@ -296,7 +296,7 @@
 			{if isset($images) && count($images) > 1}
 				<p class="resetimg clear">
 					<span id="wrapResetImages" style="display: none;">
-						<a id="resetImages" href="{$link->getProductLink($product)|escape:'html'}" onclick="$('span#wrapResetImages').hide('slow');return (false);">
+						<a id="resetImages" href="{$link->getProductLink($product)|escape:'html':'UTF-8'}" onclick="$('span#wrapResetImages').hide('slow');return (false);">
 							<i class="icon-repeat"></i>
 							{l s='Display all pictures'}
 						</a>
@@ -336,7 +336,7 @@
 							{foreach from=$packItems item=packItem}
 							
 							<div class="pack_content">
-								{$packItem.pack_quantity} x <a href="{$link->getProductLink($packItem.id_product, $packItem.link_rewrite, $packItem.category)|escape:'html'}">{$packItem.name|escape:'html':'UTF-8'}</a>
+								{$packItem.pack_quantity} x <a href="{$link->getProductLink($packItem.id_product, $packItem.link_rewrite, $packItem.category)|escape:'html':'UTF-8'}">{$packItem.name|escape:'html':'UTF-8'}</a>
 								<p>{$packItem.description_short}</p>
 							</div>
 							{/foreach}
@@ -374,7 +374,7 @@
 		
 			{if ($product->show_price AND !isset($restricted_country_mode)) OR isset($groups) OR $product->reference OR (isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS)}
 				<!-- add to cart form-->
-				<form id="buy_block" {if $PS_CATALOG_MODE AND !isset($groups) AND $product->quantity > 0}class="hidden"{/if} action="{$link->getPageLink('cart')|escape:'html'}" method="post">
+				<form id="buy_block" {if $PS_CATALOG_MODE AND !isset($groups) AND $product->quantity > 0}class="hidden"{/if} action="{$link->getPageLink('cart')|escape:'html':'UTF-8'}" method="post">
 					<!-- hidden datas -->
 					<p class="hidden">
 						<input type="hidden" name="token" value="{$static_token}" />
@@ -621,7 +621,7 @@
 												class="product-image product_image">
 												<img
 													class="lazyOwl"
-													src="{$link->getImageLink($accessory.link_rewrite, $accessory.id_image, 'home_default')|escape:'html'}"
+													src="{$link->getImageLink($accessory.link_rewrite, $accessory.id_image, 'home_default')|escape:'html':'UTF-8'}"
 													alt="{$accessory.legend|escape:'html':'UTF-8'}"
 													width="{$homeSize.width}"
 													height="{$homeSize.height}"
@@ -654,7 +654,7 @@
 														<div>
 															<a
 																class="exclusive button ajax_add_to_cart_button"
-																href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$accessory.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html'}"
+																href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$accessory.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html':'UTF-8'}"
 																data-id-product="{$accessory.id_product|intval}"
 																title="{l s='Add to cart'}">
 																<span>{l s='Add to cart'}</span>
@@ -728,7 +728,7 @@
 			<section class="page-product-box">
 				<h3 class="page-product-heading">{l s='Download'}</h3>
 				{foreach from=$attachments item=attachment}
-					<a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")|escape:'html'}">
+					<a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")|escape:'html':'UTF-8'}">
 						<span>{$attachment.name|escape:'html':'UTF-8'}</span>
 					</a>
 					<br />
@@ -761,7 +761,7 @@
 											{if isset($pictures.$key)}
 												<div class="customizationUploadBrowse">
 													<img src="{$pic_dir}{$pictures.$key}_small" alt="" />
-														<a href="{$link->getProductDeletePictureLink($product, $field.id_customization_field)|escape:'html'}" title="{l s='Delete'}" >
+														<a href="{$link->getProductDeletePictureLink($product, $field.id_customization_field)|escape:'html':'UTF-8'}" title="{l s='Delete'}" >
 															<img src="{$img_dir}icon/delete.gif" alt="{l s='Delete'}" class="customization_delete_icon" width="11" height="13" />
 														</a>
 												</div>

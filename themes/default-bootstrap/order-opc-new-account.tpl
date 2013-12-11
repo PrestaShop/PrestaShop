@@ -1,7 +1,7 @@
 <div id="opc_new_account" class="opc-main-block">
 	<div id="opc_new_account-overlay" class="opc-overlay" style="display: none;"></div>
 	<h1 class="page-heading step-num"><span>1</span> {l s='Account'}</h1>
-	<form action="{$link->getPageLink('authentication', true, NULL, "back=order-opc")|escape:'html'}" method="post" id="login_form" class="box">
+	<form action="{$link->getPageLink('authentication', true, NULL, "back=order-opc")|escape:'html':'UTF-8'}" method="post" id="login_form" class="box">
 		<fieldset>
 			<h3 class="page-subheading">{l s='Already registered?'}</h3>
 			<p><a href="#" id="openLoginFormBlock">&raquo; {l s='Click here'}</a></p>
@@ -17,7 +17,7 @@
 					<label for="login_passwd">{l s='Password'}</label>
 					<input class="form-control" type="password" id="login_passwd" name="login_passwd" />
 				</p>
-                <a href="{$link->getPageLink('password', true)|escape:'html'}" class="lost_password">{l s='Forgot your password?'}</a>
+                <a href="{$link->getPageLink('password', true)|escape:'html':'UTF-8'}" class="lost_password">{l s='Forgot your password?'}</a>
 				<p class="submit">
 					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'html':'UTF-8'}" />{/if}
                     <button type="submit" id="SubmitLogin" name="SubmitLogin" class="button btn btn-default button-medium"><span><i class="icon-lock left"></i>{l s='Login'}</span></button>

@@ -25,7 +25,7 @@
 <!-- block seach mobile -->
 {if isset($hook_mobile)}
 <div class="input_search" data-role="fieldcontain">
-	<form method="get" action="{$link->getPageLink('search')|escape:'html'}" id="searchbox">
+	<form method="get" action="{$link->getPageLink('search')|escape:'html':'UTF-8'}" id="searchbox">
 		<input type="hidden" name="controller" value="search" />
 		<input type="hidden" name="orderby" value="position" />
 		<input type="hidden" name="orderway" value="desc" />
@@ -35,7 +35,7 @@
 {else}
 <!-- Block search module TOP -->
 <div id="search_block_top">
-	<form method="get" action="{$link->getPageLink('search')|escape:'html'}" id="searchbox">
+	<form method="get" action="{$link->getPageLink('search')|escape:'html':'UTF-8'}" id="searchbox">
 		<div>
 			<input type="hidden" name="controller" value="search" />
 			<input type="hidden" name="orderby" value="position" />
