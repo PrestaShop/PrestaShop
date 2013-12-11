@@ -508,7 +508,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'name' => 'link_rewrite',
 					'lang' => true,
 					'required' => true,
-					'hint' => $this->l('Only letters and the minus (-) character are allowed.')
+					'hint' => $this->l('Only letters, numbers, underscore (_) and the minus (-) character are allowed.')
 				),
 				array(
 					'type' => 'group',
