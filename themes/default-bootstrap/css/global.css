@@ -3816,6 +3816,169 @@ textarea {
   position: relative;
   padding-bottom: 50px; }
 
+header {
+  z-index: 1;
+  position: relative;
+  background: white; }
+  header #banner-row {
+    background: black; }
+  header #nav-row {
+    background: #333333; }
+    header #nav-row nav {
+      float: right; }
+  header #header-row {
+    position: relative; }
+    @media (min-width: 768px) and (max-width: 991px) {
+      header #header-row {
+        width: 250px;
+        top: 35px; } }
+    @media (min-width: 480px) and (max-width: 767px) {
+      header #header-row {
+        width: 174px;
+        left: 15px;
+        top: 48px; } }
+    @media (max-width: 479px) {
+      header #header-row {
+        width: 200px;
+        left: 50%;
+        margin-left: -100px;
+        top: 20px; } }
+  header .header_user_info {
+    float: left;
+    border-left: 1px solid #515151;
+    border-right: 1px solid #515151; }
+    @media (max-width: 479px) {
+      header .header_user_info {
+        width: 25%;
+        text-align: center; } }
+    header .header_user_info a {
+      color: white;
+      font-weight: bold;
+      display: block;
+      padding: 8px 9px 11px 8px; }
+      @media (max-width: 479px) {
+        header .header_user_info a {
+          font-size: 11px; } }
+  header .shop-phone {
+    display: block;
+    padding: 5px 0 10px; }
+    @media (max-width: 767px) {
+      header .shop-phone {
+        display: none; } }
+    header .shop-phone i {
+      font-size: 21px;
+      line-height: 21px;
+      color: white;
+      padding-right: 7px; }
+    header .shop-phone strong {
+      color: white; }
+  header #currencies-block-top,
+  header #languages-block-top {
+    float: right;
+    border-left: 1px solid #515151;
+    position: relative; }
+    @media (max-width: 479px) {
+      header #currencies-block-top,
+      header #languages-block-top {
+        width: 25%; } }
+    header #currencies-block-top span.firstWord,
+    header #languages-block-top span.firstWord {
+      display: none; }
+    header #currencies-block-top div.current,
+    header #languages-block-top div.current {
+      font-weight: bold;
+      padding: 8px 10px 10px 10px;
+      color: white;
+      text-shadow: 1px 1px rgba(0, 0, 0, 0.2); }
+      @media (max-width: 479px) {
+        header #currencies-block-top div.current,
+        header #languages-block-top div.current {
+          text-align: center;
+          padding: 9px 5px 10px;
+          font-size: 11px; } }
+      header #currencies-block-top div.current strong,
+      header #languages-block-top div.current strong {
+        color: #777777; }
+      header #currencies-block-top div.current:after,
+      header #languages-block-top div.current:after {
+        content: "\f0d7";
+        font-family: "FontAwesome";
+        font-size: 18px;
+        line-height: 18px;
+        color: #686666;
+        vertical-align: -2px;
+        padding-left: 12px; }
+        @media (max-width: 479px) {
+          header #currencies-block-top div.current:after,
+          header #languages-block-top div.current:after {
+            padding-left: 2px;
+            font-size: 13px;
+            line-height: 13px;
+            vertical-align: 0; } }
+      @media (max-width: 479px) {
+        header #currencies-block-top div.current .cur-label,
+        header #languages-block-top div.current .cur-label {
+          display: none; } }
+    header #currencies-block-top ul,
+    header #languages-block-top ul {
+      display: none;
+      position: absolute;
+      top: 37px;
+      left: 0;
+      width: 157px;
+      background: #333333;
+      z-index: 2; }
+      header #currencies-block-top ul li,
+      header #languages-block-top ul li {
+        color: white;
+        line-height: 35px;
+        font-size: 13px; }
+        header #currencies-block-top ul li a,
+        header #currencies-block-top ul li > span,
+        header #languages-block-top ul li a,
+        header #languages-block-top ul li > span {
+          padding: 0 10px 0 12px;
+          display: block;
+          color: white; }
+        header #currencies-block-top ul li.selected, header #currencies-block-top ul li:hover a,
+        header #languages-block-top ul li.selected,
+        header #languages-block-top ul li:hover a {
+          background: #484848; }
+  header #contact-link {
+    float: right;
+    border-left: 1px solid #515151; }
+    @media (max-width: 479px) {
+      header #contact-link {
+        width: 25%;
+        text-align: center; } }
+    header #contact-link a {
+      display: block;
+      color: white;
+      font-weight: bold;
+      padding: 8px 10px 11px 10px;
+      text-shadow: 1px 1px rgba(0, 0, 0, 0.2); }
+      @media (max-width: 479px) {
+        header #contact-link a {
+          font-size: 11px;
+          padding-left: 5px;
+          padding-right: 5px; } }
+  header #contact-link a,
+  header #header-row .header_user_info a,
+  header #currencies-block-top div.current,
+  header #languages-block-top div.current {
+    cursor: pointer; }
+    header #contact-link a:hover, header #contact-link a.active,
+    header #header-row .header_user_info a:hover,
+    header #header-row .header_user_info a.active,
+    header #currencies-block-top div.current:hover,
+    header #currencies-block-top div.current.active,
+    header #languages-block-top div.current:hover,
+    header #languages-block-top div.current.active {
+      background: #2b2b2b; }
+
+.ie8 #header #header_logo {
+  width: 350px; }
+
 #center_column .page_product_box h3 {
   color: #555454;
   text-transform: uppercase;
@@ -5283,179 +5446,8 @@ div.star a:hover {
   padding: 5px 0;
   color: #333333; }
 
-.banner-top {
-  background: black; }
-
 .header-container {
   background: white; }
-
-#header {
-  padding-bottom: 21px;
-  position: relative;
-  background: white; }
-  #header .header-row {
-    position: relative; }
-    #header .header-row:first-child {
-      background-color: #333333; }
-    #header .header-row > .container {
-      position: relative; }
-    #header .header-row .shop-phone {
-      display: block;
-      padding: 5px 0 10px; }
-      @media (max-width: 767px) {
-        #header .header-row .shop-phone {
-          display: none; } }
-      #header .header-row .shop-phone i {
-        font-size: 21px;
-        line-height: 21px;
-        color: white;
-        padding-right: 7px; }
-      #header .header-row .shop-phone strong {
-        color: white; }
-    #header .header-row nav {
-      float: right; }
-    #header .header-row .header_user_info {
-      float: left;
-      border-left: 1px solid #515151;
-      border-right: 1px solid #515151; }
-      @media (max-width: 479px) {
-        #header .header-row .header_user_info {
-          width: 25%;
-          text-align: center; } }
-      #header .header-row .header_user_info a {
-        color: white;
-        font-weight: bold;
-        display: block;
-        padding: 8px 9px 11px 8px; }
-        @media (max-width: 479px) {
-          #header .header-row .header_user_info a {
-            font-size: 11px; } }
-  #header #header_logo {
-    position: absolute;
-    left: 0;
-    top: 27px;
-    z-index: 1; }
-    @media (min-width: 768px) and (max-width: 991px) {
-      #header #header_logo {
-        width: 250px;
-        top: 35px; } }
-    @media (min-width: 480px) and (max-width: 767px) {
-      #header #header_logo {
-        width: 174px;
-        left: 15px;
-        top: 48px; } }
-    @media (max-width: 479px) {
-      #header #header_logo {
-        width: 200px;
-        left: 50%;
-        margin-left: -100px;
-        top: 20px; } }
-  #header #currencies-block-top,
-  #header #languages-block-top {
-    float: right;
-    border-left: 1px solid #515151;
-    position: relative; }
-    @media (max-width: 479px) {
-      #header #currencies-block-top,
-      #header #languages-block-top {
-        width: 25%; } }
-    #header #currencies-block-top span.firstWord,
-    #header #languages-block-top span.firstWord {
-      display: none; }
-    #header #currencies-block-top div.current,
-    #header #languages-block-top div.current {
-      font-weight: bold;
-      padding: 8px 10px 10px 10px;
-      color: white;
-      text-shadow: 1px 1px rgba(0, 0, 0, 0.2); }
-      @media (max-width: 479px) {
-        #header #currencies-block-top div.current,
-        #header #languages-block-top div.current {
-          text-align: center;
-          padding: 9px 5px 10px;
-          font-size: 11px; } }
-      #header #currencies-block-top div.current strong,
-      #header #languages-block-top div.current strong {
-        color: #777777; }
-      #header #currencies-block-top div.current:after,
-      #header #languages-block-top div.current:after {
-        content: "\f0d7";
-        font-family: "FontAwesome";
-        font-size: 18px;
-        line-height: 18px;
-        color: #686666;
-        vertical-align: -2px;
-        padding-left: 12px; }
-        @media (max-width: 479px) {
-          #header #currencies-block-top div.current:after,
-          #header #languages-block-top div.current:after {
-            padding-left: 2px;
-            font-size: 13px;
-            line-height: 13px;
-            vertical-align: 0; } }
-      @media (max-width: 479px) {
-        #header #currencies-block-top div.current .cur-label,
-        #header #languages-block-top div.current .cur-label {
-          display: none; } }
-    #header #currencies-block-top ul,
-    #header #languages-block-top ul {
-      display: none;
-      position: absolute;
-      top: 37px;
-      left: 0;
-      width: 157px;
-      background: #333333;
-      z-index: 2; }
-      #header #currencies-block-top ul li,
-      #header #languages-block-top ul li {
-        color: white;
-        line-height: 35px;
-        font-size: 13px; }
-        #header #currencies-block-top ul li a,
-        #header #currencies-block-top ul li > span,
-        #header #languages-block-top ul li a,
-        #header #languages-block-top ul li > span {
-          padding: 0 10px 0 12px;
-          display: block;
-          color: white; }
-        #header #currencies-block-top ul li.selected, #header #currencies-block-top ul li:hover a,
-        #header #languages-block-top ul li.selected,
-        #header #languages-block-top ul li:hover a {
-          background: #484848; }
-  #header #contact-link {
-    float: right;
-    border-left: 1px solid #515151; }
-    @media (max-width: 479px) {
-      #header #contact-link {
-        width: 25%;
-        text-align: center; } }
-    #header #contact-link a {
-      display: block;
-      color: white;
-      font-weight: bold;
-      padding: 8px 10px 11px 10px;
-      text-shadow: 1px 1px rgba(0, 0, 0, 0.2); }
-      @media (max-width: 479px) {
-        #header #contact-link a {
-          font-size: 11px;
-          padding-left: 5px;
-          padding-right: 5px; } }
-  #header #contact-link a,
-  #header .header-row .header_user_info a,
-  #header #currencies-block-top div.current,
-  #header #languages-block-top div.current {
-    cursor: pointer; }
-    #header #contact-link a:hover, #header #contact-link a.active,
-    #header .header-row .header_user_info a:hover,
-    #header .header-row .header_user_info a.active,
-    #header #currencies-block-top div.current:hover,
-    #header #currencies-block-top div.current.active,
-    #header #languages-block-top div.current:hover,
-    #header #languages-block-top div.current.active {
-      background: #2b2b2b; }
-
-.ie8 #header #header_logo {
-  width: 350px; }
 
 .breadcrumb {
   display: inline-block;
