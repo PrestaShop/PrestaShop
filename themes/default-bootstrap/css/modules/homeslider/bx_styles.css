@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /**
  * BxSlider v4.0 - Fully loaded, responsive content slider
  * http://bxslider.com
@@ -15,7 +16,6 @@
 #homepage-slider {
   padding-left: 0;
   padding-right: 0;
-  padding-top: 50px;
   margin-bottom: 14px;
   width: 66.6%;
   max-width: 779px;
