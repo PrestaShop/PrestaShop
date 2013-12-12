@@ -1,91 +1,60 @@
-/*
-Syntax error: Undefined mixin 'border-radius'.
-        on line 34 of C:/wamp/www/PrestaShop/themes/default-bootstrap/sass\my-account.scss, in `border-radius'
-        from line 34 of C:/wamp/www/PrestaShop/themes/default-bootstrap/sass\my-account.scss
-
-Backtrace:
-C:/wamp/www/PrestaShop/themes/default-bootstrap/sass\my-account.scss:34:in `border-radius'
-C:/wamp/www/PrestaShop/themes/default-bootstrap/sass\my-account.scss:34
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:253:in `visit_mixin'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:37:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:100:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:53:in `block in visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:53:in `map'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:53:in `visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:109:in `block in visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:108:in `visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:37:in `block in visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:320:in `visit_rule'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:37:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:100:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:53:in `block in visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:53:in `map'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:53:in `visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:109:in `block in visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:108:in `visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:37:in `block in visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:320:in `visit_rule'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:37:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:100:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:53:in `block in visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:53:in `map'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:53:in `visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:109:in `block in visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:108:in `visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:37:in `block in visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:320:in `visit_rule'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:37:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:100:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:53:in `block in visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:53:in `map'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:53:in `visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:109:in `block in visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:108:in `visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:37:in `block in visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:320:in `visit_rule'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:37:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:100:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:53:in `block in visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:53:in `map'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:53:in `visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:109:in `block in visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:108:in `visit_children'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:37:in `block in visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:128:in `visit_root'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/base.rb:37:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:100:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/visitors/perform.rb:7:in `visit'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/tree/root_node.rb:20:in `render'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/engine.rb:315:in `_render'
-C:/Program Files (x86)/Koala/rubygems/gems/sass-3.2.9/lib/sass/engine.rb:262:in `render'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/compiler.rb:140:in `block (2 levels) in compile'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/compiler.rb:126:in `timed'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/compiler.rb:139:in `block in compile'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/logger.rb:45:in `red'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/compiler.rb:138:in `compile'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/compiler.rb:118:in `compile_if_required'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/compiler.rb:103:in `block (2 levels) in run'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/compiler.rb:101:in `each'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/compiler.rb:101:in `block in run'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/compiler.rb:126:in `timed'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/compiler.rb:100:in `run'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/commands/update_project.rb:45:in `perform'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/commands/base.rb:18:in `execute'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/commands/project_base.rb:19:in `execute'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/exec/sub_command_ui.rb:43:in `perform!'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/lib/compass/exec/sub_command_ui.rb:15:in `run!'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/bin/compass:30:in `block in <top (required)>'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/bin/compass:44:in `call'
-C:/Program Files (x86)/Koala/rubygems/gems/compass-0.12.2/bin/compass:44:in `<top (required)>'
-C:/Program Files (x86)/Koala/bin/compass:18:in `load'
-C:/Program Files (x86)/Koala/bin/compass:18:in `<main>'
-*/
-body:before {
-  white-space: pre;
-  font-family: monospace;
-  content: "Syntax error: Undefined mixin 'border-radius'.\A         on line 34 of C:/wamp/www/PrestaShop/themes/default-bootstrap/sass\my-account.scss, in `border-radius'\A         from line 34 of C:/wamp/www/PrestaShop/themes/default-bootstrap/sass\my-account.scss"; }
+#my-account .addresses-lists {
+  margin-bottom: 30px; }
+#my-account ul.myaccount-link-list li {
+  overflow: hidden;
+  padding-bottom: 10px; }
+  #my-account ul.myaccount-link-list li a {
+    display: block;
+    overflow: hidden;
+    font: 600 16px/20px "Open Sans", sans-serif;
+    color: #555454;
+    text-shadow: 0px 1px white;
+    text-transform: uppercase;
+    text-decoration: none;
+    position: relative;
+    border: 1px solid;
+    border-color: #cacaca #b7b7b7 #9a9a9a #b7b7b7;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f7f7f7), color-stop(100%, #ededed));
+    background-image: -webkit-linear-gradient(#f7f7f7, #ededed);
+    background-image: -moz-linear-gradient(#f7f7f7, #ededed);
+    background-image: -o-linear-gradient(#f7f7f7, #ededed);
+    background-image: linear-gradient(#f7f7f7, #ededed);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px; }
+    #my-account ul.myaccount-link-list li a i {
+      font-size: 25px;
+      color: #fd7e01;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 52px;
+      height: 100%;
+      padding: 10px 0 0 0;
+      text-align: center;
+      border: 1px solid white;
+      -moz-border-radius-topleft: 4px;
+      -webkit-border-top-left-radius: 4px;
+      border-top-left-radius: 4px;
+      -moz-border-radius-bottomleft: 4px;
+      -webkit-border-bottom-left-radius: 4px;
+      border-bottom-left-radius: 4px; }
+    #my-account ul.myaccount-link-list li a span {
+      display: block;
+      padding: 13px 15px 15px 17px;
+      overflow: hidden;
+      border: 1px solid;
+      margin-left: 52px;
+      border-color: white white white #c8c8c8;
+      -moz-border-radius-topright: 5px;
+      -webkit-border-top-right-radius: 5px;
+      border-top-right-radius: 5px;
+      -moz-border-radius-bottomright: 5px;
+      -webkit-border-bottom-right-radius: 5px;
+      border-bottom-right-radius: 5px; }
+    #my-account ul.myaccount-link-list li a:hover {
+      filter: none;
+      background: #e7e7e7;
+      border-color: #9e9e9e #c2c2c2 #c8c8c8 #c2c2c2; }
