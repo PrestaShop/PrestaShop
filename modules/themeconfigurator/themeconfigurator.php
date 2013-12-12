@@ -290,7 +290,7 @@ class ThemeConfigurator extends Module
         protected function deleteImage($image) 
         {
                 $file_name = $this->uploads_path.$image;
-                if (realpath(dirname($file_name)).DIRECTORY_SEPARATOR != $this->uploads_path)
+                if (realpath(dirname($file_name)) != realpath($this->uploads_path))
                         Tools::dieOrLog(sprintf('Could not find upload directory'));
 
                 if ($image != '' && is_file($file_name))
