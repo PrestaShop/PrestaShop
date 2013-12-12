@@ -31,10 +31,10 @@
 	<head>
 		<title>{$meta_title|escape:'html':'UTF-8'}</title>
 		{if isset($meta_description) AND $meta_description}
-		  <meta name="description" content="{$meta_description|escape:html:'UTF-8'}" />
+		  <meta name="description" content="{$meta_description|escape:'html':'UTF-8'}" />
 		{/if}
 		{if isset($meta_keywords) AND $meta_keywords}
-		  <meta name="keywords" content="{$meta_keywords|escape:html:'UTF-8'}" />
+		  <meta name="keywords" content="{$meta_keywords|escape:'html':'UTF-8'}" />
 		{/if}
 		<meta charset="utf-8" />
 		<meta name="generator" content="PrestaShop" />
@@ -45,14 +45,11 @@
 		<link rel="icon" type="image/vnd.microsoft.icon" href="{$favicon_url}?{$img_update_time}" />
 		<link rel="shortcut icon" type="image/x-icon" href="{$favicon_url}?{$img_update_time}" />
 
-		<link rel="stylesheet" href="{$css_dir}highdpi.css" type="text/css" media="screen" />
-		<link rel="stylesheet" href="{$css_dir}bootstrap_lib/bootstrap.css" type="text/css" media="all" />
-		<link rel="stylesheet" href="{$css_dir}font-awesome.css" type="text/css" media="all" />
+		<!-- <link rel="stylesheet" href="{$css_dir}highdpi.css" type="text/css" media="screen" /> -->
 		<link rel="stylesheet" href="{$css_dir}jquery/uniform.default.css" type="text/css" media="all" />
 		<link rel="stylesheet" href="{$css_dir}jquery/footable.core.css" type="text/css" media="all" />
 		<link rel="stylesheet" href="{$css_dir}jquery/jquery.bxslider.css" type="text/css" media="all" />
 
-		<link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic'  type='text/css' />
 		{if isset($css_files)}
 			{foreach from=$css_files key=css_uri item=media}
 				<link rel="stylesheet" href="{$css_uri}" type="text/css" media="{$media}" />
@@ -92,114 +89,38 @@
 		<script src="{$js_dir}jquery/jquery.bxslider.js"></script>
 		<script src="{$js_dir}jquery/footable.js"></script>
 		<script src="{$js_dir}jquery/footable.sort.js"></script>
-		<script src="{$js_dir}jquery/resonsive_utilites.js"></script>
+		<script src="{$js_dir}jquery/responsive_utilites.js"></script>
 		{$HOOK_HEADER}
 	</head>
 	<body{if isset($page_name)} id="{$page_name|escape:'html':'UTF-8'}"{/if} class="{if isset($page_name)}{$page_name|escape:'html':'UTF-8'}{/if}{if isset($body_classes) && $body_classes|@count} {implode value=$body_classes separator=' '}{/if}{if $hide_left_column} hide-left-column{/if}{if $hide_right_column} hide-right-column{/if}{if $content_only} content_only{/if} lang_{$lang_iso}">
 	{if !$content_only}
 		{if isset($restricted_country_mode) && $restricted_country_mode}
-		<div id="restricted-country">
-			<p>{l s='You cannot place a new order from your country.'} <span class="bold">{$geolocation_country}</span></p>
-		</div>
+			<div id="restricted-country">
+				<p>{l s='You cannot place a new order from your country.'} <span class="bold">{$geolocation_country}</span></p>
+			</div>
 		{/if}
 		<div id="page">
-			<!-- Header -->
-			<div class="header-container">
-				<header id="header">
-					<div class="header-row">
-						<nav class="container clearfix">
-							 
-							<div id="header_user_info">
-								{if $logged}
-									<a class="logout" href="{$link->getPageLink('index', true, NULL, "mylogout")|escape:'html'}" rel="nofollow" title="{l s='Log me out'}">{l s='Sign out'}</a>
-								{else}
-									<a class="login" href="{$link->getPageLink('my-account', true)|escape:'html'}" rel="nofollow" title="{l s='Login to your customer account'}">{l s='Sign in'}</a>
-								{/if}
-							</div> <!-- #header_user_info -->
-							{if count($languages) > 1}
-								<div id="languages-block-top">
-									<div id="countries">
-										{foreach from=$languages key=k item=language name="languages"}
-											{if $language.iso_code == $lang_iso}
-												<div class="current">
-													<span>{$language.name}</span>
-												</div>
-											{/if}
-										{/foreach}
-										<ul id="first-languages" class="countries_ul toogle_content">
-											{foreach from=$languages key=k item=language name="languages"}
-												<li {if $language.iso_code == $lang_iso}class="selected"{/if}>
-												{if $language.iso_code != $lang_iso}
-													{assign var=indice_lang value=$language.id_lang}
-													{if isset($lang_rewrite_urls.$indice_lang)}
-														<a href="{$lang_rewrite_urls.$indice_lang|escape:htmlall}" title="{$language.name}">
-													{else}
-														<a href="{$link->getLanguageLink($language.id_lang)|escape:htmlall}" title="{$language.name}">
-													{/if}
-												{/if}
-														<span>{$language.name}</span>
-												{if $language.iso_code != $lang_iso}
-													</a>
-												{/if}
-												</li>
-											{/foreach}
-										</ul>
-									</div>
-								</div> <!-- #languages-block-top -->
-								<script type="text/javascript">
-									$(document).ready(function(){
-										$('#countries .current span, #countries .countries_ul li span').each(function() {
-											var h = $(this).html();
-											var index = h.indexOf(' ');
-												if(index == -1) {
-													index = h.length;
-												}
-											$(this).html('<span class="firstWord">'+ h.substring(index, h.length) + '</span>' + h.substring(0, index));
-										});
-									}); 
-								</script>
-							{/if}
-							{if count($currencies) > 1}
-								<div id="currencies-block-top">
-									<form id="setCurrency" action="{$request_uri}" method="post">
-										<div class="current">
-											<input type="hidden" name="id_currency" id="id_currency" value=""/>
-											<input type="hidden" name="SubmitCurrency" value="" />
-											<span class="cur-label">{l s='Currency'} :</span>
-											{foreach from=$currencies key=k item=f_currency}
-												{if $cookie->id_currency == $f_currency.id_currency}<strong>{$f_currency.iso_code}</strong>{/if}
-											{/foreach}
-										</div>
-										<ul id="first-currencies" class="currencies_ul toogle_content">
-											{foreach from=$currencies key=k item=f_currency}
-												<li {if $cookie->id_currency == $f_currency.id_currency}class="selected"{/if}>
-													<a href="javascript:setCurrency({$f_currency.id_currency});" rel="nofollow" title="{$f_currency.name}">{$f_currency.name}</a>
-												</li>
-											{/foreach}
-										</ul>
-									</form>
-								</div> <!-- #currencies-block-top -->
-							{/if}
-							<div id="contact-link">
-								<a href="{$link->getPageLink('contact', true)|escape:'html'}" title="{l s='contact'}">{l s='Contact Us'}</a>
-							</div> <!-- #contact-link -->
-						   {if $shop_phone}
-								<span class="shop-phone">
-									<i class="icon-phone"></i>{l s='Call us now toll free:'} <strong>{$shop_phone}</strong>
-								</span>
-							{/if}
-						</nav><!-- .container-row -->
-					</div> <!-- .header-row -->
-					<div class="container header-row-2">
+			<header id="header">
+				<div id="banner-row">
+					{hook h="displayBanner"}
+				</div>
+				<div id="nav-row">
+					<div class="container">
+						<nav>
+							{hook h="displayNav"}
+						</nav>
+					</div>
+				</div> <!-- #end nav-row -->
+				<div id="header-row">
+					<div class="container">
 						<a id="header_logo" href="{$base_dir}" title="{$shop_name|escape:'html':'UTF-8'}">
-							<img class="logo img-responsive" src="{$logo_url}" alt="{$shop_name|escape:'html':'UTF-8'}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}" {/if}/>
+							<img class="logo img-responsive" src="{$logo_url}" alt="{$shop_name|escape:'html':'UTF-8'}"{if $logo_image_width} width="{$logo_image_width}"{/if}{if $logo_image_height} height="{$logo_image_height}"{/if}/>
 						</a>
-						<div id="header_right">
-							{$HOOK_TOP}
-						</div>
-					</div> <!-- .header-row-2 -->
-				</header> <!-- #header -->
-			</div> <!-- .header-container -->
+						{if isset($HOOK_TOP)}{$HOOK_TOP}{/if}
+					</div>
+				</div> <!-- end #header-row -->
+			</header>
+
 			<div class="columns-container">
 				<div id="columns" class="container">
 					{if $page_name !='index' && $page_name !='pagenotfound'}
@@ -207,14 +128,14 @@
 					{/if}
 					<div class="row">
 						<div id="top_column" class="center_column col-xs-12 col-sm-12">
-							{$HOOK_TOP_COLUMN}
+							{hook h="displayTopColumn"}
 						</div>
+					</div>
+					<div class="row">
 						{if isset($left_column_size) && !empty($left_column_size)}
-						<!-- Left -->
 						<div id="left_column" class="column col-xs-12 col-sm-3">
 							{$HOOK_LEFT_COLUMN}
 						</div>
 						{/if}
-						<!-- Center -->
 						<div id="center_column" class="center_column col-xs-12 col-sm-{12 - $left_column_size - $right_column_size}">
 	{/if}

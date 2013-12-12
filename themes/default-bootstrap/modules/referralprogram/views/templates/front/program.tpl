@@ -31,7 +31,7 @@
 	//]]>
 </script>
 
-{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Manage my account' mod='referralprogram'}" rel="nofollow">{l s='My account' mod='referralprogram'}</a><span class="navigation-pipe">{$navigationPipe}</span><span class="navigation_page">{l s='Referral Program' mod='referralprogram'}</span>{/capture}
+{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}" title="{l s='Manage my account' mod='referralprogram'}" rel="nofollow">{l s='My account' mod='referralprogram'}</a><span class="navigation-pipe">{$navigationPipe}</span><span class="navigation_page">{l s='Referral Program' mod='referralprogram'}</span>{/capture}
 
 <h1 class="page-heading">{l s='Referral program' mod='referralprogram'}</h1>
 
@@ -99,7 +99,7 @@
 				{/if},
 				{l s='he or she will receive a %1$d %2$s voucher and you will receive your own voucher worth %3$d %4$s.' sprintf=[$discount,$currencySign,$discount,$currencySign] mod='referralprogram'}
 			</p>
-			<form method="post" action="{$link->getModuleLink('referralprogram', 'program', [], true)|escape:'html'}" class="std">
+			<form method="post" action="{$link->getModuleLink('referralprogram', 'program', [], true)|escape:'html':'UTF-8'}" class="std">
 				<table class="table table-bordered">
 				<thead>
 					<tr>
@@ -126,12 +126,12 @@
 				<p class="checkbox">
 					<input type="checkbox" name="conditionsValided" id="conditionsValided" value="1" {if isset($smarty.post.conditionsValided) AND $smarty.post.conditionsValided eq 1}checked="checked"{/if} />
 					<label for="conditionsValided">{l s='I agree to the terms of service and adhere to them unconditionally.' mod='referralprogram'}</label>
-					<a href="{$link->getModuleLink('referralprogram', 'rules', ['height' => '500', 'width' => '400'], true)|escape:'html'}" class="thickbox" title="{l s='Conditions of the referral program' mod='referralprogram'}" rel="nofollow">{l s='Read conditions.' mod='referralprogram'}</a>
+					<a href="{$link->getModuleLink('referralprogram', 'rules', ['height' => '500', 'width' => '400'], true)|escape:'html':'UTF-8'}" class="thickbox" title="{l s='Conditions of the referral program' mod='referralprogram'}" rel="nofollow">{l s='Read conditions.' mod='referralprogram'}</a>
 				</p>
 				<p class="see_email">
 					{l s='Preview' mod='referralprogram'} 
 					{assign var="file" value="{$lang_iso}/referralprogram-invitation.html"}
-					<a href="{$link->getModuleLink('referralprogram', 'email', ['height' => '500', 'width' => '600', 'mail' => {$file}], true)|escape:'html'}" class="thickbox" title="{l s='Invitation e-mail' mod='referralprogram'}" rel="nofollow">{l s='the default e-mail' mod='referralprogram'}</a> {l s='that will be sent to your friend(s).' mod='referralprogram'}
+					<a href="{$link->getModuleLink('referralprogram', 'email', ['height' => '500', 'width' => '600', 'mail' => {$file}], true)|escape:'html':'UTF-8'}" class="thickbox" title="{l s='Invitation e-mail' mod='referralprogram'}" rel="nofollow">{l s='the default e-mail' mod='referralprogram'}</a> {l s='that will be sent to your friend(s).' mod='referralprogram'}
 				</p>
 				<p class="submit">
                     <button type="submit" id="submitSponsorFriends" name="submitSponsorFriends" class="btn btn-default button button-medium"><span>{l s='Validate' mod='referralprogram'}<i class="icon-chevron-right right"></i></span></button>
@@ -149,7 +149,7 @@
 		<p>
 			{l s='These friends have not yet placed an order on this Website since you sponsored them, but you can try again! To do so, mark the checkboxes of the friend(s) you want to remind, then click on the button "Remind my friend(s)"' mod='referralprogram'}
 		</p>
-		<form method="post" action="{$link->getModuleLink('referralprogram', 'program', [], true)|escape:'html'}" class="std">
+		<form method="post" action="{$link->getModuleLink('referralprogram', 'program', [], true)|escape:'html':'UTF-8'}" class="std">
 			<table class="table table-bordered">
 			<thead>
 				<tr>
@@ -222,7 +222,7 @@
 
 <ul class="footer_links clearfix">
 	<li>
-		<a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Back to Your Account' mod='referralprogram'}" rel="nofollow">
+		<a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}" title="{l s='Back to Your Account' mod='referralprogram'}" rel="nofollow">
 		<span><i class="icon-chevron-left"></i> {l s='Back to Your Account' mod='referralprogram'}</span></a>
 	</li>
 	<li><a class="btn btn-default button button-small" href="{$base_dir}" title="{l s='Home' mod='referralprogram'}"><span><i class="icon-chevron-left"></i>{l s='Home' mod='referralprogram'}</span></a></li>

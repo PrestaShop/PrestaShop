@@ -163,6 +163,12 @@ class AdminCategoriesControllerCore extends AdminController
 		parent::initPageHeaderToolbar();
 
 		if ($this->display != 'edit' && $this->display != 'add')
+			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
+				$this->page_header_toolbar_btn['new-url'] = array(
+					'href' => self::$currentIndex.'&amp;add'.$this->table.'root&amp;token='.$this->token,
+					'desc' => $this->l('Add new root category')
+				);
+
 			$this->page_header_toolbar_btn['new_category'] = array(
 				'href' => self::$currentIndex.'&amp;addcategory&amp;token='.$this->token,
 				'desc' => $this->l('Add new category'),
@@ -251,11 +257,6 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		if (empty($this->display))
 		{
-			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
-				$this->toolbar_btn['new-url'] = array(
-					'href' => self::$currentIndex.'&amp;add'.$this->table.'root&amp;token='.$this->token,
-					'desc' => $this->l('Add new root category')
-				);
 			$this->toolbar_btn['new'] = array(
 				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
 				'desc' => $this->l('Add New')
@@ -507,7 +508,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'name' => 'link_rewrite',
 					'lang' => true,
 					'required' => true,
-					'hint' => $this->l('Only letters and the minus (-) character are allowed.')
+					'hint' => $this->l('Only letters, numbers, underscore (_) and the minus (-) character are allowed.')
 				),
 				array(
 					'type' => 'group',

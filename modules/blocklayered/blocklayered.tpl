@@ -50,13 +50,10 @@ param_product_url = '';
 										{if $smarty.foreach.f_values.first}
 											<li>
 												<a href="#" rel="layered_{$filter.type}_slider" title="{l s='Cancel' mod='blocklayered'}">x</a>
-												{$filter.name|escape:html:'UTF-8'}{l s=':' mod='blocklayered'}
-												{if $filter.format}
-													{displayPrice price=$filter.values[0]} - 
-													{displayPrice price=$filter.values[1]}
+												{if $filter.format == 1}
+													{l s='%1$s: %2$s - %3$s'|sprintf:$filter.name:{displayPrice price=$filter.values[0]}:{displayPrice price=$filter.values[1]}|escape:html:'UTF-8' mod='blocklayered'}
 												{else}
-													{$filter.values[0]|escape:html:'UTF-8'}{$filter.unit|escape:html:'UTF-8'} - 
-													{$filter.values[1]|escape:html:'UTF-8'}{$filter.unit|escape:html:'UTF-8'}
+													{l s='%1$s: %2$s %4$s - %3$s %4$s'|sprintf:$filter.name:$filter.values[0]:$filter.values[1]:$filter.unit|escape:html:'UTF-8' mod='blocklayered'}
 												{/if}
 											</li>
 										{/if}

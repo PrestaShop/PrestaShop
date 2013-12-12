@@ -2,109 +2,82 @@
 #search_block_top {
   position: absolute;
   right: 420px;
-  top: 50px;
-}
-@media (min-width: 992px) and (max-width: 1199px) {
-  #search_block_top {
-    right: 295px;
-  }
-}
-@media (min-width: 768px) and (max-width: 991px) {
-  #search_block_top {
-    right: 207px;
-  }
-}
-@media (min-width: 480px) and (max-width: 767px) {
-  #search_block_top {
-    right: 0;
-    top: 85px;
-  }
-}
-@media (max-width: 479px) {
-  #search_block_top {
-    top: 56px;
-    right: 50%;
-    width: 270px;
-    margin-right: -135px;
-  }
-}
-#search_block_top .btn.button-search {
-  background: #333333;
-  float: left;
-  border: none;
-  color: white;
-  width: 57px;
-  text-align: center;
-  padding: 10px 0 11px 0;
-}
-#search_block_top .btn.button-search span {
-  display: none;
-}
-#search_block_top .btn.button-search:before {
-  content: "";
-  display: block;
-  font-family: "FontAwesome";
-  font-size: 17px;
-  width: 100%;
-  text-align: center;
-}
-#search_block_top .btn.button-search:hover {
-  color: #6f6f6f;
-}
-#search_block_top #search_query_top {
-  padding: 0 13px;
-  height: 45px;
-  line-height: 45px;
-  width: 271px;
-  background: #fbfbfb;
-  float: left;
-  margin-right: 1px;
-}
-@media (min-width: 768px) and (max-width: 991px) {
+  top: 50px; }
+  @media (min-width: 992px) and (max-width: 1199px) {
+    #search_block_top {
+      right: 295px; } }
+  @media (min-width: 768px) and (max-width: 991px) {
+    #search_block_top {
+      right: 207px; } }
+  @media (min-width: 480px) and (max-width: 767px) {
+    #search_block_top {
+      right: 0;
+      top: 85px; } }
+  @media (max-width: 479px) {
+    #search_block_top {
+      top: 56px;
+      right: 50%;
+      width: 270px;
+      margin-right: -135px; } }
+  #search_block_top .btn.button-search {
+    background: #333333;
+    float: left;
+    border: none;
+    color: white;
+    width: 57px;
+    text-align: center;
+    padding: 10px 0 11px 0; }
+    #search_block_top .btn.button-search span {
+      display: none; }
+    #search_block_top .btn.button-search:before {
+      content: "\f002";
+      display: block;
+      font-family: "FontAwesome";
+      font-size: 17px;
+      width: 100%;
+      text-align: center; }
+    #search_block_top .btn.button-search:hover {
+      color: #6f6f6f; }
   #search_block_top #search_query_top {
-    width: 180px;
-  }
-}
-@media (min-width: 480px) and (max-width: 767px) {
-  #search_block_top #search_query_top {
-    width: 212px;
-  }
-}
-@media (max-width: 479px) {
-  #search_block_top #search_query_top {
-    width: 212px;
-  }
-}
+    padding: 0 13px;
+    height: 45px;
+    line-height: 45px;
+    width: 271px;
+    background: #fbfbfb;
+    float: left;
+    margin-right: 1px; }
+    @media (min-width: 768px) and (max-width: 991px) {
+      #search_block_top #search_query_top {
+        width: 180px; } }
+    @media (min-width: 480px) and (max-width: 767px) {
+      #search_block_top #search_query_top {
+        width: 212px; } }
+    @media (max-width: 479px) {
+      #search_block_top #search_query_top {
+        width: 212px; } }
 
 .ac_results {
   background: white;
   border: 1px solid #d6d4d4;
   width: 271px;
-  margin-top: -1px;
-}
-.ac_results li {
-  padding: 0 10px;
-  font-weight: normal;
-  color: #686666;
-  font-size: 13px;
-  line-height: 22px;
-}
-.ac_results li.ac_odd {
-  background: white;
-}
-.ac_results li:hover, .ac_results li.ac_over {
-  background: #fbfbfb;
-}
+  margin-top: -1px; }
+  .ac_results li {
+    padding: 0 10px;
+    font-weight: normal;
+    color: #686666;
+    font-size: 13px;
+    line-height: 22px; }
+    .ac_results li.ac_odd {
+      background: white; }
+    .ac_results li:hover, .ac_results li.ac_over {
+      background: #fbfbfb; }
 
 form#searchbox label {
   color: #333333;
-  margin-bottom: 1px;
-}
+  margin-bottom: 1px; }
 form#searchbox input#search_query_block {
   border: 1px solid #d6d4d4;
   height: 18px;
-  margin-top: 10px;
-}
+  margin-top: 10px; }
 form#searchbox input#search_button {
-  padding: 1px 4px;
-}
+  padding: 1px 4px; }

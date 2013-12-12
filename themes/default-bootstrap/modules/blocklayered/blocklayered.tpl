@@ -50,13 +50,10 @@ param_product_url = '';
 										{if $smarty.foreach.f_values.first}
 											<li>
 												<a href="#" rel="layered_{$filter.type}_slider" title="{l s='Cancel' mod='blocklayered'}"></a>
-												{$filter.name|escape:html:'UTF-8'}{l s=':' mod='blocklayered'}
-												{if $filter.format}
-													{displayPrice price=$filter.values[0]} - 
-													{displayPrice price=$filter.values[1]}
+												{if $filter.format == 1}
+													{l s='%1$s: %2$s - %3$s'|sprintf:$filter.name:{displayPrice price=$filter.values[0]}:{displayPrice price=$filter.values[1]}|escape:'html':'UTF-8' mod='blocklayered'}
 												{else}
-													{$filter.values[0]|escape:html:'UTF-8'}{$filter.unit|escape:html:'UTF-8'} - 
-													{$filter.values[1]|escape:html:'UTF-8'}{$filter.unit|escape:html:'UTF-8'}
+													{l s='%1$s: %2$s %4$s - %3$s %4$s'|sprintf:$filter.name:$filter.values[0]:$filter.values[1]:$filter.unit|escape:'html':'UTF-8' mod='blocklayered'}
 												{/if}
 											</li>
 										{/if}
@@ -65,7 +62,7 @@ param_product_url = '';
 											{if $id_value == $filter_key && !is_numeric($filter_value) && ($filter.type eq 'id_attribute_group' || $filter.type eq 'id_feature') || $id_value == $filter_value && $filter.type neq 'id_attribute_group' && $filter.type neq 'id_feature'}
 												<li>
 													<a href="#" rel="layered_{$filter.type_lite}_{$id_value}" title="{l s='Cancel' mod='blocklayered'}"></a>
-													{$filter.name|escape:html:'UTF-8'}{l s=':' mod='blocklayered'} {$value.name|escape:html:'UTF-8'}
+													{$filter.name|escape:'html':'UTF-8'}{l s=':' mod='blocklayered'} {$value.name|escape:'html':'UTF-8'}
 												</li>
 											{/if}
 										{/foreach}
@@ -85,7 +82,7 @@ param_product_url = '';
 						<div>
 						{/if}
                         <div class="layered_subtitle_heading">
-                            <span class="layered_subtitle">{$filter.name|escape:html:'UTF-8'}</span>
+                            <span class="layered_subtitle">{$filter.name|escape:'html':'UTF-8'}</span>
                             <span class="layered_close"><a href="#" rel="ul_layered_{$filter.type}_{$filter.id_key}"></a></span>
 						</div>
 						<ul id="ul_layered_{$filter.type}_{$filter.id_key}" class="layered_filter_ul{if isset($filter.is_color_group) && $filter.is_color_group} color-group{/if}">
@@ -102,9 +99,9 @@ param_product_url = '';
 										{/if}
 										<label for="layered_{$filter.type_lite}_{$id_value}"{if !$value.nbr} class="disabled"{else}{if isset($filter.is_color_group) && $filter.is_color_group} name="layered_{$filter.type_lite}_{$id_value}" class="layered_color" rel="{$id_value}_{$filter.id_key}"{/if}{/if}>
 											{if !$value.nbr}
-											{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}
+											{$value.name|escape:'html':'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}
 											{else}
-											<a href="{$value.link}" rel="{$value.rel}">{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
+											<a href="{$value.link}" rel="{$value.rel}">{$value.name|escape:'html':'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
 											{/if}
 										</label>
 									</li>
@@ -123,9 +120,9 @@ param_product_url = '';
 										{/if}
 										<label for="layered_{$filter.type_lite}_{$id_value}"{if !$value.nbr} class="disabled"{else}{if isset($filter.is_color_group) && $filter.is_color_group} name="layered_{$filter.type_lite}_{$id_value}" class="layered_color" rel="{$id_value}_{$filter.id_key}"{/if}{/if}>
 											{if !$value.nbr}
-												{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
+												{$value.name|escape:'html':'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
 											{else}
-												<a href="{$value.link}" rel="{$value.rel}">{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
+												<a href="{$value.link}" rel="{$value.rel}">{$value.name|escape:'html':'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
 											{/if}
 										</label>
 									</li>
@@ -137,7 +134,7 @@ param_product_url = '';
 										{foreach from=$filter.values key=id_value item=value}
 										{if $value.nbr || !$hide_0_values}
 											<option style="color: {if isset($value.color)}{$value.color}{/if}" id="layered_{$filter.type_lite}{if $id_value || $filter.type == 'quantity'}_{$id_value}{/if}" value="{$id_value}_{$filter.id_key}" {if isset($value.checked) && $value.checked}selected="selected"{/if} {if !$value.nbr}disabled="disabled"{/if}>
-												{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
+												{$value.name|escape:'html':'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
 											</option>
 										{/if}
 										{/foreach}

@@ -25,7 +25,7 @@
 
 {capture name=path}
 	{if !isset($email_create)}{l s='Authentication'}{else}
-		<a href="{$link->getPageLink('authentication', true)|escape:'html'}" rel="nofollow" title="{l s='Authentication'}">{l s='Authentication'}</a>
+		<a href="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Authentication'}">{l s='Authentication'}</a>
 		<span class="navigation-pipe">{$navigationPipe}</span>{l s='Create your account'}
 	{/if}
 {/capture}
@@ -149,7 +149,7 @@
 	{/if}-->
 	<div class="row">
 		<div class="col-xs-12 col-sm-6">
-			<form action="{$link->getPageLink('authentication', true)|escape:'html'}" method="post" id="create-account_form" class="box">
+			<form action="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}" method="post" id="create-account_form" class="box">
 				<h3 class="page-subheading">{l s='Create an account'}</h3>
 				<div class="form_content clearfix">
 					<p>{l s='Please enter your email address to create an account.'}</p>
@@ -172,7 +172,7 @@
 			</form>
 		</div>
 		<div class="col-xs-12 col-sm-6">
-			<form action="{$link->getPageLink('authentication', true)|escape:'html'}" method="post" id="login_form" class="box">
+			<form action="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}" method="post" id="login_form" class="box">
 				<h3 class="page-subheading">{l s='Already registered?'}</h3>
 				<div class="form_content clearfix">
 					<div class="form-group">
@@ -183,7 +183,7 @@
 						<label for="passwd">{l s='Password'}</label>
 						<span><input class="is_required validate account_input form-control" type="password" data-validate="isPasswd" id="passwd" name="passwd" value="{if isset($smarty.post.passwd)}{$smarty.post.passwd|stripslashes}{/if}" /></span>
 					</div>
-					<p class="lost_password form-group"><a href="{$link->getPageLink('password')|escape:'html'}" title="{l s='Recover your forgotten password'}" rel="nofollow">{l s='Forgot your password?'}</a></p>
+					<p class="lost_password form-group"><a href="{$link->getPageLink('password')|escape:'html':'UTF-8'}" title="{l s='Recover your forgotten password'}" rel="nofollow">{l s='Forgot your password?'}</a></p>
 					<p class="submit">
 						{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'html':'UTF-8'}" />{/if}
 						<button type="submit" id="SubmitLogin" name="SubmitLogin" class="button btn btn-default button-medium">
@@ -198,7 +198,7 @@
 		</div>
 	</div>
 	{if isset($inOrderProcess) && $inOrderProcess && $PS_GUEST_CHECKOUT_ENABLED}
-		<form action="{$link->getPageLink('authentication', true, NULL, "back=$back")|escape:'html'}" method="post" id="new_account_form" class="std clearfix">
+		<form action="{$link->getPageLink('authentication', true, NULL, "back=$back")|escape:'html':'UTF-8'}" method="post" id="new_account_form" class="std clearfix">
 			<div class="box">
 				<div>
 				<div id="opc_account_form" style="display: block; ">
@@ -395,7 +395,7 @@
 		</ol>
 	</div>
 	{/if}-->
-	<form action="{$link->getPageLink('authentication', true)|escape:'html'}" method="post" id="account-creation_form" class="std box">
+	<form action="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}" method="post" id="account-creation_form" class="std box">
 		{$HOOK_CREATE_ACCOUNT_TOP}
 		<div class="account_creation">
 			<h3 class="page-subheading">{l s='Your personal information'}</h3>

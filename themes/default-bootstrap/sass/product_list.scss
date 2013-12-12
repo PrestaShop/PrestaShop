@@ -1,4 +1,6 @@
-@import '_theme_variables';
+@import "compass";
+@import "theme_variables";
+
 
 /*******************************************************
 			 Product list Styles
@@ -52,7 +54,7 @@ ul.product_list {
 		}	
 		
 		.quick-view {
-			font:700 13px/16px $font-famaly;
+			font:700 13px/16px $font-family;
 			color:#777676;
 			position:absolute;
 			left:50%;

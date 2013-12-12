@@ -39,7 +39,7 @@
 	{math equation="nbLi/nbItemsPerLine" nbLi=$nbLi nbItemsPerLine=$nbItemsPerLine assign=nbLines}
 	{math equation="nbLi/nbItemsPerLineTablet" nbLi=$nbLi nbItemsPerLineTablet=$nbItemsPerLineTablet assign=nbLinesTablet}
 	<!-- Products list -->
-	<ul class="product_list grid row {if isset($class) && $class} {$class}{/if}">
+	<ul{if isset($id) && $id} id="{$id}"{/if} class="product_list grid row{if isset($class) && $class} {$class}{/if}">
 	{foreach from=$products item=product name=products}
 		{math equation="(total%perLine)" total=$smarty.foreach.products.total perLine=$nbItemsPerLine assign=totModulo}
 		{math equation="(total%perLineT)" total=$smarty.foreach.products.total perLineT=$nbItemsPerLineTablet assign=totModuloTablet}
@@ -58,7 +58,7 @@
 							itemprop="url">
 							<img 
 								class="replace-2x img-responsive" 
-								src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html'}" 
+								src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html':'UTF-8'}" 
 								alt="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" 
 								title="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" 
 								{if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if}
@@ -76,7 +76,8 @@
 							<div 
 								class="content_price"
 								itemprop="offers" 
-								itemscope itemtype="http://schema.org/Offer">
+								itemscope 
+								itemtype="http://schema.org/Offer">
 								{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}
 									<span itemprop="price" class="price product-price">
 										{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}
@@ -144,7 +145,7 @@
 								{if isset($static_token)}
 									<a
 										class="button ajax_add_to_cart_button btn btn-default" 
-										href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", false)|escape:'html'}"
+										href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", false)|escape:'html':'UTF-8'}"
 										rel="nofollow"
 										title="{l s='Add to cart'}"
 										data-id-product="{$product.id_product|intval}">
@@ -153,7 +154,7 @@
 								{else}
 									<a
 										class="button ajax_add_to_cart_button btn btn-default"
-										href="{$link->getPageLink('cart',false, NULL, 'add=1&amp;id_product={$product.id_product|intval}', false)|escape:'html'}"
+										href="{$link->getPageLink('cart',false, NULL, 'add=1&amp;id_product={$product.id_product|intval}', false)|escape:'html':'UTF-8'}"
 										rel="nofollow"
 										title="{l s='Add to cart'}"
 										data-id-product="{$product.id_product|intval}">
@@ -206,14 +207,16 @@
 						{/if}
 					{/if}
 				</div>
-<!-- 				<div class="functional-buttons clearfix">
-					{hook h='displayProductListFunctionalButtons' product=$product}
-					{if isset($comparator_max_item) && $comparator_max_item}
-						<div class="compare">
-							<a class="addToCompare" href="#" data-id-product="{$product.id_product}" onClick="addToCompare('{$product.id_product|intval}'); return false;">{l s='Add to Compare'}</a>
-						</div>
-					{/if}
-				</div> -->
+				{if $page_name != 'index'}
+	 				<div class="functional-buttons clearfix">
+						{hook h='displayProductListFunctionalButtons' product=$product}
+						{if isset($comparator_max_item) && $comparator_max_item}
+							<div class="compare">
+								<a class="addToCompare" href="#" data-id-product="{$product.id_product}" onClick="addToCompare('{$product.id_product|intval}'); return false;">{l s='Add to Compare'}</a>
+							</div>
+						{/if}
+					</div>
+				{/if}
 			</div><!-- .product-container> -->
 		</li>
 	{/foreach}
@@ -256,10 +259,10 @@
 						html += '<div class="left-block col-xs-4 col-xs-5 col-md-4">' + $(element).find('.left-block').html() + '</div>';
 						html += '<div class="center-block col-xs-4 col-xs-7 col-md-4">';
 							html += '<div class="product-flags">'+ $(element).find('.product-flags').html() + '</div>';
-							html += '<h5>'+ $(element).find('h5').html() + '</h5>';
+							html += '<h5 itemprop="name">'+ $(element).find('h5').html() + '</h5>';
 							var rating = $(element).find('.comments_note').html(); // check : rating
 							if (rating != null) { 
-								html += '<div class="comments_note">'+ rating + '</div>';
+								html += '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="comments_note">'+ rating + '</div>';
 							}
 							html += '<p class="product-desc">'+ $(element).find('.product-desc').html() + '</p>';
 							var colorList = $(element).find('.color-list-container').html();
@@ -298,17 +301,17 @@
 					html += '<div class="left-block">' + $(element).find('.left-block').html() + '</div>';
 					html += '<div class="right-block">';
 						html += '<div class="product-flags">'+ $(element).find('.product-flags').html() + '</div>';
-						html += '<h5>'+ $(element).find('h5').html() + '</h5>';
+						html += '<h5 itemprop="name">'+ $(element).find('h5').html() + '</h5>';
 						var rating = $(element).find('.comments_note').html(); // check : rating
 							if (rating != null) { 
-								html += '<div class="comments_note">'+ rating + '</div>';
+								html += '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="comments_note">'+ rating + '</div>';
 							}
-						html += '<p class="product-desc">'+ $(element).find('.product-desc').html() + '</p>';
+						html += '<p itemprop="description" class="product-desc">'+ $(element).find('.product-desc').html() + '</p>';
 						var price = $(element).find('.content_price').html(); // check : catalog mode is enabled
 							if (price != null) { 
 								html += '<div class="content_price">'+ price + '</div>';
 							}
-						html += '<div class="button-container">'+ $(element).find('.button-container').html() +'</div>';
+						html += '<div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="button-container">'+ $(element).find('.button-container').html() +'</div>';
 						var colorList = $(element).find('.color-list-container').html();
 						if (colorList != null) {
 							html += '<div class="color-list-container">'+ colorList +'</div>';

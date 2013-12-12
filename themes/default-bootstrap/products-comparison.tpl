@@ -49,20 +49,37 @@
 					{assign var='replace_id' value=$product->id|cat:'|'}
 					<td class="ajax_block_product comparison_infos product-block">
 						<div class="remove">
-							<a class="cmp_remove" href="{$link->getPageLink('products-comparison', true)|escape:'html'}" title="{l s='Remove'}" data-id-product="{$product->id}"><i class="icon-trash"></i></a>
+							<a 
+							class="cmp_remove" 
+							href="{$link->getPageLink('products-comparison', true)|escape:'html':'UTF-8'}" 
+							title="{l s='Remove'}" 
+							data-id-product="{$product->id}">
+								<i class="icon-trash"></i>
+							</a>
 						</div>
 						<div class="product-image-block">
-							<a href="{$product->getLink()|escape:html:'UTF-8'}" title="{$product->name|escape:html:'UTF-8'}" class="product_image" >
-								<img class="img-responsive" src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')|escape:'html'}" alt="{$product->name|escape:html:'UTF-8'}" />
+							<a
+							class="product_image" 
+							href="{$product->getLink()|escape:'html':'UTF-8'}" 
+							title="{$product->name|escape:'html':'UTF-8'}">
+								<img 
+								class="img-responsive" 
+								src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')|escape:'html':'UTF-8'}" 
+								alt="{$product->name|escape:'html':'UTF-8'}" />
 							</a>
 							{if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
 								{if $product->on_sale}
-									<div class="sale-box"><span class="sale-label">{l s='Sale!'}</span></div>
+									<div class="sale-box">
+										<span class="sale-label">{l s='Sale!'}</span>
+									</div>
 								{/if}
 							{/if}
 						</div> <!-- end product-image-block -->
 						<h5>
-							<a class="product-name" href="{$product->getLink()|escape:html:'UTF-8'}" title="{$product->name|truncate:32:'...'|escape:'html':'UTF-8'}">
+							<a 
+							class="product-name" 
+							href="{$product->getLink()|escape:'html':'UTF-8'}" 
+							title="{$product->name|truncate:32:'...'|escape:'html':'UTF-8'}">
 								{$product->name|truncate:45:'...'|escape:'html':'UTF-8'}
 							</a>
 						</h5>
@@ -71,11 +88,19 @@
 								<span class="price product-price">{convertPrice price=$product->getPrice($taxes_behavior)}</span>
 								{if isset($product->specificPrice) && $product->specificPrice}
 									{if {$product->specificPrice.reduction_type == 'percentage'}}
-										<span class="old-price product-price">{displayWtPrice p=$product->getPrice($taxes_behavior)+($product->getPrice($taxes_behavior)* $product->specificPrice.reduction)}</span>
-										<span class="price-percent-reduction">-{$product->specificPrice.reduction*100|floatval}%</span>
+										<span class="old-price product-price">
+											{displayWtPrice p=$product->getPrice($taxes_behavior)+($product->getPrice($taxes_behavior)* $product->specificPrice.reduction)}
+										</span>
+										<span class="price-percent-reduction">
+											-{$product->specificPrice.reduction*100|floatval}%
+										</span>
 									{else}
-										<span class="old-price product-price">{convertPrice price=($product->getPrice($taxes_behavior) + $product->specificPrice.reduction)}</span>
-										<span class="price-percent-reduction">-{convertPrice price=$product->specificPrice.reduction}</span>
+										<span class="old-price product-price">
+											{convertPrice price=($product->getPrice($taxes_behavior) + $product->specificPrice.reduction)}
+										</span>
+										<span class="price-percent-reduction">
+											-{convertPrice price=$product->specificPrice.reduction}
+										</span>
 									{/if}
 								{/if}
 								{if $product->on_sale}
@@ -86,20 +111,23 @@
 									{/if}
 									{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
 										{math equation="pprice / punit_price"  pprice=$product->getPrice($taxes_behavior)  punit_price=$product->unit_price_ratio assign=unit_price}
-										<span class="comparison_unit_price">&nbsp;{convertPrice price=$unit_price} {l s='per %s' sprintf=$product->unity|escape:'html':'UTF-8'}</span>
+										<span class="comparison_unit_price">
+											&nbsp;{convertPrice price=$unit_price} {l s='per %s' sprintf=$product->unity|escape:'html':'UTF-8'}
+										</span>
 									{else}
 								{/if}
 							{/if}
 						</div> <!-- end prices-container -->
 
-						<div class="product_desc">{$product->description_short|strip_tags|truncate:60:'...'}</div>
+						<div class="product_desc">
+							{$product->description_short|strip_tags|truncate:60:'...'}
+						</div>
 						
 						<div class="comparison_product_infos">
-							<!-- availability -->
 							<p class="comparison_availability_statut">
 								{if !(($product->quantity <= 0 && !$product->available_later) OR ($product->quantity != 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE)}
-									<span id="availability_label">{l s='Availability:'}</span>
-									<span id="availability_value"{if $product->quantity <= 0} class="warning-inline"{/if}>
+									<span class="availability_label">{l s='Availability:'}</span>
+									<span class="availability_value"{if $product->quantity <= 0} class="warning-inline"{/if}>
 										{if $product->quantity <= 0}
 											{if $allow_oosp}
 												{$product->available_later|escape:'html':'UTF-8'}
@@ -119,15 +147,22 @@
 											<a
 												class="button ajax_add_to_cart_button btn btn-default"
 												data-id-product="{$product->id}"
-												href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html'}"
+												href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html':'UTF-8'}"
 												title="{l s='Add to cart'}">
 												<span>{l s='Add to cart'}</span>
 											</a>
 										{else}
-											<span class="ajax_add_to_cart_button button btn btn-default disabled"><span>{l s='Add to cart'}</span></span>
+											<span class="ajax_add_to_cart_button button btn btn-default disabled">
+												<span>{l s='Add to cart'}</span>
+											</span>
 										{/if}
 									{/if}
-									<a class="button lnk_view btn btn-default" href="{$product->getLink()|escape:html:'UTF-8'}" title="{l s='View'}"><span>{l s='View'}</span></a>
+									<a 
+									class="button lnk_view btn btn-default" 
+									href="{$product->getLink()|escape:'html':'UTF-8'}" 
+									title="{l s='View'}">
+										<span>{l s='View'}</span>
+									</a>
 								</div>
 							</div>
 						</div> <!-- end comparison_product_infos -->

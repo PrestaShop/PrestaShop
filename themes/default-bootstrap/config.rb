@@ -15,7 +15,7 @@ environment = :development
 # relative_assets = true
 
 # To disable debugging comments that display the original location of your selectors. Uncomment:
-# line_comments = false
+line_comments = false
 color_output = false
 
 # If you prefer the indented syntax, you might want to regenerate this
