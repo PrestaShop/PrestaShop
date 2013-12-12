@@ -1362,7 +1362,7 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	 * Add association between shop and cateogries
+	 * Add association between shop and categories
 	 * @param int $id_shop
 	 * @return bool
 	 */
