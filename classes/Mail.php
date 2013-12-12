@@ -254,7 +254,8 @@ class MailCore
 			}
 
 			/* Create mail and attach differents parts */
-			$message = new Swift_Message('['.Configuration::get('PS_SHOP_NAME', null, null, $id_shop).'] '.$subject);
+			//XXX $message = new Swift_Message('['.Configuration::get('PS_SHOP_NAME', null, null, $id_shop).'] '.$subject);
+			$message = new Swift_Message(Configuration::get('PS_SHOP_NAME', null, null, $id_shop).' | '.$subject);
 
 			$message->setCharset('utf-8');
 
