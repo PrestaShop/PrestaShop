@@ -212,7 +212,7 @@ $( document ).ready(function() {
 	$(window).scroll(function() {
 		animateGoTop();
 	});
-});
+
 
 function toggleShopModuleCheckbox(id_shop, toggle)
 {
@@ -249,3 +249,4 @@ function toggleShopModuleCheckbox(id_shop, toggle)
 
 	//show time elapsed
 	$("abbr.timeago").timeago();
+});
