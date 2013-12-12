@@ -1,133 +1,120 @@
-@import '_theme_variables';
+@import "compass";
+@import "theme_variables";
 
 /**************************************************************************
 					Contact Page Styles
 **************************************************************************/
 
 .contact-title {
-	margin-top:-5px;
-	line-height:23px;
-	margin-bottom:27px;
-	
+	margin-top: -5px;
+	line-height: 23px;
+	margin-bottom: 27px;
 	i {
-		font-size:23px;
-		color:#c0c0c0;
-		padding-right:8px;	
+		font-size: 23px;
+		color: #c0c0c0;
+		padding-right: 8px;	
 	}
 }
 
 .contact-form-box {
-	padding:23px 0 0 0;
-	margin-bottom:30px;
-	background:url(../img/contact-form.png) repeat-x $light-background;
+	padding: 23px 0 0 0;
+	margin-bottom: 30px;
+	background: url(../img/contact-form.png) repeat-x $light-background;
 	@include box-shadow(rgba(black, 0.17) 0px 5px 13px);
-	
 	fieldset {
-		padding:0 19px 21px 19px;
-		background:url(../img/form-contact-shadow.png) center bottom no-repeat;
-		background-size:contain;
+		padding: 0 19px 21px 19px;
+		background: url(../img/form-contact-shadow.png) center bottom no-repeat;
+		background-size: contain;
 	}
-	
 	label {
-		margin-bottom:6px;	
+		margin-bottom: 6px;	
 	}
-	
 	.page-subheading {
-		padding-left:0px;
-		border:none;
-		margin-bottom:0;
+		padding-left: 0px;
+		border: none;
+		margin-bottom: 0;
 	}
 	
 	.col-md-3 {
-		padding-left:0;
-																		@media (max-width: $screen-sm-max) { // max 991px
-																			padding-right:0;
-																		}
+		padding-left: 0;
+		@media (max-width: $screen-sm-max) { // max 991px
+			padding-right: 0;
+		}
 	}
-	
 	.col-md-9 {
-		padding-right:0;
-																		@media (max-width: $screen-sm-max) { // max 991px
-																			padding-left:0;
-																		}
+		padding-right: 0;
+		@media (max-width: $screen-sm-max) { // max 991px
+			padding-left: 0;
+		}
 	}
-	
-	#desc_contact0 {display:none;}
-	
+	#desc_contact0 {
+		display: none;
+	}
 	.form-group {
-		margin-bottom:7px;
+		margin-bottom: 7px;
 	}
-	
 	textarea {
-		height:257px;	
+		height: 257px;	
 	}
-	
-	.submit { margin-top:13px;}
-	
+	.submit {
+		margin-top: 13px;
+	}
 	select.form-control {
-		max-width:270px;
-		width:100%;
+		max-width: 270px;
+		width: 100%;
 	}
 	input.form-control {
-		max-width:270px;	
+		max-width: 270px;	
 	}
 	@media (min-width: $screen-md) and (max-width: $screen-md-max) {// min 992px max 1199px
 		div.uploader span.filename {
-			width:114px;	
+			width: 114px;	
 		}
 	}
 }
+
 /**************************************************************************
 				Contact Page Bottom Banners Styles 
 **************************************************************************/
 .contact-banners {
-	
 	.list-1 {
-		padding:6px 0 3px 0;
-		
+		padding: 6px 0 3px 0;
 		li {
-			padding:0px 0 3px 0;
-			font:600 18px/22px $font-custom;
-			color:#555454;
-			
+			padding: 0px 0 3px 0;
+			font: 600 18px/22px $font-custom;
+			color: #555454;
 			i {
-				font-size:25px;
-				line-height:25px;
-				color:#cdcdcd;
-				padding-right:10px;
-				vertical-align:-3px;
+				font-size: 25px;
+				line-height: 25px;
+				color: #cdcdcd;
+				padding-right: 10px;
+				vertical-align: -3px;
 			}	
 		}
 	}
-	
 	.list-2 {
-		padding:2px 0 2px 0;
-		
+		padding: 2px 0;
 		li {
-			font-weight:bold;
-			color:#46a74e;
-			padding:0 0 5px 0;
-			
+			font-weight: bold;
+			color: #46a74e;
+			padding: 0 0 5px 0;
 			i {
-				font-size:20px;
-				line-height:20px;
-				padding-right:10px;
-				vertical-align:-2px;	
+				font-size: 20px;
+				line-height: 20px;
+				padding-right: 10px;
+				vertical-align: -2px;	
 			}
 		}
 	}
-	
 	.box.box-last {
-		padding-bottom:49px;
-		
+		padding-bottom: 49px;
 		p {
-			
 			i {
-				font-size:29px;
-				line-height:29px;
-				color:#c0c0c0;
-				vertical-align:-6px;
-				padding-right:13px;
+				font-size: 29px;
+				line-height: 29px;
+				color: #c0c0c0;
+				vertical-align: -6px;
+				padding-right: 13px;
 			}
 		}
 	}
