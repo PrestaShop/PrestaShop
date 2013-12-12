@@ -25,35 +25,35 @@
 *}
 {if $page_name =='index'}
 <!-- Module HomeSlider -->
-{if isset($homeslider_slides)}
-<div id="homepage-slider">
-    <ul id="homeslider">
-    {foreach from=$homeslider_slides item=slide}
-        {if $slide.active}
-            <li>
-                <a href="{$slide.url|escape:'html':'UTF-8'}" title="{$slide.description|escape:'html':'UTF-8'}">
-                <img src="{$smarty.const._MODULE_DIR_}homeslider/images/{$slide.image|escape:'html':'UTF-8'}" alt="{$slide.legend|escape:'html':'UTF-8'}"  />
-                </a>
-            </li>
-        {/if}
-    {/foreach}
-    </ul>
-</div>
-{if isset($homeslider)}
-<script type="text/javascript">
-{if $homeslider_slides|@count > 1}
-{if $homeslider.loop == 1}
-	var homeslider_loop = true;
-{else}
-	var homeslider_loop = false;
-{/if}
-{else}
-	var homeslider_loop = false;
-{/if}
-	var homeslider_speed = {$homeslider.speed};
-	var homeslider_pause = {$homeslider.pause};
-</script>
-{/if}
-{/if}
+	{if isset($homeslider_slides)}
+		<div id="homepage-slider">
+			<ul id="homeslider">
+				{foreach from=$homeslider_slides item=slide}
+					{if $slide.active}
+						<li>
+							<a href="{$slide.url|escape:'html':'UTF-8'}" title="{$slide.description|escape:'html':'UTF-8'}">
+								<img src="{$smarty.const._MODULE_DIR_}homeslider/images/{$slide.image|escape:'html':'UTF-8'}" alt="{$slide.legend|escape:'html':'UTF-8'}"  />
+							</a>
+						</li>
+					{/if}
+				{/foreach}
+			</ul>
+		</div>
+		{if isset($homeslider)}
+			<script type="text/javascript">
+				{if $homeslider_slides|@count > 1}
+					{if $homeslider.loop == 1}
+						var homeslider_loop = true;
+					{else}
+						var homeslider_loop = false;
+					{/if}
+				{else}
+					var homeslider_loop = false;
+				{/if}
+				var homeslider_speed = {$homeslider.speed};
+				var homeslider_pause = {$homeslider.pause};
+			</script>
+		{/if}
+	{/if}
 <!-- /Module HomeSlider -->
 {/if}

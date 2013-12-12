@@ -2,102 +2,96 @@
 @import "theme_variables";
 /* block top search */
 #search_block_top {
-	position: absolute;
-	right: 420px;
-    top: 50px;												
-																		@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px 
-																			right:295px;
-																		}
-																		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
-																			right:207px;
-																		}
-																		@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
-																			right:0;
-																			top:85px;
-																		}
-																		@media (max-width: $screen-xs - 1) { // max 479px
-																			top:56px;
-																			right:50%;
-																			width:270px;
-																			margin-right:270px/2*-1;
-																		}
-	
-	.btn.button-search {
-		background:$dark-background;
-		float: left;
-		border:none;
-		color:$light-text-color;
-		width:57px;
-		text-align:center;
-		padding:10px 0 11px 0;
-		
-		span {display:none;}
-		
-		&:before {
-			content:"\f002";
-			display:block;
-			font-family:$font-icon;
-			font-size:17px;
-			width:100%;
-			text-align:center;
-		}
-		
-		&:hover {color:#6f6f6f}
+	@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px 
+		right: 295px;
 	}
-	
-	#search_query_top {
-		padding:0 13px;
-		height:45px;
-		line-height:45px;
-		width:271px;
-		background:$base-box-bg;
+	@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
+		right: 207px;
+	}
+	@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
+		right: 0;
+		top: 85px;
+	}
+	@media (max-width: $screen-xs - 1) { // max 479px
+		top: 56px;
+		right: 50%;
+		width: 270px;
+		margin-right: 270px/2*-1;
+	}
+	.btn.button-search {
+		background: $dark-background;
 		float: left;
-		margin-right:1px;
-																		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
-																			width:180px;
-																		}
-																		@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
-																			width:212px;
-																		}
-																		@media (max-width: $screen-xs - 1) { // max 479px
-																			width:212px;
-																		}	
+		border: none;
+		color: $light-text-color;
+		width: 57px;
+		text-align: center;
+		padding: 10px 0 11px 0;
+		span {
+			display: none;
+		}
+		&:before {
+			content: "\f002";
+			display: block;
+			font-family: $font-icon;
+			font-size: 17px;
+			width: 100%;
+			text-align: center;
+		}
+		&:hover {
+			color: #6f6f6f
+		}
+	}
+	#search_query_top {
+		padding: 0 13px;
+		height: 45px;
+		line-height: 45px;
+		width: 271px;
+		background: $base-box-bg;
+		float: left;
+		margin-right: 1px;
+		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
+			width: 180px;
+		}
+		@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
+			width: 212px;
+		}
+		@media (max-width: $screen-xs - 1) { // max 479px
+			width: 212px;
+		}	
 	}
 }
-.ac_results  {
-	background:$light-background;
-	border:1px solid $base-border-color;
-	width:271px;
-	margin-top:-1px;
-	
+
+.ac_results {
+	background: $light-background;
+	border: 1px solid $base-border-color;
+	width: 271px;
+	margin-top: -1px;
 	li {
-		padding:0 10px;
-		font-weight:normal;
-		color:#686666;
-		font-size:13px;
-		line-height:22px;
-		
+		padding: 0 10px;
+		font-weight: normal;
+		color: #686666;
+		font-size: 13px;
+		line-height: 22px;
 		&.ac_odd {
-			background:$light-background;	
+			background: $light-background;	
 		}
-		
 		&:hover, &.ac_over {
-			background:$base-box-bg;	
+			background: $base-box-bg;	
 		}
 	}
 }	
 
 form#searchbox {
 	label{
-		color:$base-text-color;
-		margin-bottom:1px
+		color: $base-text-color;
+		margin-bottom: 1px
 	}
-	
-	input#search_query_block{
+	input#search_query_block {
 		border: 1px solid $base-border-color;
 		height: 18px;
-		margin-top:10px;
+		margin-top: 10px;
 	}
-	
-	input#search_button{padding: 1px 4px;}
+	input#search_button {
+		padding: 1px 4px;
+	}
 }
