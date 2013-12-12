@@ -393,8 +393,8 @@ class CategoryCore extends ObjectModel
 		$categories_array = array();
 		foreach ($categories as $category)
 			$categories_array[$category['id_parent']]['subcategories'][] = $category['id_category'];
-
 		$n = 1;
+
 		if (isset($categories_array[0]) && $categories_array[0]['subcategories'])
 			Category::_subTree($categories_array, $categories_array[0]['subcategories'][0], $n);
 	}
@@ -1393,7 +1393,7 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	 * Add association between shop and cateogries
+	 * Add association between shop and categories
 	 * @param int $id_shop
 	 * @return bool
 	 */
