@@ -1,62 +1,63 @@
-@import '../../../../_theme_variables';
+@import "compass";
+@import "theme_variables";
+
 /* Home hook CSS */
 #htmlcontent_home {
 	ul {
-		margin:0 -5px;
-		
+		margin: 0 -5px;
 		li {
-			padding:0 5px 10px;
-																		@media (max-width: $screen-xs - 1) { // max 479px
-																			width:100%;
-																		}
-			img {
-				max-width:100%;
-																		@media (max-width: $screen-xs - 1) { // max 479px
-																			min-width:100%;
-																		}
-				height:auto;	
+			padding: 0 5px 10px;
+			@media (max-width: $screen-xs - 1) { // max 479px
+				width: 100%;
 			}
-			
+			img {
+				max-width: 100%;
+				height: auto;
+				@media (max-width: $screen-xs - 1) { // max 479px
+					min-width: 100%;
+				}
+			}
 			&.htmlcontent-item-5 {
-				width:66.6667%;
-																		@media (max-width: $screen-xs - 1) { // max 479px
-																			width:100%;
-																		}
+				width: 66.6667%;
+				@media (max-width: $screen-xs - 1) { // max 479px
+					width: 100%;
+				}
 			}
 		}
 	}
 }
+
 /* Top hook CSS */
 #htmlcontent_top {
-	float:left;
-	padding-top:40px;
-	width:33.4%;
-	max-width:391px;
-	padding-left:10px;
-																		@media (max-width: $screen-xs-max) { // max 767px
-																			width:100%;
-																			max-width:100%;
-																			padding-left:0;
-																			padding-top:0px;
-																		}
-	
+	float: left;
+	width: 33.4%;
+	max-width: 391px;
+	padding-left: 10px;
+	@media (max-width: $screen-xs-max) { // max 767px
+		width: 100%;
+		max-width: 100%;
+		padding-left: 0;
+		padding-top: 0px;
+	}
 	ul {
-																		@media (max-width: $screen-xs-max) { // max 767px
-																			margin:0 -5px;
-																		}
+		@media (max-width: $screen-xs-max) { // max 767px
+			margin: 0 -5px;
+		}
 		li {
-			padding-top:10px;
-			width:100%;
-																		@media (max-width: $screen-xs-max) { // max 767px
-																			float:left;
-																			padding-left:5px;
-																			padding-right:5px;
-																			width:50%;
-																		}
-			
+			width: 100%;
+			margin-bottom: 10px;
+			@media (max-width: $screen-xs-max) { // max 767px
+				float: left;
+				padding-left: 5px;
+				padding-right: 5px;
+				width: 50%;
+			}
+			&:last-child{
+				margin-bottom: 0;
+			}
 			img {
-				max-width:100%;
-				height:auto;	
+				max-width: 100%;
+				height: auto;	
 			}
 		}
 	}
