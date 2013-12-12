@@ -98,7 +98,7 @@ class AdminThemesControllerCore extends AdminController
 	public $className = 'Theme';
 	public $table = 'theme';
 	protected $toolbar_scroll = false;
-	private $imgError;
+	private $img_error;
 
 	public function init()
 	{
@@ -1686,7 +1686,7 @@ class AdminThemesControllerCore extends AdminController
 				$module_hook[$name]['hook'][] = array('hook'=>strval($row['hook']), 'position'=>strval($row['position']), 'exceptions'=>$exceptions);
 			}
 
-			$this->imgError = $this->updateImages($xml);
+			$this->img_error = $this->updateImages($xml);
 
 			foreach ($shops as $shop)
 			{
@@ -1786,7 +1786,7 @@ class AdminThemesControllerCore extends AdminController
 		$this->tpl_view_vars = array(
 			'doc' => $this->doc,
 			'themeName' => $this->themeName,
-			'imgError' => $this->imgError,
+			'imgError' => $this->img_error,
 			'back_link' => Context::getContext()->link->getAdminLink('AdminThemes')
 		);
 
