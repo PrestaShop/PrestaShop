@@ -112,17 +112,31 @@ table#product_comparison {
 }
 
 #stOCClose {
-	width: 29px !important;
-	height: 29px !important;	
+	width:29px !important;
+	height:29px !important;	
 }
-
-.stButton {
-	margin-left: 0 !important;	
-	.stFb,
-	.stTwbutton,
-	.stMainServices,
-	.stButton_gradient {
-		height: 22px !important;
+.stButton .stFb, .stButton .stTwbutton, .stButton .stMainServices {
+	height:22px !important;
+}
+.stButton .stButton_gradient {
+	height:22px !important;	
+}
+@media (min-width: $screen-lg) { // min 1200px
+	.share {
+		position:relative;
+		top:-350px;	
+	}
+}
+@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px
+	.share {
+		position:relative;
+		top:-260px;
+	}
+}
+@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
+	.share {
+		position:relative;
+		top:-245px;
 	}
 }
 
