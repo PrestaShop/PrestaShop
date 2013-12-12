@@ -1,20 +1,23 @@
-@charset "UTF-8";
 /*******************************************************************
 					Cart Block Styles
 ********************************************************************/
-#cart_block #cart_block_list .deleteCustomizableProduct, #cart_block #cart_block_list .remove_link {
+#cart_block #cart_block_list .deleteCustomizableProduct,
+#cart_block #cart_block_list .remove_link {
   position: absolute;
   right: 10px;
   top: 19px; }
-#cart_block #cart_block_list .remove_link a, #cart_block #cart_block_list .ajax_cart_block_remove_link {
+#cart_block #cart_block_list .remove_link a,
+#cart_block #cart_block_list .ajax_cart_block_remove_link {
   color: #777777; }
-  #cart_block #cart_block_list .remove_link a:before, #cart_block #cart_block_list .ajax_cart_block_remove_link:before {
+  #cart_block #cart_block_list .remove_link a:before,
+  #cart_block #cart_block_list .ajax_cart_block_remove_link:before {
     display: inline-block;
-    content: "";
+    content: "\f057";
     font-family: "FontAwesome";
     font-size: 18px;
     line-height: 18px; }
-  #cart_block #cart_block_list .remove_link a:hover, #cart_block #cart_block_list .ajax_cart_block_remove_link:hover {
+  #cart_block #cart_block_list .remove_link a:hover,
+  #cart_block #cart_block_list .ajax_cart_block_remove_link:hover {
     color: #515151; }
 #cart_block .cart-images {
   float: left;
@@ -103,11 +106,13 @@
     color: white; }
     #header #cart_block a:hover {
       color: #9c9b9b; }
-  #header #cart_block #cart_block_list .remove_link a, #header #cart_block #cart_block_list .ajax_cart_block_remove_link {
+  #header #cart_block #cart_block_list .remove_link a,
+  #header #cart_block #cart_block_list .ajax_cart_block_remove_link {
     color: white;
     outline: none;
     text-decoration: none; }
-    #header #cart_block #cart_block_list .remove_link a:hover, #header #cart_block #cart_block_list .ajax_cart_block_remove_link:hover {
+    #header #cart_block #cart_block_list .remove_link a:hover,
+    #header #cart_block #cart_block_list .ajax_cart_block_remove_link:hover {
       color: #9c9b9b; }
   #header #cart_block .price {
     color: white; }
@@ -132,7 +137,11 @@
 #header .block_content {
   margin-bottom: 0; }
 
-#cart_block #cart_block_summary, #cart_block .title_block span, #header #cart_block h4, #header #cart_block .title_block, #header #cart_block h4 {
+#cart_block #cart_block_summary,
+#cart_block .title_block span,
+#header #cart_block h4,
+#header #cart_block .title_block,
+#header #cart_block h4 {
   display: none; }
 
 #cart_block #cart_block_shipping_cost,
@@ -168,15 +177,15 @@
   top: 0;
   width: 100%;
   z-index: 98;
-  opacity: .20;
-  -moz-opacity: .20;
-  filter: alpha(opacity=20); }
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
+  opacity: 0.2; }
 
 * html .layer_cart_overlay {
-  filter: alpha(opacity=20);
   position: absolute;
   left: 0;
-  margin-left: -160px; }
+  margin-left: -160px;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
+  opacity: 0.2; }
 
 #layer_cart {
   background-color: white;
@@ -288,7 +297,7 @@
     color: #333333;
     z-index: 2; }
     #layer_cart .cross:before {
-      content: "";
+      content: "\f057";
       display: block;
       font-family: "FontAwesome";
       font-size: 25px;
@@ -334,7 +343,8 @@
         #layer_cart .crossseling #blockcart_list ul li .product-name a {
           font-size: 15px;
           line-height: 20px; }
-  #layer_cart .crossseling #blockcart_list a.bx-prev, #layer_cart .crossseling #blockcart_list a.bx-next {
+  #layer_cart .crossseling #blockcart_list a.bx-prev,
+  #layer_cart .crossseling #blockcart_list a.bx-next {
     display: block;
     font-family: "FontAwesome";
     font-size: 20px;
@@ -346,20 +356,23 @@
     position: absolute;
     top: 45%;
     margin-top: -20px; }
-    #layer_cart .crossseling #blockcart_list a.bx-prev:after, #layer_cart .crossseling #blockcart_list a.bx-next:after {
+    #layer_cart .crossseling #blockcart_list a.bx-prev:after,
+    #layer_cart .crossseling #blockcart_list a.bx-next:after {
       display: block;
       text-indent: 0; }
-    #layer_cart .crossseling #blockcart_list a.bx-prev:hover, #layer_cart .crossseling #blockcart_list a.bx-next:hover {
+    #layer_cart .crossseling #blockcart_list a.bx-prev:hover,
+    #layer_cart .crossseling #blockcart_list a.bx-next:hover {
       color: #c0c0c0; }
-    #layer_cart .crossseling #blockcart_list a.bx-prev.disabled, #layer_cart .crossseling #blockcart_list a.bx-next.disabled {
+    #layer_cart .crossseling #blockcart_list a.bx-prev.disabled,
+    #layer_cart .crossseling #blockcart_list a.bx-next.disabled {
       display: none; }
   #layer_cart .crossseling #blockcart_list a.bx-prev {
     left: 5%; }
     #layer_cart .crossseling #blockcart_list a.bx-prev:after {
-      content: ""; }
+      content: "\f137"; }
   #layer_cart .crossseling #blockcart_list a.bx-next {
     right: 5%; }
     #layer_cart .crossseling #blockcart_list a.bx-next:after {
-      content: ""; }
+      content: "\f138"; }
   #layer_cart .crossseling #blockcart_list .bx-controls {
     overflow: hidden; }
