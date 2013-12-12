@@ -33,7 +33,7 @@ class BlockBanner extends Module
 	{
 		$this->name = 'blockbanner';
 		$this->tab = 'other';
-		$this->version = 1.0;
+		$this->version = 1.1;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -49,7 +49,7 @@ class BlockBanner extends Module
 		Configuration::updateValue('BLOCKBANNER_IMG', 'sale70.gif');
 		Configuration::updateValue('BLOCKBANNER_LINK', '');
 		Configuration::updateValue('BLOCKBANNER_DESC', '');
-		return parent::install() && $this->registerHook('displayTop') && $this->registerHook('header');
+		return parent::install() && $this->registerHook('displayBanner') && $this->registerHook('displayHeader');
 	}
 
 	public function uninstall()
@@ -76,10 +76,21 @@ class BlockBanner extends Module
 			if ($total <= 0)
 				return;
 		}
+
 		return $this->display(__FILE__, 'blockbanner.tpl', $this->getCacheId());
 	}
 
-	public function hookHeader($params)
+	public function hookDisplayBanner($params)
+	{
+		return $this->hookDisplayTop($params);
+	}
+
+	public function hookDisplayFooter($params)
+	{
+		return $this->hookDisplayTop($params);
+	}
+
+	public function hookDisplayHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'blockbanner.css', 'all');
 	}

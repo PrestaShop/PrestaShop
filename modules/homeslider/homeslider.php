@@ -60,7 +60,7 @@ class HomeSlider extends Module
 	public function install()
 	{
 		/* Adds Module */
-		if (parent::install() && $this->registerHook('displayTopColumn') && $this->registerHook('actionShopDataDuplication'))
+		if (parent::install() && $this->registerHook('displayHeader') && $this->registerHook('displayTopColumn') && $this->registerHook('actionShopDataDuplication'))
 		{
 			/* Sets up configuration */
 			$res = Configuration::updateValue('HOMESLIDER_WIDTH', '779');
@@ -660,16 +660,25 @@ class HomeSlider extends Module
 		return true;
 	}
 
-	public function hookdisplayTopColumn()
+	public function hookdisplayHeader($params)
+	{
+		$this->context->controller->addJS($this->_path.'js/jquery.bxSlider.min.js');
+		$this->context->controller->addCSS($this->_path.'bx_styles.css');
+		$this->context->controller->addJS($this->_path.'js/homeslider.js');
+	}
+
+	public function hookdisplayTop($params)
+	{
+		return $this->hookdisplayTopColumn();
+	}
+
+	public function hookdisplayTopColumn($params)
 	{
 		if ($this->context->smarty->tpl_vars['page_name'] != 'index' || $this->context->getMobileDevice() != false)
 			return false;
 
 		if(!$this->_prepareHook())
 			return false;
-		$this->context->controller->addJS($this->_path.'js/jquery.bxSlider.min.js');
-		$this->context->controller->addCSS($this->_path.'bx_styles.css');
-		$this->context->controller->addJS($this->_path.'js/homeslider.js');
 
 		return $this->display(__FILE__, 'homeslider.tpl', $this->getCacheId());
 	}

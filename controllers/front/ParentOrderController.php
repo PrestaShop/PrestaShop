@@ -111,7 +111,9 @@ class ParentOrderControllerCore extends FrontController
 							else
 							{
 								$this->context->cart->addCartRule($cartRule->id);
-								Tools::redirect('index.php?controller=order-opc');
+								if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
+									Tools::redirect('index.php?controller=order-opc&addingCartRule=1');
+								Tools::redirect('index.php?controller=order&addingCartRule=1');
 							}
 						}
 						else

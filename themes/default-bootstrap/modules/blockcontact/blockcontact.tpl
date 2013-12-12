@@ -22,12 +22,11 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<div id="contact_block" class="block">
-	<p class="title_block">{l s='Contact us' mod='blockcontact'}</p>
-	<div class="block_content clearfix">
-			<p><strong>{l s='Our support hotline is available 24/7' mod='blockcontact'}</strong></p>
-			{if $telnumber != ''}<p class="tel"><span class="label">{l s='Phone:' mod='blockcontact'}</span><i class="icon-phone"></i>{$telnumber|escape:'html':'UTF-8'}</p>{/if}
-			{if $email != ''}<a class="btn btn-default button button-small" href="mailto:{$email|escape:'html':'UTF-8'}"><span>{l s='Contact our expert support team!' mod='blockcontact'}</span></a>{/if}
-	</div>
+<div id="contact-link">
+	<a href="{$link->getPageLink('contact', true)|escape:'html':'UTF-8'}" title="{l s='contact' mod='blockcontact'}">{l s='Contact Us' mod='blockcontact'}</a>
 </div>
+{if $telnumber}
+	<span class="shop-phone">
+		<i class="icon-phone"></i>{l s='Call us now toll free:'} <strong>{$telnumber}</strong>
+	</span>
+{/if}

@@ -1151,7 +1151,7 @@ class CategoryCore extends ObjectModel
 		if (!$res = Db::getInstance()->executeS('
 			SELECT cp.`id_category`, category_shop.`position`, cp.`id_parent`
 			FROM `'._DB_PREFIX_.'category` cp
-			'.Shop::addSqlAssociation('category', 'c').'
+			'.Shop::addSqlAssociation('category', 'cp').'
 			WHERE cp.`id_parent` = '.(int)$this->id_parent.'
 			ORDER BY category_shop.`position` ASC'
 		))

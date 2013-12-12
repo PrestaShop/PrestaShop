@@ -1,9 +1,10 @@
-@import '../../_theme_variables';
+@import "compass";
+@import "theme_variables";
 /* block top search */
 #search_block_top {
-	position:absolute;
+	position: absolute;
 	right: 420px;
-    top: 50px;														
+    top: 50px;												
 																		@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px 
 																			right:295px;
 																		}
@@ -33,7 +34,7 @@
 		span {display:none;}
 		
 		&:before {
-			content:"";
+			content:"\f002";
 			display:block;
 			font-family:$font-icon;
 			font-size:17px;

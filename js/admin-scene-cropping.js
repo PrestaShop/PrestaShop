@@ -81,10 +81,10 @@ function editThisZone(aInFixedZoneElement) {
 	$fixedZoneElement = $(aInFixedZoneElement).parent();
 	var x1 = $fixedZoneElement.css('margin-left');	
 	x1 = x1.substring(0,x1.indexOf('px'));
-	x1 = parseInt(x1);
+	x1 = parseInt(x1)-parseInt($('#large_scene_image').css('margin-left').replace('px', ''));
 	var y1 = $fixedZoneElement.css('margin-top');	
 	y1 = y1.substring(0,y1.indexOf('px'));
-	y1 = parseInt(y1);
+	y1 = parseInt(y1)-parseInt($('#large_scene_image').css('margin-top').replace('px', ''));
 	var width = $fixedZoneElement.css('width');	
 	width = width.substring(0,width.indexOf('px'));
 	var x2 = x1 + parseInt(width);
@@ -105,7 +105,6 @@ function editThisZone(aInFixedZoneElement) {
 	
 	$('#product_autocomplete_input').val( $fixedZoneElement.find('p').text() );
 	showAutocompleteBox(x1, y1+parseInt(height));
-	
 	$('#large_scene_image').imgAreaSelect({ x1: x1, y1: y1, x2: x2, y2: y2 });
 }
 
@@ -131,10 +130,11 @@ function afterTextInserted (event, data, formatted) {
 	zoneCurrent++;
 	var idProduct = data[1];
 	var nameProduct = data[0];
-	var x1 = selectionCurrent.x1;
-	var y1 = selectionCurrent.y1;
+	var x1 = parseInt($('#large_scene_image').css('margin-left').replace('px', '')) + selectionCurrent.x1;
+	var y1 = parseInt($('#large_scene_image').css('margin-top').replace('px', '')) + selectionCurrent.y1;
 	var width = selectionCurrent.width;
 	var height = selectionCurrent.height;
+
 	addProduct(zoneCurrent, x1, y1, width, height, idProduct, nameProduct);
 	
 }

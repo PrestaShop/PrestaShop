@@ -346,7 +346,10 @@ class BlockLayered extends Module
 			'is_indexable' =>(bool)$is_indexable
 		));
 		
-		return $this->display(__FILE__, 'attribute_group_form.tpl');
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			return $this->display(__FILE__, 'attribute_group_form_1.6.tpl');
+		else
+			return $this->display(__FILE__, 'attribute_group_form.tpl');
 	}
 
 	//ATTRIBUTES
@@ -421,8 +424,11 @@ class BlockLayered extends Module
 			'default_form_language' => (int)$this->context->controller->default_form_language,
 			'values' => $values
 		));
-		
-		return $this->display(__FILE__, 'attribute_form.tpl');
+
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			return $this->display(__FILE__, 'attribute_form_1.6.tpl');
+		else
+			return $this->display(__FILE__, 'attribute_form.tpl');
 	}
 
 	//FEATURES
@@ -514,8 +520,11 @@ class BlockLayered extends Module
 			'values' => $values,
 			'is_indexable' =>(bool)$is_indexable
 		));
-		
-		return $this->display(__FILE__, 'feature_form.tpl');
+
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			return $this->display(__FILE__, 'feature_form_1.6.tpl');
+		else
+			return $this->display(__FILE__, 'feature_form.tpl');
 	}
 
 	//FEATURES VALUE
@@ -591,8 +600,11 @@ class BlockLayered extends Module
 			'default_form_language' => (int)$this->context->controller->default_form_language,
 			'values' => $values
 		));
-		
-		return $this->display(__FILE__, 'feature_value_form.tpl');
+
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			return $this->display(__FILE__, 'feature_value_form_1.6.tpl');
+		else
+			return $this->display(__FILE__, 'feature_value_form.tpl');
 	}
 
 	public function hookProductListAssign($params)
@@ -1446,7 +1458,10 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_MNF', (int)Tools::getValue('ps_layered_filter_index_manufacturer'));
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_CAT', (int)Tools::getValue('ps_layered_filter_index_category'));
 
-			$message = '<div class="conf">'.$this->l('Settings saved successfully').'</div>';
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+				$message = '<div class="alert alert-success">'.$this->l('Settings saved successfully').'</div>';
+			else
+				$message = '<div class="conf">'.$this->l('Settings saved successfully').'</div>';
 		}
 		else if (Tools::getValue('deleteFilterTemplate'))
 		{
@@ -2175,7 +2190,10 @@ class BlockLayered extends Module
 					
 					break;
 
+
 				case 'category':
+					$this->user_groups =  ($this->context->customer->isLogged() ? $this->context->customer->getGroups() : array(Configuration::get('PS_UNIDENTIFIED_GROUP')));
+
 					$depth = Configuration::get('PS_LAYERED_FILTER_CATEGORY_DEPTH');
 					if ($depth === false)
 						$depth = 1;
@@ -2191,9 +2209,11 @@ class BlockLayered extends Module
 					$sql_query['group'] = ') count_products
 					FROM '._DB_PREFIX_.'category c
 					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category AND cl.`id_shop` = '.(int)Context::getContext()->shop->id.' and cl.id_lang = '.$id_lang.')
+					RIGHT JOIN '._DB_PREFIX_.'category_group cg ON (cg.id_category = c.id_category AND cg.`id_group` IN ('.implode(', ', $this->user_groups).'))
 					WHERE c.nleft > '.(int)$parent->nleft.'
 					AND c.nright < '.(int)$parent->nright.'
 					'.($depth ? 'AND c.level_depth <= '.($parent->level_depth+(int)$depth) : '').'
+					AND c.active = 1
 					GROUP BY c.id_category ORDER BY c.nleft, c.position';
 			}
 			

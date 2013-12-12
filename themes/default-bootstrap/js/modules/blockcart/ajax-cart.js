@@ -726,23 +726,23 @@ $(document).ready(function()
 	$("#shopping_cart a:first").hover(
 		function() {
 			if (ajaxCart.nb_total_products > 0 || cart_qty > 0)
-				$("#header_right #cart_block").stop(true, true).slideDown(450);
+				$("#header #cart_block").stop(true, true).slideDown(450);
 		},
 		function() {
 			setTimeout(function() {
 				if (!shopping_cart.isHoveringOver() && !cart_block.isHoveringOver())
-					$("#header_right #cart_block").stop(true, true).slideUp(450);
+					$("#header #cart_block").stop(true, true).slideUp(450);
 			}, 200);
 		}
 	);
 
-	$("#header_right #cart_block").hover(
+	$("#header #cart_block").hover(
 		function() {
 		},
 		function() {
 			setTimeout(function() {
 				if (!shopping_cart.isHoveringOver())
-					$("#header_right #cart_block").stop(true, true).slideUp(450);
+					$("#header #cart_block").stop(true, true).slideUp(450);
 			}, 200);
 		}
 	);

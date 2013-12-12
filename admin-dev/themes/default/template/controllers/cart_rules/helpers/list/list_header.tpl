@@ -26,7 +26,7 @@
 {block name='override_header'}
 {if $submit_form_ajax}
 	<script type="text/javascript">
-		$('#voucher', window.parent.document).val('{$new_cart_rule->code|escape:htmlall}');
+		$('#voucher', window.parent.document).val('{$new_cart_rule->code|escape:'html'}');
 		parent.add_cart_rule({$new_cart_rule->id|intval});
 		parent.$.fancybox.close();
 	</script>

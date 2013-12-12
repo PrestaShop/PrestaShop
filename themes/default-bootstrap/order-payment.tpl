@@ -265,7 +265,7 @@
 																<a
 																	id="{$product.id_product}_{$product.id_product_attribute}_{$id_customization}"
 																	class="cart_quantity_delete"
-																	href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;token={$token_cart}")|escape:'html'}"
+																	href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;token={$token_cart}")|escape:'html':'UTF-8'}"
 																	rel="nofollow">
 																	<img src="{$img_dir}icon/delete.gif" alt="{l s='Delete'}" title="{l s='Delete this customization'}" width="11" height="13" class="icon" />
 																</a>
@@ -274,7 +274,7 @@
 																<a 
 																	id="cart_quantity_up_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}"
 																	class="cart_quantity_up"
-																	href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;token={$token_cart}")|escape:'html'}"
+																	href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;token={$token_cart}")|escape:'html':'UTF-8'}"
 																	rel="nofollow"
 																	title="{l s='Add'}">
 																	<img src="{$img_dir}icon/quantity_up.gif" alt="{l s='Add'}" width="14" height="9" />
@@ -284,7 +284,7 @@
 																	<a
 																		id="cart_quantity_down_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}"
 																		class="cart_quantity_down"
-																		href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;op=down&amp;token={$token_cart}")|escape:'html'}"
+																		href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;op=down&amp;token={$token_cart}")|escape:'html':'UTF-8'}"
 																		rel="nofollow"
 																		title="{l s='Subtract'}">
 																		<img src="{$img_dir}icon/quantity_down.gif" alt="{l s='Subtract'}" width="14" height="9" />
@@ -354,7 +354,7 @@
 				{/if}
 				{if !$opc}
 					<p class="cart_navigation clearfix">
-						<a href="{$link->getPageLink('order', true, NULL, "step=2")|escape:'html'}" title="{l s='Previous'}" class="button-exclusive btn btn-default">
+						<a href="{$link->getPageLink('order', true, NULL, "step=2")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default">
 							<i class="icon-chevron-left"></i>
 							{l s='Continue shopping'}
 						</a>

@@ -87,7 +87,7 @@
 		{assign var='current_step' value='shipping'}
 		{include file="$tpl_dir./order-steps.tpl"}
 		{include file="$tpl_dir./errors.tpl"}
-		<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")|escape:'html'}" method="post" onsubmit="return acceptCGV();">
+		<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")|escape:'html':'UTF-8'}" method="post" onsubmit="return acceptCGV();">
 	{else}
 		<div id="opc_delivery_methods" class="opc-main-block">
 			<div id="opc_delivery_methods-overlay" class="opc-overlay" style="display: none;"></div>
@@ -325,7 +325,7 @@
 								{if !$is_guest}
 									{if $back}
 										<a 
-											href="{$link->getPageLink('order', true, NULL, "step=1&back={$back}&multi-shipping={$multi_shipping}")|escape:'html'}"
+											href="{$link->getPageLink('order', true, NULL, "step=1&back={$back}&multi-shipping={$multi_shipping}")|escape:'html':'UTF-8'}"
 											title="{l s='Previous'}"
 											class="button-exclusive btn btn-default">
 											<i class="icon-chevron-left"></i>
@@ -333,7 +333,7 @@
 										</a>
 									{else}
 										<a
-											href="{$link->getPageLink('order', true, NULL, "step=1&multi-shipping={$multi_shipping}")|escape:'html'}"
+											href="{$link->getPageLink('order', true, NULL, "step=1&multi-shipping={$multi_shipping}")|escape:'html':'UTF-8'}"
 											title="{l s='Previous'}"
 											class="button-exclusive btn btn-default">
 											<i class="icon-chevron-left"></i>
@@ -342,7 +342,7 @@
 									{/if}
 								{else}
 									<a
-										href="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")|escape:'html'}"
+										href="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")|escape:'html':'UTF-8'}"
 										title="{l s='Previous'}"
 										class="button-exclusive btn btn-default">
 										<i class="icon-chevron-left"></i>

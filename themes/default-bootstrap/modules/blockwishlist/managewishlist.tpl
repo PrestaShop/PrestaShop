@@ -62,8 +62,8 @@
             	<div class="row">
                     <div class="col-xs-6 col-sm-12">
                         <div class="product_image">
-                            <a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='Product detail' mod='blockwishlist'}">
-                                <img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.cover, 'home_default')|escape:'html'}" alt="{$product.name|escape:'html':'UTF-8'}" />
+                            <a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html':'UTF-8'}" title="{l s='Product detail' mod='blockwishlist'}">
+                                <img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.cover, 'home_default')|escape:'html':'UTF-8'}" alt="{$product.name|escape:'html':'UTF-8'}" />
                             </a>
                         </div>
                     </div>
@@ -73,7 +73,7 @@
                             <p id="s_title" class="product-name">
                                 {$product.name|truncate:30:'...'|escape:'html':'UTF-8'}
                                 {if isset($product.attributes_small)}
-                                    <small><a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html'}" title="{l s='Product detail' mod='blockwishlist'}">{$product.attributes_small|escape:'html':'UTF-8'}</a></small>
+                                    <small><a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)|escape:'html':'UTF-8'}" title="{l s='Product detail' mod='blockwishlist'}">{$product.attributes_small|escape:'html':'UTF-8'}</a></small>
                             {/if}
                             </p>
                             <div class="wishlist_product_detail">
@@ -137,7 +137,7 @@
 			{if $bought.quantity > 0}
 				<tr>
 					<td class="first_item">
-						<span style="float:left;"><img src="{$link->getImageLink($product.link_rewrite, $product.cover, 'small')|escape:'html'}" alt="{$product.name|escape:'html':'UTF-8'}" /></span>			
+						<span style="float:left;"><img src="{$link->getImageLink($product.link_rewrite, $product.cover, 'small')|escape:'html':'UTF-8'}" alt="{$product.name|escape:'html':'UTF-8'}" /></span>			
 						<span style="float:left;">
 							{$product.name|truncate:40:'...'|escape:'html':'UTF-8'}
 						{if isset($product.attributes_small)}

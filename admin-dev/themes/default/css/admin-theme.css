@@ -580,9 +580,9 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-exchange:before, .bootstrap .process-icon-partial_refund:before { content: "\f0ec"; }
 
-.icon-cloud-download:before, .bootstrap .process-icon-export:before { content: "\f0ed"; }
+.icon-cloud-download:before, .bootstrap .process-icon-export:before, .bootstrap .process-icon-download:before { content: "\f0ed"; }
 
-.icon-cloud-upload:before, .bootstrap .process-icon-import:before { content: "\f0ee"; }
+.icon-cloud-upload:before, .bootstrap .process-icon-import:before, .bootstrap .process-icon-upload:before { content: "\f0ee"; }
 
 .icon-user-md:before { content: "\f0f0"; }
 
