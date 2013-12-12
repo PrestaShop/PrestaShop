@@ -26,25 +26,17 @@ $( document ).ready(function() {
 
     $("[name^='checkBoxShopGroupAsso_theme']").change(function(){
 
-        var truc = $(this).parents('.tree-folder').find("[name^='checkBoxShopAsso_theme']").each(function(){
+        $(this).parents('.tree-folder').find("[name^='checkBoxShopAsso_theme']").each(function(){
             var id = $(this).attr('value');
             var checked = $(this).prop('checked');
-            console.log(id);
-            console.log(checked);
             toggleShopModuleCheckbox(id, checked);
         });
-//        console.log(truc);
-//console.log(parent);
-//        var children = parent.children('.tree');
-//
-//        console.log(children);
     });
 
     $("[name^='checkBoxShopAsso_theme']").click(function(){
         var id = $(this).attr('value');
         var checked = $(this).prop('checked');
         toggleShopModuleCheckbox(id, checked);
-
     });
 
 	//nav side bar
