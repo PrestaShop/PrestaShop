@@ -84,13 +84,9 @@
 	
 	<form action="{$link->getPageLink('address', true)|escape:'html':'UTF-8'}" method="post" class="std" id="add_address">
 		<!--h3 class="page-subheading">{if isset($id_address)}{l s='Your address'}{else}{l s='New address'}{/if}</h3-->
-		<div class="required form-group dni">
-			<label for="dni">{l s='Identification number'} <sup>*</sup></label>
-			<input type="text" class="form-control" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{else}{if isset($address->dni)}{$address->dni|escape:'html':'UTF-8'}{/if}{/if}" />
-			<span class="form_info">{l s='DNI / NIF / NIE'}</span>
-		</div>
 		{assign var="stateExist" value="false"}
 		{assign var="postCodeExist" value="false"}
+		{assign var="dniExist" value=false}
 		{foreach from=$ordered_adr_fields item=field_name}
 			{if $field_name eq 'company'}
 				<div class="form-group">
@@ -107,6 +103,14 @@
 						</div>
 					</div>
 				</div>
+			{/if}
+			{if $field_name eq 'dni'}
+			{assign var="dniExist" value=true}
+			<div class="required form-group">
+				<label for="dni">{l s='Identification number'}</label>
+				<input class="form-control" data-validate="{$address_validation.$field_name.validate}" type="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{else}{if isset($address->dni)}{$address->dni|escape:'html'}{/if}{/if}" />
+				<span class="form_info">{l s='DNI / NIF / NIE'}</span>
+			</div>
 			{/if}
 			{if $field_name eq 'firstname'}
 				<div class="required form-group">
@@ -191,7 +195,7 @@
 		{if $postCodeExist eq "false"}
 			<div class="required postcode form-group unvisible">
 				<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
-				<input class="is_required validate form-control" data-validate="{$address_validation.$field_name.validate}" type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode|escape:'html':'UTF-8'}{/if}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+				<input class="is_required validate form-control" data-validate="{$address_validation.postcode.validate}" type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode|escape:'html':'UTF-8'}{/if}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 			</div>
 		{/if}		
 		{if $stateExist eq "false"}
@@ -200,6 +204,13 @@
 				<select name="id_state" id="id_state" class="form-control">
 					<option value="">-</option>
 				</select>
+			</div>
+		{/if}
+		{if !$dniExist}
+			<div class="required dni form-group">
+				<label for="dni">{l s='Identification number'} <sup>*</sup></label>
+				<input class="is_required form-control" data-validate="{$address_validation.dni.validate}" type="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{else}{if isset($address->dni)}{$address->dni|escape:'html'}{/if}{/if}" />
+				<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 			</div>
 		{/if}
 		<div class="form-group">
