@@ -1761,7 +1761,7 @@ div.star a:hover
 			@media (max-width: $screen-xs-max)
 				width: 100%
 				float: left
-				padding-top: 5px													
+				padding-top: 5px
 			ul
 				float: right
 				@media (max-width: $screen-xs-max)
@@ -1770,10 +1770,16 @@ div.star a:hover
 					float: left
 					width: 40px
 					text-align: center
+					// min 768px max 991px
+					@media (min-width: $screen-sm) and (max-width: $screen-sm-max)
+						width: 30px
 					a
 						display: inline-block
 						color: #908f8f
 						font-size: 28px
+						// min 768px max 991px
+						@media (min-width: $screen-sm) and (max-width: $screen-sm-max)
+							font-size: 20px
 						span
 							display: none
 						&:before
@@ -1794,6 +1800,18 @@ div.star a:hover
 						a
 							&:before
 								content: "\f09e"
+					&.youtube
+						a
+							&:before
+								content: "\f167"
+					&.google-plus
+						a
+							&:before
+								content: "\f0d5"
+					&.pinterest
+						a
+							&:before
+								content: "\f0d2"
 			h4
 				float: right
 				margin-bottom: 0
