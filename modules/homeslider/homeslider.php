@@ -669,7 +669,7 @@ class HomeSlider extends Module
 
 	public function hookdisplayTop($params)
 	{
-		return $this->hookdisplayTopColumn();
+		return $this->hookdisplayTopColumn($params);
 	}
 
 	public function hookdisplayTopColumn($params)
