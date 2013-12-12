@@ -91,13 +91,16 @@ table#product_comparison .comparison_feature .product_name {
   margin-bottom: 8px; }
 @media (min-width: 1200px) {
   .share {
-    margin-bottom: 315px; } }
+    position: relative;
+    top: -350px; } }
 @media (min-width: 992px) and (max-width: 1199px) {
   .share {
-    margin-bottom: 315px; } }
+    position: relative;
+    top: -260px; } }
 @media (min-width: 768px) and (max-width: 991px) {
   .share {
-    margin-bottom: 315px; } }
+    position: relative;
+    top: -245px; } }
 
 .stArrow {
   display: none !important; }
