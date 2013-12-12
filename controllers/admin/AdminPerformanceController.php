@@ -177,11 +177,7 @@ class AdminPerformanceControllerCore extends AdminController
 					),
 					'hint' => $this->l('Enable or disable all classes and controllers overrides')
 				),
-			),
-			'submit' => array(
-				'title' => $this->l('   Save   '),
-				'class' => 'button'
-			),
+			)
 		);
 
 		$this->fields_value['native_module'] = Configuration::get('PS_DISABLE_NON_NATIVE_MODULE');
@@ -455,7 +451,11 @@ class AdminPerformanceControllerCore extends AdminController
 						)
 					)
 				)
-			)
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			),
 		);
 
 		$this->fields_value['PS_CIPHER_ALGORITHM'] = Configuration::get('PS_CIPHER_ALGORITHM');
@@ -669,8 +669,8 @@ class AdminPerformanceControllerCore extends AdminController
 			{
 				if (Tools::getValue('combination') || !Combination::isCurrentlyUsed())
 					Configuration::updateValue('PS_COMBINATION_FEATURE_ACTIVE', Tools::getValue('combination'));
-				if (Tools::getValue('group') || !Group::isCurrentlyUsed())
-					Configuration::updateValue('PS_GROUP_FEATURE_ACTIVE', Tools::getValue('group'));
+				if (Tools::getValue('customer_group') && !Group::isCurrentlyUsed())
+					Configuration::updateValue('PS_GROUP_FEATURE_ACTIVE', Tools::getValue('customer_group'));
 				Configuration::updateValue('PS_FEATURE_FEATURE_ACTIVE', Tools::getValue('feature'));
 				$redirectAdmin = true;
 			}
