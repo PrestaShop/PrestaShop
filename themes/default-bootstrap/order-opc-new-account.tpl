@@ -96,6 +96,10 @@
 					});
 					vat_number();
 					vat_number_invoice();
+					{/literal}
+					$('.id_state option[value={if isset($guestInformations.id_state)}{$guestInformations.id_state|intval}{/if}]').prop('selected', true);
+					$('.id_state_invoice option[value={if isset($guestInformations.id_state_invoice)}{$guestInformations.id_state_invoice|intval}{/if}]').prop('selected', true);
+					{literal}
 				});
 				{/literal}
 				</script>
@@ -191,12 +195,27 @@
 				<h3 class="page-subheading top-indent">{l s='Delivery address'}</h3>
 				{$stateExist = false}
 				{$postCodeExist = false}
+				{$dniExist = false}
 				{foreach from=$dlv_all_fields item=field_name}
 				{if $field_name eq "company" && $b2b_enable}
 					<div class="text form-group">
 						<label for="company">{l s='Company'}</label>
 						<input type="text" class="text form-control" id="company" name="company" value="{if isset($guestInformations) && $guestInformations.company}{$guestInformations.company}{/if}" />
 					</div>
+				{elseif $field_name eq "vat_number"}	
+				<div id="vat_number_block" style="display:none;">
+					<div class="form-group">
+						<label for="vat_number">{l s='VAT number'}</label>
+						<input type="text" class="text form-control" name="vat_number" id="vat_number" value="{if isset($guestInformations) && $guestInformations.vat_number}{$guestInformations.vat_number}{/if}" />
+					</div>
+				</div>
+				{elseif $field_name eq "dni"}
+				{assign var='dniExist' value=true}
+				<div class="required dni form-group">
+					<label for="dni">{l s='Identification number'}</label>
+					<input type="text" class="text form-control" name="dni" id="dni" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
+					<span class="form_info">{l s='DNI / NIF / NIE'}</span>
+				</div>
 				{elseif $field_name eq "firstname"}
 				<div class="required text form-group">
 					<label for="firstname">{l s='First name'} <sup>*</sup></label>
@@ -237,13 +256,6 @@
 						{/foreach}
 					</select>
 				</div>
-				{elseif $field_name eq "vat_number"}	
-				<div id="vat_number_block" style="display:none;">
-					<div class="form-group">
-						<label for="vat_number">{l s='VAT number'}</label>
-						<input type="text" class="text form-control" name="vat_number" id="vat_number" value="{if isset($guestInformations) && $guestInformations.vat_number}{$guestInformations.vat_number}{/if}" />
-					</div>
-				</div>
 				{elseif $field_name eq "state" || $field_name eq 'State:name'}
 				{$stateExist = true}
 				<div class="required id_state form-group" style="display:none;">
@@ -254,11 +266,6 @@
 				</div>
 				{/if}
 				{/foreach}
-				<div class="required dni form-group">
-					<label for="dni">{l s='Identification number'}</label>
-					<input type="text" class="text form-control" name="dni" id="dni" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
-					<span class="form_info">{l s='DNI / NIF / NIE'}</span>
-				</div>
 				{if !$postCodeExist}
 				<div class="required postcode form-group unvisible">
 					<label for="postcode">{l s='Zip / Postal code'} <sup>*</sup></label>
@@ -272,7 +279,14 @@
 						<option value="">-</option>
 					</select>
 				</div>
-				{/if}				
+				{/if}
+				{if !$dniExist}
+				<div class="required dni form-group">
+					<label for="dni">{l s='Identification number'}</label>
+					<input type="text" class="text form-control" name="dni" id="dni" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
+					<span class="form_info">{l s='DNI / NIF / NIE'}</span>
+				</div>
+				{/if}
 				<div class="form-group is_customer_param">
 					<label for="other">{l s='Additional information'}</label>
 					<textarea class="form-control" name="other" id="other" cols="26" rows="7"></textarea>
@@ -292,17 +306,18 @@
 
 				<div class="checkbox">
                 	<label for="invoice_address">
-					<input type="checkbox" name="invoice_address" id="invoice_address" autocomplete="off"/>
+					<input type="checkbox" name="invoice_address" id="invoice_address"{if (isset($smarty.post.invoice_address) && $smarty.post.invoice_address) || (isset($guestInformations) && $guestInformations.invoice_address)} checked="checked"{/if} autocomplete="off"/>
 					{l s='Please use another address for invoice'}</label>
 				</div>
 
 				<div id="opc_invoice_address" class="is_customer_param">
 					{assign var=stateExist value=false}
 					{assign var=postCodeExist value=false}
+					{assign var='dniExist' value=false}
 					<h3 class="page-subheading top-indent">{l s='Invoice address'}</h3>
 					{foreach from=$inv_all_fields item=field_name}
-					{if $field_name eq "company" &&  $b2b_enable}
-					<div class="form-group is_customer_param">
+					{if $field_name eq "company" && $b2b_enable}
+					<div class="form-group">
 						<label for="company_invoice">{l s='Company'}</label>
 						<input type="text" class="text form-control" id="company_invoice" name="company_invoice" value="" />
 					</div>
@@ -313,6 +328,8 @@
 							<input type="text" class="form-control" id="vat_number_invoice" name="vat_number_invoice" value="" />
 						</div>
 					</div>
+					{elseif $field_name eq "dni"}
+					{assign var='dniExist' value=true}
 					<div class="required form-group dni_invoice">
 						<label for="dni">{l s='Identification number'}</label>
 						<input type="text" class="text form-control" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni_invoice}{$guestInformations.dni_invoice}{/if}" />
@@ -383,18 +400,25 @@
 						</select>
 					</div>
 					{/if}
+					{if !$dniExist}
+					<div class="required form-group dni_invoice">
+						<label for="dni">{l s='Identification number'}</label>
+						<input type="text" class="text form-control" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni_invoice}{$guestInformations.dni_invoice}{/if}" />
+						<span class="form_info">{l s='DNI / NIF / NIE'}</span>
+					</div>
+					{/if}
 					<div class="form-group is_customer_param">
 						<label for="other_invoice">{l s='Additional information'}</label>
 						<textarea class="form-control" name="other_invoice" id="other_invoice" cols="26" rows="3"></textarea>
 					</div>
 					{if isset($one_phone_at_least) && $one_phone_at_least}
-						<p class="inline-infos required">{l s='You must register at least one phone number.'}</p>
+						<p class="inline-infos required is_customer_param">{l s='You must register at least one phone number.'}</p>
 					{/if}					
-					<div class="form-group">
+					<div class="form-group is_customer_param">
 						<label for="phone_invoice">{l s='Home phone'}</label>
 						<input type="text" class="form-control" name="phone_invoice" id="phone_invoice" value="{if isset($guestInformations) && $guestInformations.phone_invoice}{$guestInformations.phone_invoice}{/if}" />
 					</div>
-					<div class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}form-group is_customer_param">
+					<div class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}form-group">
 						<label for="phone_mobile_invoice">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
 						<input type="text" class="form-control" name="phone_mobile_invoice" id="phone_mobile_invoice" value="{if isset($guestInformations) && $guestInformations.phone_mobile_invoice}{$guestInformations.phone_mobile_invoice}{/if}" />
 					</div>

@@ -52,22 +52,33 @@
 			{/if}
 		{/foreach}
 	{/if}
-	$(function(){ldelim}
-		$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}{if isset($address)}{$address->id_state|intval}{/if}{/if}]').attr('selected', true);
-	{rdelim});
 	//]]>
 	{literal}
 		$(document).ready(function() {
 			$('#company').on('input',function(){
 				vat_number();
 			});
-			vat_number();
+			$('#company_invoice').on('input',function(){
+				vat_number_invoice();
+			});
 			function vat_number() {
 				if ($('#company').val() != '')
 					$('#vat_number').show();
 				else
 					$('#vat_number').hide();
 			}
+			function vat_number_invoice()
+			{
+				if ($('#company_invoice').val() != '')
+					$('#vat_number_block_invoice').show();
+				else
+					$('#vat_number_block_invoice').hide();
+			}
+			vat_number();
+			vat_number_invoice();
+			{/literal}
+			$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{/if}]').prop('selected', true);
+			{literal}
 		});
 	{/literal}
 </script>
@@ -77,6 +88,7 @@
 {include file="$tpl_dir./errors.tpl"}
 {assign var='stateExist' value=false}
 {assign var="postCodeExist" value=false}
+{assign var="dniExist" value=false}
 {if !isset($email_create)}
 	<script type="text/javascript">
 		{literal}
@@ -85,6 +97,11 @@
 					submitFunction();
 					return false;
 				});
+
+				$('#invoice_address').click(function(){
+					bindCheckbox();
+				});
+				bindCheckbox();
 			});
 			function submitFunction() {
 				$('#create_account_error').html('').hide();
@@ -124,6 +141,24 @@
 									$('select.form-control').uniform();
 								});
 							});
+						}
+						function bindCheckbox()
+						{
+							if ($('#invoice_address:checked').length > 0)
+							{
+								$('#opc_invoice_address').slideDown('slow');
+								if ($('#company_invoice').val() == '')
+									$('#vat_number_block_invoice').hide();
+								updateState('invoice');
+								updateNeedIDNumber('invoice');
+								updateZipCode('invoice');
+								{/literal}
+								$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{/if}]').prop('selected', true);
+								$('.id_state_invoice option[value={if isset($smarty.post.id_state_invoice)}{$smarty.post.id_state_invoice|intval}{/if}]').prop('selected', true);
+								{literal}
+							}
+							else
+								$('#opc_invoice_address').slideUp('slow');
 						}
 					},
 					error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -200,171 +235,286 @@
 	{if isset($inOrderProcess) && $inOrderProcess && $PS_GUEST_CHECKOUT_ENABLED}
 		<form action="{$link->getPageLink('authentication', true, NULL, "back=$back")|escape:'html':'UTF-8'}" method="post" id="new_account_form" class="std clearfix">
 			<div class="box">
-				<div>
 				<div id="opc_account_form" style="display: block; ">
 					<h3 class="page-heading bottom-indent">{l s='Instant checkout'}</h3>
-						<!-- Account -->
-						<div class="required form-group">
-							<label for="guest_email">{l s='Email address'} <sup>*</sup></label>
-							<input type="text" class="is_required validate form-control" data-validate="isEmail" id="guest_email" name="guest_email" value="{if isset($smarty.post.guest_email)}{$smarty.post.guest_email}{/if}" />
-						</div>
-						<div class="cleafix gender-line">
-							<label>{l s='Title'}</label>
-							{foreach from=$genders key=k item=gender}
-								<div class="radio-inline">
-									<label for="id_gender{$gender->id}" class="top">
-										<input type="radio" name="id_gender" id="id_gender{$gender->id}" value="{$gender->id}"{if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender->id} checked="checked"{/if} />
-										{$gender->name}
-									</label>
-								</div>
-							{/foreach}
-						</div>
-						<div class="required form-group">
-							<label for="firstname">{l s='First name'} <sup>*</sup></label>
-							<input type="text" class="is_required validate text form-control" data-validate="isName" id="firstname" name="firstname" onblur="$('#customer_firstname').val($(this).val());" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
-							<input type="hidden" class="text" id="customer_firstname" name="customer_firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
-						</div>
-						<div class="required form-group">
-							<label for="lastname">{l s='Last name'} <sup>*</sup></label>
-							<input type="text" class="is_required validate text form-control" data-validate="isName" id="lastname" name="lastname" onblur="$('#customer_lastname').val($(this).val());" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
-							<input type="hidden" class="text" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
-						</div>
-						<div class="form-group date-select">
-							<label>{l s='Date of Birth'}</label>
-							<div class="row">
-								<div class="col-xs-4">
-									<select id="days" name="days" class="form-control">
-										<option value="">-</option>
-										{foreach from=$days item=day}
-											<option value="{$day}" {if ($sl_day == $day)} selected="selected"{/if}>{$day}&nbsp;&nbsp;</option>
-										{/foreach}
-									</select>
-									{*
-										{l s='January'}
-										{l s='February'}
-										{l s='March'}
-										{l s='April'}
-										{l s='May'}
-										{l s='June'}
-										{l s='July'}
-										{l s='August'}
-										{l s='September'}
-										{l s='October'}
-										{l s='November'}
-										{l s='December'}
-									*}
-								</div>
-								<div class="col-xs-4">
-									<select id="months" name="months" class="form-control">
-										<option value="">-</option>
-										{foreach from=$months key=k item=month}
-											<option value="{$k}" {if ($sl_month == $k)} selected="selected"{/if}>{l s=$month}&nbsp;</option>
-										{/foreach}
-									</select>
-								</div>
-								<div class="col-xs-4">
-									<select id="years" name="years" class="form-control">
-										<option value="">-</option>
-										{foreach from=$years item=year}
-											<option value="{$year}" {if ($sl_year == $year)} selected="selected"{/if}>{$year}&nbsp;&nbsp;</option>
-										{/foreach}
-									</select>
-								</div>
+					<!-- Account -->
+					<div class="required form-group">
+						<label for="guest_email">{l s='Email address'} <sup>*</sup></label>
+						<input type="text" class="is_required validate form-control" data-validate="isEmail" id="guest_email" name="guest_email" value="{if isset($smarty.post.guest_email)}{$smarty.post.guest_email}{/if}" />
+					</div>
+					<div class="cleafix gender-line">
+						<label>{l s='Title'}</label>
+						{foreach from=$genders key=k item=gender}
+							<div class="radio-inline">
+								<label for="id_gender{$gender->id}" class="top">
+									<input type="radio" name="id_gender" id="id_gender{$gender->id}" value="{$gender->id}"{if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender->id} checked="checked"{/if} />
+									{$gender->name}
+								</label>
 							</div>
-						</div>
-						{if isset($newsletter) && $newsletter}
-							<div class="checkbox">
-								<label for="newsletter">
-								<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == '1'}checked="checked"{/if} />
-								{l s='Sign up for our newsletter!'}</label>
-							</div>
-							<div class="checkbox">
-								<label for="optin">
-								<input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == '1'}checked="checked"{/if} />
-								{l s='Receive special offers from our partners!'}</label>
-							</div>
-						{/if}
-						<h3 class="page-heading bottom-indent top-indent">{l s='Delivery address'}</h3>
-						{foreach from=$dlv_all_fields item=field_name}
-							{if $field_name eq "company"}
-								<div class="text form-group">
-									<label for="company">{l s='Company'}</label>
-									<input type="text" class="text form-control" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
-								</div>
-							{elseif $field_name eq "vat_number"}
-								<div id="vat_number" style="display:none;">
-									<div class="text form-group">
-										<label for="vat-number">{l s='VAT number'}</label>
-										<input id="vat-number" type="text" class="text form-control" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{/if}" />
-									</div>
-								</div>
-							{elseif $field_name eq "address1"}
-								<div class="required form-group">
-									<label for="address1">{l s='Address'} <sup>*</sup></label>
-									<input type="text" class="form-control" name="address1" id="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}" />
-								</div>
-							{elseif $field_name eq "postcode"}
-								{assign var='postCodeExist' value=true}
-								<div class="required postcode form-group">
-									<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
-									<input type="text" class="form-control" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());" />
-								</div>
-							{elseif $field_name eq "city"}
-								<div class="required form-group">
-									<label for="city">{l s='City'} <sup>*</sup></label>
-									<input type="text" class="form-control" name="city" id="city" value="{if isset($smarty.post.city)}{$smarty.post.city}{/if}" />
-								</div>
-								<!-- if customer hasn't update his layout address, country has to be verified but it's deprecated -->
-							{elseif $field_name eq "Country:name" || $field_name eq "country"}
-								<div class="required select form-group">
-									<label for="id_country">{l s='Country'} <sup>*</sup></label>
-									<select name="id_country" id="id_country" class="form-control">
-										{foreach from=$countries item=v}
-											<option value="{$v.id_country}" {if ($sl_country == $v.id_country)} selected="selected"{/if}>{$v.name}</option>
-										{/foreach}
-									</select>
-								</div>
-							{elseif $field_name eq "State:name"}
-								{assign var='stateExist' value=true}
-								<div class="required id_state select form-group">
-									<label for="id_state">{l s='State'} <sup>*</sup></label>
-									<select name="id_state" id="id_state" class="form-control">
-										<option value="">-</option>
-									</select>
-								</div>
-							{elseif $field_name eq "phone"}
-								<div class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}text form-group">
-									<label for="phone">{l s='Phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
-									<input type="text" class="text form-control" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}"/>
-								</div>
-							{/if}
 						{/foreach}
-						{if $stateExist eq false}
-							<div class="required id_state select unvisible form-group">
+					</div>
+					<div class="required form-group">
+						<label for="firstname">{l s='First name'} <sup>*</sup></label>
+						<input type="text" class="is_required validate form-control" data-validate="isName" id="firstname" name="firstname" onblur="$('#customer_firstname').val($(this).val());" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
+						<input type="hidden" id="customer_firstname" name="customer_firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
+					</div>
+					<div class="required form-group">
+						<label for="lastname">{l s='Last name'} <sup>*</sup></label>
+						<input type="text" class="is_required validate form-control" data-validate="isName" id="lastname" name="lastname" onblur="$('#customer_lastname').val($(this).val());" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
+						<input type="hidden" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
+					</div>
+					<div class="form-group date-select">
+						<label>{l s='Date of Birth'}</label>
+						<div class="row">
+							<div class="col-xs-4">
+								<select id="days" name="days" class="form-control">
+									<option value="">-</option>
+									{foreach from=$days item=day}
+										<option value="{$day}" {if ($sl_day == $day)} selected="selected"{/if}>{$day}&nbsp;&nbsp;</option>
+									{/foreach}
+								</select>
+								{*
+									{l s='January'}
+									{l s='February'}
+									{l s='March'}
+									{l s='April'}
+									{l s='May'}
+									{l s='June'}
+									{l s='July'}
+									{l s='August'}
+									{l s='September'}
+									{l s='October'}
+									{l s='November'}
+									{l s='December'}
+								*}
+							</div>
+							<div class="col-xs-4">
+								<select id="months" name="months" class="form-control">
+									<option value="">-</option>
+									{foreach from=$months key=k item=month}
+										<option value="{$k}" {if ($sl_month == $k)} selected="selected"{/if}>{l s=$month}&nbsp;</option>
+									{/foreach}
+								</select>
+							</div>
+							<div class="col-xs-4">
+								<select id="years" name="years" class="form-control">
+									<option value="">-</option>
+									{foreach from=$years item=year}
+										<option value="{$year}" {if ($sl_year == $year)} selected="selected"{/if}>{$year}&nbsp;&nbsp;</option>
+									{/foreach}
+								</select>
+							</div>
+						</div>
+					</div>
+					{if isset($newsletter) && $newsletter}
+						<div class="checkbox">
+							<label for="newsletter">
+							<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == '1'}checked="checked"{/if} />
+							{l s='Sign up for our newsletter!'}</label>
+						</div>
+						<div class="checkbox">
+							<label for="optin">
+							<input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == '1'}checked="checked"{/if} />
+							{l s='Receive special offers from our partners!'}</label>
+						</div>
+					{/if}
+					<h3 class="page-heading bottom-indent top-indent">{l s='Delivery address'}</h3>
+					{foreach from=$dlv_all_fields item=field_name}
+						{if $field_name eq "company" && $b2b_enable}
+							<div class="form-group">
+								<label for="company">{l s='Company'}</label>
+								<input type="text" class="form-control" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
+							</div>
+						{elseif $field_name eq "vat_number"}
+							<div id="vat_number" style="display:none;">
+								<div class="form-group">
+									<label for="vat-number">{l s='VAT number'}</label>
+									<input id="vat-number" type="text" class="form-control" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{/if}" />
+								</div>
+							</div>
+							{elseif $field_name eq "dni"}
+							{assign var='dniExist' value=true}
+							<div class="required dni form-group">
+								<label for="dni">{l s='Identification number'}</label>
+								<input type="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{/if}" />
+								<span class="form_info">{l s='DNI / NIF / NIE'}</span>
+							</div>
+						{elseif $field_name eq "address1"}
+							<div class="required form-group">
+								<label for="address1">{l s='Address'} <sup>*</sup></label>
+								<input type="text" class="form-control" name="address1" id="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}" />
+							</div>
+						{elseif $field_name eq "postcode"}
+							{assign var='postCodeExist' value=true}
+							<div class="required postcode form-group">
+								<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
+								<input type="text" class="form-control" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());" />
+							</div>
+						{elseif $field_name eq "city"}
+							<div class="required form-group">
+								<label for="city">{l s='City'} <sup>*</sup></label>
+								<input type="text" class="form-control" name="city" id="city" value="{if isset($smarty.post.city)}{$smarty.post.city}{/if}" />
+							</div>
+							<!-- if customer hasn't update his layout address, country has to be verified but it's deprecated -->
+						{elseif $field_name eq "Country:name" || $field_name eq "country"}
+							<div class="required select form-group">
+								<label for="id_country">{l s='Country'} <sup>*</sup></label>
+								<select name="id_country" id="id_country" class="form-control">
+									{foreach from=$countries item=v}
+										<option value="{$v.id_country}"{if (isset($smarty.post.id_country) AND  $smarty.post.id_country == $v.id_country) OR (!isset($smarty.post.id_country) && $sl_country == $v.id_country)} selected="selected"{/if}>{$v.name}</option>
+									{/foreach}
+								</select>
+							</div>
+						{elseif $field_name eq "State:name"}
+							{assign var='stateExist' value=true}
+							<div class="required id_state select form-group">
 								<label for="id_state">{l s='State'} <sup>*</sup></label>
 								<select name="id_state" id="id_state" class="form-control">
 									<option value="">-</option>
 								</select>
 							</div>
 						{/if}
-						{if $postCodeExist eq false}
-							<div class="required postcode text unvisible form-group">
-								<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
-								<input type="text" class="text form-control" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());" />
-							</div>
-						{/if}				
-						<input type="hidden" name="alias" id="alias" value="{l s='My address'}" />
-						<input type="hidden" name="is_new_customer" id="is_new_customer" value="0" />
-						<!-- END Account -->
+					{/foreach}
+					{if $stateExist eq false}
+						<div class="required id_state select unvisible form-group">
+							<label for="id_state">{l s='State'} <sup>*</sup></label>
+							<select name="id_state" id="id_state" class="form-control">
+								<option value="">-</option>
+							</select>
+						</div>
+					{/if}
+					{if $postCodeExist eq false}
+						<div class="required postcode unvisible form-group">
+							<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
+							<input type="text" class="form-control" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());" />
+						</div>
+					{/if}
+					{if $dniExist eq false}
+						<div class="required form-group dni_invoice">
+							<label for="dni">{l s='Identification number'}</label>
+							<input type="text" class="text form-control" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni_invoice}{$guestInformations.dni_invoice}{/if}" />
+							<span class="form_info">{l s='DNI / NIF / NIE'}</span>
+						</div>
+					{/if}
+					<div class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}form-group">
+						<label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
+						<input type="text" class="form-control" name="phone_mobile" id="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{/if}" />
 					</div>
-				</div>
-				<div class="account_creation dni">
-					<h3 class="page-subheading">{l s='Tax identification'}</h3>
-					<p class="required text form-group">
-						<label for="dni">{l s='Identification number'}</label>
-						<input type="text" class="text form-control" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{/if}" />
-						<span class="form_info">{l s='DNI / NIF / NIE'}</span>
-					</p>
+					<input type="hidden" name="alias" id="alias" value="{l s='My address'}" />
+					<input type="hidden" name="is_new_customer" id="is_new_customer" value="0" />
+
+					<div class="checkbox">
+	                	<label for="invoice_address">
+						<input type="checkbox" name="invoice_address" id="invoice_address"{if (isset($smarty.post.invoice_address) && $smarty.post.invoice_address) || (isset($guestInformations) && $guestInformations.invoice_address)} checked="checked"{/if} autocomplete="off"/>
+						{l s='Please use another address for invoice'}</label>
+					</div>
+					<div id="opc_invoice_address" class="is_customer_param">
+						{assign var=stateExist value=false}
+						{assign var=postCodeExist value=false}
+						<h3 class="page-subheading top-indent">{l s='Invoice address'}</h3>
+						{foreach from=$inv_all_fields item=field_name}
+						{if $field_name eq "company" && $b2b_enable}
+						<div class="form-group">
+							<label for="company_invoice">{l s='Company'}</label>
+							<input type="text" class="text form-control" id="company_invoice" name="company_invoice" value="" />
+						</div>
+						{elseif $field_name eq "vat_number"}
+						<div id="vat_number_block_invoice" class="is_customer_param" style="display:none;">
+							<div class="form-group">
+								<label for="vat_number_invoice">{l s='VAT number'}</label>
+								<input type="text" class="form-control" id="vat_number_invoice" name="vat_number_invoice" value="" />
+							</div>
+						</div>
+						{elseif $field_name eq "dni"}
+						{assign var=dniExist value=true}
+						<div class="required form-group dni_invoice">
+							<label for="dni">{l s='Identification number'}</label>
+							<input type="text" class="text form-control" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni_invoice}{$guestInformations.dni_invoice}{/if}" />
+							<span class="form_info">{l s='DNI / NIF / NIE'}</span>
+						</div>
+						{elseif $field_name eq "firstname"}
+						<div class="required form-group">
+							<label for="firstname_invoice">{l s='First name'} <sup>*</sup></label>
+							<input type="text" class="form-control" id="firstname_invoice" name="firstname_invoice" value="{if isset($guestInformations) && $guestInformations.firstname_invoice}{$guestInformations.firstname_invoice}{/if}" />
+						</div>
+						{elseif $field_name eq "lastname"}
+						<div class="required form-group">
+							<label for="lastname_invoice">{l s='Last name'} <sup>*</sup></label>
+							<input type="text" class="form-control" id="lastname_invoice" name="lastname_invoice" value="{if isset($guestInformations) && $guestInformations.firstname_invoice}{$guestInformations.firstname_invoice}{/if}" />
+						</div>
+						{elseif $field_name eq "address1"}
+						<div class="required form-group">
+							<label for="address1_invoice">{l s='Address'} <sup>*</sup></label>
+							<input type="text" class="form-control" name="address1_invoice" id="address1_invoice" value="{if isset($guestInformations) && $guestInformations.address1_invoice}{$guestInformations.address1_invoice}{/if}" />
+						</div>
+						{elseif $field_name eq "address2"}
+						<div class="form-group is_customer_param">
+							<label for="address2_invoice">{l s='Address (Line 2)'}</label>
+							<input type="text" class="form-control" name="address2_invoice" id="address2_invoice" value="{if isset($guestInformations) && $guestInformations.address2_invoice}{$guestInformations.address2_invoice}{/if}" />
+						</div>
+						{elseif $field_name eq "postcode"}
+						{$postCodeExist = true}
+						<div class="required postcode_invoice form-group">
+							<label for="postcode_invoice">{l s='Zip / Postal Code'} <sup>*</sup></label>
+							<input type="text" class="form-control" name="postcode_invoice" id="postcode_invoice" value="{if isset($guestInformations) && $guestInformations.postcode_invoice}{$guestInformations.postcode_invoice}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+						</div>
+						{elseif $field_name eq "city"}
+						<div class="required form-group">
+							<label for="city_invoice">{l s='City'} <sup>*</sup></label>
+							<input type="text" class="form-control" name="city_invoice" id="city_invoice" value="{if isset($guestInformations) && $guestInformations.city_invoice}{$guestInformations.city_invoice}{/if}" />
+						</div>
+						{elseif $field_name eq "country" || $field_name eq "Country:name"}
+						<div class="required form-group">
+							<label for="id_country_invoice">{l s='Country'} <sup>*</sup></label>
+							<select name="id_country_invoice" id="id_country_invoice" class="form-control">
+								<option value="">-</option>
+								{foreach from=$countries item=v}
+								<option value="{$v.id_country}"{if (isset($guestInformations) AND $guestInformations.id_country_invoice == $v.id_country) OR (!isset($guestInformations) && $sl_country == $v.id_country)} selected="selected"{/if}>{$v.name|escape:'html':'UTF-8'}</option>
+								{/foreach}
+							</select>
+						</div>
+						{elseif $field_name eq "state" || $field_name eq 'State:name'}
+						{$stateExist = true}
+						<div class="required id_state_invoice form-group" style="display:none;">
+							<label for="id_state_invoice">{l s='State'} <sup>*</sup></label>
+							<select name="id_state_invoice" id="id_state_invoice" class="form-control">
+								<option value="">-</option>
+							</select>
+						</div>
+						{/if}
+						{/foreach}
+						{if !$postCodeExist}
+						<div class="required postcode_invoice form-group unvisible">
+							<label for="postcode_invoice">{l s='Zip / Postal Code'} <sup>*</sup></label>
+							<input type="text" class="form-control" name="postcode_invoice" id="postcode_invoice" value="" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+						</div>
+						{/if}					
+						{if !$stateExist}
+						<div class="required id_state_invoice form-group unvisible">
+							<label for="id_state_invoice">{l s='State'} <sup>*</sup></label>
+							<select name="id_state_invoice" id="id_state_invoice" class="form-control">
+								<option value="">-</option>
+							</select>
+						</div>
+						{/if}
+						<div class="form-group is_customer_param">
+							<label for="other_invoice">{l s='Additional information'}</label>
+							<textarea class="form-control" name="other_invoice" id="other_invoice" cols="26" rows="3"></textarea>
+						</div>
+						{if isset($one_phone_at_least) && $one_phone_at_least}
+							<p class="inline-infos required is_customer_param">{l s='You must register at least one phone number.'}</p>
+						{/if}					
+						<div class="form-group is_customer_param">
+							<label for="phone_invoice">{l s='Home phone'}</label>
+							<input type="text" class="form-control" name="phone_invoice" id="phone_invoice" value="{if isset($guestInformations) && $guestInformations.phone_invoice}{$guestInformations.phone_invoice}{/if}" />
+						</div>
+						<div class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}form-group">
+							<label for="phone_mobile_invoice">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
+							<input type="text" class="form-control" name="phone_mobile_invoice" id="phone_mobile_invoice" value="{if isset($guestInformations) && $guestInformations.phone_mobile_invoice}{$guestInformations.phone_mobile_invoice}{/if}" />
+						</div>
+						<input type="hidden" name="alias_invoice" id="alias_invoice" value="{l s='My Invoice address'}" />
+					</div>
+					<!-- END Account -->
 				</div>
 				{$HOOK_CREATE_ACCOUNT_FORM}
 			</div>
@@ -561,7 +711,7 @@
 							<select name="id_country" id="id_country" class="form-control">
 								<option value="">-</option>
 								{foreach from=$countries item=v}
-								<option value="{$v.id_country}" {if ($sl_country == $v.id_country)} selected="selected"{/if}>{$v.name}</option>
+								<option value="{$v.id_country}"{if (isset($smarty.post.id_country) AND $smarty.post.id_country == $v.id_country) OR (!isset($smarty.post.id_country) && $sl_country == $v.id_country)} selected="selected"{/if}>{$v.name}</option>
 								{/foreach}
 							</select>
 						</p>
@@ -600,7 +750,7 @@
 					<label for="phone">{l s='Home phone'}</label>
 					<input type="text" class="form-control" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}" />
 				</p>
-				<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if} form-group">
+				<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}form-group">
 					<label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
 					<input type="text" class="form-control" name="phone_mobile" id="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{/if}" />
 				</p>
