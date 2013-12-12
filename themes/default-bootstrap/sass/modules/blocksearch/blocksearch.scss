@@ -2,21 +2,18 @@
 @import "theme_variables";
 /* block top search */
 #search_block_top {
-	@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px 
-		right: 295px;
+	padding-top: 50px;
+	@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px
+		padding-top: 0;
 	}
 	@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
-		right: 207px;
+		padding-top: 0;
 	}
 	@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
-		right: 0;
-		top: 85px;
+		padding-top: 0;
 	}
 	@media (max-width: $screen-xs - 1) { // max 479px
-		top: 56px;
-		right: 50%;
-		width: 270px;
-		margin-right: 270px/2*-1;
+		padding-top: 0;
 	}
 	.btn.button-search {
 		background: $dark-background;
@@ -82,7 +79,7 @@
 }	
 
 form#searchbox {
-	label{
+	label {
 		color: $base-text-color;
 		margin-bottom: 1px
 	}

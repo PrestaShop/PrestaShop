@@ -1,8 +1,8 @@
 {if $MENU != ''}
 	
 	<!-- Menu -->
-	<div class="sf-contener clearfix">
-    	<div class="cat-title">{l s="Categories" mod="blocktopmenu"}</div>
+	<div id="block_top_menu" class="sf-contener clearfix">
+		<div class="cat-title">{l s="Categories" mod="blocktopmenu"}</div>
 		<ul class="sf-menu clearfix menu-content">
 			{$MENU}
 			{if $MENU_SEARCH}
@@ -21,21 +21,21 @@
 	</div>
 
 	<!--/ Menu -->
-    {literal}
-    <script type="text/javascript">
+	{literal}
+	<script type="text/javascript">
 		$(document).ready(function() {
 			categoryMenu = $('ul.sf-menu');        //var rich menu
 			categoryMenu.superfish();				   //menu initialization
-			$('.sf-menu > li > ul').addClass('container'); //add class for width define
+			$('.sf-menu > li > ul').addClass('submenu-container'); //add class for width define
 			i = 0;
 			$('.sf-menu > li > ul > li:not(#category-thumbnail)').each(function() {  //add classes for clearing
-                i++;
+				i++;
 				if(i%2==1)
 					$(this).addClass('first-in-line-xs');
 				else if (i%5==1)
 					$(this).addClass('first-in-line-lg');
-            });
-        });
+			});
+		});
 		
 		// accordion for definition smaller that 767px
 		
@@ -48,11 +48,11 @@
 					$(this).toggleClass('active').parent().find('ul.menu-content').stop().slideToggle('medium');
 				}),
 				$('.sf-menu > li:has(ul)').each(function() {
-                    $(this).prepend('<span></span>'),
+					$(this).prepend('<span></span>'),
 					$(this).find('span').on('click touchend', function(){
-					  	categoryMenu.superfish('hide');
+						categoryMenu.superfish('hide');
 					});
-                });
+				});
 			}else{
 				$('.sf-contener .cat-title').off();	
 				$('.sf-menu').removeAttr('style');
@@ -74,5 +74,5 @@
 		$(document).ready(responsiveMenu);
 		$(window).resize(responsiveMenu);
 	</script>
-     {/literal}
+	 {/literal}
 {/if}

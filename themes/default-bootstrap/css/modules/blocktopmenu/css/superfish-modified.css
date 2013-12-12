@@ -2,14 +2,7 @@
 .sf-contener {
   clear: both;
   float: left;
-  width: 100%;
-  margin: 50px 0 0; }
-  @media (min-width: 480px) and (max-width: 767px) {
-    .sf-contener {
-      margin-top: 80px; } }
-  @media (max-width: 479px) {
-    .sf-contener {
-      margin-top: 70px; } }
+  width: 100%; }
 
 .sf-menu,
 .sf-menu * {

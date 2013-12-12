@@ -6,7 +6,6 @@
 
 @import ../css/font-awesome.css
 
-
 a:hover
 	text-decoration: none
 
@@ -68,29 +67,24 @@ header
 		> .container
 			position: relative
 		#header_logo
-			// min 768px max 991px
-			@media (min-width: $screen-sm) and (max-width: $screen-sm-max)
-				width: 250px
-				top: 35px
-			// min 480px max 767px
-			@media (min-width: $screen-xs) and (max-width: $screen-xs-max)
-				width: 174px
-				left: 15px
-				top: 48px
-			// max 479px
-			@media (max-width: $screen-xs - 1)
-				width: 200px
-				left: 50%
-				margin-left: -100px
-				top: 20px
+			padding-top: 15px
+			@extend .col-sm-4
+			@media (max-width: $screen-xs-max)
+				img
+					margin: 0 auto
+		#search_block_top
+			@extend .col-sm-4
+		#header_user
+			@extend .col-sm-4
+			#shopping_cart
+				@extend .pull-right
+		#block_top_menu
+			padding-top: 25px
+			@extend .col-lg-12
 
 	.header_user_info
 		border-left: 1px solid #515151
 		border-right: 1px solid #515151
-		// max 479px
-		@media (max-width: $screen-xs - 1) 
-			width: 25%
-			text-align: center												
 		a
 			color: $light-text-color
 			font-weight: bold
@@ -198,8 +192,6 @@ header
 
 .ie8 #header #header_logo
 	width: 350px
-
-
 
 //title
 #center_column
@@ -2778,7 +2770,7 @@ div.star.star_hover
 		color: $light-text-color
 		line-height: 60px
 		text-align: center
-		background: lighten($base-heading-color, 20%)
+		background: lighten($base-heading-color, 10%)
 		@include border-radius(100px)
 		// max 991px 
 		@media (max-width: $screen-sm-max)

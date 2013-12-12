@@ -22,29 +22,31 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<!-- block seach mobile -->
+
 {if isset($hook_mobile)}
-<div class="input_search" data-role="fieldcontain">
-	<form method="get" action="{$link->getPageLink('search')|escape:'html':'UTF-8'}" id="searchbox">
-		<input type="hidden" name="controller" value="search" />
-		<input type="hidden" name="orderby" value="position" />
-		<input type="hidden" name="orderway" value="desc" />
-		<input class="search_query" type="search" id="search_query_top" name="search_query" placeholder="{l s='Search' mod='blocksearch'}" value="{if isset($smarty.get.search_query)}{$smarty.get.search_query|htmlentities:$ENT_QUOTES:'utf-8'|stripslashes}{/if}" />
-	</form>
-</div>
+	<!-- block seach mobile -->
+	<div class="input_search" data-role="fieldcontain">
+		<form method="get" action="{$link->getPageLink('search')|escape:'html':'UTF-8'}" id="searchbox">
+			<input type="hidden" name="controller" value="search" />
+			<input type="hidden" name="orderby" value="position" />
+			<input type="hidden" name="orderway" value="desc" />
+			<input class="search_query" type="search" id="search_query_top" name="search_query" placeholder="{l s='Search' mod='blocksearch'}" value="{if isset($smarty.get.search_query)}{$smarty.get.search_query|htmlentities:$ENT_QUOTES:'utf-8'|stripslashes}{/if}" />
+		</form>
+	</div>
+	<!-- /block seach mobile -->
 {else}
-<!-- Block search module TOP -->
-<div id="search_block_top">
-	<form method="get" action="{$link->getPageLink('search')|escape:'html':'UTF-8'}" id="searchbox">
-		<div>
+	<!-- Block search module TOP -->
+	<div id="search_block_top">
+		<form id="searchbox" method="get" action="{$link->getPageLink('search')|escape:'html':'UTF-8'}" >
 			<input type="hidden" name="controller" value="search" />
 			<input type="hidden" name="orderby" value="position" />
 			<input type="hidden" name="orderway" value="desc" />
 			<input class="search_query form-control" type="text" id="search_query_top" name="search_query" placeholder="{l s='Search' mod='blocksearch'}" value="{if isset($smarty.get.search_query)}{$smarty.get.search_query|htmlentities:$ENT_QUOTES:'utf-8'|stripslashes}{/if}" />
-            <button type="submit" name="submit_search" class="btn btn-default button-search"><span>{l s='Search' mod='blocksearch'}</span></button>
-		</div>
-	</form>
-</div>
-{include file="$tpl_dir/modules/blocksearch/blocksearch-instantsearch.tpl"}
+			<button type="submit" name="submit_search" class="btn btn-default button-search">
+				<span>{l s='Search' mod='blocksearch'}</span>
+			</button>
+		</form>
+	</div>
+	{include file="$tpl_dir/modules/blocksearch/blocksearch-instantsearch.tpl"}
+	<!-- /Block search module TOP -->
 {/if}
-<!-- /Block search module TOP -->
