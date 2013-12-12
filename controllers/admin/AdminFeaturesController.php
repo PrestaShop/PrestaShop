@@ -190,11 +190,19 @@ class AdminFeaturesControllerCore extends AdminController
 	public function initPageHeaderToolbar()
 	{
 		if (empty($this->display))
+		{
 			$this->page_header_toolbar_btn['new_feature'] = array(
 				'href' => self::$currentIndex.'&amp;addfeature&amp;token='.$this->token,
 				'desc' => $this->l('Add new feature'),
 				'icon' => 'process-icon-new'
 			);
+
+			$this->page_header_toolbar_btn['new_feature_value'] = array(
+				'href' => self::$currentIndex.'&addfeature_value&id_feature='.(int)Tools::getValue('id_feature').'&token='.$this->token,
+				'desc' => $this->l('Add new feature value'),
+				'icon' => 'process-icon-new'
+			);
+		}
 
 		if ($this->display == 'view')
 			$this->page_header_toolbar_btn['new_feature_value'] = array(
