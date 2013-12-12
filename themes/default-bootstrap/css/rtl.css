@@ -1,9 +1,8 @@
-/* line 1, ../sass/rtl.scss */
+/********************************************************
+			Right to Left Styles
+********************************************************/
 * {
-  direction: rtl !important;
-}
+  direction: rtl !important; }
 
-/* line 2, ../sass/rtl.scss */
 #page {
-  text-align: right !important;
-}
+  text-align: right !important; }
