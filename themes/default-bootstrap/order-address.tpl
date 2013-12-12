@@ -40,6 +40,7 @@
 			var txtProduct = "{l s='product' js=1}";
 			var txtProducts = "{l s='products' js=1}";
 		{/if}
+		var CloseTxt = '{l s='Submit' js=1}';
 		var addressMultishippingUrl = "{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")|addslashes}";
 		var addressUrl = "{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")|addslashes}";
 		var formatedAddressFieldsValuesList = new Array();
