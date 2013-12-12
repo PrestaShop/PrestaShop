@@ -1,7 +1,9 @@
 /**********************************************************
 				Authentication Styles
 **********************************************************/
-#account-creation_form .id_state, #account-creation_form .dni, #account-creation_form .postcode {
+#account-creation_form .id_state,
+#account-creation_form .dni,
+#account-creation_form .postcode {
   display: none; }
 
 #create-account_form {
