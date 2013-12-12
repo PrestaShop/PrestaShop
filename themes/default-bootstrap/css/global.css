@@ -1,4 +1,4 @@
-@charset "CP850";
+@charset "UTF-8";
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic);
 @import url(../css/font-awesome.css);
 html, body, div, span, applet, object, iframe,
@@ -48,7 +48,7 @@ a img {
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
   display: block; }
 
-/*
+/*!
  * Bootstrap v3.0.0
  *
  * Copyright 2013 Twitter, Inc
@@ -57,7 +57,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
  *
  * Designed and built with all the love in the world by @mdo and @fat.
  */
-/* normalize.css v2.1.0 | MIT License | git.io/normalize */
+/*! normalize.css v2.1.0 | MIT License | git.io/normalize */
 article,
 aside,
 details,
@@ -485,17 +485,18 @@ blockquote {
     color: #999999; }
     blockquote small:before {
       content: '\2014 \00A0'; }
-  blockquote.pull-right {
+  blockquote.pull-right, header #header-row #header_user blockquote#shopping_cart {
     padding-right: 15px;
     padding-left: 0;
     border-right: 5px solid #eeeeee;
     border-left: 0; }
-    blockquote.pull-right p,
-    blockquote.pull-right small {
+    blockquote.pull-right p, header #header-row #header_user blockquote#shopping_cart p,
+    blockquote.pull-right small,
+    header #header-row #header_user blockquote#shopping_cart small {
       text-align: right; }
-    blockquote.pull-right small:before {
+    blockquote.pull-right small:before, header #header-row #header_user blockquote#shopping_cart small:before {
       content: ''; }
-    blockquote.pull-right small:after {
+    blockquote.pull-right small:after, header #header-row #header_user blockquote#shopping_cart small:after {
       content: '\00A0 \2014'; }
 
 q:before,
@@ -588,6 +589,9 @@ pre {
 .col-sm-2,
 .col-sm-3,
 .col-sm-4,
+header #header-row #header_logo,
+header #header-row #search_block_top,
+header #header-row #header_user,
 .col-sm-5,
 .col-sm-6,
 .col-sm-7,
@@ -619,7 +623,8 @@ pre {
 .col-lg-9,
 .col-lg-10,
 .col-lg-11,
-.col-lg-12 {
+.col-lg-12,
+header #header-row #block_top_menu {
   position: relative;
   min-height: 1px;
   padding-left: 15px;
@@ -682,6 +687,9 @@ pre {
   .col-sm-2,
   .col-sm-3,
   .col-sm-4,
+  header #header-row #header_logo,
+  header #header-row #search_block_top,
+  header #header-row #header_user,
   .col-sm-5,
   .col-sm-6,
   .col-sm-7,
@@ -700,7 +708,7 @@ pre {
   .col-sm-3 {
     width: 25%; }
 
-  .col-sm-4 {
+  .col-sm-4, header #header-row #header_logo, header #header-row #search_block_top, header #header-row #header_user {
     width: 33.33333%; }
 
   .col-sm-5 {
@@ -1035,7 +1043,7 @@ pre {
   .col-lg-11 {
     width: 91.66667%; }
 
-  .col-lg-12 {
+  .col-lg-12, header #header-row #block_top_menu {
     width: 100%; }
 
   .col-lg-push-0 {
@@ -1875,7 +1883,7 @@ input[type="button"].btn-block {
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   background-clip: padding-box; }
-  .dropdown-menu.pull-right {
+  .dropdown-menu.pull-right, header #header-row #header_user .dropdown-menu#shopping_cart {
     right: 0;
     left: auto; }
   .dropdown-menu .divider {
@@ -1933,7 +1941,7 @@ input[type="button"].btn-block {
   top: 0;
   z-index: 990; }
 
-.pull-right > .dropdown-menu {
+.pull-right > .dropdown-menu, header #header-row #header_user #shopping_cart > .dropdown-menu {
   right: 0;
   left: auto; }
 
@@ -2529,8 +2537,9 @@ input[type="button"].btn-block {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0; }
 
-.navbar-nav.pull-right > li > .dropdown-menu,
-.navbar-nav > li > .dropdown-menu.pull-right {
+.navbar-nav.pull-right > li > .dropdown-menu, header #header-row #header_user .navbar-nav#shopping_cart > li > .dropdown-menu,
+.navbar-nav > li > .dropdown-menu.pull-right,
+header #header-row #header_user .navbar-nav > li > .dropdown-menu#shopping_cart {
   left: auto;
   right: 0; }
 
@@ -3076,7 +3085,7 @@ a.thumbnail:focus {
 
 .media > .pull-left {
   margin-right: 10px; }
-.media > .pull-right {
+.media > .pull-right, header #header-row #header_user .media > #shopping_cart {
   margin-left: 10px; }
 
 .media-list {
@@ -3320,7 +3329,7 @@ button.close {
 .clearfix:after {
   clear: both; }
 
-.pull-right {
+.pull-right, header #header-row #header_user #shopping_cart {
   float: right !important; }
 
 .pull-left {
@@ -3841,28 +3850,16 @@ header {
     position: relative; }
     header #header-row > .container {
       position: relative; }
-    @media (min-width: 768px) and (max-width: 991px) {
-      header #header-row #header_logo {
-        width: 250px;
-        top: 35px; } }
-    @media (min-width: 480px) and (max-width: 767px) {
-      header #header-row #header_logo {
-        width: 174px;
-        left: 15px;
-        top: 48px; } }
-    @media (max-width: 479px) {
-      header #header-row #header_logo {
-        width: 200px;
-        left: 50%;
-        margin-left: -100px;
-        top: 20px; } }
+    header #header-row #header_logo {
+      padding-top: 15px; }
+      @media (max-width: 767px) {
+        header #header-row #header_logo img {
+          margin: 0 auto; } }
+    header #header-row #block_top_menu {
+      padding-top: 25px; }
   header .header_user_info {
     border-left: 1px solid #515151;
     border-right: 1px solid #515151; }
-    @media (max-width: 479px) {
-      header .header_user_info {
-        width: 25%;
-        text-align: center; } }
     header .header_user_info a {
       color: white;
       font-weight: bold;
@@ -6652,7 +6649,7 @@ div.star.star_hover:after {
     color: white;
     line-height: 60px;
     text-align: center;
-    background: #888787;
+    background: #6f6d6d;
     -webkit-border-radius: 100px;
     -moz-border-radius: 100px;
     -ms-border-radius: 100px;

@@ -1,17 +1,11 @@
 #header_user {
-  position: absolute;
-  top: 50px;
-  right: 0; }
+  padding-top: 50px; }
   @media (min-width: 480px) and (max-width: 767px) {
     #header_user {
-      margin-top: 25px; } }
+      padding-top: 0; } }
   @media (max-width: 479px) {
     #header_user {
-      float: none;
-      margin-left: auto;
-      margin-right: auto;
-      margin-top: 95px;
-      width: 270px; } }
+      padding-top: 0; } }
   #header_user #shopping_cart a {
     padding: 7px 10px 14px 16px;
     background: #333333;

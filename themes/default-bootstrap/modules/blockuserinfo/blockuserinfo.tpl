@@ -22,7 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <!-- Block user information module HEADER -->
 <div id="header_user" {if $PS_CATALOG_MODE}class="header_user_catalog"{/if}>
 	<ul id="header_nav">
