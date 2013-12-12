@@ -414,12 +414,12 @@ class AdminThemesControllerCore extends AdminController
 			$this->page_header_toolbar_btn['import_theme'] = array(
 				'href' => self::$currentIndex . '&amp;action=importtheme&amp;token=' . $this->token,
 				'desc' => $this->l('import new theme'),
-				'icon' => 'process-icon-new'
+				'icon' => 'process-icon-upload'
 			);
 			$this->page_header_toolbar_btn['export_theme'] = array(
 				'href' => self::$currentIndex . '&amp;action=exporttheme&amp;token=' . $this->token,
 				'desc' => $this->l('export theme'),
-				'icon' => 'process-icon-new'
+				'icon' => 'icon-cloud-download'
 			);
 		}
 		parent::initPageHeaderToolbar();
@@ -997,13 +997,9 @@ class AdminThemesControllerCore extends AdminController
 
 	public function renderExportTheme()
 	{
-//		var_dump($_POST);
-//		die();
 		if (Tools::getIsset('id_theme_export') && (int)Tools::getValue('id_theme_export') > 0)
 		{
 			return $this->renderExportTheme1();
-//		var_dump($_POST);
-//			return;
 		}
 		$theme_list = Theme::getThemes();
 
@@ -1253,7 +1249,6 @@ class AdminThemesControllerCore extends AdminController
 				)),
 		);
 
-//		$fields_formtmp =  array(array('form' => $fields_form));
 		$helper = new HelperForm();
 
 		$helper->currentIndex = $this->context->link->getAdminLink('AdminThemes', false).'&action=importtheme';
