@@ -26,6 +26,9 @@
 
 class MetaCore extends ObjectModel
 {
+	/** Declare separator string for the shop name in the meta title */ 
+	protected static $meta_title_separator = ' | ';
+
 	/** @var string Name */
 	public $page;
 	public $title;
@@ -225,7 +228,7 @@ class MetaCore extends ObjectModel
 	public static function getHomeMetas($id_lang, $page_name)
 	{
 		$metas = Meta::getMetaByPage($page_name, $id_lang);
-		$ret['meta_title'] = (isset($metas['title']) && $metas['title']) ? $metas['title'].' - '.Configuration::get('PS_SHOP_NAME') : Configuration::get('PS_SHOP_NAME');
+		$ret['meta_title'] = (isset($metas['title']) && $metas['title']) ? $metas['title'] . Meta::$meta_title_separator . Configuration::get('PS_SHOP_NAME') : Configuration::get('PS_SHOP_NAME');
 		$ret['meta_description'] = (isset($metas['description']) && $metas['description']) ? $metas['description'] : '';
 		$ret['meta_keywords'] = (isset($metas['keywords']) && $metas['keywords']) ? $metas['keywords'] :  '';
 		return $ret;
@@ -271,7 +274,7 @@ class MetaCore extends ObjectModel
 	public static function getCategoryMetas($id_category, $id_lang, $page_name, $title = '')
 	{
 		if (!empty($title))
-			$title = ' - '.$title;
+			$title = Meta::$meta_title_separator . $title;
 		$page_number = (int)Tools::getValue('p');
 		$sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description`
 				FROM `'._DB_PREFIX_.'category_lang` cl
@@ -288,12 +291,12 @@ class MetaCore extends ObjectModel
 	
 				// Paginate title
 				if (!empty($row['meta_title']))
-					$row['meta_title'] = $title.$row['meta_title'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
+					$row['meta_title'] = $title.$row['meta_title'].(!empty($page_number) ? ' ('.$page_number.')' : '') . Meta::$meta_title_separator . Configuration::get('PS_SHOP_NAME');
 				else
-					$row['meta_title'] = $row['name'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
+					$row['meta_title'] = $row['name'].(!empty($page_number) ? ' ('.$page_number.')' : '') . Meta::$meta_title_separator . Configuration::get('PS_SHOP_NAME');
 	
 				if (!empty($title))
-					$row['meta_title'] = $title.(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
+					$row['meta_title'] = $title.(!empty($page_number) ? ' ('.$page_number.')' : '') . Meta::$meta_title_separator . Configuration::get('PS_SHOP_NAME');
 	
 				$result = Meta::completeMetaTags($row, $row['name']);
 			}
@@ -326,7 +329,7 @@ class MetaCore extends ObjectModel
 			if (empty($row['meta_description']))
 				$row['meta_description'] = strip_tags($row['meta_description']);
 			$row['meta_title'] = ($row['meta_title'] ? $row['meta_title'] : $row['name']).(!empty($page_number) ? ' ('.$page_number.')' : '');
-			$row['meta_title'] .= ' - '.Configuration::get('PS_SHOP_NAME');
+			$row['meta_title'] .= Meta::$meta_title_separator . Configuration::get('PS_SHOP_NAME');
 			return Meta::completeMetaTags($row, $row['meta_title']);
 		}
 
@@ -354,7 +357,7 @@ class MetaCore extends ObjectModel
 			if (empty($row['meta_description']))
 				$row['meta_description'] = strip_tags($row['meta_description']);
 			if (!empty($row['meta_title']))
-				$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
+				$row['meta_title'] = $row['meta_title'] . Meta::$meta_title_separator . Configuration::get('PS_SHOP_NAME');
 			return Meta::completeMetaTags($row, $row['name']);
 		}
 
@@ -378,7 +381,7 @@ class MetaCore extends ObjectModel
 					AND id_cms = '.(int)$id_cms;
 		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
 		{
-			$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
+			$row['meta_title'] = $row['meta_title'] . Meta::$meta_title_separator . Configuration::get('PS_SHOP_NAME');
 			return Meta::completeMetaTags($row, $row['meta_title']);
 		}
 
@@ -402,7 +405,7 @@ class MetaCore extends ObjectModel
 					AND id_cms_category = '.(int)$id_cms_category;
 		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
 		{
-			$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
+			$row['meta_title'] = $row['meta_title'] . Meta::$meta_title_separator . Configuration::get('PS_SHOP_NAME');
 			return Meta::completeMetaTags($row, $row['meta_title']);
 		}
 
@@ -418,7 +421,7 @@ class MetaCore extends ObjectModel
 			$context = Context::getContext();
 
 		if (empty($meta_tags['meta_title']))
-			$meta_tags['meta_title'] = $default_value.' - '.Configuration::get('PS_SHOP_NAME');
+			$meta_tags['meta_title'] = $default_value . Meta::$meta_title_separator . Configuration::get('PS_SHOP_NAME');
 		if (empty($meta_tags['meta_description']))
 			$meta_tags['meta_description'] = Configuration::get('PS_META_DESCRIPTION', $context->language->id) ? Configuration::get('PS_META_DESCRIPTION', $context->language->id) : '';
 		if (empty($meta_tags['meta_keywords']))
