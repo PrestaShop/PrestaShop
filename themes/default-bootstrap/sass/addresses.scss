@@ -1,30 +1,33 @@
-@import '_theme_variables';
+@import "compass";
+@import "theme_variables";
+
 /*******************************************************
 				Addresses Styles
 ********************************************************/
 #addresses {
-	
 	#center_column {
-		
 		.page-heading {
-			margin-bottom:22px;	
+			margin-bottom: 22px;	
 		}
-		
 		p {
-			margin-bottom:13px;
-			
+			margin-bottom: 13px;
+
 			&.p-indent {
-				margin-bottom:27px;
+				margin-bottom: 27px;
 			}	
 		}
 	}
 }
 
-.address  li.address_update {
-	margin-top:14px;
-	margin-bottom:6px;
-		
-	a {
-		margin-right:10px;
-	}	
+.address {
+	li {
+		&.address_update {
+			margin-top: 14px;:
+			margin-bottom: 6px;
+
+			a {
+				margin-right: 10px;
+			}
+		}
+	}
 }
