@@ -1647,8 +1647,6 @@ class AdminControllerCore extends Controller
 		}
 		elseif ($this->display != false && method_exists($this, 'render'.$this->display))
 			$this->content .= $this->{'render'.$this->display}();
-		elseif ($this->display != false && method_exists($this, 'render'.$this->display))
-			$this->content .= $this->{'render'.$this->display}();
 		elseif (!$this->ajax)
 		{
 			$this->content .= $this->renderModulesList();
@@ -2326,10 +2324,6 @@ class AdminControllerCore extends Controller
 				$this->action = 'update_options';
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
-		}
-		elseif (Tools::getValue('action') && method_exists($this, 'process'.ucfirst(Tools::toCamelCase(Tools::getValue('action')))))
-		{
-			$this->action = Tools::getValue('action');
 		}
 		elseif (Tools::getValue('action') && method_exists($this, 'process'.ucfirst(Tools::toCamelCase(Tools::getValue('action')))))
 			$this->action = Tools::getValue('action');
