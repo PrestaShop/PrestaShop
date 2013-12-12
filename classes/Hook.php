@@ -285,6 +285,7 @@ class HookCore extends ObjectModel
 		{
 			$frontend = true;
 			$groups = array();
+			$use_groups = Group::isFeatureActive();
 			if (isset($context->employee))
 			{
 				$shop_list = array((int)$context->shop->id);
@@ -294,12 +295,15 @@ class HookCore extends ObjectModel
 			{
 				// Get shops and groups list
 				$shop_list = Shop::getContextListShopID();
-				if (isset($context->customer) && $context->customer->isLogged())
-					$groups = $context->customer->getGroups();
-				elseif (isset($context->customer) && $context->customer->isLogged(true))
-					$groups = array((int)Configuration::get('PS_GUEST_GROUP'));
-				else
-					$groups = array((int)Configuration::get('PS_UNIDENTIFIED_GROUP'));
+				if ($use_groups)
+				{
+					if (isset($context->customer) && $context->customer->isLogged())
+						$groups = $context->customer->getGroups();
+					elseif (isset($context->customer) && $context->customer->isLogged(true))
+						$groups = array((int)Configuration::get('PS_GUEST_GROUP'));
+					else
+						$groups = array((int)Configuration::get('PS_UNIDENTIFIED_GROUP'));
+				}
 			}
 			
 			// SQL Request
@@ -325,11 +329,14 @@ class HookCore extends ObjectModel
 
 			if ($frontend)
 			{
-				$sql->leftJoin('module_group', 'mg', 'mg.`id_module` = m.`id_module`');
-				if (Validate::isLoadedObject($context->shop))
-					$sql->where('mg.id_shop = '.((int)$context->shop->id).' AND  mg.`id_group` IN ('.implode(', ', $groups).')');
-				else
-					$sql->where('mg.`id_group` IN ('.implode(', ', $groups).')');
+				if ($use_groups)
+				{
+					$sql->leftJoin('module_group', 'mg', 'mg.`id_module` = m.`id_module`');
+					if (Validate::isLoadedObject($context->shop))
+						$sql->where('mg.id_shop = '.((int)$context->shop->id).' AND  mg.`id_group` IN ('.implode(', ', $groups).')');
+					else
+						$sql->where('mg.`id_group` IN ('.implode(', ', $groups).')');
+				}
 				$sql->groupBy('hm.id_hook, hm.id_module');
 			}
 
