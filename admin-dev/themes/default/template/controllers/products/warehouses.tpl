@@ -43,12 +43,9 @@
 			{foreach from=$warehouses item=warehouse name=data}
 			    <div class="panel panel-default">
 					<div class="panel-heading">
-						<h4 class="panel-title">
-							<a class="accordion-toggle" data-toggle="collapse" data-parent="#warehouse-accordion" href="#warehouse-{$warehouse['name']}">{$warehouse['name']}</a>
-						</h4>
+							<a class="accordion-toggle" data-toggle="collapse" data-parent="#warehouse-accordion" href="#warehouse-{$warehouse['id_warehouse']}">{$warehouse['name']}</a>
 					</div>
-					<div id="warehouse-{$warehouse['name']}" class="panel-collapse collapse{if $smarty.foreach.data.first} in{/if}">
-						<div class="panel-body">
+					<div id="warehouse-{$warehouse['id_warehouse']}" class="panel-collapse collapse{if $smarty.foreach.data.first} in{/if}">
 							<table class="table">
 								<thead>
 									<tr>
@@ -90,7 +87,6 @@
 							</tr>-->
 							{/if}
 						</div>
-					</div>
 				</div>
 			{/foreach}
 		</div>
