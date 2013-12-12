@@ -2711,7 +2711,6 @@ div.star.star_hover
 //Homepage pre-footer
 #facebook_block,
 #cmsinfo_block
-	margin-top: 40px
 	overflow: hidden
 	background: $homepage-footer-bg
 	min-height: 344px
@@ -2737,7 +2736,10 @@ div.star.star_hover
 			padding-top: 20px !important
 #facebook_block
 	h4
-		padding-top: 44px
+		padding: 35px 0 0 0
+		margin: 0 0 20px
+		font: 300 21px/25px $font-custom
+		color: lighten($base-heading-color, 10%)
 	.facebook-fanbox
 		background: $light-background
 		border: 1px solid #aaaaaa
@@ -2749,8 +2751,7 @@ div.star.star_hover
 		border: none
 		margin-top: 10px
 	> div
-		padding-top: 45px
-		padding-left: 0
+		padding: 35px 0 0 0
 		// max 767px
 		@media (max-width: $screen-xs-max)
 			padding-top: 20px
@@ -2790,7 +2791,7 @@ div.star.star_hover
 	h3
 		margin: 0 0 5px 0
 		font: 300 21px/25px $font-custom
-		color: lighten($base-heading-color, 20%)
+		color: lighten($base-heading-color, 10%)
 		// max 1199px
 		@media (max-width: $screen-md-max)
 			font-size: 18px

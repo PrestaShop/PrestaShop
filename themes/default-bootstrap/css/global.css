@@ -6579,7 +6579,6 @@ div.star.star_hover:after {
 
 #facebook_block,
 #cmsinfo_block {
-  margin-top: 40px;
   overflow: hidden;
   background: #f2f2f2;
   min-height: 344px;
@@ -6610,7 +6609,10 @@ div.star.star_hover:after {
         padding-top: 20px !important; } }
 
 #facebook_block h4 {
-  padding-top: 44px; }
+  padding: 35px 0 0 0;
+  margin: 0 0 20px;
+  font: 300 21px/25px "Open Sans", sans-serif;
+  color: #6f6d6d; }
 #facebook_block .facebook-fanbox {
   background: white;
   border: 1px solid #aaaaaa;
@@ -6623,8 +6625,7 @@ div.star.star_hover:after {
       border: none;
       margin-top: 10px; } }
   #cmsinfo_block > div {
-    padding-top: 45px;
-    padding-left: 0; }
+    padding: 35px 0 0 0; }
     @media (max-width: 767px) {
       #cmsinfo_block > div {
         padding-top: 20px; } }
@@ -6668,7 +6669,7 @@ div.star.star_hover:after {
   #cmsinfo_block h3 {
     margin: 0 0 5px 0;
     font: 300 21px/25px "Open Sans", sans-serif;
-    color: #888787; }
+    color: #6f6d6d; }
     @media (max-width: 1199px) {
       #cmsinfo_block h3 {
         font-size: 18px; } }
