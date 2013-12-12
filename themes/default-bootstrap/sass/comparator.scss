@@ -122,17 +122,20 @@ table#product_comparison {
 }
 @media (min-width: $screen-lg) { // min 1200px
 	.share {
-		margin-bottom:315px;	
+		position:relative;
+		top:-350px;	
 	}
 }
 @media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px
 	.share {
-			margin-bottom:315px;	
+		position:relative;
+		top:-260px;
 	}
 }
 @media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
 	.share {
-			margin-bottom:315px;	
+		position:relative;
+		top:-245px;
 	}
 }
 .share {
