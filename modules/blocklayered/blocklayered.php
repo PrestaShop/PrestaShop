@@ -2192,7 +2192,8 @@ class BlockLayered extends Module
 
 
 				case 'category':
-					$this->user_groups =  ($this->context->customer->isLogged() ? $this->context->customer->getGroups() : array(Configuration::get('PS_UNIDENTIFIED_GROUP')));
+					if (Group::isFeatureActive())
+						$this->user_groups =  ($this->context->customer->isLogged() ? $this->context->customer->getGroups() : array(Configuration::get('PS_UNIDENTIFIED_GROUP')));
 
 					$depth = Configuration::get('PS_LAYERED_FILTER_CATEGORY_DEPTH');
 					if ($depth === false)
@@ -2208,15 +2209,17 @@ class BlockLayered extends Module
 					AND '.$alias.'.active = 1 AND '.$alias.'.`visibility` IN ("both", "catalog")';
 					$sql_query['group'] = ') count_products
 					FROM '._DB_PREFIX_.'category c
-					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category AND cl.`id_shop` = '.(int)Context::getContext()->shop->id.' and cl.id_lang = '.$id_lang.')
-					RIGHT JOIN '._DB_PREFIX_.'category_group cg ON (cg.id_category = c.id_category AND cg.`id_group` IN ('.implode(', ', $this->user_groups).'))
-					WHERE c.nleft > '.(int)$parent->nleft.'
+					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category AND cl.`id_shop` = '.(int)Context::getContext()->shop->id.' and cl.id_lang = '.$id_lang.') ';
+
+					if (Group::isFeatureActive())
+						$sql_query['group'] .= 'RIGHT JOIN '._DB_PREFIX_.'category_group cg ON (cg.id_category = c.id_category AND cg.`id_group` IN ('.implode(', ', $this->user_groups).')) ';
+					
+					$sql_query['group'] .= 'WHERE c.nleft > '.(int)$parent->nleft.'
 					AND c.nright < '.(int)$parent->nright.'
 					'.($depth ? 'AND c.level_depth <= '.($parent->level_depth+(int)$depth) : '').'
 					AND c.active = 1
 					GROUP BY c.id_category ORDER BY c.nleft, c.position';
 			}
-			
 			foreach ($filters as $filter_tmp)
 			{
 				$method_name = 'get'.ucfirst($filter_tmp['type']).'FilterSubQuery';
@@ -2480,6 +2483,7 @@ class BlockLayered extends Module
 							if (isset($selected_filters['id_attribute_group'][$attributes['id_attribute']]))
 								$attributes_array[$attributes['id_attribute_group']]['values'][$attributes['id_attribute']]['checked'] = true;
 						}
+
 						$filter_blocks = array_merge($filter_blocks, $attributes_array);
 					}
 					break;

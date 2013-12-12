@@ -61,7 +61,7 @@
 		<input id="{$id}" type="file" name="{$name}"{if isset($multiple) && $multiple} multiple="multiple"{/if} class="hide" />
 		<div class="dummyfile input-group">
 			<span class="input-group-addon"><i class="icon-file"></i></span>
-			<input id="{$id}-name" type="text" class="disabled" name="filename" readonly />
+			<input id="{$id}-name" type="text" name="filename" readonly />
 			<span class="input-group-btn">
 				<button id="{$id}-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
 					<i class="icon-folder-open"></i> {if isset($multiple) && $multiple}{l s='Add files'}{else}{l s='Add file'}{/if}
