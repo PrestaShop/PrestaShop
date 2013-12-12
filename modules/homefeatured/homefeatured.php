@@ -50,6 +50,7 @@ class HomeFeatured extends Module
 	{
 		$this->_clearCache('homefeatured.tpl');
 		Configuration::updateValue('HOME_FEATURED_NBR', 8);
+		Configuration::updateValue('HOME_FEATURED_CAT_ID', Context::getContext()->shop->getCategory());
 
 		if (!parent::install()
 			|| !$this->registerHook('displayHome')
@@ -74,10 +75,18 @@ class HomeFeatured extends Module
 		if (Tools::isSubmit('submitHomeFeatured'))
 		{
 			$nbr = (int)Tools::getValue('nbr');
+			$cat_id = (int)Tools::getValue('cat_id');
+
 			if (!$nbr OR $nbr <= 0 OR !Validate::isInt($nbr))
 				$errors[] = $this->l('An invalid number of products has been specified.');
 			else
 				Configuration::updateValue('HOME_FEATURED_NBR', (int)($nbr));
+
+			if (!$cat_id OR $cat_id < Context::getContext()->shop->getCategory() OR !Validate::isInt($cat_id))
+				$errors[] = $this->l('An invalid number of category ID has been specified.');
+			else
+				Configuration::updateValue('HOME_FEATURED_CAT_ID', (int)($cat_id));
+
 			if (isset($errors) AND sizeof($errors))
 				$output .= $this->displayError(implode('<br />', $errors));
 			else
@@ -91,8 +100,15 @@ class HomeFeatured extends Module
 		$output = '
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<p>'.$this->l('To add products to your homepage, simply add them to the "home" category.').'</p><br />
-				<label>'.$this->l('Define the number of products to be displayed.').'</label>
+				<p>'.$this->l('To add products to your homepage, simply add the category ID that your preferer.').'</p><br />
+
+				<label>'.$this->l('Category ID:').'</label>
+				<div class="margin-form">
+					<input type="text" size="5" name="cat_id" value="'.Tools::safeOutput(Tools::getValue('cat_id', (int)(Configuration::get('HOME_FEATURED_CAT_ID')))).'" />
+					<p class="clear">'.$this->l('Insert the category ID for show his products (default: the Home category).').'</p>
+				</div>
+
+				<label>'.$this->l('Define the number of products to be displayed:').'</label>
 				<div class="margin-form">
 					<input type="text" size="5" name="nbr" value="'.Tools::safeOutput(Tools::getValue('nbr', (int)(Configuration::get('HOME_FEATURED_NBR')))).'" />
 					<p class="clear">'.$this->l('Define the number of products that you would like to display on homepage (default: 8).').'</p>
@@ -118,7 +134,7 @@ class HomeFeatured extends Module
 	{
 		if (!$this->isCached('homefeatured.tpl', $this->getCacheId('homefeatured')))
 		{
-			$category = new Category(Context::getContext()->shop->getCategory(), (int)Context::getContext()->language->id);
+			$category = new Category((int)Configuration::get('HOME_FEATURED_CAT_ID'), (int)Context::getContext()->language->id);
 			$nb = (int)Configuration::get('HOME_FEATURED_NBR');
 			$products = $category->getProducts((int)Context::getContext()->language->id, 1, ($nb ? $nb : 8), "position");
 
