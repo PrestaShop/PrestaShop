@@ -28,71 +28,47 @@
 	<div class="boxchart-overlay">
 		<div class="boxchart"></div>
 	</div>	
-	<span class="title">Clients / 1 month</span>
+	<span class="title">{l s='Customers'}</span>
 	<span class="value">4 589</span>
 </div>
-
 
 <div id="box-orders" class="col-lg-3 box-stats color2">
 	<div class="boxchart-overlay">
 		<div class="boxchart"></div>
 	</div>	
-	<span class="title">Orders / 1 month</span>
+	<span class="title">{l s='Orders'}</span>
 	<span class="value">789</span>
 </div>
 
-
 <div id="box-income" class="col-lg-3 box-stats color3">
 	<i class="icon-money"></i>
-	<span class="title">Income / 1 month</span>
+	<span class="title">{l s='Income'}</span>
 	<span class="value">$999,99</span>
 </div>
 
-
 <div id="box-messages" class="col-lg-3 box-stats color4">
 	<i class="icon-envelope-alt"></i>
-	<span class="title">Messages / 1 month</span>
+	<span class="title">{l s='Message'}</span>
 	<span class="value">19</span>
 </div>
-
 
 <div class="clearfix"></div>
-
-
-<div id="box-pie" class="col-lg-6 box-stats">
-	<div class="boxchart-overlay">
-		<div class="boxchart"></div>
-	</div>
-	<span class="title">Total</span>
-	<span class="value">19</span>
-	<ul class="list-unstyled">
-		<!-- <li>Nombre total de sujets <span class="badge">0</span></li> -->
-		<li>{l s='Sujets en attente'} <span class="badge">0</span></li>
-		<li>{l s='Total de messages de clients'}<span class="badge">0</span></li>
-		<li>{l s='Total de messages d\'employés'}<span class="badge">0</span></li>
-		<li>{l s='Sujets non lu'}<span class="badge">0</span></li>
-		<li>{l s='Sujets clos'}<span class="badge">0</span></li>
-	</ul>
-</div>
-
 
 <div id="box-line" class="col-lg-3 box-stats color1" >
 	<div class="boxchart-overlay">
 		<div class="boxchart"></div>
 	</div>	
-	<span class="title">Trafic / 1 month</span>
+	<span class="title">{l s='Trafic'}</span>
 	<span class="value">4 589</span>
 </div>
-
 
 <div id="box-spline" class="col-lg-3 box-stats color2" >
 	<div class="boxchart-overlay">
 		<div class="boxchart"></div>
 	</div>	
-	<span class="title">Conversion / 1 month</span>
+	<span class="title">{l s='Conversion'}</span>
 	<span class="value">4 589</span>
 </div>
-
 
 <div class="clearfix"></div>
 
@@ -199,7 +175,6 @@
 		.datum(data)
 		.attr("class", "area")
 		.attr("d", area);
-
 </script>
 
 <script>
