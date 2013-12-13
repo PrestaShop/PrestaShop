@@ -214,14 +214,14 @@
 																				<acronym title="
 																			{/if}
 																			{if $product@index >= 4}
-																				{$product.name}
+																				{$product.name}{if isset($product.attributes) && $product.attributes} {$product.attributes|escape:'htmlall':'UTF-8'}{/if}
 																				{if !$product@last}
 																					,&nbsp;
 																				{else}
 																					">&hellip;</acronym>)
 																				{/if}
 																			{else}
-																				{$product.name}
+																				{$product.name}{if isset($product.attributes) && $product.attributes} {$product.attributes|escape:'htmlall':'UTF-8'}{/if}
 																				{if !$product@last}
 																					,&nbsp;
 																				{else}
