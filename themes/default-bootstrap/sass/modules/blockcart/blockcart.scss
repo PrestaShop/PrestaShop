@@ -114,13 +114,16 @@
 	#cart_block {
 		position: absolute;
 		top: 45px;
-		left: 0;
+		right: 0;
 		z-index: 10;
 		display: none;
 		height: auto;
-		width: 100%;
 		background: #484848;
 		color: $light-text-color;
+		width: 270px;
+		@media (max-width: $screen-lg) {
+			width: 100%;
+		}
 		a {
 			color: $light-text-color;
 			&:hover {
