@@ -224,6 +224,9 @@ class AdminThemesControllerCore extends AdminController
 			'directory' => array(
 				'title' => $this->l('Directory'),
 			),
+			'responsive' => array(
+				'title' => $this->l('Responsive'),
+			)
 		);
 	}
 
@@ -275,6 +278,23 @@ class AdminThemesControllerCore extends AdminController
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 				),
+				array(
+					'type' => 'switch',
+					'label' => $this->l('Responsive'),
+					'name'=>'responsive',
+					'values' => array(
+						array(
+							'id' => 'responsive_on',
+							'value' => 1,
+							'label' => $this->l('Yes')
+						),
+						array(
+							'id' => 'responsive_off',
+							'value' => 0,
+							'label' => $this->l('No')
+						)
+					),
+				)
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
@@ -1252,36 +1272,52 @@ class AdminThemesControllerCore extends AdminController
 
 	public function initContent()
 	{
-		$this->checkMobileNeeds();
-		
-		$themes = array();
-		foreach (Theme::getThemes() as $theme)
-			$themes[] = $theme->directory;
+		if (isset($this->display) && method_exists($this, 'render'.$this->display))
+		{
+			$this->content .= $this->initPageHeaderToolbar();
 
-		foreach (scandir(_PS_ALL_THEMES_DIR_) as $theme_dir)
-			if ($theme_dir[0] != '.' && Validate::isDirName($theme_dir) && is_dir(_PS_ALL_THEMES_DIR_.$theme_dir) && file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/preview.jpg') && !in_array($theme_dir, $themes))
+			$this->content .= $this->{'render'.$this->display}();
+			$this->context->smarty->assign(array(
+				'content' => $this->content,
+				'show_page_header_toolbar' => $this->show_page_header_toolbar,
+				'page_header_toolbar_title' => $this->page_header_toolbar_title,
+				'page_header_toolbar_btn' => $this->page_header_toolbar_btn
+			));
+		}
+		else
+		{
+			$this->checkMobileNeeds();
+
+			$themes = array();
+			foreach (Theme::getThemes() as $theme)
+				$themes[] = $theme->directory;
+
+			foreach (scandir(_PS_ALL_THEMES_DIR_) as $theme_dir)
+				if ($theme_dir[0] != '.' && Validate::isDirName($theme_dir) && is_dir(_PS_ALL_THEMES_DIR_ . $theme_dir) && file_exists(_PS_ALL_THEMES_DIR_ . $theme_dir . '/preview.jpg') && !in_array($theme_dir, $themes))
+				{
+					$theme       = new Theme();
+					$theme->name = $theme->directory = $theme_dir;
+					$theme->add();
+				}
+
+			$content = '';
+			if (file_exists(_PS_IMG_DIR_ . 'logo.jpg'))
 			{
-				$theme = new Theme();
-				$theme->name = $theme->directory = $theme_dir;
-				$theme->add();
+				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_ . Configuration::get('PS_LOGO'));
+				Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
+				Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 			}
-	
-		$content = '';
-		if (file_exists(_PS_IMG_DIR_.'logo.jpg'))
-		{
-			list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO'));
-			Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
-			Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
-		}
-		if (file_exists(_PS_IMG_DIR_.'logo_mobile.jpg'))
-		{
-			list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE'));
-			Configuration::updateValue('SHOP_LOGO_MOBILE_HEIGHT', (int)round($height));
-			Configuration::updateValue('SHOP_LOGO_MOBILE_WIDTH', (int)round($width));
-		}
+			if (file_exists(_PS_IMG_DIR_ . 'logo_mobile.jpg'))
+			{
+				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MOBILE'));
+				Configuration::updateValue('SHOP_LOGO_MOBILE_HEIGHT', (int)round($height));
+				Configuration::updateValue('SHOP_LOGO_MOBILE_WIDTH', (int)round($width));
+			}
 
-		$this->content .= $content;
-		return parent::initContent();
+			$this->content .= $content;
+
+			return parent::initContent();
+		}
 	}
 
 	public function ajaxProcessGetAddonsThemes()
@@ -2012,6 +2048,8 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function renderOptions()
 	{
+		if (isset($this->display) && method_exists($this, 'render'.$this->display))
+			return $this->{'render'.$this->display}();
 		if ($this->fields_options && is_array($this->fields_options))
 		{
 			$helper = new HelperOptions($this);
