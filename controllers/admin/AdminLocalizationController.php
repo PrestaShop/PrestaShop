@@ -61,7 +61,7 @@ class AdminLocalizationControllerCore extends AdminController
 						'list' => Currency::getCurrencies()
 					),
 				),
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'localization' => array(
 				'title' =>	$this->l('Localization'),
@@ -306,8 +306,14 @@ class AdminLocalizationControllerCore extends AdminController
 			'download_updated_pack' => 1
 		);
 
-		$this->show_toolbar = false;
+		$this->show_toolbar = true;
 		return parent::renderForm();
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+		$this->page_header_toolbar_btn = array();
 	}
 
 	public function initContent()
