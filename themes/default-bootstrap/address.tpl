@@ -84,8 +84,8 @@
 	
 	<form action="{$link->getPageLink('address', true)|escape:'html':'UTF-8'}" method="post" class="std" id="add_address">
 		<!--h3 class="page-subheading">{if isset($id_address)}{l s='Your address'}{else}{l s='New address'}{/if}</h3-->
-		{assign var="stateExist" value="false"}
-		{assign var="postCodeExist" value="false"}
+		{assign var="stateExist" value=false}
+		{assign var="postCodeExist" value=false}
 		{assign var="dniExist" value=false}
 		{foreach from=$ordered_adr_fields item=field_name}
 			{if $field_name eq 'company'}
@@ -137,7 +137,7 @@
 				</div>
 			{/if}
 			{if $field_name eq 'postcode'}
-				{assign var="postCodeExist" value="true"}
+				{assign var="postCodeExist" value=true}
 				<div class="required postcode form-group">
 					<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
 					<input class="is_required validate form-control" data-validate="{$address_validation.$field_name.validate}" type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode|escape:'html':'UTF-8'}{/if}{/if}" />
@@ -183,7 +183,7 @@
 				{/if}
 			{/if}
 			{if $field_name eq 'State:name'}
-				{assign var="stateExist" value="true"}
+				{assign var="stateExist" value=true}
 				<div class="required id_state form-group">
 					<label for="id_state">{l s='State'} <sup>*</sup></label>
 					<select name="id_state" id="id_state" class="form-control">
@@ -192,13 +192,13 @@
 				</div>
 			{/if}
 		{/foreach}
-		{if $postCodeExist eq "false"}
+		{if !$postCodeExist}
 			<div class="required postcode form-group unvisible">
 				<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
 				<input class="is_required validate form-control" data-validate="{$address_validation.postcode.validate}" type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode|escape:'html':'UTF-8'}{/if}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 			</div>
 		{/if}		
-		{if $stateExist eq "false"}
+		{if !$stateExist}
 			<div class="required id_state form-group">
 				<label for="id_state">{l s='State'} <sup>*</sup></label>
 				<select name="id_state" id="id_state" class="form-control">
