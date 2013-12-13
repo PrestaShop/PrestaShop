@@ -36,7 +36,7 @@
                         {if $category->description}
                             <div class="cat_desc">
                             {if strlen($category->description) > 350}
-                                <div id="category_description_short">{$category->description|truncate:350}</div>
+                                <div id="category_description_short">{$description_short}</div>
                                 <div id="category_description_full" style="display:none">{$category->description}</div>
                                 <a href="#" onclick="$('#category_description_short').hide(); $('#category_description_full').show(); $(this).hide(); return false;" class="lnk_more">{l s='More'}</a>
                             {else}
@@ -59,7 +59,7 @@
                                 {/strip}
                             </h1>
                             {if strlen($category->description) > 350}
-                                <div id="category_description_short">{$category->description|truncate:350}</div>
+                                <div id="category_description_short">{$description_short}</div>
                                 <div id="category_description_full" style="display:none">{$category->description}</div>
                                 <a href="#" onclick="$('#category_description_short').hide(); $('#category_description_full').show(); $(this).hide(); return false;" class="lnk_more">{l s='More'}</a>
                             {else}
