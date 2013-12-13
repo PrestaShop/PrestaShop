@@ -5,7 +5,7 @@
   border-top: 5px solid #333333;
   color: #d7d7d7;
   line-height: 19px;
-  margin-bottom: 26px; }
+  margin: 0 0 26px 0; }
   .content_scene_cat .content_scene_cat_bg {
     padding: 18px 10px 10px 42px;
     background-color: #464646 !important; }
@@ -46,16 +46,15 @@
     color: #333333;
     margin: 0 0 15px 0; }
   #subcategories ul {
-    margin-left: -20px; }
+    margin: 0 0 0 -20px; }
     #subcategories ul li {
       float: left;
       width: 128px;
-      margin-left: 20px;
+      margin: 0 0 13px 20px;
       text-align: center;
-      margin-bottom: 13px;
       height: 202px; }
       #subcategories ul li .subcategory-image {
-        padding-bottom: 8px; }
+        padding: 0 0 8px 0; }
         #subcategories ul li .subcategory-image a {
           display: block;
           padding: 9px;
