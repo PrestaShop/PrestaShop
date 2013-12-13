@@ -277,7 +277,8 @@ class ProductControllerCore extends FrontController
 					$this->php_self.'-'.$this->product->link_rewrite,
 					'category-'.$this->category->id,
 					'category-'.$this->category->link_rewrite
-				)
+				),
+				'display_discount_price' => Configuration::get('PS_DISPLAY_DISCOUNT_PRICE'),
 			));
 		}
 		$this->setTemplate(_PS_THEME_DIR_.'product.tpl');
