@@ -5,7 +5,6 @@ function tmDropDown (elementType, elementClick, elementSlide, activeClass){
 	elementSlide =  elementSlide;        // element to show/hide
 	activeClass = activeClass;			 // active class for "element to click"
 
-
 	//show/hide elements
 	$(elementClick).on('click touchstart', function(){
 		if (elementType != 'cart')

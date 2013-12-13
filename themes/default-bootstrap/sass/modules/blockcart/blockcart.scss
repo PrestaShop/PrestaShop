@@ -113,25 +113,16 @@
 #header {
 	#cart_block {
 		position: absolute;
-		top: 95px;
-		right: 0;
+		top: 45px;
+		left: 0;
 		z-index: 10;
 		display: none;
 		height: auto;
-		width: 270px;
+		width: 100%;
 		background: #484848;
 		color: $light-text-color;
-		@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
-			top: 69px;
-		}
-		@media (max-width: $screen-xs - 1) { // max 479px 
-			top: 44px;
-			left: 50%;
-			margin-left: 270px/2*-1;
-		}
 		a {
 			color: $light-text-color;
-			
 			&:hover {
 				color: #9c9b9b;
 			}

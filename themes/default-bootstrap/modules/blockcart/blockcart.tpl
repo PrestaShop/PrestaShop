@@ -41,6 +41,11 @@ var delete_txt = '{l s='Delete' mod='blockcart' js=1}';
 var generated_date = {$smarty.now|intval};
 </script>
 
+<script>
+	$( document ).ready(function() {
+		$("#cart_block").appendTo("#header_nav");
+	});
+</script>
 
 <!-- MODULE Block cart -->
 <div id="cart_block" class="block exclusive">
@@ -238,4 +243,3 @@ var generated_date = {$smarty.now|intval};
 </div>
 <div class="layer_cart_overlay"></div>
 <!-- /MODULE Block cart -->
-
