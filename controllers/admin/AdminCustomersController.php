@@ -478,7 +478,7 @@ class AdminCustomersControllerCore extends AdminController
 				'label' => $this->l('Outstanding allowed:'),
 				'name' => 'outstanding_allow_amount',
 				'hint' => $this->l('Valid characters:').' 0-9',
-				'suffix' => '¤'
+				'suffix' => $this->context->currency->sign
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
