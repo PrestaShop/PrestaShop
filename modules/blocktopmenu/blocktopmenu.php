@@ -794,11 +794,7 @@ class Blocktopmenu extends Module
 							)
 						),
 					)		
-				),
-				'submit' => array(
-					'title' => $this->l('Save'),
-					'class' => 'btn btn-default',
-					)
+				)
 			),
 		);
 		
@@ -832,7 +828,7 @@ class Blocktopmenu extends Module
 		$fields_form = array(
 			'form' => array(
 				'legend' => array(
-					'title' => $this->l('Menu Top Link'),
+					'title' => $this->l('Add a new link'),
 					'icon' => 'icon-link'
 				),
 				'input' => array(
@@ -866,15 +862,13 @@ class Blocktopmenu extends Module
 							)
 						),
 					)		
-				),
-				'submit' => array(
-					'title' => $this->l('Save'),
-					'class' => 'btn btn-default',
-					)
+				)
 			),
 		);
-		
+
 		$helper = new HelperForm();
+		$helper->base_folder = realpath(dirname(__FILE__).'/views/templates/admin/_configure/helpers/form').DIRECTORY_SEPARATOR;
+		$helper->base_tpl = 'form_new_link.tpl';
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
