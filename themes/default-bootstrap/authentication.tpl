@@ -335,7 +335,7 @@
 							{elseif $field_name eq "dni"}
 							{assign var='dniExist' value=true}
 							<div class="required dni form-group">
-								<label for="dni">{l s='Identification number'}</label>
+								<label for="dni">{l s='Identification number'} <sup>*</sup></label>
 								<input type="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{/if}" />
 								<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 							</div>
@@ -391,7 +391,7 @@
 					{/if}
 					{if $dniExist eq false}
 						<div class="required form-group dni_invoice">
-							<label for="dni">{l s='Identification number'}</label>
+							<label for="dni">{l s='Identification number'} <sup>*</sup></label>
 							<input type="text" class="text form-control" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni_invoice}{$guestInformations.dni_invoice}{/if}" />
 							<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 						</div>
@@ -427,7 +427,7 @@
 						{elseif $field_name eq "dni"}
 						{assign var=dniExist value=true}
 						<div class="required form-group dni_invoice">
-							<label for="dni">{l s='Identification number'}</label>
+							<label for="dni">{l s='Identification number'} <sup>*</sup></label>
 							<input type="text" class="text form-control" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni_invoice}{$guestInformations.dni_invoice}{/if}" />
 							<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 						</div>
