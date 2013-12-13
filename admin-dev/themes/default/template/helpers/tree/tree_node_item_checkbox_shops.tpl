@@ -24,8 +24,8 @@
 *}
 <li class="tree-item{if isset($node['disabled']) && $node['disabled'] == true} tree-item-disable{/if}">
 	<label class="tree-item-name">
-	<input type="checkbox" name="checkBoxShopAsso_{$table}[{$node['id_shop']}]" value="{$node['id_shop']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
-	<i class="tree-dot"></i>
-	{$node['name']}
+		<input type="checkbox" name="checkBoxShopAsso_{$table}[{$node['id_shop']}]" value="{$node['id_shop']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
+		<i class="tree-dot"></i>
+		{$node['name']}
 	</label>
 </li>
