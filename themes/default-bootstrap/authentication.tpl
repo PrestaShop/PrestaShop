@@ -455,7 +455,7 @@
 						{$postCodeExist = true}
 						<div class="required postcode_invoice form-group">
 							<label for="postcode_invoice">{l s='Zip / Postal Code'} <sup>*</sup></label>
-							<input type="text" class="form-control" name="postcode_invoice" id="postcode_invoice" value="{if isset($guestInformations) && $guestInformations.postcode_invoice}{$guestInformations.postcode_invoice}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+							<input type="text" class="form-control" name="postcode_invoice" id="postcode_invoice" value="{if isset($guestInformations) && $guestInformations.postcode_invoice}{$guestInformations.postcode_invoice}{/if}" onkeyup="$('#postcode_invoice').val($('#postcode_invoice').val().toUpperCase());" />
 						</div>
 						{elseif $field_name eq "city"}
 						<div class="required form-group">
