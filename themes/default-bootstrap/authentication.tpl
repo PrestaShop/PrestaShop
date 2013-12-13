@@ -142,29 +142,29 @@
 								});
 							});
 						}
-						function bindCheckbox()
-						{
-							if ($('#invoice_address:checked').length > 0)
-							{
-								$('#opc_invoice_address').slideDown('slow');
-								if ($('#company_invoice').val() == '')
-									$('#vat_number_block_invoice').hide();
-								updateState('invoice');
-								updateNeedIDNumber('invoice');
-								updateZipCode('invoice');
-								{/literal}
-								$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{/if}]').prop('selected', true);
-								$('.id_state_invoice option[value={if isset($smarty.post.id_state_invoice)}{$smarty.post.id_state_invoice|intval}{/if}]').prop('selected', true);
-								{literal}
-							}
-							else
-								$('#opc_invoice_address').slideUp('slow');
-						}
 					},
 					error: function(XMLHttpRequest, textStatus, errorThrown) {
 						alert("TECHNICAL ERROR: unable to load form.\n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 					}
 				});
+			}
+			function bindCheckbox()
+			{
+				if ($('#invoice_address:checked').length > 0)
+				{
+					$('#opc_invoice_address').slideDown('slow');
+					if ($('#company_invoice').val() == '')
+						$('#vat_number_block_invoice').hide();
+					updateState('invoice');
+					updateNeedIDNumber('invoice');
+					updateZipCode('invoice');
+					{/literal}
+					$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{/if}]').prop('selected', true);
+					$('.id_state_invoice option[value={if isset($smarty.post.id_state_invoice)}{$smarty.post.id_state_invoice|intval}{/if}]').prop('selected', true);
+					{literal}
+				}
+				else
+					$('#opc_invoice_address').slideUp('slow');
 			}
 		{/literal}
 	</script>
@@ -402,13 +402,12 @@
 					</div>
 					<input type="hidden" name="alias" id="alias" value="{l s='My address'}" />
 					<input type="hidden" name="is_new_customer" id="is_new_customer" value="0" />
-
 					<div class="checkbox">
 	                	<label for="invoice_address">
 						<input type="checkbox" name="invoice_address" id="invoice_address"{if (isset($smarty.post.invoice_address) && $smarty.post.invoice_address) || (isset($guestInformations) && $guestInformations.invoice_address)} checked="checked"{/if} autocomplete="off"/>
 						{l s='Please use another address for invoice'}</label>
 					</div>
-					<div id="opc_invoice_address" class="is_customer_param">
+					<div id="opc_invoice_address"  class="unvisible">
 						{assign var=stateExist value=false}
 						{assign var=postCodeExist value=false}
 						<h3 class="page-subheading top-indent">{l s='Invoice address'}</h3>
