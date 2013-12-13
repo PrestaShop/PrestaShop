@@ -24,5 +24,12 @@
 *}
 
 <p class="buttons_bottom_block">
-	<a href="#" id="wishlist_button" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;"  title="{l s='Add to my wishlist' mod='blockwishlist'}" rel="nofollow">{l s='Add to my wishlist' mod='blockwishlist'}</a>
+	<a 
+	id="wishlist_button" 
+	href="#" 
+	onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;" 
+	rel="nofollow"  
+	title="{l s='Add to my wishlist' mod='blockwishlist'}">
+		{l s='Add to my wishlist' mod='blockwishlist'}
+	</a>
 </p>
