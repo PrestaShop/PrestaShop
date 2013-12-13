@@ -1814,6 +1814,8 @@ class AdminThemesControllerCore extends AdminController
 
 				$shop = New Shop((int)$shop);
 				$shop->id_theme = (int)Tools::getValue('id_theme');
+				$this->context->shop->id_theme = $shop->id_theme;
+				$this->context->shop->update();
 				$shop->save();
 			}
 
@@ -1851,9 +1853,10 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function postProcess()
 	{
-
-		if (Tools::isSubmit('id_theme') && !Tools::isSubmit('deletetheme') && Tools::getValue('action') != 'ThemeInstall')
+		if (Tools::isSubmit('submitOptionstheme') && Tools::isSubmit('id_theme') && !Tools::isSubmit('deletetheme') && Tools::getValue('action') != 'ThemeInstall' && $this->context->shop->id_theme != Tools::getValue('id_theme'))
+		{
 			$this->display = "ChooseThemeModule";
+		}
 		else
 		{
 		// new check compatibility theme feature (1.4) :
@@ -1961,6 +1964,7 @@ class AdminThemesControllerCore extends AdminController
 			Configuration::updateValue('PS_FAVICON', 'favicon-'.(int)$id_shop.'.ico');
 
 		Configuration::updateGlobalValue('PS_FAVICON', 'favicon.ico');
+		$this->redirect_after = self::$currentIndex.'&token='.$this->token;
 	}
 
 	/**
