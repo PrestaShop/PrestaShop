@@ -1043,7 +1043,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$this->display = "importtheme";
 
-		if (isset($_FILES['themearchive']) && isset($_POST['filename']))
+		if (isset($_FILES['themearchive']) && isset($_POST['filename']) && Tools::isSubmit('theme_archive_server'))
 		{
 			$uniqid = uniqid();
 			$sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
@@ -1070,6 +1070,18 @@ class AdminThemesControllerCore extends AdminController
 					$this->errors[] = $this->l('Only zip files are allowed');
 				elseif (!move_uploaded_file($url, $sandbox.'uploaded.zip'))
 					$this->errors[] = $this->l('Error during the file download');
+				elseif (Tools::ZipTest($sandbox.'uploaded.zip'))
+					$archive_uploaded = true;
+				else
+					$this->errors[] = $this->l('Zip file seems to be broken');
+			}
+			elseif(Tools::getValue('theme_archive_server') != '')
+			{
+				$filename = _PS_ALL_THEMES_DIR_.Tools::getValue('theme_archive_server');
+				if (substr($filename, -4) != '.zip')
+					$this->errors[] = $this->l('Only zip files are allowed');
+				elseif (!copy($filename, $sandbox.'uploaded.zip'))
+					$this->errors[] = $this->l('An error has occurred during the file copy.');
 				elseif (Tools::ZipTest($sandbox.'uploaded.zip'))
 					$archive_uploaded = true;
 				else
@@ -1148,27 +1160,7 @@ class AdminThemesControllerCore extends AdminController
 			'form' => array(
 				'tinymce' => false,
 				'legend'  => array(
-					'title' => $this->l('Theme'),
-					'icon'  => 'icon-picture'
-				),
-				'input' => array(
-					array(
-						'type'     => 'text',
-						'label'    => $this->l('Archive URL:'),
-						'name'     => 'themearchiveUrl'
-					),
-				),
-				'submit'  => array(
-					'title' => $this->l('Save'),
-					'class' => 'button'
-				)),
-		);
-
-		$fields_form[1] = array(
-			'form' => array(
-				'tinymce' => false,
-				'legend'  => array(
-					'title' => $this->l('Theme'),
+					'title' => $this->l('Import from your computer'),
 					'icon'  => 'icon-picture'
 				),
 				'input' => array(
@@ -1185,6 +1177,64 @@ class AdminThemesControllerCore extends AdminController
 				)),
 		);
 
+		$fields_form[1] = array(
+			'form' => array(
+				'tinymce' => false,
+				'legend'  => array(
+					'title' => $this->l('Import from the web'),
+					'icon'  => 'icon-picture'
+				),
+				'input' => array(
+					array(
+						'type'     => 'text',
+						'label'    => $this->l('Archive URL:'),
+						'name'     => 'themearchiveUrl'
+					),
+				),
+				'submit'  => array(
+					'title' => $this->l('Save'),
+					'class' => 'button'
+				)),
+		);
+
+		$theme_archive_server = array();
+		$files = scandir(_PS_ALL_THEMES_DIR_);
+		$theme_archive_server[] = '-';
+		foreach($files as $file)
+		{
+			if (is_file(_PS_ALL_THEMES_DIR_.$file) && substr(_PS_ALL_THEMES_DIR_.$file, -4) == '.zip')
+			{
+				$theme_archive_server[] = array('id'=>basename(_PS_ALL_THEMES_DIR_.$file),'name'=>basename(_PS_ALL_THEMES_DIR_.$file));
+			}
+		}
+
+		$fields_form[2] = array(
+			'form' => array(
+				'tinymce' => false,
+				'legend'  => array(
+					'title' => $this->l('Import from FTP'),
+					'icon'  => 'icon-picture'
+				),
+				'input' => array(
+
+					array(
+						'type'  => 'select',
+						'label' => $this->l('Select the archive:'),
+						'name'  => 'theme_archive_server',
+						'desc'  => $this->l('This field will list the zip files in the \'themes\' folder'),
+						'options' => array(
+							'id' => 'id', 'name' => 'name',
+							'query' => $theme_archive_server,
+						)
+					),
+				),
+				'submit'  => array(
+					'title' => $this->l('Save'),
+					'class' => 'button hide'
+				)),
+		);
+
+
 		$helper = new HelperForm();
 
 		$helper->currentIndex = $this->context->link->getAdminLink('AdminThemes', false).'&action=importtheme';
@@ -1192,6 +1242,7 @@ class AdminThemesControllerCore extends AdminController
 		$helper->show_toolbar = true;
 		$helper->toolbar_btn = $toolbar_btn;
 		$helper->fields_value['themearchiveUrl']='';
+		$helper->fields_value['theme_archive_server']=array();
 		$helper->multiple_fieldsets = true;
 
 		$helper->override_folder = $this->tpl_folder;
