@@ -115,7 +115,7 @@
 						<a 
 						class="color-myaccount" 
 						href="javascript:showOrder(1, {$return.id_order|intval}, '{$link->getPageLink('order-detail', true)|escape:'html':'UTF-8'}');">
-							{l s='#'}{$return.id_order|string_format:"%06d"}
+							{$return.reference}
 						</a>
 					</td>
 					<td class="history_method" data-value="{$return.state}">
