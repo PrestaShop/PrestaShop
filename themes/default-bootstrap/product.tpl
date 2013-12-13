@@ -266,7 +266,7 @@
 										{else}
 											href="{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html':'UTF-8'}"
 											data-fancybox-group="other-views"
-											class="thickbox{if $smarty.foreach.thumbnails.first} shown{/if}"
+											class="thickbox{if $image.id_image == $cover.id_image} shown{/if}"
 										{/if}
 										title="{$imageTitlte}">
 										<img

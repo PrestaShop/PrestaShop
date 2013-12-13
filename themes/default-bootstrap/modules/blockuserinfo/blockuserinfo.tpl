@@ -24,10 +24,10 @@
 *}
 <!-- Block user information module HEADER -->
 <div id="header_user" {if $PS_CATALOG_MODE}class="header_user_catalog"{/if}>
-	<ul id="header_nav">
+	<div id="header_nav">
 		{if !$PS_CATALOG_MODE}
-		<li id="shopping_cart">
-			<a class="clearfix" href="{$link->getPageLink($order_process, true)|escape:'html':'UTF-8'}" title="{l s='View my shopping cart' mod='blockuserinfo'}" rel="nofollow"><b>{l s='Cart:' mod='blockuserinfo'}</b>
+		<div id="shopping_cart">
+			<a href="{$link->getPageLink($order_process, true)|escape:'html':'UTF-8'}" title="{l s='View my shopping cart' mod='blockuserinfo'}" rel="nofollow"><b>{l s='Cart:' mod='blockuserinfo'}</b>
 			<span class="ajax_cart_quantity{if $cart_qties == 0} unvisible{/if}">{$cart_qties}</span>
 			<span class="ajax_cart_product_txt{if $cart_qties != 1} unvisible{/if}">{l s='product' mod='blockuserinfo'}</span>
 			<span class="ajax_cart_product_txt_s{if $cart_qties < 2} unvisible{/if}">{l s='products' mod='blockuserinfo'}</span>
@@ -44,8 +44,8 @@
 			</span>
 			<span class="ajax_cart_no_product{if $cart_qties > 0} unvisible{/if}">{l s='(empty)' mod='blockuserinfo'}</span>
 			</a>
-		</li>
+		</div>
 		{/if}
-	</ul>
+	</div>
 </div>
 <!-- /Block user information module HEADER -->
