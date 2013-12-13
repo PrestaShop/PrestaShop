@@ -37,7 +37,7 @@ table#product_comparison {
 	}
 	.remove {
 		text-align: right;
-		padding-bottom: 15px;
+		padding:  0 0 15px 0;
 		a {
 			font-size: 23px;
 			line-height: 23px;
@@ -61,26 +61,26 @@ table#product_comparison {
 		}
 	}
 	h5 {
-		padding-bottom: 8px;
+		padding: 0 0 8px 0 ;
 		min-height: 54px;	
 	}
 	.prices-container {
-		padding-bottom: 5px;	
+		padding: 0 0 5px 0;	
 	}
 	.comparison_availability_statut {
 		display: none;
-		font-weight: bold;
+		font-weight: 700;
 		color: #060;
 	}
 	.product_discount {
 		padding-top: 5px;
 		.reduced-price {
 			color: $product-reduced-price;
-			font-weight: bold;
+			font-weight: 700;
 		}
 	}
 	.product_desc {
-		padding-bottom: 12px;	
+		padding: 0 0 12px 0;	
 	}
 	.button-container {
 		a, > span {
@@ -108,36 +108,18 @@ table#product_comparison {
 
 
 .footer_link {
-	margin-bottom: 20px;
+	margin: 0 0 20px 0;
 }
 
 #stOCClose {
-	width:29px !important;
-	height:29px !important;	
+	width: 29px !important;
+	height: 29px !important;	
 }
-.stButton .stFb, .stButton .stTwbutton, .stButton .stMainServices {
-	height:22px !important;
-}
+.stButton .stFb, 
+.stButton .stTwbutton, 
+.stButton .stMainServices,
 .stButton .stButton_gradient {
-	height:22px !important;	
-}
-@media (min-width: $screen-lg) { // min 1200px
-	.share {
-		position:relative;
-		top:-350px;	
-	}
-}
-@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px
-	.share {
-		position:relative;
-		top:-260px;
-	}
-}
-@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
-	.share {
-		position:relative;
-		top:-245px;
-	}
+	height: 22px !important;
 }
 
 .share {

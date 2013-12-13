@@ -2,15 +2,13 @@
 				Addresses Styles
 ********************************************************/
 #addresses #center_column .page-heading {
-  margin-bottom: 22px; }
+  margin: 0 0 22px; }
 #addresses #center_column p {
-  margin-bottom: 13px; }
+  margin: 0 0 13px; }
   #addresses #center_column p.p-indent {
-    margin-bottom: 27px; }
+    margin: 0 0 27px; }
 
 .address li.address_update {
-  margin-top: 14px;
-  :
-			margin-bottom: 6px; }
+  margin: 14px 0 6px 0; }
   .address li.address_update a {
-    margin-right: 10px; }
+    margin: 0 10px 0 0; }
