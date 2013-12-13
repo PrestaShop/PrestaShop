@@ -674,22 +674,15 @@ class HomeSlider extends Module
 
 	public function hookdisplayTopColumn($params)
 	{
-		if ($this->context->smarty->tpl_vars['page_name'] != 'index' || $this->context->getMobileDevice() != false)
-			return false;
+		if ($this->context->controller->php_self != 'index' || $this->context->getMobileDevice() != false)
+			return ;
 
-		if(!$this->_prepareHook())
+		if (!$this->_prepareHook())
 			return false;
 
 		return $this->display(__FILE__, 'homeslider.tpl', $this->getCacheId());
 	}
-	
-	public function getCacheId($name = null)
-	{
-		if ($name === null && isset($this->context->smarty->tpl_vars['page_name']))
-			return parent::getCacheId($this->context->smarty->tpl_vars['page_name']->value);
-		return parent::getCacheId($name);
-	}
-	
+
 	public function clearCache()
 	{
 		$this->_clearCache('homeslider.tpl');
@@ -776,7 +769,7 @@ class HomeSlider extends Module
 			FROM '._DB_PREFIX_.'homeslider hs
 			LEFT JOIN '._DB_PREFIX_.'homeslider_slides hss ON (hs.id_homeslider_slides = hss.id_homeslider_slides)
 			LEFT JOIN '._DB_PREFIX_.'homeslider_slides_lang hssl ON (hss.id_homeslider_slides = hssl.id_homeslider_slides)
-			WHERE (id_shop = '.(int)$id_shop.')
+			WHERE id_shop = '.(int)$id_shop.'
 			AND hssl.id_lang = '.(int)$id_lang.
 			($active ? ' AND hss.`active` = 1' : ' ').'
 			ORDER BY hss.position');
