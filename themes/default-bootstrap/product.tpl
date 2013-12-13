@@ -683,7 +683,7 @@
 						<thead>
 							<tr>
 								<th>{l s='Quantity'}</th>
-								<th>{l s='Discount'}</th>
+								<th>{if $display_discount_price}{l s='Price'}{else}{l s='Discount'}{/if}</th>
 								<th>{l s='You Save'}</th>
 							</tr>
 						</thead>
@@ -694,10 +694,18 @@
 								
 								<td>
 									{if $quantity_discount.price >= 0 OR $quantity_discount.reduction_type == 'amount'}
-									   {convertPrice price=$quantity_discount.real_value|floatval}
-								   {else}
-									   {$quantity_discount.real_value|floatval}%
-								   {/if}
+										{if $display_discount_price}
+											{convertPrice price=$productPrice-$quantity_discount.real_value|floatval}
+										{else}
+											{convertPrice price=$quantity_discount.real_value|floatval}
+										{/if}
+									{else}
+										{if $display_discount_price}
+											{convertPrice price = $productPrice-($productPrice*$quantity_discount.reduction)|floatval}
+										{else}
+											{$quantity_discount.real_value|floatval}%
+										{/if}
+									{/if}
 								</td>
 								<td>
 									<span>{l s='Up to'}</span>
