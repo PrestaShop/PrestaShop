@@ -87,13 +87,16 @@
 #header #cart_block {
   position: absolute;
   top: 45px;
-  left: 0;
+  right: 0;
   z-index: 10;
   display: none;
   height: auto;
-  width: 100%;
   background: #484848;
-  color: white; }
+  color: white;
+  width: 270px; }
+  @media (max-width: 1200px) {
+    #header #cart_block {
+      width: 100%; } }
   #header #cart_block a {
     color: white; }
     #header #cart_block a:hover {
