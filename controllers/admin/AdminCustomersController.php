@@ -831,6 +831,12 @@ class AdminCustomersControllerCore extends AdminController
 			$this->display = 'edit';
 			return $customer;
 		}
+		elseif (trim(Tools::getValue('passwd')) == '')
+		{
+			$this->validateRules();
+			$this->errors[] = Tools::displayError('Password can not be empty.');
+			$this->display = 'edit';
+		}
 		elseif ($customer = parent::processAdd())
 		{
 			$this->context->smarty->assign('new_customer', $customer);
