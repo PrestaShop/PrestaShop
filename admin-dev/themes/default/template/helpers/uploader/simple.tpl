@@ -92,6 +92,23 @@
 			$('#{$id}').trigger('click');
 		});
 
+		$('#{$id}-name').on('dragenter', function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+		});
+
+		$('#{$id}-name').on('dragover', function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+		});
+
+		$('#{$id}-name').on('drop', function(e) {
+			e.preventDefault();
+			var files = e.originalEvent.dataTransfer.files;
+			$('#{$id}')[0].files = files;
+			$(this).val(files[0].name);
+		});
+
 		$('#{$id}').change(function(e) {
 			if ($(this)[0].files !== undefined)
 			{
