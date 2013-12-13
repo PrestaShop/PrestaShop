@@ -586,6 +586,50 @@ class AdminModulesControllerCore extends AdminController
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to add this.');
 	}
+	
+	public function postProcessEnable_Device()
+	{
+	 	if ($this->tabAccess['edit'] === '1')
+		{
+			$module = Module::getInstanceByName(Tools::getValue('module_name'));
+			if (Validate::isLoadedObject($module))
+			{
+				if (!$module->getPermission('configure'))
+					$this->errors[] = Tools::displayError('You do not have the permission to use this module.');
+				else
+				{
+					$module->enableDevice((int)Tools::getValue('enable_device'));
+					Tools::redirectAdmin($this->getCurrentUrl('enable_device'));
+				}
+			}
+			else
+				$this->errors[] = Tools::displayError('Cannot load the module\'s object.');
+		}
+		else
+			$this->errors[] = Tools::displayError('You do not have permission to add this.');
+	}
+
+	public function postProcessDisable_Device()
+	{
+	 	if ($this->tabAccess['edit'] === '1')
+		{
+			$module = Module::getInstanceByName(Tools::getValue('module_name'));
+			if (Validate::isLoadedObject($module))
+			{
+				if (!$module->getPermission('configure'))
+					$this->errors[] = Tools::displayError('You do not have the permission to use this module.');
+				else
+				{
+					$module->disableDevice((int)Tools::getValue('disable_device'));
+					Tools::redirectAdmin($this->getCurrentUrl('disable_device'));
+				}
+			}
+			else
+				$this->errors[] = Tools::displayError('Cannot load the module\'s object.');
+		}
+		else
+			$this->errors[] = Tools::displayError('You do not have permission to add this.');
+	}
 
 	public function postProcessDelete()
 	{
@@ -832,7 +876,7 @@ class AdminModulesControllerCore extends AdminController
 
 		// Execute filter or callback methods
 		$filterMethods = array('filterModules', 'resetFilterModules', 'filterCategory', 'unfilterCategory');
-		$callbackMethods = array('reset', 'download', 'enable', 'delete');
+		$callbackMethods = array('reset', 'download', 'enable', 'delete', 'enable_device', 'disable_device');
 		$postProcessMethodsList = array_merge((array)$filterMethods, (array)$callbackMethods);
 		foreach ($postProcessMethodsList as $ppm)
 			if (Tools::isSubmit($ppm))
