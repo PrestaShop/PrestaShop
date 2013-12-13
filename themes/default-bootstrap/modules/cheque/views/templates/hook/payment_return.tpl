@@ -27,7 +27,7 @@
 	<p class="alert alert-success">{l s='Your order on %s is complete.' sprintf=$shop_name mod='cheque'}</p>
     <div class="box order-confirmation">
     <h3 class="page-subheading">{l s='Your check must include:' mod='cheque'}</h3>
-		- {l s='Payment ammount.' mod='cheque'} <span class="price"><strong>{$total_to_pay}</strong></span>
+		- {l s='Payment amount.' mod='cheque'} <span class="price"><strong>{$total_to_pay}</strong></span>
 		<br />- {l s='Payable to the order of' mod='cheque'} <strong>{if $chequeName}{$chequeName}{else}___________{/if}</strong>
 		<br />- {l s='Mail to' mod='cheque'} <strong>{if $chequeAddress}{$chequeAddress}{else}___________{/if}</strong>
 		{if !isset($reference)}
