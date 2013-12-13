@@ -1653,8 +1653,6 @@ class AdminControllerCore extends Controller
 		{
 			$this->content .= $this->renderDetails();
 		}
-		elseif ($this->display != false && method_exists($this, 'render'.$this->display))
-			$this->content .= $this->{'render'.$this->display}();
 		elseif (!$this->ajax)
 		{
 			$this->content .= $this->renderModulesList();
