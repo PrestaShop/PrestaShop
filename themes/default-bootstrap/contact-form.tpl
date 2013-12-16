@@ -31,7 +31,7 @@
 
 {if isset($confirmation)}
 	<p class="alert alert-success">{l s='Your message has been successfully sent to our team.'}</p>
-	<ul class="footer_links">
+	<ul class="footer_links clearfix">
 		<li>
             <a class="btn btn-default button button-small" href="{$base_dir}">
                 <span>
@@ -42,7 +42,7 @@
 	</ul>
 {elseif isset($alreadySent)}
 	<p class="alert alert-warning">{l s='Your message has already been sent.'}</p>
-	<ul class="footer_links">
+	<ul class="footer_links clearfix">
 		<li>
             <a class="btn btn-default button button-small" href="{$base_dir}">
                 <span>
