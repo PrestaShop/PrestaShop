@@ -146,7 +146,7 @@ class AddShareThis extends Module
 	
 	public function hookDisplayHeader($params)
 	{
-		if ($this->context->controller->php_self != 'product')
+		if (!isset($this->context->controller->php_self) || $this->context->controller->php_self != 'product')
 			return;
 			
 		  $product = $this->context->controller->getProduct();

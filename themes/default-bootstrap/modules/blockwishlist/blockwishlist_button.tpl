@@ -24,5 +24,11 @@
 *}
 
 <div class="wishlist">
-<a href="#" rel="{$product.id_product|intval}" onclick="WishlistCart('wishlist_block_list', 'add', '{$product.id_product|intval}', false, 1); return false;" class="addToWishlist wishlistProd_{$product.id_product|intval}">{l s="Add to Wishlist"}</a>
+	<a
+	class="addToWishlist wishlistProd_{$product.id_product|intval}" 
+	href="#" 
+	rel="{$product.id_product|intval}" 
+	onclick="WishlistCart('wishlist_block_list', 'add', '{$product.id_product|intval}', false, 1); return false;" >
+		{l s="Add to Wishlist"}
+	</a>
 </div>

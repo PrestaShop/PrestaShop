@@ -45,6 +45,17 @@
 		a, a:hover, a:focus
 			background-color: white
 
+#ajax_confirmation
+	width: 450px
+	position: fixed
+	top: 100px
+	right: 10px
+	z-index: 40
+	&.animate-enter
+		+animate(bounceInDown, 0.5s, 0)
+	&.animate-out
+		+animate(bounceOutRight, 0.5s, 0)
+
 .alert.alert-danger
 	padding-left: 60px
 	position: relative
@@ -98,7 +109,6 @@
 		text-decoration: inherit
 		-webkit-font-smoothing: antialiased
 		content: "\F05A"
-
 
 .overflow-y
 	max-height: 200px

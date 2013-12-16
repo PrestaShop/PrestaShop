@@ -86,22 +86,17 @@
 ********************************************************************/
 #header #cart_block {
   position: absolute;
-  top: 95px;
+  top: 45px;
   right: 0;
   z-index: 10;
   display: none;
   height: auto;
-  width: 270px;
   background: #484848;
-  color: white; }
-  @media (min-width: 480px) and (max-width: 767px) {
+  color: white;
+  width: 270px; }
+  @media (max-width: 1200px) {
     #header #cart_block {
-      top: 69px; } }
-  @media (max-width: 479px) {
-    #header #cart_block {
-      top: 44px;
-      left: 50%;
-      margin-left: -135px; } }
+      width: 100%; } }
   #header #cart_block a {
     color: white; }
     #header #cart_block a:hover {

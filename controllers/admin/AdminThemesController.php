@@ -224,6 +224,9 @@ class AdminThemesControllerCore extends AdminController
 			'directory' => array(
 				'title' => $this->l('Directory'),
 			),
+			'responsive' => array(
+				'title' => $this->l('Responsive'),
+			)
 		);
 	}
 
@@ -275,6 +278,23 @@ class AdminThemesControllerCore extends AdminController
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 				),
+				array(
+					'type' => 'switch',
+					'label' => $this->l('Responsive'),
+					'name'=>'responsive',
+					'values' => array(
+						array(
+							'id' => 'responsive_on',
+							'value' => 1,
+							'label' => $this->l('Yes')
+						),
+						array(
+							'id' => 'responsive_off',
+							'value' => 0,
+							'label' => $this->l('No')
+						)
+					),
+				)
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
@@ -1043,7 +1063,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$this->display = "importtheme";
 
-		if (isset($_FILES['themearchive']) && isset($_POST['filename']))
+		if (isset($_FILES['themearchive']) && isset($_POST['filename']) && Tools::isSubmit('theme_archive_server'))
 		{
 			$uniqid = uniqid();
 			$sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
@@ -1070,6 +1090,18 @@ class AdminThemesControllerCore extends AdminController
 					$this->errors[] = $this->l('Only zip files are allowed');
 				elseif (!move_uploaded_file($url, $sandbox.'uploaded.zip'))
 					$this->errors[] = $this->l('Error during the file download');
+				elseif (Tools::ZipTest($sandbox.'uploaded.zip'))
+					$archive_uploaded = true;
+				else
+					$this->errors[] = $this->l('Zip file seems to be broken');
+			}
+			elseif(Tools::getValue('theme_archive_server') != '')
+			{
+				$filename = _PS_ALL_THEMES_DIR_.Tools::getValue('theme_archive_server');
+				if (substr($filename, -4) != '.zip')
+					$this->errors[] = $this->l('Only zip files are allowed');
+				elseif (!copy($filename, $sandbox.'uploaded.zip'))
+					$this->errors[] = $this->l('An error has occurred during the file copy.');
 				elseif (Tools::ZipTest($sandbox.'uploaded.zip'))
 					$archive_uploaded = true;
 				else
@@ -1148,27 +1180,7 @@ class AdminThemesControllerCore extends AdminController
 			'form' => array(
 				'tinymce' => false,
 				'legend'  => array(
-					'title' => $this->l('Theme'),
-					'icon'  => 'icon-picture'
-				),
-				'input' => array(
-					array(
-						'type'     => 'text',
-						'label'    => $this->l('Archive URL:'),
-						'name'     => 'themearchiveUrl'
-					),
-				),
-				'submit'  => array(
-					'title' => $this->l('Save'),
-					'class' => 'button'
-				)),
-		);
-
-		$fields_form[1] = array(
-			'form' => array(
-				'tinymce' => false,
-				'legend'  => array(
-					'title' => $this->l('Theme'),
+					'title' => $this->l('Import from your computer'),
 					'icon'  => 'icon-picture'
 				),
 				'input' => array(
@@ -1185,6 +1197,64 @@ class AdminThemesControllerCore extends AdminController
 				)),
 		);
 
+		$fields_form[1] = array(
+			'form' => array(
+				'tinymce' => false,
+				'legend'  => array(
+					'title' => $this->l('Import from the web'),
+					'icon'  => 'icon-picture'
+				),
+				'input' => array(
+					array(
+						'type'     => 'text',
+						'label'    => $this->l('Archive URL:'),
+						'name'     => 'themearchiveUrl'
+					),
+				),
+				'submit'  => array(
+					'title' => $this->l('Save'),
+					'class' => 'button'
+				)),
+		);
+
+		$theme_archive_server = array();
+		$files = scandir(_PS_ALL_THEMES_DIR_);
+		$theme_archive_server[] = '-';
+		foreach($files as $file)
+		{
+			if (is_file(_PS_ALL_THEMES_DIR_.$file) && substr(_PS_ALL_THEMES_DIR_.$file, -4) == '.zip')
+			{
+				$theme_archive_server[] = array('id'=>basename(_PS_ALL_THEMES_DIR_.$file),'name'=>basename(_PS_ALL_THEMES_DIR_.$file));
+			}
+		}
+
+		$fields_form[2] = array(
+			'form' => array(
+				'tinymce' => false,
+				'legend'  => array(
+					'title' => $this->l('Import from FTP'),
+					'icon'  => 'icon-picture'
+				),
+				'input' => array(
+
+					array(
+						'type'  => 'select',
+						'label' => $this->l('Select the archive:'),
+						'name'  => 'theme_archive_server',
+						'desc'  => $this->l('This field will list the zip files in the \'themes\' folder'),
+						'options' => array(
+							'id' => 'id', 'name' => 'name',
+							'query' => $theme_archive_server,
+						)
+					),
+				),
+				'submit'  => array(
+					'title' => $this->l('Save'),
+					'class' => 'button hide'
+				)),
+		);
+
+
 		$helper = new HelperForm();
 
 		$helper->currentIndex = $this->context->link->getAdminLink('AdminThemes', false).'&action=importtheme';
@@ -1192,6 +1262,7 @@ class AdminThemesControllerCore extends AdminController
 		$helper->show_toolbar = true;
 		$helper->toolbar_btn = $toolbar_btn;
 		$helper->fields_value['themearchiveUrl']='';
+		$helper->fields_value['theme_archive_server']=array();
 		$helper->multiple_fieldsets = true;
 
 		$helper->override_folder = $this->tpl_folder;
@@ -1201,36 +1272,52 @@ class AdminThemesControllerCore extends AdminController
 
 	public function initContent()
 	{
-		$this->checkMobileNeeds();
-		
-		$themes = array();
-		foreach (Theme::getThemes() as $theme)
-			$themes[] = $theme->directory;
+		if (isset($this->display) && method_exists($this, 'render'.$this->display))
+		{
+			$this->content .= $this->initPageHeaderToolbar();
 
-		foreach (scandir(_PS_ALL_THEMES_DIR_) as $theme_dir)
-			if ($theme_dir[0] != '.' && Validate::isDirName($theme_dir) && is_dir(_PS_ALL_THEMES_DIR_.$theme_dir) && file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/preview.jpg') && !in_array($theme_dir, $themes))
+			$this->content .= $this->{'render'.$this->display}();
+			$this->context->smarty->assign(array(
+				'content' => $this->content,
+				'show_page_header_toolbar' => $this->show_page_header_toolbar,
+				'page_header_toolbar_title' => $this->page_header_toolbar_title,
+				'page_header_toolbar_btn' => $this->page_header_toolbar_btn
+			));
+		}
+		else
+		{
+			$this->checkMobileNeeds();
+
+			$themes = array();
+			foreach (Theme::getThemes() as $theme)
+				$themes[] = $theme->directory;
+
+			foreach (scandir(_PS_ALL_THEMES_DIR_) as $theme_dir)
+				if ($theme_dir[0] != '.' && Validate::isDirName($theme_dir) && is_dir(_PS_ALL_THEMES_DIR_ . $theme_dir) && file_exists(_PS_ALL_THEMES_DIR_ . $theme_dir . '/preview.jpg') && !in_array($theme_dir, $themes))
+				{
+					$theme       = new Theme();
+					$theme->name = $theme->directory = $theme_dir;
+					$theme->add();
+				}
+
+			$content = '';
+			if (file_exists(_PS_IMG_DIR_ . 'logo.jpg'))
 			{
-				$theme = new Theme();
-				$theme->name = $theme->directory = $theme_dir;
-				$theme->add();
+				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_ . Configuration::get('PS_LOGO'));
+				Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
+				Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 			}
-	
-		$content = '';
-		if (file_exists(_PS_IMG_DIR_.'logo.jpg'))
-		{
-			list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO'));
-			Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
-			Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
-		}
-		if (file_exists(_PS_IMG_DIR_.'logo_mobile.jpg'))
-		{
-			list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE'));
-			Configuration::updateValue('SHOP_LOGO_MOBILE_HEIGHT', (int)round($height));
-			Configuration::updateValue('SHOP_LOGO_MOBILE_WIDTH', (int)round($width));
-		}
+			if (file_exists(_PS_IMG_DIR_ . 'logo_mobile.jpg'))
+			{
+				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MOBILE'));
+				Configuration::updateValue('SHOP_LOGO_MOBILE_HEIGHT', (int)round($height));
+				Configuration::updateValue('SHOP_LOGO_MOBILE_WIDTH', (int)round($width));
+			}
 
-		$this->content .= $content;
-		return parent::initContent();
+			$this->content .= $content;
+
+			return parent::initContent();
+		}
 	}
 
 	public function ajaxProcessGetAddonsThemes()
@@ -1763,6 +1850,8 @@ class AdminThemesControllerCore extends AdminController
 
 				$shop = New Shop((int)$shop);
 				$shop->id_theme = (int)Tools::getValue('id_theme');
+				$this->context->shop->id_theme = $shop->id_theme;
+				$this->context->shop->update();
 				$shop->save();
 			}
 
@@ -1800,9 +1889,10 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function postProcess()
 	{
-
-		if (Tools::isSubmit('id_theme') && !Tools::isSubmit('deletetheme') && Tools::getValue('action') != 'ThemeInstall')
+		if (Tools::isSubmit('submitOptionstheme') && Tools::isSubmit('id_theme') && !Tools::isSubmit('deletetheme') && Tools::getValue('action') != 'ThemeInstall' && $this->context->shop->id_theme != Tools::getValue('id_theme'))
+		{
 			$this->display = "ChooseThemeModule";
+		}
 		else
 		{
 		// new check compatibility theme feature (1.4) :
@@ -1910,6 +2000,7 @@ class AdminThemesControllerCore extends AdminController
 			Configuration::updateValue('PS_FAVICON', 'favicon-'.(int)$id_shop.'.ico');
 
 		Configuration::updateGlobalValue('PS_FAVICON', 'favicon.ico');
+		$this->redirect_after = self::$currentIndex.'&token='.$this->token;
 	}
 
 	/**
@@ -1957,6 +2048,8 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function renderOptions()
 	{
+		if (isset($this->display) && method_exists($this, 'render'.$this->display))
+			return $this->{'render'.$this->display}();
 		if ($this->fields_options && is_array($this->fields_options))
 		{
 			$helper = new HelperOptions($this);

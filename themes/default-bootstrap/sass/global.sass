@@ -3,8 +3,7 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic)
 @import theme_variables
 @import bootstrap
-
-@import ../css/font-awesome.css
+@import font-awesome.css
 
 a:hover
 	text-decoration: none
@@ -69,15 +68,22 @@ header
 		#header_logo
 			padding-top: 15px
 			@extend .col-sm-4
+			@media (max-width: $screen-md)
+				padding-top: 40px
 			@media (max-width: $screen-xs-max)
+				padding-top: 15px
 				img
 					margin: 0 auto
 		#search_block_top
 			@extend .col-sm-4
+			@extend .clearfix
+			#searchbox
+				float: left
+				width: 100%
+				background-color: red
 		#header_user
 			@extend .col-sm-4
-			#shopping_cart
-				@extend .pull-right
+			@extend .clearfix
 		#block_top_menu
 			padding-top: 25px
 			@extend .col-lg-12

@@ -23,13 +23,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<p class="buttons_bottom_block">
-	<a 
-	id="wishlist_button" 
-	href="#" 
-	onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;" 
-	rel="nofollow"  
-	title="{l s='Add to my wishlist' mod='blockwishlist'}">
-		{l s='Add to my wishlist' mod='blockwishlist'}
-	</a>
-</p>
+{extends file="helpers/form/form.tpl"}
+
+{block name="footer"}
+	<div class="panel-footer">
+		<button type="submit" class="btn btn-default pull-right" name="submitBlocktopmenuLinks">
+			<i class="process-icon-save" ></i> {l s="Save" mod="blocktopmenu"}
+		</button>
+	</div>
+{/block}

@@ -1,24 +1,18 @@
 /* block top search */
 #search_block_top {
-  padding-top: 50px; }
-  @media (min-width: 992px) and (max-width: 1199px) {
-    #search_block_top {
-      padding-top: 0; } }
-  @media (min-width: 768px) and (max-width: 991px) {
-    #search_block_top {
-      padding-top: 0; } }
-  @media (min-width: 480px) and (max-width: 767px) {
-    #search_block_top {
-      padding-top: 0; } }
-  @media (max-width: 479px) {
+  padding: 50px 0 0 0; }
+  @media (max-width: 768px) {
     #search_block_top {
       padding-top: 0; } }
   #search_block_top .btn.button-search {
     background: #333333;
-    float: left;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
     border: none;
     color: white;
-    width: 57px;
+    width: 50px;
     text-align: center;
     padding: 10px 0 11px 0; }
     #search_block_top .btn.button-search span {
@@ -33,22 +27,12 @@
     #search_block_top .btn.button-search:hover {
       color: #6f6f6f; }
   #search_block_top #search_query_top {
+    display: inline;
     padding: 0 13px;
     height: 45px;
     line-height: 45px;
-    width: 271px;
     background: #fbfbfb;
-    float: left;
     margin-right: 1px; }
-    @media (min-width: 768px) and (max-width: 991px) {
-      #search_block_top #search_query_top {
-        width: 180px; } }
-    @media (min-width: 480px) and (max-width: 767px) {
-      #search_block_top #search_query_top {
-        width: 212px; } }
-    @media (max-width: 479px) {
-      #search_block_top #search_query_top {
-        width: 212px; } }
 
 .ac_results {
   background: white;
@@ -66,12 +50,15 @@
     .ac_results li:hover, .ac_results li.ac_over {
       background: #fbfbfb; }
 
-form#searchbox label {
-  color: #333333;
-  margin-bottom: 1px; }
-form#searchbox input#search_query_block {
-  border: 1px solid #d6d4d4;
-  height: 18px;
-  margin-top: 10px; }
-form#searchbox input#search_button {
-  padding: 1px 4px; }
+form#searchbox {
+  padding: 0 50px 0 0;
+  position: relative; }
+  form#searchbox label {
+    color: #333333;
+    margin-bottom: 1px; }
+  form#searchbox input#search_query_block {
+    border: 1px solid #d6d4d4;
+    height: 18px;
+    margin-top: 10px; }
+  form#searchbox input#search_button {
+    padding: 1px 4px; }
