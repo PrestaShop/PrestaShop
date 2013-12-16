@@ -112,9 +112,12 @@ class CombinationCore extends ObjectModel
 
 		if (!$this->hasMultishopEntries() && !$this->deleteAssociations())
 			return false;
+
+		Product::updateDefaultAttribute($this->id_product);
+		
 		return true;
 	}
-	
+
 	public function add($autodate = true, $null_values = false)
 	{
 		if (!parent::add($autodate, $null_values))
@@ -128,7 +131,17 @@ class CombinationCore extends ObjectModel
 
 		SpecificPriceRule::applyAllRules(array((int)$this->id_product));
 		
+		Product::updateDefaultAttribute($this->id_product);
+		
 		return true;
+	}
+
+	public function update($null_values = false)
+	{
+		$return = parent::update($null_values);
+		Product::updateDefaultAttribute($this->id_product);
+
+		return $return;
 	}
 
 	public function deleteAssociations()
