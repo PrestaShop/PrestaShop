@@ -27,42 +27,6 @@
   <feature_value id="Leather">
     <value>Leather</value>
   </feature_value>
-  <feature_value id="Classic">
-    <value>Classic</value>
-  </feature_value>
-  <feature_value id="Casual">
-    <value>Casual</value>
-  </feature_value>
-  <feature_value id="Military">
-    <value>Military</value>
-  </feature_value>
-  <feature_value id="Girly">
-    <value>Girly</value>
-  </feature_value>
-  <feature_value id="Rock">
-    <value>Rock</value>
-  </feature_value>
-  <feature_value id="Basic">
-    <value>Basic</value>
-  </feature_value>
-  <feature_value id="Dressy">
-    <value>Dressy</value>
-  </feature_value>
-  <feature_value id="Short_Sleeve">
-    <value>Short Sleeve</value>
-  </feature_value>
-  <feature_value id="Colorful_Dress">
-    <value>Colorful Dress</value>
-  </feature_value>
-  <feature_value id="Short_Dress">
-    <value>Short Dress</value>
-  </feature_value>
-  <feature_value id="Midi_Dress">
-    <value>Midi Dress</value>
-  </feature_value>
-  <feature_value id="Maxi_Dress">
-    <value>Maxi Dress</value>
-  </feature_value>
   <feature_value id="2_75_in">
     <value>2.75 in</value>
   </feature_value>

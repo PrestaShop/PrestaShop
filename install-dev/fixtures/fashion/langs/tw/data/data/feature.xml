@@ -15,10 +15,4 @@
   <feature id="Compositions">
     <name>Compositions</name>
   </feature>
-  <feature id="Styles">
-    <name>Styles</name>
-  </feature>
-  <feature id="Properties">
-    <name>Properties</name>
-  </feature>
 </entity_feature>
