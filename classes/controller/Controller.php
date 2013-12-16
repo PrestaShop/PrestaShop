@@ -45,6 +45,11 @@ abstract class ControllerCore
 	public $js_files = array();
 
 	/**
+	 * @var array list of php error
+	 */
+	public $php_errors = array();
+
+	/**
 	 * @var bool check if header will be displayed
 	 */
 	protected $display_header;
@@ -90,6 +95,7 @@ abstract class ControllerCore
 	 */
 	public function init()
 	{
+		$old_error_handler = set_error_handler(array(__CLASS__, 'myErrorHandler'));
 		if (!defined('_PS_BASE_URL_'))
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
 		if (!defined('_PS_BASE_URL_SSL_'))
@@ -366,5 +372,29 @@ abstract class ControllerCore
 		$res = $this->context->smarty->isCached($template, $cacheId, $compileId);
 		Tools::restoreCacheSettings();
 		return $res;
+	}
+
+	public static function myErrorHandler($errno, $errstr, $errfile, $errline)
+	{
+	    if (!_PS_MODE_DEV_ || !(error_reporting() & $errno))
+			return;
+	    switch ($errno)
+		{
+		    case E_USER_ERROR:
+				$type = 'Fatal error';
+				break;
+		    case E_USER_WARNING:
+				$type = 'Warning';
+		        break;
+		    case E_USER_NOTICE:
+				$type = 'Notice';
+		        break;
+		    default:
+				$type = 'Unknow error';
+		        break;
+	    }
+		$php_errors[] = sprintf('<div class="error alert alert-danger">%1$s on line %2$s in file %3$s: [%4$s] %5$s</div>', $type, $errline, $errfile, $errno, $errstr);
+		Context::getContext()->smarty->assign('php_errors', array_unique($php_errors));
+	    return true;
 	}
 }

@@ -6,19 +6,18 @@
 **************************************************************************/
 
 .contact-title {
-	margin-top: -5px;
+	margin: -5px 0 27px 0;
 	line-height: 23px;
-	margin-bottom: 27px;
 	i {
 		font-size: 23px;
 		color: #c0c0c0;
-		padding-right: 8px;	
+		padding: 0 8px 0 0;	
 	}
 }
 
 .contact-form-box {
 	padding: 23px 0 0 0;
-	margin-bottom: 30px;
+	margin: 0 0 30px 0;
 	background: url(../img/contact-form.png) repeat-x $light-background;
 	@include box-shadow(rgba(black, 0.17) 0px 5px 13px);
 	fieldset {
@@ -27,7 +26,7 @@
 		background-size: contain;
 	}
 	label {
-		margin-bottom: 6px;	
+		margin: 0 0 6px 0;	
 	}
 	.page-subheading {
 		padding-left: 0px;

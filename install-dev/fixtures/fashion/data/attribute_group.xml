@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <entity_attribute_group>
   <fields id="name" class="AttributeGroup">
     <field name="is_color_group"/>

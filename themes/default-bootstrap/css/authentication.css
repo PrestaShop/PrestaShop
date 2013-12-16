@@ -11,12 +11,12 @@
   #create-account_form p {
     margin-bottom: 8px; }
   #create-account_form .form-group {
-    margin-bottom: 20px; }
+    margin: 0 0 20px 0; }
 
 #login_form {
   min-height: 297px; }
   #login_form .form-group {
-    margin-bottom: 3px; }
+    margin: 0 0 3px 0; }
     #login_form .form-group.lost_password {
       margin: 14px 0 15px 0; }
       #login_form .form-group.lost_password a {
