@@ -248,10 +248,11 @@ class ImageManagerCore
 	 * @param $filename real filename
 	 * @return bool true if it's correct
 	 */
-	public static function isCorrectImageFileExt($filename)
+	public static function isCorrectImageFileExt($filename, $authorized_extensions = null)
 	{
 		// Filter on file extension
-		$authorized_extensions = array('gif', 'jpg', 'jpeg', 'jpe', 'png');
+		if ($authorized_extensions === null)
+			$authorized_extensions = array('gif', 'jpg', 'jpeg', 'jpe', 'png');
 		$name_explode = explode('.', $filename);
 		if (count($name_explode) >= 2)
 		{
@@ -272,11 +273,11 @@ class ImageManagerCore
 	 * @param integer $max_file_size Maximum upload size
 	 * @return bool|string Return false if no error encountered
 	 */
-	public static function validateUpload($file, $max_file_size = 0)
+	public static function validateUpload($file, $max_file_size = 0, $types = null)
 	{
 		if ((int)$max_file_size > 0 && $file['size'] > (int)$max_file_size)
 			return sprintf(Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'), $file['size'] / 1024, $max_file_size / 1024);
-		if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name']))
+		if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types))
 			return Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png');
 		if ($file['error'])
 			return sprintf(Tools::displayError('Error while uploading image; please change your server\'s settings. (Error code: %s)'), $file['error']);

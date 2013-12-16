@@ -164,12 +164,11 @@ class UploaderCore
 		{
 			$file_path = $this->getFilePath($file['name']);
 		 
-			if ($file['tmp_name'] && is_uploaded_file($file['tmp_name'] )) {
+			if ($file['tmp_name'] && is_uploaded_file($file['tmp_name'] ))
 					move_uploaded_file($file['tmp_name'] , $file_path);
-			 } else {
+			else
 				// Non-multipart uploads (PUT method support)
 				file_put_contents($file_path, fopen('php://input', 'r'));
-			}
 			
 			$file_size = $this->_getFileSize($file_path, true);
 
