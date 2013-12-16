@@ -456,7 +456,7 @@ span.view_scroll_spacer {
 	padding: 19px 19px 17px;
 }
 .box-cart-bottom{
-	padding: 18px 19px 12px;	
+	padding: 18px 7px 12px;	
 }
 
 .box-info-product {
@@ -536,12 +536,12 @@ span.view_scroll_spacer {
 			border-left: 1px solid #06b2e6; 
 			border-bottom: 1px solid #06b2e6; 
 			text-shadow: 0 1px #015883;
-			padding: 12px 36px 14px 82px;  
+			padding: 12px 36px 14px 60px;  
 			color: $light-text-color;
 			display: block !important;
 			@include transition(all 0.3s ease);
 			@media  (max-width: $screen-md-max) { //max 1199px
-				padding: 12px 22px 14px 70px;
+				padding: 12px 22px 14px 55px;
 				font-size: 14px;  
 			}
 			@media (max-width: $screen-sm-max) {  //max 991px
