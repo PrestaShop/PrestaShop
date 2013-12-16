@@ -3,11 +3,15 @@
   <fields id="name" class="Theme">
     <field name="name"/>
     <field name="directory"/>
+    <field name="responsive"/>
   </fields>
   <entities>
     <theme id="default">
       <name>default-bootstrap</name>
       <directory>default-bootstrap</directory>
+      <responsive>0</responsive>
     </theme>
   </entities>
 </entity_theme>
+
+
