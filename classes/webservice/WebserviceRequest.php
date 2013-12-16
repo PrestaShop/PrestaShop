@@ -249,6 +249,7 @@ class WebserviceRequestCore
 			'orders' => array('description' => 'The Customers orders','class' => 'Order'),
 			'order_payments' => array('description' => 'The Order payments','class' => 'OrderPayment'),
 			'order_states' => array('description' => 'The Order states','class' => 'OrderState'),
+			'order_slip' => array('description' => 'The Order slips', 'class' => 'OrderSlip'),
 			'price_ranges' => array('description' => 'Price ranges', 'class' => 'RangePrice'),
 			'product_features' => array('description' => 'The product features','class' => 'Feature'),
 			'product_feature_values' => array('description' => 'The product feature values','class' => 'FeatureValue'),

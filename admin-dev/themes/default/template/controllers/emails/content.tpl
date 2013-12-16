@@ -37,7 +37,6 @@
 			$('#configuration_fieldset_smtp').hide();
 	});
 </script>
-<script type="text/javascript" src="../js/sendMailTest.js"></script>
 
 {if isset($content)}
 	{if isset($show_page_header_toolbar) && $show_page_header_toolbar &&(!isset($lite_display) || !$lite_display)}

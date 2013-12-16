@@ -41,9 +41,6 @@
 			</div>
 
 			{if $show_quantities == true}
-				<div class="alert alert-warning" id="available_quantity_ajax_msg" style="display: none;"></div>
-				<div class="alert alert-danger" id="available_quantity_ajax_error_msg" style="display: none;"></div>
-				<div class="alert alert-success" id="available_quantity_ajax_success_msg" style="display: none;"></div>					
 				<div class="form-group" {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="row stockForVirtualProduct">
 					<div class="col-lg-9 col-lg-offset-3">
 						<p class="checkbox">
@@ -62,7 +59,7 @@
 							</label>
 						</p>
 							{if $stock_management_active == 0 && !$product->cache_is_pack}
-								<p class="text-danger"><i class="icon-warning-sign"></i>&nbsp;{l s='This requires you to enable advanced stock management.'}</p>
+								<p class="text-info"><i class="icon-info-sign"></i>&nbsp;{l s='This requires you to enable advanced stock management.'}</p>
 							{else if $product->cache_is_pack}
 								<p class="text-info">{l s='This parameter depends on the product(s) in the pack.'}</p>
 							{/if}

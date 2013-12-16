@@ -169,7 +169,13 @@ class AdminEmailsControllerCore extends AdminController
 			return true;
 		else
 			Configuration::updateValue('PS_MAIL_PASSWD', Tools::getValue('PS_MAIL_PASSWD'));
-	}	
+	}
+	
+	public function setMedia()
+	{
+		$this->addJs(_PS_JS_DIR_.'sendMailTest.js');
+		return parent::setMedia();
+	}
 	
 	
 	/**

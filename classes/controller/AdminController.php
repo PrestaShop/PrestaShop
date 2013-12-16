@@ -2013,7 +2013,7 @@ class AdminControllerCore extends Controller
 			_PS_JS_DIR_.'tools.js',
 			_PS_JS_DIR_.'ajax.js',
 			_PS_JS_DIR_.'toolbar.js',
-			_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js',
+			_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js'
 		));
 
 		//loads specific javascripts for the admin theme, bootstrap.js should be moved into /js root directory
@@ -2021,6 +2021,7 @@ class AdminControllerCore extends Controller
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.js');
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/jquery-timeago/jquery.timeago.js');
+		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/jquery.growl.js');
 
 		if (!Tools::getValue('submitFormAjax'))
 		{
