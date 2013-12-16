@@ -190,7 +190,9 @@ class ThemeConfigurator extends Module
         public function hookdisplayHeader($params)
         {
             $this->context->controller->addCss($this->_path.'views/css/hooks.css', 'all');
-
+            $this->context->controller->addCSS($this->_path.'css/live_configurator.css');
+            $this->context->controller->addJS($this->_path.'js/live_configurator.js');
+            
             if ((int)Tools::getValue('live_configurator', 0) == 1)
             {
                 if (Tools::getValue('theme'))
@@ -217,9 +219,6 @@ class ThemeConfigurator extends Module
 					Configuration::updateValue('PS_TC_THEME', Tools::getValue('theme'));
 					Configuration::updateValue('PS_TC_FONT', Tools::getValue('font'));
 				}
-
-				$this->context->controller->addCSS($this->_path.'css/live_configurator.css');
-				$this->context->controller->addJS($this->_path.'js/live_configurator.js');
 
 				$this->smarty->assign(array(
 					'themes' => unserialize(Configuration::get('PS_TC_THEMES')),
