@@ -731,8 +731,8 @@ table.table_block td
 	position: absolute
 	top: -4px
 	overflow: hidden
-	height: 100px
-	width: 100px
+	height: 85px
+	width: 85px
 	text-align: center
 	z-index: 0
 
@@ -743,18 +743,18 @@ table.table_block td
 	right: -5px
 
 .new-label
-	font: 700 15px/18px $font-family
+	font: 700 14px/12px $font-family
 	color: $light-text-color
 	background: #6ad4ff
 	text-transform: uppercase
 	padding: 9px 0 7px
 	text-shadow: 1px 1px rgba(0,0,0,0.24)
-	width: 150px
+	width: 130px
 	text-align: center
 	display: block
 	position: absolute
-	left: -38px
-	top: 19px
+	left: -33px
+	top: 16px
 	z-index: 1
 	@include rotate(-45deg)
 	&:before
@@ -772,7 +772,7 @@ table.table_block td
 	&:after
 		position: absolute
 		bottom: -3px
-		left: 4px
+		left: 3px
 		width: 0px
 		height: 0px
 		border-style: solid
@@ -1614,7 +1614,7 @@ div.star a:hover
 // BREADCRUMB
 .breadcrumb
 	display: inline-block
-	padding: 0 11px 0 0
+	padding: 0 11px
 	border: 1px solid $base-border-color
 	font-weight: bold
 	font-size: 12px
@@ -1632,7 +1632,7 @@ div.star a:hover
 	a
 		display: inline-block
 		background: $light-background
-		padding: 0 8px 0 22px
+		padding: 0 15px 0 22px
 		margin-left: -26px
 		position: relative
 		z-index: 2
@@ -1643,15 +1643,17 @@ div.star a:hover
 			width: 38px
 			text-align: center
 			padding: 0
-			margin: 0
+			margin: 0 0 0 -10px
 			@include border-top-left-radius(3px)
 			@include border-bottom-left-radius(3px)
 			z-index: 99
 			line-height: 22px
 			display: inline-block
-			height: 24px
+			height: 25px
 			i
 				vertical-align: -1px
+			&:before
+				border: none
 		&:after
 			display: inline-block
 			content: "."
@@ -1661,6 +1663,21 @@ div.star a:hover
 			width: 18px
 			height: 18px
 			background: $light-background
+			border-right: 1px solid $base-border-color
+			border-top: 1px solid $base-border-color
+			border-radius: 2px
+			text-indent: -5000px
+			z-index: -1
+			@include rotate(45deg)
+		&:before
+			display: inline-block
+			content: "."
+			position: absolute
+			left: -10px
+			top: 3px
+			width: 18px
+			height: 18px
+			background: transparent
 			border-right: 1px solid $base-border-color
 			border-top: 1px solid $base-border-color
 			border-radius: 2px

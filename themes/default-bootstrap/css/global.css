@@ -4532,8 +4532,8 @@ table.table_block td {
   position: absolute;
   top: -4px;
   overflow: hidden;
-  height: 100px;
-  width: 100px;
+  height: 85px;
+  width: 85px;
   text-align: center;
   z-index: 0; }
 
@@ -4544,18 +4544,18 @@ table.table_block td {
   right: -5px; }
 
 .new-label {
-  font: 700 15px/18px Arial, Helvetica, sans-serif;
+  font: 700 14px/12px Arial, Helvetica, sans-serif;
   color: white;
   background: #6ad4ff;
   text-transform: uppercase;
   padding: 9px 0 7px;
   text-shadow: 1px 1px rgba(0, 0, 0, 0.24);
-  width: 150px;
+  width: 130px;
   text-align: center;
   display: block;
   position: absolute;
-  left: -38px;
-  top: 19px;
+  left: -33px;
+  top: 16px;
   z-index: 1;
   -webkit-transform: rotate(-45deg);
   -ms-transform: rotate(-45deg);
@@ -4577,7 +4577,7 @@ table.table_block td {
   .new-label:after {
     position: absolute;
     bottom: -3px;
-    left: 4px;
+    left: 3px;
     width: 0px;
     height: 0px;
     border-style: solid;
@@ -5464,7 +5464,7 @@ div.star a:hover {
 
 .breadcrumb {
   display: inline-block;
-  padding: 0 11px 0 0;
+  padding: 0 11px;
   border: 1px solid #d6d4d4;
   font-weight: bold;
   font-size: 12px;
@@ -5486,7 +5486,7 @@ div.star a:hover {
   .breadcrumb a {
     display: inline-block;
     background: white;
-    padding: 0 8px 0 22px;
+    padding: 0 15px 0 22px;
     margin-left: -26px;
     position: relative;
     z-index: 2;
@@ -5497,7 +5497,7 @@ div.star a:hover {
       width: 38px;
       text-align: center;
       padding: 0;
-      margin: 0;
+      margin: 0 0 0 -10px;
       -moz-border-radius-topleft: 3px;
       -webkit-border-top-left-radius: 3px;
       border-top-left-radius: 3px;
@@ -5507,9 +5507,11 @@ div.star a:hover {
       z-index: 99;
       line-height: 22px;
       display: inline-block;
-      height: 24px; }
+      height: 25px; }
       .breadcrumb a.home i {
         vertical-align: -1px; }
+      .breadcrumb a.home:before {
+        border: none; }
     .breadcrumb a:after {
       display: inline-block;
       content: ".";
@@ -5519,6 +5521,23 @@ div.star a:hover {
       width: 18px;
       height: 18px;
       background: white;
+      border-right: 1px solid #d6d4d4;
+      border-top: 1px solid #d6d4d4;
+      border-radius: 2px;
+      text-indent: -5000px;
+      z-index: -1;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg); }
+    .breadcrumb a:before {
+      display: inline-block;
+      content: ".";
+      position: absolute;
+      left: -10px;
+      top: 3px;
+      width: 18px;
+      height: 18px;
+      background: transparent;
       border-right: 1px solid #d6d4d4;
       border-top: 1px solid #d6d4d4;
       border-radius: 2px;
