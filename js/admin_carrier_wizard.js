@@ -250,7 +250,7 @@ function validateSteps(fromStep, toStep)
 					is_ok = false;
 					
 					$('div.input-group input').focus(function () {
-						$(this).removeClass('field_error');
+						$(this).closest('div.input-group').removeClass('has-error');
 					});
 					displayError(datas.errors, fromStep);
 					resizeWizard();
@@ -271,7 +271,7 @@ function displayError(errors, step_number)
 	for (var error in errors)
 	{
 		$('#carrier_wizard').smartWizard('setError',{stepnum:step_number,iserror:true});
-		$('input[name="'+error+'"]').addClass('field_error');
+		$('input[name="'+error+'"]').closest('div.input-group').addClass('has-error');
 		str_error += '<li>'+errors[error]+'</li>';
 	}
 	$('#step-'+step_number).prepend(str_error+'</ul></div>');
@@ -286,7 +286,7 @@ function resizeWizard()
 function bind_inputs()
 {
 	$('div.input-group input').focus(function () {
-		$(this).removeClass('field_error');
+		$(this).closest('div.input-group').removeClass('has-error');
 		$('.wizard_error').fadeOut('fast', function () { $(this).remove()});
 	});
 	
@@ -325,7 +325,7 @@ function bind_inputs()
 	});
 	
 	$('tr.range_sup td input:text, tr.range_inf td input:text').focus(function () {
-		$(this).removeClass('field_error');
+		$(this).closest('div.input-group').removeClass('has-error');
 	});
 	
 	$('tr.range_sup td input:text, tr.range_inf td input:text').keypress(function (evn) {
@@ -444,8 +444,8 @@ function validateRange(index)
 {
 	$('.wizard_error').remove();
 	//reset error css
-	$('tr.range_sup td input:text').removeClass('field_error');
-	$('tr.range_inf td input:text').removeClass('field_error');
+	$('tr.range_sup td input:text').closest('div.input-group').removeClass('has-error');
+	$('tr.range_inf td input:text').closest('div.input-group').removeClass('has-error');
 	
 	is_ok = true;
 	range_sup = parseFloat($('tr.range_sup td:eq('+index+')').find('div.input-group input:text').val().trim());
@@ -453,20 +453,20 @@ function validateRange(index)
 
 	if (isNaN(range_sup) || range_sup.length === 0)
 	{
-		$('tr.range_sup td:eq('+index+')').find('div.input-group input:text').addClass('field_error');
+		$('tr.range_sup td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
 		is_ok = false;
 		displayError([invalid_range], $("#carrier_wizard").smartWizard('currentStep'));
 	}
 	else if (is_ok && (isNaN(range_inf) || range_inf.length === 0))
 	{
-		$('tr.range_inf td:eq('+index+')').closest('div.input-group input:text').addClass('field_error');
+		$('tr.range_inf td:eq('+index+')').closest('div.input-group input:text').closest('div.input-group').addClass('has-error');
 		is_ok = false;
 		displayError([invalid_range], $("#carrier_wizard").smartWizard('currentStep'));
 	}
 	else if (is_ok && range_inf >= range_sup)
 	{
-		$('tr.range_sup td:eq('+index+')').find('div.input-group input:text').addClass('field_error');
-		$('tr.range_inf td:eq('+index+')').find('div.input-group input:text').addClass('field_error');
+		$('tr.range_sup td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
+		$('tr.range_inf td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
 		is_ok = false;
 		displayError([invalid_range], $("#carrier_wizard").smartWizard('currentStep'));
 	}
@@ -497,8 +497,8 @@ function validateRange(index)
 
 		if (!is_ok)
 		{
-			$('tr.range_sup td:eq('+index+')').find('div.input-group input:text').addClass('field_error');
-			$('tr.range_inf td:eq('+index+')').find('div.input-group input:text').addClass('field_error');
+			$('tr.range_sup td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
+			$('tr.range_inf td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
 			displayError([range_is_overlapping], $("#carrier_wizard").smartWizard('currentStep'));
 		}
 		else
@@ -520,11 +520,6 @@ function disableZone(index)
 	$('tr.fees').each(function () {
 		$(this).find('td:eq('+index+')').find('div.input-group input').attr('disabled', 'disabled');
 	});
-}
-
-function checkAllRanges()
-{
-	
 }
 
 function enableRange(index)
@@ -604,7 +599,7 @@ function checkAllFieldIsNumeric()
 {
 	$('#zones_table td input[type=text]').each(function () {
 		if (!$.isNumeric($(this).val()) && $(this).val() != '')
-			$(this).addClass('field_error');
+			$(this).closest('div.input-group').addClass('has-error');
 	});
 }
 
@@ -636,7 +631,6 @@ function repositionRange(current_index, new_index)
 
 function checkRangeContinuity(reordering)
 {
-	return true;
 	reordering = typeof reordering !== 'undefined' ? reordering : false;
 	res = true;
 
@@ -650,6 +644,7 @@ function checkRangeContinuity(reordering)
 			prev_index = index-1;
 			prev_range_sup = parseFloat($('tr.range_sup td:eq('+prev_index+')').find('div.input-group input:text').val().trim());
 			prev_range_inf = parseFloat($('tr.range_inf td:eq('+prev_index+')').find('div.input-group input:text').val().trim());
+			
 			if (range_inf < prev_range_inf || range_sup < prev_range_sup)
 			{
 				res = false;

@@ -1141,7 +1141,7 @@ product_tabs['Quantities'] = new function(){
 		data.ajax = 1;
 		data.controller = "AdminProducts";
 		data.action = "productQuantity";
-		showAjaxMsg(quantities_ajax_waiting);
+		//showNoticeMessage(quantities_ajax_waiting);
 		$.ajax({
 			type: "POST",
 			url: "ajax-tab.php",
@@ -1152,40 +1152,16 @@ product_tabs['Quantities'] = new function(){
 			{
 				if (msg.error)
 				{
-					showAjaxError(msg.error);
+					showErrorMessage(msg.error);
 					return;
 				}
-				showAjaxSuccess(quantities_ajax_success);
+				showSuccessMessage(quantities_ajax_success);
 			},
 			error: function(msg)
 			{
-				showAjaxError(msg.error);
+				showErrorMessage(msg.error);
 			}
 		});
-
-		function showAjaxError(msg)
-		{
-			$('#available_quantity_ajax_error_msg').html(msg);
-			$('#available_quantity_ajax_error_msg').show();
-			$('#available_quantity_ajax_msg').hide();
-			$('#available_quantity_ajax_success_msg').hide();
-		}
-
-		function showAjaxSuccess(msg)
-		{
-			$('#available_quantity_ajax_success_msg').html(msg);
-			$('#available_quantity_ajax_error_msg').hide();
-			$('#available_quantity_ajax_msg').hide();
-			$('#available_quantity_ajax_success_msg').show();
-		}
-
-		function showAjaxMsg(msg)
-		{
-			$('#available_quantity_ajax_msg').html(msg);
-			$('#available_quantity_ajax_error_msg').hide();
-			$('#available_quantity_ajax_msg').show();
-			$('#available_quantity_ajax_success_msg').hide();
-		}
 	};
 
 	this.refreshQtyAvailabilityForm = function()

@@ -4376,7 +4376,7 @@ class AdminProductsControllerCore extends AdminController
 				break;
 
 			case 'set_qty':
-				if (Tools::getValue('value') === false)
+				if (Tools::getValue('value') === false || (!is_numeric(trim(Tools::getValue('value')))))
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
 				if (Tools::getValue('id_product_attribute') === false)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined id product attribute'))));
