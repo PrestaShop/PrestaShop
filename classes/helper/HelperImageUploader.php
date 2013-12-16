@@ -52,16 +52,7 @@ class HelperImageUploaderCore extends HelperUploader
 			return false;
 		}
 
-		$types = $this->getAcceptTypes();
-
-		//TODO check mime type.
-		if (isset($types) && !in_array(pathinfo($file['name'], PATHINFO_EXTENSION), $types))
-		{
-			$file['error'] = Tools::displayError('Filetype not allowed');
-			return false;
-		}
-
-		if ($error = ImageManager::validateUpload($file, Tools::getMaxUploadSize($this->getMaxSize())))
+		if ($error = ImageManager::validateUpload($file, Tools::getMaxUploadSize($this->getMaxSize()), $this->getAcceptTypes()))
 		{
 			$file['error'] = $error;
 			return false;
