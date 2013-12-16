@@ -28,6 +28,7 @@ class ThemeCore extends ObjectModel
 {
 	public $name;
 	public $directory;
+	public $responsive;
 
 	/** @var int access rights of created folders (octal) */
 	public static $access_rights = 0775;
@@ -40,6 +41,7 @@ class ThemeCore extends ObjectModel
 		'fields' => array(
 			'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64, 'required' => true),
 			'directory' => array('type' => self::TYPE_STRING, 'validate' => 'isDirName', 'size' => 64, 'required' => true),
+			'responsive' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
 	);
 
@@ -109,5 +111,51 @@ class ThemeCore extends ObjectModel
 			return false;
 
 		return parent::add($autodate, $null_values);
+	}
+
+
+	/**
+	 * update the table PREFIX_theme_meta for the current theme
+	 * @param array $metas
+	 * @param bool  $full_update If true, all the meta of the theme will be deleted prior the insert, otherwise only the current $metas will be deleted
+	 *
+	 */
+	public function updateMeta($metas, $full_update = false)
+	{
+
+		if ($full_update)
+			Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme=' . $this->id);
+
+		$values = array();
+		if ($this->id > 0)
+		{
+			foreach ($metas as $meta)
+			{
+				if (!$full_update)
+					Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme=' . $this->id . ' AND id_meta=' . $meta['id_meta']);
+
+				$values[] = array(
+					'id_theme'     => $this->id,
+					'id_meta'      => $meta['id_meta'],
+					'left_column'  => (int)$meta['left'],
+					'right_column' => (int)$meta['right']
+				);
+
+
+			}
+			Db::getInstance()->insert('theme_meta', $values);
+		}
+	}
+
+	/**
+	 *
+	 */
+	public function getMeta()
+	{
+		if ($this->id > 0)
+		{
+			return Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'theme_meta WHERE id_theme='.$this->id);
+		}
+		return false;
 	}
 }

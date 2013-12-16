@@ -555,7 +555,7 @@ class AdminThemesControllerCore extends AdminController
 				$this->errors[] = $this->l('Cant create config file');
 
 			if (isset($_FILES['documentation']))
-				if (!$zip->addFile($_FILES['documentation']['tmp_name'], 'doc/'.$_FILES['documentation']['name']))
+				if (!$zip->addFile($_FILES['documentation']['tmp_name'], 'doc/'.$_POST['documentation']['name']))
 					$this->error = $this->l('Cant copy documentation.');
 
 			$this->archiveThisFile($zip, Tools::getValue('theme_directory'), _PS_ALL_THEMES_DIR_, 'themes/');
@@ -580,7 +580,7 @@ class AdminThemesControllerCore extends AdminController
 		$this->errors[] = $this->l('An error occurred during the archive generation');
 	}
 
-	private function generateXML()
+	private function generateXML($metas)
 	{
 		$theme = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><!-- Copyright Prestashop --><theme></theme>');
 		$theme->addAttribute('version', Tools::getValue('theme_version'));
@@ -619,6 +619,15 @@ class AdminThemesControllerCore extends AdminController
 				$doc->addAttribute('path', $array[1]);
 			}
 
+		$metas_xml = $theme->addChild('metas');
+
+		foreach ($metas as $row)
+		{
+			$meta_xml = $metas_xml->addChild('meta');
+			$meta_xml->addAttribute('id_meta', $row['id_meta']);
+			$meta_xml->addAttribute('left', $row['left_column']);
+			$meta_xml->addAttribute('right', $row['right_column']);
+		}
 		$modules = $theme->addChild('modules');
 		if (isset($this->to_export))
 			foreach ($this->to_export as $row)
@@ -773,8 +782,10 @@ class AdminThemesControllerCore extends AdminController
 							if ($tmp['name_module'] == $string)
 								$this->to_hook[] = $string.';'.$tmp['name_hook'].';'.$tmp['position'].';'.$tmp['exceptions'];
 
+				$theme_to_export = New Theme((int)Tools::getValue('id_theme_export'));
+				$metas = $theme_to_export->getMeta();
 
-				$this->generateXML();
+				$this->generateXML($metas);
 				$this->generateArchive();
 
 			} else
@@ -1124,11 +1135,15 @@ class AdminThemesControllerCore extends AdminController
 						$xml = simplexml_load_file($sandbox.'uploaded/Config.xml');
 						$this->xml = $xml;
 
-						$theme_directory = strval($xml->variations->variation[0]['directory']);
-
 						$themes = Theme::getThemes();
 
+						$theme_directory = strval($xml->variations->variation[0]['directory']);
+
 						$name = strval($xml->variations->variation[0]['name']);
+
+						$responsive = false;
+						if (isset($xml->variations->variation[0]['responsive']))
+							$responsive = (bool)strval($xml->variations->variation[0]['responsive']);
 
 						foreach($themes as $theme_object)
 							if ($theme_object->name == $name)
@@ -1139,22 +1154,38 @@ class AdminThemesControllerCore extends AdminController
 							if (!copy($sandbox . 'uploaded/Config.xml', _PS_ROOT_DIR_ . '/config/xml/' . $theme_directory . '.xml'))
 								$this->errors[] = $this->l('Can\'t copy configuration file');
 
-							$new_theme       = new Theme();
-							$new_theme->name = $name;
-
-							$new_theme->directory = $theme_directory;
-
-							$new_theme->add();
+							$new_theme             = new Theme();
+							$new_theme->name       = $name;
+							$new_theme->responsive = $responsive;
+							$new_theme->directory  = $theme_directory;
 
 							$target_dir = _PS_ALL_THEMES_DIR_ . $theme_directory;
 
-							$themeDocDir = $target_dir.'/docs/';
-							if (file_exists($themeDocDir))
-								Tools::deleteDirectory($themeDocDir, true);
+							$theme_doc_dir = $target_dir.'/docs/';
+							if (file_exists($theme_doc_dir))
+								Tools::deleteDirectory($theme_doc_dir, true);
 
 							$this->recurseCopy($sandbox . 'uploaded/themes/' . $theme_directory, $target_dir);
-							$this->recurseCopy($sandbox . 'uploaded/doc/', $themeDocDir);
+							$this->recurseCopy($sandbox . 'uploaded/doc/', $theme_doc_dir);
 							$this->recurseCopy($sandbox . 'uploaded/modules/', _PS_MODULE_DIR_);
+
+							$new_theme->add();
+
+							$metas = array();
+							if (isset($xml->metas))
+							{
+								foreach($xml->metas->meta as $meta)
+								{
+									$tmp_meta = array();
+									$tmp_meta['id_meta'] = intval($meta['id_meta']);
+									$tmp_meta['left'] = intval($meta['left']);
+									$tmp_meta['right'] = intval($meta['right']);
+									$metas[] = $tmp_meta;
+								}
+							}
+							$new_theme->updateMeta($metas);
+
+
 						}
 					}
 				}
