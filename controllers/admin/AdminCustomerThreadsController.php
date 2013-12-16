@@ -742,7 +742,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 			$result = imap_fetch_overview($mbox,"1:{$check->Nmsgs}",0);
 			foreach ($result as $overview)
-			{
+			{	
+				
 				 //check if message exist in database
 				 if (isset($overview->subject))
 						$subject = $overview->subject;
@@ -754,35 +755,51 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						 'SELECT `md5_header`
 						 FROM `'._DB_PREFIX_.'customer_message_sync_imap`
 						 WHERE `md5_header` = \''.pSQL($md5).'\'');
-				 if ($exist)
-				 {
+				 if ($exist) {
 					if (Configuration::get('PS_SAV_IMAP_DELETE_MSG'))
 						if (!imap_delete($mbox, $overview->msgno))
 							$str_error_delete = ', "Fail to delete message"';
-				 }
-				 else
-				 {
+				 } else {
 				 	//check if subject has id_order
 				 	preg_match('/\#ct([0-9]*)/', $subject, $matches1);
 				 	preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
-					$new_ct = (Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !isset($matches1[1]) && !isset($matches2[1]) && !preg_match('/[no_sync]/', $subject));
-					if (isset($matches1[1]) && isset($matches2[1]) || $new_ct)
+					
+					$matchFound = false;
+					if (isset($matches1[1]) && isset($matches2[1]))
+						$matchFound = true;
+					
+					$new_ct = ( Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !$matchFound && (strpos($subject, '[no_sync]') == false));				
+					
+					if ( $matchFound || $new_ct)
 					{
 						if ($new_ct)
 						{
-							if (!preg_match('/<('.Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+').')>/', $overview->from, $result)
-								|| !Validate::isEmail($from = $result[1]))
-									continue;
-							
-							$contacts = Contact::getCategoriesContacts();
+							if (!preg_match('/<('.Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+').')>/', $overview->from, $result)|| !Validate::isEmail($from = $result[1]))
+								continue;
+									
+							$contacts = Contact::getContacts($this->context->language->id);
 							if (!$contacts)
 								continue;
-							$id_contact = $contacts[0]['id_contact'];
+								
+							foreach ($contacts as $contact) {
+								if (strpos($overview->to , $contact['email']) !== false)
+									$id_contact = $contact['id_contact'];
+							}
 							
+							if (!isset($id_contact))							
+								$id_contact = $contacts[0]['id_contact'];
+								
+							$customer = new Customer;
+								
+							$client = $customer->getByEmail($from);
+
 							$ct = new CustomerThread();
+							if (isset($client->id))
+								$ct->id_customer = $client->id;
 							$ct->email = $from;
 							$ct->id_contact = $id_contact;
 							$ct->id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+							$ct->id_shop = $this->context->shop->id;
 							$ct->status = 'open';
 							$ct->token = Tools::passwdGen(12);
 							$ct->add();	
@@ -792,9 +809,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 						if (Validate::isLoadedObject($ct) && ((isset($matches2[1]) && $ct->token == $matches2[1]) || $new_ct))
 						{
+							$message = imap_fetchbody($mbox, $overview->msgno, 1);
+							$message = quoted_printable_decode($message);
+							$message = utf8_encode($message);
+							$message = quoted_printable_decode($message);
+							$message = nl2br($message);
 							$cm = new CustomerMessage();
 							$cm->id_customer_thread = $ct->id;
-							$cm->message = imap_fetchbody($mbox, $overview->msgno, 1);
+							$cm->message = $message;
 							$cm->add();
 						}
 					}
