@@ -478,7 +478,7 @@ class AdminCustomersControllerCore extends AdminController
 				'label' => $this->l('Outstanding allowed:'),
 				'name' => 'outstanding_allow_amount',
 				'hint' => $this->l('Valid characters:').' 0-9',
-				'suffix' => '¤'
+				'suffix' => $this->context->currency->sign
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
@@ -830,6 +830,12 @@ class AdminCustomersControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('An account already exists for this email address:').' '.$customer_email;
 			$this->display = 'edit';
 			return $customer;
+		}
+		elseif (trim(Tools::getValue('passwd')) == '')
+		{
+			$this->validateRules();
+			$this->errors[] = Tools::displayError('Password can not be empty.');
+			$this->display = 'edit';
 		}
 		elseif ($customer = parent::processAdd())
 		{

@@ -3700,6 +3700,12 @@ class AdminProductsControllerCore extends AdminController
 
 			if (isset($file['error']) && (int)$file['error'] != 0)
 				continue;
+	
+			if ($error = ImageManager::validateUpload($_FILES['image_product']))
+			{
+				$file['error'] = $error;
+				continue;
+			}
 
 			if (!$image->add())
 				$file['error'] = Tools::displayError('Error while creating additional image');
@@ -3721,11 +3727,6 @@ class AdminProductsControllerCore extends AdminController
 					$imagesTypes = ImageType::getImagesTypes('products');
 					foreach ($imagesTypes as $imageType)
 					{
-						/*
-							$theme = (Shop::isFeatureActive() ? '-'.$imageType['id_theme'] : '');
-							if (!ImageManager::resize($tmpName, $new_path.'-'.stripslashes($imageType['name']).$theme.'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
-								return array('error' => Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']));
-						*/
 						if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
 						{
 							$file['error'] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
@@ -4376,7 +4377,7 @@ class AdminProductsControllerCore extends AdminController
 				break;
 
 			case 'set_qty':
-				if (Tools::getValue('value') === false)
+				if (Tools::getValue('value') === false || (!is_numeric(trim(Tools::getValue('value')))))
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
 				if (Tools::getValue('id_product_attribute') === false)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined id product attribute'))));
