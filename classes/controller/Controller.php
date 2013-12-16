@@ -393,7 +393,17 @@ abstract class ControllerCore
 				$type = 'Unknow error';
 		        break;
 	    }
-		$php_errors[] = sprintf('<div class="error alert alert-danger">%1$s on line %2$s in file %3$s: [%4$s] %5$s</div>', $type, $errline, $errfile, $errno, $errstr);
+		$php_errors[] = sprintf('
+			<div class="bootstrap">
+				<div id="error-modal" class="modal fade">
+					<div class="modal-dialog">
+						<div class="alert alert-danger clearfix">
+							%1$s on line %2$s in file %3$s: [%4$s] %5$s
+							<button type="button" class="btn btn-default pull-right" data-dismiss="modal"><i class="icon-remove"></i> Close</button>
+						</div>
+					</div>
+				</div>
+			</div>', $type, $errline, $errfile, $errno, $errstr);
 		Context::getContext()->smarty->assign('php_errors', array_unique($php_errors));
 	    return true;
 	}
