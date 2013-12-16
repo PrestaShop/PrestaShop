@@ -69,6 +69,8 @@ abstract class ModuleCore
 	/** @var string Fill it if the module is installed but not yet set up */
 	public $warning;
 
+	public $enable_device = 7;
+
 	/** @var array to store the limited country */
 	public $limited_countries = array();
 
@@ -598,6 +600,30 @@ abstract class ModuleCore
 				));
 
 		return true;
+	}
+	
+	public function enableDevice($device)
+	{
+		Db::getInstance()->execute('
+			UPDATE '._DB_PREFIX_.'module_shop
+			SET enable_device = enable_device + '.(int)$device.'
+			WHERE enable_device &~ '.(int)$device.' AND id_module='.(int)$this->id.
+			Shop::addSqlRestriction()
+		);
+
+		return true;
+	}
+	
+	public function disableDevice($device)
+	{
+		Db::getInstance()->execute('
+			UPDATE '._DB_PREFIX_.'module_shop
+			SET enable_device = enable_device - '.(int)$device.'
+			WHERE enable_device & '.(int)$device.' AND id_module='.(int)$this->id.
+			Shop::addSqlRestriction()
+		);
+
+		return true;		
 	}
 
 	/**

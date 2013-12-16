@@ -50,7 +50,6 @@ if (!file_exists(dirname(__FILE__).'/settings.inc.php'))
 }
 
 require_once(dirname(__FILE__).'/settings.inc.php');
-
 require_once(dirname(__FILE__).'/autoload.php');
 
 if (_PS_DEBUG_PROFILING_)

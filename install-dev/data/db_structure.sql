@@ -2142,6 +2142,7 @@ PRIMARY KEY (`id_store`, `id_shop`),
 CREATE TABLE `PREFIX_module_shop` (
 `id_module` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
+`enable_device` TINYINT(1) NOT NULL DEFAULT  '7',
 PRIMARY KEY (`id_module` , `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;

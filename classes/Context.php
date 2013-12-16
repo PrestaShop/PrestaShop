@@ -103,6 +103,18 @@ class ContextCore
 	 * @var boolean|string mobile device of the customer
 	 */
 	protected $mobile_device;
+	
+	const DEVICE_COMPUTER = 1;
+	
+	const DEVICE_TABLET = 2;
+	
+	const DEVICE_MOBILE = 4;
+
+	public function __construct()
+	{
+		require_once(_PS_TOOL_DIR_.'mobile_Detect/Mobile_Detect.php');
+		$this->mobile_detect = new Mobile_Detect();
+	}
 
 	public function getMobileDevice()
 	{
@@ -115,8 +127,6 @@ class ContextCore
 					$this->mobile_device = true;
 				else
 				{
-					require_once(_PS_TOOL_DIR_.'mobile_Detect/Mobile_Detect.php');
-					$this->mobile_detect = new Mobile_Detect();
 					switch ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
 					{
 						case 1: // Only for mobile device
@@ -137,6 +147,23 @@ class ContextCore
 		}
 
 		return $this->mobile_device;
+	}
+	
+	public function getDevice()
+	{
+		static $device = null;
+
+		if ($device === null)
+		{
+			if ($this->mobile_detect->isTablet())
+				$device = Context::DEVICE_TABLET;
+			elseif ($this->mobile_detect->isMobile())
+				$device = Context::DEVICE_MOBILE;
+			else
+				$device = Context::DEVICE_COMPUTER;
+		}
+
+		return $device;
 	}
 
 	protected function checkMobileContext()

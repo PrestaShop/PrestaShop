@@ -674,7 +674,7 @@ class HomeSlider extends Module
 
 	public function hookdisplayTopColumn($params)
 	{
-		if ($this->context->controller->php_self != 'index' || $this->context->getMobileDevice() != false)
+		if (!isset($this->context->controller->php_self) || $this->context->controller->php_self != 'index' || $this->context->getMobileDevice() != false)
 			return ;
 
 		if (!$this->_prepareHook())
