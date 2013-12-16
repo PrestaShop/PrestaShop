@@ -155,8 +155,9 @@ ul.product_list.grid {
 					display: none;
 				}
 				.ajax_add_to_cart_button, 
-				span.button { 
-					margin-right: 6px;
+				span.button,
+				.lnk_view { 
+					margin: 0 6px 10px 0;
 				}	
 			}
 			.functional-buttons {
@@ -262,6 +263,11 @@ ul.product_list.grid {
 			&.first-item-of-tablet-line {
 				clear: left;
 			}
+		}
+	}
+	li.hovered{
+		h5{
+			min-height: 30px;
 		}
 	}
 }

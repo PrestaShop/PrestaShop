@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "CP850";
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic);
 @import url(font-awesome.css);
 html, body, div, span, applet, object, iframe,
@@ -48,7 +48,7 @@ a img {
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
   display: block; }
 
-/*!
+/*
  * Bootstrap v3.0.0
  *
  * Copyright 2013 Twitter, Inc
@@ -57,7 +57,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
  *
  * Designed and built with all the love in the world by @mdo and @fat.
  */
-/*! normalize.css v2.1.0 | MIT License | git.io/normalize */
+/* normalize.css v2.1.0 | MIT License | git.io/normalize */
 article,
 aside,
 details,
@@ -4532,8 +4532,8 @@ table.table_block td {
   position: absolute;
   top: -4px;
   overflow: hidden;
-  height: 74px;
-  width: 74px;
+  height: 100px;
+  width: 100px;
   text-align: center;
   z-index: 0; }
 
@@ -4550,12 +4550,12 @@ table.table_block td {
   text-transform: uppercase;
   padding: 9px 0 7px;
   text-shadow: 1px 1px rgba(0, 0, 0, 0.24);
-  width: 113px;
+  width: 150px;
   text-align: center;
   display: block;
   position: absolute;
-  left: -33px;
-  top: 6px;
+  left: -38px;
+  top: 19px;
   z-index: 1;
   -webkit-transform: rotate(-45deg);
   -ms-transform: rotate(-45deg);
