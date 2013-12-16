@@ -374,9 +374,9 @@ abstract class ControllerCore
 		return $res;
 	}
 
-	public function myErrorHandler($errno, $errstr, $errfile, $errline)
+	public static function myErrorHandler($errno, $errstr, $errfile, $errline)
 	{
-	    if (!(error_reporting() & $errno))
+	    if (!_PS_MODE_DEV_ || !(error_reporting() & $errno))
 			return;
 	    switch ($errno)
 		{
@@ -393,8 +393,8 @@ abstract class ControllerCore
 				$type = 'Unknow error';
 		        break;
 	    }
-		$this->php_errors[] = sprintf('<div class="error alert alert-danger">%1$s on line %2$s in file %3$s: [%4$s] %5$s</div>', $type, $errline, $errfile, $errno, $errstr);
-		$this->context->smarty->assign('php_errors', array_unique($this->php_errors));
+		$php_errors[] = sprintf('<div class="error alert alert-danger">%1$s on line %2$s in file %3$s: [%4$s] %5$s</div>', $type, $errline, $errfile, $errno, $errstr);
+		Context::getContext()->smarty->assign('php_errors', array_unique($php_errors));
 	    return true;
 	}
 }

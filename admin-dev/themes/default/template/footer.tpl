@@ -77,5 +77,10 @@
 	<div id="go-top" class="hide"><i class="icon-arrow-up"></i></div>
 </div>
 {/if}
+{if isset($php_errors)}
+	{foreach from=$php_errors item=php_error}
+		{$php_error}
+	{/foreach}
+{/if}
 </body>
 </html>

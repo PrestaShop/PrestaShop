@@ -103,11 +103,6 @@
 
 {if $display_header}
 	<body class="{if $employee->bo_menu}page-sidebar {* page-sidebar-closed *}{else}page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
-{if isset($php_errors)}
-	{foreach from=$php_errors item=php_error}
-		{$php_error}
-	{/foreach}
-{/if}
 	{* begin  HEADER *}
 	<header id="header" class="bootstrap">
 		<nav id="header_infos" role="navigation">
