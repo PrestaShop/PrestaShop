@@ -802,12 +802,7 @@ function doAdminAjax(data, success_func, error_func)
  */
 function showSuccessMessage(msg, delay)
 {
-	if (!delay)
-		delay = 2000;
-	$("#ajax_confirmation").html(msg).removeClass('hide animate-out').addClass('animate-enter');
-	setTimeout(function () {
-		$("#ajax_confirmation").removeClass('animate-enter').addClass('animate-out');
-	}, delay);
+	$.growl.notice({ title: "", message:msg});
 }
 
 /** display a warning message in a #ajax_confirmation container
@@ -815,10 +810,7 @@ function showSuccessMessage(msg, delay)
  */
 function showErrorMessage(msg, delay)
 {
-	if (!delay)
-		delay = 5000;
-	$("#ajax_confirmation")
-		.html(msg).show().delay(delay).fadeOut("slow");
+	$.growl.error({ title: "", message:msg});
 }
 
 $(document).ready(function()
