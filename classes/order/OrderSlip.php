@@ -75,6 +75,25 @@ class OrderSlipCore extends ObjectModel
 		),
 	);
 
+	protected $webserviceParameters = array(
+		'objectNodeName' => 'order_slip',
+		'objectsNodeName' => 'order_slips',
+		'fields' => array(
+			'id_customer' => array('xlink_resource'=> 'customers'),
+			'id_order' => array('xlink_resource'=> 'orders'),
+		),
+		'associations' => array(
+			'order_slip_details' => array('resource' => 'order_slip_detail', 'setter' => false, 'virtual_entity' => true,
+				'fields' => array(
+					'id' =>  array(),
+					'id_order_detail' => array('required' => true),
+					'product_quantity' => array('required' => true),
+					'amount_tax_excl' => array('required' => true),
+					'amount_tax_incl' => array('required' => true),
+				)),
+		),
+	);
+
 	public function addSlipDetail($orderDetailList, $productQtyList)
 	{
 		foreach ($orderDetailList as $key => $id_order_detail)
@@ -302,6 +321,32 @@ class OrderSlipCore extends ObjectModel
 		}
 
 		return $ecotax_detail;
+	}
+
+	public function getWsOrderSlipDetails()
+	{
+		$query = 'SELECT id_order_slip as id, id_order_detail, product_quantity, amount_tax_excl, amount_tax_incl 
+		FROM `'._DB_PREFIX_.'order_slip_detail`
+		WHERE id_order_slip = '.(int)$this->id;
+		$result = Db::getInstance()->executeS($query);
+		return $result;
+	}
+
+	public function setWsOrderSlipDetails($values)
+	{
+		if (Db::getInstance()->execute('DELETE from `'._DB_PREFIX_.'order_slip_detail` where id_order_slip = '.(int)$this->id))
+		{
+			$query = 'INSERT INTO `'._DB_PREFIX_.'order_slip_detail`(`id_order_slip`, `id_order_detail`, `product_quantity`, `amount_tax_excl`, `amount_tax_incl`) VALUES ';
+
+			foreach ($values as $value)
+				$query .= '('.(int)$this->id.', '.(int)$value['id_order_detail'].', '.(int)$value['product_quantity'].', '.
+					(isset($value['amount_tax_excl']) ? (float)$value['amount_tax_excl'] : 'NULL').', '.
+					(isset($value['amount_tax_incl']) ? (float)$value['amount_tax_incl'] : 'NULL').
+					'),';
+			$query = rtrim($query, ',');
+			Db::getInstance()->execute($query);
+		}
+		return true;
 	}
 }
 
