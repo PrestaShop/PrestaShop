@@ -437,13 +437,14 @@ span.view_scroll_spacer {
 				padding: 1px;
 				border: 1px solid $base-border-color;
 				clear: none;
+				a.color_pick {
+					display: block;
+					height: 22px;
+					width: 22px;
+					cursor: pointer;
+				}
 				&.selected{
 					border:1px solid #4d4d4d;
-					a.color_pick {
-						display: block;
-						height: 22px;
-						width: 22px;
-					}
 				}
 			}
 		}	

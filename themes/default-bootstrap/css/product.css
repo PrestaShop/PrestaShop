@@ -368,12 +368,13 @@ span.view_scroll_spacer {
       padding: 1px;
       border: 1px solid #d6d4d4;
       clear: none; }
+      #attributes .attribute_list #color_to_pick_list li a.color_pick {
+        display: block;
+        height: 22px;
+        width: 22px;
+        cursor: pointer; }
       #attributes .attribute_list #color_to_pick_list li.selected {
         border: 1px solid #4d4d4d; }
-        #attributes .attribute_list #color_to_pick_list li.selected a.color_pick {
-          display: block;
-          height: 22px;
-          width: 22px; }
 
 .product_attributes,
 .box-cart-bottom {
