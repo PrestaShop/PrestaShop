@@ -797,20 +797,17 @@ function doAdminAjax(data, success_func, error_func)
 	});
 }
 
-/** display a success message in a #ajax_confirmation container
- * @param string msg string to display
- */
-function showSuccessMessage(msg, delay)
-{
+//display a success/error/notice message
+function showSuccessMessage(msg) {
 	$.growl.notice({ title: "", message:msg});
 }
 
-/** display a warning message in a #ajax_confirmation container
- * @param string msg string to display
- */
-function showErrorMessage(msg, delay)
-{
+function showErrorMessage(msg) {
 	$.growl.error({ title: "", message:msg});
+}
+
+function showNoticeMessage(msg) {
+	$.growl.notice({ title: "", message:msg});
 }
 
 $(document).ready(function()
