@@ -70,7 +70,7 @@ class HelperUploaderCore extends Uploader
 	public function getDropZone()
 	{
 		if (!isset($this->_drop_zone))
-			$this->setDropZone('$(document)');
+			$this->setDropZone("$('#".$this->getId()."-add-button')");
 
 		return $this->_drop_zone;
 	}

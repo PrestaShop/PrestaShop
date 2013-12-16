@@ -23,6 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="box box-small clearfix">
+{if isset($order)}
 <form id="submitReorder" action="{if isset($opc) && $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" class="submit">
 		<input type="hidden" value="{$order->id}" name="id_order"/>
 		
@@ -215,7 +216,7 @@
 							</td>
 						{/if}
 						<td>
-							<label for="cb_{$product.id_order_detail|intval}">
+							<label class="price" for="cb_{$product.id_order_detail|intval}">
 								{if $group_use_tax}
 									{convertPriceWithCurrency price=$product.unit_price_tax_incl currency=$currency}
 								{else}
@@ -224,7 +225,7 @@
 							</label>
 						</td>
 						<td>
-							<label for="cb_{$product.id_order_detail|intval}">
+							<label class="price" for="cb_{$product.id_order_detail|intval}">
 								{if isset($customizedDatas.$productId.$productAttributeId)}
 									{if $group_use_tax}
 										{convertPriceWithCurrency price=$product.total_customization_wt currency=$currency}
@@ -313,7 +314,7 @@
 								{$product['qty_returned']}
 							</td>
 						{/if}
-						<td>
+						<td class="price">
 							<label for="cb_{$product.id_order_detail|intval}">
 							{if $group_use_tax}
 								{convertPriceWithCurrency price=$product.unit_price_tax_incl currency=$currency}
@@ -322,7 +323,7 @@
 							{/if}
 							</label>
 						</td>
-						<td>
+						<td class="price">
 							<label for="cb_{$product.id_order_detail|intval}">
 							{if $group_use_tax}
 								{convertPriceWithCurrency price=$product.total_price_tax_incl currency=$currency}
@@ -462,4 +463,5 @@
 	</form>
 {else}
 <p class="alert alert-info"><i class="icon-info-sign"></i>{l s='You cannot return merchandise with a guest account'}</p>
+{/if}
 {/if}

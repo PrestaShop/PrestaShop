@@ -27,5 +27,5 @@
 	<label class="tree-item-name">
 		<i class="tree-dot"></i>
 		{$node['name']}
-	<label>
+	</label>
 </li>

@@ -3160,6 +3160,9 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .nav-tabs { border-bottom: none; }
 .bootstrap .nav-tabs li a { font-size: 1.1em; font-family: "Ubuntu", sans-serif; text-transform: uppercase; font-weight: 300; }
 .bootstrap .nav-tabs li.active a, .bootstrap .nav-tabs li.active a:hover, .bootstrap .nav-tabs li.active a:focus { background-color: white; }
+.bootstrap #ajax_confirmation { width: 450px; position: fixed; top: 100px; right: 10px; z-index: 40; }
+.bootstrap #ajax_confirmation.animate-enter { -webkit-animation: bounceInDown 0.5s 0 ease both; -moz-animation: bounceInDown 0.5s 0 ease both; -ms-animation: bounceInDown 0.5s 0 ease both; -o-animation: bounceInDown 0.5s 0 ease both; animation: bounceInDown 0.5s 0 ease both; }
+.bootstrap #ajax_confirmation.animate-out { -webkit-animation: bounceOutRight 0.5s 0 ease both; -moz-animation: bounceOutRight 0.5s 0 ease both; -ms-animation: bounceOutRight 0.5s 0 ease both; -o-animation: bounceOutRight 0.5s 0 ease both; animation: bounceOutRight 0.5s 0 ease both; }
 .bootstrap .alert.alert-danger, .bootstrap #carrier_wizard .wizard_error { padding-left: 60px; position: relative; }
 .bootstrap .alert.alert-danger:before, .bootstrap #carrier_wizard .wizard_error:before { position: absolute; top: 0; left: 10px; display: block; min-height: 25px; min-width: 25px; font-family: FontAwesome; font-weight: normal; font-style: normal; font-size: 35px; text-decoration: inherit; -webkit-font-smoothing: antialiased; content: "\f00d"; }
 .bootstrap .alert.alert-success, .bootstrap #carrier_wizard .alert-success.wizard_error { padding-left: 60px; position: relative; }

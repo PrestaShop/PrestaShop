@@ -62,14 +62,14 @@
 				vat_number_invoice();
 			});
 			function vat_number() {
-				if ($('#company').val() != '')
+				if (($('#company').length) && ($('#company').val() != ''))
 					$('#vat_number').show();
 				else
 					$('#vat_number').hide();
 			}
 			function vat_number_invoice()
 			{
-				if ($('#company_invoice').val() != '')
+				if (($('#company_invoice').length) && ($('#company_invoice').val() != ''))
 					$('#vat_number_block_invoice').show();
 				else
 					$('#vat_number_block_invoice').hide();
@@ -142,29 +142,29 @@
 								});
 							});
 						}
-						function bindCheckbox()
-						{
-							if ($('#invoice_address:checked').length > 0)
-							{
-								$('#opc_invoice_address').slideDown('slow');
-								if ($('#company_invoice').val() == '')
-									$('#vat_number_block_invoice').hide();
-								updateState('invoice');
-								updateNeedIDNumber('invoice');
-								updateZipCode('invoice');
-								{/literal}
-								$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{/if}]').prop('selected', true);
-								$('.id_state_invoice option[value={if isset($smarty.post.id_state_invoice)}{$smarty.post.id_state_invoice|intval}{/if}]').prop('selected', true);
-								{literal}
-							}
-							else
-								$('#opc_invoice_address').slideUp('slow');
-						}
 					},
 					error: function(XMLHttpRequest, textStatus, errorThrown) {
 						alert("TECHNICAL ERROR: unable to load form.\n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 					}
 				});
+			}
+			function bindCheckbox()
+			{
+				if ($('#invoice_address:checked').length > 0)
+				{
+					$('#opc_invoice_address').slideDown('slow');
+					if ($('#company_invoice').val() == '')
+						$('#vat_number_block_invoice').hide();
+					updateState('invoice');
+					updateNeedIDNumber('invoice');
+					updateZipCode('invoice');
+					{/literal}
+					$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{/if}]').prop('selected', true);
+					$('.id_state_invoice option[value={if isset($smarty.post.id_state_invoice)}{$smarty.post.id_state_invoice|intval}{/if}]').prop('selected', true);
+					{literal}
+				}
+				else
+					$('#opc_invoice_address').slideUp('slow');
 			}
 		{/literal}
 	</script>
@@ -335,7 +335,7 @@
 							{elseif $field_name eq "dni"}
 							{assign var='dniExist' value=true}
 							<div class="required dni form-group">
-								<label for="dni">{l s='Identification number'}</label>
+								<label for="dni">{l s='Identification number'} <sup>*</sup></label>
 								<input type="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{/if}" />
 								<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 							</div>
@@ -391,7 +391,7 @@
 					{/if}
 					{if $dniExist eq false}
 						<div class="required form-group dni_invoice">
-							<label for="dni">{l s='Identification number'}</label>
+							<label for="dni">{l s='Identification number'} <sup>*</sup></label>
 							<input type="text" class="text form-control" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni_invoice}{$guestInformations.dni_invoice}{/if}" />
 							<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 						</div>
@@ -402,13 +402,12 @@
 					</div>
 					<input type="hidden" name="alias" id="alias" value="{l s='My address'}" />
 					<input type="hidden" name="is_new_customer" id="is_new_customer" value="0" />
-
 					<div class="checkbox">
 	                	<label for="invoice_address">
 						<input type="checkbox" name="invoice_address" id="invoice_address"{if (isset($smarty.post.invoice_address) && $smarty.post.invoice_address) || (isset($guestInformations) && $guestInformations.invoice_address)} checked="checked"{/if} autocomplete="off"/>
 						{l s='Please use another address for invoice'}</label>
 					</div>
-					<div id="opc_invoice_address" class="is_customer_param">
+					<div id="opc_invoice_address"  class="unvisible">
 						{assign var=stateExist value=false}
 						{assign var=postCodeExist value=false}
 						<h3 class="page-subheading top-indent">{l s='Invoice address'}</h3>
@@ -428,7 +427,7 @@
 						{elseif $field_name eq "dni"}
 						{assign var=dniExist value=true}
 						<div class="required form-group dni_invoice">
-							<label for="dni">{l s='Identification number'}</label>
+							<label for="dni">{l s='Identification number'} <sup>*</sup></label>
 							<input type="text" class="text form-control" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni_invoice}{$guestInformations.dni_invoice}{/if}" />
 							<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 						</div>
@@ -440,7 +439,7 @@
 						{elseif $field_name eq "lastname"}
 						<div class="required form-group">
 							<label for="lastname_invoice">{l s='Last name'} <sup>*</sup></label>
-							<input type="text" class="form-control" id="lastname_invoice" name="lastname_invoice" value="{if isset($guestInformations) && $guestInformations.firstname_invoice}{$guestInformations.firstname_invoice}{/if}" />
+							<input type="text" class="form-control" id="lastname_invoice" name="lastname_invoice" value="{if isset($guestInformations) && $guestInformations.lastname_invoice}{$guestInformations.lastname_invoice}{/if}" />
 						</div>
 						{elseif $field_name eq "address1"}
 						<div class="required form-group">
@@ -456,7 +455,7 @@
 						{$postCodeExist = true}
 						<div class="required postcode_invoice form-group">
 							<label for="postcode_invoice">{l s='Zip / Postal Code'} <sup>*</sup></label>
-							<input type="text" class="form-control" name="postcode_invoice" id="postcode_invoice" value="{if isset($guestInformations) && $guestInformations.postcode_invoice}{$guestInformations.postcode_invoice}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+							<input type="text" class="form-control" name="postcode_invoice" id="postcode_invoice" value="{if isset($guestInformations) && $guestInformations.postcode_invoice}{$guestInformations.postcode_invoice}{/if}" onkeyup="$('#postcode_invoice').val($('#postcode_invoice').val().toUpperCase());" />
 						</div>
 						{elseif $field_name eq "city"}
 						<div class="required form-group">

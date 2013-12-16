@@ -15,14 +15,14 @@
 		margin-bottom: 8px;
 	}
 	.form-group {
-		margin-bottom: 20px;
+		margin: 0 0 20px 0;
 	}
 }
 
 #login_form {
 	min-height: 297px;
 	.form-group {
-		margin-bottom: 3px;
+		margin: 0 0 3px 0;
 		&.lost_password {
 			margin: 14px 0 15px 0;
 			a {

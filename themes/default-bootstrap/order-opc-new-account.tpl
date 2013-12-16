@@ -74,14 +74,14 @@
 				{literal}
 				function vat_number()
 				{
-					if ($('#company').val() != '')
+					if (($('#company').length) && ($('#company').val() != ''))
 						$('#vat_number_block').show();
 					else
 						$('#vat_number_block').hide();
 				}
 				function vat_number_invoice()
 				{
-					if ($('#company_invoice').val() != '')
+					if (($('#company_invoice').length) && ($('#company_invoice').val() != ''))
 						$('#vat_number_block_invoice').show();
 					else
 						$('#vat_number_block_invoice').hide();
@@ -212,7 +212,7 @@
 				{elseif $field_name eq "dni"}
 				{assign var='dniExist' value=true}
 				<div class="required dni form-group">
-					<label for="dni">{l s='Identification number'}</label>
+					<label for="dni">{l s='Identification number'} <sup>*</sup></label>
 					<input type="text" class="text form-control" name="dni" id="dni" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
 					<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 				</div>
@@ -234,7 +234,7 @@
 				{elseif $field_name eq "address2"}
 				<div class="text is_customer_param form-group">
 					<label for="address2">{l s='Address (Line 2)'}</label>
-					<input type="text" class="text form-control" name="address2" id="address2" value="" />
+					<input type="text" class="text form-control" name="address2" id="address2" value="{if isset($guestInformations) && $guestInformations.address2}{$guestInformations.address2}{/if}" />
 				</div>
 				{elseif $field_name eq "postcode"}
 				{$postCodeExist = true}
@@ -282,7 +282,7 @@
 				{/if}
 				{if !$dniExist}
 				<div class="required dni form-group">
-					<label for="dni">{l s='Identification number'}</label>
+					<label for="dni">{l s='Identification number'} <sup>*</sup></label>
 					<input type="text" class="text form-control" name="dni" id="dni" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
 					<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 				</div>
@@ -331,7 +331,7 @@
 					{elseif $field_name eq "dni"}
 					{assign var='dniExist' value=true}
 					<div class="required form-group dni_invoice">
-						<label for="dni">{l s='Identification number'}</label>
+						<label for="dni">{l s='Identification number'} <sup>*</sup></label>
 						<input type="text" class="text form-control" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni_invoice}{$guestInformations.dni_invoice}{/if}" />
 						<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 					</div>
@@ -343,7 +343,7 @@
 					{elseif $field_name eq "lastname"}
 					<div class="required form-group">
 						<label for="lastname_invoice">{l s='Last name'} <sup>*</sup></label>
-						<input type="text" class="form-control" id="lastname_invoice" name="lastname_invoice" value="{if isset($guestInformations) && $guestInformations.firstname_invoice}{$guestInformations.firstname_invoice}{/if}" />
+						<input type="text" class="form-control" id="lastname_invoice" name="lastname_invoice" value="{if isset($guestInformations) && $guestInformations.lastname_invoice}{$guestInformations.lastname_invoice}{/if}" />
 					</div>
 					{elseif $field_name eq "address1"}
 					<div class="required form-group">
@@ -359,7 +359,7 @@
 					{$postCodeExist = true}
 					<div class="required postcode_invoice form-group">
 						<label for="postcode_invoice">{l s='Zip / Postal Code'} <sup>*</sup></label>
-						<input type="text" class="form-control" name="postcode_invoice" id="postcode_invoice" value="{if isset($guestInformations) && $guestInformations.postcode_invoice}{$guestInformations.postcode_invoice}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+						<input type="text" class="form-control" name="postcode_invoice" id="postcode_invoice" value="{if isset($guestInformations) && $guestInformations.postcode_invoice}{$guestInformations.postcode_invoice}{/if}" onkeyup="$('#postcode_invoice').val($('#postcode_invoice').val().toUpperCase());" />
 					</div>
 					{elseif $field_name eq "city"}
 					<div class="required form-group">
@@ -402,7 +402,7 @@
 					{/if}
 					{if !$dniExist}
 					<div class="required form-group dni_invoice">
-						<label for="dni">{l s='Identification number'}</label>
+						<label for="dni">{l s='Identification number'} <sup>*</sup></label>
 						<input type="text" class="text form-control" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni_invoice}{$guestInformations.dni_invoice}{/if}" />
 						<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 					</div>

@@ -28,17 +28,19 @@
 	<div class="col-lg-6">
 		<table class="table table-bordered">
 			<thead>
-				<th class="fixed-width-xs">
-					<span class="title_box">
-						<input type="checkbox" name="checkme" id="checkme" onclick="checkDelBoxes(this.form, 'groupBox[]', this.checked)" />
-					</span>
-				</th>
-				<th class="fixed-width-xs"><span class="title_box">{l s='ID'}</span></th>
-				<th>
-					<span class="title_box">
-						{l s='Group name'}
-					</span>
-				</th>
+				<tr>
+					<th class="fixed-width-xs">
+						<span class="title_box">
+							<input type="checkbox" name="checkme" id="checkme" onclick="checkDelBoxes(this.form, 'groupBox[]', this.checked)" />
+						</span>
+					</th>
+					<th class="fixed-width-xs"><span class="title_box">{l s='ID'}</span></th>
+					<th>
+						<span class="title_box">
+							{l s='Group name'}
+						</span>
+					</th>
+				</tr>
 			</thead>
 			<tbody>
 			{foreach $groups as $key => $group}
