@@ -51,7 +51,6 @@ if (!file_exists(dirname(__FILE__).'/settings.inc.php'))
 
 require_once(dirname(__FILE__).'/settings.inc.php');
 require_once(dirname(__FILE__).'/autoload.php');
-require_once(_PS_TOOL_DIR_.'mobile_Detect/Mobile_Detect.php');
 
 if (_PS_DEBUG_PROFILING_)
 {

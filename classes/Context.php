@@ -112,6 +112,7 @@ class ContextCore
 
 	public function __construct()
 	{
+		require_once(_PS_TOOL_DIR_.'mobile_Detect/Mobile_Detect.php');
 		$this->mobile_detect = new Mobile_Detect();
 	}
 
