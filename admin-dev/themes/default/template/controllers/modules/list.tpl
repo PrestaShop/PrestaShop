@@ -71,7 +71,7 @@
 							{$module->displayName}
 							<small>v{$module->version}</small>
 							{if isset($module->type) && $module->type == 'addonsMustHave'}
-								<span class="label label-info">{l s='Must Have'}</span>
+								<span class="label label-primary">{l s='Must Have'}</span>
 							{elseif isset($module->id) && $module->id gt 0}
 								{if isset($module->version_addons) && $module->version_addons}
 									<span class="label label-warning">{l s='Need update'}</span>
