@@ -7,4 +7,6 @@ INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
 	AND h.name IN ('actionAdminControllerSetMedia')
 );
 
-ALTER TABLE  `PREFIX_configuration` CHANGE  `name`  `name` VARCHAR( 254 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+ALTER TABLE  `PREFIX_configuration` CHANGE  `name`  `name` VARCHAR(254) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+
+ALTER TABLE  `PREFIX_module_shop` ADD  `enable_device` TINYINT(1) NOT NULL DEFAULT  '7' AFTER  `id_shop`;

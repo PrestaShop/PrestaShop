@@ -3251,60 +3251,102 @@ class AdminControllerCore extends Controller
 	 */
 	protected $translationsTab = array();
 	public function displayModuleOptions($module, $output_type = 'link', $back = null)
-	{	
+	{
+		if (!isset($module->enable_device))
+			$module->enable_device = Context::DEVICE_COMPUTER | Context::DEVICE_TABLET | Context::DEVICE_MOBILE;
+
 		if (!isset($this->translationsTab['Disable this module']))
 		{
 			$this->translationsTab['Disable this module'] = $this->l('Disable this module');
 			$this->translationsTab['Enable this module for all shops'] = $this->l('Enable this module for all shops');
 			$this->translationsTab['Disable'] = $this->l('Disable');
 			$this->translationsTab['Enable'] = $this->l('Enable');
+			$this->translationsTab['Disable on mobiles'] = $this->l('Disable on mobiles');
+			$this->translationsTab['Disable on tablets'] = $this->l('Disable on tablets');
+			$this->translationsTab['Disable on computers'] = $this->l('Disable on computers');
+			$this->translationsTab['Display on mobiles'] = $this->l('Display on mobiles');
+			$this->translationsTab['Display on tablets'] = $this->l('Display on tablets');
+			$this->translationsTab['Display on computers'] = $this->l('Display on computers');
 			$this->translationsTab['Reset'] = $this->l('Reset');
 			$this->translationsTab['Configure'] = $this->l('Configure');
 			$this->translationsTab['Delete'] = $this->l('Delete');
 			$this->translationsTab['Install'] = $this->l('Install');
 			$this->translationsTab['Uninstall'] =  $this->l('Uninstall');
 			$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $this->l('This action will permanently remove the module from the server. Are you sure you want to do this?');
-		}	
+		}
+
 		$link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
 		$modules_options = array();
-		
+
 		$configure_module = array(
-				'href' => $link_admin_modules.'&configure='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
-				'onclick' => $module->onclick_option && isset($module->onclick_option_content['configure']) ? $module->onclick_option_content['configure'] : '',
-				'title' => '',
-				'text' => $this->translationsTab['Configure'],
-				'cond' => $module->id && isset($module->is_configurable) && $module->is_configurable,
-				'icon' => 'wrench',
-				);
+			'href' => $link_admin_modules.'&configure='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
+			'onclick' => $module->onclick_option && isset($module->onclick_option_content['configure']) ? $module->onclick_option_content['configure'] : '',
+			'title' => '',
+			'text' => $this->translationsTab['Configure'],
+			'cond' => $module->id && isset($module->is_configurable) && $module->is_configurable,
+			'icon' => 'wrench',
+		);
+
 		$desactive_module = array(
-				'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab,
-				'onclick' => $module->active && $module->onclick_option && isset($module->onclick_option_content['desactive']) ? $module->onclick_option_content['desactive'] : '' ,
-				'title' => Shop::isFeatureActive() ? htmlspecialchars($module->active ? $this->translationsTab['Disable this module'] : $this->translationsTab['Enable this module for all shops']) : '',
-				'text' => $module->active ? $this->translationsTab['Disable'] : $this->translationsTab['Enable'],
-				'cond' => $module->id,
-				'icon' => 'off',
-				);
+			'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab,
+			'onclick' => $module->active && $module->onclick_option && isset($module->onclick_option_content['desactive']) ? $module->onclick_option_content['desactive'] : '' ,
+			'title' => Shop::isFeatureActive() ? htmlspecialchars($module->active ? $this->translationsTab['Disable this module'] : $this->translationsTab['Enable this module for all shops']) : '',
+			'text' => $module->active ? $this->translationsTab['Disable'] : $this->translationsTab['Enable'],
+			'cond' => $module->id,
+			'icon' => 'off',
+		);
 		$reset_module = array(
-				'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab,
-				'onclick' => $module->onclick_option && isset($module->onclick_option_content['reset']) ? $module->onclick_option_content['reset'] : '',
-				'title' => '',
-				'text' => $this->translationsTab['Reset'],
-				'cond' => $module->id && $module->active,
-				'icon' => 'share-alt',
-				);
+			'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab,
+			'onclick' => $module->onclick_option && isset($module->onclick_option_content['reset']) ? $module->onclick_option_content['reset'] : '',
+			'title' => '',
+			'text' => $this->translationsTab['Reset'],
+			'cond' => $module->id && $module->active,
+			'icon' => 'share-alt',
+		);
+
 		$delete_module = array(
-				'href' => $link_admin_modules.'&delete='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
-				'onclick' => $module->onclick_option && isset($module->onclick_option_content['delete']) ? $module->onclick_option_content['delete'] : 'return confirm(\''.$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'].'\');',
-				'title' => '',
-				'text' => $this->translationsTab['Delete'],
-				'cond' => true,
-				'icon' => 'remove',
-				);
-			
+			'href' => $link_admin_modules.'&delete='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
+			'onclick' => $module->onclick_option && isset($module->onclick_option_content['delete']) ? $module->onclick_option_content['delete'] : 'return confirm(\''.$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'].'\');',
+			'title' => '',
+			'text' => $this->translationsTab['Delete'],
+			'cond' => true,
+			'icon' => 'remove',
+		);
+
+		$display_mobile = array(
+			'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&'.($module->enable_device & Context::DEVICE_MOBILE ? 'disable_device' : 'enable_device').'='.Context::DEVICE_MOBILE.'&tab_module='.$module->tab,
+			'onclick' => '',
+			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles']),
+			'text' => $module->enable_device & Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles'],
+			'cond' => $module->id,
+			'icon' => 'off',
+		);
+
+		$display_tablet = array(
+			'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&'.($module->enable_device & Context::DEVICE_TABLET ? 'disable_device' : 'enable_device').'='.Context::DEVICE_TABLET.'&tab_module='.$module->tab,
+			'onclick' => '',
+			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets']),
+			'text' => $module->enable_device & Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets'],
+			'cond' => $module->id,
+			'icon' => 'off',
+		);
+
+		$display_computer = array(
+			'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&'.($module->enable_device & Context::DEVICE_COMPUTER ? 'disable_device' : 'enable_device').'='.Context::DEVICE_COMPUTER.'&tab_module='.$module->tab,
+			'onclick' => '',
+			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers']),
+			'text' => $module->enable_device & Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers'],
+			'cond' => $module->id,
+			'icon' => 'off',
+		);
+
 		if ($module->active)
 		{
 			$modules_options[] = $configure_module;
 			$modules_options[] = $desactive_module;
+			$modules_options[] = $display_mobile;
+			$modules_options[] = $display_tablet;
+			$modules_options[] = $display_computer;
 		}
 		else
 		{

@@ -299,7 +299,7 @@ class AdminSuppliersControllerCore extends AdminController
 	public function initToolbar()
 	{
 		parent::initToolbar();
-
+		$this->addPageHeaderToolBarModulesListButton();
 		if (empty($this->display))
 			$this->toolbar_btn['import'] = array(
 				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
@@ -309,6 +309,7 @@ class AdminSuppliersControllerCore extends AdminController
 
 	public function renderView()
 	{
+		$this->initTabModuleList();
 		$this->toolbar_title = $this->object->name;
 		$products = $this->object->getProductsLite($this->context->language->id);
 		$total_product = count($products);
