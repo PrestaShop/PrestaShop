@@ -1064,7 +1064,7 @@ class AdminModulesControllerCore extends AdminController
 		$helper->icon = 'icon-puzzle-piece';
 		$helper->color = 'color1';
 		$helper->title = $this->l('Installed Modules', null, null, false);
-		if (ConfigurationKPI::get('INSTALLED_MODULES') !== false)
+		if (ConfigurationKPI::get('INSTALLED_MODULES') !== false && ConfigurationKPI::get('INSTALLED_MODULES') != '')
 			$helper->value = ConfigurationKPI::get('INSTALLED_MODULES');
 		if (ConfigurationKPI::get('INSTALLED_MODULES_EXPIRE') < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=installed_modules';
@@ -1075,7 +1075,7 @@ class AdminModulesControllerCore extends AdminController
 		$helper->icon = 'icon-off';
 		$helper->color = 'color2';
 		$helper->title = $this->l('Disabled Modules', null, null, false);
-		if (ConfigurationKPI::get('DISABLED_MODULES') !== false)
+		if (ConfigurationKPI::get('DISABLED_MODULES') !== false && ConfigurationKPI::get('DISABLED_MODULES') != '')
 			$helper->value = ConfigurationKPI::get('DISABLED_MODULES');
 		if (ConfigurationKPI::get('DISABLED_MODULES_EXPIRE') < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_modules';
@@ -1086,7 +1086,7 @@ class AdminModulesControllerCore extends AdminController
 		$helper->icon = 'icon-refresh';
 		$helper->color = 'color3';
 		$helper->title = $this->l('Modules to update', null, null, false);
-		if (ConfigurationKPI::get('UPDATE_MODULES') !== false)
+		if (ConfigurationKPI::get('UPDATE_MODULES') !== false && ConfigurationKPI::get('UPDATE_MODULES') != '')
 			$helper->value = ConfigurationKPI::get('UPDATE_MODULES');
 		if (ConfigurationKPI::get('UPDATE_MODULES_EXPIRE') < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=update_modules';
