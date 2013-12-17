@@ -3858,8 +3858,7 @@ header {
             margin: 0 auto; } }
     header #header-row #search_block_top #searchbox {
       float: left;
-      width: 100%;
-      background-color: red; }
+      width: 100%; }
     header #header-row #block_top_menu {
       padding-top: 25px; }
   header .header_user_info {

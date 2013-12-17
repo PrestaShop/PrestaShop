@@ -1,5 +1,5 @@
-body {
-  background: #282828;
+body{
+  background:white;
 }
 
 .header-container,
@@ -10,9 +10,7 @@ body {
 #header {
   background: none;
 }
-#header .header-row {
-  background: #dadada;
-}
+
 #header .header-row .shop-phone {
   color: #333333;
 }
@@ -162,12 +160,9 @@ ul.product_list.grid > li .product-container .product-image-container .product_i
   padding-bottom: 15px;
 }
 
-.footer-container {
-  background: #1b1b1b;
-}
 @media (min-width: 768px) {
   .footer-container {
-    background: url(../img/footer-bg1.gif) repeat-x;
+    background: url(../img/footer-bg1.gif) repeat-x #1B1B1B;
   }
 }
 
