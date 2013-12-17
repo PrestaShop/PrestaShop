@@ -409,14 +409,17 @@ class AdminThemesControllerCore extends AdminController
 	public function processDelete()
 	{
 		$obj = $this->loadObject();
-
-		if ($obj && is_dir(_PS_ALL_THEMES_DIR_.$obj->directory))
-			Tools::deleteDirectory(_PS_ALL_THEMES_DIR_.$obj->directory.'/');
-
-		if ($obj && $obj->isUsed())
+		if ($obj)
 		{
-			$this->errors[] = $this->l('The theme is already being used by at least one shop. Please choose another theme before continuing.');
-			return false;
+
+			if ($obj->isUsed())
+			{
+				$this->errors[] = $this->l('The theme is already being used by at least one shop. Please choose another theme before continuing.');
+				return false;
+			}
+			if (is_dir(_PS_ALL_THEMES_DIR_.$obj->directory))
+				Tools::deleteDirectory(_PS_ALL_THEMES_DIR_.$obj->directory.'/');
+			$obj->removeMeta();
 		}
 
 		return parent::processDelete();
