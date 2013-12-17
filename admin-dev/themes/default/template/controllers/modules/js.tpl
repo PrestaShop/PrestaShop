@@ -66,8 +66,11 @@
 		if (anchor != '')
 			$.uiTableFilter($('#moduleContainer').find('table'), anchor);
 		
-		$('#moduleQuicksearch').keyup(function() {
+		$('#moduleQuicksearch').on('keyup', function(){
 			$.uiTableFilter($('#moduleContainer').find('table'), this.value);
+		}).on('keydown', function(e){
+			if (e.keyCode == 13)
+				return false;
 		});
 		
 		$('input[name="filtername"]').result(function(event, data, formatted) {
