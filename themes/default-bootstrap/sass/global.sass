@@ -16,7 +16,6 @@ a:hover
 body
 	min-width: 320px
 	height: 100%
-	background: $dark-background
 	line-height: 18px
 	font-size: 13px
 	color: $base-body-color
@@ -43,7 +42,7 @@ textarea
 header
 	z-index: 1
 	position: relative
-	background: $light-background
+	//background: $light-background
 	padding-bottom: 20px
 	#banner-row
 		background: black
@@ -1699,7 +1698,7 @@ div.star a:hover
 	padding: 0 0 100px 0
 	// min 768px
 	@media (min-width: $screen-sm)
-		background: url(../img/footer-bg.gif) repeat-x
+		background: url(../img/footer-bg.gif) repeat-x $dark-background
 	#footer
 		color: #777
 		position: relative
