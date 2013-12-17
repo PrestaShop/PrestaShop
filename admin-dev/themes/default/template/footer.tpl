@@ -78,9 +78,7 @@
 </div>
 {/if}
 {if isset($php_errors)}
-	{foreach from=$php_errors item=php_error}
-		{$php_error}
-	{/foreach}
+	{include file="error.tpl"}
 {/if}
 </body>
 </html>
