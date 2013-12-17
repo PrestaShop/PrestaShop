@@ -79,9 +79,9 @@
 
 #tool_customization #color-box ul li{
   display: inline-block;
-  border: 1px solid #595959;
-  height:27px;
-  width: 27px;
+  border: 2px solid black;
+  height:30px;
+  width: 30px;
   margin:5px 5px 5px 0;
 }
 
@@ -97,8 +97,8 @@
 
 #tool_customization #color-box .color-theme2{
   display:block;
-  width:25px;
-  height:25px;
+  width:26px;
+  height:26px;
   position: relative;
   top: -26px;
 }
@@ -171,18 +171,24 @@
   padding: 10px 15px;
 }
 
-#tool_customization .btn{font-weight: bold;}
+#tool_customization .btn{
+  width: 50%;
+  float: left;
+  display: block;
+  overflow: hidden;
+}
 
 #tool_customization .btn-1{
   background: #727171;
   color: #ffffff;
-  text-shadow: 0.1em 0.1em 0.05em #000000
 }
+
 #tool_customization .btn-2{
   background: #ffffff;
   color: #3a3939;
+  font-weight: bold;
 }
 
 #tool_customization #block-advertisement{
-  padding: 15px
+  padding: 20px
 }

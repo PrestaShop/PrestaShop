@@ -72,7 +72,9 @@
 			<button type="submit" class="btn btn-2" name="submitLiveConfigurator">{l s='Save' mod='themeconfigurator'}</button>
 		</div>
 		<div id="block-advertisement">
-			<img src="{$advertisement_image}" alt="{$advertisement_text}" />
+			<a href="http://addons.prestashop.com/?utm_source=configurator">
+				<img src="{$advertisement_image}" alt="{$advertisement_text}" />
+			</a>
 		</div>
 	</div>
 </form>
