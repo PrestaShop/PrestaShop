@@ -219,36 +219,11 @@ class ThemeConfigurator extends Module
 
 	public function hookdisplayTop($params)
 	{
-		$html = '';
-
-		if (Tools::getValue('live_configurator', 0) == 1 && Tools::getValue('live_configurator_token') == Tools::getAdminToken($this->name))
-		{
-			if (Tools::isSubmit('submitLiveConfigurator'))
-			{
-				Configuration::updateValue('PS_TC_THEME', Tools::getValue('theme'));
-				Configuration::updateValue('PS_TC_FONT', Tools::getValue('theme_font'));
-			}
-
-			$this->smarty->assign(array(
-				'themes' => unserialize(Configuration::get('PS_TC_THEMES')),
-				'fonts' => unserialize(Configuration::get('PS_TC_FONTS')),
-				'theme_font' => Tools::getValue('theme_font', Configuration::get('PS_TC_FONT')),
-				'id_shop' => (int)$this->context->shop->id,
-				'id_employee' => (int)$this->context->employee->id,
-				'live_configurator_token' => Tools::getValue('live_configurator_token', ''),
-				'advertisement_image' => $this->_path.'/img/'.$this->context->language->iso_code.'/advertisement.png',
-				'advertisement_text'  => $this->l('Over 500+ PrestaShop Premium Templates! Browse Now!')
-			));
-			$html .= $this->display(__FILE__, 'live_configurator.tpl');
-		}
-		
 		$this->context->smarty->assign(array(
 				'htmlitems'=> $this->getItemsFromHook('top'),
 				'hook' => 'top'
 		));
-		$html .= $this->display(__FILE__, 'hook.tpl');
-
-		return $html;
+		return $this->display(__FILE__, 'hook.tpl');
 	}
 
 	public function hookDisplayHome() 
@@ -283,12 +258,35 @@ class ThemeConfigurator extends Module
 	
 	public function hookDisplayFooter() 
 	{
+		$html = '';
+
+		if (Tools::getValue('live_configurator', 0) == 1 && Tools::getValue('live_configurator_token') == Tools::getAdminToken($this->name))
+		{
+			if (Tools::isSubmit('submitLiveConfigurator'))
+			{
+				Configuration::updateValue('PS_TC_THEME', Tools::getValue('theme'));
+				Configuration::updateValue('PS_TC_FONT', Tools::getValue('theme_font'));
+			}
+
+			$this->smarty->assign(array(
+				'themes' => unserialize(Configuration::get('PS_TC_THEMES')),
+				'fonts' => unserialize(Configuration::get('PS_TC_FONTS')),
+				'theme_font' => Tools::getValue('theme_font', Configuration::get('PS_TC_FONT')),
+				'id_shop' => (int)$this->context->shop->id,
+				'id_employee' => (int)$this->context->employee->id,
+				'live_configurator_token' => Tools::getValue('live_configurator_token', ''),
+				'advertisement_image' => $this->_path.'/img/'.$this->context->language->iso_code.'/advertisement.png',
+				'advertisement_text'  => $this->l('Over 500+ PrestaShop Premium Templates! Browse Now!')
+			));
+			$html .= $this->display(__FILE__, 'live_configurator.tpl');
+		}
+
 		$this->context->smarty->assign(array(
 			'htmlitems'=> $this->getItemsFromHook('footer'),
 			'hook' => 'footer'
 		));
 		
-		return $this->display(__FILE__, 'hook.tpl');
+		return $html.$this->display(__FILE__, 'hook.tpl');
 	}  
 
 	protected function getItemsFromHook($hook)
