@@ -1,3 +1,4 @@
+// helpers class for fixing input width
 .fixed-width-xs
 	width: 40px!important
 .fixed-width-sm
@@ -11,6 +12,11 @@
 .fixed-width-xxl
 	width: 250px!important
 
+//quick fix for inline hidden content on device width - waiting for bootstrap update https://github.com/twbs/bootstrap/issues/8869
+.hidden-inline-xs
+	@media (max-width: $screen-xs)
+		display: none!important
+
 .row-margin-bottom
 	margin-bottom: 15px
 .row-padding-top
@@ -20,6 +26,7 @@
 	background-color: white
 	border-color: #ccc!important
 
+// highlighting element (ie: a special row in a table)
 .highlight
 	background-color: #FFFF00
 
