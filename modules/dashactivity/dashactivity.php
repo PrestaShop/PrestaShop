@@ -350,7 +350,7 @@ class Dashactivity extends Module
 		);
 			
 		$fields_form['form']['input'][] = array(
-			'label' => $this->l('Cart active'),
+			'label' => $this->l('Activate Cart'),
 			'desc' => $this->l('How long (in minutes) a cart is to be considered active after the last recorded change.'),
 			'name' => 'DASHACTIVITY_CART_ACTIVE',
 			'type' => 'select',
@@ -368,7 +368,7 @@ class Dashactivity extends Module
 			),
 		);
 		$fields_form['form']['input'][] = array(
-			'label' => $this->l('Visitor online'),
+			'label' => $this->l('Online Visitor'),
 			'desc' => $this->l('How long (in minutes) a visitor is to be considered online after their last action (default: 30 min).'), 
 			'name' => 'DASHACTIVITY_VISITOR_ONLINE',
 			'type' => 'select',
@@ -386,7 +386,7 @@ class Dashactivity extends Module
 			),
 		);
 		$fields_form['form']['input'][] = array(
-				'label' => $this->l('Cart abandoned (min)'),
+				'label' => $this->l('Abandoned Cart (min)'),
 				'desc' => $this->l('How long (in hours) after the last action a cart is to be considered as abandoned (default: 24 hrs).'),
 				'name' => 'DASHACTIVITY_CART_ABANDONED_MIN',
 				'type' => 'text',
