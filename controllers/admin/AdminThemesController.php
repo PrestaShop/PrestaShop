@@ -1895,7 +1895,7 @@ class AdminThemesControllerCore extends AdminController
 		$theme = New Theme((int)Tools::getValue('id_theme'));
 
 		$shops = array(Configuration::get('PS_SHOP_DEFAULT'));
-		if (tools::isSubmit('checkBoxShopAsso_theme'))
+		if (Tools::isSubmit('checkBoxShopAsso_theme'))
 			$shops = Tools::getValue('checkBoxShopAsso_theme');
 
 		$xml = false;
