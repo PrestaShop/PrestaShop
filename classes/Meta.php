@@ -43,6 +43,7 @@ class MetaCore extends ObjectModel
 		'multilang_shop' => true,
 		'fields' => array(
 			'page' => 			array('type' => self::TYPE_STRING, 'validate' => 'isFileName', 'required' => true, 'size' => 64),
+			'configurable' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 
 			/* Lang fields */
 			'title' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
