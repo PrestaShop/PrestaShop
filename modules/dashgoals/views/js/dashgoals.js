@@ -1,3 +1,6 @@
+var dashgoals_data;
+var dashgoals_chart;
+
 function bar_chart_goals(widget_name, chart_details)
 {
 	nv.addGraph(function() {
@@ -5,10 +8,9 @@ function bar_chart_goals(widget_name, chart_details)
 			.stacked(true)
 			.showControls(false)
 			.tooltipContent(function(key, y, e, graph) {
+				return '/modules/dashgoals/views/js/dashgoals.js : Todo, now we need to retrieve the content with ajax';
+
 				var perf = parseInt(e) - 100;
-
-				return '/modules/dashgoals/views/js/dashgoals.js : Deprecated, now we need to retrieve the content with ajax';
-
 				if (perf > 0)
 					return '<section class="panel"><header class="panel-heading">' + key + '</header><span class="dash_trend dash_trend_up">+' + perf + '%</span></section>';
 				else if (perf < 0)
@@ -19,15 +21,39 @@ function bar_chart_goals(widget_name, chart_details)
 
 		chart.yAxis.tickFormat(d3.format('%'));
 
+		dashgoals_data = chart_details.data;
+		dashgoals_chart = chart;
+
 		d3.select('#dash_goals_chart1 svg')
 			.datum(chart_details.data)
 			.transition()
 			.call(chart);
 
+		$('#dash_goals_chart1 .nv-legendWrap').remove();
+
 		nv.utils.windowResize(chart.update);
 
 		return chart;
 	});
+}
+
+function selectDashgoalsChart(type)
+{
+	if (type !== false)
+	{
+		$.each(dashgoals_data, function(index, value) {
+			if (value.key == type + '_real' || value.key == type + '_more' || value.key == type + '_less')
+				value.disabled = false;
+			else
+				value.disabled = true;
+		});
+	}
+
+	d3.select('#dash_goals_chart1 svg')
+		.datum(dashgoals_data)
+		.transition()
+		.call(dashgoals_chart);
+	nv.utils.windowResize(dashgoals_chart.update);
 }
 
 function dashgoals_calc_sales()

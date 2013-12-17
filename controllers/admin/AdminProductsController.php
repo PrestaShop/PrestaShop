@@ -3698,7 +3698,7 @@ class AdminProductsControllerCore extends AdminController
 			else
 				$image->cover = 0;
 
-			if (isset($file['error']))
+			if (isset($file['error']) && (!is_numeric($file['error']) || $file['error'] != 0))
 				continue;
 
 			if (!$image->add())

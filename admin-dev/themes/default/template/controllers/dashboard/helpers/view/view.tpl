@@ -34,49 +34,47 @@
 <div id="dashboard">
 	<div class="row">
 		<div class="col-lg-12">
-			{if $warning}
-				<div class="alert alert-warning">{$warning}</div>
-			{/if}
+{if $warning}
+			<div class="alert alert-warning">{$warning}</div>
+{/if}
 			<div id="calendar" class="panel">
 				<form action="{$action|escape}" method="post" id="calendar_form" name="calendar_form" class="form-inline">
 
-							<div class="btn-group">
-								<button type="button" name="submitDateDay" class="btn btn-default submitDateDay">
-									{l s='Day'}
-								</button>
-								<button type="button" name="submitDateMonth" class="btn btn-default submitDateMonth">
-									{l s='Month'}
-								</button>
-								<button type="button" name="submitDateYear" class="btn btn-default submitDateYear">
-									{l s='Year'}
-								</button>
-								<button type="button" name="submitDateDayPrev" class="btn btn-default submitDateDayPrev">
-									{l s='Day'}-1
-								</button>
-								<button type="button" name="submitDateMonthPrev" class="btn btn-default submitDateMonthPrev">
-									{l s='Month'}-1
-								</button>
-								<button type="button" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev">
-									{l s='Year'}-1
-								</button>
-							</div>
+					<div class="btn-group">
+						<button type="button" name="submitDateDay" class="btn btn-default submitDateDay">
+							{l s='Day'}
+						</button>
+						<button type="button" name="submitDateMonth" class="btn btn-default submitDateMonth">
+							{l s='Month'}
+						</button>
+						<button type="button" name="submitDateYear" class="btn btn-default submitDateYear">
+							{l s='Year'}
+						</button>
+						<button type="button" name="submitDateDayPrev" class="btn btn-default submitDateDayPrev">
+							{l s='Day'}-1
+						</button>
+						<button type="button" name="submitDateMonthPrev" class="btn btn-default submitDateMonthPrev">
+							{l s='Month'}-1
+						</button>
+						<button type="button" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev">
+							{l s='Year'}-1
+						</button>
+					</div>
 
-							<input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom|escape}" class="form-control">
+					<input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom|escape}" class="form-control">
+					<input type="hidden" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" class="form-control">
 
-							<input type="hidden" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" class="form-control">
-
-							<div class="form-group pull-right">
-								<button id="datepickerExpand" class="btn btn-default" type="button">
-									<i class="icon-calendar-empty"></i>
-									{l s='From'}
-									<strong class="text-info" id="datepicker-from-info">{$datepickerFrom|escape}</strong>
-									{l s='To'}
-									<strong class="text-info" id="datepicker-to-info">{$datepickerTo|escape}</strong>
-									<strong class="text-info" id="datepicker-diff-info"></strong>
-									<i class="icon-caret-down"></i>
-								</button>
-
-							</div>
+					<div class="form-group pull-right">
+						<button id="datepickerExpand" class="btn btn-default" type="button">
+							<i class="icon-calendar-empty"></i>
+							{l s='From'}
+							<strong class="text-info" id="datepicker-from-info">{$datepickerFrom|escape}</strong>
+							{l s='To'}
+							<strong class="text-info" id="datepicker-to-info">{$datepickerTo|escape}</strong>
+							<strong class="text-info" id="datepicker-diff-info"></strong>
+							<i class="icon-caret-down"></i>
+						</button>
+					</div>
 					{$calendar}
 				</form>	
 			</div>
@@ -95,7 +93,7 @@
 			</div>
 		</div>
 		<div class="col-lg-2">
-			
+
 			<section class="dash_news panel">
 				<h3><i class="icon-rss"></i> PrestaShop News</h3>
 				<div class="dash_news_content"></div>
@@ -128,9 +126,9 @@
 						<dd><a href="http://www.prestashop.com/en/contact-us?utm_source=backoffice_dashboard" target="_blank">{l s="Go to prestashop.com"}</a></dd>
 					</dl>
 			</section>
-			
+
 			<section class="dash_simulation panel">
-				<h3><i class="icon-link"></i> {l s="Simulation Mode"}</h3>
+				<h3><i class="icon-link"></i> {l s="Demo Mode"}</h3>
 				<span class="switch prestashop-switch">
 					<input id="PS_DASHBOARD_SIMULATION_on" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 1}checked="checked"{/if} value="1" name="PS_DASHBOARD_SIMULATION">
 					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_on">
@@ -142,8 +140,9 @@
 					</label>
 					<a class="slide-button btn btn-default"></a>
 				</span>
+				{l s='This mode generates fake data so you can try your Dashboard without real numbers.'}
 			</section>
-			
+
 		</div>
 	</div>
 </div>

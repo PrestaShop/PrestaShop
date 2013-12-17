@@ -605,7 +605,6 @@ var ajaxCart = {
 		$('.layer_cart_overlay').css('height','100%');
 		$('.layer_cart_overlay').show();
 		$('#layer_cart').css({'top': n}).fadeIn('fast');
-		$.scrollTo('#layer_cart', 400);
 		crossselling_serialScroll();
 	},
 
