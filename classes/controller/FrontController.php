@@ -48,8 +48,8 @@ class FrontControllerCore extends Controller
 	protected $restrictedCountry = false;
 	protected $maintenance = false;
 
-	public $display_column_left = true;
-	public $display_column_right = true;
+	public $display_column_left;
+	public $display_column_right;
 
 	public static $initialized = false;
 
@@ -64,7 +64,7 @@ class FrontControllerCore extends Controller
 		global $useSSL;
 
 		parent::__construct();
-
+		
 		if (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'))
 			$this->ssl = true;
 
@@ -72,6 +72,9 @@ class FrontControllerCore extends Controller
 			$this->ssl = $useSSL;
 		else
 			$useSSL = $this->ssl;
+			
+		$this->display_column_left = Context::getContext()->theme->hasLeftColumn($this->php_self);
+		$this->display_column_right = Context::getContext()->theme->hasRightColumn($this->php_self);
 	}
 
 	/**
