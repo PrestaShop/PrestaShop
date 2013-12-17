@@ -37,6 +37,8 @@
 	var confirmPreferencesSaved = '{l s='Preferences saved'}';
 	{if isset($smarty.get.anchor) && !isset($error_module)}var anchor = '{$smarty.get.anchor|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var anchor = '';{/if}
 
+	{if isset($smarty.get.module_name) && !isset($error_module)}var module_name = '{$smarty.get.module_name|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var module_name = '';{/if}
+
 	{literal}
 
 	function getPrestaStore(){if(getE("prestastore").style.display!='block')return;$.post(dirNameCurrentIndex+"/ajax.php",{page:"prestastore"},function(a){getE("prestastore-content").innerHTML=a;})}
@@ -65,6 +67,9 @@
 		// ScrollTo
 		if (anchor != '')
 			$.uiTableFilter($('#moduleContainer').find('table'), anchor);
+
+		if (module_name != '')
+			$.uiTableFilter($('#moduleContainer').find('table'), module_name);
 		
 		$('#moduleQuicksearch').on('keyup', function(){
 			$.uiTableFilter($('#moduleContainer').find('table'), this.value);
