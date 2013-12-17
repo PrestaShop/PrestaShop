@@ -334,9 +334,9 @@ class HookCore extends ObjectModel
 					else
 						$sql->where('mg.`id_group` IN ('.implode(', ', $groups).')');
 				}
-				$sql->groupBy('hm.id_hook, hm.id_module');
 			}
 
+			$sql->groupBy('hm.id_hook, hm.id_module');
 			$sql->orderBy('hm.`position`');
 
 			$list = array();
