@@ -51,6 +51,20 @@
 	</header>
 	{include file='./config.tpl'}
 	<section class="loading">
+		<div class="btn-group" data-toggle="buttons">
+			<label class="btn btn-primary">
+				<input type="radio" name="options" onchange="selectDashgoalsChart('traffic');"> {l s='Traffic'}
+			</label>
+			<label class="btn btn-primary">
+				<input type="radio" name="options" onchange="selectDashgoalsChart('conversion');"> {l s='Conversion'}
+			</label>
+			<label class="btn btn-primary">
+				<input type="radio" name="options" onchange="selectDashgoalsChart('avg_cart_value');"> {l s='Average Cart Value'}
+			</label>
+			<label class="btn btn-primary active">
+				<input type="radio" name="options" onchange="selectDashgoalsChart('sales');"> {l s='Sales'}
+			</label>
+		</div>
 		<div id="dash_goals_chart1" class="chart with-transitions">
 			<svg></svg>
 		</div>
