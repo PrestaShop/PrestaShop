@@ -28,12 +28,9 @@
 <script type="text/javascript">
 	id_language = Number({$current_id_lang});
 </script>
-
 {block name="defaultOptions"}
 <form action="{$current}&token={$token}"
 	id="{if $table == null}configuration_form{else}{$table}_form{/if}"
-	{if isset($categoryData['name'])} name={$categoryData['name']}{/if}
-	{if isset($categoryData['id'])} id={$categoryData['id']} {/if}
 	method="post"
 	enctype="multipart/form-data" class="form-horizontal">
 	{foreach $option_list AS $category => $categoryData}
@@ -359,7 +356,7 @@
 					<div class="col-lg-9 col-lg-offset-3">
 						<button
 							type="submit"
-							id="{$table}_form_submit_btn"
+							id="{if isset($categoryData['id'])}{$categoryData['id']}{else}{$table}{/if}_form_submit_btn"
 							name="{if isset($categoryData['submit']['name'])}{$categoryData['submit']['name']}{else}submitOptions{$table}{/if}"
 							class="{if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}btn btn-default{/if}"
 							>
@@ -373,7 +370,11 @@
 			{/if*} -->
 			{if isset($categoryData['bottom'])}{$categoryData['bottom']}{/if}
 			{block name="footer"}
-			{include file="footer_toolbar.tpl"}
+				{if isset($categoryData['id'])}
+					{include file="footer_toolbar.tpl" submit_id_prefix=$categoryData['id']}
+				{else}
+					{include file="footer_toolbar.tpl" submit_id_prefix=$table}
+				{/if}
 			{/block}
 		</div>
 	{/foreach}
