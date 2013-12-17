@@ -120,7 +120,7 @@ class ThemeCore extends ObjectModel
 	 * @param bool  $full_update If true, all the meta of the theme will be deleted prior the insert, otherwise only the current $metas will be deleted
 	 *
 	 */
-	public function updateMeta($metas, $full_update = false)
+	public function updateMetas($metas, $full_update = false)
 	{
 
 		if ($full_update)
@@ -150,7 +150,7 @@ class ThemeCore extends ObjectModel
 	/**
 	 * @return array|bool
 	 */
-	public function getMeta()
+	public function getMetas()
 	{
 		if ($this->id > 0)
 		{
@@ -162,7 +162,7 @@ class ThemeCore extends ObjectModel
 	/**
 	 * @return bool
 	 */
-	public function removeMeta()
+	public function removeMetas()
 	{
 		if ($this->id > 0)
 		{
