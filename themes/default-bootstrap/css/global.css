@@ -3815,6 +3815,7 @@ textarea {
   z-index: 10; }
 
 .columns-container {
+  padding-top: 15px;
   background: white; }
 
 #columns {
@@ -3825,7 +3826,8 @@ textarea {
 header {
   z-index: 1;
   position: relative;
-  padding-bottom: 20px; }
+  background: white;
+  padding-bottom: 15px; }
   header #banner-row {
     background: black; }
   header #nav-row {
@@ -5047,7 +5049,8 @@ ul.footer_links {
     .content_sortPagiBar .display_m li a {
       color: gray;
       font-size: 11px;
-      line-height: 14px; }
+      line-height: 14px;
+      cursor: pointer; }
       .content_sortPagiBar .display li a i,
       .content_sortPagiBar .display_m li a i {
         display: block;
@@ -5056,13 +5059,15 @@ ul.footer_links {
         line-height: 24px;
         margin-bottom: -3px;
         color: #e1e0e0; }
-    .content_sortPagiBar .display li a:hover i, .content_sortPagiBar .display li.selected i,
-    .content_sortPagiBar .display_m li a:hover i,
-    .content_sortPagiBar .display_m li.selected i {
-      color: #333333; }
+      .content_sortPagiBar .display li a:hover i,
+      .content_sortPagiBar .display_m li a:hover i {
+        color: gray; }
     .content_sortPagiBar .display li.selected a,
     .content_sortPagiBar .display_m li.selected a {
       cursor: default; }
+    .content_sortPagiBar .display li.selected i,
+    .content_sortPagiBar .display_m li.selected i {
+      color: #333333; }
     .content_sortPagiBar .display li.display-title,
     .content_sortPagiBar .display_m li.display-title {
       font-weight: bold;

@@ -29,6 +29,7 @@ textarea
 #header
 	z-index: 10
 .columns-container
+	padding-top: 15px
 	background: $light-background
 #columns
 	z-index: 1
@@ -42,8 +43,8 @@ textarea
 header
 	z-index: 1
 	position: relative
-	//background: $light-background
-	padding-bottom: 20px
+	background: $light-background
+	padding-bottom: 15px
 	#banner-row
 		background: black
 	#nav-row
@@ -1236,6 +1237,7 @@ ul.footer_links
 				color: $GL-text-color
 				font-size: 11px
 				line-height: 14px
+				cursor: pointer
 				i
 					display: block
 					font-size: 24px
@@ -1243,13 +1245,14 @@ ul.footer_links
 					line-height: 24px
 					margin-bottom: -3px
 					color: $GL-icon-color	
-			a:hover,
+				&:hover
+					i
+						color: lighten($GL-icon-color-hover,30%)
 			&.selected
+				a
+					cursor: default
 				i
 					color: $GL-icon-color-hover
-			&.selected
-				a 
-					cursor: default
 			&.display-title
 				font-weight: bold
 				color: $base-text-color
