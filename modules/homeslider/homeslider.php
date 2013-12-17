@@ -683,6 +683,17 @@ class HomeSlider extends Module
 		return $this->display(__FILE__, 'homeslider.tpl', $this->getCacheId());
 	}
 
+	public function hookDisplayHome()
+	{
+		if(!$this->_prepareHook())
+			return;
+
+		// Check if not a mobile theme
+		if ($this->context->getMobileDevice() != false)
+			return false;
+		return $this->display(__FILE__, 'homeslider.tpl', $this->getCacheId());
+	}
+
 	public function clearCache()
 	{
 		$this->_clearCache('homeslider.tpl');
