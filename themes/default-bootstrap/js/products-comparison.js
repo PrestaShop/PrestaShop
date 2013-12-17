@@ -73,6 +73,7 @@ function compareButtonsStatusRefresh(){
 
 function totalValue(value) {
 	$('.bt_compare').find('.total-compare-val').html(value);
+	$('.bt_compare_bottom').find('.total-compare-val').html(value);
 }
 
 reloadProductComparison = function() {
