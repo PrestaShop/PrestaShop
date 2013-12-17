@@ -254,8 +254,39 @@ class AdminThemesControllerCore extends AdminController
 		$get_available_themes = Theme::getAvailable(false);
 		$available_theme_dir = array();
 		$selected_theme_dir = null;
+		$metas = Meta::getMetas();
+		$formated_metas = array();
+
+		foreach ($metas as $meta)
+		{
+			$meta_object = New Meta($meta['id_meta']);
+
+			$title = $meta['page'];
+			if (isset($meta_object->title[(int)$this->context->language->id]) && $meta_object->title[(int)$this->context->language->id] != '')
+				$title = $meta_object->title[(int)$this->context->language->id];
+
+			$formated_metas[$meta['id_meta']] = array(
+				'title' => $title,
+				'left' => 0,
+				'right' => 0,
+			);
+		}
+
 		if ($this->object)
+		{
+			if ((int)$this->object->id > 0)
+			{
+				$theme = New Theme((int)$this->object->id);
+				$theme_metas = $theme->getMetas();
+
+				foreach($theme_metas as $theme_meta)
+				{
+					$formated_metas[$theme_meta['id_meta']]['left'] = (int)$theme_meta['left_column'];
+					$formated_metas[$theme_meta['id_meta']]['right'] = (int)$theme_meta['right_column'];
+				}
+			}
 			$selected_theme_dir = $this->object->directory;
+		}
 		
 		foreach ($get_available_themes as $k => $dirname)
 		{
@@ -263,6 +294,7 @@ class AdminThemesControllerCore extends AdminController
 			$available_theme_dir[$k]['label'] = $dirname;
 			$available_theme_dir[$k]['id'] = $dirname;
 		};
+
 
 		$this->fields_form = array(
 			'tinymce' => false,
@@ -337,6 +369,46 @@ class AdminThemesControllerCore extends AdminController
 					'hint' => $this->l('Please select a valid theme directory.'),
 				);
 
+		foreach($formated_metas as $key => $formated_meta)
+		{
+
+			$this->fields_value[$key . '_left_meta']  = $formated_meta['left'];
+			$this->fields_value[$key . '_right_meta'] = $formated_meta['right'];
+			$this->fields_form['input'][]            = array(
+				'type'   => 'switch',
+				'label'  => sprintf($this->l('Left column for %1s'), $formated_meta['title']),
+				'name'   => $key . '_left_meta',
+				'values' => array(
+					array(
+						'id'    => $key . 'left_meta_on',
+						'value' => 1,
+						'label' => $this->l('Yes')
+					),
+					array(
+						'id'    => $key . 'left_meta_off',
+						'value' => 0,
+						'label' => $this->l('No')
+					)
+				));
+
+			$this->fields_form['input'][] = array(
+				'type'   => 'switch',
+				'label'  => sprintf($this->l('right column for %1s'), $formated_meta['title']),
+				'name'   => $key . '_right_meta',
+				'values' => array(
+					array(
+						'id'    => $key . 'right_meta_on',
+						'value' => 1,
+						'label' => $this->l('Yes')
+					),
+					array(
+						'id'    => $key . 'right_meta_off',
+						'value' => 0,
+						'label' => $this->l('No')
+					)
+				));
+		}
+
 		return parent::renderForm();
 	}
 
@@ -381,6 +453,28 @@ class AdminThemesControllerCore extends AdminController
 		return $res;
 	}
 
+	/**
+	 * @param Theme $theme
+	 */
+	private function updateThemeMetas($theme)
+	{
+		$query_array = array();
+		foreach($_POST as $key => $value)
+		{
+			$exploded_value = explode('_', $key);
+			if (count($exploded_value) == 3)
+			{
+
+				$query_array[(int)$exploded_value[0]]['id_meta'] = (int)$exploded_value[0];
+				if ($exploded_value[1] == 'left')
+					$query_array[(int)$exploded_value[0]]['left'] = (int)$value;
+				else
+					$query_array[(int)$exploded_value[0]]['right'] = (int)$value;
+			}
+		}
+		$theme->updateMetas($query_array, true);
+	}
+
 	public function processAdd()
 	{
 		$new_dir = Tools::getValue('directory');
@@ -403,7 +497,27 @@ class AdminThemesControllerCore extends AdminController
 			}
 		}
 
-		return parent::processAdd();
+		$theme = parent::processAdd();
+		if ((int)$theme->id > 0)
+			$this->updateThemeMetas($theme);
+		return $theme;
+	}
+
+	public function processUpdate()
+	{
+		if (Tools::getIsset('id_theme') && Tools::getIsset('name') && Tools::getIsset('responsive') && Tools::getIsset('directory'))
+		{
+			$theme = New Theme((int)Tools::getValue('id_theme'));
+			$theme->name= Tools::getValue('name');
+			$theme->directory = Tools::getValue('directory');
+			$theme->responsive = Tools::getValue('responsive');
+
+			$theme->update();
+
+			$this->updateThemeMetas($theme);
+
+		}
+		Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=29');
 	}
 
 	public function processDelete()
@@ -419,7 +533,7 @@ class AdminThemesControllerCore extends AdminController
 			}
 			if (is_dir(_PS_ALL_THEMES_DIR_.$obj->directory))
 				Tools::deleteDirectory(_PS_ALL_THEMES_DIR_.$obj->directory.'/');
-			$obj->removeMeta();
+			$obj->removeMetas();
 		}
 
 		return parent::processDelete();
@@ -1186,7 +1300,7 @@ class AdminThemesControllerCore extends AdminController
 									$metas[] = $tmp_meta;
 								}
 							}
-							$new_theme->updateMeta($metas);
+							$new_theme->updateMetas($metas);
 
 
 						}

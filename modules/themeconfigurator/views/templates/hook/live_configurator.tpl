@@ -26,8 +26,7 @@
 <div id="gear-right">
 	<i class="icon-cogs icon-2x icon-light"></i>
 </div>
-<form action="?live_configurator=1" method="post">
-	<input type="hidden" name="theme" id="theme" value="{$theme}"/>
+<form action="" method="post">
 	<div id="tool_customization">
 		<p>
 			{l s='The customization tool allows you to make color and font changes in your theme.' mod='themeconfigurator'}<br /><br />
@@ -64,12 +63,12 @@
 			<select name="font" id="font" class="font-list">
 				<option value="">{l s='Choose a font' mod='themeconfigurator'}</option>
 				{foreach $fonts as $key => $font}
-				<option value="{$key}">{$font}</option>
+				<option value="{$key}"{if $key == $theme_font} selected="selected"{/if}>{$font}</option>
 				{/foreach}
 			</select>
 		</div>
 		<div class="btn-tools">
-			<button type="reset" class="btn btn-1" id="reset">{l s='Reset' mod='themeconfigurator'}</button>
+			<button type="button" class="btn btn-1" id="reset" name="resetLiveConfigurator">{l s='Reset' mod='themeconfigurator'}</button>
 			<button type="submit" class="btn btn-2" name="submitLiveConfigurator">{l s='Save' mod='themeconfigurator'}</button>
 		</div>
 		<div id="block-advertisement">

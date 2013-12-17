@@ -2874,6 +2874,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .fixed-width-lg { width: 160px !important; }
 .bootstrap .fixed-width-xl { width: 200px !important; }
 .bootstrap .fixed-width-xxl { width: 250px !important; }
+@media (max-width: 480px) { .bootstrap .hidden-inline-xs { display: none !important; } }
 .bootstrap .row-margin-bottom { margin-bottom: 15px; }
 .bootstrap .row-padding-top { padding-top: 15px; }
 .bootstrap .thumbnail, .bootstrap .img-thumbnail, .bootstrap .thumbnail { background-color: white; border-color: #cccccc !important; }
