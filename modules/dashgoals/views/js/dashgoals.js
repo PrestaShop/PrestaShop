@@ -30,7 +30,7 @@ function bar_chart_goals(widget_name, chart_details)
 			.call(chart);
 
 		$('#dash_goals_chart1 .nv-legendWrap').remove();
-			
+
 		nv.utils.windowResize(chart.update);
 
 		return chart;
@@ -39,17 +39,21 @@ function bar_chart_goals(widget_name, chart_details)
 
 function selectDashgoalsChart(type)
 {
-	$.each(dashgoals_data, function(index, value) {
-		if (value.key == type + '_real' || value.key == type + '_more' || value.key == type + '_less')
-			value.disabled = false;
-		else
-			value.disabled = true;
-	});
+	if (type !== false)
+	{
+		$.each(dashgoals_data, function(index, value) {
+			if (value.key == type + '_real' || value.key == type + '_more' || value.key == type + '_less')
+				value.disabled = false;
+			else
+				value.disabled = true;
+		});
+	}
 
 	d3.select('#dash_goals_chart1 svg')
 		.datum(dashgoals_data)
 		.transition()
 		.call(dashgoals_chart);
+	nv.utils.windowResize(dashgoals_chart.update);
 }
 
 function dashgoals_calc_sales()
