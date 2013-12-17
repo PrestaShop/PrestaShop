@@ -411,6 +411,10 @@ span.view_scroll_spacer {
 		width: 100%;
 		.form-control {
 			max-width: 230px;
+			option{
+				background: $light-background;
+				color: $description-color;
+			}
 		}
 		ul{
 			clear: both;

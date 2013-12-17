@@ -347,6 +347,9 @@ span.view_scroll_spacer {
   width: 100%; }
   #attributes .attribute_list .form-control {
     max-width: 230px; }
+    #attributes .attribute_list .form-control option {
+      background: white;
+      color: #666666; }
   #attributes .attribute_list ul {
     clear: both; }
     #attributes .attribute_list ul li {
