@@ -103,12 +103,6 @@
 				</span>
 			</li>
 			<li>
-				<span class="data_label">{l s='Order Inquiries' mod='dashactivity'}</span>
-				<span class="data_value size_l">
-					<span id="order_inquires"></span>
-				</span>
-			</li>
-			<li>
 				<span class="data_label">{l s='Product Reviews' mod='dashactivity'}</span>
 				<span class="data_value size_l">
 					<span id="product_reviews"></span>
