@@ -995,6 +995,7 @@ CREATE TABLE `PREFIX_message_readed` (
 CREATE TABLE `PREFIX_meta` (
   `id_meta` int(10) unsigned NOT NULL auto_increment,
   `page` varchar(64) NOT NULL,
+  `configurable` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_meta`),
   KEY `meta_name` (`page`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;

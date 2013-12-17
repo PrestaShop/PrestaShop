@@ -53,6 +53,7 @@ class AdminMetaControllerCore extends AdminController
 			'title' => array('title' => $this->l('Title')),
 			'url_rewrite' => array('title' => $this->l('Friendly URL'))
 		);
+		$this->_where = ' AND a.configurable = 1';
 		$this->_group = 'GROUP BY a.id_meta';
 
 		// Options to generate friendly urls
