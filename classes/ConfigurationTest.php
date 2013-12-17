@@ -168,7 +168,7 @@ class ConfigurationTestCore
 			return false;
 		}
 		$dummy = rtrim($dir, '\\/').DIRECTORY_SEPARATOR.uniqid();
-		if (false && @file_put_contents($dummy, 'test'))
+		if (@file_put_contents($dummy, 'test'))
 		{
 			@unlink($dummy);
 			if (!$recursive)
