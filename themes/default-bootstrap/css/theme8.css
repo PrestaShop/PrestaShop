@@ -6,10 +6,6 @@ body {
 .columns-container {
   background: url(../img/bg-theme7.jpg) repeat 50% 0;
 }
-
-#header {
-  background: none;
-}
 #header .header-row {
   background: #333333;
 }

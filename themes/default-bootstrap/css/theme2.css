@@ -1,14 +1,10 @@
 body{
-  background:white;
+  background: #1B1B1B;
 }
 
 .header-container,
 .columns-container {
   background: #f6f6f6;
-}
-
-#header {
-  background: none;
 }
 
 #header .header-row .shop-phone {

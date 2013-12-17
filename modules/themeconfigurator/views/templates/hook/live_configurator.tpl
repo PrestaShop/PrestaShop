@@ -41,16 +41,14 @@
 			</p>
 		</div>
 		{if isset($themes)}
-		<div id="color-box">
-			<ul>
+			<ul id="color-box">
 				{foreach $themes as $theme}
-				<li class="{$theme}">
-					<div class="color-theme1 color1"></div>
-					<div class="color-theme2 color2"> </div>
-				</li>
+					<li class="{$theme}">
+						<div class="color-theme1 color1"></div>
+						<div class="color-theme2 color2"> </div>
+					</li>
 				{/foreach}
 			</ul>
-		</div>
 		{/if}
 		<div class="list-tools">
 			<p id="font-title">
@@ -59,7 +57,7 @@
 			</p>
 		</div>
 		<div id="font-box">
-			<p>{l s='Global' mod='themeconfigurator'}</p>
+			<p>{l s='Titles' mod='themeconfigurator'}</p>
 			<select name="font" id="font" class="font-list">
 				<option value="">{l s='Choose a font' mod='themeconfigurator'}</option>
 				{foreach $fonts as $key => $font}
