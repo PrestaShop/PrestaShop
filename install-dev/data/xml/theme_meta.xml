@@ -34,13 +34,13 @@
         <theme_meta>
             <id_theme>1</id_theme>
             <id_meta>5</id_meta>
-            <left_column>0</left_column>
+            <left_column>1</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
             <id_meta>6</id_meta>
-            <left_column>0</left_column>
+            <left_column>1</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
@@ -142,7 +142,7 @@
         <theme_meta>
             <id_theme>1</id_theme>
             <id_meta>22</id_meta>
-            <left_column>0</left_column>
+            <left_column>1</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>

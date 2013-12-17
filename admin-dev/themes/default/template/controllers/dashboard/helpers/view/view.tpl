@@ -61,16 +61,16 @@
 						</button>
 					</div>
 
-					<input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom|escape}" class="form-control">
-					<input type="hidden" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" class="form-control">
+					<input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$date_from|escape}" class="form-control">
+					<input type="hidden" name="datepickerTo" id="datepickerTo" value="{$date_to|escape}" class="form-control">
 
 					<div class="form-group pull-right">
 						<button id="datepickerExpand" class="btn btn-default" type="button">
 							<i class="icon-calendar-empty"></i>
 							{l s='From'}
-							<strong class="text-info" id="datepicker-from-info">{$datepickerFrom|escape}</strong>
+							<strong class="text-info" id="datepicker-from-info">{$date_from|escape}</strong>
 							{l s='To'}
-							<strong class="text-info" id="datepicker-to-info">{$datepickerTo|escape}</strong>
+							<strong class="text-info" id="datepicker-to-info">{$date_to|escape}</strong>
 							<strong class="text-info" id="datepicker-diff-info"></strong>
 							<i class="icon-caret-down"></i>
 						</button>
