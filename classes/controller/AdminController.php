@@ -2727,15 +2727,18 @@ class AdminControllerCore extends Controller
 			if (in_array($field, array('passwd', 'no-picture')))
 				$skip = array('required');
 
-			if (isset($def['lang']) && $def['lang'] && isset($def['required']) && $def['required'])
+			if (isset($def['lang']) && $def['lang'])
 			{
-				$value = Tools::getValue($field.'_'.$default_language->id);
-				if (Tools::isEmpty($value))
-					$this->errors[$field.'_'.$default_language->id] = sprintf(
-							Tools::displayError('The field %1$s is required at least in %2$s.'),
-							$object->displayFieldName($field, $class_name),
-							$default_language->name
-					);
+				if (isset($def['required']) && $def['required'])
+				{
+					$value = Tools::getValue($field.'_'.$default_language->id);
+					if (Tools::isEmpty($value))
+						$this->errors[$field.'_'.$default_language->id] = sprintf(
+								Tools::displayError('The field %1$s is required at least in %2$s.'),
+								$object->displayFieldName($field, $class_name),
+								$default_language->name
+						);
+				}
 
 				foreach (Language::getLanguages(false) as $language)
 				{
