@@ -24,20 +24,20 @@
 
 $( document ).ready(function() {
 
-    $("[name^='checkBoxShopGroupAsso_theme']").change(function(){
+	$("[name^='checkBoxShopGroupAsso_theme']").change(function(){
 
-        $(this).parents('.tree-folder').find("[name^='checkBoxShopAsso_theme']").each(function(){
-            var id = $(this).attr('value');
-            var checked = $(this).prop('checked');
-            toggleShopModuleCheckbox(id, checked);
-        });
-    });
+		$(this).parents('.tree-folder').find("[name^='checkBoxShopAsso_theme']").each(function(){
+			var id = $(this).attr('value');
+			var checked = $(this).prop('checked');
+			toggleShopModuleCheckbox(id, checked);
+		});
+	});
 
-    $("[name^='checkBoxShopAsso_theme']").click(function(){
-        var id = $(this).attr('value');
-        var checked = $(this).prop('checked');
-        toggleShopModuleCheckbox(id, checked);
-    });
+	$("[name^='checkBoxShopAsso_theme']").click(function(){
+		var id = $(this).attr('value');
+		var checked = $(this).prop('checked');
+		toggleShopModuleCheckbox(id, checked);
+	});
 
 	//nav side bar
 	function navSidebar(){
@@ -193,6 +193,9 @@ $( document ).ready(function() {
 	//tooltip
 	$('.label-tooltip').tooltip();
 
+	//modal
+	$("#error-modal").modal("show");
+
 	//scroll top
 	function animateGoTop() {
 		if ($(window).scrollTop())
@@ -214,20 +217,19 @@ $( document ).ready(function() {
 	});
 
 
-function toggleShopModuleCheckbox(id_shop, toggle)
-{
-    var formGroup = $("[for='to_disable_shop"+id_shop+"']").parent();
-    if (toggle == true)
-    {
-        formGroup.removeClass('hide');
-        formGroup.find('input').each(function(){$(this).prop('checked', 'checked');});
-    }
-    else
-    {
-        formGroup.addClass('hide');
-        formGroup.find('input').each(function(){$(this).prop('checked', '');});
-    }
-}
+	function toggleShopModuleCheckbox(id_shop, toggle){
+		var formGroup = $("[for='to_disable_shop"+id_shop+"']").parent();
+		if (toggle == true)
+		{
+			formGroup.removeClass('hide');
+			formGroup.find('input').each(function(){$(this).prop('checked', 'checked');});
+		}
+		else
+		{
+			formGroup.addClass('hide');
+			formGroup.find('input').each(function(){$(this).prop('checked', '');});
+		}
+	}
 
 	//media queries - depends of enquire.js
 	enquire.register("screen and (max-width: 992px)", {

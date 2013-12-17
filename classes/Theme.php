@@ -148,13 +148,25 @@ class ThemeCore extends ObjectModel
 	}
 
 	/**
-	 *
+	 * @return array|bool
 	 */
 	public function getMeta()
 	{
 		if ($this->id > 0)
 		{
 			return Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'theme_meta WHERE id_theme='.$this->id);
+		}
+		return false;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function removeMeta()
+	{
+		if ($this->id > 0)
+		{
+			return Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme=' . $this->id);
 		}
 		return false;
 	}

@@ -100,12 +100,15 @@
 								{
 									var response = data.result.{$name}[i];
 									var cover = "icon-check-empty";
+									var legend = '';
 
 									if (response.cover == "1")
 										cover = "icon-check-sign";
 
-									imageLine(response.id, response.path, response.position, cover, response.shops,
-										response.legend[{$default_language|intval}])
+									if (typeof response.legend !== 'undefined' && response.legend != null)
+										legend = response.legend[{$default_language|intval}];
+
+									imageLine(response.id, response.path, response.position, cover, response.shops, legend);
 									$("#countImage").html(parseInt($("#countImage").html()) + 1);
 									$("#img" + id).remove();
 									$("#imageTable").tableDnDUpdate();
