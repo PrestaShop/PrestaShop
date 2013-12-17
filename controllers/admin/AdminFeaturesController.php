@@ -381,6 +381,7 @@ class AdminFeaturesControllerCore extends AdminController
 		if (Feature::isFeatureActive())
 		{
 			// toolbar (save, cancel, new, ..)
+			$this->initTabModuleList();
 			$this->initToolbar();
 			$this->initPageHeaderToolbar();
 			if ($this->display == 'edit' || $this->display == 'add')
