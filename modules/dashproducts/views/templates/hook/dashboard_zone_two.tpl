@@ -44,22 +44,26 @@
 			<ul class="nav nav-tabs">
 				<li class="active">
 					<a href="#dash_recent_orders" data-toggle="tab">
-						<i class="icon-fire"></i> {l s='Recent Orders'}
+						<i class="icon-fire"></i>
+						<span class="hidden-inline-xs">{l s='Recent Orders'}</span>
 					</a>
 				</li>
 				<li>
 					<a href="#dash_best_sellers" data-toggle="tab">
-						<i class="icon-trophy"></i> {l s='Best Sellers'}
+						<i class="icon-trophy"></i>
+						<span class="hidden-inline-xs">{l s='Best Sellers'}</span>
 					</a>
 				</li>
 				<li>
 					<a href="#dash_most_viewed" data-toggle="tab">
-						<i class="icon-eye-open"></i>  {l s='Most Viewed'}
+						<i class="icon-eye-open"></i>
+						<span class="hidden-inline-xs">{l s='Most Viewed'}</span>
 					</a>
 				</li>
 				<li>
 					<a href="#dash_top_search" data-toggle="tab">
-						<i class="icon-search"></i> {l s='Top Search'}
+						<i class="icon-search"></i>
+						<span class="hidden-inline-xs">{l s='Top Search'}</span>
 					</a>
 				</li>
 			</ul>
