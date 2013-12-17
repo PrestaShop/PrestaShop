@@ -548,6 +548,7 @@ class InstallModelInstall extends InstallAbstractModel
 				'gridhtml',
 				'homeslider',
 				'homefeatured',
+				'productpaymentlogos',
 				'pagesnotfound',
 				'sekeywords',
 				'statsbestcategories',
