@@ -5,5 +5,5 @@ if (!defined('_PS_VERSION_'))
 
 function upgrade_module_1_2($object)
 {
-	return ($object->unregisterHook('top') && $object->registerHook('displayNav'));
+	return ($object->registerHook('displayNav'));
 }
