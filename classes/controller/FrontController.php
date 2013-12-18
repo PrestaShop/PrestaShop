@@ -73,8 +73,8 @@ class FrontControllerCore extends Controller
 		else
 			$useSSL = $this->ssl;
 			
-		$this->display_column_left = Context::getContext()->theme->hasLeftColumn($this->php_self);
-		$this->display_column_right = Context::getContext()->theme->hasRightColumn($this->php_self);
+		$this->display_column_left = (isset($this->php_self) ? Context::getContext()->theme->hasLeftColumn($this->php_self) : true);
+		$this->display_column_right = (isset($this->php_self) ? Context::getContext()->theme->hasRightColumn($this->php_self) : true);
 	}
 
 	/**
