@@ -265,8 +265,7 @@ class AdminThemesControllerCore extends AdminController
 			if (isset($meta_object->title[(int)$this->context->language->id]) && $meta_object->title[(int)$this->context->language->id] != '')
 				$title = $meta_object->title[(int)$this->context->language->id];
 
-			$formated_metas[$meta['page']] = array(
-				'page' => $meta['page'],
+			$formated_metas[$meta['id_meta']] = array(
 				'title' => $title,
 				'left' => 0,
 				'right' => 0,
@@ -282,8 +281,8 @@ class AdminThemesControllerCore extends AdminController
 
 				foreach($theme_metas as $theme_meta)
 				{
-					$formated_metas[$theme_meta['meta_page']]['left'] = (int)$theme_meta['left_column'];
-					$formated_metas[$theme_meta['meta_page']]['right'] = (int)$theme_meta['right_column'];
+					$formated_metas[$theme_meta['id_meta']]['left'] = (int)$theme_meta['left_column'];
+					$formated_metas[$theme_meta['id_meta']]['right'] = (int)$theme_meta['right_column'];
 				}
 			}
 			$selected_theme_dir = $this->object->directory;
@@ -373,20 +372,20 @@ class AdminThemesControllerCore extends AdminController
 		foreach($formated_metas as $key => $formated_meta)
 		{
 
-			$this->fields_value[$formated_meta['page'] . '-left-meta']  = $formated_meta['left'];
-			$this->fields_value[$formated_meta['page'] . '-right-meta'] = $formated_meta['right'];
+			$this->fields_value[$key . '_left_meta']  = $formated_meta['left'];
+			$this->fields_value[$key . '_right_meta'] = $formated_meta['right'];
 			$this->fields_form['input'][]            = array(
 				'type'   => 'switch',
 				'label'  => sprintf($this->l('Left column for %1s'), $formated_meta['title']),
-				'name'   => $formated_meta['page'] . '-left-meta',
+				'name'   => $key . '_left_meta',
 				'values' => array(
 					array(
-						'id'    => $formated_meta['page'] . '-left-meta-on',
+						'id'    => $key . 'left_meta_on',
 						'value' => 1,
 						'label' => $this->l('Yes')
 					),
 					array(
-						'id'    => $formated_meta['page'] . '-left-meta-off',
+						'id'    => $key . 'left_meta_off',
 						'value' => 0,
 						'label' => $this->l('No')
 					)
@@ -395,15 +394,15 @@ class AdminThemesControllerCore extends AdminController
 			$this->fields_form['input'][] = array(
 				'type'   => 'switch',
 				'label'  => sprintf($this->l('right column for %1s'), $formated_meta['title']),
-				'name'   => $formated_meta['page'] . '-right-meta',
+				'name'   => $key . '_right_meta',
 				'values' => array(
 					array(
-						'id'    => $formated_meta['page'] . '-right-meta-on',
+						'id'    => $key . 'right_meta_on',
 						'value' => 1,
 						'label' => $this->l('Yes')
 					),
 					array(
-						'id'    => $formated_meta['page'] . '-right-meta-off',
+						'id'    => $key . 'right_meta_off',
 						'value' => 0,
 						'label' => $this->l('No')
 					)
@@ -462,15 +461,15 @@ class AdminThemesControllerCore extends AdminController
 		$query_array = array();
 		foreach($_POST as $key => $value)
 		{
-			$exploded_value = explode('-', $key);
+			$exploded_value = explode('_', $key);
 			if (count($exploded_value) == 3)
 			{
 
-				$query_array[$exploded_value[0]]['meta_page'] = $exploded_value[0];
+				$query_array[(int)$exploded_value[0]]['id_meta'] = (int)$exploded_value[0];
 				if ($exploded_value[1] == 'left')
-					$query_array[$exploded_value[0]]['left'] = (int)$value;
+					$query_array[(int)$exploded_value[0]]['left'] = (int)$value;
 				else
-					$query_array[$exploded_value[0]]['right'] = (int)$value;
+					$query_array[(int)$exploded_value[0]]['right'] = (int)$value;
 			}
 		}
 		$theme->updateMetas($query_array, true);
@@ -1295,7 +1294,7 @@ class AdminThemesControllerCore extends AdminController
 								foreach($xml->metas->meta as $meta)
 								{
 									$tmp_meta = array();
-									$tmp_meta['meta_page'] = intval($meta['meta_page']);
+									$tmp_meta['id_meta'] = intval($meta['id_meta']);
 									$tmp_meta['left'] = intval($meta['left']);
 									$tmp_meta['right'] = intval($meta['right']);
 									$metas[] = $tmp_meta;

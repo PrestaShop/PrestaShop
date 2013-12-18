@@ -132,11 +132,11 @@ class ThemeCore extends ObjectModel
 			foreach ($metas as $meta)
 			{
 				if (!$full_update)
-					Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme=' . $this->id . ' AND meta_page=' . $meta['meta_page']);
+					Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme=' . $this->id . ' AND id_meta=' . $meta['id_meta']);
 
 				$values[] = array(
 					'id_theme'     => $this->id,
-					'meta_page'      => $meta['meta_page'],
+					'id_meta'      => $meta['id_meta'],
 					'left_column'  => (int)$meta['left'],
 					'right_column' => (int)$meta['right']
 				);
@@ -153,7 +153,7 @@ class ThemeCore extends ObjectModel
 			SELECT left_column
 			FROM '._DB_PREFIX_.'theme t
 			LEFT JOIN '._DB_PREFIX_.'theme_meta tm ON (t.id_theme = tm.id_theme)
-			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.page = tm.meta_page)
+			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta)
 			WHERE t.id_theme='.(int)$this->id.' AND m.page=\''.pSQL($page).'\'
 		');
 	}
@@ -164,7 +164,7 @@ class ThemeCore extends ObjectModel
 			SELECT right_column
 			FROM '._DB_PREFIX_.'theme t
 			LEFT JOIN '._DB_PREFIX_.'theme_meta tm ON (t.id_theme = tm.id_theme)
-			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.page = tm.meta_page)
+			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta)
 			WHERE t.id_theme='.(int)$this->id.' AND m.page=\''.pSQL($page).'\'
 		');
 	}
