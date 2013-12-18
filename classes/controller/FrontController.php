@@ -851,48 +851,51 @@ class FrontControllerCore extends Controller
 			'stock_management' => (int)$stock_management));
 	}
 
-	public function pagination($nb_products = null)
+	public function pagination($total_products = null)
 	{
 		if (!self::$initialized)
 			$this->init();
 		elseif (!$this->context)
 			$this->context = Context::getContext();
 
-		if (!$nb_products || Validate::isUnsignedInt($nb_products))
-			$nb_products = max(1, (int)Configuration::get('PS_PRODUCTS_PER_PAGE'));
+		// Retrieve the default number of products per page and the other available selections
+		$default_products_per_page = max(1, (int)Configuration::get('PS_PRODUCTS_PER_PAGE'));
+		$nArray = array($default_products_per_page, $default_products_per_page * 2, $default_products_per_page * 5);
+		
+		// Retrieve the current number of products per page (either the default, the GET parameter or the one in the cookie)
+		$this->n = $default_products_per_page;
+		if ((int)Tools::getValue('n') > 0 && in_array((int)Tools::getValue('n'), $nArray))
+			$this->n = (int)Tools::getValue('n');
+		elseif (isset($this->context->cookie->nb_item_per_page) && in_array($this->context->cookie->nb_item_per_page, $nArray))
+			$this->n = (int)$this->context->cookie->nb_item_per_page;
 
-		$nArray = array($nb_products, $nb_products * 2, $nb_products * 5);
-		$this->n = abs((int)Tools::getValue('n', ((isset($this->context->cookie->nb_item_per_page) && in_array($this->context->cookie->nb_item_per_page, $nArray)) ? $this->context->cookie->nb_item_per_page : $nb_products)));
-		$this->p = abs((int)Tools::getValue('p', 1));
-
-		if (!is_numeric(Tools::getValue('p', 1)) || Tools::getValue('p', 1) < 0)
+		// Retrieve the page number (either the GET parameter or the first page)
+		$this->p = (int)Tools::getValue('p', 1);
+		// If the parameter is not correct then redirect (do not merge with the previous line, the redirect is required in order to avoid duplicate content)
+		if (!is_numeric($this->p) || $this->p < 1)
 			Tools::redirect(self::$link->getPaginationLink(false, false, $this->n, false, 1, false));
 
-		$current_url = Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']);
-		//delete parameter page
-		$current_url = preg_replace('/(\?)?(&amp;)?p=\d+/', '$1', $current_url);
+		// Remove the page parameter in order to get a clean URL for the pagination template
+		$current_url = preg_replace('/(\?)?(&amp;)?p=\d+/', '$1', Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']));
 
-		$range = 2; /* how many pages around page selected */
-
-		if ($this->p < 1)
-			$this->p = 1;
-
-		if (isset($this->context->cookie->nb_item_per_page) && $this->n != $this->context->cookie->nb_item_per_page && in_array($this->n, $nArray))
+		if ($this->n != $default_products_per_page)
 			$this->context->cookie->nb_item_per_page = $this->n;
 
-		$pages_nb = ceil($nb_products / (int)$this->n);
-		if ($this->p > $pages_nb && $nb_products != 0)
+		$pages_nb = ceil($total_products / (int)$this->n);
+		if ($this->p > $pages_nb && $total_products != 0)
 			Tools::redirect(self::$link->getPaginationLink(false, false, $this->n, false, $pages_nb, false));
 
+		$range = 2; /* how many pages around page selected */
 		$start = (int)($this->p - $range);
 		if ($start < 1)
 			$start = 1;
 		$stop = (int)($this->p + $range);
 		if ($stop > $pages_nb)
 			$stop = (int)$pages_nb;
-		$this->context->smarty->assign('nb_products', $nb_products);
-		$pagination_infos = array(
-			'products_per_page' => (int)Configuration::get('PS_PRODUCTS_PER_PAGE'),
+
+		$this->context->smarty->assign(array(
+			'nb_products' => $total_products,
+			'products_per_page' => $this->n,
 			'pages_nb' => $pages_nb,
 			'p' => $this->p,
 			'n' => $this->n,
@@ -901,8 +904,7 @@ class FrontControllerCore extends Controller
 			'start' => $start,
 			'stop' => $stop,
 			'current_url' => $current_url
-		);
-		$this->context->smarty->assign($pagination_infos);
+		));
 	}
 
 	public static function getCurrentCustomerGroups()
