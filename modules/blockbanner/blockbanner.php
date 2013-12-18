@@ -46,9 +46,20 @@ class BlockBanner extends Module
 
 	public function install()
 	{
-		Configuration::updateValue('BLOCKBANNER_IMG', 'sale70.gif');
-		Configuration::updateValue('BLOCKBANNER_LINK', '');
-		Configuration::updateValue('BLOCKBANNER_DESC', '');
+		$languages = Language::getLanguages(false);
+		$values = array();
+
+		foreach ($languages as $lang)
+		{
+			$values['BLOCKBANNER_IMG'][$lang['id_lang']] = 'sale70.gif';
+			$values['BLOCKBANNER_LINK'][$lang['id_lang']] = '';
+			$values['BLOCKBANNER_DESC'][$lang['id_lang']] = '';
+		}
+
+		Configuration::updateValue('BLOCKBANNER_IMG', $values['BLOCKBANNER_IMG']);
+		Configuration::updateValue('BLOCKBANNER_LINK', $values['BLOCKBANNER_LINK']);
+		Configuration::updateValue('BLOCKBANNER_DESC', $values['BLOCKBANNER_DESC']);
+
 		return parent::install() && $this->registerHook('displayBanner') && $this->registerHook('displayHeader');
 	}
 
@@ -64,15 +75,17 @@ class BlockBanner extends Module
 	{
 		if (!$this->isCached('blockbanner.tpl', $this->getCacheId()))
 		{
-			if (file_exists(_PS_MODULE_DIR_.'blockbanner'.DIRECTORY_SEPARATOR.Configuration::get('BLOCKBANNER_IMG')))
-				$this->smarty->assign('banner_img', Configuration::get('BLOCKBANNER_IMG'));
-			$this->smarty->assign('banner_link', Configuration::get('BLOCKBANNER_LINK'));
-			$this->smarty->assign('banner_desc', Configuration::get('BLOCKBANNER_DESC'));
+			if (file_exists(_PS_MODULE_DIR_.'blockbanner'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR
+				.Configuration::get('BLOCKBANNER_IMG', $this->context->language->id)))
+				$this->smarty->assign('banner_img', 'img/'.Configuration::get('BLOCKBANNER_IMG', $this->context->language->id));
+
+			$this->smarty->assign('banner_link', Configuration::get('BLOCKBANNER_LINK', $this->context->language->id));
+			$this->smarty->assign('banner_desc', Configuration::get('BLOCKBANNER_DESC', $this->context->language->id));
 			$sql = 'SELECT COUNT(*)
 					FROM '._DB_PREFIX_.'store s'
 					.Shop::addSqlAssociation('store', 's');
 			$total = Db::getInstance()->getValue($sql);
-			
+
 			if ($total <= 0)
 				return;
 		}
@@ -99,28 +112,50 @@ class BlockBanner extends Module
 	{
 		if (Tools::isSubmit('submitStoreConf'))
 		{
-			if (isset($_FILES['BLOCKBANNER_IMG']) && isset($_FILES['BLOCKBANNER_IMG']['tmp_name']) && !empty($_FILES['BLOCKBANNER_IMG']['tmp_name']))
+			$languages = Language::getLanguages(false);
+			$values = array();
+			$update_images_values = false;
+
+			foreach ($languages as $lang)
 			{
-				if ($error = ImageManager::validateUpload($_FILES['BLOCKBANNER_IMG'], 4000000))
-					return $this->displayError($this->l('Invalid image'));
-				else
+				if (isset($_FILES['BLOCKBANNER_IMG_'.$lang['id_lang']])
+					&& isset($_FILES['BLOCKBANNER_IMG_'.$lang['id_lang']]['tmp_name'])
+					&& !empty($_FILES['BLOCKBANNER_IMG_'.$lang['id_lang']]['tmp_name']))
 				{
-					$ext = substr($_FILES['BLOCKBANNER_IMG']['name'], strrpos($_FILES['BLOCKBANNER_IMG']['name'], '.') + 1);
-					$file_name = md5($_FILES['BLOCKBANNER_IMG']['name']).'.'.$ext;
-					if (!move_uploaded_file($_FILES['BLOCKBANNER_IMG']['tmp_name'], dirname(__FILE__).'/'.$file_name))
-						return $this->displayError($this->l('An error occurred while attempting to upload the file.'));
+					if ($error = ImageManager::validateUpload($_FILES['BLOCKBANNER_IMG_'.$lang['id_lang']], 4000000))
+						return $this->displayError($this->l('Invalid image'));
 					else
 					{
-						if (Configuration::hasContext('BLOCKBANNER_IMG', null, Shop::getContext()) && Configuration::get('BLOCKBANNER_IMG') != $file_name)
-							@unlink(dirname(__FILE__).'/'.Configuration::get('BLOCKBANNER_IMG'));
-						Configuration::updateValue('BLOCKBANNER_IMG', $file_name);
-						$this->_clearCache('blockbanner.tpl');
-						return $this->displayConfirmation($this->l('The settings have been updated.'));
+						$ext = substr($_FILES['BLOCKBANNER_IMG_'.$lang['id_lang']]['name'], strrpos($_FILES['BLOCKBANNER_IMG_'.$lang['id_lang']]['name'], '.') + 1);
+						$file_name = md5($_FILES['BLOCKBANNER_IMG_'.$lang['id_lang']]['name']).'.'.$ext;
+
+						if (!move_uploaded_file($_FILES['BLOCKBANNER_IMG_'.$lang['id_lang']]['tmp_name'], dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$file_name))
+							return $this->displayError($this->l('An error occurred while attempting to upload the file.'));
+						else
+						{
+							if (Configuration::hasContext('BLOCKBANNER_IMG', $lang['id_lang'], Shop::getContext())
+								&& Configuration::get('BLOCKBANNER_IMG', $lang['id_lang']) != $file_name)
+								@unlink(dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.Configuration::get('BLOCKBANNER_IMG', $lang['id_lang']));
+
+							$values['BLOCKBANNER_IMG'][$lang['id_lang']] = $file_name;
+						}
 					}
+
+					$update_images_values = true;
 				}
+
+				$values['BLOCKBANNER_LINK'][$lang['id_lang']] = Tools::getValue('BLOCKBANNER_LINK_'.$lang['id_lang']);
+				$values['BLOCKBANNER_DESC'][$lang['id_lang']] = Tools::getValue('BLOCKBANNER_DESC_'.$lang['id_lang']);
 			}
-			Configuration::updateValue('BLOCKBANNER_LINK', Tools::getValue('BLOCKBANNER_LINK'));
-			Configuration::updateValue('BLOCKBANNER_DESC', Tools::getValue('BLOCKBANNER_DESC'));
+
+			if ($update_images_values)
+				Configuration::updateValue('BLOCKBANNER_IMG', $values['BLOCKBANNER_IMG']);
+
+			Configuration::updateValue('BLOCKBANNER_LINK', $values['BLOCKBANNER_LINK']);
+			Configuration::updateValue('BLOCKBANNER_DESC', $values['BLOCKBANNER_DESC']);
+
+			$this->_clearCache('blockbanner.tpl');
+			return $this->displayConfirmation($this->l('The settings have been updated.'));
 		}
 		return '';
 	}
@@ -141,20 +176,22 @@ class BlockBanner extends Module
 				),
 				'input' => array(
 					array(
-						'type' => 'file',
+						'type' => 'file_lang',
 						'label' => $this->l('Block image'),
 						'name' => 'BLOCKBANNER_IMG',
 						'desc' => $this->l('Please upload banner image'),
-						'thumb' => '../modules/'.$this->name.'/'.Configuration::get('BLOCKBANNER_IMG'),
+						'lang' => true,
 					),
 					array(
 						'type' => 'text',
+						'lang' => true,
 						'label' => $this->l('Image Link'),
 						'name' => 'BLOCKBANNER_LINK',
 						'desc' => $this->l('Please input banner link')
 					),			
 					array(
 						'type' => 'text',
+						'lang' => true,
 						'label' => $this->l('Image description'),
 						'name' => 'BLOCKBANNER_DESC',
 						'desc' => $this->l('Please input banner image description')
@@ -165,18 +202,20 @@ class BlockBanner extends Module
 				'class' => 'btn btn-default')
 			),
 		);
-		
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 		$helper->default_form_language = $lang->id;
+		$helper->module = $this;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
 		$helper->identifier = $this->identifier;
 		$helper->submit_action = 'submitStoreConf';
 		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
 		$helper->token = Tools::getAdminTokenLite('AdminModules');
 		$helper->tpl_vars = array(
+			'uri' => $this->getPathUri(),
 			'fields_value' => $this->getConfigFieldsValues(),
 			'languages' => $this->context->controller->getLanguages(),
 			'id_language' => $this->context->language->id
@@ -187,10 +226,16 @@ class BlockBanner extends Module
 	
 	public function getConfigFieldsValues()
 	{
-		return array(
-			'BLOCKBANNER_IMG' => Tools::getValue('BLOCKBANNER_IMG', Configuration::get('BLOCKBANNER_IMG')),
-			'BLOCKBANNER_LINK' => Tools::getValue('BLOCKBANNER_LINK', Configuration::get('BLOCKBANNER_LINK')),
-			'BLOCKBANNER_DESC' => Tools::getValue('BLOCKBANNER_DESC', Configuration::get('BLOCKBANNER_DESC')),
-		);
+		$languages = Language::getLanguages(false);
+		$fields = array();
+
+		foreach ($languages as $lang)
+		{
+			$fields['BLOCKBANNER_IMG'][$lang['id_lang']] = Tools::getValue('BLOCKBANNER_IMG_'.$lang['id_lang'], Configuration::get('BLOCKBANNER_IMG', $lang['id_lang']));
+			$fields['BLOCKBANNER_LINK'][$lang['id_lang']] = Tools::getValue('BLOCKBANNER_LINK_'.$lang['id_lang'], Configuration::get('BLOCKBANNER_LINK', $lang['id_lang']));
+			$fields['BLOCKBANNER_DESC'][$lang['id_lang']] = Tools::getValue('BLOCKBANNER_DESC_'.$lang['id_lang'], Configuration::get('BLOCKBANNER_DESC', $lang['id_lang']));
+		}
+
+		return $fields;
 	}
 }
