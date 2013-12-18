@@ -16,7 +16,6 @@ a:hover
 body
 	min-width: 320px
 	height: 100%
-	background: $dark-background
 	line-height: 18px
 	font-size: 13px
 	color: $base-body-color
@@ -30,6 +29,7 @@ textarea
 #header
 	z-index: 10
 .columns-container
+	padding-top: 15px
 	background: $light-background
 #columns
 	z-index: 1
@@ -44,7 +44,7 @@ header
 	z-index: 1
 	position: relative
 	background: $light-background
-	padding-bottom: 20px
+	padding-bottom: 15px
 	#banner-row
 		background: black
 	#nav-row
@@ -80,7 +80,6 @@ header
 			#searchbox
 				float: left
 				width: 100%
-				background-color: red
 		#header_user
 			@extend .col-sm-4
 			@extend .clearfix
@@ -189,6 +188,7 @@ header
 				padding-left: 5px
 				padding-right: 5px
 	#contact-link a,
+	.header_user_info a,
 	#header-row .header_user_info a,
 	#currencies-block-top div.current,
 	#languages-block-top div.current
@@ -789,12 +789,12 @@ table.table_block td
 	text-transform: uppercase
 	padding: 9px 0 7px
 	text-shadow: 1px 1px rgba(0,0,0,0.24)
-	width: 113px
+	width: 130px
 	text-align: center
 	display: block
 	position: absolute
-	right: -33px
-	top: 6px
+	right: -36px
+	top: 11px
 	z-index: 1
 	@include rotate(45deg)
 	&:before
@@ -1238,6 +1238,7 @@ ul.footer_links
 				color: $GL-text-color
 				font-size: 11px
 				line-height: 14px
+				cursor: pointer
 				i
 					display: block
 					font-size: 24px
@@ -1245,13 +1246,14 @@ ul.footer_links
 					line-height: 24px
 					margin-bottom: -3px
 					color: $GL-icon-color	
-			a:hover,
+				&:hover
+					i
+						color: lighten($GL-icon-color-hover,30%)
 			&.selected
+				a
+					cursor: default
 				i
 					color: $GL-icon-color-hover
-			&.selected
-				a 
-					cursor: default
 			&.display-title
 				font-weight: bold
 				color: $base-text-color
@@ -1699,7 +1701,7 @@ div.star a:hover
 	padding: 0 0 100px 0
 	// min 768px
 	@media (min-width: $screen-sm)
-		background: url(../img/footer-bg.gif) repeat-x
+		background: url(../img/footer-bg.gif) repeat-x $dark-background
 	#footer
 		color: #777
 		position: relative

@@ -57,7 +57,7 @@
       <value>&gt;</value>
     </configuration>
     <configuration id="PS_PRODUCTS_PER_PAGE" name="PS_PRODUCTS_PER_PAGE">
-      <value>10</value>
+      <value>12</value>
     </configuration>
     <configuration id="PS_PURCHASE_MINIMUM" name="PS_PURCHASE_MINIMUM">
       <value>0</value>

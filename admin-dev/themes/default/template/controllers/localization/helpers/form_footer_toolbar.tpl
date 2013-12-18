@@ -25,6 +25,9 @@
 
 {if $show_toolbar}
 <div class="panel-footer" id="toolbar-footer">
+	<button id="desc-{$table}-import" class="btn btn-default" type="submit" name="submitLocalizationPack">
+		<i class="process-icon-import" ></i> <span>{l s='Import'}</span>
+	</button>
 	{foreach from=$toolbar_btn item=btn key=k}
 		{if $k != 'modules-list'}
 			<a id="desc-{if $k=='save' || $k=='save-and-stay'}{if isset($submit_id_prefix)}{$submit_id_prefix}{else}{$table}{/if}{/if}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="btn btn-default{if $k=='save' || $k=='save-and-stay'} pull-right{/if}" href="{if isset($btn.href)}{$btn.href}{else}#{/if}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>

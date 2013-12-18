@@ -3802,7 +3802,6 @@ a:hover {
 body {
   min-width: 320px;
   height: 100%;
-  background: #333333;
   line-height: 18px;
   font-size: 13px;
   color: #777777; }
@@ -3816,6 +3815,7 @@ textarea {
   z-index: 10; }
 
 .columns-container {
+  padding-top: 15px;
   background: white; }
 
 #columns {
@@ -3827,7 +3827,7 @@ header {
   z-index: 1;
   position: relative;
   background: white;
-  padding-bottom: 20px; }
+  padding-bottom: 15px; }
   header #banner-row {
     background: black; }
   header #nav-row {
@@ -3860,8 +3860,7 @@ header {
             margin: 0 auto; } }
     header #header-row #search_block_top #searchbox {
       float: left;
-      width: 100%;
-      background-color: red; }
+      width: 100%; }
     header #header-row #block_top_menu {
       padding-top: 25px; }
   header .header_user_info {
@@ -3976,11 +3975,14 @@ header {
           padding-left: 5px;
           padding-right: 5px; } }
   header #contact-link a,
+  header .header_user_info a,
   header #header-row .header_user_info a,
   header #currencies-block-top div.current,
   header #languages-block-top div.current {
     cursor: pointer; }
     header #contact-link a:hover, header #contact-link a.active,
+    header .header_user_info a:hover,
+    header .header_user_info a.active,
     header #header-row .header_user_info a:hover,
     header #header-row .header_user_info a.active,
     header #currencies-block-top div.current:hover,
@@ -4596,12 +4598,12 @@ table.table_block td {
   text-transform: uppercase;
   padding: 9px 0 7px;
   text-shadow: 1px 1px rgba(0, 0, 0, 0.24);
-  width: 113px;
+  width: 130px;
   text-align: center;
   display: block;
   position: absolute;
-  right: -33px;
-  top: 6px;
+  right: -36px;
+  top: 11px;
   z-index: 1;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
@@ -5050,7 +5052,8 @@ ul.footer_links {
     .content_sortPagiBar .display_m li a {
       color: gray;
       font-size: 11px;
-      line-height: 14px; }
+      line-height: 14px;
+      cursor: pointer; }
       .content_sortPagiBar .display li a i,
       .content_sortPagiBar .display_m li a i {
         display: block;
@@ -5059,13 +5062,15 @@ ul.footer_links {
         line-height: 24px;
         margin-bottom: -3px;
         color: #e1e0e0; }
-    .content_sortPagiBar .display li a:hover i, .content_sortPagiBar .display li.selected i,
-    .content_sortPagiBar .display_m li a:hover i,
-    .content_sortPagiBar .display_m li.selected i {
-      color: #333333; }
+      .content_sortPagiBar .display li a:hover i,
+      .content_sortPagiBar .display_m li a:hover i {
+        color: gray; }
     .content_sortPagiBar .display li.selected a,
     .content_sortPagiBar .display_m li.selected a {
       cursor: default; }
+    .content_sortPagiBar .display li.selected i,
+    .content_sortPagiBar .display_m li.selected i {
+      color: #333333; }
     .content_sortPagiBar .display li.display-title,
     .content_sortPagiBar .display_m li.display-title {
       font-weight: bold;
@@ -5560,7 +5565,7 @@ div.star a:hover {
   padding: 0 0 100px 0; }
   @media (min-width: 768px) {
     .footer-container {
-      background: url(../img/footer-bg.gif) repeat-x; } }
+      background: url(../img/footer-bg.gif) repeat-x #333333; } }
   .footer-container #footer {
     color: #777777;
     position: relative; }
