@@ -310,14 +310,9 @@ class AdminLocalizationControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
-	public function initPageHeaderToolbar()
-	{
-		parent::initPageHeaderToolbar();
-		$this->page_header_toolbar_btn = array();
-	}
-
 	public function initContent()
 	{
+		$this->initTabModuleList();
 		if (!$this->loadObject(true))
 			return;
 	
