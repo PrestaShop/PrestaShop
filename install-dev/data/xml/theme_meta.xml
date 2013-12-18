@@ -2,164 +2,170 @@
 <entity_theme_meta>
     <fields>
         <field name="id_theme"/>
-        <field name="meta_page"/>
+        <field name="id_meta"/>
         <field name="left_column"/>
         <field name="right_column"/>
     </fields>
     <entities>
         <theme_meta>
+        <id_theme>1</id_theme>
+        <id_meta>1</id_meta>
+        <left_column>0</left_column>
+        <right_column>0</right_column>
+    </theme_meta>
+        <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>404</meta_page>
+            <id_meta>2</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>best-sales</meta_page>
+            <id_meta>3</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>contact</meta_page>
+            <id_meta>4</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>index</meta_page>
+            <id_meta>5</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>manufacturer</meta_page>
-            <left_column>1</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>new-products</meta_page>
-            <left_column>1</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>password</meta_page>
+            <id_meta>6</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>prices-drop</meta_page>
+            <id_meta>7</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>sitemap</meta_page>
+            <id_meta>8</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>supplier</meta_page>
+            <id_meta>1</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>address</meta_page>
+            <id_meta>9</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>addresses</meta_page>
+            <id_meta>10</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>authentication</meta_page>
+            <id_meta>11</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>cart</meta_page>
+            <id_meta>12</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>discount</meta_page>
+            <id_meta>13</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>history</meta_page>
+            <id_meta>14</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>identity</meta_page>
+            <id_meta>15</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>my-account</meta_page>
+            <id_meta>16</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>order-follow</meta_page>
+            <id_meta>17</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>order-slip</meta_page>
+            <id_meta>18</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>order</meta_page>
+            <id_meta>19</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>search</meta_page>
-            <left_column>1</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>stores</meta_page>
+            <id_meta>20</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>order-opc</meta_page>
+            <id_meta>21</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>guest-tracking</meta_page>
+            <id_meta>22</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
         <theme_meta>
             <id_theme>1</id_theme>
-            <meta_page>order-confirmation</meta_page>
+            <id_meta>23</id_meta>
+            <left_column>0</left_column>
+            <right_column>0</right_column>
+        </theme_meta>
+        <theme_meta>
+            <id_theme>1</id_theme>
+            <id_meta>24</id_meta>
+            <left_column>0</left_column>
+            <right_column>0</right_column>
+        </theme_meta>
+        <theme_meta>
+            <id_theme>1</id_theme>
+            <id_meta>25</id_meta>
+            <left_column>0</left_column>
+            <right_column>0</right_column>
+        </theme_meta>
+        <theme_meta>
+            <id_theme>1</id_theme>
+            <id_meta>26</id_meta>
             <left_column>0</left_column>
             <right_column>0</right_column>
         </theme_meta>
