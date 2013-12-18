@@ -153,7 +153,7 @@ class ThemeCore extends ObjectModel
 			SELECT left_column
 			FROM '._DB_PREFIX_.'theme t
 			LEFT JOIN '._DB_PREFIX_.'theme_meta tm ON (t.id_theme = tm.id_theme)
-			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta)
+			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.page = tm.meta_page)
 			WHERE t.id_theme='.(int)$this->id.' AND m.page=\''.pSQL($page).'\'
 		');
 	}
@@ -164,7 +164,7 @@ class ThemeCore extends ObjectModel
 			SELECT right_column
 			FROM '._DB_PREFIX_.'theme t
 			LEFT JOIN '._DB_PREFIX_.'theme_meta tm ON (t.id_theme = tm.id_theme)
-			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta)
+			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.page = tm.meta_page)
 			WHERE t.id_theme='.(int)$this->id.' AND m.page=\''.pSQL($page).'\'
 		');
 	}
