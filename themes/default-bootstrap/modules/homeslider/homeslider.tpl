@@ -30,9 +30,10 @@
 			<ul id="homeslider">
 				{foreach from=$homeslider_slides item=slide}
 					{if $slide.active}
-						<li>
-							<a href="{$slide.url|escape:'html':'UTF-8'}" title="{$slide.description|escape:'html':'UTF-8'}">
-								<img src="{$smarty.const._MODULE_DIR_}homeslider/images/{$slide.image|escape:'html':'UTF-8'}" alt="{$slide.legend|escape:'html':'UTF-8'}"  />
+						<li class="homeslider-container">
+							<a href="{$slide.url|escape:'html':'UTF-8'}" title="{$slide.legend|escape:'html':'UTF-8'}">
+								<img class="homeslider-image" src="{$smarty.const._MODULE_DIR_}homeslider/images/{$slide.image|escape:'html':'UTF-8'}" alt="{$slide.legend|escape:'html':'UTF-8'}"  />
+								<div class="homeslider-description">{$slide.description}</div>
 							</a>
 						</li>
 					{/if}
