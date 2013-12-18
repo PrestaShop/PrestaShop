@@ -32,7 +32,6 @@ function addToCompare(productId) {
 	else {
 		action = 'remove';
 	}
-
 	$.ajax({
 		url: 'index.php?controller=products-comparison&ajax=1&action='+action+'&id_product=' + productId,
 		async: true,
@@ -55,12 +54,13 @@ function addToCompare(productId) {
 			else {
 				alert(max_item);
 			}
+			totalCompareButtons();
 		},
 		error: function(){}
 	});
 }
 
-function compareButtonsStatusRefresh(){
+function compareButtonsStatusRefresh() {
 	$('.addToCompare').each(function() {
 		if ($.inArray(parseInt($(this).data('id-product')),comparedProductsIds)!== -1) {
 			$(this).addClass('checked');
@@ -71,9 +71,18 @@ function compareButtonsStatusRefresh(){
 	});
 }
 
+function totalCompareButtons() {
+	var totalProductsToCompare = parseInt($('.bt_compare .total-compare-val').html());
+	if (typeof totalProductsToCompare !== "number" || totalProductsToCompare === 0) {
+		$('.bt_compare').attr("disabled",true);
+	}
+	else {
+		$('.bt_compare').attr("disabled",false);
+	}
+}
+
 function totalValue(value) {
 	$('.bt_compare').find('.total-compare-val').html(value);
-	$('.bt_compare_bottom').find('.total-compare-val').html(value);
 }
 
 reloadProductComparison = function() {
@@ -92,4 +101,5 @@ reloadProductComparison = function() {
 
 $(document).ready(function() {
 	compareButtonsStatusRefresh();
+	totalCompareButtons();
 });
