@@ -601,7 +601,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$extensions = array('.pdf', '.txt');
 
-		if (isset($_FILES['documentation']))
+		if (isset($_FILES['documentation']) && $_FILES['documentation']['name'] != '')
 		{
 			$extension = strrchr($_FILES['documentation']['name'], '.');
 			$name = Tools::getValue('documentationName');
@@ -740,8 +740,10 @@ class AdminThemesControllerCore extends AdminController
 
 		foreach ($metas as $row)
 		{
+			$meta_obj = New Meta((int)$row['id_meta']);
+
 			$meta_xml = $metas_xml->addChild('meta');
-			$meta_xml->addAttribute('id_meta', $row['id_meta']);
+			$meta_xml->addAttribute('meta_page', $meta_obj->page);
 			$meta_xml->addAttribute('left', $row['left_column']);
 			$meta_xml->addAttribute('right', $row['right_column']);
 		}
@@ -900,7 +902,7 @@ class AdminThemesControllerCore extends AdminController
 								$this->to_hook[] = $string.';'.$tmp['name_hook'].';'.$tmp['position'].';'.$tmp['exceptions'];
 
 				$theme_to_export = New Theme((int)Tools::getValue('id_theme_export'));
-				$metas = $theme_to_export->getMeta();
+				$metas = $theme_to_export->getMetas();
 
 				$this->generateXML($metas);
 				$this->generateArchive();
@@ -1286,21 +1288,25 @@ class AdminThemesControllerCore extends AdminController
 							$this->recurseCopy($sandbox . 'uploaded/doc/', $theme_doc_dir);
 							$this->recurseCopy($sandbox . 'uploaded/modules/', _PS_MODULE_DIR_);
 
-							$new_theme->add();
 
-							$metas = array();
+							$metas_xml = array();
 							if (isset($xml->metas))
 							{
 								foreach($xml->metas->meta as $meta)
 								{
-									$tmp_meta = array();
-									$tmp_meta['id_meta'] = intval($meta['id_meta']);
-									$tmp_meta['left'] = intval($meta['left']);
-									$tmp_meta['right'] = intval($meta['right']);
-									$metas[] = $tmp_meta;
+									$meta_id = Db::getInstance()->getValue('SELECT id_meta FROM '._DB_PREFIX_.'meta WHERE page=\''.pSQL($meta['meta_page']).'\'');
+									if ((int)$meta_id > 0)
+									{
+										$tmp_meta = array();
+										$tmp_meta['id_meta'] = (int)$meta_id;
+										$tmp_meta['left'] = intval($meta['left']);
+										$tmp_meta['right'] = intval($meta['right']);
+										$metas_xml[] = $tmp_meta;
+									}
 								}
 							}
-							$new_theme->updateMetas($metas);
+							$new_theme->add();
+							$new_theme->updateMetas($metas_xml);
 
 
 						}

@@ -73,8 +73,8 @@ class FrontControllerCore extends Controller
 		else
 			$useSSL = $this->ssl;
 			
-		$this->display_column_left = Context::getContext()->theme->hasLeftColumn($this->php_self);
-		$this->display_column_right = Context::getContext()->theme->hasRightColumn($this->php_self);
+		$this->display_column_left = (isset($this->php_self) ? Context::getContext()->theme->hasLeftColumn($this->php_self) : true);
+		$this->display_column_right = (isset($this->php_self) ? Context::getContext()->theme->hasRightColumn($this->php_self) : true);
 	}
 
 	/**
@@ -1168,7 +1168,7 @@ class FrontControllerCore extends Controller
   				);
 	}
 	
-	protected function addColorsToProductList(&$products)
+	public function addColorsToProductList(&$products)
 	{
 		if (!is_array($products) || !count($products) || !file_exists(_PS_THEME_DIR_.'product-list-colors.tpl'))
 			return;
