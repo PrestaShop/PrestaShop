@@ -24,3 +24,5 @@ CREATE TABLE IF NOT EXISTS `PREFIX_theme_meta` (
   KEY `id_theme` (`id_theme`),
   KEY `id_meta` (`id_meta`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+ALTER TABLE `PREFIX_meta` ADD `configurable` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER `page`;
