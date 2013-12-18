@@ -29,6 +29,7 @@ textarea
 #header
 	z-index: 10
 .columns-container
+	padding-top: 15px
 	background: $light-background
 #columns
 	z-index: 1
@@ -42,8 +43,8 @@ textarea
 header
 	z-index: 1
 	position: relative
-	//background: $light-background
-	padding-bottom: 20px
+	background: $light-background
+	padding-bottom: 15px
 	#banner-row
 		background: black
 	#nav-row
@@ -79,7 +80,6 @@ header
 			#searchbox
 				float: left
 				width: 100%
-				background-color: red
 		#header_user
 			@extend .col-sm-4
 			@extend .clearfix
@@ -188,6 +188,7 @@ header
 				padding-left: 5px
 				padding-right: 5px
 	#contact-link a,
+	.header_user_info a,
 	#header-row .header_user_info a,
 	#currencies-block-top div.current,
 	#languages-block-top div.current
@@ -779,21 +780,21 @@ table.table_block td
 		border-color: #21a3d8 transparent transparent transparent
 		content: "."
 		text-indent: -5000px
-		@include rotate(145deg)
+		@include rotate(135deg)
 
 .sale-label
-	font: 700 15px/18px $font-family
+	font: 700 14px/12px $font-family
 	color: $light-text-color
 	background: #f13340
 	text-transform: uppercase
 	padding: 9px 0 7px
 	text-shadow: 1px 1px rgba(0,0,0,0.24)
-	width: 113px
+	width: 130px
 	text-align: center
 	display: block
 	position: absolute
 	right: -33px
-	top: 6px
+	top: 16px
 	z-index: 1
 	@include rotate(45deg)
 	&:before
@@ -819,7 +820,7 @@ table.table_block td
 		border-color: #ad2b34 transparent transparent transparent
 		content: "."
 		text-indent: -5000px
-		@include rotate(136deg)
+		@include rotate(135deg)
 
 .ie8
 	.new-label
@@ -1237,6 +1238,7 @@ ul.footer_links
 				color: $GL-text-color
 				font-size: 11px
 				line-height: 14px
+				cursor: pointer
 				i
 					display: block
 					font-size: 24px
@@ -1244,13 +1246,14 @@ ul.footer_links
 					line-height: 24px
 					margin-bottom: -3px
 					color: $GL-icon-color	
-			a:hover,
+				&:hover
+					i
+						color: lighten($GL-icon-color-hover,30%)
 			&.selected
+				a
+					cursor: default
 				i
 					color: $GL-icon-color-hover
-			&.selected
-				a 
-					cursor: default
 			&.display-title
 				font-weight: bold
 				color: $base-text-color

@@ -857,6 +857,7 @@ class HomeSlider extends Module
 						'type' => 'textarea',
 						'label' => $this->l('Description:'),
 						'name' => 'description',
+						'autoload_rte' => true,
 						'lang' => true,
 					),
 					array(

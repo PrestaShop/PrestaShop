@@ -33,6 +33,15 @@
 /*****************************************************************************
 						BXSlider Styles
 ********************************************************************************/
+#homepage-slider .homeslider-container {
+  height: 447px;
+  position: relative; }
+#homepage-slider .homeslider-image {
+  position: absolute;
+  left: 0;
+  top: 0; }
+#homepage-slider .homeslider-description {
+  position: absolute; }
 #homepage-slider .bx-wrapper {
   position: relative;
   padding: 0;
