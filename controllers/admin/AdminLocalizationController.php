@@ -34,6 +34,7 @@ class AdminLocalizationControllerCore extends AdminController
 		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Configuration'),
+				'id' => 'configuration',
 				'fields' =>	array(
 					'PS_LANG_DEFAULT' => array(
 						'title' => $this->l('Default language:'),
@@ -65,6 +66,7 @@ class AdminLocalizationControllerCore extends AdminController
 			),
 			'localization' => array(
 				'title' =>	$this->l('Localization'),
+				'id' => 'localization',
 				'icon' =>	'icon-globe',
 				'fields' =>	array(
 					'PS_WEIGHT_UNIT' => array(
@@ -100,6 +102,7 @@ class AdminLocalizationControllerCore extends AdminController
 			),
 			'options' => array(
 				'title' =>	$this->l('Advanced'),
+				'id' => 'advanced',
 				'fields' =>	array(
 					'PS_LOCALE_LANGUAGE' => array(
 						'title' => $this->l('Language locale:'),
@@ -291,10 +294,9 @@ class AdminLocalizationControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('Import   '),
+				'title' => $this->l('Save   '),
 				'class' => 'btn btn-default',
-				'name' => 'submitLocalizationPack'
-			)
+			),
 		);
 
 		$this->fields_value = array(
@@ -319,13 +321,10 @@ class AdminLocalizationControllerCore extends AdminController
 	public function initContent()
 	{
 		if (!$this->loadObject(true))
-			return;
-	
-		// toolbar (save, cancel, new, ..)
-		$this->initToolbar();
-		
-		$this->initPageHeaderToolbar();
+			return;	
 
+		$this->initToolbar();
+		$this->initPageHeaderToolbar();
 		$this->context->smarty->assign(array(
 			'localization_form' => $this->renderForm(),
 			'localization_options' => $this->renderOptions(),
