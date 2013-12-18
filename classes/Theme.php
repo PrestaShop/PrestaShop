@@ -132,11 +132,11 @@ class ThemeCore extends ObjectModel
 			foreach ($metas as $meta)
 			{
 				if (!$full_update)
-					Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme=' . $this->id . ' AND id_meta=' . $meta['id_meta']);
+					Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme=' . $this->id . ' AND meta_page=' . $meta['meta_page']);
 
 				$values[] = array(
 					'id_theme'     => $this->id,
-					'id_meta'      => $meta['id_meta'],
+					'meta_page'      => $meta['meta_page'],
 					'left_column'  => (int)$meta['left'],
 					'right_column' => (int)$meta['right']
 				);
@@ -145,6 +145,28 @@ class ThemeCore extends ObjectModel
 			}
 			Db::getInstance()->insert('theme_meta', $values);
 		}
+	}
+
+	public function hasLeftColumn($page = null)
+	{
+		return (bool)Db::getInstance()->getValue('
+			SELECT left_column
+			FROM '._DB_PREFIX_.'theme t
+			LEFT JOIN '._DB_PREFIX_.'theme_meta tm ON (t.id_theme = tm.id_theme)
+			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta)
+			WHERE t.id_theme='.(int)$this->id.' AND m.page=\''.pSQL($page).'\'
+		');
+	}
+
+	public function hasRightColumn($page = null)
+	{
+		return (bool)Db::getInstance()->getValue('
+			SELECT right_column
+			FROM '._DB_PREFIX_.'theme t
+			LEFT JOIN '._DB_PREFIX_.'theme_meta tm ON (t.id_theme = tm.id_theme)
+			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta)
+			WHERE t.id_theme='.(int)$this->id.' AND m.page=\''.pSQL($page).'\'
+		');
 	}
 
 	/**
