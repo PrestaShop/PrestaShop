@@ -86,6 +86,24 @@ UPDATE `PREFIX_hook_module` SET position = 3
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcmsinfo')
 AND id_hook = @id_hook;
 
+/* displayNav */
+SET @id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayNav');
+UPDATE `PREFIX_hook_module` SET position = 1
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockuserinfo')
+AND id_hook = @id_hook;
+
+UPDATE `PREFIX_hook_module` SET position = 2
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcurrencies')
+AND id_hook = @id_hook;
+
+UPDATE `PREFIX_hook_module` SET position = 3
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocklanguages')
+AND id_hook = @id_hook;
+
+UPDATE `PREFIX_hook_module` SET position = 4
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcontact')
+AND id_hook = @id_hook;
+
 /* displayTop */
 SET @id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop');
 UPDATE `PREFIX_hook_module` SET position = 1
