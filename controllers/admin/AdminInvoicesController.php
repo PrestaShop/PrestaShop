@@ -162,10 +162,10 @@ class AdminInvoicesControllerCore extends AdminController
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT COUNT( o.id_order ) AS nbOrders, oh.id_order_state 
-			FROM ps_order_invoice oi 
-			LEFT JOIN ps_orders o ON  oi.id_order = o.id_order 
-			JOIN ps_order_history oh ON oh.id_order = o.id_order 
-			LEFT OUTER JOIN ps_order_history oh2 ON oh2.id_order = oh.id_order AND oh2.id_order_history > oh.id_order_history 
+			FROM '._DB_PREFIX_ .'order_invoice oi 
+			LEFT JOIN '._DB_PREFIX_ .'orders o ON  oi.id_order = o.id_order 
+			JOIN '._DB_PREFIX_ .'order_history oh ON oh.id_order = o.id_order 
+			LEFT OUTER JOIN '._DB_PREFIX_ .'order_history oh2 ON oh2.id_order = oh.id_order AND oh2.id_order_history > oh.id_order_history 
 			WHERE o.id_shop IN('.implode(', ', Shop::getContextListShopID()).')	AND ISNULL(oh2.id_order_state) 
 			GROUP BY id_order_state
 		');
