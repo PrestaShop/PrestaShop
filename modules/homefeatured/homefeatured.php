@@ -123,7 +123,7 @@ class HomeFeatured extends Module
 	
 	public function hookDisplayHomeTabContent($params)
 	{
-		return $this->hookDisplayHomeTabContent($params);
+		return $this->hookDisplayHome($params);
 	}
 
 	public function hookAddProduct($params)
