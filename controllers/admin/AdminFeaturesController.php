@@ -142,7 +142,7 @@ class AdminFeaturesControllerCore extends AdminController
 			$this->_where = sprintf('AND `id_feature` = %d', (int)$id);
 
 			// get list and force no limit clause in the request
-			$this->getList($this->context->language->id, 'id_feature_value', 'ASC');
+			$this->getList($this->context->language->id, 'id_feature_value', 'ASC', 0, false);
 
 			// Render list
 			$helper = new HelperList();
