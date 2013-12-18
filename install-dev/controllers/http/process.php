@@ -95,13 +95,13 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			$this->processConfigureShop();
 		elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['configureShop']))
 			$this->processInstallFixtures();
-		elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installFixtures']))
-			$this->processInstallTheme();
-		elseif (Tools::getValue('installModules') && !empty($this->session->process_validated['installTheme']))
+		elseif (Tools::getValue('installModules') && !empty($this->session->process_validated['installFixtures']))
 			$this->processInstallModules();
 		elseif (Tools::getValue('installModulesAddons') && !empty($this->session->process_validated['installModules']))
 			$this->processInstallAddonsModules();
-		elseif (Tools::getValue('sendEmail') && !empty($this->session->process_validated['installModulesAddons']))
+		elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModulesAddons']))
+			$this->processInstallTheme();
+		elseif (Tools::getValue('sendEmail') && !empty($this->session->process_validated['installTheme']))
 			$this->processSendEmail();
 		else
 		{
@@ -368,8 +368,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			$this->process_steps[] = $fixtures_step;
 		}
 
-		$this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->l('Install theme'));
-
 		$install_modules = array('key' => 'installModules', 'lang' => $this->l('Install modules'));
 		if ($low_memory)
 			foreach ($this->model_install->getModulesList() as $module)
@@ -388,6 +386,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			foreach ($this->model_install->getAddonsModulesList($params) as $module)
 				$install_modules['subtasks'][] = array('module' => (string)$module['name'], 'id_module' => (string)$module['id_module']);
 		$this->process_steps[] = $install_modules;
+
+		$this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->l('Install theme'));
 
 		$this->displayTemplate('process');
 	}
