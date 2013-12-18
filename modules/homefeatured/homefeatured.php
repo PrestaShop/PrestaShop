@@ -104,7 +104,7 @@ class HomeFeatured extends Module
 		return $this->display(__FILE__, 'tab.tpl', $this->getCacheId('homefeatured-tab'));
 	}
 
-	public function hookDisplayHomeTabContent($params)
+	public function hookDisplayHome($params)
 	{
 		if (!$this->isCached('homefeatured.tpl', $this->getCacheId()))
 		{
@@ -121,8 +121,7 @@ class HomeFeatured extends Module
 		return $this->display(__FILE__, 'homefeatured.tpl', $this->getCacheId());
 	}
 	
-	/* Retro Compatibility < 1.6.0.1 */
-	public function hookDisplayHome($params)
+	public function hookDisplayHomeTabContent($params)
 	{
 		return $this->hookDisplayHomeTabContent($params);
 	}
