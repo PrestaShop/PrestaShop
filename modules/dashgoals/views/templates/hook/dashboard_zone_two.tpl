@@ -28,18 +28,16 @@
 	var currency_sign = '{$currency->sign|addslashes}';
 	var currency_blank = {$currency->blank|intval};
 	var priceDisplayPrecision = 0;
-	
 	var dashgoals_year = {$goals_year|intval};
-	
 	var dashgoals_ajax_link = '{$dashgoals_ajax_link|addslashes}';
 </script>
 
 <section id="dashgoals" class="panel widget">
 	<header class="panel-heading">
 		<i class="icon-bar-chart"></i> {l s='Your forecast' mod='dashgoals'}
-		<a href="javascript:void(0);" onclick="dashgoals_changeYear('backward');" class="icon-backward"></a>
+		<a href="javascript:void(0);" onclick="dashgoals_changeYear('backward');" class="btn btn-default btn-xs"><i class="icon-backward"></i></a>
 		<span id="dashgoals_title">{$goals_year}</span>
-		<a href="javascript:void(0);" onclick="dashgoals_changeYear('forward');" class="icon-forward"></a>
+		<a href="javascript:void(0);" onclick="dashgoals_changeYear('forward');" class="btn btn-default btn-xs"><i class="icon-forward"></i></a>
 		<span class="panel-heading-action">
 			<a class="list-toolbar-btn" href="javascript:void(0);" onclick="toggleDashConfig('dashgoals');" title="configure">
 				<i class="process-icon-configure"></i>
@@ -52,17 +50,17 @@
 	{include file='./config.tpl'}
 	<section class="loading">
 		<div class="btn-group" data-toggle="buttons">
-			<label class="btn btn-primary">
-				<input type="radio" name="options" onchange="selectDashgoalsChart('traffic');"> {l s='Traffic'}
+			<label class="btn btn-default">
+				<input type="radio" name="options" onchange="selectDashgoalsChart('traffic');"><i class="icon-circle" style="color:{$colors[0]}"></i> {l s='Traffic'}
 			</label>
-			<label class="btn btn-primary">
-				<input type="radio" name="options" onchange="selectDashgoalsChart('conversion');"> {l s='Conversion'}
+			<label class="btn btn-default">
+				<input type="radio" name="options" onchange="selectDashgoalsChart('conversion');"><i class="icon-circle" style="color:{$colors[1]}"></i> {l s='Conversion'}
 			</label>
-			<label class="btn btn-primary">
-				<input type="radio" name="options" onchange="selectDashgoalsChart('avg_cart_value');"> {l s='Average Cart Value'}
+			<label class="btn btn-default">
+				<input type="radio" name="options" onchange="selectDashgoalsChart('avg_cart_value');"><i class="icon-circle" style="color:{$colors[2]}"></i> {l s='Average Cart Value'}
 			</label>
-			<label class="btn btn-primary active">
-				<input type="radio" name="options" onchange="selectDashgoalsChart('sales');"> {l s='Sales'}
+			<label class="btn btn-default active">
+				<input type="radio" name="options" onchange="selectDashgoalsChart('sales');"><i class="icon-circle" style="color:{$colors[3]}"></i> {l s='Sales'}
 			</label>
 		</div>
 		<div id="dash_goals_chart1" class="chart with-transitions">
