@@ -239,6 +239,7 @@ function setYearPeriod() {
 
 function setPreviousYearPeriod() {
 	date = new Date();
+	date = new Date(date.getFullYear(), 11, 31);
 	date = date.subYears(1);
 	$("#date-end").val(date.format($("#date-end").data('date-format')));
 	date = new Date(date.getFullYear(), 0, 1);

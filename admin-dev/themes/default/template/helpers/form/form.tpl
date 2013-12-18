@@ -632,7 +632,7 @@
 	<div class="small"><sup>*</sup> {l s='Required field'}</div>
 {/if*} -->
 		{block name="footer"}
-		{include file="footer_toolbar.tpl"}
+			{include file="footer_toolbar.tpl" submit_id_prefix=$table}
 		{/block}
 		</div>
 		{/block}

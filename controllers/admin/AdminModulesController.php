@@ -1110,9 +1110,14 @@ class AdminModulesControllerCore extends AdminController
 		$categoryFiltered = array();
 		$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
 		if (count($filterCategories) > 0)
+		{
 			foreach ($filterCategories as $fc)
 				if (!empty($fc))
 					$categoryFiltered[$fc] = 1;
+		}
+
+		if (empty($categoryFiltered) && Tools::getValue('tab_module'))
+			$categoryFiltered[Tools::getValue('tab_module')] = 1;
 
 		foreach ($this->list_modules_categories as $k => $v)
 			$this->list_modules_categories[$k]['nb'] = 0;
@@ -1261,16 +1266,13 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['dirNameCurrentIndex'] = dirname(self::$currentIndex);
 		$tpl_vars['ajaxCurrentIndex'] = str_replace('index', 'ajax-tab', self::$currentIndex);
 		$tpl_vars['autocompleteList'] = rtrim($autocompleteList, ' ,').'];';
-
 		$tpl_vars['showTypeModules'] = $this->filter_configuration['PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee];
 		$tpl_vars['showCountryModules'] = $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee];
 		$tpl_vars['showInstalledModules'] = $this->filter_configuration['PS_SHOW_INSTALLED_MODULES_'.(int)$this->id_employee];
 		$tpl_vars['showEnabledModules'] = $this->filter_configuration['PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee];
 		$tpl_vars['nameCountryDefault'] = Country::getNameById($this->context->language->id, Configuration::get('PS_COUNTRY_DEFAULT'));
 		$tpl_vars['isoCountryDefault'] = $this->iso_default_country;
-
 		$tpl_vars['categoryFiltered'] = $categoryFiltered;
-
 		$tpl_vars['modules'] = $modules;
 		$tpl_vars['nb_modules'] = $this->nb_modules_total;
 		$tpl_vars['nb_modules_favorites'] = Db::getInstance()->getValue('SELECT COUNT(`id_module_preference`) FROM `'._DB_PREFIX_.'module_preference` WHERE `id_employee` = '.(int)$this->id_employee.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)');
@@ -1280,14 +1282,12 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['nb_modules_unactivated'] = $tpl_vars['nb_modules_installed'] - $tpl_vars['nb_modules_activated'];
 		$tpl_vars['list_modules_categories'] = $cleaned_list;
 		$tpl_vars['list_modules_authors'] = $this->modules_authors;
-
 		$tpl_vars['check_url_fopen'] = (ini_get('allow_url_fopen') ? 'ok' : 'ko');
 		$tpl_vars['check_openssl'] = (extension_loaded('openssl') ? 'ok' : 'ko');
-
 		$tpl_vars['add_permission'] = $this->tabAccess['add'];
 		$tpl_vars['tab_modules_preferences'] = $tab_modules_preferences;
-
 		$tpl_vars['kpis'] = $this->renderKpis();
+		$tpl_vars['module_name'] = Tools::getValue('module_name');
 
 		if ($this->logged_on_addons)
 		{

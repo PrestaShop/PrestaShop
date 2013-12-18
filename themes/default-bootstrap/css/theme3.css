@@ -7,9 +7,6 @@ body {
   background: url(../img/bg-theme2.jpg) repeat 50% 0;
 }
 
-#header {
-  background: none;
-}
 #header .header-row {
   background: #545454;
 }

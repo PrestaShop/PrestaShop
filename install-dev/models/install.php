@@ -512,7 +512,6 @@ class InstallModelInstall extends InstallAbstractModel
 				'addsharethis',
 				'blockbanner',
 				'bankwire',
-				'blockadvertising',
 				'blockbestsellers',
 				'blockcart',
 				'blocksocial',

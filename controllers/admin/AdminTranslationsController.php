@@ -98,6 +98,7 @@ class AdminTranslationsControllerCore extends AdminController
 	 */
 	public function initContent()
 	{
+		$this->initTabModuleList();
 		$this->initPageHeaderToolbar();
 		
 		if (!is_null($this->type_selected))

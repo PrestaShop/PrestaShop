@@ -48,8 +48,8 @@ class FrontControllerCore extends Controller
 	protected $restrictedCountry = false;
 	protected $maintenance = false;
 
-	public $display_column_left = true;
-	public $display_column_right = true;
+	public $display_column_left;
+	public $display_column_right;
 
 	public static $initialized = false;
 
@@ -64,7 +64,7 @@ class FrontControllerCore extends Controller
 		global $useSSL;
 
 		parent::__construct();
-
+		
 		if (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'))
 			$this->ssl = true;
 
@@ -72,6 +72,9 @@ class FrontControllerCore extends Controller
 			$this->ssl = $useSSL;
 		else
 			$useSSL = $this->ssl;
+			
+		$this->display_column_left = Context::getContext()->theme->hasLeftColumn($this->php_self);
+		$this->display_column_right = Context::getContext()->theme->hasRightColumn($this->php_self);
 	}
 
 	/**
@@ -848,18 +851,18 @@ class FrontControllerCore extends Controller
 			'stock_management' => (int)$stock_management));
 	}
 
-	public function pagination($nbProducts = 10)
+	public function pagination($nb_products = null)
 	{
 		if (!self::$initialized)
 			$this->init();
 		elseif (!$this->context)
 			$this->context = Context::getContext();
 
-		$nArray = (int)Configuration::get('PS_PRODUCTS_PER_PAGE') != 10 ? array((int)Configuration::get('PS_PRODUCTS_PER_PAGE'), 10, 20, 50) : array(10, 20, 50);
-		// Clean duplicate values
-		$nArray = array_unique($nArray);
-		asort($nArray);
-		$this->n = abs((int)(Tools::getValue('n', ((isset($this->context->cookie->nb_item_per_page) && $this->context->cookie->nb_item_per_page >= 10) ? $this->context->cookie->nb_item_per_page : (int)Configuration::get('PS_PRODUCTS_PER_PAGE')))));
+		if (!$nb_products || Validate::isUnsignedInt($nb_products))
+			$nb_products = max(1, (int)Configuration::get('PS_PRODUCTS_PER_PAGE'));
+
+		$nArray = array($nb_products, $nb_products * 2, $nb_products * 5);
+		$this->n = abs((int)Tools::getValue('n', ((isset($this->context->cookie->nb_item_per_page) && in_array($this->context->cookie->nb_item_per_page, $nArray)) ? $this->context->cookie->nb_item_per_page : $nb_products)));
 		$this->p = abs((int)Tools::getValue('p', 1));
 
 		if (!is_numeric(Tools::getValue('p', 1)) || Tools::getValue('p', 1) < 0)
@@ -877,8 +880,8 @@ class FrontControllerCore extends Controller
 		if (isset($this->context->cookie->nb_item_per_page) && $this->n != $this->context->cookie->nb_item_per_page && in_array($this->n, $nArray))
 			$this->context->cookie->nb_item_per_page = $this->n;
 
-		$pages_nb = ceil($nbProducts / (int)$this->n);
-		if ($this->p > $pages_nb && $nbProducts <> 0)
+		$pages_nb = ceil($nb_products / (int)$this->n);
+		if ($this->p > $pages_nb && $nb_products != 0)
 			Tools::redirect(self::$link->getPaginationLink(false, false, $this->n, false, $pages_nb, false));
 
 		$start = (int)($this->p - $range);
@@ -887,7 +890,7 @@ class FrontControllerCore extends Controller
 		$stop = (int)($this->p + $range);
 		if ($stop > $pages_nb)
 			$stop = (int)$pages_nb;
-		$this->context->smarty->assign('nb_products', $nbProducts);
+		$this->context->smarty->assign('nb_products', $nb_products);
 		$pagination_infos = array(
 			'products_per_page' => (int)Configuration::get('PS_PRODUCTS_PER_PAGE'),
 			'pages_nb' => $pages_nb,

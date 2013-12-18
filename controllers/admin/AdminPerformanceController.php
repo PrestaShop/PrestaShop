@@ -579,6 +579,7 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function initContent()
 	{
+		$this->initTabModuleList();
 		$this->initToolbar();
 		$this->initPageHeaderToolbar();
 		$this->display = '';

@@ -38,6 +38,18 @@
 ********************************************************************************/
 //RESET AND LAYOUT
 #homepage-slider {
+	.homeslider-container {
+		height: 447px;
+		position: relative;
+	}
+	.homeslider-image {
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+	.homeslider-description {
+		position: absolute;
+	}
 	.bx-wrapper {
 		position: relative;
 		padding: 0;
@@ -229,3 +241,4 @@
 		}
 	}
 }
+

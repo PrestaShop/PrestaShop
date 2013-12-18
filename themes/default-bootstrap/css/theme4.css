@@ -7,9 +7,6 @@ body {
   background: url(../img/bg-theme3.jpg) repeat 50% 0;
 }
 
-#header {
-  background: none;
-}
 #header .header-row {
   background: #545454;
 }
@@ -246,7 +243,7 @@ ul.product_list.grid > li .product-container:hover {
 }
 @media (min-width: 768px) {
   .footer-container {
-    background: url(../img/footer-bg3.gif) repeat-x;
+    background: url(../img/footer-bg3.gif) repeat-x #333333;
   }
 }
 

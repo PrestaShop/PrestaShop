@@ -1171,7 +1171,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('Failed to update the position.');
 		else
 		{
-			$category = new Category((int)tools::getValue('id_category'));							
+			$category = new Category((int)Tools::getValue('id_category'));							
 			if (Validate::isLoadedObject($category))
 				Hook::exec('actionCategoryUpdate', array('category' => $category));
 			$this->redirect_after = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&action=Customization&conf=5'.(($id_category = (Tools::getIsset('id_category') ? (int)Tools::getValue('id_category') : '')) ? ('&id_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminProducts');				

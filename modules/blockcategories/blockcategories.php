@@ -234,8 +234,8 @@ class BlockCategories extends Module
 
 	protected function getCacheId($name = null)
 	{
-		$name = ($name ? $name.'|' : '').implode('-', Customer::getGroupsStatic($this->context->customer->id));
-		return parent::getCacheId($name);
+		$cache_id = parent::getCacheId($name);
+		return $cache_id.'|'.implode('-', Customer::getGroupsStatic($this->context->customer->id));
 	}
 
 	public function hookFooter($params)

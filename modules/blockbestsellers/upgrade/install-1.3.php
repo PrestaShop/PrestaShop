@@ -5,5 +5,5 @@ if (!defined('_PS_VERSION_'))
 
 function upgrade_module_1_3($object)
 {
-	return ($object->unregisterHook('rightColumn') && $object->registerHook('displayHomeTab') && $object->registerHook('displayHomeTabContent'));
+	return ($object->registerHook('displayHomeTab') && $object->registerHook('displayHomeTabContent'));
 }

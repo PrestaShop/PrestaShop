@@ -146,6 +146,28 @@ class ThemeCore extends ObjectModel
 			Db::getInstance()->insert('theme_meta', $values);
 		}
 	}
+	
+	public function hasLeftColumn($page = null)
+	{
+		return (bool)Db::getInstance()->getValue('
+			SELECT left_column
+			FROM '._DB_PREFIX_.'theme t
+			LEFT JOIN '._DB_PREFIX_.'theme_meta tm ON (t.id_theme = tm.id_theme)
+			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta)
+			WHERE t.id_theme='.(int)$this->id.' AND m.page=\''.pSQL($page).'\'
+		');
+	}
+	
+	public function hasRightColumn($page = null)
+	{
+		return (bool)Db::getInstance()->getValue('
+			SELECT right_column
+			FROM '._DB_PREFIX_.'theme t
+			LEFT JOIN '._DB_PREFIX_.'theme_meta tm ON (t.id_theme = tm.id_theme)
+			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta)
+			WHERE t.id_theme='.(int)$this->id.' AND m.page=\''.pSQL($page).'\'
+		');
+	}
 
 	public function hasLeftColumn($page = null)
 	{

@@ -32,7 +32,7 @@
 {if isset($p) AND $p}
 	{if isset($smarty.get.id_category) && $smarty.get.id_category && isset($category)}
 		{if !isset($current_url)}
-		{assign var='requestPage' value=$link->getPaginationLink('category', $category, false, false, true, false)}
+			{assign var='requestPage' value=$link->getPaginationLink('category', $category, false, false, true, false)}
 		{else}
 			{assign var='requestPage' value=$current_url}
 		{/if}
