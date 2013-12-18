@@ -93,15 +93,15 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			$this->processPopulateDatabase();
 		elseif (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase']))
 			$this->processConfigureShop();
-		elseif (Tools::getValue('installModules') && !empty($this->session->process_validated['configureShop']))
+		elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['configureShop']))
+			$this->processInstallFixtures();
+		elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installFixtures']))
+			$this->processInstallTheme();
+		elseif (Tools::getValue('installModules') && !empty($this->session->process_validated['installTheme']))
 			$this->processInstallModules();
 		elseif (Tools::getValue('installModulesAddons') && !empty($this->session->process_validated['installModules']))
 			$this->processInstallAddonsModules();
-		elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['installModulesAddons']))
-			$this->processInstallFixtures();
-		elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModules']))
-			$this->processInstallTheme();
-		elseif (Tools::getValue('sendEmail') && !empty($this->session->process_validated['installTheme']))
+		elseif (Tools::getValue('sendEmail') && !empty($this->session->process_validated['installModulesAddons']))
 			$this->processSendEmail();
 		else
 		{
@@ -263,6 +263,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		if (!$this->model_install->installFixtures(Tools::getValue('entity', null), array('shop_activity' => $this->session->shop_activity, 'shop_country' => $this->session->shop_country)) || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
 		$this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
+		$this->session->process_validated = array_merge($this->session->process_validated, array('installFixtures' => true));
 		$this->ajaxJsonAnswer(true);
 	}
 
@@ -352,6 +353,23 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->process_steps[] = $populate_step;
 		$this->process_steps[] = array('key' => 'configureShop', 'lang' => $this->l('Configure shop information'));
 
+		if ($this->session->install_type == 'full')
+		{
+			// If low memory, create subtasks for installFixtures step (entity per entity)
+			$fixtures_step = array('key' => 'installFixtures', 'lang' => $this->l('Install demonstration data'));
+			if ($low_memory)
+			{
+				$fixtures_step['subtasks'] = array();
+				$xml_loader = new InstallXmlLoader();
+				$xml_loader->setFixturesPath();
+				foreach ($xml_loader->getSortedEntities() as $entity)
+					$fixtures_step['subtasks'][] = array('entity' => $entity);
+			}
+			$this->process_steps[] = $fixtures_step;
+		}
+
+		$this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->l('Install theme'));
+
 		$install_modules = array('key' => 'installModules', 'lang' => $this->l('Install modules'));
 		if ($low_memory)
 			foreach ($this->model_install->getModulesList() as $module)
@@ -370,24 +388,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			foreach ($this->model_install->getAddonsModulesList($params) as $module)
 				$install_modules['subtasks'][] = array('module' => (string)$module['name'], 'id_module' => (string)$module['id_module']);
 		$this->process_steps[] = $install_modules;
-
-		// Fixtures are installed only if option is selected
-		if ($this->session->install_type == 'full')
-		{
-			// If low memory, create subtasks for installFixtures step (entity per entity)
-			$fixtures_step = array('key' => 'installFixtures', 'lang' => $this->l('Install demonstration data'));
-			if ($low_memory)
-			{
-				$fixtures_step['subtasks'] = array();
-				$xml_loader = new InstallXmlLoader();
-				$xml_loader->setFixturesPath();
-				foreach ($xml_loader->getSortedEntities() as $entity)
-					$fixtures_step['subtasks'][] = array('entity' => $entity);
-			}
-			$this->process_steps[] = $fixtures_step;
-		}
-
-		$this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->l('Install theme'));
 
 		$this->displayTemplate('process');
 	}
