@@ -8,8 +8,7 @@ function bar_chart_goals(widget_name, chart_details)
 			.stacked(true)
 			.showControls(false)
 			.tooltipContent(function(key, y, e, graph) {
-				return '/modules/dashgoals/views/js/dashgoals.js : Todo, now we need to retrieve the content with ajax';
-
+				return '@Todo: retrieve content with ajax';
 				var perf = parseInt(e) - 100;
 				if (perf > 0)
 					return '<section class="panel"><header class="panel-heading">' + key + '</header><span class="dash_trend dash_trend_up">+' + perf + '%</span></section>';
