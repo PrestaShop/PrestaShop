@@ -32,9 +32,9 @@
 					{if $slide.active}
 						<li class="homeslider-container">
 							<a href="{$slide.url|escape:'html':'UTF-8'}" title="{$slide.legend|escape:'html':'UTF-8'}">
-								<img class="homeslider-image" src="{$smarty.const._MODULE_DIR_}homeslider/images/{$slide.image|escape:'html':'UTF-8'}" alt="{$slide.legend|escape:'html':'UTF-8'}"  />
-								<div class="homeslider-description">{$slide.description}</div>
+								<img src="{$link->getMediaLink("`$smarty.const._MODULE_DIR_`homeslider/images/`$slide.image|escape:'htmlall':'UTF-8'`")}" alt="{$slide.legend|escape:'htmlall':'UTF-8'}" />                                                            
 							</a>
+							<div class="homeslider-description">{$slide.description}</div>
 						</li>
 					{/if}
 				{/foreach}
