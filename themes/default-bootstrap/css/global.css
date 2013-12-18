@@ -4587,12 +4587,12 @@ table.table_block td {
     border-color: #21a3d8 transparent transparent transparent;
     content: ".";
     text-indent: -5000px;
-    -webkit-transform: rotate(145deg);
-    -ms-transform: rotate(145deg);
-    transform: rotate(145deg); }
+    -webkit-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    transform: rotate(135deg); }
 
 .sale-label {
-  font: 700 15px/18px Arial, Helvetica, sans-serif;
+  font: 700 14px/12px Arial, Helvetica, sans-serif;
   color: white;
   background: #f13340;
   text-transform: uppercase;
@@ -4602,8 +4602,8 @@ table.table_block td {
   text-align: center;
   display: block;
   position: absolute;
-  right: -36px;
-  top: 11px;
+  right: -33px;
+  top: 16px;
   z-index: 1;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
@@ -4633,9 +4633,9 @@ table.table_block td {
     border-color: #ad2b34 transparent transparent transparent;
     content: ".";
     text-indent: -5000px;
-    -webkit-transform: rotate(136deg);
-    -ms-transform: rotate(136deg);
-    transform: rotate(136deg); }
+    -webkit-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    transform: rotate(135deg); }
 
 .ie8 .new-label {
   left: 0px;
