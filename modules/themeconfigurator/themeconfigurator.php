@@ -268,6 +268,11 @@ class ThemeConfigurator extends Module
 				Configuration::updateValue('PS_TC_FONT', Tools::getValue('theme_font'));
 			}
 
+			$ad_image = $this->_path.'img/'.$this->context->language->iso_code.'/advertisement.png';
+
+			if (!file_exists($ad_image))
+				$ad_image = $this->_path.'img/en/advertisement.png';
+
 			$this->smarty->assign(array(
 				'themes' => unserialize(Configuration::get('PS_TC_THEMES')),
 				'fonts' => unserialize(Configuration::get('PS_TC_FONTS')),
@@ -275,9 +280,10 @@ class ThemeConfigurator extends Module
 				'id_shop' => (int)$this->context->shop->id,
 				'id_employee' => (int)$this->context->employee->id,
 				'live_configurator_token' => Tools::getValue('live_configurator_token', ''),
-				'advertisement_image' => $this->_path.'/img/'.$this->context->language->iso_code.'/advertisement.png',
+				'advertisement_image' => $ad_image,
 				'advertisement_text'  => $this->l('Over 500+ PrestaShop Premium Templates! Browse Now!')
 			));
+
 			$html .= $this->display(__FILE__, 'live_configurator.tpl');
 		}
 

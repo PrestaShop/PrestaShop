@@ -5,5 +5,5 @@ if (!defined('_PS_VERSION_'))
 
 function upgrade_module_1_1($object)
 {
-	return ($object->unregisterHook('displayRightColumn') && $object->registerHook('displayNav'));
+	return ($object->registerHook('displayNav'));
 }
