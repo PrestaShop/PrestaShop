@@ -41,7 +41,9 @@
   left: 0;
   top: 0; }
 #homepage-slider .homeslider-description {
-  position: absolute; }
+  position: absolute;
+  left: 0;
+  top: 0; }
 #homepage-slider .bx-wrapper {
   position: relative;
   padding: 0;
