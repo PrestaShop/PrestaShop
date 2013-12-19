@@ -32,7 +32,6 @@ class AdminThemesControllerCore extends AdminController
 		parent::__construct();
 	}
 
-
 	/** This value is used in isThemeCompatible method. only version node with an
 	 * higher version number will be used in [theme]/config.xml
 	 * @since 1.4.0.11, check theme compatibility 1.4
@@ -102,7 +101,6 @@ class AdminThemesControllerCore extends AdminController
 
 	public function init()
 	{
-
 		define('MAX_NAME_LENGTH', 128);
 		// No cache for auto-refresh uploaded logo
 		header('Cache-Control: no-cache, must-revalidate');
@@ -477,28 +475,33 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processAdd()
 	{
-		$new_dir = Tools::getValue('directory');
-		$res = true;
-
-		if ($new_dir != '')
+		if (($new_dir = Tools::getValue('directory')) != '')
 		{
-			if (Validate::isDirName($new_dir) && !is_dir(_PS_ALL_THEMES_DIR_.$new_dir))
+			if (!Validate::isDirName($new_dir))
 			{
-				$res &= mkdir(_PS_ALL_THEMES_DIR_.$new_dir, Theme::$access_rights);
-				if ($res)
-					$this->confirmations[] = $this->l('The directory was successfully created.');
+				$this->display = 'add';
+				return !($this->errors[] = sprintf(Tools::displayError('"%s" is not a valid directory name'), $new_dir));
 			}
+
+			if (is_dir(_PS_ALL_THEMES_DIR_.$new_dir))
+			{
+				$this->display = 'add';
+			 	return !($this->errors[] = Tools::displayError('A directory with this name already exist'));
+			}
+
+			if (mkdir(_PS_ALL_THEMES_DIR_.$new_dir, Theme::$access_rights))
+				$this->confirmations[] = $this->l('The directory was successfully created.');
 
 			if (0 !== $id_based = (int)Tools::getValue('based_on'))
 			{
 				$base_theme = new Theme($id_based);
-				$res = $this->copyTheme($base_theme->directory, $new_dir);
+				$this->copyTheme($base_theme->directory, $new_dir);
 				$base_theme = new Theme((int)Tools::getValue('based_on'));
 			}
 		}
 
 		$theme = parent::processAdd();
-		if ((int)$theme->id > 0)
+		if (is_object($theme) && (int)$theme->id > 0)
 			$this->updateThemeMetas($theme);
 		return $theme;
 	}
@@ -584,12 +587,11 @@ class AdminThemesControllerCore extends AdminController
 	private function checkNames()
 	{
 		$author = Tools::getValue('name');
-		$themeName = Tools::getValue('theme_name');
-		$count = 0;
+		$theme_name = Tools::getValue('theme_name');
 
 		if (!$author || !Validate::isGenericName($author) || strlen($author) > MAX_NAME_LENGTH)
 			$this->errors[] = $this->l('Please enter a valid author name');
-		elseif (!$themeName || !Validate::isGenericName($themeName) || strlen($themeName) > MAX_NAME_LENGTH)
+		elseif (!$theme_name || !Validate::isGenericName($theme_name) || strlen($theme_name) > MAX_NAME_LENGTH)
 			$this->errors[] = $this->l('Please enter a valid theme name');
 
 		if (count($this->errors) > 0)
@@ -666,7 +668,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$zip = new ZipArchive();
 		$zip_file_name = md5(time()).'.zip';
-		if ($zip->open(_PS_ROOT_DIR_.$zip_file_name, ZipArchive::OVERWRITE) === true)
+		if ($zip->open(_PS_CACHE_DIR_.$zip_file_name, ZipArchive::OVERWRITE) === true)
 		{
 			if (!$zip->addFromString('Config.xml', $this->xml_file))
 				$this->errors[] = $this->l('Cant create config file');
@@ -682,18 +684,30 @@ class AdminThemesControllerCore extends AdminController
 				if (!in_array($row, $this->native_modules))
 					$this->archiveThisFile($zip, $row, dirname(__FILE__).'/../../modules/', 'modules/');
 			}
+
 			$zip->close();
+
 			if (!$this->errors)
 			{
 				if (ob_get_length() > 0)
 					ob_end_clean();
-				header('Content-Type: multipart/x-zip');
-				header('Content-Disposition:attachment;filename="'.$zip_file_name.'"');
-				readfile(_PS_ROOT_DIR_.$zip_file_name);
-				unlink(_PS_ROOT_DIR_.$zip_file_name);
-				die;
+
+				ob_start();
+				header('Pragma: public');
+				header('Expires: 0');
+				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+				header('Cache-Control: public');
+				header('Content-Description: File Transfer');
+				header('Content-type: application/octet-stream');
+				header('Content-Disposition: attachment; filename="'.$zip_file_name.'"');
+				header('Content-Transfer-Encoding: binary');
+				ob_end_flush();
+				readfile(_PS_CACHE_DIR_.$zip_file_name);
+				@unlink(_PS_CACHE_DIR_.$zip_file_name);
+				exit;
 			}
 		}
+
 		$this->errors[] = $this->l('An error occurred during the archive generation');
 	}
 
@@ -906,7 +920,6 @@ class AdminThemesControllerCore extends AdminController
 
 				$this->generateXML($metas);
 				$this->generateArchive();
-
 			} else
 				$this->display = 'exporttheme';
 		} else
@@ -916,23 +929,23 @@ class AdminThemesControllerCore extends AdminController
 	private function renderExportTheme1()
 	{
 		$module_list = Db::getInstance()->executeS('
-				SELECT m.`id_module`, m.`name`, m.`active`, ms.`id_shop`
-				FROM `' . _DB_PREFIX_ . 'module` m
-				LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms On (m.`id_module` = ms.`id_module`)
-				WHERE ms.`id_shop` = ' . (int)$this->context->shop->id . '
-			');
+			SELECT m.`id_module`, m.`name`, m.`active`, ms.`id_shop`
+			FROM `' . _DB_PREFIX_ . 'module` m
+			LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms On (m.`id_module` = ms.`id_module`)
+			WHERE ms.`id_shop` = ' . (int)$this->context->shop->id . '
+		');
 
 		// Select the list of hook for this shop
 		$hook_list = Db::getInstance()->executeS('
-				SELECT h.`id_hook`, h.`name` as name_hook, hm.`position`, hm.`id_module`, m.`name` as name_module, GROUP_CONCAT(hme.`file_name`, ",") as exceptions
-				FROM `' . _DB_PREFIX_ . 'hook` h
-				LEFT JOIN `' . _DB_PREFIX_ . 'hook_module` hm ON hm.`id_hook` = h.`id_hook`
-				LEFT JOIN `' . _DB_PREFIX_ . 'module` m ON hm.`id_module` = m.`id_module`
-				LEFT OUTER JOIN `' . _DB_PREFIX_ . 'hook_module_exceptions` hme ON (hme.`id_module` = hm.`id_module` AND hme.`id_hook` = h.`id_hook`)
-				WHERE hm.`id_shop` = ' . (int)$this->context->shop->id . '
-				GROUP BY `id_module`, `id_hook`
-				ORDER BY `name_module`
-			');
+			SELECT h.`id_hook`, h.`name` as name_hook, hm.`position`, hm.`id_module`, m.`name` as name_module, GROUP_CONCAT(hme.`file_name`, ",") as exceptions
+			FROM `' . _DB_PREFIX_ . 'hook` h
+			LEFT JOIN `' . _DB_PREFIX_ . 'hook_module` hm ON hm.`id_hook` = h.`id_hook`
+			LEFT JOIN `' . _DB_PREFIX_ . 'module` m ON hm.`id_module` = m.`id_module`
+			LEFT OUTER JOIN `' . _DB_PREFIX_ . 'hook_module_exceptions` hme ON (hme.`id_module` = hm.`id_module` AND hme.`id_hook` = h.`id_hook`)
+			WHERE hm.`id_shop` = ' . (int)$this->context->shop->id . '
+			GROUP BY `id_module`, `id_hook`
+			ORDER BY `name_module`
+		');
 
 		foreach ($hook_list as &$row)
 			$row['exceptions'] = trim(preg_replace('/(,,+)/', ',', $row['exceptions']), ',');
@@ -980,7 +993,7 @@ class AdminThemesControllerCore extends AdminController
 			'form' => array(
 				'tinymce' => false,
 				'legend'  => array(
-					'title' => $this->l('Theme'),
+					'title' => $this->l('Theme configuration'),
 					'icon'  => 'icon-picture'
 				),
 				'input' => array(
@@ -1063,7 +1076,7 @@ class AdminThemesControllerCore extends AdminController
 		);
 
 		$default_language = (int)$this->context->language->id;
-		$languages = Language::getLanguages();
+		$languages = $this->getLanguages();
 
 		foreach($languages as $language)
 			$fields_value['body_title'][$language['id_lang']] = '';
@@ -1082,7 +1095,6 @@ class AdminThemesControllerCore extends AdminController
 		$fields_value['id_theme_export'] = Tools::getValue('id_theme_export');
 		$fields_value['documentationName'] = $this->l('documentation');
 
-
 		$toolbar_btn['save'] = array(
 			'href' => '',
 			'desc' => $this->l('Save')
@@ -1093,23 +1105,16 @@ class AdminThemesControllerCore extends AdminController
 		$helper->show_toolbar = true;
 		$helper->fields_value = $fields_value;
 		$helper->toolbar_btn = $toolbar_btn;
-
-
 		$helper->override_folder = $this->tpl_folder;
-
 		return $helper->generateForm(array($fields_form));
 	}
 
 	public function renderExportTheme()
 	{
 		if (Tools::getIsset('id_theme_export') && (int)Tools::getValue('id_theme_export') > 0)
-		{
 			return $this->renderExportTheme1();
-		}
+
 		$theme_list = Theme::getThemes();
-
-
-
 		$fields_form = array(
 			'form' => array(
 				'tinymce' => false,
@@ -1121,7 +1126,7 @@ class AdminThemesControllerCore extends AdminController
 					array(
 						'type' => 'select',
 						'name' => 'id_theme_export',
-						'label' => $this->l('Choose the theme to export:'),
+						'label' => $this->l('Choose the theme you want to export:'),
 						'options' => array(
 							'id' => 'id', 'name' => 'name',
 							'query' => $theme_list,
@@ -1130,14 +1135,14 @@ class AdminThemesControllerCore extends AdminController
 					),
 				),
 				'submit'  => array(
-					'title' => $this->l('Save'),
+					'title' => $this->l('Export'),
 					'class' => 'button'
 				))
 		);
 
 		$toolbar_btn['save'] = array(
 			'href' => '#',
-			'desc' => $this->l('Save')
+			'desc' => $this->l('Export')
 		);
 
 		$fields_value['id_theme_export'] = array();
@@ -1148,7 +1153,6 @@ class AdminThemesControllerCore extends AdminController
 		$helper->show_toolbar = true;
 		$helper->fields_value = $fields_value;
 		$helper->toolbar_btn = $toolbar_btn;
-
 		$helper->override_folder = $this->tpl_folder;
 
 		return $helper->generateForm(array($fields_form));
@@ -1329,7 +1333,6 @@ class AdminThemesControllerCore extends AdminController
 			'desc' => $this->l('Save')
 		);
 
-
 		$fields_form[0] = array(
 			'form' => array(
 				'tinymce' => false,
@@ -1374,6 +1377,7 @@ class AdminThemesControllerCore extends AdminController
 		$theme_archive_server = array();
 		$files = scandir(_PS_ALL_THEMES_DIR_);
 		$theme_archive_server[] = '-';
+
 		foreach($files as $file)
 		{
 			if (is_file(_PS_ALL_THEMES_DIR_.$file) && substr(_PS_ALL_THEMES_DIR_.$file, -4) == '.zip')
@@ -1418,7 +1422,6 @@ class AdminThemesControllerCore extends AdminController
 		$helper->fields_value['themearchiveUrl']='';
 		$helper->fields_value['theme_archive_server']=array();
 		$helper->multiple_fieldsets = true;
-
 		$helper->override_folder = $this->tpl_folder;
 
 		return $helper->generateForm($fields_form);
@@ -1585,7 +1588,6 @@ class AdminThemesControllerCore extends AdminController
 		}
 		return $return;
 	}
-
 
 	private function getNativeModule()
 	{
@@ -2018,9 +2020,7 @@ class AdminThemesControllerCore extends AdminController
 		}
 
 		Tools::clearCache($this->context->smarty);
-
-		$this->themeName = $theme->name;
-
+		$this->theme_name = $theme->name;
 		$this->display='view';
 	}
 
@@ -2028,8 +2028,8 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$this->tpl_view_vars = array(
 			'doc' => $this->doc,
-			'themeName' => $this->themeName,
-			'imgError' => $this->img_error,
+			'theme_name' => $this->theme_name,
+			'img_error' => $this->img_error,
 			'back_link' => Context::getContext()->link->getAdminLink('AdminThemes')
 		);
 
