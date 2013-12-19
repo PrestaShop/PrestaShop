@@ -6718,3 +6718,11 @@ div.star.star_hover:after {
 @media (max-width: 1199px) {
   .zoomdiv {
     display: none !important; } }
+
+#product.content_only div#primary_block div#pb-right-column p.resetimg {
+  margin-bottom: 0px;
+  padding-top: 0px;
+}
+#product.content_only div#primary_block div#pb-right-column #thumbs_list_frame {
+  margin-bottom: 0px;
+}
