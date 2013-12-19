@@ -133,22 +133,22 @@
 	background: #eac12d;
 }
 #tool_customization #color-box .theme5 .color1{
-	border: 13px solid #ffffff;
-}
-#tool_customization #color-box .theme5 .color2{
-	background: #729f42;
-}
-#tool_customization #color-box .theme6 .color1{
-	border: 13px solid #f1f1f1;
-}
-#tool_customization #color-box .theme6 .color2{
-	background: #317081;
-}
-#tool_customization #color-box .theme7 .color1{
 	border: 13px solid #f5f1e8;
 }
-#tool_customization #color-box .theme7 .color2{
+#tool_customization #color-box .theme5 .color2{
 	background: #b04444;
+}
+#tool_customization #color-box .theme6 .color1{
+	border: 13px solid #ffffff;
+}
+#tool_customization #color-box .theme6 .color2{
+	background: #729f42;
+}
+#tool_customization #color-box .theme7 .color1{
+	border: 13px solid #f1f1f1;
+}
+#tool_customization #color-box .theme7 .color2{
+	background: #317081;
 }
 #tool_customization #color-box .theme8 .color1{
 	border: 13px solid #fcfcfc;
