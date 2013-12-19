@@ -226,6 +226,12 @@ class AdminThemesControllerCore extends AdminController
 			),
 			'responsive' => array(
 				'title' => $this->l('Responsive'),
+			),
+			'default_left_column' => array(
+				'title' => $this->l('Default left column'),
+			),
+			'default_right_column' => array(
+				'title' => $this->l('Default right column'),
 			)
 		);
 	}
@@ -322,6 +328,40 @@ class AdminThemesControllerCore extends AdminController
 						),
 						array(
 							'id' => 'responsive_off',
+							'value' => 0,
+							'label' => $this->l('No')
+						)
+					),
+				)
+			,array(
+					'type' => 'switch',
+					'label' => $this->l('Default left column'),
+					'name'=>'default_left_column',
+					'values' => array(
+						array(
+							'id' => 'default_left_column_on',
+							'value' => 1,
+							'label' => $this->l('Yes')
+						),
+						array(
+							'id' => 'default_left_column_off',
+							'value' => 0,
+							'label' => $this->l('No')
+						)
+					),
+				)
+			,array(
+					'type' => 'switch',
+					'label' => $this->l('Default right column'),
+					'name'=>'default_right_column',
+					'values' => array(
+						array(
+							'id' => 'default_right_column_on',
+							'value' => 1,
+							'label' => $this->l('Yes')
+						),
+						array(
+							'id' => 'default_right_column_off',
 							'value' => 0,
 							'label' => $this->l('No')
 						)
@@ -462,7 +502,7 @@ class AdminThemesControllerCore extends AdminController
 		foreach($_POST as $key => $value)
 		{
 			$exploded_value = explode('_', $key);
-			if (count($exploded_value) == 3)
+			if (count($exploded_value) == 3 && (int)$exploded_value[0] > 0)
 			{
 
 				$query_array[(int)$exploded_value[0]]['id_meta'] = (int)$exploded_value[0];
@@ -511,6 +551,8 @@ class AdminThemesControllerCore extends AdminController
 			$theme->name= Tools::getValue('name');
 			$theme->directory = Tools::getValue('directory');
 			$theme->responsive = Tools::getValue('responsive');
+			$theme->default_left_column = Tools::getValue('default_left_column');
+			$theme->default_right_column = Tools::getValue('default_right_column');
 
 			$theme->update();
 
@@ -697,7 +739,7 @@ class AdminThemesControllerCore extends AdminController
 		$this->errors[] = $this->l('An error occurred during the archive generation');
 	}
 
-	private function generateXML($metas)
+	private function generateXML($theme_to_export, $metas)
 	{
 		$theme = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><!-- Copyright Prestashop --><theme></theme>');
 		$theme->addAttribute('version', Tools::getValue('theme_version'));
@@ -723,6 +765,9 @@ class AdminThemesControllerCore extends AdminController
 		$variation = $variations->addChild('variation');
 		$variation->addAttribute('name', Tools::htmlentitiesUTF8(Tools::getValue('theme_name')));
 		$variation->addAttribute('directory', Tools::getValue('theme_directory'));
+		$variation->addAttribute('responsive', $theme_to_export->responsive);
+		$variation->addAttribute('default_left_column', $theme_to_export->default_left_column);
+		$variation->addAttribute('default_right_column', $theme_to_export->default_right_column);
 		$variation->addAttribute('from', Tools::getValue('compa_from'));
 		$variation->addAttribute('to', Tools::getValue('compa_to'));
 
@@ -904,7 +949,7 @@ class AdminThemesControllerCore extends AdminController
 				$theme_to_export = New Theme((int)Tools::getValue('id_theme_export'));
 				$metas = $theme_to_export->getMetas();
 
-				$this->generateXML($metas);
+				$this->generateXML($theme_to_export, $metas);
 				$this->generateArchive();
 
 			} else
@@ -1264,6 +1309,15 @@ class AdminThemesControllerCore extends AdminController
 						if (isset($xml->variations->variation[0]['responsive']))
 							$responsive = (bool)strval($xml->variations->variation[0]['responsive']);
 
+						$default_left_column = false;
+						$default_right_column = false;
+
+						if (isset($xml->variations->variation[0]['default_left_column']))
+							$default_left_column = (bool)strval($xml->variations->variation[0]['default_left_column']);
+
+						if (isset($xml->variations->variation[0]['default_right_column']))
+							$default_right_column = (bool)strval($xml->variations->variation[0]['default_right_column']);
+
 						foreach($themes as $theme_object)
 							if ($theme_object->name == $name)
 								$this->errors[] = $this->l('Theme already installed.');
@@ -1277,6 +1331,8 @@ class AdminThemesControllerCore extends AdminController
 							$new_theme->name       = $name;
 							$new_theme->responsive = $responsive;
 							$new_theme->directory  = $theme_directory;
+							$new_theme->default_left_column = $default_left_column;
+							$new_theme->default_right_column = $default_right_column;
 
 							$target_dir = _PS_ALL_THEMES_DIR_ . $theme_directory;
 

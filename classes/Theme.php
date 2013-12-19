@@ -29,6 +29,8 @@ class ThemeCore extends ObjectModel
 	public $name;
 	public $directory;
 	public $responsive;
+	public $default_left_column;
+	public $default_right_column;
 
 	/** @var int access rights of created folders (octal) */
 	public static $access_rights = 0775;
@@ -42,6 +44,8 @@ class ThemeCore extends ObjectModel
 			'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64, 'required' => true),
 			'directory' => array('type' => self::TYPE_STRING, 'validate' => 'isDirName', 'size' => 64, 'required' => true),
 			'responsive' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'default_left_column' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'default_right_column' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
 	);
 

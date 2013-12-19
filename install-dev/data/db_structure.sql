@@ -2010,6 +2010,8 @@ CREATE TABLE IF NOT EXISTS `PREFIX_theme` (
   `name` varchar(64) NOT NULL,
   `directory` varchar(64) NOT NULL,
   `responsive` tinyint(1) NOT NULL DEFAULT '0',
+  `default_left_column` tinyint(1) NOT NULL DEFAULT '0',
+  `default_right_column` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_theme`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
