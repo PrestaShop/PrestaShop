@@ -24,7 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 $con = new AdminController();
-$con->bootstrap = true;
 $con->init();
 $con->initToolbar();
 $con->initPageHeaderToolbar();
