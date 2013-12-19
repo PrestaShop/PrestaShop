@@ -30,7 +30,8 @@
     margin: 0 auto;
     padding: 0; }
   #homepage-slider .homeslider-description {
-    padding: 50px 50px; }
+    padding: 50px 50px;
+    cursor: pointer; }
     #homepage-slider .homeslider-description h2 {
       font-size: 2.7em;
       color: white;
