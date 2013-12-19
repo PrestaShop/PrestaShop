@@ -4,12 +4,16 @@
     <field name="name"/>
     <field name="directory"/>
     <field name="responsive"/>
+      <field name="default_left_column"/>
+      <field name="default_right_column"/>
   </fields>
   <entities>
     <theme id="default">
       <name>default-bootstrap</name>
       <directory>default-bootstrap</directory>
       <responsive>0</responsive>
+        <default_left_column>0</default_left_column>
+        <default_right_column>0</default_right_column>
     </theme>
   </entities>
 </entity_theme>
