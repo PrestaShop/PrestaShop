@@ -1032,9 +1032,10 @@ abstract class ModuleCore
 		
 		$modules_installed = array();
 		$result = Db::getInstance()->executeS('
-		SELECT name, version, interest
-		FROM `'._DB_PREFIX_.'module`
-		LEFT JOIN `'._DB_PREFIX_.'module_preference` ON (`module` = `name` AND `id_employee` = '.(int)$id_employee.')');
+		SELECT m.name, m.version, mp.interest, module_shop.enable_device
+		FROM `'._DB_PREFIX_.'module` m
+		'.Shop::addSqlAssociation('module', 'm').'
+		LEFT JOIN `'._DB_PREFIX_.'module_preference` mp ON (mp.`module` = m.`name` AND mp.`id_employee` = '.(int)$id_employee.')');
 		foreach ($result as $row)
 			$modules_installed[$row['name']] = $row;
 
@@ -1265,6 +1266,7 @@ abstract class ModuleCore
 				$module->installed = true;
 				$module->database_version = $modules_installed[$module->name]['version'];
 				$module->interest = $modules_installed[$module->name]['interest'];
+				$module->enable_device = $modules_installed[$module->name]['enable_device'];
 			}
 			else
 			{
