@@ -38,6 +38,7 @@ class AdminThemesControllerCore extends AdminController
 	 * @static
 		*/
 	public static $check_features_version = '1.4';
+	public static $max_name_length = 128;
 
 	/** $check_features is a multidimensional array used to check [theme]/config.xml values,
 	 * and also checks prestashop current configuration if not match.
@@ -101,7 +102,6 @@ class AdminThemesControllerCore extends AdminController
 
 	public function init()
 	{
-		define('MAX_NAME_LENGTH', 128);
 		// No cache for auto-refresh uploaded logo
 		header('Cache-Control: no-cache, must-revalidate');
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
@@ -224,12 +224,18 @@ class AdminThemesControllerCore extends AdminController
 			),
 			'responsive' => array(
 				'title' => $this->l('Responsive'),
+				'type' => 'bool',
+				'active' => 'responsive',
 			),
 			'default_left_column' => array(
 				'title' => $this->l('Default left column'),
+				'type' => 'bool',
+				'active' => 'default_left_column',
 			),
 			'default_right_column' => array(
 				'title' => $this->l('Default right column'),
+				'type' => 'bool',
+				'active' => 'default_right_column',
 			)
 		);
 	}
@@ -631,9 +637,9 @@ class AdminThemesControllerCore extends AdminController
 		$author = Tools::getValue('name');
 		$theme_name = Tools::getValue('theme_name');
 
-		if (!$author || !Validate::isGenericName($author) || strlen($author) > MAX_NAME_LENGTH)
+		if (!$author || !Validate::isGenericName($author) || strlen($author) > self::$max_name_length)
 			$this->errors[] = $this->l('Please enter a valid author name');
-		elseif (!$theme_name || !Validate::isGenericName($theme_name) || strlen($theme_name) > MAX_NAME_LENGTH)
+		elseif (!$theme_name || !Validate::isGenericName($theme_name) || strlen($theme_name) > self::$max_name_length)
 			$this->errors[] = $this->l('Please enter a valid theme name');
 
 		if (count($this->errors) > 0)
@@ -654,7 +660,7 @@ class AdminThemesControllerCore extends AdminController
 				$this->errors[] = $this->l('File extension must be .txt or .pdf');
 			elseif ($_FILES['documentation']['error'] > 0 || $_FILES['documentation']['size'] > 1048576)
 				$this->errors[] = $this->l('An error occurred during documentation upload');
-			elseif (!$name || !Validate::isGenericName($name) || strlen($name) > MAX_NAME_LENGTH)
+			elseif (!$name || !Validate::isGenericName($name) || strlen($name) > self::$max_name_length)
 				$this->errors[] = $this->l('Please enter a valid documentation name');
 		}
 
