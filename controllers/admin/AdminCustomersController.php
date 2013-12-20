@@ -721,10 +721,7 @@ class AdminCustomersControllerCore extends AdminController
 			$connections = array();
 		$total_connections = count($connections);
 		for ($i = 0; $i < $total_connections; $i++)
-		{
-			$connections[$i]['date_add'] = Tools::displayDate($connections[$i]['date_add'],null , true);
 			$connections[$i]['http_referer'] = $connections[$i]['http_referer'] ? preg_replace('/^www./', '', parse_url($connections[$i]['http_referer'], PHP_URL_HOST)) : $this->l('Direct link');
-		}
 		
 		$referrers = Referrer::getReferrers($customer->id);
 		$total_referrers = count($referrers);
@@ -736,7 +733,6 @@ class AdminCustomersControllerCore extends AdminController
 			'customer' => $customer,
 			'gender' => $gender,
 			'gender_image' => $gender_image,
-
 			// General information of the customer
 			'registration_date' => Tools::displayDate($customer->date_add,null , true),
 			'customer_stats' => $customer_stats,
@@ -749,40 +745,29 @@ class AdminCustomersControllerCore extends AdminController
 			'customer_exists' => Customer::customerExists($customer->email),
 			'id_lang' => $customer->id_lang,
 			'customerLanguage' => (new Language($customer->id_lang)),
-
 			// Add a Private note
 			'customer_note' => Tools::htmlentitiesUTF8($customer->note),
-
 			// Messages
 			'messages' => $messages,
-
 			// Groups
 			'groups' => $groups,
-
 			// Orders
 			'orders' => $orders,
 			'orders_ok' => $orders_ok,
 			'orders_ko' => $orders_ko,
 			'total_ok' => Tools::displayPrice($total_ok, $this->context->currency->id),
-
 			// Products
 			'products' => $products,
-
 			// Addresses
 			'addresses' => $customer->getAddresses($this->default_form_language),
-
 			// Discounts
 			'discounts' => CartRule::getCustomerCartRules($this->default_form_language, $customer->id, false, false),
-
 			// Carts
 			'carts' => $carts,
-
 			// Interested
 			'interested' => $interested,
-
 			// Connections
 			'connections' => $connections,
-
 			// Referrers
 			'referrers' => $referrers,
 			'show_toolbar' => true
