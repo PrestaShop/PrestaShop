@@ -59,7 +59,7 @@
 					<li class="item"><a href="{$cmslink.link|addslashes|escape:'html':'UTF-8'}" title="{$cmslink.meta_title|escape:'html':'UTF-8'}">{$cmslink.meta_title|escape:'html':'UTF-8'}</a></li>
 				{/if}
 			{/foreach}
-			<li><a href="{$link->getPageLink('sitemap')|escape:'html':'UTF-8'}" title="{l s='sitemap' mod='blockcms'}">{l s='Sitemap' mod='blockcms'}</a></li>
+			<li><a href="{$link->getPageLink('sitemap')|escape:'html':'UTF-8'}" title="{l s='Sitemap' mod='blockcms'}">{l s='Sitemap' mod='blockcms'}</a></li>
 		</ul>
 	{$footer_text}
 	</section>

@@ -26,7 +26,7 @@
 
 {if isset($orderProducts) && count($orderProducts) > 0}
 	<div class="crossseling-content">
-        <h2>{l s='Customers who bought this product also bought' mod='blockcart'}</h2>
+        <h2>{l s='Customers who bought this product also bought:' mod='blockcart'}</h2>
         <div id="blockcart_list">
             <ul id="blockcart_caroucel">
                 {foreach from=$orderProducts item='orderProduct' name=orderProduct}
