@@ -40,7 +40,7 @@ class AdminPPreferencesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_CATALOG_MODE' => array(
 						'title' => $this->l('Catalog mode'),
-						'hint' => $this->l('When enabled, all shopping features are disabled.'),
+						'hint' => $this->l('When active, all shopping features will be disabled.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -83,20 +83,20 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_QTY_DISCOUNT_ON_COMBINATION' => array(
 						'title' => $this->l('Quantity discounts based on'),
-						'hint' => $this->l('How to calculate quantity discounts.'),
+						'hint' => $this->l('How to calculate quantity discounts'),
 						'cast' => 'intval',
 						'show' => true,
 						'required' => false,
 						'type' => 'radio',
 						'validation' => 'isBool',
 						'choices' => array(
-							0 => $this->l('Products'),
+							0 => $this->l('Products:'),
 							1 => $this->l('Combinations')
 						)
 					),
 					'PS_FORCE_FRIENDLY_PRODUCT' => array(
-						'title' => $this->l('Force update of friendly URL'),
-						'hint' => $this->l('When active, friendly URLs will be updated on every save.'),
+						'title' => $this->l('Force update of friendly url'),
+						'hint' => $this->l('When active, friendly url will be updated on every save'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -159,7 +159,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_LAST_QTIES' => array(
-						'title' => $this->l('Display remaining quantities when the qty is lower than'),
+						'title' => $this->l('Display remaining quantities when the quantity is lower than'),
 						'hint' => $this->l('Set to "0" to disable this feature.'),
 						'validation' => 'isUnsignedId',
 						'required' => true,
@@ -198,7 +198,7 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_DISPLAY_DISCOUNT_PRICE' => array(
 						'title' => $this->l('Display discounted price'),
-						'desc' => $this->l('Instead of showing the discount (-5%) it will instead show the new price with the discount applied'),
+						'desc' => $this->l('Instead of showing the discount (ie. "-5%"), it will instead show the new price with the applied discount.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -211,7 +211,7 @@ class AdminPPreferencesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_ORDER_OUT_OF_STOCK' => array(
 		 				'title' => $this->l('Allow ordering of out-of-stock products'),
-		 				'hint' => $this->l('Add to cart button is hidden when a product is unavailable'),
+		 				'hint' => $this->l('By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.'),
 		 				'validation' => 'isBool',
 		 				'cast' => 'intval',
 		 				'required' => false,
@@ -229,8 +229,8 @@ class AdminPPreferencesControllerCore extends AdminController
 						)
 					),
 					'PS_ADVANCED_STOCK_MANAGEMENT' => array(
-						'title' => $this->l('Enable advanced-stock management'),
-						'hint' => $this->l('Allows you to manage physical stock, warehouses and supply orders.'),
+						'title' => $this->l('Enable advanced stock management'),
+						'hint' => $this->l('Allows you to manage physical stock, warehouses and supply orders in a new Stock menu.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
