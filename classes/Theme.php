@@ -212,4 +212,28 @@ class ThemeCore extends ObjectModel
 		// Change responsive to active/inactive
 		return $this->update(false);
 	}
+
+	public function toggleDefaultLeftColumn()
+	{
+		if (!array_key_exists('default_left_column', $this))
+			throw new PrestaShopException('property "default_left_column" is missing in object '.get_class($this));
+
+		$this->setFieldsToUpdate(array('default_left_column' => true));
+
+		$this->default_left_column = !(int)$this->default_left_column;
+
+		return $this->update(false);
+	}
+
+	public function toggleDefaultRightColumn()
+	{
+		if (!array_key_exists('default_right_column', $this))
+			throw new PrestaShopException('property "default_right_column" is missing in object '.get_class($this));
+
+		$this->setFieldsToUpdate(array('default_right_column' => true));
+
+		$this->default_right_column = !(int)$this->default_right_column;
+
+		return $this->update(false);
+	}
 }

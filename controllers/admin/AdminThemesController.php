@@ -1976,13 +1976,13 @@ class AdminThemesControllerCore extends AdminController
 			$shops = Tools::getValue('checkBoxShopAsso_theme');
 
 		$xml = false;
-		if (file_exists(_PS_ROOT_DIR_ . '/config/xml/' . $theme->directory . '.xml'))
+		if (file_exists(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml'))
 		{
-			$xml = simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/' . $theme->directory . '.xml');
+			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml');
 		}
-		elseif(file_exists(_PS_ROOT_DIR_ . '/config/xml/default.xml'))
+		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/default.xml'))
 		{
-			$xml = simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/default.xml');
+			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/default.xml');
 		}
 
 		if ($xml)
@@ -2267,6 +2267,20 @@ class AdminThemesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
+		else if ((isset($_GET['default_left_column'.$this->table]) || isset($_GET['default_left_column'])) && Tools::getValue($this->identifier))
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'defaultleftcolumn';
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+		}
+		else if ((isset($_GET['default_right_column'.$this->table]) || isset($_GET['default_right_column'])) && Tools::getValue($this->identifier))
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'defaultrightcolumn';
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+		}
 
 		parent::initProcess();
 		// This is a composite page, we don't want the "options" display mode
@@ -2279,6 +2293,40 @@ class AdminThemesControllerCore extends AdminController
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
 			if ($object->toggleResponsive())
+				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
+			else
+				$this->errors[] = Tools::displayError('An error occurred while updating responsive status.');
+		}
+		else
+			$this->errors[] = Tools::displayError('An error occurred while updating the responsive status for this object.').
+				' <b>'.$this->table.'</b> '.
+				Tools::displayError('(cannot load object)');
+
+		return $object;
+	}
+
+	public function processDefaultLeftColumn()
+	{
+		if (Validate::isLoadedObject($object = $this->loadObject()))
+		{
+			if ($object->toggleDefaultLeftColumn())
+				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
+			else
+				$this->errors[] = Tools::displayError('An error occurred while updating responsive status.');
+		}
+		else
+			$this->errors[] = Tools::displayError('An error occurred while updating the responsive status for this object.').
+				' <b>'.$this->table.'</b> '.
+				Tools::displayError('(cannot load object)');
+
+		return $object;
+	}
+
+	public function processDefaultRightColumn()
+	{
+		if (Validate::isLoadedObject($object = $this->loadObject()))
+		{
+			if ($object->toggleDefaultRightColumn())
 				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
 			else
 				$this->errors[] = Tools::displayError('An error occurred while updating responsive status.');
