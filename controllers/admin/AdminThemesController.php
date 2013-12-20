@@ -2312,10 +2312,10 @@ class AdminThemesControllerCore extends AdminController
 			if ($object->toggleDefaultLeftColumn())
 				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
 			else
-				$this->errors[] = Tools::displayError('An error occurred while updating responsive status.');
+				$this->errors[] = Tools::displayError('An error occurred while updating default left column status.');
 		}
 		else
-			$this->errors[] = Tools::displayError('An error occurred while updating the responsive status for this object.').
+			$this->errors[] = Tools::displayError('An error occurred while updating the default left column status for this object.').
 				' <b>'.$this->table.'</b> '.
 				Tools::displayError('(cannot load object)');
 
@@ -2329,10 +2329,10 @@ class AdminThemesControllerCore extends AdminController
 			if ($object->toggleDefaultRightColumn())
 				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
 			else
-				$this->errors[] = Tools::displayError('An error occurred while updating responsive status.');
+				$this->errors[] = Tools::displayError('An error occurred while updating default right column status.');
 		}
 		else
-			$this->errors[] = Tools::displayError('An error occurred while updating the responsive status for this object.').
+			$this->errors[] = Tools::displayError('An error occurred while updating the default right column status for this object.').
 				' <b>'.$this->table.'</b> '.
 				Tools::displayError('(cannot load object)');
 
