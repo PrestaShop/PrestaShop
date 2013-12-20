@@ -408,13 +408,8 @@ class CartRuleCore extends ObjectModel
 			LEFT JOIN '._DB_PREFIX_.'order_cart_rule od ON o.id_order = od.id_order
 			WHERE o.id_customer = '.$context->cart->id_customer.'
 			AND od.id_cart_rule = '.(int)$this->id.'
-			AND '.(int)Configuration::get('PS_OS_ERROR').' != (
-				SELECT oh.id_order_state
-				FROM '._DB_PREFIX_.'order_history oh
-				WHERE oh.id_order = o.id_order
-				ORDER BY oh.date_add DESC
-				LIMIT 1
-			)');
+			AND '.(int)Configuration::get('PS_OS_ERROR').' != o.current_state
+			');
 			if ($quantityUsed + 1 > $this->quantity_per_user)
 				return (!$display_error) ? false : Tools::displayError('You cannot use this voucher anymore (usage limit reached)');
 		}
