@@ -33,6 +33,6 @@
         {if $google_plus_url != ''}<li class="google-plus"><a href="{$google_plus_url|escape:html:'UTF-8'}"><span>{l s='Google Plus' mod='blocksocial'}</span></a></li>{/if}
         {if $pinterest_url != ''}<li class="pinterest"><a href="{$pinterest_url|escape:html:'UTF-8'}"><span>{l s='Pinterest' mod='blocksocial'}</span></a></li>{/if}
 	</ul>
-    <h4>{l s='Follow us:' mod='blocksocial'}</h4>
+    <h4>{l s='Follow us' mod='blocksocial'}</h4>
 </section>
 <div class="clearfix"></div>
