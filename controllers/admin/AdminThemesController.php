@@ -227,16 +227,22 @@ class AdminThemesControllerCore extends AdminController
 				'title' => $this->l('Responsive'),
 				'type' => 'bool',
 				'active' => 'responsive',
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'default_left_column' => array(
 				'title' => $this->l('Default left column'),
 				'type' => 'bool',
 				'active' => 'default_left_column',
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'default_right_column' => array(
 				'title' => $this->l('Default right column'),
 				'type' => 'bool',
 				'active' => 'default_right_column',
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			)
 		);
 	}
@@ -2254,11 +2260,37 @@ class AdminThemesControllerCore extends AdminController
 
 	public function initProcess()
 	{
+		if ((isset($_GET['responsive'.$this->table]) || isset($_GET['responsive'])) && Tools::getValue($this->identifier))
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'responsive';
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+		}
+
 		parent::initProcess();
 		// This is a composite page, we don't want the "options" display mode
 		if ($this->display == 'options')
 			$this->display = '';
 	}
+
+	public function processResponsive()
+	{
+		if (Validate::isLoadedObject($object = $this->loadObject()))
+		{
+			if ($object->toggleResponsive())
+				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
+			else
+				$this->errors[] = Tools::displayError('An error occurred while updating responsive status.');
+		}
+		else
+			$this->errors[] = Tools::displayError('An error occurred while updating the responsive status for this object.').
+				' <b>'.$this->table.'</b> '.
+				Tools::displayError('(cannot load object)');
+
+		return $object;
+	}
+
 
 	/**
 	 * Function used to render the options for this controller

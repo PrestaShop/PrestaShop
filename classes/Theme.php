@@ -196,4 +196,20 @@ class ThemeCore extends ObjectModel
 		}
 		return false;
 	}
+
+	public function toggleResponsive()
+	{
+		// Object must have a variable called 'responsive'
+		if (!array_key_exists('responsive', $this))
+			throw new PrestaShopException('property "responsive" is missing in object '.get_class($this));
+
+		// Update only responsive field
+		$this->setFieldsToUpdate(array('responsive' => true));
+
+		// Update active responsive on object
+		$this->responsive = !(int)$this->responsive;
+
+		// Change responsive to active/inactive
+		return $this->update(false);
+	}
 }
