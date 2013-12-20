@@ -51,7 +51,7 @@ class AdminThemesControllerCore extends AdminController
 				'available' => array(
 					'value' => 'true',
 					/*
-					 * accepted attribute value if value doesnt match, prestashop configuration value must have thoses values
+					 * accepted attribute value if value doesn't match, prestashop configuration value must have those values
 					*/
 					'check_if_not_valid' => array(
 						'PS_CSS_THEME_CACHE' => 0,
