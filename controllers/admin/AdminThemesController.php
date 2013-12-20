@@ -599,6 +599,8 @@ class AdminThemesControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
+		parent::initPageHeaderToolbar();
+
 		if (empty($this->display))
 		{
 			$this->page_header_toolbar_btn['new_theme'] = array(
@@ -617,7 +619,14 @@ class AdminThemesControllerCore extends AdminController
 				'icon' => 'process-icon-download'
 			);
 		}
-		parent::initPageHeaderToolbar();
+
+		if ($this->display == 'importtheme')
+			$this->toolbar_title[] = $this->l('Import theme');
+		elseif ($this->display == 'exporttheme')
+			$this->toolbar_title[] = $this->l('Export theme');
+
+		$title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
+		$this->page_header_toolbar_title = $title;
 	}
 
 	private function checkParentClass($name)
@@ -1039,9 +1048,9 @@ class AdminThemesControllerCore extends AdminController
 		}
 
 		$employee = $this->context->employee;
-		$mail     = Tools::getValue('email') ? Tools::htmlentitiesUTF8(Tools::getValue('email')) : Tools::htmlentitiesUTF8($employee->email);
-		$author   = Tools::getValue('author_name') ? Tools::htmlentitiesUTF8(Tools::getValue('author_name')) : Tools::htmlentitiesUTF8(($employee->firstname) . ' ' . $employee->lastname);
-		$website  = Tools::getValue('website') ? Tools::htmlentitiesUTF8(Tools::getValue('website')) : Tools::getHttpHost(true);
+		$mail     = Tools::getValue('email') ? Tools::getValue('email') : $employee->email;
+		$author   = Tools::getValue('author_name') ? Tools::getValue('author_name') : $employee->firstname . ' ' . $employee->lastname;
+		$website  = Tools::getValue('website') ? Tools::getValue('website') : Tools::getHttpHost(true);
 
 		$this->formatHelperArray($to_install);
 
