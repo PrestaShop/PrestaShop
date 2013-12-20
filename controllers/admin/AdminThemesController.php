@@ -173,14 +173,14 @@ class AdminThemesControllerCore extends AdminController
 					'PS_STORES_ICON' => array(
 						'title' => $this->l('Store icon'),
 						'hint' => $this->l('Only GIF format allowed.'),
-						'hint' => $this->l('Will appear on the store locator (inside Google Maps).').'<br />'.$this->l('Suggested size: 30x30, Transparent GIF'),
+						'hint' => $this->l('Will appear on the store locator (inside Google Maps).').'<br />'.$this->l('Suggested size: 30x30, transparent GIF.'),
 						'type' => 'file',
 						'name' => 'PS_STORES_ICON',
 						'thumb' => _PS_IMG_.Configuration::get('PS_STORES_ICON').'?date='.time()
 					),
 					'PS_NAVIGATION_PIPE' => array(
 						'title' => $this->l('Navigation pipe'),
-						'hint' => $this->l('Used for the navigation path inside categories/product.'),
+						'hint' => $this->l('Used for the navigation path: Store Name > Category Name > Product Name.'),
 						'cast' => 'strval',
 						'type' => 'text',
 						'size' => 20
@@ -200,7 +200,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_MAIL_COLOR' => array(
 						'title' => $this->l('Mail color'),
-						'hint' => $this->l('Your mail will be highlighted in this color. HTML colors only, please (e.g.').' "lightblue", "#CC6600")',
+						'hint' => $this->l('Your mail will be highlighted in this color. HTML colors only, please (e.g. "lightblue", "#CC6600").',
 						'type' => 'color',
 						'name' => 'PS_MAIL_COLOR',
 						'size' => 30,					
