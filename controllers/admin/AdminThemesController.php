@@ -26,6 +26,8 @@
 
 class AdminThemesControllerCore extends AdminController
 {
+	const MAX_NAME_LENGTH = 128;
+
 	public function __construct()
 	{
 		$this->bootstrap = true;
@@ -38,7 +40,6 @@ class AdminThemesControllerCore extends AdminController
 	 * @static
 		*/
 	public static $check_features_version = '1.4';
-	public static $max_name_length = 128;
 
 	/** $check_features is a multidimensional array used to check [theme]/config.xml values,
 	 * and also checks prestashop current configuration if not match.
@@ -637,9 +638,9 @@ class AdminThemesControllerCore extends AdminController
 		$author = Tools::getValue('name');
 		$theme_name = Tools::getValue('theme_name');
 
-		if (!$author || !Validate::isGenericName($author) || strlen($author) > self::$max_name_length)
+		if (!$author || !Validate::isGenericName($author) || strlen($author) > self::MAX_NAME_LENGTH)
 			$this->errors[] = $this->l('Please enter a valid author name');
-		elseif (!$theme_name || !Validate::isGenericName($theme_name) || strlen($theme_name) > self::$max_name_length)
+		elseif (!$theme_name || !Validate::isGenericName($theme_name) || strlen($theme_name) > self::MAX_NAME_LENGTH)
 			$this->errors[] = $this->l('Please enter a valid theme name');
 
 		if (count($this->errors) > 0)
@@ -660,7 +661,7 @@ class AdminThemesControllerCore extends AdminController
 				$this->errors[] = $this->l('File extension must be .txt or .pdf');
 			elseif ($_FILES['documentation']['error'] > 0 || $_FILES['documentation']['size'] > 1048576)
 				$this->errors[] = $this->l('An error occurred during documentation upload');
-			elseif (!$name || !Validate::isGenericName($name) || strlen($name) > self::$max_name_length)
+			elseif (!$name || !Validate::isGenericName($name) || strlen($name) > self::MAX_NAME_LENGTH)
 				$this->errors[] = $this->l('Please enter a valid documentation name');
 		}
 
