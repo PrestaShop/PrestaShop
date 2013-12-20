@@ -40,7 +40,7 @@ class AdminPPreferencesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_CATALOG_MODE' => array(
 						'title' => $this->l('Catalog mode'),
-						'hint' => $this->l('When active, all shopping features will be disabled.'),
+						'hint' => $this->l('When enabled, all shopping features are disabled.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -83,20 +83,20 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_QTY_DISCOUNT_ON_COMBINATION' => array(
 						'title' => $this->l('Quantity discounts based on'),
-						'hint' => $this->l('How to calculate quantity discounts'),
+						'hint' => $this->l('How to calculate quantity discounts.'),
 						'cast' => 'intval',
 						'show' => true,
 						'required' => false,
 						'type' => 'radio',
 						'validation' => 'isBool',
 						'choices' => array(
-							0 => $this->l('Products:'),
+							0 => $this->l('Products'),
 							1 => $this->l('Combinations')
 						)
 					),
 					'PS_FORCE_FRIENDLY_PRODUCT' => array(
-						'title' => $this->l('Force update of friendly url'),
-						'hint' => $this->l('When active, friendly url will be updated on every save'),
+						'title' => $this->l('Force update of friendly URL'),
+						'hint' => $this->l('When active, friendly URLs will be updated on every save.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -132,7 +132,7 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_PRODUCTS_ORDER_WAY' => array(
 						'title' => $this->l('Default order method'),
-						'hint' => $this->l('Default order method for product list'),
+						'hint' => $this->l('Default order method for product list.'),
 						'type' => 'select',
 						'list' => array(
 							array(
