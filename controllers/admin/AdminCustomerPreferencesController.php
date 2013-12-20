@@ -75,7 +75,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 					),
 					'PS_CUSTOMER_CREATION_EMAIL' => array(
 						'title' => $this->l('Send an email after registration'),
-						'hint' => $this->l('Send an email with summary account (email, password) after registration.'),
+						'hint' => $this->l('Send an email with summary of the account information (email, password) after registration.'),
 						'validation' => 'isUnsignedInt',
 						'validation' => 'isBool',
 						'cast' => 'intval',
