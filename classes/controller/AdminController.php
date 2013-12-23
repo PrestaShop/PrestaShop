@@ -939,7 +939,13 @@ class AdminControllerCore extends Controller
 			if ($object->toggleStatus())
 			{
 				$id_category = (($id_category = (int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '';
-				$this->redirect_after = self::$currentIndex.'&conf=5'.$id_category.'&token='.$this->token;
+				$matches = array();
+
+				if (strtolower($this->table) == 'category' && preg_match('/[\?|&]controller=([^&]*)/', (string)$_SERVER['HTTP_REFERER'], $matches) !== FALSE
+					&& strtolower($matches[1]) != 'admincategories')
+						$this->redirect_after = (string)$_SERVER['HTTP_REFERER'].'&conf=5';
+				else
+					$this->redirect_after = self::$currentIndex.'&conf=5'.$id_category.'&token='.$this->token;
 			}
 			else
 				$this->errors[] = Tools::displayError('An error occurred while updating the status.');
