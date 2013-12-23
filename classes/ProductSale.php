@@ -79,7 +79,7 @@ class ProductSaleCore
 		$sql = 'SELECT cp.`id_product`
 				FROM `'._DB_PREFIX_.'category_group` cg
 				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-				WHERE cg.`id_group` '.$sql_groups;
+				WHERE cp.`id_product` IS NOT NULL AND cg.`id_group` '.$sql_groups;
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		$ids = array();
 		foreach ($products as $product)
