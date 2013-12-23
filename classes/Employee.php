@@ -139,14 +139,14 @@ class EmployeeCore extends ObjectModel
 	 */
 	public function getFields()
 	{
-		if (empty($this->stats_date_from))
-			$this->stats_date_from = date('Y-m-d 00:00:00', strtotime("-1 month"));
+		if (empty($this->stats_date_from) || $this->stats_date_from == '0000-00-00')
+			$this->stats_date_from = date('Y-m-d', strtotime("-1 month"));
 
 		if (empty($this->stats_compare_from) || $this->stats_compare_from == '0000-00-00')
 			$this->stats_compare_from = null;
 
-		if (empty($this->stats_date_to))
-			$this->stats_date_to = date('Y-m-d 23:59:59');
+		if (empty($this->stats_date_to) || $this->stats_date_to == '0000-00-00')
+			$this->stats_date_to = date('Y-m-d');
 
 		if (empty($this->stats_compare_to) || $this->stats_compare_to == '0000-00-00')
 			$this->stats_compare_to = null;
@@ -158,6 +158,15 @@ class EmployeeCore extends ObjectModel
 	{
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_BACK').'minutes'));
 	 	return parent::add($autodate, $null_values);
+	}
+
+	public function update($null_values = false)
+	{
+		if (empty($this->stats_date_from) || $this->stats_date_from == '0000-00-00')
+			$this->stats_date_from = date('Y-m-d');
+		if (empty($this->stats_date_to) || $this->stats_date_to == '0000-00-00')
+			$this->stats_date_to = date('Y-m-d');
+	 	return parent::update($null_values);
 	}
 
 	/**
