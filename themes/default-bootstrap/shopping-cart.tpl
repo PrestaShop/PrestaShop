@@ -554,14 +554,14 @@
 				href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')|escape:'html':'UTF-8'}{else}{$link->getPageLink('order', true, NULL, 'step=1')|escape:'html':'UTF-8'}{/if}"
 				class="button btn btn-default standard-checkout button-medium"
 				title="{l s='Proceed to checkout'}">
-				<span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span>
+				<span>{l s='Continue checkout'}<i class="icon-chevron-right right"></i></span>
 			</a>
 			{if Configuration::get('PS_ALLOW_MULTISHIPPING')}
 				<a
 					href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')|escape:'html':'UTF-8'}{else}{$link->getPageLink('order', true, NULL, 'step=1')|escape:'html':'UTF-8'}{/if}&amp;multi-shipping=1"
 					class="multishipping-button multishipping-checkout button btn btn-default button-medium"
 					title="{l s='Proceed to checkout'}">
-					<span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span>
+					<span>{l s='continue checkout'}<i class="icon-chevron-right right"></i></span>
 				</a>
 			{/if}
 		{/if}
