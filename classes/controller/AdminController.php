@@ -938,14 +938,15 @@ class AdminControllerCore extends Controller
 		{
 			if ($object->toggleStatus())
 			{
-				$id_category = (($id_category = (int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '';
 				$matches = array();
-
-				if (strtolower($this->table) == 'category' && preg_match('/[\?|&]controller=([^&]*)/', (string)$_SERVER['HTTP_REFERER'], $matches) !== FALSE
-					&& strtolower($matches[1]) != 'admincategories')
-						$this->redirect_after = (string)$_SERVER['HTTP_REFERER'].'&conf=5';
+				if (preg_match('/[\?|&]controller=([^&]*)/', (string)$_SERVER['HTTP_REFERER'], $matches) !== FALSE
+					&& strtolower($matches[1]) != strtolower(preg_replace('/controller/i', '', get_class($this))))
+						$this->redirect_after = (string)$_SERVER['HTTP_REFERER'];
 				else
-					$this->redirect_after = self::$currentIndex.'&conf=5'.$id_category.'&token='.$this->token;
+					$this->redirect_after = self::$currentIndex.'&token='.$this->token;
+
+				$id_category = (($id_category = (int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '';
+				$this->redirect_after .= '&conf=5'.$id_category;
 			}
 			else
 				$this->errors[] = Tools::displayError('An error occurred while updating the status.');
