@@ -336,6 +336,7 @@ class AdminThemesControllerCore extends AdminController
 					'label' => $this->l('Preview image for the theme:'),
 					'name' => 'image_preview',
 					'display_image' => true,
+					'hint' => sprintf($this->l('Max image size:%1d'), Tools::getMaxUploadSize()),
 					'image' => $image_url,
 				),
 				array(
@@ -568,15 +569,19 @@ class AdminThemesControllerCore extends AdminController
 				$base_theme = new Theme((int)Tools::getValue('based_on'));
 			}
 
-			if (@getimagesize($_FILES['image_preview']['tmp_name']) && !ImageManager::validateUpload($_FILES['image_preview'], 300000))
+			if (isset($_FILES['image_preview']))
 			{
-				move_uploaded_file($_FILES['image_preview']['tmp_name'], _PS_ALL_THEMES_DIR_.$new_dir.'/preview.jpg');
-			}
-			else
-			{
-				$this->errors[] = $this->l('Image not valid');
-				$this->display='form';
-				return false;
+				if (@getimagesize($_FILES['image_preview']['tmp_name']) && !ImageManager::validateUpload($_FILES['image_preview'], Tools::getMaxUploadSize()))
+				{
+					move_uploaded_file($_FILES['image_preview']['tmp_name'], _PS_ALL_THEMES_DIR_.$new_dir.'/preview.jpg');
+				}
+				else
+				{
+					$this->errors[] = $this->l('Image not valid');
+					$this->display  = 'form';
+
+					return false;
+				}
 			}
 		}
 
@@ -599,15 +604,19 @@ class AdminThemesControllerCore extends AdminController
 			$theme->default_right_column = Tools::getValue('default_right_column');
 			$theme->product_per_page = (int)Tools::getValue('product_per_page');
 
-			if (@getimagesize($_FILES['image_preview']['tmp_name']) && !ImageManager::validateUpload($_FILES['image_preview'], 300000))
+			if (isset($_FILES['image_preview']))
 			{
-				move_uploaded_file($_FILES['image_preview']['tmp_name'], _PS_ALL_THEMES_DIR_.$theme->directory.'/preview.jpg');
-			}
-			else
-			{
-				$this->errors[] = $this->l('Image not valid');
-				$this->display='form';
-				return false;
+				if (@getimagesize($_FILES['image_preview']['tmp_name']) && !ImageManager::validateUpload($_FILES['image_preview'], 300000))
+				{
+					move_uploaded_file($_FILES['image_preview']['tmp_name'], _PS_ALL_THEMES_DIR_.$theme->directory.'/preview.jpg');
+				}
+				else
+				{
+					$this->errors[] = $this->l('Image not valid');
+					$this->display  = 'form';
+
+					return false;
+				}
 			}
 			$theme->update();
 
@@ -2247,7 +2256,7 @@ class AdminThemesControllerCore extends AdminController
 		$id_shop = Context::getContext()->shop->id;
 		if (isset($_FILES[$field_name]['tmp_name']) && $_FILES[$field_name]['tmp_name'])
 		{
-			if ($error = ImageManager::validateUpload($_FILES[$field_name], 300000))
+			if ($error = ImageManager::validateUpload($_FILES[$field_name], Tools::getMaxUploadSize()))
 				$this->errors[] = $error;
 
 			$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
