@@ -57,8 +57,6 @@
 						$('#upload-error').closest('.form-group.').hide();
 						$('#file_missing').closest('.form-group.').hide();
 						$('#virtual_product_name').attr('value', fileName);
-						$("#upload-confirmation .error").remove();
-						$('#upload-confirmation').find('span').remove();
 						$('#upload-confirmation').prepend('<span>{l s='The file'}&nbsp;"<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'">'+fileName+'</a>"&nbsp;{l s='has successfully been uploaded'}&nbsp;' +
 							'<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="' + msg + '" /></span>');
 						$("#upload-confirmation").closest('.form-group.').show();
@@ -152,7 +150,7 @@
 							<input id="virtual_product_file" type="file" name="virtual_product_file" class="hide" maxlength="{$upload_max_filesize}" />
 							<div class="dummyfile input-group">
 								<span class="input-group-addon"><i class="icon-file"></i></span>
-								<input id="virtual_product_file-name" type="text" class="disabled" name="filename" readonly />
+								<input id="virtual_product_file-name" type="text" name="filename" readonly />
 								<span class="input-group-btn">
 									<button id="virtual_product_file-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
 										<i class="icon-folder-open"></i> {l s='Add file'}
@@ -164,7 +162,7 @@
 					</div>
 					<div class="form-group" style="display:none">
 						<div class="col-lg-push-3 col-lg-9">
-							<div class="alert alert-error col-lg-push-3 col-lg-9" id="upload-error"></div>
+							<div class="alert alert-danger" id="upload-error"></div>
 						</div>
 					</div>
 					<div class="form-group" style="display:none">
@@ -173,7 +171,6 @@
 							<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$up_filename}" />
 						{/if}
 							<div class="alert alert-info" id="upload-confirmation">
-
 								<a class="btn btn-default" id="delete_downloadable_product" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}"><i class="icon-trash"></i> {l s='Delete this file'}
 								</a>
 							</div>
@@ -210,7 +207,7 @@
 							</span>
 						</label>
 						<div class="col-lg-9">
-							<input class="datepicker" type="text" id="virtual_product_expiration_date" name="virtual_product_expiration_date" value="{$product->productDownload->date_expiration}" size="11" maxlength="10" autocomplete="off" /> 
+							<input class="datepicker" type="text" id="virtual_product_expiration_date" name="virtual_product_expiration_date" value="{$product->productDownload->date_expiration}" size="11" maxlength="10" autocomplete="off" />
 							<p class="help-block">{l s='If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date.'}</p>
 						</div>
 					</div>
