@@ -49,6 +49,9 @@
     margin-bottom: 35px; }
   #order-opc #opc_payment_methods {
     margin-bottom: 30px; }
+    #order-opc #opc_payment_methods p.warning {
+      color: #F13340;
+      font-weight: 700; }
   #order-opc #opc_account {
     margin-bottom: 30px; }
   #order-opc .address_delivery.select {

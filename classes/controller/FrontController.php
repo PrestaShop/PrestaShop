@@ -1015,10 +1015,13 @@ class FrontControllerCore extends Controller
 				$customer = new Customer((int)$cart->id_customer);
 				if (Validate::isLoadedObject($customer))
 				{
+					$customer->logged = 1;
+					$this->context->customer = $customer;
 					$this->context->cookie->id_customer = (int)$customer->id;
 					$this->context->cookie->customer_lastname = $customer->lastname;
 					$this->context->cookie->customer_firstname = $customer->firstname;
 					$this->context->cookie->logged = 1;
+					$this->context->cookie->check_cgv = 1;
 					$this->context->cookie->is_guest = $customer->isGuest();
 					$this->context->cookie->passwd = $customer->passwd;
 					$this->context->cookie->email = $customer->email;
@@ -1168,7 +1171,7 @@ class FrontControllerCore extends Controller
   				);
 	}
 	
-	protected function addColorsToProductList(&$products)
+	public function addColorsToProductList(&$products)
 	{
 		if (!is_array($products) || !count($products) || !file_exists(_PS_THEME_DIR_.'product-list-colors.tpl'))
 			return;
