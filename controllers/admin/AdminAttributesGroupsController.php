@@ -102,6 +102,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->className  = 'Attribute';
 			$this->identifier = 'id_attribute';
 			$this->position_identifier = 'id_attribute';
+			$this->position_group_identifier = 'id_attribute_group';
 			$this->list_id    = 'attribute_values';
 			$this->lang       = true;
 
@@ -871,7 +872,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			{
 				$pos = explode('_', $value);
 
-				if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_attribute_group && (int)$pos[2] === $id_attribute))
+				if ((isset($pos[1]) && isset($pos[2])) && (int)$pos[2] === $id_attribute)
 				{
 					if ($attribute = new Attribute((int)$pos[2]))
 						if (isset($position) && $attribute->updatePosition($way, $position))
