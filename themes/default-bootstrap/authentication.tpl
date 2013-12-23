@@ -522,7 +522,7 @@
 				<input type="hidden" name="display_guest_checkout" value="1" />
 				<button type="submit" class="button btn btn-default button-medium" name="submitGuestAccount" id="submitGuestAccount">
 					<span>
-						{l s='Proceed to checkout'}
+						{l s='Continue checkout'}
 						<i class="icon-chevron-right right"></i>
 					</span>
 				</button>
