@@ -200,11 +200,11 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_MAIL_COLOR' => array(
 						'title' => $this->l('Mail color'),
-						'hint' => $this->l('Your mail will be highlighted in this color. HTML colors only, please (e.g. "lightblue", "#CC6600").',
+						'hint' => $this->l('Your mail will be highlighted in this color. HTML colors only, please (e.g. "lightblue", "#CC6600").'),
 						'type' => 'color',
 						'name' => 'PS_MAIL_COLOR',
-						'size' => 30,					
-						'value' => Configuration::get('PS_MAIL_COLOR')
+						'size' => 30,
+						'value' => Configuration::get('PS_MAIL_COLOR'),
 					)
 				),
 				'submit' => array('title' => $this->l('Save'), 'class' => 'button')
