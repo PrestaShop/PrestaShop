@@ -2782,6 +2782,22 @@ exit;
 			$str = substr($str, 0, -$length_str);
 		return $str;
 	}
+
+	/**
+	 * Format a number into a human readable format
+	 * e.g. 24962496 => 23.81M
+	 * @param     $size
+	 * @param int $precision
+	 *
+	 * @return string
+	 */
+	public static function formatBytes($size, $precision = 2)
+	{
+		$base = log($size) / log(1024);
+		$suffixes = array('', 'k', 'M', 'G', 'T');
+
+		return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
+	}
 }
 
 /**
