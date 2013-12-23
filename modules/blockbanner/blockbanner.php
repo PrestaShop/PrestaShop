@@ -32,7 +32,7 @@ class BlockBanner extends Module
 	public function __construct()
 	{
 		$this->name = 'blockbanner';
-		$this->tab = 'other';
+		$this->tab = 'front_office_features';
 		$this->version = 1.1;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
