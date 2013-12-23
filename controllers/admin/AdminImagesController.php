@@ -491,7 +491,7 @@ class AdminImagesControllerCore extends AdminController
 							elseif (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height']))
 								$errors = true;
 						}
-						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
+						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the timeout, just enough time to process the end of the page on a slow server
 							return 'timeout';
 					}
 		}
@@ -508,13 +508,13 @@ class AdminImagesControllerCore extends AdminController
 							if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
 							{
 								$errors = true;
-								$this->errors[] = Tools::displayError(sprintf('Original image is corrupt (%s) or bad permission on folder', $existing_img));
+								$this->errors[] = Tools::displayError(sprintf('Original image is corrupt (%s) for product ID %2$d or bad permission on folder', $existing_img, (int)$imageObj->id_product));
 							}
 				}
 				else
 				{
 					$errors = true;
-					$this->errors[] = Tools::displayError(sprintf('Original image is missing or empty (%s)', $existing_img));
+					$this->errors[] = Tools::displayError(sprintf('Original image is missing or empty (%1$s) for product ID %2$d', $existing_img, (int)$imageObj->id_product));
 				}
 				if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
 					return 'timeout';
