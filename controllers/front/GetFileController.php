@@ -278,6 +278,7 @@ class GetFileControllerCore extends FrontController
 		header('Content-Type: '.$mimeType);
 		header('Content-Length: '.sprintf('%u', filesize($file)));
 		header('Content-Disposition: attachment; filename="'.$filename.'"');
+		@set_time_limit(0);
 		$fp = fopen($file, 'rb');
 		while (!feof($fp))
 			echo fgets($fp, 16384);
