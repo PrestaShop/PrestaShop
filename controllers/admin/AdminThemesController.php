@@ -289,6 +289,7 @@ class AdminThemesControllerCore extends AdminController
 			);
 		}
 
+		$image_url = false;
 		if ($this->object)
 		{
 			if ((int)$this->object->id > 0)
@@ -296,6 +297,9 @@ class AdminThemesControllerCore extends AdminController
 				$theme = New Theme((int)$this->object->id);
 				$theme_metas = $theme->getMetas();
 
+
+
+				$image_url = '<img alt="preview" src="../themes/'.$theme->directory.'/preview.jpg">';
 				foreach($theme_metas as $theme_meta)
 				{
 					$formated_metas[$theme_meta['id_meta']]['left'] = (int)$theme_meta['left_column'];
@@ -326,6 +330,13 @@ class AdminThemesControllerCore extends AdminController
 					'name' => 'name',
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+				),
+				array(
+					'type' => 'file',
+					'label' => $this->l('Preview image for the theme:'),
+					'name' => 'image_preview',
+					'display_image' => true,
+					'image' => $image_url,
 				),
 				array(
 					'type' => 'switch',
@@ -556,6 +567,17 @@ class AdminThemesControllerCore extends AdminController
 				$this->copyTheme($base_theme->directory, $new_dir);
 				$base_theme = new Theme((int)Tools::getValue('based_on'));
 			}
+
+			if (@getimagesize($_FILES['image_preview']['tmp_name']) && !ImageManager::validateUpload($_FILES['image_preview'], 300000))
+			{
+				move_uploaded_file($_FILES['image_preview']['tmp_name'], _PS_ALL_THEMES_DIR_.$new_dir.'/preview.jpg');
+			}
+			else
+			{
+				$this->errors[] = $this->l('Image not valid');
+				$this->display='form';
+				return false;
+			}
 		}
 
 		$theme = parent::processAdd();
@@ -568,6 +590,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		if (Tools::getIsset('id_theme') && Tools::getIsset('name') && Tools::getIsset('responsive') && Tools::getIsset('directory'))
 		{
+
 			$theme = New Theme((int)Tools::getValue('id_theme'));
 			$theme->name= Tools::getValue('name');
 			$theme->directory = Tools::getValue('directory');
@@ -576,6 +599,16 @@ class AdminThemesControllerCore extends AdminController
 			$theme->default_right_column = Tools::getValue('default_right_column');
 			$theme->product_per_page = (int)Tools::getValue('product_per_page');
 
+			if (@getimagesize($_FILES['image_preview']['tmp_name']) && !ImageManager::validateUpload($_FILES['image_preview'], 300000))
+			{
+				move_uploaded_file($_FILES['image_preview']['tmp_name'], _PS_ALL_THEMES_DIR_.$theme->directory.'/preview.jpg');
+			}
+			else
+			{
+				$this->errors[] = $this->l('Image not valid');
+				$this->display='form';
+				return false;
+			}
 			$theme->update();
 
 			$this->updateThemeMetas($theme);
@@ -592,7 +625,7 @@ class AdminThemesControllerCore extends AdminController
 
 			if ($obj->isUsed())
 			{
-				$this->errors[] = $this->l('The theme is already being used by at least one shop. Please choose another theme before continuing.');
+				$this->errors[] = $this->l('The theme is being used by at least one shop. Please choose another theme before continuing.');
 				return false;
 			}
 			if (is_dir(_PS_ALL_THEMES_DIR_.$obj->directory))
