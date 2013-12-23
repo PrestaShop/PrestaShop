@@ -55,7 +55,7 @@
 			<a class="btn btn-default button button-small" href="{$link->getPageLink('prices-drop')|escape:'html':'UTF-8'}" title="{l s='All specials' mod='blockspecials'}"><span>{l s='All specials' mod='blockspecials'}<i class="icon-chevron-right right"></i></span></a>
 		</div>
 {else}
-		<div>{l s='No specials at this time' mod='blockspecials'}</div>
+		<div>{l s='No specials at this time.' mod='blockspecials'}</div>
 {/if}
 	</div>
 </div>

@@ -26,7 +26,7 @@
 {if count($list)}
 {foreach $list AS $index => $tr}
 	<tr
-	{if $position_identifier}id="tr_{$id_category}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if}
+	{if $position_identifier}id="tr_{$position_group_identifier}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if}
 	class="{if isset($tr.class)} {$tr.class}{/if} {if $tr@iteration is odd by 1}odd{/if}"
 	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
 
@@ -47,7 +47,7 @@
 			{block name="open_td"}
 				<td
 					{if isset($params.position)}
-						id="td_{if !empty($id_category)}{$id_category}{else}0{/if}_{$tr.$identifier}"
+						id="td_{if !empty($position_group_identifier)}{$position_group_identifier}{else}0{/if}_{$tr.$identifier}"
 					{/if}
 					class="{if !$no_link}pointer{/if}
 					{if isset($params.position) && $order_by == 'position'  && $order_way != 'DESC'} dragHandle{/if}

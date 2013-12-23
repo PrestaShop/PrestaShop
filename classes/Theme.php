@@ -29,6 +29,9 @@ class ThemeCore extends ObjectModel
 	public $name;
 	public $directory;
 	public $responsive;
+	public $default_left_column;
+	public $default_right_column;
+	public $product_per_page;
 
 	/** @var int access rights of created folders (octal) */
 	public static $access_rights = 0775;
@@ -42,6 +45,9 @@ class ThemeCore extends ObjectModel
 			'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64, 'required' => true),
 			'directory' => array('type' => self::TYPE_STRING, 'validate' => 'isDirName', 'size' => 64, 'required' => true),
 			'responsive' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'default_left_column' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'default_right_column' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'product_per_page' => array('type' => self::TYPE_INT, 'validate' => 'isInt')
 		),
 	);
 
@@ -191,5 +197,45 @@ class ThemeCore extends ObjectModel
 			return Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme=' . $this->id);
 		}
 		return false;
+	}
+
+	public function toggleResponsive()
+	{
+		// Object must have a variable called 'responsive'
+		if (!array_key_exists('responsive', $this))
+			throw new PrestaShopException('property "responsive" is missing in object '.get_class($this));
+
+		// Update only responsive field
+		$this->setFieldsToUpdate(array('responsive' => true));
+
+		// Update active responsive on object
+		$this->responsive = !(int)$this->responsive;
+
+		// Change responsive to active/inactive
+		return $this->update(false);
+	}
+
+	public function toggleDefaultLeftColumn()
+	{
+		if (!array_key_exists('default_left_column', $this))
+			throw new PrestaShopException('property "default_left_column" is missing in object '.get_class($this));
+
+		$this->setFieldsToUpdate(array('default_left_column' => true));
+
+		$this->default_left_column = !(int)$this->default_left_column;
+
+		return $this->update(false);
+	}
+
+	public function toggleDefaultRightColumn()
+	{
+		if (!array_key_exists('default_right_column', $this))
+			throw new PrestaShopException('property "default_right_column" is missing in object '.get_class($this));
+
+		$this->setFieldsToUpdate(array('default_right_column' => true));
+
+		$this->default_right_column = !(int)$this->default_right_column;
+
+		return $this->update(false);
 	}
 }

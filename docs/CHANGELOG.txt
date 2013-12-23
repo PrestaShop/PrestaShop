@@ -24,6 +24,230 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.6.0.2 - (2013-12-19)  #
+####################################
+
+	Improved/changed features:
+
+	[*] Installer: install fixtures before modules
+
+	[*] FO : Dynamization of the number of items per page
+	[*] FO : Added posibilty to display new price instead of quantity discount
+	[*] Fo : Report of https://github.com/PrestaShop/PrestaShop/commit/f2d70076bd1cb7e4953978cca6d147ced72f4fa2
+	[*] FO : Move header modules to new hook, last part 2/2
+	[*] FO : Fixed issue with custom statues does not have any color, and text was not visible
+	[*] FO : Move header modules to new hook, first part 1/2
+	[*] FO: now you can download files >1G without running into max execution limitation    Added @ to suppress warning i safe mode.
+	[*] FO: now you can download files >1G without running into max execution limitation    when reading large files ( >1G ), you often get max execution timeout error, this fix will prevent this.
+	[*] FO : Move both sliders module on new hook
+	[*] FO : Merge of https://github.com/PrestaShop/PrestaShop/pull/48
+	[*] FO : Code cleaning, optimizations, new callstack available in the profiling tools
+	[*] FO : Merge of https://github.com/PrestaShop/PrestaShop/pull/854 again
+	[*] FO : Merge of https://github.com/PrestaShop/PrestaShop/pull/854
+	[*] FO : Merge of https://github.com/PrestaShop/PrestaShop/pull/766
+	[*] FO : Merge of https://github.com/PrestaShop/PrestaShop/pull/820 + https://github.com/PrestaShop/PrestaShop/commit/5e407db21e3e30a1a5fa94b9558314ffa21af407
+	[*] FO : Added getCategory getter in ProductController #PSCFV-8408
+	[*] FO : Added the possibility to deactivate customer groups management (for performances) [part 2]
+	[*] FO : Added the possibility to deactivate customer groups management (for performances) [part 1]
+
+	[*] BO : switch added on adminthemes
+	[*] BO : informations about the default left and right column added in the theme config file
+	[*] BO : performance improvement on AdminInvoices loading time
+	[*] BO : AdminThemes add form to update the theme_meta
+	[*] BO : MVC for myErrorHandler
+	[*] BO : AdminModules do not submit form on key Enter
+	[*] BO : delete theme_meta on theme delete
+	[*] BO : informations about the number of column by page added
+	[*] BO : Limit new error handler in BO
+	[*] BO : import a theme from a zip placed in the 'themes' folder in AdminThemes
+	[*] BO : changed dashgoals system
+	[*] BO : Merge of https://github.com/PrestaShop/PrestaShop/pull/636
+	[*] Bo : removed empty filters from the cookie (thus limiting its size)
+	[*] BO : Added option to always rewrite friendly url of product
+	[*] BO : Fixes issue with not beeing able to edit weight beacuse string is longer then max length
+	[*] BO : AdminImport, check choosen csv exists
+	[*] BO : AdminImport, check choosen scv exists
+	[*] BO : Merge of https://github.com/PrestaShop/PrestaShop/pull/852
+	[*] BO : replaced age by total spent in the customer list
+	[*] BO : Added countries to order list (idea from PhpMadman https://github.com/PrestaShop/PrestaShop/pull/909)
+	[*] BO : Added combination ean13 in the backend search #PSCFV-10436
+
+	[*] CORE : Set PHP error handler
+	[*] CORE: original search_query assign to .tpl    Avoid problems with special characters for eg. in polish language like ąźćłó etc.
+	[*] CORE : Merge of https://github.com/PrestaShop/PrestaShop/pull/582
+	[*] CORE : Throw Exception when no theme selected only in front office
+	[*] CORE : Throw Exception when no theme selected
+	[*] CORE : Merge of https://github.com/PrestaShop/PrestaShop/pull/729
+
+	[*] MO : blockviewed added title tag to image
+	[*] MO: blockcontact Adds title tag on link
+	[*] MO : Blockrss added title tag to links
+	[*] MO : Merge of https://github.com/PrestaShop/PrestaShop/pull/721
+
+	[*] PDF : Merge of https://github.com/PrestaShop/PrestaShop/pull/873
+
+	[*] LO : Corrected units for weight/volume/distance    UK uses Metric for weight, volume and short distances but uses Imperial  for long distances (i.e. Miles). Yes, it's a silly system here in the UK!    // I will add counties (states) with correct ISO codes when I get chance.
+
+	Fixed bugs:
+
+	[-] FO : Fix real time item compare count on bottom button
+	[-] FO : Fix bug #PSCSX-182, could not be redirected to addresses controller
+	[-] FO: fixed bug #PSCSX-88
+	[-] FO : Fix bug #PSCSX-107 qty input on virtual
+	[-] FO : Report of https://github.com/PrestaShop/PrestaShop/commit/7e841c4448ae70d762d33787da120b6695077f86
+	[-] FO : Report of https://github.com/PrestaShop/PrestaShop/commit/1140b5e8b5f7d10c8b34fc255269f80a34254901
+	[-] FO : Report of https://github.com/PrestaShop/PrestaShop/commit/50eee795ed9a2e592e25a8adf52f45a6eec84d11
+	[-] Fo : Report of https://github.com/PrestaShop/PrestaShop/commit/26d1ad0668bdcf573d84f2ff267951239c462c19
+	[-] FO : Report of https://github.com/PrestaShop/PrestaShop/commit/c8dfe1c17442b2d9d5f40520a4e633181a1ed9dc
+	[-] FO : Report of https://github.com/PrestaShop/PrestaShop/commit/f0f630fb5070d0401fec07815aba21ce5e159b4e
+	[-] Fo : Report of https://github.com/PrestaShop/PrestaShop/commit/6ef7f258eac40bf45a98ef6ba5dc4f2c5e3ea312
+	[-] FO : Report of https://github.com/PrestaShop/PrestaShop/commit/c7323c2bfeb019074a408a68e0b58f30cb36de01
+	[-] FO : Report of https://github.com/PrestaShop/PrestaShop/commit/7c1623c7fab3bbb6a92be2395ee81f9175775f96
+	[-] FO : Report of https://github.com/PrestaShop/PrestaShop/commit/2ffc2962790e8ca0c8b2c4688fdd82dec3c76382
+	[-] FO : Report of https://github.com/PrestaShop/PrestaShop/commit/81945cef71fe56ad15b2719e3143ae490a97290f
+	[-] FO : Report of https://github.com/PrestaShop/PrestaShop/commit/6d3640e895924a48480ff9f52e56658e0a8621f9
+	[-] FO : Report of https://github.com/PrestaShop/PrestaShop/commit/ad4ecefcf97d356308f7ebbb99a3755e4ee7793a
+	[-] FO : Fix versatile jQuery selector    `:hidden` selects form elements with `type="hidden"` but also : elements with `display:none`, elements with their width/height equal to zero and which the ancestor element is hidden.    `input[type=hidden]` is more appropriate for those reasons.
+	[-] FO : Remove bad links on home tabs
+	[-] FO : fixed product comparator when there are no products anymore
+	[-] FO : Added condition to display the phone number only if it is set up in the admin
+	[-] FO : Fix bug #PSCFV-11190 double escaping on customization
+	[-] FO : fixed cart rules cache id #PSCFV-11123 #PSCFV-11175
+	[-] FO : fixed potential error when you delete a best seller #PSCFV-11167
+	[-] FO : CCC do not withdraw \t+ and \s+
+	[-] FO : Merge of https://github.com/PrestaShop/PrestaShop/pull/718
+	[-] FO : trailing \t in minified html
+	[-] FO : Merge of https://github.com/ldecoker/PrestaShop/commit/d3bf4d233005511e08554a7c283e0b992815e01a
+	[-] FO : Merge of https://github.com/PrestaShop/PrestaShop/pull/696
+	[-] FO : exclude external css from CCC #PSCFV-10839
+	[-] FO : header add translation for fields
+	[-] FO : Contact-form add translation for fields
+	[-] FO : Fixed bug #PSCFV-11076
+	[-] FO : fixed tax rules cache
+	[-] FO : Fixed meta title entities #PSCFV-10312
+	[-] FO : Fix bug #PSCFV-11052 no carrier fess whne tax display to false
+	[-] FO : Fix #PSCFV-11069 remove unused file
+
+	[-] BO : fix theme config file format for meta
+	[-] BO : fix check column existence
+	[-] BO : duplicate function
+	[-] BO : fix associated table theme_meta
+	[-] BO : FixBug #PSCSX-190 button ducplicated
+	[-] BO : Fix duplicate button on dashboard configuration
+	[-] BO : Fixbug #PSCSX-140 - Module anchor after search
+	[-] BO : Update correcte date value on dashboard
+	[-] BO: Fix language fields validator
+	[-] BO : improved simulation mode in the dashboard
+	[-] BO : Report of https://github.com/PrestaShop/PrestaShop/commit/8d3c78f6b2dc2aeb2e48dc6e99c2914f3fb4d32d
+	[-] BO : FixBug uploading product image with empty legend.
+	[-] BO : FixBug #PSCSX-133 - Error in validation process
+	[-] BO : fix bug in adminthemes
+	[-] BO : fix bug in adminthemes while updating the mobile theme parameter
+	[-] BO : FixBug #PSCSX-160 Missing button
+	[-] BO : FixBug #PSCSX-84 Fix image mapping position
+	[-] BO : FixBug #PSCSX-122 Live module favorite
+	[-] BO : FixBug #PSCSX-115 Friendly URL generated
+	[-] BO : FixBug #PSCSX-116 Wrong friendly url hint description
+	[-] BO : Set correct table alias name in updatePosition
+	[-] BO : FixBug #PSCSX-37 - Double upload in carrier wizard
+	[-] BO: call actionProductUpdate hook on status change
+	[-] BO : FixBug #PSCSX-86 Missing color selector
+	[-] BO : FixBug #PSCSX-91 Wrong texture display in products attributes colors
+	[-] BO : FixBug #PSCSX-100 wrong checkbox integration
+	[-] BO : carrier wizard no fees display
+	[-] BO : Fixes for Advanced Stock Management Import    [*] BO : Combinations import supports Advanced Stock Management    [*] BO : Advanced Stock Management import now supports stock increase    [*] BO : Advanced Stock Management stock unit price uses wholesale_price (Product Cost) or 0.00001 if not set    [*] BO : Added Advanced Stock Management to csv import docs
+	[-] BO : fixed bug #PSCSX-76 - carrier wizard fees not display after reload carrier
+	[-] BO : fixed top right link with the "open in a new tab" button
+	[-] BO : Better maxlength on shippinh input fields
+	[-] BO : Fix timeout handling on product images regeneration
+	[-] BO : carrier wizard range tab now overflow scroll
+	[-] BO : carrier wizard fixed when select zone and set no shipping fees
+	[-] BO : carrier wizard, remove fees when desabled zone
+	[-] BO : Fix bug #PSCFV-11162 AdminImport, Exception on ProductSupplier
+	[-] BO : better error display for forgotten password #PSCSX-58
+	[-] BO: Add some useful hooks to modify the listings/options/forms
+	[-] BO : Adminimport reset selected csv if not exists
+	[-] BO : Category code cleaning, fixing, moving and multistore-ing
+	[-] BO : Merge of https://github.com/PrestaShop/PrestaShop/pull/819
+	[-] BO : Merge of https://github.com/smilesrg/PrestaShop/commit/b7b79ff4614e5be7891f8702acdc46c8303a2fdd
+	[-] BO : Undefined on image upload, revert of https://github.com/PrestaShop/PrestaShop/commit/48b7a49b1aea34a2def355ffec1d4c08dfdbdfd6
+	[-] BO : Double separator in function createTemplate()    smarty->getTemplateDir() returns a result ending with a separator,    so no need to add DIRECTORY_SEPARATOR ?
+	[-] BO : FixBug #PSCSX-40 categories unchanged after select a new home category
+	[-] BO : AdminImport new supplier csv
+	[-] BO : AdminImport products add missing fields    Add to file header : Width, Height, Depth, Minimal quantity, Visibility, Additional shipping cost, Unity, Unit price ratio
+	[-] BO : AdminImport add image suppliers
+	[-] BO : AdminImport add image manufacturers
+	[-] BO : Cart rules optimization / Attempt to fix #PSCFV-8895 (need to be double-checked)
+	[-] BO : AdminImages manufacturers/suppliers/stores image    • Missing logo Fashion_Manufacturer.jpg (small/medium/large)    install-dev/fixtures/fashion/img/m    • Missing logo Fashion_Supplier.jpg (small/medium/large)    install-dev/fixtures/fashion/img/su
+	[-] BO : getCartsRuleByCode should be retrocompatible
+	[-] BO : Fixed potential errors with untranslated admin tabs #PSCFV-8104
+	[-] BO : Remove warning with open_basdir on module list
+	[-] BO : fixed bug #PSCSX-25 - carrier wizard summary design and missing infos
+	[-] BO : fixed bug #PSCSX-32 class-danger on mail send error
+	[-] BO : FixBug #PSCSX-33 Misplaced save button
+
+	[-] Core: remove module overrides if installation failed
+	[-] CORE : Fix missing php self
+	[-] CORE : FixBug duplicate hook in getHookModuleExecList
+	[-] CORE: Fix Pagination problem
+	[-] CORE : FixBug #PSCSX-132 - file drag & drop
+	[-] CORE : After adding cart rule redirect improvements    This allows us display success message after adding CartRule or create other actions
+	[-] CORE : FixBug #PSCSX-89 - Up configuration name size to 255
+	[-] CORE : Ensure correct parent category for home categories
+	[-] Core: Fix #PSCFV-11165 numerical configuration values should not be overridden if the value is the same between shop and global context
+	[-] Core : integrated modified pull request https://github.com/ExploZe/PrestaShop/commit/40abb0aa72607ddfe912b364d8fc7d65733d2bd8
+	[-] CORE : Remove notices on ob clean
+	[-] CORE : Merge of https://github.com/PrestaShop/PrestaShop/pull/816
+	[-] CORE : Merge of https://github.com/PrestaShop/PrestaShop/pull/813
+	[-] CORE : Merge of https://github.com/PrestaShop/PrestaShop/pull/814
+	[-] CORE : No Exception when CONTENT_LENGTH is no set
+	[-] Core : fixed smarty escape htmlall > html
+
+	[-] MO : homeslider - FixBug #PSCSX-213 missing pointer on description zone
+	[-] MO : homeslider - add on description click event
+	[-] MO : homeslider - fix wrong text position
+	[-] MO : Blockbanner - FixBug #PSCSX-155
+	[-] MO : homeslider - FixBug #PSCSX-158
+	[-] MO : themeconfigurator - Fix live configurator posistion
+	[-] MO : Themeconfigurator - FixBug #PSCSX-135
+	[-] MO : Blockcart #PSCSX-176 - Fix Scroll top
+	[-] MO : homeslider -  FixBug #PSCSX-178 - missing php_self variable declaration
+	[-] MO : blocktopmenu FixBug #PSCSX-151 - Move Buttons
+	[-] MO : fixed warning in addsharethis
+	[-] MO : cheque - FixBug #PSCSX-164 - typo
+	[-] MO : Blocktopmenu - Fix missing categories and cms categories options
+	[-] MO : BlockLayered - FixBug #PNM-1331 Categories now filtered by groups
+	[-] MO : BlockLayered - FixBug #PNM-468 Correct sprintf format
+	[-] MO : BlockLayered - FixBug #PNM-468 Wrong filter unit
+	[-] MO : blockcms - Clean cache when "display on footer" parameter is updated
+	[-] MO : Newsletter - FixBug #PSCSX-113 - Missing id in field desc
+	[-] MO : BlockLayered - Fix missing attribute anchor separator
+	[-] MO : display_column_left not assigned to smarty in modules initContent() + ssl on loyalty front controller
+	[-] MO : Dateofdelivery Fix bug #PNM-1773 when a product has an available date
+	[-] MO : Bug fix - Blockwishlist, Product image link in BO
+	[-] MO : cheque add translation for fields
+	[-] MO : bankwire add translation for fields
+
+	[-] WS : Fix bug #PSCFV-11328 : Don't insert attribute image(s) id if no id to insert    There was an issue with the webservice where inserting an empty <images node_type="image"></images> tag would result in an error 500 when it was not needed.
+	[-] WS: update product default combination after updating a new add or modify a combination
+
+	Added Features:
+
+	[+] FO : Missing old default templates
+
+	[+] BO : Add error control to modules uploading
+	[+] BO : Merge of https://github.com/PrestaShop/PrestaShop/pull/570
+	[+] BO : AdminSearchConf add import alias
+	[+] BO : AdminAttributes add import combinations
+	[+] BO : AdminProducts add import products
+
+	[+] Core: Allow to disable modules on each devices && Mobile Detect library update
+	[+] CORE : Merg of https://github.com/PrestaShop/PrestaShop/pull/775
+
+	[+] MO : Add name value when hover color in blocklayered.tpl - Thanks @codeurWeb
+
+
+####################################
 #   v1.5.6.1 - (2013-11-18)  #
 ####################################
 

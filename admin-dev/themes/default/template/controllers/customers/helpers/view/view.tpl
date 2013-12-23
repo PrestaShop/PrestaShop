@@ -472,7 +472,7 @@
 					<tbody>
 					{foreach $connections as $connection}
 						<tr>
-							<td>{dateFormat date=$order['date_add'] full=0}</td>
+							<td>{dateFormat date=$connection['date_add'] full=0}</td>
 							<td>{$connection['pages']}</td>
 							<td>{$connection['time']}</td>
 							<td>{$connection['http_referer']}</td>

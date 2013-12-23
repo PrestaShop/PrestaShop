@@ -3134,7 +3134,9 @@ class BlockLayered extends Module
 		// Clean duplicate values
 		$nArray = array_unique($nArray);
 		asort($nArray);
-		
+
+		$this->context->controller->addColorsToProductList($products);
+
 		$smarty->assign(
 			array(
 				'homeSize' => Image::getSize(ImageType::getFormatedName('home')),

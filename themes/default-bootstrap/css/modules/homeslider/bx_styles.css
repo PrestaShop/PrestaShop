@@ -29,12 +29,44 @@
   #homepage-slider #homeslider {
     margin: 0 auto;
     padding: 0; }
+  #homepage-slider .homeslider-description {
+    padding: 50px 50px;
+    cursor: pointer; }
+    #homepage-slider .homeslider-description h2 {
+      font-size: 2.7em;
+      color: white;
+      margin: 0;
+      padding: 0; }
+    #homepage-slider .homeslider-description p {
+      width: 50%;
+      font-size: 1.15em;
+      line-height: 1.3em;
+      padding: 0.5em 0;
+      color: white; }
+    #homepage-slider .homeslider-description button {
+      font-size: 1.2em;
+      text-transform: uppercase; }
+    @media (max-width: 1200px) {
+      #homepage-slider .homeslider-description {
+        padding: 20px;
+        font-size: 0.8em; } }
+    @media (max-width: 768px) {
+      #homepage-slider .homeslider-description {
+        padding: 30px;
+        font-size: 0.7em; }
+        #homepage-slider .homeslider-description p {
+          font-size: 1.5em; } }
+    @media (max-width: 480px) {
+      #homepage-slider .homeslider-description {
+        padding: 30px;
+        font-size: 0.5em; }
+        #homepage-slider .homeslider-description p {
+          font-size: 1.7em; } }
 
 /*****************************************************************************
 						BXSlider Styles
 ********************************************************************************/
 #homepage-slider .homeslider-container {
-  height: 447px;
   position: relative; }
 #homepage-slider .homeslider-image {
   position: absolute;
