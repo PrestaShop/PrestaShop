@@ -32,7 +32,7 @@ class Dashgoals extends Module
 	protected static $month_labels = array();
 	protected static $types = array('traffic', 'conversion', 'avg_cart_value');
 
-	protected static $real_color = array('#9E5BA1', '#00A89C','#3AC4ED','#F99031');
+	protected static $real_color = array('#9E5BA1','#00A89C','#3AC4ED','#F99031');
 	protected static $more_color = array('#803E84','#008E7E','#20B2E7','#F66E1B');
 	protected static $less_color = array('#BC77BE','#00C2BB','#51D6F2','#FBB244');
 

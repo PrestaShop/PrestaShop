@@ -29,6 +29,8 @@ if (!defined('_PS_VERSION_'))
 
 class Dashactivity extends Module
 {
+	protected static $colors = array('#1F77B4', '#FF7F0E', '#2CA02C');
+
 	public function __construct()
 	{
 		$this->name = 'dashactivity';
@@ -95,6 +97,11 @@ class Dashactivity extends Module
 	
 	public function hookDashboardData($params)
 	{
+		if (strlen($params['date_from']) == 10)
+			$params['date_from'] .= ' 00:00:00';
+		if (strlen($params['date_to']) == 10)
+			$params['date_to'] .= ' 23:59:59';
+
 		if (Configuration::get('PS_DASHBOARD_SIMULATION'))
 		{
 			$days = round((strtotime($params['date_to']) - strtotime($params['date_from'])) / 3600 / 24);
@@ -121,13 +128,16 @@ class Dashactivity extends Module
 					'orders_trends' => array('way' => 'down', 'value' => 0.42),
 				),
 				'data_list_small' => array(
-					'dash_traffic_source' => array('prestashop.com' => round($visits / 2), 'google.com' => round($visits / 3), 'Direct Traffic' => round($visits / 4))
+					'dash_traffic_source' => array(
+						'<i class="icon-circle" style="color:'.self::$colors[0].'"></i> prestashop.com' => round($visits / 2),
+						'<i class="icon-circle" style="color:'.self::$colors[1].'"></i> google.com' => round($visits / 3),
+						'<i class="icon-circle" style="color:'.self::$colors[2].'"></i> Direct Traffic' => round($visits / 4))
 				),
 				'data_chart' => array(
 					'dash_trends_chart1' => array('chart_type' => 'pie_chart_trends', 'data' => array(
-						array('key' => 'prestashop.com', 'y' => round($visits / 2)),
-						array('key' => 'google.com', 'y' => round($visits / 3)),
-						array('key' => 'Direct Traffic', 'y' => round($visits / 4))
+						array('key' => 'prestashop.com', 'y' => round($visits / 2), 'color' => self::$colors[0]),
+						array('key' => 'google.com', 'y' => round($visits / 3), 'color' => self::$colors[1]),
+						array('key' => 'Direct Traffic', 'y' => round($visits / 4), 'color' => self::$colors[2])
 					))
 				)
 			);
@@ -275,31 +285,41 @@ class Dashactivity extends Module
 				'orders_trends' => array('way' => 'down', 'value' => 0.42),
 			),
 			'data_list_small' => array(
-				'dash_traffic_source' => $this->getReferer($params['date_from'], $params['date_to']),
+				'dash_traffic_source' => $this->getTrafficSources($params['date_from'], $params['date_to']),
 			),
 			'data_chart' => array(
 				'dash_trends_chart1' => $this->getChartTrafficSource($params['date_from'], $params['date_to']),
 			),
 		);
 	}
-	
-	public function getChartTrafficSource($date_from, $date_to)
+
+	protected function getChartTrafficSource($date_from, $date_to)
 	{
 		$referers = $this->getReferer($date_from, $date_to);
 		$return = array('chart_type' => 'pie_chart_trends', 'data' => array());
-		foreach ($referers as $referer_name => $nbr)
-			$return['data'][] = array('key' => $referer_name, 'y' => $nbr);
-
+		$i = 0;
+		foreach ($referers as $referer_name => $n)
+			$return['data'][] = array('key' => $referer_name, 'y' => $n, 'color' => self::$colors[$i++]);
 		return $return;
 	}
-	
-	public function getReferer($date_from, $date_to, $limit = 10)
+
+	protected function getTrafficSources($date_from, $date_to)
+	{
+		$referrers = $this->getReferer($date_from, $date_to, 3);
+		$traffic_sources = array();
+		$i = 0;
+		foreach ($referrers as $referrer_name => $n)
+			$traffic_sources['<i class="icon-circle" style="color:'.self::$colors[$i++].'"></i> '.$referrer_name] = $n;
+		return $traffic_sources;
+	}
+
+	protected function getReferer($date_from, $date_to, $limit = 3)
 	{
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
 		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{
 			$websites = array();
-			if ($result = $gapi->requestReportData('ga:source', 'ga:visitors', $date_from, $date_to, '-ga:visitors', null, 1, 3))
+			if ($result = $gapi->requestReportData('ga:source', 'ga:visitors', $date_from, $date_to, '-ga:visitors', null, 1, $limit))
 			foreach ($result as $row)
 				$websites[$row['dimensions']['source']] = $row['metrics']['visitors'];
 		}
@@ -308,7 +328,7 @@ class Dashactivity extends Module
 			$directLink = $this->l('Direct link');
 			$websites = array($directLink => 0);
 
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			$result = Db::getInstance()->ExecuteS('
 			SELECT http_referer
 			FROM '._DB_PREFIX_.'connections
 			WHERE date_add BETWEEN "'.$date_from.'" AND "'.$date_to.'"
