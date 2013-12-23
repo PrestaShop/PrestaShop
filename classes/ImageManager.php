@@ -31,6 +31,10 @@
  */
 class ImageManagerCore
 {
+	const ERROR_FILE_NOT_EXIST = 1;
+	const ERROR_FILE_WIDTH     = 2;
+	const ERROR_MEMORY_LIMIT   = 3;
+
 	/**
 	 * Generate a cached thumbnail for object lists (eg. carrier, order states...etc)
 	 *
@@ -122,7 +126,7 @@ class ImageManagerCore
 	 * @param string $file_type
 	 * @return boolean Operation result
 	 */
-	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false)
+	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false, &$error = 0)
 	{
 		if (PHP_VERSION_ID < 50300)
 			clearstatcache();
@@ -130,7 +134,8 @@ class ImageManagerCore
 			clearstatcache(true, $src_file);
 		
 		if (!file_exists($src_file) || !filesize($src_file))
-			return false;
+			return !($error = self::ERROR_FILE_NOT_EXIST);
+
 		list($src_width, $src_height, $type) = getimagesize($src_file);
 
 		// If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
@@ -141,7 +146,7 @@ class ImageManagerCore
 			$file_type = 'png';
 
 		if (!$src_width)
-			return false;
+			return !($error = self::ERROR_FILE_WIDTH);
 		if (!$dst_width)
 			$dst_width = $src_width;
 		if (!$dst_height)
@@ -174,7 +179,7 @@ class ImageManagerCore
 		}
 
 		if (!ImageManager::checkImageMemoryLimit($src_file))
-			return false;
+			return !($error = self::ERROR_MEMORY_LIMIT);
 		
 		$dest_image = imagecreatetruecolor($dst_width, $dst_height);
 
