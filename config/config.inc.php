@@ -93,6 +93,8 @@ $context = Context::getContext();
 try 
 {
 	$context->shop = Shop::initialize();
+	if (Tools::isEmpty($theme_name = $context->shop->getTheme()) && !defined('_PS_ADMIN_DIR_'))
+ 		throw new PrestaShopException(Tools::displayError('Current theme unselected. Please check your theme configuration.'));
 }
 catch (PrestaShopException $e)
 {
