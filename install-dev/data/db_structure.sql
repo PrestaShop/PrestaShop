@@ -2012,6 +2012,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_theme` (
   `responsive` tinyint(1) NOT NULL DEFAULT '0',
   `default_left_column` tinyint(1) NOT NULL DEFAULT '0',
   `default_right_column` tinyint(1) NOT NULL DEFAULT '0',
+  `product_per_page` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id_theme`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 

@@ -31,6 +31,7 @@ class ThemeCore extends ObjectModel
 	public $responsive;
 	public $default_left_column;
 	public $default_right_column;
+	public $product_per_page;
 
 	/** @var int access rights of created folders (octal) */
 	public static $access_rights = 0775;
@@ -46,6 +47,7 @@ class ThemeCore extends ObjectModel
 			'responsive' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'default_left_column' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'default_right_column' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'product_per_page' => array('type' => self::TYPE_INT, 'validate' => 'isInt')
 		),
 	);
 

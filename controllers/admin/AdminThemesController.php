@@ -378,6 +378,11 @@ class AdminThemesControllerCore extends AdminController
 						)
 					),
 				)
+			,array(
+					'type' => 'text',
+					'label' => $this->l('Number of products per page'),
+					'name'=>'product_per_page',
+				)
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
@@ -569,6 +574,7 @@ class AdminThemesControllerCore extends AdminController
 			$theme->responsive = Tools::getValue('responsive');
 			$theme->default_left_column = Tools::getValue('default_left_column');
 			$theme->default_right_column = Tools::getValue('default_right_column');
+			$theme->product_per_page = (int)Tools::getValue('product_per_page');
 
 			$theme->update();
 
@@ -804,6 +810,7 @@ class AdminThemesControllerCore extends AdminController
 		$variation->addAttribute('responsive', $theme_to_export->responsive);
 		$variation->addAttribute('default_left_column', $theme_to_export->default_left_column);
 		$variation->addAttribute('default_right_column', $theme_to_export->default_right_column);
+		$variation->addAttribute('product_per_page', $theme_to_export->product_per_page);
 		$variation->addAttribute('from', Tools::getValue('compa_from'));
 		$variation->addAttribute('to', Tools::getValue('compa_to'));
 
@@ -1331,6 +1338,10 @@ class AdminThemesControllerCore extends AdminController
 
 						$name = strval($xml->variations->variation[0]['name']);
 
+						$product_per_page = 12;
+						if (isset($xml->variations->variation[0]['product_per_page']))
+							$product_per_page = intval($xml->variations->variation[0]['product_per_page']);
+
 						$responsive = false;
 						if (isset($xml->variations->variation[0]['responsive']))
 							$responsive = (bool)strval($xml->variations->variation[0]['responsive']);
@@ -1359,6 +1370,7 @@ class AdminThemesControllerCore extends AdminController
 							$new_theme->directory  = $theme_directory;
 							$new_theme->default_left_column = $default_left_column;
 							$new_theme->default_right_column = $default_right_column;
+							$new_theme->product_per_page = $product_per_page;
 
 							$target_dir = _PS_ALL_THEMES_DIR_ . $theme_directory;
 
@@ -1777,9 +1789,15 @@ class AdminThemesControllerCore extends AdminController
 				'desc' => $this->l('Save')
 			);
 
-			$to_install = $this->formatHelperArray($theme_module['to_install']);
-			$to_enable  = $this->formatHelperArray($theme_module['to_enable']);
-			$to_disable = $this->formatHelperArray($theme_module['to_disable']);
+			$to_install = array();
+			$to_enable  = array();
+			$to_disable = array();
+			if (isset($theme_module['to_install']))
+				$to_install = $this->formatHelperArray($theme_module['to_install']);
+			if (isset($theme_module['to_enable']))
+				$to_enable = $this->formatHelperArray($theme_module['to_enable']);
+			if (isset($theme_module['to_disable']))
+				$to_disable = $this->formatHelperArray($theme_module['to_disable']);
 
 			$fields_form              = array(
 				'form' => array(
@@ -2009,7 +2027,7 @@ class AdminThemesControllerCore extends AdminController
 
 			$this->img_error = $this->updateImages($xml);
 
-			foreach ($shops as $shop)
+			foreach ($shops as $id_shop)
 			{
 
 				foreach ($_POST as $key => $value)
@@ -2030,7 +2048,7 @@ class AdminThemesControllerCore extends AdminController
 									$module->enable();
 
 								if ((int)$module->id > 0 && isset($module_hook[$module->name]))
-									$this->hookModule($module->id, $module_hook[$module->name], $shop);
+									$this->hookModule($module->id, $module_hook[$module->name], $id_shop);
 							}
 							unset($module_hook[$module->name]);
 						}
@@ -2052,16 +2070,17 @@ class AdminThemesControllerCore extends AdminController
 									$module->enable();
 
 								if ((int)$module->id > 0 && isset($module_hook[$module->name]))
-									$this->hookModule($module->id, $module_hook[$module->name], $shop);
+									$this->hookModule($module->id, $module_hook[$module->name], $id_shop);
 
 								unset($module_hook[$module->name]);
 							}
 						}
 					} else if (strncmp($key, 'to_disable', strlen('to_disable')) == 0)
 					{
-						$id_shop = (int)substr($key, 15, 1);
+						$key_exploded = explode('_', $key);
+						$id_shop_module = (int)substr($key_exploded[2], 4);
 
-						if ((int)$id_shop>0 && $id_shop != (int)$shop)
+						if ((int)$id_shop_module > 0 && $id_shop_module != (int)$id_shop)
 							continue;
 
 						if (file_exists(_PS_MODULE_DIR_ . $value))
@@ -2081,12 +2100,16 @@ class AdminThemesControllerCore extends AdminController
 						}
 					}
 				}
-
-				$shop = New Shop((int)$shop);
+				$shop = New Shop((int)$id_shop);
 				$shop->id_theme = (int)Tools::getValue('id_theme');
 				$this->context->shop->id_theme = $shop->id_theme;
 				$this->context->shop->update();
 				$shop->save();
+
+				if (Shop::isFeatureActive())
+					Configuration::updateValue('PS_PRODUCTS_PER_PAGE', (int)$theme->product_per_page, false, null, (int)$id_shop);
+				else
+					Configuration::updateValue('PS_PRODUCTS_PER_PAGE', (int)$theme->product_per_page);
 			}
 
 			$this->doc = array();
@@ -2096,6 +2119,7 @@ class AdminThemesControllerCore extends AdminController
 				$this->doc[strval($row['name'])] = '../themes/'.$theme->directory.'/docs/'.basename(strval($row['path']));
 			}
 		}
+
 
 		Tools::clearCache($this->context->smarty);
 		$this->theme_name = $theme->name;
