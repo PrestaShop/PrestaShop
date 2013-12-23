@@ -840,6 +840,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$helper = new HelperList();
 		$this->setHelperDisplay($helper);
 		$helper->actions = array('details');
+		$helper->force_show_bulk_actions = true;
 		$helper->override_folder = 'supply_orders_receipt_history/';
 		$helper->toolbar_btn = $this->toolbar_btn;
 
