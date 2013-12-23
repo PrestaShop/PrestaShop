@@ -303,7 +303,7 @@ class GetFileControllerCore extends FrontController
 		?>
 		<script type="text/javascript">
 		//<![CDATA[
-		alert("<?php echo html_entity_decode($translations[$msg], ENT_QUOTES, 'utf-8'); ?>");
+		alert("<?php echo isset($translations[$msg]) ? html_entity_decode($translations[$msg], ENT_QUOTES, 'utf-8') : html_entity_decode($msg, ENT_QUOTES, 'utf-8'); ?>");
 		window.location.href = '<?php echo __PS_BASE_URI__ ?>';
 		//]]>
 		</script>
