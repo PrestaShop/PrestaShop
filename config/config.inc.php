@@ -101,7 +101,7 @@ catch (PrestaShopException $e)
 	$e->displayMessage();
 }
 
-define('_THEME_NAME_', $context->shop->getTheme());
+define('_THEME_NAME_', $theme_name);
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
 /* Include all defines related to base uri and theme name */
