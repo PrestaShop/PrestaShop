@@ -227,6 +227,7 @@ class AdminControllerCore extends Controller
 
 	/** @var string	identifier to use for changing positions in lists (can be omitted if positions cannot be changed) */
 	protected $position_identifier;
+	protected $position_group_identifier;
 
 	/** @var boolean Table records are not deleted but marked as deleted if set to true */
 	protected $deleted = false;
@@ -1964,6 +1965,7 @@ class AdminControllerCore extends Controller
 		$helper->multiple_fieldsets = $this->multiple_fieldsets;
 		$helper->row_hover = $this->row_hover;
 		$helper->position_identifier = $this->position_identifier;
+		$helper->position_group_identifier = $this->position_group_identifier;
 		$helper->controller_name = $this->controller_name;
 		$helper->list_id = isset($this->list_id) ? $this->list_id : $this->table;
 		$helper->bootstrap = $this->bootstrap;
