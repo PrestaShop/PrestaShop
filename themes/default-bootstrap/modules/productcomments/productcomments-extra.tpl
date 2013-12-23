@@ -40,7 +40,7 @@ $(function(){
 <div id="product_comments_block_extra" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 	{if $nbComments != 0}
 	<div class="comments_note clearfix">
-		<span>{l s='Rating' mod='productcomments'}&nbsp</span>
+		<span>{l s='Rating' mod='productcomments'}&nbsp;</span>
 		<div class="star_content clearfix">
 		{section name="i" start=0 loop=5 step=1}
 			{if $averageTotal le $smarty.section.i.index}
