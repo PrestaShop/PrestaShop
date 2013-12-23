@@ -94,7 +94,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 						{
 							if (empty($except))
 								unset($exceptions[$key]);
-							elseif (!Validate::isFileName($except))
+							elseif (!empty($except) && !Validate::isFileName($except))
 								$this->errors[] = Tools::displayError('No valid value for field exceptions has been defined.');
 						}
 						if (!$this->errors && !$module->registerExceptions($id_hook, $exceptions, Shop::getContextListShopID()))
