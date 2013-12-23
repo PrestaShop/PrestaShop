@@ -101,6 +101,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->table      = 'attribute';
 			$this->className  = 'Attribute';
 			$this->identifier = 'id_attribute';
+			$this->position_identifier = 'id_attribute';
 			$this->list_id    = 'attribute_values';
 			$this->lang       = true;
 
@@ -621,6 +622,32 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			if ($this->display == 'edit')
 				$this->display = 'editAttributes';
 		}
+	}
+
+	public function processPosition()
+	{
+		if (Tools::getIsset('viewattribute_group'))
+		{
+			$object = new Attribute((int)Tools::getValue('id_attribute'));
+			self::$currentIndex = self::$currentIndex.'&viewattribute_group';
+		}
+		else
+			$object = new AttributeGroup((int)Tools::getValue('id_attribute_group'));
+
+		if (!Validate::isLoadedObject($object))
+		{
+			$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').
+				' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+		}
+		elseif (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
+			$this->errors[] = Tools::displayError('Failed to update the position.');
+		else
+		{
+			$id_identifier_str = ($id_identifier = (int)Tools::getValue($this->identifier)) ? '&'.$this->identifier.'='.$id_identifier : '';
+			$redirect = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.$id_identifier_str.'&token='.$this->token;
+			$this->redirect_after = $redirect;
+		}
+		return $object;
 	}
 
 	/**
