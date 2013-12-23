@@ -204,10 +204,13 @@ function getBlogRss() {
 }
 
 function toggleDashConfig(widget) {
+	var func_name = widget + '_toggleDashConfig';
 	if ($('#'+widget+' section.dash_config').hasClass('hide'))
 	{
 		$('#'+widget+' section').not('.dash_config').slideUp(500, function () {
 			$('#'+widget+' section.dash_config').fadeIn(500).removeClass('hide');
+			if (window[func_name] != undefined)
+				window[func_name]();
 		});
 	}
 	else
@@ -215,6 +218,8 @@ function toggleDashConfig(widget) {
 		$('#'+widget+' section.dash_config').slideUp(500, function () {
 			$('#'+widget+' section').not('.dash_config').slideDown(500).removeClass('hide');
 			$('#'+widget+' section.dash_config').addClass('hide');
+			if (window[func_name] != undefined)
+				window[func_name]();
 		});
 	}
 }

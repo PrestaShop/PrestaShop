@@ -47,7 +47,12 @@ function selectDashgoalsChart(type)
 				value.disabled = true;
 		});
 	}
+}
 
+/* 	Refresh dashgoals chart when coming from the config panel
+	Called from /js/admin-dashboard.js: toggleDashConfig() */
+function dashgoals_toggleDashConfig()
+{
 	d3.select('#dash_goals_chart1 svg')
 		.datum(dashgoals_data)
 		.transition()
@@ -55,6 +60,7 @@ function selectDashgoalsChart(type)
 	nv.utils.windowResize(dashgoals_chart.update);
 }
 
+/* 	Calculate Sales based on the traffic, average cart value and conversion rate */
 function dashgoals_calc_sales()
 {
 	$('.dashgoals_sales').each(function() {
