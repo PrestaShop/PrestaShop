@@ -185,9 +185,12 @@ class HelperListCore extends Helper
 		if (isset($this->fields_list['position']))
 		{
 			if ($this->position_identifier)
-				$id_category = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', ($this->is_cms ? '1' : Category::getRootCategory()->id ));
+				if (isset($this->position_group_identifier))
+					$position_group_identifier = (int)Tools::getValue($this->position_group_identifier);
+				else
+					$position_group_identifier = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', ($this->is_cms ? '1' : Category::getRootCategory()->id ));
 			else
-				$id_category = Category::getRootCategory()->id;
+				$position_group_identifier = Category::getRootCategory()->id;
 
 			$positions = array_map(create_function('$elem', 'return (int)($elem[\'position\']);'), $this->_list);
 			sort($positions);
@@ -253,11 +256,11 @@ class HelperListCore extends Helper
 					$this->_list[$index][$key] = array(
 						'position' => $tr[$key],
 						'position_url_down' => $this->currentIndex.
-							(isset($key_to_get) ? '&'.$key_to_get.'='.(int)$id_category : '').
+							(isset($key_to_get) ? '&'.$key_to_get.'='.(int)$position_group_identifier : '').
 							'&'.$this->position_identifier.'='.$id.
 							'&way=1&position='.((int)$tr['position'] + 1).'&token='.$this->token,
 						'position_url_up' => $this->currentIndex.
-							(isset($key_to_get) ? '&'.$key_to_get.'='.(int)$id_category : '').
+							(isset($key_to_get) ? '&'.$key_to_get.'='.(int)$position_group_identifier : '').
 							'&'.$this->position_identifier.'='.$id.
 							'&way=0&position='.((int)$tr['position'] - 1).'&token='.$this->token
 					);
@@ -326,7 +329,7 @@ class HelperListCore extends Helper
 			'table' => $this->table,
 			'token' => $this->token,
 			'color_on_bg' => $this->colorOnBackground,
-			'id_category' => isset($id_category) ? $id_category : false,
+			'position_group_identifier' => isset($position_group_identifier) ? $position_group_identifier : false,
 			'bulk_actions' => $this->bulk_actions,
 			'positions' => isset($positions) ? $positions : null,
 			'order_by' => $this->orderBy,
