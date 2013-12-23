@@ -60,7 +60,7 @@ class DbPDOCore extends Db
 	/**
 	 * @see DbCore::connect()
 	 */
-	public function	connect()
+	public function connect()
 	{
 		try {
 			$this->link = $this->_getPDO($this->server, $this->user, $this->password, $this->database, 5);
@@ -78,7 +78,7 @@ class DbPDOCore extends Db
 	/**
 	 * @see DbCore::disconnect()
 	 */
-	public function	disconnect()
+	public function disconnect()
 	{
 		unset($this->link);
 	}
@@ -112,7 +112,7 @@ class DbPDOCore extends Db
 	/**
 	 * @see DbCore::Insert_ID()
 	 */
-	public function	Insert_ID()
+	public function Insert_ID()
 	{
 		return $this->link->lastInsertId();
 	}
@@ -120,7 +120,7 @@ class DbPDOCore extends Db
 	/**
 	 * @see DbCore::Affected_Rows()
 	 */
-	public function	Affected_Rows()
+	public function Affected_Rows()
 	{
 		return $this->result->rowCount();
 	}
