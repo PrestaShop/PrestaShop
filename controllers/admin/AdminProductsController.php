@@ -3711,9 +3711,28 @@ class AdminProductsControllerCore extends AdminController
 					continue;
 				}
 
-				if (!ImageManager::resize($file['save_path'], $new_path.'.'.$image->image_format))
+				$error = 0;
+
+				if (!ImageManager::resize($file['save_path'], $new_path.'.'.$image->image_format, null, null, 'jpg', false, $error))
 				{
-					$file['error'] = Tools::displayError('An error occurred while copying image.');
+					switch ($error)
+					{
+						case ImageManager::ERROR_FILE_NOT_EXIST :
+							$file['error'] = Tools::displayError('An error occurred while copying image, the file does not exist anymore.');
+							break;
+
+						case ImageManager::ERROR_FILE_WIDTH :
+							$file['error'] = Tools::displayError('An error occurred while copying image, the file width is 0px.');
+							break;
+
+						case ImageManager::ERROR_MEMORY_LIMIT :
+							$file['error'] = Tools::displayError('An error occurred while copying image, check your memory limit.');
+							break;
+
+						default:
+							$file['error'] = Tools::displayError('An error occurred while copying image.');
+							break;
+					}
 					continue;
 				}
 				else
