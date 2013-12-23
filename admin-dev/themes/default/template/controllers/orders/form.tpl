@@ -978,25 +978,13 @@
 		$.each(addresses, function() {
 			if (this.id_address == id_address_invoice)
 			{
-				address_invoice_detail = this.company+' '+this.firstname+' '+this.lastname+'<br />'+this.address1+'<br />'+this.address2+'<br />'+this.postcode+' '+this.city;
-
-				if (this.state != null)
-					address_invoice_detail += ' '+this.state;
-
-				address_invoice_detail += '</br>'+this.country;
-
+				address_invoice_detail = this.formated_address;
 				invoice_address_edit_link = "{$link->getAdminLink('AdminAddresses')}&id_address="+this.id_address+"&updateaddress&realedit=1&liteDisplaying=1&submitFormAjax=1#";
 			}
 
 			if(this.id_address == id_address_delivery)
 			{
-				address_delivery_detail = this.company+' '+this.firstname+' '+this.lastname+'<br />'+this.address1+'<br />'+this.address2+'<br />'+this.postcode+' '+this.city;
-
-				if (this.state != null)
-					address_delivery_detail += ' '+this.state;
-
-				address_delivery_detail += '</br>'+this.country;
-
+				address_delivery_detail = this.formated_address;
 				delivery_address_edit_link = "{$link->getAdminLink('AdminAddresses')}&id_address="+this.id_address+"&updateaddress&realedit=1&liteDisplaying=1&submitFormAjax=1#";
 			}
 
@@ -1329,6 +1317,7 @@
 					<select id="id_address_delivery" name="id_address_delivery"></select>
 				</div>
 				<div class="well">
+					<a href="" id="edit_delivery_address" class="btn btn-default pull-right fancybox"><i class="icon-pencil"></i> {l s='Edit'}</a>
 					<div id="address_delivery_detail"></div>
 				</div>
 			</div>
@@ -1341,6 +1330,7 @@
 					<select id="id_address_invoice" name="id_address_invoice"></select>
 				</div>
 				<div class="well">
+					<a href="" id="edit_invoice_address" class="btn btn-default pull-right fancybox"><i class="icon-pencil"></i> {l s='Edit'}</a>
 					<div id="address_invoice_detail"></div>
 				</div>
 			</div>
