@@ -41,11 +41,11 @@
 								<span class="switch prestashop-switch">
 									<input type="radio" name="tracking_dt" id="tracking_dt_on" value="1" {if $tracking_dt}checked="checked"{/if} />
 									<label class="t radio" for="tracking_dt_on">
-										<i class="icon-check-sign color_success"></i> {l s='Yes'}
+										{l s='Yes'}
 									</label>
 									<input type="radio" name="tracking_dt" id="tracking_dt_off" value="0" {if !$tracking_dt}checked="checked"{/if}  />
 									<label class="t radio" for="tracking_dt_off"> 
-										<i class="icon-ban-circle color_danger"></i> {l s='No'}
+										{l s='No'}
 									</label>
 									<a class="slide-button btn"></a>
 								</span>
