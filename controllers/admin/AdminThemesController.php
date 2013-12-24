@@ -336,7 +336,7 @@ class AdminThemesControllerCore extends AdminController
 					'label' => $this->l('Preview image for the theme:'),
 					'name' => 'image_preview',
 					'display_image' => true,
-					'hint' => sprintf($this->l('Max image size:%1d'), Tools::getMaxUploadSize()),
+					'hint' => sprintf($this->l('Max image size:%1s'), Tools::formatBytes(Tools::getMaxUploadSize())),
 					'image' => $image_url,
 				),
 				array(
