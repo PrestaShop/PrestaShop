@@ -197,13 +197,12 @@ var generated_date = {$smarty.now|intval};
         <div class="layer_cart_product col-xs-12 col-md-6">
         	<span class="cross" title="{l s='Close window' mod='blockcart'}"></span>
             <h2><i class="icon-ok"></i>{l s='Product successfully added to your shopping cart' mod='blockcart'}</h2>
-            <div class="product-image-container">
-                <img class="layer_cart_img img-responsive" alt="img" src="{$base_dir}img/404.gif"/>
+            <div class="product-image-container layer_cart_img">
             </div>
             <div class="layer_cart_product_info">
                 <span id="layer_cart_product_title" class="product-name"></span>
                 <span id="layer_cart_product_attributes"></span>
-                <div><strong class="dark">{l s='Quantity:' mod='blockcart'}</strong><span id="layer_cart_product_quantity"></span></div>
+                <div><strong class="dark">{l s='Quantity' mod='blockcart'}</strong><span id="layer_cart_product_quantity"></span></div>
                 <div><strong class="dark">{l s='Total' mod='blockcart'}</strong><span id="layer_cart_product_price"></span></div>
             </div>
         </div>
