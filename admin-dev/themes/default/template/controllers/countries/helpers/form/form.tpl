@@ -64,11 +64,11 @@
 						<span class="switch prestashop-switch">
 							<input type="radio" name="{$input.name}" id="{$input.name}_on" value="1">
 							<label class="radio" for="{$input.name}_on">
-								<i class="icon-check-sign color_success"></i> {l s='Yes'}
+								{l s='Yes'}
 							</label>
 							<input type="radio" name="{$input.name}" id="{$input.name}_off" value="0" checked="checked">
 							<label class="radio" for="{$input.name}_off">
-								<i class="icon-ban-circle color_danger"></i> {l s='No'}
+								{l s='No'}
 							</label>
 							<a class="slide-button btn"></a>
 						</span>
