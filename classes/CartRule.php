@@ -167,7 +167,7 @@ class CartRuleCore extends ObjectModel
 	 */
 	public static function copyConditions($id_cart_rule_source, $id_cart_rule_destination)
 	{
-		Db::getInstance()->execute('
+		Db::getInstance()->execute(' 
 		INSERT INTO `'._DB_PREFIX_.'cart_rule_shop` (`id_cart_rule`, `id_shop`)
 		(SELECT '.(int)$id_cart_rule_destination.', id_shop FROM `'._DB_PREFIX_.'cart_rule_shop` WHERE `id_cart_rule` = '.(int)$id_cart_rule_source.')');
 		Db::getInstance()->execute('
@@ -187,6 +187,42 @@ class CartRuleCore extends ObjectModel
 		// Todo : should be changed soon, be must be copied too
 		// Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule` WHERE `id_cart_rule` = '.(int)$this->id);
 		// Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule_value` WHERE `id_product_rule` NOT IN (SELECT `id_product_rule` FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
+
+		// Copy products/category filters
+		$products_rules_group_source = Db::getInstance()->ExecuteS('
+		SELECT id_product_rule_group,quantity FROM `'._DB_PREFIX_.'cart_rule_product_rule_group` 
+		WHERE `id_cart_rule` = '.(int)$id_cart_rule_source.' ');
+
+		foreach ($products_rules_group_source as $product_rule_group_source)
+		{
+			Db::getInstance()->execute('
+			INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`) 
+			VALUES ('.(int)$id_cart_rule_destination.','.(int)$product_rule_group_source['quantity'].')');
+			$id_product_rule_group_destination = Db::getInstance()->Insert_ID();
+
+			$products_rules_source = Db::getInstance()->ExecuteS('
+			SELECT id_product_rule,type FROM `'._DB_PREFIX_.'cart_rule_product_rule` 
+			WHERE `id_product_rule_group` = '.(int)$product_rule_group_source['id_product_rule_group'].' ');
+
+			foreach ($products_rules_source as $product_rule_source)
+			{
+				Db::getInstance()->execute('
+				INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule` (`id_product_rule_group`, `type`) 
+				VALUES ('.(int)$id_product_rule_group_destination.',"'.pSql($product_rule_source['type']).'")');
+				$id_product_rule_destination = Db::getInstance()->Insert_ID();
+
+				$products_rules_values_source = Db::getInstance()->ExecuteS('
+				SELECT id_item FROM `'._DB_PREFIX_.'cart_rule_product_rule_value` 
+				WHERE `id_product_rule` = '.(int)$product_rule_source['id_product_rule'].' ');
+
+				foreach ($products_rules_values_source as $product_rule_value_source)
+				{
+					Db::getInstance()->execute('
+					INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) 
+					VALUES ('.(int)$id_product_rule_destination.','.(int)$product_rule_value_source['id_item'].')');
+				}
+			}
+		}
 	}
 
 	/**
