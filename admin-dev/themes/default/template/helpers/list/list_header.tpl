@@ -27,7 +27,10 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('table.{$list_id} .filter').keypress(function(event){
-				formSubmit(event, 'submitFilterButton{$list_id}')
+				if(formSubmit(event, 'submitFilterButton{$list_id}')){
+					event.preventDefault();
+					return false;
+				}
 			})
 
 			$('#submitFilterButton{$list_id}').click(function() {
