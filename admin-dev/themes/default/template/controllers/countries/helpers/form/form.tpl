@@ -70,7 +70,7 @@
 							<label class="radio" for="{$input.name}_off">
 								<i class="icon-ban-circle color_danger"></i> {l s='No'}
 							</label>
-							<a class="slide-button btn btn-default"></a>
+							<a class="slide-button btn"></a>
 						</span>
 					</div>
 				</div>

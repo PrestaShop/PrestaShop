@@ -38,7 +38,7 @@
 				<label for="multishop_{$product_tab}_off">
 					<i class="icon-ban-circle color_danger"></i> {l s='No'}
 				</label>
-				<a class="slide-button btn btn-default"></a>
+				<a class="slide-button btn"></a>
 			</span>
 			<p class="help-block"><strong>{l s='Check / Uncheck all'}</strong> {l s='(If you are editing this page for several shops, some fields like "name" or "price" are may be disabled. You will need check these fields in order to edit them)'}</p>
 		</div>

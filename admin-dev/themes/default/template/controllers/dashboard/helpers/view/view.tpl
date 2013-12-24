@@ -138,7 +138,7 @@
 					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_off">
 						<i class="icon-ban-circle color_danger"></i> {l s='No'}
 					</label>
-					<a class="slide-button btn btn-default"></a>
+					<a class="slide-button btn"></a>
 				</span>
 				{l s='This mode generates fake data so you can try your Dashboard without real numbers.'}
 			</section>
