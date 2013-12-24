@@ -47,6 +47,7 @@ function selectDashgoalsChart(type)
 				value.disabled = true;
 		});
 	}
+	dashgoals_toggleDashConfig();
 }
 
 /* 	Refresh dashgoals chart when coming from the config panel
