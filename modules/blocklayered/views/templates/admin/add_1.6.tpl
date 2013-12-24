@@ -42,7 +42,7 @@
 											<span>{l s='Yes' mod='blockfacette'}</span>
 											<span>{l s='No' mod='blockfacette'}</span>
 										</span>
-										<a class="slide-button btn btn-default"></a>
+										<a class="slide-button btn"></a>
 									</label>
 								</div>
 								<div class="col-lg-4">
@@ -79,7 +79,7 @@
 											<span>{l s='Yes' mod='blockfacette'}</span>
 											<span>{l s='No' mod='blockfacette'}</span>
 										</span>
-										<a class="slide-button btn btn-default"></a>
+										<a class="slide-button btn"></a>
 									</label>
 								</div>
 								<div class="col-lg-4">
@@ -116,7 +116,7 @@
 											<span>{l s='Yes' mod='blockfacette'}</span>
 											<span>{l s='No' mod='blockfacette'}</span>
 										</span>
-										<a class="slide-button btn btn-default"></a>
+										<a class="slide-button btn"></a>
 									</label>
 								</div>
 								<div class="col-lg-4">
@@ -153,7 +153,7 @@
 											<span>{l s='Yes' mod='blockfacette'}</span>
 											<span>{l s='No' mod='blockfacette'}</span>
 										</span>
-										<a class="slide-button btn btn-default"></a>
+										<a class="slide-button btn"></a>
 									</label>
 								</div>
 								<div class="col-lg-4">
@@ -190,7 +190,7 @@
 											<span>{l s='Yes' mod='blockfacette'}</span>
 											<span>{l s='No' mod='blockfacette'}</span>
 										</span>
-										<a class="slide-button btn btn-default"></a>
+										<a class="slide-button btn"></a>
 									</label>
 								</div>
 								<div class="col-lg-4">
@@ -227,7 +227,7 @@
 											<span>{l s='Yes' mod='blockfacette'}</span>
 											<span>{l s='No' mod='blockfacette'}</span>
 										</span>
-										<a class="slide-button btn btn-default"></a>
+										<a class="slide-button btn"></a>
 									</label>
 								</div>
 								<div class="col-lg-4">
@@ -266,7 +266,7 @@
 												<span>{l s='Yes' mod='blockfacette'}</span>
 												<span>{l s='No' mod='blockfacette'}</span>
 											</span>
-											<a class="slide-button btn btn-default"></a>
+											<a class="slide-button btn"></a>
 										</label>
 									</div>
 									<div class="col-lg-4">
@@ -317,7 +317,7 @@
 												<span>{l s='Yes' mod='blockfacette'}</span>
 												<span>{l s='No' mod='blockfacette'}</span>
 											</span>
-											<a class="slide-button btn btn-default"></a>
+											<a class="slide-button btn"></a>
 										</label>
 									</div>
 									<div class="col-lg-4">

@@ -10,7 +10,7 @@
 			<label class="t" for="free_shipping_off">
 				<i class="icon-ban-circle color_danger"></i> {l s='No'}
 			</label>
-			<a class="slide-button btn btn-default"></a>
+			<a class="slide-button btn"></a>
 		</span>
 	</div>
 </div>
@@ -123,7 +123,7 @@
 			<label class="t" for="free_gift_off">
 				<i class="icon-ban-circle color_danger"></i> {l s='No'}
 			</label>
-			<a class="slide-button btn btn-default"></a>
+			<a class="slide-button btn"></a>
 		</span>
 	</div>
 </div>

@@ -392,13 +392,13 @@
 													{/if}
 												>
 													{if $value.value == 1}
-														<i class="icon-check-sign color_success"></i> {l s='Yes'}
+														{l s='Yes'}
 													{else}
-														<i class="icon-ban-circle color_danger"></i> {l s='No'}
+														{l s='No'}
 													{/if}
 												</label>
 												{/foreach}
-												<a class="slide-button btn btn-default"></a>
+												<a class="slide-button btn"></a>
 											</span>
 										</div>
 									</div>

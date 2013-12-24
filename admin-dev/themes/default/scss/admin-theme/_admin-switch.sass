@@ -66,8 +66,6 @@
 @mixin switch-toggle()
 	@include switch-shared()
 	position: relative
-	// For callout panels in foundation
-	padding: 0 !important
 	input
 		position: absolute
 		opacity: 0
@@ -87,8 +85,15 @@
 		z-index: 1
 		width: 50%
 		height: 100%
+		color: white
+		border: solid 1px $brand-success
+		background-color: lighten($brand-success,10%)
+		@include box-shadow($brand-success 0 -1px 0 inset)
 	input:last-of-type:checked ~ a
 		left: 50%
+		border: solid 1px $brand-danger
+		background-color: lighten($brand-danger,10%)
+		@include box-shadow($brand-danger 0 -1px 0 inset)
 	//Generate styles for the multiple states
 	@for $i from 1 through 3
 		$state: $i + 2
@@ -123,7 +128,7 @@
 		text-align: center
 		font-weight: 400
 		@include box-shadow(rgba(black,0.15) 0 1px 3px 1px inset)
-		* 
+		*
 			outline: 0!important
 		label
 			text-transform: uppercase
@@ -132,10 +137,7 @@
 			cursor: pointer
 			@include transition(color 0.2s ease-out)
 		input:checked + label
-			color: #666
-		input:not(:checked) + label
-			i
-				color: #999!important
+			color: white
 		> span
 			color: #666
 			text-transform: uppercase

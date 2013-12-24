@@ -24,7 +24,7 @@
 *}
 
 <!doctype html>
-<html lang="en">
+<html>
 	<head>
 		<meta charset="UTF-8">
 		<title>{l s='Invalid security token'}</title>

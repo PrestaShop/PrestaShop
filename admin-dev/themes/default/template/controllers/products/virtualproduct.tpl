@@ -115,7 +115,7 @@
 							<span>{l s='Yes'}</span>
 							<span>{l s='No'}</span>
 						</span>
-						<a class="slide-button btn btn-default"></a>
+						<a class="slide-button btn"></a>
 					</label>
 				</div>
 			</div>
