@@ -220,7 +220,7 @@ class ThemeConfigurator extends Module
 	public function hookdisplayTop($params)
 	{
 		$this->context->smarty->assign(array(
-				'htmlitems'=> $this->getItemsFromHook('top'),
+				'htmlitems' => $this->getItemsFromHook('top'),
 				'hook' => 'top'
 		));
 		return $this->display(__FILE__, 'hook.tpl');
@@ -229,7 +229,7 @@ class ThemeConfigurator extends Module
 	public function hookDisplayHome() 
 	{
 		$this->context->smarty->assign(array(
-			'htmlitems'=> $this->getItemsFromHook('home'),
+			'htmlitems' => $this->getItemsFromHook('home'),
 			'hook' => 'home'
 		));
 
@@ -239,7 +239,7 @@ class ThemeConfigurator extends Module
 	public function hookDisplayLeftColumn() 
 	{
 		$this->context->smarty->assign(array(
-			'htmlitems'=> $this->getItemsFromHook('left'),
+			'htmlitems' => $this->getItemsFromHook('left'),
 			'hook' => 'left'
 		));
 
@@ -249,7 +249,7 @@ class ThemeConfigurator extends Module
 	public function hookDisplayRightColumn() 
 	{
 		$this->context->smarty->assign(array(
-			'htmlitems'=> $this->getItemsFromHook('right'),
+			'htmlitems' => $this->getItemsFromHook('right'),
 			'hook' => 'right'
 		));
 		
@@ -288,7 +288,7 @@ class ThemeConfigurator extends Module
 		}
 
 		$this->context->smarty->assign(array(
-			'htmlitems'=> $this->getItemsFromHook('footer'),
+			'htmlitems' => $this->getItemsFromHook('footer'),
 			'hook' => 'footer'
 		));
 		
@@ -301,11 +301,11 @@ class ThemeConfigurator extends Module
 			return false;
 
 		return Db::getInstance()->ExecuteS('
-			SELECT * 
-			FROM `'._DB_PREFIX_.'themeconfigurator` 
-			WHERE id_shop = '.(int)$this->context->shop->id.' AND id_lang = '.(int)$this->context->language->id.' AND hook = \''.pSQL($hook).'\' AND active = 1 
-			ORDER BY item_order ASC'
-		);
+		SELECT *
+		FROM `'._DB_PREFIX_.'themeconfigurator`
+		WHERE id_shop = '.(int)$this->context->shop->id.' AND id_lang = '.(int)$this->context->language->id.'
+		AND hook = \''.pSQL($hook).'\' AND active = 1
+		ORDER BY item_order ASC');
 	}
 
 	protected function deleteImage($image) 

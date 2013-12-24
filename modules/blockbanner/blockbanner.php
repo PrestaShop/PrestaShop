@@ -75,19 +75,14 @@ class BlockBanner extends Module
 	{
 		if (!$this->isCached('blockbanner.tpl', $this->getCacheId()))
 		{
-			if (file_exists(_PS_MODULE_DIR_.'blockbanner'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR
-				.Configuration::get('BLOCKBANNER_IMG', $this->context->language->id)))
-				$this->smarty->assign('banner_img', 'img/'.Configuration::get('BLOCKBANNER_IMG', $this->context->language->id));
+			$imgname = Configuration::get('BLOCKBANNER_IMG', $this->context->language->id);
+			if (file_exists(_PS_MODULE_DIR_.$this->name.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$imgname))
+				$this->smarty->assign('banner_img', $this->context->link->protocol_content.Tools::getMediaServer($imgname).$this->_path.'img/'.$imgname);
 
-			$this->smarty->assign('banner_link', Configuration::get('BLOCKBANNER_LINK', $this->context->language->id));
-			$this->smarty->assign('banner_desc', Configuration::get('BLOCKBANNER_DESC', $this->context->language->id));
-			$sql = 'SELECT COUNT(*)
-					FROM '._DB_PREFIX_.'store s'
-					.Shop::addSqlAssociation('store', 's');
-			$total = Db::getInstance()->getValue($sql);
-
-			if ($total <= 0)
-				return;
+			$this->smarty->assign(array(
+				'banner_link' => Configuration::get('BLOCKBANNER_LINK', $this->context->language->id),
+				'banner_desc' => Configuration::get('BLOCKBANNER_DESC', $this->context->language->id)
+			));
 		}
 
 		return $this->display(__FILE__, 'blockbanner.tpl', $this->getCacheId());

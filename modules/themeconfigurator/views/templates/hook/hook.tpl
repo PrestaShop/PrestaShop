@@ -8,7 +8,7 @@
                 	<a href="{$hItem.url}" class="item-link"{if $hItem.target == 1} target="_blank"{/if}>
                 {/if}
 	            	{if $hItem.image}
-	                	<img src="{$module_dir}images/{$hItem.image}" class="item-img" alt="" />
+	                	<img src="{$link->getMediaLink("`$module_dir`images/`$hItem.image`")}" class="item-img" alt="" />
 	                {/if}
 	            	{if $hItem.title && $hItem.title_use == 1}
                         <h3 class="item-title">{$hItem.title}</h3>
