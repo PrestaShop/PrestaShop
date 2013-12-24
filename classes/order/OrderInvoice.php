@@ -460,14 +460,8 @@ class OrderInvoiceCore extends ObjectModel
 			SELECT oi.*
 			FROM `'._DB_PREFIX_.'order_invoice` oi
 			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
-			WHERE '.(int)$id_order_state.' = (
-				SELECT id_order_state
-				FROM '._DB_PREFIX_.'order_history oh
-				WHERE oh.id_order = o.id_order
-				ORDER BY date_add DESC, id_order_history DESC
-				LIMIT 1
-			)
-			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
+			WHERE '.(int)$id_order_state.' = o.current_state 
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').' 
 			ORDER BY oi.`date_add` ASC
 		');
 
