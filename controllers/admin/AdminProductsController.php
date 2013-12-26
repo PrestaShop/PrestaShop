@@ -2448,14 +2448,26 @@ class AdminProductsControllerCore extends AdminController
 		{
 			if (($product = $this->loadObject(true)))
 			{
-				// adding button for delete this product
-				if ($this->tabAccess['delete'] && $this->display != 'add')
-					$this->page_header_toolbar_btn['delete'] = array(
-						'short' => 'Delete',
-						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;deleteproduct',
-						'desc' => $this->l('Delete this product'),
-						'confirm' => 1,
-						'js' => 'if (confirm(\''.$this->l('Delete product?').'\')){return true;}else{event.preventDefault();}'
+				$this->page_header_toolbar_btn['save-and-stay'] = array(
+					'short' => 'SaveAndStay',
+					'href' => '#',
+					'desc' => $this->l('Save and stay'),
+				);
+
+				$this->page_header_toolbar_btn['save'] = array(
+					'short' => 'Save',
+					'href' => '#',
+					'desc' => $this->l('Save'),
+				);
+
+				// adding button for preview this product
+				if ($url_preview = $this->getPreviewUrl($product))
+					$this->page_header_toolbar_btn['preview'] = array(
+						'short' => 'Preview',
+						'href' => $url_preview,
+						'desc' => $this->l('Preview'),
+						'target' => true,
+						'class' => 'previewUrl'
 					);
 
 				// adding button for duplicate this product
@@ -2468,16 +2480,6 @@ class AdminProductsControllerCore extends AdminController
 						'js' => 'if (confirm(\''.$this->l('Also copy images').' ?\')) document.location = \''.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;duplicateproduct\'; else document.location = \''.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;duplicateproduct&amp;noimage=1\';'
 					);
 
-				// adding button for preview this product
-				if ($url_preview = $this->getPreviewUrl($product))
-					$this->page_header_toolbar_btn['preview'] = array(
-						'short' => 'Preview',
-						'href' => $url_preview,
-						'desc' => $this->l('Preview'),
-						'target' => true,
-						'class' => 'previewUrl'
-					);
-
 				// adding button for preview this product statistics
 				if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php') && $this->display != 'add')
 					$this->page_header_toolbar_btn['stats'] = array(
@@ -2486,17 +2488,15 @@ class AdminProductsControllerCore extends AdminController
 					'desc' => $this->l('Product sales'),
 				);
 
-				$this->page_header_toolbar_btn['save'] = array(
-					'short' => 'Save',
-					'href' => '#',
-					'desc' => $this->l('Save'),
-				);	
-
-				$this->page_header_toolbar_btn['save-and-stay'] = array(
-					'short' => 'SaveAndStay',
-					'href' => '#',
-					'desc' => $this->l('Save and stay'),
-				);	
+				// adding button for delete this product
+				if ($this->tabAccess['delete'] && $this->display != 'add')
+					$this->page_header_toolbar_btn['delete'] = array(
+						'short' => 'Delete',
+						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;deleteproduct',
+						'desc' => $this->l('Delete this product'),
+						'confirm' => 1,
+						'js' => 'if (confirm(\''.$this->l('Delete product?').'\')){return true;}else{event.preventDefault();}'
+					);
 			}
 		}
 		parent::initPageHeaderToolbar();
