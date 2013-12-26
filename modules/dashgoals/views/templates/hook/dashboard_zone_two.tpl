@@ -51,16 +51,16 @@
 	<section class="loading">
 		<div class="btn-group" data-toggle="buttons">
 			<label class="btn btn-default">
-				<input type="radio" name="options" onchange="selectDashgoalsChart('traffic');"><i class="icon-circle" style="color:{$colors[0]}"></i> {l s='Traffic'}
+				<input type="radio" name="options" onchange="selectDashgoalsChart('traffic');"><i class="icon-circle" style="color:{$colors[0]}"></i> {l s='Traffic' mod='dashgoals'}
 			</label>
 			<label class="btn btn-default">
-				<input type="radio" name="options" onchange="selectDashgoalsChart('conversion');"><i class="icon-circle" style="color:{$colors[1]}"></i> {l s='Conversion'}
+				<input type="radio" name="options" onchange="selectDashgoalsChart('conversion');"><i class="icon-circle" style="color:{$colors[1]}"></i> {l s='Conversion' mod='dashgoals'}
 			</label>
 			<label class="btn btn-default">
-				<input type="radio" name="options" onchange="selectDashgoalsChart('avg_cart_value');"><i class="icon-circle" style="color:{$colors[2]}"></i> {l s='Average Cart Value'}
+				<input type="radio" name="options" onchange="selectDashgoalsChart('avg_cart_value');"><i class="icon-circle" style="color:{$colors[2]}"></i> {l s='Average Cart Value' mod='dashgoals'}
 			</label>
 			<label class="btn btn-default active">
-				<input type="radio" name="options" onchange="selectDashgoalsChart('sales');"><i class="icon-circle" style="color:{$colors[3]}"></i> {l s='Sales'}
+				<input type="radio" name="options" onchange="selectDashgoalsChart('sales');"><i class="icon-circle" style="color:{$colors[3]}"></i> {l s='Sales' mod='dashgoals'}
 			</label>
 		</div>
 		<div id="dash_goals_chart1" class="chart with-transitions">

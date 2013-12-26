@@ -139,7 +139,7 @@
 				</tr>
 				<tr>
 					<td class="label">
-						{l s='Use tax to filter price' mod='blocklayered'}
+						{l s='Use tax to filter price' mod='blocklayered' mod='blocklayered'}
 					</td>
 					<td>
 						<input type="radio" name="ps_layered_filter_price_usetax" id="ps_layered_filter_price_usetax_on" value="1"{if $price_use_tax} checked="checked"{/if}>

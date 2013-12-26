@@ -47,10 +47,10 @@ function add()
 		text = text.replace(/(^\s*)|(\s*$)/gi,"");
 		if (val == "PRODUCT")
 		{
-			val = prompt('{l s="Set ID product" js=1}');
+			val = prompt('{l s="Set ID product" mod='blocktopmenu' js=1}');
 			if (val == null || val == "" || isNaN(val))
 				return;
-			text = '{l s="Product ID" js=1}'+val;
+			text = '{l s="Product ID" mod='blocktopmenu' js=1}'+val;
 			val = "PRD"+val;
 		}
 		$("#items").append('<option value="'+val+'" selected="selected">'+text+'</option>');
@@ -79,7 +79,7 @@ function move(up)
         var tomove = $('#items option:selected');
         if (tomove.length >1)
         {
-                alert('{l s="Please select just one item"}');
+                alert('{l s="Please select just one item" mod='blocktopmenu'}');
                 return false;
         }
         if (up)

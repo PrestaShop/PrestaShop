@@ -32,7 +32,7 @@
 {include file="$tpl_dir./order-steps.tpl"}
 
 {if isset($nbProducts) && $nbProducts <= 0}
-	<p class="warning">{l s='Your shopping cart is empty.'}</p>
+	<p class="warning">{l s='Your shopping cart is empty.' mod='cheque'}</p>
 {else}
 
 <h3>{l s='Check payment' mod='cheque'}</h3>
