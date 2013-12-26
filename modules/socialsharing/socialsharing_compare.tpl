@@ -22,28 +22,34 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if $PS_SC_TWITTER || PS_SC_FACEBOOK || PS_SC_GOOGLE}
-	<div class="socialsharing_compare">
-{if $PS_SC_TWITTER}
-		<div>
-			<a href="javascript:void(0);" onclick="socialsharing_twitter_click();">
-				<img src="{$link->getMediaLink("`$module_dir`img/twitter.gif")}" alt="Tweet" />
-			</a>
-		</div>
-{/if}
-{if $PS_SC_FACEBOOK}
-		<div>
-			<a href="javascript:void(0);" onclick="socialsharing_facebook_click();">
-				<img src="{$link->getMediaLink("`$module_dir`img/facebook.gif")}" alt="Facebook Like" />
-			</a>
-		</div>
-{/if}
-{if $PS_SC_GOOGLE}
-		<div>
-			<a href="javascript:void(0);" onclick="socialsharing_google_click();">
-				<img src="{$link->getMediaLink("`$module_dir`img/google.gif")}" alt="Google Plus" />
-			</a>
-		</div>
-{/if}
+{if $PS_SC_TWITTER || $PS_SC_FACEBOOK || $PS_SC_GOOGLE || $PS_SC_PINTEREST}
+	<div id="social-share-compare">
+		<p>{l s="Share this comparison whith your friends:"}</p>
+		<p class="socialsharing_product">
+			{if $PS_SC_TWITTER}
+				<button type="button" class="btn btn-default btn-block btn-twitter" onclick="socialsharing_twitter_click({if isset($product)}'{$product->name|addslashes} {$link->getProductLink($product)|addslashes}'{/if});">
+					<i class="icon-twitter"></i> Tweet
+					<!-- <img src="{$link->getMediaLink("`$module_dir`img/twitter.gif")}" alt="Tweet" /> -->
+				</button>
+			{/if}
+			{if $PS_SC_FACEBOOK}
+				<button type="button" class="btn btn-default btn-block btn-facebook" onclick="socialsharing_facebook_click();">
+					<i class="icon-facebook"></i> Share
+					<!-- <img src="{$link->getMediaLink("`$module_dir`img/facebook.gif")}" alt="Facebook Like" /> -->
+				</button>
+			{/if}
+			{if $PS_SC_GOOGLE}
+				<button type="button" class="btn btn-default btn-block btn-google-plus" onclick="socialsharing_google_click();">
+					<i class="icon-google-plus"></i> Google+
+					<!-- <img src="{$link->getMediaLink("`$module_dir`img/google.gif")}" alt="Google Plus" /> -->
+				</button>
+			{/if}
+			{if $PS_SC_PINTEREST}
+				<button type="button" class="btn btn-default btn-block btn-pinterest" onclick="socialsharing_pinterest_click();">
+					<i class="icon-pinterest"></i> Pinterest
+					<!-- <img src="{$link->getMediaLink("`$module_dir`img/pinterest.gif")}" alt="Pinterest" /> -->
+				</button>
+			{/if}
+		</p>
 	</div>
 {/if}

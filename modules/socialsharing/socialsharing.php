@@ -29,7 +29,7 @@ if (!defined('_PS_VERSION_'))
 
 class SocialSharing extends Module
 {
-	protected static $_networks = array('Facebook', 'Twitter', 'Google');
+	protected static $_networks = array('Facebook', 'Twitter', 'Google', 'Pinterest');
 	protected $_html = '';
 
 	public function __construct()
@@ -45,7 +45,7 @@ class SocialSharing extends Module
 		parent::__construct();	
 
 		$this->displayName = $this->l('Social Sharing');
-		$this->description = $this->l('Display social sharing buttons (twitter, facebook, google plus)');
+		$this->description = $this->l('Display social sharing buttons (Twitter, Facebook, Google+, Pinterest)');
 	}
 
 	public function install()
@@ -55,8 +55,9 @@ class SocialSharing extends Module
 
 		// Activate every option by default
 		Configuration::updateValue('PS_SC_TWITTER', 1);
-		Configuration::updateValue('PS_SC_GOOGLE', 1);
 		Configuration::updateValue('PS_SC_FACEBOOK', 1);
+		Configuration::updateValue('PS_SC_GOOGLE', 1);
+		Configuration::updateValue('PS_SC_PINTEREST', 1);
 		
 		// The module will add a meta in the product page header and add a javascript file
 		$this->registerHook('header');
@@ -130,7 +131,7 @@ class SocialSharing extends Module
 				'form' => array(
 					'legend' => array(
 						'title' => $this->displayName,
-						'icon' => 'icon-envelope'
+						'icon' => 'icon-share'
 					),
 					'input' => $fields,
 					'submit' => array(
@@ -168,7 +169,8 @@ class SocialSharing extends Module
 				'product' => $this->context->controller->getProduct(),
 				'PS_SC_TWITTER' => Configuration::get('PS_SC_TWITTER'),
 				'PS_SC_GOOGLE' => Configuration::get('PS_SC_GOOGLE'),
-				'PS_SC_FACEBOOK' => Configuration::get('PS_SC_FACEBOOK')
+				'PS_SC_FACEBOOK' => Configuration::get('PS_SC_FACEBOOK'),
+				'PS_SC_PINTEREST' => Configuration::get('PS_SC_PINTEREST')
 			));
 		}
 		return $this->display(__FILE__, 'socialsharing.tpl', $this->getCacheId());
@@ -186,7 +188,8 @@ class SocialSharing extends Module
 			$this->context->smarty->assign(array(
 				'PS_SC_TWITTER' => Configuration::get('PS_SC_TWITTER'),
 				'PS_SC_GOOGLE' => Configuration::get('PS_SC_GOOGLE'),
-				'PS_SC_FACEBOOK' => Configuration::get('PS_SC_FACEBOOK')
+				'PS_SC_FACEBOOK' => Configuration::get('PS_SC_FACEBOOK'),
+				'PS_SC_PINTEREST' => Configuration::get('PS_SC_PINTEREST')
 			));
 		}
 		return $this->display(__FILE__, 'socialsharing_compare.tpl', $this->getCacheId('socialsharing_compare'));
