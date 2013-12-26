@@ -282,6 +282,7 @@ class AdminControllerCore extends Controller
 	public $show_page_header_toolbar = false;
 	public $page_header_toolbar_title;
 	public $page_header_toolbar_btn = array();
+	public $show_form_cancel_button;
 
 	public function __construct()
 	{
@@ -1170,24 +1171,6 @@ class AdminControllerCore extends Controller
 					'desc' => $this->l('Save')
 				);
 				break;
-			case 'add':
-				// Default save button - action dynamically handled in javascript
-				$this->page_header_toolbar_btn['save'] = array(
-					'href' => '#',
-					'desc' => $this->l('Save')
-				);
-				// Default cancel button - like old back link
-				$back = Tools::safeOutput(Tools::getValue('back', ''));
-				if (empty($back))
-					$back = self::$currentIndex.'&token='.$this->token;
-				if (!Validate::isCleanHtml($back))
-					die(Tools::displayError());
-			
-				if (!$this->lite_display)
-					$this->page_header_toolbar_btn['cancel'] = array(
-						'href' => $back,
-						'desc' => $this->l('Cancel')
-					);
 			case 'edit':
 				$obj = $this->loadObject(true);
 				if (Validate::isLoadedObject($obj) && isset($obj->{$this->identifier_name}) && !empty($obj->{$this->identifier_name}))
@@ -1197,12 +1180,6 @@ class AdminControllerCore extends Controller
 						is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name});
 				}
 				break;
-			case 'options':
-				// Default save button - action dynamically handled in javascript
-				$this->page_header_toolbar_btn['save'] = array(
-					'href' => '#',
-					'desc' => $this->l('Save')
-				);
 		}
 
 		$title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
@@ -1880,6 +1857,15 @@ class AdminControllerCore extends Controller
 			$this->setHelperDisplay($helper);
 			$helper->fields_value = $fields_value;
 			$helper->tpl_vars = $this->tpl_form_vars;
+			$helper->show_cancel_button = (isset($this->show_form_cancel_button)) ? $this->show_form_cancel_button : ($this->display == 'add' || $this->display == 'edit');
+
+			$back = Tools::safeOutput(Tools::getValue('back', ''));
+			if (empty($back))
+				$back = self::$currentIndex.'&token='.$this->token;
+			if (!Validate::isCleanHtml($back))
+				die(Tools::displayError());
+
+			$helper->back_url = $back;
 			!is_null($this->base_tpl_form) ? $helper->base_tpl = $this->base_tpl_form : '';
 			if ($this->tabAccess['view'])
 			{

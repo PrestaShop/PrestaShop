@@ -588,28 +588,6 @@
 						{capture name=hookName assign=hookName}display{$smarty.get.controller|ucfirst|htmlentities}Form{/capture}
 						{hook h=$hookName fieldset=$f}
 					{/if}
-				{elseif $key == 'submit'}
-					<div class="form-group">
-						<div class="col-lg-9 col-lg-offset-3">
-							<button
-								type="submit"
-								id="{if isset($field.id)}{$field.id}{else}{$table}_form_submit_btn{/if}"
-								name="{if isset($field.name)}{$field.name}{else}{$submit_action}{/if}{if isset($field.stay) && $field.stay}AndStay{/if}"
-								{if isset($field.class)}class="{$field.class}"{/if}
-								>
-								{if isset($field.icon)}<i class="{$field.icon}"></i>{/if} {$field.title}
-							</button>
-							{if isset($field.reset)}
-							<button
-								type="reset"
-								id="{if isset($field.id)}{$field.id}{else}{$table}_form_reset_btn{/if}"
-								class="{if isset($field.reset.class)}{$field.reset.class}{else}btn btn-default{/if}"
-								>
-								{if isset($field.reset.icon)}<i class="{$field.reset.icon}"></i>{/if} {$field.reset.title}
-							</button>
-							{/if}
-						</div>
-					</div>
 				{elseif $key == 'desc'}
 					<p class="clear">
 						{if is_array($field)}
@@ -628,12 +606,40 @@
 				{/if}
 				{block name="other_input"}{/block}
 			{/foreach}
-<!-- {*if $required_fields}
-	<div class="small"><sup>*</sup> {l s='Required field'}</div>
-{/if*} -->
-		{block name="footer"}
-			{include file="footer_toolbar.tpl" submit_id_prefix=$table}
-		{/block}
+			{block name="footer"}
+				{if isset($fieldset['form']['submit']) || isset($fieldset['form']['buttons'])}
+					<div class="panel-footer">
+						{if isset($fieldset['form']['submit']) && !empty($fieldset['form']['submit'])}
+						<button
+							type="submit"
+							id="{if isset($fieldset['form']['submit']['id'])}{$fieldset['form']['submit']['id']}{else}{$table}_form_submit_btn{/if}"
+							name="{if isset($fieldset['form']['submit']['name'])}{$fieldset['form']['submit']['name']}{else}{$submit_action}{/if}{if isset($fieldset['form']['submit']['stay']) && $fieldset['form']['submit']['stay']}AndStay{/if}" class="{if isset($fieldset['form']['submit']['class'])}{$fieldset['form']['submit']['class']}{else}btn btn-default pull-right{/if}"
+							>
+							<i class="{if isset($fieldset['form']['submit']['icon'])}{$fieldset['form']['submit']['icon']}{else}process-icon-save{/if}"></i> {$fieldset['form']['submit']['title']}
+						</button>
+						{/if}
+						{if isset($show_cancel_button) && $show_cancel_button}
+						<a href="{$back_url}" class="btn btn-default" onclick="window.history.back()">
+							<i class="process-icon-cancel"></i> {l s='Cancel'}
+						</a>
+						{/if}
+						{if isset($fieldset['form']['reset'])}
+						<button
+							type="reset"
+							id="{if isset($fieldset['form']['reset']['id'])}{$fieldset['form']['reset']['id']}{else}{$table}_form_reset_btn{/if}"
+							class="{if isset($fieldset['form']['reset']['class'])}{$fieldset['form']['reset']['class']}{else}btn btn-default{/if}"
+							>
+							{if isset($fieldset['form']['reset']['icon'])}<i class="{$fieldset['form']['reset']['icon']}"></i> {/if} {$fieldset['form']['reset']['title']}
+						</button>
+						{/if}
+						{if isset($fieldset['form']['buttons'])}
+						{foreach from=$fieldset['form']['buttons'] item=btn key=k}
+							<button type="{if isset($btn['type'])}{$btn['type']}{else}button{/if}" {if isset($btn['id'])}id="{$btn['id']}"{/if} class="btn btn-default{if isset($btn['class'])} {$btn['class']}{/if}" name="{if isset($btn['name'])}{$btn['name']}{else}submitOptions{$table}{/if}"{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>{if isset($btn['icon'])}<i class="{$btn['icon']}" ></i> {/if}{$btn.title}</button>
+						{/foreach}
+						{/if}
+					</div>
+				{/if}
+			{/block}
 		</div>
 		{/block}
 		{block name="other_fieldsets"}{/block}
