@@ -25,7 +25,7 @@
 
 <section id="dashtrends" class="panel widget">
 	<header class="panel-heading">
-		<i class="icon-bar-chart"></i> {l s='Dashboard'}
+		<i class="icon-bar-chart"></i> {l s='Dashboard' mod='dashtrends'}
 		<span class="panel-heading-action">
 			<a class="list-toolbar-btn" href="{$link->getAdminLink('AdminDashboard')}&profitability_conf=1" title="configure">
 				<i class="process-icon-configure"></i>
@@ -37,32 +37,32 @@
 	</header>
 	<div id="dashtrends_toolbar" class="row">
 		<dl class="col-xs-4 col-lg-2 active" onclick="selectDashtrendsChart(this, 'sales');">
-			<dt>{l s='Sales'}</dt>
+			<dt>{l s='Sales' mod='dashtrends'}</dt>
 			<dd class="data_value size_l"><span id="sales_score"></span></dd>
 			<dd class="dash_trend"><span id="sales_score_trends"></span></dd>
 		</dl>
 		<dl class="col-xs-4 col-lg-2" onclick="selectDashtrendsChart(this, 'orders');">
-			<dt>{l s='Orders'}</dt>
+			<dt>{l s='Orders' mod='dashtrends'}</dt>
 			<dd class="data_value size_l"><span id="orders_score"></span></dd>
 			<dd class="dash_trend"><span id="orders_score_trends"></span></dd>
 		</dl>
 		<dl class="col-xs-4 col-lg-2" onclick="selectDashtrendsChart(this, 'average_cart_value');">
-			<dt>{l s='Cart Value'}</dt>
+			<dt>{l s='Cart Value' mod='dashtrends'}</dt>
 			<dd class="data_value size_l"><span id="cart_value_score"></span></dd>
 			<dd class="dash_trend"><span id="cart_value_score_trends"></span></dd>
 		</dl>
 		<dl class="col-xs-4 col-lg-2" onclick="selectDashtrendsChart(this, 'visits');">
-			<dt>{l s='Visits'}</dt>
+			<dt>{l s='Visits' mod='dashtrends'}</dt>
 			<dd class="data_value size_l"><span id="visits_score"></span></dd>
 			<dd class="dash_trend"><span id="visits_score_trends"></span></dd>
 		</dl>
 		<dl class="col-xs-4 col-lg-2" onclick="selectDashtrendsChart(this, 'conversion_rate');">
-			<dt>{l s='Conversion Rate'}</dt>
+			<dt>{l s='Conversion Rate' mod='dashtrends'}</dt>
 			<dd class="data_value size_l"><span id="conversion_rate_score"></span></dd>
 			<dd class="dash_trend"><span id="conversion_rate_score_trends"></span></dd>
 		</dl>
 		<dl class="col-xs-4 col-lg-2" onclick="selectDashtrendsChart(this, 'net_profits');">
-			<dt>{l s='Net Profits'}</dt>
+			<dt>{l s='Net Profits' mod='dashtrends'}</dt>
 			<dd class="data_value size_l"><span id="net_profits_score"></span></dd>
 			<dd class="dash_trend"><span id="net_profits_score_trends"></span></dd>
 		</dl>

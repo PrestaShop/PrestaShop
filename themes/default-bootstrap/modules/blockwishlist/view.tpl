@@ -124,7 +124,7 @@
 											href="javascript:void(0);"
 											class="button ajax_add_to_cart_button btn btn-default"
 											onclick="WishlistBuyProduct('{$token|escape:'html':'UTF-8'}', '{$product.id_product}', '{$product.id_product_attribute}', '{$product.id_product}_{$product.id_product_attribute}', this, {$ajax});"
-											title="{l s='Add to cart' mod='homefeatured'}"
+											title="{l s='Add to cart' mod='blockwishlist'}"
 											rel="nofollow">
 												<span>{l s='Add to cart' mod='blockwishlist'}</span>
 											</a>

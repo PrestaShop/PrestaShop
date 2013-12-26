@@ -27,7 +27,7 @@
 				<tr>
 					<td class="label">
 						{l s='Filters:' mod='blocklayered'}
-						<p class="help-block">{l s='You can drag and drop filters to adjust position' mod='blocclayered'}</p>
+						<p class="help-block">{l s='You can drag and drop filters to adjust position' mod='blocklayered'}</p>
 					</td>
 					<td>
 						<section class="filter_panel">

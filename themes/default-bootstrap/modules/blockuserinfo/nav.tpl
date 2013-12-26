@@ -6,12 +6,12 @@
 {/if}
 <div class="header_user_info">
 	{if $logged}
-		<a class="logout" href="{$link->getPageLink('index', true, NULL, "mylogout")|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Log me out'}">
-			{l s='Sign out'}
+		<a class="logout" href="{$link->getPageLink('index', true, NULL, "mylogout")|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Log me out' mod='blockuserinfo'}">
+			{l s='Sign out' mod='blockuserinfo'}
 		</a>
 	{else}
-		<a class="login" href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Login to your customer account'}">
-			{l s='Sign in'}
+		<a class="login" href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Login to your customer account' mod='blockuserinfo'}">
+			{l s='Sign in' mod='blockuserinfo'}
 		</a>
 	{/if}
 </div>

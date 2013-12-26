@@ -25,7 +25,7 @@
 		<div class="form-group">
 			<label class="control-label col-lg-3">
 				<span class="badge" id="selected_filters">0</span>
-				<span class="label-tooltip" data-toggle="tooltip" title="" data-original-title="{l s='You can drag and drop filters to adjust position' mod='blocclayered'}">{l s='Filters:' mod='blocklayered'}</span>
+				<span class="label-tooltip" data-toggle="tooltip" title="" data-original-title="{l s='You can drag and drop filters to adjust position' mod='blocklayered'}">{l s='Filters:' mod='blocklayered'}</span>
 			</label>
 			<div class="col-lg-9">
 				<section class="filter_panel">

@@ -38,7 +38,7 @@
 							<input id="{$input.name}_{$language.id_lang}-name" type="text" class="disabled" name="filename" readonly />
 							<span class="input-group-btn">
 								<button id="{$input.name}_{$language.id_lang}-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
-									<i class="icon-folder-open"></i> {l s='Choose a file'}
+									<i class="icon-folder-open"></i> {l s='Choose a file' mod='homeslider'}
 								</button>
 							</span>
 						</div>
