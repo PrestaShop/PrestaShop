@@ -208,7 +208,7 @@ class CartRuleCore extends ObjectModel
 			{
 				Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule` (`id_product_rule_group`, `type`) 
-				VALUES ('.(int)$id_product_rule_group_destination.',"'.pSql($product_rule_source['type']).'")');
+				VALUES ('.(int)$id_product_rule_group_destination.',"'.pSQL($product_rule_source['type']).'")');
 				$id_product_rule_destination = Db::getInstance()->Insert_ID();
 
 				$products_rules_values_source = Db::getInstance()->ExecuteS('
@@ -216,11 +216,9 @@ class CartRuleCore extends ObjectModel
 				WHERE `id_product_rule` = '.(int)$product_rule_source['id_product_rule'].' ');
 
 				foreach ($products_rules_values_source as $product_rule_value_source)
-				{
 					Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) 
 					VALUES ('.(int)$id_product_rule_destination.','.(int)$product_rule_value_source['id_item'].')');
-				}
 			}
 		}
 	}
