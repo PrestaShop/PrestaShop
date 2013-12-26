@@ -270,9 +270,9 @@ class CrossSelling extends Module
 						'desc' => $this->l('Define the number of products displayed in this block.'),
 					),
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
 			),
 		);
 		

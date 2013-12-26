@@ -269,9 +269,9 @@ class BlockCart extends Module
 						'desc' => $this->l('Define the number of products to be displayed in the cross selling block.')
 					),
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'submit' => array(
+					'title' => $this->l('Save')
+				)
 			),
 		);
 		
