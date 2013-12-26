@@ -33,7 +33,7 @@ class AdminEmailsControllerCore extends AdminController
 		$this->table = 'configuration';
 
 		parent::__construct();
-
+				
 		foreach (Contact::getContacts($this->context->language->id) as $contact)
 			$arr[] = array('email_message' => $contact['id_contact'], 'name' => $contact['name']);
 
@@ -113,6 +113,7 @@ class AdminEmailsControllerCore extends AdminController
 					'PS_MAIL_SMTP_ENCRYPTION' => array(
 						'title' => $this->l('Encryption:'),
 						'hint' => $this->l('Use an encrypt protocol'),
+						'desc' => Tools::apacheModExists('mod_ssl') ? '/!\\  '.$this->l('SSL mod seems to not be installed on your server.') : '',
 						'type' => 'select',
 						'cast' => 'strval',
 						'identifier' => 'mode',

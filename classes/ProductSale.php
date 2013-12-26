@@ -162,7 +162,7 @@ class ProductSaleCore
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT cp.`id_product`
 		FROM `'._DB_PREFIX_.'category_group` cg
-		LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+		INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 		WHERE cp.`id_product` IS NOT NULL
 		'.$sql_groups);
 		$ids = array();
