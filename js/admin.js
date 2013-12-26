@@ -813,10 +813,10 @@ function showNoticeMessage(msg) {
 $(document).ready(function()
 {
 	$('select.chosen').each(function(k, item){
-		$(item).val($(this).find('option[selected=selected]').val());
-		$(item).chosen();
-		if ($(item).hasClass('no-search'))
-			$(item).next().find('.chzn-search').hide();
+		//$(item).val($(this).find('option[selected=selected]').val());
+		$(item).chosen({disable_search_threshold: 10});
+		//if ($(item).hasClass('no-search'))
+		//	$(item).next().find('.chzn-search').hide();
 	});
 
 	$('.isInvisible input, .isInvisible select, .isInvisible textarea').attr('disabled', true);
