@@ -124,10 +124,9 @@
 				</table>
 			</div>
 		</div>
-		<div class="row">
-			<button type="submit" class="btn btn-default" name="submitModule{$list['name_id']}"> 
-				<i class="icon-save"></i>
-				{l s='Save restrictions'}
+		<div class="panel-footer">
+			<button type="submit" class="btn btn-default pull-right" name="submitModule{$list['name_id']}">
+				<i class="process-icon-save"></i> {l s='Save restrictions'}
 			</button>
 		</div>
 	</div>
