@@ -31,7 +31,7 @@
 {include file="$tpl_dir./order-steps.tpl"}
 
 {if isset($nbProducts) && $nbProducts <= 0}
-	<p class="alert alert-warning">{l s='Your shopping cart is empty.'}</p>
+	<p class="alert alert-warning">{l s='Your shopping cart is empty.' mod='cheque'}</p>
 {else}
    
     <form action="{$link->getModuleLink('cheque', 'validation', [], true)|escape:'html':'UTF-8'}" method="post">
