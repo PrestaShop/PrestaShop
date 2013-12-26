@@ -302,25 +302,7 @@
 												</div>
 											{/foreach}
 										{/if}
-
-<!--
-{if count($languages) > 1}
-	<div class="displayed_flag">
-		<img src="../img/l/{$current_id_lang}.jpg" class="pointer" id="language_current_{$key}" onclick="toggleLanguageFlags(this);" />
-	</div>
-	<div id="languages_{$key}" class="language_flags">
-
-		{l s='Choose language:'}
-
-		{foreach $languages as $language}
-				<img src="../img/l/{$language.id_lang}.jpg" class="pointer" alt="{$language.name}" title="{$language.name}" onclick="changeLanguage('{$key}', '{if isset($custom_key)}{$custom_key}{else}{$key}{/if}', {$language.id_lang}, '{$language.iso_code}');" />
-		{/foreach}
-	</div>
-{/if}
--->
-
 									{/if}
-
 									{if isset($field['desc']) && !empty($field['desc'])}
 									<div class="col-lg-9 col-lg-push-3">
 										<p class="help-block">
@@ -351,29 +333,19 @@
 						</div>
 				{/if}
 			{/foreach}
-			{if isset($categoryData['submit'])}
-				<div class="form-group">
-					<div class="col-lg-9 col-lg-offset-3">
-						<button
-							type="submit"
-							id="{if isset($categoryData['id'])}{$categoryData['id']}{else}{$table}{/if}_form_submit_btn"
-							name="{if isset($categoryData['submit']['name'])}{$categoryData['submit']['name']}{else}submitOptions{$table}{/if}"
-							class="{if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}btn btn-default{/if}"
-							>
-							{if isset($categoryData['submit']['title'])}{$categoryData['submit']['title']}{else}{l s='Save'}{/if}
-						</button>
-					</div>
-				</div>
-			{/if}
-<!-- 			{*if isset($categoryData['required_fields']) && $categoryData['required_fields']}
-				<div class="small"><sup>*</sup> {l s='Required field'}</div>
-			{/if*} -->
 			{if isset($categoryData['bottom'])}{$categoryData['bottom']}{/if}
 			{block name="footer"}
-				{if isset($categoryData['id'])}
-					{include file="footer_toolbar.tpl" submit_id_prefix=$categoryData['id']}
-				{else}
-					{include file="footer_toolbar.tpl" submit_id_prefix=$table}
+				{if isset($categoryData['submit']) || isset($categoryData['buttons'])}
+					<div class="panel-footer">
+						{if isset($categoryData['submit']) && !empty($categoryData['submit'])}
+						<button type="{if isset($categoryData['submit']['type'])}{$categoryData['submit']['type']}{else}submit{/if}" {if isset($categoryData['submit']['id'])}id="{$categoryData['submit']['id']}"{/if} class="btn btn-default pull-right" name="{if isset($categoryData['submit']['name'])}{$categoryData['submit']['name']}{else}submitOptions{$table}{/if}"><i class="process-icon-{if isset($categoryData['submit']['imgclass'])}{$categoryData['submit']['imgclass']}{else}save{/if}" ></i> {$categoryData['submit']['title']}</button>
+						{/if}
+						{if isset($categoryData['buttons'])}
+						{foreach from=$categoryData['buttons'] item=btn key=k}
+							<button type="{if isset($btn['type'])}{$btn['type']}{else}button{/if}" {if isset($btn['id'])}id="{$btn['id']}"{/if} class="btn btn-default{if isset($btn['class'])} {$btn['class']}{/if}" name="{if isset($btn['name'])}{$btn['name']}{else}submitOptions{$table}{/if}"{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>{if isset($btn['icon'])}<i class="{$btn['icon']}" ></i> {/if}{$btn.title}</button>
+						{/foreach}
+						{/if}
+					</div>
 				{/if}
 			{/block}
 		</div>

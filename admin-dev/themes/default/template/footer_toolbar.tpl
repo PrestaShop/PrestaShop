@@ -35,28 +35,21 @@
 
 	<script language="javascript" type="text/javascript">
 	//<![CDATA[
-		var submited = false;
-
-		{if isset($submit_id_prefix)}
-			var submit_id_prefix = '{$submit_id_prefix}';
-		{else}
-			var submit_id_prefix = '{$table}';
-		{/if}
-
+		var submited = false
 
 		//get reference on save link
-		btn_save = $('#desc-'+submit_id_prefix+'-save');
+		btn_save = $('#desc-{if isset($submit_id_prefix)}{$submit_id_prefix}{else}{$table}{/if}-save');
 
 		//get reference on form submit button
-		btn_submit = $('#'+submit_id_prefix+'_form_submit_btn');
+		btn_submit = $('#{if isset($submit_id_prefix)}{$submit_id_prefix}{else}{$table}{/if}_form_submit_btn');
 
 		if (btn_save.length > 0 && btn_submit.length > 0)
 		{
 			//get reference on save and stay link
-			btn_save_and_stay = $('#desc-'+submit_id_prefix+'-save-and-stay');
+			btn_save_and_stay = $('#desc-{if isset($submit_id_prefix)}{$submit_id_prefix}{else}{$table}{/if}-save-and-stay');
 
 			//get reference on current save link label
-			lbl_save = $('#desc-'+submit_id_prefix+'-save');
+			lbl_save = $('#desc-{if isset($submit_id_prefix)}{$submit_id_prefix}{else}{$table}{/if}-save');
 
 			//override save link label with submit button value
 			if (btn_submit.html().length > 0)
@@ -65,7 +58,7 @@
 			if (btn_save_and_stay.length > 0)
 			{
 				//get reference on current save link label
-				lbl_save_and_stay = $('#desc-'+submit_id_prefix+'-save-and-stay');
+				lbl_save_and_stay = $('#desc-{if isset($submit_id_prefix)}{$submit_id_prefix}{else}{$table}{/if}-save-and-stay');
 
 				//override save and stay link label with submit button value
 				if (btn_submit.html().length > 0 && lbl_save_and_stay && !lbl_save_and_stay.hasClass('locked'))
@@ -77,7 +70,7 @@
 			//bind enter key press to validate form
 			$('#{$table}_form').find('input').keypress(function (e) {
 				if (e.which == 13 && e.target.localName != 'textarea' && !$(e.target).parent().hasClass('tagify-container'))
-					$('#desc-'+submit_id_prefix+'-save').click();
+					$('#desc-{if isset($submit_id_prefix)}{$submit_id_prefix}{else}{$table}{/if}-save').click();
 			});
 			//submit the form
 			{block name=formSubmit}
