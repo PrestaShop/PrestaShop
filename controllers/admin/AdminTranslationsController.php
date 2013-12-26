@@ -97,6 +97,7 @@ class AdminTranslationsControllerCore extends AdminController
 	 */
 	public function initContent()
 	{
+		$this->initTabModuleList();
 		if (!is_null($this->type_selected))
 		{
 			$method_name = 'initForm'.$this->type_selected;

@@ -319,6 +319,7 @@ class AdminFeaturesControllerCore extends AdminController
 	 */
 	public function initContent()
 	{
+		$this->initTabModuleList();
 		if (Feature::isFeatureActive())
 		{
 			// toolbar (save, cancel, new, ..)

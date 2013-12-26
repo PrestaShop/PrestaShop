@@ -435,6 +435,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 */
 	public function initContent()
 	{
+		$this->initTabModuleList();
 		if (!Combination::isFeatureActive())
 		{
 			$this->displayWarning($this->l('This feature has been disabled. You can activate it at:').

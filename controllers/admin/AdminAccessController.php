@@ -112,6 +112,7 @@ class AdminAccessControllerCore extends AdminController
 	 */
 	public function initContent()
 	{
+		$this->initTabModuleList();
 		$this->display = 'edit';
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
