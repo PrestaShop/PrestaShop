@@ -12,3 +12,7 @@ function socialsharing_facebook_click(message) {
 function socialsharing_google_click(message) {
 	window.open('https://plus.google.com/share?url=' + location.href, 'sharergplus', 'toolbar=0,status=0,width=660,height=445');
 }
+
+function socialsharing_pinterest_click(message) {
+	window.open('http://www.pinterest.com/pin/create/button/?url=' + location.href, 'sharerpinterest', 'toolbar=0,status=0,width=660,height=445');
+}
