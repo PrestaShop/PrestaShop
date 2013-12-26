@@ -148,9 +148,9 @@ class ProductPaymentLogos extends Module
 						'desc' => $this->l('Please input banner link')
 					)
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
 			),
 		);
 		
