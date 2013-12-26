@@ -29,6 +29,7 @@
 <!--[if gt IE 8]> <html class="no-js ie9" lang="{$lang_iso}"> <![endif]-->
 <html lang="{$lang_iso}">
 	<head>
+		<meta charset="utf-8" />
 		<title>{$meta_title|escape:'html':'UTF-8'}</title>
 		{if isset($meta_description) AND $meta_description}
 		  <meta name="description" content="{$meta_description|escape:'html':'UTF-8'}" />
@@ -36,7 +37,6 @@
 		{if isset($meta_keywords) AND $meta_keywords}
 		  <meta name="keywords" content="{$meta_keywords|escape:'html':'UTF-8'}" />
 		{/if}
-		<meta charset="utf-8" />
 		<meta name="generator" content="PrestaShop" />
 		<meta name="robots" content="{if isset($nobots)}no{/if}index,{if isset($nofollow) && $nofollow}no{/if}follow" />
 		<meta name="viewport" content="width=device-width, minimum-scale=0.25, maximum-scale=1.6, initial-scale=1.0" /> 
