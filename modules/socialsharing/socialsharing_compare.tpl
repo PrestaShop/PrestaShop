@@ -22,25 +22,28 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{literal}
-	<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-	<script type="text/javascript">stLight.options({publisher: "{/literal}{$conf_row}{literal}", nativeCount:false, doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
-{/literal}
-{if isset($addsharethis_data)}
-    <div class="share">
-        <strong class="dark">{l s='Share this comparison whith your friends:' mod='addsharethis'}</strong>
-        {if isset($addsharethis_data.twitter)}
-            {$addsharethis_data.twitter}
-        {/if}
-        {if isset($addsharethis_data.google)}
-            {$addsharethis_data.google}
-        {/if}
-        {if isset($addsharethis_data.pinterest)}
-            {$addsharethis_data.pinterest}
-        {/if}
-        {if isset($addsharethis_data.facebook)}
-            {$addsharethis_data.facebook}
-        {/if}
-    </div>
+{if $PS_SC_TWITTER || PS_SC_FACEBOOK || PS_SC_GOOGLE}
+	<div class="socialsharing_compare">
+{if $PS_SC_TWITTER}
+		<div>
+			<a href="javascript:void(0);" onclick="socialsharing_twitter_click();">
+				<img src="{$link->getMediaLink("`$module_dir`img/twitter.gif")}" alt="Tweet" />
+			</a>
+		</div>
 {/if}
-
+{if $PS_SC_FACEBOOK}
+		<div>
+			<a href="javascript:void(0);" onclick="socialsharing_facebook_click();">
+				<img src="{$link->getMediaLink("`$module_dir`img/facebook.gif")}" alt="Facebook Like" />
+			</a>
+		</div>
+{/if}
+{if $PS_SC_GOOGLE}
+		<div>
+			<a href="javascript:void(0);" onclick="socialsharing_google_click();">
+				<img src="{$link->getMediaLink("`$module_dir`img/google.gif")}" alt="Google Plus" />
+			</a>
+		</div>
+{/if}
+	</div>
+{/if}
