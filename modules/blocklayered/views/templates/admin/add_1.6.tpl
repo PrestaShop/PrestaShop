@@ -7,7 +7,7 @@
 			<label class="control-label col-lg-3">{l s='Template name:' mod='blocklayered'}</label>
 			<div class="col-lg-9">
 				<input type="text" id="layered_tpl_name" name="layered_tpl_name" maxlength="64" value="{$template_name}" />
-				<p class="help-block">{l s='Only as a reminder' mod='blockfacette'}</p>		
+				<p class="help-block">{l s='Only as a reminder' mod='blocklayered'}</p>		
 			</div>
 		</div>
 		<div class="form-group">
@@ -39,20 +39,20 @@
 									<label class="switch-light prestashop-switch fixed-width-lg">
 										<input name="layered_selection_subcategories" id="layered_selection_subcategories" type="checkbox" />
 										<span>
-											<span>{l s='Yes' mod='blockfacette'}</span>
-											<span>{l s='No' mod='blockfacette'}</span>
+											<span>{l s='Yes' mod='blocklayered'}</span>
+											<span>{l s='No' mod='blocklayered'}</span>
 										</span>
 										<a class="slide-button btn"></a>
 									</label>
 								</div>
 								<div class="col-lg-4">
-									<h4>{l s='Sub-categories filter' mod='blockfacette'}</h4>
+									<h4>{l s='Sub-categories filter' mod='blocklayered'}</h4>
 								</div>
 								<div class="col-lg-3 pull-right">
 									<label class="control-label col-lg-6">{l s='Filter result limit:' mod='blocklayered'}</label>
 									<div class="col-lg-6">
 										<select name="layered_selection_subcategories_filter_show_limit">
-											<option value="0">{l s='No limit' mod='blockfacette'}</option>
+											<option value="0">{l s='No limit' mod='blocklayered'}</option>
 											<option value="4">4</option>
 											<option value="5">5</option>
 											<option value="10">10</option>
@@ -64,9 +64,9 @@
 									<label class="control-label col-lg-6">{l s='Filter style:' mod='blocklayered'}</label>
 									<div class="col-lg-6">
 										<select name="layered_selection_subcategories_filter_type">
-											<option value="0">{l s='Checkbox' mod='blockfacette'}</option>
-											<option value="1">{l s='Radio button' mod='blockfacette'}</option>
-											<option value="2">{l s='Drop-down list' mod='blockfacette'}</option>
+											<option value="0">{l s='Checkbox' mod='blocklayered'}</option>
+											<option value="1">{l s='Radio button' mod='blocklayered'}</option>
+											<option value="2">{l s='Drop-down list' mod='blocklayered'}</option>
 										</select>
 									</div>
 								</div>
@@ -76,20 +76,20 @@
 									<label class="switch-light prestashop-switch fixed-width-lg">
 										<input name="layered_selection_stock" id="layered_selection_stock" type="checkbox" />
 										<span>
-											<span>{l s='Yes' mod='blockfacette'}</span>
-											<span>{l s='No' mod='blockfacette'}</span>
+											<span>{l s='Yes' mod='blocklayered'}</span>
+											<span>{l s='No' mod='blocklayered'}</span>
 										</span>
 										<a class="slide-button btn"></a>
 									</label>
 								</div>
 								<div class="col-lg-4">
-									<span class="module_name">{l s='Product stock filter' mod='blockfacette'}</span>
+									<span class="module_name">{l s='Product stock filter' mod='blocklayered'}</span>
 								</div>
 								<div class="col-lg-3 pull-right">
 									<label class="control-label col-lg-6">{l s='Filter result limit:' mod='blocklayered'}</label>
 									<div class="col-lg-6">
 										<select name="layered_selection_stock_filter_show_limit">
-											<option value="0">{l s='No limit' mod='blockfacette'}</option>
+											<option value="0">{l s='No limit' mod='blocklayered'}</option>
 											<option value="4">4</option>
 											<option value="5">5</option>
 											<option value="10">10</option>
@@ -101,9 +101,9 @@
 									<label class="control-label col-lg-6">{l s='Filter style:' mod='blocklayered'}</label>
 									<div class="col-lg-6">
 										<select name="layered_selection_stock_filter_type">
-											<option value="0">{l s='Checkbox' mod='blockfacette'}</option>
-											<option value="1">{l s='Radio button' mod='blockfacette'}</option>
-											<option value="2">{l s='Drop-down list' mod='blockfacette'}</option>
+											<option value="0">{l s='Checkbox' mod='blocklayered'}</option>
+											<option value="1">{l s='Radio button' mod='blocklayered'}</option>
+											<option value="2">{l s='Drop-down list' mod='blocklayered'}</option>
 										</select>
 									</div>
 								</div>
@@ -113,20 +113,20 @@
 									<label class="switch-light prestashop-switch fixed-width-lg">
 										<input name="layered_selection_condition" id="layered_selection_condition" type="checkbox" />
 										<span>
-											<span>{l s='Yes' mod='blockfacette'}</span>
-											<span>{l s='No' mod='blockfacette'}</span>
+											<span>{l s='Yes' mod='blocklayered'}</span>
+											<span>{l s='No' mod='blocklayered'}</span>
 										</span>
 										<a class="slide-button btn"></a>
 									</label>
 								</div>
 								<div class="col-lg-4">
-									<span class="module_name">{l s='Product condition filter' mod='blockfacette'}</span>
+									<span class="module_name">{l s='Product condition filter' mod='blocklayered'}</span>
 								</div>
 								<div class="col-lg-3 pull-right">
 									<label class="control-label col-lg-6">{l s='Filter result limit:' mod='blocklayered'}</label>
 									<div class="col-lg-6">
 										<select name="layered_selection_condition_filter_show_limit">
-											<option value="0">{l s='No limit' mod='blockfacette'}</option>
+											<option value="0">{l s='No limit' mod='blocklayered'}</option>
 											<option value="4">4</option>
 											<option value="5">5</option>
 											<option value="10">10</option>
@@ -138,9 +138,9 @@
 									<label class="control-label col-lg-6">{l s='Filter style:' mod='blocklayered'}</label>
 									<div class="col-lg-6">
 										<select name="layered_selection_condition_filter_type">
-											<option value="0">{l s='Checkbox' mod='blockfacette'}</option>
-											<option value="1">{l s='Radio button' mod='blockfacette'}</option>
-											<option value="2">{l s='Drop-down list' mod='blockfacette'}</option>
+											<option value="0">{l s='Checkbox' mod='blocklayered'}</option>
+											<option value="1">{l s='Radio button' mod='blocklayered'}</option>
+											<option value="2">{l s='Drop-down list' mod='blocklayered'}</option>
 										</select>
 									</div>
 								</div>
@@ -150,20 +150,20 @@
 									<label class="switch-light prestashop-switch fixed-width-lg">
 										<input name="layered_selection_manufacturer" id="layered_selection_manufacturer" type="checkbox" />
 										<span>
-											<span>{l s='Yes' mod='blockfacette'}</span>
-											<span>{l s='No' mod='blockfacette'}</span>
+											<span>{l s='Yes' mod='blocklayered'}</span>
+											<span>{l s='No' mod='blocklayered'}</span>
 										</span>
 										<a class="slide-button btn"></a>
 									</label>
 								</div>
 								<div class="col-lg-4">
-									<span class="module_name">{l s='Product manufacturer filter' mod='blockfacette'}</span>
+									<span class="module_name">{l s='Product manufacturer filter' mod='blocklayered'}</span>
 								</div>
 								<div class="col-lg-3 pull-right">
 									<label class="control-label col-lg-6">{l s='Filter result limit:' mod='blocklayered'}</label>
 									<div class="col-lg-6">
 										<select name="layered_selection_manufacturer_filter_show_limit">
-											<option value="0">{l s='No limit' mod='blockfacette'}</option>
+											<option value="0">{l s='No limit' mod='blocklayered'}</option>
 											<option value="4">4</option>
 											<option value="5">5</option>
 											<option value="10">10</option>
@@ -175,9 +175,9 @@
 									<label class="control-label col-lg-6">{l s='Filter style:' mod='blocklayered'}</label>
 									<div class="col-lg-6">
 										<select name="layered_selection_manufacturer_filter_type">
-											<option value="0">{l s='Checkbox' mod='blockfacette'}</option>
-											<option value="1">{l s='Radio button' mod='blockfacette'}</option>
-											<option value="2">{l s='Drop-down list' mod='blockfacette'}</option>
+											<option value="0">{l s='Checkbox' mod='blocklayered'}</option>
+											<option value="1">{l s='Radio button' mod='blocklayered'}</option>
+											<option value="2">{l s='Drop-down list' mod='blocklayered'}</option>
 										</select>
 									</div>
 								</div>
@@ -187,20 +187,20 @@
 									<label class="switch-light prestashop-switch fixed-width-lg">
 										<input name="layered_selection_weight_slider" id="layered_selection_weight_slider" type="checkbox" />
 										<span>
-											<span>{l s='Yes' mod='blockfacette'}</span>
-											<span>{l s='No' mod='blockfacette'}</span>
+											<span>{l s='Yes' mod='blocklayered'}</span>
+											<span>{l s='No' mod='blocklayered'}</span>
 										</span>
 										<a class="slide-button btn"></a>
 									</label>
 								</div>
 								<div class="col-lg-4">
-									<span class="module_name">{l s='Product weight filter (slider)' mod='blockfacette'}</span>
+									<span class="module_name">{l s='Product weight filter (slider)' mod='blocklayered'}</span>
 								</div>
 								<div class="col-lg-3 pull-right">
 									<label class="control-label col-lg-6">{l s='Filter result limit:' mod='blocklayered'}</label>
 									<div class="col-lg-6">
 										<select name="layered_selection_weight_slider_filter_show_limit">
-											<option value="0">{l s='No limit' mod='blockfacette'}</option>
+											<option value="0">{l s='No limit' mod='blocklayered'}</option>
 											<option value="4">4</option>
 											<option value="5">5</option>
 											<option value="10">10</option>
@@ -212,9 +212,9 @@
 									<label class="control-label col-lg-6">{l s='Filter style:' mod='blocklayered'}</label>
 									<div class="col-lg-6">
 										<select name="layered_selection_weight_slider_filter_type">
-											<option value="0">{l s='Slider' mod='blockfacette'}</option>
-											<option value="1">{l s='Inputs area' mod='blockfacette'}</option>
-											<option value="2">{l s='List of values' mod='blockfacette'}</option>
+											<option value="0">{l s='Slider' mod='blocklayered'}</option>
+											<option value="1">{l s='Inputs area' mod='blocklayered'}</option>
+											<option value="2">{l s='List of values' mod='blocklayered'}</option>
 										</select>
 									</div>
 								</div>
@@ -224,20 +224,20 @@
 									<label class="switch-light prestashop-switch fixed-width-lg">
 										<input name="layered_selection_price_slider" id="layered_selection_price_slider" type="checkbox" />
 										<span>
-											<span>{l s='Yes' mod='blockfacette'}</span>
-											<span>{l s='No' mod='blockfacette'}</span>
+											<span>{l s='Yes' mod='blocklayered'}</span>
+											<span>{l s='No' mod='blocklayered'}</span>
 										</span>
 										<a class="slide-button btn"></a>
 									</label>
 								</div>
 								<div class="col-lg-4">
-									<span class="module_name">{l s='Product price filter (slider)' mod='blockfacette'}</span>
+									<span class="module_name">{l s='Product price filter (slider)' mod='blocklayered'}</span>
 								</div>
 								<div class="col-lg-3 pull-right">
 									<label class="control-label col-lg-6">{l s='Filter result limit:' mod='blocklayered'}</label>
 									<div class="col-lg-6">
 										<select name="layered_selection_price_slider_filter_show_limit">
-											<option value="0">{l s='No limit' mod='blockfacette'}</option>
+											<option value="0">{l s='No limit' mod='blocklayered'}</option>
 											<option value="4">4</option>
 											<option value="5">5</option>
 											<option value="10">10</option>
@@ -249,9 +249,9 @@
 									<label class="control-label col-lg-6">{l s='Filter style:' mod='blocklayered'}</label>
 									<div class="col-lg-6">
 										<select name="layered_selection_price_slider_filter_type">
-											<option value="0">{l s='Slider' mod='blockfacette'}</option>
-											<option value="1">{l s='Inputs area' mod='blockfacette'}</option>
-											<option value="2">{l s='List of values' mod='blockfacette'}</option>
+											<option value="0">{l s='Slider' mod='blocklayered'}</option>
+											<option value="1">{l s='Inputs area' mod='blocklayered'}</option>
+											<option value="2">{l s='List of values' mod='blocklayered'}</option>
 										</select>
 									</div>
 								</div>
@@ -263,8 +263,8 @@
 										<label class="switch-light prestashop-switch fixed-width-lg">
 											<input name="layered_selection_ag_{(int)$attribute_group['id_attribute_group']}" id="layered_selection_ag_{(int)$attribute_group['id_attribute_group']}" type="checkbox" />
 											<span>
-												<span>{l s='Yes' mod='blockfacette'}</span>
-												<span>{l s='No' mod='blockfacette'}</span>
+												<span>{l s='Yes' mod='blocklayered'}</span>
+												<span>{l s='No' mod='blocklayered'}</span>
 											</span>
 											<a class="slide-button btn"></a>
 										</label>
@@ -272,12 +272,12 @@
 									<div class="col-lg-4">
 										<h4>
 										{if $attribute_group['n'] > 1}
-											{l s='Attribute group: %1$s (%2$d attributes)'|sprintf:$attribute_group['name']:$attribute_group['n'] mod='blockfacette'}
+											{l s='Attribute group: %1$s (%2$d attributes)'|sprintf:$attribute_group['name']:$attribute_group['n'] mod='blocklayered'}
 										{else}
-											{l s='Attribute group: %1$s (%2$d attribute)'|sprintf:$attribute_group['name']:$attribute_group['n'] mod='blockfacette'}
+											{l s='Attribute group: %1$s (%2$d attribute)'|sprintf:$attribute_group['name']:$attribute_group['n'] mod='blocklayered'}
 										{/if}
 										{if $attribute_group['is_color_group']}
-											<img src="../img/admin/color_swatch.png" alt="" title="{l s='This group will allow user to select a color' mod='blockfacette'}" />
+											<img src="../img/admin/color_swatch.png" alt="" title="{l s='This group will allow user to select a color' mod='blocklayered'}" />
 										{/if}
 										</h4>
 									</div>
@@ -285,7 +285,7 @@
 										<label class="control-label col-lg-6">{l s='Filter result limit:' mod='blocklayered'}</label>
 										<div class="col-lg-6">
 											<select name="layered_selection_ag_{(int)$attribute_group['id_attribute_group']}_filter_show_limit">
-												<option value="0">{l s='No limit' mod='blockfacette'}</option>
+												<option value="0">{l s='No limit' mod='blocklayered'}</option>
 												<option value="4">4</option>
 												<option value="5">5</option>
 												<option value="10">10</option>
@@ -297,9 +297,9 @@
 										<label class="control-label col-lg-6">{l s='Filter style:' mod='blocklayered'}</label>
 										<div class="col-lg-6">
 											<select name="layered_selection_ag_{(int)$attribute_group['id_attribute_group']}_filter_type">
-												<option value="0">{l s='Checkbox' mod='blockfacette'}</option>
-												<option value="1">{l s='Radio button' mod='blockfacette'}</option>
-												<option value="2">{l s='Drop-down list' mod='blockfacette'}</option>
+												<option value="0">{l s='Checkbox' mod='blocklayered'}</option>
+												<option value="1">{l s='Radio button' mod='blocklayered'}</option>
+												<option value="2">{l s='Drop-down list' mod='blocklayered'}</option>
 											</select>
 										</div>
 									</div>
@@ -314,22 +314,22 @@
 										<label class="switch-light prestashop-switch fixed-width-lg">
 											<input name="layered_selection_feat_{(int)$feature['id_feature']}" id="layered_selection_feat_{(int)$feature['id_feature']}" type="checkbox" />
 											<span>
-												<span>{l s='Yes' mod='blockfacette'}</span>
-												<span>{l s='No' mod='blockfacette'}</span>
+												<span>{l s='Yes' mod='blocklayered'}</span>
+												<span>{l s='No' mod='blocklayered'}</span>
 											</span>
 											<a class="slide-button btn"></a>
 										</label>
 									</div>
 									<div class="col-lg-4">
 										<h4>
-									{if $feature['n'] > 1}{l s='Feature: %1$s (%2$d values)'|sprintf:$feature['name']:$feature['n'] mod='blockfacette'}{else}{l s='Feature: %1$s (%2$d value)'|sprintf:$feature['name']:$feature['n'] mod='blockfacette'}{/if}
+									{if $feature['n'] > 1}{l s='Feature: %1$s (%2$d values)'|sprintf:$feature['name']:$feature['n'] mod='blocklayered'}{else}{l s='Feature: %1$s (%2$d value)'|sprintf:$feature['name']:$feature['n'] mod='blocklayered'}{/if}
 										</h4>
 									</div>
 									<div class="col-lg-3 pull-right">
 										<label class="control-label col-lg-6">{l s='Filter result limit:' mod='blocklayered'}</label>
 										<div class="col-lg-6">
 											<select name="layered_selection_feat_{(int)$feature['id_feature']}_filter_show_limit">
-												<option value="0">{l s='No limit' mod='blockfacette'}</option>
+												<option value="0">{l s='No limit' mod='blocklayered'}</option>
 												<option value="4">4</option>
 												<option value="5">5</option>
 												<option value="10">10</option>
@@ -341,9 +341,9 @@
 										<label class="control-label col-lg-6">{l s='Filter style:' mod='blocklayered'}</label>
 										<div class="col-lg-6">
 											<select name="layered_selection_feat_{(int)$feature['id_feature']}_filter_type">
-												<option value="0">{l s='Checkbox' mod='blockfacette'}</option>
-												<option value="1">{l s='Radio button' mod='blockfacette'}</option>
-												<option value="2">{l s='Drop-down list' mod='blockfacette'}</option>
+												<option value="0">{l s='Checkbox' mod='blocklayered'}</option>
+												<option value="1">{l s='Radio button' mod='blocklayered'}</option>
+												<option value="2">{l s='Drop-down list' mod='blocklayered'}</option>
 											</select>
 										</div>
 									</div>
