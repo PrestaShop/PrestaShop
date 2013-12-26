@@ -40,7 +40,7 @@
 </fieldset>
 <div class="clearfix">&nbsp;</div>
 <fieldset>
-	<legend><img src="{$uri}/img/cogs.gif" alt="{l s='Filters templates' mod='blocklayered'}" /> {l s='Filters templates (%d)'|sprintf:{$filters_templates|count} mod='blocklayered'}</legend>
+	<legend><img src="{$uri}/img/cogs.gif" alt="{l s='Filters templates' mod='blocklayered'}" /> {l s='Filters templates (%d)' sprintf=[$filters_templates|count] mod='blocklayered'}</legend>
 	{if $filters_templates|count > 0}
 	<div class="row">
 		<table class="table table-filter-templates">
@@ -139,7 +139,7 @@
 				</tr>
 				<tr>
 					<td class="label">
-						{l s='Use tax to filter price' mod='blocklayered' mod='blocklayered'}
+						{l s='Use tax to filter price' mod='blocklayered'}
 					</td>
 					<td>
 						<input type="radio" name="ps_layered_filter_price_usetax" id="ps_layered_filter_price_usetax_on" value="1"{if $price_use_tax} checked="checked"{/if}>
