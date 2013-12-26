@@ -313,9 +313,19 @@
 			{/if}
 	
 			<h1 itemprop="name">{$product->name|escape:'html':'UTF-8'}</h1>
-			<p id="product_reference" {if isset($groups) OR !$product->reference}style="display: none;"{/if}>
+			<p id="product_reference"{if isset($groups) OR !$product->reference} style="display: none;"{/if}>
 				<label>{l s='Model'} </label>
 				<span class="editable" itemprop="sku">{$product->reference|escape:'html':'UTF-8'}</span>
+			</p>
+			{capture name=condition}
+				{if $product->condition == 'new'}{l s='New'}
+				{elseif $product->condition == 'used'}{l s='Used'}
+				{elseif $product->condition == 'refurbished'}{l s='Refurbished'}
+				{/if}
+			{/capture}
+			<p id="product_condition"{if !$product->condition} style="display: none;"{/if}>
+				<label>{l s='Condition'} </label>
+				<span class="editable" itemprop="condition">{$smarty.capture.condition|escape:'html':'UTF-8'}</span>
 			</p>
 			{if $product->description_short OR $packItems|@count > 0}
 				<div id="short_description_block">
