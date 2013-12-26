@@ -73,17 +73,17 @@
 	<div class="panel">
 		<h3><i class="icon-cloud-download"></i> {l s='Import data from another shop'}</h3>
 		{foreach $form_import as $key => $field}
-		<div class="row">
+		<div class="form-group">
 		{if $key == 'radio'}
 			<label class="control-label col-lg-3">{$field.label} :</label>
 			<div class="col-lg-2">
 				<span class="switch prestashop-switch">
 					<input type="radio" name="{$field.name}" id="{$field.name}_on" value="1" {if $field.value } checked="checked" {/if}>
-					<label class="radio" for="{$field.name}_on">
+					<label for="{$field.name}_on">
 						{l s='Yes'}
 					</label>
 					<input type="radio" name="{$field.name}" id="{$field.name}_off" value="0"  {if !$field.value } checked="checked" {/if}>
-					<label class="radio" for="{$field.name}_off">
+					<label for="{$field.name}_off">
 						{l s='No'}
 					</label>
 					<a class="slide-button btn"></a>
