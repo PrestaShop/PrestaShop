@@ -122,7 +122,7 @@ class AdminImagesControllerCore extends AdminController
 					),
 					'PS_PRODUCT_PICTURE_MAX_SIZE' => array(
 						'title' => $this->l('Maximum size of product pictures'),
-						'hint' => $this->l('The maximum size of pictures uploadable by customers (in Bytes).'),
+						'hint' => $this->l('The maximum size of pictures uploadable by customers (in bytes).'),
 						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
@@ -132,7 +132,7 @@ class AdminImagesControllerCore extends AdminController
 					),
 					'PS_PRODUCT_PICTURE_WIDTH' => array(
 						'title' => $this->l('Product picture width'),
-						'hint' => $this->l('The maximum width of pictures uploadable by customers.'),
+						'hint' => $this->l('The maximum width of pictures uploadable by customers (in pixels).'),
 						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
@@ -142,7 +142,7 @@ class AdminImagesControllerCore extends AdminController
 					),
 					'PS_PRODUCT_PICTURE_HEIGHT' => array(
 						'title' => $this->l('Product picture height'),
-						'hint' => $this->l('The maximum height of pictures uploadable by customers.'),
+						'hint' => $this->l('The maximum height of pictures uploadable by customers (in pixels).'),
 						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
@@ -320,6 +320,7 @@ class AdminImagesControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
+				'class' => 'btn btn-default'
 			)
 		);
 
