@@ -50,7 +50,7 @@ class AdminReturnControllerCore extends AdminController
 					'PS_ORDER_RETURN' => array('title' => $this->l('Enable returns:'), 'desc' => $this->l('Would you like to allow merchandise returns in your shop?'), 'cast' => 'intval', 'type' => 'bool'),
 					'PS_ORDER_RETURN_NB_DAYS' => array('title' => $this->l('Time limit of validity:'), 'desc' => $this->l('How many days after the delivery date does the customer have to return a product?'), 'cast' => 'intval', 'type' => 'text', 'size' => '2'),
 				),
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			),
 		);
 

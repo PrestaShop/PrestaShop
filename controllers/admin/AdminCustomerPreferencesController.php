@@ -98,7 +98,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 				),
-				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),
+				'submit' => array('title' => $this->l('Save')),
 			),
 		);
 	}

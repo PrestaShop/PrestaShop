@@ -53,7 +53,7 @@ class AdminMaintenanceControllerCore extends AdminController
 						'default' => ''
 					),
 				),
-				'submit' => array('title' => $this->l('Save'), 'class' => 'btn btn-default'),
+				'submit' => array('title' => $this->l('Save'))
 			),
 		);
 	}

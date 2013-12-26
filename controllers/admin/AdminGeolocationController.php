@@ -44,6 +44,7 @@ class AdminGeolocationControllerCore extends AdminController
 		 				'type' => 'bool'
 					),
 				),
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'geolocationCountries' => array(
 				'title' =>	$this->l('Options'),
@@ -66,6 +67,7 @@ class AdminGeolocationControllerCore extends AdminController
 										array('key' => _PS_GEOLOCATION_NO_ORDER_, 'name' => $this->l('Visitors can see your catalog but cannot place an order.')))
 					),
 				),
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'geolocationWhitelist' => array(
 				'title' =>	$this->l('IP address whitelist'),
@@ -74,7 +76,7 @@ class AdminGeolocationControllerCore extends AdminController
 				'fields' =>	array(
 		 			'PS_GEOLOCATION_WHITELIST' => array('title' => $this->l('Whitelisted IP addresses'), 'type' => 'textarea_newlines', 'cols' => 15, 'rows' => 30),
 				),
-				'submit' => array(),
+				'submit' => array('title' => $this->l('Save'))
 			),
 		);
 	}

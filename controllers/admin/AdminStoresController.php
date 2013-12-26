@@ -99,7 +99,8 @@ class AdminStoresControllerCore extends AdminController
 						'type' => 'text',
 						'size' => '10'
 					)
-				)
+				),
+				'submit' => array('title' => $this->l('Save'))
 			)
 		);
 

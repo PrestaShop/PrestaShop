@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2013  
 *
 * NOTICE OF LICENSE
 *
@@ -68,7 +68,7 @@ class AdminBackupControllerCore extends AdminController
 						'type' => 'bool'
 					)
 				),
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			),
 		);
 	}

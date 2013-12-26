@@ -123,6 +123,7 @@ class AdminThemesControllerCore extends AdminController
 						'no_multishop_checkbox' => true,
 					),
 				),
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'appearance' => array(
 				'title' =>	$this->l('Appearance'),
@@ -207,7 +208,7 @@ class AdminThemesControllerCore extends AdminController
 						'value' => Configuration::get('PS_MAIL_COLOR'),
 					)
 				),
-				'submit' => array('title' => $this->l('Save'), 'class' => 'button')
+				'submit' => array('title' => $this->l('Save'))
 			)
 		);
 

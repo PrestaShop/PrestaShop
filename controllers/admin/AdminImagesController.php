@@ -151,7 +151,7 @@ class AdminImagesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					)
 				),
-				'submit' => array('title' => $this->l('Save   '), 'class' => 'btn btn-default'),
+				'submit' => array('title' => $this->l('Save')),
 			),
 		);
 		
@@ -338,7 +338,7 @@ class AdminImagesControllerCore extends AdminController
 				$this->l('only contains demonstration images, and then delete it.');
 		}
 
-		if (Tools::getValue('submitRegenerate'.$this->table))
+		if (Tools::isSubmit('submitRegenerate'.$this->table))
 		{
 		 	if ($this->tabAccess['edit'] === '1')
 		 	{

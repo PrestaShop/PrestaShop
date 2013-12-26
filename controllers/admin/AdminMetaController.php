@@ -163,6 +163,7 @@ class AdminMetaControllerCore extends AdminController
 						'defaultValue' => $this->url->physical_uri,
 					),
 				);
+				$shop_url_options['submit'] = array('title' => $this->l('Save'));
 			}
 		}
 		else
@@ -174,7 +175,7 @@ class AdminMetaControllerCore extends AdminController
 				'title' =>	$this->l('Set up URLs'),
 				'description' => $url_description,
 				'fields' =>	$general_fields,
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'shop_url' => $shop_url_options
 		);

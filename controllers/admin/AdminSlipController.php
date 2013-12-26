@@ -70,7 +70,7 @@ class AdminSlipControllerCore extends AdminController
 						'type' => 'textLang'
 					)
 				),
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			)
 		);
 

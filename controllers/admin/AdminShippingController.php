@@ -78,7 +78,7 @@ class AdminShippingControllerCore extends AdminController
 						<li>'.$this->l('If you set these parameters to 0, they will be disabled.').'</li>
 						<li>'.$this->l('Coupons are not taken into account when calculating free shipping').'</li>
 					</ul>',
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'general' => array(
 				'title' => $this->l('Carrier options'),
@@ -112,7 +112,8 @@ class AdminShippingControllerCore extends AdminController
 						'identifier' => 'value',
 						'list' => $carrier_default_order
 					),
-				)
+				),
+				'submit' => array('title' => $this->l('Save'))
 			)
 		);		
 	}

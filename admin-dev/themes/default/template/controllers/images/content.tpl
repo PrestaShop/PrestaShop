@@ -122,10 +122,10 @@
 					</p>
 				</div>
 			</div>
-			<div class="form-group">
-				<div class="col-lg-9 col-lg-push-3">
-					<input type="Submit" name="submitRegenerate{$table}" value="{l s='Regenerate thumbnails'}" class="btn btn-default" onclick="return confirm('{l s='Are you sure?'}');" />
-				</div>
+			<div class="panel-footer">
+				<button type="submit" name="submitRegenerate{$table}" class="btn btn-default" onclick="return confirm('{l s='Are you sure?'}');">
+					<i class="process-icon-cogs"></i> {l s='Regenerate thumbnails'}
+				</button>
 			</div>
 		</div>
 	</form>
