@@ -206,7 +206,7 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-road:before { content: "\f018"; }
 
-.icon-download-alt:before { content: "\f019"; }
+.icon-download-alt:before, .bootstrap .process-icon-download-alt:before { content: "\f019"; }
 
 .icon-download:before, .bootstrap .process-icon-save-date:before, .bootstrap .process-icon-save-status:before { content: "\f01a"; }
 
