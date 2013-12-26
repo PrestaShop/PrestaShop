@@ -152,8 +152,7 @@ class AdminAddressesControllerCore extends AdminController
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('Save   '),
-				'class' => 'btn btn-default'
+				'title' => $this->l('Save'),
 			)
 		);
 		$id_customer = (int)Tools::getValue('id_customer');

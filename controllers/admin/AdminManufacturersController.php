@@ -386,8 +386,7 @@ class AdminManufacturersControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('Save   '),
-			'class' => 'button'
+			'title' => $this->l('Save')
 		);
 
 		foreach ($this->_languages as $language)
@@ -557,8 +556,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'col' => 6,
 		);
 		$form['submit'] = array(
-			'title' => $this->l('Save   '),
-			'class' => 'button'
+			'title' => $this->l('Save'),
 		);
 
 		$this->fields_value = array(
@@ -571,6 +569,15 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->fields_form[0]['form'] = $form;
 		$this->getlanguages();
 		$helper = new HelperForm();
+		$helper->show_cancel_button = true;
+
+		$back = Tools::safeOutput(Tools::getValue('back', ''));
+		if (empty($back))
+			$back = self::$currentIndex.'&token='.$this->token;
+		if (!Validate::isCleanHtml($back))
+			die(Tools::displayError());
+
+		$helper->back_url = $back;
 		$helper->currentIndex = self::$currentIndex;
 		$helper->token = $this->token;
 		$helper->table = $this->table;

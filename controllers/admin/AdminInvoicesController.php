@@ -115,9 +115,8 @@ class AdminInvoicesControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Generate PDF file by date'),
-				'class' => 'btn btn-default',
 				'id' => 'submitPrint',
-				'icon' => 'icon-download-alt'
+				'icon' => 'process-icon-download-alt'
 			)
 		);
 
@@ -128,6 +127,7 @@ class AdminInvoicesControllerCore extends AdminController
 
 		$this->table = 'invoice_date';
 		$this->show_toolbar = false;
+		$this->show_form_cancel_button = false;
 		$this->toolbar_title = $this->l('Print PDF invoices');
 		return parent::renderForm();
 	}
@@ -154,9 +154,8 @@ class AdminInvoicesControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Generate PDF file by status.'),
-				'class' => 'btn btn-default',
 				'id' => 'submitPrint2',
-				'icon' => 'icon-download-alt'
+				'icon' => 'process-icon-download-alt'
 			)
 		);
 

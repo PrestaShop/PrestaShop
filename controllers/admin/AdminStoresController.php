@@ -297,8 +297,7 @@ class AdminStoresControllerCore extends AdminController
 			'hours' => array(
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
-				'class' => 'btn btn-default'
+				'title' => $this->l('Save'),
 			)
 		);
 		
@@ -520,7 +519,7 @@ class AdminStoresControllerCore extends AdminController
 			'title' =>	$this->l('Contact details'),
 			'icon' =>	'icon-user',
 			'fields' =>	$fields,
-			'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
+			'submit' => array('title' => $this->l('Save'))
 		);
 	}
 

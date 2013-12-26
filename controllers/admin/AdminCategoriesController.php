@@ -163,6 +163,7 @@ class AdminCategoriesControllerCore extends AdminController
 		parent::initPageHeaderToolbar();
 
 		if ($this->display != 'edit' && $this->display != 'add')
+		{
 			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
 				$this->page_header_toolbar_btn['new-url'] = array(
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'root&amp;token='.$this->token,
@@ -174,6 +175,7 @@ class AdminCategoriesControllerCore extends AdminController
 				'desc' => $this->l('Add new category'),
 				'icon' => 'process-icon-new'
 			);
+		}
 	}
 	
 	public function initContent()
@@ -523,8 +525,7 @@ class AdminCategoriesControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn-default'
+				'title' => $this->l('Save')
 			)
 		);
 

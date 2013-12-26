@@ -480,7 +480,6 @@ class AdminShopControllerCore extends AdminController
 
 		$this->fields_form['submit'] = array(
 			'title' => $this->l('Save'),
-			'class' => 'button'
 		);
 
 		if (Shop::getTotalShops() > 1 && $obj->id)

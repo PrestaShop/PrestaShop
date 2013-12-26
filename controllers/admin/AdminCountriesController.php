@@ -375,8 +375,7 @@ class AdminCountriesControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('Save   '),
-			'class' => 'btn btn-default'
+			'title' => $this->l('Save')
 		);
 		
 		if ($this->object->iso_code == 'US')

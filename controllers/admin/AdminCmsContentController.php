@@ -160,13 +160,6 @@ class AdminCmsContentControllerCore extends AdminController
 				'icon' => 'process-icon-new'
 			);
 		}
-		else
-		{
-			$this->page_header_toolbar_btn['cancel'] = array(
-				'href' => self::$currentIndex.'&amp;token='.$this->token,
-				'desc' => $this->l('Cancel')
-			);
-		}
 
 		$this->page_header_toolbar_title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
 

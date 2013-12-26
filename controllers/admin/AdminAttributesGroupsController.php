@@ -225,8 +225,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('Save   '),
-			'class' => 'button'
+			'title' => $this->l('Save'),
 		);
 
 		if (!($obj = $this->loadObject(true)))
@@ -242,6 +241,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$this->table = 'attribute';
 		$this->identifier = 'id_attribute';
 
+		$this->show_form_cancel_button = true;
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Values'),
@@ -321,8 +321,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		);
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('Save   '),
-			'class' => 'button'
+			'title' => $this->l('Save'),
 		);
 
 		$this->fields_value['id_attribute_group'] = (int)Tools::getValue('id_attribute_group');

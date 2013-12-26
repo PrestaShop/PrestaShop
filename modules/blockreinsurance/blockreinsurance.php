@@ -248,7 +248,6 @@ class Blockreinsurance extends Module
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'button'
 			)
 		);
 
