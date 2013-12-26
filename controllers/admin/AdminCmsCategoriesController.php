@@ -218,7 +218,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'required' => true,
 					'lang' => true,
@@ -226,7 +226,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Displayed:'),
+					'label' => $this->l('Displayed'),
 					'name' => 'active',
 					'required' => false,
 					'is_bool' => true,
@@ -246,7 +246,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 				// custom template
 				array(
 					'type' => 'select_category',
-					'label' => $this->l('Parent CMS Category:'),
+					'label' => $this->l('Parent CMS Category'),
 					'name' => 'id_parent',
 					'options' => array(
 						'html' => $html_categories,
@@ -254,7 +254,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Description:'),
+					'label' => $this->l('Description'),
 					'name' => 'description',
 					'lang' => true,
 					'rows' => 5,
@@ -263,28 +263,28 @@ class AdminCmsCategoriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Meta title:'),
+					'label' => $this->l('Meta title'),
 					'name' => 'meta_title',
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Meta description:'),
+					'label' => $this->l('Meta description'),
 					'name' => 'meta_description',
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Meta keywords:'),
+					'label' => $this->l('Meta keywords'),
 					'name' => 'meta_keywords',
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Friendly URL:'),
+					'label' => $this->l('Friendly URL'),
 					'name' => 'link_rewrite',
 					'required' => true,
 					'lang' => true,
