@@ -469,7 +469,7 @@ class Dashproducts extends Module
 				'input' => array(),
 				'submit' => array(
 					'title' => $this->l('   Save   '),
-					'class' => 'btn btn-default submit_dash_config',
+					'class' => 'btn btn-default pull-right submit_dash_config',
 					'reset' => array(
 						'title' => $this->l('Cancel'),
 						'class' => 'btn btn-default cancel_dash_config',

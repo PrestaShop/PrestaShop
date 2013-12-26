@@ -359,8 +359,8 @@ class Dashactivity extends Module
 				'id_form' => 'step_carrier_general',
 				'input' => array(),
 				'submit' => array(
-					'title' => $this->l('   Save   '),
-					'class' => 'btn btn-default submit_dash_config',
+					'title' => $this->l('Save'),
+					'class' => 'btn btn-default pull-right submit_dash_config',
 					'reset' => array(
 						'title' => $this->l('Cancel'),
 						'class' => 'btn btn-default cancel_dash_config',
