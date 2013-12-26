@@ -466,8 +466,8 @@ var ajaxCart = {
 					var productAttributeId = (this.hasAttributes ? parseInt(this.attributes) : 0);
 					var content =  '<dt class="unvisible" id="cart_block_product_' + domIdProduct + '">';
 					content += '<a class="cart-images" href="' + this.link + '" title="' + this.name.substring(0, 12) + '"><img  src="' + this.image_cart + '" alt="' + this.name +'"></a>';
-					var min = this.name.indexOf(';', 10);
-					var name = (this.name.length > 12 ? this.name.substring(0, ((min - 10) <= 7) ? min : 10) + '...' : this.name);
+					var name = $('<span />').html(this.name).text();
+					name = (name.length > 12 ? name.substring(0, 10) + '...' : name);
 					content += '<div class="cart-info"><div class="product-name"><a href="' + this.link + '" title="' + this.name + '" class="cart_block_product_name">' + name + '</a></div>';
 					if (this.hasAttributes)
 						  content += '<div class="product-atributes"><a href="' + this.link + '" title="' + this.name + '">' + this.attributes + '</a></div>';
