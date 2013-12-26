@@ -349,8 +349,7 @@ class AdminEmployeesControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('Save   '),
-			'class' => 'btn btn-default'
+			'title' => $this->l('Save'),
 		);
 
 		$this->fields_value['passwd'] = false;

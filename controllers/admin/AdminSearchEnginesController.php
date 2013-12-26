@@ -70,8 +70,7 @@ class AdminSearchEnginesControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('Save   '),
-				'class' => 'button'
+				'title' => $this->l('Save'),
 			)
 		);
 

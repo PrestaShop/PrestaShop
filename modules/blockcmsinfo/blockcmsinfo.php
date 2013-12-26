@@ -206,7 +206,6 @@ class Blockcmsinfo extends Module
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'button'
 			)
 		);
 
