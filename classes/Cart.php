@@ -1619,8 +1619,8 @@ class CartCore extends ObjectModel
 	public function getPackageList($flush = false)
 	{
 		static $cache = array();
-		if (isset($cache[(int)$this->id]) && $cache[(int)$this->id] !== false && !$flush)
-			return $cache[(int)$this->id];
+		if (isset($cache[(int)$this->id.'_'.(int)$this->id_address_delivery]) && $cache[(int)$this->id.'_'.(int)$this->id_address_delivery] !== false && !$flush)
+			return $cache[(int)$this->id.'_'.(int)$this->id_address_delivery];
 
 		$product_list = $this->getProducts();
 		// Step 1 : Get product informations (warehouse_list and carrier_list), count warehouse
