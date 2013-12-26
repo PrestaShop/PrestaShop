@@ -107,13 +107,13 @@
 							<span class="switch prestashop-switch">
 								<input type="radio" name="erase" id="erase_on" value="1" checked="checked">
 								<label for="erase_on" class="radioCheck">
-									<i class="icon-check-sign color_success"></i> {l s='Yes'}
+									{l s='Yes'}
 								</label>
 								<input type="radio" name="erase" id="erase_off" value="0">
 								<label for="erase_off" class="radioCheck">
-									<i class="icon-ban-circle color_danger"></i> {l s='No'}
+									{l s='No'}
 								</label>
-								<a class="slide-button btn btn-default"></a>
+								<a class="slide-button btn"></a>
 							</span>
 						</div>
 					</div>

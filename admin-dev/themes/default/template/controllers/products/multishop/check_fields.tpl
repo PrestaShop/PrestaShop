@@ -32,13 +32,13 @@
 			<span class="switch prestashop-switch">
 				<input type="radio" name="multishop_{$product_tab}" id="multishop_{$product_tab}_on" value="1" onclick="$('#product-tab-content-{$product_tab} input[name^=\'multishop_check[\']').attr('checked', true); ProductMultishop.checkAll{$product_tab}()">
 				<label for="multishop_{$product_tab}_on">
-					<i class="icon-check-sign color_success"></i> {l s='Yes'}
+					{l s='Yes'}
 				</label>
 				<input type="radio" name="multishop_{$product_tab}" id="multishop_{$product_tab}_off" value="0" checked="checked" onclick="$('#product-tab-content-{$product_tab} input[name^=\'multishop_check[\']').attr('checked', false); ProductMultishop.checkAll{$product_tab}()">
 				<label for="multishop_{$product_tab}_off">
-					<i class="icon-ban-circle color_danger"></i> {l s='No'}
+					{l s='No'}
 				</label>
-				<a class="slide-button btn btn-default"></a>
+				<a class="slide-button btn"></a>
 			</span>
 			<p class="help-block"><strong>{l s='Check / Uncheck all'}</strong> {l s='(If you are editing this page for several shops, some fields like "name" or "price" are may be disabled. You will need check these fields in order to edit them)'}</p>
 		</div>

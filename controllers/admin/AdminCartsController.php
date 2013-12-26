@@ -702,12 +702,21 @@ class AdminCartsControllerCore extends AdminController
 					$free_shipping = true;
 					break;
 				}
+
+		$addresses = $this->context->customer->getAddresses((int)$this->context->cart->id_lang);
+
+		foreach ($addresses as &$data)
+		{
+			$address = new Address((int)$data['id_address']);
+			$data['formated_address'] = AddressFormat::generateAddress($address, array(), "<br />");
+		}
+
 		return array(
 			'summary' => $this->getCartSummary(),
 			'delivery_option_list' => $this->getDeliveryOptionList(),
 			'cart' => $this->context->cart,
 			'currency' => new Currency($this->context->cart->id_currency),
-			'addresses' => $this->context->customer->getAddresses((int)$this->context->cart->id_lang),
+			'addresses' => $addresses,
 			'id_cart' => $id_cart,
 			'order_message' => $message_content,
 			'link_order' => $this->context->link->getPageLink(

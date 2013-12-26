@@ -32,6 +32,10 @@ class Dashgoals extends Module
 	protected static $month_labels = array();
 	protected static $types = array('traffic', 'conversion', 'avg_cart_value');
 
+	protected static $real_color = array('#9E5BA1','#00A89C','#3AC4ED','#F99031');
+	protected static $more_color = array('#803E84','#008E7E','#20B2E7','#F66E1B');
+	protected static $less_color = array('#BC77BE','#00C2BB','#51D6F2','#FBB244');
+
 	public function __construct()
 	{
 		$this->name = 'dashgoals';
@@ -133,6 +137,7 @@ class Dashgoals extends Module
 		$months = $this->setMonths($year);
 
 		$this->context->smarty->assign(array(
+			'colors' => self::$real_color,
 			'currency' => $this->context->currency,
 			'goals_year' => $year,
 			'goals_months' => $months,
@@ -173,13 +178,14 @@ class Dashgoals extends Module
 		// We initialize all the streams types for all the zones
 		$streams = array();
 		$average_goals = array();
-		foreach ($stream_types as $stream_type)
+
+		foreach ($stream_types as $key => $stream_type)
 		{
 			$streams[$stream_type] = array();
 			foreach ($stream_zones as $stream_zone)
 				$streams[$stream_type][$stream_zone] = array(
 					'key' => $stream_type.'_'.$stream_zone,
-					'color' => ($stream_zone == 'more' ? '#333333' : ($stream_zone == 'less' ? '#DDDDDD' : '#999999')),
+					'color' => ($stream_zone == 'more' ? self::$more_color[$key] : ($stream_zone == 'less' ? self::$less_color[$key] : self::$real_color[$key])),
 					'values' => array(),
 					'disabled' => $stream_type == 'sales' ? false : true
 				);
@@ -314,18 +320,18 @@ class Dashgoals extends Module
 
 		// Fullfilment of 1 means that we performed exactly anticipated
 		if ($fullfilment == 1)
-			$stream_values['real'] = array('x' => $label, 'y' => $base_rate);
+			$stream_values['real'] = array('x' => $label, 'y' => round($base_rate, 2));
 		// Fullfilment lower than 1 means that we UNDER performed
 		elseif ($fullfilment < 1) // 
 		{
-			$stream_values['real'] = array('x' => $label, 'y' => $fullfilment * $base_rate);
-			$stream_values['less'] = array('x' => $label, 'y' => $base_rate - ($fullfilment * $base_rate));
+			$stream_values['real'] = array('x' => $label, 'y' => round($fullfilment * $base_rate, 2));
+			$stream_values['less'] = array('x' => $label, 'y' => round($base_rate - ($fullfilment * $base_rate), 2));
 		}
 		// Fullfilment greater than 1 means that we OVER performed
 		elseif ($fullfilment > 1)
 		{
-			$stream_values['real'] = array('x' => $label, 'y' => $base_rate);
-			$stream_values['more'] = array('x' => $label, 'y' => ($fullfilment * $base_rate) - $base_rate);
+			$stream_values['real'] = array('x' => $label, 'y' => round($base_rate, 2));
+			$stream_values['more'] = array('x' => $label, 'y' => round(($fullfilment * $base_rate) - $base_rate, 2));
 		}
 
 		return $stream_values;

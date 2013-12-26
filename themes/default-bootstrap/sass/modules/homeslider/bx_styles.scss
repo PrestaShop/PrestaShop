@@ -1,4 +1,5 @@
-@import '../../_theme_variables';
+@import "compass";
+@import "theme_variables";
 /**
  * BxSlider v4.0 - Fully loaded, responsive content slider
  * http://bxslider.com
@@ -32,6 +33,46 @@
 		margin: 0 auto;
 		padding: 0;
 	}
+	.homeslider-description {
+		padding: 50px 50px;
+		cursor: pointer;
+		h2 {
+			font-size: 2.7em;
+			color: white;
+			margin: 0;
+			padding: 0;
+		}
+		p {
+			width: 50%;
+			font-size: 1.15em;
+			line-height: 1.3em;
+			padding: 0.5em 0;
+			color: white;
+		}
+		button {
+			font-size: 1.2em;
+			text-transform: uppercase;
+		}
+		@media (max-width: $screen-lg){
+			padding: 20px;
+			font-size: 0.8em;
+		}
+		@media (max-width: $screen-sm){
+			padding: 30px;
+			font-size: 0.7em;
+			p {
+				font-size: 1.5em;
+			}
+		}
+		@media (max-width: $screen-xs){
+			padding: 30px;
+			font-size: 0.5em;
+			p {
+				font-size: 1.7em;
+			}
+		}
+	}
+
 }
 /*****************************************************************************
 						BXSlider Styles
@@ -39,7 +80,6 @@
 //RESET AND LAYOUT
 #homepage-slider {
 	.homeslider-container {
-		height: 447px;
 		position: relative;
 	}
 	.homeslider-image {
@@ -49,6 +89,8 @@
 	}
 	.homeslider-description {
 		position: absolute;
+		left: 0;
+  		top: 0;
 	}
 	.bx-wrapper {
 		position: relative;

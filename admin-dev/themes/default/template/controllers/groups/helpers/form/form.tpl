@@ -189,7 +189,7 @@
 						<label class="radio" for="{$module->name}_on"><i class="icon-check-sign color_success"></i> Yes</label>
 						<input type="radio" name="{$module->name}" id="{$module->name}_off" value="0">
 						<label class="radio" for="{$module->name}_off"><i class="icon-ban-circle color_danger"></i> No</label>
-						<a class="slide-button btn btn-default"></a>
+						<a class="slide-button btn"></a>
 					</span>
 					<input type="hidden" name="modulesBoxAuth[]" value="{$module->id}">
 				</div>
@@ -204,7 +204,7 @@
 						<label class="radio" for="{$module->name}_on"><i class="icon-check-sign color_success"></i> Yes</label>
 						<input type="radio" name="{$module->name}" id="{$module->name}_off" value="0" checked="checked">
 						<label class="radio" for="{$module->name}_off"><i class="icon-ban-circle color_danger"></i> No</label>
-						<a class="slide-button btn btn-default"></a>
+						<a class="slide-button btn"></a>
 					</span>
 					<input type="hidden" name="modulesBoxUnauth[]" value="{$module->id}">
 				</div>

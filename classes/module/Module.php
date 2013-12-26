@@ -241,7 +241,7 @@ abstract class ModuleCore
 			$this->installOverrides();
 		} catch (Exception $e) {
 			$this->_errors[] = sprintf(Tools::displayError('Unable to install override: %s'), $e->getMessage());
-			//$this->uninstallOverrides(); remove this line because if module a install an override, then module b install same override, this line will remove override of module a (if you find a bug related to this line please don't forget what i say before)
+			$this->uninstallOverrides();
 			return false;
 		}
 
@@ -1032,9 +1032,10 @@ abstract class ModuleCore
 		
 		$modules_installed = array();
 		$result = Db::getInstance()->executeS('
-		SELECT name, version, interest
-		FROM `'._DB_PREFIX_.'module`
-		LEFT JOIN `'._DB_PREFIX_.'module_preference` ON (`module` = `name` AND `id_employee` = '.(int)$id_employee.')');
+		SELECT m.name, m.version, mp.interest, module_shop.enable_device
+		FROM `'._DB_PREFIX_.'module` m
+		'.Shop::addSqlAssociation('module', 'm').'
+		LEFT JOIN `'._DB_PREFIX_.'module_preference` mp ON (mp.`module` = m.`name` AND mp.`id_employee` = '.(int)$id_employee.')');
 		foreach ($result as $row)
 			$modules_installed[$row['name']] = $row;
 
@@ -1265,6 +1266,7 @@ abstract class ModuleCore
 				$module->installed = true;
 				$module->database_version = $modules_installed[$module->name]['version'];
 				$module->interest = $modules_installed[$module->name]['interest'];
+				$module->enable_device = $modules_installed[$module->name]['enable_device'];
 			}
 			else
 			{
@@ -2048,6 +2050,7 @@ abstract class ModuleCore
 			if (Autoload::getInstance()->getClassPath($class.'Core'))
 				$result &= $this->removeOverride($class);
 		}
+
 		return $result;
 	}
 
@@ -2151,7 +2154,17 @@ abstract class ModuleCore
 
 			$method = $override_class->getMethod($method->getName());
 			$length = $method->getEndLine() - $method->getStartLine() + 1;
-			array_splice($override_file, $method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'));
+			
+			$module_method = $module_class->getMethod($method->getName());
+			$module_length = $module_method->getEndLine() - $module_method->getStartLine() + 1;
+
+			$override_file_orig = $override_file;
+
+			$orig_content = preg_replace("/\s/", '', implode('', array_splice($override_file, $method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'))));
+			$module_content = preg_replace("/\s/", '', implode('', array_splice($module_file, $module_method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'))));
+
+			if (md5($module_content) != md5($orig_content))
+				$override_file = $override_file_orig;
 		}
 
 		// Remove properties from override file
@@ -2179,6 +2192,9 @@ abstract class ModuleCore
 			$code .= $line;
 		}
 		file_put_contents($override_path, $code);
+
+		// Re-generate the class index
+		Autoload::getInstance()->generateIndex();
 
 		return true;
 	}

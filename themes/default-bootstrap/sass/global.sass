@@ -3,7 +3,7 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic)
 @import theme_variables
 @import bootstrap
-@import font-awesome.css
+@import font-awesome
 
 a:hover
 	text-decoration: none
@@ -1698,6 +1698,7 @@ div.star a:hover
 
 // FOOTER
 .footer-container
+	background-color: $dark-background
 	padding: 0 0 100px 0
 	// min 768px
 	@media (min-width: $screen-sm)
@@ -2830,3 +2831,12 @@ div.star.star_hover
 @media (max-width: $screen-md-max)
 	.zoomdiv
 		display: none !important
+//temporary fix for quickview
+#product.content_only
+	div#primary_block
+		div#pb-right-column
+			p.resetimg
+				margin-bottom: 0px
+				padding-top: 0px
+			#thumbs_list_frame
+				margin-bottom: 0px

@@ -79,7 +79,7 @@ abstract class ControllerCore
 	protected $redirect_after = null;
 	
 	public $controller_type;
-	
+	public $php_self;	
 	/**
 	 * check that the controller is available for the current user/visitor
 	 */

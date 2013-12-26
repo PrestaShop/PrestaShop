@@ -94,9 +94,11 @@ class HomeSlider extends Module
 			foreach ($languages as $language)
 			{
 				$slide->title[$language['id_lang']] = 'Sample '.$i;
-				$slide->description[$language['id_lang']] = 'This is a sample picture';
+				$slide->description[$language['id_lang']] = '<h2>EXCEPTEUR<br />OCCAECAT</h2>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tristique in tortor et dignissim. Quisque non tempor leo. Maecenas egestas sem elit</p>
+				<p><button class="btn btn-default" type="button">Shop now !</button></p>';
 				$slide->legend[$language['id_lang']] = 'sample-'.$i;
-				$slide->url[$language['id_lang']] = 'http://www.prestashop.com';
+				$slide->url[$language['id_lang']] = 'http://www.prestashop.com/?utm_source=v16_homeslider';
 				$slide->image[$language['id_lang']] = 'sample-'.$i.'.jpg';
 			}
 			$slide->add();

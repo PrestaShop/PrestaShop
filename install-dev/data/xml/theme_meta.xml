@@ -1,169 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_theme_meta>
-    <fields>
-        <field name="id_theme"/>
-        <field name="meta_page"/>
-        <field name="left_column"/>
-        <field name="right_column"/>
-    </fields>
-    <entities>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>404</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>best-sales</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>contact</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>index</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>manufacturer</meta_page>
-            <left_column>1</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>new-products</meta_page>
-            <left_column>1</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>password</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>prices-drop</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>sitemap</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>supplier</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>address</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>addresses</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>authentication</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>cart</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>discount</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>history</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>identity</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>my-account</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>order-follow</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>order-slip</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>order</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>search</meta_page>
-            <left_column>1</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>stores</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>order-opc</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>guest-tracking</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-        <theme_meta>
-            <id_theme>1</id_theme>
-            <meta_page>order-confirmation</meta_page>
-            <left_column>0</left_column>
-            <right_column>0</right_column>
-        </theme_meta>
-    </entities>
+  <fields>
+    <field name="id_theme"/>
+    <field name="id_meta"/>
+    <field name="left_column"/>
+    <field name="right_column"/>
+  </fields>
+  <entities>
+    <theme_meta id="theme_meta_1" id_theme="1" id_meta="1" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_2" id_theme="1" id_meta="2" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_3" id_theme="1" id_meta="3" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_4" id_theme="1" id_meta="4" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_5" id_theme="1" id_meta="5" left_column="1" right_column="0"/>
+    <theme_meta id="theme_meta_6" id_theme="1" id_meta="6" left_column="1" right_column="0"/>
+    <theme_meta id="theme_meta_7" id_theme="1" id_meta="7" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_8" id_theme="1" id_meta="8" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_10" id_theme="1" id_meta="9" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_11" id_theme="1" id_meta="10" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_12" id_theme="1" id_meta="11" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_13" id_theme="1" id_meta="12" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_14" id_theme="1" id_meta="13" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_15" id_theme="1" id_meta="14" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_16" id_theme="1" id_meta="15" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_17" id_theme="1" id_meta="16" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_18" id_theme="1" id_meta="17" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_19" id_theme="1" id_meta="18" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_20" id_theme="1" id_meta="19" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_21" id_theme="1" id_meta="20" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_22" id_theme="1" id_meta="21" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_23" id_theme="1" id_meta="22" left_column="1" right_column="0"/>
+    <theme_meta id="theme_meta_24" id_theme="1" id_meta="23" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_25" id_theme="1" id_meta="24" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_26" id_theme="1" id_meta="25" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_27" id_theme="1" id_meta="26" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_28" id_theme="1" id_meta="28" left_column="1" right_column="0"/>
+    <theme_meta id="theme_meta_29" id_theme="1" id_meta="29" left_column="0" right_column="0"/>
+    <theme_meta id="theme_meta_30" id_theme="1" id_meta="27" left_column="0" right_column="0"/>
+  </entities>
 </entity_theme_meta>
-
-

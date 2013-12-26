@@ -63,16 +63,16 @@
 							<span class="switch prestashop-switch">
 								<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_on" value="1" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), true)">
 								<label for="{$table}_multishop_{$category}_on">
-									<i class="icon-check-sign color_success"></i> {l s='Yes'}
+									{l s='Yes'}
 								</label>
 								<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_off" value="0" checked="checked" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), false)">
 								<label for="{$table}_multishop_{$category}_off">
-									<i class="icon-ban-circle color_danger"></i> {l s='No'}
+									{l s='No'}
 								</label>
-								<a class="slide-button btn btn-default"></a>
+								<a class="slide-button btn"></a>
 							</span>
 						</div>
-												<p class="help-block">
+						<p class="help-block">
 							<strong>{l s='Check / Uncheck all'}</strong>
 							{l s='(Check boxes if you want to set a custom value for this shop or group shop context)'}
 						</p>
@@ -141,13 +141,13 @@
 													<span class="switch prestashop-switch">
 														<input type="radio" name="{$key}" id="{$key}_on" value="1" {if $field['value']} checked="checked"{/if}{if isset($field['js']['on'])} {$field['js']['on']}{/if}/>
 														<label for="{$key}_on" class="radioCheck">
-															<i class="icon-check-sign color_success"></i> {l s='Yes'}
+															{l s='Yes'}
 														</label>
 														<input type="radio" name="{$key}" id="{$key}_off" value="0" {if !$field['value']} checked="checked"{/if}{if isset($field['js']['off'])} {$field['js']['off']}{/if}/>
 														<label for="{$key}_off" class="radioCheck">
-															<i class="icon-ban-circle color_danger"></i> {l s='No'}
+															{l s='No'}
 														</label>
-														<a class="slide-button btn btn-default"></a>
+														<a class="slide-button btn"></a>
 													</span>
 												</div>
 											</div>

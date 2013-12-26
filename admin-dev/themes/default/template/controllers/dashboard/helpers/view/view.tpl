@@ -132,13 +132,13 @@
 				<span class="switch prestashop-switch">
 					<input id="PS_DASHBOARD_SIMULATION_on" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 1}checked="checked"{/if} value="1" name="PS_DASHBOARD_SIMULATION">
 					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_on">
-						<i class="icon-check-sign color_success"></i> {l s='Yes'}
+						{l s='Yes'}
 					</label>
 					<input id="PS_DASHBOARD_SIMULATION_off" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 0}checked="checked"{/if} value="0" name="PS_DASHBOARD_SIMULATION">
 					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_off">
-						<i class="icon-ban-circle color_danger"></i> {l s='No'}
+						{l s='No'}
 					</label>
-					<a class="slide-button btn btn-default"></a>
+					<a class="slide-button btn"></a>
 				</span>
 				{l s='This mode generates fake data so you can try your Dashboard without real numbers.'}
 			</section>

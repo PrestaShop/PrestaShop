@@ -19,7 +19,7 @@
 	width: 30px;
 	height: 30px;
 	text-indent: -999999px;
-	background: url(../images/gray_next.png) no-repeat 0 -30px;
+	background: url(./images/gray_next.png) no-repeat 0 -30px;
 }
 /*previous button*/
 .bx-prev {
@@ -31,7 +31,7 @@
 	width: 30px;
 	height: 30px;
 	text-indent: -999999px;
-	background: url(../images/gray_prev.png) no-repeat 0 -30px;
+	background: url(./images/gray_prev.png) no-repeat 0 -30px;
 }
 /*pager links*/
 .bx-pager {
@@ -55,7 +55,7 @@
 	font-size: 11px;
 	color:#000;
 	text-decoration:none;
-	background:url(../images/gray_pager.png) no-repeat 0 -20px;
+	background:url(./images/gray_pager.png) no-repeat 0 -20px;
 }
 
 /*

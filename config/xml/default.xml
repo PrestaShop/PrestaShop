@@ -9,6 +9,37 @@
         <variation name="default-bootstrap" directory="default-bootstrap" from="1.6.0.1" to="1.6.0.1"/>
     </variations>
     <docs/>
+    <metas>
+        <meta meta_page="404"  left="1" right="0" />
+        <meta meta_page="best-sales" left="0" right="1" />
+        <meta meta_page="contact" left="1" right="1" />
+        <meta meta_page="index" left="0" right="0" />
+        <meta meta_page="manufacturer" left="1" right="0" />
+        <meta meta_page="new-products" left="1" right="0" />
+        <meta meta_page="password" left="0" right="0" />
+        <meta meta_page="prices-drop" left="0" right="0" />
+        <meta meta_page="sitemap" left="0" right="0" />
+        <meta meta_page="supplier" left="0" right="0" />
+        <meta meta_page="address" left="0" right="0" />
+        <meta meta_page="addresses" left="0" right="0" />
+        <meta meta_page="authentication" left="0" right="0" />
+        <meta meta_page="cart" left="0" right="0" />
+        <meta meta_page="discount" left="0" right="0" />
+        <meta meta_page="history" left="0" right="0" />
+        <meta meta_page="identity" left="0" right="0" />
+        <meta meta_page="my-account" left="0" right="0" />
+        <meta meta_page="order-follow" left="0" right="0" />
+        <meta meta_page="order-slip" left="0" right="0" />
+        <meta meta_page="order" left="0" right="0" />
+        <meta meta_page="search" left="0" right="0" />
+        <meta meta_page="stores" left="0" right="0" />
+        <meta meta_page="order-opc" left="0" right="0" />
+        <meta meta_page="guest-tracking" left="0" right="0" />
+        <meta meta_page="order-confirmation" left="0" right="0" />
+        <meta meta_page="product" left="0" right="0" />
+        <meta meta_page="category" left="1" right="0" />
+        <meta meta_page="cms" left="0" right="0" />
+    </metas>
     <modules>
         <module action="install" name="dashactivity"/>
         <module action="install" name="dashtrends"/>

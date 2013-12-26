@@ -34,7 +34,9 @@
 							<a href="{$slide.url|escape:'html':'UTF-8'}" title="{$slide.legend|escape:'html':'UTF-8'}">
 								<img src="{$link->getMediaLink("`$smarty.const._MODULE_DIR_`homeslider/images/`$slide.image|escape:'htmlall':'UTF-8'`")}" alt="{$slide.legend|escape:'htmlall':'UTF-8'}" />                                                            
 							</a>
+							{if isset($slide.description) && trim($slide.description) != ''}
 							<div class="homeslider-description">{$slide.description}</div>
+							{/if}
 						</li>
 					{/if}
 				{/foreach}
@@ -53,6 +55,10 @@
 				{/if}
 				var homeslider_speed = {$homeslider.speed};
 				var homeslider_pause = {$homeslider.pause};
+
+				$('.homeslider-description').click(function(){
+					window.location.href = $(this).prev('a').prop('href');
+				});
 			</script>
 		{/if}
 	{/if}

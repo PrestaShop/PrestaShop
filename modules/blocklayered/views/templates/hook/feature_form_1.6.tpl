@@ -94,7 +94,7 @@
 					<label for="indexable_off">
 						<i class="icon-ban-circle color_danger"></i> {l s='No' mod='blockfacette'}
 					</label>
-					<a class="slide-button btn btn-default"></a>
+					<a class="slide-button btn"></a>
 				</span>
 			</div>
 		</div>

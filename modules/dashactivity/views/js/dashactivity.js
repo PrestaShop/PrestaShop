@@ -7,7 +7,7 @@ function pie_chart_trends(widget_name, chart_details)
 			.color(d3.scale.category10().range())
 			.donut(true)
 			.showLabels(false)
-			.showLegend(true);
+			.showLegend(false);
 
 		d3.select("#dash_traffic_chart2 svg")
 			.datum(chart_details.data)

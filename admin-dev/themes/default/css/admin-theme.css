@@ -2984,14 +2984,14 @@ a.link-social:hover { text-decoration: none; }
   .bootstrap .switch-light > span span { position: absolute; top: 0; left: 0; z-index: 5; display: block; width: 50%; text-align: center; }
   .bootstrap .switch-light > span span:last-child { left: 50%; }
   .bootstrap .switch-light a { position: absolute; left: 50%; top: 0; z-index: 4; display: block; width: 50%; height: 100%; padding: 0; }
-  .bootstrap .switch { display: block; height: 26px; position: relative; padding: 0 !important; }
+  .bootstrap .switch { display: block; height: 26px; position: relative; }
   .bootstrap .switch * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
   .bootstrap .switch a { display: block; -webkit-transition: all 0.3s ease-out; transition: all 0.3s ease-out; }
   .bootstrap .switch label, .bootstrap .switch > span { line-height: 26px; vertical-align: middle; }
   .bootstrap .switch input { position: absolute; opacity: 0; }
   .bootstrap .switch label { position: relative; z-index: 2; float: left; width: 50%; height: 100%; margin: 0; text-align: center; }
-  .bootstrap .switch a { position: absolute; top: 0; left: 0; padding: 0; z-index: 1; width: 50%; height: 100%; }
-  .bootstrap .switch input:last-of-type:checked ~ a { left: 50%; }
+  .bootstrap .switch a { position: absolute; top: 0; left: 0; padding: 0; z-index: 1; width: 50%; height: 100%; color: white; border: solid 1px #5cb85c; background-color: #80c780; -webkit-box-shadow: #5cb85c 0 -1px 0 inset; box-shadow: #5cb85c 0 -1px 0 inset; }
+  .bootstrap .switch input:last-of-type:checked ~ a { left: 50%; border: solid 1px #d9534f; background-color: #e27c79; -webkit-box-shadow: #d9534f 0 -1px 0 inset; box-shadow: #d9534f 0 -1px 0 inset; }
   .bootstrap .switch.switch-3 label, .bootstrap .switch.switch-3 a { width: 33.33333%; }
   .bootstrap .switch.switch-3 input:checked:nth-of-type(2) ~ a { left: 33.33333%; }
   .bootstrap .switch.switch-3 input:checked:last-of-type ~ a { left: 66.66667%; }
@@ -3007,8 +3007,7 @@ a.link-social:hover { text-decoration: none; }
   .bootstrap .prestashop-switch { min-width: 150px; background-color: #eeeeee; border-radius: 3px; color: #333333; text-align: center; font-weight: 400; -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 1px 3px 1px inset; box-shadow: rgba(0, 0, 0, 0.15) 0 1px 3px 1px inset; }
   .bootstrap .prestashop-switch * { outline: 0 !important; }
   .bootstrap .prestashop-switch label { text-transform: uppercase; color: #bbbbbb; font-weight: 400; cursor: pointer; -webkit-transition: color 0.2s ease-out; transition: color 0.2s ease-out; }
-  .bootstrap .prestashop-switch input:checked + label { color: #666666; }
-  .bootstrap .prestashop-switch input:not(:checked) + label i { color: #999999 !important; }
+  .bootstrap .prestashop-switch input:checked + label { color: white; }
   .bootstrap .prestashop-switch > span { color: #666666; text-transform: uppercase; cursor: pointer; }
   .bootstrap .prestashop-switch.switch-light input:checked ~ a { border: solid 1px #5cb85c; background-color: #80c780; -webkit-box-shadow: #5cb85c 0 -1px 0 inset; box-shadow: #5cb85c 0 -1px 0 inset; }
   .bootstrap .prestashop-switch.switch-light input:checked ~ span span:first-of-type { color: white; }
@@ -3212,6 +3211,8 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .module_col_actions { display: table-cell; width: 160px; padding: 0 10px; vertical-align: middle; text-align: right; }
 .bootstrap .module_col_actions .btn-group { text-align: left; }
 .bootstrap li.sortable-placeholder { border: 1px dashed #cccccc; background-color: #bbbbbb; margin-bottom: 4px; -webkit-border-radius: 5px; -moz-border-radius: 5px; -ms-border-radius: 5px; -o-border-radius: 5px; border-radius: 5px; }
+.bootstrap td.module_active { background-color: #5cb85c !important; }
+.bootstrap td.module_inactive { background-color: #d9534f !important; }
 .bootstrap .size_s, .bootstrap .size_md, .bootstrap .size_l, .bootstrap .size_xl, .bootstrap .size_xxl { font-family: "Ubuntu", sans-serif; }
 .bootstrap .size_s { font-size: 1.1em; }
 .bootstrap .size_md { font-size: 1.3em; }

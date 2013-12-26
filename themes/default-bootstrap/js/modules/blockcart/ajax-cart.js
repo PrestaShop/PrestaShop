@@ -594,7 +594,7 @@ var ajaxCart = {
 			$('#layer_cart_product_attributes').html(product.attributes);
 		$('#layer_cart_product_price').text(product.price);
 		$('#layer_cart_product_quantity').text(product.quantity);
-		$('.layer_cart_img').prop({'src' : product.image, 'alt' : product.name, 'title' : product.name});
+		$('.layer_cart_img').html('<img class="layer_cart_img img-responsive" src="' + product.image + '" alt="' + product.name + '" title="' + product.name + '" />');
 		var h = parseInt($(window).height());
 		var s = parseInt($(window).scrollTop());
 		var t = $('#layer_cart').outerHeight(true);

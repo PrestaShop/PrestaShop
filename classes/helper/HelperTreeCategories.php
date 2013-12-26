@@ -31,6 +31,7 @@ class HelperTreeCategoriesCore extends TreeCore
 	const DEFAULT_NODE_ITEM_TEMPLATE   = 'tree_node_item_radio.tpl';
 
 	private $_disabled_categories;
+	private $_input_name;
 	private $_lang;
 	private $_root_category;
 	private $_selected_categories;
@@ -71,6 +72,19 @@ class HelperTreeCategoriesCore extends TreeCore
 	public function getDisabledCategories()
 	{
 		return $this->_disabled_categories;
+	}
+
+	public function setInputName($value)
+	{
+		$this->_input_name = $value;
+	}
+
+	public function getInputName()
+	{
+		if (!isset($this->_input_name))
+			$this->_input_name = 'categoryBox';
+
+		return $this->_input_name;
 	}
 
 	public function setLang($value)
@@ -248,10 +262,44 @@ class HelperTreeCategoriesCore extends TreeCore
 			$this->setAttribute('use_checkbox', $this->useCheckBox());
 		}
 
-		
-
 		$this->setAttribute('selected_categories', $this->getSelectedCatgories());		
 		return parent::render($data);
+	}
+
+	//Override
+	public function renderNodes($data = null)
+	{
+		if (!isset($data))
+			$data = $this->getData();
+
+		if (!is_array($data) && !$data instanceof Traversable)
+			throw new PrestaShopException('Data value must be an traversable array');
+
+		$html = '';
+
+		foreach ($data as $item)
+		{
+			if (array_key_exists('children', $item)
+				&& !empty($item['children']))
+				$html .= $this->getContext()->smarty->createTemplate(
+					$this->getTemplateFile($this->getNodeFolderTemplate()),
+					$this->getContext()->smarty
+				)->assign(array(
+					'input_name' => $this->getInputName(),
+					'children' => $this->renderNodes($item['children']),
+					'node'     => $item
+				))->fetch();
+			else
+				$html .= $this->getContext()->smarty->createTemplate(
+					$this->getTemplateFile($this->getNodeItemTemplate()),
+					$this->getContext()->smarty
+				)->assign(array(
+					'input_name' => $this->getInputName(),
+					'node' => $item
+				))->fetch();
+		}
+
+		return $html;
 	}
 
 	private function _disableCategories(&$categories, $disabled_categories = null)
