@@ -49,6 +49,8 @@ class HelperFormCore extends Helper
 	public $languages = null;
 	public $default_form_language = null;
 	public $allow_employee_form_lang = null;
+	public $show_cancel_button = false;
+	public $back_url = '#';
 
 	public function __construct()
 	{
@@ -222,6 +224,8 @@ class HelperFormCore extends Helper
 			'module_dir' => _MODULE_DIR_,
 			'base_url' => $this->context->shop->getBaseURL(),
 			'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
+			'show_cancel_button' => $this->show_cancel_button,
+			'back_url' => $this->back_url
 		));
 		return parent::generate();
 	}
