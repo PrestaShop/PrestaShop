@@ -94,21 +94,7 @@ class AdminShopGroupControllerCore extends AdminController
 	public function initContent()
 	{
 		parent::initContent();
-
-		if ($this->display == 'options')
-		{
-			unset($this->toolbar_btn);
-			$this->toolbar_btn['new'] = array(
-				'desc' => $this->l('Add a new shop group'),
-				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
-			);
-			$this->toolbar_btn['new_2'] = array(
-				'desc' => $this->l('Add a new shop'),
-				'href' => $this->context->link->getAdminLink('AdminShop').'&amp;addshop',
-				'imgclass' => 'new'
-			);
-		}
-
+		
 		$this->addJqueryPlugin('cooki-plugin');
 		$this->addJqueryPlugin('jstree');
 		$this->addCSS(_PS_JS_DIR_.'jquery/plugins/jstree/themes/classic/style.css');
@@ -122,6 +108,20 @@ class AdminShopGroupControllerCore extends AdminController
 			'title' => $this->toolbar_title,
 			'selected_tree_id' => ($this->display == 'edit') ? 'tree-group-'.$this->id_object : 'tree-root',
 		));
+	}
+	
+	public function initToolbar()
+	{
+		parent::initToolbar();
+		$this->toolbar_btn['new'] = array(
+			'desc' => $this->l('Add a new shop group'),
+			'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
+		);
+		$this->toolbar_btn['new_2'] = array(
+			'desc' => $this->l('Add a new shop'),
+			'href' => $this->context->link->getAdminLink('AdminShop').'&amp;addshop',
+			'imgclass' => 'new'
+		);
 	}
 
 	public function renderForm()

@@ -72,7 +72,7 @@ class AdminDashboardControllerCore extends AdminController
 			'payment' => array('title' => $this->l('Average bank fees per payment method'), 'id' => 'payment'),
 			'carriers' => array('title' => $this->l('Average shipping fees per shipping method'), 'id' => 'carriers'),
 			'other' => array('title' => $this->l('Other settings'), 'id' => 'other'),
-			'expenses' => array('title' => $this->l('Other expenses'), 'id' => 'expenses')
+			'expenses' => array('title' => $this->l('Other expenses (monthly)'), 'id' => 'expenses')
 		);
 		foreach ($forms as &$form)
 		{

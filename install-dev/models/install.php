@@ -509,7 +509,7 @@ class InstallModelInstall extends InstallAbstractModel
 		{
 			// @todo THIS CODE NEED TO BE REMOVED WHEN MODULES API IS COMMITED
 			$modules = array(
-				'addsharethis',
+				'socialsharing',
 				'blockbanner',
 				'bankwire',
 				'blockbestsellers',
