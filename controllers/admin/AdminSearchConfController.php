@@ -254,13 +254,13 @@ class AdminSearchConfControllerCore extends AdminController
 					'name' => 'alias',
 					'required' => true,
 					'hint' => array(
-						$this->l('Enter each alias separated by a comma (e.g. \'prestshop,preztashop,prestasohp\')'),
+						$this->l('Enter each alias separated by a comma (e.g. \'prestshop,preztashop,prestasohp\').'),
 						$this->l('Forbidden characters: &lt;&gt;;=#{}')
 					)
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Result:'),
+					'label' => $this->l('Result'),
 					'name' => 'search',
 					'required' => true,
 					'hint' => $this->l('Search this word instead.')
