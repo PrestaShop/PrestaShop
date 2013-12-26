@@ -804,7 +804,7 @@ class ValidateCore
 	 */
 	public static function isTabName($name)
 	{
-		return preg_match('/^[a-zA-Z0-9_-]*$/', $name);
+		return preg_match('/^[^<>]+$/u', $name);
 	}
 
 	public static function isWeightUnit($unit)
