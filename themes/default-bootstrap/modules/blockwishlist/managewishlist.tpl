@@ -193,7 +193,7 @@
 					</button>
 				</div>
 				<p class="required">
-					<sup>*</sup> {l s='Required field'}
+					<sup>*</sup> {l s='Required field' mod='blockwishlist'}
 				</p>
 			</fieldset>
 		</form>

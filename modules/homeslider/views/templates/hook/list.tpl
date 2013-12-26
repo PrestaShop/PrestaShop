@@ -25,7 +25,7 @@
 
 <fieldset>
 <div class="panel-heading">
-	<i class="icon-list-ul"></i> {l s='Slides list'}
+	<i class="icon-list-ul"></i> {l s='Slides list' mod='homeslider'}
 	<span class="panel-heading-action">
 		<a id="desc-product-new" class="list-toolbar-btn" href="{$link->getAdminLink('AdminModules')}&configure=homeslider&addSlide=1">
 			<label><span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="Add new" data-html="true"><i class="process-icon-new "></i></span></label>
@@ -40,8 +40,8 @@
 				<strong>#{$slide.id_slide}</strong> {$slide.title}
 				<p style="float: right">
 					{$slide.status}
-					<a class="btn btn-primary" href="{$link->getAdminLink('AdminModules')}&configure=homeslider&id_slide={$slide.id_slide}"> {l s='Edit'}</a>
-					<a class="btn btn-danger" href="{$link->getAdminLink('AdminModules')}&configure=homeslider&delete_id_slide={$slide.id_slide}"> {l s='Delete'}</a>
+					<a class="btn btn-primary" href="{$link->getAdminLink('AdminModules')}&configure=homeslider&id_slide={$slide.id_slide}"> {l s='Edit' mod='homeslider'}</a>
+					<a class="btn btn-danger" href="{$link->getAdminLink('AdminModules')}&configure=homeslider&delete_id_slide={$slide.id_slide}"> {l s='Delete' mod='homeslider'}</a>
 				</p>
 			</li>
 		{/foreach}

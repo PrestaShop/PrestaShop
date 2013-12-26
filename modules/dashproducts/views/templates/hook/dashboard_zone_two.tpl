@@ -25,7 +25,7 @@
 
 <section id="dashproducts" class="panel widget">
 	<header class="panel-heading">
-		<i class="icon-bar-chart"></i> {l s='Product and Sales'}
+		<i class="icon-bar-chart"></i> {l s='Product and Sales' mod='dashproducts'}
 		<span class="panel-heading-action">
 			<a class="list-toolbar-btn" href="#" onclick="toggleDashConfig('dashproducts'); return false;" title="configure">
 				<i class="process-icon-configure"></i>
@@ -36,7 +36,7 @@
 		</span>
 	</header>
 	<section id="dashproducts_config" class="dash_config hide">
-		<header><i class="icon-wrench"></i> {l s='Configuration' mod='dashactivity'}</header>
+		<header><i class="icon-wrench"></i> {l s='Configuration' mod='dashproducts'}</header>
 		{$dashproducts_config_form}
 	</section>
 	<section>
@@ -45,32 +45,32 @@
 				<li class="active">
 					<a href="#dash_recent_orders" data-toggle="tab">
 						<i class="icon-fire"></i>
-						<span class="hidden-inline-xs">{l s='Recent Orders'}</span>
+						<span class="hidden-inline-xs">{l s='Recent Orders' mod='dashproducts'}</span>
 					</a>
 				</li>
 				<li>
 					<a href="#dash_best_sellers" data-toggle="tab">
 						<i class="icon-trophy"></i>
-						<span class="hidden-inline-xs">{l s='Best Sellers'}</span>
+						<span class="hidden-inline-xs">{l s='Best Sellers' mod='dashproducts'}</span>
 					</a>
 				</li>
 				<li>
 					<a href="#dash_most_viewed" data-toggle="tab">
 						<i class="icon-eye-open"></i>
-						<span class="hidden-inline-xs">{l s='Most Viewed'}</span>
+						<span class="hidden-inline-xs">{l s='Most Viewed' mod='dashproducts'}</span>
 					</a>
 				</li>
 				<li>
 					<a href="#dash_top_search" data-toggle="tab">
 						<i class="icon-search"></i>
-						<span class="hidden-inline-xs">{l s='Top Search'}</span>
+						<span class="hidden-inline-xs">{l s='Top Search' mod='dashproducts'}</span>
 					</a>
 				</li>
 			</ul>
 		</nav>
 		<div class="tab-content panel">
 			<div class="tab-pane  active" id="dash_recent_orders">
-				<h3>{l s="Last 10 orders"}</h3>
+				<h3>{l s="Last 10 orders" mod='dashproducts'}</h3>
 				<table class="table data_table" id="table_recent_orders">
 					<thead>
 					</thead>
@@ -79,7 +79,7 @@
 				</table>
 			</div>
 			<div class="tab-pane" id="dash_best_sellers">
-				<h3>{l s="Top 10 products"} - {l s="From:"} {$date_from} {l s="to:"} {$date_to}</h3>
+				<h3>{l s="Top 10 products" mod='dashproducts'} - {l s="From:" mod='dashproducts'} {$date_from} {l s="to:" mod='dashproducts'} {$date_to}</h3>
 				<table class="table data_table" id="table_best_sellers">
 					<thead>
 					</thead>
@@ -88,7 +88,7 @@
 				</table>
 			</div>
 			<div class="tab-pane" id="dash_most_viewed">
-				<h3>{l s="Most Viewed"} - {l s="From:"} {$date_from} {l s="to:"} {$date_to}</h3>
+				<h3>{l s="Most Viewed" mod='dashproducts'} - {l s="From:" mod='dashproducts'} {$date_from} {l s="to:" mod='dashproducts'} {$date_to}</h3>
 				<table class="table data_table" id="table_most_viewed">
 					<thead>
 					</thead>
@@ -97,7 +97,7 @@
 				</table>
 			</div>
 			<div class="tab-pane" id="dash_top_search">
-				<h3>{l s="Top 10 most search terms"} - {l s="From:"} {$date_from} {l s="to:"} {$date_to}</h3>
+				<h3>{l s="Top 10 most search terms" mod='dashproducts'} - {l s="From:" mod='dashproducts'} {$date_from} {l s="to:" mod='dashproducts'} {$date_to}</h3>
 				<table class="table data_table" id="table_top_10_most_search">
 					<thead>
 					</thead>
