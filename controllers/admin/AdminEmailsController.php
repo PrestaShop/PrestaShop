@@ -40,7 +40,6 @@ class AdminEmailsControllerCore extends AdminController
 		$this->fields_options = array(
 			'email' => array(
 				'title' => $this->l('Email'),
-				'id' => 'email',
 				'icon' => 'icon-envelope',
 				'fields' =>	array(
 					'PS_MAIL_EMAIL_MESSAGE' => array(
@@ -76,11 +75,10 @@ class AdminEmailsControllerCore extends AdminController
 						)
 					),
 				),
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'smtp' => array(
 				'title' => $this->l('Email'),
-				'id' => 'smtp',
 				'fields' =>	array(
 					'PS_MAIL_DOMAIN' => array(
 						'title' => $this->l('Mail domain name:'),
@@ -143,11 +141,10 @@ class AdminEmailsControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 						),
 				),
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'test' => array(
 				'title' =>	$this->l('Test your email configuration'),
-				'id' => 'test',
 				'hide_multishop_checkbox' => true,
 				'fields' =>	array(
 					'PS_SHOP_EMAIL' => array(
@@ -158,10 +155,11 @@ class AdminEmailsControllerCore extends AdminController
 						),
 				),
 				'bottom' => '<div class="row"><div class="col-lg-9 col-lg-offset-3">
-					<button type="button" class="btn btn-default" name="btEmailTest" id="btEmailTest" onclick="verifyMail();"><i class="icon-envelope"></i> '.$this->l('Send an email test').'</button>
-					<br/><br/>
 					<div class="alert" id="mailResultCheck" style="display:none;"></div>
 				</div></div>',
+				'buttons' => array(
+					array('title' => $this->l('Send an email test'), 'icon' => 'process-icon-envelope', 'name' => 'btEmailTest', 'js' => 'verifyMail()')
+				)
 			)
 		);
 	}

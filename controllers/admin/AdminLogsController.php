@@ -90,7 +90,7 @@ class AdminLogsControllerCore extends AdminController
 						'type' => 'text'
 					)
 				),
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			)
 		);
 		$this->list_no_link = true;

@@ -116,7 +116,8 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'identifier' => 'id',
 						'cast' => 'intval'
 					)
-				)
+				),
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'gift' => array(
 				'title' =>	$this->l('Gift options'),
@@ -153,7 +154,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 				),
-				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),
+				'submit' => array('title' => $this->l('Save')),
 			),
 		);
 	}

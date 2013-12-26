@@ -62,7 +62,7 @@ class AdminCountriesControllerCore extends AdminController
 						'default' => '0'
 					)
 				),
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			)
 		);
 		

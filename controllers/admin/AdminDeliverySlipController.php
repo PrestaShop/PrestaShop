@@ -49,7 +49,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 						'type' => 'text'
 					)
 				),
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			)
 		);
 

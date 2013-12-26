@@ -82,7 +82,8 @@ class AdminSearchConfControllerCore extends AdminController
 						'cast' => 'intval',
 						'desc' => $this->l('Enable the automatic indexation of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.')
 					)
-				)
+				),
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'search' => array(
 				'title' =>	$this->l('Search'),
@@ -122,7 +123,7 @@ class AdminSearchConfControllerCore extends AdminController
 						'type' => 'textLang'
 					)
 				),
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'relevance' => array(
 				'title' =>	$this->l('Weight'),
@@ -187,7 +188,8 @@ class AdminSearchConfControllerCore extends AdminController
 						'type' => 'text',
 						'cast' => 'intval'
 					)
-				)
+				),
+				'submit' => array('title' => $this->l('Save'))
 			),
 		);
 	}

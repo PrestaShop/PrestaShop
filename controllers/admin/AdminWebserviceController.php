@@ -85,7 +85,7 @@ class AdminWebserviceControllerCore extends AdminController
 							'type' => 'bool'
 						),
 					),
-					'submit' => array()
+					'submit' => array('title' => $this->l('Save'))
 				),
 			);
 

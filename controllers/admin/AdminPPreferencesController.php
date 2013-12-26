@@ -103,6 +103,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					)
 				),
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'order_by_pagination' => array(
 				'title' =>	$this->l('Pagination'),
@@ -146,7 +147,8 @@ class AdminPPreferencesControllerCore extends AdminController
 						),
 						'identifier' => 'id'
 					)
-				)
+				),
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'fo_product_page' => array(
 				'title' =>	$this->l('Product page'),
@@ -204,7 +206,8 @@ class AdminPPreferencesControllerCore extends AdminController
 						'required' => false,
 						'type' => 'bool'
 					),
-				)
+				),
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'stock' => array(
 				'title' =>	$this->l('Products stock'),
@@ -239,7 +242,7 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 				),
 				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();</script>',
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			),
 		);
 	}

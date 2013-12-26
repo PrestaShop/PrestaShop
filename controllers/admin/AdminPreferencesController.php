@@ -164,7 +164,7 @@ class AdminPreferencesControllerCore extends AdminController
 					'title' =>	$this->l('General'),
 					'icon' =>	'icon-cogs',
 					'fields' =>	$fields,
-					'submit' => array('title' => $this->l('Save   '), 'class' => 'button'),
+					'submit' => array('title' => $this->l('Save')),
 				),
 			);
 		}
