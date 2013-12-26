@@ -780,6 +780,7 @@ class AdminImportControllerCore extends AdminController
 		$this->initToolbar();
 		$this->initPageHeaderToolbar();
 		if ($this->display == 'import')
+		{
 			if (Tools::getValue('csv'))
 				$this->content .= $this->renderView();
 			else
@@ -787,6 +788,7 @@ class AdminImportControllerCore extends AdminController
 				$this->errors[] = $this->l('You must upload a file in order to proceed to the next step');
 				$this->content .= $this->renderForm();
 			}
+		}
 		else
 			$this->content .= $this->renderForm();
 
@@ -1737,7 +1739,7 @@ class AdminImportControllerCore extends AdminController
 			}
 
 			// Check if warehouse exists
-			if ($product->warehouse)
+			if (isset($product->warehouse) && $product->warehouse)
 			{
 				if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 					$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse not set on product %1$s '),$product->name[$default_language_id]);
@@ -3225,7 +3227,7 @@ class AdminImportControllerCore extends AdminController
 			return;
 		}
 
-		if (Tools::getValue('submitImportFile'))
+		if (Tools::isSubmit('import'))
 		{
 			// Check if the CSV file exist
 			if (Tools::getValue('csv'))
