@@ -214,9 +214,9 @@ class BankWire extends PaymentModule
 						'name' => 'BANK_WIRE_ADDRESS',
 					),
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
 			),
 		);
 		

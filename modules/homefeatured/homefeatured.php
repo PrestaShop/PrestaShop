@@ -159,9 +159,9 @@ class HomeFeatured extends Module
 						'desc' => $this->l('Define the number of products that you would like to display on homepage (default: 8).'),
 					),
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
 			),
 		);
 		

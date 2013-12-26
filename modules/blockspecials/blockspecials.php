@@ -164,9 +164,9 @@ class BlockSpecials extends Module
 						'desc' => $this->l('Specials are displayed randomly on the front end, but since it takes a lot of ressources, it is better to cache the results. Cache is reset everyday. 0 will disable the cache.'),
 					),
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
 			),
 		);
 		

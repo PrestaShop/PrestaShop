@@ -116,7 +116,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 				),
-				'submit' => array(),
+				'submit' => array('title' => $this->l('Save')),
 			)
 		);
 
@@ -189,8 +189,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 					),
 				),
 				'submit' => array(
-					'title' => $this->l('Save'),
-					'class' => 'btn btn-default'
+					'title' => $this->l('Save')
 				)
 			);
 		}
@@ -301,8 +300,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 						),
 					),
 					'submit' => array(
-						'title' => $this->l('Save'),
-						'class' => 'btn btn-default'
+						'title' => $this->l('Save')
 					)
 				);
 
@@ -338,8 +336,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 								),
 							),
 							'submit' => array(
-								'title' => $this->l('Save'),
-								'class' => 'btn btn-default'
+								'title' => $this->l('Save')
 							)
 						);
 					}

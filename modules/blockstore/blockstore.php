@@ -134,9 +134,9 @@ class BlockStore extends Module
 						'thumb' => '../modules/'.$this->name.'/'.Configuration::get('BLOCKBLOCKSTORE_IMG'),
 					),
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
 			),
 		);
 		

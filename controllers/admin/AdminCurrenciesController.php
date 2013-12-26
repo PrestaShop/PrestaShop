@@ -56,7 +56,6 @@ class AdminCurrenciesControllerCore extends AdminController
 				'description' => $this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, however, rates are provided as-is.'),
 				'submit' => array(
 					'title' => $this->l('Update currency rates'),
-					'class' => 'btn btn-default',
 					'name' => 'SubmitExchangesRates'
 				)
 			),
@@ -226,7 +225,6 @@ class AdminCurrenciesControllerCore extends AdminController
 
 		$this->fields_form['submit'] = array(
 			'title' => $this->l('Save'),
-			'class' => 'btn btn-default'
 		);
 
 		return parent::renderForm();

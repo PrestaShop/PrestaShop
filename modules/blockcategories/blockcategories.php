@@ -419,9 +419,9 @@ class BlockCategories extends Module
 						'name' => 'BLOCK_CATEG_NBR_COLUMN_FOOTER',
 					),
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
 			),
 		);
 		

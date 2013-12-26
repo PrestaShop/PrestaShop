@@ -225,9 +225,9 @@ class BlockAdvertising extends Module
 						'name' => 'adv_title',
 					),
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
 			),
 		);
 		

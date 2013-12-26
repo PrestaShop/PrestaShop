@@ -120,6 +120,9 @@ class AdminPerformanceControllerCore extends AdminController
 					'name' => 'smarty_console_key',
 					'hint' => $this->l('SMARTY_DEBUG parameter in the URL.')
 				),
+			),
+			'submit' => array(
+				'title' => $this->l('Save')
 			)
 		);
 
@@ -177,6 +180,9 @@ class AdminPerformanceControllerCore extends AdminController
 					),
 					'hint' => $this->l('Enable or disable all classes and controllers overrides')
 				),
+			),
+			'submit' => array(
+				'title' => $this->l('Save')
 			)
 		);
 
@@ -256,6 +262,9 @@ class AdminPerformanceControllerCore extends AdminController
 					),
 					'hint' => $this->l('These features will be disabled')
 				)
+			),
+			'submit' => array(
+				'title' => $this->l('Save')
 			)
 		);
 
@@ -363,6 +372,9 @@ class AdminPerformanceControllerCore extends AdminController
 						),
 					),
 				)
+			),
+			'submit' => array(
+				'title' => $this->l('Save')
 			)
 		);
 
@@ -405,6 +417,9 @@ class AdminPerformanceControllerCore extends AdminController
 					'name' => '_MEDIA_SERVER_3_',
 					'hint' => $this->l('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.')
 				),
+			),
+			'submit' => array(
+				'title' => $this->l('Save')
 			)
 		);
 
@@ -453,9 +468,8 @@ class AdminPerformanceControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
-				'class' => 'button'
-			),
+				'title' => $this->l('Save')
+			)
 		);
 
 		$this->fields_value['PS_CIPHER_ALGORITHM'] = Configuration::get('PS_CIPHER_ALGORITHM');
@@ -542,6 +556,9 @@ class AdminPerformanceControllerCore extends AdminController
 					'label' => $this->l('Directory depth'),
 					'name' => 'ps_cache_fs_directory_depth'
 				),
+			),
+			'submit' => array(
+				'title' => $this->l('Save')
 			),
 			'memcachedServers' => true
 		);

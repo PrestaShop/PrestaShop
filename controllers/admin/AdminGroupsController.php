@@ -241,7 +241,6 @@ class AdminGroupsControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'btn btn-default'
 			),
 			'input' => array(
 				array(

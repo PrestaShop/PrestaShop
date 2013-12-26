@@ -138,9 +138,9 @@ class blocksocial extends Module
 						'desc' => $this->l('Pinterest Url'),
 					),
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
 			),
 		);
 		

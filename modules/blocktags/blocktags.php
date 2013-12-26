@@ -140,9 +140,9 @@ class BlockTags extends Module
 				),
 				'submit' => array(
 					'title' => $this->l('Save'),
-					'class' => 'btn btn-default')
-				),
-			);
+				)
+			),
+		);
 			
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;

@@ -121,9 +121,9 @@ class Blockcontact extends Module
 						'name' => 'blockcontact_email',
 					),
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
 			),
 		);
 		

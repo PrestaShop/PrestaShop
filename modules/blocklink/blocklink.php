@@ -462,7 +462,6 @@ class BlockLink extends Module
 				),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'btn btn-default',
 				'name' => 'submitLinkAdd',
 				)
 			),
@@ -499,7 +498,6 @@ class BlockLink extends Module
 				),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'btn btn-default',
 				'name' => 'submitTitle',
 				)
 			),
@@ -534,7 +532,6 @@ class BlockLink extends Module
 				),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'btn btn-default',
 				'name' => 'submitOrderWay',
 				)
 			),
