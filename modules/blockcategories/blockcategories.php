@@ -170,19 +170,11 @@ class BlockCategories extends Module
 	public function hookLeftColumn($params)
 	{
 		$category = false;
-		if (method_exists($this->context->controller, 'getCategory') && ($category = $this->context->controller->getCategory()))
-			$this->context->cookie->last_visited_category = $category->id;
-		elseif (method_exists($this->context->controller, 'getProduct') && ($product = $this->context->controller->getProduct()))
-		{
-			if (!isset($this->context->cookie->last_visited_category)
-				|| !Product::idIsOnCategoryId($product->id, array(array('id_category' => $this->context->cookie->last_visited_category)))
-				|| !Category::inShopStatic($this->context->cookie->last_visited_category, $this->context->shop))
-				$this->context->cookie->last_visited_category = (int)$product->id_category_default;
-
+		$this->setLastVisitedCategory();
+		if (isset($this->context->cookie->last_visited_category ) && $this->context->cookie->last_visited_category)
 			$category = new Category($this->context->cookie->last_visited_category, $this->context->language->id);
-		}
-	
 		$cacheId = $this->getCacheId($category ? $category->id : null);
+
 		if (!$this->isCached('blockcategories.tpl', $cacheId))
 		{
 			$range = '';
@@ -238,8 +230,26 @@ class BlockCategories extends Module
 		return $cache_id.'|'.implode('-', Customer::getGroupsStatic($this->context->customer->id));
 	}
 
+	public function setLastVisitedCategory()
+	{
+		$cache_id = 'blockcategories::setLastVisitedCategory';
+		if (!Cache::isStored($cache_id))
+		{
+			if (method_exists($this->context->controller, 'getCategory') && ($category = $this->context->controller->getCategory()))
+				$this->context->cookie->last_visited_category = $category->id;
+			elseif (method_exists($this->context->controller, 'getProduct') && ($product = $this->context->controller->getProduct()))
+				if (!isset($this->context->cookie->last_visited_category)
+					|| !Product::idIsOnCategoryId($product->id, array(array('id_category' => $this->context->cookie->last_visited_category)))
+					|| !Category::inShopStatic($this->context->cookie->last_visited_category, $this->context->shop))
+						$this->context->cookie->last_visited_category = (int)$product->id_category_default;
+			Cache::store($cache_id, $this->context->cookie->last_visited_category);
+		}
+		return Cache::retrieve($cache_id);
+	}
+
 	public function hookFooter($params)
 	{
+		$this->setLastVisitedCategory();
 		if (!$this->isCached('blockcategories_footer.tpl', $this->getCacheId()))
 		{
 			$maxdepth = Configuration::get('BLOCK_CATEG_MAX_DEPTH');
@@ -281,21 +291,6 @@ class BlockCategories extends Module
 			$id_category = (int)Tools::getValue('id_category');
 			$id_product = (int)Tools::getValue('id_product');
 
-			if (Tools::isSubmit('id_category'))
-			{
-				$this->context->cookie->last_visited_category = $id_category;
-				$this->smarty->assign('currentCategoryId', $this->context->cookie->last_visited_category);
-			}
-			if (Tools::isSubmit('id_product'))
-			{
-				if (!isset($this->context->cookie->last_visited_category) || !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $this->context->cookie->last_visited_category))))
-				{
-					$product = new Product($id_product);
-					if (isset($product) && Validate::isLoadedObject($product))
-						$this->context->cookie->last_visited_category = (int)($product->id_category_default);
-				}
-				$this->smarty->assign('currentCategoryId', (int)($this->context->cookie->last_visited_category));
-			}
 			$this->smarty->assign('blockCategTree', $blockCategTree);
 
 			if (file_exists(_PS_THEME_DIR_.'modules/blockcategories/blockcategories_footer.tpl'))
