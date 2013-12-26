@@ -3211,6 +3211,8 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .module_col_actions { display: table-cell; width: 160px; padding: 0 10px; vertical-align: middle; text-align: right; }
 .bootstrap .module_col_actions .btn-group { text-align: left; }
 .bootstrap li.sortable-placeholder { border: 1px dashed #cccccc; background-color: #bbbbbb; margin-bottom: 4px; -webkit-border-radius: 5px; -moz-border-radius: 5px; -ms-border-radius: 5px; -o-border-radius: 5px; border-radius: 5px; }
+.bootstrap td.module_active { background-color: #5cb85c !important; }
+.bootstrap td.module_inactive { background-color: #d9534f !important; }
 .bootstrap .size_s, .bootstrap .size_md, .bootstrap .size_l, .bootstrap .size_xl, .bootstrap .size_xxl { font-family: "Ubuntu", sans-serif; }
 .bootstrap .size_s { font-size: 1.1em; }
 .bootstrap .size_md { font-size: 1.3em; }
