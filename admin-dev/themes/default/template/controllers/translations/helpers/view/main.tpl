@@ -57,6 +57,16 @@
 			$('select[name=type]').change(function() {
 				addThemeSelect();
 			});
+
+			$('#translations-languages a').click(function(e) {
+				e.preventDefault();
+				$(this).parent().addClass('active').siblings().removeClass('active');
+				$('#language-button').html($(this).html()+' <span class="caret"></span>');
+			});
+
+			$('#modify-translations').click(function(e) {
+				chooseTypeTranslation($('#translations-languages li.active').data('type'));
+			});
 		});
 	</script>
 	
@@ -97,20 +107,20 @@
 				<label class="control-label col-lg-3" for="language-button">{l s='Select your language:'}</label>
 				<div class="input-group col-lg-4">
 					<button type="button" id="language-button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-						{l s='Language'}
-						<span class="caret"></span>
+						{l s='Language'} <span class="caret"></span>
 					</button>
-					<ul class="dropdown-menu">
+					<ul class="dropdown-menu" id="translations-languages">
 						{foreach $languages as $language}
-						<li>
-							<a href="javascript:chooseTypeTranslation('{$language['iso_code']}');">
-								{$language['name']}
-							</a>
-						</li>
+						<li data-type="{$language['iso_code']}"><a href="#">{$language['name']}</a></li>
 						{/foreach}
 					</ul>
 				</div>
 				<input type="hidden" name="token" value="{$token}" />
+			</div>
+			<div class="panel-footer">
+				<button type="button" class="btn btn-default pull-right" id="modify-translations">
+					<i class="process-icon-edit"></i> {l s='Modify'}
+				</button>
 			</div>
 		</div>
 	</form>
@@ -129,7 +139,7 @@
 					<label class="control-label col-lg-3" for="params_import_language">{l s='Please select the language you want to add or update:'}</label>
 					<div class="col-lg-9">
 						<div class="row">
-							<div class="col-sm-8">
+							<div class="col-lg-6">
 								<select id="params_import_language" name="params_import_language">
 								<optgroup label="{l s='Update a language'}">
 									{foreach $packs_to_update as $lang_pack}
@@ -143,19 +153,17 @@
 								</optgroup>
 							</select> 
 							</div>
-							<div class="col-sm-4">
-								<button type="submit" name="submitAddLanguage" class="btn btn-default">
-									<i class="icon-plus"></i>
-									{l s='Add or update a language'}
-								</button>
-							</div>
-							
 						</div>
 					</div>
 					
 				{else}
 					<p class="text-danger">{l s='Cannot connect to the PrestaShop website to get the language list.'}</p>
 				{/if}				
+			</div>
+			<div class="panel-footer">
+				<button type="submit" name="submitAddLanguage" class="btn btn-default pull-right">
+					<i class="process-icon-cogs"></i> {l s='Add or update a language'}
+				</button>
 			</div>
 		</div>
 	</form>
@@ -199,10 +207,8 @@
 					</select>
 				</div>
 			</div>
-			<div class="form-group">
-				<div class="col-lg-9 pull-right">
-					<input type="submit" value="{l s='   Import   '}" name="submitImport" class="btn btn-default" />
-				</div>
+			<div class="panel-footer">
+				<button type="submit" name="submitImport" class="btn btn-default pull-right"><i class="process-icon-upload"></i> {l s='Import'}</button>
 			</div>
 		</div>
 	</form>
@@ -237,10 +243,8 @@
 					</select>
 				</div>
 			</div>
-			<div class="form-group">
-				<div class="col-lg-9 pull-right">
-					<input type="submit" class="btn btn-default" name="submitExport" value="{l s='Export'}" />
-				</div>
+			<div class="panel-footer">
+				<button type="submit" name="submitExport" class="btn btn-default pull-right"><i class="process-icon-download"></i> {l s='Export'}</button>
 			</div>
 		</div>
 	</form>
@@ -291,15 +295,13 @@
 				</div>			
 			</div>
 			<div class="form-group">
-				<div class="col-lg-9 pull-right">
-					<input type="submit" value="{l s='Copy'}" name="submitCopyLang" class="btn btn-default" />
-				</div>
-			</div>
-			<div class="form-group">
 				<p class="col-lg-12 text-muted required">
 					<span class="text-danger">*</span>
 					{l s='Language files must be complete to allow copying of translations.'}
 				</p>
+			</div>
+			<div class="panel-footer">
+				<button type="submit" name="submitCopyLang" class="btn btn-default pull-right"><i class="process-icon-duplicate"></i> {l s='Copy'}</button>
 			</div>
 		</div>
 	</form>
