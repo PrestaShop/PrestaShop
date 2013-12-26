@@ -151,8 +151,7 @@ class AdminTagsControllerCore extends AdminController
 				'products_unselected' => $obj->getProducts(false)
 			),
 			'submit' => array(
-				'title' => $this->l('Save   '),
-				'class' => 'button'
+				'title' => $this->l('Save'),
 			)
 		);
 

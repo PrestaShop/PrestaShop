@@ -377,7 +377,6 @@ class AdminStatusesControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'button'
 			)
 		);
 	
@@ -410,6 +409,15 @@ class AdminStatusesControllerCore extends AdminController
 	protected function renderOrderReturnsForm()
 	{
 		$helper = $this->initOrderReturnsForm();
+		$helper->show_cancel_button = true;
+
+		$back = Tools::safeOutput(Tools::getValue('back', ''));
+		if (empty($back))
+			$back = self::$currentIndex.'&token='.$this->token;
+		if (!Validate::isCleanHtml($back))
+			die(Tools::displayError());
+
+		$helper->back_url = $back;
 			
 		$this->fields_form[0]['form'] = array(
 			'tinymce' => true,
@@ -438,7 +446,6 @@ class AdminStatusesControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'button'
 			)
 		);
 		return $helper->generateForm($this->fields_form);

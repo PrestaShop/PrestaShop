@@ -213,9 +213,9 @@ class VatNumber extends TaxManagerModule
 								),
 						)
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
 			),
 		);
 		

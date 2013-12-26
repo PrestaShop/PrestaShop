@@ -243,8 +243,7 @@ class BlockCms extends Module
 			),
 			'submit' => array(
 				'name' => 'submitFooterCMS',
-				'title' => $this->l('Save   '),
-				'class' => 'button'
+				'title' => $this->l('Save'),
 			)
 		);
 
@@ -358,8 +357,7 @@ class BlockCms extends Module
 			),
 			'submit' => array(
 				'name' => 'submitBlockCMS',
-				'title' => $this->l('Save   '),
-				'class' => 'button'
+				'title' => $this->l('Save'),
 			)
 		);
 

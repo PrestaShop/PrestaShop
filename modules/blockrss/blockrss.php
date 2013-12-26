@@ -195,9 +195,9 @@ class Blockrss extends Module
 						'desc' => $this->l('Number of threads displayed by the block (default value: 5)'),
 					),
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
 			),
 		);
 		

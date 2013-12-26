@@ -304,8 +304,7 @@ class AdminStockManagementControllerCore extends AdminController
 						),
 					),
 					'submit' => array(
-						'title' => $this->l('Add to stock'),
-						'class' => 'btn btn-default'
+						'title' => $this->l('Add to stock')
 					)
 				);
 				$this->fields_value['usable'] = 1;
@@ -408,8 +407,7 @@ class AdminStockManagementControllerCore extends AdminController
 						),
 					),
 					'submit' => array(
-						'title' => $this->l('Remove from stock'),
-						'class' => 'btn btn-default'
+						'title' => $this->l('Remove from stock')
 					)
 				);
 			break;
@@ -530,8 +528,7 @@ class AdminStockManagementControllerCore extends AdminController
 						),
 					),
 					'submit' => array(
-						'title' => $this->l('Transfer'),
-						'class' => 'btn btn-default'
+						'title' => $this->l('Transfer')
 					)
 				);
 			break;

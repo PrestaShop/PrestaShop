@@ -95,9 +95,9 @@ class BlockFacebook extends Module
 						'name' => 'blockfacebook_url',
 					),
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'submit' => array(
+					'title' => $this->l('Save')
+				)
 			),
 		);
 		

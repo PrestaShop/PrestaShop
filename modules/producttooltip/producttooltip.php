@@ -239,9 +239,9 @@ class ProductToolTip extends Module
 						'suffix' => 'days'
 					),
 				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
 			),
 		);
 		

@@ -123,7 +123,7 @@
 				</div>
 			</div>
 			<div class="panel-footer">
-				<button type="submit" name="submitRegenerate{$table}" class="btn btn-default" onclick="return confirm('{l s='Are you sure?'}');">
+				<button type="submit" name="submitRegenerate{$table}" class="btn btn-default pull-right" onclick="return confirm('{l s='Are you sure?'}');">
 					<i class="process-icon-cogs"></i> {l s='Regenerate thumbnails'}
 				</button>
 			</div>
@@ -152,7 +152,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12 pull-right">
-                        <input type="Submit" name="submitMoveImages{$table}" value="{l s='Move images'}" class="btn btn-default" onclick="return confirm('{l s='Are you sure?'}');" />
+                        <button type="submit" name="submitMoveImages{$table}" class="btn btn-default pull-right" onclick="return confirm('{l s='Are you sure?'}');"><i class="process-icon-cogs"></i> {l s='Move images'}</button>
                     </div>
                 </div>
             </div>

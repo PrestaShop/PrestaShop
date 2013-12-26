@@ -264,8 +264,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default'
+				'title' => $this->l('Save')
 			),
 		);
 		if (($value = $this->getFieldValue($this->object, 'price')) != -1)	

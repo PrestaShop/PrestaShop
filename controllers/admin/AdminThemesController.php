@@ -399,7 +399,6 @@ class AdminThemesControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'button'
 			)
 		);
 		// adding a new theme, you can create a directory, and copy from an existing theme
@@ -1188,7 +1187,6 @@ class AdminThemesControllerCore extends AdminController
 				),
 				'submit'  => array(
 					'title' => $this->l('Save'),
-					'class' => 'button'
 				))
 		);
 
@@ -1252,8 +1250,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 				),
 				'submit'  => array(
-					'title' => $this->l('Export'),
-					'class' => 'button'
+					'title' => $this->l('Save'),
 				))
 		);
 
@@ -1503,7 +1500,6 @@ class AdminThemesControllerCore extends AdminController
 				),
 				'submit'  => array(
 					'title' => $this->l('Save'),
-					'class' => 'button'
 				)),
 		);
 
@@ -1890,7 +1886,6 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'submit'  => array(
 						'title' => $this->l('Save'),
-						'class' => 'button'
 					))
 			);
 

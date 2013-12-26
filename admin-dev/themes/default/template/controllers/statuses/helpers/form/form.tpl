@@ -89,7 +89,7 @@
 				{/if}
 				</div>
 			</div>
-		{/if}					
+		{/if}
 		</div>
 	</div>
 
