@@ -24,7 +24,7 @@
 *}
 <li class="tree-folder">
 	<span class="tree-folder-name{if isset($node['disabled']) && $node['disabled'] == true} tree-folder-name-disable{/if}">
-		<input type="checkbox" name="categoryBox[]" value="{$node['id_category']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
+		<input type="checkbox" name="{$input_name}[]" value="{$node['id_category']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
 		<i class="icon-folder-close"></i>
 		<label class="tree-toggler">{$node['name']}</label>
 	</span>

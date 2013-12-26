@@ -2,52 +2,40 @@ body {
   background: #282828;
 }
 
-.header-container,
-.columns-container {
+.header-container, .columns-container {
   background: url(../img/bg-theme7.jpg) repeat 50% 0;
 }
-#header .header-row {
+
+#header {
+  background: url(../img/bg-theme7.jpg) repeat 50% 0;
+}
+#header #nav-row {
   background: #333333;
 }
-#header .header-row .shop-phone {
+#header #nav-row .shop-phone {
   color: #777;
 }
-#header .header-row .shop-phone i,
-#header .header-row .shop-phone strong {
-  color: #fff;
+#header #nav-row .shop-phone i, #header #nav-row .shop-phone strong {
+  color: white;
 }
-#header #currencies-block-top,
-#header #languages-block-top,
-#header .header-row .header_user_info {
+#header #currencies-block-top, #header #languages-block-top, #header #nav-row .header_user_info {
   border-color: #515151;
 }
-#header #currencies-block-top div.current,
-#header #languages-block-top div.current,
-#header .header-row .header_user_info a {
+#header #currencies-block-top div.current, #header #languages-block-top div.current, #header #nav-row .header_user_info a {
   color: white;
 }
-#header #currencies-block-top div.current:hover, #header #currencies-block-top div.current.active,
-#header #languages-block-top div.current:hover,
-#header #languages-block-top div.current.active,
-#header .header-row .header_user_info a:hover,
-#header .header-row .header_user_info a.active {
+#header #currencies-block-top div.current:hover, #header #currencies-block-top div.current.active, #header #languages-block-top div.current:hover, #header #languages-block-top div.current.active, #header #nav-row .header_user_info a:hover, #header #nav-row .header_user_info a.active {
   background: #2b2b2b;
   color: white;
 }
-#header #currencies-block-top div.current strong,
-#header #languages-block-top div.current strong {
+#header #currencies-block-top div.current strong, #header #languages-block-top div.current strong {
   color: #43bebd;
 }
-#header #currencies-block-top div.current:hover, #header #currencies-block-top div.current.active,
-#header #languages-block-top div.current:hover,
-#header #languages-block-top div.current.active {
+#header #currencies-block-top div.current:hover, #header #currencies-block-top div.current.active, #header #languages-block-top div.current:hover, #header #languages-block-top div.current.active {
   background: #2b2b2b;
   color: white;
 }
-#header #header #currencies-block-top ul li.selected,
-#header #header #currencies-block-top ul li:hover a,
-#header #header #languages-block-top ul li.selected,
-#header #header #languages-block-top ul li:hover a {
+#header #currencies-block-top ul li.selected, #header #currencies-block-top ul li:hover a, #header #languages-block-top ul li.selected, #header #languages-block-top ul li:hover a {
   background: #43bebd;
 }
 #header #contact-link {
@@ -60,52 +48,47 @@ body {
   background: #2b2b2b;
   color: white;
 }
-
-#header #currencies-block-top div.current:after,
-#header #languages-block-top div.current:after {
-  color: #fff;
+#header #currencies-block-top div.current:after, #header #languages-block-top div.current:after {
+  color: white;
 }
-
-#search_block_top .btn.button-search {
+#header #search_block_top .btn.button-search {
   background: #43bebd;
   text-shadow: 0 1px #379c9c;
 }
-#search_block_top .btn.button-search:hover {
+#header #search_block_top .btn.button-search:hover {
   color: white;
   background: #333333;
   text-shadow: 0 1px #333;
 }
-#search_block_top #search_query_top {
+#header #search_block_top #search_query_top {
   border-color: #d6d4d4;
   background: rgba(248, 248, 248, 0.63);
   color: #686666;
 }
-
-#header_user #shopping_cart a {
+#header #header_user #shopping_cart a {
   background: #43bebd;
   color: white;
   text-shadow: 0 1px #379c9c;
 }
-#header_user #shopping_cart a:after {
+#header #header_user #shopping_cart a:after {
   color: white;
 }
-#header_user #shopping_cart a:hover {
+#header #header_user #shopping_cart a:hover {
   color: white;
   text-shadow: 0 1px #333;
   background: #333333;
 }
-
-.sf-menu {
+#header .sf-menu {
   background: #f6f6f6;
   border-bottom: 3px solid #e9e9e9;
 }
-.sf-menu > li {
+#header .sf-menu > li {
   border-right: 1px solid #d6d4d4;
 }
-.sf-menu > li > a {
+#header .sf-menu > li > a {
   border-bottom: 3px solid #e9e9e9;
 }
-.sf-menu > li.sfHover > a, .sf-menu > li > a:hover, .sf-menu > li.sfHoverForce > a {
+#header .sf-menu > li.sfHover > a, #header .sf-menu > li > a:hover, #header .sf-menu > li.sfHoverForce > a {
   color: #fff;
   background: #43bebd;
   border-bottom-color: #2aa2a1;
@@ -121,19 +104,15 @@ ul.product_list.grid > li .product-container .product-image-container {
 #home-page-tabs > li {
   border-color: #d6d4d4;
 }
-#home-page-tabs > li.active a,
-#home-page-tabs > li a:hover {
+#home-page-tabs > li.active a, #home-page-tabs > li a:hover {
   background: #43bebd;
   color: white;
 }
 
-.new,
-.sale {
+.new-label, .sale-label {
   background: #43bebd;
 }
-.new:before, .new:after,
-.sale:before,
-.sale:after {
+.new-label:before, .new-label:after, .sale-label:before, .sale-label:after {
   border-color: #43bebd transparent transparent transparent;
 }
 
@@ -150,23 +129,20 @@ ul.product_list.grid > li .product-container .product-image-container .product_i
   background: #f1e8e3;
 }
 
-.button.lnk_view {
-  text-shadow: none;
-  padding: 0;
-  border: none;
-}
-.button.lnk_view span {
-  border: 1px solid #9a9a9a;
-  padding: 12px 16px;
-  background: #f2f2f2;
-  color: white;
-}
-.button.lnk_view:hover span {
-  background: #b7b7b7;
-}
-
 .button.ajax_add_to_cart_button {
+  border-color: #43bebd;
+}
+.button.ajax_add_to_cart_button span {
+  filter: none;
+  border-color: #43bebd;
   background: #43bebd;
+}
+.button.ajax_add_to_cart_button:hover {
+  border-color: #333333;
+}
+.button.ajax_add_to_cart_button:hover span {
+  border-color: #333333;
+  background: #333333;
 }
 
 .price-percent-reduction {
@@ -174,8 +150,7 @@ ul.product_list.grid > li .product-container .product-image-container .product_i
   border-color: #43bebd;
 }
 
-.price,
-.price.product-price {
+.price, .price.product-price {
   color: #43bebd;
 }
 
@@ -190,14 +165,6 @@ ul.product_list.grid > li .product-container:hover {
   box-shadow: 0 5px 13px rgba(0, 0, 0, 0.17);
 }
 
-.button.lnk_view span {
-  color: #333333;
-}
-
-.button.lnk_view:hover span {
-  color: #fff;
-}
-
 #cmsinfo_block em {
   background: #43bebd;
   text-shadow: 0 1px #379c9c;
@@ -207,8 +174,7 @@ ul.product_list.grid > li .product-container:hover {
   background: rgba(230, 230, 230, 0.5);
 }
 
-#cmsinfo_block,
-#cmsinfo_block > div + div {
+#cmsinfo_block, #cmsinfo_block > div + div {
   border-color: #d8d8d8;
 }
 

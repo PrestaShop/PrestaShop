@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="alert alert-success">
-    {l s='The theme %1s has been successfully installed.' sprintf=$themeName}
+    {l s='The theme %1s has been successfully installed.'|sprintf:$theme_name}
 </div>
 
 {if $doc|count > 0}
@@ -33,28 +33,26 @@
         {/foreach}
     </ul>
 {/if}
-{if isset($imgError['error'])}
+{if isset($img_error['error'])}
     <div class="alert alert-warning">
         {l s='Warning: Copy/Paste your errors if you want to manually set the image type (in the "Images" page under the "Preferences" menu):'}
         <ul>
-            {foreach $imgError['error'] as $error}
+            {foreach $img_error['error'] as $error}
                 <li>
-                    {l s='Name image type:'} <strong>{$error['name']}</strong> {l s='Width:'} {$error['width']}
-                    px {l s='Height:'} {$error['height']}px
+                    {l s='Name image type:'} <strong>{$error['name']}</strong> {l s='Width: %1$spx Height:%2$px'|sprintf:$error['width']:$error['height']}
                 </li>
             {/foreach}
         </ul>
 
     </div>
 {/if}
-{if isset($imgError['ok'])}
+{if isset($img_error['ok'])}
     <div class="alert alert-success">
         {l s='Images have been correctly updated in database:'}
         <ul>
-            {foreach $imgError['ok'] as $error}
+            {foreach $img_error['ok'] as $error}
                 <li>
-                    {l s='Image type:'} <strong>{$error['name']}</strong> {l s='Width:'} {$error['width']}
-                    px {l s='Height:'} {$error['height']}px
+                    {l s='Image type:'} <strong>{$error['name']}</strong> {l s='Width: %1$spx Height:%2$px'|sprintf:$error['width']:$error['height']}
                 </li>
             {/foreach}
         </ul>

@@ -161,18 +161,12 @@ class AdminInvoicesControllerCore extends AdminController
 		);
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT COUNT(o.id_order) as nbOrders, (
-				SELECT oh.id_order_state
-				FROM '._DB_PREFIX_.'order_history oh
-				WHERE oh.id_order = oi.id_order
-				ORDER BY oh.date_add DESC, oh.id_order_history DESC
-				LIMIT 1
-			) id_order_state
-			FROM '._DB_PREFIX_.'order_invoice oi
-			LEFT JOIN '._DB_PREFIX_.'orders o ON (oi.id_order = o.id_order)
+			SELECT COUNT( o.id_order ) AS nbOrders, o.current_state as id_order_state
+			FROM `'._DB_PREFIX_.'order_invoice` oi
+			LEFT JOIN `'._DB_PREFIX_.'orders` o ON  oi.id_order = o.id_order 
 			WHERE o.id_shop IN('.implode(', ', Shop::getContextListShopID()).')
-			GROUP BY id_order_state
-		');
+			GROUP BY o.current_state
+		 ');
 
 		$status_stats = array();
 		foreach ($result as $row)

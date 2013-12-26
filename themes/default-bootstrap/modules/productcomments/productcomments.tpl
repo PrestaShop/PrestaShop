@@ -42,7 +42,7 @@ var moderation_active = {$moderation_active};
 			<div class="comment row">
             
 				<div class="comment_author col-sm-2">
-					<span>{l s='Grade' mod='productcomments'}&nbsp</span>
+					<span>{l s='Grade' mod='productcomments'}&nbsp;</span>
 					<div class="star_content clearfix">
 					{section name="i" start=0 loop=5 step=1}
 						{if $comment.grade le $smarty.section.i.index}

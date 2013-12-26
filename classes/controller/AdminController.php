@@ -227,6 +227,7 @@ class AdminControllerCore extends Controller
 
 	/** @var string	identifier to use for changing positions in lists (can be omitted if positions cannot be changed) */
 	protected $position_identifier;
+	protected $position_group_identifier;
 
 	/** @var boolean Table records are not deleted but marked as deleted if set to true */
 	protected $deleted = false;
@@ -937,8 +938,15 @@ class AdminControllerCore extends Controller
 		{
 			if ($object->toggleStatus())
 			{
+				$matches = array();
+				if (preg_match('/[\?|&]controller=([^&]*)/', (string)$_SERVER['HTTP_REFERER'], $matches) !== FALSE
+					&& strtolower($matches[1]) != strtolower(preg_replace('/controller/i', '', get_class($this))))
+						$this->redirect_after = preg_replace('/[\?|&]conf=([^&]*)/i', '', (string)$_SERVER['HTTP_REFERER']);
+				else
+					$this->redirect_after = self::$currentIndex.'&token='.$this->token;
+
 				$id_category = (($id_category = (int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '';
-				$this->redirect_after = self::$currentIndex.'&conf=5'.$id_category.'&token='.$this->token;
+				$this->redirect_after .= '&conf=5'.$id_category;
 			}
 			else
 				$this->errors[] = Tools::displayError('An error occurred while updating the status.');
@@ -1964,6 +1972,7 @@ class AdminControllerCore extends Controller
 		$helper->multiple_fieldsets = $this->multiple_fieldsets;
 		$helper->row_hover = $this->row_hover;
 		$helper->position_identifier = $this->position_identifier;
+		$helper->position_group_identifier = $this->position_group_identifier;
 		$helper->controller_name = $this->controller_name;
 		$helper->list_id = isset($this->list_id) ? $this->list_id : $this->table;
 		$helper->bootstrap = $this->bootstrap;

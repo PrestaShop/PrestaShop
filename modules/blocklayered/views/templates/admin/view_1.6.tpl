@@ -110,7 +110,7 @@
 							<label for="ps_layered_hide_0_values_off" class="radioCheck">
 								<i class="icon-ban-circle color_danger"></i> {l s='No' mod='blocklayered'}
 							</label>
-							<a class="slide-button btn btn-default"></a>
+							<a class="slide-button btn"></a>
 						</span>
 					</div>
 				</div>
@@ -130,7 +130,7 @@
 							<label for="ps_layered_show_qties_off" class="radioCheck">
 								<i class="icon-ban-circle color_danger"></i> {l s='No' mod='blocklayered'}
 							</label>
-							<a class="slide-button btn btn-default"></a>
+							<a class="slide-button btn"></a>
 						</span>
 					</div>
 				</div>
@@ -150,7 +150,7 @@
 							<label for="ps_layered_full_tree_off" class="radioCheck">
 								<i class="icon-ban-circle color_danger"></i> {l s='No' mod='blocklayered'}
 							</label>
-							<a class="slide-button btn btn-default"></a>
+							<a class="slide-button btn"></a>
 						</span>
 					</div>
 				</div>
@@ -176,7 +176,7 @@
 							<label for="ps_layered_filter_price_usetax_off" class="radioCheck">
 								<i class="icon-ban-circle color_danger"></i> {l s='No' mod='blocklayered'}
 							</label>
-							<a class="slide-button btn btn-default"></a>
+							<a class="slide-button btn"></a>
 						</span>
 					</div>
 				</div>
@@ -196,7 +196,7 @@
 							<label for="ps_layered_filter_index_condition_off" class="radioCheck">
 								<i class="icon-ban-circle color_danger"></i> {l s='No' mod='blocklayered'}
 							</label>
-							<a class="slide-button btn btn-default"></a>
+							<a class="slide-button btn"></a>
 						</span>
 					</div>
 				</div>
@@ -216,7 +216,7 @@
 							<label for="ps_layered_filter_index_availability_off" class="radioCheck">
 								<i class="icon-ban-circle color_danger"></i> {l s='No' mod='blocklayered'}
 							</label>
-							<a class="slide-button btn btn-default"></a>
+							<a class="slide-button btn"></a>
 						</span>
 					</div>
 				</div>
@@ -236,7 +236,7 @@
 							<label for="ps_layered_filter_index_manufacturer_off" class="radioCheck">
 								<i class="icon-ban-circle color_danger"></i> {l s='No' mod='blocklayered'}
 							</label>
-							<a class="slide-button btn btn-default"></a>
+							<a class="slide-button btn"></a>
 						</span>
 					</div>
 				</div>
@@ -256,7 +256,7 @@
 							<label for="ps_layered_filter_index_category_off" class="radioCheck">
 								<i class="icon-ban-circle color_danger"></i> {l s='No' mod='blocklayered'}
 							</label>
-							<a class="slide-button btn btn-default"></a>
+							<a class="slide-button btn"></a>
 						</span>
 					</div>
 				</div>

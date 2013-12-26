@@ -1,12 +1,12 @@
 /* block top user information */
 
-#header_user {
+#header_right #header_user {
 	clear:both;
 	float: right;
 	margin-top:8px;
 }
 
-#header_user.header_user_catalog {
+#header_right #header_user.header_user_catalog {
 	margin-top: 15px;
     min-height: 60px;
 }
@@ -36,26 +36,26 @@
 #header_user #your_account a { background-image: url('img/icon/my-account.gif') }
 
 /* user infos */ 
-.header_user_info {
+#header_user_info {
 	clear:both;
 	float:right;
 	margin-top:10px;
 	padding:0;
 	font-size:12px
 }
-.header_user_info a {
+#header_user_info a {
 	display:inline-block;
 	margin:0 0 0 10px;
 	padding:3px 0 0 34px;
 	line-height: 11px;
 	border-left:1px solid #000
 }
-.header_user_info a.account {
+#header_user_info a.account {
 	border: none;
 	display: inline;
 	margin: 0;
 	padding: 0;
 }
-*:first-child+html .header_user_info a {line-height:14px;}
-.header_user_info a.login {background: url('img/icon/login.gif') no-repeat 10px 0}
-.header_user_info a.logout {background: url('img/icon/logout.png') no-repeat 10px -1px}
+*:first-child+html #header_user_info a {line-height:14px;}
+#header_user_info a.login {background: url('img/icon/login.gif') no-repeat 10px 0}
+#header_user_info a.logout {background: url('img/icon/logout.png') no-repeat 10px -1px}

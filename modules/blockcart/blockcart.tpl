@@ -34,7 +34,7 @@ var img_dir = '{$img_dir|addslashes}';
 {/if}
 <script type="text/javascript">
 var customizationIdMessage = '{l s='Customization #' mod='blockcart' js=1}';
-var removingLinkText = '{l s='Please remove this product from my cart.' mod='blockcart' js=1}';
+var removingLinkText = '{l s='remove this product from my cart' mod='blockcart' js=1}';
 var freeShippingTranslation = '{l s='Free shipping!' mod='blockcart' js=1}';
 var freeProductTranslation = '{l s='Free!' mod='blockcart' js=1}';
 var delete_txt = '{l s='Delete' mod='blockcart' js=1}';
@@ -156,18 +156,18 @@ var generated_date = {$smarty.now|intval};
 		{if $use_taxes && $display_tax_label == 1 && $show_tax}
 			{if $priceDisplay == 0}
 				<p id="cart-price-precisions">
-					{l s='Prices include tax.' mod='blockcart'}
+					{l s='Prices are tax included' mod='blockcart'}
 				</p>
 			{/if}
 			{if $priceDisplay == 1}
 				<p id="cart-price-precisions">
-					{l s='Prices do not include tax.' mod='blockcart'}
+					{l s='Prices are tax excluded' mod='blockcart'}
 				</p>
 			{/if}
 		{/if}
 		<p id="cart-buttons">
 			{if $order_process == 'order'}<a href="{$link->getPageLink("$order_process", true)|escape:'html'}" class="button_small" title="{l s='View my shopping cart' mod='blockcart'}" rel="nofollow">{l s='Cart' mod='blockcart'}</a>{/if}
-			<a href="{$link->getPageLink("$order_process", true)|escape:'html'}" id="button_order_cart" class="exclusive{if $order_process == 'order-opc'}_large{/if}" title="{l s='Checkout' mod='blockcart'}" rel="nofollow"><span></span>{l s='Checkout' mod='blockcart'}</a>
+			<a href="{$link->getPageLink("$order_process", true)|escape:'html'}" id="button_order_cart" class="exclusive{if $order_process == 'order-opc'}_large{/if}" title="{l s='Check out' mod='blockcart'}" rel="nofollow"><span></span>{l s='Check out' mod='blockcart'}</a>
 		</p>
 	</div>
 	</div>

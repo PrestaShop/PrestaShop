@@ -102,11 +102,11 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 			$this->printErrors();
 		if (!$this->processConfigureShop())
 			$this->printErrors();
+		if (!$this->processInstallFixtures())
+			$this->printErrors();
 		if (!$this->processInstallModules())
 			$this->printErrors();
 		if (!$this->processInstallAddonsModules())
-			$this->printErrors();
-		if (!$this->processInstallFixtures())
 			$this->printErrors();
 		if (!$this->processInstallTheme())
 			$this->printErrors();

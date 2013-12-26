@@ -469,7 +469,7 @@
 									<hr />{$addresses.delivery->other}<br />
 								{/if}
 							</div>
-							<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if}&markers={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if}&zoom=7&size=600x200&scale=2&sensor=false" class="thumbnail">
+							<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if} {$addresses.delivery->country}&markers={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if} {$addresses.delivery->country}&zoom=7&size=600x200&scale=2&sensor=false" class="thumbnail">
 						{/if}
 					</div>
 					<div class="tab-pane" id="addressInvoice">
@@ -512,7 +512,7 @@
 								<hr />{$addresses.invoice->other}<br />
 							{/if}
 						</div>
-						<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.invoice->address1} {$addresses.invoice->postcode} {$addresses.invoice->city} {if ($addresses.invoice->id_state)} {$addresses.deliveryState->name}{/if}&markers={$addresses.invoice->address1} {$addresses.invoice->postcode} {$addresses.invoice->city} {if ($addresses.invoice->id_state)} {$addresses.deliveryState->name}{/if}&zoom=7&size=600x200&scale=2&sensor=false" class="thumbnail">
+						<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.invoice->address1} {$addresses.invoice->postcode} {$addresses.invoice->city} {if ($addresses.invoice->id_state) && isset($addresses.deliveryState)} {$addresses.deliveryState->name}{/if}&markers={$addresses.invoice->address1} {$addresses.invoice->postcode} {$addresses.invoice->city} {if ($addresses.invoice->id_state) && isset($addresses.deliveryState)} {$addresses.deliveryState->name}{/if}&zoom=7&size=600x200&scale=2&sensor=false" class="thumbnail">
 					</div>
 				</div>
 				<script>
@@ -556,7 +556,7 @@
 												<i class="icon-ban-circle text-danger"></i>
 												{l s='No'}
 											</label>
-											<a class="slide-button btn btn-default"></a>
+											<a class="slide-button btn"></a>
 										</span>
 									</div>
 								</div>				

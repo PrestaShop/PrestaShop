@@ -95,6 +95,7 @@ class HelperListCore extends Helper
 	public $list_skip_actions = array();
 
 	public $bulk_actions = false;
+	public $force_show_bulk_actions = false;
 	public $specificConfirmDelete = null;
 	public $colorOnBackground;
 
@@ -184,9 +185,12 @@ class HelperListCore extends Helper
 		if (isset($this->fields_list['position']))
 		{
 			if ($this->position_identifier)
-				$id_category = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', ($this->is_cms ? '1' : Category::getRootCategory()->id ));
+				if (isset($this->position_group_identifier))
+					$position_group_identifier = (int)Tools::getValue($this->position_group_identifier);
+				else
+					$position_group_identifier = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', ($this->is_cms ? '1' : Category::getRootCategory()->id ));
 			else
-				$id_category = Category::getRootCategory()->id;
+				$position_group_identifier = Category::getRootCategory()->id;
 
 			$positions = array_map(create_function('$elem', 'return (int)($elem[\'position\']);'), $this->_list);
 			sort($positions);
@@ -252,11 +256,11 @@ class HelperListCore extends Helper
 					$this->_list[$index][$key] = array(
 						'position' => $tr[$key],
 						'position_url_down' => $this->currentIndex.
-							(isset($key_to_get) ? '&'.$key_to_get.'='.(int)$id_category : '').
+							(isset($key_to_get) ? '&'.$key_to_get.'='.(int)$position_group_identifier : '').
 							'&'.$this->position_identifier.'='.$id.
 							'&way=1&position='.((int)$tr['position'] + 1).'&token='.$this->token,
 						'position_url_up' => $this->currentIndex.
-							(isset($key_to_get) ? '&'.$key_to_get.'='.(int)$id_category : '').
+							(isset($key_to_get) ? '&'.$key_to_get.'='.(int)$position_group_identifier : '').
 							'&'.$this->position_identifier.'='.$id.
 							'&way=0&position='.((int)$tr['position'] - 1).'&token='.$this->token
 					);
@@ -325,7 +329,7 @@ class HelperListCore extends Helper
 			'table' => $this->table,
 			'token' => $this->token,
 			'color_on_bg' => $this->colorOnBackground,
-			'id_category' => isset($id_category) ? $id_category : false,
+			'position_group_identifier' => isset($position_group_identifier) ? $position_group_identifier : false,
 			'bulk_actions' => $this->bulk_actions,
 			'positions' => isset($positions) ? $positions : null,
 			'order_by' => $this->orderBy,
@@ -339,7 +343,7 @@ class HelperListCore extends Helper
 			'view' => in_array('view', $this->actions),
 			'edit' => in_array('edit', $this->actions),
 			'has_actions' => !empty($this->actions),
-			'has_bulk_actions' =>  count($this->_list) <= 1 ? false : !empty($this->bulk_actions),
+			'has_bulk_actions' =>  (count($this->_list) <= 1 && !$this->force_show_bulk_actions) ? false : !empty($this->bulk_actions),
 			'list_skip_actions' => $this->list_skip_actions,
 			'row_hover' => $this->row_hover,
 		)));
@@ -613,7 +617,7 @@ class HelperListCore extends Helper
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_scroll' => $this->toolbar_scroll,
 			'toolbar_btn' => $this->toolbar_btn,
-			'has_bulk_actions' => (count($this->_list) <= 1 && !$has_value) ? false : !empty($this->bulk_actions),
+			'has_bulk_actions' => (count($this->_list) <= 1 && !$has_value && !$this->force_show_bulk_actions) ? false : !empty($this->bulk_actions),
 		));
 
 		$this->header_tpl->assign(array_merge($this->tpl_vars, array(
