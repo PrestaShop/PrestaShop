@@ -48,7 +48,7 @@
 					</li>
 				</ul>
 			</div>
-			<hr>
+			<hr />
 			<form id="preview_import" action="{$current}&token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
 				<div class="form-group">
 					<label for="entity" class="control-label col-lg-4">{l s='What kind of entity would you like to import?'} </label>
@@ -71,7 +71,7 @@
 				<div class="alert alert-warning import_supply_orders_details">
 					<p>{l s='Importing Supply Order Details will reset products ordered, if there are any.'}</p>
 				</div>
-				<hr>
+				<hr />
 				<div class="form-group" id="csv_file_uploader">
 					<label for="file" class="control-label col-lg-4">{l s='Select your CSV file'}</label>
 					<div class="col-lg-8">
@@ -169,7 +169,7 @@
 				</div>
 				<div class="form-group" id="csv_file_selected" style="display: none;">
 					<div class="alert alert-success clearfix">
-						<input type="hidden" value="{$filename}" name="csv" id="csv_selected_value">
+						<input type="hidden" value="{$csv_selected}" name="csv" id="csv_selected_value" />
 						<div class="col-lg-8">
 							<span id="csv_selected_filename">{$csv_selected|escape:'html':'UTF-8'}</span>
 						</div>
@@ -183,7 +183,7 @@
 						</div>
 					</div>
 				</div>
-				<hr>
+				<hr />
 				<div class="form-group">
 					<label for="iso_lang" class="control-label col-lg-4">
 						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='The locale must be installed'}">
