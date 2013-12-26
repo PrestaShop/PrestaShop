@@ -280,7 +280,7 @@
 				},
 				success : function(data){
 					if (data == 'OK')
-						$('#r_' + module_pref).html(confirmPreferencesSaved);
+						showSuccessMessage(confirmPreferencesSaved);
 				}
 			});
 		});
@@ -309,7 +309,7 @@
 					},
 					success : function(data){
 						if (data == 'OK')
-							$('#r_' + module_pref).html(confirmPreferencesSaved);
+							showSuccessMessage(confirmPreferencesSaved);
 					}
 				});
 			}
