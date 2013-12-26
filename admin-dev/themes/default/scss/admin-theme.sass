@@ -5,57 +5,54 @@
 @import "admin-theme/bootstrap-variables"
 @import "admin-theme/font-awesome"
 @import "admin-theme/vendor/animate"
-@import "admin-theme/growl"
-
-//Bootstrap from bower-components
 
 //Bootstrap Core : Variables + Mixins + Reset + Print
-@import "../bower_components/sass-bootstrap/lib/variables"
-@import "../bower_components/sass-bootstrap/lib/mixins"
-@import "../bower_components/sass-bootstrap/lib/normalize"
-//@import "../bower_components/sass-bootstrap/lib/print"
+@import "admin-theme/vendor/sass-bootstrap/variables"
+@import "admin-theme/vendor/sass-bootstrap/mixins"
+@import "admin-theme/vendor/sass-bootstrap/normalize"
+//@import "admin-theme/vendor/sass-bootstrap/print"
 
 //bootstrap rules apply only on div#content.bootstrap, nav.bootstrap, header.bootstrap, footer.bootstrap
 .bootstrap
 	// Core CSS
-	@import "../bower_components/sass-bootstrap/lib/scaffolding"
-	@import "../bower_components/sass-bootstrap/lib/type"
-	@import "../bower_components/sass-bootstrap/lib/code"
-	@import "../bower_components/sass-bootstrap/lib/grid"
-	@import "../bower_components/sass-bootstrap/lib/tables"
-	@import "../bower_components/sass-bootstrap/lib/forms"
-	@import "../bower_components/sass-bootstrap/lib/buttons"
+	@import "admin-theme/vendor/sass-bootstrap/scaffolding"
+	@import "admin-theme/vendor/sass-bootstrap/type"
+	@import "admin-theme/vendor/sass-bootstrap/code"
+	@import "admin-theme/vendor/sass-bootstrap/grid"
+	@import "admin-theme/vendor/sass-bootstrap/tables"
+	@import "admin-theme/vendor/sass-bootstrap/forms"
+	@import "admin-theme/vendor/sass-bootstrap/buttons"
 	// Components
-	@import "../bower_components/sass-bootstrap/lib/component-animations"
-	//@import "../bower_components/sass-bootstrap/lib/glyphicons"
-	@import "../bower_components/sass-bootstrap/lib/dropdowns"
-	@import "../bower_components/sass-bootstrap/lib/button-groups"
-	@import "../bower_components/sass-bootstrap/lib/input-groups"
-	@import "../bower_components/sass-bootstrap/lib/navs"
-	@import "../bower_components/sass-bootstrap/lib/navbar"
-	@import "../bower_components/sass-bootstrap/lib/breadcrumbs"
-	@import "../bower_components/sass-bootstrap/lib/pagination"
-	@import "../bower_components/sass-bootstrap/lib/pager"
-	@import "../bower_components/sass-bootstrap/lib/labels"
-	@import "../bower_components/sass-bootstrap/lib/badges"
-	//@import "../bower_components/sass-bootstrap/lib/jumbotron"
-	@import "../bower_components/sass-bootstrap/lib/thumbnails"
-	@import "../bower_components/sass-bootstrap/lib/alerts"
-	//@import "../bower_components/sass-bootstrap/lib/progress-bars"
-	@import "../bower_components/sass-bootstrap/lib/media"
-	@import "../bower_components/sass-bootstrap/lib/list-group"
-	@import "../bower_components/sass-bootstrap/lib/panels"
-	@import "../bower_components/sass-bootstrap/lib/wells"
-	@import "../bower_components/sass-bootstrap/lib/close"
+	@import "admin-theme/vendor/sass-bootstrap/component-animations"
+	//@import "admin-theme/vendor/sass-bootstrap/glyphicons"
+	@import "admin-theme/vendor/sass-bootstrap/dropdowns"
+	@import "admin-theme/vendor/sass-bootstrap/button-groups"
+	@import "admin-theme/vendor/sass-bootstrap/input-groups"
+	@import "admin-theme/vendor/sass-bootstrap/navs"
+	@import "admin-theme/vendor/sass-bootstrap/navbar"
+	@import "admin-theme/vendor/sass-bootstrap/breadcrumbs"
+	@import "admin-theme/vendor/sass-bootstrap/pagination"
+	@import "admin-theme/vendor/sass-bootstrap/pager"
+	@import "admin-theme/vendor/sass-bootstrap/labels"
+	@import "admin-theme/vendor/sass-bootstrap/badges"
+	//@import "admin-theme/vendor/sass-bootstrap/jumbotron"
+	@import "admin-theme/vendor/sass-bootstrap/thumbnails"
+	@import "admin-theme/vendor/sass-bootstrap/alerts"
+	//@import "admin-theme/vendor/sass-bootstrap/progress-bars"
+	@import "admin-theme/vendor/sass-bootstrap/media"
+	@import "admin-theme/vendor/sass-bootstrap/list-group"
+	@import "admin-theme/vendor/sass-bootstrap/panels"
+	@import "admin-theme/vendor/sass-bootstrap/wells"
+	@import "admin-theme/vendor/sass-bootstrap/close"
 	// Components w/ JavaScript
-	@import "../bower_components/sass-bootstrap/lib/modals"
-	@import "../bower_components/sass-bootstrap/lib/tooltip"
-	//@import "../bower_components/sass-bootstrap/lib/popovers"
-	//@import "../bower_components/sass-bootstrap/lib/carousel"
+	@import "admin-theme/vendor/sass-bootstrap/modals"
+	@import "admin-theme/vendor/sass-bootstrap/tooltip"
+	//@import "admin-theme/vendor/sass-bootstrap/popovers"
+	//@import "admin-theme/vendor/sass-bootstrap/carousel"
 
 // Utility classes
-@import "../bower_components/sass-bootstrap/lib/utilities"
-@import "../bower_components/sass-bootstrap/lib/responsive-utilities"
+@import "admin-theme/vendor/sass-bootstrap/utilities"
+@import "admin-theme/vendor/sass-bootstrap/responsive-utilities"
 
 //PrestaShop Elements
 @import "admin-theme/admin-content"
@@ -83,3 +80,7 @@
 
 //backward compatibility
 @import "admin-theme/admin-backward"
+
+//Plug-ins
+@import "admin-theme/growl"
+@import "admin-theme/chosen"

@@ -235,5 +235,4 @@ class Cheque extends PaymentModule
 			'CHEQUE_ADDRESS' => Tools::getValue('CHEQUE_ADDRESS', Configuration::get('CHEQUE_ADDRESS')),
 		);
 	}
-
 }

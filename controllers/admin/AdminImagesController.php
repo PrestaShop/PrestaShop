@@ -177,7 +177,7 @@ class AdminImagesControllerCore extends AdminController
 					'label' => $this->l('Type name'),
 					'name' => 'name',
 					'required' => true,
-					'hint' => $this->l('Letters and hyphens only (e.g. small, medium, large, extra-large)')
+					'hint' => $this->l('Letters and hyphens only (e.g. small, medium, large, extra-large).')
 				),
 				array(
 					'type' => 'text',
@@ -185,7 +185,7 @@ class AdminImagesControllerCore extends AdminController
 					'name' => 'width',
 					'required' => true,
 					'maxlength' => 5,
-					'hint' => $this->l('Maximum image width in pixels')
+					'hint' => $this->l('Maximum image width in pixels.')
 				),
 				array(
 					'type' => 'text',
@@ -193,7 +193,7 @@ class AdminImagesControllerCore extends AdminController
 					'name' => 'height',
 					'required' => true,
 					'maxlength' => 5,
-					'hint' => $this->l('Maximum image height in pixels')
+					'hint' => $this->l('Maximum image height in pixels.')
 				),
 				array(
 					'type' => 'switch',
@@ -201,7 +201,7 @@ class AdminImagesControllerCore extends AdminController
 					'name' => 'products',
 					'required' => false,
 					'is_bool' => true,
-					'hint' => $this->l('This type will be used for Product images'),
+					'hint' => $this->l('This type will be used for Product images.'),
 					'values' => array(
 						array(
 							'id' => 'products_on',
