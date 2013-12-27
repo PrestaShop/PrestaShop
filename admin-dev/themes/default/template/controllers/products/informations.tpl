@@ -191,12 +191,10 @@
 			<span class="switch prestashop-switch">
 				<input onclick="toggleDraftWarning(false);showOptions(true);showRedirectProductOptions(false);" type="radio" name="active" id="active_on" value="1" {if $product->active || !$product->isAssociatedToShop()}checked="checked" {/if} />
 				<label for="active_on" class="radioCheck">
-					<i class="icon-check-sign text-success"></i>
 					{l s='Enabled'}
 				</label>
 				<input onclick="toggleDraftWarning(true);showOptions(false);showRedirectProductOptions(true);"  type="radio" name="active" id="active_off" value="0" {if !$product->active && $product->isAssociatedToShop()}checked="checked"{/if} />
 				<label for="active_off" class="radioCheck">
-					<i class="icon-ban-circle text-danger"></i>
 					{l s='Disabled'}
 				</label>
 				<a class="slide-button btn"></a>
