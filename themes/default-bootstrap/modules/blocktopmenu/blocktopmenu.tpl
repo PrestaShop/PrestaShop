@@ -1,7 +1,6 @@
 {if $MENU != ''}
-	
 	<!-- Menu -->
-	<div id="block_top_menu" class="sf-contener clearfix">
+	<div id="block_top_menu" class="sf-contener clearfix col-lg-12">
 		<div class="cat-title">{l s="Categories" mod="blocktopmenu"}</div>
 		<ul class="sf-menu clearfix menu-content">
 			{$MENU}
@@ -19,7 +18,6 @@
 			{/if}
 		</ul>
 	</div>
-
 	<!--/ Menu -->
 	{literal}
 	<script type="text/javascript">
@@ -36,9 +34,7 @@
 					$(this).addClass('first-in-line-lg');
 			});
 		});
-		
 		// accordion for definition smaller that 767px
-		
 		responsiveflagMenu = false;
 		function menuChange(status){
 			if(status == 'enable'){
@@ -60,7 +56,6 @@
 				$('.sf-contener .cat-title').removeClass('active');
 			}
 		}
-		
 		function responsiveMenu(){
 		   if ($(document).width() <= 767 && responsiveflagMenu == false){
 				menuChange('enable'),
