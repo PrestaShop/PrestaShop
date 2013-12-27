@@ -41,17 +41,14 @@
 		<meta name="robots" content="{if isset($nobots)}no{/if}index,{if isset($nofollow) && $nofollow}no{/if}follow" />
 		<meta name="viewport" content="width=device-width, minimum-scale=0.25, maximum-scale=1.6, initial-scale=1.0" /> 
 		<meta name="apple-mobile-web-app-capable" content="yes" /> 
-		
 		<link rel="icon" type="image/vnd.microsoft.icon" href="{$favicon_url}?{$img_update_time}" />
 		<link rel="shortcut icon" type="image/x-icon" href="{$favicon_url}?{$img_update_time}" />
-
 		<!-- <link rel="stylesheet" href="{$css_dir}highdpi.css" type="text/css" media="screen" /> -->
 {if isset($css_files)}
 	{foreach from=$css_files key=css_uri item=media}
 		<link rel="stylesheet" href="{$css_uri}" type="text/css" media="{$media}" />
 	{/foreach}
 {/if}
-
 		<script>
 			if (navigator.userAgent.match(/Android/i)) {
 				var viewport = document.querySelector("meta[name=viewport]");
@@ -89,17 +86,17 @@
 		{/if}
 		<div id="page">
 			<header id="header">
-				<div id="banner-row">
+				<div class="header-row banner">
 					{hook h="displayBanner"}
 				</div>
-				<div id="nav-row">
+				<div class="header-row nav">
 					<div class="container">
 						<nav>
 							{hook h="displayNav"}
 						</nav>
 					</div>
 				</div> <!-- #end nav-row -->
-				<div id="header-row">
+				<div class="header-row">
 					<div class="container">
 						<div class="row">
 							<div id="header_logo">
@@ -112,7 +109,6 @@
 					</div>
 				</div> <!-- end #header-row -->
 			</header>
-
 			<div class="columns-container">
 				<div id="columns" class="container">
 					{if $page_name !='index' && $page_name !='pagenotfound'}
