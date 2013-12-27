@@ -49,14 +49,7 @@
 		<link rel="stylesheet" href="{$css_uri}" type="text/css" media="{$media}" />
 	{/foreach}
 {/if}
-		<script>
-			if (navigator.userAgent.match(/Android/i)) {
-				var viewport = document.querySelector("meta[name=viewport]");
-				viewport.setAttribute('content', 'initial-scale=1.0,maximum-scale=1.0,user-scalable=0,width=device-width,height=device-height');
-			}
-			if (navigator.userAgent.match(/Android/i)) {
-				window.scrollTo(0,1);
-			}
+		<script type="text/javascript">
 			var baseDir = '{$content_dir|addslashes}';
 			var baseUri = '{$base_uri|addslashes}';
 			var static_token = '{$static_token|addslashes}';
@@ -65,13 +58,20 @@
 			var priceDisplayMethod = {$priceDisplay|intval};
 			var roundMode = {$roundMode|intval};
 			var isUserLogged = {if $logged}true{else}false{/if};
+			if (navigator.userAgent.match(/Android/i)) {
+				var viewport = document.querySelector("meta[name=viewport]");
+				viewport.setAttribute('content', 'initial-scale=1.0,maximum-scale=1.0,user-scalable=0,width=device-width,height=device-height');
+			}
+			if (navigator.userAgent.match(/Android/i)) {
+				window.scrollTo(0,1);
+			}
 		</script>
 {if isset($js_files)}
 	{foreach from=$js_files item=js_uri}
 		<script type="text/javascript" src="{$js_uri}"></script>
 	{/foreach}
 {/if}
-		<!--[if IE 8]><html class="no-js lt-ie9 ie8" lang="{$lang_iso}">
+		<!--[if IE 8]>
 			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 			<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
 		<![endif]-->
@@ -86,17 +86,17 @@
 		{/if}
 		<div id="page">
 			<header id="header">
-				<div class="header-row banner">
+				<div class="row banner">
 					{hook h="displayBanner"}
 				</div>
-				<div class="header-row nav">
+				<div class="row nav">
 					<div class="container">
 						<nav>
 							{hook h="displayNav"}
 						</nav>
 					</div>
 				</div> <!-- #end nav-row -->
-				<div class="header-row">
+				<div class="row">
 					<div class="container">
 						<div class="row">
 							<div id="header_logo">
