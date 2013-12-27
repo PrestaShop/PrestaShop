@@ -57,9 +57,9 @@ class AdminEmailsControllerCore extends AdminController
 						'type' => 'radio',
 						'required' => true,
 						'choices' => array(
-							3 => $this->l('Never send emails (may be useful for test purpose)'), 
-							1 => $this->l('Use PHP mail() function. Recommended; works in most cases'), 
-							2 => $this->l('Set my own SMTP parameters. For advanced users ONLY')
+							3 => $this->l('Never send emails (may be useful for testing purposes)'), 
+							1 => $this->l('Use PHP\'s mail() function (recommended; works in most cases)'), 
+							2 => $this->l('Set my own SMTP parameters (for advanced users ONLY)')
 						),
 						'js' => array(
 							1 => 'onclick="$(\'#configuration_fieldset_smtp\').slideUp();"', 
@@ -69,7 +69,7 @@ class AdminEmailsControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_MAIL_TYPE' => array('title' => '', 'validation' => 'isGenericName', 'type' => 'radio', 'required' => true, 'choices' => array(
-						Mail::TYPE_HTML => $this->l('Send email in HTML format. '), 
+						Mail::TYPE_HTML => $this->l('Send email in HTML format'), 
 						Mail::TYPE_TEXT => $this->l('Send email in text format'), 
 						Mail::TYPE_BOTH => $this->l('Both')
 						)
@@ -81,7 +81,7 @@ class AdminEmailsControllerCore extends AdminController
 				'title' => $this->l('Email'),
 				'fields' =>	array(
 					'PS_MAIL_DOMAIN' => array(
-						'title' => $this->l('Mail domain name:'),
+						'title' => $this->l('Mail domain name'),
 						'hint' => $this->l('Fully qualified domain name (keep this field empty if you don\'t know).'),
 						'empty' => true, 'validation' =>
 						'isUrl',
@@ -89,21 +89,21 @@ class AdminEmailsControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 						),
 					'PS_MAIL_SERVER' => array(
-						'title' => $this->l('SMTP server:'),
-						'hint' => $this->l('IP address or server name (e.g. smtp.mydomain.com)'),
+						'title' => $this->l('SMTP server'),
+						'hint' => $this->l('IP address or server name (e.g. smtp.mydomain.com).'),
 						'validation' => 'isGenericName',
 						'type' => 'text',
 						'visibility' => Shop::CONTEXT_ALL
 						),
 					'PS_MAIL_USER' => array(
-						'title' => $this->l('SMTP user:'),
+						'title' => $this->l('SMTP user'),
 						'hint' => $this->l('Leave blank if not applicable.'),
 						'validation' => 'isGenericName',
 						'type' => 'text',
 						'visibility' => Shop::CONTEXT_ALL
 						),
 					'PS_MAIL_PASSWD' => array(
-						'title' => $this->l('SMTP password:'),
+						'title' => $this->l('SMTP password'),
 						'hint' => $this->l('Leave blank if not applicable.'),
 						'validation' => 'isAnything',
 						'type' => 'password',
@@ -111,7 +111,7 @@ class AdminEmailsControllerCore extends AdminController
 						'autocomplete' => false
 						),
 					'PS_MAIL_SMTP_ENCRYPTION' => array(
-						'title' => $this->l('Encryption:'),
+						'title' => $this->l('Encryption'),
 						'hint' => $this->l('Use an encrypt protocol'),
 						'desc' => Tools::apacheModExists('mod_ssl') ? '/!\\  '.$this->l('SSL mod seems to not be installed on your server.') : '',
 						'type' => 'select',
@@ -134,8 +134,8 @@ class AdminEmailsControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 						),
 					'PS_MAIL_SMTP_PORT' => array(
-						'title' => $this->l('Port:'),
-						'hint' => $this->l('Port number to use'),
+						'title' => $this->l('Port'),
+						'hint' => $this->l('Port number to use.'),
 						'validation' => 'isInt',
 						'type' => 'text',
 						'cast' => 'intval',
