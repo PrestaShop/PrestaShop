@@ -31,12 +31,12 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>{$meta_title|escape:'html':'UTF-8'}</title>
-		{if isset($meta_description) AND $meta_description}
-		  <meta name="description" content="{$meta_description|escape:'html':'UTF-8'}" />
-		{/if}
-		{if isset($meta_keywords) AND $meta_keywords}
-		  <meta name="keywords" content="{$meta_keywords|escape:'html':'UTF-8'}" />
-		{/if}
+{if isset($meta_description) AND $meta_description}
+		<meta name="description" content="{$meta_description|escape:'html':'UTF-8'}" />
+{/if}
+{if isset($meta_keywords) AND $meta_keywords}
+		<meta name="keywords" content="{$meta_keywords|escape:'html':'UTF-8'}" />
+{/if}
 		<meta name="generator" content="PrestaShop" />
 		<meta name="robots" content="{if isset($nobots)}no{/if}index,{if isset($nofollow) && $nofollow}no{/if}follow" />
 		<meta name="viewport" content="width=device-width, minimum-scale=0.25, maximum-scale=1.6, initial-scale=1.0" /> 
@@ -46,50 +46,38 @@
 		<link rel="shortcut icon" type="image/x-icon" href="{$favicon_url}?{$img_update_time}" />
 
 		<!-- <link rel="stylesheet" href="{$css_dir}highdpi.css" type="text/css" media="screen" /> -->
-		<link rel="stylesheet" href="{$css_dir}jquery/uniform.default.css" type="text/css" media="all" />
-		<link rel="stylesheet" href="{$css_dir}jquery/footable.core.css" type="text/css" media="all" />
-		<link rel="stylesheet" href="{$css_dir}jquery/jquery.bxslider.css" type="text/css" media="all" />
-
-		{if isset($css_files)}
-			{foreach from=$css_files key=css_uri item=media}
-				<link rel="stylesheet" href="{$css_uri}" type="text/css" media="{$media}" />
-			{/foreach}
-		{/if}
+{if isset($css_files)}
+	{foreach from=$css_files key=css_uri item=media}
+		<link rel="stylesheet" href="{$css_uri}" type="text/css" media="{$media}" />
+	{/foreach}
+{/if}
 
 		<script>
 			if (navigator.userAgent.match(/Android/i)) {
 				var viewport = document.querySelector("meta[name=viewport]");
 				viewport.setAttribute('content', 'initial-scale=1.0,maximum-scale=1.0,user-scalable=0,width=device-width,height=device-height');
 			}
-			if(navigator.userAgent.match(/Android/i)) {
+			if (navigator.userAgent.match(/Android/i)) {
 				window.scrollTo(0,1);
 			}
 			var baseDir = '{$content_dir|addslashes}';
 			var baseUri = '{$base_uri|addslashes}';
 			var static_token = '{$static_token|addslashes}';
 			var token = '{$token|addslashes}';
-			var priceDisplayPrecision = {$priceDisplayPrecision*$currency->decimals};
-			var priceDisplayMethod = {$priceDisplay};
-			var roundMode = {$roundMode};
+			var priceDisplayPrecision = {$priceDisplayPrecision|intval*$currency->decimals|intval};
+			var priceDisplayMethod = {$priceDisplay|intval};
+			var roundMode = {$roundMode|intval};
 			var isUserLogged = {if $logged}true{else}false{/if};
 		</script>
-		{if isset($js_files)}
-			{foreach from=$js_files item=js_uri}
-			   <script type="text/javascript" src="{$js_uri}"></script>
-			{/foreach}
-		{/if}
-		<script src="{$js_dir}tools/bootstrap.min.js"></script>
+{if isset($js_files)}
+	{foreach from=$js_files item=js_uri}
+		<script type="text/javascript" src="{$js_uri}"></script>
+	{/foreach}
+{/if}
 		<!--[if IE 8]><html class="no-js lt-ie9 ie8" lang="{$lang_iso}">
-			 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-			 <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
 		<![endif]-->
-		<script src="{$js_dir}tools/jquery.total-storage.min.js"></script>
-		<script src="{$js_dir}jquery/jquery.uniform-modify.js"></script>
-		<script src="{$js_dir}jquery/highdpi.js"></script>
-		<script src="{$js_dir}jquery/jquery.bxslider.js"></script>
-		<script src="{$js_dir}jquery/footable.js"></script>
-		<script src="{$js_dir}jquery/footable.sort.js"></script>
-		<script src="{$js_dir}jquery/responsive_utilites.js"></script>
 		{$HOOK_HEADER}
 	</head>
 	<body{if isset($page_name)} id="{$page_name|escape:'html':'UTF-8'}"{/if} class="{if isset($page_name)}{$page_name|escape:'html':'UTF-8'}{/if}{if isset($body_classes) && $body_classes|@count} {implode value=$body_classes separator=' '}{/if}{if $hide_left_column} hide-left-column{/if}{if $hide_right_column} hide-right-column{/if}{if $content_only} content_only{/if} lang_{$lang_iso}">

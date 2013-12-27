@@ -520,6 +520,15 @@ class FrontControllerCore extends Controller
 	public function display()
 	{
 		Tools::safePostVars();
+		
+		// Automatically add js files from js/autoload directory in the template
+		foreach (scandir(_PS_THEME_DIR_.'js/autoload', SCANDIR_SORT_ASCENDING) as $file)
+			if (preg_match('/^[^.].*\.js$/', $file))
+				$this->addJS(_THEME_JS_DIR_.'autoload/'.$file);
+		// Automatically add css files from css/autoload directory in the template
+		foreach (scandir(_PS_THEME_DIR_.'css/autoload', SCANDIR_SORT_ASCENDING) as $file)
+			if (preg_match('/^[^.].*\.css$/', $file))
+				$this->addCSS(_THEME_CSS_DIR_.'autoload/'.$file);
 
 		// assign css_files and js_files at the very last time
 		if ((Configuration::get('PS_CSS_THEME_CACHE') || Configuration::get('PS_JS_THEME_CACHE')) && is_writable(_PS_THEME_DIR_.'cache'))
@@ -762,7 +771,7 @@ class FrontControllerCore extends Controller
 			$this->addJS(_THEME_JS_DIR_.'quick-view.js');
 		}
 		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
-				$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
+			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 
 		// Execute Hook FrontController SetMedia
 		Hook::exec('actionFrontControllerSetMedia', array());
