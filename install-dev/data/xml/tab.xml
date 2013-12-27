@@ -42,14 +42,14 @@
     <tab id="Price_Rules" id_parent="" active="1">
       <class_name>AdminPriceRule</class_name>
     </tab>
+    <tab id="Modules" id_parent="" active="1">
+      <class_name>AdminParentModules</class_name>
+    </tab>
     <tab id="Shipping" id_parent="" active="1">
       <class_name>AdminParentShipping</class_name>
     </tab>
     <tab id="Localization" id_parent="" active="1">
       <class_name>AdminParentLocalization</class_name>
-    </tab>
-    <tab id="Modules" id_parent="" active="1">
-      <class_name>AdminParentModules</class_name>
     </tab>
     <tab id="Preferences" id_parent="" active="1">
       <class_name>AdminParentPreferences</class_name>
