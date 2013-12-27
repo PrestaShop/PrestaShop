@@ -100,7 +100,7 @@ class StatsLive extends Module
 	private function getVisitorsOnline()
 	{
 		if ($maintenance_ips = Configuration::get('PS_MAINTENANCE_IP'))
-			$maintenance_ips = implode(',', array_map('ip2long', array_map('trim', explode(',', $maintenance_ips))));
+			$maintenance_ips = implode(',', array_map('ip2long', array_filter(array_map('trim', explode(',', $maintenance_ips)))));
 
 		if (Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
 		{
