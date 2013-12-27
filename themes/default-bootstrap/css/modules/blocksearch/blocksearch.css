@@ -1,6 +1,8 @@
-/* block top search */
 #search_block_top {
   padding: 50px 0 0 0; }
+  #search_block_top #searchbox {
+    float: left;
+    width: 100%; }
   @media (max-width: 768px) {
     #search_block_top {
       padding-top: 0; } }

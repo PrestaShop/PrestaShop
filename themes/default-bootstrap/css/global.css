@@ -587,8 +587,6 @@ pre {
 .col-sm-3,
 .col-sm-4,
 header .header-row #header_logo,
-header .header-row #search_block_top,
-header .header-row #header_user,
 .col-sm-5,
 .col-sm-6,
 .col-sm-7,
@@ -620,8 +618,7 @@ header .header-row #header_user,
 .col-lg-9,
 .col-lg-10,
 .col-lg-11,
-.col-lg-12,
-header .header-row #block_top_menu {
+.col-lg-12 {
   position: relative;
   min-height: 1px;
   padding-left: 15px;
@@ -685,8 +682,6 @@ header .header-row #block_top_menu {
   .col-sm-3,
   .col-sm-4,
   header .header-row #header_logo,
-  header .header-row #search_block_top,
-  header .header-row #header_user,
   .col-sm-5,
   .col-sm-6,
   .col-sm-7,
@@ -705,7 +700,7 @@ header .header-row #block_top_menu {
   .col-sm-3 {
     width: 25%; }
 
-  .col-sm-4, header .header-row #header_logo, header .header-row #search_block_top, header .header-row #header_user {
+  .col-sm-4, header .header-row #header_logo {
     width: 33.33333%; }
 
   .col-sm-5 {
@@ -1040,7 +1035,7 @@ header .header-row #block_top_menu {
   .col-lg-11 {
     width: 91.66667%; }
 
-  .col-lg-12, header .header-row #block_top_menu {
+  .col-lg-12 {
     width: 100%; }
 
   .col-lg-push-0 {
@@ -3317,12 +3312,12 @@ button.close {
   border: 0;
   -webkit-appearance: none; }
 
-.clearfix:before, header .header-row #search_block_top:before, header .header-row #header_user:before, .clearfix:after, header .header-row #search_block_top:after, header .header-row #header_user:after {
+.clearfix:before, .clearfix:after {
   content: " ";
   /* 1 */
   display: table;
   /* 2 */ }
-.clearfix:after, header .header-row #search_block_top:after, header .header-row #header_user:after {
+.clearfix:after {
   clear: both; }
 
 .pull-right {
@@ -5279,14 +5274,6 @@ header {
     background: #333333; }
     header .nav nav {
       width: 100%; }
-      header .nav nav .shop-phone {
-        float: left; }
-      header .nav nav .header_user_info {
-        float: right; }
-      header .nav nav #contact-link {
-        float: right; }
-      header .nav nav #languages-block-top {
-        float: right; }
       header .nav nav #currencies-block-top {
         float: right; }
   header .header-row {
@@ -5303,138 +5290,6 @@ header {
           padding-top: 15px; }
           header .header-row #header_logo img {
             margin: 0 auto; } }
-    header .header-row #search_block_top #searchbox {
-      float: left;
-      width: 100%; }
-    header .header-row #block_top_menu {
-      padding-top: 25px; }
-  header .header_user_info {
-    border-left: 1px solid #515151;
-    border-right: 1px solid #515151; }
-    header .header_user_info a {
-      color: white;
-      font-weight: bold;
-      display: block;
-      padding: 8px 9px 11px 8px; }
-      @media (max-width: 479px) {
-        header .header_user_info a {
-          font-size: 11px; } }
-  header .shop-phone {
-    padding: 5px 0 10px; }
-    @media (max-width: 767px) {
-      header .shop-phone {
-        display: none; } }
-    header .shop-phone i {
-      font-size: 21px;
-      line-height: 21px;
-      color: white;
-      padding-right: 7px; }
-    header .shop-phone strong {
-      color: white; }
-  header #currencies-block-top,
-  header #languages-block-top {
-    border-left: 1px solid #515151;
-    position: relative; }
-    @media (max-width: 479px) {
-      header #currencies-block-top,
-      header #languages-block-top {
-        width: 25%; } }
-    header #currencies-block-top span.firstWord,
-    header #languages-block-top span.firstWord {
-      display: none; }
-    header #currencies-block-top div.current,
-    header #languages-block-top div.current {
-      font-weight: bold;
-      padding: 8px 10px 10px 10px;
-      color: white;
-      text-shadow: 1px 1px rgba(0, 0, 0, 0.2); }
-      @media (max-width: 479px) {
-        header #currencies-block-top div.current,
-        header #languages-block-top div.current {
-          text-align: center;
-          padding: 9px 5px 10px;
-          font-size: 11px; } }
-      header #currencies-block-top div.current strong,
-      header #languages-block-top div.current strong {
-        color: #777777; }
-      header #currencies-block-top div.current:after,
-      header #languages-block-top div.current:after {
-        content: "\f0d7";
-        font-family: "FontAwesome";
-        font-size: 18px;
-        line-height: 18px;
-        color: #686666;
-        vertical-align: -2px;
-        padding-left: 12px; }
-        @media (max-width: 479px) {
-          header #currencies-block-top div.current:after,
-          header #languages-block-top div.current:after {
-            padding-left: 2px;
-            font-size: 13px;
-            line-height: 13px;
-            vertical-align: 0; } }
-      @media (max-width: 479px) {
-        header #currencies-block-top div.current .cur-label,
-        header #languages-block-top div.current .cur-label {
-          display: none; } }
-    header #currencies-block-top ul,
-    header #languages-block-top ul {
-      display: none;
-      position: absolute;
-      top: 37px;
-      left: 0;
-      width: 157px;
-      background: #333333;
-      z-index: 2; }
-      header #currencies-block-top ul li,
-      header #languages-block-top ul li {
-        color: white;
-        line-height: 35px;
-        font-size: 13px; }
-        header #currencies-block-top ul li a,
-        header #currencies-block-top ul li > span,
-        header #languages-block-top ul li a,
-        header #languages-block-top ul li > span {
-          padding: 0 10px 0 12px;
-          display: block;
-          color: white; }
-        header #currencies-block-top ul li.selected, header #currencies-block-top ul li:hover a,
-        header #languages-block-top ul li.selected,
-        header #languages-block-top ul li:hover a {
-          background: #484848; }
-  header #contact-link {
-    border-left: 1px solid #515151; }
-    @media (max-width: 479px) {
-      header #contact-link {
-        width: 25%;
-        text-align: center; } }
-    header #contact-link a {
-      display: block;
-      color: white;
-      font-weight: bold;
-      padding: 8px 10px 11px 10px;
-      text-shadow: 1px 1px rgba(0, 0, 0, 0.2); }
-      @media (max-width: 479px) {
-        header #contact-link a {
-          font-size: 11px;
-          padding-left: 5px;
-          padding-right: 5px; } }
-  header #contact-link a,
-  header .header_user_info a,
-  header .header-row .header_user_info a,
-  header #currencies-block-top div.current,
-  header #languages-block-top div.current {
-    cursor: pointer; }
-    header #contact-link a:hover, header #contact-link a.active,
-    header .header_user_info a:hover,
-    header .header_user_info a.active,
-    header .header-row .header_user_info a:hover,
-    header .header-row .header_user_info a.active,
-    header #currencies-block-top div.current:hover,
-    header #currencies-block-top div.current.active,
-    header #languages-block-top div.current:hover,
-    header #languages-block-top div.current.active {
-      background: #2b2b2b; }
 
 .ie8 #header #header_logo {
   width: 350px; }
@@ -6467,7 +6322,7 @@ ul.footer_links {
     .content_sortPagiBar .sortPagiBar .nbrItemPage select {
       max-width: 59px;
       float: left; }
-    .content_sortPagiBar .sortPagiBar .nbrItemPage .clearfix > span, .content_sortPagiBar .sortPagiBar .nbrItemPage header .header-row #search_block_top > span, header .header-row .content_sortPagiBar .sortPagiBar .nbrItemPage #search_block_top > span, .content_sortPagiBar .sortPagiBar .nbrItemPage header .header-row #header_user > span, header .header-row .content_sortPagiBar .sortPagiBar .nbrItemPage #header_user > span {
+    .content_sortPagiBar .sortPagiBar .nbrItemPage .clearfix > span {
       padding: 3px 0 0 12px;
       display: inline-block;
       float: left; }

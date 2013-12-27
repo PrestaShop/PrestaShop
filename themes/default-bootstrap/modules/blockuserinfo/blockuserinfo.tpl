@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <!-- Block user information module HEADER -->
-<div id="header_user" {if $PS_CATALOG_MODE}class="header_user_catalog"{/if}>
+<div id="header_user" class="col-sm-4 clearfix{if $PS_CATALOG_MODE} header_user_catalog{/if}">
 	<div id="header_nav">
 		{if !$PS_CATALOG_MODE}
 		<div id="shopping_cart">

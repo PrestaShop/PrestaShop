@@ -1,8 +1,11 @@
 @import "compass";
 @import "theme_variables";
-/* block top search */
 #search_block_top {
 	padding: 50px 0 0 0;
+	#searchbox {
+		float: left;
+		width: 100%;
+	}
 	@media (max-width: $screen-sm) {
 		padding-top: 0;
 	}
