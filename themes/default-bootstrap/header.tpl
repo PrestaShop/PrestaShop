@@ -87,7 +87,9 @@
 		<div id="page">
 			<header id="header">
 				<div class="row banner">
-					{hook h="displayBanner"}
+						<div class="container">
+						{hook h="displayBanner"}
+					</div>
 				</div>
 				<div class="row nav">
 					<div class="container">
