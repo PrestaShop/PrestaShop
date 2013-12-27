@@ -2885,8 +2885,9 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .table tbody > tr:hover > td { background-color: #edf7fb; }
 .bootstrap .table td.center, .bootstrap .table th.center { text-align: center; }
 .bootstrap .table td.pointer { cursor: pointer; }
+.bootstrap .table td.dragHandle { cursor: move; }
+.bootstrap .table td.actions { min-width: 200px; }
 .bootstrap tr.highlighted td { background-color: #1ba6e5 !important; color: white; }
-.bootstrap td.actions { min-width: 200px; }
 .bootstrap .bulk-actions { margin: 17px 0 0 0; }
 .bootstrap .tree { padding: 0 0 0 20px; list-style: none; }
 .bootstrap .tree input { margin-right: 4px; }
