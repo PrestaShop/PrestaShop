@@ -53,7 +53,7 @@ header
 			width: 100%
 			#currencies-block-top
 				float: right
-	.header-row
+	.row
 		position: relative
 		> .container
 			position: relative
@@ -123,6 +123,7 @@ p.info-account
 	padding: 6px 10px
 
 label
+	color: $base-title-color
 	&.required 
 		&:before
 			content: "*"
@@ -133,9 +134,6 @@ label
 
 .unvisible
 	display: none
-
-label
-	color: $base-title-color
 
 .checkbox
 	line-height: 16px
@@ -794,7 +792,6 @@ table.table_block td
 		@media (min-width: $screen-sm)
 			margin: -9px 0
 
-
 #index
 	.tab-content
 		margin-top: 35px
@@ -809,7 +806,6 @@ table.table_block td
 		// max 767px
 		@media (max-width: $screen-xs-max)
 			margin-bottom: 20px
-
 
 .block 
 	.title_block,

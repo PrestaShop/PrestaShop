@@ -586,7 +586,7 @@ pre {
 .col-sm-2,
 .col-sm-3,
 .col-sm-4,
-header .header-row #header_logo,
+header .row #header_logo,
 .col-sm-5,
 .col-sm-6,
 .col-sm-7,
@@ -681,7 +681,7 @@ header .header-row #header_logo,
   .col-sm-2,
   .col-sm-3,
   .col-sm-4,
-  header .header-row #header_logo,
+  header .row #header_logo,
   .col-sm-5,
   .col-sm-6,
   .col-sm-7,
@@ -700,7 +700,7 @@ header .header-row #header_logo,
   .col-sm-3 {
     width: 25%; }
 
-  .col-sm-4, header .header-row #header_logo {
+  .col-sm-4, header .row #header_logo {
     width: 33.33333%; }
 
   .col-sm-5 {
@@ -5276,19 +5276,19 @@ header {
       width: 100%; }
       header .nav nav #currencies-block-top {
         float: right; }
-  header .header-row {
+  header .row {
     position: relative; }
-    header .header-row > .container {
+    header .row > .container {
       position: relative; }
-    header .header-row #header_logo {
+    header .row #header_logo {
       padding-top: 15px; }
       @media (max-width: 992px) {
-        header .header-row #header_logo {
+        header .row #header_logo {
           padding-top: 40px; } }
       @media (max-width: 767px) {
-        header .header-row #header_logo {
+        header .row #header_logo {
           padding-top: 15px; }
-          header .header-row #header_logo img {
+          header .row #header_logo img {
             margin: 0 auto; } }
 
 .ie8 #header #header_logo {
@@ -5353,18 +5353,17 @@ p.info-account {
   display: inline-block;
   padding: 6px 10px; }
 
-label.required:before {
-  content: "*";
-  color: red;
-  font-size: 14px;
-  position: relative;
-  line-height: 12px; }
+label {
+  color: #333333; }
+  label.required:before {
+    content: "*";
+    color: red;
+    font-size: 14px;
+    position: relative;
+    line-height: 12px; }
 
 .unvisible {
   display: none; }
-
-label {
-  color: #333333; }
 
 .checkbox {
   line-height: 16px; }
