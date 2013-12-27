@@ -1,12 +1,13 @@
-{*
+<?php
+/*
 * 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
-* This source file is subject to the Academic Free License (AFL 3.0)
+* This source file is subject to the Open Software License (OSL 3.0)
 * that is bundled with this package in the file LICENSE.txt.
 * It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
+* http://opensource.org/licenses/osl-3.0.php
 * If you did not receive a copy of the license and are unable to
 * obtain it through the world-wide-web, please send an email
 * to license@prestashop.com so we can send you a copy immediately.
@@ -19,13 +20,16 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2013 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
-*}
+*/
 
-<div class="alert alert-info">
-<img src="../modules/bankwire/bankwire.jpg" style="float:left; margin-right:15px;" width="86" height="49">
-<p><strong>{l s="This module allows you to accept secure payments by bank wire." mod='bankwire'}</strong></p>
-<p>{l s="If the client chooses to pay by bank wire, the order\'s status will change to 'Waiting for Payment.'" mod='bankwire'}</p>
-<p>{l s="That said, you must manually confirm the order upon receiving the bank wire." mod='bankwire'}</p>
-</div>
+function p1603_add_atachment_size()
+{
+	$attachments = Db::getInstance()->ExecuteS('SELECT id_attachment, file FROM '._DB_PREFIX_.'attachment');
+	foreach ($attachments as $attachment)
+	{
+		$file_size = @filesize(_PS_DOWNLOAD_DIR_.$attachment['file']);
+		Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'attachment SET file_size = '.(int)$file_size.' WHERE id_attachement = '.(int)$attachment['id_attachment']);
+	}
+}
