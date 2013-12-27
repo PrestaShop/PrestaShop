@@ -85,30 +85,36 @@
 			</div>
 		{/if}
 		<div id="page">
-			<header id="header">
-				<div class="row banner">
+			<div class="header-container">
+				<header id="header">
+					<div class="banner">
 						<div class="container">
-						{hook h="displayBanner"}
-					</div>
-				</div>
-				<div class="row nav">
-					<div class="container">
-						<nav>
-							{hook h="displayNav"}
-						</nav>
-					</div>
-				</div> <!-- #end nav-row -->
-				<div class="row">
-					<div class="container">
-						<div id="header_logo">
-							<a href="{$base_dir}" title="{$shop_name|escape:'html':'UTF-8'}">
-								<img class="logo img-responsive" src="{$logo_url}" alt="{$shop_name|escape:'html':'UTF-8'}"{if $logo_image_width} width="{$logo_image_width}"{/if}{if $logo_image_height} height="{$logo_image_height}"{/if}/>
-							</a>
+							<div class="row">
+								{hook h="displayBanner"}
+							</div>
 						</div>
-						{if isset($HOOK_TOP)}{$HOOK_TOP}{/if}
 					</div>
-				</div> <!-- end #header-row -->
-			</header>
+					<div class="nav">
+						<div class="container">
+							<div class="row">
+								<nav>{hook h="displayNav"}</nav>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="container">
+							<div class="row">
+								<div id="header_logo">
+									<a href="{$base_dir}" title="{$shop_name|escape:'html':'UTF-8'}">
+										<img class="logo img-responsive" src="{$logo_url}" alt="{$shop_name|escape:'html':'UTF-8'}"{if $logo_image_width} width="{$logo_image_width}"{/if}{if $logo_image_height} height="{$logo_image_height}"{/if}/>
+									</a>
+								</div>
+								{if isset($HOOK_TOP)}{$HOOK_TOP}{/if}
+							</div>
+						</div>
+					</div>
+				</header>
+			</div>
 			<div class="columns-container">
 				<div id="columns" class="container">
 					{if $page_name !='index' && $page_name !='pagenotfound'}

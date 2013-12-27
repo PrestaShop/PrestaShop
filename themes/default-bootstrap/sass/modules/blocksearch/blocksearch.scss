@@ -1,7 +1,7 @@
 @import "compass";
 @import "theme_variables";
 #search_block_top {
-	padding: 50px 0 0 0;
+	padding-top: 50px;
 	#searchbox {
 		float: left;
 		width: 100%;
@@ -66,7 +66,7 @@
 }	
 
 form#searchbox {
-	padding: 0 50px 0 0;
+	padding-right: 50px;
 	position: relative;
 	label {
 		color: $base-text-color;

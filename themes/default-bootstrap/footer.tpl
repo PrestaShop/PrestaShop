@@ -22,25 +22,25 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-		{if !$content_only}
-					</div> <!-- #center_column -->
+{if !$content_only}
+					</div><!-- #center_column -->
 					{if isset($right_column_size) && !empty($right_column_size)}
 						<div id="right_column" class="col-xs-12 col-sm-3 column">
 							{$HOOK_RIGHT_COLUMN}
 						</div>
 					{/if}
-					</div> <!-- .row -->
-				</div> <!-- #columns -->
-			</div> <!-- .columns-container -->
-<!-- Footer -->
+					</div><!-- .row -->
+				</div><!-- #columns -->
+			</div><!-- .columns-container -->
+			<!-- Footer -->
 			<div class="footer-container">
-				<div class="container">
-					<footer id="footer" class="row">
+				<footer id="footer"  class="container">
+					<div class="row">
 						{$HOOK_FOOTER}
-					</footer>
-				</div>
-			</div> <!-- .footer-container -->
-		</div> <!-- #page -->
-	{/if}
+					</div>
+				</footer>
+			</div><!-- #footer -->
+		</div><!-- #page -->
+{/if}
 	</body>
 </html>

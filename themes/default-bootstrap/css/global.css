@@ -5255,13 +5255,17 @@ textarea {
   z-index: 10; }
 
 .columns-container {
-  padding-top: 15px;
   background: white; }
 
 #columns {
   z-index: 1;
   position: relative;
-  padding-bottom: 50px; }
+  padding-bottom: 50px;
+  padding-top: 15px; }
+
+#index .tab-content {
+  margin-top: 35px;
+  margin-bottom: 34px; }
 
 header {
   z-index: 1;
@@ -5270,8 +5274,12 @@ header {
   padding-bottom: 15px; }
   header .banner {
     background: black; }
+    header .banner .row {
+      margin: 0px; }
   header .nav {
     background: #333333; }
+    header .nav .row {
+      margin: 0px; }
     header .nav nav {
       width: 100%; }
       header .nav nav #currencies-block-top {
@@ -6031,10 +6039,6 @@ table.table_block td {
       #home-page-tabs > li a:hover {
         margin: -9px 0; } }
 
-#index .tab-content {
-  margin-top: 35px;
-  margin-bottom: 34px; }
-
 .block {
   margin-bottom: 30px; }
   @media (max-width: 767px) {
@@ -6148,96 +6152,6 @@ table.table_block td {
 .block .products-block .price-percent-reduction {
   font: 700 14px/17px Arial, Helvetica, sans-serif;
   padding: 1px 6px; }
-
-#categories_block_top {
-  clear: both;
-  position: relative;
-  top: 30px; }
-  #categories_block_top .sf-menu {
-    position: relative; }
-    #categories_block_top .sf-menu > li {
-      position: static; }
-      #categories_block_top .sf-menu > li > ul {
-        width: 100%;
-        top: 60px;
-        margin: 0 20px; }
-        #categories_block_top .sf-menu > li > ul > li {
-          display: block;
-          float: left;
-          width: 20%;
-          -webkit-box-sizing: border-box;
-          -moz-box-sizing: border-box;
-          box-sizing: border-box;
-          padding: 0 10px; }
-        #categories_block_top .sf-menu > li > ul > .category_thumb {
-          display: block;
-          clear: both;
-          overflow: hidden;
-          width: 100%; }
-          #categories_block_top .sf-menu > li > ul > .category_thumb img {
-            display: inline-block;
-            width: 33%; }
-      #categories_block_top .sf-menu > li h4 a {
-        font-size: 1.1em; }
-        #categories_block_top .sf-menu > li h4 a:before {
-          display: none; }
-      #categories_block_top .sf-menu > li .main-level-submenus {
-        position: relative;
-        display: block !important;
-        visibility: visible !important;
-        top: 0;
-        background: none;
-        box-shadow: none;
-        padding: 0;
-        left: 0; }
-    #categories_block_top .sf-menu .category_thumb {
-      display: none; }
-
-#categories_block_left .block_content > ul {
-  border-top: 1px solid #d6d4d4; }
-#categories_block_left li {
-  position: relative; }
-  #categories_block_left li a {
-    font-weight: bold;
-    color: #333333;
-    display: block;
-    font-size: 13px;
-    line-height: 30px;
-    padding: 0 30px 0 19px;
-    border-bottom: 1px solid #d6d4d4; }
-  #categories_block_left li span.grower {
-    display: block;
-    background: #f6f6f6;
-    position: absolute;
-    right: 0;
-    top: 0;
-    cursor: pointer;
-    font-family: "FontAwesome";
-    font-size: 14px; }
-    #categories_block_left li span.grower.OPEN:before, #categories_block_left li span.grower.CLOSE:before {
-      content: "\f068";
-      display: block;
-      vertical-align: middle;
-      width: 30px;
-      height: 30px;
-      color: #333333;
-      line-height: 30px;
-      text-align: center; }
-    #categories_block_left li span.grower.CLOSE:before {
-      content: "\f067";
-      color: silver; }
-  #categories_block_left li span.grower:hover + a,
-  #categories_block_left li a:hover,
-  #categories_block_left li a.selected {
-    background: #f6f6f6; }
-  #categories_block_left li li a {
-    font-weight: normal;
-    color: #777777; }
-    #categories_block_left li li a:before {
-      content: "\f105";
-      font-family: "FontAwesome";
-      line-height: 29px;
-      padding-right: 8px; }
 
 .page-heading {
   font: 600 18px/22px "Open Sans", sans-serif;
@@ -6851,14 +6765,16 @@ div.star a:hover {
     width: 20px; }
 
 .footer-container {
-  background-color: #333333;
-  padding: 0 0 100px 0; }
+  background-color: #333333; }
   @media (min-width: 768px) {
     .footer-container {
       background: url(../img/footer-bg.gif) repeat-x #333333; } }
+  .footer-container .container {
+    padding: 0 0 100px 0; }
   .footer-container #footer {
-    color: #777777;
-    position: relative; }
+    color: #777777; }
+    .footer-container #footer .row {
+      position: relative; }
     .footer-container #footer .footer-block {
       margin-top: 45px; }
       @media (max-width: 767px) {

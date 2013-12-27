@@ -25,20 +25,19 @@ textarea
 	resize: none
 
 //structure
-#page
 #header
 	z-index: 10
 .columns-container
-	padding-top: 15px
 	background: $light-background
 #columns
 	z-index: 1
 	position: relative
 	padding-bottom: 50px
-#left_column
-#center_column
-#right_column
-#footer
+	padding-top: 15px
+#index
+	.tab-content
+		margin-top: 35px
+		margin-bottom: 34px
 
 header
 	z-index: 1
@@ -47,8 +46,12 @@ header
 	padding-bottom: 15px
 	.banner
 		background: black
+		.row
+			margin: 0px
 	.nav
 		background: $dark-background
+		.row
+			margin: 0px
 		nav
 			width: 100%
 			#currencies-block-top
@@ -792,11 +795,6 @@ table.table_block td
 		@media (min-width: $screen-sm)
 			margin: -9px 0
 
-#index
-	.tab-content
-		margin-top: 35px
-		margin-bottom: 34px
-
 .block
 	margin-bottom: 30px
 	// max 767px
@@ -909,103 +907,6 @@ table.table_block td
 		.price-percent-reduction
 			font: 700 14px/17px $font-family
 			padding: 1px 6px
-
-//Block CATEGORIES
-#categories_block_top
-	clear: both
-	position: relative
-	top: 30px
-	.sf-menu
-		position: relative
-		> li
-			position: static
-			> ul
-				width: 100%
-				top: 60px
-				margin: 0 20px
-				> li
-					display: block
-					float: left
-					width: 20%
-					-webkit-box-sizing: border-box
-					-moz-box-sizing: border-box
-					box-sizing: border-box
-					padding: 0 10px
-				> .category_thumb
-					display: block
-					clear: both
-					overflow: hidden
-					width: 100%
-					img
-						display: inline-block
-						width: 33%
-			h4
-				a
-					font-size: 1.1em
-					&:before
-						display: none
-			.main-level-submenus
-				position: relative
-				display: block !important
-				visibility: visible !important
-				top: 0
-				background: none
-				box-shadow: none
-				padding: 0
-				left: 0
-		.category_thumb
-			display: none
-
-#categories_block_left
-	.block_content > ul
-		border-top: 1px solid $base-border-color
-	li
-		position: relative
-		a
-			font-weight: bold
-			color: $base-text-color
-			display: block
-			font-size: 13px
-			line-height: 30px
-			padding: 0 30px 0 19px
-			border-bottom: 1px solid $base-border-color
-		span.grower
-			display: block
-			background: #f6f6f6
-			position: absolute
-			right: 0
-			top: 0
-			cursor: pointer
-			font-family: $font-icon
-			font-size: 14px
-			&.OPEN,
-			&.CLOSE
-				&:before
-					content: "\f068"
-					display: block
-					vertical-align: middle
-					width: 30px
-					height: 30px
-					color: $base-text-color
-					line-height: 30px
-					text-align: center
-			&.CLOSE:before
-				content: "\f067"
-				color: #c0c0c0
-		& span.grower:hover + a,
-		a:hover,
-		a.selected 
-			background: #f6f6f6
-		li
-			a
-				font-weight: normal
-				color: #777777
-				&:before
-					content: "\f105"
-					font-family: $font-icon
-					line-height: 29px
-					padding-right: 8px
-
 
 .page-heading
 	font: 600 18px/22px $font-custom
@@ -1566,13 +1467,15 @@ div.star a:hover
 // FOOTER
 .footer-container
 	background-color: $dark-background
-	padding: 0 0 100px 0
 	// min 768px
 	@media (min-width: $screen-sm)
 		background: url(../img/footer-bg.gif) repeat-x $dark-background
+	.container
+		padding: 0 0 100px 0
 	#footer
 		color: #777
-		position: relative
+		.row
+			position: relative
 		.footer-block
 			margin-top: 45px
 			// max 767px

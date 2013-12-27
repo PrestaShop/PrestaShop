@@ -1,5 +1,5 @@
 #search_block_top {
-  padding: 50px 0 0 0; }
+  padding-top: 50px; }
   #search_block_top #searchbox {
     float: left;
     width: 100%; }
@@ -53,7 +53,7 @@
       background: #fbfbfb; }
 
 form#searchbox {
-  padding: 0 50px 0 0;
+  padding-right: 50px;
   position: relative; }
   form#searchbox label {
     color: #333333;
