@@ -254,9 +254,9 @@
 							{foreach from=$images item=image name=thumbnails}
 								{assign var=imageIds value="`$product->id`-`$image.id_image`"}
 								{if !empty($image.legend)}
-									{assign var=imageTitlte value=$image.legend|escape:'html':'UTF-8'}
+									{assign var=imageTitle value=$image.legend|escape:'html':'UTF-8'}
 								{else}
-									{assign var=imageTitlte value=$product->name|escape:'html':'UTF-8'}
+									{assign var=imageTitle value=$product->name|escape:'html':'UTF-8'}
 								{/if}
 								<li id="thumbnail_{$image.id_image}"{if $smarty.foreach.thumbnails.last} class="last"{/if}>
 									<a 
@@ -268,13 +268,13 @@
 											data-fancybox-group="other-views"
 											class="thickbox{if $image.id_image == $cover.id_image} shown{/if}"
 										{/if}
-										title="{$imageTitlte}">
+										title="{$imageTitle}">
 										<img
 											class="img-responsive"
 											id="thumb_{$image.id_image}"
 											src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')|escape:'html':'UTF-8'}"
-											alt="{$imageTitlte}"
-											title="{$imageTitlte}"
+											alt="{$imageTitle}"
+											title="{$imageTitle}"
 											height="{$mediumSize.height}"
 											width="{$mediumSize.width}"
 											itemprop="image" />
