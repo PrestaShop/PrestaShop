@@ -207,7 +207,17 @@ var generated_date = {$smarty.now|intval};
             </div>
         </div>
         <div class="layer_cart_cart col-xs-12 col-md-6">
-            <h2><span>{l s='Cart' mod='blockcart'}</span>&nbsp;<span class="ajax_cart_quantity">{$cart_qties}</span>&nbsp;<span class="ajax_cart_product_txt{if $cart_qties > 1} unvisible{/if}">{l s='item' mod='blockcart'}</span><span class="ajax_cart_product_txt_s{if $cart_qties < 2} unvisible{/if}">{l s='items' mod='blockcart'}</span></h2>
+			<h2>
+				<!-- Plural Case [both cases are needed because page may be updated in Javascript] -->
+				<span class="ajax_cart_product_txt_s {if $cart_qties < 2} unvisible{/if}">
+					{l s='There are %s items in your cart.' mod='blockcart' sprintf=["<span class='ajax_cart_quantity'>"|cat:$cart_qties|cat:'</span>']}
+				</span>
+				<!-- Singular Case [both cases are needed because page may be updated in Javascript] -->
+				<span class="ajax_cart_product_txt {if $cart_qties > 1} unvisible{/if}">
+					{l s='There is 1 item in your cart.'}
+				</span>
+			</h2>
+
             <div class="layer_cart_row">
                 <strong class="dark">{l s='Total products' mod='blockcart'}{if $priceDisplay == 1}&nbsp;{l s='(tax excl.)' mod='blockcart'}{else}&nbsp;{l s='(tax incl.)' mod='blockcart'}{/if}</strong>
                 <span class="ajax_block_products_total">{if $cart_qties > 0}{convertPrice price=$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS)}{/if}</span>
