@@ -98,14 +98,12 @@
 				</div> <!-- #end nav-row -->
 				<div class="row">
 					<div class="container">
-						<div class="row">
-							<div id="header_logo">
-								<a href="{$base_dir}" title="{$shop_name|escape:'html':'UTF-8'}">
-									<img class="logo img-responsive" src="{$logo_url}" alt="{$shop_name|escape:'html':'UTF-8'}"{if $logo_image_width} width="{$logo_image_width}"{/if}{if $logo_image_height} height="{$logo_image_height}"{/if}/>
-								</a>
-							</div>
-							{if isset($HOOK_TOP)}{$HOOK_TOP}{/if}
+						<div id="header_logo">
+							<a href="{$base_dir}" title="{$shop_name|escape:'html':'UTF-8'}">
+								<img class="logo img-responsive" src="{$logo_url}" alt="{$shop_name|escape:'html':'UTF-8'}"{if $logo_image_width} width="{$logo_image_width}"{/if}{if $logo_image_height} height="{$logo_image_height}"{/if}/>
+							</a>
 						</div>
+						{if isset($HOOK_TOP)}{$HOOK_TOP}{/if}
 					</div>
 				</div> <!-- end #header-row -->
 			</header>
