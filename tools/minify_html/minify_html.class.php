@@ -40,6 +40,11 @@ class Minify_HTML {
      *
      * @return string
      */
+
+	/* PrestaShop
+	 * added a limit for all preg_replace_callback
+	 */
+
     public static function minify($html, $options = array()) {
         $min = new self($html, $options);
         return $min->process();
@@ -102,30 +107,35 @@ class Minify_HTML {
         $this->_html = preg_replace_callback(
             '/(\\s*)<script(\\b[^>]*?>)([\\s\\S]*?)<\\/script>(\\s*)/i'
             ,array($this, '_removeScriptCB')
-            ,$this->_html);
+            ,$this->_html
+            ,Media::getBackTrackLimit());
         
         // replace STYLEs (and minify) with placeholders
         $this->_html = preg_replace_callback(
             '/\\s*<style(\\b[^>]*>)([\\s\\S]*?)<\\/style>\\s*/i'
             ,array($this, '_removeStyleCB')
-            ,$this->_html);
+            ,$this->_html
+            ,Media::getBackTrackLimit());
         
         // remove HTML comments (not containing IE conditional comments).
         $this->_html = preg_replace_callback(
             '/<!--([\\s\\S]*?)-->/'
             ,array($this, '_commentCB')
-            ,$this->_html);
+            ,$this->_html
+            ,Media::getBackTrackLimit());
         
         // replace PREs with placeholders
         $this->_html = preg_replace_callback('/\\s*<pre(\\b[^>]*?>[\\s\\S]*?<\\/pre>)\\s*/i'
             ,array($this, '_removePreCB')
-            ,$this->_html);
+            ,$this->_html
+            ,Media::getBackTrackLimit());
         
         // replace TEXTAREAs with placeholders
         $this->_html = preg_replace_callback(
             '/\\s*<textarea(\\b[^>]*?>[\\s\\S]*?<\\/textarea>)\\s*/i'
             ,array($this, '_removeTextareaCB')
-            ,$this->_html);
+            ,$this->_html
+            ,Media::getBackTrackLimit());
         
         // trim each line.
         // @todo take into account attribute values that span multiple lines.
