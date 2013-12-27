@@ -176,9 +176,7 @@ abstract class Controller extends ControllerCore
 
 	public function __construct()
 	{
-
-		// error management
-		set_error_handler('developpementErrorHandler');
+		//set_error_handler('developpementErrorHandler');
 		ini_set('html_errors', 'on');
 		ini_set('display_errors', 'on');
 		error_reporting(E_ALL | E_STRICT);

@@ -73,14 +73,14 @@ class AdminWebserviceControllerCore extends AdminController
 						'PS_WEBSERVICE' => array('title' => $this->l('Enable PrestaShop\'s webservice'),
 							'desc' => $this->l('Before activating the webservice, you must be sure to: ').
 												'<ol>
-													<li>'.$this->l('Check that URL rewriting is available on this server').'</li>
+													<li>'.$this->l('Check that URL rewriting is available on this server.').'</li>
 													<li>'.$this->l('Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.').'</li>
 												</ol>',
 							'cast' => 'intval',
 							'type' => 'bool'),
 						'PS_WEBSERVICE_CGI_HOST' => array(
-							'title' => $this->l('Active mode CGI for PHP'),
-							'desc' => $this->l('Be sure PHP is not configured as an Apache module on your server.'),
+							'title' => $this->l('Enable CGI mode for PHP'),
+							'desc' => $this->l('Before choosing "Yes", check that PHP is not configured as an Apache module on your server.'),
 							'cast' => 'intval',
 							'type' => 'bool'
 						),
@@ -115,13 +115,13 @@ class AdminWebserviceControllerCore extends AdminController
 	{
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Webservice Accounts:'),
+				'title' => $this->l('Webservice Accounts'),
 				'icon' => 'icon-lock'
 			),
 			'input' => array(
 				array(
 					'type' => 'textbutton',
-					'label' => $this->l('Key:'),
+					'label' => $this->l('Key'),
 					'name' => 'key',
 					'id' => 'code',
 					'required' => true,
@@ -135,15 +135,15 @@ class AdminWebserviceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Key description:'),
+					'label' => $this->l('Key description'),
 					'name' => 'description',
 					'rows' => 3,
 					'cols' => 110,
-					'hint' => $this->l('Key description'),
+					'hint' => $this->l('Quick description of the key: who it is for, what permissions it has, etc.'),
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Status:'),
+					'label' => $this->l('Status'),
 					'name' => 'active',
 					'required' => false,
 					'is_bool' => true,
@@ -162,7 +162,7 @@ class AdminWebserviceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'resources',
-					'label' => $this->l('Permissions:'),
+					'label' => $this->l('Permissions'),
 					'name' => 'resources',
 				)
 			)
@@ -172,7 +172,7 @@ class AdminWebserviceControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}
@@ -263,17 +263,17 @@ class AdminWebserviceControllerCore extends AdminController
 			{
 				$apache_modules = apache_get_modules();
 				if (!in_array('mod_auth_basic', $apache_modules))
-					$this->warnings[] = $this->l('Please activate the Apache module \'mod_auth_basic\' to allow authentication of PrestaShop\'s webservice.');
+					$this->warnings[] = $this->l('Please activate the \'mod_auth_basic\' Apache module to allow authentication of PrestaShop\'s webservice.');
 				if (!in_array('mod_rewrite', $apache_modules))
-					$this->warnings[] = $this->l('Please activate the Apache module \'mod_rewrite\' to allow the PrestaShop webservice.');
+					$this->warnings[] = $this->l('Please activate the \'mod_rewrite\' Apache module to allow the PrestaShop webservice.');
 			}
 			else
 				$this->warnings[] = $this->l('We could not check to see if basic authentication and rewrite extensions have been activated. Please manually check if they\'ve been activated in order to use the PrestaShop webservice.');
 		}
 		if (!extension_loaded('SimpleXML'))
-			$this->warnings[] = $this->l('Please activate the PHP extension \'SimpleXML\' to allow testing of PrestaShop\'s webservice.');
+			$this->warnings[] = $this->l('Please activate the \'SimpleXML\' PHP extension to allow testing of PrestaShop\'s webservice.');
 		if (!configuration::get('PS_SSL_ENABLED'))
-			$this->warnings[] = $this->l('It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues. ');
+			$this->warnings[] = $this->l('It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.');
 
 		foreach ($this->_list as $k => $item)
 			if ($item['is_module'] && $item['class_name'] && $item['module_name'] &&

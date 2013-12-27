@@ -65,7 +65,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 					),
 					'PS_COOKIE_LIFETIME_FO' => array(
 						'title' => $this->l('Lifetime of Front Office cookies'),
-						'hint' => $this->l('Indicate the number of hours'),
+						'hint' => $this->l('Indicate the number of hours.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -74,7 +74,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 					),
 					'PS_COOKIE_LIFETIME_BO' => array(
 						'title' => $this->l('Lifetime of Back Office cookies'),
-						'hint' => $this->l('Indicate the number of hours'),
+						'hint' => $this->l('Indicate the number of hours.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -90,7 +90,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 				'fields' => array(
 					'PS_ATTACHMENT_MAXIMUM_SIZE' => array(
 						'title' => $this->l('Maximum size for attachment'),
-						'hint' => $this->l('Set the maximum size allowed for attachment files (in MegaBytes).'),
+						'hint' => $this->l('Set the maximum size allowed for attachment files (in megabytes).'),
 						/***** TO DO - ajouter cette ligne dans le hint ? 
 						.' '.$this->l('Maximum:').' '.
 							((int)str_replace('M', '', ini_get('post_max_size')) > (int)str_replace('M', '', ini_get('upload_max_filesize')) ? ini_get('upload_max_filesize') : ini_get('post_max_size')),
@@ -102,8 +102,8 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'default' => '2'
 					),
 					'PS_LIMIT_UPLOAD_FILE_VALUE' => array(
-						'title' => $this->l('File value upload limit'),
-						'hint' => $this->l('Define the limit upload for a downloadable product. This value has to be less than or equal to the maximum file upload allotted by your server. ').sprintf('(%s MB).', $upload_mb),
+						'title' => $this->l('Maximum size for a downloadable product'),
+						'hint' => $this->l('Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server. ').sprintf('(%s MB).', $upload_mb),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -111,8 +111,8 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'default' => '1'
 					),
 					'PS_LIMIT_UPLOAD_IMAGE_VALUE' => array(
-						'title' => $this->l('Image value upload limit'),
-						'hint' => $this->l('Define the limit upload for an image. This value has to be less than or equal to the maximum file upload allotted by your server. ').sprintf('(%s MB).', $upload_mb),
+						'title' => $this->l('Maximum size for a product\'s image'),
+						'hint' => $this->l('Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server. ').sprintf('(%s MB).', $upload_mb),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -136,7 +136,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 					),
 					'PS_HIDE_OPTIMIZATION_TIPS' => array(
 						'title' => $this->l('Hide optimization tips'),
-						'hint' => $this->l('Hide optimization tips on the Back Office homepage'),
+						'hint' => $this->l('Hide optimization tips on the Back Office homepage.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
