@@ -27,8 +27,10 @@
 	<button class="btn btn-default" data-style="expand-right" data-size="s" type="button" id="{$id}-add-button">
 		<i class="icon-plus-sign"></i> {l s='Add file'}
 	</button>
+<!--
 	<div class="alert alert-success" id="{$id}-success" style="display:none">{l s='Upload successful'}</div>
 	<div class="alert alert-danger" id="{$id}-errors" style="display:none"></div>
+-->
 </div>
 
 <script type="text/javascript">
@@ -52,6 +54,7 @@
 	$( document ).ready(function() {
 		var {$id}_add_button = Ladda.create( document.querySelector('#{$id}-add-button' ));
 		var {$id}_total_files = 0;
+		var success_message = '{l s='Upload successful' js=1}';
 
 		$('#{$id}').fileupload({
 			dataType: 'json',
@@ -59,23 +62,24 @@
 			singleFileUploads: true,
 			maxFileSize: {$post_max_size},
 			success: function (e) {
+				//showSuccessMessage(success_message);
 			},
 			start: function (e) {				
 				{$id}_add_button.start();
 			},
 			fail: function (e, data) {
-				$('#{$id}-errors').html(data.errorThrown.message).show();
+				showErrorMessage(data.errorThrown.message);
 			},
 			done: function (e, data) {
 				if (data.result) {
 					if (typeof data.result.attachment_file !== 'undefined') {
 						if (typeof data.result.attachment_file.error !== 'undefined' && data.result.attachment_file.error.length > 0)
 							$.each(data.result.attachment_file.error, function(index, error) {
-								$('#{$id}-errors').append('<p><strong>'+data.result.attachment_file.name+'</strong> : '+error+'</p>').show();
+								showErrorMessage(data.result.attachment_file.name + ' : ' + error);
 							});
 						else {
-							$('#{$id}-success').show();
-							$('#selectAttachment1').append('<option value="'+data.result.attachment_file.id_attachment+'">'+data.result.attachment_file.filename+'</option>');
+							showSuccessMessage(success_message);
+							$('#selectAttachment2').append('<option value="'+data.result.attachment_file.id_attachment+'">'+data.result.attachment_file.filename+'</option>');
 						}
 					}
 				}
@@ -84,9 +88,8 @@
 			{$id}_add_button.stop();
 		}).on('fileuploadprocessalways', function (e, data) {
 			var index = data.index,	file = data.files[index];
-			
-			if (file.error)
-				$('#{$id}-errors').append('<div class="row"><strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error+'</div>').show();
+			//if (file.error)
+				//$('#{$id}-errors').append('<div class="row"><strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error+'</div>').show();
 		}).on('fileuploadsubmit', function (e, data) {
 			var params = new Object();
 
@@ -107,8 +110,8 @@
 		});
 
 		$('#{$id}-add-button').on('click', function() {
-			$('#{$id}-success').hide();
-			$('#{$id}-errors').html('').hide();
+			//$('#{$id}-success').hide();
+			//$('#{$id}-errors').html('').hide();
 			{$id}_total_files = 0;
 			$('#{$id}').trigger('click');
 		});
