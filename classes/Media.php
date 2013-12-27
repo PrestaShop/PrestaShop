@@ -68,11 +68,11 @@ class MediaCore
 		if (strlen($html_content) > 0)
 		{
 			//set an alphabetical order for args
-			$html_content = preg_replace_callback(
-				'/(<[a-zA-Z0-9]+)((\s*[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']\s*)*)>/',
-				array('Media', 'minifyHTMLpregCallback'),
-				$html_content,
-				Media::getBackTrackLimit());
+			// $html_content = preg_replace_callback(
+				// '/(<[a-zA-Z0-9]+)((\s*[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']\s*)*)>/',
+				// array('Media', 'minifyHTMLpregCallback'),
+				// $html_content,
+				// Media::getBackTrackLimit());
 
 			require_once(_PS_TOOL_DIR_.'minify_html/minify_html.class.php');
 			$html_content = str_replace(chr(194).chr(160), '&nbsp;', $html_content);

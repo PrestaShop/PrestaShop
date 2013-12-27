@@ -28,6 +28,7 @@ class AttachmentCore extends ObjectModel
 {
 	public $file;
 	public $file_name;
+	public $file_size;
 	public $name;
 	public $mime;
 	public $description;
@@ -46,21 +47,34 @@ class AttachmentCore extends ObjectModel
 			'file' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 40),
 			'mime' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 128),
 			'file_name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 128),
+			'file_size' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 
 			// Lang fields
 			'name' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 			'description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'),
 		),
 	);
+	
+	public function add($autodate = true, $null_values = false)
+	{
+		$this->file_size = filesize(_PS_DOWNLOAD_DIR_.$this->file);
+		return parent::add($autodate, $null_values);
+	}
+	
+	public function update($null_values = false)
+	{
+		$this->file_size = filesize(_PS_DOWNLOAD_DIR_.$this->file);
+		return parent::add($null_values);
+	}
 
 	public function delete()
 	{
 		@unlink(_PS_DOWNLOAD_DIR_.$this->file);
 
 		$products = Db::getInstance()->executeS('
-							SELECT id_product
-							FROM '._DB_PREFIX_.'product_attachment
-							WHERE id_attachment='.(int)$this->id);
+		SELECT id_product
+		FROM '._DB_PREFIX_.'product_attachment
+		WHERE id_attachment = '.(int)$this->id);
 
 		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_attachment WHERE id_attachment = '.(int)$this->id);
 
