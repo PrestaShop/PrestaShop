@@ -227,7 +227,7 @@ class AdminEmployeesControllerCore extends AdminController
 					'required' => true,
 					'hint' => ($obj->id ?
 								$this->l('Leave this field blank if you do not want to change your password.') :
-									$this->l('Minimum of eight characters'))
+									$this->l('Minimum of eight characters.'))
 				),
 				array(
 					'type' => 'text',
@@ -244,14 +244,14 @@ class AdminEmployeesControllerCore extends AdminController
 				),*/
 				array(
 					'type' => 'default_tab',
-					'label' => $this->l('Default page:'),
+					'label' => $this->l('Default page'),
 					'name' => 'default_tab',
-					'hint' => $this->l('This page will be displayed just after login'),
+					'hint' => $this->l('This page will be displayed just after login.'),
 					'options' => $this->tabs_list
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Language:'),
+					'label' => $this->l('Language'),
 					'name' => 'id_lang',
 					'required' => true,
 					'options' => array(
@@ -262,14 +262,14 @@ class AdminEmployeesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select_theme',
-					'label' => $this->l('Theme:'),
+					'label' => $this->l('Theme'),
 					'name' => 'bo_theme',
 					'options' => array('query' => $this->themes),
-					'hint' => $this->l('Back Office theme')
+					'hint' => $this->l('Back Office theme.')
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Display admin menu:'),
+					'label' => $this->l('Admin menu orientation'),
 					'name' => 'bo_menu',
 					'required' => false,
 					'is_bool' => true,
@@ -293,7 +293,7 @@ class AdminEmployeesControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'switch',
-				'label' => $this->l('Status:'),
+				'label' => $this->l('Status'),
 				'name' => 'active',
 				'required' => false,
 				'is_bool' => true,
@@ -322,7 +322,7 @@ class AdminEmployeesControllerCore extends AdminController
 					}
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
-				'label' => $this->l('Profile Permission:'),
+				'label' => $this->l('Permission profile'),
 				'name' => 'id_profile',
 				'required' => true,
 				'options' => array(
@@ -342,7 +342,7 @@ class AdminEmployeesControllerCore extends AdminController
 				$this->fields_form['input'][] = array(
 					'type' => 'shop',
 					'label' => $this->l('Shop association:'),
-					'hint' => $this->l('Select the shops the employee is allowed to access'),
+					'hint' => $this->l('Select the shops the employee is allowed to access.'),
 					'name' => 'checkBoxShopAsso',
 				);
 			}
