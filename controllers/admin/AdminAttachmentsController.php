@@ -55,6 +55,10 @@ class AdminAttachmentsControllerCore extends AdminController
 			'file' => array(
 				'title' => $this->l('File')
 			),
+			'file_size' => array(
+				'title' => $this->l('Size'),
+				'callback' => 'displayHumanReadableSize'
+			),
 			'products' => array(
 				'title' => $this->l('Associated to'),
 				'suffix' => $this->l('product(s)'),
@@ -63,6 +67,13 @@ class AdminAttachmentsControllerCore extends AdminController
 		);
 
 		parent::__construct();
+	}
+
+	public static function displayHumanReadableSize($size)
+	{
+		if (!$size)
+			return '0';
+		return Tools::formatBytes($size);
 	}
 
 	public function initPageHeaderToolbar()
