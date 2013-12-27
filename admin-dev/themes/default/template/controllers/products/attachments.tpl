@@ -45,16 +45,16 @@
 	</div>
 
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="attachment_description_{$id_lang}">{l s='Description:'} </label>
+		<label class="control-label col-lg-3" for="attachment_description_{$id_lang}">
+			{l s='Description:'}
+		</label>
 		<div class="col-lg-9">
-			<div class="row">
 			{include
 				file="controllers/products/textarea_lang.tpl"
 				languages=$languages
 				input_name="attachment_description"
 				input_value=$attachment_description
 			}
-			</div>
 		</div>
 	</div>
 
@@ -80,7 +80,10 @@
 							<option value="{$attach.id_attachment}">{$attach.name}</option>
 						{/foreach}
 					</select>
-					<a href="#" id="addAttachment" class="btn btn-default btn-block">{l s='Add'} <i class="icon-arrow-right"></i></a>
+					<a href="#" id="addAttachment" class="btn btn-default btn-block">
+						{l s='Add'}
+						<i class="icon-arrow-right"></i>
+					</a>
 				</div>
 				<div class="col-lg-6">
 					<p>{l s='Attachments for this product:'}</p>
@@ -89,7 +92,10 @@
 							<option value="{$attach.id_attachment}">{$attach.name}</option>
 						{/foreach}
 					</select>
-					<a href="#" id="removeAttachment" class="btn btn-default btn-block"><i class="icon-arrow-left"></i> {l s='Remove'}</a>
+					<a href="#" id="removeAttachment" class="btn btn-default btn-block">
+						<i class="icon-arrow-left"></i>
+						{l s='Remove'}
+					</a>
 				</div>
 			</div>
 		</div>
