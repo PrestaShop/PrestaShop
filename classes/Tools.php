@@ -2793,10 +2793,12 @@ exit;
 	 */
 	public static function formatBytes($size, $precision = 2)
 	{
+		if (!$size)
+			return '0';
 		$base = log($size) / log(1024);
 		$suffixes = array('', 'k', 'M', 'G', 'T');
 
-		return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
+		return round(pow(1024, $base - floor($base)), $precision).$suffixes[floor($base)];
 	}
 }
 

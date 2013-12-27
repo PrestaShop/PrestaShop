@@ -22,18 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<!-- blockbanner module -->
-<div id="banner_block_top">
-	<div class="banner-top">
-		<div class="container">
-			<a href="{$banner_link}" title="{$banner_desc}">
+<a href="{$banner_link}" title="{$banner_desc}">
 {if isset($banner_img)}
-				<img class="img-responsive" src="{$banner_img}" alt="{$banner_desc}" title="{$banner_desc}"/>
+	<img class="img-responsive" src="{$banner_img}" alt="{$banner_desc}" title="{$banner_desc}"/>
 {else}
-				{$banner_desc}
+	{$banner_desc}
 {/if}
-			</a>
-		</div>
-	</div>
-</div>
-<!-- /blockbanner module -->
+</a>
