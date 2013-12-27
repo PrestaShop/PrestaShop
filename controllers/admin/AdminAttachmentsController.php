@@ -71,8 +71,6 @@ class AdminAttachmentsControllerCore extends AdminController
 
 	public static function displayHumanReadableSize($size)
 	{
-		if (!$size)
-			return '0';
 		return Tools::formatBytes($size);
 	}
 
