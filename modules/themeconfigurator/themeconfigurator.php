@@ -689,8 +689,8 @@ class ThemeConfigurator extends Module
 			),
 			array(
 				'label' => $this->l('Display social buttons on the products page'),
-				'name' => 'addsharethis',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('addsharethis')) && $module->isEnabledForShopContext()),
+				'name' => 'socialsharing',
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('socialsharing')) && $module->isEnabledForShopContext()),
 				'is_module' => true,
 			),
 			array(
