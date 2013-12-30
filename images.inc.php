@@ -25,10 +25,6 @@
 */
 
 /**
- * This file will be removed in 1.6
- */
-
-/**
   * @deprecated 1.5.0
   */
 function cacheImage($image, $cacheImage, $size, $imageType = 'jpg', $disableCache = false)

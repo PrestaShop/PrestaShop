@@ -8,7 +8,9 @@
 
 <form method="post" action="{$smarty.server.REQUEST_URI|escape:'html':'UTF-8'}">
 	<fieldset>
-		<div class="warn">{l s='This module is only available during the standard five-step checkout process. The carrier list has already been defined for one-page checkout. ' mod='carriercompare'}.</div>
+		<div class="warn">
+			{l s='This module is only available during the standard five-step checkout process. The carrier list has already been defined for one-page checkout. ' mod='carriercompare'}.
+		</div>
 		<legend>{l s='Global Configuration' mod='carriercompare'}</legend>
 		
 		<label for="refresh_method">Refresh carrier list method</label>

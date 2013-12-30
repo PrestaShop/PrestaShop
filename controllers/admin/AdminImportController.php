@@ -898,7 +898,8 @@ class AdminImportControllerCore extends AdminController
 			else
 			{
 				if (isset($field['help']))
-					$html = '&nbsp;<a href="#" class="info_import" title="'.$this->l('Info').'|'.$field['help'].'"><i class="icon-info-sign"></i></a>';
+
+					$html = '&nbsp;<a href="#" class="help-tooltip" data-toggle="tooltip" title="'.$field['help'].'"><i class="icon-info-sign"></i></a>';
 				else
 					$html = '';
 				$fields[] = '<div>'.$field['label'].$html.'</div>';

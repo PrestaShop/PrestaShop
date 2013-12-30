@@ -27,22 +27,26 @@
 	<div id="header_nav">
 		{if !$PS_CATALOG_MODE}
 		<div id="shopping_cart">
-			<a href="{$link->getPageLink($order_process, true)|escape:'html':'UTF-8'}" title="{l s='View my shopping cart' mod='blockuserinfo'}" rel="nofollow"><b>{l s='Cart' mod='blockuserinfo'}</b>
-			<span class="ajax_cart_quantity{if $cart_qties == 0} unvisible{/if}">{$cart_qties}</span>
-			<span class="ajax_cart_product_txt{if $cart_qties != 1} unvisible{/if}">{l s='Product' mod='blockuserinfo'}</span>
-			<span class="ajax_cart_product_txt_s{if $cart_qties < 2} unvisible{/if}">{l s='Products' mod='blockuserinfo'}</span>
-			<span class="ajax_cart_total{if $cart_qties == 0} unvisible{/if}">
-				{if $cart_qties > 0}
-					{if $priceDisplay == 1}
-						{assign var='blockuser_cart_flag' value='Cart::BOTH_WITHOUT_SHIPPING'|constant}
-						{convertPrice price=$cart->getOrderTotal(false, $blockuser_cart_flag)}
-					{else}
-						{assign var='blockuser_cart_flag' value='Cart::BOTH_WITHOUT_SHIPPING'|constant}
-						{convertPrice price=$cart->getOrderTotal(true, $blockuser_cart_flag)}
+			<a 
+			href="{$link->getPageLink($order_process, true)|escape:'html':'UTF-8'}" 
+			title="{l s='View my shopping cart' mod='blockuserinfo'}" 
+			rel="nofollow">
+				<b>{l s='Cart' mod='blockuserinfo'}</b>
+				<span class="ajax_cart_quantity{if $cart_qties == 0} unvisible{/if}">{$cart_qties}</span>
+				<span class="ajax_cart_product_txt{if $cart_qties != 1} unvisible{/if}">{l s='Product' mod='blockuserinfo'}</span>
+				<span class="ajax_cart_product_txt_s{if $cart_qties < 2} unvisible{/if}">{l s='Products' mod='blockuserinfo'}</span>
+				<span class="ajax_cart_total{if $cart_qties == 0} unvisible{/if}">
+					{if $cart_qties > 0}
+						{if $priceDisplay == 1}
+							{assign var='blockuser_cart_flag' value='Cart::BOTH_WITHOUT_SHIPPING'|constant}
+							{convertPrice price=$cart->getOrderTotal(false, $blockuser_cart_flag)}
+						{else}
+							{assign var='blockuser_cart_flag' value='Cart::BOTH_WITHOUT_SHIPPING'|constant}
+							{convertPrice price=$cart->getOrderTotal(true, $blockuser_cart_flag)}
+						{/if}
 					{/if}
-				{/if}
-			</span>
-			<span class="ajax_cart_no_product{if $cart_qties > 0} unvisible{/if}">{l s='(empty)' mod='blockuserinfo'}</span>
+				</span>
+				<span class="ajax_cart_no_product{if $cart_qties > 0} unvisible{/if}">{l s='(empty)' mod='blockuserinfo'}</span>
 			</a>
 		</div>
 		{/if}

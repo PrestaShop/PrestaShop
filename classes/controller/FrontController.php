@@ -455,8 +455,8 @@ class FrontControllerCore extends Controller
 	 */
 	public function displayHeader($display = true)
 	{
-		// This method will be removed in 1.6
 		Tools::displayAsDeprecated();
+
 		$this->initHeader();
 		$hook_header = Hook::exec('displayHeader');
 		if ((Configuration::get('PS_CSS_THEME_CACHE') || Configuration::get('PS_JS_THEME_CACHE')) && is_writable(_PS_THEME_DIR_.'cache'))
@@ -491,7 +491,6 @@ class FrontControllerCore extends Controller
 	 */
 	public function displayFooter($display = true)
 	{
-		// This method will be removed in 1.6
 		Tools::displayAsDeprecated();
 		$this->smartyOutputContent(_PS_THEME_DIR_.'footer.tpl');
 	}
@@ -511,7 +510,7 @@ class FrontControllerCore extends Controller
 	}
 
 	/**
-	 * 1.4 retrocompatibility - will be removed in 1.6
+	 * 1.4 retrocompatibility
 	 */
 	public function displayContent()
 	{
@@ -571,8 +570,8 @@ class FrontControllerCore extends Controller
 		}
 		else
 		{
-			// BEGIN - 1.4 retrocompatibility - will be removed in 1.6
 			Tools::displayAsDeprecated('layout.tpl is missing in your theme directory');
+
 			if ($this->display_header)
 				$this->smartyOutputContent(_PS_THEME_DIR_.'header.tpl');
 
@@ -583,7 +582,6 @@ class FrontControllerCore extends Controller
 
 			if ($this->display_footer)
 				$this->smartyOutputContent(_PS_THEME_DIR_.'footer.tpl');
-			// END - 1.4 retrocompatibility - will be removed in 1.6
 		}
 				
 		return true;
