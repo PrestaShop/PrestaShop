@@ -522,11 +522,11 @@ class FrontControllerCore extends Controller
 		Tools::safePostVars();
 		
 		// Automatically add js files from js/autoload directory in the template
-		foreach (scandir(_PS_THEME_DIR_.'js/autoload', SCANDIR_SORT_ASCENDING) as $file)
+		foreach (scandir(_PS_THEME_DIR_.'js/autoload/', 0) as $file)
 			if (preg_match('/^[^.].*\.js$/', $file))
 				$this->addJS(_THEME_JS_DIR_.'autoload/'.$file);
 		// Automatically add css files from css/autoload directory in the template
-		foreach (scandir(_PS_THEME_DIR_.'css/autoload', SCANDIR_SORT_ASCENDING) as $file)
+		foreach (scandir(_PS_THEME_DIR_.'css/autoload', 0) as $file)
 			if (preg_match('/^[^.].*\.css$/', $file))
 				$this->addCSS(_THEME_CSS_DIR_.'autoload/'.$file);
 
