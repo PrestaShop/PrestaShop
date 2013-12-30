@@ -508,8 +508,6 @@ class AdminImportControllerCore extends AdminController
 
 	public function setMedia()
 	{
-		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
-		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 		$bo_theme = ((Validate::isLoadedObject($this->context->employee)
 			&& $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
 
@@ -520,11 +518,11 @@ class AdminImportControllerCore extends AdminController
 		// We need to set parent media first, so that jQuery is loaded before the dependant plugins
 		parent::setMedia();
 
-		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/vendor/jquery.ui.widget.js');
-		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
-		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload.js');
-		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload-process.js');
-		$this->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js');			
+		$this->addJs(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$bo_theme.'/js/vendor/jquery.ui.widget.js');
+		$this->addJs(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
+		$this->addJs(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload.js');
+		$this->addJs(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload-process.js');
+		$this->addJs(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js');			
 		$this->addJs(__PS_BASE_URI__.'js/vendor/spin.js');
 		$this->addJs(__PS_BASE_URI__.'js/vendor/ladda.js');
 	}
