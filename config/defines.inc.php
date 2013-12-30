@@ -75,7 +75,6 @@ define('_PS_ADMIN_CONTROLLER_DIR_', _PS_ROOT_DIR_.'/controllers/admin/');
 define('_PS_FRONT_CONTROLLER_DIR_', _PS_ROOT_DIR_.'/controllers/front/');
 
 define('_PS_TOOL_DIR_', _PS_ROOT_DIR_.'/tools/');
-define('_PS_FPDF_PATH_',            _PS_TOOL_DIR_.'fpdf/'); // @deprecated will be removed in 1.6
 define('_PS_GEOIP_DIR_',            _PS_TOOL_DIR_.'geoip/');
 define('_PS_PEAR_XML_PARSER_PATH_', _PS_TOOL_DIR_.'pear_xml_parser/');
 define('_PS_SWIFT_DIR_', _PS_TOOL_DIR_.'swift/');
