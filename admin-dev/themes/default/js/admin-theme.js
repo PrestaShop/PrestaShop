@@ -219,7 +219,7 @@ $( document ).ready(function() {
 
 	function toggleShopModuleCheckbox(id_shop, toggle){
 		var formGroup = $("[for='to_disable_shop"+id_shop+"']").parent();
-		if (toggle == true)
+		if (toggle === true)
 		{
 			formGroup.removeClass('hide');
 			formGroup.find('input').each(function(){$(this).prop('checked', 'checked');});
@@ -240,7 +240,7 @@ $( document ).ready(function() {
 			$('body.page-sidebar').removeClass('page-sidebar-closed');
 		}
 	});
-	enquire.register("screen and (max-width: 480px)", {
+	enquire.register('screen and (max-width: 480px)', {
 		match : function() {
 			mobileNav();
 		},
@@ -250,5 +250,21 @@ $( document ).ready(function() {
 	});
 
 	//show time elapsed
-	$("abbr.timeago").timeago();
+	$('abbr.timeago').timeago();
+
+
+	//erase button search input
+	if ($('#bo_query').val() !== ''){
+		$('.clear_search').removeClass('hide');
+	}
+	$('.clear_search').on('click', function(){
+		$("#bo_query").val('').focus();
+		$('.clear_search').addClass('hide');
+	});
+	$("#bo_query").on('change', function(){
+		if ($('#bo_query').val() !== ''){
+			$('.clear_search').removeClass('hide');
+		}
+	});
+
 });
