@@ -46,8 +46,7 @@ class ImageManagerCore
 	 * @param bool $regenerate When turned on and the file already exist, the file will be regenerated
 	 * @return string
 	 */
-	public static function thumbnail($image, $cache_image, $size, $image_type = 'jpg', $disable_cache = false,
-		$regenerate = false)
+	public static function thumbnail($image, $cache_image, $size, $image_type = 'jpg', $disable_cache = true, $regenerate = false)
 	{
 		if (!file_exists($image))
 			return '';
@@ -85,9 +84,9 @@ class ImageManagerCore
 		}
 		// Relative link will always work, whatever the base uri set in the admin
 		if (Context::getContext()->controller->controller_type == 'admin')
-			return '<img src="../img/tmp/'.$cache_image.(!$disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
+			return '<img src="../img/tmp/'.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
 		else
-			return '<img src="'._PS_TMP_IMG_.$cache_image.(!$disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
+			return '<img src="'._PS_TMP_IMG_.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
 	}
 
 	/**
