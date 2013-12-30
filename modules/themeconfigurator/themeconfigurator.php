@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -364,7 +364,8 @@ class ThemeConfigurator extends Module
 		if(!empty($_FILES['item_img']['name']))
 		{
 			if ($old_image = Db::getInstance()->getValue('SELECT image FROM `'._DB_PREFIX_.'themeconfigurator` WHERE id_item = '.(int)$id_item))
-				$this->_deleteImages($old_image);
+				if (file_exists(dirname(__FILE__).'/images/'.$old_image))
+					@unlink(dirname(__FILE__).'/images/'.$old_image);
 					
 			if (!$image = $this->uploadImage($_FILES['item_img'], $image_w, $image_h))
 				return false;
@@ -688,8 +689,8 @@ class ThemeConfigurator extends Module
 			),
 			array(
 				'label' => $this->l('Display social buttons on the products page'),
-				'name' => 'addsharethis',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('addsharethis')) && $module->isEnabledForShopContext()),
+				'name' => 'socialsharing',
+				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('socialsharing')) && $module->isEnabledForShopContext()),
 				'is_module' => true,
 			),
 			array(

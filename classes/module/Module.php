@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -299,13 +299,14 @@ abstract class ModuleCore
 			
 			$gz = new Archive_Tar($filegz, true);
 			$files_list = $gz->listContent();				
-			foreach($files_list as $i => $file)
+			foreach ($files_list as $i => $file)
 				if (!preg_match('/^modules\/'.$this->name.'\/.*/', $file['filename']))
 					unset($files_list[$i]);
 			$files_listing = array();
 			foreach($files_list as $file)
 				if (isset($file['filename']) && is_string($file['filename']))
 					$files_listing[] = $file['filename'];
+			
 			$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
 		}
 	}

@@ -1,3 +1,4 @@
+@charset "CP850";
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic);
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -6086,14 +6087,6 @@ table.table_block td {
     .block .title_block a:hover,
     .block h4 a:hover {
       color: #333333; }
-.block#contact_block {
-  background: #333333; }
-  .block#contact_block .title_block {
-    border-color: #e4e3e3;
-    background: #333333;
-    color: white;
-    margin-bottom: 0;
-    padding-bottom: 9px; }
 .block .list-block {
   margin-top: -8px; }
   @media (max-width: 767px) {

@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -136,25 +136,26 @@
 	<td class="partial_refund_fields current-edit" style="display:none;">
 
 		<div class="form-group">
-			<label class="control-label">
-				{l s='Quantity:'}
-			</label>
-			<div class="input-group">
-				<input onchange="checkPartialRefundProductQuantity(this)" type="text" name="partialRefundProductQuantity[{{$product['id_order_detail']}}]" value="0" />
-				<div class="input-group-addon">0/{$productQuantity-$product['product_quantity_refunded']}</div>
-			</div>
-		</div>
-
-		<div class="form-group">
-			<label class="control-label">
-				{l s='Amount:'}
-			</label>
-			<div class="input-group">
-				<div class="input-group-addon">
-					{$currency->prefix}
-					{$currency->suffix}
+			<div class="col-lg-6 fixed-width-lg">
+				<label class="control-label">
+					{l s='Quantity:'}
+				</label>
+				<div class="input-group">
+					<input onchange="checkPartialRefundProductQuantity(this)" type="text" name="partialRefundProductQuantity[{{$product['id_order_detail']}}]" value="0" />
+					<div class="input-group-addon">0/{$productQuantity-$product['product_quantity_refunded']}</div>
 				</div>
-				<input onchange="checkPartialRefundProductAmount(this)" type="text" name="partialRefundProduct[{$product['id_order_detail']}]" />
+			</div>
+			<div class="col-lg-6 fixed-width-lg">
+				<label class="control-label">
+					{l s='Amount:'}
+				</label>
+				<div class="input-group">
+					<div class="input-group-addon">
+						{$currency->prefix}
+						{$currency->suffix}
+					</div>
+					<input onchange="checkPartialRefundProductAmount(this)" type="text" name="partialRefundProduct[{$product['id_order_detail']}]" />
+				</div>
 			</div>
 		</div>
 

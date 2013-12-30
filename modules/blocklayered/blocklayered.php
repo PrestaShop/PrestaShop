@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registred Trademark & Property of PrestaShop SA
 */
@@ -1766,7 +1766,9 @@ class BlockLayered extends Module
 		{
 			$this->context->controller->addJS($this->_path.'js/blocklayered_admin.js');
 
-			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			if (version_compare(_PS_VERSION_, '1.6.0.3', '>=') === TRUE)
+				$this->context->controller->addjqueryPlugin('sortable');
+			elseif (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
 				$this->context->controller->addJS(_PS_JS_DIR_.'vendor/jquery.sortable.js');
 			else
 				$this->context->controller->addJS($this->_path.'js/jquery.sortable.js');

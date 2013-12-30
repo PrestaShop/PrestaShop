@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -63,7 +63,7 @@ class GraphNvD3 extends ModuleGraphEngine
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 
 		$this->context->controller->addJS(array(
-			_PS_JS_DIR_.'/vendor/d3.js',
+			_PS_JS_DIR_.'vendor/d3.js',
 			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->context->employee->bo_theme.'/js/vendor/nv.d3.min.js',
 		));
 		$this->context->controller->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->context->employee->bo_theme.'/css/vendor/nv.d3.css');

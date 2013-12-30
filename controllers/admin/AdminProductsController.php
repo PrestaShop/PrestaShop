@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -1341,13 +1341,11 @@ class AdminProductsControllerCore extends AdminController
 			));
 
 			$this->addJS(array(
-				_PS_JS_DIR_.'productTabsManager.js',
 				_PS_JS_DIR_.'admin-products.js',
 				_PS_JS_DIR_.'attributesBack.js',
 				_PS_JS_DIR_.'price.js',
 				_PS_JS_DIR_.'tiny_mce/tiny_mce.js',
 				_PS_JS_DIR_.'tinymce.inc.js',
-				_PS_JS_DIR_.'fileuploader.js',
 				_PS_JS_DIR_.'admin-dnd.js',
 				_PS_JS_DIR_.'jquery/ui/jquery.ui.progressbar.min.js',
 				_PS_JS_DIR_.'vendor/spin.js',

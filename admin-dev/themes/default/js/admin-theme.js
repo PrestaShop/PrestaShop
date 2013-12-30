@@ -17,7 +17,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -190,8 +190,8 @@ $( document ).ready(function() {
 	}
 
 	initNav();
-	//tooltip
-	$('.label-tooltip').tooltip();
+	// tooltips
+	$('.label-tooltip, .help-tooltip').tooltip();
 
 	//modal
 	$("#error-modal").modal("show");
@@ -248,10 +248,6 @@ $( document ).ready(function() {
 			removeMobileNav();
 		}
 	});
-
-	//show time elapsed
-	$('abbr.timeago').timeago();
-
 
 	//erase button search input
 	if ($('#bo_query').val() !== ''){

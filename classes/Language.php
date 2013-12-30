@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -178,11 +178,12 @@ class LanguageCore extends ObjectModel
 	  * Return an array of theme 
 	  *
 	  * @return array([theme dir] => array('name' => [theme name]))
-		* @deprecated will be removed in 1.6
+	  * @deprecated
 	  */
 	protected function _getThemesList()
 	{
 		Tools::displayAsDeprecated();
+
 		static $themes = array();
 
 		if (empty($themes))
@@ -840,7 +841,7 @@ class LanguageCore extends ObjectModel
 			$gz = new Archive_Tar($file, true);
 			$files_list = AdminTranslationsController::filterTranslationFiles($gz->listContent());
 			if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../'))
-				$errors[] = Tools::displayError('Cannot decompress the translation file for the following language: ').(string)$iso;
+				$errors[] = Tools::displayError('Cannot decompress the translation file for the following language:').' '.(string)$iso;
 			// Clear smarty modules cache
 			Tools::clearCache();
 			if (!Language::checkAndAddLanguage((string)$iso, $lang_pack, false, $params))

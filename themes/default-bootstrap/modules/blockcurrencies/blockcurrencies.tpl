@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -37,7 +37,9 @@
 			<ul id="first-currencies" class="currencies_ul toogle_content">
 				{foreach from=$currencies key=k item=f_currency}
 					<li {if $cookie->id_currency == $f_currency.id_currency}class="selected"{/if}>
-						<a href="javascript:setCurrency({$f_currency.id_currency});" rel="nofollow" title="{$f_currency.name}">{$f_currency.name}</a>
+						<a href="javascript:setCurrency({$f_currency.id_currency});" rel="nofollow" title="{$f_currency.name}">
+							{$f_currency.name}
+						</a>
 					</li>
 				{/foreach}
 			</ul>
