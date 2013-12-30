@@ -61,7 +61,7 @@
                         <a 
                         href="{$link->getPageLink('manufacturer')|escape:'html':'UTF-8'}" 
                         title="{l s='View a list of manufacturers'}">
-                            {l s='Manufacturers:'}
+                            {l s='Manufacturers'}
                         </a>
                     </li>
                 {/if}
@@ -70,7 +70,7 @@
                         <a 
                         href="{$link->getPageLink('supplier')|escape:'html':'UTF-8'}" 
                         title="{l s='View a list of suppliers'}">
-                            {l s='Suppliers:'}
+                            {l s='Suppliers'}
                         </a>
                     </li>
                 {/if}
