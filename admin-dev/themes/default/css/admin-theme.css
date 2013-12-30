@@ -318,9 +318,9 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-chevron-right:before { content: "\f054"; }
 
-.icon-plus-sign:before, .bootstrap .process-icon-newCombination.toolbar-new:before { content: "\f055"; }
+.icon-plus-sign:before, .bootstrap .process-icon-newCombination.toolbar-new:before, .bootstrap .process-icon-plus:before { content: "\f055"; }
 
-.icon-minus-sign:before, .bootstrap .process-icon-newCombination.toolbar-cancel:before { content: "\f056"; }
+.icon-minus-sign:before, .bootstrap .process-icon-newCombination.toolbar-cancel:before, .bootstrap .process-icon-minus:before { content: "\f056"; }
 
 .icon-remove-sign:before { content: "\f057"; }
 
