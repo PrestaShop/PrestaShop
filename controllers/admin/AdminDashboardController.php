@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -39,18 +39,18 @@ class AdminDashboardControllerCore extends AdminController
 
 	public function setMedia()
 	{
+		parent::setMedia();
+
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
-		parent::setMedia();
+		
 		$this->addJqueryUI('ui.datepicker');
 		$this->addJS(array(
-			_PS_JS_DIR_.'/vendor/d3.js',
+			_PS_JS_DIR_.'vendor/d3.js',
 			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/nv.d3.min.js',
 			_PS_JS_DIR_.'/admin-dashboard.js',
 		));
-		$this->addCSS(array(
-			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/nv.d3.css',
-		));
+		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/nv.d3.css');
 	}
 
 	public function initPageHeaderToolbar()
