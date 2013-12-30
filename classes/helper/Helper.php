@@ -203,12 +203,6 @@ class HelperCore
 		if (!$use_radio)
 			$input_name = $input_name.'[]';
 
-		$this->context->controller->addCSS(_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.css');
-		$this->context->controller->addJs(array(
-			_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.js',
-			_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.async.js',
-			_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.edit.js',
-			_PS_JS_DIR_.'admin-categories-tree.js'));
 		if ($use_search)
 			$this->context->controller->addJs(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
 
@@ -227,13 +221,6 @@ class HelperCore
 		$html .= '			var selectedLabel = \''.$translations['selected'].'\';
 			var home = \''.addcslashes($root['name'], '\'').'\';
 			var use_radio = '.(int)$use_radio.';';
-		if (!$use_in_popup)
-			$html .= '
-			$(document).ready(function(){
-				buildTreeView('.$use_shop_context.');
-			});';
-		else
-			$html .= 'buildTreeView('.$use_shop_context.');';
 		$html .= '</script>';
 
 		$html .= '

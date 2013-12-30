@@ -1349,17 +1349,12 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'tinymce.inc.js',
 				_PS_JS_DIR_.'fileuploader.js',
 				_PS_JS_DIR_.'admin-dnd.js',
-				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.js',
-				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.async.js',
-				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.edit.js',
-				_PS_JS_DIR_.'admin-categories-tree.js',
 				_PS_JS_DIR_.'jquery/ui/jquery.ui.progressbar.min.js',
 				_PS_JS_DIR_.'vendor/spin.js',
 				_PS_JS_DIR_.'vendor/ladda.js'
 			));
 
 			$this->addCSS(array(
-				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.css',
 				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.css',
 			));
 		}
