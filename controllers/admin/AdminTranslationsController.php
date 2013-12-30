@@ -1155,58 +1155,68 @@ class AdminTranslationsControllerCore extends AdminController
 		{
 			case 'front':
 					// Parsing file in Front office
-					$regex = '/\{l\s*s=[\'\"]'._PS_TRANS_PATTERN_.'[\'\"](\s*sprintf=.*)?(\s*js=1)?\s*\}/U';
+					$regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?\s*\}/U';
 				break;
 
 			case 'back':
 					// Parsing file in Back office
 					if ($type_file == 'php')
-						$regex = '/this->l\(\''._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
+						$regex = '/this->l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
 					else if ($type_file == 'specific')
-						$regex = '/Translate::getAdminTranslation\(\''._PS_TRANS_PATTERN_.'\'\)/U';
+						$regex = '/Translate::getAdminTranslation\((\')'._PS_TRANS_PATTERN_.'\'\)/U';
 					else
-						$regex = '/\{l\s*s\s*=[\'\"]'._PS_TRANS_PATTERN_.'[\'\"](\s*sprintf=.*)?(\s*js=1)?(\s*slashes=1)?\s*\}/U';
+						$regex = '/\{l\s*s\s*=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*slashes=1)?\s*\}/U';
 				break;
 
 			case 'errors':
 					// Parsing file for all errors syntax
-					$regex = '/Tools::displayError\(\''._PS_TRANS_PATTERN_.'\'(,\s*(.+))?\)/U';
+					$regex = '/Tools::displayError\((\')'._PS_TRANS_PATTERN_.'\'(,\s*(.+))?\)/U';
 				break;
 
 			case 'modules':
 					// Parsing modules file
 					if ($type_file == 'php')
-						$regex = '/->l\(\''._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
+						$regex = '/->l\((\')'._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
 					else
 						// In tpl file look for something that should contain mod='module_name' according to the documentation
-						$regex = array(
-							'/\{l\s*s=\''._PS_TRANS_PATTERN_.'\'.*\s+mod=\''.$module_name.'\'.*\}/U',
-							'/\{l\s*s=\"'._PS_TRANS_PATTERN_.'\".*\s+mod=\''.$module_name.'\'.*\}/U'
-						);
+						$regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1.*\s+mod=\''.$module_name.'\'.*\}/U';
 				break;
 
 			case 'pdf':
 					// Parsing PDF file
 					if ($type_file == 'php')
-						$regex = '/HTMLTemplate.*::l\(\''._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
+						$regex = '/HTMLTemplate.*::l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
 					else
-						$regex = '/\{l\s*s=[\'\"]'._PS_TRANS_PATTERN_.'[\'\"](\s*sprintf=.*)?(\s*js=1)?(\s*pdf=\'true\')?\s*\}/U';
+						$regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*pdf=\'true\')?\s*\}/U';
 				break;
 		}
 
-		if (is_array($regex))
+		if (!is_array($regex))
+			$regex = array($regex);
+
+		$strings = array();
+		foreach ($regex as $regex_row)
 		{
-			$matches = array(1 => array());
-			foreach ($regex as $regex_row)
+			$matches = array();
+			$n = preg_match_all($regex_row, $content, $matches);
+			for ($i = 0; $i < $n; $i += 1)
 			{
-				preg_match_all($regex_row, $content, $matches2);
-				$matches[1] = array_merge($matches[1], $matches2[1]);
+				$quote = $matches[1][$i];
+				$string = $matches[2][$i];
+
+				if ($quote === '"')
+				{
+					// Escape single quotes because the core will do it when looking for the translation of this string
+					$string = str_replace('\'', '\\\'', $string);
+					// Unescape double quotes
+					$string = preg_replace('/\\\\+"/', '"', $string);
+				}
+
+				$strings[] = $string;
 			}
 		}
-		else
-			preg_match_all($regex, $content, $matches);
 
-		return $matches[1];
+		return array_unique($strings);
 	}
 
 	/**
