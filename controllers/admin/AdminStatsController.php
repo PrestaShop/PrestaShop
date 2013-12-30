@@ -386,6 +386,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		SELECT MIN(cm1.date_add) as question, MIN(cm2.date_add) as reply
 		FROM `'._DB_PREFIX_.'customer_message` cm1
 		INNER JOIN `'._DB_PREFIX_.'customer_message` cm2 ON (cm1.id_customer_thread = cm2.id_customer_thread AND cm1.date_add < cm2.date_add)
+		JOIN `'._DB_PREFIX_.'customer_thread` ct ON (cm1.id_customer_thread = ct.id_customer_thread)
 		WHERE cm1.`date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
 		AND cm1.id_employee = 0 AND cm2.id_employee != 0
 		'.Shop::addSqlRestriction().'
