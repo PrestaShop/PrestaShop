@@ -103,14 +103,16 @@ class TaxCore extends ObjectModel
 
 			// remove the id in order to create a new object
 			$this->id = 0;
-			$this->add();
+			$res = $this->add();
 
 			// change tax id in the tax rule table
-			TaxRule::swapTaxId($historized_tax->id, $this->id);
-		} else if (parent::update($nullValues))
-	            return $this->_onStatusChange();
+			$res &= TaxRule::swapTaxId($historized_tax->id, $this->id);
+			return $res;
+		} 
+		elseif (parent::update($nullValues))
+			return $this->_onStatusChange();
 
-        return false;
+		return false;
 	}
 
 	protected function _onStatusChange()
