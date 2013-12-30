@@ -40,7 +40,7 @@ try
 		Tools::redirectAdmin('index.php?controller=AdminLogin&redirect='.$_SERVER['REQUEST_URI']);
 
 	// Set current index
-	// @deprecated global will be removed in 1.6
+	// @deprecated global
 	global $currentIndex; // retrocompatibility;
 	$currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller: '');
 

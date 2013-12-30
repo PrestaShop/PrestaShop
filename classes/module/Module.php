@@ -294,13 +294,14 @@ abstract class ModuleCore
 			$filegz = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
 			$gz = new Archive_Tar($filegz, true);
 			$files_list = $gz->listContent();				
-			foreach($files_list as $i => $file)
+			foreach ($files_list as $i => $file)
 				if (!preg_match('/^modules\/'.$this->name.'\/.*/', $file['filename']))
 					unset($files_list[$i]);
+			$files_listing = array();
 			foreach($files_list as $file)
 				if (isset($file['filename']) && is_string($file['filename']))
 					$files_listing[] = $file['filename'];
-			if (is_array($files_listing) && !$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', ''))
+			if (count($files_listing) && !$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', ''))
 				continue;
 			@unlink($filegz);
 		}
