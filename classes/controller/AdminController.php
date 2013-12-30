@@ -1983,14 +1983,14 @@ class AdminControllerCore extends Controller
 		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 
-		//Bootstrap v3.01 + Specific Admin Theme
+		//Bootstrap + Specific Admin Theme
 		$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css', 'all', 0);
 
-		// Deprecated stylesheets + reset bootstrap style for the #nobootstrap field - Backward compatibility
+		//Deprecated stylesheets + reset bootstrap style for the #nobootstrap field - Backward compatibility
 		if (!$this->bootstrap)
 			$this->setDeprecatedMedia();
 		
-		//todo css for rtl support
+		//@Todo: css for rtl support
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 
@@ -2011,11 +2011,10 @@ class AdminControllerCore extends Controller
 			_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js'
 		));
 
-		//loads specific javascripts for the admin theme, bootstrap.js should be moved into /js root directory
+		//loads specific javascripts for the admin theme
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.js');
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.js');
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
-		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/jquery-timeago/jquery.timeago.js');
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/jquery.growl.js');
 		$this->addJS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/jquery.chosen.js');
 
