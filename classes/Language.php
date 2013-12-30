@@ -178,11 +178,12 @@ class LanguageCore extends ObjectModel
 	  * Return an array of theme 
 	  *
 	  * @return array([theme dir] => array('name' => [theme name]))
-		* @deprecated will be removed in 1.6
+	  * @deprecated
 	  */
 	protected function _getThemesList()
 	{
 		Tools::displayAsDeprecated();
+
 		static $themes = array();
 
 		if (empty($themes))
