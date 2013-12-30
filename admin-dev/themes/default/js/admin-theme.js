@@ -190,8 +190,8 @@ $( document ).ready(function() {
 	}
 
 	initNav();
-	//tooltip
-	$('.label-tooltip').tooltip();
+	// tooltips
+	$('.label-tooltip, .help-tooltip').tooltip();
 
 	//modal
 	$("#error-modal").modal("show");
