@@ -26,7 +26,8 @@
 
 {block name="other_input"}
 
-{if isset($supply_order) && $supply_order->id > 0 && isset($supply_order_states)}
+{if isset($supply_order) && $supply_order->id > 0 && isset($supply_order_states) && !isset($printed)}
+{assign var="printed" value=1}
 <script>
 $(document).ready(function() {
 	$('#id_supply_order_state option').each(function () {
