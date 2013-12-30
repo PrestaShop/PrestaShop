@@ -52,9 +52,9 @@ class ImageManagerCore
 			return '';
 
 		if (file_exists(_PS_TMP_IMG_DIR_.$cache_image) && $regenerate)
-			unlink(_PS_TMP_IMG_DIR_.$cache_image);
+			@unlink(_PS_TMP_IMG_DIR_.$cache_image);
 
-		if (!file_exists(_PS_TMP_IMG_DIR_.$cache_image))
+		if ($regenerate || !file_exists(_PS_TMP_IMG_DIR_.$cache_image))
 		{
 			$infos = getimagesize($image);
 
