@@ -256,8 +256,6 @@ class HelperUploaderCore extends Uploader
 			$bo_theme = 'default';
 
 		$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
-			.'/themes/'.$bo_theme.'/js/vendor/jquery.ui.widget.js');
-		$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
 			.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
 		$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
 			.'/themes/'.$bo_theme.'/js/jquery.fileupload.js');

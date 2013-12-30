@@ -305,5 +305,4 @@
 	translations['no_selected_categories'] = '{l s='You must select at least a category'|addslashes mod='blocklayered'}';
 	translations['no_selected_filters'] = '{l s='You must select at least a filter'|addslashes mod='blocklayered'}';
 	translations['selected_filters'] = '{l s='Selected filters: %s'|addslashes mod='blocklayered'}';
-	buildTreeView();
 </script>
