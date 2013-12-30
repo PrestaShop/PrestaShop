@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -57,10 +57,6 @@
 				$('a.useSpecialSyntax').click(function(){
 					var syntax = $(this).find('img').attr('alt');
 					$('#BoxUseSpecialSyntax .syntax span').html(syntax+".");
-					$('#BoxUseSpecialSyntax').toggle(1000);
-				});
-				$('#BoxUseSpecialSyntax').click(function(){
-					$('#BoxUseSpecialSyntax').toggle(1000);
 				});
 			});
 		</script>
@@ -81,12 +77,9 @@
 
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form-horizontal">
 			<div class="panel">
-				{*{$auto_translate}$*}
 				<input type="hidden" name="lang" value="{$lang}" />
 				<input type="hidden" name="type" value="{$type}" />
 				<input type="hidden" name="theme" value="{$theme}" />
-				<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="btn btn-default" />
-
 
 				<table class="table">
 					{foreach $errorsArray as $key => $value}
@@ -105,6 +98,11 @@
 						</tr>
 					{/foreach}
 				</table>
+				<div class="panel-footer">
+					<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
+					<button type="submit" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
+				</div>
 			</div>
 		</form>
 	{/if}

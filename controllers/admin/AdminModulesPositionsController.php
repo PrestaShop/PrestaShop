@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>o
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -226,7 +226,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 	public function initContent()
 	{
 		$this->initTabModuleList();
-		$this->addJS(__PS_BASE_URI__.'js/vendor/jquery.sortable.js');
+		$this->addjqueryPlugin('sortable');
 		$this->initPageHeaderToolbar();
 
 		if (array_key_exists('addToHook', $_GET) || array_key_exists('editGraft', $_GET) || (Tools::isSubmit('submitAddToHook') && $this->errors))

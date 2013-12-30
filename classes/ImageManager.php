@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -52,9 +52,9 @@ class ImageManagerCore
 			return '';
 
 		if (file_exists(_PS_TMP_IMG_DIR_.$cache_image) && $regenerate)
-			unlink(_PS_TMP_IMG_DIR_.$cache_image);
+			@unlink(_PS_TMP_IMG_DIR_.$cache_image);
 
-		if (!file_exists(_PS_TMP_IMG_DIR_.$cache_image))
+		if ($regenerate || !file_exists(_PS_TMP_IMG_DIR_.$cache_image))
 		{
 			$infos = getimagesize($image);
 

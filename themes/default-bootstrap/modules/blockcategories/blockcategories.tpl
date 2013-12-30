@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,23 +18,29 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if $blockCategTree && $blockCategTree.children|@count}
 <!-- Block categories module -->
 <div id="categories_block_left" class="block">
-	<p class="title_block">{if isset($currentCategory)}{$currentCategory->name|escape}{else}{l s='Categories' mod='blockcategories'}{/if}</p>
+	<p class="title_block">
+		{if isset($currentCategory)}
+			{$currentCategory->name|escape}
+		{else}
+			{l s='Categories' mod='blockcategories'}
+		{/if}
+	</p>
 	<div class="block_content">
 		<ul class="tree {if $isDhtml}dhtml{/if}">
-		{foreach from=$blockCategTree.children item=child name=blockCategTree}
-			{if $smarty.foreach.blockCategTree.last}
-				{include file="$branche_tpl_path" node=$child last='true'}
-			{else}
-				{include file="$branche_tpl_path" node=$child}
-			{/if}
-		{/foreach}
+			{foreach from=$blockCategTree.children item=child name=blockCategTree}
+				{if $smarty.foreach.blockCategTree.last}
+					{include file="$branche_tpl_path" node=$child last='true'}
+				{else}
+					{include file="$branche_tpl_path" node=$child}
+				{/if}
+			{/foreach}
 		</ul>
 		{* Javascript moved here to fix bug #PSCFI-151 *}
 		<script type="text/javascript">

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -129,6 +129,8 @@ class Blocktopmenu extends Module
 
 	public function getContent()
 	{
+		$this->context->controller->addjQueryPlugin('hoverIntent');
+		
 		$id_lang = (int)Context::getContext()->language->id;
 		$languages = $this->context->controller->getLanguages();
 		$default_language = (int)Configuration::get('PS_LANG_DEFAULT');
@@ -137,7 +139,7 @@ class Blocktopmenu extends Module
 		$links_label = Tools::getValue('link') ? array_filter(Tools::getValue('link'), 'strlen') : array();
 		$spacer = str_repeat('&nbsp;', $this->spacer_size);
 		$divLangName = 'link_label';
-		
+
 		$update_cache = false;
 
 		if (Tools::isSubmit('submitBlocktopmenu'))
@@ -158,22 +160,25 @@ class Blocktopmenu extends Module
 				$labels[$val['id_lang']] = Tools::getValue('label_'.(int)$val['id_lang']);
 			}
 			
-			if ((!count($links_label)) && (!count($labels)))
-				;
-			else if (!count($links_label))
-				$this->_html .= $this->displayError($this->l('Please complete the "link" field.'));
-			else if (!count($labels))
-				$this->_html .= $this->displayError($this->l('Please add a label'));
-			else if (!isset($labels[$default_language]))
-				$this->_html .= $this->displayError($this->l('Please add a label for your default language.'));
-			else
+			$count_links_label = count($links_label);
+			$count_label = count($labels);
+			if ($count_links_label || $count_label)
 			{
-				MenuTopLinks::add($links_label, $labels,  Tools::getValue('new_window', 0), (int)Shop::getContextShopID());
-				$this->_html .= $this->displayConfirmation($this->l('The link has been added.'));
+				if (!$count_links_label)
+					$this->_html .= $this->displayError($this->l('Please complete the "link" field.'));
+				elseif (!$count_label)
+					$this->_html .= $this->displayError($this->l('Please add a label'));
+				elseif (!isset($labels[$default_language]))
+					$this->_html .= $this->displayError($this->l('Please add a label for your default language.'));
+				else
+				{
+					MenuTopLinks::add($links_label, $labels,  Tools::getValue('new_window', 0), (int)Shop::getContextShopID());
+					$this->_html .= $this->displayConfirmation($this->l('The link has been added.'));
+				}
 			}
 			$update_cache = true;
 		}
-		else if (Tools::isSubmit('deletelinksmenutop'))
+		elseif (Tools::isSubmit('deletelinksmenutop'))
 		{
 			$id_linksmenutop = Tools::getValue('id_linksmenutop', 0);
 			MenuTopLinks::remove($id_linksmenutop, (int)Shop::getContextShopID());
@@ -181,7 +186,7 @@ class Blocktopmenu extends Module
 			$this->_html .= $this->displayConfirmation($this->l('The link has been removed'));
 			$update_cache = true;
 		}
-		else if (Tools::isSubmit('updatelinksmenutop'))
+		elseif (Tools::isSubmit('updatelinksmenutop'))
 		{
 			$id_linksmenutop = (int)Tools::getValue('id_linksmenutop', 0);
 			$id_shop = (int)Shop::getContextShopID();
@@ -207,8 +212,7 @@ class Blocktopmenu extends Module
 		if ($update_cache)
 			$this->clearMenuCache();
 		
-		$this->_html .= $this->renderForm();
-		$this->_html .= $this->renderAddForm();
+		$this->_html .= $this->renderForm().$this->renderAddForm();
 
 		$links = MenuTopLinks::gets((int)$id_lang, null, (int)Shop::getContextShopID());
 
@@ -216,7 +220,6 @@ class Blocktopmenu extends Module
 			return $this->_html;
 
 		$this->_html .= $this->renderList();
-		
 		return $this->_html;
 	}
 

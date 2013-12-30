@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 **
 * NOTICE OF LICENSE
 **
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 **
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -377,13 +377,6 @@
 		$('#csv_file_uploader').show();
 	}
 
-	function activeClueTip() {
-		$('.info_import').cluetip({
-			splitTitle: '|',
-			showTitle: false
-		});
-	};
-
 	// add a disabled state when empty history
 	function enableHistory(){
 		if($('.csv-history-nb').text() == 0){
@@ -496,10 +489,10 @@
 
 		$("select#entity").change(function() {
 			if ($("#entity > option:selected").val() == 8 || $("#entity > option:selected").val() == 9) {
-				$("#truncate").closest('.form-group.').hide();
+				$("#truncate").closest('.form-group').hide();
 			}
 			else {
-				$("#truncate").closest('.form-group.').show();
+				$("#truncate").closest('.form-group').show();
 			}
 			if ($("#entity > option:selected").val() == 9) {
 				$(".import_supply_orders_details").show();
@@ -509,10 +502,10 @@
 				$('input[name=multiple_value_separator]').val('{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected}{else},{/if}');
 			}
 			if ($("#entity > option:selected").val() == 1) {
-				$("#match_ref").closest('.form-group.').show();
+				$("#match_ref").closest('.form-group').show();
 			}
 			else {
-				$("#match_ref").closest('.form-group.').hide();
+				$("#match_ref").closest('.form-group').hide();
 			}
 			if ($("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 0) {
 				$(".import_products_categories").show();
@@ -522,18 +515,18 @@
 			}
 			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 ||
 				$("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6) {
-					$("#regenerate").closest('.form-group.').show();
+					$("#regenerate").closest('.form-group').show();
 			}
 			else {
-				$("#regenerate").closest('.form-group.').hide();
+				$("#regenerate").closest('.form-group').hide();
 			}
 			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 ||
 				$("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 5 ||
 				$("#entity > option:selected").val() == 6 || $("#entity > option:selected").val() == 7) {
-				$("#forceIDs").closest('.form-group.').show();
+				$("#forceIDs").closest('.form-group').show();
 			}
 			else {
-				$("#forceIDs").closest('.form-group.').hide();
+				$("#forceIDs").closest('.form-group').hide();
 			}
 
 			$("#entitie").html($("#entity > option:selected").text().toLowerCase());
