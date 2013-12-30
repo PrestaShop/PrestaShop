@@ -55,7 +55,7 @@ class SitemapControllerCore extends FrontController
 		else			
 			$this->context->smarty->assign('display_manufacturer_link', 0);
 		
-		if(Module::isInstalled('blocksupplier'))
+		if (Module::isInstalled('blocksupplier'))
 		{
 			$blocksupplier = Module::getInstanceByName('blocksupplier');			
 			$this->context->smarty->assign('display_supplier_link', isset($blocksupplier->active) ? (bool)$blocksupplier->active : false);
