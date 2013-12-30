@@ -34,7 +34,8 @@
 		var comparator_max_item = {$comparator_max_item};
 		var comparedProductsIds = [];
 		{foreach from=$compared_products key=k item=product}comparedProductsIds.push({$product});{/foreach}
-		$('document').ready(function(){
+		$(document).ready(function(){
+			$('#home-page-tabs li').first().find('a').trigger('click');
 			blockHover();
 			if (typeof reloadProductComparison != 'undefined')
 				reloadProductComparison();
