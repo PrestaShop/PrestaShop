@@ -35,7 +35,7 @@ $(function(){
 });
 </script>
 
-{if ($logged == 1 || $nbComments != 0) && !$content_only}
+{if (!$content_only && (($nbComments == 0 && $too_early == false) || ($nbComments != 0)))}
 </div><!-- Close the OosHook -->
 <div id="product_comments_block_extra" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 	{if $nbComments != 0}
