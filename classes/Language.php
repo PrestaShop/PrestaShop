@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -806,7 +806,7 @@ class LanguageCore extends ObjectModel
 		return self::$countActiveLanguages[$id_shop];
 	}
 
-	public static function downloadAndInstallLanguagePack($iso, $version = null, $params = null)
+	public static function downloadAndInstallLanguagePack($iso, $version = null, $params = null, $install = true)
 	{
 		require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 
@@ -835,7 +835,7 @@ class LanguageCore extends ObjectModel
 				elseif (!is_writable($file))
 					$errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$file.')';
 			}
-		if (file_exists($file))
+		if ($install && file_exists($file))
 		{
 			$gz = new Archive_Tar($file, true);
 			$files_list = AdminTranslationsController::filterTranslationFiles($gz->listContent());

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -281,7 +281,29 @@ abstract class ModuleCore
 		// Adding Restrictions for client groups
 		Group::addRestrictionsForModule($this->id, Shop::getShops(true, null, true));
 		Hook::exec('actionModuleInstallAfter', array('object' => $this));
+		$this->udpdateModuleTranlsations();
 		return true;
+	}
+
+	public function udpdateModuleTranlsations()
+	{
+		$languages = Language::getLanguages(false);
+		foreach($languages as $lang)
+		{
+			Language::downloadAndInstallLanguagePack($lang['iso_code'], null, null, false);
+			$filegz = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
+			$gz = new Archive_Tar($filegz, true);
+			$files_list = $gz->listContent();				
+			foreach($files_list as $i => $file)
+				if (!preg_match('/^modules\/'.$this->name.'\/.*/', $file['filename']))
+					unset($files_list[$i]);
+			foreach($files_list as $file)
+				if (isset($file['filename']) && is_string($file['filename']))
+					$files_listing[] = $file['filename'];
+			if (is_array($files_listing) && !$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', ''))
+				continue;
+			@unlink($filegz);
+		}
 	}
 
 	/**

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -147,34 +147,11 @@ class AdminTranslationsControllerCore extends AdminController
 			'post_limit_exceeded' => $this->post_limit_exceed,
 			'url_submit' => self::$currentIndex.'&submitTranslations'.ucfirst($this->type_selected).'=1&token='.$this->token,
 			'toggle_button' => $this->displayToggleButton(),
-			'textarea_sized' => TEXTAREA_SIZED,
-			'auto_translate' => ''
+			'textarea_sized' => TEXTAREA_SIZED
 		);
 
 		// Call method initForm for a type
 		return $this->{$method_name}();
-	}
-
-	public function initPageHeaderToolbar()
-	{
-		parent::initPageHeaderToolbar();
-
-		if (Tools::getValue('lang'))
-		{
-			$this->page_header_toolbar_btn['save-and-stay'] = array(
-				'short' => 'SaveAndStay',
-				'href' => '#',
-				'desc' => $this->l('Save and stay'),
-			);
-			$this->page_header_toolbar_btn['save'] = array(
-				'href' => '#',
-				'desc' => $this->l('Update translations')
-			);
-			$this->page_header_toolbar_btn['cancel'] = array(
-				'href' => self::$currentIndex.'&token='.$this->token,
-				'desc' => $this->l('Cancel')
-			);
-		}
 	}
 
 	/**
@@ -318,7 +295,7 @@ class AdminTranslationsControllerCore extends AdminController
 		if ($fd = fopen($file_path, 'w'))
 		{
 			// Get value of button save and stay
-			$save_and_stay = Tools::getValue('submitTranslations'.$type.'AndStay');
+			$save_and_stay = Tools::isSubmit('submitTranslations'.$type.'AndStay');
 
 			// Get language
 			$lang = strtolower(Tools::getValue('lang'));
@@ -1652,42 +1629,15 @@ class AdminTranslationsControllerCore extends AdminController
 		<script type="text/javascript">';
 		if (Tools::getValue('type') == 'mails')
 			$str_output .= '$(document).ready(function(){
-				openCloseAllDiv(\''.$this->type_selected.'_div\', this.value == openAll); toggleElemValue(this.id, openAll, closeAll);
+				openCloseAllDiv(\''.$this->type_selected.'_div\', $(this).data(\'status\') == \'open\'); toggleElemValue(this.id, openAll, closeAll);
 				});';
 		$str_output .= '
-			var openAll = \''.html_entity_decode($this->l('Expand all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
-			var closeAll = \''.html_entity_decode($this->l('Close all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
+			var openAll = \'<i class="process-icon-plus"></i> '.html_entity_decode($this->l('Expand all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
+			var closeAll = \'<i class="process-icon-minus"></i> '.html_entity_decode($this->l('Close all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
 		</script>
-		<div class="row">
-		<input type="button" class="btn btn-default" id="buttonall" onclick="openCloseAllDiv(\''.$this->type_selected.'_div\', this.value == openAll); toggleElemValue(this.id, openAll, closeAll);" />
-		</div>
+		<button type="button" class="btn btn-default" id="buttonall" data-status="open" onclick="openCloseAllDiv(\''.$this->type_selected.'_div\',$(this).data(\'status\') == \'open\'); toggleElemValue(this.id, openAll, closeAll);"><i class="process-icon-minus"></i> '.$this->l('Close all fieldsets').'</button>
 		<script type="text/javascript">toggleElemValue(\'buttonall\', '.($closed ? 'openAll' : 'closeAll').', '.($closed ? 'closeAll' : 'openAll').');</script>';
 		return $str_output;
-	}
-
-	protected function displaySubmitButtons($name)
-	{
-		return '
-			<input type="submit" name="submitTranslations'.ucfirst($name).'" value="'.$this->l('Update translations').'" class="button" />
-			<input type="submit" name="submitTranslations'.ucfirst($name).'AndStay" value="'.$this->l('Update and stay').'" class="button" />';
-	}
-
-	/**
-	 * Init js variables for translation with google
-	 *
-	 * @return array of variables to assign to the smarty template
-	 */
-	public function initAutoTranslate()
-	{
-		$this->addJS('http://www.google.com/jsapi');
-		$this->addJS(_PS_JS_DIR_.'gg-translate.js');
-		$this->addJS(_PS_JS_DIR_.'admin-translations.js');
-
-		$language_code = Tools::htmlentitiesUTF8(Language::getLanguageCodeByIso(Tools::getValue('lang')));
-		return array('language_code' => $language_code,
-					 'not_available' => addslashes(html_entity_decode($this->l('This language is not available in Google Translate\'s API'), ENT_QUOTES, 'utf-8')),
-					 'tooltip_title' => addslashes(html_entity_decode($this->l('Google Translate suggests :'), ENT_QUOTES, 'utf-8'))
-					);
 	}
 
 	public function displayLimitPostWarning($count)
@@ -1801,12 +1751,10 @@ class AdminTranslationsControllerCore extends AdminController
 		$this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
 			'missing_translations' => $missing_translations_front,
 			'count' => $count,
+			'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
 			'limit_warning' => $this->displayLimitPostWarning($count),
 			'tabsArray' => $tabs_array,
 		));
-
-		// Add js variables needed for autotranslate
-		//$this->tpl_view_vars = array_merge($this->tpl_view_vars, $this->initAutoTranslate());
 
 		$this->initToolbar();
 		$this->base_tpl_view = 'translation_form.tpl';
@@ -1990,13 +1938,11 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
 			'count' => $count,
+			'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
 			'limit_warning' => $this->displayLimitPostWarning($count),
 			'tabsArray' => $tabs_array,
 			'missing_translations' => $missing_translations_back
 		));
-
-		// Add js variables needed for autotranslate
-		//$this->tpl_view_vars = array_merge($this->tpl_view_vars, $this->initAutoTranslate());
 
 		$this->initToolbar();
 		$this->base_tpl_view = 'translation_form.tpl';
@@ -2073,6 +2019,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
 			'count' => count($string_to_translate),
+			'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
 			'limit_warning' => $this->displayLimitPostWarning(count($string_to_translate)),
 			'errorsArray' => $string_to_translate,
 			'missing_translations' => $count_empty
@@ -2168,6 +2115,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'count' => $count,
 			'limit_warning' => $this->displayLimitPostWarning($count),
 			'tabsArray' => $tabs_array,
+			'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
 			'missing_translations' => $missing_translations_fields
 		));
 
@@ -2531,6 +2479,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
 			'tinyMCE' => $this->getTinyMCEForMails($this->lang_selected->iso_code),
 			'mail_content' => $this->displayMailContent($core_mails, $subject_mail, $this->lang_selected, 'core', $this->l('Core emails')),
+			'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
 			'module_mails' => $module_mails,
 			'theme_name' => $this->theme_selected
 		));
@@ -2747,6 +2696,7 @@ class AdminTranslationsControllerCore extends AdminController
 				'count' => $this->total_expression,
 				'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
 				'textarea_sized' => TEXTAREA_SIZED,
+				'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
 				'modules_translations' => isset($this->modules_translations) ? $this->modules_translations : array(),
 				'missing_translations' => $this->missing_translations
 			));
@@ -2871,6 +2821,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'count' => count($tabs_array['PDF']),
 			'limit_warning' => $this->displayLimitPostWarning(count($tabs_array['PDF'])),
 			'tabsArray' => $tabs_array,
+			'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
 			'missing_translations' => $missing_translations_pdf
 		));
 

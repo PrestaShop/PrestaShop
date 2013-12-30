@@ -1,5 +1,5 @@
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -340,12 +340,34 @@ function fancyChooseBox(question, title, buttons, otherParams)
     $.fancybox( msg, {'autoDimensions': false, 'width': 500, 'height': 'auto', 'transitionIn': 'none', 'transitionOut': 'none'} );
 }
 
+function toggleLayer(whichLayer, flag)
+{
+	if (!flag)
+		$(whichLayer).hide();
+	else
+		$(whichLayer).show();
+}
+
+function openCloseLayer(whichLayer, action)
+{
+	if (!action)
+	{
+		if ($(whichLayer).css('display') == 'none')
+			$(whichLayer).show();
+		else
+			$(whichLayer).hide();
+	}
+	else if (action == 'open')
+		$(whichLayer).show();
+	else if (action == 'close')
+		$(whichLayer).hide();
+}
+
 //On dom ready
 $().ready(function()
 {
 	// Hide all elements with .hideOnSubmit class when parent form is submit
-	$('form').submit(function()
-	{
+	$('form').submit(function() {
 		$(this).find('.hideOnSubmit').hide();
 	});
 	// attribute target="_blank" is not W3C compliant
