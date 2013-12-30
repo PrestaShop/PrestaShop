@@ -2004,7 +2004,6 @@ class AdminControllerCore extends Controller
 
 		$this->addJS(array(
 			_PS_JS_DIR_.'admin.js',
-			_PS_JS_DIR_.'toggle.js',
 			_PS_JS_DIR_.'tools.js',
 			_PS_JS_DIR_.'ajax.js',
 			_PS_JS_DIR_.'toolbar.js',
