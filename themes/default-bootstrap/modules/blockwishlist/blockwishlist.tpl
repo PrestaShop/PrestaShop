@@ -96,6 +96,6 @@
 				</span>
 			</a>
 		</div> <!-- .lnk -->
-
+		
 	</div> <!-- .block_content -->
 </div> <!-- #wishlist_block -->
