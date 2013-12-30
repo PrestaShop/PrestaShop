@@ -1,6 +1,5 @@
-<?php
-/*
-* 2007-2014 PrestaShop
+{*
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,17 +18,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
-*/
-
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
-
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
-
-header("Location: ../");
-exit;
+*}
+<div id="contact-link">
+	<a href="{$link->getPageLink('contact', true)|escape:'html':'UTF-8'}" title="{l s='Contact Us' mod='blockcontact'}">{l s='Contact Us' mod='blockcontact'}</a>
+</div>
+{if $telnumber}
+	<span class="shop-phone">
+		<i class="icon-phone"></i>{l s='Call us now toll free:' mod='blockcontact'} <strong>{$telnumber}</strong>
+	</span>
+{/if}

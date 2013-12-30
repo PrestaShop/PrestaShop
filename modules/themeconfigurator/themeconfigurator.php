@@ -364,7 +364,8 @@ class ThemeConfigurator extends Module
 		if(!empty($_FILES['item_img']['name']))
 		{
 			if ($old_image = Db::getInstance()->getValue('SELECT image FROM `'._DB_PREFIX_.'themeconfigurator` WHERE id_item = '.(int)$id_item))
-				$this->_deleteImages($old_image);
+				if (file_exists(dirname(__FILE__).'/images/'.$old_image))
+					@unlink(dirname(__FILE__).'/images/'.$old_image);
 					
 			if (!$image = $this->uploadImage($_FILES['item_img'], $image_w, $image_h))
 				return false;

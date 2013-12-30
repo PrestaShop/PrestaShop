@@ -1995,7 +1995,8 @@ class AdminControllerCore extends Controller
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 
 		$this->addJquery();
-		$this->addjQueryPlugin(array('hoverIntent', 'scrollTo', 'alerts'));
+
+		$this->addjQueryPlugin(array('scrollTo', 'alerts'));
 
 		$this->addJqueryUI(array(
 			'ui.slider',
@@ -3317,7 +3318,7 @@ class AdminControllerCore extends Controller
 			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles']),
 			'text' => $module->enable_device & Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles'],
 			'cond' => $module->id,
-			'icon' => 'off',
+			'icon' => ($module->enable_device & Context::DEVICE_MOBILE) ? 'off' : 'ok',
 		);
 
 		$display_tablet = array(
@@ -3326,7 +3327,7 @@ class AdminControllerCore extends Controller
 			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets']),
 			'text' => $module->enable_device & Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets'],
 			'cond' => $module->id,
-			'icon' => 'off',
+			'icon' => ($module->enable_device & Context::DEVICE_TABLET) ? 'off' : 'ok',
 		);
 
 		$display_computer = array(
@@ -3335,7 +3336,7 @@ class AdminControllerCore extends Controller
 			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers']),
 			'text' => $module->enable_device & Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers'],
 			'cond' => $module->id,
-			'icon' => 'off',
+			'icon' =>  ($module->enable_device & Context::DEVICE_COMPUTER) ? 'off' : 'ok',
 		);
 
 		if ($module->active)

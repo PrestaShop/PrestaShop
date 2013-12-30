@@ -470,6 +470,8 @@ class OrderHistoryCore extends ObjectModel
 	public function addWs()
 	{
 	    $sendemail = (bool)Tools::getValue('sendemail', false);
+	    $this->changeIdOrderState($this->id_order_state, $this->id_order);
+	    
 	    if ($sendemail)
 	    {
 	        //Mail::Send requires link object on context and is not set when getting here
