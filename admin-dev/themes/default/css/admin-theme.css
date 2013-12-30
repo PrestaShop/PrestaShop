@@ -2662,6 +2662,7 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 @media (max-width: 768px) { #header_search { width: 100%; } }
 #header_search input, #header_search .form-group { margin: 0; }
 #header_search .form-group.focus-search { position: absolute; z-index: 900; top: 0; left: 10px; width: 400px; }
+#header_search .clear_search { position: absolute; top: 5px; right: 35px; }
 
 #employee_infos .employee_name { position: relative; padding-left: 34px !important; }
 #employee_infos .employee_avatar_small { height: 30px; width: 30px; display: inline-block; position: absolute; top: 4px; left: 0; }
