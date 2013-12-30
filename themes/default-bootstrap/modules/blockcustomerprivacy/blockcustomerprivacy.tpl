@@ -24,7 +24,9 @@
 
 <div class="error_customerprivacy" style="color:red;"></div>
 <fieldset class="account_creation customerprivacy">
-	<h3 class="page-subheading">{l s='Customer data privacy' mod='blockcustomerprivacy'}</h3>
+	<h3 class="page-subheading">
+		{l s='Customer data privacy' mod='blockcustomerprivacy'}
+	</h3>
 	<p class="required checkbox">
 		<input type="checkbox" value="1" id="customer_privacy" name="customer_privacy" autocomplete="off"/>
         <label for="customer_privacy">{$privacy_message}</label>				

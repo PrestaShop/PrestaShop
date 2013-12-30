@@ -37,7 +37,9 @@
 			<ul id="first-currencies" class="currencies_ul toogle_content">
 				{foreach from=$currencies key=k item=f_currency}
 					<li {if $cookie->id_currency == $f_currency.id_currency}class="selected"{/if}>
-						<a href="javascript:setCurrency({$f_currency.id_currency});" rel="nofollow" title="{$f_currency.name}">{$f_currency.name}</a>
+						<a href="javascript:setCurrency({$f_currency.id_currency});" rel="nofollow" title="{$f_currency.name}">
+							{$f_currency.name}
+						</a>
 					</li>
 				{/foreach}
 			</ul>
