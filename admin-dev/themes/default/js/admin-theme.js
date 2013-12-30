@@ -249,10 +249,6 @@ $( document ).ready(function() {
 		}
 	});
 
-	//show time elapsed
-	$('abbr.timeago').timeago();
-
-
 	//erase button search input
 	if ($('#bo_query').val() !== ''){
 		$('.clear_search').removeClass('hide');
