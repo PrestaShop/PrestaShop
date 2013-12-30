@@ -36,7 +36,6 @@ $(function(){
 </script>
 
 {if (!$content_only && (($nbComments == 0 && $too_early == false) || ($nbComments != 0)))}
-</div><!-- Close the OosHook -->
 <div id="product_comments_block_extra" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 	{if $nbComments != 0}
 		<div class="comments_note clearfix">
@@ -74,7 +73,5 @@ $(function(){
 		{/if}
 	</ul>
 </div>
-
-<div><!-- new div for the next content if any -->
 {/if}
 <!--  /Module ProductComments -->
