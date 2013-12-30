@@ -65,6 +65,11 @@
 			});
 
 			$('#modify-translations').click(function(e) {
+				var lang = $('#translations-languages li.active').data('type');
+
+				if (lang == null)
+					return !alert('{l s='Please select your language!'}');
+				
 				chooseTypeTranslation($('#translations-languages li.active').data('type'));
 			});
 		});
