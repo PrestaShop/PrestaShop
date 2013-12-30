@@ -82,12 +82,15 @@ class Blockcontact extends Module
 	public function hookDisplayRightColumn($params)
 	{
 		global $smarty;
-		if (!$this->isCached('blockcontact.tpl', $this->getCacheId()))
+		$tpl = 'blockcontact';
+		if (isset($params['blockcontact_tpl']) && $params['blockcontact_tpl'])
+			$tpl = $params['blockcontact_tpl'];
+		if (!$this->isCached($tpl.'.tpl', $this->getCacheId()))
 			$smarty->assign(array(
 				'telnumber' => Configuration::get('blockcontact_telnumber'),
 				'email' => Configuration::get('blockcontact_email')
 			));
-		return $this->display(__FILE__, 'blockcontact.tpl', $this->getCacheId());
+		return $this->display(__FILE__, $tpl.'.tpl', $this->getCacheId());
 	}
 	
 	public function hookDisplayLeftColumn($params)
@@ -97,7 +100,7 @@ class Blockcontact extends Module
 
 	public function hookDisplayNav($params)
 	{
-
+		$params['blockcontact_tpl'] = 'nav';
 		return $this->hookDisplayRightColumn($params);
 	}
 	
