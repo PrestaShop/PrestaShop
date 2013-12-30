@@ -81,7 +81,6 @@
 
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form-horizontal">
 			<div class="panel">
-				{*{$auto_translate}$*}
 				<input type="hidden" name="lang" value="{$lang}" />
 				<input type="hidden" name="type" value="{$type}" />
 				<input type="hidden" name="theme" value="{$theme}" />

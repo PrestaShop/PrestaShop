@@ -147,8 +147,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'post_limit_exceeded' => $this->post_limit_exceed,
 			'url_submit' => self::$currentIndex.'&submitTranslations'.ucfirst($this->type_selected).'=1&token='.$this->token,
 			'toggle_button' => $this->displayToggleButton(),
-			'textarea_sized' => TEXTAREA_SIZED,
-			'auto_translate' => ''
+			'textarea_sized' => TEXTAREA_SIZED
 		);
 
 		// Call method initForm for a type
@@ -1641,24 +1640,6 @@ class AdminTranslationsControllerCore extends AdminController
 		return $str_output;
 	}
 
-	/**
-	 * Init js variables for translation with google
-	 *
-	 * @return array of variables to assign to the smarty template
-	 */
-	public function initAutoTranslate()
-	{
-		$this->addJS('http://www.google.com/jsapi');
-		$this->addJS(_PS_JS_DIR_.'gg-translate.js');
-		$this->addJS(_PS_JS_DIR_.'admin-translations.js');
-
-		$language_code = Tools::htmlentitiesUTF8(Language::getLanguageCodeByIso(Tools::getValue('lang')));
-		return array('language_code' => $language_code,
-					 'not_available' => addslashes(html_entity_decode($this->l('This language is not available in Google Translate\'s API'), ENT_QUOTES, 'utf-8')),
-					 'tooltip_title' => addslashes(html_entity_decode($this->l('Google Translate suggests :'), ENT_QUOTES, 'utf-8'))
-					);
-	}
-
 	public function displayLimitPostWarning($count)
 	{
 		$return = array();
@@ -1774,9 +1755,6 @@ class AdminTranslationsControllerCore extends AdminController
 			'limit_warning' => $this->displayLimitPostWarning($count),
 			'tabsArray' => $tabs_array,
 		));
-
-		// Add js variables needed for autotranslate
-		//$this->tpl_view_vars = array_merge($this->tpl_view_vars, $this->initAutoTranslate());
 
 		$this->initToolbar();
 		$this->base_tpl_view = 'translation_form.tpl';
@@ -1965,9 +1943,6 @@ class AdminTranslationsControllerCore extends AdminController
 			'tabsArray' => $tabs_array,
 			'missing_translations' => $missing_translations_back
 		));
-
-		// Add js variables needed for autotranslate
-		//$this->tpl_view_vars = array_merge($this->tpl_view_vars, $this->initAutoTranslate());
 
 		$this->initToolbar();
 		$this->base_tpl_view = 'translation_form.tpl';
