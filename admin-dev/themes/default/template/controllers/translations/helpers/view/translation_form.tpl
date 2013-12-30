@@ -57,11 +57,10 @@
 
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form-horizontal">
 			<div class="panel">
-				{$toggle_button}
 				<input type="hidden" name="lang" value="{$lang}" />
 				<input type="hidden" name="type" value="{$type}" />
 				<input type="hidden" name="theme" value="{$theme}" />
-				<button type="button" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default">{l s='Update translations'}</button>
+				
 
 				<script type="text/javascript">
 					$(document).ready(function(){
@@ -88,6 +87,12 @@
 							<li><em>Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)</em> ("<strong>n$</strong>" {l s='is used for the order of the arguments'}).</li>
 						</ul>
 					</div>
+				</div>
+				<div class="panel-footer">
+					<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+					{$toggle_button}
+					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
+					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 				</div>
 			</div>
 			{foreach $tabsArray as $k => $newLang}
@@ -126,9 +131,14 @@
 								{/foreach}
 							</table>
 						</div>
+						<div class="panel-footer">
+							<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+							<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
+							<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
+						</div>
 					</div>
 				{/if}
-			{/foreach}
+			{/foreach}			
 		</form>
 	{/if}
 
