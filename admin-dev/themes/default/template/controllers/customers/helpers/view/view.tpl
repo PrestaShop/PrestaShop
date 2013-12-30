@@ -589,7 +589,7 @@
 								</td>
 								<td class="text-right">
 									<div class="btn-group">
-										<a class="btn btn-default" data-toggle="dropdown" href="?tab=AdminAddresses&id_address={$address['id_address']}&addaddress&token={getAdminToken tab='AdminAddresses'}">
+										<a class="btn btn-default" href="?tab=AdminAddresses&id_address={$address['id_address']}&addaddress&token={getAdminToken tab='AdminAddresses'}">
 											<i class="icon-edit"></i> {l s='Edit'}
 										</a>
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
