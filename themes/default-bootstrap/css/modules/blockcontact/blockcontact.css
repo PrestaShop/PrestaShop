@@ -40,13 +40,12 @@
 #contact_block .label {
   display: none; }
 #contact_block .block_content {
-  color: #888888;
-  padding: 0 20px 20px; }
+  color: #888888; }
 #contact_block p {
   margin-bottom: 4px; }
 #contact_block p.tel {
   font: 400 17px/21px Arial, Helvetica, sans-serif;
-  color: white;
+  color: #333333;
   margin-bottom: 6px; }
   #contact_block p.tel i {
     font-size: 25px;

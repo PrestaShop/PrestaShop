@@ -1995,7 +1995,8 @@ class AdminControllerCore extends Controller
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 
 		$this->addJquery();
-		$this->addjQueryPlugin(array('cluetip', 'scrollTo', 'alerts'));
+
+		$this->addjQueryPlugin(array('scrollTo', 'alerts'));
 
 		$this->addJqueryUI(array(
 			'ui.slider',
