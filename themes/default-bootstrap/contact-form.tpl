@@ -91,7 +91,7 @@
                     {if isset($customerThread.email)}
                         <input class="form-control grey" type="text" id="email" name="from" value="{$customerThread.email|escape:'html':'UTF-8'}" readonly="readonly" />
                     {else}
-                        <input class="form-control grey" type="text" id="email" name="from" value="{$email|escape:'html':'UTF-8'}" />
+                        <input class="form-control grey validate" type="text" id="email" name="from" data-validate="isEmail" value="{$email|escape:'html':'UTF-8'}" />
                     {/if}
                 </p>
                 {if !$PS_CATALOG_MODE}

@@ -309,7 +309,10 @@ class OrderOpcControllerCore extends ParentOrderController
 		}
 		else
 			$this->addJS(_THEME_MOBILE_JS_DIR_.'opc.js');
+
+		$this->addJS(_PS_JS_DIR_.'validate.js');
 		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
+		$this->addJS(_THEME_JS_DIR_.'validate_fields.js');
 	}
 
 	/**
