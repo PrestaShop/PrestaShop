@@ -26,7 +26,7 @@
 <!-- MODULE WishList -->
 <li class="lnk_wishlist">
 	<a 
-	href="{$wishlist_link}" 
+	href="{$wishlist_link|escape:'html':'UTF-8'}" 
 	title="{l s='My wishlists' mod='blockwishlist'}">
 		<i class="icon-heart"></i>
 		<span>{l s='My wishlists' mod='blockwishlist'}</span>

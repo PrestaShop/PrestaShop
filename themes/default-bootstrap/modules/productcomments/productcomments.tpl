@@ -35,7 +35,7 @@ var moderation_active = {$moderation_active};
 </script>
 
 <div id="idTab5">
-	<div id="product_comments_block_tab" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+	<div id="product_comments_block_tab">
 		{if $comments}
 			{foreach from=$comments item=comment}
 				{if $comment.content}
@@ -50,9 +50,6 @@ var moderation_active = {$moderation_active};
 								<div class="star star_on"></div>
 							{/if}
 						{/section}
-							<meta itemprop="worstRating" content = "0">
-							<meta itemprop="ratingValue" content = "2">
-							<meta itemprop="bestRating" content = "5">
 						</div>
 						<div class="comment_author_infos">
 							<strong>{$comment.customer_name|escape:'html':'UTF-8'}</strong>
