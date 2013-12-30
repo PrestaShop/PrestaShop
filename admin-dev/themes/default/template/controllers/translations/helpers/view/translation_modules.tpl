@@ -55,40 +55,43 @@
 			<p>{l s='Total missing expresssions:'} <span class="badge">{l s='%d' sprintf=$missing_translations}</p>
 		</div>
 
-		<script type="text/javascript">
-			$(document).ready(function(){
-				$('a.useSpecialSyntax').click(function(){
-					var syntax = $(this).find('img').attr('alt');
-					$('#BoxUseSpecialSyntax .syntax span').html(syntax+".");
-					$('#BoxUseSpecialSyntax').toggle(1000);
-				});
-				$('#BoxUseSpecialSyntax').click(function(){
-					$('#BoxUseSpecialSyntax').toggle(1000);
-				});
-			});
-		</script>
-
-		<div id="BoxUseSpecialSyntax">
-			<div class="alert alert-warning">
-				<p>
-					{l s='This expression uses this special syntax:'} <span>%d.</span><br />
-					{l s='You must use this syntax in your translations. Here are several examples:'}
-				</p>
-				<ul>
-					<li><em>There are <strong>%d</strong> products</em> ("<strong>%d</strong>" {l s='will be replaced by a number'}).</li>
-					<li><em>List of pages in <strong>%s</strong>:</em> ("<strong>%s</strong>" {l s='will be replaced by a string'}).</li>
-					<li><em>Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)</em> ("<strong>n$</strong>" {l s='is used for the order of the arguments'}).</li>
-				</ul>
-			</div>
-		</div>
-
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form-horizontal">
-			{$toggle_button}
-			<input type="hidden" name="lang" value="{$lang}" />
-			<input type="hidden" name="type" value="{$type}" />
-			<input type="hidden" name="theme" value="{$theme}" />
-			<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default">{l s='Update translations'}</button>
-			<br />
+			<div class="panel">
+				<input type="hidden" name="lang" value="{$lang}" />
+				<input type="hidden" name="type" value="{$type}" />
+				<input type="hidden" name="theme" value="{$theme}" />
+				<div id="BoxUseSpecialSyntax">
+					<div class="alert alert-warning">
+						<p>
+							{l s='This expression uses this special syntax:'} <span>%d.</span><br />
+							{l s='You must use this syntax in your translations. Here are several examples:'}
+						</p>
+						<ul>
+							<li><em>There are <strong>%d</strong> products</em> ("<strong>%d</strong>" {l s='will be replaced by a number'}).</li>
+							<li><em>List of pages in <strong>%s</strong>:</em> ("<strong>%s</strong>" {l s='will be replaced by a string'}).</li>
+							<li><em>Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)</em> ("<strong>n$</strong>" {l s='is used for the order of the arguments'}).</li>
+						</ul>
+					</div>
+				</div>				
+				<script type="text/javascript">
+					$(document).ready(function(){
+						$('a.useSpecialSyntax').click(function(){
+							var syntax = $(this).find('img').attr('alt');
+							$('#BoxUseSpecialSyntax .syntax span').html(syntax+".");
+							$('#BoxUseSpecialSyntax').toggle(1000);
+						});
+						$('#BoxUseSpecialSyntax').click(function(){
+							$('#BoxUseSpecialSyntax').toggle(1000);
+						});
+					});
+				</script>
+				<div class="panel-footer">
+					<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+					{$toggle_button}
+					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
+					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
+				</div>
+			</div>
 
 			{foreach $modules_translations as $theme_name => $theme}
 				{if $theme_name}<h2>&gt;{l s='Theme:'} <a name="{$theme_name}">{$theme_name}</h2>{/if}
@@ -139,6 +142,11 @@
 											</tr>
 										{/foreach}
 									</table>
+								</div>
+								<div class="panel-footer">
+									<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+									<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
+									<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 								</div>
 							</div>
 						{/if}
