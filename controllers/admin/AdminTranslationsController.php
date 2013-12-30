@@ -1629,13 +1629,13 @@ class AdminTranslationsControllerCore extends AdminController
 		<script type="text/javascript">';
 		if (Tools::getValue('type') == 'mails')
 			$str_output .= '$(document).ready(function(){
-				openCloseAllDiv(\''.$this->type_selected.'_div\', this.value == openAll); toggleElemValue(this.id, openAll, closeAll);
+				openCloseAllDiv(\''.$this->type_selected.'_div\', $(this).data(\'status\') == \'open\'); toggleElemValue(this.id, openAll, closeAll);
 				});';
 		$str_output .= '
 			var openAll = \'<i class="process-icon-plus"></i> '.html_entity_decode($this->l('Expand all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
 			var closeAll = \'<i class="process-icon-minus"></i> '.html_entity_decode($this->l('Close all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
 		</script>
-		<button type="button" class="btn btn-default" id="buttonall" onclick="openCloseAllDiv(\''.$this->type_selected.'_div\', this.html(openAll)); toggleElemValue(this.id, openAll, closeAll);"><i class="process-icon-minus"></i> '.$this->l('Close all fieldsets').'</button>
+		<button type="button" class="btn btn-default" id="buttonall" data-status="open" onclick="openCloseAllDiv(\''.$this->type_selected.'_div\',$(this).data(\'status\') == \'open\'); toggleElemValue(this.id, openAll, closeAll);"><i class="process-icon-minus"></i> '.$this->l('Close all fieldsets').'</button>
 		<script type="text/javascript">toggleElemValue(\'buttonall\', '.($closed ? 'openAll' : 'closeAll').', '.($closed ? 'closeAll' : 'openAll').');</script>';
 		return $str_output;
 	}

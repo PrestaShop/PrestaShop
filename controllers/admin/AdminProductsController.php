@@ -1341,13 +1341,11 @@ class AdminProductsControllerCore extends AdminController
 			));
 
 			$this->addJS(array(
-				_PS_JS_DIR_.'productTabsManager.js',
 				_PS_JS_DIR_.'admin-products.js',
 				_PS_JS_DIR_.'attributesBack.js',
 				_PS_JS_DIR_.'price.js',
 				_PS_JS_DIR_.'tiny_mce/tiny_mce.js',
 				_PS_JS_DIR_.'tinymce.inc.js',
-				_PS_JS_DIR_.'fileuploader.js',
 				_PS_JS_DIR_.'admin-dnd.js',
 				_PS_JS_DIR_.'jquery/ui/jquery.ui.progressbar.min.js',
 				_PS_JS_DIR_.'vendor/spin.js',
