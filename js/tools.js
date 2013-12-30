@@ -340,12 +340,34 @@ function fancyChooseBox(question, title, buttons, otherParams)
     $.fancybox( msg, {'autoDimensions': false, 'width': 500, 'height': 'auto', 'transitionIn': 'none', 'transitionOut': 'none'} );
 }
 
+function toggleLayer(whichLayer, flag)
+{
+	if (!flag)
+		$(whichLayer).hide();
+	else
+		$(whichLayer).show();
+}
+
+function openCloseLayer(whichLayer, action)
+{
+	if (!action)
+	{
+		if ($(whichLayer).css('display') == 'none')
+			$(whichLayer).show();
+		else
+			$(whichLayer).hide();
+	}
+	else if (action == 'open')
+		$(whichLayer).show();
+	else if (action == 'close')
+		$(whichLayer).hide();
+}
+
 //On dom ready
 $().ready(function()
 {
 	// Hide all elements with .hideOnSubmit class when parent form is submit
-	$('form').submit(function()
-	{
+	$('form').submit(function() {
 		$(this).find('.hideOnSubmit').hide();
 	});
 	// attribute target="_blank" is not W3C compliant

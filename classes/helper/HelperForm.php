@@ -71,8 +71,6 @@ class HelperFormCore extends Helper
 		if (is_null($this->submit_action))
 			$this->submit_action = 'submitAdd'.$this->table;
 
-		$this->context->controller->addJS(_PS_JS_DIR_.'form.js');
-
 		$categories = true;
 		$color = true;
 		$date = true;

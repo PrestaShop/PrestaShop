@@ -31,9 +31,6 @@
 		var home = '{$categories.trads.Root.name|@addcslashes:'\''}';
 		var use_radio = {if $categories.use_radio}1{else}0{/if};
 		var use_context = {if isset($categories.use_context)}1{else}0{/if};
-		$(document).ready(function(){
-			buildTreeView(use_context);
-		});
 	</script>
 <div class="panel">
 	<div class="category-filter panel-heading">

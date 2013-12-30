@@ -61,19 +61,18 @@
 	<td class="{$classname} feature-name">
 		<strong>{$grade}</strong>
 	</td>
-
 	{foreach from=$list_ids_product item=id_product}
 		{assign var='tab_grade' value=$product_grades[$grade_id]}
 		<td  width="{$width}%" class="{$classname} comparison_infos ajax_block_product" align="center">
-		{if isset($tab_grade[$id_product]) AND $tab_grade[$id_product]}
-        	<div class="product-rating">
-                {section loop=6 step=1 start=1 name=average}
-                    <input class="auto-submit-star" disabled="disabled" type="radio" name="{$grade_id}_{$id_product}_{$smarty.section.average.index}" {if isset($tab_grade[$id_product]) AND $tab_grade[$id_product]|round neq 0 and $smarty.section.average.index eq $tab_grade[$id_product]|round}checked="checked"{/if} />
-                {/section}
-            </div>
-		{else}
-			-
-		{/if}
+			{if isset($tab_grade[$id_product]) AND $tab_grade[$id_product]}
+				<div class="product-rating">
+					{section loop=6 step=1 start=1 name=average}
+						<input class="auto-submit-star" disabled="disabled" type="radio" name="{$grade_id}_{$id_product}_{$smarty.section.average.index}" {if isset($tab_grade[$id_product]) AND $tab_grade[$id_product]|round neq 0 and $smarty.section.average.index eq $tab_grade[$id_product]|round}checked="checked"{/if} />
+					{/section}
+				</div>
+			{else}
+				-
+			{/if}
 		</td>
 	{/foreach}
 </tr>				
@@ -81,28 +80,30 @@
 
 	{cycle values='comparison_feature_odd,comparison_feature_even' assign='classname'}
 <tr>
-	<td  class="{$classname} feature-name"><strong>{l s='Average' mod='productcomments'}</strong></td>
+	<td  class="{$classname} feature-name">
+		<strong>{l s='Average' mod='productcomments'}</strong>
+	</td>
 {foreach from=$list_ids_product item=id_product}
 	<td  width="{$width}%" class="{$classname} comparison_infos" align="center" >
-	{if isset($list_product_average[$id_product]) AND $list_product_average[$id_product]}
-    	<div class="product-rating">
-            {section loop=6 step=1 start=1 name=average}
-                <input class="auto-submit-star" disabled="disabled" type="radio" name="average_{$id_product}" {if $list_product_average[$id_product]|round neq 0 and $smarty.section.average.index eq $list_product_average[$id_product]|round}checked="checked"{/if} />
-            {/section}
-        </div>
-	{else}
-		-
-	{/if}
+		{if isset($list_product_average[$id_product]) AND $list_product_average[$id_product]}
+			<div class="product-rating">
+				{section loop=6 step=1 start=1 name=average}
+					<input class="auto-submit-star" disabled="disabled" type="radio" name="average_{$id_product}" {if $list_product_average[$id_product]|round neq 0 and $smarty.section.average.index eq $list_product_average[$id_product]|round}checked="checked"{/if} />
+				{/section}
+			</div>
+		{else}
+			-
+		{/if}
 	</td>	
 {/foreach}
 </tr>
 
 <tr>
-	<td  class="{$classname} comparison_infos feature-name">&nbsp;</td>
+	<td class="{$classname} comparison_infos feature-name">&nbsp;</td>
 	{foreach from=$list_ids_product item=id_product}
 	<td  width="{$width}%" class="{$classname} comparison_infos" align="center" >
-			{if isset($product_comments[$id_product]) AND $product_comments[$id_product]}
-            <script type="text/javascript">
+		{if isset($product_comments[$id_product]) AND $product_comments[$id_product]}
+			<script type="text/javascript">
 			$(document).ready(function() {
 				var htmlContent = $('#comments_{$id_product}').html();
 				$("[rel=#comments_{$id_product}]").popover({
@@ -113,19 +114,27 @@
 				});
 			});
 			</script>
-		<a href="#" onclick="return false;" rel="#comments_{$id_product}" class="btn btn-default button button-small"><span>{l s='View comments' mod='productcomments'}<i class="icon-chevron-right right"></i></span></a>
-		<div style="display:none" id="comments_{$id_product}">   
-            {foreach from=$product_comments[$id_product] item=comment}	
-                <div class="well well-sm">
-                    <strong>{$comment.customer_name|escape:'html':'UTF-8'} </strong>
-                    <small class="date"> {dateFormat date=$comment.date_add|escape:'html':'UTF-8' full=0}</small> 
-                    <div class="comment_content">{$comment.content|escape:'html':'UTF-8'|nl2br}</div>
-                    </div>
-            {/foreach}
-        </div>
-	{else}
-		-
-	{/if}
+			<a 
+			class="btn btn-default button button-small" 
+			href="#" 
+			onclick="return false;" 
+			rel="#comments_{$id_product}">
+				<span>
+					{l s='View comments' mod='productcomments'}<i class="icon-chevron-right right"></i>
+				</span>
+			</a>
+			<div style="display:none" id="comments_{$id_product}">   
+				{foreach from=$product_comments[$id_product] item=comment}	
+					<div class="well well-sm">
+						<strong>{$comment.customer_name|escape:'html':'UTF-8'} </strong>
+						<small class="date"> {dateFormat date=$comment.date_add|escape:'html':'UTF-8' full=0}</small> 
+						<div class="comment_content">{$comment.content|escape:'html':'UTF-8'|nl2br}</div>
+					</div>
+				{/foreach}
+			</div>
+		{else}
+			-
+		{/if}
 	</td>	
 {/foreach}
 </tr>
