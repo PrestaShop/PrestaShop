@@ -40,7 +40,7 @@
 			{if isset($file.delete_url)}
 			<p>
 				<a class="btn btn-default" href="{$file.delete_url}">
-				<i class="icon-trash"></i> {l s='Delete'}
+					<i class="icon-trash"></i> {l s='Delete'}
 				</a>
 			</p>
 			{/if}
@@ -79,9 +79,9 @@
 	</div>
 </div>
 <script type="text/javascript">
-	{if isset($multiple) && isset($max_files)}
+{if isset($multiple) && isset($max_files)}
 	var {$id}_max_files = {$max_files - $files|count};
-	{/if}
+{/if}
 
 	$(document).ready(function(){
 		$('#{$id}-selectbutton').click(function(e) {
