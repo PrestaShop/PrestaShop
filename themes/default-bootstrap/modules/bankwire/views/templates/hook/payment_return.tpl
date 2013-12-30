@@ -24,8 +24,10 @@
 *}
 
 {if $status == 'ok'}
-<div class="box">
-		<p class="cheque-indent"><strong class="dark">{l s='Your order on %s is complete.' sprintf=$shop_name mod='bankwire'}</strong></p>
+	<div class="box">
+		<p class="cheque-indent">
+			<strong class="dark">{l s='Your order on %s is complete.' sprintf=$shop_name mod='bankwire'}</strong>
+		</p>
 		{l s='Please send us a bank wire with' mod='bankwire'}
 		<br />- {l s='Amount' mod='bankwire'} <span class="price"> <strong>{$total_to_pay}</strong></span>
 		<br />- {l s='Name of account owner' mod='bankwire'}  <strong>{if $bankwireOwner}{$bankwireOwner}{else}___________{/if}</strong>
