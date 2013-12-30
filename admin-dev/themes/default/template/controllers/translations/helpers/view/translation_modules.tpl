@@ -78,10 +78,6 @@
 						$('a.useSpecialSyntax').click(function(){
 							var syntax = $(this).find('img').attr('alt');
 							$('#BoxUseSpecialSyntax .syntax span').html(syntax+".");
-							$('#BoxUseSpecialSyntax').toggle(1000);
-						});
-						$('#BoxUseSpecialSyntax').click(function(){
-							$('#BoxUseSpecialSyntax').toggle(1000);
 						});
 					});
 				</script>
