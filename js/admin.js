@@ -1157,3 +1157,41 @@ function openModulesList() {
 	}
 	return false;
 }
+
+function ajaxStates (id_state_selected)
+{
+	$.ajax({
+		url: "index.php",
+		cache: false,
+		data: "token="+state_token+"&ajax=1&action=states&tab=AdminStates&no_empty=1&id_country="+$('#id_country').val() + "&id_state=" + $('#id_state').val(),
+		success: function(html)
+		{
+			if (html == 'false')
+			{
+				$("#contains_states").fadeOut();
+				$('#id_state option[value=0]').attr("selected", "selected");
+			}
+			else
+			{
+				$("#id_state").html(html);
+				$("#contains_states").fadeIn();
+				$('#id_state option[value=' + id_state_selected + ']').attr("selected", "selected");
+			}
+		}
+	});
+
+	if (module_dir && vat_number)
+	{
+		$.ajax({
+			type: "GET",
+			url: module_dir + "vatnumber/ajax.php?id_country=" + $('#id_country').val(),
+			success: function(isApplicable)
+			{
+				if(isApplicable == 1)
+					$('#vat_area').show();
+				else
+					$('#vat_area').hide();
+			}
+		});
+	}
+}
