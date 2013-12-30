@@ -824,7 +824,7 @@
 											{/if}
 											{if $field.required}<sup>*</sup>{/if}
 										</label>
-										<textarea name="textField{$field.id_customization_field}" class="form-control" id="textField{$customizationField}" rows="3" cols="20" class="customization_block_input">
+										<textarea name="textField{$field.id_customization_field}" class="form-control customization_block_input" id="textField{$customizationField}" rows="3" cols="20">
 											{if isset($textFields.$key)}
 												{$textFields.$key|stripslashes}
 											{/if}
