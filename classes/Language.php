@@ -841,7 +841,7 @@ class LanguageCore extends ObjectModel
 			$gz = new Archive_Tar($file, true);
 			$files_list = AdminTranslationsController::filterTranslationFiles($gz->listContent());
 			if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../'))
-				$errors[] = Tools::displayError('Cannot decompress the translation file for the following language: ').(string)$iso;
+				$errors[] = Tools::displayError('Cannot decompress the translation file for the following language:').' '.(string)$iso;
 			// Clear smarty modules cache
 			Tools::clearCache();
 			if (!Language::checkAndAddLanguage((string)$iso, $lang_pack, false, $params))
