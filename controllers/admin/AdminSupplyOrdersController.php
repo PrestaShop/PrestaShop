@@ -600,11 +600,15 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->getlanguages();
 
 		// defines the fields of the form to display
-		$this->fields_form[]['form'] = array(
+		$this->fields_form[0]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Supply order status'),
 				'icon' => 'icon-pencil'
 			),
+			'input' => array(),
+			'submit' => array(
+				'title' => $this->l('Save')
+			)
 		);
 
 		$this->displayInformation($this->l('Be careful when changing status\'. Some of those changes cannot be canceled. '));
