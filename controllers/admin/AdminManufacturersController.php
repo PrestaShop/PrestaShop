@@ -638,6 +638,7 @@ class AdminManufacturersControllerCore extends AdminController
 	{
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
+		$this->initTabModuleList();
 		if ($this->display == 'editaddresses' || $this->display == 'addaddress')
 			$this->content .= $this->renderFormAddress();
 		else if ($this->display == 'edit' || $this->display == 'add')

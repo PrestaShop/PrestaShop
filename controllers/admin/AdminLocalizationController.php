@@ -304,7 +304,7 @@ class AdminLocalizationControllerCore extends AdminController
 			'download_updated_pack' => 1
 		);
 
-		$this->show_toolbar = false;
+		$this->show_toolbar = true;
 		return parent::renderForm();
 	}
 
@@ -315,7 +315,6 @@ class AdminLocalizationControllerCore extends AdminController
 
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
-
 		$this->context->smarty->assign(array(
 			'localization_form' => $this->renderForm(),
 			'localization_options' => $this->renderOptions(),
@@ -323,9 +322,15 @@ class AdminLocalizationControllerCore extends AdminController
 		));
 	}
 	
+	public function initToolbar()
+	{
+		$this->toolbar_btn = array();
+		$this->initTabModuleList();
+	}
+	
 	public function display()
 	{
-		$this->initContent();
+		$this->initContent();		
 		parent::display();
 	}
 

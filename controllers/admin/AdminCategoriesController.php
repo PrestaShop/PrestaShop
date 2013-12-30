@@ -105,7 +105,7 @@ class AdminCategoriesControllerCore extends AdminController
 			$this->_category = new Category($id_category);
 		else
 		{
-			if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP)
+			if (Shop::getContext() == Shop::CONTEXT_SHOP)
 				$this->_category = new Category($this->context->shop->id_category);
 			elseif (count(Category::getCategoriesWithoutParent()) > 1 && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) != 1)
 				$this->_category = Category::getTopCategory();

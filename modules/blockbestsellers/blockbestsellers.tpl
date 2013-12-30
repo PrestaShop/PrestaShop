@@ -28,7 +28,7 @@
 <div id="best-sellers_block_right" class="block products_block">
 	<h4 class="title_block"><a href="{$link->getPageLink('best-sales')|escape:'html'}" title="{l s='View a top sellers products' mod='blockbestsellers'}">{l s='Top sellers' mod='blockbestsellers'}</a></h4>
 	<div class="block_content">
-	{if $best_sellers|@count > 0}
+	{if $best_sellers && $best_sellers|@count > 0}
 		<ul class="product_images">
 			{foreach from=$best_sellers item=product name=myLoop}
 			<li class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if} clearfix">

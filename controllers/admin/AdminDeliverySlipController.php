@@ -120,6 +120,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 
 	public function initContent()
 	{
+		$this->initTabModuleList();
 		$this->content .= $this->renderForm().'<br />';
 		$this->show_toolbar = false;
 		$this->content .= $this->renderOptions();

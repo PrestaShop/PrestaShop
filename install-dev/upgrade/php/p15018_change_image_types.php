@@ -28,16 +28,16 @@ function p15018_change_image_types()
 {
 	$replace_types = array(
 		'products' => array(
-			'small' => 'small_default',
-			'medium' => 'medium_default',
-			'large' => 'large_default',
-			'thickbox' => 'thickbox_default',
-			'home' => 'home_default'
+			'small' => array('small_default', '45', '45'),
+			'medium' => array('medium_default', '58', '58'),
+			'large' => array('large_default', '264', '264'),
+			'thickbox' => array('thickbox_default', '600', '600'),
+			'home' => array('home_default', '124', '124')
 		),
 		'others' => array(
-			'category' => 'category_default',
-			'large_scene' => 'scene_default',
-			'thumb_scene' => 'm_scene_default'
+			'category' => array('category_default', '500', '500'),
+			'large_scene' => array('scene_default', '520', '189'),
+			'thumb_scene' => array('m_scene_default', '161', '58')
 		)
 	);
 
@@ -47,14 +47,16 @@ function p15018_change_image_types()
 	if ($option)
 		foreach ($replace_types as $type => $type_array)
 			foreach ($type_array as $old_type => $new_type)
-			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'image_type` (
-				SELECT NULL, "'.$new_type.'", width, height, products, categories, manufacturers, suppliers, scenes, stores
-				FROM `'._DB_PREFIX_.'image_type` WHERE name = "'.$old_type.'" LIMIT 1)');
+			if (is_array($new_type) && count($new_type))
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'image_type` (
+					SELECT NULL, "'.$new_type[0].'", "'.$new_type[1].'", "'.$new_type[2].'", products, categories, manufacturers, suppliers, scenes, stores
+					FROM `'._DB_PREFIX_.'image_type` WHERE name = "'.$old_type.'" LIMIT 1)');
 	// But if there is only the default one, we can update de names
 	else
 		foreach ($replace_types as $type => $type_array)
 			foreach ($type_array as $old_type => $new_type)
-			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_type` SET name = "'.$new_type.'" WHERE name = "'.$old_type.'"');
+				if (is_array($new_type) && count($new_type))
+					Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_type` SET name = "'.$new_type[0].'" WHERE name = "'.$old_type.'"');
 
 	// If there is less than 500 images, copy to the new format (if there is more, the merchant will have to click "regenerate thumbnails")
 	$result = Db::getInstance()->executeS('SELECT id_image, id_product FROM `'._DB_PREFIX_.'image`');
@@ -66,19 +68,21 @@ function p15018_change_image_types()
 		{
 			if (file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$row['id_product'].'-'.$row['id_image'].'.jpg'))
 				foreach ($replace_types['products'] as $old_type => $new_type)
-					p15018_copy_or_rename(
-						_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$row['id_product'].'-'.$row['id_image'].'-'.$old_type.'.jpg',
-						_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$row['id_product'].'-'.$row['id_image'].'-'.$new_type.'.jpg',
-						$option
-					);
+					if (is_array($new_type) && count($new_type))
+						p15018_copy_or_rename(
+							_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$row['id_product'].'-'.$row['id_image'].'-'.$old_type.'.jpg',
+							_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$row['id_product'].'-'.$row['id_image'].'-'.$new_type[0].'.jpg',
+							$option
+						);
 			$folder = implode(DIRECTORY_SEPARATOR, str_split((string)$row['id_image'])).DIRECTORY_SEPARATOR;
 			if (file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'.jpg'))
 				foreach ($replace_types['products'] as $old_type => $new_type)
-					p15018_copy_or_rename(
-						_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'-'.$old_type.'.jpg',
-						_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'-'.$new_type.'.jpg',
-						$option
-					);
+					if (is_array($new_type) && count($new_type))
+						p15018_copy_or_rename(
+							_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'-'.$old_type.'.jpg',
+							_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'-'.$new_type[0].'.jpg',
+							$option
+						);
 		}
 		
 		// Then the other entities (if there is less than 500 products, that should not be a problem)
@@ -90,11 +94,11 @@ function p15018_change_image_types()
 					continue;
 				foreach ($replace_types as $type => $type_array)
 					foreach ($type_array as $old_type => $new_type)
-						if (preg_match('/^([0-9]+|[a-z]{2}-default)\-'.$old_type.'\.jpg$/i', $file, $matches))
+						if (preg_match('/^([0-9]+|[a-z]{2}-default)\-'.$old_type.'\.jpg$/i', $file, $matches) && is_array($new_type) && count($new_type))
 						{
 							p15018_copy_or_rename(
 								_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$old_type.'.jpg',
-								_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$new_type.'.jpg',
+								_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$new_type[0].'.jpg',
 								$option
 							);
 						}

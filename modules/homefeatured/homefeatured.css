@@ -38,7 +38,7 @@
 	transform: rotate(45deg);  /* Newer browsers */
 }
 
-#featured-products_block_center .product_desc {height:45px;}
+#featured-products_block_center .product_desc {max-height:45px;}
 #featured-products_block_center .product_desc,
 #featured-products_block_center .product_desc a {
 	color:#666

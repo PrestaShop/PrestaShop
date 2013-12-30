@@ -162,7 +162,7 @@ class FrontControllerCore extends Controller
 
 		/* Theme is missing */
 		if (!is_dir(_PS_THEME_DIR_))
-			die(sprintf(Tools::displayError('Current theme unavailable "%s". Please check your theme directory name and permissions.'), basename(rtrim(_PS_THEME_DIR_, '/\\'))));
+			throw new PrestaShopException((sprintf(Tools::displayError('Current theme unavailable "%s". Please check your theme directory name and permissions.'), basename(rtrim(_PS_THEME_DIR_, '/\\')))));
 
 		if (Configuration::get('PS_GEOLOCATION_ENABLED'))
 			if (($newDefault = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($newDefault))
@@ -995,10 +995,13 @@ class FrontControllerCore extends Controller
 				$customer = new Customer((int)$cart->id_customer);
 				if (Validate::isLoadedObject($customer))
 				{
+					$customer->logged = 1;
+					$this->context->customer = $customer;
 					$this->context->cookie->id_customer = (int)$customer->id;
 					$this->context->cookie->customer_lastname = $customer->lastname;
 					$this->context->cookie->customer_firstname = $customer->firstname;
 					$this->context->cookie->logged = 1;
+					$this->context->cookie->check_cgv = 1;
 					$this->context->cookie->is_guest = $customer->isGuest();
 					$this->context->cookie->passwd = $customer->passwd;
 					$this->context->cookie->email = $customer->email;

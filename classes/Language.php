@@ -478,7 +478,7 @@ class LanguageCore extends ObjectModel
 			// Database translations deletion
 			$result = Db::getInstance()->executeS('SHOW TABLES FROM `'._DB_NAME_.'`');
 			foreach ($result as $row)
-				if (isset($row['Tables_in_'._DB_NAME_]) && !empty($row['Tables_in_'._DB_NAME_]) && preg_match('/_lang/', $row['Tables_in_'._DB_NAME_]))
+				if (isset($row['Tables_in_'._DB_NAME_]) && !empty($row['Tables_in_'._DB_NAME_]) && preg_match('/'.preg_quote(_DB_PREFIX_).'_lang/', $row['Tables_in_'._DB_NAME_]))
 					if (!Db::getInstance()->execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)$this->id))
 						return false;
 	
@@ -806,7 +806,7 @@ class LanguageCore extends ObjectModel
 		return self::$countActiveLanguages[$id_shop];
 	}
 
-	public static function downloadAndInstallLanguagePack($iso, $version = null, $params = null)
+	public static function downloadAndInstallLanguagePack($iso, $version = null, $params = null, $install = true)
 	{
 		require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 
@@ -835,7 +835,7 @@ class LanguageCore extends ObjectModel
 				elseif (!is_writable($file))
 					$errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$file.')';
 			}
-		if (file_exists($file))
+		if ($install && file_exists($file))
 		{
 			$gz = new Archive_Tar($file, true);
 			$files_list = $gz->listContent();

@@ -274,7 +274,29 @@ abstract class ModuleCore
 		// Adding Restrictions for client groups
 		Group::addRestrictionsForModule($this->id, Shop::getShops(true, null, true));
 		Hook::exec('actionModuleInstallAfter', array('object' => $this));
+		$this->udpdateModuleTranlsations();
 		return true;
+	}
+
+	public function udpdateModuleTranlsations()
+	{
+		$languages = Language::getLanguages(false);
+		foreach($languages as $lang)
+		{
+			Language::downloadAndInstallLanguagePack($lang['iso_code'], null, null, false);
+			$filegz = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
+			$gz = new Archive_Tar($filegz, true);
+			$files_list = $gz->listContent();				
+			foreach($files_list as $i => $file)
+				if (!preg_match('/^modules\/'.$this->name.'\/.*/', $file['filename']))
+					unset($files_list[$i]);
+			foreach($files_list as $file)
+				if (isset($file['filename']) && is_string($file['filename']))
+					$files_listing[] = $file['filename'];
+			if (is_array($files_listing) && !$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', ''))
+				continue;
+			@unlink($filegz);
+		}
 	}
 
 	/**
@@ -993,9 +1015,10 @@ abstract class ModuleCore
 		
 		$modules_installed = array();
 		$result = Db::getInstance()->executeS('
-		SELECT name, version, interest
-		FROM `'._DB_PREFIX_.'module`
-		LEFT JOIN `'._DB_PREFIX_.'module_preference` ON (`module` = `name` AND `id_employee` = '.(int)$id_employee.')');
+		SELECT m.name, m.version, mp.interest
+		FROM `'._DB_PREFIX_.'module` m
+		'.Shop::addSqlAssociation('module', 'm').'
+		LEFT JOIN `'._DB_PREFIX_.'module_preference` mp ON (mp.`module` = m.`name` AND mp.`id_employee` = '.(int)$id_employee.')');
 		foreach ($result as $row)
 			$modules_installed[$row['name']] = $row;
 

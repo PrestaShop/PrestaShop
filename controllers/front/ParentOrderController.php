@@ -111,7 +111,9 @@ class ParentOrderControllerCore extends FrontController
 							else
 							{
 								$this->context->cart->addCartRule($cartRule->id);
-								Tools::redirect('index.php?controller=order-opc');
+								if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
+									Tools::redirect('index.php?controller=order-opc&addingCartRule=1');
+								Tools::redirect('index.php?controller=order&addingCartRule=1');
 							}
 						}
 						else
@@ -475,7 +477,6 @@ class ParentOrderControllerCore extends FrontController
 	{	
 		$address = new Address($this->context->cart->id_address_delivery);
 		$id_zone = Address::getZoneById($address->id);
-		$bad_delivery = false;
 		$carriers = $this->context->cart->simulateCarriersOutput();
 		$checked = $this->context->cart->simulateCarrierSelectedOutput();
 		$delivery_option_list = $this->context->cart->getDeliveryOptionList();

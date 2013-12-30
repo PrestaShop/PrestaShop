@@ -88,7 +88,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 						{
 							if (empty($except))
 								unset($exceptions[$key]);
-							else if (!Validate::isFileName($except))
+							else if (!empty($except) && !Validate::isFileName($except))
 								$this->errors[] = Tools::displayError('No valid value for field exceptions has been defined.');
 						}
 						if (!$this->errors && !$module->registerExceptions($id_hook, $exceptions, Shop::getContextListShopID()))
@@ -128,7 +128,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 							// Check files name
 							foreach ($exception as $except)
-								if (!Validate::isFileName($except))
+								if (!empty($except) && !Validate::isFileName($except))
 									$this->errors[] = Tools::displayError('No valid value for field exceptions has been defined.');
 
 							$exceptions[$id] = $exception;
@@ -147,7 +147,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 						// Check files name
 						foreach ($exceptions as $except)
-							if (!Validate::isFileName($except))
+							if (!empty($except) && !Validate::isFileName($except))
 								$this->errors[] = Tools::displayError('No valid value for field exceptions has been defined.');
 
 						// Add files exceptions
@@ -220,6 +220,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 	public function initContent()
 	{
+		$this->initTabModuleList();
 		if (array_key_exists('addToHook', $_GET) || array_key_exists('editGraft', $_GET) || (Tools::isSubmit('submitAddToHook') && $this->errors))
 		{
 			$this->display = 'edit';

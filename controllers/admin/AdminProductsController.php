@@ -1787,7 +1787,11 @@ class AdminProductsControllerCore extends AdminController
 		if (($error = $this->object->validateFieldsLang(false, true)) !== true)
 			$this->errors[] = $error;
 
-		return !count($this->errors) ? parent::processStatus() : false;
+		if (count($this->errors))
+			return false;
+		$res = parent::processStatus();
+		Hook::exec('actionProductUpdate', array('product' => $this->object));
+		return $res;
 	}
 	
 	public function processUpdate()

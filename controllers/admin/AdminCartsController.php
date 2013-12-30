@@ -36,6 +36,7 @@ class AdminCartsControllerCore extends AdminController
 		$this->addRowAction('view');
 		$this->addRowAction('delete');
 		$this->allow_export = true;
+		$this->_orderWay = 'DESC';
 
 		$this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier, o.id_order, IF(co.id_guest, 1, 0) id_guest';
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'customer c ON (c.id_customer = a.id_customer)

@@ -563,6 +563,7 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function initContent()
 	{
+		$this->initTabModuleList();
 		$php_dot_net_supported_langs = array('en', 'zh', 'fr', 'de', 'ja', 'pl', 'ro', 'ru', 'fa', 'es', 'tr');
 		$php_lang = in_array($this->context->language->iso_code, $php_dot_net_supported_langs) ?
 			$this->context->language->iso_code : 'en';

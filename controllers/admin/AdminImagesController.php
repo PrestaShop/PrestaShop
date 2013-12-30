@@ -441,7 +441,9 @@ class AdminImagesControllerCore extends AdminController
 
 		foreach ($toDel as $d)
 			foreach ($type as $imageType)
-				if (preg_match('/^[0-9]+\-'.($product ? '[0-9]+\-' : '').$imageType['name'].'\.jpg$/', $d) || preg_match('/^([[:lower:]]{2})\-default\-'.$imageType['name'].'\.jpg$/', $d))
+				if (preg_match('/^[0-9]+\-'.($product ? '[0-9]+\-' : '').$imageType['name'].'\.jpg$/', $d) 
+					|| (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))					
+					|| preg_match('/^([[:lower:]]{2})\-default\-'.$imageType['name'].'\.jpg$/', $d))
 					if (file_exists($dir.$d))		
 						unlink($dir.$d);
 
@@ -458,10 +460,10 @@ class AdminImagesControllerCore extends AdminController
 					$toDel = scandir($dir.$imageObj->getImgFolder());
 					foreach ($toDel as $d)
 						foreach ($type as $imageType)
-							if (preg_match('/^[0-9]+\-'.$imageType['name'].'\.jpg$/', $d))
+							if (preg_match('/^[0-9]+\-'.$imageType['name'].'\.jpg$/', $d) || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d)))
 								if (file_exists($dir.$imageObj->getImgFolder().$d))
 									unlink($dir.$imageObj->getImgFolder().$d);
-	}
+				}
 			}
 		}
 	}
@@ -502,7 +504,7 @@ class AdminImagesControllerCore extends AdminController
 							elseif (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height']))
 								$errors = true;
 						}
-						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
+						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the timeout, just enough time to process the end of the page on a slow server
 							return 'timeout';
 					}
 		}
@@ -519,13 +521,13 @@ class AdminImagesControllerCore extends AdminController
 							if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
 							{
 								$errors = true;
-								$this->errors[] = Tools::displayError(sprintf('Original image is corrupt (%s) or bad permission on folder', $existing_img));
+								$this->errors[] = Tools::displayError(sprintf('Original image is corrupt (%s) for product ID %2$d or bad permission on folder', $existing_img, (int)$imageObj->id_product));
 							}
 				}
 				else
 				{
 					$errors = true;
-					$this->errors[] = Tools::displayError(sprintf('Original image is missing or empty (%s)', $existing_img));
+					$this->errors[] = Tools::displayError(sprintf('Original image is missing or empty (%1$s) for product ID %2$d', $existing_img, (int)$imageObj->id_product));
 				}
 			}
 		}

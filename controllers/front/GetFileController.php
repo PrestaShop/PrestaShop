@@ -270,7 +270,7 @@ class GetFileControllerCore extends FrontController
 				$mimeType = 'application/octet-stream';
 		}
 
-		if (ob_get_level()) 
+		if (ob_get_level() && ob_get_length() > 0)
 			ob_end_clean();
 
 		/* Set headers for download */
@@ -278,6 +278,7 @@ class GetFileControllerCore extends FrontController
 		header('Content-Type: '.$mimeType);
 		header('Content-Length: '.sprintf('%u', filesize($file)));
 		header('Content-Disposition: attachment; filename="'.$filename.'"');
+		@set_time_limit(0);
 		$fp = fopen($file, 'rb');
 		while (!feof($fp))
 			echo fgets($fp, 16384);
@@ -303,7 +304,7 @@ class GetFileControllerCore extends FrontController
 		?>
 		<script type="text/javascript">
 		//<![CDATA[
-		alert("<?php echo html_entity_decode($translations[$msg], ENT_QUOTES, 'utf-8'); ?>");
+		alert("<?php echo isset($translations[$msg]) ? html_entity_decode($translations[$msg], ENT_QUOTES, 'utf-8') : html_entity_decode($msg, ENT_QUOTES, 'utf-8'); ?>");
 		window.location.href = '<?php echo __PS_BASE_URI__ ?>';
 		//]]>
 		</script>
