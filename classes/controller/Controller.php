@@ -380,13 +380,13 @@ abstract class ControllerCore
 			return;
 	    switch ($errno)
 		{
-		    case E_USER_ERROR:
+		    case E_USER_ERROR || E_ERROR:
 				$type = 'Fatal error';
 				break;
-		    case E_USER_WARNING:
+		    case E_USER_WARNING || E_WARNING:
 				$type = 'Warning';
 		        break;
-		    case E_USER_NOTICE:
+		    case E_USER_NOTICE || E_NOTICE:
 				$type = 'Notice';
 		        break;
 		    default:
