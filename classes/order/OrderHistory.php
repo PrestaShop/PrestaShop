@@ -97,13 +97,10 @@ class OrderHistoryCore extends ObjectModel
 
 		// executes hook
 		if (in_array($new_os->id, array(Configuration::get('PS_OS_PAYMENT'), Configuration::get('PS_OS_WS_PAYMENT'))))
-			Hook::exec('actionPaymentConfirmation', array('id_order' => (int)$order->id));
+			Hook::exec('actionPaymentConfirmation', array('id_order' => (int)$order->id), null, false, true, false, $order->id_shop);
 
 		// executes hook
-		Hook::exec('actionOrderStatusUpdate', array(
-			'newOrderStatus' => $new_os,
-			'id_order' => (int)$order->id
-		));
+		Hook::exec('actionOrderStatusUpdate', array('newOrderStatus' => $new_os, 'id_order' => (int)$order->id), null, false, true, false, $order->id_shop);
 
 		if (Validate::isLoadedObject($order) && ($new_os instanceof OrderState))
 		{
@@ -331,10 +328,7 @@ class OrderHistoryCore extends ObjectModel
 			$order->setDelivery();
 
 		// executes hook
-		Hook::exec('actionOrderStatusPostUpdate', array(
-			'newOrderStatus' => $new_os,
-			'id_order' => (int)$order->id,
-		));
+		Hook::exec('actionOrderStatusPostUpdate', array('newOrderStatus' => $new_os,'id_order' => (int)$order->id,), null, false, true, false, $order->id_shop);
 
 		ShopUrl::resetMainDomainCache();
 	}
@@ -444,7 +438,7 @@ class OrderHistoryCore extends ObjectModel
 		$order->current_state = $this->id_order_state;
 		$order->update();
 
-		Hook::exec('actionOrderHistoryAddAfter', array('order_history' => $this));
+		Hook::exec('actionOrderHistoryAddAfter', array('order_history' => $this), null, false, true, false, $order->id_shop);
 
 		return true;
 	}

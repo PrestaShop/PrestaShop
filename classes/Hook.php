@@ -395,7 +395,7 @@ class HookCore extends ObjectModel
 	 * @param int $id_module Execute hook for this module only
 	 * @return string modules output
 	 */
-	public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true, $use_push = false)
+	public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true, $use_push = false, $id_shop = null)
 	{
 		static $disable_non_native_modules = null;
 		if ($disable_non_native_modules === null)
@@ -432,6 +432,22 @@ class HookCore extends ObjectModel
 
 		if ($disable_non_native_modules && !isset(Hook::$native_module))
 			Hook::$native_module = Module::getNativeModuleList();
+
+		$different_shop = false;
+		if ($id_shop !== null && Validate::isUnsignedId($id_shop) && $id_shop != $context->shop->getContextShopID())
+		{
+			$old_context_shop_id = $context->shop->getContextShopID();
+			$old_context = $context->shop->getContext();
+			$old_shop = clone $context->shop;
+			mail('remi.gaillard@prestashop.com', 'id_shop', $id_shop);
+			$shop = new Shop((int)$id_shop);
+			if (Validate::isLoadedObject($shop))
+			{
+				$context->shop = $shop;
+				$context->shop->setContext(Shop::CONTEXT_SHOP, $shop->id);
+				$different_shop = true;
+			}
+		}
 
 		foreach ($module_list as $array)
 		{
@@ -470,6 +486,7 @@ class HookCore extends ObjectModel
 			// Check which / if method is callable
 			$hook_callable = is_callable(array($moduleInstance, 'hook'.$hook_name));
 			$hook_retro_callable = is_callable(array($moduleInstance, 'hook'.$retro_hook_name));
+
 			if (($hook_callable || $hook_retro_callable) && Module::preCall($moduleInstance->name))
 			{
 				$hook_args['altern'] = ++$altern;
@@ -494,6 +511,13 @@ class HookCore extends ObjectModel
 					$output .= $display;
 			}
 		}
+
+		if ($different_shop)
+		{
+			$context->shop = $old_shop;
+			$context->shop->setContext($old_context, $shop->id);
+		}
+
 		if ($array_return)
 			return $output;
 		else
