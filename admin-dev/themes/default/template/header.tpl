@@ -353,7 +353,7 @@
 			<div class="panel multishop_toolbar clearfix">
 				<div class="col-lg-12 form-horizontal">
 					<label class="control-label col-lg-3"><i class="icon-sitemap"></i> {l s='Multistore configuration for'}</label>
-					<div class="col-lg-9">{$shop_list}</div>
+					<div class="col-lg-4">{$shop_list}</div>
 				</div>
 			</div>
 {/if}
