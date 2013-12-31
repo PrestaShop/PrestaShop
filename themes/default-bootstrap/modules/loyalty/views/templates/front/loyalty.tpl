@@ -183,17 +183,17 @@
 {if $minimalLoyalty > 0}<p>{l s='The minimum order amount in order to use these vouchers is:' mod='loyalty'} {convertPrice price=$minimalLoyalty}</p>{/if}
 
 <script type="text/javascript">
-{literal}
-$(document).ready(function()
-{
-	$('.tips').popover({
-		placement : 'top',
-		title : false,
-		html: 'true'
-	});
+	{literal}
+		$(document).ready(function()
+		{
+			$('.tips').popover({
+				placement : 'top',
+				title : false,
+				html: 'true'
+			});
 
-});
-{/literal}
+		});
+	{/literal}
 </script>
 {else}
 <p class="alert alert-warning">{l s='No vouchers yet.' mod='loyalty'}</p>

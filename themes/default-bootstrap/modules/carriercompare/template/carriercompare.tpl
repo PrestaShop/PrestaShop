@@ -85,11 +85,16 @@ PS_SE_HandleEvent();
 				</tbody>
 			</table>
 		</div>
-		<p class="alert alert-warning text-center" id="noCarrier" style="display: none;">{l s='No carrier has been made available for this selection.' mod='carriercompare'}</p>
+		<p class="alert alert-warning text-center" id="noCarrier" style="display: none;">
+			{l s='No carrier has been made available for this selection.' mod='carriercompare'}
+		</p>
 		<p class="SE_SubmitRefreshCard">
-            <button class="btn btn-default button button-small" id="carriercompare_submit" type="submit" name="carriercompare_submit"><span>{l s='Update cart' mod='carriercompare'}<i class="icon-chevron-right right"></i></span></button>
-            <button id="update_carriers_list" type="button" class="btn btn-default button button-small"><span>{l s='Update carrier list' mod='carriercompare'}<i class="icon-chevron-right right"></i></span></button>
-			<!--input id="update_carriers_list" type="button" class="exclusive_large" value="{l s='Update carrier list' mod='carriercompare'}" /-->
+            <button class="btn btn-default button button-small" id="carriercompare_submit" type="submit" name="carriercompare_submit">
+            	<span>{l s='Update cart' mod='carriercompare'}<i class="icon-chevron-right right"></i></span>
+            </button>
+            <button id="update_carriers_list" type="button" class="btn btn-default button button-small">
+            	<span>{l s='Update carrier list' mod='carriercompare'}<i class="icon-chevron-right right"></i></span>
+            </button>
 		</p>
 	</fieldset>
 </form>
