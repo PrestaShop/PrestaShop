@@ -24,7 +24,7 @@ function displayHelpButton(label, iso_user, country_iso_code, _PS_VERSION_){
         success: function(msg) {
             if(msg.content != 'none' && msg.content != '')
             {
-                $('ul.cc_button').append(msg.content);
+                $('.btn-toolbar > ul').append(msg.content);
                 $('.help-context-'+help_class_name);
             }
             else

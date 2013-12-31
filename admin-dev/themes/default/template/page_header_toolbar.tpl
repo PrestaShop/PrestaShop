@@ -38,7 +38,7 @@
 	<div class="page-bar toolbarBox">
 		<div class="btn-toolbar">
 			{block name=toolbarBox}
-			<ul class="cc_button nav nav-pills pull-right">
+			<ul class="nav nav-pills pull-right">
 				{foreach from=$toolbar_btn item=btn key=k}
 				{if $k != 'back' && $k != 'modules-list'}
 				<li>

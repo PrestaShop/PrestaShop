@@ -30,7 +30,7 @@
 	</h2>
 	<div class="page-bar toolbarBox">
 		<div class="btn-toolbar">
-			<ul class="cc_button nav nav-pills pull-right">
+			<ul class="nav nav-pills pull-right">
 				{if $add_permission eq '1'}
 				<li>
 					<a id="desc-module-new" class="toolbar_btn" href="#top_container" onclick="$('#module_install').slideToggle();" title="{l s='Add a new module'}">
