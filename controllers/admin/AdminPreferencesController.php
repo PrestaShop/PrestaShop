@@ -128,7 +128,7 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_DISPLAY_SUPPLIERS' => array(
 					'title' => $this->l('Display suppliers and manufacturers'),
-					'desc' => $this->l('Display the suppliers and manufacturers lists even if corresponding blocks are disabled.'),
+					'desc' => $this->l('Enable suppliers and manufacturers pages on your Front Office even when their respective modules are disabled.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool'
