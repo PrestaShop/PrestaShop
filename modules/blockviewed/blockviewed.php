@@ -49,12 +49,16 @@ class BlockViewed extends Module
 
 	public function install()
 	{
-		if (!parent::install()
-			|| !$this->registerHook('leftColumn')
-			|| !$this->registerHook('header')
-			|| !Configuration::updateValue('PRODUCTS_VIEWED_NBR', 2))
-			return false;
-		return true;
+		$success = (parent::install() && $this->registerHook('header') && Configuration::updateValue('PRODUCTS_VIEWED_NBR', 2));
+
+		if ($success)
+		{
+			if (Context::getContext()->theme->default_left_column)
+				$success &= $this->registerHook('leftColumn');
+			elseif (Context::getContext()->theme->default_right_column)
+				$success &= $this->registerHook('rightColumn');
+		}
+		return $success;
 	}
 
 	public function getContent()

@@ -50,31 +50,36 @@ class BlockLink extends Module
 	
 	public function install()
 	{
-		if (!parent::install() ||
-			!$this->registerHook('leftColumn') || !$this->registerHook('header') ||
-			!Db::getInstance()->execute('
-			CREATE TABLE '._DB_PREFIX_.'blocklink (
-			`id_blocklink` int(2) NOT NULL AUTO_INCREMENT, 
-			`url` varchar(255) NOT NULL,
-			`new_window` TINYINT(1) NOT NULL,
-			PRIMARY KEY(`id_blocklink`))
-			ENGINE='._MYSQL_ENGINE_.' default CHARSET=utf8') ||
-			!Db::getInstance()->execute('
-			CREATE TABLE '._DB_PREFIX_.'blocklink_shop (
-			`id_blocklink` int(2) NOT NULL AUTO_INCREMENT, 
-			`id_shop` int(2) NOT NULL,
-			PRIMARY KEY(`id_blocklink`, `id_shop`))
-			ENGINE='._MYSQL_ENGINE_.' default CHARSET=utf8') ||
-			!Db::getInstance()->execute('
-			CREATE TABLE '._DB_PREFIX_.'blocklink_lang (
-			`id_blocklink` int(2) NOT NULL,
-			`id_lang` int(2) NOT NULL,
-			`text` varchar(64) NOT NULL,
-			PRIMARY KEY(`id_blocklink`, `id_lang`))
-			ENGINE='._MYSQL_ENGINE_.' default CHARSET=utf8') ||
-			!Configuration::updateValue('PS_BLOCKLINK_TITLE', array('1' => 'Block link', '2' => 'Bloc lien')))
+		if (!parent::install() || !$this->registerHook('header'))
 			return false;
-		return true;
+		$success = Configuration::updateValue('PS_BLOCKLINK_TITLE', array('1' => 'Block link', '2' => 'Bloc lien'));
+		$success &= Db::getInstance()->execute('
+		CREATE TABLE '._DB_PREFIX_.'blocklink (
+		`id_blocklink` int(10) NOT NULL AUTO_INCREMENT, 
+		`url` varchar(254) NOT NULL,
+		`new_window` TINYINT(1) NOT NULL,
+		PRIMARY KEY(`id_blocklink`))
+		ENGINE='._MYSQL_ENGINE_.' default CHARSET=utf8');
+		$success &= Db::getInstance()->execute('
+		CREATE TABLE '._DB_PREFIX_.'blocklink_shop (
+		`id_blocklink` int(10) NOT NULL AUTO_INCREMENT, 
+		`id_shop` int(10) NOT NULL,
+		PRIMARY KEY(`id_blocklink`, `id_shop`))
+		ENGINE='._MYSQL_ENGINE_.' default CHARSET=utf8');
+		$success &= Db::getInstance()->execute('
+		CREATE TABLE '._DB_PREFIX_.'blocklink_lang (
+		`id_blocklink` int(10) NOT NULL,
+		`id_lang` int(10) NOT NULL,
+		`text` varchar(62) NOT NULL,
+		PRIMARY KEY(`id_blocklink`, `id_lang`))
+		ENGINE='._MYSQL_ENGINE_.' default CHARSET=utf8');
+
+		if (Context::getContext()->theme->default_left_column)
+			$success &= $this->registerHook('leftColumn');
+		elseif (Context::getContext()->theme->default_right_column)
+			$success &= $this->registerHook('rightColumn');
+
+		return $success;
 	}
 	
 	public function uninstall()

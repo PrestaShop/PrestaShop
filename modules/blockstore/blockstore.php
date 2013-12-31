@@ -47,7 +47,17 @@ class BlockStore extends Module
 	public function install()
 	{
 		Configuration::updateValue('BLOCKSTORE_IMG', 'store.jpg');
-		return parent::install() && $this->registerHook('rightColumn') && $this->registerHook('header');
+		$success = (parent::install() && $this->registerHook('header'));
+
+		if ($success)
+		{
+			if (Context::getContext()->theme->default_right_column)
+				$success &= $this->registerHook('rightColumn');
+			elseif (Context::getContext()->theme->default_left_column)
+				$success &= $this->registerHook('leftColumn');
+		}
+		return $success;
+		
 	}
 
 	public function uninstall()

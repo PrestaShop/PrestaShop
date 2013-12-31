@@ -54,7 +54,7 @@ class BlockLayered extends Module
 	
 	public function install()
 	{
-		if (parent::install() && $this->registerHook('leftColumn') && $this->registerHook('header') && $this->registerHook('footer')
+		if (parent::install() && $this->registerHook('header') && $this->registerHook('footer')
 		&& $this->registerHook('categoryAddition') && $this->registerHook('categoryUpdate') && $this->registerHook('attributeGroupForm')
 		&& $this->registerHook('afterSaveAttributeGroup') && $this->registerHook('afterDeleteAttributeGroup') && $this->registerHook('featureForm')
 		&& $this->registerHook('afterDeleteFeature') && $this->registerHook('afterSaveFeature') && $this->registerHook('categoryDeletion')
@@ -64,6 +64,13 @@ class BlockLayered extends Module
 		&& $this->registerHook('postProcessAttribute') && $this->registerHook('afterDeleteAttribute') && $this->registerHook('afterSaveAttribute')
 		&& $this->registerHook('displayBackOfficeHeader'))
 		{
+			if (Context::getContext()->theme->default_left_column)
+				$this->registerHook('leftColumn');
+			elseif (Context::getContext()->theme->default_right_column)
+				$this->registerHook('rightColumn');
+			else
+				return false;
+
 			Configuration::updateValue('PS_LAYERED_HIDE_0_VALUES', 1);
 			Configuration::updateValue('PS_LAYERED_SHOW_QTIES', 1);
 			Configuration::updateValue('PS_LAYERED_FULL_TREE', 1);

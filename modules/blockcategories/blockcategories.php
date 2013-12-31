@@ -57,7 +57,6 @@ class BlockCategories extends Module
 
 		if (!$tab->add() ||
 			!parent::install() ||
-			!$this->registerHook('leftColumn') ||
 			!$this->registerHook('footer') ||
 			!$this->registerHook('header') ||
 			// Temporary hooks. Do NOT hook any module on it. Some CRUD hook will replace them as soon as possible.
@@ -70,7 +69,13 @@ class BlockCategories extends Module
 			!Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', 4) ||
 			!Configuration::updateValue('BLOCK_CATEG_DHTML', 1))
 			return false;
-		return true;
+
+		if (Context::getContext()->theme->default_left_column)
+			return $this->registerHook('leftColumn');
+		elseif (Context::getContext()->theme->default_right_column)
+			return $this->registerHook('rightColumn');
+		else
+			return false;
 	}
 
 	public function uninstall()

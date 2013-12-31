@@ -12,8 +12,8 @@
         <theme id="default">
             <name>default-bootstrap</name>
             <directory>default-bootstrap</directory>
-            <responsive>0</responsive>
-            <default_left_column>0</default_left_column>
+            <responsive>1</responsive>
+            <default_left_column>1</default_left_column>
             <default_right_column>0</default_right_column>
             <product_per_page>12</product_per_page>
         </theme>

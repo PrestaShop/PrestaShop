@@ -47,13 +47,16 @@ class BlockPaymentLogo extends Module
 	public function install()
 	{
 		Configuration::updateValue('PS_PAYMENT_LOGO_CMS_ID', 0);
-		if (!parent::install())
-			return false;
-		if (!$this->registerHook('leftColumn'))
-			return false;
-		if (!$this->registerHook('header'))
-			return false;
-		return true;
+		$success = (parent::install() && $this->registerHook('header'));
+
+		if ($success)
+		{
+			if (Context::getContext()->theme->default_left_column)
+				$success &= $this->registerHook('leftColumn');
+			elseif (Context::getContext()->theme->default_right_column)
+				$success &= $this->registerHook('rightColumn');
+		}
+		return $success;
 	}
 
 	public function uninstall()
