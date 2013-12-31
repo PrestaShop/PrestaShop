@@ -85,7 +85,14 @@ class BlockAdvertising extends Module
 			if (in_array($file, array('advertising.jpg', 'advertising.gif', 'advertising.png')))
 				Configuration::updateGlobalValue('BLOCKADVERT_IMG_EXT', substr($file, strrpos($file, '.') + 1));
 
-		return (parent::install() && $this->registerHook('leftColumn'));
+		if (parent::install())
+		{
+			if (Context::getContext()->theme->default_left_column)
+				return $this->registerHook('leftColumn');
+			elseif (Context::getContext()->theme->default_right_column)
+				return $this->registerHook('rightColumn');
+		}
+		return false;
 	}
 	
 	public function uninstall()

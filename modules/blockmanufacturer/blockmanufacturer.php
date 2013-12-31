@@ -49,12 +49,21 @@ class BlockManufacturer extends Module
 		Configuration::updateValue('MANUFACTURER_DISPLAY_TEXT', true);
 		Configuration::updateValue('MANUFACTURER_DISPLAY_TEXT_NB', 5);
 		Configuration::updateValue('MANUFACTURER_DISPLAY_FORM', true);
-		return parent::install() &&
-			$this->registerHook('leftColumn') && 
+		$success = (parent::install() &&
 			$this->registerHook('header') &&
 			$this->registerHook('actionObjectManufacturerDeleteAfter') &&
 			$this->registerHook('actionObjectManufacturerAddAfter') &&
-			$this->registerHook('actionObjectManufacturerUpdateAfter');
+			$this->registerHook('actionObjectManufacturerUpdateAfter')
+		);
+
+		if ($success)
+		{
+			if (Context::getContext()->theme->default_left_column)
+				$success &= $this->registerHook('leftColumn');
+			elseif (Context::getContext()->theme->default_right_column)
+				$success &= $this->registerHook('rightColumn');
+		}
+		return $success;
     }
 
 	public function hookLeftColumn($params)

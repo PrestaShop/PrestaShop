@@ -53,13 +53,22 @@ class BlockSpecials extends Module
 			Configuration::updateValue('BLOCKSPECIALS_NB_CACHES', 20);
 		$this->_clearCache('blockspecials.tpl');
 
-		return (parent::install()
-			&& $this->registerHook('rightColumn')
+		$success = (
+			parent::install()
 			&& $this->registerHook('header')
 			&& $this->registerHook('addproduct')
 			&& $this->registerHook('updateproduct')
 			&& $this->registerHook('deleteproduct')
 		);
+
+		if ($success)
+		{
+			if (Context::getContext()->theme->default_right_column)
+				$success &= $this->registerHook('rightColumn');
+			elseif (Context::getContext()->theme->default_left_column)
+				$success &= $this->registerHook('leftColumn');
+		}
+		return $success;
 	}
 	
 	public function uninstall()

@@ -48,12 +48,16 @@ class BlockTags extends Module
 
 	function install()
 	{
-		if (parent::install() == false
-				|| $this->registerHook('leftColumn') == false
-				|| $this->registerHook('header') == false
-				|| Configuration::updateValue('BLOCKTAGS_NBR', 10) == false)
-			return false;
-		return true;
+		$success = (parent::install() && $this->registerHook('header') && Configuration::updateValue('BLOCKTAGS_NBR', 10));
+
+		if ($success)
+		{
+			if (Context::getContext()->theme->default_left_column)
+				$success &= $this->registerHook('leftColumn');
+			elseif (Context::getContext()->theme->default_right_column)
+				$success &= $this->registerHook('rightColumn');
+		}
+		return $success;
 	}
 
 	public function getContent()

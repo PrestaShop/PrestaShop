@@ -128,7 +128,6 @@ class ThemeCore extends ObjectModel
 	 */
 	public function updateMetas($metas, $full_update = false)
 	{
-
 		if ($full_update)
 			Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme=' . $this->id);
 
@@ -146,8 +145,6 @@ class ThemeCore extends ObjectModel
 					'left_column'  => (int)$meta['left'],
 					'right_column' => (int)$meta['right']
 				);
-
-
 			}
 			Db::getInstance()->insert('theme_meta', $values);
 		}
@@ -160,7 +157,7 @@ class ThemeCore extends ObjectModel
 			FROM '._DB_PREFIX_.'theme t
 			LEFT JOIN '._DB_PREFIX_.'theme_meta tm ON (t.id_theme = tm.id_theme)
 			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta)
-			WHERE t.id_theme='.(int)$this->id.' AND m.page=\''.pSQL($page).'\'
+			WHERE t.id_theme = '.(int)$this->id.' AND m.page = "'.pSQL($page).'"
 		');
 	}
 	
@@ -171,7 +168,7 @@ class ThemeCore extends ObjectModel
 			FROM '._DB_PREFIX_.'theme t
 			LEFT JOIN '._DB_PREFIX_.'theme_meta tm ON (t.id_theme = tm.id_theme)
 			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta)
-			WHERE t.id_theme='.(int)$this->id.' AND m.page=\''.pSQL($page).'\'
+			WHERE t.id_theme = '.(int)$this->id.' AND m.page = "'.pSQL($page).'"
 		');
 	}
 
@@ -180,11 +177,10 @@ class ThemeCore extends ObjectModel
 	 */
 	public function getMetas()
 	{
-		if ($this->id > 0)
-		{
-			return Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'theme_meta WHERE id_theme='.$this->id);
-		}
-		return false;
+		if (!Validate::isUnsignedId($this->id) || $this->id == 0)
+			return false;
+
+		return Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'theme_meta WHERE id_theme = '.(int)$this->id);
 	}
 
 	/**
@@ -192,11 +188,10 @@ class ThemeCore extends ObjectModel
 	 */
 	public function removeMetas()
 	{
-		if ($this->id > 0)
-		{
-			return Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme=' . $this->id);
-		}
-		return false;
+		if (!Validate::isUnsignedId($this->id) || $this->id == 0)
+			return false;
+
+		return Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme = '.(int)$this->id);
 	}
 
 	public function toggleResponsive()
