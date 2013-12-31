@@ -883,30 +883,32 @@ class LanguageCore extends ObjectModel
 		return Cache::retrieve($key);
 	}
 
-	public static function updateModuleTranslations($module_name)
+	public static function updateModulesTranslations(Array $modules_list)
 	{
 		require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 
 		$languages = Language::getLanguages(false);
 		foreach($languages as $lang)
 		{
-			$iso = $lang['iso_code'];
-			$filegz = _PS_TRANSLATIONS_DIR_.$iso.'.gzip';
+			foreach ($modules_list as $module_name)
+			{
+				$iso = $lang['iso_code'];
+				$filegz = _PS_TRANSLATIONS_DIR_.$iso.'.gzip';
 
-			clearstatcache();
-			if (@filemtime($filegz) < (time() - (24 * 3600)))
-				Language::downloadAndInstallLanguagePack($iso, null, null, false);
+				clearstatcache();
+				if (@filemtime($filegz) < (time() - (24 * 3600)))
+					Language::downloadAndInstallLanguagePack($iso, null, null, false);
 
-			$gz = new Archive_Tar($filegz, true);
-			$files_list = Language::getLanguagePackListContent($iso, $gz);
-			foreach ($files_list as $i => $file)
-				if (!preg_match('/^modules\/'.$module_name.'\/.*/', $file['filename']))
-					unset($files_list[$i]);
-			$files_listing = array();
-			foreach($files_list as $file)
-				if (isset($file['filename']) && is_string($file['filename']))
-					$files_listing[] = $file['filename'];
-			
+				$gz = new Archive_Tar($filegz, true);
+				$files_list = Language::getLanguagePackListContent($iso, $gz);
+				foreach ($files_list as $i => $file)
+					if (!preg_match('/^modules\/'.$module_name.'\/.*/', $file['filename']))
+						unset($files_list[$i]);
+				$files_listing = array();
+				foreach($files_list as $file)
+					if (isset($file['filename']) && is_string($file['filename']))
+						$files_listing[] = $file['filename'];
+			}
 			$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
 		}
 	}
