@@ -74,9 +74,10 @@ class BlockLink extends Module
 		PRIMARY KEY(`id_blocklink`, `id_lang`))
 		ENGINE='._MYSQL_ENGINE_.' default CHARSET=utf8');
 
-		if (Context::getContext()->theme->default_left_column)
+		$theme = new Theme(Context::getContext()->shop->id_theme);
+		if ($theme->default_left_column)
 			$success &= $this->registerHook('leftColumn');
-		elseif (Context::getContext()->theme->default_right_column)
+		elseif ($theme->default_right_column)
 			$success &= $this->registerHook('rightColumn');
 
 		return $success;

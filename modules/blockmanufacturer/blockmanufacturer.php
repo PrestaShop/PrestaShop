@@ -58,9 +58,10 @@ class BlockManufacturer extends Module
 
 		if ($success)
 		{
-			if (Context::getContext()->theme->default_left_column)
+			$theme = new Theme(Context::getContext()->shop->id_theme);
+			if ($theme->default_left_column)
 				$success &= $this->registerHook('leftColumn');
-			elseif (Context::getContext()->theme->default_right_column)
+			elseif ($theme->default_right_column)
 				$success &= $this->registerHook('rightColumn');
 		}
 		return $success;
