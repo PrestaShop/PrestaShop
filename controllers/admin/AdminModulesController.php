@@ -1008,15 +1008,15 @@ class AdminModulesControllerCore extends AdminController
 		$show_type_modules = $this->filter_configuration['PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee];
 		if ($show_type_modules == 'nativeModules' && !in_array($module->name, $this->list_natives_modules))
 			return true;
-		else if ($show_type_modules == 'partnerModules' && !in_array($module->name, $this->list_partners_modules))
+		elseif ($show_type_modules == 'partnerModules' && !in_array($module->name, $this->list_partners_modules))
 			return true;
-		else if ($show_type_modules == 'addonsModules' && (!isset($module->type) || $module->type != 'addonsBought'))
+		elseif ($show_type_modules == 'addonsModules' && (!isset($module->type) || $module->type != 'addonsBought'))
 			return true;
-		else if ($show_type_modules == 'mustHaveModules' && (!isset($module->type) || $module->type != 'addonsMustHave'))
+		elseif ($show_type_modules == 'mustHaveModules' && (!isset($module->type) || $module->type != 'addonsMustHave'))
 			return true;
-		else if ($show_type_modules == 'otherModules' && (in_array($module->name, $this->list_partners_modules) || in_array($module->name, $this->list_natives_modules)))
+		elseif ($show_type_modules == 'otherModules' && (in_array($module->name, $this->list_partners_modules) || in_array($module->name, $this->list_natives_modules)))
 			return true;
-		else if (strpos($show_type_modules, 'authorModules[') !== false)
+		elseif (strpos($show_type_modules, 'authorModules[') !== false)
 		{
 			// setting selected author in authors set
 			$author_selected = substr(str_replace(array('authorModules[', "\'"), array('', "'"), $show_type_modules), 0, -1);
@@ -1237,6 +1237,9 @@ class AdminModulesControllerCore extends AdminController
 			unset($object);
 			if ($module->installed && isset($module->version_addons) && $module->version_addons)
 				$upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->displayName);
+				
+			if (in_array($module->name, $this->list_partners_modules))
+				$module->type = 'addonsPartner';
 		}
 
 		// Don't display categories without modules
