@@ -1480,7 +1480,6 @@ class AdminThemesControllerCore extends AdminController
 				'submit'  => array(
 					'id' => 'zip',
 					'title' => $this->l('Save'),
-					'class' => 'button hide'
 				)),
 		);
 
@@ -1537,7 +1536,6 @@ class AdminThemesControllerCore extends AdminController
 				),
 				'submit'  => array(
 					'title' => $this->l('Save'),
-					'class' => 'button hide'
 				)),
 		);
 
@@ -1761,6 +1759,10 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$native_modules = $this->getNativeModule();
 		$theme_module = array();
+
+		$theme_module['to_install'] = array();
+		$theme_module['to_enable'] = array();
+		$theme_module['to_disable'] = array();
 		foreach ($xml->modules->module as $row)
 		{
 			if (strval($row['action']) == 'install' && !in_array(strval($row['name']), $native_modules))
@@ -1853,42 +1855,46 @@ class AdminThemesControllerCore extends AdminController
 							'type' => 'hidden',
 							'name' => 'id_theme',
 						),
-						array(
-							'type'   => 'checkbox',
-							'label'  => $this->l('Select the theme\'s modules you wish to install:'),
-							'values' => array(
-								'query' => $to_install,
-								'id'    => 'id',
-								'name'  => 'name'
-							),
-							'name'   => 'to_install',
-						),
-						array(
-							'type'   => 'checkbox',
-							'label'  => $this->l('Select the theme\'s modules you wish to enable:'),
-							'values' => array(
-								'query' => $to_enable,
-								'id'    => 'id',
-								'name'  => 'name'
-							),
-							'name'   => 'to_enable',
-						),
-						array(
-							'type'   => 'checkbox',
-							'label'  => $this->l('Select the theme\'s modules you wish to disable:'),
-							'values' => array(
-								'query' => $to_disable,
-								'id'    => 'id',
-								'name'  => 'name'
-							),
-							'name'   => 'to_disable',
-						)
 					),
 					'submit'  => array(
 						'title' => $this->l('Save'),
 					))
 			);
 
+
+			if (count($to_install) > 0)
+				$fields_form['form']['input'][] = array(
+					'type'   => 'checkbox',
+					'label'  => $this->l('Select the theme\'s modules you wish to install:'),
+					'values' => array(
+						'query' => $to_install,
+						'id'    => 'id',
+						'name'  => 'name'
+					),
+					'name'   => 'to_install',
+				);
+			if (count($to_enable) > 0)
+				$fields_form['form']['input'][] = array(
+					'type'   => 'checkbox',
+					'label'  => $this->l('Select the theme\'s modules you wish to enable:'),
+					'values' => array(
+						'query' => $to_enable,
+						'id'    => 'id',
+						'name'  => 'name'
+					),
+					'name'   => 'to_enable',
+				);
+			if (count($to_disable) > 0)
+				$fields_form['form']['input'][] = array(
+					'type'   => 'checkbox',
+					'label'  => $this->l('Select the theme\'s modules you wish to disable:'),
+					'values' => array(
+						'query' => $to_disable,
+						'id'    => 'id',
+						'name'  => 'name'
+					),
+					'name'   => 'to_disable',
+				);
 			$shops = array();
 			$shop = New Shop(Configuration::get('PS_SHOP_DEFAULT'));
 			$tmp['id_shop'] = $shop->id;
@@ -1910,8 +1916,11 @@ class AdminThemesControllerCore extends AdminController
 				{
 					$shop_xml = simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/' . $shop_theme->directory . '.xml');
 					$theme_shop_module = $this->getModules($shop_xml);
+
 					$to_shop_uninstall = $this->formatHelperArray($theme_shop_module['to_install']);
 
+					if (count($to_shop_uninstall) == 0)
+						continue;
 					$class = '';
 					if ($shop['id_shop'] == $current_shop)
 						$theme_module['to_disable_shop'.$shop['id_shop']] = $theme_shop_module['to_install'];
