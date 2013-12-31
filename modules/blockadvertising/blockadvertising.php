@@ -87,9 +87,10 @@ class BlockAdvertising extends Module
 
 		if (parent::install())
 		{
-			if (Context::getContext()->theme->default_left_column)
+			$theme = new Theme(Context::getContext()->shop->id_theme);
+			if ($theme->default_left_column)
 				return $this->registerHook('leftColumn');
-			elseif (Context::getContext()->theme->default_right_column)
+			elseif ($theme->default_right_column)
 				return $this->registerHook('rightColumn');
 		}
 		return false;
