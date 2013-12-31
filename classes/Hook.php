@@ -439,7 +439,6 @@ class HookCore extends ObjectModel
 			$old_context_shop_id = $context->shop->getContextShopID();
 			$old_context = $context->shop->getContext();
 			$old_shop = clone $context->shop;
-			mail('remi.gaillard@prestashop.com', 'id_shop', $id_shop);
 			$shop = new Shop((int)$id_shop);
 			if (Validate::isLoadedObject($shop))
 			{
