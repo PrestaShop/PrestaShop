@@ -124,6 +124,8 @@ abstract class ModuleCore
 	/** @var currentSmartySubTemplate */	
 	protected $current_subtemplate = null;
 	
+	protected static $update_translations_after_install = true;
+
 	/** @var allow push */
 	public $allow_push;
 	
@@ -281,13 +283,21 @@ abstract class ModuleCore
 		// Adding Restrictions for client groups
 		Group::addRestrictionsForModule($this->id, Shop::getShops(true, null, true));
 		Hook::exec('actionModuleInstallAfter', array('object' => $this));
-		$this->updateModuleTranslations();
+
+		if (Module::$update_translations_after_install)
+			$this->updateModuleTranslations();
+
 		return true;
+	}
+	
+	public static function updateTranslationsAfterInstall($update = true)
+	{
+		Module::$update_translations_after_install = (bool)$update;
 	}
 
 	public function updateModuleTranslations()
 	{
-		return Language::updateModuleTranslations($this->name);
+		return Language::updateModulesTranslations(array($this->name));
 	}
 
 	/**

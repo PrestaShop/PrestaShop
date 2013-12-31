@@ -606,16 +606,8 @@ class InstallModelInstall extends InstallAbstractModel
 						unlink(_PS_MODULE_DIR_.$addons_module['name'].'.zip');
 					}
 		}		
-		$errors = array();
-		foreach ($modules as $module_name)
-			$this->installModules($module_name);
 
-		if ($errors)
-		{
-			$this->setError($errors);
-			return false;
-		}
-		return true;
+		return count($modules) ? $this->installModules($modules) : true;
 	}
 	
 	/**
@@ -624,8 +616,13 @@ class InstallModelInstall extends InstallAbstractModel
 	 */
 	public function installModules($module = null)
 	{
-		$modules = $module ? array($module) : $this->getModulesList();
-	
+		if ($module !== null && !is_array($module))
+			$module = array($module);
+
+		$modules = $module !== null ? $module : $this->getModulesList();
+
+		Module::updateTranslationsAfterInstall(false);
+
 		$errors = array();
 		foreach ($modules as $module_name)
 		{
@@ -633,7 +630,7 @@ class InstallModelInstall extends InstallAbstractModel
 				continue;
 
 			$module = Module::getInstanceByName($module_name);
-			if (!$module->install())
+			if (!$module->install(false))
 				$errors[] = $this->language->l('Cannot install module "%s"', $module_name);
 		}
 
@@ -642,6 +639,10 @@ class InstallModelInstall extends InstallAbstractModel
 			$this->setError($errors);
 			return false;
 		}
+
+		Module::updateTranslationsAfterInstall(true);
+		Language::updateModulesTranslations($modules);
+
 		return true;
 	}
 
