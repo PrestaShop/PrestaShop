@@ -64,9 +64,10 @@ class BlockLayered extends Module
 		&& $this->registerHook('postProcessAttribute') && $this->registerHook('afterDeleteAttribute') && $this->registerHook('afterSaveAttribute')
 		&& $this->registerHook('displayBackOfficeHeader'))
 		{
-			if (Context::getContext()->theme->default_left_column)
+			$theme = new Theme(Context::getContext()->shop->id_theme);
+			if ($theme->default_left_column)
 				$this->registerHook('leftColumn');
-			elseif (Context::getContext()->theme->default_right_column)
+			elseif ($theme->default_right_column)
 				$this->registerHook('rightColumn');
 			else
 				return false;

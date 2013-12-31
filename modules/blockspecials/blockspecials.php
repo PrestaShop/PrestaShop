@@ -63,9 +63,10 @@ class BlockSpecials extends Module
 
 		if ($success)
 		{
-			if (Context::getContext()->theme->default_right_column)
+			$theme = new Theme(Context::getContext()->shop->id_theme);
+			if ($theme->default_right_column)
 				$success &= $this->registerHook('rightColumn');
-			elseif (Context::getContext()->theme->default_left_column)
+			elseif ($theme->default_left_column)
 				$success &= $this->registerHook('leftColumn');
 		}
 		return $success;

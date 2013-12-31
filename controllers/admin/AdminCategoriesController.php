@@ -643,7 +643,7 @@ class AdminCategoriesControllerCore extends AdminController
 				$this->errors[] = Tools::displayError($this->l('The category cannot be a parent of itself.'));
 		}
 		$object = parent::processAdd();
-		
+
 		//if we create a you root category you have to associate to a shop before to add sub categories in. So we redirect to AdminCategories listing
 		if ($object && Tools::getValue('is_root_category'))
 			Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=3');
