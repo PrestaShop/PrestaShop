@@ -141,6 +141,11 @@
  * @version 5.9.179
  */
 
+/* 
+	PrestaShop
+	all calls to file_exists replaced by Tools::file_exists_no_cache()
+*/
+
 // Main configuration file. Define the K_TCPDF_EXTERNAL_CONFIG constant to skip this file.
 require_once(dirname(__FILE__).'/config/tcpdf_config.php');
 
@@ -1949,7 +1954,7 @@ class TCPDF {
 		require(dirname(__FILE__).'/htmlcolors.php');
 		$this->webcolor = $webcolor;
 		// get array of custom spot colors
-		if (file_exists(dirname(__FILE__).'/spotcolors.php')) {
+		if (Tools::file_exists_no_cache(dirname(__FILE__).'/spotcolors.php')) {
 			require(dirname(__FILE__).'/spotcolors.php');
 			$this->spotcolor = $spotcolor;
 		} else {
@@ -5172,23 +5177,23 @@ class TCPDF {
 		}
 		$missing_style = false; // true when the font style variation is missing
 		// search and include font file
-		if ($this->empty_string($fontfile) OR (!file_exists($fontfile))) {
+		if ($this->empty_string($fontfile) OR (!Tools::file_exists_no_cache($fontfile))) {
 			// build a standard filenames for specified font
 			$tmp_fontfile = str_replace(' ', '', $family).strtolower($style).'.php';
 			// search files on various directories
-			if (($fontdir !== false) AND file_exists($fontdir.$tmp_fontfile)) {
+			if (($fontdir !== false) AND Tools::file_exists_no_cache($fontdir.$tmp_fontfile)) {
 				$fontfile = $fontdir.$tmp_fontfile;
-			} elseif (file_exists($this->_getfontpath().$tmp_fontfile)) {
+			} elseif (Tools::file_exists_no_cache($this->_getfontpath().$tmp_fontfile)) {
 				$fontfile = $this->_getfontpath().$tmp_fontfile;
-			} elseif (file_exists($tmp_fontfile)) {
+			} elseif (Tools::file_exists_no_cache($tmp_fontfile)) {
 				$fontfile = $tmp_fontfile;
 			} elseif (!$this->empty_string($style)) {
 				$missing_style = true;
 				// try to remove the style part
 				$tmp_fontfile = str_replace(' ', '', $family).'.php';
-				if (($fontdir !== false) AND file_exists($fontdir.$tmp_fontfile)) {
+				if (($fontdir !== false) AND Tools::file_exists_no_cache($fontdir.$tmp_fontfile)) {
 					$fontfile = $fontdir.$tmp_fontfile;
-				} elseif (file_exists($this->_getfontpath().$tmp_fontfile)) {
+				} elseif (Tools::file_exists_no_cache($this->_getfontpath().$tmp_fontfile)) {
 					$fontfile = $this->_getfontpath().$tmp_fontfile;
 				} else {
 					$fontfile = $tmp_fontfile;
@@ -5196,7 +5201,7 @@ class TCPDF {
 			}
 		}
 		// include font file
-		if (file_exists($fontfile)) {
+		if (Tools::file_exists_no_cache($fontfile)) {
 			include($fontfile);
 		} else {
 			$this->Error('Could not include font definition file: '.$family.'');
@@ -5695,19 +5700,19 @@ class TCPDF {
 		++$this->n;
 		$this->PageAnnots[$page][] = array('n' => $this->n, 'x' => $x, 'y' => $y, 'w' => $w, 'h' => $h, 'txt' => $text, 'opt' => $opt, 'numspaces' => $spaces);
 		if (!$this->pdfa_mode) {
-			if ((($opt['Subtype'] == 'FileAttachment') OR ($opt['Subtype'] == 'Sound')) AND (!$this->empty_string($opt['FS'])) AND file_exists($opt['FS']) AND (!isset($this->embeddedfiles[basename($opt['FS'])]))) {
+			if ((($opt['Subtype'] == 'FileAttachment') OR ($opt['Subtype'] == 'Sound')) AND (!$this->empty_string($opt['FS'])) AND Tools::file_exists_no_cache($opt['FS']) AND (!isset($this->embeddedfiles[basename($opt['FS'])]))) {
 				++$this->n;
 				$this->embeddedfiles[basename($opt['FS'])] = array('n' => $this->n, 'file' => $opt['FS']);
 			}
 		}
 		// Add widgets annotation's icons
-		if (isset($opt['mk']['i']) AND file_exists($opt['mk']['i'])) {
+		if (isset($opt['mk']['i']) AND Tools::file_exists_no_cache($opt['mk']['i'])) {
 			$this->Image($opt['mk']['i'], '', '', 10, 10, '', '', '', false, 300, '', false, false, 0, false, true);
 		}
-		if (isset($opt['mk']['ri']) AND file_exists($opt['mk']['ri'])) {
+		if (isset($opt['mk']['ri']) AND Tools::file_exists_no_cache($opt['mk']['ri'])) {
 			$this->Image($opt['mk']['ri'], '', '', 0, 0, '', '', '', false, 300, '', false, false, 0, false, true);
 		}
-		if (isset($opt['mk']['ix']) AND file_exists($opt['mk']['ix'])) {
+		if (isset($opt['mk']['ix']) AND Tools::file_exists_no_cache($opt['mk']['ix'])) {
 			$this->Image($opt['mk']['ix'], '', '', 0, 0, '', '', '', false, 300, '', false, false, 0, false, true);
 		}
 	}
@@ -7873,11 +7878,11 @@ class TCPDF {
 				$exurl = $file;
 			}
 			// check if is local file
-			if (!@file_exists($file)) {
+			if (!@Tools::file_exists_no_cache($file)) {
 				// encode spaces on filename (file is probably an URL)
 				$file = str_replace(' ', '%20', $file);
 			}
-			if (@file_exists($file)) {
+			if (@Tools::file_exists_no_cache($file)) {
 				// get image dimensions
 				$imsize = @getimagesize($file);
 			} else {
@@ -10226,7 +10231,7 @@ class TCPDF {
 	 * @since 5.9.123 (2010-09-30)
 	 */
 	public function addTTFfont($fontfile, $fonttype='', $enc='', $flags=32, $outpath='', $platid=3, $encid=1) {
-		if (!file_exists($fontfile)) {
+		if (!Tools::file_exists_no_cache($fontfile)) {
 			$this->Error('Could not find file: '.$fontfile.'');
 		}
 		// font metrics
@@ -10250,7 +10255,7 @@ class TCPDF {
 			$outpath = $this->_getfontpath();
 		}
 		// check if this font already exist
-		if (file_exists($outpath.$font_name.'.php')) {
+		if (Tools::file_exists_no_cache($outpath.$font_name.'.php')) {
 			// this font already exist (delete it from fonts folder to rebuild it)
 			return $font_name;
 		}
@@ -11630,11 +11635,11 @@ class TCPDF {
 			$file = strtolower($file);
 			$fontfile = '';
 			// search files on various directories
-			if (($fontdir !== false) AND file_exists($fontdir.$file)) {
+			if (($fontdir !== false) AND Tools::file_exists_no_cache($fontdir.$file)) {
 				$fontfile = $fontdir.$file;
-			} elseif (file_exists($this->_getfontpath().$file)) {
+			} elseif (Tools::file_exists_no_cache($this->_getfontpath().$file)) {
 				$fontfile = $this->_getfontpath().$file;
-			} elseif (file_exists($file)) {
+			} elseif (Tools::file_exists_no_cache($file)) {
 				$fontfile = $file;
 			}
 			if (!$this->empty_string($fontfile)) {
@@ -12127,11 +12132,11 @@ class TCPDF {
 			// search and get ctg font file to embedd
 			$fontfile = '';
 			// search files on various directories
-			if (($fontdir !== false) AND file_exists($fontdir.$ctgfile)) {
+			if (($fontdir !== false) AND Tools::file_exists_no_cache($fontdir.$ctgfile)) {
 				$fontfile = $fontdir.$ctgfile;
-			} elseif (file_exists($this->_getfontpath().$ctgfile)) {
+			} elseif (Tools::file_exists_no_cache($this->_getfontpath().$ctgfile)) {
 				$fontfile = $this->_getfontpath().$ctgfile;
-			} elseif (file_exists($ctgfile)) {
+			} elseif (Tools::file_exists_no_cache($ctgfile)) {
 				$fontfile = $ctgfile;
 			}
 			if ($this->empty_string($fontfile)) {

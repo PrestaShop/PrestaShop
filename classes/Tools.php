@@ -1553,6 +1553,18 @@ class ToolsCore
 		return self::$file_exists_cache[$filename];
 	}
 
+	/**
+	 * file_exists() wrapper with a call to clearstatcache prior
+	 *
+	 * @param string $filename File name
+	 * @return boolean Cached result of file_exists($filename)
+	 */
+	public static function file_exists_no_cache($filename)
+	{
+		clearstatcache();
+		return file_exists($filename);
+	}
+
 	public static function file_get_contents($url, $use_include_path = false, $stream_context = null, $curl_timeout = 5)
 	{
 		if ($stream_context == null && preg_match('/^https?:\/\//', $url))
