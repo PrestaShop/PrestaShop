@@ -40,7 +40,7 @@
 						{l s='Normal view'} 
 					</a>
 					<a class="btn btn-default {if isset($smarty.get.select) && $smarty.get.select == 'favorites'} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}&select=favorites">
-						<i class="icon-star"></i> 
+						<i class="icon-star"></i>
 						{l s='Favorites view'}
 					</a>
 				</div>
@@ -79,15 +79,15 @@ module_inactive
 								{$module->displayName}
 								<small>v{$module->version}</small>
 								{if isset($module->type) && $module->type == 'addonsMustHave'}
-									<span class="label label-primary">{l s='Must Have'}</span>
+									- <a href="#" class="help-tooltip text-primary" data-title="{l s=""}"><i class="icon-group"></i> <small>{l s="Popular"}</small></a>
 								{elseif isset($module->type) && $module->type == 'addonsPartner'}
-									<i class="icon-bookmark icon-partner"></i>
+									- <a href="#" class="help-tooltip text-warning" data-title="{l s="This module is available for free. Thanks to our partner."}"><i class="icon-pushpin"></i> <small>{l s="Partner"}</small></a>
 								{elseif isset($module->id) && $module->id gt 0}
 									{if isset($module->version_addons) && $module->version_addons}
 										<span class="label label-warning">{l s='Need update'}</span>
 									{/if}
 								{/if}
-							</div>						
+							</div>
 							<p class="module_description">
 								{if isset($module->description) && $module->description ne ''}
 									{$module->description}
@@ -96,7 +96,7 @@ module_inactive
 							{if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success">{$module->message}</div>{/if}
 						</div>
 					</td>
-					<td>
+					<td class="actions">
 						<div class="btn-group-action">
 							<div class="btn-group pull-right">
 								{if isset($module->type) && $module->type == 'addonsMustHave'}
