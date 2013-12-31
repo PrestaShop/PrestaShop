@@ -29,7 +29,7 @@
 		</h2>
 		<div class="page-bar toolbarBox">
 			<div class="btn-toolbar">
-				<ul class="cc_button nav nav-pills pull-right">
+				<ul class="nav nav-pills pull-right">
 					<li>
 						<a id="desc-module-hook" class="toolbar_btn" href="{$module_disable_link}" title="{l s='Disable'}">
 							<i class="process-icon-off"></i>

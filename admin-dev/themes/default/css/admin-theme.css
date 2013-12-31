@@ -2642,12 +2642,13 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 
 #header_infos { background-color: #242424; }
 
-#header_shopname { font: 300 1.3em/100% "Ubuntu", sans-serif; position: relative; margin: 0 20px 0 0; height: 36px; padding-left: 45px !important; line-height: 36px; }
+#header_shopname { position: relative; margin: 0 15px 0 0; height: 36px; padding-left: 45px !important; }
 #header_shopname img { position: absolute; top: 0; left: 0; width: 36px; height: 36px; }
 
 #header_notifs_icon_wrapper { height: 36px; }
 #header_notifs_icon_wrapper li a { padding: 9px 5px; }
-#header_notifs_icon_wrapper > li > a > i { font-size: 1.4em; color: white; vertical-align: middle; }
+#header_notifs_icon_wrapper > li > a > i { font-size: 1.4em; font-weight: 200; color: #b3b3b3; vertical-align: middle; }
+#header_notifs_icon_wrapper > li > a > i:hover { color: white; }
 #header_notifs_icon_wrapper .notifs_badge { background-color: #8bc954; }
 #header_notifs_icon_wrapper .notifs_dropdown { background-color: transparent; border: none; box-shadow: none; }
 #header_notifs_icon_wrapper .notifs_panel { width: 300px; -webkit-box-shadow: rgba(0, 0, 0, 0.5) 2px 2px 8px; box-shadow: rgba(0, 0, 0, 0.5) 2px 2px 8px; }
@@ -2873,17 +2874,17 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .alert.alert-info:before, .bootstrap #carrier_wizard .alert-info.wizard_error:before { position: absolute; top: 0; left: 10px; display: block; min-height: 25px; min-width: 25px; font-family: FontAwesome; font-weight: normal; font-style: normal; font-size: 35px; text-decoration: inherit; -webkit-font-smoothing: antialiased; content: "\F05A"; }
 .bootstrap .overflow-y { max-height: 200px; margin-bottom: 15px; overflow-y: auto; }
 .bootstrap .table { border-collapse: separate; border-spacing: 0 2px 0 0; margin-bottom: 5px; }
-.bootstrap .table thead > tr > th { border: none; font-weight: normal; vertical-align: top; background: white; border-bottom: solid 1px #8bc6e7; }
-.bootstrap .table thead > tr > th span.title_box { color: black; font-size: 1.1em; font-weight: bold; display: block; word-wrap: nowrap; white-space: nowrap; }
+.bootstrap .table thead > tr > th { border: none; font-weight: normal; vertical-align: top; border-bottom: solid 1px #a0d0eb; }
+.bootstrap .table thead > tr > th span.title_box { color: #656565; display: block; word-wrap: nowrap; white-space: nowrap; }
 .bootstrap .table thead > tr > th span.title_box.active { font-weight: bold; }
 .bootstrap .table thead > tr > th span.title_box a { text-decoration: none; }
 .bootstrap .table thead > tr > th span.title_box a.active { color: black; }
-.bootstrap .table thead > tr.filter > th { background-color: #dfeff8; }
-.bootstrap .table thead > tr.filter > th input[type="text"].filter, .bootstrap .table thead > tr.filter > th input[type="password"].filter, .bootstrap .table thead > tr.filter > th select.filter { font-size: 12px; border-color: #a0d0eb; }
+.bootstrap .table thead > tr.filter > th { background-color: #ecf6fb; }
+.bootstrap .table thead > tr.filter > th input[type="text"].filter, .bootstrap .table thead > tr.filter > th input[type="password"].filter, .bootstrap .table thead > tr.filter > th select.filter { font-size: 11px; border-color: #a0d0eb; }
 .bootstrap .table input, .bootstrap .table select { margin: 0; }
-.bootstrap .table tbody > tr > td { border-top: none; background-color: white; padding: 3px 7px; vertical-align: middle; word-wrap: nowrap; font-size: 12px; border-bottom: solid 1px #eeeeee; }
-.bootstrap .table tbody > tr.odd > td { background-color: #f9f9f9; }
-.bootstrap .table tbody > tr:hover > td { background-color: #edf7fb; }
+.bootstrap .table tbody > tr > td { border-top: none; color: #666666; background-color: white; padding: 3px 7px; vertical-align: middle; word-wrap: nowrap; font-size: 12px; border-bottom: solid 1px #eaedef; }
+.bootstrap .table tbody > tr.odd > td { background-color: #fcfdfe; }
+.bootstrap .table tbody > tr:hover > td { background-color: #f4f8fb; }
 .bootstrap .table td.center, .bootstrap .table th.center { text-align: center; }
 .bootstrap .table td.pointer { cursor: pointer; }
 .bootstrap .table td.dragHandle { cursor: move; }
@@ -3004,9 +3005,9 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .page-head .btn-toolbar { margin: 0; padding: 3px 0 0 0; }
 .bootstrap .page-head .btn-toolbar .nav-tabs { margin: 0; }
 .bootstrap .page-head .btn-toolbar .nav-tabs > li > a { color: #333333; }
-.bootstrap .toolbar_btn { position: relative; padding: 2px 5px !important; margin-right: 3px; font-size: 12px; font-weight: 600; color: white; text-align: center; text-shadow: none; }
+.bootstrap .toolbar_btn { position: relative; padding: 2px 5px !important; margin-right: 3px; font-size: 12px; color: white; text-align: center; text-shadow: none; }
 .bootstrap .toolbar_btn:hover { color: #8fc04d; border-color: white; background-color: white !important; }
-.bootstrap [class^="process-icon-"], .bootstrap [class*=" process-icon-"] { height: 25px; min-width: 32px; background-position: center; background-repeat: no-repeat; display: block; font-family: FontAwesome; font-weight: normal; font-style: normal; font-size: 25px; line-height: 25px; text-decoration: inherit; -webkit-font-smoothing: antialiased; *margin-right: 0.3em; }
+.bootstrap [class^="process-icon-"], .bootstrap [class*=" process-icon-"] { height: 25px; min-width: 32px; background-position: center; background-repeat: no-repeat; display: block; font-family: FontAwesome; font-style: normal; font-size: 25px; line-height: 25px; text-decoration: inherit; -webkit-font-smoothing: antialiased; *margin-right: 0.3em; }
 .bootstrap .page-header-toolbar-back { border: none !important; display: inline-block; }
 .bootstrap #datepicker .input-selected { margin: 0; }
 .bootstrap #datepicker #date-start.input-selected, .bootstrap #datepicker #date-end.input-selected { border: solid 3px #00a4e7; }

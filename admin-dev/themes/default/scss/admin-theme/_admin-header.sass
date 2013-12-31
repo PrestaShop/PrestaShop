@@ -7,12 +7,10 @@
 	background-color: $bg-header-color
 #header_shopname
 	@extend .navbar-brand
-	font: 300 1.3em/100% $headings-font-family
 	position: relative
-	margin: 0 20px 0 0
+	margin: 0 15px 0 0
 	height: 36px
 	padding-left: 45px!important
-	line-height: 36px
 	img
 		position: absolute
 		top: 0
@@ -28,8 +26,11 @@
 		padding: 9px 5px
 	> li > a > i
 		font-size: 1.4em
-		color: white
+		font-weight: 200
+		color: darken(white,30%)
 		vertical-align: middle
+		&:hover
+			color: white
 	.notifs_badge
 		@extend .badge
 		background-color: $badge-notif-color

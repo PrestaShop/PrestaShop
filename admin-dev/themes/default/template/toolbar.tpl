@@ -26,7 +26,7 @@
 <div id="{$table}_toolbar" class="toolbar-placeholder">
 	<div class="toolbarBox {if $toolbar_scroll}toolbarHead{/if}">
 		{block name=toolbarBox}
-			<ul class="cc_button">
+			<ul>
 				{foreach from=$toolbar_btn item=btn key=k}
 					<li>
 						<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href}"{/if} title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
