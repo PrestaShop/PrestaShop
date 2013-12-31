@@ -158,7 +158,7 @@ class AdminThemesControllerCore extends AdminController
 						'title' => $this->l('Invoice logo'),
 						'desc' => 
 							((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">'.$this->l('Warning: No invoice logo has been defined. The header logo will be used instead.').'</span><br />' : '').
-							$this->l('Will appear on invoice headers. If undefined, the header logo will be used.'),
+							$this->l('Will appear on invoice headers.').' '.$this->l('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO_INVOICE',
 						'thumb' => (Configuration::get('PS_LOGO_INVOICE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_INVOICE').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
