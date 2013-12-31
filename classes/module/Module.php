@@ -287,28 +287,7 @@ abstract class ModuleCore
 
 	public function updateModuleTranslations()
 	{
-		require_once _PS_TOOL_DIR_.'tar/Archive_Tar.php';
-
-		$languages = Language::getLanguages(false);
-		foreach($languages as $lang)
-		{
-			$filegz = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
-
-			if (@filemtime($filegz) < (time() - 24*3600))
-				Language::downloadAndInstallLanguagePack($lang['iso_code'], null, null, false);
-			
-			$gz = new Archive_Tar($filegz, true);
-			$files_list = $gz->listContent();				
-			foreach ($files_list as $i => $file)
-				if (!preg_match('/^modules\/'.$this->name.'\/.*/', $file['filename']))
-					unset($files_list[$i]);
-			$files_listing = array();
-			foreach($files_list as $file)
-				if (isset($file['filename']) && is_string($file['filename']))
-					$files_listing[] = $file['filename'];
-			
-			$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
-		}
+		return Language::updateModuleTranslations($this->name);
 	}
 
 	/**

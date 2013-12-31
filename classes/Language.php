@@ -839,7 +839,7 @@ class LanguageCore extends ObjectModel
 		if ($install && file_exists($file))
 		{
 			$gz = new Archive_Tar($file, true);
-			$files_list = AdminTranslationsController::filterTranslationFiles($gz->listContent());
+			$files_list = AdminTranslationsController::filterTranslationFiles(Language::getLanguagePackListContent($iso, $gz));
 			if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../'))
 				$errors[] = Tools::displayError('Cannot decompress the translation file for the following language:').' '.(string)$iso;
 			// Clear smarty modules cache
@@ -854,7 +854,6 @@ class LanguageCore extends ObjectModel
 				AdminTranslationsController::checkAndAddMailsFiles($iso, $files_list);
 				AdminTranslationsController::addNewTabs($iso, $files_list);
 			}
-			@unlink($file);
 		}
 		else
 			$errors[] = Tools::displayError('No language pack is available for your version.');
@@ -871,5 +870,44 @@ class LanguageCore extends ObjectModel
 	public static function isMultiLanguageActivated($id_shop = null)
 	{
 		return (Language::countActiveLanguages($id_shop) > 1);
+	}
+
+	public static function getLanguagePackListContent($iso, $tar)
+	{
+		if (!$tar instanceof Archive_Tar)
+			return false;
+		$key = 'Language::getLanguagePackListContent_'.$iso;
+		if (!Cache::isStored($key))
+			Cache::store($key, $tar->listContent());
+
+		return Cache::retrieve($key);
+	}
+
+	public static function updateModuleTranslations($module_name)
+	{
+		require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
+
+		$languages = Language::getLanguages(false);
+		foreach($languages as $lang)
+		{
+			$iso = $lang['iso_code'];
+			$filegz = _PS_TRANSLATIONS_DIR_.$iso.'.gzip';
+
+			clearstatcache();
+			if (@filemtime($filegz) < (time() - (24 * 3600)))
+				Language::downloadAndInstallLanguagePack($iso, null, null, false);
+
+			$gz = new Archive_Tar($filegz, true);
+			$files_list = Language::getLanguagePackListContent($iso, $gz);
+			foreach ($files_list as $i => $file)
+				if (!preg_match('/^modules\/'.$module_name.'\/.*/', $file['filename']))
+					unset($files_list[$i]);
+			$files_listing = array();
+			foreach($files_list as $file)
+				if (isset($file['filename']) && is_string($file['filename']))
+					$files_listing[] = $file['filename'];
+			
+			$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
+		}
 	}
 }
