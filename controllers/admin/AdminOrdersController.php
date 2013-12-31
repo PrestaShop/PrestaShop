@@ -353,7 +353,7 @@ class AdminOrdersControllerCore extends AdminController
 							$customer->email, $customer->firstname.' '.$customer->lastname, null, null, null, null,
 							_PS_MAIL_DIR_, true, (int)$order->id_shop))
 						{
-							Hook::exec('actionAdminOrdersTrackingNumberUpdate', array('order' => $order, 'customer' => $customer, 'carrier' => $carrier));
+							Hook::exec('actionAdminOrdersTrackingNumberUpdate', array('order' => $order, 'customer' => $customer, 'carrier' => $carrier), null, false, true, false, $order->id_shop);
 							Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 						}
 						else
@@ -716,7 +716,7 @@ class AdminOrdersControllerCore extends AdminController
 									if ($order_carrier->update())
 										$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);									
 								}
-								Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => (int)$id_order_detail));
+								Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => (int)$id_order_detail), null, false, true, false, $order->id_shop);
 							}
 						if (!count($this->errors) && $customizationList)
 							foreach ($customizationList as $id_customization => $id_order_detail)
@@ -743,7 +743,7 @@ class AdminOrdersControllerCore extends AdminController
 								$this->errors[] = Tools::displayError('A credit slip cannot be generated. ');
 							else
 							{
-								Hook::exec('actionOrderSlipAdd', array('order' => $order, 'productList' => $full_product_list, 'qtyList' => $full_quantity_list));
+								Hook::exec('actionOrderSlipAdd', array('order' => $order, 'productList' => $full_product_list, 'qtyList' => $full_quantity_list), null, false, true, false, $order->id_shop);
 								@Mail::Send(
 									(int)$order->id_lang,
 									'credit_slip',
