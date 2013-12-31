@@ -615,10 +615,10 @@ class InstallModelInstall extends InstallAbstractModel
 	 */
 	public function installModules($module = null)
 	{
-		if ($module !== null && !is_array($module))
+		if ($module && !is_array($module))
 			$module = array($module);
 
-		$modules = $module !== null ? $module : $this->getModulesList();
+		$modules = $module ? $module : $this->getModulesList();
 
 		Module::updateTranslationsAfterInstall(false);
 
@@ -629,7 +629,7 @@ class InstallModelInstall extends InstallAbstractModel
 				continue;
 
 			$module = Module::getInstanceByName($module_name);
-			if (!$module->install(false))
+			if (!$module->install())
 				$errors[] = $this->language->l('Cannot install module "%s"', $module_name);
 		}
 
