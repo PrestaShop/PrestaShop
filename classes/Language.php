@@ -889,6 +889,7 @@ class LanguageCore extends ObjectModel
 		$languages = Language::getLanguages(false);
 		foreach($languages as $lang)
 		{
+			$files_listing = array();
 			foreach ($modules_list as $module_name)
 			{
 				$iso = $lang['iso_code'];
@@ -903,7 +904,7 @@ class LanguageCore extends ObjectModel
 				foreach ($files_list as $i => $file)
 					if (!preg_match('/^modules\/'.$module_name.'\/.*/', $file['filename']))
 						unset($files_list[$i]);
-				$files_listing = array();
+
 				foreach($files_list as $file)
 					if (isset($file['filename']) && is_string($file['filename']))
 						$files_listing[] = $file['filename'];
