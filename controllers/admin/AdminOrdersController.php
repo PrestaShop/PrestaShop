@@ -27,6 +27,8 @@
 class AdminOrdersControllerCore extends AdminController
 {
 	public $toolbar_title;
+	
+	protected $statuses_array = array();
 
 	public function __construct()
 	{
@@ -59,11 +61,9 @@ class AdminOrdersControllerCore extends AdminController
 		$this->_orderBy = 'id_order';
 		$this->_orderWay = 'DESC';
 
-		$statuses_array = array();
 		$statuses = OrderState::getOrderStates((int)$this->context->language->id);
-
 		foreach ($statuses as $status)
-			$statuses_array[$status['id_order_state']] = $status['name'];
+			$this->statuses_array[$status['id_order_state']] = $status['name'];
 
 		$this->fields_list = array(
 		'id_order' => array(
@@ -100,7 +100,7 @@ class AdminOrdersControllerCore extends AdminController
 			'title' => $this->l('Status'),
 			'color' => 'color',
 			'type' => 'select',
-			'list' => $statuses_array,
+			'list' => $this->statuses_array,
 			'filter_key' => 'os!id_order_state',
 			'filter_type' => 'int',
 			'order_key' => 'osname'
@@ -161,12 +161,11 @@ class AdminOrdersControllerCore extends AdminController
 			$this->context->customer = new Customer($order->id_customer);
 		}
 
-		parent::__construct();
-	}
+		$this->bulk_actions = array(
+			'updateOrderStatus' => array('text' => $this->l('Change Order Status'))
+		);
 
-	public function initContent(){
-		$this->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.autosize.min.js');
-		return parent::initContent();
+		parent::__construct();
 	}
 
 	public function initPageHeaderToolbar()
@@ -276,7 +275,9 @@ class AdminOrdersControllerCore extends AdminController
 	public function setMedia()
 	{
 		parent::setMedia();
+
 		$this->addJqueryUI('ui.datepicker');
+		$this->addJqueryPlugin('autosize');
 		$this->addJS(_PS_JS_DIR_.'vendor/d3.js');
 		if ($this->tabAccess['edit'] == 1 && $this->display == 'view')
 		{
@@ -300,6 +301,79 @@ class AdminOrdersControllerCore extends AdminController
 		));
 
 		return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
+	}
+	
+	public function processBulkUpdateOrderStatus()
+	{
+		if (Tools::isSubmit('submitBulkupdateOrderStatus'.$this->table) && ($id_order_state = (int)Tools::getValue('id_order_state')))
+		{
+			if ($this->tabAccess['edit'] !== '1')
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+			else
+			{
+				$order_state = new OrderState($id_order_state);
+
+				if (!Validate::isLoadedObject($order_state))
+					$this->errors[] = sprintf(Tools::displayError('Order status #%d cannot be loaded'), $id_order_state);
+				else
+				{
+					foreach (Tools::getValue('orderBox') as $id_order)
+					{
+						$order = new Order((int)$id_order);
+						if (!Validate::isLoadedObject($order))
+							$this->errors[] = sprintf(Tools::displayError('Order #%d cannot be loaded'), $id_order);
+						else
+						{
+							$current_order_state = $order->getCurrentOrderState();
+							if ($current_order_state->id == $order_state->id)	
+								$this->errors[] = sprintf(Tools::displayError('Order #%d has already been assigned this status.'), $id_order);
+							else
+							{
+								$history = new OrderHistory();
+								$history->id_order = $order->id;
+								$history->id_employee = (int)$this->context->employee->id;
+
+								$use_existings_payment = !$order->hasInvoice();
+								$history->changeIdOrderState((int)$order_state->id, $order, $use_existings_payment);
+
+								$carrier = new Carrier($order->id_carrier, $order->id_lang);
+								$templateVars = array();
+								if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
+									$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
+		
+								if ($history->addWithemail(true, $templateVars))
+								{
+									if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+										foreach ($order->getProducts() as $product)
+											if (StockAvailable::dependsOnStock($product['product_id']))
+												StockAvailable::synchronize($product['product_id'], (int)$product['id_shop']);
+								}
+								else
+									$this->errors[] = sprintf(Tools::displayError('Cannot change status for order #%d.'), $id_order);
+							}
+						}
+					}
+				}
+			}
+			if (!count($this->errors))
+				Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
+		}
+	}
+	
+	public function renderList()
+	{
+		if (Tools::isSubmit('submitBulkupdateOrderStatus'.$this->table))
+		{
+			if (Tools::getIsset('cancel'))
+				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
+		
+			$this->tpl_list_vars['updateOrderStatus_mode'] = true;
+			$this->tpl_list_vars['order_statuses'] = $this->statuses_array;
+			$this->tpl_list_vars['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
+			$this->tpl_list_vars['POST'] = $_POST;
+		}
+
+		return parent::renderList();
 	}
 
 	public function postProcess()
