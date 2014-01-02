@@ -51,7 +51,7 @@ class AdminShopGroupControllerCore extends AdminController
 				'class' => 'fixed-width-xs',
 			),
 			'name' => array(
-				'title' => $this->l('Group shop'),
+				'title' => $this->l('Shop group'),
 				'width' => 'auto',
 				'filter_key' => 'a!name',
 			),
@@ -135,13 +135,13 @@ class AdminShopGroupControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Shop group name:'),
+					'label' => $this->l('Shop group name'),
 					'name' => 'name',
 					'required' => true
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Share customers:'),
+					'label' => $this->l('Share customers'),
 					'name' => 'share_customer',
 					'required' => true,
 					'class' => 't',
