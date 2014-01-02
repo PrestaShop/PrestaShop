@@ -25,7 +25,6 @@
 
 var storeUsedGroups = {};
 
-
 function populate_attrs()
 {
 	var attr_group = getE('attribute_group');

@@ -2,9 +2,8 @@ $(document).ready(function()
 {
 	var hints = $('.translatable span.hint');
 	if (youEditFieldFor)
-	{
 		hints.html(hints.html() + '<br /><span class="red">' + youEditFieldFor + '</span>');
-	}
+
 	var html = "";		
 	var nb_notifs = 0;
 	var wrapper_id = "";
@@ -13,17 +12,19 @@ $(document).ready(function()
 	$(".notifs").click(function(){
 		var wrapper_id = $(this).parent().attr("id");
 
-		$.post("ajax.php",
+		$.post(
+			"ajax.php",
 			{
 				"updateElementEmployee" : "1",
 				"updateElementEmployeeType" : $(this).parent().attr('data-type')
-			}, function(data) {
-			if(data)
-			{
-				$("#" + wrapper_id + "_value").html(0);
-				$("#" + wrapper_id + "_number_wrapper").hide();
-			}				
-		});
+			},
+			function(data) {
+				if (data) {
+					$("#" + wrapper_id + "_value").html(0);
+					$("#" + wrapper_id + "_number_wrapper").hide();
+				}				
+			}
+		);
 	});
 
 	// call it once immediately, then use setTimeout if refresh is activated
@@ -107,6 +108,6 @@ function getPush(refresh)
 				$("#customer_messages_notif_number_wrapper").hide();
 		}
 		if (refresh)
-			setTimeout("getPush(1)", 60000);
+			setTimeout("getPush(1)", 120000);
 	});
 }

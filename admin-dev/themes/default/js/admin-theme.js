@@ -22,10 +22,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-$( document ).ready(function() {
+$(document).ready(function() {
 
 	$("[name^='checkBoxShopGroupAsso_theme']").change(function(){
-
 		$(this).parents('.tree-folder').find("[name^='checkBoxShopAsso_theme']").each(function(){
 			var id = $(this).attr('value');
 			var checked = $(this).prop('checked');
@@ -39,7 +38,6 @@ $( document ).ready(function() {
 		toggleShopModuleCheckbox(id, checked);
 	});
 
-	//nav side bar
 	function navSidebar(){
 		//$('body.page-topbar').removeClass('page-topbar').addClass('page-sidebar');
 		//$('#nav-topbar').attr('id','nav-sidebar');
@@ -70,7 +68,7 @@ $( document ).ready(function() {
 			$('.expanded').removeClass('expanded');
 		});
 	}
-	//nav top bar
+
 	function navTopbar(){
 		//$('body').removeClass('page-sidebar').addClass('page-topbar').removeClass('page-sidebar-closed');
 		$('#nav-sidebar').attr('id','nav-topbar');
@@ -137,6 +135,7 @@ $( document ).ready(function() {
 				$(this).addClass('expanded');
 			}
 		});
+
 		//get click for item which has submenu
 		navigation.on('click.submenu','.maintab.has_submenu a.title', function(e){
 			e.preventDefault();
@@ -149,6 +148,7 @@ $( document ).ready(function() {
 			navigation.append(submenu);
 			submenu.show();
 		});
+
 		navigation.on('click.back','#nav-mobile-submenu-back',function(e){
 			e.preventDefault();
 			submenu.remove();
@@ -170,7 +170,6 @@ $( document ).ready(function() {
 		}
 	}
 
-	//nav switch - not used for now
 	function navSwitch(){
 		if ($('body').hasClass('page-sidebar')){
 			navTopbar();
@@ -179,7 +178,6 @@ $( document ).ready(function() {
 		}
 	}
 
-	//init menu
 	function initNav(){
 		if ($('body').hasClass('page-sidebar')){
 			navSidebar();
@@ -188,23 +186,18 @@ $( document ).ready(function() {
 			navTopbar();
 		}
 	}
-
 	initNav();
-	// tooltips
-	$('.label-tooltip, .help-tooltip').tooltip();
 
-	//modal
+	$('.label-tooltip, .help-tooltip').tooltip();
 	$("#error-modal").modal("show");
 
 	//scroll top
 	function animateGoTop() {
-		if ($(window).scrollTop())
-		{
+		if ($(window).scrollTop()) {
 			$('#go-top:hidden').stop(true, true).fadeIn();
 			$('#go-top:hidden').removeClass('hide');
-		} else {
+		} else
 			$('#go-top').stop(true, true).fadeOut();
-		}
 	}
 
 	$("#go-top").on('click',function() {
@@ -215,7 +208,6 @@ $( document ).ready(function() {
 	$(window).scroll(function() {
 		animateGoTop();
 	});
-
 
 	function toggleShopModuleCheckbox(id_shop, toggle){
 		var formGroup = $("[for='to_disable_shop"+id_shop+"']").parent();
