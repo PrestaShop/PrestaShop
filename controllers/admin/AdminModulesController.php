@@ -978,8 +978,13 @@ class AdminModulesControllerCore extends AdminController
 		}
 
 		// Filter on interest
-		if ((int)Db::getInstance()->getValue('SELECT `id_module_preference` FROM `'._DB_PREFIX_.'module_preference` WHERE `module` = \''.pSQL($module->name).'\' AND `id_employee` = '.(int)$this->id_employee.' AND `interest` = 0') > 0)
+		if ($module->interest !== '')
+		{
+			if ($module->interest === '0')
 				return true;
+		}
+		elseif ((int)Db::getInstance()->getValue('SELECT `id_module_preference` FROM `'._DB_PREFIX_.'module_preference` WHERE `module` = \''.pSQL($module->name).'\' AND `id_employee` = '.(int)$this->id_employee.' AND `interest` = 0') > 0)
+			return true;
 
 		// Filter on favorites
 		if (Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee) == 'favorites')

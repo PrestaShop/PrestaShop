@@ -488,7 +488,7 @@ abstract class Controller extends ControllerCore
 			<div class="rte" style="text-align:left;padding:8px">
 			<h3><a name="doubles">Doubles (IDs replaced by "XX") (total = '.$count.')</a></h3>';
 		foreach ($queries as $q => $nb)
-			if($nb > 1)
+			if ($nb > 1)
 				echo $hr.'<b '.$this->getQueryColor($nb).'>'.$nb.'</b> '.$q;
 		echo '</div>
 		<div class="rte" style="text-align:left;padding:8px">
