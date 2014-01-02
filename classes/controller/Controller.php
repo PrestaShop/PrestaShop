@@ -395,10 +395,10 @@ abstract class ControllerCore
 	    }
 
 		Controller::$php_errors[] = array(
-			'type' => $type, 
-			'errline' => $errline, 
-			'errfile' => $errfile, 
-			'errno' => $errno, 
+			'type' => $type,
+			'errline' => (int)$errline,
+			'errfile' => str_replace('\\', '\\\\', $errfile), // Hack for Windows paths
+			'errno' => (int)$errno,
 			'errstr' => $errstr
 		);
 		Context::getContext()->smarty->assign('php_errors', Controller::$php_errors);

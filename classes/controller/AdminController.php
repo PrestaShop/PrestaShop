@@ -1528,7 +1528,6 @@ class AdminControllerCore extends Controller
 		if (Validate::isLoadedObject($this->context->employee))
 		{
 			$accesses = Profile::getProfileAccesses($this->context->employee->id_profile, 'class_name');
-			$default_tab = new Tab((int)Context::getContext()->employee->default_tab);
 			/* Hooks are volontary out the initialize array (need those variables already assigned) */
 			$bo_color = empty($this->context->employee->bo_color) ? '#FFFFFF' : $this->context->employee->bo_color;
 			$this->context->smarty->assign(array(
@@ -1555,7 +1554,7 @@ class AdminControllerCore extends Controller
 				'tabs' => $tabs,
 				'is_multishop' => $is_multishop,
 				'multishop_context' => $this->multishop_context,
-				'default_tab_link' => $this->context->link->getAdminLink($default_tab->class_name),
+				'default_tab_link' => $this->context->link->getAdminLink(Tab::getClassNameById((int)Context::getContext()->employee->default_tab)),
 				'employee_avatar' => ImageManager::thumbnail($this->context->employee->getImage(), 'employee'.'_'.(int)$this->context->employee->id.'.'.$this->imageType, 150, $this->imageType, true, true)
 			));
 		}
