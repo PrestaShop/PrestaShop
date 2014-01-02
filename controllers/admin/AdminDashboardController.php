@@ -43,7 +43,7 @@ class AdminDashboardControllerCore extends AdminController
 
 		$this->addJqueryUI('ui.datepicker');
 		$this->addJS(array(
-			_PS_JS_DIR_.'vendor/d3.js',
+			_PS_JS_DIR_.'vendor/d3.v3.min.js',
 			__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/nv.d3.min.js',
 			_PS_JS_DIR_.'/admin-dashboard.js',
 		));
