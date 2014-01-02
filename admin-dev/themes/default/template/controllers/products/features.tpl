@@ -83,7 +83,7 @@
 							<ul class="dropdown-menu">
 								{foreach from=$languages item=language}
 									<li>
-										<a href="javascript:ze=1;" onclick="restore_lng($(this),{$language.id_lang});">{$language.iso_code}</a>
+										<a href="javascript:void(0);" onclick="restore_lng($(this),{$language.id_lang});">{$language.iso_code}</a>
 									</li>
 								{/foreach}
 							</ul>
@@ -111,7 +111,7 @@
 								<span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu">
-								<li><a href="javascript:ze=1;" onclick="tous($(this));">{l s='ALL'}</a></li>								
+								<li><a href="javascript:void(0);" onclick="all_languages($(this));">{l s='ALL'}</a></li>								
 								{foreach from=$languages item=language}
 								<li>
 									<a href="javascript:hideOtherLanguage({$language.id_lang});">{$language.iso_code}</a>
@@ -143,30 +143,26 @@
 	hideOtherLanguage(default_language);
 	$(".textarea-autosize").autosize();
 
-function tous(pos)
-{
-{/literal}
-
-{foreach from=$languages key=k item=language}
-pos.parents('td').find('.lang-{$language.id_lang}').addClass('nolang-{$language.id_lang}').removeClass('lang-{$language.id_lang}');
-
-{/foreach}
-pos.parents('td').find('.translatable-field').hide();
-pos.parents('td').find('.lang-0').show();
-{literal}
-
-
-}
-function restore_lng(pos,i)
-{
+	function all_languages(pos)
+	{
 {/literal}
 {foreach from=$languages key=k item=language}
-pos.parents('td').find('.nolang-{$language.id_lang}').addClass('lang-{$language.id_lang}').removeClass('nolang-{$language.id_lang}');
-
+		pos.parents('td').find('.lang-{$language.id_lang}').addClass('nolang-{$language.id_lang}').removeClass('lang-{$language.id_lang}');
 {/foreach}
-
+		pos.parents('td').find('.translatable-field').hide();
+		pos.parents('td').find('.lang-0').show();
 {literal}
-pos.parents('td').find('.lang-0').hide();
-hideOtherLanguage(i);
-}
-</script>{/literal}
+	}
+
+	function restore_lng(pos,i)
+	{
+{/literal}
+{foreach from=$languages key=k item=language}
+		pos.parents('td').find('.nolang-{$language.id_lang}').addClass('lang-{$language.id_lang}').removeClass('nolang-{$language.id_lang}');
+{/foreach}
+{literal}
+		pos.parents('td').find('.lang-0').hide();
+		hideOtherLanguage(i);
+	}
+</script>
+{/literal}
