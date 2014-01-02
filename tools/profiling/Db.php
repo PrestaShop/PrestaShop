@@ -107,7 +107,7 @@ abstract class Db extends DbCore
 				array_shift($stack);
 			$stack_light = array();
 			foreach ($stack as $call)
-				$stack_light[] = array('file' => $call['file'], 'line' => $call['line']);
+				$stack_light[] = array('file' => isset($call['file']) ? $call['file'] : 'undefined', 'line' => isset($call['line']) ? $call['line'] : 'undefined');
 			
 			$this->queries[] = array(
 				'query' => $sql,
