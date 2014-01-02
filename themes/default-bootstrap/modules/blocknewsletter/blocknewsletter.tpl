@@ -24,7 +24,6 @@
 *}
 
 <!-- Block Newsletter module-->
-
 <div id="newsletter_block_left" class="block">
 	<h4>{l s='Newsletter' mod='blocknewsletter'}</h4>
 	<div class="block_content">
@@ -43,7 +42,7 @@
 
 <script type="text/javascript">
     var placeholder = "{l s='Enter your e-mail' mod='blocknewsletter' js=1}";
-    var msg = '{if isset($msg) && $msg }{$msg}{/if}';
+    var msg = '{if isset($msg) && $msg }{$msg|@addcslashes:'\''}{/if}';
         $(document).ready(function() {ldelim}
             $('#newsletter-input').on({ldelim}
                 focus: function() {ldelim}
@@ -59,7 +58,7 @@
             {rdelim});
 
             {if isset($msg)}
-                $('#columns').prepend('<div class="clearfix"></div><p class="alert {if $nw_error}alert-danger{else}alert-success{/if}">{l s="Newsletter:" js=1 mod="blocknewsletter"} {$msg}</p>');
+                $('#columns').prepend('<div class="clearfix"></div><p class="alert {if $nw_error}alert-danger{else}alert-success{/if}">{l s="Newsletter:" js=1 mod="blocknewsletter"} {$msg|escape:'html':'UTF-8'}</p>');
             {/if}
         });
 </script>
