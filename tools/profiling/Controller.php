@@ -122,9 +122,9 @@ abstract class Controller extends ControllerCore
 
 	private function displayRowsBrowsed($n)
 	{
-		if ($n > 200)
+		if ($n > 400)
 			return '<span style="color:red">'.$n.' rows browsed</span>';
-		if ($n > 50)
+		if ($n > 100)
 			return '<span style="color:orange">'.$n.'  rows browsed</span>';
 		return '<span style="color:green">'.$n.' row'.($n == 1 ? '' : 's').' browsed</span>';
 	}
