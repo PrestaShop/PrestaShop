@@ -921,6 +921,75 @@ $(document).ready(function()
 			$('#'+list_id+'-empty-filters-alert').show();
 		}
 	});
+
+	var message = $('.toolbarHead');
+	var view = $(window);
+
+	// bind only if message exists. placeholder will be its parent
+	view.bind("scroll resize", function(e)
+	{
+		message.each(function(el){
+			if (message.length)
+			{
+				placeholder = $(this).parent();
+				if (e.type == 'resize')
+					$(this).css('width', $(this).parent().width());
+
+				placeholderTop = placeholder.offset().top;
+				var viewTop = view.scrollTop() + 15;
+				// here we force the toolbar to be "not fixed" when
+				// the height of the window is really small (toolbar hiding the page is not cool)
+				window_is_more_than_twice_the_toolbar  = view.height() > message.parent().height() * 2;
+				if (!$(this).hasClass("fix-toolbar") && (window_is_more_than_twice_the_toolbar && (viewTop > placeholderTop)))
+				{
+					$(this).css('width', $(this).width());
+					// fixing parent height will prevent that annoying "pagequake" thing
+					// the order is important : this has to be set before adding class fix-toolbar 
+					$(this).parent().css('height', $(this).parent().height());
+					$(this).addClass("fix-toolbar");
+				}
+				else if ($(this).hasClass("fix-toolbar") && (!window_is_more_than_twice_the_toolbar || (viewTop <= placeholderTop)) )
+				{
+					$(this).removeClass("fix-toolbar");
+					$(this).removeAttr('style');
+					$(this).parent().removeAttr('style');
+				}
+			}
+		});
+	}); // end bind
+
+	// if count errors
+	$('#hideError').on('click', function(e)
+	{
+		e.preventDefault();
+		$('.error').hide('slow', function (){
+			$('.error').remove();
+		});
+		return false;
+	});
+
+	// if count warnings
+	$(document).on('click', '#linkSeeMore', function(e){
+		e.preventDefault();
+		$('#seeMore').show();
+		$(this).hide();
+		$('#linkHide').show();
+		return false;
+	});
+	$(document).on('click', '#linkHide', function(e){
+		e.preventDefault();
+		$('#seeMore').hide();
+		$(this).hide();
+		$('#linkSeeMore').show();
+		return false;
+	});
+	$(document).on('click', '#hideWarn', function(e){
+		e.preventDefault();
+		$('.warn').hide('slow', function (){
+			$('.warn').remove();
+		});
+		return false;
+	});
 });
 
 
@@ -1195,3 +1264,105 @@ function ajaxStates (id_state_selected)
 		});
 	}
 }
+
+var query;
+var lang = Array();
+
+function setLang(array_lang) { lang = array_lang; }
+
+function getQuery() {
+ 	var result;
+ 	
+ 	result = query;
+ 	if (result == null) {
+ 		if (window.XMLHttpRequest)
+ 			result = new XMLHttpRequest();
+ 		else if (window.ActiveXObject)
+		 	result = new ActiveXObject('Microsoft.XMLHTTP');
+ 	}
+ 	return result;
+}
+
+function onQueryChange() {
+ 	if (query.readyState == 4 && query.status == 200)
+ 		document.getElementById('ajax_confirmation').innerHTML = '<span class="green bold">'+lang[0]+'</span>';
+}
+
+function request_failed() { alert(lang[1]); }
+
+function showActivity() {
+ 	document.getElementById('ajax_confirmation').innerHTML = '<span class="bold">'+lang[2]+'</span>';
+}
+
+function check_for_all_accesses(tabsize, tabnumber)
+{
+	var i = 0;
+	var res = 0;
+	var right = 0;
+	var rights = new Array('view', 'add', 'edit', 'delete', 'all'); 
+
+	while (i != parseInt(tabsize) + 1)
+	{
+		if ($('#view'+i).prop('checked') == false || $('#edit'+i).prop('checked') == false || $('#add'+i).prop('checked') == false || $('#delete'+i).prop('checked') == false)
+			$('#all'+i).attr('checked', false);
+		else
+			$('#all'+i).attr('checked', "checked");
+		i++;
+	}
+	right = 0;
+	while (right != 5)
+	{
+		res = 0;
+		i = 0;
+		while (i != tabsize)
+		{
+			if ($('#'+rights[right]+i).prop('checked') == true)
+				res++;
+			i++;
+		}
+		if (res == tabnumber - 1)
+			$('#'+rights[right]+'all').attr('checked', "checked");
+		else
+			$('#'+rights[right]+'all').attr('checked', false);
+		right++;
+	}
+}
+
+function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, table)
+{
+ 	if (id_tab == '-1' && action == 'all')
+ 	{
+ 		$(table+' .add').attr('checked', src.checked);
+ 		$(table+' .edit').attr('checked', src.checked);
+ 		$(table+' .delete').attr('checked', src.checked);
+		$(table+' .view').attr('checked', src.checked);
+		$(table+' .all').attr('checked', src.checked);
+ 	}
+	else if (action == 'all')
+		$(table+' .'+id_tab).attr('checked', src.checked);
+ 	else if (id_tab == '-1')
+ 		$(table+' .'+action).attr('checked', src.checked);
+	check_for_all_accesses(tabsize, tabnumber);
+}
+
+function ajax_power(src, action, id_tab, id_profile, token, tabsize, tabnumber)
+{
+	query = getQuery();
+	perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber);
+	if (query != null) {
+	 	try {
+		 	query.open('POST', 'index.php?tab=AdminAccess', true);
+		 	query.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		 	query.onreadystatechange = onQueryChange;
+		 	query.send('submitAddaccess=1&action='+action+'&perm='+parseInt(src.checked ? '1' : status = '0')+'&id_tab='+parseInt(id_tab)+'&id_profile='+parseInt(id_profile)+'&token='+token);
+		 	showActivity();
+		}
+		catch(exc) {
+			request_failed();
+		}
+	}
+	else
+		alert(lang[3]);
+}
+
+function redirect(new_page) { window.location = new_page; }
