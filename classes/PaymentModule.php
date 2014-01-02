@@ -179,7 +179,11 @@ abstract class PaymentModuleCore extends Module
 
 			$order_list = array();
 			$order_detail_list = array();
-			$reference = Order::generateReference();
+			
+			do
+				$reference = Order::generateReference();
+			while(Order::getByReference($reference)->count());
+			
 			$this->currentOrderReference = $reference;
 
 			$order_creation_failed = false;
