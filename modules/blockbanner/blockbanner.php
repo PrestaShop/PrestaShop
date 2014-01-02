@@ -51,7 +51,7 @@ class BlockBanner extends Module
 
 		foreach ($languages as $lang)
 		{
-			$values['BLOCKBANNER_IMG'][$lang['id_lang']] = 'sale70.gif';
+			$values['BLOCKBANNER_IMG'][$lang['id_lang']] = 'sale70.png';
 			$values['BLOCKBANNER_LINK'][$lang['id_lang']] = '';
 			$values['BLOCKBANNER_DESC'][$lang['id_lang']] = '';
 		}
