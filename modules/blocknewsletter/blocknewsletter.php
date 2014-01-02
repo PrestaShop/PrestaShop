@@ -158,20 +158,14 @@ class Blocknewsletter extends Module
 		else if ($_POST['action'] == '1')
 		{
 			$register_status = $this->isNewsletterRegistered($_POST['email']);
+
 			if ($register_status < 1)
 				return $this->error = $this->l('This email address is not registered.');
-			else if ($register_status == self::GUEST_REGISTERED)
-			{
-				if (!Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->id))
-					return $this->error = $this->l('An error occurred while attempting to unsubscribe.');
-				return $this->valid = $this->l('Unsubscription successful');
-			}
-			else if ($register_status == self::CUSTOMER_REGISTERED)
-			{
-				if (!Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'customer SET `newsletter` = 0 WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->id))
-					return $this->error = $this->l('An error occurred while attempting to unsubscribe.');
-				return $this->valid = $this->l('Unsubscription successful');
-			}
+
+			if (!$this->unregister($_POST['email'], $register_status))
+				return $this->error = $this->l('An error occurred while attempting to unsubscribe.');
+
+			return $this->valid = $this->l('Unsubscription successful');
 		}
 		/* Subscription */
 		else if ($_POST['action'] == '0')
@@ -236,15 +230,26 @@ class Blocknewsletter extends Module
 	 */
 	protected function register($email, $register_status)
 	{
-		if ($register_status == self::GUEST_NOT_REGISTERED)
-		{
-			if (!$this->registerGuest(Tools::getValue('email')))
-				return false;
+		if ($register_status == self::GUEST_NOT_REGISTERED) {
+			return $this->registerGuest($email);
 		}
-		else if ($register_status == self::CUSTOMER_NOT_REGISTERED)
-		{
-		 	if (!$this->registerUser(Tools::getValue('email')))
-	 			return false;
+
+		if ($register_status == self::CUSTOMER_NOT_REGISTERED) {
+	 		return $this->registerUser($email);
+		}
+
+		return false;
+	}
+
+	protected function unregister($email, $register_status) {
+		if ($register_status == self::GUEST_REGISTERED) {
+			$sql = 'DELETE FROM '._DB_PREFIX_.'newsletter WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->id;
+		} else if ($register_status == self::CUSTOMER_REGISTERED) {
+			$sql = 'UPDATE '._DB_PREFIX_.'customer SET `newsletter` = 0 WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->id;
+		}
+
+		if (!isset($sql) || !Db::getInstance()->execute($sql)) {
+			return false;
 		}
 
 		return true;
