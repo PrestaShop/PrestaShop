@@ -274,7 +274,7 @@ class MediaCore
 			$return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery.noConflict.php?version='.$version);
 
 		//added query migrate for compatibility with new version of jquery will be removed in ps 1.6
-		$return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery-migrate-1.2.1.js');
+		$return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery-migrate-1.2.1.min.js');
 
 		return $return;
 	}
