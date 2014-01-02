@@ -227,14 +227,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Reference:'),
+						'label' => $this->l('Reference'),
 						'name' => 'reference',
 						'required' => true,
-						'hint' => $this->l('Here\'s the reference number for your order.'),
+						'hint' => $this->l('The reference number for your order.'),
 					),
 					array(
 						'type' => 'select',
-						'label' => $this->l('Supplier:'),
+						'label' => $this->l('Supplier'),
 						'name' => 'id_supplier',
 						'required' => true,
 						'options' => array(
@@ -249,7 +249,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					),
 					array(
 						'type' => 'select',
-						'label' => $this->l('Warehouse:'),
+						'label' => $this->l('Warehouse'),
 						'name' => 'id_warehouse',
 						'required' => true,
 						'options' => array(
@@ -261,7 +261,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					),
 					array(
 						'type' => 'select',
-						'label' => $this->l('Currency:'),
+						'label' => $this->l('Currency'),
 						'name' => 'id_currency',
 						'required' => true,
 						'options' => array(
@@ -276,7 +276,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					),
 					array(
 						'type' => 'select',
-						'label' => $this->l('Order Language:'),
+						'label' => $this->l('Order Language'),
 						'name' => 'id_lang',
 						'required' => true,
 						'options' => array(
@@ -295,11 +295,11 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Automatically load products:'),
+						'label' => $this->l('Automatically load products'),
 						'name' => 'load_products',
 						'required' => false,
 						'hint' => array(
-							$this->l('This will reset the order'),
+							$this->l('This will reset the order.'),
 							$this->l('If specified, each product quantity less than or equal to this value will be loaded.'),
 						),
 					),
@@ -327,7 +327,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			{
 				$this->fields_form['input'][] = array(
 					'type' => 'date',
-					'label' => $this->l('Expected delivery date:'),
+					'label' => $this->l('Expected delivery date'),
 					'name' => 'date_delivery_expected',
 					'required' => true,
 					'desc' => $this->l('The expected delivery date for this order is...'),
@@ -350,7 +350,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$this->displayInformation(
 				$this->l('If you wish to order products, they have to be available for the specified supplier/warehouse.')
 				.' '.
-				$this->l('See Catalog/Products/Your Product/Suppliers & Warehouses')
+				$this->l('See Catalog/Products/[Your Product]/Suppliers & Warehouses.')
 				.'<br />'.
 				$this->l('Changing the currency or the supplier will reset the order.')
 				.'<br />'
@@ -771,7 +771,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
-				'hint' => $this->l('Enter here the quantity you received today'),
+				'hint' => $this->l('Enter the quantity you received today.'),
 			),
 			'quantity_received' => array(
 				'title' => $this->l('Quantity received'),
@@ -779,7 +779,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
-				'hint' => $this->l('Note that you can see details on the receptions - per products'),
+				'hint' => $this->l('Note that you can see details on the receptions - per products.'),
 			),
 			'quantity_expected' => array(
 				'title' => $this->l('Quantity expected'),
@@ -795,7 +795,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
-				'hint' => $this->l('This is the quantity left to receive'),
+				'hint' => $this->l('This is the quantity left to receive.'),
 			)
 		);
 
