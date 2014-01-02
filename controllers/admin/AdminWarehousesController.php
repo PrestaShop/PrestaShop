@@ -118,9 +118,8 @@ class AdminWarehousesControllerCore extends AdminController
 		// display help informations
 		$this->displayInformation($this->l('This interface allows you to manage your warehouses.').'<br />');
 		$this->displayInformation($this->l('Before adding stock in your warehouses, you should check the default currency used.').'<br />');
-		$this->displayInformation($this->l('You should also check:'));
-		$this->displayInformation($this->l('the management type (according to the law in your country), the valuation currency and its associated carriers and shops.').'<br />');
-		$this->displayInformation($this->l('You can also see detailed information about your stock, such as its overall value, the number of products and quantities stored, etc...')
+		$this->displayInformation($this->l('You should also check the management type (according to the law in your country), the valuation currency and its associated carriers and shops.').'<br />');
+		$this->displayInformation($this->l('You can also see detailed information about your stock, such as its overall value, the number of products and quantities stored, etc.')
 								  .'<br /><br />');
 		$this->displayInformation($this->l('Be careful! Products from different warehouses will need to be shipped in different packages.'));
 
@@ -163,61 +162,61 @@ class AdminWarehousesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Reference:'),
+					'label' => $this->l('Reference'),
 					'name' => 'reference',
 					'maxlength' => 32,
 					'required' => true,
-					'hint' => $this->l('Reference for this warehouse'),
+					'hint' => $this->l('Reference for this warehouse.'),
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'maxlength' => 45,
 					'required' => true,
 					'hint' => array(
-						$this->l('Name of this warehouse'),
+						$this->l('Name of this warehouse.'),
 						$this->l('Invalid characters:').' !&lt;&gt;,;?=+()@#"�{}_$%:',
 					)
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Phone:'),
+					'label' => $this->l('Phone'),
 					'name' => 'phone',
 					'maxlength' => 16,
-					'hint' => $this->l('Phone number for this warehouse')
+					'hint' => $this->l('Phone number for this warehouse.')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Address:'),
+					'label' => $this->l('Address'),
 					'name' => 'address',
 					'maxlength' => 128,
 					'required' => true
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Address:').' (2)',
+					'label' => $this->l('Address').' (2)',
 					'name' => 'address2',
 					'maxlength' => 128,
-					'hint' => $this->l('Address of this warehouse (complementary address is optional).'),
+					'hint' => $this->l('Complementary address (optional).'),
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Postcode/Zip Code:'),
+					'label' => $this->l('Postcode/Zip Code'),
 					'name' => 'postcode',
 					'maxlength' => 12,
 					'required' => true,
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('City:'),
+					'label' => $this->l('City'),
 					'name' => 'city',
 					'maxlength' => 32,
 					'required' => true,
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Country:'),
+					'label' => $this->l('Country'),
 					'name' => 'id_country',
 					'required' => true,
 					'default_value' => (int)$this->context->country->id,
@@ -226,11 +225,11 @@ class AdminWarehousesControllerCore extends AdminController
 						'id' => 'id_country',
 						'name' => 'name',
 					),
-					'hint' => $this->l('Warehouse location country')
+					'hint' => $this->l('Country of location of the warehouse.')
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('State:'),
+					'label' => $this->l('State'),
 					'name' => 'id_state',
 					'required' => true,
 					'options' => array(
@@ -241,7 +240,7 @@ class AdminWarehousesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Manager:'),
+					'label' => $this->l('Manager'),
 					'name' => 'id_employee',
 					'required' => true,
 					'options' => array(
@@ -252,7 +251,7 @@ class AdminWarehousesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Carriers:'),
+					'label' => $this->l('Carriers'),
 					'name' => 'ids_carriers[]',
 					'required' => false,
 					'multiple' => true,
@@ -262,8 +261,8 @@ class AdminWarehousesControllerCore extends AdminController
 						'name' => 'name'
 					),
 					'hint' => array(
-						$this->l('Associated carriers. Use CTRL+CLICK to select several.'),
-						$this->l('You must select at least one carrier, if you do not select a carrier none will be able to ship from this warehouse.'),
+						$this->l('Associated carriers. Use CTRL+Click to select more than one carrier.'),
+						$this->l('You must select at least one carrier. If you do not select any carrier, none will be able to ship from this warehouse.'),
 						$this->l('You can specify the number of carriers available to ship orders from particular warehouses.'),
 					)
 				),
@@ -311,7 +310,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'id' => 'id',
 					'name' => 'name'
 				),
-				'hint' => $this->l('Inventory valuation method')
+				'hint' => $this->l('Inventory valuation method.')
 			);
 			
 			// adds input valuation currency

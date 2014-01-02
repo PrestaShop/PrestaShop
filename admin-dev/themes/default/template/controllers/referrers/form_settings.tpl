@@ -67,7 +67,7 @@
 				<h3>
 					<i class="icon-fullscreen"></i> {l s='Indexation'}
 				</h3>
-				<div class="alert alert-info">{l s='There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the button above. This process may take awhile, and it\'s only needed if you modified or added a referrer, or if you want changes to be retroactive.'}</div>
+				<div class="alert alert-info">{l s='There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the "Refresh index" button. This process may take a while, and it\'s only needed if you modified or added a referrer, or if you want changes to be retroactive.'}</div>
 				<button type="submit" class="btn btn-default" name="submitRefreshIndex" id="submitRefreshIndex">
 					<i class="icon-refresh"></i> {l s='Refresh index'}
 				</button>
@@ -80,7 +80,7 @@
 				<h3>
 					<i class="icon-briefcase"></i> {l s='Cache'}
 				</h3>
-				<div class="alert alert-info">{l s='In order to sort and filter your data, it\'s cached. You can refresh the cache by clicking on the button above.'}</div>
+				<div class="alert alert-info">{l s='Your data is cached in order to sort it and filter it. You can refresh the cache by clicking on the "Refresh cache" button.'}</div>
 				<button type="submit" class="btn btn-default" name="submitRefreshCache" id="submitRefreshCache">
 					<i class="icon-refresh"></i> {l s='Refresh cache'}
 				</button>
