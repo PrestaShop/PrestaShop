@@ -65,7 +65,7 @@ class MailalertsActionsModuleFrontController extends ModuleFrontController
 			die('0');
 
 		$context = Context::getContext();
-		if (MailAlert::deleteAlert((int)$context->customer->id, (int)$context->customer->email, (int)$product->id, (int)$this->id_product_attribute))
+		if (MailAlert::deleteAlert((int)$context->customer->id, (int)$context->customer->email, (int)$product->id, (int)$this->id_product_attribute, (int)$context->shop->id))
 			die('0');
 		
 		die(1);
