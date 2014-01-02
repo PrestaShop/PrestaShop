@@ -63,7 +63,7 @@ class GraphNvD3 extends ModuleGraphEngine
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 
 		$this->context->controller->addJS(array(
-			_PS_JS_DIR_.'vendor/d3.js',
+			_PS_JS_DIR_.'vendor/d3.v3.min.js',
 			__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->context->employee->bo_theme.'/js/vendor/nv.d3.min.js',
 		));
 		$this->context->controller->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->context->employee->bo_theme.'/css/vendor/nv.d3.css');
