@@ -166,7 +166,7 @@ ul.product_list.grid > li .product-container .product-image-container .product_i
 }
 @media (min-width: 768px) {
   .footer-container {
-    background: url(../img/footer-bg.gif) repeat-x;
+    background: url(../img/footer-bg.png) repeat-x;
   }
 }
 
