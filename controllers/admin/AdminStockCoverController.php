@@ -196,7 +196,7 @@ class AdminStockCoverControllerCore extends AdminController
 		);
 
 		$this->displayInformation($this->l('Considering the coverage period chosen and the quantity of products/combinations that you sold.'));
-		$this->displayInformation($this->l('this interface gives you an idea of when a product will run out of stock.'));
+		$this->displayInformation($this->l('This interface gives you an idea of when a product will run out of stock.'));
 
 		return parent::renderList();
 	}
