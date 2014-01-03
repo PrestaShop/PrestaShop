@@ -416,23 +416,14 @@ class AdminControllerCore extends Controller
 		}
 		$this->context->smarty->assign('breadcrumbs2', $breadcrumbs2);
 
+		if ($tabs[0]['id_parent'] != 0 && ($link = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_ ).'/'.$this->context->link->getAdminLink($tabs[0]['class_name'])) != $_SERVER['REQUEST_URI'])
+			$this->breadcrumbs[] = '<a href="'.Tools::htmlentitiesUTF8($link).'">'.$tabs[0]['name'].'</a>';
+		else
+			$this->breadcrumbs[] = $tabs[0]['name'];
+		
 		/* BEGIN - Backward compatibility < 1.6.0.3 */
 		$navigationPipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
 		$this->context->smarty->assign('navigationPipe', $navigationPipe);
-
-		$prev = '';
-		$tabs = array_reverse($tabs);
-		foreach ($tabs as $tab)
-		{
-			if (!empty($prev) && $prev == $tab['name'])
-				array_pop($this->breadcrumbs);
-			$prev = $tab['name'];
-
-			if ($tab['id_parent'] != 0 && ($link = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_ ).'/'.$this->context->link->getAdminLink($tab['class_name'])) != $_SERVER['REQUEST_URI'])
-				$this->breadcrumbs[] = '<a href="'.Tools::htmlentitiesUTF8($link).'">'.$tab['name'].'</a>';
-			else
-				$this->breadcrumbs[] = $tab['name'];
-		}
 		/* END - Backward compatibility < 1.6.0.3 */
 	}
 
@@ -1235,14 +1226,13 @@ class AdminControllerCore extends Controller
 				break;
 		}
 
-		$title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
-
 		if (is_array($this->page_header_toolbar_btn)
 			&& $this->page_header_toolbar_btn instanceof Traversable
-			|| trim($title) != '')
+			|| count($this->toolbar_title))
 			$this->show_page_header_toolbar = true;
 
-		$this->page_header_toolbar_title = $title;
+		if (empty($this->page_header_toolbar_title))
+			$this->page_header_toolbar_title = array_pop($this->toolbar_title);
 		$this->addPageHeaderToolBarModulesListButton();
 	}
 
