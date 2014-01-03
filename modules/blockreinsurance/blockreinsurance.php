@@ -53,7 +53,9 @@ class Blockreinsurance extends Module
 		return parent::install() &&
 			$this->installDB() &&
 			Configuration::updateValue('blockreinsurance_nbblocks', 5) &&
-			$this->registerHook('footer') && $this->installFixtures();
+			$this->registerHook('footer') && $this->installFixtures() &&
+			// Disable on mobiles and tablets
+			$this->disableDevice(Context::DEVICE_TABLET | Context::DEVICE_MOBILE);
 	}
 	
 	public function installDB()
@@ -325,10 +327,6 @@ class Blockreinsurance extends Module
 
 	public function hookFooter($params)
 	{
-		// Check if not a mobile theme
-		if ($this->context->getMobileDevice() != false)
-			return false;
-
 		$this->context->controller->addCSS($this->_path.'style.css', 'all');
 		if (!$this->isCached('blockreinsurance.tpl', $this->getCacheId()))
 		{
