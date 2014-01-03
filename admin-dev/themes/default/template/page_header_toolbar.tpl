@@ -31,7 +31,34 @@
 			<i class="process-icon-back"></i>
 		</a>
 		{/if}
-		{if is_array($title)}{$title|end}{else}{$title}{/if}
+
+		{* Container *}
+		{if $breadcrumbs2.container.name != ''}
+			{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href}">{/if}
+			{if $breadcrumbs2.container.icon != ''}<i class="{$breadcrumbs2.container.icon}"></i>{/if}
+			{$breadcrumbs2.container.name}
+			{if $breadcrumbs2.container.href != ''}</a>{/if}
+			&gt;
+		{/if}
+		
+		{* Current Tab *}
+		{if $breadcrumbs2.tab.name != ''}
+			{if $breadcrumbs2.tab.href != ''}<a href="{$breadcrumbs2.tab.href}">{/if}
+			{if $breadcrumbs2.tab.icon != ''}<i class="{$breadcrumbs2.tab.icon}"></i>{/if}
+			{$breadcrumbs2.tab.name}
+			{if $breadcrumbs2.tab.href != ''}</a>{/if}
+			{if $breadcrumbs2.action.name != ''}&gt;{/if}
+		{/if}
+		
+		{* Action *}
+		{if $breadcrumbs2.action.name != ''}
+			{if $breadcrumbs2.action.href != ''}<a href="{$breadcrumbs2.action.href}">{/if}
+			{if $breadcrumbs2.action.icon != ''}<i class="{$breadcrumbs2.action.icon}"></i>{/if}
+			{$breadcrumbs2.action.name}
+			{if $breadcrumbs2.action.href != ''}</a>{/if}
+		{/if}
+
+		{* {if is_array($title)}{$title|end}{else}{$title}{/if} *}
 	</h2>
 	{/block}
 
