@@ -72,7 +72,6 @@
 			</div>
 		</div>
 		<script type="text/javascript">
-			var token = '{$token}';
 			var id_product = {if isset($product->id)}{$product->id}{else}0{/if};
 			var id_lang_default = {$id_lang_default};
 			var product_type_pack = {Product::PTYPE_PACK};

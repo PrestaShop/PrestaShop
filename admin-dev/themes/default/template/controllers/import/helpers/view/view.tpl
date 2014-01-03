@@ -26,7 +26,6 @@
 {block name="override_tpl"}
 	<script type="text/javascript">
 		var errorEmpty = '{l s='Please name your mapping configuration in order to save it.' js=1}';
-		var token = '{$token}';
 		var current = 0;
 		function showTable(nb) {
 			$('#btn_left').disabled = null;

@@ -24,7 +24,6 @@
 *}
 
 <script type="text/javascript">
-	var token = '{$token}';
 	var come_from = 'AdminModulesPositions';
 </script>
 
