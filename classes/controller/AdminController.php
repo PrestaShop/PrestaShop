@@ -512,7 +512,7 @@ class AdminControllerCore extends Controller
 		{
 			foreach ($_POST as $key => $value)
 			{
-				if (empty($value))
+				if ($value === '')
 					unset($this->context->cookie->{$prefix.$key});
 				elseif (stripos($key, $this->list_id.'Filter_') === 0)
 					$this->context->cookie->{$prefix.$key} = !is_array($value) ? $value : serialize($value);
@@ -523,14 +523,14 @@ class AdminControllerCore extends Controller
 			foreach ($_GET as $key => $value)
 				if (stripos($key, $this->list_id.'OrderBy') === 0)
 				{
-					if (empty($value) || $value == $this->_defaultOrderBy)
+					if ($value === '' || $value == $this->_defaultOrderBy)
 						unset($this->context->cookie->{$prefix.$key});
 					else
 						$this->context->cookie->{$prefix.$key} = $value;
 				}
 				elseif (stripos($key, $this->list_id.'Orderway') === 0)
 				{
-					if (empty($value) || $value == $this->_defaultOrderWay)
+					if ($value === '' || $value == $this->_defaultOrderWay)
 						unset($this->context->cookie->{$prefix.$key});
 					else
 						$this->context->cookie->{$prefix.$key} = $value;
