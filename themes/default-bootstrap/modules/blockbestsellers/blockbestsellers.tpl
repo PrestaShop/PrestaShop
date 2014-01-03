@@ -25,7 +25,5 @@
 *}
 
 {if is_array($best_sellers) && count($best_sellers)}
-	<div id="blockbestsellers" class="block">
-		{include file="$tpl_dir./product-list.tpl" products=$best_sellers class='blockbestsellers tab-pane' id='blockbestsellers'}
-	</div>
+	{include file="$tpl_dir./product-list.tpl" products=$best_sellers class='blockbestsellers tab-pane' id='blockbestsellers'}
 {/if}
