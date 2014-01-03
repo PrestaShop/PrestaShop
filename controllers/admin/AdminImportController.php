@@ -2883,6 +2883,7 @@ class AdminImportControllerCore extends AdminController
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_shop`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_image`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'pack`');
 				Image::deleteAllImages(_PS_PROD_IMG_DIR_);
 				if (!file_exists(_PS_PROD_IMG_DIR_))
 					mkdir(_PS_PROD_IMG_DIR_);
