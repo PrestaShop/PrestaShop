@@ -64,12 +64,12 @@ class MediaCore
 	/**
 	 * @var array list of javascript definitions
 	 */
-	public static $js_defs = array();
+	protected static $js_def = array();
 
 	/**
 	 * @var array list of javascript inline scripts
 	 */
-	public static $inline_script = array();
+	protected static $inline_script = array();
 
 	public static function minifyHTML($html_content)
 	{
@@ -581,6 +581,11 @@ class MediaCore
 						Tools::deleteFile($dir.DIRECTORY_SEPARATOR.$file, array('index.php'));
 	}
 
+	public static function getJsDef()
+	{
+		return Media::$js_def;
+	}
+
 	public static function getInlineScript()
 	{
 		return Media::$inline_script;
@@ -596,9 +601,9 @@ class MediaCore
 	{
 		if (is_array($js_def))
 			foreach ($js_def as $key => $js)
-					Media::$js_defs[$key] = $js;
+					Media::$js_def[$key] = $js;
 		elseif ($js_def)
-			Media::$js_defs[] = $js_def;
+			Media::$js_def[] = $js_def;
 	}
 	
 	public static function deferInlineScripts($output)

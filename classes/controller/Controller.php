@@ -366,7 +366,7 @@ abstract class ControllerCore
 			$html = $this->context->smarty->fetch($content);
 		
 		$html = Media::deferInlineScripts($html);
-		$this->context->smarty->assign('js_defs', Media::$js_defs);
+		$this->context->smarty->assign('js_defs', Media::getJsDef());
 		echo $html.$this->context->smarty->fetch(_PS_THEME_DIR_.'jsdefs.tpl');
 		
 		foreach (Media::getInlineScript() as $script)
