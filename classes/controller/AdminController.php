@@ -380,6 +380,8 @@ class AdminControllerCore extends Controller
 		{
 			$breadcrumbs2['tab']['name'] = $tabs[0]['name'];
 			$breadcrumbs2['tab']['href'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_ ).'/'.$this->context->link->getAdminLink($tabs[0]['class_name']);
+			if (!isset($tabs[1]))
+				$breadcrumbs2['tab']['icon'] = 'icon-'.$tabs[0]['class_name'];
 		}
 		if (isset($tabs[1]))
 		{
@@ -412,7 +414,6 @@ class AdminControllerCore extends Controller
 				$breadcrumbs2['action']['icon'] = 'icon-cogs';
 				break;
 		}
-
 		$this->context->smarty->assign('breadcrumbs2', $breadcrumbs2);
 
 		/* BEGIN - Backward compatibility < 1.6.0.3 */

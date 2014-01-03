@@ -49,7 +49,7 @@
 		{/if}
 		
 		{* Current Tab *}
-		{if $breadcrumbs2.tab.name != ''}
+		{if $breadcrumbs2.tab.name != '' && $breadcrumbs2.container.name != $breadcrumbs2.tab.name}
 			<li>
 				{if $breadcrumbs2.tab.href != ''}<a href="{$breadcrumbs2.tab.href}">{/if}
 				{if $breadcrumbs2.tab.icon != ''}<i class="{$breadcrumbs2.tab.icon}"></i>{/if}
