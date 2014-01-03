@@ -19,11 +19,31 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2014 PrestaShop SA
-
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if is_array($best_sellers) && count($best_sellers)}
-	{include file="$tpl_dir./product-list.tpl" products=$best_sellers class='blockbestsellers tab-pane' id='blockbestsellers'}
-{/if}
+{extends file="page_header_toolbar.tpl"} 
+
+{block name=pageTitle}
+<h2 class="page-title">
+	{l s='List of modules'}
+</h2>
+{/block}
+
+{block name=toolbarBox}
+<div class="page-bar toolbarBox">
+	<div class="btn-toolbar">
+		<ul class="nav nav-pills pull-right">
+			{if $add_permission eq '1'}
+			<li>
+				<a id="desc-module-new" class="toolbar_btn" href="#top_container" onclick="$('#module_install').slideToggle();" title="{l s='Add a new module'}">
+					<i class="process-icon-new-module" ></i>
+					<div>{l s='Add a new module'}</div>
+				</a>
+			</li>
+			{/if}
+		</ul>
+	</div>
+</div>
+{/block}
