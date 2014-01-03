@@ -708,6 +708,9 @@ class AdminModulesControllerCore extends AdminController
 							}
 					}
 
+					if (count($this->errors))
+						continue;
+
 					// Check potential error
 					if (!($module = Module::getInstanceByName(urldecode($name))))
 						$this->errors[] = $this->l('Module not found');
