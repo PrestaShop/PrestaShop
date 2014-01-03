@@ -55,10 +55,13 @@
 				{/if}
 				var homeslider_speed = {$homeslider.speed};
 				var homeslider_pause = {$homeslider.pause};
-
-				$('.homeslider-description').click(function(){
-					window.location.href = $(this).prev('a').prop('href');
+				{literal}
+				$('document').ready( function() {
+					$('.homeslider-description').click(function(){
+						window.location.href = $(this).prev('a').prop('href');
+					});
 				});
+				{/literal}
 			</script>
 		{/if}
 	{/if}
