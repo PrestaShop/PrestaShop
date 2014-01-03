@@ -367,14 +367,60 @@ class AdminControllerCore extends Controller
 	 */
 	public function initBreadcrumbs()
 	{
-		/* Breadcrumb */
+		$tabs = array();
+		$tabs = Tab::recursiveTab($this->id, $tabs);
+		
+		$dummy = array('name' => '', 'href' => '', 'icon' => '');
+		$breadcrumbs2 = array(
+			'container' => $dummy,
+			'tab' => $dummy,
+			'action' => $dummy
+		);
+		if (isset($tabs[0]))
+		{
+			$breadcrumbs2['tab']['name'] = $tabs[0]['name'];
+			$breadcrumbs2['tab']['href'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_ ).'/'.$this->context->link->getAdminLink($tabs[0]['class_name']);
+		}
+		if (isset($tabs[1]))
+		{
+			$breadcrumbs2['container']['name'] = $tabs[1]['name'];
+			$breadcrumbs2['container']['href'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_ ).'/'.$this->context->link->getAdminLink($tabs[1]['class_name']);
+			$breadcrumbs2['container']['icon'] = 'icon-'.$tabs[1]['class_name'];
+		}
+
+		/* content, edit, list, add, details, options, view */
+		switch ($this->display)
+		{
+			case 'add':
+				$breadcrumbs2['action']['name'] = $this->l('Add');
+			case 'edit':
+				$breadcrumbs2['action']['name'] = $this->l('Edit');
+				$breadcrumbs2['action']['icon'] = 'icon-pencil';
+				break;
+			case '':
+			case 'list':
+				$breadcrumbs2['action']['name'] = $this->l('List');
+				$breadcrumbs2['action']['icon'] = 'icon-sort-by-alphabet';
+				break;
+			case 'details':
+			case 'view':
+				$breadcrumbs2['action']['name'] = $this->l('View details');
+				$breadcrumbs2['action']['icon'] = 'icon-eye-open';
+				break;
+			case 'options':
+				$breadcrumbs2['action']['name'] = $this->l('Options');
+				$breadcrumbs2['action']['icon'] = 'icon-cogs';
+				break;
+		}
+
+		$this->context->smarty->assign('breadcrumbs2', $breadcrumbs2);
+
+		/* BEGIN - Backward compatibility < 1.6.0.3 */
 		$navigationPipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
 		$this->context->smarty->assign('navigationPipe', $navigationPipe);
 
-		$tabs = array();
-		$tabs = Tab::recursiveTab($this->id, $tabs);
-		$tabs = array_reverse($tabs);
 		$prev = '';
+		$tabs = array_reverse($tabs);
 		foreach ($tabs as $tab)
 		{
 			if (!empty($prev) && $prev == $tab['name'])
@@ -386,6 +432,7 @@ class AdminControllerCore extends Controller
 			else
 				$this->breadcrumbs[] = $tab['name'];
 		}
+		/* END - Backward compatibility < 1.6.0.3 */
 	}
 
 	/**
@@ -2117,6 +2164,7 @@ class AdminControllerCore extends Controller
 		));
 
 		$this->initProcess();
+		$this->initBreadcrumbs();
 	}
 
 	public function initShopContext()
@@ -2186,8 +2234,6 @@ class AdminControllerCore extends Controller
 		
 		// Replace current default country		
 		$this->context->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-				
-		$this->initBreadcrumbs();
 	}
 
 	/**
