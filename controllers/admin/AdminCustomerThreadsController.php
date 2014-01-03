@@ -655,6 +655,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			$is_valid_order_id = false;
 
 		$tpl->assign(array(
+			'email_base_url' => Context::getContext()->shop->getBaseUrl().dirname($_SERVER['PHP_SELF']).'/',
+			'link' => Context::getContext()->link,
 			'current' => self::$currentIndex,
 			'token' => $this->token,
 			'message' => $message,
@@ -673,12 +675,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 	protected function displayButton($content)
 	{
-		return '
-		<div>
-			<p>
-				'.$content.'
-			</p>
-		</div>';
+		return '<div><p>'.$content.'</p></div>';
 	}
 
 	public function renderOptions()
