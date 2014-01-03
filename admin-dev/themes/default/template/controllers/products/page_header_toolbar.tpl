@@ -26,14 +26,48 @@
 <div class="page-head">
 	{block name=pageTitle}
 	<h2 class="page-title">
-		{if isset($toolbar_btn['back'])}
+		{*if isset($toolbar_btn['back'])}
 		<a id="page-header-desc-{$table}{if isset($toolbar_btn['back'].imgclass)}-{$toolbar_btn['back'].imgclass}{/if}" class="page-header-toolbar-back" {if isset($toolbar_btn['back'].href)}href="{$toolbar_btn['back'].href}"{/if} title="{$toolbar_btn['back'].desc}" {if isset($toolbar_btn['back'].target) && $toolbar_btn['back'].target}target="_blank"{/if}{if isset($toolbar_btn['back'].js) && $toolbar_btn['back'].js}onclick="{$toolbar_btn['back'].js}"{/if}>
 			<i class="process-icon-back"></i>
-			<!-- <span {if isset($toolbar_btn['back'].force_desc) && $toolbar_btn['back'].force_desc == true } class="locked" {/if}>{$toolbar_btn['back'].desc}</span> -->
 		</a>
-		{/if}
-		{if is_array($title)}{$title|end}{else}{$title}{/if}
+		{/if*}
+		{$title}
+		{* {if is_array($title)}{$title|end}{else}{$title}{/if} *}
 	</h2>
+	{/block}
+
+	{block name=pageBreadcrumb}
+	<ul class="breadcrumb page-breadcrumb">
+		{* Container *}
+		{if $breadcrumbs2.container.name != ''}
+			<li>
+				{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href}">{/if}
+				{if $breadcrumbs2.container.icon != ''}<i class="{$breadcrumbs2.container.icon}"></i>{/if}
+				{$breadcrumbs2.container.name}
+				{if $breadcrumbs2.container.href != ''}</a>{/if}
+			</li>
+		{/if}
+		
+		{* Current Tab *}
+		{if $breadcrumbs2.tab.name != ''}
+			<li>
+				{if $breadcrumbs2.tab.href != ''}<a href="{$breadcrumbs2.tab.href}">{/if}
+				{if $breadcrumbs2.tab.icon != ''}<i class="{$breadcrumbs2.tab.icon}"></i>{/if}
+				{$breadcrumbs2.tab.name}
+				{if $breadcrumbs2.tab.href != ''}</a>{/if}
+			</li>
+		{/if}
+		
+		{* Action *}
+		{if $breadcrumbs2.action.name != ''}
+			<li>
+				{if $breadcrumbs2.action.href != ''}<a href="{$breadcrumbs2.action.href}">{/if}
+				{if $breadcrumbs2.action.icon != ''}<i class="{$breadcrumbs2.action.icon}"></i>{/if}
+				{$breadcrumbs2.action.name}
+				{if $breadcrumbs2.action.href != ''}</a>{/if}
+			</li>
+		{/if}
+		</ul>
 	{/block}
 
 	<div class="page-bar toolbarBox">
@@ -68,31 +102,24 @@
 				$(function() {
 					//get reference on save link
 					btn_save = $('i[class~="process-icon-save"]').parent();
-
 					//get reference on form submit button
 					btn_submit = $('#{$table}_form_submit_btn');
-
 					if (btn_save.length > 0 && btn_submit.length > 0)
 					{
 						//get reference on save and stay link
 						btn_save_and_stay = $('i[class~="process-icon-save-and-stay"]').parent();
-
 						//get reference on current save link label
 						lbl_save = $('#page-header-desc-{$table}-save');
-
 						//override save link label with submit button value
 						if (btn_submit.html().length > 0)
 							lbl_save.find('span').html(btn_submit.html());
-
 						if (btn_save_and_stay.length > 0) {
 							//get reference on current save link label
 							lbl_save_and_stay = $('#page-header-desc-{$table}-save-and-stay');
-
 							//override save and stay link label with submit button value
 							if (btn_submit.html().length > 0 && lbl_save_and_stay && !lbl_save_and_stay.hasClass('locked'))
 								lbl_save_and_stay.find('span').html(btn_submit.html() + " {l s='and stay'} ");
 						}
-
 						//hide standard submit button
 						btn_submit.hide();
 						//bind enter key press to validate form
@@ -107,14 +134,12 @@
 								if (submited)
 									return false;
 								submited = true;
-
 								//add hidden input to emulate submit button click when posting the form -> field name posted
 								btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'" value="1" />');
 
 								$('#{$table}_form').submit();
 								return false;
 							});
-
 							if (btn_save_and_stay) {
 								btn_save_and_stay.click(function() {
 									//add hidden input to emulate submit button click when posting the form -> field name posted
@@ -125,7 +150,6 @@
 							}
 						{/block}
 					}
-
 					{if isset($tab_modules_open) && $tab_modules_open}
 						$('#modules_list_container').modal('show');
 						openModulesList();
@@ -144,22 +168,3 @@
 		</div>
 	</div>
 </div>
-
-{block name=pageBreadcrumb}
-<ul class="breadcrumb hide">
-	<li>
-		{if $title}
-			{foreach $title as $key => $item name=title}
-				{* Use strip_tags because if the string already has been through htmlentities using escape will break it *}
-				<span class="item-{$key} ">{$item|strip_tags}
-					{if !$smarty.foreach.title.last}
-						<img alt="&gt;" style="margin-right:5px" src="../img/admin/separator_breadcrumb.png" />
-					{/if}
-				</span>
-			{/foreach}
-		{else}
-			&nbsp;
-		{/if}
-	</li>
-</ul>
-{/block}

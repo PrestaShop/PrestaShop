@@ -1,7 +1,7 @@
 .page-head
 	width: 100%
 	height: 55px
-	padding: 0 10px 0 0
+	padding: 0 0 0 0
 	margin: 0
 	border-bottom: 4px solid darken($secondary-color,10%)
 	position: fixed
@@ -12,13 +12,15 @@
 	@include box-shadow(rgba(black,0.15) 0 7px 0)
 	h2.page-title
 		@extend .pull-left
-		padding: 20px 0 0 260px
+		position: relative
+		padding: 26px 0 0 310px
+		margin: 0
 		font-size: 20px
-		line-height: 0
+		line-height: 1em
 		color: white
 		text-transform: uppercase
 		@media (max-width: $screen-tablet)
-			padding: 0 0 0 20px
+			padding: 26px 0 0 70px
 		a
 			border-bottom: dotted 1px white
 			&:hover
@@ -31,14 +33,36 @@
 		position: absolute
 		list-style: none
 		margin: 0
-		padding: 0 5px
-		left: 240px
-		top: 0
+		padding: 0
+		left: 310px
+		top: 4px
 		height: 20px
 		line-height: 20px
 		color: black
-		background-color: rgba(black,.2)
+		background: transparent
 		font-size: 12px
+		color: rgba(black,0.5)
+		@include border-radius(0)
+		@media (max-width: $screen-tablet)
+			left: 70px
+		li i
+			font-size: 14px
+		li:first-child i
+			width: 50px
+			position: absolute
+			left: -60px
+			top: 0
+			font-size: 42px
+			font-weight: 100
+			padding-right: 5px
+			color: rgba(black,0.5)
+			border-right: solid 1px #73A232
+		li:before
+			color: #73A232
+		a
+			color: rgba(white,0.6)
+			&:hover
+				color: white
 
 	.btn-toolbar
 		margin: 0
@@ -50,13 +74,13 @@
 
 .toolbar_btn
 	display: block
-	width: 46px
+	
 	height: 46px
-	border: solid 1px #73A232
+	
 	position: relative
 	padding: 2px 5px !important
 	margin-right: 3px
-	font-size: 11px
+	font-size: 12px
 	color: white
 	text-align: center
 	text-shadow: none
@@ -64,6 +88,10 @@
 	white-space: nowrap
 	overflow: hidden
 	text-overflow: ellipsis
+	@media (max-width: $screen-desktop)
+		width: 46px
+		border: solid 1px #73A232
+		font-size: 11px
 	&:hover
 		color: $secondary-color
 		border-color: white

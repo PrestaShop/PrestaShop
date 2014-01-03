@@ -26,40 +26,48 @@
 <div class="page-head">
 	{block name=pageTitle}
 	<h2 class="page-title">
-		{if isset($toolbar_btn['back'])}
+		{*if isset($toolbar_btn['back'])}
 		<a id="page-header-desc-{$table}{if isset($toolbar_btn['back'].imgclass)}-{$toolbar_btn['back'].imgclass}{/if}" class="page-header-toolbar-back" {if isset($toolbar_btn['back'].href)}href="{$toolbar_btn['back'].href}"{/if} title="{$toolbar_btn['back'].desc}" {if isset($toolbar_btn['back'].target) && $toolbar_btn['back'].target}target="_blank"{/if}{if isset($toolbar_btn['back'].js) && $toolbar_btn['back'].js}onclick="{$toolbar_btn['back'].js}"{/if}>
 			<i class="process-icon-back"></i>
 		</a>
-		{/if}
+		{/if*}
+		{$breadcrumbs2.tab.name}
+		{* {if is_array($title)}{$title|end}{else}{$title}{/if} *}
+	</h2>
+	{/block}
 
+	{block name=pageBreadcrumb}
+	<ul class="breadcrumb page-breadcrumb">
 		{* Container *}
 		{if $breadcrumbs2.container.name != ''}
-			{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href}">{/if}
-			{if $breadcrumbs2.container.icon != ''}<i class="{$breadcrumbs2.container.icon}"></i>{/if}
-			{$breadcrumbs2.container.name}
-			{if $breadcrumbs2.container.href != ''}</a>{/if}
-			&gt;
+			<li>
+				{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href}">{/if}
+				{if $breadcrumbs2.container.icon != ''}<i class="{$breadcrumbs2.container.icon}"></i>{/if}
+				{$breadcrumbs2.container.name}
+				{if $breadcrumbs2.container.href != ''}</a>{/if}
+			</li>
 		{/if}
 		
 		{* Current Tab *}
 		{if $breadcrumbs2.tab.name != ''}
-			{if $breadcrumbs2.tab.href != ''}<a href="{$breadcrumbs2.tab.href}">{/if}
-			{if $breadcrumbs2.tab.icon != ''}<i class="{$breadcrumbs2.tab.icon}"></i>{/if}
-			{$breadcrumbs2.tab.name}
-			{if $breadcrumbs2.tab.href != ''}</a>{/if}
-			{if $breadcrumbs2.action.name != ''}&gt;{/if}
+			<li>
+				{if $breadcrumbs2.tab.href != ''}<a href="{$breadcrumbs2.tab.href}">{/if}
+				{if $breadcrumbs2.tab.icon != ''}<i class="{$breadcrumbs2.tab.icon}"></i>{/if}
+				{$breadcrumbs2.tab.name}
+				{if $breadcrumbs2.tab.href != ''}</a>{/if}
+			</li>
 		{/if}
 		
 		{* Action *}
 		{if $breadcrumbs2.action.name != ''}
-			{if $breadcrumbs2.action.href != ''}<a href="{$breadcrumbs2.action.href}">{/if}
-			{if $breadcrumbs2.action.icon != ''}<i class="{$breadcrumbs2.action.icon}"></i>{/if}
-			{$breadcrumbs2.action.name}
-			{if $breadcrumbs2.action.href != ''}</a>{/if}
+			<li>
+				{if $breadcrumbs2.action.href != ''}<a href="{$breadcrumbs2.action.href}">{/if}
+				{if $breadcrumbs2.action.icon != ''}<i class="{$breadcrumbs2.action.icon}"></i>{/if}
+				{$breadcrumbs2.action.name}
+				{if $breadcrumbs2.action.href != ''}</a>{/if}
+			</li>
 		{/if}
-
-		{* {if is_array($title)}{$title|end}{else}{$title}{/if} *}
-	</h2>
+		</ul>
 	{/block}
 
 	<div class="page-bar toolbarBox">
@@ -110,22 +118,3 @@
 		</div>
 	</div>
 </div>
-
-{block name=pageBreadcrumb}
-<ul class="breadcrumb hide">
-	<li>
-		{if $title}
-			{foreach $title as $key => $item name=title}
-				{* Use strip_tags because if the string already has been through htmlentities using escape will break it *}
-				<span class="item-{$key} ">{$item|strip_tags}
-					{if !$smarty.foreach.title.last}
-						<img alt="&gt;" style="margin-right:5px" src="../img/admin/separator_breadcrumb.png" />
-					{/if}
-				</span>
-			{/foreach}
-		{else}
-			&nbsp;
-		{/if}
-	</li>
-</ul>
-{/block}
