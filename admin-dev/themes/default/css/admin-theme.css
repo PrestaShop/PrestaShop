@@ -162,7 +162,7 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-music:before { content: "\f001"; }
 
-.icon-search:before { content: "\f002"; }
+.icon-search:before, .icon-AdminSearch:before { content: "\f002"; }
 
 .icon-envelope-alt:before { content: "\f003"; }
 
