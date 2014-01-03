@@ -138,7 +138,6 @@
 
 <script type="text/javascript">
 	var upbutton = '{l s='Upload an image'}';
-	var token = '{$token}';
 	var come_from = '{$table}';
 	var success_add =  '{l s='The image has been successfully added.'}';
 	var id_tmp = 0;

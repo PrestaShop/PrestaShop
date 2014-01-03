@@ -50,6 +50,8 @@ themes/default-bootstrap/modules/*/*.php
 !themes/default-bootstrap/modules/*/index.php
 themes/default-bootstrap/lang/*.php
 !themes/default-bootstrap/lang/index.php
+themes/default-bootstrap/modules/*/translations/*.php
+!themes/default-bootstrap/modules/*/translations/index.php
 modules/*/translations/*.php
 !modules/*/translations/index.php
 mails/*

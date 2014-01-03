@@ -170,6 +170,7 @@ class DispatcherCore
 	 * @var string Set default controller, which will be used if http parameter 'controller' is empty
 	 */
 	protected $default_controller;
+	protected $use_default_controller = false;
 
 	/**
 	 * @var string Controller to use if found controller doesn't exist
@@ -229,8 +230,9 @@ class DispatcherCore
 		$this->loadRoutes();
 	}
 
-	public function getDefaultController()
+	public function useDefaultController()
 	{
+		$this->use_default_controller = true;
 		if ($this->default_controller === null)
 		{
 			if (defined('_PS_ADMIN_DIR_'))
@@ -257,7 +259,7 @@ class DispatcherCore
 		// Get current controller
 		$this->getController();
 		if (!$this->controller)
-			$this->controller = $this->getDefaultController();
+			$this->controller = $this->useDefaultController();
 		// Dispatch with right front controller
 		switch ($this->front_controller)
 		{
@@ -298,6 +300,9 @@ class DispatcherCore
 
 			// Dispatch back office controller + module back office controller
 			case self::FC_ADMIN :
+				if ($this->use_default_controller && !Tools::getValue('token'))
+					Tools::redirectAdmin('index.php?controller='.$this->controller.'&token='.Tools::getAdminTokenLite($this->controller));
+
 				$tab = Tab::getInstanceFromClassName($this->controller, Configuration::get('PS_LANG_DEFAULT'));
 				$retrocompatibility_admin_tab = null;
 
@@ -760,14 +765,10 @@ class DispatcherCore
 			}
 			
 			if ($controller == 'index' || $this->request_uri == '/index.php') 
-				$controller = $this->getDefaultController();
-			$this->controller = $controller;
+				$controller = $this->useDefaultController();
 		}
-		// Default mode, take controller from url
-		else
-			$this->controller = $controller;
 
-		$this->controller = str_replace('-', '', $this->controller);
+		$this->controller = str_replace('-', '', $controller);
 		$_GET['controller'] = $this->controller;
 		return $this->controller;
 	}

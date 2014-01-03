@@ -26,7 +26,6 @@
 
 <script type="text/javascript">{$autocompleteList}</script>
 <script type="text/javascript">
-	var token = '{$token}';
 	var currentIndex = '{$currentIndex}';
 	var currentIndexWithToken = '{$currentIndex}&token={$token}';
 	var dirNameCurrentIndex = '{$dirNameCurrentIndex}';
