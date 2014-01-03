@@ -39,7 +39,6 @@
 	var currency_blank = "{$currency->blank}";
 	var priceDisplayPrecision = 2;
 	var use_taxes = {if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}true{else}false{/if};
-	var token = "{$smarty.get.token|escape:'html':'UTF-8'}";
 	var stock_management = {$stock_management|intval};
 	var txt_add_product_stock_issue = "{l s='Are you sure you want to add this quantity?' js=1}";
 	var txt_add_product_new_invoice = "{l s='Are you sure you want to create a new invoice?' js=1}";
