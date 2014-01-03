@@ -1,0 +1,62 @@
+.table
+	border-collapse: separate
+	border-spacing: 0 2px 0 0
+	margin-bottom: 5px
+	thead 
+		> tr > th
+			border: none
+			font-weight: normal
+			vertical-align: top
+			//background: #FAFBFC
+			border-bottom: solid 1px darken(#CAE5F4,10%)
+			//border-left: solid 1px #88C5E8
+			span.title_box
+				color: #656565
+				display: block
+				word-wrap: nowrap
+				white-space: nowrap
+				&.active
+					font-weight: bold
+				a
+					text-decoration: none
+				a.active
+					color: black
+		> tr.filter > th
+			background-color: lighten(#CAE5F4,8%)
+			input[type="text"].filter, input[type="password"].filter, select.filter
+				font-size: 11px
+				border-color: darken(#CAE5F4,10%)
+	input, select
+		margin: 0
+	tbody
+		> tr > td
+			border-top: none
+			color: lighten(black,40%)
+			background-color: white
+			padding: 3px 7px
+			vertical-align: middle
+			word-wrap: nowrap
+			font-size: 12px
+			border-bottom: solid 1px #EAEDEF
+		> tr.odd > td
+			//background-color: $table-bg-accent
+			background-color: #FCFDFE
+		> tr:hover > td
+			//background-color: $table-bg-hover
+			background-color: darken(#FCFDFE,2%)
+
+	td.center, th.center
+		text-align: center
+	td.pointer
+		cursor: pointer
+	td.dragHandle
+		cursor: move
+	td.actions
+		min-width: 200px
+
+tr.highlighted td
+	background-color: $brand-primary!important
+	color: white
+
+.bulk-actions
+	margin: 17px 0 0 0

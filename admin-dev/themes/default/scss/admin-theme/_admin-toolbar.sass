@@ -12,8 +12,9 @@
 	@include box-shadow(rgba(black,0.15) 0 7px 0)
 	h2.page-title
 		@extend .pull-left
-		padding: 0 0 0 260px
-		font-size: 18px
+		padding: 20px 0 0 260px
+		font-size: 20px
+		line-height: 0
 		color: white
 		text-transform: uppercase
 		@media (max-width: $screen-tablet)
@@ -26,6 +27,18 @@
 	a
 		color: white
 		text-decoration: none
+	ul.page-breadcrumb
+		position: absolute
+		list-style: none
+		margin: 0
+		padding: 0 5px
+		left: 240px
+		top: 0
+		height: 20px
+		line-height: 20px
+		color: black
+		background-color: rgba(black,.2)
+		font-size: 12px
 
 	.btn-toolbar
 		margin: 0
@@ -36,13 +49,21 @@
 			color: #333
 
 .toolbar_btn
+	display: block
+	width: 46px
+	height: 46px
+	border: solid 1px #73A232
 	position: relative
 	padding: 2px 5px !important
 	margin-right: 3px
-	font-size: 12px
+	font-size: 11px
 	color: white
 	text-align: center
 	text-shadow: none
+	text-align: center
+	white-space: nowrap
+	overflow: hidden
+	text-overflow: ellipsis
 	&:hover
 		color: $secondary-color
 		border-color: white
