@@ -50,7 +50,7 @@ class Dashactivity extends Module
 		Configuration::updateValue('DASHACTIVITY_CART_ACTIVE', 30);
 		Configuration::updateValue('DASHACTIVITY_CART_ABANDONED_MIN', 24);
 		Configuration::updateValue('DASHACTIVITY_CART_ABANDONED_MAX', 48);
-		Configuration::updateValue('DASHACTIVITY_VISITOR_ONLINE', 24);
+		Configuration::updateValue('DASHACTIVITY_VISITOR_ONLINE', 30);
 		
 		return (parent::install() 
 			&& $this->registerHook('dashboardZoneOne') 
@@ -406,7 +406,7 @@ class Dashactivity extends Module
 			),
 		);
 		$fields_form['form']['input'][] = array(
-				'label' => $this->l('Abandoned Cart (min)'),
+				'label' => $this->l('Cart abandoned (min)'),
 				'hint' => $this->l('How long (in hours) after the last action a cart is to be considered as abandoned (default: 24 hrs).'),
 				'name' => 'DASHACTIVITY_CART_ABANDONED_MIN',
 				'type' => 'text',
