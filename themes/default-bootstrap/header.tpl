@@ -23,10 +23,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <!DOCTYPE HTML>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 " lang="{$lang_iso}"> <![endif]-->
-<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8 ie7" lang="{$lang_iso}"> <![endif]-->
-<!--[if IE 8]><html class="no-js lt-ie9 ie8" lang="{$lang_iso}"> <![endif]-->
-<!--[if gt IE 8]> <html class="no-js ie9" lang="{$lang_iso}"> <![endif]-->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 " lang="{$lang_iso}"><![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8 ie7" lang="{$lang_iso}"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9 ie8" lang="{$lang_iso}"><![endif]-->
+<!--[if gt IE 8]> <html class="no-js ie9" lang="{$lang_iso}"><![endif]-->
 <html lang="{$lang_iso}">
 	<head>
 		<meta charset="utf-8" />
@@ -47,28 +47,6 @@
 {if isset($css_files)}
 	{foreach from=$css_files key=css_uri item=media}
 		<link rel="stylesheet" href="{$css_uri}" type="text/css" media="{$media}" />
-	{/foreach}
-{/if}
-		<script type="text/javascript">
-			var baseDir = '{$content_dir|addslashes}';
-			var baseUri = '{$base_uri|addslashes}';
-			var static_token = '{$static_token|addslashes}';
-			var token = '{$token|addslashes}';
-			var priceDisplayPrecision = {$priceDisplayPrecision|intval*$currency->decimals|intval};
-			var priceDisplayMethod = {$priceDisplay|intval};
-			var roundMode = {$roundMode|intval};
-			var isUserLogged = {if $logged}true{else}false{/if};
-			if (navigator.userAgent.match(/Android/i)) {
-				var viewport = document.querySelector("meta[name=viewport]");
-				viewport.setAttribute('content', 'initial-scale=1.0,maximum-scale=1.0,user-scalable=0,width=device-width,height=device-height');
-			}
-			if (navigator.userAgent.match(/Android/i)) {
-				window.scrollTo(0,1);
-			}
-		</script>
-{if isset($js_files)}
-	{foreach from=$js_files item=js_uri}
-		<script type="text/javascript" src="{$js_uri}"></script>
 	{/foreach}
 {/if}
 		<!--[if IE 8]>

@@ -72,4 +72,3 @@ function smartyTranslate($params, &$smarty)
 
 	return $params['js'] ? $msg : Tools::safeOutput($msg);
 }
-

@@ -571,5 +571,21 @@ class MediaCore
 					if ($file[0] != '.' && $file != 'index.php')
 						Tools::deleteFile($dir.DIRECTORY_SEPARATOR.$file, array('index.php'));
 	}
-
+	
+	public static function deferInlineScripts($output)
+	{
+		return preg_replace_callback('/<script[^>]*>(.*)<\/script>/Uims', array('Media', 'deferScript'), $output);
+	}
+	
+	public static function deferScript($matches)
+	{
+		$value = trim($matches[1]);
+		if(!empty($value))
+		{
+			Controller::$inline_script[] = $value;
+			return '';
+		}
+		else
+			return $matches[0];
+	}
 }

@@ -44,3 +44,13 @@
 {/if}
 	</body>
 </html>
+{strip}
+{addJsDef baseDir=$content_dir}
+{addJsDef baseUri=$base_uri}
+{addJsDef static_token=$static_token}
+{addJsDef token=$token}
+{addJsDef priceDisplayPrecision=$priceDisplayPrecision|intval*$currency->decimals|intval}
+{addJsDef priceDisplayMethod=$priceDisplay|intval}
+{addJsDef roundMode=$roundMode|intval}
+{addJsDef isUserLogged=$logged|intval}
+{/strip}

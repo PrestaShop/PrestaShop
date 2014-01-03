@@ -83,7 +83,7 @@ smartyRegisterFunction($smarty, 'function', 'getAdminToken', array('Tools', 'get
 smartyRegisterFunction($smarty, 'function', 'displayAddressDetail', array('AddressFormat', 'generateAddressSmarty'));
 smartyRegisterFunction($smarty, 'function', 'getWidthSize', array('Image', 'getWidth'));
 smartyRegisterFunction($smarty, 'function', 'getHeightSize', array('Image', 'getHeight'));
-
+smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Controller', 'addJsDef'));
 
 function smartyDieObject($params, &$smarty)
 {
