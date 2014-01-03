@@ -292,9 +292,7 @@ class HelperListCore extends Helper
 					}
 					else
 						if (isset($params['icon'][$tr[$key]]))
-							$this->_list[$index][$key] = array(
-								'class' => $params['icon'][$tr[$key]],
-							);
+							$this->_list[$index][$key] = $params['icon'][$tr[$key]];
 				}
 				elseif (isset($params['type']) && $params['type'] == 'float')
 					$this->_list[$index][$key] = rtrim(rtrim($tr[$key], '0'), '.');
@@ -589,6 +587,7 @@ class HelperListCore extends Helper
 					if (!Validate::isCleanHtml($value))
 						$value = '';
 			}
+
 			$params['value'] = $value;
 			$this->fields_list[$key] = $params;
 		}

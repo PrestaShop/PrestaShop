@@ -49,7 +49,8 @@ class Blockcmsinfo extends Module
 			return parent::install() &&
 			$this->installDB() &&
 			Configuration::updateValue('blockcmsinfo_nbblocks', 2) &&
-			$this->registerHook('home') && $this->installFixtures();
+			$this->registerHook('home') && $this->installFixtures() &&
+			$this->disableDevice(Context::DEVICE_TABLET | Context::DEVICE_MOBILE);
 	}
 	
 	public function installDB()
@@ -245,8 +246,6 @@ class Blockcmsinfo extends Module
 
 	protected function initList()
 	{
-
-
 		$this->fields_list =  array(
 		
 			'id_info' => array(
@@ -281,10 +280,6 @@ class Blockcmsinfo extends Module
 
 	public function hookHome($params)
 	{
-		// Check if not a mobile theme
-		if ($this->context->getMobileDevice() != false)
-			return false;
-
 		$this->context->controller->addCSS($this->_path.'style.css', 'all');
 		if (!$this->isCached('blockcmsinfo.tpl', $this->getCacheId()))
 		{

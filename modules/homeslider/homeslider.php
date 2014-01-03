@@ -74,6 +74,9 @@ class HomeSlider extends Module
 			/* Adds samples */
 			if ($res)
 				$this->installSamples();
+			
+			// Disable on mobiles and tablets
+			$this->disableDevice(Context::DEVICE_TABLET | Context::DEVICE_MOBILE);
 
 			return $res;
 		}
@@ -676,7 +679,7 @@ class HomeSlider extends Module
 
 	public function hookdisplayTopColumn($params)
 	{
-		if (!isset($this->context->controller->php_self) || $this->context->controller->php_self != 'index' || $this->context->getMobileDevice() != false)
+		if (!isset($this->context->controller->php_self) || $this->context->controller->php_self != 'index')
 			return ;
 
 		if (!$this->_prepareHook())
@@ -687,12 +690,9 @@ class HomeSlider extends Module
 
 	public function hookDisplayHome()
 	{
-		if(!$this->_prepareHook())
+		if (!$this->_prepareHook())
 			return;
 
-		// Check if not a mobile theme
-		if ($this->context->getMobileDevice() != false)
-			return false;
 		return $this->display(__FILE__, 'homeslider.tpl', $this->getCacheId());
 	}
 

@@ -80,67 +80,65 @@
 		</div>
 	</form>
 </div>
-
-
 	{if $thread->id_customer}
-
 		<div class="panel">
-		{if $orders && count($orders)}
-			{if $count_ok}
-				<h3>
-					<i class="icon-shopping-cart"></i> {l s='Orders'}
-				</h3>
-				<div class="table-responsive clearfix">
-					<table class="table">
-						<tr>
-							<th class="center">
-								<span class="title_box">{l s='ID'}</span>
-							</th>
-							<th class="center">
-								<span class="title_box">{l s='Date'}</span>
-							</th>
-							<th class="center">
-								<span class="title_box">{l s='Products:'}</span>
-							</th>
-							<th class="center">
-								<span class="title_box">{l s='Total paid'}</span>
-							</th>
-							<th class="center">
-								<span class="title_box">{l s='Payment: '}</span>
-							</th>
-							<th class="center">
-								<span class="title_box">{l s='State'}</span>
-							</th>
-							<th class="center">
-								<span class="title_box">{l s='Actions'}</span>
-							</th>
-						</tr>
-						{assign var=irow value=0}
-						{foreach $orders_ok as $order}
-							<tr onclick="document.location='?tab=AdminOrders&id_order={$order.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}">
-								<td class="center">{$order.id_order}</td>
-								<td class="center">{$order.date_add}</td>
-								<td class="center">{$order.nb_products}</td>
-								<td class="center">{$order.total_paid_real}</td>
-								<td class="center">{$order.payment}</td>
-								<td class="center">{$order.order_state}</td>
-								<td class="center">
-									<a class=" btn btn-default" href="?tab=AdminOrders&id_order={$order.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}">
-										<i class="icon-eye-open"></i> {l s='View'}
-									</a>
-								</td>
-							</tr>
-						{/foreach}
-					</table>
-				</div>
+			<h3>
+				<i class="icon-shopping-cart"></i> {l s='Orders'}
 				<p class="pull-right">
-					{l s='Validated Orders:'} {$count_ok} {l s='for'} <strong>{$total_ok}</strong>
+					{l s='Validated Orders:'} {$count_ok} {l s='for'} <span class="badge">{$total_ok}</span>
 				</p>
-			{/if}
-		{/if}
+			</h3>
+			<div class="table-responsive clearfix">
+				<table class="table">
+					<tr>
+						<th class="center">
+							<span class="title_box">{l s='ID'}</span>
+						</th>
+						<th class="center">
+							<span class="title_box">{l s='Date'}</span>
+						</th>
+						<th class="center">
+							<span class="title_box">{l s='Products:'}</span>
+						</th>
+						<th class="center">
+							<span class="title_box">{l s='Total paid'}</span>
+						</th>
+						<th class="center">
+							<span class="title_box">{l s='Payment: '}</span>
+						</th>
+						<th class="center">
+							<span class="title_box">{l s='State'}</span>
+						</th>
+						<th class="center">
+							<span class="title_box">{l s='Actions'}</span>
+						</th>
+					</tr>
+					{assign var=irow value=0}
+					{foreach $orders as $order}
+						<tr onclick="document.location='?tab=AdminOrders&id_order={$order.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}">
+							<td class="center">{$order.id_order}</td>
+							<td class="center">{$order.date_add}</td>
+							<td class="center">{$order.nb_products}</td>
+							<td class="center">{$order.total_paid_real}</td>
+							<td class="center">{$order.payment}</td>
+							<td class="center">{$order.order_state}</td>
+							<td class="center">
+								<a class=" btn btn-default" href="?tab=AdminOrders&id_order={$order.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}">
+									<i class="icon-eye-open"></i> {l s='View'}
+								</a>
+							</td>
+						</tr>
+					{foreachelse}
+						<tr>
+							<td colspan="7">{l s="No orders"}</td>
+						</tr>
+					{/foreach}
+				</table>
+			</div>
 		</div>
-		<div class="panel">
+		{/if}
 		{if $products && count($products)}
+		<div class="panel">
 			<h3>
 				<i class="icon-archive"></i> {l s='Products:'}
 			</h3>
@@ -179,7 +177,6 @@
 					{/foreach}
 				</table>
 			</div>
-		{/if}
 		</div>
 	{/if}
 
@@ -210,7 +207,6 @@
 			});
 			timer = setInterval("markAsRead()", 3000);
 		});
-		
 		
 		function markAsRead()
 		{
