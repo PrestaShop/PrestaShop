@@ -72,7 +72,7 @@ class ProductPaymentLogos extends Module
 					.Shop::addSqlAssociation('store', 's');
 			$total = Db::getInstance()->getValue($sql);
 			
-			if ($total <= 0)
+				if ($total <= 0)
 				return;
 		}
 		return $this->display(__FILE__, 'productpaymentlogos.tpl', $this->getCacheId());
@@ -87,6 +87,8 @@ class ProductPaymentLogos extends Module
 	{
 		if (Tools::isSubmit('submitStoreConf'))
 		{
+			Configuration::updateValue('PRODUCTPAYMENTLOGOS_LINK', Tools::getValue('PRODUCTPAYMENTLOGOS_LINK'));
+			Configuration::updateValue('PRODUCTPAYMENTLOGOS_TITLE', Tools::getValue('PRODUCTPAYMENTLOGOS_TITLE'));
 			if (isset($_FILES['PRODUCTPAYMENTLOGOS_IMG']) && isset($_FILES['PRODUCTPAYMENTLOGOS_IMG']['tmp_name']) && !empty($_FILES['PRODUCTPAYMENTLOGOS_IMG']['tmp_name']))
 			{
 				if ($error = ImageManager::validateUpload($_FILES['PRODUCTPAYMENTLOGOS_IMG'], 4000000))
@@ -107,8 +109,7 @@ class ProductPaymentLogos extends Module
 					}
 				}
 			}
-			Configuration::updateValue('PRODUCTPAYMENTLOGOS_LINK', Tools::getValue('PRODUCTPAYMENTLOGOS_LINK'));
-			Configuration::updateValue('PRODUCTPAYMENTLOGOS_TITLE', Tools::getValue('PRODUCTPAYMENTLOGOS_TITLE'));
+			$this->_clearCache('productpaymentlogos.tpl');
 		}
 		return '';
 	}
