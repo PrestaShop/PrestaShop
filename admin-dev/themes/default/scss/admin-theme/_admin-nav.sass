@@ -36,14 +36,13 @@
 			position: relative
 			a
 				display: block
+				height: 40px
 				position: relative
 				padding: 2px 0 2px 10px
 				border-bottom: 1px solid darken($main-color,10%)
 				font-size: 12px
 				line-height: 40px
-				height: 40px
-				$color: contrast-color($main-color, white, #333, 10%)
-				color: mix($main-color, $color, 30%)
+				color: mix($main-color, contrast-color($main-color, white, #333, 10%), 30%)
 				background-color: $main-color
 				text-transform: uppercase
 				text-decoration: none
@@ -121,7 +120,7 @@
 				ul.submenu
 					padding: 8px 11px 8px 8px
 					background-color: white
-					@include box-shadow(darken(white,15%) -3px 0 0 inset)
+					@include box-shadow(darken(white,8%) -4px 0 0 inset)
 					a
 						border-bottom: solid 1px #eee
 						background-color: white
@@ -156,7 +155,6 @@
 					@include transition-property(color)
 					@include transition-duration(0.4s)
 					@include transition-timing-function(ease-out)
-				
 			span.submenu_expand
 				position: absolute
 				right: 0
@@ -194,8 +192,6 @@
 							background-color: white
 					&:last-child a
 						border-bottom: none
-					
-
 	> ul > li:hover:not(.active)
 		position: relative
 		> a
@@ -224,6 +220,7 @@
 	padding: 0 40px 0 0
 	z-index: 600
 	background-color: white
+	@include box-shadow(rgba(black,.2) 0 1px)
 	ul.menu
 		margin: 0
 		padding: 0
@@ -239,13 +236,14 @@
 			> a
 				display: block
 				line-height: 30px
-				color: $main-color
+				color: lighten($main-color,20%)
 				padding: 0 6px
 				margin: 0
 				font-size: 12px
 				i
 					margin: 0
 					width: 15px
+					color: lighten($main-color,10%)
 					background-color: transparent
 					font-size: 14px
 			&.active, &:hover
@@ -328,8 +326,10 @@
 		margin-left: 0
 		.page-head
 			top: 65px
-			h2.page-title
-				padding: 0 0 0 20px
+		.page-title
+			padding-left: 75px
+		.page-breadcrumb
+			left: 75px
 
 .page-sidebar
 	#content
