@@ -587,6 +587,7 @@ class HelperListCore extends Helper
 					if (!Validate::isCleanHtml($value))
 						$value = '';
 			}
+
 			$params['value'] = $value;
 			$this->fields_list[$key] = $params;
 		}

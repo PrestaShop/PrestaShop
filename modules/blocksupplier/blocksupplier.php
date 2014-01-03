@@ -57,7 +57,7 @@ class BlockSupplier extends Module
 			return false;
 		Configuration::updateValue('SUPPLIER_DISPLAY_TEXT', true);
 		Configuration::updateValue('SUPPLIER_DISPLAY_TEXT_NB', 5);
-		Configuration::updateValue('SUPPLIER_DISPLAY_FORM', true);
+		Configuration::updateValue('SUPPLIER_DISPLAY_FORM', false);
 		return true;
 	}
 
