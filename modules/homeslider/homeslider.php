@@ -943,31 +943,31 @@ class HomeSlider extends Module
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Height:'),
+						'label' => $this->l('Height'),
 						'name' => 'HOMESLIDER_HEIGHT',
 						'suffix' => 'px'
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Width:'),
+						'label' => $this->l('Width'),
 						'name' => 'HOMESLIDER_WIDTH',
 						'suffix' => 'px'
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Speed:'),
+						'label' => $this->l('Speed'),
 						'name' => 'HOMESLIDER_SPEED',
 						'suffix' => 'ms'
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Pause:'),
+						'label' => $this->l('Pause'),
 						'name' => 'HOMESLIDER_PAUSE',
 						'suffix' => 'ms'
 					),
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Loop:'),
+						'label' => $this->l('Auto play'),
 						'name' => 'HOMESLIDER_LOOP',
 						'values' => array(
 									array(
