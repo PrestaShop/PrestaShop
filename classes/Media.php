@@ -61,6 +61,15 @@ class MediaCore
 		'effects.transfer' => array('fileName' => 'jquery.effects.transfer.min.js', 'dependencies' => array('effects.core'), 'theme' => false)
 	);
 
+	/**
+	 * @var array list of javascript definitions
+	 */
+	public static $js_defs = array();
+
+	/**
+	 * @var array list of javascript inline scripts
+	 */
+	public static $inline_script = array();
 
 	public static function minifyHTML($html_content)
 	{
@@ -571,6 +580,26 @@ class MediaCore
 					if ($file[0] != '.' && $file != 'index.php')
 						Tools::deleteFile($dir.DIRECTORY_SEPARATOR.$file, array('index.php'));
 	}
+
+	public static function getInlineScript()
+	{
+		return Media::$inline_script;
+	}
+
+	/**
+	 * Add a new javascript definition in page
+	 *
+	 * @param mixed $js_uri
+	 * @return void
+	 */
+	public static function addJsDef($js_def)
+	{
+		if (is_array($js_def))
+			foreach ($js_def as $key => $js)
+					Media::$js_defs[$key] = $js;
+		elseif ($js_def)
+			Media::$js_defs[] = $js_def;
+	}
 	
 	public static function deferInlineScripts($output)
 	{
@@ -582,7 +611,7 @@ class MediaCore
 		$value = trim($matches[1]);
 		if(!empty($value))
 		{
-			Controller::$inline_script[] = $value;
+			Media::$inline_script[] = $value;
 			return '';
 		}
 		else
