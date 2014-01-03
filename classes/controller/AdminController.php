@@ -400,12 +400,12 @@ class AdminControllerCore extends Controller
 			case '':
 			case 'list':
 				$breadcrumbs2['action']['name'] = $this->l('List');
-				$breadcrumbs2['action']['icon'] = 'icon-sort-by-alphabet';
+				$breadcrumbs2['action']['icon'] = 'icon-th-list';
 				break;
 			case 'details':
 			case 'view':
 				$breadcrumbs2['action']['name'] = $this->l('View details');
-				$breadcrumbs2['action']['icon'] = 'icon-eye-open';
+				$breadcrumbs2['action']['icon'] = 'icon-zoom-in';
 				break;
 			case 'options':
 				$breadcrumbs2['action']['name'] = $this->l('Options');
