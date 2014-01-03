@@ -149,9 +149,8 @@
 				attributesCombinations.push(tabInfos);
 			{/foreach}
 		{/if}
-
-		var isLoggedWishlist = {if $logged}true{else}false{/if};
-		var contentOnly = {if $content_only}true{else}false{/if}
+		var isLoggedWishlist = {$logged|intval};
+		var contentOnly = {$content_only|intval};
 		//]]>
 	</script>
 
