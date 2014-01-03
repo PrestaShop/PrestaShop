@@ -23,8 +23,27 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="page-head">
-	{include file="controllers/modules/page_header_toolbar.tpl"}
-</div>
+{extends file="page_header_toolbar.tpl"} 
 
-{$kpis}
+{block name=pageTitle}
+<h2 class="page-title">
+	{l s='List of modules'}
+</h2>
+{/block}
+
+{block name=toolbarBox}
+<div class="page-bar toolbarBox">
+	<div class="btn-toolbar">
+		<ul class="nav nav-pills pull-right">
+			{if $add_permission eq '1'}
+			<li>
+				<a id="desc-module-new" class="toolbar_btn" href="#top_container" onclick="$('#module_install').slideToggle();" title="{l s='Add a new module'}">
+					<i class="process-icon-new-module" ></i>
+					<div>{l s='Add a new module'}</div>
+				</a>
+			</li>
+			{/if}
+		</ul>
+	</div>
+</div>
+{/block}
