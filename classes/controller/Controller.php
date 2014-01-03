@@ -361,9 +361,17 @@ abstract class ControllerCore
 		$this->context->cookie->write();
 		if (is_array($content))
 			foreach ($content as $tpl)
-				$this->context->smarty->display($tpl);
+				$html = $this->context->smarty->fetch($tpl);
 		else
-			$this->context->smarty->display($content);
+			$html = $this->context->smarty->fetch($content);
+		
+		$html = Media::deferInlineScripts($html);
+		$this->context->smarty->assign('js_defs', Media::getJsDef());
+		echo $html.$this->context->smarty->fetch(_PS_THEME_DIR_.'jsdefs.tpl');
+		
+		foreach (Media::getInlineScript() as $script)
+			$javascript .= $script."\n";
+		echo "\n<script type=\"text/javascript\">\n".$javascript.'</script>';
 	}
 	
 	protected function isCached($template, $cacheId = null, $compileId = null)
@@ -405,3 +413,4 @@ abstract class ControllerCore
 	    return true;
 	}
 }
+?>

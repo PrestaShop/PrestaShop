@@ -61,6 +61,15 @@ class MediaCore
 		'effects.transfer' => array('fileName' => 'jquery.effects.transfer.min.js', 'dependencies' => array('effects.core'), 'theme' => false)
 	);
 
+	/**
+	 * @var array list of javascript definitions
+	 */
+	protected static $js_def = array();
+
+	/**
+	 * @var array list of javascript inline scripts
+	 */
+	protected static $inline_script = array();
 
 	public static function minifyHTML($html_content)
 	{
@@ -572,4 +581,45 @@ class MediaCore
 						Tools::deleteFile($dir.DIRECTORY_SEPARATOR.$file, array('index.php'));
 	}
 
+	public static function getJsDef()
+	{
+		return Media::$js_def;
+	}
+
+	public static function getInlineScript()
+	{
+		return Media::$inline_script;
+	}
+
+	/**
+	 * Add a new javascript definition in page
+	 *
+	 * @param mixed $js_uri
+	 * @return void
+	 */
+	public static function addJsDef($js_def)
+	{
+		if (is_array($js_def))
+			foreach ($js_def as $key => $js)
+					Media::$js_def[$key] = $js;
+		elseif ($js_def)
+			Media::$js_def[] = $js_def;
+	}
+	
+	public static function deferInlineScripts($output)
+	{
+		return preg_replace_callback('/<script[^>]*>(.*)<\/script>/Uims', array('Media', 'deferScript'), $output);
+	}
+	
+	public static function deferScript($matches)
+	{
+		$value = trim($matches[1]);
+		if(!empty($value))
+		{
+			Media::$inline_script[] = $value;
+			return '';
+		}
+		else
+			return $matches[0];
+	}
 }
