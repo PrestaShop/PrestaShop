@@ -324,7 +324,7 @@
 						<li class="divider"></li>
 						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
 						<li class="divider"></li>
-						<li><a id="header_logout" href="index.php?logout"><i class="icon-signout"></i> {l s='Log out'}</a></li>
+						<li><a id="header_logout" href="{$default_tab_link}&amp;logout"><i class="icon-signout"></i> {l s='Log out'}</a></li>
 					</ul>
 				</li>
 			</ul>
