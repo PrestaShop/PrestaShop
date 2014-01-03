@@ -45,16 +45,6 @@ abstract class ControllerCore
 	public $js_files = array();
 
 	/**
-	 * @var array list of javascript definitions
-	 */
-	public static $js_defs = array();
-
-	/**
-	 * @var array list of javascript inline scripts
-	 */
-	public static $inline_script = array();
-
-	/**
 	 * @var array list of php error
 	 */
 	public static $php_errors = array();
@@ -296,21 +286,6 @@ abstract class ControllerCore
 	}
 
 	/**
-	 * Add a new javascript definition in page
-	 *
-	 * @param mixed $js_uri
-	 * @return void
-	 */
-	public static function addJsDef($js_def)
-	{
-		if (is_array($js_def))
-			foreach ($js_def as $key => $js)
-					Controller::$js_defs[$key] = $js;
-		elseif ($js_def)
-			Controller::$js_defs[] = $js_def;
-	}
-
-	/**
 	 * Add a new javascript file in page header.
 	 *
 	 * @param mixed $js_uri
@@ -391,10 +366,10 @@ abstract class ControllerCore
 			$html = $this->context->smarty->fetch($content);
 		
 		$html = Media::deferInlineScripts($html);
-		$this->context->smarty->assign('js_defs', Controller::$js_defs);
+		$this->context->smarty->assign('js_defs', Media::$js_defs);
 		echo $html.$this->context->smarty->fetch(_PS_THEME_DIR_.'jsdefs.tpl');
 		
-		foreach (Controller::$inline_script as $script)
+		foreach (Media::getInlineScript() as $script)
 			$javascript .= $script."\n";
 		echo "\n<script type=\"text/javascript\">\n".$javascript.'</script>';
 	}
