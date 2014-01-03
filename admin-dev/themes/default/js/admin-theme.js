@@ -45,7 +45,7 @@ $(document).ready(function() {
 		sidebar.off();
 		$('.expanded').removeClass('expanded');
 		$('.maintab').not('.active').closest('.submenu').hide();
-		sidebar.find('li.maintab.has_submenu').append('<span class="submenu_expand"></span>');
+		//sidebar.find('li.maintab.has_submenu').append('<span class="submenu_expand"></span>');
 		sidebar.on('click','.submenu_expand', function(){
 			var $navId = $(this).parent();
 			$('.submenu-collapse').remove();
