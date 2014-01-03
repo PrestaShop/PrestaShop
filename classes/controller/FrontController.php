@@ -519,7 +519,6 @@ class FrontControllerCore extends Controller
 	public function display()
 	{
 		Tools::safePostVars();
-		
 		// Automatically add js files from js/autoload directory in the template
 		foreach (scandir(_PS_THEME_DIR_.'js/autoload/', 0) as $file)
 			if (preg_match('/^[^.].*\.js$/', $file))
@@ -540,9 +539,9 @@ class FrontControllerCore extends Controller
 				$this->js_files = Media::cccJs($this->js_files);
 		}
 
-		$this->context->smarty->assign('css_files', $this->css_files);
-		$this->context->smarty->assign('js_files', array_unique($this->js_files));
 		$this->context->smarty->assign(array(
+			'css_files' => $this->css_files, 
+			'js_files' => array_unique($this->js_files),
 			'errors' => $this->errors,
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,
@@ -571,7 +570,6 @@ class FrontControllerCore extends Controller
 		else
 		{
 			Tools::displayAsDeprecated('layout.tpl is missing in your theme directory');
-
 			if ($this->display_header)
 				$this->smartyOutputContent(_PS_THEME_DIR_.'header.tpl');
 
@@ -583,7 +581,6 @@ class FrontControllerCore extends Controller
 			if ($this->display_footer)
 				$this->smartyOutputContent(_PS_THEME_DIR_.'footer.tpl');
 		}
-				
 		return true;
 	}
 
@@ -1214,3 +1211,4 @@ class FrontControllerCore extends Controller
 		return Product::getColorsListCacheId($id_product);
 	}
 }
+?>

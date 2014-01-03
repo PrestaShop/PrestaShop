@@ -101,7 +101,7 @@ class BlockCart extends Module
 		}
 
 		$total_free_shipping = 0;
-		if ($free_shipping = Tools::convertPrice(floatval(Configuration::get('PS_SHIPPING_FREE_PRICE')), new Currency(intval($params['cart']->id_currency))))
+		if ($free_shipping = Tools::convertPrice(floatval(Configuration::get('PS_SHIPPING_FREE_PRICE')), $currency))
 		{
 			$total_free_shipping =  floatval($free_shipping - ($params['cart']->getOrderTotal(true, Cart::ONLY_PRODUCTS) + $params['cart']->getOrderTotal(true, Cart::ONLY_DISCOUNTS)));
 			$discounts = $params['cart']->getCartRules(CartRule::FILTER_ACTION_SHIPPING);

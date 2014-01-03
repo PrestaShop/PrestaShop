@@ -191,9 +191,24 @@ class AdminCustomersControllerCore extends AdminController
 	{
 		parent::initToolbarTitle();
 
-		if ($this->display != 'list')
-			if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer))
-				$this->toolbar_title[] = Tools::htmlentitiesUTF8(Tools::substr($customer->firstname, 0, 1).'. '.$customer->firstname);
+		switch ($this->display)
+		{
+			case '':
+			case 'list':
+				$this->toolbar_title[] = $this->l('Manage your Customers');
+				break;
+			case 'view':
+				if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer))
+					$this->toolbar_title[] = sprintf('Information about Customer: %s', Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
+				break;
+			case 'add':
+			case 'edit':
+				if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer))
+					$this->toolbar_title[] = sprintf('Editing Customer: %s', Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
+				else
+					$this->toolbar_title[] = $this->l('Creating a new Customer');
+				break;
+		}
 	}
 
 	public function initPageHeaderToolbar()
