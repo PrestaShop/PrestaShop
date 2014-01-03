@@ -31,8 +31,7 @@
 			<i class="process-icon-back"></i>
 		</a>
 		{/if*}
-		{$breadcrumbs2.tab.name}
-		{* {if is_array($title)}{$title|end}{else}{$title}{/if} *}
+		{if is_array($title)}{$title|end|escape}{else}{$title|escape}{/if}
 	</h2>
 	{/block}
 
@@ -41,9 +40,9 @@
 		{* Container *}
 		{if $breadcrumbs2.container.name != ''}
 			<li>
-				{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href}">{/if}
-				{if $breadcrumbs2.container.icon != ''}<i class="{$breadcrumbs2.container.icon}"></i>{/if}
-				{$breadcrumbs2.container.name}
+				{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href|escape}">{/if}
+				{if $breadcrumbs2.container.icon != ''}<i class="{$breadcrumbs2.container.icon|escape}"></i>{/if}
+				{$breadcrumbs2.container.name|escape}
 				{if $breadcrumbs2.container.href != ''}</a>{/if}
 			</li>
 		{/if}
@@ -51,9 +50,9 @@
 		{* Current Tab *}
 		{if $breadcrumbs2.tab.name != '' && $breadcrumbs2.container.name != $breadcrumbs2.tab.name}
 			<li>
-				{if $breadcrumbs2.tab.href != ''}<a href="{$breadcrumbs2.tab.href}">{/if}
-				{if $breadcrumbs2.tab.icon != ''}<i class="{$breadcrumbs2.tab.icon}"></i>{/if}
-				{$breadcrumbs2.tab.name}
+				{if $breadcrumbs2.tab.href != ''}<a href="{$breadcrumbs2.tab.href|escape}">{/if}
+				{if $breadcrumbs2.tab.icon != ''}<i class="{$breadcrumbs2.tab.icon|escape}"></i>{/if}
+				{$breadcrumbs2.tab.name|escape}
 				{if $breadcrumbs2.tab.href != ''}</a>{/if}
 			</li>
 		{/if}
@@ -61,9 +60,9 @@
 		{* Action *}
 		{if $breadcrumbs2.action.name != ''}
 			<li>
-				{if $breadcrumbs2.action.href != ''}<a href="{$breadcrumbs2.action.href}">{/if}
-				{if $breadcrumbs2.action.icon != ''}<i class="{$breadcrumbs2.action.icon}"></i>{/if}
-				{$breadcrumbs2.action.name}
+				{if $breadcrumbs2.action.href != ''}<a href="{$breadcrumbs2.action.href|escape}">{/if}
+				{if $breadcrumbs2.action.icon != ''}<i class="{$breadcrumbs2.action.icon|escape}"></i>{/if}
+				{$breadcrumbs2.action.name|escape}
 				{if $breadcrumbs2.action.href != ''}</a>{/if}
 			</li>
 		{/if}
