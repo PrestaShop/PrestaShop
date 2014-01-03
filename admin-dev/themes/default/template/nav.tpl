@@ -1,5 +1,5 @@
 <div class="bootstrap">
-	<nav id="nav-sidebar" role="navigation">
+	<nav id="{if $employee->bo_menu}nav-sidebar{else}nav-topbar{/if}" role="navigation">
 		{if !$tab}
 			<div class="mainsubtablist" style="display:none"></div>
 		{/if}
