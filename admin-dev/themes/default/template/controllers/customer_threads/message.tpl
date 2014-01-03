@@ -86,26 +86,24 @@
 				</dl>
 			{/if}
 			
-			<form class="form-horizontal" action="{$current}&token={$token}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread" method="post">
+			<form class="form-inline" action="{$current}&token={$token}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread" method="post" >
 				<input type="hidden" name="id_customer_message" value="{$message.id_customer_message}" />
-				<dl>
-					<dt>{l s='Subject:'}</dt>
-					<dd>
-						<select name="id_contact" onchange="this.form.submit();">
-							{foreach $contacts as $contact}
-								<option value="{$contact.id_contact}" {if $contact.id_contact == $message.id_contact}selected="selected"{/if}>
-									{$contact.name}
-								</option>
-							{/foreach}
-						</select>
-					</dd>
-				</dl>
+				<div class="form-group">
+					<label>{l s='Subject:'}</label>
+					<select name="id_contact" class="fixed-width-lg" onchange="this.form.submit();">
+						{foreach $contacts as $contact}
+							<option value="{$contact.id_contact}" {if $contact.id_contact == $message.id_contact}selected="selected"{/if}>
+								{$contact.name}
+							</option>
+						{/foreach}
+					</select>
+				</div>
 			</form>
 		</div>
 {else}
 		<div class="infoEmployee">
 			{if $id_employee}
-				<a class="btn btn-default pull-right" href="{$current}&token={getAdminToken tab='AdminCustomerThreads'}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread">
+				<a class="btn btn-default pull-right" href="{$email_base_url}{$link->getAdminLink('AdminCustomerThreads')}{$current}&token={getAdminToken tab='AdminCustomerThreads'}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread">
 					{l s='View this thread'}
 				</a>
 			{/if}
@@ -164,7 +162,7 @@
 	{if empty($message.id_employee)}
 		<div class="panel">
 			<button class="btn btn-default"
-				onclick="$('#reply_to_{$message.id_customer_message}').show(500); $(this).hide();">
+				onclick="$('#reply_to_{$message.id_customer_message}').show(500); $(this).parent().hide();">
 				<i class="icon-mail-reply"></i> {l s='Reply to this message'}
 			</button>
 		</div>
