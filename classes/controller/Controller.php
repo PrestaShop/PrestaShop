@@ -364,14 +364,20 @@ abstract class ControllerCore
 				$html = $this->context->smarty->fetch($tpl);
 		else
 			$html = $this->context->smarty->fetch($content);
-		
-		$html = Media::deferInlineScripts($html);
-		$this->context->smarty->assign('js_defs', Media::getJsDef());
-		echo $html.$this->context->smarty->fetch(_PS_THEME_DIR_.'jsdefs.tpl');
-		
-		foreach (Media::getInlineScript() as $script)
-			$javascript .= $script."\n";
-		echo "\n<script type=\"text/javascript\">\n".$javascript.'</script>';
+
+		if ($this->controller_type == 'front')
+		{
+			$html = Media::deferInlineScripts($html);
+			$html = str_replace(array('</body>', '</html>'), '', $html);
+			$this->context->smarty->assign('js_def', Media::getJsDef());
+			$javascript = $this->context->smarty->fetch(_PS_THEME_DIR_.'javascript.tpl');
+			$javascript = substr_replace(trim($javascript), '', -(strlen('</script>')));
+			foreach (Media::getInlineScript() as $script)
+				$javascript .= $script."\n";
+			echo $html.$javascript."</script>\n\t</body>\n</html>";
+		}
+		else
+			echo $html;
 	}
 	
 	protected function isCached($template, $cacheId = null, $compileId = null)

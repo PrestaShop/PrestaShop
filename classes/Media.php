@@ -583,6 +583,7 @@ class MediaCore
 
 	public static function getJsDef()
 	{
+		ksort(Media::$js_def);
 		return Media::$js_def;
 	}
 
@@ -592,9 +593,9 @@ class MediaCore
 	}
 
 	/**
-	 * Add a new javascript definition in page
+	 * Add a new javascript definition at bottom of page
 	 *
-	 * @param mixed $js_uri
+	 * @param mixed $js_def
 	 * @return void
 	 */
 	public static function addJsDef($js_def)
@@ -604,6 +605,19 @@ class MediaCore
 					Media::$js_def[$key] = $js;
 		elseif ($js_def)
 			Media::$js_def[] = $js_def;
+	}
+
+	/**
+	 * Add a new javascript definition from a capture at bottom of page
+	 *
+	 * @param mixed $js_def
+	 * @return void
+	 */
+	public static function addJsDefL($params, $content, $smarty, &$repeat, $template)
+	{
+		if (!$repeat && isset($params) && is_array($params) && Tools::strlen($content))
+			foreach($params as $param)
+				Media::$js_def[$param] = $content;
 	}
 	
 	public static function deferInlineScripts($output)

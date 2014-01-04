@@ -115,11 +115,11 @@
 			{/foreach}
 		{/if}
 		// Translations
-		var doesntExist = '{l s='This combination does not exist for this product. Please select another combination.' js=1}';
-		var doesntExistNoMore = '{l s='This product is no longer in stock' js=1}';
-		var doesntExistNoMoreBut = '{l s='with those attributes but is available with others.' js=1}';
-		var uploading_in_progress = '{l s='Uploading in progress, please be patient.' js=1}';
-		var fieldRequired = '{l s='Please fill in all the required fields before saving your customization.' js=1}';
+		{addJsDefL name=doesntExist}{l s='This combination does not exist for this product. Please select another combination.' js=1}{/addJsDefL}
+		{addJsDefL name=doesntExistNoMore}{l s='This product is no longer in stock' js=1}{/addJsDefL}
+		{addJsDefL name=doesntExistNoMoreBut}{l s='with those attributes but is available with others.' js=1}{/addJsDefL}
+		{addJsDefL name=uploading_in_progress}{l s='Uploading in progress, please be patient.' js=1}{/addJsDefL}
+		{addJsDefL name=fieldRequired}{l s='Please fill in all the required fields before saving your customization.' js=1}{/addJsDefL}
 
 		{if isset($groups)}
 			// Combinations
@@ -149,8 +149,8 @@
 				attributesCombinations.push(tabInfos);
 			{/foreach}
 		{/if}
-		var isLoggedWishlist = {$logged|intval};
-		var contentOnly = {$content_only|intval};
+		{addJsDef isLoggedWishlist=$logged}
+		{addJsDef contentOnly=$content_only}
 		//]]>
 	</script>
 

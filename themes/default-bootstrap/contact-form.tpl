@@ -98,7 +98,7 @@
                     {if (!isset($customerThread.id_order) || $customerThread.id_order > 0)}
                         <div class="form-group selector1">
                             <label>{l s='Order reference'}</label>
-                            {if !isset($customerThread.id_order) && isset($isLogged) && $isLogged == 1}
+                            {if !isset($customerThread.id_order) && isset($isLogged) && $isLogged}
                                 <select name="id_order" class="form-control">
                                     <option value="0">{l s='-- Choose --'}</option>
                                     {foreach from=$orderList item=order}

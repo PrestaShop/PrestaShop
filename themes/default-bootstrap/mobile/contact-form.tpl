@@ -64,7 +64,7 @@
 			{if !$PS_CATALOG_MODE}
 				{if (!isset($customerThread.id_order) || $customerThread.id_order > 0)}
 				<fieldset>
-					{if !isset($customerThread.id_order) && isset($isLogged) && $isLogged == 1}
+					{if !isset($customerThread.id_order) && isset($isLogged) && $isLogged}
 						<select name="id_order" ><option value="0">-- {l s='Order ID'} --</option>
 						{foreach from=$orderList item=order}
 							<option value="{$order.value|intval}" {if $order.selected|intval}selected="selected"{/if}>{$order.label|escape:'html':'UTF-8'}</option>
