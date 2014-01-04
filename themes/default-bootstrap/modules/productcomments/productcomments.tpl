@@ -68,7 +68,7 @@ var moderation_active = {$moderation_active};
 									{l s='%1$d out of %2$d people found this review useful.' sprintf=[$comment.total_useful,$comment.total_advice] mod='productcomments'}
 								</li>
 							{/if}
-							{if $logged == 1}
+							{if $logged}
 								{if !$comment.customer_advice}
 								<li>
 									{l s='Was this comment useful to you?' mod='productcomments'}
