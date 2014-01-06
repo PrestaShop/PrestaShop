@@ -1585,13 +1585,13 @@ class AdminThemesControllerCore extends AdminController
 				}
 
 			$content = '';
-			if (file_exists(_PS_IMG_DIR_ . 'logo.jpg'))
+			if (file_exists(_PS_IMG_DIR_ . 'logo.jpg') && Configuration::get('PS_LOGO'))
 			{
 				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_ . Configuration::get('PS_LOGO'));
 				Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
 				Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 			}
-			if (file_exists(_PS_IMG_DIR_ . 'logo_mobile.jpg'))
+			if (file_exists(_PS_IMG_DIR_ . 'logo_mobile.jpg') && Configuration::get('PS_LOGO_MOBILE'))
 			{
 				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MOBILE'));
 				Configuration::updateValue('SHOP_LOGO_MOBILE_HEIGHT', (int)round($height));
