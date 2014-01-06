@@ -11,3 +11,5 @@ ALTER TABLE `PREFIX_attachment` ADD `file_size` bigint(10) unsigned NOT NULL DEF
 /* PHP:p1603_add_atachment_size(); */;
 
 DROP TABLE `PREFIX_help_access`;
+
+UPDATE `PREFIX_configuration` SET value = 0 WHERE name = 'PS_ALLOW_MULTISHIPPING';

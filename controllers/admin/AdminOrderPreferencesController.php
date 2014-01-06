@@ -82,13 +82,13 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'cast' => 'floatval',
 						'type' => 'price'
 					),
-					'PS_ALLOW_MULTISHIPPING' => array(
+					/*'PS_ALLOW_MULTISHIPPING' => array(
 						'title' => $this->l('Allow multishipping'),
 						'hint' => $this->l('Allow the customer to ship orders to multiple addresses. This option will convert the customer\'s cart into one or more orders.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
-					),
+					),*/
 					'PS_SHIP_WHEN_AVAILABLE' => array(
 						'title' => $this->l('Delayed shipping'),
 						'hint' => $this->l('Allows you to delay shipping at your customers\' request. '),
