@@ -33,7 +33,7 @@
 	<div class="block_content blockstore">
 		<p class="store_image">
 			<a href="{$link->getPageLink('stores')|escape:'html':'UTF-8'}" title="{l s='Our stores' mod='blockstore'}">
-				<img class="img-responsive" src="{$module_dir}{$store_img}" alt="{l s='Our stores' mod='blockstore'}" />
+				<img class="img-responsive" src="{$link->getMediaLink("`$module_dir``$store_img|escape:'htmlall':'UTF-8'`")}" alt="{l s='Our stores' mod='blockstore'}" />
 			</a>
 		</p>
         <p class="store-description">

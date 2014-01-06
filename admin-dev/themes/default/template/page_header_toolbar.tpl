@@ -93,7 +93,7 @@
 				{/if}
 				<li>
 					<a class="toolbar_btn" href="{$help_link}" title="{l s='Help'}">
-						<i class="icon-question"></i>
+						<i class="process-icon-help"></i>
 						<div>{l s='Help'}</div>
 					</a>
 				</li>
