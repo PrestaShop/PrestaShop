@@ -72,7 +72,7 @@
 	{l s='An upgrade is available for some of your modules!'}
 	<ul>
 	{foreach from=$upgrade_available item='module'}
-		<li> &raquo; <a href="{$currentIndex|escape:'html':'UTF-8'}&token={$token|escape:'html':'UTF-8'}&anchor=anchor{$module.anchor|escape:'html':'UTF-8'}"><b>{$module.name|escape:'html':'UTF-8'}</b></a></li>
+		<li><a href="{$currentIndex|escape:'html':'UTF-8'}&token={$token|escape:'html':'UTF-8'}&anchor={$module.anchor|escape:'html':'UTF-8'}"><b>{$module.displayName|escape:'html':'UTF-8'}</b></a></li>
 	{/foreach}
 	</ul>
 </div>

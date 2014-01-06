@@ -157,6 +157,9 @@ class AdminOrderPreferencesControllerCore extends AdminController
 				'submit' => array('title' => $this->l('Save')),
 			),
 		);
+
+		if (!Configuration::get('PS_ALLOW_MULTISHIPPING'))
+			unset($this->fields_options['general']['fields']['PS_ALLOW_MULTISHIPPING']);
 	}
 
 	/**
