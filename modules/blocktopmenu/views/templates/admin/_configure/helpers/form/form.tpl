@@ -35,6 +35,9 @@ $('#menuOrderDown').click(function(e){
     e.preventDefault();
     move();
 });
+$("#items").closest('form').on('submit', function(e) {
+	$("#items option").prop('selected', true);
+});
 $("#addItem").click(add);
 $("#availableItems").dblclick(add);
 $("#removeItem").click(remove);
@@ -119,12 +122,4 @@ function move(up)
 	{else}
 		{$smarty.block.parent}
     {/if}
-{/block}
-
-{block name="footer"}
-	<div class="panel-footer">
-		<button type="submit" class="btn btn-default pull-right" name="submitBlocktopmenu">
-			<i class="process-icon-save" ></i> {l s="Save" mod="blocktopmenu"}
-		</button>
-	</div>
 {/block}
