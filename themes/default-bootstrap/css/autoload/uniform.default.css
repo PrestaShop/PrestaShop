@@ -10,7 +10,7 @@ http://uniformjs.com/
 */
 /* General settings */
 div.selector, div.selector span, div.checker span, div.radio span, div.uploader, div.uploader span.action, div.button, div.button span {
-  background-image: url("../../../img/jquery/uniform/sprite.png");
+  background-image: url("../../img/jquery/uniform/sprite.png");
   background-repeat: no-repeat;
   -webkit-font-smoothing: antialiased; }
 div.selector, div.checker, div.button, div.radio, div.uploader {
