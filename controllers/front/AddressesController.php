@@ -38,7 +38,7 @@ class AddressesControllerCore extends FrontController
 	{
 		parent::setMedia();
 		$this->addCSS(_THEME_CSS_DIR_.'addresses.css');
-		$this->addJS(_THEME_JS_DIR_.'tools.js');
+		$this->addJS(_THEME_JS_DIR_.'tools.js'); // retro compat themes 1.5
 	}
 
 	/**
@@ -99,7 +99,7 @@ class AddressesControllerCore extends FrontController
 			'addresses_style' => $addresses_style,
 			'multipleAddresses' => $multiple_addresses_formated,
 			'ordered_fields' => $ordered_fields,
-			'addresses' => $addresses, // Retro Compatibility Theme < 1.4.1
+			'addresses' => $addresses, // retro compat themes 1.5ibility Theme < 1.4.1
 		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'addresses.tpl');
