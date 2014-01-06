@@ -252,16 +252,21 @@ class Blockcmsinfo extends Module
 				'title' => $this->l('Custom block #'),
 				'width' => 40,
 				'type' => 'text',
+				'search'  => false,
 			),
 			
 		);
 
 		if (Shop::isFeatureActive())
-			$this->fields_list['id_shop'] = array('title' => $this->l('ID Shop'), 'align' => 'center', 'width' => 25, 'type' => 'int');
+			$this->fields_list['id_shop'] = array('title'   => $this->l('ID Shop'),
+												  'align'   => 'center',
+												  'width'   => 25,
+												  'type'    => 'int'
+			);
 
 		$helper = new HelperList();
 		$helper->shopLinkType = '';
-		$helper->simple_header = true;
+		$helper->simple_header = false;
 		$helper->identifier = 'id_info';
 		$helper->actions = array('edit', 'delete');
 		$helper->show_toolbar = true;
