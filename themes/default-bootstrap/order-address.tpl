@@ -120,44 +120,9 @@
 	{assign var='current_step' value='address'}
 	{include file="$tpl_dir./order-steps.tpl"}
 	{include file="$tpl_dir./errors.tpl"}
-	{if !$multi_shipping && {Configuration::get('PS_ALLOW_MULTISHIPPING')} && !$cart->isVirtualCart()}
-		<div class="button_multishipping_mode box" id="multishipping_mode_box">
-			<div class="title">{l s='Multi-shipping'}</div>
-			<div class="description">
-				<a class="btn btn-default button exclusive-medium" href="{$link->getPageLink('order', true, NULL, 'step=1&multi-shipping=1')|escape:'html':'UTF-8'}"/>
-					<span>{l s='Specify a delivery address for each product ordered.'}</span>
-				</a>
-			</div>
-		</div>
-	{/if}
 	<form action="{$link->getPageLink($back_order_page, true)|escape:'html':'UTF-8'}" method="post">
 {else}
-	{if {Configuration::get('PS_ALLOW_MULTISHIPPING')} && !$cart->isVirtualCart()}
-		<div class="address-form-multishipping">
-			<div class="button_multishipping_mode box" id="multishipping_mode_box">
-				<div class="title">{l s='Multi-shipping'}</div>
-				<div class="description checkbox">
-					<label for="multishipping_mode_checkbox">
-						<input type="checkbox" id="multishipping_mode_checkbox" onchange="multishippingMode(this); return false;" />
-						{l s='I\'d like to specify a delivery address for each product ordered.'}
-					</label>
-				</div>
-				<div class="description_off">
-					<a class="btn btn-default button exclusive-medium" href="{$link->getPageLink('order-opc', true, NULL, 'ajax=1&multi-shipping=1&method=multishipping')|escape:'html':'UTF-8'}" id="link_multishipping_form" title="{l s='Choose the delivery address(es)'}">
-						<span>{l s='Specify a delivery address for each product.'}</span>
-					</a>
-				</div>
-			</div>
-			<script type="text/javascript">
-				{if $is_multi_address_delivery}
-				var multishipping_mode = true;
-				{else}
-				var multishipping_mode = false;
-				{/if}
-				var open_multishipping_fancybox = {$open_multishipping_fancybox|intval};
-			</script>
-		</div>
-	{/if}
+
 	<div id="opc_account" class="opc-main-block">
 		<div id="opc_account-overlay" class="opc-overlay" style="display: none;"></div>
 {/if}
