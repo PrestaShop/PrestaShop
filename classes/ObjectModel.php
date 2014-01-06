@@ -980,8 +980,11 @@ abstract class ObjectModelCore
 	{
 		global $_FIELDS;
 
-		if ($_FIELDS === null && file_exists(_PS_TRANSLATIONS_DIR_.Context::getContext()->language->iso_code.'/fields.php'))
-			include_once(_PS_TRANSLATIONS_DIR_.Context::getContext()->language->iso_code.'/fields.php');
+		if(!isset($context))
+			$context = Context::getContext();
+
+		if ($_FIELDS === null && file_exists(_PS_TRANSLATIONS_DIR_.$context->language->iso_code.'/fields.php'))
+			include_once(_PS_TRANSLATIONS_DIR_.$context->language->iso_code.'/fields.php');
 
 		$key = $class.'_'.md5($field);
 		return ((is_array($_FIELDS) && array_key_exists($key, $_FIELDS)) ? ($htmlentities ? htmlentities($_FIELDS[$key], ENT_QUOTES, 'utf-8') : $_FIELDS[$key]) : $field);

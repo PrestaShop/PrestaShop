@@ -3694,6 +3694,9 @@ class AdminProductsControllerCore extends AdminController
 			else
 				$image->cover = 0;
 
+			if (($validate = $image->validateFieldsLang(false, true)) !== true)
+				$file['error'] = Tools::displayError($validate);
+
 			if (isset($file['error']) && (!is_numeric($file['error']) || $file['error'] != 0))
 				continue;
 
