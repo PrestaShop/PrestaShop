@@ -95,7 +95,7 @@ class ShopUrlCore extends ObjectModel
 	 */
 	public static function getShopUrls($id_shop = false)
 	{
-		$urls = new Collection('ShopUrl');
+		$urls = new PrestaShopCollection('ShopUrl');
 		if ($id_shop)
 			$urls->where('id_shop', '=', $id_shop);
 		return $urls;

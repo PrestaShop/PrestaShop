@@ -709,7 +709,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function getShopsCollection($active = true, $id_shop_group = null)
 	{
-		$shops = new Collection('Shop');
+		$shops = new PrestaShopCollection('Shop');
 		if ($active)
 			$shops->where('active', '=', 1);
 

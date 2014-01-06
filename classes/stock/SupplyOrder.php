@@ -283,7 +283,7 @@ class SupplyOrderCore extends ObjectModel
 	 */
 	public function getEntriesCollection()
 	{
-		$details = new Collection('SupplyOrderDetail');
+		$details = new PrestaShopCollection('SupplyOrderDetail');
 		$details->where('id_supply_order', '=', $this->id);
 		return $details;
 	}

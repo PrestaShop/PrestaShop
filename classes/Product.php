@@ -1548,7 +1548,7 @@ class ProductCore extends ObjectModel
 		Hook::exec('actionProductAttributeDelete', array('id_product_attribute' => 0, 'id_product' => $this->id, 'deleteAllAttributes' => true));
 
 		$result = true;
-		$combinations = new Collection('Combination');
+		$combinations = new PrestaShopCollection('Combination');
 		$combinations->where('id_product', '=', $this->id);
 		foreach ($combinations as $combination)
 			$result &= $combination->delete();
@@ -5362,7 +5362,7 @@ class ProductCore extends ObjectModel
 	public function deleteDownload()
 	{
 		$result = true;
-		$collection_download = new Collection('ProductDownload');
+		$collection_download = new PrestaShopCollection('ProductDownload');
 		$collection_download->where('id_product', '=', $this->id);
 		foreach ($collection_download as $product_download)
 			$result &= $product_download->delete(true);

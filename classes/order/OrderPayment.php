@@ -113,7 +113,7 @@ class OrderPaymentCore extends ObjectModel
 		foreach ($payments as $payment)
 			$payment_list[] = $payment['id_order_payment'];
 		
-		$payments = new Collection('OrderPayment');
+		$payments = new PrestaShopCollection('OrderPayment');
 		$payments->where('id_order_payment', 'IN', $payment_list);
 		return $payments;
 	}
