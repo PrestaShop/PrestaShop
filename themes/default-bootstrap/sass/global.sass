@@ -975,7 +975,7 @@ ul.footer_links
 				display: inline-block
 				float: left
 			#uniform-nb_item
-			float: left
+				float: left
 		label,
 		select
 			float: left
@@ -983,7 +983,7 @@ ul.footer_links
 			padding: 3px 6px 0 0
 		&.instant_search
 			#productsSortForm
-			display: none
+				display: none
 	.display,
 	.display_m
 		float: right
@@ -1169,8 +1169,8 @@ ul.step
 					height: 52px
 					margin-top: -2px
 			&:focus
-			text-decoration: none
-			outline: none
+				text-decoration: none
+				outline: none
 		&.first
 			border-left-width: 1px
 			border-left-color: #b7b7b7
@@ -1272,14 +1272,13 @@ ul.step
 					&:after
 						background: url(../img/order-step-done.png) right 0 no-repeat
 		&.step_done.step_done_last
-		// min 991px
-			@media (min-width: $screen-md)
+		
+			@media (min-width: $screen-md) // min 991px
 				a:after
 					background: url(../img/order-step-done-last.png) right 0 no-repeat
 		&#step_end
 			span
-			// min 991px
-			@media (min-width: $screen-md)	
+			@media (min-width: $screen-md) // min 991px	
 				&:after
 					display: none
 		

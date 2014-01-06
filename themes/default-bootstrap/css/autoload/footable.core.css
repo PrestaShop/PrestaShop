@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .footable {
   width: 100%; }
   .footable.breakpoint > tbody > tr.footable-detail-show > td {
