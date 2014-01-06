@@ -1,3 +1,4 @@
+@charset "CP850";
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic);
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -6222,7 +6223,6 @@ ul.footer_links {
     .content_sortPagiBar .sortPagiBar #productsSortForm .selector {
       float: left; }
   .content_sortPagiBar .sortPagiBar .nbrItemPage {
-    float: left;
     float: left; }
     .content_sortPagiBar .sortPagiBar .nbrItemPage select {
       max-width: 59px;
@@ -6231,12 +6231,14 @@ ul.footer_links {
       padding: 3px 0 0 12px;
       display: inline-block;
       float: left; }
+    .content_sortPagiBar .sortPagiBar .nbrItemPage #uniform-nb_item {
+      float: left; }
   .content_sortPagiBar .sortPagiBar label,
   .content_sortPagiBar .sortPagiBar select {
     float: left; }
   .content_sortPagiBar .sortPagiBar label {
     padding: 3px 6px 0 0; }
-  .content_sortPagiBar .sortPagiBar.instant_search {
+  .content_sortPagiBar .sortPagiBar.instant_search #productsSortForm {
     display: none; }
 .content_sortPagiBar .display,
 .content_sortPagiBar .display_m {
@@ -6454,9 +6456,7 @@ ul.step {
       line-height: 21px;
       font-weight: bold;
       text-shadow: 1px 1px white;
-      position: relative;
-      text-decoration: none;
-      outline: none; }
+      position: relative; }
       @media (min-width: 992px) {
         ul.step li a:after,
         ul.step li span:after, ul.step li.step_current span:after, ul.step li.step_current_end span:after {
@@ -6470,6 +6470,10 @@ ul.step {
           width: 31px;
           height: 52px;
           margin-top: -2px; } }
+      ul.step li a:focus,
+      ul.step li span:focus, ul.step li.step_current span:focus, ul.step li.step_current_end span:focus {
+        text-decoration: none;
+        outline: none; }
     ul.step li.first {
       border-left-width: 1px;
       border-left-color: #b7b7b7; }
@@ -6581,6 +6585,9 @@ ul.step {
             padding-left: 38px; }
             ul.step li.step_done a:after {
               background: url(../img/order-step-done.png) right 0 no-repeat; } }
+    @media (min-width: 992px) {
+      ul.step li.step_done.step_done_last a:after {
+        background: url(../img/order-step-done-last.png) right 0 no-repeat; } }
     @media (min-width: 992px) {
       ul.step li#step_end:after {
         display: none; } }
