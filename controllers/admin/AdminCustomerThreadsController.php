@@ -812,8 +812,13 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				 	//check if subject has id_order
 				 	preg_match('/\#ct([0-9]*)/', $subject, $matches1);
 				 	preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
-					$new_ct = (Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !isset($matches1[1]) && !isset($matches2[1]) && !preg_match('/[no_sync]/', $subject));
-					if (isset($matches1[1]) && isset($matches2[1]) || $new_ct)
+					$matchFound = false;
+					if (isset($matches1[1]) && isset($matches2[1]))
+						$matchFound = true;
+					
+					$new_ct = ( Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !$matchFound && (strpos($subject, '[no_sync]') == false));				
+					
+					if ( $matchFound || $new_ct)
 					{
 						if ($new_ct)
 						{
@@ -821,15 +826,29 @@ class AdminCustomerThreadsControllerCore extends AdminController
 								|| !Validate::isEmail($from = $result[1]))
 									continue;
 							
-							$contacts = Contact::getCategoriesContacts();
+							// we want to assign unrecognized mails to the right contact category
+							$contacts = Contact::getContacts($this->context->language->id);
 							if (!$contacts)
 								continue;
-							$id_contact = $contacts[0]['id_contact'];
+								
+							foreach ($contacts as $contact) {
+								if (strpos($overview->to , $contact['email']) !== false)
+									$id_contact = $contact['id_contact'];
+							}
+							
+							if (!isset($id_contact)) // if not use the default contact category				
+								$id_contact = $contacts[0]['id_contact'];
+								
+							$customer = new Customer;
+							$client = $customer->getByEmail($from); //check if we already have a customer with this email
 							
 							$ct = new CustomerThread();
+							if (isset($client->id)) //if mail is owned by a customer assign to him
+								$ct->id_customer = $client->id;
 							$ct->email = $from;
 							$ct->id_contact = $id_contact;
 							$ct->id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+							$ct->id_shop = $this->context->shop->id; //new customer threads for unrecognized mails are not shown without shop id
 							$ct->status = 'open';
 							$ct->token = Tools::passwdGen(12);
 							$ct->add();	
@@ -839,9 +858,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 						if (Validate::isLoadedObject($ct) && ((isset($matches2[1]) && $ct->token == $matches2[1]) || $new_ct))
 						{
+							$message = imap_fetchbody($mbox, $overview->msgno, 1);
+							$message = quoted_printable_decode($message);
+							$message = utf8_encode($message);
+							$message = quoted_printable_decode($message);
+							$message = nl2br($message);
 							$cm = new CustomerMessage();
 							$cm->id_customer_thread = $ct->id;
-							$cm->message = imap_fetchbody($mbox, $overview->msgno, 1);
+							$cm->message = $message;
 							$cm->add();
 						}
 					}
