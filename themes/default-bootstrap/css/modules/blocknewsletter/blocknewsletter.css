@@ -42,20 +42,16 @@
     overflow: hidden; }
   #footer #newsletter_block_left .form-group {
     margin-bottom: 0; }
-#footer #newsletter_block_left .form-group.form-error > input{
-    border-color: #F13340;
-    color: #F13340;}
     #footer #newsletter_block_left .form-group .form-control {
       height: 45px;
       line-height: 30px;
-      max-width: 400px;
+      max-width: 267px;
       background: #3c3c3c;
       border-color: #515151;
       color: white;
       padding: 5px 43px 5px 12px;
       display: inline-block;
       float: left; }
-
       #footer #newsletter_block_left .form-group .form-control:focus {
         -webkit-box-shadow: black 0px 0px 0px;
         -moz-box-shadow: black 0px 0px 0px;
