@@ -145,7 +145,7 @@ class Blocktopmenu extends Module
 		if (Tools::isSubmit('submitBlocktopmenu'))
 		{
 			$items = Tools::getValue('items');
-			if (is_array($items) && count($items) && Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', implode(',', $items)))
+			if (is_array($items) && count($items) && Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', (string)implode(',', $items)))
 				$this->_html .= $this->displayConfirmation($this->l('The settings have been updated.'));
 			else
 				$this->_html .= $this->displayError($this->l('Unable to update settings.'));
@@ -231,7 +231,7 @@ class Blocktopmenu extends Module
 		else
 		{
 			$conf = Configuration::get('MOD_BLOCKTOPMENU_ITEMS');
-			if (strlen($conf) && strpos($conf, ','))
+			if (strlen($conf))
 				return explode(',', Configuration::get('MOD_BLOCKTOPMENU_ITEMS'));
 			else
 				return array();
@@ -436,8 +436,9 @@ class Blocktopmenu extends Module
 		}
 	}
 
-	private function getCategoryOption($id_category = 1, $id_lang = false, $id_shop = false, $recursive = true)
+	private function getCategoryOption($id_category = 1, $id_lang = false, $id_shop = false, $recursive = true, $items_to_skip = null)
 	{
+		$html = '';
 		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
 		$category = new Category((int)$id_category, (int)$id_lang, (int)$id_shop);
 
@@ -451,11 +452,14 @@ class Blocktopmenu extends Module
 		}
 
 		$shop = (object) Shop::getShop((int)$category->getShopID());
-		$this->_html .= '<option value="CAT'.(int)$category->id.'">'.(isset($spacer) ? $spacer : '').$category->name.' ('.$shop->name.')</option>';
+		if (isset($items_to_skip) && !in_array('CAT'.(int)$category->id, $items_to_skip))
+			$html .= '<option value="CAT'.(int)$category->id.'">'.(isset($spacer) ? $spacer : '').$category->name.' ('.$shop->name.')</option>';
 
 		if (isset($children) && count($children))
 			foreach ($children as $child)
-				$this->getCategoryOption((int)$child['id_category'], (int)$id_lang, (int)$child['id_shop']);
+				$html .= $this->getCategoryOption((int)$child['id_category'], (int)$id_lang, (int)$child['id_shop'], $recursive, $items_to_skip);
+
+		return $html;
 	}
 
 	private function getCategory($id_category, $id_lang = false, $id_shop = false)
@@ -546,10 +550,10 @@ class Blocktopmenu extends Module
 		}
 	}
 
-	private function getCMSOptions($parent = 0, $depth = 1, $id_lang = false)
+	private function getCMSOptions($parent = 0, $depth = 1, $id_lang = false, $items_to_skip = null)
 	{
-		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
-
+		$html = '';
+		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;		
 		$categories = $this->getCMSCategories(false, (int)$parent, (int)$id_lang);
 		$pages = $this->getCMSPages((int)$parent, false, (int)$id_lang);
 
@@ -557,12 +561,16 @@ class Blocktopmenu extends Module
 
 		foreach ($categories as $category)
 		{
-			$this->_html .= '<option value="CMS_CAT'.$category['id_cms_category'].'" style="font-weight: bold;">'.$spacer.$category['name'].'</option>';
-			$this->getCMSOptions($category['id_cms_category'], (int)$depth + 1, (int)$id_lang);
+			if (!in_array('CMS_CAT'.$category['id_cms_category'], $items_to_skip))
+				$html .= '<option value="CMS_CAT'.$category['id_cms_category'].'" style="font-weight: bold;">'.$spacer.$category['name'].'</option>';
+			$html .= $this->getCMSOptions($category['id_cms_category'], (int)$depth + 1, (int)$id_lang, $items_to_skip);
 		}
 
 		foreach ($pages as $page)
-			$this->_html .= '<option value="CMS'.$page['id_cms'].'">'.$spacer.$page['meta_title'].'</option>';
+			if (!in_array('CMS'.$page['id_cms'], $items_to_skip))
+				$html .= '<option value="CMS'.$page['id_cms'].'">'.$spacer.$page['meta_title'].'</option>';
+
+		return $html;
 	}
 	
 	protected function getCacheId($name = null)
@@ -800,6 +808,10 @@ class Blocktopmenu extends Module
 							)
 						),
 					)		
+				),
+				'submit' => array(
+					'name' => 'submitBlocktopmenu',
+					'title' => $this->l('Save')
 				)
 			),
 		);
@@ -816,7 +828,6 @@ class Blocktopmenu extends Module
 		$this->fields_form = array();
 		$helper->module = $this;
 		$helper->identifier = $this->identifier;		
-		$helper->submit_action = 'submitBlocktopmenu';
 		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
 		$helper->token = Tools::getAdminTokenLite('AdminModules');
 		$helper->tpl_vars = array(
@@ -868,13 +879,15 @@ class Blocktopmenu extends Module
 							)
 						),
 					)		
+				),
+				'submit' => array(
+					'name' => 'submitBlocktopmenuLinks',
+					'title' => $this->l('Save')
 				)
 			),
 		);
 
 		$helper = new HelperForm();
-		$helper->base_folder = realpath(dirname(__FILE__).'/views/templates/admin/_configure/helpers/form').DIRECTORY_SEPARATOR;
-		$helper->base_tpl = 'form_new_link.tpl';
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
@@ -887,12 +900,13 @@ class Blocktopmenu extends Module
 		
 		if (Tools::isSubmit('updatelinksmenutop'))
 		{
-			$helper->submit_action = 'updatelinksmenutop';
+			$fields_form['form']['submit'] = array(
+				'name' => 'updatelinksmenutop',
+				'title' => $this->l('Update')
+			);
 			$fields_form['form']['input'][] = array('type' => 'hidden', 'name' => 'updatelink');
 			$fields_form['form']['input'][] = array('type' => 'hidden', 'name' => 'id_linksmenutop');
 		}
-		else
-			$helper->submit_action = 'submitBlocktopmenuLinks';
 			
 		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
 		$helper->token = Tools::getAdminTokenLite('AdminModules');
@@ -907,12 +921,11 @@ class Blocktopmenu extends Module
 	public function renderChoicesSelect()
 	{
 		$spacer = str_repeat('&nbsp;', $this->spacer_size);
+		$items = $this->getMenuItems();
 		
 		$html = '<select multiple="multiple" id="availableItems" style="width: 300px; height: 160px;">';
 		$html .= '<optgroup label="'.$this->l('CMS').'">';
-		$this->_html = '';
-		$this->getCMSOptions(0, 1, $this->context->language->id);
-		$html .= $this->_html;
+		$html .= $this->getCMSOptions(0, 1, $this->context->language->id, $items);
 		$html .= '</optgroup>';
 
 		// BEGIN SUPPLIER
@@ -921,7 +934,8 @@ class Blocktopmenu extends Module
 		$html .= '<option value="ALLSUP0">'.$this->l('All suppliers').'</option>';
 		$suppliers = Supplier::getSuppliers(false, $this->context->language->id);
 		foreach ($suppliers as $supplier)
-			$html .= '<option value="SUP'.$supplier['id_supplier'].'">'.$spacer.$supplier['name'].'</option>';
+			if (!in_array('SUP'.$supplier['id_supplier'], $items))
+				$html .= '<option value="SUP'.$supplier['id_supplier'].'">'.$spacer.$supplier['name'].'</option>';
 		$html .= '</optgroup>';
 
 		// BEGIN Manufacturer
@@ -930,15 +944,14 @@ class Blocktopmenu extends Module
 		$html .= '<option value="ALLMAN0">'.$this->l('All manufacturers').'</option>';
 		$manufacturers = Manufacturer::getManufacturers(false, $this->context->language->id);
 		foreach ($manufacturers as $manufacturer)
-			$html .= '<option value="MAN'.$manufacturer['id_manufacturer'].'">'.$spacer.$manufacturer['name'].'</option>';
+			if (!in_array('MAN'.$manufacturer['id_manufacturer'], $items))
+				$html .= '<option value="MAN'.$manufacturer['id_manufacturer'].'">'.$spacer.$manufacturer['name'].'</option>';
 		$html .= '</optgroup>';
 
 		// BEGIN Categories
-		$html .= '<optgroup label="'.$this->l('Categories').'">';
-		$this->_html = '';
 		$shop = new Shop((int)Shop::getContextShopID());
-		$this->getCategoryOption($shop->getCategory(), (int)$this->context->language->id, (int)Shop::getContextShopID());
-		$html .= $this->_html;
+		$html .= '<optgroup label="'.$this->l('Categories').'">';	
+		$html .= $this->getCategoryOption($shop->getCategory(), (int)$this->context->language->id, (int)Shop::getContextShopID(), true, $items);
 		$html .= '</optgroup>';
 		
 		// BEGIN Shops
@@ -950,7 +963,9 @@ class Blocktopmenu extends Module
 			{
 				if (!$shop->setUrl() && !$shop->getBaseURL())
 					continue;
-				$html .= '<option value="SHOP'.(int)$shop->id.'">'.$spacer.$shop->name.'</option>';
+
+				if (!in_array('SHOP'.(int)$shop->id, $items))
+					$html .= '<option value="SHOP'.(int)$shop->id.'">'.$spacer.$shop->name.'</option>';
 			}	
 			$html .= '</optgroup>';
 		}
@@ -969,9 +984,10 @@ class Blocktopmenu extends Module
 			{
 				$default_language = Configuration::get('PS_LANG_DEFAULT');
 				$link = MenuTopLinks::get($link['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
-				$html .= '<option value="LNK'.(int)$link[0]['id_linksmenutop'].'">'.$spacer.$link[0]['label'].'</option>';
+				if (!in_array('LNK'.(int)$link[0]['id_linksmenutop'], $items))
+					$html .= '<option value="LNK'.(int)$link[0]['id_linksmenutop'].'">'.$spacer.$link[0]['label'].'</option>';
 			}
-			else
+			elseif (!in_array('LNK'.(int)$link['id_linksmenutop'], $items))
 				$html .= '<option value="LNK'.(int)$link['id_linksmenutop'].'">'.$spacer.$link['label'].'</option>';
 		}
 		$html .= '</optgroup>';
@@ -983,7 +999,7 @@ class Blocktopmenu extends Module
 	{
 		return array(
 			'search' => Tools::getValue('search', Configuration::get('MOD_BLOCKTOPMENU_SEARCH'))
-			);
+		);
 	}
 	
 	public function getAddLinkFieldsValues()
