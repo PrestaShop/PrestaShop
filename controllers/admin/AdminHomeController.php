@@ -663,9 +663,6 @@ class AdminHomeControllerCore extends AdminController
 
 		$tpl_vars['upgrade'] = $upgrade;
 
-		if ($this->context->employee->bo_show_screencast)
-			$tpl_vars['employee_token'] = Tools::getAdminTokenLite('AdminEmployees');
-
 		$tpl_vars['employee'] = $this->context->employee;
 		$tpl_vars['quick_links'] = $this->getQuickLinks();
 		$tpl_vars['monthly_statistics'] = $this->getMonthlyStatistics();
