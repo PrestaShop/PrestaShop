@@ -388,18 +388,21 @@ class AdminModulesControllerCore extends AdminController
 			}
 		}
 		if (!$success)
-				$this->errors[] = Tools::displayError('There was an error while extracting the module (file may be corrupted).');
-		
-		//check if it's a real module
-		foreach($zip_folders as $folder)
-			if (!in_array($folder, array('.', '..', '.svn', '.git', '__MACOSX')) && !Module::getInstanceByName($folder))
-			{
-				$this->errors[] = sprintf(Tools::displayError('The folder %1$s you uploaded is not a module.'), $folder);
-				$this->recursiveDeleteOnDisk(_PS_MODULE_DIR_.$folder);
-			}
-			
+			$this->errors[] = Tools::displayError('There was an error while extracting the module (file may be corrupted).');
+		else
+		{
+			//check if it's a real module
+			foreach($zip_folders as $folder)
+				if (!in_array($folder, array('.', '..', '.svn', '.git', '__MACOSX')) && !Module::getInstanceByName($folder))
+				{
+					$this->errors[] = sprintf(Tools::displayError('The module %1$s that you uploaded is not a valid module.'), $folder);
+					$this->recursiveDeleteOnDisk(_PS_MODULE_DIR_.$folder);
+				}
+		}
+	
 		@unlink($file);
 		$this->recursiveDeleteOnDisk($tmp_folder);
+
 		if ($success && $redirect)
 			Tools::redirectAdmin(self::$currentIndex.'&conf=8&anchor='.ucfirst($folder).'&token='.$this->token);
 

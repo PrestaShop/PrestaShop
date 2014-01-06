@@ -10,3 +10,4 @@ ALTER TABLE `PREFIX_tab_lang` CHANGE `name` `name` VARCHAR(64) DEFAULT NULL;
 ALTER TABLE `PREFIX_attachment` ADD `file_size` bigint(10) unsigned NOT NULL DEFAULT 0 AFTER `file_name`;
 /* PHP:p1603_add_atachment_size(); */;
 
+DROP TABLE `PREFIX_help_access`;

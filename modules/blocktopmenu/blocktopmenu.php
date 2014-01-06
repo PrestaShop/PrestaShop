@@ -523,8 +523,10 @@ class Blocktopmenu extends Module
 
 			foreach ($categories as $category)
 			{
+				$cat = new CMSCategory((int)$category['id_cms_category'], (int)$id_lang);
+				
 				$this->_menu .= '<li>';
-				$this->_menu .= '<a href="#">'.$category['name'].'</a>';
+				$this->_menu .= '<a href="'.Tools::HtmlEntitiesUTF8($cat->getLink()).'">'.$category['name'].'</a>';
 				$this->getCMSMenuItems($category['id_cms_category'], (int)$depth + 1);
 				$this->_menu .= '</li>';
 			}

@@ -33,9 +33,7 @@ require_once(_PS_ADMIN_DIR_.'/init.php');
 $context = Context::getContext();
 
 if (Tools::isSubmit('ajaxReferrers'))
-{
 	require(_PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php');
-}
 
 if (Tools::getValue('page') == 'prestastore' AND @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
 	readfile('http://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
@@ -66,16 +64,6 @@ if (Tools::isSubmit('ajaxProductPackItems'))
 	foreach ($products AS $packItem)
 		$jsonArray[] = '{"value": "'.(int)($packItem['id_product']).'-'.addslashes($packItem['name']).'", "text":"'.(int)($packItem['id_product']).' - '.addslashes($packItem['name']).'"}';
 	die('['.implode(',', $jsonArray).']');
-}
-
-
-if (Tools::isSubmit('submitTrackClickOnHelp'))
-{
-    $label = Tools::getValue('label');
-    $version = Tools::getValue('version');
-
-    if (!empty($label) && !empty($version))
-        HelpAccess::trackClick($label, $version);
 }
 
 if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent'))

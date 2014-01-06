@@ -519,24 +519,6 @@ class AdminControllerCore extends Controller
 		return (!empty($token) && $token === $this->token);
 	}
 
-	public function ajaxProcessHelpAccess()
-	{
-		$this->json = true;
-		$item = Tools::getValue('item');
-		$iso_user = Tools::getValue('isoUser');
-		$country = Tools::getValue('country');
-		$version = Tools::getValue('version');
-
-		if (isset($item) && isset($iso_user) && isset($country))
-        {
-            $helper = new HelperHelpAccess($item, $iso_user, $country, $version);
-            $this->content = $helper->generate();
-        }
-		else
-			$this->content = 'none';
-		$this->display = 'content';
-	}
-
 	/**
 	 * Set the filters used for the list display
 	 */
@@ -1234,6 +1216,8 @@ class AdminControllerCore extends Controller
 		if (empty($this->page_header_toolbar_title))
 			$this->page_header_toolbar_title = array_pop($this->toolbar_title);
 		$this->addPageHeaderToolBarModulesListButton();
+
+		$this->context->smarty->assign('help_link', 'http://help.prestashop.com/'.$this->context->language->iso_code.'/doc/'.str_replace('.php', '', basename(__FILE__)).'?version='._PS_VERSION_.'&country='.$this->context->country->iso_code);
 	}
 
 	/**
