@@ -42,7 +42,7 @@ class ProductControllerCore extends FrontController
 			$this->addCSS(_THEME_CSS_DIR_.'product.css');
 			$this->addJqueryPlugin(array('fancybox', 'idTabs', 'scrollTo', 'serialScroll'));
 			$this->addJS(array(
-				_THEME_JS_DIR_.'tools.js',
+				_THEME_JS_DIR_.'tools.js',  // retro compat themes 1.5
 				_THEME_JS_DIR_.'product.js'
 			));
 		}
@@ -50,7 +50,7 @@ class ProductControllerCore extends FrontController
 		{
 			$this->addJqueryPlugin(array('scrollTo', 'serialScroll'));
 			$this->addJS(array(
-				_THEME_JS_DIR_.'tools.js',
+				_THEME_JS_DIR_.'tools.js',  // retro compat themes 1.5
 				_THEME_MOBILE_JS_DIR_.'product.js',
 				_THEME_MOBILE_JS_DIR_.'jquery.touch-gallery.js'
 			));
