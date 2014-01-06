@@ -32,8 +32,12 @@ $(document).ready(function(){
 		homeslider_pause = 3000;
 	if (typeof(homeslider_loop) == 'undefined')
 		homeslider_loop = true;
+    if (typeof(homeslider_loop) == 'undefined')
+        homeslider_width = 779;
 
 	$('#homeslider').bxSlider({
+        maxSlides: 1,
+        slideWidth: homeslider_width,
 		infiniteLoop: homeslider_loop,
 		hideControlOnEnd: true,
 		pager: false,
