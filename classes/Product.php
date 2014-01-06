@@ -1743,7 +1743,7 @@ class ProductCore extends ObjectModel
 			return false;
 
 		Hook::exec(
-			'deleteProductAttribute',
+			'actionProductAttributeDelete',
 			array(
 				'id_product_attribute' => $id_product_attribute,
 				'id_product' => $this->id,
