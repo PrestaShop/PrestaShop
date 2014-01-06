@@ -665,14 +665,18 @@ class AdminModulesControllerCore extends AdminController
 
 		foreach ($this->map as $key => $method)
 		{
-			$modules = Tools::getValue($key);
+			if (!($modules = Tools::getValue($key)))
+				continue;
+
 			if (strpos($modules, '|'))
 			{
 				$modules_list_save = $modules;
 				$modules = explode('|', $modules);
 			}
-			else
-				$modules = empty($modules) ? false : array($modules);
+
+			if (!is_array($modules))
+				$modules = (array)$modules;
+
 			$module_errors = array();
 			if ($modules)
 				foreach ($modules as $name)
@@ -859,7 +863,12 @@ class AdminModulesControllerCore extends AdminController
 		}
 
 		if (Tools::getValue('update'))
-			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : ''));
+		{
+			if (isset($modules_list_save))
+				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1&module_name='.$modules_list_save);
+			elseif ($module)
+				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : ''));
+		}
 		
 		if (Tools::getValue('check_and_update'))
 		{
@@ -918,8 +927,8 @@ class AdminModulesControllerCore extends AdminController
 				$html_error_description = '';
 				if (count($module_error['message']) > 0)
 					foreach ($module_error['message'] as $e)
-						$html_error_description .= '<br />'.$e;
-				$html_error .= '<li><b>- '.$module_error['name'].'</b> : '.$html_error_description.'</li>';
+						$html_error_description .= '<br />&nbsp;&nbsp;&nbsp;&nbsp;'.$e;
+				$html_error .= '<li><b>'.$module_error['name'].'</b> : '.$html_error_description.'</li>';
 			}
 			$html_error .= '</ul>';
 		}
@@ -1165,7 +1174,15 @@ class AdminModulesControllerCore extends AdminController
 			//Add succes message for one module update
 			if (Tools::getValue('updated') && Tools::getValue('module_name'))
 			{
-				if ($module->name === (string)Tools::getValue('module_name'))
+				$module_names = (string)Tools::getValue('module_name');
+
+				if (strpos($module_names, '|'))
+					$module_names = explode('|', $module_names);
+
+				if (!is_array($module_names))
+					$module_names = (array)$module_names;
+
+				if (in_array($module->name, $module_names))
 					$module_success[] = array('name' => $module->displayName, 'message' => array(
 							0 => $this->l('Current version:').$module->version));
 			}
@@ -1247,7 +1264,7 @@ class AdminModulesControllerCore extends AdminController
 			}
 			unset($object);
 			if ($module->installed && isset($module->version_addons) && $module->version_addons)
-				$upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->displayName);
+				$upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->name, 'displayName' => $module->displayName);
 				
 			if (in_array($module->name, $this->list_partners_modules))
 				$module->type = 'addonsPartner';
