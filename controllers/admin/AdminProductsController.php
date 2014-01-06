@@ -2438,18 +2438,6 @@ class AdminProductsControllerCore extends AdminController
 		{
 			if (($product = $this->loadObject(true)))
 			{
-				$this->page_header_toolbar_btn['save-and-stay'] = array(
-					'short' => 'SaveAndStay',
-					'href' => '#',
-					'desc' => $this->l('Save and stay'),
-				);
-
-				$this->page_header_toolbar_btn['save'] = array(
-					'short' => 'Save',
-					'href' => '#',
-					'desc' => $this->l('Save'),
-				);
-
 				// adding button for preview this product
 				if ($url_preview = $this->getPreviewUrl($product))
 					$this->page_header_toolbar_btn['preview'] = array(
