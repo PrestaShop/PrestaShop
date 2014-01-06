@@ -569,7 +569,7 @@ class AdminThemesControllerCore extends AdminController
 				$base_theme = new Theme((int)Tools::getValue('based_on'));
 			}
 
-			if (isset($_FILES['image_preview']))
+			if (isset($_FILES['image_preview']) && $_FILES['image_preview']['error'] == 0)
 			{
 				if (@getimagesize($_FILES['image_preview']['tmp_name']) && !ImageManager::validateUpload($_FILES['image_preview'], Tools::getMaxUploadSize()))
 				{
@@ -604,7 +604,7 @@ class AdminThemesControllerCore extends AdminController
 			$theme->default_right_column = Tools::getValue('default_right_column');
 			$theme->product_per_page = (int)Tools::getValue('product_per_page');
 
-			if (isset($_FILES['image_preview']))
+			if (isset($_FILES['image_preview']) && $_FILES['image_preview']['error'] == 0)
 			{
 				if (@getimagesize($_FILES['image_preview']['tmp_name']) && !ImageManager::validateUpload($_FILES['image_preview'], 300000))
 				{
@@ -1585,13 +1585,13 @@ class AdminThemesControllerCore extends AdminController
 				}
 
 			$content = '';
-			if (file_exists(_PS_IMG_DIR_ . 'logo.jpg'))
+			if (file_exists(_PS_IMG_DIR_ . 'logo.jpg') && Configuration::get('PS_LOGO'))
 			{
 				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_ . Configuration::get('PS_LOGO'));
 				Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
 				Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 			}
-			if (file_exists(_PS_IMG_DIR_ . 'logo_mobile.jpg'))
+			if (file_exists(_PS_IMG_DIR_ . 'logo_mobile.jpg') && Configuration::get('PS_LOGO_MOBILE'))
 			{
 				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MOBILE'));
 				Configuration::updateValue('SHOP_LOGO_MOBILE_HEIGHT', (int)round($height));

@@ -66,6 +66,7 @@ class Blockcontact extends Module
 			Configuration::updateValue('blockcontact_telnumber', Tools::getValue('blockcontact_telnumber'));
 			Configuration::updateValue('blockcontact_email', Tools::getValue('blockcontact_email'));
 			$this->_clearCache('blockcontact.tpl');
+			$this->_clearCache('nav.tpl');
 			$html .= $this->displayConfirmation($this->l('Configuration updated'));
 		}
 
