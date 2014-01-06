@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<!-- Block stores module -->
+<!-- Productpaymentlogos module -->
 {if !$content_only}
 </div>
 <div id="product_payment_logos">
@@ -35,4 +35,4 @@
 
 
 
-<!-- /Block stores module -->
+<!-- /Productpaymentlogos module -->
