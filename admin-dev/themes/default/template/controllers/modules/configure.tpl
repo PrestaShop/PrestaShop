@@ -52,7 +52,7 @@
 					<li>
 						<a id="desc-module-hook" class="toolbar_btn" href="{$module_update_link}" title="{l s='Update'}">
 							<i class="process-icon-refresh"></i>
-							<div>{l s='Update'}</div>
+							<div>{l s='Check and update'}</div>
 						</a>
 					</li>
 					{/if}

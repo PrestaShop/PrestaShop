@@ -43,8 +43,15 @@
 			{assign var='modules' value=$modules|substr:0:-1}
 			<li>
 				<a id="desc-module-update-all" class="toolbar_btn" href="{$currentIndex}&token={$token}&update={$modules}" title="{l s='Update all'}">
-					<i class="process-icon-cogs" ></i>
+					<i class="process-icon-refresh" ></i>
 					<div>{l s='Update all'}</div>
+				</a>
+			</li>
+			{else}
+			<li>
+				<a id="desc-module-check-and-update-all" class="toolbar_btn" href="{$currentIndex}&token={$token}&checkAndUpdate=1" title="{l s='Check and update'}">
+					<i class="process-icon-refresh" ></i>
+					<div>{l s='Check and update'}</div>
 				</a>
 			</li>
 			{/if}
