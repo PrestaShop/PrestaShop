@@ -1,6 +1,7 @@
 <?php return array (
   'AbstractLogger' => '',
   'AbstractLoggerCore' => 'classes/log/AbstractLogger.php',
+  'Address' => '',
   'AddressController' => '',
   'AddressControllerCore' => 'controllers/front/AddressController.php',
   'AddressCore' => 'classes/Address.php',
