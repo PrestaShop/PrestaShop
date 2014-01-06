@@ -569,7 +569,7 @@ class AdminThemesControllerCore extends AdminController
 				$base_theme = new Theme((int)Tools::getValue('based_on'));
 			}
 
-			if (isset($_FILES['image_preview']))
+			if (isset($_FILES['image_preview']) && $_FILES['image_preview']['error'] == 0)
 			{
 				if (@getimagesize($_FILES['image_preview']['tmp_name']) && !ImageManager::validateUpload($_FILES['image_preview'], Tools::getMaxUploadSize()))
 				{
@@ -604,7 +604,7 @@ class AdminThemesControllerCore extends AdminController
 			$theme->default_right_column = Tools::getValue('default_right_column');
 			$theme->product_per_page = (int)Tools::getValue('product_per_page');
 
-			if (isset($_FILES['image_preview']))
+			if (isset($_FILES['image_preview']) && $_FILES['image_preview']['error'] == 0)
 			{
 				if (@getimagesize($_FILES['image_preview']['tmp_name']) && !ImageManager::validateUpload($_FILES['image_preview'], 300000))
 				{
