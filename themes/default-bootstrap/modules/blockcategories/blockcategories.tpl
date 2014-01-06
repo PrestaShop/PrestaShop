@@ -25,13 +25,13 @@
 {if $blockCategTree && $blockCategTree.children|@count}
 <!-- Block categories module -->
 <div id="categories_block_left" class="block">
-	<p class="title_block">
+	<h2 class="title_block">
 		{if isset($currentCategory)}
 			{$currentCategory->name|escape}
 		{else}
 			{l s='Categories' mod='blockcategories'}
 		{/if}
-	</p>
+	</h2>
 	<div class="block_content">
 		<ul class="tree {if $isDhtml}dhtml{/if}">
 			{foreach from=$blockCategTree.children item=child name=blockCategTree}
