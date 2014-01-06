@@ -90,7 +90,7 @@ class Autoload
 
 		// Retrocompatibility 
 		if (isset(Autoload::$class_aliases[$classname]) && !interface_exists($classname, false) && !class_exists($classname, false))
-			eval('class '.$classname.' extends '.Autoload::$class_aliases[$classname].'Core {}');
+			eval('class '.$classname.' extends '.Autoload::$class_aliases[$classname].' {}');
 
 		// regenerate the class index if the requested file doesn't exists
 		if ((isset($this->index[$classname]) && $this->index[$classname] && !is_file($this->root_dir.$this->index[$classname]))
