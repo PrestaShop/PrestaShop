@@ -91,6 +91,12 @@
 					</a>
 				</li>
 				{/if}
+				<li>
+					<a class="toolbar_btn" href="{$help_link}" title="{l s='Help'}">
+						<i class="icon-question"></i>
+						<div>{l s='Help'}</div>
+					</a>
+				</li>
 			</ul>
 
 			<script language="javascript" type="text/javascript">
