@@ -232,7 +232,11 @@ class BlockCategories extends Module
 
 	protected function getCacheId($name = null)
 	{
-		$cache_id = parent::getCacheId($name);
+		$cache_id = parent::getCacheId();
+
+		if ($name !== null)
+			$cache_id .= '|'.$name;
+
 		return $cache_id.'|'.implode('-', Customer::getGroupsStatic($this->context->customer->id));
 	}
 
