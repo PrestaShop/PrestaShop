@@ -50,6 +50,10 @@ class Autoload
 	public $index = array();
 
 	public $_include_override_path = true;
+	
+	protected static $class_aliases = array(
+		'Collection' => 'PrestaShopCollection'
+	);
 
 	protected function __construct()
 	{
@@ -85,8 +89,8 @@ class Autoload
 			return;
 
 		// Retrocompatibility 
-		if ($classname == 'Collection' && !interface_exists('Collection', false) && !class_exists('Collection', false))
-			eval('class Collection extends PrestaShopCollection {}');
+		if (isset(Autoload::$class_aliases[$classname]) && !interface_exists($classname, false) && !class_exists($classname, false))
+			eval('class '.$classname.' extends '.Autoload::$class_aliases[$classname].'Core {}');
 
 		// regenerate the class index if the requested file doesn't exists
 		if ((isset($this->index[$classname]) && $this->index[$classname] && !is_file($this->root_dir.$this->index[$classname]))
