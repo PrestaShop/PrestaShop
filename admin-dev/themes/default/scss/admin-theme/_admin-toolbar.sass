@@ -13,7 +13,7 @@
 	h2.page-title
 		@extend .pull-left
 		position: relative
-		padding: 26px 0 0 310px
+		padding: 26px 0 0 ($widthSidebarNav+70px)
 		margin: 0
 		font-size: 20px
 		line-height: 1em
@@ -34,7 +34,7 @@
 		list-style: none
 		margin: 0
 		padding: 0
-		left: 310px
+		left: ($widthSidebarNav+70px)
 		top: 4px
 		height: 20px
 		line-height: 20px
@@ -45,25 +45,25 @@
 		@include border-radius(0)
 		@media (max-width: $screen-tablet)
 			left: 70px
-		li i
-			font-size: 14px
-		li:first-child i
-			width: 50px
-			position: absolute
-			left: -60px
-			top: 0
-			font-size: 42px
-			font-weight: 100
-			padding-right: 5px
-			color: rgba(black,0.5)
-			border-right: solid 1px #73A232
-		li:before
-			color: #73A232
-		a
-			color: rgba(white,0.6)
-			&:hover
-				color: white
-
+		li
+			i
+				font-size: 14px
+			&:first-child i
+				width: 50px
+				position: absolute
+				left: -60px
+				top: 0
+				font-size: 42px
+				font-weight: 100
+				padding-right: 5px
+				color: rgba(black,0.5)
+				border-right: solid 1px #73A232
+			&:before
+				color: #73A232
+			a
+				color: rgba(white,0.6)
+				&:hover
+					color: white
 	.btn-toolbar
 		margin: 0
 		padding: 3px 0 0 0

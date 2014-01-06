@@ -196,9 +196,19 @@ $(document).ready(function() {
 		if ($(window).scrollTop()) {
 			$('#go-top:hidden').stop(true, true).fadeIn();
 			$('#go-top:hidden').removeClass('hide');
-		} else
+		} else {
 			$('#go-top').stop(true, true).fadeOut();
+		}
 	}
+
+	function animateFooter(){
+		if($(window).scrollTop() + $(window).height() === $(document).height()) {
+			$('#footer:hidden').removeClass('hide');
+		} else {
+			$('#footer').addClass('hide');
+		}
+	}
+	animateFooter();
 
 	$("#go-top").on('click',function() {
 		$("html, body").animate({ scrollTop: 0 }, "slow");
@@ -207,6 +217,7 @@ $(document).ready(function() {
 
 	$(window).scroll(function() {
 		animateGoTop();
+		animateFooter();
 	});
 
 	function toggleShopModuleCheckbox(id_shop, toggle){
@@ -245,7 +256,8 @@ $(document).ready(function() {
 	if ($('#bo_query').val() !== ''){
 		$('.clear_search').removeClass('hide');
 	}
-	$('.clear_search').on('click', function(){
+	$('.clear_search').on('click', function(e){
+		e.preventDefault();
 		$("#bo_query").val('').focus();
 		$('.clear_search').addClass('hide');
 	});

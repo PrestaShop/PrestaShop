@@ -59,7 +59,7 @@
 				</label>
 				<div class="col-lg-9">
 					<div class="row">
-						<div class="col-lg-6">
+						<div class="col-lg-4">
 							<span class="switch prestashop-switch">
 								<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_on" value="1" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), true)">
 								<label for="{$table}_multishop_{$category}_on">
@@ -72,11 +72,14 @@
 								<a class="slide-button btn"></a>
 							</span>
 						</div>
-						<p class="help-block">
-							<strong>{l s='Check / Uncheck all'}</strong>
-							{l s='(Check boxes if you want to set a custom value for this shop or group shop context)'}
-						</p>
-
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<p class="help-block">
+								<strong>{l s='Check / Uncheck all'}</strong>
+								{l s='(Check boxes if you want to set a custom value for this shop or group shop context)'}
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>
