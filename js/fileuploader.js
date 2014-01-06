@@ -1096,7 +1096,6 @@ qq.extend(qq.UploadHandlerXhr.prototype, {
             try {
                 response = jQuery.parseJSON(xhr.responseText);
             } catch(err){
-            	console.log(err);
                 response = {};
             }
             
