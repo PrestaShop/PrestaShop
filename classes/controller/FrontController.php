@@ -764,7 +764,8 @@ class FrontControllerCore extends Controller
 			$this->addjqueryPlugin('fancybox');
 			$this->addJS(_THEME_JS_DIR_.'quick-view.js');
 		}
-		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
+
+		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0 && ($this->php_self == 'products-comparison' || $this->php_self == 'category'))
 			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 
 		// Execute Hook FrontController SetMedia
