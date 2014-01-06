@@ -375,6 +375,7 @@
 					<i class="icon-user"></i>
 					{l s='Customer'} :
 					<a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}">
+						{if Configuration::get('PS_B2B_ENABLE')}{$customer->company} - {/if}
 						{$gender->name|escape:'html':'UTF-8'}
 						{$customer->firstname}
 						{$customer->lastname}
@@ -404,6 +405,10 @@
 						<li>{l s='Account registered:'} <strong>{dateFormat date=$customer->date_add full=true}</strong></li>
 						<li>{l s='Valid orders placed:'} <strong>{$customerStats['nb_orders']}</strong></li>
 						<li>{l s='Total spent since registration:'} <strong>{displayPrice price=Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $currency), 2) currency=$currency->id}</strong></li>
+						{if Configuration::get('PS_B2B_ENABLE')}
+							<li>{l s='Siret:'} <strong>{$customer->siret}</strong></li>
+							<li>{l s='APE:'} <strong>{$customer->ape}</strong></li>
+						{/if}
 					</ul>
 					{/if}
 				{/if}
