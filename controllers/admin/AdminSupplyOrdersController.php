@@ -830,10 +830,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->_group = 'GROUP BY a.id_supply_order_detail';
 
 		// gets the list ordered by price desc, without limit
-		$this->getList($lang_id, 'quantity_expected', 'DESC', 0, false, false);
+		$this->getList($lang_id, 'quantity_expected', 'DESC', 0, Tools::getValue('supply_order_pagination'), false);
 
 		// defines action for POST
-		$action = '&id_supply_order='.$id_supply_order;
+		$action = '&id_supply_order='.$id_supply_order.'&update_receipt=1';
 
 		// unsets some buttons
 		unset($this->toolbar_btn['export-csv-orders']);
