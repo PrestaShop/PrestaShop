@@ -36,7 +36,6 @@
 {/if}
 		<meta name="robots" content="{if isset($nobots)}no{/if}index,follow" />
 		<link rel="shortcut icon" href="{$favicon_url}" />
-		<link href="{$css_dir}restricted-country.css" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
 		<div id="restricted-country">
