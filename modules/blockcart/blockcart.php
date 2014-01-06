@@ -146,7 +146,6 @@ class BlockCart extends Module
 				$output .= $this->displayError($this->l('Ajax : Invalid choice.'));
 			else
 				Configuration::updateValue('PS_BLOCK_CART_AJAX', (int)($ajax));
-			$output .= $this->displayConfirmation($this->l('Settings updated'));
 
 			if (!($productNbr = Tools::getValue('PS_BLOCK_CART_XSELL_LIMIT')) || empty($productNbr))
 				$output .= $this->displayError($this->l('Please complete the "products to display" field.'));
