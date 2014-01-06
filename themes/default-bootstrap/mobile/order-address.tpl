@@ -113,42 +113,10 @@
 		{if !$opc}
 			{assign var='current_step' value='address'}
 			{include file="$tpl_dir./errors.tpl"}
-			
-			{if !$multi_shipping && {Configuration::get('PS_ALLOW_MULTISHIPPING')} && !$cart->isVirtualCart()}
-				<div class="button_multishipping_mode" id="multishipping_mode_box">
-					<div class="title">{l s='Multi-shipping'}</div>
-					<div class="description">
-						<a href="{$link->getPageLink('order', true, NULL, 'step=1&multi-shipping=1')|escape:'html'}"/>
-							{l s='Specify a delivery address for each product ordered.'}
-						</a>
-					</div>
-				</div>
-			{/if}
+
 		<form action="{$link->getPageLink($back_order_page, true)|escape:'html'}" method="post" data-ajax="false">
 		{else}
-			{if {Configuration::get('PS_ALLOW_MULTISHIPPING')} && !$cart->isVirtualCart()}
-				<div class="address-form-multishipping">
-					<div class="button_multishipping_mode" id="multishipping_mode_box">
-						<div class="title">{l s='Multi-shipping'}</div>
-						<div class="description">
-							<input type="checkbox" id="multishipping_mode_checkbox" onchange="multishippingMode(this); return false;" autocomplete="off"/><label for="multishipping_mode_checkbox">{l s='I\'d like to specify a delivery address for each product ordered.'}</label>
-						</div>
-						<div class="description_off">
-							<a href="{$link->getPageLink('order-opc', true, NULL, 'ajax=1&multi-shipping=1&method=multishipping')|escape:'html'}" id="link_multishipping_form" title="{l s='Choose the delivery address(es)'}">
-								{l s='Specify a delivery address for each product.'}
-							</a>
-						</div>
-					</div>
-					<script type="text/javascript">
-						{if $is_multi_address_delivery}
-						var multishipping_mode = true;
-						{else}
-						var multishipping_mode = false;
-						{/if}
-						var open_multishipping_fancybox = {$open_multishipping_fancybox|intval};
-					</script>
-				</div>
-			{/if}
+
 		<div id="opc_account" class="opc-main-block">
 			<div id="opc_account-overlay" class="opc-overlay" style="display: none;"></div>
 		{/if}

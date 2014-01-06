@@ -455,15 +455,6 @@
 	</p>
 	{/if}
 
-	{if !$opc}
-		{if Configuration::get('PS_ALLOW_MULTISHIPPING')}
-			<p class="enable-multishipping checkbox">
-				<input type="checkbox" {if $multi_shipping}checked="checked"{/if} id="enable-multishipping" />
-				<label for="enable-multishipping">{l s='I would like to specify a delivery address for each individual product.'}</label>
-			</p>
-		{/if}
-	{/if}
-
 	{* Define the style if it doesn't exist in the PrestaShop version*}
 	{* Will be deleted for 1.5 version and more *}
 	{if !isset($addresses_style)}
@@ -556,14 +547,6 @@
 				title="{l s='Proceed to checkout'}">
 				<span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span>
 			</a>
-			{if Configuration::get('PS_ALLOW_MULTISHIPPING')}
-				<a
-					href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')|escape:'html':'UTF-8'}{else}{$link->getPageLink('order', true, NULL, 'step=1')|escape:'html':'UTF-8'}{/if}&amp;multi-shipping=1"
-					class="multishipping-button multishipping-checkout button btn btn-default button-medium"
-					title="{l s='Proceed to checkout'}">
-					<span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span>
-				</a>
-			{/if}
 		{/if}
 		<a
 			href="{if (isset($smarty.server.HTTP_REFERER) && strstr($smarty.server.HTTP_REFERER, 'order.php')) || isset($smarty.server.HTTP_REFERER) && strstr($smarty.server.HTTP_REFERER, 'order-opc') || !isset($smarty.server.HTTP_REFERER)}{$link->getPageLink('index')}{else}{$smarty.server.HTTP_REFERER|escape:'html':'UTF-8'|secureReferrer}{/if}"
