@@ -39,7 +39,7 @@ class HistoryControllerCore extends FrontController
 		$this->addJqueryPlugin('scrollTo');
 		$this->addJS(array(
 					_THEME_JS_DIR_.'history.js',
-					_THEME_JS_DIR_.'tools.js') // retro compat
+					_THEME_JS_DIR_.'tools.js') // retro compat themes 1.5
 					);
 	}
 
