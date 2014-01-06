@@ -759,7 +759,7 @@ class FrontControllerCore extends Controller
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 		
-		if (Configuration::get('PS_QUICK_VIEW'))
+		if (Configuration::get('PS_QUICK_VIEW') && ($this->php_self == 'index' || $this->php_self == 'category'))
 		{
 			$this->addjqueryPlugin('fancybox');
 			$this->addJS(_THEME_JS_DIR_.'quick-view.js');

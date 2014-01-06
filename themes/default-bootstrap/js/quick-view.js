@@ -38,5 +38,3 @@ function quick_view() {
 $(document).ready(function() {
 	quick_view();
 });
-
-
