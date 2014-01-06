@@ -112,7 +112,11 @@
 					{elseif isset($params.type) && $params.type == 'editable' && isset($tr.id)}
 						<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'html':'UTF-8'}" class="{$key}" />
 					{elseif isset($params.callback)}
-						{$tr.$key}
+						{if isset($params.maxlength) && Tools::strlen($tr.$key) > $params.maxlength}
+							<span title="{$tr.$key}">{$tr.$key|truncate:$params.maxlength:'...'}</span>
+						{else}
+							{$tr.$key}
+						{/if}
 					{elseif $key == 'color'}
 						{if !is_array($tr.$key)}
 						<div style="background-color: {$tr.$key};" class="attributes-color-container"></div>
