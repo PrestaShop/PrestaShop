@@ -60,7 +60,7 @@ class GenderCore extends ObjectModel
 		if (is_null($id_lang))
 			$id_lang = Context::getContext()->language->id;
 
-		$genders = new Collection('Gender', $id_lang);
+		$genders = new PrestaShopCollection('Gender', $id_lang);
 		return $genders;
 	}
 

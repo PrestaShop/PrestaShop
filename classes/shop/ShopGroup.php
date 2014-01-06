@@ -66,7 +66,7 @@ class ShopGroupCore extends ObjectModel
 
 	public static function getShopGroups($active = true)
 	{
-		$groups = new Collection('ShopGroup');
+		$groups = new PrestaShopCollection('ShopGroup');
 		$groups->where('deleted', '=', false);
 		if ($active)
 			$groups->where('active', '=', true);

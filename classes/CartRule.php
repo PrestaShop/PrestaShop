@@ -362,7 +362,7 @@ class CartRuleCore extends ObjectModel
 	public static function deleteByIdCustomer($id_customer)
 	{
 		$return = true;
-		$cart_rules = new Collection('CartRule');
+		$cart_rules = new PrestaShopCollection('CartRule');
 		$cart_rules->where('id_customer', '=', $id_customer);
 		foreach ($cart_rules as $cart_rule)
 			$return &= $cart_rule->delete();

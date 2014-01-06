@@ -647,7 +647,7 @@ class StockManagerCore implements StockManagerInterface
 	 */
 	protected function getStockCollection($id_product, $id_product_attribute, $id_warehouse = null, $price_te = null)
 	{
-		$stocks = new Collection('Stock');
+		$stocks = new PrestaShopCollection('Stock');
 		$stocks->where('id_product', '=', $id_product);
 		$stocks->where('id_product_attribute', '=', $id_product_attribute);
 		if ($id_warehouse)

@@ -84,6 +84,10 @@ class Autoload
 		if (strpos(strtolower($classname), 'smarty_') === 0)
 			return;
 
+		// Retrocompatibility 
+		if ($classname == 'Collection' && !interface_exists('Collection', false) && !class_exists('Collection', false))
+			eval('class Collection extends PrestaShopCollection {}');
+
 		// regenerate the class index if the requested file doesn't exists
 		if ((isset($this->index[$classname]) && $this->index[$classname] && !is_file($this->root_dir.$this->index[$classname]))
 			|| (isset($this->index[$classname.'Core']) && $this->index[$classname.'Core'] && !is_file($this->root_dir.$this->index[$classname.'Core'])))

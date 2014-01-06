@@ -1248,7 +1248,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				return;
 
 			$id_lang = Context::getContext()->language->id;
-			$orders = new Collection('SupplyOrder', $id_lang);
+			$orders = new PrestaShopCollection('SupplyOrder', $id_lang);
 			$orders->where('is_template', '=', false);
 			$orders->where('id_supply_order', 'in', $ids);
 			$id_warehouse = $this->getCurrentWarehouse();

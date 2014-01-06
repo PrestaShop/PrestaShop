@@ -53,7 +53,7 @@ class ThemeCore extends ObjectModel
 
 	public static function getThemes()
 	{
-		$themes = new Collection('Theme');
+		$themes = new PrestaShopCollection('Theme');
 		$themes->orderBy('name');
 		return $themes;
 	}

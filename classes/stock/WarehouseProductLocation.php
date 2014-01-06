@@ -127,7 +127,7 @@ class WarehouseProductLocationCore extends ObjectModel
 	 */
 	public static function getCollection($id_product)
 	{
-		$collection = new Collection('WarehouseProductLocation');
+		$collection = new PrestaShopCollection('WarehouseProductLocation');
 		$collection->where('id_product', '=', (int)$id_product);
 		return $collection;
 	}

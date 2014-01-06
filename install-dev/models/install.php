@@ -482,7 +482,7 @@ class InstallModelInstall extends InstallAbstractModel
 		{
 			Configuration::updateGlobalValue('PS_SHOP_EMAIL', $data['admin_email']);
 
-			$contacts = new Collection('Contact');
+			$contacts = new PrestaShopCollection('Contact');
 			foreach ($contacts as $contact)
 			{
 				$contact->email = $data['admin_email'];

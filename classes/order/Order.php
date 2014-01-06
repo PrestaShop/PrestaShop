@@ -1296,7 +1296,7 @@ class OrderCore extends ObjectModel
 	 */
 	public static function getByReference($reference)
 	{
-		$orders = new Collection('Order');
+		$orders = new PrestaShopCollection('Order');
 		$orders->where('reference', '=', $reference);
 		return $orders;
 	}
@@ -1484,7 +1484,7 @@ class OrderCore extends ObjectModel
 	 */
 	public function getOrderPaymentCollection()
 	{
-		$order_payments = new Collection('OrderPayment');
+		$order_payments = new PrestaShopCollection('OrderPayment');
 		$order_payments->where('order_reference', '=', $this->reference);
 		return $order_payments;
 	}
@@ -1608,7 +1608,7 @@ class OrderCore extends ObjectModel
 	 */
 	public function getOrderSlipsCollection()
 	{
-		$order_slips = new Collection('OrderSlip');
+		$order_slips = new PrestaShopCollection('OrderSlip');
 		$order_slips->where('id_order', '=', $this->id);
 		return $order_slips;
 	}
@@ -1621,7 +1621,7 @@ class OrderCore extends ObjectModel
 	 */
 	public function getInvoicesCollection()
 	{
-		$order_invoices = new Collection('OrderInvoice');
+		$order_invoices = new PrestaShopCollection('OrderInvoice');
 		$order_invoices->where('id_order', '=', $this->id);
 		return $order_invoices;
 	}
@@ -1634,7 +1634,7 @@ class OrderCore extends ObjectModel
 	 */
 	public function getDeliverySlipsCollection()
 	{
-		$order_invoices = new Collection('OrderInvoice');
+		$order_invoices = new PrestaShopCollection('OrderInvoice');
 		$order_invoices->where('id_order', '=', $this->id);
 		$order_invoices->where('delivery_number', '!=', '0');
 		return $order_invoices;
@@ -1897,7 +1897,7 @@ class OrderCore extends ObjectModel
 	 */
 	public function getBrother()
 	{
-		$collection = new Collection('order');
+		$collection = new PrestaShopCollection('order');
 		$collection->where('reference', '=', $this->reference);
 		$collection->where('id_order', '<>', $this->id);
 		return $collection;
