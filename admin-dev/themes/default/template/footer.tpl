@@ -26,7 +26,7 @@
 	</div>
 </div>
 {if $display_footer}
-<div id="footer" class="bootstrap">
+<div id="footer" class="bootstrap hide">
 	<div class="col-sm-2 hidden-xs">
 		<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a>
 		-
