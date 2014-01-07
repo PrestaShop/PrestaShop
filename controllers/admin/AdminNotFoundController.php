@@ -45,7 +45,6 @@ class AdminNotFoundControllerCore extends AdminController
 
 	public function initContent()
 	{
-		
 		$this->errors[] = Tools::displayError('Controller not found');
 		$tpl_vars['controller'] = Tools::getvalue('controllerUri', Tools::getvalue('controller'));
 		$this->context->smarty->assign($tpl_vars);

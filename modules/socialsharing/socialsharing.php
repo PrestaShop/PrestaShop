@@ -200,21 +200,6 @@ class SocialSharing extends Module
 		return $this->displaySocialSharing();
 	}
 
-	public function hookLeftColumn($params)
-	{
-		return $this->displaySocialSharing();
-	}
-
-	public function hookFooter($params)
-	{
-		return $this->displaySocialSharing();
-	}
-	
-	public function hookHome($params)
-	{
-		return $this->displaySocialSharing();
-	}
-
 	public function hookExtraleft($params)
 	{
 		return $this->displaySocialSharing();
