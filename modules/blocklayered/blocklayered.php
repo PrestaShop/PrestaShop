@@ -2787,13 +2787,13 @@ class BlockLayered extends Module
 		{
 			$price_filter_query = '
 			INNER JOIN `'._DB_PREFIX_.'layered_price_index` psi ON (psi.id_product = p.id_product AND psi.id_currency = '.(int)$id_currency.'
-			AND psi.price_min <= '.(int)$filter_value[1].' AND psi.price_max >= '.(int)$filter_value[0].') ';
+			AND psi.price_min <= '.(int)$filter_value[1].' AND psi.price_max >= '.(int)$filter_value[0].' AND psi.id_shop='.(int)Context::getContext()->shop->id.') ';
 		}
 		else
 		{
 			$price_filter_query = '
 			INNER JOIN `'._DB_PREFIX_.'layered_price_index` psi 
-			ON (psi.id_product = p.id_product AND psi.id_currency = '.(int)$id_currency.') ';
+			ON (psi.id_product = p.id_product AND psi.id_currency = '.(int)$id_currency.' AND psi.id_shop='.(int)Context::getContext()->shop->id).') ';
 		}
 		
 		return array('join' => $price_filter_query, 'select' => ', psi.price_min, psi.price_max');
