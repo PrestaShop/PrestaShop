@@ -427,6 +427,10 @@ class InstallModelInstall extends InstallAbstractModel
 			Configuration::updateGlobalValue('SHOP_LOGO_WIDTH', round($width));
 			Configuration::updateGlobalValue('SHOP_LOGO_HEIGHT', round($height));
 		}
+		
+		// Disable cache for debug mode
+		if (_PS_MODE_DEV_)
+			Configuration::updateGlobalValue('PS_SMARTY_CACHE', 1);
 
 		// Active only the country selected by the merchant
 		Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'country SET active = 0 WHERE id_country != '.(int)$id_country);

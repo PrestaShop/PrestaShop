@@ -166,13 +166,13 @@ class AdminCategoriesControllerCore extends AdminController
 		{
 			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
 				$this->page_header_toolbar_btn['new-url'] = array(
-					'href' => self::$currentIndex.'&amp;add'.$this->table.'root&amp;token='.$this->token,
-					'desc' => $this->l('Add new root category')
+					'href' => self::$currentIndex.'&add'.$this->table.'root&token='.$this->token,
+					'desc' => $this->l('Add new root category', null, null, false)
 				);
 
 			$this->page_header_toolbar_btn['new_category'] = array(
-				'href' => self::$currentIndex.'&amp;addcategory&amp;token='.$this->token,
-				'desc' => $this->l('Add new category'),
+				'href' => self::$currentIndex.'&addcategory&token='.$this->token,
+				'desc' => $this->l('Add new category', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		}
