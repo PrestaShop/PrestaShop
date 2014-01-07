@@ -1637,7 +1637,6 @@ class AdminControllerCore extends Controller
 		}
 
 		$this->getLanguages();
-		// toolbar (save, cancel, new, ..)		
 		$this->initToolbar();
 		$this->initTabModuleList();
 		$this->initPageHeaderToolbar();
