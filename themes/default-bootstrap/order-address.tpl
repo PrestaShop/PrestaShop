@@ -199,7 +199,7 @@
 				{l s='Continue Shopping'}
 			</a>
 			<button type="submit" name="processAddress" class="button btn btn-default button-medium">
-				<span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span>
+				<span>{l s='Continue checkout'}<i class="icon-chevron-right right"></i></span>
 			</button>
 		</p>
 	</form>
