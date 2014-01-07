@@ -323,7 +323,7 @@ class AdminSearchControllerCore extends AdminController
 
 	public function initToolbarTitle()
 	{
-		$this->toolbar_title = $this->l('Search results');
+		$this->toolbar_title = $this->l('Search results', null, null, false);
 	}
 
 	public function renderView()
