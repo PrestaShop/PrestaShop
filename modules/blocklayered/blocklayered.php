@@ -64,13 +64,18 @@ class BlockLayered extends Module
 		&& $this->registerHook('postProcessAttribute') && $this->registerHook('afterDeleteAttribute') && $this->registerHook('afterSaveAttribute')
 		&& $this->registerHook('displayBackOfficeHeader'))
 		{
-			$theme = new Theme(Context::getContext()->shop->id_theme);
-			if ($theme->default_left_column)
-				$this->registerHook('leftColumn');
-			elseif ($theme->default_right_column)
-				$this->registerHook('rightColumn');
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
+			{
+				$theme = new Theme(Context::getContext()->shop->id_theme);
+				if ($theme->default_left_column)
+					$this->registerHook('leftColumn');
+				elseif ($theme->default_right_column)
+					$this->registerHook('rightColumn');
+				else
+					return false;
+			}
 			else
-				return false;
+				$this->registerHook('leftColumn');
 
 			Configuration::updateValue('PS_LAYERED_HIDE_0_VALUES', 1);
 			Configuration::updateValue('PS_LAYERED_SHOW_QTIES', 1);
@@ -84,6 +89,7 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-');
 			
 			$this->rebuildLayeredStructure();
+			$this->buildLayeredCategories();
 			
 			$products_count = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'product`');
 			
@@ -94,13 +100,12 @@ class BlockLayered extends Module
 			$this->installFriendlyUrlTable();
 			$this->installIndexableAttributeTable();
 			$this->installProductAttributeTable();
-			$this->installFixtures();
 			
 			if ($products_count < 5000) // Lock indexation if too many products
 			{
 				self::fullPricesIndexProcess();
 				$this->indexUrl();
-				$this->indexAttribute();				
+				$this->indexAttribute();
 			}
 			
 			return true;
@@ -126,7 +131,7 @@ class BlockLayered extends Module
 		Configuration::deleteByName('PS_LAYERED_FILTER_INDEX_CDT');
 		Configuration::deleteByName('PS_LAYERED_FILTER_INDEX_MNF');
 		Configuration::deleteByName('PS_LAYERED_FILTER_INDEX_CAT');
-		
+
 		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_price_index');
 		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_friendly_url');
 		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_attribute_group');
@@ -135,7 +140,7 @@ class BlockLayered extends Module
 		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_feature_lang_value');
 		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_category');
 		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_filter');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_filter_shop');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_filter_shop');
 		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_product_attribute');
 		return parent::uninstall();
 	}
@@ -261,234 +266,6 @@ class BlockLayered extends Module
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 	}
 
-	public function installFixtures()
-	{
-		Db::getInstance()->execute(
-			"INSERT INTO `"._DB_PREFIX_."layered_category` (`id_layered_category`, `id_shop`, `id_category`, `id_value`, `type`, `position`, `filter_type`, `filter_show_limit`) VALUES
-			(1, 1, 2, NULL, 'category', 1, 0, 0),
-			(2, 1, 2, 3, 'id_attribute_group', 2, 0, 0),
-			(3, 1, 2, NULL, 'quantity', 3, 0, 0),
-			(4, 1, 2, NULL, 'condition', 4, 0, 0),
-			(5, 1, 2, NULL, 'manufacturer', 5, 0, 0),
-			(6, 1, 2, NULL, 'weight', 6, 0, 0),
-			(7, 1, 2, NULL, 'price', 7, 0, 0),
-			(8, 1, 2, 1, 'id_attribute_group', 8, 0, 0),
-			(9, 1, 2, 2, 'id_attribute_group', 9, 0, 0),
-			(10, 1, 2, 5, 'id_feature', 10, 0, 0),
-			(11, 1, 3, NULL, 'category', 1, 0, 0),
-			(12, 1, 3, 3, 'id_attribute_group', 2, 0, 0),
-			(13, 1, 3, NULL, 'quantity', 3, 0, 0),
-			(14, 1, 3, NULL, 'condition', 4, 0, 0),
-			(15, 1, 3, NULL, 'manufacturer', 5, 0, 0),
-			(16, 1, 3, NULL, 'weight', 6, 0, 0),
-			(17, 1, 3, NULL, 'price', 7, 0, 0),
-			(18, 1, 3, 1, 'id_attribute_group', 8, 0, 0),
-			(19, 1, 3, 2, 'id_attribute_group', 9, 0, 0),
-			(20, 1, 3, 5, 'id_feature', 10, 0, 0),
-			(21, 1, 4, NULL, 'category', 1, 0, 0),
-			(22, 1, 4, 3, 'id_attribute_group', 2, 0, 0),
-			(23, 1, 4, NULL, 'quantity', 3, 0, 0),
-			(24, 1, 4, NULL, 'condition', 4, 0, 0),
-			(25, 1, 4, NULL, 'manufacturer', 5, 0, 0),
-			(26, 1, 4, NULL, 'weight', 6, 0, 0),
-			(27, 1, 4, NULL, 'price', 7, 0, 0),
-			(28, 1, 4, 1, 'id_attribute_group', 8, 0, 0),
-			(29, 1, 4, 2, 'id_attribute_group', 9, 0, 0),
-			(30, 1, 4, 5, 'id_feature', 10, 0, 0),
-			(31, 1, 5, NULL, 'category', 1, 0, 0),
-			(32, 1, 5, 3, 'id_attribute_group', 2, 0, 0),
-			(33, 1, 5, NULL, 'quantity', 3, 0, 0),
-			(34, 1, 5, NULL, 'condition', 4, 0, 0),
-			(35, 1, 5, NULL, 'manufacturer', 5, 0, 0),
-			(36, 1, 5, NULL, 'weight', 6, 0, 0),
-			(37, 1, 5, NULL, 'price', 7, 0, 0),
-			(38, 1, 5, 1, 'id_attribute_group', 8, 0, 0),
-			(39, 1, 5, 2, 'id_attribute_group', 9, 0, 0),
-			(40, 1, 5, 5, 'id_feature', 10, 0, 0),
-			(41, 1, 6, NULL, 'category', 1, 0, 0),
-			(42, 1, 6, 3, 'id_attribute_group', 2, 0, 0),
-			(43, 1, 6, NULL, 'quantity', 3, 0, 0),
-			(44, 1, 6, NULL, 'condition', 4, 0, 0),
-			(45, 1, 6, NULL, 'manufacturer', 5, 0, 0),
-			(46, 1, 6, NULL, 'weight', 6, 0, 0),
-			(47, 1, 6, NULL, 'price', 7, 0, 0),
-			(48, 1, 6, 1, 'id_attribute_group', 8, 0, 0),
-			(49, 1, 6, 2, 'id_attribute_group', 9, 0, 0),
-			(50, 1, 6, 5, 'id_feature', 10, 0, 0),
-			(51, 1, 7, NULL, 'category', 1, 0, 0),
-			(52, 1, 7, 3, 'id_attribute_group', 2, 0, 0),
-			(53, 1, 7, NULL, 'quantity', 3, 0, 0),
-			(54, 1, 7, NULL, 'condition', 4, 0, 0),
-			(55, 1, 7, NULL, 'manufacturer', 5, 0, 0),
-			(56, 1, 7, NULL, 'weight', 6, 0, 0),
-			(57, 1, 7, NULL, 'price', 7, 0, 0),
-			(58, 1, 7, 1, 'id_attribute_group', 8, 0, 0),
-			(59, 1, 7, 2, 'id_attribute_group', 9, 0, 0),
-			(60, 1, 7, 5, 'id_feature', 10, 0, 0),
-			(61, 1, 8, NULL, 'category', 1, 0, 0),
-			(62, 1, 8, 3, 'id_attribute_group', 2, 0, 0),
-			(63, 1, 8, NULL, 'quantity', 3, 0, 0),
-			(64, 1, 8, NULL, 'condition', 4, 0, 0),
-			(65, 1, 8, NULL, 'manufacturer', 5, 0, 0),
-			(66, 1, 8, NULL, 'weight', 6, 0, 0),
-			(67, 1, 8, NULL, 'price', 7, 0, 0),
-			(68, 1, 8, 1, 'id_attribute_group', 8, 0, 0),
-			(69, 1, 8, 2, 'id_attribute_group', 9, 0, 0),
-			(70, 1, 8, 5, 'id_feature', 10, 0, 0),
-			(71, 1, 9, NULL, 'category', 1, 0, 0),
-			(72, 1, 9, 3, 'id_attribute_group', 2, 0, 0),
-			(73, 1, 9, NULL, 'quantity', 3, 0, 0),
-			(74, 1, 9, NULL, 'condition', 4, 0, 0),
-			(75, 1, 9, NULL, 'manufacturer', 5, 0, 0),
-			(76, 1, 9, NULL, 'weight', 6, 0, 0),
-			(77, 1, 9, NULL, 'price', 7, 0, 0),
-			(78, 1, 9, 1, 'id_attribute_group', 8, 0, 0),
-			(79, 1, 9, 2, 'id_attribute_group', 9, 0, 0),
-			(80, 1, 9, 5, 'id_feature', 10, 0, 0),
-			(81, 1, 10, NULL, 'category', 1, 0, 0),
-			(82, 1, 10, 3, 'id_attribute_group', 2, 0, 0),
-			(83, 1, 10, NULL, 'quantity', 3, 0, 0),
-			(84, 1, 10, NULL, 'condition', 4, 0, 0),
-			(85, 1, 10, NULL, 'manufacturer', 5, 0, 0),
-			(86, 1, 10, NULL, 'weight', 6, 0, 0),
-			(87, 1, 10, NULL, 'price', 7, 0, 0),
-			(88, 1, 10, 1, 'id_attribute_group', 8, 0, 0),
-			(89, 1, 10, 2, 'id_attribute_group', 9, 0, 0),
-			(90, 1, 10, 5, 'id_feature', 10, 0, 0),
-			(91, 1, 11, NULL, 'category', 1, 0, 0),
-			(92, 1, 11, 3, 'id_attribute_group', 2, 0, 0),
-			(93, 1, 11, NULL, 'quantity', 3, 0, 0),
-			(94, 1, 11, NULL, 'condition', 4, 0, 0),
-			(95, 1, 11, NULL, 'manufacturer', 5, 0, 0),
-			(96, 1, 11, NULL, 'weight', 6, 0, 0),
-			(97, 1, 11, NULL, 'price', 7, 0, 0),
-			(98, 1, 11, 1, 'id_attribute_group', 8, 0, 0),
-			(99, 1, 11, 2, 'id_attribute_group', 9, 0, 0),
-			(100, 1, 11, 5, 'id_feature', 10, 0, 0);"
-		);
-
-		Db::getInstance()->execute(
-			"INSERT INTO `"._DB_PREFIX_."layered_filter` (`id_layered_filter`, `name`, `filters`, `n_categories`, `date_add`) VALUES
-			(1, 'My template - 2013-12-18', 'a:12:{s:10:\"categories\";a:10:{i:0;i:2;i:1;i:3;i:2;i:4;i:3;i:5;i:4;i:6;i:5;i:7;i:6;i:8;i:7;i:9;i:8;i:10;i:9;i:11;}s:9:\"shop_list\";a:1:{i:0;i:1;}s:31:\"layered_selection_subcategories\";a:2:{s:11:\"filter_type\";i:0;s:17:\"filter_show_limit\";i:0;}s:22:\"layered_selection_ag_3\";a:2:{s:11:\"filter_type\";i:0;s:17:\"filter_show_limit\";i:0;}s:23:\"layered_selection_stock\";a:2:{s:11:\"filter_type\";i:0;s:17:\"filter_show_limit\";i:0;}s:27:\"layered_selection_condition\";a:2:{s:11:\"filter_type\";i:0;s:17:\"filter_show_limit\";i:0;}s:30:\"layered_selection_manufacturer\";a:2:{s:11:\"filter_type\";i:0;s:17:\"filter_show_limit\";i:0;}s:31:\"layered_selection_weight_slider\";a:2:{s:11:\"filter_type\";i:0;s:17:\"filter_show_limit\";i:0;}s:30:\"layered_selection_price_slider\";a:2:{s:11:\"filter_type\";i:0;s:17:\"filter_show_limit\";i:0;}s:22:\"layered_selection_ag_1\";a:2:{s:11:\"filter_type\";i:0;s:17:\"filter_show_limit\";i:0;}s:22:\"layered_selection_ag_2\";a:2:{s:11:\"filter_type\";i:0;s:17:\"filter_show_limit\";i:0;}s:24:\"layered_selection_feat_5\";a:2:{s:11:\"filter_type\";i:0;s:17:\"filter_show_limit\";i:0;}}', 10, '2013-12-18 09:32:14');"
-		);
-
-		Db::getInstance()->execute(
-			"INSERT INTO `"._DB_PREFIX_."layered_friendly_url` (`id_layered_friendly_url`, `url_key`, `data`, `id_lang`) VALUES
-			(1, '3f1005f8be7881795fc5feddfdba756f', 'a:1:{s:8:\"category\";a:1:{i:1;s:1:\"1\";}}', 1),
-			(2, 'e22ad4e9f8f445df1283ec3383c55ed8', 'a:1:{s:8:\"category\";a:1:{i:2;s:1:\"2\";}}', 1),
-			(3, '929674e49248753da273092629bb45ec', 'a:1:{s:8:\"category\";a:1:{i:3;s:1:\"3\";}}', 1),
-			(4, 'c66ef06ef2ca8b06dd3d19b70727adb7', 'a:1:{s:8:\"category\";a:1:{i:4;s:1:\"4\";}}', 1),
-			(5, 'eaaa28d2b62b097bb8706dd014c8203b', 'a:1:{s:8:\"category\";a:1:{i:8;s:1:\"8\";}}', 1),
-			(6, '6fc253242f3fe98946ecdd26762e95eb', 'a:1:{s:8:\"category\";a:1:{i:5;s:1:\"5\";}}', 1),
-			(7, '03c8c4cf29ea8a405778f138021df5df', 'a:1:{s:8:\"category\";a:1:{i:7;s:1:\"7\";}}', 1),
-			(8, '2def08957abfc829e80d5279c5086b73', 'a:1:{s:8:\"category\";a:1:{i:9;s:1:\"9\";}}', 1),
-			(9, '84ce4d36b2b77bb85d2a7aebd27c8a67', 'a:1:{s:8:\"category\";a:1:{i:10;s:2:\"10\";}}', 1),
-			(10, '3f9036e3dcf0507782e3d6a1d3ca1fe1', 'a:1:{s:8:\"category\";a:1:{i:11;s:2:\"11\";}}', 1),
-			(11, 'c4d7335317f2f1ba381e038fb625d918', 'a:1:{s:10:\"id_feature\";a:1:{i:1;s:3:\"5_1\";}}', 1),
-			(12, '18f41c9cab1c150e429f1b670cae3bc1', 'a:1:{s:10:\"id_feature\";a:1:{i:2;s:3:\"5_2\";}}', 1),
-			(13, '823192a052e44927f06b39b32bcef002', 'a:1:{s:10:\"id_feature\";a:1:{i:3;s:3:\"5_3\";}}', 1),
-			(14, '905fe5b57eb2e1353911171da4ee7706', 'a:1:{s:10:\"id_feature\";a:1:{i:4;s:3:\"5_4\";}}', 1),
-			(15, 'ebb42f1bbf0d25b40049c14f1860b952', 'a:1:{s:10:\"id_feature\";a:1:{i:5;s:3:\"5_5\";}}', 1),
-			(16, 'f9a71edd8befbb99baceadc2b2fbe793', 'a:1:{s:10:\"id_feature\";a:1:{i:6;s:3:\"5_6\";}}', 1),
-			(17, 'e195459fb3d97a32e94673db75dcf299', 'a:1:{s:10:\"id_feature\";a:1:{i:7;s:3:\"5_7\";}}', 1),
-			(18, 'b7783cae5eeefc81ff4a69f4ea712ea7', 'a:1:{s:10:\"id_feature\";a:1:{i:8;s:3:\"5_8\";}}', 1),
-			(19, '45f1d9162a9fe2ffcf9f365eace9eeec', 'a:1:{s:10:\"id_feature\";a:1:{i:9;s:3:\"5_9\";}}', 1),
-			(20, '97d9dd08827238b39342d37e16ee7fc3', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:1;s:3:\"1_1\";}}', 1),
-			(21, '2f3d5048a6335cac20241e0f8cb5294e', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:2;s:3:\"1_2\";}}', 1),
-			(22, '19819345209f29bb2865355fa2cdb800', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:3;s:3:\"1_3\";}}', 1),
-			(23, '27dd5799da96500f9e0ab61387a556b5', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:4;s:3:\"1_4\";}}', 1),
-			(24, '4c3b56bbf143f376fb375700fb3e564e', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:18;s:4:\"2_18\";}}', 1),
-			(25, '80fbd682fe7c87587c2ef38aef00eb29', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:19;s:4:\"2_19\";}}', 1),
-			(26, '78dddd01ba219056c29b37547208a4e5', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:20;s:4:\"2_20\";}}', 1),
-			(27, '4bd19031210bd5e9522865a85ede8024', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:21;s:4:\"2_21\";}}', 1),
-			(28, '6e1b853954362613e140911d57ab3286', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:22;s:4:\"2_22\";}}', 1),
-			(29, '0d2f162f4367c49e531334f3b10a8f98', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:23;s:4:\"2_23\";}}', 1),
-			(30, '6a73ce72468db97129f092fa3d9a0b2e', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:5;s:3:\"3_5\";}}', 1),
-			(31, 'f1fc935c7d64dfac606eb814dcc6c4a7', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:6;s:3:\"3_6\";}}', 1),
-			(32, 'f036e061c6e0e9cd6b3c463f72f524a5', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:7;s:3:\"3_7\";}}', 1),
-			(33, '468a278b79ece55c0ed0d3bd1b2dd01f', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:8;s:3:\"3_8\";}}', 1),
-			(34, '8996dbd99c9d2240f117ba0d26b39b10', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:9;s:3:\"3_9\";}}', 1),
-			(35, '601a4dd13077730810f102b18680b537', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:10;s:4:\"3_10\";}}', 1),
-			(36, '0a68b3ba0819d7126935f51335ef9503', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:11;s:4:\"3_11\";}}', 1),
-			(37, '5f556205d67d7c26c2726dba638c2d95', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:12;s:4:\"3_12\";}}', 1),
-			(38, '4b4bb79b20455e8047c972f9ca69cd72', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:13;s:4:\"3_13\";}}', 1),
-			(39, '54dd539ce8bbf02b44485941f2d8d80b', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:14;s:4:\"3_14\";}}', 1),
-			(40, '73b845a28e9ced9709fa414f9b97dae9', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:15;s:4:\"3_15\";}}', 1),
-			(41, 'be50cfae4c360fdb124af017a4e80905', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:16;s:4:\"3_16\";}}', 1),
-			(42, '4c4550abfc4eec4c91e558fa9b5171c9', 'a:1:{s:18:\"id_attribute_group\";a:1:{i:17;s:4:\"3_17\";}}', 1),
-			(43, '14ef3952eddf958ec1f628065f6c7689', 'a:1:{s:8:\"quantity\";a:1:{i:0;i:0;}}', 1),
-			(44, '19e5bdea58716c8f3ff52345d1b5a442', 'a:1:{s:8:\"quantity\";a:1:{i:0;i:1;}}', 1),
-			(45, '11c2881845b925423888cd329d0c4953', 'a:1:{s:9:\"condition\";a:1:{s:3:\"new\";s:3:\"new\";}}', 1),
-			(46, '074755ccbf623ca666bd866203d0dec7', 'a:1:{s:9:\"condition\";a:1:{s:4:\"used\";s:4:\"used\";}}', 1),
-			(47, '70b63b881a45f66c86ea78ace4cfb6a7', 'a:1:{s:9:\"condition\";a:1:{s:11:\"refurbished\";s:11:\"refurbished\";}}', 1),
-			(48, '7b51d2594a28b8f82cfe82b0c3f161e7', 'a:1:{s:12:\"manufacturer\";a:1:{i:1;s:1:\"1\";}}', 1);"
-		);
-
-		Db::getInstance()->execute(
-			"INSERT INTO `"._DB_PREFIX_."layered_indexable_attribute_lang_value` (`id_attribute`, `id_lang`, `url_name`, `meta_title`) VALUES
-			(1, 1, '', ''),
-			(2, 1, '', ''),
-			(3, 1, '', ''),
-			(4, 1, '', ''),
-			(5, 1, '', ''),
-			(6, 1, '', ''),
-			(7, 1, '', ''),
-			(8, 1, '', ''),
-			(9, 1, '', ''),
-			(10, 1, '', ''),
-			(11, 1, '', ''),
-			(12, 1, '', ''),
-			(13, 1, '', ''),
-			(14, 1, '', ''),
-			(15, 1, '', ''),
-			(16, 1, '', ''),
-			(17, 1, '', ''),
-			(18, 1, '', ''),
-			(19, 1, '', ''),
-			(20, 1, '', ''),
-			(21, 1, '', ''),
-			(22, 1, '', ''),
-			(23, 1, '', '');"
-		);
-
-		Db::getInstance()->execute(
-			"INSERT INTO `"._DB_PREFIX_."layered_indexable_feature_value_lang_value` (`id_feature_value`, `id_lang`, `url_name`, `meta_title`) VALUES
-			(1, 1, '', ''),
-			(2, 1, '', ''),
-			(3, 1, '', ''),
-			(4, 1, '', ''),
-			(5, 1, '', ''),
-			(6, 1, '', ''),
-			(7, 1, '', ''),
-			(8, 1, '', ''),
-			(9, 1, '', ''),
-			(10, 1, '', ''),
-			(11, 1, '', ''),
-			(12, 1, '', ''),
-			(13, 1, '', ''),
-			(14, 1, '', ''),
-			(15, 1, '', ''),
-			(16, 1, '', ''),
-			(17, 1, '', ''),
-			(18, 1, '', ''),
-			(19, 1, '', ''),
-			(20, 1, '', ''),
-			(21, 1, '', ''),
-			(22, 1, '', ''),
-			(23, 1, '', ''),
-			(24, 1, '', ''),
-			(25, 1, '', ''),
-			(26, 1, '', ''),
-			(27, 1, '', ''),
-			(28, 1, '', ''),
-			(29, 1, '', ''),
-			(30, 1, '', ''),
-			(31, 1, '', ''),
-			(32, 1, '', ''),
-			(33, 1, '', '');"
-		);
-	}
-
 	//ATTRIBUTES GROUP
 	public function hookAfterSaveAttributeGroup($params)
 	{
@@ -584,7 +361,7 @@ class BlockLayered extends Module
 			'is_indexable' =>(bool)$is_indexable
 		));
 		
-		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
 			return $this->display(__FILE__, 'attribute_group_form_1.6.tpl');
 		else
 			return $this->display(__FILE__, 'attribute_group_form.tpl');
@@ -663,7 +440,7 @@ class BlockLayered extends Module
 			'values' => $values
 		));
 
-		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
 			return $this->display(__FILE__, 'attribute_form_1.6.tpl');
 		else
 			return $this->display(__FILE__, 'attribute_form.tpl');
@@ -759,7 +536,7 @@ class BlockLayered extends Module
 			'is_indexable' =>(bool)$is_indexable
 		));
 
-		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
 			return $this->display(__FILE__, 'feature_form_1.6.tpl');
 		else
 			return $this->display(__FILE__, 'feature_form.tpl');
@@ -839,7 +616,7 @@ class BlockLayered extends Module
 			'values' => $values
 		));
 
-		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
 			return $this->display(__FILE__, 'feature_value_form_1.6.tpl');
 		else
 			return $this->display(__FILE__, 'feature_value_form.tpl');
@@ -1696,7 +1473,7 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_MNF', (int)Tools::getValue('ps_layered_filter_index_manufacturer'));
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_CAT', (int)Tools::getValue('ps_layered_filter_index_category'));
 
-			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
 				$message = '<div class="alert alert-success">'.$this->l('Settings saved successfully').'</div>';
 			else
 				$message = '<div class="conf">'.$this->l('Settings saved successfully').'</div>';
@@ -1749,7 +1526,7 @@ class BlockLayered extends Module
 			$this->context->smarty->assign('asso_shops', $helper->renderAssoShop());
 		}
 
-		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
 		{
 			$tree_categories_helper = new HelperTreeCategories('categories-treeview');
 			$tree_categories_helper->setRootCategory((Shop::getContext() == Shop::CONTEXT_SHOP ? Category::getRootCategory()->id_category : 0))
@@ -1774,15 +1551,15 @@ class BlockLayered extends Module
 		{
 			$this->context->controller->addJS($this->_path.'js/blocklayered_admin.js');
 
-			if (version_compare(_PS_VERSION_, '1.6.0.3', '>=') === TRUE)
+			if (version_compare(_PS_VERSION_, '1.6.0.3', '>=') === true)
 				$this->context->controller->addjqueryPlugin('sortable');
-			elseif (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
-				$this->context->controller->addJS(_PS_JS_DIR_.'vendor/jquery.sortable.js');
+			elseif (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
+				$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.sortable.js');
 			else
 				$this->context->controller->addJS($this->_path.'js/jquery.sortable.js');
 		}
 
-		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
 			$this->context->controller->addCSS($this->_path.'css/blocklayered_admin_1.6.css');
 		else
 			$this->context->controller->addCSS($this->_path.'css/blocklayered_admin.css');
@@ -1799,13 +1576,13 @@ class BlockLayered extends Module
 				'total_filters' => 6+count($attribute_groups)+count($features)
 			));
 
-			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
 				$this->context->smarty->assign('categories_tree', $tree_categories_helper->render());
 			else
 				$this->context->smarty->assign('categories_tree', $tree_categories_helper->renderCategoryTree(
-					$root_category, array(), 'categoryBox', false, false, array(), true));
+					$root_category, array(), 'categoryBox'));
 
-			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
 				return $this->display(__FILE__, 'views/templates/admin/add_1.6.tpl');
 			else
 				return $this->display(__FILE__, 'views/templates/admin/add.tpl');
@@ -1820,16 +1597,16 @@ class BlockLayered extends Module
 
 			$filters = unserialize($template['filters']);
 
-			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
 			{
 				$tree_categories_helper->setSelectedCategories($filters['categories']);
 				$this->context->smarty->assign('categories_tree', $tree_categories_helper->render());
 			}
 			else
 				$this->context->smarty->assign('categories_tree',$tree_categories_helper->renderCategoryTree(
-					$root_category, $filters['categories'], 'categoryBox', false, false, array(), true));
+					$root_category, $filters['categories'], 'categoryBox'));
 
-			$select_shops = $filters['shop_list'];			
+			$select_shops = $filters['shop_list'];
 			unset($filters['categories']);
 			unset($filters['shop_list']);
 
@@ -1844,7 +1621,7 @@ class BlockLayered extends Module
 				'total_filters' => 6+count($attribute_groups)+count($features)
 			));
 
-			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
 				return $this->display(__FILE__, 'views/templates/admin/add_1.6.tpl');
 			else
 				return $this->display(__FILE__, 'views/templates/admin/add.tpl');
@@ -1875,7 +1652,7 @@ class BlockLayered extends Module
 				'index_cat' => Configuration::get('PS_LAYERED_FILTER_INDEX_CAT')
 			));
 			
-			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
 				return $this->display(__FILE__, 'views/templates/admin/view_1.6.tpl');
 			else
 				return $this->display(__FILE__, 'views/templates/admin/view.tpl');
@@ -3145,7 +2922,8 @@ class BlockLayered extends Module
 		$nArray = array_unique($nArray);
 		asort($nArray);
 
-		$this->context->controller->addColorsToProductList($products);
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
+			$this->context->controller->addColorsToProductList($products);
 
 		$smarty->assign(
 			array(
