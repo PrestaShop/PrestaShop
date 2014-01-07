@@ -385,7 +385,7 @@ var generated_date = {$smarty.now|intval};
 						{l s='(tax incl.)' mod='blockcart'}
 					{/if}
 				</strong>
-				<span class="ajax_cart_total">
+				<span class="ajax_block_cart_total">
 					{if $cart_qties > 0}
 						{if $priceDisplay == 1}
 							{convertPrice price=$cart->getOrderTotal(false)}
