@@ -143,12 +143,12 @@ class BlockCart extends Module
 		{
 			$ajax = Tools::getValue('cart_ajax');
 			if ($ajax != 0 && $ajax != 1)
-				$output .= $this->displayError($this->l('Ajax : Invalid choice.'));
+				$output .= $this->displayError($this->l('Ajax: Invalid choice.'));
 			else
 				Configuration::updateValue('PS_BLOCK_CART_AJAX', (int)($ajax));
 
 			if (!($productNbr = Tools::getValue('PS_BLOCK_CART_XSELL_LIMIT')) || empty($productNbr))
-				$output .= $this->displayError($this->l('Please complete the "products to display" field.'));
+				$output .= $this->displayError($this->l('Please complete the "Products to display" field.'));
 			elseif ((int)($productNbr) == 0)
 				$output .= $this->displayError($this->l('Invalid number.'));
 			else
@@ -246,7 +246,7 @@ class BlockCart extends Module
 						'label' => $this->l('Ajax cart'),
 						'name' => 'PS_BLOCK_CART_AJAX',
 						'is_bool' => true,
-						'desc' => $this->l('Activate AJAX mode for cart (compatible with the default theme)'),
+						'desc' => $this->l('Activate Ajax mode for the cart (compatible with the default theme).'),
 						'values' => array(
 									array(
 										'id' => 'active_on',
@@ -262,10 +262,10 @@ class BlockCart extends Module
 						),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Products to display in cross selling'),
+						'label' => $this->l('Products to display in cross-selling'),
 						'name' => 'PS_BLOCK_CART_XSELL_LIMIT',
 						'class' => 'fixed-width-xs',
-						'desc' => $this->l('Define the number of products to be displayed in the cross selling block.')
+						'desc' => $this->l('Define the number of products to be displayed in the cross-selling block.')
 					),
 				),
 				'submit' => array(

@@ -364,7 +364,7 @@ class BlockCategories extends Module
 						'type' => 'text',
 						'label' => $this->l('Maximum depth'),
 						'name' => 'BLOCK_CATEG_MAX_DEPTH',
-						'desc' => $this->l('Set the maximum depth of sublevels displayed in this block (0 = infinite)'),
+						'desc' => $this->l('Set the maximum depth of sublevels displayed in this block (0 = infinite).'),
 					),
 					array(
 						'type' => 'switch',
