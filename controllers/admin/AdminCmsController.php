@@ -74,12 +74,12 @@ class AdminCmsControllerCore extends AdminController
 	{
 		$this->page_header_toolbar_btn['save-and-preview'] = array(
 			'href' => '#',
-			'desc' => $this->l('Save and preview')
+			'desc' => $this->l('Save and preview', null, null, false)
 		);
 		$this->page_header_toolbar_btn['save-and-stay'] = array(
-			'short' => 'SaveAndStay',
+			'short' => $this->l('SaveAndStay', null, null, false),
 			'href' => '#',
-			'desc' => $this->l('Save and stay'),
+			'desc' => $this->l('Save and stay', null, null, false),
 		);
 		
 		return parent::initPageHeaderToolbar();

@@ -81,7 +81,7 @@ class AdminStockManagementControllerCore extends AdminController
 		if ($this->display == 'details')
 			$this->page_header_toolbar_btn['back_to_list'] = array(
 				'href' => Context::getContext()->link->getAdminLink('AdminStockManagement'),
-				'desc' => $this->l('Back to list'),
+				'desc' => $this->l('Back to list', null, null, false),
 				'icon' => 'process-icon-back'
 			);
 

@@ -118,8 +118,8 @@ class AdminScenesControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_scene'] = array(
-				'href' => self::$currentIndex.'&amp;addscene&amp;token='.$this->token,
-				'desc' => $this->l('Add new scene'),
+				'href' => self::$currentIndex.'&addscene&token='.$this->token,
+				'desc' => $this->l('Add new scene', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 
@@ -156,17 +156,17 @@ class AdminScenesControllerCore extends AdminController
 				'title' => $this->l('Image Maps'),
 				'icon' => 'icon-picture',
 			),
-			'description' =>
-				'<h4>'.$this->l('How to map products in the image:').'</h4>
-				<p>'.
-				$this->l('When a customer hovers over the image, a pop-up appears displaying a brief description of the product.').' '.
-				$this->l('The customer can then click to open the full product page.').'<br/>'.
-				$this->l('To achieve this, please define the \'mapping zone\' that, when hovered over, will display the pop-up.').' '.
-				$this->l('Left click with your mouse to draw the four-sided mapping zone, then release.').'<br/>'.
-				$this->l('Then begin typing the name of the associated product, and  a list of products will appear.').' '.
-				$this->l('Click the appropriate product and then click OK. Repeat these steps for each mapping zone you wish to create.').'<br/>'.
-				$this->l('When you have finished mapping zones, click "Save Image Map."').
-				'</p>',
+			'description' => '
+				<h4>'.$this->l('How to map products in the image:').'</h4>
+				<p>
+					'.$this->l('When a customer hovers over the image, a pop-up appears displaying a brief description of the product.').'
+					'.$this->l('The customer can then click to open the full product page.').'<br/>
+					'.$this->l('To achieve this, please define the \'mapping zone\' that, when hovered over, will display the pop-up.').'
+					'.$this->l('Left click with your mouse to draw the four-sided mapping zone, then release.').'<br/>
+					'.$this->l('Then begin typing the name of the associated product, and  a list of products will appear.').'
+					'.$this->l('Click the appropriate product and then click OK. Repeat these steps for each mapping zone you wish to create.').'<br/>
+					'.$this->l('When you have finished mapping zones, click "Save Image Map."').'
+				</p>',
 			'input' => array(
 				array(
 					'type' => 'text',

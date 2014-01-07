@@ -330,9 +330,14 @@ class DispatcherCore
 				else
 				{
 					$controllers = Dispatcher::getControllers(array(_PS_ADMIN_DIR_.'/tabs/', _PS_ADMIN_CONTROLLER_DIR_, _PS_OVERRIDE_DIR_.'controllers/admin/'));
-
 					if (!isset($controllers[strtolower($this->controller)]))
+					{
+						// If this is a parent tab, load the first child
+						if (Validate::isLoadedObject($tab) && $tab->id_parent == 0 && ($tabs = Tab::getTabs(Context::getContext()->language->id, $tab->id)) && isset($tabs[0]))
+							Tools::redirectAdmin(Context::getContext()->link->getAdminLink($tabs[0]['class_name']));
 						$this->controller = $this->controller_not_found;
+					}
+
 					$controller_class = $controllers[strtolower($this->controller)];
 					$params_hook_action_dispatcher = array('controller_type' => self::FC_ADMIN, 'controller_class' => $controller_class, 'is_module' => 0);
 

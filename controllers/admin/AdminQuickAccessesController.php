@@ -118,8 +118,8 @@ class AdminQuickAccessesControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_quick_access'] = array(
-				'href' => self::$currentIndex.'&amp;addquick_access&amp;token='.$this->token,
-				'desc' => $this->l('Add new quick access'),
+				'href' => self::$currentIndex.'&addquick_access&token='.$this->token,
+				'desc' => $this->l('Add new quick access', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 

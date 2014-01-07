@@ -158,7 +158,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		parent::initPageHeaderToolbar();
 		$this->page_header_toolbar_btn['cancel'] = array(
 			'href' => $this->context->link->getAdminLink('AdminCarriers'),
-			'desc' => $this->l('Cancel')
+			'desc' => $this->l('Cancel', null, null, false)
 		);
 	}
 
