@@ -33,7 +33,7 @@ class BlockNewProducts extends Module
 	{
 		$this->name = 'blocknewproducts';
 		$this->tab = 'front_office_features';
-		$this->version = '1.6';
+		$this->version = '1.7';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -66,6 +66,7 @@ class BlockNewProducts extends Module
 		}
 
 		$this->_clearCache('blocknewproducts.tpl');
+		$this->_clearCache('blocknewproducts_home.tpl');
 
 		return $success;
 	}
@@ -73,6 +74,7 @@ class BlockNewProducts extends Module
 	public function uninstall()
 	{
 		$this->_clearCache('blocknewproducts.tpl');
+		$this->_clearCache('blocknewproducts_home.tpl');
 		$this->_clearCache('tab.tpl');
 		return parent::uninstall();
 	}
@@ -103,7 +105,7 @@ class BlockNewProducts extends Module
 			return;
 		$newProducts = false;
 		if (Configuration::get('PS_NB_DAYS_NEW_PRODUCT'))
-			$newProducts = Product::getNewProducts((int) Context::getContext()->id_lang, 0, (int)Configuration::get('NEW_PRODUCTS_NBR'));
+			$newProducts = Product::getNewProducts((int) $this->context->language->id, 0, (int)Configuration::get('NEW_PRODUCTS_NBR'));
 
 		if (!$newProducts && !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
 			return;
@@ -117,9 +119,9 @@ class BlockNewProducts extends Module
 			$newProducts = $this->getNewProducts();
 
 			$this->smarty->assign(array(
-				'new_products' => $newProducts,
-				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
-			));
+									   'new_products' => $newProducts,
+									   'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+								  ));
 		}
 		return $this->display(__FILE__, 'blocknewproducts.tpl', $this->getCacheId());
 	}
@@ -206,17 +208,17 @@ class BlockNewProducts extends Module
 						'name' => 'PS_BLOCK_NEWPRODUCTS_DISPLAY',
 						'desc' => $this->l('Show the block even if no products are available.'),
 						'values' => array(
-									array(
-										'id' => 'active_on',
-										'value' => 1,
-										'label' => $this->l('Enabled')
-									),
-									array(
-										'id' => 'active_off',
-										'value' => 0,
-										'label' => $this->l('Disabled')
-									)
-								),
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						),
 					)
 				),
 				'submit' => array(
