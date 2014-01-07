@@ -29,14 +29,12 @@ if (!defined('_PS_VERSION_'))
 
 class BlockViewed extends Module
 {
-	private $_html = '';
-	private $_postErrors = array();
 
 	public function __construct()
 	{
 		$this->name = 'blockviewed';
 		$this->tab = 'front_office_features';
-		$this->version = 0.9;
+		$this->version = 1;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -82,16 +80,7 @@ class BlockViewed extends Module
 
 	public function hookRightColumn($params)
 	{
-		$id_product = (int)Tools::getValue('id_product');
 		$productsViewed = (isset($params['cookie']->viewed) && !empty($params['cookie']->viewed)) ? array_slice(array_reverse(explode(',', $params['cookie']->viewed)), 0, Configuration::get('PRODUCTS_VIEWED_NBR')) : array();
-
-		if ($id_product && !in_array($id_product, $productsViewed))
-		{
-			if(isset($params['cookie']->viewed) && !empty($params['cookie']->viewed))
-		  		$params['cookie']->viewed .= ',' . (int)$id_product;
-			else
-		  		$params['cookie']->viewed = (int)$id_product;
-		}
 
 		if (count($productsViewed))
 		{
@@ -145,14 +134,6 @@ class BlockViewed extends Module
 				}
 			}
 
-			if ($id_product && !in_array($id_product, $productsViewed))
-			{
-				// Check if the user to the right of access to this product
-				$product = new Product((int)$id_product);
-				if ($product->checkAccess((int)$this->context->customer->id))
-					array_unshift($productsViewed, $id_product);
-			}
-
 			if (!count($productsViewedObj))
 				return;
 
@@ -172,6 +153,20 @@ class BlockViewed extends Module
 
 	public function hookHeader($params)
 	{
+		$id_product = (int)Tools::getValue('id_product');
+		$productsViewed = (isset($params['cookie']->viewed) && !empty($params['cookie']->viewed)) ? array_slice(array_reverse(explode(',', $params['cookie']->viewed)), 0, Configuration::get('PRODUCTS_VIEWED_NBR')) : array();
+
+		if ($id_product && !in_array($id_product, $productsViewed))
+		{
+			$product = new Product((int)$id_product);
+			if ($product->checkAccess((int)$this->context->customer->id))
+			{
+				if (isset($params['cookie']->viewed) && !empty($params['cookie']->viewed))
+					$params['cookie']->viewed .= ','.(int)$id_product;
+				else
+					$params['cookie']->viewed = (int)$id_product;
+			}
+		}
 		$this->context->controller->addCSS(($this->_path).'blockviewed.css', 'all');
 	}
 	
