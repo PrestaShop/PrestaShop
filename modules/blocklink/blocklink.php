@@ -45,7 +45,7 @@ class BlockLink extends Module
 
 		$this->displayName = $this->l('Link block');
 		$this->description = $this->l('Adds a block with additional links.');
-		$this->confirmUninstall = $this->l('Are you sure you want to delete all your links ?');
+		$this->confirmUninstall = $this->l('Are you sure you want to delete all your links?');
 	}
 	
 	public function install()
@@ -244,7 +244,7 @@ class BlockLink extends Module
 		if (Tools::isSubmit('submitLinkAdd') || Tools::isSubmit('updateblocklink'))
      	{
 			if (empty($_POST['text_'.Configuration::get('PS_LANG_DEFAULT')]) || empty($_POST['url']))
-				$this->_html .= $this->displayError($this->l('You must fill in all fields'));
+				$this->_html .= $this->displayError($this->l('You must fill in all fields.'));
 			elseif (!Validate::isUrl(str_replace('http://', '', $_POST['url'])))
 				$this->_html .= $this->displayError($this->l('Bad URL'));
 			else
@@ -448,7 +448,7 @@ class BlockLink extends Module
 					),
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Open in a new window:'),
+						'label' => $this->l('Open in a new window'),
 						'name' => 'newWindow',
 						'is_bool' => true,
 						'values' => array(
@@ -478,7 +478,7 @@ class BlockLink extends Module
 		{
 			$fields_form_1['form']['input'][] = array(
 													'type' => 'shop',
-													'label' => $this->l('Shop association:'),
+													'label' => $this->l('Shop association'),
 													'name' => 'checkBoxShopAsso',
 												);
 		}
@@ -518,7 +518,7 @@ class BlockLink extends Module
 				'input' => array(
 					array(
 						'type' => 'select',
-						'label' => $this->l('Order list:'),
+						'label' => $this->l('Order list'),
 						'name' => 'orderWay',
 						'options' => array(
 							'query' => array(
