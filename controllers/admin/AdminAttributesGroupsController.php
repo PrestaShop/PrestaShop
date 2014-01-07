@@ -470,21 +470,21 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		if (empty($this->display))
 		{
 			$this->page_header_toolbar_btn['new_attribute_group'] = array(
-				'href' => self::$currentIndex.'&amp;addattribute_group&amp;token='.$this->token,
-				'desc' => $this->l('Add new attribute'),
+				'href' => self::$currentIndex.'&addattribute_group&token='.$this->token,
+				'desc' => $this->l('Add new attribute', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 			$this->page_header_toolbar_btn['new_value'] = array(
-				'href' => self::$currentIndex.'&amp;updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&amp;token='.$this->token,
-				'desc' => $this->l('Add new value'),
+				'href' => self::$currentIndex.'&updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&token='.$this->token,
+				'desc' => $this->l('Add new value', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		}
 
 		if ($this->display == 'view')
 			$this->page_header_toolbar_btn['new_value'] = array(
-				'href' => self::$currentIndex.'&amp;updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&amp;token='.$this->token,
-				'desc' => $this->l('Add new value'),
+				'href' => self::$currentIndex.'&updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&token='.$this->token,
+				'desc' => $this->l('Add new value', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 

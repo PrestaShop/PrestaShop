@@ -112,8 +112,8 @@ class AdminTaxesControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_tax'] = array(
-				'href' => self::$currentIndex.'&amp;addtax&amp;token='.$this->token,
-				'desc' => $this->l('Add new tax'),
+				'href' => self::$currentIndex.'&addtax&token='.$this->token,
+				'desc' => $this->l('Add new tax', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 

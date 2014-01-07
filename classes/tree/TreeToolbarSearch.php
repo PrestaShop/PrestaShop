@@ -49,18 +49,15 @@ class TreeToolbarSearchCore extends TreeToolbarButtonCore implements
 		$bo_theme = ((Validate::isLoadedObject($this->getContext()->employee)
 			&& $this->getContext()->employee->bo_theme) ? $this->getContext()->employee->bo_theme : 'default');
 
-		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
-			.'template'))
+		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR.'template'))
 			$bo_theme = 'default';
 
 		if ($this->getContext()->controller->ajax)
-			$html = '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
-				.'/themes/'.$bo_theme.'/js/vendor/typeahead.min.js"></script>';
+			$html = '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/vendor/typeahead.min.js"></script>';
 		else
-			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
-				.'/themes/'.$bo_theme.'/js/vendor/typeahead.min.js');
+			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/vendor/typeahead.min.js');
 
-		return (isset($html)?$html:'').parent::render();
+		return (isset($html) ? $html : '').parent::render();
 	}
 
 	private function _renderData($data)

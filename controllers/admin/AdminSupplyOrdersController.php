@@ -152,19 +152,19 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if ($this->display == 'details')
 			$this->page_header_toolbar_btn['back'] = array(
 				'href' => Context::getContext()->link->getAdminLink('AdminSupplyOrders'),
-				'desc' => $this->l('Back to list'),
+				'desc' => $this->l('Back to list', null, null, false),
 				'icon' => 'process-icon-back'
 			);
 		elseif (empty($this->display))
 		{
 			$this->page_header_toolbar_btn['new_supply_order'] = array(
-				'href' => self::$currentIndex.'&amp;addsupply_order&amp;token='.$this->token,
-				'desc' => $this->l('Add new supply order'),
+				'href' => self::$currentIndex.'&addsupply_order&token='.$this->token,
+				'desc' => $this->l('Add new supply order', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 			$this->page_header_toolbar_btn['new_supply_order_template'] = array(
-				'href' => self::$currentIndex.'&amp;addsupply_order&amp;mod=template&amp;token='.$this->token,
-				'desc' => $this->l('Add new supply order template'),
+				'href' => self::$currentIndex.'&addsupply_order&mod=template&token='.$this->token,
+				'desc' => $this->l('Add new supply order template', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		}

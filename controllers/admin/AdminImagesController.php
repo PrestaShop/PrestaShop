@@ -653,8 +653,8 @@ class AdminImagesControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_image_type'] = array(
-				'href' => self::$currentIndex.'&amp;addimage_type&amp;token='.$this->token,
-				'desc' => $this->l('Add new image type'),
+				'href' => self::$currentIndex.'&addimage_type&token='.$this->token,
+				'desc' => $this->l('Add new image type', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		

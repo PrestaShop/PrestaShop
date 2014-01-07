@@ -305,16 +305,14 @@ class TreeCore
 		$bo_theme = ((Validate::isLoadedObject($this->getContext()->employee)
 			&& $this->getContext()->employee->bo_theme) ? $this->getContext()->employee->bo_theme : 'default');
 
-		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
-			.'template'))
+		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR.'template'))
 			$bo_theme = 'default';
 
+		$js_path = __PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/tree.js';
 		if ($this->getContext()->controller->ajax)
-			$html = '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
-				.'/themes/'.$bo_theme.'/js/tree.js"></script>';
+			$html = '<script type="text/javascript" src="'.$js_path.'"></script>';
 		else
-			$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
-				.'/themes/'.$bo_theme.'/js/tree.js');
+			$this->getContext()->controller->addJs($js_path);
 
 		//Create Tree Template
 		$template = $this->getContext()->smarty->createTemplate(
@@ -338,13 +336,12 @@ class TreeCore
 		}
 		
 		//Assign Tree nodes
-		$template->assign($this->getAttributes())
-			->assign(array(
+		$template->assign($this->getAttributes())->assign(array(
 			'id'    => $this->getId(),
 			'nodes' => $this->renderNodes($data)
 		));
 
-		return (isset($html)?$html:'').$template->fetch();
+		return (isset($html) ? $html : '').$template->fetch();
 	}
 
 	public function renderNodes($data = null)

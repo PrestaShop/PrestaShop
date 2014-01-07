@@ -157,8 +157,8 @@ class AdminReferrersControllerCore extends AdminController
 	{
 		if(empty($this->display))
 			$this->page_header_toolbar_btn['new_referrer'] = array(
-				'href' => self::$currentIndex.'&amp;addreferrer&amp;token='.$this->token,
-				'desc' => $this->l('Add new referrer'),
+				'href' => self::$currentIndex.'&addreferrer&token='.$this->token,
+				'desc' => $this->l('Add new referrer', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		

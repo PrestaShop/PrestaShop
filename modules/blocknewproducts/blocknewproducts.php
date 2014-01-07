@@ -33,7 +33,7 @@ class BlockNewProducts extends Module
 	{
 		$this->name = 'blocknewproducts';
 		$this->tab = 'front_office_features';
-		$this->version = '1.5';
+		$this->version = '1.6';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -46,18 +46,28 @@ class BlockNewProducts extends Module
 
 	public function install()
 	{
-		if (!parent::install()
-			|| !$this->registerHook('header')
-			|| !$this->registerHook('addproduct')
-			|| !$this->registerHook('updateproduct')
-			|| !$this->registerHook('deleteproduct')
-			|| !Configuration::updateValue('NEW_PRODUCTS_NBR', 5)
-			|| !$this->registerHook('displayHomeTab')
-			|| !$this->registerHook('displayHomeTabContent')
-		)
-			return false;
+		$success = (parent::install()
+			&& $this->registerHook('header')
+			&& $this->registerHook('addproduct')
+			&& $this->registerHook('updateproduct')
+			&& $this->registerHook('deleteproduct')
+			&& Configuration::updateValue('NEW_PRODUCTS_NBR', 5)
+			&& $this->registerHook('displayHomeTab')
+			&& $this->registerHook('displayHomeTabContent')
+		);
+
+		if ($success)
+		{
+			$theme = new Theme(Context::getContext()->shop->id_theme);
+			if ($theme->default_left_column)
+				$success &= $this->registerHook('leftColumn');
+			elseif ($theme->default_right_column)
+				$success &= $this->registerHook('rightColumn');
+		}
+
 		$this->_clearCache('blocknewproducts.tpl');
-		return true;
+
+		return $success;
 	}
 	
 	public function uninstall()
@@ -78,6 +88,7 @@ class BlockNewProducts extends Module
 				$output .= $this->displayError($this->l('Invalid number.'));
 			else
 			{
+				Configuration::updateValue('PS_NB_DAYS_NEW_PRODUCT', (int)(Tools::getValue('PS_NB_DAYS_NEW_PRODUCT')));
 				Configuration::updateValue('PS_BLOCK_NEWPRODUCTS_DISPLAY', (int)(Tools::getValue('PS_BLOCK_NEWPRODUCTS_DISPLAY')));
 				Configuration::updateValue('NEW_PRODUCTS_NBR', (int)($productNbr));
 				$output .= $this->displayConfirmation($this->l('Settings updated'));
@@ -94,7 +105,8 @@ class BlockNewProducts extends Module
 				return;
 			$newProducts = false;
 			if (Configuration::get('PS_NB_DAYS_NEW_PRODUCT'))
-				$newProducts = Product::getNewProducts((int) $params['cookie']->id_lang, 0, (int)Configuration::get('NEW_PRODUCTS_NBR'));
+				$newProducts = Product::getNewProducts((int) Context::getContext()->id_lang, 0, (int)Configuration::get('NEW_PRODUCTS_NBR'));
+
 			if (!$newProducts && !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
 				return;
 			$this->smarty->assign(array(
@@ -164,6 +176,12 @@ class BlockNewProducts extends Module
 						'desc' => $this->l('Define the number of products to be displayed in this block.')
 					),
 					array(
+						'type'  => 'text',
+						'label' => $this->l('Number of days for which the product is considered \'new\''),
+						'name'  => 'PS_NB_DAYS_NEW_PRODUCT',
+						'class' => 'fixed-width-xs',
+					),
+					array(
 						'type' => 'switch',
 						'label' => $this->l('Always display this block'),
 						'name' => 'PS_BLOCK_NEWPRODUCTS_DISPLAY',
@@ -210,6 +228,7 @@ class BlockNewProducts extends Module
 	public function getConfigFieldsValues()
 	{		
 		return array(
+			'PS_NB_DAYS_NEW_PRODUCT' => Tools::getValue('PS_NB_DAYS_NEW_PRODUCT', Configuration::get('PS_NB_DAYS_NEW_PRODUCT')),
 			'PS_BLOCK_NEWPRODUCTS_DISPLAY' => Tools::getValue('PS_BLOCK_NEWPRODUCTS_DISPLAY', Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY')),
 			'NEW_PRODUCTS_NBR' => Tools::getValue('NEW_PRODUCTS_NBR', Configuration::get('NEW_PRODUCTS_NBR')),
 		);
