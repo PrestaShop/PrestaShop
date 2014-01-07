@@ -372,7 +372,7 @@ abstract class ControllerCore
 			$html = str_replace(array('</body>', '</html>'), '', $html);
 			$this->context->smarty->assign('js_def', Media::getJsDef());
 			$javascript = '<script type="text/javascript">';
-			if (file_exists(_PS_THEME_DIR_.'javascript.tpl'))
+			if (filemtime(_PS_THEME_DIR_.'javascript.tpl'))
 			{
 				$javascript = $this->context->smarty->fetch(_PS_THEME_DIR_.'javascript.tpl');
 				$javascript = substr_replace(trim($javascript), '', -(strlen('</script>')));
