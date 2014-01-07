@@ -367,7 +367,7 @@ class HookCore extends ObjectModel
 		// If hook_name is given, just get list of modules for this hook
 		if ($hook_name)
 		{
-			$retro_hook_name = Hook::getRetroHookName($hook_name);
+			$retro_hook_name = strtolower(Hook::getRetroHookName($hook_name));
 			$hook_name = strtolower($hook_name);
 
 			$return = array();
