@@ -107,7 +107,7 @@ class ContextCore
 	/**
 	 * @var boolean|string mobile device of the customer
 	 */
-	protected $mobile_device;
+	protected $mobile_device = null;
 	
 	const DEVICE_COMPUTER = 1;
 	
@@ -123,7 +123,7 @@ class ContextCore
 
 	public function getMobileDevice()
 	{
-		if (is_null($this->mobile_device))
+		if ($this->mobile_device === null)
 		{
 			$this->mobile_device = false;
 			if ($this->checkMobileContext())
