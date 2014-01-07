@@ -111,7 +111,7 @@ var generated_date = {$smarty.now|intval};
 									class="cart_block_product_name" 
 									href="{$link->getProductLink($product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'html':'UTF-8'}" 
 									title="{$product.name|escape:'html':'UTF-8'}">
-										{$product.name|trim|truncate:100:'...'|escape:'html':'UTF-8'}
+										{$product.name|truncate:100:'...'|escape:'html':'UTF-8'}
 									</a>
 								</div>
 								{if isset($product.attributes_small)}
@@ -179,7 +179,7 @@ var generated_date = {$smarty.now|intval};
 											x
 										</span>
 										{if isset($customization.datas.$CUSTOMIZE_TEXTFIELD.0)}
-											{$customization.datas.$CUSTOMIZE_TEXTFIELD.0.value|replace:"<br />":" "|trim|truncate:28:'...'|escape:'html':'UTF-8'}
+											{$customization.datas.$CUSTOMIZE_TEXTFIELD.0.value|replace:"<br />":" "|truncate:28:'...'|escape:'html':'UTF-8'}
 										{else}
 											{l s='Customization #%d:' sprintf=$id_customization|intval mod='blockcart'}
 										{/if}
@@ -202,7 +202,7 @@ var generated_date = {$smarty.now|intval};
 							<tr class="bloc_cart_voucher" id="bloc_cart_voucher_{$discount.id_discount}">
 								<td class="quantity">1x</td>
 								<td class="name" title="{$discount.description}">
-									{$discount.name|cat:' : '|cat:$discount.description|trim|truncate:18:'...'|escape:'html':'UTF-8'}
+									{$discount.name|cat:' : '|cat:$discount.description|truncate:18:'...'|escape:'html':'UTF-8'}
 								</td>
 								<td class="price">
 									-{if $priceDisplay == 1}{convertPrice price=$discount.value_tax_exc}{else}{convertPrice price=$discount.value_real}{/if}
