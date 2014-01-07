@@ -395,6 +395,8 @@ abstract class ControllerCore
 
 	public static function myErrorHandler($errno, $errstr, $errfile, $errline)
 	{
+		if (error_reporting() === 0)
+			return false;
 	    switch ($errno)
 		{
 		    case E_USER_ERROR || E_ERROR:
