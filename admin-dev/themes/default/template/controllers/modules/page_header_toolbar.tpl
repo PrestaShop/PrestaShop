@@ -63,6 +63,12 @@
 				</a>
 			</li>
 			{/if}
+			<li>
+				<a class="toolbar_btn" href="{$help_link|escape}" title="{l s='Help'}">
+					<i class="process-icon-help"></i>
+					<div>{l s='Help'}</div>
+				</a>
+			</li>
 		</ul>
 	</div>
 </div>
