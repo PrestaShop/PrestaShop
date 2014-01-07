@@ -230,18 +230,18 @@ class Blockreinsurance extends Module
 
 		$this->fields_form[0]['form'] = array(
 			'legend' => array(
-				'title' => $this->l('New reassurance block.'),
+				'title' => $this->l('New reassurance block'),
 			),
 			'input' => array(
 				array(
 					'type' => 'file',
-					'label' => $this->l('Image:'),
+					'label' => $this->l('Image'),
 					'name' => 'image',
 					'value' => true
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Text:'),
+					'label' => $this->l('Text'),
 					'lang' => true,
 					'name' => 'text',
 					'cols' => 40,
@@ -291,7 +291,7 @@ class Blockreinsurance extends Module
 	{
 		$this->fields_list = array(
 			'id_reinsurance' => array(
-				'title' => $this->l('Id'),
+				'title' => $this->l('ID'),
 				'width' => 120,
 				'type' => 'text',
 			),

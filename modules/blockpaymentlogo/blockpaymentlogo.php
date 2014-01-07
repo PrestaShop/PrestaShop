@@ -40,8 +40,8 @@ class BlockPaymentLogo extends Module
 		$this->bootstrap = true;
 		parent::__construct();	
 
-		$this->displayName = $this->l('Payment logo block.');
-		$this->description = $this->l('This block will display all of your payment logos.');
+		$this->displayName = $this->l('Payment logos block.');
+		$this->description = $this->l('Adds a block which displays all of your payment logos.');
 	}
 
 	public function install()
@@ -139,7 +139,7 @@ class BlockPaymentLogo extends Module
 				'input' => array(
 					array(
 						'type' => 'select',
-						'label' => $this->l('Page CMS for link:'),
+						'label' => $this->l('Destination page for the block\'s link'),
 						'name' => 'PS_PAYMENT_LOGO_CMS_ID',
 						'required' => false,
 						'default_value' => (int)$this->context->country->id,

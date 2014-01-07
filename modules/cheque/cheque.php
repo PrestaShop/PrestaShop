@@ -60,9 +60,9 @@ class Cheque extends PaymentModule
 		$this->confirmUninstall = $this->l('Are you sure you want to delete these details?');
 
 		if ((!isset($this->chequeName) || !isset($this->address) || empty($this->chequeName) || empty($this->address)))
-			$this->warning = $this->l('"To the order of" and "address" must be configured before using this module.');
+			$this->warning = $this->l('The "Pay to the order of" and "Details" fields must be configured before using this module.');
 		if (!count(Currency::checkPaymentCurrencies($this->id)))
-			$this->warning = $this->l('No currency has been set for this module');
+			$this->warning = $this->l('No currency has been set for this module.');
 	
 		$this->extra_mail_vars = array(
 											'{cheque_name}' => Configuration::get('CHEQUE_NAME'),
@@ -90,9 +90,9 @@ class Cheque extends PaymentModule
 		if (Tools::isSubmit('btnSubmit'))
 		{
 			if (!Tools::getValue('CHEQUE_NAME'))
-				$this->_postErrors[] = $this->l('\'The "To the order of" field is required.');
+				$this->_postErrors[] = $this->l('The "Pay to the order of" field is required.');
 			elseif (!Tools::getValue('CHEQUE_ADDRESS'))
-				$this->_postErrors[] = $this->l('Address is required.');
+				$this->_postErrors[] = $this->l('The "Details" field is required.');
 		}
 	}
 
@@ -192,7 +192,7 @@ class Cheque extends PaymentModule
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('To the order of'),
+						'label' => $this->l('Pay to the order of (name)'),
 						'name' => 'CHEQUE_NAME',
 					),
 					array(

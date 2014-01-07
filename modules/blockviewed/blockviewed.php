@@ -41,7 +41,7 @@ class BlockViewed extends Module
 		$this->bootstrap = true;
 		parent::__construct();	
 
-		$this->displayName = $this->l('Viewed products block.');
+		$this->displayName = $this->l('Viewed products block');
 		$this->description = $this->l('Adds a block displaying recently viewed products.');
 	}
 
@@ -72,7 +72,7 @@ class BlockViewed extends Module
 			else
 			{
 				Configuration::updateValue('PRODUCTS_VIEWED_NBR', (int)$productNbr);
-				$output .= $this->displayConfirmation($this->l('Settings updated'));
+				$output .= $this->displayConfirmation($this->l('Settings updated.'));
 			}
 		}
 		return $output.$this->renderForm();
@@ -181,7 +181,7 @@ class BlockViewed extends Module
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Products to display.'),
+						'label' => $this->l('Products to display'),
 						'name' => 'PRODUCTS_VIEWED_NBR',
 						'class' => 'fixed-width-xs',
 						'desc' => $this->l('Define the number of products displayed in this block.')
