@@ -1,0 +1,152 @@
+// FontAwesome icons
+$fa-css-prefix: icon
+
+// PrestaShop Admin Theme Colors
+// --------------------------------------------------
+//$main-color: #F7F7F7
+//$main-color: #DBD8CF //sable
+//$main-color: #CFD7DD //bleu
+//$main-color: #E0E0E0 //gris
+//$main-color: #D7D6DE //violet
+//$main-color: #F1F8FE //theme wordpress //dark
+//$main-color: #272A31 //bleu PrestaShop
+//$main-color: #3D3D3D //gris
+$main-color: #515561 //gris bleu clair
+//$main-color: #4D4645 //taupe
+//$main-color: #272822 //gris vert
+//$main-color: #313A45 //gris bleu
+//$main-color: #7B8676
+//$main-color: #443A42 //violet
+//$main-color: #373E35 //vert camo
+//$main-color: #262C3F //bleu nuit - pretty sure that a girl could do better naming the colors, sorry about that...
+//$main-color: #8C8574
+//$main-color: #3A3A4A //$secondary-color: white //blanc
+//$secondary-color: #F5792B //orange
+//$secondary-color: #81A98C //vert d'eau
+//$secondary-color: #1EAEC0 //bleu
+//$secondary-color: #00C3C1 //turquoise
+//$secondary-color: #97C885 //vert menthe
+//$secondary-color: #4691D2 //bleu ciel
+//$secondary-color: #814C76 //violet
+//$secondary-color: #FE635F //saumon
+//$secondary-color: #FFB4B8 //rose
+//$secondary-color: #F2B100 //moutarde
+//$secondary-color: #F6A88A //abricot
+//$secondary-color: #937976 //taupe clair
+//$secondary-color: #60C276 //vert
+$secondary-color: #8FC04D //vert pomme
+//$secondary-color: #6992AF //theme wordpress
+//$secondary-color: #8BC954 //vert PrestaShop
+//$secondary-color: #AB7073
+//$secondary-color: black $brand-primary: #1BA6E5
+//$brand-primary: #1BA6E5 //some tests
+//$secondary-color: #79C09D
+//$secondary-color: invert($main-color)
+//$secondary-color: lighten(invert($main-color),20%)
+//$secondary-color: adjust-hue($main-color, 80%)
+//$hue: hue(adjust-hue($main-color, 80%))
+//$secondary-color: hsl($hue, 50%, 50%) //Creates a Color from hue, saturation, and lightness values
+//$secondary-color: #00A89C //dark and light, love and war, fire and ice, etc...
+$contrasted-dark-default: #333
+$contrasted-light-default: white
+$contrasted-lightness-threshold: 10% //30% default //50 shades of gray
+//$bg-content-color: #F8F9FB //bleu gris clair
+//$bg-content-color: #F8FBF8 //vert gris clair
+//$bg-content-color: #F8F4E3 //gris foncé
+//$bg-content-color: #F6F6F6 //gris
+$bg-content-color: #F8F8F8 //gris //heading
+//$bg-header-color: darken($secondary-color,20%)
+$bg-header-color: #242424
+$bg-footer-color: #242424
+$bg-page-head-color : $secondary-color
+$bg-panel-heading-color: hsl(hue($secondary-color), 10, 90) //others
+$badge-notif-color: #8BC954
+$icon-color: #87C795
+
+
+// Bootstrap variables
+$gray-darker: lighten(#000, 13.5%)  //#222
+$gray-dark: lighten(#000, 20%)  //#333
+$gray: lighten(#000, 33.5%)  //#555
+$gray-light: lighten(#000, 60%)  //#999
+$gray-lighter: lighten(#000, 93.5%)  //#eee
+// Brand colors
+// -------------------------
+$brand-primary: #1BA6E5
+//moved to admin-theme sass
+$brand-success: #5cb85c 
+$brand-warning: #f0ad4e 
+$brand-danger: #d9534f 
+$brand-info: #5bc0de
+// Scaffolding
+// -------------------------
+$body-bg: $bg-content-color 
+$text-color: $gray
+// Typography
+// -------------------------
+$font-family-sans-serif: 'Open Sans', Helvetica, Arial, sans-serif 
+$font-size-base: 12px 
+$line-height-base: 1.428571429 
+$line-height-computed: floor($font-size-base * $line-height-base) 
+$headings-font-family: 'Ubuntu', sans-serif 
+$headings-font-weight: 300
+// Components
+// -------------------------
+$padding-base-vertical: 4px 
+$padding-base-horizontal: 8px 
+$border-radius-base: 3px
+// Tables
+// -------------------------
+// $table-bg: transparent  overall background-color
+$table-bg-accent: #f9f9f9  //for striping
+$table-bg-hover: #EDF7FB
+// Buttons
+// -------------------------
+$btn-default-color: $text-color 
+$btn-default-bg: white 
+$btn-default-border: #ccc
+$btn-primary-color: $btn-default-color 
+$btn-primary-bg: white 
+$btn-primary-border: $brand-success
+// Forms
+// -------------------------
+$input-bg: white 
+$input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + 2)
+// Dropdowns
+// -------------------------
+$dropdown-link-hover-color: white 
+$dropdown-link-hover-bg: $brand-primary
+// Grid system
+// --------------------------------------------------
+// Padding, to be divided by two and applied to the left and right of all columns
+$grid-gutter-width: 10px  // Navbar
+// -------------------------
+// Basics of a navbar
+$navbar-height: 35px  // Wells
+// -------------------------
+$well-bg: darken($bg-content-color,5%)
+// Media queries breakpoints
+// --------------------------------------------------
+// Tiny screen / phone
+$screen-tiny: 480px 
+$screen-phone: $screen-tiny 
+// Small screen / tablet
+$screen-small: 768px 
+$screen-tablet: $screen-small 
+// Medium screen / desktop
+$screen-medium: 992px 
+$screen-desktop: $screen-medium 
+// So media queries don't overlap when required, provide a maximum
+$screen-small-max: ($screen-medium - 1) 
+$screen-tablet-max: $screen-small-max 
+// Large screen / wide desktop
+$screen-large: 1200px 
+$screen-large-desktop: $screen-large
+// Container sizes
+// --------------------------------------------------
+// Small screen / tablet
+$container-tablet: 728px 
+// Medium screen / desktop
+$container-desktop: 940px 
+// Large screen / wide desktop
+$container-large-desktop: 1170px  //light

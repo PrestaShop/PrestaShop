@@ -1,132 +1,41 @@
-@import url(http://fonts.googleapis.com/css?family=Ubuntu:300|Open+Sans&subset=latin,cyrillic-ext,greek-ext,greek,latin-ext,cyrillic,vietnamese);
 /*!
- *  Font Awesome 3.2.1
- *  the iconic font designed for Bootstrap
- *  ------------------------------------------------------------------------------
- *  The full suite of pictographic icons, examples, and documentation can be
- *  found at http://fontawesome.io.  Stay up to date on Twitter at
- *  http://twitter.com/fontawesome.
- *
- *  License
- *  ------------------------------------------------------------------------------
- *  - The Font Awesome font is licensed under SIL OFL 1.1 -
- *    http://scripts.sil.org/OFL
- *  - Font Awesome CSS, LESS, and SASS files are licensed under MIT License -
- *    http://opensource.org/licenses/mit-license.html
- *  - Font Awesome documentation licensed under CC BY 3.0 -
- *    http://creativecommons.org/licenses/by/3.0/
- *  - Attribution is no longer required in Font Awesome 3.0, but much appreciated:
- *    "Font Awesome by Dave Gandy - http://fontawesome.io"
- *
- *  Author - Dave Gandy
- *  ------------------------------------------------------------------------------
- *  Email: dave@fontawesome.io
- *  Twitter: http://twitter.com/byscuits
- *  Work: Lead Product Designer @ Kyruus - http://kyruus.com
+ *  Font Awesome 4.0.3 by @davegandy - http://fontawesome.io - @fontawesome
+ *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
  */
 /* FONT PATH -------------------------- */
-@font-face { font-family: 'FontAwesome'; src: url("../font/fontawesome-webfont.eot?v=3.2.1"); src: url("../font/fontawesome-webfont.eot?#iefix&v=3.2.1") format("embedded-opentype"), url("../font/fontawesome-webfont.woff?v=3.2.1") format("woff"), url("../font/fontawesome-webfont.ttf?v=3.2.1") format("truetype"), url("../font/fontawesome-webfont.svg#fontawesomeregular?v=3.2.1") format("svg"); font-weight: normal; font-style: normal; }
+@font-face { font-family: 'FontAwesome'; src: url("../fonts/fontawesome-webfont.eot?v=4.0.3"); src: url("../fonts/fontawesome-webfont.eot?#iefix&v=4.0.3") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff?v=4.0.3") format("woff"), url("../fonts/fontawesome-webfont.ttf?v=4.0.3") format("truetype"), url("../fonts/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular") format("svg"); font-weight: normal; font-style: normal; }
 
-/* FONT AWESOME CORE -------------------------- */
-[class^="icon-"], [class*=" icon-"] { font-family: FontAwesome; font-weight: normal; font-style: normal; text-decoration: inherit; -webkit-font-smoothing: antialiased; *margin-right: .3em; }
-
-[class^="icon-"]:before, [class*=" icon-"]:before { text-decoration: inherit; display: inline-block; speak: none; }
+.icon, [class^="icon-Admin"], [class^="icon-"], .bootstrap [class^="process-icon-"], .bootstrap [class*=" process-icon-"] { display: inline-block; font-family: FontAwesome; font-style: normal; font-weight: normal; line-height: 1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
 /* makes the font 33% larger relative to the icon container */
-.icon-large:before { vertical-align: -10%; font-size: 1.3333333333333333em; }
+.icon-lg { font-size: 1.33333em; line-height: 0.75em; vertical-align: -15%; }
 
-/* makes sure icons active on rollover in links */
-a [class^="icon-"], a [class*=" icon-"] { display: inline; }
-
-/* increased font size for icon-large */
-[class^="icon-"].icon-fixed-width, [class*=" icon-"].icon-fixed-width { display: inline-block; width: 1.1428571428571428em; text-align: right; padding-right: 0.2857142857142857em; }
-
-[class^="icon-"].icon-fixed-width.icon-large, [class*=" icon-"].icon-fixed-width.icon-large { width: 1.4285714285714286em; }
-
-.icons-ul { margin-left: 2.142857142857143em; list-style-type: none; }
-
-.icons-ul > li { position: relative; }
-
-.icons-ul .icon-li { position: absolute; left: -2.142857142857143em; width: 2.142857142857143em; text-align: center; line-height: inherit; }
-
-[class^="icon-"].hide, [class*=" icon-"].hide { display: none; }
-
-.icon-muted { color: #eeeeee; }
-
-.icon-light { color: #ffffff; }
-
-.icon-dark { color: #333333; }
-
-.icon-border { border: solid 1px #eeeeee; padding: .2em .25em .15em; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; }
-
-.icon-2x { font-size: 2em; }
-
-.icon-2x.icon-border { border-width: 2px; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; }
+.icon-2x, .bootstrap [class^="process-icon-"], .bootstrap [class*=" process-icon-"] { font-size: 2em; }
 
 .icon-3x { font-size: 3em; }
 
-.icon-3x.icon-border { border-width: 3px; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
-
 .icon-4x { font-size: 4em; }
-
-.icon-4x.icon-border { border-width: 4px; -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; }
 
 .icon-5x { font-size: 5em; }
 
-.icon-5x.icon-border { border-width: 5px; -webkit-border-radius: 7px; -moz-border-radius: 7px; border-radius: 7px; }
+.icon-fw { width: 1.28571em; text-align: center; }
+
+.icon-ul { padding-left: 0; margin-left: 2.14286em; list-style-type: none; }
+.icon-ul > li { position: relative; }
+
+.icon-li { position: absolute; left: -2.14286em; width: 2.14286em; top: 0.14286em; text-align: center; }
+.icon-li.icon-lg { left: -1.85714em; }
+
+.icon-border { padding: .2em .25em .15em; border: solid 0.08em #eeeeee; border-radius: .1em; }
 
 .pull-right, #content.bootstrap h3:not(.modal-title) .panel-heading-action, #content.bootstrap .panel-heading:not(.modal-title) .panel-heading-action, #content.bootstrap .panel-heading .panel-heading-action, #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header .panel-heading-action { float: right; }
 
 .pull-left, .bootstrap .page-head h2.page-title { float: left; }
 
-[class^="icon-"].pull-left, .bootstrap .page-head h2[class^="icon-"].page-title, [class*=" icon-"].pull-left, .bootstrap .page-head h2[class*=" icon-"].page-title { margin-right: .3em; }
+.icon.pull-left, .pull-left[class^="icon-Admin"], .bootstrap .page-head h2[class^="icon-Admin"].page-title, .pull-left[class^="icon-"], .bootstrap .page-head h2[class^="icon-"].page-title, .bootstrap .page-head h2.icon.page-title, .bootstrap .page-head h2.page-title[class^="process-icon-"], .bootstrap .page-head h2.page-title[class*=" process-icon-"], .bootstrap .pull-left[class^="process-icon-"], .bootstrap .pull-left[class*=" process-icon-"] { margin-right: .3em; }
+.icon.pull-right, #content.bootstrap h3:not(.modal-title) .icon.panel-heading-action, #content.bootstrap h3:not(.modal-title) .panel-heading-action[class^="icon-Admin"], #content.bootstrap h3:not(.modal-title) .panel-heading-action[class^="icon-"], #content.bootstrap h3:not(.modal-title) .panel-heading-action[class^="process-icon-"], #content.bootstrap h3:not(.modal-title) .panel-heading-action[class*=" process-icon-"], #content.bootstrap .panel-heading .icon.panel-heading-action, #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .icon.panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header .icon.panel-heading-action, #content.bootstrap .panel-heading .panel-heading-action[class^="icon-Admin"], #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action[class^="icon-Admin"], #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header .panel-heading-action[class^="icon-Admin"], #content.bootstrap .panel-heading .panel-heading-action[class^="icon-"], #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action[class^="icon-"], #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header .panel-heading-action[class^="icon-"], #content.bootstrap .panel-heading .panel-heading-action[class^="process-icon-"], #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action[class^="process-icon-"], #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header .panel-heading-action[class^="process-icon-"], #content.bootstrap .panel-heading .panel-heading-action[class*=" process-icon-"], #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .panel-heading-action[class*=" process-icon-"], #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header .panel-heading-action[class*=" process-icon-"], .pull-right[class^="icon-Admin"], .pull-right[class^="icon-"], .bootstrap .pull-right[class^="process-icon-"], .bootstrap .pull-right[class*=" process-icon-"] { margin-left: .3em; }
 
-[class^="icon-"].pull-right, #content.bootstrap h3:not(.modal-title) [class^="icon-"].panel-heading-action, #content.bootstrap .panel-heading [class^="icon-"].panel-heading-action, #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header [class^="icon-"].panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header [class^="icon-"].panel-heading-action, [class*=" icon-"].pull-right, #content.bootstrap h3:not(.modal-title) [class*=" icon-"].panel-heading-action, #content.bootstrap .panel-heading [class*=" icon-"].panel-heading-action, #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header [class*=" icon-"].panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header [class*=" icon-"].panel-heading-action { margin-left: .3em; }
-
-/* BOOTSTRAP SPECIFIC CLASSES -------------------------- */
-/* Bootstrap 2.0 sprites.less reset */
-[class^="icon-"], [class*=" icon-"] { display: inline; width: auto; height: auto; line-height: normal; vertical-align: baseline; background-image: none; background-position: 0% 0%; background-repeat: repeat; margin-top: 0; }
-
-/* more sprites.less reset */
-.icon-white, .nav-pills > .active > a > [class^="icon-"], .nav-pills > .active > a > [class*=" icon-"], .nav-list > .active > a > [class^="icon-"], .nav-list > .active > a > [class*=" icon-"], .navbar-inverse .nav > .active > a > [class^="icon-"], #header_infos .nav > .active > a > [class^="icon-"], .navbar-inverse #header_notifs_icon_wrapper > .active > a > [class^="icon-"], #header_infos #header_notifs_icon_wrapper > .active > a > [class^="icon-"], .navbar-inverse #header_employee_box > .active > a > [class^="icon-"], #header_infos #header_employee_box > .active > a > [class^="icon-"], .navbar-inverse #header_quick > .active > a > [class^="icon-"], #header_infos #header_quick > .active > a > [class^="icon-"], .navbar-inverse .nav > .active > a > [class*=" icon-"], #header_infos .nav > .active > a > [class*=" icon-"], .navbar-inverse #header_notifs_icon_wrapper > .active > a > [class*=" icon-"], #header_infos #header_notifs_icon_wrapper > .active > a > [class*=" icon-"], .navbar-inverse #header_employee_box > .active > a > [class*=" icon-"], #header_infos #header_employee_box > .active > a > [class*=" icon-"], .navbar-inverse #header_quick > .active > a > [class*=" icon-"], #header_infos #header_quick > .active > a > [class*=" icon-"], .dropdown-menu > li > a:hover > [class^="icon-"], .dropdown-menu > li > a:hover > [class*=" icon-"], .dropdown-menu > .active > a > [class^="icon-"], .dropdown-menu > .active > a > [class*=" icon-"], .dropdown-submenu:hover > a > [class^="icon-"], .dropdown-submenu:hover > a > [class*=" icon-"] { background-image: none; }
-
-/* keeps Bootstrap styles with and without icons the same */
-.btn [class^="icon-"].icon-large, .nav [class^="icon-"].icon-large, #header_notifs_icon_wrapper [class^="icon-"].icon-large, #header_employee_box [class^="icon-"].icon-large, #header_quick [class^="icon-"].icon-large, .btn [class*=" icon-"].icon-large, .nav [class*=" icon-"].icon-large, #header_notifs_icon_wrapper [class*=" icon-"].icon-large, #header_employee_box [class*=" icon-"].icon-large, #header_quick [class*=" icon-"].icon-large { line-height: .9em; }
-
-.btn [class^="icon-"].icon-spin, .btn .bootstrap #dashboard .loading [class^="icon-"].data_value:before, .bootstrap #dashboard .loading .btn [class^="icon-"].data_value:before, .nav [class^="icon-"].icon-spin, #header_notifs_icon_wrapper [class^="icon-"].icon-spin, #header_employee_box [class^="icon-"].icon-spin, #header_quick [class^="icon-"].icon-spin, .nav .bootstrap #dashboard .loading [class^="icon-"].data_value:before, .bootstrap #dashboard .loading .nav [class^="icon-"].data_value:before, #header_notifs_icon_wrapper .bootstrap #dashboard .loading [class^="icon-"].data_value:before, .bootstrap #dashboard .loading #header_notifs_icon_wrapper [class^="icon-"].data_value:before, #header_employee_box .bootstrap #dashboard .loading [class^="icon-"].data_value:before, .bootstrap #dashboard .loading #header_employee_box [class^="icon-"].data_value:before, #header_quick .bootstrap #dashboard .loading [class^="icon-"].data_value:before, .bootstrap #dashboard .loading #header_quick [class^="icon-"].data_value:before, .btn [class*=" icon-"].icon-spin, .btn .bootstrap #dashboard .loading [class*=" icon-"].data_value:before, .bootstrap #dashboard .loading .btn [class*=" icon-"].data_value:before, .nav [class*=" icon-"].icon-spin, #header_notifs_icon_wrapper [class*=" icon-"].icon-spin, #header_employee_box [class*=" icon-"].icon-spin, #header_quick [class*=" icon-"].icon-spin, .nav .bootstrap #dashboard .loading [class*=" icon-"].data_value:before, .bootstrap #dashboard .loading .nav [class*=" icon-"].data_value:before, #header_notifs_icon_wrapper .bootstrap #dashboard .loading [class*=" icon-"].data_value:before, .bootstrap #dashboard .loading #header_notifs_icon_wrapper [class*=" icon-"].data_value:before, #header_employee_box .bootstrap #dashboard .loading [class*=" icon-"].data_value:before, .bootstrap #dashboard .loading #header_employee_box [class*=" icon-"].data_value:before, #header_quick .bootstrap #dashboard .loading [class*=" icon-"].data_value:before, .bootstrap #dashboard .loading #header_quick [class*=" icon-"].data_value:before { display: inline-block; }
-
-.nav-tabs [class^="icon-"], .nav-pills [class^="icon-"], .nav-tabs [class*=" icon-"], .nav-pills [class*=" icon-"], .nav-tabs [class^="icon-"].icon-large, .nav-pills [class^="icon-"].icon-large, .nav-tabs [class*=" icon-"].icon-large, .nav-pills [class*=" icon-"].icon-large { line-height: .9em; }
-
-.btn [class^="icon-"].pull-left.icon-2x, .btn .bootstrap .page-head h2[class^="icon-"].icon-2x.page-title, .bootstrap .page-head .btn h2[class^="icon-"].icon-2x.page-title, .btn [class*=" icon-"].pull-left.icon-2x, .btn .bootstrap .page-head h2[class*=" icon-"].icon-2x.page-title, .bootstrap .page-head .btn h2[class*=" icon-"].icon-2x.page-title, .btn [class^="icon-"].pull-right.icon-2x, .btn #content.bootstrap h3:not(.modal-title) [class^="icon-"].icon-2x.panel-heading-action, #content.bootstrap h3:not(.modal-title) .btn [class^="icon-"].icon-2x.panel-heading-action, .btn #content.bootstrap .panel-heading [class^="icon-"].icon-2x.panel-heading-action, #content.bootstrap .panel-heading .btn [class^="icon-"].icon-2x.panel-heading-action, .btn #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header [class^="icon-"].icon-2x.panel-heading-action, #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .btn [class^="icon-"].icon-2x.panel-heading-action, .btn #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header [class^="icon-"].icon-2x.panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header .btn [class^="icon-"].icon-2x.panel-heading-action, .btn [class*=" icon-"].pull-right.icon-2x, .btn #content.bootstrap h3:not(.modal-title) [class*=" icon-"].icon-2x.panel-heading-action, #content.bootstrap h3:not(.modal-title) .btn [class*=" icon-"].icon-2x.panel-heading-action, .btn #content.bootstrap .panel-heading [class*=" icon-"].icon-2x.panel-heading-action, #content.bootstrap .panel-heading .btn [class*=" icon-"].icon-2x.panel-heading-action, .btn #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header [class*=" icon-"].icon-2x.panel-heading-action, #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .btn [class*=" icon-"].icon-2x.panel-heading-action, .btn #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header [class*=" icon-"].icon-2x.panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header .btn [class*=" icon-"].icon-2x.panel-heading-action { margin-top: .18em; }
-
-.btn [class^="icon-"].icon-spin.icon-large, .btn .bootstrap #dashboard .loading [class^="icon-"].icon-large.data_value:before, .bootstrap #dashboard .loading .btn [class^="icon-"].icon-large.data_value:before, .btn [class*=" icon-"].icon-spin.icon-large, .btn .bootstrap #dashboard .loading [class*=" icon-"].icon-large.data_value:before, .bootstrap #dashboard .loading .btn [class*=" icon-"].icon-large.data_value:before { line-height: .8em; }
-
-.btn.btn-small [class^="icon-"].pull-left.icon-2x, .btn.btn-small .bootstrap .page-head h2[class^="icon-"].icon-2x.page-title, .bootstrap .page-head .btn.btn-small h2[class^="icon-"].icon-2x.page-title, .btn.btn-small [class*=" icon-"].pull-left.icon-2x, .btn.btn-small .bootstrap .page-head h2[class*=" icon-"].icon-2x.page-title, .bootstrap .page-head .btn.btn-small h2[class*=" icon-"].icon-2x.page-title, .btn.btn-small [class^="icon-"].pull-right.icon-2x, .btn.btn-small #content.bootstrap h3:not(.modal-title) [class^="icon-"].icon-2x.panel-heading-action, #content.bootstrap h3:not(.modal-title) .btn.btn-small [class^="icon-"].icon-2x.panel-heading-action, .btn.btn-small #content.bootstrap .panel-heading [class^="icon-"].icon-2x.panel-heading-action, #content.bootstrap .panel-heading .btn.btn-small [class^="icon-"].icon-2x.panel-heading-action, .btn.btn-small #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header [class^="icon-"].icon-2x.panel-heading-action, #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .btn.btn-small [class^="icon-"].icon-2x.panel-heading-action, .btn.btn-small #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header [class^="icon-"].icon-2x.panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header .btn.btn-small [class^="icon-"].icon-2x.panel-heading-action, .btn.btn-small [class*=" icon-"].pull-right.icon-2x, .btn.btn-small #content.bootstrap h3:not(.modal-title) [class*=" icon-"].icon-2x.panel-heading-action, #content.bootstrap h3:not(.modal-title) .btn.btn-small [class*=" icon-"].icon-2x.panel-heading-action, .btn.btn-small #content.bootstrap .panel-heading [class*=" icon-"].icon-2x.panel-heading-action, #content.bootstrap .panel-heading .btn.btn-small [class*=" icon-"].icon-2x.panel-heading-action, .btn.btn-small #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header [class*=" icon-"].icon-2x.panel-heading-action, #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .btn.btn-small [class*=" icon-"].icon-2x.panel-heading-action, .btn.btn-small #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header [class*=" icon-"].icon-2x.panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header .btn.btn-small [class*=" icon-"].icon-2x.panel-heading-action { margin-top: .25em; }
-
-.btn.btn-large [class^="icon-"], .btn.btn-large [class*=" icon-"] { margin-top: 0; }
-
-.btn.btn-large [class^="icon-"].pull-left.icon-2x, .btn.btn-large .bootstrap .page-head h2[class^="icon-"].icon-2x.page-title, .bootstrap .page-head .btn.btn-large h2[class^="icon-"].icon-2x.page-title, .btn.btn-large [class*=" icon-"].pull-left.icon-2x, .btn.btn-large .bootstrap .page-head h2[class*=" icon-"].icon-2x.page-title, .bootstrap .page-head .btn.btn-large h2[class*=" icon-"].icon-2x.page-title, .btn.btn-large [class^="icon-"].pull-right.icon-2x, .btn.btn-large #content.bootstrap h3:not(.modal-title) [class^="icon-"].icon-2x.panel-heading-action, #content.bootstrap h3:not(.modal-title) .btn.btn-large [class^="icon-"].icon-2x.panel-heading-action, .btn.btn-large #content.bootstrap .panel-heading [class^="icon-"].icon-2x.panel-heading-action, #content.bootstrap .panel-heading .btn.btn-large [class^="icon-"].icon-2x.panel-heading-action, .btn.btn-large #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header [class^="icon-"].icon-2x.panel-heading-action, #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .btn.btn-large [class^="icon-"].icon-2x.panel-heading-action, .btn.btn-large #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header [class^="icon-"].icon-2x.panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header .btn.btn-large [class^="icon-"].icon-2x.panel-heading-action, .btn.btn-large [class*=" icon-"].pull-right.icon-2x, .btn.btn-large #content.bootstrap h3:not(.modal-title) [class*=" icon-"].icon-2x.panel-heading-action, #content.bootstrap h3:not(.modal-title) .btn.btn-large [class*=" icon-"].icon-2x.panel-heading-action, .btn.btn-large #content.bootstrap .panel-heading [class*=" icon-"].icon-2x.panel-heading-action, #content.bootstrap .panel-heading .btn.btn-large [class*=" icon-"].icon-2x.panel-heading-action, .btn.btn-large #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header [class*=" icon-"].icon-2x.panel-heading-action, #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .btn.btn-large [class*=" icon-"].icon-2x.panel-heading-action, .btn.btn-large #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header [class*=" icon-"].icon-2x.panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header .btn.btn-large [class*=" icon-"].icon-2x.panel-heading-action { margin-top: .05em; }
-
-.btn.btn-large [class^="icon-"].pull-left.icon-2x, .btn.btn-large .bootstrap .page-head h2[class^="icon-"].icon-2x.page-title, .bootstrap .page-head .btn.btn-large h2[class^="icon-"].icon-2x.page-title, .btn.btn-large [class*=" icon-"].pull-left.icon-2x, .btn.btn-large .bootstrap .page-head h2[class*=" icon-"].icon-2x.page-title, .bootstrap .page-head .btn.btn-large h2[class*=" icon-"].icon-2x.page-title { margin-right: .2em; }
-
-.btn.btn-large [class^="icon-"].pull-right.icon-2x, .btn.btn-large #content.bootstrap h3:not(.modal-title) [class^="icon-"].icon-2x.panel-heading-action, #content.bootstrap h3:not(.modal-title) .btn.btn-large [class^="icon-"].icon-2x.panel-heading-action, .btn.btn-large #content.bootstrap .panel-heading [class^="icon-"].icon-2x.panel-heading-action, #content.bootstrap .panel-heading .btn.btn-large [class^="icon-"].icon-2x.panel-heading-action, .btn.btn-large #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header [class^="icon-"].icon-2x.panel-heading-action, #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .btn.btn-large [class^="icon-"].icon-2x.panel-heading-action, .btn.btn-large #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header [class^="icon-"].icon-2x.panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header .btn.btn-large [class^="icon-"].icon-2x.panel-heading-action, .btn.btn-large [class*=" icon-"].pull-right.icon-2x, .btn.btn-large #content.bootstrap h3:not(.modal-title) [class*=" icon-"].icon-2x.panel-heading-action, #content.bootstrap h3:not(.modal-title) .btn.btn-large [class*=" icon-"].icon-2x.panel-heading-action, .btn.btn-large #content.bootstrap .panel-heading [class*=" icon-"].icon-2x.panel-heading-action, #content.bootstrap .panel-heading .btn.btn-large [class*=" icon-"].icon-2x.panel-heading-action, .btn.btn-large #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header [class*=" icon-"].icon-2x.panel-heading-action, #content.bootstrap #header_notifs_icon_wrapper .notifs_panel .notifs_panel_header .btn.btn-large [class*=" icon-"].icon-2x.panel-heading-action, .btn.btn-large #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header [class*=" icon-"].icon-2x.panel-heading-action, #header_notifs_icon_wrapper .notifs_panel #content.bootstrap .notifs_panel_header .btn.btn-large [class*=" icon-"].icon-2x.panel-heading-action { margin-left: .2em; }
-
-/* Fixes alignment in nav lists */
-.nav-list [class^="icon-"], .nav-list [class*=" icon-"] { line-height: inherit; }
-
-/* EXTRAS -------------------------- */
-/* Stacked and layered icon */
-.icon-stack { position: relative; display: inline-block; width: 2em; height: 2em; line-height: 2em; vertical-align: -35%; }
-
-.icon-stack [class^="icon-"], .icon-stack [class*=" icon-"] { display: block; text-align: center; position: absolute; width: 100%; height: 100%; font-size: 1em; line-height: inherit; *line-height: 2em; }
-
-.icon-stack .icon-stack-base { font-size: 2em; *line-height: 1em; }
-
-/* Animated rotating icon */
-.icon-spin, .bootstrap #dashboard .loading .data_value:before { display: inline-block; -moz-animation: spin 2s infinite linear; -o-animation: spin 2s infinite linear; -webkit-animation: spin 2s infinite linear; animation: spin 2s infinite linear; }
-
-/* Prevent stack and spinners from being taken inline when inside a link */
-a .icon-stack, a .icon-spin, a .bootstrap #dashboard .loading .data_value:before, .bootstrap #dashboard .loading a .data_value:before { display: inline-block; text-decoration: none; }
+.icon-spin, .bootstrap #dashboard .loading .data_value:before { -webkit-animation: spin 2s infinite linear; -moz-animation: spin 2s infinite linear; -o-animation: spin 2s infinite linear; animation: spin 2s infinite linear; }
 
 @-moz-keyframes spin { 0% { -moz-transform: rotate(0deg); }
   100% { -moz-transform: rotate(359deg); } }
@@ -143,19 +52,25 @@ a .icon-stack, a .icon-spin, a .bootstrap #dashboard .loading .data_value:before
 @keyframes spin { 0% { transform: rotate(0deg); }
   100% { transform: rotate(359deg); } }
 
-/* Icon rotations and mirroring */
-.icon-rotate-90:before { -webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); -ms-transform: rotate(90deg); -o-transform: rotate(90deg); transform: rotate(90deg); filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1); }
+.icon-rotate-90 { filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=$rotation); -webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); -ms-transform: rotate(90deg); -o-transform: rotate(90deg); transform: rotate(90deg); }
 
-.icon-rotate-180:before { -webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); -ms-transform: rotate(180deg); -o-transform: rotate(180deg); transform: rotate(180deg); filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2); }
+.icon-rotate-180 { filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=$rotation); -webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); -ms-transform: rotate(180deg); -o-transform: rotate(180deg); transform: rotate(180deg); }
 
-.icon-rotate-270:before { -webkit-transform: rotate(270deg); -moz-transform: rotate(270deg); -ms-transform: rotate(270deg); -o-transform: rotate(270deg); transform: rotate(270deg); filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3); }
+.icon-rotate-270 { filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=$rotation); -webkit-transform: rotate(270deg); -moz-transform: rotate(270deg); -ms-transform: rotate(270deg); -o-transform: rotate(270deg); transform: rotate(270deg); }
 
-.icon-flip-horizontal:before { -webkit-transform: scale(-1, 1); -moz-transform: scale(-1, 1); -ms-transform: scale(-1, 1); -o-transform: scale(-1, 1); transform: scale(-1, 1); }
+.icon-flip-horizontal { filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=$rotation); -webkit-transform: scale(-1, 1); -moz-transform: scale(-1, 1); -ms-transform: scale(-1, 1); -o-transform: scale(-1, 1); transform: scale(-1, 1); }
 
-.icon-flip-vertical:before { -webkit-transform: scale(1, -1); -moz-transform: scale(1, -1); -ms-transform: scale(1, -1); -o-transform: scale(1, -1); transform: scale(1, -1); }
+.icon-flip-vertical { filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=$rotation); -webkit-transform: scale(1, -1); -moz-transform: scale(1, -1); -ms-transform: scale(1, -1); -o-transform: scale(1, -1); transform: scale(1, -1); }
 
-/* ensure rotation occurs inside anchor tags */
-a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, a .icon-flip-horizontal:before, a .icon-flip-vertical:before { display: inline-block; }
+.icon-stack { position: relative; display: inline-block; width: 2em; height: 2em; line-height: 2em; vertical-align: middle; }
+
+.icon-stack-1x, .icon-stack-2x { position: absolute; left: 0; width: 100%; text-align: center; }
+
+.icon-stack-1x { line-height: inherit; }
+
+.icon-stack-2x { font-size: 2em; }
+
+.icon-inverse { color: white; }
 
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen readers do not read off random characters that represent icons */
 .icon-glass:before { content: "\f000"; }
@@ -164,13 +79,13 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-search:before, .icon-AdminSearch:before { content: "\f002"; }
 
-.icon-envelope-alt:before { content: "\f003"; }
+.icon-envelope-o:before, .icon-envelope-alt:before { content: "\f003"; }
 
 .icon-heart:before { content: "\f004"; }
 
 .icon-star:before { content: "\f005"; }
 
-.icon-star-empty:before { content: "\f006"; }
+.icon-star-o:before, .icon-star-empty:before { content: "\f006"; }
 
 .icon-user:before { content: "\f007"; }
 
@@ -182,13 +97,13 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-th-list:before { content: "\f00b"; }
 
-.icon-ok:before, .bootstrap .process-icon-ok:before { content: "\f00c"; }
+.icon-check:before, .icon-ok:before, .bootstrap .process-icon-ok:before { content: "\f00c"; }
 
-.icon-remove:before, .bootstrap .process-icon-cancel:before { content: "\f00d"; }
+.icon-times:before, .icon-remove:before, .bootstrap .process-icon-cancel:before { content: "\f00d"; }
 
-.icon-zoom-in:before { content: "\f00e"; }
+.icon-search-plus:before, .icon-zoom-in:before { content: "\f00e"; }
 
-.icon-zoom-out:before { content: "\f010"; }
+.icon-search-minus:before, .icon-zoom-out:before { content: "\f010"; }
 
 .icon-power-off:before, .icon-off:before, .bootstrap .process-icon-off:before { content: "\f011"; }
 
@@ -196,25 +111,25 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-gear:before, .icon-cog:before, .icon-AdminAdmin:before, .bootstrap .process-icon-configure:before { content: "\f013"; }
 
-.icon-trash:before, .bootstrap .process-icon-delete:before, .bootstrap .process-icon-uninstall:before { content: "\f014"; }
+.icon-trash-o:before, .icon-trash:before, .bootstrap .process-icon-delete:before, .bootstrap .process-icon-uninstall:before { content: "\f014"; }
 
 .icon-home:before { content: "\f015"; }
 
-.icon-file-alt:before { content: "\f016"; }
+.icon-file-o:before, .icon-file-alt:before { content: "\f016"; }
 
-.icon-time:before { content: "\f017"; }
+.icon-clock-o:before, .icon-time:before { content: "\f017"; }
 
 .icon-road:before { content: "\f018"; }
 
-.icon-download-alt:before, .bootstrap .process-icon-download-alt:before { content: "\f019"; }
+.icon-download:before, .icon-download-alt:before, .bootstrap .process-icon-download-alt:before, .bootstrap .process-icon-save-date:before, .bootstrap .process-icon-save-status:before { content: "\f019"; }
 
-.icon-download:before, .bootstrap .process-icon-save-date:before, .bootstrap .process-icon-save-status:before { content: "\f01a"; }
+.icon-arrow-circle-o-down:before, .icon-download:before, .icon-download-alt:before, .bootstrap .process-icon-download-alt:before, .bootstrap .process-icon-save-date:before, .bootstrap .process-icon-save-status:before { content: "\f01a"; }
 
-.icon-upload:before { content: "\f01b"; }
+.icon-arrow-circle-o-up:before, .icon-upload:before, .icon-upload-alt:before { content: "\f01b"; }
 
 .icon-inbox:before { content: "\f01c"; }
 
-.icon-play-circle:before { content: "\f01d"; }
+.icon-play-circle-o:before, .icon-play-circle:before, .icon-play-sign:before { content: "\f01d"; }
 
 .icon-rotate-right:before, .icon-repeat:before { content: "\f01e"; }
 
@@ -270,13 +185,13 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-list:before { content: "\f03a"; }
 
-.icon-indent-left:before { content: "\f03b"; }
+.icon-dedent:before, .icon-outdent:before, .icon-indent-left:before { content: "\f03b"; }
 
-.icon-indent-right:before { content: "\f03c"; }
+.icon-indent:before, .icon-indent-right:before { content: "\f03c"; }
 
-.icon-facetime-video:before { content: "\f03d"; }
+.icon-video-camera:before, .icon-facetime-video:before { content: "\f03d"; }
 
-.icon-picture:before { content: "\f03e"; }
+.icon-picture-o:before, .icon-picture:before { content: "\f03e"; }
 
 .icon-pencil:before { content: "\f040"; }
 
@@ -286,13 +201,13 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-tint:before { content: "\f043"; }
 
-.icon-edit:before, .bootstrap .process-icon-edit:before { content: "\f044"; }
+.icon-edit:before, .bootstrap .process-icon-edit:before, .icon-pencil-square-o:before, .icon-edit:before, .bootstrap .process-icon-edit:before { content: "\f044"; }
 
-.icon-share:before { content: "\f045"; }
+.icon-share-square-o:before, .icon-share:before, .icon-share-alt:before { content: "\f045"; }
 
-.icon-check:before { content: "\f046"; }
+.icon-check-square-o:before, .icon-check:before, .icon-ok:before, .bootstrap .process-icon-ok:before { content: "\f046"; }
 
-.icon-move:before { content: "\f047"; }
+.icon-arrows:before, .icon-move:before { content: "\f047"; }
 
 .icon-step-backward:before { content: "\f048"; }
 
@@ -318,25 +233,25 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-chevron-right:before { content: "\f054"; }
 
-.icon-plus-sign:before, .bootstrap .process-icon-newCombination.toolbar-new:before, .bootstrap .process-icon-plus:before { content: "\f055"; }
+.icon-plus-circle:before, .icon-plus-sign:before, .bootstrap .process-icon-newCombination.toolbar-new:before, .bootstrap .process-icon-plus:before { content: "\f055"; }
 
-.icon-minus-sign:before, .bootstrap .process-icon-newCombination.toolbar-cancel:before, .bootstrap .process-icon-minus:before { content: "\f056"; }
+.icon-minus-circle:before, .icon-minus-sign:before, .bootstrap .process-icon-newCombination.toolbar-cancel:before, .bootstrap .process-icon-minus:before { content: "\f056"; }
 
-.icon-remove-sign:before { content: "\f057"; }
+.icon-times-circle:before, .icon-remove-sign:before { content: "\f057"; }
 
-.icon-ok-sign:before { content: "\f058"; }
+.icon-check-circle:before, .icon-ok-sign:before { content: "\f058"; }
 
-.icon-question-sign:before, .bootstrap .process-icon-help:before, .bootstrap .process-icon-help-new:before { content: "\f059"; }
+.icon-question-circle:before, .icon-question-sign:before, .bootstrap .process-icon-help:before, .bootstrap .process-icon-help-new:before { content: "\f059"; }
 
-.icon-info-sign:before { content: "\f05a"; }
+.icon-info-circle:before, .icon-info-sign:before { content: "\f05a"; }
 
-.icon-screenshot:before { content: "\f05b"; }
+.icon-crosshairs:before, .icon-screenshot:before { content: "\f05b"; }
 
-.icon-remove-circle:before { content: "\f05c"; }
+.icon-times-circle-o:before, .icon-remove-circle:before { content: "\f05c"; }
 
-.icon-ok-circle:before { content: "\f05d"; }
+.icon-check-circle-o:before, .icon-ok-circle:before { content: "\f05d"; }
 
-.icon-ban-circle:before { content: "\f05e"; }
+.icon-ban:before, .icon-ban-circle:before { content: "\f05e"; }
 
 .icon-arrow-left:before { content: "\f060"; }
 
@@ -346,11 +261,11 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-arrow-down:before { content: "\f063"; }
 
-.icon-mail-forward:before, .icon-share-alt:before { content: "\f064"; }
+.icon-mail-forward:before, .icon-share:before, .icon-share-alt:before { content: "\f064"; }
 
-.icon-resize-full:before { content: "\f065"; }
+.icon-expand:before, .icon-resize-full:before { content: "\f065"; }
 
-.icon-resize-small:before { content: "\f066"; }
+.icon-compress:before, .icon-resize-small:before { content: "\f066"; }
 
 .icon-plus:before, .bootstrap .process-icon-new-module:before { content: "\f067"; }
 
@@ -358,7 +273,7 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-asterisk:before { content: "\f069"; }
 
-.icon-exclamation-sign:before { content: "\f06a"; }
+.icon-exclamation-circle:before, .icon-exclamation-sign:before { content: "\f06a"; }
 
 .icon-gift:before { content: "\f06b"; }
 
@@ -366,11 +281,11 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-fire:before { content: "\f06d"; }
 
-.icon-eye-open:before, .bootstrap .process-icon-preview:before, .bootstrap .process-icon-previewURL:before { content: "\f06e"; }
+.icon-eye:before, .icon-eye-open:before, .bootstrap .process-icon-preview:before, .bootstrap .process-icon-previewURL:before { content: "\f06e"; }
 
-.icon-eye-close:before { content: "\f070"; }
+.icon-eye-slash:before, .icon-eye-close:before { content: "\f070"; }
 
-.icon-warning-sign:before { content: "\f071"; }
+.icon-warning:before, .icon-exclamation-triangle:before, .icon-warning-sign:before { content: "\f071"; }
 
 .icon-plane:before { content: "\f072"; }
 
@@ -390,19 +305,19 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-shopping-cart:before { content: "\f07a"; }
 
-.icon-folder-close:before { content: "\f07b"; }
+.icon-folder:before, .icon-folder-close:before { content: "\f07b"; }
 
 .icon-folder-open:before { content: "\f07c"; }
 
-.icon-resize-vertical:before { content: "\f07d"; }
+.icon-arrows-v:before, .icon-resize-vertical:before { content: "\f07d"; }
 
-.icon-resize-horizontal:before { content: "\f07e"; }
+.icon-arrows-h:before, .icon-resize-horizontal:before { content: "\f07e"; }
 
-.icon-bar-chart:before, .icon-AdminParentStats:before, .bootstrap .process-icon-stats:before { content: "\f080"; }
+.icon-bar-chart-o:before, .icon-bar-chart:before, .icon-AdminParentStats:before, .bootstrap .process-icon-stats:before { content: "\f080"; }
 
-.icon-twitter-sign:before { content: "\f081"; }
+.icon-twitter-square:before, .icon-twitter-sign:before { content: "\f081"; }
 
-.icon-facebook-sign:before { content: "\f082"; }
+.icon-facebook-square:before, .icon-facebook-sign:before { content: "\f082"; }
 
 .icon-camera-retro:before { content: "\f083"; }
 
@@ -412,39 +327,39 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-comments:before { content: "\f086"; }
 
-.icon-thumbs-up-alt:before { content: "\f087"; }
+.icon-thumbs-o-up:before, .icon-thumbs-up-alt:before { content: "\f087"; }
 
-.icon-thumbs-down-alt:before { content: "\f088"; }
+.icon-thumbs-o-down:before, .icon-thumbs-down-alt:before { content: "\f088"; }
 
 .icon-star-half:before { content: "\f089"; }
 
-.icon-heart-empty:before { content: "\f08a"; }
+.icon-heart-o:before, .icon-heart-empty:before { content: "\f08a"; }
 
-.icon-signout:before { content: "\f08b"; }
+.icon-sign-out:before, .icon-signout:before { content: "\f08b"; }
 
-.icon-linkedin-sign:before { content: "\f08c"; }
+.icon-linkedin-square:before, .icon-linkedin-sign:before { content: "\f08c"; }
 
-.icon-pushpin:before { content: "\f08d"; }
+.icon-thumb-tack:before, .icon-pushpin:before { content: "\f08d"; }
 
 .icon-external-link:before { content: "\f08e"; }
 
-.icon-signin:before { content: "\f090"; }
+.icon-sign-in:before, .icon-signin:before { content: "\f090"; }
 
 .icon-trophy:before { content: "\f091"; }
 
-.icon-github-sign:before { content: "\f092"; }
+.icon-github-square:before, .icon-github-sign:before { content: "\f092"; }
 
-.icon-upload-alt:before { content: "\f093"; }
+.icon-upload:before, .icon-upload-alt:before { content: "\f093"; }
 
-.icon-lemon:before { content: "\f094"; }
+.icon-lemon-o:before, .icon-lemon:before { content: "\f094"; }
 
 .icon-phone:before { content: "\f095"; }
 
-.icon-unchecked:before, .icon-check-empty:before { content: "\f096"; }
+.icon-square-o:before, .icon-check-empty:before { content: "\f096"; }
 
-.icon-bookmark-empty:before { content: "\f097"; }
+.icon-bookmark-o:before, .icon-bookmark-empty:before { content: "\f097"; }
 
-.icon-phone-sign:before { content: "\f098"; }
+.icon-phone-square:before, .icon-phone-sign:before { content: "\f098"; }
 
 .icon-twitter:before { content: "\f099"; }
 
@@ -458,29 +373,29 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-rss:before { content: "\f09e"; }
 
-.icon-hdd:before { content: "\f0a0"; }
+.icon-hdd-o:before, .icon-hdd:before { content: "\f0a0"; }
 
 .icon-bullhorn:before { content: "\f0a1"; }
 
-.icon-bell:before { content: "\f0a2"; }
+.icon-bell:before, .icon-bell-alt:before { content: "\f0f3"; }
 
 .icon-certificate:before { content: "\f0a3"; }
 
-.icon-hand-right:before { content: "\f0a4"; }
+.icon-hand-o-right:before, .icon-hand-right:before { content: "\f0a4"; }
 
-.icon-hand-left:before { content: "\f0a5"; }
+.icon-hand-o-left:before, .icon-hand-left:before { content: "\f0a5"; }
 
-.icon-hand-up:before { content: "\f0a6"; }
+.icon-hand-o-up:before, .icon-hand-up:before { content: "\f0a6"; }
 
-.icon-hand-down:before { content: "\f0a7"; }
+.icon-hand-o-down:before, .icon-hand-down:before { content: "\f0a7"; }
 
-.icon-circle-arrow-left:before, .bootstrap .process-icon-back:before { content: "\f0a8"; }
+.icon-arrow-circle-left:before, .icon-circle-arrow-left:before, .bootstrap .process-icon-back:before { content: "\f0a8"; }
 
-.icon-circle-arrow-right:before, .bootstrap .process-icon-next:before { content: "\f0a9"; }
+.icon-arrow-circle-right:before, .icon-circle-arrow-right:before, .bootstrap .process-icon-next:before { content: "\f0a9"; }
 
-.icon-circle-arrow-up:before { content: "\f0aa"; }
+.icon-arrow-circle-up:before, .icon-circle-arrow-up:before { content: "\f0aa"; }
 
-.icon-circle-arrow-down:before { content: "\f0ab"; }
+.icon-arrow-circle-down:before, .icon-circle-arrow-down:before { content: "\f0ab"; }
 
 .icon-globe:before, .icon-AdminParentLocalization:before { content: "\f0ac"; }
 
@@ -492,27 +407,27 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-briefcase:before { content: "\f0b1"; }
 
-.icon-fullscreen:before { content: "\f0b2"; }
+.icon-arrows-alt:before, .icon-fullscreen:before { content: "\f0b2"; }
 
-.icon-group:before, .icon-AdminParentCustomer:before { content: "\f0c0"; }
+.icon-group:before, .icon-AdminParentCustomer:before, .icon-users:before, .icon-group:before, .icon-AdminParentCustomer:before { content: "\f0c0"; }
 
-.icon-link:before { content: "\f0c1"; }
+.icon-chain:before, .icon-link:before { content: "\f0c1"; }
 
 .icon-cloud:before { content: "\f0c2"; }
 
-.icon-beaker:before { content: "\f0c3"; }
+.icon-flask:before, .icon-beaker:before { content: "\f0c3"; }
 
-.icon-cut:before { content: "\f0c4"; }
+.icon-cut:before, .icon-scissors:before, .icon-cut:before { content: "\f0c4"; }
 
-.icon-copy:before, .bootstrap .process-icon-duplicate:before { content: "\f0c5"; }
+.icon-copy:before, .bootstrap .process-icon-duplicate:before, .icon-files-o:before, .icon-copy:before, .bootstrap .process-icon-duplicate:before { content: "\f0c5"; }
 
 .icon-paperclip:before, .icon-paper-clip:before { content: "\f0c6"; }
 
-.icon-save:before, .bootstrap .process-icon-save:before, .bootstrap .process-icon-save-and-stay:before, .bootstrap .process-icon-save-and-preview:before { content: "\f0c7"; }
+.icon-save:before, .bootstrap .process-icon-save:before, .bootstrap .process-icon-save-and-stay:before, .bootstrap .process-icon-save-and-preview:before, .icon-floppy-o:before, .icon-save:before, .bootstrap .process-icon-save:before, .bootstrap .process-icon-save-and-stay:before, .bootstrap .process-icon-save-and-preview:before { content: "\f0c7"; }
 
-.icon-sign-blank:before { content: "\f0c8"; }
+.icon-square:before, .icon-sign-blank:before { content: "\f0c8"; }
 
-.icon-reorder:before { content: "\f0c9"; }
+.icon-bars:before, .icon-reorder:before { content: "\f0c9"; }
 
 .icon-list-ul:before { content: "\f0ca"; }
 
@@ -530,9 +445,9 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-pinterest:before { content: "\f0d2"; }
 
-.icon-pinterest-sign:before { content: "\f0d3"; }
+.icon-pinterest-square:before, .icon-pinterest-sign:before { content: "\f0d3"; }
 
-.icon-google-plus-sign:before { content: "\f0d4"; }
+.icon-google-plus-square:before, .icon-google-plus-sign:before { content: "\f0d4"; }
 
 .icon-google-plus:before { content: "\f0d5"; }
 
@@ -548,11 +463,11 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-columns:before { content: "\f0db"; }
 
-.icon-sort:before { content: "\f0dc"; }
+.icon-unsorted:before, .icon-sort:before { content: "\f0dc"; }
 
-.icon-sort-down:before { content: "\f0dd"; }
+.icon-sort-down:before, .icon-sort-asc:before, .icon-sort-down:before { content: "\f0dd"; }
 
-.icon-sort-up:before { content: "\f0de"; }
+.icon-sort-up:before, .icon-sort-desc:before, .icon-sort-up:before { content: "\f0de"; }
 
 .icon-envelope:before { content: "\f0e0"; }
 
@@ -560,23 +475,23 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-rotate-left:before, .bootstrap .process-icon-reset:before, .icon-undo:before { content: "\f0e2"; }
 
-.icon-legal:before { content: "\f0e3"; }
+.icon-legal:before, .icon-gavel:before, .icon-legal:before { content: "\f0e3"; }
 
-.icon-dashboard:before, .icon-AdminDashboard:before { content: "\f0e4"; }
+.icon-dashboard:before, .icon-AdminDashboard:before, .icon-tachometer:before, .icon-dashboard:before, .icon-AdminDashboard:before { content: "\f0e4"; }
 
-.icon-comment-alt:before { content: "\f0e5"; }
+.icon-comment-o:before, .icon-comment-alt:before { content: "\f0e5"; }
 
-.icon-comments-alt:before { content: "\f0e6"; }
+.icon-comments-o:before, .icon-comments-alt:before { content: "\f0e6"; }
 
-.icon-bolt:before { content: "\f0e7"; }
+.icon-flash:before, .icon-bolt:before { content: "\f0e7"; }
 
 .icon-sitemap:before { content: "\f0e8"; }
 
 .icon-umbrella:before { content: "\f0e9"; }
 
-.icon-paste:before { content: "\f0ea"; }
+.icon-paste:before, .icon-clipboard:before, .icon-paste:before { content: "\f0ea"; }
 
-.icon-lightbulb:before { content: "\f0eb"; }
+.icon-lightbulb-o:before, .icon-lightbulb:before { content: "\f0eb"; }
 
 .icon-exchange:before, .bootstrap .process-icon-partial_refund:before { content: "\f0ec"; }
 
@@ -590,17 +505,17 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-suitcase:before { content: "\f0f2"; }
 
-.icon-bell-alt:before { content: "\f0f3"; }
+.icon-bell-o:before, .icon-bell:before, .icon-bell-alt:before { content: "\f0a2"; }
 
 .icon-coffee:before { content: "\f0f4"; }
 
-.icon-food:before { content: "\f0f5"; }
+.icon-cutlery:before, .icon-food:before { content: "\f0f5"; }
 
-.icon-file-text-alt:before { content: "\f0f6"; }
+.icon-file-text-o:before, .icon-file-text-alt:before { content: "\f0f6"; }
 
-.icon-building:before { content: "\f0f7"; }
+.icon-building-o:before, .icon-building:before { content: "\f0f7"; }
 
-.icon-hospital:before { content: "\f0f8"; }
+.icon-hospital-o:before, .icon-hospital:before { content: "\f0f8"; }
 
 .icon-ambulance:before { content: "\f0f9"; }
 
@@ -610,17 +525,17 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-beer:before { content: "\f0fc"; }
 
-.icon-h-sign:before { content: "\f0fd"; }
+.icon-h-square:before, .icon-h-sign:before { content: "\f0fd"; }
 
-.icon-plus-sign-alt:before, .bootstrap .process-icon-newAttributes:before, .bootstrap .process-icon-new:before, .bootstrap .process-icon-new-url:before { content: "\f0fe"; }
+.icon-plus-square:before, .icon-plus-sign-alt:before, .bootstrap .process-icon-newAttributes:before, .bootstrap .process-icon-new:before, .bootstrap .process-icon-new-url:before { content: "\f0fe"; }
 
-.icon-double-angle-left:before { content: "\f100"; }
+.icon-angle-double-left:before, .icon-double-angle-left:before { content: "\f100"; }
 
-.icon-double-angle-right:before { content: "\f101"; }
+.icon-angle-double-right:before, .icon-double-angle-right:before { content: "\f101"; }
 
-.icon-double-angle-up:before { content: "\f102"; }
+.icon-angle-double-up:before, .icon-double-angle-up:before { content: "\f102"; }
 
-.icon-double-angle-down:before { content: "\f103"; }
+.icon-angle-double-down:before, .icon-double-angle-down:before { content: "\f103"; }
 
 .icon-angle-left:before { content: "\f104"; }
 
@@ -636,9 +551,9 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-tablet:before { content: "\f10a"; }
 
-.icon-mobile-phone:before { content: "\f10b"; }
+.icon-mobile-phone:before, .icon-mobile:before, .icon-mobile-phone:before { content: "\f10b"; }
 
-.icon-circle-blank:before { content: "\f10c"; }
+.icon-circle-o:before, .icon-circle-blank:before { content: "\f10c"; }
 
 .icon-quote-left:before { content: "\f10d"; }
 
@@ -652,25 +567,21 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-github-alt:before { content: "\f113"; }
 
-.icon-folder-close-alt:before { content: "\f114"; }
+.icon-folder-o:before, .icon-folder-close-alt:before { content: "\f114"; }
 
-.icon-folder-open-alt:before { content: "\f115"; }
+.icon-folder-open-o:before, .icon-folder-open-alt:before { content: "\f115"; }
 
-.icon-expand-alt:before { content: "\f116"; }
+.icon-smile-o:before, .icon-smile:before { content: "\f118"; }
 
-.icon-collapse-alt:before { content: "\f117"; }
+.icon-frown-o:before, .icon-frown:before { content: "\f119"; }
 
-.icon-smile:before { content: "\f118"; }
-
-.icon-frown:before { content: "\f119"; }
-
-.icon-meh:before { content: "\f11a"; }
+.icon-meh-o:before, .icon-meh:before { content: "\f11a"; }
 
 .icon-gamepad:before { content: "\f11b"; }
 
-.icon-keyboard:before { content: "\f11c"; }
+.icon-keyboard-o:before, .icon-keyboard:before { content: "\f11c"; }
 
-.icon-flag-alt:before { content: "\f11d"; }
+.icon-flag-o:before, .icon-flag-alt:before { content: "\f11d"; }
 
 .icon-flag-checkered:before { content: "\f11e"; }
 
@@ -682,7 +593,7 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-mail-reply-all:before { content: "\f122"; }
 
-.icon-star-half-full:before, .icon-star-half-empty:before { content: "\f123"; }
+.icon-star-half-empty:before, .icon-star-half-full:before, .icon-star-half-o:before, .icon-star-half-empty:before { content: "\f123"; }
 
 .icon-location-arrow:before { content: "\f124"; }
 
@@ -690,7 +601,7 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-code-fork:before { content: "\f126"; }
 
-.icon-unlink:before { content: "\f127"; }
+.icon-unlink:before, .icon-chain-broken:before, .icon-unlink:before { content: "\f127"; }
 
 .icon-question:before { content: "\f128"; }
 
@@ -708,11 +619,11 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-microphone:before { content: "\f130"; }
 
-.icon-microphone-off:before { content: "\f131"; }
+.icon-microphone-slash:before, .icon-microphone-off:before { content: "\f131"; }
 
 .icon-shield:before { content: "\f132"; }
 
-.icon-calendar-empty:before { content: "\f133"; }
+.icon-calendar-o:before, .icon-calendar-empty:before { content: "\f133"; }
 
 .icon-fire-extinguisher:before { content: "\f134"; }
 
@@ -720,13 +631,13 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-maxcdn:before { content: "\f136"; }
 
-.icon-chevron-sign-left:before { content: "\f137"; }
+.icon-chevron-circle-left:before, .icon-chevron-sign-left:before { content: "\f137"; }
 
-.icon-chevron-sign-right:before { content: "\f138"; }
+.icon-chevron-circle-right:before, .icon-chevron-sign-right:before { content: "\f138"; }
 
-.icon-chevron-sign-up:before { content: "\f139"; }
+.icon-chevron-circle-up:before, .icon-chevron-sign-up:before { content: "\f139"; }
 
-.icon-chevron-sign-down:before { content: "\f13a"; }
+.icon-chevron-circle-down:before, .icon-chevron-sign-down:before { content: "\f13a"; }
 
 .icon-html5:before { content: "\f13b"; }
 
@@ -738,39 +649,39 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-bullseye:before { content: "\f140"; }
 
-.icon-ellipsis-horizontal:before { content: "\f141"; }
+.icon-ellipsis-h:before, .icon-ellipsis-horizontal:before { content: "\f141"; }
 
-.icon-ellipsis-vertical:before { content: "\f142"; }
+.icon-ellipsis-v:before, .icon-ellipsis-vertical:before { content: "\f142"; }
 
-.icon-rss-sign:before { content: "\f143"; }
+.icon-rss-square:before, .icon-rss-sign:before { content: "\f143"; }
 
-.icon-play-sign:before { content: "\f144"; }
+.icon-play-circle:before, .icon-play-sign:before { content: "\f144"; }
 
 .icon-ticket:before { content: "\f145"; }
 
-.icon-minus-sign-alt:before { content: "\f146"; }
+.icon-minus-square:before, .icon-minus-sign-alt:before { content: "\f146"; }
 
-.icon-check-minus:before { content: "\f147"; }
+.icon-minus-square-o:before, .icon-check-minus:before, .icon-collapse-alt:before { content: "\f147"; }
 
 .icon-level-up:before { content: "\f148"; }
 
 .icon-level-down:before { content: "\f149"; }
 
-.icon-check-sign:before { content: "\f14a"; }
+.icon-check-square:before, .icon-check-sign:before { content: "\f14a"; }
 
-.icon-edit-sign:before { content: "\f14b"; }
+.icon-pencil-square:before, .icon-edit-sign:before { content: "\f14b"; }
 
-.icon-external-link-sign:before { content: "\f14c"; }
+.icon-external-link-square:before, .icon-external-link-sign:before { content: "\f14c"; }
 
-.icon-share-sign:before { content: "\f14d"; }
+.icon-share-square:before, .icon-share-sign:before { content: "\f14d"; }
 
 .icon-compass:before { content: "\f14e"; }
 
-.icon-collapse:before { content: "\f150"; }
+.icon-toggle-down:before, .icon-caret-square-o-down:before, .icon-collapse:before { content: "\f150"; }
 
-.icon-collapse-top:before { content: "\f151"; }
+.icon-toggle-up:before, .icon-caret-square-o-up:before, .icon-collapse-top:before { content: "\f151"; }
 
-.icon-expand:before { content: "\f152"; }
+.icon-toggle-right:before, .icon-caret-square-o-right:before, .icon-expand:before, .icon-resize-full:before { content: "\f152"; }
 
 .icon-euro:before, .icon-eur:before { content: "\f153"; }
 
@@ -780,9 +691,9 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-rupee:before, .icon-inr:before { content: "\f156"; }
 
-.icon-yen:before, .icon-jpy:before { content: "\f157"; }
+.icon-cny:before, .icon-rmb:before, .icon-yen:before, .icon-jpy:before { content: "\f157"; }
 
-.icon-renminbi:before, .icon-cny:before { content: "\f158"; }
+.icon-ruble:before, .icon-rouble:before, .icon-rub:before, .icon-cny:before { content: "\f158"; }
 
 .icon-won:before, .icon-krw:before { content: "\f159"; }
 
@@ -792,35 +703,35 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-file-text:before { content: "\f15c"; }
 
-.icon-sort-by-alphabet:before { content: "\f15d"; }
+.icon-sort-alpha-asc:before, .icon-sort-by-alphabet:before { content: "\f15d"; }
 
-.icon-sort-by-alphabet-alt:before { content: "\f15e"; }
+.icon-sort-alpha-desc:before, .icon-sort-by-alphabet-alt:before { content: "\f15e"; }
 
-.icon-sort-by-attributes:before { content: "\f160"; }
+.icon-sort-amount-asc:before, .icon-sort-by-attributes:before { content: "\f160"; }
 
-.icon-sort-by-attributes-alt:before { content: "\f161"; }
+.icon-sort-amount-desc:before, .icon-sort-by-attributes-alt:before { content: "\f161"; }
 
-.icon-sort-by-order:before { content: "\f162"; }
+.icon-sort-numeric-asc:before, .icon-sort-by-order:before { content: "\f162"; }
 
-.icon-sort-by-order-alt:before { content: "\f163"; }
+.icon-sort-numeric-desc:before, .icon-sort-by-order-alt:before { content: "\f163"; }
 
 .icon-thumbs-up:before { content: "\f164"; }
 
 .icon-thumbs-down:before { content: "\f165"; }
 
-.icon-youtube-sign:before { content: "\f166"; }
+.icon-youtube-square:before, .icon-youtube-sign:before { content: "\f166"; }
 
 .icon-youtube:before { content: "\f167"; }
 
 .icon-xing:before { content: "\f168"; }
 
-.icon-xing-sign:before { content: "\f169"; }
+.icon-xing-square:before, .icon-xing-sign:before { content: "\f169"; }
 
 .icon-youtube-play:before { content: "\f16a"; }
 
 .icon-dropbox:before { content: "\f16b"; }
 
-.icon-stackexchange:before { content: "\f16c"; }
+.icon-stack-overflow:before, .icon-stackexchange:before { content: "\f16c"; }
 
 .icon-instagram:before { content: "\f16d"; }
 
@@ -830,11 +741,11 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-bitbucket:before { content: "\f171"; }
 
-.icon-bitbucket-sign:before { content: "\f172"; }
+.icon-bitbucket-square:before, .icon-bitbucket-sign:before { content: "\f172"; }
 
 .icon-tumblr:before { content: "\f173"; }
 
-.icon-tumblr-sign:before { content: "\f174"; }
+.icon-tumblr-square:before, .icon-tumblr-sign:before { content: "\f174"; }
 
 .icon-long-arrow-down:before { content: "\f175"; }
 
@@ -866,9 +777,9 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 
 .icon-gittip:before { content: "\f184"; }
 
-.icon-sun:before { content: "\f185"; }
+.icon-sun-o:before, .icon-sun:before { content: "\f185"; }
 
-.icon-moon:before { content: "\f186"; }
+.icon-moon-o:before, .icon-moon:before { content: "\f186"; }
 
 .icon-archive:before, .icon-AdminStock:before { content: "\f187"; }
 
@@ -879,6 +790,26 @@ a .icon-rotate-90:before, a .icon-rotate-180:before, a .icon-rotate-270:before, 
 .icon-weibo:before { content: "\f18a"; }
 
 .icon-renren:before { content: "\f18b"; }
+
+.icon-pagelines:before { content: "\f18c"; }
+
+.icon-stack-exchange:before { content: "\f18d"; }
+
+.icon-arrow-circle-o-right:before { content: "\f18e"; }
+
+.icon-arrow-circle-o-left:before { content: "\f190"; }
+
+.icon-toggle-left:before, .icon-caret-square-o-left:before { content: "\f191"; }
+
+.icon-dot-circle-o:before { content: "\f192"; }
+
+.icon-wheelchair:before { content: "\f193"; }
+
+.icon-vimeo-square:before { content: "\f194"; }
+
+.icon-turkish-lira:before, .icon-try:before { content: "\f195"; }
+
+.icon-plus-square-o:before { content: "\f196"; }
 
 @-webkit-keyframes fadeIn { 0% { opacity: 0; }
   100% { opacity: 1; } }
@@ -3010,7 +2941,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .toolbar_btn { display: block; height: 46px; position: relative; padding: 2px 5px !important; margin-right: 3px; font-size: 12px; color: white; text-align: center; text-shadow: none; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 992px) { .bootstrap .toolbar_btn { width: 46px; border: solid 1px #73a232; font-size: 11px; } }
 .bootstrap .toolbar_btn:hover { color: #8fc04d; border-color: white; background-color: white !important; }
-.bootstrap [class^="process-icon-"], .bootstrap [class*=" process-icon-"] { height: 25px; min-width: 32px; background-position: center; background-repeat: no-repeat; display: block; font-family: FontAwesome; font-style: normal; font-size: 25px; line-height: 25px; text-decoration: inherit; -webkit-font-smoothing: antialiased; *margin-right: 0.3em; }
+.bootstrap [class^="process-icon-"], .bootstrap [class*=" process-icon-"] { display: block; }
 .bootstrap .page-header-toolbar-back { border: none !important; display: inline-block; }
 .bootstrap #datepicker .input-selected { margin: 0; }
 .bootstrap #datepicker #date-start.input-selected, .bootstrap #datepicker #date-end.input-selected { border: solid 3px #00a4e7; }
