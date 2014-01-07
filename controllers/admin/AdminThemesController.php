@@ -652,18 +652,18 @@ class AdminThemesControllerCore extends AdminController
 		if (empty($this->display))
 		{
 			$this->page_header_toolbar_btn['new_theme'] = array(
-				'href' => self::$currentIndex.'&amp;addtheme&amp;token='.$this->token,
-				'desc' => $this->l('Add new theme'),
+				'href' => self::$currentIndex.'&addtheme&token='.$this->token,
+				'desc' => $this->l('Add new theme', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 			$this->page_header_toolbar_btn['import_theme'] = array(
-				'href' => self::$currentIndex . '&amp;action=importtheme&amp;token=' . $this->token,
-				'desc' => $this->l('import new theme'),
+				'href' => self::$currentIndex . '&action=importtheme&token=' . $this->token,
+				'desc' => $this->l('import new theme', null, null, false),
 				'icon' => 'process-icon-upload'
 			);
 			$this->page_header_toolbar_btn['export_theme'] = array(
-				'href' => self::$currentIndex . '&amp;action=exporttheme&amp;token=' . $this->token,
-				'desc' => $this->l('export theme'),
+				'href' => self::$currentIndex . '&action=exporttheme&token=' . $this->token,
+				'desc' => $this->l('export theme', null, null, false),
 				'icon' => 'process-icon-download'
 			);
 		}

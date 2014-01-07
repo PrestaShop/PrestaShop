@@ -74,8 +74,8 @@ class AdminSuppliersControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_supplier'] = array(
-				'href' => self::$currentIndex.'&amp;addsupplier&amp;token='.$this->token,
-				'desc' => $this->l('Add new supplier'),
+				'href' => self::$currentIndex.'&addsupplier&token='.$this->token,
+				'desc' => $this->l('Add new supplier', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 

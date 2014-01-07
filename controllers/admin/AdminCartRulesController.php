@@ -61,8 +61,8 @@ class AdminCartRulesControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_cart_rule'] = array(
-				'href' => self::$currentIndex.'&amp;addcart_rule&amp;token='.$this->token,
-				'desc' => $this->l('Add new cart rule'),
+				'href' => self::$currentIndex.'&addcart_rule&token='.$this->token,
+				'desc' => $this->l('Add new cart rule', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 

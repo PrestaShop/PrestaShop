@@ -115,7 +115,7 @@ class AdminCarriersControllerCore extends AdminController
 		$this->page_header_toolbar_title = $this->l('Carriers');
 		$this->page_header_toolbar_btn['new_carrier'] = array(
 			'href' => $this->context->link->getAdminLink('AdminCarrierWizard'),
-			'desc' => $this->l('Add new carrier'),
+			'desc' => $this->l('Add new carrier', null, null, false),
 			'icon' => 'process-icon-new'
 		);
 
