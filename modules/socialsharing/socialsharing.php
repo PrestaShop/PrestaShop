@@ -79,7 +79,10 @@ class SocialSharing extends Module
 		// The module will then be hooked on the product and comparison pages
 		$this->registerHook('displayRightColumnProduct');
 		$this->registerHook('displayCompareExtraInformation');
-		
+
+		// The module will then be hooked and accessible with Smarty function
+		$this->registerHook('displaySocialSharing');
+
 		return true;
 	}
 
@@ -161,7 +164,7 @@ class SocialSharing extends Module
 		return $this->display(__FILE__, 'socialsharing_header.tpl', $this->getCacheId('socialsharing_header|'.(int)$product->id));
 	}
 
-	protected function displaySocialSharing()
+	public function hookDisplaySocialSharing()
 	{
 		if (!$this->isCached('socialsharing.tpl', $this->getCacheId()))
 		{
@@ -197,44 +200,44 @@ class SocialSharing extends Module
 
 	public function hookDisplayRightColumnProduct($params)
 	{
-		return $this->displaySocialSharing();
+		return $this->hookDisplaySocialSharing();
 	}
 
 	public function hookLeftColumn($params)
 	{
-		return $this->displaySocialSharing();
+		return $this->hookDisplaySocialSharing();
 	}
 
 	public function hookFooter($params)
 	{
-		return $this->displaySocialSharing();
+		return $this->hookDisplaySocialSharing();
 	}
-	
+
 	public function hookHome($params)
 	{
-		return $this->displaySocialSharing();
+		return $this->hookDisplaySocialSharing();
 	}
 
 	public function hookExtraleft($params)
 	{
-		return $this->displaySocialSharing();
+		return $this->hookDisplaySocialSharing();
 	}
 
 	public function hookProductActions($params)
 	{
-		return $this->displaySocialSharing();
+		return $this->hookDisplaySocialSharing();
 	}
-	
+
 	public function hookProductFooter($params)
 	{
-		return $this->displaySocialSharing();
+		return $this->hookDisplaySocialSharing();
 	}
 
 	public function hookActionObjectProductUpdateAfter($params)
 	{
 		return $this->clearProductHeaderCache($params['object']->id);
 	}
-	
+
 	public function hookActionObjectProductDeleteAfter($params)
 	{
 		return $this->clearProductHeaderCache($params['object']->id);
