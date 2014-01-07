@@ -89,8 +89,8 @@
 	{else}
 		<div class="row alert alert-warning">{l s='No filter template found.' mod='blocklayered'}</div>
 	{/if}
-	<div class="row">
-		<a class="btn btn-default" href="{$current_url}&add_new_filters_template=1"><i class="icon-plus"></i> {l s='Add new filters template' mod='blocklayered'}</a>
+	<div class="panel-footer">
+		<a class="btn btn-default pull-right" href="{$current_url}&add_new_filters_template=1"><i class="process-icon-plus"></i> {l s='Add new template' mod='blocklayered'}</a>
 	</div>
 </div>
 <div class="panel">
@@ -262,10 +262,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-lg-9 col-lg-offset-3">
-				<button type="submit" class="btn btn-default" name="submitLayeredSettings"><i class="icon-save"></i> {l s='Save configuration' mod='blocklayered'}</button>
-			</div>
+		<div class="panel-footer">
+			<button type="submit" class="btn btn-default pull-right" name="submitLayeredSettings"><i class="process-icon-save"></i> {l s='Save' mod='blocklayered'}</button>
 		</div>
 	</form>
 </div>
