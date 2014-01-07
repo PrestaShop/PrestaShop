@@ -965,10 +965,7 @@ class Mobile_Detect
      */
     public function match($regex, $userAgent = null)
     {
-        // Escape the special character which is the delimiter.
-        $regex = str_replace('/', '\/', $regex);
-
-        return (bool) preg_match('/'.$regex.'/is', (!empty($userAgent) ? $userAgent : $this->userAgent));
+        return (bool)preg_match('/'.preg_quote($regex, '/').'/is', $userAgent ? $userAgent : $this->userAgent);
     }
 
     /**
