@@ -54,13 +54,6 @@ class AdminTabsControllerCore extends AdminController
 			'name' => array(
 				'title' => $this->l('Name')
 			),
-			'logo' => array(
-				'title' => $this->l('Icon'),
-				'image' => 't',
-				'image_id' => 'class_name',
-				'orderby' => false,
-				'search' => false
-			),
 			'module' => array(
 				'title' => $this->l('Module')
 			),
@@ -152,12 +145,6 @@ class AdminTabsControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Module:'),
 					'name' => 'module'
-				),
-				array(
-					'type' => 'file',
-					'label' => $this->l('Icon:'),
-					'name' => 'icon',
-					'hint' => $this->l('Upload a logo from your computer (.gif, .jpg, .jpeg or .png).')
 				),
 				array(
 					'type' => 'switch',
