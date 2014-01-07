@@ -327,9 +327,9 @@ var generated_date = {$smarty.now|intval};
 				<strong class="dark">
 					{l s='Total products' mod='blockcart'}
 					{if $priceDisplay == 1}
-						&nbsp;{l s='(tax excl.)' mod='blockcart'}
+						{l s='(tax excl.)' mod='blockcart'}
 					{else}
-						&nbsp;{l s='(tax incl.)' mod='blockcart'}
+						{l s='(tax incl.)' mod='blockcart'}
 					{/if}
 				</strong>
 				<span class="ajax_block_products_total">
@@ -344,9 +344,9 @@ var generated_date = {$smarty.now|intval};
 					<strong class="dark">
 						{l s='Wrapping' mod='blockcart'}
 						{if $priceDisplay == 1}
-							&nbsp;{l s='(tax excl.)' mod='blockcart'}
+							{l s='(tax excl.)' mod='blockcart'}
 						{else}
-							&nbsp;{l s='(tax incl.)' mod='blockcart'}
+							{l s='(tax incl.)' mod='blockcart'}
 						{/if}
 					</strong>
 					<span class="price cart_block_wrapping_cost">
@@ -380,9 +380,9 @@ var generated_date = {$smarty.now|intval};
 				<strong class="dark">
 					{l s='Total' mod='blockcart'}
 					{if $priceDisplay == 1}
-						&nbsp;{l s='(tax excl.)' mod='blockcart'}
+						{l s='(tax excl.)' mod='blockcart'}
 					{else}
-						&nbsp;{l s='(tax incl.)' mod='blockcart'}
+						{l s='(tax incl.)' mod='blockcart'}
 					{/if}
 				</strong>
 				<span class="ajax_cart_total">
