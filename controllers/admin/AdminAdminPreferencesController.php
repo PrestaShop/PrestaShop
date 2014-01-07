@@ -134,13 +134,6 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'type' => 'bool',
 						'visibility' => Shop::CONTEXT_ALL
 					),
-					'PS_HIDE_OPTIMIZATION_TIPS' => array(
-						'title' => $this->l('Hide optimization tips'),
-						'hint' => $this->l('Hide optimization tips on the Back Office homepage.'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'type' => 'bool'
-					),
 				),
 				'submit' => array('title' => $this->l('Save'))
 			),
