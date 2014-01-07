@@ -346,8 +346,8 @@ class AdminCurrenciesControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_currency'] = array(
-				'href' => self::$currentIndex.'&amp;addcurrency&amp;token='.$this->token,
-				'desc' => $this->l('Add new currency'),
+				'href' => self::$currentIndex.'&addcurrency&token='.$this->token,
+				'desc' => $this->l('Add new currency', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 

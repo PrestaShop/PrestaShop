@@ -78,8 +78,8 @@ class AdminWarehousesControllerCore extends AdminController
 	{
 		if(empty($this->display))
 			$this->page_header_toolbar_btn['new_warehouse'] = array(
-				'href' => self::$currentIndex.'&amp;addwarehouse&amp;token='.$this->token,
-				'desc' => $this->l('Add new warehouse'),
+				'href' => self::$currentIndex.'&addwarehouse&token='.$this->token,
+				'desc' => $this->l('Add new warehouse', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		

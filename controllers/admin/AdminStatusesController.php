@@ -198,13 +198,13 @@ class AdminStatusesControllerCore extends AdminController
 		if (empty($this->display))
 		{
 			$this->page_header_toolbar_btn['new_order_state'] = array(
-				'href' => self::$currentIndex.'&amp;addorder_state&amp;token='.$this->token,
-				'desc' => $this->l('Add new order state'),
+				'href' => self::$currentIndex.'&addorder_state&token='.$this->token,
+				'desc' => $this->l('Add new order state', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 			$this->page_header_toolbar_btn['new_order_return_state'] = array(
-				'href' => self::$currentIndex.'&amp;addorder_return_state&amp;token='.$this->token,
-				'desc' => $this->l('Add new order return state'),
+				'href' => self::$currentIndex.'&addorder_return_state&token='.$this->token,
+				'desc' => $this->l('Add new order return state', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		}
