@@ -204,7 +204,7 @@ class BlockNewProducts extends Module
 						'type' => 'switch',
 						'label' => $this->l('Always display this block'),
 						'name' => 'PS_BLOCK_NEWPRODUCTS_DISPLAY',
-						'desc' => $this->l('Show the block even if no products are available.'),
+						'desc' => $this->l('Show the block even if no new products are available.'),
 						'values' => array(
 									array(
 										'id' => 'active_on',
