@@ -115,10 +115,14 @@ class ContextCore
 	
 	const DEVICE_MOBILE = 4;
 
-	public function __construct()
+	public function getMobileDetect()
 	{
-		require_once(_PS_TOOL_DIR_.'mobile_Detect/Mobile_Detect.php');
-		$this->mobile_detect = new Mobile_Detect();
+		if ($this->mobile_detect === null)
+		{
+			require_once(_PS_TOOL_DIR_.'mobile_Detect/Mobile_Detect.php');
+			$this->mobile_detect = new Mobile_Detect();
+		}
+		return $this->mobile_detect;
 	}
 
 	public function getMobileDevice()
@@ -132,18 +136,19 @@ class ContextCore
 					$this->mobile_device = true;
 				else
 				{
+					$mobile_detect = $this->getMobileDetect();
 					switch ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
 					{
 						case 1: // Only for mobile device
-							if ($this->mobile_detect->isMobile() && !$this->mobile_detect->isTablet())
+							if ($mobile_detect->isMobile() && !$mobile_detect->isTablet())
 								$this->mobile_device = true;
 							break;
 						case 2: // Only for touchpads
-							if ($this->mobile_detect->isTablet() && $this->mobile_detect->isMobile())
+							if ($mobile_detect->isTablet() && $mobile_detect->isMobile())
 								$this->mobile_device = true;
 							break;
 						case 3: // For touchpad or mobile devices
-							if ($this->mobile_detect->isMobile() || $this->mobile_detect->isTablet())
+							if ($mobile_detect->isMobile() || $mobile_detect->isTablet())
 								$this->mobile_device = true;
 							break;
 					}
@@ -160,9 +165,10 @@ class ContextCore
 
 		if ($device === null)
 		{
-			if ($this->mobile_detect->isTablet())
+			$mobile_detect = $this->getMobileDetect();
+			if ($mobile_detect->isTablet())
 				$device = Context::DEVICE_TABLET;
-			elseif ($this->mobile_detect->isMobile())
+			elseif ($mobile_detect->isMobile())
 				$device = Context::DEVICE_MOBILE;
 			else
 				$device = Context::DEVICE_COMPUTER;

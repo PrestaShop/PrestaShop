@@ -280,10 +280,9 @@ class LocalizationPackCore
 					PaymentModule::addCurrencyPermissions($currency->id);
 				}
 			}
-            if (!$feed = Tools::simplexml_load_file('http://api.prestashop.com/xml/currencies.xml'))
-                $this->_errors[] = Tools::displayError('Cannot parse the currencies XML feed.');
-            else
-			    Currency::refreshCurrencies();
+            
+			if (($error = Currency::refreshCurrencies()) !== false)
+                $this->_errors[] = $error;
 
 			if (!count($this->_errors) && $install_mode && isset($attributes['iso_code']) && count($xml->currencies->currency) == 1)
 				$this->iso_currency = $attributes['iso_code'];
