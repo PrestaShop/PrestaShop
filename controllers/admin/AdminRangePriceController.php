@@ -54,8 +54,8 @@ class AdminRangePriceControllerCore extends AdminController
 	{
 		$this->page_header_toolbar_title = $this->l('Price ranges');
 		$this->page_header_toolbar_btn['new_price_range'] = array(
-			'href' => self::$currentIndex.'&amp;addrange_price&amp;token='.$this->token,
-			'desc' => $this->l('Add new price range'),
+			'href' => self::$currentIndex.'&addrange_price&token='.$this->token,
+			'desc' => $this->l('Add new price range', null, null, false),
 			'icon' => 'process-icon-new'
 		);
 

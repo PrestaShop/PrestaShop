@@ -71,8 +71,6 @@
   'AdminGeolocationControllerCore' => 'controllers/admin/AdminGeolocationController.php',
   'AdminGroupsController' => '',
   'AdminGroupsControllerCore' => 'controllers/admin/AdminGroupsController.php',
-  'AdminHomeController' => '',
-  'AdminHomeControllerCore' => 'controllers/admin/AdminHomeController.php',
   'AdminImagesController' => '',
   'AdminImagesControllerCore' => 'controllers/admin/AdminImagesController.php',
   'AdminImportController' => '',
