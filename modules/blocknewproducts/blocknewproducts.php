@@ -38,7 +38,7 @@ class BlockNewProducts extends Module
 		$this->need_instance = 0;
 
 		$this->bootstrap = true;
-		parent::__construct();	
+		parent::__construct();
 
 		$this->displayName = $this->l('New products block');
 		$this->description = $this->l('Displays a block featuring your store\'s newest products.');
@@ -69,7 +69,7 @@ class BlockNewProducts extends Module
 
 		return $success;
 	}
-	
+
 	public function uninstall()
 	{
 		$this->_clearCache('blocknewproducts.tpl');
@@ -96,19 +96,26 @@ class BlockNewProducts extends Module
 		}
 		return $output.$this->renderForm();
 	}
-	
+
+	private function getNewProducts()
+	{
+		if (!Configuration::get('NEW_PRODUCTS_NBR'))
+			return;
+		$newProducts = false;
+		if (Configuration::get('PS_NB_DAYS_NEW_PRODUCT'))
+			$newProducts = Product::getNewProducts((int) Context::getContext()->id_lang, 0, (int)Configuration::get('NEW_PRODUCTS_NBR'));
+
+		if (!$newProducts && !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
+			return;
+		return $newProducts;
+	}
+
 	public function hookRightColumn($params)
 	{
 		if (!$this->isCached('blocknewproducts.tpl', $this->getCacheId()))
 		{
-			if (!Configuration::get('NEW_PRODUCTS_NBR'))
-				return;
-			$newProducts = false;
-			if (Configuration::get('PS_NB_DAYS_NEW_PRODUCT'))
-				$newProducts = Product::getNewProducts((int) Context::getContext()->id_lang, 0, (int)Configuration::get('NEW_PRODUCTS_NBR'));
+			$newProducts = $this->getNewProducts();
 
-			if (!$newProducts && !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
-				return;
 			$this->smarty->assign(array(
 				'new_products' => $newProducts,
 				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
@@ -133,10 +140,19 @@ class BlockNewProducts extends Module
 	{
 		return $this->display(__FILE__, 'tab.tpl', $this->getCacheId('blocknewproducts-tab'));
 	}
-	
+
 	public function hookdisplayHomeTabContent($params)
 	{
-		return $this->hookRightColumn($params);
+		if (!$this->isCached('blocknewproducts_home.tpl', $this->getCacheId()))
+		{
+			$newProducts = $this->getNewProducts();
+
+			$this->smarty->assign(array(
+									   'new_products' => $newProducts,
+									   'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+								  ));
+		}
+		return $this->display(__FILE__, 'blocknewproducts_home.tpl', $this->getCacheId());
 	}
 
 	public function hookHeader($params)
@@ -147,16 +163,19 @@ class BlockNewProducts extends Module
 	public function hookAddProduct($params)
 	{
 		$this->_clearCache('blocknewproducts.tpl');
+		$this->_clearCache('blocknewproducts_home.tpl');
 	}
 
 	public function hookUpdateProduct($params)
 	{
 		$this->_clearCache('blocknewproducts.tpl');
+		$this->_clearCache('blocknewproducts_home.tpl');
 	}
 
 	public function hookDeleteProduct($params)
 	{
 		$this->_clearCache('blocknewproducts.tpl');
+		$this->_clearCache('blocknewproducts_home.tpl');
 	}
 
 	public function renderForm()
@@ -205,7 +224,7 @@ class BlockNewProducts extends Module
 				)
 			),
 		);
-		
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
@@ -224,9 +243,9 @@ class BlockNewProducts extends Module
 
 		return $helper->generateForm(array($fields_form));
 	}
-	
+
 	public function getConfigFieldsValues()
-	{		
+	{
 		return array(
 			'PS_NB_DAYS_NEW_PRODUCT' => Tools::getValue('PS_NB_DAYS_NEW_PRODUCT', Configuration::get('PS_NB_DAYS_NEW_PRODUCT')),
 			'PS_BLOCK_NEWPRODUCTS_DISPLAY' => Tools::getValue('PS_BLOCK_NEWPRODUCTS_DISPLAY', Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY')),
