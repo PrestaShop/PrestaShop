@@ -37,8 +37,8 @@ class BlockFacebook extends Module
 
 		$this->bootstrap = true;
 		parent::__construct();
-		$this->displayName = $this->l('Block Facebook');
-		$this->description = $this->l('Display a block for subscribe to your Facebook page');
+		$this->displayName = $this->l('Facebook block');
+		$this->description = $this->l('Displays a block for subscribing to your Facebook page.');
 	}
 
 

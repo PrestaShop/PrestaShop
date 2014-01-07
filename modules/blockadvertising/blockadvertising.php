@@ -52,7 +52,7 @@ class BlockAdvertising extends Module
 		$this->bootstrap = true;
 		parent::__construct();	
 
-		$this->displayName = $this->l('Block advertising');
+		$this->displayName = $this->l('Advertising block');
 		$this->description = $this->l('Adds an advertisement block to selected sections of your e-commerce webiste.');
 		
 		$this->initialize();
@@ -218,14 +218,13 @@ class BlockAdvertising extends Module
 						'type' => 'file',
 						'label' => $this->l('Block image'),
 						'name' => 'adv_img',
-						'desc' => $this->l('Image will be displayed as 155x163'),
+						'desc' => $this->l('Image will be displayed as 155 pixels by 163 pixels.'),
 						'thumb' => '../modules/'.$this->name.'/advertising.jpg',
 					),
 					array(
 						'type' => 'text',
 						'label' => $this->l('Image link'),
 						'name' => 'adv_link',
-						'desc' => $this->l('Such as bank branch, IBAN number, BIC, etc...')
 					),
 					array(
 						'type' => 'text',

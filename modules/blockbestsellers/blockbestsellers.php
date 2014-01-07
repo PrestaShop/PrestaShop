@@ -42,8 +42,8 @@ class BlockBestSellers extends Module
 
 		parent::__construct();	
 
-		$this->displayName = $this->l('Top-seller block');
-		$this->description = $this->l('Add a block displaying your store\'s top-selling products.');
+		$this->displayName = $this->l('Top-sellers block');
+		$this->description = $this->l('Adds a block displaying your store\'s top-selling products.');
 	}
 
 	public function install()

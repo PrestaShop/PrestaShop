@@ -55,7 +55,7 @@
 								</span>
 								<select id="compare-options" class="form-control fixed-width-lg pull-right" name="compare_date_option"{if is_null($compare_date_from) || is_null($compare_date_to)} disabled="disabled"{/if}>
 									<option value="1"{if $compare_option == 1}selected="selected"{/if} label="{l s='Previous period'}">{l s='Previous period'}</option>
-									<option value="2"{if $compare_option == 2}selected="selected"{/if} label="{l s='Previous Year'}">{l s='Previous Year'}</option>
+									<option value="2"{if $compare_option == 2}selected="selected"{/if} label="{l s='Previous Year'}">{l s='Previous year'}</option>
 									<option value="3"{if $compare_option == 3}selected="selected"{/if} label="{l s='Custom'}">{l s='Custom'}</option>
 								</select>
 							</div>
