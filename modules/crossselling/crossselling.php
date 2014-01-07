@@ -42,8 +42,8 @@ class CrossSelling extends Module
 		$this->bootstrap = true;
 		parent::__construct();	
 
-		$this->displayName = $this->l('Cross Selling');
-		$this->description = $this->l('Customers who bought this product also bought:');
+		$this->displayName = $this->l('Cross-selling');
+		$this->description = $this->l('Adds a "Customers who bought this product also bought..." section to every product page.');
 	}
 
 	public function install()
@@ -79,7 +79,7 @@ class CrossSelling extends Module
 			if (Tools::getValue('displayPrice') != 0 AND Tools::getValue('CROSSSELLING_DISPLAY_PRICE') != 1)
 				$this->_html .= $this->displayError('Invalid displayPrice');
 			else if (!($productNbr = Tools::getValue('CROSSSELLING_NBR')) || empty($productNbr))
-				$this->_html .= $this->displayError('You must fill in the \'Products displayed\' field.');
+				$this->_html .= $this->displayError('You must fill in the "Number of displayed products" field.');
 			elseif ((int)($productNbr) == 0)
 				$this->_html .= $this->displayError('Invalid number.');
 			else
@@ -264,10 +264,10 @@ class CrossSelling extends Module
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Number of products displayed'),
+						'label' => $this->l('Number of displayed products'),
 						'name' => 'CROSSSELLING_NBR',
 						'class' => 'fixed-width-xs',
-						'desc' => $this->l('Define the number of products displayed in this block.'),
+						'desc' => $this->l('Set the number of products displayed in this block.'),
 					),
 				),
 				'submit' => array(
