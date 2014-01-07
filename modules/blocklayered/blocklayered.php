@@ -61,8 +61,7 @@ class BlockLayered extends Module
 		&& $this->registerHook('afterSaveProduct') && $this->registerHook('productListAssign') && $this->registerHook('postProcessAttributeGroup')
 		&& $this->registerHook('postProcessFeature') && $this->registerHook('featureValueForm') && $this->registerHook('postProcessFeatureValue')
 		&& $this->registerHook('afterDeleteFeatureValue') && $this->registerHook('afterSaveFeatureValue') && $this->registerHook('attributeForm')
-		&& $this->registerHook('postProcessAttribute') && $this->registerHook('afterDeleteAttribute') && $this->registerHook('afterSaveAttribute')
-		&& $this->registerHook('displayBackOfficeHeader'))
+		&& $this->registerHook('postProcessAttribute') && $this->registerHook('afterDeleteAttribute') && $this->registerHook('afterSaveAttribute'))
 		{
 			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
 			{
@@ -661,11 +660,6 @@ class BlockLayered extends Module
 	public function hookRightColumn($params)
 	{
 		return $this->hookLeftColumn($params);
-	}
-
-	public function hookDisplayBackOfficeHeader()
-	{
-		
 	}
 
 	public function hookHeader($params)
@@ -1453,9 +1447,7 @@ class BlockLayered extends Module
 							VALUES('.$id_layered_filter.', '.(int)$asso['id_shop'].')'
 						);
 
-
 					$this->buildLayeredCategories();
-					
 					$message = $this->displayConfirmation($this->l('Your filter').' "'.Tools::safeOutput(Tools::getValue('layered_tpl_name')).'" '.
 						((isset($_POST['id_layered_filter']) && $_POST['id_layered_filter']) ? $this->l('was updated successfully.') : $this->l('was added successfully.')));
 				}
@@ -3209,7 +3201,6 @@ class BlockLayered extends Module
 		// Get all filter template
 		$res = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'layered_filter ORDER BY date_add DESC');
 		$categories = array();
-		
 		// Remove all from layered_category
 		Db::getInstance()->execute('TRUNCATE '._DB_PREFIX_.'layered_category');
 			
@@ -3218,25 +3209,30 @@ class BlockLayered extends Module
 		
 		$sql_to_insert = 'INSERT INTO '._DB_PREFIX_.'layered_category (id_category, id_shop, id_value, type, position, filter_show_limit, filter_type) VALUES ';
 		$values = false;
+
 		foreach ($res as $filter_template)
 		{
 			$data = Tools::unSerialize($filter_template['filters']);
-			foreach ($data['categories'] as  $id_category)
+			foreach ($data['shop_list'] as $id_shop)
 			{
-				$n = 0;
-				if (!in_array($id_category, $categories)) // Last definition, erase preivious categories defined
+				if (!isset($categories[$id_shop]))
+					$categories[$id_shop] = array();
+
+				foreach ($data['categories'] as  $id_category)
 				{
-					$categories[] = $id_category;
-					foreach ($data as $key => $value)
-						if (substr($key, 0, 17) == 'layered_selection')
-						{
-							$values = true;
-							$type = $value['filter_type'];
-							$limit = $value['filter_show_limit'];
-							$n++;
-							
-							foreach ($data['shop_list'] as $id_shop)
+					$n = 0;
+					if (!in_array($id_category, $categories[$id_shop])) // Last definition, erase preivious categories defined
+					{
+						$categories[$id_shop][] = $id_category;
+
+						foreach ($data as $key => $value)
+							if (substr($key, 0, 17) == 'layered_selection')
 							{
+								$values = true;
+								$type = $value['filter_type'];
+								$limit = $value['filter_show_limit'];
+								$n++;
+
 								if ($key == 'layered_selection_stock')
 									$sql_to_insert .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'quantity\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
 								else if ($key == 'layered_selection_subcategories')
@@ -3256,7 +3252,7 @@ class BlockLayered extends Module
 									$sql_to_insert .= '('.(int)$id_category.', '.(int)$id_shop.', '.(int)str_replace('layered_selection_feat_', '', $key).',
 										\'id_feature\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
 							}
-						}
+					}
 				}
 			}
 		}
