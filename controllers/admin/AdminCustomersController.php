@@ -215,8 +215,8 @@ class AdminCustomersControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_customer'] = array(
-				'href' => self::$currentIndex.'&amp;addcustomer&amp;token='.$this->token,
-				'desc' => $this->l('Add new customer'),
+				'href' => self::$currentIndex.'&addcustomer&token='.$this->token,
+				'desc' => $this->l('Add new customer', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 

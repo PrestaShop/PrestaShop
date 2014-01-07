@@ -2430,8 +2430,8 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_product'] = array(
-					'href' => self::$currentIndex.'&amp;addproduct&amp;token='.$this->token,
-					'desc' => $this->l('Add new product'),
+					'href' => self::$currentIndex.'&addproduct&token='.$this->token,
+					'desc' => $this->l('Add new product', null, null, false),
 					'icon' => 'process-icon-new'
 				);
 		if ($this->display == 'edit' || $this->display == 'add')
@@ -2441,9 +2441,9 @@ class AdminProductsControllerCore extends AdminController
 				// adding button for preview this product
 				if ($url_preview = $this->getPreviewUrl($product))
 					$this->page_header_toolbar_btn['preview'] = array(
-						'short' => 'Preview',
+						'short' => $this->l('Preview', null, null, false),
 						'href' => $url_preview,
-						'desc' => $this->l('Preview'),
+						'desc' => $this->l('Preview', null, null, false),
 						'target' => true,
 						'class' => 'previewUrl'
 					);
@@ -2451,29 +2451,29 @@ class AdminProductsControllerCore extends AdminController
 				// adding button for duplicate this product
 				if ($this->tabAccess['add'] && $this->display != 'add')
 					$this->page_header_toolbar_btn['duplicate'] = array(
-						'short' => 'Duplicate',
+						'short' => $this->l('Duplicate', null, null, false),
 						'href' => '#',
-						'desc' => $this->l('Duplicate'),
+						'desc' => $this->l('Duplicate', null, null, false),
 						'confirm' => 1,
-						'js' => 'if (confirm(\''.$this->l('Also copy images').' ?\')) document.location = \''.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;duplicateproduct\'; else document.location = \''.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;duplicateproduct&amp;noimage=1\';'
+						'js' => 'if (confirm(\''.$this->l('Also copy images', null, true, false).' ?\')) document.location = \''.$this->context->link->getAdminLink('AdminProducts', null, true, false).'&id_product='.(int)$product->id.'&duplicateproduct\'; else document.location = \''.$this->context->link->getAdminLink('AdminProducts', null, true, false).'&id_product='.(int)$product->id.'&duplicateproduct&noimage=1\';'
 					);
 
 				// adding button for preview this product statistics
 				if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php') && $this->display != 'add')
 					$this->page_header_toolbar_btn['stats'] = array(
-					'short' => 'Statistics',
-					'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsproduct&amp;id_product='.(int)$product->id,
-					'desc' => $this->l('Product sales'),
+					'short' => $this->l('Statistics', null, null, false),
+					'href' => $this->context->link->getAdminLink('AdminStats').'&module=statsproduct&id_product='.(int)$product->id,
+					'desc' => $this->l('Product sales', null, null, false),
 				);
 
 				// adding button for delete this product
 				if ($this->tabAccess['delete'] && $this->display != 'add')
 					$this->page_header_toolbar_btn['delete'] = array(
-						'short' => 'Delete',
-						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;deleteproduct',
-						'desc' => $this->l('Delete this product'),
+						'short' => $this->l('Delete', null, null, false),
+						'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)$product->id.'&deleteproduct',
+						'desc' => $this->l('Delete this product', null, null, false),
 						'confirm' => 1,
-						'js' => 'if (confirm(\''.$this->l('Delete product?').'\')){return true;}else{event.preventDefault();}'
+						'js' => 'if (confirm(\''.$this->l('Delete product?', null, true, false).'\')){return true;}else{event.preventDefault();}'
 					);
 			}
 		}

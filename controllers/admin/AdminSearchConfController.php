@@ -198,15 +198,15 @@ class AdminSearchConfControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_alias'] = array(
-				'href' => self::$currentIndex.'&amp;addalias&amp;token='.$this->token,
-				'desc' => $this->l('Add new alias'),
+				'href' => self::$currentIndex.'&addalias&token='.$this->token,
+				'desc' => $this->l('Add new alias', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		$this->identifier_name = 'alias';
 		parent::initPageHeaderToolbar();
 			$this->toolbar_btn['import'] = array(
 				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=alias',
-				'desc' => $this->l('Import')
+				'desc' => $this->l('Import', null, null, false)
 			);
 	}
 

@@ -150,13 +150,13 @@ class AdminCmsContentControllerCore extends AdminController
 		if ($this->display == 'list')
 		{
 			$this->page_header_toolbar_btn['new_cms_category'] = array(
-				'href' => self::$currentIndex.'&amp;addcms_category&amp;token='.$this->token,
-				'desc' => $this->l('Add new CMS category'),
+				'href' => self::$currentIndex.'&addcms_category&token='.$this->token,
+				'desc' => $this->l('Add new CMS category', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 			$this->page_header_toolbar_btn['new_cms_page'] = array(
-				'href' => self::$currentIndex.'&amp;addcms&amp;id_cms_category='.$id_cms_category.'&amp;token='.$this->token,
-				'desc' => $this->l('Add new CMS page'),
+				'href' => self::$currentIndex.'&addcms&id_cms_category='.(int)$id_cms_category.'&token='.$this->token,
+				'desc' => $this->l('Add new CMS page', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		}

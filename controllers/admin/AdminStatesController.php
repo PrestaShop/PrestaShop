@@ -111,8 +111,8 @@ class AdminStatesControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_state'] = array(
-				'href' => self::$currentIndex.'&amp;addstate&amp;token='.$this->token,
-				'desc' => $this->l('Add new state'),
+				'href' => self::$currentIndex.'&addstate&token='.$this->token,
+				'desc' => $this->l('Add new state', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 

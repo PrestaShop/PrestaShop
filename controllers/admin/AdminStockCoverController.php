@@ -112,7 +112,7 @@ class AdminStockCoverControllerCore extends AdminController
 					.(Tools::getValue('coverage_period') ? '&coverage_period='.Tools::getValue('coverage_period') : '')
 					.(Tools::getValue('warn_days') ? '&warn_days='.Tools::getValue('warn_days') : '')
 					.(Tools::getValue('id_warehouse') ? '&id_warehouse='.Tools::getValue('id_warehouse') : ''),
-				'desc' => $this->l('Back to list'),
+				'desc' => $this->l('Back to list', null, null, false),
 				'icon' => 'process-icon-back'
 			);
 

@@ -105,13 +105,13 @@ class AdminManufacturersControllerCore extends AdminController
 		if (empty($this->display))
 		{
 			$this->page_header_toolbar_btn['new_manufacturer'] = array(
-				'href' => self::$currentIndex.'&amp;addmanufacturer&amp;token='.$this->token,
-				'desc' => $this->l('Add new manufacturer'),
+				'href' => self::$currentIndex.'&addmanufacturer&token='.$this->token,
+				'desc' => $this->l('Add new manufacturer', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 			$this->page_header_toolbar_btn['new_manufacturer_address'] = array(
-				'href' => self::$currentIndex.'&amp;addaddress&amp;token='.$this->token,
-				'desc' => $this->l('Add new manufacturer address'),
+				'href' => self::$currentIndex.'&addaddress&token='.$this->token,
+				'desc' => $this->l('Add new manufacturer address', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		}
@@ -125,7 +125,7 @@ class AdminManufacturersControllerCore extends AdminController
 
 				$this->page_header_toolbar_btn['cancel'] = array(
 					'href' => $back,
-					'desc' => $this->l('Cancel')
+					'desc' => $this->l('Cancel', null, null, false)
 				);
 			}
 		}
