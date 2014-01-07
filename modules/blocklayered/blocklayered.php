@@ -2762,9 +2762,16 @@ class BlockLayered extends Module
 		{
 			if ($filter_block['nbr_filterBlocks'] == 0)
 				return false;
-				
+
+			$translate = array();
+			$translate['price'] = $this->l('price');
+			$translate['weight'] = $this->l('weight');
+
 			$smarty->assign($filter_block);
-			$smarty->assign('hide_0_values', Configuration::get('PS_LAYERED_HIDE_0_VALUES'));
+			$smarty->assign(array(
+				'hide_0_values' => Configuration::get('PS_LAYERED_HIDE_0_VALUES'),
+				'blocklayeredSliderName' => $translate
+			));
 			return $this->display(__FILE__, 'blocklayered.tpl');
 		}
 		else
