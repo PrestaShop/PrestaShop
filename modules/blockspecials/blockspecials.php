@@ -44,7 +44,7 @@ class BlockSpecials extends Module
 		parent::__construct();	
 
 		$this->displayName = $this->l('Specials block');
-		$this->description = $this->l('Adds a block displaying current product specials.');
+		$this->description = $this->l('Adds a block displaying your current discounted products.');
 	}
 
 	public function install()
@@ -151,7 +151,7 @@ class BlockSpecials extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Always display this block.'),
+						'label' => $this->l('Always display this block'),
 						'name' => 'PS_BLOCK_SPECIALS_DISPLAY',
 						'desc' => $this->l('Show the block even if no products are available.'),
 						'values' => array(
@@ -169,9 +169,9 @@ class BlockSpecials extends Module
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Number of cache files.'),
+						'label' => $this->l('Number of cached files'),
 						'name' => 'BLOCKSPECIALS_NB_CACHES',
-						'desc' => $this->l('Specials are displayed randomly on the front end, but since it takes a lot of ressources, it is better to cache the results. Cache is reset everyday. 0 will disable the cache.'),
+						'desc' => $this->l('Specials are displayed randomly on the front-end, but since it takes a lot of ressources, it is better to cache the results. The cache is reset daily. 0 will disable the cache.'),
 					),
 				),
 				'submit' => array(
