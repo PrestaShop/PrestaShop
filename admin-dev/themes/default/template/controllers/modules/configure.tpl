@@ -25,8 +25,24 @@
 <div class="bootstrap">
 	<div class="page-head">
 		<h2 class="page-title">
-			{l s='Configure:'} {$module_display_name} ({$module_name})
+			{l s='Configure module %s' sprintf=$module_display_name}
 		</h2>
+	<ul class="breadcrumb page-breadcrumb">
+		{* Container *}
+		{if $breadcrumbs2.container.name != ''}
+			<li>
+				{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href|escape}">{/if}
+				{if $breadcrumbs2.container.icon != ''}<i class="{$breadcrumbs2.container.icon|escape}"></i>{/if}
+				{$breadcrumbs2.container.name|escape}
+				{if $breadcrumbs2.container.href != ''}</a>{/if}
+			</li>
+		{/if}
+			<li>{$module_name}</li>
+			<li>
+				<i class="icon-wrench"></i>
+				{l s='Configure'}
+			</li>
+		</ul>
 		<div class="page-bar toolbarBox">
 			<div class="btn-toolbar">
 				<ul class="nav nav-pills pull-right">
