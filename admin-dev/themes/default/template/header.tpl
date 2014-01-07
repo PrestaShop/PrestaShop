@@ -131,15 +131,10 @@
 							<div class="notifs_panel_header">
 								<h3>{l s='Latest Orders'}</h3>
 							</div>
-							<div id="list_orders_notif" class="list-group">
-								<a href="#" class="media list-group-item no_notifs">
-									<span class="pull-left">
-										<i class="icon-time"></i>
-									</span>
-									<span class="media-body">
-										{l s='No new orders has been placed on your shop'}
-									</span>
-								</a>
+							<div id="list_orders_notif" class="list_notif">
+								<span class="no_notifs">
+									{l s='No new orders has been placed on your shop'}
+								</span>
 							</div>
 							<div class="notifs_panel_footer">
 								<a href="index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a>
@@ -161,17 +156,12 @@
 							<div class="notifs_panel_header">
 								<h3>{l s='Latest Registrations'}</h3>
 							</div>
-							<div id="list_customers_notif" class="list-group">
-								<a href="#" class="media list-group-item no_notifs">
-									<span class="pull-left">
-										<i class="icon-time"></i>
-									</span>
-									<span class="media-body">
-										{l s='No new customers registered on your shop'}
-									</span>
-								</a>
+							<div id="list_customers_notif" class="list_notif">
+								<span class="no_notifs">
+									{l s='No new customers registered on your shop'}
+								</span>
 							</div>
-							<div class="panel-footer">
+							<div class="notifs_panel_footer">
 								<a href="index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'}</a>
 							</div>
 						</section>
@@ -191,17 +181,12 @@
 							<div class="notifs_panel_header">
 								<h3>{l s='Latest Messages'}</h3>
 							</div>
-							<div id="list_orders_notif" class="list-group">
-								<a href="#" class="media list-group-item no_notifs">
-									<span class="pull-left">
-										<i class="icon-time"></i>
-									</span>
-									<span class="media-body">
-										{l s='No new messages posted on your shop'}
-									</span>
-								</a>
+							<div id="list_orders_notif" class="list_notif">
+								<span class="no_notifs">
+									{l s='No new messages posted on your shop'}
+								</span>
 							</div>
-							<div class="panel-footer text-small">
+							<div class="notifs_panel_footer">
 								<a href="index.php?controller=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a>
 							</div>
 						</section>
