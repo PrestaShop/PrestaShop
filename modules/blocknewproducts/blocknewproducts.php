@@ -33,7 +33,7 @@ class BlockNewProducts extends Module
 	{
 		$this->name = 'blocknewproducts';
 		$this->tab = 'front_office_features';
-		$this->version = '1.7';
+		$this->version = '1.6';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -163,16 +163,19 @@ class BlockNewProducts extends Module
 	public function hookAddProduct($params)
 	{
 		$this->_clearCache('blocknewproducts.tpl');
+		$this->_clearCache('blocknewproducts_home.tpl');
 	}
 
 	public function hookUpdateProduct($params)
 	{
 		$this->_clearCache('blocknewproducts.tpl');
+		$this->_clearCache('blocknewproducts_home.tpl');
 	}
 
 	public function hookDeleteProduct($params)
 	{
 		$this->_clearCache('blocknewproducts.tpl');
+		$this->_clearCache('blocknewproducts_home.tpl');
 	}
 
 	public function renderForm()
