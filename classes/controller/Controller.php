@@ -95,7 +95,8 @@ abstract class ControllerCore
 	 */
 	public function init()
 	{
-		$old_error_handler = set_error_handler(array(__CLASS__, 'myErrorHandler'));
+		if (_PS_MODE_DEV_ && $this->controller_type == 'admin');
+			$old_error_handler = set_error_handler(array(__CLASS__, 'myErrorHandler'));
 		if (!defined('_PS_BASE_URL_'))
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
 		if (!defined('_PS_BASE_URL_SSL_'))
@@ -394,8 +395,6 @@ abstract class ControllerCore
 
 	public static function myErrorHandler($errno, $errstr, $errfile, $errline)
 	{
-	    if (!_PS_MODE_DEV_ || !(error_reporting() & $errno))
-			return;
 	    switch ($errno)
 		{
 		    case E_USER_ERROR || E_ERROR:
