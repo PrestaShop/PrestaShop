@@ -541,6 +541,16 @@ class AdminMetaControllerCore extends AdminController
 	{
 		$this->checkAndUpdateRoute('cms_category_rule');
 	}
+	
+	public function updateOptionPsRouteNewsfeedRule()
+	{
+		$this->checkAndUpdateRoute('newsfeed_rule');
+	}
+
+	public function updateOptionPsRouteNewsfeedCategoryRule()
+	{
+		$this->checkAndUpdateRoute('newsfeed_category_rule');
+	}
 
 	/**
 	 * Update shop domain (for mono shop)
@@ -628,6 +638,8 @@ class AdminMetaControllerCore extends AdminController
 		$this->addFieldRoute('manufacturer_rule', $this->l('Route to manufacturer'));
 		$this->addFieldRoute('cms_rule', $this->l('Route to CMS page'));
 		$this->addFieldRoute('cms_category_rule', $this->l('Route to CMS category'));
+		$this->addFieldRoute('newsfeed_rule', $this->l('Route to Newsfeed page'));
+		$this->addFieldRoute('newsfeed_category_rule', $this->l('Route to Newsfeed category'));
 		$this->addFieldRoute('module', $this->l('Route to modules'));
 	}
 

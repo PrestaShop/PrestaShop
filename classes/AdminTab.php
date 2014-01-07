@@ -151,7 +151,7 @@ abstract class AdminTabCore
 
 	public $smarty;
 
-	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms', 'id_attribute' => 'id_attribute', 'id_attribute_group' => 'id_attribute_group', 'id_feature' => 'id_feature', 'id_carrier' => 'id_carrier');
+	protected $identifiersDnd = array('id_product' => 'id_product', 'id_category' => 'id_category_to_move','id_cms_category' => 'id_cms_category_to_move', 'id_cms' => 'id_cms','id_newsfeed_category' => 'id_newsfeed_category_to_move', 'id_newsfeed' => 'id_newsfeed', 'id_attribute' => 'id_attribute', 'id_attribute_group' => 'id_attribute_group', 'id_feature' => 'id_feature', 'id_carrier' => 'id_carrier');
 
 	/** @var bool Redirect or not ater a creation */
 	protected $_redirect = true;
@@ -191,6 +191,8 @@ abstract class AdminTabCore
 	public static $tabParenting = array(
 		'AdminCms' => 'AdminCmsContent',
 		'AdminCmsCategories' => 'AdminCmsContent',
+		'AdminNewsfeed' => 'AdminNewsfeedContent',
+		'AdminNewsfeedCategories' => 'AdminNewsfeedContent',
 		'AdminOrdersStates' => 'AdminStatuses',
 		'AdminAttributeGenerator' => 'AdminProducts',
 		'AdminAttributes' => 'AdminAttributesGroups',
@@ -1371,9 +1373,12 @@ abstract class AdminTabCore
 	public function displayListHeader($token = NULL)
 	{
 		$isCms = false;
+		$isNewsfeed= false;
 		if (preg_match('/cms/Ui', $this->identifier))
 			$isCms = true;
-		$id_cat = Tools::getValue('id_'.($isCms ? 'cms_' : '').'category');
+		elseif (preg_match('/newsfeed/Ui', $this->identifier))
+			$isNewsfeed = true;
+		$id_cat = Tools::getValue('id_'.($isCms ? 'cms_' : ($isNewsfeed ? 'newsfeed_' : '')).'category');
 
 		if (!isset($token) || empty($token))
 			$token = $this->token;
@@ -1610,13 +1615,17 @@ abstract class AdminTabCore
 		if ($this->_list)
 		{
 			$isCms = false;
+			$isNewsfeed = false;
 			if (preg_match('/cms/Ui', $this->identifier))
 				$isCms = true;
-			$keyToGet = 'id_'.($isCms ? 'cms_' : '').'category'.(in_array($this->identifier, array('id_category', 'id_cms_category')) ? '_parent' : '');
+			elseif (preg_match('/newsfeed/Ui', $this->identifier))
+				$isNewsfeed = true;
+			$keyToGet = 'id_'.($isCms ? 'cms_' : ($isNewsfeed ? 'newsfeed_' : '')).'category'.(in_array($this->identifier, array('id_category', 'id_cms_category','id_newsfeed_category')) ? '_parent' : '');
+
 			foreach ($this->_list as $tr)
 			{
 				$id = $tr[$this->identifier];
-				echo '<tr'.(array_key_exists($this->identifier,$this->identifiersDnd) ? ' id="tr_'.(($id_category = (int)(Tools::getValue('id_'.($isCms ? 'cms_' : '').'category', '1'))) ? $id_category : '').'_'.$id.'_'.$tr['position'].'"' : '').($irow++ % 2 ? ' class="alt_row"' : '').' '.((isset($tr['color']) && $this->colorOnBackground) ? 'style="background-color: '.$tr['color'].'"' : '').'>
+				echo '<tr'.(array_key_exists($this->identifier,$this->identifiersDnd) ? ' id="tr_'.(($id_category = (int)(Tools::getValue('id_'.($isCms ? 'cms_' : ($isNewsfeed ? 'newsfeed_' : '')).'category', '1'))) ? $id_category : '').'_'.$id.'_'.$tr['position'].'"' : '').($irow++ % 2 ? ' class="alt_row"' : '').' '.((isset($tr['color']) && $this->colorOnBackground) ? 'style="background-color: '.$tr['color'].'"' : '').'>
 							<td class="center">';
 				if ($this->delete && (!isset($this->_listSkipDelete) || !in_array($id, $this->_listSkipDelete)))
 					echo '<input type="checkbox" name="'.$this->table.'Box[]" value="'.$id.'" class="noborder" />';

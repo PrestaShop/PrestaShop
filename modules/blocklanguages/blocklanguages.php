@@ -83,6 +83,18 @@ class BlockLanguages extends Module
 					$default_rewrite[$infos['id_lang']] = $arr_link;
 				}
 			}
+
+			if (Dispatcher::getInstance()->getController() == 'newsfeed' && (($id_newsfeed = (int)Tools::getValue('id_newsfeed')) || ($id_newsfeed_category = (int)Tools::getValue('id_newsfeed_category'))))
+			{
+				$rewrite_infos = (isset($id_newsfeed) && !isset($id_newsfeed_category)) ? Newsfeed::getUrlRewriteInformations($id_newsfeed) : NewsfeedCategory::getUrlRewriteInformations($id_newfeeds_category);
+				foreach ($rewrite_infos as $infos)
+				{
+					$arr_link = (isset($id_newsfeed) && !isset($id_newsfeed_category)) ?
+						$link->getNewsfeedLink($id_newsfeed, $infos['link_rewrite'], null, $infos['id_lang']) :
+						$link->getNewsfeedCategoryLink($id_newsfeed_category, $infos['link_rewrite'], $infos['id_lang']);
+					$default_rewrite[$infos['id_lang']] = $arr_link;
+				}
+			}
 			$this->smarty->assign('lang_rewrite_urls', $default_rewrite);
 		}
 		return true;

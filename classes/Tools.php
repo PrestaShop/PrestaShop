@@ -947,7 +947,7 @@ class ToolsCore
 	* @param integer $id_category Category ID
 	* @param string $path Path end
 	* @param boolean $linkOntheLastItem Put or not a link on the current category
-	* @param string [optionnal] $categoryType defined what type of categories is used (products or cms)
+	* @param string [optionnal] $categoryType defined what type of categories is used (products, cms or newsfeed)
 	*/
 	public static function getPath($id_category, $path = '', $link_on_the_item = false, $category_type = 'products', Context $context = null)
 	{
@@ -955,8 +955,10 @@ class ToolsCore
 			$context = Context::getContext();
 
 		$id_category = (int)$id_category;
-		if ($id_category == 1)
+		if ($id_category == 1 && $category_type != 'Newsfeed') // This might need a newsfeed fix
 			return '<span class="navigation_end">'.$path.'</span>';
+		elseif ($id_category == 0 && $category_type === 'Newsfeed')
+			return $path;
 
 		$pipe = Configuration::get('PS_NAVIGATION_PIPE');
 		if (empty($pipe))
@@ -1011,10 +1013,24 @@ class ToolsCore
 
 			return Tools::getPath($category->id_parent, $full_path, $link_on_the_item, $category_type);
 		}
+		else if ($category_type === 'Newsfeed')
+		{
+			$category = new NewsfeedCategory($id_category, $context->language->id);
+			if (!Validate::isLoadedObject($category))
+				die(Tools::displayError());
+			$category_link = $context->link->getNewsfeedCategoryLink($category);
+
+			if ($path != $category->name)
+				$full_path .= '<a href="'.Tools::safeOutput($category_link).'">'.htmlentities($category->name, ENT_NOQUOTES, 'UTF-8').'</a><span class="navigation-pipe">'.$pipe.'</span>'.$path;
+			else
+				$full_path = ($link_on_the_item ? '<a href="'.Tools::safeOutput($category_link).'">' : '').htmlentities($path, ENT_NOQUOTES, 'UTF-8').($link_on_the_item ? '</a>' : '');
+
+			return Tools::getPath($category->id_parent, $full_path, $link_on_the_item, $category_type);
+		}
 	}
 
 	/**
-	* @param string [optionnal] $type_cat defined what type of categories is used (products or cms)
+	* @param string [optionnal] $type_cat defined what type of categories is used (products, cms or newsfeed)
 	*/
 	public static function getFullPath($id_category, $end, $type_cat = 'products', Context $context = null)
 	{
@@ -1032,10 +1048,12 @@ class ToolsCore
 		}
 		else if ($type_cat === 'CMS')
 		    $category = new CMSCategory($id_category, $context->language->id);
+		else if ($type_cat === 'Newsfeed')
+			$category = new NewsfeedCategory($id_category, $context->language->id);
 
 		if (!Validate::isLoadedObject($category))
 			$id_category = $default_category;
-		if ($id_category == $default_category)
+		if ($id_category == $default_category && $type_cat != 'Newsfeed')
 			return htmlentities($end, ENT_NOQUOTES, 'UTF-8');
 
 		return Tools::getPath($id_category, $category->name, true, $type_cat).'<span class="navigation-pipe">'.$pipe.'</span> <span class="navigation_product">'.htmlentities($end, ENT_NOQUOTES, 'UTF-8').'</span>';

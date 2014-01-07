@@ -51,6 +51,8 @@
 	//check if folder exist
 	if (!is_dir('../../img/cms'))
 		mkdir('../../img/cms');
+	if (!is_dir('../../img/newsfeed'))
+		mkdir('../../img/newsfeed');
 	
 	define('CONFIG_SYS_DEFAULT_PATH', '../../img/cms'); //accept relative path only
 	define('CONFIG_SYS_ROOT_PATH', '../../img/cms');	//accept relative path only

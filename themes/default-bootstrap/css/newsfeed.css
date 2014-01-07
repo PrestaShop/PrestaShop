@@ -1,0 +1,95 @@
+/**************************************************************
+					Newsfeed Pages Styles
+***************************************************************/
+#newsfeed #center_column .news-block {
+  padding-bottom: 20px;
+}
+#newsfeed #center_column h1 {
+  margin-bottom: 25px;
+}
+#newsfeed #center_column h3 {
+  font-size: 16px;
+  border-bottom: none;
+  margin: 0 0 0 0;
+  padding-bottom: 17px;
+}
+#newsfeed #center_column p {
+  line-height: 18px;
+}
+#newsfeed #center_column .list-1 li {
+  padding: 4px 0 6px 0;
+  font-weight: bold;
+  color: #46a74e;
+  border-top: 1px solid #d6d4d4;
+}
+#newsfeed #center_column .list-1 li:first-child {
+  border: none;
+}
+#newsfeed #center_column .list-1 li em {
+  font-size: 20px;
+  line-height: 20px;
+  padding-right: 15px;
+  vertical-align: -2px;
+}
+#newsfeed #center_column img {
+  margin: 4px 0 17px;
+  max-width: 100%;
+  height: auto;
+}
+#newsfeed #center_column .testimonials {
+  border: 1px solid;
+  border-color: #dfdede #d2d0d0 #b0afaf #d2d0d0;
+  margin: 4px 0 13px 0;
+  position: relative;
+}
+#newsfeed #center_column .testimonials .inner {
+  border: 1px solid white;
+  padding: 19px 18px 11px 18px;
+  background: #fbfbfb;
+  background: -moz-linear-gradient(top, #fbfbfb 0%, #fefefe 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fbfbfb), color-stop(100%, #fefefe));
+  background: -webkit-linear-gradient(top, #fbfbfb 0%, #fefefe 100%);
+  background: -o-linear-gradient(top, #fbfbfb 0%, #fefefe 100%);
+  background: -ms-linear-gradient(top, #fbfbfb 0%, #fefefe 100%);
+  background: linear-gradient(to bottom, #fbfbfb 0%, #fefefe 100%);
+}
+#newsfeed #center_column .testimonials .inner span {
+  text-indent: -5000px;
+  display: inline-block;
+  width: 20px;
+  height: 15px;
+}
+#newsfeed #center_column .testimonials .inner span.before {
+  background: url(../img/bl-before-bg.png) no-repeat;
+  margin-right: 8px;
+}
+#newsfeed #center_column .testimonials .inner span.after {
+  background: url(../img/bl-after-bg.png) no-repeat;
+  margin-left: 8px;
+}
+#newsfeed #center_column .testimonials:after {
+  content: ".";
+  display: block;
+  text-indent: -5000px;
+  position: absolute;
+  bottom: -16px;
+  left: 21px;
+  width: 15px;
+  height: 16px;
+  background: url(../img/testimon-after.gif) no-repeat;
+}
+#newsfeed #center_column .testimonials + p {
+  padding-left: 45px;
+  margin-bottom: 18px;
+}
+#newsfeed #center_column p.bottom-indent {
+  margin-bottom: 18px;
+}
+
+/**************************************************************
+					Newsfeed Category Styles
+***************************************************************/
+.newsfeed_short_content {
+	margin-left: 30px;
+	display:block;
+}

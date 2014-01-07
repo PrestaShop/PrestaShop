@@ -149,7 +149,7 @@ function copy2friendlyURL()
 
 function copyMeta2friendlyURL()
 {
-	if (!$('input[name="id_cms"]').length)
+	if (!$('input[name="id_cms"]').length || !$('input[name="id_newsfeed"]').length)
 		$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8'));
 }
 
@@ -718,6 +718,12 @@ function submitAddcmsAndPreview()
 {
 	$('#previewSubmitAddcmsAndPreview').attr('name','submitAddcmsAndPreview');
 	$('#cms').submit();
+}
+
+function submitAddnewsfeedAndPreview()
+{
+	$('#previewSubmitAddnewsfeedAndPreview').attr('name','submitAddnewsfeedAndPreview');
+	$('#newsfeed').submit();
 }
 
 function checkAllMultishopDefaultValue(item)

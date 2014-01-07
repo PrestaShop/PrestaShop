@@ -74,6 +74,9 @@ class Blocktopmenu extends Module
 			!$this->registerHook('actionObjectCmsUpdateAfter') ||
 			!$this->registerHook('actionObjectCmsDeleteAfter') ||
 			!$this->registerHook('actionObjectCmsAddAfter') ||
+			!$this->registerHook('actionObjectNewsfeedUpdateAfter') ||
+			!$this->registerHook('actionObjectNewsfeedDeleteAfter') ||
+			!$this->registerHook('actionObjectNewsfeedAddAfter') ||
 			!$this->registerHook('actionObjectSupplierUpdateAfter') ||
 			!$this->registerHook('actionObjectSupplierDeleteAfter') ||
 			!$this->registerHook('actionObjectSupplierAddAfter') ||
@@ -278,6 +281,18 @@ class Blocktopmenu extends Module
 					if (Validate::isLoadedObject($category))
 						$html .= '<option selected="selected" value="CMS_CAT'.$id.'">'.$category->name.'</option>'.PHP_EOL;
 					break;
+					
+				case 'NEWSFEED':
+					$newsfeed = new Newsfeed((int)$id, (int)$id_lang);
+					if (Validate::isLoadedObject($news))
+						$html .= '<option selected="selected" value="NEWSFEED'.$id.'">'.$newsfeed->meta_title.'</option>'.PHP_EOL;
+					break;
+
+				case 'NEWSFEED_CAT':
+					$category = new NewsfeedCategory((int)$id, (int)$id_lang);
+					if (Validate::isLoadedObject($category))
+						$html .= '<option selected="selected" value="NEWSFEED_CAT'.$id.'">'.$category->name.'</option>'.PHP_EOL;
+					break;
 
 				// Case to handle the option to show all Manufacturers
 				case 'ALLMAN':
@@ -363,6 +378,23 @@ class Blocktopmenu extends Module
 					{
 						$this->_menu .= '<li><a href="'.Tools::HtmlEntitiesUTF8($category->getLink()).'" title="'.$category->name.'">'.$category->name.'</a>';
 						$this->getCMSMenuItems($category->id);
+						$this->_menu .= '</li>'.PHP_EOL;
+					}
+					break;
+					
+				case 'NEWSFEED':
+					$selected = ($this->page_name == 'newsfeed' && (Tools::getValue('id_newsfeed') == $id)) ? ' class="sfHover"' : '';
+					$newsfeed = Newsfeed::getLinks((int)$id_lang, array($id));
+					if (count($newsfeed))
+						$this->_menu .= '<li'.$selected.'><a href="'.Tools::HtmlEntitiesUTF8($newsfeed[0]['link']).'" title="'.$newsfeed[0]['meta_title'].'">'.$newsfeed[0]['meta_title'].'</a></li>'.PHP_EOL;
+					break;
+
+				case 'NEWSFEED_CAT':
+					$category = new NewsfeedCategory((int)$id, (int)$id_lang);
+					if (count($category))
+					{
+						$this->_menu .= '<li><a href="'.Tools::HtmlEntitiesUTF8($category->getLink()).'" title="'.$category->name.'">'.$category->name.'</a>';
+						$this->getNewsfeedMenuItems($category->id);
 						$this->_menu .= '</li>'.PHP_EOL;
 					}
 					break;
@@ -573,11 +605,67 @@ class Blocktopmenu extends Module
 		return $html;
 	}
 	
+	private function getNewsfeedMenuItems($parent, $depth = 1, $id_lang = false)
+	{
+		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
+
+		if ($depth > 3)
+			return;
+
+		$categories = $this->getNewsfeedCategories(false, (int)$parent, (int)$id_lang);
+		$pages = $this->getNewsfeedPages((int)$parent);
+
+		if (count($categories) || count($pages))
+		{
+			$this->_menu .= '<ul>';
+
+			foreach ($categories as $category)
+			{
+				$this->_menu .= '<li>';
+				$this->_menu .= '<a href="#">'.$category['name'].'</a>';
+				$this->getNewsfeedMenuItems($category['id_news_category'], (int)$depth + 1);
+				$this->_menu .= '</li>';
+			}
+
+			foreach ($pages as $page)
+			{
+				$news = new Newsfeed($page['id_newsfeed'], (int)$id_lang);
+				$links = $news->getLinks((int)$id_lang, array((int)$news->id));
+
+				$selected = ($this->page_name == 'newsfeed' && ((int)Tools::getValue('id_newsfeed') == $page['id_newsfeed'])) ? ' class="sfHoverForce"' : '';
+				$this->_menu .= '<li '.$selected.'>';
+				$this->_menu .= '<a href="'.$links[0]['link'].'">'.$news->meta_title.'</a>';
+				$this->_menu .= '</li>';
+			}
+
+			$this->_menu .= '</ul>';
+		}
+	}
+
+	private function getNewsfeedOptions($parent = 0, $depth = 1, $id_lang = false)
+	{
+		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
+
+		$categories = $this->getNewsfeedCategories(false, (int)$parent, (int)$id_lang);
+		$pages = $this->getNewsfeedPages((int)$parent, false, (int)$id_lang);
+
+		$spacer = str_repeat('&nbsp;', $this->spacer_size * (int)$depth);
+
+		foreach ($categories as $category)
+		{
+			$this->_html .= '<option value="NEWSFEED_CAT'.$category['id_newsfeed_category'].'" style="font-weight: bold;">'.$spacer.$category['name'].'</option>';
+			$this->getNewsOptions($category['id_newsfeed_category'], (int)$depth + 1, (int)$id_lang);
+		}
+
+		foreach ($pages as $page)
+			$this->_html .= '<option value="NEWSFEED'.$page['id_newsfeed'].'">'.$spacer.$page['meta_title'].'</option>';
+	}
+	
 	protected function getCacheId($name = null)
 	{
 		parent::getCacheId($name);
-		$page_name = in_array($this->page_name, array('category', 'supplier', 'manufacturer', 'cms', 'product')) ? $this->page_name : 'index';
-		return 'blocktopmenu|'.(int)Tools::usingSecureMode().'|'.$page_name.'|'.(int)$this->context->shop->id.'|'.implode(', ',$this->user_groups).'|'.(int)$this->context->language->id.'|'.(int)Tools::getValue('id_category').'|'.(int)Tools::getValue('id_manufacturer').'|'.(int)Tools::getValue('id_supplier').'|'.(int)Tools::getValue('id_cms').'|'.(int)Tools::getValue('id_product');
+		$page_name = in_array($this->page_name, array('category', 'supplier', 'manufacturer', 'cms', 'newsfeed','product')) ? $this->page_name : 'index';
+		return 'blocktopmenu|'.(int)Tools::usingSecureMode().'|'.$page_name.'|'.(int)$this->context->shop->id.'|'.implode(', ',$this->user_groups).'|'.(int)$this->context->language->id.'|'.(int)Tools::getValue('id_category').'|'.(int)Tools::getValue('id_manufacturer').'|'.(int)Tools::getValue('id_supplier').'|'.(int)Tools::getValue('id_cms').'|'.(int)Tools::getValue('id_newsfeed').'|'.(int)Tools::getValue('id_product');
 	}
 
 	public function hookDisplayTop($param)
@@ -658,6 +746,64 @@ class Blocktopmenu extends Module
 
 		return Db::getInstance()->executeS($sql);
 	}
+	
+	private function getNewsfeedCategories($recursive = false, $parent = 1, $id_lang = false)
+	{
+		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
+
+		if ($recursive === false)
+		{
+			$sql = 'SELECT bcp.`id_newsfeed_category`, bcp.`id_parent`, bcp.`level_depth`, bcp.`active`, bcp.`position`, cl.`name`, cl.`link_rewrite`
+				FROM `'._DB_PREFIX_.'newsfeed_category` bcp
+				INNER JOIN `'._DB_PREFIX_.'newsfeed_category_lang` cl
+				ON (bcp.`id_newsfeed_category` = cl.`id_newsfeed_category`)
+				WHERE cl.`id_lang` = '.(int)$id_lang.'
+				AND bcp.`id_parent` = '.(int)$parent;
+
+			return Db::getInstance()->executeS($sql);
+		}
+		else
+		{
+			$sql = 'SELECT bcp.`id_newsfeed_category`, bcp.`id_parent`, bcp.`level_depth`, bcp.`active`, bcp.`position`, cl.`name`, cl.`link_rewrite`
+				FROM `'._DB_PREFIX_.'newsfeed_category` bcp
+				INNER JOIN `'._DB_PREFIX_.'newsfeed_category_lang` cl
+				ON (bcp.`id_newsfeed_category` = cl.`id_newsfeed_category`)
+				WHERE cl.`id_lang` = '.(int)$id_lang.'
+				AND bcp.`id_parent` = '.(int)$parent;
+
+			$results = Db::getInstance()->executeS($sql);
+			foreach ($results as $result)
+			{
+				$sub_categories = $this->getNewsfeedCategories(true, $result['id_newsfeed_category'], (int)$id_lang);
+				if ($sub_categories && count($sub_categories) > 0)
+					$result['sub_categories'] = $sub_categories;
+				$categories[] = $result;
+			}
+
+			return isset($categories) ? $categories : false;
+		}
+
+	}
+
+	private function getNewsfeedPages($id_newsfeed_category, $id_shop = false, $id_lang = false)
+	{
+		$id_shop = ($id_shop !== false) ? (int)$id_shop : (int)Context::getContext()->shop->id;
+		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
+
+		$sql = 'SELECT c.`id_newsfeed`, cl.`meta_title`, cl.`link_rewrite`
+			FROM `'._DB_PREFIX_.'newsfeed` c
+			INNER JOIN `'._DB_PREFIX_.'newsfeed_shop` cs
+			ON (c.`id_newsfeed` = cs.`id_newsfeed`)
+			INNER JOIN `'._DB_PREFIX_.'news_lang` cl
+			ON (c.`id_newsfeed` = cl.`id_newsfeed`)
+			WHERE c.`id_newsfeed_category` = '.(int)$id_newsfeed_category.'
+			AND cs.`id_shop` = '.(int)$id_shop.'
+			AND cl.`id_lang` = '.(int)$id_lang.'
+			AND c.`active` = 1
+			ORDER BY `position`';
+
+		return Db::getInstance()->executeS($sql);
+	}
 
 	public function hookActionObjectCategoryAddAfter($params)
 	{
@@ -685,6 +831,21 @@ class Blocktopmenu extends Module
 	}
 	
 	public function hookActionObjectCmsAddAfter($params)
+	{
+		$this->clearMenuCache();
+	}
+	
+	public function hookActionObjectNewsfeedUpdateAfter($params)
+	{
+		$this->clearMenuCache();
+	}
+	
+	public function hookActionObjectNewsfeedDeleteAfter($params)
+	{
+		$this->clearMenuCache();
+	}
+	
+	public function hookActionObjectNewsfeedAddAfter($params)
 	{
 		$this->clearMenuCache();
 	}
@@ -926,6 +1087,12 @@ class Blocktopmenu extends Module
 		$html = '<select multiple="multiple" id="availableItems" style="width: 300px; height: 160px;">';
 		$html .= '<optgroup label="'.$this->l('CMS').'">';
 		$html .= $this->getCMSOptions(0, 1, $this->context->language->id, $items);
+		$html .= '</optgroup>';
+		
+		$html .= '<optgroup label="'.$this->l('Newsfeed').'">';
+		$this->_html = '';
+		$this->getNewsfeedOptions(0, 1, $this->context->language->id);
+		$html .= $this->_html;
 		$html .= '</optgroup>';
 
 		// BEGIN SUPPLIER

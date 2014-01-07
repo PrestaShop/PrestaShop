@@ -99,5 +99,8 @@
     <access id="access_1_100" id_profile="SuperAdmin" id_tab="Supply_orders" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_101" id_profile="SuperAdmin" id_tab="Configuration" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_102" id_profile="SuperAdmin" id_tab="Dashboard" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_1_103" id_profile="SuperAdmin" id_tab="Newsfeed_pages" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_1_104" id_profile="SuperAdmin" id_tab="Newsfeed_categories" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_1_105" id_profile="SuperAdmin" id_tab="Newsfeed" view="1" add="1" edit="1" delete="1"/>
   </entities>
 </entity_access>

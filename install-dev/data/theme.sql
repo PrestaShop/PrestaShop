@@ -194,6 +194,7 @@ INSERT INTO `PREFIX_hook_module_exceptions` (`id_shop`, `id_module`, `id_hook`, 
 		UNION SELECT 'sitemap' as page
 		UNION SELECT 'stores' as page
 		UNION SELECT 'cms' as page
+		UNION SELECT 'newsfeed' as page
 		UNION SELECT 'contact' as page
 		UNION SELECT 'myaccount' as page
 		UNION SELECT 'identity' as page

@@ -110,6 +110,9 @@
     <access id="access_3_99" id_profile="Logistician" id_tab="Stock_cover" view="1" add="1" edit="1" delete="1"/>
     <access id="access_3_100" id_profile="Logistician" id_tab="Supply_orders" view="1" add="1" edit="1" delete="1"/>
     <access id="access_3_101" id_profile="Logistician" id_tab="Configuration" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_3_102" id_profile="Logistician" id_tab="Newsfeed_pages" view="0" add="0" edit="0" delete="0"/>
+    <access id="access_3_103" id_profile="Logistician" id_tab="Newsfeed_categories" view="0" add="0" edit="0" delete="0"/>
+    <access id="access_3_104" id_profile="Logistician" id_tab="Newsfeed" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_1" id_profile="Translator" id_tab="Home" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_2" id_profile="Translator" id_tab="CMS_pages" view="1" add="1" edit="1" delete="1"/>
     <access id="access_4_3" id_profile="Translator" id_tab="CMS_categories" view="1" add="1" edit="1" delete="1"/>
@@ -211,6 +214,9 @@
     <access id="access_4_99" id_profile="Translator" id_tab="Stock_cover" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_100" id_profile="Translator" id_tab="Supply_orders" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_101" id_profile="Translator" id_tab="Configuration" view="0" add="0" edit="0" delete="0"/>
+    <access id="access_4_102" id_profile="Translator" id_tab="Newsfeed_pages" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_4_103" id_profile="Translator" id_tab="Newsfeed_categories" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_3_104" id_profile="Translator" id_tab="Newsfeed" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_1" id_profile="Salesman" id_tab="Home" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_2" id_profile="Salesman" id_tab="CMS_pages" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_3" id_profile="Salesman" id_tab="CMS_categories" view="0" add="0" edit="0" delete="0"/>
@@ -312,6 +318,9 @@
     <access id="access_5_99" id_profile="Salesman" id_tab="Stock_cover" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_100" id_profile="Salesman" id_tab="Supply_orders" view="1" add="0" edit="0" delete="0"/>
     <access id="access_5_101" id_profile="Salesman" id_tab="Configuration" view="0" add="0" edit="0" delete="0"/>
+    <access id="access_5_102" id_profile="Salesman" id_tab="Newsfeed_pages" view="0" add="0" edit="0" delete="0"/>
+    <access id="access_5_103" id_profile="Salesman" id_tab="Newsfeed_categories" view="0" add="0" edit="0" delete="0"/>
+    <access id="access_3_104" id_profile="Salesman" id_tab="Newsfeed" view="0" add="0" edit="0" delete="0"/>
     <access id="access_3_0" id_profile="Logistician" id_tab="" view="1" add="1" edit="1" delete="1"/>
     <access id="access_4_0" id_profile="Translator" id_tab="" view="1" add="1" edit="1" delete="1"/>
     <access id="access_5_0" id_profile="Salesman" id_tab="" view="1" add="1" edit="1" delete="1"/>

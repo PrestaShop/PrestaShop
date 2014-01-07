@@ -209,6 +209,36 @@
     'path' => 'controllers/admin/AdminCmsController.php',
     'type' => 'class',
   ),
+  'AdminNewsfeedCategoriesController' =>
+  array (
+    'path' => '',
+    'type' => 'class',
+  ),
+  'AdminNewsfeedCategoriesControllerCore' =>
+  array (
+    'path' => 'controllers/admin/AdminNewsfeedCategoriesController.php',
+    'type' => 'class',
+  ),
+  'AdminNewsfeedContentController' =>
+  array (
+    'path' => '',
+    'type' => 'class',
+  ),
+  'AdminNewsfeedContentControllerCore' =>
+  array (
+    'path' => 'controllers/admin/AdminNewsfeedContentController.php',
+    'type' => 'class',
+  ),
+  'AdminNewsfeedController' =>
+  array (
+    'path' => '',
+    'type' => 'class',
+  ),
+  'AdminNewsfeedControllerCore' =>
+  array (
+    'path' => 'controllers/admin/AdminNewsfeedController.php',
+    'type' => 'class',
+  ),
   'AdminContactsController' => 
   array (
     'path' => '',

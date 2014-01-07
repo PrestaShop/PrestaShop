@@ -62,7 +62,7 @@ class MetaCore extends ObjectModel
 		// Exclude pages forbidden
 		$exlude_pages = array(
 			'category', 'changecurrency', 'cms', 'footer', 'header',
-			'pagination', 'product', 'product-sort', 'statistics'
+			'pagination', 'product', 'product-sort', 'statistics','newsfeed'
 		);
 
 		foreach ($files as $file)
@@ -210,6 +210,10 @@ class MetaCore extends ObjectModel
 				return Meta::getCmsMetas($id_cms, $id_lang, $page_name);
 			elseif ($page_name == 'cms' && ($id_cms_category = Tools::getValue('id_cms_category')))
 				return Meta::getCmsCategoryMetas($id_cms_category, $id_lang, $page_name);
+			elseif ($page_name == 'newsfeed' && ($id_newsfeed = Tools::getValue('id_newsfeed')))
+				return Meta::getNewsfeedMetas($id_newsfeed, $id_lang, $page_name);
+			elseif ($page_name == 'newsfeed' && ($id_newsfeed_category = Tools::getValue('id_newsfeed_category')))
+				return Meta::getNewsfeedCategoryMetas($id_newsfeed_category, $id_lang, $page_name);
 		}
 
 		return Meta::getHomeMetas($id_lang, $page_name);
@@ -401,6 +405,54 @@ class MetaCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'cms_category_lang`
 				WHERE id_lang = '.(int)$id_lang.'
 					AND id_cms_category = '.(int)$id_cms_category;
+		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
+		{
+			$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
+			return Meta::completeMetaTags($row, $row['meta_title']);
+		}
+
+		return Meta::getHomeMetas($id_lang, $page_name);
+	}
+
+	/**
+	 * Get Newsfeed meta tags
+	 *
+	 * @since 1.5.0
+	 * @param int $id_newsfeed
+	 * @param int $id_lang
+	 * @param string $page_name
+	 * @return array
+	 */
+	public static function getNewsfeedMetas($id_newsfeed, $id_lang, $page_name)
+	{
+		$sql = 'SELECT `meta_title`, `meta_description`, `meta_keywords`
+				FROM `'._DB_PREFIX_.'newsfeed_lang`
+				WHERE id_lang = '.(int)$id_lang.'
+					AND id_newsfeed = '.(int)$id_newsfeed;
+		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
+		{
+			$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
+			return Meta::completeMetaTags($row, $row['meta_title']);
+		}
+
+		return Meta::getHomeMetas($id_lang, $page_name);
+	}
+
+	/**
+	 * Get Newsfeed category meta tags
+	 *
+	 * @since 1.5.0
+	 * @param int $id_newsfeed_category
+	 * @param int $id_lang
+	 * @param string $page_name
+	 * @return array
+	 */
+	public static function getNewsfeedCategoryMetas($id_newsfeed_category, $id_lang, $page_name)
+	{
+		$sql = 'SELECT `meta_title`, `meta_description`, `meta_keywords`
+				FROM `'._DB_PREFIX_.'newsfeed_category_lang`
+				WHERE id_lang = '.(int)$id_lang.'
+					AND id_newsfeed_category = '.(int)$id_newsfeed_category;
 		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
 		{
 			$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');

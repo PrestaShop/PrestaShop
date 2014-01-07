@@ -18,6 +18,12 @@
     <tab id="Combinations_Generator" id_parent="-1" active="1">
       <class_name>AdminAttributeGenerator</class_name>
     </tab>
+    <tab id="Newsfeed_Pages" id_parent="-1" active="1">
+      <class_name>AdminNewsfeed</class_name>
+    </tab>
+    <tab id="Newsfeed_Categories" id_parent="-1" active="1">
+      <class_name>AdminNewsfeedCategories</class_name>
+    </tab>
     <tab id="Search" id_parent="-1" active="1">
       <class_name>AdminSearch</class_name>
     </tab>
@@ -218,6 +224,9 @@
     </tab>
     <tab id="CMS" id_parent="Preferences" active="1">
       <class_name>AdminCmsContent</class_name>
+    </tab>
+    <tab id="Newsfeed" id_parent="Preferences" active="1">
+      <class_name>AdminNewsfeedContent</class_name>
     </tab>
     <tab id="Images" id_parent="Preferences" active="1">
       <class_name>AdminImages</class_name>

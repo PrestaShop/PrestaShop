@@ -259,6 +259,79 @@ class LinkCore
 	}
 
 	/**
+	 * Create a link to a Newsfeed category
+	 *
+	 * @param mixed $category NewsfeedCategory object
+	 * @param string $alias
+	 * @param int $id_lang
+	 * @return string
+	 */
+	public function getNewsfeedCategoryLink($newsfeed_category, $alias = null, $id_lang = null, $id_shop = null)
+	{
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
+
+		$url = $this->getBaseLink($id_shop).$this->getLangLink($id_lang, null, $id_shop);
+
+		$dispatcher = Dispatcher::getInstance();
+		if (!is_object($newsfeed_category))
+		{
+			if ($alias !== null && !$dispatcher->hasKeyword('newsfeed_category_rule', $id_lang, 'meta_keywords', $id_shop) && !$dispatcher->hasKeyword('newsfeed_category_rule', $id_lang, 'meta_title', $id_shop))
+				return $url.$dispatcher->createUrl('newsfeed_category_rule', $id_lang, array('id' => (int)$newsfeed_category, 'rewrite' => (string)$alias), $this->allow, '', $id_shop);
+			$newsfeed_category = new NewsfeedCategory($newsfeed_category, $id_lang);
+		}
+
+		// Set available keywords
+		$params = array();
+		$params['id'] = $newsfeed_category->id;
+		$params['rewrite'] = (!$alias) ? $newsfeed_category->link_rewrite : $alias;
+		$params['meta_keywords'] =	Tools::str2url($newsfeed_category->meta_keywords);
+		$params['meta_title'] = Tools::str2url($newsfeed_category->meta_title);
+
+		return $url.$dispatcher->createUrl('newsfeed_category_rule', $id_lang, $params, $this->allow, '', $id_shop);
+	}
+
+	/**
+	 * Create a link to a Newsfeed page
+	 *
+	 * @param mixed $newsfeed Newsfeed object
+	 * @param string $alias
+	 * @param bool $ssl
+	 * @param int $id_lang
+	 * @return string
+	 */
+	public function getNewsfeedLink($newsfeed, $alias = null, $ssl = null, $id_lang = null, $id_shop = null)
+	{
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
+
+		$url = $this->getBaseLink($id_shop, $ssl).$this->getLangLink($id_lang, null, $id_shop);
+
+		$dispatcher = Dispatcher::getInstance();
+		if (!is_object($newsfeed))
+		{
+			if ($alias !== null && !$dispatcher->hasKeyword('newsfeed_rule', $id_lang, 'meta_keywords', $id_shop) && !$dispatcher->hasKeyword('newsfeed_rule', $id_lang, 'meta_title', $id_shop))
+				return $url.$dispatcher->createUrl('newsfeed_rule', $id_lang, array('id' => (int)$newsfeed, 'rewrite' => (string)$alias), $this->allow, '', $id_shop);
+			$newsfeed = new Newsfeed($newsfeed, $id_lang);
+		}
+
+		// Set available keywords
+		$params = array();
+		$params['id'] = $newsfeed->id;
+		$params['rewrite'] = (!$alias) ? (is_array($newsfeed->link_rewrite) ? $newsfeed->link_rewrite[(int)$id_lang] : $newsfeed->link_rewrite) : $alias;
+
+		$params['meta_keywords'] = '';
+		if (isset($newsfeed->meta_keywords) && !empty($newsfeed->meta_keywords))
+			$params['meta_keywords'] = is_array($newsfeed->meta_keywords) ?  Tools::str2url($newsfeed->meta_keywords[(int)$id_lang]) :  Tools::str2url($newsfeed->meta_keywords);
+
+		$params['meta_title'] = '';
+		if (isset($newsfeed->meta_title) && !empty($newsfeed->meta_title))
+			$params['meta_title'] = is_array($newsfeed->meta_title) ? Tools::str2url($newsfeed->meta_title[(int)$id_lang]) : Tools::str2url($newsfeed->meta_title);
+
+		return $url.$dispatcher->createUrl('newsfeed_rule', $id_lang, $params, $this->allow, '', $id_shop);
+	}
+
+	/**
 	 * Create a link to a supplier
 	 *
 	 * @param mixed $supplier Supplier object (can be an ID supplier, but deprecated)
@@ -495,6 +568,10 @@ class LinkCore
 			return $this->getCMSLink((int)$params['id_cms'], null, false, (int)$id_lang);
 		elseif ($controller == 'cms' && isset($params['id_cms_category']))
 			return $this->getCMSCategoryLink((int)$params['id_cms_category'], null, (int)$id_lang);
+		elseif ($controller == 'newsfeed' && isset($params['id_newsfeed']))
+			return $this->getNewsfeedLink((int)$params['id_newsfeed'], null, false, (int)$id_lang);
+		elseif ($controller == 'newsfeed' && isset($params['id_newsfeed_category']))
+			return $this->getNewsfeedCategoryLink((int)$params['id_newsfeed_category'], null, (int)$id_lang);
 		elseif (isset($params['fc']) && $params['fc'] == 'module')
 		{
 			$module = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
