@@ -482,10 +482,10 @@ class Dashproducts extends Module
 		);
 			
 		$inputs = array(
-			array('label' => $this->l('Number of "Recent Orders" to display:'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_LAST_ORDER'),
-			array('label' => $this->l('Number of "Best Sellers" to display:'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_BEST_SELLER'),
-			array('label' => $this->l('Number of "Most Viewed" to display:'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_MOST_VIEWED'),
-			array('label' => $this->l('Number of "Top Search" to display:'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_TOP_SEARCH'),
+			array('label' => $this->l('Number of "Recent Orders" to display'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_LAST_ORDER'),
+			array('label' => $this->l('Number of "Best Sellers" to display'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_BEST_SELLER'),
+			array('label' => $this->l('Number of "Most Viewed" to display'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_MOST_VIEWED'),
+			array('label' => $this->l('Number of "Top Search" to display'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_TOP_SEARCH'),
 		);
 		
 		foreach($inputs as $input)
