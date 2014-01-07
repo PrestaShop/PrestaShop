@@ -79,7 +79,7 @@ class AdminShopGroupControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					)
 				),
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			)
 		);
 
