@@ -212,14 +212,14 @@ class BlockCms extends Module
 				),
 				array(
 					'type' => 'cms_pages',
-					'label' => $this->l('Footer links:'),
+					'label' => $this->l('Footer links'),
 					'name' => 'footerBox[]',
 					'values' => BlockCMSModel::getAllCMSStructure(),
 					'desc' => $this->l('Please mark every page that you want to display in the footer CMS block.')
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Footer informations:'),
+					'label' => $this->l('Footer informations'),
 					'name' => 'footer_text',
 					'rows' => 5,
 					'cols' => 60,
@@ -296,14 +296,14 @@ class BlockCms extends Module
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name of the CMS block :'),
+					'label' => $this->l('Name of the CMS block:'),
 					'name' => 'block_name',
 					'lang' => true,
 					'desc' => $this->l('If you leave this field empty, the block name will use the category name by default.')
 				),
 				array(
 					'type' => 'select_category',
-					'label' => $this->l('CMS category :'),
+					'label' => $this->l('CMS category'),
 					'name' => 'id_category',
 					'options' => array(
 						'query' => BlockCMSModel::getCMSCategories(true),
@@ -313,7 +313,7 @@ class BlockCms extends Module
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Location :'),
+					'label' => $this->l('Location'),
 					'name' => 'block_location',
 					'options' => array(
 						'query' => array(
@@ -330,7 +330,7 @@ class BlockCms extends Module
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Display stores :'),
+					'label' => $this->l('Display stores'),
 					'name' => 'display_stores',
 					'class' => 't',
 					'required' => true,
@@ -345,7 +345,7 @@ class BlockCms extends Module
 							'value' => 0,
 							'label' => $this->l('No')),
 					),
-					'desc' => $this->l('Display "our stores" at the end of the block.')
+					'desc' => $this->l('Displays the "Our stores" link at the end of the block.')
 				),
 				array(
 					'type' => 'cms_pages',
@@ -619,7 +619,7 @@ class BlockCms extends Module
 				Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteBlockCMSConfirmation');
 			}
 			else
-				$this->_html .= $this->displayError($this->l('Error: You are trying to delete a non-existing CMS blocks. '));
+				$this->_html .= $this->displayError($this->l('Error: You are trying to delete a non-existing CMS block.'));
 		}
 		elseif (Tools::isSubmit('submitFooterCMS'))
 		{

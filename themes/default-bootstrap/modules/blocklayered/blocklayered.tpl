@@ -32,6 +32,8 @@
 	{else}
 		param_product_url = '';
 	{/if}
+
+	{addJsDef blocklayeredSliderName=$blocklayeredSliderName}
 </script>
 <div id="layered_block_left" class="block">
 	<p class="title_block">{l s='Catalog' mod='blocklayered'}</p>

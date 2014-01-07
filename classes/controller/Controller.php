@@ -95,7 +95,8 @@ abstract class ControllerCore
 	 */
 	public function init()
 	{
-		$old_error_handler = set_error_handler(array(__CLASS__, 'myErrorHandler'));
+		if (_PS_MODE_DEV_ && $this->controller_type == 'admin');
+			$old_error_handler = set_error_handler(array(__CLASS__, 'myErrorHandler'));
 		if (!defined('_PS_BASE_URL_'))
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
 		if (!defined('_PS_BASE_URL_SSL_'))
@@ -371,7 +372,7 @@ abstract class ControllerCore
 			$html = str_replace(array('</body>', '</html>'), '', $html);
 			$this->context->smarty->assign('js_def', Media::getJsDef());
 			$javascript = '<script type="text/javascript">';
-			if (file_exists(_PS_THEME_DIR_.'javascript.tpl'))
+			if (@filemtime(_PS_THEME_DIR_.'javascript.tpl'))
 			{
 				$javascript = $this->context->smarty->fetch(_PS_THEME_DIR_.'javascript.tpl');
 				$javascript = substr_replace(trim($javascript), '', -(strlen('</script>')));
@@ -394,8 +395,8 @@ abstract class ControllerCore
 
 	public static function myErrorHandler($errno, $errstr, $errfile, $errline)
 	{
-	    if (!_PS_MODE_DEV_ || !(error_reporting() & $errno))
-			return;
+		if (error_reporting() === 0)
+			return false;
 	    switch ($errno)
 		{
 		    case E_USER_ERROR || E_ERROR:
