@@ -990,6 +990,24 @@ class FrontControllerCore extends Controller
 		return parent::addCSS($list_uri, $css_media_type, $offset);
 	}
 
+	public function removeCSS($css_uri, $css_media_type = 'all')
+	{
+		if (!is_array($css_uri))
+			$css_uri = array($css_uri => $css_media_type);
+
+		$list_uri = array();
+		foreach ($css_uri as $file => $media)
+		{
+			$different = 0;
+			$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/css/modules/', $file, $different);
+			if ($different && file_exists($override_path))
+				$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/css/modules/', $file, $different);
+			$list_uri[$file] = $media;
+		}
+
+		return parent::removeCSS($list_uri, $css_media_type);
+	}
+
 	/**
 	 * Add one or several JS files for front, checking if js files are overriden in theme/js/modules/ directory
 	 *
@@ -1012,6 +1030,25 @@ class FrontControllerCore extends Controller
 		}
 
 		return parent::addJS($js_uri);
+	}
+
+	public function removeJS($js_uri)
+	{
+		if (!is_array($js_uri))
+			$js_uri = array($js_uri);
+
+		foreach ($js_uri as $key => &$file)
+		{
+			if (!preg_match('/^http(s?):\/\//i', $file))
+			{
+				$different = 0;
+				$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/js/modules/', $file, $different);
+				if ($different && file_exists($override_path))
+					$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/js/modules/', $file, $different);
+			}
+		}
+
+		return parent::removeJS($js_uri);
 	}
 
 	protected function recoverCart()
