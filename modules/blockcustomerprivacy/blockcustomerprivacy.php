@@ -43,8 +43,8 @@ class Blockcustomerprivacy extends Module
 		$this->bootstrap = true;
 		parent::__construct();	
 
-		$this->displayName = $this->l('Customer data privacy block.');
-		$this->description = $this->l('Adds a block displaying a message about a customer\'s privacy data. ');
+		$this->displayName = $this->l('Customer data privacy block');
+		$this->description = $this->l('Adds a block displaying a message about a customer\'s privacy data.');
 	}
 	
 	public function install()
@@ -52,7 +52,7 @@ class Blockcustomerprivacy extends Module
 		$return = (parent::install() && $this->registerHook('createAccountForm') && $this->registerHook('header') && $this->registerHook('actionBeforeSubmitAccount'));
 		Configuration::updateValue('CUSTPRIV_MESSAGE', array($this->context->language->id => 
 			$this->l('The personal data you provide is used to answer queries, process orders or allow access to specific information.').' '.
-			$this->l('You have the right to modify and delete all the personal information found in the "My Account" page. ')
+			$this->l('You have the right to modify and delete all the personal information found in the "My Account" page.')
 		));
 		return $return;
 	}
@@ -132,7 +132,7 @@ class Blockcustomerprivacy extends Module
 						'type' => 'textarea',
 						'lang' => true,
 						'autoload_rte' => true,
-						'label' => $this->l('Customer data privacy message :'),
+						'label' => $this->l('Customer data privacy message:'),
 						'name' => 'custpriv_message',
 						'desc' => $this->l('The customer data privacy message will be displayed in the account creation form.').'<br>'.$this->l('
 Tip: If the customer privacy message is too long to be written directly in the form, you can add a link to one of your pages. This can easily be created via the "CMS" page under the "Preferences" menu.')

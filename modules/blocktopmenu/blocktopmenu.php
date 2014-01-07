@@ -59,7 +59,7 @@ class Blocktopmenu extends Module
 		parent::__construct();	
 
 		$this->displayName = $this->l('Top horizontal menu');
-		$this->description = $this->l('Add a new horizontal menu to the top of your e-commerce website.');
+		$this->description = $this->l('Adds a new horizontal menu to the top of your e-commerce website.');
 	}
 
 	public function install()
@@ -165,9 +165,9 @@ class Blocktopmenu extends Module
 			if ($count_links_label || $count_label)
 			{
 				if (!$count_links_label)
-					$this->_html .= $this->displayError($this->l('Please complete the "link" field.'));
+					$this->_html .= $this->displayError($this->l('Please complete the "Link" field.'));
 				elseif (!$count_label)
-					$this->_html .= $this->displayError($this->l('Please add a label'));
+					$this->_html .= $this->displayError($this->l('Please add a label.'));
 				elseif (!isset($labels[$default_language]))
 					$this->_html .= $this->displayError($this->l('Please add a label for your default language.'));
 				else
@@ -183,7 +183,7 @@ class Blocktopmenu extends Module
 			$id_linksmenutop = Tools::getValue('id_linksmenutop', 0);
 			MenuTopLinks::remove($id_linksmenutop, (int)Shop::getContextShopID());
 			Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', str_replace(array('LNK'.$id_linksmenutop.',', 'LNK'.$id_linksmenutop), '', Configuration::get('MOD_BLOCKTOPMENU_ITEMS')));
-			$this->_html .= $this->displayConfirmation($this->l('The link has been removed'));
+			$this->_html .= $this->displayConfirmation($this->l('The link has been removed.'));
 			$update_cache = true;
 		}
 		elseif (Tools::isSubmit('updatelinksmenutop'))
@@ -204,7 +204,7 @@ class Blocktopmenu extends Module
 				}
 
 				MenuTopLinks::update($link, $label, $new_window, (int)$id_shop, (int)$id_linksmenutop, (int)$id_linksmenutop);
-				$this->_html .= $this->displayConfirmation($this->l('The link has been edited'));
+				$this->_html .= $this->displayConfirmation($this->l('The link has been edited.'));
 			}
 			$update_cache = true;
 		}
@@ -792,7 +792,7 @@ class Blocktopmenu extends Module
 					),
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Search Bar'),
+						'label' => $this->l('Search bar'),
 						'name' => 'search',
 						'is_bool' => true,
 						'values' => array(
@@ -851,13 +851,13 @@ class Blocktopmenu extends Module
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Label:'),
+						'label' => $this->l('Label'),
 						'name' => 'label',
 						'lang' => true,
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Link:'),
+						'label' => $this->l('Link'),
 						'name' => 'link',
 						'lang' => true,
 					),
@@ -1034,7 +1034,7 @@ class Blocktopmenu extends Module
 		$links = MenuTopLinks::gets((int)$this->context->language->id, null, (int)Shop::getContextShopID());
 		$fields_list = array(
 			'id_linksmenutop' => array(
-				'title' => $this->l('Id Link'),
+				'title' => $this->l('Link ID'),
 				'type' => 'text',
 			),
 			'label' => array(
@@ -1046,7 +1046,7 @@ class Blocktopmenu extends Module
 				'type' => 'link',
 			),
 			'new_window' => array(
-				'title' => $this->l('New Window'),
+				'title' => $this->l('New window'),
 				'type' => 'bool',
 				'align' => 'center',
 				'active' => 'status',

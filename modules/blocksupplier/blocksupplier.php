@@ -41,7 +41,7 @@ class BlockSupplier extends Module
 		parent::__construct();	
 
 		$this->displayName = $this->l('Suppliers block');
-        $this->description = $this->l('Adds a block displaying product suppliers.');
+        $this->description = $this->l('Adds a block displaying your product suppliers.');
     }
 
 	function install()
@@ -98,9 +98,9 @@ class BlockSupplier extends Module
 			$text_nb = (int)(Tools::getValue('SUPPLIER_DISPLAY_TEXT_NB'));
 			$form_list = (int)(Tools::getValue('SUPPLIER_DISPLAY_FORM'));
 			if ($text_list AND !Validate::isUnsignedInt($text_nb))
-				$errors[] = $this->l('Invalid number of elements');
+				$errors[] = $this->l('Invalid number of elements.');
 			elseif (!$text_list AND !$form_list)
-				$errors[] = $this->l('Please activate at least one system list.');
+				$errors[] = $this->l('Please activate at least one type of list.');
 			else
 			{
 				Configuration::updateValue('SUPPLIER_DISPLAY_TEXT', $text_list);
@@ -111,7 +111,7 @@ class BlockSupplier extends Module
 			if (isset($errors) AND sizeof($errors))
 				$output .= $this->displayError(implode('<br />', $errors));
 			else
-				$output .= $this->displayConfirmation($this->l('Settings updated'));
+				$output .= $this->displayConfirmation($this->l('Settings updated.'));
 		}
 		return $output.$this->renderForm();
 	}
@@ -154,7 +154,7 @@ class BlockSupplier extends Module
 						'type' => 'switch',
 						'label' => $this->l('Use a plain-text list'),
 						'name' => 'SUPPLIER_DISPLAY_TEXT',
-						'desc' => $this->l('Display suppliers in a plain-text list'),
+						'desc' => $this->l('Display suppliers in a plain-text list.'),
 						'values' => array(
 									array(
 										'id' => 'active_on',

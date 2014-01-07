@@ -43,8 +43,8 @@ class HomeFeatured extends Module
 		$this->bootstrap = true;
 		parent::__construct();	
 
-		$this->displayName = $this->l('Featured products on the homepage.');
-		$this->description = $this->l('Displays featured products in the middle of your homepage.');
+		$this->displayName = $this->l('Featured products on the homepage');
+		$this->description = $this->l('Displays featured products in the central column of your homepage.');
 	}
 
 	function install()
@@ -149,14 +149,14 @@ class HomeFeatured extends Module
 					'title' => $this->l('Settings'),
 					'icon' => 'icon-cogs'
 				),
-				'description' => $this->l('To add products to your homepage, simply add them to the "home" category.'),
+				'description' => $this->l('To add products to your homepage, simply add them to the root product category (default: "Home").'),
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Define the number of products to be displayed.'),
+						'label' => $this->l('Number of products to be displayed'),
 						'name' => 'HOME_FEATURED_NBR',
 						'class' => 'fixed-width-xs',
-						'desc' => $this->l('Define the number of products that you would like to display on homepage (default: 8).'),
+						'desc' => $this->l('Set the number of products that you would like to display on homepage (default: 8).'),
 					),
 				),
 				'submit' => array(
