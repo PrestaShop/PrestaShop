@@ -1137,6 +1137,9 @@ class AdminModulesControllerCore extends AdminController
 		// If we are on a module configuration, no need to load all modules
 		if (Tools::getValue('configure') != '')
 			return true;
+			
+		$this->initToolbar();
+		$this->initPageHeaderToolbar();
 
 		// Init
 		$smarty = $this->context->smarty;
