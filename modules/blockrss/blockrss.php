@@ -45,7 +45,7 @@ class Blockrss extends Module
 		parent::__construct();	
 
 		$this->displayName = $this->l('RSS feed block');
-		$this->description = $this->l('Adds a block displaying an RSS feed.');
+		$this->description = $this->l('Adds a block displaying a RSS feed.');
 
 		$this->version = '1.1';
 		$this->author = 'PrestaShop';
@@ -88,7 +88,7 @@ class Blockrss extends Module
 			elseif (!$nbr OR $nbr <= 0 OR !Validate::isInt($nbr))
 				$errors[] = $this->l('Invalid number of feeds');				
 			elseif (stristr($urlfeed, $_SERVER['HTTP_HOST'].__PS_BASE_URI__))
-				$errors[] = $this->l('You have selected a feed URL on your own website. Please choose another URL');
+				$errors[] = $this->l('You have selected a feed URL from your own website. Please choose another URL.');
 			elseif (!($contents = Tools::file_get_contents($urlfeed)))
 				$errors[] = $this->l('Feed is unreachable, check your URL');
 			/* Even if the feed was reachable, We need to make sure that the feed is well formated */
@@ -116,7 +116,7 @@ class Blockrss extends Module
 		{
 			$errors = array();
 			if (stristr(Configuration::get('RSS_FEED_URL'), $_SERVER['HTTP_HOST'].__PS_BASE_URI__))
-				$errors[] = $this->l('You have selected a feed URL on your own website. Please choose another URL');
+				$errors[] = $this->l('You have selected a feed URL from your own website. Please choose another URL.');
 			
 			if (sizeof($errors))
 				$output .= $this->displayError(implode('<br />', $errors));
@@ -187,20 +187,20 @@ class Blockrss extends Module
 						'type' => 'text',
 						'label' => $this->l('Block title'),
 						'name' => 'RSS_FEED_TITLE',
-						'desc' => $this->l('Create a title for the block (default: \'RSS feed\')'),
+						'desc' => $this->l('Create a title for the block (default: \'RSS feed\').'),
 					),
 					array(
 						'type' => 'text',
 						'label' => $this->l('Add a feed URL'),
 						'name' => 'RSS_FEED_URL',
-						'desc' => $this->l('Add the URL of the feed you want to use (sample: http://news.google.com/?output=rss)'),
+						'desc' => $this->l('Add the URL of the feed you want to use (sample: http://news.google.com/?output=rss).'),
 					),
 					array(
 						'type' => 'text',
 						'label' => $this->l('Number of threads displayed'),
 						'name' => 'RSS_FEED_NBR',
 						'class' => 'fixed-width-sm',
-						'desc' => $this->l('Number of threads displayed by the block (default value: 5)'),
+						'desc' => $this->l('Number of threads displayed in the block (default value: 5).'),
 					),
 				),
 				'submit' => array(
