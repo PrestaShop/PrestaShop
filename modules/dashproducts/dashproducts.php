@@ -168,7 +168,7 @@ class Dashproducts extends Module
 			),
 			array(
 				'id' => 'net_profit',
-				'title' => $this->l('Net Profit'),
+				'title' => $this->l('Net profit'),
 				'class' => 'text-center',
 			)
 		);
