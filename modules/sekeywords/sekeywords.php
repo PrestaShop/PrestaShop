@@ -54,7 +54,7 @@ class SEKeywords extends ModuleGraph
 				ORDER BY occurences DESC';
 
 		$this->displayName = $this->l('Search engine keywords');
-		$this->description = $this->l('Display which keywords have led visitors to your website.');
+		$this->description = $this->l('Displays which keywords have led visitors to your website.');
 	}
 
 	public function install()
@@ -112,17 +112,15 @@ class SEKeywords extends ModuleGraph
 		<div class="alert alert-warning">
 			<h4>'.$this->l('Identify external search engine keywords').'</h4>
 			<p>'
-				.$this->l('One of the most common ways of finding a website through a search engine.').
-				$this->l('Identifying the most popular keywords entered by your new visitors allows you to see the products you should put in front if you want to achieve SEO. ').'
+				.$this->l('This is one of the most common ways of finding a website through a search engine.').
+				$this->l('Identifying the most popular keywords entered by your new visitors allows you to see the products you should put in front if you want to achieve better visibility in search engines.').'
 			</p>
 			<p>&nbsp;</p>
 			<h4>'.$this->l('How does it work?').'</h4>
 			<p>'
-				.$this->l('When a visitor comes to your website, the server notes their previous location. This module parses the URL and finds the keywords in it.').
-				sprintf($this->l('Currently, it manages the following search engines: %1$s and %2$s.'),
-				'<b>Google, AOL, Yandex, Ask, NHL, Yahoo, Baidu, Lycos, Exalead, Live, Voila</b>',
-				'<b>Altavista</b>'
-				).$this->l('Soon, it will be possible to dynamically add new search engines and contribute to this module.').'
+				.$this->l('When a visitor comes to your website, the web server notes the URL of the site he/she comes from. This module then parses the URL, and if it finds a reference to a known search engine, it finds the keywords in it.').'<br>'.
+				$this->l('This module can recognize all the search engines listed in PrestaShop\'s Stats/Search Engine page -- and you can add more!').'<br>'.
+				$this->l('IMPORTANT NOTE: in September 2013, Google chose to encrypt its searches queries using SSL. This means all the referer-based tools in the World (including this one) cannot identify Google keywords anymore.').'
 			</p>
 		</div>
 		<p>'.($total == 1 ? sprintf($this->l('%d keyword matches your query.'), $total) : sprintf($this->l('%d keywords match your query.'), $total)).'</p>';
