@@ -2209,7 +2209,6 @@ class BlockLayered extends Module
 					
 					break;
 
-
 				case 'category':
 					if (Group::isFeatureActive())
 						$this->user_groups =  ($this->context->customer->isLogged() ? $this->context->customer->getGroups() : array(Configuration::get('PS_UNIDENTIFIED_GROUP')));
@@ -2586,7 +2585,6 @@ class BlockLayered extends Module
 							);
 					}
 					break;
-				
 			}
 		}
 		
@@ -2686,17 +2684,21 @@ class BlockLayered extends Module
 					$nofollow = false;
 					if (!empty($values['checked']) && in_array($type_filter['type'], $blacklist))
 						$global_nofollow = true;
+
 					$option_checked_clone_array = $option_checked_array;
 					
 					// If not filters checked, add parameter
 					$value_name = !empty($values['url_name']) ? $values['url_name'] : $values['name'];
+
 					if (!in_array(Tools::link_rewrite($value_name), $param_group_selected_array[Tools::link_rewrite($filter_name)]))
 					{
 						// Update parameter filter checked before
 						if (array_key_exists(Tools::link_rewrite($filter_name), $option_checked_array))
 						{
 							$option_checked_clone_array[Tools::link_rewrite($filter_name)] = $option_checked_clone_array[Tools::link_rewrite($filter_name)].Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', Tools::link_rewrite($value_name));
-							$nofollow = true;
+
+							if (in_array($type_filter['type'], $blacklist))
+								$nofollow = true;
 						}
 						else
 							$option_checked_clone_array[Tools::link_rewrite($filter_name)] = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', Tools::link_rewrite($value_name));
@@ -2712,12 +2714,20 @@ class BlockLayered extends Module
 					ksort($option_checked_clone_array); // Order parameters
 					foreach ($option_checked_clone_array as $key_group => $value_group)
 						$parameters .= '/'.str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', $key_group).$value_group;
-					
+
+					// Add nofollow if any blacklisted filters ins in parameters
+					foreach ($filter_blocks as $filter)
+					{
+						$name = Tools::link_rewrite((!empty($filter['url_name']) ? $filter['url_name'] : $filter['name']));
+						if (in_array($filter['type'], $blacklist) && strpos($parameters, $name.'-') !== false)
+							$nofollow = true;
+					}
+
 					// Check if there is an non indexable attribute or feature in the url
 					foreach ($non_indexable as $value)
 						if (strpos($parameters, '/'.$value) !== false)
 							$nofollow = true;
-					
+
 					$type_filter['values'][$key]['link'] = Context::getContext()->link->getCategoryLink($parent, null, null, ltrim($parameters, '/'));						
 					$type_filter['values'][$key]['rel'] = ($nofollow) ? 'nofollow' : '';
 				}
@@ -2748,7 +2758,6 @@ class BlockLayered extends Module
 			'param_product_url' => $param_product_url,
 			'no_follow' => (!empty($param_selected) || $global_nofollow)
 		);
-		
 		return $cache;
 	}
 	
