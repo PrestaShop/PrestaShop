@@ -66,7 +66,7 @@ module_inactive
 							class="noborder" title="{l s='Module %1s '|sprintf:$module->name}" />
 						{/if}
 					</td>
-					<td>
+					<td class="fixed-width-xs">
 						<img width="32" alt="{$module->displayName}" title="{$module->displayName}" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}" />
 					</td>
 					<td>
