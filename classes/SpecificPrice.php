@@ -238,7 +238,7 @@ class SpecificPriceCore extends ObjectModel
 				$query .= 'AND `from_quantity` <= '.max(1, $qty_to_use);
 			}
 
-			$query .= ' ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC';
+			$query .= ' ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` DESC, `score` DESC';
 			
 			SpecificPrice::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
 				
