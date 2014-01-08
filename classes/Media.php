@@ -238,7 +238,7 @@ class MediaCore
 		if (empty($css_uri))
 			return false;
 
-		$css_uri = '/'.ltrim(str_replace(str_replace(array('/', '\\'), _PS_ROOT_DIR_), __PS_BASE_URI__, $css_uri), '/\\');
+		$css_uri = '/'.ltrim(str_replace(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, _PS_ROOT_DIR_), __PS_BASE_URI__, $css_uri), '/\\');
 		// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
 		$url_data = parse_url($css_uri);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
