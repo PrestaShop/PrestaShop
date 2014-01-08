@@ -561,13 +561,13 @@ class Blocktopmenu extends Module
 
 		foreach ($categories as $category)
 		{
-			if (!in_array('CMS_CAT'.$category['id_cms_category'], $items_to_skip))
+			if (isset($items_to_skip) && !in_array('CMS_CAT'.$category['id_cms_category'], $items_to_skip))
 				$html .= '<option value="CMS_CAT'.$category['id_cms_category'].'" style="font-weight: bold;">'.$spacer.$category['name'].'</option>';
 			$html .= $this->getCMSOptions($category['id_cms_category'], (int)$depth + 1, (int)$id_lang, $items_to_skip);
 		}
 
 		foreach ($pages as $page)
-			if (!in_array('CMS'.$page['id_cms'], $items_to_skip))
+			if (isset($items_to_skip) && !in_array('CMS'.$page['id_cms'], $items_to_skip))
 				$html .= '<option value="CMS'.$page['id_cms'].'">'.$spacer.$page['meta_title'].'</option>';
 
 		return $html;
