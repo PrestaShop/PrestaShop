@@ -1,4 +1,4 @@
-/*
+{*
 * 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -19,36 +19,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2014 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
-*/
+*}
 
-$(document).ready(function(){
-
-	if (typeof(homeslider_speed) == 'undefined')
-		homeslider_speed = 500;
-	if (typeof(homeslider_pause) == 'undefined')
-		homeslider_pause = 3000;
-	if (typeof(homeslider_loop) == 'undefined')
-		homeslider_loop = true;
-    if (typeof(homeslider_width) == 'undefined')
-        homeslider_width = 779;
-
-	$('#homeslider').bxSlider({
-        maxSlides: 1,
-        slideWidth: homeslider_width,
-		infiniteLoop: homeslider_loop,
-		hideControlOnEnd: true,
-		pager: false,
-		autoHover: true,
-		auto: homeslider_loop,
-		speed: homeslider_speed,
-		pause: homeslider_pause,
-		controls: true
-	});
-
-    $('.homeslider-description').click(function () {
-        window.location.href = $(this).prev('a').prop('href');
-    });
-});
+<li class="mailalerts">
+	<a href="{$link->getModuleLink('mailalerts', 'account')|escape:'html'}" title="{l s='My alerts' mod='mailalerts'}" rel="nofollow">
+    	<i class="icon-envelope"></i>
+		<span>{l s='My alerts' mod='mailalerts'}</span>
+	</a>
+</li>

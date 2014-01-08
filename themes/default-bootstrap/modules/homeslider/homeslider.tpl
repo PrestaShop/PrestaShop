@@ -44,27 +44,18 @@
             </ul>
         </div>
         {if isset($homeslider)}
-            <script type="text/javascript">
                 {if $homeslider_slides|@count > 1}
                     {if $homeslider.loop == 1}
-                        var homeslider_loop = true;
+                        {addJsDef homeslider_loop=true}
                     {else}
-                        var homeslider_loop = false;
+                        {addJsDef homeslider_loop=false}
                     {/if}
                 {else}
-                    var homeslider_loop = false;
+                    {addJsDef homeslider_loop=false}
                 {/if}
-                var homeslider_width = {$homeslider.width};
-                var homeslider_speed = {$homeslider.speed};
-                var homeslider_pause = {$homeslider.pause};
-                {literal}
-                $('document').ready(function () {
-                    $('.homeslider-description').click(function () {
-                        window.location.href = $(this).prev('a').prop('href');
-                    });
-                });
-                {/literal}
-            </script>
+                {addJsDef homeslider_width=$homeslider.width}
+                {addJsDef homeslider_speed=$homeslider.speed}
+                {addJsDef homeslider_pause=$homeslider.pause}
         {/if}
     {/if}
     <!-- /Module HomeSlider -->
