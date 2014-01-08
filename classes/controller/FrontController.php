@@ -477,8 +477,7 @@ class FrontControllerCore extends Controller
 		));
 
 		$this->context->smarty->assign(array(
-			'css_files' => $this->css_files,
-			'js_files' => Configuration::get('PS_JS_HTML_THEME_COMPRESSION') ? array() : array_unique($this->js_files)
+			'css_files' => $this->css_files
 		));
 
 		$this->display_header = $display;
@@ -540,8 +539,7 @@ class FrontControllerCore extends Controller
 		}
 
 		$this->context->smarty->assign(array(
-			'css_files' => $this->css_files, 
-			'js_files' => Configuration::get('PS_JS_HTML_THEME_COMPRESSION') ? array(): array_unique($this->js_files),
+			'css_files' => $this->css_files,
 			'errors' => $this->errors,
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,
