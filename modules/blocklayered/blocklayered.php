@@ -633,10 +633,11 @@ class BlockLayered extends Module
 		$selected_filters = $this->getSelectedFilters();
 		$filter_block = $this->getFilterBlock($selected_filters);
 		$title = '';
+
 		if (is_array($filter_block['title_values']))
 			foreach ($filter_block['title_values'] as $key => $val)
 				$title .= ' – '.$key.' '.implode('/', $val);
-		
+
 		$smarty->assign('categoryNameComplement', $title);
 		$this->getProducts($selected_filters, $params['catProducts'], $params['nbProducts'], $p, $n, $pages_nb, $start, $stop, $range);
 		// Need a nofollow on the pagination links?
@@ -704,7 +705,7 @@ class BlockLayered extends Module
 
 		if (!empty($title))
 		{
-			$smarty->assign('meta_title', ucfirst(substr($category_metas['meta_title'], 3)));
+			$smarty->assign('meta_title', ucfirst($title));
 			$smarty->assign('meta_description', $description.'. '.$category_metas['meta_description']);
 		}
 		else
@@ -2728,7 +2729,7 @@ class BlockLayered extends Module
 						if (strpos($parameters, '/'.$value) !== false)
 							$nofollow = true;
 
-					$type_filter['values'][$key]['link'] = Context::getContext()->link->getCategoryLink($parent, null, null, ltrim($parameters, '/'));						
+					$type_filter['values'][$key]['link'] = Context::getContext()->link->getCategoryLink($parent, null, null, ltrim($parameters, '/'));
 					$type_filter['values'][$key]['rel'] = ($nofollow) ? 'nofollow' : '';
 				}
 			}
