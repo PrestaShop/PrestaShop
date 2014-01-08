@@ -52,9 +52,6 @@
         </li>
 	</ul>
 {else}
-	<p class="contact-title">
-        <i class="icon-comment-alt"></i>{l s='For questions about an order or for more information about our products'}.
-    </p>
 	{include file="$tpl_dir./errors.tpl"}
 	<form action="{$request_uri|escape:'html':'UTF-8'}" method="post" class="contact-form-box" enctype="multipart/form-data">
 		<fieldset>
@@ -81,8 +78,8 @@
                 </div> <!-- .col-xs-12 .col-md-3 -->
                     <p id="desc_contact0" class="desc_contact">&nbsp;</p>
                     {foreach from=$contacts item=contact}
-                        <p id="desc_contact{$contact.id_contact|intval}" class="desc_contact" style="display:none;">
-                            {$contact.description|escape:'html':'UTF-8'}
+                        <p id="desc_contact{$contact.id_contact|intval}" class="desc_contact contact-title" style="display:none;">
+                            <i class="icon-comment-alt"></i>{$contact.description|escape:'html':'UTF-8'}
                         </p>
                     {/foreach}
                 {/if}
