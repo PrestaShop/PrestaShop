@@ -23,12 +23,140 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-
 //global variables
 var combinations = [];
 var selectedCombination = [];
 var globalQuantity = 0;
 var colors = [];
+
+//To do after loading HTML
+$(document).ready(function()
+{
+	//init the serialScroll for thumbs
+	$('#thumbs_list').serialScroll({
+		items:'li:visible',
+		prev:'#view_scroll_left',
+		next:'#view_scroll_right',
+		axis:'x',
+		offset:0,
+		start:0,
+		stop:true,
+		onBefore:serialScrollFixLock,
+		duration:700,
+		step: 2,
+		lazy: true,
+		lock: false,
+		force:false,
+		cycle:false
+	});
+
+	$('#thumbs_list').trigger('goto', 1);// SerialScroll Bug on goto 0 ?
+	$('#thumbs_list').trigger('goto', 0);
+
+	//hover 'other views' images management
+	$('#views_block li a').hover(
+		function(){displayImage($(this));},
+		function(){}
+	);
+
+	//set jqZoom parameters if needed
+	if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
+	{
+		$('.jqzoom').jqzoom({
+			zoomType: 'innerzoom', //innerzoom/standard/reverse/drag
+			zoomWidth: 458, //zooming div default width(default width value is 200)
+			zoomHeight: 458, //zooming div default width(default height value is 200)
+			xOffset: 21, //zooming div default offset(default offset value is 10)
+			yOffset: 0,
+			title: false
+		});
+	}
+	//add a link on the span 'view full size' and on the big image
+	$('#view_full_size, #image-block img').click(function(){
+		$('#views_block .shown').click();
+	});
+
+	//catch the click on the "more infos" button at the top of the page
+	$('#short_description_block .button').click(function(){
+		$('#more_info_tab_more_info').click();
+		$.scrollTo( '#more_info_tabs', 1200 );
+	});
+
+	// Hide the customization submit button and display some message
+	$('#customizedDatas input').click(function() {
+		$('#customizedDatas input').hide();
+		$('#ajax-loader').fadeIn();
+		$('#customizedDatas').append(uploading_in_progress);
+	});
+
+	original_url = window.location + '';
+	first_url_check = true;
+	checkUrl();
+	initLocationChange();
+
+	//init the price in relation of the selected attributes
+	if (typeof productHasAttributes != 'undefined' && productHasAttributes)
+		findCombination(true);
+	else if (typeof productHasAttributes != 'undefined' && !productHasAttributes)
+		refreshProductImages(0);
+
+	$('#resetImages').click(function() {
+		refreshProductImages(0);
+	});
+	if (contentOnly == false)
+		$('.thickbox').fancybox({
+			'hideOnContentClick': true,
+			'transitionIn'	: 'elastic',
+			'transitionOut'	: 'elastic'
+		});
+	else
+		$('.thickbox').click(function(){return false});
+
+	$('#bxslider').bxSlider({
+		minSlides: 1,
+		maxSlides: 6,
+		slideWidth: 178,
+		slideMargin: 20,
+		pager: false,
+		nextText: '',
+		prevText: '',
+		moveSlides:1,
+		infiniteLoop:false,
+		hideControlOnEnd: true
+	});
+
+    // The button to increment the product value
+    $('.product_quantity_up').click(function(e){
+        e.preventDefault();
+        fieldName = $(this).data('field-qty');
+        var currentVal = parseInt($('input[name='+fieldName+']').val());
+		if (quantityAvailable > 0) {
+				quantityAvailableT = quantityAvailable;
+		} else {
+				quantityAvailableT = 100000000;
+		}
+        if (!isNaN(currentVal) && currentVal < quantityAvailableT) {
+            $('input[name='+fieldName+']').val(currentVal + 1).trigger('keyup');
+        } else {
+            $('input[name='+fieldName+']').val(quantityAvailableT);
+        }
+		return false;
+    });
+	 // The button to decrement the product value
+    $(".product_quantity_down").click(function(e) {
+        e.preventDefault();
+        fieldName = $(this).data('field-qty');
+        var currentVal = parseInt($('input[name='+fieldName+']').val());
+        if (!isNaN(currentVal) && currentVal > 1) {
+            $('input[name='+fieldName+']').val(currentVal - 1).trigger('keyup');
+        } else {
+            $('input[name='+fieldName+']').val(1);
+        }
+		return false;
+    });
+	if (typeof minimalQuantity != 'undefined' && minimalQuantity)
+		checkMinimalQuantity();
+});
 
 //check if a function exists
 function function_exists(function_name)
@@ -513,90 +641,6 @@ function refreshProductImages(id_product_attribute)
 	serialScrollFixLock('', '', '', '', 0);// SerialScroll Bug on goto 0 ?
 }
 
-//To do after loading HTML
-$(document).ready(function()
-{
-	//init the serialScroll for thumbs
-	$('#thumbs_list').serialScroll({
-		items:'li:visible',
-		prev:'#view_scroll_left',
-		next:'#view_scroll_right',
-		axis:'x',
-		offset:0,
-		start:0,
-		stop:true,
-		onBefore:serialScrollFixLock,
-		duration:700,
-		step: 2,
-		lazy: true,
-		lock: false,
-		force:false,
-		cycle:false
-	});
-
-	$('#thumbs_list').trigger('goto', 1);// SerialScroll Bug on goto 0 ?
-	$('#thumbs_list').trigger('goto', 0);
-
-	//hover 'other views' images management
-	$('#views_block li a').hover(
-		function(){displayImage($(this));},
-		function(){}
-	);
-
-	//set jqZoom parameters if needed
-	if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-	{
-		$('.jqzoom').jqzoom({
-			zoomType: 'innerzoom', //innerzoom/standard/reverse/drag
-			zoomWidth: 458, //zooming div default width(default width value is 200)
-			zoomHeight: 458, //zooming div default width(default height value is 200)
-			xOffset: 21, //zooming div default offset(default offset value is 10)
-			yOffset: 0,
-			title: false
-		});
-	}
-	//add a link on the span 'view full size' and on the big image
-	$('#view_full_size, #image-block img').click(function(){
-		$('#views_block .shown').click();
-	});
-
-	//catch the click on the "more infos" button at the top of the page
-	$('#short_description_block .button').click(function(){
-		$('#more_info_tab_more_info').click();
-		$.scrollTo( '#more_info_tabs', 1200 );
-	});
-
-	// Hide the customization submit button and display some message
-	$('#customizedDatas input').click(function() {
-		$('#customizedDatas input').hide();
-		$('#ajax-loader').fadeIn();
-		$('#customizedDatas').append(uploading_in_progress);
-	});
-
-	original_url = window.location + '';
-	first_url_check = true;
-	checkUrl();
-	initLocationChange();
-
-	//init the price in relation of the selected attributes
-	if (typeof productHasAttributes != 'undefined' && productHasAttributes)
-		findCombination(true);
-	else if (typeof productHasAttributes != 'undefined' && !productHasAttributes)
-		refreshProductImages(0);
-
-	$('#resetImages').click(function() {
-		refreshProductImages(0);
-	});
-	if (contentOnly == false)
-		$('.thickbox').fancybox({
-			'hideOnContentClick': true,
-			'transitionIn'	: 'elastic',
-			'transitionOut'	: 'elastic'
-		});
-	else
-		$('.thickbox').click(function(){return false});
-});
-
 function saveCustomization()
 {
 	$('#quantityBackup').val($('#quantity_wanted').val());
@@ -745,35 +789,3 @@ function checkUrl()
 		}
 	}
 }
-// product quantity change buttons
-$(document).ready(function(){
-    // The button to increment the product value
-    $('.product_quantity_up').click(function(e){
-        e.preventDefault();
-        fieldName = $(this).data('field-qty');
-        var currentVal = parseInt($('input[name='+fieldName+']').val());
-		if (quantityAvailable > 0) {
-				quantityAvailableT = quantityAvailable;
-		} else {
-				quantityAvailableT = 100000000;
-		}
-        if (!isNaN(currentVal) && currentVal < quantityAvailableT) {
-            $('input[name='+fieldName+']').val(currentVal + 1).trigger('keyup');
-        } else {
-            $('input[name='+fieldName+']').val(quantityAvailableT);
-        }
-		return false;
-    });
-	 // The button to decrement the product value
-    $(".product_quantity_down").click(function(e) {
-        e.preventDefault();
-        fieldName = $(this).data('field-qty');
-        var currentVal = parseInt($('input[name='+fieldName+']').val());
-        if (!isNaN(currentVal) && currentVal > 1) {
-            $('input[name='+fieldName+']').val(currentVal - 1).trigger('keyup');
-        } else {
-            $('input[name='+fieldName+']').val(1);
-        }
-		return false;
-    });
-});

@@ -88,11 +88,11 @@
 				<span class="switch prestashop-switch">
 					<input type="radio" name="layered_indexable" id="indexable_on" value="1"{if $is_indexable} checked="checked"{/if}>
 					<label for="indexable_on">
-						<i class="icon-check-sign color_success"></i> {l s='Yes' mod='blocklayered'}
+						<i class="color_success"></i> {l s='Yes' mod='blocklayered'}
 					</label>
 					<input type="radio" name="layered_indexable" id="indexable_off" value="0"{if !$is_indexable} checked="checked"{/if}>
 					<label for="indexable_off">
-						<i class="icon-ban-circle color_danger"></i> {l s='No' mod='blocklayered'}
+						<i class="color_danger"></i> {l s='No' mod='blocklayered'}
 					</label>
 					<a class="slide-button btn"></a>
 				</span>

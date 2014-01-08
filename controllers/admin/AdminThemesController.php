@@ -1550,6 +1550,8 @@ class AdminThemesControllerCore extends AdminController
 		$helper->fields_value['theme_archive_server']=array();
 		$helper->multiple_fieldsets = true;
 		$helper->override_folder = $this->tpl_folder;
+		$helper->languages = $this->getLanguages();
+		$helper->default_form_language = (int)$this->context->language->id;
 
 		return $helper->generateForm($fields_form);
 	}
@@ -1948,12 +1950,13 @@ class AdminThemesControllerCore extends AdminController
 
 			$helper = new HelperForm();
 
-			$helper->currentIndex = $this->context->link->getAdminLink('AdminThemes', false) . '&action=ThemeInstall';
-			$helper->token        = Tools::getAdminTokenLite('AdminThemes');
-			$helper->show_toolbar = true;
-			$helper->toolbar_btn  = $toolbar_btn;
-			$helper->fields_value = $fields_value;
-
+			$helper->currentIndex          = $this->context->link->getAdminLink('AdminThemes', false).'&action=ThemeInstall';
+			$helper->token                 = Tools::getAdminTokenLite('AdminThemes');
+			$helper->show_toolbar          = true;
+			$helper->toolbar_btn           = $toolbar_btn;
+			$helper->fields_value          = $fields_value;
+			$helper->languages             = $this->getLanguages();
+			$helper->default_form_language = (int)$this->context->language->id;
 
 			$helper->override_folder = $this->tpl_folder;
 

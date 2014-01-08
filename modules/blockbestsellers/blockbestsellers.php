@@ -49,6 +49,7 @@ class BlockBestSellers extends Module
 	public function install()
 	{
 		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('blockbestsellers-home.tpl');
 		$this->_clearCache('tab.tpl');
 		
 		if (!parent::install()
@@ -68,6 +69,7 @@ class BlockBestSellers extends Module
 	public function uninstall()
 	{
 		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('blockbestsellers-home.tpl');
 		$this->_clearCache('tab.tpl');
 		
 		return parent::uninstall();
@@ -76,24 +78,28 @@ class BlockBestSellers extends Module
 	public function hookAddProduct($params)
 	{
 		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('blockbestsellers-home.tpl');
 		$this->_clearCache('tab.tpl');
 	}
 
 	public function hookUpdateProduct($params)
 	{
 		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('blockbestsellers-home.tpl');
 		$this->_clearCache('tab.tpl');
 	}
 
 	public function hookDeleteProduct($params)
 	{
 		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('blockbestsellers-home.tpl');
 		$this->_clearCache('tab.tpl');
 	}
 
 	public function hookActionOrderStatusPostUpdate($params)
 	{
 		$this->_clearCache('blockbestsellers.tpl');
+		$this->_clearCache('blockbestsellers-home.tpl');
 		$this->_clearCache('tab.tpl');
 	}
 
@@ -185,13 +191,13 @@ class BlockBestSellers extends Module
 
 	public function hookdisplayHomeTabContent($params)
 	{
-		if (!$this->isCached('blockbestsellers.tpl', $this->getCacheId('blockbestsellers-home')))
+		if (!$this->isCached('blockbestsellers-home.tpl', $this->getCacheId('blockbestsellers-home')))
 		{
 			$this->smarty->assign(array(
 				'best_sellers' => BlockBestSellers::$cache_best_sellers,
 				'homeSize' => Image::getSize(ImageType::getFormatedName('home'))));
 		}
-		return $this->display(__FILE__, 'blockbestsellers.tpl', $this->getCacheId('blockbestsellers-home'));
+		return $this->display(__FILE__, 'blockbestsellers-home.tpl', $this->getCacheId('blockbestsellers-home'));
 	}
 
 	public function hookRightColumn($params)
