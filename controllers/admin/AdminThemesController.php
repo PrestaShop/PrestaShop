@@ -2039,7 +2039,7 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processThemeInstall()
 	{
-		if (Shop::isFeatureActive() && !Tools::getIsset('checkBoxShopAsso_theme'))
+		if (Shop::isFeatureActive() && !Tools::getIsset('checkBoxShopAsso_configuration'))
 		{
 			$this->errors[] = $this->l('You must choose at least one shop.');
 			$this->display = 'ChooseThemeModule';
@@ -2049,8 +2049,8 @@ class AdminThemesControllerCore extends AdminController
 		$theme = New Theme((int)Tools::getValue('id_theme'));
 
 		$shops = array(Configuration::get('PS_SHOP_DEFAULT'));
-		if (Tools::isSubmit('checkBoxShopAsso_theme'))
-			$shops = Tools::getValue('checkBoxShopAsso_theme');
+		if (Tools::isSubmit('checkBoxShopAsso_configuration'))
+			$shops = Tools::getValue('checkBoxShopAsso_configuration');
 
 		$xml = false;
 		if (file_exists(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml'))
