@@ -42,8 +42,8 @@ class productsCategory extends Module
 		$this->bootstrap = true;
 		parent::__construct();	
 		
-		$this->displayName = $this->l('Products Category');
-		$this->description = $this->l('Display products of the same category on the product page.');
+		$this->displayName = $this->l('Products category');
+		$this->description = $this->l('Displays products of the same category on the product page.');
  	}
 
 	public function install()
@@ -70,12 +70,12 @@ class productsCategory extends Module
 	{
 		$this->_html = '';
 		if (Tools::isSubmit('submitCross') AND Tools::getValue('PRODUCTSCATEGORY_DISPLAY_PRICE') != 0 AND Tools::getValue('PRODUCTSCATEGORY_DISPLAY_PRICE') != 1)
-			$this->_html .= $this->displayError('Invalid displayPrice');
+			$this->_html .= $this->displayError('Invalid displayPrice.');
 		elseif (Tools::isSubmit('submitCross'))
 		{
 			Configuration::updateValue('PRODUCTSCATEGORY_DISPLAY_PRICE', Tools::getValue('PRODUCTSCATEGORY_DISPLAY_PRICE'));
 			$this->_clearCache('productscategory.tpl');
-			$this->_html .= $this->displayConfirmation($this->l('Settings updated successfully'));
+			$this->_html .= $this->displayConfirmation($this->l('Settings updated successfully.'));
 		}
 		$this->_html .= $this->renderForm();
 		
