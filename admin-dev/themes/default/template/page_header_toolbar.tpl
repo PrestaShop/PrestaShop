@@ -76,9 +76,9 @@
 				{foreach from=$toolbar_btn item=btn key=k}
 				{if $k != 'back' && $k != 'modules-list'}
 				<li>
-					<a id="page-header-desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href}"{/if} title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
-						<i class="{if isset($btn.icon)}{$btn.icon}{else}process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i>
-						<span {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc}</span>
+					<a id="page-header-desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href|escape}"{/if} title="{$btn.desc|escape}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
+						<i class="{if isset($btn.icon)}{$btn.icon|escape}{else}process-icon-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}{/if} {if isset($btn.class)}{$btn.class|escape}{/if}" ></i>
+						<span {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc|escape}</span>
 					</a>
 				</li>
 				{/if}
@@ -91,12 +91,14 @@
 					</a>
 				</li>
 				{/if}
+				{if isset($help_link)}
 				<li>
 					<a class="toolbar_btn" href="{$help_link|escape}" title="{l s='Help'}">
 						<i class="process-icon-help"></i>
 						<div>{l s='Help'}</div>
 					</a>
 				</li>
+				{/if}
 			</ul>
 
 			<script language="javascript" type="text/javascript">

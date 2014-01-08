@@ -315,7 +315,6 @@ class HookCore extends ObjectModel
 			// For payment modules, we check that they are available in the contextual country
 			elseif ($frontend)
 			{
-				$sql->where(Module::getPaypalIgnore());
 				if (Validate::isLoadedObject($context->country))
 					$sql->where('(h.name = "displayPayment" AND (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' AND id_shop = '.(int)$context->shop->id.' LIMIT 1) = '.(int)$context->country->id.')');
 				if (Validate::isLoadedObject($context->currency))
@@ -367,7 +366,7 @@ class HookCore extends ObjectModel
 		// If hook_name is given, just get list of modules for this hook
 		if ($hook_name)
 		{
-			$retro_hook_name = Hook::getRetroHookName($hook_name);
+			$retro_hook_name = strtolower(Hook::getRetroHookName($hook_name));
 			$hook_name = strtolower($hook_name);
 
 			$return = array();

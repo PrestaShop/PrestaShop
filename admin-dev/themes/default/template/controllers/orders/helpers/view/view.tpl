@@ -110,9 +110,9 @@
 							{l s='View invoice'}
 						</a>
 						{else}
-							<span class="icon-stack">
-								<i class="icon-file"></i>
-								<i class="icon-ban-circle icon-stack-base text-danger"></i>
+							<span class="icon-stack icon-lg">
+								<i class="icon-file icon-stack-1x"></i>
+								<i class="icon-ban-circle icon-stack-2x text-danger"></i>
 							</span>
 							{l s='No invoice'}
 						{/if}
@@ -122,9 +122,9 @@
 							{l s='View delivery slip'}
 						</a>
 						{else}
-							<span class="icon-stack">
-								<i class="icon-truck"></i>
-								<i class="icon-ban-circle icon-stack-base text-danger"></i>
+							<span class="icon-stack icon-lg">
+								<i class="icon-truck icon-stack-1x"></i>
+								<i class="icon-ban-circle icon-stack-2x text-danger"></i>
 							</span>
 							{l s='No delivery slip'}
 						{/if}

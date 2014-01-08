@@ -376,6 +376,18 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 */
 	public function processAdd()
 	{
+		if ($this->table == 'attribute')
+		{
+			$object = new $this->className();
+			foreach (Language::getLanguages(false) as $language)
+				if ($object->isAttribute(Tools::getValue('name_'.$language['id_lang']), $language['id_lang']))
+					$this->errors['name_'.$language['id_lang']] = sprintf(Tools::displayError('The attribute value "%1$s" already exist for %2$s language'),
+						Tools::getValue('name_'.$language['id_lang']), $language['name']);
+
+			if (!empty($this->errors))
+				return $object;
+		}
+
 		$object = parent::processAdd();
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
@@ -470,21 +482,21 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		if (empty($this->display))
 		{
 			$this->page_header_toolbar_btn['new_attribute_group'] = array(
-				'href' => self::$currentIndex.'&amp;addattribute_group&amp;token='.$this->token,
-				'desc' => $this->l('Add new attribute'),
+				'href' => self::$currentIndex.'&addattribute_group&token='.$this->token,
+				'desc' => $this->l('Add new attribute', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 			$this->page_header_toolbar_btn['new_value'] = array(
-				'href' => self::$currentIndex.'&amp;updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&amp;token='.$this->token,
-				'desc' => $this->l('Add new value'),
+				'href' => self::$currentIndex.'&updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&token='.$this->token,
+				'desc' => $this->l('Add new value', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		}
 
 		if ($this->display == 'view')
 			$this->page_header_toolbar_btn['new_value'] = array(
-				'href' => self::$currentIndex.'&amp;updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&amp;token='.$this->token,
-				'desc' => $this->l('Add new value'),
+				'href' => self::$currentIndex.'&updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&token='.$this->token,
+				'desc' => $this->l('Add new value', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 

@@ -231,6 +231,9 @@ class AdminShopUrlControllerCore extends AdminController
 							'readonly' => true
 						),
 					),
+					'submit' => array(
+						'title' => $this->l('Save'),
+					),
 				),
 			),
 		);

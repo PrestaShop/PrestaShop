@@ -83,13 +83,13 @@ class AdminTabsControllerCore extends AdminController
 		if ($this->display == 'details')
 			$this->page_header_toolbar_btn['back_to_list'] = array(
 				'href' => Context::getContext()->link->getAdminLink('AdminTabs'),
-				'desc' => $this->l('Back to list'),
+				'desc' => $this->l('Back to list', null, null, false),
 				'icon' => 'process-icon-back'
 			);
 		elseif(empty($this->display))
 			$this->page_header_toolbar_btn['new_menu'] = array(
-				'href' => self::$currentIndex.'&amp;addtab&amp;token='.$this->token,
-				'desc' => $this->l('Add new menu'),
+				'href' => self::$currentIndex.'&addtab&token='.$this->token,
+				'desc' => $this->l('Add new menu', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		

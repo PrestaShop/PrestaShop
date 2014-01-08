@@ -551,11 +551,13 @@ class MediaCore
 			foreach ($js_files_infos as $file_infos)
 			{
 				if (file_exists($file_infos['path']))
-					$content .= file_get_contents($file_infos['path']).';';
+				{
+					$tmp_content = file_get_contents($file_infos['path']);
+					$content .= (preg_match('@\.(min|pack)\.[^/]+$\.@', $file_infos['path']) ? $tmp_content : Media::packJS($tmp_content));
+				}
 				else
 					$compressed_js_files_not_found[] = $file_infos['path'];
 			}
-			$content = Media::packJS($content);
 
 			if (!empty($compressed_js_files_not_found))
 				$content = '/* WARNING ! file(s) not found : "'.

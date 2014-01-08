@@ -35,7 +35,7 @@
 		"image":         "{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|addslashes|replace:'\\\'':'\''}",
         "image_cart":    "{$link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')|addslashes|replace:'\\\'':'\''}",
 		"priceByLine":   "{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total}{else}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total_wt}{/if}",
-		"name":          "{$product.name|html_entity_decode:2:'UTF-8'|truncate:15:'...':true|escape:'html':'UTF-8'}",
+		"name":          "{$product.name|trim|html_entity_decode:2:'UTF-8'|truncate:15:'...':true|escape:'html':'UTF-8'}",
 		"price":         "{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total}{else}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total_wt}{/if}",
 		"price_float":   "{$product.total}",
 		"idCombination": {if isset($product.attributes_small)}{$productAttributeId}{else}0{/if},
@@ -64,7 +64,7 @@
 						{ldelim}
 						"index":			{$index},
 						"value":			"{$data.value|addslashes|replace: '\\\'':'\''}",
-						"truncatedValue":	"{$data.value|truncate:28:'...'|addslashes|replace: '\\\'':'\''}"
+						"truncatedValue":	"{$data.value|trim|truncate:28:'...'|addslashes|replace: '\\\'':'\''}"
 						{rdelim}{if !$smarty.foreach.datas.last},{/if}
 					{/foreach}]
 				{rdelim}{if !$smarty.foreach.customization.last},{/if}
@@ -81,9 +81,9 @@
 {if $discounts}{foreach from=$discounts item=discount name='discounts'}
 	{ldelim}
 		"id":              "{$discount.id_discount}",
-		"name":            "{$discount.name|cat:' : '|cat:$discount.description|truncate:18:'...'|addslashes|replace:'\\\'':'\''}",
+		"name":            "{$discount.name|cat:' : '|cat:$discount.description|trim|truncate:18:'...'|addslashes|replace:'\\\'':'\''}",
 		"description":     "{$discount.description|addslashes|replace:'\\\'':'\''}",
-		"nameDescription": "{$discount.name|cat:' : '|cat:$discount.description|truncate:18:'...'|addslashes|replace:'\\\'':'\''}",
+		"nameDescription": "{$discount.name|cat:' : '|cat:$discount.description|trim|truncate:18:'...'|addslashes|replace:'\\\'':'\''}",
 		"code":            "{$discount.code}",
 		"link":            "{$link->getPageLink("$order_process", true, NULL, "deleteDiscount={$discount.id_discount}")|escape:'html':'UTF-8'}",
 		"price":           "{if $priceDisplay == 1}{convertPrice|html_entity_decode:2:'UTF-8' price=$discount.value_tax_exc}{else}{convertPrice|html_entity_decode:2:'UTF-8' price=$discount.value_real}{/if}",

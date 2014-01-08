@@ -103,7 +103,7 @@ class Blocknewsletter extends Module
 			
 			$voucher = Tools::getValue('NW_VOUCHER_CODE');
 			if ($voucher && !Validate::isDiscountName($voucher))
-				$this->_html .= $this->displayError($this->l('The coucher code is invalid.'));
+				$this->_html .= $this->displayError($this->l('The voucher code is invalid.'));
 			else
 			{
 				Configuration::updateValue('NW_VOUCHER_CODE', pSQL($voucher));
@@ -152,7 +152,7 @@ class Blocknewsletter extends Module
 	private function newsletterRegistration()
 	{
 		if (empty($_POST['email']) || !Validate::isEmail($_POST['email']))
-			return $this->error = $this->l('Invalid email address');
+			return $this->error = $this->l('Invalid email address.');
 
 		/* Unsubscription */
 		else if ($_POST['action'] == '1')
@@ -165,7 +165,7 @@ class Blocknewsletter extends Module
 			if (!$this->unregister($_POST['email'], $register_status))
 				return $this->error = $this->l('An error occurred while attempting to unsubscribe.');
 
-			return $this->valid = $this->l('Unsubscription successful');
+			return $this->valid = $this->l('Unsubscription successful.');
 		}
 		/* Subscription */
 		else if ($_POST['action'] == '0')
@@ -525,12 +525,12 @@ class Blocknewsletter extends Module
 									array(
 										'id' => 'active_on',
 										'value' => 1,
-										'label' => $this->l('Enabled')
+										'label' => $this->l('Yes')
 									),
 									array(
 										'id' => 'active_off',
 										'value' => 0,
-										'label' => $this->l('Disabled')
+										'label' => $this->l('No')
 									)
 								),
 					),
@@ -542,12 +542,12 @@ class Blocknewsletter extends Module
 									array(
 										'id' => 'active_on',
 										'value' => 1,
-										'label' => $this->l('Enabled')
+										'label' => $this->l('Yes')
 									),
 									array(
 										'id' => 'active_off',
 										'value' => 0,
-										'label' => $this->l('Disabled')
+										'label' => $this->l('No')
 									)
 								),
 					),

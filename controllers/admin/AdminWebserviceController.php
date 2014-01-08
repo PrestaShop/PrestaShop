@@ -96,8 +96,8 @@ class AdminWebserviceControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_webservice'] = array(
-				'href' => self::$currentIndex.'&amp;addwebservice_account&amp;token='.$this->token,
-				'desc' => $this->l('Add new webservice key'),
+				'href' => self::$currentIndex.'&addwebservice_account&token='.$this->token,
+				'desc' => $this->l('Add new webservice key', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 

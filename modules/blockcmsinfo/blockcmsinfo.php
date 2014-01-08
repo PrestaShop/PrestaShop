@@ -40,8 +40,8 @@ class Blockcmsinfo extends Module
 		$this->bootstrap = true;
 		$this->need_instance = 0;
 		parent::__construct();
-		$this->displayName = $this->l('Customer cms information block');
-		$this->description = $this->l('Adds an information block customers in your store.');
+		$this->displayName = $this->l('Custom CMS information block');
+		$this->description = $this->l('Adds custom information blocks in your store.');
 	}
 
 	public function install()
@@ -190,12 +190,12 @@ class Blockcmsinfo extends Module
 		$this->fields_form[0]['form'] = array(
 					'tinymce' => true,
 					'legend' => array(
-					'title' => $this->l('New cms custom block.'),
+					'title' => $this->l('New custom CMS block'),
 			),
 			'input' => array(
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Text:'),
+					'label' => $this->l('Text'),
 					'lang' => true,
 					'name' => 'text',
 					'cols' => 40,
@@ -249,7 +249,7 @@ class Blockcmsinfo extends Module
 		$this->fields_list =  array(
 		
 			'id_info' => array(
-				'title' => $this->l('Custom block #'),
+				'title' => $this->l('Custom block number'),
 				'width' => 40,
 				'type' => 'text',
 				'search'  => false,

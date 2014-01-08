@@ -95,7 +95,8 @@ abstract class ControllerCore
 	 */
 	public function init()
 	{
-		$old_error_handler = set_error_handler(array(__CLASS__, 'myErrorHandler'));
+		if (_PS_MODE_DEV_ && $this->controller_type == 'admin');
+			$old_error_handler = set_error_handler(array(__CLASS__, 'myErrorHandler'));
 		if (!defined('_PS_BASE_URL_'))
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
 		if (!defined('_PS_BASE_URL_SSL_'))
@@ -250,8 +251,9 @@ abstract class ControllerCore
 				$css_path = Media::getCSSPath($css_file, $media);
 			else
 				$css_path = Media::getCSSPath($media, $css_media_type);
-
-			if ($css_path && !in_array($css_path, $this->css_files))
+			
+			$key = is_array($css_path) ? key($css_path) : $css_path;
+			if ($css_path && (!isset($this->css_files[$key]) || ($this->css_files[$key] != reset($css_path))))
 			{
 				$size = count($this->css_files);
 				if ($offset === null || $offset > $size || $offset < 0 || !is_numeric($offset))
@@ -259,6 +261,22 @@ abstract class ControllerCore
 
 				$this->css_files = array_merge(array_slice($this->css_files, 0, $offset), $css_path, array_slice($this->css_files, $offset));
 			}
+		}
+	}
+
+	public function removeCSS($css_uri, $css_media_type = 'all')
+	{
+		if (!is_array($css_uri))
+			$css_uri = array($css_uri);
+
+		foreach ($css_uri as $css_file => $media)
+		{
+			if (is_string($css_file) && strlen($css_file) > 1)
+				$css_path = Media::getCSSPath($css_file, $media);
+			else
+				$css_path = Media::getCSSPath($media, $css_media_type);
+			if ($css_path && isset($this->css_files[key($css_path)]) && ($this->css_files[key($css_path)] == reset($css_path)))
+				unset($this->css_files[key($css_path)]);
 		}
 	}
 
@@ -274,7 +292,8 @@ abstract class ControllerCore
 			foreach ($js_uri as $js_file)
 			{
 				$js_path = Media::getJSPath($js_file);
-				if ($js_path && !in_array($js_path, $this->js_files))
+				$key = is_array($js_path) ? key($js_path) : $js_path;
+				if ($js_path && (!isset($this->js_file[$key]) || ($this->js_file[$key] != reset($js_path))))
 					$this->js_files[] = $js_path;
 			}
 		else
@@ -282,6 +301,23 @@ abstract class ControllerCore
 			$js_path = Media::getJSPath($js_uri);
 			if ($js_path)
 				$this->js_files[] = $js_path;
+		}
+	}
+
+	public function removeJS($js_uri)
+	{
+		if (is_array($js_uri))
+			foreach ($js_uri as $js_file)
+			{
+				$js_path = Media::getJSPath($js_file);
+				if ($js_path && in_array($js_path, $this->js_files))
+					unset($this->js_files[array_search($js_path,$this->js_files)]);
+			}
+		else
+		{
+			$js_path = Media::getJSPath($js_uri);
+			if ($js_path)
+				unset($this->js_files[array_search($js_path,$this->js_files)]);
 		}
 	}
 
@@ -369,8 +405,11 @@ abstract class ControllerCore
 		{
 			$html = Media::deferInlineScripts($html);
 			$html = str_replace(array('</body>', '</html>'), '', $html);
-			$this->context->smarty->assign('js_def', Media::getJsDef());
-			$javascript = $this->context->smarty->fetch(_PS_THEME_DIR_.'javascript.tpl');
+			$this->context->smarty->assign(array(
+				'js_files' => array_unique($this->js_files),
+				'js_def' => Media::getJsDef())
+			);
+			$javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
 			$javascript = substr_replace(trim($javascript), '', -(strlen('</script>')));
 			foreach (Media::getInlineScript() as $script)
 				$javascript .= $script."\n";
@@ -390,8 +429,8 @@ abstract class ControllerCore
 
 	public static function myErrorHandler($errno, $errstr, $errfile, $errline)
 	{
-	    if (!_PS_MODE_DEV_ || !(error_reporting() & $errno))
-			return;
+		if (error_reporting() === 0)
+			return false;
 	    switch ($errno)
 		{
 		    case E_USER_ERROR || E_ERROR:

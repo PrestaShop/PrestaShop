@@ -57,8 +57,8 @@ class BankWire extends PaymentModule
 		$this->bootstrap = true;
 		parent::__construct();	
 
-		$this->displayName = $this->l('Bank Wire');
-		$this->description = $this->l('Accept payments for your products via bank wire.');
+		$this->displayName = $this->l('Bank wire');
+		$this->description = $this->l('Accept payments for your products via bank wire transfer.');
 		$this->confirmUninstall = $this->l('Are you sure about removing these details?');
 		if (!isset($this->owner) || !isset($this->details) || !isset($this->address))
 			$this->warning = $this->l('Account owner and account details must be configured before using this module.');
@@ -206,7 +206,7 @@ class BankWire extends PaymentModule
 						'type' => 'textarea',
 						'label' => $this->l('Details'),
 						'name' => 'BANK_WIRE_DETAILS',
-						'desc' => $this->l('Such as bank branch, IBAN number, BIC, etc...')
+						'desc' => $this->l('Such as bank branch, IBAN number, BIC, etc.')
 					),
 					array(
 						'type' => 'textarea',

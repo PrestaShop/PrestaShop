@@ -35,22 +35,31 @@
 		@extend .badge
 		background-color: $badge-notif-color
 	.notifs_dropdown
-		background-color: transparent
+		background-color: white
 		border: none
-		box-shadow: none
-	.notifs_panel
-		@extend .panel
-		@extend .panel-default
-		width: 300px
-		@include box-shadow(rgba(black,0.5) 2px 2px 8px)
-		.notifs_panel_header
-			@extend .panel-heading
-			h3
-				padding: 0
-				font-size: 1.3em
-				margin: 0
-		.notifs_panel_footer
-			@extend .panel-footer
+		@include box-shadow(rgba(black,0.7) 0 0 10px)
+		.notifs_panel
+			width: 300px
+			.notifs_panel_header
+				h3
+					padding: 10px
+					font-size: 1.3em
+					margin: 0
+					border-bottom: solid 1px #CCCCCC
+			.notifs_panel_footer
+				padding: 10px
+				text-align: center
+			.list_notif
+				a
+					display: block
+					text-decoration: none
+					padding: 5px
+					border-bottom: solid 1px #CCCCCC
+				.no_notifs
+					@extend .text-muted
+					display: block
+					padding: 15px
+					border-bottom: solid 1px #CCCCCC
 #header_nav_toggle
 	background-color: black
 	border: none

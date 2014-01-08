@@ -191,14 +191,14 @@ class AdminFeaturesControllerCore extends AdminController
 		if (empty($this->display))
 		{
 			$this->page_header_toolbar_btn['new_feature'] = array(
-				'href' => self::$currentIndex.'&amp;addfeature&amp;token='.$this->token,
-				'desc' => $this->l('Add new feature'),
+				'href' => self::$currentIndex.'&addfeature&token='.$this->token,
+				'desc' => $this->l('Add new feature', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 
 			$this->page_header_toolbar_btn['new_feature_value'] = array(
 				'href' => self::$currentIndex.'&addfeature_value&id_feature='.(int)Tools::getValue('id_feature').'&token='.$this->token,
-				'desc' => $this->l('Add new feature value'),
+				'desc' => $this->l('Add new feature value', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		}
@@ -206,7 +206,7 @@ class AdminFeaturesControllerCore extends AdminController
 		if ($this->display == 'view')
 			$this->page_header_toolbar_btn['new_feature_value'] = array(
 				'href' => self::$currentIndex.'&addfeature_value&id_feature='.(int)Tools::getValue('id_feature').'&token='.$this->token,
-				'desc' => $this->l('Add new feature value'),
+				'desc' => $this->l('Add new feature value', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 

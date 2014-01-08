@@ -303,8 +303,8 @@ class AdminRequestSqlControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_request'] = array(
-				'href' => self::$currentIndex.'&amp;addrequest_sql&amp;token='.$this->token,
-				'desc' => $this->l('Add new SQL request'),
+				'href' => self::$currentIndex.'&addrequest_sql&token='.$this->token,
+				'desc' => $this->l('Add new SQL request', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 
