@@ -530,17 +530,29 @@ class AdminControllerCore extends Controller
 					}
 					else
 					{
-						$sql_filter .= ' AND ';
+						$values=explode(",", $value);
+						
+						$sql_filter .= ' AND (';
+						
+						for($counter=0;$counter<count($values);$counter++){
+							$val=$values[$counter];
+							
+							if($counter>0 && $counter<count($values))
+								$sql_filter .= ' OR ';
+							
 						$check_key = ($key == $this->identifier || $key == '`'.$this->identifier.'`');
 
 						if ($type == 'int' || $type == 'bool')
-							$sql_filter .= (($check_key || $key == '`active`') ? 'a.' : '').pSQL($key).' = '.(int)$value.' ';
+							$sql_filter .= (($check_key || $key == '`active`') ? 'a.' : '').pSQL($key).' = '.(int)$val.' ';
 						elseif ($type == 'decimal')
-							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = '.(float)$value.' ';
+							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = '.(float)$val.' ';
 						elseif ($type == 'select')
-							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = \''.pSQL($value).'\' ';
+							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = \''.pSQL($val).'\' ';
 						else
-							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL($value).'%\' ';
+							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL($val).'%\' ';
+						}
+						
+						$sql_filter .= ')';
 					}
 				}
 			}
