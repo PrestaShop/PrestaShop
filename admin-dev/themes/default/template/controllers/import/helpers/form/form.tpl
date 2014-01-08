@@ -471,8 +471,6 @@
 		var truncateAuthorized = {$truncateAuthorized|intval};
 
 		enableHistory();
-
-		activeClueTip();
 		
 		$('#preview_import').submit(function(e) {
 			if ($('#truncate').get(0).checked) {
@@ -546,7 +544,6 @@
 						fields += j[i].field;
 	
 					$("#availableFields").html(fields);
-					activeClueTip();
 				},
 				error: function(j){}			
 			});
