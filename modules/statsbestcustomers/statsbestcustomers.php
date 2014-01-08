@@ -94,7 +94,7 @@ class StatsBestCustomers extends ModuleGrid
 		);
 
 		$this->displayName = $this->l('Best customers');
-		$this->description = $this->l('A list of best customers.');
+		$this->description = $this->l('Adds a list of the best customers to the Stats dashboard.');
 	}
 
 	public function install()
