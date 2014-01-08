@@ -150,7 +150,7 @@
 		{/if}
 		{addJsDef isLoggedWishlist=$logged}
 		{addJsDef contentOnly=$content_only}
-		{addJsDef minimalQuantity=$product->minimal_quantity}
+		{addJsDef minimalQuantity=$product->minimal_quantity|intval}
 		//]]>
 	</script>
 
