@@ -43,7 +43,7 @@ class StatsCatalog extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Catalog statistics');
-		$this->description = $this->l('General statistics about your catalog.');
+		$this->description = $this->l('Adds a tab containing general statistics about your catalog to the Stats dashboard.');
 	}
 
 	public function install()
@@ -202,12 +202,12 @@ class StatsCatalog extends Module
 				<li class="list-group-item">'.$this->returnLine($this->l('Images available:'), '<span class="badge">'.(int)$totalPictures).'</span></li>
 				<li class="list-group-item">'.$this->returnLine($this->l('Average number of images:'), '<span class="badge">'.number_format((float)$averagePictures, 2, '.', '')).'</span></li>
 				<li class="list-group-item">'.$this->returnLine($this->l('Products never viewed:'), '<span class="badge">'.(int)$totalNV.' / '.(int)$total).'</span></li>
-				<li class="list-group-item">'.$this->returnLine('<a style="cursor : pointer" onclick="$(\'#pnb\').slideToggle();">'.$this->l('Products never purchased:').'</a>', '<span class="badge">'.(int)$totalNB.' / '.(int)$total).'</span></li>
+				<li class="list-group-item">'.$this->returnLine($this->l('Products never purchased:'), '<span class="badge">'.(int)$totalNB.' / '.(int)$total).'</span></li>
 				<li class="list-group-item">'.$this->returnLine($this->l('Conversion rate*:'), '<span class="badge">'.$conversion).'</span></li>
 			</ul>
 			<div class="row row-margin-bottom">
 				<p>
-					<i class="icon-asterisk"></i>'.$this->l('Define the average conversion rate for the product page (It is possible to purchase a product without viewing the product page, so this rate can be greater than 1).').'
+					<i class="icon-asterisk"></i>'.$this->l('Defines the average conversion rate for the product page. It is possible to purchase a product without viewing the product page, so this rate can be greater than 1.').'
 				</p>
 			</div>';
 
@@ -240,7 +240,7 @@ class StatsCatalog extends Module
 								<ul class="dropdown-menu">
 									<li>
 										<a href="'.$this->context->link->getProductLink($product['id_product'], $product['link_rewrite']).'" target="_blank">
-											<i class="icon-eye-open"></i> '.$this->l('See').'
+											<i class="icon-eye-open"></i> '.$this->l('View').'
 										</a>
 									</li>
 								</ul>
