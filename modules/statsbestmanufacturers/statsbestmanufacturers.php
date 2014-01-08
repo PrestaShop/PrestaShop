@@ -49,7 +49,7 @@ class StatsBestManufacturers extends ModuleGrid
 		
 		$this->_defaultSortColumn = 'sales';
 		$this->_defaultSortDirection = 'DESC';
-		$this->_emptyMessage = $this->l('Empty recordset returned');
+		$this->_emptyMessage = $this->l('Empty recordset returned.');
 		$this->_pagingMessage = sprintf($this->l('Displaying %1$s of %2$s'), '{0} - {1}', '{2}');
 
 		$this->_columns = array(
@@ -77,7 +77,7 @@ class StatsBestManufacturers extends ModuleGrid
 		);
 
 		$this->displayName = $this->l('Best manufacturers');
-		$this->description = $this->l('A list of the best manufacturers');
+		$this->description = $this->l('Adds a list of the best manufacturers to the Stats dashboard.');
 	}
 
 	public function install()
