@@ -1105,13 +1105,21 @@ class BlockLayered extends Module
 		
 		$start_time = microtime(true);
 		
-		do
-		{
-			$cursor = (int)self::indexPricesUnbreakable((int)$cursor, $full, $smart);
-			$time_elapsed = microtime(true) - $start_time;
-		}
-		while ($cursor < $nb_products && (Tools::getMemoryLimit()) > memory_get_peak_usage() && $time_elapsed < $max_executiontime);
-		
+		if (function_exists('memory_get_peak_usage'))
+			do
+			{
+				$cursor = (int)self::indexPricesUnbreakable((int)$cursor, $full, $smart);
+				$time_elapsed = microtime(true) - $start_time;
+			}
+			while ($cursor < $nb_products && Tools::getMemoryLimit() > memory_get_peak_usage() && $time_elapsed < $max_executiontime);
+		else
+			do
+			{
+				$cursor = (int)self::indexPricesUnbreakable((int)$cursor, $full, $smart);
+				$time_elapsed = microtime(true) - $start_time;
+			}
+			while ($cursor < $nb_products && $time_elapsed < $max_executiontime);
+
 		if (($nb_products > 0 && !$full || $cursor < $nb_products && $full) && !$ajax)
 		{
 			$token = substr(Tools::encrypt('blocklayered/index'), 0, 10);
