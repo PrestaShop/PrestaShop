@@ -2259,7 +2259,7 @@ class BlockLayered extends Module
 						$sql_query[$key] .= $value;
 				}
 			}
-			
+
 			$products = false;
 			if (!empty($sql_query['from']))
 			{
@@ -2428,14 +2428,21 @@ class BlockLayered extends Module
 				case 'quantity':
 					$quantity_array = array (
 						0 => array('name' => $this->l('Not available'), 'nbr' => 0),
-						1 => array('name' => $this->l('In stock'),
-						'nbr' => 0));
+						1 => array('name' => $this->l('In stock'), 'nbr' => 0)
+					);
 					foreach ($quantity_array as $key => $quantity)
 						if (isset($selected_filters['quantity']) && in_array($key, $selected_filters['quantity']))
 							$quantity_array[$key]['checked'] = true;
 					if (isset($products) && $products)
 						foreach ($products as $product)
-							$quantity_array[(int)($product['quantity'] > 0)]['nbr']++;
+						{
+							//If oosp move all not available quantity to available quantity
+							if ((int)$product['quantity'] > 0 || Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product['id_product'])))
+								$quantity_array[1]['nbr']++;
+							else
+								$quantity_array[0]['nbr']++;
+						}
+
 					$filter_blocks[] = array(
 						'type_lite' => 'quantity',
 						'type' => 'quantity',
@@ -2445,6 +2452,7 @@ class BlockLayered extends Module
 						'filter_show_limit' => $filter['filter_show_limit'],
 						'filter_type' => $filter['filter_type']
 					);
+
 					break;
 
 				case 'manufacturer':
