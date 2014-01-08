@@ -44,7 +44,6 @@
 			{/if}
 		{/foreach}
 	</div>
-	{include file="page_header_toolbar.tpl" toolbar_btn=$page_header_toolbar_btn title=$page_header_toolbar_title}
 {/if}
 
 <div class="row">
