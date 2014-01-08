@@ -183,7 +183,7 @@ class StatsData extends Module
 						'type' => 'switch',
 						'label' => $this->l('Save page views for each customer'),
 						'name' => 'PS_STATSDATA_CUSTOMER_PAGESVIEWS',
-						'desc' => $this->l('Stored customer page views uses a lot of CPU resources and database space.'),
+						'desc' => $this->l('Storing customer page views uses a lot of CPU resources and database space. Only enable if your server can handle it.'),
 						'values' => array(
 									array(
 										'id' => 'active_on',
@@ -219,7 +219,7 @@ class StatsData extends Module
 						'type' => 'switch',
 						'label' => $this->l('Plugins detection'),
 						'name' => 'PS_STATSDATA_PLUGINS',
-						'desc' => $this->l('Plugins detection loads an extra 20kb javascript file for new visitors.'),
+						'desc' => $this->l('Plugins detection loads an extra 20 kb JavaScript file once for new visitors.'),
 						'values' => array(
 									array(
 										'id' => 'active_on',
