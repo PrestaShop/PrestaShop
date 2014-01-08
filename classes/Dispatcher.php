@@ -95,6 +95,26 @@ class DispatcherCore
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
 		),
+		'newsfeed_rule' => array(
+			'controller' =>	'newsfeed',
+			'rule' =>		'newsfeed/{id}-{rewrite}',
+			'keywords' => array(
+				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_newsfeed'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+			),
+		),
+		'newsfeed_category_rule' => array(
+			'controller' =>	'newsfeed',
+			'rule' =>		'newsfeed/category/{id}-{rewrite}',
+			'keywords' => array(
+				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_newsfeed_category'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+			),
+		),
 		'module' => array(
 			'controller' =>	null,
 			'rule' =>		'module/{module}{/:controller}',

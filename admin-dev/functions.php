@@ -133,7 +133,7 @@ function displayDate($sqlDate, $withTime = false)
   * @param integer $id_category Start category
   * @param string $path Current path
   * @param string $highlight String to highlight (in XHTML/CSS)
-  * @param string $type Category type (products/cms)
+  * @param string $type Category type (products/cms/newsfeed)
   */
 function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryType = 'catalog', $home = false)
 {
@@ -192,6 +192,24 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 		if ($category->id == 1)
 			return substr($path, 0, strlen($path) - 3);
 		return getPath($urlBase, $category->id_parent, $path, '', 'cms');
+	}
+	elseif ($categoryType == 'newsfeed')
+	{
+		$category = new NewsfeedCategory($id_category, $context->language->id);
+		if (!$category->id)
+			return $path;
+
+		$name = ($highlight != null) ? str_ireplace($highlight, '<span class="highlight">'.$highlight.'</span>', NewsfeedCategory::hideNewsfeedCategoryPosition($category->name)) : NewsfeedCategory::hideNewsfeedCategoryPosition($category->name);
+		$edit = '<a href="'.$urlBase.'&id_newsfeedcategory='.$category->id.'&addcategory&token=' . Tools::getAdminToken('AdminNewContent'.(int)(Tab::getIdFromClassName('AdminNewContent')).(int)$context->employee->id).'">
+				<i class="icon-pencil"></i></a> ';
+		if ($category->id == 1)
+			$edit = '<li><a href="'.$urlBase.'&id_newsfeedcategory='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminNewsfeedContent'.(int)(Tab::getIdFromClassName('AdminNewsfeedContent')).(int)$context->employee->id).'">
+					<i class="icon-home"></i></a></li> ';
+		$path = $edit.'<li><a href="'.$urlBase.'&id_newsfeedcategory='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminNewsfeedContent'.(int)(Tab::getIdFromClassName('AdminNewsfeedContent')).(int)$context->employee->id).'">
+		'.$name.'</a></li> > '.$path;
+		if ($category->id == 1)
+			return substr($path, 0, strlen($path) - 3);
+		return getPath($urlBase, $category->id_parent, $path, '', 'newsfeed');
 	}
 }
 

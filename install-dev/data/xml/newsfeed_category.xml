@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_newsfeed_category>
+  <fields id="name" class="NewsfeedCategory">
+    <field name="id_parent" relation="newsfeed_category"/>
+    <field name="active"/>
+  </fields>
+  <entities>
+    <newsfeed_category id="Newsfeed" id_parent="" active="1"/>
+  </entities>
+</entity_newsfeed_category>

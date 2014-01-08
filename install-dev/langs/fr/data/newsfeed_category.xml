@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<entity_newsfeed_category>
+  <newsfeed_category id="Newsfeed">
+    <name>Newsfeed</name>
+    <description/>
+    <link_rewrite>newsfeed</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </newsfeed_category>
+</entity_newsfeed_category>

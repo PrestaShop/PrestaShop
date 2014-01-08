@@ -406,6 +406,54 @@ CREATE TABLE `PREFIX_cms_category_lang` (
   KEY `category_name` (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+CREATE TABLE `PREFIX_newsfeed` (
+  `id_newsfeed` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_newsfeed_category` int(10) unsigned NOT NULL,
+  `position` int(10) unsigned NOT NULL DEFAULT '0',
+  `active` tinyint(1) unsigned NOT NULL default '0',
+  `indexation` tinyint(1) unsigned NOT NULL default '0',
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
+  PRIMARY KEY (`id_newsfeed`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_newsfeed_lang` (
+  `id_newsfeed` int(10) unsigned NOT NULL,
+  `id_lang` int(10) unsigned NOT NULL,
+  `meta_title` varchar(128) NOT NULL,
+  `meta_description` varchar(255) default NULL,
+  `meta_keywords` varchar(255) default NULL,
+  `content` longtext,
+  short_content` VARCHAR( 100 ) DEFAULT NULL,
+  `link_rewrite` varchar(128) NOT NULL,
+  PRIMARY KEY (`id_newsfeed`,`id_lang`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_newsfeed_category` (
+  `id_newsfeed_category` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_parent` int(10) unsigned NOT NULL,
+  `level_depth` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
+  `position` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY (`id_newsfeed_category`),
+  KEY `category_parent` (`id_parent`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_newsfeed_category_lang` (
+  `id_newsfeed_category` int(10) unsigned NOT NULL,
+  `id_lang` int(10) unsigned NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `description` text,
+  `link_rewrite` varchar(128) NOT NULL,
+  `meta_title` varchar(128) DEFAULT NULL,
+  `meta_keywords` varchar(255) DEFAULT NULL,
+  `meta_description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_newsfeed_category`,`id_lang`),
+  KEY `category_name` (`name`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
 CREATE TABLE `PREFIX_compare` (
   `id_compare` int(10) unsigned NOT NULL auto_increment,
   `id_customer` int(10) unsigned NOT NULL,
@@ -2053,6 +2101,15 @@ CREATE TABLE `PREFIX_cms_shop` (
 `id_cms` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL ,
   PRIMARY KEY (`id_cms`, `id_shop`),
+	KEY `id_shop` (`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_newsfeed_shop` (
+`id_newsfeed` INT( 11 ) UNSIGNED NOT NULL,
+`id_shop` INT( 11 ) UNSIGNED NOT NULL ,
+`date_add` datetime NOT NULL,
+`date_upd` datetime NOT NULL,
+  PRIMARY KEY (`id_newsfeed`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 

@@ -120,5 +120,9 @@
       <page>cms</page>
 		<configurable>0</configurable>
     </meta>
+    <meta id="newsfeed">
+      <page>newsfeed</page>
+		<configurable>0</configurable>
+    </meta>
   </entities>
 </entity_meta>

@@ -85,6 +85,20 @@ function initTableDnD(table)
 						id_cms: ids[2],
 						way: way
 					};
+				else if (table.id == 'newsfeed_category')
+					params = {
+						action: 'updateNewsfeedCategoriesPositions',
+						id_newsfeed_category_parent: ids[1],
+						id_newsfeed_category_to_move: ids[2],
+						way: way
+					};
+				else if (table.id == 'newsfeed')
+					params = {
+						action: 'updateNewsfeedPositions',
+						id_newsfeed_category: ids[1],
+						id_newsfeed: ids[2],
+						way: way
+					};
 				else if (come_from == 'AdminModulesPositions')
 					params = {
 						action: 'updatePositions',

@@ -631,7 +631,7 @@ class FrontControllerCore extends Controller
 				foreach ($query as $key => $value)
 					$params[Tools::safeOutput($key)] = Tools::safeOutput($value);
 			}
-			$excluded_key = array('isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms');
+			$excluded_key = array('isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms','id_newsfeed');
 			foreach ($_GET as $key => $value)
 				if (!in_array($key, $excluded_key) && Validate::isUrl($key) && Validate::isUrl($value))
 					$params[Tools::safeOutput($key)] = Tools::safeOutput($value);
@@ -1197,6 +1197,7 @@ class FrontControllerCore extends Controller
 		$blocksupplier = Module::getInstanceByName('blocksupplier');
 		$this->context->smarty->assign('categoriesTree', Category::getRootCategory()->recurseLiteCategTree(0));
 		$this->context->smarty->assign('categoriescmsTree', CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1));
+		$this->context->smarty->assign('categoriesnewsfeedTree', NewsfeedCategory::getRecurseCategory($this->context->language->id, 1, 1, 1));
 		$this->context->smarty->assign('voucherAllowed', (int)CartRule::isFeatureActive());
 		$this->context->smarty->assign('display_manufacturer_link', (bool)$blockmanufacturer->active);
 		$this->context->smarty->assign('display_supplier_link', (bool)$blocksupplier->active);

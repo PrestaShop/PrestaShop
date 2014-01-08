@@ -64,6 +64,7 @@ class HelperListCore extends Helper
 	public static $cache_lang = array();
 
 	public $is_cms = false;
+	public $is_newsfeed = false;
 
 	public $position_identifier;
 
@@ -188,7 +189,7 @@ class HelperListCore extends Helper
 				if (isset($this->position_group_identifier))
 					$position_group_identifier = (int)Tools::getValue($this->position_group_identifier);
 				else
-					$position_group_identifier = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', ($this->is_cms ? '1' : Category::getRootCategory()->id ));
+					$position_group_identifier = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : ($this->is_newsfeed ? 'newsfeed_' : '')).'category', ($this->is_cms ? '1' : ($this->is_newsfeed ? '1' : Category::getRootCategory()->id) ));
 			else
 				$position_group_identifier = Category::getRootCategory()->id;
 
@@ -197,9 +198,9 @@ class HelperListCore extends Helper
 		}
 
 		// key_to_get is used to display the correct product category or cms category after a position change
-		$identifier = in_array($this->identifier, array('id_category', 'id_cms_category')) ? '_parent' : '';
+		$identifier = in_array($this->identifier, array('id_category', 'id_cms_category','id_newsfeed_category')) ? '_parent' : '';
 		if ($identifier)
-			$key_to_get = 'id_'.($this->is_cms ? 'cms_' : '').'category'.$identifier;
+			$key_to_get = 'id_'.($this->is_cms ? 'cms_' : ($this->is_newsfeed ? 'newsfeed_' : '')).'category'.$identifier;
 
 		foreach ($this->_list as $index => $tr)
 		{
@@ -333,6 +334,7 @@ class HelperListCore extends Helper
 			'order_by' => $this->orderBy,
 			'order_way' => $this->orderWay,
 			'is_cms' => $this->is_cms,
+			'is_newsfeed' => $this->is_newsfeed,
 			'fields_display' => $this->fields_list,
 			'list' => $this->_list,
 			'actions' => $this->actions,
@@ -510,7 +512,7 @@ class HelperListCore extends Helper
 		if (!isset($this->list_id))
 			$this->list_id = $this->table;
 
-		$id_cat = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category');
+		$id_cat = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : ($this->is_newsfeed ? 'newsfeed_' : '')).'category');
 
 		if (!isset($token) || empty($token))
 			$token = $this->token;

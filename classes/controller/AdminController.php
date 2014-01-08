@@ -224,6 +224,7 @@ class AdminControllerCore extends Controller
 	protected $_having;
 
 	protected $is_cms = false;
+	protected $is_newsfeed = false;
 
 	/** @var string	identifier to use for changing positions in lists (can be omitted if positions cannot be changed) */
 	protected $position_identifier;
@@ -1822,6 +1823,7 @@ class AdminControllerCore extends Controller
 				$this->actions[] = $action;
 		}
 		$helper->is_cms = $this->is_cms;
+		$helper->is_newsfeed = $this->is_newsfeed;
 		$list = $helper->generateList($this->_list, $this->fields_list);
 
 		return $list;

@@ -266,6 +266,7 @@ class WebserviceRequestCore
 			'employees' => array('description' => 'The Employees', 'class' => 'Employee'),
 			'search' => array('description' => 'Search', 'specific_management' => true, 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'content_management_system' => array('description' => 'Content management system', 'class' => 'CMS'),
+			'newsfeed' => array('description' => 'Newsfeed', 'class' => 'Newsfeed'),
 			'shops' => array('description' => 'Shops from multi-shop feature', 'class' => 'Shop'),
 			'shop_groups' => array('description' => 'Shop groups from multi-shop feature', 'class' => 'ShopGroup'),
 			'taxes' => array('description' => 'The tax rate', 'class' => 'Tax'),

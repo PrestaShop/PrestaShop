@@ -213,6 +213,25 @@
                         </a>
                     </li>
                 {/if}
+            	<li>
+                    <a href="{$categoriesnewsfeedTree.link|escape:'html':'UTF-8'}" title="{$categoriesnewsfeedTree.name|escape:'html':'UTF-8'}">
+                        {$categoriesnewsfeedTree.name|escape:'html':'UTF-8'}
+                    </a>
+                </li>
+                {if isset($categoriesnewsfeedTree.children)}
+                    {foreach $categoriesnewsfeedTree.children as $child}
+                        {if (isset($child.children) && $child.children|@count > 0) || $child.newsfeed|@count > 0}
+                            {include file="$tpl_dir./category-newsfeed-tree-branch.tpl" node=$child}
+                        {/if}
+                    {/foreach}
+                {/if}
+                {foreach from=$categoriesnewsfeedTree.newsfeed item=newsfeed name=newsfeedTree}
+                    <li>
+                        <a href="{$newsfeed.link|escape:'html':'UTF-8'}" title="{$newsfeed.meta_title|escape:'html':'UTF-8'}">
+                            {dateFormat date=$newsfeed.date_add|escape:'html':'UTF-8' full=0} - {$newsfeed.meta_title|escape:'html':'UTF-8'}
+                        </a>
+                    </li>
+                {/foreach}
             </ul>
         </div>
     </div>
