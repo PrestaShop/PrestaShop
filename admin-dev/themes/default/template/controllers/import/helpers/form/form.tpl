@@ -411,7 +411,6 @@
 						else {
 							$(data.context).find('button').remove();
 
-							console.log(data.result.file);
 							var filename = encodeURIComponent(data.result.file.filename);
 							var row = $('#csv_uploaded_history tr:first').clone();
 
