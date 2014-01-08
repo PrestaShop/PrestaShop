@@ -221,32 +221,11 @@
 		</li>
 	{/foreach}
 	</ul>
+{addJsDefL name=min_item}{l s='Please select at least one product' js=1}{/addJsDefL}
+{addJsDefL name=max_item}{l s='You cannot add more than %d product(s) to the product comparison' sprintf=$comparator_max_item js=1}{/addJsDefL}
+{addJsDef comparator_max_item=$comparator_max_item}
+{addJsDef comparedProductsIds=$compared_products}
 <!-- Script for transformation Grid/List layouts -->
-{if $page_name == 'product'}
-	<script type="text/javascript">
-		var comparator_max_item = {$comparator_max_item};
-		var comparedProductsIds = [];
-		{foreach from=$compared_products key=k item=product}comparedProductsIds.push({$product});{/foreach}
-		$('document').ready(function(){
-			blockHover();
-		});
-	</script>
-{/if}
-<script type="text/javascript">
-	function blockHover(status) {
-		$('.product_list.grid li.ajax_block_product').each(function() {
-			$(this).find('.product-container').hover(
-			function(){
-				if ($('body').find('.container').width() == 1170)
-				$(this).parent().addClass('hovered'); 
-			},
-			function(){
-				if ($('body').find('.container').width() == 1170)
-				$(this).parent().removeClass('hovered');
-			}
-		)});	
-	}
-</script>
 {if $page_name !='index' && $page_name !='product'}  <!--// excluding page for Grid/List-->
 	<script type="text/javascript"><!--
 		function display(view) {

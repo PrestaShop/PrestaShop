@@ -23,9 +23,5 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 $(document).ready(function(){
-	$('#home-page-tabs li:first').addClass('active').find('a').trigger('click');
-	if (typeof blockHover != 'undefined')
-		blockHover();
-	if (typeof reloadProductComparison != 'undefined')
-		reloadProductComparison();
+	$('#home-page-tabs li:first').addClass('active');
 });
