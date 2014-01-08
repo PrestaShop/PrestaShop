@@ -200,11 +200,17 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	{
 		parent::initPageHeaderToolbar();
 
-		$this->page_header_toolbar_title = $this->l('Attributes generator');
+		$this->page_header_toolbar_title = $this->l('Attributes generator', null, null, false);
 		$this->page_header_toolbar_btn['back'] = array(
 			'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&key_tab=Combinations',
 			'desc' => $this->l('Back to the product', null, null, false)
 		);
+	}
+
+	public function initBreadcrumbs()
+	{
+		$this->display = 'generator';
+		return parent::initBreadcrumbs();
 	}
 
 	public function initContent()

@@ -107,7 +107,7 @@
 												{if !$value.nbr}
 												{$value.name|escape:'html':'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}
 												{else}
-												<a href="{$value.link}" rel="{$value.rel}">{$value.name|escape:'html':'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
+												<a href="{$value.link}"{if $value.rel|trim != ''} rel="{$value.rel}"{/if}>{$value.name|escape:'html':'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
 												{/if}
 											</label>
 										</li>
@@ -128,7 +128,7 @@
 												{if !$value.nbr}
 													{$value.name|escape:'html':'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
 												{else}
-													<a href="{$value.link}" rel="{$value.rel}">{$value.name|escape:'html':'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
+													<a href="{$value.link}"{if $value.rel|trim != ''} rel="{$value.rel}"{/if}>{$value.name|escape:'html':'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
 												{/if}
 											</label>
 										</li>
