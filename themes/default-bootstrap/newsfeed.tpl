@@ -61,9 +61,9 @@
 						<a href="{$link->getNewsfeedLink($newsfeedpages.id_newsfeed, $newsfeedpages.link_rewrite)|escape:'html':'UTF-8'}">{dateFormat date=$newsfeedpages.date_add|escape:'html':'UTF-8' full=0} - {$newsfeedpages.meta_title|escape:'html':'UTF-8'}</a>
 						<a href="{$link->getNewsfeedLink($newsfeedpages.id_newsfeed, $newsfeedpages.link_rewrite)|escape:'html':'UTF-8'}" class="newsfeed_short_content">
 							{if isset($newsfeedpages.short_content) && !empty($newsfeedpages.short_content)}
-								{nl2br($newsfeedpages.short_content)}
+								{nl2br($newsfeedpages.short_content)}...
 							{else}
-								{nl2br( substr( strip_tags($newsfeedpages.content),0,300) ) }...
+								{nl2br( substr( strip_tags($newsfeedpages.content),0,100) ) }...
 							{/if}
 						</a>
 					</li>

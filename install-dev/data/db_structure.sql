@@ -424,7 +424,7 @@ CREATE TABLE `PREFIX_newsfeed_lang` (
   `meta_description` varchar(255) default NULL,
   `meta_keywords` varchar(255) default NULL,
   `content` longtext,
-  short_content` VARCHAR( 400 ) DEFAULT NULL,
+  short_content` VARCHAR( 100 ) DEFAULT NULL,
   `link_rewrite` varchar(128) NOT NULL,
   PRIMARY KEY (`id_newsfeed`,`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;

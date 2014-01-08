@@ -1154,6 +1154,26 @@
     'path' => 'classes/CMS.php',
     'type' => 'class',
   ),
+  'Newsfeed' =>
+  array (
+    'path' => '',
+    'type' => 'class',
+  ),
+  'NewsfeedCore' =>
+  array (
+    'path' => 'classes/Newsfeed.php',
+    'type' => 'class',
+  ),
+  'NewsfeedCategory' =>
+  array (
+    'path' => '',
+    'type' => 'class',
+  ),
+  'NewsfeedCategoryCore' =>
+  array (
+    'path' => 'classes/NewsfeedCategory.php',
+    'type' => 'class',
+  ),
   'CSV' => 
   array (
     'path' => '',
@@ -1312,6 +1332,16 @@
   'CmsControllerCore' => 
   array (
     'path' => 'controllers/front/CmsController.php',
+    'type' => 'class',
+  ),
+  'NewsfeedController' =>
+  array (
+    'path' => '',
+    'type' => 'class',
+  ),
+  'NewsfeedControllerCore' =>
+  array (
+    'path' => 'controllers/front/NewsfeedController.php',
     'type' => 'class',
   ),
   'Combination' => 

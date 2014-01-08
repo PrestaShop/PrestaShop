@@ -151,7 +151,7 @@ class AdminNewsfeedContentControllerCore extends AdminController
 		{
 			$this->page_header_toolbar_btn['new_newsfeed_category'] = array(
 				'href' => self::$currentIndex.'&addnewsfeed_category&token='.$this->token,
-				'desc' => $this->l('Add new Newsfeed category',null,null,false)),
+				'desc' => $this->l('Add new Newsfeed category',null,null,false),
 				'icon' => 'process-icon-new'
 			);
 			$this->page_header_toolbar_btn['new_newsfeed_page'] = array(
