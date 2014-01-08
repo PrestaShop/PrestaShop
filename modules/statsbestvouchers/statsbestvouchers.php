@@ -49,7 +49,7 @@ class StatsBestVouchers extends ModuleGrid
 		
 		$this->_defaultSortColumn = 'ca';
 		$this->_defaultSortDirection = 'DESC';
-		$this->_emptyMessage = $this->l('Empty recordset returned');
+		$this->_emptyMessage = $this->l('Empty recordset returned.');
 		$this->_pagingMessage = sprintf($this->l('Displaying %1$s of %2$s'), '{0} - {1}', '{2}');
 
 		$this->_columns = array(
@@ -80,7 +80,7 @@ class StatsBestVouchers extends ModuleGrid
 		);
 
 		$this->displayName = $this->l('Best vouchers');
-		$this->description = $this->l('A list of the best vouchers');
+		$this->description = $this->l('Adds a list of the best vouchers to the Stats dashboard.');
 	}
 
 	public function install()

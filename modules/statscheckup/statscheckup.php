@@ -42,7 +42,7 @@ class StatsCheckUp extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Catalog evaluation');
-		$this->description = $this->l('Quick evaluation of your catalog quality.');
+		$this->description = $this->l('Adds a quick evaluation of your catalog quality to the Stats dashboard.');
 	}
 
 	public function install()
@@ -148,10 +148,10 @@ class StatsCheckUp extends Module
 			return $this->l('No product was found.');
 
 		$arrayConf = array(
-			'DESCRIPTIONS' => array('name' => $this->l('Descriptions'), 'text' => $this->l('Chars (without HTML)')),
-			'IMAGES' => array('name' => $this->l('Images'), 'text' => $this->l('Images')),
+			'DESCRIPTIONS' => array('name' => $this->l('Descriptions'), 'text' => $this->l('chars (without HTML)')),
+			'IMAGES' => array('name' => $this->l('Images'), 'text' => $this->l('images')),
 			'SALES' => array('name' => $this->l('Sales'), 'text' => $this->l('orders / month')),
-			'STOCK' => array('name' => $this->l('Available quantity for sale'), 'text' => $this->l('Items'))
+			'STOCK' => array('name' => $this->l('Available quantity for sale'), 'text' => $this->l('items'))
 		);
 
 		$this->html = '
