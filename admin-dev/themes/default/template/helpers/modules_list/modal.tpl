@@ -7,7 +7,7 @@
 			</div>
 			<div class="modal-body">
 				<div id="modules_list_container_tab" style="display:none;"></div>
-				<div id="modules_list_loader"><img src="../img/loader.gif" alt=""/></div>
+				<div id="modules_list_loader"><i class="icon-refresh icon-spin"></i></div>
 			</div>
 		</div>
 	</div>
