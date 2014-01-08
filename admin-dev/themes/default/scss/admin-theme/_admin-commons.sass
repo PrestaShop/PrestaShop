@@ -92,24 +92,23 @@
 		text-decoration: inherit
 		-webkit-font-smoothing: antialiased
 		content: "\f00c"
-
+//@todo
 .alert.alert-info
-	padding-left: 60px
+	padding-left: 50px
 	position: relative
+	border: none
+	border-left: solid 3px lighten($brand-info,7%)
 	&:before
 		position: absolute
-		top: 0
+		top: 10px
 		left: 10px
 		display: block
 		min-height: 25px
 		min-width: 25px
-		font-family: FontAwesome
-		font-weight: normal
-		font-style: normal
-		font-size: 35px
-		text-decoration: inherit
-		-webkit-font-smoothing: antialiased
-		content: "\F05A"
+		color: lighten($brand-info,7%)
+		@extend .icon
+		@extend .icon-3x
+		@extend .icon-question-circle
 
 .overflow-y
 	max-height: 200px
