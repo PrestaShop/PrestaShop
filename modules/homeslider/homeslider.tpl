@@ -30,32 +30,32 @@
             <ul id="homeslider">
                 {foreach from=$homeslider_slides item=slide}
                     {if $slide.active}
-                        <li>
-                            <a href="{$slide.url|escape:'html':'UTF-8'}"
-                               title="{$slide.description|escape:'html':'UTF-8'}">
+                        <li class="homeslider-container">
+                            <a href="{$slide.url|escape:'html':'UTF-8'}" title="{$slide.legend|escape:'html':'UTF-8'}">
                                 <img src="{$link->getMediaLink("`$smarty.const._MODULE_DIR_`homeslider/images/`$slide.image|escape:'htmlall':'UTF-8'`")}"
                                      alt="{$slide.legend|escape:'htmlall':'UTF-8'}"/>
                             </a>
+                            {if isset($slide.description) && trim($slide.description) != ''}
+                                <div class="homeslider-description">{$slide.description}</div>
+                            {/if}
                         </li>
                     {/if}
                 {/foreach}
             </ul>
         </div>
         {if isset($homeslider)}
-            <script type="text/javascript">
                 {if $homeslider_slides|@count > 1}
                     {if $homeslider.loop == 1}
-                        var homeslider_loop = true;
+                        {addJsDef homeslider_loop=true}
                     {else}
-                        var homeslider_loop = false;
+                        {addJsDef homeslider_loop=false}
                     {/if}
                 {else}
-                    var homeslider_loop = false;
+                    {addJsDef homeslider_loop=false}
                 {/if}
-                var homeslider_width = {$homeslider.width};
-                var homeslider_speed = {$homeslider.speed};
-                var homeslider_pause = {$homeslider.pause};
-            </script>
+                {addJsDef homeslider_width=$homeslider.width}
+                {addJsDef homeslider_speed=$homeslider.speed}
+                {addJsDef homeslider_pause=$homeslider.pause}
         {/if}
     {/if}
     <!-- /Module HomeSlider -->
