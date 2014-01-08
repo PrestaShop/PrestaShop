@@ -26,13 +26,13 @@
 <script type="text/javascript">
 $('document').ready(function()
 {
-	$('img[rel^=ajax_id_mailalert_]').click(function()
+	$('i[rel^=ajax_id_mailalert_]').click(function()
 	{
 		var ids =  $(this).attr('rel').replace('ajax_id_mailalert_', '');
 		ids = ids.split('_');
 		var id_product_mail_alert = ids[0];
 		var id_product_attribute_mail_alert = ids[1];
-		var parent = $(this).parent().parent();
+		var parent = $(this).parents('li');
 
 		$.ajax({
 			url: "{$link->getModuleLink('mailalerts', 'actions', ['process' => 'remove'])|addslashes}",
@@ -56,29 +56,30 @@ $('document').ready(function()
 });
 </script>
 
-{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Manage my account' mod='mailalerts'}" rel="nofollow">{l s='My account' mod='mailalerts'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='My alerts' mod='mailalerts'}{/capture}
+{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Manage my account' mod='mailalerts'}" rel="nofollow">{l s='My account' mod='mailalerts'}</a><span class="navigation-pipe">{$navigationPipe}</span><span class="navigation_page">{l s='My alerts' mod='mailalerts'}</span>{/capture}
 
-<div id="mailalerts_block_account">
+<div id="mailalerts_block_account" class="block">
 	<h1 class="page-heading">{l s='My alerts' mod='mailalerts'}</h1>
 	{if $mailAlerts}
-		<div>
-			{foreach from=$mailAlerts item=mailAlert}
-			<div class="mailalert clearfix">
-				<a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)}" title="{$mailAlert.name|escape:'html':'UTF-8'}" class="product_img_link"><img src="{$link->getImageLink($mailAlert.link_rewrite, $mailAlert.cover, 'small_default')|escape:'html'}" alt=""/></a>
-				<h3><a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)|escape:'html'}" title="{$mailAlert.name|escape:'html':'UTF-8'}">{$mailAlert.name|escape:'html':'UTF-8'}</a></h3>
-				<div class="product_desc">{$mailAlert.attributes_small|escape:'html':'UTF-8'}</div>
-
-				<div class="remove">
-					<img rel="ajax_id_mailalert_{$mailAlert.id_product}_{$mailAlert.id_product_attribute}" src="{$img_dir}icon/delete.gif" alt="{l s='Remove' mod='mailalerts'}" class="icon" />
-				</div>
-			</div>
+		<ul class="products-block">
+			{foreach from=$mailAlerts item=mailAlert name=myLoop}
+			<li class="clearfix{if $smarty.foreach.myLoop.last} last_item{/if}">
+				<a class="products-block-image" href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)}" title="{$mailAlert.name|escape:'html':'UTF-8'}"><img src="{$link->getImageLink($mailAlert.link_rewrite, $mailAlert.cover, 'small_default')|escape:'html'}" alt=""/></a>
+                <div class="product-content">
+                	<span class="remove">
+                        <i class="icon-remove" rel="ajax_id_mailalert_{$mailAlert.id_product}_{$mailAlert.id_product_attribute}"></i>
+                    </span>
+                    <h5><a class="product-name" href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)|escape:'html'}" title="{$mailAlert.name|escape:'html':'UTF-8'}">{$mailAlert.name|escape:'html':'UTF-8'}</a></h5>
+                    <div class="product-description"><small>{$mailAlert.attributes_small|escape:'html':'UTF-8'}</small></div>
+                </div>
+			</li>
 			{/foreach}
-		</div>
+		</ul>
 	{else}
 		<p class="alert alert-warning">{l s='No mail alerts yet.' mod='mailalerts'}</p>
 	{/if}
 
 	<ul class="footer_links clearfix">
-		<li class="fleft"><a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Back to Your Account' mod='mailalerts'}"><span><i class="icon-chevron-left"></i>{l s='Back to Your Account' mod='mailalerts'}</span></a></li>
+		<li><a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Back to Your Account' mod='mailalerts'}"><span><i class="icon-chevron-left"></i>{l s='Back to Your Account' mod='mailalerts'}</span></a></li>
 	</ul>
 </div>
