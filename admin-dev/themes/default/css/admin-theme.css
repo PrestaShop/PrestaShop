@@ -3190,38 +3190,38 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap #dash_version iframe { height: 80px; width: 100%; }
 .bootstrap .adminsearch #content .panel .panel, .bootstrap .adminsearch #content #dash_version .panel, .bootstrap .adminsearch #content .panel #dash_version, .bootstrap .adminsearch #content #dash_version #dash_version { padding: 0; margin: 0; border: none; -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0; border-radius: 0; -webkit-box-shadow: 0; box-shadow: 0; }
 
-#content.nobootstrap { background-color: white; min-width: 1200px; padding: 80px 40px; }
-#content.nobootstrap form p { margin: 0.5em 0 0; padding: 0 0 0.5em; }
-#content.nobootstrap fieldset { background-color: #ebedf4; border: 1px solid #ccced7; color: #585a69; margin: 0; padding: 1em; }
-#content.nobootstrap legend { background: #ebedf4; border: 1px solid #ccced7; font-weight: 700; margin: 0; padding: 0.2em 0.5em; text-align: left; }
-#content.nobootstrap label { color: #585a69; text-shadow: 0 1px 0 white; float: left; width: 250px; padding: 0.2em 0.5em 0 0; text-align: right; font-weight: bold; }
-#content.nobootstrap label.t { float: none; clear: none; padding: 0 5px 0; margin: 0px; font-weight: normal; font-size: 12px; text-shadow: none; }
-#content.nobootstrap .clear { clear: both; }
-#content.nobootstrap .margin-form { padding: 0 0 1em 260px; color: #7f7f7f; font-size: 0.85em; }
-#content.nobootstrap fieldset img { padding: 0 4px 0 0; vertical-align: bottom; }
-#content.nobootstrap .button { cursor: pointer; background: -moz-linear-gradient(center top, #f9f9f9, #e3e3e3) repeat scroll 0 0 transparent; background: -webkit-gradient(linear, center top, center bottom, from(#f9f9f9), to(#e3e3e3)) repeat scroll 0 0 transparent; border-color: #cccccc #bbbbbb #a0a0a0; border-left: 1px solid #bbbbbb; border-radius: 3px 3px 3px 3px; border-right: 1px solid #bbbbbb; border-style: solid; border-width: 1px; color: black; margin: 0; outline: medium none; padding: 3px 8px; text-align: center; vertical-align: middle; white-space: nowrap; text-shadow: 0 1px 0 white; }
-#content.nobootstrap .button:hover { border-color: #aaaaaa #999999 #888888; }
-#content.nobootstrap input { vertical-align: middle; }
-#content.nobootstrap select { border: 1px solid #cccccc; font-size: 12px; }
-#content.nobootstrap input, #content.nobootstrap textarea, #content.nobootstrap option { color: black; font-size: 12px; margin: 0; padding: 0; }
-#content.nobootstrap input[type="text"], #content.nobootstrap input[type="password"], #content.nobootstrap input[type="file"], #content.nobootstrap textarea { border: 1px solid #cccccc; background-color: white; padding: 2px 4px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset; }
-#content.nobootstrap .table_grid { width: 100%; }
-#content.nobootstrap .table { background-color: white; border: 1px solid #cccccc; padding: 0; border-radius: 3px; }
-#content.nobootstrap .table th a { text-decoration: underline; }
-#content.nobootstrap .table th a:hover { text-decoration: none; }
-#content.nobootstrap .table tr th { background-color: #f1f1f1; color: #333333; font-size: 13px; padding: 4px 6px; text-align: left; }
-#content.nobootstrap .table tr th.right { text-align: center; }
-#content.nobootstrap .table tr td { border-bottom: 1px solid #cccccc; color: #333333; font-size: 12px; padding: 4px 4px 4px 6px; }
-#content.nobootstrap .table tr.row_hover.filter:hover td { background: #f1f9ff; }
-#content.nobootstrap .table tr td.row_hover:hover table tr td { background: none; }
-#content.nobootstrap .table tr.action_details td { background: #fafafa; }
-#content.nobootstrap .table tr.alt_row.action_details td { background: #e8e8e8; }
-#content.nobootstrap .table tr td.empty { background: white !important; border-bottom: none; }
-#content.nobootstrap .table tr td.first { border-left: 1px solid #dedede; }
-#content.nobootstrap .table tr td.last { border-right: 1px solid #dedede; }
-#content.nobootstrap .table tr.small td { height: 15px; }
-#content.nobootstrap .table tr.last td { border-bottom: none; }
-#content.nobootstrap .table tr .filter { background-color: #f1f9ff; }
+.nobootstrap { background-color: white; min-width: 1200px; padding: 80px 40px; }
+.nobootstrap form p { margin: 0.5em 0 0; padding: 0 0 0.5em; }
+.nobootstrap fieldset { background-color: #ebedf4; border: 1px solid #ccced7; color: #585a69; margin: 0; padding: 1em; }
+.nobootstrap legend { background: #ebedf4; border: 1px solid #ccced7; font-weight: 700; margin: 0; padding: 0.2em 0.5em; text-align: left; }
+.nobootstrap label { color: #585a69; text-shadow: 0 1px 0 white; float: left; width: 250px; padding: 0.2em 0.5em 0 0; text-align: right; font-weight: bold; }
+.nobootstrap label.t { float: none; clear: none; padding: 0 5px 0; margin: 0px; font-weight: normal; font-size: 12px; text-shadow: none; }
+.nobootstrap .clear { clear: both; }
+.nobootstrap .margin-form { padding: 0 0 1em 260px; color: #7f7f7f; font-size: 0.85em; }
+.nobootstrap fieldset img { padding: 0 4px 0 0; vertical-align: bottom; }
+.nobootstrap .button { cursor: pointer; background: -moz-linear-gradient(center top, #f9f9f9, #e3e3e3) repeat scroll 0 0 transparent; background: -webkit-gradient(linear, center top, center bottom, from(#f9f9f9), to(#e3e3e3)) repeat scroll 0 0 transparent; border-color: #cccccc #bbbbbb #a0a0a0; border-left: 1px solid #bbbbbb; border-radius: 3px 3px 3px 3px; border-right: 1px solid #bbbbbb; border-style: solid; border-width: 1px; color: black; margin: 0; outline: medium none; padding: 3px 8px; text-align: center; vertical-align: middle; white-space: nowrap; text-shadow: 0 1px 0 white; }
+.nobootstrap .button:hover { border-color: #aaaaaa #999999 #888888; }
+.nobootstrap input { vertical-align: middle; }
+.nobootstrap select { border: 1px solid #cccccc; font-size: 12px; }
+.nobootstrap input, .nobootstrap textarea, .nobootstrap option { color: black; font-size: 12px; margin: 0; padding: 0; }
+.nobootstrap input[type="text"], .nobootstrap input[type="password"], .nobootstrap input[type="file"], .nobootstrap textarea { border: 1px solid #cccccc; background-color: white; padding: 2px 4px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset; }
+.nobootstrap .table_grid { width: 100%; }
+.nobootstrap .table { background-color: white; border: 1px solid #cccccc; padding: 0; border-radius: 3px; }
+.nobootstrap .table th a { text-decoration: underline; }
+.nobootstrap .table th a:hover { text-decoration: none; }
+.nobootstrap .table tr th { background-color: #f1f1f1; color: #333333; font-size: 13px; padding: 4px 6px; text-align: left; }
+.nobootstrap .table tr th.right { text-align: center; }
+.nobootstrap .table tr td { border-bottom: 1px solid #cccccc; color: #333333; font-size: 12px; padding: 4px 4px 4px 6px; }
+.nobootstrap .table tr.row_hover.filter:hover td { background: #f1f9ff; }
+.nobootstrap .table tr td.row_hover:hover table tr td { background: none; }
+.nobootstrap .table tr.action_details td { background: #fafafa; }
+.nobootstrap .table tr.alt_row.action_details td { background: #e8e8e8; }
+.nobootstrap .table tr td.empty { background: white !important; border-bottom: none; }
+.nobootstrap .table tr td.first { border-left: 1px solid #dedede; }
+.nobootstrap .table tr td.last { border-right: 1px solid #dedede; }
+.nobootstrap .table tr.small td { height: 15px; }
+.nobootstrap .table tr.last td { border-bottom: none; }
+.nobootstrap .table tr .filter { background-color: #f1f9ff; }
 
 .bootstrap { /* jQuery Growl Copyright 2013 Kevin Sylvestre 1.1.4 */ /* @group Base */ /* @end */ /* @group Single Chosen */ /* @end */ /* @group Results */ /* @end */ /* @group Multi Chosen */ /* @end */ /* @group Active  */ /* @end */ /* @group Disabled Support */ /* @end */ /* @group Right to Left */ /* @end */ /* @group Retina compatibility */ /* @end */ }
 .bootstrap #growls { z-index: 50000; position: fixed; }
