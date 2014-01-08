@@ -477,7 +477,6 @@ class FrontControllerCore extends Controller
 		));
 
 		$this->context->smarty->assign('css_files', $this->css_files);
-		$this->context->smarty->assign('js_files', array_unique($this->js_files));
 
 		$this->display_header = $display;
 		$this->smartyOutputContent(_PS_THEME_DIR_.'header.tpl');
@@ -539,7 +538,6 @@ class FrontControllerCore extends Controller
 
 		$this->context->smarty->assign(array(
 			'css_files' => $this->css_files, 
-			'js_files' => array_unique($this->js_files),
 			'errors' => $this->errors,
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,

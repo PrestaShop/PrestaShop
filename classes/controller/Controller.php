@@ -405,13 +405,12 @@ abstract class ControllerCore
 		{
 			$html = Media::deferInlineScripts($html);
 			$html = str_replace(array('</body>', '</html>'), '', $html);
-			$this->context->smarty->assign('js_def', Media::getJsDef());
-			$javascript = '<script type="text/javascript">';
-			if (@filemtime(_PS_THEME_DIR_.'javascript.tpl'))
-			{
-				$javascript = $this->context->smarty->fetch(_PS_THEME_DIR_.'javascript.tpl');
-				$javascript = substr_replace(trim($javascript), '', -(strlen('</script>')));
-			}
+			$this->context->smarty->assign(array(
+				'js_files' => array_unique($this->js_files),
+				'js_def' => Media::getJsDef())
+			);
+			$javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
+			$javascript = substr_replace(trim($javascript), '', -(strlen('</script>')));
 			foreach (Media::getInlineScript() as $script)
 				$javascript .= $script."\n";
 			echo $html.$javascript."</script>\n\t</body>\n</html>";
