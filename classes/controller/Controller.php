@@ -401,7 +401,7 @@ abstract class ControllerCore
 		else
 			$html = $this->context->smarty->fetch($content);
 
-		if ($this->controller_type == 'front' && Configuration::get('PS_JS_HTML_THEME_COMPRESSION'))
+		if ($this->controller_type == 'front')
 		{
 			$html = Media::deferInlineScripts($html);
 			$html = str_replace(array('</body>', '</html>'), '', $html);
