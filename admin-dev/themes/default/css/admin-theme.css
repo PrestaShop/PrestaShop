@@ -5,14 +5,14 @@
 /* FONT PATH -------------------------- */
 @font-face { font-family: 'FontAwesome'; src: url("../fonts/fontawesome-webfont.eot?v=4.0.3"); src: url("../fonts/fontawesome-webfont.eot?#iefix&v=4.0.3") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff?v=4.0.3") format("woff"), url("../fonts/fontawesome-webfont.ttf?v=4.0.3") format("truetype"), url("../fonts/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular") format("svg"); font-weight: normal; font-style: normal; }
 
-.icon, [class^="icon-Admin"], [class^="icon-"], .bootstrap [class^="process-icon-"], .bootstrap [class*=" process-icon-"] { display: inline-block; font-family: FontAwesome; font-style: normal; font-weight: normal; line-height: 1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.icon, [class^="icon-Admin"], [class^="icon-"], .bootstrap .alert.alert-info:before, .bootstrap #carrier_wizard .alert-info.wizard_error:before, .bootstrap [class^="process-icon-"], .bootstrap [class*=" process-icon-"] { display: inline-block; font-family: FontAwesome; font-style: normal; font-weight: normal; line-height: 1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
 /* makes the font 33% larger relative to the icon container */
 .icon-lg { font-size: 1.33333em; line-height: 0.75em; vertical-align: -15%; }
 
 .icon-2x, .bootstrap [class^="process-icon-"], .bootstrap [class*=" process-icon-"] { font-size: 2em; }
 
-.icon-3x { font-size: 3em; }
+.icon-3x, .bootstrap .alert.alert-info:before, .bootstrap #carrier_wizard .alert-info.wizard_error:before { font-size: 3em; }
 
 .icon-4x { font-size: 4em; }
 
@@ -32,8 +32,8 @@
 
 .pull-left, .bootstrap .page-head h2.page-title { float: left; }
 
-.icon.pull-left, .pull-left[class^="icon-Admin"], .bootstrap .page-head h2[class^="icon-Admin"].page-title, .pull-left[class^="icon-"], .bootstrap .page-head h2[class^="icon-"].page-title, .bootstrap .page-head h2.icon.page-title, .bootstrap .page-head h2.page-title[class^="process-icon-"], .bootstrap .page-head h2.page-title[class*=" process-icon-"], .bootstrap .pull-left[class^="process-icon-"], .bootstrap .pull-left[class*=" process-icon-"] { margin-right: .3em; }
-.icon.pull-right, #content.bootstrap h3:not(.modal-title) .icon.panel-heading-action, #content.bootstrap h3:not(.modal-title) .panel-heading-action[class^="icon-Admin"], #content.bootstrap h3:not(.modal-title) .panel-heading-action[class^="icon-"], #content.bootstrap h3:not(.modal-title) .panel-heading-action[class^="process-icon-"], #content.bootstrap h3:not(.modal-title) .panel-heading-action[class*=" process-icon-"], #content.bootstrap .panel-heading .icon.panel-heading-action, #content.bootstrap .panel-heading .panel-heading-action[class^="icon-Admin"], #content.bootstrap .panel-heading .panel-heading-action[class^="icon-"], #content.bootstrap .panel-heading .panel-heading-action[class^="process-icon-"], #content.bootstrap .panel-heading .panel-heading-action[class*=" process-icon-"], .pull-right[class^="icon-Admin"], .pull-right[class^="icon-"], .bootstrap .pull-right[class^="process-icon-"], .bootstrap .pull-right[class*=" process-icon-"] { margin-left: .3em; }
+.icon.pull-left, .pull-left[class^="icon-Admin"], .bootstrap .page-head h2[class^="icon-Admin"].page-title, .pull-left[class^="icon-"], .bootstrap .page-head h2[class^="icon-"].page-title, .bootstrap .pull-left.alert.alert-info:before, .bootstrap .page-head h2.alert.alert-info.page-title:before, .bootstrap .page-head #carrier_wizard h2.alert-info.page-title.wizard_error:before, .bootstrap #carrier_wizard .page-head h2.alert-info.page-title.wizard_error:before, .bootstrap #carrier_wizard .pull-left.alert-info.wizard_error:before, .bootstrap .page-head h2.icon.page-title, .bootstrap .page-head h2.page-title[class^="process-icon-"], .bootstrap .page-head h2.page-title[class*=" process-icon-"], .bootstrap .pull-left[class^="process-icon-"], .bootstrap .pull-left[class*=" process-icon-"] { margin-right: .3em; }
+.icon.pull-right, #content.bootstrap h3:not(.modal-title) .icon.panel-heading-action, #content.bootstrap h3:not(.modal-title) .panel-heading-action[class^="icon-Admin"], #content.bootstrap h3:not(.modal-title) .panel-heading-action[class^="icon-"], #content.bootstrap h3:not(.modal-title) .panel-heading-action.alert.alert-info:before, #content.bootstrap h3:not(.modal-title) #carrier_wizard .panel-heading-action.alert-info.wizard_error:before, #content.bootstrap #carrier_wizard h3:not(.modal-title) .panel-heading-action.alert-info.wizard_error:before, #content.bootstrap h3:not(.modal-title) .panel-heading-action[class^="process-icon-"], #content.bootstrap h3:not(.modal-title) .panel-heading-action[class*=" process-icon-"], #content.bootstrap .panel-heading .icon.panel-heading-action, #content.bootstrap .panel-heading .panel-heading-action[class^="icon-Admin"], #content.bootstrap .panel-heading .panel-heading-action[class^="icon-"], #content.bootstrap .panel-heading .panel-heading-action.alert.alert-info:before, #content.bootstrap .panel-heading #carrier_wizard .panel-heading-action.alert-info.wizard_error:before, #content.bootstrap #carrier_wizard .panel-heading .panel-heading-action.alert-info.wizard_error:before, #content.bootstrap .panel-heading .panel-heading-action[class^="process-icon-"], #content.bootstrap .panel-heading .panel-heading-action[class*=" process-icon-"], .pull-right[class^="icon-Admin"], .pull-right[class^="icon-"], .bootstrap .pull-right.alert.alert-info:before, .bootstrap #carrier_wizard .pull-right.alert-info.wizard_error:before, .bootstrap .pull-right[class^="process-icon-"], .bootstrap .pull-right[class*=" process-icon-"] { margin-left: .3em; }
 
 .icon-spin, .bootstrap #dashboard .loading .data_value:before { -webkit-animation: spin 2s infinite linear; -moz-animation: spin 2s infinite linear; -o-animation: spin 2s infinite linear; animation: spin 2s infinite linear; }
 
@@ -241,7 +241,7 @@
 
 .icon-check-circle:before, .icon-ok-sign:before { content: "\f058"; }
 
-.icon-question-circle:before, .icon-question-sign:before, .bootstrap .process-icon-help:before, .bootstrap .process-icon-help-new:before { content: "\f059"; }
+.icon-question-circle:before, .icon-question-sign:before, .bootstrap .process-icon-help:before, .bootstrap .process-icon-help-new:before, .bootstrap .alert.alert-info:before, .bootstrap #carrier_wizard .alert-info.wizard_error:before { content: "\f059"; }
 
 .icon-info-circle:before, .icon-info-sign:before { content: "\f05a"; }
 
@@ -2799,8 +2799,8 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .alert.alert-danger:before, .bootstrap #carrier_wizard .wizard_error:before { position: absolute; top: 0; left: 10px; display: block; min-height: 25px; min-width: 25px; font-family: FontAwesome; font-weight: normal; font-style: normal; font-size: 35px; text-decoration: inherit; -webkit-font-smoothing: antialiased; content: "\f00d"; }
 .bootstrap .alert.alert-success, .bootstrap #carrier_wizard .alert-success.wizard_error { padding-left: 60px; position: relative; }
 .bootstrap .alert.alert-success:before, .bootstrap #carrier_wizard .alert-success.wizard_error:before { position: absolute; top: 0; left: 10px; display: block; min-height: 25px; min-width: 25px; font-family: FontAwesome; font-weight: normal; font-style: normal; font-size: 35px; text-decoration: inherit; -webkit-font-smoothing: antialiased; content: "\f00c"; }
-.bootstrap .alert.alert-info, .bootstrap #carrier_wizard .alert-info.wizard_error { padding-left: 60px; position: relative; }
-.bootstrap .alert.alert-info:before, .bootstrap #carrier_wizard .alert-info.wizard_error:before { position: absolute; top: 0; left: 10px; display: block; min-height: 25px; min-width: 25px; font-family: FontAwesome; font-weight: normal; font-style: normal; font-size: 35px; text-decoration: inherit; -webkit-font-smoothing: antialiased; content: "\F05A"; }
+.bootstrap .alert.alert-info, .bootstrap #carrier_wizard .alert-info.wizard_error { padding-left: 50px; position: relative; border: none; border-left: solid 3px #79cbe4; }
+.bootstrap .alert.alert-info:before, .bootstrap #carrier_wizard .alert-info.wizard_error:before { position: absolute; top: 10px; left: 10px; display: block; min-height: 25px; min-width: 25px; color: #79cbe4; }
 .bootstrap .overflow-y { max-height: 200px; margin-bottom: 15px; overflow-y: auto; }
 .bootstrap .table { border-collapse: separate; border-spacing: 0 2px 0 0; margin-bottom: 5px; }
 .bootstrap .table thead > tr > th { border: none; font-weight: normal; vertical-align: top; border-bottom: solid 1px #a0d0eb; }
