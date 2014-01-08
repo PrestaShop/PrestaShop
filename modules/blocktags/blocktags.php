@@ -43,7 +43,7 @@ class BlockTags extends Module
 		parent::__construct();	
 
 		$this->displayName = $this->l('Tags block');
-		$this->description = $this->l('Adds a block containing product tags.');
+		$this->description = $this->l('Adds a block containing your product tags.');
 	}
 
 	function install()
@@ -67,7 +67,7 @@ class BlockTags extends Module
 		if (Tools::isSubmit('submitBlockTags'))
 		{
 			if (!($tagsNbr = Tools::getValue('BLOCKTAGS_NBR')) || empty($tagsNbr))
-				$output .= $this->displayError($this->l('Please complete the "tags displayed" field.'));
+				$output .= $this->displayError($this->l('Please complete the "Displayed tags" field.'));
 			elseif ((int)($tagsNbr) == 0)
 				$output .= $this->displayError($this->l('Invalid number.'));
 			else
@@ -137,10 +137,10 @@ class BlockTags extends Module
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Tags displayed'),
+						'label' => $this->l('Displayed tags'),
 						'name' => 'BLOCKTAGS_NBR',
 						'class' => 'fixed-width-xs',
-						'desc' => $this->l('Define the number of tags you would like displayed in this block.')
+						'desc' => $this->l('Set the number of tags you would like displayed in this block.')
 					),
 				),
 				'submit' => array(

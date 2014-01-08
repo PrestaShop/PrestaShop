@@ -41,7 +41,7 @@ class BlockStore extends Module
 		parent::__construct();	
 
 		$this->displayName = $this->l('Store locator block');
-		$this->description = $this->l('Displays a store locator link directly on your webiste.');
+		$this->description = $this->l('Displays an image link to PrestaShop\'s store locator feature.');
 	}
 
 	public function install()
@@ -101,7 +101,7 @@ class BlockStore extends Module
 			if (isset($_FILES['BLOCKSTORE_IMG']) && isset($_FILES['BLOCKSTORE_IMG']['tmp_name']) && !empty($_FILES['BLOCKSTORE_IMG']['tmp_name']))
 			{
 				if ($error = ImageManager::validateUpload($_FILES['BLOCKSTORE_IMG'], 4000000))
-					return $this->displayError($this->l('Invalid image'));
+					return $this->displayError($this->l('Invalid image.'));
 				else
 				{
 					$ext = substr($_FILES['BLOCKSTORE_IMG']['name'], strrpos($_FILES['BLOCKSTORE_IMG']['name'], '.') + 1);
@@ -141,7 +141,7 @@ class BlockStore extends Module
 						'type' => 'file',
 						'label' => $this->l('Block image'),
 						'name' => 'BLOCKSTORE_IMG',
-						'desc' => $this->l('( The selected image will be displayed as 174x115 )'),
+						'desc' => $this->l('( The selected image will be displayed as 174 pixels per 115 pixels).'),
 						'thumb' => '../modules/'.$this->name.'/'.Configuration::get('BLOCKBLOCKSTORE_IMG'),
 					),
 				),

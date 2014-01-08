@@ -104,7 +104,7 @@ class BlockManufacturer extends Module
 			$text_nb = (int)(Tools::getValue('MANUFACTURER_DISPLAY_TEXT_NB'));
 			$form_list = (int)(Tools::getValue('MANUFACTURER_DISPLAY_FORM'));
 			if ($text_list && !Validate::isUnsignedInt($text_nb))
-				$errors[] = $this->l('There is an invalid number of elements');
+				$errors[] = $this->l('There is an invalid number of elements.');
 			elseif (!$text_list && !$form_list)
 				$errors[] = $this->l('Please activate at least one system list.');
 			else
@@ -117,7 +117,7 @@ class BlockManufacturer extends Module
 			if (isset($errors) && count($errors))
 				$output .= $this->displayError(implode('<br />', $errors));
 			else
-				$output .= $this->displayConfirmation($this->l('Settings updated'));
+				$output .= $this->displayConfirmation($this->l('Settings updated.'));
 		}
 		return $output.$this->renderForm();
 	}
@@ -155,7 +155,7 @@ class BlockManufacturer extends Module
 						'type' => 'switch',
 						'label' => $this->l('Use a plain-text list'),
 						'name' => 'MANUFACTURER_DISPLAY_TEXT',
-						'desc' => $this->l('Display manufacturers in a plain-text list'),
+						'desc' => $this->l('Display manufacturers in a plain-text list.'),
 						'values' => array(
 									array(
 										'id' => 'active_on',

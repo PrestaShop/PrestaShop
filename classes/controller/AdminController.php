@@ -394,34 +394,30 @@ class AdminControllerCore extends Controller
 		switch ($this->display)
 		{
 			case 'add':
-				$breadcrumbs2['action']['name'] = $this->l('Add');
+				$breadcrumbs2['action']['name'] = $this->l('Add', null, null, false);
 			case 'edit':
-				$breadcrumbs2['action']['name'] = $this->l('Edit');
+				$breadcrumbs2['action']['name'] = $this->l('Edit', null, null, false);
 				$breadcrumbs2['action']['icon'] = 'icon-pencil';
 				break;
 			case '':
 			case 'list':
-				$breadcrumbs2['action']['name'] = $this->l('List');
+				$breadcrumbs2['action']['name'] = $this->l('List', null, null, false);
 				$breadcrumbs2['action']['icon'] = 'icon-th-list';
 				break;
 			case 'details':
 			case 'view':
-				$breadcrumbs2['action']['name'] = $this->l('View details');
+				$breadcrumbs2['action']['name'] = $this->l('View details', null, null, false);
 				$breadcrumbs2['action']['icon'] = 'icon-zoom-in';
 				break;
 			case 'options':
-				$breadcrumbs2['action']['name'] = $this->l('Options');
+				$breadcrumbs2['action']['name'] = $this->l('Options', null, null, false);
 				$breadcrumbs2['action']['icon'] = 'icon-cogs';
 				break;
 		}
 		$this->context->smarty->assign('breadcrumbs2', $breadcrumbs2);
 
-		if ($tabs[0]['id_parent'] != 0 && ($link = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_ ).'/'.$this->context->link->getAdminLink($tabs[0]['class_name'])) != $_SERVER['REQUEST_URI'])
-			$this->breadcrumbs[] = '<a href="'.Tools::htmlentitiesUTF8($link).'">'.$tabs[0]['name'].'</a>';
-		else
-			$this->breadcrumbs[] = $tabs[0]['name'];
-		
 		/* BEGIN - Backward compatibility < 1.6.0.3 */
+		$this->breadcrumbs[] = $tabs[0]['name'];
 		$navigationPipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
 		$this->context->smarty->assign('navigationPipe', $navigationPipe);
 		/* END - Backward compatibility < 1.6.0.3 */
@@ -439,15 +435,15 @@ class AdminControllerCore extends Controller
 		switch ($this->display)
 		{
 			case 'edit':
-				$this->toolbar_title[] = $this->l('Edit');
+				$this->toolbar_title[] = $this->l('Edit', null, null, false);
 				break;
 
 			case 'add':
-				$this->toolbar_title[] = $this->l('Add new');
+				$this->toolbar_title[] = $this->l('Add new', null, null, false);
 				break;
 
 			case 'view':
-				$this->toolbar_title[] = $this->l('View');
+				$this->toolbar_title[] = $this->l('View', null, null, false);
 				break;
 		}
 
@@ -1641,7 +1637,6 @@ class AdminControllerCore extends Controller
 		}
 
 		$this->getLanguages();
-		// toolbar (save, cancel, new, ..)		
 		$this->initToolbar();
 		$this->initTabModuleList();
 		$this->initPageHeaderToolbar();
@@ -3247,7 +3242,7 @@ class AdminControllerCore extends Controller
 		$module->options['uninstall_url'] = $link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
 
 		$module->options['uninstall_onclick'] = ((!$module->onclick_option) ?
-			((empty($module->confirmUninstall)) ? '' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') :
+			((empty($module->confirmUninstall)) ? 'return confirm(\''.$this->l('Do you really want to uninstall this module?').'\');' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') :
 			$obj->onclickOption('uninstall', $module->options['uninstall_url']));
 
 		if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')))) && (int)Tools::getValue('conf') > 0)
@@ -3410,7 +3405,7 @@ class AdminControllerCore extends Controller
 		{
 			if ($module->id)
 				$return[] = '<a href="'.$link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'"
-				onclick="'.(isset($module->onclick_option_content['desactive']) ? $module->onclick_option_content['desactive'] : '').'"
+				onclick="'.(isset($module->onclick_option_content['uninstall']) ? $module->onclick_option_content['uninstall'] : 'return confirm(\''.$this->l('Do you really want to uninstall this module?').'\');').'"
 				title="'.$this->translationsTab['Uninstall'].'">
 				<i class="icon-minus-sign-alt"></i>&nbsp;'.$this->translationsTab['Uninstall'].'</a>';
 		}

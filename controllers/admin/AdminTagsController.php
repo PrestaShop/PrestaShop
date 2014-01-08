@@ -70,8 +70,8 @@ class AdminTagsControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_tag'] = array(
-				'href' => self::$currentIndex.'&amp;addtag&amp;token='.$this->token,
-				'desc' => $this->l('Add new tag'),
+				'href' => self::$currentIndex.'&addtag&token='.$this->token,
+				'desc' => $this->l('Add new tag', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 

@@ -50,7 +50,7 @@ class HomeSlider extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Image slider for your homepage.');
+		$this->displayName = $this->l('Image slider for your homepage');
 		$this->description = $this->l('Adds an image slider to your homepage.');
 	}
 
@@ -237,10 +237,10 @@ class HomeSlider extends Module
 		{
 			/* Checks state (active) */
 			if (!Validate::isInt(Tools::getValue('active_slide')) || (Tools::getValue('active_slide') != 0 && Tools::getValue('active_slide') != 1))
-				$errors[] = $this->l('Invalid slide state');
+				$errors[] = $this->l('Invalid slide state.');
 			/* Checks position */
 			if (!Validate::isInt(Tools::getValue('position')) || (Tools::getValue('position') < 0))
-				$errors[] = $this->l('Invalid slide position');
+				$errors[] = $this->l('Invalid slide position.');
 			/* If edit : checks id_slide */
 			if (Tools::isSubmit('id_slide'))
 			{
@@ -264,9 +264,9 @@ class HomeSlider extends Module
 				if (Tools::strlen(Tools::getValue('url_'.$language['id_lang'])) > 0 && !Validate::isUrl(Tools::getValue('url_'.$language['id_lang'])))
 					$errors[] = $this->l('The URL format is not correct.');
 				if (Tools::getValue('image_'.$language['id_lang']) != null && !Validate::isFileName(Tools::getValue('image_'.$language['id_lang'])))
-					$errors[] = $this->l('Invalid filename');
+					$errors[] = $this->l('Invalid filename.');
 				if (Tools::getValue('image_old_'.$language['id_lang']) != null && !Validate::isFileName(Tools::getValue('image_old_'.$language['id_lang'])))
-					$errors[] = $this->l('Invalid filename');
+					$errors[] = $this->l('Invalid filename.');
 			}
 
 			/* Checks title/url/legend/description for default lang */
@@ -400,18 +400,18 @@ class HomeSlider extends Module
 			$res = $slide->delete();
 			$this->clearCache();
 			if (!$res)
-				$this->_html .= $this->displayError('Could not delete');
+				$this->_html .= $this->displayError('Could not delete.');
 			else
-				$this->_html .= $this->displayConfirmation($this->l('Slide deleted'));
+				$this->_html .= $this->displayConfirmation($this->l('Slide deleted.'));
 		}
 
 		/* Display errors if needed */
 		if (count($errors))
 			$this->_html .= $this->displayError(implode('<br />', $errors));
 		elseif (Tools::isSubmit('submitSlide') && Tools::getValue('id_slide'))
-			$this->_html .= $this->displayConfirmation($this->l('Slide updated'));
+			$this->_html .= $this->displayConfirmation($this->l('Slide updated.'));
 		elseif (Tools::isSubmit('submitSlide'))
-			$this->_html .= $this->displayConfirmation($this->l('Slide added'));
+			$this->_html .= $this->displayConfirmation($this->l('Slide added.'));
 	}
 
 	private function _prepareHook()
@@ -606,31 +606,31 @@ class HomeSlider extends Module
 				'input' => array(
 					array(
 						'type' => 'file_lang',
-						'label' => $this->l('Select a file:'),
+						'label' => $this->l('Select a file'),
 						'name' => 'image',
 						'lang' => true,
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Title:'),
+						'label' => $this->l('Title'),
 						'name' => 'title',
 						'lang' => true,
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('URL:'),
+						'label' => $this->l('URL'),
 						'name' => 'url',
 						'lang' => true,
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Legend:'),
+						'label' => $this->l('Legend'),
 						'name' => 'legend',
 						'lang' => true,
 					),
 					array(
 						'type' => 'textarea',
-						'label' => $this->l('Description:'),
+						'label' => $this->l('Description'),
 						'name' => 'description',
 						'autoload_rte' => true,
 						'lang' => true,

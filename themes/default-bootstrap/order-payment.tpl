@@ -324,9 +324,9 @@
 									<tbody>
 										{foreach from=$discounts item=discount name=discountLoop}
 											<tr class="cart_discount {if $smarty.foreach.discountLoop.last}last_item{elseif $smarty.foreach.discountLoop.first}first_item{else}item{/if}" id="cart_discount_{$discount.id_discount}">
-												<td class="cart_discount_name" colspan="2">{$discount.name}</td>
-												<td class="cart_discount_description" colspan="3">{$discount.description}</td>
-												<td class="cart_discount_price">
+												<td class="cart_discount_description" colspan="2">{$discount.description}</td>												
+												<td class="cart_discount_name">{$discount.name}</td>
+												<td class="cart_discount_price" colspan="2">
 													<span class="price-discount">
 														{if $discount.value_real > 0}
 															{if !$priceDisplay}

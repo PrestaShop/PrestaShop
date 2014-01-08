@@ -80,8 +80,8 @@ class AdminSlipControllerCore extends AdminController
 	public function initPageHeaderToolbar()
 	{
 		$this->page_header_toolbar_btn['generate_pdf'] = array(
-			'href' => self::$currentIndex.'&amp;token='.$this->token,
-			'desc' => $this->l('Generate PDF'),
+			'href' => self::$currentIndex.'&token='.$this->token,
+			'desc' => $this->l('Generate PDF', null, null, false),
 			'icon' => 'process-icon-save-date'
 		);
 

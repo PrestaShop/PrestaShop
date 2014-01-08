@@ -39,7 +39,7 @@ class blocksocial extends Module
 		parent::__construct();	
 
 		$this->displayName = $this->l('Social networking block');
-		$this->description = $this->l('Allows you to add information about your brand\'s social networking sites.');
+		$this->description = $this->l('Allows you to add information about your brand\'s social networking accounts.');
 	}
 	
 	public function install()
@@ -103,39 +103,39 @@ class blocksocial extends Module
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Facebook URL:'),
+						'label' => $this->l('Facebook URL'),
 						'name' => 'blocksocial_facebook',
-						'desc' => $this->l('Create a title for the block (default: \'RSS feed\')'),
+						'desc' => $this->l('Your Facebook fan page.'),
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Twitter URL:'),
+						'label' => $this->l('Twitter URL'),
 						'name' => 'blocksocial_twitter',
-						'desc' => $this->l('Add the URL of the feed you want to use (sample: http://news.google.com/?output=rss)'),
+						'desc' => $this->l('Your official Twitter accounts.'),
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('RSS URL:'),
+						'label' => $this->l('RSS URL'),
 						'name' => 'blocksocial_rss',
-						'desc' => $this->l('Number of threads displayed by the block (default value: 5)'),
+						'desc' => $this->l('The RSS feed of your choice (your blog, your store, etc.).'),
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Youtube URL:'),
+						'label' => $this->l('YouTube URL'),
 						'name' => 'blocksocial_youtube',
-						'desc' => $this->l('Youtube Url'),
+						'desc' => $this->l('Your official YouTube account.'),
 					),
 					array(
 						'type' => 'text',
 						'label' => $this->l('Google Plus URL:'),
 						'name' => 'blocksocial_google_plus',
-						'desc' => $this->l('Google Plus Url'),
+						'desc' => $this->l('You official Google Plus page.'),
 					),
 					array(
 						'type' => 'text',
 						'label' => $this->l('Pinterest URL:'),
 						'name' => 'blocksocial_pinterest',
-						'desc' => $this->l('Pinterest Url'),
+						'desc' => $this->l('Your official Pinterest account.'),
 					),
 				),
 				'submit' => array(

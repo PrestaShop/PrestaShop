@@ -148,8 +148,8 @@ class AdminGroupsControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_group'] = array(
-				'href' => self::$currentIndex.'&amp;addgroup&amp;token='.$this->token,
-				'desc' => $this->l('Add new group'),
+				'href' => self::$currentIndex.'&addgroup&token='.$this->token,
+				'desc' => $this->l('Add new group', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 

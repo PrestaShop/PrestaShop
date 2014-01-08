@@ -66,7 +66,7 @@ module_inactive
 							class="noborder" title="{l s='Module %1s '|sprintf:$module->name}" />
 						{/if}
 					</td>
-					<td>
+					<td class="fixed-width-xs">
 						<img width="32" alt="{$module->displayName}" title="{$module->displayName}" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}" />
 					</td>
 					<td>
@@ -81,7 +81,7 @@ module_inactive
 								{if isset($module->type) && $module->type == 'addonsMustHave'}
 									- <a href="#" class="help-tooltip text-primary" data-title="{l s=""}"><i class="icon-group"></i> <small>{l s="Popular"}</small></a>
 								{elseif isset($module->type) && $module->type == 'addonsPartner'}
-									- <a href="#" class="help-tooltip text-warning" data-title="{l s="This module is available for free. Thanks to our partner."}"><i class="icon-pushpin"></i> <small>{l s="Partner"}</small></a>
+									- <a href="#" class="help-tooltip text-warning" data-title="{l s="This module is available for free thanks to our partner."}"><i class="icon-pushpin"></i> <small>{l s="Partner"}</small></a>
 								{elseif isset($module->id) && $module->id gt 0}
 									{if isset($module->version_addons) && $module->version_addons}
 										<span class="label label-warning">{l s='Need update'}</span>

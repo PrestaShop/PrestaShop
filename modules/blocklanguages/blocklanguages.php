@@ -40,7 +40,7 @@ class BlockLanguages extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Language block');
-		$this->description = $this->l('Adds a block allowing customers to select a website language.');
+		$this->description = $this->l('Adds a block allowing customers to select a language for your store\s content.');
 	}
 
 	public function install()

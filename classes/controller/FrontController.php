@@ -354,7 +354,7 @@ class FrontControllerCore extends Controller
 		));
 
 		// Add the tpl files directory for mobile
-		if ($this->context->getMobileDevice() != false)
+		if ($this->useMobileTheme())
 			$this->context->smarty->assign(array(
 				'tpl_mobile_uri' => _PS_THEME_MOBILE_DIR_,
 			));
@@ -383,11 +383,11 @@ class FrontControllerCore extends Controller
 		);
 
 		// Add the images directory for mobile
-		if ($this->context->getMobileDevice() != false)
+		if ($this->useMobileTheme())
 			$assign_array['img_mobile_dir'] = _THEME_MOBILE_IMG_DIR_;
 
 		// Add the CSS directory for mobile
-		if ($this->context->getMobileDevice() != false)
+		if ($this->useMobileTheme())
 			$assign_array['css_mobile_dir'] = _THEME_MOBILE_CSS_DIR_;
 
 		foreach ($assign_array as $assign_key => $assign_value)
@@ -429,7 +429,7 @@ class FrontControllerCore extends Controller
 		$this->process();
 		if (!isset($this->context->cart))
 			$this->context->cart = new Cart();
-		if ($this->context->getMobileDevice() == false)
+		if (!$this->useMobileTheme())
 		{
 			// These hooks aren't used for the mobile theme.
 			// Needed hooks are called in the tpl files.
@@ -443,11 +443,9 @@ class FrontControllerCore extends Controller
 			));
 		}
 		else
-		{
 			$this->context->smarty->assign(array(
 				'HOOK_MOBILE_HEADER' => Hook::exec('displayMobileHeader'),
 			));
-		}
 	}
 
 	/**
@@ -479,7 +477,6 @@ class FrontControllerCore extends Controller
 		));
 
 		$this->context->smarty->assign('css_files', $this->css_files);
-		$this->context->smarty->assign('js_files', array_unique($this->js_files));
 
 		$this->display_header = $display;
 		$this->smartyOutputContent(_PS_THEME_DIR_.'header.tpl');
@@ -520,13 +517,13 @@ class FrontControllerCore extends Controller
 	{
 		Tools::safePostVars();
 		// Automatically add js files from js/autoload directory in the template
-		foreach (scandir(_PS_THEME_DIR_.'js/autoload/', 0) as $file)
+		foreach (scandir($this->getThemeDir().'js/autoload/', 0) as $file)
 			if (preg_match('/^[^.].*\.js$/', $file))
-				$this->addJS(_THEME_JS_DIR_.'autoload/'.$file);
+				$this->addJS(str_replace(_PS_ROOT_DIR_, '', $this->getThemeDir()).'js/autoload/'.$file);
 		// Automatically add css files from css/autoload directory in the template
-		foreach (scandir(_PS_THEME_DIR_.'css/autoload', 0) as $file)
+		foreach (scandir($this->getThemeDir().'css/autoload', 0) as $file)
 			if (preg_match('/^[^.].*\.css$/', $file))
-				$this->addCSS(_THEME_CSS_DIR_.'autoload/'.$file);
+				$this->addCSS(str_replace(_PS_ROOT_DIR_, '', $this->getThemeDir()).'css/autoload'.$file);
 
 		// assign css_files and js_files at the very last time
 		if ((Configuration::get('PS_CSS_THEME_CACHE') || Configuration::get('PS_JS_THEME_CACHE')) && is_writable(_PS_THEME_DIR_.'cache'))
@@ -535,21 +532,20 @@ class FrontControllerCore extends Controller
 			if (Configuration::get('PS_CSS_THEME_CACHE'))
 				$this->css_files = Media::cccCSS($this->css_files);
 			//JS compressor management
-			if (Configuration::get('PS_JS_THEME_CACHE') && !$this->context->getMobileDevice())
+			if (Configuration::get('PS_JS_THEME_CACHE') && !$this->useMobileTheme())
 				$this->js_files = Media::cccJs($this->js_files);
 		}
 
 		$this->context->smarty->assign(array(
 			'css_files' => $this->css_files, 
-			'js_files' => array_unique($this->js_files),
 			'errors' => $this->errors,
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,
 		));
 		
 		$live_edit_content = '';
-		// Don't use live edit if on mobile device
-		if (!$this->context->getMobileDevice() && $this->checkLiveEditAccess())
+		// Don't use live edit if on mobile theme
+		if (!$this->useMobileTheme() && $this->checkLiveEditAccess())
 			$live_edit_content = $this->getLiveEditFooter();
 		
 		$layout = $this->getLayout();
@@ -599,8 +595,7 @@ class FrontControllerCore extends Controller
 					'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', array()),
 				));
 
-				$template_dir = ($this->context->getMobileDevice() == true ? _PS_THEME_MOBILE_DIR_ : _PS_THEME_DIR_);
-				$this->smartyOutputContent($template_dir.'maintenance.tpl');
+				$this->smartyOutputContent($this->getTemplatePath($this->getThemeDir().'maintenance.tpl'));
 				exit;
 			}
 		}
@@ -611,7 +606,7 @@ class FrontControllerCore extends Controller
 	{
 		header('HTTP/1.1 503 temporarily overloaded');
 		$this->context->smarty->assign('favicon_url', _PS_IMG_.Configuration::get('PS_FAVICON'));
-		$this->smartyOutputContent(_PS_THEME_DIR_.'restricted-country.tpl');
+		$this->smartyOutputContent($this->getTemplatePath($this->getThemeDir().'restricted-country.tpl'));
 		exit;
 	}
 
@@ -719,26 +714,34 @@ class FrontControllerCore extends Controller
 
 	/**
 	 * Specific medias for mobile device.
+	 * if autoload directory is present in the mobile theme, these files will not be loaded
 	 */
 	public function setMobileMedia()
 	{
 		$this->addjquery();
-		$this->addJS(_THEME_MOBILE_JS_DIR_.'jquery.mobile-1.3.0.min.js');
-		$this->addJS(_THEME_MOBILE_JS_DIR_.'jqm-docs.js');
-		$this->addJS(_PS_JS_DIR_.'tools.js');
-		$this->addJS(_THEME_MOBILE_JS_DIR_.'global.js');
-		$this->addjqueryPlugin('fancybox');
 
-		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jquery.mobile-1.3.0.min.css', 'all');
-		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jqm-docs.css', 'all');
-		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'global.css', 'all');
+		if (!file_exists($this->getThemeDir().'js/autoload/'))
+		{
+			$this->addJS(_THEME_MOBILE_JS_DIR_.'jquery.mobile-1.3.0.min.js');
+			$this->addJS(_THEME_MOBILE_JS_DIR_.'jqm-docs.js');
+			$this->addJS(_PS_JS_DIR_.'tools.js');
+			$this->addJS(_THEME_MOBILE_JS_DIR_.'global.js');
+			$this->addjqueryPlugin('fancybox');
+		}
+
+		if (!file_exists($this->getThemeDir().'js/autoload/'))
+		{
+			$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jquery.mobile-1.3.0.min.css', 'all');
+			$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jqm-docs.css', 'all');
+			$this->addCSS(_THEME_MOBILE_CSS_DIR_.'global.css', 'all');
+		}
 	}
 
 	public function setMedia()
 	{
 		// if website is accessed by mobile device
 		// @see FrontControllerCore::setMobileMedia()
-		if ($this->context->getMobileDevice() != false)
+		if ($this->useMobileTheme())
 		{
 			$this->setMobileMedia();
 			return true;
@@ -759,13 +762,13 @@ class FrontControllerCore extends Controller
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 		
-		if (Configuration::get('PS_QUICK_VIEW') && ($this->php_self == 'index' || $this->php_self == 'category'))
+		if (Configuration::get('PS_QUICK_VIEW'))
 		{
 			$this->addjqueryPlugin('fancybox');
 			$this->addJS(_THEME_JS_DIR_.'quick-view.js');
 		}
 
-		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0 && ($this->php_self == 'products-comparison' || $this->php_self == 'category'))
+		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
 			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 
 		// Execute Hook FrontController SetMedia
@@ -985,6 +988,24 @@ class FrontControllerCore extends Controller
 		return parent::addCSS($list_uri, $css_media_type, $offset);
 	}
 
+	public function removeCSS($css_uri, $css_media_type = 'all')
+	{
+		if (!is_array($css_uri))
+			$css_uri = array($css_uri => $css_media_type);
+
+		$list_uri = array();
+		foreach ($css_uri as $file => $media)
+		{
+			$different = 0;
+			$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/css/modules/', $file, $different);
+			if ($different && file_exists($override_path))
+				$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/css/modules/', $file, $different);
+			$list_uri[$file] = $media;
+		}
+
+		return parent::removeCSS($list_uri, $css_media_type);
+	}
+
 	/**
 	 * Add one or several JS files for front, checking if js files are overriden in theme/js/modules/ directory
 	 *
@@ -1007,6 +1028,25 @@ class FrontControllerCore extends Controller
 		}
 
 		return parent::addJS($js_uri);
+	}
+
+	public function removeJS($js_uri)
+	{
+		if (!is_array($js_uri))
+			$js_uri = array($js_uri);
+
+		foreach ($js_uri as $key => &$file)
+		{
+			if (!preg_match('/^http(s?):\/\//i', $file))
+			{
+				$different = 0;
+				$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/js/modules/', $file, $different);
+				if ($different && file_exists($override_path))
+					$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/js/modules/', $file, $different);
+			}
+		}
+
+		return parent::removeJS($js_uri);
 	}
 
 	protected function recoverCart()
@@ -1043,7 +1083,7 @@ class FrontControllerCore extends Controller
 	 */
 	public function setTemplate($default_template)
 	{
-		if ($this->context->getMobileDevice() != false)
+		if ($this->useMobileTheme())
 			$this->setMobileTemplate($default_template);
 		else
 		{
@@ -1066,7 +1106,28 @@ class FrontControllerCore extends Controller
 	{
 		return Hook::exec('DisplayOverrideTemplate', array('controller' => $this));
 	}
+	
+	protected function useMobileTheme()
+	{
+		static $use_mobile_template = null;
 
+		// The mobile theme must have a layout to be used
+		if ($use_mobile_template === null)
+			$use_mobile_template = ($this->context->getMobileDevice() && file_exists(_PS_THEME_MOBILE_DIR_.'layout.tpl'));
+
+		return $use_mobile_template;
+	}
+	
+	protected function getThemeDir()
+	{
+		return $this->useMobileTheme() ? _PS_THEME_MOBILE_DIR_ : _PS_THEME_DIR_;
+	}
+	
+	protected function getOverrideThemeDir()
+	{
+		return $this->useMobileTheme() ? _PS_THEME_MOBILE_OVERRIDE_DIR_ : _PS_THEME_MOBILE_DIR_;
+	}
+	
 	/**
 	 * Returns the layout corresponding to the current page by using the override system
 	 * Ex:
@@ -1081,16 +1142,11 @@ class FrontControllerCore extends Controller
 	 */
 	public function getLayout()
 	{
-		$entity = Tools::getValue('controller');
+		$entity = $this->php_self;
 		$id_item = (int)Tools::getValue('id_'.$entity);
 
-		$layout_dir = _PS_THEME_DIR_;
-		$layout_override_dir  = _PS_THEME_OVERRIDE_DIR_;
-		if ($this->context->getMobileDevice() != false)
-		{
-			$layout_dir = _PS_THEME_MOBILE_DIR_;
-			$layout_override_dir = _PS_THEME_MOBILE_OVERRIDE_DIR_;
-		}
+		$layout_dir = $this->getThemeDir();
+		$layout_override_dir  = $this->getOverrideThemeDir();
 
 		$layout = false;
 		if ($entity)
@@ -1107,6 +1163,28 @@ class FrontControllerCore extends Controller
 		return $layout;
 	}
 
+	protected function getTemplatePath($template)
+	{
+		if (!$this->useMobileTheme())
+			return $template;
+
+		$tpl_file = basename($template);
+		$dirname = dirname($template).(substr(dirname($template), -1, 1) == '/' ? '' : '/');
+
+		if ($dirname == _PS_THEME_DIR_)
+		{
+			if (file_exists(_PS_THEME_MOBILE_DIR_.$tpl_file))
+				$template = _PS_THEME_MOBILE_DIR_.$tpl_file;
+		}
+		elseif ($dirname == _PS_THEME_MOBILE_DIR_)
+		{
+			if (!file_exists(_PS_THEME_MOBILE_DIR_.$tpl_file) && file_exists(_PS_THEME_DIR_.$tpl_file))
+				$template = _PS_THEME_DIR_.$tpl_file;
+		}
+		
+		return $template;
+	}
+	
 	/**
 	 * This checks if the template set is available for mobile themes,
 	 * otherwise the front template is choosen.
@@ -1127,22 +1205,10 @@ class FrontControllerCore extends Controller
 		$this->context->smarty->assign('id_cgv', Configuration::get('PS_CONDITIONS_CMS_ID'));
 		$this->context->smarty->assign('PS_SHOP_NAME', Configuration::get('PS_SHOP_NAME'));
 
-		$mobile_template = '';
-		$tpl_file = basename($template);
-		$dirname = dirname($template).(substr(dirname($template), -1, 1) == '/' ? '' : '/');
+		$template = $this->getTemplatePath($template);
 
-		if ($dirname == _PS_THEME_DIR_)
-		{
-			if (file_exists(_PS_THEME_MOBILE_DIR_.$tpl_file))
-				$template = _PS_THEME_MOBILE_DIR_.$tpl_file;
-		}
-		elseif ($dirname == _PS_THEME_MOBILE_DIR_)
-		{
-			if (!file_exists(_PS_THEME_MOBILE_DIR_.$tpl_file) && file_exists(_PS_THEME_DIR_.$tpl_file))
-				$template = _PS_THEME_DIR_.$tpl_file;
-		}
 		$assign = array();
-		$assign['tpl_file'] = basename($tpl_file, '.tpl');
+		$assign['tpl_file'] = basename($template, '.tpl');
 		if (isset($this->php_self))
 			$assign['controller_name'] = $this->php_self;
 
@@ -1211,4 +1277,3 @@ class FrontControllerCore extends Controller
 		return Product::getColorsListCacheId($id_product);
 	}
 }
-?>

@@ -100,8 +100,8 @@ class AdminProfilesControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_profile'] = array(
-				'href' => self::$currentIndex.'&amp;addprofile&amp;token='.$this->token,
-				'desc' => $this->l('Add new profile'),
+				'href' => self::$currentIndex.'&addprofile&token='.$this->token,
+				'desc' => $this->l('Add new profile', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		

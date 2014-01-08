@@ -40,24 +40,6 @@
 {/block}
 {block name="script"}
 	$(document).ready(function() {
-		if (btn_submit.length > 0)
-		{
-			//get reference on save and stay link
-			btn_save_and_preview = $('span[class~="process-icon-save-and-preview"]').parent();
-
-			//get reference on current save link label
-			lbl_save = $('#desc-{$table}-save div');
-
-			//submit the form
-				if (btn_save_and_preview)
-				{
-					btn_save_and_preview.click(function() {
-						//add hidden input to emulate submit button click when posting the form -> field name posted
-						btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'AndPreview" value="1" />');
-						$('#{$table}_form').submit();
-					});
-				}
-		}
 		$('#active_on').bind('click', function(){
 			toggleDraftWarning(false);
 		});

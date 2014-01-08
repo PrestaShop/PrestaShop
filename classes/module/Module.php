@@ -1412,13 +1412,13 @@ abstract class ModuleCore
 	{
 		return true;
 	}
-	
+
+	/*
+		@deprecated since 1.6.0.2
+	*/
 	public static function getPaypalIgnore()
 	{
-		$iso_code = Country::getIsoById((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-		$paypal_countries = array('ES', 'FR', 'PL', 'IT');
-		if (Context::getContext()->getMobileDevice() && Context::getContext()->shop->getTheme() == 'default' && in_array($iso_code, $paypal_countries))
-			return 'm.`name` = \'paypal\'';
+		Tools::displayAsDeprecated();
 	}
 
 	/**
@@ -1451,8 +1451,6 @@ abstract class ModuleCore
 			$hookPayment = 'displayPayment';
 
 		$list = Shop::getContextListShopID();
-		if ($paypal_condition = Module::getPaypalIgnore())
-			$paypal_condition = ' AND '.$paypal_condition;
 			
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
 		FROM `'._DB_PREFIX_.'module` m
@@ -1465,7 +1463,7 @@ abstract class ModuleCore
 		'.(isset($billing) && $frontend ? 'AND mc.id_country = '.(int)$billing->id_country : '').'
 		AND (SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN('.implode(', ', $list).')) = '.count($list).'
 		AND hm.id_shop IN('.implode(', ', $list).')
-		'.((count($groups) && $frontend && $use_groups) ? 'AND (mg.`id_group` IN ('.implode(', ', $groups).'))' : '').$paypal_condition.'
+		'.((count($groups) && $frontend && $use_groups) ? 'AND (mg.`id_group` IN ('.implode(', ', $groups).'))' : '').'
 		GROUP BY hm.id_hook, hm.id_module
 		ORDER BY hm.`position`, m.`name` DESC');
 	}

@@ -54,8 +54,8 @@ class AdminRangeWeightControllerCore extends AdminController
 	{
 		$this->page_header_toolbar_title = $this->l('Weight ranges');
 		$this->page_header_toolbar_btn['new_weight_range'] = array(
-			'href' => self::$currentIndex.'&amp;addrange_weight&amp;token='.$this->token,
-			'desc' => $this->l('Add new weight range'),
+			'href' => self::$currentIndex.'&addrange_weight&token='.$this->token,
+			'desc' => $this->l('Add new weight range', null, null, false),
 			'icon' => 'process-icon-new'
 		);
 
