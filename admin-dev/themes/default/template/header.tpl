@@ -328,8 +328,8 @@
 		{include file='nav.tpl'}
 
 		<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}">
-		{include file="page_header_toolbar.tpl" toolbar_btn=$page_header_toolbar_btn title=$page_header_toolbar_title}
-		
+		{$page_header_toolbar}
+		{$modal_module_list}
 
 {if $install_dir_exists}
 			<div class="alert alert-warning">

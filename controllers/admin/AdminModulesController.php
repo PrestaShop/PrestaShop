@@ -1337,6 +1337,8 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['tab_modules_preferences'] = $tab_modules_preferences;
 		$tpl_vars['kpis'] = $this->renderKpis();
 		$tpl_vars['module_name'] = Tools::getValue('module_name');
+		$tpl_vars['page_header_toolbar_title'] = $this->page_header_toolbar_title;
+		$tpl_vars['page_header_toolbar_btn'] = $this->page_header_toolbar_btn;
 
 		if ($this->logged_on_addons)
 		{
