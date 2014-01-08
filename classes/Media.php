@@ -205,14 +205,13 @@ class MediaCore
 		$url_data = parse_url($js_uri);
 		if (!array_key_exists('host', $url_data))
 		{
-			$js_uri = '/'.ltrim(str_replace(_PS_ROOT_DIR_, __PS_BASE_URI__, $url_data['path']), '/\\');
+			$js_uri = '/'.ltrim(str_replace(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, _PS_ROOT_DIR_), __PS_BASE_URI__, $js_uri), '/\\');
 			$url_data['path'] = $js_uri;
-			$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);		// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
+			$file_uri = _PS_ROOT_DIR_.str_replace(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);		// remove PS_BASE_URI on _PS_ROOT_DIR for the following
 		}
 		else
 			$file_uri = $js_uri;
 		// check if js files exists
-
 		if (!preg_match('/^http(s?):\/\//i', $file_uri) && !@filemtime($file_uri))
 			return false;
 
@@ -222,6 +221,8 @@ class MediaCore
 			$js_uri = dirname(preg_replace('/\?.+$/', '', $_SERVER['REQUEST_URI']).'a').'/..'.$js_uri;
 		}
 		
+		$js_uri = str_replace('//', '/', $js_uri);
+
 		return $js_uri;
 	}
 
@@ -237,10 +238,11 @@ class MediaCore
 		if (empty($css_uri))
 			return false;
 
-		$css_uri = '/'.ltrim(str_replace(_PS_ROOT_DIR_, __PS_BASE_URI__, $css_uri), '/\\');
+		$css_uri = '/'.ltrim(str_replace(str_replace(array('/', '\\'), _PS_ROOT_DIR_), __PS_BASE_URI__, $css_uri), '/\\');
 		// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
 		$url_data = parse_url($css_uri);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
+
 		// check if css files exists
 		if (!@filemtime($file_uri) && !array_key_exists('host', $url_data)) 
 			return false;
@@ -250,6 +252,8 @@ class MediaCore
 			$css_uri = preg_replace('/^'.preg_quote(__PS_BASE_URI__, '/').'/', '/', $css_uri);
 			$css_uri = dirname(preg_replace('/\?.+$/', '', $_SERVER['REQUEST_URI']).'a').'/..'.$css_uri;
 		}
+
+		$css_uri = str_replace('//', '/', $css_uri);
 
 		return array($css_uri => $css_media_type);
 	}
