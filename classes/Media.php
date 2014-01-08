@@ -205,7 +205,7 @@ class MediaCore
 		$url_data = parse_url($js_uri);
 		if (!array_key_exists('host', $url_data))
 		{
-			$js_uri = '/'.ltrim(str_replace(_PS_ROOT_DIR_, __PS_BASE_URI__, $url_data['path']), DIRECTORY_SEPARATOR);
+			$js_uri = '/'.ltrim(str_replace(_PS_ROOT_DIR_, __PS_BASE_URI__, $url_data['path']), '/\\');
 			$url_data['path'] = $js_uri;
 			$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);		// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
 		}
@@ -237,7 +237,7 @@ class MediaCore
 		if (empty($css_uri))
 			return false;
 
-		$css_uri = '/'.ltrim(str_replace(_PS_ROOT_DIR_, __PS_BASE_URI__, $css_uri), DIRECTORY_SEPARATOR);
+		$css_uri = '/'.ltrim(str_replace(_PS_ROOT_DIR_, __PS_BASE_URI__, $css_uri), '/\\');
 		// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
 		$url_data = parse_url($css_uri);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
