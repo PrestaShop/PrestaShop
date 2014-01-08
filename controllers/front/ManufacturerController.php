@@ -33,9 +33,6 @@ class ManufacturerControllerCore extends FrontController
 	{
 		parent::setMedia();
 		$this->addCSS(_THEME_CSS_DIR_.'product_list.css');
-
-		if (Configuration::get('PS_COMPARATOR_MAX_ITEM'))
-			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 	}
 
 	public function canonicalRedirection($canonicalURL = '')

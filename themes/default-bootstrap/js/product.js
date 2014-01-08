@@ -154,6 +154,7 @@ $(document).ready(function()
         }
 		return false;
     });
+
 	if (typeof minimalQuantity != 'undefined' && minimalQuantity)
 		checkMinimalQuantity();
 });

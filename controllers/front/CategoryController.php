@@ -45,10 +45,8 @@ class CategoryControllerCore extends FrontController
 				_THEME_CSS_DIR_.'category.css' => 'all',
 				_THEME_CSS_DIR_.'product_list.css' => 'all',
 			));
-
-			if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
-				$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 		}
+		$this->addJS(_THEME_JS_DIR_.'category.js');
 	}
 
 	public function canonicalRedirection($canonicalURL = '')
