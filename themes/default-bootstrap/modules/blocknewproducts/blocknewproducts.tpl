@@ -24,27 +24,38 @@
 *}
 <!-- MODULE Block new products -->
 <div id="new-products_block_right" class="block products_block">
-    <h4 class="title_block"><a href="{$link->getPageLink('new-products')|escape:'html'}" title="{l s='New products' mod='blocknewproducts'}">{l s='New products' mod='blocknewproducts'}</a></h4>
-    <div class="block_content">
+	<h4 class="title_block">
+    	<a href="{$link->getPageLink('new-products')|escape:'html'}" title="{l s='New products' mod='blocknewproducts'}">{l s='New products' mod='blocknewproducts'}</a>
+    </h4>
+    <div class="block_content products-block">
         {if $new_products !== false}
-            <ul class="product_images clearfix">
-                {foreach from=$new_products item='product' name='newProducts'}
-                    {if $smarty.foreach.newProducts.index < 2}
-                        <li{if $smarty.foreach.newProducts.first} class="first"{/if}><a href="{$product.link|escape:'html'}" title="{$product.legend|escape:html:'UTF-8'}"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'medium_default')|escape:'html'}" height="{$mediumSize.height}" width="{$mediumSize.width}" alt="{$product.legend|escape:html:'UTF-8'}" /></a></li>
-                    {/if}
+            <ul class="products">
+                {foreach from=$new_products item=newproduct name=myLoop}
+                    <li class="clearfix">
+                        <a class="products-block-image" href="{$newproduct.link|escape:'html'}" title="{$newproduct.legend|escape:html:'UTF-8'}"><img class="replace-2x img-responsive" src="{$link->getImageLink($newproduct.link_rewrite, $newproduct.id_image, 'small_default')|escape:'html'}" alt="{$newproduct.name|escape:html:'UTF-8'}" /></a>
+                        <div class="product-content">
+                        	<h5>
+                            	<a class="product-name" href="{$newproduct.link|escape:'html'}" title="{$newproduct.name|escape:html:'UTF-8'}">{$newproduct.name|strip_tags|escape:html:'UTF-8'}</a>
+                            </h5>
+                        	<p class="product-description">{$newproduct.description_short|strip_tags:'UTF-8'|truncate:75:'...'}</p>
+                            {if (!$PS_CATALOG_MODE AND ((isset($newproduct.show_price) && $newproduct.show_price) || (isset($newproduct.available_for_order) && $newproduct.available_for_order)))}
+                            	{if isset($newproduct.show_price) && $newproduct.show_price && !isset($restricted_country_mode)}
+                                    <div class="price-box">
+                                        <span class="price">
+                                        	{if !$priceDisplay}{convertPrice price=$newproduct.price}{else}{convertPrice price=$newproduct.price_tax_exc}{/if}
+                                        </span>
+                                    </div>
+                                {/if}
+                            {/if}
+                        </div>
+                    </li>
                 {/foreach}
             </ul>
-            <dl class="products">
-                {foreach from=$new_products item=newproduct name=myLoop}
-                    <dt class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}"><a href="{$newproduct.link|escape:'html'}" title="{$newproduct.name|escape:html:'UTF-8'}">{$newproduct.name|strip_tags|escape:html:'UTF-8'}</a></dt>
-                    {if $newproduct.description_short}<dd class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}"><a href="{$newproduct.link|escape:'html'}">{$newproduct.description_short|strip_tags:'UTF-8'|truncate:75:'...'}</a><br /><a href="{$newproduct.link}" class="lnk_more">{l s='Read more' mod='blocknewproducts'}</a></dd>{/if}
-                {/foreach}
-            </dl>
             <div>
                 <a href="{$link->getPageLink('new-products')|escape:'html'}" title="{l s='All new products' mod='blocknewproducts'}" class="btn btn-default button button-small"><span>{l s='All new products' mod='blocknewproducts'}<i class="icon-chevron-right right"></i></span></a>
             </div>
         {else}
-            <p>&raquo; {l s='Do not allow new products at this time.' mod='blocknewproducts'}</p>
+        	<p>&raquo; {l s='Do not allow new products at this time.' mod='blocknewproducts'}</p>
         {/if}
     </div>
 </div>
