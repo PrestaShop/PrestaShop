@@ -47,4 +47,8 @@ $(document).ready(function(){
 		pause: homeslider_pause,
 		controls: true
 	});
+
+    $('.homeslider-description').click(function () {
+        window.location.href = $(this).prev('a').prop('href');
+    });
 });
