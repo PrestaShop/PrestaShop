@@ -439,7 +439,7 @@
 
 .icon-table:before { content: "\f0ce"; }
 
-.icon-magic:before { content: "\f0d0"; }
+.icon-magic:before, .icon-AdminAttributeGenerator:before { content: "\f0d0"; }
 
 .icon-truck:before, .icon-AdminParentShipping:before { content: "\f0d1"; }
 
