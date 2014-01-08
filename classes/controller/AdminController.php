@@ -1395,8 +1395,12 @@ class AdminControllerCore extends Controller
 		
 		// Check if header/footer have been overriden
 		$dir = $this->context->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.trim($this->override_folder, '\\/').DIRECTORY_SEPARATOR;
+		$module_list_dir = $this->context->smarty->getTemplateDir(0).'helpers'.DIRECTORY_SEPARATOR.'modules_list'.DIRECTORY_SEPARATOR;
+
 		$header_tpl = file_exists($dir.'header.tpl') ? $dir.'header.tpl' : 'header.tpl';
+		$page_header_toolbar = file_exists($dir.'page_header_toolbar.tpl') ? $dir.'page_header_toolbar.tpl' : 'page_header_toolbar.tpl';
 		$footer_tpl = file_exists($dir.'footer.tpl') ? $dir.'footer.tpl' : 'footer.tpl';
+		$modal_module_list = file_exists($module_list_dir.'modal.tpl') ? $module_list_dir.'modal.tpl' : 'modal.tpl';
 		$tpl_action = $this->tpl_folder.$this->display.'.tpl';
 
 		// Check if action template has been overriden
@@ -1422,11 +1426,16 @@ class AdminControllerCore extends Controller
 
 		foreach (array('errors', 'warnings', 'informations', 'confirmations') as $type)
 			$this->context->smarty->assign($type, $this->json ? Tools::jsonEncode(array_unique($this->$type)) : array_unique($this->$type));
+		$this->context->smarty->assign(array(
+			'page_header_toolbar' => $this->context->smarty->fetch($page_header_toolbar),
+			'modal_module_list' => $this->context->smarty->fetch($modal_module_list),
+			)
+		);
 
 		$this->context->smarty->assign(array(
 			'page' =>  $this->json ? Tools::jsonEncode($page) : $page,
 			'header' => $this->context->smarty->fetch($header_tpl),
-			'footer' => $this->context->smarty->fetch($footer_tpl)
+			'footer' => $this->context->smarty->fetch($footer_tpl),
 			)
 		);
 			
@@ -1681,6 +1690,8 @@ class AdminControllerCore extends Controller
 			'url_post' => self::$currentIndex.'&token='.$this->token,
 			'show_page_header_toolbar' => $this->show_page_header_toolbar,
 			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'title' => $this->page_header_toolbar_title,
+			'toolbar_btn' => $this->page_header_toolbar_btn,
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 	}

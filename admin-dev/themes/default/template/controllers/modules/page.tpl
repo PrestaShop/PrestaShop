@@ -22,7 +22,8 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{include file='controllers/modules/top.tpl'}
+
+{$kpis}
 
 {if $add_permission eq '1'}
 <div id="module_install" class="row" style="{if !isset($smarty.post.downloadflag)}display: none;{/if}">
