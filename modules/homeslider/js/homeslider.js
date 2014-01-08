@@ -32,7 +32,7 @@ $(function(){
 		homeslider_pause = 3000;
 	if (typeof(homeslider_loop) == 'undefined')
 		homeslider_loop = true;
-    if (typeof(homeslider_loop) == 'undefined')
+    if (typeof(homeslider_width) == 'undefined')
         homeslider_width = 779;
 
 	$('#homeslider').bxSlider({

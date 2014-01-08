@@ -33,10 +33,13 @@
 
 	function removeCarrierLogo()
 	{
-		$('#carrier_logo_img').attr('src', '../img/admin/carrier-default.jpg');
-		$('#logo').val('null');
-		fixCarrierLogoDisplay();
-		$('#carrier_logo_remove').hide();
+		if (confirm('{l s='Are you sure you want to delete the logo?' js=1}'))
+		{
+			$('#carrier_logo_img').attr('src', '../img/admin/carrier-default.jpg');
+			$('#logo').val('null');
+			fixCarrierLogoDisplay();
+			$('#carrier_logo_remove').hide();
+		}
 	}
 	
 	function uploadCarrierLogo()

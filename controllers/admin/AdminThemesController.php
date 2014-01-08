@@ -2132,7 +2132,7 @@ class AdminThemesControllerCore extends AdminController
 
 						if (file_exists(_PS_MODULE_DIR_ . $value))
 						{
-							if (!class_exists($value))
+							if (!class_exists($value) && file_exists(_PS_MODULE_DIR_ . $value . '/' . $value . '.php'))
 								require(_PS_MODULE_DIR_ . $value . '/' . $value . '.php');
 
 							if (class_exists($value))
