@@ -207,6 +207,12 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		);
 	}
 
+	public function initBreadcrumbs()
+	{
+		$this->display = 'generator';
+		return parent::initBreadcrumbs();
+	}
+
 	public function initContent()
 	{
 		if (!Combination::isFeatureActive())

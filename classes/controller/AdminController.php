@@ -413,6 +413,10 @@ class AdminControllerCore extends Controller
 				$breadcrumbs2['action']['name'] = $this->l('Options', null, null, false);
 				$breadcrumbs2['action']['icon'] = 'icon-cogs';
 				break;
+			case 'generator':
+				$breadcrumbs2['action']['name'] = $this->l('Generator', null, null, false);
+				$breadcrumbs2['action']['icon'] = 'icon-flask';
+				break;
 		}
 		$this->context->smarty->assign('breadcrumbs2', $breadcrumbs2);
 
