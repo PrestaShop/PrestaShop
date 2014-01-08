@@ -484,7 +484,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$helper->id = 'box-pending-messages';
 		$helper->icon = 'icon-envelope';
 		$helper->color = 'color1';
-		$helper->title = $this->l('Pending Messages', null, null, false);
+		$helper->title = $this->l('Pending Discussion Threads', null, null, false);
 		if (ConfigurationKPI::get('PENDING_MESSAGES') !== false)
 			$helper->value = ConfigurationKPI::get('PENDING_MESSAGES');
 		if (ConfigurationKPI::get('PENDING_MESSAGES_EXPIRE') < $time)
