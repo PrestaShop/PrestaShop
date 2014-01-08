@@ -177,7 +177,7 @@ class CartControllerCore extends FrontController
 		$mode = (Tools::getIsset('update') && $this->id_product) ? 'update' : 'add';
 
 		if ($this->qty == 0)
-			$this->errors[] = Tools::displayError('Null quantity.');
+			$this->errors[] = Tools::displayError('Null quantity.',false);
 		else if (!$this->id_product)
 			$this->errors[] = Tools::displayError('Product not found');
 
