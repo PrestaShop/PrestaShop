@@ -22,7 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {include file="$tpl_dir./errors.tpl"}
 {if $errors|@count == 0}
 	<script type="text/javascript">
@@ -151,6 +150,7 @@
 		{/if}
 		{addJsDef isLoggedWishlist=$logged}
 		{addJsDef contentOnly=$content_only}
+		{addJsDef minimalQuantity=$product->minimal_quantity}
 		//]]>
 	</script>
 
@@ -860,23 +860,5 @@
 			{include file="$tpl_dir./product-list.tpl" products=$packItems}
 		</section>
 		{/if}
-
 	{/if}
-
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#bxslider').bxSlider({
-				minSlides: 1,
-				maxSlides: 6,
-				slideWidth: 178,
-				slideMargin: 20,
-				pager: false,
-				nextText: '',
-				prevText: '',
-				moveSlides:1,
-				infiniteLoop:false,
-				hideControlOnEnd: true
-			});
-		});
-	</script>
 {/if}
