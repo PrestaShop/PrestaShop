@@ -41,7 +41,7 @@ class ProductPaymentLogos extends Module
 		parent::__construct();	
 
 		$this->displayName = $this->l('Product payment logos block');
-		$this->description = $this->l('Displays payment system logos at the product page.');
+		$this->description = $this->l('Displays the logos of the available payment systems on the product page.');
 	}
 
 	public function install()
@@ -131,22 +131,22 @@ class ProductPaymentLogos extends Module
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Logos heading'),
+						'label' => $this->l('Block heading'),
 						'name' => 'PRODUCTPAYMENTLOGOS_TITLE',
-						'desc' => $this->l('Please input logos heading')
+						'desc' => $this->l('You can choose to add a heading above the logos.')
 					),
 					array(
 						'type' => 'file',
 						'label' => $this->l('Block image'),
 						'name' => 'PRODUCTPAYMENTLOGOS_IMG',
-						'desc' => $this->l('Please upload banner image'),
+						'desc' => $this->l('If your shop\'s payment methods differ from the ones presented in the default image, then you must create your own image with the necessary logos.'),
 						'thumb' => '../modules/'.$this->name.'/'.Configuration::get('PRODUCTPAYMENTLOGOS_IMG'),
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Image Link'),
+						'label' => $this->l('Image link'),
 						'name' => 'PRODUCTPAYMENTLOGOS_LINK',
-						'desc' => $this->l('Please input banner link')
+						'desc' => $this->l('You can either upload your own image using the form above, or link to it from the "Image link" option.')
 					)
 				),
 				'submit' => array(

@@ -143,33 +143,33 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_SAV_IMAP_URL' => array(
 						'title' => $this->l('IMAP URL'),
-						'hint' => $this->l('URL for IMAP server (mail.server.com)'),
+						'hint' => $this->l('URL for your IMAP server (ie.: mail.server.com).'),
 						'type' => 'text'
 					),
 					'PS_SAV_IMAP_PORT' => array(
 						'title' => $this->l('IMAP port'),
-						'hint' => $this->l('Port to use to connect to IMAP server'),
+						'hint' => $this->l('Port to use to connect to your IMAP server.'),
 						'type' => 'text',
 						'defaultValue' => 143,
 					),
 					'PS_SAV_IMAP_USER' => array(
 						'title' => $this->l('IMAP user'),
-						'hint' => $this->l('User to use to connect to IMAP server'),
+						'hint' => $this->l('User to use to connect to your IMAP server.'),
 						'type' => 'text'
 					),
 					'PS_SAV_IMAP_PWD' => array(
 						'title' => $this->l('IMAP password'),
-						'hint' => $this->l('Password used to connect IMAP server'),
+						'hint' => $this->l('Password to use to connect your IMAP server.'),
 						'type' => 'text'
 					),
 					'PS_SAV_IMAP_DELETE_MSG' => array(
 						'title' => $this->l('Delete messages'),
-						'hint' => $this->l('Delete messages after sync. If you do not active this option, the sync will take more time.'),
+						'hint' => $this->l('Delete messages after synchronization. If you do not enable this option, the synchrozination will take more time.'),
 						'type' => 'bool',
 					),
 					'PS_SAV_IMAP_CREATE_THREADS' => array(
 						'title' => $this->l('Create new threads'),
-						'hint' => $this->l('Create new threads for unrecognized emails'),
+						'hint' => $this->l('Create new threads for unrecognized emails.'),
 						'type' => 'bool',
 					),
 					'PS_SAV_IMAP_OPT_NORSH' => array(
@@ -180,17 +180,17 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					'PS_SAV_IMAP_OPT_SSL' => array(
 						'title' => $this->l('IMAP options').' (/ssl)',
 						'type' => 'bool',
-						'hint' => $this->l('Use the Secure Socket Layer to encrypt the session.'),
+						'hint' => $this->l('Use the Secure Socket Layer (TLS/SSL) to encrypt the session.'),
 					),
 					'PS_SAV_IMAP_OPT_VALIDATE-CERT' => array(
 						'title' => $this->l('IMAP options').' (/validate-cert)',
 						'type' => 'bool',
-						'hint' => $this->l('Validate certificates from the TLS/SSL server'),
+						'hint' => $this->l('Validate certificates from the TLS/SSL server.'),
 					),
 					'PS_SAV_IMAP_OPT_NOVALIDATE-CERT' => array(
 						'title' => $this->l('IMAP options').' (/novalidate-cert)',
 						'type' => 'bool',
-						'hint' => $this->l('Do not validate certificates from the TLS/SSL server. This is only needed if a server uses self-signed certificates'),
+						'hint' => $this->l('Do not validate certificates from the TLS/SSL server. This is only needed if a server uses self-signed certificates.'),
 					),
 					'PS_SAV_IMAP_OPT_TLS' => array(
 						'title' => $this->l('IMAP options').' (/tls)',
@@ -484,7 +484,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$helper->id = 'box-pending-messages';
 		$helper->icon = 'icon-envelope';
 		$helper->color = 'color1';
-		$helper->title = $this->l('Pending Messages', null, null, false);
+		$helper->title = $this->l('Pending Discussion Threads', null, null, false);
 		if (ConfigurationKPI::get('PENDING_MESSAGES') !== false)
 			$helper->value = ConfigurationKPI::get('PENDING_MESSAGES');
 		if (ConfigurationKPI::get('PENDING_MESSAGES_EXPIRE') < $time)
@@ -552,7 +552,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		if ($thread->status != 'closed')
 			$actions['closed'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=2&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'name' => $this->l('Mark this message as handled.')
+				'name' => $this->l('Mark this message as "handled".')
 			);
 
 		if ($thread->status != 'pending1')

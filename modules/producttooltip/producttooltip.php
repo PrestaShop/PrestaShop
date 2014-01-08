@@ -41,7 +41,7 @@ class ProductToolTip extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Product tooltips');
-		$this->description = $this->l('Show how many people are watching a product page, last sale and last cart added.');
+		$this->description = $this->l('Shows information on a product page: how many people are viewing it, the last time it was sold and the last time it was added to a cart.');
 	}
 
 	public function install()
@@ -162,7 +162,7 @@ class ProductToolTip extends Module
 						'type' => 'switch',
 						'label' => $this->l('Number of visitors'),
 						'desc' => $this->l('Display the number of visitors who are currently watching this product?').'<br>'.
-							$this->l('If you activate the option above, you must activate the first option of StatData module'),
+							$this->l('If you activate the option above, you must activate the first option ("Save page views for each customer") of the "Data mining for statistics" (StatsData) module.'),
 						'name' => 'PS_PTOOLTIP_PEOPLE',
 						'values' => array(
 							array(
@@ -180,7 +180,8 @@ class ProductToolTip extends Module
 					array(
 						'type' => 'text',
 						'label' => $this->l('Period length'),
-						'desc' => 'For instance, if set to 30 minutes, display the number of visitors in the last 30 minutes.',
+						'desc' => $this->l('Set the reference period length.').'<br>'.
+							$this->l('For instance, if set to 30 minutes, display the number of visitors in the last 30 minutes.'),
 						'name' => 'PS_PTOOLTIP_LIFETIME',
 						'suffix' => $this->l('minutes'),
 						'values' => array(
@@ -217,7 +218,7 @@ class ProductToolTip extends Module
 					array(
 						'type' => 'switch',
 						'label' => $this->l('Added to a cart'),
-						'desc' => $this->l('If not ordered yet, display the last time the product has been added to a cart?'),
+						'desc' => $this->l('If the product has not been ordered yet, display the last time the product has been added to a cart?'),
 						'name' => 'PS_PTOOLTIP_DATE_CART',
 						'values' => array(
 							array(
