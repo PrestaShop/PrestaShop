@@ -55,7 +55,7 @@ class StatsBestProducts extends ModuleGrid
 		$this->_columns = array(
 			array(
 				'id' => 'reference',
-				'header' => $this->l('Ref.'),
+				'header' => $this->l('Reference'),
 				'dataIndex' => 'reference',
 				'align' => 'left'
 			),
@@ -85,7 +85,7 @@ class StatsBestProducts extends ModuleGrid
 			),
 			array(
 				'id' => 'averageQuantitySold',
-				'header' => $this->l('Quantity sold in a day.'),
+				'header' => $this->l('Quantity sold in a day'),
 				'dataIndex' => 'averageQuantitySold',
 				'align' => 'center'
 			),
@@ -97,14 +97,14 @@ class StatsBestProducts extends ModuleGrid
 			),
 			array(
 				'id' => 'quantity',
-				'header' => $this->l('Available quantity for sale.'),
+				'header' => $this->l('Available quantity for sale'),
 				'dataIndex' => 'quantity',
 				'align' => 'center'
 			)
 		);
 		
 		$this->displayName = $this->l('Best-selling products');
-		$this->description = $this->l('A list of the best-selling products.');
+		$this->description = $this->l('Adds a list of the best-selling products to the Stats dashboard.');
 	}
 
 	public function install()
