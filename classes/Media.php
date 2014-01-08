@@ -244,7 +244,7 @@ class MediaCore
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
 
 		// check if css files exists
-		if (!@filemtime($file_uri) && !array_key_exists('host', $url_data)) 
+		if ((!@filemtime($file_uri) && !array_key_exists('host', $url_data)) || filesize($file_uri) === 0)
 			return false;
 
 		if (Context::getContext()->controller->controller_type == 'admin')
