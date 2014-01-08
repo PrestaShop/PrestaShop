@@ -93,7 +93,7 @@ class AdminStoresControllerCore extends AdminController
 						'size' => '10'
 					),
 					'PS_STORES_CENTER_LONG' => array(
-						'title' => $this->l('efault longitude'),
+						'title' => $this->l('Default longitude'),
 						'hint' => $this->l('Used for the initial position of the map.'),
 						'cast' => 'floatval',
 						'type' => 'text',
