@@ -42,11 +42,11 @@
 
 <script type="text/javascript">
     var placeholder = "{l s='Enter your e-mail' mod='blocknewsletter' js=1}";
-    var msg = '{if isset($msg) && $msg }{$msg|@addcslashes:'\''}{/if}';
+    var msg_newsl = '{if isset($msg) && $msg }{$msg|@addcslashes:'\''}{/if}';
         $(document).ready(function() {ldelim}
             $('#newsletter-input').on({ldelim}
                 focus: function() {ldelim}
-                    if ($(this).val() == placeholder || $(this).val() == msg) {ldelim}
+                    if ($(this).val() == placeholder || $(this).val() == msg_newsl) {ldelim}
                         $(this).val('');
                     {rdelim}
                 {rdelim},
