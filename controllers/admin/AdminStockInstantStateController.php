@@ -181,7 +181,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
-		if (Tools::isSubmit('csv') && (int)Tools::getValue('id_warehouse') != -1)
+		if ((Tools::isSubmit('csv_quantities') || Tools::isSubmit('csv_prices')) && (int)Tools::getValue('id_warehouse') != -1)
 			$limit = false;
 
 		$order_by_valuation = false;
