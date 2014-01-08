@@ -74,7 +74,7 @@ class StatsBestSuppliers extends ModuleGrid
 		);
 
 		$this->displayName = $this->l('Best suppliers');
-		$this->description = $this->l('A list of the best suppliers');
+		$this->description = $this->l('Adds a list of the best suppliers to the Stats dashboard.');
 	}
 
 	public function install()
