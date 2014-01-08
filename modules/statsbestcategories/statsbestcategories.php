@@ -80,7 +80,7 @@ class StatsBestCategories extends ModuleGrid
 		);
 
 		$this->displayName = $this->l('Best categories');
-		$this->description = $this->l('A list of the best categories');
+		$this->description = $this->l('Adds a list of the best categories to the Stats dashboard.');
 	}
 
 	public function install()
