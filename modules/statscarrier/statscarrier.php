@@ -45,7 +45,7 @@ class StatsCarrier extends ModuleGraph
 		parent::__construct();
 
 		$this->displayName = $this->l('Carrier distribution');
-		$this->description = $this->l('Display each carriers\' distribution. ');
+		$this->description = $this->l('Adds a graph displaying each carriers\' distribution to the Stats dashboard.');
 	}
 
 	public function install()
@@ -85,7 +85,7 @@ class StatsCarrier extends ModuleGraph
 			</form>
 
 			<div class="alert alert-info">
-				'.$this->l('This graph represents the carrier distribution for your orders. You can also narrow the focus of the graph to display distribution for a particular state.').'
+				'.$this->l('This graph represents the carrier distribution for your orders. You can also narrow the focus of the graph to display distribution for a particular order status.').'
 			</div>
 			<div class="row row-margin-bottom">
 				<div class="col-lg-12">
