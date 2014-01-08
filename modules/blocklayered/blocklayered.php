@@ -1943,6 +1943,7 @@ class BlockLayered extends Module
 				MAX(image_shop.`id_image`) id_image,
 				il.legend, 
 				m.name manufacturer_name,
+				MAX(pa.id_product_attribute) id_product_attribute,
 				DATEDIFF('.$alias_where.'.`date_add`, DATE_SUB(NOW(), INTERVAL '.(int)$nb_day_new_product.' DAY)) > 0 AS new,
 				stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
 			FROM `'._DB_PREFIX_.'category_product` cp
@@ -1955,6 +1956,7 @@ class BlockLayered extends Module
 			Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$cookie->id_lang.')
 			LEFT JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer)
+			LEFT JOIN '._DB_PREFIX_.'product_attribute pa ON (p.id_product = pa.id_product)
 			WHERE '.$alias_where.'.`active` = 1 AND '.$alias_where.'.`visibility` IN ("both", "catalog")
 			AND '.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 			AND c.active = 1
@@ -2970,7 +2972,6 @@ class BlockLayered extends Module
 		
 		$products = $this->getProductByFilters($selected_filters);
 		$products = Product::getProductsProperties((int)$cookie->id_lang, $products);
-		
 		$nb_products = $this->nbr_products;
 		$range = 2; /* how many pages around page selected */
 		
@@ -2991,6 +2992,12 @@ class BlockLayered extends Module
 		$stop = (int)($p + $range);
 		if ($stop > $pages_nb)
 			$stop = (int)($pages_nb);
+
+		foreach ($products as &$product)
+		{
+			if ($product['id_product_attribute'] && isset($product['product_attribute_minimal_quantity']))
+				$product['minimal_quantity'] = $product['product_attribute_minimal_quantity'];
+		}
 	}
 
 	public function rebuildLayeredStructure()
