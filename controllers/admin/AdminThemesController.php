@@ -1948,12 +1948,13 @@ class AdminThemesControllerCore extends AdminController
 
 			$helper = new HelperForm();
 
-			$helper->currentIndex = $this->context->link->getAdminLink('AdminThemes', false) . '&action=ThemeInstall';
-			$helper->token        = Tools::getAdminTokenLite('AdminThemes');
-			$helper->show_toolbar = true;
-			$helper->toolbar_btn  = $toolbar_btn;
-			$helper->fields_value = $fields_value;
-
+			$helper->currentIndex          = $this->context->link->getAdminLink('AdminThemes', false).'&action=ThemeInstall';
+			$helper->token                 = Tools::getAdminTokenLite('AdminThemes');
+			$helper->show_toolbar          = true;
+			$helper->toolbar_btn           = $toolbar_btn;
+			$helper->fields_value          = $fields_value;
+			$helper->languages             = $this->getLanguages();
+			$helper->default_form_language = (int)$this->context->language->id;
 
 			$helper->override_folder = $this->tpl_folder;
 
