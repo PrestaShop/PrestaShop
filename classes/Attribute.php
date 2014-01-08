@@ -144,6 +144,29 @@ class AttributeCore extends ObjectModel
 		');
 	}
 
+	public static function isAttribute($name, $id_lang)
+	{
+		if (!Combination::isFeatureActive())
+			return array();
+
+		$result = Db::getInstance()->getValue('
+			SELECT COUNT(*)
+			FROM `'._DB_PREFIX_.'attribute_group` ag
+			LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl
+				ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
+			LEFT JOIN `'._DB_PREFIX_.'attribute` a
+				ON a.`id_attribute_group` = ag.`id_attribute_group`
+			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
+				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
+			'.Shop::addSqlAssociation('attribute_group', 'ag').'
+			'.Shop::addSqlAssociation('attribute', 'a').'
+			WHERE al.`name` = \''.pSQL($name).'\'
+			ORDER BY agl.`name` ASC, a.`position` ASC
+		');
+
+		return ((int)$result > 0);
+	}
+
 	/**
 	 * Get quantity for a given attribute combination
 	 * Check if quantity is enough to deserve customer
