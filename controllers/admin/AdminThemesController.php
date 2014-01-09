@@ -1386,8 +1386,8 @@ class AdminThemesControllerCore extends AdminController
 						if (isset($xml->variations->variation[0]['responsive']))
 							$responsive = (bool)strval($xml->variations->variation[0]['responsive']);
 
-						$default_left_column = false;
-						$default_right_column = false;
+						$default_left_column = true;
+						$default_right_column = true;
 
 						if (isset($xml->variations->variation[0]['default_left_column']))
 							$default_left_column = (bool)strval($xml->variations->variation[0]['default_left_column']);
