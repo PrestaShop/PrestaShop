@@ -1424,7 +1424,7 @@ class AdminThemesControllerCore extends AdminController
 
 
 							$metas_xml = array();
-							if (isset($xml->metas))
+							if ($xml->metas->meta)
 							{
 								foreach($xml->metas->meta as $meta)
 								{
@@ -1437,6 +1437,17 @@ class AdminThemesControllerCore extends AdminController
 										$tmp_meta['right'] = intval($meta['right']);
 										$metas_xml[] = $tmp_meta;
 									}
+								}
+							}
+							else
+							{
+								$metas = Db::getInstance()->executeS('SELECT id_meta FROM '._DB_PREFIX_.'meta');
+								foreach($metas as $meta)
+								{
+									$tmp_meta['id_meta'] = (int)$meta['id_meta'];
+									$tmp_meta['left'] = 1;
+									$tmp_meta['right'] = 1;
+									$metas_xml[] = $tmp_meta;
 								}
 							}
 							$new_theme->add();
