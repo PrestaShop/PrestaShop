@@ -212,7 +212,7 @@ class MediaCore
 		else
 			$file_uri = $js_uri;
 		// check if js files exists
-		if (!preg_match('/^http(s?):\/\//i', $file_uri) && !@filemtime($file_uri))
+		if (!preg_match('/^http(s?):\/\//i', $file_uri) && (!@filemtime($file_uri) || filesize($file_uri) === 0))
 			return false;
 
 		if (Context::getContext()->controller->controller_type == 'admin' && !array_key_exists('host', $url_data))
