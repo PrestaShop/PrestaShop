@@ -808,7 +808,10 @@ class AdminModulesControllerCore extends AdminController
 								'module_update_link' => $update_link,
 								'trad_link' => $trad_link,
 								'module_languages' => Language::getLanguages(false),
-								'theme_language_dir' => _THEME_LANG_DIR_
+								'theme_language_dir' => _THEME_LANG_DIR_,
+								'page_header_toolbar_title' => $this->page_header_toolbar_title,
+								'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+								'add_permission' => $this->tabAccess['add'],
 							));
 							
 							// Display checkbox in toolbar if multishop

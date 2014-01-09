@@ -23,6 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+
 {extends file="page_header_toolbar.tpl"} 
 
 {block name=pageTitle}
@@ -35,7 +36,7 @@
 <div class="page-bar toolbarBox">
 	<div class="btn-toolbar">
 		<ul class="nav nav-pills pull-right">
-			{if $upgrade_available|@count}
+			{if isset($upgrade_available) && $upgrade_available|@count}
 			{assign var='modules' value=''}
 			{foreach from=$upgrade_available item='module'}
 				{assign var='modules' value=$modules|cat:$module.name:'|'}
@@ -63,12 +64,14 @@
 				</a>
 			</li>
 			{/if}
+			{if isset($help_link)}
 			<li>
 				<a class="toolbar_btn" href="{$help_link|escape}" title="{l s='Help'}">
 					<i class="process-icon-help"></i>
 					<div>{l s='Help'}</div>
 				</a>
 			</li>
+			{/if}
 		</ul>
 	</div>
 </div>
