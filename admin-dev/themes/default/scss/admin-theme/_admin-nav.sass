@@ -23,6 +23,8 @@ $widthSidebarNav: 210px
 				text-transform: uppercase
 				text-decoration: none
 				background-color: $main-color
+				border-bottom: darken($main-color,6%) solid 1px
+				@include box-shadow(darken($main-color,10%) -1px 0 0 inset)
 				@include transition-property(background-color)
 				@include transition-duration(0.4s)
 				@include transition-timing-function(ease-out)
@@ -45,6 +47,8 @@ $widthSidebarNav: 210px
 				> a.title
 					background-color: darken($main-color,15%)
 					color: white
+					border-bottom: darken($main-color,15%) solid 1px
+					@include box-shadow(darken($main-color,15%) 0 -1px 0 0)
 					i
 						color: white
 				ul.submenu
@@ -53,7 +57,7 @@ $widthSidebarNav: 210px
 					width: 200px
 					z-index: 600
 					left: $widthSidebarNav
-					top: 0
+					top: -1px
 			&.active
 				a.title
 					color: white
@@ -71,18 +75,23 @@ $widthSidebarNav: 210px
 						background-color: white
 						color: $brand-primary
 						&:hover
-							color: $main-color
-							background-color: mix(white, $main-color, 90%)
+							color: $brand-primary
+							border-bottom: solid 1px mix(white, $brand-primary, 85%)
+							background-color: mix(white, $brand-primary, 85%)
 							text-decoration: none
+							@include box-shadow(white 0 -1px)
+					li:last-child a
+						border-bottom: solid 1px white
 					li.active a
 						color: contrast-color($brand-primary, white, #333, 10%)
 						background-color: $brand-primary
-						border-bottom: solid 1px darken($brand-primary,5%)
+						border-bottom: solid 1px white
 			ul.submenu
 				display: none
 				list-style: none
 				padding: 6px
 				background-color: darken($main-color,10%)
+				@include box-shadow(#EEEEEE -1px 0 0 inset)
 				li
 					a
 						display: block
@@ -191,7 +200,6 @@ $widthSidebarNav: 210px
 			display: block
 		ul.submenu
 			background-color: white
-			@include box-shadow(rgba(black,0.3) 0 2px 4px)
 			display: none
 			position: absolute
 			margin: 0
@@ -199,6 +207,7 @@ $widthSidebarNav: 210px
 			left: 0
 			top: 28px
 			width: 200px!important
+			@include box-shadow(rgba(black,0.3) 0 2px 4px)
 			> li
 				width: 200px
 				padding: 0
