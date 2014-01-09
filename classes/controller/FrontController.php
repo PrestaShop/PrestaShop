@@ -433,8 +433,6 @@ class FrontControllerCore extends Controller
 		{
 			// These hooks aren't used for the mobile theme.
 			// Needed hooks are called in the tpl files.
-			if (!isset($this->context->cart))
-				$this->context->cart = new Cart();
 			$this->context->smarty->assign(array(
 				'HOOK_HEADER' => Hook::exec('displayHeader'),
 				'HOOK_TOP' => Hook::exec('displayTop'),
@@ -443,9 +441,7 @@ class FrontControllerCore extends Controller
 			));
 		}
 		else
-			$this->context->smarty->assign(array(
-				'HOOK_MOBILE_HEADER' => Hook::exec('displayMobileHeader'),
-			));
+			$this->context->smarty->assign('HOOK_MOBILE_HEADER', Hook::exec('displayMobileHeader'));
 	}
 
 	/**
