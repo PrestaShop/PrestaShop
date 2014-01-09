@@ -23,7 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-
 <table id="module-list" class="table">
 	<thead>
 		<tr>
@@ -79,9 +78,9 @@ module_inactive
 								{$module->displayName}
 								<small>v{$module->version}</small>
 								{if isset($module->type) && $module->type == 'addonsMustHave'}
-									- <a href="#" class="help-tooltip text-primary" data-title="{l s=""}"><i class="icon-group"></i> <small>{l s="Popular"}</small></a>
+									- <a href="#" class="module-badge-popular help-tooltip text-primary" data-title="{l s=""}"><i class="icon-group"></i> <small>{l s="Popular"}</small></a>
 								{elseif isset($module->type) && $module->type == 'addonsPartner'}
-									- <a href="#" class="help-tooltip text-warning" data-title="{l s="This module is available for free thanks to our partner."}"><i class="icon-pushpin"></i> <small>{l s="Partner"}</small></a>
+									- <a href="#" class="module-badge-partner help-tooltip text-warning" data-title="{l s="This module is available for free thanks to our partner."}"><i class="icon-pushpin"></i> <small>{l s="Partner"}</small></a>
 								{elseif isset($module->id) && $module->id gt 0}
 									{if isset($module->version_addons) && $module->version_addons}
 										<span class="label label-warning">{l s='Need update'}</span>
