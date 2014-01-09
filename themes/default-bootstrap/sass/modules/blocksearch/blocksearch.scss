@@ -66,18 +66,21 @@
 }	
 
 form#searchbox {
-	padding-right: 50px;
 	position: relative;
 	label {
 		color: $base-text-color;
-		margin-bottom: 1px
 	}
 	input#search_query_block {
-		border: 1px solid $base-border-color;
-		height: 18px;
-		margin-top: 10px;
+		margin-right:10px;
+		max-width:222px;
+		margin-bottom:10px;
+		display:inline-block;
+		float:left;
 	}
-	input#search_button {
-		padding: 1px 4px;
+	.button.button-small {
+		float:left;
+		i {
+			margin-right:0;
+		}
 	}
 }
