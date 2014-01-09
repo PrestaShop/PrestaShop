@@ -46,19 +46,25 @@ class BlockStore extends Module
 
 	public function install()
 	{
-		Configuration::updateValue('BLOCKSTORE_IMG', 'store.jpg');
-		$success = (parent::install() && $this->registerHook('header'));
+		if (!parent::install())
+			return false;
 
-		if ($success)
+		// Hook the module either on the left or right column
+		$theme = new Theme(Context::getContext()->shop->id_theme);
+		if ((!$theme->default_right_column || !$this->registerHook('rightColumn'))
+			&& (!$theme->default_left_column || !$this->registerHook('leftColumn')))
 		{
-			$theme = new Theme(Context::getContext()->shop->id_theme);
-			if ($theme->default_right_column)
-				$success &= $this->registerHook('rightColumn');
-			elseif ($theme->default_left_column)
-				$success &= $this->registerHook('leftColumn');
+			// If there are no colums implemented by the template, throw an error and uninstall the module
+			$this->_errors[] = $this->l('This module need to be hooked in a column and your theme does not implement one');
+			parent::uninstall();
+			return false;
 		}
-		return $success;
-		
+
+		if (Tools::file_exists(dirname(__FILE__).'/store.jpg'))
+			Configuration::updateValue('BLOCKSTORE_IMG', 'store.jpg');
+
+		// Hook the module at the end on the header, only if it has been hooked 
+		return $this->registerHook('header');
 	}
 
 	public function uninstall()
