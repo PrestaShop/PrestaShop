@@ -408,7 +408,7 @@ class ProductControllerCore extends FrontController
 			foreach ($attributes_groups as $k => $row)
 			{
 				// Color management
-				if ((isset($row['attribute_color']) && $row['attribute_color']) || (file_exists(_PS_COL_IMG_DIR_.$row['id_attribute'].'.jpg')))
+				if (isset($row['is_color_group']) && $row['is_color_group'] && (isset($row['attribute_color']) && $row['attribute_color']) || (file_exists(_PS_COL_IMG_DIR_.$row['id_attribute'].'.jpg')))
 				{
 					$colors[$row['id_attribute']]['value'] = $row['attribute_color'];
 					$colors[$row['id_attribute']]['name'] = $row['attribute_name'];
