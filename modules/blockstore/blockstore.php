@@ -60,7 +60,7 @@ class BlockStore extends Module
 			return false;
 		}
 
-		if (Tools::file_exists(dirname(__FILE__).'/store.jpg'))
+		if (file_exists(dirname(__FILE__).'/store.jpg'))
 			Configuration::updateValue('BLOCKSTORE_IMG', 'store.jpg');
 
 		// Hook the module at the end on the header, only if it has been hooked 
