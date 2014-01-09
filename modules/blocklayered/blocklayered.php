@@ -672,7 +672,7 @@ class BlockLayered extends Module
 			if ($filter_block['nbr_filterBlocks'] == 0)
 				return false;
 		
-		if (Tools::getValue('id_category', Tools::getValue('id_category_layered', 1)) == 1)
+		if (Tools::getValue('id_category', Tools::getValue('id_category_layered', Configuration::get('PS_HOME_CATEGORY'))) == Configuration::get('PS_HOME_CATEGORY'))
 			return;
 		
 		$id_lang = (int)$cookie->id_lang;
@@ -1038,7 +1038,7 @@ class BlockLayered extends Module
 				foreach ($attribute as $param)
 				{
 					$selected_filters = array();
-					$link = '/'.str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', Tools::link_rewrite($param['name'])).Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', Tools::link_rewrite($param['value']));
+					$link = '/'.str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($param['name'])).Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($param['value']));
 					$selected_filters[$param['type']] = array();
 
 					if (!isset($param['id_id_value']))
@@ -1662,8 +1662,9 @@ class BlockLayered extends Module
 
 	private function getSelectedFilters()
 	{
-		$id_parent = (int)Tools::getValue('id_category', Tools::getValue('id_category_layered', 1));
-		if ($id_parent == 1)
+		$home_category = Configuration::get('PS_HOME_CATEGORY');
+		$id_parent = (int)Tools::getValue('id_category', Tools::getValue('id_category_layered', $home_category));
+		if ($id_parent == $home_category)
 			return;
 		
 		// Force attributes selection (by url '.../2-mycategory/color-blue' or by get parameter 'selected_filters')
@@ -1680,7 +1681,7 @@ class BlockLayered extends Module
 			{
 				foreach ($url_attributes as $url_attribute)
 				{
-					$url_parameters = explode(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), $url_attribute);
+					$url_parameters = explode(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), $url_attribute);
 					$attribute_name  = array_shift($url_parameters);
 					if ($attribute_name == 'page')
 						$this->page = (int)$url_parameters[0];
@@ -1690,7 +1691,7 @@ class BlockLayered extends Module
 					{
 						foreach ($url_parameters as $url_parameter)
 						{
-							$data = Db::getInstance()->getValue('SELECT data FROM `'._DB_PREFIX_.'layered_friendly_url` WHERE `url_key` = \''.md5('/'.$attribute_name.Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR').$url_parameter).'\'');
+							$data = Db::getInstance()->getValue('SELECT data FROM `'._DB_PREFIX_.'layered_friendly_url` WHERE `url_key` = \''.md5('/'.$attribute_name.Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-').$url_parameter).'\'');
 							if ($data)
 								foreach (Tools::unSerialize($data) as $key_params => $params)
 								{
@@ -1755,9 +1756,10 @@ class BlockLayered extends Module
 		if (!empty($this->products))
 			return $this->products;
 
+		$home_category = Configuration::get('PS_HOME_CATEGORY');
 		/* If the current category isn't defined or if it's homepage, we have nothing to display */
-		$id_parent = (int)Tools::getValue('id_category', Tools::getValue('id_category_layered', 1));
-		if ($id_parent == 1)
+		$id_parent = (int)Tools::getValue('id_category', Tools::getValue('id_category_layered', $home_category));
+		if ($id_parent == $home_category)
 			return false;
 
 		$alias_where = 'p';
@@ -1974,7 +1976,7 @@ class BlockLayered extends Module
 			ORDER BY '.Tools::getProductsOrder('by', Tools::getValue('orderby'), true).' '.Tools::getProductsOrder('way', Tools::getValue('orderway')).
 			' LIMIT '.(((int)$this->page - 1) * $n.','.$n));
 		}
-		
+
 		if (Tools::getProductsOrder('by', Tools::getValue('orderby'), true) == 'p.price')
 			Tools::orderbyPrice($this->products, Tools::getProductsOrder('way', Tools::getValue('orderway')));
 			
@@ -1999,9 +2001,9 @@ class BlockLayered extends Module
 		if (is_array($cache))
 			return $cache;
 			
-		
-		$id_parent = (int)Tools::getValue('id_category', Tools::getValue('id_category_layered', 1));
-		if ($id_parent == 1)
+		$home_category = Configuration::get('PS_HOME_CATEGORY');
+		$id_parent = (int)Tools::getValue('id_category', Tools::getValue('id_category_layered', $home_category));
+		if ($id_parent == $home_category)
 			return;
 		
 		$parent = new Category((int)$id_parent, $id_lang);
@@ -2027,7 +2029,7 @@ class BlockLayered extends Module
 						unset($selected_filters[$key]);
 					break;
 			}
-		
+
 		$filter_blocks = array();
 		foreach ($filters as $filter)
 		{
@@ -2642,7 +2644,7 @@ class BlockLayered extends Module
 				{
 					$value_name = !empty($value['url_name']) ? $value['url_name'] : $value['name'];
 					$value_meta = !empty($value['meta_title']) ? $value['meta_title'] : $value['name'];
-					$param_group_selected .= Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', Tools::link_rewrite($value_name));
+					$param_group_selected .= Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($value_name));
 					$param_group_selected_array[Tools::link_rewrite($filter_name)][] = Tools::link_rewrite($value_name);
 				
 					if (!isset($title_values[$filter_name]))
@@ -2657,12 +2659,12 @@ class BlockLayered extends Module
 			}
 			if (!empty($param_group_selected))
 			{
-				$param_selected .= '/'.str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', Tools::link_rewrite($filter_name)).$param_group_selected;
+				$param_selected .= '/'.str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($filter_name)).$param_group_selected;
 				$option_checked_array[Tools::link_rewrite($filter_name)] = $param_group_selected;
 			}
 			// select only attribute and group attribute to display an unique product combination link
 			if (!empty($param_group_selected) && $type_filter['type'] == 'id_attribute_group')
-				$param_product_url .= '/'.str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', Tools::link_rewrite($filter_name)).$param_group_selected;
+				$param_product_url .= '/'.str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($filter_name)).$param_group_selected;
 			
 		}
 		
@@ -2704,25 +2706,25 @@ class BlockLayered extends Module
 						// Update parameter filter checked before
 						if (array_key_exists(Tools::link_rewrite($filter_name), $option_checked_array))
 						{
-							$option_checked_clone_array[Tools::link_rewrite($filter_name)] = $option_checked_clone_array[Tools::link_rewrite($filter_name)].Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', Tools::link_rewrite($value_name));
+							$option_checked_clone_array[Tools::link_rewrite($filter_name)] = $option_checked_clone_array[Tools::link_rewrite($filter_name)].Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($value_name));
 
 							if (in_array($type_filter['type'], $blacklist))
 								$nofollow = true;
 						}
 						else
-							$option_checked_clone_array[Tools::link_rewrite($filter_name)] = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', Tools::link_rewrite($value_name));
+							$option_checked_clone_array[Tools::link_rewrite($filter_name)] = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($value_name));
 					}
 					else
 					{
 						// Remove selected parameters
-						$option_checked_clone_array[Tools::link_rewrite($filter_name)] = str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', Tools::link_rewrite($value_name)), '', $option_checked_clone_array[Tools::link_rewrite($filter_name)]);
+						$option_checked_clone_array[Tools::link_rewrite($filter_name)] = str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($value_name)), '', $option_checked_clone_array[Tools::link_rewrite($filter_name)]);
 						if (empty($option_checked_clone_array[Tools::link_rewrite($filter_name)]))
 							unset($option_checked_clone_array[Tools::link_rewrite($filter_name)]);
 					}
 					$parameters = '';
 					ksort($option_checked_clone_array); // Order parameters
 					foreach ($option_checked_clone_array as $key_group => $value_group)
-						$parameters .= '/'.str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', $key_group).$value_group;
+						$parameters .= '/'.str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', $key_group).$value_group;
 
 					// Add nofollow if any blacklisted filters ins in parameters
 					foreach ($filter_blocks as $filter)
@@ -2956,7 +2958,7 @@ class BlockLayered extends Module
 			array(
 				'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
 				'nb_products' => $nb_products,
-				'category' => new Category(Tools::getValue('id_category_layered', 1), (int)$cookie->id_lang),
+				'category' => new Category(Tools::getValue('id_category_layered', Configuration::get('PS_HOME_CATEGORY')), (int)$cookie->id_lang),
 				'pages_nb' => (int)$pages_nb,
 				'p' => (int)$p,
 				'n' => (int)$n,
