@@ -41,8 +41,8 @@
 <!-- /Block Newsletter module-->
 
 <script type="text/javascript">
-    var placeholder = "{l s='Enter your e-mail' mod='blocknewsletter' js=1}";
-    var msg_newsl = "{if isset($msg) && $msg }{$msg|@addcslashes:'\''}{/if}";
+    var placeholder = '{l s='Enter your e-mail' mod='blocknewsletter' js=1}';
+    var msg_newsl = '{if isset($msg) && $msg }{$msg|@addcslashes:'\''}{/if}';
         $(document).ready(function() {ldelim}
             $('#newsletter-input').on({ldelim}
                 focus: function() {ldelim}
