@@ -24,6 +24,53 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.5.6.2 - (2014-01-09)  #
+####################################
+
+	Fixed bugs:
+
+	[-] FO : Trim before truncate
+	[-] FO : Fix bug #PSCFV-11098 MO images under media servers
+	[-] FO : Fix bug #PSCFV-11098 logo under media servers
+	[-] FO : Fix bug #PSCFV-11267, bad cache on carrier choice in normal checkout
+	[-] FO : Fix bug #PSCFV-11361, inner join on category_product
+	[-] FO : Fix bug #PSCFV-11356 bad query on product sales
+	[-] FO : Fixed bug #PSCFV-11076
+	[-] FO : Fix bug #PSCFV-11052 no carrier fess whne tax display to false
+	[-] FO : Fix #PSCFV-11069 remove unused file
+
+	[-] BO : Error display on image legend length
+	[-] BO : Remove percentage char from frendly url
+	[-] BO: Clear CCC cache after media servers update
+	[-] BO : Image upload, legend can be null
+	[-] BO : fixed bug loading wrong root category in AdminCategoriesController    Fix wrong root category being loaded.    There's an issue if you activate multishop and create a new root category which loads the wrong category and causes, at least, 'Add new Category' and 'Export' in AdminCategories to redirect back to the category list (e.g. impossible to add/remove categories).
+	[-] BO : Undefined on image upload, revert of https://github.com/PrestaShop/PrestaShop/commit/48b7a49b1aea34a2def355ffec1d4c08dfdbdfd6
+	[-] BO : Double separator in function createTemplate()    smarty->getTemplateDir() returns a result ending with a separator,    so no need to add DIRECTORY_SEPARATOR ?
+	[-] BO : Remove warning with open_basdir on module list
+
+	[-] CORE : Ensure correct parent category for home categories
+	[-] Core: update cartrule feature active on cartrule updating
+
+	[-] MO : blocklayered some fixes and improvements
+	[-] MO : Could not have translations on install from addons
+	[-] MO : Blockcart, correct short product name with HTML entities
+	[-] MO : fixed bug #PSCFV-9642 - Slider does not scroll when define language from right to left
+
+	[-] WS: adding a new order history must call OrderHistory::addWs()
+
+	Deprecated methods:
+
+	[~] MO : MailAlerts : alert deletion from account    When on "my account > my alerts", the "delete" link was not working because of the missing $id_shop parameter in MailalertsActionsModuleFrontController::processRemove()
+
+	Improved/changed features:
+
+	[*] MO : homeslider, Added CDN to img link
+	[*] MO : blockreinsurance, Add image size (Fix PSCFV-5764) and Add CDN to img link
+
+	[*] LO: Updated French VAT rates for 2014
+
+
+####################################
 #   v1.5.6.1 - (2013-11-18)  #
 ####################################
 
