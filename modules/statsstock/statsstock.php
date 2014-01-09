@@ -41,8 +41,8 @@ class StatsStock extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Stats on available quantities');
-		$this->description = '';
+		$this->displayName = $this->l('Available quantities');
+		$this->description = 'Adds a tab showing the quantity of available products for sale to the Stats dashboard.';
 	}
 
 	public function install()
@@ -86,7 +86,7 @@ class StatsStock extends Module
 		<script type="text/javascript">$(\'#calendar\').slideToggle();</script>
 
 		<div class="panel-heading">'
-			.$this->l('Evaluation of available quantities for sale.').
+			.$this->l('Evaluation of available quantities for sale').
 		'</div>
 		<form action="'.$ru.'" method="post" class="form-horizontal">
 			<div class="row row-margin-bottom">
