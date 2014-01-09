@@ -63,11 +63,16 @@ class BlockSpecials extends Module
 
 		if ($success)
 		{
+			// Hook the module either on the left or right column
 			$theme = new Theme(Context::getContext()->shop->id_theme);
-			if ($theme->default_right_column)
-				$success &= $this->registerHook('rightColumn');
-			elseif ($theme->default_left_column)
-				$success &= $this->registerHook('leftColumn');
+			if ((!$theme->default_right_column || !$this->registerHook('rightColumn'))
+				&& (!$theme->default_left_column || !$this->registerHook('leftColumn')))
+			{
+				// If there are no colums implemented by the template, throw an error and uninstall the module
+				$this->_errors[] = $this->l('This module need to be hooked in a column and your theme does not implement one');
+				parent::uninstall();
+				return false;
+			}
 		}
 		return $success;
 	}
