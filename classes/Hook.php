@@ -121,14 +121,15 @@ class HookCore extends ObjectModel
 		{
 			// Get all hook ID by name and alias
 			$hook_ids = array();
-			$result = Db::getInstance()->ExecuteS('
+			$db = Db::getInstance();
+			$result = $db->ExecuteS('
 			SELECT `id_hook`, `name`
 			FROM `'._DB_PREFIX_.'hook`
 			UNION
 			SELECT `id_hook`, ha.`alias` as name
 			FROM `'._DB_PREFIX_.'hook_alias` ha
-			INNER JOIN `'._DB_PREFIX_.'hook` h ON ha.name = h.name');
-			foreach ($result as $row)
+			INNER JOIN `'._DB_PREFIX_.'hook` h ON ha.name = h.name', false);
+			while ($row = $db->nextRow($result))
 				$hook_ids[strtolower($row['name'])] = $row['id_hook'];
 			Cache::store($cache_id, $hook_ids);
 		}

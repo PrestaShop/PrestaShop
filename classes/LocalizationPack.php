@@ -24,8 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
-
 class LocalizationPackCore
 {
 	public	$name;

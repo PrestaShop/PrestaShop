@@ -35,7 +35,7 @@ class BlockBestSellers extends Module
 	{
 		$this->name = 'blockbestsellers';
 		$this->tab = 'front_office_features';
-		$this->version = '1.4';
+		$this->version = '1.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -63,6 +63,17 @@ class BlockBestSellers extends Module
 			|| !ProductSale::fillProductSales()
 		)
 			return false;
+
+		// Hook the module either on the left or right column
+		$theme = new Theme(Context::getContext()->shop->id_theme);
+		if ((!$theme->default_left_column || !$this->registerHook('leftColumn'))
+			&& (!$theme->default_right_column || !$this->registerHook('rightColumn')))
+		{
+			// If there are no colums implemented by the template, throw an error and uninstall the module
+			$this->_errors[] = $this->l('This module need to be hooked in a column and your theme does not implement one');
+			parent::uninstall();
+			return false;
+		}
 		return true;
 	}
 	
@@ -123,7 +134,7 @@ class BlockBestSellers extends Module
 			'form' => array(
 				'legend' => array(
 					'title' => $this->l('Settings'),
-					'icon' => 'icon-star-empty'
+					'icon' => 'icon-cogs'
 				),
 				'input' => array(
 					array(
