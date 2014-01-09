@@ -503,6 +503,11 @@ class AdminEmployeesControllerCore extends AdminController
 		die ('Form language updated.');
 	}
 	
+	protected function ajaxProcessToggleMenu()
+	{
+		$this->context->cookie->collapse_menu = (int)Tools::getValue('collapse');
+		$this->context->cookie->write();
+	}
 	public function ajaxProcessGetTabByIdProfile()
 	{
 		$id_profile = Tools::getValue('id_profile');
