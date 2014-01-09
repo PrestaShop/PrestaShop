@@ -71,8 +71,6 @@ class AdminModulesControllerCore extends AdminController
 
 		register_shutdown_function('displayFatalError');
 
-		include_once(_PS_ADMIN_DIR_.'/../tools/tar/Archive_Tar.php');
-
 		// Set the modules categories
 		$this->list_modules_categories['administration']['name'] = $this->l('Administration');
 		$this->list_modules_categories['advertising_marketing']['name'] = $this->l('Advertising and Marketing');
@@ -380,6 +378,7 @@ class AdminModulesControllerCore extends AdminController
 		}
 		else
 		{
+			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 			$archive = new Archive_Tar($file);
 			if ($archive->extract($tmp_folder))
 			{

@@ -74,14 +74,9 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		$this->bootstrap = true;
 		$this->multishop_context = Shop::CONTEXT_ALL;
-
-		parent::__construct();
-
 	 	$this->table = 'translations';
 
-		// Include all file for create or read an archive
-		include_once(_PS_ADMIN_DIR_.'/../tools/tar/Archive_Tar.php');
-		include_once(_PS_ADMIN_DIR_.'/../tools/pear/PEAR.php');
+		parent::__construct();
 	}
 
 	/*
@@ -445,6 +440,7 @@ class AdminTranslationsControllerCore extends AdminController
 			$this->exportTabs();
 			$items = array_flip(Language::getFilesList($this->lang_selected->iso_code, $this->theme_selected, false, false, false, false, true));
 			$file_name = _PS_TRANSLATIONS_DIR_.'/export/'.$this->lang_selected->iso_code.'.gzip';
+			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 			$gz = new Archive_Tar($file_name, true);
 			if ($gz->createModify($items, null, _PS_ROOT_DIR_));
 			{
@@ -671,6 +667,7 @@ class AdminTranslationsControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('No file has been selected.');
 		else
 		{
+			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 			$gz = new Archive_Tar($_FILES['file']['tmp_name'], true);
 			$filename = $_FILES['file']['name'];
 			$iso_code = str_replace(array('.tar.gz', '.gzip'), '', $filename);
@@ -795,6 +792,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$file = _PS_TRANSLATIONS_DIR_.$arr_import_lang[0].'.gzip';
 				if ((bool)@file_put_contents($file, $content))
 				{
+					require_once(_PS_TOOL_DIR_.'/tar/Archive_Tar.php');
 					$gz = new Archive_Tar($file, true);
 					$files_list = AdminTranslationsController::filterTranslationFiles($gz->listContent());
 					if ($error = $gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../'))
