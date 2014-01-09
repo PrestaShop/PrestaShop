@@ -35,7 +35,7 @@ class BlockBestSellers extends Module
 	{
 		$this->name = 'blockbestsellers';
 		$this->tab = 'front_office_features';
-		$this->version = '1.4';
+		$this->version = '1.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -63,7 +63,15 @@ class BlockBestSellers extends Module
 			|| !ProductSale::fillProductSales()
 		)
 			return false;
-		return true;
+
+
+		$theme = new Theme(Context::getContext()->shop->id_theme);
+		if ($theme->default_left_column)
+			return $this->registerHook('leftColumn');
+		elseif ($theme->default_right_column)
+			return $this->registerHook('rightColumn');
+		else
+			return false;
 	}
 	
 	public function uninstall()
@@ -123,7 +131,7 @@ class BlockBestSellers extends Module
 			'form' => array(
 				'legend' => array(
 					'title' => $this->l('Settings'),
-					'icon' => 'icon-star-empty'
+					'icon' => 'icon-cogs'
 				),
 				'input' => array(
 					array(
