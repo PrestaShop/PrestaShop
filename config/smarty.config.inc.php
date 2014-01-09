@@ -126,6 +126,8 @@ function smarty_modifier_truncate($string, $length = 80, $etc = '...', $break_wo
 	if (!$length)
 		return '';
 
+	$string = trim($string);
+
 	if (Tools::strlen($string) > $length)
 	{
 		$length -= min($length, Tools::strlen($etc));
