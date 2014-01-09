@@ -1165,7 +1165,7 @@ class FrontControllerCore extends Controller
 		return $layout;
 	}
 
-	protected function getTemplatePath($template)
+	public function getTemplatePath($template)
 	{
 		if (!$this->useMobileTheme())
 			return $template;

@@ -2374,27 +2374,6 @@ table { border-collapse: collapse; border-spacing: 0; }
 .bootstrap .close { float: right; font-size: 18px; font-weight: bold; line-height: 1; color: black; text-shadow: 0 1px 0 white; opacity: 0.2; filter: alpha(opacity=20); }
 .bootstrap .close:hover, .bootstrap .close:focus { color: black; text-decoration: none; cursor: pointer; opacity: 0.5; filter: alpha(opacity=50); }
 .bootstrap button.close { padding: 0; cursor: pointer; background: transparent; border: 0; -webkit-appearance: none; }
-.bootstrap .modal-open { overflow: hidden; }
-.bootstrap .modal { display: none; overflow: auto; overflow-y: scroll; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1040; }
-.bootstrap .modal.fade .modal-dialog { -webkit-transform: translate(0, -25%); -ms-transform: translate(0, -25%); transform: translate(0, -25%); -webkit-transition: -webkit-transform 0.3s ease-out; -moz-transition: -moz-transform 0.3s ease-out; -o-transition: -o-transform 0.3s ease-out; transition: transform 0.3s ease-out; }
-.bootstrap .modal.in .modal-dialog { -webkit-transform: translate(0, 0); -ms-transform: translate(0, 0); transform: translate(0, 0); }
-.bootstrap .modal-dialog { position: relative; margin-left: auto; margin-right: auto; width: auto; padding: 10px; z-index: 1050; }
-.bootstrap .modal-content { position: relative; background-color: white; border: 1px solid #999999; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 6px; -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5); box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5); background-clip: padding-box; outline: none; }
-.bootstrap .modal-backdrop { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1030; background-color: black; }
-.bootstrap .modal-backdrop.fade { opacity: 0; filter: alpha(opacity=0); }
-.bootstrap .modal-backdrop.in { opacity: 0.5; filter: alpha(opacity=50); }
-.bootstrap .modal-header { padding: 15px; border-bottom: 1px solid #e5e5e5; min-height: 16.42857px; }
-.bootstrap .modal-header .close { margin-top: -2px; }
-.bootstrap .modal-title { margin: 0; line-height: 1.42857; }
-.bootstrap .modal-body { position: relative; padding: 20px; }
-.bootstrap .modal-footer { margin-top: 15px; padding: 19px 20px 20px; text-align: right; border-top: 1px solid #e5e5e5; }
-.bootstrap .modal-footer:before, .bootstrap .modal-footer:after { content: " "; /* 1 */ display: table; /* 2 */ }
-.bootstrap .modal-footer:after { clear: both; }
-.bootstrap .modal-footer .btn + .btn { margin-left: 5px; margin-bottom: 0; }
-.bootstrap .modal-footer .btn-group .btn + .btn { margin-left: -1px; }
-.bootstrap .modal-footer .btn-block + .btn-block { margin-left: 0; }
-@media screen and (min-width: 768px) { .bootstrap .modal-dialog { width: 600px; padding-top: 30px; padding-bottom: 30px; }
-  .bootstrap .modal-content { -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); } }
 .bootstrap .tooltip { position: absolute; z-index: 1030; display: block; visibility: visible; font-size: 11px; line-height: 1.4; opacity: 0; filter: alpha(opacity=0); }
 .bootstrap .tooltip.in { opacity: 0.9; filter: alpha(opacity=90); }
 .bootstrap .tooltip.top { margin-top: -3px; padding: 5px 0; }
@@ -2412,6 +2391,37 @@ table { border-collapse: collapse; border-spacing: 0; }
 .bootstrap .tooltip.bottom-left .tooltip-arrow { top: 0; left: 5px; border-width: 0 5px 5px; border-bottom-color: black; }
 .bootstrap .tooltip.bottom-right .tooltip-arrow { top: 0; right: 5px; border-width: 0 5px 5px; border-bottom-color: black; }
 
+.modal-open { overflow: hidden; }
+
+.modal { display: none; overflow: auto; overflow-y: scroll; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1040; }
+.modal.fade .modal-dialog { -webkit-transform: translate(0, -25%); -ms-transform: translate(0, -25%); transform: translate(0, -25%); -webkit-transition: -webkit-transform 0.3s ease-out; -moz-transition: -moz-transform 0.3s ease-out; -o-transition: -o-transform 0.3s ease-out; transition: transform 0.3s ease-out; }
+.modal.in .modal-dialog { -webkit-transform: translate(0, 0); -ms-transform: translate(0, 0); transform: translate(0, 0); }
+
+.modal-dialog { position: relative; margin-left: auto; margin-right: auto; width: auto; padding: 10px; z-index: 1050; }
+
+.modal-content { position: relative; background-color: white; border: 1px solid #999999; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 6px; -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5); box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5); background-clip: padding-box; outline: none; }
+
+.modal-backdrop { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1030; background-color: black; }
+.modal-backdrop.fade { opacity: 0; filter: alpha(opacity=0); }
+.modal-backdrop.in { opacity: 0.5; filter: alpha(opacity=50); }
+
+.modal-header { padding: 15px; border-bottom: 1px solid #e5e5e5; min-height: 16.42857px; }
+
+.modal-header .close { margin-top: -2px; }
+
+.modal-title { margin: 0; line-height: 1.42857; }
+
+.modal-body { position: relative; padding: 20px; }
+
+.modal-footer { margin-top: 15px; padding: 19px 20px 20px; text-align: right; border-top: 1px solid #e5e5e5; }
+.modal-footer:before, .modal-footer:after { content: " "; /* 1 */ display: table; /* 2 */ }
+.modal-footer:after { clear: both; }
+.modal-footer .btn + .btn { margin-left: 5px; margin-bottom: 0; }
+.modal-footer .btn-group .btn + .btn { margin-left: -1px; }
+.modal-footer .btn-block + .btn-block { margin-left: 0; }
+
+@media screen and (min-width: 768px) { .modal-dialog { width: 600px; padding-top: 30px; padding-bottom: 30px; }
+  .modal-content { -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); } }
 .clearfix:before, .clearfix:after { content: " "; /* 1 */ display: table; /* 2 */ }
 .clearfix:after { clear: both; }
 
@@ -2614,7 +2624,7 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 #footer a.footer_link:hover { color: white; text-decoration: none; }
 #footer a.footer_link i { color: white; }
 
-a.link-social i { font-size: 2em; width: 30px; height: 30px; display: inline-block; line-height: 30px; text-align: center; -webkit-border-radius: 30px; -moz-border-radius: 30px; -ms-border-radius: 30px; -o-border-radius: 30px; border-radius: 30px; }
+a.link-social i { font-size: 2em; width: 30px; height: 30px; display: inline-block; line-height: 30px; text-align: center; margin: 0 4px 0 0; -webkit-border-radius: 30px; -moz-border-radius: 30px; -ms-border-radius: 30px; -o-border-radius: 30px; border-radius: 30px; }
 a.link-social:hover { text-decoration: none; }
 
 .link-twitter i { color: white; background-color: #7cceef; }
