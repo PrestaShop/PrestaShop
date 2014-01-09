@@ -240,6 +240,15 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'bool',
 						'visibility' => Shop::CONTEXT_ALL,
 					),
+					'PS_FORCE_ASM_NEW_PRODUCT' => array(
+						'title' => $this->l('New products use advanced stock management'),
+						'hint' => $this->l('New products will automaticlly use advanced stock management and depends on stock, but no warehouse will be selected'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'required' => false,
+						'type' => 'bool',
+						'visibility' => Shop::CONTEXT_ALL,
+					),
 				),
 				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();</script>',
 				'submit' => array('title' => $this->l('Save'))
