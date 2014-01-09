@@ -873,11 +873,11 @@ class LanguageCore extends ObjectModel
 
 	public static function getLanguagePackListContent($iso, $tar)
 	{
+		$key = 'Language::getLanguagePackListContent_'.$iso;
 		if (!Cache::isStored($key))
 		{
 			if (!$tar instanceof Archive_Tar)
 				return false;
-			$key = 'Language::getLanguagePackListContent_'.$iso;
 			Cache::store($key, $tar->listContent());
 		}
 		return Cache::retrieve($key);
