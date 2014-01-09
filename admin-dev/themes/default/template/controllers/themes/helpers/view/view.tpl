@@ -33,6 +33,9 @@
         {/foreach}
     </ul>
 {/if}
+<div class="alert alert-warning">
+    {l s='Warning : You may have to regenerate images to fit with this new theme'}
+</div>
 {if isset($img_error['error'])}
     <div class="alert alert-warning">
         {l s='Warning: Copy/Paste your errors if you want to manually set the image type (in the "Images" page under the "Preferences" menu):'}
