@@ -23,6 +23,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+{* retro compatibility *}
+{assign var=title value=$page_header_toolbar_title}
+{assign var=toolbar_btn value=$page_header_toolbar_btn}
+
 <div class="page-head">
 	{block name=pageTitle}
 	<h2 class="page-title">

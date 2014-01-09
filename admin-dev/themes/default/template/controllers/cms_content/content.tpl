@@ -23,8 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{include file='helpers/modules_modal.tpl'}
-
 {if isset($cms_breadcrumb)}
 	<ul class="breadcrumb cat_bar">
 		{$cms_breadcrumb}
