@@ -123,15 +123,11 @@ $context->country = $defaultCountry;
 @date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
 
 /* Set locales */
-$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY').'.UTF-8');
-setlocale(LC_COLLATE, $locale);
-setlocale(LC_CTYPE, $locale);
-setlocale(LC_TIME, $locale);
-setlocale(LC_NUMERIC, 'en_US.UTF-8');
+$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY'));
+setlocale(LC_ALL, $locale.'.UTF-8', $locale.'.UTF8');
+setlocale(LC_NUMERIC, 'en_US.UTF-8', 'en_US.UTF8');
 
 /* Instantiate cookie */
-
-
 $cookie_lifetime = (int)(defined('_PS_ADMIN_DIR_') ? Configuration::get('PS_COOKIE_LIFETIME_BO') : Configuration::get('PS_COOKIE_LIFETIME_FO'));
 $cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
 
@@ -178,12 +174,11 @@ if (!defined('_PS_ADMIN_DIR_'))
 	if (isset($cookie->id_customer) && (int)$cookie->id_customer)
 	{
 		$customer = new Customer($cookie->id_customer);
-		if(!Validate::isLoadedObject($customer))
-			$customer->logout();
+		if (!Validate::isLoadedObject($customer))
+			$context->cookie->logout();
 		else
 		{
-			$customer->logged = $cookie->logged;
-
+			$customer->logged = true;
 			if ($customer->id_lang != $context->language->id)
 			{
 				$customer->id_lang = $context->language->id;
@@ -198,7 +193,7 @@ if (!defined('_PS_ADMIN_DIR_'))
 		
 		// Change the default group
 		if (Group::isFeatureActive())
-			$customer->id_default_group = Configuration::get('PS_UNIDENTIFIED_GROUP');
+			$customer->id_default_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
 	}
 	$customer->id_guest = $cookie->id_guest;
 	$context->customer = $customer;
