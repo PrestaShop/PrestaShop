@@ -1776,9 +1776,10 @@ class BlockLayered extends Module
 				$query_filters_from .= ' INNER JOIN '._DB_PREFIX_.'category_product cp
 				ON p.id_product = cp.id_product
 				INNER JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category AND
-				'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.'
-				AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
-				AND c.active = 1)';
+				c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright.'
+				AND c.active = 1)
+				RIGHT JOIN '._DB_PREFIX_.'layered_category lc ON (lc.id_category = '.(int)$id_parent.' AND 
+				id_shop = '.(int) Context::getContext()->shop->id.')';
 			else
 				$query_filters_from .= ' INNER JOIN '._DB_PREFIX_.'category_product cp
 				ON p.id_product = cp.id_product
