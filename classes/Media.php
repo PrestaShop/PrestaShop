@@ -212,7 +212,7 @@ class MediaCore
 		else
 			$file_uri = $js_uri;
 		// check if js files exists
-		if (!preg_match('/^http(s?):\/\//i', $file_uri) && !@filemtime($file_uri))
+		if (!preg_match('/^http(s?):\/\//i', $file_uri) && (!@filemtime($file_uri) || filesize($file_uri) === 0))
 			return false;
 
 		if (Context::getContext()->controller->controller_type == 'admin' && !array_key_exists('host', $url_data))
@@ -438,7 +438,7 @@ class MediaCore
 			if (!array_key_exists('date', $css_files_by_media[$media]))
 				$css_files_by_media[$media]['date'] = 0;
 			$css_files_by_media[$media]['date'] = max(
-				file_exists($infos['path']) ? filemtime($infos['path']) : 0,
+				file_exists($infos['path']) ? @filemtime($infos['path']) : 0,
 				$css_files_by_media[$media]['date']
 			);
 
@@ -454,7 +454,7 @@ class MediaCore
 			$filename = _PS_THEME_DIR_.'cache/'.$key.'_'.$media.'.css';
 			$info = array(
 				'key' => $key,
-				'date' => file_exists($filename) ? filemtime($filename) : 0
+				'date' => file_exists($filename) ? @filemtime($filename) : 0
 			);
 		}
 
@@ -542,7 +542,7 @@ class MediaCore
 				$js_files_infos[] = $infos;
 
 				$js_files_date = max(
-					file_exists($infos['path']) ? filemtime($infos['path']) : 0,
+					file_exists($infos['path']) ? @filemtime($infos['path']) : 0,
 					$js_files_date
 				);
 				$compressed_js_filename .= $filename;
@@ -553,7 +553,7 @@ class MediaCore
 		$compressed_js_filename = md5($compressed_js_filename);
 
 		$compressed_js_path = _PS_THEME_DIR_.'cache/'.$compressed_js_filename.'.js';
-		$compressed_js_file_date = file_exists($compressed_js_path) ? filemtime($compressed_js_path) : 0;
+		$compressed_js_file_date = file_exists($compressed_js_path) ? @filemtime($compressed_js_path) : 0;
 
 		// aggregate and compress js files content, write new caches files
 		if ($js_files_date > $compressed_js_file_date)

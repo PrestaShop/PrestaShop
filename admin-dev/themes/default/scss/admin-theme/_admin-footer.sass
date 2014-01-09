@@ -2,7 +2,7 @@
 	z-index: 600
 	display: block
 	width: 100%
-	background-color: rgba($bg-footer-color,0.85)
+	background-color: black
 	color: #888
 	position: fixed
 	bottom: 0
@@ -27,11 +27,18 @@
 		color: #fff
 		cursor: pointer
 		font-size: 16px
-		background-color: rgba(0,0,0,0.5)
+		background-color: $main-color
 		&:hover
-			background-color: black
+			background-color: $brand-primary
 	.social-networks
 		margin: 4px 0 0 0
+	a.footer_link
+		color: $brand-primary
+		&:hover
+			color: white
+			text-decoration: none
+		i
+			color: white
 
 a.link-social
 	i
@@ -41,6 +48,7 @@ a.link-social
 		display: inline-block
 		line-height: 30px
 		text-align: center
+		margin: 0 4px 0 0
 		@include border-radius(30px)
 	&:hover
 		text-decoration: none

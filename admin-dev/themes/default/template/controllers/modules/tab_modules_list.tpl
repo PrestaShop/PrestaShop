@@ -66,6 +66,6 @@
 		</div>
 	</div>
 {/if}
-<div class="alert alert-warning">
+<div class="alert alert-info row-margin-top">
 	<a href="{$admin_module_favorites_view}">{l s='More options'}</a>
 </div>

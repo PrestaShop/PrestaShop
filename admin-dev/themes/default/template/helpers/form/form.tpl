@@ -34,11 +34,13 @@
 		<div class="panel" id="fieldset_{$f}">
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
-					<h3>
-						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'html':'UTF-8'}" />{/if}
-						{if isset($field.icon)}<i class="{$field.icon}"></i>{/if}
-						{$field.title}
-					</h3>
+                    {block name="legend"}
+                        <h3>
+                            {if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'html':'UTF-8'}" />{/if}
+                            {if isset($field.icon)}<i class="{$field.icon}"></i>{/if}
+                            {$field.title}
+                        </h3>
+                    {/block}
 				{elseif $key == 'description' && $field}
 					<div class="alert alert-info">{$field}</div>
 				{elseif $key == 'input'}

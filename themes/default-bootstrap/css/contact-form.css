@@ -52,38 +52,3 @@
   @media (min-width: 992px) and (max-width: 1199px) {
     .contact-form-box div.uploader span.filename {
       width: 114px; } }
-
-/**************************************************************************
-				Contact Page Bottom Banners Styles 
-**************************************************************************/
-.contact-banners .list-1 {
-  padding: 6px 0 3px 0; }
-  .contact-banners .list-1 li {
-    padding: 0px 0 3px 0;
-    font: 600 18px/22px "Open Sans", sans-serif;
-    color: #555454; }
-    .contact-banners .list-1 li i {
-      font-size: 25px;
-      line-height: 25px;
-      color: #cdcdcd;
-      padding-right: 10px;
-      vertical-align: -3px; }
-.contact-banners .list-2 {
-  padding: 2px 0; }
-  .contact-banners .list-2 li {
-    font-weight: bold;
-    color: #46a74e;
-    padding: 0 0 5px 0; }
-    .contact-banners .list-2 li i {
-      font-size: 20px;
-      line-height: 20px;
-      padding-right: 10px;
-      vertical-align: -2px; }
-.contact-banners .box.box-last {
-  padding-bottom: 49px; }
-  .contact-banners .box.box-last p i {
-    font-size: 29px;
-    line-height: 29px;
-    color: #c0c0c0;
-    vertical-align: -6px;
-    padding-right: 13px; }
