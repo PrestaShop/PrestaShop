@@ -25,7 +25,7 @@
 
 <!-- Block Newsletter module-->
 <div id="newsletter_block_left" class="block">
-	<h4>{l s='Newsletter' mod='blocknewsletter'}</h4>
+	<h2>{l s='Newsletter' mod='blocknewsletter'}</h2>
 	<div class="block_content">
 		<form action="{$link->getPageLink('index')|escape:'html':'UTF-8'}" method="post">
 			<div class="form-group{if isset($msg) && $msg } {if $nw_error}form-error{else}form-ok{/if}{/if}" >
@@ -42,7 +42,7 @@
 
 <script type="text/javascript">
     var placeholder = "{l s='Enter your e-mail' mod='blocknewsletter' js=1}";
-    var msg_newsl = '{if isset($msg) && $msg }{$msg|@addcslashes:'\''}{/if}';
+    var msg_newsl = "{if isset($msg) && $msg }{$msg|@addcslashes:'\''}{/if}";
         $(document).ready(function() {ldelim}
             $('#newsletter-input').on({ldelim}
                 focus: function() {ldelim}

@@ -25,7 +25,7 @@
 
 <!-- Block suppliers module -->
 <div id="suppliers_block_left" class="block blocksupplier">
-	<p class="title_block">
+	<h2>
 		{if $display_link_supplier}
 			<a href="{$link->getPageLink('supplier')|escape:'html':'UTF-8'}" title="{l s='Suppliers' mod='blocksupplier'}">
 		{/if}
@@ -33,7 +33,7 @@
 		{if $display_link_supplier}
 			</a>
 		{/if}
-	</p>
+	</h2>
 	<div class="block_content list-block">
 		{if $suppliers}
 			{if $text_list}

@@ -25,7 +25,7 @@
 
 <!-- Block manufacturers module -->
 <div id="manufacturers_block_left" class="block blockmanufacturer">
-	<p class="title_block">
+	<h2>
 		{if $display_link_manufacturer}
 			<a href="{$link->getPageLink('manufacturer')|escape:'html':'UTF-8'}" title="{l s='Manufacturers' mod='blockmanufacturer'}">
 		{/if}
@@ -33,7 +33,7 @@
 		{if $display_link_manufacturer}
 			</a>
 		{/if}
-	</p>
+	</h2>
 	<div class="block_content list-block">
 		{if $manufacturers}
 			{if $text_list}

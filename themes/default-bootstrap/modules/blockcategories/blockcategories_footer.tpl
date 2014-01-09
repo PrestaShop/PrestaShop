@@ -24,8 +24,8 @@
 *}
 
 <!-- Block categories module -->
-<section class="blockcategories_footer footer-block col-xs-12 col-sm-2">
-	<h4>{l s='Categories' mod='blockcategories'}</h4>
+<div class="blockcategories_footer footer-block col-xs-12 col-sm-2">
+	<h2>{l s='Categories' mod='blockcategories'}</h2>
 	<div class="category_footer toggle-footer">
 		<div class="list">
 			<ul class="tree {if $isDhtml}dhtml{/if}">
@@ -49,5 +49,5 @@
 			</ul>
 		</div>
 	</div> <!-- .category_footer -->
-</section>
+</div>
 <!-- /Block categories module -->

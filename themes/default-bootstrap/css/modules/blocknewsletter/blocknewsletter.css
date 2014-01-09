@@ -28,7 +28,7 @@
   @media (max-width: 767px) {
     #footer #newsletter_block_left {
       width: 100%; } }
-  #footer #newsletter_block_left h4 {
+  #footer #newsletter_block_left h2 {
     background: none;
     float: left;
     padding: 7px 16px 5px 0;
@@ -36,7 +36,7 @@
     font-size: 21px;
     line-height: 25px;
     border: none; }
-    #footer #newsletter_block_left h4:after {
+    #footer #newsletter_block_left h2:after {
       display: none; }
   #footer #newsletter_block_left .block_content {
     overflow: hidden; }

@@ -49,7 +49,7 @@ var generated_date = {$smarty.now|intval};
 
 <!-- MODULE Block cart -->
 <div id="cart_block" class="block exclusive">
-	<p class="title_block">
+	<h2>
 		<a href="{$link->getPageLink("$order_process", true)|escape:'html':'UTF-8'}" title="{l s='View my shopping cart' mod='blockcart'}" rel="nofollow">
 			{l s='Cart' mod='blockcart'}
 			{if $ajax_allowed}
@@ -65,7 +65,7 @@ var generated_date = {$smarty.now|intval};
 				</span>
 			{/if}
 		</a>
-	</p>
+	</h2>
 	<div class="block_content">
 		<!-- block summary -->
 		<div 
