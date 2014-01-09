@@ -27,15 +27,15 @@
 		<h2 class="page-title">
 			{l s='Configure module %s' sprintf=$module_display_name}
 		</h2>
-	<ul class="breadcrumb page-breadcrumb">
-		{if $breadcrumbs2.container.name != ''}
-			<li>
-				{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href|escape}">{/if}
-				{if $breadcrumbs2.container.icon != ''}<i class="{$breadcrumbs2.container.icon|escape}"></i>{/if}
-				{$breadcrumbs2.container.name|escape}
-				{if $breadcrumbs2.container.href != ''}</a>{/if}
-			</li>
-		{/if}
+		<ul class="breadcrumb page-breadcrumb">
+			{if $breadcrumbs2.container.name != ''}
+				<li>
+					{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href|escape}">{/if}
+					{if $breadcrumbs2.container.icon != ''}<i class="{$breadcrumbs2.container.icon|escape}"></i>{/if}
+					{$breadcrumbs2.container.name|escape}
+					{if $breadcrumbs2.container.href != ''}</a>{/if}
+				</li>
+			{/if}
 			<li>{$module_name}</li>
 			<li>
 				<i class="icon-wrench"></i>

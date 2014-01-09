@@ -52,6 +52,7 @@ class BlockLink extends Module
 	{
 		if (!parent::install() || !$this->registerHook('header'))
 			return false;
+
 		$success = Configuration::updateValue('PS_BLOCKLINK_TITLE', array('1' => 'Block link', '2' => 'Bloc lien'));
 		$success &= Db::getInstance()->execute('
 		CREATE TABLE '._DB_PREFIX_.'blocklink (
@@ -73,14 +74,23 @@ class BlockLink extends Module
 		`text` varchar(62) NOT NULL,
 		PRIMARY KEY(`id_blocklink`, `id_lang`))
 		ENGINE='._MYSQL_ENGINE_.' default CHARSET=utf8');
+		if (!$success)
+		{
+			parent::uninstall();
+			return false;
+		}
 
+		// Hook the module either on the left or right column
 		$theme = new Theme(Context::getContext()->shop->id_theme);
-		if ($theme->default_left_column)
-			$success &= $this->registerHook('leftColumn');
-		elseif ($theme->default_right_column)
-			$success &= $this->registerHook('rightColumn');
-
-		return $success;
+		if ((!$theme->default_left_column || !$this->registerHook('leftColumn'))
+			&& (!$theme->default_right_column || !$this->registerHook('rightColumn')))
+		{
+			// If there are no colums implemented by the template, throw an error and uninstall the module
+			$this->_errors[] = $this->l('This module need to be hooked in a column and your theme does not implement one');
+			parent::uninstall();
+			return false;
+		}
+		return true;
 	}
 	
 	public function uninstall()

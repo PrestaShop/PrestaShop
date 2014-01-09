@@ -66,6 +66,11 @@ $(document).ready(function() {
 		sidebar.find('.menu-collapse').on('click',function(){
 			$('body').toggleClass('page-sidebar-closed');
 			$('.expanded').removeClass('expanded');
+			$.ajax({
+				url: "index.php",
+				cache: false,
+				data: "token="+employee_token+'&ajax=1&action=toggleMenu&tab=AdminEmployees&collapse='+Number($('body').hasClass('page-sidebar-closed'))
+			});
 		});
 	}
 
