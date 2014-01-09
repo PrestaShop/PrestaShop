@@ -53,4 +53,5 @@
 {addJsDef priceDisplayMethod=$priceDisplay}
 {addJsDef roundMode=$roundMode}
 {addJsDef logged=$logged}
+{addJsDef page_name=$page_name|escape:'html':'UTF-8'}
 {/strip}

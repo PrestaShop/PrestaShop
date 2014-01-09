@@ -77,7 +77,7 @@ class AdminCmsContentControllerCore extends AdminController
 	{
 		$this->initTabModuleList();
 		$this->content .= $this->renderPageHeaderToolbar();
-
+		
 		$this->admin_cms_categories->token = $this->token;
 		$this->admin_cms->token = $this->token;
 
@@ -100,13 +100,16 @@ class AdminCmsContentControllerCore extends AdminController
 			foreach ($cms_tabs as $tab)
 				if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway'))
 					$cat_bar_index = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
-
+			$this->context->smarty->assign(array(
+				'cms_breadcrumb' => getPath($cat_bar_index, $id_cms_category, '', '', 'cms'),
+				'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+				'page_header_toolbar_title' => $this->toolbar_title,
+			));
+			
 			$this->content .= $this->admin_cms_categories->renderList();
 			$this->admin_cms->id_cms_category = $id_cms_category;
 			$this->content .= $this->admin_cms->renderList();
-			$this->context->smarty->assign(array(
-				'cms_breadcrumb' => getPath($cat_bar_index, $id_cms_category, '', '', 'cms'),
-			));
+			
 		}
 
 		$this->context->smarty->assign(array(
@@ -128,7 +131,7 @@ class AdminCmsContentControllerCore extends AdminController
 		if ($this->display == 'edit_category')
 		{
 			if (Tools::getValue('addcms_category') !== false)
-				$this->toolbar_title[] =$this->l('Add new');
+				$this->toolbar_title[] = $this->l('Add new');
 			else
 				$this->toolbar_title[] = sprintf($this->l('Edit: %s'), $cms_category->name[$this->context->employee->id_lang]);
 		}
@@ -145,7 +148,7 @@ class AdminCmsContentControllerCore extends AdminController
 			}
 		}
 		else
-			$this->toolbar_title[] = $cms_category->name[$this->context->employee->id_lang];
+			$this->toolbar_title[] = $this->l('CMS');
 
 		if ($this->display == 'list')
 		{
@@ -175,7 +178,9 @@ class AdminCmsContentControllerCore extends AdminController
 		$this->context->smarty->assign(array(
 			'show_page_header_toolbar' => $this->show_page_header_toolbar,
 			'title' => $this->page_header_toolbar_title,
-			'toolbar_btn' => $this->page_header_toolbar_btn
+			'toolbar_btn' => $this->page_header_toolbar_btn,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+			'page_header_toolbar_title' => $this->toolbar_title,
 		));
 
 		return $template->fetch();
