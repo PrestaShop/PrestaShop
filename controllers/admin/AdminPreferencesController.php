@@ -92,7 +92,7 @@ class AdminPreferencesControllerCore extends AdminController
 			if (Configuration::get('PS_SSL_ENABLED'))
 				$fields['PS_SSL_ENABLED_EVERYWHERE'] = array(
 					'title' => $this->l('Force the SSL on all the pages'),
-					'desc' => $this->l('Force all your store to use SSL'),
+					'desc' => $this->l('Force all your store to use SSL.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool',
@@ -110,8 +110,8 @@ class AdminPreferencesControllerCore extends AdminController
 					'visibility' => Shop::CONTEXT_ALL
 				),
 				'PS_ALLOW_HTML_IFRAME' => array(
-					'title' => $this->l('Allow iframes on html fields'),
-					'desc' => $this->l('Allow iframes on fields like product description. We recommend that you leave this option disabled'),
+					'title' => $this->l('Allow iframes on HTML fields'),
+					'desc' => $this->l('Allow iframes on text fields like product description. We recommend that you leave this option disabled.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool',
@@ -119,7 +119,7 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_PRICE_ROUND_MODE' => array(
 					'title' => $this->l('Round mode'),
-					'desc' => $this->l('You can choose how to round prices: Always round superior, always round inferior or classic rounding.'),
+					'desc' => $this->l('You can choose how to round prices: always round up, always round down or classic rounding (up if > .5, down if < .5).',)
 					'validation' => 'isInt',
 					'cast' => 'intval',
 					'type' => 'select',
