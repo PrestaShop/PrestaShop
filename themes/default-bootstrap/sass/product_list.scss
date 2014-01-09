@@ -83,7 +83,7 @@ Product list(Grid) Styles
 
 ul.product_list.grid {
 	> li {
-		margin-bottom: 20px;
+		padding-bottom: 20px;
 		text-align: center;
 		@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
 			width: 50%;
@@ -229,8 +229,6 @@ ul.product_list.grid {
 		}
 		@media (min-width: $screen-lg) { // min 1200px
 			&.hovered {
-				margin-bottom: -300px;
-				padding-bottom: 226px;
 				.product-container {
 					@include box-shadow(rgba(black, 0.17) 0 0 13px);
 					position: relative;
@@ -279,10 +277,6 @@ ul.product_list.grid {
 					border: none;
 					padding-bottom: 0;
 					margin-bottom: 0;
-					&.hovered {
-						margin-bottom: -320px;
-						padding-bottom: 250px;	
-					}
 				}
 			}
 			@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
@@ -511,13 +505,8 @@ Product list(Index page) Styles
 			padding-bottom: 10px;
 			margin-bottom: 10px;
 			@media (min-width: $screen-lg) { // min 1200px
-				padding-bottom: 35px;
-				margin-bottom: 50px;
-			}
-			@media (min-width: $screen-lg) { // min 1200px
-				&.hovered {
-					margin-bottom: -300px;
-				}
+				padding-bottom: 85px;
+				margin-bottom:0;
 			}
 			.availability {
 				display: none;
@@ -527,10 +516,6 @@ Product list(Index page) Styles
 					border: none;
 					padding-bottom: 0;
 					margin-bottom: 0;
-					&.hovered {
-						margin-bottom: -300px;
-						padding-bottom: 235px;	
-					}
 				}
 			}
 			@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
