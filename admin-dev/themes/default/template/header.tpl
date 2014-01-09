@@ -70,6 +70,7 @@
 		var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
 		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads'}';
 		var currentIndex = '{$currentIndex|@addcslashes:'\''}';
+		var employee_token = '{getAdminToken tab='AdminEmployees'}';
 		var choose_language_translate = '{l s='Choose language' js=1}';
 		var default_language = '{$default_language|intval}';
 		var admin_modules_link = '{$link->getAdminLink("AdminModules")|addslashes}';
