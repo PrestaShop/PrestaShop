@@ -45,7 +45,7 @@ class StatsNewsletter extends ModuleGraph
 		parent::__construct();
 
 		$this->displayName = $this->l('Newsletter');
-		$this->description = $this->l('Display newsletter registrations.');
+		$this->description = $this->l('Adds a tab with a graph showing newsletter registrations to the Stats dashboard.');
 	}
 
 	public function install()
@@ -84,7 +84,7 @@ class StatsNewsletter extends ModuleGraph
 			</div>';
 		}
 		else
-			$this->_html = '<p>'.$this->l('The "Newsletter Block" module must be installed.').'</p>';
+			$this->_html = '<p>'.$this->l('The "Newsletter block" module must be installed.').'</p>';
 
 		return $this->_html;
 	}
