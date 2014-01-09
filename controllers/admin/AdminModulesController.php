@@ -71,8 +71,6 @@ class AdminModulesControllerCore extends AdminController
 
 		register_shutdown_function('displayFatalError');
 
-		include_once(_PS_ADMIN_DIR_.'/../tools/tar/Archive_Tar.php');
-
 		// Set the modules categories
 		$this->list_modules_categories['administration']['name'] = $this->l('Administration');
 		$this->list_modules_categories['advertising_marketing']['name'] = $this->l('Advertising and Marketing');
@@ -380,6 +378,7 @@ class AdminModulesControllerCore extends AdminController
 		}
 		else
 		{
+			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 			$archive = new Archive_Tar($file);
 			if ($archive->extract($tmp_folder))
 			{
@@ -808,7 +807,10 @@ class AdminModulesControllerCore extends AdminController
 								'module_update_link' => $update_link,
 								'trad_link' => $trad_link,
 								'module_languages' => Language::getLanguages(false),
-								'theme_language_dir' => _THEME_LANG_DIR_
+								'theme_language_dir' => _THEME_LANG_DIR_,
+								'page_header_toolbar_title' => $this->page_header_toolbar_title,
+								'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+								'add_permission' => $this->tabAccess['add'],
 							));
 							
 							// Display checkbox in toolbar if multishop
