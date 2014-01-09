@@ -63,21 +63,21 @@
 		{/if}
 		<div id="page">
 			<div class="header-container">
-				<div class="banner">
-					<div class="container">
-						<div class="row">
-							{hook h="displayBanner"}
-						</div>
-					</div>
-				</div>
-				<div class="nav">
-					<div class="container">
-						<div class="row">
-							<nav>{hook h="displayNav"}</nav>
-						</div>
-					</div>
-				</div>
 				<header id="header">
+					<div class="banner">
+						<div class="container">
+							<div class="row">
+								{hook h="displayBanner"}
+							</div>
+						</div>
+					</div>
+					<div class="nav">
+						<div class="container">
+							<div class="row">
+								<nav>{hook h="displayNav"}</nav>
+							</div>
+						</div>
+					</div>
 					<div class="container">
 						<div class="row">
 							<div id="header_logo">

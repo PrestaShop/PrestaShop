@@ -43,35 +43,34 @@ header
 	z-index: 1
 	position: relative
 	background: $light-background
-
-.banner
-	background: black
+	.banner
+		background: black
+		.row
+			margin: 0px
+	.nav
+		background: $dark-background
+		.row
+			margin: 0px
+		nav
+			width: 100%
+			#currencies-block-top
+				float: right
 	.row
-		margin: 0px
-.nav
-	background: $dark-background
-	.row
-		margin: 0px
-	nav
-		width: 100%
-		#currencies-block-top
-			float: right
-.row
-	position: relative
-	> .container
 		position: relative
-	#header_logo
-		padding-top: 15px
-		h1
-			text-indent: -9999px
-			font-size: 0
-		@extend .col-sm-4
-		@media (max-width: $screen-md)
-			padding-top: 40px
-		@media (max-width: $screen-xs-max)
+		> .container
+			position: relative
+		#header_logo
 			padding-top: 15px
-			img
-				margin: 0 auto
+			h1
+				text-indent: -9999px
+				font-size: 0
+			@extend .col-sm-4
+			@media (max-width: $screen-md)
+				padding-top: 40px
+			@media (max-width: $screen-xs-max)
+				padding-top: 15px
+				img
+					margin: 0 auto
 
 .ie8 #header #header_logo
 	width: 350px

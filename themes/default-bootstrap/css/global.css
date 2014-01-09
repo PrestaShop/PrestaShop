@@ -587,7 +587,7 @@ pre {
 .col-sm-2,
 .col-sm-3,
 .col-sm-4,
-.row #header_logo,
+header .row #header_logo,
 .col-sm-5,
 .col-sm-6,
 .col-sm-7,
@@ -682,7 +682,7 @@ pre {
   .col-sm-2,
   .col-sm-3,
   .col-sm-4,
-  .row #header_logo,
+  header .row #header_logo,
   .col-sm-5,
   .col-sm-6,
   .col-sm-7,
@@ -701,7 +701,7 @@ pre {
   .col-sm-3 {
     width: 25%; }
 
-  .col-sm-4, .row #header_logo {
+  .col-sm-4, header .row #header_logo {
     width: 33.33333%; }
 
   .col-sm-5 {
@@ -5272,38 +5272,35 @@ header {
   z-index: 1;
   position: relative;
   background: white; }
-
-.banner {
-  background: black; }
-  .banner .row {
-    margin: 0px; }
-
-.nav {
-  background: #333333; }
-  .nav .row {
-    margin: 0px; }
-  .nav nav {
-    width: 100%; }
-    .nav nav #currencies-block-top {
-      float: right; }
-
-.row {
-  position: relative; }
-  .row > .container {
+  header .banner {
+    background: black; }
+    header .banner .row {
+      margin: 0px; }
+  header .nav {
+    background: #333333; }
+    header .nav .row {
+      margin: 0px; }
+    header .nav nav {
+      width: 100%; }
+      header .nav nav #currencies-block-top {
+        float: right; }
+  header .row {
     position: relative; }
-  .row #header_logo {
-    padding-top: 15px; }
-    .row #header_logo h1 {
-      text-indent: -9999px;
-      font-size: 0; }
-    @media (max-width: 992px) {
-      .row #header_logo {
-        padding-top: 40px; } }
-    @media (max-width: 767px) {
-      .row #header_logo {
-        padding-top: 15px; }
-        .row #header_logo img {
-          margin: 0 auto; } }
+    header .row > .container {
+      position: relative; }
+    header .row #header_logo {
+      padding-top: 15px; }
+      header .row #header_logo h1 {
+        text-indent: -9999px;
+        font-size: 0; }
+      @media (max-width: 992px) {
+        header .row #header_logo {
+          padding-top: 40px; } }
+      @media (max-width: 767px) {
+        header .row #header_logo {
+          padding-top: 15px; }
+          header .row #header_logo img {
+            margin: 0 auto; } }
 
 .ie8 #header #header_logo {
   width: 350px; }
