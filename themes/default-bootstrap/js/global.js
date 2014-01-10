@@ -23,10 +23,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 $('document').ready(function(){
-	if (typeof blockHover != 'undefined')
-		blockHover();
-	if (typeof reloadProductComparison != 'undefined')
-		reloadProductComparison();
+	blockHover();
+
 	if (typeof page_name != 'undefined' && !in_array(page_name, ['index', 'product']))
 	{
 		var view = $.totalStorage('display');
@@ -36,12 +34,13 @@ $('document').ready(function(){
 			display('grid');
 
 		$('.add_to_compare').click(function(e){
+			e.preventDefault();
 			if (typeof addToCompare != 'undefined')
 				addToCompare(parseInt($(this).data('id-product')));
-			e.preventDefault();
 		});
 	}
 });
+
 function blockHover(status) 
 {
 	$('.product_list.grid li.ajax_block_product').each(function() {
@@ -60,6 +59,7 @@ function blockHover(status)
 		}
 	)});	
 }
+
 function display(view)
 {
 	if (view == 'list')

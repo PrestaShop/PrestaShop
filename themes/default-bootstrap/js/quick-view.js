@@ -22,7 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-function quick_view() {
+$(document).ready(function() {
+	quick_view();
+});
+
+function quick_view()
+{
 	$('.quick-view').click(function() {
 		$.fancybox({
 			'padding':  0,
@@ -35,6 +40,3 @@ function quick_view() {
 		return false;
 	});
 }
-$(document).ready(function() {
-	quick_view();
-});

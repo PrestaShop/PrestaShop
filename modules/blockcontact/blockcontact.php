@@ -45,8 +45,8 @@ class Blockcontact extends Module
 	public function install()
 	{
 		return parent::install()
-			&& Configuration::updateValue('blockcontact_telnumber', '')
-			&& Configuration::updateValue('blockcontact_email', '')
+			&& Configuration::updateValue('BLOCKCONTACT_TELNUMBER', '')
+			&& Configuration::updateValue('BLOCKCONTACT_EMAIL', '')
 			&& $this->registerHook('displayNav')
 			&& $this->registerHook('displayHeader');
 	}
@@ -54,7 +54,7 @@ class Blockcontact extends Module
 	public function uninstall()
 	{
 		// Delete configuration
-		return Configuration::deleteByName('blockcontact_telnumber') && Configuration::deleteByName('blockcontact_email') && parent::uninstall();
+		return Configuration::deleteByName('BLOCKCONTACT_TELNUMBER') && Configuration::deleteByName('BLOCKCONTACT_EMAIL') && parent::uninstall();
 	}
 	
 	public function getContent()
@@ -63,8 +63,8 @@ class Blockcontact extends Module
 		// If we try to update the settings
 		if (Tools::isSubmit('submitModule'))
 		{				
-			Configuration::updateValue('blockcontact_telnumber', Tools::getValue('blockcontact_telnumber'));
-			Configuration::updateValue('blockcontact_email', Tools::getValue('blockcontact_email'));
+			Configuration::updateValue('BLOCKCONTACT_TELNUMBER', Tools::getValue('blockcontact_telnumber'));
+			Configuration::updateValue('BLOCKCONTACT_EMAIL', Tools::getValue('blockcontact_email'));
 			$this->_clearCache('blockcontact.tpl');
 			$this->_clearCache('nav.tpl');
 			$html .= $this->displayConfirmation($this->l('Configuration updated'));
@@ -155,8 +155,8 @@ class Blockcontact extends Module
 	public function getConfigFieldsValues()
 	{
 		return array(
-			'blockcontact_telnumber' => Tools::getValue('blockcontact_telnumber', Configuration::get('blockcontact_telnumber')),
-			'blockcontact_email' => Tools::getValue('blockcontact_email', Configuration::get('blockcontact_email')),
+			'blockcontact_telnumber' => Tools::getValue('blockcontact_telnumber', Configuration::get('BLOCKCONTACT_TELNUMBER')),
+			'blockcontact_email' => Tools::getValue('blockcontact_email', Configuration::get('BLOCKCONTACT_EMAIL')),
 		);
 	}
 }
