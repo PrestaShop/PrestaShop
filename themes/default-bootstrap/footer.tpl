@@ -52,6 +52,7 @@
 {addJsDef priceDisplayPrecision=$priceDisplayPrecision*$currency->decimals}
 {addJsDef priceDisplayMethod=$priceDisplay}
 {addJsDef roundMode=$roundMode}
-{addJsDef logged=$logged}
+{addJsDef logged=$logged|boolval}
 {addJsDef page_name=$page_name|escape:'html':'UTF-8'}
+{addJsDef contentOnly=$content_only|boolval}
 {/strip}

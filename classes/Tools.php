@@ -2812,6 +2812,13 @@ exit;
 
 		return round(pow(1024, $base - floor($base)), $precision).$suffixes[floor($base)];
 	}
+
+	public static function boolVal($value)
+	{
+		if (empty($value))
+			$value = false;
+		return (bool)$value;
+	}
 }
 
 /**

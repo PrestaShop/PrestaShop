@@ -183,7 +183,7 @@ var moderation_active = {$moderation_active};
 						{l s='Comment' mod='productcomments'}: <sup class="required">*</sup>
 					</label>
 					<textarea id="content" name="content"></textarea>
-					{if $allow_guests == true && $logged == 0}
+					{if $allow_guests == true && !$logged}
 						<label>
 							{l s='Your name' mod='productcomments'}: <sup class="required">*</sup>
 						</label>
