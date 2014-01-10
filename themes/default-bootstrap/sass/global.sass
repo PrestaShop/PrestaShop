@@ -2495,8 +2495,9 @@ div.star.star_hover
 	padding-left: 29px
 	// max 991px
 	@media (max-width: $screen-sm-max)
-		padding-left: 15px
-		padding-right: 15px
+		min-height: 348px
+		padding-left: 13px
+		padding-right: 13px
 	// max 767px
 	@media (max-width: $screen-xs-max)
 		width: 100%
@@ -2517,6 +2518,9 @@ div.star.star_hover
 		margin: 0 0 20px
 		font: 300 21px/25px $font-custom
 		color: lighten($base-heading-color, 10%)
+		// max 991px 
+		@media (max-width: $screen-sm-max)
+			font-size: 18px
 	.facebook-fanbox
 		background: $light-background
 		border: 1px solid #aaaaaa
@@ -2528,7 +2532,7 @@ div.star.star_hover
 		border: none
 		margin-top: 10px
 	> div
-		padding: 35px 0 0 0
+		padding: 35px 10px 0 0
 		// max 767px
 		@media (max-width: $screen-xs-max)
 			padding-top: 20px
