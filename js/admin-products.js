@@ -46,14 +46,6 @@ function ProductTabsManager(){
 				this.onLoad(tab_name, this.product_tabs[tab_name].onReady);
 		}
 
-		// @see with tDidierjean
-		//$(document).bind('change', function(){
-		//	if (self.current_request)
-		//	{
-		//		self.current_request.abort();
-		//	}
-		//});
-
 		$('.shopList.chzn-done').bind('change', function(){
 			if (self.current_request)
 			{
@@ -548,8 +540,8 @@ product_tabs['Combinations'] = new function(){
  */
 function disableSave()
 {
-		$('#desc-product-save').hide();
-		$('#desc-product-save-and-stay').hide();
+	$('#desc-product-save').hide();
+	$('#desc-product-save-and-stay').hide();
 }
 
 /**
@@ -615,23 +607,15 @@ function handleSaveButtons(e)
 	}
 }
 
-function handleSaveButtonsForSimple()
-{
-	return "";
-}
-
-function handleSaveButtonsForVirtual()
-{
-	return "";
-}
+function handleSaveButtonsForSimple(){return '';}
+function handleSaveButtonsForVirtual(){return '';}
 
 function handleSaveButtonsForPack()
 {
 	// if no item left in the pack, disable save buttons
 	if ($("#inputPackItems").val() == "")
 		return empty_pack_msg;
-	else
-		return "";
+	return '';
 }
 
 product_tabs['Seo'] = new function(){
@@ -1485,7 +1469,7 @@ product_tabs['VirtualProduct'] = new function(){
 			$('#is_virtual_file_product').hide();
 
 		$('input[name=is_virtual_file]').live('change', function(e) {
-			if($(this).prop('checked'))
+			if ($(this).prop('checked'))
 				$('#is_virtual_file_product').show();
 			else
 				$('#is_virtual_file_product').hide();

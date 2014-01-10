@@ -44,13 +44,13 @@ class blocksocial extends Module
 	
 	public function install()
 	{
-		return (parent::install() AND Configuration::updateValue('blocksocial_facebook', '') && Configuration::updateValue('blocksocial_twitter', '') && Configuration::updateValue('blocksocial_rss', '') && $this->registerHook('displayHeader') && $this->registerHook('displayFooter'));
+		return (parent::install() AND Configuration::updateValue('BLOCKSOCIAL_FACEBOOK', '') && Configuration::updateValue('BLOCKSOCIAL_TWITTER', '') && Configuration::updateValue('BLOCKSOCIAL_RSS', '') && $this->registerHook('displayHeader') && $this->registerHook('displayFooter'));
 	}
 	
 	public function uninstall()
 	{
-		//Delete configuration			
-		return (Configuration::deleteByName('blocksocial_facebook') AND Configuration::deleteByName('blocksocial_twitter') AND Configuration::deleteByName('blocksocial_rss') AND parent::uninstall());
+		//Delete configuration
+		return (Configuration::deleteByName('BLOCKSOCIAL_FACEBOOK') AND Configuration::deleteByName('BLOCKSOCIAL_TWITTER') AND Configuration::deleteByName('BLOCKSOCIAL_RSS') AND parent::uninstall());
 	}
 	
 	public function getContent()
@@ -59,12 +59,12 @@ class blocksocial extends Module
 		$output = '';
 		if (Tools::isSubmit('submitModule'))
 		{	
-			Configuration::updateValue('blocksocial_facebook', (($_POST['blocksocial_facebook'] != '') ? $_POST['blocksocial_facebook']: ''));
-			Configuration::updateValue('blocksocial_twitter', (($_POST['blocksocial_twitter'] != '') ? $_POST['blocksocial_twitter']: ''));		
-			Configuration::updateValue('blocksocial_rss', (($_POST['blocksocial_rss'] != '') ? $_POST['blocksocial_rss']: ''));
-			Configuration::updateValue('blocksocial_youtube', (($_POST['blocksocial_youtube'] != '') ? $_POST['blocksocial_youtube']: ''));
-			Configuration::updateValue('blocksocial_google_plus', (($_POST['blocksocial_google_plus'] != '') ? $_POST['blocksocial_google_plus']: ''));
-			Configuration::updateValue('blocksocial_pinterest', (($_POST['blocksocial_pinterest'] != '') ? $_POST['blocksocial_pinterest']: ''));				
+			Configuration::updateValue('BLOCKSOCIAL_FACEBOOK', (($_POST['blocksocial_facebook'] != '') ? $_POST['blocksocial_facebook']: ''));
+			Configuration::updateValue('BLOCKSOCIAL_TWITTER', (($_POST['blocksocial_twitter'] != '') ? $_POST['blocksocial_twitter']: ''));
+			Configuration::updateValue('BLOCKSOCIAL_RSS', (($_POST['blocksocial_rss'] != '') ? $_POST['blocksocial_rss']: ''));
+			Configuration::updateValue('BLOCKSOCIAL_YOUTUBE', (($_POST['blocksocial_youtube'] != '') ? $_POST['blocksocial_youtube']: ''));
+			Configuration::updateValue('BLOCKSOCIAL_GOOGLE_PLUS', (($_POST['blocksocial_google_plus'] != '') ? $_POST['blocksocial_google_plus']: ''));
+			Configuration::updateValue('BLOCKSOCIAL_PINTEREST', (($_POST['blocksocial_pinterest'] != '') ? $_POST['blocksocial_pinterest']: ''));
 			$this->_clearCache('blocksocial.tpl');
 			$output .= $this->displayConfirmation($this->l('Configuration updated'));
 		}
@@ -81,12 +81,12 @@ class blocksocial extends Module
 	{
 		if (!$this->isCached('blocksocial.tpl', $this->getCacheId()))
 			$this->smarty->assign(array(
-				'facebook_url' => Configuration::get('blocksocial_facebook'),
-				'twitter_url' => Configuration::get('blocksocial_twitter'),
-				'rss_url' => Configuration::get('blocksocial_rss'),
-				'youtube_url' => Configuration::get('blocksocial_youtube'),
-				'google_plus_url' => Configuration::get('blocksocial_google_plus'),
-				'pinterest_url' => Configuration::get('blocksocial_pinterest'),
+				'facebook_url' => Configuration::get('BLOCKSOCIAL_FACEBOOK'),
+				'twitter_url' => Configuration::get('BLOCKSOCIAL_TWITTER'),
+				'rss_url' => Configuration::get('BLOCKSOCIAL_RSS'),
+				'youtube_url' => Configuration::get('BLOCKSOCIAL_YOUTUBE'),
+				'google_plus_url' => Configuration::get('BLOCKSOCIAL_GOOGLE_PLUS'),
+				'pinterest_url' => Configuration::get('BLOCKSOCIAL_PINTEREST'),
 			));
 
 		return $this->display(__FILE__, 'blocksocial.tpl', $this->getCacheId());
@@ -166,12 +166,12 @@ class blocksocial extends Module
 	public function getConfigFieldsValues()
 	{
 		return array(
-			'blocksocial_facebook' => Tools::getValue('blocksocial_facebook', Configuration::get('blocksocial_facebook')),
-			'blocksocial_twitter' => Tools::getValue('blocksocial_twitter', Configuration::get('blocksocial_twitter')),
-			'blocksocial_rss' => Tools::getValue('blocksocial_rss', Configuration::get('blocksocial_rss')),
-			'blocksocial_youtube' => Tools::getValue('blocksocial_youtube', Configuration::get('blocksocial_youtube')),
-			'blocksocial_google_plus' => Tools::getValue('blocksocial_google_plus', Configuration::get('blocksocial_google_plus')),
-			'blocksocial_pinterest' => Tools::getValue('blocksocial_pinterest', Configuration::get('blocksocial_pinterest')),
+			'blocksocial_facebook' => Tools::getValue('blocksocial_facebook', Configuration::get('BLOCKSOCIAL_FACEBOOK')),
+			'blocksocial_twitter' => Tools::getValue('blocksocial_twitter', Configuration::get('BLOCKSOCIAL_TWITTER')),
+			'blocksocial_rss' => Tools::getValue('blocksocial_rss', Configuration::get('BLOCKSOCIAL_RSS')),
+			'blocksocial_youtube' => Tools::getValue('blocksocial_youtube', Configuration::get('BLOCKSOCIAL_YOUTUBE')),
+			'blocksocial_google_plus' => Tools::getValue('blocksocial_google_plus', Configuration::get('BLOCKSOCIAL_GOOGLE_PLUS')),
+			'blocksocial_pinterest' => Tools::getValue('blocksocial_pinterest', Configuration::get('BLOCKSOCIAL_PINTEREST')),
 		);
 	}
 

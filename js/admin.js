@@ -355,74 +355,7 @@ function noComma(elem)
  	getE(elem).value = getE(elem).value.replace(new RegExp(',', 'g'), '.');
 }
 
-/* Help boxes */
-if (typeof helpboxes != 'undefined' && helpboxes)
-{
-	$(function()
-	{
-		if ($('input'))
-		{
-			//Display by rollover
-			$('input').focusin(function(){$(this).parent().find('.hint:first').css('display', 'block');});
-			$('input').focusout(function(){$(this).parent().find('.hint:first').css('display', 'none');});
-
-			//display when you press the tab key
-			$('input').keydown(function(e){
-				if (e.keyCode === 9)
-				{
-					$('input').focus(function() {$(this).parent().find('.hint:first').css('display', 'block');});
-					$('input').blur(function() {$(this).parent().find('.hint:first').css('display', 'none');});
-				}
-			});
-		}
-		if ($('select'))
-		{
-			//Display by rollover
-			$('select').focusin(function(){$(this).parent().find('.hint:first').css('display', 'block');});
-			$('select').focusout(function(){$(this).parent().find('.hint:first').css('display', 'none');});
-
-			//display when you press the tab key
-			$('select').keydown(function (e){
-				if (e.keyCode === 9)
-				{
-					$('select').focus(function(){$(this).parent().find('.hint:first').css('display', 'block');});
-					$('select').blur(function(){$(this).parent().find('.hint:first').css('display', 'none');});
-				}
-			});
-		}
-		if ($('span.title_box'))
-		{
-			//Display by rollover
-			$('span.title_box').focusin(function() {
-				//get reference to the hint box
-				var parent = $(this).parent();
-				var box = parent.find('.hint:first');
-
-				if (box.length > 0)
-				{
-					//gets parent position
-					var left_position = parent.offset().left;
-
-					//gets width of the box
-					var box_width = box.width();
-
-					//gets width of the screen
-					var document_width = $(document).width();
-
-					//changes position of the box if needed
-					if (document_width < (left_position + box_width))
-						box.css('margin-left', '-' + box_width + 'px');
-
-					//shows the box
-					box.css('display', 'block');
-				}
-			});
-			$('span.title_box').focusout(function(){$(this).parent().find('.hint:first').css('display', 'none');});
-		}
-	});
-}
-
-/* Code generator for Affiliation and vourchers */
+/* Code generator for Affiliation and vouchers */
 function gencode(size)
 {
 	getE('code').value = '';
@@ -431,39 +364,17 @@ function gencode(size)
 		getE('code').value += chars.charAt(Math.floor(Math.random() * chars.length));
 }
 
-function free_shipping()
-{
-	if (getE('id_discount_type').value == 3 && getE('discount_value').value == '')
-		getE('discount_value').value = '0';
-}
-
-var newWin = null;
-
-function closeWin ()
-{
-	if (newWin != null)
-		if (!newWin.closed)
-			newWin.close();
-}
-
-function openWin(url, title, width, height, top, left)
-{
-	var options;
-	var sizes;
-
-	closeWin();
-	options = 'toolbar=0, location=0, directories=0, statfr=no, menubar=0, scrollbars=yes, resizable=yes';
-	sizes = 'width='+width+', height='+height+', top='+top+', left='+left+'';
-	newWin = window.open(url, title, options+', '+sizes);
-	newWin.focus();
-}
-
+var tpl_viewing_window = null;
 function viewTemplates(id_select, prefix, ext)
 {
 	var loc = $(id_select).val();
 	if (loc != 0)
-		openWin (prefix+loc+ext, 'tpl_viewing', '520', '400', '50', '300');
-	return ;
+	{
+		if (tpl_viewing_window != null && !tpl_viewing_window.closed)
+			tpl_viewing_window.close();
+		tpl_viewing_window = window.open(prefix + loc + ext, 'tpl_viewing', 'toolbar=0,location=0,directories=0,statfr=no,menubar=0,scrollbars=yes,resizable=yes,width=520,height=400,top=50,left=300');
+		tpl_viewing_window.focus();
+	}
 }
 
 function validateImportation(mandatory)
@@ -503,12 +414,6 @@ function validateImportation(mandatory)
 			}
 			return false
 		}
-}
-
-function chooseTypeTranslation(id_lang)
-{
-	getE('translation_lang').value = id_lang;
-	document.getElementById('typeTranslationForm').submit();
 }
 
 function orderDeleteProduct(txtConfirm, txtExplain)
@@ -783,7 +688,7 @@ function doAdminAjax(data, success_func, error_func)
 				return success_func(data);
 
 			data = $.parseJSON(data);
-			if(data.confirmations.length != 0)
+			if (data.confirmations.length != 0)
 				showSuccessMessage(data.confirmations);
 			else
 				showErrorMessage(data.error);
@@ -835,13 +740,13 @@ $(document).ready(function()
 	});
 
 	$(document).on('keyup change', '.copy2friendlyUrl', function(e){
-		if(!isArrowKey(e))
+		if (!isArrowKey(e))
 			return copy2friendlyURL();
 	});
 
 	// on live will make this binded for dynamic content
 	$(document).on('keyup change', '.updateCurrentText', function(e){
-		if(typeof e == KeyboardEvent)
+		if (typeof e == KeyboardEvent)
 			if(isArrowKey(e))
 				return;
 
@@ -849,7 +754,7 @@ $(document).ready(function()
 	});
 
 	$(document).on('keyup change', '.copyMeta2friendlyURL', function(e){
-		if(!isArrowKey(e))
+		if (!isArrowKey(e))
 			return copyMeta2friendlyURL()
 	});
 
@@ -1057,8 +962,7 @@ function display_action_details(row_id, controller, token, action, params)
 			'ajax': true
 		};
 
-		$.each(params, function(k, v)
-		{
+		$.each(params, function(k, v) {
 			ajax_params[k] = v;
 		});
 
@@ -1131,7 +1035,7 @@ function display_action_details(row_id, controller, token, action, params)
 					current_element.parent().parent().after(content);
 					current_element.parent().parent().parent().find('.details_'+id).hide();
 				}
-				current_element.data('dataMaped',true);
+				current_element.data('dataMaped', true);
 				current_element.data('opened', false);
 				
 				if (typeof(initTableDnD) != 'undefined')
@@ -1164,9 +1068,6 @@ function quickSelect(elt)
 	else
 		location.href = eltVal;
 }
-
-
-//New Admin fonctions
 
 function hideOtherLanguage(id)
 {
@@ -1224,7 +1125,7 @@ function openModulesList() {
 	return false;
 }
 
-function ajaxStates (id_state_selected)
+function ajaxStates(id_state_selected)
 {
 	$.ajax({
 		url: "index.php",
@@ -1260,35 +1161,6 @@ function ajaxStates (id_state_selected)
 			}
 		});
 	}
-}
-
-var query;
-var lang = Array();
-
-function setLang(array_lang) { lang = array_lang; }
-
-function getQuery() {
- 	var result;
- 	
- 	result = query;
- 	if (result == null) {
- 		if (window.XMLHttpRequest)
- 			result = new XMLHttpRequest();
- 		else if (window.ActiveXObject)
-		 	result = new ActiveXObject('Microsoft.XMLHTTP');
- 	}
- 	return result;
-}
-
-function onQueryChange() {
- 	if (query.readyState == 4 && query.status == 200)
- 		document.getElementById('ajax_confirmation').innerHTML = '<span class="green bold">'+lang[0]+'</span>';
-}
-
-function request_failed() { alert(lang[1]); }
-
-function showActivity() {
- 	document.getElementById('ajax_confirmation').innerHTML = '<span class="bold">'+lang[2]+'</span>';
 }
 
 function check_for_all_accesses(tabsize, tabnumber)
@@ -1342,24 +1214,98 @@ function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, tabl
 	check_for_all_accesses(tabsize, tabnumber);
 }
 
-function ajax_power(src, action, id_tab, id_profile, token, tabsize, tabnumber)
+verifMailREGEX = /^([\w+-]+(?:\.[\w+-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+function verifyMail(testMsg, testSubject)
 {
-	query = getQuery();
-	perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber);
-	if (query != null) {
-	 	try {
-		 	query.open('POST', 'index.php?tab=AdminAccess', true);
-		 	query.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-		 	query.onreadystatechange = onQueryChange;
-		 	query.send('submitAddaccess=1&action='+action+'&perm='+parseInt(src.checked ? '1' : status = '0')+'&id_tab='+parseInt(id_tab)+'&id_profile='+parseInt(id_profile)+'&token='+token);
-		 	showActivity();
-		}
-		catch(exc) {
-			request_failed();
-		}
+	$("#mailResultCheck").removeClass("alert-danger").removeClass('alert-success').html('<img src="../img/admin/ajax-loader.gif" alt="" />');
+	$("#mailResultCheck").slideDown("slow");
+
+	//local verifications
+	if ($("#testEmail[value=]").length > 0)
+	{
+		$("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(errorMail);
+		return false;
+	}
+	else if (!verifMailREGEX.test( $("#testEmail").val() ))
+	{
+		$("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(errorMail);
+		return false;
 	}
 	else
-		alert(lang[3]);
+	{
+		//external verifications and sets
+		$.ajax(
+		{
+		   url: "index.php",
+		   cache: false,
+		   type : "POST",
+		   data:
+			{
+				"mailMethod"	: (($("input[name=PS_MAIL_METHOD]:checked").val() == 2) ? "smtp" : "native"),
+				"smtpSrv"		: $("input[name=PS_MAIL_SERVER]").val(),
+				"testEmail"		: $("#testEmail").val(),
+				"smtpLogin"		: $("input[name=PS_MAIL_USER]").val(),
+				"smtpPassword"	: $("input[name=PS_MAIL_PASSWD]").val(),
+				"smtpPort"		: $("input[name=PS_MAIL_SMTP_PORT]").val(),
+				"smtpEnc"		: $("select[name=PS_MAIL_SMTP_ENCRYPTION]").val(),
+				"testMsg"		: textMsg,
+				"testSubject"	: textSubject,
+				"token"			: token_mail,
+				"ajax"			: 1,
+				"tab"				: 'AdminEmails',
+				"action"			: 'sendMailTest'
+			},
+		   success: function(ret)
+		   {
+				if (ret == "ok")
+				{
+					$("#mailResultCheck").addClass("alert-success").removeClass("alert-danger").removeClass('userInfos').html(textSendOk);
+					mailIsOk = true;
+				}
+				else
+				{
+					mailIsOk = false;
+					$("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(textSendError + '<br />' + ret);
+				}
+		   }
+		 }
+		 );
+	}
+}
+
+function checkLangPack(token){
+	if ($('#iso_code').val().length == 2)
+	{
+		$('#lang_pack_loading').show();
+		$('#lang_pack_msg').hide();
+		doAdminAjax(
+			{
+				controller:'AdminLanguages',
+				action:'checkLangPack',
+				token:token,
+				ajax:1,
+				iso_lang:($('#iso_code').val()).toLowerCase(), 
+				ps_version:$('#ps_version').val()
+			},
+			function(ret)
+			{
+				$('#lang_pack_loading').hide();
+				ret = $.parseJSON(ret);
+				if( ret.status == 'ok')
+				{
+					content = $.parseJSON(ret.content);
+					message = langPackOk + ' <b>'+content['name'] + '</b>) :'
+						+'<br />' + langPackVersion + ' ' + content['version']
+						+ ' <a href="http://www.prestashop.com/download/lang_packs/gzip/' + content['version'] + '/'
+						+ ($('#iso_code').val()).toLowerCase()+'.gzip" target="_blank" class="link">'+download+'</a><br />' + langPackInfo;
+					$('#lang_pack_msg').html(message);
+					$('#lang_pack_msg').show();
+				}
+				else
+					showErrorMessage(ret.error);
+			}
+		 );
+	 }
 }
 
 function redirect(new_page) { window.location = new_page; }
