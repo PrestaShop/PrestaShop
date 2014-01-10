@@ -50,7 +50,7 @@ class StatsForecast extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Stats Dashboard');
-		$this->description = '';
+		$this->description = 'This is the main module for the Stats dashboard. It displays a summary of all your current statistics.';
 	}
 
 	public function install()
@@ -134,9 +134,9 @@ class StatsForecast extends Module
 						<input type="hidden" name="submitGranularity" value="1" />
 						<select name="stats_granularity" onchange="this.form.submit();">
 							<option value="10">'.$this->l('Per Day').'</option>
-							<option value="42" '.($this->context->cookie->stats_granularity == '42' ? 'selected="selected"' : '').'>'.$this->l('Per Week').'</option>
-							<option value="7" '.($this->context->cookie->stats_granularity == '7' ? 'selected="selected"' : '').'>'.$this->l('Per Month').'</option>
-							<option value="4" '.($this->context->cookie->stats_granularity == '4' ? 'selected="selected"' : '').'>'.$this->l('Per Year').'</option>
+							<option value="42" '.($this->context->cookie->stats_granularity == '42' ? 'selected="selected"' : '').'>'.$this->l('Per week').'</option>
+							<option value="7" '.($this->context->cookie->stats_granularity == '7' ? 'selected="selected"' : '').'>'.$this->l('Per month').'</option>
+							<option value="4" '.($this->context->cookie->stats_granularity == '4' ? 'selected="selected"' : '').'>'.$this->l('Per year').'</option>
 						</select>
 					</div>
 				</div>
@@ -317,7 +317,7 @@ class StatsForecast extends Module
 							<p>'.round(100 * $orders / max(1, $fullcarts)).' %</p>
 						</td>
 						<td rowspan="2" class="center">
-							<p>'.$this->l('orders').'</p>
+							<p>'.$this->l('Orders').'</p>
 							<p>'.$orders.'</p>
 						</td>
 						<td rowspan="2" class="center">
@@ -333,7 +333,7 @@ class StatsForecast extends Module
 							<i class="icon-chevron-right"></i>
 						</td>
 						<td rowspan="2" class="center">
-							<p>'.$this->l('orders').'</p>
+							<p>'.$this->l('Orders').'</p>
 						</td>
 						<td rowspan="2" class="center">
 							<p>'.$this->l('Visitors').'</p>
@@ -429,7 +429,7 @@ class StatsForecast extends Module
 				<form id="cat" action="'.$ru.'#cat" method="post" class="form-horizontal">
 					<div class="row row-margin-bottom">
 						<label class="control-label col-lg-3">
-							'.$this->l('Zone:').'
+							'.$this->l('Zone').'
 						</label>
 						<div class="col-lg-3">
 							<input type="hidden" name="submitIdZone" value="1" />

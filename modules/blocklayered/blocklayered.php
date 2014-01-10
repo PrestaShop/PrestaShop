@@ -3012,18 +3012,17 @@ class BlockLayered extends Module
 	public function getProducts($selected_filters, &$products, &$nb_products, &$p, &$n, &$pages_nb, &$start, &$stop, &$range)
 	{
 		global $cookie;
-		
+
 		$products = $this->getProductByFilters($selected_filters);
-		$products = Product::getProductsProperties((int)$cookie->id_lang, $products);
 		$nb_products = $this->nbr_products;
 		$range = 2; /* how many pages around page selected */
-		
+
 		$n = (int)Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'));
 		$p = $this->page;
-		
+
 		if ($p < 0)
 			$p = 0;
-		
+
 		if ($p > ($nb_products / $n))
 			$p = ceil($nb_products / $n);
 		$pages_nb = ceil($nb_products / (int)($n));
@@ -3031,7 +3030,7 @@ class BlockLayered extends Module
 		$start = (int)($p - $range);
 		if ($start < 1)
 			$start = 1;
-			
+
 		$stop = (int)($p + $range);
 		if ($stop > $pages_nb)
 			$stop = (int)($pages_nb);

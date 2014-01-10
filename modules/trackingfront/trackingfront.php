@@ -40,7 +40,7 @@ class TrackingFront extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Tracking - Front office');
-		$this->description = $this->l('Enable your affiliates to access their own statistics.');
+		$this->description = $this->l('Enable your affiliates to access their own statistics. See Stats/Referers.');
 	}
 	
 	public function postProcess()

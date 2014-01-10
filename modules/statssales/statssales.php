@@ -46,7 +46,7 @@ class StatsSales extends ModuleGraph
 		parent::__construct();
 		
 		$this->displayName = $this->l('Sales and orders');
-		$this->description = $this->l('Display sales evolution and orders by status.');
+		$this->description = $this->l('Adds sales evolution and orders by status.');
 	}
 	
 	public function install()
@@ -78,7 +78,7 @@ class StatsSales extends ModuleGraph
 				</p>
 			</div>
 			<div class="alert alert-info">
-				<p>'.$this->l('The following graphs represent the evolution of your e-store\'s orders and sales turnover for a selected period. This tool is one that you should use often as it allows you to quickly monitor your store\'s viability. This feature also allows you to monitor multiple time periods, and only valid orders are graphically represented.').'</p>
+				<p>'.$this->l('The following graphs represent the evolution of your e-store\'s orders and sales turnover for a selected period. This tool is one that you should use often as it allows you to quickly monitor your store\'s viability. This tool also allows you to monitor multiple time periods, and only valid orders are graphically represented.').'</p>
 			</div>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" class="form-horizontal alert">
 				<div class="row">
