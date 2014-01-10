@@ -355,86 +355,13 @@ function noComma(elem)
  	getE(elem).value = getE(elem).value.replace(new RegExp(',', 'g'), '.');
 }
 
-/* Help boxes */
-if (typeof helpboxes != 'undefined' && helpboxes)
-{
-	$(function()
-	{
-		if ($('input'))
-		{
-			//Display by rollover
-			$('input').focusin(function(){$(this).parent().find('.hint:first').css('display', 'block');});
-			$('input').focusout(function(){$(this).parent().find('.hint:first').css('display', 'none');});
-
-			//display when you press the tab key
-			$('input').keydown(function(e){
-				if (e.keyCode === 9)
-				{
-					$('input').focus(function() {$(this).parent().find('.hint:first').css('display', 'block');});
-					$('input').blur(function() {$(this).parent().find('.hint:first').css('display', 'none');});
-				}
-			});
-		}
-		if ($('select'))
-		{
-			//Display by rollover
-			$('select').focusin(function(){$(this).parent().find('.hint:first').css('display', 'block');});
-			$('select').focusout(function(){$(this).parent().find('.hint:first').css('display', 'none');});
-
-			//display when you press the tab key
-			$('select').keydown(function (e){
-				if (e.keyCode === 9)
-				{
-					$('select').focus(function(){$(this).parent().find('.hint:first').css('display', 'block');});
-					$('select').blur(function(){$(this).parent().find('.hint:first').css('display', 'none');});
-				}
-			});
-		}
-		if ($('span.title_box'))
-		{
-			//Display by rollover
-			$('span.title_box').focusin(function() {
-				//get reference to the hint box
-				var parent = $(this).parent();
-				var box = parent.find('.hint:first');
-
-				if (box.length > 0)
-				{
-					//gets parent position
-					var left_position = parent.offset().left;
-
-					//gets width of the box
-					var box_width = box.width();
-
-					//gets width of the screen
-					var document_width = $(document).width();
-
-					//changes position of the box if needed
-					if (document_width < (left_position + box_width))
-						box.css('margin-left', '-' + box_width + 'px');
-
-					//shows the box
-					box.css('display', 'block');
-				}
-			});
-			$('span.title_box').focusout(function(){$(this).parent().find('.hint:first').css('display', 'none');});
-		}
-	});
-}
-
-/* Code generator for Affiliation and vourchers */
+/* Code generator for Affiliation and vouchers */
 function gencode(size)
 {
 	getE('code').value = '';
 	var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	for (var i = 1; i <= size; ++i)
 		getE('code').value += chars.charAt(Math.floor(Math.random() * chars.length));
-}
-
-function free_shipping()
-{
-	if (getE('id_discount_type').value == 3 && getE('discount_value').value == '')
-		getE('discount_value').value = '0';
 }
 
 var newWin = null;
@@ -503,12 +430,6 @@ function validateImportation(mandatory)
 			}
 			return false
 		}
-}
-
-function chooseTypeTranslation(id_lang)
-{
-	getE('translation_lang').value = id_lang;
-	document.getElementById('typeTranslationForm').submit();
 }
 
 function orderDeleteProduct(txtConfirm, txtExplain)
