@@ -3,11 +3,11 @@
 <theme version="1.0" name="default-bootstrap" directory="default-bootstrap">
     <author name="Emilien Puget" email="emilien.puget@prestashop.com" url="http://localhost"/>
     <descriptions>
-        <description iso="fr"></description>
+        <description iso="en"></description>
     </descriptions>
     <variations>
         <variation name="default-bootstrap" directory="default-bootstrap" responsive="1" default_left_column="1"
-                   default_right_column="0" product_per_page="12" from="1.6.0.2" to="1.6.0.2"/>
+                   default_right_column="0" product_per_page="12" from="1.6.0.3" to="1.6.0.3"/>
     </variations>
     <docs>
         <doc name="documentation" path="doc/"/>
@@ -44,20 +44,18 @@
         <meta meta_page="product" left="0" right="0"/>
     </metas>
     <modules>
-        <module action="install" name="socialsharing"/>
-        <module action="install" name="blockbanner"/>
-        <module action="install" name="blockfacebook"/>
-        <module action="install" name="blockcmsinfo"/>
-        <module action="install" name="productpaymentlogos"/>
-        <module action="install" name="themeconfigurator"/>
+        <module action="enable" name="socialsharing"/>
+        <module action="enable" name="blockbanner"/>
         <module action="enable" name="blockbestsellers"/>
         <module action="enable" name="blockcart"/>
         <module action="enable" name="blocksocial"/>
         <module action="enable" name="blockcategories"/>
         <module action="enable" name="blockcurrencies"/>
+        <module action="enable" name="blockfacebook"/>
         <module action="enable" name="blocklanguages"/>
         <module action="enable" name="blocklayered"/>
         <module action="enable" name="blockcms"/>
+        <module action="enable" name="blockcmsinfo"/>
         <module action="enable" name="blockcontact"/>
         <module action="enable" name="blockcontactinfos"/>
         <module action="enable" name="blockmanufacturer"/>
@@ -80,8 +78,9 @@
         <module action="enable" name="dashproducts"/>
         <module action="enable" name="homeslider"/>
         <module action="enable" name="homefeatured"/>
+        <module action="enable" name="productpaymentlogos"/>
         <module action="enable" name="statsdata"/>
-        <module action="enable" name="themeinstallator"/>
+        <module action="enable" name="themeconfigurator"/>
         <module action="enable" name="blockwishlist"/>
         <module action="enable" name="productcomments"/>
         <module action="enable" name="sendtoafriend"/>
@@ -93,10 +92,13 @@
         <module action="disable" name="blockrss"/>
         <module action="disable" name="blocksharefb"/>
         <module action="disable" name="crossselling"/>
+        <module action="disable" name="editorial"/>
         <module action="disable" name="loyalty"/>
         <module action="disable" name="mailalerts"/>
         <module action="disable" name="productscategory"/>
         <module action="disable" name="producttooltip"/>
+        <module action="disable" name="referralprogram"/>
+        <module action="disable" name="themeinstallator"/>
         <module action="disable" name="trackingfront"/>
         <module action="disable" name="vatnumber"/>
         <hooks>
@@ -107,18 +109,8 @@
             <hook module="socialsharing" hook="displayCompareExtraInformation" position="1"/>
             <hook module="blockbanner" hook="displayHeader" position="2"/>
             <hook module="blockbanner" hook="displayBanner" position="1"/>
-            <hook module="blockfacebook" hook="displayHome" position="2"/>
-            <hook module="blockfacebook" hook="displayHeader" position="8"/>
-            <hook module="blockcmsinfo" hook="displayHome" position="3"/>
-            <hook module="productpaymentlogos" hook="displayHeader" position="29"/>
-            <hook module="productpaymentlogos" hook="displayProductButtons" position="1"/>
-            <hook module="themeconfigurator" hook="displayLeftColumn" position="12"
-                  exceptions="contact,auth,discount,identity,order,addresses,sitemap,password,cms,index,orderslip,myaccount,cart,product,address,orderopc,pagenotfound,stores,orderfollow"/>
-            <hook module="themeconfigurator" hook="displayHome" position="1"/>
-            <hook module="themeconfigurator" hook="displayHeader" position="30"/>
-            <hook module="themeconfigurator" hook="displayFooter" position="9"/>
-            <hook module="themeconfigurator" hook="displayBackOfficeHeader" position="2"/>
-            <hook module="themeconfigurator" hook="displayTopColumn" position="2"/>
+            <hook module="blockbestsellers" hook="displayLeftColumn" position="1"
+                  exceptions="myaccount,cart,product,address,orderopc,pagenotfound,stores,orderfollow,contact,auth,discount,identity,order,addresses,sitemap,password,cms,index,orderslip"/>
             <hook module="blockbestsellers" hook="displayHeader" position="3"/>
             <hook module="blockbestsellers" hook="actionProductAdd" position="1"/>
             <hook module="blockbestsellers" hook="actionProductUpdate" position="1"/>
@@ -131,8 +123,8 @@
             <hook module="blockcart" hook="actionCartListOverride" position="1"/>
             <hook module="blocksocial" hook="displayHeader" position="5"/>
             <hook module="blocksocial" hook="displayFooter" position="2"/>
-            <hook module="blockcategories" hook="displayLeftColumn" position="1"
-                  exceptions="product,cart,address,orderopc,pagenotfound,stores,orderfollow,contact,discount,auth,identity,order,addresses,sitemap,password,cms,orderslip,index,myaccount"/>
+            <hook module="blockcategories" hook="displayLeftColumn" position="2"
+                  exceptions="pagenotfound,stores,orderfollow,auth,contact,discount,identity,order,addresses,sitemap,password,index,cms,orderslip,myaccount,cart,product,address,orderopc"/>
             <hook module="blockcategories" hook="displayHeader" position="6"/>
             <hook module="blockcategories" hook="displayFooter" position="3"/>
             <hook module="blockcategories" hook="actionCategoryAdd" position="1"/>
@@ -143,13 +135,14 @@
             <hook module="blockcategories" hook="actionAdminLanguagesControllerStatusBefore" position="1"/>
             <hook module="blockcurrencies" hook="displayHeader" position="7"/>
             <hook module="blockcurrencies" hook="displayNav" position="2"/>
+            <hook module="blockfacebook" hook="displayHome" position="2"/>
+            <hook module="blockfacebook" hook="displayHeader" position="8"/>
             <hook module="blocklanguages" hook="displayHeader" position="9"/>
             <hook module="blocklanguages" hook="displayNav" position="3"/>
-            <hook module="blocklayered" hook="displayLeftColumn" position="2"
-                  exceptions="stores,orderfollow,contact,auth,discount,identity,order,addresses,sitemap,password,index,cms,orderslip,myaccount,cart,product,address,orderopc,pagenotfound"/>
+            <hook module="blocklayered" hook="displayLeftColumn" position="3"
+                  exceptions="identity,order,addresses,sitemap,password,cms,orderslip,index,myaccount,product,cart,address,orderopc,pagenotfound,stores,orderfollow,contact,discount,auth"/>
             <hook module="blocklayered" hook="displayHeader" position="10"/>
             <hook module="blocklayered" hook="displayFooter" position="3"/>
-            <hook module="blocklayered" hook="displayBackOfficeHeader" position="1"/>
             <hook module="blocklayered" hook="actionCategoryAdd" position="2"/>
             <hook module="blocklayered" hook="actionCategoryUpdate" position="2"/>
             <hook module="blocklayered" hook="actionCategoryDelete" position="2"/>
@@ -171,26 +164,27 @@
             <hook module="blocklayered" hook="actionAttributePostProcess" position="1"/>
             <hook module="blocklayered" hook="actionAttributeDelete" position="1"/>
             <hook module="blocklayered" hook="actionAttributeSave" position="1"/>
-            <hook module="blockcms" hook="displayLeftColumn" position="3"
-                  exceptions="order,addresses,sitemap,password,cms,index,orderslip,myaccount,cart,product,address,orderopc,pagenotfound,stores,orderfollow,contact,auth,discount,identity"/>
+            <hook module="blockcms" hook="displayLeftColumn" position="4"
+                  exceptions="cms,index,orderslip,myaccount,cart,product,address,orderopc,pagenotfound,stores,orderfollow,contact,auth,discount,identity,order,addresses,sitemap,password"/>
             <hook module="blockcms" hook="displayHeader" position="11"/>
             <hook module="blockcms" hook="displayFooter" position="4"/>
             <hook module="blockcms" hook="actionObjectCmsUpdateAfter" position="1"/>
             <hook module="blockcms" hook="actionObjectCmsDeleteAfter" position="1"/>
             <hook module="blockcms" hook="actionShopDataDuplication" position="1"/>
             <hook module="blockcms" hook="actionAdminStoresControllerUpdate_optionsAfter" position="1"/>
+            <hook module="blockcmsinfo" hook="displayHome" position="3"/>
             <hook module="blockcontact" hook="displayHeader" position="12"/>
             <hook module="blockcontact" hook="displayNav" position="4"/>
             <hook module="blockcontactinfos" hook="displayHeader" position="13"/>
             <hook module="blockcontactinfos" hook="displayFooter" position="6"/>
-            <hook module="blockmanufacturer" hook="displayLeftColumn" position="4"
-                  exceptions="orderslip,index,myaccount,product,cart,address,orderopc,pagenotfound,stores,orderfollow,contact,discount,auth,identity,order,addresses,sitemap,password,cms"/>
+            <hook module="blockmanufacturer" hook="displayLeftColumn" position="5"
+                  exceptions="orderopc,pagenotfound,stores,orderfollow,contact,auth,discount,identity,order,addresses,sitemap,password,cms,index,orderslip,myaccount,cart,product,address"/>
             <hook module="blockmanufacturer" hook="displayHeader" position="14"/>
             <hook module="blockmanufacturer" hook="actionObjectManufacturerDeleteAfter" position="1"/>
             <hook module="blockmanufacturer" hook="actionObjectManufacturerAddAfter" position="1"/>
             <hook module="blockmanufacturer" hook="actionObjectManufacturerUpdateAfter" position="1"/>
-            <hook module="blockmyaccount" hook="displayLeftColumn" position="5"
-                  exceptions="pagenotfound,stores,orderfollow,contact,auth,discount,identity,order,addresses,sitemap,password,cms,index,orderslip,myaccount,cart,product,address,orderopc"/>
+            <hook module="blockmyaccount" hook="displayLeftColumn" position="6"
+                  exceptions="discount,auth,identity,order,addresses,sitemap,password,cms,orderslip,index,myaccount,product,cart,address,orderopc,pagenotfound,stores,orderfollow,contact"/>
             <hook module="blockmyaccount" hook="displayHeader" position="15"/>
             <hook module="blockmyaccount" hook="actionModuleRegisterHookAfter" position="1"/>
             <hook module="blockmyaccount" hook="actionModuleUnRegisterUnHookAfter" position="1"/>
@@ -198,6 +192,8 @@
             <hook module="blockmyaccountfooter" hook="displayFooter" position="5"/>
             <hook module="blockmyaccountfooter" hook="actionModuleRegisterHookAfter" position="2"/>
             <hook module="blockmyaccountfooter" hook="actionModuleUnRegisterHookAfter" position="1"/>
+            <hook module="blocknewproducts" hook="displayLeftColumn" position="7"
+                  exceptions="password,cms,index,orderslip,myaccount,cart,product,address,orderopc,pagenotfound,stores,orderfollow,contact,auth,discount,identity,order,addresses,sitemap"/>
             <hook module="blocknewproducts" hook="displayHeader" position="17"/>
             <hook module="blocknewproducts" hook="actionProductAdd" position="2"/>
             <hook module="blocknewproducts" hook="actionProductUpdate" position="2"/>
@@ -207,29 +203,29 @@
             <hook module="blocknewsletter" hook="displayHeader" position="18"/>
             <hook module="blocknewsletter" hook="displayFooter" position="1"/>
             <hook module="blocknewsletter" hook="actionCustomerAccountAdd" position="1"/>
-            <hook module="blockpaymentlogo" hook="displayLeftColumn" position="6"
-                  exceptions="identity,order,addresses,sitemap,password,cms,index,orderslip,myaccount,cart,product,address,orderopc,pagenotfound,stores,orderfollow,contact,auth,discount"/>
+            <hook module="blockpaymentlogo" hook="displayLeftColumn" position="8"
+                  exceptions="address,orderopc,pagenotfound,stores,orderfollow,contact,auth,discount,identity,order,addresses,sitemap,password,cms,index,orderslip,myaccount,cart,product"/>
             <hook module="blockpaymentlogo" hook="displayHeader" position="19"/>
             <hook module="blocksearch" hook="displayHeader" position="20"/>
             <hook module="blocksearch" hook="displayTop" position="1"/>
             <hook module="blocksearch" hook="displayMobileTopSiteMap" position="1"/>
-            <hook module="blockspecials" hook="displayLeftColumn" position="7"
-                  exceptions="cms,orderslip,index,myaccount,product,cart,address,orderopc,pagenotfound,stores,orderfollow,contact,discount,auth,identity,order,addresses,sitemap,password"/>
+            <hook module="blockspecials" hook="displayLeftColumn" position="9"
+                  exceptions="contact,discount,auth,identity,order,addresses,sitemap,password,cms,orderslip,index,myaccount,product,cart,address,orderopc,pagenotfound,stores,orderfollow"/>
             <hook module="blockspecials" hook="displayHeader" position="21"/>
             <hook module="blockspecials" hook="actionProductAdd" position="3"/>
             <hook module="blockspecials" hook="actionProductUpdate" position="3"/>
             <hook module="blockspecials" hook="actionProductDelete" position="3"/>
-            <hook module="blockstore" hook="displayLeftColumn" position="8"
-                  exceptions="orderopc,pagenotfound,stores,orderfollow,contact,auth,discount,identity,order,addresses,sitemap,password,cms,index,orderslip,myaccount,cart,product,address"/>
+            <hook module="blockstore" hook="displayLeftColumn" position="10"
+                  exceptions="sitemap,password,cms,index,orderslip,myaccount,cart,product,address,orderopc,pagenotfound,stores,orderfollow,contact,auth,discount,identity,order,addresses"/>
             <hook module="blockstore" hook="displayHeader" position="22"/>
-            <hook module="blocksupplier" hook="displayLeftColumn" position="9"
-                  exceptions="auth,discount,identity,order,addresses,sitemap,password,cms,index,orderslip,myaccount,cart,product,address,orderopc,pagenotfound,stores,orderfollow,contact"/>
+            <hook module="blocksupplier" hook="displayLeftColumn" position="11"
+                  exceptions="cart,product,address,orderopc,pagenotfound,stores,orderfollow,contact,auth,discount,identity,order,addresses,sitemap,password,cms,index,orderslip,myaccount"/>
             <hook module="blocksupplier" hook="displayHeader" position="23"/>
             <hook module="blocksupplier" hook="actionObjectSupplierDeleteAfter" position="1"/>
             <hook module="blocksupplier" hook="actionObjectSupplierAddAfter" position="1"/>
             <hook module="blocksupplier" hook="actionObjectSupplierUpdateAfter" position="1"/>
-            <hook module="blocktags" hook="displayLeftColumn" position="10"
-                  exceptions="password,cms,orderslip,index,myaccount,product,cart,address,orderopc,pagenotfound,stores,orderfollow,contact,discount,auth,identity,order,addresses,sitemap"/>
+            <hook module="blocktags" hook="displayLeftColumn" position="12"
+                  exceptions="orderfollow,contact,discount,auth,identity,order,addresses,sitemap,password,cms,orderslip,index,myaccount,product,cart,address,orderopc,pagenotfound,stores"/>
             <hook module="blocktags" hook="displayHeader" position="24"/>
             <hook module="blocktopmenu" hook="displayTop" position="3"/>
             <hook module="blocktopmenu" hook="actionCategoryUpdate" position="3"/>
@@ -252,8 +248,8 @@
             <hook module="blockuserinfo" hook="displayHeader" position="25"/>
             <hook module="blockuserinfo" hook="displayTop" position="2"/>
             <hook module="blockuserinfo" hook="displayNav" position="1"/>
-            <hook module="blockviewed" hook="displayLeftColumn" position="11"
-                  exceptions="address,orderopc,pagenotfound,stores,orderfollow,contact,auth,discount,identity,order,addresses,sitemap,password,cms,index,orderslip,myaccount,cart,product"/>
+            <hook module="blockviewed" hook="displayLeftColumn" position="13"
+                  exceptions="addresses,orderfollow,sitemap,discount,cms,index,myaccount,cart,address,password,orderopc,pagenotfound,orderslip,stores,product,contact,auth,identity,order"/>
             <hook module="blockviewed" hook="displayHeader" position="26"/>
             <hook module="dashactivity" hook="dashboardZoneOne" position="1"/>
             <hook module="dashactivity" hook="dashboardData" position="1"/>
@@ -280,9 +276,18 @@
             <hook module="homefeatured" hook="actionProductDelete" position="4"/>
             <hook module="homefeatured" hook="displayHomeTab" position="2"/>
             <hook module="homefeatured" hook="displayHomeTabContent" position="2"/>
+            <hook module="productpaymentlogos" hook="displayHeader" position="29"/>
+            <hook module="productpaymentlogos" hook="displayProductButtons" position="1"/>
             <hook module="statsdata" hook="actionAuthentication" position="1"/>
             <hook module="statsdata" hook="displayFooter" position="8"/>
             <hook module="statsdata" hook="actionCustomerAccountAdd" position="2"/>
+            <hook module="themeconfigurator" hook="displayLeftColumn" position="14"
+                  exceptions="addresses,sitemap,password,cms,orderslip,index,myaccount,cart,product,address,orderopc,pagenotfound,stores,orderfollow,contact,discount,auth,identity,order"/>
+            <hook module="themeconfigurator" hook="displayHome" position="1"/>
+            <hook module="themeconfigurator" hook="displayHeader" position="30"/>
+            <hook module="themeconfigurator" hook="displayFooter" position="9"/>
+            <hook module="themeconfigurator" hook="displayBackOfficeHeader" position="1"/>
+            <hook module="themeconfigurator" hook="displayTopColumn" position="2"/>
             <hook module="blockwishlist" hook="displayHeader" position="31"/>
             <hook module="blockwishlist" hook="actionCartSave" position="1"/>
             <hook module="blockwishlist" hook="displayTop" position="7"/>
