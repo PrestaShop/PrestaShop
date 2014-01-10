@@ -1214,4 +1214,98 @@ function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, tabl
 	check_for_all_accesses(tabsize, tabnumber);
 }
 
+verifMailREGEX = /^([\w+-]+(?:\.[\w+-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+function verifyMail(testMsg, testSubject)
+{
+	$("#mailResultCheck").removeClass("alert-danger").removeClass('alert-success').html('<img src="../img/admin/ajax-loader.gif" alt="" />');
+	$("#mailResultCheck").slideDown("slow");
+
+	//local verifications
+	if ($("#testEmail[value=]").length > 0)
+	{
+		$("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(errorMail);
+		return false;
+	}
+	else if (!verifMailREGEX.test( $("#testEmail").val() ))
+	{
+		$("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(errorMail);
+		return false;
+	}
+	else
+	{
+		//external verifications and sets
+		$.ajax(
+		{
+		   url: "index.php",
+		   cache: false,
+		   type : "POST",
+		   data:
+			{
+				"mailMethod"	: (($("input[name=PS_MAIL_METHOD]:checked").val() == 2) ? "smtp" : "native"),
+				"smtpSrv"		: $("input[name=PS_MAIL_SERVER]").val(),
+				"testEmail"		: $("#testEmail").val(),
+				"smtpLogin"		: $("input[name=PS_MAIL_USER]").val(),
+				"smtpPassword"	: $("input[name=PS_MAIL_PASSWD]").val(),
+				"smtpPort"		: $("input[name=PS_MAIL_SMTP_PORT]").val(),
+				"smtpEnc"		: $("select[name=PS_MAIL_SMTP_ENCRYPTION]").val(),
+				"testMsg"		: textMsg,
+				"testSubject"	: textSubject,
+				"token"			: token_mail,
+				"ajax"			: 1,
+				"tab"				: 'AdminEmails',
+				"action"			: 'sendMailTest'
+			},
+		   success: function(ret)
+		   {
+				if (ret == "ok")
+				{
+					$("#mailResultCheck").addClass("alert-success").removeClass("alert-danger").removeClass('userInfos').html(textSendOk);
+					mailIsOk = true;
+				}
+				else
+				{
+					mailIsOk = false;
+					$("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(textSendError + '<br />' + ret);
+				}
+		   }
+		 }
+		 );
+	}
+}
+
+function checkLangPack(token){
+	if ($('#iso_code').val().length == 2)
+	{
+		$('#lang_pack_loading').show();
+		$('#lang_pack_msg').hide();
+		doAdminAjax(
+			{
+				controller:'AdminLanguages',
+				action:'checkLangPack',
+				token:token,
+				ajax:1,
+				iso_lang:($('#iso_code').val()).toLowerCase(), 
+				ps_version:$('#ps_version').val()
+			},
+			function(ret)
+			{
+				$('#lang_pack_loading').hide();
+				ret = $.parseJSON(ret);
+				if( ret.status == 'ok')
+				{
+					content = $.parseJSON(ret.content);
+					message = langPackOk + ' <b>'+content['name'] + '</b>) :'
+						+'<br />' + langPackVersion + ' ' + content['version']
+						+ ' <a href="http://www.prestashop.com/download/lang_packs/gzip/' + content['version'] + '/'
+						+ ($('#iso_code').val()).toLowerCase()+'.gzip" target="_blank" class="link">'+download+'</a><br />' + langPackInfo;
+					$('#lang_pack_msg').html(message);
+					$('#lang_pack_msg').show();
+				}
+				else
+					showErrorMessage(ret.error);
+			}
+		 );
+	 }
+}
+
 function redirect(new_page) { window.location = new_page; }
