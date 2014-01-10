@@ -6769,7 +6769,7 @@ div.star a:hover {
     .footer-container {
       background: url(../img/footer-bg.png) repeat-x #333333; } }
   .footer-container .container {
-    padding: 0 0 100px 0; }
+    padding-bottom: 100px; }
   .footer-container #footer {
     color: #777777; }
     .footer-container #footer .row {
@@ -7277,7 +7277,9 @@ p.payment_module {
       background: url(../img/bankwire.png) 15px 12px no-repeat #fbfbfb; }
     p.payment_module a.cheque {
       background: url(../img/cheque.png) 15px 15px no-repeat #fbfbfb; }
-    p.payment_module a.cheque:after, p.payment_module a.bankwire:after {
+	p.payment_module a.cash {
+      background: url(../img/cash.png) 15px 15px no-repeat #fbfbfb; }
+    p.payment_module a.cheque:after, p.payment_module a.bankwire:after, p.payment_module a.cash:after {
       display: block;
       content: "\f054";
       position: absolute;

@@ -1460,7 +1460,7 @@ div.star a:hover
 	@media (min-width: $screen-sm)
 		background: url(../img/footer-bg.png) repeat-x $dark-background
 	.container
-		padding: 0 0 100px 0
+		padding-bottom: 100px
 	#footer
 		color: #777
 		.row
@@ -1996,7 +1996,9 @@ p.payment_module
 			background: url(../img/bankwire.png) 15px 12px no-repeat $base-box-bg
 		&.cheque
 			background: url(../img/cheque.png) 15px 15px no-repeat $base-box-bg
-		&.cheque, &.bankwire
+		&.cash
+			background: url(../img/cash.png) 15px 15px no-repeat $base-box-bg
+		&.cheque, &.bankwire, &.cash
 			&:after
 				display: block
 				content: "\f054"
