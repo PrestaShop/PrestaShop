@@ -688,7 +688,7 @@ function doAdminAjax(data, success_func, error_func)
 				return success_func(data);
 
 			data = $.parseJSON(data);
-			if(data.confirmations.length != 0)
+			if (data.confirmations.length != 0)
 				showSuccessMessage(data.confirmations);
 			else
 				showErrorMessage(data.error);
@@ -740,13 +740,13 @@ $(document).ready(function()
 	});
 
 	$(document).on('keyup change', '.copy2friendlyUrl', function(e){
-		if(!isArrowKey(e))
+		if (!isArrowKey(e))
 			return copy2friendlyURL();
 	});
 
 	// on live will make this binded for dynamic content
 	$(document).on('keyup change', '.updateCurrentText', function(e){
-		if(typeof e == KeyboardEvent)
+		if (typeof e == KeyboardEvent)
 			if(isArrowKey(e))
 				return;
 
@@ -754,7 +754,7 @@ $(document).ready(function()
 	});
 
 	$(document).on('keyup change', '.copyMeta2friendlyURL', function(e){
-		if(!isArrowKey(e))
+		if (!isArrowKey(e))
 			return copyMeta2friendlyURL()
 	});
 
@@ -962,8 +962,7 @@ function display_action_details(row_id, controller, token, action, params)
 			'ajax': true
 		};
 
-		$.each(params, function(k, v)
-		{
+		$.each(params, function(k, v) {
 			ajax_params[k] = v;
 		});
 
@@ -1036,7 +1035,7 @@ function display_action_details(row_id, controller, token, action, params)
 					current_element.parent().parent().after(content);
 					current_element.parent().parent().parent().find('.details_'+id).hide();
 				}
-				current_element.data('dataMaped',true);
+				current_element.data('dataMaped', true);
 				current_element.data('opened', false);
 				
 				if (typeof(initTableDnD) != 'undefined')
@@ -1069,9 +1068,6 @@ function quickSelect(elt)
 	else
 		location.href = eltVal;
 }
-
-
-//New Admin fonctions
 
 function hideOtherLanguage(id)
 {
@@ -1129,7 +1125,7 @@ function openModulesList() {
 	return false;
 }
 
-function ajaxStates (id_state_selected)
+function ajaxStates(id_state_selected)
 {
 	$.ajax({
 		url: "index.php",
@@ -1165,35 +1161,6 @@ function ajaxStates (id_state_selected)
 			}
 		});
 	}
-}
-
-var query;
-var lang = Array();
-
-function setLang(array_lang) { lang = array_lang; }
-
-function getQuery() {
- 	var result;
- 	
- 	result = query;
- 	if (result == null) {
- 		if (window.XMLHttpRequest)
- 			result = new XMLHttpRequest();
- 		else if (window.ActiveXObject)
-		 	result = new ActiveXObject('Microsoft.XMLHTTP');
- 	}
- 	return result;
-}
-
-function onQueryChange() {
- 	if (query.readyState == 4 && query.status == 200)
- 		document.getElementById('ajax_confirmation').innerHTML = '<span class="green bold">'+lang[0]+'</span>';
-}
-
-function request_failed() { alert(lang[1]); }
-
-function showActivity() {
- 	document.getElementById('ajax_confirmation').innerHTML = '<span class="bold">'+lang[2]+'</span>';
 }
 
 function check_for_all_accesses(tabsize, tabnumber)
@@ -1245,26 +1212,6 @@ function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, tabl
  	else if (id_tab == '-1')
  		$(table+' .'+action).attr('checked', src.checked);
 	check_for_all_accesses(tabsize, tabnumber);
-}
-
-function ajax_power(src, action, id_tab, id_profile, token, tabsize, tabnumber)
-{
-	query = getQuery();
-	perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber);
-	if (query != null) {
-	 	try {
-		 	query.open('POST', 'index.php?tab=AdminAccess', true);
-		 	query.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-		 	query.onreadystatechange = onQueryChange;
-		 	query.send('submitAddaccess=1&action='+action+'&perm='+parseInt(src.checked ? '1' : status = '0')+'&id_tab='+parseInt(id_tab)+'&id_profile='+parseInt(id_profile)+'&token='+token);
-		 	showActivity();
-		}
-		catch(exc) {
-			request_failed();
-		}
-	}
-	else
-		alert(lang[3]);
 }
 
 function redirect(new_page) { window.location = new_page; }
