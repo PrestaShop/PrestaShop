@@ -158,12 +158,15 @@ class UploaderCore
 		return $this->files;
 	}
 
-	public function upload($file)
+	public function upload($file, $dest = null)
 	{
 		if ($this->validate($file))
 		{
-			$file_path = $this->getFilePath($file['name']);
-		 
+			if (isset($dest) && is_dir($dest))
+				$file_path = $dest;
+			else
+				$file_path = $this->getFilePath(isset($dest) ? $dest : $file['name']);
+
 			if ($file['tmp_name'] && is_uploaded_file($file['tmp_name'] ))
 					move_uploaded_file($file['tmp_name'] , $file_path);
 			else
