@@ -40,7 +40,6 @@
 		var iso_user = '{$iso_user|@addcslashes:'\''}';
 		var country_iso_code = '{$country_iso_code|@addcslashes:'\''}';
 		var _PS_VERSION_ = '{$smarty.const._PS_VERSION_|@addcslashes:'\''}';
-		var helpboxes = {$help_box|intval};
 		var roundMode = {$round_mode|intval};
 {if isset($shop_context)}
 	{if $shop_context == Shop::CONTEXT_ALL}
