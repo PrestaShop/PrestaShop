@@ -25,11 +25,11 @@
 
 <!-- Block myaccount module -->
 <div class="block myaccount-column">
-	<p class="title_block">
+	<h2>
 		<a href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}" title="{l s='My account' mod='blockmyaccount'}">
 			{l s='My account' mod='blockmyaccount'}
 		</a>
-	</p>
+	</h2>
 	<div class="block_content list-block">
 		<ul>
 			<li>

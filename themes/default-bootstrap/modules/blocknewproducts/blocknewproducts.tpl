@@ -24,9 +24,9 @@
 *}
 <!-- MODULE Block new products -->
 <div id="new-products_block_right" class="block products_block">
-	<h4 class="title_block">
+	<h2>
     	<a href="{$link->getPageLink('new-products')|escape:'html'}" title="{l s='New products' mod='blocknewproducts'}">{l s='New products' mod='blocknewproducts'}</a>
-    </h4>
+    </h2>
     <div class="block_content products-block">
         {if $new_products !== false}
             <ul class="products">

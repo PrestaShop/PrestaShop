@@ -36,7 +36,7 @@
 	{addJsDef blocklayeredSliderName=$blocklayeredSliderName}
 </script>
 <div id="layered_block_left" class="block">
-	<p class="title_block">{l s='Catalog' mod='blocklayered'}</p>
+	<h2>{l s='Catalog' mod='blocklayered'}</h2>
 	<div class="block_content">
 		<form action="#" id="layered_form">
 			<div>

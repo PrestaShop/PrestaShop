@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<section id="social_block">
+<div id="social_block">
 	<ul>
 		{if $facebook_url != ''}
 			<li class="facebook">
@@ -69,6 +69,6 @@
         	</li>
         {/if}
 	</ul>
-    <h4>{l s='Follow us' mod='blocksocial'}</h4>
-</section>
+    <h2>{l s='Follow us' mod='blocksocial'}</h2>
+</div>
 <div class="clearfix"></div>

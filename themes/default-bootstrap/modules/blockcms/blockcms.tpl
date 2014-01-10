@@ -26,12 +26,12 @@
 {if $block == 1}
 	<!-- Block CMS module -->
 	{foreach from=$cms_titles key=cms_key item=cms_title}
-		<section id="informations_block_left_{$cms_key}" class="block informations_block_left">
-			<p class="title_block">
+		<div id="informations_block_left_{$cms_key}" class="block informations_block_left">
+			<h2>
 				<a href="{$cms_title.category_link|escape:'html':'UTF-8'}">
 					{if !empty($cms_title.name)}{$cms_title.name}{else}{$cms_title.category_name}{/if}
 				</a>
-			</p>
+			</h2>
 			<div class="block_content list-block">
 				<ul>
 					{foreach from=$cms_title.categories item=cms_page}
@@ -61,13 +61,13 @@
 					{/if}
 				</ul>
 			</div>
-		</section>
+		</div>
 	{/foreach}
 	<!-- /Block CMS module -->
 {else}
 	<!-- MODULE Block footer -->
-	<section class="footer-block col-xs-12 col-sm-2" id="block_various_links_footer">
-		<h4>{l s='Information' mod='blockcms'}</h4>
+	<div class="footer-block col-xs-12 col-sm-2" id="block_various_links_footer">
+		<h2>{l s='Information' mod='blockcms'}</h2>
 		<ul class="toggle-footer">
 			{if !$PS_CATALOG_MODE}
 				<li class="first_item">
@@ -116,14 +116,14 @@
 			</li>
 		</ul>
 		{$footer_text}
-	</section>
+	</div>
 	{if $display_poweredby}
-	<section class="bottom-footer col-xs-12">
+	<div class="bottom-footer col-xs-12">
 		<div>
 			&copy; 2013 {l s='Powered by' mod='blockcms'} 
 			<a class="_blank" href="http://www.prestashop.com">PrestaShop</a>&trade;
 		</div>
-	</section>
+	</div>
 	{/if}
 	<!-- /MODULE Block footer -->
 {/if}
