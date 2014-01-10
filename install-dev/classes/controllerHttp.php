@@ -195,9 +195,6 @@ abstract class InstallControllerHttp
 		$this->init();
 	}
 
-	/**
-	 * Initialize model
-	 */
 	public function init()
 	{
 	}
