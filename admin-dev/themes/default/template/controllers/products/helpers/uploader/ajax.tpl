@@ -74,6 +74,7 @@
 
 		$('#{$id}').fileupload({
 			dataType: 'json',
+			async: false,
 			autoUpload: false,
 			singleFileUploads: true,
 			maxFileSize: {$post_max_size},
