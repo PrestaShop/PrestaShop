@@ -52,7 +52,7 @@ class Blockreinsurance extends Module
 	{
 		return parent::install() &&
 			$this->installDB() &&
-			Configuration::updateValue('blockreinsurance_nbblocks', 5) &&
+			Configuration::updateValue('BLOCKREINSURANCE_NBBLOCKS', 5) &&
 			$this->registerHook('footer') && $this->installFixtures() &&
 			// Disable on mobiles and tablets
 			$this->disableDevice(Context::DEVICE_TABLET | Context::DEVICE_MOBILE);
@@ -83,7 +83,7 @@ class Blockreinsurance extends Module
 	public function uninstall()
 	{
 		// Delete configuration
-		return Configuration::deleteByName('blockreinsurance_nbblocks') &&
+		return Configuration::deleteByName('BLOCKREINSURANCE_NBBLOCKS') &&
 			$this->uninstallDB() &&
 			parent::uninstall();
 	}
@@ -204,7 +204,7 @@ class Blockreinsurance extends Module
 
 		if (isset($_POST['submitModule']))
 		{
-			Configuration::updateValue('blockreinsurance_nbblocks', ((isset($_POST['nbblocks']) && $_POST['nbblocks'] != '') ? (int)$_POST['nbblocks'] : ''));
+			Configuration::updateValue('BLOCKREINSURANCE_NBBLOCKS', ((isset($_POST['nbblocks']) && $_POST['nbblocks'] != '') ? (int)$_POST['nbblocks'] : ''));
 			if ($this->removeFromDB() && $this->addToDB())
 			{
 				$this->_clearCache('blockreinsurance.tpl');
