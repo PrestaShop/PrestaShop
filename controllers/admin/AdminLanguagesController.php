@@ -283,11 +283,7 @@ class AdminLanguagesControllerCore extends AdminController
 			);
 		}
 
-		$this->fields_value = array(
-			'ps_version' => _PS_VERSION_
-		);
-
-		$this->addJS(_PS_JS_DIR_.'checkLangPack.js');
+		$this->fields_value = array('ps_version' => _PS_VERSION_);
 
 		return parent::renderForm();
 	}
