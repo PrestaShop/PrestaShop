@@ -1758,7 +1758,7 @@ class AdminThemesControllerCore extends AdminController
 			'gridhtml', 'homefeatured', 'homeslider', 'loyalty', 'mailalerts', 'newsletter',
 			'pagesnotfound', 'productcomments', 'productpaymentlogos', 'productscategory',
 			'producttooltip', 'pscleaner', 'referralprogram', 'sekeywords', 'sendtoafriend',
-			'statsbestcategories', 'statsbestcustomers', 'statsbestmanufacturers',
+			'socialsharing', 'statsbestcategories', 'statsbestcustomers', 'statsbestmanufacturers',
 			'statsbestproducts', 'statsbestsuppliers', 'statsbestvouchers',
 			'statscarrier', 'statscatalog', 'statscheckup', 'statsdata',
 			'statsequipment', 'statsforecast', 'statslive', 'statsnewsletter',
