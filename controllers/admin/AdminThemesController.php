@@ -1044,6 +1044,8 @@ class AdminThemesControllerCore extends AdminController
 
 	private function renderExportTheme1()
 	{
+		$to_install = array();
+
 		$module_list = Db::getInstance()->executeS('
 			SELECT m.`id_module`, m.`name`, m.`active`, ms.`id_shop`
 			FROM `' . _DB_PREFIX_ . 'module` m
@@ -1133,16 +1135,6 @@ class AdminThemesControllerCore extends AdminController
 						'label' => $this->l('Website'),
 					),
 					array(
-						'type'   => 'checkbox',
-						'label'  => $this->l('Select the theme\'s modules you wish to export:'),
-						'values' => array(
-							'query' => $this->formatHelperArray($to_install),
-							'id'    => 'id',
-							'name'  => 'name'
-						),
-						'name'   => 'modulesToExport',
-					),
-					array(
 						'type'  => 'text',
 						'name'  => 'theme_name',
 						'label' => $this->l('Theme name'),
@@ -1189,6 +1181,20 @@ class AdminThemesControllerCore extends AdminController
 					'title' => $this->l('Save'),
 				))
 		);
+
+		if (count($to_install) > 0)
+		{
+			$fields_form['form']['input'][] = array(
+				'type'   => 'checkbox',
+				'label'  => $this->l('Select the theme\'s modules you wish to export:'),
+				'values' => array(
+					'query' => $this->formatHelperArray($to_install),
+					'id'    => 'id',
+					'name'  => 'name'
+				),
+				'name'   => 'modulesToExport',
+			);
+		}
 
 		$default_language = (int)$this->context->language->id;
 		$languages = $this->getLanguages();
@@ -1865,9 +1871,6 @@ class AdminThemesControllerCore extends AdminController
 		if ($xml)
 		{
 			$theme_module = $this->getModules($xml);
-			$native_module = $this->getNativeModule(1);
-
-			$theme_module['to_disable'] = array_merge($theme_module['to_disable'], array_diff($native_module, $theme_module['to_enable']));
 
 			$toolbar_btn['save'] = array(
 				'href' => '#',
