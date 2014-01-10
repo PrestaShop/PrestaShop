@@ -433,8 +433,6 @@ class FrontControllerCore extends Controller
 		{
 			// These hooks aren't used for the mobile theme.
 			// Needed hooks are called in the tpl files.
-			if (!isset($this->context->cart))
-				$this->context->cart = new Cart();
 			$this->context->smarty->assign(array(
 				'HOOK_HEADER' => Hook::exec('displayHeader'),
 				'HOOK_TOP' => Hook::exec('displayTop'),
@@ -443,9 +441,7 @@ class FrontControllerCore extends Controller
 			));
 		}
 		else
-			$this->context->smarty->assign(array(
-				'HOOK_MOBILE_HEADER' => Hook::exec('displayMobileHeader'),
-			));
+			$this->context->smarty->assign('HOOK_MOBILE_HEADER', Hook::exec('displayMobileHeader'));
 	}
 
 	/**
@@ -477,7 +473,8 @@ class FrontControllerCore extends Controller
 		));
 
 		$this->context->smarty->assign(array(
-			'css_files' => $this->css_files
+			'css_files' => $this->css_files,
+			'js_files' => array() // assign moved to smartyOutputContent since 1.6
 		));
 
 		$this->display_header = $display;
@@ -540,6 +537,7 @@ class FrontControllerCore extends Controller
 
 		$this->context->smarty->assign(array(
 			'css_files' => $this->css_files,
+			'js_files' => array(), // assign moved to smartyOutputContent since 1.6
 			'errors' => $this->errors,
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,

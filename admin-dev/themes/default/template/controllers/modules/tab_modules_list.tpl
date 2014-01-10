@@ -25,20 +25,20 @@
 *}
 
 {if isset($tab_modules_list) && !empty($tab_modules_list)}
-	<div class="row">
+	<div class="row row-margin-bottom">
 		<div class="col-lg-12">
-			<ul class="nav nav-tabs">
-				{if count($tab_modules_list.installed)}
+			<ul class="nav nav-pills">
+				{if count($tab_modules_list.not_installed)}
 					<li class="active">
-						<a href="#tab_modules_list_installed" data-toggle="tab">
-							{l s='Installed'}
+						<a href="#tab_modules_list_not_installed" data-toggle="tab">
+							{l s='Not Installed'}
 						</a>
 					</li>
 				{/if}
-				{if count($tab_modules_list.not_installed)}
-					<li{if count($tab_modules_list.installed) == 0} class="active"{/if}>
-						<a href="#tab_modules_list_not_installed" data-toggle="tab">
-							{l s='Not Installed'}
+				{if count($tab_modules_list.installed)}
+					<li>
+						<a href="#tab_modules_list_installed" data-toggle="tab">
+							{l s='Installed'}
 						</a>
 					</li>
 				{/if}
@@ -55,7 +55,7 @@
 			</table>
 			{/if}
 		</div>
-		<div class="tab-pane{if count($tab_modules_list.installed) == 0} active{/if}" id="tab_modules_list_not_installed">
+		<div class="tab-pane active" id="tab_modules_list_not_installed">
 			{if count($tab_modules_list.not_installed)}
 			<table id="tab_modules_list_not_installed" class="table">
 				{foreach from=$tab_modules_list.not_installed item=module}
@@ -66,6 +66,6 @@
 		</div>
 	</div>
 {/if}
-<div class="alert alert-info row-margin-top">
-	<a href="{$admin_module_favorites_view}">{l s='More options'}</a>
+<div class="alert alert-addons row-margin-top">
+	<a href="http://addons.prestashop.com" target="_blank">{l s='More modules on addons.prestashop.com'}</a>
 </div>

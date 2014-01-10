@@ -33,7 +33,7 @@ class BlockManufacturer extends Module
     {
         $this->name = 'blockmanufacturer';
         $this->tab = 'front_office_features';
-        $this->version = 1.0;
+        $this->version = 1.1;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -48,7 +48,7 @@ class BlockManufacturer extends Module
 	{
 		Configuration::updateValue('MANUFACTURER_DISPLAY_TEXT', true);
 		Configuration::updateValue('MANUFACTURER_DISPLAY_TEXT_NB', 5);
-		Configuration::updateValue('MANUFACTURER_DISPLAY_FORM', true);
+		Configuration::updateValue('MANUFACTURER_DISPLAY_FORM', false);
 		$success = (parent::install() &&
 			$this->registerHook('header') &&
 			$this->registerHook('actionObjectManufacturerDeleteAfter') &&
@@ -58,11 +58,16 @@ class BlockManufacturer extends Module
 
 		if ($success)
 		{
+			// Hook the module either on the left or right column
 			$theme = new Theme(Context::getContext()->shop->id_theme);
-			if ($theme->default_left_column)
-				$success &= $this->registerHook('leftColumn');
-			elseif ($theme->default_right_column)
-				$success &= $this->registerHook('rightColumn');
+			if ((!$theme->default_left_column || !$this->registerHook('leftColumn'))
+				&& (!$theme->default_right_column || !$this->registerHook('rightColumn')))
+			{
+				// If there are no colums implemented by the template, throw an error and uninstall the module
+				$this->_errors[] = $this->l('This module need to be hooked in a column and your theme does not implement one');
+				parent::uninstall();
+				return false;
+			}
 		}
 		return $success;
     }

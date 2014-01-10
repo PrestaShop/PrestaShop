@@ -70,6 +70,7 @@
 		var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
 		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads'}';
 		var currentIndex = '{$currentIndex|@addcslashes:'\''}';
+		var employee_token = '{getAdminToken tab='AdminEmployees'}';
 		var choose_language_translate = '{l s='Choose language' js=1}';
 		var default_language = '{$default_language|intval}';
 		var admin_modules_link = '{$link->getAdminLink("AdminModules")|addslashes}';
@@ -103,7 +104,7 @@
 </head>
 
 {if $display_header}
-	<body class="{if $employee->bo_menu}page-sidebar {* page-sidebar-closed *}{else}page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
+	<body class="{if $employee->bo_menu}page-sidebar {if $collapse_menu}page-sidebar-closed{/if}{else}page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
 	{* begin  HEADER *}
 	<header id="header" class="bootstrap">
 		<nav id="header_infos" role="navigation">

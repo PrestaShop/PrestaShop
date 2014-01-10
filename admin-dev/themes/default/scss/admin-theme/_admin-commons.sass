@@ -89,6 +89,12 @@
 .alert.alert-info
 	@include alert-panel(icon-question-circle, $brand-info)
 
+.alert.alert-addons
+	$alert-addons-border: lighten($brand-addons,10%)
+	$alert-addons-text: $brand-addons
+	@include alert-variant(#F3F3F2, $alert-addons-border, $alert-addons-text)
+	@include alert-panel(icon-puzzle-piece, $brand-addons)
+
 .overflow-y
 	max-height: 200px
 	margin-bottom: 15px

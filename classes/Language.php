@@ -809,8 +809,6 @@ class LanguageCore extends ObjectModel
 
 	public static function downloadAndInstallLanguagePack($iso, $version = null, $params = null, $install = true)
 	{
-		require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
-
 		if (!Validate::isLanguageIsoCode($iso))
 			return false;
 
@@ -838,6 +836,7 @@ class LanguageCore extends ObjectModel
 			}
 		if ($install && file_exists($file))
 		{
+			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 			$gz = new Archive_Tar($file, true);
 			$files_list = AdminTranslationsController::filterTranslationFiles(Language::getLanguagePackListContent($iso, $gz));
 			if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../'))
@@ -874,12 +873,13 @@ class LanguageCore extends ObjectModel
 
 	public static function getLanguagePackListContent($iso, $tar)
 	{
-		if (!$tar instanceof Archive_Tar)
-			return false;
 		$key = 'Language::getLanguagePackListContent_'.$iso;
 		if (!Cache::isStored($key))
+		{
+			if (!$tar instanceof Archive_Tar)
+				return false;
 			Cache::store($key, $tar->listContent());
-
+		}
 		return Cache::retrieve($key);
 	}
 
@@ -888,25 +888,24 @@ class LanguageCore extends ObjectModel
 		require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 
 		$languages = Language::getLanguages(false);
-		foreach($languages as $lang)
+		foreach ($languages as $lang)
 		{
 			$files_listing = array();
 			foreach ($modules_list as $module_name)
 			{
-				$iso = $lang['iso_code'];
-				$filegz = _PS_TRANSLATIONS_DIR_.$iso.'.gzip';
+				$filegz = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
 
 				clearstatcache();
 				if (@filemtime($filegz) < (time() - (24 * 3600)))
-					Language::downloadAndInstallLanguagePack($iso, null, null, false);
+					Language::downloadAndInstallLanguagePack($lang['iso_code'], null, null, false);
 
 				$gz = new Archive_Tar($filegz, true);
-				$files_list = Language::getLanguagePackListContent($iso, $gz);
+				$files_list = Language::getLanguagePackListContent($lang['iso_code'], $gz);
 				foreach ($files_list as $i => $file)
-					if (!preg_match('/^modules\/'.$module_name.'\/.*/', $file['filename']))
+					if (strpos($file['filename'], 'modules/'.$module_name.'/') !== 0)
 						unset($files_list[$i]);
 
-				foreach($files_list as $file)
+				foreach ($files_list as $file)
 					if (isset($file['filename']) && is_string($file['filename']))
 						$files_listing[] = $file['filename'];
 			}

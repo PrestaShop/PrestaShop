@@ -1579,8 +1579,10 @@ abstract class ModuleCore
 	public function displayError($error)
 	{
 	 	$output = '
+	 	<div class="bootstrap">
 		<div class="module_error alert alert-danger">
 			'.$error.'
+		</div>
 		</div>';
 		$this->error = true;
 		return $output;
@@ -1589,8 +1591,10 @@ abstract class ModuleCore
 	public function displayConfirmation($string)
 	{
 	 	$output = '
+	 	<div class="bootstrap">
 		<div class="module_confirmation conf confirm alert alert-success">
 			'.$string.'
+		</div>
 		</div>';
 		return $output;
 	}
@@ -1609,8 +1613,9 @@ abstract class ModuleCore
 			$exceptionsCache = array();
 			$sql = 'SELECT * FROM `'._DB_PREFIX_.'hook_module_exceptions`
 				WHERE `id_shop` IN ('.implode(', ', Shop::getContextListShopID()).')';
-			$result = Db::getInstance()->executeS($sql);
-			foreach ($result as $row)
+			$db = Db::getInstance();
+			$result = $db->executeS($sql, false);
+			while ($row = $db->nextRow($result))
 			{
 				if (!$row['file_name'])
 					continue;

@@ -55,19 +55,24 @@ class Blockrss extends Module
 
  	function install()
  	{
+ 	 	if (!parent::install())
+			return false;
+
+		// Hook the module either on the left or right column
+		$theme = new Theme(Context::getContext()->shop->id_theme);
+		if ((!$theme->default_left_column || !$this->registerHook('leftColumn'))
+			&& (!$theme->default_right_column || !$this->registerHook('rightColumn')))
+		{
+			// If there are no colums implemented by the template, throw an error and uninstall the module
+			$this->_errors[] = $this->l('This module need to be hooked in a column and your theme does not implement one');
+			parent::uninstall();
+			return false;
+		}
+
 		Configuration::updateValue('RSS_FEED_TITLE', $this->l('RSS feed'));
 		Configuration::updateValue('RSS_FEED_NBR', 5);
- 	 	$success = (parent::install() && $this->registerHook('header'));
 
-		if ($success)
-		{
-			$theme = new Theme(Context::getContext()->shop->id_theme);
-			if ($theme->default_left_column)
-				$success &= $this->registerHook('leftColumn');
-			elseif ($theme->default_right_column)
-				$success &= $this->registerHook('rightColumn');
-		}
-		return $success;
+		return $this->registerHook('header');
   	}
 
 	public function getContent()
