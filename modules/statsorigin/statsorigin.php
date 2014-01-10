@@ -42,7 +42,7 @@ class StatsOrigin extends ModuleGraph
 		parent::__construct();
 
 		$this->displayName = $this->l('Visitors origin');
-		$this->description = $this->l('Display the website(s) your visitors came from.');
+		$this->description = $this->l('Adds a graph displaying the websites your visitors came from to the Stats dashboard.');
 	}
 
 	public function install()
@@ -88,14 +88,14 @@ class StatsOrigin extends ModuleGraph
 		{
 			$this->_html .= '
 			<div class="alert alert-info">
-				'.$this->l('Here we break down the 10 most popular referral websites that call customers to your e-store.').'
+				'.$this->l('In the tab, we break down the 10 most popular referral websites that bring customers to your online store.').'
 			</div>
 			<h4>'.$this->l('Guide').'</h4>
 			<div class="alert alert-warning">
 				<h4>'.$this->l('What is a referral website?').'</h4>
 				<p>
-					'.$this->l('When visiting a webpage, the referrer is the URL of the previous webpage from which a link was followed.').'<br />
-					'.$this->l('A referrer enables you to know which keywords visitors use in search engines when browsing for your online store.').'<br /><br />
+					'.$this->l('The referrer is the URL of the previous webpage from which a link was followed by the visitor.').'<br />
+					'.$this->l('A referrer also enables you to know which keywords visitors use in search engines when browsing for your online store.').'<br /><br />
 					'.$this->l('A referrer can be:').'
 				</p>
 				<ul>

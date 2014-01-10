@@ -44,7 +44,7 @@ class StatsPersonalInfos extends ModuleGraph
 		parent::__construct();
 
 		$this->displayName = $this->l('Registered customer information');
-		$this->description = $this->l('Display characteristics such as gender and age.');
+		$this->description = $this->l('Adds information about your registered customers (such as gender and ageà to the Stats dashboard.');
 	}
 
 	public function install()
@@ -60,18 +60,18 @@ class StatsPersonalInfos extends ModuleGraph
 			</div>
 			<h4>'.$this->l('Guide').'</h4>
 			<div class="alert alert-warning">
-				<h4>'.$this->l('Target your audience.').'</h4>
+				<h4>'.$this->l('Target your audience').'</h4>
 				<p>
-					'.$this->l('In order for each message to have an impact, you need to know who it is being addressed to. ').'
-					'.$this->l('Defining your target audience is essential when choosing the right tools to win them over.').'
-					'.$this->l('It is best to limit action to a group -- or groups -- of clients.').'
+					'.$this->l('In order for each message to have an impact, you need to know who it is being addressed to. ').'<br>'.'
+					'.$this->l('Defining your target audience is essential when choosing the right tools to win them over.').'<br>'.'
+					'.$this->l('It is best to limit action to a group -- or groups -- of clients.').'<br>'.'
 					'.$this->l('Storing registered customer information allows you to accurately define customer profile so you can adapt your special deals and promotions.').'
 				</p>
 				<p>
-					'.$this->l('Increase your sales by').'
+					'.$this->l('You can increase your sales by:').'
 					<ul>
-						<li class="bullet">'.$this->l('launching targeted advertisement campaigns.').'</li>
-						<li class="bullet">'.$this->l('Contact a group of clients by email or newsletter.').'</li>
+						<li class="bullet">'.$this->l('Launching targeted advertisement campaigns.').'</li>
+						<li class="bullet">'.$this->l('Contacting a group of clients by email or newsletter.').'</li>
 					</ul>
 				</p>
 			</div>';
@@ -97,7 +97,7 @@ class StatsPersonalInfos extends ModuleGraph
 							'.$this->engine(array('type' => 'pie', 'option' => 'gender')).'
 						</div>
 						<div class="col-lg-4">
-							<p>'.$this->l('Gender distribution allows you to determine the percentage of men and women shoppers in your store. ').'</p>
+							<p>'.$this->l('Gender distribution allows you to determine the percentage of men and women shoppers in your store.').'</p>
 							<hr/>
 							<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=gender">
 								<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
@@ -111,7 +111,7 @@ class StatsPersonalInfos extends ModuleGraph
 							'.$this->engine(array('type' => 'pie', 'option' => 'age')).'
 						</div>
 						<div class="col-lg-4">
-							<p>'.$this->l('Age ranges allow you to better understand target demographics. ').'</p>
+							<p>'.$this->l('Age ranges allow you to better understand target demographics.').'</p>
 							<hr/>
 							<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=age">
 								<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
@@ -125,7 +125,7 @@ class StatsPersonalInfos extends ModuleGraph
 							'.$this->engine(array('type' => 'pie', 'option' => 'country')).'
 						</div>
 						<div class="col-lg-4">
-							<p>'.$this->l('Country distribution allows you to analyze which part of the world your customers are shopping from.').'</p>
+							<p>'.$this->l('Country distribution allows you to analyze which part of the World your customers are shopping from.').'</p>
 							<hr/>
 							<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=country">
 								<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
@@ -153,7 +153,7 @@ class StatsPersonalInfos extends ModuleGraph
 							'.$this->engine(array('type' => 'pie', 'option' => 'language')).'
 						</div>
 						<div class="col-lg-4">
-							<p>'.$this->l('Language distribution allows you to analyze the browsing language used by your customers. ').'</p>
+							<p>'.$this->l('Language distribution allows you to analyze the browsing language used by your customers.').'</p>
 							<hr/>
 							<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language">
 								<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'

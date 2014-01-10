@@ -54,7 +54,7 @@ class StatsSearch extends ModuleGraph
 				ORDER BY occurences DESC';
 
 		$this->displayName = $this->l('Shop search');
-		$this->description = $this->l('Display which keywords have been searched by your store\'s visitors.');
+		$this->description = $this->l('Adds a tab showing which keywords have been searched by your store\'s visitors.');
 	}
 
 	public function install()
