@@ -90,16 +90,16 @@
 <table class="table tableDnD" id="imageTable">
 	<thead>
 		<tr class="nodrag nodrop"> 
-			<th class="fixed-width-sm"><span class="title_box">{l s='Image'}</span></th>
+			<th class="fixed-width-lg"><span class="title_box">{l s='Image'}</span></th>
 			<th class="fixed-width-lg"><span class="title_box">{l s='Legend'}</span></th>
-			<th class="center fixed-width-xs"><span class="title_box">{l s='Position'}</span></th>
+			<th class="fixed-width-xs"><span class="title_box">{l s='Position'}</span></th>
 			{if $shops}
-			{foreach from=$shops item=shop}
-				<th class="center fixed-width-xs"><span class="title_box">{$shop.name}</span></th>
-			{/foreach}
+				{foreach from=$shops item=shop}
+					<th class="fixed-width-xs"><span class="title_box">{$shop.name}</span></th>
+				{/foreach}
 			{/if}
-			<th class="center fixed-width-xs"><span class="title_box">{l s='Cover'}</span></th>
-			<th></th>
+			<th class="fixed-width-xs"><span class="title_box">{l s='Cover'}</span></th>
+			<th></th> <!-- action -->
 		</tr>
 	</thead>
 	<tbody id="imageList">
@@ -111,7 +111,11 @@
 	<tr id="image_id">
 		<td>
 			<a href="{$smarty.const._THEME_PROD_DIR_}image_path.jpg" class="fancybox">
-				<img src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-default-{$imageType}.jpg" alt="legend" title="legend" />
+				<img
+					src="{$smarty.const._THEME_PROD_DIR_}{$iso_lang}-default-{$imageType}.jpg"
+					alt="legend"
+					title="legend"
+					class="img-thumbnail" />
 			</a>
 		</td>
 		<td>legend</td>
@@ -120,16 +124,23 @@
 		</td>
 		{if $shops}
 			{foreach from=$shops item=shop}
-			<td class="center">
-				<input type="checkbox" class="image_shop" name="id_image" id="{$shop.id_shop}image_id" value="{$shop.id_shop}" />
+			<td>
+				<input
+					type="checkbox"
+					class="image_shop"
+					name="id_image"
+					id="{$shop.id_shop}image_id"
+					value="{$shop.id_shop}" />
 			</td>
 			{/foreach}
 		{/if}
-		<td class="center cover"><a href="#">
-			<i class="covered icon-check-empty"></i>
+		<td class="cover">
+			<a href="#">
+				<i class="icon-check-empty icon-2x covered"></i>
+			</a>
 		</td>
-		<td class="center">
-			<a href="#" class="btn btn-default delete_product_image pull-right" >
+		<td>
+			<a href="#" class="delete_product_image pull-right btn btn-default" >
 				<i class="icon-trash"></i> {l s='Delete this image'}
 			</a>
 		</td>
@@ -149,7 +160,7 @@
 	{
 		line = $("#lineType").html();
 		line = line.replace(/image_id/g, id);			
-		line = line.replace(/[a-z]{0,2}-default/g, path);
+		line = line.replace(/\/[a-z]{0,2}-default/g, path);
 		line = line.replace(/image_path/g, path);
 		line = line.replace(/image_position/g, position);
 		line = line.replace(/legend/g, legend);
@@ -202,7 +213,6 @@
 			updateImagePosition(image_up);
 			}
 		});
-
 		/**
 		 * on success function 
 		 */
