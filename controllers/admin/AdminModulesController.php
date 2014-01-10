@@ -270,6 +270,10 @@ class AdminModulesControllerCore extends AdminController
 						if (!$access['edit'])
 							$perm &= false; 
 					}
+					
+					if (in_array($module->name, $this->list_partners_modules))
+						$module->type = 'addonsPartner';
+					
 					if ($perm)
 					{
 						$this->fillModuleData($module, 'array');
