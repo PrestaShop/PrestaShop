@@ -364,33 +364,17 @@ function gencode(size)
 		getE('code').value += chars.charAt(Math.floor(Math.random() * chars.length));
 }
 
-var newWin = null;
-
-function closeWin ()
-{
-	if (newWin != null)
-		if (!newWin.closed)
-			newWin.close();
-}
-
-function openWin(url, title, width, height, top, left)
-{
-	var options;
-	var sizes;
-
-	closeWin();
-	options = 'toolbar=0, location=0, directories=0, statfr=no, menubar=0, scrollbars=yes, resizable=yes';
-	sizes = 'width='+width+', height='+height+', top='+top+', left='+left+'';
-	newWin = window.open(url, title, options+', '+sizes);
-	newWin.focus();
-}
-
+var tpl_viewing_window = null;
 function viewTemplates(id_select, prefix, ext)
 {
 	var loc = $(id_select).val();
 	if (loc != 0)
-		openWin (prefix+loc+ext, 'tpl_viewing', '520', '400', '50', '300');
-	return ;
+	{
+		if (tpl_viewing_window != null && !tpl_viewing_window.closed)
+			tpl_viewing_window.close();
+		tpl_viewing_window = window.open(prefix + loc + ext, 'tpl_viewing', 'toolbar=0,location=0,directories=0,statfr=no,menubar=0,scrollbars=yes,resizable=yes,width=520,height=400,top=50,left=300');
+		tpl_viewing_window.focus();
+	}
 }
 
 function validateImportation(mandatory)
