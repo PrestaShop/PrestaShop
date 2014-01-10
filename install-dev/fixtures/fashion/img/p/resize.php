@@ -5,7 +5,7 @@ ini_set('max_execution_time', 7200);
 ini_set('memory_limit', '512M');
 
 $types = ImageType::getImagesTypes('products');
-$files = scandir(__DIR__);
+$files = scandir(dirname(__FILE__));
 foreach ($files as $file)
 	if (preg_match('/^Fotolia_([0-9]+)_X\.jpg$/i', $file, $match))
 	{
