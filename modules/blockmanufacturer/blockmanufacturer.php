@@ -33,7 +33,7 @@ class BlockManufacturer extends Module
     {
         $this->name = 'blockmanufacturer';
         $this->tab = 'front_office_features';
-        $this->version = 1.0;
+        $this->version = 1.1;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -48,7 +48,7 @@ class BlockManufacturer extends Module
 	{
 		Configuration::updateValue('MANUFACTURER_DISPLAY_TEXT', true);
 		Configuration::updateValue('MANUFACTURER_DISPLAY_TEXT_NB', 5);
-		Configuration::updateValue('MANUFACTURER_DISPLAY_FORM', true);
+		Configuration::updateValue('MANUFACTURER_DISPLAY_FORM', false);
 		$success = (parent::install() &&
 			$this->registerHook('header') &&
 			$this->registerHook('actionObjectManufacturerDeleteAfter') &&
