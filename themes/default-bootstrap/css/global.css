@@ -7814,8 +7814,9 @@ div.star.star_hover:after {
   @media (max-width: 991px) {
     #facebook_block,
     #cmsinfo_block {
-      padding-left: 15px;
-      padding-right: 15px; } }
+      min-height: 348px;
+      padding-left: 13px;
+      padding-right: 13px; } }
   @media (max-width: 767px) {
     #facebook_block,
     #cmsinfo_block {
@@ -7840,6 +7841,9 @@ div.star.star_hover:after {
   margin: 0 0 20px;
   font: 300 21px/25px "Open Sans", sans-serif;
   color: #6f6d6d; }
+  @media (max-width: 991px) {
+    #facebook_block h4 {
+      font-size: 18px; } }
 #facebook_block .facebook-fanbox {
   background: white;
   border: 1px solid #aaaaaa;
@@ -7852,7 +7856,7 @@ div.star.star_hover:after {
       border: none;
       margin-top: 10px; } }
   #cmsinfo_block > div {
-    padding: 35px 0 0 0; }
+    padding: 35px 10px 0 0; }
     @media (max-width: 767px) {
       #cmsinfo_block > div {
         padding-top: 20px; } }
