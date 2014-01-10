@@ -38,7 +38,7 @@
 		{else}
 			{l s='Warning! Your PHP configuration limits the maximum number of fields allowed in a form:'}
 			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
-			{l s='Please ask your hosting provider to increase the this limit to'}
+			{l s='Please ask your hosting provider to increase this limit to'}
 		{/if}
 		{l s='%s at least, or you will have to edit the translation files.' sprintf=$limit_warning['needed_limit']}
 	</div>
