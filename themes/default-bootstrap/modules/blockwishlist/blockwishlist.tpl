@@ -23,14 +23,14 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div id="wishlist_block" class="block account">
-	<h4 class="title_block">
+	<h2>
 		<a 
 		href="{$wishlist_link|escape:'html':'UTF-8'}" 
 		title="{l s='My wishlists' mod='blockwishlist'}" 
 		rel="nofollow">
 			{l s='Wishlist' mod='blockwishlist'}
 		</a>
-	</h4>
+	</h2>
 
 	<div class="block_content">
 		<div id="wishlist_block_list" class="expanded">

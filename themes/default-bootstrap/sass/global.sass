@@ -43,7 +43,6 @@ header
 	z-index: 1
 	position: relative
 	background: $light-background
-	padding-bottom: 15px
 	.banner
 		background: black
 		.row
@@ -62,6 +61,9 @@ header
 			position: relative
 		#header_logo
 			padding-top: 15px
+			h1
+				text-indent: -9999px
+				font-size: 0
 			@extend .col-sm-4
 			@media (max-width: $screen-md)
 				padding-top: 40px
@@ -805,16 +807,15 @@ table.table_block td
 		@media (max-width: $screen-xs-max)
 			margin-bottom: 20px
 
-.block 
-	.title_block,
-	h4
+.block
+	h2
 		font: 600 18px/22px $font-custom
 		color: $base-heading-color
 		background: #f6f6f6
 		border-top: 5px solid $dark-border-color
 		text-transform: uppercase
 		padding: 14px 5px 17px 20px
-		margin-bottom: 20px
+		margin: 0 0 20px 0
 		@media (min-width: $screen-sm) and (max-width: $screen-sm-max)
 			font-size: 14px
 		// max 767px
@@ -1474,7 +1475,7 @@ div.star a:hover
 			color: #777
 			&:hover
 				color: $light-text-color
-		h4
+		h2
 			font: 600 18px/22px $font-custom
 			color: $light-text-color
 			margin: 0 0 13px 0
@@ -1506,27 +1507,26 @@ div.star a:hover
 			// max 767px 
 			@media (max-width: $screen-xs-max)
 				border: none
-			> div
-				padding: 0 0 0 5px
-				// max 767px 
-				@media (max-width: $screen-xs-max)
-					padding-left: 0
-				ul
-					li
-						padding: 0 0 7px 4px
-						overflow: hidden
-						line-height: 30px
-						> span,
-						> span a
-							color: $light-text-color
-							font-weight: normal
-						i
-							font-size: 25px
-							width: 32px
-							text-align: center
-							padding-right: 12px
-							float: left
-							color: #908f8f
+			padding: 0 0 0 5px
+			// max 767px 
+			@media (max-width: $screen-xs-max)
+				padding-left: 0
+			ul
+				li
+					padding: 0 0 7px 4px
+					overflow: hidden
+					line-height: 30px
+					> span,
+					> span a
+						color: $light-text-color
+						font-weight: normal
+					i
+						font-size: 25px
+						width: 32px
+						text-align: center
+						padding-right: 12px
+						float: left
+						color: #908f8f
 
 		.blockcategories_footer
 			clear: left
@@ -1589,7 +1589,7 @@ div.star a:hover
 						a
 							&:before
 								content: "\f0d2"
-			h4
+			h2
 				float: right
 				margin-bottom: 0
 				font-size: 21px

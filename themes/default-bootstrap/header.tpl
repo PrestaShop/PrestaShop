@@ -78,16 +78,17 @@
 							</div>
 						</div>
 					</div>
-					<div>
-						<div class="container">
-							<div class="row">
-								<div id="header_logo">
+					<div class="container">
+						<div class="row">
+							<div id="header_logo">
+								<h1>
+									{$shop_name|escape:'html':'UTF-8'}
 									<a href="{$base_dir}" title="{$shop_name|escape:'html':'UTF-8'}">
 										<img class="logo img-responsive" src="{$logo_url}" alt="{$shop_name|escape:'html':'UTF-8'}"{if $logo_image_width} width="{$logo_image_width}"{/if}{if $logo_image_height} height="{$logo_image_height}"{/if}/>
 									</a>
-								</div>
-								{if isset($HOOK_TOP)}{$HOOK_TOP}{/if}
+								</h1>
 							</div>
+							{if isset($HOOK_TOP)}{$HOOK_TOP}{/if}
 						</div>
 					</div>
 				</header>
@@ -104,9 +105,9 @@
 					</div>
 					<div class="row">
 						{if isset($left_column_size) && !empty($left_column_size)}
-						<div id="left_column" class="column col-xs-12 col-sm-3">
+						<aside id="left_column" class="column col-xs-12 col-sm-3">
 							{$HOOK_LEFT_COLUMN}
-						</div>
+						</aside>
 						{/if}
-						<div id="center_column" class="center_column col-xs-12 col-sm-{12 - $left_column_size - $right_column_size}">
+						<section id="center_column" class="center_column col-xs-12 col-sm-{12 - $left_column_size - $right_column_size}">
 	{/if}

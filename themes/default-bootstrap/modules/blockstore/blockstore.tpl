@@ -25,11 +25,11 @@
 
 <!-- Block stores module -->
 <div id="stores_block_left" class="block">
-	<p class="title_block">
+	<h2>
 		<a href="{$link->getPageLink('stores')|escape:'html':'UTF-8'}" title="{l s='Our stores' mod='blockstore'}">
 			{l s='Our stores' mod='blockstore'}
 		</a>
-	</p>
+	</h2>
 	<div class="block_content blockstore">
 		<p class="store_image">
 			<a href="{$link->getPageLink('stores')|escape:'html':'UTF-8'}" title="{l s='Our stores' mod='blockstore'}">

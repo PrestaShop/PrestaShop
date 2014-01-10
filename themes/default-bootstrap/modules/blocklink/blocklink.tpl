@@ -25,13 +25,13 @@
 
 <!-- Block links module -->
 <div id="links_block_left" class="block">
-	<p class="title_block">
-	{if $url}
-		<a href="{$url|escape}">{$title|escape}</a>
-	{else}
-		{$title|escape}
-	{/if}
-	</p>
+	<h2>
+    	{if $url}
+    		<a href="{$url|escape}">{$title|escape}</a>
+    	{else}
+    		{$title|escape}
+    	{/if}
+	</h2>
     <div class="block_content list-block">
         <ul>
             {foreach from=$blocklink_links item=blocklink_link}
