@@ -40,7 +40,6 @@
 		var iso_user = '{$iso_user|@addcslashes:'\''}';
 		var country_iso_code = '{$country_iso_code|@addcslashes:'\''}';
 		var _PS_VERSION_ = '{$smarty.const._PS_VERSION_|@addcslashes:'\''}';
-		var helpboxes = {$help_box|intval};
 		var roundMode = {$round_mode|intval};
 {if isset($shop_context)}
 	{if $shop_context == Shop::CONTEXT_ALL}
@@ -55,15 +54,13 @@
 {/if}
 		var autorefresh_notifications = '{$autorefresh_notifications|@addcslashes:'\''}';
 		var new_order_msg = '{l s='A new order has been placed on your shop.' js=1}';
-		var order_number_msg = '{l s='Order number: ' js=1}';
-		var total_msg = '{l s='Total: ' js=1}';
-		var from_msg = '{l s='From: ' js=1}';
+		var order_number_msg = '{l s='Order number:' js=1} ';
+		var total_msg = '{l s='Total:' js=1} ';
+		var from_msg = '{l s='From:' js=1} ';
 		var see_order_msg = '{l s='View this order' js=1}';
 		var new_customer_msg = '{l s='A new customer registered on your shop.' js=1}';
-		var customer_name_msg = '{l s='Customer name: ' js=1}';
-		var see_customer_msg = '{l s='View this customer' js=1}';
+		var customer_name_msg = '{l s='Customer name:' js=1} ';
 		var new_msg = '{l s='A new message posted on your shop.' js=1}';
-		var excerpt_msg = '{l s='Excerpt: ' js=1}';
 		var see_msg = '{l s='Read this message' js=1}';
 		var token = '{$token|addslashes}';
 		var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
