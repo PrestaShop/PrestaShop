@@ -159,8 +159,10 @@
 	function imageLine(id, path, position, cover, shops, legend)
 	{
 		line = $("#lineType").html();
-		line = line.replace(/image_id/g, id);			
-		line = line.replace(/\/[a-z]{0,2}-default/g, path);
+		line = line.replace(/image_id/g, id);
+		line = line.replace(/(\/)?[a-z]{0,2}-default/g, function($0, $1){
+			return $1 ? $1 + path : $0;
+		});
 		line = line.replace(/image_path/g, path);
 		line = line.replace(/image_position/g, position);
 		line = line.replace(/legend/g, legend);
