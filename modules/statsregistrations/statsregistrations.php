@@ -43,7 +43,7 @@ class StatsRegistrations extends ModuleGraph
 		parent::__construct();
 		
 		$this->displayName = $this->l('Customer accounts');
-		$this->description = $this->l('Display registration progress.');
+		$this->description = $this->l('Adds a registration progress tab to the Stats dashboard.');
 	}
 
 	/**
@@ -126,12 +126,12 @@ class StatsRegistrations extends ModuleGraph
 		</div>
 		<h4>'.$this->l('How to act on the registrations\' evolution?').'</h4>
 		<div class="alert alert-warning">
-			'.$this->l('If you let your shop run without changing anything, the number of customer registrations should stay stable or slightly decline.').'
-			'.$this->l('A significant increase or decrease in customer registration shows that there has probably been a change to your shop.With that in mind, we suggest that you identify the cause, correct the issue and get back in the business of making money!').'<br />
+			'.$this->l('If you let your shop run without changing anything, the number of customer registrations should stay stable or show a slight decline.').'
+			'.$this->l('A significant increase or decrease in customer registration shows that there has probably been a change to your shop. With that in mind, we suggest that you identify the cause, correct the issue and get back in the business of making money!').'<br />
 			'.$this->l('Here is a summary of what may affect the creation of customer accounts:').'
 			<ul>
-				<li>'.$this->l('An advertising campaign can attract an increased number of visitors to your online store. This will likely be followed by an increase in customer accounts, and profit margins, which will depend on customer "quality." Well-targeted advertising is typically more effective than large-scale advertising... and it\'s cheaper too!').'</li>
-				<li>'.$this->l('Specials, sales, promotions and/or contests typically demand a shoppers\' attentions. Offering such things will not only keep your business lively,  it will also increase traffic, build customer loyalty and genuine change your current e-commerce philosophy.').'</li>
+				<li>'.$this->l('An advertising campaign can attract an increased number of visitors to your online store. This will likely be followed by an increase in customer accounts and profit margins, which will depend on customer "quality." Well-targeted advertising is typically more effective than large-scale advertising... and it\'s cheaper too!').'</li>
+				<li>'.$this->l('Specials, sales, promotions and/or contests typically demand a shoppers\' attentions. Offering such things will not only keep your business lively, it will also increase traffic, build customer loyalty and genuinely change your current e-commerce philosophy.').'</li>
 				<li>'.$this->l('Design and user-friendliness are more important than ever in the world of online sales. An ill-chosen or hard-to-follow graphical theme can keep shoppers at bay. This means that you should aspire to find the right balance between beauty and functionality for your online store.').'</li>
 			</ul>
 		</div>

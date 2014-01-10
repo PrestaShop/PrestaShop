@@ -43,8 +43,8 @@ class StatsEquipment extends ModuleGraph
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Software');
-		$this->description = $this->l('Display the software used by visitors.');
+		$this->displayName = $this->l('Browsers and operating systems');
+		$this->description = $this->l('Adds a tab containing graphs about web browser and operating system usage to the Stats dashboard.');
 	}
 
 	public function install()
@@ -126,11 +126,11 @@ class StatsEquipment extends ModuleGraph
 		</div>
 		<h4>'.$this->l('Guide').'</h4>
 		<div class="alert alert-warning">
-			<h4>'.$this->l('Ensure that your website is accessible to all.').'</h4>
+			<h4>'.$this->l('Ensure that your website is accessible to all').'</h4>
 			<p>
-			'.$this->l('When managing Websites, it is important to keep track of software used by visitors in order to be sure that the site displays the same way for everyone. 
-				PrestaShop was built in order to be compatible with most recent Web browsers and computer operating systems (OS). 
-				However, because you may end up adding advanced features to your Website or even modify the core PrestaShop code, these additions may not be accessible by everyone. 
+			'.$this->l('When managing Websites, it is important to keep track of the software used by visitors in order to be sure that the site displays the same way for everyone. 
+				PrestaShop was built in order to be compatible with the most recent Web browsers and computer operating systems (OS). 
+				However, because you may end up adding advanced features to your website or even modify the core PrestaShop code, these additions may not be accessible to everyone. 
 				That is why it is a good idea to keep tabs on the percentage of users for each type of software before adding or changing something that only a limited number of users will be able to access.').'
 			</p>
 		</div>
