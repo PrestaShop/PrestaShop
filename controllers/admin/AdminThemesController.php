@@ -1953,40 +1953,44 @@ class AdminThemesControllerCore extends AdminController
 
 			$current_shop = Context::getContext()->shop->id;
 
-			foreach($shops as $shop)
+			foreach ($shops as $shop)
 			{
 				$shop_theme = New Theme((int)$shop['id_theme']);
 				if ((int)Tools::getValue('id_theme') == (int)$shop['id_theme'])
 					continue;
 
-				if (file_exists(_PS_ROOT_DIR_ . '/config/xml/' . $shop_theme->directory . '.xml'))
-				{
-					$shop_xml = simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/' . $shop_theme->directory . '.xml');
-					$theme_shop_module = $this->getModules($shop_xml);
+				$old_xml_name = 'default.xml';
+				if (file_exists(_PS_ROOT_DIR_.'/config/xml/'.$shop_theme->directory.'.xml'))
+					$old_xml_name = $shop_theme->directory.'.xml';
 
-					$to_shop_uninstall = $this->formatHelperArray($theme_shop_module['to_install']);
+				$shop_xml          = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$old_xml_name);
+				$theme_shop_module = $this->getModules($shop_xml);
 
-					if (count($to_shop_uninstall) == 0)
-						continue;
-					$class = '';
-					if ($shop['id_shop'] == $current_shop)
-						$theme_module['to_disable_shop'.$shop['id_shop']] = $theme_shop_module['to_install'];
-					else
-						$class = 'hide';
+				$to_shop_uninstall = array_merge($theme_shop_module['to_install'], $theme_shop_module['to_enable']);
 
-					$fields_form['form']['input'][] = array('type'   => 'checkbox',
-															'label'  => sprintf($this->l('Select the old %1s theme\'s modules you wish to disable:'), $shop_theme->directory),
-															'formGroupClass' => $class,
-															'values' => array(
-																'query' => $to_shop_uninstall,
-																'id'    => 'id',
-																'name'  => 'name'
-															),
-															'name'   => 'to_disable_shop'.$shop['id_shop']
-					);
+				$to_shop_uninstall_formated = $this->formatHelperArray(array_diff($to_shop_uninstall, $theme_module['to_enable']));
 
+				if (count($to_shop_uninstall_formated) == 0)
+					continue;
 
-				}
+				$class = '';
+				if ($shop['id_shop'] == $current_shop)
+					$theme_module['to_disable_shop'.$shop['id_shop']] = $theme_shop_module['to_install'];
+				else
+					$class = 'hide';
+
+				$fields_form['form']['input'][] = array(
+					'type'           => 'checkbox',
+					'label'          => sprintf($this->l('Select the old %1s theme\'s modules you wish to disable:'), $shop_theme->directory),
+					'formGroupClass' => $class,
+					'values'         => array(
+						'query' => $to_shop_uninstall_formated,
+						'id'    => 'id',
+						'name'  => 'name'
+					),
+					'name'           => 'to_disable_shop'.$shop['id_shop']
+				);
+
 			}
 
 			$fields_value = $this->formatHelperValuesArray($theme_module);
