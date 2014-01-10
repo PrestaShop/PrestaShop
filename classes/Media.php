@@ -221,7 +221,8 @@ class MediaCore
 			$js_uri = dirname(preg_replace('/\?.+$/', '', $_SERVER['REQUEST_URI']).'a').'/..'.$js_uri;
 		}
 		
-		$js_uri = str_replace('//', '/', $js_uri);
+		if (!array_key_exists('host', $url_data))
+			$js_uri = str_replace('//', '/', $js_uri);
 
 		return $js_uri;
 	}
@@ -635,18 +636,41 @@ class MediaCore
 	
 	public static function deferInlineScripts($output)
 	{
-		return preg_replace_callback('/<script[^>]*>(.*)<\/script>/Uims', array('Media', 'deferScript'), $output);
+		/* Try to enqueue in js_files inline scripts with src but without conditionnal comments */
+		$dom = new DOMDocument();
+		libxml_use_internal_errors(true);
+		@$dom->loadHTML(($output));
+		libxml_use_internal_errors(false);
+		$scripts = $dom->getElementsByTagName('script');
+		if (is_object($scripts) && $scripts->length)
+			foreach ($scripts as $script)
+				if ($src = $script->getAttribute('src'))
+					Context::getContext()->controller->addJS($src);
+
+		return preg_replace_callback('/<\s*script[^>]*>(.*)<\s*\/script\s*[^>]*>/Uims', array('Media', 'deferScript'), $output);
 	}
 	
 	public static function deferScript($matches)
 	{
-		$value = trim($matches[1]);
-		if(!empty($value))
-		{
-			Media::$inline_script[] = $value;
+		if (!is_array($matches))
+			return false;
+		$inline = '';
+
+		if (isset($matches[0]))
+			$original = trim($matches[0]);
+		if (isset($matches[1]))
+			$inline = trim($matches[1]);
+
+		/* This is an inline script then add its content to inline scripts stack and remove it from content */
+		if (!empty($inline) && preg_match('/<\s*[\/]script[^>]*>/ims', $original) !== false && Media::$inline_script[] = $inline)
 			return '';
-		}
-		else
-			return $matches[0];
+
+		/* This is an external script, if it already belongs to js_files then remove it from content */
+		preg_match('/src\s*=\s*["\']?([^"\']*)[^>]/ims', $original, $results);
+		if (isset($results[1]) && in_array($results[1], Context::getContext()->controller->js_files))
+			return '';
+
+		/* return original string because no match was found */
+		return $original;
 	}
 }
