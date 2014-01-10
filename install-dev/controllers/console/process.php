@@ -28,13 +28,8 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 {
 	const SETTINGS_FILE = 'config/settings.inc.php';
 
-	/**
-	 * @var InstallModelInstall
-	 */
 	protected $model_install;
-	
 	public $process_steps = array();
-	
 	public $previous_button = false;
 
 	public function init()
@@ -63,6 +58,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 	public function initializeContext()
 	{
 		global $smarty;
+
 		// Clean all cache values
 		Cache::clean('*');
 
@@ -110,9 +106,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 			$this->printErrors();
 		if (!$this->processInstallTheme())
 			$this->printErrors();
-		if ($this->datas->send_email)
-			if (!$this->processSendEmail())
-				$this->printErrors();
 
 		if ($this->datas->newsletter)
 		{
@@ -191,11 +184,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 			'shop_country' =>			$this->datas->shop_country,
 			'shop_timezone' =>			$this->datas->timezone,
 			'use_smtp' =>				false,
-			'smtp_server' =>			null,
-			'smtp_login' =>				null,
-			'smtp_password' =>			null,
-			'smtp_encryption' =>		null,
-			'smtp_port' =>				null,
 			'admin_firstname' =>		$this->datas->admin_firstname,
 			'admin_lastname' =>			$this->datas->admin_lastname,
 			'admin_password' =>			$this->datas->admin_password,
@@ -242,45 +230,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 	}
 
 	/**
-	 * PROCESS : sendEmail
-	 * Send information e-mail
-	 */
-	public function processSendEmail()
-	{
-		require_once _PS_INSTALL_MODELS_PATH_.'mail.php';
-		$mail = new InstallModelMail(
-			$this->datas->use_smtp,
-			$this->datas->smtp_server,
-			$this->datas->smtp_login,
-			$this->datas->smtp_password,
-			$this->datas->smtp_port,
-			$this->datas->smtp_encryption,
-			$this->datas->admin_email
-		);
-
-		if (file_exists(_PS_INSTALL_LANGS_PATH_.$this->language->getLanguageIso().'/mail_identifiers.txt'))
-			$content = file_get_contents(_PS_INSTALL_LANGS_PATH_.$this->language->getLanguageIso().'/mail_identifiers.txt');
-		else
-			$content = file_get_contents(_PS_INSTALL_LANGS_PATH_.InstallLanguages::DEFAULT_ISO.'/mail_identifiers.txt');
-
-		$vars = array(
-			'{firstname}' => $this->datas->admin_firstname,
-			'{lastname}' => $this->datas->admin_lastname,
-			'{shop_name}' => $this->datas->shop_name,
-			'{passwd}' => $this->datas->admin_password,
-			'{email}' => $this->datas->admin_email,
-			'{shop_url}' => Tools::getHttpHost(true).__PS_BASE_URI__,
-		);
-		$content = str_replace(array_keys($vars), array_values($vars), $content);
-
-		$mail->send(
-			$this->l('%s - Login information', $this->datas->shop_name),
-			$content
-		);
-
-		return true;
-	}
-		/**
 	 * PROCESS : installModulesAddons
 	 * Install modules from addons
 	 */
