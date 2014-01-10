@@ -473,7 +473,8 @@ class FrontControllerCore extends Controller
 		));
 
 		$this->context->smarty->assign(array(
-			'css_files' => $this->css_files
+			'css_files' => $this->css_files,
+			'js_files' => array() // assign moved to smartyOutputContent since 1.6
 		));
 
 		$this->display_header = $display;
@@ -536,6 +537,7 @@ class FrontControllerCore extends Controller
 
 		$this->context->smarty->assign(array(
 			'css_files' => $this->css_files,
+			'js_files' => array(), // assign moved to smartyOutputContent since 1.6
 			'errors' => $this->errors,
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,
