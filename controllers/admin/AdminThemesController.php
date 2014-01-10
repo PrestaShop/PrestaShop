@@ -1729,16 +1729,44 @@ class AdminThemesControllerCore extends AdminController
 		return $return;
 	}
 
-	private function getNativeModule()
+	/**
+	 *
+	 * @param int $type
+	 * $type = 0 both native & partner (default)
+	 * $type = 1 native
+	 * $type = 2 partner
+	 *
+	 *
+	 * @return array
+	 */
+	private function getNativeModule($type = 0)
 	{
 		$xml = simplexml_load_string(Tools::file_get_contents('http://api.prestashop.com/xml/modules_list_15.xml'));
 
 		if ($xml)
 		{
 			$natives = array();
-			foreach ($xml->modules as $row)
-				foreach ($row->module as $row2)
-					$natives[] = (string)$row2['name'];
+
+			switch ($type)
+			{
+				case 0:
+					foreach ($xml->modules as $row)
+						foreach ($row->module as $row2)
+							$natives[] = (string)$row2['name'];
+					break;
+				case 1:
+					foreach ($xml->modules as $row)
+						if ($row['type'] == 'native')
+						foreach ($row->module as $row2)
+							$natives[] = (string)$row2['name'];
+					break;
+				case 2:
+					foreach ($xml->modules as $row)
+						if ($row['type'] == 'partner')
+						foreach ($row->module as $row2)
+							$natives[] = (string)$row2['name'];
+					break;
+			}
 
 			if (count($natives > 0))
 				return $natives;
@@ -1837,6 +1865,9 @@ class AdminThemesControllerCore extends AdminController
 		if ($xml)
 		{
 			$theme_module = $this->getModules($xml);
+			$native_module = $this->getNativeModule(1);
+
+			$theme_module['to_disable'] = array_merge($theme_module['to_disable'], array_diff($native_module, $theme_module['to_enable']));
 
 			$toolbar_btn['save'] = array(
 				'href' => '#',
