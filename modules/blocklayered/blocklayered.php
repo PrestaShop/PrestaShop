@@ -629,6 +629,17 @@ class BlockLayered extends Module
 		global $smarty;
 		if (!Configuration::getGlobalValue('PS_LAYERED_INDEXED'))
 			return;
+
+		$categories_count = Db::getInstance()->getValue('
+			SELECT COUNT(*)
+			FROM '._DB_PREFIX_.'layered_category
+			WHERE id_category = '.(int)Tools::getValue('id_category', Tools::getValue('id_category_layered', Configuration::get('PS_HOME_CATEGORY'))).'
+			AND id_shop = '.(int) Context::getContext()->shop->id
+		);
+
+		if ($categories_count == 0)
+			return;
+
 		// Inform the hook was executed
 		$params['hookExecuted'] = true;
 		// List of product to overrride categoryController
@@ -1782,7 +1793,7 @@ class BlockLayered extends Module
 				c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright.'
 				AND c.active = 1)
 				RIGHT JOIN '._DB_PREFIX_.'layered_category lc ON (lc.id_category = '.(int)$id_parent.' AND 
-				id_shop = '.(int) Context::getContext()->shop->id.')';
+				lc.id_shop = '.(int) Context::getContext()->shop->id.')';
 			else
 				$query_filters_from .= ' INNER JOIN '._DB_PREFIX_.'category_product cp
 				ON p.id_product = cp.id_product
