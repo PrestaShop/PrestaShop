@@ -2500,9 +2500,6 @@ class ProductCore extends ObjectModel
 		if (!Validate::isBool($usetax) || !Validate::isUnsignedId($id_product))
 			die(Tools::displayError());
 
-		// Initializations
-		$id_group = (int)Group::getCurrent()->id;
-
 		// If there is cart in context or if the specified id_cart is different from the context cart id
 		if (!is_object($cur_cart) || (Validate::isUnsignedInt($id_cart) && $id_cart && $cur_cart->id != $id_cart))
 		{
@@ -2572,7 +2569,10 @@ class ProductCore extends ObjectModel
 			$usetax = false;
 
 		if (is_null($id_customer) && Validate::isLoadedObject($context->customer))
+		{
 			$id_customer = $context->customer->id;
+			$id_group = (int)$context->customer->id_default_group;
+		}
 
 		return Product::priceCalculation(
 			$context->shop->id,
