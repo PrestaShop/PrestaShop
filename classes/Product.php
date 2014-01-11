@@ -2573,6 +2573,8 @@ class ProductCore extends ObjectModel
 			$id_customer = $context->customer->id;
 			$id_group = (int)$context->customer->id_default_group;
 		}
+		else
+			$id_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
 
 		return Product::priceCalculation(
 			$context->shop->id,
