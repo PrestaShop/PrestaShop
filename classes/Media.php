@@ -661,7 +661,7 @@ class MediaCore
 		if (isset($matches[1]))
 			$inline = trim($matches[1]);
 
-		/* This is an inline script then add its content to inline scripts stack and remove it from content */
+		/* This is an inline script, add its content to inline scripts stack then remove it from content */
 		if (!empty($inline) && preg_match('/<\s*[\/]script[^>]*>/ims', $original) !== false && Media::$inline_script[] = $inline)
 			return '';
 

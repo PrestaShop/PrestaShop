@@ -22,10 +22,82 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+$(document).ready(function()
+{
+	ajaxCart.overrideButtonsInThePage();
 
-// Retrocompatibility with 1.4
-if (typeof baseUri === "undefined" && typeof baseDir !== "undefined")
-	baseUri = baseDir;
+	$('#block_cart_collapse').click(function(){
+			ajaxCart.collapse();
+	});
+	$('#block_cart_expand').click(function(){
+			ajaxCart.expand();
+	});
+
+	var cart_qty = 0;
+	var current_timestamp = parseInt(new Date().getTime() / 1000);
+
+	if (typeof $('.ajax_cart_quantity').html() == 'undefined' || (typeof generated_date != 'undefined' && generated_date != null && (parseInt(generated_date) + 30) < current_timestamp))
+		ajaxCart.refresh();
+	else
+		cart_qty = parseInt($('.ajax_cart_quantity').html());
+
+	/* roll over cart */
+	var cart_block = new HoverWatcher('#cart_block');
+	var shopping_cart = new HoverWatcher('#shopping_cart');
+
+	$("#shopping_cart a:first").hover(
+		function() {
+			if (ajaxCart.nb_total_products > 0 || cart_qty > 0)
+				$("#header #cart_block").stop(true, true).slideDown(450);
+		},
+		function() {
+			setTimeout(function() {
+				if (!shopping_cart.isHoveringOver() && !cart_block.isHoveringOver())
+					$("#header #cart_block").stop(true, true).slideUp(450);
+			}, 200);
+		}
+	);
+
+	$("#header #cart_block").appendTo("#header_nav").hover(
+		function() {
+		},
+		function() {
+			setTimeout(function() {
+				if (!shopping_cart.isHoveringOver())
+					$("#header #cart_block").stop(true, true).slideUp(450);
+			}, 200);
+		}
+	);
+
+	$('.delete_voucher').live('click', function() {
+		$.ajax({
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			async: true,
+			cache: false,
+			url:$(this).attr('href') + '?rand=' + new Date().getTime()
+		});
+		$(this).parent().parent().remove();
+		if ($('body').attr('id') == 'order' || $('body').attr('id') == 'order-opc')
+		{
+			if (typeof(updateAddressSelection) != 'undefined')
+				updateAddressSelection();
+			else
+				location.reload();
+		}
+		return false;
+	});
+
+	$('#cart_navigation input').click(function(){
+		$(this).attr('disabled', true).addClass('disabled');
+		$(this).closest("form").get(0).submit();
+	});
+
+	$('#layer_cart .cross, #layer_cart .continue, .layer_cart_overlay').click(function(){
+		$('.layer_cart_overlay').hide();
+		$('#layer_cart').fadeOut('fast'); return false;
+	});
+});
 
 //JS Object : update the cart by ajax actions
 var ajaxCart = {
@@ -189,10 +261,7 @@ var ajaxCart = {
 			$('.ajax_add_to_cart_button').removeAttr('disabled');
 	},
 	// close fancybox
-	updateFancyBox : function ()
-	{
-		
-	},
+	updateFancyBox : function (){},
 
 	// add a product in the cart via ajax
 	add : function(idProduct, idCombination, addedFromProductPage, callerElement, quantity, whishlist){
@@ -441,7 +510,6 @@ var ajaxCart = {
 		});
 	},
 
-
 	//display the products witch are in json data but not already displayed
 	displayNewProducts : function(jsonData) {
 
@@ -587,6 +655,7 @@ var ajaxCart = {
 		}
 		return (content);
 	},
+
 	updateLayer : function(product) {
 		$('#layer_cart_product_title').text(product.name);
 		$('#layer_cart_product_attributes').text('');
@@ -699,82 +768,6 @@ var ajaxCart = {
 		}
 	}
 };
-
-$(document).ready(function()
-{
-	$('#block_cart_collapse').click(function(){
-			ajaxCart.collapse();
-	});
-	$('#block_cart_expand').click(function(){
-			ajaxCart.expand();
-	});
-	ajaxCart.overrideButtonsInThePage();
-
-	var cart_qty = 0;
-	var current_timestamp = parseInt(new Date().getTime() / 1000);
-
-	if (typeof $('.ajax_cart_quantity').html() == 'undefined' || (typeof generated_date != 'undefined' && generated_date != null && (parseInt(generated_date) + 30) < current_timestamp))
-		ajaxCart.refresh();
-	else
-		cart_qty = parseInt($('.ajax_cart_quantity').html());
-
-	/* roll over cart */
-	var cart_block = new HoverWatcher('#cart_block');
-	var shopping_cart = new HoverWatcher('#shopping_cart');
-
-	$("#shopping_cart a:first").hover(
-		function() {
-			if (ajaxCart.nb_total_products > 0 || cart_qty > 0)
-				$("#header #cart_block").stop(true, true).slideDown(450);
-		},
-		function() {
-			setTimeout(function() {
-				if (!shopping_cart.isHoveringOver() && !cart_block.isHoveringOver())
-					$("#header #cart_block").stop(true, true).slideUp(450);
-			}, 200);
-		}
-	);
-
-	$("#header #cart_block").hover(
-		function() {
-		},
-		function() {
-			setTimeout(function() {
-				if (!shopping_cart.isHoveringOver())
-					$("#header #cart_block").stop(true, true).slideUp(450);
-			}, 200);
-		}
-	);
-
-	$('.delete_voucher').live('click', function() {
-		$.ajax({
-			type: 'POST',
-			headers: { "cache-control": "no-cache" },
-			async: true,
-			cache: false,
-			url:$(this).attr('href') + '?rand=' + new Date().getTime()
-		});
-		$(this).parent().parent().remove();
-		if ($('body').attr('id') == 'order' || $('body').attr('id') == 'order-opc')
-		{
-			if (typeof(updateAddressSelection) != 'undefined')
-				updateAddressSelection();
-			else
-				location.reload();
-		}
-		return false;
-	});
-
-	$('#cart_navigation input').click(function(){
-		$(this).attr('disabled', true).addClass('disabled');
-		$(this).closest("form").get(0).submit();
-	});
-
-	$('#layer_cart .cross, #layer_cart .continue, .layer_cart_overlay').click(function(){
-		$('.layer_cart_overlay').hide();
-		$('#layer_cart').fadeOut('fast'); return false;
-	});
-});
 
 function HoverWatcher(selector){
 	this.hovering = false;

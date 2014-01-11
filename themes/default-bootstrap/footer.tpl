@@ -42,17 +42,6 @@
 			</div><!-- #footer -->
 		</div><!-- #page -->
 {/if}
+{include file="$tpl_dir./global.tpl"}
 	</body>
 </html>
-{strip}
-{addJsDef baseDir=$content_dir}
-{addJsDef baseUri=$base_uri}
-{addJsDef static_token=$static_token}
-{addJsDef token=$token}
-{addJsDef priceDisplayPrecision=$priceDisplayPrecision*$currency->decimals}
-{addJsDef priceDisplayMethod=$priceDisplay}
-{addJsDef roundMode=$roundMode}
-{addJsDef logged=$logged|boolval}
-{addJsDef page_name=$page_name|escape:'html':'UTF-8'}
-{addJsDef contentOnly=$content_only|boolval}
-{/strip}
