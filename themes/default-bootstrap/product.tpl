@@ -35,8 +35,6 @@
 		{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
 		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 	{/if}
-	{assign var='imgIndex' value=0}
-	{assign var='textFieldIndex' value=0}
 
 	<div id="primary_block" class="row" itemscope itemtype="http://schema.org/Product">
 		{if !$content_only}
@@ -179,7 +177,7 @@
 			{if isset($images) && count($images) > 1}
 				<p class="resetimg clear">
 					<span id="wrapResetImages" style="display: none;">
-						<a id="resetImages" href="{$link->getProductLink($product)|escape:'html':'UTF-8'}" onclick="$('span#wrapResetImages').hide('slow');return (false);">
+						<a id="resetImages" href="{$link->getProductLink($product)|escape:'html':'UTF-8'}">
 							<i class="icon-repeat"></i>
 							{l s='Display all pictures'}
 						</a>
@@ -409,7 +407,7 @@
 													{assign var="default_colorpicker" value=""}
 													{foreach from=$group.attributes key=id_attribute item=group_attribute}
 														<li{if $group.default == $id_attribute} class="selected"{/if}>
-															<a id="color_{$id_attribute|intval}" class="color_pick{if ($group.default == $id_attribute)} selected{/if}" style="background: {$colors.$id_attribute.value};" title="{$colors.$id_attribute.name}" onclick="colorPickerClick(this);getProductAttribute();">
+															<a id="color_{$id_attribute|intval}" class="color_pick{if ($group.default == $id_attribute)} selected{/if}" style="background: {$colors.$id_attribute.value};" title="{$colors.$id_attribute.name}">
 																{if file_exists($col_img_dir|cat:$id_attribute|cat:'.jpg')}
 																	<img src="{$img_col_dir}{$id_attribute}.jpg" alt="{$colors.$id_attribute.name}" width="20" height="20" />
 																{/if}
@@ -740,109 +738,80 @@
 		</section>
 		{/if}
 	{/if}
-		{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
-		{addJsDef currencyRate=$currencyRate|floatval}
-		{addJsDef currencyFormat=$currencyFormat|intval}
-		{addJsDef currencyBlank=$currencyBlank|intval}
-		{addJsDef taxRate=$tax_rate|floatval}
-		{addJsDef jqZoomEnabled=$jqZoomEnabled|boolval}
-		{addJsDef oosHookJsCodeFunctions=Array()}
-		{addJsDef id_product=$product->id|intval}
-		{addJsDef productHasAttributes=isset($groups)|boolval}
-		{addJsDef quantitiesDisplayAllowed=$display_qties|boolval}
-		{if $display_qties == 1 && $product->quantity}{addJsDef quantityAvailable=$product->quantity}{else}{addJsDef quantityAvailable=0}{/if}
-		{addJsDef allowBuyWhenOutOfStock=$allow_oosp|boolval}
-		{addJsDef availableNowValue=$product->available_now|escape:'quotes':'UTF-8'}
-		{addJsDef availableLaterValue=$product->available_later|escape:'quotes':'UTF-8'}
-		{addJsDef productPriceTaxExcluded=$product->getPriceWithoutReduct(true)|default:'null' - $product->ecotax}
-		{addJsDef productBasePriceTaxExcluded=($product->base_price - $product->ecotax)|floatval}
-		{addJsDef attribute_anchor_separator=$attribute_anchor_separator|addslashes}
-		{if $product->specificPrice && $product->specificPrice.reduction && $product->specificPrice.reduction_type == 'percentage'}{addJsDef reduction_percent=$product->specificPrice.reduction*100}{else}{addJsDef reduction_percent=0}{/if}
-		{if $product->specificPrice && $product->specificPrice.reduction && $product->specificPrice.reduction_type == 'amount'}{addJsDef reduction_price=$product->specificPrice.reduction|floatval}{else}{addJsDef reduction_price=0}{/if}
-		{if $product->specificPrice && $product->specificPrice.price}{addJsDef specific_price=$product->specificPrice.price}{else}{addJsDef specific_price=0}{/if}
-		{if $product->specificPrice && $product->specificPrice|@count}{addJsDef product_specific_price=$product->specificPrice}{else}{addJsDef product_specific_price=array()}{/if}
-		{addJsDef specific_currency=$product->specificPrice && $product->specificPrice.id_currency}
-		{addJsDef group_reduction=$group_reduction}
-		{addJsDef default_eco_tax=$product->ecotax|floatval}
-		{addJsDef ecotaxTax_rate=$ecotaxTax_rate|floatval}
-		{addJsDef currentDate=$smarty.now|date_format:'%Y-%m-%d %H:%M:%S'}
-		{addJsDef maxQuantityToAllowDisplayOfLastQuantityMessage=$last_qties}
-		{addJsDef noTaxForThisProduct=$no_tax|boolval}
-		{addJsDef displayPrice=$priceDisplay|intval}
-		{addJsDef productReference=$product->reference|escape:'html':'UTF-8'}
-		{addJsDef productAvailableForOrder=$product->available_for_order|boolval}
-		{if !$PS_CATALOG_MODE}{addJsDef productShowPrice=$product->show_price|boolval}{else}{addJsDef productShowPrice=0}{/if}
-		{addJsDef productUnitPriceRatio=$product->unit_price_ratio|floatval}
-		{if isset($cover.id_image_only)}{addJsDef idDefaultImage=$cover.id_image_only|intval}{else}{addJsDef idDefaultImage=0}{/if}
-		{addJsDef stock_management=$stock_management|intval}
-		{addJsDef productPriceWithoutReduction=$productPriceWithoutReduction|floatval}
-		{addJsDef productPrice=$productPrice|floatval}
-		{addJsDef img_ps_dir=$img_ps_dir}
-		{addJsDef customizationFields=Array()}
-		{addJsDef img_prod_dir=$img_prod_dir}
-		{addJsDef combinationImages=Array()}
-		{addJsDef attributesCombinations=Array()}
-		{addJsDef isLoggedWishlist=$logged|boolval}
-		{addJsDef minimalQuantity=$product->minimal_quantity|intval}
-		// Translations
-		{addJsDefL name=doesntExist}{l s='This combination does not exist for this product. Please select another combination.' js=1}{/addJsDefL}
-		{addJsDefL name=doesntExistNoMore}{l s='This product is no longer in stock' js=1}{/addJsDefL}
-		{addJsDefL name=doesntExistNoMoreBut}{l s='with those attributes but is available with others.' js=1}{/addJsDefL}
-		{addJsDefL name=uploading_in_progress}{l s='Uploading in progress, please be patient.' js=1}{/addJsDefL}
-		{addJsDefL name=fieldRequired}{l s='Please fill in all the required fields before saving your customization.' js=1}{/addJsDefL}
-<script type="text/javascript">
-// <![CDATA[
-{foreach from=$customizationFields item='field' name='customizationFields'}
-{assign var="key" value="pictures_`$product->id`_`$field.id_customization_field`"}
-	customizationFields[{$smarty.foreach.customizationFields.index|intval}] = new Array();
-	customizationFields[{$smarty.foreach.customizationFields.index|intval}][0] = '{if $field.type|intval == 0}img{$imgIndex++}{else}textField{$textFieldIndex++}{/if}';
-	customizationFields[{$smarty.foreach.customizationFields.index|intval}][1] = {if $field.type|intval == 0 && isset($pictures.$key) && $pictures.$key}2{else}{$field.required|intval}{/if};
-{/foreach}
-
-{if isset($combinationImages)}
-{foreach from=$combinationImages item='combination' key='combinationId' name='f_combinationImages'}
-	combinationImages[{$combinationId}] = new Array();
-{foreach from=$combination item='image' name='f_combinationImage'}
-		combinationImages[{$combinationId}][{$smarty.foreach.f_combinationImage.index}] = {$image.id_image|intval};
-{/foreach}
-{/foreach}
+{strip}
+{addJsDef allowBuyWhenOutOfStock=$allow_oosp|boolval}
+{addJsDef availableNowValue=$product->available_now|escape:'quotes':'UTF-8'}
+{addJsDef availableLaterValue=$product->available_later|escape:'quotes':'UTF-8'}
+{addJsDef attribute_anchor_separator=$attribute_anchor_separator|addslashes}
+{addJsDef attributesCombinations=$attributesCombinations}
+{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
+{addJsDef currencyRate=$currencyRate|floatval}
+{addJsDef currencyFormat=$currencyFormat|intval}
+{addJsDef currencyBlank=$currencyBlank|intval}
+{addJsDef currentDate=$smarty.now|date_format:'%Y-%m-%d %H:%M:%S'}
+{addJsDef combinations=$combinationsJS}
+{addJsDef combinationImages=$combinationImagesJS}
+{addJsDef customizationFields=$customizationFieldsJS}
+{addJsDef default_eco_tax=$product->ecotax|floatval}
+{addJsDef displayPrice=$priceDisplay|intval}
+{addJsDef ecotaxTax_rate=$ecotaxTax_rate|floatval}
+{addJsDef group_reduction=$group_reduction}
+{if isset($cover.id_image_only)}
+	{addJsDef idDefaultImage=$cover.id_image_only|intval}
+{else}
+	{addJsDef idDefaultImage=0}
 {/if}
-
-	combinationImages[0] = new Array();
-
-{if isset($images)}
-{foreach from=$images item='image' name='f_defaultImages'}
-	combinationImages[0][{$smarty.foreach.f_defaultImages.index}] = {$image.id_image};
-{/foreach}
+{addJsDef img_ps_dir=$img_ps_dir}
+{addJsDef img_prod_dir=$img_prod_dir}
+{addJsDef id_product=$product->id|intval}
+{addJsDef jqZoomEnabled=$jqZoomEnabled|boolval}
+{addJsDef maxQuantityToAllowDisplayOfLastQuantityMessage=$last_qties|intval}
+{addJsDef minimalQuantity=$product->minimal_quantity|intval}
+{addJsDef noTaxForThisProduct=$no_tax|boolval}
+{addJsDef oosHookJsCodeFunctions=Array()}
+{addJsDef productHasAttributes=isset($groups)|boolval}
+{addJsDef productPriceTaxExcluded=($product->getPriceWithoutReduct(true)|default:'null' - $product->ecotax)|floatval}
+{addJsDef productBasePriceTaxExcluded=($product->base_price - $product->ecotax)|floatval}
+{addJsDef productReference=$product->reference|escape:'html':'UTF-8'}
+{addJsDef productAvailableForOrder=$product->available_for_order|boolval}
+{addJsDef productPriceWithoutReduction=$productPriceWithoutReduction|floatval}
+{addJsDef productPrice=$productPrice|floatval}
+{addJsDef productUnitPriceRatio=$product->unit_price_ratio|floatval}
+{addJsDef productShowPrice=(!$PS_CATALOG_MODE && $product->show_price)|boolval}
+{if $product->specificPrice && $product->specificPrice|@count}
+	{addJsDef product_specific_price=$product->specificPrice}
+{else}
+	{addJsDef product_specific_price=array()}
 {/if}
-
-{if isset($groups)}
-{foreach from=$combinations key=idCombination item=combination}
-	
-	var specific_price_combination = new Array();
-	var available_date = new Array();
-	specific_price_combination['reduction_percent'] = {if $combination.specific_price && $combination.specific_price.reduction && $combination.specific_price.reduction_type == 'percentage'}{$combination.specific_price.reduction*100}{else}0{/if};
-	specific_price_combination['reduction_price'] = {if $combination.specific_price && $combination.specific_price.reduction && $combination.specific_price.reduction_type == 'amount'}{$combination.specific_price.reduction}{else}0{/if};
-	specific_price_combination['price'] = {if $combination.specific_price && $combination.specific_price.price}{$combination.specific_price.price}{else}0{/if};
-	specific_price_combination['reduction_type'] = '{if $combination.specific_price}{$combination.specific_price.reduction_type}{/if}';
-	specific_price_combination['id_product_attribute'] = {if $combination.specific_price}{$combination.specific_price.id_product_attribute|intval}{else}0{/if};
-	available_date['date'] = '{$combination.available_date}';
-	available_date['date_formatted'] = '{dateFormat date=$combination.available_date full=false}';
-	addCombination({$idCombination|intval}, new Array({$combination.list}), {$combination.quantity}, {$combination.price}, {$combination.ecotax}, {$combination.id_image}, '{$combination.reference|addslashes}', {$combination.unit_impact}, {$combination.minimal_quantity}, available_date, specific_price_combination);
-{/foreach}
+{if $display_qties == 1 && $product->quantity}
+	{addJsDef quantityAvailable=$product->quantity}
+{else}
+	{addJsDef quantityAvailable=0}
 {/if}
-
-{if isset($attributesCombinations)}
-{foreach from=$attributesCombinations key=id item=aC}
-	
-	tabInfos = new Array();
-	tabInfos['id_attribute'] = '{$aC.id_attribute|intval}';
-	tabInfos['attribute'] = '{$aC.attribute}';
-	tabInfos['group'] = '{$aC.group}';
-	tabInfos['id_attribute_group'] = '{$aC.id_attribute_group|intval}';
-	attributesCombinations.push(tabInfos);
-{/foreach}
+{addJsDef quantitiesDisplayAllowed=$display_qties|boolval}
+{if $product->specificPrice && $product->specificPrice.reduction && $product->specificPrice.reduction_type == 'percentage'}
+	{addJsDef reduction_percent=$product->specificPrice.reduction*100|floatval}
+{else}
+	{addJsDef reduction_percent=0}
 {/if}
-//]]>
-</script>
+{if $product->specificPrice && $product->specificPrice.reduction && $product->specificPrice.reduction_type == 'amount'}
+	{addJsDef reduction_price=$product->specificPrice.reduction|floatval}
+{else}
+	{addJsDef reduction_price=0}
+{/if}
+{if $product->specificPrice && $product->specificPrice.price}
+	{addJsDef specific_price=$product->specificPrice.price|floatval}
+{else}
+	{addJsDef specific_price=0}
+{/if}
+{addJsDef specific_currency=($product->specificPrice && $product->specificPrice.id_currency)|boolval}
+{addJsDef stock_management=$stock_management|intval}
+{addJsDef taxRate=$tax_rate|floatval}
+
+{addJsDefL name=doesntExist}{l s='This combination does not exist for this product. Please select another combination.' js=1}{/addJsDefL}
+{addJsDefL name=doesntExistNoMore}{l s='This product is no longer in stock' js=1}{/addJsDefL}
+{addJsDefL name=doesntExistNoMoreBut}{l s='with those attributes but is available with others.' js=1}{/addJsDefL}
+{addJsDefL name=fieldRequired}{l s='Please fill in all the required fields before saving your customization.' js=1}{/addJsDefL}
+{addJsDefL name=uploading_in_progress}{l s='Uploading in progress, please be patient.' js=1}{/addJsDefL}
+{/strip}
 {/if}
