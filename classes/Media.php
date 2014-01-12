@@ -132,6 +132,8 @@ class MediaCore
 
 	public static function packJSinHTMLpregCallback($preg_matches)
 	{
+		if (!(trim($preg_matches[2])))
+			return $preg_matches[0];
 		$preg_matches[1] = $preg_matches[1].'/* <![CDATA[ */';
 		$preg_matches[2] = Media::packJS($preg_matches[2]);
 		$preg_matches[count($preg_matches) - 1] = '/* ]]> */'.$preg_matches[count($preg_matches) - 1];
