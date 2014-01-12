@@ -32,6 +32,7 @@ class MetaCore extends ObjectModel
 	public $description;
 	public $keywords;
 	public $url_rewrite;
+	public $configurable;
 
 	/**
 	 * @see ObjectModel::$definition
