@@ -22,37 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<script type="text/javascript">
-$('document').ready(function()
-{
-	$('a[rel^=ajax_id_favoriteproduct_]').click(function()
-	{
-		var idFavoriteProduct =  $(this).attr('rel').replace('ajax_id_favoriteproduct_', '');
-		var parent = $(this).parent().parent();
-
-		$.ajax({
-			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], true)|addslashes}",
-			type: "POST",
-			data: {
-				'id_product': idFavoriteProduct,
-				'ajax': true
-			},
-			success: function(result)
-			{
-				if (result == '0')
-				{
-					parent.fadeOut("normal", function()
-					{
-						parent.remove();
-					});
-				}
- 		 	}
-		});
-	});
-});
-</script>
-
 {capture name=path}
 	<a href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}">
 		{l s='My account' mod='favoriteproducts'}

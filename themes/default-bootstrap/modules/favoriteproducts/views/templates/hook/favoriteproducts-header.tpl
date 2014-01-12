@@ -22,10 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script type="text/javascript">
-	var favorite_products_url_add = '{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'add'], false)|addslashes}';
-	var favorite_products_url_remove = '{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], false)|addslashes}';
+{strip}
+{addJsDef favorite_products_url_add=$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'add'], true)|addslashes}
+{addJsDef favorite_products_url_remove=$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], true)|addslashes}
 {if isset($smarty.get.id_product)}
-	var favorite_products_id_product = '{$smarty.get.id_product|intval}';
+	{addJsDef favorite_products_id_product=$smarty.get.id_product|intval}
 {/if} 
-</script>
+{/strip}
