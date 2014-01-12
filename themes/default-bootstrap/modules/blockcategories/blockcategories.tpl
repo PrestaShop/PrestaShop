@@ -42,17 +42,6 @@
 				{/if}
 			{/foreach}
 		</ul>
-		{* Javascript moved here to fix bug #PSCFI-151 *}
-		<script type="text/javascript">
-		// <![CDATA[
-			{literal}
-			$('document').ready( function() {
-				// we hide the tree only if JavaScript is activated
-				$('div#categories_block_left ul.dhtml').hide();
-			});
-			{/literal}
-		// ]]>
-		</script>
 	</div>
 </div>
 <!-- /Block categories module -->
