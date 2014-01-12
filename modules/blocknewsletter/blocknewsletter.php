@@ -489,6 +489,7 @@ class Blocknewsletter extends Module
 	public function hookDisplayHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'blocknewsletter.css', 'all');
+		$this->context->controller->addJS($this->_path.'blocknewsletter.js');
 	}
 
 	/**
