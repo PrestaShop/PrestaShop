@@ -185,7 +185,7 @@
 								<span>{l s='Send' mod='productcomments'}</span>
 							</button>&nbsp;
 							{l s='or' mod='productcomments'}&nbsp;
-							<a href="#" onclick="$.fancybox.close();" >
+							<a class="closefb" href="#">
 								{l s='Cancel' mod='productcomments'}
 							</a>
 						</p>
