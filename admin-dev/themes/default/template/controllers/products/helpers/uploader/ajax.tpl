@@ -84,6 +84,7 @@
 			},
 			fail: function (e, data) {
 				$('#{$id}-errors').html(data.errorThrown.message).parent().show();
+				$('#{$id}-files-list').html('').parent().hide();
 			},
 			done: function (e, data) {
 				if (data.result) {
@@ -91,6 +92,7 @@
 						for (var i=0; i<data.result.{$name}.length; i++) {
 							if (typeof data.result.{$name}[i].error !== 'undefined' && data.result.{$name}[i].error != '') {
 								$('#{$id}-errors').html('<strong>'+data.result.{$name}[i].name+'</strong> : '+data.result.{$name}[i].error).parent().show();
+								$('#{$id}-files-list').html('').parent().hide();
 							}
 							else 
 							{
@@ -167,6 +169,7 @@
 			
 			if (file.error) {
 				$('#{$id}-errors').append('<div class="row"><strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error+'</div>').parent().show();
+				$('#{$id}-files-list').html('').parent().hide();
 				$(data.context).find('button').trigger('click');
 			}
 		}).on('fileuploadsubmit', function (e, data) {
