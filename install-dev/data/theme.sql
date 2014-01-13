@@ -51,9 +51,9 @@ UPDATE `PREFIX_configuration` SET value = 'store.jpg' WHERE name = 'BLOCKSTORE_I
 UPDATE `PREFIX_configuration` SET value = 'jpg' WHERE name = 'BLOCKADVERT_IMG_EXT';
 UPDATE `PREFIX_configuration` SET value = 'CAT3,CAT26' WHERE name = 'MOD_BLOCKTOPMENU_ITEMS';
 UPDATE `PREFIX_configuration` SET value = '0' WHERE name = 'MOD_BLOCKTOPMENU_SEARCH';
-UPDATE `PREFIX_configuration` SET value = 'http://www.facebook.com/prestashop' WHERE name = 'blocksocial_facebook';
-UPDATE `PREFIX_configuration` SET value = 'http://www.twitter.com/prestashop' WHERE name = 'blocksocial_twitter';
-UPDATE `PREFIX_configuration` SET value = 'http://www.prestashop.com/blog/en/feed/' WHERE name = 'blocksocial_rss';
+UPDATE `PREFIX_configuration` SET value = 'http://www.facebook.com/prestashop' WHERE name = 'BLOCKSOCIAL_FACEBOOK';
+UPDATE `PREFIX_configuration` SET value = 'http://www.twitter.com/prestashop' WHERE name = 'BLOCKSOCIAL_TWITTER';
+UPDATE `PREFIX_configuration` SET value = 'http://www.prestashop.com/blog/en/feed/' WHERE name = 'BLOCKSOCIAL_RSS';
 UPDATE `PREFIX_configuration` SET value = 'My Company' WHERE name = 'blockcontactinfos_company';
 UPDATE `PREFIX_configuration` SET value = '42 avenue des Champs Elysées\n75000 Paris\nFrance' WHERE name = 'blockcontactinfos_address';
 UPDATE `PREFIX_configuration` SET value = '0123-456-789' WHERE name = 'blockcontactinfos_phone';
