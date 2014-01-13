@@ -23,40 +23,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script type="text/javascript">
-{literal}
-$('document').ready(function(){
-	$('#send_friend_button').fancybox({
-		'hideOnContentClick': false
-	});
-
-	$('#sendEmail').click(function(){
-		
-		var name = $('#friend_name').val();
-		var email = $('#friend_email').val();
-		var id_product = $('#id_product_comment_send').val();
-		if (name && email && !isNaN(id_product))
-		{
-			$.ajax({
-				{/literal}url: "{$module_dir}sendtoafriend_ajax.php",{literal}
-				type: "POST",
-				headers: {"cache-control": "no-cache"},
-				data: {action: 'sendToMyFriend', secure_key: '{/literal}{$stf_secure_key}{literal}', name: name, email: email, id_product: id_product},{/literal}{literal}
-				dataType: "json",
-				success: function(result) {
-					$.fancybox.close();
-					var msg = result ? "{/literal}{l s='Your e-mail has been sent successfully' mod='sendtoafriend'}{literal}" : "{/literal}{l s='Your e-mail could not be sent. Please check the e-mail address and try again.' mod='sendtoafriend'}{literal}";
-					var title = "{/literal}{l s='Send to a friend' mod='sendtoafriend'}{literal}";
-					fancyMsgBox(msg, title);
-				}
-			});
-		}
-		else
-			$('#send_friend_form_error').text("{/literal}{l s='You did not fill required fields' mod='sendtoafriend' js=1}{literal}");
-	});
-});
-{/literal}
-</script>
 <li class="sendtofriend">
 	<a id="send_friend_button" href="#send_friend_form">
 		{l s='Send to a friend' mod='sendtoafriend'}
@@ -105,7 +71,7 @@ $('document').ready(function(){
 					</div>
 					<p class="submit">
 						<input id="id_product_comment_send" name="id_product" type="hidden" value="{$stf_product->id}" />
-						<a href="#" onclick="$.fancybox.close();">
+						<a class="closefb" href="#">
 							{l s='Cancel' mod='sendtoafriend'}
 						</a>
 						&nbsp;{l s='or' mod='sendtoafriend'}&nbsp;					
@@ -122,3 +88,8 @@ $('document').ready(function(){
 		</div>
 	</div>
 </li>
+{addJsDef stf_secure_key=$stf_secure_key}
+{addJsDefL name=stf_msg_success}{l s='Your e-mail has been sent successfully' mod='sendtoafriend' js=1}{/addJsDefL}
+{addJsDefL name=stf_msg_error}{l s='Your e-mail could not be sent. Please check the e-mail address and try again.' mod='sendtoafriend' js=1}{/addJsDefL}
+{addJsDefL name=stf_msg_title}{l s='Send to a friend' mod='sendtoafriend' js=1}{/addJsDefL}
+{addJsDefL name=stf_msg_required}{l s='You did not fill required fields' mod='sendtoafriend' js=1}{/addJsDefL}

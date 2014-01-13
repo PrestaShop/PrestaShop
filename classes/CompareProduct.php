@@ -97,7 +97,7 @@ class CompareProductCore extends ObjectModel
 		}
 
 		return Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'compare_product` (`id_compare`, `id_product`, `date_add`, `date_upd`)
+			INSERT IGNORE INTO `'._DB_PREFIX_.'compare_product` (`id_compare`, `id_product`, `date_add`, `date_upd`)
 			VALUES ('.(int)($id_compare).', '.(int)($id_product).', NOW(), NOW())');
 	}
 

@@ -37,5 +37,4 @@
 		</p>
 	</form>
 </div>
-{include file="$self/blocksearch-instantsearch.tpl"}
 <!-- /Block search module -->

@@ -2027,13 +2027,8 @@ class AdminControllerCore extends Controller
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 
 		$this->addJquery();
-
-		$this->addjQueryPlugin(array('scrollTo', 'alerts'));
-
-		$this->addJqueryUI(array(
-			'ui.slider',
-			'ui.datepicker'
-		));
+		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'growl'));
+		$this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
 		$this->addJS(array(
 			_PS_JS_DIR_.'admin.js',
@@ -2046,15 +2041,9 @@ class AdminControllerCore extends Controller
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.js');
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.js');
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
-		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/jquery.growl.js');
-		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/jquery.chosen.js');
 
 		if (!Tools::getValue('submitFormAjax'))
-		{
 			$this->addJs(_PS_JS_DIR_.'notifications.js');
-			if (Configuration::get('PS_HELPBOX'))
-				$this->addJS(_PS_JS_DIR_.'helpAccess.js');
-		}
 
 		// Execute Hook AdminController SetMedia
 		Hook::exec('actionAdminControllerSetMedia');

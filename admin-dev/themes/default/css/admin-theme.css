@@ -97,7 +97,7 @@
 
 .icon-th-list:before { content: "\f00b"; }
 
-.icon-check:before, .icon-ok:before, .bootstrap .process-icon-ok:before { content: "\f00c"; }
+.icon-check:before, .bootstrap .process-icon-ok:before { content: "\f00c"; }
 
 .icon-times:before, .icon-remove:before, .bootstrap .process-icon-cancel:before { content: "\f00d"; }
 
@@ -205,7 +205,7 @@
 
 .icon-share-square-o:before, .icon-share:before, .icon-share-alt:before { content: "\f045"; }
 
-.icon-check-square-o:before, .icon-check:before, .icon-ok:before, .bootstrap .process-icon-ok:before { content: "\f046"; }
+.icon-check-square-o:before { content: "\f046"; }
 
 .icon-arrows:before, .icon-move:before { content: "\f047"; }
 

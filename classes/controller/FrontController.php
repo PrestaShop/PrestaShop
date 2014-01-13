@@ -522,7 +522,7 @@ class FrontControllerCore extends Controller
 		// Automatically add css files from css/autoload directory in the template
 		foreach (scandir($this->getThemeDir().'css/autoload', 0) as $file)
 			if (preg_match('/^[^.].*\.css$/', $file))
-				$this->addCSS($this->getThemeDir().'css/autoload'.$file);
+				$this->addCSS($this->getThemeDir().'css/autoload/'.$file);
 
 		// assign css_files and js_files at the very last time
 		if ((Configuration::get('PS_CSS_THEME_CACHE') || Configuration::get('PS_JS_THEME_CACHE')) && is_writable(_PS_THEME_DIR_.'cache'))

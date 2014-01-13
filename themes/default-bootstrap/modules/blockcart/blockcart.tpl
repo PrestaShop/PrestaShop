@@ -22,31 +22,6 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-
-{* IMPORTANT : If you change some data here, you have to report these changes in the ./blockcart-json.js (to let ajaxCart available) *}
-
-{if $ajax_allowed}
-<script type="text/javascript">
-var CUSTOMIZE_TEXTFIELD = {$CUSTOMIZE_TEXTFIELD};
-var img_dir = '{$img_dir|addslashes}';
-</script>
-{/if}
-<script type="text/javascript">
-var customizationIdMessage = '{l s='Customization #' mod='blockcart' js=1}';
-var removingLinkText = '{l s='remove this product from my cart' mod='blockcart' js=1}';
-var freeShippingTranslation = '{l s='Free shipping!' mod='blockcart' js=1}';
-var freeProductTranslation = '{l s='Free!' mod='blockcart' js=1}';
-var delete_txt = '{l s='Delete' mod='blockcart' js=1}';
-var generated_date = {$smarty.now|intval};
-</script>
-
-<script>
-	$( document ).ready(function() {
-		$("#cart_block").appendTo("#header_nav");
-	});
-</script>
-
 <!-- MODULE Block cart -->
 <div id="cart_block" class="block exclusive">
 	<p class="title_block">
@@ -416,4 +391,15 @@ var generated_date = {$smarty.now|intval};
 	<div class="crossseling"></div>
 </div> <!-- #layer_cart -->
 <div class="layer_cart_overlay"></div>
+{strip}
+{addJsDef CUSTOMIZE_TEXTFIELD=$CUSTOMIZE_TEXTFIELD}
+{addJsDef img_dir=$img_dir|addslashes}
+{addJsDef generated_date=$smarty.now|intval}
+
+{addJsDefL name=customizationIdMessage}{l s='Customization #' mod='blockcart' js=1}{/addJsDefL}
+{addJsDefL name=removingLinkText}{l s='remove this product from my cart' mod='blockcart' js=1}{/addJsDefL}
+{addJsDefL name=freeShippingTranslation}{l s='Free shipping!' mod='blockcart' js=1}{/addJsDefL}
+{addJsDefL name=freeProductTranslation}{l s='Free!' mod='blockcart' js=1}{/addJsDefL}
+{addJsDefL name=delete_txt}{l s='Delete' mod='blockcart' js=1}{/addJsDefL}
+{/strip}
 <!-- /MODULE Block cart -->

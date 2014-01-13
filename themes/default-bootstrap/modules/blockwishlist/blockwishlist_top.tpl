@@ -22,10 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script type="text/javascript">
-	var isLoggedWishlist = {if $logged}true{else}false{/if};
-	var wishlistProductsIds = [];
-</script>
-{foreach from=$wishlist_products item=product name=i}
-	<script type="text/javascript">wishlistProductsIds.push({$product.id_product});</script>
-{/foreach}
+{strip}
+{addJsDef isLoggedWishlist=$logged|boolval}
+{addJsDef wishlistProductsIds=$wishlist_products}
+{/strip}
