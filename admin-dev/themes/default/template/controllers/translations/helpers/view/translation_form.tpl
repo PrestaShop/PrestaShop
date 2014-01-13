@@ -47,7 +47,7 @@
 		<div class="alert alert-info">
 			<ul>
 				<li>{l s='Click on titles to open fieldsets'}.</li>
-				<li>{l s='Some sentences to translate use this syntax: "Word %s word". These "%s" are variables, and PrestaShop takes care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}</li>
+				<li>{l s='Some sentences to translate use this syntax: "Word %%s word". These "%%s" are variables, and PrestaShop takes care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.'}</li>
 			</ul>
 		</div>
 		<div class="panel">

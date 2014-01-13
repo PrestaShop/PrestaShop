@@ -24,8 +24,7 @@
 
 $(document).ready(function()
 {
-	$('#mainForm').submit(function()
-	{
+	$('#mainForm').submit(function() {
 		$('#btNext').hide();
 	});
 

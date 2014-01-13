@@ -181,7 +181,7 @@
 
 	<hr/>
 
-	{* status informations *}	
+	{* status informations *}
 	<div class="form-group">		
 		<label class="control-label col-lg-3">
 			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
@@ -328,6 +328,7 @@
 				file="controllers/products/textarea_lang.tpl"
 				languages=$languages
 				input_name='description_short'
+				class="autoload_rte"
 				input_value=$product->description_short
 				max=$PS_PRODUCT_SHORT_DESC_LIMIT}
 		</div>
@@ -345,6 +346,7 @@
 			{include
 				file="controllers/products/textarea_lang.tpl"
 				languages=$languages input_name='description'
+				class="autoload_rte"
 				input_value=$product->description}
 		</div>
 	</div>

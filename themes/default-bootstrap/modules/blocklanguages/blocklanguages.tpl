@@ -22,49 +22,34 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <!-- Block languages module -->
 {if count($languages) > 1}
-	<div id="languages-block-top">
-		<div id="countries">
+	<div id="languages-block-top" class="languages-block">
+		{foreach from=$languages key=k item=language name="languages"}
+			{if $language.iso_code == $lang_iso}
+				<div class="current">
+					<span>{$language.name|regex_replace:"/\s.*$/":""}</span>
+				</div>
+			{/if}
+		{/foreach}
+		<ul id="first-languages" class="languages-block_ul toogle_content">
 			{foreach from=$languages key=k item=language name="languages"}
-				{if $language.iso_code == $lang_iso}
-					<div class="current">
-						<span>{$language.name}</span>
-					</div>
+				<li {if $language.iso_code == $lang_iso}class="selected"{/if}>
+				{if $language.iso_code != $lang_iso}
+					{assign var=indice_lang value=$language.id_lang}
+					{if isset($lang_rewrite_urls.$indice_lang)}
+						<a href="{$lang_rewrite_urls.$indice_lang|escape:'html':'UTF-8'}" title="{$language.name}">
+					{else}
+						<a href="{$link->getLanguageLink($language.id_lang)|escape:'html':'UTF-8'}" title="{$language.name}">
+					{/if}
 				{/if}
+						<span>{$language.name|regex_replace:"/\s.*$/":""}</span>
+				{if $language.iso_code != $lang_iso}
+					</a>
+				{/if}
+				</li>
 			{/foreach}
-			<ul id="first-languages" class="countries_ul toogle_content">
-				{foreach from=$languages key=k item=language name="languages"}
-					<li {if $language.iso_code == $lang_iso}class="selected"{/if}>
-					{if $language.iso_code != $lang_iso}
-						{assign var=indice_lang value=$language.id_lang}
-						{if isset($lang_rewrite_urls.$indice_lang)}
-							<a href="{$lang_rewrite_urls.$indice_lang|escape:'html':'UTF-8'}" title="{$language.name}">
-						{else}
-							<a href="{$link->getLanguageLink($language.id_lang)|escape:'html':'UTF-8'}" title="{$language.name}">
-						{/if}
-					{/if}
-							<span>{$language.name}</span>
-					{if $language.iso_code != $lang_iso}
-						</a>
-					{/if}
-					</li>
-				{/foreach}
-			</ul>
-		</div>
+		</ul>
 	</div>
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$('#countries .current span, #countries .countries_ul li span').each(function() {
-				var h = $(this).html();
-				var index = h.indexOf(' ');
-					if(index == -1) {
-						index = h.length;
-					}
-				$(this).html('<span class="firstWord">'+ h.substring(index, h.length) + '</span>' + h.substring(0, index));
-			});
-		}); 
-	</script>
 {/if}
 <!-- /Block languages module -->

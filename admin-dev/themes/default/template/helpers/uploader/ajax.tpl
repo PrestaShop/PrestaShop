@@ -107,6 +107,7 @@
 
 		$('#{$id}').fileupload({
 			dataType: 'json',
+			async: false,
 			autoUpload: false,
 			singleFileUploads: true,
 			{if isset($post_max_size)}maxFileSize: {$post_max_size},{/if}

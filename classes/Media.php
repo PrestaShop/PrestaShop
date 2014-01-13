@@ -132,6 +132,8 @@ class MediaCore
 
 	public static function packJSinHTMLpregCallback($preg_matches)
 	{
+		if (!(trim($preg_matches[2])))
+			return $preg_matches[0];
 		$preg_matches[1] = $preg_matches[1].'/* <![CDATA[ */';
 		$preg_matches[2] = Media::packJS($preg_matches[2]);
 		$preg_matches[count($preg_matches) - 1] = '/* ]]> */'.$preg_matches[count($preg_matches) - 1];
@@ -661,7 +663,7 @@ class MediaCore
 		if (isset($matches[1]))
 			$inline = trim($matches[1]);
 
-		/* This is an inline script then add its content to inline scripts stack and remove it from content */
+		/* This is an inline script, add its content to inline scripts stack then remove it from content */
 		if (!empty($inline) && preg_match('/<\s*[\/]script[^>]*>/ims', $original) !== false && Media::$inline_script[] = $inline)
 			return '';
 

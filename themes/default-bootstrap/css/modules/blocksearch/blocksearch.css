@@ -3,9 +3,6 @@
   #search_block_top #searchbox {
     float: left;
     width: 100%; }
-  @media (max-width: 768px) {
-    #search_block_top {
-      padding-top: 0; } }
   #search_block_top .btn.button-search {
     background: #333333;
     display: block;

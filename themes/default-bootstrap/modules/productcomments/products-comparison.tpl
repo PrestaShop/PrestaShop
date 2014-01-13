@@ -22,30 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<script type="text/javascript" src="{$module_dir}js/products-comparison.js"></script>
-<script type="text/javascript" src="{$module_dir}js/jquery.rating.pack.js"></script>
-<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/jquery.cluetip.js"></script>
-<script type="text/javascript">
-	{literal}
-	$(function()
-	{
-		$('input[type=radio].star').rating();
-	});
-	$(function()
-	{
-		$('.auto-submit-star').rating();
-	});
-	
-	//close  comment form
-	function closeCommentForm()
-	{
-		$('#sendComment').slideUp('fast');
-		$('input#addCommentButton').fadeIn('slow');
-	}
-	{/literal}
-</script>
-
 <tr class="comparison_header">
 	<td class="feature-name">
 		<strong>{l s='Comments' mod='productcomments'}</strong>
@@ -97,28 +73,12 @@
 	</td>	
 {/foreach}
 </tr>
-
 <tr>
 	<td class="{$classname} comparison_infos feature-name">&nbsp;</td>
 	{foreach from=$list_ids_product item=id_product}
 	<td  width="{$width}%" class="{$classname} comparison_infos" align="center" >
 		{if isset($product_comments[$id_product]) AND $product_comments[$id_product]}
-			<script type="text/javascript">
-			$(document).ready(function() {
-				var htmlContent = $('#comments_{$id_product}').html();
-				$("[rel=#comments_{$id_product}]").popover({
-					placement : 'top', //placement of the popover. also can use top, bottom, left or right
-					title : false, //this is the top title bar of the popover. add some basic css
-					html: 'true', //needed to show html of course
-					content : htmlContent  //this is the content of the html box. add the image here or anything you want really.
-				});
-			});
-			</script>
-			<a 
-			class="btn btn-default button button-small" 
-			href="#" 
-			onclick="return false;" 
-			rel="#comments_{$id_product}">
+			<a class="btn btn-default button button-small" href="#" data-id-product-comment="{$id_product|intval} rel="#comments_{$id_product|intval}">
 				<span>
 					{l s='View comments' mod='productcomments'}<i class="icon-chevron-right right"></i>
 				</span>
