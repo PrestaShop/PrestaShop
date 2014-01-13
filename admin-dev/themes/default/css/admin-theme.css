@@ -1,3 +1,20 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, #content.bootstrap .panel-heading, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font: inherit; font-size: 100%; vertical-align: baseline; }
+
+html { line-height: 1; }
+
+ol, ul { list-style: none; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+
+caption, th, td { text-align: left; font-weight: normal; vertical-align: middle; }
+
+q, blockquote { quotes: none; }
+q:before, q:after, blockquote:before, blockquote:after { content: ""; content: none; }
+
+a img { border: none; }
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary { display: block; }
+
 /*!
  *  Font Awesome 4.0.3 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -2595,10 +2612,12 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 #header_search .clear_search { position: absolute; top: 5px; right: 35px; }
 
 #employee_infos .employee_name { position: relative; padding-left: 34px !important; }
-#employee_infos .employee_avatar_small { height: 30px; width: 30px; display: inline-block; position: absolute; top: 4px; left: 0; }
-#employee_infos .employee_avatar_small img { width: 100%; height: 100%; -webkit-border-radius: 30px; -moz-border-radius: 30px; -ms-border-radius: 30px; -o-border-radius: 30px; border-radius: 30px; }
-#employee_infos .employee_avatar { height: 100px; width: 100px; display: block; margin: 10px auto; overflow: hidden; -webkit-border-radius: 120px; -moz-border-radius: 120px; -ms-border-radius: 120px; -o-border-radius: 120px; border-radius: 120px; -webkit-box-shadow: white 0 0 0 2px, #cccccc 0 0 10px 3px; box-shadow: white 0 0 0 2px, #cccccc 0 0 10px 3px; }
-#employee_infos .employee_avatar img { width: 100%; height: 100%; }
+
+.employee_avatar_small { height: 30px; width: 30px; display: inline-block; position: absolute; top: 4px; left: 0; }
+.employee_avatar_small img { width: 100%; height: 100%; -webkit-border-radius: 30px; -moz-border-radius: 30px; -ms-border-radius: 30px; -o-border-radius: 30px; border-radius: 30px; }
+
+.employee_avatar { height: 100px; width: 100px; display: block; margin: 10px auto; overflow: hidden; -webkit-border-radius: 120px; -moz-border-radius: 120px; -ms-border-radius: 120px; -o-border-radius: 120px; border-radius: 120px; -webkit-box-shadow: white 0 0 0 2px, #cccccc 0 0 10px 3px; box-shadow: white 0 0 0 2px, #cccccc 0 0 10px 3px; }
+.employee_avatar img { width: 100%; height: 100%; }
 
 #footer { z-index: 600; display: block; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: #888888; position: fixed; bottom: 0; height: 50px; line-height: 50px; -webkit-animation: fadeInUp 0.3s 0.2s ease both; -moz-animation: fadeInUp 0.3s 0.2s ease both; -ms-animation: fadeInUp 0.3s 0.2s ease both; -o-animation: fadeInUp 0.3s 0.2s ease both; animation: fadeInUp 0.3s 0.2s ease both; }
 #footer a { color: #cccccc; }
@@ -3198,6 +3217,8 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap #dash_version { padding: 0 !important; overflow: hidden; }
 .bootstrap #dash_version iframe { height: 80px; width: 100%; }
 .bootstrap .adminsearch #content .panel .panel, .bootstrap .adminsearch #content #dash_version .panel, .bootstrap .adminsearch #content .panel #dash_version, .bootstrap .adminsearch #content #dash_version #dash_version { padding: 0; margin: 0; border: none; -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0; border-radius: 0; -webkit-box-shadow: 0; box-shadow: 0; }
+.bootstrap #translations_form .translations-email-panel { margin: 0 0 5px 0; padding: 5px; }
+.bootstrap #translations_form .block-mail iframe, .bootstrap #translations_form .block-mail textarea { width: 100%; height: 400px; }
 
 /* jQuery Growl Copyright 2013 Kevin Sylvestre 1.1.4 */
 #growls { z-index: 50000; position: fixed; }
