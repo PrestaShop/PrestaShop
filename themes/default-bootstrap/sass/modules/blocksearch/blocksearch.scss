@@ -6,9 +6,6 @@
 		float: left;
 		width: 100%;
 	}
-	@media (max-width: $screen-sm) {
-		padding-top: 0;
-	}
 	.btn.button-search {
 		background: $dark-background;
 		display: block;

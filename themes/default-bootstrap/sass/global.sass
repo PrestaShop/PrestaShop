@@ -544,6 +544,7 @@ table.table_block td
 				background: $table-background
 				border-bottom-width: 1px
 				color: $base-text-color
+				vertical-align: middle
 	td
 		a.color-myaccount
 			color: $link-color
@@ -566,6 +567,8 @@ table.table_block td
 		color: $product-name-color
 		&:hover
 			color: $product-name-hover-color
+		@media (max-width: $screen-sm)
+			font-size: 14px
 
 .price
 	font-size: 13px
@@ -1155,6 +1158,9 @@ ul.step
 			font-weight: bold
 			text-shadow: 1px 1px rgba(255,255,255,1)
 			position: relative
+			// max 991px										
+			@media (max-width: $screen-md) 
+				font-size: 15px
 			// min 991px										
 			@media (min-width: $screen-md) 
 				&:after
@@ -1634,6 +1640,9 @@ div.star a:hover
 		span
 			@include border-radius(4px)
 			padding: 11px 15px 10px 15px
+			// max 992px 
+			@media (max-width: $screen-md)
+				font-size: 16px
 		i.right
 			font-size: 25px
 			line-height: 25px
@@ -1735,7 +1744,7 @@ a.price_discount_delete
 				color: $product-price-color
 				background: $light-background
 
-@media (max-width: 767px)
+@media (max-width: $screen-xs-max)
 	#order-detail-content
 		#cart_summary
 			table, thead, tbody, th, td, tr
@@ -1787,6 +1796,16 @@ a.price_discount_delete
 						display: block
 						float: left
 						width: 50%
+
+@media (max-width: $screen-sm)
+	#order-detail-content
+		#cart_summary
+			tbody
+				td 
+					.price
+						text-align: center
+					&.cart_description
+						width: 300px
 
 .cart_voucher
 	vertical-align: top !important
@@ -2003,7 +2022,7 @@ p.payment_module
 				display: block
 				content: "\f054"
 				position: absolute
-				right: 0px
+				right: 15px
 				margin-top: -11px
 				top: 50%
 				font-family: $font-icon
@@ -2497,28 +2516,28 @@ div.star.star_hover
 	padding-left: 29px
 	// max 991px
 	@media (max-width: $screen-sm-max)
-		padding-left: 15px
-		padding-right: 15px
+		min-height: 348px
+		padding-left: 13px
+		padding-right: 13px
 	// max 767px
 	@media (max-width: $screen-xs-max)
 		width: 100%
-		min-height: 1px
-	h4
-		font: 600 21px/25px $font-custom
-		color: $base-heading-color
-		margin-bottom: 26px
-		// max 991px 
-		@media (max-width: $screen-sm-max)
-			font-size: 16px
-		// max 767px
-		@media (max-width: $screen-xs-max)
-			padding-top: 20px !important
+		min-height: 1px		
 #facebook_block
 	h4
 		padding: 35px 0 0 0
-		margin: 0 0 20px
+		margin: 0 0 26px 0
 		font: 300 21px/25px $font-custom
 		color: lighten($base-heading-color, 10%)
+		// max 991px 
+		@media (max-width: $screen-sm-max)
+			font-size: 18px
+		// max 767px
+		@media (max-width: $screen-xs-max)
+			padding-top: 20px !important
+		// 768px
+		@media (max-width: $screen-sm)
+			font-size: 16px
 	.facebook-fanbox
 		background: $light-background
 		border: 1px solid #aaaaaa
@@ -2530,7 +2549,7 @@ div.star.star_hover
 		border: none
 		margin-top: 10px
 	> div
-		padding: 35px 0 0 0
+		padding: 35px 10px 0 0
 		// max 767px
 		@media (max-width: $screen-xs-max)
 			padding-top: 20px
