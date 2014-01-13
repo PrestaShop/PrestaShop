@@ -89,7 +89,7 @@
 					{if $field['type'] == 'hidden'}
 						<input type="hidden" name="{$key}" value="{$field['value']}" />
 					{else}
-						<div class="form-group">
+						<div class="form-group {if isset($field.form_group_class)} {$field.form_group_class} {/if}">
 							<div id="conf_id_{$key}" {if $field['is_invisible']} class="isInvisible"{/if}>								
 								{block name="label"}
 									{if isset($field['title']) && isset($field['hint'])}
