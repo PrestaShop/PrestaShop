@@ -328,6 +328,26 @@ class AdminMetaControllerCore extends AdminController
 						$this->l('Only letters and hyphens are allowed.'),
 					)
 				),
+				array(
+					'type' => 'switch',
+					'cast' => 'int',
+					'label' => $this->l('Configurable:'),
+					'name' => 'configurable',
+					'required' => false,
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'configurable_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'configurable_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					)
+				),
 			),
 			'submit' => array(
 				'title' => $this->l('Save')
