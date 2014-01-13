@@ -626,33 +626,33 @@
     <configuration id="MOD_BLOCKTOPMENU_SEARCH" name="MOD_BLOCKTOPMENU_SEARCH">
       <value/>
     </configuration>
-    <configuration id="blocksocial_facebook" name="blocksocial_facebook">
+    <configuration id="blocksocial_facebook" name="BLOCKSOCIAL_FACEBOOK">
       <value>http://www.facebook.com/prestashop</value>
     </configuration>
-    <configuration id="blocksocial_twitter" name="blocksocial_twitter">
+    <configuration id="blocksocial_twitter" name="BLOCKSOCIAL_TWITTER">
       <value>http://www.twitter.com/prestashop</value>
     </configuration>
-    <configuration id="blocksocial_rss" name="blocksocial_rss">
+    <configuration id="blocksocial_rss" name="BLOCKSOCIAL_RSS">
       <value>http://www.prestashop.com/blog/en/feed/</value>
     </configuration>
-    <configuration id="blockcontactinfos_company" name="blockcontactinfos_company">
+    <configuration id="blockcontactinfos_company" name="BLOCKCONTACTINFOS_COMPANY">
       <value>Your company</value>
     </configuration>
-    <configuration id="blockcontactinfos_address" name="blockcontactinfos_address">
+    <configuration id="blockcontactinfos_address" name="BLOCKCONTACTINFOS_ADDRESS">
       <value>Address line 1
 City
 Country</value>
     </configuration>
-    <configuration id="blockcontactinfos_phone" name="blockcontactinfos_phone">
+    <configuration id="blockcontactinfos_phone" name="BLOCKCONTACTINFOS_PHONE">
       <value>0123-456-789</value>
     </configuration>
-    <configuration id="blockcontactinfos_email" name="blockcontactinfos_email">
+    <configuration id="blockcontactinfos_email" name="BLOCKCONTACTINFOS_EMAIL">
       <value>pub@prestashop.com</value>
     </configuration>
-    <configuration id="blockcontact_telnumber" name="blockcontact_telnumber">
+    <configuration id="blockcontact_telnumber" name="BLOCKCONTACT_TELNUMBER">
       <value>0123-456-789</value>
     </configuration>
-    <configuration id="blockcontact_email" name="blockcontact_email">
+    <configuration id="blockcontact_email" name="BLOCKCONTACT_EMAIL">
       <value>pub@prestashop.com</value>
     </configuration>
     <configuration id="SUPPLIER_DISPLAY_TEXT" name="SUPPLIER_DISPLAY_TEXT">

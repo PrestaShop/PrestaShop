@@ -242,23 +242,10 @@ class ProductControllerCore extends FrontController
 				$return_link = Tools::safeOutput($this->context->link->getCategoryLink($this->category));
 			else
 				$return_link = 'javascript: history.back();';
-			
-			$customizationFields = $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false;
-			
-			// JS Definitions algo from template 1.5
-			$customization_fields_js = array();
-			$j=0;
-			foreach ($customizationFields as $i  => $field)
-			{
-				$key = 'pictures_'.(int)$this->product->id.'_'.(int)$field['id_customization_field'];
-				$customization_fields_js[$i][0] = empty($field['type']) ? 'img'.$i : 'textField'.$j++;
-				$customization_fields_js[$i][1] = (empty($field['type']) && isset($pictures[$key])) ? 2 : (int)$field['required'];
-			}
 
 			$this->context->smarty->assign(array(
 				'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
-				'customizationFields' => $customizationFields, // retro compat < 1.6
-				'customizationFieldsJS' => $customization_fields_js,
+				'customizationFields' => $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false,
 				'accessories' => $this->product->getAccessories($this->context->language->id),
 				'return_link' => $return_link,
 				'product' => $this->product,
