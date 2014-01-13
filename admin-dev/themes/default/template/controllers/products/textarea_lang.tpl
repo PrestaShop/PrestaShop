@@ -31,7 +31,7 @@
 		<textarea
 			id="{$input_name}_{$language.id_lang}"
 			name="{$input_name}_{$language.id_lang}"
-			class="textarea-autosize">{if isset($input_value[$language.id_lang])}{$input_value[$language.id_lang]|htmlentitiesUTF8}{/if}</textarea>
+			class="{if isset($class)}{$class}{else}textarea-autosize{/if}">{if isset($input_value[$language.id_lang])}{$input_value[$language.id_lang]|htmlentitiesUTF8}{/if}</textarea>
 {if $languages|count > 1}
 	</div>
 	<div class="col-lg-2">
