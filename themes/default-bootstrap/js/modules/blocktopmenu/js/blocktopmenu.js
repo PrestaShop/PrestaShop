@@ -70,12 +70,13 @@ function responsiveMenu()
 {
    if ($(document).width() <= 767 && responsiveflagMenu == false)
 	{
-		menuChange('enable'),
-		responsiveflagMenu = true	
+		menuChange('enable');
+		responsiveflagMenu = true;
+
 	}
 	else if ($(document).width() >= 768)
 	{
-		menuChange('disable'),
-		responsiveflagMenu = false
+		menuChange('disable');
+		responsiveflagMenu = false;
 	}
 }
