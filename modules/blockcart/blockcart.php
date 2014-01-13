@@ -141,7 +141,7 @@ class BlockCart extends Module
 		$output = '';
 		if (Tools::isSubmit('submitBlockCart'))
 		{
-			$ajax = Tools::getValue('cart_ajax');
+			$ajax = Tools::getValue('PS_BLOCK_CART_AJAX');
 			if ($ajax != 0 && $ajax != 1)
 				$output .= $this->displayError($this->l('Ajax: Invalid choice.'));
 			else
