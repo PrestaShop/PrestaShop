@@ -672,6 +672,8 @@ class AdminThemesControllerCore extends AdminController
 			$this->toolbar_title[] = $this->l('Import theme');
 		elseif ($this->display == 'exporttheme')
 			$this->toolbar_title[] = $this->l('Export theme');
+		else
+			$this->toolbar_title[] = $this->l('Theme');
 
 		$title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
 		$this->page_header_toolbar_title = $title;
