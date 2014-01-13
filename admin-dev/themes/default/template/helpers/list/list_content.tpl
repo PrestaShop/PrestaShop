@@ -69,9 +69,9 @@
 						{$tr.$key}
 					{elseif isset($params.activeVisu)}
 						{if $tr.$key}
-							<span class="label label-success"><i class="icon-check-sign"></i> {l s='Enabled'}</span>
+							<i class="icon-check-ok"></i> {l s='Enabled'}
 						{else}
-							<span class="label label-warning"><i class="icon-ban-circle"></i> {l s='Disabled'}</span>
+							<i class="icon-remove"></i> {l s='Disabled'}
 						{/if}
 
 					{elseif isset($params.position)}

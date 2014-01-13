@@ -43,12 +43,14 @@
 		{l s='%s at least, or you will have to edit the translation files.' sprintf=$limit_warning['needed_limit']}
 	</div>
 	{else}
-
 		<div class="alert alert-info">
-			<ul class="nav">
-				<li>{l s='Click on titles to open fieldsets'}.</li>
-				<li>{l s='Some sentences to translate use this syntax: "Word %s word". These "%s" are variables, and PrestaShop takes care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}</li>
-			</ul>
+			<p>
+				{l s='Some sentences to translate use this syntax: "You have %%s items...". These "%s" are variables, and PrestaShop takes care of replacing them before displaying your translation.' sprintf='%d, %s, %1$s, %2$d'}<br>
+				<strong>{l s='You must leave these in your translations, and place them appropriately in your sentence.'}</strong>
+			</p>
+			<p>
+				{l s='Click on titles to open fieldsets'}.
+			</p>
 		</div>
 		<div class="panel">
 			<p>{l s='Expressions to translate:'} <span class="badge">{l s='%d' sprintf=$count}</span></p>

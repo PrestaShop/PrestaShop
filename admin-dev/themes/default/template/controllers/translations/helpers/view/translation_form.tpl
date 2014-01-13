@@ -45,7 +45,7 @@
 	{else}
 
 		<div class="alert alert-info">
-			<ul class="nav">
+			<ul>
 				<li>{l s='Click on titles to open fieldsets'}.</li>
 				<li>{l s='Some sentences to translate use this syntax: "Word %s word". These "%s" are variables, and PrestaShop takes care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}</li>
 			</ul>
@@ -77,7 +77,7 @@
 							{l s='Some of these expressions use this special syntax:'} <strong>%d.</strong>
 							{l s='You MUST use this syntax in your translations. Here are several examples:'}
 						</p>
-						<ul class="nav">
+						<ul>
 							<li>"There are <strong>%d</strong> products": "<strong>%d</strong>" {l s='will be replaced by a number.'}).</li>
 							<li>"List of pages in <strong>%s</strong>": "<strong>%s</strong>" {l s='will be replaced by a string.'}).</li>
 							<li>"Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)": "<strong>n$</strong>" {l s='helps you reorder the arguments when necessary.'}).</li>
