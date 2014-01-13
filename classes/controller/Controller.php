@@ -404,16 +404,15 @@ abstract class ControllerCore
 		if ($this->controller_type == 'front')
 		{
 			$html = Media::deferInlineScripts($html);
-			$html = str_replace(array('</body>', '</html>'), '', $html);
+			$html = trim(str_replace(array('</body>', '</html>'), '', $html))."\n";
 			$this->context->smarty->assign(array(
+				'js_def' => Media::getJsDef(),
 				'js_files' => array_unique($this->js_files),
-				'js_def' => Media::getJsDef())
-			);
+				'js_inline' => Media::getInlineScript(),
+				
+			));
 			$javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
-			$javascript = substr_replace(trim($javascript), '', -(strlen('</script>')));
-			foreach (Media::getInlineScript() as $script)
-				$javascript .= $script."\n";
-			echo $html.$javascript."</script>\n\t</body>\n</html>";
+			echo $html.$javascript."\t</body>\n</html>";
 		}
 		else
 			echo $html;

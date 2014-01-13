@@ -1,8 +1,3 @@
-{if isset($js_files)}
-{foreach from=$js_files key=k item=js_uri}
-<script type="text/javascript" src="{$js_uri}"></script>
-{/foreach}
-{/if}
 <script type="text/javascript">
 {if isset($js_def) && is_array($js_def) && $js_def|@count}
 {foreach from=$js_def key=k item=def}
@@ -26,3 +21,8 @@ var {$k} = '{$def|@addcslashes:'\''}';
 {/foreach}
 {/if}
 </script>
+{if isset($js_files)}
+{foreach from=$js_files key=k item=js_uri}
+<script type="text/javascript" src="{$js_uri}"></script>
+{/foreach}
+{/if}
