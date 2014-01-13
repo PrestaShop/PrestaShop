@@ -9,14 +9,16 @@
                     <label class="control-label col-lg-3">{l s='Language' mod='themeconfigurator'}</label>
                     <div class="col-lg-7">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
+                            <span id="selected-language">
                             {foreach from=$htmlitems.lang.all item=lang}
                                 {if $lang.id_lang == $htmlitems.lang.default.id_lang} {$lang.iso_code}{/if}
                             {/foreach}
+                            </span>
                             <span class="caret">&nbsp;</span>
                         </button>
                         <ul class="languages dropdown-menu">
                             {foreach from=$htmlitems.lang.all item=lang}
-                                <li id="lang-{$lang.id_lang}" class="new-lang-flag"><a href="javascript:hideOtherLanguage({$lang.id_lang});">{$lang.name}</a></li>
+                                <li id="lang-{$lang.id_lang}" class="new-lang-flag"><a href="javascript:setLanguage({$lang.id_lang}, '{$lang.iso_code}');">{$lang.name}</a></li>
                             {/foreach}
                         </ul>
                         <input type="hidden" id="lang-id" name="id_lang" value="{$htmlitems.lang.default.id_lang}" />
@@ -89,3 +91,10 @@
         </form>
     </div>
 </div>
+<script type="text/javascript">
+function setLanguage(language_id, language_code) {
+    $('#lang-id').val(language_id);
+    $('#selected-language').html(language_code);
+    $(this).addClass('active').siblings().removeClass('active');
+}
+</script>
