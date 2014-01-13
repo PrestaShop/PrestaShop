@@ -33,7 +33,7 @@ class BlockBanner extends Module
 	{
 		$this->name = 'blockbanner';
 		$this->tab = 'front_office_features';
-		$this->version = 1.1;
+		$this->version = 1.2;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -76,7 +76,8 @@ class BlockBanner extends Module
 		if (!$this->isCached('blockbanner.tpl', $this->getCacheId()))
 		{
 			$imgname = Configuration::get('BLOCKBANNER_IMG', $this->context->language->id);
-			if (file_exists(_PS_MODULE_DIR_.$this->name.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$imgname))
+
+			if ($imgname && file_exists(_PS_MODULE_DIR_.$this->name.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$imgname))
 				$this->smarty->assign('banner_img', $this->context->link->protocol_content.Tools::getMediaServer($imgname).$this->_path.'img/'.$imgname);
 
 			$this->smarty->assign(array(

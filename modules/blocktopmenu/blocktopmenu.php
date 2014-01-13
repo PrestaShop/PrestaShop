@@ -52,7 +52,7 @@ class Blocktopmenu extends Module
 	{
 		$this->name = 'blocktopmenu';
 		$this->tab = 'front_office_features';
-		$this->version = 1.8;
+		$this->version = 1.9;
 		$this->author = 'PrestaShop';
 
 		$this->bootstrap = true;
@@ -594,6 +594,7 @@ class Blocktopmenu extends Module
 
 		$this->context->controller->addJS($this->_path.'js/hoverIntent.js');
 		$this->context->controller->addJS($this->_path.'js/superfish-modified.js');
+		$this->context->controller->addJS($this->_path.'js/blocktopmenu.js');
 		$this->context->controller->addCSS($this->_path.'css/blocktopmenu.css');
 		$this->context->controller->addCSS($this->_path.'css/superfish-modified.css');
 

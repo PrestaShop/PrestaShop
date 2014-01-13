@@ -16,7 +16,7 @@
 
 #header_user {
   padding-top: 50px; }
-  @media (max-width: 768px) {
+  @media (max-width: 480px) {
     #header_user {
       padding-top: 20px; } }
   #header_user #header_nav {

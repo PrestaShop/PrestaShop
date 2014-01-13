@@ -85,6 +85,7 @@ smartyRegisterFunction($smarty, 'function', 'getWidthSize', array('Image', 'getW
 smartyRegisterFunction($smarty, 'function', 'getHeightSize', array('Image', 'getHeight'));
 smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef'));
 smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
+smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
 
 function smartyDieObject($params, &$smarty)
 {

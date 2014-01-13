@@ -22,18 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script type="text/javascript">
-var productcomments_controller_url = '{$productcomments_controller_url}';
-var confirm_report_message = '{l s='Are you sure you want report this comment?' mod='productcomments' js=1}';
-var secure_key = '{$secure_key}';
-var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
-var productcomment_added = '{l s='Your comment has been added!' mod='productcomments' js=1}';
-var productcomment_added_moderation = '{l s='Your comment has been added and will be available once approved by a moderator' mod='productcomments' js=1}';
-var productcomment_title = '{l s='New comment' mod='productcomments' js=1}';
-var productcomment_ok = '{l s='OK' mod='productcomments' js=1}';
-var moderation_active = {$moderation_active};
-</script>
-
 <div id="idTab5">
 	<div id="product_comments_block_tab">
 		{if $comments}
@@ -183,7 +171,7 @@ var moderation_active = {$moderation_active};
 						{l s='Comment' mod='productcomments'}: <sup class="required">*</sup>
 					</label>
 					<textarea id="content" name="content"></textarea>
-					{if $allow_guests == true && $logged == 0}
+					{if $allow_guests == true && !$logged}
 						<label>
 							{l s='Your name' mod='productcomments'}: <sup class="required">*</sup>
 						</label>
@@ -197,7 +185,7 @@ var moderation_active = {$moderation_active};
 								<span>{l s='Send' mod='productcomments'}</span>
 							</button>&nbsp;
 							{l s='or' mod='productcomments'}&nbsp;
-							<a href="#" onclick="$.fancybox.close();" >
+							<a class="closefb" href="#">
 								{l s='Cancel' mod='productcomments'}
 							</a>
 						</p>
@@ -209,3 +197,16 @@ var moderation_active = {$moderation_active};
 	</div>
 </div>
 <!-- End fancybox -->
+{strip}
+{addJsDef productcomments_controller_url=$productcomments_controller_url|@addcslashes:'\''}
+{addJsDef moderation_active=$moderation_active|boolval}
+{addJsDef productcomments_url_rewrite=$productcomments_url_rewriting_activated|boolval}
+
+{addJsDef secure_key=$secure_key}
+
+{addJsDefL name=confirm_report_message}{l s='Are you sure you want report this comment?' mod='productcomments' js=1}{/addJsDefL}
+{addJsDefL name=productcomment_added}{l s='Your comment has been added!' mod='productcomments' js=1}{/addJsDefL}
+{addJsDefL name=productcomment_added_moderation}{l s='Your comment has been added and will be available once approved by a moderator' mod='productcomments' js=1}{/addJsDefL}
+{addJsDefL name=productcomment_title}{l s='New comment' mod='productcomments' js=1}{/addJsDefL}
+{addJsDefL name=productcomment_ok}{l s='OK' mod='productcomments' js=1}{/addJsDefL}
+{/strip}

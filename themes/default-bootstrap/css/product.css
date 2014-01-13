@@ -679,7 +679,7 @@ table.table-produst-discounts {
 
 .buttons_bottom_block {
   clear: both;
-  padding-top: 13px; }
+  padding: 13px 0 0 5px; }
   .buttons_bottom_block #wishlist_button {
     font-weight: 700; }
 
