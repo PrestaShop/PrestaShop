@@ -506,21 +506,6 @@ class ProductControllerCore extends FrontController
 			}
 			
 			// JS Definitions algo from template 1.5
-			$combination_images_js = array();
-			if (is_array($combination_images))
-				foreach ($combination_images as $i => $combination_image)
-					foreach ($combination_image as $j => $combination)
-						if ($combination['id_image'])
-						{
-							$combination_images_js[0][] = (int)$combination['id_image'];
-							if ($i)
-								$combination_images_js[(int)$i][(int)$j] = (int)$combination['id_image'];
-						}
-
-			if (is_array($combination_images_js[0]))
-				$combination_images_js[0] = array_values(array_unique($combination_images_js[0]));
-			
-			// JS Definitions algo from template 1.5
 			$combinations_js = array();
 			foreach ($combinations as $id_combination => $combination)			
 				$combinations_js[] = array(
@@ -553,8 +538,7 @@ class ProductControllerCore extends FrontController
 				'colors' => (count($colors)) ? $colors : false,
 				'combinations' => $combinations, // retro compat < 1.6
 				'combinationsJS' => $combinations_js,
-				'combinationImages' => $combination_images, // retro compat < 1.6
-				'combinationImagesJS' => $combination_images_js
+				'combinationImages' => $combination_images
 			));
 		}
 	}
