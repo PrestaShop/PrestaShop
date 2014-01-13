@@ -2221,19 +2221,21 @@ class AdminTranslationsControllerCore extends AdminController
 		if (array_key_exists('group_name', $mails))
 			$group_name = $mails['group_name'];
 
-		$str_return .= '
-		<div class="mails_field" >
-			<h3 style="cursor : pointer" onclick="$(\'#'.$id_html.'\').slideToggle();">'.$title.' - <font color="red">'.$mails['empty_values'].'</font> '
-			.sprintf($this->l('missing translation(s) on %1$s template(s) for %2$s'),
-				'<font color="blue">'.((int)$mails['empty_values'] + (int)$mails['total_filled']).'</font>',
-			 	$obj_lang->name)
-			.':</h3>
-			<div name="mails_div" id="'.$id_html.'">';
+		$str_return .= '<div class="mails_field" >
+			<h4>'.'<a href="#" onclick="$(\'#'.$id_html.'\').slideToggle();">'
+			.'<i class="icon-arrow-right"></i> '
+			.$title.' - '.$mails['empty_values'].' '
+			.sprintf($this->l('missing translation(s) on %1$s template(s) for %2$s'),((int)$mails['empty_values'] + (int)$mails['total_filled']),$obj_lang->name)
+			.'</a></h4>
+			<div name="mails_div" id="'.$id_html.'" class="panel-group">';
 		if (!empty($mails['files']))
 		{
 			$topic_already_displayed = array();
 			foreach ($mails['files'] as $mail_name => $mail_files)
 			{
+				$str_return .= '<div class="panel translations-email-panel">';
+				$str_return .= '<a href="#'.$mail_name.'" class="panel-title" data-toggle="collapse" data-parent="#'.$id_html.'" ><i class="icon-caret-down"></i> '.$mail_name.'</a>';
+				$str_return .= '<div id="'.$mail_name.'" class="email-collapse panel-collapse collapse">';
 				if (array_key_exists('html', $mail_files) || array_key_exists('txt', $mail_files))
 				{
 					if (array_key_exists($mail_name, $all_subject_mail))
@@ -2246,52 +2248,68 @@ class AdminTranslationsControllerCore extends AdminController
 							$topic_already_displayed[] = $subject_key;
 							$value_subject_mail = isset($mails['subject'][$subject_mail]) ? $mails['subject'][$subject_mail] : '';
 							$str_return .= '
-							<div class="label-subject" style="text-align:center;">
-								<label style="text-align:right">'.sprintf($this->l('Subject for %s:'), '<em>'.$mail_name.'</em>').'</label>
-								<div class="mail-form" style="text-align:left">
-									<b>'.$subject_mail.'</b><br />';
-							if (isset($value_subject_mail['trad']) && $value_subject_mail['trad'])
-								$str_return .= '<input type="text" name="subject['.Tools::htmlentitiesUTF8($group_name).']['.Tools::htmlentitiesUTF8($subject_mail).']" value="'.$value_subject_mail['trad'].'" />';
-							else
-								$str_return .= '<input type="text" name="subject['.Tools::htmlentitiesUTF8($group_name).']['.Tools::htmlentitiesUTF8($subject_mail).']" value="" />';
-
+							<div class="label-subject row">
+								<label class="control-label col-lg-3">'.sprintf($this->l('Subject'));
 							if (isset($value_subject_mail['use_sprintf']) && $value_subject_mail['use_sprintf'])
-								$str_return .= '<a class="useSpecialSyntax" title="'.$this->l('This expression uses a special syntax:').' '.$value_subject_mail['use_sprintf'].'" style="cursor:pointer">
-									<img src="'._PS_IMG_.'admin/error.png" alt="'.$value_subject_mail['use_sprintf'].'" />
-								</a>';
-							$str_return .= '</div>
-							</div>';
+								$str_return .= '<span class="useSpecialSyntax" title="'.$this->l('This expression uses a special syntax:').' '.$value_subject_mail['use_sprintf'].'">
+									<i class="icon-exclamation-triangle"></i>
+								</span>';
+							$str_return .= '</label><div class="col-lg-9">';
+							if (isset($value_subject_mail['trad']) && $value_subject_mail['trad'])
+								$str_return .= '<input class="form-control" type="text" name="subject['.Tools::htmlentitiesUTF8($group_name).']['.Tools::htmlentitiesUTF8($subject_mail).']" value="'.$value_subject_mail['trad'].'" />';
+							else
+								$str_return .= '<input class="form-control" type="text" name="subject['.Tools::htmlentitiesUTF8($group_name).']['.Tools::htmlentitiesUTF8($subject_mail).']" value="" />';
+
+							$str_return .= '<p class="help-block">'.$subject_mail.'</p>';
+
+							$str_return .= '</div></div>';
 						}
 					}
 					else
 					{
 						$str_return .= '
-						<div class="label-subject">
-							<b>'.sprintf($this->l('No Subject was found for %s in the database.'), '<em>'.$mail_name.'</em>').'</b>
-						</div>';
+							<div class="label-subject">'
+							.sprintf($this->l('No Subject was found for %s in the database.'), '<strong>'.$mail_name.'</strong>')
+							.'</div>';
 					}
+					// tab menu
+					$str_return .= '<ul class="nav nav-pills">
+						  <li class="active"><a href="#'.$mail_name.'-html" data-toggle="tab">'.$mail_name.'.html</a></li>
+						  <li><a href="#'.$mail_name.'-text" data-toggle="tab">'.$mail_name.'.txt</a></li>
+						</ul>';
+
+					// tab-content
+					$str_return .= '<div class="tab-content">';
+
 					if (array_key_exists('html', $mail_files))
 					{
+						$str_return .= '<div class="tab-pane active" id="'.$mail_name.'-html">';
 						$base_uri = str_replace(_PS_ROOT_DIR_, __PS_BASE_URI__, $mails['directory']);
 						$base_uri = str_replace('//', '/', $base_uri);
 						$url_mail = $base_uri.$mail_name.'.html';
 						$str_return .= $this->displayMailBlockHtml($mail_files['html'], $obj_lang->iso_code, $url_mail, $mail_name, $group_name, $name_for_module);
+						$str_return .= '</div>';
 					}
+
 					if (array_key_exists('txt', $mail_files))
+					{
+						$str_return .= '<div class="tab-pane" id="'.$mail_name.'-text">';
 						$str_return .= $this->displayMailBlockTxt($mail_files['txt'], $obj_lang->iso_code, $mail_name, $group_name, $name_for_module);
+						$str_return .= '</div>';
+					}
+					$str_return .= '</div>';
+					$str_return .= '</div><!--end .panel-collapse -->';
+					$str_return .= '</div><!--end .panel -->';
 				}
 			}
 		}
 		else
 			$str_return .= '<p class="error">
-				'.$this->l('There was a problem getting the mail files.').'<br />
+				'.$this->l('There was a problem getting the mail files.').'<br>
 				'.sprintf($this->l('English language files must exist in %s folder'), '<em>'.preg_replace('@/[a-z]{2}(/?)$@', '/en$1', $mails['directory']).'</em>').'
 			</p>';
 
-		$str_return .= '
-			</div><!-- #'.$id_html.' -->
-			<div class="clear"></div>
-		</div>';
+		$str_return .= '</div><!-- #'.$id_html.' --></div><!-- end .mails_field -->';
 		return $str_return;
 	}
 	/**
@@ -2308,11 +2326,10 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		return '
 				<div class="block-mail" >
-					<label>'.$mail_name.'.txt</label>
 					<div class="mail-form">
-						<div><textarea class="rte mailrte noEditor" cols="80" rows="30" name="'.$group_name.'[txt]['.($name_for_module ? $name_for_module.'|' : '' ).$mail_name.']" style="width:560px;margin=0;">'.Tools::htmlentitiesUTF8(stripslashes(strip_tags($content[$lang]))).'</textarea></div>
-					</div><!-- .mail-form -->
-				</div><!-- .block-mail -->';
+						<div><textarea class="rte mailrte noEditor" name="'.$group_name.'[txt]['.($name_for_module ? $name_for_module.'|' : '' ).$mail_name.']">'.Tools::htmlentitiesUTF8(stripslashes(strip_tags($content[$lang]))).'</textarea></div>
+					</div>
+				</div>';
 	}
 	/**
 	 * Just build the html structure for display html mails.
@@ -2353,21 +2370,18 @@ class AdminTranslationsControllerCore extends AdminController
 		$content[$lang] = (isset($content[$lang]) ? Tools::htmlentitiesUTF8(stripslashes($content[$lang])) : '');
 		$str_return .= '
 		<div class="block-mail" >
-			<label>'.$mail_name.'.html</label>
-			<div class="mail-form">
-				<div>';
+			<div class="mail-form">';
 		$str_return .= '
 				<div class="label-subject">
 					<b>'.$this->l('"title" tag:').'</b>&nbsp;'.(isset($title['en']) ? $title['en'] : '').'<br />
 					<input type="text" name="title_'.$group_name.'_'.$mail_name.'" value="'.(isset($title[$lang]) ? $title[$lang] : '').'" />
-				</div><!-- .label-subject -->';
+				</div>';
 		$str_return .= '
-				<iframe style="background:white;border:1px solid #DFD5C3;" border="0" src ="'.$url.'?'.(rand(0, 1000000000)).'" width="565" height="497"></iframe>
-					<a style="display:block;margin-top:5px;width:130px;" href="#" onclick="$(this).parent().hide(); displayTiny($(this).parent().next()); return false;" class="button">'.$this->l('Edit this email template.').'</a>
-				</div>
+				
+				<a href="#" onclick="$(this).parent().hide(); displayTiny($(this).parent().next()); return false;" class="btn btn-default">'.$this->l('Edit this email template.').'</a>
 				<textarea style="display:none;" class="rte mailrte" cols="80" rows="30" name="'.$group_name.'[html]['.$name_for_module.$mail_name.']">'.$content[$lang].'</textarea>
-			</div><!-- .mail-form -->
-		</div><!-- .block-mail -->';
+			</div>
+		</div>';
 		return $str_return;
 	}
 

@@ -67,7 +67,7 @@
 					{l s='Some of these expressions use this special syntax:'} <span>%d.</span><br />
 					{l s='You MUST use this syntax in your translations. Here are several examples:'}
 				</p>
-				<ul class="nav">
+				<ul>
 					<li>"There are <strong>%d</strong> products": "<strong>%d</strong>" {l s='will be replaced by a number.'}).</li>
 					<li>"List of pages in <strong>%s</strong>": "<strong>%s</strong>" {l s='will be replaced by a string.'}).</li>
 					<li>"Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)": "<strong>n$</strong>" {l s='helps you reorder the arguments when necessary.'}).</li>
