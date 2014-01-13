@@ -319,6 +319,9 @@ class CartControllerCore extends FrontController
 			die(Tools::jsonEncode(array('hasError' => true, 'errors' => $this->errors)));
 		if ($this->ajax_refresh)
 			die(Tools::jsonEncode(array('refresh' => true)));
+		
+		// write cookie if can't on destruct
+		$this->context->cookie->write();
 
 		if (Tools::getIsset('summary'))
 		{
