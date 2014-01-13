@@ -626,13 +626,13 @@
     <configuration id="MOD_BLOCKTOPMENU_SEARCH" name="MOD_BLOCKTOPMENU_SEARCH">
       <value/>
     </configuration>
-    <configuration id="blocksocial_facebook" name="blocksocial_facebook">
+    <configuration id="blocksocial_facebook" name="BLOCKSOCIAL_FACEBOOK">
       <value>http://www.facebook.com/prestashop</value>
     </configuration>
-    <configuration id="blocksocial_twitter" name="blocksocial_twitter">
+    <configuration id="blocksocial_twitter" name="BLOCKSOCIAL_TWITTER">
       <value>http://www.twitter.com/prestashop</value>
     </configuration>
-    <configuration id="blocksocial_rss" name="blocksocial_rss">
+    <configuration id="blocksocial_rss" name="BLOCKSOCIAL_RSS">
       <value>http://www.prestashop.com/blog/en/feed/</value>
     </configuration>
     <configuration id="blockcontactinfos_company" name="blockcontactinfos_company">
