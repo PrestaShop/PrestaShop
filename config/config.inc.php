@@ -124,8 +124,11 @@ $context->country = $defaultCountry;
 
 /* Set locales */
 $locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY'));
-setlocale(LC_ALL, $locale.'.UTF-8', $locale.'.UTF8');
-setlocale(LC_NUMERIC, 'en_US.UTF-8', 'en_US.UTF8');
+/* Please do not use LC_ALL here http://www.php.net/manual/fr/function.setlocale.php#25041 */
+setlocale(LC_COLLATE, $locale.'.UTF-8', $locale.'.utf8');
+setlocale(LC_CTYPE, $locale.'.UTF-8', $locale.'.utf8');
+setlocale(LC_TIME, $locale.'.UTF-8', $locale.'.utf8');
+setlocale(LC_NUMERIC, 'en_US.UTF-8', 'en_US.utf8');
 
 /* Instantiate cookie */
 $cookie_lifetime = (int)(defined('_PS_ADMIN_DIR_') ? Configuration::get('PS_COOKIE_LIFETIME_BO') : Configuration::get('PS_COOKIE_LIFETIME_FO'));
