@@ -176,7 +176,7 @@
 		<div id="login-footer" class="animated fadeIn">
 			<p class="text-center text-muted">
 				<a href="http://www.prestashop.com/" onclick="return !window.open(this.href);">
-					&copy; PrestaShop&#8482; 2005-{$smarty.now|date_format:"%Y"} - All rights reserved
+					&copy; PrestaShop&#8482; 2007-{$smarty.now|date_format:"%Y"} - All rights reserved
 				</a>
 			</p>
 			<p class="text-center">

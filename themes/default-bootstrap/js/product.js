@@ -30,6 +30,20 @@ var colors = [];
 
 $(document).ready(function()
 {
+	if (typeof customizationFields !== 'undefined' && customizationFields)
+	{
+		customizationFieldsBk = customizationFields;
+		var customizationFields = [];
+		var j = 0;
+		for (var i = 0; i < customizationFieldsBk.length; ++i)
+		{
+			var key = 'pictures_' + parseInt(id_product) + '_' + parseInt(customizationFieldsBk[i]['id_customization_field']);
+			customizationFields[i] = [];
+			customizationFields[i][0] = (parseInt(customizationFieldsBk[i]['type']) == 0) ? 'img' + i : 'textField' + j++;
+			customizationFields[i][1] = (parseInt(customizationFieldsBk[i]['type']) == 0 && customizationFieldsBk[i][key]) ? 2 : parseInt(customizationFieldsBk[i]['required']);
+		}
+	}
+	
 	//init the serialScroll for thumbs
 	$('#thumbs_list').serialScroll({
 		items:'li:visible',

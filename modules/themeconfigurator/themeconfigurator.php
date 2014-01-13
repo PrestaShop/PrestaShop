@@ -197,18 +197,20 @@ class ThemeConfigurator extends Module
 			$this->context->controller->addJS($this->_path.'js/live_configurator.js');
 
 			if (Tools::getValue('theme'))
-				$this->context->controller->addCss($this->smarty->smarty->tpl_vars['css_dir']->value.Tools::getValue('theme').'.css', 'all');
+			{
+				$this->context->controller->addCss($this->_path.'css/'.Tools::getValue('theme').'.css', 'all');
+			}
 
 			if (Tools::getValue('theme_font'))
-				$this->context->controller->addCss($this->smarty->smarty->tpl_vars['css_dir']->value.Tools::getValue('theme_font').'.css', 'all');
+				$this->context->controller->addCss($this->_path.'css/'.Tools::getValue('theme_font').'.css', 'all');
 		}
 		else
 		{
 			if (Configuration::get('PS_TC_THEME') != '')
-				$this->context->controller->addCss($this->smarty->smarty->tpl_vars['css_dir']->value.Configuration::get('PS_TC_THEME').'.css', 'all');
+				$this->context->controller->addCss($this->_path.'css/'.Configuration::get('PS_TC_THEME').'.css', 'all');
 
 			if (Configuration::get('PS_TC_FONT') != '')
-				$this->context->controller->addCss($this->smarty->smarty->tpl_vars['css_dir']->value.Configuration::get('PS_TC_FONT').'.css', 'all');
+				$this->context->controller->addCss($this->_path.'css/'.Configuration::get('PS_TC_FONT').'.css', 'all');
 		}
 	}
 

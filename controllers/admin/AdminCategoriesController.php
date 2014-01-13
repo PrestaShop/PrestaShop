@@ -525,7 +525,8 @@ class AdminCategoriesControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('Save')
+				'title' => $this->l('Save'),
+				'name' => 'submitAdd'.$this->table.'AndBackToParent'
 			)
 		);
 
