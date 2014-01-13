@@ -168,8 +168,8 @@
 		</div>
 	</div> <!-- end row -->
 	<div class="row">
-		<div class="col-xs-12 col-sm-6">
-			<ul class="address item box" id="address_delivery" {if $cart->isVirtualCart()}style="display:none;"{/if}>
+		<div class="col-xs-12 col-sm-6" {if $cart->isVirtualCart()}style="display:none;"{/if}>
+			<ul class="address item box" id="address_delivery">
 			</ul>
 		</div>
 		<div class="col-xs-12 col-sm-6">
