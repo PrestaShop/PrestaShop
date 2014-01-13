@@ -485,6 +485,10 @@ class AdminMetaControllerCore extends AdminController
 	public function updateOptionPsRewritingSettings()
 	{
 		Configuration::updateValue('PS_REWRITING_SETTINGS', (int)Tools::getValue('PS_REWRITING_SETTINGS'));
+		$this->updateOptionDomain(Tools::getValue('domain'));
+		$this->updateOptionDomainSsl(Tools::getValue('domain_ssl'));
+		$this->updateOptionUri(Tools::getValue('uri'));
+
 		if (Tools::generateHtaccess($this->ht_file, null, null, '', Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS'), false, Tools::getValue('PS_HTACCESS_DISABLE_MODSEC')))
 		{
 			Tools::enableCache();
