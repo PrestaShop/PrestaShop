@@ -450,18 +450,22 @@ class AdminProductsControllerCore extends AdminController
 		$this->content = $tpl->fetch();
 	}
 
-	public function ajaxProcessDeleteVirtualProduct()
+	public function processDeleteVirtualProduct()
 	{
 		if (!($id_product_download = ProductDownload::getIdFromIdProduct((int)Tools::getValue('id_product'))))
-			$this->jsonError($this->l('Cannot retrieve file'));
+			$this->errors[] = Tools::displayError('Cannot retrieve file');
 		else
 		{
 			$product_download = new ProductDownload((int)$id_product_download);
+
 			if (!$product_download->deleteFile((int)$id_product_download))
-				$this->jsonError($this->l('Cannot delete file'));
+				$this->errors[] = Tools::displayError('Cannot delete file');
 			else
-				$this->jsonConfirmation($this->_conf[1]);
+				$this->redirect_after = self::$currentIndex.'&id_product='.(int)Tools::getValue('id_product').'&updateproduct&key_tab=VirtualProduct&conf=1&token='.$this->token;
 		}
+
+		$this->display = 'edit';
+		$this->tab_display = 'VirtualProduct';
 	}
 
 	public function ajaxProcessAddAttachment()
@@ -3144,6 +3148,23 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
+	public function ajaxProcessAddVirtualProductFile()
+	{
+		if (isset($_FILES['virtual_product_file_uploader']))
+		{
+			$unique_name = ProductDownload::getNewFilename();
+			$helper = new HelperUploader('virtual_product_file_uploader');
+			$files = $helper->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
+				->setSavePath(_PS_DOWNLOAD_DIR_)->upload($_FILES['virtual_product_file_uploader'], $unique_name);
+			unset($files['save_path']);
+			$files['name'] = $unique_name;
+			die(Tools::jsonEncode(array($helper->getName() => $files)));
+		}
+
+		die(Tools::jsonEncode(array('virtual_product_file_uploader' => array('name' => 'virtual_product_file_uploader',
+			'error' => array(Tools::displayError('Invalid file input name'))))));
+	}
+
 	public function initFormVirtualProduct($product)
 	{
 		$data = $this->createTemplate($this->tpl_form);
@@ -3169,23 +3190,33 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$msg = '';
 
-		$data->assign('download_product_file_missing', $msg);
-		$data->assign('download_dir_writable', ProductDownload::checkWritableDir());
+		$virtual_product_file_uploader = new HelperUploader('virtual_product_file_uploader');
+		$virtual_product_file_uploader->setMultiple(false)->setUseAjax(true)->setUrl(
+			Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$product->id
+			.'&action=AddVirtualProductFile')->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
+			->setTemplate('virtual_product_file_uploader_ajax.tpl');
 
-		$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename')));
+		$data->assign(array(
+			'download_product_file_missing' => $msg,
+			'download_dir_writable' => ProductDownload::checkWritableDir(),
+			'up_filename' => strval(Tools::getValue('virtual_product_filename'))
+		));
 
 		$product->productDownload->nb_downloadable = ($product->productDownload->id > 0) ? $product->productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
 		$product->productDownload->date_expiration = ($product->productDownload->id > 0) ? ((!empty($product->productDownload->date_expiration) && $product->productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($product->productDownload->date_expiration)) : '' ) : htmlentities(Tools::getValue('virtual_product_expiration_date'), ENT_COMPAT, 'UTF-8');
 		$product->productDownload->nb_days_accessible = ($product->productDownload->id > 0) ? $product->productDownload->nb_days_accessible : htmlentities(Tools::getValue('virtual_product_nb_days'), ENT_COMPAT, 'UTF-8');
 		$product->productDownload->is_shareable = $product->productDownload->id > 0 && $product->productDownload->is_shareable;
 
-		$data->assign('ad', dirname($_SERVER['PHP_SELF']));
-		$data->assign('product', $product);
-		$data->assign('token', $this->token);
-		$data->assign('currency', $currency);
+		$data->assign(array(
+			'ad' => dirname($_SERVER['PHP_SELF']),
+			'product' => $product,
+			'token' => $this->token,
+			'currency' => $currency,
+			'link' => $this->context->link,
+			'is_file' => $product->productDownload->checkFile(),
+			'virtual_product_file_uploader' => $virtual_product_file_uploader->render()
+		));
 		$data->assign($this->tpl_form_vars);
-		$data->assign('link', $this->context->link);
-		$data->assign('is_file', $product->productDownload->checkFile());
 		$this->tpl_form_vars['product'] = $product;
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}

@@ -1044,6 +1044,8 @@ class AdminThemesControllerCore extends AdminController
 
 	private function renderExportTheme1()
 	{
+		$to_install = array();
+
 		$module_list = Db::getInstance()->executeS('
 			SELECT m.`id_module`, m.`name`, m.`active`, ms.`id_shop`
 			FROM `' . _DB_PREFIX_ . 'module` m
@@ -1133,16 +1135,6 @@ class AdminThemesControllerCore extends AdminController
 						'label' => $this->l('Website'),
 					),
 					array(
-						'type'   => 'checkbox',
-						'label'  => $this->l('Select the theme\'s modules you wish to export:'),
-						'values' => array(
-							'query' => $this->formatHelperArray($to_install),
-							'id'    => 'id',
-							'name'  => 'name'
-						),
-						'name'   => 'modulesToExport',
-					),
-					array(
 						'type'  => 'text',
 						'name'  => 'theme_name',
 						'label' => $this->l('Theme name'),
@@ -1189,6 +1181,20 @@ class AdminThemesControllerCore extends AdminController
 					'title' => $this->l('Save'),
 				))
 		);
+
+		if (count($to_install) > 0)
+		{
+			$fields_form['form']['input'][] = array(
+				'type'   => 'checkbox',
+				'label'  => $this->l('Select the theme\'s modules you wish to export:'),
+				'values' => array(
+					'query' => $this->formatHelperArray($to_install),
+					'id'    => 'id',
+					'name'  => 'name'
+				),
+				'name'   => 'modulesToExport',
+			);
+		}
 
 		$default_language = (int)$this->context->language->id;
 		$languages = $this->getLanguages();
@@ -1729,16 +1735,44 @@ class AdminThemesControllerCore extends AdminController
 		return $return;
 	}
 
-	private function getNativeModule()
+	/**
+	 *
+	 * @param int $type
+	 * $type = 0 both native & partner (default)
+	 * $type = 1 native
+	 * $type = 2 partner
+	 *
+	 *
+	 * @return array
+	 */
+	private function getNativeModule($type = 0)
 	{
 		$xml = simplexml_load_string(Tools::file_get_contents('http://api.prestashop.com/xml/modules_list_15.xml'));
 
 		if ($xml)
 		{
 			$natives = array();
-			foreach ($xml->modules as $row)
-				foreach ($row->module as $row2)
-					$natives[] = (string)$row2['name'];
+
+			switch ($type)
+			{
+				case 0:
+					foreach ($xml->modules as $row)
+						foreach ($row->module as $row2)
+							$natives[] = (string)$row2['name'];
+					break;
+				case 1:
+					foreach ($xml->modules as $row)
+						if ($row['type'] == 'native')
+						foreach ($row->module as $row2)
+							$natives[] = (string)$row2['name'];
+					break;
+				case 2:
+					foreach ($xml->modules as $row)
+						if ($row['type'] == 'partner')
+						foreach ($row->module as $row2)
+							$natives[] = (string)$row2['name'];
+					break;
+			}
 
 			if (count($natives > 0))
 				return $natives;
@@ -1758,7 +1792,7 @@ class AdminThemesControllerCore extends AdminController
 			'gridhtml', 'homefeatured', 'homeslider', 'loyalty', 'mailalerts', 'newsletter',
 			'pagesnotfound', 'productcomments', 'productpaymentlogos', 'productscategory',
 			'producttooltip', 'pscleaner', 'referralprogram', 'sekeywords', 'sendtoafriend',
-			'statsbestcategories', 'statsbestcustomers', 'statsbestmanufacturers',
+			'socialsharing', 'statsbestcategories', 'statsbestcustomers', 'statsbestmanufacturers',
 			'statsbestproducts', 'statsbestsuppliers', 'statsbestvouchers',
 			'statscarrier', 'statscatalog', 'statscheckup', 'statsdata',
 			'statsequipment', 'statsforecast', 'statslive', 'statsnewsletter',
@@ -1919,40 +1953,44 @@ class AdminThemesControllerCore extends AdminController
 
 			$current_shop = Context::getContext()->shop->id;
 
-			foreach($shops as $shop)
+			foreach ($shops as $shop)
 			{
 				$shop_theme = New Theme((int)$shop['id_theme']);
 				if ((int)Tools::getValue('id_theme') == (int)$shop['id_theme'])
 					continue;
 
-				if (file_exists(_PS_ROOT_DIR_ . '/config/xml/' . $shop_theme->directory . '.xml'))
-				{
-					$shop_xml = simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/' . $shop_theme->directory . '.xml');
-					$theme_shop_module = $this->getModules($shop_xml);
+				$old_xml_name = 'default.xml';
+				if (file_exists(_PS_ROOT_DIR_.'/config/xml/'.$shop_theme->directory.'.xml'))
+					$old_xml_name = $shop_theme->directory.'.xml';
 
-					$to_shop_uninstall = $this->formatHelperArray($theme_shop_module['to_install']);
+				$shop_xml          = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$old_xml_name);
+				$theme_shop_module = $this->getModules($shop_xml);
 
-					if (count($to_shop_uninstall) == 0)
-						continue;
-					$class = '';
-					if ($shop['id_shop'] == $current_shop)
-						$theme_module['to_disable_shop'.$shop['id_shop']] = $theme_shop_module['to_install'];
-					else
-						$class = 'hide';
+				$to_shop_uninstall = array_merge($theme_shop_module['to_install'], $theme_shop_module['to_enable']);
 
-					$fields_form['form']['input'][] = array('type'   => 'checkbox',
-															'label'  => sprintf($this->l('Select the old %1s theme\'s modules you wish to disable:'), $shop_theme->directory),
-															'formGroupClass' => $class,
-															'values' => array(
-																'query' => $to_shop_uninstall,
-																'id'    => 'id',
-																'name'  => 'name'
-															),
-															'name'   => 'to_disable_shop'.$shop['id_shop']
-					);
+				$to_shop_uninstall_formated = $this->formatHelperArray(array_diff($to_shop_uninstall, $theme_module['to_enable']));
 
+				if (count($to_shop_uninstall_formated) == 0)
+					continue;
 
-				}
+				$class = '';
+				if ($shop['id_shop'] == $current_shop)
+					$theme_module['to_disable_shop'.$shop['id_shop']] = $theme_shop_module['to_install'];
+				else
+					$class = 'hide';
+
+				$fields_form['form']['input'][] = array(
+					'type'           => 'checkbox',
+					'label'          => sprintf($this->l('Select the old %1s theme\'s modules you wish to disable:'), $shop_theme->directory),
+					'formGroupClass' => $class,
+					'values'         => array(
+						'query' => $to_shop_uninstall_formated,
+						'id'    => 'id',
+						'name'  => 'name'
+					),
+					'name'           => 'to_disable_shop'.$shop['id_shop']
+				);
+
 			}
 
 			$fields_value = $this->formatHelperValuesArray($theme_module);

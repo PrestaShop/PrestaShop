@@ -22,7 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <!-- Block Newsletter module-->
 <div id="newsletter_block_left" class="block">
 	<h4>{l s='Newsletter' mod='blocknewsletter'}</h4>
@@ -39,26 +38,12 @@
 	</div>
 </div>
 <!-- /Block Newsletter module-->
+{strip}
+{addJsDef msg_newsl=$msg|@addcslashes:'\''}
+{addJsDef nw_error=$nw_error}
 
-<script type="text/javascript">
-    var placeholder = "{l s='Enter your e-mail' mod='blocknewsletter' js=1}";
-    var msg_newsl = '{if isset($msg) && $msg }{$msg|@addcslashes:'\''}{/if}';
-        $(document).ready(function() {ldelim}
-            $('#newsletter-input').on({ldelim}
-                focus: function() {ldelim}
-                    if ($(this).val() == placeholder || $(this).val() == msg_newsl) {ldelim}
-                        $(this).val('');
-                    {rdelim}
-                {rdelim},
-                blur: function() {ldelim}
-                    if ($(this).val() == '') {ldelim}
-                        $(this).val(placeholder);
-                    {rdelim}
-                {rdelim}
-            {rdelim});
-
-            {if isset($msg)}
-                $('#columns').prepend('<div class="clearfix"></div><p class="alert {if $nw_error}alert-danger{else}alert-success{/if}">{l s="Newsletter:" js=1 mod="blocknewsletter"} {$msg|escape:'html':'UTF-8'}</p>');
-            {/if}
-        });
-</script>
+{addJsDefL name=placeholder_blocknewsletter}{l s='Enter your e-mail' mod='blocknewsletter' js=1}{/addJsDefL}
+{if $msg}
+	{addJsDefL name=alert_blocknewsletter}{l s='Newsletter : %1$s' sprintf=$msg js=1 mod="blocknewsletter"}{/addJsDefL}
+{/if}
+{/strip}

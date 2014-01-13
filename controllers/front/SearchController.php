@@ -158,8 +158,5 @@ class SearchControllerCore extends FrontController
 
 		if (!$this->instant_search && !$this->ajax_search)
 			$this->addCSS(_THEME_CSS_DIR_.'product_list.css');
-			
-		if (Configuration::get('PS_COMPARATOR_MAX_ITEM'))
-			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 	}
 }

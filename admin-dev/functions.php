@@ -447,23 +447,6 @@ function runAdminTab($tab, $ajaxMode = false)
 					$bread .= '</a>';
 			}
 
-			// @TODO : a way to desactivate this feature
-			if (!$ajaxMode)
-				echo'<script type="text/javascript">
-
-				$(function() {
-					$.ajax({
-						type: \'POST\',
-						url: \'ajax.php\',
-						data: \'helpAccess=1&item='.$item['class_name'].'&isoUser='.$isoUser.'&country='.Context::getContext()->country->iso_code.'&version='._PS_VERSION_.'\',
-						async : true,
-						success: function(msg) {
-							$("#help-button").html(msg);
-							$("#help-button").fadeIn("slow");
-						}
-					});
-				});</script>';
-
 			if (!$ajaxMode)
 				echo '<div class="path_bar">
 			<div id="help-button" class="floatr" style="display: none; font-family: Verdana; font-size: 10px; margin-right: 4px; margin-top: 4px;">

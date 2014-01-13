@@ -96,8 +96,7 @@ function process_install(step)
 			}
 		},
 		// An error HTTP (page not found, json not valid, etc.) occured during this step
-		error: function()
-		{
+		error: function() {
 			install_error(step);
 		}
 	});
@@ -146,15 +145,11 @@ function process_install_subtask(step, current_subtask)
 				else
 					process_install_subtask(step, current_subtask);
 			}
-			// An error occured during this step
-			else
-			{
+			else 
 				install_error(step, (json) ? json.message : '');
-			}
 		},
 		// An error HTTP (page not found, json not valid, etc.) occured during this step
-		error: function()
-		{
+		error: function() {
 			install_error(step);
 		}
 	});

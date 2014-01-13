@@ -372,16 +372,13 @@ class InstallModelInstall extends InstallAbstractModel
 					Tools::deleteFile(_PS_TMP_IMG_DIR_.$file);
 
 		$default_data = array(
-			'shop_name' =>		'My Shop',
-			'shop_activity' =>	'',
-			'shop_country' =>	'us',
-			'shop_timezone' =>	'US/Eastern',
-			'use_smtp' =>		false,
-			'smtp_server' =>	'',
-			'smtp_login' =>		'',
-			'smtp_password' =>	'',
-			'smtp_encryption' =>'off',
-			'smtp_port' =>		25,
+			'shop_name' => 'My Shop',
+			'shop_activity' => '',
+			'shop_country' => 'us',
+			'shop_timezone' => 'US/Eastern',
+			'use_smtp' => false,
+			'smtp_encryption' => 'off',
+			'smtp_port' => 25,
 		);
 
 		foreach ($default_data as $k => $v)
@@ -411,9 +408,6 @@ class InstallModelInstall extends InstallAbstractModel
 
 		// Set mails configuration
 		Configuration::updateGlobalValue('PS_MAIL_METHOD', 			($data['use_smtp']) ? 2 : 1);
-		Configuration::updateGlobalValue('PS_MAIL_SERVER', 			$data['smtp_server']);
-		Configuration::updateGlobalValue('PS_MAIL_USER', 			$data['smtp_login']);
-		Configuration::updateGlobalValue('PS_MAIL_PASSWD', 			$data['smtp_password']);
 		Configuration::updateGlobalValue('PS_MAIL_SMTP_ENCRYPTION', $data['smtp_encryption']);
 		Configuration::updateGlobalValue('PS_MAIL_SMTP_PORT', 		$data['smtp_port']);
 
@@ -499,7 +493,6 @@ class InstallModelInstall extends InstallAbstractModel
 
 	public function getModulesList()
 	{
-		// @todo REMOVE DEV MODE
 		$modules = array();
 		if (false)
 		{
@@ -509,7 +502,6 @@ class InstallModelInstall extends InstallAbstractModel
 		}
 		else
 		{
-			// @todo THIS CODE NEED TO BE REMOVED WHEN MODULES API IS COMMITED
 			$modules = array(
 				'socialsharing',
 				'blockbanner',

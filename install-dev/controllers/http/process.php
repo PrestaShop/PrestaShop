@@ -28,13 +28,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 {
 	const SETTINGS_FILE = 'config/settings.inc.php';
 
-	/**
-	 * @var InstallModelInstall
-	 */
 	protected $model_install;
-	
 	public $process_steps = array();
-	
 	public $previous_button = false;
 
 	public function init()
@@ -199,12 +194,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			'shop_activity' =>			$this->session->shop_activity,
 			'shop_country' =>			$this->session->shop_country,
 			'shop_timezone' =>			$this->session->shop_timezone,
-			'use_smtp' =>				$this->session->use_smtp,
-			'smtp_server' =>			$this->session->smtp_server,
-			'smtp_login' =>				$this->session->smtp_login,
-			'smtp_password' =>			$this->session->smtp_password,
-			'smtp_encryption' =>		$this->session->smtp_encryption,
-			'smtp_port' =>				$this->session->smtp_port,
 			'admin_firstname' =>		$this->session->admin_firstname,
 			'admin_lastname' =>			$this->session->admin_lastname,
 			'admin_password' =>			$this->session->admin_password,
@@ -284,50 +273,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	}
 
 	/**
-	 * PROCESS : sendEmail
-	 * Send information e-mail
-	 */
-	public function processSendEmail()
-	{
-		require_once _PS_INSTALL_MODELS_PATH_.'mail.php';
-		$mail = new InstallModelMail(
-			$this->session->use_smtp,
-			$this->session->smtp_server,
-			$this->session->smtp_login,
-			$this->session->smtp_password,
-			$this->session->smtp_port,
-			$this->session->smtp_encryption,
-			$this->session->admin_email
-		);
-
-		if (file_exists(_PS_INSTALL_LANGS_PATH_.$this->language->getLanguageIso().'/mail_identifiers.txt'))
-			$content = file_get_contents(_PS_INSTALL_LANGS_PATH_.$this->language->getLanguageIso().'/mail_identifiers.txt');
-		else
-			$content = file_get_contents(_PS_INSTALL_LANGS_PATH_.InstallLanguages::DEFAULT_ISO.'/mail_identifiers.txt');
-
-		$vars = array(
-			'{firstname}' => $this->session->admin_firstname,
-			'{lastname}' => $this->session->admin_lastname,
-			'{shop_name}' => $this->session->shop_name,
-			'{passwd}' => $this->session->admin_password,
-			'{email}' => $this->session->admin_email,
-			'{shop_url}' => Tools::getHttpHost(true).__PS_BASE_URI__,
-		);
-		$content = str_replace(array_keys($vars), array_values($vars), $content);
-
-		$mail->send(
-			$this->l('%s - Login information', $this->session->shop_name),
-			$content
-		);
-
-		// If last step is fine, we store the fact PrestaShop is installed
-		$this->session->last_step = 'configure';
-		$this->session->step = 'configure';
-
-		$this->ajaxJsonAnswer(true);
-	}
-
-	/**
 	 * @see InstallAbstractModel::display()
 	 */
 	public function display()
@@ -376,11 +321,13 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		
 		$install_modules = array('key' => 'installModulesAddons', 'lang' => $this->l('Install Addons modules'));
 
-		$params = array('iso_lang' => $this->language->getLanguageIso(), 
-							'iso_country' => $this->session->shop_country, 
-							'email' => $this->session->admin_email, 
-							'shop_url' => Tools::getHttpHost(),
-							'version' => _PS_INSTALL_VERSION_);
+		$params = array(
+			'iso_lang' => $this->language->getLanguageIso(), 
+			'iso_country' => $this->session->shop_country, 
+			'email' => $this->session->admin_email, 
+			'shop_url' => Tools::getHttpHost(),
+			'version' => _PS_INSTALL_VERSION_
+		);
 
 		if ($low_memory)
 			foreach ($this->model_install->getAddonsModulesList($params) as $module)

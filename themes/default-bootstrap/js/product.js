@@ -24,12 +24,10 @@
 */
 
 //global variables
-var combinations = [];
 var selectedCombination = [];
 var globalQuantity = 0;
 var colors = [];
 
-//To do after loading HTML
 $(document).ready(function()
 {
 	//init the serialScroll for thumbs
@@ -100,9 +98,18 @@ $(document).ready(function()
 	else if (typeof productHasAttributes != 'undefined' && !productHasAttributes)
 		refreshProductImages(0);
 
-	$('#resetImages').click(function() {
+	$('#resetImages').click(function(e) {
+		e.preventDefault();
 		refreshProductImages(0);
+		$(this).parent().hide('slow');
 	});
+
+	$('.color_pick').click(function(e) {
+		e.preventDefault();
+		colorPickerClick($(this));
+		getProductAttribute();
+	});
+
 	if (contentOnly == false)
 		$('.thickbox').fancybox({
 			'hideOnContentClick': true,
@@ -210,6 +217,8 @@ function findCombination(firstTime)
 		choice.push($(this).val());
 	});
 
+	if (typeof combinations == 'undefined' || !combinations)
+		combinations = [];
 	//testing every combination to find the conbination's attributes' case of the user
 	for (var combination = 0; combination < combinations.length; ++combination)
 	{

@@ -4,6 +4,7 @@
 <!--
 var install_is_done = '<?php echo addslashes($this->l('Done!')) ?>';
 var process_steps = <?php echo Tools::jsonEncode($this->process_steps) ?>;
+var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin') ?>';
 -->
 </script>
 
@@ -62,7 +63,7 @@ var process_steps = <?php echo Tools::jsonEncode($this->process_steps) ?>;
 			<a href="<?php echo $this->l('http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation') ?>" target="_blank"><img src="theme/img/help.png" /></a>
 		</h3>
 
-		<div id="boBlock" class="blockInfoEnd clearfix" onclick="window.open('../admin')">
+		<div id="boBlock" class="blockInfoEnd clearfix" onclick="window.open(admin)">
 			<img src="theme/img/visu_boBlock.png" alt="" />
 			<h3><?php echo $this->l('Back Office'); ?></h3>
 			<p class="description"><?php echo $this->l('Manage your store using your Back Office. Manage your orders and customers, add modules, change themes, etc.') ?></p>

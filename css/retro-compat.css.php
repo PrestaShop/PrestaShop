@@ -25,7 +25,7 @@
 */
 
 header('content-type: text/css');
-$css_folder = __DIR__.'/../js/jquery/';
+$css_folder = dirname(__FILE__).'/../js/jquery/';
 
 $css_files = array(
 				'datepicker.css' => 

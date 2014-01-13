@@ -57,31 +57,31 @@ class AdminTaxesControllerCore extends AdminController
 				'title' =>	$this->l('Tax options'),
 				'fields' =>	array(
 					'PS_TAX' => array(
-						'title' => $this->l('Enable tax:'),
-						'desc' => $this->l('Select whether or not to include tax on purchases'),
+						'title' => $this->l('Enable tax'),
+						'desc' => $this->l('Select whether or not to include tax on purchases.'),
 						'cast' => 'intval', 'type' => 'bool'),
 					'PS_TAX_DISPLAY' => array(
-						'title' => $this->l('Display tax in the shopping cart:'),
+						'title' => $this->l('Display tax in the shopping cart'),
 						'desc' => $this->l('Select whether or not to display tax on a distinct line in the cart.'),
 						'cast' => 'intval',
 						'type' => 'bool'),
 					'PS_TAX_ADDRESS_TYPE' => array(
-						'title' => $this->l('Based on:'),
+						'title' => $this->l('Based on'),
 						'cast' => 'pSQL',
 						'type' => 'select',
 						'list' => array(
 							array(
-								'name' => $this->l('Invoice Address'),
+								'name' => $this->l('Invoice address'),
 								'id' => 'id_address_invoice'
 								),
 							array(
-								'name' => $this->l('Delivery Address'),
+								'name' => $this->l('Delivery address'),
 								'id' => 'id_address_delivery')
 								),
 						'identifier' => 'id'
 						),
 					'PS_USE_ECOTAX' => array(
-						'title' => $this->l('Use ecotax:'),
+						'title' => $this->l('Use ecotax'),
 						'desc' => $ecotax_desc,
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -132,7 +132,7 @@ class AdminTaxesControllerCore extends AdminController
 			self::$cache_lang['DeleteItem'] = $this->l('Delete item #', __CLASS__, true, false);
 
 		if (TaxRule::isTaxInUse($id))
-			$confirm = $this->l('This tax is currently in use as tax rule. Are you sure you\'d like to continue?');
+			$confirm = $this->l('This tax is currently in use as a tax rule. Are you sure you\'d like to continue?');
 
 		$this->context->smarty->assign(array(
 			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
@@ -179,15 +179,15 @@ class AdminTaxesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'required' => true,
 					'lang' => true,
-					'hint' => $this->l('Tax name to display in carts and on invoices (e.g. VAT).').' - '.$this->l('Invalid characters').' <>;=#{}'
+					'hint' => $this->l('Tax name to display in carts and on invoices (e.g. "VAT").').' - '.$this->l('Invalid characters').' <>;=#{}'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Rate:'),
+					'label' => $this->l('Rate'),
 					'name' => 'rate',
 					'maxlength' => 6,
 					'required' => true,
@@ -195,7 +195,7 @@ class AdminTaxesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Enable:'),
+					'label' => $this->l('Enable'),
 					'name' => 'active',
 					'required' => false,
 					'is_bool' => true,
