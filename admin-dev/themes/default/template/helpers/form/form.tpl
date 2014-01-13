@@ -46,7 +46,7 @@
 				{elseif $key == 'input'}
 					{foreach $field as $input}
 						{block name="input_row"}
-						<div class="form-group {if $input.type == 'hidden'}hide{/if}" {if $input.name == 'id_state'}id="contains_states"{if !$contains_states}style="display:none;"{/if}{/if}>
+						<div class="form-group {if isset($input.form_group_class)} {$input.form_group_class} {/if}{if $input.type == 'hidden'}hide{/if}" {if $input.name == 'id_state'}id="contains_states"{if !$contains_states}style="display:none;"{/if}{/if}>
 						{if $input.type == 'hidden'}
 							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 						{else}

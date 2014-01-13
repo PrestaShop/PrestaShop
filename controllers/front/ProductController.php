@@ -246,19 +246,19 @@ class ProductControllerCore extends FrontController
 			$customizationFields = $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false;
 			
 			// JS Definitions algo from template 1.5
-			$customizationFieldsJS = array();
+			$customization_fields_js = array();
 			$j=0;
 			foreach ($customizationFields as $i  => $field)
 			{
 				$key = 'pictures_'.(int)$this->product->id.'_'.(int)$field['id_customization_field'];
-				$customizationFieldsJS[$i][0] = empty($field['type']) ? 'img'.$i : 'textField'.$j++;
-				$customizationFieldsJS[$i][1] = (empty($field['type']) && isset($pictures[$key])) ? 2 : (int)$field['required'];
+				$customization_fields_js[$i][0] = empty($field['type']) ? 'img'.$i : 'textField'.$j++;
+				$customization_fields_js[$i][1] = (empty($field['type']) && isset($pictures[$key])) ? 2 : (int)$field['required'];
 			}
 
 			$this->context->smarty->assign(array(
 				'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
 				'customizationFields' => $customizationFields, // retro compat < 1.6
-				'customizationFieldsJS' => $customizationFieldsJS,
+				'customizationFieldsJS' => $customization_fields_js,
 				'accessories' => $this->product->getAccessories($this->context->language->id),
 				'return_link' => $return_link,
 				'product' => $this->product,
@@ -519,25 +519,25 @@ class ProductControllerCore extends FrontController
 			}
 			
 			// JS Definitions algo from template 1.5
-			$combinationImagesJS = array();
+			$combination_images_js = array();
 			if (is_array($combination_images))
 				foreach ($combination_images as $i => $combination_image)
 					foreach ($combination_image as $j => $combination)
 						if ($combination['id_image'])
 						{
-							$combinationImagesJS[0][] = (int)$combination['id_image'];
+							$combination_images_js[0][] = (int)$combination['id_image'];
 							if ($i)
-								$combinationImagesJS[(int)$i][(int)$j] = (int)$combination['id_image'];
+								$combination_images_js[(int)$i][(int)$j] = (int)$combination['id_image'];
 						}
 
-			if (is_array($combinationImagesJS[0]))
-				$combinationImagesJS[0] = array_values(array_unique($combinationImagesJS[0]));
+			if (is_array($combination_images_js[0]))
+				$combination_images_js[0] = array_values(array_unique($combination_images_js[0]));
 			
 			// JS Definitions algo from template 1.5
-			$combinationsJS = array();
-			foreach ($combinations as $idCombination => $combination)			
-				$combinationsJS[] = array(
-					'idCombination' => (int)$idCombination, 
+			$combinations_js = array();
+			foreach ($combinations as $id_combination => $combination)			
+				$combinations_js[] = array(
+					'idCombination' => (int)$id_combination, 
 					'idsAttributes' => explode(',' , $combination['list']), 
 					'quantity' => (int)$combination['quantity'],
 					'price' => $combination['price'], 
@@ -565,9 +565,9 @@ class ProductControllerCore extends FrontController
 				'groups' => $groups,
 				'colors' => (count($colors)) ? $colors : false,
 				'combinations' => $combinations, // retro compat < 1.6
-				'combinationsJS' => $combinationsJS,
+				'combinationsJS' => $combinations_js,
 				'combinationImages' => $combination_images, // retro compat < 1.6
-				'combinationImagesJS' => $combinationImagesJS
+				'combinationImagesJS' => $combination_images_js
 			));
 		}
 	}
