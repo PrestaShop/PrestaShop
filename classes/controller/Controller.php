@@ -408,8 +408,7 @@ abstract class ControllerCore
 			$this->context->smarty->assign(array(
 				'js_def' => Media::getJsDef(),
 				'js_files' => array_unique($this->js_files),
-				'js_inline' => Media::getInlineScript(),
-				
+				'js_inline' => Media::getInlineScript()
 			));
 			$javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
 			echo $html.$javascript."\t</body>\n</html>";
