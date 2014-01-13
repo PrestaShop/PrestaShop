@@ -2572,7 +2572,7 @@ body { min-height: 100%; height: 100%; font: 400 12px/1.42857 "Open Sans", Helve
 
 body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; background: #f8f8f8; }
 
-.bootstrap .panel .panel-footer, .bootstrap #dash_version .panel-footer { margin: 15px -20px -20px; height: 73px; }
+.bootstrap .panel .panel-footer, .bootstrap #dash_version .panel-footer { margin: 15px -20px -20px; height: 73px; border-color: #eeeeee; background-color: white; }
 .bootstrap .panel .panel-footer .btn.pull-right:not(:first-child), .bootstrap #dash_version .panel-footer .btn.pull-right:not(:first-child), #content.bootstrap .panel .panel-footer h3:not(.modal-title) .btn.panel-heading-action:not(:first-child), #content.bootstrap h3:not(.modal-title) .panel .panel-footer .btn.panel-heading-action:not(:first-child), #content.bootstrap #dash_version .panel-footer h3:not(.modal-title) .btn.panel-heading-action:not(:first-child), #content.bootstrap h3:not(.modal-title) #dash_version .panel-footer .btn.panel-heading-action:not(:first-child), #content.bootstrap .panel .panel-footer .panel-heading .btn.panel-heading-action:not(:first-child), #content.bootstrap .panel-heading .panel .panel-footer .btn.panel-heading-action:not(:first-child), #content.bootstrap #dash_version .panel-footer .panel-heading .btn.panel-heading-action:not(:first-child), #content.bootstrap .panel-heading #dash_version .panel-footer .btn.panel-heading-action:not(:first-child) { margin-right: 5px; }
 
 #header .panel-footer { margin: 15px 0 0 !important; height: 40px !important; }
@@ -3218,8 +3218,10 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap #dash_version { padding: 0 !important; overflow: hidden; }
 .bootstrap #dash_version iframe { height: 80px; width: 100%; }
 .bootstrap .adminsearch #content .panel .panel, .bootstrap .adminsearch #content #dash_version .panel, .bootstrap .adminsearch #content .panel #dash_version, .bootstrap .adminsearch #content #dash_version #dash_version { padding: 0; margin: 0; border: none; -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0; border-radius: 0; -webkit-box-shadow: 0; box-shadow: 0; }
-.bootstrap #translations_form .translations-email-panel { margin: 0 0 8px 0; padding: 8px 12px; }
-.bootstrap #translations_form .block-mail iframe, .bootstrap #translations_form .block-mail textarea { width: 100%; height: 400px; }
+.bootstrap #translations_form .translations-email-panel { margin: 0 0 8px 20px; padding: 8px 12px; }
+.bootstrap #translations_form .block-mail iframe, .bootstrap #translations_form .block-mail textarea, .bootstrap #translations_form .block-mail .rce, .bootstrap #translations_form .block-mail .source-code { width: 100%; height: 500px; }
+.bootstrap #translations_form .panel-group { display: none; }
+.bootstrap #translations_form .mails_field h4 { padding-top: 15px; }
 
 /* jQuery Growl Copyright 2013 Kevin Sylvestre 1.1.4 */
 #growls { z-index: 50000; position: fixed; }
