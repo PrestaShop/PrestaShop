@@ -92,7 +92,7 @@ class ProductToolTip extends Module
 
 	public function hookHeader($params)
 	{
-		$this->context->controller->addJQueryPlugin('jgrowl');
+		$this->context->controller->addJQueryPlugin('growl');
 	}
 
 	public function hookProductFooter($params)

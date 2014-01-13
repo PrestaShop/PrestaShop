@@ -45,15 +45,15 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		foreach ($languages as $language)
 			$language_array[$language['id_lang']] = $language['name'];
 
-		$images_array = array(
-			'open' => array('src' => 'status_green.png', 'alt' => $this->l('Open')),
-			'closed' => array('src' => 'status_red.png', 'alt' => $this->l('Closed')),
-			'pending1' => array('src' => 'status_orange.png', 'alt' => $this->l('Pending 1')),
-			'pending2' => array('src' => 'status_orange.png', 'alt' => $this->l('Pending 2')),
+		$icon_array = array(
+			'open' => array('class' => 'icon-circle text-success', 'alt' => $this->l('Open')),
+			'closed' => array('class' => 'icon-circle text-danger', 'alt' => $this->l('Closed')),
+			'pending1' => array('class' => 'icon-circle text-warning', 'alt' => $this->l('Pending 1')),
+			'pending2' => array('class' => 'icon-circle text-warning', 'alt' => $this->l('Pending 2')),
 		);
 
 		$status_array = array();
-		foreach ($images_array as $k => $v)
+		foreach ($icon_array as $k => $v)
 			$status_array[$k] = $v['alt'];
 
 		$this->fields_list = array(
@@ -89,7 +89,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'title' => $this->l('Status'),
 				'type' => 'select',
 				'list' => $status_array,
-				'icon' => $images_array,
+				'icon' => $icon_array,
 				'align' => 'center',
 				'filter_key' => 'a!status',
 				'filter_type' => 'string',
@@ -428,7 +428,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 		return parent::postProcess();
 	}
-
+		
 	public function initContent()
 	{
 		if (isset($_GET['filename']) && file_exists(_PS_UPLOAD_DIR_.$_GET['filename']) && Validate::isFileName($_GET['filename']))
