@@ -1426,11 +1426,13 @@ class AdminControllerCore extends Controller
 
 		foreach (array('errors', 'warnings', 'informations', 'confirmations') as $type)
 			$this->context->smarty->assign($type, $this->json ? Tools::jsonEncode(array_unique($this->$type)) : array_unique($this->$type));
-		$this->context->smarty->assign(array(
-			'page_header_toolbar' => $this->context->smarty->fetch($page_header_toolbar),
-			'modal_module_list' => $this->context->smarty->fetch($modal_module_list),
-			)
-		);
+
+		if ($this->show_page_header_toolbar && !$this->lite_display)
+			$this->context->smarty->assign(array(
+				'page_header_toolbar' => $this->context->smarty->fetch($page_header_toolbar),
+				'modal_module_list' => $this->context->smarty->fetch($modal_module_list),
+				)
+			);
 
 		$this->context->smarty->assign(array(
 			'page' =>  $this->json ? Tools::jsonEncode($page) : $page,
