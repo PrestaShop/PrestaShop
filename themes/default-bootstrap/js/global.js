@@ -39,10 +39,11 @@ $('document').ready(function(){
 	if (typeof page_name != 'undefined' && !in_array(page_name, ['index', 'product']))
 	{
 		var view = $.totalStorage('display');
-		if (view)
+
+		if (view && view != 'grid')
 			display(view);
 		else
-			display('grid');
+			$('.display').find('li#grid').addClass('selected');
 
 		$('.add_to_compare').click(function(e){
 			e.preventDefault();
