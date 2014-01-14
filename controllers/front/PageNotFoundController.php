@@ -40,6 +40,7 @@ class PageNotFoundControllerCore extends FrontController
 
 		if (in_array(Tools::strtolower(substr($_SERVER['REQUEST_URI'], -3)), array('png', 'jpg', 'gif')))
 		{
+			$this->context->cookie->disallowWriting();
 			if ((bool)Configuration::get('PS_REWRITING_SETTINGS'))
 				preg_match('#([0-9]+)(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/(.+)\.(png|jpg|gif)$#', $_SERVER['REQUEST_URI'], $matches);
 			if ((!isset($matches[2]) || empty($matches[2])) && !(bool)Configuration::get('PS_REWRITING_SETTINGS'))
@@ -59,7 +60,10 @@ class PageNotFoundControllerCore extends FrontController
 			exit;
 		}
 		elseif (in_array(Tools::strtolower(substr($_SERVER['REQUEST_URI'], -3)), array('.js', 'css')))
+		{
+			$this->context->cookie->disallowWriting();
 			exit;
+		}
 
 		parent::initContent();
 
@@ -71,4 +75,3 @@ class PageNotFoundControllerCore extends FrontController
 		// 404 - no need to redirect to the canonical url
 	}
 }
-
