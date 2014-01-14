@@ -40,9 +40,10 @@ class LocalizationPackCore
 		$main_attributes = $xml->attributes();
 		$this->name = (string)$main_attributes['name'];
 		$this->version = (string)$main_attributes['version'];
+		$res = true;
+
 		if (empty($selection))
 		{
-			$res = true;
 			$res &= $this->_installStates($xml);
 			$res &= $this->_installTaxes($xml);
 			$res &= $this->_installCurrencies($xml, $install_mode);
@@ -67,21 +68,13 @@ class LocalizationPackCore
 				Currency::refreshCurrencies();
 			}
 
-			return $res;
 		}
-		foreach ($selection as $selected)
-			if (strtolower((string)$selected) == 'currencies')
-			{
-				if (!Validate::isLocalizationPackSelection($selected) || !$this->{'_install'.ucfirst($selected)}($xml, true))
-					return false;
-			}
-			else
-			{
-				if (!Validate::isLocalizationPackSelection($selected) || !$this->{'_install'.ucfirst($selected)}($xml))
-					return false;
-			}
+		else
+			foreach ($selection as $selected)
+				// No need to specify the install_mode because if the selection mode is used, then it's not the install
+				$res &= Validate::isLocalizationPackSelection($selected) ? $this->{'_install'.$selected}($xml) : false;
 
-		return true;
+		return $res;
 	}
 
 	protected function _installStates($xml)
@@ -134,7 +127,9 @@ class LocalizationPackCore
 						$this->_errors[] = Tools::displayError('An error occurred while adding the state.');
 						return false;
 					}
-				} else {
+				}
+				else
+				{
 					$state = new State($id_state);
 					if (!Validate::isLoadedObject($state))
 					{
@@ -279,7 +274,7 @@ class LocalizationPackCore
 				}
 			}
             
-			if (($error = Currency::refreshCurrencies()) !== false)
+			if (($error = Currency::refreshCurrencies()) !== null)
                 $this->_errors[] = $error;
 
 			if (!count($this->_errors) && $install_mode && isset($attributes['iso_code']) && count($xml->currencies->currency) == 1)
@@ -300,6 +295,7 @@ class LocalizationPackCore
 				if (Language::getIdByIso($attributes['iso_code']) && !$install_mode)
 					continue;
 				$errors = Language::downloadAndInstallLanguagePack($attributes['iso_code'], $attributes['version'], $attributes);
+				p($errors);
 				if ($errors !== true && is_array($errors))
 					$this->_errors = array_merge($this->_errors, $errors);
 			}
