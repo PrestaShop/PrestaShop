@@ -210,7 +210,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		else
 		{
 			$this->no_back = true;
-			$this->toolbar_btn['new'] = array(
+			$this->page_header_toolbar_btn['new'] = array(
 				'href' => '#',
 				'desc' => $this->l('Add a new tax rule.')
 			);
@@ -330,6 +330,10 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 					'label' => $this->l('Description'),
 					'name' => 'description',
 				)
+			),
+			'submit' => array(
+				'title' => $this->l('Save and stay'),
+				'stay' => true
 			)
 		);
 

@@ -646,7 +646,8 @@ class FrontControllerCore extends Controller
 			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $_SERVER['REQUEST_URI'] != __PS_BASE_URI__)
 				die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$final_url.'">'.$final_url.'</a>');
 
-			header('HTTP/1.0 301 Moved');
+			$redirect_type = Configuration::get('PS_CANONICAL_REDIRECT') == 2 ? '301' : '302';
+			header('HTTP/1.0 '.$redirect_type.' Moved');
 			header('Cache-Control: no-cache');
 			Tools::redirectLink($final_url);
 		}

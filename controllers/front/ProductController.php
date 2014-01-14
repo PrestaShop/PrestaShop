@@ -294,7 +294,7 @@ class ProductControllerCore extends FrontController
 		$id_country = (int)$id_customer ? Customer::getCurrentCountry($id_customer) : Configuration::get('PS_COUNTRY_DEFAULT');
 
 		$group_reduction = GroupReduction::getValueForProduct($this->product->id, $id_group);
-		if ($group_reduction == 0)
+		if ($group_reduction === false)
 			$group_reduction = Group::getReduction((int)$this->context->cookie->id_customer) / 100;
 
 		// Tax
@@ -449,7 +449,10 @@ class ProductControllerCore extends FrontController
 				$combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
 				$combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
 				if ($row['available_date'] != '0000-00-00')
+				{
 					$combinations[$row['id_product_attribute']]['available_date'] = $row['available_date'];
+					$combinations[$row['id_product_attribute']]['date_formatted'] = Tools::displayDate($row['available_date']);
+				}
 				else
 					$combinations[$row['id_product_attribute']]['available_date'] = '';
 
@@ -504,57 +507,12 @@ class ProductControllerCore extends FrontController
 				$attribute_list = rtrim($attribute_list, ',');
 				$combinations[$id_product_attribute]['list'] = $attribute_list;
 			}
-			
-			// JS Definitions algo from template 1.5
-			$combination_images_js = array();
-			if (is_array($combination_images))
-				foreach ($combination_images as $i => $combination_image)
-					foreach ($combination_image as $j => $combination)
-						if ($combination['id_image'])
-						{
-							$combination_images_js[0][] = (int)$combination['id_image'];
-							if ($i)
-								$combination_images_js[(int)$i][(int)$j] = (int)$combination['id_image'];
-						}
-
-			if (is_array($combination_images_js[0]))
-				$combination_images_js[0] = array_values(array_unique($combination_images_js[0]));
-			
-			// JS Definitions algo from template 1.5
-			$combinations_js = array();
-			foreach ($combinations as $id_combination => $combination)			
-				$combinations_js[] = array(
-					'idCombination' => (int)$id_combination, 
-					'idsAttributes' => explode(',' , $combination['list']), 
-					'quantity' => (int)$combination['quantity'],
-					'price' => $combination['price'], 
-					'ecotax' => $combination['ecotax'], 
-					'image' => $combination['id_image'],
-					'reference' => $combination['reference'],
-					'unit_price' => $combination['unit_impact'],
-					'minimal_quantity' => (int)$combination['minimal_quantity'], 
-					'available_date' => array(
-						'date' => $combination['available_date'],
-						'date_formatted' => Tools::displayDate($combination['available_date'])
-					), 
-					'specific_price' => array(
-						'reduction_percent' => ($combination['specific_price'] && $combination['specific_price']['reduction'] && $combination['specific_price']['reduction_type'] == 'percentage') ? 
-							(float)$combination['specific_price']['reduction'] * 100 : 0,		
-						'reduction_price' => ($combination['specific_price'] && $combination['specific_price']['reduction'] && $combination['specific_price']['reduction_type'] == 'amount') ? 
-							(float)$combination['specific_price']['reduction'] : 0,
-						'price' => ($combination['specific_price'] && $combination['specific_price']['price']) ? (float)$combination['specific_price']['price'] : 0,
-						'reduction_type' => ($combination['specific_price'] && $combination['specific_price']['reduction_type']) ? $combination['specific_price']['reduction_type'] : '',
-						'id_product_attribute' => ($combination['specific_price'] && $combination['specific_price']['id_product_attribute']) ? (int)$combination['specific_price']['id_product_attribute'] : 0
-					)
-				);
 
 			$this->context->smarty->assign(array(
 				'groups' => $groups,
 				'colors' => (count($colors)) ? $colors : false,
-				'combinations' => $combinations, // retro compat < 1.6
-				'combinationsJS' => $combinations_js,
-				'combinationImages' => $combination_images, // retro compat < 1.6
-				'combinationImagesJS' => $combination_images_js
+				'combinations' => $combinations,
+				'combinationImages' => $combination_images
 			));
 		}
 	}

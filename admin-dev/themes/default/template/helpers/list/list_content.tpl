@@ -96,14 +96,14 @@
 								<img src="../img/admin/{$tr[$key]['src']}" alt="{$tr[$key]['alt']}" title="{$tr[$key]['alt']}" />
 							{/if}
 						{/if}
-					{elseif isset($params.price)}
-						{$tr.$key}
+					{elseif isset($params.type) && $params.type == 'price'}
+						{displayPrice price=$tr.$key}
 					{elseif isset($params.float)}
 						{$tr.$key}
 					{elseif isset($params.type) && $params.type == 'date'}
-						{$tr.$key}
+						{dateFormat date=$tr.$key full=0}
 					{elseif isset($params.type) && $params.type == 'datetime'}
-						{$tr.$key}
+						{dateFormat date=$tr.$key full=1}
 					{elseif isset($params.type) && $params.type == 'decimal'}
 						{$tr.$key|string_format:"%.2f"}
 					{elseif isset($params.type) && $params.type == 'percent'}

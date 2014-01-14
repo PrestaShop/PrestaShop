@@ -118,7 +118,7 @@ class AdminLogsControllerCore extends AdminController
 	public function displayEmployee($value, $tr)
 	{
 		$employee = new Employee((int)$tr['id_employee']);
-		return ImageManager::thumbnail($employee->getImage(), $this->table.'_mini_'.$value.'_'.$this->context->shop->id.'.'.$this->imageType, 45, $this->imageType).' '.$value;
+		return '<span class="employee_avatar_small">'.ImageManager::thumbnail($employee->getImage(), $this->table.'_mini_'.$value.'_'.$this->context->shop->id.'.'.$this->imageType, 45, $this->imageType).'</span> '.$value;
 	}
 }
 
