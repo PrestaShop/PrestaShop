@@ -45,15 +45,6 @@
 			{l s='%s at least, or you will have to edit the translation files.' sprintf=$limit_warning['needed_limit']}
 		</div>
 	{else}
-		<div class="alert alert-info">
-			<p>
-				{l s='Some sentences to translate use this syntax: "You have %%s items...". These "%s" are variables, and PrestaShop takes care of replacing them before displaying your translation.' sprintf='%d, %s, %1$s, %2$d'}<br>
-				<strong>{l s='You must leave these in your translations, and place them appropriately in your sentence.'}</strong>
-			</p>
-			<p>
-				{l s='Click on titles to open fieldsets'}.
-			</p>
-		</div>
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form-horizontal">
 			<div class="panel">
 				<input type="hidden" name="lang" value="{$lang}" />
@@ -121,6 +112,7 @@
 							// create special config
 							var rte_mail_config = {};
 							rte_mail_config['editor_selector'] = 'rte-mail-' + rte_mail_selector;
+							rte_mail_config['height'] = '500px';
 							// move controls to active panel
 							$('#translation_mails-control-actions').appendTo($(this).find('.panel-collapse.in'));
 							// when user first open email

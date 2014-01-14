@@ -2221,19 +2221,27 @@ class AdminTranslationsControllerCore extends AdminController
 		if (array_key_exists('group_name', $mails))
 			$group_name = $mails['group_name'];
 
+		if($mails['empty_values'] == 0) {
+			$translation_missing_badge_type = 'badge-success';
+		} else {
+			$translation_missing_badge_type = 'badge-danger';
+		}
+
 		$str_return .= '<div class="mails_field">
-			<h4>'.'<a href="javascript:void(0);" onclick="$(\'#'.$id_html.'\').slideToggle();">'.
-			'<i class="icon-arrow-right"></i> '.$title.'</a></h4><p class="text-muted">'.$mails['empty_values'].' '.
-			sprintf($this->l('missing translation(s) on %1$s template(s) for %2$s'),((int)$mails['empty_values'] + (int)$mails['total_filled']),$obj_lang->name).
-			'</p>
+			<h4>
+			<span class="badge">'.((int)$mails['empty_values'] + (int)$mails['total_filled']).' <i class="icon-envelope-o"></i></span>
+			<a href="javascript:void(0);" onclick="$(\'#'.$id_html.'\').slideToggle();">'.$title.'</a>
+			<span class="pull-right badge '.$translation_missing_badge_type.'">'.$mails['empty_values'].' '.$this->l('missing translation(s)').'</span>
+			</h4>
 			<div name="mails_div" id="'.$id_html.'" class="panel-group">';
+
 		if (!empty($mails['files']))
 		{
 			$topic_already_displayed = array();
 			foreach ($mails['files'] as $mail_name => $mail_files)
 			{
 				$str_return .= '<div class="panel translations-email-panel">';
-				$str_return .= '<a href="#email-'.$mail_name.'" class="panel-title" data-toggle="collapse" data-parent="#'.$id_html.'" ><i class="icon-caret-down"></i> '.$mail_name.'</a>';
+				$str_return .= '<a href="#email-'.$mail_name.'" class="panel-title" data-toggle="collapse" data-parent="#'.$id_html.'" >'.$mail_name.' <i class="icon-caret-down"></i> </a>';
 				$str_return .= '<div id="email-'.$mail_name.'" class="email-collapse panel-collapse collapse">';
 				if (array_key_exists('html', $mail_files) || array_key_exists('txt', $mail_files))
 				{
@@ -2265,15 +2273,15 @@ class AdminTranslationsControllerCore extends AdminController
 					else
 					{
 						$str_return .= '
-							<div class="alert alert-info">'
+							<hr><div class="alert alert-info">'
 							.sprintf($this->l('No Subject was found for %s in the database.'), $mail_name)
 							.'</div>';
 					}
 					// tab menu
 					$str_return .= '<hr><ul class="nav nav-pills">
-						<li class="active"><a href="#'.$mail_name.'-html" data-toggle="tab">'.$this->l('Version .html').'</a></li>
-						<li><a href="#'.$mail_name.'-text" data-toggle="tab">'.$this->l('Version .txt').'</a></li>
-						<li><a href="#'.$mail_name.'-editor" data-toggle="tab">'.$this->l('Editor').'</a></li>
+						<li class="active"><a href="#'.$mail_name.'-html" data-toggle="tab">'.$this->l('View HTML version').'</a></li>
+						<li><a href="#'.$mail_name.'-editor" data-toggle="tab">'.$this->l('Edit HTML version').'</a></li>
+						<li><a href="#'.$mail_name.'-text" data-toggle="tab">'.$this->l('View/Edit TXT version').'</a></li>
 						</ul>';
 					// tab-content
 					$str_return .= '<div class="tab-content">';

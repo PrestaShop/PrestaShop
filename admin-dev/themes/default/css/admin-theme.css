@@ -3219,10 +3219,15 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap #dash_version iframe { height: 80px; width: 100%; }
 .bootstrap .adminsearch #content .panel .panel, .bootstrap .adminsearch #content #dash_version .panel, .bootstrap .adminsearch #content .panel #dash_version, .bootstrap .adminsearch #content #dash_version #dash_version { padding: 0; margin: 0; border: none; -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0; border-radius: 0; -webkit-box-shadow: 0; box-shadow: 0; }
 .bootstrap #translations_form .translations-email-panel { margin: 0 0 8px 20px; padding: 8px 12px; }
-.bootstrap #translations_form .block-mail iframe, .bootstrap #translations_form .block-mail textarea, .bootstrap #translations_form .block-mail .rce, .bootstrap #translations_form .block-mail .source-code { width: 100%; height: 500px; }
+.bootstrap #translations_form .block-mail iframe, .bootstrap #translations_form .block-mail textarea { width: 100%; height: 500px; }
 .bootstrap #translations_form .panel-group { display: none; }
-.bootstrap #translations_form .mails_field { padding-top: 15px; margin-bottom: 15px; }
+.bootstrap #translations_form a.panel-title i { display: none; }
+.bootstrap #translations_form a.panel-title:hover { text-decoration: none; }
+.bootstrap #translations_form a.panel-title:hover i { display: inline-block; }
+.bootstrap #translations_form .mails_field { border-bottom: 1px solid #eeeeee; padding-bottom: 8px; margin-bottom: 16px; }
 .bootstrap #translations_form .mails_field ul.nav-pills { margin-bottom: 5px; }
+.bootstrap #translations_form .mails_field h4 .badge, .bootstrap #translations_form .mails_field h4 #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper .bootstrap #translations_form .mails_field h4 .notifs_badge, .bootstrap #translations_form .mails_field h4 .module-badge-popular, .bootstrap #translations_form .mails_field h4 .module-badge-partner { font-size: 12px; }
+.bootstrap #translations_form .mails_field h4 .badge.badge-danger, .bootstrap #translations_form .mails_field h4 #header_notifs_icon_wrapper .badge-danger.notifs_badge, #header_notifs_icon_wrapper .bootstrap #translations_form .mails_field h4 .badge-danger.notifs_badge, .bootstrap #translations_form .mails_field h4 .badge-danger.module-badge-popular, .bootstrap #translations_form .mails_field h4 .badge-danger.module-badge-partner { color: #d9534f; border: solid 2px #d9534f; background-color: transparent; }
 .bootstrap #translations_form .mails_field .panel-footer { margin: 0 -15px; }
 
 /* jQuery Growl Copyright 2013 Kevin Sylvestre 1.1.4 */
