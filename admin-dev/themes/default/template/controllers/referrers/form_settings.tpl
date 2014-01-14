@@ -22,7 +22,34 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
+<div class="row">
+	<div class="col-lg-6">
+			<form action="{$current}&token={$token}" method="post" id="refresh_index_form" name="refresh_index_form" class="form-horizontal">
+				<div class="panel">
+					<h3>
+						<i class="icon-fullscreen"></i> {l s='Indexation'}
+					</h3>
+					<div class="alert alert-info">{l s='There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the "Refresh index" button. This process may take a while, and it\'s only needed if you modified or added a referrer, or if you want changes to be retroactive.'}</div>
+					<button type="submit" class="btn btn-default" name="submitRefreshIndex" id="submitRefreshIndex">
+						<i class="icon-refresh"></i> {l s='Refresh index'}
+					</button>
+				</div>
+			</form>
+		</div>
+		<div class="col-lg-6">
+			<form action="{$current}&token={$token}" method="post" id="refresh_cache_form" name="refresh_cache_form" class="form-horizontal">
+				<div class="panel">
+					<h3>
+						<i class="icon-briefcase"></i> {l s='Cache'}
+					</h3>
+					<div class="alert alert-info">{l s='Your data is cached in order to sort it and filter it. You can refresh the cache by clicking on the "Refresh cache" button.'}</div>
+					<button type="submit" class="btn btn-default" name="submitRefreshCache" id="submitRefreshCache">
+						<i class="icon-refresh"></i> {l s='Refresh cache'}
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
 <div id="settings_referrers" class="row">
@@ -53,41 +80,13 @@
 						</div>
 					</div>
 				</div>
-					
-				
 				<button type="submit" class="btn btn-default" name="submitSettings" id="submitSettings">
 					<i class="icon-save"></i> {l s='Save'}
 				</button>
 			</div>
 		</form>
 	</div>
-	<div class="col-lg-6">
-		<form action="{$current}&token={$token}" method="post" id="refresh_index_form" name="refresh_index_form" class="form-horizontal">
-			<div class="panel">
-				<h3>
-					<i class="icon-fullscreen"></i> {l s='Indexation'}
-				</h3>
-				<div class="alert alert-info">{l s='There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the "Refresh index" button. This process may take a while, and it\'s only needed if you modified or added a referrer, or if you want changes to be retroactive.'}</div>
-				<button type="submit" class="btn btn-default" name="submitRefreshIndex" id="submitRefreshIndex">
-					<i class="icon-refresh"></i> {l s='Refresh index'}
-				</button>
-			</div>
-		</form>
 	</div>
-	<div class="col-lg-6">
-		<form action="{$current}&token={$token}" method="post" id="refresh_cache_form" name="refresh_cache_form" class="form-horizontal">
-			<div class="panel">
-				<h3>
-					<i class="icon-briefcase"></i> {l s='Cache'}
-				</h3>
-				<div class="alert alert-info">{l s='Your data is cached in order to sort it and filter it. You can refresh the cache by clicking on the "Refresh cache" button.'}</div>
-				<button type="submit" class="btn btn-default" name="submitRefreshCache" id="submitRefreshCache">
-					<i class="icon-refresh"></i> {l s='Refresh cache'}
-				</button>
-			</div>
-		</form>
-	</div>
-</div>
 
 
 	

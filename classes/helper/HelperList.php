@@ -296,15 +296,6 @@ class HelperListCore extends Helper
 				}
 				elseif (isset($params['type']) && $params['type'] == 'float')
 					$this->_list[$index][$key] = rtrim(rtrim($tr[$key], '0'), '.');
-				elseif (isset($params['type']) && $params['type'] == 'price')
-				{
-					$currency = (isset($params['currency']) && $params['currency']) ? Currency::getCurrencyInstance($tr['id_currency']) : $this->context->currency;
-					$this->_list[$index][$key] = Tools::displayPrice($tr[$key], $currency, false);
-				}
-				elseif (isset($params['type']) && $params['type'] == 'date')
-					$this->_list[$index][$key] = Tools::displayDate($tr[$key]);
-				elseif (isset($params['type']) && $params['type'] == 'datetime')
-					$this->_list[$index][$key] = Tools::displayDate($tr[$key],null , true);
 				elseif (isset($tr[$key]))
 				{
 					$echo = $tr[$key];

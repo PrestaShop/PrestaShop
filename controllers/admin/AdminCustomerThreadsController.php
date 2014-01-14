@@ -108,6 +108,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			'date_upd' => array(
 				'title' => $this->l('Last message'),
 				'havingFilter' => true,
+				'type' => 'datetime',
 			),
 		);
 

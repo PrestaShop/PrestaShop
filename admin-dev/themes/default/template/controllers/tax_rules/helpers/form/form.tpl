@@ -42,7 +42,7 @@
 
 		$('#tax_rule_form').hide();
 
-		$('#desc-tax_rules_group-new').click(function() {
+		$('#page-header-desc-tax_rule-new').click(function() {
 			initForm();
 			$('#tax_rule_form').slideToggle();
 			return false;
