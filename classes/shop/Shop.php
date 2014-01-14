@@ -388,7 +388,7 @@ class ShopCore extends ObjectModel
 
 				$params = $_GET;
 				unset($params['id_shop']);
-				$url = $default_shop->domain.
+				$url = $default_shop->domain;
 				if (!Configuration::get('PS_REWRITING_SETTINGS'))
 					$url .= $default_shop->getBaseURI().'index.php?'.http_build_query($params);
 				else
