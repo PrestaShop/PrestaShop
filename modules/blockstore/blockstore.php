@@ -116,9 +116,9 @@ class BlockStore extends Module
 						return $this->displayError($this->l('An error occurred while attempting to upload the file.'));
 					else
 					{
-						if (Configuration::hasContext('BLOCKBLOCKSTORE_IMG', null, Shop::getContext()) && Configuration::get('BLOCKBLOCKSTORE_IMG') != $file_name)
-							@unlink(dirname(__FILE__).'/'.Configuration::get('BLOCKBLOCKSTORE_IMG'));
-						Configuration::updateValue('BLOCKBLOCKSTORE_IMG', $file_name);
+						if (Configuration::hasContext('BLOCKSTORE_IMG', null, Shop::getContext()) && Configuration::get('BLOCKSTORE_IMG') != $file_name)
+							@unlink(dirname(__FILE__).'/'.Configuration::get('BLOCKSTORE_IMG'));
+						Configuration::updateValue('BLOCKSTORE_IMG', $file_name);
 						$this->_clearCache('blockstore.tpl');
 						return $this->displayConfirmation($this->l('The settings have been updated.'));
 					}
@@ -148,7 +148,7 @@ class BlockStore extends Module
 						'label' => $this->l('Block image'),
 						'name' => 'BLOCKSTORE_IMG',
 						'desc' => $this->l('( The selected image will be displayed as 174 pixels per 115 pixels).'),
-						'thumb' => '../modules/'.$this->name.'/'.Configuration::get('BLOCKBLOCKSTORE_IMG'),
+						'thumb' => '../modules/'.$this->name.'/'.Configuration::get('BLOCKSTORE_IMG'),
 					),
 				),
 				'submit' => array(
