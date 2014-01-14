@@ -199,20 +199,26 @@
 			imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}icon-check-sign{else}icon-check-empty{/if}", assoc, "{$image->legend[$default_language]|@addcslashes:'\"'}");
 		{/foreach}
 		{literal}
+		var originalOrder = false;
+
 		$("#imageTable").tableDnD(
-		{
+		{	onDragStart: function(table, row) {
+				originalOrder = $.tableDnD.serialize();
+			},
 			onDrop: function(table, row) {
-			current = $(row).attr("id");
-			stop = false;
-			image_up = "{";
-			$("#imageList").find("tr").each(function(i) {
-				$("#td_" +  $(this).attr("id")).html(i + 1);
-				if (!stop || (i + 1) == 2)
-					image_up += '"' + $(this).attr("id") + '" : ' + (i + 1) + ',';
-			});
-			image_up = image_up.slice(0, -1);
-			image_up += "}";
-			updateImagePosition(image_up);
+				if (originalOrder != $.tableDnD.serialize()) {
+					current = $(row).attr("id");
+					stop = false;
+					image_up = "{";
+					$("#imageList").find("tr").each(function(i) {
+						$("#td_" +  $(this).attr("id")).html(i + 1);
+						if (!stop || (i + 1) == 2)
+							image_up += '"' + $(this).attr("id") + '" : ' + (i + 1) + ',';
+					});
+					image_up = image_up.slice(0, -1);
+					image_up += "}";
+					updateImagePosition(image_up);
+				}
 			}
 		});
 		/**
