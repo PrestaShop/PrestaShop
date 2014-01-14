@@ -22,10 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<div class="row">
-	<div class="col-lg-4">
-		{$shops_tree}
-	</div>
-	<div class="col-lg-8">{$content}</div>
-</div>
+<li class="tree-folder">
+	<span class="tree-folder-name">
+		<i class="icon-folder-close"></i>
+		<label class="tree-toggler "><a href="{$url_shop_group}&id_shop_group={$node['id']}">{$node['name']}</a></label>
+	</span>
+	<ul class="tree">
+		{$children}
+	</ul>
+</li>

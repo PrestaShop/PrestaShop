@@ -96,8 +96,44 @@ class AdminShopGroupControllerCore extends AdminController
 		parent::initContent();
 		
 		$this->addJqueryPlugin('cooki-plugin');
-		$this->addJqueryPlugin('jstree');
-		$this->addCSS(_PS_JS_DIR_.'jquery/plugins/jstree/themes/classic/style.css');
+		$data = Shop::getTree();
+
+		foreach ($data as $key_group => &$group)
+			foreach ($group['shops'] as $key_shop => &$shop)
+			{
+				$current_shop = new Shop($shop['id_shop']);
+				$urls = $current_shop->getUrls();
+
+				foreach ($urls as $key_url => &$url)
+				{
+					$title = $url['domain'].$url['physical_uri'].$url['virtual_uri'];
+					if (strlen($title) > 23)
+						$title = substr($title, 0, 23).'...';
+
+					$url['name'] = $title;
+					$shop['urls'][$url['id_shop_url']] = $url;
+				}
+			}
+
+		$shops_tree = new HelperTreeShops('shops-tree', 'Multistore tree');
+		$shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
+			->setHeaderTemplate('shop_tree_header.tpl')->setActions(array(
+				new TreeToolbarLink(
+					'Collapse All',
+					'#',
+					'$(\'#'.$shops_tree->getId().'\').tree(\'collapseAll\'); return false;',
+					'icon-collapse-alt'),
+				new TreeToolbarLink(
+					'Expand All',
+					'#',
+					'$(\'#'.$shops_tree->getId().'\').tree(\'expandAll\'); return false;',
+					'icon-expand-alt')
+			))
+			->setAttribute('url_shop_group', $this->context->link->getAdminLink('AdminShopGroup'))
+			->setAttribute('url_shop', $this->context->link->getAdminLink('AdminShop'))
+			->setAttribute('url_shop_url', $this->context->link->getAdminLink('AdminShopUrl'))
+			->setData($data);
+		$shops_tree = $shops_tree->render(null, false, false);
 
 		if ($this->display == 'edit')
 			$this->toolbar_title[] = $this->object->name;
@@ -106,22 +142,37 @@ class AdminShopGroupControllerCore extends AdminController
 			'toolbar_scroll' => 1,
 			'toolbar_btn' => $this->toolbar_btn,
 			'title' => $this->toolbar_title,
-			'selected_tree_id' => ($this->display == 'edit') ? 'tree-group-'.$this->id_object : 'tree-root',
+			'shops_tree' => $shops_tree
 		));
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+
+		if ($this->display != 'add' && $this->display != 'edit')
+		{
+			$this->page_header_toolbar_btn['new'] = array(
+				'desc' => $this->l('Add a new shop group'),
+				'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
+			);
+			$this->page_header_toolbar_btn['new_2'] = array(
+				'desc' => $this->l('Add a new shop'),
+				'href' => $this->context->link->getAdminLink('AdminShop').'&addshop',
+				'imgclass' => 'new'
+			);
+		}
 	}
 	
 	public function initToolbar()
 	{
 		parent::initToolbar();
-		$this->toolbar_btn['new'] = array(
-			'desc' => $this->l('Add a new shop group'),
-			'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
-		);
-		$this->toolbar_btn['new_2'] = array(
-			'desc' => $this->l('Add a new shop'),
-			'href' => $this->context->link->getAdminLink('AdminShop').'&amp;addshop',
-			'imgclass' => 'new'
-		);
+		
+		if ($this->display != 'add' && $this->display != 'edit')
+			$this->toolbar_btn['new'] = array(
+				'desc' => $this->l('Add a new shop group'),
+				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
+			);
 	}
 
 	public function renderForm()

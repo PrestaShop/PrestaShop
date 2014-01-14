@@ -240,6 +240,8 @@ class AdminShopUrlControllerCore extends AdminController
 
 		if (!($obj = $this->loadObject(true)))
 			return;
+
+		self::$currentIndex = self::$currentIndex.'&id_shop='.$obj->id;
 		$current_shop = Shop::initialize();
 
 		$list_shop_with_url = array();
@@ -260,31 +262,49 @@ class AdminShopUrlControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+
+		if ($this->display != 'add' && $this->display != 'edit')
+		{
+			if ($this->id_object)
+				$this->loadObject();
+
+			if (!$this->id_shop && $this->object && $this->object->id_shop)
+				$this->id_shop = $this->object->id_shop;
+
+			$this->page_header_toolbar_btn['edit'] = array(
+				'desc' => $this->l('Edit this shop'),
+				'href' => $this->context->link->getAdminLink('AdminShop').'&updateshop&id_shop='.$this->id_shop,
+			);
+
+			$this->page_header_toolbar_btn['new'] = array(
+				'desc' => $this->l('Add a new URL'),
+				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&add'.$this->table.'&id_shop='
+					.$this->id_shop,
+			);
+		}
+	}
+
 	public function initToolbar()
 	{
-		if ($this->id_object)
-			$this->loadObject();
-
-		if (!$this->id_shop && $this->object && $this->object->id_shop)
-			$this->id_shop = $this->object->id_shop;
-
-		if (!$this->display && $this->id_shop)
-			$this->toolbar_btn['edit'] = array(
-				'desc' => $this->l('Edit this shop'),
-				'href' => $this->context->link->getAdminLink('AdminShop').'&amp;updateshop&amp;id_shop='.$this->id_shop,
-			);
-
 		parent::initToolbar();
 
-		$this->show_toolbar = false;
-		if (isset($this->toolbar_btn['new']))
+		if ($this->display != 'add' && $this->display != 'edit')
+		{
+			if ($this->id_object)
+				$this->loadObject();
+
+			if (!$this->id_shop && $this->object && $this->object->id_shop)
+				$this->id_shop = $this->object->id_shop;
+
 			$this->toolbar_btn['new'] = array(
 				'desc' => $this->l('Add a new URL'),
-				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&amp;add'.$this->table.'&amp;id_shop='.$this->id_shop,
+				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&amp;add'.$this->table.'&amp;id_shop='
+					.$this->id_shop,
 			);
-
-		if (isset($this->toolbar_btn['back']))
-			$this->toolbar_btn['back']['href'] .= '&amp;id_shop='.$this->id_shop;
+		}
 	}
 
 	public function initContent()
@@ -292,8 +312,44 @@ class AdminShopUrlControllerCore extends AdminController
 		parent::initContent();
 
 		$this->addJqueryPlugin('cooki-plugin');
-		$this->addJqueryPlugin('jstree');
-		$this->addCSS(_PS_JS_DIR_.'jquery/plugins/jstree/themes/classic/style.css');
+		$data = Shop::getTree();
+
+		foreach ($data as $key_group => &$group)
+			foreach ($group['shops'] as $key_shop => &$shop)
+			{
+				$current_shop = new Shop($shop['id_shop']);
+				$urls = $current_shop->getUrls();
+
+				foreach ($urls as $key_url => &$url)
+				{
+					$title = $url['domain'].$url['physical_uri'].$url['virtual_uri'];
+					if (strlen($title) > 23)
+						$title = substr($title, 0, 23).'...';
+
+					$url['name'] = $title;
+					$shop['urls'][$url['id_shop_url']] = $url;
+				}
+			}
+
+		$shops_tree = new HelperTreeShops('shops-tree', 'Multistore tree');
+		$shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
+			->setHeaderTemplate('shop_tree_header.tpl')->setActions(array(
+				new TreeToolbarLink(
+					'Collapse All',
+					'#',
+					'$(\'#'.$shops_tree->getId().'\').tree(\'collapseAll\'); return false;',
+					'icon-collapse-alt'),
+				new TreeToolbarLink(
+					'Expand All',
+					'#',
+					'$(\'#'.$shops_tree->getId().'\').tree(\'expandAll\'); return false;',
+					'icon-expand-alt')
+			))
+			->setAttribute('url_shop_group', $this->context->link->getAdminLink('AdminShopGroup'))
+			->setAttribute('url_shop', $this->context->link->getAdminLink('AdminShop'))
+			->setAttribute('url_shop_url', $this->context->link->getAdminLink('AdminShopUrl'))
+			->setData($data);
+		$shops_tree = $shops_tree->render(null, false, false);
 
 		if (!$this->display && $this->id_shop)
 		{
@@ -305,7 +361,7 @@ class AdminShopUrlControllerCore extends AdminController
 			'toolbar_scroll' => 1,
 			'toolbar_btn' => $this->toolbar_btn,
 			'title' => $this->toolbar_title,
-			'selected_tree_id' => ($this->display == 'edit' ? 'tree-url-'.$this->id_object : (Tools::getValue('id_shop') ? 'tree-shop-'.Tools::getValue('id_shop') : '')),
+			'shops_tree' => $shops_tree
 		));
 	}
 

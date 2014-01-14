@@ -22,10 +22,9 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<div class="row">
-	<div class="col-lg-4">
-		{$shops_tree}
+<div class="panel-heading">
+	{if isset($title)}<i class="icon-sitemap"></i>&nbsp;{l s=$title}{/if}
+	<div class="pull-right">
+		{if isset($toolbar)}{$toolbar}{/if}
 	</div>
-	<div class="col-lg-8">{$content}</div>
 </div>

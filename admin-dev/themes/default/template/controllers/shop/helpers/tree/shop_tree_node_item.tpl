@@ -23,9 +23,21 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="row">
-	<div class="col-lg-4">
-		{$shops_tree}
-	</div>
-	<div class="col-lg-8">{$content}</div>
-</div>
+<li class="tree-item">
+	<label class="tree-item-name">
+		<i class="tree-dot"></i>
+		<a href="{$url_shop}&id_shop={$node['id_shop']}">{$node['name']}</a>
+	</label>
+	{if isset($node['urls'])}
+		<ul class="tree">
+			{foreach $node['urls'] as $url}
+			<li class="tree-item">
+				<label class="tree-item-name">
+					<i class="tree-dot"></i>
+					<a href="{$url_shop_url}&id_shop_url={$url['id_shop_url']}">{$url['name']}</a>
+				</label>
+			</li>
+			{/foreach}
+		</ul>
+	{/if}
+</li>
