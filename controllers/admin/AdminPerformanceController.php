@@ -221,7 +221,8 @@ class AdminPerformanceControllerCore extends AdminController
 							'label' => $this->l('No')
 						)
 					),
-					'hint' => $this->l('Choose "No" to disable Product Combinations.')
+					'hint' => $this->l('Choose "No" to disable Product Combinations.'),
+					'desc' => Combination::isCurrentlyUsed() ? $this->l('You cannot set this parameter to No when combinations are already used by some of your products') : null
 				),
 				array(
 					'type' => 'switch',
