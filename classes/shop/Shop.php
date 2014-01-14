@@ -196,7 +196,7 @@ class ShopCore extends ObjectModel
 			LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
 			LEFT JOIN '._DB_PREFIX_.'theme t ON (t.id_theme = s.id_theme)
 			WHERE s.id_shop = '.(int)$this->id.'
-			AND s.active = 1 AND s.deleted = 0 AND su.main = 1');
+			AND s.active = 1 AND s.deleted = 0');
 			Cache::store($cache_id, $row);
 		}
 		$row = Cache::retrieve($cache_id);
