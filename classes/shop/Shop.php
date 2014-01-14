@@ -340,7 +340,8 @@ class ShopCore extends ObjectModel
 					{
 						$request_uri = substr($request_uri, strlen($found_uri));
 						$url = str_replace('//', '/', $row['domain'].$row['uri'].$request_uri);
-						header('HTTP/1.1 301 Moved Permanently');
+						$redirect_type = Configuration::get('PS_CANONICAL_REDIRECT') == 2 ? '301' : '302';
+						header('HTTP/1.0 '.$redirect_type.' Moved');
 						header('Cache-Control: no-cache');
 						header('location: http://'.$url);
 						exit;
@@ -387,11 +388,11 @@ class ShopCore extends ObjectModel
 
 				$params = $_GET;
 				unset($params['id_shop']);
+				$url = $default_shop->domain.
 				if (!Configuration::get('PS_REWRITING_SETTINGS'))
-					$url = 'http://'.$default_shop->domain.$default_shop->getBaseURI().'index.php?'.http_build_query($params);
+					$url .= $default_shop->getBaseURI().'index.php?'.http_build_query($params);
 				else
 				{
-					$url = $default_shop->domain;
 					// Catch url with subdomain "www"
 					if (strpos($url, 'www.') === 0 && 'www.'.$_SERVER['HTTP_HOST'] === $url || $_SERVER['HTTP_HOST'] === 'www.'.$url)
 						$url .= $_SERVER['REQUEST_URI'];
@@ -401,6 +402,8 @@ class ShopCore extends ObjectModel
 					if (count($params))
 						$url .= '?'.http_build_query($params);
 				}
+				$redirect_type = Configuration::get('PS_CANONICAL_REDIRECT') == 2 ? '301' : '302';
+				header('HTTP/1.0 '.$redirect_type.' Moved');
 				header('location: http://'.$url);
 				exit;
 			}

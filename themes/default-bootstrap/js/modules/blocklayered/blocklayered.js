@@ -537,6 +537,15 @@ function reloadContent(params_plus)
 			$('.hide-action').each(function() {
 				hideFilterValueAction(this);
 			});
+
+			if (display instanceof Function) {
+				var view = $.totalStorage('display');
+
+				if (view)
+					display(view);
+				else
+					display('grid');
+			}
 		}
 	});
 	ajaxQueries.push(ajaxQuery);

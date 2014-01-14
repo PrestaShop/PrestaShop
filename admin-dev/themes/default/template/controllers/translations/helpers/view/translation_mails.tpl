@@ -105,6 +105,16 @@
 					</span>
 				</h3>
 				{$mail_content}
+				<script type="text/javascript">
+					$('.mails_field').on('shown.bs.collapse', function () {
+						var active_email = $(this).find('.email-collapse.in');
+						var frame = active_email.find('.email-html-frame');
+						var src = frame.data('email-src');
+						if (frame.find('iframe.email-frame').length == 0) {
+							frame.append('<iframe class="email-frame" src="'+src+'"/>');
+						}
+					});
+				</script>
 			</div>
 			<div class="panel">
 				<h3>
@@ -115,9 +125,9 @@
 						modules/name_of_module/mails/{$lang|strtolower}/
 					</span>
 				</h3>
-				{*foreach $module_mails as $module_name => $mails}
+				{foreach $module_mails as $module_name => $mails}
 					{$mails['display']}
-				{/foreach*}
+				{/foreach}
 			</div>
 		</form>
 	{/if}

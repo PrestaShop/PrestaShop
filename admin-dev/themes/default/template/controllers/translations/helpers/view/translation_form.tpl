@@ -61,7 +61,6 @@
 				<input type="hidden" name="type" value="{$type}" />
 				<input type="hidden" name="theme" value="{$theme}" />
 				
-
 				<script type="text/javascript">
 					$(document).ready(function(){
 						$('a.useSpecialSyntax').click(function(){
