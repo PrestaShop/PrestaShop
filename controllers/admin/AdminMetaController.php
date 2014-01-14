@@ -75,11 +75,16 @@ class AdminMetaControllerCore extends AdminController
 				'type' => 'bool'
 			),
 			'PS_CANONICAL_REDIRECT' => array(
-				'title' => $this->l('Automatically redirect to the canonical URL'),
-				'hint' => $this->l('Recommended, but your theme must be compliant.'),
-				'validation' => 'isBool',
+				'title' => $this->l('Redirect to the canonical URL'),
+				'validation' => 'isUnsignedInt',
 				'cast' => 'intval',
-				'type' => 'bool'
+				'type' => 'select',
+				'list' => array(
+					array('value' => 0, 'name' => $this->l('No redirection (you may have duplicate content issues)')),
+					array('value' => 1, 'name' => $this->l('302 Moved Temporarily (recommended while setting up your store)')),
+					array('value' => 2, 'name' => $this->l('301 Moved Permanently (recommended once you have gone live)'))
+				),
+				'identifier' => 'value',
 			),
 		);
 
