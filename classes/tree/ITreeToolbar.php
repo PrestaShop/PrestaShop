@@ -38,5 +38,6 @@ interface ITreeToolbarCore
 	public function setTemplateDirectory($value);
 	public function getTemplateDirectory();	
 	public function addAction($action);
+	public function removeActions();
 	public function render();
 }
