@@ -106,36 +106,39 @@ class HelperTreeShopsCore extends TreeCore
 		return $this->_template;
 	}
 
-	public function render($data = NULL)
+	public function render($data = null, $use_default_actions = true, $use_selected_shop = true)
 	{
 		if (!isset($data))
 			$data = $this->getData();
 
-		$this->setActions(array(
-			new TreeToolbarLink(
-				'Collapse All',
-				'#',
-				'$(\'#'.$this->getId().'\').tree(\'collapseAll\'); return false;',
-				'icon-collapse-alt'),
-			new TreeToolbarLink(
-				'Expand All',
-				'#',
-				'$(\'#'.$this->getId().'\').tree(\'expandAll\'); return false;',
-				'icon-expand-alt'),
-			new TreeToolbarLink(
-				'Check All',
-				'#',
-				'checkAllAssociatedShops($(\'#'.$this->getId().'\')); return false;',
-				'icon-check-sign'),
-			new TreeToolbarLink(
-				'Uncheck All',
-				'#',
-				'uncheckAllAssociatedShops($(\'#'.$this->getId().'\')); return false;',
-				'icon-check-empty')
-			)
-		);
+		if ($use_default_actions)
+			$this->setActions(array(
+				new TreeToolbarLink(
+					'Collapse All',
+					'#',
+					'$(\'#'.$this->getId().'\').tree(\'collapseAll\'); return false;',
+					'icon-collapse-alt'),
+				new TreeToolbarLink(
+					'Expand All',
+					'#',
+					'$(\'#'.$this->getId().'\').tree(\'expandAll\'); return false;',
+					'icon-expand-alt'),
+				new TreeToolbarLink(
+					'Check All',
+					'#',
+					'checkAllAssociatedShops($(\'#'.$this->getId().'\')); return false;',
+					'icon-check-sign'),
+				new TreeToolbarLink(
+					'Uncheck All',
+					'#',
+					'uncheckAllAssociatedShops($(\'#'.$this->getId().'\')); return false;',
+					'icon-check-empty')
+				)
+			);
 
-		$this->setAttribute('selected_shops', $this->getSelectedShops());		
+		if ($use_selected_shop)
+			$this->setAttribute('selected_shops', $this->getSelectedShops());
+
 		return parent::render($data);
 	}
 

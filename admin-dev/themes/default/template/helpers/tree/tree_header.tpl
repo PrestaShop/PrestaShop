@@ -23,6 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="tree-panel-heading-controls clearfix">
-	<!-- <i class="icon-tag"></i>&nbsp;{l s=$title} -->
+	{if isset($title)}<i class="icon-tag"></i>&nbsp;{l s=$title}{/if}
 	{if isset($toolbar)}{$toolbar}{/if}
 </div>

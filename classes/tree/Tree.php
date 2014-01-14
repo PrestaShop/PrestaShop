@@ -297,6 +297,15 @@ class TreeCore
 		return $this;
 	}
 
+	public function removeActions()
+	{
+		if (!isset($this->_toolbar))
+			$this->setToolbar(new TreeToolbarCore());
+
+		$this->getToolbar()->setTemplateDirectory($this->getTemplateDirectory())->removeActions();
+		return $this;
+	}
+
 	public function render($data = null)
 	{
 		//Adding tree.js

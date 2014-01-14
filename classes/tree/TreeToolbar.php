@@ -173,6 +173,12 @@ class TreeToolbarCore implements ITreeToolbarCore
 		return $this;
 	}
 
+	public function removeActions()
+	{
+		$this->_actions = null;
+		return $this;
+	}
+
 	public function render()
 	{
 		foreach ($this->getActions() as $action)
