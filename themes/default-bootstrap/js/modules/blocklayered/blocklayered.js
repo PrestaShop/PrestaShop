@@ -541,10 +541,8 @@ function reloadContent(params_plus)
 			if (display instanceof Function) {
 				var view = $.totalStorage('display');
 
-				if (view)
+				if (view && view != 'grid')
 					display(view);
-				else
-					display('grid');
 			}
 		}
 	});
