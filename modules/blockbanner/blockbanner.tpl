@@ -24,7 +24,7 @@
 *}
 <a href="{$banner_link}" title="{$banner_desc}">
 {if isset($banner_img)}
-	<img class="img-responsive" src="{$banner_img}" alt="{$banner_desc}" title="{$banner_desc}"/>
+	<img class="img-responsive" src="{$banner_img}" alt="{$banner_desc}" title="{$banner_desc}" width="1170" height="65" />
 {else}
 	{$banner_desc}
 {/if}
