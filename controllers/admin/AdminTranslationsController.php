@@ -2223,9 +2223,9 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$str_return .= '<div class="mails_field">
 			<h4>'.'<a href="javascript:void(0);" onclick="$(\'#'.$id_html.'\').slideToggle();">'.
-			'<i class="icon-arrow-right"></i> '.$title.'</a> - '.$mails['empty_values'].' '.
+			'<i class="icon-arrow-right"></i> '.$title.'</a></h4><p class="text-muted">'.$mails['empty_values'].' '.
 			sprintf($this->l('missing translation(s) on %1$s template(s) for %2$s'),((int)$mails['empty_values'] + (int)$mails['total_filled']),$obj_lang->name).
-			'</h4>
+			'</p>
 			<div name="mails_div" id="'.$id_html.'" class="panel-group">';
 		if (!empty($mails['files']))
 		{
@@ -2258,7 +2258,6 @@ class AdminTranslationsControllerCore extends AdminController
 								$str_return .= '<input class="form-control" type="text" name="subject['.Tools::htmlentitiesUTF8($group_name).']['.Tools::htmlentitiesUTF8($subject_mail).']" value="'.$value_subject_mail['trad'].'" />';
 							else
 								$str_return .= '<input class="form-control" type="text" name="subject['.Tools::htmlentitiesUTF8($group_name).']['.Tools::htmlentitiesUTF8($subject_mail).']" value="" />';
-
 							$str_return .= '<p class="help-block">'.$subject_mail.'</p>';
 							$str_return .= '</div></div>';
 						}
@@ -2266,18 +2265,16 @@ class AdminTranslationsControllerCore extends AdminController
 					else
 					{
 						$str_return .= '
-							<div class="label-subject">'
-							.sprintf($this->l('No Subject was found for %s in the database.'), '<strong>'.$mail_name.'</strong>')
+							<div class="alert alert-info">'
+							.sprintf($this->l('No Subject was found for %s in the database.'), $mail_name)
 							.'</div>';
 					}
 					// tab menu
-					$str_return .= '<ul class="nav nav-pills">
-						  <li class="active"><a href="#'.$mail_name.'-html" data-toggle="tab">'.$mail_name.'.html</a></li>
-						  <li><a href="#'.$mail_name.'-text" data-toggle="tab">'.$mail_name.'.txt</a></li>
-						  <li><a href="#'.$mail_name.'-editor" data-toggle="tab">'.$this->l('editor').'</a></li>
-						  <li><a href="#'.$mail_name.'-source" data-toggle="tab">'.$this->l('source').'</a></li>
+					$str_return .= '<hr><ul class="nav nav-pills">
+						<li class="active"><a href="#'.$mail_name.'-html" data-toggle="tab">'.$this->l('Version .html').'</a></li>
+						<li><a href="#'.$mail_name.'-text" data-toggle="tab">'.$this->l('Version .txt').'</a></li>
+						<li><a href="#'.$mail_name.'-editor" data-toggle="tab">'.$this->l('Editor').'</a></li>
 						</ul>';
-
 					// tab-content
 					$str_return .= '<div class="tab-content">';
 
@@ -2300,10 +2297,6 @@ class AdminTranslationsControllerCore extends AdminController
 
 					$str_return .= '<div class="tab-pane" id="'.$mail_name.'-editor">';
 					$str_return .= $this->displayMailEditor($mail_files['html'], $obj_lang->iso_code, $url_mail, $mail_name, $group_name, $name_for_module);
-					$str_return .= '</div>';
-
-					$str_return .= '<div class="tab-pane" id="'.$mail_name.'-source">';
-					$str_return .= $this->displayMailSource($mail_files['html'], $obj_lang->iso_code, $url_mail, $mail_name, $group_name, $name_for_module);
 					$str_return .= '</div>';
 
 					$str_return .= '</div>';
@@ -2374,15 +2367,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$title = array();
 		$this->cleanMailContent($content, $lang, $title);
 		$name_for_module = $name_for_module ? $name_for_module.'|' : '';
-		return '<textarea class="rte form-control" name="'.$group_name.'[html]['.$name_for_module.$mail_name.']">'.$content[$lang].'</textarea>';
-	}
-
-	protected function displayMailSource($content, $lang, $url, $mail_name, $group_name, $name_for_module = false)
-	{
-		$title = array();
-		$this->cleanMailContent($content, $lang, $title);
-		$name_for_module = $name_for_module ? $name_for_module.'|' : '';
-		return '<textarea class="source-code" name="'.$group_name.'[html]['.$name_for_module.$mail_name.']">'.$content[$lang].'</textarea>';
+		return '<textarea class="rte-mail rte-mail-'.$mail_name.' form-control" data-rte="'.$mail_name.'" name="'.$group_name.'[html]['.$name_for_module.$mail_name.']">'.$content[$lang].'</textarea>';
 	}
 
 	protected function cleanMailContent(&$content, $lang, &$title)
@@ -2448,15 +2433,7 @@ class AdminTranslationsControllerCore extends AdminController
 				var ad = \''.$ad.'\' ;
 			</script>
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
-			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>
-			<script type="text/javascript">
-				$(document).ready(function () {
-					tinySetup();
-				});
-				function displayTiny(obj) {
-					tinyMCE.get(obj.attr(\'name\')).show();
-				}
-			</script>';
+			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>';
 	}
 
 	/**

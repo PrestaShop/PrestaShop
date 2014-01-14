@@ -3,11 +3,15 @@ function tinySetup(config)
 	if(!config)
 		config = {};
 
+	var editor_selector = 'rte';
+	if (typeof config['editor_selector'] !== 'undefined')
+		var editor_selector = config['editor_selector'];
+
 	default_config = {
 		mode : "specific_textareas",
 		theme : "advanced",
-		//skin:"cirkuit",
-		editor_selector : "rte",
+		//skin: "ps16",
+		editor_selector : editor_selector,
 		editor_deselector : "noEditor",
 		plugins : "safari,pagebreak,style,table,advimage,advlink,inlinepopups,media,contextmenu,paste,fullscreen,xhtmlxtras,preview",
 		// Theme options

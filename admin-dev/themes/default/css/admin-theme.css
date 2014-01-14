@@ -3221,7 +3221,9 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap #translations_form .translations-email-panel { margin: 0 0 8px 20px; padding: 8px 12px; }
 .bootstrap #translations_form .block-mail iframe, .bootstrap #translations_form .block-mail textarea, .bootstrap #translations_form .block-mail .rce, .bootstrap #translations_form .block-mail .source-code { width: 100%; height: 500px; }
 .bootstrap #translations_form .panel-group { display: none; }
-.bootstrap #translations_form .mails_field h4 { padding-top: 15px; }
+.bootstrap #translations_form .mails_field { padding-top: 15px; margin-bottom: 15px; }
+.bootstrap #translations_form .mails_field ul.nav-pills { margin-bottom: 5px; }
+.bootstrap #translations_form .mails_field .panel-footer { margin: 0 -15px; }
 
 /* jQuery Growl Copyright 2013 Kevin Sylvestre 1.1.4 */
 #growls { z-index: 50000; position: fixed; }
