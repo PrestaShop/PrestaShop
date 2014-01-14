@@ -32,7 +32,7 @@
 		color="color1"
 		icon="icon-shopping-cart"
 		title="{l s='Cart #%06d'|sprintf:$cart->id}"
-		subtitle="{if $customer->id}{$customer->firstname} {$customer->lastname}{else}{l s='Guest'}{/if} {l s='On'} {$cart->date_upd}"
+		subtitle="{if $customer->id}{$customer->firstname} {$customer->lastname}{else}{l s='Guest'}{/if} {l s='On'} {dateFormat date=$cart->date_upd full=0}"
 		value="{displayWtPriceWithCurrency price=$total_price currency=$currency}"
 		source=''
 		chart=null
