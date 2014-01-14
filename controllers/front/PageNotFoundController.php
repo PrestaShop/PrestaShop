@@ -40,6 +40,7 @@ class PageNotFoundControllerCore extends FrontController
 
 		if (preg_match('/\.(gif|jpe?g|png|ico)$/i', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)))
 		{
+			$this->context->cookie->disallowWriting();
 			if (!isset($_SERVER['REDIRECT_URL']))
 			{
 				$_SERVER['REDIRECT_URL'] = '';
@@ -102,7 +103,10 @@ class PageNotFoundControllerCore extends FrontController
 			exit;
 		}
 		elseif (in_array(Tools::strtolower(substr($_SERVER['REQUEST_URI'], -3)), array('.js', 'css')))
+		{
+			$this->context->cookie->disallowWriting();
 			exit;
+		}
 
 		parent::initContent();
 
