@@ -101,9 +101,9 @@
 					{elseif isset($params.float)}
 						{$tr.$key}
 					{elseif isset($params.type) && $params.type == 'date'}
-						{$tr.$key}
+						{dateFormat date=$tr.$key full=0}
 					{elseif isset($params.type) && $params.type == 'datetime'}
-						{$tr.$key}
+						{dateFormat date=$tr.$key full=1}
 					{elseif isset($params.type) && $params.type == 'decimal'}
 						{$tr.$key|string_format:"%.2f"}
 					{elseif isset($params.type) && $params.type == 'percent'}
