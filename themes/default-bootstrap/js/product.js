@@ -32,7 +32,6 @@ $(document).ready(function()
 {
 	if (typeof customizationFields !== 'undefined' && customizationFields)
 	{
-		customizationFieldsBk = customizationFields;
 		var customizationFields = [];
 		var j = 0;
 		for (var i = 0; i < customizationFieldsBk.length; ++i)
@@ -43,6 +42,37 @@ $(document).ready(function()
 			customizationFields[i][1] = (parseInt(customizationFieldsBk[i]['type']) == 0 && customizationFieldsBk[i][key]) ? 2 : parseInt(customizationFieldsBk[i]['required']);
 		}
 	}
+
+	if (typeof combinationImages !== 'undefined' && combinationImages)
+    {
+		combinationImagesJS = [];
+		combinationImagesJS[0] = [];
+		var k = 0;
+        for (var i in combinationImages)
+		{
+			combinationImagesJS[i] = [];
+            for (var j in combinationImages[i])
+            {
+                var id_image = parseInt(combinationImages[i][j]['id_image']);
+             	if (id_image)
+                {
+					combinationImagesJS[0][k] = id_image;
+					combinationImagesJS[i][j] = [];
+					combinationImagesJS[i][j] = id_image;
+					k++;	
+                }
+            }
+		}
+
+	    if (typeof combinationImagesJS[0] !== 'undefined' && combinationImagesJS[0])
+	    {
+	       var array_values = [];
+	       for (var key in arrayUnique(combinationImagesJS[0]))
+	           array_values.push(combinationImagesJS[0][key]);
+	       combinationImagesJS[0] = array_values;
+	    }
+		combinationImages = combinationImagesJS;
+    }
 	
 	//init the serialScroll for thumbs
 	$('#thumbs_list').serialScroll({
@@ -179,6 +209,15 @@ $(document).ready(function()
 	if (typeof minimalQuantity != 'undefined' && minimalQuantity)
 		checkMinimalQuantity();
 });
+
+function arrayUnique(a)
+{
+    return a.reduce(function(p, c){
+        if (p.indexOf(c) < 0)
+			p.push(c);
+        return p;
+    }, []);
+};
 
 //check if a function exists
 function function_exists(function_name)
