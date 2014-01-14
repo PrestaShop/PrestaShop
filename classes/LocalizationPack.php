@@ -295,7 +295,6 @@ class LocalizationPackCore
 				if (Language::getIdByIso($attributes['iso_code']) && !$install_mode)
 					continue;
 				$errors = Language::downloadAndInstallLanguagePack($attributes['iso_code'], $attributes['version'], $attributes);
-				p($errors);
 				if ($errors !== true && is_array($errors))
 					$this->_errors = array_merge($this->_errors, $errors);
 			}
