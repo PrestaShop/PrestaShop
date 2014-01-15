@@ -294,7 +294,7 @@
 				</span>
 				<!-- Singular Case [both cases are needed because page may be updated in Javascript] -->
 				<span class="ajax_cart_product_txt {if $cart_qties > 1} unvisible{/if}">
-					{l s='There is 1 item in your cart.'}
+					{l s='There is 1 item in your cart.' mod='blockcart'}
 				</span>
 			</h2>
 
