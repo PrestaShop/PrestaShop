@@ -1263,7 +1263,14 @@ class AdminModulesControllerCore extends AdminController
 
 			// Assign warnings
 			if ($module->active && isset($module->warning) && !empty($module->warning))
-				$this->warnings[] = sprintf($this->l('%1$s: %2$s'), $module->displayName, $module->warning);
+			{
+
+				$href = Context::getContext()->link->getAdminLink('AdminModules', true).'&module_name='.$module->name.'&tab_module='.$module->tab.'&configure='.$module->name;
+
+				$this->context->smarty->assign('text', sprintf($this->l('%1$s: %2$s'), $module->displayName, $module->warning));
+				$this->context->smarty->assign('module_link', $href);
+				$this->warnings[] = $this->context->smarty->fetch('controllers/modules/warning_module.tpl');
+			}
 
 			// AutoComplete array
 			$autocompleteList .= Tools::jsonEncode(array(
