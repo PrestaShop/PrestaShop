@@ -129,7 +129,7 @@ class AdminTabsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'lang' => true,
 					'required' => true,
@@ -137,18 +137,18 @@ class AdminTabsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Class:'),
+					'label' => $this->l('Class'),
 					'name' => 'class_name',
 					'required' => true
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Module:'),
+					'label' => $this->l('Module'),
 					'name' => 'module'
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Status:'),
+					'label' => $this->l('Status'),
 					'name' => 'active',
 					'required' => false,
 					'is_bool' => true,

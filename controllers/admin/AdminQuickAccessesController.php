@@ -72,7 +72,7 @@ class AdminQuickAccessesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'lang' => true,
 					'maxlength' => 32,
@@ -81,15 +81,15 @@ class AdminQuickAccessesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('URL:'),
+					'label' => $this->l('URL'),
 					'name' => 'link',
 					'maxlength' => 128,
 					'required' => true,
-					'hint' => $this->l('If it\'s a URL that comes from your Back Office, you must NOT use a security token.')
+					'hint' => $this->l('If it\'s a URL that comes from your Back Office, you MUST remove the security token.')
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Open in new window:'),
+					'label' => $this->l('Open in new window'),
 					'name' => 'new_window',
 					'required' => false,
 					'values' => array(

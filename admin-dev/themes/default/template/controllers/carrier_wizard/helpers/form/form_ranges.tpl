@@ -1,6 +1,6 @@
 		<script>var zones_nbr = {$zones|count +3} ; /*corresponds to the third input text (max, min and all)*/</script>
 		<div id="zone_ranges" style="overflow:auto">
-			<h4>{l s='Tranches'}</h4>
+			<h4>{l s='Ranges'}</h4>
 			<table id="zones_table" class="table" style="max-width:100%">
 				<tbody>
 					<tr class="range_inf">
