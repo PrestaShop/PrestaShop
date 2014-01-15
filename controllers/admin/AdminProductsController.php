@@ -2548,7 +2548,7 @@ class AdminProductsControllerCore extends AdminController
 
 			if (Shop::getContext() != Shop::CONTEXT_ALL)
 			{
-				$this->context->smarty->assign('bullet_common_field', '<img src="themes/'.$this->context->employee->bo_theme.'/img/bullet_orange.png" style="vertical-align: bottom" />');
+				$this->context->smarty->assign('bullet_common_field', '<i class="icon-circle text-orange"></i>');
 				$this->context->smarty->assign('display_common_field', true);
 			}
 		}
