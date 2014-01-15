@@ -37,7 +37,7 @@
 							</label>
 						</div>
 						<div class="theme_container">
-							<img class="thumbnail" src="../themes/{$theme->directory}/preview.jpg" alt="{$theme->directory}" />
+							<img class="img-thumbnail" src="../themes/{$theme->directory}/preview.jpg" alt="{$theme->directory}" />
 						</div>
 					</div>
 				{/foreach}

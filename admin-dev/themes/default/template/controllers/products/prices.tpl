@@ -261,7 +261,7 @@ $(document).ready(function () {
 
 	<div class="form-group">
 		<div class="col-lg-9 col-lg-offset-3">
-			<div class="alert alert-success">
+			<div class="alert alert-warning">
 				<strong>{l s='Final retail price:'}</strong>
 				<span>
 					{$currency->prefix}
