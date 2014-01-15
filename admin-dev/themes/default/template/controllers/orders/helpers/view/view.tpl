@@ -135,7 +135,7 @@
 					</div>
 					<div class="row">
 						{if Configuration::get('PS_ORDER_RETURN')}
-						<a class="btn btn-default" id="desc-order-standard_refund" href="">
+						<a id="desc-order-standard_refund" class="btn btn-default" href="#refundForm">
 							<i class="icon-exchange"></i>
 							{if $order->hasBeenShipped()}
 								{l s='Return products'}
@@ -147,7 +147,7 @@
 						</a>
 						{/if}
 						{if $order->hasInvoice()}
-						<a class="btn btn-default" id="desc-order-partial_refund" href="">
+						<a id="desc-order-partial_refund" class="btn btn-default" href="#refundForm">
 							<i class="icon-exchange"></i>
 							{l s='Partial refund'}
 						</a>
@@ -380,10 +380,8 @@
 						{$customer->firstname}
 						{$customer->lastname}
 					</a>
-					<small>
-						({l s='#'}{$customer->id}) - 
-						<a href="mailto:{$customer->email}">{$customer->email}</a>
-					</small>
+					({l s='#'}{$customer->id}) - 
+					<a href="mailto:{$customer->email}">{$customer->email}</a>
 				</h3>
 				{if ($customer->isGuest())}
 					{l s='This order has been placed by a guest.'}
@@ -935,7 +933,7 @@
 			</table>
 
 			{if $can_edit}
-			<div class="row-margin-bottom order_action">
+			<div class="row-margin-bottom row-margin-top order_action">
 			{if !$order->hasBeenDelivered()}
 				<button type="button" id="add_product" class="btn btn-default">
 					<i class="icon-plus-sign"></i>
@@ -1056,39 +1054,41 @@
 					</div>
 				</div>
 			</div>
-			<div style="display: none;" class="standard_refund_fields form-horizontal">
-				{if ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN'))}
-				<p class="checkbox">
-					<label for="reinjectQuantities">
-						<input type="checkbox" name="reinjectQuantities"/>
-						{l s='Re-stock products'}
-					</label>
-				</p>
-				{/if}
-
-				{if ((!$order->hasBeenDelivered() && $order->hasBeenPaid()) || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
-				<p class="checkbox">
-					<label for="generateCreditSlip">
-						<input type="checkbox" id="generateCreditSlip" name="generateCreditSlip" onclick="toggleShippingCost(this)" />
-						{l s='Generate a credit card slip'}
-					</label>
-				</p>
-				<p class="checkbox">
-					<label for="generateDiscount">
-						<input type="checkbox" id="generateDiscount" name="generateDiscount" onclick="toggleShippingCost(this)" />
-						{l s='Generate a voucher'}
-					</label>
-				</p>
-				<p class="checkbox" id="spanShippingBack" style="display:none;">
-					<label for="shippingBack" style="float:none">
-						<input type="checkbox" id="shippingBack" name="shippingBack" />
-						{l s='Repay shipping costs'}
-					</label>
-				</p>
-				{/if}
-
+			<div style="display: none;" class="standard_refund_fields form-horizontal panel">
+				<div class="form-group">
+					{if ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN'))}
+					<p class="checkbox">
+						<label for="reinjectQuantities">
+							<input type="checkbox" id="reinjectQuantities" name="reinjectQuantities" />
+							{l s='Re-stock products'}
+						</label>
+					</p>
+					{/if}
+					{if ((!$order->hasBeenDelivered() && $order->hasBeenPaid()) || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
+					<p class="checkbox">
+						<label for="generateCreditSlip">
+							<input type="checkbox" id="generateCreditSlip" name="generateCreditSlip" onclick="toggleShippingCost(this)" />
+							{l s='Generate a credit card slip'}
+						</label>
+					</p>
+					<p class="checkbox">
+						<label for="generateDiscount">
+							<input type="checkbox" id="generateDiscount" name="generateDiscount" onclick="toggleShippingCost(this)" />
+							{l s='Generate a voucher'}
+						</label>
+					</p>
+					<p class="checkbox" id="spanShippingBack" style="display:none;">
+						<label for="shippingBack">
+							<input type="checkbox" id="shippingBack" name="shippingBack" />
+							{l s='Repay shipping costs'}
+						</label>
+					</p>
+					{/if}
+				</div>
 				{if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
-				<input type="submit" name="cancelProduct" value="{if $order->hasBeenDelivered()}{l s='Return products'}{elseif $order->hasBeenPaid()}{l s='Refund products'}{else}{l s='Cancel products'}{/if}" class="btn btn-default" />
+				<div class="row">
+					<input type="submit" name="cancelProduct" value="{if $order->hasBeenDelivered()}{l s='Return products'}{elseif $order->hasBeenPaid()}{l s='Refund products'}{else}{l s='Cancel products'}{/if}" class="btn btn-default" />
+				</div>
 				{/if}
 			</div>
 			<div style="display:none;" class="partial_refund_fields">
