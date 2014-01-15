@@ -502,7 +502,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 
 .icon-flash:before, .icon-bolt:before { content: "\f0e7"; }
 
-.icon-sitemap:before { content: "\f0e8"; }
+.icon-sitemap:before, .icon-AdminShop:before { content: "\f0e8"; }
 
 .icon-umbrella:before { content: "\f0e9"; }
 
