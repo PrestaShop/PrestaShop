@@ -130,7 +130,7 @@
 			</div>
 			<div class="panel">
 				<h3>
-					<i class="icon-envelope"></i>
+					<i class="icon-puzzle-piece"></i>
 					{l s='Module emails'}
 					<span class="badge">
 						<i class="icon-folder"></i>

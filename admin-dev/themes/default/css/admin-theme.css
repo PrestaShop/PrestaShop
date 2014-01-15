@@ -2928,6 +2928,7 @@ a.link-social:hover { text-decoration: none; }
   .bootstrap .switch label { position: relative; z-index: 2; float: left; width: 50%; height: 100%; margin: 0; text-align: center; }
   .bootstrap .switch a { position: absolute; top: 0; left: 0; padding: 0; z-index: 1; width: 50%; height: 100%; color: white; border: solid 1px #5cb85c; background-color: #80c780; -webkit-box-shadow: #5cb85c 0 -1px 0 inset; box-shadow: #5cb85c 0 -1px 0 inset; }
   .bootstrap .switch input:last-of-type:checked ~ a { left: 50%; border: solid 1px #d9534f; background-color: #e27c79; -webkit-box-shadow: #d9534f 0 -1px 0 inset; box-shadow: #d9534f 0 -1px 0 inset; }
+  .bootstrap .switch input:disabled ~ a { border: solid 1px #b3b3b3; background-color: #cccccc; -webkit-box-shadow: #b3b3b3 0 -1px 0 inset; box-shadow: #b3b3b3 0 -1px 0 inset; }
   .bootstrap .switch.switch-3 label, .bootstrap .switch.switch-3 a { width: 33.33333%; }
   .bootstrap .switch.switch-3 input:checked:nth-of-type(2) ~ a { left: 33.33333%; }
   .bootstrap .switch.switch-3 input:checked:last-of-type ~ a { left: 66.66667%; }
