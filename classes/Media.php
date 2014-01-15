@@ -217,12 +217,6 @@ class MediaCore
 		if (!preg_match('/^http(s?):\/\//i', $file_uri) && (!@filemtime($file_uri) || filesize($file_uri) === 0))
 			return false;
 
-		if (Context::getContext()->controller->controller_type == 'admin' && !array_key_exists('host', $url_data))
-		{
-			$js_uri = preg_replace('/^'.preg_quote(__PS_BASE_URI__, '/').'/', '/', $js_uri);
-			$js_uri = dirname(preg_replace('/\?.+$/', '', $_SERVER['REQUEST_URI']).'a').'/..'.$js_uri;
-		}
-		
 		if (!array_key_exists('host', $url_data))
 			$js_uri = str_replace('//', '/', $js_uri);
 
@@ -249,12 +243,6 @@ class MediaCore
 		// check if css files exists
 		if ((!@filemtime($file_uri) && !array_key_exists('host', $url_data)) || filesize($file_uri) === 0)
 			return false;
-
-		if (Context::getContext()->controller->controller_type == 'admin')
-		{
-			$css_uri = preg_replace('/^'.preg_quote(__PS_BASE_URI__, '/').'/', '/', $css_uri);
-			$css_uri = dirname(preg_replace('/\?.+$/', '', $_SERVER['REQUEST_URI']).'a').'/..'.$css_uri;
-		}
 
 		$css_uri = str_replace('//', '/', $css_uri);
 
