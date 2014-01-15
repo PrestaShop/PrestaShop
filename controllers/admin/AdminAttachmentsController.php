@@ -212,7 +212,7 @@ class AdminAttachmentsControllerCore extends AdminController
 						$_POST['mime'] = $_FILES['file']['type'];
 					}
 				}
-				else if (array_key_exists('file', $_FILES) && (int)$_FILES['file']['error'] === 1)
+				elseif (array_key_exists('file', $_FILES) && (int)$_FILES['file']['error'] === 1)
 				{
 					$max_upload = (int)ini_get('upload_max_filesize');
 					$max_post = (int)ini_get('post_max_size');
@@ -223,7 +223,7 @@ class AdminAttachmentsControllerCore extends AdminController
 						'<b>'.$upload_mb.'</b>'
 					);
 				}
-				else
+				elseif (!isset($a) || (isset($a) && !file_exists(_PS_DOWNLOAD_DIR_.$a->file)))
 					$this->errors[] = $this->l('Upload error.  Please check your server configurations for the maximum upload size allowed.');
 			}
 			$this->validateRules();

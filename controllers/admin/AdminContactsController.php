@@ -61,7 +61,7 @@ class AdminContactsControllerCore extends AdminController
 					'required' => true,
 					'lang' => true,
 					'col' => 4,
-					'hint' => $this->l('Contact name (e.g. Customer Support)'),
+					'hint' => $this->l('Contact name (e.g. Customer Support).'),
 				),
 				array(
 					'type' => 'text',
@@ -69,7 +69,7 @@ class AdminContactsControllerCore extends AdminController
 					'name' => 'email',
 					'required' => false,
 					'col' => 4,
-					'hint' => $this->l('Emails will be sent to this address'),
+					'hint' => $this->l('Emails will be sent to this address.'),
 				),
 				array(
 					'type' => 'switch',
@@ -99,7 +99,7 @@ class AdminContactsControllerCore extends AdminController
 					'required' => false,
 					'lang' => true,
 					'col' => 6,
-					'hint' => $this->l('Further information regarding this contact'),
+					'hint' => $this->l('Further information regarding this contact.'),
 				),
 			),
 			'submit' => array(
@@ -111,7 +111,7 @@ class AdminContactsControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}

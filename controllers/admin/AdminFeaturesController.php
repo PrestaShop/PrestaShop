@@ -160,7 +160,7 @@ class AdminFeaturesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'lang' => true,
 					'size' => 33,
@@ -174,7 +174,7 @@ class AdminFeaturesControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}
@@ -318,7 +318,7 @@ class AdminFeaturesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'select',
-					'label' => $this->l('Feature:'),
+					'label' => $this->l('Feature'),
 					'name' => 'id_feature',
 					'options' => array(
 						'query' => Feature::getFeatures($this->context->language->id),
@@ -329,7 +329,7 @@ class AdminFeaturesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Value:'),
+					'label' => $this->l('Value'),
 					'name' => 'value',
 					'lang' => true,
 					'size' => 33,

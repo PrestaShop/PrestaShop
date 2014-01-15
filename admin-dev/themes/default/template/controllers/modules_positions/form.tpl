@@ -35,7 +35,7 @@
 			{l s='Transplant a module'}
 		</h3>
 		<div class="form-group">
-			<label class="control-label col-lg-3 required"> {l s='Module:'}</label>
+			<label class="control-label col-lg-3 required"> {l s='Module'}</label>
 			<div class="col-lg-9">
 				<select name="id_module" {if $edit_graft} disabled="disabled"{/if}>
 					{foreach $modules as $module}
@@ -45,7 +45,7 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3 required"> {l s='Hook into'} :</label>
+			<label class="control-label col-lg-3 required"> {l s='Hook into'}</label>
 			<div class="col-lg-9">
 				<select name="id_hook" {if $edit_graft} disabled="disabled"{/if}>
 					{foreach $hooks as $hook}
@@ -55,12 +55,13 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3">{l s='Exceptions'} :</label>
+			<label class="control-label col-lg-3">{l s='Exceptions'}</label>
 			<div class="col-lg-9">
 				<div class="well">
 					<p>
 						{l s='Please specify the files for which you do not want the module to be displayed.'}<br />
-						{l s='Please input each filename, separated by a comma.'}<br />
+						{l s='Please input each filename, separated by a comma (",").'}<br />
+						{l s='You can also click the filename in the list below, and even make a multiple selection by keeping the Ctrl key pressed while clicking, or choose a whole range of filename by keeping the Shift key pressed while clicking.'}<br />
 						{if !$except_diff}
 							{$exception_list}
 						{else}
