@@ -250,9 +250,11 @@ $(document).ready(function() {
 	});
 	enquire.register('screen and (max-width: 480px)', {
 		match : function() {
+			$('body').addClass('mobile-nav');
 			mobileNav();
 		},
 		unmatch : function() {
+			$('body').removeClass('mobile-nav');
 			removeMobileNav();
 		}
 	});

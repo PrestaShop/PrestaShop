@@ -110,6 +110,10 @@ $widthSidebarNav: 210px
 	@media (max-width: $screen-phone)
 		display: none
 
+.page-sidebar
+	#content
+		margin-left: $widthSidebarNav
+
 .page-sidebar-closed
 	#nav-sidebar
 		overflow: visible 
@@ -143,7 +147,7 @@ $widthSidebarNav: 210px
 				padding: 8px!important
 				background-color: darken($main-color,10%)!important
 	#content
-		margin-left: 55px!important
+		margin-left: 55px
 		@media (max-width: $screen-phone)
 			margin-left: 0
 		h2.page-title
@@ -152,7 +156,6 @@ $widthSidebarNav: 210px
 			left: 120px!important
 	.submenu_expand
 		display: none
-
 
 #nav-topbar
 	position: fixed
@@ -326,6 +329,7 @@ $widthSidebarNav: 210px
 	ul.menu.menu-close
 		@include animate(fadeOutLeft, 0.2s)
 	.menu-collapse
+		color: white
 		position: absolute
 		width: 50px
 		height: 37px
@@ -354,10 +358,6 @@ $widthSidebarNav: 210px
 			padding-left: 75px
 		.page-breadcrumb
 			left: 75px
-
-.page-sidebar
-	#content
-		margin-left: $widthSidebarNav
 
 //icons
 [class^="icon-Admin"]
@@ -396,3 +396,5 @@ $widthSidebarNav: 210px
 	@extend .icon-link
 .icon-AdminAttributeGenerator
 	@extend .icon-magic
+.icon-AdminShop
+	@extend .icon-sitemap

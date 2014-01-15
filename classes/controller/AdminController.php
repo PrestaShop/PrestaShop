@@ -2029,7 +2029,7 @@ class AdminControllerCore extends Controller
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 
 		$this->addJquery();
-		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen'));
+		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize'));
 		$this->addjQueryPlugin('growl', null, false);
 		$this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
@@ -2041,8 +2041,8 @@ class AdminControllerCore extends Controller
 		));
 
 		//loads specific javascripts for the admin theme
-		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.js');
-		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.js');
+		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.min.js');
+		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.min.js');
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
 
 		if (!Tools::getValue('submitFormAjax'))
