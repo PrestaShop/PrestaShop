@@ -116,8 +116,8 @@ function move(up)
 	    <br/>
 	    <div class="row">
 	    	<div class="col-lg-1"></div>
-	    	<div class="col-lg-4"><a href="#" id="removeItem" class="btn btn-primary"><i class="icon-arrow-right"></i> {l s='Remove' mod="blocktopmenu"}</a></div>
-	    	<div class="col-lg-4"><a href="#" id="addItem" class="btn btn-primary"><i class="icon-arrow-left"></i> {l s='Add' mod="blocktopmenu"}</a></div>
+	    	<div class="col-lg-4"><a href="#" id="removeItem" class="btn btn-default"><i class="icon-arrow-right"></i> {l s='Remove' mod="blocktopmenu"}</a></div>
+	    	<div class="col-lg-4"><a href="#" id="addItem" class="btn btn-default"><i class="icon-arrow-left"></i> {l s='Add' mod="blocktopmenu"}</a></div>
 	    </div>
 	{else}
 		{$smarty.block.parent}
