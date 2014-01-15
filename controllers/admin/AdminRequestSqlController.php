@@ -55,7 +55,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				'title' =>	$this->l('Settings'),
 				'fields' =>	array(
 					'PS_ENCODING_FILE_MANAGER_SQL' => array(
-						'title' => $this->l('Select your encoding file by default'),
+						'title' => $this->l('Select your default file encoding'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'value',
@@ -103,7 +103,7 @@ class AdminRequestSqlControllerCore extends AdminController
 		$this->display = null;
 		$this->initToolbar();
 
-		$this->displayWarning($this->l('When saving the query, only the request type "SELECT" is allowed.'));
+		$this->displayWarning($this->l('When saving the query, only the "SELECT" request type is allowed.'));
 		$this->displayInformation('
 		<strong>'.$this->l('How do I create a new sql query?').'</strong><br />
 		<ul>
@@ -131,14 +131,14 @@ class AdminRequestSqlControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'size' => 103,
 					'required' => true
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Request:'),
+					'label' => $this->l('Request'),
 					'name' => 'sql',
 					'cols' => 100,
 					'rows' => 10,
@@ -357,7 +357,7 @@ class AdminRequestSqlControllerCore extends AdminController
 						die();
 					}
 					else
-						$this->errors[] = Tools::DisplayError('The file is too large and can not be downloaded. Please use the clause "LIMIT" in this query.');
+						$this->errors[] = Tools::DisplayError('The file is too large and can not be downloaded. Please use the LIMIT clause in this query.');
 				}
 			}
 		}
@@ -376,10 +376,10 @@ class AdminRequestSqlControllerCore extends AdminController
 			{
 				case 'checkedFrom':
 					if (isset($e[$key]['table']))
-						$this->errors[] = sprintf(Tools::displayError('The Table "%s" doesn\'t exist.'), $e[$key]['table']);
+						$this->errors[] = sprintf(Tools::displayError('The "%s" table does not exist.'), $e[$key]['table']);
 					else if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
-							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
 							$e[$key]['attribut'][0],
 							$e[$key]['attribut'][1]
 						);
@@ -389,17 +389,17 @@ class AdminRequestSqlControllerCore extends AdminController
 
 				case 'checkedSelect':
 					if (isset($e[$key]['table']))
-						$this->errors[] = sprintf(Tools::displayError('The Table "%s" doesn\'t exist.'), $e[$key]['table']);
+						$this->errors[] = sprintf(Tools::displayError('The "%s" table does not exist.'), $e[$key]['table']);
 					else if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
-							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
 							$e[$key]['attribut'][0],
 							$e[$key]['attribut'][1]
 						);
 					else if (isset($e[$key]['*']))
-						$this->errors[] = Tools::displayError('The operator "*" can be used in a nested query.');
+						$this->errors[] = Tools::displayError('The "*" operator can be used in a nested query.');
 					else
-						$this->errors[] = Tools::displayError('Error');
+						$this->errors[] = Tools::displayError('Error.');
 				break;
 
 				case 'checkedWhere':
@@ -407,20 +407,20 @@ class AdminRequestSqlControllerCore extends AdminController
 						$this->errors[] = sprintf(Tools::displayError('The operator "%s" is incorrect.'), $e[$key]['operator']);
 					else if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
-							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
 							$e[$key]['attribut'][0],
 							$e[$key]['attribut'][1]
 						);
 					else
-						$this->errors[] = Tools::displayError('Error');
+						$this->errors[] = Tools::displayError('Error.');
 				break;
 
 				case 'checkedHaving':
 					if (isset($e[$key]['operator']))
-						$this->errors[] = sprintf(Tools::displayError('The operator "%s" is incorrect.'), $e[$key]['operator']);
+						$this->errors[] = sprintf(Tools::displayError('The "%s" operator is incorrect.'), $e[$key]['operator']);
 					else if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
-							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
 							$e[$key]['attribut'][0],
 							$e[$key]['attribut'][1]
 						);
@@ -431,7 +431,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				case 'checkedOrder':
 					if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
-							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
 							$e[$key]['attribut'][0],
 							$e[$key]['attribut'][1]
 						);
@@ -442,7 +442,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				case 'checkedGroupBy':
 					if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
-							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
 							$e[$key]['attribut'][0],
 							$e[$key]['attribut'][1]
 						);
@@ -457,7 +457,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				case 'returnNameTable':
 						if (isset($e[$key]['reference']))
 							$this->errors[] = sprintf(
-								Tools::displayError('The reference "%1$s" does not exist in the table: %2$s.'),
+								Tools::displayError('The "%1$s" reference does not exist in the "%2$s" table.'),
 								$e[$key]['reference'][0],
 								$e[$key]['attribut'][1]
 							);
@@ -466,7 +466,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				break;
 
 				case 'testedRequired':
-						$this->errors[] = sprintf(Tools::displayError('%s doesn\'t exist.'), $e[$key]);
+						$this->errors[] = sprintf(Tools::displayError('%s does not exist.'), $e[$key]);
 					break;
 
 				case 'testedUnauthorized':
