@@ -266,8 +266,9 @@ class Loyalty extends Module
 				<div class="margin-form">
 					<input type="text" size="2" id="point_rate" name="point_rate" value="'.(float)(Configuration::get('PS_LOYALTY_POINT_RATE')).'" /> '.$currency->sign.'
 					<label for="point_rate" class="t"> = '.$this->l('1 reward point').'.</label>
-					<br />
-					<label for="point_value" class="t">'.$this->l('1 point = ').'</label>
+					</div>
+					<label for="point_value">'.$this->l('1 point = ').'</label>
+					<div class="margin-form">
 					<input type="text" size="2" name="point_value" id="point_value" value="'.(float)(Configuration::get('PS_LOYALTY_POINT_VALUE')).'" /> '.$currency->sign.'
 					<label for="point_value" class="t">'.$this->l('for the discount').'.</label>
 				</div>
