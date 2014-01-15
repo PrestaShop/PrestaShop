@@ -277,7 +277,6 @@ class AdminOrdersControllerCore extends AdminController
 		parent::setMedia();
 
 		$this->addJqueryUI('ui.datepicker');
-		$this->addJqueryPlugin('autosize');
 		$this->addJS(_PS_JS_DIR_.'vendor/d3.v3.min.js');
 		if ($this->tabAccess['edit'] == 1 && $this->display == 'view')
 		{
