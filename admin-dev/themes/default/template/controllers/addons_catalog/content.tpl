@@ -22,5 +22,8 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<iframe frameborder="no" class="clearfix" style="margin:0px;padding:0px;width:100%;height:920px" src="http://addons.prestashop.com/iframe/search.php?parentUrl={$parentDomain}"></iframe>
+{if $display_addons_content}
+	{$addons_content}
+{else}
+	<iframe frameborder="no" class="clearfix" style="margin:0px;padding:0px;width:100%;height:920px" src="http://addons.prestashop.com/iframe/search.php?isoLang={$iso_lang}&isoCurrency={$iso_currency}&isoCountry={$iso_country}&parentUrl={$parent_domain}"></iframe>
+{/if}
