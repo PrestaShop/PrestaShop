@@ -196,6 +196,23 @@ class ConfigurationCore extends ObjectModel
 	}
 
 	/**
+	  * Get a single configuration value for all shops
+	  *
+	  * @param string $key Key wanted
+	  * @param int $id_lang
+	  * @return array Values for all shops
+	  */
+	public static function getMultiShopValues($key, $id_lang = null)
+	{
+		$shops = Shop::getShops(false, null, true);
+		$resultsArray = array();
+		foreach ($shops as $id_shop)
+			$resultsArray[$id_shop] = Configuration::get($key, $id_lang, null, $id_shop);
+		return $resultsArray;
+	}
+
+
+	/**
 	  * Get several configuration values (in one language only)
 	  *
 	  * @param array $keys Keys wanted
