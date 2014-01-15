@@ -261,26 +261,26 @@ class AdminStatusesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Status name:'),
+					'label' => $this->l('Status name'),
 					'name' => 'name',
 					'lang' => true,
 					'required' => true,
 					'hint' => array(
-						$this->l('Order status (e.g. \'Pending\')'),
-						$this->l('Invalid characters: numbers and').' !<>,;?=+()@#"�{}_$%:'
+						$this->l('Order status (e.g. \'Pending\').'),
+						$this->l('Invalid characters: numbers and').' !<>,;?=+()@#"{}_$%:'
 					)
 				),
 				array(
 					'type' => 'file',
-					'label' => $this->l('Icon:'),
+					'label' => $this->l('Icon'),
 					'name' => 'icon',
-					'hint' => $this->l('Upload an icon from your computer (File type: .gif, suggested size: 16x16)')
+					'hint' => $this->l('Upload an icon from your computer (File type: .gif, suggested size: 16x16).')
 				),
 				array(
 					'type' => 'color',
-					'label' => $this->l('Color:'),
+					'label' => $this->l('Color'),
 					'name' => 'color',
-					'hint' => $this->l('Status will be highlighted in this color. (HTML colors only)').' "lightblue", "#CC6600")'
+					'hint' => $this->l('Status will be highlighted in this color. HTML colors only.').' "lightblue", "#CC6600")'
 				),
 				array(
 					'type' => 'checkbox',
@@ -298,7 +298,7 @@ class AdminStatusesControllerCore extends AdminController
 					'name' => 'invoice',
 					'values' => array(
 						'query' => array(
-							array('id' => 'on', 'name' => $this->l('Allow a customer to download and view PDF versions of their invoice.'), 'val' => '1'),
+							array('id' => 'on', 'name' => $this->l('Allow a customer to download and view PDF versions of his/her invoices.'), 'val' => '1'),
 							),
 						'id' => 'id',
 						'name' => 'name'
@@ -309,7 +309,7 @@ class AdminStatusesControllerCore extends AdminController
 					'name' => 'hidden',
 					'values' => array(
 						'query' => array(
-							array('id' => 'on', 'name' => $this->l('Hide this state in all customer orders'), 'val' => '1'),
+							array('id' => 'on', 'name' => $this->l('Hide this status in all customer orders.'), 'val' => '1'),
 							),
 						'id' => 'id',
 						'name' => 'name'
@@ -331,7 +331,7 @@ class AdminStatusesControllerCore extends AdminController
 					'name' => 'shipped',
 					'values' => array(
 						'query' => array(
-							array('id' => 'on',  'name' => $this->l('Set the order as shipped'), 'val' => '1'),
+							array('id' => 'on',  'name' => $this->l('Set the order as shipped.'), 'val' => '1'),
 							),
 						'id' => 'id',
 						'name' => 'name'
@@ -342,7 +342,7 @@ class AdminStatusesControllerCore extends AdminController
 					'name' => 'paid',
 					'values' => array(
 						'query' => array(
-							array('id' => 'on', 'name' => $this->l('Set the order as paid'), 'val' => '1'),
+							array('id' => 'on', 'name' => $this->l('Set the order as paid.'), 'val' => '1'),
 							),
 						'id' => 'id',
 						'name' => 'name'
@@ -353,7 +353,7 @@ class AdminStatusesControllerCore extends AdminController
 					'name' => 'delivery',
 					'values' => array(
 						'query' => array(
-							array('id' => 'on', 'name' => $this->l('Show delivery PDF'), 'val' => '1'),
+							array('id' => 'on', 'name' => $this->l('Show delivery PDF.'), 'val' => '1'),
 							),
 						'id' => 'id',
 						'name' => 'name'
@@ -371,7 +371,7 @@ class AdminStatusesControllerCore extends AdminController
 					),
 					'hint' => array(
 						$this->l('Only letters, number and hashtags are allowed.'),
-						$this->l('Email template for both .html and .txt')
+						$this->l('Email template for both .html and .txt.')
 					)
 				)
 			),
@@ -428,20 +428,20 @@ class AdminStatusesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Status name:'),
+					'label' => $this->l('Status name'),
 					'name' => 'name',
 					'lang' => true,
 					'required' => true,
 					'hint' => array(
-						$this->l('Order\'s return status name'),
+						$this->l('Order\'s return status name.'),
 						$this->l('Invalid characters: numbers and').' !<>,;?=+()@#"�{}_$%:'
 					)
 				),
 				array(
 					'type' => 'color',
-					'label' => $this->l('Color:'),
+					'label' => $this->l('Color'),
 					'name' => 'color',
-					'hint' => $this->l('Status will be highlighted in this color. (HTML colors only)').' "lightblue", "#CC6600")'
+					'hint' => $this->l('Status will be highlighted in this color. HTML colors only.').' "lightblue", "#CC6600")'
 				)
 			),
 			'submit' => array(
