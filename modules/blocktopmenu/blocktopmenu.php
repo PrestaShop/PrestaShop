@@ -897,8 +897,8 @@ class Blocktopmenu extends Module
 		$this->fields_form = array();
 
 		$helper->identifier = $this->identifier;
-		
-		
+
+		$helper->fields_value = $this->getAddLinkFieldsValues();
 		if (Tools::isSubmit('updatelinksmenutop'))
 		{
 			$fields_form['form']['submit'] = array(
@@ -907,15 +907,14 @@ class Blocktopmenu extends Module
 			);
 			$fields_form['form']['input'][] = array('type' => 'hidden', 'name' => 'updatelink');
 			$fields_form['form']['input'][] = array('type' => 'hidden', 'name' => 'id_linksmenutop');
+			$helper->fields_value['updatelink'] = '';
 		}
 			
 		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
 		$helper->token = Tools::getAdminTokenLite('AdminModules');
-		$helper->tpl_vars = array(
-			'fields_value' => $this->getAddLinkFieldsValues(),
-			'languages' => $this->context->controller->getLanguages(),
-			'id_language' => $this->context->language->id
-		);
+		$helper->languages =$this->context->controller->getLanguages();
+		$helper->default_form_language = (int)$this->context->language->id;
+
 		return $helper->generateForm(array($fields_form));
 	}
 
