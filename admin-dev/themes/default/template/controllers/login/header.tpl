@@ -28,23 +28,23 @@
 <!--[if IE 8]>    <html class="no-js lt-ie9 ie8" lang="en"> <![endif]-->
 <!--[if gt IE 8]> <html lang="fr" class="no-js ie9" lang="en"> <![endif]-->
 <html lang="{$iso}">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<meta name="robots" content="NOFOLLOW, NOINDEX">
-	<title>
-		{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'html':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if} (PrestaShop&trade;)
-	</title>
-	{foreach from=$css_files key=css_uri item=media}
-		<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
-	{/foreach}
-	{foreach from=$js_files item=js_uri}
-		<script type="text/javascript" src="{$js_uri}"></script>
-	{/foreach}
-	<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_dir}favicon.ico" />
-	<link rel="shortcut icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
-</head>
-<body>
-	<div id="login" class="bootstrap">
-		<div id="content">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="robots" content="NOFOLLOW, NOINDEX">
+		<title>
+			{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'html':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if} (PrestaShop&trade;)
+		</title>
+		{foreach from=$css_files key=css_uri item=media}
+			<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
+		{/foreach}
+		{foreach from=$js_files item=js_uri}
+			<script type="text/javascript" src="{$js_uri}"></script>
+		{/foreach}
+		<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_dir}favicon.ico" />
+		<link rel="shortcut icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
+	</head>
+	<body>
+		<div id="login" class="bootstrap">
+			<div id="content">
