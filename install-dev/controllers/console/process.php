@@ -147,7 +147,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 	 */
 	public function processInstallDatabase()
 	{
-		$this->initializeContext();
 		return $this->model_install->installDatabase($this->datas->database_clear);
 	}
 
