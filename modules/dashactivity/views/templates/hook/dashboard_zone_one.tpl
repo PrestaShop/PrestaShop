@@ -112,7 +112,7 @@
 		</ul>
 	</section>
 	<section id="dash_customers" class="loading">
-		<header><i class="icon-user"></i> {l s='Customers & Newsletters' mod='dashactivity'} <span class="subtitle small" id="customers-newsletters-subtitle"><span></header>
+		<header><i class="icon-user"></i> {l s='Customers & Newsletters' mod='dashactivity'} <span class="subtitle small" id="customers-newsletters-subtitle"></span></header>
 		<ul class="data_list">
 			<li>
 				<span class="data_label">{l s='New Customers' mod='dashactivity'}</span>
@@ -136,7 +136,7 @@
 	</section>
 	<section id="dash_traffic" class="loading">
 		<header>
-			<i class="icon-globe"></i> {l s='Traffic' mod='dashactivity'}  <span class="subtitle small" id="traffic-subtitle"><span>
+			<i class="icon-globe"></i> {l s='Traffic' mod='dashactivity'} <span class="subtitle small" id="traffic-subtitle"></span>
 		</header>
 		<ul class="data_list">
 			{if $gapi_mode}

@@ -77,6 +77,12 @@ class Datas
 			'validate' => 'isInt',
 			'help' => 'Drop existing tables' 
 		),
+		'database_create' => array(
+			'name' => 'db_create',
+			'default' => '0',
+			'validate' => 'isInt',
+			'help' => 'Create the database if not exist' 
+		),
 		'database_prefix' => array(
 			'name' => 'prefix',
 			'default' => 'ps_',

@@ -889,7 +889,7 @@
 							<span class="title_box ">{l s='Unit Price'}</span>
 							<small class="text-muted">{$smarty.capture.TaxMethod}</small>
 						</th>
-						<th><span class="title_box ">{l s='Qty'}</th>
+						<th><span class="title_box ">{l s='Qty'}</span></th>
 						{if $display_warehouse}<th><span class="title_box ">{l s='Warehouse'}</span></th>{/if}
 						{if ($order->hasBeenPaid())}<th><span class="title_box ">{l s='Refunded'}</span></th>{/if}
 						{if ($order->hasBeenDelivered() || $order->hasProductReturned())}
@@ -1104,7 +1104,7 @@
 						{l s='Generate a voucher'}
 					</label>
 				</p>
-				<button type="submit" name="partialRefund" class="btn btn-default" />
+				<button type="submit" name="partialRefund" class="btn btn-default">
 					<i class="icon-ok"></i>
 					{l s='Partial refund'}
 				</button>
@@ -1137,7 +1137,9 @@
 	{/if}
 
 	<script type="text/javascript">
-		$(".textarea-autosize").autosize();
+		$(document).ready(function(){
+			$(".textarea-autosize").autosize();
+		});
  	</script>
 
 {/block}

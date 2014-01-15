@@ -2029,7 +2029,7 @@ class AdminControllerCore extends Controller
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 
 		$this->addJquery();
-		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen'));
+		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize'));
 		$this->addjQueryPlugin('growl', null, false);
 		$this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
