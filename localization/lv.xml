@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Latvia" version="1.0">
 	<currencies>
-		<currency name="Lats" iso_code="LVL" iso_code_num="428" sign="Ls" blank="1" conversion_rate="0.709095" format="2" decimals="1" />
+		<currency name="Euro" iso_code="EUR" iso_code_num="978" sign="€" blank="1" conversion_rate="1.00" format="2" decimals="1" />
 	</currencies>
 	<languages>
 		<language iso_code="lv" />
