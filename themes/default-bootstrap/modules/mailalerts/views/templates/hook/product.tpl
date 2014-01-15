@@ -23,77 +23,22 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script type="text/javascript">{literal}
-// <![CDATA[
-oosHookJsCodeFunctions.push('oosHookJsCodeMailAlert');
-
-function clearText() {
-	if ($('#oos_customer_email').val() == '{/literal}{l s='your@email.com' mod='mailalerts'}{literal}')
-		$('#oos_customer_email').val('');
-}
-
-function oosHookJsCodeMailAlert() {
-	$.ajax({
-		type: 'POST',
-		url: "{/literal}{$link->getModuleLink('mailalerts', 'actions', ['process' => 'check'])}{literal}",
-		data: 'id_product={/literal}{$id_product}{literal}&id_product_attribute='+$('#idCombination').val(),
-		success: function (msg) {
-			if (msg == '0') {
-				$('#mailalert_link').show();
-				$('#oos_customer_email').show();
-			}
-			else {
-				$('#mailalert_link').hide();
-				$('#oos_customer_email').hide();
-			}
-		}
-	});
-}
-
-function  addNotification() {
-	$.ajax({
-		type: 'POST',
-		url: "{/literal}{$link->getModuleLink('mailalerts', 'actions', ['process' => 'add'])}{literal}",
-		data: 'id_product={/literal}{$id_product}{literal}&id_product_attribute='+$('#idCombination').val()+'&customer_email='+$('#oos_customer_email').val()+'',
-		success: function (msg) {
-			if (msg == '1') {
-				$('#mailalert_link').hide();
-				$('#oos_customer_email').hide();
-				$('#oos_customer_email_result').html("{/literal}{l s='Request notification registered' mod='mailalerts'}{literal}");
-				$('#oos_customer_email_result').css('color', 'green').show();
-			}
-			else if (msg == '2' ) {
-				$('#oos_customer_email_result').html("{/literal}{l s='You already have an alert for this product' mod='mailalerts'}{literal}");
-				$('#oos_customer_email_result').css('color', 'red').show();
-			} else {
-				$('#oos_customer_email_result').html("{/literal}{l s='Your e-mail address is invalid' mod='mailalerts'}{literal}");
-				$('#oos_customer_email_result').css('color', 'red').show();
-			}
-		}
-	});
-	return false;
-}
-
-$(document).ready(function() {
-	oosHookJsCodeMailAlert();
-	$('#oos_customer_email').bind('keypress', function(e) {
-		if(e.keyCode == 13)
-		{
-			addNotification();
-			return false;
-		}
-	});
-});
-{/literal}
-//]]>
-</script>
-
 <!-- MODULE MailAlerts -->
 	{if isset($email) AND $email}
 		<p class="form-group">
-			<input type="text" id="oos_customer_email" name="customer_email" size="20" value="{l s='your@email.com' mod='mailalerts'}" class="mailalerts_oos_email form-control" onclick="clearText();" />
+			<input type="text" id="oos_customer_email" name="customer_email" size="20" value="{l s='your@email.com' mod='mailalerts'}" class="mailalerts_oos_email form-control" />
     	</p>
     {/if}
-	<a href="#" title="{l s='Notify me when available' mod='mailalerts'}" onclick="return addNotification();" id="mailalert_link" rel="nofollow">{l s='Notify me when available' mod='mailalerts'}</a>
-	<span id="oos_customer_email_result" style="display:none;"></span>
+	<a href="#" title="{l s='Notify me when available' mod='mailalerts'}" id="mailalert_link" rel="nofollow">{l s='Notify me when available' mod='mailalerts'}</a>
+	<span id="oos_customer_email_result" style="display:none; display: block;"></span>
+{strip}
+{addJsDef oosHookJsCodeFunctions=array('oosHookJsCodeMailAlert')}
+{addJsDef mailalerts_url_check=$link->getModuleLink('mailalerts', 'actions', ['process' => 'check'])}
+{addJsDef mailalerts_url_add=$link->getModuleLink('mailalerts', 'actions', ['process' => 'add'])}
+
+{addJsDefL name='mailalerts_placeholder'}{l s='your@email.com' mod='mailalerts' js=1}{/addJsDefL}
+{addJsDefL name='mailalerts_registered'}{l s='Request notification registered' mod='mailalerts' js=1}{/addJsDefL}
+{addJsDefL name='mailalerts_already'}{l s='You already have an alert for this product' mod='mailalerts' js=1}{/addJsDefL}
+{addJsDefL name='mailalerts_invalid'}{l s='Your e-mail address is invalid' mod='mailalerts' js=1}{/addJsDefL}
+{/strip}
 <!-- END : MODULE MailAlerts -->

@@ -1748,9 +1748,11 @@ class AdminProductsControllerCore extends AdminController
 						.'&conf=3&token='.$this->token;
 			}
 			else
+			{
 				$this->object->delete();
 				// if errors : stay on edit page
 				$this->display = 'edit';
+			}
 		}
 		else
 			$this->errors[] = Tools::displayError('An error occurred while creating an object.').' <b>'.$this->table.'</b>';
@@ -2098,19 +2100,25 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	public function updateDownloadProduct($product, $edit = 0)
 	{
-		$is_virtual_file = (int)Tools::getValue('is_virtual_file');
-		// add or update a virtual product
-		if (Tools::getValue('is_virtual_good') == 'true')
+		if ((int)Tools::getValue('is_virtual_file') == 1)
 		{
-			$product->setDefaultAttribute(0);//reset cache_default_attribute			
-			if (Tools::getValue('virtual_product_expiration_date') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date') && !empty($is_virtual_file)))
+			if (isset($_FILES['virtual_product_file_uploader']) && $_FILES['virtual_product_file_uploader']['size'] > 0)
 			{
+				$virtual_product_filename = ProductDownload::getNewFilename();
+				$helper = new HelperUploader('virtual_product_file_uploader');
+				$files = $helper->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
+					->setSavePath(_PS_DOWNLOAD_DIR_)->upload($_FILES['virtual_product_file_uploader'], $virtual_product_filename);
+			}
+			else
+				$virtual_product_filename = Tools::getValue('virtual_product_filename', ProductDownload::getNewFilename());
+
+			$product->setDefaultAttribute(0);//reset cache_default_attribute
+			if (Tools::getValue('virtual_product_expiration_date') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date')))
 				if (!Tools::getValue('virtual_product_expiration_date'))
 				{
 					$this->errors[] = Tools::displayError('The expiration-date attribute is required.');
 					return false;
 				}
-			}
 
 			// Trick's
 			if ($edit == 1)
@@ -2124,20 +2132,14 @@ class AdminProductsControllerCore extends AdminController
 
 			$is_shareable = Tools::getValue('virtual_product_is_shareable');
 			$virtual_product_name = Tools::getValue('virtual_product_name');
-			$virtual_product_filename = Tools::getValue('virtual_product_filename');
 			$virtual_product_nb_days = Tools::getValue('virtual_product_nb_days');
 			$virtual_product_nb_downloable = Tools::getValue('virtual_product_nb_downloable');
 			$virtual_product_expiration_date = Tools::getValue('virtual_product_expiration_date');
 
-			if ($virtual_product_filename)
-				$filename = $virtual_product_filename;
-			else
-				$filename = ProductDownload::getNewFilename();
-
 			$download = new ProductDownload((int)$id_product_download);
 			$download->id_product = (int)$product->id;
 			$download->display_filename = $virtual_product_name;
-			$download->filename = $filename;
+			$download->filename = $virtual_product_filename;
 			$download->date_add = date('Y-m-d H:i:s');
 			$download->date_expiration = $virtual_product_expiration_date ? $virtual_product_expiration_date.' 23:59:59' : '';
 			$download->nb_days_accessible = (int)$virtual_product_nb_days;
@@ -3145,23 +3147,6 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
-	public function ajaxProcessAddVirtualProductFile()
-	{
-		if (isset($_FILES['virtual_product_file_uploader']))
-		{
-			$unique_name = ProductDownload::getNewFilename();
-			$helper = new HelperUploader('virtual_product_file_uploader');
-			$files = $helper->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
-				->setSavePath(_PS_DOWNLOAD_DIR_)->upload($_FILES['virtual_product_file_uploader'], $unique_name);
-			unset($files['save_path']);
-			$files['name'] = $unique_name;
-			die(Tools::jsonEncode(array($helper->getName() => $files)));
-		}
-
-		die(Tools::jsonEncode(array('virtual_product_file_uploader' => array('name' => 'virtual_product_file_uploader',
-			'error' => array(Tools::displayError('Invalid file input name'))))));
-	}
-
 	public function initFormVirtualProduct($product)
 	{
 		$data = $this->createTemplate($this->tpl_form);
@@ -3176,22 +3161,28 @@ class AdminProductsControllerCore extends AdminController
 			$product_download = new ProductDownload($id_product_download);
 		$product->{'productDownload'} = $product_download;
 
+		if ($product->productDownload->id && empty($product->productDownload->display_filename))
+		{
+			$this->errors[] = Tools::displayError('A file name is required in order to associate a file');
+			$this->tab_display = 'VirtualProduct';
+		}
+
 		// @todo handle is_virtual with the value of the product
 		$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$product->productDownload->filename;
-		$data->assign('product_downloaded', $product->productDownload->id && !empty($product->productDownload->display_filename));
+		$data->assign('product_downloaded', $product->productDownload->id);
 
 		if (!file_exists($exists_file)
 			&& !empty($product->productDownload->display_filename)
 			&& empty($product->cache_default_attribute))
-			$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product->productDownload->display_filename);
+			$msg = sprintf(Tools::displayError('This file "%s" is missing'),
+				$product->productDownload->display_filename);
 		else
 			$msg = '';
 
 		$virtual_product_file_uploader = new HelperUploader('virtual_product_file_uploader');
-		$virtual_product_file_uploader->setMultiple(false)->setUseAjax(true)->setUrl(
+		$virtual_product_file_uploader->setMultiple(false)->setUrl(
 			Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$product->id
-			.'&action=AddVirtualProductFile')->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
-			->setTemplate('virtual_product_file_uploader_ajax.tpl');
+			.'&action=AddVirtualProductFile')->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')));
 
 		$data->assign(array(
 			'download_product_file_missing' => $msg,

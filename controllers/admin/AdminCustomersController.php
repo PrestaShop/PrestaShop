@@ -296,7 +296,7 @@ class AdminCustomersControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Title:'),
+					'label' => $this->l('Title'),
 					'name' => 'id_gender',
 					'required' => false,
 					'class' => 't',
@@ -304,7 +304,7 @@ class AdminCustomersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('First name:'),
+					'label' => $this->l('First name'),
 					'name' => 'firstname',
 					'required' => true,
 					'col' => '4',
@@ -312,7 +312,7 @@ class AdminCustomersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Last name:'),
+					'label' => $this->l('Last name'),
 					'name' => 'lastname',
 					'required' => true,
 					'col' => '4',
@@ -320,22 +320,22 @@ class AdminCustomersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Email address:'),
+					'label' => $this->l('Email address'),
 					'name' => 'email',
 					'col' => '4',
 					'required' => true
 				),
 				array(
 					'type' => 'password',
-					'label' => $this->l('Password:'),
+					'label' => $this->l('Password'),
 					'name' => 'passwd',
 					'required' => ($obj->id ? false : true),
 					'col' => '4',
-					'hint' => ($obj->id ? $this->l('Leave  this field blank if there\'s no change') : $this->l('Minimum of five characters'))
+					'hint' => ($obj->id ? $this->l('Leave this field blank if there\'s no change.') : $this->l('Minimum of five characters.'))
 				),
 				array(
 					'type' => 'birthday',
-					'label' => $this->l('Birthday:'),
+					'label' => $this->l('Birthday'),
 					'name' => 'birthday',
 					'options' => array(
 						'days' => $days,
@@ -345,7 +345,7 @@ class AdminCustomersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Status:'),
+					'label' => $this->l('Status'),
 					'name' => 'active',
 					'required' => false,
 					'class' => 't',
@@ -362,11 +362,11 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'hint' => $this->l('Enable or disable customer login')
+					'hint' => $this->l('Enable or disable customer login.')
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Newsletter:'),
+					'label' => $this->l('Newsletter'),
 					'name' => 'newsletter',
 					'required' => false,
 					'class' => 't',
@@ -387,7 +387,7 @@ class AdminCustomersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Opt in:'),
+					'label' => $this->l('Opt in'),
 					'name' => 'optin',
 					'required' => false,
 					'class' => 't',
