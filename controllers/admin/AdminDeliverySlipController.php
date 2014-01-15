@@ -38,12 +38,12 @@ class AdminDeliverySlipControllerCore extends AdminController
 				'title' =>	$this->l('Delivery slip options'),
 				'fields' =>	array(
 					'PS_DELIVERY_PREFIX' => array(
-						'title' => $this->l('Delivery prefix:'),
-						'desc' => $this->l('Prefix used for delivery slips'),
+						'title' => $this->l('Delivery prefix'),
+						'desc' => $this->l('Prefix used for delivery slips.'),
 						'type' => 'textLang'
 					),
 					'PS_DELIVERY_NUMBER' => array(
-						'title' => $this->l('Delivery number:'),
+						'title' => $this->l('Delivery number'),
 						'desc' => $this->l('The next delivery slip will begin with this number and then increase with each additional slip.'),
 						'cast' => 'intval',
 						'type' => 'text'
@@ -66,19 +66,19 @@ class AdminDeliverySlipControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'date',
-					'label' => $this->l('From:'),
+					'label' => $this->l('From'),
 					'name' => 'date_from',
 					'maxlength' => 10,
 					'required' => true,
-					'hint' => $this->l('Format: 2011-12-31 (inclusive)')
+					'hint' => $this->l('Format: 2011-12-31 (inclusive).')
 				),
 				array(
 					'type' => 'date',
-					'label' => $this->l('To:'),
+					'label' => $this->l('To'),
 					'name' => 'date_to',
 					'maxlength' => 10,
 					'required' => true,
-					'hint' => $this->l('Format: 2012-12-31 (inclusive)')
+					'hint' => $this->l('Format: 2012-12-31 (inclusive).')
 				)
 			),
 			'submit' => array(
