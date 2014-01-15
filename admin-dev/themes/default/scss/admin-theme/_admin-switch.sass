@@ -14,7 +14,6 @@
 	> span
 		line-height: 26px
 		vertical-align: middle
-	// Outline the toggles when the inputs are focused
 
 @mixin switch-light()
 	@include switch-shared()
@@ -94,6 +93,10 @@
 		border: solid 1px $brand-danger
 		background-color: lighten($brand-danger,10%)
 		@include box-shadow($brand-danger 0 -1px 0 inset)
+	input:disabled ~ a
+		border: solid 1px lighten(gray,20%)
+		background-color: lighten(gray,30%)
+		@include box-shadow(lighten(gray,20%) 0 -1px 0 inset)
 	//Generate styles for the multiple states
 	@for $i from 1 through 3
 		$state: $i + 2
@@ -108,7 +111,6 @@
 		&.switch-#{$state} input:checked:last-of-type ~ a
 			left: 100 - $width * 1%
 
-
 .switch a,
 .switch-light span span
 	display: none
@@ -116,10 +118,8 @@
 @media only screen
 	.switch-light
 		@include switch-light()
-
 	.switch
 		@include switch-toggle()
-
 	.prestashop-switch
 		min-width: 150px
 		background-color: #eee
