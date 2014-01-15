@@ -1269,7 +1269,7 @@ class AdminModulesControllerCore extends AdminController
 
 				$this->context->smarty->assign('text', sprintf($this->l('%1$s: %2$s'), $module->displayName, $module->warning));
 				$this->context->smarty->assign('module_link', $href);
-				$this->warnings[] = $this->context->smarty->fetch('controllers/modules/warning_module.tpl');
+				$this->displayWarning($this->context->smarty->fetch('controllers/modules/warning_module.tpl'));
 			}
 
 			// AutoComplete array
