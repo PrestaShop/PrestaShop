@@ -45,6 +45,6 @@
 	<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_dir}favicon.ico" />
 	<link rel="shortcut icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
 </head>
-<body class="page-topbar">
+<body>
 	<div id="login" class="bootstrap">
 		<div id="content">

@@ -1,5 +1,6 @@
 #login
 	height: 100%
+	background-color: #092756
 	@include background(radial-gradient(color-stops(rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%), top left),linear-gradient(top,rgba(57,173,219,.25),rgba(42,60,87,.4)),linear-gradient(left top,#670D10,#092756))
 
 #login-header
@@ -13,6 +14,8 @@
 #login-panel
 	margin: 0 auto
 	width: 420px
+	@media (max-width: $screen-phone)
+		width: 90%
 	.panel
 		@include box-shadow(rgba(white,0.45) 0 0 0 6px)
 	.panel-footer
@@ -29,7 +32,7 @@
 		position: relative
 	.front, .back
 		@include backface-visibility(hidden)
-		width: 420px
+		width: 100%
 		padding: 20px
 		position: absolute
 		top: 0
@@ -44,81 +47,3 @@
 #login-footer
 	a
 		color: #A0AAB5
-
-.animated
-	-webkit-animation-duration: 1s
-	-moz-animation-duration: 1s
-	-o-animation-duration: 1s
-	animation-duration: 1s
-	-webkit-animation-fill-mode: both
-	-moz-animation-fill-mode: both
-	-o-animation-fill-mode: both
-	animation-fill-mode: both
-
-@-webkit-keyframes fadeInDown
-	0%
-		opacity: 0
-		-webkit-transform: translateY(-20px)
-	100%
-		opacity: 1
-		-webkit-transform: translateY(0)
-
-@-moz-keyframes fadeInDown
-	0%
-		opacity: 0
-		-moz-transform: translateY(-20px)
-	100%
-		opacity: 1
-		-moz-transform: translateY(0)
-
-@-o-keyframes fadeInDown
-	0%
-		opacity: 0
-		-o-transform: translateY(-20px)
-	100%
-		opacity: 1
-		-o-transform: translateY(0)
-
-@keyframes fadeInDown
-	0%
-		opacity: 0
-		transform: translateY(-20px)
-	100%
-		opacity: 1
-		transform: translateY(0)
-
-.animated.fadeInDown
-	-webkit-animation-name: fadeInDown
-	-moz-animation-name: fadeInDown
-	-o-animation-name: fadeInDown
-	//animation-name: fadeInDown
-
-@-webkit-keyframes fadeIn
-	0%
-		opacity: 0
-	100%
-		opacity: 1
-
-@-moz-keyframes fadeIn
-	0%
-		opacity: 0
-	100%
-		opacity: 1
-
-@-o-keyframes fadeIn
-	0%
-		opacity: 0
-	100%
-		opacity: 1
-
-@keyframes fadeIn
-	0%
-		opacity: 0
-	100%
-		opacity: 1
-
-.animated.fadeIn
-	-webkit-animation-name: fadeIn
-	-moz-animation-name: fadeIn
-	-o-animation-name: fadeIn
-	//animation-name: fadeIn
