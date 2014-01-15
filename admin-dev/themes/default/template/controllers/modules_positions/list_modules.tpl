@@ -33,7 +33,7 @@
 	<div class="col-lg-9">
 		<div class="panel">
 			<form class="form-inline well">
-				<label>{l s='Show'} :</label>
+				<label>{l s='Show'}</label>
 				<span>
 					<select id="show_modules" onChange="autoUrl('show_modules', '{$url_show_modules}')" class="filter fixed-width-lg">
 						<option value="all">{l s='All modules'}&nbsp;</option>
@@ -156,12 +156,12 @@
 		<div class="panel">
 			<h3><i class="icon-eye-open"></i> {l s='Live Edit'}</h3>
 			{if $live_edit}
-				<p>{l s='You have to select a shop to use LiveEdit'}</p>
+				<p>{l s='You have to select a shop to use Live Edit'}</p>
 			{else}
 				<p>{l s='Click here to be redirected to the Front Office of your shop where you can move and delete modules directly.'}</p>
 					<a class="btn btn-default" href="{$url_live_edit}" target="_blank">
 						<i class="icon-edit"></i>
-						{l s='Run LiveEdit'}
+						{l s='Run Live Edit'}
 					</a>
 			{/if}
 		</div>
