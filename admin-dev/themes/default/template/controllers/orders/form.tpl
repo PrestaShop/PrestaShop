@@ -597,7 +597,7 @@
 					else
 						customization_errors = false;
 					$('#products_found').show();
-					products_found += '<label class="control-label col-lg-3">{l s='Product:'}</label><div class="col-lg-6"><select id="id_product" onclick="display_product_attributes();display_product_customizations();"></div>';
+					products_found += '<label class="control-label col-lg-3">{l s='Product'}</label><div class="col-lg-6"><select id="id_product" onclick="display_product_attributes();display_product_customizations();"></div>';
 					attributes_html += '<label class="control-label col-lg-3">{l s='Combination'}</label><div class="col-lg-6">';
 					$.each(res.products, function() {
 						products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+'</option>';
@@ -1047,8 +1047,8 @@
 
 		<div id="search-customer-form-group" class="form-group ">
 			<label class="control-label col-lg-3">
-				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search a customer by typping the first letters of his/her name'}">
-					{l s='Search customers'}
+				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search for an existing customer by typing the first letters of his/her name.'}">
+					{l s='Search for a customer'}
 				</span>
 			</label>
 			<div class="col-lg-9">
@@ -1116,9 +1116,9 @@
 							<tr>
 								<th><span class="title_box">{l s='ID'}</span></th>
 								<th><span class="title_box">{l s='Date'}</span></th>
-								<th><span class="title_box">{l s='Products:'}</span></th>
+								<th><span class="title_box">{l s='Products'}</span></th>
 								<th><span class="title_box">{l s='Total paid'}</span></th>
-								<th><span class="title_box">{l s='Payment: '}</span></th>
+								<th><span class="title_box">{l s='Payment'}</span></th>
 								<th><span class="title_box">{l s='Status'}</span></th>
 								<th></th>
 							</tr>
@@ -1140,7 +1140,7 @@
 		</h3>
 		<div class="form-group">
 			<label class="control-label col-lg-3">
-				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search a product by typping the first letters of his/her name.'}">
+				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search for an existing product by typing the first letters of his/her name.'}">
 					{l s='Search for a product'}
 				</span>
 			</label>
@@ -1178,10 +1178,10 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="qty">{l s='Quantity:'}</label>
+				<label class="control-label col-lg-3" for="qty">{l s='Quantity'}</label>
 				<div class="col-lg-9">
 					<input type="text" name="qty" id="qty" class="form-control fixed-width-sm" value="1" />
-					<p class="help-block">{l s='In stock:'} <span id="qty_in_stock"></span></p>
+					<p class="help-block">{l s='In stock'} <span id="qty_in_stock"></span></p>
 				</div>
 			</div>
 
@@ -1205,9 +1205,9 @@
 						<tr>
 							<th><span class="title_box">{l s='Product'}</span></th>
 							<th><span class="title_box">{l s='Description'}</span></th>
-							<th><span class="title_box">{l s='Ref'}</span></th>
+							<th><span class="title_box">{l s='Reference'}</span></th>
 							<th><span class="title_box">{l s='Unit price'}</span></th>
-							<th><span class="title_box">{l s='Qty'}</span></th>
+							<th><span class="title_box">{l s='Quantity'}</span></th>
 							<th><span class="title_box">{l s='Price'}</span></th>
 						</tr>
 					</thead>
@@ -1261,7 +1261,7 @@
 		</h3>
 		<div class="form-group">
 			<label class="control-label col-lg-3">
-				{l s='Search for a voucher:'} 
+				{l s='Search for a voucher'} 
 			</label>
 			<div class="col-lg-9">
 				<div class="row">
@@ -1362,7 +1362,7 @@
 			</div>
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="shipping_price">
-					{l s='Shipping price:'}
+					{l s='Shipping price'}
 				</label>
 				<div class="col-lg-9">
 					<p id="shipping_price" class="form-control-static" name="shipping_price"></p>
@@ -1430,31 +1430,31 @@
 			<div class="row">
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total products:'}</span><br/>
+						<span>{l s='Total products'}</span><br/>
 						<span id="total_products" class="size_l text-success"></span>
 					</div>
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total vouchers:'}</span><br/>
+						<span>{l s='Total vouchers'}</span><br/>
 						<span id="total_vouchers" class="size_l text-danger"></span>
 					</div>
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total shipping:'}</span><br/>
+						<span>{l s='Total shipping'}</span><br/>
 						<span id="total_shipping" class="size_l"></span>
 					</div>
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total taxes:'}</span><br/>
+						<span>{l s='Total taxes'}</span><br/>
 						<span id="total_taxes" class="size_l"></span>
 					</div>
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total without taxes:'}</span><br/>
+						<span>{l s='Total without taxes'}</span><br/>
 						<span id="total_without_taxes" class="size_l"></span>
 					</div>
 				</div>
