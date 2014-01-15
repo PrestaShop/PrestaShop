@@ -1021,8 +1021,15 @@ product_tabs['Informations'] = new function(){
 			$('#simple_product').attr('checked', true);
 		}
 
-		$('input[name="type_product"]').live('click', function()
+		$('input[name="type_product"]').live('click', function(e)
 		{
+			if ($(this).attr('id') == 'virtual_product' && $('#name_' + id_lang_default).val() == '')
+			{
+				e.preventDefault();
+				alert(missing_product_name);
+				$('#name_' + id_lang_default).focus();
+				return false;
+			}
 			// Reset settings
 			$('a[id*="Pack"]').hide();
 			$('a[id*="VirtualProduct"]').hide();
@@ -1469,7 +1476,7 @@ product_tabs['VirtualProduct'] = new function(){
 			$('#is_virtual_file_product').hide();
 
 		$('input[name=is_virtual_file]').live('change', function(e) {
-			if ($(this).prop('checked'))
+			if ($(this).val() == 1)
 				$('#is_virtual_file_product').show();
 			else
 				$('#is_virtual_file_product').hide();
