@@ -52,7 +52,7 @@ class AdminBackupControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_BACKUP_ALL' => array(
 						'title' => $this->l('Ignore statistics tables'),
-						'desc' => $this->l('Drop existing tables during import').'
+						'desc' => $this->l('Drop existing tables during import.').'
 							<br />'._DB_PREFIX_.'connections, '._DB_PREFIX_.'connections_page, '._DB_PREFIX_.'connections_source, '.
 							_DB_PREFIX_.'guest, '._DB_PREFIX_.'statssearch',
 						'cast' => 'intval',
@@ -157,7 +157,7 @@ class AdminBackupControllerCore extends AdminController
 
 		// Test if the backup dir is writable
 		if (!is_writable(_PS_ADMIN_DIR_.'/backups/'))
-			$this->warnings[] = $this->l('The "Backups" directory located in the admin directory must be writeable (CHMOD 755 / 777)');
+			$this->warnings[] = $this->l('The "Backups" directory located in the admin directory must be writeable (CHMOD 755 / 777).');
 
 		if ($this->display == 'add' && is_writable(_PS_ADMIN_DIR_.'/backups/'))
 		{

@@ -47,8 +47,8 @@ class AdminReturnControllerCore extends AdminController
 			'general' => array(
 				'title' =>	$this->l('Merchandise return (RMA) options'),
 				'fields' =>	array(
-					'PS_ORDER_RETURN' => array('title' => $this->l('Enable returns:'), 'desc' => $this->l('Would you like to allow merchandise returns in your shop?'), 'cast' => 'intval', 'type' => 'bool'),
-					'PS_ORDER_RETURN_NB_DAYS' => array('title' => $this->l('Time limit of validity:'), 'desc' => $this->l('How many days after the delivery date does the customer have to return a product?'), 'cast' => 'intval', 'type' => 'text', 'size' => '2'),
+					'PS_ORDER_RETURN' => array('title' => $this->l('Enable returns'), 'desc' => $this->l('Would you like to allow merchandise returns in your shop?'), 'cast' => 'intval', 'type' => 'bool'),
+					'PS_ORDER_RETURN_NB_DAYS' => array('title' => $this->l('Time limit of validity'), 'desc' => $this->l('How many days after the delivery date does the customer have to return a product?'), 'cast' => 'intval', 'type' => 'text', 'size' => '2'),
 				),
 				'submit' => array('title' => $this->l('Save'))
 			),
@@ -75,21 +75,21 @@ class AdminReturnControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text_customer',
-					'label' => $this->l('Customer:'),
+					'label' => $this->l('Customer'),
 					'name' => '',
 					'size' => '',
 					'required' => false,
 				),
 				array(
 					'type' => 'text_order',
-					'label' => $this->l('Order:'),
+					'label' => $this->l('Order'),
 					'name' => '',
 					'size' => '',
 					'required' => false,
 				),
 				array(
 					'type' => 'free',
-					'label' => $this->l('Customer explanation:'),
+					'label' => $this->l('Customer explanation'),
 					'name' => 'question',
 					'size' => '',
 					'required' => false,
@@ -104,7 +104,7 @@ class AdminReturnControllerCore extends AdminController
 						'id' => 'id_order_return_state',
 						'name' => 'name'
 					),
-					'desc' => $this->l('Merchandise return (RMA) status')
+					'desc' => $this->l('Merchandise return (RMA) status.')
 				),
 				array(
 					'type' => 'list_products',
@@ -112,7 +112,7 @@ class AdminReturnControllerCore extends AdminController
 					'name' => '',
 					'size' => '',
 					'required' => false,
-					'desc' => $this->l('List of products in return package')
+					'desc' => $this->l('List of products in return package.')
 				),
 			),
 			'submit' => array(

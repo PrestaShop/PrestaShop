@@ -76,7 +76,7 @@ class AdminShippingControllerCore extends AdminController
 				'description' =>
 					'<ul>
 						<li>'.$this->l('If you set these parameters to 0, they will be disabled.').'</li>
-						<li>'.$this->l('Coupons are not taken into account when calculating free shipping').'</li>
+						<li>'.$this->l('Coupons are not taken into account when calculating free shipping.').'</li>
 					</ul>',
 				'submit' => array('title' => $this->l('Save'))
 			),
@@ -84,7 +84,7 @@ class AdminShippingControllerCore extends AdminController
 				'title' => $this->l('Carrier options'),
 				'fields' => array(
 					'PS_CARRIER_DEFAULT' => array(
-						'title' => $this->l('Default carrier:'),
+						'title' => $this->l('Default carrier'),
 						'desc' => $this->l('Your shop\'s default carrier'),
 						'cast' => 'intval',
 						'type' => 'select',
@@ -97,16 +97,16 @@ class AdminShippingControllerCore extends AdminController
 							Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true, false, false, null, Carrier::ALL_CARRIERS))
 					),
 					'PS_CARRIER_DEFAULT_SORT' => array(
-						'title' => $this->l('Sort by:'),
-						'desc' => $this->l('This will only be visible in the Front Office'),
+						'title' => $this->l('Sort by'),
+						'desc' => $this->l('This will only be visible in the Front Office.'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'value',
 						'list' => $carrier_default_sort
 					),
 					'PS_CARRIER_DEFAULT_ORDER' => array(
-						'title' => $this->l('Order by:'),
-						'desc' => $this->l('This will only be visible in the Front Office'),
+						'title' => $this->l('Order by'),
+						'desc' => $this->l('This will only be visible in the Front Office.'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'value',

@@ -96,24 +96,24 @@ class AdminGroupsControllerCore extends AdminController
 					'title' =>	$this->l('Default groups options'),
 					'fields' =>	array(
 						'PS_UNIDENTIFIED_GROUP' => array(
-							'title' => $this->l('Visitors group:'), 
-							'desc' => $this->l('The group defined for your un-identified visitors'), 
+							'title' => $this->l('Visitors group'), 
+							'desc' => $this->l('The group defined for your un-identified visitors.'), 
 							'cast' => 'intval', 
 							'type' => 'select',
 							'list' => $groups,
 							'identifier' => 'id_group'
 						),
 						'PS_GUEST_GROUP' => array(
-							'title' => $this->l('Guests group:'), 
-							'desc' => $this->l('The group defined for your identified guest customers (used in guest checkout)'), 
+							'title' => $this->l('Guests group'), 
+							'desc' => $this->l('The group defined for your identified guest customers (used in guest checkout).'), 
 							'cast' => 'intval', 
 							'type' => 'select',
 							'list' => $groups,
 							'identifier' => 'id_group'
 						),
 						'PS_CUSTOMER_GROUP' => array(
-							'title' => $this->l('Customers group:'), 
-							'desc' => $this->l('The group defined for your identified customers'), 
+							'title' => $this->l('Customers group'), 
+							'desc' => $this->l('The group defined for your identified customers.'), 
 							'cast' => 'intval', 
 							'type' => 'select',
 							'list' => $groups,
@@ -138,7 +138,7 @@ class AdminGroupsControllerCore extends AdminController
 			$this->toolbar_btn['save-and-stay'] = array(
 				'short' => 'SaveAndStay',
 				'href' => '#',
-				'desc' => $this->l('Save, then add a category reduction'),
+				'desc' => $this->l('Save, then add a category reduction.'),
 				'force_desc' => true,
 			);
 		parent::initToolbar();
@@ -300,7 +300,7 @@ class AdminGroupsControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'hint' => $this->l('Customers in this group can view prices')
+					'hint' => $this->l('Customers in this group can view prices.')
 				),
 				array(
 					'type' => 'group_discount_category',
@@ -321,7 +321,7 @@ class AdminGroupsControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}
@@ -438,7 +438,7 @@ class AdminGroupsControllerCore extends AdminController
 		$result = array();
 		if (!Validate::isUnsignedId($id_category))
 		{
-			$result['errors'][] = Tools::displayError('Wrong category ID');
+			$result['errors'][] = Tools::displayError('Wrong category ID.');
 			$result['hasError'] = true;
 		}
 		else if (!$this->validateDiscount($category_reduction))
