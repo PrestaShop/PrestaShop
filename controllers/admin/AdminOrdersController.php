@@ -94,7 +94,7 @@ class AdminOrdersControllerCore extends AdminController
 			'currency' => true
 		),
 		'payment' => array(
-			'title' => $this->l('Payment: ')
+			'title' => $this->l('Payment')
 		),
 		'osname' => array(
 			'title' => $this->l('Status'),
