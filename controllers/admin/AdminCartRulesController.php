@@ -54,7 +54,6 @@ class AdminCartRulesControllerCore extends AdminController
 	{
 		parent::setMedia();
 		$this->addJqueryPlugin(array('typewatch', 'fancybox', 'autocomplete'));
-		$this->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.autosize.min.js');
 	}
 
 	public function initPageHeaderToolbar()

@@ -473,7 +473,7 @@
 									<hr />{$addresses.delivery->other}<br />
 								{/if}
 							</div>
-							<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if} {$addresses.delivery->country}&markers={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if} {$addresses.delivery->country}&zoom=7&size=600x200&scale=2&sensor=false" class="thumbnail">
+							<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if} {$addresses.delivery->country}&markers={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if} {$addresses.delivery->country}&zoom=7&size=600x200&scale=2&sensor=false" class="img-thumbnail">
 						{/if}
 					</div>
 					<div class="tab-pane" id="addressInvoice">
@@ -516,7 +516,7 @@
 								<hr />{$addresses.invoice->other}<br />
 							{/if}
 						</div>
-						<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.invoice->address1} {$addresses.invoice->postcode} {$addresses.invoice->city} {if ($addresses.invoice->id_state) && isset($addresses.deliveryState)} {$addresses.deliveryState->name}{/if}&markers={$addresses.invoice->address1} {$addresses.invoice->postcode} {$addresses.invoice->city} {if ($addresses.invoice->id_state) && isset($addresses.deliveryState)} {$addresses.deliveryState->name}{/if}&zoom=7&size=600x200&scale=2&sensor=false" class="thumbnail">
+						<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.invoice->address1} {$addresses.invoice->postcode} {$addresses.invoice->city} {if ($addresses.invoice->id_state) && isset($addresses.deliveryState)} {$addresses.deliveryState->name}{/if}&markers={$addresses.invoice->address1} {$addresses.invoice->postcode} {$addresses.invoice->city} {if ($addresses.invoice->id_state) && isset($addresses.deliveryState)} {$addresses.deliveryState->name}{/if}&zoom=7&size=600x200&scale=2&sensor=false" class="img-thumbnail">
 					</div>
 				</div>
 				<script>
@@ -889,7 +889,7 @@
 							<span class="title_box ">{l s='Unit Price'}</span>
 							<small class="text-muted">{$smarty.capture.TaxMethod}</small>
 						</th>
-						<th><span class="title_box ">{l s='Qty'}</th>
+						<th><span class="title_box ">{l s='Qty'}</span></th>
 						{if $display_warehouse}<th><span class="title_box ">{l s='Warehouse'}</span></th>{/if}
 						{if ($order->hasBeenPaid())}<th><span class="title_box ">{l s='Refunded'}</span></th>{/if}
 						{if ($order->hasBeenDelivered() || $order->hasProductReturned())}
@@ -1104,7 +1104,7 @@
 						{l s='Generate a voucher'}
 					</label>
 				</p>
-				<button type="submit" name="partialRefund" class="btn btn-default" />
+				<button type="submit" name="partialRefund" class="btn btn-default">
 					<i class="icon-ok"></i>
 					{l s='Partial refund'}
 				</button>
@@ -1137,7 +1137,9 @@
 	{/if}
 
 	<script type="text/javascript">
-		$(".textarea-autosize").autosize();
+		$(document).ready(function(){
+			$(".textarea-autosize").autosize();
+		});
  	</script>
 
 {/block}
