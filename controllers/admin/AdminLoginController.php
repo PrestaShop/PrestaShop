@@ -43,7 +43,7 @@ class AdminLoginControllerCore extends AdminController
 	{
 		$this->addJquery();
 		$this->addjqueryPlugin('validate');
-		$this->addCSS('/'.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css');
+		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css');
 		$this->addJS(_PS_JS_DIR_.'vendor/spin.js');
 		$this->addJS(_PS_JS_DIR_.'vendor/ladda.js');
 		$this->addJS(_PS_JS_DIR_.'login.js');
