@@ -320,6 +320,8 @@ class MediaCore
 				$ui_tmp[] = Media::getJqueryUIPath($dependency, $theme, false);
 				if (self::$jquery_ui_dependencies[$dependency]['theme'])
 					$dep_css = Media::getCSSPath($folder.'themes/'.$theme.'/jquery.'.$dependency.'.css');
+
+
 				if (isset($dep_css) && (!empty($dep_css) || $dep_css))
 					$ui_path['css'] = array_merge($ui_path['css'], $dep_css);
 			}
@@ -330,8 +332,11 @@ class MediaCore
 			{
 				foreach ($ui_tmp as $ui)
 				{
-					$ui_path['js'][] = $ui['js'];
-					$ui_path['css'][] = $ui['css'];
+					if (!empty($ui['js']))
+						$ui_path['js'][] = $ui['js'];
+
+					if (!empty($ui['css']))
+						$ui_path['css'][] = $ui['css'];
 				}
 				$ui_path['js'][] = Media::getJSPath($folder.$file);
 			}
@@ -341,7 +346,12 @@ class MediaCore
 
 		//add i18n file for datepicker
 		if ($component == 'ui.datepicker')
+		{
+			if (!is_array($ui_path['js']))
+				$ui_path['js'] = array($ui_path['js']);
+
 			$ui_path['js'][] = Media::getJSPath($folder.'i18n/jquery.ui.datepicker-'.Context::getContext()->language->iso_code.'.js');
+		}
 
 		return $ui_path;
 	}

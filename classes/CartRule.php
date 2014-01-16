@@ -523,13 +523,15 @@ class CartRuleCore extends ObjectModel
 		{
 			// Minimum amount is converted to the default currency
 			$minimum_amount = $this->minimum_amount;
-			if ($this->minimum_amount_currency != Configuration::get('PS_CURRENCY_DEFAULT'))
+			if ($this->minimum_amount_currency != $context->currency->id)
 			{
 				$minimum_amount_currency = new Currency($this->minimum_amount_currency);
 				if ($this->minimum_amount == 0 || $minimum_amount_currency->conversion_rate == 0)
 					$minimum_amount = 0;
 				else
-					$minimum_amount = $this->minimum_amount / $minimum_amount_currency->conversion_rate;
+					$minimum_amount /= $minimum_amount_currency->conversion_rate;
+
+				$minimum_amount *= $context->currency->conversion_rate;
 			}
 
 			$cartTotal = $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_PRODUCTS);

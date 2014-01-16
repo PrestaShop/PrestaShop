@@ -29,7 +29,7 @@
 	var label_error = '{l s='error'}';
 </script>
 <div id="login-panel">
-	<div id="login-header" class="animated fadeIn">
+	<div id="login-header">
 		<h1 class="text-center">
 			<img id="logo" width="40px" src="{$img_dir}/icon-prestashop.svg"/>
 			PRESTASHOP
@@ -57,7 +57,7 @@
 		<div class="alert alert-warning">{$warningSslMessage}</div>
 		{/if}
 	</div>
-	<div class="flip-container animated fadeInDown">
+	<div class="flip-container">
 		<div class="flipper">
 			<div class="front panel">
 				{if !isset($wrong_folder_name) && !isset($wrong_install_name)}
@@ -107,7 +107,7 @@
 					<div class="panel-footer">
 						<button name="submitLogin" type="submit" tabindex="4" class="btn btn-default btn-lg btn-block ladda-button" data-style="slide-up" data-spinner-color="black" >
 							<span class="ladda-label">
-								<i class="icon-ok text-success"></i>
+								<i class="icon-check text-success"></i>
 								{l s='Log in'}
 							</span>
 						</button>
@@ -170,7 +170,7 @@
 		</div>
 		{/if}
 	</div>
-	<div id="login-footer" class="animated fadeIn">
+	<div id="login-footer">
 		<p class="text-center text-muted">
 			<a href="http://www.prestashop.com/" onclick="return !window.open(this.href);">
 				&copy; PrestaShop&#8482; 2007-{$smarty.now|date_format:"%Y"} - All rights reserved

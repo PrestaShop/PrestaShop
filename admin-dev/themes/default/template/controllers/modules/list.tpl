@@ -76,7 +76,7 @@ module_inactive
 							<div class="module_name">
 								<span style="display:none">{$module->name}</span>
 								{$module->displayName}
-								<small>v{$module->version}</small>
+								<small class="text-muted">v{$module->version} - by {$module->author}</small>
 								{if isset($module->type) && $module->type == 'addonsMustHave'}
 									- <a href="#" class="module-badge-popular help-tooltip text-primary" data-title="{l s=""}"><i class="icon-group"></i> <small>{l s="Popular"}</small></a>
 								{elseif isset($module->type) && $module->type == 'addonsPartner'}
