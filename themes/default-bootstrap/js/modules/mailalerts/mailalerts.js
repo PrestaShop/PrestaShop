@@ -54,7 +54,7 @@ function oosHookJsCodeMailAlert()
 	$.ajax({
 		type: 'POST',
 		url: mailalerts_url_check,
-		data: 'id_product=' + id_product + ' &id_product_attribute=' + $('#idCombination').val(),
+		data: 'id_product=' + id_product + '&id_product_attribute=' + $('#idCombination').val(),
 		success: function (msg) {
 			if (msg == '0')
 			{
