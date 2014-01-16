@@ -1,9 +1,34 @@
+{*
+* 2007-2014 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2014 PrestaShop SA
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*}
+
 <div class="new-item">
 	<div class="form-group clearfix">
     	<span class="button btn btn-default new-item"><i class="icon-plus-sign"></i>{l s='Add item' mod='themeconfigurator'}</span>
     </div>
     <div class="item-container">
-        <form method="post" action="{$htmlitems.postAction}" enctype="multipart/form-data" class="item-form defaultForm  form-horizontal">
+        <form method="post" action="{$htmlitems.postAction|escape:'htmlall':'UTF-8'}" enctype="multipart/form-data" class="item-form defaultForm  form-horizontal">
         	<div class="panel">
                 <div class="language item-field form-group">
                     <label class="control-label col-lg-3">{l s='Language' mod='themeconfigurator'}</label>
@@ -11,17 +36,17 @@
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
                             <span id="selected-language">
                             {foreach from=$htmlitems.lang.all item=lang}
-                                {if $lang.id_lang == $htmlitems.lang.default.id_lang} {$lang.iso_code}{/if}
+                                {if $lang.id_lang == $htmlitems.lang.default.id_lang} {$lang.iso_code|escape:'htmlall':'UTF-8'}{/if}
                             {/foreach}
                             </span>
                             <span class="caret">&nbsp;</span>
                         </button>
                         <ul class="languages dropdown-menu">
                             {foreach from=$htmlitems.lang.all item=lang}
-                                <li id="lang-{$lang.id_lang}" class="new-lang-flag"><a href="javascript:setLanguage({$lang.id_lang}, '{$lang.iso_code}');">{$lang.name}</a></li>
+                                <li id="lang-{$lang.id_lang|escape:'htmlall':'UTF-8'}" class="new-lang-flag"><a href="javascript:setLanguage({$lang.id_lang|escape:'htmlall':'UTF-8'}, '{$lang.iso_code|escape:'htmlall':'UTF-8'}');">{$lang.name|escape:'htmlall':'UTF-8'}</a></li>
                             {/foreach}
                         </ul>
-                        <input type="hidden" id="lang-id" name="id_lang" value="{$htmlitems.lang.default.id_lang}" />
+                        <input type="hidden" id="lang-id" name="id_lang" value="{$htmlitems.lang.default.id_lang|escape:'htmlall':'UTF-8'}" />
                     </div>
                 </div>
                 <div class="title item-field form-group">

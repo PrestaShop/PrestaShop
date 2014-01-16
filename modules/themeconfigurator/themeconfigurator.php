@@ -25,8 +25,8 @@
 */
 
 if (!defined('_PS_VERSION_'))
-	exit;	
-	
+	exit;
+
 class ThemeConfigurator extends Module
 {
 	protected $max_image_size = 1048576;
@@ -37,23 +37,34 @@ class ThemeConfigurator extends Module
 	{
 		$this->name = 'themeconfigurator';
 		$this->tab = 'front_office_features';
-		$this->version = '0.1';
+		$this->version = '0.2';
 		$this->bootstrap = true;
-		$this->secure_key = Tools::encrypt($this->name);                
+		$this->secure_key = Tools::encrypt($this->name);
 		$this->default_language = Language::getLanguage(Configuration::get('PS_LANG_DEFAULT'));
 		$this->languages = Language::getLanguages();
-		parent::__construct();	
+		$this->author = 'PrestaShop';
+		parent::__construct();
 		$this->displayName = $this->l('Theme configurator');
 		$this->description = $this->l('Configure elements of your theme');
-		$this->module_path     = _PS_MODULE_DIR_.$this->name.'/';
-		$this->uploads_path    = _PS_MODULE_DIR_.$this->name.'/images/';
-		$this->admin_tpl_path  = _PS_MODULE_DIR_.$this->name.'/views/templates/admin/';
-		$this->hooks_tpl_path  = _PS_MODULE_DIR_.$this->name.'/views/templates/hooks/';
+		$this->module_path = _PS_MODULE_DIR_.$this->name.'/';
+		$this->uploads_path = _PS_MODULE_DIR_.$this->name.'/img/';
+		$this->admin_tpl_path = _PS_MODULE_DIR_.$this->name.'/views/templates/admin/';
+		$this->hooks_tpl_path = _PS_MODULE_DIR_.$this->name.'/views/templates/hooks/';
 	}
-	
+
 	public function install()
 	{
-		$themes_colors = array('theme1', 'theme2', 'theme3', 'theme4', 'theme5', 'theme6', 'theme7', 'theme8', 'theme9');
+		$themes_colors = array(
+			'theme1',
+			'theme2',
+			'theme3',
+			'theme4',
+			'theme5',
+			'theme6',
+			'theme7',
+			'theme8',
+			'theme9'
+		);
 		$themes_fonts = array(
 			'font1' => 'Open Sans',
 			'font2' => 'Josefin Slab',
@@ -67,9 +78,9 @@ class ThemeConfigurator extends Module
 			'font10' => 'Droid Sans'
 		);
 
-		if (!parent::install() ||
-			!$this->installDB() ||            
-			!$this->installFixtures() ||
+		if (!parent::install()
+			|| !$this->installDB()
+			|| !$this->installFixtures() ||
 			!$this->registerHook('displayHeader') ||
 			!$this->registerHook('displayTopColumn') ||
 			!$this->registerHook('displayLeftColumn') ||
@@ -80,13 +91,14 @@ class ThemeConfigurator extends Module
 			!Configuration::updateValue('PS_TC_THEMES', serialize($themes_colors)) ||
 			!Configuration::updateValue('PS_TC_FONTS', serialize($themes_fonts)) ||
 			!Configuration::updateValue('PS_TC_THEME', '') ||
-			!Configuration::updateValue('PS_TC_FONT', ''))
+			!Configuration::updateValue('PS_TC_FONT', '')
+		)
 			return false;
 
 		return true;
 	}
 
-	private function installDB() 
+	private function installDB()
 	{
 		return (
 			Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'themeconfigurator`') &&
@@ -110,7 +122,6 @@ class ThemeConfigurator extends Module
 			) ENGINE = '._MYSQL_ENGINE_.' DEFAULT CHARSET=UTF8;')
 		);
 
-		return true;
 	}
 
 	public function installFixtures()
@@ -161,11 +172,10 @@ class ThemeConfigurator extends Module
 				');
 		}
 
-
 		return $result;
 	}
 
-	public function uninstall() 
+	public function uninstall()
 	{
 		$images = Db::getInstance()->executeS('SELECT image FROM `'._DB_PREFIX_.'themeconfigurator`');
 		foreach ($images as $image)
@@ -182,24 +192,22 @@ class ThemeConfigurator extends Module
 		if (Tools::getValue('configure') != $this->name)
 			return;
 
-		$this->context->controller->addCSS($this->_path.'views/css/admin.css');
+		$this->context->controller->addCSS($this->_path.'css/admin.css');
 		$this->context->controller->addJquery();
-		$this->context->controller->addJS($this->_path.'views/js/admin.js');
+		$this->context->controller->addJS($this->_path.'js/admin.js');
 	}
 
-	public function hookdisplayHeader($params)
+	public function hookdisplayHeader()
 	{
-		$this->context->controller->addCss($this->_path.'views/css/hooks.css', 'all');
-		
+		$this->context->controller->addCss($this->_path.'css/hooks.css', 'all');
+
 		if (Tools::getValue('live_configurator', 0) == 1 && Tools::getValue('live_configurator_token') == Tools::getAdminToken($this->name))
 		{
 			$this->context->controller->addCSS($this->_path.'css/live_configurator.css');
 			$this->context->controller->addJS($this->_path.'js/live_configurator.js');
 
 			if (Tools::getValue('theme'))
-			{
 				$this->context->controller->addCss($this->_path.'css/'.Tools::getValue('theme').'.css', 'all');
-			}
 
 			if (Tools::getValue('theme_font'))
 				$this->context->controller->addCss($this->_path.'css/'.Tools::getValue('theme_font').'.css', 'all');
@@ -214,21 +222,22 @@ class ThemeConfigurator extends Module
 		}
 	}
 
-	public function hookdisplayTopColumn($params)
+	public function hookdisplayTopColumn()
 	{
-		return $this->hookdisplayTop($params);
+		return $this->hookdisplayTop();
 	}
 
-	public function hookdisplayTop($params)
+	public function hookdisplayTop()
 	{
 		$this->context->smarty->assign(array(
-				'htmlitems' => $this->getItemsFromHook('top'),
-				'hook' => 'top'
+			'htmlitems' => $this->getItemsFromHook('top'),
+			'hook' => 'top'
 		));
+
 		return $this->display(__FILE__, 'hook.tpl');
 	}
 
-	public function hookDisplayHome() 
+	public function hookDisplayHome()
 	{
 		$this->context->smarty->assign(array(
 			'htmlitems' => $this->getItemsFromHook('home'),
@@ -238,7 +247,7 @@ class ThemeConfigurator extends Module
 		return $this->display(__FILE__, 'hook.tpl');
 	}
 
-	public function hookDisplayLeftColumn() 
+	public function hookDisplayLeftColumn()
 	{
 		$this->context->smarty->assign(array(
 			'htmlitems' => $this->getItemsFromHook('left'),
@@ -247,18 +256,18 @@ class ThemeConfigurator extends Module
 
 		return $this->display(__FILE__, 'hook.tpl');
 	}
-	
-	public function hookDisplayRightColumn() 
+
+	public function hookDisplayRightColumn()
 	{
 		$this->context->smarty->assign(array(
 			'htmlitems' => $this->getItemsFromHook('right'),
 			'hook' => 'right'
 		));
-		
+
 		return $this->display(__FILE__, 'hook.tpl');
-	}  
-	
-	public function hookDisplayFooter() 
+	}
+
+	public function hookDisplayFooter()
 	{
 		$html = '';
 
@@ -283,7 +292,7 @@ class ThemeConfigurator extends Module
 				'id_employee' => (int)$this->context->employee->id,
 				'live_configurator_token' => Tools::getValue('live_configurator_token', ''),
 				'advertisement_image' => $ad_image,
-				'advertisement_text'  => $this->l('Over 500+ PrestaShop Premium Templates! Browse Now!')
+				'advertisement_text' => $this->l('Over 500+ PrestaShop Premium Templates! Browse Now!')
 			));
 
 			$html .= $this->display(__FILE__, 'live_configurator.tpl');
@@ -293,9 +302,9 @@ class ThemeConfigurator extends Module
 			'htmlitems' => $this->getItemsFromHook('footer'),
 			'hook' => 'footer'
 		));
-		
+
 		return $html.$this->display(__FILE__, 'hook.tpl');
-	}  
+	}
 
 	protected function getItemsFromHook($hook)
 	{
@@ -310,7 +319,7 @@ class ThemeConfigurator extends Module
 		ORDER BY item_order ASC');
 	}
 
-	protected function deleteImage($image) 
+	protected function deleteImage($image)
 	{
 		$file_name = $this->uploads_path.$image;
 
@@ -321,7 +330,7 @@ class ThemeConfigurator extends Module
 			unlink($file_name);
 	}
 
-	protected function removeItem() 
+	protected function removeItem()
 	{
 		$id_item = (int)Tools::getValue('item_id');
 
@@ -340,22 +349,23 @@ class ThemeConfigurator extends Module
 					id_shop = '.(int)$this->context->shop->id.' AND
 					hook = \''.pSQL(Tools::getValue('item_hook')).'\')'
 			);
-				
+
 			$this->context->smarty->assign('confirmation', $this->l('Successful deletion.'));
 		}
 		else
 			$this->context->smarty->assign('error', $this->l('Can\'t delete the slide.'));
 	}
-	
+
 	protected function updateItem()
 	{
 		$id_item = (int)Tools::getValue('item_id');
 		$title = Tools::getValue('item_title');
 		$content = Tools::getValue('item_html');
 
-		if (!Validate::isCleanHtml($title, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')) || !Validate::isCleanHtml($content,(int)Configuration::get('PS_ALLOW_HTML_IFRAME')))
+		if (!Validate::isCleanHtml($title, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')) || !Validate::isCleanHtml($content, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')))
 		{
 			$this->context->smarty->assign('error', $this->l('Invalid content'));
+
 			return false;
 		}
 
@@ -363,18 +373,18 @@ class ThemeConfigurator extends Module
 		$image_w = (is_numeric(Tools::getValue('item_img_w'))) ? (int)Tools::getValue('item_img_w') : '';
 		$image_h = (is_numeric(Tools::getValue('item_img_h'))) ? (int)Tools::getValue('item_img_h') : '';
 
-		if(!empty($_FILES['item_img']['name']))
+		if (!empty($_FILES['item_img']['name']))
 		{
 			if ($old_image = Db::getInstance()->getValue('SELECT image FROM `'._DB_PREFIX_.'themeconfigurator` WHERE id_item = '.(int)$id_item))
-				if (file_exists(dirname(__FILE__).'/images/'.$old_image))
-					@unlink(dirname(__FILE__).'/images/'.$old_image);
-					
+				if (file_exists(dirname(__FILE__).'/img/'.$old_image))
+					@unlink(dirname(__FILE__).'/img/'.$old_image);
+
 			if (!$image = $this->uploadImage($_FILES['item_img'], $image_w, $image_h))
 				return false;
 
 			$new_image = 'image = \''.pSQL($image).'\',';
-		} 
-		else 
+		}
+		else
 		{
 			$image_w = '';
 			$image_h = '';
@@ -393,49 +403,50 @@ class ThemeConfigurator extends Module
 					active = '.(int)Tools::getValue('item_active').',
 					html = \''.pSQL($content).'\'
 			WHERE id_item = '.(int)Tools::getValue('item_id')
-		))
+		)
+		)
 		{
 			if ($image = Db::getInstance()->getValue('SELECT image FROM `'._DB_PREFIX_.'themeconfigurator` WHERE id_item = '.(int)Tools::getValue('item_id')))
 				$this->deleteImage($image);
 
 			$this->context->smarty->assign('error', $this->l('An error occured while saving data.'));
+
 			return false;
 		}
 
 		$this->context->smarty->assign('confirmation', $this->l('Successfully updated.'));
+
 		return true;
 	}
 
-	protected function uploadImage($image, $image_w = '', $image_h = '') 
+	protected function uploadImage($image, $image_w = '', $image_h = '')
 	{
 		$res = false;
 		if (is_array($image) && (ImageManager::validateUpload($image, $this->max_image_size) === false) && ($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) && move_uploaded_file($image['tmp_name'], $tmp_name))
-		{                        
+		{
 			$type = Tools::strtolower(Tools::substr(strrchr($image['name'], '.'), 1));
 			$img_name = Tools::encrypt($image['name'].sha1(microtime())).'.'.$type;
-			Configuration::set('PS_IMAGE_QUALITY','png_all');
-			if (ImageManager::resize($tmp_name, dirname(__FILE__).'/images/'.$img_name, $image_w, $image_h))
+			Configuration::set('PS_IMAGE_QUALITY', 'png_all');
+			if (ImageManager::resize($tmp_name, dirname(__FILE__).'/img/'.$img_name, $image_w, $image_h))
 				$res = true;
 		}
-
-		if (isset($temp_name))
-			@unlink($tmp_name);
 
 		if (!$res)
 		{
 			$this->context->smarty->assign('error', $this->l('An error occurred during the image upload.'));
+
 			return false;
 		}
 
 		return $img_name;
 	}
 
-	 public function getContent()
+	public function getContent()
 	{
 		if (Tools::isSubmit('submitModule'))
 		{
 			Configuration::updateValue('PS_QUICK_VIEW', (int)Tools::getValue('quick_view'));
-			foreach($this->getConfigurableModules() as $module)
+			foreach ($this->getConfigurableModules() as $module)
 			{
 				if (!isset($module['is_module']) || !$module['is_module'] || !Validate::isModuleName($module['name']) || !Tools::isSubmit($module['name']))
 					continue;
@@ -474,13 +485,14 @@ class ThemeConfigurator extends Module
 		return $html;
 	}
 
-	protected function addItem() 
+	protected function addItem()
 	{
 		$title = Tools::getValue('item_title');
 		$content = Tools::getValue('item_html');
 		if (!Validate::isCleanHtml($title, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')) || !Validate::isCleanHtml($content, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')))
 		{
 			$this->context->smarty->assign('error', $this->l('Invalid content'));
+
 			return false;
 		}
 
@@ -492,13 +504,14 @@ class ThemeConfigurator extends Module
 					AND id_lang = '.(int)Tools::getValue('id_lang').'
 					AND hook = \''.pSQL(Tools::getValue('item_hook')).'\' 
 					ORDER BY item_order DESC'
-			))
+		)
+		)
 			$current_order = 1;
 
 		$image_w = is_numeric(Tools::getValue('item_img_w')) ? (int)Tools::getValue('item_img_w') : '';
 		$image_h = is_numeric(Tools::getValue('item_img_h')) ? (int)Tools::getValue('item_img_h') : '';
 
-		if(!empty($_FILES['item_img']['name']))
+		if (!empty($_FILES['item_img']['name']))
 		{
 			if (!$image = $this->uploadImage($_FILES['item_img'], $image_w, $image_h))
 				return false;
@@ -527,16 +540,19 @@ class ThemeConfigurator extends Module
 					\''.pSQL($image_h).'\',
 					\''.pSQL($content).'\',
 					1)
-			'))
+			')
+		)
 		{
 			if (!Tools::isEmpty($image))
 				$this->deleteImage($image);
 
-			$this->context->smarty->assign('error', $this->l('An error occured while saving data.'));        
-			return false;        
+			$this->context->smarty->assign('error', $this->l('An error occured while saving data.'));
+
+			return false;
 		}
 
 		$this->context->smarty->assign('confirmation', $this->l('New item added successfull.'));
+
 		return true;
 	}
 
@@ -548,39 +564,39 @@ class ThemeConfigurator extends Module
 			$desc = '';
 			if (isset($module['is_module']) && $module['is_module'])
 			{
-					$module_instance = Module::getInstanceByName($module['name']);
-					if (Validate::isLoadedObject($module_instance) && method_exists($module_instance, 'getContent'))
-							$desc = '<a href="'.$this->context->link->getAdminLink('AdminModules', true).'&configure='.urlencode($module_instance->name).'&tab_module='.$module_instance->tab.'&module_name='.urlencode($module_instance->name).'">'.$this->l('Configure').'</a>';
+				$module_instance = Module::getInstanceByName($module['name']);
+				if (Validate::isLoadedObject($module_instance) && method_exists($module_instance, 'getContent'))
+					$desc = '<a href="'.$this->context->link->getAdminLink('AdminModules', true).'&configure='.urlencode($module_instance->name).'&tab_module='.$module_instance->tab.'&module_name='.urlencode($module_instance->name).'">'.$this->l('Configure').'</a>';
 			}
 			if (!$desc && isset($module['desc']) && $module['desc'])
-					$desc = $module['desc'];
+				$desc = $module['desc'];
 
 			$inputs[] = array(
-					'type' => 'switch',
-					'label' => $module['label'],
-					'name' => $module['name'],
-					'desc' => $desc,
-					'values' => array(
-							array(
-								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Enabled')
-							),
-							array(
-								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('Disabled')
-							)
-						),
-					);
+				'type' => 'switch',
+				'label' => $module['label'],
+				'name' => $module['name'],
+				'desc' => $desc,
+				'values' => array(
+					array(
+						'id' => 'active_on',
+						'value' => 1,
+						'label' => $this->l('Enabled')
+					),
+					array(
+						'id' => 'active_off',
+						'value' => 0,
+						'label' => $this->l('Disabled')
+					)
+				),
+			);
 		}
 
 		$inputs[] = array(
-			'type'  => 'free',
+			'type' => 'free',
 			'label' => $this->l('Live configurator'),
-			'name'  => 'live-conf'
+			'name' => 'live-conf'
 		);
-		
+
 		$fields_form = array(
 			'form' => array(
 				'legend' => array(
@@ -594,7 +610,7 @@ class ThemeConfigurator extends Module
 				)
 			),
 		);
-		
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
 		$helper->table = $this->table;
@@ -609,13 +625,15 @@ class ThemeConfigurator extends Module
 		$helper->token = Tools::getAdminTokenLite('AdminModules');
 		$helper->tpl_vars = array(
 			'fields_value' => array_merge($this->getConfigFieldsValues(),
-				array('live-conf' => '<a href="'.$this->context->link->getPageLink('index')
-					.'?live_configurator=1&id_employee='.(int)$this->context->employee->id
-					.'&id_shop='.(int)$this->context->shop->id
-					.'&live_configurator_token='.Tools::getAdminToken($this->name)
-					.(Configuration::get('PS_TC_THEME') != '' ? '&theme='.Configuration::get('PS_TC_THEME') : '')
-					.(Configuration::get('PS_TC_FONT') != '' ? '&theme_font='.Configuration::get('PS_TC_FONT') : '')
-					.'" class="btn btn-default" onclick="return !window.open($(this).attr(\'href\'));"><i class="icon-cogs"></i> Live configurator</a>')),
+				array(
+					'live-conf' => '<a href="'.$this->context->link->getPageLink('index')
+						.'?live_configurator=1&id_employee='.(int)$this->context->employee->id
+						.'&id_shop='.(int)$this->context->shop->id
+						.'&live_configurator_token='.Tools::getAdminToken($this->name)
+						.(Configuration::get('PS_TC_THEME') != '' ? '&theme='.Configuration::get('PS_TC_THEME') : '')
+						.(Configuration::get('PS_TC_FONT') != '' ? '&theme_font='.Configuration::get('PS_TC_FONT') : '')
+						.'" class="btn btn-default" onclick="return !window.open($(this).attr(\'href\'));"><i class="icon-cogs"></i> Live configurator</a>'
+				)),
 			'languages' => $this->context->controller->getLanguages(),
 			'id_language' => $this->context->language->id
 		);
@@ -624,24 +642,33 @@ class ThemeConfigurator extends Module
 	}
 
 	protected function renderThemeConfiguratorForm()
-	{        
+	{
 		$id_shop = (int)$this->context->shop->id;
 		$items = array();
+		$hooks = array();
+
 		$this->context->smarty->assign('htmlcontent', array(
 			'admin_tpl_path' => $this->admin_tpl_path,
 			'hooks_tpl_path' => $this->hooks_tpl_path,
-	
+
 			'info' => array(
-				'module'        => $this->name,
-				'name'        => $this->displayName,
-				'version'   => $this->version,
+				'module' => $this->name,
+				'name' => $this->displayName,
+				'version' => $this->version,
 				'psVersion' => _PS_VERSION_,
-				'context'        => (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') == 0) ? 1 : ($this->context->shop->getTotalShops() != 1) ? $this->context->shop->getContext() : 1
+				'context' => (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') == 0) ? 1 : ($this->context->shop->getTotalShops() != 1) ? $this->context->shop->getContext() : 1
 			)
 		));
 
-		foreach ($this->languages as $language) {
-			$hooks[$language['id_lang']] = array('home', 'top', 'left', 'right', 'footer');
+		foreach ($this->languages as $language)
+		{
+			$hooks[$language['id_lang']] = array(
+				'home',
+				'top',
+				'left',
+				'right',
+				'footer'
+			);
 
 			foreach ($hooks[$language['id_lang']] as $hook)
 				$items[$language['id_lang']][$hook] = Db::getInstance()->ExecuteS('
@@ -660,51 +687,51 @@ class ThemeConfigurator extends Module
 				'all' => $this->languages,
 				'lang_dir' => _THEME_LANG_DIR_,
 				'user' => $this->context->language->id
-			),                                
+			),
 			'postAction' => 'index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&tab_module=other&module_name='.$this->name.'',
 			'id_shop' => $id_shop
 		));
 
 		return $this->display(__FILE__, 'views/templates/admin/admin.tpl');
 	}
-	
+
 	protected function getConfigurableModules()
 	{
 		return array(
 			array(
 				'label' => $this->l('Display the reinsurance block'),
 				'name' => 'blockreinsurance',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockreinsurance')) && $module->isEnabledForShopContext()),
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockreinsurance')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
 			),
 			array(
 				'label' => $this->l('Display the social following links'),
 				'name' => 'blocksocial',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blocksocial')) && $module->isEnabledForShopContext()),
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blocksocial')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
 			),
 			array(
 				'label' => $this->l('Display contact information'),
 				'name' => 'blockcontactinfos',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockcontactinfos')) && $module->isEnabledForShopContext()),
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockcontactinfos')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
 			),
 			array(
 				'label' => $this->l('Display social buttons on the products page'),
 				'name' => 'socialsharing',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('socialsharing')) && $module->isEnabledForShopContext()),
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('socialsharing')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
 			),
 			array(
 				'label' => $this->l('Display facebook block on the home page'),
 				'name' => 'blockfacebook',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockfacebook')) && $module->isEnabledForShopContext()),
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockfacebook')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
 			),
 			array(
 				'label' => $this->l('Customer cms information block'),
 				'name' => 'blockcmsinfo',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockcmsinfo')) && $module->isEnabledForShopContext()),
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockcmsinfo')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
 			),
 			array(
@@ -715,13 +742,13 @@ class ThemeConfigurator extends Module
 			array(
 				'label' => $this->l('Enable top banner'),
 				'name' => 'blockbanner',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('blockbanner')) && $module->isEnabledForShopContext()),
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockbanner')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
 			),
 			array(
 				'label' => $this->l('Enable product payment logos'),
 				'name' => 'productpaymentlogos',
-				'value' => (int)(Validate::isLoadedObject($module = Module::getInstanceByName('productpaymentlogos')) && $module->isEnabledForShopContext()),
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('productpaymentlogos')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
 			)
 		);
@@ -731,7 +758,8 @@ class ThemeConfigurator extends Module
 	{
 		$values = array();
 		foreach ($this->getConfigurableModules() as $module)
-				$values[$module['name']] = $module['value'];
+			$values[$module['name']] = $module['value'];
+
 		return $values;
 	}
 }

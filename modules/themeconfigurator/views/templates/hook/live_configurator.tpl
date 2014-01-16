@@ -43,7 +43,7 @@
 		{if isset($themes)}
 			<ul id="color-box">
 				{foreach $themes as $theme}
-					<li class="{$theme}">
+					<li class="{$theme|escape:'htmlall':'UTF-8'}">
 						<div class="color-theme1 color1"></div>
 						<div class="color-theme2 color2"> </div>
 					</li>
@@ -61,7 +61,7 @@
 			<select name="font" id="font" class="font-list">
 				<option value="">{l s='Choose a font' mod='themeconfigurator'}</option>
 				{foreach $fonts as $key => $font}
-				<option value="{$key}"{if $key == $theme_font} selected="selected"{/if}>{$font}</option>
+				<option value="{$key|escape:'htmlall':'UTF-8'}"{if $key == $theme_font} selected="selected"{/if}>{$font|escape:'htmlall':'UTF-8'}</option>
 				{/foreach}
 			</select>
 		</div>
@@ -71,7 +71,7 @@
 		</div>
 		<div id="block-advertisement">
 			<a href="http://addons.prestashop.com/?utm_source=configurator">
-				<img src="{$advertisement_image}" alt="{$advertisement_text}" />
+				<img src="{$advertisement_image|escape:'htmlall':'UTF-8'}" alt="{$advertisement_text|escape:'htmlall':'UTF-8'}" />
 			</a>
 		</div>
 	</div>
