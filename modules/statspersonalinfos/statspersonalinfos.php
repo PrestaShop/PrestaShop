@@ -30,8 +30,7 @@ if (!defined('_PS_VERSION_'))
 class StatsPersonalInfos extends ModuleGraph
 {
 	private $html = '';
-	private $_query = '';
-	private $_option;
+	private $option;
 
 	public function __construct()
 	{
@@ -52,7 +51,7 @@ class StatsPersonalInfos extends ModuleGraph
 		return (parent::install() && $this->registerHook('AdminStatsModules'));
 	}
 
-	public function hookAdminStatsModules($params)
+	public function hookAdminStatsModules()
 	{
 		$this->html = '
 			<div class="panel-heading">
@@ -61,11 +60,14 @@ class StatsPersonalInfos extends ModuleGraph
 			<h4>'.$this->l('Guide').'</h4>
 			<div class="alert alert-warning">
 				<h4>'.$this->l('Target your audience').'</h4>
-				<p>
-					'.$this->l('In order for each message to have an impact, you need to know who it is being addressed to. ').'<br>'.'
-					'.$this->l('Defining your target audience is essential when choosing the right tools to win them over.').'<br>'.'
-					'.$this->l('It is best to limit action to a group -- or groups -- of clients.').'<br>'.'
-					'.$this->l('Storing registered customer information allows you to accurately define customer profile so you can adapt your special deals and promotions.').'
+				<p>'.
+					$this->l('In order for each message to have an impact, you need to know who it is being addressed to. ').
+					'<br>'.
+					$this->l('Defining your target audience is essential when choosing the right tools to win them over.').
+					'<br>'.
+					$this->l('It is best to limit action to a group -- or groups -- of clients.').
+					'<br>'.
+					$this->l('Storing registered customer information allows you to accurately define customer profile so you can adapt your special deals and promotions.').'
 				</p>
 				<p>
 					'.$this->l('You can increase your sales by:').'
@@ -80,21 +82,39 @@ class StatsPersonalInfos extends ModuleGraph
 		{
 			if (Tools::getValue('export'))
 				if (Tools::getValue('exportType') == 'gender')
-					$this->csvExport(array('type' => 'pie', 'option' => 'gender'));
+					$this->csvExport(array(
+						'type' => 'pie',
+						'option' => 'gender'
+					));
 				else if (Tools::getValue('exportType') == 'age')
-					$this->csvExport(array('type' => 'pie', 'option' => 'age'));
+					$this->csvExport(array(
+						'type' => 'pie',
+						'option' => 'age'
+					));
 				else if (Tools::getValue('exportType') == 'country')
-					$this->csvExport(array('type' => 'pie', 'option' => 'country'));
+					$this->csvExport(array(
+						'type' => 'pie',
+						'option' => 'country'
+					));
 				else if (Tools::getValue('exportType') == 'currency')
-					$this->csvExport(array('type' => 'pie', 'option' => 'currency'));
+					$this->csvExport(array(
+						'type' => 'pie',
+						'option' => 'currency'
+					));
 				else if (Tools::getValue('exportType') == 'language')
-					$this->csvExport(array('type' => 'pie', 'option' => 'language'));
+					$this->csvExport(array(
+						'type' => 'pie',
+						'option' => 'language'
+					));
 
 			$this->html .= '
 				<div class="row row-margin-bottom">
 					<div class="col-lg-12">
 						<div class="col-lg-8">
-							'.$this->engine(array('type' => 'pie', 'option' => 'gender')).'
+							'.$this->engine(array(
+					'type' => 'pie',
+					'option' => 'gender'
+				)).'
 						</div>
 						<div class="col-lg-4">
 							<p>'.$this->l('Gender distribution allows you to determine the percentage of men and women shoppers in your store.').'</p>
@@ -108,7 +128,10 @@ class StatsPersonalInfos extends ModuleGraph
 				<div class="row row-margin-bottom">
 					<div class="col-lg-12">
 						<div class="col-lg-8">
-							'.$this->engine(array('type' => 'pie', 'option' => 'age')).'
+							'.$this->engine(array(
+					'type' => 'pie',
+					'option' => 'age'
+				)).'
 						</div>
 						<div class="col-lg-4">
 							<p>'.$this->l('Age ranges allow you to better understand target demographics.').'</p>
@@ -122,7 +145,10 @@ class StatsPersonalInfos extends ModuleGraph
 				<div class="row row-margin-bottom">
 					<div class="col-lg-12">
 						<div class="col-lg-8">
-							'.$this->engine(array('type' => 'pie', 'option' => 'country')).'
+							'.$this->engine(array(
+					'type' => 'pie',
+					'option' => 'country'
+				)).'
 						</div>
 						<div class="col-lg-4">
 							<p>'.$this->l('Country distribution allows you to analyze which part of the World your customers are shopping from.').'</p>
@@ -136,7 +162,10 @@ class StatsPersonalInfos extends ModuleGraph
 				<div class="row row-margin-bottom">
 					<div class="col-lg-12">
 						<div class="col-lg-8">
-							'.$this->engine(array('type' => 'pie', 'option' => 'currency')).'
+							'.$this->engine(array(
+					'type' => 'pie',
+					'option' => 'currency'
+				)).'
 						</div>
 						<div class="col-lg-4">
 							<p>'.$this->l('Currency range allows you to determine which currency your customers are using.').'</p>
@@ -150,7 +179,10 @@ class StatsPersonalInfos extends ModuleGraph
 				<div class="row row-margin-bottom">
 					<div class="col-lg-12">
 						<div class="col-lg-8">
-							'.$this->engine(array('type' => 'pie', 'option' => 'language')).'
+							'.$this->engine(array(
+					'type' => 'pie',
+					'option' => 'language'
+				)).'
 						</div>
 						<div class="col-lg-4">
 							<p>'.$this->l('Language distribution allows you to analyze the browsing language used by your customers.').'</p>
@@ -164,17 +196,18 @@ class StatsPersonalInfos extends ModuleGraph
 		}
 		else
 			$this->html .= '<p>'.$this->l('No customers have registered yet.').'</p>';
+
 		return $this->html;
 	}
 
 	public function setOption($option, $layers = 1)
 	{
-		$this->_option = $option;
+		$this->option = $option;
 	}
 
 	protected function getData($layers)
 	{
-		switch ($this->_option)
+		switch ($this->option)
 		{
 			case 'gender':
 				$this->_titles['main'] = $this->l('Gender distribution');
@@ -192,21 +225,21 @@ class StatsPersonalInfos extends ModuleGraph
 						GROUP BY c.id_gender';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-				$gendersResults = array();
+				$genders_results = array();
 				foreach ($result as $row)
 				{
 					$type = (is_null($row['type'])) ? 2 : $row['type'];
-					if (!isset($gendersResults[$type]))
-						$gendersResults[$type] = 0;
-					$gendersResults[$type] += $row['total'];
+					if (!isset($genders_results[$type]))
+						$genders_results[$type] = 0;
+					$genders_results[$type] += $row['total'];
 				}
 
-				foreach ($gendersResults as $type => $total)
+				foreach ($genders_results as $type => $total)
 				{
 					$this->_values[] = $total;
 					$this->_legend[] = $genders[$type];
 				}
-			break;
+				break;
 
 			case 'age':
 				$this->_titles['main'] = $this->l('Age Range');
@@ -245,7 +278,7 @@ class StatsPersonalInfos extends ModuleGraph
 							AND (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) < 35
 							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL';
- 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 				if (isset($result['total']) && $result['total'])
 				{
 					$this->_values[] = $result['total'];
@@ -304,7 +337,7 @@ class StatsPersonalInfos extends ModuleGraph
 					$this->_values[] = $result['total'];
 					$this->_legend[] = $this->l('Unknown');
 				}
-			break;
+				break;
 
 			case 'country':
 				$this->_titles['main'] = $this->l('Country distribution');
@@ -322,7 +355,7 @@ class StatsPersonalInfos extends ModuleGraph
 					$this->_values[] = $row['total'];
 					$this->_legend[] = $row['name'];
 				}
-			break;
+				break;
 
 			case 'currency':
 				$this->_titles['main'] = $this->l('Currency distribution');
@@ -338,7 +371,7 @@ class StatsPersonalInfos extends ModuleGraph
 					$this->_values[] = $row['total'];
 					$this->_legend[] = $row['name'];
 				}
-			break;
+				break;
 
 			case 'language':
 				$this->_titles['main'] = $this->l('Language distribution');
@@ -354,9 +387,7 @@ class StatsPersonalInfos extends ModuleGraph
 					$this->_values[] = $row['total'];
 					$this->_legend[] = $row['name'];
 				}
-			break;
+				break;
 		}
 	}
 }
-
-
