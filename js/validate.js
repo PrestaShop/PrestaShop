@@ -117,9 +117,24 @@ function validate_isAddress(s)
 	return reg.test(s);
 }
 
-function validate_isPostCode(s)
+function validate_isPostCode(s, pattern)
 {
-	var reg = /^[a-z 0-9-]+$/i;
+	if (typeof(pattern) == 'undefined')
+		pattern = '[a-z 0-9-]+';
+	else
+	{
+		var replacements = {
+			' ': '( |)',
+			'-': '(-|)',
+			'N': '[0-9]',
+			'L': '[a-zA-Z]'
+		};
+
+		for (var new_value in replacements)
+			pattern = pattern.split(new_value).join(replacements[new_value]); 
+	}
+
+	var reg = new RegExp('^'+pattern+'$');
 	return reg.test(s);
 }
 

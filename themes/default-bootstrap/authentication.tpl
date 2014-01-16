@@ -48,7 +48,7 @@
 				countriesNeedIDNumber.push({$country.id_country|intval});
 			{/if}
 			{if isset($country.need_zip_code)}
-				countriesNeedZipCode[{$country.id_country|intval}] = {$country.need_zip_code};
+				countriesNeedZipCode[{$country.id_country|intval}] = '{$country.zip_code_format|escape:'htmlall':'UTF-8'}';
 			{/if}
 		{/foreach}
 	{/if}
