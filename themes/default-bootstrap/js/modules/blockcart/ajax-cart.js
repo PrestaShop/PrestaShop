@@ -528,7 +528,7 @@ var ajaxCart = {
 				//if product is not in the displayed cart, add a new product's line
 				var domIdProduct = this.id + '_' + (this.idCombination ? this.idCombination : '0') + '_' + (this.idAddressDelivery ? this.idAddressDelivery : '0');
 				var domIdProductAttribute = this.id + '_' + (this.idCombination ? this.idCombination : '0');
-console.log(this);
+
 				if ($('#cart_block_product_'+ domIdProduct).length == 0)
 				{
 					var productId = parseInt(this.id);
