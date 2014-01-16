@@ -28,7 +28,7 @@
 	</td>
 	<td class="cart_description">
 		<p class="product-name"><a href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'html':'UTF-8'}">{$product.name|escape:'html':'UTF-8'}</a></p>
-        <small class="cart_ref">{l s='SKU'} : {if $product.reference}{$product.reference|escape:'html':'UTF-8'}{else}--{/if}</small>
+        {if $product.reference}<small class="cart_ref">{l s='SKU'} : {$product.reference|escape:'html':'UTF-8'}</small>{/if}
 		{if isset($product.attributes) && $product.attributes}<small><a href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'html':'UTF-8'}">{$product.attributes|escape:'html':'UTF-8'}</a></small>{/if}
 	</td>
 	<td class="cart_avail" >{if $product.quantity_available > 0}<span class="label label-success">{l s='In Stock'}</span>{else}<span class="label label-warning">{l s='Out of Stock'}</span>{/if}</td>
