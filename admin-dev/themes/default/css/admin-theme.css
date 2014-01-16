@@ -3094,6 +3094,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .hook_panel_header .hook_name { font-weight: 400; font-size: 1.2em; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; color: #1ba6e5; border: solid 1px #cccccc; background-color: white; padding: 0 4px; }
 .bootstrap .hook_panel_header .hook_title { text-transform: uppercase; font-size: 1em; }
 .bootstrap .hook_panel_header .hook_description { padding: 3px 0 0 3px; }
+.bootstrap #modules_list_container_tab img { max-width: 66px; }
 .bootstrap .module_list .module_list_item { display: table; width: 100%; padding: 5px 0; margin-bottom: 4px; background-color: white; -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 0 3px, rgba(0, 0, 0, 0.1) 0 -2px 0 inset; box-shadow: rgba(0, 0, 0, 0.3) 0 0 3px, rgba(0, 0, 0, 0.1) 0 -2px 0 inset; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
 .bootstrap .module_col_select { display: table-cell; width: 22px; min-height: 35px; vertical-align: middle; text-align: center; border-right: 1px solid #dddddd; }
 .bootstrap .module_col_position { display: table-cell; width: 60px; vertical-align: middle; text-align: right; }
