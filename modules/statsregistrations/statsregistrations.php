@@ -29,19 +29,19 @@ if (!defined('_PS_VERSION_'))
 
 class StatsRegistrations extends ModuleGraph
 {
-	private $_html = '';
-	private $_query = '';
+	private $html = '';
+	private $query = '';
 
-	function __construct()
+	public function __construct()
 	{
 		$this->name = 'statsregistrations';
 		$this->tab = 'analytics_stats';
 		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-			
+
 		parent::__construct();
-		
+
 		$this->displayName = $this->l('Customer accounts');
 		$this->description = $this->l('Adds a registration progress tab to the Stats dashboard.');
 	}
@@ -51,7 +51,7 @@ class StatsRegistrations extends ModuleGraph
 	 */
 	public function install()
 	{
-		return (parent::install() AND $this->registerHook('AdminStatsModules'));
+		return (parent::install() && $this->registerHook('AdminStatsModules'));
 	}
 
 	/**
@@ -64,6 +64,7 @@ class StatsRegistrations extends ModuleGraph
 				WHERE `date_add` BETWEEN '.ModuleGraph::getDateBetween().'
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER);
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+
 		return isset($result['total']) ? $result['total'] : 0;
 	}
 
@@ -83,6 +84,7 @@ class StatsRegistrations extends ModuleGraph
 					AND (g.id_customer IS NULL OR g.id_customer = 0)
 					AND c.`date_add` BETWEEN '.ModuleGraph::getDateBetween();
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+
 		return $result['blocked'];
 	}
 
@@ -97,26 +99,30 @@ class StatsRegistrations extends ModuleGraph
 					AND o.valid = 1
 					AND ABS(TIMEDIFF(o.date_add, c.date_add)+0) < 120000';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+
 		return $result['buyers'];
 	}
-		
-	public function hookAdminStatsModules($params)
+
+	public function hookAdminStatsModules()
 	{
-		$totalRegistrations = $this->getTotalRegistrations();
-		$totalBlocked = $this->getBlockedVisitors();
-		$totalBuyers = $this->getFirstBuyers();
+		$total_registrations = $this->getTotalRegistrations();
+		$total_blocked = $this->getBlockedVisitors();
+		$total_buyers = $this->getFirstBuyers();
 		if (Tools::getValue('export'))
-			$this->csvExport(array('layers' => 0, 'type' => 'line'));
-		$this->_html = '
+			$this->csvExport(array(
+				'layers' => 0,
+				'type' => 'line'
+			));
+		$this->html = '
 		<div class="panel-heading">
 			'.$this->displayName.'
 		</div>
 		<div class="alert alert-info">
 			<ul>
 				<li>
-					'.$this->l('Number of visitors who stopped at the registering step:').' <span class="totalStats">'.(int)($totalBlocked).($totalRegistrations ? ' ('.number_format(100*$totalBlocked/($totalRegistrations+$totalBlocked), 2).'%)' : '').'</span><li/>
-					'.$this->l('Number of visitors who placed an order directly after registration:').' <span class="totalStats">'.(int)($totalBuyers).($totalRegistrations ? ' ('.number_format(100*$totalBuyers/($totalRegistrations), 2).'%)' : '').'</span>
-				<li>'.$this->l('Total customer accounts:').' <span class="totalStats">'.$totalRegistrations.'</span></li>
+					'.$this->l('Number of visitors who stopped at the registering step:').' <span class="totalStats">'.(int)$total_blocked.($total_registrations ? ' ('.number_format(100 * $total_blocked / ($total_registrations + $total_blocked), 2).'%)' : '').'</span><li/>
+					'.$this->l('Number of visitors who placed an order directly after registration:').' <span class="totalStats">'.(int)$total_buyers.($total_registrations ? ' ('.number_format(100 * $total_buyers / ($total_registrations), 2).'%)' : '').'</span>
+				<li>'.$this->l('Total customer accounts:').' <span class="totalStats">'.$total_registrations.'</span></li>
 			</ul>
 		</div>
 		<h4>'.$this->l('Guide').'</h4>
@@ -148,12 +154,13 @@ class StatsRegistrations extends ModuleGraph
 				</div>
 			</div>
 		</div>';
-		return $this->_html;
+
+		return $this->html;
 	}
-	
+
 	protected function getData($layers)
 	{
-		$this->_query = '
+		$this->query = '
 			SELECT `date_add`
 			FROM `'._DB_PREFIX_.'customer`
 			WHERE 1
@@ -162,18 +169,18 @@ class StatsRegistrations extends ModuleGraph
 		$this->_titles['main'] = $this->l('Number of customer accounts created');
 		$this->setDateGraph($layers, true);
 	}
-	
+
 	protected function setAllTimeValues($layers)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate());
-		foreach ($result AS $row)
-			$this->_values[(int)(substr($row['date_add'], 0, 4))]++;
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query.$this->getDate());
+		foreach ($result as $row)
+			$this->_values[(int)Tools::substr($row['date_add'], 0, 4)]++;
 	}
-	
+
 	protected function setYearValues($layers)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate());
-		foreach ($result AS $row)
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query.$this->getDate());
+		foreach ($result as $row)
 		{
 			$mounth = (int)substr($row['date_add'], 5, 2);
 			if (!isset($this->_values[$mounth]))
@@ -181,20 +188,18 @@ class StatsRegistrations extends ModuleGraph
 			$this->_values[$mounth]++;
 		}
 	}
-	
+
 	protected function setMonthValues($layers)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate());
-		foreach ($result AS $row)
-			$this->_values[(int)(substr($row['date_add'], 8, 2))]++;
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query.$this->getDate());
+		foreach ($result as $row)
+			$this->_values[(int)Tools::substr($row['date_add'], 8, 2)]++;
 	}
 
 	protected function setDayValues($layers)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate());
-		foreach ($result AS $row)
-			$this->_values[(int)(substr($row['date_add'], 11, 2))]++;
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query.$this->getDate());
+		foreach ($result as $row)
+			$this->_values[(int)Tools::substr($row['date_add'], 11, 2)]++;
 	}
 }
-
-
