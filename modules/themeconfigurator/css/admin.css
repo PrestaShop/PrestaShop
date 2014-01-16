@@ -1,4 +1,4 @@
-@import url('font/font.css');
+@import url('../views/css/font/font.css');
 
 .new-item .button {
 	display:block;
