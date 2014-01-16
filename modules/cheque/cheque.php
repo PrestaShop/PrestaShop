@@ -60,7 +60,7 @@ class Cheque extends PaymentModule
 		$this->confirmUninstall = $this->l('Are you sure you want to delete these details?');
 
 		if ((!isset($this->chequeName) || !isset($this->address) || empty($this->chequeName) || empty($this->address)))
-			$this->warning = $this->l('The "Pay to the order of" and "Details" fields must be configured before using this module.');
+			$this->warning = $this->l('The "Pay to the order of" and "Address" fields must be configured before using this module.');
 		if (!count(Currency::checkPaymentCurrencies($this->id)))
 			$this->warning = $this->l('No currency has been set for this module.');
 	
@@ -92,7 +92,7 @@ class Cheque extends PaymentModule
 			if (!Tools::getValue('CHEQUE_NAME'))
 				$this->_postErrors[] = $this->l('The "Pay to the order of" field is required.');
 			elseif (!Tools::getValue('CHEQUE_ADDRESS'))
-				$this->_postErrors[] = $this->l('The "Details" field is required.');
+				$this->_postErrors[] = $this->l('The "Address" field is required.');
 		}
 	}
 
@@ -197,7 +197,8 @@ class Cheque extends PaymentModule
 					),
 					array(
 						'type' => 'textarea',
-						'label' => $this->l('Details'),
+						'label' => $this->l('Address'),
+						'desc' => $this->l('Address where the check should be sent to.'),
 						'name' => 'CHEQUE_ADDRESS',
 					),
 				),
