@@ -33,4 +33,3 @@ if (!$tf->active)
 	Tools::redirect('index.php?controller=404');
 $tf->postProcess();
 echo $tf->isLogged() ? $tf->displayAccount() : $tf->displayLogin();
-
