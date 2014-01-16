@@ -50,7 +50,7 @@ class VatNumber extends TaxManagerModule
 		$this->description = $this->l('Enable entering of the VAT intra-community number when creating the address. You must fill in the company field to allow entering the VAT number.');
 	}
 
-	public function    install()
+	public function install()
 	{
 		return (parent::install() && Configuration::updateValue('VATNUMBER_MANAGEMENT', 1));
 	}
@@ -60,15 +60,15 @@ class VatNumber extends TaxManagerModule
 		return (parent::uninstall() && Configuration::updateValue('VATNUMBER_MANAGEMENT', 0));
 	}
 
-	public function enable()
+	public function enable($force_all = false)
 	{
-		parent::enable();
+		parent::enable($force_all);
 		Configuration::updateValue('VATNUMBER_MANAGEMENT', 1);
 	}
 
-	public function disable()
+	public function disable($force_all = false)
 	{
-		parent::disable();
+		parent::disable($force_all);
 		Configuration::updateValue('VATNUMBER_MANAGEMENT', 0);
 	}
 
@@ -198,14 +198,15 @@ class VatNumber extends TaxManagerModule
 
 	public function renderForm()
 	{
-		// Getting data...
 		$countries = Country::getCountries($this->context->language->id);
 
-		// ...formatting array
-		$countries_fmt[0] = array(
-			'id' => 0,
-			'name' => $this->l('-- Choose a country --')
+		$countries_fmt = array(
+			0 => array(
+				'id' => 0,
+				'name' => $this->l('-- Choose a country --')
+			)
 		);
+
 		foreach ($countries as $country)
 			$countries_fmt[] = array(
 				'id' => $country['id_country'],
