@@ -22,8 +22,9 @@
 		height: inherit
 		margin: 0 -20px -20px
 	.flip-container
-		@include perspective(1000px)
 		height: 370px
+		@include perspective(1000px)
+		@include animate(fadeInDown, 0.3s)
 		&.flip .flipper
 			@include rotateY(180deg)
 	.flipper

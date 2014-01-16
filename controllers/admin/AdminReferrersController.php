@@ -214,6 +214,7 @@ class AdminReferrersControllerCore extends AdminController
 					'desc' => $this->l('Leave blank if no change')
 				)
 			),
+			'submit' => array('title' => $this->l('Save')),
 			'desc' => array(
 				$this->l('Affiliates can access their data with this name and password.'),
 				$this->l('Front access:').' <a class="btn btn-link" href="'.$uri.'modules/trackingfront/stats.php" style="font-style: italic;"><i class="icon-external-link-sign"></i> '.$uri.'modules/trackingfront/stats.php</a>'
@@ -244,7 +245,8 @@ class AdminReferrersControllerCore extends AdminController
 					'name' => 'percent_fee',
 					'desc' => $this->l('Percent of the sales.')
 				)
-			)
+			),
+			'submit' => array('title' => $this->l('Save'))
 		));
 
 		if (Shop::isFeatureActive())

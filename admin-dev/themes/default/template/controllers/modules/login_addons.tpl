@@ -67,8 +67,8 @@
 						<input id="password_addons" class="form-control" name="password_addons" type="password" value=""  autocomplete="off" class="form-control ac_input">
 					</div>
 				</div>
-				<div class="form-group">
-					<button id="addons_login_button" class="btn btn-default" type="submit">
+				<div class="row">
+					<button id="addons_login_button" class="btn btn-default btn-block btn-lg" type="submit">
 						<i class="icon-unlock"></i> {l s='Log in'}
 					</button>
 				</div>
