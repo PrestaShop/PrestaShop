@@ -112,6 +112,13 @@ class AdminSuppliersControllerCore extends AdminController
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}',
 				),
 				array(
+					 'type' => 'text',
+					 'label' => $this->l('E-mail address:'),
+					 'name' => 'email',
+					 'size' => 33,
+					 'required' => true
+				),
+				array(
 					'type' => 'textarea',
 					'label' => $this->l('Description:'),
 					'name' => 'description',
