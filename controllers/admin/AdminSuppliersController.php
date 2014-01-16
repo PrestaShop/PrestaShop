@@ -112,6 +112,13 @@ class AdminSuppliersControllerCore extends AdminController
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}',
 				),
 				array(
+					 'type' => 'text',
+					 'label' => $this->l('E-mail address:'),
+					 'name' => 'email',
+					 'size' => 33,
+					 'required' => true
+				),
+				array(
 					'type' => 'textarea',
 					'label' => $this->l('Description:'),
 					'name' => 'description',
@@ -418,6 +425,7 @@ class AdminSuppliersControllerCore extends AdminController
 			$address->alias = Tools::getValue('name', null);
 			$address->lastname = 'supplier'; // skip problem with numeric characters in supplier name
 			$address->firstname = 'supplier'; // skip problem with numeric characters in supplier name
+			$address->email = Tools::getValue('email',null);
 			$address->address1 = Tools::getValue('address', null);
 			$address->address2 = Tools::getValue('address2', null);
 			$address->postcode = Tools::getValue('postcode', null);
