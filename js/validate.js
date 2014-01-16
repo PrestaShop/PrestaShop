@@ -134,7 +134,7 @@ function validate_isPostCode(s, pattern)
 			pattern = pattern.split(new_value).join(replacements[new_value]); 
 	}
 
-	var reg = new RegExp('^'+pattern+'$');
+	var reg = new RegExp('^'+pattern+'$', 'i');
 	return reg.test(s);
 }
 
