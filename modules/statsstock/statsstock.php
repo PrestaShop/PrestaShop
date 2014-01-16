@@ -78,9 +78,7 @@ class StatsStock extends Module
 		$products = Db::getInstance()->executeS($sql);
 
 		foreach ($products as $key => $p)
-		{
 			$products[$key]['stockvalue'] = $p['wholesale_price'] * $p['quantity'];
-		}
 
 		$this->html .= '
 		<script type="text/javascript">$(\'#calendar\').slideToggle();</script>
