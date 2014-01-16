@@ -29,8 +29,9 @@ class VATNumberTaxManager implements TaxManagerInterface
 	public static function isAvailableForThisAddress(Address $address)
 	{
 		return (!empty($address->vat_number)
-					AND $address->id_country != Configuration::get('VATNUMBER_COUNTRY')
-					AND Configuration::get('VATNUMBER_MANAGEMENT'));
+			&& $address->id_country != Configuration::get('VATNUMBER_COUNTRY')
+			&& Configuration::get('VATNUMBER_MANAGEMENT')
+		);
 	}
 
 	public function getTaxCalculator()
