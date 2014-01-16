@@ -82,6 +82,7 @@
 							</a>
 							<div class="cart-info">
 								<div class="product-name">
+									<span class="quantity-formated"><span class="quantity">{$product.cart_quantity}</span>&nbsp;x&nbsp;</span>
 									<a 
 									class="cart_block_product_name" 
 									href="{$link->getProductLink($product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'html':'UTF-8'}" 
@@ -98,10 +99,6 @@
 										</a>
 									</div>
 								{/if}
-								<span class="quantity-formated">
-									<span class="quantity">{$product.cart_quantity}</span>
-									x
-								</span>
 								<span class="price">
 									{if !isset($product.is_gift) || !$product.is_gift}
 										{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice p="`$product.total`"}{else}{displayWtPrice p="`$product.total_wt`"}{/if}
@@ -147,12 +144,6 @@
 											rel="nofollow"> 
 											</a>
 										</div>
-										<span class="quantity-formated">
-											<span class="quantity">
-												{$customization.quantity}
-											</span>
-											x
-										</span>
 										{if isset($customization.datas.$CUSTOMIZE_TEXTFIELD.0)}
 											{$customization.datas.$CUSTOMIZE_TEXTFIELD.0.value|replace:"<br />":" "|truncate:28:'...'|escape:'html':'UTF-8'}
 										{else}
