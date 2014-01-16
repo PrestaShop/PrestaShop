@@ -1,0 +1,6 @@
+<IfModule mod_env.c>
+	SetEnv HTTP_MOD_REWRITE On
+</IfModule>
+
+RewriteEngine on
+RewriteRule ^.*$ test.php

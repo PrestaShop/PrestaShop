@@ -48,6 +48,8 @@
 		<p class="aligned last">
 			<input id="btTestDB" class="button" type="button" value="<?php echo $this->l('Test your database connection now!') ?>"/>
 		</p>
+		
+		<input class="text" type="hidden" id="rewrite_engine" name="rewrite_engine" value="0" />
 
 		<?php if ($this->errors): ?>
 			<p id="dbResultCheck" class="errorBlock"><?php echo implode('<br />', $this->errors) ?></p>

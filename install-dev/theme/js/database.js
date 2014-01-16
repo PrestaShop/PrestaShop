@@ -24,6 +24,14 @@
 
 $(document).ready(function()
 {
+	// Check rewrite engine availability
+	$.ajax({
+		url: 'sandbox/anything.php',
+		success: function(value) {
+			$('#rewrite_engine').val(1);
+		}
+	});
+
 	// Check database configuration
 	$('#btTestDB').click(function()
 	{

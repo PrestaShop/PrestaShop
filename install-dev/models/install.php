@@ -410,6 +410,9 @@ class InstallModelInstall extends InstallAbstractModel
 		Configuration::updateGlobalValue('PS_MAIL_METHOD', 			($data['use_smtp']) ? 2 : 1);
 		Configuration::updateGlobalValue('PS_MAIL_SMTP_ENCRYPTION', $data['smtp_encryption']);
 		Configuration::updateGlobalValue('PS_MAIL_SMTP_PORT', 		$data['smtp_port']);
+		
+		// Set default rewriting settings
+		Configuration::updateGlobalValue('PS_REWRITING_SETTINGS', $data['rewrite_engine']);
 
 		// Activate rijndael 128 encrypt algorihtm if mcrypt is activated
 		Configuration::updateGlobalValue('PS_CIPHER_ALGORITHM', function_exists('mcrypt_encrypt') ? 1 : 0);
@@ -487,6 +490,9 @@ class InstallModelInstall extends InstallAbstractModel
 				$contact->update();
 			}
 		}
+
+		if (!@Tools::generateHtaccess(null, $data['rewrite_engine']))
+			Configuration::updateGlobalValue('PS_REWRITING_SETTINGS', 0);
 
 		return true;
 	}
