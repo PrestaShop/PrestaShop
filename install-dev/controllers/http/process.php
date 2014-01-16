@@ -199,6 +199,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			'admin_password' =>			$this->session->admin_password,
 			'admin_email' =>			$this->session->admin_email,
 			'configuration_agrement' =>	$this->session->configuration_agrement,
+			'rewrite_engine' =>			$this->session->rewrite_engine,
 		));
 
 		if (!$success || $this->model_install->getErrors())

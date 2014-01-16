@@ -1792,7 +1792,7 @@ class ToolsCore
 
 	public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
 	{
-		if (defined('PS_INSTALLATION_IN_PROGRESS'))
+		if (defined('PS_INSTALLATION_IN_PROGRESS') && $rewrite_settings === null)
 			return true;
 
 		// Default values for parameters
