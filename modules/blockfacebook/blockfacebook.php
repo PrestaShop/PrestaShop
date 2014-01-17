@@ -80,6 +80,13 @@ class BlockFacebook extends Module
 		return $this->display(__FILE__, 'blockfacebook.tpl', $this->getCacheId());
 	}
 
+	public function hookHeader()
+	{
+		$this->page_name = Dispatcher::getInstance()->getController();
+		if ($this->page_name == 'index')
+			$this->context->controller->addJS(($this->_path).'blockfacebook.js');
+	}
+
 	public function renderForm()
 	{
 		$fields_form = array(
