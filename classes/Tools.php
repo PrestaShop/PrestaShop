@@ -742,7 +742,17 @@ class ToolsCore
 				foreach (scandir($dir) as $file)
 					if ($file[0] != '.' && $file != 'index.php')
 						self::deleteDirectory($dir.DIRECTORY_SEPARATOR.$file);
-	}   
+	}
+    
+	/**
+	* Clear XML cache folder
+ 	*/
+	public static function clearXMLCache()
+	{
+		foreach (scandir(_PS_ROOT_DIR_.'/config/xml') as $file)
+			if ((pathinfo($file, PATHINFO_EXTENSION) == 'xml') && ($file != 'default.xml'))
+				self::deleteFile(_PS_ROOT_DIR_.'/config/xml/'.$file);
+	}
 
 	/**
 	* Display an error according to an error code

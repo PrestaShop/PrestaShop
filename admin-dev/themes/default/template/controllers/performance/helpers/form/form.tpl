@@ -35,7 +35,7 @@
 		<div class="clearfix row-padding-top">
 			<a href="{$current}&token={$token}&empty_smarty_cache=1" class="btn btn-default">
 				<i class="icon-eraser"></i>
-				{l s='Clear Smarty cache & Autoload cache'}
+				{l s='Clear cache'}
 			</a>
 		</div>
 	{/if}		
