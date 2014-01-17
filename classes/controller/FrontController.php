@@ -967,6 +967,47 @@ class FrontControllerCore extends Controller
 		return (strcasecmp(Tools::getToken(false), Tools::getValue('token')) == 0);
 	}
 
+	public function addMedia($media_uri, $css_media_type = null, $offset = null, $remove = false)
+	{
+		if ($css_media_type && !is_array($media_uri))
+			$media_uri = array($media_uri => $css_media_type);
+		else
+			$media_uri = array($media_uri);
+
+		$list_uri = array();
+		foreach ($media_uri as $file => $media)
+		{
+			if (!preg_match('/^http(s?):\/\//i', $media))
+			{
+				$different = 0;
+				$type = $css_media_type ? 'css' : 'js';
+				$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/'.$type.'/modules/', $file, $different);
+				if ($different && file_exists($override_path))
+					$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/'.$type.'/modules/', $file, $different);
+				if ($css_media_type)
+					$list_uri[$file] = $media;
+				else
+					$list_uri = $media;
+			}
+		}
+
+		if ($remove)
+		{
+			if ($css_media_type)
+				return parent::removeCSS($list_uri, $css_media_type);
+			return parent::removeJS($list_uri);
+		}
+
+		if ($css_media_type)
+			return parent::addCSS($list_uri, $css_media_type, $offset);
+		return parent::addJS($list_uri);
+	}
+
+	public function removeMedia($media_uri, $css_media_type = null)
+	{
+		Frontcontroller::addMedia($media_uri, $css_media_type, null, true);
+	}
+
 	/**
 	 * Add one or several CSS for front, checking if css files are overriden in theme/css/modules/ directory
 	 *
@@ -974,38 +1015,12 @@ class FrontControllerCore extends Controller
 	 */
 	public function addCSS($css_uri, $css_media_type = 'all', $offset = null)
 	{
-		if (!is_array($css_uri))
-			$css_uri = array($css_uri => $css_media_type);
-
-		$list_uri = array();
-		foreach ($css_uri as $file => $media)
-		{
-			$different = 0;
-			$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/css/modules/', $file, $different);
-			if ($different && file_exists($override_path))
-				$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/css/modules/', $file, $different);
-			$list_uri[$file] = $media;
-		}
-
-		return parent::addCSS($list_uri, $css_media_type, $offset);
+		return Frontcontroller::addMedia($css_uri, $css_media_type, $offset = null);
 	}
 
 	public function removeCSS($css_uri, $css_media_type = 'all')
 	{
-		if (!is_array($css_uri))
-			$css_uri = array($css_uri => $css_media_type);
-
-		$list_uri = array();
-		foreach ($css_uri as $file => $media)
-		{
-			$different = 0;
-			$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/css/modules/', $file, $different);
-			if ($different && file_exists($override_path))
-				$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/css/modules/', $file, $different);
-			$list_uri[$file] = $media;
-		}
-
-		return parent::removeCSS($list_uri, $css_media_type);
+		return Frontcontroller::removeMedia($css_uri, $css_media_type);
 	}
 
 	/**
@@ -1015,39 +1030,12 @@ class FrontControllerCore extends Controller
 	 */
 	public function addJS($js_uri)
 	{
-		if (!is_array($js_uri))
-			$js_uri = array($js_uri);
-		foreach ($js_uri as $key => &$file)
-		{
-			if (!preg_match('/^http(s?):\/\//i', $file))
-			{
-				$different = 0;
-				$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/js/modules/', $file, $different);
-				if ($different && file_exists($override_path))
-					$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/js/modules/', $file, $different);
-			}
-		}
-
-		return parent::addJS($js_uri);
+		return Frontcontroller::addMedia($js_uri);
 	}
 
 	public function removeJS($js_uri)
 	{
-		if (!is_array($js_uri))
-			$js_uri = array($js_uri);
-
-		foreach ($js_uri as $key => &$file)
-		{
-			if (!preg_match('/^http(s?):\/\//i', $file))
-			{
-				$different = 0;
-				$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/js/modules/', $file, $different);
-				if ($different && file_exists($override_path))
-					$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/js/modules/', $file, $different);
-			}
-		}
-
-		return parent::removeJS($js_uri);
+		return Frontcontroller::removeMedia($js_uri);
 	}
 
 	protected function recoverCart()

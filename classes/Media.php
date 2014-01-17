@@ -201,26 +201,7 @@ class MediaCore
 	 */
 	public static function getJSPath($js_uri)
 	{
-		if (is_array($js_uri) || $js_uri === null || empty($js_uri))
-			return false;
-
-		$url_data = parse_url($js_uri);
-		if (!array_key_exists('host', $url_data))
-		{
-			$js_uri = '/'.ltrim(str_replace(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, _PS_ROOT_DIR_), __PS_BASE_URI__, $js_uri), '/\\');
-			$url_data['path'] = $js_uri;
-			$file_uri = _PS_ROOT_DIR_.str_replace(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);		// remove PS_BASE_URI on _PS_ROOT_DIR for the following
-		}
-		else
-			$file_uri = $js_uri;
-		// check if js files exists
-		if (!preg_match('/^http(s?):\/\//i', $file_uri) && (!@filemtime($file_uri) || filesize($file_uri) === 0))
-			return false;
-
-		if (!array_key_exists('host', $url_data))
-			$js_uri = str_replace('//', '/', $js_uri);
-
-		return $js_uri;
+		return Media::getMediaPath($js_uri);
 	}
 
 	/**
@@ -232,21 +213,35 @@ class MediaCore
 	 */
 	public static function getCSSPath($css_uri, $css_media_type = 'all')
 	{
-		if (empty($css_uri))
+		return Media::getMediaPath($css_uri, $css_media_type);
+	}
+
+	public static function getMediaPath($media_uri, $css_media_type = null)
+	{
+		if (is_array($media_uri) || $media_uri === null || empty($media_uri))
 			return false;
 
-		$css_uri = '/'.ltrim(str_replace(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, _PS_ROOT_DIR_), __PS_BASE_URI__, $css_uri), '/\\');
-		// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
-		$url_data = parse_url($css_uri);
-		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
+		$url_data = parse_url($media_uri);
+		$file_uri = '';
+		if (!array_key_exists('host', $url_data))
+		{
+			$media_uri = '/'.ltrim(str_replace(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, _PS_ROOT_DIR_), __PS_BASE_URI__, $media_uri), '/\\');
+			$url_data['path'] = $media_uri;			
+			// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
+			$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
+		}
 
 		// check if css files exists
-		if ((!@filemtime($file_uri) && !array_key_exists('host', $url_data)) || filesize($file_uri) === 0)
+		if (!array_key_exists('host', $url_data) && (!@filemtime($file_uri) || filesize($file_uri) === 0))
 			return false;
 
-		$css_uri = str_replace('//', '/', $css_uri);
+		if (!array_key_exists('host', $url_data))
+			$media_uri = str_replace('//', '/', $media_uri);
 
-		return array($css_uri => $css_media_type);
+		if ($css_media_type)
+			return array($media_uri => $css_media_type);
+
+		return $media_uri;
 	}
 
 	/**
