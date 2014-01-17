@@ -681,7 +681,7 @@ class AdminModulesControllerCore extends AdminController
 				// Browse modules list
 				foreach ($modules_on_disk as $km => $module_on_disk)
 				{
-					if ($module_on_disk->installed && isset($module_on_disk->version_addons) && $module_on_disk->version_addons)
+					if (isset($module_on_disk->version_addons) && $module_on_disk->version_addons)
 						$modules[] = $module_on_disk->name;
 				}
 
