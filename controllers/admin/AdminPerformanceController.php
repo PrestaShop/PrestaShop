@@ -886,6 +886,7 @@ class AdminPerformanceControllerCore extends AdminController
 		{
 			$redirectAdmin = true;
 			Tools::clearSmartyCache();
+			Tools::clearXMLCache();
 			Media::clearCache();
 			Autoload::getInstance()->generateIndex();
 		}
