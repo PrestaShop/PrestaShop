@@ -980,14 +980,19 @@ class FrontControllerCore extends Controller
 			if (!preg_match('/^http(s?):\/\//i', $media))
 			{
 				$different = 0;
-				$type = $css_media_type ? 'css' : 'js';
+				$type = 'css';
+				if (!$css_media_type)
+				{
+					$type = 'js';
+					$file = $media;
+				}
 				$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/'.$type.'/modules/', $file, $different);
 				if ($different && file_exists($override_path))
 					$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/'.$type.'/modules/', $file, $different);
 				if ($css_media_type)
 					$list_uri[$file] = $media;
 				else
-					$list_uri = $media;
+					$list_uri = $file;
 			}
 		}
 
