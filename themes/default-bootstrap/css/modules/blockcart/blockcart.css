@@ -1,7 +1,6 @@
 /*******************************************************************
 					Cart Block Styles
 ********************************************************************/
-#cart_block #cart_block_list .deleteCustomizableProduct,
 #cart_block #cart_block_list .remove_link {
   position: absolute;
   right: 10px;
@@ -27,7 +26,7 @@
   position: relative;
   padding-right: 20px; }
   #cart_block .cart-info .product-name {
-    padding-bottom: 15px;
+    padding-bottom: 5px;
     margin-top: -4px; }
     #cart_block .cart-info .product-name a {
       font-size: 13px;
@@ -36,7 +35,11 @@
   #cart_block .cart-info .quantity-formated {
     display: inline-block;
     color: #9c9b9b;
-    text-transform: uppercase; }
+    text-transform: uppercase;
+    font-size: 10px;
+    padding-right: 5px; }
+    #cart_block .cart-info .quantity-formated .quantity {
+      font-size: 15px; }
 #cart_block dt {
   font-weight: normal;
   overflow: hidden;
@@ -44,11 +47,13 @@
   position: relative; }
 #cart_block dd {
   position: relative; }
-  #cart_block dd li {
-    padding: 10px 20px; }
-    #cart_block dd li .deleteCustomizableProduct {
-      top: 12px !important;
-      right: 15px !important; }
+  #cart_block dd .cart_block_customizations {
+    border-top: 1px dashed #333333; }
+    #cart_block dd .cart_block_customizations li {
+      padding: 10px 20px; }
+      #cart_block dd .cart_block_customizations li .deleteCustomizableProduct {
+        position: absolute;
+        right: 10px; }
 #cart_block #cart_block_no_products {
   margin: 0;
   padding: 10px 20px; }
@@ -115,8 +120,6 @@
     background: url(../../../img/cart-shadow.png) repeat-x; }
     #header #cart_block dt.first_item {
       background: none; }
-  #header #cart_block dd {
-    background: url(../../../img/cart-shadow.png) repeat-x; }
   #header #cart_block .product-atributes {
     padding-bottom: 10px;
     font-size: 11px; }

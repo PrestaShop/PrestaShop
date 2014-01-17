@@ -379,6 +379,7 @@ class InstallModelInstall extends InstallAbstractModel
 			'use_smtp' => false,
 			'smtp_encryption' => 'off',
 			'smtp_port' => 25,
+			'rewrite_engine' => false,
 		);
 
 		foreach ($default_data as $k => $v)
