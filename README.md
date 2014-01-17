@@ -1,4 +1,4 @@
-HOW TO ADD A FIELD IN A BACK-OFFICE for Product? No videos & examples can't find :(
+HOW TO ADD A FIELD IN A BACK-OFFICE for Product? No videos & examples for it :(
 ======
 ![PrestaShop](http://www.prestashop.com/images/banners/general/banner-github_728x90.png "PrestaShop")
 
