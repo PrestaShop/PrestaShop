@@ -5,7 +5,6 @@
 ********************************************************************/
 #cart_block {
 	#cart_block_list {
-		.deleteCustomizableProduct,
 		.remove_link {
 			position: absolute;
 			right: 10px;
@@ -35,7 +34,7 @@
 		position: relative;
 		padding-right: 20px;
 		.product-name {
-			padding-bottom: 15px;
+			padding-bottom: 5px;
 			margin-top: -4px;
 			a {
 				font-size: 13px;
@@ -47,6 +46,11 @@
 			display: inline-block;
 			color: #9c9b9b;
 			text-transform: uppercase;
+			font-size: 10px;
+    		padding-right: 5px;
+    		.quantity{
+    			font-size: 15px;
+    		}
 		}
 	}
 	dt {
@@ -57,14 +61,18 @@
 	}
 	dd {
 		position: relative;
-		li {
-			padding: 10px 20px;
-			
-			.deleteCustomizableProduct {
-				top: 12px !important;
-				right: 15px !important;	
+		.cart_block_customizations{
+			border-top: 1px dashed $dark-background;
+			li {
+				padding: 10px 20px;
+				
+				.deleteCustomizableProduct {
+					position: absolute;
+					right: 10px;	
+				}
 			}
 		}
+		
 	}
 	#cart_block_no_products {
 		margin: 0;
@@ -149,9 +157,6 @@
 			&.first_item {
 				background: none;
 			}
-		}
-		dd {
-			background: url(../../../img/cart-shadow.png) repeat-x;
 		}
 		.product-atributes {
 			padding-bottom: 10px;

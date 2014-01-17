@@ -579,30 +579,7 @@ class AdminCartsControllerCore extends AdminController
 		if (count($summary['discounts']))
 			foreach ($summary['discounts'] as &$voucher)
 				$voucher['value_real'] = Tools::displayPrice($voucher['value_real'], $currency);
-		$summary['total_products'] = str_replace(
-			$currency->sign, '',
-			Tools::displayPrice($summary['total_products'], $currency)
-		);
-		$summary['total_discounts_tax_exc'] = str_replace(
-			$currency->sign, '',
-			Tools::displayPrice($summary['total_discounts_tax_exc'], $currency)
-		);
-		$summary['total_shipping_tax_exc'] = str_replace(
-			$currency->sign, '',
-			Tools::displayPrice($summary['total_shipping_tax_exc'], $currency)
-		);
-		$summary['total_tax'] = str_replace(
-			$currency->sign, '',
-			Tools::displayPrice($summary['total_tax'], $currency)
-		);
-		$summary['total_price_without_tax'] = str_replace(
-			$currency->sign, '',
-			Tools::displayPrice($summary['total_price_without_tax'], $currency)
-		);
-		$summary['total_price'] = str_replace(
-			$currency->sign, '',
-			Tools::displayPrice($summary['total_price'], $currency)
-		);
+
 		if (isset($summary['gift_products']) && count($summary['gift_products']))
 			foreach ($summary['gift_products'] as &$product)
 			{
