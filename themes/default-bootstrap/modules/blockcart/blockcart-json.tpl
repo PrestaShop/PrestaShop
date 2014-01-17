@@ -84,7 +84,7 @@
 		"description": {$discount.description|json_encode},
 		"nameDescription": {$discount.name|cat:' : '|cat:$discount.description|trim|truncate:18:'...'|json_encode},
 		"code": {$discount.code|json_encode},
-		"link": {$link->getPageLink("$order_process", true, NULL, "deleteDiscount={$discount.id_discount}")|json_encode}",
+		"link": {$link->getPageLink("$order_process", true, NULL, "deleteDiscount={$discount.id_discount}")|json_encode},
 		"price": {if $priceDisplay == 1}{convertPrice|json_encode price=$discount.value_tax_exc}{else}{convertPrice|json_encode price=$discount.value_real}{/if},
 		"price_float": {if $priceDisplay == 1}{$discount.value_tax_exc|json_encode}{else}{$discount.value_real|json_encode}{/if}
 	{rdelim}
