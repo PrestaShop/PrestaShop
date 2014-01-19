@@ -95,7 +95,7 @@ class AdminThemesControllerCore extends AdminController
 			'tab' => 'AdminStores',
 		)
 	);
-	
+
 	public $className = 'Theme';
 	public $table = 'theme';
 	protected $toolbar_scroll = false;
@@ -138,7 +138,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_LOGO_MOBILE' => array(
 						'title' => $this->l('Header logo for mobile'),
-						'desc' => 
+						'desc' =>
 							((Configuration::get('PS_LOGO_MOBILE') === false) ? '<span class="light-warning">'.$this->l('Warning: No mobile logo has been defined. The header logo will be used instead.').'</span><br />' : '').
 							$this->l('Will appear on the main page of your mobile template. If left undefined, the header logo will be used.'),
 						'type' => 'file',
@@ -147,7 +147,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_LOGO_MAIL' => array(
 						'title' => $this->l('Mail logo'),
-						'desc' => 
+						'desc' =>
 							((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: No email logo has been indentified. The header logo will be used instead.').'</span><br />' : '').
 							$this->l('Will appear on email headers. If undefined, the header logo will be used.'),
 						'type' => 'file',
@@ -156,7 +156,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_LOGO_INVOICE' => array(
 						'title' => $this->l('Invoice logo'),
-						'desc' => 
+						'desc' =>
 							((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">'.$this->l('Warning: No invoice logo has been defined. The header logo will be used instead.').'</span><br />' : '').
 							$this->l('Will appear on invoice headers.').' '.$this->l('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.'),
 						'type' => 'file',
@@ -253,11 +253,11 @@ class AdminThemesControllerCore extends AdminController
 		$allow_mobile = (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE');
 		if (!$allow_mobile && Context::getContext()->shop->getTheme() == 'default')
 			return;
-		
+
 		$iso_code = Country::getIsoById((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 		$paypal_installed = (bool)Module::isInstalled('paypal');
 		$paypal_countries = array('ES', 'FR', 'PL', 'IT');
-		
+
 		if (!$paypal_installed && in_array($iso_code, $paypal_countries))
 		{
 			if (!$this->isXmlHttpRequest())
@@ -303,13 +303,15 @@ class AdminThemesControllerCore extends AdminController
 				$image_url = '<img alt="preview" src="../themes/'.$theme->directory.'/preview.jpg">';
 				foreach($theme_metas as $theme_meta)
 				{
+                    $formated_metas[$theme_meta['id_meta']]['id_theme_meta'] = (int)$theme_meta['id_theme_meta'];
+                    $formated_metas[$theme_meta['id_meta']]['id_meta'] = (int)$theme_meta['id_meta'];
 					$formated_metas[$theme_meta['id_meta']]['left'] = (int)$theme_meta['left_column'];
 					$formated_metas[$theme_meta['id_meta']]['right'] = (int)$theme_meta['right_column'];
 				}
 			}
 			$selected_theme_dir = $this->object->directory;
 		}
-		
+
 		foreach ($get_available_themes as $k => $dirname)
 		{
 			$available_theme_dir[$k]['value'] = $dirname;
@@ -419,7 +421,7 @@ class AdminThemesControllerCore extends AdminController
 				'label' => $this->l('Copy missing files from existing theme:'),
 				'hint' => $this->l('If you create a new theme, it\'s recommended that you use default theme files.'),
 				'options' => array(
-					'id' => 'id', 'name' => 'name', 
+					'id' => 'id', 'name' => 'name',
 					'default' => array('value' => 0, 'label' => '&nbsp;-&nbsp;'),
 					'query' => $theme_query,
 				)
@@ -437,47 +439,24 @@ class AdminThemesControllerCore extends AdminController
 					'hint' => $this->l('Please select a valid theme directory.'),
 				);
 
-		foreach($formated_metas as $key => $formated_meta)
-		{
+        $list = '';
+        if (Tools::getIsset('update'.$this->table))
+        {
+            $fields_list = array(
+                'title' => array('title' => $this->l('Meta'), 'align' => 'center', 'width' => 'auto'),
+                'left' => array('title' => $this->l('Left column'), 'active' => 'left', 'type' => 'bool'),
+                'right' => array('title' => $this->l('Right column'), 'active' => 'right', 'type' => 'bool'),
+            );
+            $helper_list = New HelperList();
+            $helper_list->shopLinkType = '';
+            $helper_list->identifier = 'id_theme_meta';
+            $helper_list->table = 'meta';
+            $helper_list->currentIndex = $this->context->link->getAdminLink('AdminThemes', false);
+            $helper_list->token = Tools::getAdminTokenLite('AdminThemes');
+            $list = $helper_list->generateList($formated_metas, $fields_list);
+        }
 
-			$this->fields_value[$key . '_left_meta']  = $formated_meta['left'];
-			$this->fields_value[$key . '_right_meta'] = $formated_meta['right'];
-			$this->fields_form['input'][]            = array(
-				'type'   => 'switch',
-				'label'  => sprintf($this->l('Left column for %1s'), $formated_meta['title']),
-				'name'   => $key . '_left_meta',
-				'values' => array(
-					array(
-						'id'    => $key . 'left_meta_on',
-						'value' => 1,
-						'label' => $this->l('Yes')
-					),
-					array(
-						'id'    => $key . 'left_meta_off',
-						'value' => 0,
-						'label' => $this->l('No')
-					)
-				));
-
-			$this->fields_form['input'][] = array(
-				'type'   => 'switch',
-				'label'  => sprintf($this->l('right column for %1s'), $formated_meta['title']),
-				'name'   => $key . '_right_meta',
-				'values' => array(
-					array(
-						'id'    => $key . 'right_meta_on',
-						'value' => 1,
-						'label' => $this->l('Yes')
-					),
-					array(
-						'id'    => $key . 'right_meta_off',
-						'value' => 0,
-						'label' => $this->l('No')
-					)
-				));
-		}
-
-		return parent::renderForm();
+		return parent::renderForm().$list;
 	}
 
 	public function renderList()
@@ -487,11 +466,11 @@ class AdminThemesControllerCore extends AdminController
 
 		return parent::renderList();
 	}
-	
+
 	/**
 	 * copy $base_theme_dir into $target_theme_dir.
 	 *
-	 * @param string $base_theme_dir relative path to base dir 
+	 * @param string $base_theme_dir relative path to base dir
 	 * @param string $target_theme_dir relative path to target dir
 	 * @return boolean true if success
 	 */
@@ -511,36 +490,14 @@ class AdminThemesControllerCore extends AdminController
 				{
 					if (!is_dir($target_dir.$file))
 						mkdir($target_dir.$file, Theme::$access_rights);
-					
+
 					$res &= AdminThemesController::copyTheme($base_theme_dir.$file, $target_theme_dir.$file);
 				}
 				elseif (!file_exists($target_theme_dir.$file))
 					$res &= copy($base_dir.$file, $target_dir.$file);
 			}
-		
+
 		return $res;
-	}
-
-	/**
-	 * @param Theme $theme
-	 */
-	private function updateThemeMetas($theme)
-	{
-		$query_array = array();
-		foreach($_POST as $key => $value)
-		{
-			$exploded_value = explode('_', $key);
-			if (count($exploded_value) == 3 && (int)$exploded_value[0] > 0)
-			{
-
-				$query_array[(int)$exploded_value[0]]['id_meta'] = (int)$exploded_value[0];
-				if ($exploded_value[1] == 'left')
-					$query_array[(int)$exploded_value[0]]['left'] = (int)$value;
-				else
-					$query_array[(int)$exploded_value[0]]['right'] = (int)$value;
-			}
-		}
-		$theme->updateMetas($query_array, true);
 	}
 
 	public function processAdd()
@@ -587,7 +544,18 @@ class AdminThemesControllerCore extends AdminController
 
 		$theme = parent::processAdd();
 		if (is_object($theme) && (int)$theme->id > 0)
-			$this->updateThemeMetas($theme);
+        {
+
+            $metas = Meta::getMetas();
+
+            foreach($metas as &$meta)
+            {
+                $meta['left'] = $theme->default_left_column;
+                $meta['right'] = $theme->default_right_column;
+
+            }
+            $theme->updateMetas($metas, true);
+        }
 		return $theme;
 	}
 
@@ -619,9 +587,6 @@ class AdminThemesControllerCore extends AdminController
 				}
 			}
 			$theme->update();
-
-			$this->updateThemeMetas($theme);
-
 		}
 		Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=29');
 	}
@@ -2296,7 +2261,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$this->updateLogo('PS_LOGO', 'logo');
 	}
-	
+
 	/**
 	 * Update PS_LOGO_MOBILE
 	 */
@@ -2441,6 +2406,20 @@ class AdminThemesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
+        else if (Tools::getIsset('id_theme_meta') && Tools::getIsset('leftmeta'))
+        {
+            if ($this->tabAccess['edit'] === '1')
+                $this->action = 'leftmeta';
+            else
+                $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+        }
+        else if (Tools::getIsset('id_theme_meta') && Tools::getIsset('rightmeta'))
+        {
+            if ($this->tabAccess['edit'] === '1')
+                $this->action = 'rightmeta';
+            else
+                $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+        }
 
 		parent::initProcess();
 		// This is a composite page, we don't want the "options" display mode
@@ -2498,6 +2477,42 @@ class AdminThemesControllerCore extends AdminController
 
 		return $object;
 	}
+
+    public function processLeftMeta()
+    {
+        $theme_meta = Db::getInstance()->getRow(
+            'SELECT * FROM ' . _DB_PREFIX_ . 'theme_meta WHERE id_theme_meta = ' . (int)Tools::getValue('id_theme_meta')
+        );
+
+        $result = false;
+        if ($theme_meta) {
+            $sql = 'UPDATE '._DB_PREFIX_.'theme_meta SET left_column='.(int)!(bool)$theme_meta['left_column'].' WHERE id_theme_meta='.(int)Tools::getValue('id_theme_meta');
+            $result = Db::getInstance()->execute($sql);
+        }
+
+        if ($result)
+            $this->redirect_after = self::$currentIndex.'&updatetheme&id_theme='.$theme_meta['id_theme'].'&conf=5&token='.$this->token;
+        else
+            $this->errors[] = Tools::displayError('An error occurred while updating this meta.');
+    }
+
+    public function processRightMeta()
+    {
+        $theme_meta = Db::getInstance()->getRow(
+            'SELECT * FROM ' . _DB_PREFIX_ . 'theme_meta WHERE id_theme_meta = ' . (int)Tools::getValue('id_theme_meta')
+        );
+
+        $result = false;
+        if ($theme_meta) {
+            $sql = 'UPDATE '._DB_PREFIX_.'theme_meta SET right_column='.(int)!(bool)$theme_meta['right_column'].' WHERE id_theme_meta='.(int)Tools::getValue('id_theme_meta');
+            $result = Db::getInstance()->execute($sql);
+        }
+
+        if ($result)
+            $this->redirect_after = self::$currentIndex.'&updatetheme&id_theme='.$theme_meta['id_theme'].'&conf=5&token='.$this->token;
+        else
+            $this->errors[] = Tools::displayError('An error occurred while updating this meta.');
+    }
 
 
 	/**
