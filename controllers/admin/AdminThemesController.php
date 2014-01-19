@@ -651,15 +651,10 @@ class AdminThemesControllerCore extends AdminController
 
 		if (empty($this->display))
 		{
-			$this->page_header_toolbar_btn['new_theme'] = array(
-				'href' => self::$currentIndex.'&addtheme&token='.$this->token,
-				'desc' => $this->l('Add new theme', null, null, false),
-				'icon' => 'process-icon-new'
-			);
 			$this->page_header_toolbar_btn['import_theme'] = array(
 				'href' => self::$currentIndex . '&action=importtheme&token=' . $this->token,
-				'desc' => $this->l('import new theme', null, null, false),
-				'icon' => 'process-icon-upload'
+				'desc' => $this->l('Add new theme', null, null, false),
+				'icon' => 'process-icon-new'
 			);
 			$this->page_header_toolbar_btn['export_theme'] = array(
 				'href' => self::$currentIndex . '&action=exporttheme&token=' . $this->token,
@@ -1554,7 +1549,6 @@ class AdminThemesControllerCore extends AdminController
 					'icon'  => 'icon-picture'
 				),
 				'input' => array(
-
 					array(
 						'type'  => 'select',
 						'label' => $this->l('Select the archive:'),
@@ -1571,6 +1565,14 @@ class AdminThemesControllerCore extends AdminController
 				)),
 		);
 
+        $this->context->smarty->assign(
+            array(
+                'add_new_theme_href' => self::$currentIndex . '&addtheme&token=' . $this->token,
+                'add_new_theme_label' => $this->l('Create new theme')
+            )
+        );
+
+        $create_new_theme_panel = $this->context->smarty->fetch('controllers/themes/helpers/view/importtheme_view.tpl');
 
 		$helper = new HelperForm();
 
@@ -1585,7 +1587,7 @@ class AdminThemesControllerCore extends AdminController
 		$helper->languages = $this->getLanguages();
 		$helper->default_form_language = (int)$this->context->language->id;
 
-		return $helper->generateForm($fields_form);
+		return $helper->generateForm($fields_form).$create_new_theme_panel;
 	}
 
 	public function initContent()
