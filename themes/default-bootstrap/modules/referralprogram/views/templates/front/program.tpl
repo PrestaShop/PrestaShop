@@ -78,7 +78,7 @@
 
 	<div id="idTab1" class="tab-pane active">
 		<p class="bold">
-			<strong>{l s='Get a discount of %1$d %2$s for you and your friends by recommending this Website.' sprintf=[$discount,$currencySign] mod='referralprogram'}</strong>
+			<strong>{l s='Get a discount of %1$s for you and your friends by recommending this Website.' sprintf=[$discount] mod='referralprogram'}</strong>
 		</p>
 		{if $canSendInvitations}
 			<p>
