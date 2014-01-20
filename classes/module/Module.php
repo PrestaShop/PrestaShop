@@ -2045,7 +2045,7 @@ abstract class ModuleCore
 		foreach (Tools::scandir($this->getLocalPath().'override', 'php', '', true) as $file)
 		{
 			$class = basename($file, '.php');
-			if (Autoload::getInstance()->getClassPath($class.'Core'))
+			if (PrestaShopAutoload::getInstance()->getClassPath($class.'Core'))
 				$result &= $this->addOverride($class);
 		}
 
@@ -2066,7 +2066,7 @@ abstract class ModuleCore
 		foreach (Tools::scandir($this->getLocalPath().'override', 'php', '', true) as $file)
 		{
 			$class = basename($file, '.php');
-			if (Autoload::getInstance()->getClassPath($class.'Core'))
+			if (PrestaShopAutoload::getInstance()->getClassPath($class.'Core'))
 				$result &= $this->removeOverride($class);
 		}
 
@@ -2081,13 +2081,13 @@ abstract class ModuleCore
 	 */
 	public function addOverride($classname)
 	{
-		$path = Autoload::getInstance()->getClassPath($classname.'Core');
+		$path = PrestaShopAutoload::getInstance()->getClassPath($classname.'Core');
 
 		// Check if there is already an override file, if not, we just need to copy the file
-		if (Autoload::getInstance()->getClassPath($classname))
+		if (PrestaShopAutoload::getInstance()->getClassPath($classname))
 		{
 			// Check if override file is writable
-			$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
+			$override_path = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath($classname);
 			if ((!file_exists($override_path) && !is_writable(dirname($override_path))) || (file_exists($override_path) && !is_writable($override_path)))
 				throw new Exception(sprintf(Tools::displayError('file (%s) not writable'), $override_path));
 
@@ -2128,7 +2128,7 @@ abstract class ModuleCore
 				throw new Exception(sprintf(Tools::displayError('directory (%s) not writable'), dirname($override_dest)));
 			copy($override_src, $override_dest);
 			// Re-generate the class index
-			Autoload::getInstance()->generateIndex();
+			PrestaShopAutoload::getInstance()->generateIndex();
 		}
 		return true;
 	}
@@ -2141,13 +2141,13 @@ abstract class ModuleCore
 	 */
 	public function removeOverride($classname)
 	{
-		$path = Autoload::getInstance()->getClassPath($classname.'Core');
+		$path = PrestaShopAutoload::getInstance()->getClassPath($classname.'Core');
 
-		if (!Autoload::getInstance()->getClassPath($classname))
+		if (!PrestaShopAutoload::getInstance()->getClassPath($classname))
 			return true;
 
 		// Check if override file is writable
-		$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
+		$override_path = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath($classname);
 		if (!is_writable($override_path))
 			return false;
 
@@ -2213,7 +2213,7 @@ abstract class ModuleCore
 		file_put_contents($override_path, $code);
 
 		// Re-generate the class index
-		Autoload::getInstance()->generateIndex();
+		PrestaShopAutoload::getInstance()->generateIndex();
 
 		return true;
 	}
