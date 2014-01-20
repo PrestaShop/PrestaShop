@@ -323,7 +323,8 @@ class AdminCustomersControllerCore extends AdminController
 					'label' => $this->l('Email address'),
 					'name' => 'email',
 					'col' => '4',
-					'required' => true
+					'required' => true,
+					'autocomplete' => false
 				),
 				array(
 					'type' => 'password',
