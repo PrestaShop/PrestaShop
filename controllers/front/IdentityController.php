@@ -55,6 +55,27 @@ class IdentityControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('Invalid date of birth.');
 			else
 			{
+
+				if (Configuration::get('PS_B2B_ENABLE'))
+				{
+					/* Check siret and ape format */
+					$country_id = (int)Tools::getValue('b2b_id_country');
+					if (!($country = new Country($country_id)) || !Validate::isLoadedObject($country))
+						$this->errors[] = Tools::displayError('Country cannot be loaded with b2b country_id');
+
+					$siret = Tools::getValue('siret');
+					if ($country->iso_code != 'FR' && $siret != '' && !$country->checkSiretCode($siret))
+						$this->errors[] = sprintf(Tools::displayError('The siret code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->siret_code_format))));
+					elseif($country->iso_code == 'FR' && $siret != '' && Validate::isSiret($siret))
+						$this->errors[] = Tools::displayError('Siret is invalid');
+
+					$ape = Tools::getValue('ape');
+					if ($country->iso_code != 'FR' && $ape != '' && !$country->checkApeCode($ape))
+						$this->errors[] = sprintf(Tools::displayError('The ape code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->ape_code_format))));
+					elseif($country->iso_code == 'FR' && $ape != '' && Validate::isApe($ape))
+						$this->errors[] = Tools::displayError('APE is invalid');
+				}
+
 				$email = trim(Tools::getValue('email'));
 				$this->customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
 				if (isset($_POST['old_passwd']))
@@ -80,6 +101,10 @@ class IdentityControllerCore extends FrontController
 				{
 					$this->customer->id_default_group = (int)$prev_id_default_group;
 					$this->customer->firstname = Tools::ucwords($this->customer->firstname);
+
+					if (Configuration::get('PS_B2B_ENABLE'))
+						// force update of website, even if box is empty
+						$this->customer->website = Tools::getValue('website');
 
 					if (!isset($_POST['newsletter']))
 						$this->customer->newsletter = 0;
@@ -116,6 +141,8 @@ class IdentityControllerCore extends FrontController
 	{
 		parent::initContent();
 
+		$this->assignCountries();
+
 		if ($this->customer->birthday)
 			$birthday = explode('-', $this->customer->birthday);
 		else
@@ -144,6 +171,28 @@ class IdentityControllerCore extends FrontController
 		$this->addCSS(_THEME_CSS_DIR_.'identity.css');
 		$this->addJS(_PS_JS_DIR_.'validate.js');
 		$this->addJS(_THEME_JS_DIR_.'validate_fields.js');
+	}
+
+	/**
+	 * Assign countries var to smarty
+	 */
+	protected function assignCountries()
+	{
+		// Select the most appropriate country
+		if (isset($_POST['id_country']) && is_numeric($_POST['id_country']))
+			$selectedCountry = (int)($_POST['id_country']);
+
+		if (!isset($selectedCountry))
+			$selectedCountry = (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
+
+		if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES'))
+			$countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
+		else
+			$countries = Country::getCountries($this->context->language->id, true);
+		$this->context->smarty->assign(array(
+				'countries' => $countries,
+				'sl_country' => (isset($selectedCountry) ? $selectedCountry : 0),
+				));
 	}
 
 }

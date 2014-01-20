@@ -148,6 +148,36 @@
                         </label>
                     </div>
                 {/if}
+		{if $b2b_enable}
+			<h1 class="page-subheading">
+				{l s='Your company information'}
+			</h1>
+			<div class="form-group">
+				<label for="">{l s='Company'}</label>
+				<input type="text" class="form-control" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
+			</div>
+			<div class="select form-group">
+				<label for="b2b_id_country">{l s='Country'} <sup>*</sup></label>
+				<select name="b2b_id_country" id="b2b_id_country" class="form-control">
+					<option value="">-</option>
+					{foreach from=$countries item=v}
+					<option value="{$v.id_country}" {if ($sl_country == $v.id_country)} selected="selected"{/if}>{$v.name}</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="siret">{l s='SIRET'}</label>
+				<input type="text" class="form-control" id="siret" name="siret" value="{if isset($smarty.post.siret)}{$smarty.post.siret}{/if}" />
+			</div>
+			<div class="form-group">
+				<label for="ape">{l s='APE'}</label>
+				<input type="text" class="form-control" id="ape" name="ape" value="{if isset($smarty.post.ape)}{$smarty.post.ape}{/if}" />
+			</div>
+			<div class="form-group">
+				<label for="website">{l s='Website'}</label>
+				<input type="text" class="form-control" id="website" name="website" value="{if isset($smarty.post.website)}{$smarty.post.website}{/if}" />
+			</div>
+		{/if}
                 <div class="form-group">
                     <button type="submit" name="submitIdentity" class="btn btn-default button button-medium">
                         <span>{l s='Save'}<i class="icon-chevron-right right"></i></span>
