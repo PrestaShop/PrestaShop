@@ -888,7 +888,7 @@ class AdminPerformanceControllerCore extends AdminController
 			Tools::clearSmartyCache();
 			Tools::clearXMLCache();
 			Media::clearCache();
-			Autoload::getInstance()->generateIndex();
+			PrestaShopAutoload::getInstance()->generateIndex();
 		}
 
 		if (Tools::isSubmit('submitAddconfiguration') && _PS_MODE_DEV_)
@@ -897,9 +897,9 @@ class AdminPerformanceControllerCore extends AdminController
 			Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', (int)Tools::getValue('overrides'));
 
 			if (Tools::getValue('overrides'))
-				Autoload::getInstance()->_include_override_path = false;
+				PrestaShopAutoload::getInstance()->_include_override_path = false;
 
-			Autoload::getInstance()->generateIndex();
+			PrestaShopAutoload::getInstance()->generateIndex();
 		}
 
 		if ($redirectAdmin && (!isset($this->errors) || !count($this->errors)))

@@ -2162,7 +2162,7 @@ exit;
 		if (_PS_DISPLAY_COMPATIBILITY_WARNING_)
 		{
 			trigger_error($error, E_USER_WARNING);
-			Logger::addLog($message, 3, $class);
+			PrestaShopLogger::addLog($message, 3, $class);
 		}
 	}
 
@@ -2420,7 +2420,7 @@ exit;
 	{
 		if ($die || (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_))
 			die($msg);
-		return Logger::addLog($msg);
+		return PrestaShopLogger::addLog($msg);
 	}
 
 	/**

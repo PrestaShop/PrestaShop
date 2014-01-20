@@ -97,7 +97,7 @@ abstract class InstallControllerHttp
 	{
 		$session = InstallSession::getInstance();
 		if (!$session->last_step || $session->last_step == 'welcome')
-			Autoload::getInstance()->generateIndex();
+			PrestaShopAutoload::getInstance()->generateIndex();
 
 		if (Tools::getValue('compile_templates'))
 		{
