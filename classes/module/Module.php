@@ -999,10 +999,17 @@ abstract class ModuleCore
 
 	public static function getModuleName($module)
 	{
+		$iso = substr(Context::getContext()->language->iso_code, 0, 2);
+
 		// Config file
-		$configFile = _PS_MODULE_DIR_.$module.'/config.xml';
-		if (!file_exists($configFile))
-			return 'Module '.ucfirst($module);
+		$configFile = _PS_MODULE_DIR_.$module.'/config_'.$iso.'.xml';
+		// For "en" iso code, we keep the default config.xml name
+		if ($iso == 'en' || !file_exists($configFile))
+		{
+			$configFile = _PS_MODULE_DIR_.$module.'/config.xml';
+			if (!file_exists($configFile))
+				return 'Module '.ucfirst($module);
+		}
 
 		// Load config.xml
 		libxml_use_internal_errors(true);
@@ -1070,13 +1077,18 @@ abstract class ModuleCore
 				}
 			}
 
+			$iso = substr(Context::getContext()->language->iso_code, 0, 2);
+
 			// Check if config.xml module file exists and if it's not outdated
-			$configFile = _PS_MODULE_DIR_.$module.'/config.xml';
-			$xml_exist = file_exists($configFile);
-			if ($xml_exist)
-				$needNewConfigFile = (filemtime($configFile) < filemtime(_PS_MODULE_DIR_.$module.'/'.$module.'.php'));
-			else
-				$needNewConfigFile = true;
+			$xml_exist = true;
+			$configFile = _PS_MODULE_DIR_.$module.'/config_'.$iso.'.xml';
+			if ($iso == 'en' || !file_exists($configFile))
+			{
+				$configFile = _PS_MODULE_DIR_.$module.'/config_'.$iso.'.xml';
+				if (!file_exists($configFile))
+					$xml_exist = false;
+			}
+			$needNewConfigFile = $xml_exist ? (filemtime($configFile) < filemtime(_PS_MODULE_DIR_.$module.'/'.$module.'.php')) : true;
 
 			// If config.xml exists and that the use config flag is at true
 			if ($useConfig && $xml_exist)
@@ -1832,19 +1844,20 @@ abstract class ModuleCore
 	protected function _generateConfigXml()
 	{
 		$xml = '<?xml version="1.0" encoding="UTF-8" ?>
-        <module>
-            <name>'.$this->name.'</name>
-            <displayName><![CDATA['.Tools::htmlentitiesUTF8($this->displayName).']]></displayName>
-            <version><![CDATA['.$this->version.']]></version>
-            <description><![CDATA['.Tools::htmlentitiesUTF8($this->description).']]></description>
-            <author><![CDATA['.Tools::htmlentitiesUTF8($this->author).']]></author>
-            <tab><![CDATA['.Tools::htmlentitiesUTF8($this->tab).']]></tab>'.(isset($this->confirmUninstall) ? "\n\t".'<confirmUninstall>'.$this->confirmUninstall.'</confirmUninstall>' : '').'
-            <is_configurable>'.(isset($this->is_configurable) ? (int)$this->is_configurable : 0).'</is_configurable>
-            <need_instance>'.(int)$this->need_instance.'</need_instance>'.(isset($this->limited_countries) ? "\n\t".'<limited_countries>'.(count($this->limited_countries) == 1 ? $this->limited_countries[0] : '').'</limited_countries>' : '').'
-        </module>';
+<module>
+	<name>'.$this->name.'</name>
+	<displayName><![CDATA['.Tools::htmlentitiesUTF8($this->displayName).']]></displayName>
+	<version><![CDATA['.$this->version.']]></version>
+	<description><![CDATA['.Tools::htmlentitiesUTF8($this->description).']]></description>
+	<author><![CDATA['.Tools::htmlentitiesUTF8($this->author).']]></author>
+	<tab><![CDATA['.Tools::htmlentitiesUTF8($this->tab).']]></tab>'.(isset($this->confirmUninstall) ? "\n\t".'<confirmUninstall>'.$this->confirmUninstall.'</confirmUninstall>' : '').'
+	<is_configurable>'.(isset($this->is_configurable) ? (int)$this->is_configurable : 0).'</is_configurable>
+	<need_instance>'.(int)$this->need_instance.'</need_instance>'.(isset($this->limited_countries) ? "\n\t".'<limited_countries>'.(count($this->limited_countries) == 1 ? $this->limited_countries[0] : '').'</limited_countries>' : '').'
+</module>';
 		if (is_writable(_PS_MODULE_DIR_.$this->name.'/'))
 		{
-			$file = _PS_MODULE_DIR_.$this->name.'/config.xml';
+			$iso = substr(Context::getContext()->language->iso_code, 0, 2);
+			$file = _PS_MODULE_DIR_.$this->name.'/'.($iso == 'en' ? 'config.xml' : 'config_'.$iso.'.xml');
 			if (!@file_put_contents($file, $xml))
 				if (!is_writable($file))
 				{
