@@ -233,7 +233,8 @@ class AdminEmployeesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Email address'),
 					'name' => 'email',
-					'required' => true
+					'required' => true,
+					'autocomplete' => false
 				),
 				/*array(
 					'type' => 'color',
