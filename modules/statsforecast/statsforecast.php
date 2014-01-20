@@ -29,7 +29,7 @@ if (!defined('_PS_VERSION_'))
 
 class StatsForecast extends Module
 {
-	private $_html = '';
+	private $html = '';
 	private $t1 = 0;
 	private $t2 = 0;
 	private $t3 = 0;
@@ -87,30 +87,35 @@ class StatsForecast extends Module
 		$prop30 = $interval / $interval2;
 
 		if ($this->context->cookie->stats_granularity == 7)
-			$intervalAvg = $interval2 / 30;
+			$interval_avg = $interval2 / 30;
 		if ($this->context->cookie->stats_granularity == 4)
-			$intervalAvg = $interval2 / 365;
+			$interval_avg = $interval2 / 365;
 		if ($this->context->cookie->stats_granularity == 10)
-			$intervalAvg = $interval2;
+			$interval_avg = $interval2;
 		if ($this->context->cookie->stats_granularity == 42)
-			$intervalAvg = $interval2 / 7;
+			$interval_avg = $interval2 / 7;
 
-		$dataTable = array();
+		$data_table = array();
 		if ($this->context->cookie->stats_granularity == 10)
 			for ($i = $from; $i <= $to2; $i = strtotime('+1 day', $i))
-				$dataTable[date('Y-m-d', $i)] = array('fix_date' => date('Y-m-d', $i), 'countOrders' => 0, 'countProducts' => 0, 'totalSales' => 0);
+				$data_table[date('Y-m-d', $i)] = array(
+					'fix_date' => date('Y-m-d', $i),
+					'countOrders' => 0,
+					'countProducts' => 0,
+					'totalSales' => 0
+				);
 
-		$dateFromGAdd = ($this->context->cookie->stats_granularity != 42
+		$date_from_gadd = ($this->context->cookie->stats_granularity != 42
 			? 'LEFT(date_add, '.(int)$this->context->cookie->stats_granularity.')'
 			: 'IFNULL(MAKEDATE(YEAR(date_add),DAYOFYEAR(date_add)-WEEKDAY(date_add)), CONCAT(YEAR(date_add),"-01-01*"))');
 
-		$dateFromGInvoice = ($this->context->cookie->stats_granularity != 42
+		$date_from_ginvoice = ($this->context->cookie->stats_granularity != 42
 			? 'LEFT(invoice_date, '.(int)$this->context->cookie->stats_granularity.')'
 			: 'IFNULL(MAKEDATE(YEAR(invoice_date),DAYOFYEAR(invoice_date)-WEEKDAY(invoice_date)), CONCAT(YEAR(invoice_date),"-01-01*"))');
 
 		$result = $db->query('
 		SELECT
-			'.$dateFromGInvoice.' as fix_date,
+			'.$date_from_ginvoice.' as fix_date,
 			COUNT(*) as countOrders,
 			SUM((SELECT SUM(od.product_quantity) FROM '._DB_PREFIX_.'order_detail od WHERE o.id_order = od.id_order)) as countProducts,
 			SUM(o.total_paid_tax_excl / o.conversion_rate) as totalSales
@@ -118,11 +123,11 @@ class StatsForecast extends Module
 		WHERE o.valid = 1
 		AND o.invoice_date BETWEEN '.ModuleGraph::getDateBetween().'
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
-		GROUP BY '.$dateFromGInvoice);
+		GROUP BY '.$date_from_ginvoice);
 		while ($row = $db->nextRow($result))
-			$dataTable[$row['fix_date']] = $row;
+			$data_table[$row['fix_date']] = $row;
 
-		$this->_html .= '<div>
+		$this->html .= '<div>
 			<div class="panel-heading"><i class="icon-dashboard"></i> '.$this->displayName.'</div>
 			<div class="alert alert-info">'.$this->l('All amounts listed do not include tax.').'</div>
 			<form id="granularity" action="'.Tools::safeOutput($ru).'#granularity" method="post" class="form-horizontal">
@@ -156,50 +161,49 @@ class StatsForecast extends Module
 					</tr>
 				</thead>';
 
-		$visitArray = array();
-		$sql = 'SELECT '.$dateFromGAdd.' as fix_date, COUNT(*) as visits
+		$visit_array = array();
+		$sql = 'SELECT '.$date_from_gadd.' as fix_date, COUNT(*) as visits
 				FROM '._DB_PREFIX_.'connections c
 				WHERE c.date_add BETWEEN '.ModuleGraph::getDateBetween().'
 				'.Shop::addSqlRestriction(false, 'c').'
-				GROUP BY '.$dateFromGAdd;
+				GROUP BY '.$date_from_gadd;
 		$visits = Db::getInstance()->query($sql);
 		while ($row = $db->nextRow($visits))
-			$visitArray[$row['fix_date']] = $row['visits'];
+			$visit_array[$row['fix_date']] = $row['visits'];
 
-		$today = date('Y-m-d');
-		foreach ($dataTable as $row)
+		foreach ($data_table as $row)
 		{
-			$visitsToday = (int)(isset($visitArray[$row['fix_date']]) ? $visitArray[$row['fix_date']] : 0);
+			$visits_today = (int)(isset($visit_array[$row['fix_date']]) ? $visit_array[$row['fix_date']] : 0);
 
-			$dateFromGReg = ($this->context->cookie->stats_granularity != 42
+			$date_from_greg = ($this->context->cookie->stats_granularity != 42
 				? 'LIKE \''.$row['fix_date'].'%\''
-				: 'BETWEEN \''.substr($row['fix_date'], 0, 10).' 00:00:00\' AND DATE_ADD(\''.substr($row['fix_date'], 0, 8).substr($row['fix_date'], 8, 2).' 23:59:59\', INTERVAL 7 DAY)');
+				: 'BETWEEN \''.Tools::substr($row['fix_date'], 0, 10).' 00:00:00\' AND DATE_ADD(\''.Tools::substr($row['fix_date'], 0, 8).Tools::substr($row['fix_date'], 8, 2).' 23:59:59\', INTERVAL 7 DAY)');
 			$row['registrations'] = Db::getInstance()->getValue('
 			SELECT COUNT(*) FROM '._DB_PREFIX_.'customer
 			WHERE date_add BETWEEN '.ModuleGraph::getDateBetween().'
-			AND date_add '.$dateFromGReg
-			.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER));
+			AND date_add '.$date_from_greg
+				.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER));
 
-			$this->_html .= '
+			$this->html .= '
 			<tr>
 				<td>'.$row['fix_date'].'</td>
-				<td align="center">'.$visitsToday.'</td>
-				<td align="center">'.(int)($row['registrations']).'</td>
-				<td align="center">'.(int)($row['countOrders']).'</td>
-				<td align="center">'.(int)($row['countProducts']).'</td>
-				<td align="center">'.($visitsToday ? round(100 * (int)($row['registrations']) / $visitsToday, 2).' %' : '-').'</td>
-				<td align="center">'.($visitsToday ? round(100 * (int)($row['countOrders']) / $visitsToday, 2).' %' : '-').'</td>
+				<td align="center">'.$visits_today.'</td>
+				<td align="center">'.(int)$row['registrations'].'</td>
+				<td align="center">'.(int)$row['countOrders'].'</td>
+				<td align="center">'.(int)$row['countProducts'].'</td>
+				<td align="center">'.($visits_today ? round(100 * (int)$row['registrations'] / $visits_today, 2).' %' : '-').'</td>
+				<td align="center">'.($visits_today ? round(100 * (int)$row['countOrders'] / $visits_today, 2).' %' : '-').'</td>
 				<td align="right">'.Tools::displayPrice($row['totalSales'], $currency).'</td>
 			</tr>';
 
-			$this->t1 += $visitsToday;
-			$this->t2 += (int)($row['registrations']);
-			$this->t3 += (int)($row['countOrders']);
-			$this->t4 += (int)($row['countProducts']);
+			$this->t1 += $visits_today;
+			$this->t2 += (int)$row['registrations'];
+			$this->t3 += (int)$row['countOrders'];
+			$this->t4 += (int)$row['countProducts'];
 			$this->t8 += $row['totalSales'];
 		}
 
-		$this->_html .= '
+		$this->html .= '
 				<tr>
 					<th></th>
 					<th class="center"><span class="title_box active">'.$this->l('Visits').'</span></th>
@@ -212,23 +216,23 @@ class StatsForecast extends Module
 				</tr>
 				<tr>
 					<td>'.$this->l('Total').'</td>
-					<td class="center">'.(int)($this->t1).'</td>
-					<td class="center">'.(int)($this->t2).'</td>
-					<td class="center">'.(int)($this->t3).'</td>
-					<td class="center">'.(int)($this->t4).'</td>
+					<td class="center">'.(int)$this->t1.'</td>
+					<td class="center">'.(int)$this->t2.'</td>
+					<td class="center">'.(int)$this->t3.'</td>
+					<td class="center">'.(int)$this->t4.'</td>
 					<td class="center">--</td>
 					<td class="center">--</td>
 					<td align="right">'.Tools::displayPrice($this->t8, $currency).'</td>
 				</tr>
 				<tr>
 					<td>'.$this->l('Average').'</td>
-					<td class="center">'.(int)($this->t1 / $intervalAvg).'</td>
-					<td class="center">'.(int)($this->t2 / $intervalAvg).'</td>
-					<td class="center">'.(int)($this->t3 / $intervalAvg).'</td>
-					<td class="center">'.(int)($this->t4 / $intervalAvg).'</td>
-					<td class="center">'.($this->t1 ? round(100 * $this->t2 / $this->t1, 2) .' %' : '-').'</td>
-					<td class="center">'.($this->t1 ? round(100 * $this->t3 / $this->t1, 2) .' %' : '-').'</td>
-					<td align="right">'.Tools::displayPrice($this->t8 / $intervalAvg, $currency).'</td>
+					<td class="center">'.(int)($this->t1 / $interval_avg).'</td>
+					<td class="center">'.(int)($this->t2 / $interval_avg).'</td>
+					<td class="center">'.(int)($this->t3 / $interval_avg).'</td>
+					<td class="center">'.(int)($this->t4 / $interval_avg).'</td>
+					<td class="center">'.($this->t1 ? round(100 * $this->t2 / $this->t1, 2).' %' : '-').'</td>
+					<td class="center">'.($this->t1 ? round(100 * $this->t3 / $this->t1, 2).' %' : '-').'</td>
+					<td align="right">'.Tools::displayPrice($this->t8 / $interval_avg, $currency).'</td>
 				</tr>
 				<tr>
 					<td>'.$this->l('Forecast').'</td>
@@ -247,7 +251,7 @@ class StatsForecast extends Module
 		$sql = 'SELECT COUNT(DISTINCT c.id_guest)
 				FROM '._DB_PREFIX_.'connections c
 				WHERE c.date_add BETWEEN '.ModuleGraph::getDateBetween()
-					.Shop::addSqlRestriction(false, 'c');
+			.Shop::addSqlRestriction(false, 'c');
 		$visitors = Db::getInstance()->getValue($sql);
 
 		$sql = 'SELECT COUNT(DISTINCT g.id_customer)
@@ -255,7 +259,7 @@ class StatsForecast extends Module
 				INNER JOIN '._DB_PREFIX_.'guest g ON c.id_guest = g.id_guest
 				WHERE g.id_customer != 0
 					AND c.date_add BETWEEN '.ModuleGraph::getDateBetween()
-					.Shop::addSqlRestriction(false, 'c');
+			.Shop::addSqlRestriction(false, 'c');
 		$customers = Db::getInstance()->getValue($sql);
 
 		$sql = 'SELECT COUNT(*)
@@ -281,10 +285,10 @@ class StatsForecast extends Module
 				FROM '._DB_PREFIX_.'orders o
 				WHERE o.valid = 1
 					AND o.date_add BETWEEN '.ModuleGraph::getDateBetween()
-					.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o');
+			.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o');
 		$orders = Db::getInstance()->getValue($sql);
 
-		$this->_html .= '
+		$this->html .= '
 		<div class="row row-margin-bottom">
 			<h4><i class="icon-filter"></i> '.$this->l('Conversion').'</h4>
 		</div>
@@ -378,13 +382,12 @@ class StatsForecast extends Module
 		$from = strtotime($employee->stats_date_from.' 00:00:00');
 		$to = strtotime($employee->stats_date_to.' 23:59:59');
 		$interval = ($to - $from) / 60 / 60 / 24;
-		$prop5000 = 5000 / 30 * $interval;
 
-		$this->_html .= '
+		$this->html .= '
 			<div class="row row-margin-bottom">
 				<h4><i class="icon-money"></i> '.$this->l('Payment distribution').'</h4>
 				<div class="alert alert-info">'
-					.$this->l('The amounts are with taxes, so you can get an estimation of the commission due to the payment method.').'
+			.$this->l('The amounts are with taxes, so you can get an estimation of the commission due to the payment method.').'
 				</div>
 				<form id="cat" action="'.$ru.'#payment" method="post" class="form-horizontal">
 					<div class="row row-margin-bottom">
@@ -395,9 +398,9 @@ class StatsForecast extends Module
 							<input type="hidden" name="submitIdZone" value="1" />
 							<select name="stats_id_zone" onchange="this.form.submit();">
 								<option value="0">'.$this->l('-- No filter --').'</option>';
-					foreach (Zone::getZones() as $zone)
-						$this->_html .= '<option value="'.(int)$zone['id_zone'].'" '.($this->context->cookie->stats_id_zone == $zone['id_zone'] ? 'selected="selected"' : '').'>'.$zone['name'].'</option>';
-					$this->_html .= '
+		foreach (Zone::getZones() as $zone)
+			$this->html .= '<option value="'.(int)$zone['id_zone'].'" '.($this->context->cookie->stats_id_zone == $zone['id_zone'] ? 'selected="selected"' : '').'>'.$zone['name'].'</option>';
+		$this->html .= '
 							</select>
 						</div>
 					</div>
@@ -412,15 +415,15 @@ class StatsForecast extends Module
 						</tr>
 					</thead>
 					<tbody>';
-					foreach ($ca['payment'] as $payment)
-					$this->_html .= '
+		foreach ($ca['payment'] as $payment)
+			$this->html .= '
 						<tr>
 							<td class="center">'.$payment['payment_method'].'</td>
 							<td class="center">'.(int)$payment['nb'].'</td>
 							<td align="right">'.Tools::displayPrice($payment['total'], $currency).'</td>
 							<td align="right">'.Tools::displayPrice($payment['cart'], $currency).'</td>
 						</tr>';
-					$this->_html .= '
+		$this->html .= '
 					</tbody>
 				</table>
 			</div>
@@ -435,9 +438,9 @@ class StatsForecast extends Module
 							<input type="hidden" name="submitIdZone" value="1" />
 							<select name="stats_id_zone" onchange="this.form.submit();">
 								<option value="0">'.$this->l('-- No filter --').'</option>';
-					foreach (Zone::getZones() as $zone)
-						$this->_html .= '<option value="'.(int)$zone['id_zone'].'" '.($this->context->cookie->stats_id_zone == $zone['id_zone'] ? 'selected="selected"' : '').'>'.$zone['name'].'</option>';
-					$this->_html .= '
+		foreach (Zone::getZones() as $zone)
+			$this->html .= '<option value="'.(int)$zone['id_zone'].'" '.($this->context->cookie->stats_id_zone == $zone['id_zone'] ? 'selected="selected"' : '').'>'.$zone['name'].'</option>';
+		$this->html .= '
 							</select>
 						</div>
 					</div>
@@ -454,8 +457,8 @@ class StatsForecast extends Module
 						</tr>
 					</thead>
 					<tbody>';
-					foreach ($ca['cat'] as $catrow)
-						$this->_html .= '
+		foreach ($ca['cat'] as $catrow)
+			$this->html .= '
 						<tr>
 							<td class="center">'.(empty($catrow['name']) ? $this->l('Unknown') : $catrow['name']).'</td>
 							<td class="center">'.$catrow['orderQty'].'</td>
@@ -464,7 +467,7 @@ class StatsForecast extends Module
 							<td class="center">'.((int)$ca['ventil']['total'] ? number_format((100 * $catrow['orderSum'] / $ca['ventil']['total']), 1, '.', ' ') : '0').'%</td>
 							<td align="right">'.Tools::displayPrice($catrow['priveAvg'], $currency).'</td>
 						</tr>';
-					$this->_html .= '
+		$this->html .= '
 					</tbody>
 				</table>
 			</div>
@@ -480,19 +483,19 @@ class StatsForecast extends Module
 						</tr>
 					</thead>
 					<tbody>';
-			foreach ($ca['lang'] as $ophone => $amount)
-			{
-				$percent = (int)($ca['langprev'][$ophone]) ? number_format((100 * $amount / $ca['langprev'][$ophone]) - 100, 1, '.', ' ') : '&#x221e;';
-				$this->_html .= '
+		foreach ($ca['lang'] as $ophone => $amount)
+		{
+			$percent = (int)($ca['langprev'][$ophone]) ? number_format((100 * $amount / $ca['langprev'][$ophone]) - 100, 1, '.', ' ') : '&#x221e;';
+			$this->html .= '
 					<tr '.(($percent < 0) ? 'class="alt_row"' : '').'>
 						<td class="center">'.$ophone.'</td>
 						<td align="right">'.Tools::displayPrice($amount, $currency).'</td>
 						<td class="center">'.((int)$ca['ventil']['total'] ? number_format((100 * $amount / $ca['ventil']['total']), 1, '.', ' ').'%' : '-').'</td>
-						<td class="center">'.(($percent > 0 OR $percent == '&#x221e;') ? '<img src="../img/admin/arrow_up.png" />' : '<img src="../img/admin/arrow_down.png" /> ').'</td>
-						<td class="center">'.(($percent > 0 OR $percent == '&#x221e;') ? '+' : '').$percent.'%</td>
+						<td class="center">'.(($percent > 0 || $percent == '&#x221e;') ? '<img src="../img/admin/arrow_up.png" />' : '<img src="../img/admin/arrow_down.png" /> ').'</td>
+						<td class="center">'.(($percent > 0 || $percent == '&#x221e;') ? '+' : '').$percent.'%</td>
 					</tr>';
-			}
-			$this->_html .= '
+		}
+		$this->html .= '
 					</tbody>
 				</table>
 			</div>
@@ -509,8 +512,8 @@ class StatsForecast extends Module
 						</tr>
 					</thead>
 					<tbody>';
-			foreach ($ca['zones'] as $zone)
-				$this->_html .= '
+		foreach ($ca['zones'] as $zone)
+			$this->html .= '
 					<tr>
 						<td class="center">'.(isset($zone['name']) ? $zone['name'] : $this->l('Undefined')).'</td>
 						<td class="center">'.(int)($zone['nb']).'</td>
@@ -518,7 +521,7 @@ class StatsForecast extends Module
 						<td class="center">'.($ca['ventil']['nb'] ? number_format((100 * $zone['nb'] / $ca['ventil']['nb']), 1, '.', ' ') : '0').'%</td>
 						<td class="center">'.((int)$ca['ventil']['total'] ? number_format((100 * $zone['total'] / $ca['ventil']['total']), 1, '.', ' ') : '0').'%</td>
 					</tr>';
-			$this->_html .= '
+		$this->html .= '
 					</tbody>
 				</table>
 			</div>
@@ -533,9 +536,9 @@ class StatsForecast extends Module
 							<input type="hidden" name="submitIdZone" value="1" />
 							<select name="stats_id_zone" onchange="this.form.submit();">
 								<option value="0">'.$this->l('-- No filter --').'</option>';
-					foreach (Zone::getZones() as $zone)
-						$this->_html .= '<option value="'.(int)$zone['id_zone'].'" '.($this->context->cookie->stats_id_zone == $zone['id_zone'] ? 'selected="selected"' : '').'>'.$zone['name'].'</option>';
-					$this->_html .= '
+		foreach (Zone::getZones() as $zone)
+			$this->html .= '<option value="'.(int)$zone['id_zone'].'" '.($this->context->cookie->stats_id_zone == $zone['id_zone'] ? 'selected="selected"' : '').'>'.$zone['name'].'</option>';
+		$this->html .= '
 							</select>
 						</div>
 					</div>
@@ -551,16 +554,16 @@ class StatsForecast extends Module
 						</tr>
 					</thead>
 					<tbody>';
-				foreach ($ca['currencies'] as $currencyRow)
-					$this->_html .= '
+		foreach ($ca['currencies'] as $currency_row)
+			$this->html .= '
 						<tr>
-							<td class="center">'.$currencyRow['name'].'</td>
-							<td class="center">'.(int)($currencyRow['nb']).'</td>
-							<td align="right">'.Tools::displayPrice($currencyRow['total'], $currency).'</td>
-							<td class="center">'.($ca['ventil']['nb'] ? number_format((100 * $currencyRow['nb'] / $ca['ventil']['nb']), 1, '.', ' ') : '0').'%</td>
-							<td class="center">'.((int)$ca['ventil']['total'] ? number_format((100 * $currencyRow['total'] / $ca['ventil']['total']), 1, '.', ' ') : '0').'%</td>
+							<td class="center">'.$currency_row['name'].'</td>
+							<td class="center">'.(int)($currency_row['nb']).'</td>
+							<td align="right">'.Tools::displayPrice($currency_row['total'], $currency).'</td>
+							<td class="center">'.($ca['ventil']['nb'] ? number_format((100 * $currency_row['nb'] / $ca['ventil']['nb']), 1, '.', ' ') : '0').'%</td>
+							<td class="center">'.((int)$ca['ventil']['total'] ? number_format((100 * $currency_row['total'] / $ca['ventil']['total']), 1, '.', ' ') : '0').'%</td>
 						</tr>';
-				$this->_html .= '
+		$this->html .= '
 					</tbody>
 				</table>
 			</div>
@@ -575,19 +578,19 @@ class StatsForecast extends Module
 						</tr>
 					</thead>
 					<tbody>';
-				foreach ($ca['attributes'] as $attribut)
-					$this->_html .= '
+		foreach ($ca['attributes'] as $attribut)
+			$this->html .= '
 						<tr>
 							<td class="center">'.$attribut['gname'].'</td>
 							<td class="center">'.$attribut['aname'].'</td>
 							<td class="center">'.(int)($attribut['total']).'</td>
 						</tr>';
-				$this->_html .= '
+		$this->html .= '
 					</tbody>
 				</table>
 			</div>';
 
-		return $this->_html;
+		return $this->html;
 	}
 
 	private function getRealCA()
@@ -598,7 +601,7 @@ class StatsForecast extends Module
 		$where = $join = '';
 		if ((int)$this->context->cookie->stats_id_zone)
 		{
-			$join =  ' LEFT JOIN `'._DB_PREFIX_.'address` a ON o.id_address_invoice = a.id_address LEFT JOIN `'._DB_PREFIX_.'country` co ON co.id_country = a.id_country';
+			$join = ' LEFT JOIN `'._DB_PREFIX_.'address` a ON o.id_address_invoice = a.id_address LEFT JOIN `'._DB_PREFIX_.'country` co ON co.id_country = a.id_country';
 			$where = ' AND co.id_zone = '.(int)$this->context->cookie->stats_id_zone.' ';
 		}
 
@@ -617,19 +620,19 @@ class StatsForecast extends Module
 		$ca['cat'] = Db::getInstance()->executeS($sql);
 		uasort($ca['cat'], 'statsforecast_sort');
 
-		$langValues = '';
+		$lang_values = '';
 		$sql = 'SELECT l.id_lang, l.iso_code
 				FROM `'._DB_PREFIX_.'lang` l
 				'.Shop::addSqlAssociation('lang', 'l').'
 				WHERE l.active = 1';
 		$languages = Db::getInstance()->executeS($sql);
 		foreach ($languages as $language)
-			$langValues .= 'SUM(IF(o.id_lang = '.(int)$language['id_lang'].', total_paid_tax_excl / o.conversion_rate, 0)) as '.pSQL($language['iso_code']).',';
-		$langValues = rtrim($langValues, ',');
+			$lang_values .= 'SUM(IF(o.id_lang = '.(int)$language['id_lang'].', total_paid_tax_excl / o.conversion_rate, 0)) as '.pSQL($language['iso_code']).',';
+		$lang_values = rtrim($lang_values, ',');
 
-		if ($langValues)
+		if ($lang_values)
 		{
-			$sql = 'SELECT '.$langValues.'
+			$sql = 'SELECT '.$lang_values.'
 					FROM `'._DB_PREFIX_.'orders` o
 					WHERE o.valid = 1
 					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
@@ -637,7 +640,7 @@ class StatsForecast extends Module
 			$ca['lang'] = Db::getInstance()->getRow($sql);
 			arsort($ca['lang']);
 
-			$sql = 'SELECT '.$langValues.'
+			$sql = 'SELECT '.$lang_values.'
 					FROM `'._DB_PREFIX_.'orders` o
 					WHERE o.valid = 1
 						AND ADDDATE(o.`invoice_date`, interval 30 day) BETWEEN \''.$employee->stats_date_from.' 00:00:00\' AND \''.min(date('Y-m-d H:i:s'), $employee->stats_date_to.' 23:59:59').'\'
@@ -714,5 +717,6 @@ function statsforecast_sort($a, $b)
 {
 	if ($a['orderSum'] == $b['orderSum'])
 		return 0;
+
 	return ($a['orderSum'] > $b['orderSum']) ? -1 : 1;
 }
