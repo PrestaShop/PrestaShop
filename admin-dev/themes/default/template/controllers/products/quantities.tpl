@@ -170,8 +170,8 @@
 		{/if}
 		<div class="panel-footer">
 			<a href="{$link->getAdminLink('AdminProducts')}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
-			<button id="product_form_submit_btn"  type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
-			<button id="product_form_submit_btn"  type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
+			<button type="submit" name="submitAddproduct" class="btn btn-default pull-right product_quantities_button"><i class="process-icon-save"></i> {l s='Save'}</button>
+			<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right product_quantities_button"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 		</div>
 	</div>
 	<div class="panel">
@@ -238,8 +238,8 @@
 		{/if}
 		<div class="panel-footer">
 			<a href="{$link->getAdminLink('AdminProducts')}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
-			<button id="product_form_submit_btn"  type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
-			<button id="product_form_submit_btn"  type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
+			<button type="submit" name="submitAddproduct" class="btn btn-default pull-right product_quantities_button"><i class="process-icon-save"></i> {l s='Save'}</button>
+			<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right product_quantities_button"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 		</div>
 		<script type="text/javascript">
 			var quantities_ajax_success = '{l s='Data saved' js='1'}';
