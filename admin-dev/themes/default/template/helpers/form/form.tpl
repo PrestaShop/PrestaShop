@@ -632,7 +632,8 @@
 							type="submit"
 							value="1"
 							id="{if isset($fieldset['form']['submit']['id'])}{$fieldset['form']['submit']['id']}{else}{$table}_form_submit_btn{/if}"
-							name="{if isset($fieldset['form']['submit']['name'])}{$fieldset['form']['submit']['name']}{else}{$submit_action}{/if}{if isset($fieldset['form']['submit']['stay']) && $fieldset['form']['submit']['stay']}AndStay{/if}" class="{if isset($fieldset['form']['submit']['class'])}{$fieldset['form']['submit']['class']}{else}btn btn-default pull-right{/if}"
+							name="{if isset($fieldset['form']['submit']['name'])}{$fieldset['form']['submit']['name']}{else}{$submit_action}{/if}{if isset($fieldset['form']['submit']['stay']) && $fieldset['form']['submit']['stay']}AndStay{/if}"
+							class="{if isset($fieldset['form']['submit']['class'])}{$fieldset['form']['submit']['class']}{else}btn btn-default pull-right{/if}"
 							>
 							<i class="{if isset($fieldset['form']['submit']['icon'])}{$fieldset['form']['submit']['icon']}{else}process-icon-save{/if}"></i> {$fieldset['form']['submit']['title']}
 						</button>
@@ -668,11 +669,10 @@
 {block name="after"}{/block}
 
 {if isset($tinymce) && $tinymce}
-	<script type="text/javascript">
-
-	var iso = '{$iso}';
-	var pathCSS = '{$smarty.const._THEME_CSS_DIR_}';
-	var ad = '{$ad}';
+<script type="text/javascript">
+	var iso = '{$iso|addslashes}';
+	var pathCSS = '{$smarty.const._THEME_CSS_DIR_|addslashes}';
+	var ad = '{$ad|addslashes}';
 
 	$(document).ready(function(){
 		{block name="autoload_tinyMCE"}
@@ -681,7 +681,7 @@
 			});
 		{/block}
 	});
-	</script>
+</script>
 {/if}
 {if $firstCall}
 	<script type="text/javascript">
