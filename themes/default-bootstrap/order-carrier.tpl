@@ -367,9 +367,9 @@
 							<p><strong class="dark">{l s='Leave a message'}</strong></p>
 							<div>
 								<p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
-								<textarea class="form-control" cols="120" rows="2" name="message" id="message">
+								<textarea class="form-control" cols="120" rows="2" name="message" id="message">{strip}
 									{if isset($oldMessage)}{$oldMessage|escape:'html':'UTF-8'}{/if}
-								</textarea>
+								{/strip}</textarea>
 							</div>
 						</div> <!-- end opc_delivery_methods -->
 					{/if}
