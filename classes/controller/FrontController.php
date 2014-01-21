@@ -996,7 +996,7 @@ class FrontControllerCore extends Controller
 				if ($css_media_type)
 					$list_uri[$file] = $media;
 				else
-					$list_uri = $file;
+					$list_uri[] = $file;
 			}
 			else
 				$list_uri[$file] = $media;
