@@ -846,7 +846,7 @@ class Blocktopmenu extends Module
 		$fields_form = array(
 			'form' => array(
 				'legend' => array(
-					'title' => $this->l('Add a new link'),
+					'title' => (Tools::getIsset('updatelinksmenutop') && !Tools::getValue('updatelinksmenutop')) ? $this->l('Update link') : $this->l('Add a new link'),
 					'icon' => 'icon-link'
 				),
 				'input' => array(
@@ -883,7 +883,7 @@ class Blocktopmenu extends Module
 				),
 				'submit' => array(
 					'name' => 'submitBlocktopmenuLinks',
-					'title' => $this->l('Save')
+					'title' => $this->l('Add')
 				)
 			),
 		);
@@ -895,18 +895,19 @@ class Blocktopmenu extends Module
 		$helper->default_form_language = $lang->id;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
 		$this->fields_form = array();
-
 		$helper->identifier = $this->identifier;
-
 		$helper->fields_value = $this->getAddLinkFieldsValues();
-		if (Tools::isSubmit('updatelinksmenutop'))
-		{
+
+		if (Tools::getIsset('updatelinksmenutop') && !Tools::getValue('updatelinksmenutop'))
 			$fields_form['form']['submit'] = array(
 				'name' => 'updatelinksmenutop',
 				'title' => $this->l('Update')
 			);
+
+		if (Tools::isSubmit('updatelinksmenutop'))
+		{			
 			$fields_form['form']['input'][] = array('type' => 'hidden', 'name' => 'updatelink');
-			$fields_form['form']['input'][] = array('type' => 'hidden', 'name' => 'id_linksmenutop');
+			$fields_form['form']['input'][] = array('type' => 'hidden', 'name' => 'id_linksmenutop');			
 			$helper->fields_value['updatelink'] = '';
 		}
 			
@@ -1007,6 +1008,7 @@ class Blocktopmenu extends Module
 		$links_label_edit = '';
 		$labels_edit = '';
 		$new_window_edit = '';
+
 		if (Tools::isSubmit('updatelinksmenutop'))
 		{
 			$link = MenuTopLinks::getLinkLang(Tools::getValue('id_linksmenutop'), (int)Shop::getContextShopID());
@@ -1019,12 +1021,21 @@ class Blocktopmenu extends Module
 			'new_window' => Tools::getValue('new_window', $new_window_edit),
 			'id_linksmenutop' => Tools::getValue('id_linksmenutop'),
 		);
-		
-		foreach (Language::getLanguages(false) as $lang)
+
+		if (Tools::getValue('submitAddmodule'))
 		{
-			$fields_values['label'][$lang['id_lang']] = Tools::getValue('label_'.(int)$lang['id_lang'], isset($labels_edit[$lang['id_lang']]) ? $labels_edit[$lang['id_lang']] : '');
-			$fields_values['link'][$lang['id_lang']] = Tools::getValue('link_'.(int)$lang['id_lang'], isset($links_label_edit[$lang['id_lang']]) ? $links_label_edit[$lang['id_lang']] : '');
+			foreach (Language::getLanguages(false) as $lang)
+			{
+				$fields_values['label'][$lang['id_lang']] = '';
+				$fields_values['link'][$lang['id_lang']] = '';
+			}
 		}
+		else
+			foreach (Language::getLanguages(false) as $lang)
+			{
+				$fields_values['label'][$lang['id_lang']] = Tools::getValue('label_'.(int)$lang['id_lang'], isset($labels_edit[$lang['id_lang']]) ? $labels_edit[$lang['id_lang']] : '');
+				$fields_values['link'][$lang['id_lang']] = Tools::getValue('link_'.(int)$lang['id_lang'], isset($links_label_edit[$lang['id_lang']]) ? $links_label_edit[$lang['id_lang']] : '');
+			}
 		
 		return $fields_values;	
 	}
