@@ -25,7 +25,7 @@
 <div class="panel">
 	<div class="row">
 		{foreach $kpis as $kpi}
-		<div class="col-lg-3">
+		<div class="col-sm-6 ol-lg-3">
 			{$kpi}
 		</div>			
 		{/foreach}
