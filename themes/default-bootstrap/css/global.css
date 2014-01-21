@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "CP850";
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic);
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -7184,8 +7184,25 @@ table#cart_summary .gift-icon {
 #id_address_delivery.form-control {
   width: 269px; }
 
-.checkbox.addressesAreEquals {
-  margin: 0 0 25px 0; }
+.addresses .select label,
+.addresses .selector,
+.addresses .addresses .address_select {
+  clear: both;
+  float: left; }
+.addresses .waitimage {
+  display: none;
+  float: left;
+  width: 24px;
+  height: 24px;
+  background-image: url("../../../img/loader.gif");
+  background-repeat: no-repeat;
+  position: relative;
+  bottom: -2px;
+  left: 10px; }
+.addresses .checkbox.addressesAreEquals {
+  clear: both;
+  float: left;
+  margin: 15px 0 25px 0; }
 
 #order .delivery_option > div,
 #order-opc .delivery_option > div {
