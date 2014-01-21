@@ -233,8 +233,8 @@
 		{/if}
 
 		<script type="text/javascript">
-			var quantities_ajax_success = '{l s='Data saved'}';
-			var quantities_ajax_waiting = '{l s='Saving data...'}';
+			var quantities_ajax_success = '{l s='Data saved' js='1'}';
+			var quantities_ajax_waiting = '{l s='Saving data...' js='1'}';
 		</script>
 	</div>
 {/if}
