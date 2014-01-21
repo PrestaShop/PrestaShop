@@ -1912,8 +1912,27 @@ table#cart_summary .gift-icon
 #id_address_invoice.form-control,
 #id_address_delivery.form-control
 	width: 269px
-.checkbox.addressesAreEquals
-	margin: 0 0 25px 0
+
+.addresses 
+	.select label,
+	.selector, 
+	.addresses .address_select
+		clear: both
+		float: left
+	.waitimage
+		display: none
+		float: left
+		width: 24px
+		height: 24px
+		background-image: url('../../../img/loader.gif')
+		background-repeat: no-repeat
+		position: relative
+		bottom: -2px
+		left: 10px
+	.checkbox.addressesAreEquals
+		clear: both
+		float: left
+		margin: 15px 0 25px 0
 
 // step 4 - paiement
 #order .delivery_option,

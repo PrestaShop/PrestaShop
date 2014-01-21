@@ -94,6 +94,9 @@ function updateAddresses()
 	var idAddress_invoice = $('input[type=checkbox]#addressesAreEquals:checked').length === 1 ? idAddress_delivery : parseInt($('#id_address_invoice').val());
 	
    	if(isNaN(idAddress_delivery) == false && isNaN(idAddress_invoice) == false)	
+	{
+		$('.addresses .waitimage').show();
+		$('.button[name="processAddress"]').prop('disabled', 'disabled');
 		$.ajax({
 			type: 'POST',
 			headers: { "cache-control": "no-cache" },
@@ -122,10 +125,15 @@ function updateAddresses()
 							errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 					alert(errors);
 				}
+				$('.addresses .waitimage').hide();
+				$('.button[name="processAddress"]').prop('disabled', '');
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				$('.addresses .waitimage').hide();                        
+				$('.button[name="processAddress"]').prop('disabled', '');
 				if (textStatus !== 'abort')
 					alert("TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 			}
 		});
+	}
 }
