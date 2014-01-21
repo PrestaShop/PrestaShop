@@ -25,7 +25,8 @@
 */
 
 $timer_start = microtime(true);
-define('_PS_ADMIN_DIR_', getcwd());
+if (!defined('_PS_ADMIN_DIR_'))
+	define('_PS_ADMIN_DIR_', getcwd());
 
 if (!defined('PS_ADMIN_DIR'))
 	define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);

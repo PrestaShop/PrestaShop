@@ -30,7 +30,7 @@ class AdminLogsControllerCore extends AdminController
 	{
 		$this->bootstrap = true;
 	 	$this->table = 'log';
-	 	$this->className = 'Logger';
+	 	$this->className = 'PrestaShopLogger';
 	 	$this->lang = false;
 		$this->noLink = true;
 
@@ -101,7 +101,7 @@ class AdminLogsControllerCore extends AdminController
 	
 	public function processDelete()
 	{
-		return Logger::eraseAllLogs();
+		return PrestaShopLogger::eraseAllLogs();
 	}
 
 	public function initToolbar()

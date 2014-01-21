@@ -23,8 +23,8 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
-define('_PS_ADMIN_DIR_', getcwd());
+if (!defined('_PS_ADMIN_DIR_'))
+	define('_PS_ADMIN_DIR_', getcwd());
 include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 /* Getting cookie or logout */
 require_once(_PS_ADMIN_DIR_.'/init.php');

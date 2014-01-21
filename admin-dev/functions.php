@@ -23,7 +23,9 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-require_once(dirname(__FILE__).'/../images.inc.php');
+if (!defined('_PS_ADMIN_DIR_'))
+	define('_PS_ADMIN_DIR_', getcwd());
+require_once(_PS_ADMIN_DIR_.'/../images.inc.php');
 function bindDatepicker($id, $time)
 {
 	if ($time)

@@ -2054,7 +2054,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$class_name = substr($file, 0, -4);	
 
 				if (!class_exists($class_name, false) && !class_exists($class_name.'Core', false))
-					Autoload::getInstance()->load($class_name);
+					PrestaShopAutoload::getInstance()->load($class_name);
 
 				if (!is_subclass_of($class_name.'Core', 'ObjectModel'))
 					continue;

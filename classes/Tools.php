@@ -742,7 +742,17 @@ class ToolsCore
 				foreach (scandir($dir) as $file)
 					if ($file[0] != '.' && $file != 'index.php')
 						self::deleteDirectory($dir.DIRECTORY_SEPARATOR.$file);
-	}   
+	}
+    
+	/**
+	* Clear XML cache folder
+ 	*/
+	public static function clearXMLCache()
+	{
+		foreach (scandir(_PS_ROOT_DIR_.'/config/xml') as $file)
+			if ((pathinfo($file, PATHINFO_EXTENSION) == 'xml') && ($file != 'default.xml'))
+				self::deleteFile(_PS_ROOT_DIR_.'/config/xml/'.$file);
+	}
 
 	/**
 	* Display an error according to an error code
@@ -2152,7 +2162,7 @@ exit;
 		if (_PS_DISPLAY_COMPATIBILITY_WARNING_)
 		{
 			trigger_error($error, E_USER_WARNING);
-			Logger::addLog($message, 3, $class);
+			PrestaShopLogger::addLog($message, 3, $class);
 		}
 	}
 
@@ -2410,7 +2420,7 @@ exit;
 	{
 		if ($die || (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_))
 			die($msg);
-		return Logger::addLog($msg);
+		return PrestaShopLogger::addLog($msg);
 	}
 
 	/**

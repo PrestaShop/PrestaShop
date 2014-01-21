@@ -73,7 +73,7 @@
 				<span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}">{sizeof($customer_thread_message)}</a></span>
 			</div>
 			<div class="col-lg-3 box-stats color1" >
-				<i class="icon-ok"></i>
+				<i class="icon-book"></i>
 				<span class="title">{l s='Products'}<br /><small>&nbsp;</small></span>
 				<span class="value">{sizeof($products)}</span>
 			</div>

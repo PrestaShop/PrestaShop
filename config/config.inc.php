@@ -40,7 +40,7 @@ if (!headers_sent())
 	header('Content-Type: text/html; charset=utf-8');
 
 /* No settings file? goto installer... */
-if (!file_exists(dirname(__FILE__).'/settings.inc.php'))
+if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 {
 	$dir = ((substr($_SERVER['REQUEST_URI'], -1) == '/' || is_dir($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : dirname($_SERVER['REQUEST_URI']).'/');
 	if (!file_exists(dirname(__FILE__).'/../install'))
@@ -48,8 +48,8 @@ if (!file_exists(dirname(__FILE__).'/settings.inc.php'))
 	header('Location: install/');
 	exit;
 }
-
-require_once(dirname(__FILE__).'/settings.inc.php');
+//include settings file only if we are not in multi-tenancy mode 
+require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 require_once(dirname(__FILE__).'/autoload.php');
 
 if (_PS_DEBUG_PROFILING_)

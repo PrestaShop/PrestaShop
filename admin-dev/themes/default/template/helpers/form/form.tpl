@@ -440,9 +440,25 @@
 									{/if}
 
 								{elseif $input.type == 'checkbox'}
+                                    {if isset($input.expand)}
+                                        <a class="btn btn-default show_checkbox{if $input.expand.default == 'hide'} hidden {/if}" href="#">
+                                            <i class="icon-{$input.expand.show.icon}"></i>
+                                            {$input.expand.show.text}
+                                            {if isset($input.expand.print_total) && $input.expand.print_total > 0}
+                                                <span class="badge">{$input.expand.print_total}</span>
+                                            {/if}
+                                        </a>
+                                        <a class="btn btn-default hide_checkbox{if $input.expand.default == 'show'} hidden {/if}" href="#">
+                                            <i class="icon-{$input.expand.show.icon}"></i>
+                                            {$input.expand.hide.text}
+                                            {if isset($input.expand.print_total) && $input.expand.print_total > 0}
+                                                <span class="badge">{$input.expand.print_total}</span>
+                                            {/if}
+                                        </a>
+                                    {/if}
 									{foreach $input.values.query as $value}
 										{assign var=id_checkbox value=$input.name|cat:'_'|cat:$value[$input.values.id]}
-										<div class="checkbox">
+										<div class="checkbox{if isset($input.expand) && $input.expand.default == 'show'} hidden {/if}">
 											<label for="{$id_checkbox}">
 												<input type="checkbox"
 													name="{$id_checkbox}"
@@ -688,6 +704,20 @@
 		displayFlags(languages, id_language, allowEmployeeFormLang);
 
 		$(document).ready(function() {
+
+            $(".show_checkbox").click(function () {
+                $(this).addClass('hidden')
+                $(this).siblings('.checkbox').removeClass('hidden');
+                $(this).siblings('.hide_checkbox').removeClass('hidden');
+                return false;
+            });
+            $(".hide_checkbox").click(function () {
+                $(this).addClass('hidden')
+                $(this).siblings('.checkbox').addClass('hidden');
+                $(this).siblings('.show_checkbox').removeClass('hidden');
+                return false;
+            });
+
 			{if isset($fields_value.id_state)}
 				if ($('#id_country') && $('#id_state'))
 				{

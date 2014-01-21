@@ -24,7 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include(dirname(__FILE__).'/../config/config.inc.php');
+if (!defined('_PS_ADMIN_DIR_'))
+	define('_PS_ADMIN_DIR_', getcwd());
+include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 
 if (isset($_GET['secure_key']))
 {
