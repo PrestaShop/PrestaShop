@@ -225,19 +225,32 @@ class MediaCore
 		$file_uri = '';
 		if (!array_key_exists('host', $url_data))
 		{
+			$media_uri_host_mode = '/'.ltrim(str_replace(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, _PS_CORE_DIR_), __PS_BASE_URI__, $media_uri), '/\\');
 			$media_uri = '/'.ltrim(str_replace(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, _PS_ROOT_DIR_), __PS_BASE_URI__, $media_uri), '/\\');
 			$url_data['path'] = $media_uri;			
 			// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
 			$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
+			$file_uri_host_mode = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, Tools::str_replace_once(_PS_CORE_DIR_, '', $url_data['path']));
 		}
 
 		// check if css files exists
-		if (!array_key_exists('host', $url_data) && (!@filemtime($file_uri) || filesize($file_uri) === 0))
-			return false;
+		if (!array_key_exists('host', $url_data))
+		{			
+			if (!@filemtime($file_uri) || filesize($file_uri) === 0)
+			{
+				if (defined('_PS_HOST_MODE_') && !@filemtime($file_uri_host_mode) || filesize($file_uri_host_mode) === 0)
+					return false;
+				else
+				{
+					$media_uri = $media_uri_host_mode;
+					$file_uri = $file_uri_host_mode;
+				}				
+			}
+		}
 
 		if (!array_key_exists('host', $url_data))
 			$media_uri = str_replace('//', '/', $media_uri);
-
+		
 		if ($css_media_type)
 			return array($media_uri => $css_media_type);
 
@@ -268,10 +281,11 @@ class MediaCore
 		// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
 		$url_data = parse_url($file);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
+		$file_uri_host_mode = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
 		// check if js files exists, if not try to load query from ajax.googleapis.com
 
 		$return = array();
-		if (@filemtime($file_uri))
+		if (@filemtime($file_uri) || (defined('_PS_HOST_MODE_') && @filemtime($file_uri_host_mode)))
 			$return[] = Media::getJSPath($file);
 		else
 			$return[] = Media::getJSPath(Tools::getCurrentUrlProtocolPrefix().'ajax.googleapis.com/ajax/libs/jquery/'.$version.'/jquery'.($minifier ? '.min.js' : '.js'));
@@ -298,6 +312,7 @@ class MediaCore
 		$file = 'jquery.'.$component.'.min.js';
 		$url_data = parse_url($folder.$file);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
+		$file_uri_host_mode = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
 		$ui_tmp = array();
 		if (isset(Media::$jquery_ui_dependencies[$component]) && Media::$jquery_ui_dependencies[$component]['theme'] && $check_dependencies)
 		{
@@ -321,7 +336,7 @@ class MediaCore
 					$ui_path['css'] = array_merge($ui_path['css'], $dep_css);
 			}
 		}
-		if (@filemtime($file_uri))
+		if (@filemtime($file_uri) || (defined('_PS_HOST_MODE_') && @filemtime($file_uri_host_mode)))
 		{
 			if (!empty($ui_tmp))
 			{
@@ -366,13 +381,16 @@ class MediaCore
 		$file = 'jquery.'.$name.'.js';
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		if (@file_exists($file_uri.$file))
+		$file_uri_host_mode = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
+		
+		if (@file_exists($file_uri.$file) || (defined('_PS_HOST_MODE_') && @file_exists($file_uri_host_mode.$file)))
 			$plugin_path['js'] = Media::getJSPath($folder.$file);
-		elseif (@file_exists($file_uri.$name.'/'.$file))
+		elseif (@file_exists($file_uri.$name.'/'.$file) || (defined('_PS_HOST_MODE_') && @file_exists($file_uri_host_mode.$name.'/'.$file)))
 			$plugin_path['js'] = Media::getJSPath($folder.$name.'/'.$file);
 		else
 			return false;
 		$plugin_path['css'] = Media::getJqueryPluginCSSPath($name, $folder);
+
 		return $plugin_path;
 	}
 
@@ -389,9 +407,11 @@ class MediaCore
 		$file = 'jquery.'.$name.'.css';
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		if (@file_exists($file_uri.$file))
+		$file_uri_host_mode = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
+		
+		if (@file_exists($file_uri.$file) || (defined('_PS_HOST_MODE_') && @file_exists($file_uri_host_mode.$file)))
 			return Media::getCSSPath($folder.$file);
-		elseif (@file_exists($file_uri.$name.'/'.$file))
+		elseif (@file_exists($file_uri.$name.'/'.$file) || (defined('_PS_HOST_MODE_') && @file_exists($file_uri_host_mode.$name.'/'.$file)))
 			return Media::getCSSPath($folder.$name.'/'.$file);
 		else
 			return false;

@@ -39,7 +39,7 @@ class BlockCms extends Module
 	{
 		$this->name = 'blockcms';
 		$this->tab = 'front_office_features';
-		$this->version = '1.5';
+		$this->version = '1.6';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -224,6 +224,21 @@ class BlockCms extends Module
 				),
 				array(
 					'type' => 'checkbox',
+					'name' => 'PS_STORES_DISPLAY_FOOTER',
+					'values' => array(
+						'query' => array(
+							array(
+								'id' => 'on',
+								'name' => $this->l('Display "our stores" link in the footer'),
+								'val' => '1'
+							),
+						),
+						'id' => 'id',
+						'name' => 'name'
+					)
+				),
+				array(
+					'type' => 'checkbox',
 					'name' => 'cms_footer_powered_by',
 					'values' => array(
 						'query' => array(
@@ -254,6 +269,7 @@ class BlockCms extends Module
 
 		$this->fields_value['cms_footer_on'] = Configuration::get('FOOTER_BLOCK_ACTIVATION');
 		$this->fields_value['cms_footer_powered_by_on'] = Configuration::get('FOOTER_POWEREDBY');
+		$this->fields_value['PS_STORES_DISPLAY_FOOTER_on'] = Configuration::get('PS_STORES_DISPLAY_FOOTER');
 
 		foreach ($this->context->controller->_languages as $language)
 		{
@@ -624,6 +640,7 @@ class BlockCms extends Module
 			$footer_boxes = Tools::getValue('footerBox') ? implode('|', Tools::getValue('footerBox')) : '';
 			$block_activation = (Tools::getValue('cms_footer_on') == 1) ? 1 : 0;
 
+			Configuration::updateValue('PS_STORES_DISPLAY_FOOTER', Tools::getValue('PS_STORES_DISPLAY_FOOTER_on'));
 			Configuration::updateValue('FOOTER_CMS', rtrim($footer_boxes, '|'));
 			Configuration::updateValue('FOOTER_POWEREDBY', $powered_by);
 			Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', $block_activation);

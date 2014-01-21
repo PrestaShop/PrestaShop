@@ -37,6 +37,9 @@ class AdminBlockCategoriesController extends ModuleAdminController
 				&& !unlink(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg'))
 				$this->context->controller->errors[] = Tools::displayError('Error while delete');
 
+			if (empty($this->context->controller->errors))
+				Tools::clearSmartyCache();
+
 			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCategories').'&id_category='
 				.(int)Tools::getValue('id_category').'&updatecategory');
 		}
@@ -100,7 +103,9 @@ class AdminBlockCategoriesController extends ModuleAdminController
 			}
 
 			if (count($total_errors))
-			$this->context->controller->errors = array_merge($this->context->controller->errors, $total_errors);
+				$this->context->controller->errors = array_merge($this->context->controller->errors, $total_errors);
+			else
+				Tools::clearSmartyCache();
 
 			die(Tools::jsonEncode(array('thumbnail' => $files)));
 		}

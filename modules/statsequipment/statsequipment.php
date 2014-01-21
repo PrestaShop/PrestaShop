@@ -30,8 +30,8 @@ if (!defined('_PS_VERSION_'))
 class StatsEquipment extends ModuleGraph
 {
 	private $html = '';
-	private $_query = '';
-	private $_query2 = '';
+	private $query = '';
+	private $query2 = '';
 
 	public function __construct()
 	{
@@ -64,7 +64,7 @@ class StatsEquipment extends ModuleGraph
 					'.Shop::addSqlRestriction(false, 'c');
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->query($sql);
 
-		$calcArray = array(
+		$calc_array = array(
 			'jsOK' => 0,
 			'jsKO' => 0,
 			'javaOK' => 0,
@@ -84,30 +84,31 @@ class StatsEquipment extends ModuleGraph
 		{
 			if (!$row['javascript'])
 			{
-				++$calcArray['jsKO'];
+				++$calc_array['jsKO'];
 				continue;
 			}
-			++$calcArray['jsOK'];
-			($row['windows_media']) ? ++$calcArray['wmpOK'] : ++$calcArray['wmpKO'];
-			($row['real_player']) ? ++$calcArray['realOK'] : ++$calcArray['realKO'];
-			($row['adobe_flash']) ? ++$calcArray['flashOK'] : ++$calcArray['flashKO'];
-			($row['adobe_director']) ? ++$calcArray['directorOK'] : ++$calcArray['directorKO'];
-			($row['sun_java']) ? ++$calcArray['javaOK'] : ++$calcArray['javaKO'];
-			($row['apple_quicktime']) ? ++$calcArray['qtOK'] : ++$calcArray['qtKO'];
+			++$calc_array['jsOK'];
+			($row['windows_media']) ? ++$calc_array['wmpOK'] : ++$calc_array['wmpKO'];
+			($row['real_player']) ? ++$calc_array['realOK'] : ++$calc_array['realKO'];
+			($row['adobe_flash']) ? ++$calc_array['flashOK'] : ++$calc_array['flashKO'];
+			($row['adobe_director']) ? ++$calc_array['directorOK'] : ++$calc_array['directorKO'];
+			($row['sun_java']) ? ++$calc_array['javaOK'] : ++$calc_array['javaKO'];
+			($row['apple_quicktime']) ? ++$calc_array['qtOK'] : ++$calc_array['qtKO'];
 		}
 
-		if (!$calcArray['jsOK'])
+		if (!$calc_array['jsOK'])
 			return false;
 
 		$equip = array(
-			'Windows Media Player' => $calcArray['wmpOK'] / ($calcArray['wmpOK'] + $calcArray['wmpKO']),
-			'Real Player' => $calcArray['realOK'] / ($calcArray['realOK'] + $calcArray['realKO']),
-			'Apple Quicktime' => $calcArray['qtOK'] / ($calcArray['qtOK'] + $calcArray['qtKO']),
-			'Sun Java' => $calcArray['javaOK'] / ($calcArray['javaOK'] + $calcArray['javaKO']),
-			'Adobe Flash' => $calcArray['flashOK'] / ($calcArray['flashOK'] + $calcArray['flashKO']),
-			'Adobe Shockwave' => $calcArray['directorOK'] / ($calcArray['directorOK'] + $calcArray['directorKO'])
+			'Windows Media Player' => $calc_array['wmpOK'] / ($calc_array['wmpOK'] + $calc_array['wmpKO']),
+			'Real Player' => $calc_array['realOK'] / ($calc_array['realOK'] + $calc_array['realKO']),
+			'Apple Quicktime' => $calc_array['qtOK'] / ($calc_array['qtOK'] + $calc_array['qtKO']),
+			'Sun Java' => $calc_array['javaOK'] / ($calc_array['javaOK'] + $calc_array['javaKO']),
+			'Adobe Flash' => $calc_array['flashOK'] / ($calc_array['flashOK'] + $calc_array['flashKO']),
+			'Adobe Shockwave' => $calc_array['directorOK'] / ($calc_array['directorOK'] + $calc_array['directorKO'])
 		);
 		arsort($equip);
+
 		return $equip;
 	}
 
@@ -162,14 +163,15 @@ class StatsEquipment extends ModuleGraph
 				</div>
 			</div>
 		</div>';
-			if ($equipment)
-			{
-				$this->html .= '<table class="table">
+		if ($equipment)
+		{
+			$this->html .= '<table class="table">
 				<tr><th><span class="title_box  active">'.$this->l('Plugins').'</th></span><th></th></tr>';
-				foreach ($equipment as $name => $value)	
-					$this->html .= '<tr><td>'.$name.'</td><td>'.number_format(100 * $value, 2).'%</td></tr>';
-				$this->html .= '</table>';
-			}
+			foreach ($equipment as $name => $value)
+				$this->html .= '<tr><td>'.$name.'</td><td>'.number_format(100 * $value, 2).'%</td></tr>';
+			$this->html .= '</table>';
+		}
+
 		return $this->html;
 	}
 
@@ -179,33 +181,33 @@ class StatsEquipment extends ModuleGraph
 		{
 			case 'wb':
 				$this->_titles['main'] = $this->l('Web browser used.');
-				$this->_query = 'SELECT wb.`name`, COUNT(g.`id_web_browser`) AS total
+				$this->query = 'SELECT wb.`name`, COUNT(g.`id_web_browser`) AS total
 						FROM `'._DB_PREFIX_.'web_browser` wb
 						LEFT JOIN `'._DB_PREFIX_.'guest` g ON g.`id_web_browser` = wb.`id_web_browser`
 						LEFT JOIN `'._DB_PREFIX_.'connections` c ON g.`id_guest` = c.`id_guest`
 						WHERE 1
 							'.Shop::addSqlRestriction(false, 'c').'
 							AND c.`date_add` BETWEEN ';
-				$this->_query2 = ' GROUP BY g.`id_web_browser`';
-			break;
+				$this->query2 = ' GROUP BY g.`id_web_browser`';
+				break;
 
 			case 'os':
 				$this->_titles['main'] = $this->l('Operating system used.');
-				$this->_query = 'SELECT os.`name`, COUNT(g.`id_operating_system`) AS total
+				$this->query = 'SELECT os.`name`, COUNT(g.`id_operating_system`) AS total
 						FROM `'._DB_PREFIX_.'operating_system` os
 						LEFT JOIN `'._DB_PREFIX_.'guest` g ON g.`id_operating_system` = os.`id_operating_system`
 						LEFT JOIN `'._DB_PREFIX_.'connections` c ON g.`id_guest` = c.`id_guest`
 						WHERE 1
 							'.Shop::addSqlRestriction(false, 'c').'
 							AND c.`date_add` BETWEEN ';
-				$this->_query2 = ' GROUP BY g.`id_operating_system`';
-			 break;
+				$this->query2 = ' GROUP BY g.`id_operating_system`';
+				break;
 		}
 	}
 
 	protected function getData($layers)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate().$this->_query2);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query.$this->getDate().$this->query2);
 		$this->_values = array();
 		$i = 0;
 		foreach ($result as $row)
@@ -215,5 +217,3 @@ class StatsEquipment extends ModuleGraph
 		}
 	}
 }
-
-

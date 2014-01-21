@@ -38,7 +38,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.10.1';
+		$this->version = '1.10.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -1052,7 +1052,7 @@ class BlockLayered extends Module
 				foreach ($attribute as $param)
 				{
 					$selected_filters = array();
-					$link = '/'.str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($param['name'])).Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($param['value']));
+					$link = '/'.str_replace($this->getAnchor(), '_', Tools::link_rewrite($param['name'])).$this->getAnchor().str_replace($this->getAnchor(), '_', Tools::link_rewrite($param['value']));
 					$selected_filters[$param['type']] = array();
 
 					if (!isset($param['id_id_value']))
@@ -1695,7 +1695,7 @@ class BlockLayered extends Module
 			{
 				foreach ($url_attributes as $url_attribute)
 				{
-					$url_parameters = explode(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), $url_attribute);
+					$url_parameters = explode($this->getAnchor(), $url_attribute);
 					$attribute_name  = array_shift($url_parameters);
 					if ($attribute_name == 'page')
 						$this->page = (int)$url_parameters[0];
@@ -1705,7 +1705,7 @@ class BlockLayered extends Module
 					{
 						foreach ($url_parameters as $url_parameter)
 						{
-							$data = Db::getInstance()->getValue('SELECT data FROM `'._DB_PREFIX_.'layered_friendly_url` WHERE `url_key` = \''.md5('/'.$attribute_name.Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-').$url_parameter).'\'');
+							$data = Db::getInstance()->getValue('SELECT data FROM `'._DB_PREFIX_.'layered_friendly_url` WHERE `url_key` = \''.md5('/'.$attribute_name.$this->getAnchor().$url_parameter).'\'');
 							if ($data)
 								foreach (Tools::unSerialize($data) as $key_params => $params)
 								{
@@ -2659,7 +2659,7 @@ class BlockLayered extends Module
 				{
 					$value_name = !empty($value['url_name']) ? $value['url_name'] : $value['name'];
 					$value_meta = !empty($value['meta_title']) ? $value['meta_title'] : $value['name'];
-					$param_group_selected .= Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($value_name));
+					$param_group_selected .= $this->getAnchor().str_replace($this->getAnchor(), '_', Tools::link_rewrite($value_name));
 					$param_group_selected_array[Tools::link_rewrite($filter_name)][] = Tools::link_rewrite($value_name);
 				
 					if (!isset($title_values[$filter_name]))
@@ -2674,12 +2674,12 @@ class BlockLayered extends Module
 			}
 			if (!empty($param_group_selected))
 			{
-				$param_selected .= '/'.str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($filter_name)).$param_group_selected;
+				$param_selected .= '/'.str_replace($this->getAnchor(), '_', Tools::link_rewrite($filter_name)).$param_group_selected;
 				$option_checked_array[Tools::link_rewrite($filter_name)] = $param_group_selected;
 			}
 			// select only attribute and group attribute to display an unique product combination link
 			if (!empty($param_group_selected) && $type_filter['type'] == 'id_attribute_group')
-				$param_product_url .= '/'.str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($filter_name)).$param_group_selected;
+				$param_product_url .= '/'.str_replace($this->getAnchor(), '_', Tools::link_rewrite($filter_name)).$param_group_selected;
 			
 		}
 		
@@ -2721,25 +2721,25 @@ class BlockLayered extends Module
 						// Update parameter filter checked before
 						if (array_key_exists(Tools::link_rewrite($filter_name), $option_checked_array))
 						{
-							$option_checked_clone_array[Tools::link_rewrite($filter_name)] = $option_checked_clone_array[Tools::link_rewrite($filter_name)].Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($value_name));
+							$option_checked_clone_array[Tools::link_rewrite($filter_name)] = $option_checked_clone_array[Tools::link_rewrite($filter_name)].$this->getAnchor().str_replace($this->getAnchor(), '_', Tools::link_rewrite($value_name));
 
 							if (in_array($type_filter['type'], $blacklist))
 								$nofollow = true;
 						}
 						else
-							$option_checked_clone_array[Tools::link_rewrite($filter_name)] = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($value_name));
+							$option_checked_clone_array[Tools::link_rewrite($filter_name)] = $this->getAnchor().str_replace($this->getAnchor(), '_', Tools::link_rewrite($value_name));
 					}
 					else
 					{
 						// Remove selected parameters
-						$option_checked_clone_array[Tools::link_rewrite($filter_name)] = str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-').str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', Tools::link_rewrite($value_name)), '', $option_checked_clone_array[Tools::link_rewrite($filter_name)]);
+						$option_checked_clone_array[Tools::link_rewrite($filter_name)] = str_replace($this->getAnchor().str_replace($this->getAnchor(), '_', Tools::link_rewrite($value_name)), '', $option_checked_clone_array[Tools::link_rewrite($filter_name)]);
 						if (empty($option_checked_clone_array[Tools::link_rewrite($filter_name)]))
 							unset($option_checked_clone_array[Tools::link_rewrite($filter_name)]);
 					}
 					$parameters = '';
 					ksort($option_checked_clone_array); // Order parameters
 					foreach ($option_checked_clone_array as $key_group => $value_group)
-						$parameters .= '/'.str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-'), '_', $key_group).$value_group;
+						$parameters .= '/'.str_replace($this->getAnchor(), '_', $key_group).$value_group;
 
 					// Add nofollow if any blacklisted filters ins in parameters
 					foreach ($filter_blocks as $filter)
@@ -3315,5 +3315,14 @@ class BlockLayered extends Module
 		}
 		if ($values)
 			Db::getInstance()->execute(rtrim($sql_to_insert, ','));
+	}
+
+	protected function getAnchor()
+	{
+		static $anchor = null;
+		if ($anchor === null)
+			if (!$anchor = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'))
+				$anchor = '-';
+		return $anchor;
 	}
 }

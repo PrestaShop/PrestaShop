@@ -1069,21 +1069,6 @@
     'path' => 'controllers/front/AuthController.php',
     'type' => 'class',
   ),
-  'Autoload' => 
-  array (
-    'path' => 'classes/Autoload.php',
-    'type' => 'class',
-  ),
-  'Backup' => 
-  array (
-    'path' => '',
-    'type' => 'class',
-  ),
-  'BackupCore' => 
-  array (
-    'path' => 'classes/Backup.php',
-    'type' => 'class',
-  ),
   'BestSalesController' => 
   array (
     'path' => '',
@@ -2014,16 +1999,6 @@
     'path' => 'classes/LocalizationPack.php',
     'type' => 'class',
   ),
-  'Logger' => 
-  array (
-    'path' => '',
-    'type' => 'class',
-  ),
-  'LoggerCore' => 
-  array (
-    'path' => 'classes/Logger.php',
-    'type' => 'class',
-  ),
   'Mail' => 
   array (
     'path' => '',
@@ -2524,6 +2499,21 @@
     'path' => 'controllers/front/PdfOrderSlipController.php',
     'type' => 'class',
   ),
+  'PrestaShopAutoload' => 
+  array (
+    'path' => 'classes/PrestaShopAutoload.php',
+    'type' => 'class',
+  ),
+  'PrestaShopBackup' => 
+  array (
+    'path' => '',
+    'type' => 'class',
+  ),
+  'PrestaShopBackupCore' => 
+  array (
+    'path' => 'classes/PrestaShopBackup.php',
+    'type' => 'class',
+  ),
   'PrestaShopCollection' => 
   array (
     'path' => '',
@@ -2552,6 +2542,16 @@
   'PrestaShopExceptionCore' => 
   array (
     'path' => 'classes/exception/PrestaShopException.php',
+    'type' => 'class',
+  ),
+  'PrestaShopLogger' => 
+  array (
+    'path' => '',
+    'type' => 'class',
+  ),
+  'PrestaShopLoggerCore' => 
+  array (
+    'path' => 'classes/PrestaShopLogger.php',
     'type' => 'class',
   ),
   'PrestaShopModuleException' => 

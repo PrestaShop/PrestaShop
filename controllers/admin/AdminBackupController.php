@@ -33,7 +33,7 @@ class AdminBackupControllerCore extends AdminController
 	{
 		$this->bootstrap = true;
 		$this->table = 'backup';
-		$this->className = 'Backup';
+		$this->className = 'PrestaShopBackup';
 		$this->identifier = 'filename';
 		parent::__construct();
 

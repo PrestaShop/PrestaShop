@@ -332,4 +332,10 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 			return $object;
 		}
 	}
+
+	public function postProcess()
+	{
+		Tools::clearSmartyCache();
+		return parent::postProcess();
+	}
 }

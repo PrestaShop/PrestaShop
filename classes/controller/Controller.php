@@ -361,6 +361,8 @@ abstract class ControllerCore
 	 */
 	public function addJqueryPlugin($name, $folder = null, $css = true)
 	{
+		if (!is_array($name))
+			$name = array($name);
 		if (is_array($name))
 		{
 			foreach ($name as $plugin)
@@ -370,17 +372,8 @@ abstract class ControllerCore
 				if (!empty($plugin_path['js']))
 					$this->addJS($plugin_path['js']);
 				if ($css && !empty($plugin_path['css']))
-					$this->addCSS($plugin_path['css']);
+					$this->addCSS(key($plugin_path['css']), 'all');
 			}
-		}
-		else
-		{
-			$plugin_path = Media::getJqueryPluginPath($name, $folder);
-
-			if (!empty($plugin_path['js']))
-				$this->addJS($plugin_path['js']);
-			if ($css && !empty($plugin_path['css']))
-				$this->addCSS($plugin_path['css']);
 		}
 	}
 

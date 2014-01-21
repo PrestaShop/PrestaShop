@@ -101,12 +101,12 @@ class StatsCheckUp extends Module
 				.Shop::addSqlAssociation('lang', 'l');
 		$languages = $db->executeS($sql);
 
-		$arrayColors = array(
-			0 => '<img src="../modules/'.$this->name.'/red.png" alt="'.$this->l('Bad').'" />',
-			1 => '<img src="../modules/'.$this->name.'/orange.png" alt="'.$this->l('Average').'" />',
-			2 => '<img src="../modules/'.$this->name.'/green.png" alt="'.$this->l('Good').'" />'
+		$array_colors = array(
+			0 => '<img src="../modules/'.$this->name.'/img/red.png" alt="'.$this->l('Bad').'" />',
+			1 => '<img src="../modules/'.$this->name.'/img/orange.png" alt="'.$this->l('Average').'" />',
+			2 => '<img src="../modules/'.$this->name.'/img/green.png" alt="'.$this->l('Good').'" />'
 		);
-		$tokenProducts = Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).(int)Context::getContext()->employee->id);
+		$token_products = Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Context::getContext()->employee->id);
 		$divisor = 4;
 		$totals = array('products' => 0, 'active' => 0, 'images' => 0, 'sales' => 0, 'stock' => 0);
 		foreach ($languages as $language)
@@ -115,11 +115,11 @@ class StatsCheckUp extends Module
 			$totals['description_'.$language['iso_code']] = 0;
 		}
 
-		$orderBy = 'p.id_product';
+		$order_by = 'p.id_product';
 		if ($this->context->cookie->checkup_order == 2)
-			$orderBy = 'pl.name';
+			$order_by = 'pl.name';
 		else if ($this->context->cookie->checkup_order == 3)
-			$orderBy = 'nbSales DESC';
+			$order_by = 'nbSales DESC';
 
 		// Get products stats
 		$sql = 'SELECT p.id_product, product_shop.active, pl.name, (
@@ -141,13 +141,13 @@ class StatsCheckUp extends Module
 				'.Product::sqlStock('p', 0).'
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl
 					ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('pl').')
-				ORDER BY '.$orderBy;
+				ORDER BY '.$order_by;
 		$result = $db->executeS($sql);
 
 		if (!$result)
 			return $this->l('No product was found.');
 
-		$arrayConf = array(
+		$array_conf = array(
 			'DESCRIPTIONS' => array('name' => $this->l('Descriptions'), 'text' => $this->l('chars (without HTML)')),
 			'IMAGES' => array('name' => $this->l('Images'), 'text' => $this->l('images')),
 			'SALES' => array('name' => $this->l('Sales'), 'text' => $this->l('orders / month')),
@@ -163,11 +163,11 @@ class StatsCheckUp extends Module
 				<thead>
 					<tr>
 						<th></th>
-						<th><span class="title_box active">'.$arrayColors[0].' '.$this->l('Not enough').'</span></th>
-						<th><span class="title_box active">'.$arrayColors[2].' '.$this->l('Alright').'</span></th>
+						<th><span class="title_box active">'.$array_colors[0].' '.$this->l('Not enough').'</span></th>
+						<th><span class="title_box active">'.$array_colors[2].' '.$this->l('Alright').'</span></th>
 					</tr>
 				</thead>';
-			foreach ($arrayConf as $conf => $translations)
+			foreach ($array_conf as $conf => $translations)
 				$this->html .= '
 				<tbody>
 					<tr>
@@ -221,7 +221,7 @@ class StatsCheckUp extends Module
 					<th><span class="title_box active">'.$this->l('Item').'</span></th>
 					<th class="center"><span class="title_box active">'.$this->l('Active').'</span></th>';
 			foreach ($languages as $language)
-				$this->html .= '<th><span class="title_box active">'.$this->l('Desc.').' ('.strtoupper($language['iso_code']).')</span></th>';
+				$this->html .= '<th><span class="title_box active">'.$this->l('Desc.').' ('.Tools::strtoupper($language['iso_code']).')</span></th>';
 			$this->html .= '
 					<th class="center"><span class="title_box active">'.$this->l('Images').'</span></th>
 					<th class="center"><span class="title_box active">'.$this->l('Sales').'</span></th>
@@ -261,18 +261,18 @@ class StatsCheckUp extends Module
 			$this->html .= '
 				<tr>
 					<td>'.$row['id_product'].'</td>
-					<td><a href="index.php?tab=AdminProducts&updateproduct&id_product='.$row['id_product'].'&token='.$tokenProducts.'">'.Tools::substr($row['name'], 0, 42).'</a></td>
-					<td class="center">'.$arrayColors[$scores['active']].'</td>';
+					<td><a href="index.php?tab=AdminProducts&updateproduct&id_product='.$row['id_product'].'&token='.$token_products.'">'.Tools::substr($row['name'], 0, 42).'</a></td>
+					<td class="center">'.$array_colors[$scores['active']].'</td>';
 				foreach ($languages as $language)
 					if (isset($row['desclength_'.$language['iso_code']]))
-						$this->html .= '<td class="center">'.(int)$row['desclength_'.$language['iso_code']].' '.$arrayColors[$scores['description_'.$language['iso_code']]].'</td>';
+						$this->html .= '<td class="center">'.(int)$row['desclength_'.$language['iso_code']].' '.$array_colors[$scores['description_'.$language['iso_code']]].'</td>';
 					else
-						$this->html .= '<td>0 '.$arrayColors[0].'</td>';
+						$this->html .= '<td>0 '.$array_colors[0].'</td>';
 				$this->html .= '
-					<td class="center">'.(int)$row['nbImages'].' '.$arrayColors[$scores['images']].'</td>
-					<td class="center">'.(int)$row['nbSales'].' '.$arrayColors[$scores['sales']].'</td>
-					<td class="center">'.(int)$row['stock'].' '.$arrayColors[$scores['stock']].'</td>
-					<td class="center">'.$arrayColors[$scores['average']].'</td>
+					<td class="center">'.(int)$row['nbImages'].' '.$array_colors[$scores['images']].'</td>
+					<td class="center">'.(int)$row['nbSales'].' '.$array_colors[$scores['sales']].'</td>
+					<td class="center">'.(int)$row['stock'].' '.$array_colors[$scores['stock']].'</td>
+					<td class="center">'.$array_colors[$scores['average']].'</td>
 				</tr>';
 		}
 
@@ -300,7 +300,7 @@ class StatsCheckUp extends Module
 					<th colspan="2"></th>
 					<th class="center"><span class="title_box active">'.$this->l('Active').'</span></th>';
 			foreach ($languages as $language)
-				$this->html .= '<th class="center"><span class="title_box active">'.$this->l('Desc.').' ('.strtoupper($language['iso_code']).')</span></th>';
+				$this->html .= '<th class="center"><span class="title_box active">'.$this->l('Desc.').' ('.Tools::strtoupper($language['iso_code']).')</span></th>';
 			$this->html .= '
 					<th class="center"><span class="title_box active">'.$this->l('Images').'</span></th>
 					<th class="center"><span class="title_box active">'.$this->l('Sales').'</span></th>
@@ -309,14 +309,14 @@ class StatsCheckUp extends Module
 				</tr>
 				<tr>
 					<td colspan="2"></td>
-					<td class="center">'.$arrayColors[$totals['active']].'</td>';
+					<td class="center">'.$array_colors[$totals['active']].'</td>';
 			foreach ($languages as $language)
-				$this->html .= '<td class="center">'.$arrayColors[$totals['description_'.$language['iso_code']]].'</td>';
+				$this->html .= '<td class="center">'.$array_colors[$totals['description_'.$language['iso_code']]].'</td>';
 			$this->html .= '
-					<td class="center">'.$arrayColors[$totals['images']].'</td>
-					<td class="center">'.$arrayColors[$totals['sales']].'</td>
-					<td class="center">'.$arrayColors[$totals['stock']].'</td>
-					<td class="center">'.$arrayColors[$totals['average']].'</td>
+					<td class="center">'.$array_colors[$totals['images']].'</td>
+					<td class="center">'.$array_colors[$totals['sales']].'</td>
+					<td class="center">'.$array_colors[$totals['stock']].'</td>
+					<td class="center">'.$array_colors[$totals['average']].'</td>
 				</tr>
 			</tfoot>
 		</table></div>';

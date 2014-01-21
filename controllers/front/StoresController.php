@@ -276,9 +276,12 @@ class StoresControllerCore extends FrontController
 	{
 		parent::setMedia();
 		$this->addCSS(_THEME_CSS_DIR_.'stores.css');
+
 		if (!Configuration::get('PS_STORES_SIMPLIFIED'))
+		{
+			$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+			$this->addJS('http'.((Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 's' : '').'://maps.google.com/maps/api/js?sensor=true&amp;region='.substr($default_country->iso_code, 0, 2));
 			$this->addJS(_THEME_JS_DIR_.'stores.js');
-        $default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-		$this->addJS('http'.((Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 's' : '').'://maps.google.com/maps/api/js?sensor=true&amp;region='.substr($default_country->iso_code, 0, 2));
+		}
 	}
 }
