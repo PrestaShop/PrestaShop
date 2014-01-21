@@ -39,6 +39,32 @@
 				formSubmit(event, 'submitFilterButton{$list_id}')
 			})
 
+            $(".ajax_table_link").click(function () {
+                var link = $(this);
+                $.post($(this).attr('href'), function (data) {
+                    console.log(data);
+                    if (data.success == 1) {
+                        showSuccessMessage(data.text);
+
+                        if (link.hasClass('label-warning'))
+                            link.removeClass('label-warning').addClass('label-success');
+                        else
+                            link.removeClass('label-success').addClass('label-warning');
+
+                        link.children().each(function () {
+                            if ($(this).hasClass('hidden'))
+                                $(this).removeClass('hidden');
+                            else
+                                $(this).addClass('hidden');
+                        });
+                    }
+                    else
+                        showErrorMessage(data.text);
+
+                }, 'json');
+                return false;
+            });
+
 			$('#submitFilterButton{$list_id}').click(function() {
 				$('#submitFilter{$list_id}').val(1);
 			});

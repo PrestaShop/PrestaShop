@@ -70,7 +70,7 @@ class HelperListCore extends Helper
 	public $table_id;
 
 	/**
-	 * @var string Customize list display
+	 * @var array Customize list display
 	 *
 	 * align  : determine value alignment
 	 * prefix : displayed before value
@@ -169,12 +169,13 @@ class HelperListCore extends Helper
 	 * @param int $id_product
 	 * @return string
 	 */
-	public function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
+	public function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null, $ajax = false)
 	{
 		$tpl_enable = $this->createTemplate('list_action_enable.tpl');
 		$tpl_enable->assign(array(
+			'ajax' => $ajax,
 			'enabled' => (bool)$value,
-			'url_enable' => Tools::safeOutput($this->currentIndex.'&'.$this->identifier.'='.(int)$id.'&'.$active.$this->table.
+			'url_enable' => Tools::safeOutput($this->currentIndex.'&'.$this->identifier.'='.(int)$id.'&'.$active.$this->table.($ajax ? '&action='.$active.$this->table.'&ajax='.(int)$ajax : '').
 				((int)$id_category && (int)$id_product ? '&id_category='.(int)$id_category : '').'&token='.($token != null ? $token : $this->token))
 		));
 		return $tpl_enable->fetch();
@@ -240,13 +241,17 @@ class HelperListCore extends Helper
 						$calling_obj = $this->context->controller;
 					else
 						$calling_obj = $this;
+
+					if (!isset($params['ajax']))
+						$params['ajax'] = false;
 					$this->_list[$index][$key] = $calling_obj->displayEnableLink(
 						$this->token,
 						$id,
 						$tr[$key],
 						$params['active'],
 						Tools::getValue('id_category'),
-						Tools::getValue('id_product')
+						Tools::getValue('id_product'),
+						$params['ajax']
 					);
 				}
 				elseif (isset($params['activeVisu']))
