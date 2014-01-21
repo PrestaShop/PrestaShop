@@ -116,7 +116,13 @@ class AdminEmployeesControllerCore extends AdminController
 		$path = _PS_ADMIN_DIR_.'/themes/';
 		foreach (scandir($path) as $theme)
 			if ($theme[0] != '.' && is_dir($path.$theme) && (file_exists($path.$theme.'/css/admin-theme.css')))
-				$this->themes[] = $theme;
+			{
+				$this->themes[] = array('id' => $theme.'|admin-theme.css', 'name' => $theme.' - admin-theme.css');
+				if (file_exists($path.$theme.'/css/schemes'))
+					foreach (scandir($path.$theme.'/css/schemes') as $css)
+						if ($css[0] != '.' && preg_match('/\.css$/', $css))
+							$this->themes[] = array('id' => $theme.'|schemes/'.$css, 'name' => $theme.' - schemes/'.$css);
+			}
 
 		$home_tab = Tab::getInstanceFromClassName('AdminDashboard', $this->context->language->id);
 		$this->tabs_list[$home_tab->id] = array(
@@ -262,10 +268,14 @@ class AdminEmployeesControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'select_theme',
+					'type' => 'select',
 					'label' => $this->l('Theme'),
-					'name' => 'bo_theme',
-					'options' => array('query' => $this->themes),
+					'name' => 'bo_theme_css',
+					'options' => array(
+						'query' => $this->themes,
+						'id' => 'id',
+						'name' => 'name'
+					),
 					'hint' => $this->l('Back Office theme.')
 				),
 				array(
@@ -354,6 +364,7 @@ class AdminEmployeesControllerCore extends AdminController
 		);
 
 		$this->fields_value['passwd'] = false;
+		$this->fields_value['bo_theme_css'] = $obj->bo_theme.'|'.$obj->bo_css;
 
 		if (empty($obj->id))
 			$this->fields_value['id_lang'] = $this->context->language->id;
@@ -464,10 +475,17 @@ class AdminEmployeesControllerCore extends AdminController
 				}
 			}
 
-			if (!in_array(Tools::getValue('bo_theme'), $this->themes))
+			if (Tools::getValue('bo_theme_css'))
 			{
-				$this->errors[] = Tools::displayError('Invalid theme');
-				return false;
+				$bo_theme = explode('|', Tools::getValue('bo_theme_css'));
+				$_POST['bo_theme'] = $bo_theme[0];
+				if (!in_array($bo_theme[0], scandir(_PS_ADMIN_DIR_.'/themes')))
+				{
+					$this->errors[] = Tools::displayError('Invalid theme');
+					return false;
+				}
+				if (isset($bo_theme[1]))
+					$_POST['bo_css'] = $bo_theme[1];
 			}
 
 			$assos = $this->getSelectedAssoShop($this->table);
@@ -475,6 +493,7 @@ class AdminEmployeesControllerCore extends AdminController
 				if (Shop::isFeatureActive() && _PS_ADMIN_PROFILE_ != $_POST['id_profile'])
 					$this->errors[] = Tools::displayError('The employee must be associated with at least one shop.');
 		}
+
 		return parent::postProcess();
 	}
 
