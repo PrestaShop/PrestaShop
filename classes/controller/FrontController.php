@@ -969,10 +969,14 @@ class FrontControllerCore extends Controller
 
 	public function addMedia($media_uri, $css_media_type = null, $offset = null, $remove = false)
 	{
-		if ($css_media_type && !is_array($media_uri))
-			$media_uri = array($media_uri => $css_media_type);
-		else
-			$media_uri = array($media_uri);
+
+		if (!is_array($media_uri))
+		{
+			if ($css_media_type)
+				$media_uri = array($media_uri => $css_media_type);
+			else
+				$media_uri = array($media_uri);
+		}
 
 		$list_uri = array();
 		foreach ($media_uri as $file => $media)
@@ -994,6 +998,8 @@ class FrontControllerCore extends Controller
 				else
 					$list_uri = $file;
 			}
+			else
+				$list_uri[$file] = $media;
 		}
 
 		if ($remove)
