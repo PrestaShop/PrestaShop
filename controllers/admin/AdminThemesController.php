@@ -658,7 +658,7 @@ class AdminThemesControllerCore extends AdminController
 			);
 			$this->page_header_toolbar_btn['export_theme'] = array(
 				'href' => self::$currentIndex.'&action=exporttheme&token='.$this->token,
-				'desc' => $this->l('export theme', null, null, false),
+				'desc' => $this->l('Export theme', null, null, false),
 				'icon' => 'process-icon-export'
 			);
 		}
