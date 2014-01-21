@@ -305,7 +305,11 @@
 			</tfoot>
 			<tbody>
 				{assign var='odd' value=0}
+				{assign var='have_non_virtual_products' value=false}
 				{foreach $products as $product}
+					{if $product.is_virtual == 0}
+						{assign var='have_non_virtual_products' value=true}						
+					{/if}
 					{assign var='productId' value=$product.id_product}
 					{assign var='productAttributeId' value=$product.id_product_attribute}
 					{assign var='quantityDisplayed' value=0}
@@ -475,7 +479,7 @@
 		<div class="order_delivery clearfix row">
 			{if !isset($formattedAddresses) || (count($formattedAddresses.invoice) == 0 && count($formattedAddresses.delivery) == 0) || (count($formattedAddresses.invoice.formated) == 0 && count($formattedAddresses.delivery.formated) == 0)}
 				{if $delivery->id}
-					<div class="col-xs-12 col-sm-6">
+					<div class="col-xs-12 col-sm-6"{if !$have_non_virtual_products} style="display: none;"{/if}>
 						<ul id="delivery_address" class="address item box">
 							<li><h3 class="page-subheading">{l s='Delivery address'}&nbsp;<span class="address_alias">({$delivery->alias})</span></h3></li>
 							{if $delivery->company}<li class="address_company">{$delivery->company|escape:'html':'UTF-8'}</li>{/if}
@@ -502,7 +506,7 @@
 				{/if}
 			{else}
 				{foreach from=$formattedAddresses key=k item=address}
-					<div class="col-xs-12 col-sm-6">
+					<div class="col-xs-12 col-sm-6"{if $k == 'delivery' && !$have_non_virtual_products} style="display: none;"{/if}>
 						<ul class="address {if $address@last}last_item{elseif $address@first}first_item{/if} {if $address@index % 2}alternate_item{else}item{/if} box">
 							<li>
 								<h3 class="page-subheading">
