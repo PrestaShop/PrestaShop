@@ -28,28 +28,28 @@
 		<input type="hidden" value="{$order->id}" name="id_order"/>
 		
 			<a href="#" onclick="$(this).closest('form').submit(); return false;" class="button btn btn-default button-medium pull-right"><span>{l s='Reorder'}<i class="icon-chevron-right right"></i></span></a>
-        <p class="dark">
+		<p class="dark">
 			<strong>{l s='Order Reference %s - placed on' sprintf=$order->getUniqReference()} {dateFormat date=$order->date_add full=0}</strong>
 		</p>
 	
 </form>
 </div>
 <div class="info-order box">
-    {if $carrier->id}<p><strong class="dark">{l s='Carrier'}</strong> {if $carrier->name == "0"}{$shop_name|escape:'html':'UTF-8'}{else}{$carrier->name|escape:'html':'UTF-8'}{/if}</p>{/if}
-    <p><strong class="dark">{l s='Payment method'}</strong> <span class="color-myaccount">{$order->payment|escape:'html':'UTF-8'}</span></p>
-    {if $invoice AND $invoiceAllowed}
-    <p>
-        <i class="icon-file-text"></i>
-        <a target="_blank" href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">{l s='Download your invoice as a PDF file.'}</a>
-    </p>
-    {/if}
-    {if $order->recyclable}
-    <p><i class="icon-repeat"></i>&nbsp;{l s='You have given permission to receive your order in recycled packaging.'}</p>
-    {/if}
-    {if $order->gift}
-        <p><i class="icon-gift"></i>&nbsp;{l s='You have requested gift wrapping for this order.'}</p>
-        <p><strong class="dark">{l s='Message'}</strong> {$order->gift_message|nl2br}</p>
-    {/if}
+	{if $carrier->id}<p><strong class="dark">{l s='Carrier'}</strong> {if $carrier->name == "0"}{$shop_name|escape:'html':'UTF-8'}{else}{$carrier->name|escape:'html':'UTF-8'}{/if}</p>{/if}
+	<p><strong class="dark">{l s='Payment method'}</strong> <span class="color-myaccount">{$order->payment|escape:'html':'UTF-8'}</span></p>
+	{if $invoice AND $invoiceAllowed}
+	<p>
+		<i class="icon-file-text"></i>
+		<a target="_blank" href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">{l s='Download your invoice as a PDF file.'}</a>
+	</p>
+	{/if}
+	{if $order->recyclable}
+	<p><i class="icon-repeat"></i>&nbsp;{l s='You have given permission to receive your order in recycled packaging.'}</p>
+	{/if}
+	{if $order->gift}
+		<p><i class="icon-gift"></i>&nbsp;{l s='You have requested gift wrapping for this order.'}</p>
+		<p><strong class="dark">{l s='Message'}</strong> {$order->gift_message|nl2br}</p>
+	{/if}
 </div>
 
 {if count($order_history)}
@@ -81,36 +81,35 @@
 
 <div class="adresses_bloc">
 	<div class="row">
-    	<div class="col-xs-12 col-sm-6">
-        	<ul class="address alternate_item box" {if $order->isVirtual()}style="display:none;"{/if}>
-            <li><h3 class="page-subheading">{l s='Delivery address'} ({$address_delivery->alias})</h3></li>
-            {foreach from=$dlv_adr_fields name=dlv_loop item=field_item}
-                {if $field_item eq "company" && isset($address_delivery->company)}<li class="address_company">{$address_delivery->company|escape:'html':'UTF-8'}</li>
-                {elseif $field_item eq "address2" && $address_delivery->address2}<li class="address_address2">{$address_delivery->address2|escape:'html':'UTF-8'}</li>
-                {elseif $field_item eq "phone_mobile" && $address_delivery->phone_mobile}<li class="address_phone_mobile">{$address_delivery->phone_mobile|escape:'html':'UTF-8'}</li>
-                {else}
-                        {assign var=address_words value=" "|explode:$field_item} 
-                        <li>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$deliveryAddressFormatedValues[$word_item|replace:',':'']|escape:'html':'UTF-8'}</span>{/foreach}</li>
-                {/if}
-            {/foreach}
-        </ul>
-        </div>
-    	<div class="col-xs-12 col-sm-6">
-        	<ul class="address item {if $order->isVirtual()}full_width{/if} box">
-            <li><h3 class="page-subheading">{l s='Invoice address'} ({$address_invoice->alias})</h3></li>
-            {foreach from=$inv_adr_fields name=inv_loop item=field_item}
-                {if $field_item eq "company" && isset($address_invoice->company)}<li class="address_company">{$address_invoice->company|escape:'html':'UTF-8'}</li>
-                {elseif $field_item eq "address2" && $address_invoice->address2}<li class="address_address2">{$address_invoice->address2|escape:'html':'UTF-8'}</li>
-                {elseif $field_item eq "phone_mobile" && $address_invoice->phone_mobile}<li class="address_phone_mobile">{$address_invoice->phone_mobile|escape:'html':'UTF-8'}</li>
-                {else}
-                        {assign var=address_words value=" "|explode:$field_item}
-                        <li>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$invoiceAddressFormatedValues[$word_item|replace:',':'']|escape:'html':'UTF-8'}</span>{/foreach}</li>
-                {/if}
-        
-            {/foreach}
-        </ul>
-        </div>
-    </div>
+		<div class="col-xs-12 col-sm-6"{if $order->isVirtual()} style="display:none;"{/if}>
+			<ul class="address alternate_item box">
+				<li><h3 class="page-subheading">{l s='Delivery address'} ({$address_delivery->alias})</h3></li>
+				{foreach from=$dlv_adr_fields name=dlv_loop item=field_item}
+					{if $field_item eq "company" && isset($address_delivery->company)}<li class="address_company">{$address_delivery->company|escape:'html':'UTF-8'}</li>
+					{elseif $field_item eq "address2" && $address_delivery->address2}<li class="address_address2">{$address_delivery->address2|escape:'html':'UTF-8'}</li>
+					{elseif $field_item eq "phone_mobile" && $address_delivery->phone_mobile}<li class="address_phone_mobile">{$address_delivery->phone_mobile|escape:'html':'UTF-8'}</li>
+					{else}
+							{assign var=address_words value=" "|explode:$field_item} 
+							<li>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$deliveryAddressFormatedValues[$word_item|replace:',':'']|escape:'html':'UTF-8'}</span>{/foreach}</li>
+					{/if}
+				{/foreach}
+			</ul>
+		</div>
+		<div class="col-xs-12 col-sm-6">
+			<ul class="address item {if $order->isVirtual()}full_width{/if} box">
+				<li><h3 class="page-subheading">{l s='Invoice address'} ({$address_invoice->alias})</h3></li>
+				{foreach from=$inv_adr_fields name=inv_loop item=field_item}
+					{if $field_item eq "company" && isset($address_invoice->company)}<li class="address_company">{$address_invoice->company|escape:'html':'UTF-8'}</li>
+					{elseif $field_item eq "address2" && $address_invoice->address2}<li class="address_address2">{$address_invoice->address2|escape:'html':'UTF-8'}</li>
+					{elseif $field_item eq "phone_mobile" && $address_invoice->phone_mobile}<li class="address_phone_mobile">{$address_invoice->phone_mobile|escape:'html':'UTF-8'}</li>
+					{else}
+							{assign var=address_words value=" "|explode:$field_item}
+							<li>{foreach from=$address_words item=word_item name="word_loop"}{if !$smarty.foreach.word_loop.first} {/if}<span class="address_{$word_item|replace:',':''}">{$invoiceAddressFormatedValues[$word_item|replace:',':'']|escape:'html':'UTF-8'}</span>{/foreach}</li>
+					{/if}
+				{/foreach}
+			</ul>
+		</div>
+	</div>
 </div>
 {$HOOK_ORDERDETAILDISPLAYED}
 {if !$is_guest}<form action="{$link->getPageLink('order-follow', true)|escape:'html':'UTF-8'}" method="post">{/if}
@@ -135,27 +134,27 @@
 					<td colspan="{if $return_allowed}2{else}1{/if}">
 						<strong>{l s='Items (tax excl.)'}</strong>
 					</td>
-                    <td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
-                    	<span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithoutTaxes() currency=$currency}</span>
-                    </td>
+					<td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
+						<span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithoutTaxes() currency=$currency}</span>
+					</td>
 				</tr>
 			{/if}
 			<tr class="item">
 				<td colspan="{if $return_allowed}2{else}1{/if}">
 					<strong>{l s='Items'} {if $use_tax}{l s='(tax incl.)'}{/if} </strong>
 				</td>
-                <td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
-                	<span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithTaxes() currency=$currency}</span>
-                </td>
+				<td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
+					<span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithTaxes() currency=$currency}</span>
+				</td>
 			</tr>
 			{if $order->total_discounts > 0}
 			<tr class="item">
 				<td colspan="{if $return_allowed}2{else}1{/if}">
 					<strong>{l s='Total vouchers'}</strong>
 				</td>
-                <td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
-                	<span class="price-discount">{displayWtPriceWithCurrency price=$order->total_discounts currency=$currency convert=1}</span>
-                </td>
+				<td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
+					<span class="price-discount">{displayWtPriceWithCurrency price=$order->total_discounts currency=$currency convert=1}</span>
+				</td>
 			</tr>
 			{/if}
 			{if $order->total_wrapping > 0}
@@ -163,26 +162,26 @@
 				<td colspan="{if $return_allowed}2{else}1{/if}">
 					<strong>{l s='Total gift wrapping cost'}</strong>
 				</td>
-                <td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
-                	<span class="price-wrapping">{displayWtPriceWithCurrency price=$order->total_wrapping currency=$currency}</span>
-                </td>
+				<td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
+					<span class="price-wrapping">{displayWtPriceWithCurrency price=$order->total_wrapping currency=$currency}</span>
+				</td>
 			</tr>
 			{/if}
 			<tr class="item">
 				<td colspan="{if $return_allowed}2{else}1{/if}">
 					<strong>{l s='Shipping & handling'} {if $use_tax}{l s='(tax incl.)'}{/if} </strong>
 				</td>
-                <td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
-                	<span class="price-shipping">{displayWtPriceWithCurrency price=$order->total_shipping currency=$currency}</span>
-                </td>
+				<td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
+					<span class="price-shipping">{displayWtPriceWithCurrency price=$order->total_shipping currency=$currency}</span>
+				</td>
 			</tr>
 			<tr class="totalprice item">
 				<td colspan="{if $return_allowed}2{else}1{/if}">
 					<strong>{l s='Total'}</strong>
 				</td>
-                <td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
-                	<span class="price">{displayWtPriceWithCurrency price=$order->total_paid currency=$currency}</span>
-                </td>
+				<td colspan="{if $order->hasProductReturned()}5{else}4{/if}">
+					<span class="price">{displayWtPriceWithCurrency price=$order->total_paid currency=$currency}</span>
+				</td>
 			</tr>
 		</tfoot>
 		<tbody>
@@ -204,12 +203,12 @@
 							<label for="cb_{$product.id_order_detail|intval}">{$product.product_name|escape:'html':'UTF-8'}</label>
 						</td>
 						<td>
-                        <input class="order_qte_input form-control grey"  name="order_qte_input[{$smarty.foreach.products.index}]" type="text" size="2" value="{$product.customizationQuantityTotal|intval}" />
+						<input class="order_qte_input form-control grey"  name="order_qte_input[{$smarty.foreach.products.index}]" type="text" size="2" value="{$product.customizationQuantityTotal|intval}" />
 							<div class="clearfix return_quantity_buttons">
-                            	<a href="#" class="return_quantity_down btn btn-default button-minus"><span><i class="icon-minus"></i></span></a>
-                                <a href="#" class="return_quantity_up btn btn-default button-plus"><span><i class="icon-plus"></i></span></a>
-                            </div>                        
-                            <label for="cb_{$product.id_order_detail|intval}"><span class="order_qte_span editable">{$product.customizationQuantityTotal|intval}</span></label></td>
+								<a href="#" class="return_quantity_down btn btn-default button-minus"><span><i class="icon-minus"></i></span></a>
+								<a href="#" class="return_quantity_up btn btn-default button-plus"><span><i class="icon-plus"></i></span></a>
+							</div>                        
+							<label for="cb_{$product.id_order_detail|intval}"><span class="order_qte_span editable">{$product.customizationQuantityTotal|intval}</span></label></td>
 						{if $order->hasProductReturned()}
 							<td>
 								{$product['qty_returned']}
@@ -266,11 +265,11 @@
 							</td>
 							<td>
 								<input class="order_qte_input form-control grey" name="customization_qty_input[{$customizationId|intval}]" type="text" size="2" value="{$customization.quantity|intval}" />
-                                <div class="clearfix return_quantity_buttons">
-                                    <a href="#" class="return_quantity_down btn btn-default button-minus"><span><i class="icon-minus"></i></span></a>
-                                    <a href="#" class="return_quantity_up btn btn-default button-plus"><span><i class="icon-plus"></i></span></a>
-                                </div>
-                                <label for="cb_{$product.id_order_detail|intval}"><span class="order_qte_span editable">{$customization.quantity|intval}</span></label>
+								<div class="clearfix return_quantity_buttons">
+									<a href="#" class="return_quantity_down btn btn-default button-minus"><span><i class="icon-minus"></i></span></a>
+									<a href="#" class="return_quantity_up btn btn-default button-plus"><span><i class="icon-plus"></i></span></a>
+								</div>
+								<label for="cb_{$product.id_order_detail|intval}"><span class="order_qte_span editable">{$customization.quantity|intval}</span></label>
 							</td>
 							<td colspan="2"></td>
 						</tr>
@@ -303,12 +302,12 @@
 							</label>
 						</td>
 						<td class="return_quantity">
-                        	<input class="order_qte_input form-control grey" name="order_qte_input[{$product.id_order_detail|intval}]" type="text" size="2" value="{$productQuantity|intval}" />
-                            <div class="clearfix return_quantity_buttons">
-                            	<a href="#" class="return_quantity_down btn btn-default button-minus"><span><i class="icon-minus"></i></span></a>
-                                <a href="#" class="return_quantity_up btn btn-default button-plus"><span><i class="icon-plus"></i></span></a>
-                            </div>
-                        	<label for="cb_{$product.id_order_detail|intval}"><span class="order_qte_span editable">{$productQuantity|intval}</span></label></td>
+							<input class="order_qte_input form-control grey" name="order_qte_input[{$product.id_order_detail|intval}]" type="text" size="2" value="{$productQuantity|intval}" />
+							<div class="clearfix return_quantity_buttons">
+								<a href="#" class="return_quantity_down btn btn-default button-minus"><span><i class="icon-minus"></i></span></a>
+								<a href="#" class="return_quantity_up btn btn-default button-plus"><span><i class="icon-plus"></i></span></a>
+							</div>
+							<label for="cb_{$product.id_order_detail|intval}"><span class="order_qte_span editable">{$productQuantity|intval}</span></label></td>
 						{if $order->hasProductReturned()}
 							<td>
 								{$product['qty_returned']}
@@ -359,7 +358,7 @@
 			<textarea class="form-control" cols="67" rows="3" name="returnText"></textarea>
 		</p>
 		<p class="form-group">
-            <button type="submit" name="submitReturnMerchandise" class="btn btn-default button button-small"><span>{l s='Make an RMA slip'}<i class="icon-chevron-right right"></i></span></button>
+			<button type="submit" name="submitReturnMerchandise" class="btn btn-default button button-small"><span>{l s='Make an RMA slip'}<i class="icon-chevron-right right"></i></span></button>
 			<input type="hidden" class="hidden" value="{$order->id|intval}" name="id_order" />
 		</p>
 	</div>
@@ -406,15 +405,15 @@
 			{foreach from=$messages item=message name="messageList"}
 				<tr class="{if $smarty.foreach.messageList.first}first_item{elseif $smarty.foreach.messageList.last}last_item{/if} {if $smarty.foreach.messageList.index % 2}alternate_item{else}item{/if}">
 					<td>
-                        <strong class="dark">
-                            {if isset($message.elastname) && $message.elastname}
-                                {$message.efirstname|escape:'html':'UTF-8'} {$message.elastname|escape:'html':'UTF-8'}
-                            {elseif $message.clastname}
-                                {$message.cfirstname|escape:'html':'UTF-8'} {$message.clastname|escape:'html':'UTF-8'}
-                            {else}
-                                {$shop_name|escape:'html':'UTF-8'}
-                            {/if}
-                        </strong>
+						<strong class="dark">
+							{if isset($message.elastname) && $message.elastname}
+								{$message.efirstname|escape:'html':'UTF-8'} {$message.elastname|escape:'html':'UTF-8'}
+							{elseif $message.clastname}
+								{$message.cfirstname|escape:'html':'UTF-8'} {$message.clastname|escape:'html':'UTF-8'}
+							{else}
+								{$shop_name|escape:'html':'UTF-8'}
+							{/if}
+						</strong>
 						<br />
 						{dateFormat date=$message.date_add full=1}
 					</td>
@@ -458,7 +457,7 @@
 		<div class="submit">
 			<input type="hidden" name="id_order" value="{$order->id|intval}" />
 			<input type="submit" class="unvisible" name="submitMessage" value="{l s='Send'}"/>
-            <button type="submit" name="submitMessage" class="button btn btn-default button-medium"><span>{l s='Send'}<i class="icon-chevron-right right"></i></span></button>
+			<button type="submit" name="submitMessage" class="button btn btn-default button-medium"><span>{l s='Send'}<i class="icon-chevron-right right"></i></span></button>
 		</div>
 	</form>
 {else}
