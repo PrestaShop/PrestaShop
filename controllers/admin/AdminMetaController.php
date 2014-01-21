@@ -33,7 +33,8 @@ class AdminMetaControllerCore extends AdminController
 
 	public function __construct()
 	{
-		parent::__construct();
+	 	$this->table = 'meta';
+	 	$this->className = 'Meta';
 
 		$this->bootstrap = true;
 		$this->identifier_name = 'page';
@@ -55,6 +56,8 @@ class AdminMetaControllerCore extends AdminController
 		);
 		$this->_where = ' AND a.configurable = 1';
 		$this->_group = 'GROUP BY a.id_meta';
+
+		parent::__construct();
 
 		// Options to generate friendly urls
 		$mod_rewrite = Tools::modRewriteActive();
@@ -198,6 +201,18 @@ class AdminMetaControllerCore extends AdminController
 		}
 
 		$this->fields_options['robots'] = $robots_options;
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_meta'] = array(
+				'href' => self::$currentIndex.'&addmeta&token='.$this->token,
+				'desc' => $this->l('Add a new page', null, null, false),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
 	}
 
 	public function initProcess()
