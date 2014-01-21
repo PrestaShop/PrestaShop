@@ -106,7 +106,7 @@ class HelperCore
 	/**
 	 * default behaviour for helper is to return a tpl fetched
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public function generate()
 	{
