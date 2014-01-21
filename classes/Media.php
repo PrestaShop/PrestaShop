@@ -236,9 +236,11 @@ class MediaCore
 		// check if css files exists
 		if (!array_key_exists('host', $url_data))
 		{			
-			if (!@filemtime($file_uri) || filesize($file_uri) === 0)
+			if (!filemtime($file_uri) || filesize($file_uri) === 0)
 			{
-				if (defined('_PS_HOST_MODE_') && !@filemtime($file_uri_host_mode) || filesize($file_uri_host_mode) === 0)
+				if (!defined('_PS_HOST_MODE_'))
+					return false;
+				elseif(!filemtime($file_uri_host_mode) || filesize($file_uri_host_mode) === 0)
 					return false;
 				else
 				{
