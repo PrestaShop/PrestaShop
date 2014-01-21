@@ -342,9 +342,9 @@ product_tabs['Combinations'] = new function(){
 	this.removeButtonCombination = function(item)
 	{		
 		$('#add_new_combination').show();
-		$('.process-icon-newCombination').removeClass('toolbar-new');
-		$('.process-icon-newCombination').addClass('toolbar-cancel');
-		$('#desc-product-newCombination div').html(msg_cancel_combination);
+		$('#desc-product-newCombination').children('i').first().removeClass('process-icon-new');
+		$('#desc-product-newCombination').children('i').first().addClass('process-icon-minus');
+		$('#desc-product-newCombination').children('span').first().html(msg_cancel_combination);
 		$('id_product_attribute').val(0);
 		self.init_elems();
 	};
@@ -352,14 +352,16 @@ product_tabs['Combinations'] = new function(){
 	this.addButtonCombination = function(item)
 	{
 		$('#add_new_combination').hide();
-		$('.process-icon-newCombination').removeClass('toolbar-cancel');
-		$('.process-icon-newCombination').addClass('toolbar-new');
-		$('#desc-product-newCombination div').html(msg_new_combination);
+		$('#desc-product-newCombination').children('i').first().removeClass('process-icon-minus');
+		$('#desc-product-newCombination').children('i').first().addClass('process-icon-new');
+		$('#desc-product-newCombination').children('span').first().html(msg_new_combination);
 	};
 
 	this.bindToggleAddCombination = function (){
-		$('#desc-product-newCombination').click(function() {
-			if ($('.process-icon-newCombination').hasClass('toolbar-new'))
+		$('#desc-product-newCombination').click(function(e) {
+			e.preventDefault();
+
+			if ($(this).children('i').first().hasClass('process-icon-new'))
 				self.removeButtonCombination('add');
 			else
 			{
