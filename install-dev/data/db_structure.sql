@@ -727,6 +727,7 @@ CREATE TABLE `PREFIX_employee` (
   `stats_compare_option` int(1) unsigned NOT NULL DEFAULT 1,
   `bo_color` varchar(32) default NULL,
   `bo_theme` varchar(32) default NULL,
+  `bo_css` varchar(64) default NULL,
   `default_tab` int(10) unsigned NOT NULL DEFAULT 0,
   `bo_width` int(10) unsigned NOT NULL DEFAULT 0,
   `bo_menu` tinyint(1) NOT NULL default '1',
