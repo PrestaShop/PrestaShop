@@ -46,10 +46,10 @@
                     if (data.success == 1) {
                         showSuccessMessage(data.text);
 
-                        if (link.hasClass('label-warning'))
-                            link.removeClass('label-warning').addClass('label-success');
+                        if (link.hasClass('action-disabled'))
+                            link.removeClass('action-disabled').addClass('action-enabled');
                         else
-                            link.removeClass('label-success').addClass('label-warning');
+                            link.removeClass('action-enabled').addClass('action-disabled');
 
                         link.children().each(function () {
                             if ($(this).hasClass('hidden'))

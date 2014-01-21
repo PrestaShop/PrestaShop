@@ -473,6 +473,8 @@ class AdminThemesControllerCore extends AdminController
 				),
 			);
 			$helper_list = New HelperList();
+			$helper_list->tpl_vars = array('icon' => 'icon-columns');
+			$helper_list->title = $this->l('Appearance of columns');
 			$helper_list->no_link = true;
 			$helper_list->shopLinkType = '';
 			$helper_list->identifier = 'id_theme_meta';
