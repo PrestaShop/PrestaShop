@@ -138,7 +138,7 @@
 							{$address.alias|escape:'html':'UTF-8'}
 						</option>
 					{/foreach}
-				</select>
+				</select><span class="waitimage"></span>
 			</div>
 			<p class="checkbox addressesAreEquals" {if $cart->isVirtualCart()}style="display:none;"{/if}>
 				<input type="checkbox" name="same" id="addressesAreEquals" value="1" onclick="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}"{if $cart->id_address_invoice == $cart->id_address_delivery || $addresses|@count == 1} checked="checked"{/if} />
@@ -155,7 +155,7 @@
 							{$addresses[address].alias|escape:'html':'UTF-8'}
 						</option>
 					{/section}
-					</select>
+					</select><span class="waitimage"></span>
 				{else}
 					<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1&select_address=1{if $back}&mod={$back}{/if}")|escape:'html':'UTF-8'}" title="{l s='Add'}" class="button button-small btn btn-default">
 						<span>
