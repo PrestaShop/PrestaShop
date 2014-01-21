@@ -3438,14 +3438,23 @@ class AdminProductsControllerCore extends AdminController
 
 		$template = $this->context->smarty->createTemplate('controllers/products/input_text_lang.tpl',
 			$this->context->smarty);
-		return '<div class="form-group"><div class="input-group">'
-			.'<span class="input-group-addon"><span class="checkbox"><input type="checkbox" name="require_'.$type.'_'.(int)($id_customization_field).'" id="require_'.$type.'_'.(int)($id_customization_field).'" value="1" '.($required ? 'checked="checked"' : '').'/><label for="require_'.$type.'_'.(int)($id_customization_field).'"> '.$this->l('Required').'</label></span></span>'
+		return '<div class="form-group">'
+			.'<div class="col-lg-6">'
 			.$template->assign(array(
 				'languages' => $languages,
 				'input_name'  => 'label_'.$type.'_'.(int)($id_customization_field),
 				'input_value' => $input_value
 			))->fetch()
-			.'</div></div>';
+			.'</div>'
+			.'<div class="col-lg-6">'
+			.'<div class="checkbox">'
+			.'<label for="require_'.$type.'_'.(int)($id_customization_field).'">'
+			.'<input type="checkbox" name="require_'.$type.'_'.(int)($id_customization_field).'" id="require_'.$type.'_'.(int)($id_customization_field).'" value="1" '.($required ? 'checked="checked"' : '').'/>'
+			.$this->l('Required')
+			.'</label>'
+			.'</div>'
+			.'</div>'
+			.'</div>';
 	}
 
 	protected function _displayLabelFields(&$obj, &$labels, $languages, $default_language, $type)
