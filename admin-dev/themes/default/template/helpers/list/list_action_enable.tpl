@@ -22,10 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a class="label {if $enabled}label-success{else}label-warning{/if}" href="{$url_enable}" {if isset($confirm)}onclick="return confirm('{$confirm}');"{/if} title="{if $enabled}{l s='Enabled'}{else}{l s='Disabled'}{/if}">
-	{if $enabled}
-		<i class="icon-check-sign"></i> {l s='Yes'}
-	{else}
-		<i class="icon-ban-circle"></i> {l s='No'}
-	{/if}
+<a class="label {if $ajax}ajax_table_link{/if} {if $enabled}label-success{else}label-warning{/if}" href="{$url_enable}" {if isset($confirm)}onclick="return confirm('{$confirm}');"{/if} title="{if $enabled}{l s='Enabled'}{else}{l s='Disabled'}{/if}">
+		<i class="icon-check{if !$enabled} hidden{/if}"></i>
+		<i class="icon-remove{if $enabled} hidden{/if}"></i>
 </a>
