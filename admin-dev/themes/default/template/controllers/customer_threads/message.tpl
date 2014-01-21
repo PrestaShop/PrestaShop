@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if !$email}
+{*if !$email}
 	<div class="panel">
 		<h3>
 			{if !empty($message.employee_name)}
@@ -191,4 +191,4 @@
 			</form>
 		</div>
 	</div>
-{/if}
+{/if*}

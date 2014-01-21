@@ -29,8 +29,8 @@ body
 		background-color: lighten($bg-content-color,20%)
 		@include border-radius(5px)
 		@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
-	.panel-heading
-		@extend h3
+		.panel-heading
+			@extend h3
 	h3:not(.modal-title), .panel-heading
 		border: none
 		padding: 0 5px
@@ -47,7 +47,7 @@ body
 		.badge
 			background: white
 			border: solid 2px lighten($brand-primary,35%)
-			+border-radius(20px)
+			@include border-radius(20px)
 			color: $brand-primary
 			line-height: 1.2em
 			font-size: 1em
