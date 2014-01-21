@@ -23,6 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <a class="list-action-enable {if $ajax}ajax_table_link{/if} {if $enabled}action-enabled{else}action-disabled{/if}" href="{$url_enable}" {if isset($confirm)}onclick="return confirm('{$confirm}');"{/if} title="{if $enabled}{l s='Enabled'}{else}{l s='Disabled'}{/if}">
-		<i class="icon-check{if !$enabled} hidden{/if}"></i>
-		<i class="icon-remove{if $enabled} hidden{/if}"></i>
+	<i class="icon-check{if !$enabled} hidden{/if}"></i>
+	<i class="icon-remove{if $enabled} hidden{/if}"></i>
 </a>
