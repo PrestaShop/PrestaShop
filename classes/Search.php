@@ -126,16 +126,25 @@ class SearchCore
 
 		if (!$indexation)
 		{
-			$words = explode(' ', $string);
 			$processed_words = array();
-			// search for aliases for each word of the query
-			foreach ($words as $word)
+			
+			// Attempt to find exact match with alias that contains whitespace.
+			$alias = new Alias(null, $string);
+			if (Validate::isLoadedObject($alias))
+				$processed_words[] = $alias->search;
+			else
 			{
-				$alias = new Alias(null, $word);
-				if (Validate::isLoadedObject($alias))
-					$processed_words[] = $alias->search;
-				else
-					$processed_words[] = $word;
+				$words = explode(' ', $string);
+			
+				// search for aliases for each word of the query
+				foreach ($words as $word)
+				{
+					$alias = new Alias(null, $word);
+					if (Validate::isLoadedObject($alias))
+						$processed_words[] = $alias->search;
+					else
+						$processed_words[] = $word;
+				}
 			}
 			$string = implode(' ', $processed_words);
 		}
