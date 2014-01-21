@@ -63,6 +63,9 @@ class EmployeeCore extends ObjectModel
 
 	/** @var string employee's chosen theme */
 	public $bo_theme;
+	
+	/** @var string employee's chosen css file */
+	public $bo_css = 'admin-theme.css';
 
 	/** @var integer employee desired screen width */
 	public $bo_width;
@@ -96,6 +99,7 @@ class EmployeeCore extends ObjectModel
 			'bo_color' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
 			'default_tab' => 		  array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'bo_theme' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 32),
+			'bo_css' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
 			'bo_width' => 			  array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'bo_menu' => 			  array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'stats_date_from' => 	  array('type' => self::TYPE_DATE, 'validate' => 'isDate'),

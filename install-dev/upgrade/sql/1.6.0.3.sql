@@ -14,3 +14,5 @@ DROP TABLE `PREFIX_help_access`;
 
 ALTER TABLE `PREFIX_theme_meta` CHANGE `left_column` `left_column` TINYINT( 1 ) NOT NULL DEFAULT '1',
 CHANGE `right_column` `right_column` TINYINT( 1 ) NOT NULL DEFAULT '1';
+
+ALTER TABLE `PREFIX_employee` ADD `bo_css` varchar(64) default 'admin-theme.css' AFTER `bo_theme`;

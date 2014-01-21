@@ -542,8 +542,8 @@ product_tabs['Combinations'] = new function(){
  */
 function disableSave()
 {
-	$('#desc-product-save').hide();
-	$('#desc-product-save-and-stay').hide();
+	$('button[name="submitAddproduct"]').hide();
+	$('button[name="submitAddproductAndStay"]').hide();
 }
 
 /**
@@ -554,8 +554,8 @@ function disableSave()
  */
 function enableSave()
 {
-		$('#desc-product-save').show();
-		$('#desc-product-save-and-stay').show();
+	$('button[name="submitAddproduct"]').show();
+	$('button[name="submitAddproductAndStay"]').show();
 }
 
 function handleSaveButtons(e)
@@ -1301,13 +1301,21 @@ product_tabs['Quantities'] = new function(){
 		data.ajax = 1;
 		data.controller = "AdminProducts";
 		data.action = "productQuantity";
-		//showNoticeMessage(quantities_ajax_waiting);
+
 		$.ajax({
 			type: "POST",
 			url: "ajax-tab.php",
 			data: data,
 			dataType: 'json',
 			async : true,
+			beforeSend: function(xhr, settings)
+			{
+				$('.product_quantities_button').attr('disabled', 'disabled');
+			},
+			complete: function(xhr, status)
+			{
+				$('.product_quantities_button').removeAttr('disabled');
+			},
 			success: function(msg)
 			{
 				if (msg.error)
@@ -1319,7 +1327,7 @@ product_tabs['Quantities'] = new function(){
 			},
 			error: function(msg)
 			{
-				showErrorMessage(msg.error);
+				showErrorMessage(msg.error);				
 			}
 		});
 	};
