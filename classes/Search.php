@@ -252,16 +252,18 @@ class SearchCore
 		$eligible_products = array();
 		foreach ($results as $row)
 			$eligible_products[] = $row['id_product'];
+	
+		$eligible_products2 = array();
 		foreach ($intersect_array as $query)
 		{
-			$eligible_products2 = array();
 			foreach ($db->executeS($query) as $row)
 				$eligible_products2[] = $row['id_product'];
-
-			$eligible_products = array_intersect($eligible_products, $eligible_products2);
-			if (!count($eligible_products))
-				return ($ajax ? array() : array('total' => 0, 'result' => array()));
 		}
+		
+		$eligible_products = array_intersect($eligible_products, $eligible_products2);
+		if (!count($eligible_products))
+			return ($ajax ? array() : array('total' => 0, 'result' => array()));
+
 
 		$eligible_products = array_unique($eligible_products);
 
