@@ -7,9 +7,7 @@
 			border: none
 			font-weight: normal
 			vertical-align: top
-			//background: #FAFBFC
 			border-bottom: solid 1px darken(#CAE5F4,10%)
-			//border-left: solid 1px #88C5E8
 			span.title_box
 				color: #656565
 				display: block
@@ -39,12 +37,9 @@
 			font-size: 12px
 			border-bottom: solid 1px #EAEDEF
 		> tr.odd > td
-			//background-color: $table-bg-accent
 			background-color: #FCFDFE
 		> tr:hover > td
-			//background-color: $table-bg-hover
 			background-color: darken(#FCFDFE,2%)
-
 	td.center, th.center
 		text-align: center
 	td.pointer
@@ -55,8 +50,25 @@
 		min-width: 200px
 
 tr.highlighted td
-	background-color: $brand-primary!important
+	background-color: $brand-primary !important
 	color: white !important
 
 .bulk-actions
 	margin: 17px 0 0 0
+
+.list-action-enable
+	font-size: 1.3em
+	display: block
+	width: 30px
+	text-align: center
+	color: rgba(white,0.8)
+	@include border-radius(3px)
+	&.action-enabled
+		border: solid $brand-success 1px
+		background-color: lighten($brand-success,10%)
+	&.action-disabled
+		border: solid $brand-danger 1px
+		background-color: lighten($brand-danger,10%)
+	&:hover
+		color: white
+
