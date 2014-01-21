@@ -148,7 +148,7 @@ class HelperOptionsCore extends Helper
 					foreach ($languages as $language)
 					{
 						if ($field['type'] == 'textLang')
-							$value = Tools::safeOutput(Tools::getValue($key.'_'.$language['id_lang'], Configuration::get($key, $language['id_lang'])));
+							$value = Tools::getValue($key.'_'.$language['id_lang'], Configuration::get($key, $language['id_lang']));
 						elseif ($field['type'] == 'textareaLang')
 							$value = Configuration::get($key, $language['id_lang']);
 						elseif ($field['type'] == 'selectLang')
