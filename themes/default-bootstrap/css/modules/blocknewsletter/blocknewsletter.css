@@ -86,5 +86,5 @@
         margin-bottom: -35px;
         left: 15px;
         clear: none; } }
-.newsletter-input {
-  max-width: 300px !important; }
+  #footer #newsletter_block_left .newsletter-input {
+    max-width: 300px !important; }

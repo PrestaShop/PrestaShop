@@ -84,6 +84,8 @@
 			{/if}
 		{/if}
 	</td>
+	{else}
+	<td class="cart_gift_quantity text-center">{if !empty($product.gift)}<input size="2" type="text" autocomplete="off" disabled="disabled" class="cart_quantity_input form-control grey" value="1" />{/if}</td>
     {/if}
 	<td class="cart_total" data-title="{l s='Total'}">
 		<span class="price" id="total_product_price_{$product.id_product}_{$product.id_product_attribute}{if $quantityDisplayed > 0}_nocustom{/if}_{$product.id_address_delivery|intval}{if !empty($product.gift)}_gift{/if}">
@@ -104,6 +106,8 @@
 			<div>
 				<a rel="nofollow" title="{l s='Delete'}" class="cart_quantity_delete" id="{$product.id_product}_{$product.id_product_attribute}_{if $quantityDisplayed > 0}nocustom{else}0{/if}_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")|escape:'html':'UTF-8'}"><i class="icon-trash"></i></a>
 			</div>
+		{else}
+
 		{/if}
 		</td>
 	{/if}
