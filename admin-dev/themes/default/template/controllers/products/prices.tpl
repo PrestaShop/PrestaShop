@@ -445,8 +445,8 @@ $(document).ready(function () {
 						<div class="col-lg-6">
 							<select name="sp_reduction_type" id="sp_reduction_type">
 								<option selected="selected">-</option>
-								<option value="amount">{l s='Amount'}</option>
-								<option value="percentage">{l s='Percentage'}</option>
+								<option value="amount">{l s='Currency Units'}</option>
+								<option value="percentage">{l s='Percent'}</option>
 							</select>
 						</div>
 					</div>
