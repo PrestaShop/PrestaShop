@@ -462,15 +462,18 @@ class AdminThemesControllerCore extends AdminController
 				'left' => array(
 					'title' => $this->l('Left column'),
 					'active' => 'left',
-					'type' => 'bool'
+					'type' => 'bool',
+					'ajax' => true
 				),
 				'right' => array(
 					'title' => $this->l('Right column'),
 					'active' => 'right',
-					'type' => 'bool'
+					'type' => 'bool',
+					'ajax' => true
 				),
 			);
 			$helper_list = New HelperList();
+			$helper_list->no_link = true;
 			$helper_list->shopLinkType = '';
 			$helper_list->identifier = 'id_theme_meta';
 			$helper_list->table = 'meta';
@@ -2728,6 +2731,25 @@ class AdminThemesControllerCore extends AdminController
 		return $object;
 	}
 
+	public function ajaxProcessLeftMeta()
+	{
+		$theme_meta = Db::getInstance()->getRow(
+			'SELECT * FROM '._DB_PREFIX_.'theme_meta WHERE id_theme_meta = '.(int)Tools::getValue('id_theme_meta')
+		);
+
+		$result = false;
+		if ($theme_meta)
+		{
+			$sql = 'UPDATE '._DB_PREFIX_.'theme_meta SET left_column='.(int)!(bool)$theme_meta['left_column'].' WHERE id_theme_meta='.(int)Tools::getValue('id_theme_meta');
+			$result = Db::getInstance()->execute($sql);
+		}
+
+		if ($result)
+			echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
+		else
+			echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
+	}
+
 	public function processLeftMeta()
 	{
 		$theme_meta = Db::getInstance()->getRow(
@@ -2745,6 +2767,25 @@ class AdminThemesControllerCore extends AdminController
 			$this->redirect_after = self::$currentIndex.'&updatetheme&id_theme='.$theme_meta['id_theme'].'&conf=5&token='.$this->token;
 		else
 			$this->errors[] = Tools::displayError('An error occurred while updating this meta.');
+	}
+
+	public function ajaxProcessRightMeta()
+	{
+		$theme_meta = Db::getInstance()->getRow(
+			'SELECT * FROM '._DB_PREFIX_.'theme_meta WHERE id_theme_meta = '.(int)Tools::getValue('id_theme_meta')
+		);
+
+		$result = false;
+		if ($theme_meta)
+		{
+			$sql = 'UPDATE '._DB_PREFIX_.'theme_meta SET right_column='.(int)!(bool)$theme_meta['right_column'].' WHERE id_theme_meta='.(int)Tools::getValue('id_theme_meta');
+			$result = Db::getInstance()->execute($sql);
+		}
+
+		if ($result)
+			echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
+		else
+			echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
 	}
 
 	public function processRightMeta()
