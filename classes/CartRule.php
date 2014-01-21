@@ -1086,7 +1086,7 @@ class CartRuleCore extends ObjectModel
 		if (!CartRule::isFeatureActive() || !Validate::isLoadedObject($context->cart))
 			return array();
 
-		$errors = array();
+		static $errors = array();
 		foreach ($context->cart->getCartRules() as $cart_rule)
 		{
 			if ($error = $cart_rule['obj']->checkValidity($context, true))
