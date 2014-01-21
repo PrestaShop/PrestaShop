@@ -230,7 +230,7 @@ class AdminInvoicesControllerCore extends AdminController
 				$this->errors[] = $this->l('No invoice has been found for this period.');
 			}
 		}
-		else if (Tools::isSubmit('submitAddinvoice_status'))
+		elseif (Tools::isSubmit('submitAddinvoice_status'))
 		{
 			if (!is_array($status_array = Tools::getValue('id_order_state')) || !count($status_array))
 				$this->errors[] = $this->l('You must select at least one order status.');
@@ -286,4 +286,3 @@ class AdminInvoicesControllerCore extends AdminController
 		return $templates;
 	}
 }
-
