@@ -86,3 +86,5 @@
         margin-bottom: -35px;
         left: 15px;
         clear: none; } }
+.newsletter-input {
+  max-width: 300px !important; }
