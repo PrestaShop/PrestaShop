@@ -2800,6 +2800,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .tree .tree-item-disable:hover, .bootstrap .tree .tree-folder-name-disable:hover { color: #cccccc; background-color: none; }
 .bootstrap .tree-actions { display: inline-block; }
 .bootstrap .tree-panel-heading-controls { margin: -20px -20px 20px; padding: 5px; border-bottom: solid 1px #dfdfdf; }
+.bootstrap .tree-actions .twitter-typeahead { padding: 0 0 0 4px; }
 .bootstrap label.control-label { font-size: 13px; font-weight: normal; color: #666666; }
 .bootstrap label.control-label span.label-tooltip { text-decoration: none; font-size: 13px; color: #3586ae; background-color: #edf7fb; border: none; border-bottom: solid 1px #d8edf7; padding: 0 5px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
 .bootstrap label.required:before { content: "*"; color: red; font-size: 14px; position: relative; line-height: 12px; }
