@@ -108,6 +108,7 @@ class GuestCore extends ObjectModel
 			'Safari iPad' => 'iPad',
 			'Firefox' => 'Firefox/',
 			'Opera' => 'Opera',
+			'IE 11' => 'Trident',
 			'IE 10' => 'MSIE 10',
 			'IE 9' => 'MSIE 9',
 			'IE 8' => 'MSIE 8',
