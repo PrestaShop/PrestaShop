@@ -34,6 +34,7 @@ class AdminCartRulesControllerCore extends AdminController
 	 	$this->lang = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
+		$this->_orderWay = 'DESC';
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'icon' => 'icon-trash', 'confirm' => $this->l('Delete selected items?')));
 
