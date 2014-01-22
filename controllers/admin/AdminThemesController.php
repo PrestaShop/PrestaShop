@@ -1,4 +1,5 @@
 <?php
+
 /*
 * 2007-2014 PrestaShop
 *
@@ -2099,6 +2100,17 @@ class AdminThemesControllerCore extends AdminController
 			$to_install = array();
 			$to_enable = array();
 			$to_disable = array();
+
+			foreach($theme_module['to_install'] as $key => $module_to_install)
+				if (Module::isInstalled($module_to_install) && Module::isEnabled($module_to_install))
+					unset($theme_module['to_install'][$key]);
+			foreach($theme_module['to_enable'] as $key => $module_to_enable)
+				if (Module::isEnabled($module_to_enable))
+					unset($theme_module['to_enable'][$key]);
+			foreach($theme_module['to_disable'] as $key => $module_to_disable)
+				if (!Module::isEnabled($module_to_disable))
+					unset($theme_module['to_enable'][$key]);
+
 			if (isset($theme_module['to_install']))
 				$to_install = $this->formatHelperArray($theme_module['to_install']);
 			if (isset($theme_module['to_enable']))
@@ -2374,11 +2386,12 @@ class AdminThemesControllerCore extends AdminController
 
 				$exceptions = (isset($row['exceptions']) ? explode(',', strval($row['exceptions'])) : array());
 
-				$module_hook[$name]['hook'][] = array(
-					'hook' => strval($row['hook']),
-					'position' => strval($row['position']),
-					'exceptions' => $exceptions
-				);
+				if (Hook::getIdByName(strval($row['hook'])))
+					$module_hook[$name]['hook'][] = array(
+						'hook' => strval($row['hook']),
+						'position' => strval($row['position']),
+						'exceptions' => $exceptions
+					);
 			}
 
 			$this->img_error = $this->updateImages($xml);
