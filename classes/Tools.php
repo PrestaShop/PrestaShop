@@ -914,6 +914,16 @@ class ToolsCore
 	}
 
 	/**
+	* Encrypt data string
+	*
+	* @param string $data String to encrypt
+	*/
+	public static function encryptIV($data)
+	{
+		return md5(_COOKIE_IV_.$data);
+	}
+
+	/**
 	* Get token to prevent CSRF
 	*
 	* @param string $token token to encrypt
