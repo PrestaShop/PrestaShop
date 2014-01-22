@@ -108,7 +108,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 						'img_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/img/'),
 						'mails_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/mails/'),
 						'module_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/modules/'),
-						'theme_lang_dir' => $this->l('Recursive write permissions  for %1$s user on %2$s', $user, '~/themes/default-bootstrap/lang/'),
+						'theme_lang_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/themes/default-bootstrap/lang/'),
 						'theme_pdf_lang_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/themes/default-bootstrap/pdf/lang/'),
 						'theme_cache_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/themes/default-bootstrap/cache/'),
 						'translations_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/translations/'),
