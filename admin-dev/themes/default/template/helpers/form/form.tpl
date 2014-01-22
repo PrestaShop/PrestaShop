@@ -295,13 +295,13 @@
 										{$input.required = false}
 										{$input.desc = null}
 									{else}
-										<select name="{$input.name}" class="{if isset($input.class)}{$input.class}{/if}"
-												id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
+										<select name="{$input.name|escape:'html':'utf-8'}" class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if}"
+												id="{if isset($input.id)}{$input.id|escape:'html':'utf-8'}{else}{$input.name|escape:'html':'utf-8'}{/if}"
 												{if isset($input.multiple)}multiple="multiple" {/if}
-												{if isset($input.size)}size="{$input.size}"{/if}
-												{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
+												{if isset($input.size)}size="{$input.size|escape:'html':'utf-8'}"{/if}
+												{if isset($input.onchange)}onchange="{$input.onchange|escape:'html':'utf-8'}"{/if}>
 											{if isset($input.options.default)}
-												<option value="{$input.options.default.value}">{$input.options.default.label}</option>
+												<option value="{$input.options.default.value|escape:'html':'utf-8'}">{$input.options.default.label|escape:'html':'utf-8'}</option>
 											{/if}
 											{if isset($input.options.optiongroup)}
 												{foreach $input.options.optiongroup.query AS $optiongroup}
