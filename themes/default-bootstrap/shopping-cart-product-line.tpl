@@ -52,6 +52,7 @@
 			{/if}
 		</span>
 	</td>
+
     {if !isset($cannotModify)}
 	<td class="cart_quantity {if isset($customizedDatas.$productId.$productAttributeId) AND $quantityDisplayed == 0} text-center{/if}">
 		{if isset($cannotModify) AND $cannotModify == 1}
@@ -84,8 +85,9 @@
 			{/if}
 		{/if}
 	</td>
-	{else}
-	<td class="cart_gift_quantity text-center">{if !empty($product.gift)}<input size="2" type="text" autocomplete="off" disabled="disabled" class="cart_quantity_input form-control grey" value="1" />{/if}</td>
+	{elseif !isset($cannotModify)}
+			<td class="cart_gift_quantity text-center">{if !empty($product.gift)}<input size="2" type="text" autocomplete="off" disabled="disabled" class="cart_quantity_input form-control grey" value="1" />{/if}</td>
+
     {/if}
 	<td class="cart_total" data-title="{l s='Total'}">
 		<span class="price" id="total_product_price_{$product.id_product}_{$product.id_product_attribute}{if $quantityDisplayed > 0}_nocustom{/if}_{$product.id_address_delivery|intval}{if !empty($product.gift)}_gift{/if}">
