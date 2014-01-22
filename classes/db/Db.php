@@ -497,7 +497,7 @@ abstract class DbCore
 				$use_cache = false;
 				$result = $this->result;
 			}
-			elseif ($this->result)
+			else
 			{
 				$result = array();
 				while ($row = $this->nextRow($this->result))
