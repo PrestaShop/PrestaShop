@@ -11,7 +11,7 @@ function bar_chart_goals(widget_name, chart_details)
 			.showControls(false)
 			.tooltipContent(function(key, y, e, graph) {
 
-				if (key == 'sales_real') {
+				if (key == 'sales_real' || key == 'avg_cart_value_real') {
 					var result = '<section class="panel"><header class="panel-heading">' + graph.series.title + '</header><strong>' + formatCurrency(parseInt(graph.point.sales), currency_format, currency_sign, currency_blank) + '</strong><br />(' + formatCurrency(parseInt(graph.point.goal), currency_format, currency_sign, currency_blank) + ')<br/>';
 					if (graph.point.sales > graph.point.goal)
 						result += '<span class="dash_trend dash_trend_up">+';
@@ -19,23 +19,44 @@ function bar_chart_goals(widget_name, chart_details)
 						result += '<span class="dash_trend dash_trend_down">';
 					result += graph.point.goal_diff + '%</span></section>';
 					return result;
-				} else if (key == 'sales_less') {
+				} else if (key == 'sales_less' || key == 'avg_cart_value_less') {
 					if (graph.point.sales > 0)
 						return '<section class="panel"><header class="panel-heading">' + graph.series.title + '</header><strong>' + graph.series.zone_text + '</strong><br /><span class="dash_trend dash_trend_down">' + formatCurrency(parseInt(graph.point.goal_diff), currency_format, currency_sign, currency_blank) + '</span></section>';
 					else
 						return '<section class="panel"><header class="panel-heading">' + graph.series.title + '</header><strong>' + graph.series.zone_text + '</strong><br />(' + formatCurrency(parseInt(graph.point.goal), currency_format, currency_sign, currency_blank) + ')</section>';
-				} else if (key == 'sales_more')
+				} else if (key == 'sales_more' || key == 'avg_cart_value_more')
 					return '<section class="panel"><header class="panel-heading">' + graph.series.title + '</header><strong>' + graph.series.zone_text + '</strong><br /><span class="dash_trend dash_trend_up">+' + formatCurrency(parseInt(graph.point.goal_diff), currency_format, currency_sign, currency_blank) + '</span></section>';
-				else {
-					var perf = parseInt(e) - 100;
-
-					if (perf > 0)
-						return '<section class="panel"><header class="panel-heading">' + graph.series.title + '</header><strong>' + graph.series.zone_text + '</strong><br /><span class="dash_trend dash_trend_up">+' + graph.point.goal_diff + '%</span></section>';
-					else if (perf < 0)
+				else if (key == 'traffic_real') {
+					var result = '<section class="panel"><header class="panel-heading">' + graph.series.title + '</header><strong>' + graph.point.traffic + ' ' +graph.series.unit_text+'</strong><br />(' + graph.point.goal + ' ' +graph.series.unit_text+')<br/>';
+					if (graph.point.traffic > graph.point.goal)
+						result += '<span class="dash_trend dash_trend_up">+';
+					else
+						result += '<span class="dash_trend dash_trend_down">';
+					result += graph.point.goal_diff + '%</span></section>';
+					return result;
+				} else if (key == 'traffic_less') {
+					if (graph.point.traffic > 0)
+						return '<section class="panel"><header class="panel-heading">' + graph.series.title + '</header><strong>' + graph.series.zone_text + '</strong><br /><span class="dash_trend dash_trend_down">' + graph.point.goal_diff + ' ' +graph.series.unit_text+'</span></section>';
+					else
+						return '<section class="panel"><header class="panel-heading">' + graph.series.title + '</header><strong>' + graph.series.zone_text + '</strong><br />(' + graph.point.goal + ' ' +graph.series.unit_text+')</section>';
+				} else if (key == 'traffic_more')
+					return '<section class="panel"><header class="panel-heading">' + graph.series.title + '</header><strong>' + graph.series.zone_text + '</strong><br /><span class="dash_trend dash_trend_up">+' + graph.point.goal_diff + ' ' +graph.series.unit_text+'</span></section>';
+				else if (key == 'conversion_real') {
+					var result = '<section class="panel"><header class="panel-heading">' + graph.series.title + '</header><strong>' + graph.point.conversion + '%</strong><br />(' + graph.point.goal + '%)</strong><br/>';
+					if (graph.point.conversion  > graph.point.goal)
+						result += '<span class="dash_trend dash_trend_up">+';
+					else
+						result += '<span class="dash_trend dash_trend_down">';
+					result += graph.point.goal_diff + '%</span></section>';
+					return result;
+				} else if (key == 'conversion_less') {
+					if (graph.point.conversion > 0)
 						return '<section class="panel"><header class="panel-heading">' + graph.series.title + '</header><strong>' + graph.series.zone_text + '</strong><br /><span class="dash_trend dash_trend_down">' + graph.point.goal_diff + '%</span></section>';
 					else
-						return '<section class="panel"><header class="panel-heading">' + graph.series.title + '</header><strong>' + graph.series.zone_text + '</strong><br /><span class="dash_trend dash_trend_right">-</span></section>';
-				}
+						return '<section class="panel"><header class="panel-heading">' + graph.series.title + '</header><strong>' + graph.series.zone_text + '</strong><br />(' + graph.point.goal + '%)</section>';
+				} else if (key == 'conversion_more')
+					return '<section class="panel"><header class="panel-heading">' + graph.series.title + '</header><strong>' + graph.series.zone_text + '</strong><br /><span class="dash_trend dash_trend_up">+' + graph.point.goal_diff + '%</span></section>';
+				
 			});
 
 		chart.yAxis.tickFormat(d3.format('%'));
