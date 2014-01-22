@@ -110,7 +110,7 @@
 			</button>
 
 			<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">
-				<img src="{$img_dir}prestashop-avatar.png" height="15" width="15" />
+				<img src="{$img_dir}prestashop-avatar.png" height="15" width="15" alt="{$shop_name|escape:'html':'UTF-8'}" />
 				{$shop_name}
 			</a>
 
@@ -178,7 +178,7 @@
 							<div class="notifs_panel_header">
 								<h3>{l s='Latest Messages'}</h3>
 							</div>
-							<div id="list_orders_notif" class="list_notif">
+							<div id="list_customer_messages_notif" class="list_notif">
 								<span class="no_notifs">
 									{l s='No new messages posted on your shop'}
 								</span>
