@@ -490,17 +490,19 @@ abstract class DbCore
 
 		if (!$this->result)
 			$result = false;
-
-		if (!$array)
-		{
-			$use_cache = false;
-			$result = $this->result;
-		}
 		else
 		{
-			$result = array();
-			while ($row = $this->nextRow($this->result))
-				$result[] = $row;
+			if (!$array)
+			{
+				$use_cache = false;
+				$result = $this->result;
+			}
+			else
+			{
+				$result = array();
+				while ($row = $this->nextRow($this->result))
+					$result[] = $row;
+			}
 		}
 
 		$this->last_cached = false;
