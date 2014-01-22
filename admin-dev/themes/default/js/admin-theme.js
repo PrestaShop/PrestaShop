@@ -193,6 +193,7 @@ $(document).ready(function() {
 	}
 	initNav();
 
+	$('.dropdown-toggle').dropdown();
 	$('.label-tooltip, .help-tooltip').tooltip();
 	$("#error-modal").modal("show");
 
