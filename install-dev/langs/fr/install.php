@@ -3,6 +3,11 @@ return array(
 	'informations' => array(
 		'phone' => '+33 (0)1.40.18.30.04',
 		'support' => 'http://support.prestashop.com/fr/',
+		'forum' => 'http://www.prestashop.com/forums/?lang=fr',
+		'blog' => 'http://www.prestashop.com/blog/fr/',
+		'support' => 'https://www.prestashop.com/fr/support',
+		'documentation' => 'http://doc.prestashop.com/pages/viewpage.action?pageId=11272318',
+		'documentation_upgrade' => 'http://doc.prestashop.com/pages/viewpage.action?pageId=11272342'
 	),
 	'translations' => array(
 		'menu_welcome' => 'Choix de la langue',
