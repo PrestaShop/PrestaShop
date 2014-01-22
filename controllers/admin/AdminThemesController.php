@@ -307,7 +307,7 @@ class AdminThemesControllerCore extends AdminController
 				$theme_metas = $theme->getMetas();
 
 				// if no theme_meta are found, we must create them
-				if (count($theme_metas))
+				if (empty($theme_metas))
 				{
 					$metas = Db::getInstance()->executeS('SELECT id_meta FROM '._DB_PREFIX_.'meta');
 					$metas_default = array();
@@ -555,8 +555,7 @@ class AdminThemesControllerCore extends AdminController
 
 				return !($this->errors[] = sprintf(Tools::displayError('"%s" is not a valid directory name'), $new_dir));
 			}
-
-			if (is_dir(_PS_ALL_THEMES_DIR_.$new_dir))
+			if (Theme::getByDirectory($new_dir))
 			{
 				$this->display = 'add';
 
