@@ -502,7 +502,7 @@ function validateRange(index)
 			displayError([range_is_overlapping], $("#carrier_wizard").smartWizard('currentStep'));
 		}
 		else
-			checkRangeContinuity();
+			isOverlapping();
 	}
 	return is_ok;
 }
@@ -678,6 +678,31 @@ function getCorrectRangePosistion(current_inf, current_sup)
 			new_position = index;
 	});
 	return new_position;
+}
+
+function isOverlapping()
+{
+
+	$('tr.range_sup td').not('.range_type, .range_sign').each( function (){
+		index = $(this).index();
+		
+		current_inf = $('.range_inf td:eq('+index+') input').val();
+		current_sup = $('.range_sup td:eq('+index+') input').val();
+
+		$('tr.range_sup td').not('.range_type, .range_sign').each( function (){
+			testing_index = $(this).index();
+			if (testing_index != index) //do not test himself
+			{
+				testing_inf = $('.range_inf td:eq('+testing_index+') input').val();
+				testing_sup = $('.range_sup td:eq('+testing_index+') input').val();
+				if ((current_inf >= testing_inf && current_inf < testing_sup) || (current_sup > testing_inf && current_sup < testing_sup))
+				{
+					$('tr.range_sup td:eq('+testing_index+') div.input-group, tr.range_inf td:eq('+testing_index+') div.input-group').addClass('has-error');
+					displayError([overlapping_range], $("#carrier_wizard").smartWizard('currentStep'));
+				}
+			}
+		});
+	});
 }
 
 function checkAllZones(elt)
