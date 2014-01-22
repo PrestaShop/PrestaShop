@@ -31,7 +31,6 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
 	<title>{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'html':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if}</title>
 	{if $display_header}
