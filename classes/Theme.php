@@ -119,6 +119,23 @@ class ThemeCore extends ObjectModel
 		return parent::add($autodate, $null_values);
 	}
 
+	/**
+	 * @param $directory
+	 *
+	 * @return bool|Theme
+	 */
+	public static function getByDirectory($directory)
+	{
+		if (is_string($directory) && strlen($directory) > 0 && file_exists(_PS_ALL_THEMES_DIR_.$directory) && is_dir(_PS_ALL_THEMES_DIR_.$directory))
+		{
+			$res = Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.'theme WHERE directory="'.pSQL($directory).'"');
+
+			if (!$res)
+				return false;
+
+			return new Theme($res['id_theme']);
+		}
+	}
 
 	/**
 	 * update the table PREFIX_theme_meta for the current theme

@@ -25,7 +25,7 @@
 
 {extends file="helpers/view/view.tpl"}
 
-{block name="override_tpl"}
+<!--
 <div class="panel">
 	<div class="panel-heading text-center">
 			<button class="btn btn-default pull-left">Archiver</button>
@@ -174,9 +174,10 @@
 		</article>
 	</div>
 </div>
-{/block}
+-->
 
-{*block name="override_tpl"}
+
+{block name="override_tpl"}
 <div class="panel">
 	<h3>
 		<i class="icon-envelope"></i>
@@ -374,4 +375,4 @@
 			timer = null;
    		}
 	</script>
-{/block*}
+{/block}

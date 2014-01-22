@@ -252,5 +252,9 @@ return array(
 		'All files are not successfuly uploaded on your server' => 'Tous les fichiers n\'ont pas été correctement téléchargés sur votre serveur',
 		'Must be at least 8 characters' => 'Minimum 8 caractères',
 		'http://doc.prestashop.com/display/PS15/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation' => 'http://doc.prestashop.com/display/PS15/Installer+PrestaShop#InstallerPrestaShop-Terminerl%%27installation',
+		'%s Login information' => 'Informations de connexion sur %s',
+		'Permissions on files and folders' => 'Permissions d\'accès sur les fichiers et dossiers',
+		'Continue the installation in:' => 'Continuer l\'installation en :',
+		'Recursive write permissions for %1$s user on %2$s' => 'Droits récursifs en écriture pour l\'utilisateur %1$s sur le dossier %2$s',
 	),
 );

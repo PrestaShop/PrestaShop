@@ -1,23 +1,21 @@
-// FontAwesome icons
-$fa-css-prefix: icon
-
 // PrestaShop Admin Theme Colors
-$main-color: $grayCharcoal
-$secondary-color: $greenPrestashop
+$main-color: #40454F !default
+$primary-color: $blueSkype !default
+$secondary-color: $greenPrestashop !default
+$bg-content-color: #F9F5F0 !default
 
 $contrasted-dark-default: #333
 $contrasted-light-default: white
 $contrasted-lightness-threshold: 10%
 
-$bg-content-color: #F8F8F8
-$bg-header-color: #242424
-$bg-footer-color: #242424
-
 $bg-page-head-color : $secondary-color
 $bg-panel-heading-color: hsl(hue($secondary-color), 10, 90)
-$badge-notif-color: #8BC954
-$icon-color: #87C795
-$brand-addons: #E7217A
+
+$badge-notif-color: $greenPrestashop
+$brand-addons: $pinkPrestashop
+
+// FontAwesome icons
+$fa-css-prefix: icon
 
 // Bootstrap variables
 $gray-darker: lighten(#000, 13.5%)  //#222
@@ -25,15 +23,19 @@ $gray-dark: lighten(#000, 20%)  //#333
 $gray: lighten(#000, 33.5%)  //#555
 $gray-light: lighten(#000, 60%)  //#999
 $gray-lighter: lighten(#000, 93.5%)  //#eee
+
 // Brand colors
-$brand-primary: #50C3EE
-$brand-success: #5cb85c 
-$brand-warning: #f0ad4e 
-$brand-danger: #d9534f 
-$brand-info: #5bc0de
+$brand-primary: $primary-color !default
+
+$brand-success: #5cb85c !default
+$brand-warning: #f0ad4e !default
+$brand-danger: #d9534f !default
+$brand-info: #5bc0de !default
+
 // Scaffolding
-$body-bg: $bg-content-color 
+$body-bg: $bg-content-color
 $text-color: $gray
+
 // Typography
 $font-family-sans-serif: 'Open Sans', Helvetica, Arial, sans-serif 
 $font-size-base: 12px 
@@ -41,15 +43,18 @@ $line-height-base: 1.428571429
 $line-height-computed: floor($font-size-base * $line-height-base) 
 $headings-font-family: 'Ubuntu', sans-serif 
 $headings-font-weight: 300
+
 // Components
 $padding-base-vertical: 4px 
 $padding-base-horizontal: 8px 
 $border-radius-base: 3px
 
 // Tables
+
 // $table-bg: transparent  overall background-color
 $table-bg-accent: #f9f9f9  //for striping
 $table-bg-hover: #EDF7FB
+
 // Buttons
 $btn-default-color: $text-color 
 $btn-default-bg: white 
@@ -57,14 +62,18 @@ $btn-default-border: #ccc
 $btn-primary-color: $btn-default-color 
 $btn-primary-bg: white 
 $btn-primary-border: $brand-success
+
 // Forms
 $input-bg: white 
 $input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + 2)
+
 // Dropdowns
 $dropdown-link-hover-color: white 
 $dropdown-link-hover-bg: $brand-primary
+
 // Grid system
 $grid-gutter-width: 10px  // Navbar
+
 // Basics of a navbar
 $navbar-height: 35px  // Wells
 $well-bg: darken($bg-content-color,5%)
@@ -73,23 +82,29 @@ $well-bg: darken($bg-content-color,5%)
 // Tiny screen / phone
 $screen-tiny: 480px 
 $screen-phone: $screen-tiny 
+
 // Small screen / tablet
 $screen-small: 768px 
 $screen-tablet: $screen-small 
+
 // Medium screen / desktop
 $screen-medium: 992px 
 $screen-desktop: $screen-medium 
+
 // So media queries don't overlap when required, provide a maximum
 $screen-small-max: ($screen-medium - 1) 
-$screen-tablet-max: $screen-small-max 
+$screen-tablet-max: $screen-small-max
+
 // Large screen / wide desktop
 $screen-large: 1200px 
 $screen-large-desktop: $screen-large
 
 // Container sizes
 // Small screen / tablet
-$container-tablet: 728px 
+$container-tablet: 728px
+
 // Medium screen / desktop
-$container-desktop: 940px 
+$container-desktop: 940px
+
 // Large screen / wide desktop
 $container-large-desktop: 1170px  //light
