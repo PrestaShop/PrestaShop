@@ -120,6 +120,7 @@
 					},
 					success: function(data){
 						$('#moduleContainer').html(data);
+						$('.dropdown-toggle').dropdown();
 					}
 				});
 			}
