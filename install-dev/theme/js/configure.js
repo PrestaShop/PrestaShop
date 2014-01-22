@@ -24,29 +24,43 @@
 
 $(document).ready(function()
 {
+	checkTimeZone($('#infosCountry'));
 	// When a country is changed
 	$('#infosCountry').change(function()
 	{
-		var iso = $(this).val();
-
-		// Get timezone by iso
-		$.ajax({
-			url: 'index.php',
-			data: 'timezoneByIso=true&iso='+iso,
-			dataType: 'json',
-			cache: true,
-			success: function(json) {
-				if (json.success) {
-					$('#infosTimezone').val(json.message).trigger("liszt:updated");
-					if (in_array(iso, ['us','ca','ru','me','au','id']))
-						$('#timezone_div').show();
-					else
-						$('#timezone_div').hide();
-				}
-			}
-		});
+		checkTimeZone(this);
 	});
 });
+
+function checkTimeZone(elt)
+{
+	var iso = $(elt).val();
+
+	// Get timezone by iso
+	$.ajax({
+		url: 'index.php',
+		data: 'timezoneByIso=true&iso='+iso,
+		dataType: 'json',
+		cache: true,
+		success: function(json) {
+			if (json.success) {
+				$('#infosTimezone').val(json.message).trigger("liszt:updated");
+				if (in_array(iso, ['us','ca','ru','me','au','id']))
+				{
+					if ($('#infosTimezone:visible').length == 0 && $('#infosTimezone_chosen').length == 0)
+					{
+						$('#infosTimezone:hidden').show();
+						$('#timezone_div').show();
+						$('#infosTimezone').chosen();
+					}
+					$('#timezone_div').show();
+				}
+				else
+					$('#timezone_div').hide();
+			}
+		}
+	});
+}
 
 function in_array(needle, haystack) {
     var length = haystack.length;

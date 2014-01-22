@@ -1,4 +1,5 @@
 <?php
+
 /*
 * 2007-2014 PrestaShop
 *
@@ -306,6 +307,21 @@ class AdminThemesControllerCore extends AdminController
 				$theme = New Theme((int)$this->object->id);
 				$theme_metas = $theme->getMetas();
 
+				// if no theme_meta are found, we must create them
+				if (empty($theme_metas))
+				{
+					$metas = Db::getInstance()->executeS('SELECT id_meta FROM '._DB_PREFIX_.'meta');
+					$metas_default = array();
+					foreach ($metas as $meta)
+					{
+						$tmp_meta['id_meta'] = (int)$meta['id_meta'];
+						$tmp_meta['left'] = 1;
+						$tmp_meta['right'] = 1;
+						$metas_default[] = $tmp_meta;
+					}
+					$theme->updateMetas($metas_default);
+					$theme_metas = $theme->getMetas();
+				}
 
 				$image_url = '<img alt="preview" src="../themes/'.$theme->directory.'/preview.jpg">';
 				foreach ($theme_metas as $theme_meta)
@@ -325,7 +341,6 @@ class AdminThemesControllerCore extends AdminController
 			$available_theme_dir[$k]['label'] = $dirname;
 			$available_theme_dir[$k]['id'] = $dirname;
 		};
-
 
 		$this->fields_form = array(
 			'tinymce' => false,
@@ -541,8 +556,7 @@ class AdminThemesControllerCore extends AdminController
 
 				return !($this->errors[] = sprintf(Tools::displayError('"%s" is not a valid directory name'), $new_dir));
 			}
-
-			if (is_dir(_PS_ALL_THEMES_DIR_.$new_dir))
+			if (Theme::getByDirectory($new_dir))
 			{
 				$this->display = 'add';
 
@@ -1380,7 +1394,7 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processImportTheme()
 	{
-		$this->display = "importtheme";
+		$this->display = 'importtheme';
 
 		if (isset($_FILES['themearchive']) && isset($_POST['filename']) && Tools::isSubmit('theme_archive_server'))
 		{
@@ -1405,7 +1419,7 @@ class AdminThemesControllerCore extends AdminController
 			}
 			elseif (Tools::getValue('themearchiveUrl') != '')
 			{
-				if (!Validate::isModuleUrl($url = Tools::getValue('themearchiveUrl'), $this->errors)) // $tmp is not used, because we don't care about the error output of isModuleUrl
+				if (!Validate::isModuleUrl($url = Tools::getValue('themearchiveUrl'), $this->errors))
 					$this->errors[] = $this->l('Only zip files are allowed');
 				elseif (!move_uploaded_file($url, $sandbox.'uploaded.zip'))
 					$this->errors[] = $this->l('Error during the file download');
@@ -2086,6 +2100,17 @@ class AdminThemesControllerCore extends AdminController
 			$to_install = array();
 			$to_enable = array();
 			$to_disable = array();
+
+			foreach($theme_module['to_install'] as $key => $module_to_install)
+				if (Module::isInstalled($module_to_install) && Module::isEnabled($module_to_install))
+					unset($theme_module['to_install'][$key]);
+			foreach($theme_module['to_enable'] as $key => $module_to_enable)
+				if (Module::isEnabled($module_to_enable))
+					unset($theme_module['to_enable'][$key]);
+			foreach($theme_module['to_disable'] as $key => $module_to_disable)
+				if (!Module::isEnabled($module_to_disable))
+					unset($theme_module['to_enable'][$key]);
+
 			if (isset($theme_module['to_install']))
 				$to_install = $this->formatHelperArray($theme_module['to_install']);
 			if (isset($theme_module['to_enable']))
@@ -2361,11 +2386,12 @@ class AdminThemesControllerCore extends AdminController
 
 				$exceptions = (isset($row['exceptions']) ? explode(',', strval($row['exceptions'])) : array());
 
-				$module_hook[$name]['hook'][] = array(
-					'hook' => strval($row['hook']),
-					'position' => strval($row['position']),
-					'exceptions' => $exceptions
-				);
+				if (Hook::getIdByName(strval($row['hook'])))
+					$module_hook[$name]['hook'][] = array(
+						'hook' => strval($row['hook']),
+						'position' => strval($row['position']),
+						'exceptions' => $exceptions
+					);
 			}
 
 			$this->img_error = $this->updateImages($xml);
