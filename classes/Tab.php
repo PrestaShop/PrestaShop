@@ -273,7 +273,7 @@ class TabCore extends ObjectModel
 		if (self::$_getIdFromClassName === null)
 		{
 			self::$_getIdFromClassName = array();
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM `'._DB_PREFIX_.'tab`');
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM `'._DB_PREFIX_.'tab`', true, false);
 			foreach ($result as $row)
 				self::$_getIdFromClassName[strtolower($row['class_name'])] = $row['id_tab'];
 		}
