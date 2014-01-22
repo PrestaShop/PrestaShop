@@ -41,7 +41,7 @@ $(document).ready(function()
 		$(this).children('div').fadeOut('slow');
 	});
 
-	$('select.chosen').chosen();
+	$('select.chosen').not('.no-chosen').chosen();
 	
 	// try to pre-compile the smarty templates	
 	function compile_smarty_templates(bo)
