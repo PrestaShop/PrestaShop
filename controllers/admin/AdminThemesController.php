@@ -306,6 +306,21 @@ class AdminThemesControllerCore extends AdminController
 				$theme = New Theme((int)$this->object->id);
 				$theme_metas = $theme->getMetas();
 
+				// if no theme_meta are found, we must create them
+				if (count($theme_metas))
+				{
+					$metas = Db::getInstance()->executeS('SELECT id_meta FROM '._DB_PREFIX_.'meta');
+					$metas_default = array();
+					foreach ($metas as $meta)
+					{
+						$tmp_meta['id_meta'] = (int)$meta['id_meta'];
+						$tmp_meta['left'] = 1;
+						$tmp_meta['right'] = 1;
+						$metas_default[] = $tmp_meta;
+					}
+					$theme->updateMetas($metas_default);
+					$theme_metas = $theme->getMetas();
+				}
 
 				$image_url = '<img alt="preview" src="../themes/'.$theme->directory.'/preview.jpg">';
 				foreach ($theme_metas as $theme_meta)
@@ -325,7 +340,6 @@ class AdminThemesControllerCore extends AdminController
 			$available_theme_dir[$k]['label'] = $dirname;
 			$available_theme_dir[$k]['id'] = $dirname;
 		};
-
 
 		$this->fields_form = array(
 			'tinymce' => false,
@@ -1380,7 +1394,7 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processImportTheme()
 	{
-		$this->display = "importtheme";
+		$this->display = 'importtheme';
 
 		if (isset($_FILES['themearchive']) && isset($_POST['filename']) && Tools::isSubmit('theme_archive_server'))
 		{
@@ -1405,7 +1419,7 @@ class AdminThemesControllerCore extends AdminController
 			}
 			elseif (Tools::getValue('themearchiveUrl') != '')
 			{
-				if (!Validate::isModuleUrl($url = Tools::getValue('themearchiveUrl'), $this->errors)) // $tmp is not used, because we don't care about the error output of isModuleUrl
+				if (!Validate::isModuleUrl($url = Tools::getValue('themearchiveUrl'), $this->errors))
 					$this->errors[] = $this->l('Only zip files are allowed');
 				elseif (!move_uploaded_file($url, $sandbox.'uploaded.zip'))
 					$this->errors[] = $this->l('Error during the file download');
