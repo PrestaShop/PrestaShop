@@ -407,7 +407,7 @@ class LinkCore
 
 	public function getMediaLink($filepath)
 	{
-		return Tools::getProtocol().Tools::getMediaServer($filepath).$filepath;
+		return Tools::getShopProtocol().Tools::getMediaServer($filepath).$filepath;
 	}
 
 	/**
