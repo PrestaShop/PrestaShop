@@ -220,7 +220,7 @@ class AdminLoginControllerCore extends AdminController
 		if (!count($this->errors))
 		{	
 			$pwd = Tools::passwdGen();
-			$employee->passwd = md5(pSQL(_COOKIE_KEY_.$pwd));
+			$employee->passwd = Tools::encrypt($pwd);
 			$employee->last_passwd_gen = date('Y-m-d H:i:s', time());
 
 			$params = array(
