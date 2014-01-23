@@ -6911,6 +6911,9 @@ div.star a:hover {
         border-top: 1px solid #515151;
         width: 100%; }
 
+#reinsurance_block{
+  clear:both!important;}
+
 #short_description_content ul,
 #short_description_content ol,
 #short_description_content dl,
