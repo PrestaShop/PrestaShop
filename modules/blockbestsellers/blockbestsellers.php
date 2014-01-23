@@ -26,7 +26,7 @@
 
 if (!defined('_PS_VERSION_'))
 	exit;
-	
+
 class BlockBestSellers extends Module
 {
 	protected static $cache_best_sellers;
@@ -35,12 +35,12 @@ class BlockBestSellers extends Module
 	{
 		$this->name = 'blockbestsellers';
 		$this->tab = 'front_office_features';
-		$this->version = '1.5';
+		$this->version = '1.5.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
 
-		parent::__construct();	
+		parent::__construct();
 
 		$this->displayName = $this->l('Top-sellers block');
 		$this->description = $this->l('Adds a block displaying your store\'s top-selling products.');
@@ -51,7 +51,7 @@ class BlockBestSellers extends Module
 		$this->_clearCache('blockbestsellers.tpl');
 		$this->_clearCache('blockbestsellers-home.tpl');
 		$this->_clearCache('tab.tpl');
-		
+
 		if (!parent::install()
 			|| !$this->registerHook('header')
 			|| !$this->registerHook('actionOrderStatusPostUpdate')
@@ -67,22 +67,25 @@ class BlockBestSellers extends Module
 		// Hook the module either on the left or right column
 		$theme = new Theme(Context::getContext()->shop->id_theme);
 		if ((!$theme->default_left_column || !$this->registerHook('leftColumn'))
-			&& (!$theme->default_right_column || !$this->registerHook('rightColumn')))
+			&& (!$theme->default_right_column || !$this->registerHook('rightColumn'))
+		)
 		{
 			// If there are no colums implemented by the template, throw an error and uninstall the module
 			$this->_errors[] = $this->l('This module need to be hooked in a column and your theme does not implement one');
 			parent::uninstall();
+
 			return false;
 		}
+
 		return true;
 	}
-	
+
 	public function uninstall()
 	{
 		$this->_clearCache('blockbestsellers.tpl');
 		$this->_clearCache('blockbestsellers-home.tpl');
 		$this->_clearCache('tab.tpl');
-		
+
 		return parent::uninstall();
 	}
 
@@ -125,6 +128,7 @@ class BlockBestSellers extends Module
 			Configuration::updateValue('PS_BLOCK_BESTSELLERS_DISPLAY', (int)Tools::getValue('PS_BLOCK_BESTSELLERS_DISPLAY'));
 			$output .= $this->displayConfirmation($this->l('Settings updated'));
 		}
+
 		return $output.$this->renderForm();
 	}
 
@@ -161,10 +165,10 @@ class BlockBestSellers extends Module
 				)
 			)
 		);
-		
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
-		$helper->table =  $this->table;
+		$helper->table = $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 		$helper->default_form_language = $lang->id;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
@@ -197,6 +201,7 @@ class BlockBestSellers extends Module
 			BlockBestSellers::$cache_best_sellers = $this->getBestSellers($params);
 			$this->smarty->assign('best_sellers', BlockBestSellers::$cache_best_sellers);
 		}
+
 		return $this->display(__FILE__, 'tab.tpl', $this->getCacheId('blockbestsellers-tab'));
 	}
 
@@ -206,8 +211,10 @@ class BlockBestSellers extends Module
 		{
 			$this->smarty->assign(array(
 				'best_sellers' => BlockBestSellers::$cache_best_sellers,
-				'homeSize' => Image::getSize(ImageType::getFormatedName('home'))));
+				'homeSize' => Image::getSize(ImageType::getFormatedName('home'))
+			));
 		}
+
 		return $this->display(__FILE__, 'blockbestsellers-home.tpl', $this->getCacheId('blockbestsellers-home'));
 	}
 
@@ -223,14 +230,15 @@ class BlockBestSellers extends Module
 				'smallSize' => Image::getSize(ImageType::getFormatedName('small'))
 			));
 		}
+
 		return $this->display(__FILE__, 'blockbestsellers.tpl', $this->getCacheId('blockbestsellers-col'));
 	}
-		
+
 	public function hookLeftColumn($params)
 	{
 		return $this->hookRightColumn($params);
 	}
-	
+
 	protected function getBestSellers($params)
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
@@ -243,6 +251,7 @@ class BlockBestSellers extends Module
 		$usetax = (Product::getTaxCalculationMethod((int)$this->context->customer->id) != PS_TAX_EXC);
 		foreach ($result as &$row)
 			$row['price'] = Tools::displayPrice(Product::getPriceStatic((int)$row['id_product'], $usetax), $currency);
+
 		return $result;
 	}
 }
