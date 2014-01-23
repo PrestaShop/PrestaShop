@@ -1851,6 +1851,27 @@ class CartCore extends ObjectModel
 						);
 					}
 		}
+
+		// Single shipping fee on multiple orders
+		if (Configuration::get('PS_WAREHOUSE_SINGLE_FEE'))
+			foreach ($final_package_list as &$package)
+				if (count($package) > 1)
+					foreach ($package as &$list)
+					{
+						// Set value to mark that we found default warehouse
+						if ($list['id_warehouse'] == Configuration::get('PS_FEE_WAREHOUSE_ID'))
+							$default_fee_warehouse = true;
+						// Set no shipping if warehouse does not match the one in settings.
+						if ($list['id_warehouse'] != Configuration::get('PS_FEE_WAREHOUSE_ID'))
+							$list['product_list']['no_shipping_fee'] = true;
+					}
+
+			// Default warehouse was not found, set fee on first available warehouse
+			if (!$default_fee_warehouse)
+				foreach ($final_package_list as &$package)
+					if (count($package) > 1)
+						$package[0]['product_list']['no_shipping_fee'] = false;
+
 		$cache[(int)$this->id] = $final_package_list;
 		return $final_package_list;
 	}
@@ -2734,6 +2755,12 @@ class CartCore extends ObjectModel
 				$shipping_cost += $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int)$this->id_currency);
 
 		}
+
+		// Remove shipping cost from package
+		if (Configuration::get('PS_WAREHOUSE_SINGLE_FEE'))
+			if (isset($product_list['no_shipping_fee']) && $product_list['no_shipping_fee'])
+				$shipping_cost = 0; // Reset cost
+
 		// Adding handling charges
 		if (isset($configuration['PS_SHIPPING_HANDLING']) && $carrier->shipping_handling)
 			$shipping_cost += (float)$configuration['PS_SHIPPING_HANDLING'];
