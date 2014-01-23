@@ -521,36 +521,36 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					$this->toolbar_btn['save-and-stay'] = array(
 						'short' => 'SaveAndStay',
 						'href' => '#',
-						'desc' => $this->l('Save then add another value'),
+						'desc' => $this->l('Save then add another value', null, null, false),
 						'force_desc' => true,
 					);
 
 				$this->toolbar_btn['back'] = array(
 					'href' => self::$currentIndex.'&token='.$this->token,
-					'desc' => $this->l('Back to list')
+					'desc' => $this->l('Back to list', null, null, false)
 				);
 				break;
 			case 'view':
 				$this->toolbar_btn['newAttributes'] = array(
-						'href' => self::$currentIndex.'&amp;updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&amp;token='.$this->token,
-						'desc' => $this->l('Add New Values'),
+						'href' => self::$currentIndex.'&updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&token='.$this->token,
+						'desc' => $this->l('Add New Values', null, null, false),
 						'class' => 'toolbar-new'
 					);
 
 				$this->toolbar_btn['back'] = array(
 					'href' => self::$currentIndex.'&token='.$this->token,
-					'desc' => $this->l('Back to list')
+					'desc' => $this->l('Back to list', null, null, false)
 				);
 				break;
 			default: // list
 				$this->toolbar_btn['new'] = array(
-					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
-					'desc' => $this->l('Add New Attributes')
+					'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
+					'desc' => $this->l('Add New Attributes', null, null, false)
 				);
 		}
 			$this->toolbar_btn['import'] = array(
 					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=combinations',
-					'desc' => $this->l('Import')
+					'desc' => $this->l('Import', null, null, false)
 				);
 	}
 
