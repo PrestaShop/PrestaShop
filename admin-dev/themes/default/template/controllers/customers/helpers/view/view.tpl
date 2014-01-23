@@ -73,94 +73,121 @@
 						{l s='Edit'}
 					</a>
 				</div>
-				<ul class="list-unstyled col-lg-6">
-					<li>
-						{l s='Title:'}
-						<span>{$gender->name}</span>
-					</li>
-					<li>
-						{l s='Registration date:'}
-						<span>{$registration_date}</span>
-					</li>
-					<li>
-						{l s='Last visit:'}
-						<span>{if $customer_stats['last_visit']}{$last_visit}{else}{l s='Never'}{/if}</span>
-					</li>
-					<li>
-						{if $count_better_customers != '-'}{l s='Rank:'}
-						<span># {$count_better_customers}</span>
-						{/if}
-					</li>
-					<li>
-						{if $shop_is_feature_active}{l s='Shop:'}
-						<span>{$name_shop}</span>
-						{/if}
-					</li>
-				</ul>
-				<ul class="list-unstyled col-lg-6">
-					<li>
-						{l s='Language:'}
-						<span>
-							{if isset($customerLanguage)}
-							{$customerLanguage->name}
-							{else}
-							{l s='undefined'}
-							{/if}
-						</span>
-					</li>
-					<li>
-						 {if $customer->newsletter}
-							<span class="label label-success">
-								<i class="icon-check-sign"></i>
-								{l s='Newsletter'}
-							</span>
-						{else}
-							<span class="label label-warning">
-								<i class="icon-ban-circle"></i>
-								{l s='Newsletter'}
-							</span>
-						{/if}
-					</li>
-					<li>
-						{if $customer->optin}
-						<span class="label label-success">
-							<i class="icon-check-sign"></i>
-							{l s='Opt in'}
-						</span>
-						{else}
-						<span class="label label-warning">
-							<i class="icon-ban-circle"></i>
-							{l s='Opt in'}
-						</span>
-						{/if}
-					</li>
-					<li>
-						{l s='Age:'}
-						{if isset($customer->birthday) && $customer->birthday != '0000-00-00'}
-							{l s='%d years old' sprintf=[$customer_stats['age']]} ({l s='Birth date:'} {$customer_birthday})
-						{else}
-							{l s='Unknown'}
-						{/if}
-					</li>
-					<li>
-						{l s='Last update:'}
-						<span>{$last_update}</span>
-					</li>
-					<li>
-						{l s='Status:'}
-						{if $customer->active}
-						<span class="label label-success">
-							<i class="icon-check-sign"></i>
-							{l s='Active'}
-						</span>
-						{else}
-						<span class="label label-warning">
-							<i class="icon-ban-circle"></i>
-							{l s='Inactive'}
-						</span>
-						{/if}
-					</li>
-				</ul>
+
+				<div class="form-horizontal">
+					<div class="row">
+						<label class="control-label col-lg-3">{l s='Social Title'}</label>
+						<div class="col-lg-9">
+							<p class="form-control-static">{if $gender->name}{$gender->name}{else}{l s='Unknown'}{/if}</p>
+						</div>
+					</div>
+					<div class="row">
+						<label class="control-label col-lg-3">{l s='Age'}</label>
+						<div class="col-lg-9">
+							<p class="form-control-static">
+								{if isset($customer->birthday) && $customer->birthday != '0000-00-00'}
+									{l s='%1$d years old (birth date: %2$s)' sprintf=[$customer_stats['age'], $customer_birthday]}
+								{else}
+									{l s='Unknown'}
+								{/if}
+							</p>
+						</div>
+					</div>
+					<div class="row">
+						<label class="control-label col-lg-3">{l s='Registration Date'}</label>
+						<div class="col-lg-9">
+							<p class="form-control-static">{$registration_date}</p>
+						</div>
+					</div>
+					<div class="row">
+						<label class="control-label col-lg-3">{l s='Last Visit'}</label>
+						<div class="col-lg-9">
+							<p class="form-control-static">{if $customer_stats['last_visit']}{$last_visit}{else}{l s='Never'}{/if}</p>
+						</div>
+					</div>
+					{if $count_better_customers != '-'}
+						<div class="row">
+							<label class="control-label col-lg-3">{l s='Best Customer Rank'}</label>
+							<div class="col-lg-9">
+								<p class="form-control-static">{$count_better_customers}</p>
+							</div>
+						</div>
+					{/if}
+					{if $shop_is_feature_active}
+						<div class="row">
+							<label class="control-label col-lg-3">{l s='Shop'}</label>
+							<div class="col-lg-9">
+								<p class="form-control-static">{$name_shop}</p>
+							</div>
+						</div>
+					{/if}
+					<div class="row">
+						<label class="control-label col-lg-3">{l s='Language'}</label>
+						<div class="col-lg-9">
+							<p class="form-control-static">
+								{if isset($customerLanguage)}
+									{$customerLanguage->name}
+								{else}
+									{l s='Unknown'}
+								{/if}
+							</p>
+						</div>
+					</div>
+					<div class="row">
+						<label class="control-label col-lg-3">{l s='Registrations'}</label>
+						<div class="col-lg-9">
+							<p class="form-control-static">
+								{if $customer->newsletter}
+									<span class="label label-success">
+										<i class="icon-check-sign"></i>
+										{l s='Newsletter'}
+									</span>
+								{else}
+									<span class="label label-warning">
+										<i class="icon-ban-circle"></i>
+										{l s='Newsletter'}
+									</span>
+								{/if}
+								&nbsp;
+								{if $customer->optin}
+									<span class="label label-success">
+										<i class="icon-check-sign"></i>
+										{l s='Opt in'}
+									</span>
+									{else}
+									<span class="label label-warning">
+										<i class="icon-ban-circle"></i>
+										{l s='Opt in'}
+									</span>
+								{/if}
+							</p>
+						</div>
+					</div>
+					<div class="row">
+						<label class="control-label col-lg-3">{l s='Latest Update'}</label>
+						<div class="col-lg-9">
+							<p class="form-control-static">{$last_update}</p>
+						</div>
+					</div>
+					<div class="row">
+						<label class="control-label col-lg-3">{l s='Status'}</label>
+						<div class="col-lg-9">
+							<p class="form-control-static">
+								{if $customer->active}
+									<span class="label label-success">
+										<i class="icon-check-sign"></i>
+										{l s='Active'}
+									</span>
+								{else}
+									<span class="label label-warning">
+										<i class="icon-ban-circle"></i>
+										{l s='Inactive'}
+									</span>
+								{/if}
+							</p>
+						</div>
+					</div>
+				</div>
 				{if $customer->isGuest()}
 					{l s='This customer is registered as.'} <b>{l s='Guest'}</b>
 					{if !$customer_exists}
