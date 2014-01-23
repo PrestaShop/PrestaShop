@@ -18,3 +18,7 @@ CHANGE `right_column` `right_column` TINYINT( 1 ) NOT NULL DEFAULT '1';
 ALTER TABLE `PREFIX_employee` ADD `bo_css` varchar(64) default 'admin-theme.css' AFTER `bo_theme`;
 
 INSERT INTO `PREFIX_web_browser` (name) VALUES ('IE 11');
+
+INSERT IGNORE INTO PREFIX_theme_meta( `id_theme` , `id_meta` )
+  SELECT `PREFIX_theme`.`id_theme` , `PREFIX_meta`.`id_meta`
+  FROM `PREFIX_theme` , `PREFIX_meta`;

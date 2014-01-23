@@ -58,7 +58,7 @@ class ParentOrderControllerCore extends FrontController
 		$this->nbProducts = $this->context->cart->nbProducts();
 		
 		if (!$this->context->customer->isLogged(true) && $this->context->getMobileDevice() && Tools::getValue('step'))
-			Tools::redirect($this->context->link->getPageLink('authentication', true, (int)$this->context->language->id, $params));
+			Tools::redirect($this->context->link->getPageLink('authentication', true, (int)$this->context->language->id));
 		
 		// Redirect to the good order process
 		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 && Dispatcher::getInstance()->getController() != 'order')
@@ -480,6 +480,7 @@ class ParentOrderControllerCore extends FrontController
 		$carriers = $this->context->cart->simulateCarriersOutput();
 		$checked = $this->context->cart->simulateCarrierSelectedOutput();
 		$delivery_option_list = $this->context->cart->getDeliveryOptionList();
+		$delivery_option = $this->context->cart->getDeliveryOption(null, false);
 		$this->setDefaultCarrierSelection($delivery_option_list);
 
 		$this->context->smarty->assign(array(		
@@ -487,7 +488,7 @@ class ParentOrderControllerCore extends FrontController
 			'delivery_option_list' => $delivery_option_list,
 			'carriers' => $carriers,
 			'checked' => $checked,
-			'delivery_option' => $this->context->cart->getDeliveryOption(null, false)
+			'delivery_option' => $delivery_option
 		));
 
 		$vars = array(
@@ -495,7 +496,7 @@ class ParentOrderControllerCore extends FrontController
 				'carriers' => $carriers,
 				'checked' => $checked,
 				'delivery_option_list' => $delivery_option_list,
-				'delivery_option' => $this->context->cart->getDeliveryOption(null, false)
+				'delivery_option' => $delivery_option
 			))
 		);
 		

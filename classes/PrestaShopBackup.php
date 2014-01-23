@@ -153,7 +153,7 @@ class PrestaShopBackupCore
 	{
 		foreach ($list as $file)
 		{
-			$backup = new PrestaShopBackup::($file);
+			$backup = new PrestaShopBackup($file);
 			if (!$backup->delete())
 			{
 				$this->error = $backup->error;
