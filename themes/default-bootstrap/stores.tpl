@@ -72,31 +72,6 @@
 	    </table>
 	{/if}
 {else}
-	<script type="text/javascript">
-		// <![CDATA[
-		var map;
-		var markers = [];
-		var infoWindow;
-		var locationSelect;
-
-		var defaultLat = '{$defaultLat}';
-		var defaultLong = '{$defaultLong}';
-		
-		var translation_1 = '{l s='No stores were found. Please try selecting a wider radius.' js=1}';
-		var translation_2 = '{l s='store found -- see details:' js=1}';
-		var translation_3 = '{l s='stores found -- view all results:' js=1}';
-		var translation_4 = '{l s='Phone:' js=1}';
-		var translation_5 = '{l s='Get directions' js=1}';
-		var translation_6 = '{l s='Not found' js=1}';
-		
-		var hasStoreIcon = '{$hasStoreIcon}';
-		var distance_unit = '{$distance_unit}';
-		var img_store_dir = '{$img_store_dir}';
-		var img_ps_dir = '{$img_ps_dir}';
-		var searchUrl = '{$searchUrl}';
-		var logo_store = '{$logo_store}';
-		//]]>
-	</script>
 	<div id="map"></div>
 	<p class="store-title">
 		<strong class="dark">
@@ -144,4 +119,24 @@
         <tbody>
         </tbody>
 	</table>
+{strip}
+{addJsDef map=''}
+{addJsDef markers=array()}
+{addJsDef infoWindow=''}
+{addJsDef locationSelect=''}
+{addJsDef defaultLat=$defaultLat}
+{addJsDef defaultLong=$defaultLong}
+{addJsDef hasStoreIcon=$hasStoreIcon}
+{addJsDef distance_unit=$distance_unit}
+{addJsDef img_store_dir=$img_store_dir}
+{addJsDef img_ps_dir=$img_ps_dir}
+{addJsDef searchUrl=$searchUrl}
+{addJsDef logo_store=$logo_store}
+{addJsDefL name=translation_1}{l s='No stores were found. Please try selecting a wider radius.' js=1}{/addJsDefL}
+{addJsDefL name=translation_2}{l s='store found -- see details:' js=1}{/addJsDefL}
+{addJsDefL name=translation_3}{l s='stores found -- view all results:' js=1}{/addJsDefL}
+{addJsDefL name=translation_4}{l s='Phone:' js=1}{/addJsDefL}
+{addJsDefL name=translation_5}{l s='Get directions' js=1}{/addJsDefL}
+{addJsDefL name=translation_6}{l s='Not found' js=1}{/addJsDefL}
+{/strip}
 {/if}
