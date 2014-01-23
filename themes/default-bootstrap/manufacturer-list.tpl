@@ -48,19 +48,19 @@
         	<div class="sortPagiBar clearfix">
 				{if $manufacturer.nb_products > 0}
 					<ul class="display hidden-xs">
-					    <li class="display-title">
-					    	{l s='View:'}
-					    </li>
-					    <li id="grid">
-					    	<a onclick="display('grid');">
-					    		<i class="icon-th-large"></i>{l s='Grid'}
-					    	</a>
-					    </li>
-					    <li id="list">
-					    	<a onclick="display('list');">
-					    		<i class="icon-th-list"></i>{l s='List'}
-					    	</a>
-					    </li>
+						<li class="display-title">
+							{l s='View:'}
+						</li>
+						<li id="grid">
+							<a rel="nofollow" href="#" title="{l s='Grid'}">
+								<i class="icon-th-large"></i>{l s='Grid'}
+							</a>
+						</li>
+						<li id="list">
+							<a rel="nofollow" href="#" title="{l s='List'}">
+								<i class="icon-th-list"></i>{l s='List'}
+							</a>
+						</li>
 					</ul>
 				{/if}
                 {include file="./nbr-product-page.tpl"}
