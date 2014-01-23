@@ -556,7 +556,7 @@
 	{/if}
 {strip}
 {addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
-{addJsDef currencyRat =$currencyRate|floatval}
+{addJsDef currencyRate=$currencyRate|floatval}
 {addJsDef currencyFormat=$currencyFormat|intval}
 {addJsDef currencyBlank=$currencyBlank|intval}
 {addJsDef deliveryAddress=$cart->id_address_delivery|intval}
