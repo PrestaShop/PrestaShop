@@ -248,7 +248,6 @@ function validateSteps(fromStep, toStep)
 				if (datas.has_error)
 				{
 					is_ok = false;
-					
 					$('div.input-group input').focus(function () {
 						$(this).closest('div.input-group').removeClass('has-error');
 					});
@@ -266,11 +265,12 @@ function validateSteps(fromStep, toStep)
 
 function displayError(errors, step_number)
 {
+	$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
 	$('.wizard_error').remove();
 	str_error = '<div class="error wizard_error" style="display:none"><ul>';
 	for (var error in errors)
 	{
-		$('#carrier_wizard').smartWizard('setError',{stepnum:step_number,iserror:true});
+		$('#carrier_wizard .actionBar a.btn').addClass('disabled');
 		$('input[name="'+error+'"]').closest('div.input-group').addClass('has-error');
 		str_error += '<li>'+errors[error]+'</li>';
 	}
@@ -442,6 +442,7 @@ function showFees()
 
 function validateRange(index)
 {
+	$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
 	$('.wizard_error').remove();
 	//reset error css
 	$('tr.range_sup td input:text').closest('div.input-group').removeClass('has-error');
@@ -597,6 +598,7 @@ function delete_new_range()
 
 function checkAllFieldIsNumeric()
 {
+	$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
 	$('#zones_table td input[type=text]').each(function () {
 		if (!$.isNumeric($(this).val()) && $(this).val() != '')
 			$(this).closest('div.input-group').addClass('has-error');
@@ -682,19 +684,20 @@ function getCorrectRangePosistion(current_inf, current_sup)
 
 function isOverlapping()
 {
-
+	$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
 	$('tr.range_sup td').not('.range_type, .range_sign').each( function (){
 		index = $(this).index();
-		
-		current_inf = $('.range_inf td:eq('+index+') input').val();
-		current_sup = $('.range_sup td:eq('+index+') input').val();
+		current_inf = parseInt($('.range_inf td:eq('+index+') input').val());
+		current_sup = parseInt($('.range_sup td:eq('+index+') input').val());
 
 		$('tr.range_sup td').not('.range_type, .range_sign').each( function (){
 			testing_index = $(this).index();
+			
 			if (testing_index != index) //do not test himself
 			{
-				testing_inf = $('.range_inf td:eq('+testing_index+') input').val();
-				testing_sup = $('.range_sup td:eq('+testing_index+') input').val();
+				testing_inf = parseInt($('.range_inf td:eq('+testing_index+') input').val());
+				testing_sup = parseInt($('.range_sup td:eq('+testing_index+') input').val());
+
 				if ((current_inf >= testing_inf && current_inf < testing_sup) || (current_sup > testing_inf && current_sup < testing_sup))
 				{
 					$('tr.range_sup td:eq('+testing_index+') div.input-group, tr.range_inf td:eq('+testing_index+') div.input-group').addClass('has-error');
