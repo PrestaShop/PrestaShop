@@ -232,6 +232,12 @@ div.field {
 
 #uploadedImage {border:1px solid #ccc;}	
 
+#dbPart #formCheckSQL .waitBlock {
+	padding:20px;
+	background:#D9EDF7 url(img/ajax-loader-small.gif) no-repeat 16px 12px;
+	border:1px solid #81CFE6;
+}
+
 .okBlock {
 	padding:20px 20px 20px 38px;
 	background:#b7e2a7 url(img/pict_ok.png) no-repeat 15px 21px;

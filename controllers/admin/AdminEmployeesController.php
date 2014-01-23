@@ -276,6 +276,7 @@ class AdminEmployeesControllerCore extends AdminController
 						'id' => 'id',
 						'name' => 'name'
 					),
+					'onchange' => 'var value_array = $(this).val().split("|"); $("link").first().attr("href", "themes/" + value_array[0] + "/css/" + value_array[1]);',
 					'hint' => $this->l('Back Office theme.')
 				),
 				array(

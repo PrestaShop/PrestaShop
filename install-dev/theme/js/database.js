@@ -35,7 +35,12 @@ $(document).ready(function()
 	// Check database configuration
 	$('#btTestDB').click(function()
 	{
-		$("#dbResultCheck").slideUp('slow');
+		$("#dbResultCheck")
+			.removeClass('errorBlock')
+			.removeClass('okBlock')
+			.addClass('waitBlock')
+			.html('&nbsp;')
+			.slideDown('slow');
 		$.ajax({
 			url: 'index.php',
 			data: {
@@ -54,17 +59,17 @@ $(document).ready(function()
 			{
 				$("#dbResultCheck")
 					.addClass((json.success) ? 'okBlock' : 'errorBlock')
+					.removeClass('waitBlock')
 					.removeClass((json.success) ? 'errorBlock' : 'okBlock')
 					.html(json.message)
-					.slideDown('slow');
 			},
             error: function(xhr)
             {
                 $("#dbResultCheck")
                     .addClass('errorBlock')
+					.removeClass('waitBlock')
                     .removeClass('okBlock')
                     .html('An error occurred:<br /><br />' + xhr.responseText)
-                    .slideDown('slow');
             }
 		});
 	});
