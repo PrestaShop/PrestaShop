@@ -26,8 +26,8 @@
 {if isset($orderby) AND isset($orderway)}
 <ul class="display hidden-xs">
 	<li class="display-title">{l s='View:'}</li>
-    <li id="grid"><a onclick="display('grid');"><i class="icon-th-large"></i>{l s='Grid'}</a></li>
-    <li id="list"><a onclick="display('list');"><i class="icon-th-list"></i>{l s='List'}</a></li>
+    <li id="grid"><a rel="nofollow" href="#" title="{l s='Grid'}"><i class="icon-th-large"></i>{l s='Grid'}</a></li>
+    <li id="list"><a rel="nofollow" href="#" title="{l s='List'}"><i class="icon-th-list"></i>{l s='List'}</a></li>
 </ul>
 {* On 1.5 the var request is setted on the front controller. The next lines assure the retrocompatibility with some modules *}
 {if !isset($request)}
