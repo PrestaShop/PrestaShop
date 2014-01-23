@@ -58,7 +58,7 @@ class ParentOrderControllerCore extends FrontController
 		$this->nbProducts = $this->context->cart->nbProducts();
 		
 		if (!$this->context->customer->isLogged(true) && $this->context->getMobileDevice() && Tools::getValue('step'))
-			Tools::redirect($this->context->link->getPageLink('authentication', true, (int)$this->context->language->id, $params));
+			Tools::redirect($this->context->link->getPageLink('authentication', true, (int)$this->context->language->id));
 		
 		// Redirect to the good order process
 		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 && Dispatcher::getInstance()->getController() != 'order')
