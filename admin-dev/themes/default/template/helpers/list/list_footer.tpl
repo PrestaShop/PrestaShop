@@ -136,6 +136,7 @@
 {foreach from=$toolbar_btn item=btn key=k}
 	{if $k == 'back'}
 		{assign 'back_button' $btn}
+		{break}
 	{/if}
 {/foreach}
 {if isset($back_button)}
