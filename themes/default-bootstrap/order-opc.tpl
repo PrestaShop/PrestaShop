@@ -77,8 +77,8 @@
 {addJsDef countriesNeedIDNumber=array()}
 {addJsDef countriesNeedZipCode=array()}
 {addJsDef vat_management=$vat_management|intval}
-{addJsDef errorCarrier=$errorCarrier}
-{addJsDef errorTOS=$errorTOS}
+{addJsDef errorCarrier=$errorCarrier|@addcslashes:'\''}
+{addJsDef errorTOS=$errorTOS|@addcslashes:'\''}
 {addJsDef checkedCarrier=$checked|intval}
 {addJsDef addresses=array()}
 {addJsDef isLogged=$isLogged|intval}
@@ -100,5 +100,6 @@
 {addJsDefL name=txtModifyMyAddress}{l s='Modify my address' js=1}{/addJsDefL}
 {addJsDefL name=txtInstantCheckout}{l s='Instant checkout' js=1}{/addJsDefL}
 {addJsDefL name=txtSelectAnAddressFirst}{l s='Please start by selecting an address.' js=1}{/addJsDefL}
+{addJsDefL name=txtFree}{l s='Free' js=1}{/addJsDefL}
 {/strip}
 {/if}
