@@ -50,6 +50,16 @@ $(document).ready(function(){
 			if (typeof addToCompare != 'undefined')
 				addToCompare(parseInt($(this).data('id-product')));
 		});
+		
+		$('#grid').click(function(e){
+			e.preventDefault();
+			display('grid');
+		});
+
+		$('#list').click(function(e){
+			e.preventDefault();
+			display('list');
+		});
 	}
 });
 
