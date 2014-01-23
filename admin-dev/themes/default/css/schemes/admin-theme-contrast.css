@@ -1577,6 +1577,8 @@ textarea { overflow: auto; vertical-align: top; }
 
 table { border-collapse: collapse; border-spacing: 0; }
 
+.bootstrap { @-ms-viewport { width: device-width; }
+ }
 .bootstrap *, .bootstrap *:before, .bootstrap *:after { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
 .bootstrap html { font-size: 62.5%; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 .bootstrap body { font-family: "Open Sans", Helvetica, Arial, sans-serif; font-size: 12px; line-height: 1.42857; color: #555555; background-color: white; }
@@ -2455,6 +2457,47 @@ table { border-collapse: collapse; border-spacing: 0; }
 .bootstrap .tooltip.bottom .tooltip-arrow { top: 0; left: 50%; margin-left: -5px; border-width: 0 5px 5px; border-bottom-color: black; }
 .bootstrap .tooltip.bottom-left .tooltip-arrow { top: 0; left: 5px; border-width: 0 5px 5px; border-bottom-color: black; }
 .bootstrap .tooltip.bottom-right .tooltip-arrow { top: 0; right: 5px; border-width: 0 5px 5px; border-bottom-color: black; }
+.bootstrap .clearfix:before, .bootstrap .clearfix:after { content: " "; display: table; }
+.bootstrap .clearfix:after { clear: both; }
+.bootstrap .center-block { display: block; margin-left: auto; margin-right: auto; }
+.bootstrap .pull-right, #content.bootstrap h3:not(.modal-title) .panel-heading-action, #content.bootstrap .panel .panel-heading:not(.modal-title) .panel-heading-action, #content.bootstrap #dash_version .panel-heading:not(.modal-title) .panel-heading-action, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading:not(.modal-title) .panel-heading-action, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading:not(.modal-title) .panel-heading-action, #content.bootstrap .panel-heading .panel-heading-action { float: right !important; }
+.bootstrap .pull-left, .bootstrap .page-head h2.page-title { float: left !important; }
+.bootstrap .hide { display: none !important; }
+.bootstrap .show { display: block !important; }
+.bootstrap .invisible { visibility: hidden; }
+.bootstrap .text-hide { font: 0/0 a; color: transparent; text-shadow: none; background-color: transparent; border: 0; }
+.bootstrap .hidden { display: none !important; visibility: hidden !important; }
+.bootstrap .affix { position: fixed; }
+.bootstrap .visible-xs, .bootstrap tr.visible-xs, .bootstrap th.visible-xs, .bootstrap td.visible-xs { display: none !important; }
+@media (max-width: 767px) { .bootstrap .visible-xs { display: block !important; }
+  .bootstrap table.visible-xs { display: table; }
+  .bootstrap tr.visible-xs { display: table-row !important; }
+  .bootstrap th.visible-xs, .bootstrap td.visible-xs { display: table-cell !important; } }
+.bootstrap .visible-sm, .bootstrap tr.visible-sm, .bootstrap th.visible-sm, .bootstrap td.visible-sm { display: none !important; }
+@media (min-width: 768px) and (max-width: 991px) { .bootstrap .visible-sm { display: block !important; }
+  .bootstrap table.visible-sm { display: table; }
+  .bootstrap tr.visible-sm { display: table-row !important; }
+  .bootstrap th.visible-sm, .bootstrap td.visible-sm { display: table-cell !important; } }
+.bootstrap .visible-md, .bootstrap tr.visible-md, .bootstrap th.visible-md, .bootstrap td.visible-md { display: none !important; }
+@media (min-width: 992px) and (max-width: 1199px) { .bootstrap .visible-md { display: block !important; }
+  .bootstrap table.visible-md { display: table; }
+  .bootstrap tr.visible-md { display: table-row !important; }
+  .bootstrap th.visible-md, .bootstrap td.visible-md { display: table-cell !important; } }
+.bootstrap .visible-lg, .bootstrap tr.visible-lg, .bootstrap th.visible-lg, .bootstrap td.visible-lg { display: none !important; }
+@media (min-width: 1200px) { .bootstrap .visible-lg { display: block !important; }
+  .bootstrap table.visible-lg { display: table; }
+  .bootstrap tr.visible-lg { display: table-row !important; }
+  .bootstrap th.visible-lg, .bootstrap td.visible-lg { display: table-cell !important; } }
+@media (max-width: 767px) { .bootstrap .hidden-xs, .bootstrap #header_notifs_icon_wrapper, .bootstrap tr.hidden-xs, .bootstrap tr#header_notifs_icon_wrapper, .bootstrap th.hidden-xs, .bootstrap th#header_notifs_icon_wrapper, .bootstrap td.hidden-xs, .bootstrap td#header_notifs_icon_wrapper { display: none !important; } }
+@media (min-width: 768px) and (max-width: 991px) { .bootstrap .hidden-sm, .bootstrap tr.hidden-sm, .bootstrap th.hidden-sm, .bootstrap td.hidden-sm { display: none !important; } }
+@media (min-width: 992px) and (max-width: 1199px) { .bootstrap .hidden-md, .bootstrap tr.hidden-md, .bootstrap th.hidden-md, .bootstrap td.hidden-md { display: none !important; } }
+@media (min-width: 1200px) { .bootstrap .hidden-lg, .bootstrap tr.hidden-lg, .bootstrap th.hidden-lg, .bootstrap td.hidden-lg { display: none !important; } }
+.bootstrap .visible-print, .bootstrap tr.visible-print, .bootstrap th.visible-print, .bootstrap td.visible-print { display: none !important; }
+@media print { .bootstrap .visible-print { display: block !important; }
+  .bootstrap table.visible-print { display: table; }
+  .bootstrap tr.visible-print { display: table-row !important; }
+  .bootstrap th.visible-print, .bootstrap td.visible-print { display: table-cell !important; } }
+@media print { .bootstrap .hidden-print, .bootstrap tr.hidden-print, .bootstrap th.hidden-print, .bootstrap td.hidden-print { display: none !important; } }
 
 .modal-open { overflow: hidden; }
 
@@ -2489,64 +2532,6 @@ table { border-collapse: collapse; border-spacing: 0; }
   .modal-content { -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); }
   .modal-sm { width: 300px; }
   .modal-lg { width: 900px; } }
-.clearfix:before, .clearfix:after { content: " "; display: table; }
-.clearfix:after { clear: both; }
-
-.center-block { display: block; margin-left: auto; margin-right: auto; }
-
-.pull-right, #content.bootstrap h3:not(.modal-title) .panel-heading-action, #content.bootstrap .panel .panel-heading:not(.modal-title) .panel-heading-action, #content.bootstrap #dash_version .panel-heading:not(.modal-title) .panel-heading-action, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading:not(.modal-title) .panel-heading-action, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading:not(.modal-title) .panel-heading-action, #content.bootstrap .panel-heading .panel-heading-action { float: right !important; }
-
-.pull-left, .bootstrap .page-head h2.page-title { float: left !important; }
-
-.hide { display: none !important; }
-
-.show { display: block !important; }
-
-.invisible { visibility: hidden; }
-
-.text-hide { font: 0/0 a; color: transparent; text-shadow: none; background-color: transparent; border: 0; }
-
-.hidden { display: none !important; visibility: hidden !important; }
-
-.affix { position: fixed; }
-
-@-ms-viewport { width: device-width; }
-
-.visible-xs, tr.visible-xs, th.visible-xs, td.visible-xs { display: none !important; }
-
-@media (max-width: 767px) { .visible-xs { display: block !important; }
-  table.visible-xs { display: table; }
-  tr.visible-xs { display: table-row !important; }
-  th.visible-xs, td.visible-xs { display: table-cell !important; } }
-.visible-sm, tr.visible-sm, th.visible-sm, td.visible-sm { display: none !important; }
-
-@media (min-width: 768px) and (max-width: 991px) { .visible-sm { display: block !important; }
-  table.visible-sm { display: table; }
-  tr.visible-sm { display: table-row !important; }
-  th.visible-sm, td.visible-sm { display: table-cell !important; } }
-.visible-md, tr.visible-md, th.visible-md, td.visible-md { display: none !important; }
-
-@media (min-width: 992px) and (max-width: 1199px) { .visible-md { display: block !important; }
-  table.visible-md { display: table; }
-  tr.visible-md { display: table-row !important; }
-  th.visible-md, td.visible-md { display: table-cell !important; } }
-.visible-lg, tr.visible-lg, th.visible-lg, td.visible-lg { display: none !important; }
-
-@media (min-width: 1200px) { .visible-lg { display: block !important; }
-  table.visible-lg { display: table; }
-  tr.visible-lg { display: table-row !important; }
-  th.visible-lg, td.visible-lg { display: table-cell !important; } }
-@media (max-width: 767px) { .hidden-xs, #header_notifs_icon_wrapper, tr.hidden-xs, tr#header_notifs_icon_wrapper, th.hidden-xs, th#header_notifs_icon_wrapper, td.hidden-xs, td#header_notifs_icon_wrapper { display: none !important; } }
-@media (min-width: 768px) and (max-width: 991px) { .hidden-sm, tr.hidden-sm, th.hidden-sm, td.hidden-sm { display: none !important; } }
-@media (min-width: 992px) and (max-width: 1199px) { .hidden-md, tr.hidden-md, th.hidden-md, td.hidden-md { display: none !important; } }
-@media (min-width: 1200px) { .hidden-lg, tr.hidden-lg, th.hidden-lg, td.hidden-lg { display: none !important; } }
-.visible-print, tr.visible-print, th.visible-print, td.visible-print { display: none !important; }
-
-@media print { .visible-print { display: block !important; }
-  table.visible-print { display: table; }
-  tr.visible-print { display: table-row !important; }
-  th.visible-print, td.visible-print { display: table-cell !important; } }
-@media print { .hidden-print, tr.hidden-print, th.hidden-print, td.hidden-print { display: none !important; } }
 html { min-height: 100%; height: 100%; font-size: 62.5%; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 
 body { min-height: 100%; height: 100%; font: 400 12px/1.42857 "Open Sans", Helvetica, Arial, sans-serif; color: #555555; background-color: white; }
@@ -2555,6 +2540,7 @@ body { min-height: 100%; height: 100%; font: 400 12px/1.42857 "Open Sans", Helve
 
 #content.bootstrap { padding: 80px 10px 0; -webkit-transition-property: margin; transition-property: margin; -webkit-transition-duration: 0.4s; transition-duration: 0.4s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; }
 #content.bootstrap .panel, #content.bootstrap #dash_version, #content.bootstrap .message-item-initial .message-item-initial-body, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel { padding: 20px; margin-bottom: 20px; border: solid 1px #e6e6e6; background-color: white; -webkit-border-radius: 5px; -moz-border-radius: 5px; -ms-border-radius: 5px; -o-border-radius: 5px; border-radius: 5px; -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset; box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset; }
+#content.bootstrap .panel .panel, #content.bootstrap #dash_version .panel, #content.bootstrap .message-item-initial .message-item-initial-body .panel, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel, #content.bootstrap .panel #dash_version, #content.bootstrap #dash_version #dash_version, #content.bootstrap .message-item-initial .message-item-initial-body #dash_version, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel #dash_version, #content.bootstrap .panel .message-item-initial .message-item-initial-body, #content.bootstrap .message-item-initial .panel .message-item-initial-body, #content.bootstrap #dash_version .message-item-initial .message-item-initial-body, #content.bootstrap .message-item-initial #dash_version .message-item-initial-body, #content.bootstrap .message-item-initial .message-item-initial-body .message-item-initial-body, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .message-item-initial .message-item-initial-body, #content.bootstrap .message-item-initial .timeline .timeline-item .timeline-caption .timeline-panel .message-item-initial-body, #content.bootstrap .panel .timeline .timeline-item .timeline-caption .timeline-panel, #content.bootstrap .timeline .timeline-item .timeline-caption .panel .timeline-panel, #content.bootstrap #dash_version .timeline .timeline-item .timeline-caption .timeline-panel, #content.bootstrap .timeline .timeline-item .timeline-caption #dash_version .timeline-panel, #content.bootstrap .message-item-initial .message-item-initial-body .timeline .timeline-item .timeline-caption .timeline-panel, #content.bootstrap .timeline .timeline-item .timeline-caption .message-item-initial .message-item-initial-body .timeline-panel, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .timeline-panel { border: solid 1px #cccccc; -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset; box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset; }
 #content.bootstrap h3:not(.modal-title), #content.bootstrap .panel .panel-heading:not(.modal-title), #content.bootstrap #dash_version .panel-heading:not(.modal-title), #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading:not(.modal-title), #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading:not(.modal-title), #content.bootstrap .panel-heading { border: none; padding: 0 5px; margin: -16px -16px 15px -16px; color: contrasted(#e8e3e3); font-size: 1.2em; line-height: 30px; font-weight: 300; text-transform: uppercase; background-color: white; border-bottom: solid 1px #cccccc; }
 #content.bootstrap h3:not(.modal-title) i, #content.bootstrap .panel .panel-heading:not(.modal-title) i, #content.bootstrap #dash_version .panel-heading:not(.modal-title) i, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading:not(.modal-title) i, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading:not(.modal-title) i, #content.bootstrap h3:not(.modal-title) a, #content.bootstrap .panel .panel-heading:not(.modal-title) a, #content.bootstrap #dash_version .panel-heading:not(.modal-title) a, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading:not(.modal-title) a, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading:not(.modal-title) a, #content.bootstrap .panel-heading i, #content.bootstrap .panel-heading a { color: contrasted(#e8e3e3); }
 #content.bootstrap h3:not(.modal-title) .badge, #content.bootstrap .panel .panel-heading:not(.modal-title) .badge, #content.bootstrap #dash_version .panel-heading:not(.modal-title) .badge, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading:not(.modal-title) .badge, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading:not(.modal-title) .badge, #content.bootstrap h3:not(.modal-title) #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content.bootstrap h3:not(.modal-title) .notifs_badge, #content.bootstrap .panel .panel-heading:not(.modal-title) #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content.bootstrap .panel .panel-heading:not(.modal-title) .notifs_badge, #content.bootstrap #dash_version .panel-heading:not(.modal-title) #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content.bootstrap #dash_version .panel-heading:not(.modal-title) .notifs_badge, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading:not(.modal-title) #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading:not(.modal-title) .notifs_badge, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading:not(.modal-title) #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading:not(.modal-title) .notifs_badge, #content.bootstrap h3:not(.modal-title) .module-badge-popular, #content.bootstrap .panel .panel-heading:not(.modal-title) .module-badge-popular, #content.bootstrap #dash_version .panel-heading:not(.modal-title) .module-badge-popular, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading:not(.modal-title) .module-badge-popular, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading:not(.modal-title) .module-badge-popular, #content.bootstrap h3:not(.modal-title) .module-badge-partner, #content.bootstrap .panel .panel-heading:not(.modal-title) .module-badge-partner, #content.bootstrap #dash_version .panel-heading:not(.modal-title) .module-badge-partner, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading:not(.modal-title) .module-badge-partner, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading:not(.modal-title) .module-badge-partner, #content.bootstrap .panel-heading .badge, #content.bootstrap .panel-heading #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper #content.bootstrap .panel-heading .notifs_badge, #content.bootstrap .panel-heading .module-badge-popular, #content.bootstrap .panel-heading .module-badge-partner { background: white; border: solid 2px #b1e0f1; -webkit-border-radius: 20px; -moz-border-radius: 20px; -ms-border-radius: 20px; -o-border-radius: 20px; border-radius: 20px; color: #25a0ca; line-height: 1.2em; font-size: 1em; padding: 0 10px; font-weight: 700; margin-left: 10px; }
@@ -3377,16 +3363,17 @@ a.link-social:hover { text-decoration: none; }
 .ladda-button[data-size=l] .ladda-label { font-size: 1.2em; }
 .ladda-button[data-size=xl] .ladda-label { font-size: 1.5em; }
 
-.nobootstrap { background-color: white; min-width: 1200px; padding: 80px 40px; }
+.nobootstrap { background-color: white; min-width: 1200px; padding: 100px 30px; }
 .nobootstrap form p { margin: 0.5em 0 0; padding: 0 0 0.5em; }
-.nobootstrap fieldset { background-color: #ebedf4; border: 1px solid #ccced7; color: #585a69; margin: 0; padding: 1em; }
+.nobootstrap fieldset { background-color: #ebedf4; border: 1px solid #ccced7; color: #585a69; margin: 0 0 10px 0; padding: 1em; }
+.nobootstrap fieldset img { padding: 0 4px 0 0; vertical-align: bottom; }
 .nobootstrap legend { background: #ebedf4; border: 1px solid #ccced7; font-weight: 700; margin: 0; padding: 0.2em 0.5em; text-align: left; }
+.nobootstrap legend a { color: #585984; text-decoration: none; }
 .nobootstrap label { color: #585a69; text-shadow: 0 1px 0 white; float: left; width: 250px; padding: 0.2em 0.5em 0 0; text-align: right; font-weight: bold; }
 .nobootstrap label.t { float: none; clear: none; padding: 0 5px 0; margin: 0px; font-weight: normal; font-size: 12px; text-shadow: none; }
 .nobootstrap .clear { clear: both; }
 .nobootstrap .margin-form { padding: 0 0 1em 260px; color: #7f7f7f; font-size: 0.85em; }
-.nobootstrap fieldset img { padding: 0 4px 0 0; vertical-align: bottom; }
-.nobootstrap .button { cursor: pointer; background: -moz-linear-gradient(center top, #f9f9f9, #e3e3e3) repeat scroll 0 0 transparent; background: -webkit-gradient(linear, center top, center bottom, from(#f9f9f9), to(#e3e3e3)) repeat scroll 0 0 transparent; border-color: #cccccc #bbbbbb #a0a0a0; border-left: 1px solid #bbbbbb; border-radius: 3px 3px 3px 3px; border-right: 1px solid #bbbbbb; border-style: solid; border-width: 1px; color: black; margin: 0; outline: medium none; padding: 3px 8px; text-align: center; vertical-align: middle; white-space: nowrap; text-shadow: 0 1px 0 white; }
+.nobootstrap .button { cursor: pointer; background: -moz-linear-gradient(center top, #f9f9f9, #e3e3e3) repeat scroll 0 0 transparent; background: -webkit-gradient(linear, center top, center bottom, from(#f9f9f9), to(#e3e3e3)) repeat scroll 0 0 transparent; border-color: #cccccc #bbbbbb #a0a0a0; border-left: 1px solid #bbbbbb; border-radius: 3px 3px 3px 3px; border-right: 1px solid #bbbbbb; border-style: solid; border-width: 1px; color: black; margin: 5px 0; outline: medium none; padding: 3px 8px; text-align: center; vertical-align: middle; white-space: nowrap; text-shadow: 0 1px 0 white; text-decoration: none; }
 .nobootstrap .button:hover { border-color: #aaaaaa #999999 #888888; }
 .nobootstrap input { vertical-align: middle; }
 .nobootstrap select { border: 1px solid #cccccc; font-size: 12px; }
@@ -3409,3 +3396,18 @@ a.link-social:hover { text-decoration: none; }
 .nobootstrap .table tr.small td { height: 15px; }
 .nobootstrap .table tr.last td { border-bottom: none; }
 .nobootstrap .table tr .filter { background-color: #f1f9ff; }
+
+.nobootstrap .form-group { clear: both; margin-bottom: 1em; float: left; width: 100%; }
+.nobootstrap .form-group > div { float: left; }
+.nobootstrap .panel:not(.bootstrap), .nobootstrap .bootstrap #dash_version:not(.bootstrap), .bootstrap .nobootstrap #dash_version:not(.bootstrap), .nobootstrap .bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap), .bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap), .nobootstrap .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap), .bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) { background-color: #ebedf4; border: 1px solid #ccced7; color: #585a69; margin: 0 0 10px 0; padding: 1em; float: left; width: 100%; box-sizing: border-box; }
+.nobootstrap .panel:not(.bootstrap) img, .nobootstrap .bootstrap #dash_version:not(.bootstrap) img, .bootstrap .nobootstrap #dash_version:not(.bootstrap) img, .nobootstrap .bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) img, .bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) img, .nobootstrap .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) img, .bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) img { padding: 0 4px 0 0; vertical-align: bottom; }
+.nobootstrap .panel:not(.bootstrap) h3, .nobootstrap .bootstrap #dash_version:not(.bootstrap) h3, .bootstrap .nobootstrap #dash_version:not(.bootstrap) h3, .nobootstrap .bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) h3, .bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) h3, .nobootstrap .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) h3, .bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) h3, .nobootstrap #content.bootstrap .panel:not(.bootstrap) .panel-heading, #content.bootstrap .nobootstrap .panel:not(.bootstrap) .panel-heading, .nobootstrap .panel:not(.bootstrap) #content.bootstrap #dash_version .panel-heading, .nobootstrap #content.bootstrap #dash_version:not(.bootstrap) .panel-heading, #content.bootstrap .nobootstrap #dash_version:not(.bootstrap) .panel-heading, .nobootstrap .panel:not(.bootstrap) #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading, .nobootstrap #content.bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) .panel-heading, #content.bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) .panel-heading, .nobootstrap .panel:not(.bootstrap) #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading, .nobootstrap #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) .panel-heading, #content.bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) .panel-heading { position: relative; top: -25px; display: inline-block; background: #ebedf4; border: 1px solid #ccced7; font-weight: 700; margin: 0; padding: 0.2em 0.5em; text-align: left; }
+.nobootstrap .panel:not(.bootstrap) h3 a, .nobootstrap .bootstrap #dash_version:not(.bootstrap) h3 a, .bootstrap .nobootstrap #dash_version:not(.bootstrap) h3 a, .nobootstrap .bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) h3 a, .bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) h3 a, .nobootstrap .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) h3 a, .bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) h3 a, .nobootstrap #content.bootstrap .panel:not(.bootstrap) .panel-heading a, #content.bootstrap .nobootstrap .panel:not(.bootstrap) .panel-heading a, .nobootstrap .panel:not(.bootstrap) #content.bootstrap #dash_version .panel-heading a, .nobootstrap #content.bootstrap #dash_version:not(.bootstrap) .panel-heading a, #content.bootstrap .nobootstrap #dash_version:not(.bootstrap) .panel-heading a, .nobootstrap .panel:not(.bootstrap) #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading a, .nobootstrap #content.bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) .panel-heading a, #content.bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) .panel-heading a, .nobootstrap .panel:not(.bootstrap) #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading a, .nobootstrap #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) .panel-heading a, #content.bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) .panel-heading a { color: #585984; text-decoration: none; }
+.nobootstrap .panel:not(.bootstrap) h3 i, .nobootstrap .bootstrap #dash_version:not(.bootstrap) h3 i, .bootstrap .nobootstrap #dash_version:not(.bootstrap) h3 i, .nobootstrap .bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) h3 i, .bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) h3 i, .nobootstrap .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) h3 i, .bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) h3 i, .nobootstrap #content.bootstrap .panel:not(.bootstrap) .panel-heading i, #content.bootstrap .nobootstrap .panel:not(.bootstrap) .panel-heading i, .nobootstrap .panel:not(.bootstrap) #content.bootstrap #dash_version .panel-heading i, .nobootstrap #content.bootstrap #dash_version:not(.bootstrap) .panel-heading i, #content.bootstrap .nobootstrap #dash_version:not(.bootstrap) .panel-heading i, .nobootstrap .panel:not(.bootstrap) #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading i, .nobootstrap #content.bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) .panel-heading i, #content.bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) .panel-heading i, .nobootstrap .panel:not(.bootstrap) #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading i, .nobootstrap #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) .panel-heading i, #content.bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) .panel-heading i { font-family: "FontAwesome"; }
+.nobootstrap .panel:not(.bootstrap) .help-block, .nobootstrap .bootstrap #dash_version:not(.bootstrap) .help-block, .bootstrap .nobootstrap #dash_version:not(.bootstrap) .help-block, .nobootstrap .bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) .help-block, .bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) .help-block, .nobootstrap .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) .help-block, .bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) .help-block { float: left; clear: both; }
+.nobootstrap .panel:not(.bootstrap) .switch, .nobootstrap .bootstrap #dash_version:not(.bootstrap) .switch, .bootstrap .nobootstrap #dash_version:not(.bootstrap) .switch, .nobootstrap .bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) .switch, .bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) .switch, .nobootstrap .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) .switch, .bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) .switch { float: left; clear: both; line-height: 1.3em; }
+.nobootstrap .panel:not(.bootstrap) .switch label, .nobootstrap .bootstrap #dash_version:not(.bootstrap) .switch label, .bootstrap .nobootstrap #dash_version:not(.bootstrap) .switch label, .nobootstrap .bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) .switch label, .bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) .switch label, .nobootstrap .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) .switch label, .bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) .switch label { padding: 0 10px 0 5px; float: left; width: auto; }
+.nobootstrap .panel:not(.bootstrap) .switch input[type=checkbox], .nobootstrap .bootstrap #dash_version:not(.bootstrap) .switch input[type=checkbox], .bootstrap .nobootstrap #dash_version:not(.bootstrap) .switch input[type=checkbox], .nobootstrap .bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) .switch input[type=checkbox], .bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) .switch input[type=checkbox], .nobootstrap .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) .switch input[type=checkbox], .bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) .switch input[type=checkbox], .nobootstrap .panel:not(.bootstrap) .switch input[type=radio], .nobootstrap .bootstrap #dash_version:not(.bootstrap) .switch input[type=radio], .bootstrap .nobootstrap #dash_version:not(.bootstrap) .switch input[type=radio], .nobootstrap .bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) .switch input[type=radio], .bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) .switch input[type=radio], .nobootstrap .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) .switch input[type=radio], .bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) .switch input[type=radio] { float: left; }
+.nobootstrap .panel:not(.bootstrap) .radio label, .nobootstrap .bootstrap #dash_version:not(.bootstrap) .radio label, .bootstrap .nobootstrap #dash_version:not(.bootstrap) .radio label, .nobootstrap .bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) .radio label, .bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) .radio label, .nobootstrap .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) .radio label, .bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) .radio label { clear: both; width: auto; margin-right: 4px; }
+.nobootstrap .panel:not(.bootstrap) button, .nobootstrap .bootstrap #dash_version:not(.bootstrap) button, .bootstrap .nobootstrap #dash_version:not(.bootstrap) button, .nobootstrap .bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) button, .bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) button, .nobootstrap .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) button, .bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) button { cursor: pointer; background: -moz-linear-gradient(center top, #f9f9f9, #e3e3e3) repeat scroll 0 0 transparent; background: -webkit-gradient(linear, center top, center bottom, from(#f9f9f9), to(#e3e3e3)) repeat scroll 0 0 transparent; border-color: #cccccc #bbbbbb #a0a0a0; border-left: 1px solid #bbbbbb; border-radius: 3px 3px 3px 3px; border-right: 1px solid #bbbbbb; border-style: solid; border-width: 1px; color: black; margin: 5px 0; outline: medium none; padding: 3px 8px; text-align: center; vertical-align: middle; white-space: nowrap; text-shadow: 0 1px 0 white; text-decoration: none; }
+.nobootstrap .panel:not(.bootstrap) button:hover, .nobootstrap .bootstrap #dash_version:not(.bootstrap) button:hover, .bootstrap .nobootstrap #dash_version:not(.bootstrap) button:hover, .nobootstrap .bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) button:hover, .bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) button:hover, .nobootstrap .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) button:hover, .bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) button:hover { border-color: #aaaaaa #999999 #888888; }

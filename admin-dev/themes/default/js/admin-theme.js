@@ -275,9 +275,20 @@ $(document).ready(function() {
 		}
 	});
 
+	$('a.btn-help').on('click', function(e){
+		e.preventDefault();
+		var url = $(this).attr('href');
+		window.open(
+			url,
+			'PrestaShop',
+			'width=500,height=600,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=10,top=10'
+		)
+	});
+
 	WebFontConfig = {
 		google: { families: [ 'Open+Sans::latin' ] }
 	};
+	
 	(function() {
 		var wf = document.createElement('script');
 		wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
