@@ -47,22 +47,24 @@
 {if $nbSuppliers > 0}
 	<div class="content_sortPagiBar">
         <div class="sortPagiBar clearfix">
-            <ul class="display hidden-xs">
-                <li class="display-title">
-                	{l s='View:'}
-                </li>
-                <li id="grid">
-                	<a onclick="display('grid');">
-                		<i class="icon-th-large"></i>{l s='Grid'}
-                	</a>
-                </li>
-                <li id="list">
-                	<a onclick="display('list');">
-                		<i class="icon-th-list"></i>{l s='List'}
-                	</a>
-                </li>
-            </ul>
-            {include file="./nbr-product-page.tpl"}
+			{if $supplier.nb_products > 0}
+				<ul class="display hidden-xs">
+				    <li class="display-title">
+				    	{l s='View:'}
+				    </li>
+				    <li id="grid">
+				    	<a onclick="display('grid');">
+				    		<i class="icon-th-large"></i>{l s='Grid'}
+				    	</a>
+				    </li>
+				    <li id="list">
+				    	<a onclick="display('list');">
+				    		<i class="icon-th-list"></i>{l s='List'}
+				    	</a>
+				    </li>
+				</ul>
+			{/if}
+	        {include file="./nbr-product-page.tpl"}
         </div>
         <div class="top-pagination-content clearfix bottom-line">
             {include file="$tpl_dir./pagination.tpl"}
@@ -135,46 +137,5 @@
             {include file="$tpl_dir./pagination.tpl" paginationId='bottom'}
         </div>
     </div>
-    <script type="text/javascript"><!--
-		function display(view) {
-			if (view == 'list') {
-				$('#suppliers_list').attr('class', 'list row');
-				$('#suppliers_list > li').removeClass('col-xs-12 col-sm-6 col-lg-4').addClass('col-xs-12');
-				$('#suppliers_list > li').each(function(index, element) {
-					html = '';
-					html = '<div class="mansup-container"><div class="row">';
-						html += '<div class="left-side col-xs-12 col-sm-3">' + $(element).find('.left-side').html() + '</div>';
-						html += '<div class="middle-side col-xs-12 col-sm-5">'+ $(element).find('.middle-side').html() +'</div>';	
-						html += '<div class="right-side col-xs-12 col-sm-4"><div class="right-side-content">'+ $(element).find('.right-side-content').html() + '</div></div>'; 
-					html += '</div></div>';
-				$(element).html(html);
-				});		
-				$('.display').find('li#list').addClass('selected');
-				$('.display').find('li#grid').removeAttr('class');
-				$.totalStorage('display', 'list'); 
-			} else {
-				$('#suppliers_list').attr('class', 'grid row');
-				$('#suppliers_list > li').removeClass('col-xs-12').addClass('col-xs-12 col-sm-6 col-lg-4');
-				$('#suppliers_list > li').each(function(index, element) {
-				html = '';
-				html += '<div class="product-container">';
-					html += '<div class="left-side">' + $(element).find('.left-side').html() + '</div>';
-					html += '<div class="middle-side">'+ $(element).find('.middle-side').html() +'</div>';
-					html += '<div class="right-side"><div class="right-side-content">'+ $(element).find('.right-side-content').html() + '</div></div>'; 
-				html += '</div>';		
-				$(element).html(html);
-				});
-				$('.display').find('li#grid').addClass('selected');
-				$('.display').find('li#list').removeAttr('class');
-				$.totalStorage('display', 'grid');
-			}	
-		}
-		view = $.totalStorage('display');
-		if (view) {
-			display(view);
-		} else {
-			display('grid');
-		}
-		//--></script>
 {/if}
 {/if}
