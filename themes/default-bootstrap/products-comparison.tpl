@@ -28,12 +28,6 @@
 <h1 class="page-heading">{l s='Product Comparison'}</h1>
 
 {if $hasProduct}
-	<script type="text/javascript">
-		$('document').ready(function(){
-			if (typeof reloadProductComparison != 'undefined')
-				reloadProductComparison()
-		});
-	</script>
 	<div class="products_block table-responsive">
 		<table id="product_comparison" class="table table-bordered">
 			<tr>
