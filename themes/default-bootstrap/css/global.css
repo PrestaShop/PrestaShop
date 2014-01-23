@@ -6102,7 +6102,7 @@ table.table_block td {
     .block .list-block li a i {
       display: none; }
     .block .list-block li a:before {
-      content: "";
+      content: "\f105";
       display: inline;
       font-family: "FontAwesome";
       color: #333333;
@@ -6910,6 +6910,9 @@ div.star a:hover {
         padding: 15px 0 0 0;
         border-top: 1px solid #515151;
         width: 100%; }
+
+#reinsurance_block{
+  clear:both!important;}
 
 #short_description_content ul,
 #short_description_content ol,
