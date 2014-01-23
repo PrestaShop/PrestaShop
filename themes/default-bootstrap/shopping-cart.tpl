@@ -48,17 +48,6 @@
 {elseif $PS_CATALOG_MODE}
 	<p class="alert alert-warning">{l s='This store has not accepted your new order.'}</p>
 {else}
-	<script type="text/javascript">
-		// <![CDATA[
-		var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';
-		var currencyRate = '{$currencyRate|floatval}';
-		var currencyFormat = '{$currencyFormat|intval}';
-		var currencyBlank = '{$currencyBlank|intval}';
-		var txtProduct = "{l s='product' js=1}";
-		var txtProducts = "{l s='products' js=1}";
-		var deliveryAddress = {$cart->id_address_delivery|intval};
-		// ]]>
-	</script>
 	<p style="display:none" id="emptyCartWarning" class="alert alert-warning">{l s='Your shopping cart is empty.'}</p>
 	{if isset($lastProductAdded) AND $lastProductAdded}
 		<div class="cart_last_product">
@@ -565,4 +554,13 @@
 			<div id="HOOK_SHOPPING_CART_EXTRA">{$HOOK_SHOPPING_CART_EXTRA}</div>
 		</div>
 	{/if}
+{strip}
+{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
+{addJsDef currencyRat =$currencyRate|floatval}
+{addJsDef currencyFormat=$currencyFormat|intval}
+{addJsDef currencyBlank=$currencyBlank|intval}
+{addJsDef deliveryAddress=$cart->id_address_delivery|intval}
+{addJsDefL name=txtProduct}{l s='product' js=1}{/addJsDefL}
+{addJsDefL name=txtProducts}{l s='products' js=1}{/addJsDefL}
+{/strip}
 {/if}
