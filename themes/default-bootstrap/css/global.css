@@ -6102,7 +6102,7 @@ table.table_block td {
     .block .list-block li a i {
       display: none; }
     .block .list-block li a:before {
-      content: "";
+      content: "\f105";
       display: inline;
       font-family: "FontAwesome";
       color: #333333;
