@@ -22,22 +22,14 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {if !$opc}
-	<script type="text/javascript">
-	// <![CDATA[
-	var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';
-	var currencyRate = '{$currencyRate|floatval}';
-	var currencyFormat = '{$currencyFormat|intval}';
-	var currencyBlank = '{$currencyBlank|intval}';
-	var txtProduct = "{l s='product' js=1}";
-	var txtProducts = "{l s='products' js=1}";
-	// ]]>
-	</script>
+	{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
+	{addJsDef currencyRate=$currencyRate|floatval}
+	{addJsDef currencyFormat=$currencyFormat|intval}
+	{addJsDef currencyBlank=$currencyBlank|intval}
+	{addJsDefL name=txtProduct}{l s='product' js=1}{/addJsDefL}
+	{addJsDefL name=txtProducts}{l s='products' js=1}{/addJsDefL}
 	{capture name=path}{l s='Your payment method'}{/capture}
-{/if}
-
-{if !$opc}
 	<h1 class="page-heading">{l s='Please choose your payment method'}</h1>
 {else}
 	<h1 class="page-heading step-num"><span>3</span> {l s='Please choose your payment method'}</h1>
