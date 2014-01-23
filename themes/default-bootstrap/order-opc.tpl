@@ -34,54 +34,6 @@
 	<h2 id="cart_title">{l s='Your shopping cart'}</h2>
 	<p class="alert alert-warning">{l s='Your new order was not accepted.'}</p>
 {else}
-<script type="text/javascript">
-	// <![CDATA[
-	var imgDir = '{$img_dir}';
-	var authenticationUrl = '{$link->getPageLink("authentication", true)|addslashes}';
-	var orderOpcUrl = '{$link->getPageLink("order-opc", true)|addslashes}';
-	var historyUrl = '{$link->getPageLink("history", true)|addslashes}';
-	var guestTrackingUrl = '{$link->getPageLink("guest-tracking", true)|addslashes}';
-	var addressUrl = '{$link->getPageLink("address", true, NULL, "back={$back_order_page}")|addslashes}';
-	var orderProcess = 'order-opc';
-	var guestCheckoutEnabled = {$PS_GUEST_CHECKOUT_ENABLED|intval};
-	var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';
-	var currencyRate = '{$currencyRate|floatval}';
-	var currencyFormat = '{$currencyFormat|intval}';
-	var currencyBlank = '{$currencyBlank|intval}';
-	var displayPrice = {$priceDisplay};
-	var taxEnabled = {$use_taxes};
-	var conditionEnabled = {$conditions|intval};
-	var countries = new Array();
-	var countriesNeedIDNumber = new Array();
-	var countriesNeedZipCode = new Array();
-	var vat_management = {$vat_management|intval};
-	
-	var txtWithTax = "{l s='(tax incl.)' js=1}";
-	var txtWithoutTax = "{l s='(tax excl.)' js=1}";
-	var txtHasBeenSelected = "{l s='has been selected' js=1}";
-	var txtNoCarrierIsSelected = "{l s='No carrier has been selected' js=1}";
-	var txtNoCarrierIsNeeded = "{l s='No carrier is needed for this order' js=1}";
-	var txtConditionsIsNotNeeded = "{l s='You do not need to accept the Terms of Service for this order.' js=1}";
-	var txtTOSIsAccepted = "{l s='The service terms have been accepted' js=1}";
-	var txtTOSIsNotAccepted = "{l s='The service terms have not been accepted' js=1}";
-	var txtThereis = "{l s='There is' js=1}";
-	var txtErrors = "{l s='Error(s)' js=1}";
-	var txtDeliveryAddress = "{l s='Delivery address' js=1}";
-	var txtInvoiceAddress = "{l s='Invoice address' js=1}";
-	var txtModifyMyAddress = "{l s='Modify my address' js=1}";
-	var txtInstantCheckout = "{l s='Instant checkout' js=1}";
-	var txtSelectAnAddressFirst = "{l s='Please start by selecting an address.' js=1}";
-	var errorCarrier = "{$errorCarrier}";
-	var errorTOS = "{$errorTOS}";
-	var checkedCarrier = "{if isset($checked)}{$checked}{else}0{/if}";
-
-	var addresses = new Array();
-	var isLogged = {$isLogged|intval};
-	var isGuest = {$isGuest|intval};
-	var isVirtualCart = {$isVirtualCart|intval};
-	var isPaymentStep = {$isPaymentStep|intval};
-	//]]>
-</script>
 	{if $productNumber}
 		<!-- Shopping Cart -->
 		{include file="$tpl_dir./shopping-cart.tpl"}
@@ -105,4 +57,48 @@
 		<h2 class="page-heading">{l s='Your shopping cart'}</h2>
 		<p class="alert alert-warning">{l s='Your shopping cart is empty.'}</p>
 	{/if}
+{strip}
+{addJsDef imgDir=$img_dir}
+{addJsDef authenticationUrl=$link->getPageLink("authentication", true)|addslashes}
+{addJsDef orderOpcUrl=$link->getPageLink("order-opc", true)|addslashes}
+{addJsDef historyUrl=$link->getPageLink("history", true)|addslashes}
+{addJsDef guestTrackingUrl=$link->getPageLink("guest-tracking", true)|addslashes}
+{addJsDef addressUrl=$link->getPageLink("address", true, NULL, "back={$back_order_page}")|addslashes}
+{addJsDef orderProcess='order-opc'}
+{addJsDef guestCheckoutEnabled=$PS_GUEST_CHECKOUT_ENABLED|intval}
+{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
+{addJsDef currencyRate=$currencyRate|floatval}
+{addJsDef currencyFormat=$currencyFormat|intval}
+{addJsDef currencyBlank=$currencyBlank|intval}
+{addJsDef displayPrice=$priceDisplay}
+{addJsDef taxEnabled=$use_taxes}
+{addJsDef conditionEnabled=$conditions|intval}
+{addJsDef countries=array()}
+{addJsDef countriesNeedIDNumber=array()}
+{addJsDef countriesNeedZipCode=array()}
+{addJsDef vat_management=$vat_management|intval}
+{addJsDef errorCarrier=$errorCarrier}
+{addJsDef errorTOS=$errorTOS}
+{addJsDef checkedCarrier=$checked|intval}
+{addJsDef addresses=array()}
+{addJsDef isLogged=$isLogged|intval}
+{addJsDef isGuest=$isGuest|intval}
+{addJsDef isVirtualCart=$isVirtualCart|intval}
+{addJsDef isPaymentStep=$isPaymentStep|intval}
+{addJsDefL name=txtWithTax}{l s='(tax incl.)' js=1}{/addJsDefL}
+{addJsDefL name=txtWithoutTax}{l s='(tax excl.)' js=1}{/addJsDefL}
+{addJsDefL name=txtHasBeenSelected}{l s='has been selected' js=1}{/addJsDefL}
+{addJsDefL name=txtNoCarrierIsSelected}{l s='No carrier has been selected' js=1}{/addJsDefL}
+{addJsDefL name=txtNoCarrierIsNeeded}{l s='No carrier is needed for this order' js=1}{/addJsDefL}
+{addJsDefL name=txtConditionsIsNotNeeded}{l s='You do not need to accept the Terms of Service for this order.' js=1}{/addJsDefL}
+{addJsDefL name=txtTOSIsAccepted}{l s='The service terms have been accepted' js=1}{/addJsDefL}
+{addJsDefL name=txtTOSIsNotAccepted}{l s='The service terms have not been accepted' js=1}{/addJsDefL}
+{addJsDefL name=txtThereis}{l s='There is' js=1}{/addJsDefL}
+{addJsDefL name=txtErrors}{l s='Error(s)' js=1}{/addJsDefL}
+{addJsDefL name=txtDeliveryAddress}{l s='Delivery address' js=1}{/addJsDefL}
+{addJsDefL name=txtInvoiceAddress}{l s='Invoice address' js=1}{/addJsDefL}
+{addJsDefL name=txtModifyMyAddress}{l s='Modify my address' js=1}{/addJsDefL}
+{addJsDefL name=txtInstantCheckout}{l s='Instant checkout' js=1}{/addJsDefL}
+{addJsDefL name=txtSelectAnAddressFirst}{l s='Please start by selecting an address.' js=1}{/addJsDefL}
+{/strip}
 {/if}
