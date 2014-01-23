@@ -100,8 +100,8 @@ class NotificationCore
 				break;
 		}
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-		$total = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()');
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
+		$total = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()', false);
 		$json = array('total' => $total, 'results' => array());
 		foreach ($result as $value)
 		{
