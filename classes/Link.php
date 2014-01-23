@@ -501,11 +501,11 @@ class LinkCore
 			if (!empty($module))
 			{
 				unset($params['fc'], $params['module']);
-				return $this->getModuleLink($module, $controller, $params, false, (int)$id_lang);
+				return $this->getModuleLink($module, $controller, $params, null, (int)$id_lang);
 			}
 		}		
 
-		return $this->getPageLink($controller, false, $id_lang, $params);
+		return $this->getPageLink($controller, null, $id_lang, $params);
 	}
 
 	public function goPage($url, $p)
