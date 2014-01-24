@@ -23,43 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if !$opc}
-{strip}
-		{capture name=path}{l s='Shipping:'}{/capture}
-		{assign var='current_step' value='shipping'}
-		{addJsDef orderProcess='order'}
-		{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
-		{addJsDef currencyRate=$currencyRate|floatval}
-		{addJsDef currencyFormat=$currencyFormat|intval}
-		{addJsDef currencyBlank=$currencyBlank|intval}
-		{if isset($virtual_cart) && !$virtual_cart && $giftAllowed && $cart->gift == 1}
-			{addJsDef cart_gift=true}
-		{else}
-			{addJsDef cart_gift=false}
-		{/if}
-		{addJsDef orderUrl=$link->getPageLink("order", true)|addslashes}
-		{addJsDefL name=txtProduct}{l s='Product' js=1}{/addJsDefL}
-		{addJsDefL name=txtProducts}{l s='Products' js=1}{/addJsDefL}
-		{addJsDefL name=msg_order_carrier}{l s='You must agree to the terms of service before continuing.' js=1}{/addJsDefL}
-	{/strip}
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$("a.iframe").fancybox({
-				'type': 'iframe',
-				'width': 600,
-				'height': 600
-			});
-			if (cart_gift && $('input#gift').is(':checked'))
-				$('p#gift_div').show();
-		});
-		function acceptCGV()
-		{
-			if ($('#cgv').length && !$('input#cgv:checked').length)
-				alert(msg_order_carrier);
-			else
-				return true;
-			return false;
-		}
-	</script>
 	<div id="carrier_area">
 		<h1 class="page-heading">{l s='Shipping:'}</h1>
 		{include file="$tpl_dir./order-steps.tpl"}
@@ -344,3 +307,23 @@
 		</div> <!-- end opc_delivery_methods -->
 	{/if}
 </div> <!-- end carrier_area -->
+{strip}
+{if !$opc}
+	{capture name=path}{l s='Shipping:'}{/capture}
+	{assign var='current_step' value='shipping'}
+	{addJsDef orderProcess='order'}
+	{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
+	{addJsDef currencyRate=$currencyRate|floatval}
+	{addJsDef currencyFormat=$currencyFormat|intval}
+	{addJsDef currencyBlank=$currencyBlank|intval}
+	{if isset($virtual_cart) && !$virtual_cart && $giftAllowed && $cart->gift == 1}
+		{addJsDef cart_gift=true}
+	{else}
+		{addJsDef cart_gift=false}
+	{/if}
+	{addJsDef orderUrl=$link->getPageLink("order", true)|addslashes}
+	{addJsDefL name=txtProduct}{l s='Product' js=1}{/addJsDefL}
+	{addJsDefL name=txtProducts}{l s='Products' js=1}{/addJsDefL}
+	{addJsDefL name=msg_order_carrier}{l s='You must agree to the terms of service before continuing.' js=1}{/addJsDefL}
+{/if}
+{/strip}
