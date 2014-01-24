@@ -2547,7 +2547,7 @@ body { min-height: 100%; height: 100%; font: 400 12px/1.42857 "Open Sans", Helve
 #content.bootstrap h3:not(.modal-title) .panel-heading-action, #content.bootstrap .panel .panel-heading:not(.modal-title) .panel-heading-action, #content.bootstrap #dash_version .panel-heading:not(.modal-title) .panel-heading-action, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading:not(.modal-title) .panel-heading-action, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading:not(.modal-title) .panel-heading-action, #content.bootstrap .panel-heading .panel-heading-action { margin-right: -5px; }
 #content.bootstrap h3:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #content.bootstrap .panel .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #content.bootstrap #dash_version .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn, #content.bootstrap .panel-heading .panel-heading-action a.list-toolbar-btn { float: left; height: 30px; width: 30px; color: #db6335; border-left: solid 1px #cccccc; }
 #content.bootstrap h3:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #content.bootstrap .panel .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #content.bootstrap #dash_version .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn:hover, #content.bootstrap .panel-heading .panel-heading-action a.list-toolbar-btn:hover { text-decoration: none; color: black; }
-#content.bootstrap h3:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content.bootstrap .panel .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content.bootstrap #dash_version .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content.bootstrap .panel-heading .panel-heading-action a.list-toolbar-btn i { text-align: center; font-size: 1.3em; line-height: 30px; }
+#content.bootstrap h3:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content.bootstrap .panel .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content.bootstrap #dash_version .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content.bootstrap .panel-heading .panel-heading-action a.list-toolbar-btn i { text-align: center; font-size: 1.4em; line-height: 30px; }
 #content.bootstrap .panel-danger .panel-heading { background-color: #8bc954 !important; }
 #content.bootstrap form .alert, #content.bootstrap form #carrier_wizard .wizard_error, #content.bootstrap #carrier_wizard form .wizard_error { clear: both; }
 @media (max-width: 480px) { #content.bootstrap { padding: 80px 5px 0; } }
@@ -2567,13 +2567,14 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 
 #header { z-index: 20; }
 
+#header_infos { height: 36px !important; }
+
 #header_shopname { position: relative; margin: 0 15px 0 0; height: 36px; padding-left: 45px !important; }
 #header_shopname img { position: absolute; top: 0; left: 0; width: 36px; height: 36px; }
 
 #header_notifs_icon_wrapper { height: 36px; }
-#header_notifs_icon_wrapper li { width: 36px; text-align: center; }
-#header_notifs_icon_wrapper li a { height: 36px; padding: 0 !important; }
-#header_notifs_icon_wrapper > li > a > i { font-size: 14px; line-height: 36px; color: #b3b3b3; vertical-align: middle; }
+#header_notifs_icon_wrapper li a { padding: 0 5px; }
+#header_notifs_icon_wrapper > li > a > i { font-size: 1.4em; font-weight: 200; color: #b3b3b3; vertical-align: middle; }
 #header_notifs_icon_wrapper > li > a > i:hover { color: white; }
 #header_notifs_icon_wrapper .notifs_badge { background-color: #8bc954; }
 #header_notifs_icon_wrapper .notifs_dropdown { background-color: white; border: none; -webkit-box-shadow: rgba(0, 0, 0, 0.7) 0 0 10px; box-shadow: rgba(0, 0, 0, 0.7) 0 0 10px; }
@@ -2769,7 +2770,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .table td.actions { min-width: 200px; }
 .bootstrap tr.highlighted td { background-color: #db6335 !important; color: white !important; }
 .bootstrap .bulk-actions { margin: 17px 0 0 0; }
-.bootstrap .list-action-enable { font-size: 1.3em; display: block; width: 30px; text-align: center; color: rgba(255, 255, 255, 0.8); -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
+.bootstrap .list-action-enable { font-size: 1.3em; display: inline-block; width: 30px; text-align: center; color: rgba(255, 255, 255, 0.8); -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
 .bootstrap .list-action-enable.action-enabled { border: solid #5cb85c 1px; background-color: #80c780; }
 .bootstrap .list-action-enable.action-disabled { border: solid #d9534f 1px; background-color: #e27c79; }
 .bootstrap .list-action-enable:hover { color: white; }
@@ -2818,7 +2819,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .tagify-container > input:focus { outline: 0; -webkit-box-shadow: none; box-shadow: none; }
 .bootstrap .box-stats { background-color: white; }
 .bootstrap .box-stats .boxchart-overlay { padding: 10px 10px 5px 10px; margin-right: 10px; float: left; color: white; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
-.bootstrap .box-stats i { float: left; height: 64px; width: 64px; margin-right: 10px; color: white; font-size: 35px; text-align: center; line-height: 64px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
+.bootstrap .box-stats i { float: left; height: 64px; width: 64px; margin-right: 10px; color: white; font-size: 42px; text-align: center; line-height: 64px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
 .bootstrap .box-stats .title { color: #666666; display: block; }
 .bootstrap .box-stats .value { font-size: 22px; }
 .bootstrap .box-stats small { line-height: 0.3em; color: #aaaaaa; text-transform: uppercase; }
@@ -2894,9 +2895,8 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .page-head ul.page-breadcrumb li:before { color: #345d83; }
 .bootstrap .page-head ul.page-breadcrumb li a { color: rgba(255, 255, 255, 0.6); }
 .bootstrap .page-head ul.page-breadcrumb li a:hover { color: white; }
-.bootstrap .page-head .btn-toolbar { margin: 0; padding: 3px 0 0 0; }
-.bootstrap .page-head .btn-toolbar .nav-tabs { margin: 0; }
-.bootstrap .page-head .btn-toolbar .nav-tabs > li > a { color: #333333; }
+.bootstrap .page-head .btn-toolbar { margin: 0; padding: 0; }
+.bootstrap .page-head .btn-toolbar > ul.nav, .bootstrap .page-head .btn-toolbar > ul#header_notifs_icon_wrapper, .bootstrap .page-head .btn-toolbar > ul#header_employee_box, .bootstrap .page-head .btn-toolbar > ul#header_quick { position: relative; top: 3px; }
 .bootstrap .toolbar_btn { display: block; height: 46px; position: relative; padding: 2px 5px !important; margin-right: 3px; font-size: 12px; color: white; text-align: center; text-shadow: none; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 992px) { .bootstrap .toolbar_btn { width: 46px; border: solid 1px #345d83; font-size: 11px; } }
 .bootstrap .toolbar_btn:hover { color: #4c84b8; border-color: white; background-color: white !important; }

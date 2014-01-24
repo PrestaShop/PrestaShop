@@ -228,13 +228,13 @@ class AdminProductsControllerCore extends AdminController
 		$this->fields_list['price'] = array(
 			'title' => $this->l('Base price'),
 			'type' => 'price',
-			'align' => 'right',
+			'align' => 'text-right',
 			'filter_key' => 'a!price'
 		);
 		$this->fields_list['price_final'] = array(
 			'title' => $this->l('Final price'),
 			'type' => 'price',
-			'align' => 'right',
+			'align' => 'text-right',
 			'havingFilter' => true,
 			'orderby' => false
 		);
@@ -243,7 +243,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->fields_list['sav_quantity'] = array(
 				'title' => $this->l('Quantity'),
 				'type' => 'int',
-				'align' => 'right',
+				'align' => 'text-right',
 				'filter_key' => 'sav!quantity',
 				'orderby' => true,
 				//'hint' => $this->l('This is the quantity available in the current shop/group.'),
@@ -253,7 +253,7 @@ class AdminProductsControllerCore extends AdminController
 			'title' => $this->l('Status'),
 			'active' => 'status',
 			'filter_key' => $alias.'!active',
-			'align' => 'center',
+			'align' => 'text-center',
 			'type' => 'bool',
 			'class' => 'fixed-width-sm',
 			'orderby' => false
