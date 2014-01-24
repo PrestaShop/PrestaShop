@@ -583,7 +583,7 @@ class MediaCore
 				{
 					$tmp_content = file_get_contents($file_infos['path']);
 					if (preg_match('@\.(min|pack)\.[^/]+$@', $file_infos['path'], $matches))
-						$content .= preg_replace('/\/\/@\ssourceMappingURL\=[_a-zA-Z0-9-.]+\.'.$matches[1].'\.map\s\n/', '', $tmp_content);
+						$content .= preg_replace('/\/\/@\ssourceMappingURL\=[_a-zA-Z0-9-.]+\.'.$matches[1].'\.map\s+/', '', $tmp_content);
 					else
 						$content .= Media::packJS($tmp_content);
 				}
