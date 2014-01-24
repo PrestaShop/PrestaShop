@@ -2043,21 +2043,16 @@ class AdminThemesControllerCore extends AdminController
 		$fmt_arr = array();
 		foreach ($origin_arr as $module)
 		{
-			$name = $module;
+			$display_name = $module;
 
-			if (!class_exists($module) && file_exists(_PS_MODULE_DIR_.$module.'/'.$module.'.php'))
-				require(_PS_MODULE_DIR_.$module.'/'.$module.'.php');
-
-			if (class_exists($module))
-			{
-				$module_class = New $module;
-				$name = $module_class->displayName;
-			}
+			$module_obj = Module::getInstanceByName($module);
+			if (Validate::isLoadedObject($module_obj))
+				$display_name = $module_obj->displayName;
 
 			$tmp = array();
 			$tmp['id'] = 'module'.$module;
 			$tmp['val'] = $module;
-			$tmp['name'] = $name;
+			$tmp['name'] = $display_name;
 			$fmt_arr[] = $tmp;
 		}
 
@@ -2393,48 +2388,37 @@ class AdminThemesControllerCore extends AdminController
 				{
 					if (strncmp($key, 'to_install', strlen('to_install')) == 0)
 					{
-						if (file_exists(_PS_MODULE_DIR_.$value))
+
+						$module_obj = Module::getInstanceByName($value);
+						if (Validate::isLoadedObject($module_obj))
 						{
-							if (!class_exists($value) && file_exists(_PS_MODULE_DIR_.$value.'/'.$value.'.php'))
-								require(_PS_MODULE_DIR_.$value.'/'.$value.'.php');
+							if (!Module::isInstalled($module_obj->name))
+								$module_obj->install();
+							else
+								$module_obj->enable();
 
-							if (class_exists($value))
-							{
-								$module = Module::getInstanceByName($value);
-								if (!Module::isInstalled($module->name))
-									$module->install();
-								else
-									$module->enable();
+							if ((int)$module_obj->id > 0 && isset($module_hook[$module_obj->name]))
+								$this->hookModule($module_obj->id, $module_hook[$module_obj->name], $id_shop);
 
-								if ((int)$module->id > 0 && isset($module_hook[$module->name]))
-									$this->hookModule($module->id, $module_hook[$module->name], $id_shop);
-							}
-							unset($module_hook[$module->name]);
+							unset($module_hook[$module_obj->name]);
 						}
-
 					}
 					else if (strncmp($key, 'to_enable', strlen('to_enable')) == 0)
 					{
-						if (file_exists(_PS_MODULE_DIR_.$value))
+						$module_obj = Module::getInstanceByName($value);
+						if (Validate::isLoadedObject($module_obj))
 						{
-							if (!class_exists($value) && file_exists(_PS_MODULE_DIR_.$value.'/'.$value.'.php'))
-								require(_PS_MODULE_DIR_.$value.'/'.$value.'.php');
+							if (!Module::isInstalled($module_obj->name))
+								$module_obj->install();
+							else if (!Module::isEnabled($module_obj->name))
+								$module_obj->enable();
 
-							if (class_exists($value))
-							{
-								$module = Module::getInstanceByName($value);
+							if ((int)$module_obj->id > 0 && isset($module_hook[$module_obj->name]))
+								$this->hookModule($module_obj->id, $module_hook[$module_obj->name], $id_shop);
 
-								if (!Module::isInstalled($module->name))
-									$module->install();
-								else if (!Module::isEnabled($module->name))
-									$module->enable();
-
-								if ((int)$module->id > 0 && isset($module_hook[$module->name]))
-									$this->hookModule($module->id, $module_hook[$module->name], $id_shop);
-
-								unset($module_hook[$module->name]);
-							}
+							unset($module_hook[$module_obj->name]);
 						}
+
 					}
 					else if (strncmp($key, 'to_disable', strlen('to_disable')) == 0)
 					{
@@ -2444,20 +2428,13 @@ class AdminThemesControllerCore extends AdminController
 						if ((int)$id_shop_module > 0 && $id_shop_module != (int)$id_shop)
 							continue;
 
-						if (file_exists(_PS_MODULE_DIR_.$value))
+						$module_obj = Module::getInstanceByName($value);
+						if (Validate::isLoadedObject($module_obj))
 						{
-							if (!class_exists($value) && file_exists(_PS_MODULE_DIR_.$value.'/'.$value.'.php'))
-								require(_PS_MODULE_DIR_.$value.'/'.$value.'.php');
+							if (Module::isEnabled($module_obj->name))
+								$module_obj->disable();
 
-							if (class_exists($value))
-							{
-								$module = new $value;
-								if (Module::isEnabled($module->name))
-								{
-									$module->disable();
-								}
-							}
-							unset($module_hook[$module->name]);
+							unset($module_hook[$module_obj->name]);
 						}
 					}
 				}
