@@ -22,7 +22,37 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{if $ajax}
+<script type="text/javascript">
+    $(function () {
+        $(".ajax_table_link").click(function () {
+            var link = $(this);
+            $.post($(this).attr('href'), function (data) {
+                console.log(data);
+                if (data.success == 1) {
+                    showSuccessMessage(data.text);
 
+                    if (link.hasClass('action-disabled'))
+                        link.removeClass('action-disabled').addClass('action-enabled');
+                    else
+                        link.removeClass('action-enabled').addClass('action-disabled');
+
+                    link.children().each(function () {
+                        if ($(this).hasClass('hidden'))
+                            $(this).removeClass('hidden');
+                        else
+                            $(this).addClass('hidden');
+                    });
+                }
+                else
+                    showErrorMessage(data.text);
+
+            }, 'json');
+            return false;
+        });
+    });
+</script>
+{/if}
 {if !$simple_header}
 	{* Display column names and arrows for ordering (ASC, DESC) *}
 	{if $is_order_position}
@@ -38,32 +68,6 @@
 			$('table.{$list_id} .filter').keypress(function(event){
 				formSubmit(event, 'submitFilterButton{$list_id}')
 			})
-
-            $(".ajax_table_link").click(function () {
-                var link = $(this);
-                $.post($(this).attr('href'), function (data) {
-                    console.log(data);
-                    if (data.success == 1) {
-                        showSuccessMessage(data.text);
-
-                        if (link.hasClass('action-disabled'))
-                            link.removeClass('action-disabled').addClass('action-enabled');
-                        else
-                            link.removeClass('action-enabled').addClass('action-disabled');
-
-                        link.children().each(function () {
-                            if ($(this).hasClass('hidden'))
-                                $(this).removeClass('hidden');
-                            else
-                                $(this).addClass('hidden');
-                        });
-                    }
-                    else
-                        showErrorMessage(data.text);
-
-                }, 'json');
-                return false;
-            });
 
 			$('#submitFilterButton{$list_id}').click(function() {
 				$('#submitFilter{$list_id}').val(1);
