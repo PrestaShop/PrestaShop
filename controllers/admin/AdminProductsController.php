@@ -2436,7 +2436,7 @@ class AdminProductsControllerCore extends AdminController
 					'desc' => $this->l('Add new product', null, null, false),
 					'icon' => 'process-icon-new'
 				);
-		if ($this->display == 'edit' || $this->display == 'add')
+		if ($this->display == 'edit')
 		{
 			if (($product = $this->loadObject(true)))
 			{
@@ -2451,7 +2451,7 @@ class AdminProductsControllerCore extends AdminController
 					);
 
 				// adding button for duplicate this product
-				if ($this->tabAccess['add'] && $this->display != 'add')
+				if ($this->tabAccess['add'])
 					$this->page_header_toolbar_btn['duplicate'] = array(
 						'short' => $this->l('Duplicate', null, null, false),
 						'href' => '#',
@@ -2461,7 +2461,7 @@ class AdminProductsControllerCore extends AdminController
 					);
 
 				// adding button for preview this product statistics
-				if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php') && $this->display != 'add')
+				if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php'))
 					$this->page_header_toolbar_btn['stats'] = array(
 					'short' => $this->l('Statistics', null, null, false),
 					'href' => $this->context->link->getAdminLink('AdminStats').'&module=statsproduct&id_product='.(int)$product->id,
@@ -2469,7 +2469,7 @@ class AdminProductsControllerCore extends AdminController
 				);
 
 				// adding button for delete this product
-				if ($this->tabAccess['delete'] && $this->display != 'add')
+				if ($this->tabAccess['delete'])
 					$this->page_header_toolbar_btn['delete'] = array(
 						'short' => $this->l('Delete', null, null, false),
 						'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)$product->id.'&deleteproduct',
