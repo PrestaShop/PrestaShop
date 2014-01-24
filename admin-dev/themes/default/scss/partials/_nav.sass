@@ -6,6 +6,7 @@ $widthSidebarNav: 210px
 	height: 100%
 	z-index: 500
 	background-color: darken($main-color,10%)
+	border-right: 1px solid $main-color
 	ul.menu
 		margin: 0
 		padding: 0
@@ -19,12 +20,16 @@ $widthSidebarNav: 210px
 				padding: 0 5px
 				font-size: 12px
 				line-height: 35px
-				color: mix($main-color, contrast-color($main-color, white, #333, 10%), 30%)
+				font-weight: 400
+				color: mix($main-color, contrast-color($main-color, black, white, 50%), 30%)
 				text-transform: uppercase
 				text-decoration: none
 				background-color: $main-color
 				border-bottom: darken($main-color,6%) solid 1px
-				@include box-shadow(darken($main-color,10%) -1px 0 0 inset)
+				@include text-shadow(rgba(black,0.3) 1px 1px 0)
+				white-space: nowrap
+				text-overflow: ellipsis
+				//@include box-shadow(darken($main-color,10%) -1px 0 0 inset)
 				@include transition-property(background-color)
 				@include transition-duration(0.4s)
 				@include transition-timing-function(ease-out)
@@ -34,9 +39,9 @@ $widthSidebarNav: 210px
 					width: 30px
 					position: relative
 					top: 2px
-					color: lighten($main-color,25%)
-					background-color: darken($main-color,25%)
-					font-size: 20px
+					color: mix($main-color, contrast-color($main-color, black, white, 50%), 60%)
+					//background-color: darken($main-color,25%)
+					font-size: 28px
 					line-height: 30px
 					text-align: center
 					@include transition-property(color)
@@ -45,10 +50,10 @@ $widthSidebarNav: 210px
 					@include border-radius(30px)
 			&:hover:not(.active)
 				> a.title
-					background-color: darken($main-color,15%)
-					color: white
+					background-color: darken($main-color,10%)
+					color: contrast-color($main-color, black, white, 50%)
 					border-bottom: darken($main-color,15%) solid 1px
-					@include box-shadow(darken($main-color,15%) 0 -1px 0 0)
+					@include box-shadow($brand-primary -4px 0 0 0 inset)
 					i
 						color: white
 				ul.submenu
@@ -61,19 +66,19 @@ $widthSidebarNav: 210px
 			&.active
 				a.title
 					color: white
-					background-color: lighten($main-color,10%)
+					background-color: lighten($main-color,15%)
 					border: none
 					i
-						color: $brand-primary
-						background-color: white
+						color: contrast-color($main-color, black, white, 50%)
+						//background-color: white
 				ul.submenu
 					display: block
 					padding: 8px 11px 8px 8px
 					background-color: white
 					a
-						border-bottom: solid 1px #eee
 						background-color: white
 						color: $brand-primary
+						border-bottom: solid 1px darken(white,10%)
 						&:hover
 							color: $brand-primary
 							border-bottom: solid 1px mix(white, $brand-primary, 85%)
@@ -91,20 +96,19 @@ $widthSidebarNav: 210px
 				list-style: none
 				padding: 6px
 				background-color: darken($main-color,10%)
-				@include box-shadow(#EEEEEE -1px 0 0 inset)
 				li
 					a
+						color: mix($main-color, contrast-color($main-color, black, white, 50%), 30%)
 						display: block
 						padding: 4px 5px 4px 10px
 						font-size: 12px
-						border: none
-						color: lighten($main-color,40%)
-						background-color: darken($main-color,15%)
-						border-bottom: solid 2px darken($main-color,10%)
+						background-color: $main-color
+						border-bottom: solid 1px darken($main-color,10%)
 						&:hover
-							color: $brand-primary
+							color: contrast-color($main-color, black, white, 50%)
 							text-decoration: none
-							background-color: white
+							background-color: darken($main-color,10%)
+							@include box-shadow($brand-primary -4px 0 0 0 inset)
 					&:last-child a
 						border-bottom: none
 	@media (max-width: $screen-phone)

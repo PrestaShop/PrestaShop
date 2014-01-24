@@ -2571,8 +2571,9 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 #header_shopname img { position: absolute; top: 0; left: 0; width: 36px; height: 36px; }
 
 #header_notifs_icon_wrapper { height: 36px; }
-#header_notifs_icon_wrapper li a { padding: 0 5px; }
-#header_notifs_icon_wrapper > li > a > i { font-size: 1.4em; font-weight: 200; color: #b3b3b3; vertical-align: middle; }
+#header_notifs_icon_wrapper li { width: 36px; text-align: center; }
+#header_notifs_icon_wrapper li a { height: 36px; padding: 0 !important; }
+#header_notifs_icon_wrapper > li > a > i { font-size: 14px; line-height: 36px; color: #b3b3b3; vertical-align: middle; }
 #header_notifs_icon_wrapper > li > a > i:hover { color: white; }
 #header_notifs_icon_wrapper .notifs_badge { background-color: #8bc954; }
 #header_notifs_icon_wrapper .notifs_dropdown { background-color: white; border: none; -webkit-box-shadow: rgba(0, 0, 0, 0.7) 0 0 10px; box-shadow: rgba(0, 0, 0, 0.7) 0 0 10px; }
@@ -2622,24 +2623,24 @@ a.link-social:hover { text-decoration: none; }
 .link-google i { color: white; background-color: #e6644e; }
 .link-google i:hover { color: #e6644e; background-color: white; }
 
-#nav-sidebar { position: fixed; width: 210px; height: 100%; z-index: 500; background-color: #212b31; }
+#nav-sidebar { position: fixed; width: 210px; height: 100%; z-index: 500; background-color: #212b31; border-right: 1px solid #36454f; }
 #nav-sidebar ul.menu { margin: 0; padding: 0; list-style: none; }
 #nav-sidebar ul.menu li.maintab { position: relative; }
-#nav-sidebar ul.menu li.maintab > a.title { display: block; height: 35px; position: relative; padding: 0 5px; font-size: 12px; line-height: 35px; color: #c2c7ca; text-transform: uppercase; text-decoration: none; background-color: #36454f; border-bottom: #2a353d solid 1px; -webkit-box-shadow: #212b31 -1px 0 0 inset; box-shadow: #212b31 -1px 0 0 inset; -webkit-transition-property: background-color; transition-property: background-color; -webkit-transition-duration: 0.4s; transition-duration: 0.4s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; }
-#nav-sidebar ul.menu li.maintab > a.title i { display: inline-block; height: 30px; width: 30px; position: relative; top: 2px; color: #6b879a; background-color: #020303; font-size: 20px; line-height: 30px; text-align: center; -webkit-transition-property: color; transition-property: color; -webkit-transition-duration: 0.4s; transition-duration: 0.4s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; -webkit-border-radius: 30px; -moz-border-radius: 30px; -ms-border-radius: 30px; -o-border-radius: 30px; border-radius: 30px; }
-#nav-sidebar ul.menu li.maintab:hover:not(.active) > a.title { background-color: #171d22; color: white; border-bottom: #171d22 solid 1px; -webkit-box-shadow: #171d22 0 -1px 0 0; box-shadow: #171d22 0 -1px 0 0; }
+#nav-sidebar ul.menu li.maintab > a.title { display: block; height: 35px; position: relative; padding: 0 5px; font-size: 12px; line-height: 35px; font-weight: 400; color: #c2c7ca; text-transform: uppercase; text-decoration: none; background-color: #36454f; border-bottom: #2a353d solid 1px; text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 0; white-space: nowrap; text-overflow: ellipsis; -webkit-transition-property: background-color; transition-property: background-color; -webkit-transition-duration: 0.4s; transition-duration: 0.4s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; }
+#nav-sidebar ul.menu li.maintab > a.title i { display: inline-block; height: 30px; width: 30px; position: relative; top: 2px; color: #868f95; font-size: 28px; line-height: 30px; text-align: center; -webkit-transition-property: color; transition-property: color; -webkit-transition-duration: 0.4s; transition-duration: 0.4s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; -webkit-border-radius: 30px; -moz-border-radius: 30px; -ms-border-radius: 30px; -o-border-radius: 30px; border-radius: 30px; }
+#nav-sidebar ul.menu li.maintab:hover:not(.active) > a.title { background-color: #212b31; color: white; border-bottom: #171d22 solid 1px; -webkit-box-shadow: #2ba6cb -4px 0 0 0 inset; box-shadow: #2ba6cb -4px 0 0 0 inset; }
 #nav-sidebar ul.menu li.maintab:hover:not(.active) > a.title i { color: white; }
 #nav-sidebar ul.menu li.maintab:hover:not(.active) ul.submenu { position: absolute; display: block; width: 200px; z-index: 600; left: 210px; top: -1px; }
-#nav-sidebar ul.menu li.maintab.active a.title { color: white; background-color: #4b5f6d; border: none; }
-#nav-sidebar ul.menu li.maintab.active a.title i { color: #2ba6cb; background-color: white; }
+#nav-sidebar ul.menu li.maintab.active a.title { color: white; background-color: #556d7c; border: none; }
+#nav-sidebar ul.menu li.maintab.active a.title i { color: white; }
 #nav-sidebar ul.menu li.maintab.active ul.submenu { display: block; padding: 8px 11px 8px 8px; background-color: white; }
-#nav-sidebar ul.menu li.maintab.active ul.submenu a { border-bottom: solid 1px #eeeeee; background-color: white; color: #2ba6cb; }
+#nav-sidebar ul.menu li.maintab.active ul.submenu a { background-color: white; color: #2ba6cb; border-bottom: solid 1px #e6e6e6; }
 #nav-sidebar ul.menu li.maintab.active ul.submenu a:hover { color: #2ba6cb; border-bottom: solid 1px #dff1f7; background-color: #dff1f7; text-decoration: none; -webkit-box-shadow: white 0 -1px; box-shadow: white 0 -1px; }
 #nav-sidebar ul.menu li.maintab.active ul.submenu li:last-child a { border-bottom: solid 1px white; }
 #nav-sidebar ul.menu li.maintab.active ul.submenu li.active a { color: white; background-color: #2ba6cb; border-bottom: solid 1px white; }
-#nav-sidebar ul.menu li.maintab ul.submenu { display: none; list-style: none; padding: 6px; background-color: #212b31; -webkit-box-shadow: #eeeeee -1px 0 0 inset; box-shadow: #eeeeee -1px 0 0 inset; }
-#nav-sidebar ul.menu li.maintab ul.submenu li a { display: block; padding: 4px 5px 4px 10px; font-size: 12px; border: none; color: #98acb9; background-color: #171d22; border-bottom: solid 2px #212b31; }
-#nav-sidebar ul.menu li.maintab ul.submenu li a:hover { color: #2ba6cb; text-decoration: none; background-color: white; }
+#nav-sidebar ul.menu li.maintab ul.submenu { display: none; list-style: none; padding: 6px; background-color: #212b31; }
+#nav-sidebar ul.menu li.maintab ul.submenu li a { color: #c2c7ca; display: block; padding: 4px 5px 4px 10px; font-size: 12px; background-color: #36454f; border-bottom: solid 1px #212b31; }
+#nav-sidebar ul.menu li.maintab ul.submenu li a:hover { color: white; text-decoration: none; background-color: #212b31; -webkit-box-shadow: #2ba6cb -4px 0 0 0 inset; box-shadow: #2ba6cb -4px 0 0 0 inset; }
 #nav-sidebar ul.menu li.maintab ul.submenu li:last-child a { border-bottom: none; }
 @media (max-width: 480px) { #nav-sidebar { display: none; } }
 
@@ -2965,7 +2966,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .chevron-right:before { left: 0; top: 0; border-width: 1.2em 0 1.2em 0.5em; border-color: transparent transparent transparent #1bbdff; background-color: #00a4e7; }
 .bootstrap .input-complete { -webkit-animation: one 0.2s ease-in-out; -moz-animation: one 0.2s ease-in-out; -ms-animation: one 0.2s ease-in-out; -o-animation: one 0.2s ease-in-out; animation: one 0.2s ease-in-out; }
 .bootstrap .multishop-well { padding: 20px 20px 10px; margin-bottom: 15px; background-color: #faf8f0; border: none; border-left: 3px solid #fbeccb; }
-.bootstrap [class^="icon-Admin"] { margin-right: 4px; }
+.bootstrap [class^="icon-Admin"] { margin-right: 4px; text-align: center; }
 .bootstrap [class^="process-icon-"], .bootstrap [class*=" process-icon-"] { display: block; }
 .bootstrap #carrier_wizard { position: relative; display: block; }
 .bootstrap #carrier_wizard .stepContainer { position: relative; display: block; clear: both; }
