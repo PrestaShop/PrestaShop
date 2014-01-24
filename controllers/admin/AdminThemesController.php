@@ -2108,16 +2108,6 @@ class AdminThemesControllerCore extends AdminController
 			if (isset($theme_module['to_disable']))
 				$to_disable = $this->formatHelperArray($theme_module['to_disable']);
 
-			foreach($to_install as $key => $module_to_install)
-				if (Module::isInstalled($module_to_install['val']) && Module::isEnabled($module_to_install['val']))
-					unset($to_install[$key]);
-			foreach($to_enable as $key => $module_to_enable)
-				if (Module::isEnabled($module_to_enable['val']))
-					unset($to_enable[$key]);
-			foreach($to_disable as $key => $module_to_disable)
-				if (!Module::isEnabled($module_to_disable['val']))
-					unset($to_disable[$key]);
-
 			$fields_form = array(
 				'form' => array(
 					'tinymce' => false,
