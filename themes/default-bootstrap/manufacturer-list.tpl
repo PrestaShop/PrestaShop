@@ -76,72 +76,75 @@
         {math equation="nbLi/nbItemsPerLine" nbLi=$nbLi nbItemsPerLine=$nbItemsPerLine assign=nbLines}
         {math equation="nbLi/nbItemsPerLineTablet" nbLi=$nbLi nbItemsPerLineTablet=$nbItemsPerLineTablet assign=nbLinesTablet}
 
-		<ul id="manufacturers_list">
+		<ul id="manufacturers_list" class="list row">
 			{foreach from=$manufacturers item=manufacturer name=manufacturers}
 	        	{math equation="(total%perLine)" total=$smarty.foreach.manufacturers.total perLine=$nbItemsPerLine assign=totModulo}
 	            {math equation="(total%perLineT)" total=$smarty.foreach.manufacturers.total perLineT=$nbItemsPerLineTablet assign=totModuloTablet}
 	            {if $totModulo == 0}{assign var='totModulo' value=$nbItemsPerLine}{/if}
 	            {if $totModuloTablet == 0}{assign var='totModuloTablet' value=$nbItemsPerLineTablet}{/if}
-				<li class="{if $smarty.foreach.manufacturers.iteration%$nbItemsPerLine == 0} last-in-line{elseif $smarty.foreach.manufacturers.iteration%$nbItemsPerLine == 1} first-in-line{/if} {if $smarty.foreach.manufacturers.iteration > ($smarty.foreach.manufacturers.total - $totModulo)}last-line{/if} {if $smarty.foreach.manufacturers.iteration%$nbItemsPerLineTablet == 0}last-item-of-tablet-line{elseif $smarty.foreach.manufacturers.iteration%$nbItemsPerLineTablet == 1}first-item-of-tablet-line{/if} {if $smarty.foreach.manufacturers.iteration > ($smarty.foreach.manufacturers.total - $totModuloTablet)}last-tablet-line{/if}{if $smarty.foreach.manufacturers.last} item-last{/if}"> 
-	            	<div class="left-side">
-						<div class="logo">
-							{if $manufacturer.nb_products > 0}
-								<a
-								class="lnk_img" 
-								href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}" 
-								title="{$manufacturer.name|escape:'html':'UTF-8'}" >
-							{/if}
-								<img src="{$img_manu_dir}{$manufacturer.image|escape:'html':'UTF-8'}-medium_default.jpg" alt="" />
-							{if $manufacturer.nb_products > 0}
-								</a>
-							{/if}
-						</div> <!-- .logo -->
-					</div> <!-- .left-side -->
-					
-					<div class="middle-side">
-						<h3>
-							{if $manufacturer.nb_products > 0}
-								<a 
-								class="product-name" 
-								href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}">
-							{/if}
-								{$manufacturer.name|truncate:60:'...'|escape:'html':'UTF-8'}
-							{if $manufacturer.nb_products > 0}
-								</a>
-							{/if}
-						</h3>
-						<div class="description rte">
-							{$manufacturer.short_description}
-						</div>
-	                </div> <!-- .middle-side -->
+				<li class="{if $smarty.foreach.manufacturers.iteration%$nbItemsPerLine == 0} last-in-line{elseif $smarty.foreach.manufacturers.iteration%$nbItemsPerLine == 1} first-in-line{/if} {if $smarty.foreach.manufacturers.iteration > ($smarty.foreach.manufacturers.total - $totModulo)}last-line{/if} {if $smarty.foreach.manufacturers.iteration%$nbItemsPerLineTablet == 0}last-item-of-tablet-line{elseif $smarty.foreach.manufacturers.iteration%$nbItemsPerLineTablet == 1}first-item-of-tablet-line{/if} {if $smarty.foreach.manufacturers.iteration > ($smarty.foreach.manufacturers.total - $totModuloTablet)}last-tablet-line{/if}{if $smarty.foreach.manufacturers.last} item-last{/if} col-xs-12">
+					<div class="mansup-container">
+						<div class="row"> 
+			            	<div class="left-side col-xs-12 col-sm-3">
+								<div class="logo">
+									{if $manufacturer.nb_products > 0}
+										<a
+										class="lnk_img" 
+										href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}" 
+										title="{$manufacturer.name|escape:'html':'UTF-8'}" >
+									{/if}
+										<img src="{$img_manu_dir}{$manufacturer.image|escape:'html':'UTF-8'}-medium_default.jpg" alt="" />
+									{if $manufacturer.nb_products > 0}
+										</a>
+									{/if}
+								</div> <!-- .logo -->
+							</div> <!-- .left-side -->
+						
+							<div class="middle-side col-xs-12 col-sm-5">
+								<h3>
+									{if $manufacturer.nb_products > 0}
+										<a 
+										class="product-name" 
+										href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}">
+									{/if}
+										{$manufacturer.name|truncate:60:'...'|escape:'html':'UTF-8'}
+									{if $manufacturer.nb_products > 0}
+										</a>
+									{/if}
+								</h3>
+								<div class="description rte">
+									{$manufacturer.short_description}
+								</div>
+			                </div> <!-- .middle-side -->
 
-					<div class="right-side">
-	                	<div class="right-side-content">
-	                        <p class="product-counter">
-	                            {if $manufacturer.nb_products > 0}
-	                            	<a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}">
-	                            {/if}
-	                            {if $manufacturer.nb_products == 1}
-	                            	{l s='%d product' sprintf=$manufacturer.nb_products|intval}
-	                            {else}
-	                            	{l s='%d products' sprintf=$manufacturer.nb_products|intval}
-	                            {/if}
-	                            {if $manufacturer.nb_products > 0}
-	                        		</a>
-	                        	{/if}
-	                        </p>
-		                    {if $manufacturer.nb_products > 0}
-		                        <a 
-		                        class="btn btn-default button exclusive-medium" 
-		                        href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}">
-		                        	<span>
-		                        		{l s='view products'} <i class="icon-chevron-right right"></i>
-		                        	</span>
-		                        </a>
-		                    {/if}
-	                    </div>
-	                </div> <!-- .right-side -->
-
+							<div class="right-side col-xs-12 col-sm-4">
+			                	<div class="right-side-content">
+			                        <p class="product-counter">
+			                            {if $manufacturer.nb_products > 0}
+			                            	<a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}">
+			                            {/if}
+			                            {if $manufacturer.nb_products == 1}
+			                            	{l s='%d product' sprintf=$manufacturer.nb_products|intval}
+			                            {else}
+			                            	{l s='%d products' sprintf=$manufacturer.nb_products|intval}
+			                            {/if}
+			                            {if $manufacturer.nb_products > 0}
+			                        		</a>
+			                        	{/if}
+			                        </p>
+				                    {if $manufacturer.nb_products > 0}
+				                        <a 
+				                        class="btn btn-default button exclusive-medium" 
+				                        href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}">
+				                        	<span>
+				                        		{l s='view products'} <i class="icon-chevron-right right"></i>
+				                        	</span>
+				                        </a>
+				                    {/if}
+			                    </div>
+			                </div> <!-- .right-side -->
+			            </div>
+			        </div>
 				</li>
 			{/foreach}
 		</ul>
