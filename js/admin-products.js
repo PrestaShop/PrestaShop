@@ -542,8 +542,8 @@ product_tabs['Combinations'] = new function(){
  */
 function disableSave()
 {
-	$('button[name="submitAddproduct"]').hide();
-	$('button[name="submitAddproductAndStay"]').hide();
+	//$('button[name="submitAddproduct"]').hide();
+	//$('button[name="submitAddproductAndStay"]').hide();
 }
 
 /**
