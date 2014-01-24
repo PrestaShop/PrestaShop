@@ -23,6 +23,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if !$opc}
+	{capture name=path}{l s='Shipping:'}{/capture}
+	{assign var='current_step' value='shipping'}
 	<div id="carrier_area">
 		<h1 class="page-heading">{l s='Shipping:'}</h1>
 		{include file="$tpl_dir./order-steps.tpl"}
@@ -309,8 +311,6 @@
 </div> <!-- end carrier_area -->
 {strip}
 {if !$opc}
-	{capture name=path}{l s='Shipping:'}{/capture}
-	{assign var='current_step' value='shipping'}
 	{addJsDef orderProcess='order'}
 	{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
 	{addJsDef currencyRate=$currencyRate|floatval}
