@@ -544,6 +544,7 @@ class HelperListCore extends Helper
 			$table_dnd = true;
 
 		$prefix = isset($this->controller_name) ? str_replace(array('admin', 'controller'), '', Tools::strtolower($this->controller_name)) : '';
+		$ajax = false;
 		foreach ($this->fields_list as $key => $params)
 		{
 			if (!isset($params['type']))
@@ -552,6 +553,8 @@ class HelperListCore extends Helper
 			switch ($params['type'])
 			{
 				case 'bool':
+					if (isset($params['ajax']) && $params['ajax'])
+						$ajax = true;
 					break;
 
 				case 'date':
@@ -616,6 +619,7 @@ class HelperListCore extends Helper
 		));
 
 		$this->header_tpl->assign(array_merge($this->tpl_vars, array(
+			'ajax' => $ajax,
 			'title' => array_key_exists('title', $this->tpl_vars) ? $this->tpl_vars['title'] : $this->title,
 			'show_filters' => (count($this->_list) <= 1 && !$has_value) ? false : true,
 			'filters_has_value' => $has_value,

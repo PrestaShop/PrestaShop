@@ -637,7 +637,31 @@ class AdminControllerCore extends Controller
 				$action = Tools::getValue('action');
 				// no need to use displayConf() here
 				if (!empty($action) && method_exists($this, 'ajaxProcess'.Tools::toCamelCase($action)))
-					return $this->{'ajaxProcess'.Tools::toCamelCase($action)}();
+				{
+					Hook::exec('actionAdmin'.ucfirst($this->action).'Before', array('controller' => $this));
+					Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
+
+					$return = $this->{'ajaxProcess'.Tools::toCamelCase($action)}();
+
+					Hook::exec('actionAdmin'.ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
+					Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
+
+					return $return;
+				}
+				elseif (!empty($action) && $this->controller_name == 'AdminModules' && Tools::getIsset('configure'))
+				{
+					$module_name = Tools::getValue('configure');
+					if (!class_exists($module_name) && file_exists(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php'))
+						require(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php');
+
+
+					if (class_exists($module_name))
+					{
+						$module_obj = New $module_name;
+						if (method_exists($module_obj, 'ajaxProcess'.$action))
+							return $module_obj->{'ajaxProcess'.$action}();
+					}
+				}
 				elseif (method_exists($this, 'ajaxProcess'))
 					return $this->ajaxProcess();
 			}
