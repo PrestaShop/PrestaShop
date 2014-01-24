@@ -115,7 +115,7 @@ function p15012_add_missing_columns()
 		SET `id_order_invoice` = 0 WHERE `id_order_invoice` LIKE "" OR `id_order_invoice` IS NULL';
 
   $q_list['order_payment']['id_order_invoice']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_payment`
-		CHANGE `id_order_invoice` id_order_invoice int(10) unsigned DEFAULT NULL';
+		CHANGE `id_order_invoice` id_order_invoice int(10) unsigned NOT NULL DEFAULT 0';
 
   $q_list['orders']['reference']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'orders`
 		CHANGE `reference` reference varchar(9) DEFAULT NULL';
