@@ -45,7 +45,7 @@ if($pos = strpos($query, ' (ref:'))
 
 $excludeIds = Tools::getValue('excludeIds', false);
 if ($excludeIds && $excludeIds != 'NaN')
-	$excludeIds = implode(',', array_map('intval', explode(',', $excludeIds)));
+	$excludeIds = implode(',', array_map('intval', explode('-', $excludeIds)));
 else
 	$excludeIds = '';
 

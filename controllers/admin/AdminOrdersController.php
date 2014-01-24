@@ -39,6 +39,11 @@ class AdminOrdersControllerCore extends AdminController
 		$this->deleted = false;
 		$this->context = Context::getContext();
 
+		// Add delete icon only if the emplyee is a SuperAdmin
+		if ($this->context->employee->isSuperAdmin()) {
+			$this->addRowAction('delete');
+		}
+
 		$this->_select = '
 		a.id_currency,
 		a.id_order AS id_pdf,
