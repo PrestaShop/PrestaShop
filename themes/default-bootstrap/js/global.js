@@ -22,11 +22,16 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+
+var responsiveflag = false;
+
 $(document).ready(function(){
 	highdpi_init();
 	blockHover();
 	responsiveResize();
 	$(window).resize(responsiveResize);
+	tmDropDown ('', '#header .current', 'ul.toogle_content', 'active');							// all of this should be defined or left empty brackets
+	//tmDropDown ('cart', 'li#shopping_cart > a', '#cart_block', 'active');			// all of this should be defined or left empty brackets
 
 	if (navigator.userAgent.match(/Android/i)) {
 		var viewport = document.querySelector("meta[name=viewport]");
@@ -229,14 +234,7 @@ function tmDropDown (elementType, elementClick, elementSlide, activeClass){
 			$(elementHide).slideUp(),
 			$(elementClick).removeClass('active')
 	})
-};
-$(document).ready(function(){ 
-	tmDropDown ('', '#header .current', 'ul.toogle_content', 'active');							// all of this should be defined or left empty brackets
-	//tmDropDown ('cart', 'li#shopping_cart > a', '#cart_block', 'active');			// all of this should be defined or left empty brackets
-});
-
-
-var responsiveflag = false;
+}
 
 //   TOGGLE FOOTER
 
@@ -253,7 +251,6 @@ function accordionFooter(status){
 	}
 
 //   TOGGLE COLUMNS
-
 function accordion(status){
 		leftColumnBlocks = $('#left_column');
 		if(status == 'enable'){
@@ -267,16 +264,15 @@ function accordion(status){
 		}
 	}
 
-
 function responsiveResize(){
 	   if ($(document).width() <= 767 && responsiveflag == false){
-	   		accordion('enable'),
-		    accordionFooter('enable'),
-			responsiveflag = true	
+	   		accordion('enable');
+		    accordionFooter('enable');
+			responsiveflag = true;	
 		}
 		else if ($(document).width() >= 768){
-			accordion('disable'),
-			accordionFooter('disable'),
-	        responsiveflag = false
+			accordion('disable');
+			accordionFooter('disable');
+	        responsiveflag = false;
 		}
 }

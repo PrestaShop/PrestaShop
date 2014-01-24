@@ -582,7 +582,10 @@ class MediaCore
 				if (file_exists($file_infos['path']))
 				{
 					$tmp_content = file_get_contents($file_infos['path']);
-					$content .= (preg_match('@\.(min|pack)\.[^/]+$\.@', $file_infos['path']) ? $tmp_content : Media::packJS($tmp_content));
+					if (preg_match('@\.(min|pack)\.[^/]+$@', $file_infos['path'], $matches))
+						$content .= preg_replace('/\/\/@\ssourceMappingURL\=[_a-zA-Z0-9-.]+\.'.$matches[1].'\.map\s\n/', '', $tmp_content);
+					else
+						$content .= Media::packJS($tmp_content);
 				}
 				else
 					$compressed_js_files_not_found[] = $file_infos['path'];
