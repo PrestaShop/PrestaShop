@@ -2101,22 +2101,22 @@ class AdminThemesControllerCore extends AdminController
 			$to_enable = array();
 			$to_disable = array();
 
-			foreach($theme_module['to_install'] as $key => $module_to_install)
-				if (Module::isInstalled($module_to_install) && Module::isEnabled($module_to_install))
-					unset($theme_module['to_install'][$key]);
-			foreach($theme_module['to_enable'] as $key => $module_to_enable)
-				if (Module::isEnabled($module_to_enable))
-					unset($theme_module['to_enable'][$key]);
-			foreach($theme_module['to_disable'] as $key => $module_to_disable)
-				if (!Module::isEnabled($module_to_disable))
-					unset($theme_module['to_enable'][$key]);
-
 			if (isset($theme_module['to_install']))
 				$to_install = $this->formatHelperArray($theme_module['to_install']);
 			if (isset($theme_module['to_enable']))
 				$to_enable = $this->formatHelperArray($theme_module['to_enable']);
 			if (isset($theme_module['to_disable']))
 				$to_disable = $this->formatHelperArray($theme_module['to_disable']);
+
+			foreach($to_install as $key => $module_to_install)
+				if (Module::isInstalled($module_to_install['val']) && Module::isEnabled($module_to_install['val']))
+					unset($to_install[$key]);
+			foreach($to_enable as $key => $module_to_enable)
+				if (Module::isEnabled($module_to_enable['val']))
+					unset($to_enable[$key]);
+			foreach($to_disable as $key => $module_to_disable)
+				if (!Module::isEnabled($module_to_disable['val']))
+					unset($to_disable[$key]);
 
 			$fields_form = array(
 				'form' => array(
