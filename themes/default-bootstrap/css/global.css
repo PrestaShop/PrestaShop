@@ -1,5 +1,4 @@
 @charset "CP850";
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,600italic,700,700italic,800,800italic);
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -6911,8 +6910,8 @@ div.star a:hover {
         border-top: 1px solid #515151;
         width: 100%; }
 
-#reinsurance_block{
-  clear:both!important;}
+#reinsurance_block {
+  clear: both !important; }
 
 #short_description_content ul,
 #short_description_content ol,
