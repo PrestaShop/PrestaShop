@@ -699,27 +699,21 @@ class ThemeConfigurator extends Module
 	{
 		return array(
 			array(
-				'label' => $this->l('Display the reinsurance block'),
-				'name' => 'blockreinsurance',
-				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockreinsurance')) && $module->isEnabledForShopContext(),
+				'label' => $this->l('Display top banner'),
+				'name' => 'blockbanner',
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockbanner')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
 			),
 			array(
-				'label' => $this->l('Display the social following links'),
-				'name' => 'blocksocial',
-				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blocksocial')) && $module->isEnabledForShopContext(),
+				'label' => $this->l('Display the menu'),
+				'name' => 'blocktopmenu',
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blocktopmenu')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
 			),
 			array(
-				'label' => $this->l('Display contact information'),
-				'name' => 'blockcontactinfos',
-				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockcontactinfos')) && $module->isEnabledForShopContext(),
-				'is_module' => true,
-			),
-			array(
-				'label' => $this->l('Display social buttons on the products page'),
-				'name' => 'socialsharing',
-				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('socialsharing')) && $module->isEnabledForShopContext(),
+				'label' => $this->l('Display the homeslider on the home page'),
+				'name' => 'homeslider',
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('homeslider')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
 			),
 			array(
@@ -735,20 +729,62 @@ class ThemeConfigurator extends Module
 				'is_module' => true,
 			),
 			array(
+				'label' => $this->l('Display newsletter'),
+				'name' => 'blocknewsletter',
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blocknewsletter')) && $module->isEnabledForShopContext(),
+				'is_module' => true,
+			),
+			array(
+				'label' => $this->l('Display the social following links'),
+				'name' => 'blocksocial',
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blocksocial')) && $module->isEnabledForShopContext(),
+				'is_module' => true,
+			),
+			array(
+				'label' => $this->l('Display categories'),
+				'name' => 'blockcategories',
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockcategories')) && $module->isEnabledForShopContext(),
+				'is_module' => true,
+			),
+			array(
+				'label' => $this->l('Display my account footer'),
+				'name' => 'blockmyaccountfooter',
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockmyaccountfooter')) && $module->isEnabledForShopContext(),
+				'is_module' => true,
+			),
+			array(
+				'label' => $this->l('Display contact information'),
+				'name' => 'blockcontactinfos',
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockcontactinfos')) && $module->isEnabledForShopContext(),
+				'is_module' => true,
+			),
+			array(
+				'label' => $this->l('Display the reinsurance block'),
+				'name' => 'blockreinsurance',
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockreinsurance')) && $module->isEnabledForShopContext(),
+				'is_module' => true,
+			),
+			array(
 				'label' => $this->l('Enable Quick view'),
 				'name' => 'quick_view',
 				'value' => (int)Tools::getValue('PS_QUICK_VIEW', Configuration::get('PS_QUICK_VIEW'))
 			),
 			array(
-				'label' => $this->l('Enable top banner'),
-				'name' => 'blockbanner',
-				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockbanner')) && $module->isEnabledForShopContext(),
-				'is_module' => true,
-			),
-			array(
 				'label' => $this->l('Enable product payment logos'),
 				'name' => 'productpaymentlogos',
 				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('productpaymentlogos')) && $module->isEnabledForShopContext(),
+				'is_module' => true,
+			),
+			array(
+				'label' => $this->l('Display social buttons on the products page'),
+				'name' => 'socialsharing',
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('socialsharing')) && $module->isEnabledForShopContext(),
+				'is_module' => true,
+			),
+			array(
+				'label' => $this->l('Display product comments'),
+				'name' => 'productcomments',
+				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('productcomments')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
 			)
 		);
