@@ -25,4 +25,6 @@
 {strip}
 {addJsDef isLoggedWishlist=$logged|boolval}
 {addJsDef wishlistProductsIds=$wishlist_products}
+{addJsDefL name=loggin_required}{l s='You must be logged in to manage your wishlist.' mod='blockwishlist' js=1}{/addJsDefL}
+{addJsDefL name=added_to_wishlist}{l s='Adedd to wishlist.' mod='blockwishlist' js=1}{/addJsDefL}
 {/strip}
