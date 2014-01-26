@@ -12,7 +12,7 @@ To contribute to the  project, you should ideally be familiar with Git, the sour
 Contributors should follow the following process:
 
 1. Create your Github account
-2. Fork the project. If you have a fix for PrestaShop 1.5.x, you should apply this process to [the PrestaShop 1.5 project][0].
+2. Fork the project.
 3. Create a branch in your fork for your changes.
 4. Change the files on your branch. Be sure to follow the [the coding standards][1].
 5. Push your branch to your Github account.
@@ -32,7 +32,6 @@ Thank you for your help in making PrestaShop even better!
 * All modules files you commit in your pull request must respect/use the [Academic Free License (AFL 3.0)][7].
 
 
-[0]: https://github.com/PrestaShop/PrestaShop-1.5
 [1]: http://doc.prestashop.com/display/PS16/Coding+Standards
 [2]: http://doc.prestashop.com/display/PS16/How+to+write+a+commit+message
 [3]: https://help.github.com/articles/using-pull-requests
