@@ -68,7 +68,7 @@
 								class="quick-view"
 								href="#" 
 								rel="{$product.link|escape:'html':'UTF-8'}">
-									<span>Quick view</span>
+									<span>{l s='Quick view'}</span>
 							</a>
 						{/if}
 						{if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
