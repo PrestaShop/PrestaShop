@@ -44,6 +44,6 @@
 	<label class="pull-left">
 		<input type="checkbox" id="filter-by-category" {if $is_category_filter}checked="checked"{/if} />
 		<i class="icon-tags"></i>
-		{l s=$title}
+		$title
 	</label>
 </div>
