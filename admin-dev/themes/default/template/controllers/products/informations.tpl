@@ -421,7 +421,7 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="tags_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Tags separated by commas (e.g. dvd, dvd player, hifi)'} - {l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%">
+				title="{l s='Each tag has to be followed by a comma. Following characters are forbiden: %s' sprintf='!&lt;;&gt;;?=+#&quot;&deg;{}_$%'}">
 				{l s='Tags:'}
 			</span>
 		</label>
