@@ -337,7 +337,7 @@ function fancyMsgBox(msg, title)
 {
     if (title) msg = "<h2>" + title + "</h2><p>" + msg + "</p>";
     msg += "<br/><p class=\"submit\" style=\"text-align:right; padding-bottom: 0\"><input class=\"button\" type=\"button\" value=\"OK\" onclick=\"$.fancybox.close();\" /></p>";
-    $.fancybox( msg, {'autoDimensions': false, 'width': 500, 'height': 'auto', 'transitionIn': 'none', 'transitionOut': 'none'} );
+    $.fancybox( msg, {'autoDimensions': false, 'autoSize': false, 'width': 500, 'height': 'auto', 'transitionIn': 'none', 'transitionOut': 'none'} );
 }
 
 /**
