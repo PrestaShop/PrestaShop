@@ -79,10 +79,8 @@
 					{$categoryNameComplement|escape:'html':'UTF-8'}
 				{/if}
 			{/strip}
-            <span class="heading-counter">{include file="$tpl_dir./category-count.tpl"}</span>
 		</h1>
-		
-
+		<span class="heading-counter pull-right">{include file="$tpl_dir./category-count.tpl"}</span>
 		{if isset($subcategories)}
 		<!-- Subcategories -->
 		<div id="subcategories">
