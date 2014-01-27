@@ -144,7 +144,7 @@ class PrestaShopAutoload
 		// Write classes index on disc to cache it
 		$filename = $this->root_dir.PrestaShopAutoload::INDEX_FILE;
 		$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
-		if ($filename_tmp !== false && file_put_contents($filename_tmp, $content, LOCK_EX) !== false)
+		if ($filename_tmp !== false && file_put_contents($filename_tmp, $content) !== false)
 		{
 			if (!rename($filename_tmp, $filename))
 				unlink($filename_tmp);
