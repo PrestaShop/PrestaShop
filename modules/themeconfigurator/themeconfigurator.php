@@ -277,6 +277,7 @@ class ThemeConfigurator extends Module
 			{
 				Configuration::updateValue('PS_TC_THEME', Tools::getValue('theme'));
 				Configuration::updateValue('PS_TC_FONT', Tools::getValue('theme_font'));
+				Tools::redirect('index.php');
 			}
 
 			$ad_image = $this->_path.'img/'.$this->context->language->iso_code.'/advertisement.png';
