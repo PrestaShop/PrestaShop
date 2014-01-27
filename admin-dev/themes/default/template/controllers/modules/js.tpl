@@ -177,7 +177,7 @@
 						{
 							$('#addons_loading').html('');
 							$('#addons_login_div').fadeOut();
-							window.location.href = currentIndexWithToken;
+							window.location.href = currentIndexWithToken + '&conf=32';
 						}
 						else
 							$('#addons_loading').html(errorLogin);
