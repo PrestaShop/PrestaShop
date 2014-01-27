@@ -1848,9 +1848,23 @@ class CartCore extends ObjectModel
 							'carrier_list' => $data['carrier_list'],
 							'warehouse_list' => $data['warehouse_list'],
 							'id_warehouse' => $id_warehouse,
+							'no_shipping_cost' => (Configuration::get('PS_WAREHOUSE_SINGLE_COST') ? ($id_warehouse == Configuration::get('PS_COST_WAREHOUSE_ID') ? false : true) : false),
 						);
+						if ($id_warehouse == Configuration::get('PS_COST_WAREHOUSE_ID') && Configuration::get('PS_WAREHOUSE_SINGLE_COST') )
+							$has_default_warehouse = true;
 					}
 		}
+		if (!$has_default_warehouse && Configuration::get('PS_WAREHOUSE_SINGLE_COST'))
+		{
+			foreach ($final_package_list as &$packages)
+				foreach ($packages as $key => &$package)
+					if ($key == 0)
+					{
+						$package['no_shipping_cost'] = false;
+						break;
+					}
+		}
+
 		$cache[(int)$this->id] = $final_package_list;
 		return $final_package_list;
 	}
@@ -1965,8 +1979,8 @@ class CartCore extends ObjectModel
 					if (!isset($carriers_instance[$id_carrier]))
 						$carriers_instance[$id_carrier] = new Carrier($id_carrier);
 
-					$price_with_tax = $this->getPackageShippingCost($id_carrier, true, $country, $package['product_list']);
-					$price_without_tax = $this->getPackageShippingCost($id_carrier, false, $country, $package['product_list']);
+					$price_with_tax = $this->getPackageShippingCost($id_carrier, true, $country, $package['product_list'],null,$package['no_shipping_cost']);
+					$price_without_tax = $this->getPackageShippingCost($id_carrier, false, $country, $package['product_list'],null,$package['no_shipping_cost']);
 					if (is_null($best_price) || $price_with_tax < $best_price)
 					{
 						$best_price = $price_with_tax;
@@ -2525,7 +2539,7 @@ class CartCore extends ObjectModel
 	 *
 	 * @return float Shipping total
 	 */
-	public function getPackageShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null, $id_zone = null)
+	public function getPackageShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null, $id_zone = null, $no_shipping_cost = null)
 	{
 		if ($this->isVirtualCart())
 			return 0;
@@ -2753,6 +2767,10 @@ class CartCore extends ObjectModel
 				$shipping_cost += $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int)$this->id_currency);
 
 		}
+
+		if ($no_shipping_cost == true && Configuration::get('PS_WAREHOUSE_SINGLE_COST'))
+			$shipping_cost = 0;
+
 		// Adding handling charges
 		if (isset($configuration['PS_SHIPPING_HANDLING']) && $carrier->shipping_handling)
 			$shipping_cost += (float)$configuration['PS_SHIPPING_HANDLING'];

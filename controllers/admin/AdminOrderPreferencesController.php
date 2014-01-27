@@ -54,6 +54,8 @@ class AdminOrderPreferencesControllerCore extends AdminController
 			)
 		);
 
+		$warehouse_list = Warehouse::getWarehouses();
+
 		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('General'),
@@ -115,7 +117,21 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'list' => $cms_tab,
 						'identifier' => 'id',
 						'cast' => 'intval'
-					)
+					),
+					'PS_WAREHOUSE_SINGLE_COST' => array(
+						'title' => $this->l('Warehouse single shipping cost'),
+						'hint' => $this->l('When orders from multiple warehouses, shipping cost will only be added to one order.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_COST_WAREHOUSE_ID' => array(
+						'title' => $this->l('Default warehouse to apply cost on'),
+						'hint' => $this->l('If order contains products from this warehouse, apply cost on itt, else apply on first available warehouse'),
+						'type' => 'select',
+						'list' => $warehouse_list,
+						'identifier' => 'id_warehouse'
+					),
 				),
 				'submit' => array('title' => $this->l('Save'))
 			),
