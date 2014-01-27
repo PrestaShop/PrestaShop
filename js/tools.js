@@ -161,6 +161,38 @@ function openCloseAllDiv(name, option)
 		toggle(tab[i], option);
 }
 
+function toggleDiv(name, option)
+{
+	console.log(option);
+	$('*[name='+name+']').each(function(){
+		if (option == 'open')
+		{
+			$('#buttonall').data('status', 'close');
+			$(this).hide();
+		}
+		else
+		{
+			$('#buttonall').data('status', 'open');
+			$(this).show();
+		}
+	})
+}
+
+function toggleButtonValue(id_button, text1, text2)
+{
+	if ($('#'+id_button).find('i').first().hasClass('process-icon-minus'))
+	{
+		$('#'+id_button).find('i').first().removeClass('process-icon-minus').addClass('process-icon-plus');
+		$('#'+id_button).find('span').first().html(text1);
+	}
+	else
+	{
+		$('#'+id_button).find('i').first().removeClass('process-icon-plus').addClass('process-icon-minus');
+		$('#'+id_button).find('span').first().html(text2);
+	}
+}
+
+
 /**
 * Toggle the value of the element id_button between text1 and text2
 */
