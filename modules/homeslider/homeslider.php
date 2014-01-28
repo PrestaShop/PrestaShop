@@ -444,6 +444,14 @@ class HomeSlider extends Module
 			);
 
 			$slides = $this->getSlides(true);
+			if (is_array($slides))
+				foreach($slides as &$slide)
+				{
+					$slide['sizes'] = @getimagesize((dirname(__FILE__).DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$slide['image']));
+					if (isset($slide['sizes'][3]) && $slide['sizes'][3])
+						$slide['sizes'] = $slide['sizes'][3];
+				}
+
 			if (!$slides)
 				return false;
 
