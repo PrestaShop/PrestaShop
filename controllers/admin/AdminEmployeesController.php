@@ -54,7 +54,8 @@ class AdminEmployeesControllerCore extends AdminController
 
 		$this->context = Context::getContext();
 
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),
+			'confirm' => $this->l('Delete selected items?')));
 		/*
 		check if there are more than one superAdmin
 		if it's the case then we can delete a superAdmin
@@ -81,8 +82,10 @@ class AdminEmployeesControllerCore extends AdminController
 			'lastname' => array('title' => $this->l('Last Name')),
 			'firstname' => array('title' => $this->l('First Name')),
 			'email' => array('title' => $this->l('Email address')),
-			'profile' => array('title' => $this->l('Profile'), 'type' => 'select', 'list' => $this->profiles_array, 'filter_key' => 'pl!name', 'class' => 'fixed-width-lg'),
-			'active' => array('title' => $this->l('Can log in'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'class' => 'fixed-width-sm'),
+			'profile' => array('title' => $this->l('Profile'), 'type' => 'select', 'list' => $this->profiles_array,
+				'filter_key' => 'pl!name', 'class' => 'fixed-width-lg'),
+			'active' => array('title' => $this->l('Can log in'), 'align' => 'center', 'active' => 'status',
+				'type' => 'bool', 'class' => 'fixed-width-sm'),
 		);
 
 		$this->fields_options = array(
@@ -113,13 +116,14 @@ class AdminEmployeesControllerCore extends AdminController
 			)
 		);
 
-		$path = _PS_ADMIN_DIR_.'/themes/';
+		$path = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR;
 		foreach (scandir($path) as $theme)
-			if ($theme[0] != '.' && is_dir($path.$theme) && (file_exists($path.$theme.'/css/admin-theme.css')))
+			if ($theme[0] != '.' && is_dir($path.$theme) && (@filemtime($path.$theme.DIRECTORY_SEPARATOR.'css'
+				.DIRECTORY_SEPARATOR.'admin-theme.css')))
 			{
 				$this->themes[] = array('id' => $theme.'|admin-theme.css', 'name' => $theme.' - admin-theme.css');
-				if (file_exists($path.$theme.'/css/schemes'))
-					foreach (scandir($path.$theme.'/css/schemes') as $css)
+				if (file_exists($path.$theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'schemes'))
+					foreach (scandir($path.$theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'schemes') as $css)
 						if ($css[0] != '.' && preg_match('/\.css$/', $css))
 							$this->themes[] = array('id' => $theme.'|schemes/'.$css, 'name' => $theme.' - schemes/'.$css);
 			}
@@ -172,7 +176,8 @@ class AdminEmployeesControllerCore extends AdminController
 			{
 				array_pop($this->toolbar_title);
 				$this->toolbar_title[] = sprintf($this->l('Edit: %1$s %2$s'), $obj->lastname, $obj->firstname);
-				$this->page_header_toolbar_title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
+				$this->page_header_toolbar_title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ',
+					$this->toolbar_title);
 			}
 		}
 	}
@@ -181,7 +186,8 @@ class AdminEmployeesControllerCore extends AdminController
 	{
  		$this->_select = 'pl.`name` AS profile';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'profile` p ON a.`id_profile` = p.`id_profile`
-		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '.(int)$this->context->language->id.')';
+		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '
+			.(int)$this->context->language->id.')';
 
 		return parent::renderList();
 	}
@@ -221,7 +227,8 @@ class AdminEmployeesControllerCore extends AdminController
 					'type' => 'file',
 					'label' => $this->l('Picture'),
 					'name' => 'image',
-					'image' => ImageManager::thumbnail($obj->getImage(), $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 150, $this->imageType, true, true),
+					'image' => ImageManager::thumbnail($obj->getImage(), $this->table.'_'.(int)$obj->id.'.'
+						.$this->imageType, 150, $this->imageType, true, true),
 					'col' => 6,
 					'value' => true,
 					'display_image' => true,
@@ -378,7 +385,8 @@ class AdminEmployeesControllerCore extends AdminController
 		if (!($obj = $this->loadObject(true)))
 			return false;
 		$email = $this->getFieldValue($obj, 'email');
-		if (Validate::isEmail($email) && Employee::employeeExists($email) && (!Tools::getValue('id_employee') ||  ($employee = new Employee((int)Tools::getValue('id_employee'))) && $employee->email != $email))
+		if (Validate::isEmail($email) && Employee::employeeExists($email) && (!Tools::getValue('id_employee')
+			|| ($employee = new Employee((int)Tools::getValue('id_employee'))) && $employee->email != $email))
 			$this->errors[] = Tools::displayError('An account already exists for this email address:').' '.$email;
 	}
 
@@ -387,7 +395,8 @@ class AdminEmployeesControllerCore extends AdminController
 		if (Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee'))
 		{
 			/* PrestaShop demo mode */
-			if (_PS_MODE_DEMO_ && $id_employee = Tools::getValue('id_employee') && (int)$id_employee == _PS_DEMO_MAIN_BO_ACCOUNT_)
+			if (_PS_MODE_DEMO_ && $id_employee = Tools::getValue('id_employee')
+				&& (int)$id_employee == _PS_DEMO_MAIN_BO_ACCOUNT_)
 			{
 				$this->errors[] = Tools::displayError('This functionality has been disabled.');
 				return;
@@ -410,7 +419,8 @@ class AdminEmployeesControllerCore extends AdminController
 			$warehouses = Warehouse::getWarehousesByEmployee((int)Tools::getValue('id_employee'));
 			if (Tools::isSubmit('deleteemployee') && count($warehouses) > 0)
 			{
-				$this->errors[] = Tools::displayError('You cannot delete this account because it manages warehouses. Check your warehouses first.');
+				$this->errors[] = Tools::displayError('You cannot delete this account because it manages warehouses. 
+					Check your warehouses first.');
 				return false;
 			}
 		}
@@ -468,7 +478,8 @@ class AdminEmployeesControllerCore extends AdminController
 			{
 				if (Tools::getValue('id_profile') != (int)_PS_ADMIN_PROFILE_)
 				{
-					$this->errors[] = Tools::displayError('You should have at least one employee in the administrator group.');
+					$this->errors[] = Tools::displayError('You should have at least one employee in the administrator 
+						group.');
 					return false;
 				}
 
@@ -483,7 +494,7 @@ class AdminEmployeesControllerCore extends AdminController
 			{
 				$bo_theme = explode('|', Tools::getValue('bo_theme_css'));
 				$_POST['bo_theme'] = $bo_theme[0];
-				if (!in_array($bo_theme[0], scandir(_PS_ADMIN_DIR_.'/themes')))
+				if (!in_array($bo_theme[0], scandir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes')))
 				{
 					$this->errors[] = Tools::displayError('Invalid theme');
 					return false;
@@ -513,7 +524,8 @@ class AdminEmployeesControllerCore extends AdminController
 	{
 		$res = parent::afterUpdate($object);
 		// Update cookie if needed
-		if (Tools::getValue('id_employee') == $this->context->employee->id && Tools::getValue('passwd') && $object->passwd != $this->context->employee->passwd)
+		if (Tools::getValue('id_employee') == $this->context->employee->id && Tools::getValue('passwd') 
+			&& $object->passwd != $this->context->employee->passwd)
 			$this->context->cookie->passwd = $this->context->employee->passwd = $object->passwd;
 
 		return $res;
