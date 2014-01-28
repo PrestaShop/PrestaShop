@@ -117,25 +117,38 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		if ($this->output != '')
 			return $this->objOutput->getObjectRender()->overrideContent($this->output);
 		// display image content if needed
-		else if ($this->imgToDisplay)
+		elseif ($this->imgToDisplay)
 		{
-			if(empty($this->imgExtension)){
+			if (empty($this->imgExtension))
+			{
 				$imginfo = getimagesize($this->imgToDisplay);
-				$this->imgExtension = image_type_to_extension($imginfo[2],false);
+				$this->imgExtension = image_type_to_extension($imginfo[2], false);
 			}
 
 			$imageResource = false;
 			$types = array(
-				'jpg' => array('function' => 'imagecreatefromjpeg', 'Content-Type' => 'image/jpeg'),
-				'jpeg' => array('function' => 'imagecreatefromjpeg', 'Content-Type' => 'image/jpeg'),
-				'png' => array('function' => 'imagecreatefrompng', 'Content-Type' => 'image/png'),
-				'gif' => array('function' => 'imagecreatefromgif', 'Content-Type' => 'image/gif')
+				'jpg' => array(
+					'function' => 'imagecreatefromjpeg', 
+					'Content-Type' => 'image/jpeg'
+				),
+				'jpeg' => array(
+					'function' => 'imagecreatefromjpeg', 
+					'Content-Type' => 'image/jpeg'
+				),
+				'png' => array('function' => 
+					'imagecreatefrompng', 
+					'Content-Type' => 'image/png'
+				),
+				'gif' => array(
+					'function' => 'imagecreatefromgif', 
+					'Content-Type' => 'image/gif'
+				)
 			);
 
 			if (array_key_exists($this->imgExtension, $types))
 				$imageResource = @$types[$this->imgExtension]['function']($this->imgToDisplay);
 
-			if(!$imageResource)
+			if (!$imageResource)
 				throw new WebserviceException(sprintf('Unable to load the image "%s"', str_replace(_PS_ROOT_DIR_, '[SHOP_ROOT_DIR]', $this->imgToDisplay)), array(47, 500));
 			else
 			{
