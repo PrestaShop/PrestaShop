@@ -1654,7 +1654,8 @@ class BlockLayered extends Module
 				'index_cdt' => Configuration::get('PS_LAYERED_FILTER_INDEX_CDT'),
 				'index_qty' => Configuration::get('PS_LAYERED_FILTER_INDEX_QTY'),
 				'index_mnf' => Configuration::get('PS_LAYERED_FILTER_INDEX_MNF'),
-				'index_cat' => Configuration::get('PS_LAYERED_FILTER_INDEX_CAT')
+				'index_cat' => Configuration::get('PS_LAYERED_FILTER_INDEX_CAT'),
+				'limit_warning' => $this->displayLimitPostWarning(21+count($attribute_groups)*3+count($features)*3)
 			));
 			
 			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
@@ -1662,6 +1663,25 @@ class BlockLayered extends Module
 			else
 				return $this->display(__FILE__, 'views/templates/admin/view.tpl');
 		}
+	}
+
+	public function displayLimitPostWarning($count)
+	{
+		$return = array();
+		if ((ini_get('suhosin.post.max_vars') && ini_get('suhosin.post.max_vars') < $count) || (ini_get('suhosin.request.max_vars') && ini_get('suhosin.request.max_vars') < $count))
+		{
+			$return['error_type'] = 'suhosin';
+			$return['post.max_vars'] = ini_get('suhosin.post.max_vars');
+			$return['request.max_vars'] = ini_get('suhosin.request.max_vars');
+			$return['needed_limit'] = $count + 100;
+		}
+		elseif (ini_get('max_input_vars') && ini_get('max_input_vars') < $count)
+		{
+			$return['error_type'] = 'conf';
+			$return['max_input_vars'] = ini_get('max_input_vars');
+			$return['needed_limit'] = $count + 100;
+		}
+		return $return;
 	}
 
 	private function getSelectedFilters()
