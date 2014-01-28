@@ -50,7 +50,7 @@ if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 }
 //include settings file only if we are not in multi-tenancy mode 
 require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
-require_once(dirname(__FILE__).'/autoload.php');
+require_once(_PS_CONFIG_DIR_.'autoload.php');
 
 if (_PS_DEBUG_PROFILING_)
 {

@@ -60,7 +60,7 @@ class PrestaShopAutoload
 
 	protected function __construct()
 	{
-		$this->root_dir = _PS_ROOT_DIR_.'/';
+		$this->root_dir = _PS_CORE_DIR_.'/';
 		if (file_exists($this->root_dir.PrestaShopAutoload::INDEX_FILE))
 			$this->index = include($this->root_dir.PrestaShopAutoload::INDEX_FILE);
 		else
