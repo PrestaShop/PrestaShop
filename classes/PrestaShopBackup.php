@@ -64,7 +64,8 @@ class PrestaShopBackupCore
 	public function setCustomBackupPath($dir)
 	{
 		$customDir = DIRECTORY_SEPARATOR.trim($dir, '/').DIRECTORY_SEPARATOR;
-		if (is_dir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.$customDir.DIRECTORY_SEPARATOR))
+		if (is_dir((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).DIRECTORY_SEPARATOR.$customDir
+			.DIRECTORY_SEPARATOR))
 			$this->customBackupDir = $customDir;
 		else
 			return false;
@@ -84,7 +85,8 @@ class PrestaShopBackupCore
 		$backupDir = PrestaShopBackup::getBackupPath($filename);
 		if (!empty($this->customBackupDir))
 		{
-			$backupDir = str_replace(_PS_ADMIN_DIR_.self::$backupDir, _PS_ADMIN_DIR_.$this->customBackupDir, $backupDir);
+			$backupDir = str_replace((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).self::$backupDir,
+				(defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).$this->customBackupDir, $backupDir);
 
 			if (strrpos($backupDir, DIRECTORY_SEPARATOR))
 				$backupDir .= DIRECTORY_SEPARATOR;
@@ -97,16 +99,16 @@ class PrestaShopBackupCore
 	 * @param string $filename prefix of the backup file (datetime will be the second part)
 	 * @return The full path of the backup file, or false if the backup file does not exists
 	 */
-	public static function getBackupPath($filename)
+	public static function getBackupPath($filename = '')
 	{
-		$backupdir = realpath(_PS_ADMIN_DIR_.self::$backupDir);
+		$backupdir = realpath((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).self::$backupDir);
 
 		if ($backupdir === false)
 			die(Tools::displayError('"Backup" directory does not exist.'));
 
 		// Check the realpath so we can validate the backup file is under the backup directory
 		if (!empty($filename))
-			$backupfile = realpath($backupdir.'/'.$filename);
+			$backupfile = realpath($backupdir.DIRECTORY_SEPARATOR.$filename);
 		else
 			$backupfile = $backupdir.DIRECTORY_SEPARATOR;
 
@@ -123,10 +125,7 @@ class PrestaShopBackupCore
 	 */
 	public function getBackupURL()
 	{
-		$adminDir = __PS_BASE_URI__.substr($_SERVER['SCRIPT_NAME'], strlen(__PS_BASE_URI__) );
-		$adminDir = substr($adminDir, 0, strrpos($adminDir, '/'));
-
-		return $adminDir.'/backup.php?filename='.basename($this->id);
+		return __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/backup.php?filename='.basename($this->id);
 	}
 
 	/**
@@ -138,7 +137,8 @@ class PrestaShopBackupCore
 	{
 		if (!$this->id || !unlink($this->id))
 		{
-			$this->error = Tools::displayError('Error deleting').' '.($this->id ? '"'.$this->id.'"' : Tools::displayError('Invalid ID'));
+			$this->error = Tools::displayError('Error deleting').' '.($this->id ? '"'.$this->id.'"' :
+				Tools::displayError('Invalid ID'));
 			return false;
 		}
 		return true;
@@ -171,7 +171,8 @@ class PrestaShopBackupCore
 	public function add()
 	{
 		if (!$this->psBackupAll)
-			$ignore_insert_table = array(_DB_PREFIX_.'connections', _DB_PREFIX_.'connections_page', _DB_PREFIX_.'connections_source', _DB_PREFIX_.'guest', _DB_PREFIX_.'statssearch');
+			$ignore_insert_table = array(_DB_PREFIX_.'connections', _DB_PREFIX_.'connections_page', _DB_PREFIX_
+				.'connections_source', _DB_PREFIX_.'guest', _DB_PREFIX_.'statssearch');
 		else
 			$ignore_insert_table = array();
 		
