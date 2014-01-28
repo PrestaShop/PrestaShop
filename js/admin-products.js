@@ -117,7 +117,7 @@ function ProductTabsManager(){
 			data: data,
 			success : function(data)
 			{
-				tab_selector.html(data);
+				tab_selector.html(data).find('.dropdown-toggle').dropdown();
 				tab_selector.removeClass('not-loaded');
 
 				if (selected)
