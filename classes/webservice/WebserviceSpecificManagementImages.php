@@ -692,15 +692,15 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				break;
 			// Delete the image
 			case 'DELETE':
-				if ($filename_exists)
+				// Delete products image in DB
+				if ($this->imageType == 'products')
 				{
-					// Delete products image in DB
-					if ($this->imageType == 'products')
-					{
 						$image = new Image((int)$this->wsObject->urlSegment[3]);
 						return $image->delete();
-					}
-					elseif (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores')))
+				}
+				elseif ($filename_exists)
+				{
+					if (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores')))
 					{
 						$object = new $this->wsObject->resourceList[$this->imageType]['class']((int)$this->wsObject->urlSegment[2]);
 						return $object->deleteImage(true);
