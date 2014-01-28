@@ -38,13 +38,14 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.10.2';
+		$this->version = '1.10.3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
 
 		parent::__construct();
 
+		$this->ps_versions_compliancy = array('min' => '1.5', 'max' => _PS_VERSION_);
 		$this->displayName = $this->l('Layered navigation block');
 		$this->description = $this->l('Displays a block with layered navigation filters.');
 		
@@ -650,7 +651,7 @@ class BlockLayered extends Module
 
 		if (is_array($filter_block['title_values']))
 			foreach ($filter_block['title_values'] as $key => $val)
-				$title .= ' – '.$key.' '.implode('/', $val);
+				$title .= ' > '.$key.' '.implode('/', $val);
 
 		$smarty->assign('categoryNameComplement', $title);
 		$this->getProducts($selected_filters, $params['catProducts'], $params['nbProducts'], $p, $n, $pages_nb, $start, $stop, $range);
@@ -694,36 +695,25 @@ class BlockLayered extends Module
 
 		// Generate meta title and meta description
 		$category_title = (empty($category->meta_title[$id_lang]) ? $category->name[$id_lang] : $category->meta_title[$id_lang]);
+		$category_metas = Meta::getMetaTags($id_lang, 'category');
 		$title = '';
-		$description = '';
 		$keywords = '';
-		if (is_array($filter_block['meta_values']))
-			foreach ($filter_block['meta_values'] as $key => $val)
-			{
-				if (!empty($val['title']))
-					$val['title'] = $val['title'].' ';
 
-				foreach ($val['values'] as $value)
-				{
-					$title .= $category_title.' '.$val['title'].$value.' - ';
-					$description .= $category_title.' '.$val['title'].$value.', ';
-					$keywords .= $val['title'].$value.', ';
-				}
+		if (is_array($filter_block['title_values']))
+			foreach ($filter_block['title_values'] as $key => $val)
+			{
+				$title .= ' > '.$key.' '.implode('/', $val);
+				$keywords .= $key.' '.implode('/', $val).', ';
 			}
-		// Title attributes (ex: <attr1> <value1>/<value2> - <attr2> <value1>)
-		$title = strtolower(rtrim(substr($title, 0, -3)));
-		// Title attributes (ex: <attr1> <value1>/<value2>, <attr2> <value1>)
-		$description = strtolower(rtrim(substr($description, 0, -2)));
-		// kewords attributes (ex: <attr1> <value1>, <attr1> <value2>, <attr2> <value1>)
-		$category_metas = Meta::getMetaTags($id_lang, 'category', $title);
+
+		$title = $category_title.$title;
 
 		if (!empty($title))
-		{
-			$smarty->assign('meta_title', ucfirst($title));
-			$smarty->assign('meta_description', $description.'. '.$category_metas['meta_description']);
-		}
+			$smarty->assign('meta_title', $title.' - '.Configuration::get('PS_SHOP_NAME'));
 		else
 			$smarty->assign('meta_title', $category_metas['meta_title']);
+
+		$smarty->assign('meta_description', $category_metas['meta_description']);
 
 		$keywords = substr(strtolower($keywords), 0, 1000);
 		if (!empty($keywords))
@@ -2958,6 +2948,7 @@ class BlockLayered extends Module
 		global $smarty, $cookie;
 
 		$selected_filters = $this->getSelectedFilters();
+		$filter_block = $this->getFilterBlock($this->getSelectedFilters());
 		$this->getProducts($selected_filters, $products, $nb_products, $p, $n, $pages_nb, $start, $stop, $range);
 		
 		// Add pagination variable
@@ -2968,6 +2959,34 @@ class BlockLayered extends Module
 
 		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
 			$this->context->controller->addColorsToProductList($products);
+
+		$category = new Category(Tools::getValue('id_category_layered', Configuration::get('PS_HOME_CATEGORY')), (int)$cookie->id_lang);
+
+		// Generate meta title and meta description
+		$category_title = (empty($category->meta_title) ? $category->name : $category->meta_title);		
+		$category_metas = Meta::getMetaTags((int)$cookie->id_lang, 'category');
+		$title = '';
+		$keywords = '';
+
+		if (is_array($filter_block['title_values']))
+			foreach ($filter_block['title_values'] as $key => $val)
+			{
+				$title .= ' > '.$key.' '.implode('/', $val);
+				$keywords .= $key.' '.implode('/', $val).', ';
+			}
+
+		$title = $category_title.$title;
+
+		if (!empty($title))
+			$meta_title = $title;
+		else
+			$meta_title = $category_metas['meta_title'];
+
+		$meta_description = $category_metas['meta_description'];
+
+		$keywords = substr(strtolower($keywords), 0, 1000);
+		if (!empty($keywords))
+			$meta_keywords = rtrim($category_title.', '.$keywords.', '.$category_metas['meta_keywords'], ', ');
 
 		$smarty->assign(
 			array(
@@ -3006,7 +3025,11 @@ class BlockLayered extends Module
 		'filtersBlock' => utf8_encode($this->generateFiltersBlock($selected_filters)),
 		'productList' => utf8_encode($product_list),
 		'pagination' => $smarty->fetch(_PS_THEME_DIR_.'pagination.tpl'),
-		'categoryCount' => $category_count));
+		'categoryCount' => $category_count,
+		'meta_title' => $meta_title.' - '.Configuration::get('PS_SHOP_NAME'),
+		'heading' => $meta_title,
+		'meta_keywords' => $meta_keywords,
+		'meta_description' => $meta_description));
 	}
 	
 	public function getProducts($selected_filters, &$products, &$nb_products, &$p, &$n, &$pages_nb, &$start, &$stop, &$range)
