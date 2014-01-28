@@ -37,6 +37,9 @@ class AdminLoginControllerCore extends AdminController
 		$this->meta_title = $this->l('Administration panel');
 
 		parent::__construct();
+
+		if (!headers_sent())
+			header('Login: true');
 	}
 
 	public function setMedia()

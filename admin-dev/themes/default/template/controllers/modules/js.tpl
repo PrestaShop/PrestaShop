@@ -107,8 +107,10 @@
 			{
 				resAjax = $.ajax({
 					type:"POST",
-					url : $(this).attr('href'),
+					url : $(this).attr('href')+'&rand=' + new Date().getTime(),
+					headers: {"cache-control": "no-cache"},
 					async: true,
+					cache: false,
 					data : {
 						ajax : "1",
 						token : token,
@@ -118,7 +120,10 @@
 					beforeSend: function(xhr){
 						$('#moduleContainer').html('<img src="../img/loader.gif" alt="" border="0" />');
 					},
-					success: function(data){
+					success: function(data, status, request){
+						if (request.getResponseHeader('Login') === 'true')
+							return window.location.reload();
+
 						$('#moduleContainer').html(data);
 						$('.dropdown-toggle').dropdown();
 					}
@@ -134,7 +139,9 @@
 			resAjax = $.ajax({
 				type:"POST",
 				url: ajaxCurrentIndex,
+				headers: {"cache-control": "no-cache"},
 				async: true,
+				cache: false,
 				data: {
 					ajaxMode : "1",
 					ajax : "1",
