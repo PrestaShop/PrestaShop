@@ -130,6 +130,10 @@ class ThemeConfigurator extends Module
 
 		for ($i = 1; $i < 6; $i++)
 		{
+			$sizes = @getimagesize((dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'banner-img'.(int)$i.'.jpg'));
+			$width = (isset($sizes[0]) && $sizes[0])? (int)$sizes[0] : 0;
+			$height = (isset($sizes[1]) && $sizes[1])? (int)$sizes[1] : 0;
+
 			$result &= Db::getInstance()->Execute('
 				INSERT INTO `'._DB_PREFIX_.'themeconfigurator` ( 
 						`id_shop`, `id_lang`, `item_order`, `title`, `title_use`, `hook`, `url`, `target`, `image`, `image_w`, `image_h`, `html`, `active`
@@ -142,9 +146,9 @@ class ThemeConfigurator extends Module
 					\'home\',
 					\'\',
 					\'0\',
-					\'banner-img'.$i.'.jpg\',
-					\'\',
-					\'\',
+					\'banner-img'.(int)$i.'.jpg\',
+					'.$width.',
+					'.$height.',
 					\'\',
 					1)
 				');
@@ -152,6 +156,10 @@ class ThemeConfigurator extends Module
 
 		for ($i = 6; $i < 8; $i++)
 		{
+			$sizes = @getimagesize((dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'banner-img'.(int)$i.'.jpg'));
+			$width = (isset($sizes[0]) && $sizes[0]) ? (int)$sizes[0] : 0;
+			$height = (isset($sizes[1]) && $sizes[1]) ? (int)$sizes[1] : 0;
+
 			$result &= Db::getInstance()->Execute('
 				INSERT INTO `'._DB_PREFIX_.'themeconfigurator` ( 
 						`id_shop`, `id_lang`, `item_order`, `title`, `title_use`, `hook`, `url`, `target`, `image`, `image_w`, `image_h`, `html`, `active`
@@ -164,9 +172,9 @@ class ThemeConfigurator extends Module
 					\'top\',
 					\'\',
 					\'0\',
-					\'banner-img'.$i.'.jpg\',
-					\'\',
-					\'\',
+					\'banner-img'.(int)$i.'.jpg\',
+					'.$width.',
+					'.$height.',
 					\'\',
 					1)
 				');
