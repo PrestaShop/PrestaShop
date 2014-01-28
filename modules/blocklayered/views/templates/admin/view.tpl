@@ -5,6 +5,22 @@
 <div id="ajax-message-ko" class="error ajax-message alert alert-danger" style="display: none">
 	<span class="message"></span>
 </div>
+{if !empty($limit_warning)}
+	<div class="error">
+		{if $limit_warning['error_type'] == 'suhosin'}
+			{l s='Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:'}
+
+			<b>{$limit_warning['post.max_vars']}</b> {l s='for suhosin.post.max_vars.'}<br/>
+			<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
+			{l s='Please ask your hosting provider to increase the Suhosin limit to'}
+		{else}
+			{l s='Warning! Your PHP configuration limits the maximum number of fields allowed in a form:'}<br/>
+			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
+			{l s='Please ask your hosting provider to increase this limit to'}
+		{/if}
+		{l s='%s at least, or you will have to edit the translation files manually.' sprintf=$limit_warning['needed_limit']}
+	</div>
+{/if}
 <fieldset>
 	<legend><img src="{$uri}/img/cogs.gif" alt="{l s='Indexes and caches' mod='blocklayered'}" /> {l s='Indexes and caches' mod='blocklayered'}</legend>
 	<div id="indexing-warning" class="alert alert-warning" style="display: none">
@@ -61,7 +77,9 @@
 					<td class="center">{(int)$template['n_categories']}</td>
 					<td>{Tools::displayDate($template['date_add'],null , true)}</td>
 					<td class="text-right">
+						{if empty($limit_warning)}
 						<a href="{$current_url}&edit_filters_template=1&id_layered_filter={(int)$template['id_layered_filter']}" class="btn btn-default"><img src="{$uri}img/edit.gif" alt="{l s='Edit' mod='blocklayered'}" />{l s='Edit' mod='blocklayered'}</a> 
+						{/if}
 						<a href="{$current_url}&deleteFilterTemplate=1&id_layered_filter={(int)$template['id_layered_filter']}"
 						onclick="return confirm('{l s='Do you really want to delete this filter template' mod='blocklayered'}');"><img src="{$uri}img/cross.png" alt="{l s='Delete' mod='blocklayered'}" />{l s='Delete' mod='blocklayered'}</a>
 					</td>
@@ -74,9 +92,11 @@
 	{else}
 		<div class="info">{l s='No filter template found.' mod='blocklayered'}</div>
 	{/if}
+	{if empty($limit_warning)}
 	<div class="row">
 		<a href="{$current_url}&add_new_filters_template=1" class="button">{l s='Add new filters template' mod='blocklayered'}</a>
 	</div>
+	{/if}
 </fieldset>
 <div class="clearfix">&nbsp;</div>
 <fieldset>
