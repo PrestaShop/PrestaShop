@@ -448,8 +448,8 @@ class HomeSlider extends Module
 				foreach($slides as &$slide)
 				{
 					$slide['sizes'] = @getimagesize((dirname(__FILE__).DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$slide['image']));
-					if (isset($slide['sizes'][3]) && $slide['sizes'][3])
-						$slide['sizes'] = $slide['sizes'][3];
+					if (isset($slide['sizes'][0]) && $slide['sizes'][0])
+						$slide['width'] = $slide['sizes'][0];
 				}
 
 			if (!$slides)
