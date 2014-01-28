@@ -75,6 +75,64 @@ ul.product_list {
 			font-style: italic;
 		}
 	}
+	.functional-buttons {
+		div {
+			a, label {
+				font-weight: bold;
+				color: #777676;
+				cursor: pointer;
+				&:hover { 
+					color: #000;
+				}	
+			}
+			&.wishlist { 
+				border-right: 1px solid $base-border-color;
+				a:before {
+					display: inline-block;
+					font-family: $font-icon;
+					content: "\f08a";
+					margin-right: 3px;
+				}
+				a.checked:before {
+					content: "\f004";  
+				}
+				@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px
+					border-right: 0;
+					a:before {
+						display:none;
+					}
+				}
+				@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
+					border-right: 0;
+					a:before {
+						display:none;
+					}
+				}
+			}
+			&.compare {
+				a {
+					&:before {
+						content: "\f067";
+						display: inline-block;
+						font-family: $font-icon;
+						margin-right: 3px;
+						@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px
+							display: none;
+						}
+	
+						@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
+							display: none;
+						}
+					}
+					&.checked {
+						&:before {
+							content: "\f068";
+						}
+					}	
+				}
+			}
+		}
+	}
 }
 
 /*******************************************************
@@ -170,60 +228,6 @@ ul.product_list.grid {
 					width: 50%;
 					float: left;
 					padding: 3px 0 4px 0;
-					a, label {
-						font-weight: bold;
-						color: #777676;
-						cursor: pointer;
-						&:hover { 
-							color: #000;
-						}	
-					}
-					&.wishlist { 
-						border-right: 1px solid $base-border-color;
-						a:before {
-							display: inline-block;
-							font-family: $font-icon;
-							content: "\f08a";
-							margin-right: 3px;
-						}
-						a.checked:before {
-							content: "\f004";  
-						}
-						@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px
-							border-right: 0;
-							a:before {
-								display:none;
-							}
-						}
-						@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
-							border-right: 0;
-							a:before {
-								display:none;
-							}
-						}
-					}
-					&.compare {
-						a {
-							&:before {
-								content: "\f067";
-								display: inline-block;
-								font-family: $font-icon;
-								margin-right: 3px;
-								@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px
-									display: none;
-								}
-
-								@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
-									display: none;
-								}
-							}
-							&.checked {
-								&:before {
-									content: "\f068";
-								}
-							}	
-						}
-					}
 				}
 			}
 		}
@@ -411,69 +415,16 @@ ul.product_list.list {
 						}
 					}
 					a {
-						font-weight: bold;
-						color: #777676;
 						cursor: pointer;
 					}
 					.wishlist {
-						a:before {
-							content: "\f08a";
-							font-family: $font-icon;
-							width: 30px;
-							height: 30px;
-							font-size: 15px;
-							text-align: center;
-							display: inline-block;
-							background: #929292;
-							color: $light-text-color;
-							padding: 7px 0 0 0;
-							@include border-radius(100px);
-							margin-right: 3px;
-							font-weight: normal;
-							margin-right: 7px;
-						}
-						a:hover {
-							color: $base-text-color;
-							&:before {
-								background: $dark-background;
-							}
-						}
-						a.checked {
-							&:before {
-								content: "\f004";        
-							}
-						}
+						border:none;		
 					}
 					.compare {
 						padding-top: 10px;
 						a {
 							&:before {
-								content: "\f066";
-								display: inline-block;
-								font-family: $font-icon;
-								width: 30px;
-								height: 30px;
-								font-size: 15px;
-								text-align: center;
-								background: #929292;
-								@include border-radius(100px);
-								margin-right: 3px;
-								padding: 6px 0 0 0;
-								color: $light-text-color;
-							}
-							&:hover {
-								color: $base-text-color;
-								&:before {
-									background: $dark-background;	
-								}
-							}
-						}
-						a.checked {
-							&:before {
-								background: $light-background;
-								border: 1px solid #929292;
-								color: #929292;
-								padding-top: 5px;
+								margin-right:10px;	
 							}
 						}
 					}
