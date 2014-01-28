@@ -50,14 +50,14 @@
                     <div class="content_scene_cat_bg" {if $category->id_image}style="background:url({$link->getCatImageLink($category->link_rewrite, $category->id_image, 'category_default')|escape:'html':'UTF-8'}) 0 bottom no-repeat; background-size:contain; min-height:{$categorySize.height}px;" {/if}>
                         {if $category->description}
                             <div class="cat_desc">
-                            <h1 class="category-name">
+                            <span class="category-name">
                                 {strip}
                                     {$category->name|escape:'html':'UTF-8'}
                                     {if isset($categoryNameComplement)}
                                         {$categoryNameComplement|escape:'html':'UTF-8'}
                                     {/if}
                                 {/strip}
-                            </h1>
+                            </span>
                             {if strlen($category->description) > 350}
                                 <div id="category_description_short">{$description_short}</div>
                                 <div id="category_description_full" style="display:none">{$category->description}</div>
