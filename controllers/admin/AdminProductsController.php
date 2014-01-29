@@ -2574,7 +2574,7 @@ class AdminProductsControllerCore extends AdminController
 		// autoload rich text editor (tiny mce)
 		$this->tpl_form_vars['tinymce'] = true;
 		$iso = $this->context->language->iso_code;
-		$this->tpl_form_vars['iso'] = file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
+		$this->tpl_form_vars['iso'] = file_exists(_PS_CORE_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
 		$this->tpl_form_vars['ad'] = dirname($_SERVER['PHP_SELF']);
 
 		if (Validate::isLoadedObject(($this->object)))
