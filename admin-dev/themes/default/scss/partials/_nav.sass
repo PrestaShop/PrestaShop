@@ -15,32 +15,33 @@ $widthSidebarNav: 210px
 			position: relative
 			> a.title
 				display: block
-				height: 35px
+				height: 36px
 				position: relative
-				padding: 0 5px
-				font-size: 12px
-				line-height: 35px
-				font-weight: 400
+				padding: 0 7px
 				color: mix($main-color, contrast-color($main-color, black, white, 50%), 30%)
-				text-transform: uppercase
-				text-decoration: none
 				background-color: $main-color
 				border-bottom: darken($main-color,6%) solid 1px
-				@include text-shadow(rgba(black,0.3) 1px 1px 0)
+				font-family: $font-family-sans-serif
+				font-size: 12px
+				text-transform: uppercase
+				text-decoration: none
 				white-space: nowrap
 				text-overflow: ellipsis
-				//@include box-shadow(darken($main-color,10%) -1px 0 0 inset)
+				@include text-shadow(rgba(black,0.3) 1px 1px 0)
 				@include transition-property(background-color)
 				@include transition-duration(0.4s)
 				@include transition-timing-function(ease-out)
+				span
+					position: relative
+					top: -2px
 				i
+					position: relative
 					display: inline-block
 					height: 30px
 					width: 30px
-					position: relative
-					top: 2px
+					top: 3px
+					margin-right: 6px
 					color: mix($main-color, contrast-color($main-color, black, white, 50%), 60%)
-					//background-color: darken($main-color,25%)
 					font-size: 28px
 					line-height: 30px
 					text-align: center
@@ -127,8 +128,8 @@ $widthSidebarNav: 210px
 		@include transition-timing-function(ease-out)
 		a.title
 			text-align: center
-		span.title
-			display: none
+			> span
+				display: none
 		ul.submenu
 			display: none!important
 			padding-top: 37px
@@ -140,8 +141,8 @@ $widthSidebarNav: 210px
 			a.title
 				text-align: left
 				padding-left: 8px
-			span.title
-				display: inline-block
+				> span
+					display: inline-block
 			ul.submenu
 				position: absolute!important
 				display: block!important

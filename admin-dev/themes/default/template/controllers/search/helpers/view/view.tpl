@@ -172,3 +172,27 @@ $(function() {
 	{/if}
 
 {/if}
+<div class="row">
+	<div class="col-lg-4">
+		<div class="panel">
+			<h3>Recherchez sur Doc.PrestaShop.com</h3>
+			<a href="http://doc.prestashop.com/dosearchsite.action?spaceSearch=true&queryString={$query}" target="_blank" class="btn btn-default">c'est parti !</a>
+		</div>
+	</div>
+	<div class="col-lg-4">
+	<div class="panel">
+		<h3>Recherchez sur Addons.PrestaShop.com</h3>
+		<a href="http://addons.prestashop.com/{$lang_iso}/recherche?search_query={$query}" target="_blank" class="btn btn-default">c'est parti !</a>
+	</div>
+	</div>
+	<div class="col-lg-4">
+	<div class="panel">
+		<h3>Recherchez sur Forum.PrestaShop.com</h3>
+		<a href="https://www.google.fr/search?q=site%3Aprestashop.com%2Fforums%2F+{$query}" target="_blank" class="btn btn-default">c'est parti !</a>
+		</div>
+	</div>
+</div>
+
+
+
+

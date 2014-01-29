@@ -23,6 +23,7 @@ body
 	@include transition-duration(0.4s)
 	@include transition-timing-function(ease-out)
 	.panel
+		position: relative
 		padding: 20px
 		margin-bottom: 20px
 		border: solid 1px darken($bg-content-color,10%)
@@ -30,7 +31,15 @@ body
 		@include border-radius(5px)
 		@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
 		.panel-heading
-			@extend h3
+			font-family: $headings-font-family
+			font-weight: $headings-font-weight
+			font-size: 14px
+			text-overflow: ellipsis
+			white-space: nowrap
+			padding-right: 60px
+			color: #555
+			i
+				font-size: 14px
 		.panel
 			border: solid 1px #CCC
 			@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
@@ -40,13 +49,10 @@ body
 		border: none
 		padding: 0 5px
 		margin: -16px -16px 15px -16px
-		color: contrasted($bg-panel-heading-color)	
 		font-size: 1.2em
 		line-height: 30px
-		font-weight: 300
 		text-transform: uppercase
-		background-color: white
-		border-bottom: solid 1px #ccc
+		border-bottom: solid 1px #EEEEEE
 		i, a
 			color: contrasted($bg-panel-heading-color)
 		.badge
@@ -60,20 +66,21 @@ body
 			font-weight: 700
 			margin-left: 10px
 		.panel-heading-action
-			@extend .pull-right
-			margin-right: -5px
+			position: absolute
+			top: 2px
+			right: 0
 			a.list-toolbar-btn
 				float: left
 				height: 30px
 				width: 30px
-				color: $brand-primary
-				border-left: solid 1px #ccc
+				color: #CCC
+				border-left: solid 1px #eee
 				&:hover
 					text-decoration: none
-					color: black
+					color: $brand-primary
 				i
 					text-align: center
-					font-size: 1.4em
+					font-size: 18px
 					line-height: 30px
 	.panel-danger .panel-heading
 		background-color: $badge-notif-color!important
@@ -81,6 +88,10 @@ body
 		clear: both		
 	@media (max-width: $screen-phone)
 		padding: 80px 5px 0
+	.help-block
+		font-style: italic
+	.nav.nav-tabs li.active a
+		z-index: 99
 
 //data-focus
 .data-focus
@@ -107,7 +118,7 @@ body.display-modal
 .bootstrap
 	input[type="text"],input[type="search"],input[type="password"], textarea, select
 		@extend .form-control
-		
+
 //panels
 .bootstrap
 	.panel
@@ -115,7 +126,7 @@ body.display-modal
 			margin: 15px -20px -20px
 			height: 73px
 			border-color: #eee
-			background-color: white
+			background-color: #FCFDFE
 			.btn.pull-right:not(:first-child)
 				margin-right: 5px
 #header

@@ -23,7 +23,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-			</table>
+				</table>
+			</div>
 			<div class="row">
 				<div class="col-lg-8">
 				{if $bulk_actions}
@@ -138,6 +139,7 @@
 	</tr>
 </table>
 </div>
+
 <input type="hidden" name="token" value="{$token}" />
 </form>
 
