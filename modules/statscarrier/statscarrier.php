@@ -29,10 +29,8 @@ if (!defined('_PS_VERSION_'))
 
 class StatsCarrier extends ModuleGraph
 {
-	private $_html = '';
-	private $_query = '';
-	private $_query2 = '';
-	private $_option = '';
+	private $html = '';
+	private $option = '';
 
 	public function __construct()
 	{
@@ -64,8 +62,8 @@ class StatsCarrier extends ModuleGraph
 		$states = OrderState::getOrderStates($this->context->language->id);
 
 		if (Tools::getValue('export'))
-				$this->csvExport(array('type' => 'pie', 'option' => Tools::getValue('id_order_state')));
-		$this->_html = '
+			$this->csvExport(array('type' => 'pie', 'option' => Tools::getValue('id_order_state')));
+		$this->html = '
 			<div class="panel-heading">
 				'.$this->displayName.'
 			</div>
@@ -74,9 +72,9 @@ class StatsCarrier extends ModuleGraph
 					<div class="col-lg-5 col-lg-offset-6">
 						<select name="id_order_state">
 							<option value="0"'.((!Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$this->l('All').'</option>';
-				foreach ($states as $state)
-					$this->_html .= '<option value="'.$state['id_order_state'].'"'.(($state['id_order_state'] == Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$state['name'].'</option>';
-				$this->_html .= '</select>
+		foreach ($states as $state)
+			$this->html .= '<option value="'.$state['id_order_state'].'"'.(($state['id_order_state'] == Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$state['name'].'</option>';
+		$this->html .= '</select>
 					</div>
 					<div class="col-lg-1">
 						<input type="submit" name="submitState" value="'.$this->l('Filter').'" class="btn btn-default pull-right" />
@@ -90,7 +88,10 @@ class StatsCarrier extends ModuleGraph
 			<div class="row row-margin-bottom">
 				<div class="col-lg-12">
 					<div class="col-lg-8">
-						'.($result['total'] ? $this->engine(array('type' => 'pie', 'option' => Tools::getValue('id_order_state'))).'
+						'.($result['total'] ? $this->engine(array(
+					'type' => 'pie',
+					'option' => Tools::getValue('id_order_state')
+				)).'
 					</div>
 					<div class="col-lg-4">
 						<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language" class="btn btn-default">
@@ -99,23 +100,24 @@ class StatsCarrier extends ModuleGraph
 					</div>
 				</div>
 			</div>';
-		return $this->_html;
+
+		return $this->html;
 	}
 
 	public function setOption($option, $layers = 1)
 	{
-		$this->_option = (int)$option;
+		$this->option = (int)$option;
 	}
 
 	protected function getData($layers)
 	{
-		$stateQuery = '';
-		if ((int)$this->_option)
-			$stateQuery = 'AND (
+		$state_query = '';
+		if ((int)$this->option)
+			$state_query = 'AND (
 				SELECT oh.id_order_state FROM `'._DB_PREFIX_.'order_history` oh
 				WHERE o.id_order = oh.id_order
 				ORDER BY oh.date_add DESC, oh.id_order_history DESC
-				LIMIT 1) = '.(int)$this->_option;
+				LIMIT 1) = '.(int)$this->option;
 		$this->_titles['main'] = $this->l('Percentage of orders listed by carrier.');
 
 		$sql = 'SELECT c.name, COUNT(DISTINCT o.`id_order`) as total
@@ -123,7 +125,7 @@ class StatsCarrier extends ModuleGraph
 				LEFT JOIN `'._DB_PREFIX_.'orders` o ON o.id_carrier = c.id_carrier
 				WHERE o.`date_add` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
-					'.$stateQuery.'
+					'.$state_query.'
 				GROUP BY c.`id_carrier`';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		foreach ($result as $row)
