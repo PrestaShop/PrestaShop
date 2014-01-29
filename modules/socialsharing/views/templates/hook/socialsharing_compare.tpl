@@ -24,7 +24,7 @@
 *}
 {if $PS_SC_TWITTER || $PS_SC_FACEBOOK || $PS_SC_GOOGLE || $PS_SC_PINTEREST}
 	<div id="social-share-compare">
-		<p>{l s="Share this comparison whith your friends:"}</p>
+		<p>{l s="Share this comparison with your friends:" mod='socialsharing'}</p>
 		<p class="socialsharing_product">
 			{if $PS_SC_TWITTER}
 				<button type="button" class="btn btn-default btn-block btn-twitter" onclick="socialsharing_twitter_click({if isset($product)}'{$product->name|addslashes} {$link->getProductLink($product)|addslashes}'{/if});">
