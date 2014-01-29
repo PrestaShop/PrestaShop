@@ -10,7 +10,7 @@ PrestaShop is a free and open-source e-commerce web application, committed to pr
 ABOUT THIS REPOSITORY
 --------
 
-This repository contains the latest version of PrestaShop currenly in development: version 1.6. This means that clicking the "Download ZIP" button from the root of this repository will download the current state of PrestaShop 1.6 -- a branch that is currently under development, and not for production use. You can learn more about the upcoming features of version 1.6 by going to [the progress page][1].
+This repository contains the latest version of PrestaShop currently in development: version 1.6. This means that clicking the "Download ZIP" button from the root of this repository will download the current state of PrestaShop 1.6 -- a branch that is currently under development, and not for production use. You can learn more about the upcoming features of version 1.6 by going to [the progress page][1].
 
 If you want to download the latest stable version of PrestaShop (currently v1.5.6), you need to go to [the download page][2] on the official PrestaShop site.
 
