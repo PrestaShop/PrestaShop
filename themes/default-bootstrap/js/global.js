@@ -41,8 +41,6 @@ $(document).ready(function(){
 		window.scrollTo(0,1);
 	}
 
-	$('#home-page-tabs li:first, #index .tab-content ul:first').addClass('active');
-
 	if (typeof page_name != 'undefined' && !in_array(page_name, ['index', 'product']))
 	{
 		var view = $.totalStorage('display');
