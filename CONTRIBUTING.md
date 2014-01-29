@@ -11,7 +11,7 @@ To contribute to the  project, you should ideally be familiar with Git, the sour
 
 Contributors should follow the following process:
 
-1. Create your Github account
+1. Create your Github account.
 2. Fork the project.
 3. Create a branch in your fork for your changes.
 4. Change the files on your branch. Be sure to follow the [the coding standards][1].
