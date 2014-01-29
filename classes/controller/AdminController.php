@@ -1450,7 +1450,11 @@ class AdminControllerCore extends Controller
 			$this->context->smarty->assign('conf', $this->json ? Tools::jsonEncode($this->_conf[(int)$conf]) : $this->_conf[(int)$conf]);
 
 		foreach (array('errors', 'warnings', 'informations', 'confirmations') as $type)
+		{
+			if (!is_array($this->$type))
+				$this->$type = (array)$this->$type;
 			$this->context->smarty->assign($type, $this->json ? Tools::jsonEncode(array_unique($this->$type)) : array_unique($this->$type));
+		}
 
 		if ($this->show_page_header_toolbar && !$this->lite_display)
 			$this->context->smarty->assign(array(
