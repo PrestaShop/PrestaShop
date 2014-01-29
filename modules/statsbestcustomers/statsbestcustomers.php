@@ -29,13 +29,13 @@ if (!defined('_PS_VERSION_'))
 
 class StatsBestCustomers extends ModuleGrid
 {
-	private $_html;
-	private $_query;
-	private $_columns;
-	private $_defaultSortColumn;
-	private $_defaultSortDirection;
-	private $_emptyMessage;
-	private $_pagingMessage;
+	private $html;
+	private $query;
+	private $columns;
+	private $default_sort_column;
+	private $default_sort_direction;
+	private $empty_message;
+	private $paging_message;
 
 	public function __construct()
 	{
@@ -44,17 +44,17 @@ class StatsBestCustomers extends ModuleGrid
 		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-		
+
 		parent::__construct();
-		
-		$this->_defaultSortColumn = 'totalMoneySpent';
-		$this->_defaultSortDirection = 'DESC';
-		$this->_emptyMessage = $this->l('Empty recordset returned');
-		$this->_pagingMessage = sprintf($this->l('Displaying %1$s of %2$s'), '{0} - {1}', '{2}');
+
+		$this->default_sort_column = 'totalMoneySpent';
+		$this->default_sort_direction = 'DESC';
+		$this->empty_message = $this->l('Empty recordset returned');
+		$this->paging_message = sprintf($this->l('Displaying %1$s of %2$s'), '{0} - {1}', '{2}');
 
 		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-		
-		$this->_columns = array(
+
+		$this->columns = array(
 			array(
 				'id' => 'lastname',
 				'header' => $this->l('Last Name'),
@@ -104,18 +104,18 @@ class StatsBestCustomers extends ModuleGrid
 
 	public function hookAdminStatsModules($params)
 	{
-		$engineParams = array(
+		$engine_params = array(
 			'id' => 'id_customer',
 			'title' => $this->displayName,
-			'columns' => $this->_columns,
-			'defaultSortColumn' => $this->_defaultSortColumn,
-			'defaultSortDirection' => $this->_defaultSortDirection,
-			'emptyMessage' => $this->_emptyMessage,
-			'pagingMessage' => $this->_pagingMessage
+			'columns' => $this->columns,
+			'defaultSortColumn' => $this->default_sort_column,
+			'defaultSortDirection' => $this->default_sort_direction,
+			'emptyMessage' => $this->empty_message,
+			'pagingMessage' => $this->paging_message
 		);
 		if (Tools::getValue('export'))
-			$this->csvExport($engineParams);
-		$this->_html = '
+			$this->csvExport($engine_params);
+		$this->html = '
 		<div class="panel-heading">
 			'.$this->displayName.'
 		</div>
@@ -133,16 +133,17 @@ class StatsBestCustomers extends ModuleGrid
 					'.$this->l('These operations encourage clients to buy products and visit your oneline store more regularly.').'
 				</p>
 			</div>
-		'.$this->engine($engineParams).'
+		'.$this->engine($engine_params).'
 		<a class="btn btn-default export-csv" href="'.htmlentities($_SERVER['REQUEST_URI']).'&export=1">
 			<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
 		</a>';
-		return $this->_html;
+
+		return $this->html;
 	}
 
 	public function getData()
 	{
-		$this->_query = '
+		$this->query = '
 		SELECT SQL_CALC_FOUND_ROWS c.`id_customer`, c.`lastname`, c.`firstname`, c.`email`,
 			COUNT(co.`id_connections`) as totalVisits,
 			IFNULL((
@@ -165,16 +166,16 @@ class StatsBestCustomers extends ModuleGrid
 		LEFT JOIN `'._DB_PREFIX_.'connections` co ON g.`id_guest` = co.`id_guest`
 		WHERE co.date_add BETWEEN '.$this->getDate()
 			.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c').
-		'GROUP BY c.`id_customer`, c.`lastname`, c.`firstname`, c.`email`';
+			'GROUP BY c.`id_customer`, c.`lastname`, c.`firstname`, c.`email`';
 		if (Validate::IsName($this->_sort))
 		{
-			$this->_query .= ' ORDER BY `'.$this->_sort.'`';
+			$this->query .= ' ORDER BY `'.$this->_sort.'`';
 			if (isset($this->_direction) && Validate::isSortDirection($this->_direction))
-				$this->_query .= ' '.$this->_direction;
+				$this->query .= ' '.$this->_direction;
 		}
 		if (($this->_start === 0 || Validate::IsUnsignedInt($this->_start)) && Validate::IsUnsignedInt($this->_limit))
-			$this->_query .= ' LIMIT '.$this->_start.', '.($this->_limit);
-		$this->_values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query);
+			$this->query .= ' LIMIT '.$this->_start.', '.($this->_limit);
+		$this->_values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query);
 		$this->_totalCount = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()');
 	}
 }
