@@ -92,7 +92,10 @@ class AdminBackupControllerCore extends AdminController
 		if ($object->id)
 			$this->tpl_view_vars = array('url_backup' => $object->getBackupURL());
 		else if ($object->error)
+		{
 			$this->errors[] = $object->error;
+			$this->tpl_view_vars = array('errors' => $this->errors);
+		}
 
 		return parent::renderView();
 	}
@@ -143,9 +146,13 @@ class AdminBackupControllerCore extends AdminController
 	 */
 	protected function loadObject($opt = false)
 	{
-		if ($id = Tools::getValue($this->identifier))
+		if (($id = Tools::getValue($this->identifier)) && PrestaShopBackup::backupExist($id))
 			return new $this->className($id);
-		return new $this->className();
+
+		$obj = new $this->className();
+		$obj->error = Tools::displayError('The backup file does not exist');
+
+		return $obj;
 	}
 
 	public function postProcess()
