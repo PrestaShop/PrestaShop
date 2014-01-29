@@ -42,7 +42,7 @@
 	</section>
 	<section>
 		<nav>
-			<ul class="nav nav-tabs">
+			<ul class="nav nav-pills">
 				<li class="active">
 					<a href="#dash_recent_orders" data-toggle="tab">
 						<i class="icon-fire"></i>
@@ -71,7 +71,7 @@
 		</nav>
 		<div class="tab-content panel">
 			<div class="tab-pane  active" id="dash_recent_orders">
-				<h3>{l s='Last %d orders:' sprintf=$DASHPRODUCT_NBR_SHOW_LAST_ORDER|intval mod='dashproducts'}</h3>
+				<h3>{l s='Last %d orders' sprintf=$DASHPRODUCT_NBR_SHOW_LAST_ORDER|intval mod='dashproducts'}</h3>
 				<table class="table data_table" id="table_recent_orders">
 					<thead>
 					</thead>
@@ -80,7 +80,8 @@
 				</table>
 			</div>
 			<div class="tab-pane" id="dash_best_sellers">
-				<h3>{l s='Top %d products:' sprintf=$DASHPRODUCT_NBR_SHOW_BEST_SELLER|intval mod='dashproducts'} - {l s="From" mod='dashproducts'} {$date_from} {l s="to" mod='dashproducts'} {$date_to}</h3>
+				<h3>{l s='Top %d products' sprintf=$DASHPRODUCT_NBR_SHOW_BEST_SELLER|intval mod='dashproducts'}
+				<span class="badge">{l s="From" mod='dashproducts'} {$date_from} {l s="to" mod='dashproducts'} {$date_to}</span></h3>
 				<table class="table data_table" id="table_best_sellers">
 					<thead>
 					</thead>
@@ -89,7 +90,8 @@
 				</table>
 			</div>
 			<div class="tab-pane" id="dash_most_viewed">
-				<h3>{l s="Most Viewed" mod='dashproducts'} - {l s="From" mod='dashproducts'} {$date_from} {l s="to" mod='dashproducts'} {$date_to}</h3>
+				<h3>{l s="Most Viewed" mod='dashproducts'}
+				<span class="badge">{l s="From" mod='dashproducts'} {$date_from} {l s="to" mod='dashproducts'} {$date_to}</span></h3>
 				<table class="table data_table" id="table_most_viewed">
 					<thead>
 					</thead>
@@ -98,7 +100,8 @@
 				</table>
 			</div>
 			<div class="tab-pane" id="dash_top_search">
-				<h3>{l s='Top %d most search terms:' sprintf=$DASHPRODUCT_NBR_SHOW_TOP_SEARCH|intval mod='dashproducts'} - {l s="From" mod='dashproducts'} {$date_from} {l s="to" mod='dashproducts'} {$date_to}</h3>
+				<h3>{l s='Top %d most search terms' sprintf=$DASHPRODUCT_NBR_SHOW_TOP_SEARCH|intval mod='dashproducts'}
+				<span class="badge">{l s="From" mod='dashproducts'} {$date_from} {l s="to" mod='dashproducts'} {$date_to}</span></h3>
 				<table class="table data_table" id="table_top_10_most_search">
 					<thead>
 					</thead>

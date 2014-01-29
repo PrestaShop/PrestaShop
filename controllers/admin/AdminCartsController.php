@@ -66,9 +66,9 @@ class AdminCartsControllerCore extends AdminController
 				'callback' => 'getOrderTotalUsingTaxCalculationMethod',
 				'orderby' => false,
 				'search' => false,
-				'align' => 'right',
-				'prefix' => '<b>',
-				'suffix' => '</b>',
+				'align' => 'text-right',
+				'prefix' => '<span class="badge">',
+				'suffix' => '</span>',
 			),
 			'carrier' => array(
 				'title' => $this->l('Carrier'),

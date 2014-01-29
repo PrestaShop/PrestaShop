@@ -532,8 +532,8 @@ class AdminGroupsControllerCore extends AdminController
 		$group = new Group($tr['id_group']);
 		if (!Validate::isLoadedObject($group))
 			return;
-		return '<a class="label '.($group->show_prices ? 'label-success' : 'label-warning').'" href="index.php?tab=AdminGroups&id_group='.(int)$group->id.'&changeShowPricesVal&token='.Tools::getAdminTokenLite('AdminGroups').'">
-				'.($group->show_prices ? '<i class="icon-check-sign"></i> '.$this->l('Yes') : '<i class="icon-ban-circle"></i> '.$this->l('No')).
+		return '<a class="list-action-enable'.($group->show_prices ? ' action-enabled' : ' action-disabled').'" href="index.php?tab=AdminGroups&id_group='.(int)$group->id.'&changeShowPricesVal&token='.Tools::getAdminTokenLite('AdminGroups').'">
+				'.($group->show_prices ? '<i class="icon-check"></i>' : '<i class="icon-remove"></i>').
 			'</a>';
 	}
 

@@ -281,22 +281,7 @@ $(document).ready(function() {
 		window.open(
 			url,
 			'PrestaShop',
-			'width=500,height=600,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=10,top=10'
+			'width=500,height=600,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=50,top=50'
 		)
 	});
-
-	WebFontConfig = {
-		google: { families: [ 'Open+Sans::latin' ] }
-	};
-	
-	(function() {
-		var wf = document.createElement('script');
-		wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
-			'://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-		wf.type = 'text/javascript';
-		wf.async = 'true';
-		var s = document.getElementsByTagName('script')[0];
-		s.parentNode.insertBefore(wf, s);
-	})();
-
 });

@@ -95,7 +95,7 @@
 						<i class="icon-chevron-left"></i>
 						{l s='Prev'}
 						</a>
-					{l s='Order'} : <strong>#{$order->id} - {$order->reference}</strong>
+					{l s='Order'} <span class="badge">#{$order->id}</span> <span class="badge">{$order->reference}</span>
 					<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$nextOrder}" {if !$nextOrder}disabled{/if}>
 						{l s='Next'}
 						<i class="icon-chevron-right"></i>
@@ -373,15 +373,21 @@
 				{if $customer->id}
 				<h3>
 					<i class="icon-user"></i>
-					{l s='Customer'} :
-					<a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}">
-						{if Configuration::get('PS_B2B_ENABLE')}{$customer->company} - {/if}
-						{$gender->name|escape:'html':'UTF-8'}
-						{$customer->firstname}
-						{$customer->lastname}
-					</a>
-					({l s='#'}{$customer->id}) - 
-					<a href="mailto:{$customer->email}">{$customer->email}</a>
+					{l s='Customer'}
+					<span class="badge">
+						<a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}">
+							{if Configuration::get('PS_B2B_ENABLE')}{$customer->company} - {/if}
+							{$gender->name|escape:'html':'UTF-8'}
+							{$customer->firstname}
+							{$customer->lastname}
+						</a>
+					</span>
+					<span class="badge">
+						{l s='#'}{$customer->id}
+					</span>
+					<span class="badge">
+						<a href="mailto:{$customer->email}">{$customer->email}</a>
+					</span>
 				</h3>
 				{if ($customer->isGuest())}
 					{l s='This order has been placed by a guest.'}
