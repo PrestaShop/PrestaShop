@@ -55,22 +55,6 @@
 					</a>
 				</p>*}
 				<div class="block_content">
-					<!-- block summary -->
-					<div id="cart_block_summary" class="{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded' || !$ajax_allowed || !isset($colapseExpandStatus)}collapsed{else}expanded{/if}">
-						<span class="ajax_cart_quantity" {if $cart_qties <= 0}style="display:none;"{/if}>{$cart_qties}</span>
-						<span class="ajax_cart_product_txt_s" {if $cart_qties <= 1}style="display:none"{/if}>{l s='Products' mod='blockcart'}</span>
-						<span class="ajax_cart_product_txt" {if $cart_qties > 1}style="display:none"{/if}>{l s='Product' mod='blockcart'}</span>
-						<span class="ajax_cart_total" {if $cart_qties == 0}style="display:none"{/if}>
-							{if $cart_qties > 0}
-								{if $priceDisplay == 1}
-									{convertPrice price=$cart->getOrderTotal(false)}
-								{else}
-									{convertPrice price=$cart->getOrderTotal(true)}
-								{/if}
-							{/if}
-						</span>
-						<span class="ajax_cart_no_product" {if $cart_qties != 0}style="display:none"{/if}>{l s='(empty)' mod='blockcart'}</span>
-					</div>
 					<!-- block list of products -->
 					<div id="cart_block_list" class="{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded' || !$ajax_allowed || !isset($colapseExpandStatus)}expanded{else}collapsed{/if}">
 						{if $products}
