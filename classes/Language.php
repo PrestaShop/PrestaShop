@@ -839,6 +839,24 @@ class LanguageCore extends ObjectModel
 			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 			$gz = new Archive_Tar($file, true);
 			$files_list = AdminTranslationsController::filterTranslationFiles(Language::getLanguagePackListContent($iso, $gz));
+
+			if (defined('_PS_HOST_MODE_'))
+			{
+				$mails_files = array();
+				$other_files = array();
+
+				foreach ($files_list as $key => $data)
+					if (substr($data['filename'], 0, 5) == 'mails')
+						$mails_files[] = $data;
+					else
+						$other_files[] = $data;
+
+				$files_list = $other_files;
+
+				if (!$gz->extractList(AdminTranslationsController::filesListToPaths($mails_files), _PS_CORE_DIR_))
+					$errors[] = Tools::displayError('Cannot decompress the translation mail file for the following language:').' '.(string)$iso;
+			}
+
 			if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../'))
 				$errors[] = Tools::displayError('Cannot decompress the translation file for the following language:').' '.(string)$iso;
 			// Clear smarty modules cache
