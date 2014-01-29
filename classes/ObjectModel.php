@@ -1112,6 +1112,9 @@ abstract class ObjectModelCore
  							);
 			}
 			$resource_parameters['fields'][$field_name] = array_merge($resource_parameters['fields'][$field_name], $current_field);
+
+			if (isset($details['ws_modifier']))
+				$resource_parameters['fields'][$field_name]['modifier'] = $details['ws_modifier'];
 		}
 		if (isset($this->date_add))
 			$resource_parameters['fields']['date_add']['setter'] = false;

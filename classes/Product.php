@@ -301,7 +301,17 @@ class ProductCore extends ObjectModel
 			'meta_description' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 			'meta_keywords' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 			'meta_title' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-			'link_rewrite' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
+			'link_rewrite' =>	array(
+				'type' => self::TYPE_STRING, 
+				'lang' => true, 
+				'validate' => 'isLinkRewrite', 
+				'required' => true, 
+				'size' => 128,
+				'ws_modifier' => array(
+					'http_method' => WebserviceRequest::HTTP_POST,
+					'modifier' => 'modifierWsLinkRewrite'
+				)
+			),
 			'name' => 						array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 128),
 			'description' => 				array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
 			'description_short' => 			array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
@@ -5466,6 +5476,22 @@ class ProductCore extends ObjectModel
 			Product::PTYPE_VIRTUAL => 'virtual',
 		);
 		return $type_information[$this->getType()];
+	}
+	
+	/* 
+		Create the link rewrite if not exists or invalid on product creation
+	*/
+	public function modifierWsLinkRewrite()
+	{
+		foreach ($this->name as $id_lang => $name)
+		{
+			if (empty($this->link_rewrite[$id_lang]))
+				$this->link_rewrite[$id_lang] = Tools::link_rewrite($name);
+			elseif (!Validate::isLinkRewrite($this->link_rewrite[$id_lang]))
+				$this->link_rewrite[$id_lang] = Tools::link_rewrite($this->link_rewrite[$id_lang]);
+		}
+
+		return true;
 	}
 
 	public function getWsProductBundle()
