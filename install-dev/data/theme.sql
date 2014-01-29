@@ -111,7 +111,7 @@ WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksear
 AND id_hook = @id_hook;
 
 UPDATE `PREFIX_hook_module` SET position = 2
-WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockuserinfo')
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcart')
 AND id_hook = @id_hook;
 
 UPDATE `PREFIX_hook_module` SET position = 3
@@ -119,22 +119,18 @@ WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocktopm
 AND id_hook = @id_hook;
 
 UPDATE `PREFIX_hook_module` SET position = 4
-WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcart')
-AND id_hook = @id_hook;
-
-UPDATE `PREFIX_hook_module` SET position = 5
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'homeslider')
 AND id_hook = @id_hook;
 
-UPDATE `PREFIX_hook_module` SET position = 6
+UPDATE `PREFIX_hook_module` SET position = 5
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'themeconfigurator')
 AND id_hook = @id_hook;
 
-UPDATE `PREFIX_hook_module` SET position = 7
+UPDATE `PREFIX_hook_module` SET position = 6
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockwhislist')
 AND id_hook = @id_hook;
 
-UPDATE `PREFIX_hook_module` SET position = 8
+UPDATE `PREFIX_hook_module` SET position = 7
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockbanner')
 AND id_hook = @id_hook;
 
