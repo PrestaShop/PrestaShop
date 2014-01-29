@@ -93,6 +93,7 @@ class PrestaShopBackupCore
 		}
 		return $backupDir;
 	}
+
 	/**
 	 * Get the full path of the backup file
 	 *
@@ -118,6 +119,21 @@ class PrestaShopBackupCore
 		return $backupfile;
 	}
 
+	/**
+	 * Check if a backup file exist
+	 *
+	 * @param string $filename prefix of the backup file (datetime will be the second part)
+	 * @return boolean true if backup file exist
+	 */
+	public static function backupExist($filename)
+	{
+		$backupdir = realpath((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).self::$backupDir);
+
+		if ($backupdir === false)
+			die(Tools::displayError('"Backup" directory does not exist.'));
+
+		return @filemtime($backupdir.DIRECTORY_SEPARATOR.$filename);
+	}
 	/**
 	 * Get the URL used to retreive this backup file
 	 *
