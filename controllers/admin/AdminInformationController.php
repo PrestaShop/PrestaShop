@@ -95,11 +95,6 @@ class AdminInformationControllerCore extends AdminController
 	 */
 	public function getTestResult()
 	{
-		// Functions list to test with 'test_system'
-		// Test to execute (function/args): lets uses the default test
-		$tests = ConfigurationTest::getDefaultTests();
-		$tests_op = ConfigurationTest::getDefaultTestsOp();
-
 		$tests_errors = array(
 			'phpversion' => $this->l('Update your PHP version.'),
 			'upload' => $this->l('Configure your server to allow file uploads.'),
@@ -122,16 +117,26 @@ class AdminInformationControllerCore extends AdminController
 			'gz' => $this->l('Enable GZIP compression on your server.')
 		);
 
-		$params_required_results = ConfigurationTest::check($tests);
-		$params_optional_results = ConfigurationTest::check($tests_op);
+		// Functions list to test with 'test_system'
+		// Test to execute (function/args): lets uses the default test
+		$params_required_results = ConfigurationTest::check(ConfigurationTest::getDefaultTests());
 
-		return array(
+		if (!defined('_PS_HOST_MODE_'))
+			$params_optional_results = ConfigurationTest::check(ConfigurationTest::getDefaultTestsOp());
+
+		$results = array(
 			'failRequired' => in_array('fail', $params_required_results),
-			'failOptional' => in_array('fail', $params_optional_results),
 			'testsErrors' => $tests_errors,
 			'testsRequired' => $params_required_results,
-			'testsOptional' => $params_optional_results,
 		);
+
+		if (!defined('_PS_HOST_MODE_'))
+			$results = array_merge($results, array(
+				'failOptional' => in_array('fail', $params_optional_results),
+				'testsOptional' => $params_optional_results,
+			));
+
+		return $results;
 	}
 
 	public function displayAjaxCheckFiles()
