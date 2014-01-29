@@ -673,7 +673,7 @@ class MediaCore
 	 * @param mixed $js_def
 	 * @return void
 	 */
-	public static function addJsDefL($params, $content, $smarty, &$repeat, $template)
+	public static function addJsDefL($params, $content, $smarty, &$repeat)
 	{
 		if (!$repeat && isset($params) && is_array($params) && Tools::strlen($content))
 			foreach($params as $param)
