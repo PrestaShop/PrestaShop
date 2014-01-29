@@ -157,7 +157,7 @@ class SocialSharing extends Module
 		{
 			$this->context->smarty->assign(array(
 				'cover' => Product::getCover($product->id),
-				'legend' => $product->link_rewrite,
+				'link_rewrite' => $product->link_rewrite,
 			));
 		}
 
