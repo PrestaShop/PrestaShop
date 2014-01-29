@@ -34,7 +34,7 @@
 		<ul class="block_content products-block">
 			{foreach from=$best_sellers item=product name=myLoop}
 			<li class="clearfix">
-				<a class="products-block-image" href="{$product.link|escape:'html'}" title="{$product.legend|escape:'html':'UTF-8'}" class="content_img clearfix">
+				<a href="{$product.link|escape:'html'}" title="{$product.legend|escape:'html':'UTF-8'}" class="products-block-image content_img clearfix">
 					<img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small_default')|escape:'html'}" alt="{$product.legend|escape:'html':'UTF-8'}" />
 				</a>
 				<div class="product-content">
