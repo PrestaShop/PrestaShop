@@ -25,12 +25,12 @@
 */
 
 if (!defined('_PS_VERSION_'))
-    exit;
+	exit;
 
 class SocialSharing extends Module
 {
-	protected static $_networks = array('Facebook', 'Twitter', 'Google', 'Pinterest');
-	protected $_html = '';
+	protected static $networks = array('Facebook', 'Twitter', 'Google', 'Pinterest');
+	protected $html = '';
 
 	public function __construct()
 	{
@@ -38,11 +38,11 @@ class SocialSharing extends Module
 		$this->author = 'PrestaShop';
 		$this->tab = 'advertising_marketing';
 		$this->need_instance = 0;
-		$this->version = '0.9';
+		$this->version = '1';
 		$this->bootstrap = true;
 		$this->_directory = dirname(__FILE__);
 
-		parent::__construct();	
+		parent::__construct();
 
 		$this->displayName = $this->l('Social sharing');
 		$this->description = $this->l('Displays social sharing buttons (Twitter, Facebook, Google+ and Pinterest) on every product page.');
@@ -58,10 +58,10 @@ class SocialSharing extends Module
 		Configuration::updateValue('PS_SC_FACEBOOK', 1);
 		Configuration::updateValue('PS_SC_GOOGLE', 1);
 		Configuration::updateValue('PS_SC_PINTEREST', 1);
-		
+
 		// The module will add a meta in the product page header and add a javascript file
 		$this->registerHook('header');
-		
+
 		// This hook could have been called only from the product page, but it's better to add the JS in all the pages with CCC
 		/*
 			$id_hook_header = Hook::getIdByName('header');
@@ -79,15 +79,16 @@ class SocialSharing extends Module
 		// The module will then be hooked on the product and comparison pages
 		$this->registerHook('displayRightColumnProduct');
 		$this->registerHook('displayCompareExtraInformation');
-		
+
 		return true;
 	}
 
 	public function getConfigFieldsValues()
 	{
 		$values = array();
-		foreach (self::$_networks as $network)
-			$values['PS_SC_'.strtoupper($network)] = (int)Tools::getValue('PS_SC_'.strtoupper($network), Configuration::get('PS_SC_'.strtoupper($network)));
+		foreach (self::$networks as $network)
+			$values['PS_SC_'.Tools::strtoupper($network)] = (int)Tools::getValue('PS_SC_'.Tools::strtoupper($network), Configuration::get('PS_SC_'.Tools::strtoupper($network)));
+
 		return $values;
 	}
 
@@ -95,9 +96,10 @@ class SocialSharing extends Module
 	{
 		if (Tools::isSubmit('submitSocialSharing'))
 		{
-			foreach (self::$_networks as $network)
-				Configuration::updateValue('PS_SC_'.strtoupper($network), (int)Tools::getValue('PS_SC_'.strtoupper($network)));
-			$this->_html .= $this->displayConfirmation($this->l('Settings updated'));
+			foreach (self::$networks as $network)
+				Configuration::updateValue('PS_SC_'.Tools::strtoupper($network), (int)Tools::getValue('PS_SC_'.Tools::strtoupper($network)));
+			$this->html .= $this->displayConfirmation($this->l('Settings updated'));
+			$this->_clearCache('socialsharing.tpl');
 		}
 
 		$helper = new HelperForm();
@@ -107,26 +109,26 @@ class SocialSharing extends Module
 		$helper->tpl_vars = array('fields_value' => $this->getConfigFieldsValues());
 
 		$fields = array();
-		foreach (self::$_networks as $network)
+		foreach (self::$networks as $network)
 			$fields[] = array(
 				'type' => 'switch',
 				'label' => $network,
-				'name' => 'PS_SC_'.strtoupper($network),
+				'name' => 'PS_SC_'.Tools::strtoupper($network),
 				'values' => array(
 					array(
-						'id' => strtolower($network).'_active_on',
+						'id' => Tools::strtolower($network).'_active_on',
 						'value' => 1,
 						'label' => $this->l('Enabled')
 					),
 					array(
-						'id' => strtolower($network).'_active_off',
+						'id' => Tools::strtolower($network).'_active_off',
 						'value' => 0,
 						'label' => $this->l('Disabled')
 					)
 				)
 			);
 
-		return $this->_html.$helper->generateForm(array(
+		return $this->html.$helper->generateForm(array(
 			array(
 				'form' => array(
 					'legend' => array(
@@ -158,6 +160,7 @@ class SocialSharing extends Module
 				'legend' => $product->link_rewrite,
 			));
 		}
+
 		return $this->display(__FILE__, 'socialsharing_header.tpl', $this->getCacheId('socialsharing_header|'.(int)$product->id));
 	}
 
@@ -173,6 +176,7 @@ class SocialSharing extends Module
 				'PS_SC_PINTEREST' => Configuration::get('PS_SC_PINTEREST')
 			));
 		}
+
 		return $this->display(__FILE__, 'socialsharing.tpl', $this->getCacheId());
 	}
 
@@ -192,6 +196,7 @@ class SocialSharing extends Module
 				'PS_SC_PINTEREST' => Configuration::get('PS_SC_PINTEREST')
 			));
 		}
+
 		return $this->display(__FILE__, 'socialsharing_compare.tpl', $this->getCacheId('socialsharing_compare'));
 	}
 
@@ -209,7 +214,7 @@ class SocialSharing extends Module
 	{
 		return $this->displaySocialSharing();
 	}
-	
+
 	public function hookProductFooter($params)
 	{
 		return $this->displaySocialSharing();
@@ -219,7 +224,7 @@ class SocialSharing extends Module
 	{
 		return $this->clearProductHeaderCache($params['object']->id);
 	}
-	
+
 	public function hookActionObjectProductDeleteAfter($params)
 	{
 		return $this->clearProductHeaderCache($params['object']->id);
