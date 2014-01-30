@@ -66,7 +66,7 @@ module_inactive
 						{/if}
 					</td>
 					<td class="fixed-width-xs">
-						<img width="32" alt="{$module->displayName}" title="{$module->displayName}" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}" />
+						<img width="32" alt="{$module->displayName}" title="{$module->displayName}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}" />
 					</td>
 					<td>
 						<div id="anchor{$module->name|ucfirst}" title="{$module->displayName}">

@@ -3266,9 +3266,12 @@ class AdminControllerCore extends Controller
 			$obj = new $module->name();
 		// Fill module data
 		$module->logo = '../../img/questionmark.png';
-		if (file_exists('../modules/'.$module->name.'/logo.gif'))
+
+		if (@filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$module->name
+			.DIRECTORY_SEPARATOR.'logo.gif'))
 			$module->logo = 'logo.gif';
-		if (file_exists('../modules/'.$module->name.'/logo.png'))
+		if (@filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$module->name
+			.DIRECTORY_SEPARATOR.'logo.png'))
 			$module->logo = 'logo.png';
 		$module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back);
 		$link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
