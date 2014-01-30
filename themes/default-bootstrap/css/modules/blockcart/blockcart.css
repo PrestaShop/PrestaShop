@@ -1,6 +1,53 @@
 /*******************************************************************
 					Cart Block Styles
 ********************************************************************/
+#shopping_cart {
+  position: relative;
+  width: 270px;
+  float: right;
+  padding-top: 50px; }
+  @media (max-width: 480px) {
+    #shopping_cart {
+      padding-top: 20px; } }
+  @media (max-width: 1200px) {
+    #shopping_cart {
+      margin: 0 auto;
+      float: none;
+      width: 100%; } }
+  #shopping_cart > a:first-child {
+    padding: 7px 10px 14px 16px;
+    background: #333333;
+    display: block;
+    font-weight: bold;
+    color: #777777;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+    overflow: hidden; }
+    @media (min-width: 768px) and (max-width: 991px) {
+      #shopping_cart > a:first-child span.ajax_cart_product_txt, #shopping_cart > a:first-child span.ajax_cart_product_txt_s {
+        display: none !important; } }
+    #shopping_cart > a:first-child b {
+      color: white;
+      font: 600 18px/22px "Open Sans", sans-serif;
+      padding-right: 5px; }
+    #shopping_cart > a:first-child:before {
+      content: "\f07a";
+      font-family: "FontAwesome";
+      display: inline-block;
+      font-size: 23px;
+      line-height: 23px;
+      color: white;
+      padding-right: 15px; }
+    #shopping_cart > a:first-child:after {
+      content: "\f0d7";
+      font-family: "FontAwesome";
+      display: inline-block;
+      float: right;
+      font-size: 18px;
+      color: #686666;
+      padding: 6px 0 0 0; }
+  #shopping_cart .ajax_cart_total {
+    display: none !important; }
+
 #cart_block #cart_block_list .remove_link {
   position: absolute;
   right: 10px;
@@ -91,14 +138,18 @@
 ********************************************************************/
 #header #cart_block {
   position: absolute;
-  top: 45px;
+  top: 95px;
   right: 0;
-  z-index: 10;
+  z-index: 100;
   display: none;
   height: auto;
   background: #484848;
   color: white;
   width: 270px; }
+  @media (max-width: 480px) {
+    #header #cart_block {
+      top: 65px;
+      width: 100%; } }
   @media (max-width: 1200px) {
     #header #cart_block {
       width: 100%; } }

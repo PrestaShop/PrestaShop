@@ -467,11 +467,11 @@ class MediaCore
 		}
 
 		// get compressed css file infos
-		$version = (float)Configuration::get('PS_CCCCSS_VERSION');
+		$version = (int)Configuration::get('PS_CCCCSS_VERSION');
 		foreach ($compressed_css_files_infos as $media => &$info)
 		{
 			$key = md5($info['key'].$protocol_link);
-			$filename = $cache_path.$key.'_'.$media.'_v'.$version.'.css';
+			$filename = $cache_path.'v_'.$version.'_'.$key.'_'.$media.'.css';
 
 			$info = array(
 				'key' => $key,
@@ -479,26 +479,26 @@ class MediaCore
 			);
 		}
 
-		// aggregate and compress css files content, write new caches files
-		$import_url = array();
-		$flag = 0;
 		foreach ($css_files_by_media as $media => $media_infos)
 		{
-			$cache_filename = $cache_path.$compressed_css_files_infos[$media]['key'].'_'.$media.'_v'.$version.'.css';
 			if ($media_infos['date'] > $compressed_css_files_infos[$media]['date'])
 			{
-				$pattern = '/_v'.preg_quote($version).'\.css$/';
-				$filelist = scandir($cache_path);
-				foreach($filelist as $filename)
-					if (!empty($filename) && $filename[0] != '.' && preg_match($pattern, $filename))
-						@unlink($cache_path.$filename);
-
-				if ($flag++ == 0)
+				if ($compressed_css_files_infos[$media]['date'])
 				{
-					$version = (float)($version + 0.1);
-					Configuration::updateValue('PS_CCCCSS_VERSION', $version);
+					Configuration::updateValue('PS_CCCCSS_VERSION', ++$version);
+					break;
 				}
-				$cache_filename = $cache_path.$compressed_css_files_infos[$media]['key'].'_'.$media.'_v'.$version.'.css';
+			}
+		}
+
+		// aggregate and compress css files content, write new caches files
+		$import_url = array();
+		foreach ($css_files_by_media as $media => $media_infos)
+		{
+			$cache_filename = $cache_path.'v_'.$version.'_'.$compressed_css_files_infos[$media]['key'].'_'.$media.'.css';
+			if ($media_infos['date'] > $compressed_css_files_infos[$media]['date'])
+			{
+				$cache_filename = $cache_path.'v_'.$version.'_'.$compressed_css_files_infos[$media]['key'].'_'.$media.'.css';
 				$compressed_css_files[$media] = '';
 				foreach ($media_infos['files'] as $file_infos)
 				{
@@ -586,22 +586,17 @@ class MediaCore
 
 		// get compressed js file infos
 		$compressed_js_filename = md5($compressed_js_filename);
-		$version = (float)Configuration::get('PS_CCCJS_VERSION');
-		$compressed_js_path = $cache_path.$compressed_js_filename.'_v'.$version.'.js';
+		$version = (int)Configuration::get('PS_CCCJS_VERSION');
+		$compressed_js_path = $cache_path.'v_'.$version.'_'.$compressed_js_filename.'.js';
 		$compressed_js_file_date = file_exists($compressed_js_path) ? @filemtime($compressed_js_path) : 0;
 
 		// aggregate and compress js files content, write new caches files
 		if ($js_files_date > $compressed_js_file_date)
 		{
-			$filelist = scandir($cache_path);
-			$pattern = '/_v'.preg_quote($version).'\.js$/';
-			foreach($filelist as $filename)
-				if (!empty($filename) && preg_match($pattern, $filename))
-					@unlink($cache_path.$filename);
+			if ($compressed_js_file_date)
+				Configuration::updateValue('PS_CCCJS_VERSION', ++$version);
 
-			$version = (float)($version + 0.1);
-			Configuration::updateValue('PS_CCCJS_VERSION', $version);
-			$compressed_js_path = $cache_path.$compressed_js_filename.'_v'.$version.'.js';
+			$compressed_js_path = $cache_path.'v_'.$version.'_'.$compressed_js_filename.'.js';
 			$content = '';
 			foreach ($js_files_infos as $file_infos)
 			{
@@ -639,6 +634,11 @@ class MediaCore
 				foreach (scandir($dir) as $file)
 					if ($file[0] != '.' && $file != 'index.php')
 						Tools::deleteFile($dir.DIRECTORY_SEPARATOR.$file, array('index.php'));
+
+		$version = (int)Configuration::get('PS_CCCJS_VERSION');
+		Configuration::updateValue('PS_CCCJS_VERSION', ++$version);
+		$version = (int)Configuration::get('PS_CCCCSS_VERSION');
+		Configuration::updateValue('PS_CCCCSS_VERSION', ++$version);
 	}
 
 	public static function getJsDef()

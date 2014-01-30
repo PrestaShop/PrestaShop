@@ -26,7 +26,7 @@
 
 <tr>
 	<td class="fixed-width-sm center">
-		<img class="img-thumbnail" alt="{$module->name}" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}">
+		<img class="img-thumbnail" alt="{$module->name}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}">
 	</td>
 	<td>
 		<div id="anchor{$module->name|ucfirst}">

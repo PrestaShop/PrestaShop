@@ -64,7 +64,7 @@ module_inactive
 						{/if}
 					</td>
 					<td class="fixed-width-xs">
-						<img width="32" alt="{$module->displayName}" title="{$module->displayName}" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}" />
+						<img width="32" alt="{$module->displayName}" title="{$module->displayName}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}" />
 					</td>
 					<td>
 						<div id="anchor{$module->name|ucfirst}" title="{$module->displayName}">
@@ -76,7 +76,7 @@ module_inactive
 								{$module->displayName}
 								<small class="text-muted">v{$module->version} - by {$module->author}</small>
 								{if isset($module->type) && $module->type == 'addonsMustHave'}
-									- <a href="#" class="module-badge-popular help-tooltip text-primary" data-title="{l s=""}"><i class="icon-group"></i> <small>{l s="Popular"}</small></a>
+									- <a href="#" class="module-badge-popular help-tooltip text-primary" data-title="{l s="This module is available on PrestaShop Addons"}"><i class="icon-group"></i> <small>{l s="Popular"}</small></a>
 								{elseif isset($module->type) && $module->type == 'addonsPartner'}
 									- <a href="#" class="module-badge-partner help-tooltip text-warning" data-title="{l s="This module is available for free thanks to our partner."}"><i class="icon-pushpin"></i> <small>{l s="Partner"}</small></a>
 								{elseif isset($module->id) && $module->id gt 0}

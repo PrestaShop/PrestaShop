@@ -40,7 +40,7 @@ class ControllerFactoryCore
 
 		if (!class_exists($className, false))
 		{
-			require_once(_PS_ROOT_DIR_.'/controllers/'.$className.'.php');
+			require_once(_PS_CORE_DIR_.'/controllers/'.$className.'.php');
 			if (file_exists(_PS_ROOT_DIR_.'/override/controllers/'.$className.'.php'))
 				require_once(_PS_ROOT_DIR_.'/override/controllers/'.$className.'.php');
 			else
