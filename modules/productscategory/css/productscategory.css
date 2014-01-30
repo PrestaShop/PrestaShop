@@ -40,7 +40,7 @@ h2.productscategory_h2 {
 }
 
 #productscategory_scroll_left, #productscategory_scroll_right {
-	background: url('img/thumbs_left.gif') no-repeat center;
+	background: url('../img/thumbs_left.gif') no-repeat center;
 	text-indent: -3000px;
 	display: block;
 	width: 9px;
@@ -49,4 +49,4 @@ h2.productscategory_h2 {
 	margin-top: 30px;
 }
 
-#productscategory_scroll_right { background-image: url('img/thumbs_right.gif'); }
+#productscategory_scroll_right { background-image: url('../img/thumbs_right.gif'); }

@@ -374,7 +374,7 @@ class AdminControllerCore extends Controller
 
 		$this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 		
-		$this->admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
+		$this->admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
 		$this->admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $this->admin_webpath);
 	}
 
@@ -1450,7 +1450,11 @@ class AdminControllerCore extends Controller
 			$this->context->smarty->assign('conf', $this->json ? Tools::jsonEncode($this->_conf[(int)$conf]) : $this->_conf[(int)$conf]);
 
 		foreach (array('errors', 'warnings', 'informations', 'confirmations') as $type)
+		{
+			if (!is_array($this->$type))
+				$this->$type = (array)$this->$type;
 			$this->context->smarty->assign($type, $this->json ? Tools::jsonEncode(array_unique($this->$type)) : array_unique($this->$type));
+		}
 
 		if ($this->show_page_header_toolbar && !$this->lite_display)
 			$this->context->smarty->assign(array(
@@ -3262,9 +3266,12 @@ class AdminControllerCore extends Controller
 			$obj = new $module->name();
 		// Fill module data
 		$module->logo = '../../img/questionmark.png';
-		if (file_exists('../modules/'.$module->name.'/logo.gif'))
+
+		if (@filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$module->name
+			.DIRECTORY_SEPARATOR.'logo.gif'))
 			$module->logo = 'logo.gif';
-		if (file_exists('../modules/'.$module->name.'/logo.png'))
+		if (@filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$module->name
+			.DIRECTORY_SEPARATOR.'logo.png'))
 			$module->logo = 'logo.png';
 		$module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back);
 		$link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);

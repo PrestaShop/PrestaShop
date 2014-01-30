@@ -5,6 +5,22 @@
 <div id="ajax-message-ko" class="error ajax-message alert alert-danger" style="display: none">
 	<span class="message"></span>
 </div>
+{if !empty($limit_warning)}
+	<div class="alert alert-danger">
+		{if $limit_warning['error_type'] == 'suhosin'}
+			{l s='Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:'}
+
+			<b>{$limit_warning['post.max_vars']}</b> {l s='for suhosin.post.max_vars.'}<br/>
+			<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
+			{l s='Please ask your hosting provider to increase the Suhosin limit to'}
+		{else}
+			{l s='Warning! Your PHP configuration limits the maximum number of fields allowed in a form:'}<br/>
+			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
+			{l s='Please ask your hosting provider to increase this limit to'}
+		{/if}
+		{l s='%s at least, or you will have to edit the translation files manually.' sprintf=$limit_warning['needed_limit']}
+	</div>
+{/if}
 <div class="panel">
 	<h3><i class="icon-cogs"></i> {l s='Indexes and caches' mod='blocklayered'}</h3>
 	<div id="indexing-warning" class="alert alert-warning" style="display: none">
@@ -61,6 +77,7 @@
 					<td class="center">{(int)$template['n_categories']}</td>
 					<td>{Tools::displayDate($template['date_add'],null , true)}</td>
 					<td>
+						{if empty($limit_warning)}
 						<div class="btn-group-action">
 							<div class="btn-group pull-right">
 								<a href="{$current_url}&edit_filters_template=1&id_layered_filter={(int)$template['id_layered_filter']}" class="btn btn-default">
@@ -79,6 +96,7 @@
 								</ul>
 							</div>
 						</div>
+						{/if}
 					</td>
 				</tr>
 				{/foreach}
@@ -89,9 +107,11 @@
 	{else}
 		<div class="row alert alert-warning">{l s='No filter template found.' mod='blocklayered'}</div>
 	{/if}
+	{if empty($limit_warning)}
 	<div class="panel-footer">
 		<a class="btn btn-default pull-right" href="{$current_url}&add_new_filters_template=1"><i class="process-icon-plus"></i> {l s='Add new template' mod='blocklayered'}</a>
 	</div>
+	{/if}
 </div>
 <div class="panel">
 	<h3><i class="icon-cogs"></i> {l s='Configuration' mod='blocklayered'}</h3>

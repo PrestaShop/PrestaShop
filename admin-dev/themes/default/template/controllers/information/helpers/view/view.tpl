@@ -26,6 +26,7 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
+	{if !$smarty.const._PS_HOST_MODE_}
 	<script type="text/javascript">
 		$(document).ready(function()
 		{
@@ -67,6 +68,7 @@
 			});
 		});
 	</script>
+	{/if}
 	<div class="row">
 		<div class="col-lg-6">
 			<div class="panel">
@@ -204,25 +206,28 @@
 					{/foreach}
 				</ul>
 				{/if}
-				<p>
-					<strong>{l s='Optional parameters'}:</strong>
-				{if !$failOptional}
-					<span class="text-success">{l s='OK'}</span>
-				</p>
-				{else}
-					<span class="text-success">{l s='Please fix the following error(s)'}</span>
-				</p>
-				<ul>
-					{foreach from=$testsOptional item='value' key='key'}
-						{if $value eq 'fail'}
-							<li>{$key}</li>
-						{/if}
-					{/foreach}
-				</ul>
+				{if isset($failOptional)}
+					<p>
+						<strong>{l s='Optional parameters'}:</strong>
+					{if !$failOptional}
+						<span class="text-success">{l s='OK'}</span>
+					</p>
+					{else}
+						<span class="text-success">{l s='Please fix the following error(s)'}</span>
+					</p>
+					<ul>
+						{foreach from=$testsOptional item='value' key='key'}
+							{if $value eq 'fail'}
+								<li>{$key}</li>
+							{/if}
+						{/foreach}
+					</ul>
+					{/if}
 				{/if}
 			</div>
 		</div>
 	</div>
+	{if !$smarty.const._PS_HOST_MODE_}
 	<div class="panel">
 		<h3>
 			<i class="icon-info"></i> 
@@ -230,4 +235,5 @@
 		</h3>
 		<div id="changedFiles"><i class="icon-spin icon-refresh"></i> {l s='Checking files...'}</div>
 	</div>
+	{/if}
 {/block}

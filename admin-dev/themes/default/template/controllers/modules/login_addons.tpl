@@ -49,7 +49,7 @@
 		{else}
 			<!--start addons login-->
 			<div class="panel-heading">
-				<i class="icon-user"></i>
+				<i class="icon-puzzle-piece"></i>
 				<a target="_blank" href="http://addons.prestashop.com/">PrestaShop Addons</a>
 			</div>
 			<form id="addons_login_form" method="post" >

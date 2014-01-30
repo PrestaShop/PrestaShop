@@ -121,7 +121,7 @@ class AdminShopControllerCore extends AdminController
 
 			$this->toolbar_btn['new'] = array(
 				'desc' => $this->l('Add new shop'),
-				'href' => $this->context->link->getAdminLink('AdminShop').'&amp;add'.$this->table.'&amp;id_shop_group='
+				'href' => $this->context->link->getAdminLink('AdminShop').'&add'.$this->table.'&id_shop_group='
 					.$this->id_shop_group,
 			);
 		}

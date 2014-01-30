@@ -1,6 +1,5 @@
 //DASHBOARD
 .size_s, .size_md, .size_l, .size_xl, .size_xxl
-	font-family: $headings-font-family
 .size_s
 	font-size: 1.1em
 .size_md
@@ -11,6 +10,11 @@
 	font-size: 2em
 .size_xxl
 	font-size: 2.3em
+
+.number-monospace
+	font-family: $font-family-mono!important
+	word-spacing: -0.3em
+	font-weight: 200
 
 .color_success
 	color: $brand-success
@@ -40,7 +44,7 @@
 	height: 70px
 
 #dashboard
-	section
+	section > section
 		header
 			padding: 3px 8px
 			margin: 0 0 3px 0
@@ -48,12 +52,12 @@
 			font-size: 1.2em
 			background-color: $brand-primary
 			.small
+				display: block
+				clear: both
 				font-variant: small-cap
 				text-transform: uppercase
-				font-size: 0.7em
-		header.panel-heading
-			color: #555
-		
+				font-size: 0.8em
+				font-family: $font-family-sans-serif
 	.data_list
 		@extend .list-group
 		margin: 0 0 10px 0
@@ -139,11 +143,11 @@
 		header
 			margin-bottom: 0
 		#dashtrends_toolbar
-			margin: 4px -16px
+			margin: 0 -16px 10px
 		dl
 			cursor: pointer
 			margin: 0
-			min-height: 120px
+			min-height: 90px
 			text-align: center
 			background-color: white
 			padding: 10px
@@ -152,12 +156,22 @@
 			&:first-child
 				border-left: none
 			&.active
-				background-color: #eee
+				background-color: $brand-primary
+				@include box-shadow(white 0 0 0 2px inset)
+				dt
+					color: white
+					font-size: 1.2em
+				dd
+					color: white
 		dt
 			text-align: center
 			height: 37px
 			line-height: 1em
-			font: 300 1.1em/120% $headings-font-family
+			font: 400 1.1em/120% $headings-font-family
+		dd
+			span
+				font-size: 0.9em
+				white-space: nowrap
 		svg
 			height: 350px
 
@@ -166,6 +180,10 @@
 			height: 250px
 			
 	#dashproducts
+		nav
+			margin-bottom: 10px
+			font: 400 1.1em/120% $headings-font-family
+			text-transform: uppercase
 
 	#dashaddons
 		background-color: white
@@ -206,6 +224,15 @@
 		.data_chart
 
 		.data_trends
+	.tooltip-panel
+		padding: 10px
+		min-width: 150px
+	.tooltip-panel-heading
+		font: 400 1.2em/#{$line-height-base} $headings-font-family
+		text-align: center
+		margin-bottom: 10px
+		text-transform: uppercase
+		border-bottom: 1px solid #ccc
 
 =animation($name,$value)
 	-webkit-animation-#{$name}: $value

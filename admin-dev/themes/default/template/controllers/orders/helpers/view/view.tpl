@@ -62,22 +62,22 @@
 
 	<div class="panel">
 		<div class="row">
-			<div class="col-lg-3 box-stats color3" >
+			<div class="col-sm-6 col-lg-3 box-stats color3" >
 				<i class="icon-calendar-empty"></i>
 				<span class="title">{l s='Date'}<br /><small>&nbsp;</small></span>
 				<span class="value">{dateFormat date=$order->date_add full=false}</span>
 			</div>
-			<div class="col-lg-3 box-stats color2" >
+			<div class="col-sm-6 col-lg-3 box-stats color2" >
 				<i class="icon-comments"></i>
 				<span class="title">{l s='Messages'}<br /><small>&nbsp;</small></span>
 				<span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}">{sizeof($customer_thread_message)}</a></span>
 			</div>
-			<div class="col-lg-3 box-stats color1" >
+			<div class="col-sm-6 col-lg-3 box-stats color1" >
 				<i class="icon-book"></i>
 				<span class="title">{l s='Products'}<br /><small>&nbsp;</small></span>
 				<span class="value">{sizeof($products)}</span>
 			</div>
-			<div class="col-lg-3 box-stats color4" >
+			<div class="col-sm-6 col-lg-3 box-stats color4" >
 				<i class="icon-money"></i>
 				<span class="title">{l s='Total'}<br /><small>&nbsp;</small></span>
 				<span class="value">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
@@ -90,16 +90,21 @@
 	<div class="row">
 		<div class="col-lg-6">
 			<div class="panel">
-				<h3 class="text-center">
-					<a class="btn btn-default pull-left" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
-						<i class="icon-chevron-left"></i>
-						{l s='Prev'}
+				<h3>
+					<i class="icon-credit-card"></i>
+					{l s='Order'}
+					<span class="badge">#{$order->id}</span>
+					<span class="badge">{$order->reference}</span>
+					<div class="btn-group pull-right">
+						<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
+							<i class="icon-chevron-left"></i>
+							{l s='Prev'}
 						</a>
-					{l s='Order'} : <strong>#{$order->id} - {$order->reference}</strong>
-					<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$nextOrder}" {if !$nextOrder}disabled{/if}>
-						{l s='Next'}
-						<i class="icon-chevron-right"></i>
-					</a> 
+						<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$nextOrder}" {if !$nextOrder}disabled{/if}>
+							{l s='Next'}
+							<i class="icon-chevron-right"></i>
+						</a>
+					</div>
 				</h3>
 				<!-- Orders Actions -->
 				<div class="well">
@@ -373,15 +378,21 @@
 				{if $customer->id}
 				<h3>
 					<i class="icon-user"></i>
-					{l s='Customer'} :
-					<a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}">
-						{if Configuration::get('PS_B2B_ENABLE')}{$customer->company} - {/if}
-						{$gender->name|escape:'html':'UTF-8'}
-						{$customer->firstname}
-						{$customer->lastname}
-					</a>
-					({l s='#'}{$customer->id}) - 
-					<a href="mailto:{$customer->email}">{$customer->email}</a>
+					{l s='Customer'}
+					<span class="badge">
+						<a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}">
+							{if Configuration::get('PS_B2B_ENABLE')}{$customer->company} - {/if}
+							{$gender->name|escape:'html':'UTF-8'}
+							{$customer->firstname}
+							{$customer->lastname}
+						</a>
+					</span>
+					<span class="badge">
+						{l s='#'}{$customer->id}
+					</span>
+					<span class="badge">
+						<a href="mailto:{$customer->email}">{$customer->email}</a>
+					</span>
 				</h3>
 				{if ($customer->isGuest())}
 					{l s='This order has been placed by a guest.'}

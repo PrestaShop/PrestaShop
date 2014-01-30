@@ -1352,6 +1352,7 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['module_name'] = Tools::getValue('module_name');
 		$tpl_vars['page_header_toolbar_title'] = $this->page_header_toolbar_title;
 		$tpl_vars['page_header_toolbar_btn'] = $this->page_header_toolbar_btn;
+		$tpl_vars['modules_uri'] = __PS_BASE_URI__.basename(_PS_MODULE_DIR_);
 
 		if ($this->logged_on_addons)
 		{

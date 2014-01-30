@@ -81,10 +81,10 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-lg-3" id="hookDashboardZoneOne">
+		<div class="col-md-4 col-lg-3" id="hookDashboardZoneOne">
 			{$hookDashboardZoneOne}
 		</div>
-		<div class="col-lg-7" id="hookDashboardZoneTwo">
+		<div class="col-md-8 col-lg-7" id="hookDashboardZoneTwo">
 			{$hookDashboardZoneTwo}
 			<div id="dashaddons" class="row-margin-bottom">
 				<a href="http://addons.prestashop.com/208-dashboards?utm_source=backoffice_dashboard" target="_blank">
@@ -92,8 +92,7 @@
 				</a>
 			</div>
 		</div>
-		<div class="col-lg-2">
-
+		<div class="col-md-12 col-lg-2">
 			<section class="dash_news panel">
 				<h3><i class="icon-rss"></i> PrestaShop News</h3>
 				<div class="dash_news_content"></div>

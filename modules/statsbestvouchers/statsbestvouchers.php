@@ -29,13 +29,13 @@ if (!defined('_PS_VERSION_'))
 
 class StatsBestVouchers extends ModuleGrid
 {
-	private $_html;
-	private $_query;
-	private $_columns;
-	private $_defaultSortColumn;
-	private $_defaultSortDirection;
-	private $_emptyMessage;
-	private $_pagingMessage;
+	private $html;
+	private $query;
+	private $columns;
+	private $default_sort_column;
+	private $default_sort_direction;
+	private $empty_message;
+	private $paging_message;
 
 	public function __construct()
 	{
@@ -44,15 +44,15 @@ class StatsBestVouchers extends ModuleGrid
 		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-		
-		parent::__construct();
-		
-		$this->_defaultSortColumn = 'ca';
-		$this->_defaultSortDirection = 'DESC';
-		$this->_emptyMessage = $this->l('Empty recordset returned.');
-		$this->_pagingMessage = sprintf($this->l('Displaying %1$s of %2$s'), '{0} - {1}', '{2}');
 
-		$this->_columns = array(
+		parent::__construct();
+
+		$this->default_sort_column = 'ca';
+		$this->default_sort_direction = 'DESC';
+		$this->empty_message = $this->l('Empty recordset returned.');
+		$this->paging_message = sprintf($this->l('Displaying %1$s of %2$s'), '{0} - {1}', '{2}');
+
+		$this->columns = array(
 			array(
 				'id' => 'code',
 				'header' => $this->l('Code'),
@@ -90,34 +90,35 @@ class StatsBestVouchers extends ModuleGrid
 
 	public function hookAdminStatsModules($params)
 	{
-		$engineParams = array(
+		$engine_params = array(
 			'id' => 'id_product',
 			'title' => $this->displayName,
-			'columns' => $this->_columns,
-			'defaultSortColumn' => $this->_defaultSortColumn,
-			'defaultSortDirection' => $this->_defaultSortDirection,
-			'emptyMessage' => $this->_emptyMessage,
-			'pagingMessage' => $this->_pagingMessage
+			'columns' => $this->columns,
+			'defaultSortColumn' => $this->default_sort_column,
+			'defaultSortDirection' => $this->default_sort_direction,
+			'emptyMessage' => $this->empty_message,
+			'pagingMessage' => $this->paging_message
 		);
 
 		if (Tools::getValue('export'))
-				$this->csvExport($engineParams);
+			$this->csvExport($engine_params);
 
-		$this->_html = '
+		$this->html = '
 			<div class="panel-heading">
 				'.$this->displayName.'
 			</div>
-			'.$this->engine($engineParams).'
+			'.$this->engine($engine_params).'
 			<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1">
 				<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
 			</a>';
-		return $this->_html;
+
+		return $this->html;
 	}
 
 	public function getData()
 	{
 		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-		$this->_query = 'SELECT SQL_CALC_FOUND_ROWS cr.code, ocr.name, COUNT(ocr.id_cart_rule) as total, ROUND(SUM(o.total_paid_real) / o.conversion_rate,2) as ca
+		$this->query = 'SELECT SQL_CALC_FOUND_ROWS cr.code, ocr.name, COUNT(ocr.id_cart_rule) as total, ROUND(SUM(o.total_paid_real) / o.conversion_rate,2) as ca
 				FROM '._DB_PREFIX_.'order_cart_rule ocr
 				LEFT JOIN '._DB_PREFIX_.'orders o ON o.id_order = ocr.id_order
 				LEFT JOIN '._DB_PREFIX_.'cart_rule cr ON cr.id_cart_rule = ocr.id_cart_rule
@@ -127,14 +128,14 @@ class StatsBestVouchers extends ModuleGrid
 				GROUP BY ocr.id_cart_rule';
 		if (Validate::IsName($this->_sort))
 		{
-			$this->_query .= ' ORDER BY `'.$this->_sort.'`';
-			if (isset($this->_direction) && (strtoupper($this->_direction) == 'ASC' || strtoupper($this->_direction) == 'DESC'))
-				$this->_query .= ' '.pSQL($this->_direction);
+			$this->query .= ' ORDER BY `'.$this->_sort.'`';
+			if (isset($this->_direction) && (Tools::strtoupper($this->_direction) == 'ASC' || Tools::strtoupper($this->_direction) == 'DESC'))
+				$this->query .= ' '.pSQL($this->_direction);
 		}
 		if (($this->_start === 0 || Validate::IsUnsignedInt($this->_start)) && Validate::IsUnsignedInt($this->_limit))
-			$this->_query .= ' LIMIT '.$this->_start.', '.($this->_limit);
+			$this->query .= ' LIMIT '.$this->_start.', '.($this->_limit);
 
-		$values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query);
+		$values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query);
 		foreach ($values as &$value)
 			$value['ca'] = Tools::displayPrice($value['ca'], $currency);
 		$this->_values = $values;

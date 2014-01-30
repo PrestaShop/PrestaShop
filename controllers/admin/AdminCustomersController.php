@@ -111,7 +111,7 @@ class AdminCustomersControllerCore extends AdminController
 				'active' => 'status',
 				'type' => 'bool',
 				'orderby' => false,
-				'filter_key' => 'a!active',
+				'filter_key' => 'a!active'
 			),
 			'newsletter' => array(
 				'title' => $this->l('News.'),
@@ -939,17 +939,17 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function printNewsIcon($value, $customer)
 	{
-		return '<a class="label '.($value ? 'label-success' : 'label-warning').'" href="index.php?tab=AdminCustomers&id_customer='
+		return '<a class="list-action-enable '.($value ? 'action-enabled' : 'action-disabled').'" href="index.php?tab=AdminCustomers&id_customer='
 			.(int)$customer['id_customer'].'&changeNewsletterVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">
-				'.($value ? '<i class="icon-check-sign"></i> '.$this->l('Yes') : '<i class="icon-ban-circle"></i> '.$this->l('No')).
+				'.($value ? '<i class="icon-check"></i>' : '<i class="icon-remove"></i>').
 			'</a>';
 	}
 
 	public function printOptinIcon($value, $customer)
 	{
-		return '<a class="label '.($value ? 'label-success' : 'label-warning').'" href="index.php?tab=AdminCustomers&id_customer='
+		return '<a class="list-action-enable '.($value ? 'action-enabled' : 'action-disabled').'" href="index.php?tab=AdminCustomers&id_customer='
 			.(int)$customer['id_customer'].'&changeOptinVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">
-				'.($value ? '<i class="icon-check-sign"></i> '.$this->l('Yes') : '<i class="icon-ban-circle"></i> '.$this->l('No')).
+				'.($value ? '<i class="icon-check"></i>' : '<i class="icon-ban-circle"></i>').
 			'</a>';
 	}
 

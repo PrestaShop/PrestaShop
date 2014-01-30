@@ -25,7 +25,8 @@
 */
 
 // Include some alias functions
-require_once(dirname(__FILE__).'/alias.php');
-require_once(dirname(__FILE__).'/../classes/PrestaShopAutoload.php');
+require_once(_PS_CONFIG_DIR_.'alias.php');
+require_once(_PS_CLASS_DIR_.'PrestaShopAutoload.php');
 
 spl_autoload_register(array(PrestaShopAutoload::getInstance(), 'load'));
+

@@ -58,7 +58,7 @@ $(document).ready(function()
 		}
 	);
 
-	$("#header #cart_block").appendTo("#header_nav").hover(
+	$("#header #cart_block").hover(
 		function() {
 		},
 		function() {

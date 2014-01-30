@@ -22,17 +22,14 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<!-- Productpaymentlogos module -->
-{if !$content_only}
-</div>
-<div id="product_payment_logos">
-	<div class="box-security">
-    <h5 class="product-heading-h5">{$banner_title}</h5> 
-  	<a href="{$banner_link}" title="{$banner_title}"><img src="{$module_dir}{$banner_img}" alt="{$banner_title}"/></a>                 
-  </div>
-{/if}  
-
-
-
-<!-- /Productpaymentlogos module -->
+<meta property="og:title" content="" />
+<meta property="og:type" content="product" />
+<meta property="og:site_name" content="" />
+<meta property="og:description" content="" />
+<meta property="og:email" content="" />
+<meta property="og:phone_number" content="" />
+<meta property="og:street-address" content="" />
+<meta property="og:locality" content="" />
+<meta property="og:country-name" content="" />
+<meta property="og:postal-code" content="" />
+<meta property="og:image" content="{$link->getImageLink($link_rewrite, $cover.id_image, large_default)}" />

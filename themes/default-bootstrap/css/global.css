@@ -1,4 +1,4 @@
-@charset "CP850";
+@charset "UTF-8";
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -7867,7 +7867,7 @@ div.star.star_hover:after {
 
 #facebook_block h4 {
   padding: 35px 0 0 0;
-  margin: 0 0 26px 0;
+  margin: 0 0 12px 0;
   font: 300 21px/25px "Open Sans", sans-serif;
   color: #6f6d6d; }
   @media (max-width: 991px) {

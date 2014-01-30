@@ -26,6 +26,10 @@
 
 class WebserviceRequestCore
 {
+	const HTTP_GET = 1;
+	const HTTP_POST = 2;
+	const HTTP_PUT = 4;
+	
 	protected $_available_languages = null;
 	/**
 	 * Errors triggered at execution
@@ -1519,6 +1523,14 @@ class WebserviceRequestCore
 						$object->{$fieldName} = (string)$attributes->$fieldName;
 				}
 			}
+
+			// Apply the modifiers if they exist
+			foreach ($this->resourceConfiguration['fields'] as $fieldName => $fieldProperties)
+			{				
+				if (isset($fieldProperties['modifier']) && isset($fieldProperties['modifier']['modifier']) && $fieldProperties['modifier']['http_method'] & constant('WebserviceRequest::HTTP_'.$this->method))
+					$object->{$fieldProperties['modifier']['modifier']}();
+			}
+
 			if (!$this->hasErrors())
 			{
 				if ($i18n && ($retValidateFieldsLang = $object->validateFieldsLang(false, true)) !== true)

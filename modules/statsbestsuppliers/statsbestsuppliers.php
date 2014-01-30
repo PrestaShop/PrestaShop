@@ -29,13 +29,13 @@ if (!defined('_PS_VERSION_'))
 
 class StatsBestSuppliers extends ModuleGrid
 {
-	private $_html = null;
-	private $_query = null;
-	private $_columns = null;
-	private $_defaultSortColumn = null;
-	private $_defaultSortDirection = null;
-	private $_emptyMessage = null;
-	private $_pagingMessage = null;
+	private $html = null;
+	private $query = null;
+	private $columns = null;
+	private $default_sort_column = null;
+	private $default_sort_direction = null;
+	private $empty_message = null;
+	private $paging_message = null;
 
 	public function __construct()
 	{
@@ -47,12 +47,12 @@ class StatsBestSuppliers extends ModuleGrid
 
 		parent::__construct();
 
-		$this->_defaultSortColumn = 'sales';
-		$this->_defaultSortDirection = 'DESC';
-		$this->_emptyMessage = $this->l('Empty record set returned');
-		$this->_pagingMessage = sprintf($this->l('Displaying %1$s of %2$s'), '{0} - {1}', '{2}');
+		$this->default_sort_column = 'sales';
+		$this->default_sort_direction = 'DESC';
+		$this->empty_message = $this->l('Empty record set returned');
+		$this->paging_message = sprintf($this->l('Displaying %1$s of %2$s'), '{0} - {1}', '{2}');
 
-		$this->_columns = array(
+		$this->columns = array(
 			array(
 				'id' => 'name',
 				'header' => $this->l('Name'),
@@ -84,27 +84,27 @@ class StatsBestSuppliers extends ModuleGrid
 
 	public function hookAdminStatsModules($params)
 	{
-		$engineParams = array(
+		$engine_params = array(
 			'id' => 'id_category',
 			'title' => $this->displayName,
-			'columns' => $this->_columns,
-			'defaultSortColumn' => $this->_defaultSortColumn,
-			'defaultSortDirection' => $this->_defaultSortDirection,
-			'emptyMessage' => $this->_emptyMessage,
-			'pagingMessage' => $this->_pagingMessage
+			'columns' => $this->columns,
+			'defaultSortColumn' => $this->default_sort_column,
+			'defaultSortDirection' => $this->default_sort_direction,
+			'emptyMessage' => $this->empty_message,
+			'pagingMessage' => $this->paging_message
 		);
 
 		if (Tools::getValue('export') == 1)
-				$this->csvExport($engineParams);
-		$this->_html = '
+				$this->csvExport($engine_params);
+		$this->html = '
 			<div class="panel-heading">
 				'.$this->displayName.'
 			</div>
-			'.$this->engine($engineParams).'
+			'.$this->engine($engine_params).'
 			<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1">
 				<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
 			</a>';
-		return $this->_html;
+		return $this->html;
 	}
 
 	/**
@@ -128,7 +128,7 @@ class StatsBestSuppliers extends ModuleGrid
 	{
 		$this->_totalCount = $this->getTotalCount();
 
-		$this->_query = 'SELECT s.name, SUM(od.product_quantity) as quantity, ROUND(SUM(od.product_quantity * od.product_price) / o.conversion_rate, 2) as sales
+		$this->query = 'SELECT s.name, SUM(od.product_quantity) as quantity, ROUND(SUM(od.product_quantity * od.product_price) / o.conversion_rate, 2) as sales
 				FROM '._DB_PREFIX_.'order_detail od
 				LEFT JOIN '._DB_PREFIX_.'product p ON p.id_product = od.product_id
 				LEFT JOIN '._DB_PREFIX_.'orders o ON o.id_order = od.id_order
@@ -140,13 +140,13 @@ class StatsBestSuppliers extends ModuleGrid
 				GROUP BY p.id_supplier';
 		if (Validate::IsName($this->_sort))
 		{
-			$this->_query .= ' ORDER BY `'.$this->_sort.'`';
+			$this->query .= ' ORDER BY `'.$this->_sort.'`';
 			if (isset($this->_direction) && Validate::isSortDirection($this->_direction))
-				$this->_query .= ' '.$this->_direction;
+				$this->query .= ' '.$this->_direction;
 		}
 
 		if (($this->_start === 0 || Validate::IsUnsignedInt($this->_start)) && Validate::IsUnsignedInt($this->_limit))
-			$this->_query .= ' LIMIT '.$this->_start.', '.($this->_limit);
-		$this->_values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query);
+			$this->query .= ' LIMIT '.$this->_start.', '.($this->_limit);
+		$this->_values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query);
 	}
 }

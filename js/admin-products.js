@@ -117,7 +117,7 @@ function ProductTabsManager(){
 			data: data,
 			success : function(data)
 			{
-				tab_selector.html(data);
+				tab_selector.html(data).find('.dropdown-toggle').dropdown();
 				tab_selector.removeClass('not-loaded');
 
 				if (selected)
@@ -867,7 +867,7 @@ product_tabs['Associations'] = new function(){
 product_tabs['Attachments'] = new function(){
 	var self = this;
 	this.bindAttachmentEvents = function (){
-		$("#addAttachment").live('click', function() {
+		$("#addAttachment").on('click', function() {
 			$("#selectAttachment2 option:selected").each(function(){
 				var val = $('#arrayAttachments').val();
 				var tab = val.split(',');
@@ -878,7 +878,7 @@ product_tabs['Attachments'] = new function(){
 			});
 			return !$("#selectAttachment2 option:selected").remove().appendTo("#selectAttachment1");
 		});
-		$("#removeAttachment").live('click', function() {
+		$("#removeAttachment").on('click', function() {
 			$("#selectAttachment1 option:selected").each(function(){
 				var val = $('#arrayAttachments').val();
 				var tab = val.split(',');
@@ -908,7 +908,7 @@ product_tabs['Shipping'] = new function(){
 	var self = this;
 
 	this.bindCarriersEvents = function (){
-		$("#addCarrier").live('click', function() {
+		$("#addCarrier").on('click', function() {
 			$('#availableCarriers option:selected').each( function() {
 	                $('#selectedCarriers').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
 	            $(this).remove();
@@ -916,7 +916,7 @@ product_tabs['Shipping'] = new function(){
 	        $('#selectedCarriers option').prop('selected', true);
 		});
 
-		$("#removeCarrier").live('click', function() {
+		$("#removeCarrier").on('click', function() {
 			$('#selectedCarriers option:selected').each( function() {
 	            $('#availableCarriers').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
 	            $(this).remove();
@@ -1023,7 +1023,7 @@ product_tabs['Informations'] = new function(){
 			$('#simple_product').attr('checked', true);
 		}
 
-		$('input[name="type_product"]').live('click', function(e)
+		$('input[name="type_product"]').on('click', function(e)
 		{
 			if ($(this).attr('id') == 'virtual_product' && $('#name_' + id_lang_default).val() == '')
 			{
@@ -1146,7 +1146,7 @@ product_tabs['Pack'] = new function(){
 			$('#ppackdiv').show();
 		}
 
-		$('.delPackItem').live('click', function(){
+		$('.delPackItem').on('click', function(){
 			delPackItem($(this).attr('name'));
 		})
 
@@ -1442,7 +1442,7 @@ product_tabs['Suppliers'] = new function(){
 	};
 
 	this.onReady = function(){
-		$('.supplierCheckBox').live('click', function() {
+		$('.supplierCheckBox').on('click', function() {
 			var check = $(this);
 			var checkbox = $('#default_supplier_'+check.val());
 
@@ -1485,7 +1485,7 @@ product_tabs['VirtualProduct'] = new function(){
 		else
 			$('#is_virtual_file_product').hide();
 
-		$('input[name=is_virtual_file]').live('change', function(e) {
+		$('input[name=is_virtual_file]').on('change', function(e) {
 			if ($(this).val() == 1)
 				$('#is_virtual_file_product').show();
 			else
@@ -1769,13 +1769,13 @@ $(document).ready(function() {
 	tabs_manager.init();
 	updateCurrentText();
 	$("#name_" + id_lang_default + ",#link_rewrite_" + id_lang_default)
-		.live("change", function(e)
+		.on("change", function(e)
 		{
 			$(this).trigger("handleSaveButtons");
 		});
 	// bind that custom event
 	$("#name_" + id_lang_default + ",#link_rewrite_" + id_lang_default)
-		.live("handleSaveButtons", function(e)
+		.on("handleSaveButtons", function(e)
 		{
 			handleSaveButtons()
 		});
