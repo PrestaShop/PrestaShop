@@ -45,7 +45,7 @@ The official PrestaShop documentation is available online [on its own website][6
 CONTRIBUTING
 --------
 
-If you want to contribute to PrestaShop, read the [CONTRIBUTING.md][7] file in this repository.
+If you want to contribute to PrestaShop, read the [CONTRIBUTING.md][7] file in this repository or read the [tutorials about contribution][8] on the documentation site.
 
 
 FORUMS
@@ -62,3 +62,4 @@ Thank you for downloading and using the PrestaShop e-commerce Open-source soluti
 [5]: http://www.prestashop.com/forums/
 [6]: http://doc.prestashop.com
 [7]: CONTRIBUTING.md
+[8]: http://doc.prestashop.com/display/PS16/Contributing+to+PrestaShop
