@@ -2120,9 +2120,8 @@ class CartCore extends ObjectModel
 				foreach ($value['carrier_list'] as $id_carrier => $data)
 				{
 					$total_price_with_tax += $data['price_with_tax'];
-					$total_price_with_tax = (in_array($id_carrier, $free_carriers_rules)) ?  0 : $total_price_with_tax;
 					$total_price_without_tax += $data['price_without_tax'];
-					$total_price_without_tax = (in_array($id_carrier, $free_carriers_rules)) ? 0 : $total_price_without_tax ;
+					$total_price_without_tax_with_rules = (in_array($id_carrier, $free_carriers_rules)) ? 0 : $total_price_without_tax ;
 
 					if (!isset($carrier_collection[$id_carrier]))
 						$carrier_collection[$id_carrier] = new Carrier($id_carrier);
@@ -2137,6 +2136,7 @@ class CartCore extends ObjectModel
 				}
 				$delivery_option_list[$id_address][$key]['total_price_with_tax'] = $total_price_with_tax;
 				$delivery_option_list[$id_address][$key]['total_price_without_tax'] = $total_price_without_tax;
+				$delivery_option_list[$id_address][$key]['is_free'] = !$total_price_without_tax_with_rules ? true : false;
 				$delivery_option_list[$id_address][$key]['position'] = $position / count($value['carrier_list']);
 			}
 
