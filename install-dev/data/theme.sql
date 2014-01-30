@@ -176,6 +176,15 @@ UPDATE `PREFIX_hook_module` SET position = 6
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcontactinfos')
 AND id_hook = @id_hook;
 
+/* displayProductButtons */
+SET @id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayProductButtons');
+UPDATE `PREFIX_hook_module` SET position = 1
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockwishlist')
+AND id_hook = @id_hook;
+UPDATE `PREFIX_hook_module` SET position = 2
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockpaymentlogo')
+AND id_hook = @id_hook;
+
 /* Exceptions for pages without left column */
 SET @id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn');
 INSERT INTO `PREFIX_hook_module_exceptions` (`id_shop`, `id_module`, `id_hook`, `file_name`) (
