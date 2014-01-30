@@ -1698,6 +1698,10 @@ class AdminImportControllerCore extends AdminController
 				if (isset($product->id_category))
 					$product->updateCategories(array_map('intval', $product->id_category));
 
+				$product->checkDefaultAttributes();
+				if (!$product->cache_default_attribute)
+					Product::updateDefaultAttribute($product->id);
+
 				// Features import
 				$features = get_object_vars($product);
 
@@ -2130,7 +2134,7 @@ class AdminImportControllerCore extends AdminController
 
 			$product->checkDefaultAttributes();
 			if (!$product->cache_default_attribute)
-						Product::updateDefaultAttribute($product->id);
+				Product::updateDefaultAttribute($product->id);
 			if ($id_product_attribute)
 			{
 				// now adds the attributes in the attribute_combination table
