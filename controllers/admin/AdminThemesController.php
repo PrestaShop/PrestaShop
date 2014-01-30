@@ -825,11 +825,11 @@ class AdminThemesControllerCore extends AdminController
 		if ($zip->open(_PS_CACHE_DIR_.$zip_file_name, ZipArchive::OVERWRITE) === true)
 		{
 			if (!$zip->addFromString('Config.xml', $this->xml_file))
-				$this->errors[] = $this->l('Cant create config file');
+				$this->errors[] = $this->l('Can\'t create config file.');
 
 			if (isset($_FILES['documentation']))
 				if (!$zip->addFile($_FILES['documentation']['tmp_name'], 'doc/'.$_POST['documentation']['name']))
-					$this->error = $this->l('Cant copy documentation.');
+					$this->error = $this->l('Can\'t copy documentation.');
 
 			$this->archiveThisFile($zip, Tools::getValue('theme_directory'), _PS_ALL_THEMES_DIR_, 'themes/');
 
