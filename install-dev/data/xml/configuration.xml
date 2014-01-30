@@ -691,9 +691,6 @@ Country</value>
     <configuration id="HOMESLIDER_LOOP" name="HOMESLIDER_LOOP">
       <value>1</value>
     </configuration>
-    <configuration id="PS_VERSION_DB" name="PS_VERSION_DB">
-      <value>1.5.6.0</value>
-    </configuration>
     <configuration id="PS_BASE_DISTANCE_UNIT" name="PS_BASE_DISTANCE_UNIT">
       <value>m</value>
     </configuration>
