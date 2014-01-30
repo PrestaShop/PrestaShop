@@ -1,5 +1,4 @@
-<?php
-/*
+{*
 * 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -20,14 +19,19 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2014 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
-*/
-if (!defined('_PS_VERSION_'))
-	exit;
+*}
+<!-- Productpaymentlogos module -->
+{if !$content_only}
+<div id="product_payment_logos">
+	<div class="box-security">
+    <h5 class="product-heading-h5">{$banner_title}</h5> 
+  	<a href="{$banner_link}" title="{$banner_title}"><img src="{$module_dir}{$banner_img}" alt="{$banner_title}"/></a>
+    </div>
+</div>
+{/if}  
 
-function upgrade_module_1_4($object)
-{
-	return ($object->registerHook('addproduct') && $object->registerHook('updateproduct') && $object->registerHook('deleteproduct'));
-}
+
+
+<!-- /Productpaymentlogos module -->

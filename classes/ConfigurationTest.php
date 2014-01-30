@@ -41,7 +41,6 @@ class ConfigurationTestCore
 			'cache_dir' => 'cache',
 			'log_dir' => 'log',
 			'img_dir' => 'img',
-			'mails_dir' => 'mails',
 			'module_dir' => 'modules',
 			'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang/',
 			'theme_pdf_lang_dir' => 'themes/'._THEME_NAME_.'/pdf/lang/',
@@ -62,7 +61,8 @@ class ConfigurationTestCore
 				'gd' => false,
 				'mysql_support' => false,
 				'config_dir' => 'config',
-				'files' => false
+				'files' => false,
+				'mails_dir' => 'mails',
 			));
 
 		return $tests;

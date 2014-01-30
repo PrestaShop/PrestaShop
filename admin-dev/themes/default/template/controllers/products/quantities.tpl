@@ -242,8 +242,8 @@
 			<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right product_quantities_button"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 		</div>
 		<script type="text/javascript">
-			var quantities_ajax_success = '{l s='Data saved' js='1'}';
-			var quantities_ajax_waiting = '{l s='Saving data...' js='1'}';
+			var quantities_ajax_success = '{l s='Data saved' js=1}';
+			var quantities_ajax_waiting = '{l s='Saving data...' js=1}';
 		</script>
 	</div>
 {/if}
