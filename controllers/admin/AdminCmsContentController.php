@@ -312,7 +312,7 @@ class AdminCmsContentControllerCore extends AdminController
 		{
 			if ($id_cms = (int)Tools::getValue('id_cms'))
 			{
-				$bo_cms_url = dirname($_SERVER['PHP_SELF']).'/index.php?tab=AdminCmsContent&id_cms='.(int)$id_cms.'&updatecms&token='.$this->token;
+				$bo_cms_url = _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/index.php?tab=AdminCmsContent&id_cms='.(int)$id_cms.'&updatecms&token='.$this->token;
 
 				if (Tools::getValue('redirect'))
 					die($bo_cms_url);
