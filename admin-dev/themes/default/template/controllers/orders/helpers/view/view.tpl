@@ -92,7 +92,9 @@
 			<div class="panel">
 				<h3>
 					<i class="icon-credit-card"></i>
-					{l s='Order'} <span class="badge">#{$order->id}</span> <span class="badge">{$order->reference}</span>
+					{l s='Order'}
+					<span class="badge">#{$order->id}</span>
+					<span class="badge">{$order->reference}</span>
 					<div class="btn-group pull-right">
 						<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
 							<i class="icon-chevron-left"></i>
