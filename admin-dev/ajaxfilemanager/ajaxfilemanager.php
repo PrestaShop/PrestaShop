@@ -1,8 +1,12 @@
 <?php
+@ini_set('display_errors', 'on');
+@error_reporting(E_ALL | E_STRICT);
 	if (!defined('_PS_ADMIN_DIR_'))
-		define('_PS_ADMIN_DIR_', getcwd());
-	require_once('../../config/config.inc.php');
-	require_once('../init.php');
+		define('_PS_ADMIN_DIR_', getcwd().'/../');
+
+	require_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+	require_once(_PS_ADMIN_DIR_.'/init.php');
+
 	/**
 	 * file manager platform
 	 * @author Logan Cai (cailongqun [at] yahoo [dot] com [dot] cn)
