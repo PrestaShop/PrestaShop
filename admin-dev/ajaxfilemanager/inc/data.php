@@ -1,8 +1,8 @@
 <pre>Array
 (
-    [currentFolderPath] => ../uploaded/
-    [new_folder] => Test
+    [currentFolderPath] => /media/host-1/img/cms/
+    [new_folder] => test
 )
 </pre>
 
-22/Sep/2008 13:17:12
+30/Jan/2014 14:34:27

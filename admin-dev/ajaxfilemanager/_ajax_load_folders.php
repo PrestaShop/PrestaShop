@@ -1,9 +1,9 @@
 <?php
 	require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "inc" . DIRECTORY_SEPARATOR . "config.php");
 	if (!defined('_PS_ADMIN_DIR_'))
-		define('_PS_ADMIN_DIR_', getcwd());
-	require_once('../../config/config.inc.php');
-	require_once('../init.php');
+		define('_PS_ADMIN_DIR_', getcwd().'/../');
+	require_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+	require_once(_PS_ADMIN_DIR_.'/init.php');
 ?>
 <select class="input inputSearch" name="search_folder" id="search_folder">
 	<?php 

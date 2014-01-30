@@ -1,8 +1,8 @@
 <?php
 	if (!defined('_PS_ADMIN_DIR_'))
-		define('_PS_ADMIN_DIR_', getcwd());
-	require_once('../../config/config.inc.php');
-	require_once('../init.php');
+		define('_PS_ADMIN_DIR_', getcwd().'/../');
+	require_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+	require_once(_PS_ADMIN_DIR_.'/init.php');
 	/**
 	 * ajax preview
 	 * @author Logan Cai (cailongqun [at] yahoo [dot] com [dot] cn)
