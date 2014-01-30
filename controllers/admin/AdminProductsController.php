@@ -3195,7 +3195,8 @@ class AdminProductsControllerCore extends AdminController
 		$product->productDownload->is_shareable = $product->productDownload->id > 0 && $product->productDownload->is_shareable;
 
 		$data->assign(array(
-			'ad' => dirname($_SERVER['PHP_SELF']),
+			'ad' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_),
+			'iso_tiny_mce' => $iso_tiny_mce,
 			'product' => $product,
 			'token' => $this->token,
 			'currency' => $currency,
@@ -3532,7 +3533,7 @@ class AdminProductsControllerCore extends AdminController
 				$data->assign(array(
 					'obj' => $obj,
 					'table' => $this->table,
-					'ad' => dirname($_SERVER['PHP_SELF']),
+					'ad' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_),
 					'iso_tiny_mce' => $iso_tiny_mce,
 					'languages' => $this->_languages,
 					'id_lang' => $this->context->language->id,
