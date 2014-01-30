@@ -2574,7 +2574,7 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 
 #header { z-index: 20; }
 
-#header_infos { height: 36px !important; overflow: hidden; }
+#header_infos { height: 36px !important; }
 
 #header_shopname { position: relative; margin: 0 15px 0 0; height: 36px; padding-left: 45px !important; }
 #header_shopname img { position: absolute; top: 0; left: 0; width: 35px; height: 35px; }
@@ -2637,9 +2637,9 @@ a.link-social:hover { text-decoration: none; }
 #nav-sidebar ul.menu li.maintab > a.title { display: block; height: 36px; position: relative; padding: 0 7px; color: #c5c7ca; background-color: #40454f; border-bottom: #32363e solid 1px; font-family: "Open Sans", Helvetica, Arial, sans-serif; font-size: 12px; text-transform: uppercase; text-decoration: none; white-space: nowrap; text-overflow: ellipsis; text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 0; -webkit-transition-property: background-color; transition-property: background-color; -webkit-transition-duration: 0.4s; transition-duration: 0.4s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; }
 #nav-sidebar ul.menu li.maintab > a.title span { position: relative; top: -2px; }
 #nav-sidebar ul.menu li.maintab > a.title i { position: relative; display: inline-block; height: 30px; width: 30px; top: 3px; margin-right: 6px; color: #8c8f95; font-size: 28px; line-height: 30px; text-align: center; -webkit-transition-property: color; transition-property: color; -webkit-transition-duration: 0.4s; transition-duration: 0.4s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; -webkit-border-radius: 30px; -moz-border-radius: 30px; -ms-border-radius: 30px; -o-border-radius: 30px; border-radius: 30px; }
-#nav-sidebar ul.menu li.maintab:hover:not(.active) > a.title { background-color: #292c33; color: white; border-bottom: #1e2025 solid 1px; -webkit-box-shadow: #00aff0 -4px 0 0 0 inset; box-shadow: #00aff0 -4px 0 0 0 inset; }
-#nav-sidebar ul.menu li.maintab:hover:not(.active) > a.title i { color: white; }
-#nav-sidebar ul.menu li.maintab:hover:not(.active) ul.submenu { position: absolute; display: block; width: 200px; z-index: 600; left: 210px; top: -1px; }
+#nav-sidebar ul.menu li.maintab.hover > a.title { background-color: #292c33; color: white; border-bottom: #1e2025 solid 1px; -webkit-box-shadow: #00aff0 -4px 0 0 0 inset; box-shadow: #00aff0 -4px 0 0 0 inset; }
+#nav-sidebar ul.menu li.maintab.hover > a.title i { color: white; }
+#nav-sidebar ul.menu li.maintab.hover ul.submenu { position: absolute; display: block; width: 200px; z-index: 600; left: 210px; top: -1px; }
 #nav-sidebar ul.menu li.maintab.active a.title { color: white; background-color: #626a79; border: none; }
 #nav-sidebar ul.menu li.maintab.active a.title i { color: white; }
 #nav-sidebar ul.menu li.maintab.active ul.submenu { display: block; padding: 8px 11px 8px 8px; background-color: white; border-right: 1px solid #eaddcc; }
@@ -2897,7 +2897,7 @@ a.link-social:hover { text-decoration: none; }
   .bootstrap .prestashop-switch.switch-light input ~ span span:first-of-type { color: #cccccc; }
   .bootstrap .prestashop-switch.switch-light input ~ span span:last-of-type { color: white; } }
 .bootstrap .page-head { width: 100%; height: 55px; padding: 0 0 0 0; margin: 0; border-bottom: 4px solid #71b238; position: fixed; top: 36px; left: 0px; z-index: 499; background-color: #8bc954; -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; }
-.bootstrap .page-head h2.page-title { position: relative; padding: 26px 0 0 280px; margin: 0; font-size: 20px; line-height: 1em; color: white; }
+.bootstrap .page-head h2.page-title { position: relative; padding: 24px 0 0 280px; margin: 0; font: 300 22px/1em "Open Sans", Helvetica, Arial, sans-serif; color: white; }
 @media (max-width: 768px) { .bootstrap .page-head h2.page-title { padding: 26px 0 0 70px; } }
 .bootstrap .page-head h2.page-title a { border-bottom: dotted 1px white; }
 .bootstrap .page-head h2.page-title a:hover { color: black; border-color: black; }
