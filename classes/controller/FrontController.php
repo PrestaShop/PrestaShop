@@ -515,14 +515,16 @@ class FrontControllerCore extends Controller
 	public function display()
 	{
 		Tools::safePostVars();
+		
+		$theme_dir = $this->getThemeDir();
+
 		// Automatically add js files from js/autoload directory in the template
-		foreach (scandir($this->getThemeDir().'js/autoload/', 0) as $file)
-			if (preg_match('/^[^.].*\.js$/', $file))
-				$this->addJS($this->getThemeDir().'js/autoload/'.$file);
+		foreach (glob($theme_dir.'js/autoload/*.js') as $file)
+			$this->addJS($file);
+
 		// Automatically add css files from css/autoload directory in the template
-		foreach (scandir($this->getThemeDir().'css/autoload', 0) as $file)
-			if (preg_match('/^[^.].*\.css$/', $file))
-				$this->addCSS($this->getThemeDir().'css/autoload/'.$file);
+		foreach (glob($theme_dir.'js/autoload/*.css') as $file)
+			$this->addCSS($file);
 
 		// assign css_files and js_files at the very last time
 		if ((Configuration::get('PS_CSS_THEME_CACHE') || Configuration::get('PS_JS_THEME_CACHE')) && is_writable(_PS_THEME_DIR_.'cache'))
