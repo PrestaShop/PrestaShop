@@ -1140,9 +1140,9 @@ class OrderCore extends ObjectModel
 			$order_invoice = new OrderInvoice();
 			$order_invoice->id_order = $this->id;
 			$order_invoice->number = 0;
-			$invoice_address = new Address((int)$this->id_address_invoice);
+			$address = new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 			$carrier = new Carrier((int)$this->id_carrier);
-			$tax_calculator = $carrier->getTaxCalculator($invoice_address);
+			$tax_calculator = $carrier->getTaxCalculator($address);
 
 			$order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
 			$order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
