@@ -48,7 +48,7 @@ $widthSidebarNav: 210px
 					@include transition-duration(0.4s)
 					@include transition-timing-function(ease-out)
 					@include border-radius(30px)
-			&:hover:not(.active)
+			&.hover
 				> a.title
 					background-color: darken($main-color,10%)
 					color: contrast-color($main-color, black, white, 50%)
