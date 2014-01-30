@@ -54,7 +54,7 @@ class AdminLoginControllerCore extends AdminController
 	
 	public function initContent()
 	{
-		if ((empty($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') && Configuration::get('PS_SSL_ENABLED'))
+		if (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
 		{
 			// You can uncomment these lines if you want to force https even from localhost and automatically redirect
 			// header('HTTP/1.1 301 Moved Permanently');
