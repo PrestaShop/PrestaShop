@@ -374,7 +374,7 @@ class AdminControllerCore extends Controller
 
 		$this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 		
-		$this->admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
+		$this->admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
 		$this->admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $this->admin_webpath);
 	}
 
