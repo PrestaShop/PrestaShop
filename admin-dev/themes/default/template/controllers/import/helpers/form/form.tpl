@@ -303,7 +303,7 @@
 				<i class="icon-list-alt"></i>
 				{l s='Available fields'}
 			</h3>
-			<div id="availableFields" class="alert alert-warning">
+			<div id="availableFields" class="alert alert-info">
 				{$available_fields}
 			</div>
 			<p>{l s='* Required field'}</p>
@@ -543,6 +543,7 @@
 						fields += j[i].field;
 	
 					$("#availableFields").html(fields);
+					$('.help-tooltip').tooltip();
 				},
 				error: function(j){}			
 			});
