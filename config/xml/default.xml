@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright Prestashop -->
 <theme version="1.0" name="default-bootstrap" directory="default-bootstrap">
-    <author name="Emilien Puget" email="emilien.puget@prestashop.com" url="http://localhost"/>
+    <author name="PrestaShop" email="contact@prestashop.com" url="http://www.prestashop.com"/>
     <descriptions>
         <description iso="en"></description>
     </descriptions>

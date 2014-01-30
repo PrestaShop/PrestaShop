@@ -62,7 +62,6 @@
 				<label for="{$id_checkbox}" class="control-label">
 					<input type="checkbox" name="{$input.name}[]" id="{$id_checkbox}" value="{$value[$input.values.id]|intval}" {if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
 					{if $value['invoice']}
-						{$value[$input.values.name]}
 						<span class="badge badge-success">
 						{if isset($statusStats[$value['id_order_state']]) && $statusStats[$value['id_order_state']]}
 							{$statusStats[$value['id_order_state']]}
@@ -70,8 +69,8 @@
 							0
 						{/if}
 						</span>
-					{else}
 						{$value[$input.values.name]}
+					{else}
 						<span class="badge badge-error">
 						{if isset($statusStats[$value['id_order_state']]) && $statusStats[$value['id_order_state']]}
 							{$statusStats[$value['id_order_state']]}
@@ -79,6 +78,7 @@
 							0
 						{/if}
 						</span>
+						{$value[$input.values.name]}
 					{/if}
 				</label>
 			</p>

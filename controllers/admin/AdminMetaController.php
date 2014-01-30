@@ -164,13 +164,15 @@ class AdminMetaControllerCore extends AdminController
 						'type' => 'text',
 						'defaultValue' => $this->url->domain_ssl,
 					),
-					'uri' => array(
+				);
+
+				if(!defined('_PS_HOST_MODE_'))
+					$shop_url_options['fields']['uri'] = array(
 						'title' =>	$this->l('Base URI'),
 						'validation' => 'isString',
 						'type' => 'text',
 						'defaultValue' => $this->url->physical_uri,
-					),
-				);
+					);
 				$shop_url_options['submit'] = array('title' => $this->l('Save'));
 			}
 		}
@@ -515,7 +517,9 @@ class AdminMetaControllerCore extends AdminController
 
 		$this->updateOptionDomain(Tools::getValue('domain'));
 		$this->updateOptionDomainSsl(Tools::getValue('domain_ssl'));
-		$this->updateOptionUri(Tools::getValue('uri'));
+
+		if (Tools::getIsset('uri'))
+			$this->updateOptionUri(Tools::getValue('uri'));
 
 		if (Tools::generateHtaccess($this->ht_file, null, null, '', Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS'), false, Tools::getValue('PS_HTACCESS_DISABLE_MODSEC')))
 		{

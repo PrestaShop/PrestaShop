@@ -438,8 +438,22 @@ function reloadContent(params_plus)
 		cache: false, // @todo see a way to use cache and to add a timestamps parameter to refresh cache each 10 minutes for example
 		success: function(result)
 		{
-			$('#layered_block_left').replaceWith(utf8_decode(result.filtersBlock));
+			if (result.meta_description != '')
+				$('meta[name="description"]').attr('content', result.meta_description);
 
+			if (result.meta_keywords != '')
+				$('meta[name="keywords"]').attr('content', result.meta_keywords);
+
+			if (result.meta_title != '')
+				$('title').html(result.meta_title);
+
+			if (result.heading != '')
+			{
+				$('h1.page-heading').html(result.heading);
+				$('span.category-name').html(result.heading);
+			}
+
+			$('#layered_block_left').replaceWith(utf8_decode(result.filtersBlock));
 			$('.category-product-count, .heading-counter').html(result.categoryCount);
 
 			if (result.productList)

@@ -40,14 +40,14 @@
 				<h2>{l s='How do you want to delete these customer(s)?'}</h2>
 				<p>{l s='There are two ways of deleting a customer. Please choose your preferred method.'}</p>
 				<ul class="listForm">
-				<li>
-					<input type="radio" name="deleteMode" value="real" id="deleteMode_real" />
-					<label for="deleteMode_real" style="float:none;">{l s='I want to delete my customer(s) (All data will be removed from the database, and customers with the same e-mail address will be able to re-register.'}</label>
-				</li>
-				<li>
-					<input type="radio" name="deleteMode" value="deleted" id="deleteMode_deleted" />
-					<label for="deleteMode_deleted" style="float:none">{l s='I don\'t want my customer(s) to register again. Therefore, each customer(s) will be removed from this list but all corresponding data will be kept in the database.'}</label>
-				</li>
+					<li>
+						<input type="radio" name="deleteMode" value="real" id="deleteMode_real" />
+						<label for="deleteMode_real" style="float:none;">{l s='I want to delete my customer(s) (All data will be removed from the database, and customers with the same e-mail address will be able to re-register.'}</label>
+					</li>
+					<li>
+						<input type="radio" name="deleteMode" value="deleted" id="deleteMode_deleted" />
+						<label for="deleteMode_deleted" style="float:none">{l s='I don\'t want my customer(s) to register again. Therefore, each customer(s) will be removed from this list but all corresponding data will be kept in the database.'}</label>
+					</li>
 				</ul>
 				{foreach $POST as $key => $value}
 					{if is_array($value)}
@@ -61,7 +61,6 @@
 				<br /><input type="submit" class="button" value="{l s='Delete'}" />
 			</div>
 		</form>
-		<div class="clear">&nbsp;</div>
 		<script>
 			$(document).ready(function() {
 				$('table[name=\'list_table\']').hide();

@@ -119,7 +119,7 @@ class Dashproducts extends Module
 				'id' => 'total_paid',
 				'value' => Tools::displayPrice((float)$order['total_paid'], $currency),
 				'class' => 'text-center',
-				'wrapper_start' => '<span class="label label-success">',
+				'wrapper_start' => '<span class="badge">',
 				'wrapper_end' => '<span>',
 				);
 			$tr[] = array(
@@ -130,7 +130,7 @@ class Dashproducts extends Module
 			$tr[] = array(
 				'id' => 'details',
 				'value' => $this->l('Details'),
-				'class' => 'text-center',
+				'class' => 'text-right',
 				'wrapper_start' => '<a class="btn btn-default" href="index.php?tab=AdminOrders&id_order='.(int)$order['id_order'].'&vieworder&token='.Tools::getAdminTokenLite('AdminOrders').'" title="'.$this->l('Details').'"><i class="icon-search"></i>',
 				'wrapper_end' => '</a>'
 				);

@@ -566,12 +566,11 @@ function updateDisplay()
 
 		if (selectedCombination.specific_price)
 		{
-			if (selectedCombination['specific_price'] && selectedCombination['specific_price'].reduction_type == 'percentage')
-			{
+			if (selectedCombination.specific_price.reduction_percent > 0) {
 				$('#reduction_amount').hide();
 				$('#reduction_percent_display').html('-' + parseFloat(selectedCombination['specific_price'].reduction_percent) + '%');
 				$('#reduction_percent').show();
-			} else if (selectedCombination['specific_price'].reduction_type == 'amount' && selectedCombination['specific_price'].reduction_price != 0) {
+			} else if (selectedCombination.specific_price.reduction_price > 0) {
 				$('#reduction_amount_display').html('-' + formatCurrency(reduction_price, currencyFormat, currencySign, currencyBlank));
 				$('#reduction_percent').hide();
 				$('#reduction_amount').show();
@@ -581,11 +580,11 @@ function updateDisplay()
 			}
 		}
 
-		if (product_specific_price['reduction_type'] != '' || selectedCombination['specific_price'].reduction_type != '')
+		if (product_specific_price['reduction_type'] != '' || selectedCombination.specific_price.reduction_percent > 0 || selectedCombination.specific_price.reduction_price > 0)
 			$('#discount_reduced_price,#old_price').show();
 		else
 			$('#discount_reduced_price,#old_price').hide();
-		if ((product_specific_price['reduction_type'] == 'percentage' && selectedCombination['specific_price'].reduction_type == 'percentage') || selectedCombination['specific_price'].reduction_type == 'percentage')
+		if ((product_specific_price['reduction_type'] == 'percentage' && selectedCombination.specific_price.reduction_percent > 0) || selectedCombination['specific_price'].reduction_type == 'percentage')
 			$('#reduction_percent').show();
 		else
 			$('#reduction_percent').hide();

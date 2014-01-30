@@ -475,3 +475,6 @@
 		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 	</div>
 </div>
+<script type="text/javascript">
+	var missing_product_name = '{l s='Please fill product name input field' js=1}';
+</script>

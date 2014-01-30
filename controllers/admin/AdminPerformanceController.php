@@ -844,11 +844,14 @@ class AdminPerformanceControllerCore extends AdminController
 					elseif ($caching_system == 'CacheXcache' && !ini_get('xcache.var_size'))
 						$this->errors[] = Tools::displayError('To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).').'
 							<a href="http://xcache.lighttpd.net/wiki/XcacheIni">http://xcache.lighttpd.net/wiki/XcacheIni</a>';						
-					elseif ($caching_system == 'CacheFs' && !is_writable(_PS_CACHEFS_DIRECTORY_))
-						$this->errors[] = sprintf(
-							Tools::displayError('To use CacheFS, the directory %s must be writable.'),
-							realpath(_PS_CACHEFS_DIRECTORY_)
-						);
+					elseif ($caching_system == 'CacheFs')
+						if (!is_dir(_PS_CACHEFS_DIRECTORY_))
+							@mkdir(_PS_CACHEFS_DIRECTORY_, 0777, true);
+						elseif  (!is_writable(_PS_CACHEFS_DIRECTORY_))
+							$this->errors[] = sprintf(
+								Tools::displayError('To use CacheFS, the directory %s must be writable.'),
+								realpath(_PS_CACHEFS_DIRECTORY_)
+							);
 
 					if ($caching_system == 'CacheFs')
 					{

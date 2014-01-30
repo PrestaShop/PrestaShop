@@ -39,11 +39,14 @@
 </div>
 <!-- /Block Newsletter module-->
 {strip}
+{if isset($msg) && $msg}
 {addJsDef msg_newsl=$msg|@addcslashes:'\''}
+{/if}
+{if isset($nw_error) && $nw_error}
 {addJsDef nw_error=$nw_error}
-
+{/if}
 {addJsDefL name=placeholder_blocknewsletter}{l s='Enter your e-mail' mod='blocknewsletter' js=1}{/addJsDefL}
-{if $msg}
+{if isset($msg) && $msg}
 	{addJsDefL name=alert_blocknewsletter}{l s='Newsletter : %1$s' sprintf=$msg js=1 mod="blocknewsletter"}{/addJsDefL}
 {/if}
 {/strip}
