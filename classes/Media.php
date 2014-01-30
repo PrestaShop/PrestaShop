@@ -467,11 +467,11 @@ class MediaCore
 		}
 
 		// get compressed css file infos
-		$version = '_v_'.(int)Configuration::get('PS_CCCCSS_VERSION');
+		$version = (int)Configuration::get('PS_CCCCSS_VERSION');
 		foreach ($compressed_css_files_infos as $media => &$info)
 		{
 			$key = md5($info['key'].$protocol_link);
-			$filename = $cache_path.$key.'_'.$media.$version.'.css';
+			$filename = $cache_path.'v_'.$version.'_'.$key.'_'.$media.'.css';
 
 			$info = array(
 				'key' => $key,
@@ -479,14 +479,26 @@ class MediaCore
 			);
 		}
 
+		foreach ($css_files_by_media as $media => $media_infos)
+		{
+			if ($media_infos['date'] > $compressed_css_files_infos[$media]['date'])
+			{
+				if ($compressed_css_files_infos[$media]['date'])
+				{
+					Configuration::updateValue('PS_CCCCSS_VERSION', ++$version);
+					break;
+				}
+			}
+		}
+
 		// aggregate and compress css files content, write new caches files
 		$import_url = array();
 		foreach ($css_files_by_media as $media => $media_infos)
 		{
-			$cache_filename = $cache_path.$compressed_css_files_infos[$media]['key'].'_'.$media.$version.'.css';
+			$cache_filename = $cache_path.'v_'.$version.'_'.$compressed_css_files_infos[$media]['key'].'_'.$media.'.css';
 			if ($media_infos['date'] > $compressed_css_files_infos[$media]['date'])
 			{
-				$cache_filename = $cache_path.$compressed_css_files_infos[$media]['key'].'_'.$media.$version.'.css';
+				$cache_filename = $cache_path.'v_'.$version.'_'.$compressed_css_files_infos[$media]['key'].'_'.$media.'.css';
 				$compressed_css_files[$media] = '';
 				foreach ($media_infos['files'] as $file_infos)
 				{
@@ -574,14 +586,17 @@ class MediaCore
 
 		// get compressed js file infos
 		$compressed_js_filename = md5($compressed_js_filename);
-		$version = '_v_'.(int)Configuration::get('PS_CCCJS_VERSION');
-		$compressed_js_path = $cache_path.$compressed_js_filename.$version.'.js';
+		$version = (int)Configuration::get('PS_CCCJS_VERSION');
+		$compressed_js_path = $cache_path.'v_'.$version.'_'.$compressed_js_filename.'.js';
 		$compressed_js_file_date = file_exists($compressed_js_path) ? @filemtime($compressed_js_path) : 0;
 
 		// aggregate and compress js files content, write new caches files
 		if ($js_files_date > $compressed_js_file_date)
 		{
-			$compressed_js_path = $cache_path.$compressed_js_filename.$version.'.js';
+			if ($compressed_js_file_date)
+				Configuration::updateValue('PS_CCCJS_VERSION', ++$version);
+
+			$compressed_js_path = $cache_path.'v_'.$version.'_'.$compressed_js_filename.'.js';
 			$content = '';
 			foreach ($js_files_infos as $file_infos)
 			{
