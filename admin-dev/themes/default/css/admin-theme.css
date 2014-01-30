@@ -2555,7 +2555,7 @@ body { min-height: 100%; height: 100%; font: 400 12px/1.42857 "Open Sans", Helve
 #content.bootstrap h3:not(.modal-title) .panel-heading-action a.list-toolbar-btn i, #content.bootstrap .panel-heading .panel-heading-action a.list-toolbar-btn i { text-align: center; font-size: 18px; line-height: 30px; }
 #content.bootstrap .panel-danger .panel-heading { background-color: #8bc954 !important; }
 #content.bootstrap form .alert, #content.bootstrap form #carrier_wizard .wizard_error, #content.bootstrap #carrier_wizard form .wizard_error { clear: both; }
-@media (max-width: 480px) { #content.bootstrap { padding: 80px 5px 0; } }
+@media (max-width: 480px) { #content.bootstrap { padding: 80px 5px 0; margin-left: 0 !important; } }
 #content.bootstrap .help-block { font-style: italic; }
 #content.bootstrap .nav.nav-tabs li.active a, #content.bootstrap .nav-tabs#header_notifs_icon_wrapper li.active a, #content.bootstrap .nav-tabs#header_employee_box li.active a, #content.bootstrap .nav-tabs#header_quick li.active a { z-index: 99; }
 
@@ -2574,10 +2574,10 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 
 #header { z-index: 20; }
 
-#header_infos { height: 36px !important; }
+#header_infos { height: 36px !important; overflow: hidden; }
 
 #header_shopname { position: relative; margin: 0 15px 0 0; height: 36px; padding-left: 45px !important; }
-#header_shopname img { position: absolute; top: 0; left: 0; width: 36px; height: 36px; }
+#header_shopname img { position: absolute; top: 0; left: 0; width: 35px; height: 35px; }
 
 #header_notifs_icon_wrapper { height: 36px; }
 #header_notifs_icon_wrapper li a { padding: 0 5px; }
@@ -2631,7 +2631,7 @@ a.link-social:hover { text-decoration: none; }
 .link-google i { color: white; background-color: #e6644e; }
 .link-google i:hover { color: #e6644e; background-color: white; }
 
-#nav-sidebar { position: fixed; width: 210px; height: 100%; z-index: 500; background-color: #292c33; border-right: 1px solid #40454f; }
+#nav-sidebar { position: fixed; width: 210px; height: 100%; z-index: 500; background-color: #292c33; }
 #nav-sidebar ul.menu { margin: 0; padding: 0; list-style: none; }
 #nav-sidebar ul.menu li.maintab { position: relative; }
 #nav-sidebar ul.menu li.maintab > a.title { display: block; height: 36px; position: relative; padding: 0 7px; color: #c5c7ca; background-color: #40454f; border-bottom: #32363e solid 1px; font-family: "Open Sans", Helvetica, Arial, sans-serif; font-size: 12px; text-transform: uppercase; text-decoration: none; white-space: nowrap; text-overflow: ellipsis; text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 0; -webkit-transition-property: background-color; transition-property: background-color; -webkit-transition-duration: 0.4s; transition-duration: 0.4s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; }
@@ -2642,7 +2642,7 @@ a.link-social:hover { text-decoration: none; }
 #nav-sidebar ul.menu li.maintab:hover:not(.active) ul.submenu { position: absolute; display: block; width: 200px; z-index: 600; left: 210px; top: -1px; }
 #nav-sidebar ul.menu li.maintab.active a.title { color: white; background-color: #626a79; border: none; }
 #nav-sidebar ul.menu li.maintab.active a.title i { color: white; }
-#nav-sidebar ul.menu li.maintab.active ul.submenu { display: block; padding: 8px 11px 8px 8px; background-color: white; }
+#nav-sidebar ul.menu li.maintab.active ul.submenu { display: block; padding: 8px 11px 8px 8px; background-color: white; border-right: 1px solid #eaddcc; }
 #nav-sidebar ul.menu li.maintab.active ul.submenu a { background-color: white; color: #00aff0; border-bottom: solid 1px #e6e6e6; }
 #nav-sidebar ul.menu li.maintab.active ul.submenu a:hover { color: #00aff0; border-bottom: solid 1px #d8f3fc; background-color: #d8f3fc; text-decoration: none; -webkit-box-shadow: white 0 -1px; box-shadow: white 0 -1px; }
 #nav-sidebar ul.menu li.maintab.active ul.submenu li:last-child a { border-bottom: solid 1px white; }
@@ -2706,6 +2706,9 @@ a.link-social:hover { text-decoration: none; }
 #nav-mobile .menu-collapse { color: white; position: absolute; width: 50px; height: 37px; line-height: 1.3em; top: 0; right: 0; }
 
 .menu-collapse { cursor: pointer; height: 54px; width: 100%; font-size: 2em; text-align: center; line-height: 55px; display: block; color: #1e2025; }
+
+.mobile-nav #content h2.page-title { padding-left: 10px !important; }
+.mobile-nav #content ul.page-breadcrumb { left: 10px !important; }
 
 .page-topbar #main { padding-top: 64px; }
 .page-topbar #content { margin-left: 0; }
