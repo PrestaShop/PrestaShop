@@ -33,7 +33,7 @@ $(document).ready(function() {
 	if (typeof cart_gift != 'undefined' && cart_gift && $('input#gift').is(':checked'))
 		$('p#gift_div').show();
 
-	$('input[data-js=delivery_option_radio]').on('change', function(){
+	$('input.delivery_option_radio').on('change', function(){
 		var key = $(this).data('key');
 		var id_address = parseInt($(this).data('id_address'));
 		if (orderProcess == 'order' && key && id_address)
