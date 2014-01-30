@@ -49,11 +49,11 @@
 			these two paths accept relative path only, don't use absolute path
 		*/
 	//check if folder exist
-	if (!is_dir('../../img/cms'))
-		mkdir('../../img/cms');
+	if (!is_dir(_PS_ROOT_DIR_.'/img/cms'))
+		mkdir(_PS_ROOT_DIR_.'/img/cms');
 	
-	define('CONFIG_SYS_DEFAULT_PATH', '../../img/cms'); //accept relative path only
-	define('CONFIG_SYS_ROOT_PATH', '../../img/cms');	//accept relative path only
+	define('CONFIG_SYS_DEFAULT_PATH', _PS_ROOT_DIR_.'/img/cms'); //accept relative path only
+	define('CONFIG_SYS_ROOT_PATH', _PS_ROOT_DIR_.'/img/cms');	//accept relative path only
 	define('CONFIG_SYS_FOLDER_SHOWN_ON_TOP', true); //show your folders on the top of list if true or order by name 
 	define("CONFIG_SYS_DIR_SESSION_PATH", 'session/');
 	define("CONFIG_SYS_PATTERN_FORMAT", 'list'); //three options: reg ,csv, list, this option define the parttern format for the following patterns
