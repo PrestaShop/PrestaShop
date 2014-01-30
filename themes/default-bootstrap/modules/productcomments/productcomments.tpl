@@ -60,16 +60,10 @@
 								{if !$comment.customer_advice}
 								<li>
 									{l s='Was this comment useful to you?' mod='productcomments'}
-									<button 
-									class="usefulness_btn btn btn-default button button-small" 
-									data-is-usefull="1" 
-									data-id-product-comment="{$comment.id_product_comment}">
+									<button class="usefulness_btn btn btn-default button button-small" data-is-usefull="1" data-id-product-comment="{$comment.id_product_comment}">
 										<span>{l s='Yes' mod='productcomments'}</span>
 									</button>
-									<button 
-									class="usefulness_btn btn btn-default button button-small" 
-									data-is-usefull="0" 
-									data-id-product-comment="{$comment.id_product_comment}">
+									<button class="usefulness_btn btn btn-default button button-small" data-is-usefull="0" data-id-product-comment="{$comment.id_product_comment}">
 										<span>{l s='No' mod='productcomments'}</span>
 									</button>
 								</li>
@@ -90,10 +84,7 @@
 			{/foreach}
 			{if (!$too_early AND ($logged OR $allow_guests))}
 			<p class="align_center">
-				<a 
-				id="new_comment_tab_btn" 
-				class="btn btn-default button button-small open-comment-form"  
-				href="#new_comment_form">
+				<a id="new_comment_tab_btn" class="btn btn-default button button-small open-comment-form" href="#new_comment_form">
 					<span>{l s='Write your review' mod='productcomments'} !</span>
 				</a>
 			</p>
@@ -101,10 +92,7 @@
 		{else}
 			{if (!$too_early AND ($logged OR $allow_guests))}
 			<p class="align_center">
-				<a 
-				id="new_comment_tab_btn" 
-				class="btn btn-default button button-small open-comment-form" 
-				href="#new_comment_form">
+				<a id="new_comment_tab_btn" class="btn btn-default button button-small open-comment-form" href="#new_comment_form">
 					<span>{l s='Be the first to write your review' mod='productcomments'} !</span>
 				</a>
 			</p>
@@ -125,11 +113,7 @@
 			<div class="row">
 				{if isset($product) && $product}
 					<div class="product clearfix  col-xs-12 col-sm-6">
-						<img 
-						src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home_default')|escape:'html':'UTF-8'}" 
-						height="{$homeSize.height}" 
-						width="{$homeSize.width}" 
-						alt="{$product->name|escape:'html':'UTF-8'}" />
+						<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home_default')|escape:'html':'UTF-8'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:'html':'UTF-8'}" />
 						<div class="product_desc">
 							<p class="product_name">
 								<strong>{$product->name}</strong>
@@ -140,10 +124,7 @@
 				{/if}
 				<div class="new_comment_form_content col-xs-12 col-sm-6">
 					<h2>{l s='Write a review' mod='productcomments'}</h2>
-					<div 
-					id="new_comment_form_error" 
-					class="error" 
-					style="display: none; padding: 15px 25px">
+					<div id="new_comment_form_error" class="error" style="display: none; padding: 15px 25px">
 						<ul></ul>
 					</div>
 					{if $criterions|@count > 0}
@@ -201,7 +182,6 @@
 {addJsDef productcomments_controller_url=$productcomments_controller_url|@addcslashes:'\''}
 {addJsDef moderation_active=$moderation_active|boolval}
 {addJsDef productcomments_url_rewrite=$productcomments_url_rewriting_activated|boolval}
-
 {addJsDef secure_key=$secure_key}
 
 {addJsDefL name=confirm_report_message}{l s='Are you sure you want report this comment?' mod='productcomments' js=1}{/addJsDefL}
