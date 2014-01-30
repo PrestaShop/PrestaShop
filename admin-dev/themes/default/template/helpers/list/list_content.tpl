@@ -95,6 +95,8 @@
 							{else}
 								<img src="../img/admin/{$tr[$key]['src']}" alt="{$tr[$key]['alt']}" title="{$tr[$key]['alt']}" />
 							{/if}
+                        {else}
+                            <i class="{$tr[$key]}"></i>
 						{/if}
 					{elseif isset($params.type) && $params.type == 'price'}
 						{displayPrice price=$tr.$key}
