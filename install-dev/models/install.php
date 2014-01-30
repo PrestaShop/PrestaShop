@@ -187,6 +187,7 @@ class InstallModelInstall extends InstallAbstractModel
 		$flip_languages = array_flip($languages);
 		$id_lang =  (!empty($flip_languages[$this->language->getLanguageIso()])) ? $flip_languages[$this->language->getLanguageIso()] : 1;
 		Configuration::updateGlobalValue('PS_LANG_DEFAULT', $id_lang);
+		Configuration::updateGlobalValue('PS_VERSION_DB', _PS_INSTALL_VERSION_);
 		return true;
 	}
 
