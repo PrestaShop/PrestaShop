@@ -105,6 +105,11 @@
 			</div>
 		</div>
 	</div>
+	<div class="form-group">
+		<div class="col-lg-offset-3">
+			<div class="alert alert-info">{l s='All selected carriers will be available for customers orders.'}</div>
+		</div>
+	</div>
 	<div class="panel-footer">
 		<a href="{$link->getAdminLink('AdminProducts')}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
 		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
