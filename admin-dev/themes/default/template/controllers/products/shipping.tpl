@@ -105,9 +105,9 @@
 			</div>
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group" id="no-selected-carries-alert">
 		<div class="col-lg-offset-3">
-			<div class="alert alert-info">{l s='All selected carriers will be available for customers orders.'}</div>
+			<div class="alert alert-warning">{l s='If no carriers is selected then all carriers will be available for customers orders.'}</div>
 		</div>
 	</div>
 	<div class="panel-footer">

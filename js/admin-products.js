@@ -914,6 +914,11 @@ product_tabs['Shipping'] = new function(){
 	            $(this).remove();
 	        });
 	        $('#selectedCarriers option').prop('selected', true);
+	       
+	       	if ($('#selectedCarriers').find("option").length == 0)
+	       		$('#no-selected-carries-alert').show();
+	       	else
+	       		$('#no-selected-carries-alert').hide();
 		});
 
 		$("#removeCarrier").on('click', function() {
@@ -922,6 +927,11 @@ product_tabs['Shipping'] = new function(){
 	            $(this).remove();
 	        });
 			$('#selectedCarriers option').prop('selected', true);
+
+			if ($('#selectedCarriers').find("option").length == 0)
+	       		$('#no-selected-carries-alert').show();
+	       	else
+	       		$('#no-selected-carries-alert').hide();
 		});
 	};
 
