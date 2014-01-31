@@ -393,11 +393,6 @@ class ThemeConfigurator extends Module
 
 			$new_image = 'image = \''.pSQL($image).'\',';
 		}
-		else
-		{
-			$image_w = '';
-			$image_h = '';
-		}
 
 		if (!Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'themeconfigurator` SET 
@@ -707,12 +702,6 @@ class ThemeConfigurator extends Module
 	protected function getConfigurableModules()
 	{
 		return array(
-			array(
-				'label' => $this->l('Display the reinsurance block'),
-				'name' => 'blockreinsurance',
-				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockreinsurance')) && $module->isEnabledForShopContext(),
-				'is_module' => true,
-			),
 			array(
 				'label' => $this->l('Display the social following links'),
 				'name' => 'blocksocial',
