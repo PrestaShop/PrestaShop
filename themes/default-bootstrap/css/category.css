@@ -12,12 +12,12 @@
     @media (max-width: 1199px) {
       .content_scene_cat .content_scene_cat_bg {
         padding: 10px 10px 10px 15px; } }
-  .content_scene_cat h1.category-name {
+  .content_scene_cat span.category-name {
     font: 600 42px/51px "Open Sans", sans-serif;
     color: white;
     margin-bottom: 12px; }
     @media (max-width: 1199px) {
-      .content_scene_cat h1.category-name {
+      .content_scene_cat span.category-name {
         font-size: 25px;
         line-height: 30px; } }
   .content_scene_cat p {
