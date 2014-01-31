@@ -145,7 +145,7 @@
 						{if $currency->format % 2 != 0}{$currency->sign}{/if}
 						{if $currency->format % 2 == 0}{$currency->sign}{/if}
 					</span>
-					<input type="text" name="attribute_wholesale_price" id="attribute_wholesale_price" value="" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+					<input type="text" name="attribute_wholesale_price" id="attribute_wholesale_price" value="0" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 				</div>
 			</div>
 			<span style="display:none;" id="attribute_wholesale_price_full">({l s='Overrides wholesale price on "Information" tab'})</span>
