@@ -433,25 +433,32 @@ class ParentOrderControllerCore extends FrontController
 				'formatedAddressFieldsValuesList' => $formatedAddressFieldsValuesList));
 
 			/* Setting default addresses for cart */
-			if ((!isset($this->context->cart->id_address_delivery) || empty($this->context->cart->id_address_delivery)) && count($customerAddresses))
+			if (count($customerAddresses))
 			{
-				$this->context->cart->id_address_delivery = (int)($customerAddresses[0]['id_address']);
-				$update = 1;
+				if ((!isset($this->context->cart->id_address_delivery) || empty($this->context->cart->id_address_delivery)) || !Address::isCountryActiveById((int)$this->context->cart->id_address_delivery))
+				{
+					$this->context->cart->id_address_delivery = (int)($customerAddresses[0]['id_address']);
+					$update = 1;
+				}
+				if ((!isset($this->context->cart->id_address_invoice) || empty($this->context->cart->id_address_invoice)) || !Address::isCountryActiveById((int)$this->context->cart->id_address_invoice))
+				{
+					$this->context->cart->id_address_invoice = (int)($customerAddresses[0]['id_address']);
+					$update = 1;
+				}
+
+				/* Update cart addresses only if needed */
+				if (isset($update) && $update)
+				{
+					$this->context->cart->update();
+					if (!$this->context->cart->isMultiAddressDelivery())
+						$this->context->cart->setNoMultishipping();
+					// Address has changed, so we check if the cart rules still apply
+					CartRule::autoRemoveFromCart($this->context);
+					CartRule::autoAddToCart($this->context);
+				}
 			}
-			if ((!isset($this->context->cart->id_address_invoice) || empty($this->context->cart->id_address_invoice)) && count($customerAddresses))
-			{
-				$this->context->cart->id_address_invoice = (int)($customerAddresses[0]['id_address']);
-				$update = 1;
-			}
-			/* Update cart addresses only if needed */
-			if (isset($update) && $update)
-			{
-				$this->context->cart->update();
-				
-				// Address has changed, so we check if the cart rules still apply
-				CartRule::autoRemoveFromCart($this->context);
-				CartRule::autoAddToCart($this->context);
-			}
+
+
 
 			/* If delivery address is valid in cart, assign it to Smarty */
 			if (isset($this->context->cart->id_address_delivery))
