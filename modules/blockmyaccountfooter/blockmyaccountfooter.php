@@ -56,7 +56,7 @@ class Blockmyaccountfooter extends Module
 		return true;
 	}
 
-	public function hookActionUnModuleRegisterHookAfter($params)
+	public function hookActionModuleUnRegisterHookAfter($params)
 	{
 		return $this->hookActionModuleRegisterHookAfter($params);
 	}
