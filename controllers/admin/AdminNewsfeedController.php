@@ -213,6 +213,14 @@ class AdminNewsfeedControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
+			),
+			'buttons' => array(
+				'save_and_preview' => array(
+				'name' => 'viewnewsfeed',
+				'type' => 'submit',
+				'title' => $this->l('Save and preview'),
+				'class' => 'btn btn-default pull-right',
+				'icon' => 'process-icon-preview'
 			)
 		);
 
@@ -260,8 +268,15 @@ class AdminNewsfeedControllerCore extends AdminController
 	
 	public function postProcess()
 	{	
-		if (Tools::isSubmit('viewnewsfeed') && ($id_newsfeed = (int)Tools::getValue('id_newsfeed')) && ($newsfeed = new Newsfeed($id_newsfeed, $this->context->language->id)) && Validate::isLoadedObject($newsfeed))
-			$this->redirect_after = $this->getPreviewUrl($newsfeed);
+		if (Tools::isSubmit('viewnewsfeed') && ($id_newsfeed = (int)Tools::getValue('id_newsfeed')))
+		{
+			parent::postProcess();
+			if (($newsfeed= new Newsfeed($id_newsfeed, $this->context->language->id)) && Validate::isLoadedObject($newsfeed))
+			{
+				$this->redirect_after = $this->getPreviewUrl($newsfeed);
+				Tools::redirectAdmin($this->redirect_after);
+			}
+		}
 		elseif (Tools::isSubmit('deletenewsfeed'))
 		{
 			if (Tools::getValue('id_newsfeed') == Configuration::get('PS_CONDITIONS_Newsfeed_ID'))
@@ -394,7 +409,7 @@ class AdminNewsfeedControllerCore extends AdminController
 		{
 			$params = http_build_query(array(
 				'adtoken' => Tools::getAdminTokenLite('AdminNewsfeedContent'),
-				'ad' => substr(dirname($_SERVER['PHP_SELF']), strrpos(dirname($_SERVER['PHP_SELF']), '/') + 1),
+				'ad' => basename(_PS_ADMIN_DIR_),
 				'id_employee' => (int)$this->context->employee->id
 				)
 			);

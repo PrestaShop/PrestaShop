@@ -100,13 +100,16 @@ class AdminNewsfeedContentControllerCore extends AdminController
 			foreach ($newsfeed_tabs as $tab)
 				if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway'))
 					$cat_bar_index = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
-
+			$this->context->smarty->assign(array(
+				'newsfeed_breadcrumb' => getPath($cat_bar_index, $id_newsfeed_category, '', '', 'newsfeed'),
+				'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+				'page_header_toolbar_title' => $this->toolbar_title,
+			));
+			
 			$this->content .= $this->admin_newsfeed_categories->renderList();
 			$this->admin_newsfeed->id_newsfeed_category = $id_newsfeed_category;
 			$this->content .= $this->admin_newsfeed->renderList();
-			$this->context->smarty->assign(array(
-				'newsfeed_breadcrumb' => getPath($cat_bar_index, $id_newsfeed_category, '', '', 'newsfeed'),
-			));
+			
 		}
 
 		$this->context->smarty->assign(array(
@@ -175,7 +178,9 @@ class AdminNewsfeedContentControllerCore extends AdminController
 		$this->context->smarty->assign(array(
 			'show_page_header_toolbar' => $this->show_page_header_toolbar,
 			'title' => $this->page_header_toolbar_title,
-			'toolbar_btn' => $this->page_header_toolbar_btn
+			'toolbar_btn' => $this->page_header_toolbar_btn,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+			'page_header_toolbar_title' => $this->toolbar_title,
 		));
 
 		return $template->fetch();
@@ -283,7 +288,7 @@ class AdminNewsfeedContentControllerCore extends AdminController
 		{
 			if ($id_newsfeed = (int)Tools::getValue('id_newsfeed'))
 			{
-				$bo_newsfeed_url = dirname($_SERVER['PHP_SELF']).'/index.php?tab=AdminNewsfeedContent&id_newsfeed='.(int)$id_newsfeed.'&updatenewsfeed&token='.$this->token;
+				$bo_newsfeed_url = _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/index.php?tab=AdminNewsfeedContent&id_newsfeed='.(int)$id_newsfeed.'&updatenewsfeed&token='.$this->token;
 
 				if (Tools::getValue('redirect'))
 					die($bo_newsfeed_url);
