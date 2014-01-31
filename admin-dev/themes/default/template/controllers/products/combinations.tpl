@@ -135,7 +135,7 @@
 			<label class="control-label col-lg-3" for="attribute_wholesale_price">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_wholesale_price" type="default"}
 				<span class="label-tooltip" data-toggle="tooltip"
-					title="{l s='Leave blank if the price does not change'}">
+					title="{l s='Set to zero if the price does not change'}">
 					{l s='Wholesale price:'}
 				</span>
 			</label>
