@@ -128,7 +128,7 @@ class Smarty_Internal_Config {
     public function getCompiledTimestamp()
     {
         return $this->compiled_timestamp === null
-            ? ($this->compiled_timestamp = (file_exists($this->getCompiledFilepath())) ? filemtime($this->getCompiledFilepath()) : false)
+            ? ($this->compiled_timestamp = (file_exists($this->getCompiledFilepath())) ? @filemtime($this->getCompiledFilepath()) : false)
             : $this->compiled_timestamp;
     }
 

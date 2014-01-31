@@ -118,7 +118,7 @@ class Session
 						$path=$this->dir.$file;
 						$output .= $path ;
 						//check if this is a expired session file
-						if(filemtime($path) + $this->lifeTime < time())
+						if(@filemtime($path) + $this->lifeTime < time())
 						{							
 							if($fo->delete($path))
 							{
@@ -156,7 +156,7 @@ class Session
 							$path=CONFIG_SYS_ROOT_PATH.$file;
 							$output .= $path ;
 							//check if this is a expired session file
-							if(filemtime($path) + $this->lifeTime < time())
+							if(@filemtime($path) + $this->lifeTime < time())
 							{							
 								if($fo->delete($path))
 								{

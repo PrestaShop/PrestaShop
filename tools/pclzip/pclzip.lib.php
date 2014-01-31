@@ -2577,7 +2577,7 @@
     // ----- Look for regular folder
     else if ($p_filedescr['type']=='folder') {
       $p_header['external'] = 0x00000010;
-      $p_header['mtime'] = filemtime($p_filename);
+      $p_header['mtime'] = @filemtime($p_filename);
       $p_header['size'] = filesize($p_filename);
     }
     
@@ -2596,7 +2596,7 @@
       $p_header['mtime'] = time();
     }
     else {
-      $p_header['mtime'] = filemtime($p_filename);
+      $p_header['mtime'] = @filemtime($p_filename);
     }
 
     // ------ Look for file comment
