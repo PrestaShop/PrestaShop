@@ -1649,7 +1649,7 @@ class Archive_Tar extends PEAR
 			              .' already exists and is write protected');
             return false;
           }
-          if (filemtime($v_header['filename']) > $v_header['mtime']) {
+          if (@filemtime($v_header['filename']) > $v_header['mtime']) {
             // To be completed : An error or silent no replace ?
           }
         }

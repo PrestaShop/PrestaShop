@@ -2804,11 +2804,11 @@ exit;
 
 		$time_limit -= 5;
 		$start_time = microtime(true);
-		$last_modified = filemtime($file_name);
+		$last_modified = @filemtime($file_name);
 
 		while(true)
 		{
-			if (((microtime(true) - $start_time) > $time_limit) || filemtime($file_name) > $last_modified)
+			if (((microtime(true) - $start_time) > $time_limit) || @filemtime($file_name) > $last_modified)
 				break;
 			clearstatcache();
 			usleep(300);
