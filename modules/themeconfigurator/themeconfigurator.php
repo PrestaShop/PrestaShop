@@ -298,7 +298,7 @@ class ThemeConfigurator extends Module
 				'fonts' => unserialize(Configuration::get('PS_TC_FONTS')),
 				'theme_font' => Tools::getValue('theme_font', Configuration::get('PS_TC_FONT')),
 				'id_shop' => (int)$this->context->shop->id,
-				'id_employee' => (int)$this->context->employee->id,
+				'id_employee' => isset($this->context->employee) ? (int)$this->context->employee->id : 0,
 				'live_configurator_token' => Tools::getValue('live_configurator_token', ''),
 				'advertisement_image' => $ad_image,
 				'advertisement_text' => $this->l('Over 500+ PrestaShop Premium Templates! Browse Now!')
