@@ -324,6 +324,16 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'title' => $this->l('Save'),
 		);
 
+		$this->fields_form['buttons'] = array(
+			'save-and-stay' => array(
+				'title' => $this->l('Save then add another value'),
+				'name' => 'submitAdd'.$this->table.'AndStay',
+				'type' => 'submit',
+				'class' => 'btn btn-default pull-right',
+				'icon' => 'process-icon-save'
+			)
+		);
+
 		$this->fields_value['id_attribute_group'] = (int)Tools::getValue('id_attribute_group');
 
 		// Override var of Controller
