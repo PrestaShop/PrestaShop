@@ -25,14 +25,14 @@
 
 {extends file="helpers/form/form.tpl"}
 
-{block name="label"}
-	{if $input.type == 'color'}
-		<div id="colorAttributeProperties"{if !$colorAttributeProperties} style="display: none;"{/if}>
-	{/if}
-	{if $input.type == 'closediv'}
-		</div>
+{block name="input_row"}
+	{if $input.type == 'color' || $input.name == 'texture' || $input.name == 'current_texture'}
+		<div class="colorAttributeProperties"{if !$colorAttributeProperties} style="display: none;"{/if}>
 	{/if}
 	{$smarty.block.parent}
+	{if $input.type == 'color' || $input.name == 'texture' || $input.name == 'current_texture'}
+		</div>
+	{/if}
 {/block}
 
 {block name="field"}
@@ -58,9 +58,9 @@
 	var displayColorFieldsOption = function() {
 		var val = $('#id_attribute_group').val();
 		if (attributesGroups[val])
-			$('#colorAttributeProperties').show();
+			$('.colorAttributeProperties').show();
 		else
-			$('#colorAttributeProperties').hide();
+			$('.colorAttributeProperties').hide();
 	};
 	
 	displayColorFieldsOption();
