@@ -2615,6 +2615,7 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 #footer a.footer_link { color: #00aff0; }
 #footer a.footer_link:hover { color: white; text-decoration: none; }
 #footer a.footer_link i { color: white; }
+#footer.hide{ display: none!important; }
 
 a.link-social i { font-size: 2em; width: 30px; height: 30px; display: inline-block; line-height: 30px !important; text-align: center; margin: 0 4px 0 0; -webkit-border-radius: 30px; -moz-border-radius: 30px; -ms-border-radius: 30px; -o-border-radius: 30px; border-radius: 30px; }
 a.link-social:hover { text-decoration: none; }
