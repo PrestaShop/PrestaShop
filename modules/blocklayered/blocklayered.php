@@ -1979,7 +1979,7 @@ class BlockLayered extends Module
 				MAX(image_shop.`id_image`) id_image,
 				il.legend, 
 				m.name manufacturer_name,
-				MAX(pa.id_product_attribute) id_product_attribute,
+				pa.id_product_attribute,
 				DATEDIFF('.$alias_where.'.`date_add`, DATE_SUB(NOW(), INTERVAL '.(int)$nb_day_new_product.' DAY)) > 0 AS new,
 				stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
 			FROM `'._DB_PREFIX_.'category_product` cp
@@ -1997,6 +1997,7 @@ class BlockLayered extends Module
 			AND '.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 			AND c.active = 1
 			AND p.id_product IN ('.implode(',', $product_id_list).')
+			AND IF (pa.id_product_attribute != 0, IF (pa.default_on = 1, 1, 0), 1) = 1
 			GROUP BY product_shop.id_product
 			ORDER BY '.Tools::getProductsOrder('by', Tools::getValue('orderby'), true).' '.Tools::getProductsOrder('way', Tools::getValue('orderway')).
 			' LIMIT '.(((int)$this->page - 1) * $n.','.$n));
