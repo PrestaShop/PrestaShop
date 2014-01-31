@@ -319,9 +319,9 @@ class AdminDashboardControllerCore extends AdminController
 	public function ajaxProcessGetBlogRss()
 	{
 		$return = array('has_errors' => false, 'rss' => array());
-		if (!$this->isFresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', 604800))
+		if (!$this->isFresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', 86400))
 			if (!$this->refresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', 'https://api.prestashop.com/rss/blog/blog-'.$this->context->language->iso_code.'.xml'))
-				$return['has_errors'] = true;		
+				$return['has_errors'] = true;
 		
 		if (!$return['has_errors'])
 		{
