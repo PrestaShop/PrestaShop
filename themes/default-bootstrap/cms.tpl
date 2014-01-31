@@ -26,10 +26,11 @@
 	{if !$cms->active}
 		<br />
 		<div id="admin-action-cms">
-			<p>{l s='This CMS page is not visible to your customers.'}
-			<input type="hidden" id="admin-action-cms-id" value="{$cms->id}" />
-			<input type="submit" value="{l s='Publish'}" class="exclusive btn btn-default" onclick="submitPublishCMS('{$base_dir}{$smarty.get.ad|escape:'html':'UTF-8'}', 0, '{$smarty.get.adtoken|escape:'html':'UTF-8'}')"/>
-			<input type="submit" value="{l s='Back'}" class="exclusive btn btn-default" onclick="submitPublishCMS('{$base_dir}{$smarty.get.ad|escape:'html':'UTF-8'}', 1, '{$smarty.get.adtoken|escape:'html':'UTF-8'}')"/>
+			<p>
+				<span>{l s='This CMS page is not visible to your customers.'}</span>
+				<input type="hidden" id="admin-action-cms-id" value="{$cms->id}" />
+				<input type="submit" value="{l s='Publish'}" class="publish_button button btn btn-default" onclick="submitPublishCMS('{$base_dir}{$smarty.get.ad|escape:'html':'UTF-8'}', 0, '{$smarty.get.adtoken|escape:'html':'UTF-8'}')"/>
+				<input type="submit" value="{l s='Back'}" class="lnk_view button btn btn-default" onclick="submitPublishCMS('{$base_dir}{$smarty.get.ad|escape:'html':'UTF-8'}', 1, '{$smarty.get.adtoken|escape:'html':'UTF-8'}')"/>
 			</p>
 			<div class="clear" ></div>
 			<p id="admin-action-result"></p>
