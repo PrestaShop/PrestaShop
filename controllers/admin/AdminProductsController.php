@@ -3194,6 +3194,8 @@ class AdminProductsControllerCore extends AdminController
 		$product->productDownload->nb_days_accessible = ($product->productDownload->id > 0) ? $product->productDownload->nb_days_accessible : htmlentities(Tools::getValue('virtual_product_nb_days'), ENT_COMPAT, 'UTF-8');
 		$product->productDownload->is_shareable = $product->productDownload->id > 0 && $product->productDownload->is_shareable;
 
+		$iso_tiny_mce = $this->context->language->iso_code;
+		$iso_tiny_mce = (file_exists(_PS_JS_DIR_.'tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
 		$data->assign(array(
 			'ad' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_),
 			'iso_tiny_mce' => $iso_tiny_mce,
