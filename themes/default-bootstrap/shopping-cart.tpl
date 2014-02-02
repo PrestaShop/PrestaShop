@@ -332,7 +332,7 @@
 														{else}
 															{l s='Text #'}{$textField@index+1}
 														{/if}
-														{l s=':'} {$textField.value}
+														: {$textField.value}
 													</li>
 												{/foreach}
 											</ul>
