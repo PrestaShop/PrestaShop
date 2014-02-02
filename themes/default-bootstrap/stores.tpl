@@ -110,7 +110,7 @@
 	<table id="stores-table" class="table table-bordered">
     	<thead>
 			<tr>
-                <th class="num">{l s='#'}</th>
+                <th class="num">#</th>
                 <th>{l s='Store'}</th>
                 <th>{l s='Address'}</th>
                 <th>{l s='Distance'}</th>
