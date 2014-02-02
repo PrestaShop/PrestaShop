@@ -24,7 +24,7 @@
 *}
 <div class="pagenotfound">
 	<div class="img-404">
-    	<img src="{$img_dir}/img-404.jpg" alt="{l s='pagenotfound'}" />
+    	<img src="{$img_dir}/img-404.jpg" alt="{l s='Page not found'}" />
     </div>
 	<h1>{l s='This page is not available'}</h1>
 
