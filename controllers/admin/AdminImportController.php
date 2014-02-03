@@ -3357,7 +3357,7 @@ class AdminImportControllerCore extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			$match = implode('|', Tools::getValue('type_value'));
-			Db::getInstance()->execute('INSERT INTO  `'._DB_PREFIX_.'import_match` (
+			Db::getInstance()->execute('INSERT IGNORE INTO  `'._DB_PREFIX_.'import_match` (
 										`id_import_match` ,
 										`name` ,
 										`match`,

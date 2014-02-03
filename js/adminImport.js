@@ -50,8 +50,7 @@ $(document).ready(function(){
 	       },
 	      error: function(XMLHttpRequest, textStatus, errorThrown) 
 	       {
-	       		jAlert('TECHNICAL ERROR Details: '+XMLHttpRequest.responseText);
-	       		
+	       		jAlert('TECHNICAL ERROR Details: ' + html_escape(XMLHttpRequest.responseText));
 	       }
 	   });
 
@@ -77,7 +76,7 @@ $(document).ready(function(){
 		       },
 		      error: function(XMLHttpRequest, textStatus, errorThrown) 
 		       {
-		       		jAlert('TECHNICAL ERROR Details: '+XMLHttpRequest.responseText);
+		       		jAlert('TECHNICAL ERROR Details: ' + html_escape(XMLHttpRequest.responseText));
 		       		
 		       }
 		   });
@@ -101,9 +100,18 @@ $(document).ready(function(){
 		       },
 		      error: function(XMLHttpRequest, textStatus, errorThrown) 
 		       {
-		       		jAlert('TECHNICAL ERROR Details: '+XMLHttpRequest.responseText);
+		       		jAlert('TECHNICAL ERROR Details: ' + html_escape(XMLHttpRequest.responseText));
 		       }
 		   });
 	
 	});
 });
+
+function html_escape(str) {
+    return String(str)
+	    .replace(/&/g, '&amp;')
+	    .replace(/"/g, '&quot;')
+	    .replace(/'/g, '&#39;')
+	    .replace(/</g, '&lt;')
+	    .replace(/>/g, '&gt;');
+}
