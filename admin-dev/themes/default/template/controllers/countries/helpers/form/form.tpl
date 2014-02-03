@@ -56,18 +56,18 @@
 
 {block name="input_row"}
 	{if $input.name == 'standardization'}
-		<div class="row" id="TAASC" style="display: none;">
+		<div class="form-group" id="TAASC" style="display: none;">
 			<label for="{$input.name}" class="control-label col-lg-3 ">{$input.label}</label>
 			<div class="col-lg-9">
 				<div class="row">
 					<div class="input-group col-lg-2">
 						<span class="switch prestashop-switch">
 							<input type="radio" name="{$input.name}" id="{$input.name}_on" value="1">
-							<label class="radio" for="{$input.name}_on">
+							<label for="{$input.name}_on">
 								{l s='Yes'}
 							</label>
 							<input type="radio" name="{$input.name}" id="{$input.name}_off" value="0" checked="checked">
-							<label class="radio" for="{$input.name}_off">
+							<label for="{$input.name}_off">
 								{l s='No'}
 							</label>
 							<a class="slide-button btn"></a>
