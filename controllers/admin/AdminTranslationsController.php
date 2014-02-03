@@ -1281,7 +1281,7 @@ class AdminTranslationsControllerCore extends AdminController
 		{
 			$theme_exists = $this->theme_exists($theme);
 			if (!$theme_exists)
-				throw new PrestaShopException(sprintf(Tools::displayError('Invalid theme "%s"'), $theme));
+				throw new PrestaShopException(sprintf(Tools::displayError('Invalid theme "%s"'), Tools::safeOutput($theme)));
 			$this->theme_selected = Tools::safeOutput($theme);
 		}
 
@@ -1301,7 +1301,7 @@ class AdminTranslationsControllerCore extends AdminController
 			$iso_code = Tools::getValue('lang') ? Tools::getValue('lang') : Tools::getValue('iso_code');
 
 			if (!Validate::isLangIsoCode($iso_code) || !in_array($iso_code, $this->all_iso_lang))
-				throw new PrestaShopException(sprintf(Tools::displayError('Invalid iso code "%s"'), $iso_code));
+				throw new PrestaShopException(sprintf(Tools::displayError('Invalid iso code "%s"'), Tools::safeOutput($iso_code)));
 
 			$this->lang_selected = new Language((int)Language::getIdByIso($iso_code));
 		}
@@ -1539,10 +1539,10 @@ class AdminTranslationsControllerCore extends AdminController
 					{
 						$module_name = substr($mail_name, 0, $module_name_pipe_pos);
 						if (!Validate::isModuleName($module_name))
-							throw new PrestaShopException(sprinf(Tools::displayError('Invalid module name "%s"'), $module_name));
+							throw new PrestaShopException(sprinf(Tools::displayError('Invalid module name "%s"'), Tools::safeOutput($module_name)));
 						$mail_name = substr($mail_name, $module_name_pipe_pos + 1);
 						if (!Validate::isTplName($mail_name))
-							throw new PrestaShopException(sprintf(Tools::displayError('Invalid mail name "%s"'), $mail_name));
+							throw new PrestaShopException(sprintf(Tools::displayError('Invalid mail name "%s"'), Tools::safeOutput($mail_name)));
 					}
 
 					if ($type_content == 'html')
