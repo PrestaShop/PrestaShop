@@ -104,19 +104,7 @@
                                     </p>
 
                                     <p class="form-group selector1">
-                                        <label>{l s='Priority' mod='blockwishlist'}: </label>
-                                        <select id="priority_{$product.id_product}_{$product.id_product_attribute}"
-                                                class="form-control">
-                                            <option value="0"{if $product.priority eq 0} selected="selected"{/if}>
-                                                {l s='High' mod='blockwishlist'}
-                                            </option>
-                                            <option value="1"{if $product.priority eq 1} selected="selected"{/if}>
-                                                {l s='Medium' mod='blockwishlist'}
-                                            </option>
-                                            <option value="2"{if $product.priority eq 2} selected="selected"{/if}>
-                                                {l s='Low' mod='blockwishlist'}
-                                            </option>
-                                        </select>
+                                        <span><strong>{l s='Priority' mod='blockwishlist'}:</strong> {$product.priority_name}</span>
                                     </p>
                                     <div class="btn_action">
                                         {if isset($product.attribute_quantity) AND $product.attribute_quantity >= 1 OR !isset($product.attribute_quantity) AND $product.product_quantity >= 1}
