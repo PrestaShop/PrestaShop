@@ -31,13 +31,13 @@ class BlockAdvertising extends Module
 {
 	/* Title associated to the image */
 	public $adv_title;
-	
+
 	/* Link associated to the image */
 	public $adv_link;
-	
+
 	/* Name of the image without extension */
 	public $adv_imgname;
-	
+
 	/* Image path with extension */
 	public $adv_img;
 
@@ -45,16 +45,16 @@ class BlockAdvertising extends Module
 	{
 		$this->name = 'blockadvertising';
 		$this->tab = 'advertising_marketing';
-		$this->version = '0.5';
+		$this->version = '0.6';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
 		$this->bootstrap = true;
-		parent::__construct();	
+		parent::__construct();
 
 		$this->displayName = $this->l('Advertising block');
-		$this->description = $this->l('Adds an advertisement block to selected sections of your e-commerce webiste.');
-		
+		$this->description = $this->l('Adds an advertisement block to selected sections of your e-commerce website.');
+
 		$this->initialize();
 	}
 
@@ -64,18 +64,20 @@ class BlockAdvertising extends Module
 	protected function initialize()
 	{
 		$this->adv_imgname = 'advertising';
-		if ((Shop::getContext() == Shop::CONTEXT_GROUP  || Shop::getContext() == Shop::CONTEXT_SHOP)
-			&& file_exists(_PS_MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'-g'.$this->context->shop->getContextShopGroupID().'.'.Configuration::get('BLOCKADVERT_IMG_EXT')))
+		if ((Shop::getContext() == Shop::CONTEXT_GROUP || Shop::getContext() == Shop::CONTEXT_SHOP)
+			&& file_exists(_PS_MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'-g'.$this->context->shop->getContextShopGroupID().'.'.Configuration::get('BLOCKADVERT_IMG_EXT'))
+		)
 			$this->adv_imgname .= '-g'.$this->context->shop->getContextShopGroupID();
 		if (Shop::getContext() == Shop::CONTEXT_SHOP
-			&& file_exists(_PS_MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'-s'.$this->context->shop->getContextShopID().'.'.Configuration::get('BLOCKADVERT_IMG_EXT')))
+			&& file_exists(_PS_MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'-s'.$this->context->shop->getContextShopID().'.'.Configuration::get('BLOCKADVERT_IMG_EXT'))
+		)
 			$this->adv_imgname .= '-s'.$this->context->shop->getContextShopID();
 
 		$this->adv_img = Tools::getMediaServer($this->name)._MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'.'.Configuration::get('BLOCKADVERT_IMG_EXT');
 		$this->adv_link = htmlentities(Configuration::get('BLOCKADVERT_LINK'), ENT_QUOTES, 'UTF-8');
 		$this->adv_title = htmlentities(Configuration::get('BLOCKADVERT_TITLE'), ENT_QUOTES, 'UTF-8');
 	}
-	
+
 	public function install()
 	{
 		if (!parent::install())
@@ -84,11 +86,13 @@ class BlockAdvertising extends Module
 		// Hook the module either on the left or right column
 		$theme = new Theme(Context::getContext()->shop->id_theme);
 		if ((!$theme->default_left_column || !$this->registerHook('leftColumn'))
-			&& (!$theme->default_right_column || !$this->registerHook('rightColumn')))
+			&& (!$theme->default_right_column || !$this->registerHook('rightColumn'))
+		)
 		{
 			// If there are no colums implemented by the template, throw an error and uninstall the module
 			$this->_errors[] = $this->l('This module need to be hooked in a column and your theme does not implement one');
 			parent::uninstall();
+
 			return false;
 		}
 
@@ -101,12 +105,13 @@ class BlockAdvertising extends Module
 
 		return true;
 	}
-	
+
 	public function uninstall()
 	{
 		Configuration::deleteByName('BLOCKADVERT_LINK');
 		Configuration::deleteByName('BLOCKADVERT_TITLE');
 		Configuration::deleteByName('BLOCKADVERT_IMG_EXT');
+
 		return (parent::uninstall());
 	}
 
@@ -120,7 +125,7 @@ class BlockAdvertising extends Module
 		// Delete the image file
 		if ($this->adv_imgname != 'advertising' && file_exists(_PS_MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'.'.Configuration::get('BLOCKADVERT_IMG_EXT')))
 			unlink(_PS_MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'.'.Configuration::get('BLOCKADVERT_IMG_EXT'));
-		
+
 		// Update the extension to the global value or the shop group value if available
 		Configuration::deleteFromContext('BLOCKADVERT_IMG_EXT');
 		Configuration::updateValue('BLOCKADVERT_IMG_EXT', Configuration::get('BLOCKADVERT_IMG_EXT'));
@@ -148,34 +153,37 @@ class BlockAdvertising extends Module
 					// Set the image name with a name contextual to the shop context
 					$this->adv_imgname = 'advertising';
 					if (Shop::getContext() == Shop::CONTEXT_GROUP)
-						$this->adv_imgname = 'advertising'.'-g'.(int)$this->context->shop->getContextShopGroupID();
+						$this->adv_imgname = 'advertising-g'.(int)$this->context->shop->getContextShopGroupID();
 					elseif (Shop::getContext() == Shop::CONTEXT_SHOP)
-						$this->adv_imgname = 'advertising'.'-s'.(int)$this->context->shop->getContextShopID();
+						$this->adv_imgname = 'advertising-s'.(int)$this->context->shop->getContextShopID();
 
 					// Copy the image in the module directory with its new name
 					if (!move_uploaded_file($_FILES['adv_img']['tmp_name'], _PS_MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'.'.Configuration::get('BLOCKADVERT_IMG_EXT')))
 						$errors .= $this->l('File upload error.');
 				}
 			}
-			
+
 			// If the link is not set, then delete it in order to use the next default value (either the global value or the group value)
 			if ($link = Tools::getValue('adv_link'))
 				Configuration::updateValue('BLOCKADVERT_LINK', $link);
 			elseif (Shop::getContext() == Shop::CONTEXT_SHOP || Shop::getContext() == Shop::CONTEXT_GROUP)
 				Configuration::deleteFromContext('BLOCKADVERT_LINK');
-				
+
 			// If the title is not set, then delete it in order to use the next default value (either the global value or the group value)
 			if ($title = Tools::getValue('adv_title'))
 				Configuration::updateValue('BLOCKADVERT_TITLE', $title);
 			elseif (Shop::getContext() == Shop::CONTEXT_SHOP || Shop::getContext() == Shop::CONTEXT_GROUP)
 				Configuration::deleteFromContext('BLOCKADVERT_TITLE');
-			
+
 			// Reset the module properties
 			$this->initialize();
 			$this->_clearCache('blockadvertising.tpl');
-		}
-		if ($errors)
+
+			if (!$errors)
+				Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&conf=6');
 			echo $this->displayError($errors);
+		}
+
 	}
 
 	/**
@@ -186,17 +194,20 @@ class BlockAdvertising extends Module
 	public function getContent()
 	{
 		$this->postProcess();
+
 		return $this->renderForm();
 	}
 
 	public function hookRightColumn($params)
 	{
 		if (!$this->isCached('blockadvertising.tpl', $this->getCacheId()))
-			$this->smarty->assign(array(
-				'image' => $this->context->link->protocol_content.$this->adv_img,
-				'adv_link' => $this->adv_link,
-				'adv_title' => $this->adv_title,
-			));
+			$this->smarty->assign(
+				array(
+					'image' => $this->context->link->protocol_content.$this->adv_img,
+					'adv_link' => $this->adv_link,
+					'adv_title' => $this->adv_title,
+				)
+			);
 
 		return $this->display(__FILE__, 'blockadvertising.tpl', $this->getCacheId());
 	}
@@ -210,9 +221,15 @@ class BlockAdvertising extends Module
 	{
 		$this->context->controller->addCSS($this->_path.'blockadvertising.css', 'all');
 	}
-	
+
 	public function renderForm()
 	{
+		$adv_imgname = 'advertising';
+		if (Shop::getContext() == Shop::CONTEXT_GROUP)
+			$adv_imgname = 'advertising-g'.(int)$this->context->shop->getContextShopGroupID();
+		elseif (Shop::getContext() == Shop::CONTEXT_SHOP)
+			$adv_imgname = 'advertising-s'.(int)$this->context->shop->getContextShopID();
+
 		$fields_form = array(
 			'form' => array(
 				'legend' => array(
@@ -225,7 +242,7 @@ class BlockAdvertising extends Module
 						'label' => $this->l('Block image'),
 						'name' => 'adv_img',
 						'desc' => $this->l('Image will be displayed as 155 pixels by 163 pixels.'),
-						'thumb' => '../modules/'.$this->name.'/advertising.jpg',
+						'thumb' => '../modules/'.$this->name.'/'.$adv_imgname.'.jpg',
 					),
 					array(
 						'type' => 'text',
@@ -243,10 +260,10 @@ class BlockAdvertising extends Module
 				)
 			),
 		);
-		
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
-		$helper->table =  $this->table;
+		$helper->table = $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 		$helper->default_form_language = $lang->id;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
@@ -264,7 +281,7 @@ class BlockAdvertising extends Module
 
 		return $helper->generateForm(array($fields_form));
 	}
-	
+
 	public function getConfigFieldsValues()
 	{
 		return array(
