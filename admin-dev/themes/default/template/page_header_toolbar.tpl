@@ -27,7 +27,7 @@
 {if !isset($title) && isset($page_header_toolbar_title)}
 	{assign var=title value=$page_header_toolbar_title}
 {/if}
-{if !isset($toolbar_btn) && isset($page_header_toolbar_btn)}
+{if isset($page_header_toolbar_btn)}
 	{assign var=toolbar_btn value=$page_header_toolbar_btn}
 {/if}
 

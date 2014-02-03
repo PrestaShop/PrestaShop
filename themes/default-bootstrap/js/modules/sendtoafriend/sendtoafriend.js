@@ -36,7 +36,6 @@ $(document).ready(function(){
 	$('#sendEmail').click(function(){
 		var name = $('#friend_name').val();
 		var email = $('#friend_email').val();
-		var id_product = $('#id_product_comment_send').val();
 		if (name && email && !isNaN(id_product))
 		{
 			$.ajax({

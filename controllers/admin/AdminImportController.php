@@ -1698,6 +1698,10 @@ class AdminImportControllerCore extends AdminController
 				if (isset($product->id_category))
 					$product->updateCategories(array_map('intval', $product->id_category));
 
+				$product->checkDefaultAttributes();
+				if (!$product->cache_default_attribute)
+					Product::updateDefaultAttribute($product->id);
+
 				// Features import
 				$features = get_object_vars($product);
 
@@ -2130,7 +2134,7 @@ class AdminImportControllerCore extends AdminController
 
 			$product->checkDefaultAttributes();
 			if (!$product->cache_default_attribute)
-						Product::updateDefaultAttribute($product->id);
+				Product::updateDefaultAttribute($product->id);
 			if ($id_product_attribute)
 			{
 				// now adds the attributes in the attribute_combination table
@@ -3353,7 +3357,7 @@ class AdminImportControllerCore extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			$match = implode('|', Tools::getValue('type_value'));
-			Db::getInstance()->execute('INSERT INTO  `'._DB_PREFIX_.'import_match` (
+			Db::getInstance()->execute('INSERT IGNORE INTO  `'._DB_PREFIX_.'import_match` (
 										`id_import_match` ,
 										`name` ,
 										`match`,

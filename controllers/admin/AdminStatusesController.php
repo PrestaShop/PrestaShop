@@ -93,7 +93,7 @@ class AdminStatusesControllerCore extends AdminController
 				'title' => $this->l('Send email to customer'),
 				'align' => 'center',
 				'icon' => array(
-					'1' => 'icon-ok text-success',
+					'1' => 'icon-check text-success',
 					'0' => 'icon-ban-circle text-danger'
 				),
 				'type' => 'bool',
@@ -104,7 +104,7 @@ class AdminStatusesControllerCore extends AdminController
 				'title' => $this->l('Delivery'),
 				'align' => 'center',
 				'icon' => array(
-					'1' => 'icon-ok text-success',
+					'1' => 'icon-check text-success',
 					'0' => 'icon-ban-circle text-danger'
 				),
 				'type' => 'bool',
@@ -116,7 +116,7 @@ class AdminStatusesControllerCore extends AdminController
 				'title' => $this->l('Invoice'),
 				'align' => 'center',
 				'icon' => array(
-					'1' => 'icon-ok text-success',
+					'1' => 'icon-check text-success',
 					'0' => 'icon-ban-circle text-danger'
 				),
 				'type' => 'bool',

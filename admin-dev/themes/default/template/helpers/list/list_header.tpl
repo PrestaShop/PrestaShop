@@ -268,7 +268,7 @@
 						</span>
 					</th>
 					{/if}
-					{if $has_actions}
+					{if $has_actions || $show_filters}
 					<th>{if !$simple_header}{/if}</th>
 					{/if}
 				</tr>
@@ -327,7 +327,7 @@
 					{if $shop_link_type}
 					<th>--</th>
 					{/if}
-					{if $has_actions}
+					{if $has_actions || $show_filters}
 					<th class="actions">
 						{if $show_filters}
 						<span class="pull-right">

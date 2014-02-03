@@ -132,7 +132,7 @@
 	</div>
 	{/if}
 </div>
-
+{block name="footer"}
 {foreach from=$toolbar_btn item=btn key=k}
 	{if $k == 'back'}
 		{assign 'back_button' $btn}
@@ -146,7 +146,7 @@
 	</a>
 </div>
 {/if}
-
+{/block}
 {if !$simple_header}
 		<input type="hidden" name="token" value="{$token}" />
 	</div>

@@ -144,7 +144,7 @@ class ThemeConfigurator extends Module
 					\'\',
 					\'0\',
 					\'home\',
-					\'\',
+					\'http://www.prestashop.com/\',
 					\'0\',
 					\'banner-img'.(int)$i.'.jpg\',
 					'.$width.',
@@ -170,7 +170,7 @@ class ThemeConfigurator extends Module
 					\'\',
 					\'0\',
 					\'top\',
-					\'\',
+					\'http://www.prestashop.com/\',
 					\'0\',
 					\'banner-img'.(int)$i.'.jpg\',
 					'.$width.',
@@ -298,7 +298,7 @@ class ThemeConfigurator extends Module
 				'fonts' => unserialize(Configuration::get('PS_TC_FONTS')),
 				'theme_font' => Tools::getValue('theme_font', Configuration::get('PS_TC_FONT')),
 				'id_shop' => (int)$this->context->shop->id,
-				'id_employee' => (int)$this->context->employee->id,
+				'id_employee' => isset($this->context->employee) ? (int)$this->context->employee->id : 0,
 				'live_configurator_token' => Tools::getValue('live_configurator_token', ''),
 				'advertisement_image' => $ad_image,
 				'advertisement_text' => $this->l('Over 500+ PrestaShop Premium Templates! Browse Now!')
@@ -392,11 +392,6 @@ class ThemeConfigurator extends Module
 				return false;
 
 			$new_image = 'image = \''.pSQL($image).'\',';
-		}
-		else
-		{
-			$image_w = '';
-			$image_h = '';
 		}
 
 		if (!Db::getInstance()->execute('
@@ -707,12 +702,6 @@ class ThemeConfigurator extends Module
 	protected function getConfigurableModules()
 	{
 		return array(
-			array(
-				'label' => $this->l('Display the reinsurance block'),
-				'name' => 'blockreinsurance',
-				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockreinsurance')) && $module->isEnabledForShopContext(),
-				'is_module' => true,
-			),
 			array(
 				'label' => $this->l('Display the social following links'),
 				'name' => 'blocksocial',

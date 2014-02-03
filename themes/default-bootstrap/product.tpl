@@ -749,8 +749,12 @@
 {addJsDef currencyFormat=$currencyFormat|intval}
 {addJsDef currencyBlank=$currencyBlank|intval}
 {addJsDef currentDate=$smarty.now|date_format:'%Y-%m-%d %H:%M:%S'}
-{addJsDef combinations=$combinations}
-{addJsDef combinationImages=$combinationImages}
+{if isset($combinations) && $combinations}
+	{addJsDef combinations=$combinations}
+{/if}
+{if isset($combinationImages) && $combinationImages}
+	{addJsDef combinationImages=$combinationImages}
+{/if}
 {addJsDef customizationFields=$customizationFields}
 {addJsDef default_eco_tax=$product->ecotax|floatval}
 {addJsDef displayPrice=$priceDisplay|intval}

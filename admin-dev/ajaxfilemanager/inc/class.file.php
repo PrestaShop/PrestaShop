@@ -50,7 +50,7 @@
 				}
 			}else 
 			{
-				trigger_error('No such file exists. ' . $path, E_USER_NOTICE);	
+				trigger_error('No such file exists. ' . Tools::safeOutput($path), E_USER_NOTICE);	
 			}				
 			}
 

@@ -8,9 +8,9 @@
 	 *
 	 */
 	if (!defined('_PS_ADMIN_DIR_'))
-		define('_PS_ADMIN_DIR_', getcwd());
-	require_once('../../config/config.inc.php');
-	require_once('../init.php');
+		define('_PS_ADMIN_DIR_', getcwd().'/../');
+	require_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+	require_once(_PS_ADMIN_DIR_.'/init.php');
 
 	if(!isset($manager))
 	{
@@ -73,9 +73,10 @@
         echo "parentFolder = {path:'" . getParentFolderPath($folderInfo['path']). "'};\n"; 
 		echo 'currentFolder ={'; 
 		$count =1;
+
 		foreach($folderInfo as $k=>$v)
 		{
-			echo ($count++ == 1?'':',') . "'" . $k . "':'" . ($k=='ctime'|| $k=='mtime'?date(DATE_TIME_FORMAT, $v):$v)  . "'";
+			echo ($count++ == 1?'':',') . "'" . $k . "':'" . ($k=='ctime'|| $k=='mtime'?date(DATE_TIME_FORMAT, $v) : Tools::safeOutput($v))  . "'";
 
 		}
 		echo "};\n";

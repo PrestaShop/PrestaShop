@@ -39,13 +39,10 @@ $(document).ready(function() {
 	});
 
 	function navSidebar(){
-		//$('body.page-topbar').removeClass('page-topbar').addClass('page-sidebar');
-		//$('#nav-topbar').attr('id','nav-sidebar');
 		var sidebar = $('#nav-sidebar');
 		sidebar.off();
 		$('.expanded').removeClass('expanded');
 		$('.maintab').not('.active').closest('.submenu').hide();
-		//sidebar.find('li.maintab.has_submenu').append('<span class="submenu_expand"></span>');
 		sidebar.on('click','.submenu_expand', function(){
 			var $navId = $(this).parent();
 			$('.submenu-collapse').remove();
@@ -75,7 +72,6 @@ $(document).ready(function() {
 	}
 
 	function navTopbar(){
-		//$('body').removeClass('page-sidebar').addClass('page-topbar').removeClass('page-sidebar-closed');
 		$('#nav-sidebar').attr('id','nav-topbar');
 		var topbar = $('#nav-topbar');
 		topbar.off();
@@ -117,8 +113,8 @@ $(document).ready(function() {
 	}
 
 	function mobileNav() {
-		//clean actual menu type
-		// get it in navigation whatever type it is.
+		// clean actual menu type
+		// get it in navigation whatever type it is
 		var navigation = $('#nav-sidebar,#nav-topbar');
 		var submenu = "";
 		// clean trigger
@@ -192,6 +188,18 @@ $(document).ready(function() {
 		}
 	}
 	initNav();
+
+	// wip prevent mouseout
+	$("li.maintab.has_submenu").not(".active").on("mouseenter",function(e){
+		$("li.maintab").removeClass("hover");
+		$(this).addClass("hover");
+		$(this).on("mouseleave",function(){
+			var $submenu = $(this);
+			setTimeout(function(){
+				$submenu.removeClass("hover");
+			}, 300);
+		});
+	});
 
 	$('.dropdown-toggle').dropdown();
 	$('.label-tooltip, .help-tooltip').tooltip();
