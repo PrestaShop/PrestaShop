@@ -558,14 +558,14 @@ class AdminControllerCore extends Controller
 			}
 
 			foreach ($_GET as $key => $value)
-				if (stripos($key, $this->list_id.'OrderBy') === 0)
+				if (stripos($key, $this->list_id.'OrderBy') === 0 && Validate::isOrderBy($value))
 				{
 					if ($value === '' || $value == $this->_defaultOrderBy)
 						unset($this->context->cookie->{$prefix.$key});
 					else
 						$this->context->cookie->{$prefix.$key} = $value;
 				}
-				elseif (stripos($key, $this->list_id.'Orderway') === 0)
+				elseif (stripos($key, $this->list_id.'Orderway') === 0 && Validate::isOrderWay($value))
 				{
 					if ($value === '' || $value == $this->_defaultOrderWay)
 						unset($this->context->cookie->{$prefix.$key});
@@ -2777,7 +2777,7 @@ class AdminControllerCore extends Controller
 				if (isset($def['required']) && $def['required'])
 				{
 					$value = Tools::getValue($field.'_'.$default_language->id);
-					if (Tools::isEmpty($value))
+					if (empty($value))
 						$this->errors[$field.'_'.$default_language->id] = sprintf(
 								Tools::displayError('The field %1$s is required at least in %2$s.'),
 								$object->displayFieldName($field, $class_name),

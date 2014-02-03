@@ -80,12 +80,13 @@
                                         <input type="checkbox" name="item_active" value="1"{if $hItem.active == 1} checked="checked"{/if} />
                                     </div>
                                 </div>
-                                <!--<div class="title item-field form-group">
+                                <div class="title item-field form-group">
                                     <label class="control-label col-lg-3">{l s='Title' mod='themeconfigurator'}</label>
                                     <div class="col-lg-7">
                                         <input type="text" name="item_title" size="48" value="{$hItem.title|escape:'htmlall':'UTF-8'}" />
                                     </div>
                                 </div>
+                                <!--
                                 <div class="title_use item-field form-group">
                                     <label class="control-label col-lg-3">{l s='Use title in front' mod='themeconfigurator'}</label>
                                     <div class="col-lg-7">

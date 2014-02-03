@@ -513,7 +513,7 @@ class pagination
 		{
 			$output .= "?" . $extra;
 		}
-		return $output;
+		return Tools::safeOutput($output);
 	}
 	/**
 	 * return the html

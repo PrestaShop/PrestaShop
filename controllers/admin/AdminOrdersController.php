@@ -923,7 +923,7 @@ class AdminOrdersControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('The order cannot be found');
 				elseif (!Validate::isNegativePrice($amount) || !(float)$amount)
 					$this->errors[] = Tools::displayError('The amount is invalid.');
-				elseif (!Validate::isString(Tools::getValue('payment_method')))
+				elseif (!Validate::isGenericName(Tools::getValue('payment_method')))
 					$this->errors[] = Tools::displayError('The selected payment method is invalid.');
 				elseif (!Validate::isString(Tools::getValue('payment_transaction_id')))
 					$this->errors[] = Tools::displayError('The transaction ID is invalid.');
