@@ -83,6 +83,9 @@ Release Notes for PrestaShop 1.5
 	[-] FO : OrderOpcController Fix wrong hook
 	[-] FO : OrderConfirmationController is not kept on https when the platform is set up to handle the order checkout process on https. Now, also the order confirmation page is on https if needed.
 
+	[-] BO : FixBug #PSCSX-569 wrong switch display
+	[-] BO : fixed bug #PSCSX-565 - carrier breadcrumbs fix
+	[-] BO : Fix bug #PSCSX-396 duplicate import matches
 	[-] BO :  Blockbanner : Typo fix
 	[-] BO : FixBug #PSCSX-564 Warning on carriers selection
 	[-] BO : FixBug #PSCSX-534 supply order pdf template
