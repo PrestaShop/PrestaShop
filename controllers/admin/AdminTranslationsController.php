@@ -609,6 +609,10 @@ class AdminTranslationsControllerCore extends AdminController
 						{
 							$id_lang = Language::getIdByIso($iso_code);
 							$tab->name[(int)$id_lang] = $translations;
+							
+							// Do not crash at intall
+							if (!isset($tab->name[Configuration::get('PS_LANG_DEFAULT')]))
+								$tab->name[(int)Configuration::get('PS_LANG_DEFAULT')] = $translations;
 
 							if (!Validate::isGenericName($tab->name[(int)$id_lang]))
 								$errors[] = sprintf(Tools::displayError('Tab "%s" is not valid'), $tab->name[(int)$id_lang]);
