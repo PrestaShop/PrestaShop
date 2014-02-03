@@ -22,9 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {include file="$tpl_dir./errors.tpl"}
-
 {if isset($category)}
 	{if $category->id AND $category->active}
     	{if $scenes || $category->description || $category->id_image}
@@ -72,15 +70,8 @@
                   {/if}
             </div>
 		{/if}
-		<h1 class="page-heading{if (isset($subcategories) && !$products) || (isset($subcategories) && $products) || !isset($subcategories) && $products} product-listing{/if}">
-			{strip}
-				{$category->name|escape:'html':'UTF-8'}
-				{if isset($categoryNameComplement)}
-					{$categoryNameComplement|escape:'html':'UTF-8'}
-				{/if}
-			{/strip}
-		</h1>
-		<span class="heading-counter pull-right">{include file="$tpl_dir./category-count.tpl"}</span>
+		<h1 class="page-heading{if (isset($subcategories) && !$products) || (isset($subcategories) && $products) || !isset($subcategories) && $products} product-listing{/if}">{$category->name|escape:'html':'UTF-8'}{if isset($categoryNameComplement)}&nbsp;{$categoryNameComplement|escape:'html':'UTF-8'}{/if}</h1>
+		{include file="$tpl_dir./category-count.tpl"}
 		{if isset($subcategories)}
 		<!-- Subcategories -->
 		<div id="subcategories">
@@ -106,9 +97,8 @@
 			</ul>
 		</div>
 		{/if}
-
 		{if $products}
-			<div class="content_sortPagiBar">
+			<div class="content_sortPagiBar clearfix">
             	<div class="sortPagiBar clearfix">
             		{include file="./product-sort.tpl"}
                 	{include file="./nbr-product-page.tpl"}
@@ -118,9 +108,7 @@
 					{include file="$tpl_dir./pagination.tpl"}
                 </div>
 			</div>
-			
 			{include file="./product-list.tpl" products=$products}
-			
 			<div class="content_sortPagiBar">
 				<div class="bottom-pagination-content clearfix">
 					{include file="./product-compare.tpl" paginationId='bottom'}
