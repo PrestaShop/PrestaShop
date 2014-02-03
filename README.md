@@ -22,7 +22,7 @@ To install PrestaShop, you need a web server running PHP5 and any flavor of MySQ
 You will also need a database administration tool, such as phpMyAdmin, in order to create a database for PrestaShop.
 We recommend the Apache or Nginx web servers.
 
-If your host does not offer PHP5 by default, [here are a few explanations][3] about PHP5 or the .htaccess file for certain hosting services (1&1, Free, Lycos, OVH, Infomaniak, Amen, GoDaddy, etc.).
+If your host does not offer PHP5 by default, [here are a few explanations][3] about PHP5 or the .htaccess file for certain hosting services (1&1, Free, OVH, Infomaniak, Amen, GoDaddy, etc.).
 
 If you want your own store with nothing to download and install, visit [http://www.prestabox.com][4]: it lets you create your online store in less than 10 minutes without any technical knowledge.
 
