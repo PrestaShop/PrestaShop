@@ -190,7 +190,7 @@ class BlockBanner extends Module
 						'lang' => true,
 						'label' => $this->l('Image description'),
 						'name' => 'BLOCKBANNER_DESC',
-						'desc' => $this->l('Please enter a short but meaninful description for the banner.')
+						'desc' => $this->l('Please enter a short but meaningful description for the banner.')
 					)
 				),
 				'submit' => array(
