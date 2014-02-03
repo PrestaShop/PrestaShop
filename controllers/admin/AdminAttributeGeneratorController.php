@@ -207,7 +207,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		);
 	}
 
-	public function initBreadcrumbs()
+	public function initBreadcrumbs($tab_id = null, $tabs = null)
 	{
 		$this->display = 'generator';
 		return parent::initBreadcrumbs();
