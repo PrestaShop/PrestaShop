@@ -3048,7 +3048,7 @@ class BlockLayered extends Module
 		'categoryCount' => $category_count,
 		'meta_title' => $meta_title.' - '.Configuration::get('PS_SHOP_NAME'),
 		'heading' => $meta_title,
-		'meta_keywords' => $meta_keywords,
+		'meta_keywords' => isset($meta_keywords) ? $meta_keywords : null,
 		'meta_description' => $meta_description));
 	}
 	
