@@ -217,3 +217,13 @@ INSERT INTO `PREFIX_hook_module_exceptions` (`id_shop`, `id_module`, `id_hook`, 
 INSERT INTO `PREFIX_linksmenutop` (`id_linksmenutop`, `id_shop`, `new_window`) VALUES (1, 1, 1);
 INSERT INTO `PREFIX_linksmenutop_lang` (`id_linksmenutop`, `id_lang`, `id_shop`, `label`, `link`) VALUES (1, 1, 1, 'Blog', 'http://www.prestashop.com/blog/');
 
+INSERT INTO `PREFIX_hook_module_exceptions` (`id_shop`, `id_module`, `id_hook`, `file_name`) 
+(
+	SELECT 1, m.id_module, h.id_hook, 'category'
+	FROM `PREFIX_hook` h
+	JOIN `PREFIX_hook_module` hm ON (hm.id_hook = h.id_hook)
+	JOIN `PREFIX_module` m ON (m.id_module = hm.id_module)
+	WHERE 
+	h.name='displayLeftColumn' AND m.name IN ('blockbestsellers', 'blockmanufacturer', 'blocksupplier', 'blockmyaccount', 'blockpaymentlogo')
+	GROUP BY m.id_module
+);
