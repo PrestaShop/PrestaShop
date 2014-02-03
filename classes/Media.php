@@ -75,6 +75,7 @@ class MediaCore
 	{
 		if (strlen($html_content) > 0)
 		{
+
 			//set an alphabetical order for args
 			// $html_content = preg_replace_callback(
 				// '/(<[a-zA-Z0-9]+)((\s*[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']\s*)*)>/',
@@ -434,7 +435,7 @@ class MediaCore
 		$compressed_css_files_not_found = array();
 		$compressed_css_files_infos = array();
 		$protocol_link = Tools::getCurrentUrlProtocolPrefix();
-		$cache_path = _PS_THEME_DIR_.'cache'.DIRECTORY_SEPARATOR;
+		$cache_path = _PS_THEME_DIR_.'cache/';
 
 		// group css files by media
 		foreach ($css_files as $filename => $media)
@@ -559,7 +560,7 @@ class MediaCore
 		$compressed_js_filename = '';
 		$js_external_files = array();
 		$protocol_link = Tools::getCurrentUrlProtocolPrefix();
-		$cache_path = _PS_THEME_DIR_.'cache'.DIRECTORY_SEPARATOR;
+		$cache_path = _PS_THEME_DIR_.'cache/';
 
 		// get js files infos
 		foreach ($js_files as $filename)

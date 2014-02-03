@@ -346,7 +346,10 @@ class HelperCore
 	
 	public function renderModulesList($modules_list)
 	{
-		$this->tpl_vars = array('modules_list' => $modules_list);
+		$this->tpl_vars = array(
+			'modules_list' => $modules_list,
+			'modules_uri' => __PS_BASE_URI__.basename(_PS_MODULE_DIR_)
+		);
 		$tpl = $this->createTemplate('helpers/modules_list/list.tpl');
 		$tpl->assign($this->tpl_vars);
 

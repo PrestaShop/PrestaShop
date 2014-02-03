@@ -51,6 +51,9 @@ function clearText()
 
 function oosHookJsCodeMailAlert()
 {
+	if (typeof mailalerts_url_check == 'undefined')
+		return;
+
 	$.ajax({
 		type: 'POST',
 		url: mailalerts_url_check,
@@ -72,8 +75,9 @@ function oosHookJsCodeMailAlert()
 
 function  addNotification()
 {
-	if ($('#oos_customer_email').val() == mailalerts_placeholder)
+	if ($('#oos_customer_email').val() == mailalerts_placeholder || (typeof mailalerts_url_add == 'undefined'))
 		return;
+
 	$.ajax({
 		type: 'POST',
 		url: mailalerts_url_add,

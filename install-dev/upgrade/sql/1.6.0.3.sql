@@ -22,6 +22,8 @@ INSERT INTO `PREFIX_web_browser` (name) VALUES ('IE 11');
 INSERT INTO `PREFIX_theme` (`name`, `directory`, `responsive`, `default_left_column`, `default_right_column`, `product_per_page`)
 VALUES ('default-bootstrap', 'default-bootstrap', 1, 1, 0, 12);
 
-INSERT IGNORE INTO PREFIX_theme_meta( `id_theme` , `id_meta` )
+INSERT IGNORE INTO `PREFIX_theme_meta` ( `id_theme` , `id_meta` )
   SELECT `PREFIX_theme`.`id_theme` , `PREFIX_meta`.`id_meta`
   FROM `PREFIX_theme` , `PREFIX_meta`;
+  
+ALTER TABLE `PREFIX_import_match` ADD UNIQUE (`name` ( 32 ));

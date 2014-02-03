@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="alert alert-success">
-    {l s='The theme %1s has been successfully installed.'|sprintf:$theme_name}
+    {l s='The "%1$s" theme has been successfully installed.'|sprintf:$theme_name}
 </div>
 
 {if $doc|count > 0}
@@ -34,15 +34,15 @@
     </ul>
 {/if}
 <div class="alert alert-warning">
-    {l s='Warning : You may have to regenerate images to fit with this new theme'}
+    {l s='Warning: You may have to regenerate images to fit with this new theme.'}
 </div>
 {if isset($img_error['error'])}
     <div class="alert alert-warning">
-        {l s='Warning: Copy/Paste your errors if you want to manually set the image type (in the "Images" page under the "Preferences" menu):'}
+        {l s='Warning: Copy/paste your errors if you want to manually set the image type (in the "Images" page under the "Preferences" menu):'}
         <ul>
             {foreach $img_error['error'] as $error}
                 <li>
-                    {l s='Name image type:'} <strong>{$error['name']}</strong> {l s='Width: %1$spx Height:%2$px'|sprintf:$error['width']:$error['height']}
+                    {l s='Name image type:'} <strong>{$error['name']}</strong> {l s='(width: %1$spx, height: %2$spx).'|sprintf:$error['width']:$error['height']}
                 </li>
             {/foreach}
         </ul>
@@ -51,11 +51,11 @@
 {/if}
 {if isset($img_error['ok'])}
     <div class="alert alert-success">
-        {l s='Images have been correctly updated in database:'}
+        {l s='Images have been correctly updated in the database:'}
         <ul>
             {foreach $img_error['ok'] as $error}
                 <li>
-                    {l s='Image type:'} <strong>{$error['name']}</strong> {l s='Width: %1$spx Height:%2$px'|sprintf:$error['width']:$error['height']}
+                    {l s='Name image type:'} <strong>{$error['name']}</strong> {l s='(width: %1$spx, height: %2$spx).'|sprintf:$error['width']:$error['height']}
                 </li>
             {/foreach}
         </ul>

@@ -34,11 +34,7 @@
 			</h2>
 			<div class="row">
 				<div class="product clearfix col-xs-12 col-sm-6">
-					<img 
-					src="{$link->getImageLink($stf_product->link_rewrite, $stf_product_cover, 'home_default')|escape:'html':'UTF-8'}" 
-					height="{$homeSize.height}" 
-					width="{$homeSize.width}" 
-					alt="{$stf_product->name|escape:'html':'UTF-8'}" />
+					<img src="{$link->getImageLink($stf_product->link_rewrite, $stf_product_cover, 'home_default')|escape:'html':'UTF-8'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$stf_product->name|escape:'html':'UTF-8'}" />
 					<div class="product_desc">
 						<p class="product_name">
 							<strong>{$stf_product->name}</strong>
@@ -70,16 +66,11 @@
 						</p>
 					</div>
 					<p class="submit">
-						<input id="id_product_comment_send" name="id_product" type="hidden" value="{$stf_product->id}" />
 						<a class="closefb" href="#">
 							{l s='Cancel' mod='sendtoafriend'}
 						</a>
 						&nbsp;{l s='or' mod='sendtoafriend'}&nbsp;					
-						<button 
-						id="sendEmail" 
-						class="btn button button-small" 
-						name="sendEmail" 
-						type="submit">
+						<button id="sendEmail" class="btn button button-small" name="sendEmail" type="submit">
 							<span>{l s='Send' mod='sendtoafriend'}</span>
 						</button>
 					</p>

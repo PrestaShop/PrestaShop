@@ -263,13 +263,15 @@ class ToolsCore
 	public static function usingSecureMode()
 	{
 		if (isset($_SERVER['HTTPS']))
-			return ($_SERVER['HTTPS'] == 1 || strtolower($_SERVER['HTTPS']) == 'on');
+			return in_array(Tools::strtolower($_SERVER['HTTPS']), array(1, 'on'));
 		// $_SERVER['SSL'] exists only in some specific configuration
 		if (isset($_SERVER['SSL']))
-			return ($_SERVER['SSL'] == 1 || strtolower($_SERVER['SSL']) == 'on');
+			return in_array(Tools::strtolower($_SERVER['SSL']), array(1, 'on'));
 		// $_SERVER['REDIRECT_HTTPS'] exists only in some specific configuration
 		if (isset($_SERVER['REDIRECT_HTTPS']))
-			return ($_SERVER['REDIRECT_HTTPS'] == 1 || strtolower($_SERVER['REDIRECT_HTTPS']) == 'on');
+			return in_array(Tools::strtolower($_SERVER['REDIRECT_HTTPS']), array(1, 'on'));
+		if (isset($_SERVER['HTTP_SSL']))
+			return in_array(Tools::strtolower($_SERVER['HTTP_SSL']), array(1, 'on'));
 
 		return false;
 	}
@@ -2802,11 +2804,11 @@ exit;
 
 		$time_limit -= 5;
 		$start_time = microtime(true);
-		$last_modified = filemtime($file_name);
+		$last_modified = @filemtime($file_name);
 
 		while(true)
 		{
-			if (((microtime(true) - $start_time) > $time_limit) || filemtime($file_name) > $last_modified)
+			if (((microtime(true) - $start_time) > $time_limit) || @filemtime($file_name) > $last_modified)
 				break;
 			clearstatcache();
 			usleep(300);

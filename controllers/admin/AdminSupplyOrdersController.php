@@ -290,7 +290,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'type' => 'text',
 						'label' => $this->l('Global discount rate (%):'),
 						'name' => 'discount_rate',
-						'required' => true,
+						'required' => false,
 						'hint' => $this->l('This is the global discount rate in percent for the order.'),
 					),
 					array(
@@ -306,6 +306,15 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				),
 				'submit' => array(
 					'title' => $this->l('Save order'),
+				),
+				'buttons' => array(
+					'save-and-stay' => array(
+						'title' => $this->l('Save order and stay'),
+						'name' => 'submitAddsupply_orderAndStay',
+						'type' => 'submit',
+						'class' => 'btn btn-default pull-right',
+						'icon' => 'process-icon-save'
+					)
 				)
 			);
 

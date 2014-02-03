@@ -171,7 +171,6 @@ class AdminStockManagementControllerCore extends AdminController
 				}
 
 				$this->displayInformation($this->l('Rolling over the quantity and price fields will give you the details about the last stock movement.'));
-
 				// fields in the form
 				$this->fields_form[]['form'] = array(
 					'legend' => array(
@@ -1042,6 +1041,8 @@ class AdminStockManagementControllerCore extends AdminController
 					$helper->languages = $this->_languages;
 					$helper->default_form_language = $this->default_form_language;
 					$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
+					$helper->show_cancel_button = true;
+					$helper->back_url = $this->context->link->getAdminLink('AdminStockManagement');
 
 					$helper->fields_value = array(
 						'id_product' => $id_product,

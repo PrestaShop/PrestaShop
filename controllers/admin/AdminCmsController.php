@@ -204,6 +204,15 @@ class AdminCmsControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
+			),
+			'buttons' => array(
+				'save_and_preview' => array(
+					'name' => 'viewcms',
+					'type' => 'submit',
+					'title' => $this->l('Save and preview'),
+					'class' => 'btn btn-default pull-right',
+					'icon' => 'process-icon-preview'
+				)
 			)
 		);
 
@@ -251,8 +260,15 @@ class AdminCmsControllerCore extends AdminController
 	
 	public function postProcess()
 	{	
-		if (Tools::isSubmit('viewcms') && ($id_cms = (int)Tools::getValue('id_cms')) && ($cms = new CMS($id_cms, $this->context->language->id)) && Validate::isLoadedObject($cms))
-			$this->redirect_after = $this->getPreviewUrl($cms);
+		if (Tools::isSubmit('viewcms') && ($id_cms = (int)Tools::getValue('id_cms')))
+		{
+			parent::postProcess();
+			if (($cms = new CMS($id_cms, $this->context->language->id)) && Validate::isLoadedObject($cms))
+			{
+				$this->redirect_after = $this->getPreviewUrl($cms);			
+				Tools::redirectAdmin($this->redirect_after);
+			}
+		}
 		elseif (Tools::isSubmit('deletecms'))
 		{
 			if (Tools::getValue('id_cms') == Configuration::get('PS_CONDITIONS_CMS_ID'))
@@ -385,7 +401,7 @@ class AdminCmsControllerCore extends AdminController
 		{
 			$params = http_build_query(array(
 				'adtoken' => Tools::getAdminTokenLite('AdminCmsContent'),
-				'ad' => substr(dirname($_SERVER['PHP_SELF']), strrpos(dirname($_SERVER['PHP_SELF']), '/') + 1),
+				'ad' => basename(_PS_ADMIN_DIR_),
 				'id_employee' => (int)$this->context->employee->id
 				)
 			);

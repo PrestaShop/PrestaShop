@@ -53,12 +53,12 @@
 			<textarea name="returnText" class="form-control"></textarea>
 		</p>
 		{foreach $ids_order_detail as $id_order_detail}
-			<input type="hidden" name="ids_order_detail[{$id_order_detail}]" value="{$id_order_detail}"/>
+			<input type="hidden" name="ids_order_detail[{$id_order_detail|intval}]" value="{$id_order_detail|intval}"/>
 		{/foreach}
 		{foreach $order_qte_input as $key => $value}
-			<input type="hidden" name="order_qte_input[{$key}]" value="{$value}"/>
+			<input type="hidden" name="order_qte_input[{$key|intval}]" value="{$value|intval}"/>
 		{/foreach}
-		<input type="hidden" name="id_order" value="{$id_order}"/>
+		<input type="hidden" name="id_order" value="{$id_order|intval}"/>
 		<input class="unvisible" type="submit" name="submitReturnMerchandise" value="{l s='Make an RMA slip'}"/>
 		<p>
 	        <button type="submit" name="submitReturnMerchandise" class="btn btn-default button button-small">

@@ -76,6 +76,22 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 	}
 
 	/**
+	 * Returns the invoice logo
+	 */
+	protected function getLogo()
+	{
+		$logo = '';
+
+		$physical_uri = Context::getContext()->shop->physical_uri.'img/';
+
+		if (Configuration::get('PS_LOGO_INVOICE', null, null, (int)Shop::getContextShopID()) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)Shop::getContextShopID())))
+			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)Shop::getContextShopID());
+		elseif (Configuration::get('PS_LOGO', null, null, (int)Shop::getContextShopID()) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int)Shop::getContextShopID())))
+			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int)Shop::getContextShopID());
+		return $logo;
+	}
+
+	/**
 	 * @see HTMLTemplate::getBulkFilename()
 	 */
 	public function getBulkFilename()
