@@ -22,18 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{if scenes}
-
-<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/jquery.scrollTo.js"></script>
-<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/jquery.serialScroll.js"></script>
-<script type="text/javascript">// <![CDATA[
-i18n_scene_close = '{l s='Close' js=1}';
-$(function () {ldelim}
-	li_width = parseInt({$thumbSceneImageType.width} + 10);
-{rdelim});
-//]]></script>
-<script type="text/javascript" src="{$js_dir}scenes.js"></script>
+{if $scenes}
 <div id="scenes">
 	<div>
 		{foreach $scenes as $scene_key=>$scene}
@@ -99,4 +88,8 @@ $(function () {ldelim}
 	</div>
 	{/if}
 </div>
+{strip}
+{addJsDefL name=i18n_scene_close}{l s='Close' js=1}{/addJsDefL}
+{addJsDef li_width=($thumbSceneImageType.width|intval+10)}
+{/strip}
 {/if}
