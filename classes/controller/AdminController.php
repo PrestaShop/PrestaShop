@@ -381,11 +381,16 @@ class AdminControllerCore extends Controller
 	/**
 	 * Set breadcrumbs array for the controller page
 	 */
-	public function initBreadcrumbs()
+	public function initBreadcrumbs($tab_id = null, $tabs = null)
 	{
-		$tabs = array();
-		$tabs = Tab::recursiveTab($this->id, $tabs);
+		if (is_array($tabs) || count($tabs))
+			$tabs = array();
 		
+		if (is_null($tab_id))
+			$tab_id = $this->id;
+		
+		$tabs = Tab::recursiveTab($tab_id, $tabs);
+
 		$dummy = array('name' => '', 'href' => '', 'icon' => '');
 		$breadcrumbs2 = array(
 			'container' => $dummy,
@@ -411,6 +416,8 @@ class AdminControllerCore extends Controller
 		{
 			case 'add':
 				$breadcrumbs2['action']['name'] = $this->l('Add', null, null, false);
+				$breadcrumbs2['action']['icon'] = 'icon-plus';
+				break;
 			case 'edit':
 				$breadcrumbs2['action']['name'] = $this->l('Edit', null, null, false);
 				$breadcrumbs2['action']['icon'] = 'icon-pencil';
@@ -434,6 +441,7 @@ class AdminControllerCore extends Controller
 				$breadcrumbs2['action']['icon'] = 'icon-flask';
 				break;
 		}
+
 		$this->context->smarty->assign('breadcrumbs2', $breadcrumbs2);
 
 		/* BEGIN - Backward compatibility < 1.6.0.3 */
