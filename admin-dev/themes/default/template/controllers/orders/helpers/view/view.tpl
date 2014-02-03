@@ -660,8 +660,8 @@
 							{foreach from=$order->getOrderPaymentCollection() item=payment}
 							<tr>
 								<td>{dateFormat date=$payment->date_add full=true}</td>
-								<td>{$payment->payment_method}</td>
-								<td>{$payment->transaction_id}</td>
+								<td>{$payment->payment_method|escape:'html':'UTF-8'}</td>
+								<td>{$payment->transaction_id|escape:'html':'UTF-8'}</td>
 								<td>{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
 								<td>
 								{if $invoice = $payment->getOrderInvoice($order->id)}
