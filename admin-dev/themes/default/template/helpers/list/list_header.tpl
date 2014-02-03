@@ -268,7 +268,7 @@
 						</span>
 					</th>
 					{/if}
-					{if $has_actions}
+					{if $has_actions || $show_filters}
 					<th>{if !$simple_header}{/if}</th>
 					{/if}
 				</tr>
