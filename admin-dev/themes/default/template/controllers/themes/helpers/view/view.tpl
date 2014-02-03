@@ -34,7 +34,7 @@
     </ul>
 {/if}
 <div class="alert alert-warning">
-    {l s='Warning : You may have to regenerate images to fit with this new theme'}
+    {l s='Warning: You may have to regenerate images to fit with this new theme'}
 </div>
 {if isset($img_error['error'])}
     <div class="alert alert-warning">
@@ -42,7 +42,7 @@
         <ul>
             {foreach $img_error['error'] as $error}
                 <li>
-                    {l s='Name image type:'} <strong>{$error['name']}</strong> {l s='Width: %1$spx Height:%2$px'|sprintf:$error['width']:$error['height']}
+                    {l s='Image type name: <strong>%1$s</strong> (width: %2$spx height: %3$px).'|sprintf:$error['name']:$error['width']:$error['height']}
                 </li>
             {/foreach}
         </ul>
@@ -51,11 +51,11 @@
 {/if}
 {if isset($img_error['ok'])}
     <div class="alert alert-success">
-        {l s='Images have been correctly updated in database:'}
+        {l s='Images have been correctly updated in the database:'}
         <ul>
             {foreach $img_error['ok'] as $error}
                 <li>
-                    {l s='Image type:'} <strong>{$error['name']}</strong> {l s='Width: %1$spx Height:%2$px'|sprintf:$error['width']:$error['height']}
+                    {l s='Image type name: <strong>%1$s</strong> (width: %2$spx height: %3$px).'|sprintf:$error['name']:$error['width']:$error['height']}
                 </li>
             {/foreach}
         </ul>
