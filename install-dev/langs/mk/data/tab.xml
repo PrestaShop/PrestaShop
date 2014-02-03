@@ -23,8 +23,8 @@
   <tab id="Products" name="наслови"/>
   <tab id="Categories" name="Категории"/>
   <tab id="Monitoring" name="Надзор"/>
-  <tab id="Attributes_and_Values" name="Product Attributes"/>
-  <tab id="Features" name="Product Features"/>
+  <tab id="Attributes_and_Values" name="атрибути и вредности"/>
+  <tab id="Features" name="Карактеристики"/>
   <tab id="Manufacturers" name="Издавачи"/>
   <tab id="Suppliers" name="Продавачи"/>
   <tab id="Image_Mapping" name="Мапирање на фотографии"/>
