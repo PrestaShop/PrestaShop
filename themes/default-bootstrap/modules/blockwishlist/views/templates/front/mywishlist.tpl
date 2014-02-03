@@ -99,9 +99,7 @@
 								<td>{$wishlists[i].counter|intval}</td>
 								<td>{$wishlists[i].date_add|date_format:"%Y-%m-%d"}</td>
 								<td>
-									<a 
-									href="javascript:;" 
-									onclick="javascript:WishlistManage('block-order-detail', '{$wishlists[i].id_wishlist|intval}');">
+									<a  href="javascript:;"  onclick="javascript:WishlistManage('block-order-detail', '{$wishlists[i].id_wishlist|intval}');">
 										{l s='View' mod='blockwishlist'}
 									</a>
 								</td>
