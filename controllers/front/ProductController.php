@@ -627,7 +627,7 @@ class ProductControllerCore extends FrontController
 				
 		$indexes = array_flip($authorized_text_fields);
 		foreach ($_POST as $field_name => $value)
-			if (in_array($field_name, $authorized_text_fields) && !empty($value))
+			if (in_array($field_name, $authorized_text_fields) && !empty((string)$value))
 			{
 				if (!Validate::isMessage($value))
 					$this->errors[] = Tools::displayError('Invalid message');
