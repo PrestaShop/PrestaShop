@@ -815,7 +815,7 @@ class FrontControllerCore extends Controller
 			return false;
 		if (Tools::getValue('liveToken') != Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
 			return false;
-		return is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.Tools::getValue('ad'));
+		return is_dir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.Tools::getValue('ad'));
 	}
 	
 	public function getLiveEditFooter()
