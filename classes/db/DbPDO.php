@@ -88,7 +88,15 @@ class DbPDOCore extends Db
 	 */
 	protected function _query($sql)
 	{
-		return $this->link->query($sql);
+		if($this->ping())
+			return $this->link->query($sql);
+		else
+		{
+			if($this->connect())
+				return $this->link->query($sql);
+			else
+				return false;
+		}
 	}
 
 	/**
@@ -260,5 +268,15 @@ class DbPDOCore extends Db
 		unset($link);
 
 		return ($result === false) ? false : true;
+	}
+
+	public function ping() {
+		try{
+			$this->link->query('SELECT 1');
+		}catch (PDOException $e)
+		{
+			return false;
+		}
+		return true;
 	}
 }

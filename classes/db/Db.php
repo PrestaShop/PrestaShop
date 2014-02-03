@@ -165,6 +165,8 @@ abstract class DbCore
 	/* do not remove, useful for some modules */
 	abstract public function set_db($db_name);
 	
+	abstract public function ping();
+	
 	abstract public function getBestEngine();
 
 	/**
