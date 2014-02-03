@@ -73,9 +73,10 @@
         echo "parentFolder = {path:'" . getParentFolderPath($folderInfo['path']). "'};\n"; 
 		echo 'currentFolder ={'; 
 		$count =1;
+
 		foreach($folderInfo as $k=>$v)
 		{
-			echo ($count++ == 1?'':',') . "'" . $k . "':'" . ($k=='ctime'|| $k=='mtime'?date(DATE_TIME_FORMAT, $v):$v)  . "'";
+			echo ($count++ == 1?'':',') . "'" . $k . "':'" . ($k=='ctime'|| $k=='mtime'?date(DATE_TIME_FORMAT, $v) : Tools::safeOutput($v))  . "'";
 
 		}
 		echo "};\n";
