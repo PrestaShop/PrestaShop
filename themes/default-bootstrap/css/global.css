@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "CP850";
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -6161,7 +6161,8 @@ table.table_block td {
     font: bold 13px/22px Arial, Helvetica, sans-serif;
     float: right;
     color: #333333;
-    text-transform: none; }
+    text-transform: none;
+    margin-bottom: 10px; }
     @media (max-width: 480px) {
       .page-heading span.heading-counter {
         float: none;
@@ -6210,7 +6211,8 @@ ul.footer_links {
       margin-left: 10px; }
 
 .content_sortPagiBar .sortPagiBar {
-  border-bottom: 1px solid #d6d4d4; }
+  border-bottom: 1px solid #d6d4d4;
+  clear: both; }
   .content_sortPagiBar .sortPagiBar #productsSortForm {
     float: left;
     margin-right: 20px;
