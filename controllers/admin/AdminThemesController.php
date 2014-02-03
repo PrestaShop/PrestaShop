@@ -351,14 +351,14 @@ class AdminThemesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name of the theme:'),
+					'label' => $this->l('Name of the theme'),
 					'name' => 'name',
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 				),
 				array(
 					'type' => 'file',
-					'label' => $this->l('Preview image for the theme:'),
+					'label' => $this->l('Preview image for the theme'),
 					'name' => 'image_preview',
 					'display_image' => true,
 					'hint' => sprintf($this->l('Max image size:%1s'), Tools::formatBytes(Tools::getMaxUploadSize())),
@@ -430,7 +430,7 @@ class AdminThemesControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
-				'label' => $this->l('Name of the theme\'s directory:'),
+				'label' => $this->l('Name of the theme\'s directory'),
 				'name' => 'directory',
 				'required' => true,
 				'hint' => $this->l('If the directory does not exists, it will be created.'),
@@ -440,7 +440,7 @@ class AdminThemesControllerCore extends AdminController
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
 				'name' => 'based_on',
-				'label' => $this->l('Copy missing files from existing theme:'),
+				'label' => $this->l('Copy missing files from existing theme'),
 				'hint' => $this->l('If you create a new theme, it\'s recommended that you use default theme files.'),
 				'options' => array(
 					'id' => 'id',
@@ -456,7 +456,7 @@ class AdminThemesControllerCore extends AdminController
 		else
 			$this->fields_form['input'][] = array(
 				'type' => 'radio',
-				'label' => $this->l('Directory:'),
+				'label' => $this->l('Directory'),
 				'name' => 'directory',
 				'required' => true,
 				'br' => true,
@@ -1251,7 +1251,7 @@ class AdminThemesControllerCore extends AdminController
 		{
 			$fields_form['form']['input'][] = array(
 				'type' => 'checkbox',
-				'label' => $this->l('Select the theme\'s modules you wish to export:'),
+				'label' => $this->l('Select the theme\'s modules you wish to export'),
 				'values' => array(
 					'query' => $this->formatHelperArray($to_install),
 					'id' => 'id',
@@ -1315,7 +1315,7 @@ class AdminThemesControllerCore extends AdminController
 					array(
 						'type' => 'select',
 						'name' => 'id_theme_export',
-						'label' => $this->l('Choose the theme you want to export:'),
+						'label' => $this->l('Choose the theme you want to export'),
 						'options' => array(
 							'id' => 'id',
 							'name' => 'name',
@@ -1584,7 +1584,7 @@ class AdminThemesControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'file',
-						'label' => $this->l('Zip of the theme:'),
+						'label' => $this->l('Zip of the theme'),
 						'name' => 'themearchive'
 					),
 				),
@@ -1605,7 +1605,7 @@ class AdminThemesControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Archive URL:'),
+						'label' => $this->l('Archive URL'),
 						'name' => 'themearchiveUrl'
 					),
 				),
@@ -1640,7 +1640,7 @@ class AdminThemesControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'select',
-						'label' => $this->l('Select the archive:'),
+						'label' => $this->l('Select the archive'),
 						'name' => 'theme_archive_server',
 						'desc' => $this->l('This field will list the zip files in the \'themes\' folder'),
 						'options' => array(
@@ -2113,7 +2113,7 @@ class AdminThemesControllerCore extends AdminController
 					'input' => array(
 						array(
 							'type' => 'shop',
-							'label' => $this->l('Shop association:'),
+							'label' => $this->l('Shop association'),
 							'name' => 'checkBoxShopAsso_theme'
 						),
 						array(
@@ -2131,7 +2131,7 @@ class AdminThemesControllerCore extends AdminController
 			if (count($to_install) > 0)
 				$fields_form['form']['input'][] = array(
 					'type' => 'checkbox',
-					'label' => $this->l('Select the theme\'s modules you wish to install:'),
+					'label' => $this->l('Select the theme\'s modules you wish to install'),
 					'values' => array(
 						'query' => $to_install,
 						'id' => 'id',
@@ -2148,7 +2148,7 @@ class AdminThemesControllerCore extends AdminController
 			if (count($to_enable) > 0)
 				$fields_form['form']['input'][] = array(
 					'type' => 'checkbox',
-					'label' => $this->l('Select the theme\'s modules you wish to enable:'),
+					'label' => $this->l('Select the theme\'s modules you wish to enable'),
 					'values' => array(
 						'query' => $to_enable,
 						'id' => 'id',
@@ -2165,7 +2165,7 @@ class AdminThemesControllerCore extends AdminController
 			if (count($to_disable) > 0)
 				$fields_form['form']['input'][] = array(
 					'type' => 'checkbox',
-					'label' => $this->l('Select the theme\'s modules you wish to disable:'),
+					'label' => $this->l('Select the theme\'s modules you wish to disable'),
 					'values' => array(
 						'query' => $to_disable,
 						'id' => 'id',
