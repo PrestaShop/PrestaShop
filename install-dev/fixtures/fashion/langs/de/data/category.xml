@@ -2,7 +2,9 @@
 <entity_category>
   <category id="Women" id_shop="1">
     <name>Women</name>
-    <description>You will find here all woman fashion collections. This category includes all the basics of your wardrobe and much more: shoes, accessories, printed t-shirts, feminine dresses, women's jeans!</description>
+    <description>&lt;p&gt;&lt;strong&gt;You will find here all woman fashion collections.&lt;/strong&gt;&lt;/p&gt;&#xD;
+&lt;p&gt;This category includes all the basics of your wardrobe and much more:&lt;/p&gt;&#xD;
+&lt;p&gt;shoes, accessories, printed t-shirts, feminine dresses, women's jeans!&lt;/p&gt;</description>
     <link_rewrite>women</link_rewrite>
     <meta_title/>
     <meta_keywords/>
@@ -10,7 +12,8 @@
   </category>
   <category id="Tops" id_shop="1">
     <name>Tops</name>
-    <description>Choose from t-shirts, tops, blouses, short sleeves, long sleeves, tank tops, 3/4 sleeves and more. Find the cut that suits you the best!</description>
+    <description>&lt;p&gt;Choose from t-shirts, tops, blouses, short sleeves, long sleeves, tank tops, 3/4 sleeves and more.&lt;/p&gt;&#xD;
+&lt;p&gt;Find the cut that suits you the best!&lt;/p&gt;</description>
     <link_rewrite>tops</link_rewrite>
     <meta_title/>
     <meta_keywords/>
@@ -18,7 +21,8 @@
   </category>
   <category id="T-shirts" id_shop="1">
     <name>T-shirts</name>
-    <description>The must have of your wardrobe, take a look at our different colors, shapes and style of our collection!</description>
+    <description>&lt;p&gt;The must have of your wardrobe, take a look at our different colors,&lt;/p&gt;&#xD;
+&lt;p&gt;shapes and style of our collection!&lt;/p&gt;</description>
     <link_rewrite>tshirts</link_rewrite>
     <meta_title/>
     <meta_keywords/>
@@ -42,7 +46,8 @@
   </category>
   <category id="Dresses" id_shop="1">
     <name>Dresses</name>
-    <description>Find your favorites dresses from our wide choice of evening, casual or summer dresses! We offer dresses for every day, every style and every occasion.</description>
+    <description>&lt;p&gt;Find your favorites dresses from our wide choice of evening, casual or summer dresses!&lt;/p&gt;&#xD;
+&lt;p&gt;We offer dresses for every day, every style and every occasion.&lt;/p&gt;</description>
     <link_rewrite>dresses</link_rewrite>
     <meta_title/>
     <meta_keywords/>
@@ -50,7 +55,8 @@
   </category>
   <category id="Casual_Dresses" id_shop="1">
     <name>Casual Dresses</name>
-    <description>You are looking for a dress for every day? Take a look at our selection of dresses to find one that suits you.</description>
+    <description>&lt;p&gt;You are looking for a dress for every day? Take a look at&lt;/p&gt;&#xD;
+&lt;p&gt;our selection of dresses to find one that suits you.&lt;/p&gt;</description>
     <link_rewrite>casual-dresses</link_rewrite>
     <meta_title/>
     <meta_keywords/>
