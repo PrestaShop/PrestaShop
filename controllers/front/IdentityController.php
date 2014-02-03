@@ -45,8 +45,8 @@ class IdentityControllerCore extends FrontController
 	{
 		$origin_newsletter = (bool)$this->customer->newsletter;
 
-		if (isset($_POST['years']) && isset($_POST['months']) && isset($_POST['days']))
-			$this->customer->birthday = (int)($_POST['years']).'-'.(int)($_POST['months']).'-'.(int)($_POST['days']);
+		if (Tools::getIsset('years') && Tools::getIsset('months') && Tools::getIsset('days'))
+			$this->customer->birthday = (int)(Tools::getValue('years')).'-'.(int)(Tools::getValue('months')).'-'.(int)(Tools::getValue('days'));
 
 		if (Tools::isSubmit('submitIdentity'))
 		{
@@ -56,17 +56,17 @@ class IdentityControllerCore extends FrontController
 			else
 			{
 				$email = trim(Tools::getValue('email'));
-				$this->customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
-				if (isset($_POST['old_passwd']))
-					$_POST['old_passwd'] = trim($_POST['old_passwd']);
+				$this->customer->birthday = (empty(Tools::getValue('years')) ? '' : (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days'));
+				if (Tools::getIsset('old_passwd'))
+					$old_passwd = trim(Tools::getValue('old_passwd'));
 				
 				if (!Validate::isEmail($email))
 					$this->errors[] = Tools::displayError('This email address is not valid');
 				elseif ($this->customer->email != $email && Customer::customerExists($email, true))
 					$this->errors[] = Tools::displayError('An account using this email address has already been registered.');
-				elseif ((!isset($_POST['old_passwd']) || empty($_POST['old_passwd'])) || (Tools::encrypt($_POST['old_passwd']) != $this->context->cookie->passwd))
+				elseif (!Tools::getIsset('old_passwd') || empty($old_password) || (Tools::encrypt($old_passwd) != $this->context->cookie->passwd))
 					$this->errors[] = Tools::displayError('The password you entered is incorrect.');
-				elseif ($_POST['passwd'] != $_POST['confirmation'])
+				elseif (Tools::getValue('passwd') != Tools::getValue('confirmation'))
 					$this->errors[] = Tools::displayError('The password and confirmation do not match.');
 				else
 				{
@@ -81,14 +81,14 @@ class IdentityControllerCore extends FrontController
 					$this->customer->id_default_group = (int)$prev_id_default_group;
 					$this->customer->firstname = Tools::ucwords($this->customer->firstname);
 
-					if (!isset($_POST['newsletter']))
+					if (!Tools::getIsset('newsletter'))
 						$this->customer->newsletter = 0;
-					elseif (!$origin_newsletter && isset($_POST['newsletter']))
+					elseif (!$origin_newsletter && Tools::getIsset('newsletter'))
 						if ($module_newsletter = Module::getInstanceByName('blocknewsletter'))
 							if ($module_newsletter->active)
 								$module_newsletter->confirmSubscription($this->customer->email);
 
-					if (!isset($_POST['optin']))
+					if (!Tools::getIsset('optin'))
 						$this->customer->optin = 0;
 					if (Tools::getValue('passwd'))
 						$this->context->cookie->passwd = $this->customer->passwd;
