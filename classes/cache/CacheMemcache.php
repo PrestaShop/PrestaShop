@@ -43,16 +43,14 @@ class CacheMemcacheCore extends Cache
 	public function __construct()
 	{
 		$this->connect();
-
-        $this->keys = array();
-        $servers = self::getMemcachedServers();
-       
-		if(is_array($servers) && count($servers) > 0)
+		if($this->is_connected)
 		{
-		    $this->keys = @$this->memcache->get(_COOKIE_IV_);
-		    if (!is_array($this->keys))
-		        $this->keys = array();		
+			$this->keys = @$this->memcache->get(_COOKIE_IV_);
+			if (!is_array($this->keys))
+				$this->keys = array();
 		}
+
+       
 
         /*
 		// Get keys (this code comes from Doctrine 2 project)
@@ -97,11 +95,11 @@ class CacheMemcacheCore extends Cache
 		if (class_exists('Memcache') && extension_loaded('memcache'))
 			$this->memcache = new Memcache();
 		else
-			return false;
+			return;
 		
 		$servers = self::getMemcachedServers();
 		if (!$servers)
-			return false;
+			return;
 		foreach ($servers as $server)
 			$this->memcache->addServer($server['ip'], $server['port'], true, (int) $server['weight']);
 
