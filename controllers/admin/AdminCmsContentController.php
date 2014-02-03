@@ -126,7 +126,6 @@ class AdminCmsContentControllerCore extends AdminController
 			$id_cms_category = 1;
 
 		$cms_category = new CMSCategory($id_cms_category);
-		$this->toolbar_title[] = 'CMS';
 
 		if ($this->display == 'edit_category')
 		{
