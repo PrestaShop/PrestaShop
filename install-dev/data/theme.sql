@@ -49,7 +49,7 @@ UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'FOOTER_POWEREDBY';
 UPDATE `PREFIX_configuration` SET value = 'http://www.prestashop.com' WHERE name = 'BLOCKADVERT_LINK';
 UPDATE `PREFIX_configuration` SET value = 'store.jpg' WHERE name = 'BLOCKSTORE_IMG';
 UPDATE `PREFIX_configuration` SET value = 'jpg' WHERE name = 'BLOCKADVERT_IMG_EXT';
-UPDATE `PREFIX_configuration` SET value = 'CAT3,CAT26' WHERE name = 'MOD_BLOCKTOPMENU_ITEMS';
+UPDATE `PREFIX_configuration` SET value = 'CAT3,CAT8,CAT5,LNK1' WHERE name = 'MOD_BLOCKTOPMENU_ITEMS';
 UPDATE `PREFIX_configuration` SET value = '0' WHERE name = 'MOD_BLOCKTOPMENU_SEARCH';
 UPDATE `PREFIX_configuration` SET value = 'http://www.facebook.com/prestashop' WHERE name = 'BLOCKSOCIAL_FACEBOOK';
 UPDATE `PREFIX_configuration` SET value = 'http://www.twitter.com/prestashop' WHERE name = 'BLOCKSOCIAL_TWITTER';
@@ -214,4 +214,6 @@ INSERT INTO `PREFIX_hook_module_exceptions` (`id_shop`, `id_module`, `id_hook`, 
 	WHERE id_hook = @id_hook
 );
 
+INSERT INTO `PREFIX_linksmenutop` (`id_linksmenutop`, `id_shop`, `new_window`) VALUES (1, 1, 1);
+INSERT INTO `PREFIX_linksmenutop_lang` (`id_linksmenutop`, `id_lang`, `id_shop`, `label`, `link`) VALUES (1, 1, 1, 'Blog', 'http://www.prestashop.com/blog/');
 
