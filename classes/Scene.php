@@ -198,24 +198,30 @@ class SceneCore extends ObjectModel
 		if (!Scene::isFeatureActive())
 			return array();
 
-		if (!$context)
-			$context = Context::getContext();
-		$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
-
-		$sql = 'SELECT s.*
-				FROM `'._DB_PREFIX_.'scene_category` sc
-				LEFT JOIN `'._DB_PREFIX_.'scene` s ON (sc.id_scene = s.id_scene)
-				'.Shop::addSqlAssociation('scene', 's').'
-				LEFT JOIN `'._DB_PREFIX_.'scene_lang` sl ON (sl.id_scene = s.id_scene)
-				WHERE sc.id_category = '.(int)$id_category.'
-					AND sl.id_lang = '.(int)$id_lang
-					.($only_active ? ' AND s.active = 1' : '').'
-				ORDER BY sl.name ASC';
-		$scenes = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-
-		if (!$lite_result && $scenes)
-			foreach ($scenes as &$scene)
-				$scene = new Scene($scene['id_scene'], $id_lang, false, $hide_scene_position);
+		$cache_key = 'Scene::getScenes'.$id_category.(int)$lite_result;
+		if (!Cache::isStored($cache_key))
+		{
+			if (!$context)
+				$context = Context::getContext();
+			$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
+	
+			$sql = 'SELECT s.*
+					FROM `'._DB_PREFIX_.'scene_category` sc
+					LEFT JOIN `'._DB_PREFIX_.'scene` s ON (sc.id_scene = s.id_scene)
+					'.Shop::addSqlAssociation('scene', 's').'
+					LEFT JOIN `'._DB_PREFIX_.'scene_lang` sl ON (sl.id_scene = s.id_scene)
+					WHERE sc.id_category = '.(int)$id_category.'
+						AND sl.id_lang = '.(int)$id_lang
+						.($only_active ? ' AND s.active = 1' : '').'
+					ORDER BY sl.name ASC';
+			$scenes = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+	
+			if (!$lite_result && $scenes)
+				foreach ($scenes as &$scene)
+					$scene = new Scene($scene['id_scene'], $id_lang, false, $hide_scene_position);
+			Cache::store($cache_key, $scenes);
+		}
+		$scenes = Cache::retrieve($cache_key);
 		return $scenes;
 	}
 
@@ -292,5 +298,3 @@ class SceneCore extends ObjectModel
 		return Configuration::get('PS_SCENE_FEATURE_ACTIVE');
 	}
 }
-
-
