@@ -26,24 +26,12 @@
 <div id="scenes">
 	<div>
 		{foreach $scenes as $scene_key=>$scene}
-		<div class="screen_scene" id="screen_scene_{$scene->id}" style="background:transparent url({$base_dir}img/scenes/{$scene->id}-scene_default.jpg); height:{$largeSceneImageType.height}px; width:{$largeSceneImageType.width}px; {if !$scene@first} display:none;{/if}">
+		<div class="screen_scene" id="screen_scene_{$scene->id}" style="background:transparent url({$base_dir}img/scenes/{$scene->id}-scene_default.jpg); height:{$largeSceneImageType.height}px; width:{$largeSceneImageType.width}px;{if !$scene@first} display:none;{/if}">
 			{foreach $scene->products as $product_key=>$product}
 			{assign var=imageIds value="`$product.id_product`-`$product.id_image`"}
-				<a href="{$product.link|escape:'html':'UTF-8'}" rel="#scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}" class="popover-button" style="width:{$product.zone_width}px; height:{$product.zone_height}px; margin-left:{$product.x_axis}px ;margin-top:{$product.y_axis}px;">
+				<a href="{$product.link|escape:'html':'UTF-8'}" class="popover-button" style="width:{$product.zone_width}px; height:{$product.zone_height}px; margin-left:{$product.x_axis}px ;margin-top:{$product.y_axis}px;" data-id_product_scene="{$scene_key|intval}_{$product_key|intval}_{$product.id_product|intval}">
 					<span style="margin-top:{math equation='a/2 -10' a=$product.zone_height}px; margin-left:{math equation='a/2 -10' a=$product.zone_width}px;"></span>
 				</a>
-                <script type="text/javascript">
-					$(document).ready(function() {
-						var htmlContent = $('#scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}').html();
-						$("[rel=#scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}]").popover({
-							placement : 'bottom', //placement of the popover. also can use top, bottom, left or right
-							trigger:'hover',
-							title : false, //this is the top title bar of the popover. add some basic css
-							html: 'true', //needed to show html of course
-							content : htmlContent  //this is the content of the html box. add the image here or anything you want really.
-						});
-					});
-				</script>
 				<div id="scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}" style="display:none;">
                 	<div class="product-image-container">
 						<img class="img-responsive replace-2x" src="{$link->getImageLink($product.id_product, $imageIds, 'home_default')|escape:'html':'UTF-8'}" alt="" />
