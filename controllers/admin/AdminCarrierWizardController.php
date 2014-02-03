@@ -140,22 +140,23 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 		return parent::renderView();
 	}
-
-	public function initToolbarTitle()
+	
+	public function initBreadcrumbs($tab_id = null,$tabs = null)
 	{
-		$bread_extended = array_unique($this->breadcrumbs);
-
 		if (Tools::getValue('id_carrier'))
-			$bread_extended[2] = $this->l('Edit');
+			$this->display = 'edit';
 		else
-			$bread_extended[2] = $this->l('Add new');
+			$this->display = 'add';
 
-		$this->toolbar_title = $bread_extended;
+		parent::initBreadcrumbs((int)Tab::getIdFromClassName('AdminCarriers'));
+		
+		$this->display = 'view';
 	}
 
 	public function initPageHeaderToolbar()
 	{
 		parent::initPageHeaderToolbar();
+
 		$this->page_header_toolbar_btn['cancel'] = array(
 			'href' => $this->context->link->getAdminLink('AdminCarriers'),
 			'desc' => $this->l('Cancel', null, null, false)
