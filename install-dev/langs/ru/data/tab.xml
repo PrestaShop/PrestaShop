@@ -25,6 +25,8 @@
   <tab id="Customers" name="Клиенты"/>
   <tab id="Customers_2" name="Клиенты"/>
   <tab id="Customers_1" name="Клиенты"/>
+  <tab id="Dashboard" name="Dashboard"/>
+  <tab id="CarrierWizard" name="Carrier"/>
   <tab id="DB_Backup" name="DB Backup"/>
   <tab id="Delivery_Slips" name="Счета на доставку"/>
   <tab id="E-mail" name="E-mail"/>
