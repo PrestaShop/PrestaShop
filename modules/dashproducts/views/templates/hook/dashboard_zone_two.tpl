@@ -64,7 +64,7 @@
 				<li>
 					<a href="#dash_top_search" data-toggle="tab">
 						<i class="icon-search"></i>
-						<span class="hidden-inline-xs">{l s='Top Search' mod='dashproducts'}</span>
+						<span class="hidden-inline-xs">{l s='Top Searches' mod='dashproducts'}</span>
 					</a>
 				</li>
 			</ul>
