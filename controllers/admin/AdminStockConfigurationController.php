@@ -433,7 +433,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'title' => $this->l('Editable?'),
 				'align' => 'center',
 				'icon' => array(
-					'1' => 'icon-check text-success.gif',
+					'1' => 'icon-check text-success',
 					'0' => 'icon-ban-circle text-danger'
 				),
 				'type' => 'bool',
