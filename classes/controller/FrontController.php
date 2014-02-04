@@ -515,16 +515,7 @@ class FrontControllerCore extends Controller
 	public function display()
 	{
 		Tools::safePostVars();
-		// Automatically add js files from js/autoload directory in the template
-		if (@filemtime($this->getThemeDir().'js/autoload/'))
-			foreach (scandir($this->getThemeDir().'js/autoload/', 0) as $file)
-				if (preg_match('/^[^.].*\.js$/', $file))
-					$this->addJS($this->getThemeDir().'js/autoload/'.$file);
-		// Automatically add css files from css/autoload directory in the template
-		if (@filemtime($this->getThemeDir().'css/autoload/'))
-			foreach (scandir($this->getThemeDir().'css/autoload', 0) as $file)
-				if (preg_match('/^[^.].*\.css$/', $file))
-					$this->addCSS($this->getThemeDir().'css/autoload/'.$file);
+
 
 		// assign css_files and js_files at the very last time
 		if ((Configuration::get('PS_CSS_THEME_CACHE') || Configuration::get('PS_JS_THEME_CACHE')) && is_writable(_PS_THEME_DIR_.'cache'))
@@ -756,6 +747,17 @@ class FrontControllerCore extends Controller
 		$this->addjqueryPlugin('easing');
 		$this->addJS(_PS_JS_DIR_.'tools.js');
 		$this->addJS(_THEME_JS_DIR_.'global.js');
+
+		// Automatically add js files from js/autoload directory in the template
+		if (@filemtime($this->getThemeDir().'js/autoload/'))
+			foreach (scandir($this->getThemeDir().'js/autoload/', 0) as $file)
+				if (preg_match('/^[^.].*\.js$/', $file))
+					$this->addJS($this->getThemeDir().'js/autoload/'.$file);
+		// Automatically add css files from css/autoload directory in the template
+		if (@filemtime($this->getThemeDir().'css/autoload/'))
+			foreach (scandir($this->getThemeDir().'css/autoload', 0) as $file)
+				if (preg_match('/^[^.].*\.css$/', $file))
+					$this->addCSS($this->getThemeDir().'css/autoload/'.$file);
 
 		if (Tools::isSubmit('live_edit') && Tools::getValue('ad') && Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
 		{
