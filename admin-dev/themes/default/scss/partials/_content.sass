@@ -1,14 +1,12 @@
-html
+html, body
 	min-height: 100%
 	height: 100%
-	font-size: 62.5%
-	-webkit-tap-highlight-color: rgba(0,0,0,0)
+	
 body
-	min-height: 100%
-	height: 100%
 	font: 400 #{$font-size-base}/#{$line-height-base} $font-family-base
 	color: $text-color
 	background-color: $body-bg
+	-webkit-tap-highlight-color: rgba(0,0,0,0)
 
 #main
 	z-index: 10
@@ -43,16 +41,18 @@ body
 		.panel
 			border: solid 1px #CCC
 			@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
-
-
 	h3:not(.modal-title), .panel-heading
 		border: none
-		padding: 0 5px
-		margin: -16px -16px 15px -16px
+		padding: 0 0 0 5px
+		margin: -20px -16px 15px -16px
 		font-size: 1.2em
-		line-height: 30px
+		line-height: 2.2em
+		height: 2.2em
 		text-transform: uppercase
 		border-bottom: solid 1px #EEEEEE
+		.btn-group
+			position: relative
+			top: 2px
 		i, a
 			color: contrasted($bg-panel-heading-color)
 		.badge
@@ -64,7 +64,7 @@ body
 			font-size: 1em
 			padding: 0 10px
 			font-weight: 700
-			margin-left: 10px
+			margin-left: 0.4em
 		.panel-heading-action
 			position: absolute
 			top: 2px
@@ -93,6 +93,9 @@ body
 		font-style: italic
 	.nav.nav-tabs li.active a
 		z-index: 99
+	.breadcrumb
+		background-color: white
+		border: solid 1px darken($bg-content-color,10%)
 
 //data-focus
 .data-focus
@@ -130,6 +133,7 @@ body.display-modal
 			background-color: #FCFDFE
 			.btn.pull-right:not(:first-child)
 				margin-right: 5px
+
 #header
 	.panel-footer
 		margin: 15px 0 0!important
