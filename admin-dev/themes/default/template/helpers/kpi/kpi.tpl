@@ -23,15 +23,22 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <{if isset($href) && $href}a style="display:block" href="{$href|escape}"{else}div{/if} id="{$id|escape}" class="box-stats {$color|escape}" >
-	{if isset($icon) && $icon}<i class="{$icon|escape}"></i>{/if}
-	{if isset($chart) && $chart}
-	<div class="boxchart-overlay">
-		<div class="boxchart">
-		</div>
-	</div>
+	<div class="kpi-content">
+	{if isset($icon) && $icon}
+		<i class="{$icon|escape}"></i>
 	{/if}
-	<span class="title">{$title|escape}<br /><small>{$subtitle|escape}</small></span>
-	<span class="value">{$value|escape}</span>
+	{if isset($chart) && $chart}
+		<div class="boxchart-overlay">
+			<div class="boxchart">
+			</div>
+		</div>
+	{/if}
+	
+		<span class="title">{$title|escape}</span>
+		<span ckass="subtitle">{$subtitle|escape}</span>
+		<span class="value">{$value|escape}</span>
+	</div>
+	
 </{if isset($href) && $href}a{else}div{/if}>
 
 {if isset($source) && $source != ''}
