@@ -81,7 +81,7 @@ class OrderStateCore extends ObjectModel
 			'delivery' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'hidden' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'paid' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'deleted' =>	array('type' => self::TYPE_BOOL, 'validade' => 'isBool'),
+			'deleted' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
 			// Lang fields
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
