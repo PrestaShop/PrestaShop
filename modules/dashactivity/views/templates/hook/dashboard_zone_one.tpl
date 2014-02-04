@@ -86,7 +86,7 @@
 				</span>
 			</li>
 			<li>
-				<span class="data_label">{l s='Products Out of Stock' mod='dashactivity'}</span>
+				<span class="data_label">{l s='Out of Stock Products' mod='dashactivity'}</span>
 				<span class="data_value size_l">
 					<span id="products_out_of_stock"></span>
 				</span>
