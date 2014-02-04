@@ -433,8 +433,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'title' => $this->l('Editable?'),
 				'align' => 'center',
 				'icon' => array(
-					'1' => 'enabled.gif',
-					'0' => 'disabled.gif'
+					'1' => 'icon-check text-success',
+					'0' => 'icon-ban-circle text-danger'
 				),
 				'type' => 'bool',
 				'orderby' => false,
@@ -444,8 +444,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'title' => $this->l('Is there a delivery note available?'),
 				'align' => 'center',
 				'icon' => array(
-					'1' => 'enabled.gif',
-					'0' => 'disabled.gif'
+					'1' => 'icon-check text-success',
+					'0' => 'icon-ban-circle text-danger'
 				),
 				'type' => 'bool',
 				'orderby' => false,
@@ -455,8 +455,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'title' => $this->l('Is there a pending receipt?'),
 				'align' => 'center',
 				'icon' => array(
-					'1' => 'enabled.gif',
-					'0' => 'disabled.gif'
+					'1' => 'icon-check text-success',
+					'0' => 'icon-ban-circle text-danger'
 				),
 				'type' => 'bool',
 				'orderby' => false,
@@ -466,8 +466,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'title' => $this->l('Delivery state?'),
 				'align' => 'center',
 				'icon' => array(
-					'1' => 'enabled.gif',
-					'0' => 'disabled.gif'
+					'1' => 'icon-check text-success',
+					'0' => 'icon-ban-circle text-danger'
 				),
 				'type' => 'bool',
 				'orderby' => false,
@@ -477,8 +477,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'title' => $this->l('Enclosed order state?'),
 				'align' => 'center',
 				'icon' => array(
-					'1' => 'enabled.gif',
-					'0' => 'disabled.gif'
+					'1' => 'icon-check text-success',
+					'0' => 'icon-ban-circle text-danger'
 				),
 				'type' => 'bool',
 				'orderby' => false,
