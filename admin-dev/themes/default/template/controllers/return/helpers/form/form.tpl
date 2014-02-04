@@ -59,21 +59,26 @@
 							</a>
 						</td>
 					</tr>
-					{foreach $customizationDatas as $type => $datas}
+					{assign var='productId' value=$returnedCustomization.product_id}
+					{assign var='productAttributeId' value=$returnedCustomization.product_attribute_id}
+					{assign var='customizationId' value=$returnedCustomization.id_customization}
+					{assign var='addressDeliveryId' value=$returnedCustomization.id_address_delivery}
+					{foreach $customizedDatas.$productId.$productAttributeId.$addressDeliveryId.$customizationId.datas as $type => $datas}
 						<tr>
 							<td colspan="4">
-							{if $type == 'type_file'}
+							{if $type == $smarty.const._CUSTOMIZE_FILE_}
 								<ul>
-								{foreach $datas a $data name='loop'}
+								{foreach from=$datas item='data'}
 									<li>
-										<a href="displayImage.php?img={$data['value']}&name={$order->id|intval}-file{$loop.iteration}" target="_blank"><img src="{$picture_folder}{$data['value']}_small" alt="" /></a>
+										<a href="displayImage.php?img={$data['value']}&name={$returnedCustomization['id_order_detail']|intval}-file{$smarty.foreach.data.iteration.iteration}" target="_blank"><img src="{$picture_folder}{$data['value']}_small" alt="" /></a>
 									</li>
 								{/foreach}
 								</ul>
-							{elseif $type == 'type_textfield'}
+							{elseif $type == $smarty.const._CUSTOMIZE_TEXTFIELD_}
+
 								<ul>
-									{foreach $datas as $data name='loop'}
-										<li>{if $data['name']}$data['name']{else}{l s='Text #%d' sprintf=$loop.iteration}{/if}{l s=':'} {$data['value']}</li>
+									{foreach from=$datas item='data'}
+										<li>{if $data['name']}{$data['name']}{else}{l s='Text #%d' sprintf=$smarty.foreach.data.iteration}{/if}{l s=':'} {$data['value']}</li>
 									{/foreach}
 								</ul>
 							{/if}
