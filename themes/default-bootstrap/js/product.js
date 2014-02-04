@@ -165,13 +165,13 @@ $(document).ready(function()
 
 	original_url = window.location + '';
 	first_url_check = true;
-	checkUrl();
+	var url_found = checkUrl();
 	initLocationChange();
 
 	//init the price in relation of the selected attributes
-	if (typeof productHasAttributes != 'undefined' && productHasAttributes)
+	if (typeof productHasAttributes != 'undefined' && productHasAttributes && !url_found)
 		findCombination(true);
-	else if (typeof productHasAttributes != 'undefined' && !productHasAttributes)
+	else if (typeof productHasAttributes != 'undefined' && !productHasAttributes && !url_found)
 		refreshProductImages(0);
 
 	$('#resetImages').click(function(e) {
@@ -876,10 +876,12 @@ function checkUrl()
 			{
 				findCombination(false);
 				original_url = url;
+				return true;
 			}
 			// no combination found = removing attributes from url
 			else
 				window.location = url.substring(0, url.indexOf('#'));
 		}
 	}
+	return false;
 }
