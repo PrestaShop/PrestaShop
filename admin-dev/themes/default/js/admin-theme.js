@@ -158,7 +158,7 @@ $(document).ready(function() {
 	}
 
 	function removeMobileNav(){
-		navigation = $('#nav-mobile');
+		var navigation = $('#nav-mobile');
 		$('#nav-mobile-submenu').remove();
 		$('span.menu-collapse').html('<i class="icon-align-justify"></i>');
 		navigation.off();
@@ -189,28 +189,35 @@ $(document).ready(function() {
 	}
 	initNav();
 
-	// wip prevent mouseout
+	// prevent mouseout + direct path to submenu
+	var closingMenu, openingMenu;
+	$('li.maintab.has_submenu').not('.active').hover(
+		function(){
 
-	var closingMenu;
+			var submenu = $(this);
+			clearTimeout(openingMenu);
+			openingMenu = setTimeout(function(){
+				$('li.maintab').removeClass('hover');
+				submenu.addClass('hover');
+			},50);
 
-	$("li.maintab.has_submenu").not(".active").on("mouseenter",function(){
-		clearTimeout(closingMenu);
-		$("li.maintab").removeClass("hover");
-		$(this).addClass("hover");
-	});
-
-	$("li.maintab.has_submenu").on("mouseleave",function(){
-		var $submenu = $(this);
-		console.log('out');
-		closingMenu = setTimeout(function(){
-			$submenu.removeClass("hover");
-		}, 500);
+			clearTimeout(closingMenu);
+		},
+		function(){
+			var submenu = $(this);
+			closingMenu = setTimeout(function(){
+				submenu.removeClass('hover');
+			},300);
+		}
+	);
+	$('ul.submenu').on('mouseenter', function(){
+		clearTimeout(openingMenu);
 	});
 
 
 	$('.dropdown-toggle').dropdown();
 	$('.label-tooltip, .help-tooltip').tooltip();
-	$("#error-modal").modal("show");
+	$('#error-modal').modal('show');
 
 	//scroll top
 	function animateGoTop() {
@@ -231,8 +238,8 @@ $(document).ready(function() {
 	}
 	animateFooter();
 
-	$("#go-top").on('click',function() {
-		$("html, body").animate({ scrollTop: 0 }, "slow");
+	$('#go-top').on('click',function() {
+		$('html, body').animate({ scrollTop: 0 }, 'slow');
 		return false;
 	});
 
@@ -256,7 +263,7 @@ $(document).ready(function() {
 	}
 
 	//media queries - depends of enquire.js
-	enquire.register("screen and (max-width: 768px)", {
+	enquire.register('screen and (max-width: 768px)', {
 		match : function() {
 			$('body.page-sidebar').addClass('page-sidebar-closed');
 		},
@@ -281,10 +288,10 @@ $(document).ready(function() {
 	}
 	$('.clear_search').on('click', function(e){
 		e.preventDefault();
-		$("#bo_query").val('').focus();
+		$('#bo_query').val('').focus();
 		$('.clear_search').addClass('hide');
 	});
-	$("#bo_query").on('change', function(){
+	$('#bo_query').on('change', function(){
 		if ($('#bo_query').val() !== ''){
 			$('.clear_search').removeClass('hide');
 		}
@@ -297,6 +304,6 @@ $(document).ready(function() {
 			url,
 			'PrestaShop',
 			'width=500,height=600,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=50,top=50'
-		)
+		);
 	});
 });
