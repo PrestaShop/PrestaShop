@@ -2839,9 +2839,9 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .box-stats .boxchart-overlay { padding: 10px 10px 5px 10px; margin-right: 10px; float: left; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
 .bootstrap .box-stats .kpi-content { float: left; width: 100%; padding-left: 72px; position: relative; }
 .bootstrap .box-stats .kpi-content i { position: absolute; top: 0; left: 0; font-size: 56px; text-align: center; color: white; width: 66px; height: 66px; line-height: 66px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
-.bootstrap .box-stats .kpi-content .title { display: block; color: #666666; clear: both; }
-.bootstrap .box-stats .kpi-content .subtitle { display: block; line-height: 0.3em; color: #aaaaaa; text-transform: uppercase; clear: both; }
-.bootstrap .box-stats .kpi-content .value { display: block; font-size: 1.8em; white-space: nowrap; text-overflow: ellipsis; clear: both; overflow: hidden; }
+.bootstrap .box-stats .kpi-content .title { display: block; clear: both; color: #666666; }
+.bootstrap .box-stats .kpi-content .subtitle { display: block; clear: both; line-height: 0.3em; text-transform: uppercase; }
+.bootstrap .box-stats .kpi-content .value { display: block; clear: both; font-size: 1.8em; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 .bootstrap .box-stats:hover { text-decoration: none; }
 .bootstrap .color1 i, .bootstrap .color1 .boxchart-overlay { background-color: #2ba8e3; -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 -3px 0 inset; box-shadow: rgba(0, 0, 0, 0.2) 0 -3px 0 inset; }
 .bootstrap .color1 .value { color: #2ba8e3; }
@@ -2905,7 +2905,6 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .page-head h2.page-title a { border-bottom: dotted 1px white; }
 .bootstrap .page-head h2.page-title a:hover { color: black; border-color: black; }
 .bootstrap .page-head a { color: white; text-decoration: none; }
-.bootstrap .page-head .toolbarBox { position: absolute; top: 0; right: 0; }
 .bootstrap .page-head ul.page-breadcrumb { position: absolute; list-style: none; margin: 0; padding: 0; left: 280px; top: 4px; height: 20px; line-height: 20px; color: black; font-size: 12px; color: rgba(0, 0, 0, 0.5); background: transparent !important; border: none !important; -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0; border-radius: 0; }
 @media (max-width: 768px) { .bootstrap .page-head ul.page-breadcrumb { left: 70px; } }
 .bootstrap .page-head ul.page-breadcrumb li { text-transform: uppercase; }
