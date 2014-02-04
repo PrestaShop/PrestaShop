@@ -63,24 +63,32 @@
 	<div class="panel">
 		<div class="row">
 			<div class="col-sm-6 col-lg-3 box-stats color3" >
-				<i class="icon-calendar-empty"></i>
-				<span class="title">{l s='Date'}<br /><small>&nbsp;</small></span>
-				<span class="value">{dateFormat date=$order->date_add full=false}</span>
+				<div class="kpi-content">
+					<i class="icon-calendar-empty"></i>
+					<span class="title">{l s='Date'}</span>
+					<span class="value">{dateFormat date=$order->date_add full=false}</span>
+				</div>
 			</div>
 			<div class="col-sm-6 col-lg-3 box-stats color2" >
-				<i class="icon-comments"></i>
-				<span class="title">{l s='Messages'}<br /><small>&nbsp;</small></span>
-				<span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}">{sizeof($customer_thread_message)}</a></span>
+				<div class="kpi-content">
+					<i class="icon-comments"></i>
+					<span class="title">{l s='Messages'}</span>
+					<span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}">{sizeof($customer_thread_message)}</a></span>
+				</div>
 			</div>
 			<div class="col-sm-6 col-lg-3 box-stats color1" >
-				<i class="icon-book"></i>
-				<span class="title">{l s='Products'}<br /><small>&nbsp;</small></span>
-				<span class="value">{sizeof($products)}</span>
+				<div class="kpi-content">
+					<i class="icon-book"></i>
+					<span class="title">{l s='Products'}</span>
+					<span class="value">{sizeof($products)}</span>
+				</div>
 			</div>
 			<div class="col-sm-6 col-lg-3 box-stats color4" >
-				<i class="icon-money"></i>
-				<span class="title">{l s='Total'}<br /><small>&nbsp;</small></span>
-				<span class="value">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
+				<div class="kpi-content">
+					<i class="icon-money"></i>
+					<span class="title">{l s='Total'}</span>
+					<span class="value">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
+				</div>
 			</div>
 		</div>
 	</div>
