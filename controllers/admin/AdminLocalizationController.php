@@ -36,25 +36,25 @@ class AdminLocalizationControllerCore extends AdminController
 				'title' =>	$this->l('Configuration'),
 				'fields' =>	array(
 					'PS_LANG_DEFAULT' => array(
-						'title' => $this->l('Default language:'),
-						'hint' => $this->l('The default language used in your shop'),
+						'title' => $this->l('Default language'),
+						'hint' => $this->l('The default language used in your shop.'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'id_lang',
 						'list' => Language::getlanguages(false)
 					),
 					'PS_COUNTRY_DEFAULT' => array(
-						'title' => $this->l('Default country:'),
-						'hint' => $this->l('The default country used in your shop'),
+						'title' => $this->l('Default country'),
+						'hint' => $this->l('The default country used in your shop.'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'id_country',
 						'list' => Country::getCountries($this->context->language->id)
 					),
 					'PS_CURRENCY_DEFAULT' => array(
-						'title' => $this->l('Default currency:'),
+						'title' => $this->l('Default currency'),
 						'hint' =>
-							$this->l('The default currency used in your shop').' - '.$this->l('If you change the default currency, you will have to manually edit every product price.'),
+							$this->l('The default currency used in your shop.').' - '.$this->l('If you change the default currency, you will have to manually edit every product price.'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'id_currency',
@@ -68,29 +68,29 @@ class AdminLocalizationControllerCore extends AdminController
 				'icon' =>	'icon-globe',
 				'fields' =>	array(
 					'PS_WEIGHT_UNIT' => array(
-						'title' => $this->l('Weight unit:'),
-						'hint' => $this->l('The default weight unit for your shop (e.g. kg or lbs)'),
+						'title' => $this->l('Weight unit'),
+						'hint' => $this->l('The default weight unit for your shop (e.g. kg or lbs).'),
 						'validation' => 'isWeightUnit',
 						'required' => true,
 						'type' => 'text'
 					),
 					'PS_DISTANCE_UNIT' => array(
-						'title' => $this->l('Distance unit:'),
-						'hint' => $this->l('The default distance unit for your shop (e.g. km or mi)'),
+						'title' => $this->l('Distance unit'),
+						'hint' => $this->l('The default distance unit for your shop (e.g. km or mi).'),
 						'validation' => 'isDistanceUnit',
 						'required' => true,
 						'type' => 'text'
 					),
 					'PS_VOLUME_UNIT' => array(
-						'title' => $this->l('Volume unit:'),
-						'hint' => $this->l('The default volume unit for your shop'),
+						'title' => $this->l('Volume unit'),
+						'hint' => $this->l('The default volume unit for your shop.'),
 						'validation' => 'isWeightUnit',
 						'required' => true,
 						'type' => 'text'
 					),
 					'PS_DIMENSION_UNIT' => array(
-						'title' => $this->l('Dimension unit:'),
-						'hint' => $this->l('The default dimension unit for your shop (e.g. cm or in)'),
+						'title' => $this->l('Dimension unit'),
+						'hint' => $this->l('The default dimension unit for your shop (e.g. cm or in).'),
 						'validation' => 'isDistanceUnit',
 						'required' => true,
 						'type' => 'text'
@@ -102,14 +102,14 @@ class AdminLocalizationControllerCore extends AdminController
 				'title' =>	$this->l('Advanced'),
 				'fields' =>	array(
 					'PS_LOCALE_LANGUAGE' => array(
-						'title' => $this->l('Language locale:'),
+						'title' => $this->l('Language locale'),
 						'hint' => $this->l('Your server\'s language locale.'),
 						'validation' => 'isLanguageIsoCode',
 						'type' => 'text',
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_LOCALE_COUNTRY' => array(
-						'title' => $this->l('Country locale:'),
+						'title' => $this->l('Country locale'),
 						'hint' => $this->l('Your server\'s country locale.'),
 						'validation' => 'isLanguageIsoCode',
 						'type' => 'text',
@@ -250,7 +250,7 @@ class AdminLocalizationControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'select',
-					'label' => $this->l('Localization pack you want to import:'),
+					'label' => $this->l('Localization pack you want to import'),
 					'name' => 'iso_localization_pack',
 					'options' => array(
 						'query' => $localizations_pack,
@@ -260,7 +260,7 @@ class AdminLocalizationControllerCore extends AdminController
 				),
 				array(
 					'type' => 'checkbox',
-					'label' => $this->l('Content to import:'),
+					'label' => $this->l('Content to import'),
 					'name' => 'selection[]',
 					'lang' => true,
 					'values' => array(
