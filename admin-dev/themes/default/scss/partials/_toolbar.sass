@@ -13,7 +13,7 @@
 	h2.page-title
 		@extend .pull-left
 		position: relative
-		padding: 24px 0 0 ($widthSidebarNav+70px)
+		padding: 22px 0 0 ($widthSidebarNav+70px)
 		margin: 0
 		font: 300 22px/1em $font-family-sans-serif
 		color: white
@@ -27,6 +27,10 @@
 	a
 		color: white
 		text-decoration: none
+	.toolbarBox
+		position: absolute
+		top: 0
+		right: 0
 	ul.page-breadcrumb
 		position: absolute
 		list-style: none
@@ -37,9 +41,10 @@
 		height: 20px
 		line-height: 20px
 		color: black
-		background: transparent
 		font-size: 12px
 		color: rgba(black,0.5)
+		background: transparent !important
+		border: none !important
 		@include border-radius(0)
 		@media (max-width: $screen-tablet)
 			left: 70px
@@ -69,6 +74,7 @@
 		> ul.nav
 			position: relative
 			top: 3px
+
 
 .toolbar_btn
 	height: 46px
