@@ -47,7 +47,7 @@ function smartyTranslate($params, &$smarty)
 
 	// If the template is part of a module
 	if (!empty($params['mod']))
-		return Translate::getModuleTranslation($params['mod'], $params['s'], basename($filename, '.tpl'), $sprintf);
+		return Translate::getModuleTranslation($params['mod'], $params['s'], basename($filename, '.tpl'), $sprintf, isset($params['js']));
 
 	// If the tpl is at the root of the template folder
 	if (dirname($filename) == '.')
