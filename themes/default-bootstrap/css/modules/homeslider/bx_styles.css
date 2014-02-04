@@ -86,7 +86,9 @@
     display: block; }
   #homepage-slider .bx-wrapper img {
     display: block;
-    max-width: 100%; }
+    max-width: 100%; 
+	height: auto;
+}
 #homepage-slider .bx-wrapper .bx-viewport {
   width: 100%; }
 #homepage-slider .bx-wrapper .bx-pager,
