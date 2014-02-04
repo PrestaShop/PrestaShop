@@ -302,15 +302,18 @@ function saveAddress(type)
 		return false;
 	
 	var params = 'firstname='+encodeURIComponent($('#firstname'+(type == 'invoice' ? '_invoice' : '')).val())+'&lastname='+encodeURIComponent($('#lastname'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'company='+encodeURIComponent($('#company'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'vat_number='+encodeURIComponent($('#vat_number'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'dni='+encodeURIComponent($('#dni'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
+	if ($('#company'+(type == 'invoice' ? '_invoice' : '')).length)	
+		params += 'company='+encodeURIComponent($('#company'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
+	if ($('#vat_number'+(type == 'invoice' ? '_invoice' : '')).length)
+		params += 'vat_number='+encodeURIComponent($('#vat_number'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
+	if ($('#dni'+(type == 'invoice' ? '_invoice' : '')).length)
+		params += 'dni='+encodeURIComponent($('#dni'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
 	params += 'address1='+encodeURIComponent($('#address1'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
 	params += 'address2='+encodeURIComponent($('#address2'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
 	params += 'postcode='+encodeURIComponent($('#postcode'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
 	params += 'city='+encodeURIComponent($('#city'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
 	params += 'id_country='+encodeURIComponent($('#id_country').val())+'&';
-	if ($('#id_state'+(type == 'invoice' ? '_invoice' : '')).val())
+	if ($('#id_state'+(type == 'invoice' ? '_invoice' : '')).length)
 		params += 'id_state='+encodeURIComponent($('#id_state'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
 	params += 'other='+encodeURIComponent($('#other'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
 	params += 'phone='+encodeURIComponent($('#phone'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
@@ -560,6 +563,7 @@ $(function() {
 				else
 					params += encodeURIComponent($(this).attr('name'))+'='+encodeURIComponent($(this).val())+'&';
 			});
+
 			$('#opc_account_form select:visible').each(function() {
 				params += encodeURIComponent($(this).attr('name'))+'='+encodeURIComponent($(this).val())+'&';
 			});
