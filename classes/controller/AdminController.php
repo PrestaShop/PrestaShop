@@ -725,8 +725,9 @@ class AdminControllerCore extends Controller
 		return $object;
 	}
 	
-	public function processExport()
+	public function processExport($text_delimiter = '"')
 	{
+
 		// clean buffer
 		if (ob_get_level() && ob_get_length() > 0)
 			ob_clean();
@@ -749,7 +750,8 @@ class AdminControllerCore extends Controller
 			$path_to_image = false;
 			foreach ($this->fields_list as $key => $params)
 			{
-				$field_value = isset($row[$key]) ? Tools::htmlentitiesDecodeUTF8($row[$key]) : '';
+				$field_value = isset($row[$key]) ? Tools::htmlentitiesDecodeUTF8(
+					Tools::nl2br($row[$key])) : '';
 				if ($key == 'image')
 				{
 					if ($params['image'] != 'p' || Configuration::get('PS_LEGACY_IMAGES'))
@@ -766,7 +768,8 @@ class AdminControllerCore extends Controller
 		$this->context->smarty->assign(array(
 			'export_precontent' => "\xEF\xBB\xBF",
 			'export_headers' => $headers,
-			'export_content' => $content
+			'export_content' => $content,
+			'text_delimiter' => $text_delimiter
 			)
 		);
 
