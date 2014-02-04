@@ -23,7 +23,7 @@
     <access id="access_3_12" id_profile="Logistician" id_tab="Price_rules" view="0" add="0" edit="0" delete="0"/>
     <access id="access_3_13" id_profile="Logistician" id_tab="Shipping" view="1" add="1" edit="1" delete="1"/>
     <access id="access_3_14" id_profile="Logistician" id_tab="Localization" view="0" add="0" edit="0" delete="0"/>
-    <access id="access_3_15" id_profile="Logistician" id_tab="Modules" view="0" add="0" edit="0" delete="0"/>
+    <access id="access_3_15" id_profile="Logistician" id_tab="Modules" view="1" add="0" edit="1" delete="0"/>
     <access id="access_3_16" id_profile="Logistician" id_tab="Preferences" view="0" add="0" edit="0" delete="0"/>
     <access id="access_3_17" id_profile="Logistician" id_tab="Advanced_parameters" view="0" add="0" edit="0" delete="0"/>
     <access id="access_3_18" id_profile="Logistician" id_tab="Administration" view="0" add="0" edit="0" delete="0"/>
@@ -225,7 +225,7 @@
     <access id="access_5_12" id_profile="Salesman" id_tab="Price_rules" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_13" id_profile="Salesman" id_tab="Shipping" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_14" id_profile="Salesman" id_tab="Localization" view="0" add="0" edit="0" delete="0"/>
-    <access id="access_5_15" id_profile="Salesman" id_tab="Modules" view="0" add="0" edit="0" delete="0"/>
+    <access id="access_5_15" id_profile="Salesman" id_tab="Modules" view="1" add="0" edit="1" delete="0"/>
     <access id="access_5_16" id_profile="Salesman" id_tab="Preferences" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_17" id_profile="Salesman" id_tab="Advanced_parameters" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_18" id_profile="Salesman" id_tab="Administration" view="0" add="0" edit="0" delete="0"/>
