@@ -286,12 +286,12 @@
 .icon-zoom-out
 	@extend .icon-search-minus
 
-//icons
+//icons page-head
 [class^="icon-Admin"]
 	@extend .icon
 	@extend .icon-2x
+	@extedn .icon-fw
 	margin-right: 4px
-	text-align: center
 
 .icon-AdminDashboard
 	@extend .icon-dashboard
@@ -330,9 +330,13 @@
 
 //Toolbar
 [class^="process-icon-"],[class*="process-icon-"]
+	display: block
+	width: 30px
+	margin: 0 auto
+	font-size: 28px
 	@extend .icon
 	@extend .icon-2x
-	display: block
+	@extend .icon-fw
 .process-icon-save, .process-icon-save-and-stay, .process-icon-save-and-preview
 	@extend .icon-save
 .process-icon-ok
