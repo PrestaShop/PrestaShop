@@ -26,7 +26,7 @@
 <div class="clearfix "></div>
 <section id="dashproducts" class="panel widget">
 	<header class="panel-heading">
-		<i class="icon-bar-chart"></i> {l s='Product and Sales' mod='dashproducts'}
+		<i class="icon-bar-chart"></i> {l s='Products and Sales' mod='dashproducts'}
 		<span class="panel-heading-action">
 			<a class="list-toolbar-btn" href="#" onclick="toggleDashConfig('dashproducts'); return false;" title="configure">
 				<i class="process-icon-configure"></i>
