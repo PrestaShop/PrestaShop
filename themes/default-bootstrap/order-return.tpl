@@ -54,7 +54,8 @@
 						{assign var='productId' value=$customization.product_id}
 						{assign var='productAttributeId' value=$customization.product_attribute_id}
 						{assign var='customizationId' value=$customization.id_customization}
-						{foreach from=$customizedDatas.$productId.$productAttributeId.$customizationId.datas key='type' item='datas'}
+						{assign var='addressDeliveryId' value=$customization.id_address_delivery}
+						{foreach from=$customizedDatas.$productId.$productAttributeId.$addressDeliveryId.$customizationId.datas key='type' item='datas'}
 							<tr class="alternate_item">
 								<td colspan="3">
 									{if $type == $smarty.const._CUSTOMIZE_FILE_}

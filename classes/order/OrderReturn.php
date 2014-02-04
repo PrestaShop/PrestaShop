@@ -185,12 +185,14 @@ class OrderReturnCore extends ObjectModel
 		if (!Validate::isLoadedObject($order))
 			die(Tools::displayError());
 		$products = $order->getProducts();
+
 		foreach ($returns as &$return)
 		{
 			$return['product_id'] = (int)($products[(int)($return['id_order_detail'])]['product_id']);
 			$return['product_attribute_id'] = (int)($products[(int)($return['id_order_detail'])]['product_attribute_id']);
 			$return['name'] = $products[(int)($return['id_order_detail'])]['product_name'];
 			$return['reference'] = $products[(int)($return['id_order_detail'])]['product_reference'];
+			$return['id_address_delivery'] = $products[(int)($return['id_order_detail'])]['id_address_delivery'];
 		}
 		return $returns;
 	}
