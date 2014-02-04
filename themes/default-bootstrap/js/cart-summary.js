@@ -798,7 +798,7 @@ function refreshDeliveryOptions()
 			carrier_id_list.pop();
 			var it = this;
 			$(carrier_id_list).each(function() {
-				$(it).parent().find('input[value="' + this.toString() + '"]').change();
+				$(it).closest('.delivery_options').find('input[value="' + this.toString() + '"]').change();
 			});
 		}
 		else

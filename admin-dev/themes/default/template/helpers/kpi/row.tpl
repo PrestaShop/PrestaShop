@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="panel">
+<div class="panel kpi-container">
 	<div class="row">
 		{foreach $kpis as $kpi}
 		<div class="col-sm-6 col-lg-3">

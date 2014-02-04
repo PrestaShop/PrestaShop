@@ -5,7 +5,7 @@ PrestaShop is an open-source e-commerce solution. Everyone is welcome and even e
 
 PrestaShop 1.6 is written mostly in PHP. Other languages used throughout are JavaScript, HTML, CSS, the Smarty templating language, SQL, and XML.
 
-To contribute to the  project, you should ideally be familiar with Git, the source code management system that PrestaShop uses, with the official repository being hosted here on Github: 
+To contribute to the project, you should ideally be familiar with Git, the source code management system that PrestaShop uses, with the official repository being hosted on Github: 
 * You can learn more about Git here: http://try.github.io/ (there are many tutorials available on the Web).
 * You can get help on Github here: https://help.github.com/.
 
@@ -14,12 +14,12 @@ Contributors should follow the following process:
 1. Create your Github account.
 2. Fork the project.
 3. Create a branch in your fork for your changes.
-4. Change the files on your branch. Be sure to follow the [the coding standards][1].
+4. Change the files on your branch. Be sure to follow [the coding standards][1].
 5. Push your branch to your Github account.
-6. Create a pull request for your changes on the PrestaShop project. Be sure to follow [the commit message norm][2] in your pull request. If you need some help to make a pull request, read the [Github help page about creating pull requests][3].
+6. Create a pull request for your changes on the PrestaShop project. Be sure to follow [the commit message norm][2] in your pull request. If you need help to make a pull request, read the [Github help page about creating pull requests][3].
 7. Wait for one of the core developers either to include your change in the codebase, or to comment on possible improvements you should make to your code.
 
-That's it: you have contributed to this open source projet! Congratulations!
+That's it: you have contributed to this open source project! Congratulations!
 
 The PrestaShop documentation features a thorough explanation of the [complete process to your first pull request][4].
 
@@ -30,7 +30,7 @@ If you don't feel comfortable forking the project or using Git, you can also eit
 Thank you for your help in making PrestaShop even better!
 
 
-### About licences
+### About licenses
 
 * All core files you commit in your pull request must respect/use the [Open Software License (OSL 3.0)][7].
 * All modules files you commit in your pull request must respect/use the [Academic Free License (AFL 3.0)][8].

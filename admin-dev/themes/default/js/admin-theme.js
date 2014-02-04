@@ -190,16 +190,23 @@ $(document).ready(function() {
 	initNav();
 
 	// wip prevent mouseout
-	$("li.maintab.has_submenu").not(".active").on("mouseenter",function(e){
+
+	var closingMenu;
+
+	$("li.maintab.has_submenu").not(".active").on("mouseenter",function(){
+		clearTimeout(closingMenu);
 		$("li.maintab").removeClass("hover");
 		$(this).addClass("hover");
-		$(this).on("mouseleave",function(){
-			var $submenu = $(this);
-			setTimeout(function(){
-				$submenu.removeClass("hover");
-			}, 300);
-		});
 	});
+
+	$("li.maintab.has_submenu").on("mouseleave",function(){
+		var $submenu = $(this);
+		console.log('out');
+		closingMenu = setTimeout(function(){
+			$submenu.removeClass("hover");
+		}, 500);
+	});
+
 
 	$('.dropdown-toggle').dropdown();
 	$('.label-tooltip, .help-tooltip').tooltip();
