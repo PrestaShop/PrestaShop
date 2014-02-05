@@ -122,7 +122,7 @@ class AdminLocalizationControllerCore extends AdminController
 
 		if (function_exists('date_default_timezone_set'))
 			$this->fields_options['general']['fields']['PS_TIMEZONE'] = array(
-				'title' => $this->l('Time zone:'),
+				'title' => $this->l('Time zone'),
 				'validation' => 'isAnything',
 				'type' => 'select',
 				'list' => Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT name FROM '._DB_PREFIX_.'timezone'),

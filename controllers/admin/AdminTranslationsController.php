@@ -256,7 +256,7 @@ class AdminTranslationsControllerCore extends AdminController
 			if (!mkdir($path, 0777, true))
 			{
 				$bool &= false;
-				$this->errors[] = sprintf($this->l('Cannot create the folder "%s". Please check your directory writing permisions.'), $path);
+				$this->errors[] = sprintf($this->l('Cannot create the folder "%s". Please check your directory writing permissions.'), $path);
 			}
 
 		return $bool;
@@ -834,7 +834,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('Language not found.');
 		}
 		else
-			$this->errors[] = Tools::displayError('Invalid parameter');
+			$this->errors[] = Tools::displayError('Invalid parameter.');
 	}
 
 	/**
