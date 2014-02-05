@@ -66,22 +66,31 @@
 					{foreach $customizedDatas.$productId.$productAttributeId.$addressDeliveryId.$customizationId.datas as $type => $datas}
 						<tr>
 							<td colspan="4">
-							{if $type == $smarty.const._CUSTOMIZE_FILE_}
-								<ul>
-								{foreach from=$datas item='data'}
-									<li>
-										<a href="displayImage.php?img={$data['value']}&name={$returnedCustomization['id_order_detail']|intval}-file{$smarty.foreach.data.iteration.iteration}" target="_blank"><img src="{$picture_folder}{$data['value']}_small" alt="" /></a>
-									</li>
-								{/foreach}
-								</ul>
-							{elseif $type == $smarty.const._CUSTOMIZE_TEXTFIELD_}
+								<div class="form-horizontal">
+									{if $type == $smarty.const._CUSTOMIZE_FILE_}
+										{foreach from=$datas item='data'}
+											<div class="form-group">
+												<span class="col-lg-3 control-label"><strong>{l s='Attachment'}</strong></span>
+												<div class="col-lg-9">
+													<a href="displayImage.php?img={$data['value']}&name={$returnedCustomization['id_order_detail']|intval}-file{$smarty.foreach.data.iteration.iteration}" target="_blank"><img class="img-thumbnail" src="{$picture_folder}{$data['value']}_small" alt="" /></a>
+												</div>
+											</div>
+										{/foreach}
+									{elseif $type == $smarty.const._CUSTOMIZE_TEXTFIELD_}
 
-								<ul>
-									{foreach from=$datas item='data'}
-										<li>{if $data['name']}{$data['name']}{else}{l s='Text #%d' sprintf=$smarty.foreach.data.iteration}{/if}{l s=':'} {$data['value']}</li>
-									{/foreach}
-								</ul>
-							{/if}
+										
+											{foreach from=$datas item='data'}
+												<div class="form-group">
+													<span class="control-label col-lg-3"><strong>{if $data['name']}{$data['name']}{else}{l s='Text #%d' sprintf=$smarty.foreach.data.iteration}{/if}</strong></span>
+													<div class="col-lg-9">
+														<p class="form-control-static">
+															{$data['value']}
+														</p>
+													</div>
+												</div>
+											{/foreach}
+									{/if}
+								</div>
 							</td>
 						</tr>
 					{/foreach}
