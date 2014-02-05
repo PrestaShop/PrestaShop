@@ -31,7 +31,7 @@
 		tinySetup({
 			editor_selector :"autoload_rte",
 			setup : function(ed) {
-				ed.onInit.add(function(ed)
+				ed.on('init', function(ed)
 				{
 					if (typeof ProductMultishop.load_tinymce[ed.id] != 'undefined')
 					{
@@ -42,7 +42,7 @@
 					}
 				});
 
-				ed.onKeyUp.add(function(ed, e) {
+				ed.on('keyup', function(ed, e) {
 					tinyMCE.triggerSave();
 					textarea = $('#'+ed.id);
 					max = textarea.parent('div').find('span.counter').attr('max');
