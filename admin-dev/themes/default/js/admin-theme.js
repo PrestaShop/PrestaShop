@@ -193,28 +193,26 @@ $(document).ready(function() {
 	var closingMenu, openingMenu;
 	$('li.maintab.has_submenu').not('.active').hover(
 		function(){
-
 			var submenu = $(this);
 			clearTimeout(openingMenu);
 			openingMenu = setTimeout(function(){
 				$('li.maintab').removeClass('hover');
 				submenu.addClass('hover');
 			},50);
-
 			clearTimeout(closingMenu);
 		},
 		function(){
 			var submenu = $(this);
 			closingMenu = setTimeout(function(){
 				submenu.removeClass('hover');
-			},300);
+			},250);
 		}
 	);
 	$('ul.submenu').on('mouseenter', function(){
 		clearTimeout(openingMenu);
 	});
 
-
+	//bootstrap components init
 	$('.dropdown-toggle').dropdown();
 	$('.label-tooltip, .help-tooltip').tooltip();
 	$('#error-modal').modal('show');
