@@ -56,7 +56,7 @@ class IdentityControllerCore extends FrontController
 			else
 			{
 				$email = trim(Tools::getValue('email'));
-				$this->customer->birthday = (empty(Tools::getValue('years')) ? '' : (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days'));
+				$this->customer->birthday = Tools::getValue('years') ? '' : (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days');
 				if (Tools::getIsset('old_passwd'))
 					$old_passwd = trim(Tools::getValue('old_passwd'));
 				
