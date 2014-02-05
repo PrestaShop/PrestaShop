@@ -616,7 +616,7 @@
 								class_customization_field = "";
 								if (this.required == 1){ class_customization_field = 'required' };
 								customization_html += '<div class="form-group"><label class="control-label col-lg-3 ' + class_customization_field + '" for="customization_'+id_product+'_'+this.id_customization_field+'">';
-								customization_html += this.name+'{l s=':'}</label><div class="col-lg-9">';
+								customization_html += this.name+'</label><div class="col-lg-9">';
 								if (this.type == 0)
 									customization_html += '<input class="form-control customization_field" type="file" name="customization_'+id_product+'_'+this.id_customization_field+'" id="customization_'+id_product+'_'+this.id_customization_field+'">';
 								else if (this.type == 1)
