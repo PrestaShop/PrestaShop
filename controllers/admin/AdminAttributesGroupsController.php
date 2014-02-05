@@ -183,7 +183,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'lang' => true,
 					'required' => true,
@@ -192,7 +192,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Public name:'),
+					'label' => $this->l('Public name'),
 					'name' => 'public_name',
 					'lang' => true,
 					'required' => true,
@@ -201,7 +201,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Attribute type:'),
+					'label' => $this->l('Attribute type'),
 					'name' => 'group_type',
 					'required' => true,
 					'options' => array(
@@ -210,7 +210,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						'name' => 'name'
 					),
 					'col' => '2',
-					'hint' => $this->l('Choose the type of the attribute')
+					'hint' => $this->l('Choose the type of the attribute.')
 				)
 			)
 		);
@@ -219,7 +219,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}
@@ -250,7 +250,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'select',
-					'label' => $this->l('Attribute group:'),
+					'label' => $this->l('Attribute group'),
 					'name' => 'id_attribute_group',
 					'required' => true,
 					'options' => array(
@@ -258,11 +258,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						'id' => 'id_attribute_group',
 						'name' => 'name'
 					),
-					'hint' => $this->l('Choose the group of the attribute')
+					'hint' => $this->l('Choose the group of the attribute.')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Value:'),
+					'label' => $this->l('Value'),
 					'name' => 'name',
 					'lang' => true,
 					'required' => true,
@@ -282,7 +282,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 				'values' => Shop::getTree()
 			);
@@ -294,24 +294,24 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 		$this->fields_form['input'][] = array(
 			'type' => 'color',
-			'label' => $this->l('Color:'),
+			'label' => $this->l('Color'),
 			'name' => 'color',
-			'hint' => $this->l('Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600")')
+			'hint' => $this->l('Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").')
 		);
 
 		$this->fields_form['input'][] = array(
 			'type' => 'file',
-			'label' => $this->l('Texture:'),
+			'label' => $this->l('Texture'),
 			'name' => 'texture',
 			'hint' => array(
-				$this->l('Upload color texture from your computer'),
+				$this->l('Upload color texture from your computer.'),
 				$this->l('This will override the HTML color!')
 			)
 		);
 
 		$this->fields_form['input'][] = array(
 			'type' => 'current_texture',
-			'label' => $this->l('Current texture:'),
+			'label' => $this->l('Current texture'),
 			'name' => 'current_texture'
 		);
 		
@@ -869,11 +869,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			{
 				if ($group_attribute = new AttributeGroup((int)$pos[2]))
 					if (isset($position) && $group_attribute->updatePosition($way, $position))
-						echo 'ok position '.(int)$position.' for group attribute '.(int)$pos[2].'\r\n';
+						echo 'ok position '.(int)$position.' for attribute group '.(int)$pos[2].'\r\n';
 					else
-						echo '{"hasError" : true, "errors" : "Can not update group attribute '.(int)$id_attribute_group.' to position '.(int)$position.' "}';
+						echo '{"hasError" : true, "errors" : "Can not update the '.(int)$id_attribute_group.' attribute group to position '.(int)$position.' "}';
 				else
-					echo '{"hasError" : true, "errors" : "This group attribute ('.(int)$id_attribute_group.') can t be loaded"}';
+					echo '{"hasError" : true, "errors" : "The ('.(int)$id_attribute_group.') attribute group cannot be loaded."}';
 
 				break;
 			}
@@ -899,9 +899,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						if (isset($position) && $attribute->updatePosition($way, $position))
 							echo 'ok position '.(int)$position.' for attribute '.(int)$pos[2].'\r\n';
 						else
-							echo '{"hasError" : true, "errors" : "Can not update attribute '.(int)$id_attribute.' to position '.(int)$position.' "}';
+							echo '{"hasError" : true, "errors" : "Can not update the '.(int)$id_attribute.' attribute to position '.(int)$position.' "}';
 					else
-						echo '{"hasError" : true, "errors" : "This attribute ('.(int)$id_attribute.') can t be loaded"}';
+						echo '{"hasError" : true, "errors" : "The ('.(int)$id_attribute.') attribute cannot be loaded"}';
 
 					break;
 				}

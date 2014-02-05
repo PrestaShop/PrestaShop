@@ -304,7 +304,7 @@ class AdminGroupsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'group_discount_category',
-					'label' => $this->l('Category discount:'),
+					'label' => $this->l('Category discount'),
 					'name' => 'reduction',
 					'values' => ($group->id ? $this->formatCategoryDiscountList((int)$group->id) : array())
 				),

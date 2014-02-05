@@ -361,7 +361,7 @@ class AdminStatusesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select_template',
-					'label' => $this->l('Template:'),
+					'label' => $this->l('Template'),
 					'name' => 'template',
 					'lang' => true,
 					'options' => array(

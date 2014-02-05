@@ -2222,7 +2222,7 @@ class AdminThemesControllerCore extends AdminController
 
 				$fields_form['form']['input'][] = array(
 					'type' => 'checkbox',
-					'label' => sprintf($this->l('Select the old %1s theme\'s modules you wish to disable:'), $shop_theme->directory),
+					'label' => sprintf($this->l('Select the modules from the old %1s theme that you wish to disable'), $shop_theme->directory),
 					'form_group_class' => $class,
 					'values' => array(
 						'query' => $to_shop_uninstall_formated,
