@@ -120,7 +120,7 @@
 	{if $display_poweredby}
 	<section class="bottom-footer col-xs-12">
 		<div>
-			&copy; 2013 {l s='Powered by' mod='blockcms'} 
+			&copy; 2014 {l s='Powered by' mod='blockcms'} 
 			<a class="_blank" href="http://www.prestashop.com">PrestaShop</a>&trade;
 		</div>
 	</section>
