@@ -118,6 +118,14 @@
 		{/if}
 		</div>			
 		{/foreach}
+		<div class="panel-footer">
+			<button type="submit" value="1" id="shop_form_submit_btn" name="submitAddshop" class="btn btn-default pull-right">
+				<i class="process-icon-save"></i> {l s='Save'}
+			</button>
+			<a href="{$currentIndex}&id_shop_group=0&token={$token}" class="btn btn-default" onclick="window.history.back()">
+				<i class="process-icon-cancel"></i> {l s='Cancel'}
+			</a>
+		</div>
 	</div>
 	{/if}
 {/block}
