@@ -1451,7 +1451,7 @@ class AdminTranslationsControllerCore extends AdminController
 						Tools::clearCache();
 
 						// Redirect
-						if (Tools::getValue('submitTranslationsModulesAndStay'))
+						if (Tools::getIsset('submitTranslationsModulesAndStay'))
 							$this->redirect(true);
 						else
 							$this->redirect();
