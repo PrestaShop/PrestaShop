@@ -222,7 +222,7 @@ class AdminReferrersControllerCore extends AdminController
 		if (Module::isInstalled('trackingfront'))
 			$this->fields_form[0]['form']['desc'] = array(
 				$this->l('Affiliates can access their data with this name and password.'),
-				$this->l('Front access:').' <a class="btn btn-link" href="'.$uri.'modules/trackingfront/stats.php" style="font-style: italic;"><i class="icon-external-link-sign"></i> '.$uri.'modules/trackingfront/stats.php</a>'
+				$this->l('Front access:').' <a class="btn btn-link" href="'.$uri.'modules/trackingfront/stats.php" onclick="return !window.open(this.href);"><i class="icon-external-link-sign"></i> '.$uri.'modules/trackingfront/stats.php</a>'
 			);
 		else
 			$this->fields_form[0]['form']['desc'] = array(
