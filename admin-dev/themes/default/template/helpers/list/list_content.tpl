@@ -189,6 +189,13 @@
 	</tr>
 {/foreach}
 {else}
-	<tr><td class="text-center text-muted" colspan="{count($fields_display) + 2}"><i class="icon-warning-sign"></i> {l s='No records found'}</td></tr>
+	<tr>
+		<td class="list-empty" colspan="{count($fields_display) + 2}">
+			<div class="list-empty-msg">
+				<i class="icon-warning-sign list-empty-icon"></i>
+				{l s='No records found'}
+			</div>
+		</td>
+	</tr>
 {/if}
 </tbody>
