@@ -28,7 +28,7 @@ $(document).ready(function() {
 
 function quick_view()
 {
-	$('.quick-view').click(function() {
+	$(document).on('click', '.quick-view', function() {
 		var url = this.rel;
 		if (url.indexOf('?') != -1)
 			url += '&';
