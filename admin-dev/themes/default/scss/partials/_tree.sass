@@ -1,21 +1,29 @@
+.tree-panel-heading-controls
+	line-height: 2.2em
+	text-transform: uppercase
+	i
+		font-size: $icon-size-base
 .tree
 	padding: 0 0 0 20px
 	list-style: none
 	input
 		margin-right: 4px
 	i
-		font-size: 1.3em
+		font-size: $icon-size-base
 	.tree-item-name, .tree-folder-name
 		padding: 0 5px
-		+border-radius(6px)
 		font-weight: normal
+		@include border-radius(6px)
 		&:hover
 			background-color: #eee
 			cursor: pointer
 	.tree-selected
-		background-color: lighten($brand-primary,30%)
+		color: white
+		background-color: $brand-primary
+		&:hover
+			color: gray
 		i.tree-dot
-			background-color: $brand-primary
+			background-color: white
 	i.tree-dot
 		display: inline-block
 		position: relative
@@ -23,7 +31,7 @@
 		height: 6px
 		margin: 0 4px 0 6px
 		background-color: #ccc
-		+border-radius(6px)
+		@include border-radius(6px)
 	.tree-item-disable, .tree-folder-name-disable
 		color: #ccc
 		&:hover
@@ -40,3 +48,8 @@
 .tree-actions
 	.twitter-typeahead
 		padding: 0 0 0 4px
+
+.tree-panel-label-title
+	font-weight: 400
+	padding: 0 0 0 8px
+	margin: 0

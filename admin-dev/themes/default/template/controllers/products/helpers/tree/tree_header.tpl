@@ -41,7 +41,7 @@
 	<div id="category-tree-toolbar" {if !$is_category_filter}style="display:none;"{/if}>
 		{if isset($toolbar)}{$toolbar}{/if}
 	</div>
-	<label class="pull-left">
+	<label class="tree-panel-label-title">
 		<input type="checkbox" id="filter-by-category" {if $is_category_filter}checked="checked"{/if} />
 		<i class="icon-tags"></i>
 		{$title}

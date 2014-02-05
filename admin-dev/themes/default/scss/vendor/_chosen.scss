@@ -1,5 +1,5 @@
-$chosen-sprite: url("../img/chosen-sprite.png");
-$chosen-sprite-retina: url("../img/chosen-sprite@2x.png");
+$chosen-sprite: url("../img/chosen-sprite.png") !default;
+$chosen-sprite-retina: url("../img/chosen-sprite@2x.png") !default;
 
 /* @group Base */
 .chosen-container {

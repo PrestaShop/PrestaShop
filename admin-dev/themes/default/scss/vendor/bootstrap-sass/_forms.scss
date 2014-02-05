@@ -11,6 +11,10 @@ fieldset {
   padding: 0;
   margin: 0;
   border: 0;
+  // Chrome and Firefox set a `min-width: -webkit-min-content;` on fieldsets,
+  // so we reset that to ensure it behaves more like a standard block element.
+  // See https://github.com/twbs/bootstrap/issues/12359.
+  min-width: 0;
 }
 
 legend {
@@ -33,6 +37,10 @@ label {
 
 
 // Normalize form controls
+//
+// While most of our form styles require extra classes, some basic normalization
+// is required to ensure optimum display with or without those classes to better
+// address browser inconsistencies.
 
 // Override content-box in Normalize (* isn't specific enough)
 input[type="search"] {
@@ -47,9 +55,15 @@ input[type="checkbox"] {
   line-height: normal;
 }
 
-// Set the height of select and file controls to match text inputs
+// Set the height of file controls to match text inputs
 input[type="file"] {
   display: block;
+}
+
+// Make range inputs behave like textual form controls
+input[type="range"] {
+  display: block;
+  width: 100%;
 }
 
 // Make multiple select elements height not fixed
@@ -58,28 +72,11 @@ select[size] {
   height: auto;
 }
 
-// Fix optgroup Firefox bug per https://github.com/twbs/bootstrap/issues/7611
-select optgroup {
-  font-size: inherit;
-  font-style: inherit;
-  font-family: inherit;
-}
-
-// Focus for select, file, radio, and checkbox
+// Focus for file, radio, and checkbox
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
   @include tab-focus();
-}
-
-// Fix for Chrome number input
-// Setting certain font-sizes causes the `I` bar to appear on hover of the bottom increment button.
-// See https://github.com/twbs/bootstrap/issues/8350 for more.
-input[type="number"] {
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    height: auto;
-  }
 }
 
 // Adjust output element
@@ -133,9 +130,6 @@ output {
   @include form-control-focus();
 
   // Placeholder
-  //
-  // Placeholder text gets special styles because when browsers invalidate entire
-  // lines if it doesn't understand a selector/
   @include placeholder();
 
   // Disabled and read-only inputs
@@ -147,6 +141,7 @@ output {
   fieldset[disabled] & {
     cursor: not-allowed;
     background-color: $input-bg-disabled;
+    opacity: 1; // iOS fix for unreadable disabled content
   }
 
   // [converter] extracted textarea& to textarea.form-control
@@ -274,14 +269,14 @@ input[type="checkbox"],
 }
 
 // Feedback states
+.has-success {
+  @include form-control-validation($state-success-text, $state-success-text, $state-success-bg);
+}
 .has-warning {
   @include form-control-validation($state-warning-text, $state-warning-text, $state-warning-bg);
 }
 .has-error {
   @include form-control-validation($state-danger-text, $state-danger-text, $state-danger-bg);
-}
-.has-success {
-  @include form-control-validation($state-success-text, $state-success-text, $state-success-bg);
 }
 
 
