@@ -332,8 +332,7 @@
 								</span>
 							{/if}
 						</div> <!-- end prices -->
-						
-						<p id="reduction_amount" {if !$product->specificPrice || $product->specificPrice.reduction_type != 'amount' || $product->specificPrice.reduction|intval ==0} style="display:none"{/if}>
+						<p id="reduction_amount" {if !$product->specificPrice || $product->specificPrice.reduction_type != 'amount' || $product->specificPrice.reduction|floatval ==0} style="display:none"{/if}>
 							<span id="reduction_amount_display">
 							{if $product->specificPrice && $product->specificPrice.reduction_type == 'amount' && $product->specificPrice.reduction|intval !=0}
 								-{convertPrice price=$productPriceWithoutReduction-$productPrice|floatval}
