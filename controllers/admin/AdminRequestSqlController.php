@@ -109,8 +109,8 @@ class AdminRequestSqlControllerCore extends AdminController
 		<ul>
 			<li>'.$this->l('Click "Add New".').'</li>
 			<li>'.$this->l('Fill in the fields and click "Save".').'</li>
-			<li>'.$this->l('You can then view the query results by clicking on the tab:').' <i class="icon-pencil"></i></li>
-			<li>'.$this->l('You can also export the query results as CSV file by clicking on the tab:').' <i class="icon-upload"></i></li>
+			<li>'.$this->l('You can then view the query results by clicking on this icon in the dropdown menu:').' <i class="icon-pencil"></i></li>
+			<li>'.$this->l('You can also export the query results as CSV file by clicking on this icon in the dropdown menu:').' <i class="icon-upload"></i></li>
 		</ul>');
 
 		$this->addRowAction('export');

@@ -203,15 +203,15 @@ class AdminReferrersControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'required' => true
 				),
 				array(
 					'type' => 'password',
-					'label' => $this->l('Password:'),
+					'label' => $this->l('Password'),
 					'name' => 'passwd',
-					'desc' => $this->l('Leave blank if no change')
+					'desc' => $this->l('Leave blank if no change.')
 				)
 			),
 			'submit' => array('title' => $this->l('Save')),
@@ -229,19 +229,19 @@ class AdminReferrersControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Click fee:'),
+					'label' => $this->l('Click fee'),
 					'name' => 'click_fee',
 					'desc' => $this->l('Fee given for each visit.')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Base fee:'),
+					'label' => $this->l('Base fee'),
 					'name' => 'base_fee',
 					'desc' => $this->l('Fee given for each order placed.')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Percent fee:'),
+					'label' => $this->l('Percent fee'),
 					'name' => 'percent_fee',
 					'desc' => $this->l('Percent of the sales.')
 				)
@@ -253,7 +253,7 @@ class AdminReferrersControllerCore extends AdminController
 		{
 			$this->fields_form[1]['form']['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}
@@ -267,30 +267,30 @@ class AdminReferrersControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Include:'),
+					'label' => $this->l('Include'),
 					'name' => 'http_referer_like',
 					'cols' => 40,
 					'rows' => 1,
-					'legend' => $this->l('HTTP referrer')
+					'legend' => $this->l('HTTP referrer.')
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Exclude:'),
+					'label' => $this->l('Exclude'),
 					'name' => 'http_referer_like_not',
 					'cols' => 40,
 					'rows' => 1
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Include:'),
+					'label' => $this->l('Include'),
 					'name' => 'request_uri_like',
 					'cols' => 40,
 					'rows' => 1,
-					'legend' => $this->l('Request URI')
+					'legend' => $this->l('Request URI.')
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Exclude:'),
+					'label' => $this->l('Exclude'),
 					'name' => 'request_uri_like_not',
 					'cols' => 40,
 					'rows' => 1
@@ -311,30 +311,30 @@ class AdminReferrersControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Include:'),
+					'label' => $this->l('Include'),
 					'name' => 'http_referer_regexp',
 					'cols' => 40,
 					'rows' => 1,
-					'legend' => $this->l('HTTP referrer')
+					'legend' => $this->l('HTTP referrer.')
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Exclude:'),
+					'label' => $this->l('Exclude'),
 					'name' => 'http_referer_regexp_not',
 					'cols' => 40,
 					'rows' => 1
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Include:'),
+					'label' => $this->l('Include'),
 					'name' => 'request_uri_regexp',
 					'cols' => 40,
 					'rows' => 1,
-					'legend' => $this->l('Request URI')
+					'legend' => $this->l('Request URI.')
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Exclude:'),
+					'label' => $this->l('Exclude'),
 					'name' => 'request_uri_regexp_not',
 					'cols' => 40,
 					'rows' => 1

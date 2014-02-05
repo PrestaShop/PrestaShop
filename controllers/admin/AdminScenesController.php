@@ -119,7 +119,7 @@ class AdminScenesControllerCore extends AdminController
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_scene'] = array(
 				'href' => self::$currentIndex.'&addscene&token='.$this->token,
-				'desc' => $this->l('Add new scene', null, null, false),
+				'desc' => $this->l('Add new image map', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 
@@ -170,7 +170,7 @@ class AdminScenesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Image map name:'),
+					'label' => $this->l('Image map name'),
 					'name' => 'name',
 					'lang' => true,
 					'required' => true,
@@ -178,7 +178,7 @@ class AdminScenesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Status:'),
+					'label' => $this->l('Status'),
 					'name' => 'active',
 					'required' => false,
 					'class' => 't',
@@ -251,7 +251,7 @@ class AdminScenesControllerCore extends AdminController
 
 			$input_img_alt = array(
 				'type' => 'file',
-				'label' => $this->l('Alternative thumbnail:'),
+				'label' => $this->l('Alternative thumbnail'),
 				'name' => 'thumb',
 				'desc' => $img_alt_desc
 			);
@@ -284,14 +284,14 @@ class AdminScenesControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}
 
 		$this->fields_form['input'][] = array(
 			'type' => 'file',
-			'label' => $this->l('Image to be mapped:'),
+			'label' => $this->l('Image to be mapped'),
 			'name' => 'image',
 			'display_image' => true,
 			'desc' => $image_to_map_desc,

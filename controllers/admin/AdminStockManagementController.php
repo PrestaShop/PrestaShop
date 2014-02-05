@@ -260,11 +260,11 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_warehouse',
 								'name' => 'name'
 							),
-							'hint' => $this->l('Please select the warehouse that you\'ll be adding products to. ')
+							'hint' => $this->l('Please select the warehouse that you\'ll be adding products to.')
 						),
 						array(
 							'type' => 'text',
-							'label' => $this->l('Unit price (tax excl.):'),
+							'label' => $this->l('Unit price (tax excl.)'),
 							'name' => 'price',
 							'required' => true,
 							'size' => 10,

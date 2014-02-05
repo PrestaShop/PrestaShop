@@ -50,7 +50,7 @@ class AdminWarehousesControllerCore extends AdminController
 				'title' => $this->l('Name'),
 			),
 			'management_type' => array(
-				'title' => $this->l('Managment type'),
+				'title' => $this->l('Management type'),
 			),
 			'employee' => array(
 				'title' => $this->l('Manager'),
@@ -296,7 +296,7 @@ class AdminWarehousesControllerCore extends AdminController
 			// adds input management type
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
-				'label' => $this->l('Management type:'),
+				'label' => $this->l('Management type'),
 				'hint' => $this->l('Be careful! You won\'t be able to change this value later!'),
 				'name' => 'management_type',
 				'required' => true,
@@ -324,7 +324,7 @@ class AdminWarehousesControllerCore extends AdminController
 			// adds input valuation currency
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
-				'label' => $this->l('Stock valuation currency:'),
+				'label' => $this->l('Stock valuation currency'),
 				'hint' => $this->l('Be careful! You won\'t be able to change this value later!'),
 				'name' => 'id_currency',
 				'required' => true,
