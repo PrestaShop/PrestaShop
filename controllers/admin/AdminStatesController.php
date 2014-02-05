@@ -129,7 +129,7 @@ class AdminStatesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'maxlength' => 32,
 					'required' => true,
@@ -137,7 +137,7 @@ class AdminStatesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('ISO code:'),
+					'label' => $this->l('ISO code'),
 					'name' => 'iso_code',
 					'maxlength' => 7,
 					'required' => true,
@@ -146,7 +146,7 @@ class AdminStatesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Country:'),
+					'label' => $this->l('Country'),
 					'name' => 'id_country',
 					'required' => true,
 					'default_value' => (int)$this->context->country->id,
@@ -159,7 +159,7 @@ class AdminStatesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Zone:'),
+					'label' => $this->l('Zone'),
 					'name' => 'id_zone',
 					'required' => true,
 					'options' => array(
@@ -174,7 +174,7 @@ class AdminStatesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Status:'),
+					'label' => $this->l('Status'),
 					'name' => 'active',
 					'required' => true,
 					'values' => array(
