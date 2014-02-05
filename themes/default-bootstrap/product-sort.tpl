@@ -22,7 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {if isset($orderby) AND isset($orderway)}
 <ul class="display hidden-xs">
 	<li class="display-title">{l s='View:'}</li>
@@ -41,22 +40,6 @@
 	{else}
 		{assign var='request' value=$link->getPaginationLink(false, false, false, true)}
 	{/if}
-{/if}
-{if !isset($paginationId) || $paginationId == ''}
-<script type="text/javascript">
-//<![CDATA[
-$(document).ready(function(){
-	if($('#layered_form').length == 0)
-	{
- 		$('.selectProductSort').change(function(){
-			var requestSortProducts = '{$request}';
- 			var splitData = $(this).val().split(':');
-			document.location.href = requestSortProducts + ((requestSortProducts.indexOf('?') < 0) ? '?' : '&') + 'orderby=' + splitData[0] + '&orderway=' + splitData[1];
-    	});
-  	}
-});
-//]]>
-</script>
 {/if}
 <form id="productsSortForm{if isset($paginationId)}_{$paginationId}{/if}" action="{$request|escape:'html':'UTF-8'}" class="productsSortForm">
 	<div class="select selector1">
@@ -78,4 +61,5 @@ $(document).ready(function(){
 	</div>
 </form>
 <!-- /Sort products -->
+{addJsDef request=$request}
 {/if}
