@@ -139,20 +139,18 @@
 										</div>
 									{elseif $field['type'] == 'bool'}
 										<div class="col-lg-9">
-											<div class="row">
-												<div class="input-group col-lg-2">
-													<span class="switch prestashop-switch">
-														<input type="radio" name="{$key}" id="{$key}_on" value="1" {if $field['value']} checked="checked"{/if}{if isset($field['js']['on'])} {$field['js']['on']}{/if}/>
-														<label for="{$key}_on" class="radioCheck">
-															{l s='Yes'}
-														</label>
-														<input type="radio" name="{$key}" id="{$key}_off" value="0" {if !$field['value']} checked="checked"{/if}{if isset($field['js']['off'])} {$field['js']['off']}{/if}/>
-														<label for="{$key}_off" class="radioCheck">
-															{l s='No'}
-														</label>
-														<a class="slide-button btn"></a>
-													</span>
-												</div>
+											<div class="input-group">
+												<span class="switch prestashop-switch">
+													<input type="radio" name="{$key}" id="{$key}_on" value="1" {if $field['value']} checked="checked"{/if}{if isset($field['js']['on'])} {$field['js']['on']}{/if}/>
+													<label for="{$key}_on" class="radioCheck">
+														{l s='Yes'}
+													</label>
+													<input type="radio" name="{$key}" id="{$key}_off" value="0" {if !$field['value']} checked="checked"{/if}{if isset($field['js']['off'])} {$field['js']['off']}{/if}/>
+													<label for="{$key}_off" class="radioCheck">
+														{l s='No'}
+													</label>
+													<a class="slide-button btn"></a>
+												</span>
 											</div>
 										</div>
 
@@ -180,22 +178,24 @@
 											{/foreach}
 										</div>
 									{elseif $field['type'] == 'text'}
-										<div class="col-lg-9 {if isset($field['suffix'])}input-group{/if}">
+										<div class="col-lg-9">{if isset($field['suffix'])}<div class="input-group">{/if}
 											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'html':'UTF-8'}" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if}/>
 											{if isset($field['suffix'])}
 											<span class="input-group-addon">
 												{$field['suffix']|strval}
 											</span>
 											{/if}
+											{if isset($field['suffix'])}</div>{/if}
 										</div>
 									{elseif $field['type'] == 'password'}
-										<div class="col-lg-9 {if isset($field['suffix'])}input-group{/if}">
+										<div class="col-lg-9">{if isset($field['suffix'])}<div class="input-group">{/if}
 											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if} />
 											{if isset($field['suffix'])}
 											<span class="input-group-addon">
 												{$field['suffix']|strval}
 											</span>
 											{/if}
+											{if isset($field['suffix'])}</div>{/if}
 										</div>
 									{elseif $field['type'] == 'textarea'}
 										<div class="col-lg-9">
@@ -307,7 +307,7 @@
 										{/if}
 									{/if}
 									{if isset($field['desc']) && !empty($field['desc'])}
-									<div class="col-lg-9 col-lg-push-3">
+									<div class="col-lg-9 col-lg-offset-3">
 										<p class="help-block">
 											{if is_array($field['desc'])}
 												{foreach $field['desc'] as $p}
@@ -325,7 +325,7 @@
 									{/if}
 								{/block}{* end block input *}
 								{if $field['is_invisible']}
-								<div class="col-lg-9 col-lg-push-3">
+								<div class="col-lg-9 col-lg-offset-3">
 									<p class="alert alert-warning">
 										{l s='You can\'t change the value of this configuration field in the context of this shop.'}
 									</p>

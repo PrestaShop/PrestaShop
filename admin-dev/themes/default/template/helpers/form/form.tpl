@@ -370,39 +370,37 @@
 										{if isset($value.p) && $value.p}<p class="help-block">{$value.p}</p>{/if}
 									{/foreach}
 								{elseif $input.type == 'switch'}
-									<div class="row">
-										<div class="input-group col-lg-2">
-											<span class="switch prestashop-switch">
-												{foreach $input.values as $value}
-												<input
-													type="radio"
-													name="{$input.name}"
-													{if $value.value == 1}
-														id="{$input.name}_on"
-													{else}
-														id="{$input.name}_off"
-													{/if}
-													value="{$value.value}"
-													{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
-													{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
-												/>
-												<label
-													{if $value.value == 1}
-														for="{$input.name}_on"
-													{else}
-														for="{$input.name}_off"
-													{/if}
-												>
-													{if $value.value == 1}
-														{l s='Yes'}
-													{else}
-														{l s='No'}
-													{/if}
-												</label>
-												{/foreach}
-												<a class="slide-button btn"></a>
-											</span>
-										</div>
+									<div class="input-group col-lg-2">
+										<span class="switch prestashop-switch">
+											{foreach $input.values as $value}
+											<input
+												type="radio"
+												name="{$input.name}"
+												{if $value.value == 1}
+													id="{$input.name}_on"
+												{else}
+													id="{$input.name}_off"
+												{/if}
+												value="{$value.value}"
+												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
+												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
+											/>
+											<label
+												{if $value.value == 1}
+													for="{$input.name}_on"
+												{else}
+													for="{$input.name}_off"
+												{/if}
+											>
+												{if $value.value == 1}
+													{l s='Yes'}
+												{else}
+													{l s='No'}
+												{/if}
+											</label>
+											{/foreach}
+											<a class="slide-button btn"></a>
+										</span>
 									</div>
 
 
@@ -607,7 +605,7 @@
 						{hook h=$hookName fieldset=$f}
 					{/if}
 				{elseif $key == 'desc'}
-					<p class="clear">
+					<div class="alert alert-info col-lg-offset-3">
 						{if is_array($field)}
 							{foreach $field as $k => $p}
 								{if is_array($p)}
@@ -620,7 +618,7 @@
 						{else}
 							{$field}
 						{/if}
-					</p>
+					</div>
 				{/if}
 				{block name="other_input"}{/block}
 			{/foreach}

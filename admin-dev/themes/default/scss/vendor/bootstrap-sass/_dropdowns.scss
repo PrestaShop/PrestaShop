@@ -47,7 +47,7 @@
 
   // Aligns the dropdown menu to right
   //
-  // Deprecated as of 3.1 in favor of `.dropdown-menu-[dir]`
+  // Deprecated as of 3.1.0 in favor of `.dropdown-menu-[dir]`
   &.pull-right {
     right: 0;
     left: auto;
@@ -201,12 +201,12 @@
 @media (min-width: $grid-float-breakpoint) {
   .navbar-right {
     .dropdown-menu {
-      right: 0;
-      left: auto;
+      right: 0; left: auto;
     }
     // Necessary for overrides of the default right aligned menu.
     // Will remove come v4 in all likelihood.
-    .dropdown-menu-left {\left: 0;\right: auto;
+    .dropdown-menu-left {
+      left: 0; right: auto;
     }
   }
 }

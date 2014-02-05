@@ -1722,6 +1722,8 @@ abstract class ModuleCore
 			return _PS_THEME_DIR_.'modules/'.$module_name.'/views/templates/front/'.$template;
 		elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$module_name.'/views/templates/hook/'.$template))
 			return false;
+		elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$module_name.'/views/templates/front/'.$template))
+			return false;
 		elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$module_name.'/'.$template))
 			return false;
 		return null;
@@ -1757,8 +1759,8 @@ abstract class ModuleCore
 		else
 		{
 			$this->smarty->assign(array(
-				'module_dir' =>				__PS_BASE_URI__.'modules/'.basename($file, '.php').'/',
-				'module_template_dir' =>	($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/',
+				'module_dir' =>	__PS_BASE_URI__.'modules/'.basename($file, '.php').'/',
+				'module_template_dir' => ($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/',
 				'allow_push' => $this->allow_push
 			));
 
@@ -1810,9 +1812,11 @@ abstract class ModuleCore
 		
 		if ($overloaded)
 			return $overloaded;
-		elseif (file_exists(_PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template))
+		elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template))
 			return _PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template;
-		elseif (file_exists(_PS_MODULE_DIR_.$this->name.'/'.$template))
+		elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$this->name.'/views/templates/front/'.$template))
+ 			return _PS_MODULE_DIR_.$this->name.'/views/templates/front/'.$template;
+		elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$this->name.'/'.$template))
 			return _PS_MODULE_DIR_.$this->name.'/'.$template;
 		else
 			return null;

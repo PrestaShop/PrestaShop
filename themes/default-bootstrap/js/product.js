@@ -79,6 +79,7 @@ $(document).ready(function()
 		var k = 0;
 		for (var i in combinations)
 		{
+			globalQuantity += combinations[i]['quantity'];
 			combinationsJS[k] = [];
 			combinationsJS[k]['idCombination'] = parseInt(i);
 			combinationsJS[k]['idsAttributes'] = combinations[i]['list'].split(",");

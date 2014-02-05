@@ -26,7 +26,11 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-
+	{if $mod_security_warning}
+	<div class="alert alert-warning">
+		{l s='Apache mod_security is activated on your server. This could result in some Bad Request errors'}
+	</div>
+	{/if}
 	{if !empty($limit_warning)}
 	<div class="alert alert-warning">
 		{if $limit_warning['error_type'] == 'suhosin'}
@@ -43,7 +47,6 @@
 		{l s='%s at least, or you will have to edit the translation files manually.' sprintf=$limit_warning['needed_limit']}
 	</div>
 	{else}
-
 		<div class="alert alert-info">
 			{l s='Some sentences to translate use this syntax: "Word %s word". These "%s" are variables, and PrestaShop takes care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}
 		</div>
