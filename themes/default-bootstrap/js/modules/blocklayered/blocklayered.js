@@ -557,6 +557,7 @@ function reloadContent(params_plus)
 
 				if (view && view != 'grid')
 					display(view);
+				blockHover();
 			}
 		}
 	});
