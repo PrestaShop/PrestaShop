@@ -130,11 +130,16 @@
 								{/foreach}
 								</ul>
 							{elseif $type == constant('Product::CUSTOMIZE_TEXTFIELD')}
-								<ul style="margin-bottom: 4px; padding: 0; list-style-type: none;">
-								{foreach from=$datas key='index' item='data'}
-									<li>{if $data.name}{$data.name}{else}{l s='Text #'}{$index}{/if}{l s=':'}<b>{$data.value}</b></li>
-								{/foreach}
-								</ul>
+								<div class="form-horizontal">
+									{foreach from=$datas key='index' item='data'}
+										<div class="form-group">
+											<span class="control-label col-lg-3"><strong>{if $data.name}{$data.name}{else}{l s='Text #'}{$index}{/if}</strong></span>
+											<div class="col-lg-9">
+												<p class="form-control-static">{$data.value}</p>
+											</div>
+										</div>
+									{/foreach}
+								</div>
 							{/if}
 						{/foreach}
 						</td>
