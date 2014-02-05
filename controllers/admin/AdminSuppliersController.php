@@ -113,18 +113,18 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Description:'),
+					'label' => $this->l('Description'),
 					'name' => 'description',
 					'lang' => true,
 					'hint' => array(
 						$this->l('Invalid characters:').' &lt;&gt;;=#{}',
-						$this->l('Will appear in the supplier list')
+						$this->l('Will appear in the list of suppliers.')
 					),
 					'autoload_rte' => 'rte' //Enable TinyMCE editor for short description
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Phone:'),
+					'label' => $this->l('Phone'),
 					'name' => 'phone',
 					'maxlength' => 16,
 					'col' => 4,
@@ -132,7 +132,7 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Address:'),
+					'label' => $this->l('Address'),
 					'name' => 'address',
 					'maxlength' => 128,
 					'col' => 6,
@@ -140,14 +140,14 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Address:').' (2)',
+					'label' => $this->l('Address').' (2)',
 					'name' => 'address2',
 					'col' => 6,
 					'maxlength' => 128,
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Postal Code/Zip Code:'),
+					'label' => $this->l('Postal Code/Zip Code'),
 					'name' => 'postcode',
 					'maxlength' => 12,
 					'col' => 2,
@@ -155,7 +155,7 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('City:'),
+					'label' => $this->l('City'),
 					'name' => 'city',
 					'maxlength' => 32,
 					'col' => 4,
@@ -163,7 +163,7 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Country:'),
+					'label' => $this->l('Country'),
 					'name' => 'id_country',
 					'required' => true,
 					'col' => 4,
@@ -187,16 +187,16 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'file',
-					'label' => $this->l('Logo:'),
+					'label' => $this->l('Logo'),
 					'name' => 'logo',
 					'display_image' => true,
 					'image' => $image_url ? $image_url : false,
 					'size' => $image_size,
-					'hint' => $this->l('Upload a supplier logo from your computer')
+					'hint' => $this->l('Upload a supplier logo from your computer.')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Meta title:'),
+					'label' => $this->l('Meta title'),
 					'name' => 'meta_title',
 					'lang' => true,
 					'col' => 4,
@@ -204,7 +204,7 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Meta description:'),
+					'label' => $this->l('Meta description'),
 					'name' => 'meta_description',
 					'lang' => true,
 					'col' => 6,
@@ -212,18 +212,18 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'tags',
-					'label' => $this->l('Meta keywords:'),
+					'label' => $this->l('Meta keywords'),
 					'name' => 'meta_keywords',
 					'lang' => true,
 					'col' => 6,
 					'hint' => array(
-						$this->l('To add "tags" click in the field, write something and then press "Enter"'),
+						$this->l('To add "tags" click in the field, write something and then press "Enter".'),
 						$this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 					)
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Enable:'),
+					'label' => $this->l('Enable'),
 					'name' => 'active',
 					'required' => false,
 					'class' => 't',
@@ -282,7 +282,7 @@ class AdminSuppliersControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}

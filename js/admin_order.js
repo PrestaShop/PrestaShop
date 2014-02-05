@@ -326,9 +326,12 @@ function init()
 		$('.add_product_fields').show();
 		$('.edit_product_fields, .standard_refund_fields, .partial_refund_fields, .order_action').hide();
 		$('tr#new_product').slideDown('fast', function () {
-			$('tr#new_product td').fadeIn('fast');
+			$('tr#new_product td').fadeIn('fast', function() {
+				$('#add_product_product_name').focus();
+				$.scrollTo('tr#new_product', 1200, {offset: -100});
+			});
 		});
-		$.scrollTo('tr#new_product', 1200, {offset: -100});
+
 		return false;
 	});
 

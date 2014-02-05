@@ -342,7 +342,7 @@ class AdminShopControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Shop name:'),
+					'label' => $this->l('Shop name'),
 					'desc' => array($this->l('This field does not refer to the shop name visible in the front office.'),
 							sprintf($this->l('Follow %sthis link%s to edit the shop name used on the Front Office.'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'#store_fieldset_general">', '</a>')),
 					'name' => 'name',
@@ -380,7 +380,7 @@ class AdminShopControllerCore extends AdminController
 
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
-				'label' => $this->l('Group Shop:'),
+				'label' => $this->l('Shop group'),
 				'desc' => $group_desc,
 				'name' => 'id_shop_group',
 				'options' => array(
@@ -399,7 +399,7 @@ class AdminShopControllerCore extends AdminController
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'textShopGroup',
-				'label' => $this->l('Shop group:'),
+				'label' => $this->l('Shop group'),
 				'desc' => $this->l('You can\'t edit the shop group because the current shop belongs to a group with the "share" option enabled.'),
 				'name' => 'id_shop_group',
 				'value' => $group->name
@@ -409,7 +409,7 @@ class AdminShopControllerCore extends AdminController
 		$categories = Category::getRootCategories($this->context->language->id);
 		$this->fields_form['input'][] = array(
 			'type' => 'select',
-			'label' => $this->l('Category root:'),
+			'label' => $this->l('Category root'),
 			'desc' => $this->l('This is the root category of the store that you\'ve created. To define a new root category for your store,').'&nbsp;<a href="'.$this->context->link->getAdminLink('AdminCategories').'&addcategoryroot" target="_blank">'.$this->l('Please click here').'</a>',
 			'name' => 'id_category',
 			'options' => array(
@@ -454,7 +454,7 @@ class AdminShopControllerCore extends AdminController
 		$this->fields_form['input'][] = array(
 			'type' => 'categories',
 			'name' => 'categoryBox',
-			'label' => $this->l('Associated categories:'),
+			'label' => $this->l('Associated categories'),
 			'tree' => array(
 				'id' => 'categories-tree',
 				'selected_categories' => $selected_cat,
@@ -466,7 +466,7 @@ class AdminShopControllerCore extends AdminController
 		);
 		/*$this->fields_form['input'][] = array(
 			'type' => 'switch',
-			'label' => $this->l('Enabled:'),
+			'label' => $this->l('Enabled'),
 			'name' => 'active',
 			'required' => true,
 			'is_bool' => true,
@@ -494,7 +494,7 @@ class AdminShopControllerCore extends AdminController
 
 		$this->fields_form['input'][] = array(
 			'type' => 'theme',
-			'label' => $this->l('Theme:'),
+			'label' => $this->l('Theme'),
 			'name' => 'theme',
 			'values' => $themes
 		);
@@ -509,32 +509,32 @@ class AdminShopControllerCore extends AdminController
 			$disabled = false;
 
 		$import_data = array(
-			'carrier' => $this->l('Carriers:'),
-			'cms' => $this->l('CMS page'),
-			'contact' => $this->l('Contact'),
+			'carrier' => $this->l('Carriers'),
+			'cms' => $this->l('CMS pages'),
+			'contact' => $this->l('Contact information'),
 			'country' => $this->l('Countries'),
-			'currency' => $this->l('Currencies:'),
-			'discount' => $this->l('Discounts'),
+			'currency' => $this->l('Currencies'),
+			'discount' => $this->l('Discount prices'),
 			'employee' => $this->l('Employees'),
 			'image' => $this->l('Images'),
-			'lang' => $this->l('Langs'),
-			'manufacturer' => $this->l('Manufacturers:'),
-			'module' => $this->l('modules'),
+			'lang' => $this->l('Languages'),
+			'manufacturer' => $this->l('Manufacturers'),
+			'module' => $this->l('Modules'),
 			'hook_module' => $this->l('Module hooks'),
 			'meta_lang' => $this->l('Meta'),
-			'product' => $this->l('Products:'),
+			'product' => $this->l('Products'),
 			'product_attribute' => $this->l('Combinations'),
 			'scene' => $this->l('Scenes'),
 			'stock_available' => $this->l('Available quantities for sale'),
 			'store' => $this->l('Stores'),
-			'warehouse' => $this->l('Warehouse'),
+			'warehouse' => $this->l('Warehouses'),
 			'webservice_account' => $this->l('Webservice accounts'),
 			'attribute_group' => $this->l('Attribute groups'),
 			'feature' => $this->l('Features'),
 			'group' => $this->l('Customer groups'),
 			'tax_rules_group' => $this->l('Tax rules groups'),
 			'supplier' => $this->l('Suppliers'),
-			'referrer' => $this->l('Referrers'),
+			'referrer' => $this->l('Referrers/affiliates'),
 			'zone' => $this->l('Zones'),
 			'cart_rule' => $this->l('Cart rules'),
 		);

@@ -425,7 +425,7 @@ class AdminCustomersControllerCore extends AdminController
 			array(
 				array(
 					'type' => 'group',
-					'label' => $this->l('Group access:'),
+					'label' => $this->l('Group access'),
 					'name' => 'groupBox',
 					'values' => $groups,
 					'required' => true,
@@ -434,7 +434,7 @@ class AdminCustomersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Default customer group:'),
+					'label' => $this->l('Default customer group'),
 					'name' => 'id_default_group',
 					'options' => array(
 						'query' => $groups,
@@ -471,40 +471,40 @@ class AdminCustomersControllerCore extends AdminController
 
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
-				'label' => $this->l('Company:'),
+				'label' => $this->l('Company'),
 				'name' => 'company'
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
-				'label' => $this->l('SIRET:'),
+				'label' => $this->l('SIRET'),
 				'name' => 'siret'
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
-				'label' => $this->l('APE:'),
+				'label' => $this->l('APE'),
 				'name' => 'ape'
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
-				'label' => $this->l('Website:'),
+				'label' => $this->l('Website'),
 				'name' => 'website'
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
-				'label' => $this->l('Outstanding allowed:'),
+				'label' => $this->l('Outstanding allowed'),
 				'name' => 'outstanding_allow_amount',
 				'hint' => $this->l('Valid characters:').' 0-9',
 				'suffix' => $this->context->currency->sign
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
-				'label' => $this->l('Maximum number of payment days:'),
+				'label' => $this->l('Maximum number of payment days'),
 				'name' => 'max_payment_days',
 				'hint' => $this->l('Valid characters:').' 0-9'
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
-				'label' => $this->l('Risk:'),
+				'label' => $this->l('Risk'),
 				'name' => 'id_risk',
 				'required' => false,
 				'class' => 't',
@@ -670,7 +670,7 @@ class AdminCustomersControllerCore extends AdminController
 		foreach ($orders as $order)
 		{
 			if (!isset($order['order_state']))
-				$order['order_state'] = $this->l('The state isn\'t defined for this order');
+				$order['order_state'] = $this->l('There is no state defined for this order.');
 
 			if ($order['valid'])
 			{

@@ -249,7 +249,7 @@ class AdminSearchConfControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Alias:'),
+					'label' => $this->l('Alias'),
 					'name' => 'alias',
 					'required' => true,
 					'hint' => array(
