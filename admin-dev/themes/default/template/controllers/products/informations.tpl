@@ -30,7 +30,7 @@
 
 <div id="product-informations" class="panel product-tab">
 	<input type="hidden" name="submitted_tabs[]" value="Informations" />
-	<h3 class="tab">{l s='Information'}</h3>
+	<h3 class="tab"> <i class="icon-info"></i> {l s='Information'}</h3>
 	<script type="text/javascript">
 		{if isset($ps_force_friendly_product) && $ps_force_friendly_product}
 			var ps_force_friendly_product = 1;
@@ -187,18 +187,20 @@
 			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
 			{l s='Status:'}
 		</label>
-		<div class="input-group col-lg-3">
-			<span class="switch prestashop-switch">
-				<input onclick="toggleDraftWarning(false);showOptions(true);showRedirectProductOptions(false);" type="radio" name="active" id="active_on" value="1" {if $product->active || !$product->isAssociatedToShop()}checked="checked" {/if} />
-				<label for="active_on" class="radioCheck">
-					{l s='Enabled'}
-				</label>
-				<input onclick="toggleDraftWarning(true);showOptions(false);showRedirectProductOptions(true);"  type="radio" name="active" id="active_off" value="0" {if !$product->active && $product->isAssociatedToShop()}checked="checked"{/if} />
-				<label for="active_off" class="radioCheck">
-					{l s='Disabled'}
-				</label>
-				<a class="slide-button btn"></a>
-			</span>
+		<div class="col-lg-4">
+			<div class="input-group">
+				<span class="switch prestashop-switch">
+					<input onclick="toggleDraftWarning(false);showOptions(true);showRedirectProductOptions(false);" type="radio" name="active" id="active_on" value="1" {if $product->active || !$product->isAssociatedToShop()}checked="checked" {/if} />
+					<label for="active_on" class="radioCheck">
+						{l s='Enabled'}
+					</label>
+					<input onclick="toggleDraftWarning(true);showOptions(false);showRedirectProductOptions(true);"  type="radio" name="active" id="active_off" value="0" {if !$product->active && $product->isAssociatedToShop()}checked="checked"{/if} />
+					<label for="active_off" class="radioCheck">
+						{l s='Disabled'}
+					</label>
+					<a class="slide-button btn"></a>
+				</span>
+			</div>
 		</div>
 	</div>
 
