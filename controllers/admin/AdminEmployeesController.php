@@ -251,7 +251,7 @@ class AdminEmployeesControllerCore extends AdminController
 				),
 				/*array(
 					'type' => 'color',
-					'label' => $this->l('Admin panel color:'),
+					'label' => $this->l('Admin panel color'),
 					'name' => 'bo_color',
 					'class' => 'color mColorPickerInput',
 					'hint' => $this->l('Admin panel background will be displayed in this color (HTML colors only).').' "lightblue", "#CC6600")'
@@ -360,7 +360,7 @@ class AdminEmployeesControllerCore extends AdminController
 				$this->context->smarty->assign('_PS_ADMIN_PROFILE_', (int)_PS_ADMIN_PROFILE_);
 				$this->fields_form['input'][] = array(
 					'type' => 'shop',
-					'label' => $this->l('Shop association:'),
+					'label' => $this->l('Shop association'),
 					'hint' => $this->l('Select the shops the employee is allowed to access.'),
 					'name' => 'checkBoxShopAsso',
 				);

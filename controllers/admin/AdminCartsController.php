@@ -362,7 +362,7 @@ class AdminCartsControllerCore extends AdminController
 				$this->context->cart->save();
 			}
 			else
-				$errors[] = Tools::displayError('This product cannot be added to the cart');
+				$errors[] = Tools::displayError('This product cannot be added to the cart.');
 
 			if (!count($errors))
 			{
@@ -525,12 +525,12 @@ class AdminCartsControllerCore extends AdminController
 		{
 			$errors = array();
 			if (!($id_cart_rule = Tools::getValue('id_cart_rule')) || !$cart_rule = new CartRule((int)$id_cart_rule))
-				$errors[] = Tools::displayError('Invalid voucher');
+				$errors[] = Tools::displayError('Invalid voucher.');
 			elseif ($err = $cart_rule->checkValidity($this->context))
 				$errors[] = $err;
 			if (!count($errors))
 				if (!$this->context->cart->addCartRule((int)$cart_rule->id))
-					$errors[] = Tools::displayError('Can\'t add the voucher');
+					$errors[] = Tools::displayError('Can\'t add the voucher.');
 			echo Tools::jsonEncode(array_merge($this->ajaxReturnVars(), array('errors' => $errors)));
 		}
 	}

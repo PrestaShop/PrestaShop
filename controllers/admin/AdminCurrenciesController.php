@@ -142,8 +142,8 @@ class AdminCurrenciesControllerCore extends AdminController
 					'hint' =>$this->l('Applies to all prices (e.g. $1,240.15).'),
 					'options' => array(
 						'query' => array(
-							array('key' => 1, 'name' => 'X0,000.00 ('.$this->l('as with Dollars').')'),
-							array('key' => 2, 'name' => '0 000,00X ('.$this->l('as with Euros').')'),
+							array('key' => 1, 'name' => 'X0,000.00 ('.$this->l('Such as with Dollars').')'),
+							array('key' => 2, 'name' => '0 000,00X ('.$this->l('such as with Euros').')'),
 							array('key' => 3, 'name' => 'X0.000,00'),
 							array('key' => 4, 'name' => '0,000.00X'),
 							array('key' => 5, 'name' => 'X0\'000.00') // Added for the switzerland currency

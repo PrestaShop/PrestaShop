@@ -288,7 +288,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Global discount rate (%):'),
+						'label' => $this->l('Global discount rate (%)'),
 						'name' => 'discount_rate',
 						'required' => false,
 						'hint' => $this->l('This is the global discount rate in percent for the order.'),

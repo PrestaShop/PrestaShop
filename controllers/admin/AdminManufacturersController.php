@@ -76,7 +76,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'align' => 'center'
 			),
 			'products' => array(
-				'title' => $this->l('Products:'),
+				'title' => $this->l('Products'),
 				'search' => false,
 				'align' => 'center',
 			),
@@ -149,7 +149,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product` p ON (a.`id_manufacturer` = p.`id_manufacturer`)';
 		$this->_group = 'GROUP BY a.`id_manufacturer`';
 
-		$this->context->smarty->assign('title_list', $this->l('List of manufacturers:'));
+		$this->context->smarty->assign('title_list', $this->l('List of manufacturers'));
 
 		$this->content .= parent::renderList();
 	}
@@ -229,7 +229,7 @@ class AdminManufacturersControllerCore extends AdminController
 				ON (a.`id_manufacturer` = m.`id_manufacturer`)';
 		$this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0 AND a.`deleted`=0';
 
-		$this->context->smarty->assign('title_list', $this->l('Manufacturers addresses:'));
+		$this->context->smarty->assign('title_list', $this->l('Manufacturers addresses'));
 
 		// call postProcess() for take care about actions and filters
 		$this->postProcess();
@@ -279,13 +279,13 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
-				'title' => $this->l('Manufacturers:'),
+				'title' => $this->l('Manufacturers'),
 				'icon' => 'icon-certificate'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'col' => 4,
 					'required' => true,
@@ -293,7 +293,7 @@ class AdminManufacturersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Short description:'),
+					'label' => $this->l('Short description'),
 					'name' => 'short_description',
 					'lang' => true,
 					'cols' => 60,
@@ -304,7 +304,7 @@ class AdminManufacturersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Description:'),
+					'label' => $this->l('Description'),
 					'name' => 'description',
 					'lang' => true,
 					'cols' => 60,
@@ -315,7 +315,7 @@ class AdminManufacturersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'file',
-					'label' => $this->l('Logo:'),
+					'label' => $this->l('Logo'),
 					'name' => 'logo',
 					'image' => $image_url ? $image_url : false,
 					'size' => $image_size,
@@ -325,7 +325,7 @@ class AdminManufacturersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Meta title:'),
+					'label' => $this->l('Meta title'),
 					'name' => 'meta_title',
 					'lang' => true,
 					'col' => 4,
@@ -333,7 +333,7 @@ class AdminManufacturersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Meta description:'),
+					'label' => $this->l('Meta description'),
 					'name' => 'meta_description',
 					'lang' => true,
 					'col' => 6,
@@ -341,7 +341,7 @@ class AdminManufacturersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'tags',
-					'label' => $this->l('Meta keywords:'),
+					'label' => $this->l('Meta keywords'),
 					'name' => 'meta_keywords',
 					'lang' => true,
 					'col' => 6,
@@ -352,7 +352,7 @@ class AdminManufacturersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Enable:'),
+					'label' => $this->l('Enable'),
 					'name' => 'active',
 					'required' => false,
 					'class' => 't',
@@ -380,7 +380,7 @@ class AdminManufacturersControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}
@@ -427,7 +427,7 @@ class AdminManufacturersControllerCore extends AdminController
 		if (!$address->id_manufacturer || !Manufacturer::manufacturerExists($address->id_manufacturer))
 			$form['input'][] = array(
 				'type' => 'select',
-				'label' => $this->l('Choose the manufacturer:'),
+				'label' => $this->l('Choose the manufacturer'),
 				'name' => 'id_manufacturer',
 				'options' => array(
 					'query' => Manufacturer::getManufacturers(),
@@ -439,7 +439,7 @@ class AdminManufacturersControllerCore extends AdminController
 		{
 			$form['input'][] = array(
 				'type' => 'text',
-				'label' => $this->l('Manufacturer:'),
+				'label' => $this->l('Manufacturer'),
 				'name' => 'name',
 				'col' => 4,
 				'disabled' => true,
@@ -463,7 +463,7 @@ class AdminManufacturersControllerCore extends AdminController
 		
 		$form['input'][] = array(
 			'type' => 'text',
-			'label' => $this->l('Last name:'),
+			'label' => $this->l('Last name'),
 			'name' => 'lastname',
 			'required' => true,
 			'col' => 4,
@@ -471,7 +471,7 @@ class AdminManufacturersControllerCore extends AdminController
 		);
 		$form['input'][] = array(
 			'type' => 'text',
-			'label' => $this->l('First name:'),
+			'label' => $this->l('First name'),
 			'name' => 'firstname',
 			'required' => true,
 			'col' => 4,
@@ -479,14 +479,14 @@ class AdminManufacturersControllerCore extends AdminController
 		);
 		$form['input'][] = array(
 			'type' => 'text',
-			'label' => $this->l('Address:'),
+			'label' => $this->l('Address'),
 			'name' => 'address1',
 			'col' => 6,
 			'required' => true,
 		);
 		$form['input'][] = array(
 			'type' => 'text',
-			'label' => $this->l('Address (2):'),
+			'label' => $this->l('Address (2)'),
 			'name' => 'address2',
 			'col' => 6,
 			'required' => false,
@@ -501,14 +501,14 @@ class AdminManufacturersControllerCore extends AdminController
 		);
 		$form['input'][] = array(
 			'type' => 'text',
-			'label' => $this->l('City:'),
+			'label' => $this->l('City'),
 			'name' => 'city',
 			'col' => 4,
 			'required' => true,
 		);
 		$form['input'][] = array(
 			'type' => 'select',
-			'label' => $this->l('Country:'),
+			'label' => $this->l('Country'),
 			'name' => 'id_country',
 			'required' => false,
 			'default_value' => (int)$this->context->country->id,
@@ -521,7 +521,7 @@ class AdminManufacturersControllerCore extends AdminController
 		);
 		$form['input'][] = array(
 			'type' => 'select',
-			'label' => $this->l('State:'),
+			'label' => $this->l('State'),
 			'name' => 'id_state',
 			'required' => false,
 			'col' => 4,
@@ -533,21 +533,21 @@ class AdminManufacturersControllerCore extends AdminController
 		);
 		$form['input'][] = array(
 			'type' => 'text',
-			'label' => $this->l('Home phone:'),
+			'label' => $this->l('Home phone'),
 			'name' => 'phone',
 			'col' => 4,
 			'required' => false,
 		);
 		$form['input'][] = array(
 			'type' => 'text',
-			'label' => $this->l('Mobile phone:'),
+			'label' => $this->l('Mobile phone'),
 			'name' => 'phone_mobile',
 			'col' => 4,
 			'required' => false,
 		);
 		$form['input'][] = array(
 			'type' => 'textarea',
-			'label' => $this->l('Other:'),
+			'label' => $this->l('Other'),
 			'name' => 'other',
 			'required' => false,
 			'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}',
