@@ -28,7 +28,11 @@
 {block name="override_tpl"}
 
 	{$tinyMCE}
-
+	{if $mod_security_warning}
+	<div class="alert alert-warning">
+		{l s='Apache mod_security is activated on your server. This could result in some Bad Request errors'}
+	</div>
+	{/if}
 	{if !empty($limit_warning)}
 		<div class="alert alert-warning">
 			{if $limit_warning['error_type'] == 'suhosin'}
