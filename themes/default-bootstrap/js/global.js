@@ -65,6 +65,15 @@ $(document).ready(function(){
 			e.preventDefault();
 			display('list');
 		});
+
+		if (typeof request != 'undefined' && request)
+		{
+	 		$('.selectProductSort').change(function(){
+				var requestSortProducts = request;
+	 			var splitData = $(this).val().split(':');
+				document.location.href = requestSortProducts + ((requestSortProducts.indexOf('?') < 0) ? '?' : '&') + 'orderby=' + splitData[0] + '&orderway=' + splitData[1];
+	    	});
+		}
 	}
 });
 
