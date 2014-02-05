@@ -290,7 +290,7 @@ class AdminMetaControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Page:'),
+					'label' => $this->l('Page'),
 					'name' => 'page',
 
 					'options' => array(

@@ -268,15 +268,15 @@ class AdminLanguagesControllerCore extends AdminController
 				),
 				'list_files' => array(
 					array(
-						'label' => $this->l('Translation files:'),
+						'label' => $this->l('Translation files'),
 						'files' => Language::getFilesList($obj->iso_code, _THEME_NAME_, false, false, 'tr', true)
 					),
 					array(
-						'label' => $this->l('Theme files:'),
+						'label' => $this->l('Theme files'),
 						'files' => Language::getFilesList($obj->iso_code, _THEME_NAME_, false, false, 'theme', true)
 					),
 					array(
-						'label' => $this->l('Mail files:'),
+						'label' => $this->l('Mail files'),
 						'files' => Language::getFilesList($obj->iso_code, _THEME_NAME_, false, false, 'mail', true)
 					)
 				)

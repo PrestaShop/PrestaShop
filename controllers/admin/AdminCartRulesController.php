@@ -138,7 +138,7 @@ class AdminCartRulesControllerCore extends AdminController
 			if ((int)Tools::getValue('minimum_amount') < 0)
 				$this->errors[] = Tools::displayError('The minimum amount cannot be lower than zero.');
 			if ((float)Tools::getValue('reduction_percent') < 0 || (float)Tools::getValue('reduction_percent') > 100)
-				$this->errors[] = Tools::displayError('Reduction percent must be between 0% and 100%');
+				$this->errors[] = Tools::displayError('Reduction percentage must be between 0% and 100%');
 			if ((int)Tools::getValue('reduction_amount') < 0)
 				$this->errors[] = Tools::displayError('Reduction amount cannot be lower than zero.');
 			if (Tools::getValue('code') && ($same_code = (int)CartRule::getIdByCode(Tools::getValue('code'))) && $same_code != Tools::getValue('id_cart_rule'))

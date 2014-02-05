@@ -83,20 +83,20 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_QTY_DISCOUNT_ON_COMBINATION' => array(
 						'title' => $this->l('Quantity discounts based on'),
-						'hint' => $this->l('How to calculate quantity discounts'),
+						'hint' => $this->l('How to calculate quantity discounts.'),
 						'cast' => 'intval',
 						'show' => true,
 						'required' => false,
 						'type' => 'radio',
 						'validation' => 'isBool',
 						'choices' => array(
-							0 => $this->l('Products:'),
+							0 => $this->l('Products'),
 							1 => $this->l('Combinations')
 						)
 					),
 					'PS_FORCE_FRIENDLY_PRODUCT' => array(
-						'title' => $this->l('Force update of friendly url'),
-						'hint' => $this->l('When active, friendly url will be updated on every save'),
+						'title' => $this->l('Force update of friendly URL'),
+						'hint' => $this->l('When active, friendly URL will be updated on every save.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,

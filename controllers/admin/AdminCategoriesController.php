@@ -429,7 +429,7 @@ class AdminCategoriesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'lang' => true,
 					'required' => true,
@@ -438,7 +438,7 @@ class AdminCategoriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Displayed:'),
+					'label' => $this->l('Displayed'),
 					'name' => 'active',
 					'required' => false,
 					'is_bool' => true,
@@ -457,7 +457,7 @@ class AdminCategoriesControllerCore extends AdminController
 				),
 				array(
 					'type'  => 'categories',
-					'label' => $this->l('Parent category:'),
+					'label' => $this->l('Parent category'),
 					'name'  => 'id_parent',
 					'tree'  => array(
 						'id'                  => 'categories-tree',
@@ -467,7 +467,7 @@ class AdminCategoriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Description:'),
+					'label' => $this->l('Description'),
 					'name' => 'description',
 					'autoload_rte' => true,
 					'lang' => true,
@@ -475,7 +475,7 @@ class AdminCategoriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'file',
-					'label' => $this->l('Image:'),
+					'label' => $this->l('Image'),
 					'name' => 'image',
 					'display_image' => true,
 					'image' => $image_url ? $image_url : false,
@@ -485,28 +485,28 @@ class AdminCategoriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Meta title:'),
+					'label' => $this->l('Meta title'),
 					'name' => 'meta_title',
 					'lang' => true,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Meta description:'),
+					'label' => $this->l('Meta description'),
 					'name' => 'meta_description',
 					'lang' => true,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
 					'type' => 'tags',
-					'label' => $this->l('Meta keywords:'),
+					'label' => $this->l('Meta keywords'),
 					'name' => 'meta_keywords',
 					'lang' => true,
 					'hint' => $this->l('To add "tags," click in the field, write something, and then press "Enter."').'&nbsp;'.$this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Friendly URL:'),
+					'label' => $this->l('Friendly URL'),
 					'name' => 'link_rewrite',
 					'lang' => true,
 					'required' => true,
@@ -514,7 +514,7 @@ class AdminCategoriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'group',
-					'label' => $this->l('Group access:'),
+					'label' => $this->l('Group access'),
 					'name' => 'groupBox',
 					'values' => Group::getGroups(Context::getContext()->language->id),
 					'info_introduction' => $this->l('You now have three default customer groups.'),
@@ -539,7 +539,7 @@ class AdminCategoriesControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'switch',
-				'label' => $this->l('Root Category:'),
+				'label' => $this->l('Root Category'),
 				'name' => 'is_root_category',
 				'required' => false,
 				'is_bool' => true,
@@ -562,7 +562,7 @@ class AdminCategoriesControllerCore extends AdminController
 		if (Shop::isFeatureActive())
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 
