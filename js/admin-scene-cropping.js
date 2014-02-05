@@ -139,13 +139,13 @@ function afterTextInserted (event, data, formatted) {
 	
 }
 
-function addProduct(zoneIndex, x1, y1, width, height, idProduct, nameProduct){
+function addProduct(zoneIndex, x1, y1, width, height, idProduct, nameProduct) {
 	$('#large_scene_image') 
 		.imgAreaSelect({hide:true})
 		.before('\
 			<div class="fixed_zone" id="visual_zone_' + zoneIndex + '" style="color:black;overflow:hidden;margin-left:' + x1 + 'px; margin-top:' + y1 + 'px; width:' + width + 'px; height :' + height + 'px; background-color:white;border:1px solid black; position:absolute;" title="' + nameProduct + '">\
-				<input type="hidden" name="zones[' + zoneIndex + '][x1]" value="' + x1 + '"/>\
-				<input type="hidden" name="zones[' + zoneIndex + '][y1]" value="' + y1 + '"/>\
+				<input type="hidden" name="zones[' + zoneIndex + '][x1]" value="' + (x1-parseInt($('#large_scene_image').css('margin-left').replace('px', ''))) + '"/>\
+				<input type="hidden" name="zones[' + zoneIndex + '][y1]" value="' + (y1-parseInt($('#large_scene_image').css('margin-top').replace('px', ''))) + '"/>\
 				<input type="hidden" name="zones[' + zoneIndex + '][width]" value="' + width + '"/>\
 				<input type="hidden" name="zones[' + zoneIndex + '][height]" value="' + height + '"/>\
 				<input type="hidden" name="zones[' + zoneIndex + '][id_product]" value="' + idProduct + '"/>\
@@ -191,7 +191,9 @@ $(window).load(function () {
 	/* load existing products zone */
 	for(var i = 0; i < startingData.length; i++)
 	{
-		addProduct(i, startingData[i][2], startingData[i][3], startingData[i][4], startingData[i][5], startingData[i][1], startingData[i][0]);
+		addProduct(i, startingData[i][2]+parseInt($('#large_scene_image').css('margin-left').replace('px', '')), 
+			startingData[i][3]+parseInt($('#large_scene_image').css('margin-top').replace('px', '')),
+			startingData[i][4], startingData[i][5], startingData[i][1], startingData[i][0]);
 	}
 	zoneCurrent = startingData.length;
 	
