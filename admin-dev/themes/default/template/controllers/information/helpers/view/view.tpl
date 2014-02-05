@@ -200,7 +200,7 @@
 				</p>
 				<ul>
 					{foreach from=$testsRequired item='value' key='key'}
-						{if $value eq 'fail'}
+						{if $value eq 'fail' && isset($testsErrors[$key])}
 							<li>{$testsErrors[$key]}</li>
 						{/if}
 					{/foreach}
