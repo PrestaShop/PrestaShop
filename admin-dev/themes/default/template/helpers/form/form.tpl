@@ -607,7 +607,7 @@
 						{hook h=$hookName fieldset=$f}
 					{/if}
 				{elseif $key == 'desc'}
-					<p class="clear">
+					<div class="alert alert-info col-lg-offset-3">
 						{if is_array($field)}
 							{foreach $field as $k => $p}
 								{if is_array($p)}
@@ -620,7 +620,7 @@
 						{else}
 							{$field}
 						{/if}
-					</p>
+					</div>
 				{/if}
 				{block name="other_input"}{/block}
 			{/foreach}
