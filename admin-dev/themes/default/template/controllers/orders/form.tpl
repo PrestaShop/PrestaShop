@@ -1514,7 +1514,7 @@
 				<div class="form-group">
 					<div class="col-lg-9 col-lg-offset-3">
 						<button type="submit" name="submitAddOrder" class="btn btn-default" />
-							<i class="icon-ok"></i>
+							<i class="icon-check"></i>
 							{l s='Create the order'}
 						</button>
 					</div>
