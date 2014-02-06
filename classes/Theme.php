@@ -170,22 +170,22 @@ class ThemeCore extends ObjectModel
 	public function hasLeftColumn($page = null)
 	{
 		return (bool)Db::getInstance()->getValue('
-			SELECT left_column
+			SELECT IFNULL(left_column, default_left_column)
 			FROM '._DB_PREFIX_.'theme t
 			LEFT JOIN '._DB_PREFIX_.'theme_meta tm ON (t.id_theme = tm.id_theme)
-			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta)
-			WHERE t.id_theme = '.(int)$this->id.' AND m.page = "'.pSQL($page).'"
+			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta AND m.page = "'.pSQL($page).'")
+			WHERE t.id_theme = '.(int)$this->id.'
 		');
 	}
 	
 	public function hasRightColumn($page = null)
 	{
 		return (bool)Db::getInstance()->getValue('
-			SELECT right_column
+			SELECT IFNULL(right_column, default_right_column)
 			FROM '._DB_PREFIX_.'theme t
 			LEFT JOIN '._DB_PREFIX_.'theme_meta tm ON (t.id_theme = tm.id_theme)
-			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta)
-			WHERE t.id_theme = '.(int)$this->id.' AND m.page = "'.pSQL($page).'"
+			LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta AND m.page = "'.pSQL($page).'")
+			WHERE t.id_theme = '.(int)$this->id.'
 		');
 	}
 
