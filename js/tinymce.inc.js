@@ -12,7 +12,7 @@ function tinySetup(config)
 //    safari,pagebreak,style,table,advimage,advlink,inlinepopups,media,contextmenu,paste,fullscreen,xhtmlxtras,preview
 	default_config = {
         selector: ".rte" ,
-        plugins : "link image paste safari pagebreak table contextmenu preview filemanager table code media",
+        plugins : "link image paste pagebreak table contextmenu preview filemanager table code media",
         toolbar1 : "code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,|,blockquote,forecolor,backcolor",
         toolbar2: "pasteword,|,bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,|,cleanup,|,media,image",
         external_filemanager_path: ad+'/../js/tiny_mce/plugins/filemanager/',
