@@ -58,21 +58,17 @@
 					<i class="icon-sitemap"></i> {l s='Multistore'}
 				</label>
 				<div class="col-lg-9">
-					<div class="row">
-						<div class="col-lg-4">
-							<span class="switch prestashop-switch">
-								<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_on" value="1" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), true)">
-								<label for="{$table}_multishop_{$category}_on">
-									{l s='Yes'}
-								</label>
-								<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_off" value="0" checked="checked" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), false)">
-								<label for="{$table}_multishop_{$category}_off">
-									{l s='No'}
-								</label>
-								<a class="slide-button btn"></a>
-							</span>
-						</div>
-					</div>
+					<span class="switch prestashop-switch fixed-width-lg">
+						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_on" value="1" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), true)">
+						<label for="{$table}_multishop_{$category}_on">
+							{l s='Yes'}
+						</label>
+						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_off" value="0" checked="checked" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), false)">
+						<label for="{$table}_multishop_{$category}_off">
+							{l s='No'}
+						</label>
+						<a class="slide-button btn"></a>
+					</span>
 					<div class="row">
 						<div class="col-lg-12">
 							<p class="help-block">
@@ -128,7 +124,7 @@
 									{if $field['type'] == 'select'}
 										<div class="col-lg-9">
 											{if $field['list']}
-												<select name="{$key}"{if isset($field['js'])} onchange="{$field['js']}"{/if} id="{$key}" {if isset($field['size'])} size="{$field['size']}"{/if}>
+												<select class="fixed-width-xxl" name="{$key}"{if isset($field['js'])} onchange="{$field['js']}"{/if} id="{$key}" {if isset($field['size'])} size="{$field['size']}"{/if}>
 													{foreach $field['list'] AS $k => $option}
 														<option value="{$option[$field['identifier']]}"{if $field['value'] == $option[$field['identifier']]} selected="selected"{/if}>{$option['name']}</option>
 													{/foreach}
@@ -139,25 +135,21 @@
 										</div>
 									{elseif $field['type'] == 'bool'}
 										<div class="col-lg-9">
-											<div class="input-group">
-												<span class="switch prestashop-switch">
-													<input type="radio" name="{$key}" id="{$key}_on" value="1" {if $field['value']} checked="checked"{/if}{if isset($field['js']['on'])} {$field['js']['on']}{/if}/>
-													<label for="{$key}_on" class="radioCheck">
-														{l s='Yes'}
-													</label>
-													<input type="radio" name="{$key}" id="{$key}_off" value="0" {if !$field['value']} checked="checked"{/if}{if isset($field['js']['off'])} {$field['js']['off']}{/if}/>
-													<label for="{$key}_off" class="radioCheck">
-														{l s='No'}
-													</label>
-													<a class="slide-button btn"></a>
-												</span>
-											</div>
+											<span class="switch prestashop-switch fixed-width-lg">
+												<input type="radio" name="{$key}" id="{$key}_on" value="1" {if $field['value']} checked="checked"{/if}{if isset($field['js']['on'])} {$field['js']['on']}{/if}/>
+												<label for="{$key}_on" class="radioCheck">
+													{l s='Yes'}
+												</label>
+												<input type="radio" name="{$key}" id="{$key}_off" value="0" {if !$field['value']} checked="checked"{/if}{if isset($field['js']['off'])} {$field['js']['off']}{/if}/>
+												<label for="{$key}_off" class="radioCheck">
+													{l s='No'}
+												</label>
+												<a class="slide-button btn"></a>
+											</span>
 										</div>
-
 									{elseif $field['type'] == 'radio'}
 										<div class="col-lg-9">
 											{foreach $field['choices'] AS $k => $v}
-
 												<p class="radio">
 													<label for="{$key}_{$k}">
 														<input type="radio" name="{$key}" id="{$key}_{$k}" value="{$k}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
@@ -167,10 +159,8 @@
 											{/foreach}
 										</div>
 									{elseif $field['type'] == 'checkbox'}
-
 										<div class="col-lg-9">
 											{foreach $field['choices'] AS $k => $v}
-
 												<p class="checkbox">
 													<input type="checkbox" name="{$key}" id="{$key}{$k}_on" value="{$k|intval}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
 													<label class="col-lg-3" for="{$key}{$k}_on"> {$v}</label>
@@ -203,21 +193,20 @@
 										</div>
 									{elseif $field['type'] == 'file'}
 										<div class="col-lg-9">{$field['file']}</div>
-						            {elseif $field['type'] == 'color'}
+									{elseif $field['type'] == 'color'}
 										<div class="col-lg-2">
-											<div class="row">
-												<div class="input-group">
-									              <input type="color" size="{$field['size']}" data-hex="true" {if isset($input.class)}class="{$field['class']}" {else}class="color mColorPickerInput"{/if} name="{$field['name']}" class="{if isset($field['class'])}{$field['class']}{/if}" value="{$field['value']|escape:'html':'UTF-8'}" />
-									            </div>
-									        </div>
+											<div class="input-group">
+												<input type="color" size="{$field['size']}" data-hex="true" {if isset($input.class)}class="{$field['class']}" {else}class="color mColorPickerInput"{/if} name="{$field['name']}" class="{if isset($field['class'])}{$field['class']}{/if}" value="{$field['value']|escape:'html':'UTF-8'}" />
+											</div>
 							            </div>
 									{elseif $field['type'] == 'price'}
-										<div class="input-group col-lg-9">
-											<span class="input-group-addon">{$currency_left_sign}{$currency_right_sign} {l s='(tax excl.)'}</span>
-											<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'html':'UTF-8'}" />
+										<div class="col-lg-9">
+											<div class="input-group fixed-width-lg">
+												<span class="input-group-addon">{$currency_left_sign}{$currency_right_sign} {l s='(tax excl.)'}</span>
+												<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'html':'UTF-8'}" />
+											</div>
 										</div>
 									{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang' || $field['type'] == 'selectLang'}
-
 										{if $field['type'] == 'textLang'}
 											<div class="col-lg-9">
 												<div class="row">
@@ -257,7 +246,6 @@
 												{/foreach}
 												</div>
 											</div>
-
 										{elseif $field['type'] == 'textareaLang'}
 											<div class="col-lg-9">
 												{foreach $field['languages'] AS $id_lang => $value}
@@ -289,10 +277,8 @@
 													});
 												</script>
 											</div>
-
 										{elseif $field['type'] == 'selectLang'}
 											{foreach $languages as $language}
-
 												<div id="{$key}_{$language.id_lang}" style="display: {if $language.id_lang == $current_id_lang}block{else}none{/if};" class="col-lg-9">
 													<select name="{$key}_{$language.iso_code|upper}">
 														{foreach $field['list'] AS $k => $v}
@@ -326,7 +312,7 @@
 								{/block}{* end block input *}
 								{if $field['is_invisible']}
 								<div class="col-lg-9 col-lg-offset-3">
-									<p class="alert alert-warning">
+									<p class="alert alert-warning row-margin-top">
 										{l s='You can\'t change the value of this configuration field in the context of this shop.'}
 									</p>
 								</div>

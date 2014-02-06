@@ -75,24 +75,31 @@
 			<tr class="customized customized-{$product['id_order_detail']|intval}">
 				<td colspan="2">
 				<input type="hidden" class="edit_product_id_order_detail" value="{$product['id_order_detail']|intval}" />
-			{foreach $customization.datas as $type => $datas}
-				{if ($type == Product::CUSTOMIZE_FILE)}
-					<ul style="margin: 4px 0px 4px 0px; padding: 0px; list-style-type: none;">
-					{foreach from=$datas item=data}
-						<li style="margin: 2px;">
-							<span>{if $data['name']}{$data['name']}{else}{l s='Picture #'}{$data@iteration}{/if}{l s=':'}</span>&nbsp;
-								<a href="displayImage.php?img={$data['value']}&name={$order->id|intval}-file{$data@iteration}" target="_blank"><img src="{$smarty.const._THEME_PROD_PIC_DIR_}{$data['value']}_small" alt="" /></a>
-						</li>
-					{/foreach}
-					</ul>
-				{elseif ($type == Product::CUSTOMIZE_TEXTFIELD)}
-					<ul style="margin: 0px 0px 4px 0px; padding: 0px 0px 0px 6px; list-style-type: none;">
-					{foreach from=$datas item=data}
-						<li>{if $data['name']}{l s='%s:' sprintf=$data['name']}{else}{l s='Text #%s:' sprintf=$data@iteration}{/if} {$data['value']}</li>
-					{/foreach}
-					</ul>
-				{/if}
-			{/foreach}
+					<div class="form-horizontal">
+						{foreach $customization.datas as $type => $datas}
+							{if ($type == Product::CUSTOMIZE_FILE)}
+								{foreach from=$datas item=data}
+									<div class="form-group">
+											<span class="col-lg-3 control-label"><strong>{if $data['name']}{$data['name']}{else}{l s='Picture #'}{$data@iteration}{/if}</strong></span>
+											<div class="col-lg-9">
+												<a href="displayImage.php?img={$data['value']}&name={$order->id|intval}-file{$data@iteration}" target="_blank">
+													<img class="img-thumbnail" src="{$smarty.const._THEME_PROD_PIC_DIR_}{$data['value']}_small" alt="" />
+												</a>
+											</div>
+									</div>
+								{/foreach}
+							{elseif ($type == Product::CUSTOMIZE_TEXTFIELD)}
+								{foreach from=$datas item=data}
+									<div class="form-group">
+										<span class="col-lg-3 control-label"><strong>{if $data['name']}{l s='%s' sprintf=$data['name']}{else}{l s='Text #%s' sprintf=$data@iteration}{/if}</strong></span>
+										<div class="col-lg-9">
+											<p class="form-control-static">{$data['value']}</p>
+										</div>
+									</div>
+								{/foreach}
+							{/if}
+						{/foreach}
+					</div>
 				</td>
 				<td align="center">-
 				</td>
