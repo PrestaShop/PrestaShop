@@ -94,9 +94,9 @@
 		background-color: lighten($brand-danger,10%)
 		@include box-shadow($brand-danger 0 -1px 0 inset)
 	input:disabled ~ a
-		border: solid 1px lighten(gray,20%)
-		background-color: lighten(gray,30%)
-		@include box-shadow(lighten(gray,20%) 0 -1px 0 inset)
+		border: solid 1px lighten(gray,20%) !important
+		background-color: lighten(gray,30%)	!important
+		@include box-shadow(lighten(gray,20%) 0 -1px 0 inset !important)
 	//Generate styles for the multiple states
 	@for $i from 1 through 3
 		$state: $i + 2
@@ -121,13 +121,11 @@
 	.switch
 		@include switch-toggle()
 	.prestashop-switch
-		min-width: 150px
 		background-color: #eee
 		border-radius: 3px
 		color: #333
 		text-align: center
-		font-weight: 400
-		@include box-shadow(rgba(black,0.15) 0 1px 3px 1px inset)
+		@include box-shadow(rgba(black,0.15) 0 1px 4px 1px inset)
 		*
 			outline: 0!important
 		label
@@ -162,8 +160,4 @@
 					color: #ccc
 				&:last-of-type
 					color: white
-
-// Disabled Radio Switch
-
-// Disabled Checkbox Switch
 

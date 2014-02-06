@@ -1920,7 +1920,8 @@ class ToolsCore
 			$physicals = array();
 			foreach ($list_uri as $uri)
 			{
-				fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
+				if (Shop::isFeatureActive())
+					fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
 				fwrite($write_fd, 'RewriteRule . - [E=REWRITEBASE:'.$uri['physical'].']'."\n");
 				
 				// Webservice
@@ -1936,17 +1937,20 @@ class ToolsCore
 					if (!$rewrite_settings)
 					{
 						fwrite($write_fd, $media_domains);
-						fwrite($write_fd, $domain_rewrite_cond);
+						if (Shop::isFeatureActive())
+							fwrite($write_fd, $domain_rewrite_cond);
 						fwrite($write_fd, 'RewriteRule ^'.trim($uri['virtual'], '/').'/?$ '.$uri['physical'].$uri['virtual']."index.php [L,R]\n");
 					}
 					else
 					{
 						fwrite($write_fd, $media_domains);
-						fwrite($write_fd, $domain_rewrite_cond);
+						if (Shop::isFeatureActive())
+							fwrite($write_fd, $domain_rewrite_cond);
 						fwrite($write_fd, 'RewriteRule ^'.trim($uri['virtual'], '/').'$ '.$uri['physical'].$uri['virtual']." [L,R]\n");
 					}
 					fwrite($write_fd, $media_domains);
-					fwrite($write_fd, $domain_rewrite_cond);
+					if (Shop::isFeatureActive())
+						fwrite($write_fd, $domain_rewrite_cond);
 					fwrite($write_fd, 'RewriteRule ^'.ltrim($uri['virtual'], '/').'(.*) '.$uri['physical']."$1 [L]\n\n");
 				}			
 
@@ -1957,10 +1961,12 @@ class ToolsCore
 					if (Configuration::get('PS_LEGACY_IMAGES'))
 					{
 						fwrite($write_fd, $media_domains);
-						fwrite($write_fd, $domain_rewrite_cond);
+						if (Shop::isFeatureActive())
+							fwrite($write_fd, $domain_rewrite_cond);
 						fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3$4.jpg [L]'."\n");
 						fwrite($write_fd, $media_domains);
-						fwrite($write_fd, $domain_rewrite_cond);
+						if (Shop::isFeatureActive())
+							fwrite($write_fd, $domain_rewrite_cond);
 						fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3.jpg [L]'."\n");
 					}
 
@@ -1974,20 +1980,24 @@ class ToolsCore
 							$img_name .= '$'.$j;
 						}
 						$img_name .= '$'.$j;
-							fwrite($write_fd, $media_domains);
-						fwrite($write_fd, $domain_rewrite_cond);
+						fwrite($write_fd, $media_domains);
+						if (Shop::isFeatureActive())
+							fwrite($write_fd, $domain_rewrite_cond);
 						fwrite($write_fd, 'RewriteRule ^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/'.$img_path.$img_name.'$'.($j + 1).".jpg [L]\n");
 					}
 					fwrite($write_fd, $media_domains);
-					fwrite($write_fd, $domain_rewrite_cond);
+					if (Shop::isFeatureActive())
+						fwrite($write_fd, $domain_rewrite_cond);
 					fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[\.*_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2$3.jpg [L]'."\n");
 					fwrite($write_fd, $media_domains);
-					fwrite($write_fd, $domain_rewrite_cond);
+					if (Shop::isFeatureActive())
+						fwrite($write_fd, $domain_rewrite_cond);
 					fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z_-]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2.jpg [L]'."\n");
 				}
 				
 				fwrite($write_fd, "# AlphaImageLoader for IE and fancybox\n");
-				fwrite($write_fd, $domain_rewrite_cond);
+				if (Shop::isFeatureActive())
+					fwrite($write_fd, $domain_rewrite_cond);
 				fwrite($write_fd, 'RewriteRule ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ js/jquery/plugins/fancybox/images/$1.$2 [L]'."\n");
 			}
 			// Redirections to dispatcher
@@ -1997,9 +2007,11 @@ class ToolsCore
 				fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -s [OR]\n");
 				fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -l [OR]\n");
 				fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -d\n");
-				fwrite($write_fd, $domain_rewrite_cond);
+				if (Shop::isFeatureActive())
+					fwrite($write_fd, $domain_rewrite_cond);
 				fwrite($write_fd, "RewriteRule ^.*$ - [NC,L]\n");
-				fwrite($write_fd, $domain_rewrite_cond);
+				if (Shop::isFeatureActive())
+					fwrite($write_fd, $domain_rewrite_cond);
 				fwrite($write_fd, "RewriteRule ^.*\$ %{ENV:REWRITEBASE}index.php [NC,L]\n");
 			}
 		}

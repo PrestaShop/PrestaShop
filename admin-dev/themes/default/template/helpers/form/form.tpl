@@ -370,8 +370,8 @@
 										{if isset($value.p) && $value.p}<p class="help-block">{$value.p}</p>{/if}
 									{/foreach}
 								{elseif $input.type == 'switch'}
-									<div class="input-group col-lg-2">
-										<span class="switch prestashop-switch">
+									<div "col-lg-9">
+										<span class="switch prestashop-switch fixed-width-lg">
 											{foreach $input.values as $value}
 											<input
 												type="radio"
@@ -402,8 +402,6 @@
 											<a class="slide-button btn"></a>
 										</span>
 									</div>
-
-
 								{elseif $input.type == 'textarea'}
 									{assign var=use_textarea_autosize value=true}
 									{if isset($input.lang) AND $input.lang}
