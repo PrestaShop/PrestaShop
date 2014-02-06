@@ -4538,12 +4538,12 @@ class ProductCore extends ObjectModel
 	public function setWsProductFeatures($product_features)
 	{
 	
-	$db_features = Db::getInstance()->executeS('
-							SELECT p.*, f.`custom`
-							FROM `'._DB_PREFIX_.'feature_product` p
-							LEFT JOIN `'._DB_PREFIX_.'feature_value` f ON (f.`id_feature_value` = p.`id_feature_value`)
-							WHERE `id_product` = '.(int)$this->id
-						);
+		$db_features = Db::getInstance()->executeS('
+								SELECT p.*, f.`custom`
+								FROM `'._DB_PREFIX_.'feature_product` p
+								LEFT JOIN `'._DB_PREFIX_.'feature_value` f ON (f.`id_feature_value` = p.`id_feature_value`)
+								WHERE `id_product` = '.(int)$this->id
+							);
 
 
 		$pfa = array();
@@ -4577,7 +4577,8 @@ class ProductCore extends ObjectModel
 		);
 
  		foreach ($product_features as $product_feature)
- 			$this->addFeaturesToDB($product_feature['id'], $product_feature['id_feature_value'], $product_feature['custom']);
+ 			if (($id_feature = $this->addFeaturesToDB($product_feature['id'], $product_feature['id_feature_value'], $product_feature['custom'])) && $product_feature['custom'])
+ 				;//$this->addFeaturesCustomToDB	
 
  		return true;
 	}
