@@ -965,7 +965,7 @@
 				</button>
 			</div>
 			{/if}
-
+			<br />
 			<div class="row">
 				<div class="col-lg-6">
 					<div class="alert alert-warning">
@@ -1124,8 +1124,7 @@
 					</label>
 				</p>
 				<button type="submit" name="partialRefund" class="btn btn-default">
-					<i class="icon-ok"></i>
-					{l s='Partial refund'}
+					<i class="icon-check"></i> {l s='Partial refund'}
 				</button>
 			</div>
 		</div>
