@@ -45,7 +45,7 @@ class ThemeConfigurator extends Module
 		$this->author = 'PrestaShop';
 		parent::__construct();
 		$this->displayName = $this->l('Theme configurator');
-		$this->description = $this->l('Configure elements of your theme');
+		$this->description = $this->l('Configure the main elements of your theme.');
 		$this->module_path = _PS_MODULE_DIR_.$this->name.'/';
 		$this->uploads_path = _PS_MODULE_DIR_.$this->name.'/img/';
 		$this->admin_tpl_path = _PS_MODULE_DIR_.$this->name.'/views/templates/admin/';
@@ -301,7 +301,7 @@ class ThemeConfigurator extends Module
 				'id_employee' => isset($this->context->employee) ? (int)$this->context->employee->id : 0,
 				'live_configurator_token' => Tools::getValue('live_configurator_token', ''),
 				'advertisement_image' => $ad_image,
-				'advertisement_text' => $this->l('Over 500+ PrestaShop Premium Templates! Browse Now!')
+				'advertisement_text' => $this->l('Over 500+ PrestaShop premium templates! Browse now!')
 			));
 
 			$html .= $this->display(__FILE__, 'live_configurator.tpl');
@@ -413,7 +413,7 @@ class ThemeConfigurator extends Module
 			if ($image = Db::getInstance()->getValue('SELECT image FROM `'._DB_PREFIX_.'themeconfigurator` WHERE id_item = '.(int)Tools::getValue('item_id')))
 				$this->deleteImage($image);
 
-			$this->context->smarty->assign('error', $this->l('An error occured while saving data.'));
+			$this->context->smarty->assign('error', $this->l('An error occurred while saving data.'));
 
 			return false;
 		}
@@ -550,12 +550,12 @@ class ThemeConfigurator extends Module
 			if (!Tools::isEmpty($image))
 				$this->deleteImage($image);
 
-			$this->context->smarty->assign('error', $this->l('An error occured while saving data.'));
+			$this->context->smarty->assign('error', $this->l('An error occurred while saving data.'));
 
 			return false;
 		}
 
-		$this->context->smarty->assign('confirmation', $this->l('New item added successfull.'));
+		$this->context->smarty->assign('confirmation', $this->l('New item added successful.'));
 
 		return true;
 	}
@@ -703,7 +703,7 @@ class ThemeConfigurator extends Module
 	{
 		return array(
 			array(
-				'label' => $this->l('Display the social following links'),
+				'label' => $this->l('Display links to your store\'s social accounts (Twitter, Facebook, etc.)'),
 				'name' => 'blocksocial',
 				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blocksocial')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
@@ -715,25 +715,25 @@ class ThemeConfigurator extends Module
 				'is_module' => true,
 			),
 			array(
-				'label' => $this->l('Display social buttons on the products page'),
+				'label' => $this->l('Display social sharing buttons on the products page'),
 				'name' => 'socialsharing',
 				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('socialsharing')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
 			),
 			array(
-				'label' => $this->l('Display facebook block on the home page'),
+				'label' => $this->l('Display the Facebook block on the home page'),
 				'name' => 'blockfacebook',
 				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockfacebook')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
 			),
 			array(
-				'label' => $this->l('Customer cms information block'),
+				'label' => $this->l('Customer CMS information block'),
 				'name' => 'blockcmsinfo',
 				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockcmsinfo')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
 			),
 			array(
-				'label' => $this->l('Enable Quick view'),
+				'label' => $this->l('Enable quick view'),
 				'name' => 'quick_view',
 				'value' => (int)Tools::getValue('PS_QUICK_VIEW', Configuration::get('PS_QUICK_VIEW'))
 			),
@@ -744,7 +744,7 @@ class ThemeConfigurator extends Module
 				'is_module' => true,
 			),
 			array(
-				'label' => $this->l('Enable product payment logos'),
+				'label' => $this->l('Display your product payment logos'),
 				'name' => 'productpaymentlogos',
 				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('productpaymentlogos')) && $module->isEnabledForShopContext(),
 				'is_module' => true,

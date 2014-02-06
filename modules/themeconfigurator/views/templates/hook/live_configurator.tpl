@@ -31,7 +31,7 @@
 		<p>
 			{l s='The customization tool allows you to make color and font changes in your theme.' mod='themeconfigurator'}<br /><br />
 			<span>
-				{l s='Only you, as a merchant can see this tool (as you are currently logged in your Back-office), your visitors will not see this tool.' mod='themeconfigurator'}
+				{l s='Only you can see this tool (as you are currently logged as a merchant in your Back-office); your visitors will not see this tool.' mod='themeconfigurator'}
 			</span>
 		</p>
 		<div class="list-tools">
