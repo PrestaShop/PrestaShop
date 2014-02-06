@@ -1,8 +1,14 @@
 <?php
+@ini_set('display_errors', 'on');
+	@error_reporting(E_ALL | E_STRICT);
 session_start();
 mb_internal_encoding('UTF-8');
 
-require ('../../../../config/config.inc.php');
+if (!defined('_PS_ADMIN_DIR_'))
+		define('_PS_ADMIN_DIR_', getcwd().'/../');
+
+require_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+require_once(_PS_ADMIN_DIR_.'/init.php');
 //------------------------------------------------------------------------------
 // DON'T COPY THIS VARIABLES IN FOLDERS config.php FILES
 //------------------------------------------------------------------------------
@@ -23,9 +29,9 @@ require ('../../../../config/config.inc.php');
 
 $base_url="http://".$_SERVER['HTTP_HOST'];  // DON'T TOUCH (base url (only domain) of site (without final /)).
 $upload_dir = __PS_BASE_URI__.'img/cms/'; // path from base_url to base of upload folder (with start and final /)
-$current_path = '../../../../img/cms/'; // relative path from filemanager folder to upload folder (with final /)
+$current_path = _PS_ROOT_DIR_.'/img/cms/'; // relative path from filemanager folder to upload folder (with final /)
 //thumbs folder can't put inside upload folder
-$thumbs_base_path = '../../../../img/cms/'; // relative path from filemanager folder to thumbs folder (with final /)
+$thumbs_base_path = _PS_ROOT_DIR_.'/img/cms/'; // relative path from filemanager folder to thumbs folder (with final /)
 
 //--------------------------------------------------------------------------------------------------------
 // YOU CAN COPY AND CHANGE THESE VARIABLES INTO FOLDERS config.php FILES TO CUSTOMIZE EACH FOLDER OPTIONS

@@ -2440,7 +2440,7 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		// TinyMCE
 		$iso_tiny_mce = (Tools::file_exists_cache(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso_lang.'.js') ? $iso_lang : 'en');
-		$ad = dirname($_SERVER['PHP_SELF']);
+		$ad = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_);
 		//return false;
 		return '
 			<script type="text/javascript">

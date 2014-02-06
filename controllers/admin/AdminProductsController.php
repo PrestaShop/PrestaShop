@@ -2575,7 +2575,8 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['tinymce'] = true;
 		$iso = $this->context->language->iso_code;
 		$this->tpl_form_vars['iso'] = file_exists(_PS_CORE_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
-		$this->tpl_form_vars['ad'] = dirname($_SERVER['PHP_SELF']);
+		$this->tpl_form_vars['path_css'] = _THEME_CSS_DIR_;
+		$this->tpl_form_vars['ad'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_);
 
 		if (Validate::isLoadedObject(($this->object)))
 			$id_product = (int)$this->object->id;
