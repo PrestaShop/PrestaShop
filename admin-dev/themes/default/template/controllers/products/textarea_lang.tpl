@@ -51,9 +51,5 @@
 {/foreach}
 
 <script type="text/javascript">
-	var iso = '{$iso_tiny_mce|addslashes}';
-	var pathCSS = '{$smarty.const._THEME_CSS_DIR_|addslashes}';
-	var ad = '{$ad|addslashes}';
-
 	$(".textarea-autosize").autosize();
 </script>

@@ -15,7 +15,9 @@ function tinySetup(config)
         plugins : "link image paste pagebreak table contextmenu preview filemanager table code media",
         toolbar1 : "code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,|,blockquote,forecolor,backcolor",
         toolbar2: "pasteword,|,bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,|,cleanup,|,media,image",
-        external_filemanager_path: ad+'/../js/tiny_mce/plugins/filemanager/',
+		external_filemanager_path: ad+"/filemanager/",
+		filemanager_title: "File manager" ,
+		external_plugins: { "filemanager" : ad+"/filemanager/plugin.min.js"},
         language: iso
 	}
 

@@ -259,4 +259,5 @@
 			<input type="hidden" name="key_tab" id="key_tab" value="Informations" />
 		</form>
 	</div>
+
 {/block}
