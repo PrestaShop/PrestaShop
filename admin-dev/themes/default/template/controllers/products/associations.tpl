@@ -32,7 +32,7 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="category_block">
 			{include file="controllers/products/multishop/checkbox.tpl" field="associated-categories-tree" type="category_box"}
-			{l s='Associated categories:'}
+			{l s='Associated categories'}
 		</label>
 		<div class="col-lg-9">
 			<div id="category_block">
@@ -48,7 +48,7 @@
 			{include file="controllers/products/multishop/checkbox.tpl" field="id_category_default" type="default"}
 			<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='The default category is the category displayed by default.'}">
-				{l s='Default category:'}
+				{l s='Default category'}
 			</span>
 		</label>
 		<div class="col-lg-5">
@@ -62,8 +62,8 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="product_autocomplete_input">
 			<span class="label-tooltip" data-toggle="tooltip"
-			title="{l s='Begin typing the first letters of the product name, then select the product from the drop-down list.'}{l s='(Do not forget to save the product afterward)'}">
-			{l s='Accessories:'}
+			title="{l s='Start by typing the first letters of the product\'s name, then select the product from the drop-down list.'}{l s='Do not forget to save the product afterward!'}">
+			{l s='Accessories'}
 			</span>
 		</label>
 		<div class="col-lg-5">
@@ -89,7 +89,7 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="id_manufacturer">{l s='Manufacturer:'}</label>
+		<label class="control-label col-lg-3" for="id_manufacturer">{l s='Manufacturer'}</label>
 		<div class="col-lg-5">
 			<select name="id_manufacturer" id="id_manufacturer">
 				<option value="0">- {l s='Choose (optional)'} -</option>
