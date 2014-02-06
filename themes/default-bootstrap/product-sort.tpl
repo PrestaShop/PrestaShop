@@ -61,5 +61,7 @@
 	</div>
 </form>
 <!-- /Sort products -->
-{addJsDef request=$request}
+	{if !isset($paginationId) || $paginationId == ''}
+		{addJsDef request=$request}
+	{/if}
 {/if}
