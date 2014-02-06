@@ -126,6 +126,7 @@
 			</p>
 			<span class="help-block">{l s='This restriction applies to the country of delivery.'}</span>
 			<div id="country_restriction_div">
+				<br />
 				<table class="table">
 					<tr>
 						<td>
@@ -159,6 +160,7 @@
 				</label>
 			</p>
 			<div id="carrier_restriction_div">
+				<br />
 				<table class="table">
 					<tr>
 						<td>
@@ -192,6 +194,7 @@
 				</label>
 			</p>
 			<div id="group_restriction_div">
+				<br />
 				<table class="table">
 					<tr>
 						<td>
@@ -224,7 +227,8 @@
 					{l s='Compatibility with other cart rules'}
 				</label>
 			</p>
-			<div id="cart_rule_restriction_div" >
+			<div id="cart_rule_restriction_div">
+				<br />
 				<table  class="table">
 					<tr>
 						<td>
@@ -257,6 +261,7 @@
 				</label>
 			</p>
 			<div id="product_restriction_div">
+				<br />
 				<table id="product_rule_group_table" class="table">
 					{foreach from=$product_rule_groups item='product_rule_group'}
 						{$product_rule_group}
@@ -285,8 +290,7 @@
 									<option value="{$shop.id_shop|intval}">&nbsp;{$shop.name|escape}</option>
 								{/foreach}
 							</select>
-							<br/>
-							<a id="shop_select_add" class="btn btn-default" >{l s='Add'} &gt;&gt; </a>
+							<a id="shop_select_add" class="btn btn-default btn-block clearfix" >{l s='Add'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
 							<p>{l s='Selected shops'}</p>
@@ -295,8 +299,7 @@
 									<option value="{$shop.id_shop|intval}">&nbsp;{$shop.name|escape}</option>
 								{/foreach}
 							</select>
-							<br/>
-							<a id="shop_select_remove" class="btn btn-default" > &lt;&lt; {l s='Remove'} </a>
+							<a id="shop_select_remove" class="btn btn-default btn-block clearfix" ><i class="icon-arrow-left"></i> {l s='Remove'}</a>
 						</td>
 					</tr>
 				</table>
