@@ -76,13 +76,7 @@ class AdminScenesControllerCore extends AdminController
 
 			foreach ($images_types as $k => $image_type)
 			{						
-				if ($image_type['name'] == 'scene_default' AND isset($_FILES['image']) AND isset($_FILES['image']['tmp_name']) AND !$_FILES['image']['error'])				
-					ImageManager::resize(
-						$base_img_path,
-						_PS_SCENE_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
-						(int)$image_type['width'],
-						(int)$image_type['height']);					
-				else if ($image_type['name'] == 'm_scene_default')
+				if ($image_type['name'] == 'm_scene_default')
 				{				
 					if (isset($_FILES['thumb']) && !$_FILES['thumb']['error'])
 						$base_thumb_path = _PS_SCENE_THUMB_IMG_DIR_.$obj->id.'.jpg';
@@ -93,7 +87,13 @@ class AdminScenesControllerCore extends AdminController
 						_PS_SCENE_THUMB_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
 						(int)$image_type['width'],
 						(int)$image_type['height']);
-				}
+				}												
+				elseif (isset($_FILES['image']) AND isset($_FILES['image']['tmp_name']) AND !$_FILES['image']['error'])				
+					ImageManager::resize(
+						$base_img_path,
+						_PS_SCENE_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
+						(int)$image_type['width'],
+						(int)$image_type['height']);
 			}
 		}
 
