@@ -314,8 +314,6 @@ class OrderControllerCore extends ParentOrderController
 			$this->_assignCarrier();
 			$this->step = 2;
 			$this->displayContent();
-			include(_PS_ROOT_DIR_.'/footer.php');
-			exit;
 		}
 		$orderTotal = $this->context->cart->getOrderTotal();
 	}
