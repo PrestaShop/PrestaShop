@@ -42,7 +42,7 @@ class HomeSlider extends Module
 	{
 		$this->name = 'homeslider';
 		$this->tab = 'front_office_features';
-		$this->version = '1.2.5';
+		$this->version = '1.2.6';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->secure_key = Tools::encrypt($this->name);
@@ -81,7 +81,7 @@ class HomeSlider extends Module
 			// Disable on mobiles and tablets
 			$this->disableDevice(Context::DEVICE_TABLET | Context::DEVICE_MOBILE);
 
-			return $res;
+			return (bool)$res;
 		}
 
 		return false;
@@ -128,7 +128,7 @@ class HomeSlider extends Module
 			$res &= Configuration::deleteByName('HOMESLIDER_PAUSE');
 			$res &= Configuration::deleteByName('HOMESLIDER_LOOP');
 
-			return $res;
+			return (bool)$res;
 		}
 
 		return false;
