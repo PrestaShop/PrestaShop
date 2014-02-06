@@ -52,11 +52,13 @@
 			{l s='Code'}
 		</span>
 	</label>
-	<div class="input-group col-lg-4">
-		<input type="text" id="code" name="code" value="{$currentTab->getFieldValue($currentObject, 'code')|escape}" />
-		<span class="input-group-btn">
-			<a href="javascript:gencode(8);" class="btn btn-default"><i class="icon-random"></i> {l s='Generate'}</a>
-		</span>
+	<div class="col-lg-9">
+		<div class="input-group col-lg-4">
+			<input type="text" id="code" name="code" value="{$currentTab->getFieldValue($currentObject, 'code')|escape}" />
+			<span class="input-group-btn">
+				<a href="javascript:gencode(8);" class="btn btn-default"><i class="icon-random"></i> {l s='Generate'}</a>
+			</span>
+		</div>
 	</div>
 </div>
 
@@ -67,14 +69,16 @@
 			{l s='Highlight'}
 		</span>
 	</label>
-	<div class="input-group col-lg-2">
-		<span class="switch prestashop-switch">
-			<input type="radio" name="highlight" id="highlight_on" value="1" {if $currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if}/>
-			<label for="highlight_on">{l s='Yes'}</label>
-			<input type="radio" name="highlight" id="highlight_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if} />
-			<label for="highlight_off">{l s='No'}</label>
-			<a class="slide-button btn"></a>
-		</span>
+	<div class="col-lg-9">
+		<div class="input-group col-lg-2">
+			<span class="switch prestashop-switch">
+				<input type="radio" name="highlight" id="highlight_on" value="1" {if $currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if}/>
+				<label for="highlight_on">{l s='Yes'}</label>
+				<input type="radio" name="highlight" id="highlight_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if} />
+				<label for="highlight_off">{l s='No'}</label>
+				<a class="slide-button btn"></a>
+			</span>
+		</div>
 	</div>
 </div>
 
@@ -86,14 +90,16 @@
 			{l s='Partial use'}
 		</span>
 	</label>
-	<div class="input-group col-lg-2">
-		<span class="switch prestashop-switch">
-			<input type="radio" name="partial_use" id="partial_use_on" value="1" {if $currentTab->getFieldValue($currentObject, 'partial_use')|intval}checked="checked"{/if} />
-			<label class="t" for="partial_use_on">{l s='Yes'}</label>
-			<input type="radio" name="partial_use" id="partial_use_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'partial_use')|intval}checked="checked"{/if} />
-			<label class="t" for="partial_use_off">{l s='No'}</label>
-			<a class="slide-button btn"></a>
-		</span>
+	<div class="col-lg-9">
+		<div class="input-group col-lg-2">
+			<span class="switch prestashop-switch">
+				<input type="radio" name="partial_use" id="partial_use_on" value="1" {if $currentTab->getFieldValue($currentObject, 'partial_use')|intval}checked="checked"{/if} />
+				<label class="t" for="partial_use_on">{l s='Yes'}</label>
+				<input type="radio" name="partial_use" id="partial_use_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'partial_use')|intval}checked="checked"{/if} />
+				<label class="t" for="partial_use_off">{l s='No'}</label>
+				<a class="slide-button btn"></a>
+			</span>
+		</div>
 	</div>
 </div>
 
@@ -111,14 +117,16 @@
 
 <div class="form-group">
 	<label class="control-label col-lg-3">{l s='Status'}</label>
-	<div class="input-group col-lg-2">
-		<span class="switch prestashop-switch">
-			<input type="radio" name="active" id="active_on" value="1" {if $currentTab->getFieldValue($currentObject, 'active')|intval}checked="checked"{/if} />
-			<label class="t" for="active_on">{l s='Yes'}</label>
-			<input type="radio" name="active" id="active_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'active')|intval}checked="checked"{/if} />
-			<label class="t" for="active_off">{l s='No'}</label>
-			<a class="slide-button btn"></a>
-		</span>
+	<div class="col-lg-9">
+		<div class="input-group col-lg-2">
+			<span class="switch prestashop-switch">
+				<input type="radio" name="active" id="active_on" value="1" {if $currentTab->getFieldValue($currentObject, 'active')|intval}checked="checked"{/if} />
+				<label class="t" for="active_on">{l s='Yes'}</label>
+				<input type="radio" name="active" id="active_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'active')|intval}checked="checked"{/if} />
+				<label class="t" for="active_off">{l s='No'}</label>
+				<a class="slide-button btn"></a>
+			</span>
+		</div>
 	</div>
 </div>
 <script type="text/javascript">

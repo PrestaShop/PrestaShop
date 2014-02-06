@@ -1,17 +1,19 @@
 <div class="form-group">
 	<label class="control-label  col-lg-3">{l s='Free shipping'}</label>
-	<div class="input-group col-lg-2">
-		<span class="switch prestashop-switch">
-			<input type="radio" name="free_shipping" id="free_shipping_on" value="1" {if $currentTab->getFieldValue($currentObject, 'free_shipping')|intval}checked="checked"{/if} />
-			<label class="t" for="free_shipping_on">
-				{l s='Yes'}
-			</label>
-			<input type="radio" name="free_shipping" id="free_shipping_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'free_shipping')|intval}checked="checked"{/if} />
-			<label class="t" for="free_shipping_off">
-				{l s='No'}
-			</label>
-			<a class="slide-button btn"></a>
-		</span>
+	<div class="col-lg-9">
+		<div class="input-group col-lg-2">
+			<span class="switch prestashop-switch">
+				<input type="radio" name="free_shipping" id="free_shipping_on" value="1" {if $currentTab->getFieldValue($currentObject, 'free_shipping')|intval}checked="checked"{/if} />
+				<label class="t" for="free_shipping_on">
+					{l s='Yes'}
+				</label>
+				<input type="radio" name="free_shipping" id="free_shipping_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'free_shipping')|intval}checked="checked"{/if} />
+				<label class="t" for="free_shipping_off">
+					{l s='No'}
+				</label>
+				<a class="slide-button btn"></a>
+			</span>
+		</div>
 	</div>
 </div>
 
@@ -41,11 +43,13 @@
 
 <div id="apply_discount_percent_div" class="form-group">
 	<label class="control-label col-lg-3">{l s='Value'}</label>
-	<div class="input-group col-lg-2">
-		<span class="input-group-addon">%</span>
-		<input type="text" id="reduction_percent" class="input-mini" name="reduction_percent" value="{$currentTab->getFieldValue($currentObject, 'reduction_percent')|floatval}" />
+	<div class="col-lg-9">
+		<div class="input-group col-lg-2">
+			<span class="input-group-addon">%</span>
+			<input type="text" id="reduction_percent" class="input-mini" name="reduction_percent" value="{$currentTab->getFieldValue($currentObject, 'reduction_percent')|floatval}" />
+		</div>
+		<span class="help-block"><i class="icon-warning-sign"></i> {l s='Does not apply to the shipping costs'}</span>
 	</div>
-	<span class="help-block"><i class="icon-warning-sign"></i> {l s='Does not apply to the shipping costs'}</span>
 </div>
 
 <div id="apply_discount_amount_div" class="form-group">
@@ -75,28 +79,28 @@
 <div id="apply_discount_to_div" class="form-group">
 	<label class="control-label col-lg-3">{l s='Apply a discount to'}</label>
 	<div class="col-lg-7">
-		<p class="checkbox">
-			<label class="t radio" for="apply_discount_to_order">
-				<input type="radio" name="apply_discount_to" id="apply_discount_to_order" value="order" {if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval == 0}checked="checked"{/if} />
+		<p class="radio">
+			<label for="apply_discount_to_order">
+				<input type="radio" name="apply_discount_to" id="apply_discount_to_order" value="order"{if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval == 0} checked="checked"{/if} />
 				 {l s='Order (without shipping)'}
 			</label>
 		</p>
-		<p class="checkbox">
-			<label class="t radio" for="apply_discount_to_product">
-				<input type="radio" name="apply_discount_to" id="apply_discount_to_product" value="specific"  {if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval > 0}checked="checked"{/if} />
+		<p class="radio">
+			<label for="apply_discount_to_product">
+				<input type="radio" name="apply_discount_to" id="apply_discount_to_product" value="specific"{if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval > 0} checked="checked"{/if} />
 				{l s='Specific product'}
 			</label>
 		</p>
-		<p class="checkbox">
-			<label class="t radio" for="apply_discount_to_cheapest">
-				<input type="radio" name="apply_discount_to" id="apply_discount_to_cheapest" value="cheapest"  {if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval == -1}checked="checked"{/if} />
+		<p class="radio">
+			<label for="apply_discount_to_cheapest">
+				<input type="radio" name="apply_discount_to" id="apply_discount_to_cheapest" value="cheapest"{if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval == -1} checked="checked"{/if} />
 				 {l s='Cheapest product'}
 			</label>
 		</p>
-		<p class="checkbox">
-			<label class="t radio" for="apply_discount_to_selection">
-				<input type="radio" name="apply_discount_to" id="apply_discount_to_selection" value="selection"  {if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval == -2}checked="checked"{/if} />
-				{l s='Selected product(s)'}
+		<p class="radio">
+			<label for="apply_discount_to_selection">
+				<input type="radio" name="apply_discount_to" id="apply_discount_to_selection" value="selection"{if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval == -2} checked="checked"{/if}{if $product_rule_groups|@count == 0}disabled="disabled"{/if} />
+				{l s='Selected product(s)'}{if $product_rule_groups|@count == 0}&nbsp;<span id="apply_discount_to_selection_warning" class="text-muted clearfix"><i class="icon-warning-sign"></i> <a href="#" id="apply_discount_to_selection_shortcut">{l s='You must select some products before'}</a></span>{/if}
 			</label>
 		</p>
 	</div>
@@ -104,35 +108,41 @@
 
 <div id="apply_discount_to_product_div" class="form-group">
 	<label class="control-label col-lg-3">{l s='Product'}</label>
-	<div class="input-group col-lg-5">
-		<input type="text" id="reductionProductFilter" name="reductionProductFilter" value="{$reductionProductFilter|escape:'html':'UTF-8'}" />
-		<input type="hidden" id="reduction_product" name="reduction_product" value="{$currentTab->getFieldValue($currentObject, 'reduction_product')|intval}" />
-		<span class="input-group-addon"><i class="icon-search"></i></span>
+	<div class="col-lg-9">
+		<div class="input-group col-lg-5">
+			<input type="text" id="reductionProductFilter" name="reductionProductFilter" value="{$reductionProductFilter|escape:'html':'UTF-8'}" />
+			<input type="hidden" id="reduction_product" name="reduction_product" value="{$currentTab->getFieldValue($currentObject, 'reduction_product')|intval}" />
+			<span class="input-group-addon"><i class="icon-search"></i></span>
+		</div>
 	</div>
 </div>
 
 <div class="form-group">
 	<label class="control-label col-lg-3">{l s='Send a free gift'}</label>
-	<div class="input-group col-lg-2">
-		<span class="switch prestashop-switch">
-			<input type="radio" name="free_gift" id="free_gift_on" value="1" {if $currentTab->getFieldValue($currentObject, 'gift_product')|intval}checked="checked"{/if} />
-			<label class="t" for="free_gift_on">
-				{l s='Yes'}
-			</label>
-			<input type="radio" name="free_gift" id="free_gift_off" value="0" {if !$currentTab->getFieldValue($currentObject, 'gift_product')|intval}checked="checked"{/if} />
-			<label class="t" for="free_gift_off">
-				{l s='No'}
-			</label>
-			<a class="slide-button btn"></a>
-		</span>
+	<div class="col-lg-9">
+		<div class="input-group col-lg-2">
+			<span class="switch prestashop-switch">
+				<input type="radio" name="free_gift" id="free_gift_on" value="1" {if $currentTab->getFieldValue($currentObject, 'gift_product')|intval}checked="checked"{/if} />
+				<label class="t" for="free_gift_on">
+					{l s='Yes'}
+				</label>
+				<input type="radio" name="free_gift" id="free_gift_off" value="0" {if !$currentTab->getFieldValue($currentObject, 'gift_product')|intval}checked="checked"{/if} />
+				<label class="t" for="free_gift_off">
+					{l s='No'}
+				</label>
+				<a class="slide-button btn"></a>
+			</span>
+		</div>
 	</div>
 </div>
 
 <div id="free_gift_div" class="form-group">
 	<label class="control-label col-lg-3">{l s='Search a product'}</label>
-	<div class="input-group col-lg-5">
-		<input type="text" id="giftProductFilter" value="{$giftProductFilter}" />
-		<span class="input-group-addon"><i class="icon-search"></i></span>
+	<div class="col-lg-9">
+		<div class="input-group col-lg-5">
+			<input type="text" id="giftProductFilter" value="{$giftProductFilter}" />
+			<span class="input-group-addon"><i class="icon-search"></i></span>
+		</div>
 	</div>
 </div>
 

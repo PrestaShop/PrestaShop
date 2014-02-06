@@ -5,11 +5,13 @@
 			{l s='Limit to a single customer'}
 		</span>
 	</label>
-	<div class="input-group col-lg-9">
-		<span class="input-group-addon"><i class="icon-user"></i></i></span>
-		<input type="hidden" id="id_customer" name="id_customer" value="{$currentTab->getFieldValue($currentObject, 'id_customer')|intval}" />
-		<input type="text" id="customerFilter" class="input-xlarge" name="customerFilter" value="{$customerFilter|escape:'html':'UTF-8'}" />
-		<span class="input-group-addon"><i class="icon-search"></i></span>
+	<div class="col-lg-9">
+		<div class="input-group col-lg-12">		
+			<span class="input-group-addon"><i class="icon-user"></i></i></span>
+			<input type="hidden" id="id_customer" name="id_customer" value="{$currentTab->getFieldValue($currentObject, 'id_customer')|intval}" />
+			<input type="text" id="customerFilter" class="input-xlarge" name="customerFilter" value="{$customerFilter|escape:'html':'UTF-8'}" />
+			<span class="input-group-addon"><i class="icon-search"></i></span>
+		</div>
 	</div>
 </div>
 
@@ -22,17 +24,21 @@
 	</label>
 	<div class="col-lg-9">
 		<div class="row">
-			<div class="input-group col-lg-6">
-				<span class="input-group-addon">{l s='From'}</span>
-				<input type="text" class="datepicker input-medium" name="date_from"
-				value="{if $currentTab->getFieldValue($currentObject, 'date_from')}{$currentTab->getFieldValue($currentObject, 'date_from')|escape}{else}{$defaultDateFrom}{/if}" />
-				<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
+			<div class="col-lg-6">
+				<div class="input-group">
+					<span class="input-group-addon">{l s='From'}</span>
+					<input type="text" class="datepicker input-medium" name="date_from"
+					value="{if $currentTab->getFieldValue($currentObject, 'date_from')}{$currentTab->getFieldValue($currentObject, 'date_from')|escape}{else}{$defaultDateFrom}{/if}" />
+					<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
+				</div>
 			</div>
-			<div class="input-group col-lg-6">
-				<span class="input-group-addon">{l s='To'}</span>
-				<input type="text" class="datepicker input-medium" name="date_to"
-				value="{if $currentTab->getFieldValue($currentObject, 'date_to')}{$currentTab->getFieldValue($currentObject, 'date_to')|escape}{else}{$defaultDateTo}{/if}" />
-				<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
+			<div class="col-lg-6">
+				<div class="input-group">
+					<span class="input-group-addon">{l s='To'}</span>
+					<input type="text" class="datepicker input-medium" name="date_to"
+					value="{if $currentTab->getFieldValue($currentObject, 'date_to')}{$currentTab->getFieldValue($currentObject, 'date_to')|escape}{else}{$defaultDateTo}{/if}" />
+					<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
+				</div>
 			</div>
 		</div>
 	</div>

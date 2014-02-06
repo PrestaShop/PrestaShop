@@ -109,8 +109,29 @@ for (i in restrictions)
 	$('#' + restrictions[i] + '_select_remove').click(function() {removeCartRuleOption(this);});
 	$('#' + restrictions[i] + '_select_add').click(function() {addCartRuleOption(this);});
 }
+
 toggleCartRuleFilter($('#product_restriction'));
-$('#product_restriction').click(function() {toggleCartRuleFilter(this);});
+
+$('#product_restriction').click(function() {
+	toggleCartRuleFilter(this);
+
+	if ($(this).prop('checked'))
+	{
+		$('#apply_discount_to_selection').removeAttr('disabled');
+		$('#apply_discount_to_selection_warning').hide();
+	}
+	else
+	{
+		$('#apply_discount_to_selection').attr('disabled', 'disabled');
+		$('#apply_discount_to_selection_warning').show();
+	}
+});
+
+$('#apply_discount_to_selection_shortcut').click(function() {
+	displayCartRuleTab('conditions');
+	$('#product_restriction').focus();
+	return false;
+});
 
 function toggleApplyDiscount(percent, amount, apply_to)
 {
