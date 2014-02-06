@@ -31,7 +31,7 @@
 	{/if}
 
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="width">{$bullet_common_field} {l s='Width (package):'}</label>
+		<label class="control-label col-lg-3" for="width">{$bullet_common_field} {l s='Package width'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_dimension_unit}</span>
 			<input maxlength="14" id="width" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />			
@@ -39,7 +39,7 @@
 	</div>
 
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="height">{$bullet_common_field} {l s='Height (package):'}</label>
+		<label class="control-label col-lg-3" for="height">{$bullet_common_field} {l s='Package height'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_dimension_unit}</span>
 			<input maxlength="14" id="height" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
@@ -47,7 +47,7 @@
 	</div>
 	
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="depth">{$bullet_common_field} {l s='Depth (package):'}</label>
+		<label class="control-label col-lg-3" for="depth">{$bullet_common_field} {l s='Package depth'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_dimension_unit}</span>
 			<input maxlength="14" id="depth" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
@@ -55,7 +55,7 @@
 	</div>
 
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="weight">{$bullet_common_field} {l s='Weight (package):'}</label>
+		<label class="control-label col-lg-3" for="weight">{$bullet_common_field} {l s='Package weight'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_weight_unit}</span>
 			<input maxlength="14" id="weight" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
@@ -66,7 +66,7 @@
 		<label class="control-label col-lg-3" for="additional_shipping_cost">
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='A carrier tax will be applied.'}">
-				{l s='Additional shipping cost (per quantity):'}
+				{l s='Additional shipping fees (for one item)'}
 			</span>
 			
 		</label>
@@ -77,7 +77,7 @@
 	</div>
 
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="availableCarriers">{l s='Carriers:'}</label>
+		<label class="control-label col-lg-3" for="availableCarriers">{l s='Carriers'}</label>
 		<div class="col-lg-9">
 			<div class="form-control-static row">
 				<div class="col-xs-6">
@@ -107,7 +107,7 @@
 	</div>
 	<div class="form-group" id="no-selected-carries-alert">
 		<div class="col-lg-offset-3">
-			<div class="alert alert-warning">{l s='If no carriers is selected then all carriers will be available for customers orders.'}</div>
+			<div class="alert alert-warning">{l s='If no carrier is selected then all the carriers will be available for customers orders.'}</div>
 		</div>
 	</div>
 	<div class="panel-footer">
