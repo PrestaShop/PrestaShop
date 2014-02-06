@@ -31,7 +31,7 @@
 		{l s='List of products by manufacturer'}&nbsp;{$manufacturer->name|escape:'html':'UTF-8'}
 	</h1>
 	{if !empty($manufacturer->description) || !empty($manufacturer->short_description)}
-		<div class="description_box">
+		<div class="description_box rte">
 			{if !empty($manufacturer->short_description)}
 				<div class="short_desc">
 					{$manufacturer->short_description}
