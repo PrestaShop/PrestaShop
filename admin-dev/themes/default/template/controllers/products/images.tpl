@@ -36,7 +36,7 @@
 				
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='MB max.'}">
-					{if isset($id_image)}{l s='Edit this product image:'}{else}{l s='Add a new image to this product:'}{/if}
+					{if isset($id_image)}{l s='Edit this product\'s image:'}{else}{l s='Add a new image to this product'}{/if}
 				</span>
 			</label>
 			<div class="col-lg-9">
@@ -47,7 +47,7 @@
 			<label class="control-label col-lg-3">
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='Invalid characters:'} <>;=#{}">
-					{l s='Legend:'}
+					{l s='Legend'}
 				</span>			
 			</label>
 			<div class="col-lg-9">

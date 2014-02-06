@@ -51,9 +51,9 @@
 		});
 	</script>
 	<input type="hidden" name="submitted_tabs[]" value="Combinations" />
-	<h3>{l s='Add or modify combinations for this product.'}</h3>
+	<h3>{l s='Add or modify combinations for this product'}</h3>
 	<div class="alert alert-info">
-		{l s='Or use the'}&nbsp;<a class="btn btn-link bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><i class="icon-magic"></i> {l s='Product combinations generator'} <i class="icon-external-link-sign"></i></a> {l s='in order to automatically create a set of combinations.'}
+		{l s='You can also use the'}&nbsp;<a class="btn btn-link bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><i class="icon-magic"></i> {l s='Product combinations generator'} <i class="icon-external-link-sign"></i></a> {l s='in order to automatically create a set of combinations.'}
 	</div>
 	{if $combination_exists}
 	<div class="alert alert-info" style="display:block">
@@ -68,7 +68,7 @@
 	<div id="add_new_combination" class="panel" style="display: none;">
 		<div class="panel-heading">{l s='Add or modify combinations for this product.'}</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3" for="attribute_group">{l s='Attribute:'}</label>
+			<label class="control-label col-lg-3" for="attribute_group">{l s='Attribute'}</label>
 			<div class="col-lg-5">
 				<select name="attribute_group" id="attribute_group" onchange="populate_attrs();">
 				{if isset($attributes_groups)}
@@ -80,7 +80,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<label class="control-label col-lg-3" for="attribute">{l s='Value:'}</label>
+			<label class="control-label col-lg-3" for="attribute">{l s='Value'}</label>
 			<div class="col-lg-9">
 				<div class="form-group">
 					<div class="col-lg-8">
@@ -107,7 +107,7 @@
 			<label class="control-label col-lg-3" for="attribute_reference">
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='Special characters allowed:'} .-_#">
-					{l s='Reference:'}
+					{l s='Reference'}
 				</span>
 			</label>
 			<div class="col-lg-5">
@@ -116,7 +116,7 @@
 		</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_ean13">
-				{l s='EAN13:'}
+				{l s='EAN13'}
 			</label>
 			<div class="col-lg-3">
 				<input maxlength="13" type="text" id="attribute_ean13" name="attribute_ean13" value="" />
@@ -124,7 +124,7 @@
 		</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_upc">
-				{l s='UPC:'}
+				{l s='UPC'}
 			</label>
 			<div class="col-lg-3">
 				<input maxlength="12" type="text" id="attribute_upc" name="attribute_upc" value="" />
@@ -136,7 +136,7 @@
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_wholesale_price" type="default"}
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='Set to zero if the price does not change'}">
-					{l s='Wholesale price:'}
+					{l s='Wholesale price'}
 				</span>
 			</label>
 			<div class="col-lg-9">
@@ -153,7 +153,7 @@
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_price_impact">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_price_impact" type="attribute_price_impact"}
-				{l s='Impact on price:'}
+				{l s='Impact on price'}
 			</label>
 			<div class="col-lg-9">
 				<div class="row">
@@ -212,7 +212,7 @@
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_weight_impact">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_weight_impact" type="attribute_weight_impact"}
-				{l s='Impact on weight:'}
+				{l s='Impact on weight'}
 			</label>
 			<div class="col-lg-9">
 				<div class="row">
@@ -242,7 +242,7 @@
 		<div id="tr_unit_impact" class="form-group">
 			<label class="control-label col-lg-3" for="attribute_unit_impact">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_unit_impact" type="attribute_unit_impact"}
-				{l s='Impact on unit price :'}
+				{l s='Impact on unit price'}
 			</label>
 			<div class="col-lg-3">
 				<select name="attribute_unit_impact" id="attribute_unit_impact" onchange="check_unit_impact();">
@@ -273,7 +273,7 @@
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_ecotax" type="default"}
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='overrides Eco-tax in the "Information" tab'}">
-					{l s='Eco-tax (tax excl.):'}
+					{l s='Eco-tax (tax excl.)'}
 				</span>
 			</label>
 			<div class="input-group col-lg-2">
@@ -290,7 +290,7 @@
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_minimal_quantity" type="default"}
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}">
-					{l s='Minimum quantity:'}
+					{l s='Minimum quantity'}
 				</span>
 			</label>
 			<div class="col-lg-9">
@@ -305,7 +305,7 @@
 				{include file="controllers/products/multishop/checkbox.tpl" field="available_date_attribute" type="default"}
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='The available date when this product is out of stock.'}">
-					{l s='Available date:'}
+					{l s='Available date'}
 				</span>
 			</label>
 			<div class="col-lg-9">
@@ -342,7 +342,7 @@
 				<p class="checkbox">
 				<label for="attribute_default">
 					<input type="checkbox" name="attribute_default" id="attribute_default" value="1" />
-					{l s='Make this combination the default combination for this product'}
+					{l s='Make this combination the default combination for this product.'}
 				</label>
 				</p>
 			</div>
