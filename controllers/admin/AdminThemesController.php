@@ -252,30 +252,6 @@ class AdminThemesControllerCore extends AdminController
 		);
 	}
 
-	protected function checkMobileNeeds()
-	{
-		$allow_mobile = (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE');
-		if (!$allow_mobile && Context::getContext()->shop->getTheme() == 'default')
-			return;
-
-		$iso_code = Country::getIsoById((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-		$paypal_installed = (bool)Module::isInstalled('paypal');
-		$paypal_countries = array(
-			'ES',
-			'FR',
-			'PL',
-			'IT'
-		);
-
-		if (!$paypal_installed && in_array($iso_code, $paypal_countries))
-		{
-			if (!$this->isXmlHttpRequest())
-				$this->warnings[] = $this->l('At this time, the mobile theme only works with PayPal\'s payment module. Please activate and configure the PayPal module to enable mobile payments.')
-					.'<br>'.
-					$this->l('In order to use the mobile theme, you must install and configure the PayPal module.');
-		}
-	}
-
 	public function renderForm()
 	{
 		$get_available_themes = Theme::getAvailable(false);
@@ -1697,13 +1673,9 @@ class AdminThemesControllerCore extends AdminController
 		}
 		else
 		{
-			$this->checkMobileNeeds();
-
 			$themes = array();
 			foreach (Theme::getThemes() as $theme)
-			{
 				$themes[] = $theme->directory;
-			}
 
 			foreach (scandir(_PS_ALL_THEMES_DIR_) as $theme_dir)
 			{
@@ -1713,9 +1685,7 @@ class AdminThemesControllerCore extends AdminController
 					&& !in_array($theme_dir, $themes)
 					&& file_exists(_PS_ROOT_DIR_.'/config/xml/'.$theme_dir.'.xml')
 				)
-				{
 					$this->importThemeXmlConfig(simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$theme_dir.'.xml'));
-				}
 			}
 
 			$content = '';
@@ -1886,32 +1856,20 @@ class AdminThemesControllerCore extends AdminController
 			{
 				case 0:
 					foreach ($xml->modules as $row)
-					{
 						foreach ($row->module as $row2)
-						{
 							$natives[] = (string)$row2['name'];
-						}
-					}
 					break;
 				case 1:
 					foreach ($xml->modules as $row)
-					{
 						if ($row['type'] == 'native')
 							foreach ($row->module as $row2)
-							{
 								$natives[] = (string)$row2['name'];
-							}
-					}
 					break;
 				case 2:
 					foreach ($xml->modules as $row)
-					{
 						if ($row['type'] == 'partner')
 							foreach ($row->module as $row2)
-							{
 								$natives[] = (string)$row2['name'];
-							}
-					}
 					break;
 			}
 
@@ -2063,12 +2021,8 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$fmtArr = array();
 		foreach ($originArr as $key => $type)
-		{
 			foreach ($type as $module)
-			{
 				$fmtArr[$key.'_module'.$module] = true;
-			}
-		}
 
 		return $fmtArr;
 	}
@@ -2273,13 +2227,11 @@ class AdminThemesControllerCore extends AdminController
 			foreach ($xml->images->image as $row)
 			{
 				if ($result = (bool)Db::getInstance()->executes(sprintf('SELECT * FROM `'._DB_PREFIX_.'image_type` WHERE `name` = \'%s\' ', pSQL($row['name']))))
-				{
 					$return['error'][] = array(
 						'name' => strval($row['name']),
 						'width' => (int)$row['width'],
 						'height' => (int)$row['height']
 					);
-				}
 				else
 				{
 					Db::getInstance()->execute('
@@ -2315,7 +2267,6 @@ class AdminThemesControllerCore extends AdminController
 		{
 			foreach ($hooks as $hook)
 			{
-
 				$sql_hook_module = 'INSERT INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
 									VALUES ('.(int)$id_module.', '.(int)$shop.', '.(int)Hook::getIdByName($hook['hook']).', '.(int)$hook['position'].')';
 
@@ -2331,8 +2282,6 @@ class AdminThemesControllerCore extends AdminController
 				Db::getInstance()->execute($sql_hook_module);
 			}
 		}
-
-
 	}
 
 	public function processThemeInstall()
@@ -2353,18 +2302,13 @@ class AdminThemesControllerCore extends AdminController
 
 		$xml = false;
 		if (file_exists(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml'))
-		{
 			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml');
-		}
 		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/default.xml'))
-		{
 			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/default.xml');
-		}
 
 		if ($xml)
 		{
 			$module_hook = array();
-
 			foreach ($xml->modules->hooks->hook as $row)
 			{
 				$name = strval($row['module']);
@@ -2383,12 +2327,10 @@ class AdminThemesControllerCore extends AdminController
 
 			foreach ($shops as $id_shop)
 			{
-
 				foreach ($_POST as $key => $value)
 				{
 					if (strncmp($key, 'to_install', strlen('to_install')) == 0)
 					{
-
 						if (file_exists(_PS_MODULE_DIR_.$value))
 						{
 							if (!class_exists($value) && file_exists(_PS_MODULE_DIR_.$value.'/'.$value.'.php'))
@@ -2456,13 +2398,9 @@ class AdminThemesControllerCore extends AdminController
 			}
 
 			$this->doc = array();
-
 			foreach ($xml->docs->doc as $row)
-			{
 				$this->doc[strval($row['name'])] = '../themes/'.$theme->directory.'/docs/'.basename(strval($row['path']));
-			}
 		}
-
 
 		Tools::clearCache($this->context->smarty);
 		$this->theme_name = $theme->name;
@@ -2489,9 +2427,7 @@ class AdminThemesControllerCore extends AdminController
 	public function postProcess()
 	{
 		if (Tools::isSubmit('submitOptionstheme') && Tools::isSubmit('id_theme') && !Tools::isSubmit('deletetheme') && Tools::getValue('action') != 'ThemeInstall' && $this->context->shop->id_theme != Tools::getValue('id_theme'))
-		{
 			$this->display = "ChooseThemeModule";
-		}
 		else
 		{
 			// new check compatibility theme feature (1.4) :

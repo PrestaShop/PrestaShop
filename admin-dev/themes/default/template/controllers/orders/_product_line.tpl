@@ -44,15 +44,23 @@
 		{if $can_edit}
 		<span class="product_price_edit" style="display:none;">
 			<input type="hidden" name="product_id_order_detail" class="edit_product_id_order_detail" value="{$product['id_order_detail']}" />
-			{if $currency->sign % 2}
-			{$currency->sign}
-			{/if}
-			<input type="text" name="product_price_tax_excl" class="edit_product_price_tax_excl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_excl'], 2)}"/>
-			{if !($currency->sign % 2)}{$currency->sign}{/if}
-			{l s='tax excl.'}<br />
-			{if $currency->sign % 2}{$currency->sign}{/if}
-			<input type="text" name="product_price_tax_incl" class="edit_product_price_tax_incl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_incl'], 2)}"/>
-			{if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax incl.'}
+			<div class="form-group">
+				<div class="fixed-width-xl">
+					<div class="input-group">
+						{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax excl.'}</div>{/if}
+						<input type="text" name="product_price_tax_excl" class="edit_product_price_tax_excl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_excl'], 2)}"/>
+						{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax excl.'}</div>{/if}
+					</div>
+				</div>
+				<br/>
+				<div class="fixed-width-xl">				
+					<div class="input-group">
+						{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
+						<input type="text" name="product_price_tax_incl" class="edit_product_price_tax_incl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_incl'], 2)}"/>
+						{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
+					</div>
+				</div>
+			</div>
 		</span>
 		{/if}
 	</td>
@@ -133,29 +141,27 @@
 		0/{$productQuantity}
 	{/if}
 	</td>
-	<td class="partial_refund_fields current-edit" style="display:none;">
-
+	<td class="partial_refund_fields current-edit" style="display:none; width: 250px" colspan="2">
 		<div class="form-group">
-			<div class="col-lg-6 fixed-width-lg">
+			<div class="col-lg-4">
 				<label class="control-label">
 					{l s='Quantity:'}
 				</label>
 				<div class="input-group">
-					<input onchange="checkPartialRefundProductQuantity(this)" type="text" name="partialRefundProductQuantity[{{$product['id_order_detail']}}]" value="0" />
-					<div class="input-group-addon">0/{$productQuantity-$product['product_quantity_refunded']}</div>
+					<input onchange="checkPartialRefundProductQuantity(this)" type="text" name="partialRefundProductQuantity[{{$product['id_order_detail']}}]" value="{if ($productQuantity-$product['product_quantity_refunded']) >0}1{else}0{/if}" />
+					<div class="input-group-addon">/ {$productQuantity-$product['product_quantity_refunded']}</div>
 				</div>
 			</div>
-			<div class="col-lg-6 fixed-width-lg">
+			<div class="col-lg-8">
 				<label class="control-label">
 					{l s='Amount:'}
 				</label>
 				<div class="input-group">
-					<div class="input-group-addon">
-						{$currency->prefix}
-						{$currency->suffix}
-					</div>
+					{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
 					<input onchange="checkPartialRefundProductAmount(this)" type="text" name="partialRefundProduct[{$product['id_order_detail']}]" />
+					{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
 				</div>
+				<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s)' sprintf=$product['amount_refundable']}</p>
 			</div>
 		</div>
 
@@ -182,7 +188,7 @@
 		&nbsp;
 		{/if}
 	</td>
-	<td class="product_action">
+	<td class="product_action text-right">
 		{* edit/delete controls *}
 		<div class="btn-group">
 			<button type="button" class="btn btn-default edit_product_change_link">
@@ -210,7 +216,6 @@
 			<i class="icon-remove"></i>
 			{l s='Cancel'}
 		</button>
-
 	</td>
 	{/if}
 </tr>
