@@ -491,7 +491,7 @@ class AdminCustomersControllerCore extends AdminController
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
-				'label' => $this->l('Outstanding allowed'),
+				'label' => $this->l('Allowed outstanding amount'),
 				'name' => 'outstanding_allow_amount',
 				'hint' => $this->l('Valid characters:').' 0-9',
 				'suffix' => $this->context->currency->sign
@@ -504,7 +504,7 @@ class AdminCustomersControllerCore extends AdminController
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
-				'label' => $this->l('Risk'),
+				'label' => $this->l('Risk rating'),
 				'name' => 'id_risk',
 				'required' => false,
 				'class' => 't',
