@@ -31,7 +31,7 @@
 			<div class="lang_{$language.id_lang}" style="display:{if $language.id_lang == $default_form_language}block{else}none{/if}; float: left;">
 				<input type="text" name="url_name_{$language.id_lang}" id="url_name_{$language.id_lang}" value="{if isset($values[$language['id_lang']]) && isset($values[$language['id_lang']]['url_name'])}{$values[$language['id_lang']]['url_name']|escape:'htmlall':'UTF-8'}{/if}" size="64" maxlength="64" />
 				<p class="preference_description">{l s='Specific URL format in block layered generation' mod='blocklayered'}</p>
-				<span class="hint" name="help_box">{l s='Invalid characters: <>;=#{}_' mod='blocklayered.'}<span class="hint-pointer">&nbsp;</span></span>
+				<span class="hint" name="help_box">{l s='Invalid characters: <>;=#{}_' mod='blocklayered'}<span class="hint-pointer">&nbsp;</span></span>
 			</div>
 		{/foreach}
 	</div>
