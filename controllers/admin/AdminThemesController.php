@@ -812,7 +812,7 @@ class AdminThemesControllerCore extends AdminController
 			foreach ($this->to_export as $row)
 			{
 				if (!in_array($row, $this->native_modules))
-					$this->archiveThisFile($zip, $row, dirname(__FILE__).'/../../modules/', 'modules/');
+					$this->archiveThisFile($zip, $row, _PS_ROOT_DIR_.'/modules/', 'modules/');
 			}
 
 			$zip->close();
