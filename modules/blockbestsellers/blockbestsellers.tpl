@@ -48,7 +48,7 @@
                         <p>
                             <a href="{$product.link|escape:'html'}" title="{$product.legend|escape:'html':'UTF-8'}">
                                 {$product.name|strip_tags:'UTF-8'|escape:'html':'UTF-8'}<br/>
-                                <span class="price">{$product.price}</span>
+                                {if !$PS_CATALOG_MODE}<span class="price">{$product.price}</span>{/if}
                             </a>
                         </p>
                         {/if}
