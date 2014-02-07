@@ -81,7 +81,7 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('DASHACTIVITY_CART_ABANDONED_MAX', '48', NOW(), NOW());
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('DASHACTIVITY_VISITOR_ONLINE', '30', NOW(), NOW());
 
-INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('PS_DASHGOALS_CURRENT_YEAR', YEAR(), NOW(), NOW());
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('PS_DASHGOALS_CURRENT_YEAR', YEAR(NOW()), NOW(), NOW());
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('DASHPRODUCT_NBR_SHOW_LAST_ORDER', '10', NOW(), NOW());
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('DASHPRODUCT_NBR_SHOW_BEST_SELLER', '10', NOW(), NOW());
