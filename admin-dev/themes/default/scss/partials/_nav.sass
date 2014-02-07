@@ -70,6 +70,7 @@ $menu-item-size: 36px
 					display: block
 					padding: 8px 9px 8px 8px
 					background-color: white
+					border-right: 1px solid darken($bg-content-color,10%)
 					a
 						background-color: white
 						color: $brand-primary
@@ -123,6 +124,8 @@ $menu-item-size: 36px
 			padding-top: 37px
 			position: relative
 			top: 0
+		li.maintab.active ul.submenu
+			border: none !important
 		a.title
 			text-align: center
 			i
@@ -392,7 +395,7 @@ $menu-item-size: 36px
 	i
 		font-size: $icon-size-base
 
-.page-sidebar-closed
+.page-sidebar-closed:not(.nav-topbar)
 	.searchtab
 		&:before
 			z-index: 1000

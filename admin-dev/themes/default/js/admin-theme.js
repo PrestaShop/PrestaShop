@@ -261,7 +261,7 @@ $(document).ready(function() {
 	}
 
 	//media queries - depends of enquire.js
-	enquire.register('screen and (max-width: 1200px)', {
+	enquire.register('screen and (max-width: 768px)', {
 		match : function() {
 			$('body.page-sidebar').addClass('page-sidebar-closed');
 		},
