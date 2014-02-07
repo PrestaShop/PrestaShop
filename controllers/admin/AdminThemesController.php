@@ -1464,25 +1464,32 @@ class AdminThemesControllerCore extends AdminController
 
 	/**
 	 * @param SimpleXMLElement $xml
+	 * @param bool             $theme_dir only used if the theme directory to import is already located on the shop
 	 *
-	 * @return bool|Theme return theme on success, otherwise the error as a string is returned
+	 * @return string|Theme return theme on success, otherwise the error as a string is returned
 	 */
-	protected function importThemeXmlConfig(SimpleXMLElement $xml)
+	protected function importThemeXmlConfig(SimpleXMLElement $xml, $theme_dir = false)
 	{
 		$themes = Theme::getThemes();
 
 		$name = strval($xml->variations->variation[0]['name']);
 
-		foreach ($themes as $theme_object)
-		{
-			if ($theme_object->name == $name)
-				return $this->l('Theme already installed.');
-		}
-
 		$new_theme = new Theme();
 		$new_theme->name = $name;
 
 		$new_theme->directory = strval($xml->variations->variation[0]['directory']);
+
+		if ($theme_dir)
+		{
+			$new_theme->name = $theme_dir;
+			$new_theme->directory = $theme_dir;
+		}
+
+		foreach ($themes as $theme_object)
+		{
+			if ($theme_object->name == $new_theme->name)
+				return $this->l('Theme already installed.');
+		}
 
 		$new_theme->product_per_page = Configuration::get('PS_PRODUCTS_PER_PAGE');
 
@@ -1683,9 +1690,21 @@ class AdminThemesControllerCore extends AdminController
 					&& is_dir(_PS_ALL_THEMES_DIR_.$theme_dir)
 					&& file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/preview.jpg')
 					&& !in_array($theme_dir, $themes)
-					&& file_exists(_PS_ROOT_DIR_.'/config/xml/'.$theme_dir.'.xml')
 				)
-					$this->importThemeXmlConfig(simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$theme_dir.'.xml'));
+				{
+
+					$config_file = false;
+					$default_config = _PS_ROOT_DIR_.'/config/xml/default.xml';
+					$theme_config = _PS_ROOT_DIR_.'/config/xml/'.$theme_dir.'.xml';
+
+					if (file_exists($theme_config))
+						$config_file = $theme_config;
+					elseif (file_exists($default_config))
+						$config_file = $default_config;
+
+					if ($config_file)
+						$this->importThemeXmlConfig(simplexml_load_file($config_file), $theme_dir);
+				}
 			}
 
 			$content = '';
