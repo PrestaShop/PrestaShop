@@ -890,7 +890,8 @@ abstract class PaymentModuleCore extends Module
 		}
 		if (!isset($id_currency) || empty($id_currency))
 			return false;
-		return (new Currency($id_currency));
+		$currency = new Currency($id_currency);
+		return $currency;
 	}
 
 	/**

@@ -743,6 +743,7 @@ class AdminCustomersControllerCore extends AdminController
 		for ($i = 0; $i < $total_referrers; $i++)
 			$referrers[$i]['date_add'] = Tools::displayDate($referrers[$i]['date_add'],null , true);
 
+		$customerLanguage = new Language($customer->id_lang);
 		$shop = new Shop($customer->id_shop);
 		$this->tpl_view_vars = array(
 			'customer' => $customer,
@@ -759,7 +760,7 @@ class AdminCustomersControllerCore extends AdminController
 			'last_update' => Tools::displayDate($customer->date_upd,null , true),
 			'customer_exists' => Customer::customerExists($customer->email),
 			'id_lang' => $customer->id_lang,
-			'customerLanguage' => (new Language($customer->id_lang)),
+			'customerLanguage' => $customerLanguage,
 			// Add a Private note
 			'customer_note' => Tools::htmlentitiesUTF8($customer->note),
 			// Messages
