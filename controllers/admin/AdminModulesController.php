@@ -1140,10 +1140,12 @@ class AdminModulesControllerCore extends AdminController
 	
 	public function initContent()
 	{
+		$this->meta_title = 'Modules';
+
 		// If we are on a module configuration, no need to load all modules
 		if (Tools::getValue('configure') != '')
 			return true;
-			
+
 		$this->initToolbar();
 		$this->initPageHeaderToolbar();
 
