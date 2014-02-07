@@ -3182,7 +3182,8 @@ class AdminProductsControllerCore extends AdminController
 		$virtual_product_file_uploader = new HelperUploader('virtual_product_file_uploader');
 		$virtual_product_file_uploader->setMultiple(false)->setUrl(
 			Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$product->id
-			.'&action=AddVirtualProductFile')->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')));
+			.'&action=AddVirtualProductFile')->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
+			->setTemplate('virtual_product.tpl');
 
 		$data->assign(array(
 			'download_product_file_missing' => $msg,
