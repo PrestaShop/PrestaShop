@@ -76,13 +76,19 @@
 
 					{elseif isset($params.position)}
 						{if $order_by == 'position' && $order_way != 'DESC'}
-							<a href="{$tr.$key.position_url_down}" {if !($tr.$key.position != $positions[count($positions) - 1])}style="display: none;"{/if}>
-								<img src="../img/admin/{if $order_way == 'ASC'}down{else}up{/if}.gif" alt="{l s='Down'}" title="{l s='Down'}" />
-							</a>
-
-							<a href="{$tr.$key.position_url_up}" {if !($tr.$key.position != $positions.0)}style="display: none;"{/if}>
-								<img src="../img/admin/{if $order_way == 'ASC'}up{else}down{/if}.gif" alt="{l s='Up'}" title="{l s='Up'}" />
-							</a>
+							<div class="dragGroup">
+								<div class="positions">
+									{$tr.$key.position}
+								</div>
+								<div class="btn-group">
+									<a class="btn btn-default btn-xs" href="{$tr.$key.position_url_down}" {if !($tr.$key.position != $positions[count($positions) - 1])}disabled{/if}>
+										<i class="icon-chevron-{if $order_way == 'ASC'}down{else}up{/if}"></i>
+									</a>
+									<a class="btn btn-default btn-xs" href="{$tr.$key.position_url_up}" {if !($tr.$key.position != $positions.0)}disabled{/if}>
+										<i class="icon-chevron-{if $order_way == 'ASC'}up{else}down{/if}"></i>
+									</a>
+								</div>
+							</div>
 						{else}
 							{$tr.$key.position + 1}
 						{/if}

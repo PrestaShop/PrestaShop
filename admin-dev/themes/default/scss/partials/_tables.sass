@@ -45,9 +45,54 @@
 	td.pointer
 		cursor: pointer
 	td.dragHandle
-		cursor: move
+		.dragGroup
+			width: 80px
+			cursor: move
+			text-align: center
+			position: relative
+			font-size: $icon-size-base
+			padding: 4px 4px 4px 20px
+			@include border-radius(5px)
+			&:hover
+				color: white
+				background-color: $brand-primary !important
+			&:before
+				@extend .icon
+				@extend .icon-arrows
+				display: block
+				height: 16px
+				width: 16px
+				position: absolute
+				top: 18px
+				left: 6px
+			.btn-group
+
+			.positions
+				display: inline-block
+				border: solid 1px #ccc
+				background-color: #eee
+				padding: 0 5px
+				color: #aaa
+				width: 43px
+				@include text-shadow(white 1px 1px)
+				@include border-radius(3px)
+				@include box-shadow(rgba(0,0,0,0.2) 0 1px 3px inset)
 	td.actions
 		min-width: 200px
+	tr.myDragClass
+		padding: 10px
+		background-color: #EEEEEE
+		td
+			color: white !important
+			background-color: $brand-primary !important
+			@include transform(translate(5px,10px))
+
+	&.tableDnD td
+		@include transition-property(all)
+		@include transition-duration(0.2s)
+		@include transition-timing-function(ease-out)
+
+
 
 tr.highlighted td
 	background-color: $brand-primary !important

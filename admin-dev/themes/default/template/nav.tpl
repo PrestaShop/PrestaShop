@@ -4,6 +4,88 @@
 			<div class="mainsubtablist" style="display:none"></div>
 		{/if}
 		<ul class="menu">
+			<li class="searchtab">
+				<form method="post" action="index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}" role="search">
+					<div class="form-group">
+						<input type="hidden" name="bo_search_type" id="bo_search_type" />
+						<div class="input-group">
+							<div class="input-group-btn">
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									<i id="search_type_icon" class="icon-reorder"></i>
+									<i class="icon-caret-down"></i>
+								</button>
+								<ul id="header_search_options" class="dropdown-menu">
+									<li class="search-all search-option active">
+										<a href="#" data-value="0" data-placeholder="{l s='What are you looking for?'}" data-icon="icon-reorder">
+											<i class="icon-search"></i> {l s='Everywhere'}</a>
+									</li>
+									<li class="divider"></li>
+									<li class="search-book search-option">
+										<a href="#" data-value="1" data-placeholder="{l s='Product name, SKU, reference...'}" data-icon="icon-book">
+											<i class="icon-book"></i> {l s='Catalog'}
+										</a>
+									</li>
+									<li class="search-customers-name search-option">
+										<a href="#" data-value="2" data-placeholder="{l s='Email, name...'}" data-icon="icon-group">
+											<i class="icon-group"></i> {l s='Customers'} {l s='by name'}
+										</a>
+									</li>
+									<li class="search-customers-addresses search-option">
+										<a href="#" data-value="6" data-placeholder="{l s='123.45.67.89'}" data-icon="icon-desktop">
+											<i class="icon-desktop"></i> {l s='Customers'} {l s='by ip address'}</a>
+									</li>
+									<li class="search-orders search-option">
+										<a href="#" data-value="3" data-placeholder="{l s='Order ID'}" data-icon="icon-credit-card">
+											<i class="icon-credit-card"></i> {l s='Orders'}
+										</a>
+									</li>
+									<li class="search-invoices search-option">
+										<a href="#" data-value="4" data-placeholder="{l s='Invoice Number'}" data-icon="icon-book">
+											<i class="icon-book"></i> {l s='Invoices'}
+										</a>
+									</li>
+									<li class="search-carts search-option">
+										<a href="#" data-value="5" data-placeholder="{l s='Cart ID'}" data-icon="icon-shopping-cart">
+											<i class="icon-shopping-cart"></i> {l s='Carts'}
+										</a>
+									</li>
+									<li class="search-modules search-option">
+										<a href="#" data-value="7" data-placeholder="{l s='Module name'}" data-icon="icon-puzzle-piece">
+											<i class="icon-puzzle-piece"></i> {l s='Modules'}
+										</a>
+									</li>
+								</ul>
+							</div>
+							<input id="bo_query" name="bo_query" type="search" class="form-control" value="{$bo_query}" placeholder="{l s='Search'}" />
+							<a href="javascript:void(0);" class="clear_search hide"><i class="icon-remove"></i></a>
+<!-- 							<span class="input-group-btn">
+								<button type="submit" id="bo_search_submit" class="btn btn-primary">
+									<i class="icon-search"></i>
+								</button>
+							</span> -->
+						</div>
+					</div>
+
+					<script>
+						$('#bo_query').on('blur', function(){ $('#header_search .form-group').removeClass('focus-search'); });
+						$('#header_search *').on('focus', function(){ $('#header_search .form-group').addClass('focus-search'); });
+						$('#header_search_options').on('click','li a', function(e){
+							e.preventDefault();
+							$('#header_search_options .search-option').removeClass('active');
+							$(this).closest('li').addClass('active');
+							$('#bo_search_type').val($(this).data('value'));
+							$('#search_type_icon').removeAttr("class").addClass($(this).data('icon'));
+							$('#bo_query').attr("placeholder",$(this).data('placeholder'));
+							$('#bo_query').focus();
+						});
+						{if isset($search_type) && $search_type}
+							$(document).ready(function() {
+								$('.search-option a[data-value='+{$search_type|intval}+']').click();
+							});
+						{/if}
+					</script>
+				</form>
+			</li>
 			{foreach $tabs as $t}
 				{if $t.active}
 				<li class="maintab {if $t.current}active{/if} {if $t.sub_tabs|@count}has_submenu{/if}" id="maintab{$t.id_tab}" data-submenu="{$t.id_tab}">

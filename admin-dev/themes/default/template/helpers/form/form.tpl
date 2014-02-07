@@ -295,7 +295,8 @@
 										{$input.required = false}
 										{$input.desc = null}
 									{else}
-										<select name="{$input.name|escape:'html':'utf-8'}" class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if}"
+										<select name="{$input.name|escape:'html':'utf-8'}"
+												class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if} fixed-width-xl"
 												id="{if isset($input.id)}{$input.id|escape:'html':'utf-8'}{else}{$input.name|escape:'html':'utf-8'}{/if}"
 												{if isset($input.multiple)}multiple="multiple" {/if}
 												{if isset($input.size)}size="{$input.size|escape:'html':'utf-8'}"{/if}
@@ -477,7 +478,7 @@
 								<div class="form-group">
 									{foreach $input.options as $key => $select}
 									<div class="col-lg-2">
-										<select name="{$key}" class="{if isset($input.class)}{$input.class}{/if}">
+										<select name="{$key}" class="{if isset($input.class)}{$input.class}{/if}" class="fixed-width-lg">
 											<option value="">-</option>
 											{if $key == 'months'}
 												{*

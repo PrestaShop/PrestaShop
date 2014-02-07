@@ -98,22 +98,20 @@
 	<div class="row">
 		<div class="col-lg-6">
 			<div class="panel">
-				<h3>
+				<div class="panel-heading">
 					<i class="icon-credit-card"></i>
 					{l s='Order'}
-					<span class="badge">#{$order->id}</span>
+					<span class="badge">{l s="#"}{$order->id}</span>
 					<span class="badge">{$order->reference}</span>
-					<div class="btn-group pull-right">
-						<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
-							<i class="icon-chevron-left"></i>
-							{l s='Prev'}
+					<div class="btn-group">
+						<a class="btn btn-default btn-xs" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
+							<i class="icon-backward"></i>
 						</a>
-						<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$nextOrder}" {if !$nextOrder}disabled{/if}>
-							{l s='Next'}
-							<i class="icon-chevron-right"></i>
+						<a class="btn btn-default btn-xs" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$nextOrder}" {if !$nextOrder}disabled{/if}>
+							<i class="icon-forward"></i>
 						</a>
 					</div>
-				</h3>
+				</div>
 				<!-- Orders Actions -->
 				<div class="well">
 					<div class="row row-margin-bottom">
@@ -388,15 +386,15 @@
 					<i class="icon-user"></i>
 					{l s='Customer'}
 					<span class="badge">
+						{l s='#'}{$customer->id}
+					</span>
+					<span class="badge">
 						<a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}">
 							{if Configuration::get('PS_B2B_ENABLE')}{$customer->company} - {/if}
 							{$gender->name|escape:'html':'UTF-8'}
 							{$customer->firstname}
 							{$customer->lastname}
 						</a>
-					</span>
-					<span class="badge">
-						{l s='#'}{$customer->id}
 					</span>
 					<span class="badge">
 						<a href="mailto:{$customer->email}">{$customer->email}</a>

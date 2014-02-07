@@ -58,8 +58,8 @@
 			<div class="col-lg-9"><p class="form-control-static">{$currency->name} ({$currency->sign})</p></div>
 		</div>
 		<div class="row">
-			<label class="control-label col-lg-3">{l s='Products'}</label>
-			<div class="col-lg-9"><p class="form-control-static">{$warehouse_num_products} {l s='References:'}</p></div>
+			<label class="control-label col-lg-3">{l s='Product references:'}</label>
+			<div class="col-lg-9"><p class="form-control-static">{$warehouse_num_products}</p></div>
 		</div>
 		<div class="row">
 			<label class="control-label col-lg-3">{l s='Physical product quantities:'}</label>
@@ -72,7 +72,7 @@
 	</div>
 </div>
 <div class="panel">
-	<h3><i class="icon-sitemap"></i> {l s='Shops:'}</h3>
+	<h3><i class="icon-sitemap"></i> {l s='Shops'}</h3>
 	{if isset($shops) && count($shops) > 0}
 	<div class="alert alert-info">{l s='The following are the shops associated with this warehouse.'}</div>
 	<table class="table">

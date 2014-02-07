@@ -156,29 +156,11 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		ON DUPLICATE KEY UPDATE `price` = VALUES(price), `weight` = VALUES(weight)');
     }
 
-	protected static function getAttributesImpacts($id_product)
-	{
-		$tab = array();
-		$result = Db::getInstance()->executeS(
-			'SELECT ai.`id_attribute`, ai.`price`, ai.`weight`
-			FROM `'._DB_PREFIX_.'attribute_impact` ai
-			WHERE ai.`id_product` = '.(int)$id_product);
-
-		if (!$result)
-			return array();
-		foreach ($result as $impact)
-		{
-			$tab[$impact['id_attribute']]['price'] = (float)$impact['price'];
-			$tab[$impact['id_attribute']]['weight'] = (float)$impact['weight'];
-		}
-		return $tab;
-    }
-
 	public function initGroupTable()
 	{
 		$combinations_groups = $this->product->getAttributesGroups($this->context->language->id);
 		$attributes = array();
-		$impacts = AdminAttributeGeneratorController::getAttributesImpacts($this->product->id);
+		$impacts = Product::getAttributesImpacts($this->product->id);
 		foreach ($combinations_groups as &$combination)
 		{
 			$target = &$attributes[$combination['id_attribute_group']][$combination['id_attribute']];
