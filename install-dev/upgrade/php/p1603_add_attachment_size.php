@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function p1603_add_atachment_size()
+function p1603_add_attachment_size()
 {
 	$attachments = Db::getInstance()->ExecuteS('SELECT id_attachment, file FROM '._DB_PREFIX_.'attachment');
 	foreach ($attachments as $attachment)

@@ -846,7 +846,7 @@
 						{foreach $order->getBrother() as $brother_order}
 						<tr>
 							<td>
-								<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">#{'%06d'|sprintf:$brother_order->id}</a>
+								<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">#{$brother_order->id}</a>
 							</td>
 							<td>
 								{$brother_order->getCurrentOrderState()->name[$current_id_lang]}
@@ -963,7 +963,7 @@
 				</button>
 			</div>
 			{/if}
-
+			<br />
 			<div class="row">
 				<div class="col-lg-6">
 					<div class="alert alert-warning">
@@ -1122,8 +1122,7 @@
 					</label>
 				</p>
 				<button type="submit" name="partialRefund" class="btn btn-default">
-					<i class="icon-ok"></i>
-					{l s='Partial refund'}
+					<i class="icon-check"></i> {l s='Partial refund'}
 				</button>
 			</div>
 		</div>

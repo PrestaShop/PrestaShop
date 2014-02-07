@@ -100,7 +100,7 @@
 
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="simple_product">
-			{$bullet_common_field} {l s='Type:'}
+			{$bullet_common_field} {l s='Type'}
 		</label>
 		<div class="col-lg-9">
 			<div class="radio">
@@ -130,7 +130,7 @@
 		<label class="control-label col-lg-3 required" for="name_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Invalid characters:'} &lt;&gt;;=#{}">
-				{l s='Name:'}
+				{l s='Name'}
 			</span>
 		</label>
 		<div class="col-lg-5">
@@ -146,8 +146,8 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="reference">
 			<span class="label-tooltip" data-toggle="tooltip"
-			title="{l s='Special characters allowed:'} .-_#\">
-				{$bullet_common_field} {l s='Reference:'}
+			title="{l s='Allowed special characters:'} .-_#\">
+				{$bullet_common_field} {l s='Reference'}
 			</span>
 		</label>
 		<div class="col-lg-5">
@@ -158,8 +158,8 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="ean13">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='(Europe, Japan)'}">
-				{$bullet_common_field} {l s='EAN13 or JAN:'}
+				title="{l s='Specific to Europe and Japan.'}">
+				{$bullet_common_field} {l s='EAN13 or JAN'}
 			</span>
 		</label>
 		<div class="col-lg-3">
@@ -170,8 +170,8 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="upc">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='(US, Canada)'}">
-				{$bullet_common_field} {l s='UPC:'}
+				title="{l s='Specific to the USA and Canada.'}">
+				{$bullet_common_field} {l s='UPC'}
 			</span>
 		</label>
 		<div class="col-lg-3">
@@ -185,7 +185,7 @@
 	<div class="form-group">		
 		<label class="control-label col-lg-3">
 			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
-			{l s='Status:'}
+			{l s='Status'}
 		</label>
 		<div class="col-lg-9">
 			<span class="switch prestashop-switch fixed-width-lg">
@@ -258,7 +258,7 @@
 	<div class="form-group">		
 		<label class="control-label col-lg-3" for="visibility">
 			{include file="controllers/products/multishop/checkbox.tpl" field="visibility" type="default"}
-			{l s='Visibility:'}
+			{l s='Visibility'}
 		</label>
 		<div class="col-lg-3">
 			<select name="visibility" id="visibility">
@@ -279,7 +279,7 @@
 						{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="show_price" type="show_price"}
 						{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="online_only" type="default"}
 					{/if}
-					{l s='Options:'}
+					{l s='Options'}
 				</label>
 				<div class="col-lg-5">
 					<p class="checkbox">
@@ -300,7 +300,7 @@
 			<div class="form-group">				
 				<label class="control-label col-lg-3" for="condition">
 					{include file="controllers/products/multishop/checkbox.tpl" field="condition" type="default"}
-					{l s='Condition:'}
+					{l s='Condition'}
 				</label>
 				<div class="col-lg-3">
 					<select name="condition" id="condition">
@@ -320,7 +320,7 @@
 			{include file="controllers/products/multishop/checkbox.tpl" field="description_short" type="tinymce" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Appears in the product list(s), and on the top of the product page.'}">
-				{l s='Short description:'}
+				{l s='Short description'}
 			</span>
 		</label>
 		<div class="col-lg-9">
@@ -339,7 +339,7 @@
 			{include file="controllers/products/multishop/checkbox.tpl" field="description" type="tinymce" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Appears in the body of the product page'}">
-				{l s='Description:'}
+				{l s='Description'}
 			</span>
 		</label>
 		<div class="col-lg-9">
@@ -363,7 +363,7 @@
 
 	<div id="createImageDescription" class="panel" style="display:none">
 		<div class="form-group">
-			<label class="control-label col-lg-3" for="smallImage_0">{l s='Select your image:'}</label>
+			<label class="control-label col-lg-3" for="smallImage_0">{l s='Select your image'}</label>
 			<div class="col-lg-9">
 				<ul class="list-inline">
 					{foreach from=$images item=image key=key}
@@ -378,7 +378,7 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3" for="leftRight_1">{l s='Position:'}</label>
+			<label class="control-label col-lg-3" for="leftRight_1">{l s='Position'}</label>
 			<div class="col-lg-5">
 				<p class="checkbox">
 					<input type="radio" name="leftRight" id="leftRight_1" value="left" checked>							
@@ -391,13 +391,13 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3" for="imageTypes_0">{l s='Select the type of picture:'}</label>
+			<label class="control-label col-lg-3" for="imageTypes_0">{l s='Select the type of picture'}</label>
 			<div class="col-lg-5">
 				{foreach from=$imagesTypes key=key item=type}
 				<p class="checkbox">
 					<input type="radio" name="imageTypes" id="imageTypes_{$key}" value="{$type.name}" {if $key == 0}checked="checked"{/if}>
 					<label for="imageTypes_{$key}" class="t">
-						{$type.name} <span>({$type.width}px {l s='by'} {$type.height}px)</span>
+						{$type.name} <span>{l s='%dpx by %dpx' sprintf=[$type.width, $type.height]}</span>
 					</label>
 				</p>
 				{/foreach}
@@ -407,7 +407,7 @@
 			<label class="control-label col-lg-3" for="resultImage">
 				<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='The tag to copy/paste into the description.'}">
-					{l s='Image tag to insert:'}
+					{l s='Image tag to insert'}
 				</span>
 			</label>
 			<div class="col-lg-4">
@@ -421,7 +421,7 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="tags_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Each tag has to be followed by a comma. Following characters are forbiden: %s' sprintf='!&lt;;&gt;;?=+#&quot;&deg;{}_$%'}">
+				title="{l s='Each tag has to be followed by a comma. The following characters are forbidden: %s' sprintf='!&lt;;&gt;;?=+#&quot;&deg;{}_$%'}">
 				{l s='Tags:'}
 			</span>
 		</label>

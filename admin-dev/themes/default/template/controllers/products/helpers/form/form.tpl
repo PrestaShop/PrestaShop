@@ -132,6 +132,13 @@
 					var split_position = id.indexOf('-') + 1;
 					var btn_name = id.substr(split_position);
 
+					if (btn_name == 'VirtualProduct' || btn_name == 'Pack' && $('#name_' + id_lang_default).val() == '')
+					{
+						alert(missing_product_name);
+						$('#name_' + id_lang_default).focus();
+						return false;
+					}
+
 					$('#key_tab').val(btn_name);
 
 					if ($(this).attr("id") != $(".productTabs a.active ").attr('id'))
@@ -259,4 +266,5 @@
 			<input type="hidden" name="key_tab" id="key_tab" value="Informations" />
 		</form>
 	</div>
+
 {/block}

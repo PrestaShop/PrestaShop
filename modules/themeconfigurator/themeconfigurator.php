@@ -555,7 +555,7 @@ class ThemeConfigurator extends Module
 			return false;
 		}
 
-		$this->context->smarty->assign('confirmation', $this->l('New item added successful.'));
+		$this->context->smarty->assign('confirmation', $this->l('New item successfully added.'));
 
 		return true;
 	}
@@ -727,7 +727,7 @@ class ThemeConfigurator extends Module
 				'is_module' => true,
 			),
 			array(
-				'label' => $this->l('Customer CMS information block'),
+				'label' => $this->l('Custom CMS information block'),
 				'name' => 'blockcmsinfo',
 				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('blockcmsinfo')) && $module->isEnabledForShopContext(),
 				'is_module' => true,

@@ -32,8 +32,8 @@
 		<label class="control-label col-lg-3" for="meta_title_{$id_lang}">
 			{include file="controllers/products/multishop/checkbox.tpl" field="meta_title" type="default" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Product page title: Leave blank to use the product name'}">
-				{l s='Meta title:'}
+				title="{l s='Product page title: leave blank to use the product name.'}">
+				{l s='Meta title'}
 			</span>
 		</label>
 		<div class="col-lg-8">
@@ -50,8 +50,8 @@
 		<label class="control-label col-lg-3" for="meta_description_{$id_lang}">
 			{include file="controllers/products/multishop/checkbox.tpl" field="meta_description" type="default" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='A single sentence for the HTML header is needed. '}">
-				{l s='Meta description:'}
+				title="{l s='You needed only a single sentence for the HTML header.'}">
+				{l s='Meta description'}
 			</span>
 		</label>
 		<div class="col-lg-8">
@@ -68,8 +68,8 @@
 		<label class="control-label col-lg-3" for="meta_keywords_{$id_lang}">
 			{include file="controllers/products/multishop/checkbox.tpl" field="meta_keywords" type="default" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Keywords for HTML header, separated by commas.'}">
-				{l s='Meta keywords:'}
+				title="{l s='Keywords for the HTML header, separated by commas.'}">
+				{l s='Meta keywords'}
 			</span>
 		</label>
 		<div class="col-lg-8">

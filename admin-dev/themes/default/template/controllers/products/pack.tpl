@@ -43,7 +43,7 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="curPackItemName">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Begin typing the first letters of the product name. Then select the product from the drop-down list:'}">
+				title="{l s='Start by typing the first letters of the product name, then select the product from the drop-down list.'}">
 				{l s='Product'}
 			</span>
 		</label>

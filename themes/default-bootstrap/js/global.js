@@ -50,7 +50,7 @@ $(document).ready(function(){
 		else
 			$('.display').find('li#grid').addClass('selected');
 
-		$('.add_to_compare').click(function(e){
+		$(document).delegate('.add_to_compare','click', function(e){
 			e.preventDefault();
 			if (typeof addToCompare != 'undefined')
 				addToCompare(parseInt($(this).data('id-product')));

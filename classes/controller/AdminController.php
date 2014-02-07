@@ -1922,7 +1922,7 @@ class AdminControllerCore extends Controller
 
 			// For add a fields via an override of $fields_form, use $fields_form_override
 			if (is_array($this->fields_form_override) && !empty($this->fields_form_override))
-				$this->fields_form[0]['form']['input'][] = $this->fields_form_override;
+				$this->fields_form[0]['form']['input'] = array_merge($this->fields_form[0]['form']['input'], $this->fields_form_override);
 
 			$fields_value = $this->getFieldsValue($this->object);
 
