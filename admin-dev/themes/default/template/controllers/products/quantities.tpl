@@ -59,14 +59,14 @@
 							</label>
 						</p>
 							{if $stock_management_active == 0 && !$product->cache_is_pack}
-								<p class="text-info"><i class="icon-info-sign"></i>&nbsp;{l s='This requires you to enable advanced stock management.'}</p>
+								<p class="help-block"><i class="icon-warning-sign"></i>&nbsp;{l s='This requires you to enable advanced stock management.'}</p>
 							{else if $product->cache_is_pack}
-								<p class="text-info">{l s='This parameter depends on the product(s) in the pack.'}</p>
+								<p class="help-block">{l s='This parameter depends on the product(s) in the pack.'}</p>
 							{/if}
 					</div>
 				</div>
 
-				<div {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="row stockForVirtualProduct">
+				<div {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="form-group stockForVirtualProduct">
 					<label class="control-label col-lg-3" for="depends_on_stock_1">{l s='Available quantities'}</label>
 					<div class="col-lg-9">
 						<p class="radio">
