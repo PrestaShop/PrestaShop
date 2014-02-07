@@ -81,15 +81,7 @@ class DbMySQLiCore extends Db
 	 */
 	protected function _query($sql)
 	{
-		if($this->ping())
-			return $this->link->query($sql);
-		else
-		{
-			if($this->connect())
-				return $this->link->query($sql);
-			else
-				return false;
-		}
+		return $this->link->query($sql);
 	}
 
 	/**

@@ -165,8 +165,6 @@ abstract class DbCore
 	/* do not remove, useful for some modules */
 	abstract public function set_db($db_name);
 	
-	abstract public function ping();
-	
 	abstract public function getBestEngine();
 
 	/**
@@ -311,6 +309,12 @@ abstract class DbCore
 			$sql = $sql->build();
 
 		$this->result = $this->_query($sql);
+		//check the result and error number to see if error is caused by mysql server has gone away
+		if(!$this->result && $this->getNumberError()==2006)
+		{
+			if($this->connect())
+				$this->result=$this->_query($sql);
+		}
 		if (_PS_DEBUG_SQL_)
 			$this->displayError($sql);
 		return $this->result;
