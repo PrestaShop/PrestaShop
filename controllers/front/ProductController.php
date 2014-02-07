@@ -503,7 +503,7 @@ class ProductControllerCore extends FrontController
 			{
 				$attribute_list = '';
 				foreach ($comb['attributes'] as $id_attribute)
-					$attribute_list .= (int)$id_attribute.',';
+					$attribute_list .= '\''.(int)$id_attribute.'\',';
 				$attribute_list = rtrim($attribute_list, ',');
 				$combinations[$id_product_attribute]['list'] = $attribute_list;
 			}
