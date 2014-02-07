@@ -67,7 +67,7 @@ class AdminContactsControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Email address'),
 					'name' => 'email',
-					'required' => false,
+					'required' => true,
 					'col' => 4,
 					'hint' => $this->l('Emails will be sent to this address.'),
 				),
