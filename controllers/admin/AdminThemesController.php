@@ -299,7 +299,7 @@ class AdminThemesControllerCore extends AdminController
 					$theme_metas = $theme->getMetas();
 				}
 
-				$image_url = '<img alt="preview" src="../themes/'.$theme->directory.'/preview.jpg">';
+				$image_url = '<img alt="preview" src="'.__PS_BASE_URI__.'themes/'.$theme->directory.'/preview.jpg">';
 				foreach ($theme_metas as $theme_meta)
 				{
 					$formated_metas[$theme_meta['id_meta']]['id_theme_meta'] = (int)$theme_meta['id_theme_meta'];
@@ -2399,7 +2399,7 @@ class AdminThemesControllerCore extends AdminController
 
 			$this->doc = array();
 			foreach ($xml->docs->doc as $row)
-				$this->doc[strval($row['name'])] = '../themes/'.$theme->directory.'/docs/'.basename(strval($row['path']));
+				$this->doc[strval($row['name'])] = __PS_BASE_URI__.'themes/'.$theme->directory.'/docs/'.basename(strval($row['path']));
 		}
 
 		Tools::clearCache($this->context->smarty);
