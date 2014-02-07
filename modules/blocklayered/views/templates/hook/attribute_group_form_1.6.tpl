@@ -24,7 +24,7 @@
 *}
 <div class="form-group">
 	<label class="control-label col-lg-3">
-		<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="'.$this->l('Invalid characters:').' <>;=#{}_">{l s='URL:' mod='blocklayered'}</span>
+		<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="{l s='Invalid characters: <>;=#{}_' mod='blocklayered.'}">{l s='URL' mod='blocklayered'}</span>
 	</label>
 	<div class="col-lg-9">
 		<div class="row">
@@ -47,13 +47,13 @@
 			</div>
 			{/foreach}
 			<div class="col-lg-9">
-				<p class="help-block">{l s='Specific URL format in block layered generation' mod='blocklayered'}</p>
+				<p class="help-block">{l s='Specific URL format in block layered generation.' mod='blocklayered'}</p>
 			</div>
 		</div>
 	</div>
 </div>
 <div class="form-group">
-	<label class="control-label col-lg-3">{l s='Meta title:' mod='blocklayered'}</label>
+	<label class="control-label col-lg-3">{l s='Meta title' mod='blocklayered'}</label>
 	<div class="col-lg-9">
 		<div class="row">
 			{foreach $languages as $language}
@@ -81,7 +81,7 @@
 	</div>
 </div>
 <div class="form-group">
-	<label class="control-label col-lg-3" for="">{l s='Indexable:' mod='blocklayered'}</label>
+	<label class="control-label col-lg-3" for="">{l s='Indexable' mod='blocklayered'}</label>
 	<div class="col-lg-9">
 		<div class="row">
 			<div class="input-group col-lg-2">
