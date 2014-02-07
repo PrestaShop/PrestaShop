@@ -24,7 +24,7 @@
 *}
 <div class="form-group">
 	<label class="control-label col-lg-3">
-		<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="{l s='Invalid characters: <>;=#{}_' mod='blocklayered.'}">{l s='URL' mod='blocklayered'}</span>
+		<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="{l s='Invalid characters: <>;=#{}_' mod='blocklayered'}">{l s='URL' mod='blocklayered'}</span>
 	</label>
 	<div class="col-lg-9">
 		<div class="row">
