@@ -3507,8 +3507,8 @@ class ProductCore extends ObjectModel
 		$impact_sql = 'INSERT INTO `'._DB_PREFIX_.'attribute_impact` (`id_product`, `id_attribute`, `weight`, `price`) VALUES ';
 
 		foreach ($impacts as $id_attribute => $impact)
-			$impact_sql .= '('.(int)$id_product_new.', '.(int)$id_attribute.', '.(int)$impacts[$id_attribute]['weight'].', '
-				.(int)$impacts[$id_attribute]['price'].'),';
+			$impact_sql .= '('.(int)$id_product_new.', '.(int)$id_attribute.', '.(float)$impacts[$id_attribute]['weight'].', '
+				.(float)$impacts[$id_attribute]['price'].'),';
 
 		$impact_sql = substr_replace($impact_sql, '', -1);
 		$impact_sql .= ' ON DUPLICATE KEY UPDATE `price` = VALUES(price), `weight` = VALUES(weight)';
