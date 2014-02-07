@@ -630,7 +630,10 @@ $files=array_merge(array($prev_folder),array($current_folder),$sorted);
 			    $extension_lower=fix_strtolower($file_array['extension']);
 			    if(in_array($extension_lower, $ext_img)){
 				$src = $base_url . $cur_dir . rawurlencode($file);
-				$mini_src = $src_thumb = $thumbs_path.$subdir. $file;
+				$mini_src = $src_thumb = $thumbs_path.$subdir.$file;
+
+				if (strpos($src_thumb, _PS_ROOT_DIR_) === 0)
+					$mini = $thumb = __PS_BASE_URI__.substr($thumbs_path.$subdir.$file, strlen(_PS_ROOT_DIR_)+1);
 				//add in thumbs folder if not exist
 				if(!file_exists($src_thumb)){
 				    try {
@@ -693,7 +696,7 @@ $files=array_merge(array($prev_folder),array($current_folder),$sorted);
 				    <?php if($is_icon_thumb){ ?><div class="filetype"><?php echo $extension_lower ?></div><?php } ?>
 				    <div class="img-container">
 					    <span></span>
-					    <img alt="<?php echo $filename." thumbnails";?>" class="<?php echo $show_original ? "original" : "" ?> <?php echo $is_icon_thumb ? "icon" : "" ?>" src="<?php echo $src_thumb; ?>">
+					    <img alt="<?php echo $filename." thumbnails";?>" class="<?php echo $show_original ? "original" : "" ?> <?php echo $is_icon_thumb ? "icon" : "" ?>" src="<?php echo $thumb; ?>">
 				    </div>
 				</div>
 				<div class="img-precontainer-mini <?php if($is_img) echo 'original-thumb' ?>">
@@ -701,7 +704,7 @@ $files=array_merge(array($prev_folder),array($current_folder),$sorted);
 				    <div class="img-container-mini">
 					<span></span>
 					<?php if($mini_src!=""){ ?>
-					<img alt="<?php echo $filename." thumbnails";?>" class="<?php echo $show_original_mini ? "original" : "" ?> <?php echo $is_icon_thumb_mini ? "icon" : "" ?>" src="<?php echo $mini_src; ?>">
+					<img alt="<?php echo $filename." thumbnails";?>" class="<?php echo $show_original_mini ? "original" : "" ?> <?php echo $is_icon_thumb_mini ? "icon" : "" ?>" src="<?php echo $mini; ?>">
 					<?php } ?>
 				    </div>
 				</div>
