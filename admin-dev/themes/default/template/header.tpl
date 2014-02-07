@@ -32,7 +32,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
-	<title>{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'html':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if}</title>
+	<title>{if $meta_title != ''}{$meta_title} • {/if}{$shop_name}</title>
 	{if $display_header}
 	<script type="text/javascript">
 		var help_class_name = '{$controller_name|@addcslashes:'\''}';
