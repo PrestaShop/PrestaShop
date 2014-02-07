@@ -973,7 +973,6 @@ class FrontControllerCore extends Controller
 
 	public function addMedia($media_uri, $css_media_type = null, $offset = null, $remove = false)
 	{
-
 		if (!is_array($media_uri))
 		{
 			if ($css_media_type)

@@ -3309,7 +3309,7 @@ class AdminImportControllerCore extends AdminController
 			if (!empty($filename))
 			{
 				$bName = basename($filename);
-				if ($delete = Tools::getValue('delete') && file_exists($file))
+				if (Tools::getValue('delete') && file_exists($file))
 					@unlink($file);
 				elseif (file_exists($file))
 				{
