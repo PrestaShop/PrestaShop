@@ -33,6 +33,9 @@
 	{if $input.type == 'color' || $input.name == 'texture' || $input.name == 'current_texture'}
 		</div>
 	{/if}
+	{if $input.name == 'name'}
+		{hook h="displayAttributeForm" id_attribute=$form_id}
+	{/if}
 {/block}
 
 {block name="field"}
@@ -46,9 +49,6 @@
 		</div>
 	{else}
 		{$smarty.block.parent}
-	{/if}
-	{if $input.name == 'name'}
-		{hook h="displayAttributeForm" id_attribute=$form_id}
 	{/if}
 {/block}
 

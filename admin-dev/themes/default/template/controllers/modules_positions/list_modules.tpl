@@ -29,6 +29,12 @@
 
 <div>{block name="leadin"}{/block}</div>
 
+{if !$can_move}
+					<p class="alert alert-warning">
+						{l s='If you want to order/move the following data, please select a shop from the shop list.'}
+					</p>
+{/if}
+
 <div class="row">
 	<div class="col-lg-9">
 		<div class="panel">
@@ -53,24 +59,19 @@
 			<div id="modulePosition">
 				<form method="post" action="{$url_submit}" >
 
-{if !$can_move}
-					<span class="alert">
-						{l s='If you want to order/move the following data, please select a shop from the shop list.'}
-					</span>
-{/if}
 {foreach $hooks as $hook}
 					<section class="hook_panel">
 						<a name="{$hook['name']}"></a>
 						<header class="hook_panel_header">
 							<span class="hook_name">{$hook['name']}</span>
-							<span class="hook_title">{$hook['title']}</span>
-
+							<!-- <span class="hook_title">{$hook['title']}</span> -->
 							<span class="badge pull-right">
 	{if $hook['module_count'] && $can_move}
 								<input type="checkbox" id="Ghook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 0, this)"/>
 	{/if}
 								{$hook['module_count']} {if $hook['module_count'] > 1}{l s='Modules'}{else}{l s='Module'}{/if}
 							</span>
+
 	{if !empty($hook['description'])}
 							<div class="hook_description">{$hook['description']}</div>
 	{/if}
@@ -191,6 +192,8 @@
 				$.each(e.target.children, function(index, element) {
 					$(element).find('.positions').html(++start);
 				});
+
+				showSuccessMessage(update_success_msg);
 			}
 		});
 	});
