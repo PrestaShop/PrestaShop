@@ -13,7 +13,7 @@
 	h2.page-title
 		@extend .pull-left
 		position: relative
-		padding: 22px 0 0 ($widthSidebarNav+70px)
+		padding: 25px 0 0 ($widthSidebarNav+70px)
 		margin: 0
 		font: 300 22px/1em $font-family-sans-serif
 		color: white
@@ -48,16 +48,17 @@
 			left: 70px
 		li
 			text-transform: uppercase
+			.shopList
+				width: 30px
 			i
 				font-size: 14px
-			&:first-child i
+			&.breadcrumb-container i, &.breadcrumb-current i
 				position: absolute
 				left: -60px
 				top: 2px
 				font-size: 42px
-				font-weight: 100
 				padding-right: 5px
-				color: rgba(black,0.5)
+				color: darken($secondary-color,15%)
 				border-right: solid 1px darken($secondary-color,15%)
 			&:before
 				color: darken($secondary-color,15%)

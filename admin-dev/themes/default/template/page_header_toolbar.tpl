@@ -46,9 +46,17 @@
 
 		{block name=pageBreadcrumb}
 		<ul class="breadcrumb page-breadcrumb">
+
+			{* Shop *}
+			{if $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+				<li class="breadcrumb-multishop">
+					{$shop_list}
+				</li>
+			{/if}
+
 			{* Container *}
 			{if $breadcrumbs2.container.name != ''}
-				<li>
+				<li class="breadcrumb-container">
 					{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href|escape}">{/if}
 					{if $breadcrumbs2.container.icon != ''}<i class="{$breadcrumbs2.container.icon|escape}"></i>{/if}
 					{$breadcrumbs2.container.name|escape}
@@ -58,7 +66,7 @@
 			
 			{* Current Tab *}
 			{if $breadcrumbs2.tab.name != '' && $breadcrumbs2.container.name != $breadcrumbs2.tab.name}
-				<li>
+				<li class="breadcrumb-current">
 					{if $breadcrumbs2.tab.href != ''}<a href="{$breadcrumbs2.tab.href|escape}">{/if}
 					{if $breadcrumbs2.tab.icon != ''}<i class="{$breadcrumbs2.tab.icon|escape}"></i>{/if}
 					{$breadcrumbs2.tab.name|escape}
@@ -68,7 +76,7 @@
 			
 			{* Action *}
 			{if $breadcrumbs2.action.name != ''}
-				<li>
+				<li class="breadcrumb-action">
 					{if $breadcrumbs2.action.href != ''}<a href="{$breadcrumbs2.action.href|escape}">{/if}
 					{if $breadcrumbs2.action.icon != ''}<i class="{$breadcrumbs2.action.icon|escape}"></i>{/if}
 					{$breadcrumbs2.action.name|escape}

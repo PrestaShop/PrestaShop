@@ -61,9 +61,7 @@
 				<div class="form-group">
 					{if isset($fields_value[$input.name][$language.id_lang]) && $fields_value[$input.name][$language.id_lang] != ''}
 					<div id="{$input.name}-{$language.id_lang}-images-thumbnails" class="col-lg-12">
-						<div class="img-thumbnail text-center">
-							<img src="{$uri}img/{$fields_value[$input.name][$language.id_lang]}" class="col-lg-12" />
-						</div>
+						<img src="{$uri}img/{$fields_value[$input.name][$language.id_lang]}" class="img-thumbnail"/>
 					</div>
 					{/if}
 				</div>

@@ -7,12 +7,15 @@
 		padding: 0
 		background-color: transparent
 		color: $main-color
-		font-weight: 500
+
+#modulePosition
+
 .hook_panel
-	@extend .well
-	@include box-shadow(rgba(white,0.9) 0 0 0 1px inset)
 	padding: 10px 10px 5px 10px
-	margin-bottom: 3px!important
+	margin-bottom: 10px!important
+	border: solid #E6E6E6 1px
+	@include box-shadow(rgba(black,0.10) 0 -2px 0 inset)
+	@include border-radius(3px)
 .module_name
 	font-size: 1.2em
 .module_description
@@ -21,16 +24,13 @@
 	margin: 0 -10px 0 -10px
 	padding: 0 10px 10px 10px
 	.hook_name
-		font-weight: 400
-		font-size: 1.2em
-		@include border-radius(3px)
+		font-size: 1.4em
 		color: $brand-primary
-		border: solid 1px #ccc
 		background-color: white
 		padding: 0 4px
-	.hook_title 
-		text-transform: uppercase
-		font-size: 1em
+		@include border-radius(3px)
+	.hook_title
+		@extend .text-muted
 	.hook_description
 		@extend .text-muted
 		padding: 3px 0 0 3px
@@ -43,10 +43,9 @@
 		display: table
 		width: 100%
 		padding: 5px 0
-		margin-bottom: 4px
+		margin-bottom: -1px
 		background-color: white
-		@include box-shadow(rgba(0,0,0,0.3) 0 0 3px,rgba(black,0.10) 0 -2px 0 inset)
-		@include border-radius(3px)
+		border: solid 1px #9ED0EC
 .module_list
 	.draggable
 		cursor: pointer
@@ -63,28 +62,24 @@
 	vertical-align: middle
 	text-align: right
 	.positions
-		font-family: $headings-font-family
-		font-weight: 200
-		@include text-shadow(white 1px 1px)
+		border: solid 1px #ccc
+		background-color: #eee
 		padding: 0 5px
 		font-size: 1.6em
 		color: #aaa
+		cursor: move
+		@include text-shadow(white 1px 1px)
 		@include border-radius(3px)
 		@include box-shadow(rgba(0,0,0,0.2) 0 1px 3px inset)
-		border: solid 1px #ccc
-		background-color: #eee
-		cursor: n-resize
 .module_col_icon
 	display: table-cell
 	width: 50px
 	text-align: center
 	vertical-align: middle
-	
 .module_col_infos
 	display: table-cell
 	height: 50px
 	vertical-align: middle
-	
 .module_col_actions
 	display: table-cell
 	width: 160px
@@ -95,8 +90,8 @@
 		text-align: left
 li.sortable-placeholder
 	border: 1px dashed #CCC
-	background-color: #BBB
-	margin-bottom: 4px
+	background-color: #eee
+	margin: 4px
 	+border-radius(5px)
 td.module_active
 	background-color: lighten($brand-success,10%)!important

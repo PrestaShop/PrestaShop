@@ -46,7 +46,7 @@ function ProductTabsManager(){
 				this.onLoad(tab_name, this.product_tabs[tab_name].onReady);
 		}
 
-		$('.shopList.chzn-done').bind('change', function(){
+		$('.shopList.chzn-done').on('change', function(){
 			if (self.current_request)
 			{
 				self.page_reloading = true;
@@ -54,7 +54,7 @@ function ProductTabsManager(){
 			}
 		});
 
-		$(window).bind('beforeunload', function() {
+		$(window).on('beforeunload', function() {
 			self.page_reloading = true;
 		});
 	}

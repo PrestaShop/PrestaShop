@@ -356,3 +356,29 @@ $menu-item-size: 36px
 			padding-left: 75px
 		.page-breadcrumb
 			left: 75px
+
+
+.searchtab
+	padding: 13px 7px
+	height: 54px
+	position: relative
+	background-color: darken($main-color,5%)
+	#bo_query
+		color: $main-color
+		background-color: lighten($main-color,60%)
+	.form-group.focus-search
+		position: absolute
+		z-index: 900
+		top: 0
+		left: 5px
+		width: 400px
+		#bo_query
+			width: 100%
+	.clear_search
+		position: absolute
+		top: 5px
+		right: 8px
+	i
+		font-size: $icon-size-base
+
+
