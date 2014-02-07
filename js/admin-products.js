@@ -1035,13 +1035,6 @@ product_tabs['Informations'] = new function(){
 
 		$('input[name="type_product"]').on('click', function(e)
 		{
-			if ($(this).attr('id') == 'virtual_product' && $('#name_' + id_lang_default).val() == '')
-			{
-				e.preventDefault();
-				alert(missing_product_name);
-				$('#name_' + id_lang_default).focus();
-				return false;
-			}
 			// Reset settings
 			$('a[id*="Pack"]').hide();
 			$('a[id*="VirtualProduct"]').hide();
@@ -1059,7 +1052,7 @@ product_tabs['Informations'] = new function(){
 			if (product_type == product_type_pack)
 			{
 				//when you change the type of the product, directly go to the pack tab
-				$('a[id*="Pack"]').show().click();
+				$('a[id*="Pack"]').show();
 				$('#ppack').val(1).attr('checked', true).attr('disabled', true);
 				$('#ppackdiv').show();
 				// If the pack tab has not finished loaded the changes will be made when the loading event is triggered
@@ -1086,7 +1079,7 @@ product_tabs['Informations'] = new function(){
 				}
 				else
 				{
-					$('a[id*="VirtualProduct"]').show().click();
+					$('a[id*="VirtualProduct"]').show();
 					$('#is_virtual').val(1);
 
 					tabs_manager.onLoad('VirtualProduct', function(){

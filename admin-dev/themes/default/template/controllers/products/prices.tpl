@@ -117,7 +117,7 @@ $(document).ready(function () {
 			{include file="controllers/products/multishop/checkbox.tpl" field="wholesale_price" type="default"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Wholesale price'}">
-				{l s='Pre-tax wholesale price:'}
+				{l s='Pre-tax wholesale price'}
 			</span>
 
 		</label>
@@ -132,7 +132,7 @@ $(document).ready(function () {
 			{include file="controllers/products/multishop/checkbox.tpl" field="price" type="price"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='The pre-tax retail price to sell this product'}">
-				{l s='Pre-tax retail price:'}
+				{l s='Pre-tax retail price'}
 			</span>
 		</label>
 		<div class="input-group col-lg-2">
@@ -198,7 +198,7 @@ $(document).ready(function () {
 			{include file="controllers/products/multishop/checkbox.tpl" field="ecotax" type="default"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='already included in price'}">
-				{l s='Eco-tax (tax incl.):'}
+				{l s='Eco-tax (tax incl.)'}
 			</span>
 		</label>
 		<div class="input-group col-lg-2">
@@ -208,7 +208,7 @@ $(document).ready(function () {
 	</div>
 
 	<div class="form-group" {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none;"{/if} >
-		<label class="control-label col-lg-3" for="priceTI">{l s='Retail price with tax:'}</label>
+		<label class="control-label col-lg-3" for="priceTI">{l s='Retail price with tax'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
 			<input id="priceType" name="priceType" type="hidden" value="TE" />
@@ -221,7 +221,7 @@ $(document).ready(function () {
 			{include file="controllers/products/multishop/checkbox.tpl" field="unit_price" type="unit_price"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='e.g. per lb.'}">
-				{l s='Unit price:'}
+				{l s='Unit price'}
 			</span>
 		</label>
 		<div class="input-group col-lg-4">
@@ -293,7 +293,7 @@ $(document).ready(function () {
 	<h3>{l s='Specific prices'}</h3>
 
 	<div class="alert alert-info">
-		{l s='You can set specific prices for clients belonging to different groups, different countries, etc...'}
+		{l s='You can set specific prices for clients belonging to different groups, different countries, etc.'}
 	</div>
 
 	<div class="form-group">
@@ -421,7 +421,7 @@ $(document).ready(function () {
 			<div class="form-group">
 				<label class="control-label col-lg-2" for="sp_price">{l s='Product price'}
 					{if $country_display_tax_label}
-						{l s='(tax excl.):'}
+						{l s='(tax excl.)'}
 					{/if}
 				</label>
 				<div class="col-lg-9">
@@ -441,7 +441,7 @@ $(document).ready(function () {
 			</div>
 
 			<div class="form-group">
-				<label class="control-label col-lg-2" for="sp_reduction">{l s='Apply a discount of:'}</label>
+				<label class="control-label col-lg-2" for="sp_reduction">{l s='Apply a discount of'}</label>
 				<div class="col-lg-4">
 					<div class="row">
 						<div class="col-lg-6">

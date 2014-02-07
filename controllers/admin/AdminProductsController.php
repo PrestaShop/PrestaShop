@@ -2575,7 +2575,8 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['tinymce'] = true;
 		$iso = $this->context->language->iso_code;
 		$this->tpl_form_vars['iso'] = file_exists(_PS_CORE_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
-		$this->tpl_form_vars['ad'] = dirname($_SERVER['PHP_SELF']);
+		$this->tpl_form_vars['path_css'] = _THEME_CSS_DIR_;
+		$this->tpl_form_vars['ad'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_);
 
 		if (Validate::isLoadedObject(($this->object)))
 			$id_product = (int)$this->object->id;
@@ -3181,7 +3182,8 @@ class AdminProductsControllerCore extends AdminController
 		$virtual_product_file_uploader = new HelperUploader('virtual_product_file_uploader');
 		$virtual_product_file_uploader->setMultiple(false)->setUrl(
 			Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$product->id
-			.'&action=AddVirtualProductFile')->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')));
+			.'&action=AddVirtualProductFile')->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
+			->setTemplate('virtual_product.tpl');
 
 		$data->assign(array(
 			'download_product_file_missing' => $msg,

@@ -75,7 +75,7 @@
 		{foreach $form_import as $key => $field}
 		<div class="form-group">
 		{if $key == 'radio'}
-			<label class="control-label col-lg-3">{$field.label} :</label>
+			<label class="control-label col-lg-3">{$field.label}</label>
 			<div class="col-lg-2">
 				<span class="switch prestashop-switch">
 					<input type="radio" name="{$field.name}" id="{$field.name}_on" value="1" {if $field.value } checked="checked" {/if}>
@@ -91,7 +91,7 @@
 			</div>
 		{elseif $key == 'select'}
 			<div id="shop_list" {if !$checked}display:none{/if}>
-				<label class="control-label col-lg-3">{$field.label} :</label>
+				<label class="control-label col-lg-3">{$field.label}</label>
 				<div class="col-lg-9">
 					<select name="{$field.name}" id="{$field.name}" >
 						{foreach $field.options.query AS $key => $option}
@@ -104,7 +104,7 @@
 			</div>
 		{elseif $key == 'allcheckbox'}
 			<div id="data_list" {if !$checked}display:none{/if}>
-				<label class="control-label col-lg-3">{$field.label} :</label>
+				<label class="control-label col-lg-3">{$field.label}</label>
 				<div class="col-lg-9">					
 				{foreach $field.values as $key => $label}
 					<p class="checkbox"><input type="checkbox" name="importData[{$key}]" checked="checked" /> {$label}</p>

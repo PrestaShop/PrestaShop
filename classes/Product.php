@@ -3449,8 +3449,8 @@ class ProductCore extends ObjectModel
 			'.Shop::addSqlAssociation('product_attribute', 'pa').'
 			WHERE pa.`id_product` = '.(int)$id_product_old
 		);
-
 		$combinations = array();
+
 		foreach ($result as $row)
 		{
 			$id_product_attribute_old = (int)$row['id_product_attribute'];
@@ -3502,8 +3502,39 @@ class ProductCore extends ObjectModel
 			else
 				Shop::setContext($context_old, $context_shop_id_old);
 		}
+
+		$impacts = self::getAttributesImpacts($id_product_old);
+		$impact_sql = 'INSERT INTO `'._DB_PREFIX_.'attribute_impact` (`id_product`, `id_attribute`, `weight`, `price`) VALUES ';
+
+		foreach ($impacts as $id_attribute => $impact)
+			$impact_sql .= '('.(int)$id_product_new.', '.(int)$id_attribute.', '.(float)$impacts[$id_attribute]['weight'].', '
+				.(float)$impacts[$id_attribute]['price'].'),';
+
+		$impact_sql = substr_replace($impact_sql, '', -1);
+		$impact_sql .= ' ON DUPLICATE KEY UPDATE `price` = VALUES(price), `weight` = VALUES(weight)';
+
+		Db::getInstance()->execute($impact_sql);
+
 		return !$return ? false : $combination_images;
 	}
+
+	public static function getAttributesImpacts($id_product)
+	{
+		$return = array();
+		$result = Db::getInstance()->executeS(
+			'SELECT ai.`id_attribute`, ai.`price`, ai.`weight`
+			FROM `'._DB_PREFIX_.'attribute_impact` ai
+			WHERE ai.`id_product` = '.(int)$id_product);
+
+		if (!$result)
+			return array();
+		foreach ($result as $impact)
+		{
+			$return[$impact['id_attribute']]['price'] = (float)$impact['price'];
+			$return[$impact['id_attribute']]['weight'] = (float)$impact['weight'];
+		}
+		return $return;
+    }
 
 	/**
 	* Get product attribute image associations

@@ -594,6 +594,7 @@ function init()
 		$('.cancel_product_change_link:visible').trigger('click');
 		closeAddProduct();
 		var element = $(this);
+		console.log(element.closest('tr.product-line-row').find('input.edit_product_id_order_detail').val());
 		$.ajax({
 			type: 'POST',
 			url: admin_order_tab_link,
@@ -603,7 +604,7 @@ function init()
 				ajax: 1,
 				token: token,
 				action: 'loadProductInformation',
-				id_order_detail: $(this).closest('tr.product-line-row').find('input.edit_product_id_order_detail').val(),
+				id_order_detail: element.closest('tr.product-line-row').find('input.edit_product_id_order_detail').val(),
 				id_address: id_address,
 				id_order: id_order
 			},
@@ -896,11 +897,11 @@ $(document).ready(function() {
 
 function checkPartialRefundProductQuantity(it)
 {
-	if (parseInt($(it).val()) > parseInt($(it).parent().parent().find('.partialRefundProductQuantity').val()))
-		$(it).val($(it).parent().parent().find('.partialRefundProductQuantity').val());
+	if (parseInt($(it).val()) > parseInt($(it).closest('td').find('.partialRefundProductQuantity').val()))
+		$(it).val($(it).closest('td').find('.partialRefundProductQuantity').val());
 }
 function checkPartialRefundProductAmount(it)
 {
-	if (parseInt($(it).val()) > parseInt($(it).parent().parent().find('.partialRefundProductAmount').val()))
-		$(it).val($(it).parent().parent().find('.partialRefundProductAmount').val());
+	if (parseInt($(it).val()) > parseInt($(it).closest('td').find('.partialRefundProductAmount').val()))
+		$(it).val($(it).closest('td').find('.partialRefundProductAmount').val());
 }

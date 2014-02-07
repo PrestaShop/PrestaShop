@@ -476,9 +476,13 @@ abstract class ModuleCore
 		{
 			// Read each file name
 			foreach ($files as $file)
-				if (!in_array($file, array('.', '..', '.svn', 'index.php')))
+				if (!in_array($file, array('.', '..', '.svn', 'index.php')) && preg_match('/\.php$/', $file))
 				{
 					$tab = explode('-', $file);
+
+					if (!isset($tab[1]))
+						continue;
+
 					$file_version = basename($tab[1], '.php');
 					// Compare version, if minor than actual, we need to upgrade the module
 					if (count($tab) == 2 &&
