@@ -54,6 +54,9 @@ class AdminTabsControllerCore extends AdminController
 			'name' => array(
 				'title' => $this->l('Name')
 			),
+			'class_name' => array(
+				'title' => $this->l('Class')
+			),
 			'module' => array(
 				'title' => $this->l('Module')
 			),
