@@ -635,10 +635,8 @@ class HookCore extends ObjectModel
 	public static function backBeforePayment($module)
 	{
 		Tools::displayAsDeprecated();
-		$params['module'] = strval($module);
-		if (!$params['module'])
-			return false;
-		return Hook::exec('backBeforePayment', $params);
+		if ($module)
+			return Hook::exec('backBeforePayment', array('module' => strval($module)));
 	}
 
 	/**

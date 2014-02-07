@@ -114,6 +114,14 @@ class AdminThemesControllerCore extends AdminController
 		parent::init();
 		$this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP) ? true : false;
 
+		$themes = Theme::getThemes();
+
+		foreach ($themes as $key => $theme)
+		{
+			if (!file_exists(_PS_ALL_THEMES_DIR_.$theme->directory.'/preview.jpg'))
+				unset($themes[$key]);
+
+		}
 		$this->fields_options = array(
 			'theme' => array(
 				'title' => sprintf($this->l('Select a theme for shop %s'), $this->context->shop->name),
@@ -121,7 +129,7 @@ class AdminThemesControllerCore extends AdminController
 				'fields' => array(
 					'theme_for_shop' => array(
 						'type' => 'theme',
-						'themes' => Theme::getThemes(),
+						'themes' => $themes,
 						'id_theme' => $this->context->shop->id_theme,
 						'can_display_themes' => $this->can_display_themes,
 						'no_multishop_checkbox' => true,

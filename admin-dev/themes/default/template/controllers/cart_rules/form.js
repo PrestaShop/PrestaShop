@@ -167,6 +167,12 @@ function toggleApplyDiscount(percent, amount, apply_to)
 	{
 		$('#apply_discount_amount_div').hide(200);
 		$('#reduction_amount').val('0');
+
+		if ($('#apply_discount_off').prop('checked'))
+		{
+			$('#apply_discount_to_product').removeProp('checked')
+			toggleApplyDiscountTo();
+		}
 	}
 		
 	if (apply_to)

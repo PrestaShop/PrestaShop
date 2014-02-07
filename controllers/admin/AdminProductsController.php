@@ -1712,7 +1712,7 @@ class AdminProductsControllerCore extends AdminController
 		if ($this->object->add())
 		{
 			PrestaShopLogger::addLog(sprintf($this->l('%s addition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
-			$this->addCarriers();
+			$this->addCarriers($this->object);
 			$this->updateAccessories($this->object);
 			$this->updatePackItems($this->object);
 			$this->updateDownloadProduct($this->object);
@@ -3676,9 +3676,12 @@ class AdminProductsControllerCore extends AdminController
 		return $carrier_list;
 	}
 
-	protected function addCarriers()
+	protected function addCarriers($product = null)
 	{
-		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+		if (!isset($product))
+			$product = new Product((int)Tools::getValue('id_product'));
+
+		if (Validate::isLoadedObject($product))
 		{
 			$carriers = array();
 			

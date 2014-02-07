@@ -145,16 +145,11 @@ class HelperListCore extends Helper
 		$this->orderBy = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderBy);
 		$this->orderWay = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderWay);
 
-		// Display list header (filtering, pagination and column names)
-		$tpl_vars['header'] = $this->displayListHeader();
-
-		// Show the content of the table
-		$tpl_vars['content'] = $this->displayListContent();
-
-		// Close list table and submit button
-		$tpl_vars['footer'] = $this->displayListFooter();
-
-		$this->tpl->assign($tpl_vars);
+		$this->tpl->assign(array(
+			'header' => $this->displayListHeader(), // Display list header (filtering, pagination and column names)
+			'content' => $this->displayListContent(), // Show the content of the table
+			'footer' => $this->displayListFooter() // Close list table and submit button
+		));
 		return parent::generate();
 	}
 
