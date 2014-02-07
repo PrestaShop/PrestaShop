@@ -82,7 +82,7 @@ $(document).ready(function()
 			globalQuantity += combinations[i]['quantity'];
 			combinationsJS[k] = [];
 			combinationsJS[k]['idCombination'] = parseInt(i);
-			combinationsJS[k]['idsAttributes'] = combinations[i]['list'].split(",");
+			combinationsJS[k]['idsAttributes'] = combinations[i]['attributes'];
 			combinationsJS[k]['quantity'] = combinations[i]['quantity'];
 			combinationsJS[k]['price'] = combinations[i]['price'];
 			combinationsJS[k]['ecotax'] = combinations[i]['ecotax']; 
