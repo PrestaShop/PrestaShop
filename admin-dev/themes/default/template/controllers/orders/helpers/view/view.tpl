@@ -848,7 +848,7 @@
 						{foreach $order->getBrother() as $brother_order}
 						<tr>
 							<td>
-								<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">#{'%06d'|sprintf:$brother_order->id}</a>
+								<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">#{$brother_order->id}</a>
 							</td>
 							<td>
 								{$brother_order->getCurrentOrderState()->name[$current_id_lang]}
