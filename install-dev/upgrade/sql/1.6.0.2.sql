@@ -1,7 +1,7 @@
 SET NAMES 'utf8';
 
 INSERT INTO `PREFIX_hook` (`id_hook` , `name` , `title` , `description` , `position` , `live_edit`) 
-VALUES (NULL , 'actionAdminControllerSetMedia', 'Admin action setMedia', '', '0', '0'), 
+VALUES (NULL , 'actionAdminControllerSetMedia', 'Admin action setMedia', '', '0', '0');
 
 INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`) (
   SELECT m.id_module, s.id_shop, h.id_hook, 0
