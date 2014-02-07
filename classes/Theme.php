@@ -179,7 +179,7 @@ class ThemeCore extends ObjectModel
 				WHERE t.id_theme ='.(int)$this->id.'
 				AND m.page = "'.pSQL($page).'" ) , default_left_column
 			)
-			FROM ps_theme
+			FROM '._DB_PREFIX_.'theme
 			WHERE id_theme ='.(int)$this->id
 		);
 	}
@@ -196,7 +196,7 @@ class ThemeCore extends ObjectModel
 				WHERE t.id_theme ='.(int)$this->id.'
 				AND m.page = "'.pSQL($page).'" ) , default_right_column
 			)
-			FROM ps_theme
+			FROM '._DB_PREFIX_.'theme
 			WHERE id_theme ='.(int)$this->id);
 	}
 
