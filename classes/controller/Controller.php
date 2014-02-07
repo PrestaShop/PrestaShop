@@ -96,7 +96,7 @@ abstract class ControllerCore
 	public function init()
 	{
 		if (_PS_MODE_DEV_ && $this->controller_type == 'admin')
-			$old_error_handler = set_error_handler(array(__CLASS__, 'myErrorHandler'));
+			set_error_handler(array(__CLASS__, 'myErrorHandler'));
 		if (!defined('_PS_BASE_URL_'))
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
 		if (!defined('_PS_BASE_URL_SSL_'))

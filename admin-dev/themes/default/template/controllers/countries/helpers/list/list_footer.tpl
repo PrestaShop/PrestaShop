@@ -31,7 +31,7 @@
 							<div class="col-lg-6">
 								<select id="select_submitBulk" name="select_submitBulk">
 									{foreach $bulk_actions as $key => $params}
-									<option value="{$key}">{$params.text}</option>
+									<option value="{$key}"{if isset($params.confirm)} data-confirm="{$params.confirm}"{/if}>{$params.text}</option>
 									{/foreach}
 								</select>
 							</div>
@@ -141,18 +141,11 @@
 </div>
 </form>
 <script type="text/javascript">
-	var confirmation = new Array();
-	{foreach $bulk_actions as $key => $params}
-		{if isset($params.confirm)}
-			confirmation['{$key}{$table}'] = "{$params.confirm}";
-		{/if}
-	{/foreach}
-
 	$(document).ready(function(){
 		{if $bulk_actions|count > 1}
 			$('#submitBulk').click(function(){
-				if (confirmation[$(this).val()])
-					return confirm(confirmation[$(this).val()]);
+				if ($('#select_submitBulk option:selected').data('confirm') !== undefined)
+					return confirm($('#select_submitBulk option:selected').data('confirm'));
 				else
 					return true;
 			});

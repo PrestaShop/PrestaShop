@@ -678,7 +678,7 @@ class AdminPerformanceControllerCore extends AdminController
 				Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
 				Configuration::updateValue('PS_SMARTY_CONSOLE', Tools::getValue('smarty_console', 0));
 				Configuration::updateValue('PS_SMARTY_CONSOLE_KEY', Tools::getValue('smarty_console_key', 'SMARTY_DEBUG'));
-				$redirecAdmin = true;
+				$redirectAdmin = true;
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');

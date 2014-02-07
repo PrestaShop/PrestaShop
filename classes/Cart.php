@@ -2878,19 +2878,21 @@ class CartCore extends ObjectModel
 		$invoice = new Address((int)$this->id_address_invoice);
 
 		// New layout system with personalization fields
-		$formatted_addresses['delivery'] = AddressFormat::getFormattedLayoutData($delivery);		
-		$formatted_addresses['invoice'] = AddressFormat::getFormattedLayoutData($invoice);
+		$formatted_addresses = array(
+			'delivery' => AddressFormat::getFormattedLayoutData($delivery),
+			'invoice' => AddressFormat::getFormattedLayoutData($invoice)
+		);
 
 		$base_total_tax_inc = $this->getOrderTotal(true);
 		$base_total_tax_exc = $this->getOrderTotal(false);
-		
+
 		$total_tax = $base_total_tax_inc - $base_total_tax_exc;
 
 		if ($total_tax < 0)
 			$total_tax = 0;
-		
+
 		$currency = new Currency($this->id_currency);
-		
+
 		$products = $this->getProducts($refresh);
 		$gift_products = array();
 		$cart_rules = $this->getCartRules();
@@ -2900,7 +2902,7 @@ class CartCore extends ObjectModel
 		$total_products = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 		$total_discounts = $this->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
 		$total_discounts_tax_exc = $this->getOrderTotal(false, Cart::ONLY_DISCOUNTS);
-		
+
 		// The cart content is altered for display
 		foreach ($cart_rules as &$cart_rule)
 		{
