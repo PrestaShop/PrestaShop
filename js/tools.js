@@ -163,7 +163,6 @@ function openCloseAllDiv(name, option)
 
 function toggleDiv(name, option)
 {
-	console.log(option);
 	$('*[name='+name+']').each(function(){
 		if (option == 'open')
 		{
@@ -476,7 +475,7 @@ function print_r(arr, level)
 function in_array(value, array)
 {
 	for (var i in array)
-		if (array[i] === value)
+		if ((array[i] + '') === (value + ''))
 			return true;
 	return false;
 }
