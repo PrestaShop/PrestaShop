@@ -127,7 +127,7 @@ $hidden_files = array('config.php');
 /*******************
  * JAVA upload 
  *******************/
-$java_upload=true;
+$java_upload=false;
 $JAVAMaxSizeUpload=200; //Gb
 
 
