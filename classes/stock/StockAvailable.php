@@ -250,10 +250,11 @@ class StockAvailableCore extends ObjectModel
 				Db::getInstance()->update($query['table'], $query['data'], $query['where']);
 			}
 		}
-
 		// In case there are no warehouses, removes product from StockAvailable
 		if (count($ids_warehouse) == 0 && StockAvailable::dependsOnStock((int)$id_product))
 			Db::getInstance()->update('stock_available', array('quantity' => 0 ), 'id_product = '.(int)$id_product);
+			
+		Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
 	}
 
 	/**
@@ -475,6 +476,8 @@ class StockAvailableCore extends ObjectModel
 				   )
 				  );
 
+		Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
+
 		return true;
 	}
 
@@ -546,6 +549,9 @@ class StockAvailableCore extends ObjectModel
 				   )
 				  );
 		}
+
+		Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
+
 	}
 
 	/**
@@ -602,6 +608,8 @@ class StockAvailableCore extends ObjectModel
 			$stock_available->id_shop = (int)$id_shop;
 			$stock_available->postSave();
 		}
+
+		Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
 
 		return $res;
 	}
