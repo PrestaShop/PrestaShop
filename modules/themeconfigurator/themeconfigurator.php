@@ -405,7 +405,7 @@ class ThemeConfigurator extends Module
 					image_w = '.(int)$image_w.',
 					image_h = '.(int)$image_h.',
 					active = '.(int)Tools::getValue('item_active').',
-					html = \''.pSQL($content).'\'
+					html = \''.pSQL($content, true).'\'
 			WHERE id_item = '.(int)Tools::getValue('item_id')
 		)
 		)
