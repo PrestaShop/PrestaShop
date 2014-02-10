@@ -284,15 +284,15 @@
 				<div class="col-lg-5">
 					<p class="checkbox">
 						<input type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
-						<label for="available_for_order" class="t">{l s='Available for order'}</label>
+						<label for="available_for_order">{l s='Available for order'}</label>
 					</p>
 					<p class="checkbox">	
 						<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
-						<label for="show_price" class="t">{l s='show price'}</label>
+						<label for="show_price">{l s='show price'}</label>
 					</p>
 					<p class="checkbox">
 						<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
-						<label for="online_only" class="t">{l s='Online only (not sold in store)'}</label>
+						<label for="online_only">{l s='Online only (not sold in store)'}</label>
 					</p>
 				</div>
 			</div>
@@ -369,7 +369,7 @@
 					{foreach from=$images item=image key=key}
 					<li>
 						<input type="radio" name="smallImage" id="smallImage_{$key}" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
-						<label for="smallImage_{$key}" class="t">
+						<label for="smallImage_{$key}" >
 							<img src="{$image.src}" alt="{$image.legend}" />
 						</label>
 					</li>
@@ -382,11 +382,11 @@
 			<div class="col-lg-5">
 				<p class="checkbox">
 					<input type="radio" name="leftRight" id="leftRight_1" value="left" checked>							
-					<label for="leftRight_1" class="t">{l s='left'}</label>
+					<label for="leftRight_1" >{l s='left'}</label>
 				</p>
 				<p class="checkbox">
 					<input type="radio" name="leftRight" id="leftRight_2" value="right">
-					<label for="leftRight_2" class="t">{l s='right'}</label>
+					<label for="leftRight_2" >{l s='right'}</label>
 				</p>
 			</div>
 		</div>
@@ -396,7 +396,7 @@
 				{foreach from=$imagesTypes key=key item=type}
 				<p class="checkbox">
 					<input type="radio" name="imageTypes" id="imageTypes_{$key}" value="{$type.name}" {if $key == 0}checked="checked"{/if}>
-					<label for="imageTypes_{$key}" class="t">
+					<label for="imageTypes_{$key}" >
 						{$type.name} <span>{l s='%dpx by %dpx' sprintf=[$type.width, $type.height]}</span>
 					</label>
 				</p>
