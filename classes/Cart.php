@@ -711,7 +711,7 @@ class CartCore extends ObjectModel
 				ag.`id_attribute_group` = agl.`id_attribute_group`
 				AND agl.`id_lang` = '.(int)$id_lang.'
 			)
-			WHERE pac.`id_product_attribute` IN ('.implode($pa_implode, ',').')
+			WHERE pac.`id_product_attribute` IN ('.implode(',', $pa_implode).')
 			ORDER BY agl.`public_name` ASC'
 		);
 
@@ -801,7 +801,7 @@ class CartCore extends ObjectModel
 		return true;
 	}
 
-	public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = false, $id_address_delivery = 0)
+	public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
 	{
 		$sql = 'SELECT cp.`quantity` FROM `'._DB_PREFIX_.'cart_product` cp';
 
@@ -1357,7 +1357,7 @@ class CartCore extends ObjectModel
 			if (is_null($products) && is_null($id_carrier))
 				$shipping_fees = $this->getTotalShippingCost(null, (boolean)$with_taxes);
 			else
-				$shipping_fees = $this->getPackageShippingCost($id_carrier, (int)$with_taxes, null, $products);
+				$shipping_fees = $this->getPackageShippingCost($id_carrier, (bool)$with_taxes, null, $products);
 		}
 		else
 			$shipping_fees = 0;
@@ -2052,12 +2052,9 @@ class CartCore extends ObjectModel
 			// Get all delivery options with a unique carrier
 			foreach ($common_carriers as $id_carrier)
 			{
-				$price = 0;
 				$key = '';
 				$package_list = array();
 				$product_list = array();
-				$total_price_with_tax = 0;
-				$total_price_without_tax = 0;
 				$price_with_tax = 0;
 				$price_without_tax = 0;
 
@@ -2099,11 +2096,13 @@ class CartCore extends ObjectModel
 			{
 				$cr = new CartRule((int)$cart_rule['id_cart_rule']);
 				if (Validate::isLoadedObject($cr))
+				{
 					$carriers = $cr->getAssociatedRestrictions('carrier', true, false);
-				if (is_array($carriers) && count($carriers) && isset($carriers['selected']))
-					foreach($carriers['selected'] as $carrier)
-						if (isset($carrier['id_carrier']) && $carrier['id_carrier'])
-							$free_carriers_rules[] = (int)$carrier['id_carrier'];
+					if (is_array($carriers) && count($carriers) && isset($carriers['selected']))
+						foreach($carriers['selected'] as $carrier)
+							if (isset($carrier['id_carrier']) && $carrier['id_carrier'])
+								$free_carriers_rules[] = (int)$carrier['id_carrier'];
+				}
 			}
 		}
 
@@ -2144,7 +2143,6 @@ class CartCore extends ObjectModel
 		foreach ($delivery_option_list as &$array)
 			uasort ($array, array('Cart', 'sortDeliveryOptionList'));
 
-		$cache = $delivery_option_list;
 		return $delivery_option_list;
 	}
 	
@@ -2571,7 +2569,7 @@ class CartCore extends ObjectModel
 			return $shipping_cost;
 		}
 
-		if(!isset($id_zone))
+		if (!isset($id_zone))
 		{
 			// Get id zone
 			if (!$this->isMultiAddressDelivery()
@@ -3460,7 +3458,7 @@ class CartCore extends ObjectModel
 	 */
 	public function setNoMultishipping()
 	{
-		$emptyCache = $result = false;
+		$emptyCache = false;
 		if (Configuration::get('PS_ALLOW_MULTISHIPPING'))
 		{
 			// Upgrading quantities
@@ -3479,8 +3477,7 @@ class CartCore extends ObjectModel
 						AND `id_shop` = '.(int)$this->id_shop.'
 						AND id_product = '.$product['id_product'].'
 						AND id_product_attribute = '.$product['id_product_attribute'];
-				$result = Db::getInstance()->execute($sql);
-				if ($result)
+				if (Db::getInstance()->execute($sql))
 					$emptyCache = true;
 			}
 
