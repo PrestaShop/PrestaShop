@@ -285,7 +285,7 @@ class CategoryCore extends ObjectModel
 	 * Recursively add specified category childs to $to_delete array
 	 *
 	 * @param array &$to_delete Array reference where categories ID will be saved
-	 * @param array $id_category Parent category ID
+	 * @param integer $id_category Parent category ID
 	 */
 	protected function recursiveDelete(&$to_delete, $id_category)
 	{
@@ -609,6 +609,8 @@ class CategoryCore extends ObjectModel
 
 		if (empty($order_way))
 			$order_way = 'ASC';
+			
+		$order_by_prefix = false;
 		if ($order_by == 'id_product' || $order_by == 'date_add' || $order_by == 'date_upd')
 			$order_by_prefix = 'p';
 		elseif ($order_by == 'name')
@@ -679,12 +681,9 @@ class CategoryCore extends ObjectModel
 					.' GROUP BY product_shop.id_product';
 
 		if ($random === true)
-		{
-			$sql .= ' ORDER BY RAND()';
-			$sql .= ' LIMIT 0, '.(int)$random_number_products;
-		}
+			$sql .= ' ORDER BY RAND() LIMIT '.(int)$random_number_products;
 		else
-			$sql .= ' ORDER BY '.(isset($order_by_prefix) ? $order_by_prefix.'.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).'
+			$sql .= ' ORDER BY '.(!empty($order_by_prefix) ? $order_by_prefix.'.' : '').'`'.bqSQL($order_by).'` '.pSQL($order_way).'
 			LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -1156,11 +1155,12 @@ class CategoryCore extends ObjectModel
 		))
 			return false;
 
+		$moved_category = false;
 		foreach ($res as $category)
 			if ((int)$category['id_category'] == (int)$this->id)
 				$moved_category = $category;
 
-		if (!isset($moved_category) || !isset($position))
+		if ($moved_category === false || !$position)
 			return false;
 		// < and > statements rather than BETWEEN operator
 		// since BETWEEN is treated differently according to databases
@@ -1523,7 +1523,7 @@ class CategoryCore extends ObjectModel
 	{
 		$shop = new Shop($id_shop);
 		// if array is empty or if the default category is not selected, return false
-		if (empty($categories) || !in_array($shop->id_category, $categories))
+		if (!is_array($categories) || !count($categories) || !in_array($shop->id_category, $categories))
 			return false;
 
 		// delete categories for this shop

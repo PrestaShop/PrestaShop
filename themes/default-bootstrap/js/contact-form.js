@@ -22,13 +22,20 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
 $(document).ready(function () {
 	$('select[name=id_order]').change(function () {
 		showProductSelect($(this).attr('value'));
 	});
 	showProductSelect($('select[name=id_order]').attr('value'));
 });
+
+if (typeof $.uniform.defaults !== 'undefined')
+{
+	if (typeof contact_fileDefaultHtml !== 'undefined')
+		$.uniform.defaults.fileDefaultHtml = contact_fileDefaultHtml;
+	if (typeof contact_fileButtonHtml !== 'undefined')
+		$.uniform.defaults.fileButtonHtml = contact_fileButtonHtml;
+}
 
 function showProductSelect(id_order)
 {
