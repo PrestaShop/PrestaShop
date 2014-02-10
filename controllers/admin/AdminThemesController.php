@@ -431,7 +431,7 @@ class AdminThemesControllerCore extends AdminController
 					'name' => 'name',
 					'default' => array(
 						'value' => 0,
-						'label' => '&nbsp;-&nbsp;'
+						'label' => '-'
 					),
 					'query' => $theme_query,
 				)
