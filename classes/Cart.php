@@ -2143,6 +2143,7 @@ class CartCore extends ObjectModel
 		foreach ($delivery_option_list as &$array)
 			uasort ($array, array('Cart', 'sortDeliveryOptionList'));
 
+		$cache = $delivery_option_list;
 		return $delivery_option_list;
 	}
 	
