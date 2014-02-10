@@ -390,22 +390,22 @@ class AdminCountriesControllerCore extends AdminController
 		if (Validate::isLoadedObject($country) && Tools::getValue('id_zone'))
 		{
 			$old_id_zone = $country->id_zone;
-			//we change zone for states attached to this country, only if they have the same id zone before change
-			if (parent::processUpdate())
+			$results = Db::getInstance()->executeS('SELECT `id_state` FROM `'._DB_PREFIX_.'state` WHERE `id_country` = '.(int)$country->id.' AND `id_zone` = '.(int)$old_id_zone);
+
+			if ($results && count($results))
 			{
-				$results = Db::getInstance()->executeS('SELECT `id_state` FROM `'._DB_PREFIX_.'state` WHERE `id_country` = '.(int)$country->id.' AND `id_zone` = '.(int)$old_id_zone);
 				$ids = array();
 				foreach ($results as $res)
 					$ids[] = (int)$res['id_state'];
 				
-				Db::getInstance()->execute(
-					'UPDATE `'._DB_PREFIX_.'state` 
-					SET `id_zone` = '.(int)Tools::getValue('id_zone').' 
-					WHERE `id_state` IN ('.implode(',', $ids).')');
+				if (count($ids))
+					$res = Db::getInstance()->execute(
+							'UPDATE `'._DB_PREFIX_.'state` 
+							SET `id_zone` = '.(int)Tools::getValue('id_zone').' 
+							WHERE `id_state` IN ('.implode(',', $ids).')');
 			}
 		}
-		else
-			parent::processUpdate();
+		return parent::processUpdate();
 	}
 
 	public function postProcess()
@@ -462,6 +462,7 @@ class AdminCountriesControllerCore extends AdminController
 			}
 			unset($tmp_addr_format);
 		}
+
 		return $res;
 	}
 	
