@@ -102,7 +102,7 @@
 					<i class="icon-credit-card"></i>
 					{l s='Order'}
 					<span class="badge">{l s="#"}{$order->id}</span>
-					<span class="badge">{$order->reference}</span>
+					<span class="badge">{Order::getOrderReference($order->id)}</span>
 					<div class="btn-group">
 						<a class="btn btn-default btn-xs" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
 							<i class="icon-backward"></i>
