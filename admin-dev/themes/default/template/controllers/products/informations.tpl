@@ -270,7 +270,7 @@
 		</div>
 	</div>
 
-	<div id="product_options" class="form-group" {if !$product->active}style="display:none"{/if} >
+	<div id="product_options" class="form-group">
 		<div class="col-lg-12">
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="available_for_order">
