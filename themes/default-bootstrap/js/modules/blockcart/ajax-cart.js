@@ -106,40 +106,42 @@ var ajaxCart = {
 	//override every button in the page in relation to the cart
 	overrideButtonsInThePage : function(){
 		//for every 'add' buttons...
-		$('.ajax_add_to_cart_button').unbind('click').click(function(){
+		$('.ajax_add_to_cart_button').unbind('click').click(function(e){
+			e.preventDefault();
 			var idProduct =  $(this).data('id-product');
 			if ($(this).attr('disabled') != 'disabled')
 				ajaxCart.add(idProduct, null, false, this);
-			return false;
 		});
 		//for product page 'add' button...
-		$('#add_to_cart button').unbind('click').click(function(){
+		$('#add_to_cart button').unbind('click').click(function(e){
+			e.preventDefault();
 			ajaxCart.add( $('#product_page_product_id').val(), $('#idCombination').val(), true, null, $('#quantity_wanted').val(), null);
-			return false;
 		});
 
 		//for 'delete' buttons in the cart block...
-		$('#cart_block_list .ajax_cart_block_remove_link').unbind('click').click(function(){
+		$('#cart_block_list .ajax_cart_block_remove_link').unbind('click').click(function(e){
+			e.preventDefault();
 			// Customized product management
 			var customizationId = 0;
 			var productId = 0;
 			var productAttributeId = 0;
 			var customizableProductDiv = $($(this).parent().parent()).find("div[id^=deleteCustomizableProduct_]");
+			var idAddressDelivery = false;
 
 			if (customizableProductDiv && $(customizableProductDiv).length)
 			{
-				$(customizableProductDiv).each(function(){
-					var ids = $(this).attr('id').split('_');
-					if (typeof(ids[1]) != 'undefined')
-					{
-						customizationId = parseInt(ids[1]);
-						productId = parseInt(ids[2]);
-						if (typeof(ids[3]) != 'undefined')
-							productAttributeId = parseInt(ids[3]);
-						return false;
-					}
-				});
+				var ids = customizableProductDiv.attr('id').split('_');
+				if (typeof(ids[1]) != 'undefined')
+				{
+					customizationId = parseInt(ids[1]);
+					productId = parseInt(ids[2]);
+					if (typeof(ids[3]) != 'undefined')
+						productAttributeId = parseInt(ids[3]);
+					if (typeof(ids[4]) != 'undefined')
+						idAddressDelivery = parseInt(ids[4]);
+				}
 			}
+
 
 			// Common product management
 			if (!customizationId)
@@ -149,15 +151,15 @@ var ajaxCart = {
 				firstCut = firstCut.replace('deleteCustomizableProduct_', '');
 				ids = firstCut.split('_');
 				productId = parseInt(ids[0]);
+
 				if (typeof(ids[1]) != 'undefined')
 					productAttributeId = parseInt(ids[1]);
+				if (typeof(ids[2]) != 'undefined')
+					idAddressDelivery = parseInt(ids[2]);
 			}
-
-			var idAddressDelivery = $(this).parent().parent().attr('id').match(/.*_\d+_\d+_(\d+)/)[1];
 
 			// Removing product from the cart
 			ajaxCart.remove(productId, productAttributeId, customizationId, idAddressDelivery);
-			return false;
 		});
 	},
 
