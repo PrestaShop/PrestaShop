@@ -51,6 +51,11 @@ class AdminOrdersControllerCore extends AdminController
 		IF((SELECT COUNT(so.id_order) FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
 		country_lang.name as cname';
 
+		if (Configuration::get('PS_USE_REF_NUM'))
+			$this->_select .= ', IFNULL(a.`reference_num`, a.`reference`) as reference';
+		else
+			$this->_select .= ', a.`reference` as reference';
+
 		$this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
 		INNER JOIN `'._DB_PREFIX_.'address` address ON address.id_address = a.id_address_delivery
@@ -669,7 +674,7 @@ class AdminOrdersControllerCore extends AdminController
 									$params['{voucher_amount}'] = Tools::displayPrice($cart_rule->reduction_amount, $currency, false);
 									$params['{voucher_num}'] = $cart_rule->code;
 									$customer = new Customer((int)$order->id_customer);
-									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
+									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), Order::getOrderReference($order->id)),
 										$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
 										null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
 								}
@@ -887,7 +892,7 @@ class AdminOrdersControllerCore extends AdminController
 									$currency = $this->context->currency;
 									$params['{voucher_amount}'] = Tools::displayPrice($cartrule->reduction_amount, $currency, false);
 									$params['{voucher_num}'] = $cartrule->code;
-									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
+									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), Order::getOrderReference($order->id)),
 									$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
 									null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
 								}
@@ -1457,7 +1462,7 @@ class AdminOrdersControllerCore extends AdminController
 				$deliveryState = new State((int)($addressDelivery->id_state));
 		}
 
-		$this->toolbar_title = sprintf($this->l('Order #%1$d (%2$s) - %3$s %4$s'), $order->id, $order->reference, $customer->firstname, $customer->lastname);
+		$this->toolbar_title = sprintf($this->l('Order #%1$d (%2$s) - %3$s %4$s'), $order->id, Order::getOrderReference($order->id), $customer->firstname, $customer->lastname);
 		if (Shop::isFeatureActive())
 		{
 			$shop = new Shop((int)$order->id_shop);

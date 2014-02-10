@@ -169,7 +169,7 @@ class BankWire extends PaymentModule
 				'id_order' => $params['objOrder']->id
 			));
 			if (isset($params['objOrder']->reference) && !empty($params['objOrder']->reference))
-				$this->smarty->assign('reference', $params['objOrder']->reference);
+				$this->smarty->assign('reference', Order::getOrderReference($params['objOrder']->id));
 		}
 		else
 			$this->smarty->assign('status', 'failed');

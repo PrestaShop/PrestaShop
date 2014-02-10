@@ -68,7 +68,14 @@ class GuestTrackingControllerCore extends FrontController
 			$order_reference = current(explode('#', Tools::getValue('order_reference')));
 			// Ignore $result_number
 			if (!empty($order_reference))
-				$order_collection = Order::getByReference($order_reference);
+			{
+				// If use_ref_num is active and order_reference can be converted to an number higher then 0
+				// This is for retrocompatibility with old orders using reference
+				if (Configuration::get('PS_USE_REF_NUM') && (int)$order_reference > 0)
+					$order_collection = Order::getByReferenceNumber($order_reference);
+				else
+					$order_collection = Order::getByReference($order_reference);
+			}
 
 			$email = Tools::getValue('email');
 

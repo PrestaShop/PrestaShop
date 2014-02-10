@@ -169,7 +169,7 @@ class OrderOpcControllerCore extends ParentOrderController
 								$email = $this->context->customer->email;
 								if ($this->context->customer->is_guest)
 									$this->context->customer->logout(); // If guest we clear the cookie for security reason
-								die('freeorder:'.$order->reference.':'.$email);
+								die('freeorder:'.Order::getOrderReference($order->id).':'.$email);
 							}
 							exit;
 							break;

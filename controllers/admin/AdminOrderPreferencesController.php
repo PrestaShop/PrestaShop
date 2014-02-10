@@ -115,7 +115,21 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'list' => $cms_tab,
 						'identifier' => 'id',
 						'cast' => 'intval'
-					)
+					),
+					'PS_USE_REF_NUM' => array(
+						'title' => $this->l('Use numeric order reference'),
+						'hint' => $this->l('Change order reference from AEGOGZXRS to 000001.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_REF_NUM_LENGTH' => array(
+						'title' => $this->l('Numeric reference length'),
+						'hint' => $this->l('Set the length of reference, max length 10'),
+						'validation' => 'isFloat',
+						'cast' => 'floatval',
+						'type' => 'text'
+					),
 				),
 				'submit' => array('title' => $this->l('Save'))
 			),
