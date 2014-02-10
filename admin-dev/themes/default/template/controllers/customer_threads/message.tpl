@@ -73,7 +73,7 @@
 			</dl>
 			{/if}
 			{if !empty($message.id_order) && $is_valid_order_id && empty($message.id_employee)}
-				<dl>
+				<dl class="dl-horizontal">
 					<dt>{l s='Order #'}</dt> 
 					<dd><a href="index.php?tab=AdminOrders&id_order={$message.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">{$message.id_order} <img src="../img/admin/search.gif" alt="{l s='View'}" /></a>
 					</dd>
@@ -89,14 +89,18 @@
 			<form class="form-inline" action="{$current}&token={$token}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread" method="post" >
 				<input type="hidden" name="id_customer_message" value="{$message.id_customer_message}" />
 				<div class="form-group">
-					<label>{l s='Subject:'}</label>
-					<select name="id_contact" class="fixed-width-lg" onchange="this.form.submit();">
-						{foreach $contacts as $contact}
-							<option value="{$contact.id_contact}" {if $contact.id_contact == $message.id_contact}selected="selected"{/if}>
-								{$contact.name}
-							</option>
-						{/foreach}
-					</select>
+					<dl class="dl-horizontal">
+						<dt>{l s='Subject:'}</dt>
+						<dd>
+							<select name="id_contact" class="fixed-width-lg" onchange="this.form.submit();">
+								{foreach $contacts as $contact}
+									<option value="{$contact.id_contact}" {if $contact.id_contact == $message.id_contact}selected="selected"{/if}>
+										{$contact.name}
+									</option>
+								{/foreach}
+							</select>
+						</dd>
+					</dl>
 				</div>
 			</form>
 		</div>

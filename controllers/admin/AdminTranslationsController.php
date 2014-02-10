@@ -877,7 +877,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		foreach ($files as $file)
 		{
-			if (preg_match('/^(.*).(tpl|php)$/', $file) && Tools::file_exists_cache($dir.$file) && !in_array($file, self::$ignore_folder))
+			if (preg_match('/^(.*)\.(tpl|php)$/', $file) && Tools::file_exists_cache($dir.$file) && !in_array($file, self::$ignore_folder))
 			{
 				// Get content for this file
 				$content = file_get_contents($dir.$file);

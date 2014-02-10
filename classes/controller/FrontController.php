@@ -987,6 +987,7 @@ class FrontControllerCore extends Controller
 			if (!preg_match('/^http(s?):\/\//i', $media))
 			{
 				$different = 0;
+                $different_css = 0;
 				$type = 'css';
 				if (!$css_media_type)
 				{
@@ -994,8 +995,14 @@ class FrontControllerCore extends Controller
 					$file = $media;
 				}
 				$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/'.$type.'/modules/', $file, $different);
+
+                $override_path_css = str_replace(basename ($file), $type.'/'.basename ($file), str_replace(__PS_BASE_URI__, _PS_ROOT_DIR_.'/', $file), $different_css );
+
 				if ($different && file_exists($override_path))
 					$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/'.$type.'/modules/', $file, $different);
+                elseif ($different_css && file_exists($override_path_css))
+                    $file = $override_path_css;
+
 				if ($css_media_type)
 					$list_uri[$file] = $media;
 				else

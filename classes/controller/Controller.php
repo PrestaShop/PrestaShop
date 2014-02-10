@@ -429,21 +429,25 @@ abstract class ControllerCore
 	{
 		if (error_reporting() === 0)
 			return false;
-	    switch ($errno)
+		switch ($errno)
 		{
-		    case E_USER_ERROR || E_ERROR:
+			case E_USER_ERROR:
+			case E_ERROR:
 				$type = 'Fatal error';
-				break;
-		    case E_USER_WARNING || E_WARNING:
+				die;
+			break;
+			case E_USER_WARNING:
+			case E_WARNING:
 				$type = 'Warning';
-		        break;
-		    case E_USER_NOTICE || E_NOTICE:
+			break;
+			case E_USER_NOTICE:
+			case E_NOTICE:
 				$type = 'Notice';
-		        break;
-		    default:
+			break;
+			default:
 				$type = 'Unknow error';
-		        break;
-	    }
+			break;
+		}
 
 		Controller::$php_errors[] = array(
 			'type' => $type,

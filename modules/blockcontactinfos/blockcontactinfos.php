@@ -33,6 +33,7 @@ class Blockcontactinfos extends Module
 	public function __construct()
 	{
 		$this->name = 'blockcontactinfos';
+		$this->author = 'PrestaShop';
 		if (version_compare(_PS_VERSION_, '1.4.0.0') >= 0)
 			$this->tab = 'front_office_features';
 		else
