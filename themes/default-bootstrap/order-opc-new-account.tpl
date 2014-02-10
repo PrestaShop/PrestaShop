@@ -62,10 +62,10 @@
 								countries[{$country.id_country|intval}].push({ldelim}'id' : '{$state.id_state}', 'name' : '{$state.name|escape:'html':'UTF-8'}'{rdelim});
 							{/foreach}
 						{/if}
-						{if $country.need_identification_number}
+						{if isset($country.need_identification_number) && $country.need_identification_number}
 							countriesNeedIDNumber.push({$country.id_country|intval});
 						{/if}	
-						{if isset($country.need_zip_code)}
+						{if isset($country.need_zip_code) && $country.need_zip_code}
 							countriesNeedZipCode[{$country.id_country|intval}] = {$country.need_zip_code};
 						{/if}
 					{/foreach}
