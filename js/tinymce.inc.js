@@ -12,7 +12,7 @@ function tinySetup(config)
 //    safari,pagebreak,style,table,advimage,advlink,inlinepopups,media,contextmenu,paste,fullscreen,xhtmlxtras,preview
 	default_config = {
 		selector: ".rte" ,
-		plugins : "link image paste pagebreak table contextmenu preview filemanager table code media",
+		plugins : "link image paste pagebreak table contextmenu preview filemanager table code media autoresize",
 		toolbar1 : "code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,|,blockquote,forecolor,backcolor",
 		toolbar2: "pasteword,|,bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,|,cleanup,|,media,image",
 		external_filemanager_path: ad+"/filemanager/",
@@ -20,7 +20,6 @@ function tinySetup(config)
 		external_plugins: { "filemanager" : ad+"/filemanager/plugin.min.js"},
 		language: iso,
 		skin: "prestashop",
-		plugins: "autoresize",
 		resize: false
 	}
 
