@@ -190,7 +190,7 @@ class ProductSupplierCore extends ObjectModel
 	 *
 	 * @param int $id_product
 	 * @param int $group_by_supplier
-	 * @return Collection
+	 * @return PrestaShopCollection Collection of ProductSupplier
 	 */
 	public static function getSupplierCollection($id_product, $group_by_supplier = true)
 	{

@@ -291,7 +291,7 @@ class TabCore extends ObjectModel
 	 * @static
 	 * @param $module string Module name
 	 * @param null $id_lang integer Language ID
-	 * @return array|Collection Collection of tabs (or empty array)
+	 * @return array|PrestaShopCollection Collection of tabs (or empty array)
 	 */
 	public static function getCollectionFromModule($module, $id_lang = null)
 	{
