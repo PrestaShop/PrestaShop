@@ -53,8 +53,6 @@ class StockAvailableCore extends ObjectModel
 	/** @var bool determine if a product is out of stock - it was previously in Product class */
 	public $out_of_stock = false;
 
-	protected static $cache_quantity_available;
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -346,7 +344,7 @@ class StockAvailableCore extends ObjectModel
 			$id_product_attribute = 0;
 
 		$key = (int)$id_product.'-'.(int)$id_product_attribute.'-'.(int)$id_shop;
-		if (!isset(self::$cache_quantity_available[$key]))
+		if (!Cache::isStored($key))
 		{
 			$query = new DbQuery();
 			$query->select('SUM(quantity)');
@@ -358,10 +356,10 @@ class StockAvailableCore extends ObjectModel
 	
 			$query->where('id_product_attribute = '.(int)$id_product_attribute);
 			$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
-
-			self::$cache_quantity_available[$key] = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+			Cache::store($key, (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query));
 		}
-		return self::$cache_quantity_available[$key];
+
+		return Cache::retrieve($key);
 	}
 
 	/**
