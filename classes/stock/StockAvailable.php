@@ -362,6 +362,11 @@ class StockAvailableCore extends ObjectModel
 		return Cache::retrieve($key);
 	}
 
+	public static function cleanCacheQuantityAvailable()
+	{
+		self::$cache_quantity_available = array();
+	}
+
 	/**
 	 * Upgrades total_quantity_available after having saved
 	 * @see ObjectModel::add()
