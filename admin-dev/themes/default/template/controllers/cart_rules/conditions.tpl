@@ -102,7 +102,7 @@
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='A customer will only be able to use the cart rule "X" time(s).'}">
-			{l s='Total available for each user.'}
+			{l s='Total available for each user'}
 		</span>
 	</label>
 	<div class="col-lg-9">
