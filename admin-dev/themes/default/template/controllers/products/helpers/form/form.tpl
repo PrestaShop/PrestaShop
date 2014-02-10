@@ -31,7 +31,7 @@
 		tinySetup({
 			editor_selector :"autoload_rte",
 			setup : function(ed) {
-				ed.onInit.add(function(ed)
+				ed.on('init', function(ed)
 				{
 					if (typeof ProductMultishop.load_tinymce[ed.id] != 'undefined')
 					{
@@ -42,7 +42,7 @@
 					}
 				});
 
-				ed.onKeyUp.add(function(ed, e) {
+				ed.on('keyup', function(ed, e) {
 					tinyMCE.triggerSave();
 					textarea = $('#'+ed.id);
 					max = textarea.parent('div').find('span.counter').attr('max');
@@ -131,6 +131,13 @@
 					// Update submit button value
 					var split_position = id.indexOf('-') + 1;
 					var btn_name = id.substr(split_position);
+
+					if (btn_name == 'VirtualProduct' || btn_name == 'Pack' && $('#name_' + id_lang_default).val() == '')
+					{
+						alert(missing_product_name);
+						$('#name_' + id_lang_default).focus();
+						return false;
+					}
 
 					$('#key_tab').val(btn_name);
 
@@ -259,4 +266,5 @@
 			<input type="hidden" name="key_tab" id="key_tab" value="Informations" />
 		</form>
 	</div>
+
 {/block}

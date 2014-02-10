@@ -146,6 +146,7 @@ class SocialSharing extends Module
 
 	public function hookDisplayHeader($params)
 	{
+		$this->context->controller->addCss($this->_path.'css/socialsharing.css');
 		$this->context->controller->addJS($this->_path.'js/socialsharing.js');
 
 		// Exception are managed with Module::registerExceptions() but this is needed in case the merchant added new controllers afterwards

@@ -35,7 +35,7 @@
 	{/if}
 	
 		<span class="title">{$title|escape}</span>
-		<span ckass="subtitle">{$subtitle|escape}</span>
+		<span cLass="subtitle">{$subtitle|escape}</span>
 		<span class="value">{$value|escape}</span>
 	</div>
 	

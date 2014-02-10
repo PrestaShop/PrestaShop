@@ -184,7 +184,6 @@ class PDFGeneratorCore extends TCPDF
 		$this->SetHeaderMargin(5);
 		$this->SetFooterMargin(18);
 		$this->setMargins(10, 40, 10);
-		$this->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
 
 		$this->AddPage();
 

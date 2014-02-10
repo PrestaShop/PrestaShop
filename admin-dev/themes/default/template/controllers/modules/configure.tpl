@@ -25,7 +25,7 @@
 <div class="bootstrap">
 	<div class="page-head">
 		<h2 class="page-title">
-			{l s='Configure module %s' sprintf=$module_display_name}
+			{l s='Configure "%s" module' sprintf=$module_display_name}
 		</h2>
 		<ul class="breadcrumb page-breadcrumb">
 			{if $breadcrumbs2.container.name != ''}

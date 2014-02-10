@@ -54,6 +54,9 @@ class AdminTabsControllerCore extends AdminController
 			'name' => array(
 				'title' => $this->l('Name')
 			),
+			'class_name' => array(
+				'title' => $this->l('Class')
+			),
 			'module' => array(
 				'title' => $this->l('Module')
 			),
@@ -179,7 +182,7 @@ class AdminTabsControllerCore extends AdminController
 		if ($display_parent)
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
-				'label' => $this->l('Parent:'),
+				'label' => $this->l('Parent'),
 				'name' => 'id_parent',
 				'options' => array(
 					'query' => $tabs,

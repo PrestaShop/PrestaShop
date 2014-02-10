@@ -295,7 +295,8 @@
 										{$input.required = false}
 										{$input.desc = null}
 									{else}
-										<select name="{$input.name|escape:'html':'utf-8'}" class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if}"
+										<select name="{$input.name|escape:'html':'utf-8'}"
+												class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if} fixed-width-xl"
 												id="{if isset($input.id)}{$input.id|escape:'html':'utf-8'}{else}{$input.name|escape:'html':'utf-8'}{/if}"
 												{if isset($input.multiple)}multiple="multiple" {/if}
 												{if isset($input.size)}size="{$input.size|escape:'html':'utf-8'}"{/if}
@@ -370,42 +371,38 @@
 										{if isset($value.p) && $value.p}<p class="help-block">{$value.p}</p>{/if}
 									{/foreach}
 								{elseif $input.type == 'switch'}
-									<div class="row">
-										<div class="input-group col-lg-2">
-											<span class="switch prestashop-switch">
-												{foreach $input.values as $value}
-												<input
-													type="radio"
-													name="{$input.name}"
-													{if $value.value == 1}
-														id="{$input.name}_on"
-													{else}
-														id="{$input.name}_off"
-													{/if}
-													value="{$value.value}"
-													{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
-													{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
-												/>
-												<label
-													{if $value.value == 1}
-														for="{$input.name}_on"
-													{else}
-														for="{$input.name}_off"
-													{/if}
-												>
-													{if $value.value == 1}
-														{l s='Yes'}
-													{else}
-														{l s='No'}
-													{/if}
-												</label>
-												{/foreach}
-												<a class="slide-button btn"></a>
-											</span>
-										</div>
+									<div "col-lg-9">
+										<span class="switch prestashop-switch fixed-width-lg">
+											{foreach $input.values as $value}
+											<input
+												type="radio"
+												name="{$input.name}"
+												{if $value.value == 1}
+													id="{$input.name}_on"
+												{else}
+													id="{$input.name}_off"
+												{/if}
+												value="{$value.value}"
+												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
+												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
+											/>
+											<label
+												{if $value.value == 1}
+													for="{$input.name}_on"
+												{else}
+													for="{$input.name}_off"
+												{/if}
+											>
+												{if $value.value == 1}
+													{l s='Yes'}
+												{else}
+													{l s='No'}
+												{/if}
+											</label>
+											{/foreach}
+											<a class="slide-button btn"></a>
+										</span>
 									</div>
-
-
 								{elseif $input.type == 'textarea'}
 									{assign var=use_textarea_autosize value=true}
 									{if isset($input.lang) AND $input.lang}
@@ -481,7 +478,7 @@
 								<div class="form-group">
 									{foreach $input.options as $key => $select}
 									<div class="col-lg-2">
-										<select name="{$key}" class="{if isset($input.class)}{$input.class}{/if}">
+										<select name="{$key}" class="{if isset($input.class)}{$input.class}{/if}" class="fixed-width-lg">
 											<option value="">-</option>
 											{if $key == 'months'}
 												{*
@@ -607,7 +604,7 @@
 						{hook h=$hookName fieldset=$f}
 					{/if}
 				{elseif $key == 'desc'}
-					<p class="clear">
+					<div class="alert alert-info col-lg-offset-3">
 						{if is_array($field)}
 							{foreach $field as $k => $p}
 								{if is_array($p)}
@@ -620,7 +617,7 @@
 						{else}
 							{$field}
 						{/if}
-					</p>
+					</div>
 				{/if}
 				{block name="other_input"}{/block}
 			{/foreach}

@@ -261,5 +261,6 @@ return array(
 		'Permissions on files and folders' => 'Permissions d\'accès sur les fichiers et dossiers',
 		'Continue the installation in:' => 'Continuer l\'installation en :',
 		'Recursive write permissions for %1$s user on %2$s' => 'Droits récursifs en écriture pour l\'utilisateur %1$s sur le dossier %2$s',
+		'Share your experience with your friends!' => 'Partagez votre expérience avec vos amis!',
 	),
 );

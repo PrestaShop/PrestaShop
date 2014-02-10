@@ -48,7 +48,7 @@ class AdminTagsControllerCore extends AdminController
 				'filter_key' => 'a!name'
 			),
 			'products' => array(
-				'title' => $this->l('Products:'),
+				'title' => $this->l('Products'),
 				'align' => 'center',
 				'class' => 'fixed-width-xs',
 				'havingFilter' => true
@@ -130,13 +130,13 @@ class AdminTagsControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'required' => true
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Language:'),
+					'label' => $this->l('Language'),
 					'name' => 'id_lang',
 					'required' => true,
 					'options' => array(

@@ -1071,7 +1071,6 @@ class CategoryCore extends ObjectModel
 
 	public function getGroups()
 	{
-		$groups = array();
 		$cache_id = 'Category::getGroups_'.(int)$this->id;
 		if (!Cache::isStored($cache_id))
 		{

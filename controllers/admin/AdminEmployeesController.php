@@ -251,7 +251,7 @@ class AdminEmployeesControllerCore extends AdminController
 				),
 				/*array(
 					'type' => 'color',
-					'label' => $this->l('Admin panel color:'),
+					'label' => $this->l('Admin panel color'),
 					'name' => 'bo_color',
 					'class' => 'color mColorPickerInput',
 					'hint' => $this->l('Admin panel background will be displayed in this color (HTML colors only).').' "lightblue", "#CC6600")'
@@ -360,7 +360,7 @@ class AdminEmployeesControllerCore extends AdminController
 				$this->context->smarty->assign('_PS_ADMIN_PROFILE_', (int)_PS_ADMIN_PROFILE_);
 				$this->fields_form['input'][] = array(
 					'type' => 'shop',
-					'label' => $this->l('Shop association:'),
+					'label' => $this->l('Shop association'),
 					'hint' => $this->l('Select the shops the employee is allowed to access.'),
 					'name' => 'checkBoxShopAsso',
 				);
@@ -392,16 +392,15 @@ class AdminEmployeesControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		if (Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee'))
+		/* PrestaShop demo mode */
+		if ((Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee') || Tools::isSubmit('submitAddemployee')) && _PS_MODE_DEMO_)
 		{
-			/* PrestaShop demo mode */
-			if (_PS_MODE_DEMO_ && $id_employee = Tools::getValue('id_employee')
-				&& (int)$id_employee == _PS_DEMO_MAIN_BO_ACCOUNT_)
-			{
 				$this->errors[] = Tools::displayError('This functionality has been disabled.');
 				return;
-			}
+		}
 
+		if (Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee'))
+		{
 			if ($this->context->employee->id == Tools::getValue('id_employee'))
 			{
 				$this->errors[] = Tools::displayError('You cannot disable or delete your own account.');

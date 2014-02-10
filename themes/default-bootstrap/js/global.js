@@ -50,7 +50,7 @@ $(document).ready(function(){
 		else
 			$('.display').find('li#grid').addClass('selected');
 
-		$('.add_to_compare').click(function(e){
+		$(document).delegate('.add_to_compare','click', function(e){
 			e.preventDefault();
 			if (typeof addToCompare != 'undefined')
 				addToCompare(parseInt($(this).data('id-product')));
@@ -65,6 +65,15 @@ $(document).ready(function(){
 			e.preventDefault();
 			display('list');
 		});
+
+		if (typeof request != 'undefined' && request)
+		{
+	 		$('.selectProductSort').change(function(){
+				var requestSortProducts = request;
+	 			var splitData = $(this).val().split(':');
+				document.location.href = requestSortProducts + ((requestSortProducts.indexOf('?') < 0) ? '?' : '&') + 'orderby=' + splitData[0] + '&orderway=' + splitData[1];
+	    	});
+		}
 	}
 });
 

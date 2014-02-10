@@ -27,8 +27,8 @@
 		{if isset($files) && $files|count > 0}
 		{foreach $files as $file}
 		{if isset($file.image) && $file.type == 'image'}
-		<div class="img-thumbnail text-center">
-			<p>{$file.image}</p>
+		<div>
+			{$file.image}
 			{if isset($file.size)}<p>{l s='File size'} {$file.size}kb</p>{/if}
 			{if isset($file.delete_url)}
 			<p>
@@ -134,8 +134,8 @@
 
 									if (typeof data.result.{$name}[i].image !== 'undefined')
 									{
-										var template = '<div class="img-thumbnail text-center">';
-										template += '<p>'+data.result.{$name}[i].image+'</p>';
+										var template = '<div>';
+										template += data.result.{$name}[i].image;
 										
 										if (typeof data.result.{$name}[i].delete_url !== 'undefined')
 											template += '<p><a class="btn btn-default" href="'+data.result.{$name}[i].delete_url+'"><i class="icon-trash"></i> {l s='Delete'}</a></p>';

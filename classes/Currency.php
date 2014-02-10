@@ -148,11 +148,12 @@ class CurrencyCore extends ObjectModel
 	public function deleteSelection($selection)
 	{
 		if (!is_array($selection))
-			die(Tools::displayError());
+			return false;
 
+		$res = array();
 		foreach ($selection as $id)
 		{
-			$obj = new Currency((int)($id));
+			$obj = new Currency((int)$id);
 			$res[$id] = $obj->delete();
 		}
 

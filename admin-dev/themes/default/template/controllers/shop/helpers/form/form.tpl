@@ -75,7 +75,7 @@
 		{foreach $form_import as $key => $field}
 		<div class="form-group">
 		{if $key == 'radio'}
-			<label class="control-label col-lg-3">{$field.label} :</label>
+			<label class="control-label col-lg-3">{$field.label}</label>
 			<div class="col-lg-2">
 				<span class="switch prestashop-switch">
 					<input type="radio" name="{$field.name}" id="{$field.name}_on" value="1" {if $field.value } checked="checked" {/if}>
@@ -91,7 +91,7 @@
 			</div>
 		{elseif $key == 'select'}
 			<div id="shop_list" {if !$checked}display:none{/if}>
-				<label class="control-label col-lg-3">{$field.label} :</label>
+				<label class="control-label col-lg-3">{$field.label}</label>
 				<div class="col-lg-9">
 					<select name="{$field.name}" id="{$field.name}" >
 						{foreach $field.options.query AS $key => $option}
@@ -104,7 +104,7 @@
 			</div>
 		{elseif $key == 'allcheckbox'}
 			<div id="data_list" {if !$checked}display:none{/if}>
-				<label class="control-label col-lg-3">{$field.label} :</label>
+				<label class="control-label col-lg-3">{$field.label}</label>
 				<div class="col-lg-9">					
 				{foreach $field.values as $key => $label}
 					<p class="checkbox"><input type="checkbox" name="importData[{$key}]" checked="checked" /> {$label}</p>
@@ -118,6 +118,14 @@
 		{/if}
 		</div>			
 		{/foreach}
+		<div class="panel-footer">
+			<button type="submit" value="1" id="shop_form_submit_btn" name="submitAddshop" class="btn btn-default pull-right">
+				<i class="process-icon-save"></i> {l s='Save'}
+			</button>
+			<a href="{$currentIndex}&id_shop_group=0&token={$token}" class="btn btn-default" onclick="window.history.back()">
+				<i class="process-icon-cancel"></i> {l s='Cancel'}
+			</a>
+		</div>
 	</div>
 	{/if}
 {/block}

@@ -131,7 +131,7 @@ class AdminAddressesControllerCore extends AdminController
 					'name' => 'phone',
 					'required' => false,
 					'col' => '4',
-					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number')) : ''
+					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
 				),
 				array(
 					'type' => 'text',
@@ -139,7 +139,7 @@ class AdminAddressesControllerCore extends AdminController
 					'name' => 'phone_mobile',
 					'required' => false,
 					'col' => '4',
-					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number')) : ''
+					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
 				),
 				array(
 					'type' => 'textarea',
@@ -344,7 +344,7 @@ class AdminAddressesControllerCore extends AdminController
 		$id_country = (int)Tools::getValue('id_country');
 		$country = new Country((int)$id_country);
 		if ($country && !(int)$country->contains_states && $id_state)
-			$this->errors[] = Tools::displayError('You\'ve selected a state for a country that does not contain states.');
+			$this->errors[] = Tools::displayError('You have selected a state for a country that does not contain states.');
 
 		/* If the selected country contains states, then a state have to be selected */
 		if ((int)$country->contains_states && !$id_state)

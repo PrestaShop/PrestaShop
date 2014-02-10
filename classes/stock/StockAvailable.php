@@ -53,8 +53,6 @@ class StockAvailableCore extends ObjectModel
 	/** @var bool determine if a product is out of stock - it was previously in Product class */
 	public $out_of_stock = false;
 
-	protected static $cache_quantity_available;
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -252,10 +250,11 @@ class StockAvailableCore extends ObjectModel
 				Db::getInstance()->update($query['table'], $query['data'], $query['where']);
 			}
 		}
-
 		// In case there are no warehouses, removes product from StockAvailable
 		if (count($ids_warehouse) == 0 && StockAvailable::dependsOnStock((int)$id_product))
 			Db::getInstance()->update('stock_available', array('quantity' => 0 ), 'id_product = '.(int)$id_product);
+			
+		Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
 	}
 
 	/**
@@ -345,8 +344,8 @@ class StockAvailableCore extends ObjectModel
 		if ($id_product_attribute === null)
 			$id_product_attribute = 0;
 
-		$key = (int)$id_product.'-'.(int)$id_product_attribute.'-'.(int)$id_shop;
-		if (!isset(self::$cache_quantity_available[$key]))
+		$key = 'StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'-'.(int)$id_product_attribute.'-'.(int)$id_shop;
+		if (!Cache::isStored($key))
 		{
 			$query = new DbQuery();
 			$query->select('SUM(quantity)');
@@ -358,10 +357,10 @@ class StockAvailableCore extends ObjectModel
 	
 			$query->where('id_product_attribute = '.(int)$id_product_attribute);
 			$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
-
-			self::$cache_quantity_available[$key] = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+			Cache::store($key, (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query));
 		}
-		return self::$cache_quantity_available[$key];
+
+		return Cache::retrieve($key);
 	}
 
 	/**
@@ -477,6 +476,8 @@ class StockAvailableCore extends ObjectModel
 				   )
 				  );
 
+		Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
+
 		return true;
 	}
 
@@ -548,6 +549,9 @@ class StockAvailableCore extends ObjectModel
 				   )
 				  );
 		}
+
+		Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
+
 	}
 
 	/**
@@ -604,6 +608,8 @@ class StockAvailableCore extends ObjectModel
 			$stock_available->id_shop = (int)$id_shop;
 			$stock_available->postSave();
 		}
+
+		Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
 
 		return $res;
 	}

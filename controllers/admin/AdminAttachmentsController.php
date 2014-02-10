@@ -114,7 +114,7 @@ class AdminAttachmentsControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Filename:'),
+					'label' => $this->l('Filename'),
 					'name' => 'name',
 					'required' => true,
 					'lang' => true,
@@ -122,7 +122,7 @@ class AdminAttachmentsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Description:'),
+					'label' => $this->l('Description'),
 					'name' => 'description',
 					'lang' => true,
 					'col' => 6
@@ -131,7 +131,7 @@ class AdminAttachmentsControllerCore extends AdminController
 					'type' => 'file',
 					'file' => isset($link) ? $link : null,
 					'size' => isset($size) ? $size : null,
-					'label' => $this->l('File:'),
+					'label' => $this->l('File'),
 					'name' => 'file',
 					'col' => 6
 				),
@@ -194,7 +194,7 @@ class AdminAttachmentsControllerCore extends AdminController
 				{
 					if ($_FILES['file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
 						$this->errors[] = sprintf(
-							$this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you\'re trying to upload is:  %2$d kB.'),
+							$this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.'),
 							(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
 							number_format(($_FILES['file']['size'] / 1024), 2, '.', '')
 						);
@@ -224,7 +224,7 @@ class AdminAttachmentsControllerCore extends AdminController
 					);
 				}
 				elseif (!isset($a) || (isset($a) && !file_exists(_PS_DOWNLOAD_DIR_.$a->file)))
-					$this->errors[] = $this->l('Upload error.  Please check your server configurations for the maximum upload size allowed.');
+					$this->errors[] = $this->l('Upload error. Please check your server configurations for the maximum upload size allowed.');
 			}
 			$this->validateRules();
 		}

@@ -217,7 +217,7 @@ class AdminProductsControllerCore extends AdminController
 
 		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
 			$this->fields_list['shopname'] = array(
-				'title' => $this->l('Default shop:'),
+				'title' => $this->l('Default shop'),
 				'filter_key' => 'shop!name',
 			);
 		else
@@ -1680,7 +1680,7 @@ class AdminProductsControllerCore extends AdminController
 				foreach ($imagesTypes as $k => $image_type)
 				{
 					if (!ImageManager::resize($tmpName, $new_path.'-'.stripslashes($image_type['name']).'.'.$image->image_format, $image_type['width'], $image_type['height'], $image->image_format))
-						$this->errors[] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($image_type['name']);
+						$this->errors[] = Tools::displayError('An error occurred while copying this image:').' '.stripslashes($image_type['name']);
 				}
 			}
 
@@ -1712,7 +1712,7 @@ class AdminProductsControllerCore extends AdminController
 		if ($this->object->add())
 		{
 			PrestaShopLogger::addLog(sprintf($this->l('%s addition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
-			$this->addCarriers();
+			$this->addCarriers($this->object);
 			$this->updateAccessories($this->object);
 			$this->updatePackItems($this->object);
 			$this->updateDownloadProduct($this->object);
@@ -2575,7 +2575,8 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['tinymce'] = true;
 		$iso = $this->context->language->iso_code;
 		$this->tpl_form_vars['iso'] = file_exists(_PS_CORE_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
-		$this->tpl_form_vars['ad'] = dirname($_SERVER['PHP_SELF']);
+		$this->tpl_form_vars['path_css'] = _THEME_CSS_DIR_;
+		$this->tpl_form_vars['ad'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_);
 
 		if (Validate::isLoadedObject(($this->object)))
 			$id_product = (int)$this->object->id;
@@ -3181,7 +3182,8 @@ class AdminProductsControllerCore extends AdminController
 		$virtual_product_file_uploader = new HelperUploader('virtual_product_file_uploader');
 		$virtual_product_file_uploader->setMultiple(false)->setUrl(
 			Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$product->id
-			.'&action=AddVirtualProductFile')->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')));
+			.'&action=AddVirtualProductFile')->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
+			->setTemplate('virtual_product.tpl');
 
 		$data->assign(array(
 			'download_product_file_missing' => $msg,
@@ -3366,7 +3368,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$content .= '
 		<div class="form-group">
-			<label class="control-label col-lg-3" for="specificPricePriority1">'.$this->l('Priorities:').'</label>
+			<label class="control-label col-lg-3" for="specificPricePriority1">'.$this->l('Priorities').'</label>
 			<div class="input-group col-lg-9">
 				<select id="specificPricePriority1" name="specificPricePriority[]">
 					<option value="id_shop"'.($specific_price_priorities[0] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->l('Shop').'</option>
@@ -3674,9 +3676,12 @@ class AdminProductsControllerCore extends AdminController
 		return $carrier_list;
 	}
 
-	protected function addCarriers()
+	protected function addCarriers($product = null)
 	{
-		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+		if (!isset($product))
+			$product = new Product((int)Tools::getValue('id_product'));
+
+		if (Validate::isLoadedObject($product))
 		{
 			$carriers = array();
 			
@@ -4536,8 +4541,8 @@ class AdminProductsControllerCore extends AdminController
 	public function getL($key)
 	{
 		$trad = array(
-			'Default category:' => $this->l('Default category:'),
-			'Catalog:' => $this->l('Catalog:'),
+			'Default category:' => $this->l('Default category'),
+			'Catalog:' => $this->l('Catalog'),
 			'Consider changing the default category.' => $this->l('Consider changing the default category.'),
 			'ID' => $this->l('ID'),
 			'Name' => $this->l('Name'),

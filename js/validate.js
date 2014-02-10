@@ -1,5 +1,5 @@
 /* unicode_hack.js
-*    Copyright (C) 2010-2012  Marcelo Gibson de Castro Gonçalves. All rights reserved.
+*    Copyright (C) 2010-2012  Marcelo Gibson de Castro GonÃ§alves. All rights reserved.
 *
 *    Copying and distribution of this file, with or without modification,
 *    are permitted in any medium without royalty provided the copyright
@@ -101,7 +101,7 @@ var unicode_hack = (function() {
 */
 function validate_isName(s)
 {
-	var reg = /^[^0-9!<>,;?=+()@#"�{}_$%:]+$/;
+	var reg = /^[^0-9!<>,;?=+()@#"°{}_$%:]+$/;
 	return reg.test(s);
 }
 
@@ -119,7 +119,7 @@ function validate_isAddress(s)
 
 function validate_isPostCode(s, pattern)
 {
-	if (typeof(pattern) == 'undefined')
+	if (typeof(pattern) == 'undefined' || pattern.length == 0)
 		pattern = '[a-z 0-9-]+';
 	else
 	{
@@ -140,7 +140,7 @@ function validate_isPostCode(s, pattern)
 
 function validate_isCityName(s)
 {
-	var reg = /^[^!<>;?=+@#"�{}_$%]+$/;
+	var reg = /^[^!<>;?=+@#"°{}_$%]+$/;
 	return reg.test(s);
 }
 

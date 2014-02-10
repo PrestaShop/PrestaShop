@@ -55,7 +55,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_COOKIE_CHECKIP' => array(
-						'title' => $this->l('Check the IP address on the cookie'),
+						'title' => $this->l('Check the cookie\'s IP address'),
 						'hint' => $this->l('Check the IP address of the cookie in order to prevent your cookie from being stolen.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -65,7 +65,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 					),
 					'PS_COOKIE_LIFETIME_FO' => array(
 						'title' => $this->l('Lifetime of Front Office cookies'),
-						'hint' => $this->l('Indicate the number of hours.'),
+						'hint' => $this->l('Set the value in hours.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -74,7 +74,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 					),
 					'PS_COOKIE_LIFETIME_BO' => array(
 						'title' => $this->l('Lifetime of Back Office cookies'),
-						'hint' => $this->l('Indicate the number of hours.'),
+						'hint' => $this->l('Set the value in hours.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',

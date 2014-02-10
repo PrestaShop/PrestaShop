@@ -56,14 +56,14 @@ class AdminSearchEnginesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Server:'),
+					'label' => $this->l('Server'),
 					'name' => 'server',
 					'size' => 20,
 					'required' => true
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('$_GET variable:'),
+					'label' => $this->l('$_GET variable'),
 					'name' => 'getvar',
 					'size' => 40,
 					'required' => true

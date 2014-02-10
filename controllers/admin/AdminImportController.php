@@ -366,7 +366,7 @@ class AdminImportControllerCore extends AdminController
 					'alias' => array('label' => $this->l('Alias *')),
 					'active' => array('label' => $this->l('Active  (0/1)')),
 					'customer_email' => array('label' => $this->l('Customer email *')),
-					'id_customer' => array('label' => $this->l('Customer ID:')),
+					'id_customer' => array('label' => $this->l('Customer ID')),
 					'manufacturer' => array('label' => $this->l('Manufacturer')),
 					'supplier' => array('label' => $this->l('Supplier')),
 					'company' => array('label' => $this->l('Company')),
@@ -3309,7 +3309,7 @@ class AdminImportControllerCore extends AdminController
 			if (!empty($filename))
 			{
 				$bName = basename($filename);
-				if ($delete = Tools::getValue('delete') && file_exists($file))
+				if (Tools::getValue('delete') && file_exists($file))
 					@unlink($file);
 				elseif (file_exists($file))
 				{

@@ -256,7 +256,7 @@ class AdminTranslationsControllerCore extends AdminController
 			if (!mkdir($path, 0777, true))
 			{
 				$bool &= false;
-				$this->errors[] = sprintf($this->l('Cannot create the folder "%s". Please check your directory writing permisions.'), $path);
+				$this->errors[] = sprintf($this->l('Cannot create the folder "%s". Please check your directory writing permissions.'), $path);
 			}
 
 		return $bool;
@@ -834,7 +834,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('Language not found.');
 		}
 		else
-			$this->errors[] = Tools::displayError('Invalid parameter');
+			$this->errors[] = Tools::displayError('Invalid parameter.');
 	}
 
 	/**
@@ -1451,7 +1451,7 @@ class AdminTranslationsControllerCore extends AdminController
 						Tools::clearCache();
 
 						// Redirect
-						if (Tools::getValue('submitTranslationsModulesAndStay'))
+						if (Tools::getIsset('submitTranslationsModulesAndStay'))
 							$this->redirect(true);
 						else
 							$this->redirect();
@@ -1754,6 +1754,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'count' => $count,
 			'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
 			'limit_warning' => $this->displayLimitPostWarning($count),
+			'mod_security_warning' => Tools::apacheModExists('mod_security'),
 			'tabsArray' => $tabs_array,
 		));
 
@@ -1877,7 +1878,8 @@ class AdminTranslationsControllerCore extends AdminController
 						$prefix_key = 'Admin'.ucfirst(substr($tmp, strrpos($tmp, DIRECTORY_SEPARATOR) + 1, $pos));
 
 					// Adding list, form, option in Helper Translations
-					$list_prefix_key = array('AdminHelpers', 'AdminList', 'AdminView', 'AdminOptions', 'AdminForm');
+					$list_prefix_key = array('AdminHelpers', 'AdminList', 'AdminView', 'AdminOptions', 'AdminForm',
+						'AdminCalendar', 'AdminTree', 'AdminUploader', 'AdminDataviz', 'AdminKpi', 'AdminModule_list');
 					if (in_array($prefix_key, $list_prefix_key))
 						$prefix_key = 'Helper';
 
@@ -1941,6 +1943,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'count' => $count,
 			'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
 			'limit_warning' => $this->displayLimitPostWarning($count),
+			'mod_security_warning' => Tools::apacheModExists('mod_security'),
 			'tabsArray' => $tabs_array,
 			'missing_translations' => $missing_translations_back
 		));
@@ -2022,6 +2025,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'count' => count($string_to_translate),
 			'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
 			'limit_warning' => $this->displayLimitPostWarning(count($string_to_translate)),
+			'mod_security_warning' => Tools::apacheModExists('mod_security'),
 			'errorsArray' => $string_to_translate,
 			'missing_translations' => $count_empty
 		));
@@ -2115,6 +2119,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
 			'count' => $count,
 			'limit_warning' => $this->displayLimitPostWarning($count),
+			'mod_security_warning' => Tools::apacheModExists('mod_security'),
 			'tabsArray' => $tabs_array,
 			'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
 			'missing_translations' => $missing_translations_fields
@@ -2435,7 +2440,7 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		// TinyMCE
 		$iso_tiny_mce = (Tools::file_exists_cache(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso_lang.'.js') ? $iso_lang : 'en');
-		$ad = dirname($_SERVER['PHP_SELF']);
+		$ad = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_);
 		//return false;
 		return '
 			<script type="text/javascript">
@@ -2499,6 +2504,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
 			'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
+			'mod_security_warning' => Tools::apacheModExists('mod_security'),
 			'tinyMCE' => $this->getTinyMCEForMails($this->lang_selected->iso_code),
 			'mail_content' => $this->displayMailContent($core_mails, $subject_mail, $this->lang_selected, 'core', $this->l('Core emails')),
 			'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
@@ -2717,6 +2723,7 @@ class AdminTranslationsControllerCore extends AdminController
 				'default_theme_name' => self::DEFAULT_THEME_NAME,
 				'count' => $this->total_expression,
 				'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
+				'mod_security_warning' => Tools::apacheModExists('mod_security'),
 				'textarea_sized' => TEXTAREA_SIZED,
 				'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
 				'modules_translations' => isset($this->modules_translations) ? $this->modules_translations : array(),
@@ -2842,6 +2849,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
 			'count' => count($tabs_array['PDF']),
 			'limit_warning' => $this->displayLimitPostWarning(count($tabs_array['PDF'])),
+			'mod_security_warning' => Tools::apacheModExists('mod_security'),
 			'tabsArray' => $tabs_array,
 			'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
 			'missing_translations' => $missing_translations_pdf

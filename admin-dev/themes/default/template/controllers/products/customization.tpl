@@ -26,16 +26,18 @@
 {if isset($obj->id)}
 <div id="product-customization" class="panel product-tab">
 	<input type="hidden" name="submitted_tabs[]" value="Customization" />
-	<h3>{l s='Add or modify customizable properties.'}</h3>
-	
-	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Customization"}
+	<h3>{l s='Add or modify customizable properties'}</h3>
+
+	{if isset($display_common_field) && $display_common_field}
+		<div class="alert alert-info">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=$bullet_common_field}</div>
+	{/if}
 
 	<div class="form-group">		
 		<label class="control-label col-lg-3" for="uploadable_files">
-			{include file="controllers/products/multishop/checkbox.tpl" field="uploadable_files" type="default"}
+			{$bullet_common_field} 
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Number of upload file fields displayed'}">
-				{l s='File fields:'}
+				title="{l s='Number of upload file fields to be displayed to the user.'}">
+				{l s='File fields'}
 			</span>
 		</label>
 		<div class="col-lg-1">
@@ -44,10 +46,10 @@
 	</div>
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="text_fields">
-			{include file="controllers/products/multishop/checkbox.tpl" field="text_fields" type="default"}
+			{$bullet_common_field} 
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Number of text fields displayed'}">
-				{l s='Text fields:'}
+				title="{l s='Number of text fields to be displayed to the user.'}">
+				{l s='Text fields'}
 			</span>
 		</label>
 		<div class="col-lg-1">
@@ -58,7 +60,7 @@
 	<hr/>
 	<div class="form-group">
 		<label class="control-label col-lg-3">
-			{l s='Define the label of the file fields:'}
+			{l s='Define the label of the file fields'}
 		</label>
 		<div class="col-lg-9">
 			{$display_file_labels}
@@ -69,7 +71,7 @@
 	<hr/>
 	<div class="form-group">
 		<label class="control-label col-lg-3">
-			{l s='Define the label of the text fields:'}
+			{l s='Define the label of the text fields'}
 		</label>
 		<div class="col-lg-9">
 			{$display_text_labels}
