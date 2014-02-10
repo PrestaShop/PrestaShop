@@ -1678,7 +1678,6 @@ abstract class ModuleCore
 
 	public function isEnabledForShopContext()
 	{
-		$shop_list = Shop::getContextListShopID();
 		return (bool)Db::getInstance()->getValue('
 			SELECT COUNT(*) n
 			FROM `'._DB_PREFIX_.'module_shop`
