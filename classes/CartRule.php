@@ -620,7 +620,7 @@ class CartRuleCore extends ObjectModel
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON cp.id_product_attribute = pac.id_product_attribute
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')
+							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligibleProductsList)).')
 							AND cp.id_product_attribute > 0');
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
@@ -628,7 +628,7 @@ class CartRuleCore extends ObjectModel
 								if (in_array($cartAttribute['id_attribute'], $productRule['values']))
 								{
 									$countMatchingProducts += $cartAttribute['quantity'];
-									if ($alreadyInCart && $this->gift_product == $cartProduct['id_product']&& $this->gift_product_attribute == $cartProduct['id_product_attribute'])
+									if ($alreadyInCart && $this->gift_product == $cartAttribute['id_product'] && $this->gift_product_attribute == $cartAttribute['id_product_attribute'])
 										--$countMatchingProducts;
 									$matchingProductsList[] = $cartAttribute['id_product'].'-'.$cartAttribute['id_product_attribute'];
 								}
@@ -641,7 +641,7 @@ class CartRuleCore extends ObjectModel
 							SELECT cp.quantity, cp.`id_product`
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')');
+							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligibleProductsList)).')');
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
 							foreach ($cartProducts as $cartProduct)
@@ -662,7 +662,7 @@ class CartRuleCore extends ObjectModel
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							LEFT JOIN `'._DB_PREFIX_.'category_product` catp ON cp.id_product = catp.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')
+							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligibleProductsList)).')
 							AND cp.`id_product` <> '.(int)$this->gift_product);
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
@@ -687,7 +687,7 @@ class CartRuleCore extends ObjectModel
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							LEFT JOIN `'._DB_PREFIX_.'product` p ON cp.id_product = p.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')');
+							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligibleProductsList)).')');
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
 							foreach ($cartManufacturers as $cartManufacturer)
@@ -706,7 +706,7 @@ class CartRuleCore extends ObjectModel
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							LEFT JOIN `'._DB_PREFIX_.'product` p ON cp.id_product = p.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')');
+							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligibleProductsList)).')');
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
 							foreach ($cartSuppliers as $cartSupplier)

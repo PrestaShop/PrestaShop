@@ -32,6 +32,7 @@ class Blockcontact extends Module
 	public function __construct()
 	{
 		$this->name = 'blockcontact';
+		$this->author = 'PrestaShop';
 		$this->tab = 'front_office_features';
 		$this->version = '1.1';
 

@@ -51,6 +51,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			{
 				if (Tools::isSubmit('method'))
 				{
+
 					switch (Tools::getValue('method'))
 					{
 						case 'updateMessage':
@@ -292,7 +293,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			}
 		}
 		elseif (Tools::isSubmit('ajax'))
-			throw new PrestaShopException('Method is not defined');
+			die(Tools::jsonEncode('No products in cart'));
 	}
 
 	public function setMedia()
