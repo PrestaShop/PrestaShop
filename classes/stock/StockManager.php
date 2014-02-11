@@ -643,7 +643,7 @@ class StockManagerCore implements StockManagerInterface
 	 * @param int $id_product_attribute
 	 * @param int $id_warehouse Optional
 	 * @param int $price_te Optional
-	 * @return Collection of Stock
+	 * @return PrestaShopCollection Collection of Stock
 	 */
 	protected function getStockCollection($id_product, $id_product_attribute, $id_warehouse = null, $price_te = null)
 	{

@@ -764,7 +764,7 @@ class CategoryCore extends ObjectModel
 	 * Return an array of all children of the current category
 	 *
 	 * @param int $id_lang
-	 * @return Collection
+	 * @return PrestaShopCollection Collection of Category
 	 */
 	public function getAllChildren($id_lang = null)
 	{
