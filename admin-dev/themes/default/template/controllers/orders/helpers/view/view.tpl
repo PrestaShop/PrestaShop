@@ -1024,10 +1024,18 @@
 					</div>
 					<div class="panel">
 						<table class="table">
+
+							{* Assign order price *}
+							{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
+								{assign var=order_product_price value=($order->total_products)}
+							{else}
+								{assign var=order_product_price value=$order->total_products_wt}
+							{/if}
+
 							<tr id="total_products">
 								<td class="text-right">{l s='Products:'}</td>
 								<td class="amount text-right">
-									{displayPrice price=$order->total_products_wt currency=$currency->id}
+									{displayPrice price=$order_product_price currency=$currency->id}
 								</td>
 								<td class="partial_refund_fields current-edit" style="display:none;"></td>
 							</tr>
@@ -1060,10 +1068,17 @@
 									</div>
 								</td>
 							</tr>
+							{* Assign order price *}
+							{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
+								{assign var=order_total_price value=($order->total_paid_tax_excl)}
+							{else}
+								{assign var=order_total_price value=$order->total_paid_tax_incl}
+							{/if}
+
 							<tr id="total_order">
 								<td class="text-right"><strong>{l s='Total'}</strong></td>
 								<td class="amount text-right">
-									<strong>{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</strong>
+									<strong>{displayPrice price=$order_total_price currency=$currency->id}</strong>
 								</td>
 								<td class="partial_refund_fields current-edit" style="display:none;"></td>
 							</tr>
