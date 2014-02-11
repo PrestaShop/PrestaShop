@@ -59,7 +59,7 @@ class AdminQuickAccessesControllerCore extends AdminController
 				'title' => $this->l('New window'),
 				'align' => 'center',
 				'type' => 'bool',
-				'activeVisu' => 'new_window',
+				'active' => 'new_window',
 				'class' => 'fixed-width-sm'
 			)
 		);
@@ -125,6 +125,34 @@ class AdminQuickAccessesControllerCore extends AdminController
 
 		parent::initPageHeaderToolbar();
 	}
+
+	public function initProcess()
+	{
+		if ((isset($_GET['new_window'.$this->table]) || isset($_GET['new_window'])) && Tools::getValue($this->identifier))
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'newWindow';
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+		}
+
+		parent::initProcess();
+	}
+
+	public function processNewWindow()
+	{
+		if (Validate::isLoadedObject($object = $this->loadObject()))
+		{
+			if ($object->toggleNewWindow())
+				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
+			else
+				$this->errors[] = Tools::displayError('An error occurred while updating new window property.');
+		}
+		else
+			$this->errors[] = Tools::displayError('An error occurred while updating the new window property for this object.').
+				' <b>'.$this->table.'</b> '.
+				Tools::displayError('(cannot load object)');
+
+		return $object;
+	}
 }
-
-
