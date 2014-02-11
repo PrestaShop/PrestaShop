@@ -23,6 +23,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if $product['customizedDatas']}
+{* Assign product price *}
+{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
+	{assign var=product_price value=($product['unit_price_tax_excl'] + $product['ecotax'])}
+{else}
+	{assign var=product_price value=$product['unit_price_tax_incl']}
+{/if}
 	<tr class="customized customized-{$product['id_order_detail']|intval} product-line-row">
 		<td>
 			<input type="hidden" class="edit_product_id_order_detail" value="{$product['id_order_detail']|intval}" />
@@ -36,7 +42,7 @@
 			</a>
 		</td>
 		<td>
-			<span class="product_price_show">{displayPrice price=$product['product_price_wt'] currency=$currency->id|intval}</span>
+			<span class="product_price_show">{displayPrice price=$product_price currency=$currency->id|intval}</span>
 			{if $can_edit}
 			<span class="product_price_edit" style="display:none;">
 				<input type="hidden" name="product_id_order_detail" class="edit_product_id_order_detail" value="{$product['id_order_detail']|intval}" />
