@@ -109,7 +109,7 @@ function blockHover(status)
 		},
 		function(){
 			if ($('body').find('.container').width() == 1170)
-			$(this).parent().removeClass('hovered').removeProp('style');
+			$(this).parent().removeClass('hovered').removeAttr('style');
 		}
 	)});	
 }
