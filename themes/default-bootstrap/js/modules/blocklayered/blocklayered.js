@@ -123,36 +123,11 @@ $(document).ready(function()
 		hideFilterValueAction(this);
 	});
 
-	// To be sure there is no other events attached to the selectProductSort, change the ID
-	var id = 1;
-	while ($('#selectPrductSort').length) { // Because ids are duplicated
-		// Unbind event change on #selectPrductSort
-		$('#selectPrductSort').unbind('change');
-		$('#selectPrductSort').attr('onchange', '');
-		$('#selectPrductSort').addClass('selectProductSort');
-		$('#selectPrductSort').attr('id', 'selectPrductSort'+id);
-		$('label[for=selectPrductSort]').attr('for', 'selectPrductSort'+id);
-		id++;
-	}
-
-	while ($('#selectProductSort').length) { // Because ids are duplicated
-		// Unbind event change on #selectProductSort
-		$('#selectProductSort').unbind('change');
-		$('#selectProductSort').attr('onchange', '');
-		$('#selectProductSort').addClass('selectProductSort');
-		$('#selectProductSort').attr('id', 'selectProductSort'+id);
-		$('label[for=selectProductSort]').attr('for', 'selectProductSort'+id);
-		id++;
-	}
-
-	// Since 1.5, event is add to .selectProductSort and not to #selectPrductSort
-	setTimeout(function() {
-		$('.selectProductSort').unbind('change');
-	}, 100);
-
-	$('.selectProductSort').live('change', function(event) {
+	$('.selectProductSort').unbind('change').bind('change', function(event) {
 		$('.selectProductSort').val($(this).val());
-		reloadContent();
+
+		if($('#layered_form').length > 0)
+			reloadContent();
 	});
 
 	$('.js-nb_item').unbind('change').attr('onchange', '');
@@ -166,9 +141,73 @@ $(document).ready(function()
 	initLayered();
 });
 
+function initFilters()
+{
+	if (typeof filters !== 'undefined')
+	{
+		for (key in filters)
+		{
+			if (filters.hasOwnProperty(key))
+				var filter = filters[key];
+
+			if (typeof filter.slider !== 'undefined' && parseInt(filter.filter_type) == 0)
+			{
+				var filterRange = parseInt(filter.max)-parseInt(filter.min);
+				var step = filterRange / 100;
+
+				if (step > 1)
+					step = parseInt(step);
+
+				addSlider(filter.type,
+				{
+					range: true,
+					step: step,
+					min: parseInt(filter.min),
+					max: parseInt(filter.max),
+					values: [filter.values[0], filter.values[1]],
+					slide: function(event, ui) {
+						stopAjaxQuery();
+
+						if (parseInt(filter.format) < 5)
+						{
+							from = formatCurrency(ui.values[0], parseInt(filter.format), filter.unit);
+							to = formatCurrency(ui.values[1], parseInt(filter.format), filter.unit);
+						}
+						else
+						{
+							from = ui.values[0] + filter.unit;
+							to = ui.values[1] + filter.unit;
+						}
+
+						$('#layered_' + filter.type + '_range').html(from + ' - ' + to);
+					},
+					stop: function () {
+						reloadContent();
+					}
+				}, filter.unit, parseInt(filter.format));
+			}
+			else if(typeof filter.slider !== 'undefined' && parseInt(filter.filter_type) == 1)
+			{
+				$('#layered_' + filter.type + '_range_min').attr('limitValue', filter.min);
+				$('#layered_' + filter.type + '_range_max').attr('limitValue', filter.max);
+			}
+			
+			$('.layered_' + filter.type).show();
+		}
+
+		initUniform();
+	}
+}
+
+function initUniform()
+{
+	$("#layered_form input[type='checkbox'], #layered_form input[type='radio'], select.form-control").uniform();
+}
+
 function hideFilterValueAction(it)
 {
-	if (typeof(layered_hidden_list[$(it).parent().find('ul').attr('id')]) == 'undefined' || layered_hidden_list[$(it).parent().find('ul').attr('id')] == false)
+	if (typeof(layered_hidden_list[$(it).parent().find('ul').attr('id')]) == 'undefined'
+		|| layered_hidden_list[$(it).parent().find('ul').attr('id')] == false)
 	{
 		$(it).parent().find('.hiddable').hide();
 		$(it).parent().find('.hide-action.less').hide();
@@ -205,8 +244,8 @@ function initSliders()
 			case 2:
 			case 3:
 			case 4:
-				from = blocklayeredFormatCurrency($('#layered_'+slider['type']+'_slider').slider('values', 0), slider['format'], slider['unit']);
-				to = blocklayeredFormatCurrency($('#layered_'+slider['type']+'_slider').slider('values', 1), slider['format'], slider['unit']);
+				from = formatCurrency($('#layered_'+slider['type']+'_slider').slider('values', 0), slider['format'], slider['unit']);
+				to = formatCurrency($('#layered_'+slider['type']+'_slider').slider('values', 1), slider['format'], slider['unit']);
 				break;
 			case 5:
 				from =  $('#layered_'+slider['type']+'_slider').slider('values', 0)+slider['unit']
@@ -219,6 +258,7 @@ function initSliders()
 
 function initLayered()
 {
+	initFilters();
 	initSliders();
 	initLocationChange();
 	updateProductUrl();
@@ -230,6 +270,9 @@ function initLayered()
 }
 
 function paginationButton(nbProductsIn) {
+	if (typeof(current_friendly_url) === 'undefined')
+		current_friendly_url = '#';
+
 	$('div.pagination a').not(':hidden').each(function () {
 		if ($(this).attr('href').search('&p=') == -1) {
 			var page = 1;
@@ -515,10 +558,15 @@ function reloadContent(params_plus)
 
 			if (typeof(reloadProductComparison) == 'function')
 				reloadProductComparison();
+
+			filters = result.filters;
+			initFilters();
 			initSliders();
 
+			current_friendly_url = result.current_friendly_url;
+
 			// Currente page url
-			if (typeof(current_friendly_url) == 'undefined')
+			if (typeof(current_friendly_url) === 'undefined')
 				current_friendly_url = '#';
 
 			// Get all sliders value
@@ -539,9 +587,11 @@ function reloadContent(params_plus)
 					current_friendly_url += '/'+blocklayeredSliderName[sliderType]+'-'+$('#layered_'+sliderType+'_range_min').val()+'-'+$('#layered_'+sliderType+'_range_max').val();
 				}
 			});
+
 			if (current_friendly_url == '#')
 				current_friendly_url = '#/';
-			window.location = current_friendly_url;
+
+			window.location.href = current_friendly_url;
 			lockLocationChecking = true;
 
 			if(slideUp)
@@ -588,6 +638,9 @@ function initLocationChange(func, time)
 
 function getUrlParams()
 {
+	if (typeof(current_friendly_url) === 'undefined')
+		current_friendly_url = '#';
+
 	var params = current_friendly_url;
 	if(window.location.href.split('#').length == 2 && window.location.href.split('#')[1] != '')
 		params = '#'+window.location.href.split('#')[1];
@@ -636,51 +689,4 @@ function utf8_decode (utfstr) {
 		}
 	}
 	return res;
-}
-
-
-/**
- * Return a formatted price
- * Copy from tools.js
- */
-function blocklayeredFormatCurrency(price, currencyFormat, currencySign, currencyBlank)
-{
-	// if you modified this function, don't forget to modify the PHP function displayPrice (in the Tools.php class)
-	blank = '';
-	price = parseFloat(price.toFixed(6));
-	price = ps_round(price, priceDisplayPrecision);
-	if (currencyBlank > 0)
-		blank = ' ';
-	if (currencyFormat == 1)
-		return currencySign + blank + blocklayeredFormatNumber(price, priceDisplayPrecision, ',', '.');
-	if (currencyFormat == 2)
-		return (blocklayeredFormatNumber(price, priceDisplayPrecision, ' ', ',') + blank + currencySign);
-	if (currencyFormat == 3)
-		return (currencySign + blank + blocklayeredFormatNumber(price, priceDisplayPrecision, '.', ','));
-	if (currencyFormat == 4)
-		return (blocklayeredFormatNumber(price, priceDisplayPrecision, ',', '.') + blank + currencySign);
-	return price;
-}
-
-
-/**
- * Return a formatted number
- * Copy from tools.js
- */
-function blocklayeredFormatNumber(value, numberOfDecimal, thousenSeparator, virgule)
-{
-	value = value.toFixed(numberOfDecimal);
-	var val_string = value+'';
-	var tmp = val_string.split('.');
-	var abs_val_string = (tmp.length == 2) ? tmp[0] : val_string;
-	var deci_string = ('0.' + (tmp.length == 2 ? tmp[1] : 0)).substr(2);
-	var nb = abs_val_string.length;
-
-	for (var i = 1 ; i < 4; i++)
-		if (value >= Math.pow(10, (3 * i)))
-			abs_val_string = abs_val_string.substring(0, nb - (3 * i)) + thousenSeparator + abs_val_string.substring(nb - (3 * i));
-
-	if (parseInt(numberOfDecimal) == 0)
-		return abs_val_string;
-	return abs_val_string + virgule + (deci_string > 0 ? deci_string : '00');
 }
