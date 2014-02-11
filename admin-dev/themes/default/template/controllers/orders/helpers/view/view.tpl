@@ -442,6 +442,12 @@
 							{l s='Invoice address'}
 						</a>
 					</li>
+					<li>
+						<a href="#messages">
+							<i class="icon-envelope"></i>
+							{l s='Messages'}
+						</a>
+					</li>
 				</ul>
 				<!-- Tab content -->
 				<div class="tab-content panel">
@@ -533,6 +539,67 @@
 						</div>
 						<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.invoice->address1} {$addresses.invoice->postcode} {$addresses.invoice->city} {if ($addresses.invoice->id_state) && isset($addresses.deliveryState)} {$addresses.deliveryState->name}{/if}&markers={$addresses.invoice->address1} {$addresses.invoice->postcode} {$addresses.invoice->city} {if ($addresses.invoice->id_state) && isset($addresses.deliveryState)} {$addresses.deliveryState->name}{/if}&zoom=7&size=600x200&scale=2&sensor=false" class="img-thumbnail">
 					</div>
+					<div class="tab-pane" id="messages">
+						<form action="{$smarty.server.REQUEST_URI}&token={$smarty.get.token}" method="post" onsubmit="if (getE('visibility').checked == true) return confirm('{l s='Do you want to send this message to the customer?'}');">
+						<div id="message" class="form-horizontal">
+							<div class="form-group">
+								<label class="control-label col-lg-3">{l s='Choose a standard message'}</label>
+								<div class="col-lg-9">
+									<select name="order_message" id="order_message" onchange="orderOverwriteMessage(this, '{l s='Do you want to overwrite your existing message?'}')">
+										<option value="0" selected="selected">-</option>
+										{foreach from=$orderMessages item=orderMessage}
+										<option value="{$orderMessage['message']|escape:'html':'UTF-8'}">{$orderMessage['name']}</option>
+										{/foreach}
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-lg-3">{l s='Display to customer?'}</label>
+								<div class="col-lg-9">
+									<div class="input-group col-lg-2">
+										<span class="switch prestashop-switch">
+											<input type="radio" name="visibility" id="visibility_on" value="0" />
+											<label for="visibility_on">
+												{l s='Yes'}
+											</label>
+											<input type="radio" name="visibility" id="visibility_off" value="1" checked="checked" /> 
+											<label for="visibility_off">
+												{l s='No'}
+											</label>
+											<a class="slide-button btn"></a>
+										</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-lg-3">{l s='Message'}</label>
+								<div class="col-lg-9">
+									<textarea id="txt_msg" class="textarea-autosize" name="message">{Tools::getValue('message')|escape:'html':'UTF-8'}</textarea>
+									<p id="nbchars"></p>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-lg-9 col-lg-offset-3">
+									<input type="hidden" name="id_order" value="{$order->id}" />
+									<input type="hidden" name="id_customer" value="{$order->id_customer}" />
+									<button type="submit" id="submitMessage" class="btn btn-default" name="submitMessage">
+										<i class="icon-envelope text-success"></i>
+										{l s='Send'}
+									</button>
+								</div>
+							</div>
+
+							<hr/>
+							<a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}">
+								{l s='Show all messages.'}
+								<i class="icon-external-link"></i>
+							</a>
+						</div>
+					</form>
+					</div>
 				</div>
 				<script>
 					$('#tabAddresses a').click(function (e) {
@@ -540,82 +607,6 @@
 						$(this).tab('show')
 					})
 				</script>
-
-<!-- message -->
-				<form action="{$smarty.server.REQUEST_URI}&token={$smarty.get.token}" method="post" onsubmit="if (getE('visibility').checked == true) return confirm('{l s='Do you want to send this message to the customer?'}');">
-					<!-- <p id="message_m" style="display: {if Tools::getValue('message')}none{else}block{/if}">
-						{l s='to add a comment or send a message to the customer.'}
-					</p> -->
-					<div id="message" class="form-horizontal well" style="display:none">
-						<div class="form-group">
-							<label class="control-label col-lg-3">{l s='Choose a standard message'}</label>
-							<div class="col-lg-9">
-								<select name="order_message" id="order_message" onchange="orderOverwriteMessage(this, '{l s='Do you want to overwrite your existing message?'}')">
-									<option value="0" selected="selected">-</option>
-									{foreach from=$orderMessages item=orderMessage}
-									<option value="{$orderMessage['message']|escape:'html':'UTF-8'}">{$orderMessage['name']}</option>
-									{/foreach}
-								</select>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="control-label col-lg-3">{l s='Display to customer?'}</label>
-							<div class="col-lg-9">
-								<div class="row">
-									<div class="input-group col-lg-2">
-										<span class="switch prestashop-switch">
-											<input type="radio" name="visibility" id="visibility_on" value="0" />
-											<label class="radio" for="visibility_on">
-												<i class="icon-check-sign text-success"></i>
-												{l s='Yes'}
-											</label>
-											<input type="radio" name="visibility" id="visibility_off" value="1" checked="checked" /> 
-											<label class="radio" for="visibility_off">
-												<i class="icon-ban-circle text-danger"></i>
-												{l s='No'}
-											</label>
-											<a class="slide-button btn"></a>
-										</span>
-									</div>
-								</div>				
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="control-label col-lg-3">{l s='Message'}</label>
-							<div class="col-lg-9">
-								<textarea id="txt_msg" class="textarea-autosize" name="message">{Tools::getValue('message')|escape:'html':'UTF-8'}</textarea>
-								<p id="nbchars"></p>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-lg-9 col-lg-offset-3">
-								<input type="hidden" name="id_order" value="{$order->id}" />
-								<input type="hidden" name="id_customer" value="{$order->id_customer}" />
-								<button type="button" id="cancelMessage" class="btn btn-default">
-									<i class="icon-remove text-danger"></i>
-									{l s='Cancel'}
-								</button>
-								<button type="submit" id="submitMessage" class="btn btn-default" name="submitMessage">
-									<i class="icon-ok text-success"></i>
-									{l s='Send'}
-								</button>
-							</div>
-						</div>
-
-						<hr/>
-						<button id="newMessage" type="button" class="btn btn-default">
-							<i class="icon-envelope"></i>
-							{l s='New message'}
-						</button>
-						<a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}">
-							<b>{l s='Click here'}</b> {l s='to see all messages.'}
-							<i class="icon-external-link"></i>
-						</a>
-					</div>
-				</form>
 			</div>
 		</div>
 	</div>
