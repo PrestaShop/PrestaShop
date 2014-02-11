@@ -7823,15 +7823,17 @@ div.star.star_hover:after {
   background: white !important; }
 
 .fancybox-skin .fancybox-close {
-  top: 8px;
-  right: 8px;
   width: 28px;
   height: 28px;
   background: none;
   font-size: 28px;
   line-height: 28px;
   color: #333333;
-  text-align: center; }
+  text-align: center;
+  background: white;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px; }
   .fancybox-skin .fancybox-close:hover {
     color: #515151; }
   .fancybox-skin .fancybox-close:after {
