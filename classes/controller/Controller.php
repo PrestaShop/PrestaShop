@@ -403,9 +403,7 @@ abstract class ControllerCore
 
 		if ($this->controller_type == 'front')
 		{
-			$dom_availaible = false;
  			$dom_availaible = extension_loaded('dom')? true : false;
-
  			if ($dom_availaible)
 				$html = Media::deferInlineScripts($html);
 			$html = trim(str_replace(array('</body>', '</html>'), '', $html))."\n";
