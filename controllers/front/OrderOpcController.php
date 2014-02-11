@@ -293,7 +293,10 @@ class OrderOpcControllerCore extends ParentOrderController
 			}
 		}
 		elseif (Tools::isSubmit('ajax'))
-			die(Tools::jsonEncode('No products in cart'));
+		{
+			$this->errors[] = Tools::displayError('No product in your cart.');
+			die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
+		}
 	}
 
 	public function setMedia()
