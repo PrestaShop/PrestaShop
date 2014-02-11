@@ -449,7 +449,7 @@ function reloadContent(params_plus)
 
 			if (result.heading != '')
 			{
-				$('h1.page-heading').html(result.heading);
+				$('h1.page-heading .cat-name').html(result.heading);
 				$('span.category-name').html(result.heading);
 			}
 
