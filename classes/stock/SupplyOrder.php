@@ -279,7 +279,7 @@ class SupplyOrderCore extends ObjectModel
 	/**
 	 * Retrieves the details entries (i.e. products) collection for the current order
 	 *
-	 * @return Collection of SupplyOrderDetail
+	 * @return PrestaShopCollection Collection of SupplyOrderDetail
 	 */
 	public function getEntriesCollection()
 	{

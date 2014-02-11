@@ -1295,7 +1295,7 @@ class OrderCore extends ObjectModel
 	 * @since 1.5.0.14
 	 * 
 	 * @param string $reference
-	 * @return Collection of Order
+	 * @return PrestaShopCollection Collection of Order
 	 */
 	public static function getByReference($reference)
 	{
@@ -1496,7 +1496,7 @@ class OrderCore extends ObjectModel
 	/**
 	 * This method allows to get all Order Payment for the current order
 	 * @since 1.5.0.1
-	 * @return Collection of Order Payment
+	 * @return PrestaShopCollection Collection of OrderPayment
 	 */
 	public function getOrderPaymentCollection()
 	{
@@ -1620,7 +1620,7 @@ class OrderCore extends ObjectModel
 	 *
 	 * Get all order_slips for the current order
 	 * @since 1.5.0.2
-	 * @return Collection of Order slip
+	 * @return PrestaShopCollection Collection of OrderSlip
 	 */
 	public function getOrderSlipsCollection()
 	{
@@ -1633,7 +1633,7 @@ class OrderCore extends ObjectModel
 	 *
 	 * Get all invoices for the current order
 	 * @since 1.5.0.1
-	 * @return Collection of Order invoice
+	 * @return PrestaShopCollection Collection of OrderInvoice
 	 */
 	public function getInvoicesCollection()
 	{
@@ -1646,7 +1646,7 @@ class OrderCore extends ObjectModel
 	 *
 	 * Get all delivery slips for the current order
 	 * @since 1.5.0.2
-	 * @return Collection of Order invoice
+	 * @return PrestaShopCollection Collection of OrderInvoice
 	 */
 	public function getDeliverySlipsCollection()
 	{
@@ -1659,7 +1659,7 @@ class OrderCore extends ObjectModel
 	/**
 	 * Get all not paid invoices for the current order
 	 * @since 1.5.0.2
-	 * @return Collection of Order invoice not paid
+	 * @return PrestaShopCollection Collection of Order invoice not paid
 	 */
 	public function getNotPaidInvoicesCollection()
 	{

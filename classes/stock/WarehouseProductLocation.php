@@ -123,7 +123,7 @@ class WarehouseProductLocationCore extends ObjectModel
 	 * For a given product, gets its warehouses
 	 *
 	 * @param int $id_product
-	 * @return Collection The type of the collection is WarehouseProductLocation
+	 * @return PrestaShopCollection The type of the collection is WarehouseProductLocation
 	 */
 	public static function getCollection($id_product)
 	{

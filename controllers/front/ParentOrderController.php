@@ -417,7 +417,7 @@ class ParentOrderControllerCore extends FrontController
 			if (key($customerAddresses) != 0)
 				$customerAddresses = array_values($customerAddresses);
 
-			if (!count($customerAddresses))
+			if (!count($customerAddresses) && !Tools::isSubmit('ajax'))
 				if (!Address::isCountryActiveById((int)$this->context->cart->id_address_delivery) || !Address::isCountryActiveById((int)$this->context->cart->id_address_invoice))
 				{
 					$back_url = $this->context->link->getPageLink('order', true, (int)$this->context->language->id, array('step' => Tools::getValue('step'), 'multi-shipping' => (int)Tools::getValue('multi-shipping')));

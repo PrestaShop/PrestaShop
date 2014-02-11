@@ -2169,6 +2169,7 @@ class AdminControllerCore extends Controller
 			'table' => $this->table,
 			'current' => self::$currentIndex,
 			'token' => $this->token,
+			'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
 			'stock_management' => (int)Configuration::get('PS_STOCK_MANAGEMENT')
 		));
 		
