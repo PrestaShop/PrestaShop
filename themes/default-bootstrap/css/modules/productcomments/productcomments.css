@@ -49,10 +49,8 @@
         line-height: 20px; } }
     .comments_advices a:before {
       background: #929292;
-      -webkit-border-radius: 50px;
       -moz-border-radius: 50px;
-      -ms-border-radius: 50px;
-      -o-border-radius: 50px;
+      -webkit-border-radius: 50px;
       border-radius: 50px;
       color: white;
       display: inline-block;
@@ -93,13 +91,9 @@
   border-width: 0; }
 
 #new_comment_form {
-  width: 465px;
   overflow: hidden;
   color: #333333;
   text-align: left; }
-  @media (max-width: 767px) {
-    #new_comment_form {
-      width: 275px; } }
   #new_comment_form h2 {
     margin-bottom: 10px; }
   #new_comment_form .title {
@@ -132,8 +126,11 @@
         font-size: 13px;
         color: #000; }
   #new_comment_form .new_comment_form_content {
-    padding: 15px;
+    padding: 15px 25px 15px 15px;
     background: #f8f8f8; }
+    @media (max-width: 767px) {
+      #new_comment_form .new_comment_form_content {
+        padding-left: 25px; } }
     #new_comment_form .new_comment_form_content .intro_form {
       padding-bottom: 10px;
       font-weight: bold;
