@@ -1130,7 +1130,7 @@ function ajaxStates(id_state_selected)
 	$.ajax({
 		url: "index.php",
 		cache: false,
-		data: "token="+state_token+"&ajax=1&action=states&tab=AdminStates&no_empty=1&id_country="+$('#id_country').val() + "&id_state=" + $('#id_state').val(),
+		data: "token="+state_token+"&ajax=1&action=states&tab=AdminStates&no_empty=0&id_country="+$('#id_country').val() + "&id_state=" + $('#id_state').val(),
 		success: function(html)
 		{
 			if (html == 'false')
