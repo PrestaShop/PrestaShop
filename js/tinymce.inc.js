@@ -13,8 +13,8 @@ function tinySetup(config)
 	default_config = {
 		selector: ".rte" ,
 		plugins : "link image paste pagebreak table contextmenu preview filemanager table code media autoresize",
-		toolbar1 : "code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,|,blockquote,forecolor,backcolor",
-		toolbar2: "pasteword,|,bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,|,cleanup,|,media,image",
+		toolbar1 : "code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,|,blockquote,forecolor,backcolor,pasteword,|,bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,|,cleanup,|,media,image",
+		toolbar2: "",
 		external_filemanager_path: ad+"/filemanager/",
 		filemanager_title: "File manager" ,
 		external_plugins: { "filemanager" : ad+"/filemanager/plugin.min.js"},
