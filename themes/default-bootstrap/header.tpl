@@ -105,7 +105,7 @@
 					</div>
 					<div class="row">
 						{if isset($left_column_size) && !empty($left_column_size)}
-						<div id="left_column" class="column col-xs-12 col-sm-3">
+						<div id="left_column" class="column col-xs-12 col-sm-{$left_column_size|intval}">
 							{$HOOK_LEFT_COLUMN}
 						</div>
 						{/if}
