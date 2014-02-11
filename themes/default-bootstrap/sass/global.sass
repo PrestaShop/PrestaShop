@@ -2522,8 +2522,6 @@ div.star.star_hover
 	background: $light-background !important
 
 .fancybox-skin .fancybox-close
-	top: 8px
-	right: 8px
 	width: 28px
 	height: 28px
 	background: none
@@ -2531,6 +2529,8 @@ div.star.star_hover
 	line-height: 28px
 	color: $base-text-color
 	text-align: center
+	background: #fff
+	@include border-radius(50px)
 	&:hover 
 		color: $link-hover-color
 	&:after
