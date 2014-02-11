@@ -258,9 +258,9 @@ class AdminStatesControllerCore extends AdminController
 			if (is_array($states) AND !empty($states))
 			{
 				$list = '';
-				if (Tools::getValue('no_empty') != true)
+				if ((bool)Tools::getValue('no_empty') != true)
 				{
-					$empty_value = (Tools::isSubmit('empty_value')) ? Tools::getValue('empty_value') : '----------';
+					$empty_value = (Tools::isSubmit('empty_value')) ? Tools::getValue('empty_value') : '-';
 					$list = '<option value="0">'.Tools::htmlentitiesUTF8($empty_value).'</option>'."\n";
 				}
 
