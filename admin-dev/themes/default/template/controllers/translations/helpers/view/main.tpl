@@ -101,7 +101,9 @@
 				<label class="control-label col-lg-3" for="theme">{l s='Select your theme'}</label>
 				<div class="col-lg-4">
 					<select name="theme" id="theme">
+						{if !$host_mode}
 						<option value="">{l s='Core (no theme selected)'}</option>
+						{/if}
 						{foreach $themes as $theme}
 							<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
 						{/foreach}
