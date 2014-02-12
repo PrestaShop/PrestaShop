@@ -496,8 +496,8 @@ $(document).ready(function()
 		
 		if (!$(this).attr('eventCheckboxChange'))
 		{
-			$(this).live('change', function() { $(this).checkboxChange(fnChecked, fnUnchecked); });
-			$(this).attr('eventCheckboxChange', true);
+			$(this).on('change', function() { $(this).checkboxChange(fnChecked, fnUnchecked); });
+			$(this).prop('eventCheckboxChange', true);
 		}
 	};
 

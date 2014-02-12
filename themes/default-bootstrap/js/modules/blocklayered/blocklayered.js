@@ -34,7 +34,7 @@ $(document).ready(function()
 	openCloseFilter();
 
 	// Click on color
-	$('#layered_form input[type=button], #layered_form label.layered_color').live('click', function()
+	$('#layered_form input[type=button], #layered_form label.layered_color').on('click', function()
 	{
 		if (!$('input[name='+$(this).attr('name')+'][type=hidden]').length)
 			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).val($(this).attr('rel')).appendTo('#layered_form');
@@ -44,13 +44,13 @@ $(document).ready(function()
 	});
 
 	// Click on checkbox
-	$('#layered_form input[type=checkbox], #layered_form input[type=radio], #layered_form select').live('change', function()
+	$('#layered_form input[type=checkbox], #layered_form input[type=radio], #layered_form select').on('change', function()
 	{
 		reloadContent();
 	});
 
 	// Changing content of an input text
-	$('#layered_form input.layered_input_range').live('keyup', function()
+	$('#layered_form input.layered_input_range').on('keyup', function()
 	{
 		if ($(this).attr('timeout_id'))
 			window.clearTimeout($(this).attr('timeout_id'));
@@ -82,7 +82,7 @@ $(document).ready(function()
 		}, 500, this));
 	});
 
-	$('#layered_block_left .radio').live('click', function() {
+	$('#layered_block_left .radio').on('click', function() {
 		var name = $(this).attr('name');
 		$.each($(this).parent().parent().find('input[type=button]'), function (it, item) {
 			if ($(item).hasClass('on') && $(item).attr('name') != name) {
@@ -93,7 +93,7 @@ $(document).ready(function()
 	});
 
 	// Click on label
-	$('#layered_block_left label a').live({
+	$('#layered_block_left label a').on({
 		click: function() {
 			var disable = $(this).parent().parent().find('input').attr('disabled');
 			if (disable == ''
@@ -108,7 +108,7 @@ $(document).ready(function()
 	});
 
 	layered_hidden_list = {};
-	$('.hide-action').live('click', function() {
+	$('.hide-action').on('click', function() {
 		if (typeof(layered_hidden_list[$(this).parent().find('ul').attr('id')]) == 'undefined' || layered_hidden_list[$(this).parent().find('ul').attr('id')] == false)
 		{
 			layered_hidden_list[$(this).parent().find('ul').attr('id')] = true;
@@ -132,7 +132,7 @@ $(document).ready(function()
 
 	$('.js-nb_item').unbind('change').attr('onchange', '');
 
-	$('.js-nb_item').live('change', function(event) {
+	$('.js-nb_item').on('change', function(event) {
 		$('.js-nb_item').val($(this).val());
 		reloadContent();
 	});
@@ -339,7 +339,7 @@ function paginationButton(nbProductsIn) {
 
 function cancelFilter()
 {
-	$('#enabled_filters a').live('click', function(e)
+	$('#enabled_filters a').on('click', function(e)
 	{
 		if ($(this).attr('rel').search(/_slider$/) > 0)
 		{
@@ -375,7 +375,7 @@ function cancelFilter()
 
 function openCloseFilter()
 {
-	$('#layered_form span.layered_close a').live('click', function(e)
+	$('#layered_form span.layered_close a').on('click', function(e)
 	{
 		if ($(this).html() == '&lt;')
 		{
