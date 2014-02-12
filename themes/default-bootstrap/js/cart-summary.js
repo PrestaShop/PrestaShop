@@ -25,11 +25,11 @@
 
 $(document).ready(function()
 {
-	$('.cart_quantity_up').unbind('click').live('click', function(){upQuantity($(this).attr('id').replace('cart_quantity_up_', '')); return false;});
-	$('.cart_quantity_down').unbind('click').live('click', function(){downQuantity($(this).attr('id').replace('cart_quantity_down_', '')); return false;});
-	$('.cart_quantity_delete' ).unbind('click').live('click', function(){deleteProductFromSummary($(this).attr('id')); return false;});
+	$('.cart_quantity_up').unbind('click').on('click', function(){upQuantity($(this).attr('id').replace('cart_quantity_up_', '')); return false;});
+	$('.cart_quantity_down').unbind('click').on('click', function(){downQuantity($(this).attr('id').replace('cart_quantity_down_', '')); return false;});
+	$('.cart_quantity_delete' ).unbind('click').on('click', function(){deleteProductFromSummary($(this).attr('id')); return false;});
 	$('.cart_quantity_input').typeWatch({highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, true, this.el);}});
-	$('.cart_address_delivery').live('change', function(){changeAddressDelivery($(this));});
+	$('.cart_address_delivery').on('change', function(){changeAddressDelivery($(this));});
 	cleanSelectAddressDelivery();
 });
 
@@ -809,11 +809,11 @@ $(document).ready(function() {
 	
 	refreshDeliveryOptions();
 	
-	$('.delivery_option_radio').live('change', function() {
+	$('.delivery_option_radio').on('change', function() {
 		refreshDeliveryOptions();
 	});
 	
-	$('#allow_seperated_package').live('click', function() {
+	$('#allow_seperated_package').on('click', function() {
 		$.ajax({
 			type: 'POST',
 			headers: { "cache-control": "no-cache" },
