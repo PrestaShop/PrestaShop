@@ -8,7 +8,7 @@
     <meta_keywords/>
     <meta_title/>
     <name>Faded Short Sleeve T-shirts</name>
-    <available_now>In stock</available_now>
+    <available_now>En stock</available_now>
     <available_later/>
   </product>
   <product id="Blouse" id_shop="1">
@@ -19,7 +19,7 @@
     <meta_keywords/>
     <meta_title/>
     <name>Blouse</name>
-    <available_now>In stock</available_now>
+    <available_now>En stock</available_now>
     <available_later/>
   </product>
   <product id="Printed_Dress" id_shop="1">
@@ -30,7 +30,7 @@
     <meta_keywords/>
     <meta_title/>
     <name>Printed Dress</name>
-    <available_now>In stock</available_now>
+    <available_now>En stock</available_now>
     <available_later/>
   </product>
   <product id="Printed_Dress_1" id_shop="1">
@@ -41,7 +41,7 @@
     <meta_keywords/>
     <meta_title/>
     <name>Printed Dress</name>
-    <available_now>In stock</available_now>
+    <available_now>En stock</available_now>
     <available_later/>
   </product>
   <product id="Printed_Summer_Dress" id_shop="1">
@@ -52,7 +52,7 @@
     <meta_keywords/>
     <meta_title/>
     <name>Printed Summer Dress</name>
-    <available_now>In stock</available_now>
+    <available_now>En stock</available_now>
     <available_later/>
   </product>
   <product id="Printed_Summer_Dress_1" id_shop="1">
@@ -63,7 +63,7 @@
     <meta_keywords/>
     <meta_title/>
     <name>Printed Summer Dress</name>
-    <available_now>In stock</available_now>
+    <available_now>En stock</available_now>
     <available_later/>
   </product>
   <product id="Printed_Chiffon_Dress" id_shop="1">
@@ -74,7 +74,7 @@
     <meta_keywords/>
     <meta_title/>
     <name>Printed Chiffon Dress</name>
-    <available_now>In stock</available_now>
+    <available_now>En stock</available_now>
     <available_later/>
   </product>
 </entity_product>
