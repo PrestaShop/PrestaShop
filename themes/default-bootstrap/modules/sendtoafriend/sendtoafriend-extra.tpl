@@ -66,13 +66,13 @@
 						</p>
 					</div>
 					<p class="submit">
+						<button id="sendEmail" class="btn button button-small" name="sendEmail" type="submit">
+							<span>{l s='Send' mod='sendtoafriend'}</span>
+						</button>&nbsp;
+						{l s='or' mod='sendtoafriend'}&nbsp;
 						<a class="closefb" href="#">
 							{l s='Cancel' mod='sendtoafriend'}
 						</a>
-						&nbsp;{l s='or' mod='sendtoafriend'}&nbsp;					
-						<button id="sendEmail" class="btn button button-small" name="sendEmail" type="submit">
-							<span>{l s='Send' mod='sendtoafriend'}</span>
-						</button>
 					</p>
 				</div> <!-- .send_friend_form_content -->
 			</div>
