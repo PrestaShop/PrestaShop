@@ -702,39 +702,57 @@ class AdminTranslationsControllerCore extends AdminController
 					Tools::deleteDirectory($sandbox, true);
 				}
 				
+				$i = 0;
+				$tmp_array = array();
+				foreach($files_paths as $files_path)
+				{
+					$path = dirname($files_path);
+					if (is_dir(_PS_TRANSLATIONS_DIR_.'../'.$path) && !is_writable(_PS_TRANSLATIONS_DIR_.'../'.$path) && !in_array($path, $tmp_array))
+					{
+						$this->errors[] = (!$i++? Tools::displayError('The archive cannot be extracted.').' ' : '').Tools::displayError('The server does not have permissions for writing.').' '.sprintf(Tools::displayError('Please check rights for %s'), $path);
+						$tmp_array[] = $path;
+					}
+
+				}
+
 				if (count($this->errors))
 					return false;
 
-				if ($gz->extractList($files_paths, _PS_TRANSLATIONS_DIR_.'../'))
+				if ($error = $gz->extractList($files_paths, _PS_TRANSLATIONS_DIR_.'../'))
 				{
-					foreach ($files_list as $file2check)
-						if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_.'../'.$file2check['filename'], Tools::getDefaultIndexContent()))
-							continue;
-
-					// Clear smarty modules cache
-					Tools::clearCache();
-
-					if (Validate::isLanguageFileName($filename))
+					if (is_object($error) && !empty($error->message))
+						$this->errors[] = Tools::displayError('The archive cannot be extracted.'). ' '.$error->message;
+					else
 					{
-						if (!Language::checkAndAddLanguage($iso_code))
-							$conf = 20;
-						else
+						foreach ($files_list as $file2check)
+							if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_.'../'.$file2check['filename'], Tools::getDefaultIndexContent()))
+								continue;
+	
+						// Clear smarty modules cache
+						Tools::clearCache();
+	
+						if (Validate::isLanguageFileName($filename))
 						{
-							// Reset cache 
-							Language::loadLanguages();
-							
-							AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
-							$this->checkAndAddThemesFiles($files_list, $themes_selected);
-							$tab_errors = AdminTranslationsController::addNewTabs($iso_code, $files_list);
-							
-							if (count($tab_errors))
+							if (!Language::checkAndAddLanguage($iso_code))
+								$conf = 20;
+							else
 							{
-								$this->errors += $tab_errors;
-								return false;
+								// Reset cache 
+								Language::loadLanguages();
+								
+								AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
+								$this->checkAndAddThemesFiles($files_list, $themes_selected);
+								$tab_errors = AdminTranslationsController::addNewTabs($iso_code, $files_list);
+								
+								if (count($tab_errors))
+								{
+									$this->errors += $tab_errors;
+									return false;
+								}
 							}
 						}
+						$this->redirect(false, (isset($conf) ? $conf : '15'));
 					}
-					$this->redirect(false, (isset($conf) ? $conf : '15'));
 				}
 				$this->errors[] = Tools::displayError('The archive cannot be extracted.');
 			}
