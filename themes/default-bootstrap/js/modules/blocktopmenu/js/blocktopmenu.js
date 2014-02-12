@@ -29,7 +29,7 @@ var mCategoryGrover = $('.sf-contener .cat-title');
 
 // init Super Fish Menu for 767px+ resolution
 
-function desctopInit() {
+function desktopInit() {
 	mCategoryGrover.off();
 	mCategoryGrover.removeClass('active');
 	$('.sf-menu > li > ul').removeClass('menu-mobile').parent().find('.menu-mobile-grover').remove();
@@ -70,7 +70,7 @@ function mobileInit() {
 // change the menu display at different resolutions
 function menuChange(status)
 {
-	status == 'enable'?mobileInit():desctopInit()
+	status == 'enable'?mobileInit():desktopInit()
 }
 
 // check resolution
