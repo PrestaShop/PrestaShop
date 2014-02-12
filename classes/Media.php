@@ -694,7 +694,7 @@ class MediaCore
 				if ($src = $script->getAttribute('src'))
 					Context::getContext()->controller->addJS($src);
 
-		return preg_replace_callback('/<script[^>]*>(.*)<\/script\s*[^>]*>/Uims', array('Media', 'deferScript'), $output);
+		return preg_replace_callback('/<script[^>]*>(.*)<\s*\/script\s*[^>]*>/Uims', array('Media', 'deferScript'), $output);
 	}
 	
 	public static function deferScript($matches)
