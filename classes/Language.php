@@ -839,6 +839,21 @@ class LanguageCore extends ObjectModel
 			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 			$gz = new Archive_Tar($file, true);
 			$files_list = AdminTranslationsController::filterTranslationFiles(Language::getLanguagePackListContent($iso, $gz));
+			$files_paths = AdminTranslationsController::filesListToPaths($files_list);
+
+			$i = 0;
+			$tmp_array = array();
+
+			foreach($files_paths as $files_path)
+			{
+				$path = dirname($files_path);
+				if (is_dir(_PS_TRANSLATIONS_DIR_.'../'.$path) && !is_writable(_PS_TRANSLATIONS_DIR_.'../'.$path) && !in_array($path, $tmp_array))
+				{
+					$errors[] = (!$i++? Tools::displayError('The archive cannot be extracted.').' ' : '').Tools::displayError('The server does not have permissions for writing.').' '.sprintf(Tools::displayError('Please check rights for %s'), $path);
+					$tmp_array[] = $path;
+				}
+
+			}
 
 			if (defined('_PS_HOST_MODE_'))
 			{
