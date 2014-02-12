@@ -2358,24 +2358,19 @@ class AdminThemesControllerCore extends AdminController
 				{
 					if (strncmp($key, 'to_install', strlen('to_install')) == 0)
 					{
-						if (file_exists(_PS_MODULE_DIR_.$value))
+						$module = Module::getInstanceByName($value);
+						if ($module)
 						{
-							if (!class_exists($value) && file_exists(_PS_MODULE_DIR_.$value.'/'.$value.'.php'))
-								require(_PS_MODULE_DIR_.$value.'/'.$value.'.php');
+							if (!Module::isInstalled($module->name))
+								$module->install();
+							if (!Module::isEnabled($module->name))
+								$module->enable();
 
-							if (class_exists($value))
-							{
-								$module = Module::getInstanceByName($value);
-								if (!Module::isInstalled($module->name))
-									$module->install();
-								if (!Module::isEnabled($module->name))
-									$module->enable();
-
-								if ((int)$module->id > 0 && isset($module_hook[$module->name]))
-									$this->hookModule($module->id, $module_hook[$module->name], $id_shop);
-							}
-							unset($module_hook[$module->name]);
+							if ((int)$module->id > 0 && isset($module_hook[$module->name]))
+								$this->hookModule($module->id, $module_hook[$module->name], $id_shop);
 						}
+						unset($module_hook[$module->name]);
+
 					}
 					else if (strncmp($key, 'to_enable', strlen('to_enable')) == 0)
 					{
