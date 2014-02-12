@@ -2593,7 +2593,7 @@ class ProductCore extends ObjectModel
 			$zipcode,
 			$id_currency,
 			$id_group,
-			$cart_quantity,
+			$quantity,
 			$usetax,
 			$decimals,
 			$only_reduc,
@@ -2604,7 +2604,7 @@ class ProductCore extends ObjectModel
 			$id_customer,
 			$use_customer_price,
 			$id_cart, 
-			$quantity
+			$cart_quantity
 		);
 	}
 
