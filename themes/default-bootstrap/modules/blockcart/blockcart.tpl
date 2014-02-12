@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <!-- MODULE Block cart -->
-<div class="col-sm-4 clearfix{if $PS_CATALOG_MODE} header_user_catalog{/if}">
+<div class="col-sm-4 clearfix pull-right{if $PS_CATALOG_MODE} header_user_catalog{/if}">
 	<div id="shopping_cart">
 		<a href="{$link->getPageLink($order_process, true)|escape:'html':'UTF-8'}" title="{l s='View my shopping cart' mod='blockcart'}" rel="nofollow">
 			<b>{l s='Cart' mod='blockcart'}</b>
