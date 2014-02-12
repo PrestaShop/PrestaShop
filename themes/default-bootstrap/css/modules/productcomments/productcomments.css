@@ -49,8 +49,10 @@
         line-height: 20px; } }
     .comments_advices a:before {
       background: #929292;
-      -moz-border-radius: 50px;
       -webkit-border-radius: 50px;
+      -moz-border-radius: 50px;
+      -ms-border-radius: 50px;
+      -o-border-radius: 50px;
       border-radius: 50px;
       color: white;
       display: inline-block;
