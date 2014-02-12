@@ -41,7 +41,7 @@
             </strong>
             {foreach from=$wishlists item=wishlist name=i}
                 {if $wishlist.id_wishlist != $current_wishlist.id_wishlist}
-                    <a href="{$base_dir_ssl}modules/blockwishlist/view.php?token={$wishlist.token}" rel="nofollow"
+                    <a href="{$base_dir_ssl|rtrim:'/'|cat:$modules_dir}blockwishlist/view.php?token={$wishlist.token}" rel="nofollow"
                        title="{$wishlist.name}">
                         {$wishlist.name}
                     </a>

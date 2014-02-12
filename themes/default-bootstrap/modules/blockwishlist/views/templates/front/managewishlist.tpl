@@ -51,7 +51,7 @@
         </ul>
         <p class="wishlisturl form-group">
             <label>{l s='Permalink' mod='blockwishlist'}:</label>
-            <input type="text" class="form-control" value="{$base_dir_ssl}module/blockwishlist/view?token={$token_wish|escape:'html':'UTF-8'}" readonly="readonly"/>
+            <input type="text" class="form-control" value="{$base_dir_ssl|rtrim:'/'|cat:$modules_dir}blockwishlist/view?token={$token_wish|escape:'html':'UTF-8'}" readonly="readonly"/>
         </p>
         <p class="submit">
             <a id="showSendWishlist" class="btn btn-default button button-small" href="#" onclick="WishlistVisibility('wl_send', 'SendWishlist'); return false;" title="{l s='Send this wishlist' mod='blockwishlist'}">
