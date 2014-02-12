@@ -69,7 +69,7 @@ $(document).ready(function()
 		}
 	);
 
-	$('.delete_voucher').live('click', function() {
+	$(document).on('click','.delete_voucher', function() {
 		$.ajax({
 			type: 'POST',
 			headers: { "cache-control": "no-cache" },
