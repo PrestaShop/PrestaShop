@@ -438,7 +438,7 @@ function displayImage(domAAroundImgThumb, no_animation)
 				'title' : new_title
 			}).load(function(){
 				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-					$(this).prop('rel', new_href);
+					$(this).attr('rel', new_href);
 			}); 
 		}
 		$('#views_block li a').removeClass('shown');
