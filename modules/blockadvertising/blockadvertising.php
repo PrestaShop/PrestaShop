@@ -45,7 +45,7 @@ class BlockAdvertising extends Module
 	{
 		$this->name = 'blockadvertising';
 		$this->tab = 'advertising_marketing';
-		$this->version = '0.6';
+		$this->version = '0.7';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -224,12 +224,6 @@ class BlockAdvertising extends Module
 
 	public function renderForm()
 	{
-		$adv_imgname = 'advertising';
-		if (Shop::getContext() == Shop::CONTEXT_GROUP)
-			$adv_imgname = 'advertising-g'.(int)$this->context->shop->getContextShopGroupID();
-		elseif (Shop::getContext() == Shop::CONTEXT_SHOP)
-			$adv_imgname = 'advertising-s'.(int)$this->context->shop->getContextShopID();
-
 		$fields_form = array(
 			'form' => array(
 				'legend' => array(
@@ -242,7 +236,7 @@ class BlockAdvertising extends Module
 						'label' => $this->l('Block image'),
 						'name' => 'adv_img',
 						'desc' => $this->l('Image will be displayed as 155 pixels by 163 pixels.'),
-						'thumb' => '../modules/'.$this->name.'/'.$adv_imgname.'.jpg',
+						'thumb' => $this->context->link->protocol_content.$this->adv_img,
 					),
 					array(
 						'type' => 'text',
