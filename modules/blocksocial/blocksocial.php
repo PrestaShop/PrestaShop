@@ -34,6 +34,7 @@ class blocksocial extends Module
 		$this->name = 'blocksocial';
 		$this->tab = 'front_office_features';
 		$this->version = '1.0';
+		$this->author = 'PrestaShop';
 
 		$this->bootstrap = true;
 		parent::__construct();	
