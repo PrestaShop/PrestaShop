@@ -259,7 +259,7 @@ class AdminCmsControllerCore extends AdminController
 	}
 	
 	public function postProcess()
-	{	
+	{
 		if (Tools::isSubmit('viewcms') && ($id_cms = (int)Tools::getValue('id_cms')))
 		{
 			parent::postProcess();

@@ -607,7 +607,7 @@ class LanguageCore extends ObjectModel
 	public static function getIdByIso($iso_code)
 	{
 	 	if (!Validate::isLanguageIsoCode($iso_code))
-	 		die(Tools::displayError('Fatal error: ISO code is not correct').' '.$iso_code);
+	 		die(Tools::displayError('Fatal error: ISO code is not correct').' '.Tools::safeOutput($iso_code));
 
 		return Db::getInstance()->getValue('SELECT `id_lang` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
 	}
@@ -615,7 +615,7 @@ class LanguageCore extends ObjectModel
 	public static function getLanguageCodeByIso($iso_code)
 	{
 	 	if (!Validate::isLanguageIsoCode($iso_code))
-			die(Tools::displayError('Fatal error: ISO code is not correct').' '.$iso_code);
+			die(Tools::displayError('Fatal error: ISO code is not correct').' '.Tools::safeOutput($iso_code));
 
 		return Db::getInstance()->getValue('SELECT `language_code` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
 	}
@@ -623,7 +623,7 @@ class LanguageCore extends ObjectModel
 	public static function getLanguageByIETFCode($code)
 	{
 		if (!Validate::isLanguageCode($code))
-			die(sprintf(Tools::displayError('Fatal error: IETF code %s is not correct'), $code));
+			die(sprintf(Tools::displayError('Fatal error: IETF code %s is not correct'), Tools::safeOutput($code)));
 
 		// $code is in the form of 'xx-YY' where xx is the language code
 		// and 'YY' a country code identifying a variant of the language.
