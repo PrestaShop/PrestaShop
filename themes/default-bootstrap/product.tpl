@@ -436,11 +436,13 @@
 					{/if}
 				</div> <!-- end product_attributes -->
 				<div class="box-cart-bottom">
-					<p id="add_to_cart" {if (!$allow_oosp && $product->quantity <= 0) || !$product->available_for_order || (isset($restricted_country_mode) && $restricted_country_mode) || $PS_CATALOG_MODE}style="display:none"{/if} class="buttons_bottom_block">
-						<button type="submit" name="Submit" class="exclusive">
-							<span>{l s='Add to cart'}</span>
-						</button>
-					</p>
+					<div {if (!$allow_oosp && $product->quantity <= 0) || !$product->available_for_order || (isset($restricted_country_mode) && $restricted_country_mode) || $PS_CATALOG_MODE}style="display:none"{/if}>
+						<p id="add_to_cart" class="buttons_bottom_block">
+							<button type="submit" name="Submit" class="exclusive">
+								<span>{l s='Add to cart'}</span>
+							</button>
+						</p>
+					</div>
 					{if isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS}{$HOOK_PRODUCT_ACTIONS}{/if}<strong></strong>
 				</div> <!-- end box-cart-bottom -->
 			</div> <!-- end box-info-product -->
