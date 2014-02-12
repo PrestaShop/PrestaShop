@@ -49,14 +49,18 @@
 			position: absolute;
 			right: 6px;
 			top: 20px;
-			display: none;
 			width: 30px;
 			height: 30px;
 			z-index: 2;
 			&:after {
 				font-family: $font-icon;
-				content: "\f068";
+				content: "\f067";
 				font-size: 26px;
+			}
+			&.active {
+				&:after {
+					content: "\f068";	
+				}
 			}
 		}
 	}
@@ -67,19 +71,6 @@
 		display: block;
 		padding: 17px 20px;
 		border-bottom: 3px solid #e9e9e9;
-		@media (max-width: $screen-xs-max) { // max 767px
-			&.sf-with-ul {
-				&:after {
-					position: absolute;
-					right: 15px;
-					top: 18px;
-					font-family: $font-icon;
-					content: "\f067";
-					font-size: 26px;
-					z-index: 1;
-				}
-			}
-		}
 	}
 	&.sfHover > a,
 	> a:hover,
@@ -238,15 +229,5 @@ ul.sf-menu li li li.sfHover ul {
 		&.active:after{
 			content: "\f068";
 		}
-	}
-}
-@media (max-width: $screen-xs-max) { // max 767px
-	.sf-menu > li.sfHover > a.sf-with-ul:after,
-	.sf-menu > li.sfHoverForce > a.sf-with-ul:after { 
-		display: none;
-	}
-	.sf-menu > li.sfHover > span,
-	.sf-menu > li.sfHoverForce > span {
-		display: block;
 	}
 }

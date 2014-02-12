@@ -22,12 +22,20 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-var responsiveflagMenu = false;
 
-$(document).ready(function(){
-	categoryMenu = $('ul.sf-menu');        //var rich menu
-	categoryMenu.superfish();				   //menu initialization
-	$('.sf-menu > li > ul').addClass('submenu-container'); //add class for width define
+var responsiveflagMenu = false;
+var categoryMenu = $('ul.sf-menu');
+var mCategoryGrover = $('.sf-contener .cat-title');
+
+// init Super Fish Menu for 767px+ resolution
+
+function desctopInit() {
+	mCategoryGrover.off();
+	mCategoryGrover.removeClass('active');
+	$('.sf-menu > li > ul').removeClass('menu-mobile').parent().find('.menu-mobile-grover').remove();
+	$('.sf-menu').removeAttr('style');
+	categoryMenu.superfish('init');
+	$('.sf-menu > li > ul').addClass('submenu-container clearfix'); //add class for width define
 	i = 0;
 	$('.sf-menu > li > ul > li:not(#category-thumbnail)').each(function(){  //add classes for clearing
 		i++;
@@ -36,36 +44,36 @@ $(document).ready(function(){
 		else if (i%5 == 1)
 			$(this).addClass('first-in-line-lg');
 	});
-	responsiveMenu();
-	$(window).resize(responsiveMenu);
-});
-
-// accordion for definition smaller that 767px
-function menuChange(status)
-{
-	if(status == 'enable')
-	{
-		$('.sf-menu > li > ul').removeAttr('style');
-		$('.sf-menu').removeAttr('style');
-		$('.sf-contener .cat-title').on('click', function(){
-			$(this).toggleClass('active').parent().find('ul.menu-content').stop().slideToggle('medium');
-		}),
-		$('.sf-menu > li:has(ul)').each(function(){
-			$(this).prepend('<span></span>'),
-			$(this).find('span').on('click touchend', function(){
-				categoryMenu.superfish('hide');
-			});
-		});
-	}
-	else
-	{
-		$('.sf-contener .cat-title').off();	
-		$('.sf-menu').removeAttr('style');
-		$('.sf-menu > li > ul').removeAttr('style');
-		$('.sf-contener .cat-title').removeClass('active');
-	}
 }
 
+function mobileInit() {
+	categoryMenu.superfish('destroy');
+	$('.sf-menu').removeAttr('style');
+	mCategoryGrover.on('click', function(){
+		$(this).toggleClass('active').parent().find('ul.menu-content').stop().slideToggle('medium');
+	}),
+	$('.sf-menu > li > ul').addClass('menu-mobile clearfix').parent().prepend('<span class="menu-mobile-grover"></span>');
+	$(".sf-menu .menu-mobile-grover").on('click touchstart', function() {
+		var catSubUl = $(this).next().next('.menu-mobile');
+		if(catSubUl.is(':hidden')) {
+		catSubUl.slideDown(),
+		$(this).addClass('active')
+		}
+		else {
+			catSubUl.slideUp(),
+			$(this).removeClass('active');
+		}
+		return false
+	})
+}
+
+// change the menu display at different resolutions
+function menuChange(status)
+{
+	status == 'enable'?mobileInit():desctopInit()
+}
+
+// check resolution
 function responsiveMenu()
 {
    if ($(document).width() <= 767 && responsiveflagMenu == false)
@@ -80,3 +88,6 @@ function responsiveMenu()
 		responsiveflagMenu = false;
 	}
 }
+
+$(document).ready(responsiveMenu);
+$(window).resize(responsiveMenu);
