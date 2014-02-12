@@ -119,7 +119,7 @@
             <hook module="blockbestsellers" hook="displayHomeTab" position="3"/>
             <hook module="blockbestsellers" hook="displayHomeTabContent" position="3"/>
             <hook module="blockcart" hook="displayHeader" position="4"/>
-            <hook module="blockcart" hook="displayTop" position="4"/>
+            <hook module="blockcart" hook="displayTop" position="3"/>
             <hook module="blockcart" hook="actionCartListOverride" position="1"/>
             <hook module="blocksocial" hook="displayHeader" position="5"/>
             <hook module="blocksocial" hook="displayFooter" position="2"/>
@@ -227,7 +227,7 @@
             <hook module="blocktags" hook="displayLeftColumn" position="12"
                   exceptions="orderfollow,contact,discount,auth,identity,order,addresses,sitemap,password,cms,orderslip,index,myaccount,product,cart,address,orderopc,pagenotfound,stores"/>
             <hook module="blocktags" hook="displayHeader" position="24"/>
-            <hook module="blocktopmenu" hook="displayTop" position="3"/>
+            <hook module="blocktopmenu" hook="displayTop" position="4"/>
             <hook module="blocktopmenu" hook="actionCategoryUpdate" position="3"/>
             <hook module="blocktopmenu" hook="actionObjectProductUpdateAfter" position="2"/>
             <hook module="blocktopmenu" hook="actionObjectProductDeleteAfter" position="2"/>
