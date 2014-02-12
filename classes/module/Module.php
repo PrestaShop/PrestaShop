@@ -952,7 +952,7 @@ abstract class ModuleCore
 		if (!Validate::isModuleName($module_name))
 		{
 			if (_PS_MODE_DEV_)
-				die(Tools::displayError($module_name.' is not a valid module name.'));
+				die(Tools::displayError(Tools::safeOutput($module_name).' is not a valid module name.'));
 			return false;
 		}
 
