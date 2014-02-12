@@ -216,7 +216,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 							'type' => 'color',
 							'label' => $this->l('Color'),
 							'name' => 'color',
-							'hint' => $this->l('The background of the PrestaShop Back Office will be displayed in this color (HTML colors only, please).'),
+							'hint' => $this->l('Status vill be highlited in this color. HTML colors only.'),
 						),
 						array(
 							'type' => 'switch',
@@ -330,9 +330,9 @@ class AdminStockConfigurationControllerCore extends AdminController
 								),
 								array(
 									'type' => 'color',
-									'label' => $this->l('Back Office color'),
+									'label' => $this->l('Color'),
 									'name' => 'color',
-									'desc' => $this->l('The background of PrestaShop\'s Back Office will be displayed in this color (HTML colors only, please).'),
+									'desc' => $this->l('Status vill be highlited in this color. HTML colors only.'),
 								),
 							),
 							'submit' => array(
