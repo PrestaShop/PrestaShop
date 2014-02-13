@@ -2622,10 +2622,10 @@ class AdminControllerCore extends Controller
 		(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
 		$this->_listTotal = 0;
-		if (!($this->_list = Db::getInstance()->executeS($this->_listsql)))
+		if (!($this->_list = Db::getInstance()->executeS($this->_listsql, true, false)))
 			$this->_list_error = Db::getInstance()->getMsgError();
 		else
-			$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
+			$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`', false);
 
 		Hook::exec('action'.$this->controller_name.'ListingResultsModifier', array(
 			'list' => &$this->_list,
