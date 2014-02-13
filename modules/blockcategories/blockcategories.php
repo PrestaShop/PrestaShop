@@ -185,8 +185,14 @@ class BlockCategories extends Module
 	{
 		$this->setLastVisitedCategory();
 		if (Configuration::get('BLOCK_CATEG_ROOT_CATEGORY') && isset($this->context->cookie->last_visited_category) && $this->context->cookie->last_visited_category)
+        {
 			$category = new Category($this->context->cookie->last_visited_category, $this->context->language->id);
-		else
+            if (Configuration::get('BLOCK_CATEG_ROOT_CATEGORY') == 2 && !$category->is_root_category && $category->id_parent)
+                $category = new Category($category->id_parent, $this->context->language->id);
+            elseif (Configuration::get('BLOCK_CATEG_ROOT_CATEGORY') == 3 && !$category->is_root_category && !$category->getSubCategories($category->id, true))
+                $category = new Category($category->id_parent, $this->context->language->id);
+        }
+        else
 			$category = new Category(Configuration::get('PS_HOME_CATEGORY'), $this->context->language->id);
 
 		$cacheId = $this->getCacheId($category ? $category->id : null);
@@ -385,6 +391,16 @@ class BlockCategories extends Module
 								'value' => 1,
 								'label' => $this->l('Current')
 							),
+                            array(
+                                'id' => 'parent',
+                                'value' => 2,
+                                'label' => $this->l('Parent')
+                            ),
+                            array(
+                                'id' => 'current_parent',
+                                'value' => 3,
+                                'label' => $this->l('Current, unless it has no subcategories, then Parent')
+                            ),
 						)
 					),
 					array(
