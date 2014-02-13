@@ -208,34 +208,45 @@ class AdminShopUrlControllerCore extends AdminController
 							'name' => 'domain_ssl',
 							'size' => 50,
 						),
-						array(
-							'type' => 'text',
-							'label' => $this->l('Physical URL'),
-							'name' => 'physical_uri',
-							'desc' => $this->l('This is the physical folder for your store on the server. Leave this field empty if your store is installed on the root path (e.g. if your store is available at www.my-prestashop.com/my-store/, you input my-store/ in this field).'),
-							'size' => 50,
-						),
-						array(
-							'type' => 'text',
-							'label' => $this->l('Virtual URL'),
-							'name' => 'virtual_uri',
-							'desc' => $desc_virtual_uri,
-							'size' => 50,
-							'hint' => (!$update_htaccess) ? $this->l('Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your URL doesn\'t work, please check with your host provider on how to activate URL rewriting.') : null,
-						),
-						array(
-							'type' => 'text',
-							'label' => $this->l('Your final URL will be'),
-							'name' => 'final_url',
-							'size' => 76,
-							'readonly' => true
-						),
 					),
 					'submit' => array(
 						'title' => $this->l('Save'),
 					),
 				),
 			),
+		);
+		
+		if (!defined('_PS_HOST_MODE_'))
+			$this->fields_form[1]['form']['input'] = array_merge($this->fields_form[1]['form']['input'],
+				array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Physical URL'),
+						'name' => 'physical_uri',
+						'desc' => $this->l('This is the physical folder for your store on the server. Leave this field empty if your store is installed on the root path (e.g. if your store is available at www.my-prestashop.com/my-store/, you input my-store/ in this field).'),
+						'size' => 50,
+					)
+				)
+			);
+
+		$this->fields_form[1]['form']['input'] = array_merge($this->fields_form[1]['form']['input'],
+			array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Virtual URL'),
+					'name' => 'virtual_uri',
+					'desc' => $desc_virtual_uri,
+					'size' => 50,
+					'hint' => (!$update_htaccess) ? $this->l('Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your URL doesn\'t work, please check with your host provider on how to activate URL rewriting.') : null,
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Your final URL will be'),
+					'name' => 'final_url',
+					'size' => 76,
+					'readonly' => true
+				),
+			)
 		);
 
 		if (!($obj = $this->loadObject(true)))
