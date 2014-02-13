@@ -35,16 +35,21 @@ $(function(){
     if (typeof(homeslider_width) == 'undefined')
         homeslider_width = 779;
 
-	$('#homeslider').bxSlider({
-        maxSlides: 1,
-        slideWidth: homeslider_width,
-		infiniteLoop: homeslider_loop,
-		hideControlOnEnd: true,
-		pager: true,
-		autoHover: true,
-		auto: homeslider_loop,
-		speed: homeslider_speed,
-		pause: homeslider_pause,
-		controls: false
-	});
+	if (!!$.prototype.bxSlider)
+		$('#homeslider').bxSlider({
+	        maxSlides: 1,
+	        slideWidth: homeslider_width,
+			infiniteLoop: homeslider_loop,
+			hideControlOnEnd: true,
+			pager: true,
+			autoHover: true,
+			auto: homeslider_loop,
+			speed: homeslider_speed,
+			pause: homeslider_pause,
+			controls: false
+		});
+
+    $('.homeslider-description').click(function () {
+        window.location.href = $(this).prev('a').prop('href');
+    });
 });
