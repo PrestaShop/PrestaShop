@@ -199,13 +199,13 @@ class AdminThemesControllerCore extends AdminController
 						'size' => 20
 					),
 					'PS_ALLOW_MOBILE_DEVICE' => array(
-						'title' => $this->l('Enable the mobile theme.'),
+						'title' => $this->l('Enable the mobile theme'),
 						'hint' => $this->l('Allows visitors browsing on mobile devices to view a lighter version of your website.'),
 						'type' => 'radio',
 						'required' => true,
 						'validation' => 'isGenericName',
 						'choices' => array(
-							0 => $this->l('I\'d like to disable it, please. '),
+							0 => $this->l('I\'d like to disable it, please.'),
 							1 => $this->l('I\'d like to enable it only on smart phones.'),
 							2 => $this->l('I\'d like to enable it only on tablets.'),
 							3 => $this->l('I\'d like to enable it on both smart phones and tablets.')
