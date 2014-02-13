@@ -216,7 +216,6 @@ class ContactControllerCore extends FrontController
 		$this->addCSS(_THEME_CSS_DIR_.'contact-form.css');
 		$this->addJS(_THEME_JS_DIR_.'contact-form.js');
 		$this->addJS(_PS_JS_DIR_.'validate.js');
-		$this->addJS(_THEME_JS_DIR_.'validate_fields.js');
 	}
 
 	/**
