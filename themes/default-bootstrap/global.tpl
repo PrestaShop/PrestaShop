@@ -15,4 +15,5 @@
 {addJsDef usingSecureMode=Tools::usingSecureMode()|boolval}
 {addJsDef ajaxsearch=Configuration::get('PS_SEARCH_AJAX')|boolval}
 {addJsDef instantsearch=Configuration::get('PS_INSTANT_SEARCH')|boolval}
+{addJsDef quickView=$quick_view|boolval}
 {/strip}
