@@ -310,7 +310,7 @@ var ajaxCart = {
 					{
 						$('.crossseling').html(jsonData.crossSelling)
 						$(jsonData.products).each(function(){
-							if (this.id != undefined && this.id == parseInt(idProduct))
+							if (this.id != undefined && this.id == parseInt(idProduct) && this.idCombination == parseInt(idCombination))
 								ajaxCart.updateLayer(this);
 						});
 					}
@@ -321,7 +321,7 @@ var ajaxCart = {
 					window.parent.ajaxCart.updateCartInformation(jsonData, addedFromProductPage, contentOnly);
 					if (!jsonData.hasError)
 						$(jsonData.products).each(function(){
-							if (this.id != undefined && this.id == parseInt(idProduct))
+							if (this.id != undefined && this.id == parseInt(idProduct) && this.idCombination == parseInt(idCombination)
 								window.parent.ajaxCart.updateLayer(this);
 						});
 					else 
