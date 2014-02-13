@@ -1,7 +1,7 @@
 /* lnk on detail product page */
-#primary_block #wishlist_button {
+#wishlist_button {
   font-weight: 700; }
-  #primary_block #wishlist_button:before {
+  #wishlist_button:before {
     content: "\f08a";
     font: 400 15px/31px "FontAwesome";
     color: white;
