@@ -1674,6 +1674,8 @@ class AdminThemesControllerCore extends AdminController
 
 	public function initContent()
 	{
+		if ($this->display == 'list')
+			$this->display = '';
 		if (isset($this->display) && method_exists($this, 'render'.$this->display))
 		{
 			$this->content .= $this->initPageHeaderToolbar();
@@ -2517,7 +2519,10 @@ class AdminThemesControllerCore extends AdminController
 		if (isset($_FILES[$field_name]['tmp_name']) && $_FILES[$field_name]['tmp_name'])
 		{
 			if ($error = ImageManager::validateUpload($_FILES[$field_name], Tools::getMaxUploadSize()))
+			{
 				$this->errors[] = $error;
+				return false;
+			}
 
 			$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 			if (!$tmp_name || !move_uploaded_file($_FILES[$field_name]['tmp_name'], $tmp_name))
@@ -2544,7 +2549,8 @@ class AdminThemesControllerCore extends AdminController
 
 			unlink($tmp_name);
 		}
-		Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=6');
+		if (!count($this->errors))
+			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=6');
 	}
 
 	/**
@@ -2635,7 +2641,7 @@ class AdminThemesControllerCore extends AdminController
 
 		parent::initProcess();
 		// This is a composite page, we don't want the "options" display mode
-		if ($this->display == 'options')
+		if ($this->display == 'options' || $this->display == 'list')
 			$this->display = '';
 	}
 
