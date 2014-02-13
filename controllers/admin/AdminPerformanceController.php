@@ -570,6 +570,7 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->fields_value['ps_cache_fs_directory_depth'] = $depth ? $depth : 1;
 
 		$this->tpl_form_vars['servers'] = CacheMemcache::getMemcachedServers();
+		$this->tpl_form_vars['_PS_CACHE_ENABLED_'] = _PS_CACHE_ENABLED_;
 	}
 
 	public function renderForm()

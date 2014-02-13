@@ -24,6 +24,12 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
+{block name="input_row"}
+	{if $input.name == 'caching_system'}<div id="{$input.name}_wrapper"{if isset($_PS_CACHE_ENABLED_) && !$_PS_CACHE_ENABLED_} style="display: none;"{/if}>{/if}
+	{$smarty.block.parent}
+	{if $input.name == 'caching_system'}</div>{/if}
+{/block}
+
 {block name="input"}
 	{if $input.type == 'radio' && $input.name == 'combination' && $input.disabled}
 		<div class="alert alert-warning">
@@ -132,16 +138,16 @@
 
 	function showMemcached() {
 		if ($('input[name="caching_system"]:radio:checked').val() == 'CacheMemcache') {
-			$('#memcachedServers').show();
-			$('#ps_cache_fs_directory_depth').parent().parent().hide();
+			$('#memcachedServers').css('display', $('#cache_active_on').is(':checked') ? 'block' : 'none');
+			$('#ps_cache_fs_directory_depth').closest('.form-group').hide();
 		}
 		else if ($('input[name="caching_system"]:radio:checked').val() == 'CacheFs') {
 			$('#memcachedServers').hide();
-			$('#ps_cache_fs_directory_depth').parent().parent().show();
+			$('#ps_cache_fs_directory_depth').closest('.form-group').css('display', $('#cache_active_on').is(':checked') ? 'block' : 'none');
 		}
 		else {
 			$('#memcachedServers').hide();
-			$('#ps_cache_fs_directory_depth').parent().parent().hide();
+			$('#ps_cache_fs_directory_depth').closest('.form-group').hide();
 		}
 	}
 
@@ -149,9 +155,20 @@
 
 		showMemcached();
 
+		$('input[name="cache_active"]').change(function() {
+			$('#caching_system_wrapper').css('display', ($(this).val() == 1) ? 'block' : 'none');
+			showMemcached();
+
+			if ($('input[name="caching_system"]:radio:checked').val() == 'CacheFs')
+				$('#ps_cache_fs_directory_depth').focus();
+		});
+
 		$('input[name="caching_system"]').change(function() {
 			$('#cache_up').val(1);
 			showMemcached();
+
+			if ($('input[name="caching_system"]:radio:checked').val() == 'CacheFs')
+				$('#ps_cache_fs_directory_depth').focus();
 		});
 
 		$('#addMemcachedServer').click(function() {
