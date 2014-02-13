@@ -2,7 +2,7 @@
 @import "theme_variables";
 
 /* lnk on detail product page */
-#primary_block #wishlist_button {
+#wishlist_button {
 	font-weight: 700;
 	&:before{
 		content: "\f08a";

@@ -36,7 +36,7 @@
 		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 	{/if}
 
-	<div id="primary_block" class="row" itemscope itemtype="http://schema.org/Product">
+	<div class="primary_block row" itemscope itemtype="http://schema.org/Product">
 		{if !$content_only}
 			<div class="container">
 				<div class="top-hr"></div>
@@ -59,8 +59,8 @@
 				{$confirmation}
 			</p>
 		{/if}
-		<!-- right infos-->  
-		<div id="pb-right-column" class="col-xs-12 col-sm-4 col-md-5">
+		<!-- left infos-->  
+		<div class="pb-left-column col-xs-12 col-sm-4 col-md-5">
 			<!-- product img-->        
 			<div id="image-block" class="clearfix">
 				{if $product->on_sale}
@@ -184,11 +184,11 @@
 					</span>
 				</p>
 			{/if}
-		</div> <!-- end pb-right-column -->
-		<!-- end right infos--> 
+		</div> <!-- end pb-left-column -->
+		<!-- end left infos--> 
 
-		<!-- left infos -->
-		<div id="pb-left-column" class="col-xs-12 col-sm-4">
+		<!-- center infos -->
+		<div class="pb-center-column col-xs-12 col-sm-4">
 			{if $product->online_only}
 				<p class="online_only">{l s='Online only'}</p>
 			{/if}
@@ -276,10 +276,10 @@
 				</ul>
 			{/if}
 		</div>
-		<!-- end left infos-->
+		<!-- end center infos-->
 		
-		<!-- pb-right-column1-->
-		<div id="pb-right-column1" class="col-xs-12 col-sm-4 col-md-3">
+		<!-- pb-right-column-->
+		<div class="pb-right-column col-xs-12 col-sm-4 col-md-3">
 			{if ($product->show_price && !isset($restricted_country_mode)) || isset($groups) || $product->reference || (isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS)}
 			<!-- add to cart form-->
 			<form id="buy_block" {if $PS_CATALOG_MODE && !isset($groups) && $product->quantity > 0}class="hidden"{/if} action="{$link->getPageLink('cart')|escape:'html':'UTF-8'}" method="post">
@@ -443,7 +443,7 @@
 				</div> <!-- end box-info-product -->
 			</form>
 			{/if}
-		</div> <!-- end pb-right-column1-->
+		</div> <!-- end pb-right-column-->
 	</div> <!-- end primary_block -->
 
 	{if !$content_only}
