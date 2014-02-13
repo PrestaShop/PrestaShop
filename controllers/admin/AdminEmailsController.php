@@ -57,8 +57,7 @@ class AdminEmailsControllerCore extends AdminController
 						'type' => 'radio',
 						'required' => true,
 						'choices' => array(
-							3 => $this->l('Never send emails (may be useful for testing purposes)'), 
-							1 => $this->l('Use PHP\'s mail() function (recommended; works in most cases)'), 
+							3 => $this->l('Never send emails (may be useful for testing purposes)'),
 							2 => $this->l('Set my own SMTP parameters (for advanced users ONLY)')
 						),
 						'js' => array(
@@ -168,8 +167,14 @@ class AdminEmailsControllerCore extends AdminController
 				)
 			)
 		);
+
+		if (!defined('_PS_HOST_MODE_'))
+			$this->fields_options['email']['fields']['PS_MAIL_METHOD']['choices'][1] =
+				$this->l('Use PHP\'s mail() function (recommended; works in most cases)');
+
+		ksort($this->fields_options['email']['fields']['PS_MAIL_METHOD']['choices']);
 	}
-	
+
 	public function updateOptionPsMailPasswd($value)
 	{
 		if (Tools::getValue('PS_MAIL_PASSWD') == '' && Configuration::get('PS_MAIL_PASSWD'))
@@ -221,7 +226,8 @@ class AdminEmailsControllerCore extends AdminController
 		if (isset($_POST['PS_SHOP_EMAIL']))
 			$_POST['PS_SHOP_EMAIL'] = Configuration::get('PS_SHOP_EMAIL');
 
-		if (isset($_POST['PS_MAIL_METHOD']) && $_POST['PS_MAIL_METHOD'] == 2 && (empty($_POST['PS_MAIL_SERVER']) || empty($_POST['PS_MAIL_SMTP_PORT'])))
+		if (isset($_POST['PS_MAIL_METHOD']) && $_POST['PS_MAIL_METHOD'] == 2
+			&& (empty($_POST['PS_MAIL_SERVER']) || empty($_POST['PS_MAIL_SMTP_PORT'])))
 			$this->errors[] = Tools::displayError('You must define an SMTP server and an SMTP port. If you do not know it, use the PHP mail() function instead.');
 	}
 
