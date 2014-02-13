@@ -731,7 +731,7 @@ class AdminControllerCore extends Controller
 		// clean buffer
 		if (ob_get_level() && ob_get_length() > 0)
 			ob_clean();
-		$this->getList($this->context->language->id);
+		$this->getList($this->context->language->id, null, null, 0, false);
 		if (!count($this->_list))
 			return;
 
