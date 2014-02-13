@@ -28,6 +28,9 @@ $(document).ready(function()
 	$('.auto-submit-star').rating();
 
 	$('.open-comment-form').fancybox({
+		'autoSize' : false,
+		'width' : 600,
+		'height' : 'auto',
 		'hideOnContentClick': false
 	});
 
