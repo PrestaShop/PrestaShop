@@ -582,7 +582,10 @@ class AdminPerformanceControllerCore extends AdminController
 
 		$this->initFieldsetFeaturesDetachables();
 		$this->initFieldsetCCC();
-		$this->initFieldsetMediaServer();
+
+		if (!defined('_PS_HOST_MODE_'))
+			$this->initFieldsetMediaServer();
+
 		$this->initFieldsetCiphering();
 		$this->initFieldsetCaching();
 
@@ -723,7 +726,7 @@ class AdminPerformanceControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 
-		if ((bool)Tools::getValue('media_server_up'))
+		if ((bool)Tools::getValue('media_server_up') && !defined('_PS_HOST_MODE_'))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
