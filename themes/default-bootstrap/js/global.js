@@ -28,7 +28,7 @@ var responsiveflag = false;
 $(document).ready(function(){
 	highdpi_init();
 	blockHover();
-	if (quickView)
+	if (typeof quickView !== 'undefined' && quickView)
 		quick_view();
 	responsiveResize();
 	$(window).resize(responsiveResize);
@@ -159,7 +159,7 @@ function display(view)
 		$.totalStorage('display', 'list');
 		if (typeof ajaxCart != 'undefined')      // cart button reload
 			ajaxCart.overrideButtonsInThePage();
-		if (quickView) 	// qick view button reload
+		if (typeof quickView !== 'undefined' && quickView) 	// qick view button reload
 			quick_view();
 	}
 	else 
@@ -201,7 +201,7 @@ function display(view)
 		$.totalStorage('display', 'grid');			
 		if (typeof ajaxCart != 'undefined') 	// cart button reload
 			ajaxCart.overrideButtonsInThePage();
-		if (quickView) 	// qick view button reload
+		if (typeof quickView !== 'undefined' && quickView) 	// qick view button reload
 			quick_view();
 		blockHover();
 	}	
