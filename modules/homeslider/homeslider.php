@@ -140,27 +140,32 @@ class HomeSlider extends Module
 	protected function createTables()
 	{
 		/* Slides */
-		$res = (bool)Db::getInstance()->execute('
-			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider` (
+		$res = (bool)Db::getInstance()->execute(
+			'
+						CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider` (
 				`id_homeslider_slides` int(10) unsigned NOT NULL AUTO_INCREMENT,
 				`id_shop` int(10) unsigned NOT NULL,
 				PRIMARY KEY (`id_homeslider_slides`, `id_shop`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=UTF8;
-		');
+		'
+		);
 
 		/* Slides configuration */
-		$res &= Db::getInstance()->execute('
-			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider_slides` (
+		$res &= Db::getInstance()->execute(
+			'
+						CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider_slides` (
 			  `id_homeslider_slides` int(10) unsigned NOT NULL AUTO_INCREMENT,
 			  `position` int(10) unsigned NOT NULL DEFAULT \'0\',
 			  `active` tinyint(1) unsigned NOT NULL DEFAULT \'0\',
 			  PRIMARY KEY (`id_homeslider_slides`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=UTF8;
-		');
+		'
+		);
 
 		/* Slides lang configuration */
-		$res &= Db::getInstance()->execute('
-			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider_slides_lang` (
+		$res &= Db::getInstance()->execute(
+			'
+						CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider_slides_lang` (
 			  `id_homeslider_slides` int(10) unsigned NOT NULL,
 			  `id_lang` int(10) unsigned NOT NULL,
 			  `title` varchar(255) NOT NULL,
@@ -170,7 +175,8 @@ class HomeSlider extends Module
 			  `image` varchar(255) NOT NULL,
 			  PRIMARY KEY (`id_homeslider_slides`,`id_lang`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=UTF8;
-		');
+		'
+		);
 
 		return $res;
 	}
@@ -187,9 +193,11 @@ class HomeSlider extends Module
 			$to_del->delete();
 		}
 
-		return Db::getInstance()->execute('
-			DROP TABLE IF EXISTS `'._DB_PREFIX_.'homeslider`, `'._DB_PREFIX_.'homeslider_slides`, `'._DB_PREFIX_.'homeslider_slides_lang`;
-		');
+		return Db::getInstance()->execute(
+			'
+						DROP TABLE IF EXISTS `'._DB_PREFIX_.'homeslider`, `'._DB_PREFIX_.'homeslider_slides`, `'._DB_PREFIX_.'homeslider_slides_lang`;
+		'
+		);
 	}
 
 	public function getContent()
@@ -372,12 +380,14 @@ class HomeSlider extends Module
 					isset($_FILES['image_'.$language['id_lang']]['tmp_name']) &&
 					!empty($_FILES['image_'.$language['id_lang']]['tmp_name']) &&
 					!empty($imagesize) &&
-					in_array(Tools::strtolower(Tools::substr(strrchr($imagesize['mime'], '/'), 1)), array(
-						'jpg',
-						'gif',
-						'jpeg',
-						'png'
-					)) &&
+					in_array(
+						Tools::strtolower(Tools::substr(strrchr($imagesize['mime'], '/'), 1)), array(
+							'jpg',
+							'gif',
+							'jpeg',
+							'png'
+						)
+					) &&
 					in_array($type, array('jpg', 'gif', 'jpeg', 'png'))
 				)
 				{
@@ -445,7 +455,7 @@ class HomeSlider extends Module
 
 			$slides = $this->getSlides(true);
 			if (is_array($slides))
-				foreach($slides as &$slide)
+				foreach ($slides as &$slide)
 				{
 					$slide['sizes'] = @getimagesize((dirname(__FILE__).DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$slide['image']));
 					if (isset($slide['sizes'][3]) && $slide['sizes'][3])
@@ -502,11 +512,13 @@ class HomeSlider extends Module
 
 	public function hookActionShopDataDuplication($params)
 	{
-		Db::getInstance()->execute('
-		INSERT IGNORE INTO '._DB_PREFIX_.'homeslider (id_homeslider_slides, id_shop)
+		Db::getInstance()->execute(
+			'
+					INSERT IGNORE INTO '._DB_PREFIX_.'homeslider (id_homeslider_slides, id_shop)
 		SELECT id_homeslider_slides, '.(int)$params['new_id_shop'].'
 		FROM '._DB_PREFIX_.'homeslider
-		WHERE id_shop = '.(int)$params['old_id_shop']);
+		WHERE id_shop = '.(int)$params['old_id_shop']
+		);
 		$this->clearCache();
 	}
 
@@ -554,9 +566,10 @@ class HomeSlider extends Module
 
 	public function getNextPosition()
 	{
-		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT MAX(hss.`position`) AS `next_position`
-				FROM `'._DB_PREFIX_.'homeslider_slides` hss, `'._DB_PREFIX_.'homeslider` hs
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
+			'
+							SELECT MAX(hss.`position`) AS `next_position`
+							FROM `'._DB_PREFIX_.'homeslider_slides` hss, `'._DB_PREFIX_.'homeslider` hs
 				WHERE hss.`id_homeslider_slides` = hs.`id_homeslider_slides` AND hs.`id_shop` = '.(int)$this->context->shop->id
 		);
 
@@ -569,22 +582,24 @@ class HomeSlider extends Module
 		$id_shop = $this->context->shop->id;
 		$id_lang = $this->context->language->id;
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT hs.`id_homeslider_slides` as id_slide,
-					   hssl.`image`,
-					   hss.`position`,
-					   hss.`active`,
-					   hssl.`title`,
-					   hssl.`url`,
-					   hssl.`legend`,
-					   hssl.`description`
-			FROM '._DB_PREFIX_.'homeslider hs
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+			'
+						SELECT hs.`id_homeslider_slides` as id_slide,
+								   hssl.`image`,
+								   hss.`position`,
+								   hss.`active`,
+								   hssl.`title`,
+								   hssl.`url`,
+								   hssl.`legend`,
+								   hssl.`description`
+						FROM '._DB_PREFIX_.'homeslider hs
 			LEFT JOIN '._DB_PREFIX_.'homeslider_slides hss ON (hs.id_homeslider_slides = hss.id_homeslider_slides)
 			LEFT JOIN '._DB_PREFIX_.'homeslider_slides_lang hssl ON (hss.id_homeslider_slides = hssl.id_homeslider_slides)
 			WHERE id_shop = '.(int)$id_shop.'
 			AND hssl.id_lang = '.(int)$id_lang.
 			($active ? ' AND hss.`active` = 1' : ' ').'
-			ORDER BY hss.position');
+			ORDER BY hss.position'
+		);
 	}
 
 	public function displayStatus($id_slide, $active)
@@ -615,10 +630,12 @@ class HomeSlider extends Module
 		foreach ($slides as $key => $slide)
 			$slides[$key]['status'] = $this->displayStatus($slide['id_slide'], $slide['active']);
 
-		$this->context->smarty->assign(array(
-			'link' => $this->context->link,
-			'slides' => $slides,
-		));
+		$this->context->smarty->assign(
+			array(
+				'link' => $this->context->link,
+				'slides' => $slides,
+			)
+		);
 
 		return $this->display(__FILE__, 'list.tpl');
 	}
