@@ -321,7 +321,7 @@ var ajaxCart = {
 					window.parent.ajaxCart.updateCartInformation(jsonData, addedFromProductPage, contentOnly);
 					if (!jsonData.hasError)
 						$(jsonData.products).each(function(){
-							if (this.id != undefined && this.id == parseInt(idProduct) && this.idCombination == parseInt(idCombination)
+							if (this.id != undefined && this.id == parseInt(idProduct) && this.idCombination == parseInt(idCombination))
 								window.parent.ajaxCart.updateLayer(this);
 						});
 					else 
