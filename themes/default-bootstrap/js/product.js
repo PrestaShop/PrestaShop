@@ -296,7 +296,7 @@ function addCombination(idCombination, arrayOfIdAttributes, quantity, price, eco
 function findCombination(firstTime)
 {
 	$('#minimal_quantity_wanted_p').fadeOut();
-	if (typeof $('#minimal_quantity_label').text() !== 'undefined' && $('#minimal_quantity_label').html() > 1)
+	if (typeof $('#minimal_quantity_label').text() === 'undefined' || $('#minimal_quantity_label').html() > 1)
 		$('#quantity_wanted').val(1);
 
 	//create a temporary 'choice' array containing the choices of the customer
