@@ -28,6 +28,8 @@ var responsiveflag = false;
 $(document).ready(function(){
 	highdpi_init();
 	blockHover();
+	if (quickView)
+		quick_view();
 	responsiveResize();
 	$(window).resize(responsiveResize);
 	tmDropDown ('', '#header .current', 'ul.toogle_content', 'active');							// all of this should be defined or left empty brackets
@@ -157,7 +159,7 @@ function display(view)
 		$.totalStorage('display', 'list');
 		if (typeof ajaxCart != 'undefined')      // cart button reload
 			ajaxCart.overrideButtonsInThePage();
-		if (typeof quick_view != 'undefined') 	// qick view button reload
+		if (quickView) 	// qick view button reload
 			quick_view();
 	}
 	else 
@@ -199,10 +201,31 @@ function display(view)
 		$.totalStorage('display', 'grid');			
 		if (typeof ajaxCart != 'undefined') 	// cart button reload
 			ajaxCart.overrideButtonsInThePage();
-		if (typeof quick_view != 'undefined') 	// qick view button reload
+		if (quickView) 	// qick view button reload
 			quick_view();
 		blockHover();
 	}	
+}
+
+function quick_view()
+{
+	$(document).on('click', '.quick-view', function() {
+		var url = this.rel;
+		if (url.indexOf('?') != -1)
+			url += '&';
+		else
+			url += '?';
+			
+		$.fancybox({
+			'padding':  0,
+			'width':    1087,
+			'height':   610,
+			'type':     'iframe',
+			'href':     url+'content_only=1'
+		});
+		ajaxCart.refresh();
+		return false;
+	});
 }
 
 /*********************************************************** TMMenuDropDown **********************************/
