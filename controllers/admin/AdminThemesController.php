@@ -2544,6 +2544,7 @@ class AdminThemesControllerCore extends AdminController
 
 			unlink($tmp_name);
 		}
+		Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=6');
 	}
 
 	/**
