@@ -28,6 +28,9 @@ ob_start();
 
 require_once(dirname(__FILE__).'/../config/config.inc.php');
 
+// Cart is needed for some requests
+Context::getContext()->cart = new Cart();
+
 //set http auth headers for apache+php-cgi work around
 if (isset($_SERVER['HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches))
 {
