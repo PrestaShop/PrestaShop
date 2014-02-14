@@ -185,10 +185,6 @@ class ThemeConfigurator extends Module
 
 	public function uninstall()
 	{
-		$images = Db::getInstance()->executeS('SELECT image FROM `'._DB_PREFIX_.'themeconfigurator`');
-		foreach ($images as $image)
-			$this->deleteImage($image['image']);
-
 		if (!Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'themeconfigurator`') || !parent::uninstall())
 			return false;
 
