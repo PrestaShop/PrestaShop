@@ -1,18 +1,5 @@
 @import "compass";
 @import "theme_variables";
-
-/**
- * BxSlider v4.0 - Fully loaded, responsive content slider
- * http://bxslider.com
- *
- * Written by: Steven Wanderski, 2012
- * http://stevenwanderski.com
- * (while drinking Belgian ales and listening to jazz)
- *
- * CEO and founder of bxCreative, LTD
- * http://bxcreative.com
- */
-
 #crossselling_list, .accessories-block .block_content, #productscategory_list {
 	
 		/** RESET AND LAYOUT
@@ -120,14 +107,14 @@
 		.bx-next{
 			right:10px;
 		&:before{
-			content:""	
+			content:"?"	
 			}
 		}
 		
 		.bx-prev{
 			left:10px;
 		&:before{
-			content:"";
+			content:"?";
 		
 			}
 		}
