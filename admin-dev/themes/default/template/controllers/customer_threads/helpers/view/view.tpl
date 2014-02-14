@@ -185,7 +185,7 @@
 	</h3>
 	<form action="{$current}&token={$token}&viewcustomer_thread&id_customer_thread={$id_customer_thread}" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div id="ChangeStatus" class="row row-margin-bottom">
-			<label class="control-label col-lg-3">{l s='Change status of message:'}</label>
+			<label class="control-label col-lg-3">{l s='Change status of message'}</label>
 			<div class="col-lg-3">
 				<select onchange="quickSelect(this);">
 					{foreach $actions as $action}
@@ -195,7 +195,7 @@
 			</div>
 		</div>
 		<div class="row row-margin-bottom">
-			<label class="control-label col-lg-3">{l s='Forward this discussion to an employee:'}</label>
+			<label class="control-label col-lg-3">{l s='Forward this discussion to an employee'}</label>
 			<div class="col-lg-3">
 				<select name="id_employee_forward">
 					<option value="-1">{l s='-- Choose --'}</option>
@@ -247,13 +247,13 @@
 							<span class="title_box">{l s='Date'}</span>
 						</th>
 						<th class="center">
-							<span class="title_box">{l s='Products:'}</span>
+							<span class="title_box">{l s='Products'}</span>
 						</th>
 						<th class="center">
 							<span class="title_box">{l s='Total paid'}</span>
 						</th>
 						<th class="center">
-							<span class="title_box">{l s='Payment: '}</span>
+							<span class="title_box">{l s='Payment'}</span>
 						</th>
 						<th class="center">
 							<span class="title_box">{l s='State'}</span>
@@ -289,7 +289,7 @@
 		{if $products && count($products)}
 		<div class="panel">
 			<h3>
-				<i class="icon-archive"></i> {l s='Products:'}
+				<i class="icon-archive"></i> {l s='Products'}
 			</h3>
 			<div class="table-responsive clearfix">
 				<table class="table">
