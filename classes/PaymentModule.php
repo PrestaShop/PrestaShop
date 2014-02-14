@@ -367,6 +367,76 @@ abstract class PaymentModuleCore extends Module
 						$price = Product::getPriceStatic((int)$product['id_product'], false, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 						$price_wt = Product::getPriceStatic((int)$product['id_product'], true, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
+
+						$products_list .=
+						'<tr>
+							<td style="border:1px solid #D6D4D4;">
+								<table class="table">
+									<tr>
+										<td width="10">&nbsp;</td>
+										<td>
+											<font size="2" face="Open-sans, sans-serif" color="#555454">
+												'.$product['reference'].'
+											</font>
+										</td>
+										<td width="10">&nbsp;</td>
+									</tr>
+								</table>
+							</td>
+							<td style="border:1px solid #D6D4D4;">
+								<table class="table">
+										<tr>
+											<td width="10">&nbsp;</td>
+											<td>
+												<font size="2" face="Open-sans, sans-serif" color="#555454">
+													<strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').'</strong>
+												</font>
+											</td>
+										<td width="10">&nbsp;</td>
+									</tr>
+								</table>
+							</td>
+							<td style="border:1px solid #D6D4D4;">
+								<table class="table">
+									<tr>
+										<td width="10">&nbsp;</td>
+										<td align="right">
+											<font size="2" face="Open-sans, sans-serif" color="#555454">
+												'.Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ?  Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'
+											</font>
+										</td>
+										<td width="10">&nbsp;</td>
+									</tr>
+								</table>
+							</td>
+							<td style="border:1px solid #D6D4D4;">
+								<table class="table">
+									<tr>
+										<td width="10">&nbsp;</td>
+										<td align="right">
+											<font size="2" face="Open-sans, sans-serif" color="#555454">
+												'.$product['quantity'].'
+											</font>
+										</td>
+										<td width="10">&nbsp;</td>
+									</tr>
+								</table>
+							</td>
+							<td style="border:1px solid #D6D4D4;">
+								<table class="table">
+									<tr>
+										<td width="10">&nbsp;</td>
+										<td align="right">
+											<font size="2" face="Open-sans, sans-serif" color="#555454">
+												'.Tools::displayPrice($product['quantity'] * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $this->context->currency, false).'
+											</font>
+										</td>
+										<td width="10">&nbsp;</td>
+									</tr>
+								</table>
+							</td>
+						</tr>';
+
 						$customization_quantity = 0;
 						$customized_datas = Product::getAllCustomizedDatas((int)$order->id_cart);
 						if (isset($customized_datas[$product['id_product']][$product['id_product_attribute']]))
@@ -380,151 +450,72 @@ abstract class PaymentModuleCore extends Module
 
 								if (isset($customization['datas'][Product::CUSTOMIZE_FILE]))
 									$customization_text .= sprintf(Tools::displayError('%d image(s)'), count($customization['datas'][Product::CUSTOMIZE_FILE])).'<br />';
-								$customization_text .= '---<br />';
+
+								$customization_quantity = (int)$product['customization_quantity'];
+
+								$products_list .=
+									'<tr>
+										<td colspan="2" style="border:1px solid #D6D4D4;">
+											<table class="table">
+													<tr>
+														<td width="10">&nbsp;</td>
+														<td>
+															<font size="2" face="Open-sans, sans-serif" color="#555454">
+																<strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').'</strong><br>
+																'.$customization_text.'
+															</font>
+														</td>
+													<td width="10">&nbsp;</td>
+												</tr>
+											</table>
+										</td>
+										<td style="border:1px solid #D6D4D4;">
+											<table class="table">
+												<tr>
+													<td width="10">&nbsp;</td>
+													<td align="right">
+														<font size="2" face="Open-sans, sans-serif" color="#555454">
+															'.Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ?  Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'
+														</font>
+													</td>
+													<td width="10">&nbsp;</td>
+												</tr>
+											</table>
+										</td>
+										<td style="border:1px solid #D6D4D4;">
+											<table class="table">
+												<tr>
+													<td width="10">&nbsp;</td>
+													<td align="right">
+														<font size="2" face="Open-sans, sans-serif" color="#555454">
+															'.$customization_quantity.'
+														</font>
+													</td>
+													<td width="10">&nbsp;</td>
+												</tr>
+											</table>
+										</td>
+										<td style="border:1px solid #D6D4D4;">
+											<table class="table">
+												<tr>
+													<td width="10">&nbsp;</td>
+													<td align="right">
+														<font size="2" face="Open-sans, sans-serif" color="#555454">
+															'.Tools::displayPrice($customization_quantity * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $this->context->currency, false).'
+														</font>
+													</td>
+													<td width="10">&nbsp;</td>
+												</tr>
+											</table>
+										</td>
+									</tr>';
 							}
 
-							$customization_text = Tools::rtrimString($customization_text, '---<br />');
 
-							$customization_quantity = (int)$product['customization_quantity'];
-							$products_list .=
-							'<tr>
-								<td style="border:1px solid #D6D4D4;">
-									<table class="table">
-										<tr>
-											<td width="10">&nbsp;</td>
-											<td>
-												<font size="2" face="Open-sans, sans-serif" color="#555454">
-													'.$product['reference'].'
-												</font>
-											</td>
-											<td width="10">&nbsp;</td>
-										</tr>
-									</table>
-								</td>
-								<td style="border:1px solid #D6D4D4;">
-									<table class="table">
-											<tr>
-												<td width="10">&nbsp;</td>
-												<td>
-													<font size="2" face="Open-sans, sans-serif" color="#555454">
-														<strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').' - '.Tools::displayError('Customized').(!empty($customization_text) ? ' - '.$customization_text : '').'</strong>
-													</font>
-												</td>
-											<td width="10">&nbsp;</td>
-										</tr>
-									</table>
-								</td>
-								<td style="border:1px solid #D6D4D4;">
-									<table class="table">
-										<tr>
-											<td width="10">&nbsp;</td>
-											<td align="right">
-												<font size="2" face="Open-sans, sans-serif" color="#555454">
-													'.Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ?  Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'
-												</font>
-											</td>
-											<td width="10">&nbsp;</td>
-										</tr>
-									</table>
-								</td>
-								<td style="border:1px solid #D6D4D4;">
-									<table class="table">
-										<tr>
-											<td width="10">&nbsp;</td>
-											<td align="right">
-												<font size="2" face="Open-sans, sans-serif" color="#555454">
-													'.$customization_quantity.'
-												</font>
-											</td>
-											<td width="10">&nbsp;</td>
-										</tr>
-									</table>
-								</td>
-								<td style="border:1px solid #D6D4D4;">
-									<table class="table">
-										<tr>
-											<td width="10">&nbsp;</td>
-											<td align="right">
-												<font size="2" face="Open-sans, sans-serif" color="#555454">
-													'.Tools::displayPrice($customization_quantity * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $this->context->currency, false).'
-												</font>
-											</td>
-											<td width="10">&nbsp;</td>
-										</tr>
-									</table>
-								</td>
-							</tr>';
+
+
 						}
-
-						if (!$customization_quantity || (int)$product['cart_quantity'] > $customization_quantity)
-							$products_list .=
-							'<tr>
-								<td style="border:1px solid #D6D4D4;">
-									<table class="table">
-										<tr>
-											<td width="10">&nbsp;</td>
-											<td>
-												<font size="2" face="Open-sans, sans-serif" color="#555454">
-													'.$product['reference'].'
-												</font>
-											</td>
-											<td width="10">&nbsp;</td>
-										</tr>
-									</table>
-								</td>
-								<td style="border:1px solid #D6D4D4;">
-									<table class="table">
-										<tr>
-											<td width="10">&nbsp;</td>
-											<td>
-												<font size="2" face="Open-sans, sans-serif" color="#555454">
-													<strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').'</strong>
-												</font>
-											</td>
-											<td width="10">&nbsp;</td>
-										</tr>
-									</table>
-								</td>
-								<td style="border:1px solid #D6D4D4;">
-									<table class="table">
-										<tr>
-											<td width="10">&nbsp;</td>
-												<td align="right">
-													<font size="2" face="Open-sans, sans-serif" color="#555454">
-														'.Tools::displayPrice(Product::getTaxCalculationMethod((int)$this->context->customer->id) == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'
-													</font>
-												</td>
-											<td width="10">&nbsp;</td>
-										</tr>
-									</table>
-								</td>
-								<td style="border:1px solid #D6D4D4;">
-									<table class="table">
-										<tr>
-											<td width="10">&nbsp;</td>
-											<td align="right">
-												<font size="2" face="Open-sans, sans-serif" color="#555454">
-													'.((int)$product['cart_quantity'] - $customization_quantity).'
-												</font>
-											</td>
-											<td width="10">&nbsp;</td>
-										</tr>
-									</table>
-								</td>
-								<td style="border:1px solid #D6D4D4;">
-									<table class="table">
-										<tr>
-											<td width="10">&nbsp;</td>
-											<td align="right">
-												<font size="2" face="Open-sans, sans-serif" color="#555454">
-													'.Tools::displayPrice(((int)$product['cart_quantity'] - $customization_quantity) * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $this->context->currency, false).'
-												</font>
-											</td>
-											<td width="10">&nbsp;</td>
-										</tr>
-									</table>
-								</td>
-							</tr>';
+						
 
 						// Check if is not a virutal product for the displaying of shipping
 						if (!$product['is_virtual'])
