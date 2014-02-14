@@ -1315,7 +1315,7 @@ class ToolsCore
 
 		if (!$exact)
 		{
-			$spacepos = mb_strrpos($truncate, ' ');
+			$spacepos = Tools::strrpos($truncate, ' ');
 			if ($html)
 			{
 				$truncateCheck = Tools::substr($truncate, 0, $spacepos);
@@ -1469,6 +1469,13 @@ class ToolsCore
 		if (function_exists('mb_substr'))
 			return mb_substr($str, (int)$start, ($length === false ? Tools::strlen($str) : (int)$length), $encoding);
 		return substr($str, $start, ($length === false ? Tools::strlen($str) : (int)$length));
+	}
+
+	public static function strpos($str, $find, $offset = 0, $encoding = 'UTF-8')
+	{
+		if (function_exists('mb_strpos'))
+			return mb_strpos($str, $find, $offset, $encoding);
+		return strpos($str, $find, $offset);
 	}
 
 	public static function strrpos($str, $find, $offset = 0, $encoding = 'utf-8')
