@@ -309,7 +309,7 @@ class AdminCountriesControllerCore extends AdminController
 				),			
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Contains following  states'),
+					'label' => $this->l('Contains states'),
 					'name' => 'contains_states',
 					'required' => false,
 					'values' => array(
