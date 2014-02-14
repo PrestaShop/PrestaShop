@@ -155,7 +155,7 @@ class AdminPaymentControllerCore extends AdminController
 
 	public function renderView()
 	{
-		$this->toolbar_title = $this->l('Payment: ');
+		$this->toolbar_title = $this->l('Payment');
 		unset($this->toolbar_btn['back']);
 		
 		$shop_context = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);

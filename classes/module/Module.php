@@ -1839,13 +1839,24 @@ abstract class ModuleCore
 		return $is_cached;
 	}
 
+
+	/*
+	 * Clear template cache
+	 *
+	 * @param string $template Template name
+	 * @param int null $cache_id
+	 * @param int null $compile_id
+	 * @return int Number of template cleared
+	 */
 	protected function _clearCache($template, $cache_id = null, $compile_id = null)
 	{
 		Tools::enableCache();
 		if ($cache_id === null)
 			$cache_id = $this->name;
-		Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath($template), $cache_id, $compile_id);
+		$number_of_template_cleared = Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath($template), $cache_id, $compile_id);
 		Tools::restoreCacheSettings();
+
+		return $number_of_template_cleared;
 	}
 
 	protected function _generateConfigXml()
