@@ -40,7 +40,7 @@ class ProductControllerCore extends FrontController
 		if ($this->context->getMobileDevice() == false)
 		{
 			$this->addCSS(_THEME_CSS_DIR_.'product.css');
-			$this->addJqueryPlugin(array('fancybox', 'idTabs', 'scrollTo', 'serialScroll'));
+			$this->addJqueryPlugin(array('fancybox', 'idTabs', 'scrollTo', 'serialScroll', 'bxslider'));
 			$this->addJS(array(
 				_THEME_JS_DIR_.'tools.js',  // retro compat themes 1.5
 				_THEME_JS_DIR_.'product.js'

@@ -476,9 +476,9 @@ class HomeSlider extends Module
 	{
 		if (!isset($this->context->controller->php_self) || $this->context->controller->php_self != 'index')
 			return;
-		$this->context->controller->addJS($this->_path.'js/jquery.bxSlider.min.js');
-		$this->context->controller->addCSS($this->_path.'bx_styles.css');
+		$this->context->controller->addCSS($this->_path.'homeslider.css');
 		$this->context->controller->addJS($this->_path.'js/homeslider.js');
+		$this->context->controller->addJqueryPlugin(array('bxslider'));
 	}
 
 	public function hookdisplayTop($params)

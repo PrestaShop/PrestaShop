@@ -196,18 +196,19 @@ $(document).ready(function()
 	else
 		$('.thickbox').click(function(){return false});
 
-	$('#bxslider').bxSlider({
-		minSlides: 1,
-		maxSlides: 6,
-		slideWidth: 178,
-		slideMargin: 20,
-		pager: false,
-		nextText: '',
-		prevText: '',
-		moveSlides:1,
-		infiniteLoop:false,
-		hideControlOnEnd: true
-	});
+	if (!!$.prototype.bxSlider)
+		$('#bxslider').bxSlider({
+			minSlides: 1,
+			maxSlides: 6,
+			slideWidth: 178,
+			slideMargin: 20,
+			pager: false,
+			nextText: '',
+			prevText: '',
+			moveSlides:1,
+			infiniteLoop:false,
+			hideControlOnEnd: true
+		});
 
     // The button to increment the product value
     $('.product_quantity_up').click(function(e){
