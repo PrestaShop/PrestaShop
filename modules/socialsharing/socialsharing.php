@@ -191,7 +191,7 @@ class SocialSharing extends Module
 
 	public function hookDisplayCompareExtraInformation($params)
 	{
-		if (!$this->isCached('socialsharing_compare.tpl'))
+		if (!$this->isCached('socialsharing_compare.tpl', $this->getCacheId('socialsharing_compare')))
 		{
 			$this->context->smarty->assign(array(
 				'PS_SC_TWITTER' => Configuration::get('PS_SC_TWITTER'),
@@ -201,7 +201,7 @@ class SocialSharing extends Module
 			));
 		}
 
-		return $this->display(__FILE__, 'socialsharing_compare.tpl');
+		return $this->display(__FILE__, 'socialsharing_compare.tpl', $this->getCacheId('socialsharing_compare'));
 	}
 
 	public function hookDisplayRightColumnProduct($params)
