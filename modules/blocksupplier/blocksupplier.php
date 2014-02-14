@@ -48,16 +48,26 @@ class BlockSupplier extends Module
 	{
 		if (!parent::install())
 			return false;
-		if (!$this->registerHook('displayLeftColumn') ||
-				!$this->registerHook('displayHeader') ||
+		if (!$this->registerHook('displayHeader') ||
 				!$this->registerHook('actionObjectSupplierDeleteAfter') ||
 				!$this->registerHook('actionObjectSupplierAddAfter') ||
 				!$this->registerHook('actionObjectSupplierUpdateAfter')
 			)
 			return false;
+
+		$theme = new Theme(Context::getContext()->shop->id_theme);
+		if ((!$theme->default_right_column || !$this->registerHook('rightColumn'))
+			&& (!$theme->default_left_column || !$this->registerHook('leftColumn'))
+		)
+		{
+			parent::uninstall();
+
+			return false;
+		}
 		Configuration::updateValue('SUPPLIER_DISPLAY_TEXT', true);
 		Configuration::updateValue('SUPPLIER_DISPLAY_TEXT_NB', 5);
 		Configuration::updateValue('SUPPLIER_DISPLAY_FORM', false);
+
 		return true;
 	}
 
