@@ -38,7 +38,7 @@ class SocialSharing extends Module
 		$this->author = 'PrestaShop';
 		$this->tab = 'advertising_marketing';
 		$this->need_instance = 0;
-		$this->version = '1';
+		$this->version = '1.1';
 		$this->bootstrap = true;
 		$this->_directory = dirname(__FILE__);
 
@@ -100,6 +100,9 @@ class SocialSharing extends Module
 				Configuration::updateValue('PS_SC_'.Tools::strtoupper($network), (int)Tools::getValue('PS_SC_'.Tools::strtoupper($network)));
 			$this->html .= $this->displayConfirmation($this->l('Settings updated'));
 			$this->_clearCache('socialsharing.tpl');
+			$this->_clearCache('socialsharing_compare.tpl');
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules', true).'&conf=6&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name);
+
 		}
 
 		$helper = new HelperForm();
@@ -188,7 +191,7 @@ class SocialSharing extends Module
 
 	public function hookDisplayCompareExtraInformation($params)
 	{
-		if (!$this->isCached('socialsharing_compare.tpl', $this->getCacheId('socialsharing_compare')))
+		if (!$this->isCached('socialsharing_compare.tpl'))
 		{
 			$this->context->smarty->assign(array(
 				'PS_SC_TWITTER' => Configuration::get('PS_SC_TWITTER'),
@@ -198,7 +201,7 @@ class SocialSharing extends Module
 			));
 		}
 
-		return $this->display(__FILE__, 'socialsharing_compare.tpl', $this->getCacheId('socialsharing_compare'));
+		return $this->display(__FILE__, 'socialsharing_compare.tpl');
 	}
 
 	public function hookDisplayRightColumnProduct($params)
