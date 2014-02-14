@@ -2,7 +2,7 @@
 <module>
 	<name>socialsharing</name>
 	<displayName><![CDATA[Social sharing]]></displayName>
-	<version><![CDATA[1]]></version>
+	<version><![CDATA[1.1]]></version>
 	<description><![CDATA[Displays social sharing buttons (Twitter, Facebook, Google+ and Pinterest) on every product page.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[advertising_marketing]]></tab>
