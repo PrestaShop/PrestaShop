@@ -347,6 +347,7 @@ span.view_scroll_spacer {
 		}
 		#short_description_content{
 			padding: 0 0 15px;
+			word-wrap: break-word;
 			p{
 				line-height: 18px;
 			}
@@ -395,6 +396,7 @@ span.view_scroll_spacer {
 }
 #page .rte {
 	padding: 0 20px 20px;
+	word-wrap: break-word;
 	p{
 		margin-bottom: 0;
 	}
