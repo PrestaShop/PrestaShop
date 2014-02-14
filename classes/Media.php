@@ -272,7 +272,7 @@ class MediaCore
 		$add_no_conflict = false;
 		if ($version === null)
 			$version = _PS_JQUERY_VERSION_; //set default version
-		else if (preg_match('/^([0-9]+\.)+[0-9]$/Ui', $version))
+		else if (preg_match('/^([0-9\.]+)$/Ui', $version))
 			$add_no_conflict = true;
 		else
 			return false;
@@ -295,7 +295,7 @@ class MediaCore
 			$return[] = Media::getJSPath(Tools::getCurrentUrlProtocolPrefix().'ajax.googleapis.com/ajax/libs/jquery/'.$version.'/jquery'.($minifier ? '.min.js' : '.js'));
 
 		if ($add_no_conflict)
-			$return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery.noConflict.php?version='.$version);
+			$return[] = Media::getJSPath(Context::getContext()->link->getMediaLink(_PS_JS_DIR_.'jquery/jquery.noConflict.php?version='.$version));
 
 		//added query migrate for compatibility with new version of jquery will be removed in ps 1.6
 		$return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery-migrate-1.2.1.min.js');
@@ -690,12 +690,41 @@ class MediaCore
 		@$dom->loadHTML(($output));
 		libxml_use_internal_errors(false);
 		$scripts = $dom->getElementsByTagName('script');
+
 		if (is_object($scripts) && $scripts->length)
 			foreach ($scripts as $script)
 				if ($src = $script->getAttribute('src'))
-					Context::getContext()->controller->addJS($src);
+				{
+					$patterns = array(
+						'#code.jquery.com/jquery-([0-9\.]+)(\.min)*\.js$#Ui',
+						'#ajax.googleapis.com/ajax/libs/jquery/([0-9\.]+)/jquery(\.min)*\.js$#Ui',
+						'#ajax.aspnetcdn.com/ajax/jquery/jquery-([0-9\.]+)(\.min)*\.js$#Ui',
+						'#cdnjs.cloudflare.com/ajax/libs/jquery/([0-9\.]+)/jquery(\.min)*\.js$#Ui'
+					);
+					$flag = false;
+					foreach($patterns as $pattern)
+					{
+						$matches = array();
+						if (preg_match($pattern, $src, $matches))
+						{
+							$minifier = $version = false;
+							if (isset($matches[2]) && $matches[2])
+								$minifier = (bool)$matches[2];
+							if (isset($matches[1]) && $matches[1])
+								$version = $matches[1];
+							if ($version)
+							{
+								Context::getContext()->controller->addJquery($version, null, $minifier);
+								$flag = true;
+							}
+						}
 
-		return preg_replace_callback('/<script[^>]*>(.*)<\s*\/script\s*[^>]*>/Uims', array('Media', 'deferScript'), $output);
+					}
+					if (!$flag)
+						Context::getContext()->controller->addJS($src);
+				}
+		$output = preg_replace_callback('/<script[^>]*>(.*)<\s*\/script\s*[^>]*>/Uims', array('Media', 'deferScript'), $output);
+		return $output;
 	}
 	
 	public static function deferScript($matches)
@@ -706,6 +735,7 @@ class MediaCore
 
 		if (isset($matches[0]))
 			$original = trim($matches[0]);
+
 		if (isset($matches[1]))
 			$inline = trim($matches[1]);
 
@@ -714,8 +744,9 @@ class MediaCore
 			return '';
 
 		/* This is an external script, if it already belongs to js_files then remove it from content */
+
 		preg_match('/src\s*=\s*["\']?([^"\']*)[^>]/ims', $original, $results);
-		if (isset($results[1]) && in_array($results[1], Context::getContext()->controller->js_files))
+		if (isset($results[1]))
 			return '';
 
 		/* return original string because no match was found */
