@@ -317,6 +317,7 @@ class ProductControllerCore extends FrontController
 
 		$quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true, (int)$this->context->customer->id);
 		foreach ($quantity_discounts as &$quantity_discount)
+		{
 			if ($quantity_discount['id_product_attribute'])
 			{
 				$combination = new Combination((int)$quantity_discount['id_product_attribute']);
@@ -325,6 +326,9 @@ class ProductControllerCore extends FrontController
 					$quantity_discount['attributes'] = $attribute['name'].' - ';
 				$quantity_discount['attributes'] = rtrim($quantity_discount['attributes'], ' - ');
 			}
+			if ((int)$quantity_discount['id_currency'] == 0 && $quantity_discount['reduction_type'] == 'amount')
+				$quantity_discount['reduction'] = Tools::convertPriceFull($quantity_discount['reduction'], null, Context::getContext()->currency);
+		}
 
 		$product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
 		$address = new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
