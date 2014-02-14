@@ -209,7 +209,8 @@ function display(view)
 
 function quick_view()
 {
-	$(document).on('click', '.quick-view', function() {
+	$(document).on('click', '.quick-view', function(e) {
+		e.preventDefault();
 		var url = this.rel;
 		if (url.indexOf('?') != -1)
 			url += '&';
@@ -223,8 +224,6 @@ function quick_view()
 			'type':     'iframe',
 			'href':     url+'content_only=1'
 		});
-		ajaxCart.refresh();
-		return false;
 	});
 }
 
