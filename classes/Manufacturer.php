@@ -153,6 +153,11 @@ class ManufacturerCore extends ObjectModel
 	  * Return manufacturers
 	  *
 	  * @param boolean $get_nb_products [optional] return products numbers for each
+	  * @param int $id_lang
+	  * @param bool $active
+	  * @param int $p
+	  * @param int $n
+	  * @param bool $all_group
 	  * @return array Manufacturers
 	  */
 	public static function getManufacturers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_group = false)

@@ -966,6 +966,12 @@ class AdminImportControllerCore extends AdminController
 		return true;
 	}
 
+	/**
+	 * @param $array
+	 * @param $funcname
+	 * @param mixed $user_data
+	 * @return bool
+	 */
 	public static function arrayWalk(&$array, $funcname, &$user_data = false)
 	{
 		if (!is_callable($funcname)) return false;

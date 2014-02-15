@@ -2295,6 +2295,11 @@ abstract class AdminTabCore
 		echo $output;
 	}
 
+	/**
+	 * @param $key
+	 * @param $filter
+	 * @return mixed
+	 */
 	protected function filterToField($key, $filter)
 	{
 		foreach ($this->fieldsDisplay as $field)

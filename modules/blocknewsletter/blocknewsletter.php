@@ -225,8 +225,8 @@ class Blocknewsletter extends Module
 	 * Subscribe an email to the newsletter. It will create an entry in the newsletter table
 	 * or update the customer table depending of the register status
 	 *
-	 * @param unknown_type $email
-	 * @param unknown_type $register_status
+	 * @param string $email
+	 * @param int $register_status
 	 */
 	protected function register($email, $register_status)
 	{

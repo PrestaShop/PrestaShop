@@ -310,7 +310,7 @@ class AddressCore extends ObjectModel
 	/**
 	* Specify if an address is already in base
 	*
-	* @param $id_address Address id
+	* @param int $id_address Address id
 	* @return boolean
 	*/
 	public static function addressExists($id_address)
