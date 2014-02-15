@@ -44,7 +44,6 @@ class AdminShopControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Shop'),
-				'width' => 'auto',
 				'filter_key' => 'a!name',
 				'width' => 200,
 			),

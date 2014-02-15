@@ -177,7 +177,6 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_FAVICON' => array(
 						'title' => $this->l('Favicon'),
-						'hint' => $this->l('Only ICO format allowed'),
 						'hint' => $this->l('Will appear in the address bar of your web browser.'),
 						'type' => 'file',
 						'name' => 'PS_FAVICON',
@@ -185,7 +184,6 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_STORES_ICON' => array(
 						'title' => $this->l('Store icon'),
-						'hint' => $this->l('Only GIF format allowed.'),
 						'hint' => $this->l('Will appear on the store locator (inside Google Maps).').'<br />'.$this->l('Suggested size: 30x30, transparent GIF.'),
 						'type' => 'file',
 						'name' => 'PS_STORES_ICON',

@@ -297,7 +297,7 @@ class AdminWarehousesControllerCore extends AdminController
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
 				'label' => $this->l('Management type'),
-				'hint' => $this->l('Be careful! You won\'t be able to change this value later!'),
+				'hint' => $this->l('Inventory valuation method. Be careful! You won\'t be able to change this value later!'),
 				'name' => 'management_type',
 				'required' => true,
 				'options' => array(
@@ -318,7 +318,6 @@ class AdminWarehousesControllerCore extends AdminController
 					'id' => 'id',
 					'name' => 'name'
 				),
-				'hint' => $this->l('Inventory valuation method.')
 			);
 			
 			// adds input valuation currency
