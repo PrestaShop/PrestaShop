@@ -239,7 +239,7 @@ function translate($string)
 	if (!is_array($_LANGADM))
 		return str_replace('"', '&quot;', $string);
 	$key = md5(str_replace('\'', '\\\'', $string));
-	$str = (key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : ((key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : $string);
+	$str = (array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : ((array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : $string);
 	return str_replace('"', '&quot;', stripslashes($str));
 }
 
