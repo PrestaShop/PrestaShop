@@ -241,7 +241,7 @@ function quick_view()
 				'width':    1087,
 				'height':   610,
 				'type':     'iframe',
-				'href':     url+'content_only=1'
+				'href':     url + 'content_only=1'
 			});
 	});
 }
