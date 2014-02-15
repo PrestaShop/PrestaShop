@@ -1323,7 +1323,7 @@ class AdminControllerCore extends Controller
 	 * otherwise return an empty object, or die
 	 *
 	 * @param boolean $opt Return an empty object if load fail
-	 * @return object
+	 * @return object|boolean
 	 */
 	protected function loadObject($opt = false)
 	{
@@ -1351,8 +1351,6 @@ class AdminControllerCore extends Controller
 			$this->errors[] = Tools::displayError('The object cannot be loaded (the dentifier is missing or invalid)');
 			return false;
 		}
-
-		return $this->object;
 	}
 
 	/**

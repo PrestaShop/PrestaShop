@@ -708,8 +708,6 @@ class AdminThemesControllerCore extends AdminController
 			return false;
 		else
 			return true;
-
-		return false;
 	}
 
 	private function checkNames()

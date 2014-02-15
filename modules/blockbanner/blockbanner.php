@@ -159,7 +159,6 @@ class BlockBanner extends Module
 	public function getContent()
 	{
 		return $this->postProcess().$this->renderForm();
-		return $output;
 	}
 	
 	public function renderForm()
