@@ -412,7 +412,7 @@
 
 										<div class="col-lg-9">
 									{/if}
-											<textarea name="{$input.name}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte {if isset($input.class)}{$input.class}{/if}{else}textarea-autosize{/if}" >{$fields_value[$input.name][$language.id_lang]|escape:'html':'UTF-8'}</textarea>
+											<textarea name="{$input.name}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte {if isset($input.class)}{$input.class}{/if}{else}{if isset($input.class)}{$input.class}{else}textarea-autosize{/if}{/if}" >{$fields_value[$input.name][$language.id_lang]|escape:'html':'UTF-8'}</textarea>
 									{if $languages|count > 1}	
 										</div>
 										<div class="col-lg-2">
