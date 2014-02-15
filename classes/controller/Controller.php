@@ -403,14 +403,14 @@ abstract class ControllerCore
 
 		if ($this->controller_type == 'front')
 		{
- 			$dom_availaible = extension_loaded('dom')? true : false;
- 			if ($dom_availaible)
+ 			$dom_available = extension_loaded('dom') ? true : false;
+ 			if ($dom_available)
 				$html = Media::deferInlineScripts($html);
 			$html = trim(str_replace(array('</body>', '</html>'), '', $html))."\n";
 			$this->context->smarty->assign(array(
 				'js_def' => Media::getJsDef(),
 				'js_files' => array_unique($this->js_files),
-				'js_inline' => $dom_availaible ? Media::getInlineScript() : array()
+				'js_inline' => $dom_available ? Media::getInlineScript() : array()
 			));
 			$javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
 
