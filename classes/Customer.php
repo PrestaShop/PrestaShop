@@ -98,7 +98,7 @@ class CustomerCore extends ObjectModel
 	/** @var integer Password */
 	public $passwd;
 
-	/** @var datetime Password */
+	/** @var string Datetime Password */
 	public $last_passwd_gen;
 
 	/** @var boolean Status */
