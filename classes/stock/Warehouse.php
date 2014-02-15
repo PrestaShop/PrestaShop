@@ -494,7 +494,7 @@ class WarehouseCore extends ObjectModel
 	 * For a given pack, returns the warehouse it can be shipped from
 	 *
 	 * @param int $id_product
-	 * @return int|bool id_warehouse or false
+	 * @return array|bool id_warehouse or false
 	 */
 	public static function getPackWarehouses($id_product, $id_shop = null)
 	{

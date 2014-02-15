@@ -132,7 +132,7 @@ class CookieCore
 	/**
 	 * Magic method wich return cookie data from _content array
 	 *
-	 * @param $key key wanted
+	 * @param string $key key wanted
 	 * @return string value corresponding to the key
 	 */
 	public function __get($key)
@@ -143,7 +143,7 @@ class CookieCore
 	/**
 	 * Magic method which check if key exists in the cookie
 	 *
-	 * @param $key key wanted
+	 * @param string $key key wanted
 	 * @return boolean key existence
 	 */
 	public function __isset($key)
@@ -154,7 +154,7 @@ class CookieCore
 	/**
 	 * Magic method wich add data into _content array
 	 *
-	 * @param $key key desired
+	 * @param string $key key desired
 	 * @param $value value corresponding to the key
 	 */
 	public function __set($key, $value)
@@ -171,7 +171,7 @@ class CookieCore
 	/**
 	 * Magic method wich delete data into _content array
 	 *
-	 * @param $key key wanted
+	 * @param string $key key wanted
 	 */
 	public function __unset($key)
 	{
