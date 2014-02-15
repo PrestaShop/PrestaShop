@@ -499,7 +499,7 @@ class Blocktopmenu extends Module
 
 					foreach ($files as $file)
 						if (preg_match('/'.$category->id.'-([0-9])?_thumb.jpg/i', $file) === 1)
-							$this->_menu .= '<div><img src="'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_IMG_DIR_).'/'.basename(_PS_CAT_IMG_DIR_).'/'.$file.'" alt="'.$category->name.'" class="imgm" /></div>';
+							$this->_menu .= '<div><img src="'.$this->context->link->getMediaLink(_THEME_CAT_DIR_.$file).'" alt="'.Tools::SafeOutput($category->name).'" title="'.Tools::SafeOutput($category->name).'" class="imgm" /></div>';
 
 					$this->_menu .= '</li>';
 				}
