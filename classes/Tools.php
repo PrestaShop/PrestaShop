@@ -451,7 +451,7 @@ class ToolsCore
 	* Return price with currency sign for a given product
 	*
 	* @param float $price Product price
-	* @param object $currency Current currency (object, id_currency, NULL => context currency)
+	* @param object|array $currency Current currency (object, id_currency, NULL => context currency)
 	* @return string Price correctly formated (sign, decimal separator...)
 	*/
 	public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
@@ -547,8 +547,10 @@ class ToolsCore
 	* Return price converted
 	*
 	* @param float $price Product price
-	* @param object $currency Current currency object
+	* @param object|array $currency Current currency object
 	* @param boolean $to_currency convert to currency or from currency to default currency
+	* @param Context $context
+	* @return float Price
 	*/
 	public static function convertPrice($price, $currency = null, $to_currency = true, Context $context = null)
 	{

@@ -1563,7 +1563,7 @@ class CartCore extends ObjectModel
 	/**
 	* Get the gift wrapping price
 	* @param boolean $with_taxes With or without taxes
-	* @return gift wrapping price
+	* @return float wrapping price
 	*/
 	public function getGiftWrappingPrice($with_taxes = true, $id_address = null)
 	{

@@ -64,7 +64,7 @@ class AdminTranslationsControllerCore extends AdminController
 	/** @var string : Name of translations type */
 	protected $type_selected;
 
-	/** @var object : Language for the selected language */
+	/** @var Language object : Language for the selected language */
 	protected $lang_selected;
 
 	/** @var boolean : Is true if number of var exceed the suhosin request or post limit */

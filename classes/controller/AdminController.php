@@ -262,7 +262,7 @@ class AdminControllerCore extends Controller
 	/** @var instanciation of the class associated with the AdminController */
 	protected $object;
 
-	/** @var current object ID */
+	/** @var int current object ID */
 	protected $id_object;
 
 	/**
