@@ -55,8 +55,8 @@ class CookieCore
 	/**
 	 * Get data if the cookie exists and else initialize an new one
 	 *
-	 * @param $name Cookie name before encrypting
-	 * @param $path
+	 * @param $name string Cookie name before encrypting
+	 * @param $path string
 	 */
 	public function __construct($name, $path = '', $expire = null, $shared_urls = null, $standalone = false)
 	{
