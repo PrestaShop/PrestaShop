@@ -1302,8 +1302,6 @@ class AdminControllerCore extends Controller
 					'desc' => $this->l('Save')
 				);
 				break;
-			case 'view':
-				break;
 			default: // list
 				$this->toolbar_btn['new'] = array(
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
