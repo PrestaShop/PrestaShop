@@ -985,7 +985,7 @@ class AdminImportControllerCore extends AdminController
 	 * @param int $id_image (default null) id of the image if watermark enabled.
 	 * @param string $url path or url to use
 	 * @param string entity 'products' or 'categories'
-	 * @return void
+	 * @return boolean
 	 */
 	protected static function copyImg($id_entity, $id_image = null, $url, $entity = 'products', $regenerate = true)
 	{
