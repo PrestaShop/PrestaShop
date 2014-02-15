@@ -30,7 +30,7 @@ $(document).ready(function(){
 		updateStateByIdCountry();
 	});
 
-	if (SE_RefreshMethod == 0)
+	if (typeof SE_RefreshMethod !='undefined' && SE_RefreshMethod == 0)
 	{
 		$(document).on('change', '#id_state', function(){
 			resetAjaxQueries();
@@ -70,7 +70,8 @@ function updateStateByIdCountry()
 	$('#id_state').children().remove();
 	$('#availableCarriers').slideUp('fast');
 	$('#states').slideUp('fast');
-	displayWaitingAjax('block', SE_RefreshStateTS);
+	if (typeof SE_RefreshStateTS !='undefined')
+		displayWaitingAjax('block', SE_RefreshStateTS);
 	
 	var query = $.ajax({
 		type: 'POST',
@@ -79,7 +80,7 @@ function updateStateByIdCountry()
 		data: 'method=getStates&id_country=' + $('#id_country').val(),
 		dataType: 'json',
 		success: function(json) {
-			if (json.length)
+			if (json && json.length)
 			{
 				for (state in json)
 				{
@@ -87,7 +88,7 @@ function updateStateByIdCountry()
 				}
 				$('#states').slideDown('fast');
 			}
-			if (SE_RefreshMethod == 0)
+			if (typeof SE_RefreshMethod !='undefined' && SE_RefreshMethod == 0)
 				updateCarriersList();
 			displayWaitingAjax('none', '');
 		}
