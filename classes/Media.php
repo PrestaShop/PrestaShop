@@ -223,9 +223,6 @@ class MediaCore
 		if (is_array($media_uri) || $media_uri === null || empty($media_uri))
 			return false;
 
-  		if (preg_match('#^//#', $media_uri))
-			$media_uri = Tools::getCurrentUrlProtocolPrefix().substr($media_uri, 2);
-
 		$url_data = parse_url($media_uri);
 		if (!is_array($url_data))
 			return false;
@@ -701,6 +698,9 @@ class MediaCore
 			foreach ($scripts as $script)
 				if ($src = $script->getAttribute('src'))
 				{
+			  		if (preg_match('#^//#', $src))
+						$src = Tools::getCurrentUrlProtocolPrefix().substr($src, 2);
+
 					$patterns = array(
 						'#code.jquery.com/jquery-([0-9\.]+)(\.min)*\.js$#Ui',
 						'#ajax.googleapis.com/ajax/libs/jquery/([0-9\.]+)/jquery(\.min)*\.js$#Ui',
