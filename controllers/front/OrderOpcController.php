@@ -438,7 +438,6 @@ class OrderOpcControllerCore extends ParentOrderController
 			'sl_year' => $birthday[0],
 			'sl_month' => $birthday[1],
 			'sl_day' => $birthday[2],
-			'id_address_invoice' => $id_address_invoice,
 			'company_invoice' => Tools::htmlentitiesUTF8($address_invoice->company),
 			'lastname_invoice' => Tools::htmlentitiesUTF8($address_invoice->lastname),
 			'firstname_invoice' => Tools::htmlentitiesUTF8($address_invoice->firstname),

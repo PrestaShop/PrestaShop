@@ -2,7 +2,6 @@
 return array(
 	'informations' => array(
 		'phone' => '+33 (0)1.40.18.30.04',
-		'support' => 'http://support.prestashop.com/fr/',
 		'forum' => 'http://www.prestashop.com/forums/?lang=fr',
 		'blog' => 'http://www.prestashop.com/blog/fr/',
 		'support' => 'https://www.prestashop.com/fr/support',
