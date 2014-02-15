@@ -193,7 +193,7 @@ class UpgraderCore
 	/**
 	 * return an array of files
 	 * that the md5file does not match to the original md5file (provided by $rss_md5file_link_dir )
-	 * @return void
+	 * @return array
 	 */
 	public function getChangedFilesList()
 	{
