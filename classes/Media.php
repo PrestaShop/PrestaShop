@@ -702,10 +702,10 @@ class MediaCore
 						$src = Tools::getCurrentUrlProtocolPrefix().substr($src, 2);
 
 					$patterns = array(
-						'#code.jquery.com/jquery-([0-9\.]+)(\.min)*\.js$#Ui',
-						'#ajax.googleapis.com/ajax/libs/jquery/([0-9\.]+)/jquery(\.min)*\.js$#Ui',
-						'#ajax.aspnetcdn.com/ajax/jquery/jquery-([0-9\.]+)(\.min)*\.js$#Ui',
-						'#cdnjs.cloudflare.com/ajax/libs/jquery/([0-9\.]+)/jquery(\.min)*\.js$#Ui'
+						'#code\.jquery\.com/jquery-([0-9\.]+)(\.min)*\.js$#Ui',
+						'#ajax\.googleapis\.com/ajax/libs/jquery/([0-9\.]+)/jquery(\.min)*\.js$#Ui',
+						'#ajax\.aspnetcdn\.com/ajax/jquery/jquery-([0-9\.]+)(\.min)*\.js$#Ui',
+						'#cdnjs\.cloudflare\.com/ajax/libs/jquery/([0-9\.]+)/jquery(\.min)*\.js$#Ui'
 					);
 					$flag = false;
 					foreach($patterns as $pattern)
