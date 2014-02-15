@@ -58,7 +58,7 @@ class reinsuranceClass extends ObjectModel
 	{
 		/* Classical fields */
 		foreach ($_POST AS $key => $value)
-			if (key_exists($key, $this) AND $key != 'id_'.$this->table)
+			if (array_key_exists($key, $this) AND $key != 'id_'.$this->table)
 				$this->{$key} = $value;
 
 		/* Multilingual fields */

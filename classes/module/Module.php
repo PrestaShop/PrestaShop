@@ -190,7 +190,7 @@ abstract class ModuleCore
 				if (isset(self::$modules_cache[$this->name]['id_module']))
 					$this->id = self::$modules_cache[$this->name]['id_module'];
 				foreach (self::$modules_cache[$this->name] as $key => $value)
-					if (key_exists($key, $this))
+					if (array_key_exists($key, $this))
 						$this->{$key} = $value;
 				$this->_path = __PS_BASE_URI__.'modules/'.$this->name.'/';
 			}

@@ -3802,7 +3802,7 @@ class ProductCore extends ObjectModel
 		if (!$this->isFullyLoaded && is_null($this->tags))
 			$this->tags = Tag::getProductTags($this->id);
 
-		if (!($this->tags && key_exists($id_lang, $this->tags)))
+		if (!($this->tags && array_key_exists($id_lang, $this->tags)))
 			return '';
 
 		$result = '';
