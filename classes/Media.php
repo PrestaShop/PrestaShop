@@ -223,7 +223,13 @@ class MediaCore
 		if (is_array($media_uri) || $media_uri === null || empty($media_uri))
 			return false;
 
+  		if (preg_match('#^//#', $media_uri))
+			$media_uri = Tools::getCurrentUrlProtocolPrefix().substr($media_uri, 2);
+
 		$url_data = parse_url($media_uri);
+		if (!is_array($url_data))
+			return false;
+
 		$file_uri = '';
 		if (!array_key_exists('host', $url_data))
 		{
