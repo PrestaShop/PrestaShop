@@ -22,26 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {if !$opc}
-<script type="text/javascript">
-// <![CDATA[
-var taxEnabled = "{$use_taxes}";
-var displayPrice = "{$priceDisplay}";
-var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';
-var currencyRate = '{$currencyRate|floatval}';
-var currencyFormat = '{$currencyFormat|intval}';
-var currencyBlank = '{$currencyBlank|intval}';
-var id_carrier = '{$id_carrier|intval}';
-var id_state = '{$id_state|intval}';
-var SE_RedirectTS = "{l s='Refreshing the page and updating your cart...' mod='carriercompare'}";
-var SE_RefreshStateTS = "{l s='Checking available states...' mod='carriercompare'}";
-var SE_RetrievingInfoTS = "{l s='Retrieving information...' mod='carriercompare'}";
-var SE_RefreshMethod = {$refresh_method};
-var txtFree = "{l s='Free!' mod='carriercompare'}";
-PS_SE_HandleEvent();
-//]]>
-</script>
 <form class="box" id="compare_shipping_form" method="post" action="#" >
 	<fieldset id="compare_shipping">
 		<h1 class="page-heading bottom-indent">{l s='Estimate the cost of shipping & taxes.' mod='carriercompare'}</h1>
@@ -98,4 +79,18 @@ PS_SE_HandleEvent();
 		</p>
 	</fieldset>
 </form>
+{addJsDef taxEnabled=$use_taxes}
+{addJsDef displayPrice=$priceDisplay}
+{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
+{addJsDef currencyRate=$currencyRate|floatval}
+{addJsDef currencyFormat=$currencyFormat|intval}
+{addJsDef currencyBlank=$currencyBlank|intval}
+{addJsDef id_carrier=$id_carrier|intval}
+{addJsDef id_state=$id_state|intval}
+{addJsDef SE_RefreshMethod=$refresh_method|intval}
+
+{addJsDefL name=SE_RedirectTS}{l s='Refreshing the page and updating your cart...' mod='carriercompare' js=1}{/addJsDefL}
+{addJsDefL name=SE_RefreshStateTS}{l s='Checking available states...' mod='carriercompare' js=1}{/addJsDefL}
+{addJsDefL name=SE_RetrievingInfoTS}{l s='Retrieving information...' mod='carriercompare' js=1}{/addJsDefL}
+{addJsDefL name=txtFree}{l s='Free!' mod='carriercompare' js=1}{/addJsDefL}
 {/if}
