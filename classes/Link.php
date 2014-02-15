@@ -358,7 +358,7 @@ class LinkCore
 	 *
 	 * @param string $controller
 	 * @param boolean $with_token include or not the token in the url
-	 * @return controller url
+	 * @return string url
 	 */
 	public function getAdminLink($controller, $with_token = true)
 	{
