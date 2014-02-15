@@ -3401,4 +3401,4 @@ class AdminImportControllerCore extends AdminController
 			.DIRECTORY_SEPARATOR.$file;
 	}
 }
-?>
+
