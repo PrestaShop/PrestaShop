@@ -442,7 +442,7 @@ class AdminTranslationsControllerCore extends AdminController
 			$file_name = _PS_TRANSLATIONS_DIR_.'/export/'.$this->lang_selected->iso_code.'.gzip';
 			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 			$gz = new Archive_Tar($file_name, true);
-			if ($gz->createModify($items, null, _PS_ROOT_DIR_));
+			if ($gz->createModify($items, null, _PS_ROOT_DIR_))
 			{
 				ob_start();
 				header('Pragma: public');
