@@ -41,6 +41,7 @@ $_LANGMAIL['Product out of stock'] = 'One or more products are almost out of sto
 $_LANGMAIL['We miss you'] = 'We miss you';
 $_LANGMAIL['Email verification'] = 'Email verification';
 $_LANGMAIL['Newsletter voucher'] = 'Newsletter voucher';
+$_LANGMAIL['New order'] = 'New order : #%d - %s';
 $_LANGMAIL['Stock coverage'] = 'Stock coverage';
 $_LANGMAIL['Congratulations!'] = 'Congratulations!';
 $_LANGMAIL['Your wishlist\\\'s link'] = 'Your wishlist\'s link';
