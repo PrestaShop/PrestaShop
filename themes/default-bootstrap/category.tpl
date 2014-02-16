@@ -32,7 +32,7 @@
                         <!-- Scenes -->
                         {include file="$tpl_dir./scenes.tpl" scenes=$scenes}
                         {if $category->description}
-                            <div class="cat_desc">
+                            <div class="cat_desc rte">
                             {if Tools::strlen($category->description) > 350}
                                 <div id="category_description_short">{$description_short}</div>
                                 <div id="category_description_full" style="display:none">{$category->description}</div>
@@ -57,11 +57,11 @@
                                 {/strip}
                             </span>
                             {if Tools::strlen($category->description) > 350}
-                                <div id="category_description_short">{$description_short}</div>
-                                <div id="category_description_full" style="display:none">{$category->description}</div>
+                                <div id="category_description_short" class="rte">{$description_short}</div>
+                                <div id="category_description_full" class="hidden rte">{$category->description}</div>
                                 <a href="#" onclick="$('#category_description_short').hide(); $('#category_description_full').show(); $(this).hide(); return false;" class="lnk_more">{l s='More'}</a>
                             {else}
-                                <div>{$category->description}</div>
+                                <div class="rte">{$category->description}</div>
                             {/if}
                             </div>
                         {/if}
