@@ -45,7 +45,7 @@ class BlockCMSModel extends ObjectModel
 	 */
 	public static $definition = array(
 		'table' => 'cms_block',
-		'primary' => 'id_customer',
+		'primary' => 'id_cms_block',
 		'fields' => array(
 			'id_cms_block' =>       array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
 			'id_cms_category' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
