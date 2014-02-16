@@ -63,12 +63,6 @@
 	{/if}
 	</p>
 {/if}
-<script>
-	$('#idTabs a').click(function (e) {
-		e.preventDefault();
-		$(this).tab('show');
-	})
-</script>
 <ul class="nav nav-tabs" id="idTabs">
 	<li class="active"><a data-toggle="tab" href="#idTab1" class="tab-pane {if $activeTab eq 'sponsor'} active{/if}" title="{l s='Sponsor my friends' mod='referralprogram'}" rel="nofollow">{l s='Sponsor my friends' mod='referralprogram'}</a></li>
 	<li><a data-toggle="tab" href="#idTab2"  class="tab-pane {if $activeTab eq 'pending'} selected{/if}" title="{l s='List of pending friends' mod='referralprogram'}" rel="nofollow">{l s='Pending friends' mod='referralprogram'}</a></li>
