@@ -113,7 +113,7 @@
 			<div class="row">
 				{if isset($product) && $product}
 					<div class="product clearfix  col-xs-12 col-sm-6">
-						<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home_default')|escape:'html':'UTF-8'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:'html':'UTF-8'}" />
+						<img src="{$productcomment_cover_image}" height="{$mediumSize.height}" width="{$mediumSize.width}" alt="{$product->name|escape:'html':'UTF-8'}" />
 						<div class="product_desc">
 							<p class="product_name">
 								<strong>{$product->name}</strong>
