@@ -243,11 +243,11 @@
 				<ul class="nav nav-tabs" id="myTab">
 					<li class="active"><a href="#shipping">
 						<i class="icon-truck "></i>
-						Shipping</a>
+						{l s='Shipping'}</a>
 					</li>
 					<li><a href="#returns">
 						<i class="icon-undo"></i>
-						Merchandise Returns</a>
+						{l s='Merchandise Returns'}</a>
 					</li>
 				</ul>
 				<!-- Tab content -->
@@ -498,7 +498,7 @@
 						{/if}
 					</div>
 					<div class="tab-pane" id="addressInvoice">
-						<!-- Invoice address -->						
+						<!-- Invoice address -->
 						{if $can_edit}
 						<form class="form-horizontal" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$order->id}">
 							<div class="form-group">
@@ -743,7 +743,7 @@
 												<option value="{$current_currency['id_currency']}"{if $current_currency['id_currency'] == $currency->id} selected="selected"{/if}>{$current_currency['sign']}</option>
 											{/foreach}
 											</select>
-										</div>								
+										</div>
 									</div>
 								</td>
 								{if count($invoices_collection) > 0}
@@ -810,7 +810,7 @@
 				</ul>
 			</div>
 			{/if}
-		
+
 			<!-- linked orders block -->
 			{if count($order->getBrother()) > 0}
 			<div class="panel">
@@ -1162,6 +1162,6 @@
 		$(document).ready(function(){
 			$(".textarea-autosize").autosize();
 		});
- 	</script>
+	</script>
 
 {/block}
