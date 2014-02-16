@@ -179,12 +179,22 @@ abstract class PaymentModuleCore extends Module
 
 			$order_list = array();
 			$order_detail_list = array();
-			
+
+			if (Configuration::get('PS_USE_REF_NUM'))
+				Configuration::updateValue('PS_REF_NUM', Configuration::get('PS_REF_NUM')+1);
+
 			do
+			{
 				$reference = Order::generateReference();
+				if (Configuration::get('PS_USE_REF_NUM'))
+					$reference_num = Order::generateReferenceNumber();
+			}
 			while(Order::getByReference($reference)->count());
-			
+
 			$this->currentOrderReference = $reference;
+
+			if (Configuration::get('PS_USE_REF_NUM'))
+				$this->currentOrderReferenceNumber = $reference_num;
 
 			$order_creation_failed = false;
 			$cart_total_paid = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(true, Cart::BOTH), 2);
@@ -232,6 +242,7 @@ abstract class PaymentModuleCore extends Module
 					$order->id_lang = (int)$this->context->cart->id_lang;
 					$order->id_cart = (int)$this->context->cart->id;
 					$order->reference = $reference;
+					$order->reference_num = $reference_num;
 					$order->id_shop = (int)$this->context->shop->id;
 					$order->id_shop_group = (int)$this->context->shop->id_shop_group;
 
@@ -590,13 +601,13 @@ abstract class PaymentModuleCore extends Module
 									'{voucher_num}' => $voucher->code,
 									'{firstname}' => $this->context->customer->firstname,
 									'{lastname}' => $this->context->customer->lastname,
-									'{id_order}' => $order->reference,
+									'{id_order}' => Order::getOrderReference($order->id),
 									'{order_name}' => $order->getUniqReference()
 								);
 								Mail::Send(
 									(int)$order->id_lang,
 									'voucher',
-									sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
+									sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), Order::getOrderReference($order->id)),
 									$params,
 									$this->context->customer->email,
 									$this->context->customer->firstname.' '.$this->context->customer->lastname,

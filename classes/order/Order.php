@@ -155,6 +155,7 @@ class OrderCore extends ObjectModel
 	 * @var string Order reference, this reference is not unique, but unique for a payment
 	 */
 	public $reference;
+	public $reference_num;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -204,6 +205,7 @@ class OrderCore extends ObjectModel
 			'delivery_date' => 				array('type' => self::TYPE_DATE),
 			'valid' => 						array('type' => self::TYPE_BOOL),
 			'reference' => 					array('type' => self::TYPE_STRING),
+			'reference_num' => 				array('type' => self::TYPE_STRING),
 			'date_add' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
@@ -1304,6 +1306,13 @@ class OrderCore extends ObjectModel
 		return $orders;
 	}
 
+	public static function getByReferenceNumber($reference_num)
+	{
+		$orders = new PrestaShopCollection('Order');
+		$orders->where('reference_num', '=', $reference_num);
+		return $orders;
+	}
+
 	public function getTotalWeight()
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -1464,6 +1473,19 @@ class OrderCore extends ObjectModel
 	public static function generateReference()
 	{
 		return strtoupper(Tools::passwdGen(9, 'NO_NUMERIC'));
+	}
+
+	/**
+	 * Generate a unique reference for orders generated with the same cart id
+	 * This references, is usefull for check payment
+	 *
+	 * @return String
+	 */
+	public static function generateReferenceNumber()
+	{
+		$ref_num = Configuration::get('PS_REF_NUM');
+		$length = Configuration::get('PS_REF_NUM_LENGTH');
+		return sprintf('%0'.$length.'d', $ref_num);
 	}
 
 	public function orderContainProduct($id_product)
@@ -1947,9 +1969,15 @@ class OrderCore extends ObjectModel
 		$order = Db::getInstance()->getRow($query);
 		
 		if ($order['min'] == $order['max'])
-			return $this->reference;
+			if (Configuration::get('PS_USE_REF_NUM') && !empty($this->reference_num)) // Make sure that ref_num is active and reference_num contains number
+				return $this->reference_num;
+			else
+				return $this->reference;
 		else
-			return $this->reference.'#'.($this->id + 1 - $order['min']);
+			if (Configuration::get('PS_USE_REF_NUM') && !empty($this->reference_num))
+				return $this->reference_num.'#'.($this->id + 1 - $order['min']);
+			else
+				return $this->reference.'#'.($this->id + 1 - $order['min']);
 	}
 	
 	/**
@@ -1979,6 +2007,20 @@ class OrderCore extends ObjectModel
 				SELECT `id_order_carrier`
 				FROM `'._DB_PREFIX_.'order_carrier`
 				WHERE `id_order` = '.(int)$this->id);
-	}		
+	}
+
+	/**
+	 * Return correct reference type
+	 *
+	 * @return string
+	 */
+	public static function getOrderReference($id_order)
+	{
+		$order = new Order($id_order);
+		if (Configuration::get('PS_USE_REF_NUM') && !empty($order->reference_num))
+			return $order->reference_num;
+		else
+			return $order->reference;
+	}
 }
 
