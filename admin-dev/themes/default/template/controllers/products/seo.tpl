@@ -116,5 +116,5 @@
 	</div>
 </div>
 <script type="text/javascript">
-	hideOtherLanguage({$id_lang});
+	hideOtherLanguage({$default_form_language});
 </script>

@@ -3052,6 +3052,9 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormSeo($product)
 	{
+		if (!$this->default_form_language)
+			$this->getLanguages();
+
 		$data = $this->createTemplate($this->tpl_form);
 
 		$data->assign(array(
@@ -3059,7 +3062,8 @@ class AdminProductsControllerCore extends AdminController
 			'languages' => $this->_languages,
 			'id_lang' => $this->context->language->id,
 			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED'),
-			'curent_shop_url' => $this->context->shop->getBaseURL()
+			'curent_shop_url' => $this->context->shop->getBaseURL(),
+			'default_form_language' => $this->default_form_language
 		));
 
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
@@ -3511,7 +3515,11 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormAttachments($obj)
 	{
+		if (!$this->default_form_language)
+			$this->getLanguages();
+
 		$data = $this->createTemplate($this->tpl_form);
+		$data->assign('default_form_language', $this->default_form_language);
 
 		if ((bool)$obj->id)
 		{
@@ -3561,10 +3569,14 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormInformations($product)
 	{
+		if (!$this->default_form_language)
+			$this->getLanguages();
+
 		$data = $this->createTemplate($this->tpl_form);
 
 		$currency = $this->context->currency;
 		$data->assign('languages', $this->_languages);
+		$data->assign('default_form_language', $this->default_form_language);
 		$data->assign('currency', $currency);
 		$this->object = $product;
 		//$this->display = 'edit';
@@ -4069,7 +4081,11 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormQuantities($obj)
 	{
+		if (!$this->default_form_language)
+			$this->getLanguages();
+
 		$data = $this->createTemplate($this->tpl_form);
+		$data->assign('default_form_language', $this->default_form_language);
 
 		if ($obj->id)
 		{
@@ -4343,7 +4359,12 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormFeatures($obj)
 	{
+		if (!$this->default_form_language)
+			$this->getLanguages();
+
 		$data = $this->createTemplate($this->tpl_form);
+		$data->assign('default_form_language', $this->default_form_language);
+
 		if (!Feature::isFeatureActive())
 			$this->displayWarning($this->l('This feature has been disabled. ').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
 		else
