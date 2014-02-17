@@ -36,7 +36,6 @@
     <access id="access_3_25" id_profile="Logistician" id_tab="Features" view="0" add="0" edit="0" delete="0"/>
     <access id="access_3_26" id_profile="Logistician" id_tab="Manufacturers" view="0" add="0" edit="0" delete="0"/>
     <access id="access_3_27" id_profile="Logistician" id_tab="Suppliers" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_3_28" id_profile="Logistician" id_tab="Image_Mapping" view="0" add="0" edit="0" delete="0"/>
     <access id="access_3_29" id_profile="Logistician" id_tab="Tags" view="0" add="0" edit="0" delete="0"/>
     <access id="access_3_30" id_profile="Logistician" id_tab="Attachments" view="0" add="0" edit="0" delete="0"/>
     <access id="access_3_31" id_profile="Logistician" id_tab="Orders_1" view="1" add="1" edit="1" delete="1"/>
@@ -137,7 +136,6 @@
     <access id="access_4_25" id_profile="Translator" id_tab="Features" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_26" id_profile="Translator" id_tab="Manufacturers" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_27" id_profile="Translator" id_tab="Suppliers" view="0" add="0" edit="0" delete="0"/>
-    <access id="access_4_28" id_profile="Translator" id_tab="Image_Mapping" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_29" id_profile="Translator" id_tab="Tags" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_30" id_profile="Translator" id_tab="Attachments" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_31" id_profile="Translator" id_tab="Orders_1" view="0" add="0" edit="0" delete="0"/>
@@ -238,7 +236,6 @@
     <access id="access_5_25" id_profile="Salesman" id_tab="Features" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_26" id_profile="Salesman" id_tab="Manufacturers" view="1" add="0" edit="0" delete="0"/>
     <access id="access_5_27" id_profile="Salesman" id_tab="Suppliers" view="0" add="0" edit="0" delete="0"/>
-    <access id="access_5_28" id_profile="Salesman" id_tab="Image_Mapping" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_29" id_profile="Salesman" id_tab="Tags" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_30" id_profile="Salesman" id_tab="Attachments" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_31" id_profile="Salesman" id_tab="Orders_1" view="1" add="1" edit="1" delete="1"/>
