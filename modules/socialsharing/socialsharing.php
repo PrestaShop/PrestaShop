@@ -149,7 +149,7 @@ class SocialSharing extends Module
 
 	public function hookDisplayHeader($params)
 	{
-		if (!isset($this->context->controller->php_self) || $this->context->controller->php_self != 'product')
+		if (!isset($this->context->controller->php_self) || !in_array($this->context->controller->php_self, array('product', 'products-comparison')))
 			return;
 
 		$this->context->controller->addCss($this->_path.'css/socialsharing.css');
