@@ -71,7 +71,7 @@
 						</span>
 						{$value[$input.values.name]}
 					{else}
-						<span class="badge badge-error">
+						<span class="badge badge-danger">
 						{if isset($statusStats[$value['id_order_state']]) && $statusStats[$value['id_order_state']]}
 							{$statusStats[$value['id_order_state']]}
 						{else}

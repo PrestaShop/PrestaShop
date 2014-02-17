@@ -66,7 +66,7 @@
 		</div>
 
 		<div class="alert alert-info">
-			<h4>{l s='How to restore a database backup in 10 easy steps:'}</h4">
+			<h4>{l s='How to restore a database backup in 10 easy steps'}</h4>
 			<ol>
 				<li>{l s='Set "Enable Shop" to "No" in the "Maintenance" page under the "Preferences" menu.'}</li>
 				<li>{l s='Download the backup from the list below or from your FTP server (in the folder "admin/backups").'}</li>
