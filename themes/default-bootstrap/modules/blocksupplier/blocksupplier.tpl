@@ -41,11 +41,15 @@
 			{foreach from=$suppliers item=supplier name=supplier_list}
 				{if $smarty.foreach.supplier_list.iteration <= $text_list_nb}
 				<li class="{if $smarty.foreach.supplier_list.last}last_item{elseif $smarty.foreach.supplier_list.first}first_item{else}item{/if}">
+                {if $display_link_supplier}
 					<a 
 					href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html':'UTF-8'}" 
 					title="{l s='More about' mod='blocksupplier'} {$supplier.name}">
-						{$supplier.name|escape:'html':'UTF-8'}
+				{/if}
+                {$supplier.name|escape:'html':'UTF-8'}
+                {if $display_link_supplier}
 					</a>
+                {/if}
 				</li>
 				{/if}
 			{/foreach}
