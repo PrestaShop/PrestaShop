@@ -103,10 +103,11 @@ if (isset($_SERVER['HTTP_LOCAL_CONTENT_SHA1']) && $_SERVER['HTTP_LOCAL_CONTENT_S
 	$result['status'] = $_SERVER['SERVER_PROTOCOL'].' 304 Not Modified';
 }
 
-foreach ($result['headers'] as $param_value)
-{
-	header($param_value);
-}
+if (is_array($result['headers']))
+	foreach ($result['headers'] as $param_value)
+	{
+		header($param_value);
+	}
 if (isset($result['type']))
 {
 //	header($result['content_sha1']);
