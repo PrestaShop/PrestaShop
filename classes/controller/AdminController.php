@@ -3464,20 +3464,3 @@ class AdminControllerCore extends Controller
 		return $return;
 	}
 }
-
-/* Make Some Generic Strings Available for Translation
- *
- * Leave the comments, 
- * the code just needs to be there to be parsed 
- * but there is no point in executing it
-
-	// The following strings are needed in AdminCountries, but we want
-	// them to be stored with the AdminController key
-	// because they have nothing to do with countries by themselves.
-
-	$this->l('Customer');
-	$this->l('Warehouse');
-	$this->l('Country');
-	$this->l('State');
-	$this->l('Address');
-*/
