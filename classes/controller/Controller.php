@@ -404,16 +404,16 @@ abstract class ControllerCore
 		if ($this->controller_type == 'front')
 		{
  			$dom_availaible = extension_loaded('dom')? true : false;
-			$defer = $dom_availaible && configuration::get('PS_JS_HTML_THEME_COMPRESSION');
- 			if ($defer)
+ 			if ($dom_availaible)
 				$html = Media::deferInlineScripts($html);
 			$html = trim(str_replace(array('</body>', '</html>'), '', $html))."\n";
 			$this->context->smarty->assign(array(
 				'js_def' => Media::getJsDef(),
 				'js_files' => array_unique($this->js_files),
-				'js_inline' => $defer ? Media::getInlineScript() : array()
+				'js_inline' => $dom_availaible ? Media::getInlineScript() : array()
 			));
 			$javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
+
 			echo $html.$javascript."\t</body>\n</html>";
 		}
 		else

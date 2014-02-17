@@ -41,6 +41,40 @@ $(document).ready(function() {
 		e.preventDefault();
 		addNotification();
 	});
+
+	$('i[rel^=ajax_id_mailalert_]').on('click', function()
+	{
+		var ids =  $(this).attr('rel').replace('ajax_id_mailalert_', '');
+		ids = ids.split('_');
+		var id_product_mail_alert = parseInt(ids[0]);
+		var id_product_attribute_mail_alert = parseInt(ids[1]);
+		var parent = $(this).parents('li');
+
+		if (typeof mailalerts_url_remove == 'undefined')
+			return;
+
+		$.ajax({
+			url: mailalerts_url_remove,
+			type: "POST",
+			data: {
+				'id_product': id_product_mail_alert,
+				'id_product_attribute': id_product_attribute_mail_alert
+			},
+			success: function(result)
+			{
+				if (result == '0')
+				{
+					parent.fadeOut("normal", function()
+					{
+                        if (parent.siblings().length == 0)
+                            $("#mailalerts_block_account_warning").removeClass('hidden');
+                        parent.remove();
+					});
+				}
+ 		 	}
+		});
+	});
+
 });
 
 function clearText()

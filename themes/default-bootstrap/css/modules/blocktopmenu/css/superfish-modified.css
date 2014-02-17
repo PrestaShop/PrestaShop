@@ -93,8 +93,8 @@
   /* match top ul list item height */
   z-index: 99;
   padding: 12px 0px 18px 0px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px; }
   @media (max-width: 767px) {
     .sf-menu li ul {
@@ -105,9 +105,9 @@
   display: block !important;
   opacity: 1 !important;
   background: none;
-  -moz-box-shadow: transparent 0px 0px 0px;
-  -webkit-box-shadow: transparent 0px 0px 0px;
-  box-shadow: transparent 0px 0px 0px; }
+  -webkit-box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px;
+  -moz-box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px;
+  box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px; }
 
 .sf-menu li li li ul {
   padding: 0 0 0 20px; }

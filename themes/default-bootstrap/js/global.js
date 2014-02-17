@@ -77,6 +77,23 @@ $(document).ready(function(){
 	    	});
 		}
 	}
+	
+	jQuery.curCSS = jQuery.css;
+	if (!!$.prototype.cluetip)
+		$('a.cluetip').cluetip({
+			local:true,
+			cursor: 'pointer',
+			dropShadow: false,
+			dropShadowSteps: 0,
+			showTitle: false,
+			tracking: true,
+			sticky: false,
+			mouseOutClose: true,
+			fx: {             
+		    	open:       'fadeIn',
+		    	openSpeed:  'fast'
+			}
+		}).css('opacity', 0.8);
 });
 
 function highdpi_init()
@@ -210,21 +227,23 @@ function display(view)
 
 function quick_view()
 {
-	$(document).on('click', '.quick-view', function(e) {
+	$(document).on('click', '.quick-view', function(e) 
+	{
 		e.preventDefault();
 		var url = this.rel;
 		if (url.indexOf('?') != -1)
 			url += '&';
 		else
 			url += '?';
-			
-		$.fancybox({
-			'padding':  0,
-			'width':    1087,
-			'height':   610,
-			'type':     'iframe',
-			'href':     url+'content_only=1'
-		});
+
+		if (!!$.prototype.fancybox)
+			$.fancybox({
+				'padding':  0,
+				'width':    1087,
+				'height':   610,
+				'type':     'iframe',
+				'href':     url + 'content_only=1'
+			});
 	});
 }
 

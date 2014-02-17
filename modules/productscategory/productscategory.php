@@ -206,6 +206,8 @@ class ProductsCategory extends Module
 
 	public function hookHeader($params)
 	{
+		if (!isset($this->context->controller->php_self) || $this->context->controller->php_self != 'product')
+			return;
 		$this->context->controller->addCSS($this->_path.'css/productscategory.css', 'all');
 		$this->context->controller->addJS($this->_path.'js/productscategory.js');
 		$this->context->controller->addJqueryPlugin(array('scrollTo', 'serialScroll', 'bxslider'));

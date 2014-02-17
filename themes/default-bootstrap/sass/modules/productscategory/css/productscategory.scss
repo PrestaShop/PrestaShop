@@ -105,16 +105,16 @@
 		
 		
 		.bx-next{
-			right:10px;
+			right: 10px;
 		&:before{
-			content:"?"	
+			content: "\f138";	
 			}
 		}
 		
 		.bx-prev{
 			left:10px;
 		&:before{
-			content:"?";
+			content: "\f137";
 		
 			}
 		}

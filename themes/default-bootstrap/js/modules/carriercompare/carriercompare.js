@@ -22,44 +22,42 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+var ajaxQueries = new Array();
 
-function PS_SE_HandleEvent()
-{
-	$(document).ready(function() {		
-		$('#id_country').change(function() {
+$(document).ready(function(){		
+	$(document).on('change', '#id_country', function(){
+		resetAjaxQueries();
+		updateStateByIdCountry();
+	});
+
+	if (typeof SE_RefreshMethod !='undefined' && SE_RefreshMethod == 0)
+	{
+		$(document).on('change', '#id_state', function(){
 			resetAjaxQueries();
-			updateStateByIdCountry();
-		});
-
-		if (SE_RefreshMethod == 0)
-		{
-			$('#id_state').change(function() {
-				resetAjaxQueries();
-				updateCarriersList();
-			});
-
-			$('#zipcode').bind('keyup',function(e) {
-				if (e.keyCode == '13')
-				{		
-					resetAjaxQueries();
-					updateCarriersList();
-				}												
-			});
-		}
-
-		$('#update_carriers_list').click(function() {
 			updateCarriersList();
 		});
 
-		$('#carriercompare_submit').click(function() {
-			resetAjaxQueries();
-			saveSelection();
-			return false;
+		$(document).on('keyup', '#zipcode', function(e){
+			if (e.keyCode == '13')
+			{		
+				resetAjaxQueries();
+				updateCarriersList();
+			}												
 		});
+	}
 
-		updateStateByIdCountry();
+	$(document).on('click', '#update_carriers_list', function(){
+		updateCarriersList();
 	});
-}
+
+	$(document).on('click', '#carriercompare_submit', function(){
+		resetAjaxQueries();
+		saveSelection();
+		return false;
+	});
+
+	updateStateByIdCountry();
+});
 
 function displayWaitingAjax(type, message)
 {
@@ -72,7 +70,8 @@ function updateStateByIdCountry()
 	$('#id_state').children().remove();
 	$('#availableCarriers').slideUp('fast');
 	$('#states').slideUp('fast');
-	displayWaitingAjax('block', SE_RefreshStateTS);
+	if (typeof SE_RefreshStateTS !='undefined')
+		displayWaitingAjax('block', SE_RefreshStateTS);
 	
 	var query = $.ajax({
 		type: 'POST',
@@ -81,7 +80,7 @@ function updateStateByIdCountry()
 		data: 'method=getStates&id_country=' + $('#id_country').val(),
 		dataType: 'json',
 		success: function(json) {
-			if (json.length)
+			if (json && json.length)
 			{
 				for (state in json)
 				{
@@ -89,7 +88,7 @@ function updateStateByIdCountry()
 				}
 				$('#states').slideDown('fast');
 			}
-			if (SE_RefreshMethod == 0)
+			if (typeof SE_RefreshMethod !='undefined' && SE_RefreshMethod == 0)
 				updateCarriersList();
 			displayWaitingAjax('none', '');
 		}
@@ -185,7 +184,6 @@ function saveSelection()
 	return false;
 }
 
-var ajaxQueries = new Array();
 function resetAjaxQueries()
 {
 	for (i = 0; i < ajaxQueries.length; ++i)

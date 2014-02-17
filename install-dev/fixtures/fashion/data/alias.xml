@@ -6,13 +6,13 @@
     <field name="active"/>
   </fields>
   <entities>
-    <alias id="ipdo" active="1">
-      <alias>ipdo</alias>
-      <search>ipod</search>
+    <alias id="bloose" active="1">
+      <alias>bloose</alias>
+      <search>blouse</search>
     </alias>
-    <alias id="piod" active="1">
-      <alias>piod</alias>
-      <search>ipod</search>
+    <alias id="blues" active="1">
+      <alias>blues</alias>
+      <search>blouse</search>
     </alias>
   </entities>
 </entity_alias>

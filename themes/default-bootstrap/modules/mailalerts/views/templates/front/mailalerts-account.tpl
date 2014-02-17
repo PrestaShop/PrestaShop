@@ -22,44 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<script type="text/javascript">
-$('document').ready(function()
-{
-	$('i[rel^=ajax_id_mailalert_]').click(function()
-	{
-		var ids =  $(this).attr('rel').replace('ajax_id_mailalert_', '');
-		ids = ids.split('_');
-		var id_product_mail_alert = ids[0];
-		var id_product_attribute_mail_alert = ids[1];
-		var parent = $(this).parents('li');
-
-		$.ajax({
-			url: "{$link->getModuleLink('mailalerts', 'actions', ['process' => 'remove'])|addslashes}",
-			type: "POST",
-			data: {
-				'id_product': id_product_mail_alert,
-				'id_product_attribute': id_product_attribute_mail_alert
-			},
-			success: function(result)
-			{
-				if (result == '0')
-				{
-					parent.fadeOut("normal", function()
-					{
-                        if (parent.siblings().length == 0)
-                            $("#mailalerts_block_account_warning").removeClass('hidden');
-                        parent.remove();
-					});
-				}
- 		 	}
-		});
-	});
-});
-</script>
-
 {capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Manage my account' mod='mailalerts'}" rel="nofollow">{l s='My account' mod='mailalerts'}</a><span class="navigation-pipe">{$navigationPipe}</span><span class="navigation_page">{l s='My alerts' mod='mailalerts'}</span>{/capture}
-
 <div id="mailalerts_block_account" class="block">
 	<h1 class="page-heading">{l s='My alerts' mod='mailalerts'}</h1>
 	{if $mailAlerts}
@@ -79,8 +42,8 @@ $('document').ready(function()
 		</ul>
 	{/if}
     <p id="mailalerts_block_account_warning" class="{if $mailAlerts}hidden{/if} alert alert-warning">{l s='No mail alerts yet.' mod='mailalerts'}</p>
-
 	<ul class="footer_links clearfix">
 		<li><a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Back to Your Account' mod='mailalerts'}"><span><i class="icon-chevron-left"></i>{l s='Back to Your Account' mod='mailalerts'}</span></a></li>
 	</ul>
 </div>
+{addJsDef mailalerts_url_remove=$link->getModuleLink('mailalerts', 'actions', ['process' => 'remove'])|addslashes}

@@ -87,11 +87,11 @@
   #crossselling_list .bx-next, .accessories-block .block_content .bx-next, #productscategory_list .bx-next {
     right: 10px; }
     #crossselling_list .bx-next:before, .accessories-block .block_content .bx-next:before, #productscategory_list .bx-next:before {
-      content: "?"; }
+      content: "\f138"; }
   #crossselling_list .bx-prev, .accessories-block .block_content .bx-prev, #productscategory_list .bx-prev {
     left: 10px; }
     #crossselling_list .bx-prev:before, .accessories-block .block_content .bx-prev:before, #productscategory_list .bx-prev:before {
-      content: "?"; }
+      content: "\f137"; }
   #crossselling_list .bx-wrapper .bx-controls-direction a.disabled, .accessories-block .block_content .bx-wrapper .bx-controls-direction a.disabled, #productscategory_list .bx-wrapper .bx-controls-direction a.disabled {
     display: none; }
   #crossselling_list .bx-wrapper .bx-controls-auto, .accessories-block .block_content .bx-wrapper .bx-controls-auto, #productscategory_list .bx-wrapper .bx-controls-auto {
