@@ -112,7 +112,7 @@
 		var iso = '{$iso_tiny_mce}';
 		var pathCSS = '{$smarty.const._THEME_CSS_DIR_}';
 		var ad = '{$ad}';
-		hideOtherLanguage({$id_lang});
+		hideOtherLanguage({$default_form_language});
 	</script>
 </div>
 {/if}
