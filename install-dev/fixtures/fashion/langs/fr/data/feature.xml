@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <entity_feature>
   <feature id="Height">
-    <name>Height</name>
+    <name>Hauteur</name>
   </feature>
   <feature id="Width">
-    <name>Width</name>
+    <name>Largeur</name>
   </feature>
   <feature id="Depth">
-    <name>Depth</name>
+    <name>Profondeur</name>
   </feature>
   <feature id="Weight">
-    <name>Weight</name>
+    <name>Poids</name>
   </feature>
   <feature id="Compositions">
     <name>Compositions</name>
@@ -19,6 +19,6 @@
     <name>Styles</name>
   </feature>
   <feature id="Properties">
-    <name>Properties</name>
+    <name>Propriétés</name>
   </feature>
 </entity_feature>

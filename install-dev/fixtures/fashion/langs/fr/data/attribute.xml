@@ -10,10 +10,10 @@
     <name>L</name>
   </attribute>
   <attribute id="One_size">
-    <name>One size</name>
+    <name>Taille unique</name>
   </attribute>
   <attribute id="Grey">
-    <name>Grey</name>
+    <name>Gris</name>
   </attribute>
   <attribute id="Taupe">
     <name>Taupe</name>
@@ -22,34 +22,34 @@
     <name>Beige</name>
   </attribute>
   <attribute id="White">
-    <name>White</name>
+    <name>Blanc</name>
   </attribute>
   <attribute id="Off_White">
-    <name>Off White</name>
+    <name>Blanc cassé</name>
   </attribute>
   <attribute id="Red">
-    <name>Red</name>
+    <name>Rouge</name>
   </attribute>
   <attribute id="Black">
-    <name>Black</name>
+    <name>Noir</name>
   </attribute>
   <attribute id="Camel">
-    <name>Camel</name>
+    <name>Chameau</name>
   </attribute>
   <attribute id="Orange">
     <name>Orange</name>
   </attribute>
   <attribute id="Blue">
-    <name>Blue</name>
+    <name>Bleu</name>
   </attribute>
   <attribute id="Green">
-    <name>Green</name>
+    <name>Vert</name>
   </attribute>
   <attribute id="Yellow">
-    <name>Yellow</name>
+    <name>Jaune</name>
   </attribute>
   <attribute id="Brown">
-    <name>Brown</name>
+    <name>Marron</name>
   </attribute>
   <attribute id="35">
     <name>35</name>
@@ -70,6 +70,6 @@
     <name>40</name>
   </attribute>
   <attribute id="Pink">
-    <name>Pink</name>
+    <name>Rose</name>
   </attribute>
 </entity_attribute>
