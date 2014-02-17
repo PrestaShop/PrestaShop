@@ -55,7 +55,7 @@
         <h3 class="page-subheading">{l s='send a message'}</h3>
         <div class="clearfix">
             <div class="col-xs-12 col-md-3">
-                <div class="form-group selector1">
+                <div class="form-group">
                     <label for="id_contact">{l s='Subject Heading'}</label>
                 {if isset($customerThread.id_contact)}
                         {foreach from=$contacts item=contact}
@@ -64,7 +64,7 @@
                                 <input type="hidden" name="id_contact" value="{$contact.id_contact}" />
                             {/if}
                         {/foreach}
-                </div> <!-- .selector1 -->
+                </div>
                 {else}
                     <select id="id_contact" class="form-control" name="id_contact" onchange="showElemFromSelect('id_contact', 'desc_contact')">
                         <option value="0">{l s='-- Choose --'}</option>
@@ -90,13 +90,13 @@
                 </p>
                 {if !$PS_CATALOG_MODE}
                     {if (!isset($customerThread.id_order) || $customerThread.id_order > 0)}
-                        <div class="form-group selector1">
+                        <div class="form-group">
                             <label>{l s='Order reference'}</label>
                             {if !isset($customerThread.id_order) && isset($isLogged) && $isLogged}
                                 <select name="id_order" class="form-control">
                                     <option value="0">{l s='-- Choose --'}</option>
                                     {foreach from=$orderList item=order}
-                                        <option value="{$order.value|intval}" {if $order.selected|intval}selected="selected"{/if}>{$order.label|escape:'html':'UTF-8'}</option>
+                                        <option value="{$order.value|intval}"{if $order.selected|intval} selected="selected"{/if}>{$order.label|escape:'html':'UTF-8'}</option>
                                     {/foreach}
                                 </select>
                             {elseif !isset($customerThread.id_order) && empty($isLogged)}
@@ -107,11 +107,11 @@
                         </div>
                     {/if}
                     {if isset($isLogged) && $isLogged}
-                        <div class="form-group selector1">
-                            <label>{l s='Product'}</label>
+                        <div class="form-group">
+                            <label class="unvisible">{l s='Product'}</label>
                             {if !isset($customerThread.id_product)}
                                 {foreach from=$orderedProductList key=id_order item=products name=products}
-                                    <select name="id_product" id="{$id_order}_order_products" class="product_select form-control" style="{if !$smarty.foreach.products.first} display:none; {/if}" {if !$smarty.foreach.products.first}disabled="disabled" {/if}>
+                                    <select name="id_product" id="{$id_order}_order_products" class="unvisible product_select form-control"{if !$smarty.foreach.products.first} style="display:none;"{/if}{if !$smarty.foreach.products.first} disabled="disabled"{/if}>
                                         <option value="0">{l s='-- Choose --'}</option>
                                         {foreach from=$products item=product}
                                             <option value="{$product.value|intval}">{$product.label|escape:'html':'UTF-8'}</option>
