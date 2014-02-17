@@ -2852,9 +2852,9 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .tt-suggestions { padding: 0 6px; -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px; box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px; }
 .bootstrap .tt-suggestion p { border-bottom: solid 1px #cccccc; margin: 0 !important; padding: 0 !important; }
 .bootstrap .tt-suggestion:last-child p { border-bottom: none; }
-.bootstrap .tagify-container { background-color: white; padding: 2px 6px; min-height: 30px; overflow: auto; -webkit-border-radius: 5px; -moz-border-radius: 5px; -ms-border-radius: 5px; -o-border-radius: 5px; border-radius: 5px; border: solid 1px #cccccc; -webkit-box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset; box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset; }
+.bootstrap .tagify-container { background-color: white; padding: 0px 3px; min-height: 30px; overflow: auto; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; border: solid 1px #cccccc; -webkit-box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset; box-shadow: rgba(0, 0, 0, 0.075) 0 1px 1px inset; }
 .bootstrap .tagify-container span { float: left; }
-.bootstrap .tagify-container > span { display: inline-block; padding: 3px 5px; margin: 3px; border-radius: 2px; border: 1px solid #00aff0; background-color: #3ecbff; color: white; }
+.bootstrap .tagify-container > span { display: inline-block; padding: 2px 5px; margin: 3px; border-radius: 2px; border: 1px solid #00aff0; background-color: #3ecbff; color: white; }
 .bootstrap .tagify-container > span > a { padding-left: 5px; color: #00aff0; text-decoration: none; font-weight: bold; }
 .bootstrap .tagify-container > input { margin-top: 2px; border: 0 none; width: 100px; -webkit-box-shadow: none; box-shadow: none; }
 .bootstrap .tagify-container > input:focus { outline: 0; -webkit-box-shadow: none; box-shadow: none; }
@@ -2887,7 +2887,7 @@ a.link-social:hover { text-decoration: none; }
   .bootstrap .switch-light label { position: relative; z-index: 3; display: block; width: 100%; }
   .bootstrap .switch-light input { position: absolute; opacity: 0; z-index: 5; }
   .bootstrap .switch-light input:checked ~ a { left: 0%; }
-  .bootstrap .switch-light > span { position: absolute; left: 0; width: 100%; margin: 0; text-align: left; }
+  .bootstrap .switch-light > span { position: absolute; left: 0; width: 100%; margin: 0; text-align: left; font-weight: normal; }
   .bootstrap .switch-light > span span { position: absolute; top: 0; left: 0; z-index: 5; display: block; width: 50%; text-align: center; }
   .bootstrap .switch-light > span span:last-child { left: 50%; }
   .bootstrap .switch-light a { position: absolute; left: 50%; top: 0; z-index: 4; display: block; width: 50%; height: 100%; padding: 0; }
@@ -3360,7 +3360,7 @@ body .mce-abs-layout-item { position: absolute; }
 
 .mce-tooltip-w .mce-tooltip-arrow { left: 0; top: 50%; margin-top: -5px; border-right-style: solid; border-left: none; border-top-color: transparent; border-bottom-color: transparent; }
 
-.mce-btn { position: relative; display: inline-block; *display: inline; *zoom: 1; -webkit-box-shadow: #eeeeee 0 -2px 0 inset; -moz-box-shadow: #eeeeee 0 -2px 0 inset; box-shadow: #eeeeee 0 -2px 0 inset; }
+.mce-btn { position: relative; display: inline-block; *display: inline; *zoom: 1; background-color: white; -webkit-box-shadow: #eeeeee 0 -2px 0 inset; -moz-box-shadow: #eeeeee 0 -2px 0 inset; box-shadow: #eeeeee 0 -2px 0 inset; }
 .mce-btn:hover, .mce-btn:focus { color: #eeeeee; background-color: #eeeeee; -webkit-box-shadow: #dddddd 0 -2px 0 inset; -moz-box-shadow: #dddddd 0 -2px 0 inset; box-shadow: #dddddd 0 -2px 0 inset; }
 .mce-btn.mce-disabled button, .mce-btn.mce-disabled:hover button { cursor: default; box-shadow: none; opacity: 0.4; filter: alpha(opacity=40); zoom: 1; }
 .mce-btn.mce-active { background-color: #d6d6d6; }
