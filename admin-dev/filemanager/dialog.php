@@ -128,6 +128,8 @@ else
 		$path_parts = pathinfo($lang);
 		if (is_readable('lang/'.$path_parts['basename'].'.php'))
 			$language_file = 'lang/'.$path_parts['basename'].'.php';
+		else
+			$lang = $default_language;
 	}
 
 
@@ -138,10 +140,10 @@ else
 
 	$get_params = http_build_query(
 		array(
-			'type' => $_GET['type'],
-			'lang' => $lang,
+			'type' => Tools::safeOutput($_GET['type']),
+			'lang' => Tools::safeOutput($lang),
 			'popup' => $popup,
-			'field_id' => isset($_GET['field_id']) ? $_GET['field_id'] : '',
+			'field_id' => isset($_GET['field_id']) ? (int)$_GET['field_id'] : '',
 			'fldr' => ''
 		)
 	);
@@ -288,7 +290,7 @@ else
 	<input type="hidden" id="file_number_limit_js" value="<?php echo $file_number_limit_js; ?>"/>
 	<input type="hidden" id="descending" value="<?php echo $descending ? "true" : "false"; ?>"/>
 	<?php $protocol = 'http'; ?>
-	<input type="hidden" id="current_url" value="<?php echo str_replace(array('&filter='.$filter), array(''), $protocol."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']); ?>"/>
+	<input type="hidden" id="current_url" value="<?php echo str_replace(array('&filter='.$filter), array(''), $protocol."://".$_SERVER['HTTP_HOST'].Tools::safeOutput($_SERVER['REQUEST_URI'])); ?>"/>
 	<input type="hidden" id="lang_show_url" value="<?php echo lang_Show_url; ?>"/>
 	<input type="hidden" id="lang_extract" value="<?php echo lang_Extract; ?>"/>
 	<input type="hidden" id="lang_file_info" value="<?php echo fix_strtoupper(lang_File_info); ?>"/>
@@ -322,13 +324,13 @@ else
 							<div class="fallback">
 								<?php echo lang_Upload_file ?>:<br/>
 								<input name="file" type="file"/>
-								<input type="hidden" name="fldr" value="<?php echo $subdir; ?>"/>
-								<input type="hidden" name="view" value="<?php echo $view; ?>"/>
-								<input type="hidden" name="type" value="<?php echo $_GET['type']; ?>"/>
-								<input type="hidden" name="field_id" value="<?php echo $_GET['field_id']; ?>"/>
-								<input type="hidden" name="popup" value="<?php echo $popup; ?>"/>
-								<input type="hidden" name="lang" value="<?php echo $lang; ?>"/>
-								<input type="hidden" name="filter" value="<?php echo $filter; ?>"/>
+								<input type="hidden" name="fldr" value="<?php echo Tools::safeOutput($subdir); ?>"/>
+								<input type="hidden" name="view" value="<?php echo Tools::safeOutput($view); ?>"/>
+								<input type="hidden" name="type" value="<?php echo Tools::safeOutput($_GET['type']); ?>"/>
+								<input type="hidden" name="field_id" value="<?php echo (int)$_GET['field_id']; ?>"/>
+								<input type="hidden" name="popup" value="<?php echo Tools::safeOutput($popup); ?>"/>
+								<input type="hidden" name="lang" value="<?php echo Tools::safeOutput($lang); ?>"/>
+								<input type="hidden" name="filter" value="<?php echo Tools::safeOutput($filter); ?>"/>
 								<input type="submit" name="submit" value="<?php echo lang_OK ?>"/>
 							</div>
 						</form>
@@ -660,15 +662,15 @@ else
 		}
 
 		?>
-		<li data-name="<?php echo $file ?>" <?php if ($file == '..') echo 'class="back"'; else echo 'class="dir"'; ?>>
-			<figure data-name="<?php echo $file ?>" class="<?php if ($file == "..") echo "back-"; ?>directory" data-type="<?php if ($file != "..")
+		<li data-name="<?php echo Tools::safeOutput($file) ?>" <?php if ($file == '..') echo 'class="back"'; else echo 'class="dir"'; ?>>
+			<figure data-name="<?php echo Tools::safeOutput($file) ?>" class="<?php if ($file == "..") echo "back-"; ?>directory" data-type="<?php if ($file != "..")
 			{
 				echo "dir";
 			} ?>">
 				<a class="folder-link" href="dialog.php?<?php echo $get_params.rawurlencode($src)."&".uniqid() ?>">
 					<div class="img-precontainer">
 						<div class="img-container directory"><span></span>
-							<img class="directory-img" src="img/<?php echo $icon_theme; ?>/folder<?php if ($file == "..")
+							<img class="directory-img" src="img/<?php echo Tools::safeOuput($icon_theme); ?>/folder<?php if ($file == "..")
 							{
 								echo "_back";
 							} ?>.jpg" alt="folder"/>
@@ -677,7 +679,7 @@ else
 					<div class="img-precontainer-mini directory">
 						<div class="img-container-mini">
 							<span></span>
-							<img class="directory-img" src="img/<?php echo $icon_theme; ?>/folder<?php if ($file == "..")
+							<img class="directory-img" src="img/<?php echo Tools::safeOutput($icon_theme); ?>/folder<?php if ($file == "..")
 							{
 								echo "_back";
 							} ?>.png" alt="folder"/>
@@ -699,12 +701,12 @@ else
 						{
 							echo "ellipsis";
 						} ?>">
-							<a class="folder-link" data-file="<?php echo $file ?>" href="dialog.php?<?php echo $get_params.rawurlencode($src)."&".uniqid() ?>"><?php echo $file; ?></a>
+							<a class="folder-link" data-file="<?php echo $file ?>" href="dialog.php?<?php echo $get_params.rawurlencode($src)."&".uniqid() ?>"><?php echo Tools::safeOutput($file); ?></a>
 						</h4>
 					</div>
 					<input type="hidden" class="name" value=""/>
-					<input type="hidden" class="date" value="<?php echo $file_array['date']; ?>"/>
-					<input type="hidden" class="size" value="<?php echo $file_array['size']; ?>"/>
+					<input type="hidden" class="date" value="<?php echo Tools::safeOutput($file_array['date']); ?>"/>
+					<input type="hidden" class="size" value="<?php echo Tools::safeOutput($file_array['size']); ?>"/>
 					<input type="hidden" class="extension" value="<?php echo lang_Type_dir; ?>"/>
 					<div class="file-date"><?php echo date(lang_Date_type, $file_array['date']) ?></div>
 					<?php if ($show_folder_size)

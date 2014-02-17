@@ -1,7 +1,10 @@
 <?php
 
 include('config/config.php');
-if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') die('forbiden');
+
+if ($_SESSION['verify'] != 'RESPONSIVEfilemanager')
+	die('forbiden');
+
 include('include/utils.php');
 
 if (isset($_GET['action']))
@@ -20,6 +23,8 @@ if (isset($_GET['action']))
 				$_SESSION['descending'] = $_GET['descending'] === 'true';
 			break;
 		case 'image_size':
+			if (realpath(dirname(_PS_ROOT_DIR_.$_POST['path'])) != realpath(_PS_ROOT_DIR_.$upload_dir))
+				die();
 			$pos = strpos($_POST['path'], $upload_dir);
 			if ($pos !== false)
 			{
@@ -90,10 +95,9 @@ if (isset($_GET['action']))
 							}
 						}
 						$zip->close();
-					} else
-					{
+					} 
+					else
 						echo 'failed to open file';
-					}
 					break;
 				case 'gz':
 					$p = new PharData($path);
@@ -181,11 +185,11 @@ if (isset($_GET['action']))
 						$("#jquery_jplayer_1").jPlayer({
 							ready: function () {
 								$(this).jPlayer("setMedia", {
-									title: "<?php $_GET['title']; ?>",
-									mp3: "<?php echo $preview_file; ?>",
-									m4a: "<?php echo $preview_file; ?>",
-									oga: "<?php echo $preview_file; ?>",
-									wav: "<?php echo $preview_file; ?>"
+									title: "<?php Tools::safeOutput($_GET['title']); ?>",
+									mp3: "<?php echo Tools::safeOutput($preview_file); ?>",
+									m4a: "<?php echo Tools::safeOutput($preview_file); ?>",
+									oga: "<?php echo Tools::safeOutput($preview_file); ?>",
+									wav: "<?php echo Tools::safeOutput($preview_file); ?>"
 								});
 							},
 							swfPath: "js",
@@ -208,9 +212,9 @@ if (isset($_GET['action']))
 						$("#jquery_jplayer_1").jPlayer({
 							ready: function () {
 								$(this).jPlayer("setMedia", {
-									title: "<?php $_GET['title']; ?>",
-									m4v: "<?php echo $preview_file; ?>",
-									ogv: "<?php echo $preview_file; ?>"
+									title: "<?php Tools::safeOutput($_GET['title']); ?>",
+									m4v: "<?php echo Tools::safeOutput($preview_file); ?>",
+									ogv: "<?php echo Tools::safeOutput($preview_file); ?>"
 								});
 							},
 							swfPath: "js",
