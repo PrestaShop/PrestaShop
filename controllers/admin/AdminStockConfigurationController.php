@@ -432,10 +432,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 			'editable' => array(
 				'title' => $this->l('Editable?'),
 				'align' => 'center',
-				'icon' => array(
-					'1' => 'icon-check text-success',
-					'0' => 'icon-ban-circle text-danger'
-				),
+				'active' => 'editable',
 				'type' => 'bool',
 				'orderby' => false,
 				'class' => 'fixed-width-sm'
@@ -443,10 +440,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 			'delivery_note' => array(
 				'title' => $this->l('Is there a delivery note available?'),
 				'align' => 'center',
-				'icon' => array(
-					'1' => 'icon-check text-success',
-					'0' => 'icon-ban-circle text-danger'
-				),
+				'active' => 'deliveryNote',
 				'type' => 'bool',
 				'orderby' => false,
 				'class' => 'fixed-width-sm'
@@ -454,10 +448,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 			'pending_receipt' => array(
 				'title' => $this->l('Is there a pending receipt?'),
 				'align' => 'center',
-				'icon' => array(
-					'1' => 'icon-check text-success',
-					'0' => 'icon-ban-circle text-danger'
-				),
+				'active' => 'pendingReceipt',
 				'type' => 'bool',
 				'orderby' => false,
 				'class' => 'fixed-width-sm'
@@ -465,10 +456,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 			'receipt_state' => array(
 				'title' => $this->l('Delivery state?'),
 				'align' => 'center',
-				'icon' => array(
-					'1' => 'icon-check text-success',
-					'0' => 'icon-ban-circle text-danger'
-				),
+				'active' => 'receiptState',
 				'type' => 'bool',
 				'orderby' => false,
 				'class' => 'fixed-width-sm'
@@ -476,10 +464,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 			'enclosed' => array(
 				'title' => $this->l('Enclosed order state?'),
 				'align' => 'center',
-				'icon' => array(
-					'1' => 'icon-check text-success',
-					'0' => 'icon-ban-circle text-danger'
-				),
+				'active' => 'enclosed',
 				'type' => 'bool',
 				'orderby' => false,
 				'class' => 'fixed-width-sm'
@@ -558,5 +543,11 @@ class AdminStockConfigurationControllerCore extends AdminController
 			return false;
 		}
 		parent::initProcess();	
+	}
+
+	public function ajaxProcess()
+	{
+		//@todo: emilien
+		$result = false;
 	}
 }

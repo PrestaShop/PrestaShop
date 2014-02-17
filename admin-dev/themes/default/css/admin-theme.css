@@ -2725,6 +2725,8 @@ a.link-social:hover { text-decoration: none; }
 
 .page-topbar .searchtab { display: none; }
 
+[class^="icon-"] { font-size: 14px; }
+
 [class^="process-icon-"], [class*="process-icon-"] { display: block; width: 30px; margin: 0 auto; font-size: 28px; }
 
 .bootstrap { @-webkit-keyframes one { 0% { background-color: #00a4e7; }
@@ -3151,6 +3153,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap #translations_form .mails_field h4 .badge, .bootstrap #translations_form .mails_field h4 #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper .bootstrap #translations_form .mails_field h4 .notifs_badge, .bootstrap #translations_form .mails_field h4 .module-badge-popular, .bootstrap #translations_form .mails_field h4 .module-badge-partner { font-size: 12px; }
 .bootstrap #translations_form .mails_field h4 .badge.badge-danger, .bootstrap #translations_form .mails_field h4 #header_notifs_icon_wrapper .badge-danger.notifs_badge, #header_notifs_icon_wrapper .bootstrap #translations_form .mails_field h4 .badge-danger.notifs_badge, .bootstrap #translations_form .mails_field h4 .badge-danger.module-badge-popular, .bootstrap #translations_form .mails_field h4 .badge-danger.module-badge-partner { color: #d9534f; border: solid 2px #d9534f; background-color: transparent; }
 .bootstrap #translations_form .mails_field .panel-footer { margin: 0 -15px; }
+.bootstrap .employee_avatar_small { vertical-align: middle; margin-right: 4px; }
 .bootstrap .employee_avatar_small img { padding: 0; border: none; }
 .bootstrap .employee_avatar { display: block !important; margin: 10px auto !important; text-align: center; -webkit-box-shadow: white 0 0 0 2px, #cccccc 0 0 10px 3px; box-shadow: white 0 0 0 2px, #cccccc 0 0 10px 3px; }
 .bootstrap .avatar-xs { height: 16px; width: 16px; display: inline-block; text-align: center; background-color: #eeeeee; overflow: hidden; -webkit-border-radius: 16px; -moz-border-radius: 16px; -ms-border-radius: 16px; -o-border-radius: 16px; border-radius: 16px; }

@@ -37,19 +37,18 @@ class AdminLogsControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_log' => array(
 				'title' => $this->l('ID'), 
-				'align' => 'center', 
+				'align' => 'text-center', 
 				'class' => 'fixed-width-xs'
 			),
 			'employee' => array(
-				'title' => $this->l('Employee'), 
-				'align' => 'left', 
+				'title' => $this->l('Employee'),
 				'havingFilter' => true,
 				'callback' => 'displayEmployee',
 				'callback_object' => $this
 			),
 			'severity' => array(
 				'title' => $this->l('Severity (1-4)'), 
-				'align' => 'center', 
+				'align' => 'text-center', 
 				'class' => 'fixed-width-xs'
 			),
 			'message' => array(
@@ -71,8 +70,7 @@ class AdminLogsControllerCore extends AdminController
 				'class' => 'fixed-width-xs'
 			),
 			'date_add' => array(
-				'title' => $this->l('Date'), 
-				'width' => 150, 
+				'title' => $this->l('Date'),
 				'align' => 'right', 
 				'type' => 'datetime'
 			)
