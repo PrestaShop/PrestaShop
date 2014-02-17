@@ -1985,6 +1985,7 @@ class BlockLayered extends Module
 			WHERE '.$alias_where.'.`active` = 1 AND '.$alias_where.'.`visibility` IN ("both", "catalog")
 			AND '.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 			AND c.active = 1
+			AND (pa.default_on = 1 OR pa.default_on IS NULL)
 			AND p.id_product IN ('.implode(',', $product_id_list).')
 			GROUP BY product_shop.id_product
 			ORDER BY '.Tools::getProductsOrder('by', Tools::getValue('orderby'), true).' '.Tools::getProductsOrder('way', Tools::getValue('orderway')).
