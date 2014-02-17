@@ -72,6 +72,11 @@ class MediaCore
 	 */
 	protected static $inline_script = array();
 
+	/**
+	 * @var array list of javascript external scripts
+	 */
+	protected static $inline_script_src = array();
+
 	public static function minifyHTML($html_content)
 	{
 		if (strlen($html_content) > 0)
@@ -693,7 +698,6 @@ class MediaCore
 		@$dom->loadHTML(($output));
 		libxml_use_internal_errors(false);
 		$scripts = $dom->getElementsByTagName('script');
-
 		if (is_object($scripts) && $scripts->length)
 			foreach ($scripts as $script)
 				if ($src = $script->getAttribute('src'))
@@ -705,9 +709,10 @@ class MediaCore
 						'#code\.jquery\.com/jquery-([0-9\.]+)(\.min)*\.js$#Ui',
 						'#ajax\.googleapis\.com/ajax/libs/jquery/([0-9\.]+)/jquery(\.min)*\.js$#Ui',
 						'#ajax\.aspnetcdn\.com/ajax/jquery/jquery-([0-9\.]+)(\.min)*\.js$#Ui',
-						'#cdnjs\.cloudflare\.com/ajax/libs/jquery/([0-9\.]+)/jquery(\.min)*\.js$#Ui'
+						'#cdnjs\.cloudflare\.com/ajax/libs/jquery/([0-9\.]+)/jquery(\.min)*\.js$#Ui',
+						'#/jquery-([0-9\.]+)(\.min)*\.js$#Ui'
 					);
-					$flag = false;
+
 					foreach($patterns as $pattern)
 					{
 						$matches = array();
@@ -721,12 +726,12 @@ class MediaCore
 							if ($version)
 							{
 								Context::getContext()->controller->addJquery($version, null, $minifier);
-								$flag = true;
+								array_push(Media::$inline_script_src, $src);
 							}
 						}
 
 					}
-					if (!$flag)
+					if (!in_array($src, Media::$inline_script_src))
 						Context::getContext()->controller->addJS($src);
 				}
 		$output = preg_replace_callback('/<script[^>]*>(.*)<\s*\/script\s*[^>]*>/Uims', array('Media', 'deferScript'), $output);
@@ -752,7 +757,7 @@ class MediaCore
 		/* This is an external script, if it already belongs to js_files then remove it from content */
 
 		preg_match('/src\s*=\s*["\']?([^"\']*)[^>]/ims', $original, $results);
-		if (isset($results[1]))
+		if (isset($results[1]) && (in_array($results[1], Context::getContext()->controller->js_files) || in_array($results[1], Media::$inline_script_src)))
 			return '';
 
 		/* return original string because no match was found */
