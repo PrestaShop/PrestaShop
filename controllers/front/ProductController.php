@@ -496,11 +496,11 @@ class ProductControllerCore extends FrontController
 			{
 				foreach ($groups as &$group)
 					foreach ($group['attributes_quantity'] as $key => &$quantity)
-						if (!$quantity)
+						if ($quantity <= 0)
 							unset($group['attributes'][$key]);
 
 				foreach ($colors as $key => $color)
-					if (!$color['attributes_quantity'])
+					if ($color['attributes_quantity'] <= 0)
 						unset($colors[$key]);
 			}
 			foreach ($combinations as $id_product_attribute => $comb)
