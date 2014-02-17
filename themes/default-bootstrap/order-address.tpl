@@ -22,111 +22,20 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{if $opc}
-	{assign var="back_order_page" value="order-opc.php"}
-{else}
-	{assign var="back_order_page" value="order.php"}
-{/if}
-
-<script type="text/javascript">
-	// <![CDATA[
-		{if !$opc}
-			var orderProcess = 'order';
-			var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';
-			var currencyRate = '{$currencyRate|floatval}';
-			var currencyFormat = '{$currencyFormat|intval}';
-			var currencyBlank = '{$currencyBlank|intval}';
-			var txtProduct = "{l s='product' js=1}";
-			var txtProducts = "{l s='products' js=1}";
-		{/if}
-		var CloseTxt = '{l s='Submit' js=1}';
-		var addressMultishippingUrl = "{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")|addslashes}";
-		var addressUrl = "{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")|addslashes}";
-		var formatedAddressFieldsValuesList = new Array();
-		{foreach from=$formatedAddressFieldsValuesList key=id_address item=type}
-			formatedAddressFieldsValuesList[{$id_address}] =
-			{ldelim}
-				'ordered_fields':[
-					{foreach from=$type.ordered_fields key=num_field item=field_name name=inv_loop}
-						{if !$smarty.foreach.inv_loop.first},{/if}{$field_name|json_encode}
-					{/foreach}
-				],
-				'formated_fields_values':{ldelim}
-						{foreach from=$type.formated_fields_values key=pattern_name item=field_name name=inv_loop}
-							{if !$smarty.foreach.inv_loop.first},{/if}{$pattern_name|json_encode}:{$field_name|json_encode}
-						{/foreach}
-					{rdelim}
-			{rdelim}
-		{/foreach}
-		function getAddressesTitles() {
-			return {
-				'invoice': "<h3 class='page-subheading'>{l s='Your billing address' js=1}</h3>",
-				'delivery': "<h3 class='page-subheading'>{l s='Your delivery address' js=1}</h3>"
-			};
-		}
-
-		function buildAddressBlock(id_address, address_type, dest_comp) {
-			if (isNaN(id_address))
-				return;
-			var adr_titles_vals = getAddressesTitles();
-			var li_content = formatedAddressFieldsValuesList[id_address]['formated_fields_values'];
-			var ordered_fields_name = ['title'];
-			ordered_fields_name = ordered_fields_name.concat(formatedAddressFieldsValuesList[id_address]['ordered_fields']);
-			ordered_fields_name = ordered_fields_name.concat(['update']);
-			dest_comp.html('');
-			li_content['title'] = adr_titles_vals[address_type];
-			li_content['update'] = '<a class="button button-small btn btn-default" href="{$link->getPageLink('address', true, NULL, "id_address")|addslashes}'+id_address+'&amp;back={$back_order_page}?step=1{if $back}&mod={$back}{/if}" title="{l s='Update' js=1}"><span>{l s='Update' js=1}<i class="icon-chevron-right right"></i></span></a>';
-			appendAddressList(dest_comp, li_content, ordered_fields_name);
-		}
-
-		function appendAddressList(dest_comp, values, fields_name) {
-			for (var item in fields_name) {
-				var name = fields_name[item];
-				var value = getFieldValue(name, values);
-				if (value != "") {
-					var new_li = document.createElement('li');
-					new_li.className = 'address_'+ name;
-					new_li.innerHTML = getFieldValue(name, values);
-					dest_comp.append(new_li);
-				}
-			}
-		}
-
-		function getFieldValue(field_name, values) {
-			var reg=new RegExp("[ ]+", "g");
-			var items = field_name.split(reg);
-			var vals = new Array();
-			for (var field_item in items) {
-				items[field_item] = items[field_item].replace(",", "");
-				vals.push(values[items[field_item]]);
-			}
-			return vals.join(" ");
-		}
-	//]]>
-</script>
-
-{if !$opc}
-	{capture name=path}{l s='Addresses'}{/capture}
-{/if}
-
-{if !$opc}
-	<h1 class="page-heading">{l s='Addresses'}</h1>
-{else}
-	<h1 class="page-heading step-num"><span>1</span> {l s='Addresses'}</h1>
-{/if}
-
 {if !$opc}
 	{assign var='current_step' value='address'}
+	{capture name=path}{l s='Addresses'}{/capture}
+	{assign var="back_order_page" value="order.php"}
+	<h1 class="page-heading">{l s='Addresses'}</h1>
 	{include file="$tpl_dir./order-steps.tpl"}
 	{include file="$tpl_dir./errors.tpl"}
-	<form action="{$link->getPageLink($back_order_page, true)|escape:'html':'UTF-8'}" method="post">
+		<form action="{$link->getPageLink($back_order_page, true)|escape:'html':'UTF-8'}" method="post">
 {else}
-
+	{assign var="back_order_page" value="order-opc.php"}
+	<h1 class="page-heading step-num"><span>1</span> {l s='Addresses'}</h1>
 	<div id="opc_account" class="opc-main-block">
 		<div id="opc_account-overlay" class="opc-overlay" style="display: none;"></div>
 {/if}
-
 <div class="addresses clearfix">
 	<div class="row">
 		<div class="col-xs-12 col-sm-6">
@@ -168,12 +77,12 @@
 		</div>
 	</div> <!-- end row -->
 	<div class="row">
-		<div class="col-xs-12 col-sm-6" {if $cart->isVirtualCart()}style="display:none;"{/if}>
+		<div class="col-xs-12 col-sm-6"{if $cart->isVirtualCart()} style="display:none;"{/if}>
 			<ul class="address item box" id="address_delivery">
 			</ul>
 		</div>
 		<div class="col-xs-12 col-sm-6">
-			<ul class="address alternate_item {if $cart->isVirtualCart()}full_width{/if} box" id="address_invoice">
+			<ul class="address alternate_item{if $cart->isVirtualCart()} full_width{/if} box" id="address_invoice">
 			</ul>
 		</div>
 	</div> <!-- end row -->
@@ -189,20 +98,46 @@
 		</div>
 	{/if}
 </div> <!-- end addresses -->
-
 {if !$opc}
-		<p class="cart_navigation clearfix">
-			<input type="hidden" class="hidden" name="step" value="2" />
-			<input type="hidden" name="back" value="{$back}" />
-			<a href="{$link->getPageLink($back_order_page, true, NULL, "step=0{if $back}&back={$back}{/if}")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default">
-				<i class="icon-chevron-left"></i>
-				{l s='Continue Shopping'}
-			</a>
-			<button type="submit" name="processAddress" class="button btn btn-default button-medium">
-				<span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span>
-			</button>
-		</p>
-	</form>
+			<p class="cart_navigation clearfix">
+				<input type="hidden" class="hidden" name="step" value="2" />
+				<input type="hidden" name="back" value="{$back}" />
+				<a href="{$link->getPageLink($back_order_page, true, NULL, "step=0{if $back}&back={$back}{/if}")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default">
+					<i class="icon-chevron-left"></i>
+					{l s='Continue Shopping'}
+				</a>
+				<button type="submit" name="processAddress" class="button btn btn-default button-medium">
+					<span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span>
+				</button>
+			</p>
+		</form>
 {else}
 	</div> <!--  end opc_account -->
 {/if}
+{strip}
+{if !$opc}
+	{addJsDef orderProcess='order'}
+	{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
+	{addJsDef currencyRate=$currencyRate|floatval}
+	{addJsDef currencyFormat=$currencyFormat|intval}
+	{addJsDef currencyBlank=$currencyBlank|intval}
+	{addJsDefL name=txtProduct}{l s='product' js=1}{/addJsDefL}
+	{addJsDefL name=txtProducts}{l s='products' js=1}{/addJsDefL}
+	{addJsDefL name=CloseTxt}{l s='Submit' js=1}{/addJsDefL}
+{/if}
+{capture}{if $back}&mod={$back|urlencode}{/if}{/capture}
+{capture name=addressUrl}{$link->getPageLink('address', true, NULL, 'back='|cat:$back_order_page|cat:'?step=1'|cat:$smarty.capture.default)|addslashes}{/capture}
+{addJsDef addressUrl=$smarty.capture.addressUrl}
+{capture}{'&multi-shipping=1'|urlencode}{/capture}
+{addJsDef addressMultishippingUrl=$smarty.capture.addressUrl|cat:$smarty.capture.default}
+{capture name=addressUrlAdd}{$smarty.capture.addressUrl|cat:'&id_address='}{/capture}
+{addJsDef addressUrlAdd=$smarty.capture.addressUrlAdd}
+{addJsDef formatedAddressFieldsValuesList=array()}
+{addJsDef formatedAddressFieldsValuesList=$formatedAddressFieldsValuesList}
+{capture}<h3 class="page-subheading">{l s='Your billing address' js=1}</h3>{/capture}
+{addJsDefL name=titleInvoice}{$smarty.capture.default|@addcslashes:'\''}{/addJsDefL}
+{capture}<h3 class="page-subheading">{l s='Your delivery address' js=1}</h3>{/capture}
+{addJsDefL name=titleDelivery}{$smarty.capture.default|@addcslashes:'\''}{/addJsDefL}
+{capture}<a class="button button-small btn btn-default" href="{$smarty.capture.addressUrlAdd}" title="{l s='Update' js=1}"><span>{l s='Update' js=1}<i class="icon-chevron-right right"></i></span></a>{/capture}
+{addJsDefL name=liUpdate}{$smarty.capture.default|@addcslashes:'\''}{/addJsDefL}
+{/strip}
