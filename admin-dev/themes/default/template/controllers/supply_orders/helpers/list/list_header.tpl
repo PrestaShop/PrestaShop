@@ -42,9 +42,9 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<div class="checkbox col-lg-3 col-lg-push-3">
+				<div class="checkbox col-lg-9 col-lg-push-3">
 					<label for="filter_status">
-						<input type="checkbox" name="filter_status" class="noborder" onChange="$('#supply_orders').submit();" {if $filter_status == 1}value="on" checked{/if} /> {l s='Choose not to display completed/canceled orders:'}
+						<input id="filter_status" type="checkbox" name="filter_status" class="noborder" onChange="$('#supply_orders').submit();" {if $filter_status == 1}value="on" checked{/if} /> {l s='Choose not to display completed/canceled orders:'}
 					</label>
 				</div>
 			</div>
