@@ -79,6 +79,9 @@ class EmployeeCore extends ObjectModel
 	/** @var boolean Status */
 	public $active = 1;
 
+	/** @var boolean Optin status */
+	public $optin = 1;
+
 	public $remote_addr;
 
 	/**
@@ -95,6 +98,7 @@ class EmployeeCore extends ObjectModel
 			'passwd' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isPasswdAdmin', 'required' => true, 'size' => 32),
 			'last_passwd_gen' => 	  array('type' => self::TYPE_STRING),
 			'active' => 			  array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'optin' => 			  array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'id_profile' => 		  array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
 			'bo_color' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
 			'default_tab' => 		  array('type' => self::TYPE_INT, 'validate' => 'isInt'),
@@ -161,6 +165,8 @@ class EmployeeCore extends ObjectModel
 	public function add($autodate = true, $null_values = true)
 	{
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_BACK').'minutes'));
+		$this->saveOptin();
+
 	 	return parent::add($autodate, $null_values);
 	}
 
@@ -170,7 +176,24 @@ class EmployeeCore extends ObjectModel
 			$this->stats_date_from = date('Y-m-d');
 		if (empty($this->stats_date_to) || $this->stats_date_to == '0000-00-00')
 			$this->stats_date_to = date('Y-m-d');
+		$this->saveOptin();
 	 	return parent::update($null_values);
+	}
+	
+	protected function saveOptin()
+	{
+		if ($this->optin && !defined('PS_INSTALLATION_IN_PROGRESS'))
+		{
+			$language = new Language($this->id_lang);
+			$params = http_build_query(array(
+				'email' => $this->email,
+				'method' => 'addMemberToNewsletter',
+				'language' => $language->iso_code,
+				'visitorType' => 1,
+				'source' => 'backoffice'
+			));
+			Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+		}
 	}
 
 	/**
@@ -368,8 +391,8 @@ class EmployeeCore extends ObjectModel
 	
 	public function getImage()
 	{
-		if (!isset($this->id) || empty($this->id) || !file_exists($this->image_dir.$this->id.'.jpg'))
+		if (!Validate::isLoadedObject($this))
 			return _PS_IMG_DIR_.'prestashop-avatar.png';
-		return $this->image_dir.$this->id.'.jpg';
+		return Tools::getShopProtocol().'api.prestashop.com/profile/avatar.php?email='.urlencode($this->email);
 	}
 }

@@ -198,6 +198,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			'admin_lastname' =>			$this->session->admin_lastname,
 			'admin_password' =>			$this->session->admin_password,
 			'admin_email' =>			$this->session->admin_email,
+			'send_informations' =>		$this->session->send_informations,
 			'configuration_agrement' =>	$this->session->configuration_agrement,
 			'rewrite_engine' =>			$this->session->rewrite_engine,
 		));

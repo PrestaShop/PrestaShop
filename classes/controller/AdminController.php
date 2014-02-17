@@ -1613,8 +1613,6 @@ class AdminControllerCore extends Controller
 				'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS') && $accesses['AdminOrders']['view'],
 				'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS') && $accesses['AdminCustomers']['view'],
 				'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && $accesses['AdminCustomerThreads']['view'],
-				'first_name' => Tools::substr($this->context->employee->firstname, 0, 1),
-				'last_name' => Tools::safeOutput($this->context->employee->lastname),
 				'employee' => $this->context->employee,
 				'search_type' => Tools::getValue('bo_search_type'),
 				'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
@@ -1628,7 +1626,6 @@ class AdminControllerCore extends Controller
 				'is_multishop' => $is_multishop,
 				'multishop_context' => $this->multishop_context,
 				'default_tab_link' => $this->context->link->getAdminLink(Tab::getClassNameById((int)Context::getContext()->employee->default_tab)),
-				'employee_avatar' => ImageManager::thumbnail($this->context->employee->getImage(), 'employee'.'_'.(int)$this->context->employee->id.'.'.$this->imageType, 150, $this->imageType, true, true),
 				'collapse_menu' => isset($this->context->cookie->collapse_menu) ? (int)$this->context->cookie->collapse_menu : 0
 			));
 		}
