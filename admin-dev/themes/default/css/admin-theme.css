@@ -3598,6 +3598,8 @@ i.mce-i-resize { color: #333333; }
 
 .mce-throbber { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.6; filter: alpha(opacity=60); zoom: 1; background: white url("img/loader.gif") no-repeat center center; }
 
+.mce-i-none { width: 16px; height: 16px; margin: 2px 0; }
+
 .mce-ico { font-size: 14px; line-height: 20px; }
 
 .mce-i-save:before { content: "\f0c7"; }
