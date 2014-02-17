@@ -339,7 +339,7 @@ function paginationButton(nbProductsIn) {
 
 function cancelFilter()
 {
-	$('#enabled_filters a').on('click', function(e)
+	$(document).on('click', '#enabled_filters a', function(e)
 	{
 		if ($(this).attr('rel').search(/_slider$/) > 0)
 		{
@@ -375,7 +375,7 @@ function cancelFilter()
 
 function openCloseFilter()
 {
-	$('#layered_form span.layered_close a').on('click', function(e)
+	$(document).on('click', '#layered_form span.layered_close a', function(e)
 	{
 		if ($(this).html() == '&lt;')
 		{
