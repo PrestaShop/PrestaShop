@@ -288,7 +288,6 @@ class SearchCore
 						AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 					)
 					WHERE p.`id_product` '.$product_pool.'
-					AND p.`active` = 1
 					ORDER BY position DESC LIMIT 10';
 			return $db->executeS($sql);
 		}
