@@ -29,7 +29,7 @@
 		{if isset($id)}id="{$id}"{/if}
 		{if isset($name)}name="{$name}"{/if}
 		class="search-field {if isset($class)} {$class}{/if}"
-		placeholder="search..." />
+		placeholder="{l s='search...'}" />
 </div>
 
 {if isset($typeahead_source) && isset($id)}

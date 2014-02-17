@@ -298,7 +298,8 @@ span.view_scroll_spacer {
     .pb-center-column #short_description_block .buttons_bottom_block {
       display: none; }
     .pb-center-column #short_description_block #short_description_content {
-      padding: 0 0 15px; }
+      padding: 0 0 15px;
+      word-wrap: break-word; }
       .pb-center-column #short_description_block #short_description_content p {
         line-height: 18px; }
   .pb-center-column #buy_block {
@@ -334,7 +335,8 @@ span.view_scroll_spacer {
     left: 0; }
 
 #page .rte {
-  padding: 0 20px 20px; }
+  padding: 0 20px 20px;
+  word-wrap: break-word; }
   #page .rte p {
     margin-bottom: 0; }
 
