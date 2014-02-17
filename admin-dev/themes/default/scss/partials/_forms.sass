@@ -43,7 +43,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 	text-transform: uppercase
 	.caret
 		border-top-color: $gray-dark!important
-	&:hover, &:focus
+	&:hover
 		.caret
 			border-top-color: white!important
 	&.btn-default
@@ -55,17 +55,16 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 			border-color: darken($brand-primary,10%)
 			i
 				color: white
-
 	&.btn-primary
 		background-color: $brand-primary
 		color: white
 		border-color: darken($brand-primary,10%)
-
 	&.btn-default[disabled]
 		border-color: $gray-light
 		color: $gray-light
 		background-color: lighten($gray-light,35%)
 		@include box-shadow(lighten($gray-light,20%) 0 -2px 0 inset)
+
 .dropdown-menu
 	text-align: left
 	> li a
@@ -99,17 +98,17 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 //tag
 .tagify-container
 	background-color: white
-	padding: 2px 6px
+	padding: 0px 3px
 	min-height: 30px
 	overflow: auto
-	+border-radius(5px)
+	+border-radius(3px)
 	border: solid 1px #ccc
 	+box-shadow(rgba(0, 0, 0, 0.075) 0 1px 1px inset)
 	span
 		float: left
 	> span
 		display: inline-block
-		padding: 3px 5px
+		padding: 2px 5px
 		margin: 3px
 		border-radius: 2px
 		border: 1px solid $brand-primary

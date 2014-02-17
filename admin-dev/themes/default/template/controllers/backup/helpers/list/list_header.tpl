@@ -45,7 +45,7 @@
 
 		<div class="alert alert-warning">
 			<button data-dismiss="alert" class="close" type="button">×</button>
-			<p>{l s='Disclaimer before creating a new backup'}</p>
+			<h4>{l s='Disclaimer before creating a new backup'}</h4>
 			<ol>
 				<li>{l s='PrestaShop is not responsible for your database, its backups and/or recovery.'}</li>
 				<li>{l s='PrestaShop is open-source software. You are using it at your own risk under the license agreement.'}</li>
@@ -66,7 +66,7 @@
 		</div>
 
 		<div class="alert alert-info">
-			<p>{l s='How to restore a database backup in 10 easy steps:'}</p>
+			<h4>{l s='How to restore a database backup in 10 easy steps:'}</h4">
 			<ol>
 				<li>{l s='Set "Enable Shop" to "No" in the "Maintenance" page under the "Preferences" menu.'}</li>
 				<li>{l s='Download the backup from the list below or from your FTP server (in the folder "admin/backups").'}</li>

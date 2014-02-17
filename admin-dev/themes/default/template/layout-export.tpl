@@ -26,4 +26,5 @@
 
 {foreach from=$export_content item=line}
 {foreach from=$line item=content}{$text_delimiter}{$content}{$text_delimiter};{/foreach}
+
 {/foreach}
