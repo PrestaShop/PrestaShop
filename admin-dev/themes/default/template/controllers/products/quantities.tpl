@@ -247,7 +247,6 @@
 		</script>
 	</div>
 {/if}
-{*$default_language*}
 <script type="text/javascript">
-	hideOtherLanguage({$default_language});
+	hideOtherLanguage({$default_form_language});
 </script>
