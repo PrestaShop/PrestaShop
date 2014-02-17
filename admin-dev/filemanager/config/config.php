@@ -29,7 +29,7 @@ $base_url="http://".$_SERVER['HTTP_HOST'];  // DON'T TOUCH (base url (only domai
 $upload_dir = __PS_BASE_URI__.'img/cms/'; // path from base_url to base of upload folder (with start and final /)
 $current_path = _PS_ROOT_DIR_.'/img/cms/'; // relative path from filemanager folder to upload folder (with final /)
 //thumbs folder can't put inside upload folder
-$thumbs_base_path = _PS_ROOT_DIR_.'/img/cms/'; // relative path from filemanager folder to thumbs folder (with final /)
+$thumbs_base_path = _PS_ROOT_DIR_.'/img/tmp/cms/'; // relative path from filemanager folder to thumbs folder (with final /)
 
 //--------------------------------------------------------------------------------------------------------
 // YOU CAN COPY AND CHANGE THESE VARIABLES INTO FOLDERS config.php FILES TO CUSTOMIZE EACH FOLDER OPTIONS
