@@ -96,10 +96,12 @@ class CrossSelling extends Module
 	public function hookHeader()
 	{
 		if (!isset($this->context->controller->php_self) || !in_array($this->context->controller->php_self, array('product', 'order')))
-			return;	
+			return;
+		if (in_array($this->context->controller->php_self, array('order')) && Tools::getValue('step'))
+			return;
 		$this->context->controller->addCSS(($this->_path).'crossselling.css', 'all');
 		$this->context->controller->addJS(($this->_path).'js/crossselling.js');
-		$this->context->controller->addJqueryPlugin(array('scrollTo', 'serialScroll'));
+		$this->context->controller->addJqueryPlugin(array('scrollTo', 'serialScroll', 'bxslider'));
 	}
 
 	/**
