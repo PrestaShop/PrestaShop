@@ -732,6 +732,7 @@ CREATE TABLE `PREFIX_employee` (
   `bo_width` int(10) unsigned NOT NULL DEFAULT 0,
   `bo_menu` tinyint(1) NOT NULL default '1',
   `active` tinyint(1) unsigned NOT NULL default '0',
+  `optin` tinyint(1) unsigned NOT NULL default '1',
   `id_last_order` int(10) unsigned NOT NULL default '0',
   `id_last_customer_message` int(10) unsigned NOT NULL default '0',
   `id_last_customer` int(10) unsigned NOT NULL default '0',

@@ -219,13 +219,19 @@
 {/if}
 				<li id="employee_infos" class="dropdown">
 					<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
-						<span class="employee_avatar_small">{$employee_avatar}</span>
+						<span class="employee_avatar_small">
+							<img class="imgm img-thumbnail" alt="" src="//api.prestashop.com/profile/avatar.php?email={$employee->email|urlencode}" width="32" height="32" />
+						</span>
 						{l s="Me"}
 						<i class="caret"></i>
 					</a>
 					<ul id="employee_links" class="dropdown-menu">
-						<li><span class="employee_avatar">{$employee_avatar}</span></li>
-						<li class="text-center">{$first_name}&nbsp;{$last_name}</li>
+						<li>
+							<span class="employee_avatar">
+								<img class="imgm img-thumbnail" alt="" src="//api.prestashop.com/profile/avatar.php?email={$employee->email|urlencode}" width="96" height="96" />
+							</span>
+						</li>
+						<li class="text-center">{$employee->firstname} {$employee->lastname}</li>
 						<li class="divider"></li>
 						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
 						<li class="divider"></li>
