@@ -422,6 +422,7 @@ class ProductControllerCore extends FrontController
 				}
 				if (!isset($groups[$row['id_attribute_group']]))
 					$groups[$row['id_attribute_group']] = array(
+						'group_name' => $row['group_name'],
 						'name' => $row['public_group_name'],
 						'group_type' => $row['group_type'],
 						'default' => -1,
