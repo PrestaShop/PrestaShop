@@ -262,7 +262,7 @@ class AdminControllerCore extends Controller
 	/** @var instanciation of the class associated with the AdminController */
 	protected $object;
 
-	/** @var current object ID */
+	/** @var int current object ID */
 	protected $id_object;
 
 	/**
@@ -1302,8 +1302,6 @@ class AdminControllerCore extends Controller
 					'desc' => $this->l('Save')
 				);
 				break;
-			case 'view':
-				break;
 			default: // list
 				$this->toolbar_btn['new'] = array(
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
@@ -1323,7 +1321,7 @@ class AdminControllerCore extends Controller
 	 * otherwise return an empty object, or die
 	 *
 	 * @param boolean $opt Return an empty object if load fail
-	 * @return object
+	 * @return object|boolean
 	 */
 	protected function loadObject($opt = false)
 	{
@@ -1351,8 +1349,6 @@ class AdminControllerCore extends Controller
 			$this->errors[] = Tools::displayError('The object cannot be loaded (the dentifier is missing or invalid)');
 			return false;
 		}
-
-		return $this->object;
 	}
 
 	/**
@@ -2899,7 +2895,7 @@ class AdminControllerCore extends Controller
 	{
 		/* Classical fields */
 		foreach ($_POST as $key => $value)
-			if (key_exists($key, $object) && $key != 'id_'.$table)
+			if (array_key_exists($key, $object) && $key != 'id_'.$table)
 			{
 				/* Do not take care of password field if empty */
 				if ($key == 'passwd' && Tools::getValue('id_'.$table) && empty($value))

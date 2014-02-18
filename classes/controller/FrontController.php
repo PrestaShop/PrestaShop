@@ -516,7 +516,6 @@ class FrontControllerCore extends Controller
 	{
 		Tools::safePostVars();
 
-
 		// assign css_files and js_files at the very last time
 		if ((Configuration::get('PS_CSS_THEME_CACHE') || Configuration::get('PS_JS_THEME_CACHE')) && is_writable(_PS_THEME_DIR_.'cache'))
 		{
@@ -805,7 +804,6 @@ class FrontControllerCore extends Controller
 			'PS_SHOP_NAME' => Configuration::get('PS_SHOP_NAME'),
 			'PS_ALLOW_MOBILE_DEVICE' => isset($_SERVER['HTTP_USER_AGENT']) && (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE') && @filemtime(_PS_THEME_MOBILE_DIR_)
 		));
-
 	}
 	
 	public function checkLiveEditAccess()
