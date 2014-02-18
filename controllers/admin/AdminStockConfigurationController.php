@@ -435,7 +435,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'active' => 'editable',
 				'type' => 'bool',
 				'orderby' => false,
-				'class' => 'fixed-width-sm'
+				'class' => 'fixed-width-sm',
+				'ajax' => true
 			),
 			'delivery_note' => array(
 				'title' => $this->l('Is there a delivery note available?'),
@@ -443,7 +444,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'active' => 'deliveryNote',
 				'type' => 'bool',
 				'orderby' => false,
-				'class' => 'fixed-width-sm'
+				'class' => 'fixed-width-sm',
+				'ajax' => true
 			),
 			'pending_receipt' => array(
 				'title' => $this->l('Is there a pending receipt?'),
@@ -451,7 +453,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'active' => 'pendingReceipt',
 				'type' => 'bool',
 				'orderby' => false,
-				'class' => 'fixed-width-sm'
+				'class' => 'fixed-width-sm',
+				'ajax' => true
 			),
 			'receipt_state' => array(
 				'title' => $this->l('Delivery state?'),
@@ -459,7 +462,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'active' => 'receiptState',
 				'type' => 'bool',
 				'orderby' => false,
-				'class' => 'fixed-width-sm'
+				'class' => 'fixed-width-sm',
+				'ajax' => true
 			),
 			'enclosed' => array(
 				'title' => $this->l('Enclosed order state?'),
@@ -467,7 +471,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'active' => 'enclosed',
 				'type' => 'bool',
 				'orderby' => false,
-				'class' => 'fixed-width-sm'
+				'class' => 'fixed-width-sm',
+				'ajax' => true
 			),
 		);
 
@@ -545,9 +550,68 @@ class AdminStockConfigurationControllerCore extends AdminController
 		parent::initProcess();	
 	}
 
-	public function ajaxProcess()
+	public function ajaxProcessEditableSupplyOrderState()
 	{
-		//@todo: emilien
-		$result = false;
+		$id_supply_order_state = (int)Tools::getValue('id_supply_order_state');
+
+		$sql = 'UPDATE '._DB_PREFIX_.'supply_order_state SET `editable` = NOT `editable` WHERE id_supply_order_state='.$id_supply_order_state;
+		$result = Db::getInstance()->execute($sql);
+
+		if ($result)
+			echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
+		else
+			echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
+	}
+
+	public function ajaxProcessDeliveryNoteSupplyOrderState()
+	{
+		$id_supply_order_state = (int)Tools::getValue('id_supply_order_state');
+
+		$sql = 'UPDATE '._DB_PREFIX_.'supply_order_state SET `delivery_note` = NOT `delivery_note` WHERE id_supply_order_state='.$id_supply_order_state;
+		$result = Db::getInstance()->execute($sql);
+
+		if ($result)
+			echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
+		else
+			echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
+	}
+
+	public function ajaxProcessPendingReceiptSupplyOrderState()
+	{
+		$id_supply_order_state = (int)Tools::getValue('id_supply_order_state');
+
+		$sql = 'UPDATE '._DB_PREFIX_.'supply_order_state SET `pending_receipt` = NOT `pending_receipt` WHERE id_supply_order_state='.$id_supply_order_state;
+		$result = Db::getInstance()->execute($sql);
+
+		if ($result)
+			echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
+		else
+			echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
+	}
+
+	public function ajaxProcessReceiptStateSupplyOrderState()
+	{
+		$id_supply_order_state = (int)Tools::getValue('id_supply_order_state');
+
+		$sql = 'UPDATE '._DB_PREFIX_.'supply_order_state SET `receipt_state` = NOT `receipt_state` WHERE id_supply_order_state='.$id_supply_order_state;
+		$result = Db::getInstance()->execute($sql);
+
+		if ($result)
+			echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
+		else
+			echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
+	}
+
+	public function ajaxProcessEnclosedSupplyOrderState()
+	{
+		$id_supply_order_state = (int)Tools::getValue('id_supply_order_state');
+
+		$sql = 'UPDATE '._DB_PREFIX_.'supply_order_state SET `enclosed`= NOT `enclosed` WHERE id_supply_order_state='.$id_supply_order_state;
+		$result = Db::getInstance()->execute($sql);
+
+		if ($result)
+			echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
+		else
+			echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
 	}
 }
