@@ -40,7 +40,7 @@
 			{if $category.id_category == $categories_tree_current_id}
 				{$category.name}
 			{else}
-				<a href="{$currentIndex}{$params_url}&token={$token}">{$category.name}</a>
+				<a href="{$currentIndex}{$params_url}&amp;token={$token}">{$category.name}</a>
 			{/if}
 		</li>
 		{/foreach}
