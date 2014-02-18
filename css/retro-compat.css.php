@@ -50,8 +50,6 @@ $css_files = array(
 					array('new_file' => $css_folder.'plugins/thickbox/jquery.thickbox.css'),
 				'jquery.fancybox.css' => 
 					array('new_file' => $css_folder.'plugins/fancybox/jquery.fancybox.css'),
-				'jquery.autocomplete.css' => 
-					array('new_file' => $css_folder.'plugins/autocomplete/jquery.autocomplete.css')
 				);
 				
 				

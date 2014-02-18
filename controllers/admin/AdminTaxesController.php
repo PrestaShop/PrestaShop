@@ -98,7 +98,6 @@ class AdminTaxesControllerCore extends AdminController
 				'hint' => $this->l('Define the ecotax (e.g. French ecotax: 19.6%).'),
 				'cast' => 'intval',
 				'type' => 'select',
-				'identifier' => 'id_tax',
 				'identifier' => 'id_tax_rules_group',
 				'list' => TaxRulesGroup::getTaxRulesGroupsForOptions()
 				);

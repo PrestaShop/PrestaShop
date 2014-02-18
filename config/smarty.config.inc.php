@@ -216,7 +216,7 @@ class SmartyLazyRegister
 
 	/**
 	 * Register a function or method to be dynamically called later
-	 * @param $params function name or array(object name, method name)
+	 * @param string|array $params function name or array(object name, method name)
 	 */
 	public function register($params)
 	{
@@ -229,8 +229,8 @@ class SmartyLazyRegister
 	/**
 	 * Dynamically call static function or method
 	 *
-	 * @param $name function name
-	 * @param $arguments function argument
+	 * @param string $name function name
+	 * @param mixed $arguments function argument
 	 * @return mixed function return
 	 */
 	public function __call($name, $arguments)

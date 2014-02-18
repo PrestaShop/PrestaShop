@@ -120,4 +120,3 @@ class AdminLogsControllerCore extends AdminController
 	}
 }
 
-?>
