@@ -2849,9 +2849,10 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .btn.btn-default[disabled] { border-color: #999999; color: #999999; background-color: #f2f2f2; -webkit-box-shadow: #cccccc 0 -2px 0 inset; box-shadow: #cccccc 0 -2px 0 inset; }
 .bootstrap .dropdown-menu { text-align: left; }
 .bootstrap .dropdown-menu > li a { padding: 5px 10px; }
-.bootstrap .btn-group-action { width: 160px; float: right; }
-.bootstrap .btn-group-action a { text-decoration: none; }
-.bootstrap .btn-group-action i { font-size: 14px; }
+.bootstrap .btn-group-action .btn-group { white-space: nowrap; float: right; }
+.bootstrap .btn-group-action .btn-group > a, .bootstrap .btn-group-action .btn-group button { text-decoration: none; display: inline-block; float: none; }
+.bootstrap .btn-group-action .btn-group > a:first-child { margin-right: -3px; }
+.bootstrap .btn-group-action .btn-group i { font-size: 14px; }
 .bootstrap .tt-query { border-bottom-right-radius: 3px !important; border-top-right-radius: 3px !important; }
 .bootstrap .tt-dropdown-menu { background-color: white; border: solid 1px #cccccc; font-size: 0.9em; text-transform: none; }
 .bootstrap .tt-suggestions { padding: 0 6px; -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px; box-shadow: rgba(0, 0, 0, 0.25) 0 1px 4px; }
@@ -3821,9 +3822,6 @@ i.mce-i-backcolor { background: #bbbbbb; }
 .chosen-rtl.chosen-container-single .chosen-single div b { background-position: 6px 2px; }
 .chosen-rtl.chosen-container-single.chosen-with-drop .chosen-single div b { background-position: -12px 2px; }
 
-/* @end */
-/* @group Retina compatibility */
-@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 144dpi) { .chosen-rtl .chosen-search input[type="text"], .chosen-container-single .chosen-single abbr, .chosen-container-single .chosen-single div b, .chosen-container-single .chosen-search input[type="text"], .chosen-container-multi .chosen-choices .search-choice .search-choice-close, .chosen-container .chosen-results-scroll-down span, .chosen-container .chosen-results-scroll-up span { background-image: url("../img/chosen-sprite@2x.png") !important; background-size: 52px 37px !important; background-repeat: no-repeat !important; } }
 /* @end */
 /*!
  * Ladda
