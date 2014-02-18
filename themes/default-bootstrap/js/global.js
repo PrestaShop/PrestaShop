@@ -51,12 +51,6 @@ $(document).ready(function(){
 			display(view);
 		else
 			$('.display').find('li#grid').addClass('selected');
-
-		$(document).delegate('.add_to_compare','click', function(e){
-			e.preventDefault();
-			if (typeof addToCompare != 'undefined')
-				addToCompare(parseInt($(this).data('id-product')));
-		});
 		
 		$('#grid').click(function(e){
 			e.preventDefault();
