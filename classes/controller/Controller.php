@@ -413,7 +413,6 @@ abstract class ControllerCore
 				'js_inline' => $dom_availaible ? Media::getInlineScript() : array()
 			));
 			$javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
-
 			echo $html.$javascript."\t</body>\n</html>";
 		}
 		else

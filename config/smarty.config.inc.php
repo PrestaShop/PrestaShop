@@ -147,12 +147,16 @@ function smarty_modifier_htmlentitiesUTF8($string)
 }
 function smartyMinifyHTML($tpl_output, &$smarty)
 {
+	if (in_array(Context::getContext()->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip')))
+		return $tpl_output;
     $tpl_output = Media::minifyHTML($tpl_output);
     return $tpl_output;
 }
 
 function smartyPackJSinHTML($tpl_output, &$smarty)
 {
+	if (in_array(Context::getContext()->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip')))
+		return $tpl_output;
     $tpl_output = Media::packJSinHTML($tpl_output);
     return $tpl_output;
 }
