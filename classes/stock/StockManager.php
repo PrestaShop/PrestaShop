@@ -626,7 +626,7 @@ class StockManagerCore implements StockManagerInterface
 	 * For a given stock, calculates its new WA(Weighted Average) price based on the new quantities and price
 	 * Formula : (physicalStock * lastCump + quantityToAdd * unitPrice) / (physicalStock + quantityToAdd)
 	 *
-	 * @param Stock $stock
+	 * @param Stock|PrestaShopCollection $stock
 	 * @param int $quantity
 	 * @param float $price_te
 	 * @return int WA

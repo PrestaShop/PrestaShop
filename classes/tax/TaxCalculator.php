@@ -72,7 +72,7 @@ class TaxCalculatorCore
 	/**
 	 * Compute and add the taxes to the specified price
 	 *
-	 * @param price_te price tax excluded
+	 * @param float $price_te price tax excluded
 	 * @return float price with taxes
 	 */
 	public function addTaxes($price_te)
@@ -84,8 +84,8 @@ class TaxCalculatorCore
 	/**
 	 * Compute and remove the taxes to the specified price
 	 *
-	 * @param price_ti price tax inclusive
-	 * @return price without taxes
+	 * @param float $price_ti price tax inclusive
+	 * @return float price without taxes
 	 */
 	public function removeTaxes($price_ti)
 	{

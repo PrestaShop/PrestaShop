@@ -1880,6 +1880,7 @@ class BlockLayered extends Module
 				case 'weight':
 					if ($selected_filters['weight'][0] != 0 || $selected_filters['weight'][1] != 0)
 						$query_filters_where .= ' AND p.`weight` BETWEEN '.(float)($selected_filters['weight'][0] - 0.001).' AND '.(float)($selected_filters['weight'][1] + 0.001);
+				break;
 
 				case 'price':
 					if (isset($selected_filters['price']))
