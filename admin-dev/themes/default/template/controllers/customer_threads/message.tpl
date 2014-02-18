@@ -32,7 +32,7 @@
 			{else}
 				<i class="icon-user"></i> 
 				{if !empty($message.id_customer)}
-					<a href="index.php?tab=AdminCustomers&id_customer={$message.id_customer}&viewcustomer&token={getAdminToken tab='AdminCustomers'}" title="{l s='View customer'}">
+					<a href="index.php?tab=AdminCustomers&amp;id_customer={$message.id_customer}&amp;viewcustomer&amp;token={getAdminToken tab='AdminCustomers'}" title="{l s='View customer'}">
 						{$message.customer_name}
 					</a>
 				{else}
@@ -45,7 +45,7 @@
 			<dl class="dl-horizontal">
 				<dt>{l s='Customer ID:'}</dt> 
 				<dd>
-					<a href="index.php?tab=AdminCustomers&id_customer={$message.id_customer}&viewcustomer&token={getAdminToken tab='AdminCustomers'}" title="{l s='View customer'}">
+					<a href="index.php?tab=AdminCustomers&amp;id_customer={$message.id_customer}&amp;viewcustomer&amp;token={getAdminToken tab='AdminCustomers'}" title="{l s='View customer'}">
 						{$message.id_customer} <i class="icon-search"></i>
 					</a>
 				</dd>
@@ -65,7 +65,7 @@
 			<dl class="dl-horizontal">
 				<dt>{l s='File attachment'}</dt> 
 				<dd>
-					<a href="index.php?tab=AdminCustomerThreads&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread&token={getAdminToken tab='AdminCustomerThreads'}&filename={$message.file_name}"
+					<a href="index.php?tab=AdminCustomerThreads&amp;id_customer_thread={$message.id_customer_thread}&amp;viewcustomer_thread&amp;token={getAdminToken tab='AdminCustomerThreads'}&amp;filename={$message.file_name}"
 					title="{l s='View file'}">
 						<i class="icon-search"></i>
 					</a>
@@ -75,18 +75,18 @@
 			{if !empty($message.id_order) && $is_valid_order_id && empty($message.id_employee)}
 				<dl class="dl-horizontal">
 					<dt>{l s='Order #'}</dt> 
-					<dd><a href="index.php?tab=AdminOrders&id_order={$message.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">{$message.id_order} <img src="../img/admin/search.gif" alt="{l s='View'}" /></a>
+					<dd><a href="index.php?tab=AdminOrders&amp;id_order={$message.id_order}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">{$message.id_order} <img src="../img/admin/search.gif" alt="{l s='View'}" /></a>
 					</dd>
 				</dl>
 			{/if}
 			{if !empty($message.id_product) && empty($message.id_employee)}
 				<dl class="dl-horizontal">
 					<dt>{l s='Product #'}</dt> 
-					<dd><a href="index.php?tab=AdminProducts&id_product={$message.id_product}&updateproduct&token={getAdminToken tab='AdminProducts'}" title="{l s='View order'}">{$message.id_product} <img src="../img/admin/search.gif" alt="{l s='View'}" /></a></dd>
+					<dd><a href="index.php?tab=AdminProducts&amp;id_product={$message.id_product}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}" title="{l s='View order'}">{$message.id_product} <img src="../img/admin/search.gif" alt="{l s='View'}" /></a></dd>
 				</dl>
 			{/if}
 			
-			<form class="form-inline" action="{$current}&token={$token}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread" method="post" >
+			<form class="form-inline" action="{$current}&amp;token={$token}&amp;id_customer_thread={$message.id_customer_thread}&amp;viewcustomer_thread" method="post" >
 				<input type="hidden" name="id_customer_message" value="{$message.id_customer_message}" />
 				<div class="form-group">
 					<dl class="dl-horizontal">
@@ -107,7 +107,7 @@
 {else}
 		<div class="infoEmployee">
 			{if $id_employee}
-				<a class="btn btn-default pull-right" href="{$email_base_url}{$link->getAdminLink('AdminCustomerThreads')}{$current}&token={getAdminToken tab='AdminCustomerThreads'}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread">
+				<a class="btn btn-default pull-right" href="{$email_base_url}{$link->getAdminLink('AdminCustomerThreads')}{$current}&amp;token={getAdminToken tab='AdminCustomerThreads'}&amp;id_customer_thread={$message.id_customer_thread|intval}&amp;viewcustomer_thread=1">
 					{l s='View this thread'}
 				</a>
 			{/if}
@@ -173,7 +173,7 @@
 	{/if}
 	<div id="reply_to_{$message.id_customer_message}" style="display: none;">
 		<div class="panel">
-			<form action="{$current}&token={getAdminToken tab='AdminCustomerThreads'}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread" method="post" enctype="multipart/form-data" class="form-horizontal">
+			<form action="{$current}&amp;token={getAdminToken tab='AdminCustomerThreads'}&amp;id_customer_thread={$message.id_customer_thread|intval}&amp;viewcustomer_thread=1" method="post" enctype="multipart/form-data" class="form-horizontal">
 				<div class="panel-heading">
 					{l s='Please type your reply below:'}
 				</div>

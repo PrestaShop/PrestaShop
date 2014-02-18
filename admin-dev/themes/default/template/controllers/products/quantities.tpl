@@ -149,7 +149,7 @@
 								{else}
 								{l s='Deny orders'}
 								{/if} 
-								<a class="confirm_leave" href="index.php?tab=AdminPPreferences&token={$token_preferences}">
+								<a class="confirm_leave" href="index.php?tab=AdminPPreferences&amp;token={$token_preferences}">
 									{l s='as set in Products Preferences page'}
 								</a>
 							</label>

@@ -96,7 +96,7 @@
 					<label class="control-label col-lg-3">{l s='Link to the file:'}</label>
 					<div class="col-lg-5">
 						<a href="{$product->productDownload->getTextLink(true)}" class="btn btn-default"><i class="icon-download"></i> {l s='Download file'}</a>
-						<a href="{$currentIndex}&deleteVirtualProduct=true&updateproduct&token={$token}&id_product={$product->id}" class="btn btn-default" onclick="return confirm('{l s='Do you really want to delete this file?' js=1}');"><i class="icon-trash"></i> {l s='Delete this file'}</a>
+						<a href="{$currentIndex}&amp;deleteVirtualProduct=true&amp;updateproduct&amp;token={$token}&amp;id_product={$product->id}" class="btn btn-default" onclick="return confirm('{l s='Do you really want to delete this file?' js=1}');"><i class="icon-trash"></i> {l s='Delete this file'}</a>
 					</div>
 				</div>
 				{/if}				

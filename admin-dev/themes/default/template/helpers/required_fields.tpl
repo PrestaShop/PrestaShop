@@ -29,7 +29,7 @@
 <div class="clearfix">&nbsp;</div>
 <div style="display:none" class="panel requiredFieldsParameters">
 	<h3><i class="icon-asterisk"></i> {l s='Required Fields'}</h3>
-	<form name="updateFields" action="{$current}&submitFields=1&token={$token}" method="post">
+	<form name="updateFields" action="{$current}&amp;submitFields=1&amp;token={$token}" method="post">
 		<div class="alert alert-info">
 			{l s='Select the fields you would like to be required for this section.'}
 		</div>

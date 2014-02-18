@@ -30,7 +30,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="btn-group pull-right">
-				<a class="btn btn-default {if !isset($smarty.get.select)} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}">
+				<a class="btn btn-default {if !isset($smarty.get.select)} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&amp;token={$smarty.get.token|htmlentities}">
 					<i class="icon-list"></i>
 					{l s='Normal view'} 
 				</a>
