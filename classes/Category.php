@@ -183,7 +183,7 @@ class CategoryCore extends ObjectModel
 	 * update category positions in parent
 	 *
 	 * @param mixed $null_values
-	 * @return void
+	 * @return boolean
 	 */
 	public function update($null_values = false)
 	{
@@ -1039,7 +1039,7 @@ class CategoryCore extends ObjectModel
 	/**
 	* Specify if a category already in base
 	*
-	* @param $id_category Category id
+	* @param int $id_category Category id
 	* @return boolean
 	*/
 	public static function categoryExists($id_category)

@@ -499,7 +499,6 @@ class AdminManufacturersControllerCore extends AdminController
 			'label' => $this->l('Zip Code/Postal Code'),
 			'name' => 'postcode',
 			'col' => 2,
-			'required' => true,
 			'required' => false,
 		);
 		$form['input'][] = array(

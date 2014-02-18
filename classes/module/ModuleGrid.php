@@ -28,7 +28,7 @@ abstract class ModuleGridCore extends Module
 {
 	protected $_employee;
 
-	/** @var string array graph data */
+	/** @var array of strings graph data */
 	protected $_values = array();
 
 	/** @var integer total number of values **/

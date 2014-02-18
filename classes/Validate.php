@@ -832,7 +832,7 @@ class ValidateCore
 	/**
 	 * Check if the value is a sort direction value (DESC/ASC)
 	 *
-	 * @param char $value
+	 * @param string $value
 	 * @return boolean Validity is ok or not
 	 */
 	public static function isSortDirection($value)

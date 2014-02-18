@@ -2527,7 +2527,7 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * renderForm contains all necessary initialization needed for all tabs
 	 *
-	 * @return void
+	 * @return string|void
 	 */
 	public function renderForm()
 	{

@@ -966,6 +966,12 @@ class AdminImportControllerCore extends AdminController
 		return true;
 	}
 
+	/**
+	 * @param $array
+	 * @param $funcname
+	 * @param mixed $user_data
+	 * @return bool
+	 */
 	public static function arrayWalk(&$array, $funcname, &$user_data = false)
 	{
 		if (!is_callable($funcname)) return false;
@@ -985,7 +991,7 @@ class AdminImportControllerCore extends AdminController
 	 * @param int $id_image (default null) id of the image if watermark enabled.
 	 * @param string $url path or url to use
 	 * @param string entity 'products' or 'categories'
-	 * @return void
+	 * @return boolean
 	 */
 	protected static function copyImg($id_entity, $id_image = null, $url, $entity = 'products', $regenerate = true)
 	{
@@ -3401,4 +3407,4 @@ class AdminImportControllerCore extends AdminController
 			.DIRECTORY_SEPARATOR.$file;
 	}
 }
-?>
+
