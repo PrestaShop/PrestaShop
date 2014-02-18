@@ -37,6 +37,9 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		$this->allow_export = true;
+
+		$this->_orderBy = 'name';
+		$this->_orderWay = 'ASC';
 		
 		$this->bulk_actions = array(
 			'delete' => array(
