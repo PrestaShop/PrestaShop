@@ -37,6 +37,7 @@
 	<script type="text/javascript">
 		var help_class_name = '{$controller_name|@addcslashes:'\''}';
 		var iso_user = '{$iso_user|@addcslashes:'\''}';
+		var full_language_code = '{$full_language_code|@addcslashes:'\''}';
 		var country_iso_code = '{$country_iso_code|@addcslashes:'\''}';
 		var _PS_VERSION_ = '{$smarty.const._PS_VERSION_|@addcslashes:'\''}';
 		var roundMode = {$round_mode|intval};
@@ -260,7 +261,7 @@
 {* end display_header*}
 
 {else}
-	<body{if isset($lite_display) && $lite_display} class="display-modal"{/if}>
+	<body{if isset($lite_display) && $lite_display} class="display-modal"{/if}>		
 		<div id="main">
 			<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}">
 {/if}

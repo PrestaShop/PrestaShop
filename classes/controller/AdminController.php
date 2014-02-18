@@ -1643,6 +1643,7 @@ class AdminControllerCore extends Controller
 			'country_iso_code' => $this->context->country->iso_code,
 			'version' => _PS_VERSION_,
 			'lang_iso' => $this->context->language->iso_code,
+			'full_language_code' => $this->context->language->language_code,
 			'link' => $this->context->link,
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
 			'base_url' => $this->context->shop->getBaseURL(),
@@ -2083,6 +2084,7 @@ class AdminControllerCore extends Controller
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.min.js');
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.min.js');
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
+		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/moment-with-langs.min.js');
 
 		if (!Tools::getValue('submitFormAjax'))
 			$this->addJs(_PS_JS_DIR_.'notifications.js');
@@ -2172,7 +2174,7 @@ class AdminControllerCore extends Controller
 			'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
 			'stock_management' => (int)Configuration::get('PS_STOCK_MANAGEMENT')
 		));
-		
+
 		if ($this->display_header)
 			$this->context->smarty->assign('displayBackOfficeHeader', Hook::exec('displayBackOfficeHeader', array()));
 		
