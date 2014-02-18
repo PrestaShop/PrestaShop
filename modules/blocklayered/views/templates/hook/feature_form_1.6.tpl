@@ -66,7 +66,7 @@
 						{$language['iso_code']}
 						<span class="caret"></span>
 					</button>
-					<ul class="dropdown-menu">';
+					<ul class="dropdown-menu">
 						{foreach $languages as $language}
 						<li><a href="javascript:hideOtherLanguage({$language['id_lang']});" tabindex="-1">{$language['name']}</a></li>
 						{/foreach}
