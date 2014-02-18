@@ -39,12 +39,6 @@ $menu-item-size: 36px
 					@include transition-timing-function(ease-out)
 				span
 					padding-left: 0.4em
-			&:hover
-				> a.title
-					background-color: darken($main-color,8%)
-					color: contrast-color($main-color, black, white, 50%)
-					i
-						color: white
 			&.hover
 				> a.title
 					background-color: darken($main-color,8%)
@@ -68,7 +62,6 @@ $menu-item-size: 36px
 						color: contrast-color($main-color, black, white, 50%)
 				ul.submenu
 					display: block
-					padding: 8px 9px 8px 8px
 					background-color: white
 					border-right: 1px solid darken($bg-content-color,10%)
 					a
@@ -110,7 +103,7 @@ $menu-item-size: 36px
 	@media (max-width: $screen-phone)
 		display: none
 
-$min-height: 800px
+$min-height: 1000px
 @media (max-height: $min-height)
 	#nav-sidebar ul.menu li.maintab > a.title
 		font-size: 11px
@@ -172,7 +165,6 @@ $min-height: 800px
 				left: 50px!important
 				top: 36px!important
 				width: 200px!important
-				padding: 8px!important
 				background-color: darken($main-color,10%)!important
 	#content
 		margin-left: 55px

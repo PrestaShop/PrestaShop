@@ -2645,15 +2645,13 @@ a.link-social:hover { text-decoration: none; }
 #nav-sidebar ul.menu li.maintab > a.title { display: block; position: relative; padding: 0 0.35em; height: 36px; border-top: #232732 solid 1px; background-color: #383f50; color: #c3c5ca; line-height: 36px; text-transform: uppercase; text-decoration: none; white-space: nowrap; text-overflow: ellipsis; -webkit-transition-property: background-color; transition-property: background-color; -webkit-transition-duration: 0.2s; transition-duration: 0.2s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; }
 #nav-sidebar ul.menu li.maintab > a.title i { width: 36px; font-size: 28px; vertical-align: middle; color: #878b96; -webkit-transition-property: color; transition-property: color; -webkit-transition-duration: 0.4s; transition-duration: 0.4s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; }
 #nav-sidebar ul.menu li.maintab > a.title span { padding-left: 0.4em; }
-#nav-sidebar ul.menu li.maintab:hover > a.title { background-color: #272c38; color: white; }
-#nav-sidebar ul.menu li.maintab:hover > a.title i { color: white; }
 #nav-sidebar ul.menu li.maintab.hover > a.title { background-color: #272c38; color: white; }
 #nav-sidebar ul.menu li.maintab.hover > a.title i { color: white; }
 #nav-sidebar ul.menu li.maintab.hover ul.submenu { position: absolute; display: block; width: 200px; z-index: 600; left: 210px; top: 0; }
 #nav-sidebar ul.menu li.maintab:first-child > a.title { border-top: none; }
 #nav-sidebar ul.menu li.maintab.active a.title { color: white; background-color: #58627d; }
 #nav-sidebar ul.menu li.maintab.active a.title i { color: white; }
-#nav-sidebar ul.menu li.maintab.active ul.submenu { display: block; padding: 8px 9px 8px 8px; background-color: white; border-right: 1px solid #e6e6e6; }
+#nav-sidebar ul.menu li.maintab.active ul.submenu { display: block; background-color: white; border-right: 1px solid #e6e6e6; }
 #nav-sidebar ul.menu li.maintab.active ul.submenu a { background-color: white; color: #00aff0; border-bottom: solid 1px #d8f3fc; }
 #nav-sidebar ul.menu li.maintab.active ul.submenu a:hover { color: #00aff0; border-bottom: solid 1px #d8f3fc; background-color: #d8f3fc; text-decoration: none; -webkit-box-shadow: white 0 -1px; box-shadow: white 0 -1px; }
 #nav-sidebar ul.menu li.maintab.active ul.submenu li:last-child a { border-bottom: solid 1px white; }
@@ -2663,7 +2661,7 @@ a.link-social:hover { text-decoration: none; }
 #nav-sidebar ul.menu li.maintab ul.submenu li a:hover { color: white; text-decoration: none; background-color: #232732; -webkit-box-shadow: #00aff0 -4px 0 0 0 inset; box-shadow: #00aff0 -4px 0 0 0 inset; }
 @media (max-width: 480px) { #nav-sidebar { display: none; } }
 
-@media (max-height: 800px) { #nav-sidebar ul.menu li.maintab > a.title { font-size: 11px; height: 26px; line-height: 26px; }
+@media (max-height: 1000px) { #nav-sidebar ul.menu li.maintab > a.title { font-size: 11px; height: 26px; line-height: 26px; }
   #nav-sidebar ul.menu li.maintab > a.title i { text-align: right; width: 18px; font-size: 14px; }
   #nav-sidebar ul.menu li.maintab ul.submenu { padding: 1px 1px 0 1px; }
   #nav-sidebar ul.menu li.maintab ul.submenu li a { padding: 0 6px; height: 26px; line-height: 26px; }
@@ -2680,7 +2678,7 @@ a.link-social:hover { text-decoration: none; }
 .page-sidebar-closed #nav-sidebar > ul > li.maintab:hover { width: 250px !important; position: relative; }
 .page-sidebar-closed #nav-sidebar > ul > li.maintab:hover a.title { text-align: left; }
 .page-sidebar-closed #nav-sidebar > ul > li.maintab:hover a.title > span { display: inline-block; }
-.page-sidebar-closed #nav-sidebar > ul > li.maintab:hover ul.submenu { position: absolute !important; display: block !important; left: 50px !important; top: 36px !important; width: 200px !important; padding: 8px !important; background-color: #232732 !important; }
+.page-sidebar-closed #nav-sidebar > ul > li.maintab:hover ul.submenu { position: absolute !important; display: block !important; left: 50px !important; top: 36px !important; width: 200px !important; background-color: #232732 !important; }
 .page-sidebar-closed #content { margin-left: 55px; }
 @media (max-width: 480px) { .page-sidebar-closed #content { margin-left: 0; } }
 .page-sidebar-closed #content h2.page-title { padding: 26px 0 0 120px !important; }
