@@ -1372,16 +1372,14 @@
 				<label class="control-label col-lg-3" for="free_shipping">
 					{l s='Free shipping'}
 				</label>
-				<div class="input-group col-lg-3">
+				<div class="input-group col-lg-9 fixed-width-lg">
 					<span class="switch prestashop-switch">
 						<input type="radio" name="free_shipping" id="free_shipping" value="1">
 						<label for="free_shipping" class="radioCheck">
-							<i class="icon-check-sign text-success"></i>
 							{l s='yes'}
 						</label>
 						<input type="radio" name="free_shipping" id="free_shipping_off" value="0" checked="checked">
 						<label for="free_shipping_off" class="radioCheck">
-							<i class="icon-ban-circle text-danger"></i>
 							{l s='No'}
 						</label>
 						<a class="slide-button btn"></a>
