@@ -42,6 +42,7 @@ class BankWire extends PaymentModule
 		$this->tab = 'payments_gateways';
 		$this->version = '0.6';
 		$this->author = 'PrestaShop';
+		$this->controllers = array('payment', 'validation');
 		
 		$this->currencies = true;
 		$this->currencies_mode = 'checkbox';

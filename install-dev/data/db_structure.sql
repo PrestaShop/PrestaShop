@@ -1000,6 +1000,7 @@ CREATE TABLE `PREFIX_meta` (
   `page` varchar(64) NOT NULL,
 	`configurable` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_meta`),
+  UNIQUE KEY `page` (`page`),
   KEY `meta_name` (`page`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
