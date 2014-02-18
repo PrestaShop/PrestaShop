@@ -477,9 +477,8 @@ class CategoryCore extends ObjectModel
 		return $categories;
 	}
 
-	public static function getNestedCategories($root_category = null,
-		$id_lang = false, $active = true, $sql_filter = '', $sql_sort = '',
-		$sql_limit = '')
+	public static function getNestedCategories($root_category = null, $id_lang = false, $active = true, $groups = null,
+		$sql_filter = '', $sql_sort = '', $sql_limit = '')
 	{
 		if (!isset($root_category))
 			$root_category = self::getRootCategory($id_lang)->id;
@@ -490,33 +489,46 @@ class CategoryCore extends ObjectModel
 		if (!Validate::isBool($active))
 			die(Tools::displayError());
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'category` c
-			'.Shop::addSqlAssociation('category', 'c').'
-			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').'
-			WHERE 1 '.$sql_filter.' '.($id_lang ? 'AND `id_lang` = '.(int)$id_lang : '').'
-			'.($active ? 'AND `active` = 1' : '').'
-			'.(!$id_lang ? 'GROUP BY c.id_category' : '').'
-			'.($sql_sort != '' ? $sql_sort : 'ORDER BY c.`level_depth` ASC, category_shop.`position` ASC').'
-			'.($sql_limit != '' ? $sql_limit : '')
-		);
+		if (isset($groups) && Group::isFeatureActive() && !is_array($groups))
+			$groups = (array)$groups;
 
-		$categories = array();
-		$buff = array();
+		$cache_id = 'Category::getNestedCategories_'.md5((int)$root_category.(int)$id_lang.(int)$active.(int)$active
+			.(isset($groups) && Group::isFeatureActive() ? implode('', $groups) : ''));
 
-		foreach ($result as $row)
+		if (!Cache::isStored($cache_id))
 		{
-			$current = &$buff[$row['id_category']];
-			$current = $row;
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+				SELECT *
+				FROM `'._DB_PREFIX_.'category` c
+				'.Shop::addSqlAssociation('category', 'c').'
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').'
+				'.(isset($groups) && Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON c.`id_category` = cg.`id_category`' : '').'
+				WHERE 1 '.$sql_filter.' '.($id_lang ? 'AND `id_lang` = '.(int)$id_lang : '').'
+				'.($active ? ' AND `active` = 1' : '').'
+				'.(isset($groups) && Group::isFeatureActive() ? ' AND cg.`id_group` IN ('.implode(',', $groups).')' : '').'
+				'.(!$id_lang || (isset($groups) && Group::isFeatureActive()) ? ' GROUP BY c.`id_category`' : '').'
+				'.($sql_sort != '' ? $sql_sort : ' ORDER BY c.`level_depth` ASC, category_shop.`position` ASC').'
+				'.($sql_limit != '' ? $sql_limit : '')
+			);
 
-			if ($row['id_category'] == $root_category)
-				$categories[$row['id_category']] = &$current;
-			else
-				$buff[$row['id_parent']]['children'][$row['id_category']] = &$current;
+			$categories = array();
+			$buff = array();
+
+			foreach ($result as $row)
+			{
+				$current = &$buff[$row['id_category']];
+				$current = $row;
+
+				if ($row['id_category'] == $root_category)
+					$categories[$row['id_category']] = &$current;
+				else
+					$buff[$row['id_parent']]['children'][$row['id_category']] = &$current;
+			}
+
+			Cache::store($cache_id, $categories);
 		}
 
-		return $categories;
+		return Cache::retrieve($cache_id);
 	}
 
 	public static function getSimpleCategories($id_lang)
