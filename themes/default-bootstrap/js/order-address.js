@@ -136,3 +136,58 @@ function updateAddresses()
 		});
 	}
 }
+
+function getAddressesTitles()
+{
+	return {
+		'invoice': titleInvoice,
+		'delivery': titleDelivery
+	};
+}
+
+function buildAddressBlock(id_address, address_type, dest_comp)
+{
+	if (isNaN(id_address))
+		return;
+	var adr_titles_vals = getAddressesTitles();
+	var li_content = formatedAddressFieldsValuesList[id_address]['formated_fields_values'];
+	var ordered_fields_name = ['title'];
+	var reg = new RegExp("[ ]+", "g");
+	ordered_fields_name = ordered_fields_name.concat(formatedAddressFieldsValuesList[id_address]['ordered_fields']);
+	ordered_fields_name = ordered_fields_name.concat(['update']);
+	dest_comp.html('');
+	li_content['title'] = adr_titles_vals[address_type];
+	var items = liUpdate.split(reg);
+	var regUrl = new RegExp('(https?://[^"]*)', 'gi');
+	liUpdate = liUpdate.replace(regUrl, addressUrlAdd + parseInt(id_address));
+	li_content['update'] = liUpdate;
+	appendAddressList(dest_comp, li_content, ordered_fields_name);
+}
+
+function appendAddressList(dest_comp, values, fields_name)
+{
+	for (var item in fields_name)
+	{
+		var name = fields_name[item];
+		var value = getFieldValue(name, values);
+		if (value != "") {
+			var new_li = document.createElement('li');
+			new_li.className = 'address_' + name;
+			new_li.innerHTML = getFieldValue(name, values);
+			dest_comp.append(new_li);
+		}
+	}
+}
+
+function getFieldValue(field_name, values)
+{
+	var reg=new RegExp("[ ]+", "g");
+	var items = field_name.split(reg);
+	var vals = new Array();
+	for (var field_item in items)
+	{
+		items[field_item] = items[field_item].replace(",", "");
+		vals.push(values[items[field_item]]);
+	}
+	return vals.join(" ");
+}

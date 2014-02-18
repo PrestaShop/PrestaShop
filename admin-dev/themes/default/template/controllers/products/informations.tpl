@@ -476,5 +476,6 @@
 	</div>
 </div>
 <script type="text/javascript">
+	hideOtherLanguage({$default_form_language});
 	var missing_product_name = '{l s='Please fill product name input field' js=1}';
 </script>

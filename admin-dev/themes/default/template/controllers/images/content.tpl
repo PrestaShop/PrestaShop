@@ -79,21 +79,17 @@
 					{l s='Erase previous images'}
 				</label>
 				<div class="col-lg-9">
-					<div class="row">
-						<div class="input-group col-lg-2">
-							<span class="switch prestashop-switch">
-								<input type="radio" name="erase" id="erase_on" value="1" checked="checked">
-								<label for="erase_on" class="radioCheck">
-									{l s='Yes'}
-								</label>
-								<input type="radio" name="erase" id="erase_off" value="0">
-								<label for="erase_off" class="radioCheck">
-									{l s='No'}
-								</label>
-								<a class="slide-button btn"></a>
-							</span>
-						</div>
-					</div>
+					<span class="switch prestashop-switch fixed-width-lg">
+						<input type="radio" name="erase" id="erase_on" value="1" checked="checked">
+						<label for="erase_on" class="radioCheck">
+							{l s='Yes'}
+						</label>
+						<input type="radio" name="erase" id="erase_off" value="0">
+						<label for="erase_off" class="radioCheck">
+							{l s='No'}
+						</label>
+						<a class="slide-button btn"></a>
+					</span>
 					<p class="help-block">
 						{l s='Select "No" only if your server timed out and you need to resume the regeneration.'}
 					</p>

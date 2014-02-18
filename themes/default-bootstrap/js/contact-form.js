@@ -39,6 +39,11 @@ if (typeof $.uniform.defaults !== 'undefined')
 
 function showProductSelect(id_order)
 {
-	$('.product_select').hide().attr('disabled', 'disabled').parent('.selector').hide();
-	$('#'+id_order+'_order_products').show().removeAttr('disabled').parent('.selector').show();
+	$('.product_select').hide().prop('disabled', 'disabled').parent('.selector').hide();
+	$('.product_select').parents('.form-group').find('label').hide();
+	if ($('#' + id_order + '_order_products').length > 0)
+	{
+		$('#' + id_order + '_order_products').removeProp('disabled').show().parent('.selector').removeClass('disabled').show();
+		$('.product_select').parents('.form-group').show().find('label').show();
+	}
 }

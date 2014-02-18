@@ -59,21 +59,17 @@
 		<div class="form-group" id="TAASC" style="display: none;">
 			<label for="{$input.name}" class="control-label col-lg-3 ">{$input.label}</label>
 			<div class="col-lg-9">
-				<div class="row">
-					<div class="input-group col-lg-2">
-						<span class="switch prestashop-switch">
-							<input type="radio" name="{$input.name}" id="{$input.name}_on" value="1">
-							<label for="{$input.name}_on">
-								{l s='Yes'}
-							</label>
-							<input type="radio" name="{$input.name}" id="{$input.name}_off" value="0" checked="checked">
-							<label for="{$input.name}_off">
-								{l s='No'}
-							</label>
-							<a class="slide-button btn"></a>
-						</span>
-					</div>
-				</div>
+				<span class="switch prestashop-switch fixed-width-lg">
+					<input type="radio" name="{$input.name}" id="{$input.name}_on" value="1">
+					<label for="{$input.name}_on">
+						{l s='Yes'}
+					</label>
+					<input type="radio" name="{$input.name}" id="{$input.name}_off" value="0" checked="checked">
+					<label for="{$input.name}_off">
+						{l s='No'}
+					</label>
+					<a class="slide-button btn"></a>
+				</span>
 			</div>
 		</div>
 	{else}

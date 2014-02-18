@@ -143,9 +143,10 @@
 	</div>
 </div>
 {/if}
-{literal}
+
 <script type="text/javascript">
-	hideOtherLanguage(default_language);
+	hideOtherLanguage({$default_form_language});
+{literal}
 	$(".textarea-autosize").autosize();
 
 	function all_languages(pos)

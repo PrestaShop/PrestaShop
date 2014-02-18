@@ -6924,9 +6924,10 @@ div.star a:hover {
   margin-left: 20px; }
 
 .rte ul {
-	list-style-type: disc; }
+  list-style-type: disc; }
+
 .rte ol {
-	list-style-type: decimal; }
+  list-style-type: decimal; }
 
 .block_hidden_only_for_screen {
   display: none; }
@@ -7956,6 +7957,19 @@ div.star.star_hover:after {
     @media (max-width: 991px) {
       #cmsinfo_block ul li {
         padding-bottom: 0; } }
+  #cmsinfo_block p em {
+    background: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    margin: 0;
+    font-size: 13px;
+    color: #777777;
+    float: none;
+    height: inherit;
+    line-height: inherit;
+    text-align: left;
+    font-style: italic; }
 
 .ie8 #facebook_block,
 .ie8 #cmsinfo_block {

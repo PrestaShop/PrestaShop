@@ -23,165 +23,94 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{if $opc}
-	{assign var="back_order_page" value="order-opc.php"}
-{else}
+{if !$opc}
+	{assign var='current_step' value='address'}
+	{capture name=path}{l s='Addresses'}{/capture}
 	{assign var="back_order_page" value="order.php"}
+	<h1 class="page-heading">{l s='Addresses'}</h1>
+	{include file="$tpl_dir./order-steps.tpl"}
+	{include file="$tpl_dir./errors.tpl"}
+	{include file="$tpl_dir./order-address-multishipping-products.tpl"}
+		<form action="{$link->getPageLink('order', true, NULL, 'multi-shipping=1')|escape:'html':'UTF-8'}" method="post">
+{else}
+	{assign var="back_order_page" value="order-opc.php"}
+	<h1 class="page-heading step-num"><span>1</span> {l s='Addresses'}</h1>
+	<div id="opc_account" class="opc-main-block">
+		<div id="opc_account-overlay" class="opc-overlay" style="display: none;"></div>
 {/if}
-
-<script type="text/javascript">
-// <![CDATA[
-	{if !$opc}
-	var orderProcess = 'order';
-	var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';
-	var currencyRate = '{$currencyRate|floatval}';
-	var currencyFormat = '{$currencyFormat|intval}';
-	var currencyBlank = '{$currencyBlank|intval}';
-	var txtProduct = "{l s='Product' js=1}";
-	var txtProducts = "{l s='Products' js=1}";
-	var txtSelectAnAddressFirst = "{l s='Please start by selecting an address' js=1}";
+<div class="addresses clearfix">
+	<input type="hidden" name="id_address_delivery" id="id_address_delivery" value="{$cart->id_address_delivery}" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}" />
+	<p id="address_invoice_form" class="select" {if $cart->id_address_invoice == $cart->id_address_delivery}style="display: none;"{/if}>
+	
+	{if $addresses|@count >= 1}
+    <div class="form-group selector1">
+		<label for="id_address_invoice" class="strong">{l s='Choose a billing address:'}</label>
+		<select name="id_address_invoice" id="id_address_invoice" class="address_select form-control" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}">
+		{section loop=$addresses step=-1 name=address}
+			<option value="{$addresses[address].id_address|intval}" {if $addresses[address].id_address == $cart->id_address_invoice && $cart->id_address_delivery != $cart->id_address_invoice}selected="selected"{/if}>{$addresses[address].alias|escape:'html':'UTF-8'}</option>
+		{/section}
+		</select>
+    </div>
+	{else}
+		<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back}{/if}")|escape:'html':'UTF-8'}" title="{l s='Add'}" class="button button-small btn btn-default"><span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span></a>
 	{/if}
-
-	var formatedAddressFieldsValuesList = new Array();
-
-	{foreach from=$formatedAddressFieldsValuesList key=id_address item=type}
-		formatedAddressFieldsValuesList[{$id_address}] =
-		{
-			'ordered_fields':[
-				{foreach from=$type.ordered_fields key=num_field item=field_name name=inv_loop}
-					{if !$smarty.foreach.inv_loop.first},{/if}"{$field_name}"
-				{/foreach}
-			],
-			'formated_fields_values':{
-				{foreach from=$type.formated_fields_values key=pattern_name item=field_name name=inv_loop}
-					{if !$smarty.foreach.inv_loop.first},{/if}"{$pattern_name}":"{$field_name}"
-				{/foreach}
-			}
-		}
-	{/foreach}
-
-	function getAddressesTitles()
-	{
-		return {
-			'invoice': "<h3 class='page-subheading'>{l s='Your billing address'}</h3>",
-			'delivery': "<h3 class='page-subheading'>{l s='Your delivery address'}</h3>"
-		};
-
-	}
-
-
-	function buildAddressBlock(id_address, address_type, dest_comp)
-	{
-		var adr_titles_vals = getAddressesTitles();
-		var li_content = formatedAddressFieldsValuesList[id_address]['formated_fields_values'];
-		var ordered_fields_name = ['title'];
-
-		ordered_fields_name = ordered_fields_name.concat(formatedAddressFieldsValuesList[id_address]['ordered_fields']);
-		ordered_fields_name = ordered_fields_name.concat(['update']);
-		
-		dest_comp.html('');
-
-		li_content['title'] = adr_titles_vals[address_type];
-		li_content['update'] = '<a class="btn btn-default button button-small" href="{$link->getPageLink('address', true, NULL, "id_address")|addslashes}'+id_address+'&amp;back=order?step=1{if $back}&mod={$back}{/if}" title="{l s='Update' js=1}"><span>{l s='Update' js=1}<i class="icon-chevron-right right"></i></span></a>';
-
-		appendAddressList(dest_comp, li_content, ordered_fields_name);
-	}
-
-	function appendAddressList(dest_comp, values, fields_name)
-	{
-		for (var item in fields_name)
-		{
-			var name = fields_name[item];
-			var value = getFieldValue(name, values);
-			if (value != "")
-			{
-				var new_li = document.createElement('li');
-				new_li.className = 'address_'+ name;
-				new_li.innerHTML = getFieldValue(name, values);
-				dest_comp.append(new_li);
-			}
-		}
-	}
-
-	function getFieldValue(field_name, values)
-	{
-		var reg=new RegExp("[ ]+", "g");
-
-		var items = field_name.split(reg);
-		var vals = new Array();
-
-		for (var field_item in items)
-			vals.push(values[items[field_item]]);
-		return vals.join(" ");
-	}
-
-//]]>
-</script>
-
-{if !$opc}
-{capture name=path}{l s='Addresses'}{/capture}
-{/if}
-
-{if !$opc}<h1 class="page-heading">{l s='Addresses'}</h1>{else}<h1 class="page-heading step-num"><span>1</span> {l s='Addresses'}</h1>{/if}
-
-{if !$opc}
-{assign var='current_step' value='address'}
-{include file="$tpl_dir./order-steps.tpl"}
-{include file="$tpl_dir./errors.tpl"}
-
-{include file="$tpl_dir./order-address-multishipping-products.tpl"}
-
-<form action="{$link->getPageLink('order', true, NULL, 'multi-shipping=1')|escape:'html':'UTF-8'}" method="post">
-{else}
-<div id="opc_account" class="opc-main-block">
-	<div id="opc_account-overlay" class="opc-overlay" style="display: none;"></div>
-{/if}
-	<div class="addresses clearfix">
-		<input type="hidden" name="id_address_delivery" id="id_address_delivery" value="{$cart->id_address_delivery}" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}" />
-		<p id="address_invoice_form" class="select" {if $cart->id_address_invoice == $cart->id_address_delivery}style="display: none;"{/if}>
-		
-		{if $addresses|@count >= 1}
-        <div class="form-group selector1">
-			<label for="id_address_invoice" class="strong">{l s='Choose a billing address:'}</label>
-			<select name="id_address_invoice" id="id_address_invoice" class="address_select form-control" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}">
-			{section loop=$addresses step=-1 name=address}
-				<option value="{$addresses[address].id_address|intval}" {if $addresses[address].id_address == $cart->id_address_invoice && $cart->id_address_delivery != $cart->id_address_invoice}selected="selected"{/if}>{$addresses[address].alias|escape:'html':'UTF-8'}</option>
-			{/section}
-			</select>
-        </div>
-		{else}
-			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back}{/if}")|escape:'html':'UTF-8'}" title="{l s='Add'}" class="button button-small btn btn-default"><span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span></a>
-		{/if}
-		</p>
-		<div class="row">
-        	<div class="col-sm-12 col-md-6">
-                <ul class="address alternate_item {if $cart->isVirtualCart()}full_width{/if} box" id="address_invoice">
-                </ul>
-            </div>
-		</div>
-		<p class="address_add submit">
-			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")|escape:'html':'UTF-8'}" title="{l s='Add'}" class="button button-small btn btn-default"><span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span></a>
-		</p>
-		{if !$opc}
-		<div id="ordermsg" class="form-group">
-			<label>{l s='If you would like to add a comment about your order, please write it in the field below.'}</label>
-			<textarea class="form-control" cols="60" rows="6" name="message">{if isset($oldMessage)}{$oldMessage}{/if}</textarea>
-		</div>
-		{/if}
-	</div>
-{if !$opc}
-	<p class="cart_navigation clearfix">
-		<input type="hidden" class="hidden" name="step" value="2" />
-		<input type="hidden" name="back" value="{$back}" />
-		{if $back}
-			<a href="{$link->getPageLink('order', true, NULL, "step=0&amp;back={$back}")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
-		{else}
-			<a href="{$link->getPageLink('order', true, NULL, "step=0")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
-		{/if}
-        <button type="submit" name="processAddress" class="button btn btn-default button-medium"><span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span></button>
 	</p>
-</form>
-{else}
+	<div class="row">
+    	<div class="col-sm-12 col-md-6">
+            <ul class="address alternate_item {if $cart->isVirtualCart()}full_width{/if} box" id="address_invoice">
+            </ul>
+        </div>
+	</div>
+	<p class="address_add submit">
+		<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")|escape:'html':'UTF-8'}" title="{l s='Add'}" class="button button-small btn btn-default"><span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span></a>
+	</p>
+	{if !$opc}
+	<div id="ordermsg" class="form-group">
+		<label>{l s='If you would like to add a comment about your order, please write it in the field below.'}</label>
+		<textarea class="form-control" cols="60" rows="6" name="message">{if isset($oldMessage)}{$oldMessage}{/if}</textarea>
+	</div>
+	{/if}
 </div>
+{if !$opc}
+			<p class="cart_navigation clearfix">
+				<input type="hidden" class="hidden" name="step" value="2" />
+				<input type="hidden" name="back" value="{$back}" />
+				{if $back}
+					<a href="{$link->getPageLink('order', true, NULL, "step=0&amp;back={$back}")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
+				{else}
+					<a href="{$link->getPageLink('order', true, NULL, "step=0")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
+				{/if}
+		        <button type="submit" name="processAddress" class="button btn btn-default button-medium"><span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span></button>
+			</p>
+		</form>
+{else}
+	</div>
 {/if}
+{strip}
+{if !$opc}
+	{addJsDef orderProcess='order'}
+	{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
+	{addJsDef currencyRate=$currencyRate|floatval}
+	{addJsDef currencyFormat=$currencyFormat|intval}
+	{addJsDef currencyBlank=$currencyBlank|intval}
+	{addJsDefL name=txtProduct}{l s='product' js=1}{/addJsDefL}
+	{addJsDefL name=txtProducts}{l s='products' js=1}{/addJsDefL}
+	{addJsDefL name=CloseTxt}{l s='Submit' js=1}{/addJsDefL}
+	{addJsDefL name=txtSelectAnAddressFirst}{l s='Please start by selecting an address' js=1}{/addJsDefL}
+{/if}
+{capture}{if $back}&mod={$back|urlencode}{/if}{/capture}
+{capture name=addressUrl}{$link->getPageLink('address', true, NULL, 'back='|cat:$back_order_page|cat:'?step=1'|cat:$smarty.capture.default)|addslashes}{/capture}
+{addJsDef addressUrl=$smarty.capture.addressUrl}
+{capture}{'&multi-shipping=1'|urlencode}{/capture}
+{addJsDef addressMultishippingUrl=$smarty.capture.addressUrl|cat:$smarty.capture.default}
+{capture name=addressUrlAdd}{$smarty.capture.addressUrl|cat:'&id_address='}{/capture}
+{addJsDef addressUrlAdd=$smarty.capture.addressUrlAdd}
+{addJsDef formatedAddressFieldsValuesList=array()}
+{addJsDef formatedAddressFieldsValuesList=$formatedAddressFieldsValuesList}
+{capture}<h3 class="page-subheading">{l s='Your billing address' js=1}</h3>{/capture}
+{addJsDefL name=titleInvoice}{$smarty.capture.default|@addcslashes:'\''}{/addJsDefL}
+{capture}<h3 class="page-subheading">{l s='Your delivery address' js=1}</h3>{/capture}
+{addJsDefL name=titleDelivery}{$smarty.capture.default|@addcslashes:'\''}{/addJsDefL}
+{capture}<a class="button button-small btn btn-default" href="{$smarty.capture.addressUrlAdd}" title="{l s='Update' js=1}"><span>{l s='Update' js=1}<i class="icon-chevron-right right"></i></span></a>{/capture}
+{addJsDefL name=liUpdate}{$smarty.capture.default|@addcslashes:'\''}{/addJsDefL}
+{/strip}
