@@ -1564,7 +1564,11 @@ table { border-collapse: collapse; border-spacing: 0; }
 
 td, th { padding: 0; }
 
-.bootstrap { @-ms-viewport { width: device-width; }
+.bootstrap { @-webkit-keyframes progress-bar-stripes { from { background-position: 40px 0; }
+  to { background-position: 0 0; } }
+ @keyframes progress-bar-stripes { from { background-position: 40px 0; }
+  to { background-position: 0 0; } }
+ @-ms-viewport { width: device-width; }
  }
 .bootstrap * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
 .bootstrap *:before, .bootstrap *:after { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
@@ -2327,6 +2331,18 @@ td, th { padding: 0; }
 .bootstrap .alert-danger, .bootstrap #carrier_wizard .wizard_error { background-color: #f2dede; border-color: #ebccd1; color: #a94442; }
 .bootstrap .alert-danger hr, .bootstrap #carrier_wizard .wizard_error hr { border-top-color: #e4b9c0; }
 .bootstrap .alert-danger .alert-link, .bootstrap #carrier_wizard .wizard_error .alert-link { color: #843534; }
+.bootstrap .progress { overflow: hidden; height: 17px; margin-bottom: 17px; background-color: whitesmoke; border-radius: 3px; -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); }
+.bootstrap .progress-bar { float: left; width: 0%; height: 100%; font-size: 11px; line-height: 17px; color: white; text-align: center; background-color: #00aff0; -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15); box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15); -webkit-transition: width 0.6s ease; transition: width 0.6s ease; }
+.bootstrap .progress-striped .progress-bar { background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent); background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent); background-size: 40px 40px; }
+.bootstrap .progress.active .progress-bar { -webkit-animation: progress-bar-stripes 2s linear infinite; animation: progress-bar-stripes 2s linear infinite; }
+.bootstrap .progress-bar-success { background-color: #5cb85c; }
+.progress-striped .bootstrap .progress-bar-success { background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent); background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent); }
+.bootstrap .progress-bar-info { background-color: #5bc0de; }
+.progress-striped .bootstrap .progress-bar-info { background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent); background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent); }
+.bootstrap .progress-bar-warning { background-color: #f0ad4e; }
+.progress-striped .bootstrap .progress-bar-warning { background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent); background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent); }
+.bootstrap .progress-bar-danger { background-color: #d9534f; }
+.progress-striped .bootstrap .progress-bar-danger { background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent); background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent); }
 .bootstrap .media, .bootstrap .message-item, .bootstrap .media-body { overflow: hidden; zoom: 1; }
 .bootstrap .media, .bootstrap .message-item, .bootstrap .media .media, .bootstrap .message-item .media, .bootstrap .media .message-item, .bootstrap .message-item .message-item { margin-top: 15px; }
 .bootstrap .media:first-child, .bootstrap .message-item:first-child { margin-top: 0; }
