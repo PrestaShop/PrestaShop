@@ -114,7 +114,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 	/**
 	 * Join current entity to an associated entity
 	 *
-	 * @param $association Association name
+	 * @param string $association Association name
 	 * @param string $on
 	 * @param int $type
 	 * @return PrestaShopCollection

@@ -130,6 +130,9 @@ class SpecificPriceRuleCore extends ObjectModel
 		return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_specific_price_rule='.(int)$this->id.$where);
 	}
 
+	/**
+	 * @param array $products
+	 */
 	public static function applyAllRules($products = false)
 	{
 		$rules = new PrestaShopCollection('SpecificPriceRule');
