@@ -141,7 +141,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'post_limit_exceeded' => $this->post_limit_exceed,
 			'url_submit' => self::$currentIndex.'&submitTranslations'.ucfirst($this->type_selected).'=1&token='.$this->token,
 			'toggle_button' => $this->displayToggleButton(),
-			'textarea_sized' => self::TEXTAREA_SIZED
+			'textarea_sized' => AdminTranslationsControllerCore::TEXTAREA_SIZED
 		);
 
 		// Call method initForm for a type
@@ -2741,7 +2741,7 @@ class AdminTranslationsControllerCore extends AdminController
 				'count' => $this->total_expression,
 				'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
 				'mod_security_warning' => Tools::apacheModExists('mod_security'),
-				'textarea_sized' => self::TEXTAREA_SIZED,
+				'textarea_sized' => AdminTranslationsControllerCore::TEXTAREA_SIZED,
 				'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
 				'modules_translations' => isset($this->modules_translations) ? $this->modules_translations : array(),
 				'missing_translations' => $this->missing_translations
