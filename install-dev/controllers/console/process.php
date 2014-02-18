@@ -193,6 +193,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 			'admin_password' =>			$this->datas->admin_password,
 			'admin_email' =>			$this->datas->admin_email,
 			'configuration_agrement' =>	true,
+			'send_informations' => true,
 		));
 		
 	}
