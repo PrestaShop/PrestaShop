@@ -73,7 +73,7 @@ class AdminStatusesControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_order_state' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
+				'align' => 'text-center',
 				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
@@ -83,7 +83,7 @@ class AdminStatusesControllerCore extends AdminController
 			),
 			'logo' => array(
 				'title' => $this->l('Icon'),
-				'align' => 'center',
+				'align' => 'text-center',
 				'image' => 'os',
 				'orderby' => false,
 				'search' => false,
@@ -91,35 +91,29 @@ class AdminStatusesControllerCore extends AdminController
 			),
 			'send_email' => array(
 				'title' => $this->l('Send email to customer'),
-				'align' => 'center',
-				'icon' => array(
-					'1' => 'icon-check text-success',
-					'0' => 'icon-ban-circle text-danger'
-				),
+				'align' => 'text-center',
+				'active' => 'sendEmail',
 				'type' => 'bool',
+				'ajax' => true,
 				'orderby' => false,
 				'class' => 'fixed-width-sm'
 			),
 			'delivery' => array(
 				'title' => $this->l('Delivery'),
-				'align' => 'center',
-				'icon' => array(
-					'1' => 'icon-check text-success',
-					'0' => 'icon-ban-circle text-danger'
-				),
+				'align' => 'text-center',
+				'active' => 'delivery',
 				'type' => 'bool',
+				'ajax' => true,
 				'orderby' => false,
 				'class' => 'fixed-width-sm'
 			)
 			,
 			'invoice' => array(
 				'title' => $this->l('Invoice'),
-				'align' => 'center',
-				'icon' => array(
-					'1' => 'icon-check text-success',
-					'0' => 'icon-ban-circle text-danger'
-				),
+				'align' => 'text-center',
+				'active' => 'invoice',
 				'type' => 'bool',
+				'ajax' => true,
 				'orderby' => false,
 				'class' => 'fixed-width-sm'
 			),
@@ -471,8 +465,8 @@ class AdminStatusesControllerCore extends AdminController
 	{
 		if (Tools::isSubmit($this->table.'Orderby') || Tools::isSubmit($this->table.'Orderway'))
 			$this->filter = true;
-				
-		if (Tools::isSubmit('submitAddorder_return_state') || Tools::isSubmit('submitAddorder_return_state'))
+
+		if (Tools::isSubmit('submitAddorder_return_state'))
 		{
 			$id_order_return_state = Tools::getValue('id_order_return_state');
 
@@ -582,5 +576,11 @@ class AdminStatusesControllerCore extends AdminController
 		}
 
 		return true;
+	}
+
+	public function ajaxProcess()
+	{
+		//@todo: emilien
+		$result = false;
 	}
 }

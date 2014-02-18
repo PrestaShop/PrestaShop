@@ -47,11 +47,6 @@ class AdminEmployeesControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
-		$this->fieldImageSettings = array(
-			'name' => 'image',
-			'dir' => 'e'
-		);
-
 		$this->context = Context::getContext();
 
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),
@@ -224,14 +219,10 @@ class AdminEmployeesControllerCore extends AdminController
 					'required' => true
 				),
 				array(
-					'type' => 'file',
-					'label' => $this->l('Picture'),
-					'name' => 'image',
-					'image' => ImageManager::thumbnail($obj->getImage(), $this->table.'_'.(int)$obj->id.'.'
-						.$this->imageType, 150, $this->imageType, true, true),
-					'col' => 6,
-					'value' => true,
-					'display_image' => true,
+					'type' => 'html',
+					'name' => '<img src="'.$obj->getImage().'&time='.time().'" alt="" class="imgm img-thumbnail" />
+					<div class="clear">&nbsp;</div>
+					<div class="alert alert-info">'.$this->l('To change your avatar log in to prestashop.com and follow the on-screen instructions to change your profile picture.').'</div>',
 				),
 				array(
 					'type' => 'password',
@@ -248,6 +239,26 @@ class AdminEmployeesControllerCore extends AdminController
 					'name' => 'email',
 					'required' => true,
 					'autocomplete' => false
+				),
+				array(
+					'type' => 'switch',
+					'label' => $this->l('Connect to PrestaShop'),
+					'name' => 'optin',
+					'required' => false,
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'optin_on',
+							'value' => 1,
+							'label' => $this->l('Yes')
+						),
+						array(
+							'id' => 'optin_off',
+							'value' => 0,
+							'label' => $this->l('No')
+						)
+					),
+					'hint' => $this->l('PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, please uncheck this box.')
 				),
 				/*array(
 					'type' => 'color',

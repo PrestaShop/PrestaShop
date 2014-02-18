@@ -101,8 +101,6 @@
 
 			$(document).ready(function()
 			{
-				hideOtherLanguage(default_language);
-
 				if (product_type == product_type_pack)
 				{
 					$('a[id*="VirtualProduct"]').hide();
@@ -176,7 +174,7 @@
 						if ($("input[name='id_product']").val() != 0 || btn_name != 'Informations')
 							handleSaveButtons();
 					}
-					hideOtherLanguage(default_language);
+
 					$('.label-tooltip').tooltip();
 				});
 

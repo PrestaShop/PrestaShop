@@ -570,6 +570,8 @@
 									</div>
 								{elseif $input.type == 'free'}
 									{$fields_value[$input.name]}
+								{elseif $input.type == 'html'}
+									{$input.name}
 								{/if}
 								{/block}{* end block input *}
 								{block name="description"}

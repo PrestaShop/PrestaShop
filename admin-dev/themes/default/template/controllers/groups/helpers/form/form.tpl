@@ -183,8 +183,8 @@
 			{foreach $input['values']['auth_modules'] key=key item=module }
 			<div class="form-group">
 				<label class="control-label col-lg-4"><img src="../modules/{$module->name}/logo.gif"> {$module->displayName}</label>
-				<div class="input-group col-lg-2">
-					<span class="switch prestashop-switch">
+				<div class="input-group col-lg-9">
+					<span class="switch prestashop-switch fixed-width-lg">
 						<input type="radio" name="{$module->name}" id="{$module->name}_on" value="1" checked="checked">
 						<label for="{$module->name}_on">{l s='Yes'}</label>
 						<input type="radio" name="{$module->name}" id="{$module->name}_off" value="0">
@@ -198,8 +198,8 @@
 			{foreach $input['values']['unauth_modules'] key=key item=module }
 			<div class="form-group">
 				<label class="control-label col-lg-4"><img src="../modules/{$module->name}/logo.gif"> {$module->displayName}</label>
-				<div class="input-group col-lg-2">
-					<span class="switch prestashop-switch">
+				<div class="input-group col-lg-9">
+					<span class="switch prestashop-switch fixed-width-lg">
 						<input type="radio" name="{$module->name}" id="{$module->name}_on" value="1">
 						<label for="{$module->name}_on">{l s='Yes'}</label>
 						<input type="radio" name="{$module->name}" id="{$module->name}_off" value="0" checked="checked">

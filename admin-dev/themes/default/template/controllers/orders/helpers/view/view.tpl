@@ -557,19 +557,17 @@
 							<div class="form-group">
 								<label class="control-label col-lg-3">{l s='Display to customer?'}</label>
 								<div class="col-lg-9">
-									<div class="input-group col-lg-2">
-										<span class="switch prestashop-switch">
-											<input type="radio" name="visibility" id="visibility_on" value="0" />
-											<label for="visibility_on">
-												{l s='Yes'}
-											</label>
-											<input type="radio" name="visibility" id="visibility_off" value="1" checked="checked" /> 
-											<label for="visibility_off">
-												{l s='No'}
-											</label>
-											<a class="slide-button btn"></a>
-										</span>
-									</div>
+									<span class="switch prestashop-switch fixed-width-lg">
+										<input type="radio" name="visibility" id="visibility_on" value="0" />
+										<label for="visibility_on">
+											{l s='Yes'}
+										</label>
+										<input type="radio" name="visibility" id="visibility_off" value="1" checked="checked" /> 
+										<label for="visibility_off">
+											{l s='No'}
+										</label>
+										<a class="slide-button btn"></a>
+									</span>
 								</div>
 							</div>
 

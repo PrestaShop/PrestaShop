@@ -41,10 +41,16 @@
 	font-size: 1.1em
 	letter-spacing: 0.0625em
 	background-color: $brand-primary
+	&.badge-info
+		background-color: $brand-info
 	&.badge-success
 		background-color: $brand-success
-	&.badge-error
+	&.badge-warning
+		background-color: $brand-warning
+	&.badge-danger
 		background-color: $brand-danger
+	&.badge-critical
+		background-color: darken($brand-danger,15%)
 
 //tabs
 .nav-tabs

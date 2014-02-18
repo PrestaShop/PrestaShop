@@ -385,7 +385,7 @@ class AdminImagesControllerCore extends AdminController
 
 	public static function printEntityActiveIcon($value, $object)
 	{
-		return ($value ? '<i class="icon-check text-success"></i>' : '<i class="icon-remove text-danger"></i>');
+		return ($value ? '<span class="list-action-enable action-enabled"><i class="icon-check"></i></span>' : '<span class="list-action-enable action-disabled"><i class="icon-remove"></i></span>');
 	}
 
 	protected function _childValidation()
