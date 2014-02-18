@@ -84,6 +84,11 @@ class EmployeeCore extends ObjectModel
 
 	public $remote_addr;
 
+	/* employee notifications */
+	public $id_last_order;
+	public $id_last_customer_message;
+	public $id_last_customer;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -111,6 +116,9 @@ class EmployeeCore extends ObjectModel
 			'stats_compare_from' =>   array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'stats_compare_to' => 	  array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'stats_compare_option' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'id_last_order' => 			  array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'id_last_customer_message' => 			  array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'id_last_customer' => 			  array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 		),
 	);
 
@@ -394,5 +402,18 @@ class EmployeeCore extends ObjectModel
 		if (!Validate::isLoadedObject($this))
 			return _PS_IMG_DIR_.'prestashop-avatar.png';
 		return Tools::getShopProtocol().'api.prestashop.com/profile/avatar.php?email='.urlencode($this->email);
+	}
+
+	public function getLastElementsForNotify($element)
+	{
+		$max = Db::getInstance()->getValue('
+			SELECT MAX(`id_'. $element.'`) as id_'.$element.'
+			FROM `'._DB_PREFIX_.$element.($element == 'order' ? 's': '').'`');
+
+		// if no rows in table, set max to 0
+		if ((int)$max < 1)
+			$max = 0;
+
+		return (int)$max;
 	}
 }

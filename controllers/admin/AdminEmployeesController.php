@@ -517,6 +517,13 @@ class AdminEmployeesControllerCore extends AdminController
 			if (!$assos && $this->table = 'employee')
 				if (Shop::isFeatureActive() && _PS_ADMIN_PROFILE_ != $_POST['id_profile'])
 					$this->errors[] = Tools::displayError('The employee must be associated with at least one shop.');
+
+			if (!$this->restrict_edition)
+			{
+				$_POST['id_last_order'] = $employee->getLastElementsForNotify('order');;
+				$_POST['id_last_customer_message'] = $employee->getLastElementsForNotify('customer_message');
+				$_POST['id_last_customer'] = $employee->getLastElementsForNotify('customer');
+			}
 		}
 
 		return parent::postProcess();
