@@ -582,16 +582,8 @@ class AdminStatusesControllerCore extends AdminController
 	{
 		$id_order_state = (int)Tools::getValue('id_order_state');
 
-		$order_state = Db::getInstance()->getRow(
-			'SELECT * FROM '._DB_PREFIX_.'order_state WHERE id_order_state = '.$id_order_state
-		);
-
-		$result = false;
-		if ($order_state)
-		{
-			$sql = 'UPDATE '._DB_PREFIX_.'order_state SET send_email='.(int)!(bool)$order_state['send_email'].' WHERE id_order_state='.$id_order_state;
-			$result = Db::getInstance()->execute($sql);
-		}
+		$sql = 'UPDATE '._DB_PREFIX_.'order_state SET `send_email`= NOT `send_email` WHERE id_order_state='.$id_order_state;
+		$result = Db::getInstance()->execute($sql);
 
 		if ($result)
 			echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
@@ -603,16 +595,8 @@ class AdminStatusesControllerCore extends AdminController
 	{
 		$id_order_state = (int)Tools::getValue('id_order_state');
 
-		$order_state = Db::getInstance()->getRow(
-			'SELECT * FROM '._DB_PREFIX_.'order_state WHERE id_order_state = '.$id_order_state
-		);
-
-		$result = false;
-		if ($order_state)
-		{
-			$sql = 'UPDATE '._DB_PREFIX_.'order_state SET delivery='.(int)!(bool)$order_state['delivery'].' WHERE id_order_state='.$id_order_state;
-			$result = Db::getInstance()->execute($sql);
-		}
+		$sql = 'UPDATE '._DB_PREFIX_.'order_state SET `delivery`= NOT `delivery` WHERE id_order_state='.$id_order_state;
+		$result = Db::getInstance()->execute($sql);
 
 		if ($result)
 			echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
@@ -620,20 +604,12 @@ class AdminStatusesControllerCore extends AdminController
 			echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
 	}
 
-	public function AjaxProcessInvoiceOrderState()
+	public function ajaxProcessInvoiceOrderState()
 	{
 		$id_order_state = (int)Tools::getValue('id_order_state');
 
-		$order_state = Db::getInstance()->getRow(
-			'SELECT * FROM '._DB_PREFIX_.'order_state WHERE id_order_state = '.$id_order_state
-		);
-
-		$result = false;
-		if ($order_state)
-		{
-			$sql = 'UPDATE '._DB_PREFIX_.'order_state SET invoice='.(int)!(bool)$order_state['invoice'].' WHERE id_order_state='.$id_order_state;
-			$result = Db::getInstance()->execute($sql);
-		}
+		$sql = 'UPDATE '._DB_PREFIX_.'order_state SET `invoice`= NOT `invoice` WHERE id_order_state='.$id_order_state;
+		$result = Db::getInstance()->execute($sql);
 
 		if ($result)
 			echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
