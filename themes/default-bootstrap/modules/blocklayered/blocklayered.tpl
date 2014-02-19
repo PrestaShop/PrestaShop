@@ -144,7 +144,7 @@
 									</label> 
 									<span id="layered_{$filter.type}_range"></span>
 									<div class="layered_slider_container">
-										<div class="layered_slider" id="layered_{$filter.type}_slider"></div>
+										<div class="layered_slider" id="layered_{$filter.type}_slider" data-type="{$filter.type}" data-format="{$filter.format}" data-unit="{$filter.unit}"></div>
 									</div>
 								{else}
 									{if $filter.filter_type == 1}
