@@ -1586,7 +1586,7 @@ class AdminControllerCore extends Controller
 				if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'] && $sub_tab['class_name'] != 'AdminCarrierWizard')
 				{
 					$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
-					$sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this));
+					$sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this) || $sub_tab['class_name'] == Tools::getValue('controller'));
 				}
 				else
 					unset($sub_tabs[$index2]);					
