@@ -38,8 +38,9 @@ $(document).ready(function(){
 
 	if (!!$.prototype.bxSlider)
 		$('#homeslider').bxSlider({
-	        maxSlides: 1,
-	        slideWidth: homeslider_width,
+			useCSS: false,
+			maxSlides: 1,
+			slideWidth: homeslider_width,
 			infiniteLoop: homeslider_loop,
 			hideControlOnEnd: true,
 			pager: false,
