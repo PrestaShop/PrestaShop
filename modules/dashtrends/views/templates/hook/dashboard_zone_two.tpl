@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="clearfix"></div>
-<section id="dashtrends" class="panel widget">
+<section id="dashtrends" class="panel widget {if $allow_push} allow_push{/if}">
 	<header class="panel-heading">
 		<i class="icon-bar-chart"></i> {l s='Dashboard' mod='dashtrends'}
 		<span class="panel-heading-action">
