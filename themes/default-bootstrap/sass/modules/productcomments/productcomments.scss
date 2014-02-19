@@ -13,7 +13,7 @@
 	}	
 	.comments_note span,
 	.star_content {
-		float: left;
+		display: inline-block;
 		color: $base-text-color;
 	}	
 	.star_content {

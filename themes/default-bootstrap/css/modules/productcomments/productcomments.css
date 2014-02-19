@@ -9,7 +9,7 @@
     margin-bottom: 5px; }
   #product_comments_block_extra .comments_note span,
   #product_comments_block_extra .star_content {
-    float: left;
+    display: inline-block;
     color: #333333; }
   #product_comments_block_extra .star_content {
     margin-top: 1px; }
@@ -206,8 +206,6 @@
                 content: "\f0da";
                 color: #333333;
                 margin-right: 8px; } }
-      #product_comments_block_tab div.comment .comment_details .title_block {
-        text-transform: capitalize; }
   #product_comments_block_tab div.star:after {
     content: "\f006";
     font-family: "FontAwesome";
