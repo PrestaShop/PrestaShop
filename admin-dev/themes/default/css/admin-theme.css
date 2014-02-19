@@ -680,7 +680,7 @@
 /* FONT PATH -------------------------- */
 @font-face { font-family: 'FontAwesome'; src: url("../fonts/fontawesome-webfont.eot?v=4.0.4"); src: url("../fonts/fontawesome-webfont.eot?#iefix&v=4.0.4") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff?v=4.0.4") format("woff"), url("../fonts/fontawesome-webfont.ttf?v=4.0.4") format("truetype"), url("../fonts/fontawesome-webfont.svg?v=4.0.4#fontawesomeregular") format("svg"); font-weight: normal; font-style: normal; }
 
-.icon, .page-sidebar-closed:not(.nav-topbar) .searchtab:before, [class^="icon-"], [class^="process-icon-"], [class*="process-icon-"], .bootstrap .alert.alert-warning:before, .bootstrap .alert.alert-danger:before, .bootstrap #carrier_wizard .wizard_error:before, .bootstrap .alert.alert-success:before, .bootstrap .alert.alert-info:before, .bootstrap .alert.alert-addons:before, .bootstrap .table td.dragHandle .dragGroup:before, .mce-ico { display: inline-block; font-family: FontAwesome; font-style: normal; font-weight: normal; line-height: 1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.icon, .page-sidebar-closed:not(.nav-topbar) .searchtab:before, [class^="icon-"], [class^="process-icon-"], [class*="process-icon-"], .bootstrap .alert.alert-warning:before, .bootstrap .alert.alert-danger:before, .bootstrap #carrier_wizard .wizard_error:before, .bootstrap .alert.alert-success:before, .bootstrap .alert.alert-info:before, .bootstrap .alert.alert-addons:before, .bootstrap .table td.dragHandle .dragGroup:before, .bootstrap #dashboard .loading .data_value:before, .mce-ico { display: inline-block; font-family: FontAwesome; font-style: normal; font-weight: normal; line-height: 1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
 /* makes the font 33% larger relative to the icon container */
 .icon-lg { font-size: 1.33333em; line-height: 0.75em; vertical-align: -15%; }
@@ -707,8 +707,8 @@
 
 .pull-left, .bootstrap .page-head h2.page-title { float: left; }
 
-.icon.pull-left, .page-sidebar-closed:not(.nav-topbar) .pull-left.searchtab:before, .page-sidebar-closed:not(.nav-topbar) .bootstrap .page-head h2.searchtab.page-title:before, .bootstrap .page-head .page-sidebar-closed:not(.nav-topbar) h2.searchtab.page-title:before, .pull-left[class^="icon-"], .bootstrap .page-head h2[class^="icon-"].page-title, .pull-left[class^="process-icon-"], .bootstrap .page-head h2[class^="process-icon-"].page-title, .pull-left[class*="process-icon-"], .bootstrap .page-head h2[class*="process-icon-"].page-title, .bootstrap .pull-left.alert.alert-warning:before, .bootstrap .page-head h2.alert.alert-warning.page-title:before, .bootstrap .pull-left.alert.alert-danger:before, .bootstrap .page-head h2.alert.alert-danger.page-title:before, .bootstrap .page-head #carrier_wizard h2.page-title.wizard_error:before, .bootstrap #carrier_wizard .page-head h2.page-title.wizard_error:before, .bootstrap #carrier_wizard .pull-left.wizard_error:before, .bootstrap .pull-left.alert.alert-success:before, .bootstrap .page-head h2.alert.alert-success.page-title:before, .bootstrap .pull-left.alert.alert-info:before, .bootstrap .page-head h2.alert.alert-info.page-title:before, .bootstrap .pull-left.alert.alert-addons:before, .bootstrap .page-head h2.alert.alert-addons.page-title:before, .bootstrap .table td.dragHandle .pull-left.dragGroup:before, .bootstrap .table td.dragHandle .page-head h2.dragGroup.page-title:before, .bootstrap .page-head .table td.dragHandle h2.dragGroup.page-title:before, .bootstrap .page-head h2.icon.page-title, .bootstrap .page-head h2.page-title.mce-ico, .pull-left.mce-ico { margin-right: .3em; }
-.icon.pull-right, .page-sidebar-closed:not(.nav-topbar) .pull-right.searchtab:before, .pull-right[class^="icon-"], .pull-right[class^="process-icon-"], .pull-right[class*="process-icon-"], .bootstrap .pull-right.alert.alert-warning:before, .bootstrap .pull-right.alert.alert-danger:before, .bootstrap #carrier_wizard .pull-right.wizard_error:before, .bootstrap .pull-right.alert.alert-success:before, .bootstrap .pull-right.alert.alert-info:before, .bootstrap .pull-right.alert.alert-addons:before, .bootstrap .table td.dragHandle .pull-right.dragGroup:before, .pull-right.mce-ico { margin-left: .3em; }
+.icon.pull-left, .page-sidebar-closed:not(.nav-topbar) .pull-left.searchtab:before, .page-sidebar-closed:not(.nav-topbar) .bootstrap .page-head h2.searchtab.page-title:before, .bootstrap .page-head .page-sidebar-closed:not(.nav-topbar) h2.searchtab.page-title:before, .pull-left[class^="icon-"], .bootstrap .page-head h2[class^="icon-"].page-title, .pull-left[class^="process-icon-"], .bootstrap .page-head h2[class^="process-icon-"].page-title, .pull-left[class*="process-icon-"], .bootstrap .page-head h2[class*="process-icon-"].page-title, .bootstrap .pull-left.alert.alert-warning:before, .bootstrap .page-head h2.alert.alert-warning.page-title:before, .bootstrap .pull-left.alert.alert-danger:before, .bootstrap .page-head h2.alert.alert-danger.page-title:before, .bootstrap .page-head #carrier_wizard h2.page-title.wizard_error:before, .bootstrap #carrier_wizard .page-head h2.page-title.wizard_error:before, .bootstrap #carrier_wizard .pull-left.wizard_error:before, .bootstrap .pull-left.alert.alert-success:before, .bootstrap .page-head h2.alert.alert-success.page-title:before, .bootstrap .pull-left.alert.alert-info:before, .bootstrap .page-head h2.alert.alert-info.page-title:before, .bootstrap .pull-left.alert.alert-addons:before, .bootstrap .page-head h2.alert.alert-addons.page-title:before, .bootstrap .table td.dragHandle .pull-left.dragGroup:before, .bootstrap .table td.dragHandle .page-head h2.dragGroup.page-title:before, .bootstrap .page-head .table td.dragHandle h2.dragGroup.page-title:before, .bootstrap .page-head h2.icon.page-title, .bootstrap .page-head #dashboard .loading h2.page-title.data_value:before, .bootstrap #dashboard .loading .page-head h2.page-title.data_value:before, .bootstrap .page-head h2.page-title.mce-ico, .bootstrap #dashboard .loading .pull-left.data_value:before, .pull-left.mce-ico { margin-right: .3em; }
+.icon.pull-right, .page-sidebar-closed:not(.nav-topbar) .pull-right.searchtab:before, .pull-right[class^="icon-"], .pull-right[class^="process-icon-"], .pull-right[class*="process-icon-"], .bootstrap .pull-right.alert.alert-warning:before, .bootstrap .pull-right.alert.alert-danger:before, .bootstrap #carrier_wizard .pull-right.wizard_error:before, .bootstrap .pull-right.alert.alert-success:before, .bootstrap .pull-right.alert.alert-info:before, .bootstrap .pull-right.alert.alert-addons:before, .bootstrap .table td.dragHandle .pull-right.dragGroup:before, .bootstrap #dashboard .loading .pull-right.data_value:before, .pull-right.mce-ico { margin-left: .3em; }
 
 .icon-spin, .bootstrap #dashboard .loading .data_value:before { -webkit-animation: spin 2s infinite linear; -moz-animation: spin 2s infinite linear; -o-animation: spin 2s infinite linear; animation: spin 2s infinite linear; }
 
@@ -805,7 +805,7 @@
 
 .icon-rotate-right:before, .icon-repeat:before { content: "\f01e"; }
 
-.icon-refresh:before, .process-icon-update:before, .process-icon-refresh:before { content: "\f021"; }
+.icon-refresh:before, .process-icon-update:before, .process-icon-refresh:before, .bootstrap #dashboard .loading .data_value:before { content: "\f021"; }
 
 .icon-list-alt:before { content: "\f022"; }
 
@@ -2642,18 +2642,17 @@ a.link-social:hover { text-decoration: none; }
 #nav-sidebar { position: fixed; width: 210px; height: 100%; z-index: 500; background-color: #191c23; }
 #nav-sidebar ul.menu { margin: 0; padding: 0; list-style: none; }
 #nav-sidebar ul.menu li.maintab { position: relative; }
-#nav-sidebar ul.menu li.maintab > a.title { display: block; position: relative; padding: 0 0.35em; height: 36px; border-top: #232732 solid 1px; background-color: #383f50; color: #c3c5ca; line-height: 36px; text-transform: uppercase; text-decoration: none; white-space: nowrap; text-overflow: ellipsis; -webkit-transition-property: background-color; transition-property: background-color; -webkit-transition-duration: 0.2s; transition-duration: 0.2s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; }
+#nav-sidebar ul.menu li.maintab a { white-space: nowrap; text-overflow: ellipsis; }
+#nav-sidebar ul.menu li.maintab > a.title { display: block; position: relative; padding: 0 0.35em; height: 36px; border-top: #232732 solid 1px; background-color: #383f50; color: #c3c5ca; line-height: 36px; text-transform: uppercase; text-decoration: none; -webkit-transition-property: background-color; transition-property: background-color; -webkit-transition-duration: 0.2s; transition-duration: 0.2s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; }
 #nav-sidebar ul.menu li.maintab > a.title i { width: 36px; font-size: 28px; vertical-align: middle; color: #878b96; -webkit-transition-property: color; transition-property: color; -webkit-transition-duration: 0.4s; transition-duration: 0.4s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; }
 #nav-sidebar ul.menu li.maintab > a.title span { padding-left: 0.4em; }
-#nav-sidebar ul.menu li.maintab:hover > a.title { background-color: #272c38; color: white; }
-#nav-sidebar ul.menu li.maintab:hover > a.title i { color: white; }
 #nav-sidebar ul.menu li.maintab.hover > a.title { background-color: #272c38; color: white; }
 #nav-sidebar ul.menu li.maintab.hover > a.title i { color: white; }
 #nav-sidebar ul.menu li.maintab.hover ul.submenu { position: absolute; display: block; width: 200px; z-index: 600; left: 210px; top: 0; }
 #nav-sidebar ul.menu li.maintab:first-child > a.title { border-top: none; }
 #nav-sidebar ul.menu li.maintab.active a.title { color: white; background-color: #58627d; }
 #nav-sidebar ul.menu li.maintab.active a.title i { color: white; }
-#nav-sidebar ul.menu li.maintab.active ul.submenu { display: block; padding: 8px 9px 8px 8px; background-color: white; border-right: 1px solid #e6e6e6; }
+#nav-sidebar ul.menu li.maintab.active ul.submenu { display: block; background-color: white; border-right: 1px solid #e6e6e6; }
 #nav-sidebar ul.menu li.maintab.active ul.submenu a { background-color: white; color: #00aff0; border-bottom: solid 1px #d8f3fc; }
 #nav-sidebar ul.menu li.maintab.active ul.submenu a:hover { color: #00aff0; border-bottom: solid 1px #d8f3fc; background-color: #d8f3fc; text-decoration: none; -webkit-box-shadow: white 0 -1px; box-shadow: white 0 -1px; }
 #nav-sidebar ul.menu li.maintab.active ul.submenu li:last-child a { border-bottom: solid 1px white; }
@@ -2663,10 +2662,16 @@ a.link-social:hover { text-decoration: none; }
 #nav-sidebar ul.menu li.maintab ul.submenu li a:hover { color: white; text-decoration: none; background-color: #232732; -webkit-box-shadow: #00aff0 -4px 0 0 0 inset; box-shadow: #00aff0 -4px 0 0 0 inset; }
 @media (max-width: 480px) { #nav-sidebar { display: none; } }
 
+@media (max-height: 800px) { body:not(.page-sidebar-closed) #nav-sidebar ul.menu li.maintab > a.title { font-size: 12px; height: 28px; line-height: 28px; }
+  body:not(.page-sidebar-closed) #nav-sidebar ul.menu li.maintab > a.title i { text-align: right; width: 18px; font-size: 14px; }
+  body:not(.page-sidebar-closed) #nav-sidebar ul.menu li.maintab ul.submenu { padding: 1px 1px 0 1px; }
+  body:not(.page-sidebar-closed) #nav-sidebar ul.menu li.maintab ul.submenu li a { padding: 0 6px; height: 26px; line-height: 26px; }
+  body:not(.page-sidebar-closed) #nav-sidebar ul.menu li.maintab.active ul.submenu { display: none; }
+  body:not(.page-sidebar-closed) #nav-sidebar ul.menu li.maintab.active:hover ul.submenu { position: absolute; display: block; width: 200px; z-index: 600; left: 210px; top: 0; } }
 .page-sidebar #content { margin-left: 210px; }
 
 .page-sidebar-closed #nav-sidebar { overflow: visible; width: 50px; }
-.page-sidebar-closed #nav-sidebar ul.submenu { display: none !important; padding-top: 37px; position: relative; top: 0; }
+.page-sidebar-closed #nav-sidebar ul.submenu { display: none !important; padding-top: 37px; position: relative; top: 0; padding-top: 1px !important; }
 .page-sidebar-closed #nav-sidebar li.maintab.active ul.submenu { border: none !important; }
 .page-sidebar-closed #nav-sidebar a.title { text-align: center; }
 .page-sidebar-closed #nav-sidebar a.title i { width: 42px !important; }
@@ -2674,7 +2679,7 @@ a.link-social:hover { text-decoration: none; }
 .page-sidebar-closed #nav-sidebar > ul > li.maintab:hover { width: 250px !important; position: relative; }
 .page-sidebar-closed #nav-sidebar > ul > li.maintab:hover a.title { text-align: left; }
 .page-sidebar-closed #nav-sidebar > ul > li.maintab:hover a.title > span { display: inline-block; }
-.page-sidebar-closed #nav-sidebar > ul > li.maintab:hover ul.submenu { position: absolute !important; display: block !important; left: 50px !important; top: 36px !important; width: 200px !important; padding: 8px !important; background-color: #232732 !important; }
+.page-sidebar-closed #nav-sidebar > ul > li.maintab:hover ul.submenu { position: absolute !important; display: block !important; left: 50px !important; top: 36px !important; width: 200px !important; }
 .page-sidebar-closed #content { margin-left: 55px; }
 @media (max-width: 480px) { .page-sidebar-closed #content { margin-left: 0; } }
 .page-sidebar-closed #content h2.page-title { padding: 26px 0 0 120px !important; }
@@ -3113,7 +3118,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap #dashboard #dashaddons a:hover { text-decoration: none; }
 .bootstrap #dashboard #dashactivity svg { height: 150px; }
 .bootstrap #dashboard .loading .data_value { min-width: 30px; text-align: center; }
-.bootstrap #dashboard .loading .data_value:before { font-size: 0.7em; font-family: FontAwesome; content: "\f021"; color: #cccccc; }
+.bootstrap #dashboard .loading .data_value:before { font-size: 14px; color: #cccccc; }
 .bootstrap #dashboard .loading .data_value span, .bootstrap #dashboard .loading .data_value small { display: none; }
 .bootstrap #dashboard .loading .data_trend { display: none; }
 .bootstrap #dashboard .tooltip-panel { padding: 10px; min-width: 150px; }
@@ -3790,10 +3795,10 @@ i.mce-i-backcolor { background: #bbbbbb; }
 
 /* @end */
 /* @group Multi Chosen */
-.chosen-container-multi .chosen-choices { position: relative; overflow: hidden; margin: 0; padding: 0; width: 100%; height: auto !important; height: 1%; border: 1px solid #aaa; background-color: #fff; cursor: text; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff)); background-image: -webkit-linear-gradient(#eeeeee 1%, #ffffff 15%); background-image: -moz-linear-gradient(#eeeeee 1%, #ffffff 15%); background-image: -o-linear-gradient(#eeeeee 1%, #ffffff 15%); background-image: linear-gradient(#eeeeee 1%, #ffffff 15%); }
+.chosen-container-multi .chosen-choices { position: relative; overflow: hidden; margin: 0; padding: 0; width: 100%; height: auto !important; height: 1%; border: 1px solid #aaa; background-color: #fff; cursor: text; border-radius: 3px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff)); background-image: -webkit-linear-gradient(#eeeeee 1%, #ffffff 15%); background-image: -moz-linear-gradient(#eeeeee 1%, #ffffff 15%); background-image: -o-linear-gradient(#eeeeee 1%, #ffffff 15%); background-image: linear-gradient(#eeeeee 1%, #ffffff 15%); }
 .chosen-container-multi .chosen-choices li { float: left; list-style: none; }
 .chosen-container-multi .chosen-choices li.search-field { margin: 0; padding: 0; white-space: nowrap; }
-.chosen-container-multi .chosen-choices li.search-field input[type="text"] { margin: 1px 0; padding: 5px; height: 15px; outline: 0; border: 0 !important; background: transparent !important; box-shadow: none; color: #666; font-size: 100%; font-family: sans-serif; line-height: normal; border-radius: 0; }
+.chosen-container-multi .chosen-choices li.search-field input[type="text"] { margin: 1px 0; padding: 5px; height: 22px; outline: 0; border: 0 !important; background: transparent !important; box-shadow: none; color: #666; font-size: 100%; font-family: sans-serif; line-height: normal; }
 .chosen-container-multi .chosen-choices li.search-field .default { color: #999; }
 .chosen-container-multi .chosen-choices li.search-choice { position: relative; margin: 3px 0 3px 5px; padding: 3px 20px 3px 5px; border: 1px solid #aaa; border-radius: 3px; background-color: #e4e4e4; background-clip: padding-box; box-shadow: 0 0 2px white inset, 0 1px 0 rgba(0, 0, 0, 0.05); color: #333; line-height: 13px; cursor: default; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eeeeee)); background-image: -webkit-linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%); background-image: -moz-linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%); background-image: -o-linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%); background-image: linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%); }
 .chosen-container-multi .chosen-choices li.search-choice .search-choice-close { position: absolute; top: 4px; right: 3px; display: block; width: 12px; height: 12px; background: url("../img/chosen-sprite.png") -42px 1px no-repeat; font-size: 1px; }

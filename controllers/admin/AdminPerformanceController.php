@@ -48,7 +48,7 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Template cache'),
+					'label' => $this->l('Template compilation'),
 					'name' => 'smarty_force_compile',
 					'values' => array(
 						array(

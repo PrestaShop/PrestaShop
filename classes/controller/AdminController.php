@@ -262,7 +262,7 @@ class AdminControllerCore extends Controller
 	/** @var instanciation of the class associated with the AdminController */
 	protected $object;
 
-	/** @var current object ID */
+	/** @var int current object ID */
 	protected $id_object;
 
 	/**
@@ -1302,8 +1302,6 @@ class AdminControllerCore extends Controller
 					'desc' => $this->l('Save')
 				);
 				break;
-			case 'view':
-				break;
 			default: // list
 				$this->toolbar_btn['new'] = array(
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
@@ -1323,7 +1321,7 @@ class AdminControllerCore extends Controller
 	 * otherwise return an empty object, or die
 	 *
 	 * @param boolean $opt Return an empty object if load fail
-	 * @return object
+	 * @return object|boolean
 	 */
 	protected function loadObject($opt = false)
 	{
@@ -1351,8 +1349,6 @@ class AdminControllerCore extends Controller
 			$this->errors[] = Tools::displayError('The object cannot be loaded (the dentifier is missing or invalid)');
 			return false;
 		}
-
-		return $this->object;
 	}
 
 	/**
@@ -1590,7 +1586,7 @@ class AdminControllerCore extends Controller
 				if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'] && $sub_tab['class_name'] != 'AdminCarrierWizard')
 				{
 					$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
-					$sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this));
+					$sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this) || $sub_tab['class_name'] == Tools::getValue('controller'));
 				}
 				else
 					unset($sub_tabs[$index2]);					
@@ -1610,9 +1606,9 @@ class AdminControllerCore extends Controller
 				'brightness' => Tools::getBrightness($bo_color) < 128 ? 'white' : '#383838',
 				'bo_width' => (int)$this->context->employee->bo_width,
 				'bo_color' => isset($this->context->employee->bo_color) ? Tools::htmlentitiesUTF8($this->context->employee->bo_color) : null,
-				'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS') && $accesses['AdminOrders']['view'],
-				'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS') && $accesses['AdminCustomers']['view'],
-				'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && $accesses['AdminCustomerThreads']['view'],
+				'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS') && isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view'],
+				'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS') && isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view'],
+				'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && isset($accesses['AdminCustomerThreads'])&& $accesses['AdminCustomerThreads']['view'],
 				'employee' => $this->context->employee,
 				'search_type' => Tools::getValue('bo_search_type'),
 				'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
@@ -2899,7 +2895,7 @@ class AdminControllerCore extends Controller
 	{
 		/* Classical fields */
 		foreach ($_POST as $key => $value)
-			if (key_exists($key, $object) && $key != 'id_'.$table)
+			if (array_key_exists($key, $object) && $key != 'id_'.$table)
 			{
 				/* Do not take care of password field if empty */
 				if ($key == 'passwd' && Tools::getValue('id_'.$table) && empty($value))

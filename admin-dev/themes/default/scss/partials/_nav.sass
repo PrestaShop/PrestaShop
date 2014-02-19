@@ -13,6 +13,9 @@ $menu-item-size: 36px
 		list-style: none
 		li.maintab
 			position: relative
+			a
+				white-space: nowrap
+				text-overflow: ellipsis
 			> a.title
 				display: block
 				position: relative
@@ -24,8 +27,6 @@ $menu-item-size: 36px
 				line-height: $menu-item-size
 				text-transform: uppercase
 				text-decoration: none
-				white-space: nowrap
-				text-overflow: ellipsis
 				@include transition-property(background-color)
 				@include transition-duration(0.2s)
 				@include transition-timing-function(ease-out)
@@ -39,12 +40,6 @@ $menu-item-size: 36px
 					@include transition-timing-function(ease-out)
 				span
 					padding-left: 0.4em
-			&:hover
-				> a.title
-					background-color: darken($main-color,8%)
-					color: contrast-color($main-color, black, white, 50%)
-					i
-						color: white
 			&.hover
 				> a.title
 					background-color: darken($main-color,8%)
@@ -68,7 +63,6 @@ $menu-item-size: 36px
 						color: contrast-color($main-color, black, white, 50%)
 				ul.submenu
 					display: block
-					padding: 8px 9px 8px 8px
 					background-color: white
 					border-right: 1px solid darken($bg-content-color,10%)
 					a
@@ -107,9 +101,37 @@ $menu-item-size: 36px
 							text-decoration: none
 							background-color: darken($main-color,10%)
 							@include box-shadow($brand-primary -4px 0 0 0 inset)
-
 	@media (max-width: $screen-phone)
 		display: none
+
+$min-height: 800px
+@media (max-height: $min-height)
+	body:not(.page-sidebar-closed)
+		#nav-sidebar ul.menu li.maintab > a.title
+			font-size: 12px
+			height: 28px
+			line-height: 28px
+			i
+				text-align: right
+				width: 18px
+				font-size: 14px
+		#nav-sidebar ul.menu li.maintab ul.submenu
+			padding: 1px 1px 0 1px
+			li a
+				padding: 0 6px
+				height: 26px
+				line-height: 26px
+
+		#nav-sidebar ul.menu li.maintab.active ul.submenu
+			display: none
+		#nav-sidebar ul.menu li.maintab.active:hover ul.submenu
+			position: absolute
+			display: block
+			width: 200px
+			z-index: 600
+			left: $widthSidebarNav
+			top: 0
+
 
 .page-sidebar
 	#content
@@ -124,6 +146,7 @@ $menu-item-size: 36px
 			padding-top: 37px
 			position: relative
 			top: 0
+			padding-top: 1px!important
 		li.maintab.active ul.submenu
 			border: none !important
 		a.title
@@ -145,8 +168,6 @@ $menu-item-size: 36px
 				left: 50px!important
 				top: 36px!important
 				width: 200px!important
-				padding: 8px!important
-				background-color: darken($main-color,10%)!important
 	#content
 		margin-left: 55px
 		@media (max-width: $screen-phone)
@@ -415,3 +436,6 @@ $menu-item-size: 36px
 .page-topbar
 	.searchtab
 		display: none
+
+
+

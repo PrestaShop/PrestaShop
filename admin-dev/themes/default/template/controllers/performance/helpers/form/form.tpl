@@ -39,7 +39,7 @@
 	{$smarty.block.parent}
 	{if in_array($input.type, array('radio', 'switch')) && $input.name == 'smarty_cache'}
 		<div class="clearfix row-padding-top">
-			<a href="{$current}&token={$token}&empty_smarty_cache=1" class="btn btn-default">
+			<a href="{$current}&amp;token={$token}&amp;empty_smarty_cache=1" class="btn btn-default">
 				<i class="icon-eraser"></i>
 				{l s='Clear cache'}
 			</a>
@@ -75,7 +75,7 @@
 				</div>
 			</div>
 			<div id="formMemcachedServer" style="display:none;">
-				<form action="{$current}&token={$token}" method="post" class="form-horizontal">
+				<form action="{$current}&amp;token={$token}" method="post" class="form-horizontal">
 					<div class="form-group">
 						<label class="control-label col-lg-3">{l s='IP Address'} </label>
 						<div class="col-lg-9">
@@ -122,7 +122,7 @@
 						<td>{$server.port}</td>
 						<td>{$server.weight}</td>
 						<td>
-							<a class="btn btn-default" href="{$current}&token={$token}&deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
+							<a class="btn btn-default" href="{$current}&amp;token={$token}&amp;deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
 						</td>
 					</tr>
 				{/foreach}

@@ -347,7 +347,7 @@ class AdminImagesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
-		elseif (Tools::getValue('submitMoveImages'.$this->table))
+		elseif (Tools::isSubmit('submitMoveImages'.$this->table))
 		{
 			if ($this->tabAccess['edit'] === '1')
 		 	{
@@ -357,7 +357,7 @@ class AdminImagesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
-		elseif (Tools::getValue('submitImagePreferences'))
+		elseif (Tools::isSubmit('submitImagePreferences'))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{

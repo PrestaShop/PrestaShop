@@ -55,7 +55,7 @@
         <h3 class="page-subheading">{l s='send a message'}</h3>
         <div class="clearfix">
             <div class="col-xs-12 col-md-3">
-                <div class="form-group">
+                <div class="form-group selector1">
                     <label for="id_contact">{l s='Subject Heading'}</label>
                 {if isset($customerThread.id_contact)}
                         {foreach from=$contacts item=contact}
@@ -90,7 +90,7 @@
                 </p>
                 {if !$PS_CATALOG_MODE}
                     {if (!isset($customerThread.id_order) || $customerThread.id_order > 0)}
-                        <div class="form-group">
+                        <div class="form-group selector1">
                             <label>{l s='Order reference'}</label>
                             {if !isset($customerThread.id_order) && isset($isLogged) && $isLogged}
                                 <select name="id_order" class="form-control">
@@ -107,7 +107,7 @@
                         </div>
                     {/if}
                     {if isset($isLogged) && $isLogged}
-                        <div class="form-group">
+                        <div class="form-group selector1">
                             <label class="unvisible">{l s='Product'}</label>
                             {if !isset($customerThread.id_product)}
                                 {foreach from=$orderedProductList key=id_order item=products name=products}

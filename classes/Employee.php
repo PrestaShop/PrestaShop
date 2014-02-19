@@ -84,6 +84,11 @@ class EmployeeCore extends ObjectModel
 
 	public $remote_addr;
 
+	/* employee notifications */
+	public $id_last_order;
+	public $id_last_customer_message;
+	public $id_last_customer;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -91,26 +96,29 @@ class EmployeeCore extends ObjectModel
 		'table' => 'employee',
 		'primary' => 'id_employee',
 		'fields' => array(
-			'lastname' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
-			'firstname' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
-			'email' => 				  array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 128),
-			'id_lang' => 			  array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-			'passwd' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isPasswdAdmin', 'required' => true, 'size' => 32),
-			'last_passwd_gen' => 	  array('type' => self::TYPE_STRING),
-			'active' => 			  array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'optin' => 			  array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'id_profile' => 		  array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-			'bo_color' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
-			'default_tab' => 		  array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-			'bo_theme' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 32),
-			'bo_css' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
-			'bo_width' => 			  array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-			'bo_menu' => 			  array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'stats_date_from' => 	  array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-			'stats_date_to' => 		  array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-			'stats_compare_from' =>   array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-			'stats_compare_to' => 	  array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-			'stats_compare_option' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'lastname' =>					array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'firstname' =>					array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'email' =>						array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 128),
+			'id_lang' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+			'passwd' => 					array('type' => self::TYPE_STRING, 'validate' => 'isPasswdAdmin', 'required' => true, 'size' => 32),
+			'last_passwd_gen' =>			array('type' => self::TYPE_STRING),
+			'active' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'optin' => 			  			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'id_profile' => 		 		array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+			'bo_color' => 			 		array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
+			'default_tab' => 		 		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'bo_theme' => 			 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 32),
+			'bo_css' => 					array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
+			'bo_width' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'bo_menu' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'stats_date_from' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'stats_date_to' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'stats_compare_from' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'stats_compare_to' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'stats_compare_option' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'id_last_order' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'id_last_customer_message' =>	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'id_last_customer' =>			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 		),
 	);
 
@@ -394,5 +402,19 @@ class EmployeeCore extends ObjectModel
 		if (!Validate::isLoadedObject($this))
 			return _PS_IMG_DIR_.'prestashop-avatar.png';
 		return Tools::getShopProtocol().'api.prestashop.com/profile/avatar.php?email='.urlencode($this->email);
+	}
+
+	public function getLastElementsForNotify($element)
+	{
+		$element = bqSQL($element);
+		$max = Db::getInstance()->getValue('
+			SELECT MAX(`id_'.$element.'`) as `id_'.$element.'`
+			FROM `'._DB_PREFIX_.$element.($element == 'order' ? 's': '').'`');
+
+		// if no rows in table, set max to 0
+		if ((int)$max < 1)
+			$max = 0;
+
+		return (int)$max;
 	}
 }

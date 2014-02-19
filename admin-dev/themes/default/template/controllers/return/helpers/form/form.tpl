@@ -53,7 +53,7 @@
 						<td>{$returnedCustomization['name']}</td>
 						<td class="text-center">{$returnedCustomization['product_quantity']|intval}</td>
 						<td class="text-center">
-							<a class="btn btn-default" href="{$current}&deleteorder_return_detail&id_order_detail={$returnedCustomization['id_order_detail']}&id_order_return={$id_order_return}&id_customization={$returnedCustomization['id_customization']}&token={$token}">
+							<a class="btn btn-default" href="{$current}&amp;deleteorder_return_detail&amp;id_order_detail={$returnedCustomization['id_order_detail']}&amp;id_order_return={$id_order_return}&amp;id_customization={$returnedCustomization['id_customization']}&amp;token={$token}">
 								<i class="icon-remove"></i>
 								{l s='Delete'}
 							</a>
@@ -104,7 +104,7 @@
 							<td class="text-center">{$product['product_name']}</td>
 							<td class="text-center">{$product['product_quantity']}</td>
 							<td class="text-center">
-								<a class="btn btn-default"  href="{$current}&deleteorder_return_detail&id_order_detail={$product['id_order_detail']}&id_order_return={$id_order_return}&token={$token}">
+								<a class="btn btn-default"  href="{$current}&amp;deleteorder_return_detail&amp;id_order_detail={$product['id_order_detail']}&amp;id_order_return={$id_order_return}&amp;token={$token}">
 									<i class="icon-remove"></i>
 									{l s='Delete'}
 								</a>

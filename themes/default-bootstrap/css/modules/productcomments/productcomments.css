@@ -188,7 +188,8 @@
         line-height-font-weight: bold;
         line-height-float: left; }
       #product_comments_block_tab div.comment .comment_author .star_content {
-        float: left;
+        display: inline-block;
+        vertical-align: middle;
         margin: 0 0 0 5px; }
     #product_comments_block_tab div.comment .comment_details {
       overflow: hidden;

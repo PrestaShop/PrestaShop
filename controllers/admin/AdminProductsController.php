@@ -1717,6 +1717,13 @@ class AdminProductsControllerCore extends AdminController
 			$this->updatePackItems($this->object);
 			$this->updateDownloadProduct($this->object);
 
+			if (Configuration::get('PS_FORCE_ASM_NEW_PRODUCT') && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+			{
+				$this->object->advanced_stock_management = 1;
+				StockAvailable::setProductDependsOnStock($this->object->id, true, (int)$this->context->shop->id, 0);
+				$this->object->save();
+			}
+
 			if (empty($this->errors))
 			{
 				$languages = Language::getLanguages(false);
@@ -2520,7 +2527,7 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * renderForm contains all necessary initialization needed for all tabs
 	 *
-	 * @return void
+	 * @return string|void
 	 */
 	public function renderForm()
 	{
