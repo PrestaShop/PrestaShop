@@ -223,7 +223,7 @@ class BlockCart extends Module
 		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')))
 		{
 			$this->context->controller->addJS(($this->_path).'ajax-cart.js');
-			$this->context->controller->addJqueryPlugin(array('scrollTo', 'serialScroll'));
+			$this->context->controller->addJqueryPlugin(array('scrollTo', 'serialScroll', 'bxslider'));
 		}
 	}
 	

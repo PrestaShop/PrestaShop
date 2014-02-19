@@ -775,14 +775,15 @@ function HoverWatcher(selector){
 
 function crossselling_serialScroll()
 {
-	$('#blockcart_caroucel').bxSlider({
-		minSlides: 2,
-		maxSlides: 4,
-		slideWidth: 178,
-		slideMargin: 20,
-		moveSlides: 1,
-		infiniteLoop: false,
-  		hideControlOnEnd: true,
-		pager: false
-	});
+	if (!!$.prototype.bxSlider)
+		$('#blockcart_caroucel').bxSlider({
+			minSlides: 2,
+			maxSlides: 4,
+			slideWidth: 178,
+			slideMargin: 20,
+			moveSlides: 1,
+			infiniteLoop: false,
+	  		hideControlOnEnd: true,
+			pager: false
+		});
 }
