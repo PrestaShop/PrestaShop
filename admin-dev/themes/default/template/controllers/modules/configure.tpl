@@ -46,6 +46,12 @@
 			<div class="btn-toolbar">
 				<ul class="nav nav-pills pull-right">
 					<li>
+						<a id="desc-module-back" class="toolbar_btn" href="{$back_link}" title="{l s='Back'}">
+							<i class="process-icon-back" ></i>
+							<div>{l s='Back'}</div>
+						</a>
+					</li>
+					<li>
 						<a id="desc-module-hook" class="toolbar_btn" href="{$module_disable_link}" title="{l s='Disable'}">
 							<i class="process-icon-off"></i>
 							<div>{l s='Disable'}</div>
@@ -75,12 +81,6 @@
 						<a id="desc-module-hook" class="toolbar_btn" href="{$module_hook_link}" title="{l s='Manage hooks'}">
 							<i class="process-icon-anchor"></i>
 							<div>{l s='Manage hooks'}</div>
-						</a>
-					</li>
-					<li>
-						<a id="desc-module-back" class="toolbar_btn" href="{$back_link}" title="{l s='Back'}">
-							<i class="process-icon-back" ></i>
-							<div>{l s='Back'}</div>
 						</a>
 					</li>
 				</ul>
