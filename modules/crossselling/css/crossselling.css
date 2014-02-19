@@ -26,7 +26,7 @@
 
 #crossselling_scroll_left,
  #crossselling_scroll_right {
-	background: url('img/thumbs_left.gif') no-repeat center;
+	background: url('../img/thumbs_left.gif') no-repeat center;
 	text-indent: -3000px;
 	display: block;
 	width: 9px;
@@ -34,4 +34,4 @@
 	float: left;
 	margin-top: 30px
 }
-#crossselling_scroll_right { background-image: url('img/thumbs_right.gif') }
+#crossselling_scroll_right { background-image: url('../img/thumbs_right.gif') }
