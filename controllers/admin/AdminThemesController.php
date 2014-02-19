@@ -633,7 +633,11 @@ class AdminThemesControllerCore extends AdminController
 
 				return false;
 			}
-			if (is_dir(_PS_ALL_THEMES_DIR_.$obj->directory))
+			$themes = array();
+			foreach (Theme::getThemes() as $theme)
+				$themes[] = $theme->directory;
+
+			if (is_dir(_PS_ALL_THEMES_DIR_.$obj->directory) && !in_array($obj->directory, $themes))
 				Tools::deleteDirectory(_PS_ALL_THEMES_DIR_.$obj->directory.'/');
 			$obj->removeMetas();
 		}
