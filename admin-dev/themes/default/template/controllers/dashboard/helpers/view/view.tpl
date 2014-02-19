@@ -59,6 +59,9 @@
 						<button type="button" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev">
 							{l s='Year'}-1
 						</button>
+						<button type="submit" name="submitDateRealTime" class="btn btn-default submitDateRealTime {if $dashboard_use_push}active{/if}" value="{!$dashboard_use_push|intval}">
+							{l s='Real Time'}
+						</button>
 					</div>
 
 					<input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$date_from|escape}" class="form-control">

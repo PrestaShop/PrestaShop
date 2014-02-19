@@ -29,7 +29,7 @@
 		</h2>
 		<ul class="breadcrumb page-breadcrumb">
 			{if $breadcrumbs2.container.name != ''}
-				<li>
+				<li class="breadcrumb-current">
 					{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href|escape}">{/if}
 					{if $breadcrumbs2.container.icon != ''}<i class="{$breadcrumbs2.container.icon|escape}"></i>{/if}
 					{$breadcrumbs2.container.name|escape}

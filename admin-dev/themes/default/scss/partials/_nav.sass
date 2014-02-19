@@ -13,6 +13,9 @@ $menu-item-size: 36px
 		list-style: none
 		li.maintab
 			position: relative
+			a
+				white-space: nowrap
+				text-overflow: ellipsis
 			> a.title
 				display: block
 				position: relative
@@ -24,8 +27,6 @@ $menu-item-size: 36px
 				line-height: $menu-item-size
 				text-transform: uppercase
 				text-decoration: none
-				white-space: nowrap
-				text-overflow: ellipsis
 				@include transition-property(background-color)
 				@include transition-duration(0.2s)
 				@include transition-timing-function(ease-out)
@@ -144,6 +145,7 @@ $min-height: 1000px
 			padding-top: 37px
 			position: relative
 			top: 0
+			padding-top: 1px!important
 		li.maintab.active ul.submenu
 			border: none !important
 		a.title
@@ -165,7 +167,6 @@ $min-height: 1000px
 				left: 50px!important
 				top: 36px!important
 				width: 200px!important
-				background-color: darken($main-color,10%)!important
 	#content
 		margin-left: 55px
 		@media (max-width: $screen-phone)
