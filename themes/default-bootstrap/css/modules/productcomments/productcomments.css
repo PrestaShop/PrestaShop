@@ -207,8 +207,6 @@
                 content: "\f0da";
                 color: #333333;
                 margin-right: 8px; } }
-      #product_comments_block_tab div.comment .comment_details .title_block {
-        text-transform: capitalize; }
   #product_comments_block_tab div.star:after {
     content: "\f006";
     font-family: "FontAwesome";

@@ -16,6 +16,7 @@ $menu-item-size: 36px
 			a
 				white-space: nowrap
 				text-overflow: ellipsis
+				overflow: hidden
 			> a.title
 				display: block
 				position: relative
@@ -62,28 +63,29 @@ $menu-item-size: 36px
 					i
 						color: contrast-color($main-color, black, white, 50%)
 				ul.submenu
-					display: block
-					background-color: white
-					border-right: 1px solid darken($bg-content-color,10%)
-					a
+					body:not(.page-sidebar-closed) &
+						display: block
 						background-color: white
-						color: $brand-primary
-						border-bottom: solid 1px mix(white, $brand-primary, 85%)
-						&:hover
+						border-right: 1px solid darken($bg-content-color,10%)
+						a
+							background-color: white
 							color: $brand-primary
 							border-bottom: solid 1px mix(white, $brand-primary, 85%)
-							background-color: mix(white, $brand-primary, 85%)
-							text-decoration: none
-							@include box-shadow(white 0 -1px)
-					li:last-child a
-						border-bottom: solid 1px white
-					li.active a
-						color: contrast-color($brand-primary, white, #333, 10%)
-						background-color: $brand-primary
-						position: relative
-						top: -1px
-						border-top: solid 1px white
-						border-bottom: solid 1px $brand-primary
+							&:hover
+								color: $brand-primary
+								border-bottom: solid 1px mix(white, $brand-primary, 85%)
+								background-color: mix(white, $brand-primary, 85%)
+								text-decoration: none
+								@include box-shadow(white 0 -1px)
+						li:last-child a
+							border-bottom: solid 1px white
+						li.active a
+							color: contrast-color($brand-primary, white, #333, 10%)
+							background-color: $brand-primary
+							position: relative
+							top: -1px
+							border-top: solid 1px white
+							border-bottom: solid 1px $brand-primary
 			ul.submenu
 				display: none
 				list-style: none
@@ -146,7 +148,7 @@ $min-height: 800px
 			padding-top: 37px
 			position: relative
 			top: 0
-			padding-top: 1px!important
+			padding: 1px 4px 3px 4px!important
 		li.maintab.active ul.submenu
 			border: none !important
 		a.title
