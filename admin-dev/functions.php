@@ -449,13 +449,6 @@ function runAdminTab($tab, $ajaxMode = false)
 					$bread .= '</a>';
 			}
 
-			if (!$ajaxMode)
-				echo '<div class="path_bar">
-			<div id="help-button" class="floatr" style="display: none; font-family: Verdana; font-size: 10px; margin-right: 4px; margin-top: 4px;">
-			</div>
-				<a href="?token='.Tools::getAdminToken($tab.intval(Tab::getIdFromClassName($tab)).(int)Context::getContext()->employee->id).'">'.Translate::getAdminTranslation('Back Office').'</a>
-				'.$bread.'</div>';
-
 			if (!$ajaxMode && Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && Context::getContext()->controller->multishop_context != Shop::CONTEXT_ALL)
 			{
 				echo '<div class="multishop_info">';
