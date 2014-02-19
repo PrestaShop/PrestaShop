@@ -63,16 +63,13 @@ class AdminLoginControllerCore extends AdminController
 			$clientIsMaintenanceOrLocal = in_array(Tools::getRemoteAddr(), array_merge(array('127.0.0.1'), explode(',', Configuration::get('PS_MAINTENANCE_IP'))));
 			// If ssl is enabled, https protocol is required. Exception for maintenance and local (127.0.0.1) IP
 			if ($clientIsMaintenanceOrLocal)
-			{
 				$warningSslMessage = Tools::displayError('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.');
-				$this->context->smarty->assign('warningSslMessage', $warningSslMessage);
-			}
 			else
 			{	
 				$url = 'https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']);
 				$warningSslMessage = sprintf(Tools::displayError('SSL is activated. Please connect using the following link to <a href="%s">log into secure mode (https://)</a>', false), $url);
-				$this->context->smarty->assign('warningSslMessage', $warningSslMessage);
 			}
+			$this->context->smarty->assign('warningSslMessage', $warningSslMessage);
 		}
 
 		if (file_exists(_PS_ADMIN_DIR_.'/../install'))
