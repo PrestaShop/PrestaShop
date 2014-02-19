@@ -168,18 +168,20 @@ function initFilters()
 					slide: function(event, ui) {
 						stopAjaxQuery();
 
-						if (parseInt(filter.format) < 5)
+						if (parseInt($(event.target).data('format')) < 5)
 						{
-							from = formatCurrency(ui.values[0], parseInt(filter.format), filter.unit);
-							to = formatCurrency(ui.values[1], parseInt(filter.format), filter.unit);
+							from = formatCurrency(ui.values[0], parseInt($(event.target).data('format')),
+								$(event.target).data('unit'));
+							to = formatCurrency(ui.values[1], parseInt($(event.target).data('format')),
+								$(event.target).data('unit'));
 						}
 						else
 						{
-							from = ui.values[0] + filter.unit;
-							to = ui.values[1] + filter.unit;
+							from = ui.values[0] + $(event.target).data('unit');
+							to = ui.values[1] + $(event.target).data('unit');
 						}
 
-						$('#layered_' + filter.type + '_range').html(from + ' - ' + to);
+						$('#layered_' + $(event.target).data('type') + '_range').html(from + ' - ' + to);
 					},
 					stop: function () {
 						reloadContent();
