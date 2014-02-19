@@ -48,7 +48,7 @@ class AttributeGroupCore extends ObjectModel
 			'position' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 
 			// Lang fields
-			'name' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'name' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 			'public_name' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
 		),
 	);
