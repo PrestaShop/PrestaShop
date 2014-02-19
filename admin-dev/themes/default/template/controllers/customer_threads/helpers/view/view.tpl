@@ -183,7 +183,7 @@
 		<i class="icon-envelope"></i>
 		{l s='Message status'}
 	</h3>
-	<form action="{$current}&token={$token}&viewcustomer_thread&id_customer_thread={$id_customer_thread}" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<form action="{$current}&amp;token={$token}&amp;viewcustomer_thread&amp;id_customer_thread={$id_customer_thread}" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div id="ChangeStatus" class="row row-margin-bottom">
 			<label class="control-label col-lg-3">{l s='Change status of message'}</label>
 			<div class="col-lg-3">
@@ -272,7 +272,7 @@
 							<td class="center">{$order.payment}</td>
 							<td class="center">{$order.order_state}</td>
 							<td class="center">
-								<a class=" btn btn-default" href="?tab=AdminOrders&id_order={$order.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}">
+								<a class=" btn btn-default" href="?tab=AdminOrders&amp;id_order={$order.id_order}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">
 									<i class="icon-eye-open"></i> {l s='View'}
 								</a>
 							</td>
@@ -312,13 +312,13 @@
 					</tr>
 					{assign var=irow value=0}
 					{foreach $products as $product}
-						<tr onclick="document.location = '?tab=AdminOrders&id_order={$product.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}'">
+						<tr onclick="document.location = '?tab=AdminOrders&amp;id_order={$product.id_order}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}'">
 							<td class="center">{$product.date_add}</td>
 							<td class="center">{$product.product_id}</td>
 							<td class="center">{$product.product_name}</td>
 							<td class="center">{$product.product_quantity}</td>
 							<td class="center">
-								<a class=" btn btn-default" href="?tab=AdminOrders&id_order={$product.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}">
+								<a class=" btn btn-default" href="?tab=AdminOrders&amp;id_order={$product.id_order}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">
 									<i class="icon-eye-open"></i> {l s='View'}
 								</a>
 							</td>

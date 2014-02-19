@@ -38,6 +38,9 @@ class AdminManufacturersControllerCore extends AdminController
 	 	$this->deleted = false;
 		$this->allow_export = true;
 
+		$this->_orderBy = 'name';
+		$this->_orderWay = 'ASC';
+
 	 	$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
@@ -496,7 +499,6 @@ class AdminManufacturersControllerCore extends AdminController
 			'label' => $this->l('Zip Code/Postal Code'),
 			'name' => 'postcode',
 			'col' => 2,
-			'required' => true,
 			'required' => false,
 		);
 		$form['input'][] = array(

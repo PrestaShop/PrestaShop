@@ -239,7 +239,7 @@ function translate($string)
 	if (!is_array($_LANGADM))
 		return str_replace('"', '&quot;', $string);
 	$key = md5(str_replace('\'', '\\\'', $string));
-	$str = (key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : ((key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : $string);
+	$str = (array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : ((array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : $string);
 	return str_replace('"', '&quot;', stripslashes($str));
 }
 
@@ -448,13 +448,6 @@ function runAdminTab($tab, $ajaxMode = false)
 				if (count($tabs) - 1 > $key)
 					$bread .= '</a>';
 			}
-
-			if (!$ajaxMode)
-				echo '<div class="path_bar">
-			<div id="help-button" class="floatr" style="display: none; font-family: Verdana; font-size: 10px; margin-right: 4px; margin-top: 4px;">
-			</div>
-				<a href="?token='.Tools::getAdminToken($tab.intval(Tab::getIdFromClassName($tab)).(int)Context::getContext()->employee->id).'">'.Translate::getAdminTranslation('Back Office').'</a>
-				'.$bread.'</div>';
 
 			if (!$ajaxMode && Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && Context::getContext()->controller->multishop_context != Shop::CONTEXT_ALL)
 			{

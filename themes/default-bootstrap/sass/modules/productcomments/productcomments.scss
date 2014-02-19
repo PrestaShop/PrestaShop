@@ -233,7 +233,8 @@
 				float: left;
 			}
 			.star_content {
-				float: left;
+				display: inline-block;
+				vertical-align: middle;
 				margin: 0 0 0 5px;
 			}
 		}
@@ -255,9 +256,6 @@
 						}
 					}
 				}					
-			}
-			.title_block{
-				text-transform: capitalize;
 			}
 		}			
 	}

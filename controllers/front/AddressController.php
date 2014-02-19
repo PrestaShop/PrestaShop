@@ -138,15 +138,6 @@ class AddressControllerCore extends FrontController
 			if ((int)$country->contains_states && !(int)$address->id_state)
 				$this->errors[] = Tools::displayError('This country requires you to chose a State.');
 
-			// US customer: normalize the address
-			if ($address->id_country == Country::getByIso('US') && Configuration::get('PS_TAASC'))
-			{
-				include_once(_PS_TAASC_PATH_.'AddressStandardizationSolution.php');
-				$normalize = new AddressStandardizationSolution;
-				$address->address1 = $normalize->AddressLineStandardization($address->address1);
-				$address->address2 = $normalize->AddressLineStandardization($address->address2);
-			}
-			
 			$postcode = Tools::getValue('postcode');		
 			/* Check zip code format */
 			if ($country->zip_code_format && !$country->checkZipCode($postcode))

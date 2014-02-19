@@ -382,7 +382,7 @@ class MediaCore
 	 * return jquery plugin path.
 	 *
 	 * @param mixed $name
-	 * @return void
+	 * @return string|boolean
 	 */
 	public static function getJqueryPluginPath($name, $folder = null)
 	{
@@ -410,7 +410,7 @@ class MediaCore
 	 * return jquery plugin css path if exist.
 	 *
 	 * @param mixed $name
-	 * @return void
+	 * @return string|boolean
 	 */
 	public static function getJqueryPluginCSSPath($name, $folder = null)
 	{

@@ -27,7 +27,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class Dashproducts extends Module
+class DashProducts extends Module
 {
 	public function __construct()
 	{
@@ -36,6 +36,9 @@ class Dashproducts extends Module
 		$this->tab = '';
 		$this->version = '0.1';
 		$this->author = 'PrestaShop';
+
+		$this->push_filename = _PS_CACHE_DIR_.'push/activity';
+		$this->allow_push = true;
 		
 		parent::__construct();
 	}
@@ -46,26 +49,30 @@ class Dashproducts extends Module
 		Configuration::updateValue('DASHPRODUCT_NBR_SHOW_BEST_SELLER', 10);
 		Configuration::updateValue('DASHPRODUCT_NBR_SHOW_MOST_VIEWED', 10);
 		Configuration::updateValue('DASHPRODUCT_NBR_SHOW_TOP_SEARCH', 10);
-		
+
 		return (parent::install()
 			&& $this->registerHook('dashboardZoneTwo')
 			&& $this->registerHook('dashboardData')
+			&& $this->registerHook('actionObjectOrderAddAfter')
+			&& $this->registerHook('actionSearch')
 		);
 	}
 
 	public function hookDashboardZoneTwo($params)
 	{
-		$this->context->smarty->assign(array(
-			'DASHACTIVITY_CART_ACTIVE' => Configuration::get('DASHACTIVITY_CART_ACTIVE'),
-			'DASHACTIVITY_VISITOR_ONLINE' => Configuration::get('DASHACTIVITY_VISITOR_ONLINE'),
-			'DASHPRODUCT_NBR_SHOW_LAST_ORDER' => Configuration::get('DASHPRODUCT_NBR_SHOW_LAST_ORDER'),
-			'DASHPRODUCT_NBR_SHOW_BEST_SELLER' => Configuration::get('DASHPRODUCT_NBR_SHOW_BEST_SELLER'),
-			'DASHPRODUCT_NBR_SHOW_TOP_SEARCH' => Configuration::get('DASHPRODUCT_NBR_SHOW_TOP_SEARCH'),
-			'date_from' => Tools::displayDate($params['date_from']),
-			'date_to' => Tools::displayDate($params['date_to']),
-			'dashproducts_config_form' => $this->renderConfigForm(),
+		$this->context->smarty->assign(
+			array(
+				'DASHACTIVITY_CART_ACTIVE' => Configuration::get('DASHACTIVITY_CART_ACTIVE'),
+				'DASHACTIVITY_VISITOR_ONLINE' => Configuration::get('DASHACTIVITY_VISITOR_ONLINE'),
+				'DASHPRODUCT_NBR_SHOW_LAST_ORDER' => Configuration::get('DASHPRODUCT_NBR_SHOW_LAST_ORDER'),
+				'DASHPRODUCT_NBR_SHOW_BEST_SELLER' => Configuration::get('DASHPRODUCT_NBR_SHOW_BEST_SELLER'),
+				'DASHPRODUCT_NBR_SHOW_TOP_SEARCH' => Configuration::get('DASHPRODUCT_NBR_SHOW_TOP_SEARCH'),
+				'date_from' => Tools::displayDate($params['date_from']),
+				'date_to' => Tools::displayDate($params['date_to']),
+				'dashproducts_config_form' => $this->renderConfigForm(),
 			)
 		);
+
 		return $this->display(__FILE__, 'dashboard_zone_two.tpl');
 	}
 
@@ -75,8 +82,8 @@ class Dashproducts extends Module
 		$table_best_sellers = $this->getTableBestSellers($params['date_from'], $params['date_to']);
 		$table_most_viewed = $this->getTableMostViewed($params['date_from'], $params['date_to']);
 		$table_top_10_most_search = $this->getTableTop10MostSearch($params['date_from'], $params['date_to']);
-		//$table_top_5_search = $this->getTableTop5Search();
 
+		//$table_top_5_search = $this->getTableTop5Search();
 		return array(
 			'data_table' => array(
 				'table_recent_orders' => $table_recent_orders,
@@ -109,34 +116,35 @@ class Dashproducts extends Module
 				'id' => 'firstname_lastname',
 				'value' => Tools::htmlentitiesUTF8($order['firstname']).' '.Tools::htmlentitiesUTF8($order['lastname']),
 				'class' => 'text-left',
-				);
+			);
 			$tr[] = array(
 				'id' => 'state_name',
 				'value' => count(OrderDetail::getList((int)$order['id_order'])),
 				'class' => 'text-center',
-				);
+			);
 			$tr[] = array(
 				'id' => 'total_paid',
 				'value' => Tools::displayPrice((float)$order['total_paid'], $currency),
 				'class' => 'text-center',
 				'wrapper_start' => '<span class="badge">',
 				'wrapper_end' => '<span>',
-				);
+			);
 			$tr[] = array(
 				'id' => 'date_add',
 				'value' => Tools::displayDate($order['date_add']),
 				'class' => 'text-center',
-				);
+			);
 			$tr[] = array(
 				'id' => 'details',
 				'value' => $this->l('Details'),
 				'class' => 'text-right',
 				'wrapper_start' => '<a class="btn btn-default" href="index.php?tab=AdminOrders&id_order='.(int)$order['id_order'].'&vieworder&token='.Tools::getAdminTokenLite('AdminOrders').'" title="'.$this->l('Details').'"><i class="icon-search"></i>',
 				'wrapper_end' => '</a>'
-				);
+			);
 
 			$body[] = $tr;
 		}
+
 		return array('header' => $header, 'body' => $body);
 	}
 
@@ -175,21 +183,23 @@ class Dashproducts extends Module
 			)
 		);
 
-		$products = Db::getInstance()->ExecuteS('
-		SELECT
-			product_id,
-			count(*) as total,
-			AVG(total_price_tax_excl / conversion_rate) as price,
-			SUM(total_price_tax_excl / conversion_rate) as sales,
-			SUM(product_quantity * purchase_supplier_price / conversion_rate) as expenses
-		FROM `'._DB_PREFIX_.'orders` o
+		$products = Db::getInstance()->ExecuteS(
+			'
+					SELECT
+						product_id,
+						count(*) as total,
+						AVG(total_price_tax_excl / conversion_rate) as price,
+						SUM(total_price_tax_excl / conversion_rate) as sales,
+						SUM(product_quantity * purchase_supplier_price / conversion_rate) as expenses
+					FROM `'._DB_PREFIX_.'orders` o
 		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
 		AND valid = 1
 		'.Shop::addSqlRestriction(false, 'o').'
 		GROUP BY product_id
 		ORDER BY total DESC
-		LIMIT '.(int)Configuration::get('DASHPRODUCT_NBR_SHOW_BEST_SELLER', 10));
+		LIMIT '.(int)Configuration::get('DASHPRODUCT_NBR_SHOW_BEST_SELLER', 10)
+		);
 
 		$body = array();
 		foreach ($products as $product)
@@ -198,7 +208,7 @@ class Dashproducts extends Module
 			if (!Validate::isLoadedObject($product_obj))
 				continue;
 			$category = new Category($product_obj->getDefaultCategory(), $this->context->language->id);
-			
+
 			$img = '';
 			if (($row_image = Product::getCover($product_obj->id)) && $row_image['id_image'])
 			{
@@ -240,6 +250,7 @@ class Dashproducts extends Module
 				)
 			);
 		}
+
 		return array('header' => $header, 'body' => $body);
 	}
 
@@ -290,7 +301,7 @@ class Dashproducts extends Module
 				$tr = array();
 				$tr[] = array(
 					'id' => 'product',
-					'value' => '<img src="..'._PS_TMP_IMG_.'product_mini_'.(int)$product_obj->id.'.jpg'.'" />',
+					'value' => '<img src="..'._PS_TMP_IMG_.'product_mini_'.(int)$product_obj->id.'.jpg" />',
 					'class' => 'text-center',
 				);
 				$tr[] = array(
@@ -322,7 +333,7 @@ class Dashproducts extends Module
 				);
 				$body[] = $tr;
 			}
-		
+
 		return array('header' => $header, 'body' => $body);
 	}
 
@@ -356,17 +367,17 @@ class Dashproducts extends Module
 					'id' => 'product',
 					'value' => $term['keywords'],
 					'class' => 'text-left',
-					);
+				);
 				$tr[] = array(
 					'id' => 'product',
 					'value' => $term['count_keywords'],
 					'class' => 'text-center',
-					);
+				);
 				$tr[] = array(
 					'id' => 'product',
 					'value' => $term['results'],
 					'class' => 'text-center',
-					);
+				);
 				$body[] = $tr;
 			}
 
@@ -381,9 +392,9 @@ class Dashproducts extends Module
 				'title' => $this->l('Product'),
 			)
 		);
-		
+
 		$body = array();
-		
+
 		return array('header' => $header, 'body' => $body);
 	}
 
@@ -396,7 +407,7 @@ class Dashproducts extends Module
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 					AND o.valid = 1
 					AND o.`date_add` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"';
-		
+
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 	}
 
@@ -435,15 +446,16 @@ class Dashproducts extends Module
 				foreach ($result as $row)
 				{
 					if (preg_match('@/([a-z]{2}/)?([a-z]+/)?([0-9]+)\-.*\.html$@', $row['dimensions']['pagePath'], $matches))
-						$id_object = (int)$matches[3];
-					$products[] = array('id_object' => $id_object, 'counter' => $row['metrics']['visits']);
+						$products[] = array('id_object' => (int)$matches[3], 'counter' => $row['metrics']['visits']);
 				}
+
 			return $products;
 		}
 		else
-			return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT p.id_object, pv.counter
-			FROM `'._DB_PREFIX_.'page_viewed` pv
+			return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+				'
+							SELECT p.id_object, pv.counter
+							FROM `'._DB_PREFIX_.'page_viewed` pv
 			LEFT JOIN `'._DB_PREFIX_.'date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
 			LEFT JOIN `'._DB_PREFIX_.'page` p ON pv.`id_page` = p.`id_page`
 			LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`
@@ -451,24 +463,26 @@ class Dashproducts extends Module
 			'.Shop::addSqlRestriction(false, 'pv').'
 			AND dr.`time_start` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
 			AND dr.`time_end` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
-			LIMIT '.(int)$limit);
+			LIMIT '.(int)$limit
+			);
 	}
 
 	public function getMostSearchTerms($date_from, $date_to, $limit = 10)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT `keywords`, count(`id_statssearch`) as count_keywords, `results`
-		FROM `'._DB_PREFIX_.'statssearch` ss
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+			'
+					SELECT `keywords`, count(`id_statssearch`) as count_keywords, `results`
+					FROM `'._DB_PREFIX_.'statssearch` ss
 		WHERE ss.`date_add` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
 		'.Shop::addSqlRestriction(false, 'ss').'
 		GROUP BY ss.`keywords`
 		ORDER BY `count_keywords` DESC
-		LIMIT '.(int)$limit);
+		LIMIT '.(int)$limit
+		);
 	}
-	
+
 	public function renderConfigForm()
 	{
-		
 		$fields_form = array(
 			'form' => array(
 				'input' => array(),
@@ -482,34 +496,46 @@ class Dashproducts extends Module
 				)
 			),
 		);
-			
+
 		$inputs = array(
-			array('label' => $this->l('Number of "Recent Orders" to display'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_LAST_ORDER'),
-			array('label' => $this->l('Number of "Best Sellers" to display'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_BEST_SELLER'),
-			array('label' => $this->l('Number of "Most Viewed" to display'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_MOST_VIEWED'),
-			array('label' => $this->l('Number of "Top Searches" to display'), 'config_name' => 'DASHPRODUCT_NBR_SHOW_TOP_SEARCH'),
+			array(
+				'label' => $this->l('Number of "Recent Orders" to display'),
+				'config_name' => 'DASHPRODUCT_NBR_SHOW_LAST_ORDER'
+			),
+			array(
+				'label' => $this->l('Number of "Best Sellers" to display'),
+				'config_name' => 'DASHPRODUCT_NBR_SHOW_BEST_SELLER'
+			),
+			array(
+				'label' => $this->l('Number of "Most Viewed" to display'),
+				'config_name' => 'DASHPRODUCT_NBR_SHOW_MOST_VIEWED'
+			),
+			array(
+				'label' => $this->l('Number of "Top Searches" to display'),
+				'config_name' => 'DASHPRODUCT_NBR_SHOW_TOP_SEARCH'
+			),
 		);
-		
-		foreach($inputs as $input)
+
+		foreach ($inputs as $input)
 			$fields_form['form']['input'][] = array(
-						'type' => 'select',
-						'label' => $input['label'],
-						'name' => $input['config_name'],
-						'options' => array(
-							'query' => array(
-								array('id' => 5, 'name' => 5),
-								array('id' => 10, 'name' => 10),
-								array('id' => 20, 'name' => 20),
-								array('id' => 50, 'name' => 50),
-								),
-							'id' => 'id',
-							'name' => 'name',
-						)
-					);
-				
+				'type' => 'select',
+				'label' => $input['label'],
+				'name' => $input['config_name'],
+				'options' => array(
+					'query' => array(
+						array('id' => 5, 'name' => 5),
+						array('id' => 10, 'name' => 10),
+						array('id' => 20, 'name' => 20),
+						array('id' => 50, 'name' => 50),
+					),
+					'id' => 'id',
+					'name' => 'name',
+				)
+			);
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
-		$helper->table =  $this->table;
+		$helper->table = $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 		$helper->default_form_language = $lang->id;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
@@ -525,7 +551,7 @@ class Dashproducts extends Module
 
 		return $helper->generateForm(array($fields_form));
 	}
-	
+
 	public function getConfigFieldsValues()
 	{
 		return array(
@@ -534,5 +560,15 @@ class Dashproducts extends Module
 			'DASHPRODUCT_NBR_SHOW_MOST_VIEWED' => Configuration::get('DASHPRODUCT_NBR_SHOW_MOST_VIEWED'),
 			'DASHPRODUCT_NBR_SHOW_TOP_SEARCH' => Configuration::get('DASHPRODUCT_NBR_SHOW_TOP_SEARCH'),
 		);
+	}
+
+	public function hookActionObjectOrderAddAfter($params)
+	{
+		Tools::changeFileMTime($this->push_filename);
+	}
+	
+	public function hookActionSearch($params)
+	{
+		Tools::changeFileMTime($this->push_filename);
 	}
 }

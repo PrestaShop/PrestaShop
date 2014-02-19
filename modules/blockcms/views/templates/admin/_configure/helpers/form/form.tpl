@@ -96,20 +96,20 @@
                                             {if (($key == (sizeof($cms_blocks_position) - 1)) || (sizeof($cms_blocks_position) == 1))}
                                                     style="display: none;"
                                             {/if}
-                                                    href="{$current}&configure=blockcms&id_cms_block={$cms_block['id_cms_block']}&way=1&position={(int)$cms_block['position'] + 1}&location=0&token={$token}">
+                                                    href="{$current}&amp;configure=blockcms&amp;id_cms_block={$cms_block['id_cms_block']}&amp;way=1&amp;position={(int)$cms_block['position'] + 1}&location=0&token={$token}">
                                             <img src="{$smarty.const._PS_ADMIN_IMG_}down.gif" alt="{l s='Down' mod='blockcms'}" title="{l s='Down' mod='blockcms'}" />
                                         </a>
                                         <a
                                             {if (($cms_block['position'] == 0) || ($key == 0))}
                                                     style="display: none;"
                                             {/if}
-                                                    href="{$current}&configure=blockcms&id_cms_block={$cms_block['id_cms_block']}&way=0&position={(int)$cms_block['position'] - 1}&location=0&token={$token}">
+                                                    href="{$current}&amp;configure=blockcms&amp;id_cms_block={$cms_block['id_cms_block']}&amp;way=0&amp;position={(int)$cms_block['position'] - 1}&amp;location=0&amp;token={$token}">
                                             <img src="{$smarty.const._PS_ADMIN_IMG_}up.gif" alt="{l s='Up' mod='blockcms'}" title="{l s='Up' mod='blockcms'}" />
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="{$current}&token={$token}&editBlockCMS&id_cms_block={(int)$cms_block['id_cms_block']}" title="{l s='Edit' mod='blockcms'}"><img src="{$smarty.const._PS_ADMIN_IMG_}edit.gif" alt="" /></a>
-                                        <a href="{$current}&token={$token}&deleteBlockCMS&id_cms_block={(int)$cms_block['id_cms_block']}" title="{l s='Delete' mod='blockcms'}"><img src="{$smarty.const._PS_ADMIN_IMG_}delete.gif" alt="" /></a>
+                                        <a href="{$current}&amp;token={$token}&amp;editBlockCMS&amp;id_cms_block={(int)$cms_block['id_cms_block']}" title="{l s='Edit' mod='blockcms'}"><img src="{$smarty.const._PS_ADMIN_IMG_}edit.gif" alt="" /></a>
+                                        <a href="{$current}&amp;token={$token}&amp;deleteBlockCMS&amp;id_cms_block={(int)$cms_block['id_cms_block']}" title="{l s='Delete' mod='blockcms'}"><img src="{$smarty.const._PS_ADMIN_IMG_}delete.gif" alt="" /></a>
                                     </td>
                                 </tr>
                             {/foreach}

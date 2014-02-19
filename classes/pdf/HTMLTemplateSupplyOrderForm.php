@@ -181,7 +181,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
 	/**
 	 * Rounds values of a SupplyOrderDetail object
-	 * @param array $collection
+	 * @param array|PrestaShopCollection $collection
 	 */
 	protected function roundSupplyOrderDetails(&$collection)
 	{

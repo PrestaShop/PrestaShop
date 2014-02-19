@@ -189,6 +189,7 @@ $chosen-sprite: url("../img/chosen-sprite.png") !default;
 		border: 1px solid #aaa;
 		background-color: #fff;
 		cursor: text;
+		border-radius: 3px;
 		@include box-sizing(border-box);
 		@include background-image(linear-gradient(#eee 1%, #fff 15%));
 	}
@@ -202,7 +203,7 @@ $chosen-sprite: url("../img/chosen-sprite.png") !default;
 			input[type="text"] {
 				margin: 1px 0;
 				padding: 5px;
-				height: 15px;
+				height: 22px;
 				outline: 0;
 				border: 0 !important;
 				background: transparent !important;
@@ -211,7 +212,6 @@ $chosen-sprite: url("../img/chosen-sprite.png") !default;
 				font-size: 100%;
 				font-family: sans-serif;
 				line-height: normal;
-				border-radius: 0;
 			}
 			.default {
 				color: #999;

@@ -52,7 +52,7 @@ class Blocktopmenu extends Module
 	{
 		$this->name = 'blocktopmenu';
 		$this->tab = 'front_office_features';
-		$this->version = 1.9;
+		$this->version = 1.10;
 		$this->author = 'PrestaShop';
 
 		$this->bootstrap = true;
@@ -340,7 +340,7 @@ class Blocktopmenu extends Module
 			switch (substr($item, 0, strlen($value[1])))
 			{
 				case 'CAT':
-					$this->getCategory($id, $id_lang, $id_shop);
+					$this->_menu .= $this->generateCategoriesMenu(Category::getNestedCategories($id, $id_lang, true, $this->user_groups));
 					break;
 
 				case 'PRD':
@@ -436,79 +436,75 @@ class Blocktopmenu extends Module
 		}
 	}
 
-	private function getCategoryOption($id_category = 1, $id_lang = false, $id_shop = false, $recursive = true, $items_to_skip = null)
+	private function generateCategoriesOption($categories, $items_to_skip = null)
 	{
 		$html = '';
-		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
-		$category = new Category((int)$id_category, (int)$id_lang, (int)$id_shop);
 
-		if (is_null($category->id))
-			return;
-
-		if ($recursive)
+		foreach ($categories as $key => $category)
 		{
-			$children = Category::getChildren((int)$id_category, (int)$id_lang, true, (int)$id_shop);
-			$spacer = str_repeat('&nbsp;', $this->spacer_size * (int)$category->level_depth);
+			if (isset($items_to_skip) && !in_array('CAT'.(int)$category['id_category'], $items_to_skip))
+			{
+				$shop = (object) Shop::getShop((int)$category['id_shop']);
+				$html .= '<option value="CAT'.(int)$category['id_category'].'">'
+					.str_repeat('&nbsp;', $this->spacer_size * (int)$category['level_depth']).$category['name'].' ('.$shop->name.')</option>';
+			}
+
+			if (isset($category['children']) && !empty($category['children']))
+				$html .= $this->generateCategoriesOption($category['children'], $items_to_skip);
+
 		}
-
-		$shop = (object) Shop::getShop((int)$category->getShopID());
-		if (isset($items_to_skip) && !in_array('CAT'.(int)$category->id, $items_to_skip))
-			$html .= '<option value="CAT'.(int)$category->id.'">'.(isset($spacer) ? $spacer : '').$category->name.' ('.$shop->name.')</option>';
-
-		if (isset($children) && count($children))
-			foreach ($children as $child)
-				$html .= $this->getCategoryOption((int)$child['id_category'], (int)$id_lang, (int)$child['id_shop'], $recursive, $items_to_skip);
 
 		return $html;
 	}
 
-	private function getCategory($id_category, $id_lang = false, $id_shop = false)
+	private function generateCategoriesMenu($categories)
 	{
-		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
-		$category = new Category((int)$id_category, (int)$id_lang);
+		$html = '';
 
-		if ($category->level_depth > 1)
-			$category_link = $category->getLink();
-		else
-			$category_link = $this->context->link->getPageLink('index');
-
-		if (is_null($category->id))
-			return;
-
-		$children = Category::getChildren((int)$id_category, (int)$id_lang, true, (int)$id_shop);
-		$selected = ($this->page_name == 'category' && ((int)Tools::getValue('id_category') == $id_category)) ? ' class="sfHoverForce"' : '';
-
-		$is_intersected = array_intersect($category->getGroups(), $this->user_groups);
-		// filter the categories that the user is allowed to see and browse
-		if (!empty($is_intersected))
+		foreach ($categories as $key => $category)
 		{
-			$this->_menu .= '<li '.$selected.'>';
-			$this->_menu .= '<a href="'.Tools::HtmlEntitiesUTF8($category_link).'" title="'.$category->name.'">'.$category->name.'</a>';
-
-			if (count($children))
+			if ($category['level_depth'] > 1)
 			{
-				$this->_menu .= '<ul>';
+				$cat = new Category($category['id_category']);
+				$link = Tools::HtmlEntitiesUTF8($cat->getLink());
+			}
+			else
+				$link = $this->context->link->getPageLink('index');
 
-				foreach ($children as $child)
-					$this->getCategory((int)$child['id_category'], (int)$id_lang, (int)$child['id_shop']);
+			$html .= '<li'.(($this->page_name == 'category'
+				&& (int)Tools::getValue('id_category') == (int)$category['id_category']) ? ' class="sfHoverForce"' : '').'>';
+			$html .= '<a href="'.$link.'" title="'.$category['name'].'">'.$category['name'].'</a>';
 
-				if ($category->level_depth == 2)
+			if (isset($category['children']) && !empty($category['children']))
+			{
+				$html .= '<ul>';
+				$html .= $this->generateCategoriesMenu($category['children']);
+
+				if ((int)$category['level_depth'] == 2)
 				{
 					$files = scandir(_PS_CAT_IMG_DIR_);
-					$this->_menu .= '<li id="category-thumbnail">';
 
-					foreach ($files as $file)
-						if (preg_match('/'.$category->id.'-([0-9])?_thumb.jpg/i', $file) === 1)
-							$this->_menu .= '<div><img src="'.$this->context->link->getMediaLink(_THEME_CAT_DIR_.$file).'" alt="'.Tools::SafeOutput($category->name).'" title="'.Tools::SafeOutput($category->name).'" class="imgm" /></div>';
+					if (count($files) > 0)
+					{
+						$html .= '<li id="category-thumbnail">';
 
-					$this->_menu .= '</li>';
+						foreach ($files as $file)
+							if (preg_match('/'.$category['id_category'].'-([0-9])?_thumb.jpg/i', $file) === 1)
+								$html .= '<div><img src="'.$this->context->link->getMediaLink(_THEME_CAT_DIR_.$file)
+								.'" alt="'.Tools::SafeOutput($category['name']).'" title="'
+								.Tools::SafeOutput($category['name']).'" class="imgm" /></div>';
+
+						$html .= '</li>';
+					}
 				}
 
-				$this->_menu .= '</ul>';
+				$html .= '</ul>';
 			}
 
-			$this->_menu .= '</li>';
+			$html .= '</li>';
 		}
+
+		return $html;
 	}
 
 	private function getCMSMenuItems($parent, $depth = 1, $id_lang = false)
@@ -952,7 +948,8 @@ class Blocktopmenu extends Module
 		// BEGIN Categories
 		$shop = new Shop((int)Shop::getContextShopID());
 		$html .= '<optgroup label="'.$this->l('Categories').'">';	
-		$html .= $this->getCategoryOption($shop->getCategory(), (int)$this->context->language->id, (int)Shop::getContextShopID(), true, $items);
+		$html .= $this->generateCategoriesOption(
+			Category::getNestedCategories($shop->getCategory(), (int)$this->context->language->id, true), $items);
 		$html .= '</optgroup>';
 		
 		// BEGIN Shops
