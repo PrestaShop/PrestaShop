@@ -104,32 +104,33 @@ $menu-item-size: 36px
 	@media (max-width: $screen-phone)
 		display: none
 
-$min-height: 1000px
+$min-height: 800px
 @media (max-height: $min-height)
-	#nav-sidebar ul.menu li.maintab > a.title
-		font-size: 11px
-		height: 26px
-		line-height: 26px
-		i
-			text-align: right
-			width: 18px
-			font-size: 14px
-	#nav-sidebar ul.menu li.maintab ul.submenu
-		padding: 1px 1px 0 1px
-		li a
-			padding: 0 6px
-			height: 26px
-			line-height: 26px
+	body:not(.page-sidebar-closed)
+		#nav-sidebar ul.menu li.maintab > a.title
+			font-size: 12px
+			height: 28px
+			line-height: 28px
+			i
+				text-align: right
+				width: 18px
+				font-size: 14px
+		#nav-sidebar ul.menu li.maintab ul.submenu
+			padding: 1px 1px 0 1px
+			li a
+				padding: 0 6px
+				height: 26px
+				line-height: 26px
 
-	#nav-sidebar ul.menu li.maintab.active ul.submenu
-		display: none
-	#nav-sidebar ul.menu li.maintab.active:hover ul.submenu
-		position: absolute
-		display: block
-		width: 200px
-		z-index: 600
-		left: $widthSidebarNav
-		top: 0
+		#nav-sidebar ul.menu li.maintab.active ul.submenu
+			display: none
+		#nav-sidebar ul.menu li.maintab.active:hover ul.submenu
+			position: absolute
+			display: block
+			width: 200px
+			z-index: 600
+			left: $widthSidebarNav
+			top: 0
 
 
 .page-sidebar
