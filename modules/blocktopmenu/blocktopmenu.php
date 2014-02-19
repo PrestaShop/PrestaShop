@@ -436,28 +436,23 @@ class Blocktopmenu extends Module
 		}
 	}
 
-	private function getCategoryOption($id_category = 1, $id_lang = false, $id_shop = false, $recursive = true, $items_to_skip = null)
+	private function generateCategoriesOption($categories, $items_to_skip = null)
 	{
 		$html = '';
-		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
-		$category = new Category((int)$id_category, (int)$id_lang, (int)$id_shop);
 
-		if (is_null($category->id))
-			return;
-
-		if ($recursive)
+		foreach ($categories as $key => $category)
 		{
-			$children = Category::getChildren((int)$id_category, (int)$id_lang, true, (int)$id_shop);
-			$spacer = str_repeat('&nbsp;', $this->spacer_size * (int)$category->level_depth);
+			if (isset($items_to_skip) && !in_array('CAT'.(int)$category['id_category'], $items_to_skip))
+			{
+				$shop = (object) Shop::getShop((int)$category['id_shop']);
+				$html .= '<option value="CAT'.(int)$category['id_category'].'">'
+					.str_repeat('&nbsp;', $this->spacer_size * (int)$category['level_depth']).$category['name'].' ('.$shop->name.')</option>';
+			}
+
+			if (isset($category['children']) && !empty($category['children']))
+				$html .= $this->generateCategoriesOption($category['children'], $items_to_skip);
+
 		}
-
-		$shop = (object) Shop::getShop((int)$category->getShopID());
-		if (isset($items_to_skip) && !in_array('CAT'.(int)$category->id, $items_to_skip))
-			$html .= '<option value="CAT'.(int)$category->id.'">'.(isset($spacer) ? $spacer : '').$category->name.' ('.$shop->name.')</option>';
-
-		if (isset($children) && count($children))
-			foreach ($children as $child)
-				$html .= $this->getCategoryOption((int)$child['id_category'], (int)$id_lang, (int)$child['id_shop'], $recursive, $items_to_skip);
 
 		return $html;
 	}
@@ -477,7 +472,7 @@ class Blocktopmenu extends Module
 				$link = $this->context->link->getPageLink('index');
 
 			$html .= '<li'.(($this->page_name == 'category'
-				&& (int)Tools::getValue('id_category') == $category['id_category']) ? ' class="sfHoverForce"' : '').'>';
+				&& (int)Tools::getValue('id_category') == (int)$category['id_category']) ? ' class="sfHoverForce"' : '').'>';
 			$html .= '<a href="'.$link.'" title="'.$category['name'].'">'.$category['name'].'</a>';
 
 			if (isset($category['children']) && !empty($category['children']))
@@ -485,7 +480,7 @@ class Blocktopmenu extends Module
 				$html .= '<ul>';
 				$html .= $this->generateCategoriesMenu($category['children']);
 
-				if ($category['level_depth'] == 2)
+				if ((int)$category['level_depth'] == 2)
 				{
 					$files = scandir(_PS_CAT_IMG_DIR_);
 
@@ -953,7 +948,8 @@ class Blocktopmenu extends Module
 		// BEGIN Categories
 		$shop = new Shop((int)Shop::getContextShopID());
 		$html .= '<optgroup label="'.$this->l('Categories').'">';	
-		$html .= $this->getCategoryOption($shop->getCategory(), (int)$this->context->language->id, (int)Shop::getContextShopID(), true, $items);
+		$html .= $this->generateCategoriesOption(
+			Category::getNestedCategories($shop->getCategory(), (int)$this->context->language->id, true), $items);
 		$html .= '</optgroup>';
 		
 		// BEGIN Shops
