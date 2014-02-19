@@ -3076,6 +3076,10 @@ class BlockLayered extends Module
 		$range = 2; /* how many pages around page selected */
 
 		$n = (int)Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'));
+
+		if ($n <= 0)
+			$n = 1;
+
 		$p = $this->page;
 
 		if ($p < 0)
