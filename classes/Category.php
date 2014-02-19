@@ -900,11 +900,16 @@ class CategoryCore extends ObjectModel
 		return self::$_links[$id_category.'-'.$id_lang];
 	}
 
-	public function getLink(Link $link = null)
+	public function getLink(Link $link = null, $id_lang = null)
 	{
 		if (!$link)
 			$link = Context::getContext()->link;
-		return $link->getCategoryLink($this, $this->link_rewrite);
+
+		if (!$id_lang && is_array($this->link_rewrite))
+			$id_lang = Context::getContext()->language->id;
+
+		return $link->getCategoryLink($this,
+			is_array($this->link_rewrite) ? $this->link_rewrite[$id_lang] : $this->link_rewrite, $id_lang);
 	}
 
 	public function getName($id_lang = null)
