@@ -322,18 +322,19 @@ class OrderCore extends ObjectModel
 	public function getCartProducts()
 	{
 		$product_id_list = array();
-		foreach ($this->getProducts() as $product)
+        	$products = $this->getProducts();
+		foreach ($products as $product)
 			$product_id_list[] = $this->id_address_delivery.'_'
 				.$product['product_id'].'_'
 				.$product['product_attribute_id'].'_'
 				.(isset($product['id_customization']) ? $product['id_customization'] : '0');
 
 		$product_list = array();
-		foreach ($this->getProducts() as $product)
+		foreach ($products as $product)
 		{
 			$key = $this->id_address_delivery.'_'
 				.$product['id_product'].'_'
-				.(isset($product['id_product_attribute']) ? $product['id_product_attribute'] : '0').'_'
+				.(isset($product['product_attribute_id']) ? $product['product_attribute_id'] : '0').'_'
 				.(isset($product['id_customization']) ? $product['id_customization'] : '0');
 
 			if (in_array($key, $product_id_list))
