@@ -54,7 +54,7 @@ class AdminLoginControllerCore extends AdminController
 	
 	public function initContent()
 	{
-		if (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
+		if (!Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
 		{
 			// You can uncomment these lines if you want to force https even from localhost and automatically redirect
 			// header('HTTP/1.1 301 Moved Permanently');
@@ -63,12 +63,15 @@ class AdminLoginControllerCore extends AdminController
 			$clientIsMaintenanceOrLocal = in_array(Tools::getRemoteAddr(), array_merge(array('127.0.0.1'), explode(',', Configuration::get('PS_MAINTENANCE_IP'))));
 			// If ssl is enabled, https protocol is required. Exception for maintenance and local (127.0.0.1) IP
 			if ($clientIsMaintenanceOrLocal)
-				$this->errors[] = Tools::displayError('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.');
+			{
+				$warningSslMessage = Tools::displayError('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.');
+				$this->context->smarty->assign('warningSslMessage', $warningSslMessage);
+			}
 			else
 			{	
 				$url = 'https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']);
-				$warningSslMessage = sprintf(Tools::displayError('SSL is activated. Please connect using the following link to <a href="%s">log into secure mode (https://)</a>'), $url);
-				$this->context->smarty->assign(array('warningSslMessage' => $warningSslMessage));
+				$warningSslMessage = sprintf(Tools::displayError('SSL is activated. Please connect using the following link to <a href="%s">log into secure mode (https://)</a>', false), $url);
+				$this->context->smarty->assign('warningSslMessage', $warningSslMessage);
 			}
 		}
 
