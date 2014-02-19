@@ -1338,7 +1338,7 @@ class CartCore extends ObjectModel
 		if (!in_array($type, $array_type))
 			die(Tools::displayError());
 
-		$with_shipping = in_array($type, array(Cart::BOTH, Cart::ONLY_SHIPPING));
+		$with_shipping = in_array($type, array(Cart::BOTH, Cart::ONLY_SHIPPING, Cart::ONLY_DISCOUNTS));
 		
 		// if cart rules are not used
 		if ($type == Cart::ONLY_DISCOUNTS && !CartRule::isFeatureActive())
