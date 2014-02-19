@@ -44,6 +44,9 @@ class Dashtrends extends Module
 		$this->version = '0.2';
 		$this->author = 'PrestaShop';
 
+		$this->push_filename = _PS_CACHE_DIR_.'push/trends';
+		$this->allow_push = true;
+
 		parent::__construct();
 	}
 
@@ -53,6 +56,7 @@ class Dashtrends extends Module
 			&& $this->registerHook('dashboardZoneTwo')
 			&& $this->registerHook('dashboardData')
 			&& $this->registerHook('actionAdminControllerSetMedia')
+			&& $this->registerHook('actionOrderStatusPostUpdate')
 		);
 	}
 
@@ -316,5 +320,10 @@ class Dashtrends extends Module
 		}
 
 		return $data;
+	}
+
+	public function hookActionOrderStatusPostUpdate($params)
+	{
+		Tools::changeFileMTime($this->push_filename);
 	}
 }
