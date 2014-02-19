@@ -774,10 +774,10 @@ class ToolsCore
 		if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $string == 'Fatal error')
 			return ('<pre>'.print_r(debug_backtrace(), true).'</pre>');
 		if (!is_array($_ERRORS))
-			return str_replace('"', '&quot;', $string);
+			return $htmlentities ? str_replace('"', '&quot;', $string) : $string;
 		$key = md5(str_replace('\'', '\\\'', $string));
 		$str = (isset($_ERRORS) && is_array($_ERRORS) && array_key_exists($key, $_ERRORS)) ? ($htmlentities ? htmlentities($_ERRORS[$key], ENT_COMPAT, 'UTF-8') : $_ERRORS[$key]) : $string;
-		return str_replace('"', '&quot;', stripslashes($str));
+		return $htmlentities ? str_replace('"', '&quot;', stripslashes($str)) : $str;
 	}
 
 	/**
