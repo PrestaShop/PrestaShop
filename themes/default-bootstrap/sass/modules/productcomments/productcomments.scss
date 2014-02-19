@@ -13,7 +13,7 @@
 	}	
 	.comments_note span,
 	.star_content {
-		display: inline-block;
+		float: left;
 		color: $base-text-color;
 	}	
 	.star_content {
@@ -233,7 +233,8 @@
 				float: left;
 			}
 			.star_content {
-				float: left;
+				display: inline-block;
+				vertical-align: middle;
 				margin: 0 0 0 5px;
 			}
 		}
@@ -255,6 +256,9 @@
 						}
 					}
 				}					
+			}
+			.title_block{
+				text-transform: capitalize;
 			}
 		}			
 	}
