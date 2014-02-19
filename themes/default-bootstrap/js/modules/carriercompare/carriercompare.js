@@ -84,13 +84,14 @@ function updateStateByIdCountry()
 			{
 				for (state in json)
 				{
-					$('#id_state').append('<option value=\''+json[state].id_state+'\' '+(id_state == json[state].id_state ? 'selected="selected"' : '')+'>'+json[state].name+'</option>');
+					$('#id_state').append('<option value=\''+json[state].id_state+'\' '+'>'+json[state].name+'</option>');
 				}
 				$('#states').slideDown('fast');
 			}
 			if (typeof SE_RefreshMethod !='undefined' && SE_RefreshMethod == 0)
 				updateCarriersList();
 			displayWaitingAjax('none', '');
+			$('#id_state').uniform();
 		}
 	});
 	ajaxQueries.push(query);
