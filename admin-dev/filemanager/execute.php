@@ -13,7 +13,7 @@ if ($thumb_pos != 0
 )
 	die('wrong path');
 
-$language_file = 'lang/en_EN.php';
+$language_file = 'lang/en.php';
 if (isset($_GET['lang']) && $_GET['lang'] != 'undefined' && $_GET['lang'] != '')
 {
 	$path_parts = pathinfo($_GET['lang']);
