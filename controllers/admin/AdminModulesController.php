@@ -834,7 +834,10 @@ class AdminModulesControllerCore extends AdminController
 									'module' => $module,
 									'display_multishop_checkbox' => true,
 									'current_url' => $this->getCurrentUrl('enable'),
-									'shop_context' => $shop_context
+									'shop_context' => $shop_context,
+									'shop_list' => Helper::renderShopList(),
+									'is_multishop' => Shop::isFeatureActive(),
+									'multishop_context' => Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP
 								));
 							}
 
