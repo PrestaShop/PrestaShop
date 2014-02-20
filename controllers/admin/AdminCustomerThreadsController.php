@@ -541,31 +541,31 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 		$actions = array();
 
-		/*
-if ($next_thread)
-			$actions['next_thread'] = array(
+		if ($next_thread)
+			$next_thread = array(
 				'href' => self::$currentIndex.'&id_customer_thread='.(int)$next_thread.'&viewcustomer_thread&token='.$this->token,
 				'name' => $this->l('Reply to the next unanswered message in this category.')
 			);
-		else
-			$actions['next_thread'] = array(
-				'href' => false,
-				'name' => $this->l('All other messages in this category have been answered.')
-			);
-*/
 
 		if ($thread->status != 'closed')
 			$actions['closed'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=2&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'label' => $this->l('Mark this message as "handled".'),
+				'label' => $this->l('Mark as "handled".'),
 				'name' => 'setstatus',
 				'value' => 2
+			);
+		else
+			$actions['open'] = array(
+				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
+				'label' => $this->l('Re-open.'),
+				'name' => 'setstatus',
+				'value' => 1
 			);
 
 		if ($thread->status != 'pending1')
 			$actions['pending1'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=3&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'label' => $this->l('Mark this message as "pending 1" (will be answered later).'),
+				'label' => $this->l('Mark as "pending 1" (will be answered later).'),
 				'name' => 'setstatus',
 				'value' => 3
 			);
@@ -580,7 +580,7 @@ if ($next_thread)
 		if ($thread->status != 'pending2')
 			$actions['pending2'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=4&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'label' => $this->l('Mark this message as "pending 2" (will be answered later).'),
+				'label' => $this->l('Mark as "pending 2" (will be answered later).'),
 				'name' => 'setstatus',
 				'value' => 4
 			);
@@ -617,7 +617,7 @@ if ($next_thread)
 				foreach ($products as $key => $product)
 					$products[$key]['date_add'] = Tools::displayDate($product['date_add'], null, true);
 		}
-	
+		$timeline_items = $this->getTimeline($messages, $thread->id_order);
 		$first_message = $messages[0];
 		unset($messages[0]);
 				
@@ -625,7 +625,7 @@ if ($next_thread)
 		foreach ($contacts as $c)
 			if ($c['id_contact'] == $thread->id_contact)
 				$contact = $c['name'];
-		
+
 		$this->tpl_view_vars = array(
 			'id_customer_thread' => $id_customer_thread,
 			'thread' => $thread,
@@ -643,8 +643,12 @@ if ($next_thread)
 			'orders_ok' => isset($orders_ok) ? $orders_ok : false,
 			'count_ok' => isset($orders_ok) ? count($orders_ok) : false,
 			'PS_CUSTOMER_SERVICE_SIGNATURE' => str_replace('\r\n', "\n", Configuration::get('PS_CUSTOMER_SERVICE_SIGNATURE', (int)$thread->id_lang)),
-			'timeline_items' => $this->getTimeline($messages, $thread->id_order),
+			'timeline_items' => $timeline_items,
 		);
+
+		if ($next_thread)
+			$this->tpl_view_vars['next_thread'] = $next_thread;
+		
 		return parent::renderView();
 	}
 	

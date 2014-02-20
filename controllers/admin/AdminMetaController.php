@@ -64,7 +64,7 @@ class AdminMetaControllerCore extends AdminController
 		$general_fields = array(
 			'PS_REWRITING_SETTINGS' => array(
 				'title' => $this->l('Friendly URL'),
-				'hint' => ($mod_rewrite ? $this->l('Enable only if your server allows URL rewriting (recommended).') : ''),
+				'hint' => ($mod_rewrite ? $this->l('Enable this option only if your server allows URL rewriting (recommended).') : ''),
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool',
@@ -72,7 +72,7 @@ class AdminMetaControllerCore extends AdminController
 			),
 			'PS_ALLOW_ACCENTED_CHARS_URL' => array(
 				'title' => $this->l('Accented URL'),
-				'hint' => $this->l('Enable if you want to allow accented characters in your friendly URLs.').' '.$this->l('You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.'),
+				'hint' => $this->l('Enable this option if you want to allow accented characters in your friendly URLs.').' '.$this->l('You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.'),
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool'
@@ -335,7 +335,7 @@ class AdminMetaControllerCore extends AdminController
 					'lang' => true,
 					'hint' =>  array(
 						$this->l('List of keywords for search engines.'),
-						$this->l('To add tagsn click in the field, write something, and then press the "Enter" key.'),
+						$this->l('To add tags, click in the field, write something, and then press the "Enter" key.'),
 						$this->l('Invalid characters:').' &lt;&gt;;=#{}'
 					)
 				),
@@ -347,7 +347,7 @@ class AdminMetaControllerCore extends AdminController
 					'required' => true,
 					'disabled' => (bool)$is_index,
 					'hint' => array(
-						$this->l('For instance, "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
+						$this->l('For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php'),
 						$this->l('Only letters and hyphens are allowed.'),
 					)
 				),
@@ -533,7 +533,7 @@ class AdminMetaControllerCore extends AdminController
 			// Message copied/pasted from the information tip
 			$message = $this->l('Before being able to use this tool, you need to:');
 			$message .= '<br />- '.$this->l('Create a blank .htaccess in your root directory.');
-			$message .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system)');
+			$message .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system).');
 			$this->errors[] = $message;
 		}
 	}
