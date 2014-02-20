@@ -29,28 +29,25 @@
 <div class="panel">
 	<div class="panel-heading text-center">
 		<form action="{$link->getAdminLink('AdminCustomerThreads')}&viewcustomer_thread&id_customer_thread={$id_customer_thread}" method="post" enctype="multipart/form-data" class="form-horizontal">
+		<div class="btn-group pull-left">
 		{foreach $actions as $action}
 			<button class="btn btn-default pull-left" name="{$action.name|escape:'html':'UTF-8'}" value="{$action.value|intval}">
 				{if isset($action.icon)}<i class="{$action.icon|escape:'html':'UTF-8'}"></i>{/if}{$action.label}
 			</button>
 		{/foreach}
 		</form>
-		<div class="btn-group pull-left">
 			<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">{l s="Forward this discussion to"}</button>
 		</div>
 		
 		<i class="icon-comments"></i>
 		{l s="Thread"} : #<strong>{$id_customer_thread|intval}</strong>
-		<!--
-<div class="btn-group pull-right">
-			<a class="btn btn-default pull-left" href="#">
-				<i class="icon-chevron-left"></i>
-			</a>
-			<a class="btn btn-default pull-left" href="#" disabled="">
-				<i class="icon-chevron-right"></i>
+		{if isset($next_thread) && $next_thread}
+		<div class="btn-group pull-right">
+			<a class="btn btn-default pull-left" href="{$next_thread.href}">
+				<i class="icon-chevron-right"></i> {$next_thread.name}
 			</a> 
 		</div>
--->
+		{/if}
 	</div>
 	<div class="row">
 		<div class="message-item-initial media">
@@ -90,11 +87,11 @@
 </div>
 <div class="panel">
 	<form action="{$link->getAdminLink('AdminCustomerThreads')}&id_customer_thread={$thread->id|intval}&viewcustomer_thread" method="post" enctype="multipart/form-data" class="form-horizontal">
-	<h3>{l s="Answer to"} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'}{/if}</h3>
+	<h3>{l s="Answer to"} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} {else} {$thread->email}{/if}</h3>
 	<div class="row">
 		<div class="media">
 			<div class="pull-left">
-				<span class="avatar-md"><img src="{$current_employee->getImage()}" alt=""></span>
+				<span class="avatar-md">{if isset($current_employee->firstname)}<img src="{$current_employee->getImage()}" alt="">{/if}</span>
 			</div>
 			<div class="media-body">
 				<textarea cols="30" rows="7" name="reply_message">{$PS_CUSTOMER_SERVICE_SIGNATURE|escape:'html':'UTF-8'}</textarea>
