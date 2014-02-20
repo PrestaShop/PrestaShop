@@ -635,7 +635,10 @@ class AdminThemesControllerCore extends AdminController
 			}
 			$themes = array();
 			foreach (Theme::getThemes() as $theme)
-				$themes[] = $theme->directory;
+			{
+				if ($theme->id != $obj->id)
+					$themes[] = $theme->directory;
+			}
 
 			if (is_dir(_PS_ALL_THEMES_DIR_.$obj->directory) && !in_array($obj->directory, $themes))
 				Tools::deleteDirectory(_PS_ALL_THEMES_DIR_.$obj->directory.'/');

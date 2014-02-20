@@ -753,9 +753,16 @@ class ToolsCore
  	*/
 	public static function clearXMLCache()
 	{
+		$themes = array();
+		foreach (Theme::getThemes() as $theme)
+			$themes[] = $theme->directory;
+
 		foreach (scandir(_PS_ROOT_DIR_.'/config/xml') as $file)
-			if ((pathinfo($file, PATHINFO_EXTENSION) == 'xml') && ($file != 'default.xml'))
+		{
+			$path_info = pathinfo($file, PATHINFO_EXTENSION);
+			if (($path_info == 'xml') && ($file != 'default.xml') && !in_array(basename($file, '.'.$path_info), $themes))
 				self::deleteFile(_PS_ROOT_DIR_.'/config/xml/'.$file);
+		}
 	}
 
 	/**
@@ -2914,3 +2921,4 @@ function cmpPriceDesc($a, $b)
 		return -1;
 	return 0;
 }
+
