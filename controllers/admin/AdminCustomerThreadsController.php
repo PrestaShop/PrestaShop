@@ -617,7 +617,7 @@ if ($next_thread)
 				foreach ($products as $key => $product)
 					$products[$key]['date_add'] = Tools::displayDate($product['date_add'], null, true);
 		}
-	
+		$timeline_items = $this->getTimeline($messages, $thread->id_order);
 		$first_message = $messages[0];
 		unset($messages[0]);
 				
@@ -643,7 +643,7 @@ if ($next_thread)
 			'orders_ok' => isset($orders_ok) ? $orders_ok : false,
 			'count_ok' => isset($orders_ok) ? count($orders_ok) : false,
 			'PS_CUSTOMER_SERVICE_SIGNATURE' => str_replace('\r\n', "\n", Configuration::get('PS_CUSTOMER_SERVICE_SIGNATURE', (int)$thread->id_lang)),
-			'timeline_items' => $this->getTimeline($messages, $thread->id_order),
+			'timeline_items' => $timeline_items,
 		);
 		return parent::renderView();
 	}
