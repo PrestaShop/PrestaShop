@@ -753,9 +753,16 @@ class ToolsCore
  	*/
 	public static function clearXMLCache()
 	{
+		$themes = array();
+		foreach (Theme::getThemes() as $theme)
+			$themes[] = $theme->directory;
+
 		foreach (scandir(_PS_ROOT_DIR_.'/config/xml') as $file)
-			if ((pathinfo($file, PATHINFO_EXTENSION) == 'xml') && ($file != 'default.xml'))
+		{
+			$path_info = pathinfo($file, PATHINFO_EXTENSION);
+			if (($path_info == 'xml') && ($file != 'default.xml') && !in_array(basename($file, '.'.$path_info), $themes))
 				self::deleteFile(_PS_ROOT_DIR_.'/config/xml/'.$file);
+		}
 	}
 
 	/**
@@ -963,6 +970,33 @@ class ToolsCore
 	{
 		$context = Context::getContext();
 		return Tools::getAdminToken($params['tab'].(int)Tab::getIdFromClassName($params['tab']).(int)$context->employee->id);
+	}
+
+	/**
+	* Get a valid URL to use from BackOffice
+	*
+	* @param string $url An URL to use in BackOffice
+	* @param boolean $entites Set to true to use htmlentities function on URL param
+	*/
+	public static function getAdminUrl($url = null, $entities = false)
+	{
+		$link = Tools::getHttpHost(true).__PS_BASE_URI__;
+
+		if (isset($url))
+			$link .= ($entities ? Tools::htmlentitiesUTF8($url) : $url);
+
+		return $link;
+	}
+
+	/**
+	* Get a valid image URL to use from BackOffice
+	*
+	* @param string $image Image name
+	* @param boolean $entites Set to true to use htmlentities function on image param
+	*/
+	public static function getAdminImageUrl($image = null, $entities = false)
+	{
+		return Tools::getAdminUrl(basename(_PS_IMG_DIR_).'/'.$image, $entities);
 	}
 
 	/**
@@ -2914,3 +2948,4 @@ function cmpPriceDesc($a, $b)
 		return -1;
 	return 0;
 }
+

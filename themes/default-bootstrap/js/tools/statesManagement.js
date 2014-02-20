@@ -63,7 +63,8 @@ function updateState(suffix)
 		$(states).each(function (key, item){
 			$('select#id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).append('<option value="' + item.id + '"' + (idSelectedCountry === item.id ? ' selected="selected"' : '') + '>' + item.name + '</option>');
 		});
-		$('.id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '') + ':hidden').fadeIn('slow');;
+		$('.id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '') + ':hidden').fadeIn('slow');
+		$('#id_state').uniform();
 	}
 	else
 		$('.id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).fadeOut('fast');
@@ -73,7 +74,10 @@ function updateNeedIDNumber(suffix)
 {
 	var idCountry = parseInt($('select#id_country' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).val());
 	if ($.inArray(idCountry, countriesNeedIDNumber) >= 0)
+	{
 		$('.dni' + (typeof suffix !== 'undefined' ? '_' + suffix : '') + ':hidden').fadeIn('slow');
+		$('#dni').uniform();
+	}
 	else
 		$('.dni' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).fadeOut('fast');
 }
@@ -83,7 +87,10 @@ function updateZipCode(suffix)
 	var idCountry = parseInt($('select#id_country' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).val());
 
 	if (typeof countriesNeedZipCode[idCountry] !== 'undefined')
+	{
 		$('.postcode' + (typeof suffix !== 'undefined' ? '_' + suffix : '') + ':hidden').fadeIn('slow');
+		$('#postcode').uniform();
+	}
 	else
 		$('.postcode'+(typeof suffix !== 'undefined' ? '_' + suffix : '')).fadeOut('fast');
 }
