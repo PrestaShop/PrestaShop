@@ -2376,19 +2376,18 @@ class AdminThemesControllerCore extends AdminController
 					}
 					else if (strncmp($key, 'to_enable', strlen('to_enable')) == 0)
 					{
-						$module_obj = Module::getInstanceByName($value);
-						if (Validate::isLoadedObject($module_obj))
+						$module = Module::getInstanceByName($value);
+						if ($module)
 						{
-							if (!Module::isInstalled($module_obj->name))
-								$module_obj->install();
-							else if (!Module::isEnabled($module_obj->name))
-								$module_obj->enable();
+							if (!Module::isInstalled($module->name))
+								$module->install();
+							if (!Module::isEnabled($module->name))
+								$module->enable();
 
-							if ((int)$module_obj->id > 0 && isset($module_hook[$module_obj->name]))
-								$this->hookModule($module_obj->id, $module_hook[$module_obj->name], $id_shop);
-
-							unset($module_hook[$module_obj->name]);
+							if ((int)$module->id > 0 && isset($module_hook[$module->name]))
+								$this->hookModule($module->id, $module_hook[$module->name], $id_shop);
 						}
+						unset($module_hook[$module->name]);
 
 					}
 					else if (strncmp($key, 'to_disable', strlen('to_disable')) == 0)
