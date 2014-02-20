@@ -1258,11 +1258,11 @@ class ProductCore extends ObjectModel
 	* @param string $supplier_reference DEPRECATED
 	*/
 	public function addCombinationEntity($wholesale_price, $price, $weight, $unit_impact, $ecotax, $quantity,
-		$id_images, $reference, $id_supplier, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1,  array $id_shop_list = array())
+		$id_images, $reference, $id_supplier, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1,  array $id_shop_list = array(), $available_date = null)
 	{
 		$id_product_attribute = $this->addAttribute(
 			$price, $weight, $unit_impact, $ecotax, $id_images,
-			$reference, $ean13, $default, $location, $upc, $minimal_quantity, $id_shop_list);
+			$reference, $ean13, $default, $location, $upc, $minimal_quantity, $id_shop_list, $available_date);
 
 		$this->addSupplierReference($id_supplier, $id_product_attribute);
 		$result = ObjectModel::updateMultishopTable('Combination', array(
@@ -1482,7 +1482,7 @@ class ProductCore extends ObjectModel
 	 * @return mixed $id_product_attribute or false
 	 */
 	public function addAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $ean13,
-								 $default, $location = null, $upc = null, $minimal_quantity = 1, array $id_shop_list = array())
+								 $default, $location = null, $upc = null, $minimal_quantity = 1, array $id_shop_list = array(), $available_date = null)
 	{
 		if (!$this->id)
 			return;
@@ -1503,6 +1503,7 @@ class ProductCore extends ObjectModel
 		$combination->upc = pSQL($upc);
 		$combination->default_on = (int)$default;
 		$combination->minimal_quantity = (int)$minimal_quantity;
+		$combination->available_date = $available_date;
 
 		// if we add a combination for this shop and this product does not use the combination feature in other shop,
 		// we clone the default combination in every shop linked to this product
