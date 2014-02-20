@@ -109,9 +109,7 @@ $chosen-sprite: url("../img/chosen-sprite.png") !default;
 			font-size: 1em;
 			font-family: sans-serif;
 			line-height: normal;
-			border-radius: 0;
 			@include box-sizing(border-box);
-			@include background($chosen-sprite no-repeat 100% -20px, linear-gradient(#eee 1%, #fff 15%));
 		}
 	}
 	.chosen-drop {

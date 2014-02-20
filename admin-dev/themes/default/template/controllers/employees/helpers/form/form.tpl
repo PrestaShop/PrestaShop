@@ -26,15 +26,15 @@
 
 {block name="input"}
 	{if $input.type == 'default_tab'}
-	<select name="{$input.name}" id="{$input.name}">
+	<select id="{$input.name}" name="{$input.name}" class="chosen fixed-width-xxl">
 		{foreach $input.options AS $option}
 			{if isset($option.children) && $option.children|@count}
 				<optgroup label="{$option.name|escape:'html':'UTF-8'}"></optgroup>
 				{foreach $option.children AS $children}
-					<option value="{$children.id_tab}" {if $fields_value[$input.name] == $children.id_tab}selected="selected"{/if}>&nbsp;&nbsp;{$children.name|escape:'html':'UTF-8'}</option>
+					<option value="{$children.id_tab}" {if $fields_value[$input.name] == $children.id_tab}selected="selected"{/if}>{$children.name|escape:'html':'UTF-8'}</option>
 				{/foreach}
 			{else}
-				<option value="{$option.id_tab}" {if $fields_value[$input.name] == $option.id_tab}selected="selected"{/if}>&nbsp;&nbsp;{$option.name|escape:'html':'UTF-8'}</option>
+				<option value="{$option.id_tab}" {if $fields_value[$input.name] == $option.id_tab}selected="selected"{/if}>{$option.name|escape:'html':'UTF-8'}</option>
 			{/if}
 		{/foreach}
 	</select>
