@@ -34,7 +34,7 @@ $(document).ready(function()
 	openCloseFilter();
 
 	// Click on color
-	$('#layered_form input[type=button], #layered_form label.layered_color').on('click', function()
+	$(document).on('click', '#layered_form input[type=button], #layered_form label.layered_color', function()
 	{
 		if (!$('input[name='+$(this).attr('name')+'][type=hidden]').length)
 			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).val($(this).attr('rel')).appendTo('#layered_form');
@@ -44,13 +44,13 @@ $(document).ready(function()
 	});
 
 	// Click on checkbox
-	$('#layered_form input[type=checkbox], #layered_form input[type=radio], #layered_form select').on('change', function()
+	$(document).on('change', '#layered_form input[type=checkbox], #layered_form input[type=radio], #layered_form select', function()
 	{
 		reloadContent();
 	});
 
 	// Changing content of an input text
-	$('#layered_form input.layered_input_range').on('keyup', function()
+	$(document).on('keyup', '#layered_form input.layered_input_range', function()
 	{
 		if ($(this).attr('timeout_id'))
 			window.clearTimeout($(this).attr('timeout_id'));
@@ -82,7 +82,7 @@ $(document).ready(function()
 		}, 500, this));
 	});
 
-	$('#layered_block_left .radio').on('click', function() {
+	$(document).on('click', '#layered_block_left .radio', function() {
 		var name = $(this).attr('name');
 		$.each($(this).parent().parent().find('input[type=button]'), function (it, item) {
 			if ($(item).hasClass('on') && $(item).attr('name') != name) {

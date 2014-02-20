@@ -179,13 +179,13 @@ class TranslateCore
 
 			if ($js)
 				$ret = addslashes($ret);
+			else
+				$ret = Tools::htmlentitiesUTF8($ret);
 
-                        $ret = str_replace('"', '&quot;', $ret);
-
-                        if ($sprintf === null)
-                                $lang_cache[$cache_key] = $ret; 
-                        else    
-                                return $ret;
+			if ($sprintf === null)
+				$lang_cache[$cache_key] = $ret; 
+			else    
+         	return $ret;
 
 		}
 		return $lang_cache[$cache_key];
