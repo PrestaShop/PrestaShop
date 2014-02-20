@@ -541,18 +541,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 		$actions = array();
 
-		/*
-if ($next_thread)
-			$actions['next_thread'] = array(
+		if ($next_thread)
+			$next_thread = array(
 				'href' => self::$currentIndex.'&id_customer_thread='.(int)$next_thread.'&viewcustomer_thread&token='.$this->token,
 				'name' => $this->l('Reply to the next unanswered message in this category.')
 			);
-		else
-			$actions['next_thread'] = array(
-				'href' => false,
-				'name' => $this->l('All other messages in this category have been answered.')
-			);
-*/
 
 		if ($thread->status != 'closed')
 			$actions['closed'] = array(
@@ -560,6 +553,13 @@ if ($next_thread)
 				'label' => $this->l('Mark as "handled".'),
 				'name' => 'setstatus',
 				'value' => 2
+			);
+		else
+			$actions['open'] = array(
+				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
+				'label' => $this->l('Re-open.'),
+				'name' => 'setstatus',
+				'value' => 1
 			);
 
 		if ($thread->status != 'pending1')
@@ -625,7 +625,7 @@ if ($next_thread)
 		foreach ($contacts as $c)
 			if ($c['id_contact'] == $thread->id_contact)
 				$contact = $c['name'];
-		
+
 		$this->tpl_view_vars = array(
 			'id_customer_thread' => $id_customer_thread,
 			'thread' => $thread,
@@ -645,6 +645,10 @@ if ($next_thread)
 			'PS_CUSTOMER_SERVICE_SIGNATURE' => str_replace('\r\n', "\n", Configuration::get('PS_CUSTOMER_SERVICE_SIGNATURE', (int)$thread->id_lang)),
 			'timeline_items' => $timeline_items,
 		);
+
+		if ($next_thread)
+			$this->tpl_view_vars['next_thread'] = $next_thread;
+		
 		return parent::renderView();
 	}
 	

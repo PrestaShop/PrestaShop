@@ -20,7 +20,8 @@ function tinySetup(config)
 		external_plugins: { "filemanager" : ad+"/filemanager/plugin.min.js"},
 		language: iso,
 		skin: "prestashop",
-		resize: false
+		resize: false,
+		extended_valid_elements : "em[class|name|id]"
 	}
 
 	$.each(default_config, function(index, el)
