@@ -155,7 +155,7 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Feature'),
-				'image' => '../img/t/AdminFeatures.gif'
+				'icon' => 'icon-info-sign'
 			),
 			'input' => array(
 				array(
