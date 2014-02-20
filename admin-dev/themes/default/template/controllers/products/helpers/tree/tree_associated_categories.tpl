@@ -105,6 +105,7 @@
 		);
 
 		{if isset($selected_categories)}
+			$('#no_default_category').hide();
 			{assign var=imploded_selected_categories value='","'|implode:$selected_categories}
 			var selected_categories = new Array("{$imploded_selected_categories}");
 

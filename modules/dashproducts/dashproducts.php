@@ -33,7 +33,7 @@ class DashProducts extends Module
 	{
 		$this->name = 'dashproducts';
 		$this->displayName = 'Dashboard Products';
-		$this->tab = '';
+		$this->tab = 'dashboard';
 		$this->version = '0.1';
 		$this->author = 'PrestaShop';
 
@@ -413,26 +413,24 @@ class DashProducts extends Module
 
 	public function getTotalProductAddedCart($date_from, $date_to, $id_product)
 	{
-		$sql = 'SELECT count(`id_product`) as count
-				FROM `'._DB_PREFIX_.'cart_product` cp
-				WHERE cp.`id_product` = '.(int)$id_product.'
-					'.Shop::addSqlRestriction(false, 'cp').'
-					AND cp.`date_add` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"';
-
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT count(`id_product`) as count
+		FROM `'._DB_PREFIX_.'cart_product` cp
+		WHERE cp.`id_product` = '.(int)$id_product.'
+		'.Shop::addSqlRestriction(false, 'cp').'
+		AND cp.`date_add` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"');
 	}
 
 	public function getTotalProductPurchased($date_from, $date_to, $id_product)
 	{
-		$sql = 'SELECT count(`product_id`) as count
-				FROM `'._DB_PREFIX_.'order_detail` od
-				JOIN `'._DB_PREFIX_.'orders` o ON o.`id_order` = od.`id_order`
-				WHERE od.`product_id` = '.(int)$id_product.'
-					'.Shop::addSqlRestriction(false, 'od').'
-					AND o.valid = 1
-					AND o.`date_add` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"';
-
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT count(`product_id`) as count
+		FROM `'._DB_PREFIX_.'order_detail` od
+		JOIN `'._DB_PREFIX_.'orders` o ON o.`id_order` = od.`id_order`
+		WHERE od.`product_id` = '.(int)$id_product.'
+		'.Shop::addSqlRestriction(false, 'od').'
+		AND o.valid = 1
+		AND o.`date_add` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"');
 	}
 
 	public function getTotalViewed($date_from, $date_to, $limit = 10)
@@ -452,10 +450,9 @@ class DashProducts extends Module
 			return $products;
 		}
 		else
-			return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-				'
-							SELECT p.id_object, pv.counter
-							FROM `'._DB_PREFIX_.'page_viewed` pv
+			return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT p.id_object, pv.counter
+			FROM `'._DB_PREFIX_.'page_viewed` pv
 			LEFT JOIN `'._DB_PREFIX_.'date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
 			LEFT JOIN `'._DB_PREFIX_.'page` p ON pv.`id_page` = p.`id_page`
 			LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`
@@ -463,22 +460,22 @@ class DashProducts extends Module
 			'.Shop::addSqlRestriction(false, 'pv').'
 			AND dr.`time_start` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
 			AND dr.`time_end` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
-			LIMIT '.(int)$limit
-			);
+			LIMIT '.(int)$limit);
 	}
 
 	public function getMostSearchTerms($date_from, $date_to, $limit = 10)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-			'
-					SELECT `keywords`, count(`id_statssearch`) as count_keywords, `results`
-					FROM `'._DB_PREFIX_.'statssearch` ss
+		if (!Module::isInstalled('statssearch'))
+			return array();
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT `keywords`, count(`id_statssearch`) as count_keywords, `results`
+		FROM `'._DB_PREFIX_.'statssearch` ss
 		WHERE ss.`date_add` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
 		'.Shop::addSqlRestriction(false, 'ss').'
 		GROUP BY ss.`keywords`
 		ORDER BY `count_keywords` DESC
-		LIMIT '.(int)$limit
-		);
+		LIMIT '.(int)$limit);
 	}
 
 	public function renderConfigForm()

@@ -40,7 +40,7 @@ class DashGoals extends Module
 	{
 		$this->name = 'dashgoals';
 		$this->displayName = 'Dashboard Goals';
-		$this->tab = '';
+		$this->tab = 'dashboard';
 		$this->version = '0.1';
 		$this->author = 'PrestaShop';
 

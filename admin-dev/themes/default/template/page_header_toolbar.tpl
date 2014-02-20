@@ -86,9 +86,9 @@
 			</ul>
 		{/block}
 
+		{block name=toolbarBox}
 		<div class="page-bar toolbarBox">
-			<div class="btn-toolbar">
-				{block name=toolbarBox}
+			<div class="btn-toolbar">				
 				<ul class="nav nav-pills pull-right">
 					{foreach from=$toolbar_btn item=btn key=k}
 					{if $k != 'back' && $k != 'modules-list'}
@@ -137,9 +137,9 @@
 						});
 					{/if}
 				//]]>
-				</script>
-				{/block}
+				</script>				
 			</div>
 		</div>
+		{/block}
 	</div>
 </div>

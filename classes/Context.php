@@ -144,7 +144,7 @@ class ContextCore
 								$this->mobile_device = true;
 							break;
 						case 2: // Only for touchpads
-							if ($mobile_detect->isTablet() && $mobile_detect->isMobile())
+							if ($mobile_detect->isTablet() && !$mobile_detect->isMobile())
 								$this->mobile_device = true;
 							break;
 						case 3: // For touchpad or mobile devices

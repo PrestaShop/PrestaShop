@@ -97,6 +97,7 @@ class AdminModulesControllerCore extends AdminController
 		$this->list_modules_categories['social_networks']['name'] = $this->l('Social Networks');
 		$this->list_modules_categories['others']['name'] = $this->l('Other Modules');
 		$this->list_modules_categories['mobile']['name'] = $this->l('Mobile');
+		$this->list_modules_categories['dashboard']['name'] = $this->l('Dashboard');
 
 		uasort($this->list_modules_categories, array($this, 'checkCategoriesNames'));
 
@@ -829,14 +830,19 @@ class AdminModulesControllerCore extends AdminController
 								}
 								else
 									$shop_context = 'all shops';
-
 								$this->context->smarty->assign(array(
 									'module' => $module,
 									'display_multishop_checkbox' => true,
 									'current_url' => $this->getCurrentUrl('enable'),
-									'shop_context' => $shop_context
+									'shop_context' => $shop_context,
 								));
 							}
+
+							$this->context->smarty->assign(array(
+								'shop_list' => Helper::renderShopList(),
+								'is_multishop' => Shop::isFeatureActive(),
+								'multishop_context' => Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP
+							));
 
 
 							if (Shop::isFeatureActive() && isset(Context::getContext()->tmpOldShop))
@@ -1320,6 +1326,8 @@ class AdminModulesControllerCore extends AdminController
 			$html = $this->generateHtmlMessage($module_success);
 			$this->confirmations[] = sprintf($this->l('The following module(s) were upgraded successfully:').' %s', $html);
 		}
+
+		ConfigurationKPI::updateValue('UPDATE_MODULES', count($upgrade_available));
 
 		// Init tpl vars for smarty
 		$tpl_vars = array();

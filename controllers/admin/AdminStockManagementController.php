@@ -974,6 +974,7 @@ class AdminStockManagementControllerCore extends AdminController
 				$is_pack = false;
 				$is_virtual = false;
 				$lang_id = $this->context->language->id;
+				$default_wholesale_price = 0;
 
 				// try to load product attribute first
 				if ($id_product_attribute > 0)
@@ -1002,6 +1003,8 @@ class AdminStockManagementControllerCore extends AdminController
 						);
 						$query->where('a.`id_product_attribute` = '.$id_product_attribute);
 						$name = Db::getInstance()->getValue($query);
+						$p = new Product($id_product, false, $lang_id);
+						$default_wholesale_price = $combination->wholesale_price > 0 ? $combination->wholesale_price : $p->wholesale_price;
 					}
 				}
 				// try to load a simple product
@@ -1018,6 +1021,7 @@ class AdminStockManagementControllerCore extends AdminController
 						$manufacturer_reference = $product->supplier_reference;
 						$is_pack = $product->cache_is_pack;
 						$is_virtual = $product->is_virtual;
+						$default_wholesale_price = $product->wholesale_price;
 					}
 				}
 
@@ -1056,7 +1060,7 @@ class AdminStockManagementControllerCore extends AdminController
 						'quantity' => Tools::getValue('quantity', ''),
 						'id_warehouse' => Tools::getValue('id_warehouse', ''),
 						'usable' => ($this->fields_value['usable'] ? $this->fields_value['usable'] : Tools::getValue('usable', '')),
-						'price' => Tools::getValue('price', ''),
+						'price' => Tools::getValue('price', (float)Tools::convertPrice($default_wholesale_price, null)),
 						'id_currency' => Tools::getValue('id_currency', ''),
 						'id_stock_mvt_reason' => Tools::getValue('id_stock_mvt_reason', ''),
 						'is_post' => 1,

@@ -350,7 +350,7 @@ class ShopCore extends ObjectModel
 			}
 		}
 
-		if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || Tools::isPHPCLI())
+		if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || Tools::isPHPCLI() || in_array(Tools::getHttpHost(), array(_MEDIA_SERVER_1_, _MEDIA_SERVER_2_, _MEDIA_SERVER_3_)))
 		{
 			// If in admin, we can access to the shop without right URL
 			if ((!$id_shop && Tools::isPHPCLI()) || defined('_PS_ADMIN_DIR_'))
