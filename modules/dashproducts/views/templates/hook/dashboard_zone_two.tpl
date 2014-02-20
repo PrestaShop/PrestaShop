@@ -24,7 +24,7 @@
 *}
 
 <div class="clearfix "></div>
-<section id="dashproducts" class="panel widget">
+<section id="dashproducts" class="panel widget {if $allow_push} allow_push{/if}">
 	<header class="panel-heading">
 		<i class="icon-bar-chart"></i> {l s='Products and Sales' mod='dashproducts'}
 		<span class="panel-heading-action">
