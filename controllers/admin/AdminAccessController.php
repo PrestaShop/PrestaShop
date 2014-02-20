@@ -90,6 +90,8 @@ class AdminAccessControllerCore extends AdminController
 				else
 					unset($modules[$profile['id_profile']][$k]);
 			}
+
+			uasort($modules[$profile['id_profile']], array($this, 'sortModuleByName'));
 		}
 
 		$this->fields_form = array('');
@@ -242,5 +244,10 @@ class AdminAccessControllerCore extends AdminController
 	public function getCurrentProfileId()
 	{
 		return (isset($_GET['id_profile']) && !empty($_GET['id_profile']) && is_numeric($_GET['id_profile'])) ? (int)$_GET['id_profile'] : 1;
+	}
+
+	private function sortModuleByName($a, $b)
+	{
+		return strnatcmp($a['name'], $b['name']);
 	}
 }
