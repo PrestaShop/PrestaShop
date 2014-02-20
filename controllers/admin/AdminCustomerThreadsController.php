@@ -557,7 +557,7 @@ if ($next_thread)
 		if ($thread->status != 'closed')
 			$actions['closed'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=2&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'label' => $this->l('Mark this message as "handled".'),
+				'label' => $this->l('Mark as "handled".'),
 				'name' => 'setstatus',
 				'value' => 2
 			);
@@ -565,7 +565,7 @@ if ($next_thread)
 		if ($thread->status != 'pending1')
 			$actions['pending1'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=3&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'label' => $this->l('Mark this message as "pending 1" (will be answered later).'),
+				'label' => $this->l('Mark as "pending 1" (will be answered later).'),
 				'name' => 'setstatus',
 				'value' => 3
 			);
@@ -580,7 +580,7 @@ if ($next_thread)
 		if ($thread->status != 'pending2')
 			$actions['pending2'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=4&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'label' => $this->l('Mark this message as "pending 2" (will be answered later).'),
+				'label' => $this->l('Mark as "pending 2" (will be answered later).'),
 				'name' => 'setstatus',
 				'value' => 4
 			);
