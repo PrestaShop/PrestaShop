@@ -22,48 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<script type="text/javascript">
-	// <![CDATA[
-	var idSelectedCountry = {if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}{if isset($address->id_state)}{$address->id_state|intval}{else}false{/if}{/if};
-	var countries = new Array();
-	var countriesNeedIDNumber = new Array();
-	var countriesNeedZipCode = new Array();
-	{foreach from=$countries item='country'}
-		{if isset($country.states) && $country.contains_states}
-			countries[{$country.id_country|intval}] = new Array();
-			{foreach from=$country.states item='state' name='states'}
-				countries[{$country.id_country|intval}].push({ldelim}'id' : '{$state.id_state}', 'name' : '{$state.name|addslashes}'{rdelim});
-			{/foreach}
-		{/if}
-		{if isset($country.need_identification_number) && $country.need_identification_number}
-			countriesNeedIDNumber.push({$country.id_country|intval});
-		{/if}
-		{if isset($country.need_zip_code) && $country.need_zip_code}
-			countriesNeedZipCode[{$country.id_country|intval}] = '{$country.zip_code_format|escape:'htmlall':'UTF-8'}';
-		{/if}
-	{/foreach}
-	$(function(){ldelim}
-		$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}{if isset($address->id_state)}{$address->id_state|intval}{/if}{/if}]').attr('selected', true);
-	{rdelim});
-	{literal}
-		$(document).ready(function() {
-			$('#company').on('input',function(){
-				vat_number();
-			});
-			vat_number();
-			function vat_number()
-			{
-				if ($('#company').val() != '')
-					$('#vat_number').show();
-				else
-					$('#vat_number').hide();
-			}
-		});
-	{/literal}
-	//]]>
-</script>
-
 {capture name=path}{l s='Your addresses'}{/capture}
 <div class="box">
 	<h1 class="page-subheading">{l s='Your addresses'}</h1>
@@ -81,7 +39,6 @@
 	</p>
 	{include file="$tpl_dir./errors.tpl"}
 	<p class="required"><sup>*</sup>{l s='Required field'}</p>
-	
 	<form action="{$link->getPageLink('address', true)|escape:'html':'UTF-8'}" method="post" class="std" id="add_address">
 		<!--h3 class="page-subheading">{if isset($id_address)}{l s='Your address'}{else}{l s='New address'}{/if}</h3-->
 		{assign var="stateExist" value=false}
@@ -155,32 +112,6 @@
 					<label for="id_country">{l s='Country'}<sup>*</sup></label>
 					<select id="id_country" class="form-control" name="id_country">{$countries_list}</select>
 				</div>
-				{if $vatnumber_ajax_call}
-					<script type="text/javascript">
-						var ajaxurl = '{$ajaxurl}';
-						{literal}
-							$(document).ready(function(){
-								$('#id_country').change(function() {
-									$.ajax({
-										type: "GET",
-										url: ajaxurl+"vatnumber/ajax.php?id_country="+$('#id_country').val(),
-										success: function(isApplicable){
-											if(isApplicable == "1")
-											{
-												$('#vat_area').show();
-												$('#vat_number').show();
-											}
-											else
-											{
-												$('#vat_area').hide();
-											}
-										}
-									});
-								});
-							});
-						{/literal}
-					</script>
-				{/if}
 			{/if}
 			{if $field_name eq 'State:name'}
 				{assign var="stateExist" value=true}
@@ -248,7 +179,6 @@
 		</p>
 	</form>
 </div>
-
 <ul class="footer_links clearfix">
 	<li>
 		<a class="btn btn-defaul button button-small" href="{$link->getPageLink('addresses', true)|escape:'html':'UTF-8'}">
@@ -256,3 +186,23 @@
 		</a>
 	</li>
 </ul>
+{strip}
+{if isset($smarty.post.id_state)}
+	{addJsDef idSelectedState=$smarty.post.id_state|intval}
+{else if isset($address->id_state)}
+	{addJsDef idSelectedState=$address->id_state|intval}
+{else}
+	{addJsDef idSelectedState=false}
+{/if}
+{if isset($smarty.post.id_country)}
+	{addJsDef idSelectedCountry=$smarty.post.id_country|intval}
+{else if isset($address->id_country)}
+	{addJsDef idSelectedCountry=$address->id_country|intval}
+{else}
+	{addJsDef idSelectedCountry=false}
+{/if}
+{addJsDef countries=$countries}
+{if isset($vatnumber_ajax_call) && $vatnumber_ajax_call}
+	{addJsDef vatnumber_ajax_call=$vatnumber_ajax_call}
+{/if}
+{/strip}
