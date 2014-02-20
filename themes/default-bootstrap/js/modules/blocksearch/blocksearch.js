@@ -70,7 +70,7 @@ $(document).ready(function()
 		});
 	/*	*/
 	/* TODO Ids aa blocksearch_type need to be removed*/
-	if (typeof ajaxsearch != 'undefined' && ajaxsearch)
+	if (typeof ajaxsearch != 'undefined' && ajaxsearch && typeof blocksearch_type !== 'undefined' && blocksearch_type)
 		$("#search_query_" + blocksearch_type).autocomplete(
 			search_url,
 			{

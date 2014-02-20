@@ -48,14 +48,15 @@
         position: absolute;
         right: 6px;
         top: 20px;
-        display: none;
         width: 30px;
         height: 30px;
         z-index: 2; }
         .sf-menu > li span:after {
           font-family: "FontAwesome";
-          content: "\f068";
-          font-size: 26px; } }
+          content: "\f067";
+          font-size: 26px; }
+        .sf-menu > li span.active:after {
+          content: "\f068"; } }
   .sf-menu > li > a {
     font: 600 18px/22px "Open Sans", sans-serif;
     text-transform: uppercase;
@@ -63,15 +64,6 @@
     display: block;
     padding: 17px 20px;
     border-bottom: 3px solid #e9e9e9; }
-    @media (max-width: 767px) {
-      .sf-menu > li > a.sf-with-ul:after {
-        position: absolute;
-        right: 15px;
-        top: 18px;
-        font-family: "FontAwesome";
-        content: "\f067";
-        font-size: 26px;
-        z-index: 1; } }
   .sf-menu > li.sfHover > a,
   .sf-menu > li > a:hover, .sf-menu > li.sfHoverForce > a {
     background: #333333;
@@ -219,12 +211,3 @@ ul.sf-menu li li li.sfHover ul {
         font-size: 26px; }
       .cat-title.active:after {
         content: "\f068"; } }
-
-@media (max-width: 767px) {
-  .sf-menu > li.sfHover > a.sf-with-ul:after,
-  .sf-menu > li.sfHoverForce > a.sf-with-ul:after {
-    display: none; }
-
-  .sf-menu > li.sfHover > span,
-  .sf-menu > li.sfHoverForce > span {
-    display: block; } }

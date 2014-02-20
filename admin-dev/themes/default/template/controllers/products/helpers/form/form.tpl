@@ -101,8 +101,6 @@
 
 			$(document).ready(function()
 			{
-				hideOtherLanguage(default_language);
-
 				if (product_type == product_type_pack)
 				{
 					$('a[id*="VirtualProduct"]').hide();
@@ -132,7 +130,7 @@
 					var split_position = id.indexOf('-') + 1;
 					var btn_name = id.substr(split_position);
 
-					if (btn_name == 'VirtualProduct' || btn_name == 'Pack' && $('#name_' + id_lang_default).val() == '')
+					if ((btn_name == 'VirtualProduct' || btn_name == 'Pack') && $('#name_' + id_lang_default).val() == '')
 					{
 						alert(missing_product_name);
 						$('#name_' + id_lang_default).focus();
@@ -176,7 +174,7 @@
 						if ($("input[name='id_product']").val() != 0 || btn_name != 'Informations')
 							handleSaveButtons();
 					}
-					hideOtherLanguage(default_language);
+
 					$('.label-tooltip').tooltip();
 				});
 

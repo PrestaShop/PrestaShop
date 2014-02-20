@@ -111,7 +111,7 @@
 			<div class="form-group">
 				<label class="control-label col-lg-3">{l s='Filter by product:'}</label>
 				<div class="col-lg-9">
-					<select id="selectProduct" name="selectProduct" style="width: 200px;" onfocus="fillProducts();" onchange="updateConversionRate(this.value);">
+					<select id="selectProduct" class="fixed-width-xl" name="selectProduct" onfocus="fillProducts();" onchange="updateConversionRate(this.value);">
 						<option value="0" selected="selected">- {l s='All'} -</option>
 					</select>
 				</div>

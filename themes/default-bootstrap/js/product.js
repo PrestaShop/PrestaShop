@@ -196,18 +196,19 @@ $(document).ready(function()
 	else
 		$('.thickbox').click(function(){return false});
 
-	$('#bxslider').bxSlider({
-		minSlides: 1,
-		maxSlides: 6,
-		slideWidth: 178,
-		slideMargin: 20,
-		pager: false,
-		nextText: '',
-		prevText: '',
-		moveSlides:1,
-		infiniteLoop:false,
-		hideControlOnEnd: true
-	});
+	if (!!$.prototype.bxSlider)
+		$('#bxslider').bxSlider({
+			minSlides: 1,
+			maxSlides: 6,
+			slideWidth: 178,
+			slideMargin: 20,
+			pager: false,
+			nextText: '',
+			prevText: '',
+			moveSlides:1,
+			infiniteLoop:false,
+			hideControlOnEnd: true
+		});
 
     // The button to increment the product value
     $('.product_quantity_up').click(function(e){
@@ -296,7 +297,9 @@ function addCombination(idCombination, arrayOfIdAttributes, quantity, price, eco
 function findCombination(firstTime)
 {
 	$('#minimal_quantity_wanted_p').fadeOut();
-	$('#quantity_wanted').val(1);
+	if (typeof $('#minimal_quantity_label').text() === 'undefined' || $('#minimal_quantity_label').html() > 1)
+		$('#quantity_wanted').val(1);
+
 	//create a temporary 'choice' array containing the choices of the customer
 	var choice = [];
 	$('#attributes select, #attributes input[type=hidden], #attributes input[type=radio]:checked').each(function(){
@@ -650,18 +653,18 @@ function displayImage(domAAroundImgThumb, no_animation)
 		no_animation = false;
 	if (domAAroundImgThumb.prop('href'))
 	{
-		var new_src = domAAroundImgThumb.prop('href').replace('thickbox', 'large');
-		var new_title = domAAroundImgThumb.prop('title');
-		var new_href = domAAroundImgThumb.prop('href');
+		var new_src = domAAroundImgThumb.attr('href').replace('thickbox', 'large');
+		var new_title = domAAroundImgThumb.attr('title');
+		var new_href = domAAroundImgThumb.attr('href');
 		if ($('#bigpic').prop('src') != new_src)
 		{
-			$('#bigpic').prop({
+			$('#bigpic').attr({
 				'src' : new_src, 
 				'alt' : new_title, 
 				'title' : new_title
 			}).load(function(){
 				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-					$(this).prop('rel', new_href);
+					$(this).attr('rel', new_href);
 			}); 
 		}
 		$('#views_block li a').removeClass('shown');

@@ -216,7 +216,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 							'type' => 'color',
 							'label' => $this->l('Color'),
 							'name' => 'color',
-							'hint' => $this->l('The background of the PrestaShop Back Office will be displayed in this color (HTML colors only, please).'),
+							'hint' => $this->l('Status vill be highlited in this color. HTML colors only.'),
 						),
 						array(
 							'type' => 'switch',
@@ -330,9 +330,9 @@ class AdminStockConfigurationControllerCore extends AdminController
 								),
 								array(
 									'type' => 'color',
-									'label' => $this->l('Back Office color'),
+									'label' => $this->l('Color'),
 									'name' => 'color',
-									'desc' => $this->l('The background of PrestaShop\'s Back Office will be displayed in this color (HTML colors only, please).'),
+									'desc' => $this->l('Status vill be highlited in this color. HTML colors only.'),
 								),
 							),
 							'submit' => array(
@@ -432,57 +432,47 @@ class AdminStockConfigurationControllerCore extends AdminController
 			'editable' => array(
 				'title' => $this->l('Editable?'),
 				'align' => 'center',
-				'icon' => array(
-					'1' => 'icon-check text-success',
-					'0' => 'icon-ban-circle text-danger'
-				),
+				'active' => 'editable',
 				'type' => 'bool',
 				'orderby' => false,
-				'class' => 'fixed-width-sm'
+				'class' => 'fixed-width-sm',
+				'ajax' => true
 			),
 			'delivery_note' => array(
 				'title' => $this->l('Is there a delivery note available?'),
 				'align' => 'center',
-				'icon' => array(
-					'1' => 'icon-check text-success',
-					'0' => 'icon-ban-circle text-danger'
-				),
+				'active' => 'deliveryNote',
 				'type' => 'bool',
 				'orderby' => false,
-				'class' => 'fixed-width-sm'
+				'class' => 'fixed-width-sm',
+				'ajax' => true
 			),
 			'pending_receipt' => array(
 				'title' => $this->l('Is there a pending receipt?'),
 				'align' => 'center',
-				'icon' => array(
-					'1' => 'icon-check text-success',
-					'0' => 'icon-ban-circle text-danger'
-				),
+				'active' => 'pendingReceipt',
 				'type' => 'bool',
 				'orderby' => false,
-				'class' => 'fixed-width-sm'
+				'class' => 'fixed-width-sm',
+				'ajax' => true
 			),
 			'receipt_state' => array(
 				'title' => $this->l('Delivery state?'),
 				'align' => 'center',
-				'icon' => array(
-					'1' => 'icon-check text-success',
-					'0' => 'icon-ban-circle text-danger'
-				),
+				'active' => 'receiptState',
 				'type' => 'bool',
 				'orderby' => false,
-				'class' => 'fixed-width-sm'
+				'class' => 'fixed-width-sm',
+				'ajax' => true
 			),
 			'enclosed' => array(
 				'title' => $this->l('Enclosed order state?'),
 				'align' => 'center',
-				'icon' => array(
-					'1' => 'icon-check text-success',
-					'0' => 'icon-ban-circle text-danger'
-				),
+				'active' => 'enclosed',
 				'type' => 'bool',
 				'orderby' => false,
-				'class' => 'fixed-width-sm'
+				'class' => 'fixed-width-sm',
+				'ajax' => true
 			),
 		);
 
@@ -558,5 +548,70 @@ class AdminStockConfigurationControllerCore extends AdminController
 			return false;
 		}
 		parent::initProcess();	
+	}
+
+	public function ajaxProcessEditableSupplyOrderState()
+	{
+		$id_supply_order_state = (int)Tools::getValue('id_supply_order_state');
+
+		$sql = 'UPDATE '._DB_PREFIX_.'supply_order_state SET `editable` = NOT `editable` WHERE id_supply_order_state='.$id_supply_order_state;
+		$result = Db::getInstance()->execute($sql);
+
+		if ($result)
+			echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
+		else
+			echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
+	}
+
+	public function ajaxProcessDeliveryNoteSupplyOrderState()
+	{
+		$id_supply_order_state = (int)Tools::getValue('id_supply_order_state');
+
+		$sql = 'UPDATE '._DB_PREFIX_.'supply_order_state SET `delivery_note` = NOT `delivery_note` WHERE id_supply_order_state='.$id_supply_order_state;
+		$result = Db::getInstance()->execute($sql);
+
+		if ($result)
+			echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
+		else
+			echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
+	}
+
+	public function ajaxProcessPendingReceiptSupplyOrderState()
+	{
+		$id_supply_order_state = (int)Tools::getValue('id_supply_order_state');
+
+		$sql = 'UPDATE '._DB_PREFIX_.'supply_order_state SET `pending_receipt` = NOT `pending_receipt` WHERE id_supply_order_state='.$id_supply_order_state;
+		$result = Db::getInstance()->execute($sql);
+
+		if ($result)
+			echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
+		else
+			echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
+	}
+
+	public function ajaxProcessReceiptStateSupplyOrderState()
+	{
+		$id_supply_order_state = (int)Tools::getValue('id_supply_order_state');
+
+		$sql = 'UPDATE '._DB_PREFIX_.'supply_order_state SET `receipt_state` = NOT `receipt_state` WHERE id_supply_order_state='.$id_supply_order_state;
+		$result = Db::getInstance()->execute($sql);
+
+		if ($result)
+			echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
+		else
+			echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
+	}
+
+	public function ajaxProcessEnclosedSupplyOrderState()
+	{
+		$id_supply_order_state = (int)Tools::getValue('id_supply_order_state');
+
+		$sql = 'UPDATE '._DB_PREFIX_.'supply_order_state SET `enclosed`= NOT `enclosed` WHERE id_supply_order_state='.$id_supply_order_state;
+		$result = Db::getInstance()->execute($sql);
+
+		if ($result)
+			echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
+		else
+			echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
 	}
 }

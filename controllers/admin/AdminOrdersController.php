@@ -66,59 +66,74 @@ class AdminOrdersControllerCore extends AdminController
 			$this->statuses_array[$status['id_order_state']] = $status['name'];
 
 		$this->fields_list = array(
-		'id_order' => array(
-			'title' => $this->l('ID'),
-			'align' => 'center'
-		),
-		'reference' => array(
-			'title' => $this->l('Reference'),
-			'align' => 'center'
-		),
-		'new' => array(
-			'title' => $this->l('New'),
-			'align' => 'center',
-			'type' => 'bool',
-			'tmpTableFilter' => true,
-			'orderby' => false
-		),
-		'customer' => array(
-			'title' => $this->l('Customer'),
-			'havingFilter' => true,
-		),
-		'total_paid_tax_incl' => array(
-			'title' => $this->l('Total'),
-			'align' => 'right',
-			'prefix' => '<span class="badge">',
-			'suffix' => '</span>',
-			'type' => 'price',
-			'currency' => true
-		),
-		'payment' => array(
-			'title' => $this->l('Payment')
-		),
-		'osname' => array(
-			'title' => $this->l('Status'),
-			'color' => 'color',
-			'type' => 'select',
-			'list' => $this->statuses_array,
-			'filter_key' => 'os!id_order_state',
-			'filter_type' => 'int',
-			'order_key' => 'osname'
-		),
-		'date_add' => array(
-			'title' => $this->l('Date'),
-			'align' => 'right',
-			'type' => 'datetime',
-			'filter_key' => 'a!date_add'
-		),
-		'id_pdf' => array(
-			'title' => $this->l('PDF'),
-			'align' => 'center',
-			'callback' => 'printPDFIcons',
-			'orderby' => false,
-			'search' => false,
-			'remove_onclick' => true)
+			'id_order' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
+			),
+			'reference' => array(
+				'title' => $this->l('Reference'),
+				'align' => 'center'
+			),
+			'new' => array(
+				'title' => $this->l('New'),
+				'align' => 'center',
+				'type' => 'bool',
+				'tmpTableFilter' => true,
+				'orderby' => false
+			),
+			'customer' => array(
+				'title' => $this->l('Customer'),
+				'havingFilter' => true,
+			),
 		);
+
+		if (Configuration::get('PS_B2B_ENABLE'))
+		{
+			$this->fields_list = array_merge($this->fields_list, array(
+				'company' => array(
+					'title' => $this->l('Company'),
+					'filter_key' => 'c!company'
+				),
+			));
+		}
+
+		$this->fields_list = array_merge($this->fields_list, array(
+			'total_paid_tax_incl' => array(
+				'title' => $this->l('Total'),
+				'align' => 'right',
+				'prefix' => '<span class="badge">',
+				'suffix' => '</span>',
+				'type' => 'price',
+				'currency' => true
+			),
+			'payment' => array(
+				'title' => $this->l('Payment')
+			),
+			'osname' => array(
+				'title' => $this->l('Status'),
+				'color' => 'color',
+				'type' => 'select',
+				'list' => $this->statuses_array,
+				'filter_key' => 'os!id_order_state',
+				'filter_type' => 'int',
+				'order_key' => 'osname'
+			),
+			'date_add' => array(
+				'title' => $this->l('Date'),
+				'align' => 'right',
+				'type' => 'datetime',
+				'filter_key' => 'a!date_add'
+			),
+			'id_pdf' => array(
+				'title' => $this->l('PDF'),
+				'align' => 'center',
+				'callback' => 'printPDFIcons',
+				'orderby' => false,
+				'search' => false,
+				'remove_onclick' => true
+			)
+		));
 		
 		if (Country::isCurrentlyUsed('country', true))
 		{
@@ -155,8 +170,6 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			// Save context (in order to apply cart rule)
 			$order = new Order((int)Tools::getValue('id_order'));
-			if (!Validate::isLoadedObject($order))
-				throw new PrestaShopException('Cannot load Order object');
 			$this->context->cart = new Cart($order->id_cart);
 			$this->context->customer = new Customer($order->id_customer);
 		}
@@ -382,7 +395,7 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			$order = new Order(Tools::getValue('id_order'));
 			if (!Validate::isLoadedObject($order))
-				throw new PrestaShopException('Can\'t load Order object');
+				$this->errors[] = Tools::displayError('The order cannot be found within your database.');
 			ShopUrl::cacheMainDomainForShop((int)$order->id_shop);
 		}
 
@@ -977,7 +990,7 @@ class AdminOrdersControllerCore extends AdminController
 				$employee = new Employee((int)Context::getContext()->cookie->id_employee);
 				$payment_module->validateOrder(
 					(int)$cart->id, (int)$id_order_state,
-					$cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l('Manual order -- Employee:').
+					$cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l('Manual order -- Employee:').' '.
 					substr($employee->firstname, 0, 1).'. '.$employee->lastname, array(), null, false, $cart->secure_key
 				);
 				if ($payment_module->currentOrder)
@@ -1424,7 +1437,7 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		$order = new Order(Tools::getValue('id_order'));
 		if (!Validate::isLoadedObject($order))
-			throw new PrestaShopException('object can\'t be loaded');
+			$this->errors[] = Tools::displayError('The order cannot be found within your database.');
 
 		$customer = new Customer($order->id_customer);
 		$carrier = new Carrier($order->id_carrier);

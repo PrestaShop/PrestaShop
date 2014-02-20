@@ -43,13 +43,12 @@
 		color: rgba(black,0.5)
 		background: transparent !important
 		border: none !important
+		white-space: nowrap
 		@include border-radius(0)
 		@media (max-width: $screen-tablet)
 			left: 70px
 		li
 			text-transform: uppercase
-			.shopList
-				width: 30px
 			i
 				font-size: 14px
 			&.breadcrumb-container i, &.breadcrumb-current i
@@ -81,6 +80,7 @@
 	margin-right: 3px
 	font-size: 12px
 	color: white
+	background-color: $secondary-color
 	text-align: center
 	text-shadow: none
 	text-align: center

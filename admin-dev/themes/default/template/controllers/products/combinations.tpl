@@ -53,7 +53,7 @@
 	<input type="hidden" name="submitted_tabs[]" value="Combinations" />
 	<h3>{l s='Add or modify combinations for this product'}</h3>
 	<div class="alert alert-info">
-		{l s='You can also use the'}&nbsp;<a class="btn btn-link bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><i class="icon-magic"></i> {l s='Product combinations generator'} <i class="icon-external-link-sign"></i></a> {l s='in order to automatically create a set of combinations.'}
+		{l s='You can also use the'}&nbsp;<a class="btn btn-link bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&amp;id_product={$product->id}&amp;attributegenerator&amp;token={$token_generator}"><i class="icon-magic"></i> {l s='Product combinations generator'} <i class="icon-external-link-sign"></i></a> {l s='in order to automatically create a set of combinations.'}
 	</div>
 	{if $combination_exists}
 	<div class="alert alert-info" style="display:block">

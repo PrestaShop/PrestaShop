@@ -309,7 +309,7 @@ class AdminCountriesControllerCore extends AdminController
 				),			
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Contains following  states'),
+					'label' => $this->l('Contains states'),
 					'name' => 'contains_states',
 					'required' => false,
 					'values' => array(
@@ -390,22 +390,22 @@ class AdminCountriesControllerCore extends AdminController
 		if (Validate::isLoadedObject($country) && Tools::getValue('id_zone'))
 		{
 			$old_id_zone = $country->id_zone;
-			//we change zone for states attached to this country, only if they have the same id zone before change
-			if (parent::processUpdate())
+			$results = Db::getInstance()->executeS('SELECT `id_state` FROM `'._DB_PREFIX_.'state` WHERE `id_country` = '.(int)$country->id.' AND `id_zone` = '.(int)$old_id_zone);
+
+			if ($results && count($results))
 			{
-				$results = Db::getInstance()->executeS('SELECT `id_state` FROM `'._DB_PREFIX_.'state` WHERE `id_country` = '.(int)$country->id.' AND `id_zone` = '.(int)$old_id_zone);
 				$ids = array();
 				foreach ($results as $res)
 					$ids[] = (int)$res['id_state'];
 				
-				Db::getInstance()->execute(
-					'UPDATE `'._DB_PREFIX_.'state` 
-					SET `id_zone` = '.(int)Tools::getValue('id_zone').' 
-					WHERE `id_state` IN ('.implode(',', $ids).')');
+				if (count($ids))
+					$res = Db::getInstance()->execute(
+							'UPDATE `'._DB_PREFIX_.'state` 
+							SET `id_zone` = '.(int)Tools::getValue('id_zone').' 
+							WHERE `id_state` IN ('.implode(',', $ids).')');
 			}
 		}
-		else
-			parent::processUpdate();
+		return parent::processUpdate();
 	}
 
 	public function postProcess()
@@ -462,6 +462,7 @@ class AdminCountriesControllerCore extends AdminController
 			}
 			unset($tmp_addr_format);
 		}
+
 		return $res;
 	}
 	
@@ -490,6 +491,15 @@ class AdminCountriesControllerCore extends AdminController
 
 	protected function displayValidFields()
 	{
+		/* The following translations are needed later - don't remove the comments!
+		$this->l('Customer');
+		$this->l('Warehouse');
+		$this->l('Country');
+		$this->l('State');
+		$this->l('Address');
+		*/
+
+
 		$html_tabnav = '<ul class="nav nav-tabs" id="custom-address-fields">';
 		$html_tabcontent = '<div class="tab-content" >';
 
@@ -504,11 +514,11 @@ class AdminCountriesControllerCore extends AdminController
 			if ($i != 0){ $class_tab_active = ''; }
 			$fields = array();
 			$html_tabnav .= '<li class="'.$class_tab_active.'"">
-				<a href="#availableListFieldsFor_'.$class_name.'"><i class="icon-caret-down"></i>&nbsp;'.$class_name.'</a></li>';
+				<a href="#availableListFieldsFor_'.$class_name.'"><i class="icon-caret-down"></i>&nbsp;'.Translate::getAdminTranslation($class_name, 'AdminCountries').'</a></li>';
 			
 			foreach (AddressFormat::getValidateFields($class_name) as $name)
 				$fields[] = '<a href="javascript:void(0);" class="addPattern btn btn-default btn-xs" id="'.($class_name == 'Address' ? $name : $class_name.':'.$name).'">
-					<i class="icon-plus-sign"></i>&nbsp;'.$name.'</a>';
+					<i class="icon-plus-sign"></i>&nbsp;'.ObjectModel::displayFieldName($name, $class_name).'</a>';
 			$html_tabcontent .= '
 				<div class="tab-pane availableFieldsList panel '.$class_tab_active.'" id="availableListFieldsFor_'.$class_name.'">
 				'.implode(' ', $fields).'</div>';

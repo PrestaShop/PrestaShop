@@ -29,7 +29,6 @@
  */
 class AdminSupplyOrdersControllerCore extends AdminController
 {
-
 	/*
 	 * @var array List of warehouses
 	 */
@@ -1109,10 +1108,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$id_currency = (int)Tools::getValue('id_currency', 0);
 			if ($id_currency <= 0 || ( !($result = Currency::getCurrency($id_currency)) || empty($result) ))
 				$this->errors[] = Tools::displayError($this->l('The selected currency is not valid.'));
+
 			// get delivery date
-			$delivery_expected = new DateTime(pSQL(Tools::getValue('date_delivery_expected')));
-			// converts date to timestamp
-			if ($delivery_expected <= (new DateTime('yesterday')))
+			if (strtotime(Tools::getValue('date_delivery_expected')) <= strtotime('-1 day'))
 				$this->errors[] = Tools::displayError($this->l('The date you specified cannot be in the past.'));
 
 			// gets threshold

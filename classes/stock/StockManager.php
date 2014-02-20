@@ -626,7 +626,7 @@ class StockManagerCore implements StockManagerInterface
 	 * For a given stock, calculates its new WA(Weighted Average) price based on the new quantities and price
 	 * Formula : (physicalStock * lastCump + quantityToAdd * unitPrice) / (physicalStock + quantityToAdd)
 	 *
-	 * @param Stock $stock
+	 * @param Stock|PrestaShopCollection $stock
 	 * @param int $quantity
 	 * @param float $price_te
 	 * @return int WA
@@ -643,7 +643,7 @@ class StockManagerCore implements StockManagerInterface
 	 * @param int $id_product_attribute
 	 * @param int $id_warehouse Optional
 	 * @param int $price_te Optional
-	 * @return Collection of Stock
+	 * @return PrestaShopCollection Collection of Stock
 	 */
 	protected function getStockCollection($id_product, $id_product_attribute, $id_warehouse = null, $price_te = null)
 	{

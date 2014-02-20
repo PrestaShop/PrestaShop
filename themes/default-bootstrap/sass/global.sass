@@ -575,6 +575,7 @@ table.table_block td
 .price
 	font-size: 13px
 	color: $price-color
+	white-space: nowrap
 
 .price.product-price
 	font: 600 21px/26px $font-custom
@@ -1286,9 +1287,9 @@ ul.step
 					background: url(../img/order-step-done-last.png) right 0 no-repeat
 		&#step_end
 			span
-			@media (min-width: $screen-md) // min 991px	
-				&:after
-					display: none
+				@media (min-width: $screen-md) // min 991px	
+					&:after
+						display: none
 		
 		em
 			font-style: normal
@@ -1628,6 +1629,12 @@ div.star a:hover
 #tinymce ol,
 #tinymce dl
 	margin-left: 20px
+
+.rte ul
+	list-style-type: disc
+
+.rte ol
+	list-style-type: decimal
 
 .block_hidden_only_for_screen
 	display: none
@@ -2522,8 +2529,6 @@ div.star.star_hover
 	background: $light-background !important
 
 .fancybox-skin .fancybox-close
-	top: 8px
-	right: 8px
 	width: 28px
 	height: 28px
 	background: none
@@ -2531,6 +2536,8 @@ div.star.star_hover
 	line-height: 28px
 	color: $base-text-color
 	text-align: center
+	background: #fff
+	@include border-radius(50px)
 	&:hover 
 		color: $link-hover-color
 	&:after
@@ -2633,6 +2640,19 @@ div.star.star_hover
 			// max 991px 
 			@media (max-width: $screen-sm-max)
 				padding-bottom: 0
+	p
+		em
+			background: none
+			@include border-radius(0)
+			margin: 0
+			font-size: 13px
+			color: $text-color
+			float: none
+			height: inherit
+			line-height: inherit
+			text-align: left
+			font-style: italic
+
 .ie8
 	#facebook_block,
 	#cmsinfo_block
@@ -2644,13 +2664,12 @@ div.star.star_hover
 		display: none !important
 //temporary fix for quickview
 #product.content_only
-	div#primary_block
-		div#pb-right-column
-			p.resetimg
-				margin-bottom: 0px
-				padding-top: 0px
-			#thumbs_list_frame
-				margin-bottom: 0px
+	div.pb-left-column
+		p.resetimg
+			margin-bottom: 0px
+			padding-top: 0px
+		#thumbs_list_frame
+			margin-bottom: 0px
 
 
 //Product Compare

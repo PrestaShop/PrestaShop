@@ -92,11 +92,11 @@
 									<span class="positions">{$module@iteration}</span>
 									{if $can_move}
 									<div class="btn-group-vertical">
-										<a class="btn btn-default btn-xs" {if {$module@iteration} == 1} disabled{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=0&token={$token}&changePosition#{$hook['name']}">
+										<a class="btn btn-default btn-xs" {if {$module@iteration} == 1} disabled{/if} href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;direction=0&amp;token={$token}&amp;changePosition#{$hook['name']}">
 											<i class="icon-chevron-up"></i>
 										</a>
 
-										<a class="btn btn-default btn-xs" {if {$module@iteration} == count($hook['modules'])}disabled{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=1&token={$token}&changePosition#{$hook['name']}">
+										<a class="btn btn-default btn-xs" {if {$module@iteration} == count($hook['modules'])}disabled{/if} href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;direction=1&amp;token={$token}&amp;changePosition#{$hook['name']}">
 											<i class="icon-chevron-down"></i>
 										</a>
 									</div>
@@ -116,7 +116,7 @@
 								<div class="module_col_actions">
 									<!-- <div class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}"></div> -->
 									<div class="btn-group">
-										<a class="btn btn-default" href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&editGraft{if $display_key}&show_modules={$display_key}{/if}&token={$token}">
+										<a class="btn btn-default" href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;editGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token}">
 											<i class="icon-pencil"></i>
 											{l s='Edit'}
 										</a>
@@ -125,7 +125,7 @@
 										</a>
 										<ul class="dropdown-menu">
 											<li>
-												<a href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&deleteGraft{if $display_key}&show_modules={$display_key}{/if}&token={$token}">
+												<a href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;deleteGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token}">
 													<i class="icon-minus-sign-alt"></i>
 													{l s='Unhook'}
 												</a>

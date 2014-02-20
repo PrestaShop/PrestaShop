@@ -24,7 +24,7 @@
 *}
 <div class="row">
 	<div class="col-lg-6">
-			<form action="{$current}&token={$token}" method="post" id="refresh_index_form" name="refresh_index_form" class="form-horizontal">
+			<form action="{$current}&amp;token={$token}" method="post" id="refresh_index_form" name="refresh_index_form" class="form-horizontal">
 				<div class="panel">
 					<h3>
 						<i class="icon-fullscreen"></i> {l s='Indexation'}
@@ -37,7 +37,7 @@
 			</form>
 		</div>
 		<div class="col-lg-6">
-			<form action="{$current}&token={$token}" method="post" id="refresh_cache_form" name="refresh_cache_form" class="form-horizontal">
+			<form action="{$current}&amp;token={$token}" method="post" id="refresh_cache_form" name="refresh_cache_form" class="form-horizontal">
 				<div class="panel">
 					<h3>
 						<i class="icon-briefcase"></i> {l s='Cache'}
@@ -54,17 +54,17 @@
 
 <div id="settings_referrers" class="row">
 	<div class="col-lg-3">
-		<form action="{$current}&token={$token}" method="post" id="settings_form" name="settings_form" class="form-horizontal">
+		<form action="{$current}&amp;token={$token}" method="post" id="settings_form" name="settings_form" class="form-horizontal">
 			<div class="panel">
 				<h3>
 					<i class="icon-cog"></i> {l s='Settings'}
 				</h3>
 				<div class="alert alert-info">{l s='Direct traffic can be quite resource-intensive. You should consider enabling it only if you have a strong need for it.'}</div>
 				<div class="form-group">
-					<label class="control-label col-lg-5">{l s='Save direct traffic?'}</label>
-					<div class="col-lg-7">
+					<label class="control-label col-lg-6">{l s='Save direct traffic?'}</label>
+					<div class="col-lg-6">
 						<div class="row">
-							<div class="input-group col-lg-2">
+							<div class="input-group fixed-width-md">
 								<span class="switch prestashop-switch">
 									<input type="radio" name="tracking_dt" id="tracking_dt_on" value="1" {if $tracking_dt}checked="checked"{/if} />
 									<label class="t" for="tracking_dt_on">

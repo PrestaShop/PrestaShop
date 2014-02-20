@@ -1,5 +1,4 @@
 $chosen-sprite: url("../img/chosen-sprite.png") !default;
-$chosen-sprite-retina: url("../img/chosen-sprite@2x.png") !default;
 
 /* @group Base */
 .chosen-container {
@@ -190,6 +189,7 @@ $chosen-sprite-retina: url("../img/chosen-sprite@2x.png") !default;
 		border: 1px solid #aaa;
 		background-color: #fff;
 		cursor: text;
+		border-radius: 3px;
 		@include box-sizing(border-box);
 		@include background-image(linear-gradient(#eee 1%, #fff 15%));
 	}
@@ -203,7 +203,7 @@ $chosen-sprite-retina: url("../img/chosen-sprite@2x.png") !default;
 			input[type="text"] {
 				margin: 1px 0;
 				padding: 5px;
-				height: 15px;
+				height: 22px;
 				outline: 0;
 				border: 0 !important;
 				background: transparent !important;
@@ -212,7 +212,6 @@ $chosen-sprite-retina: url("../img/chosen-sprite@2x.png") !default;
 				font-size: 100%;
 				font-family: sans-serif;
 				line-height: normal;
-				border-radius: 0;
 			}
 			.default {
 				color: #999;
@@ -385,22 +384,6 @@ $chosen-sprite-retina: url("../img/chosen-sprite@2x.png") !default;
 				background-position: -12px 2px;
 			}
 		}
-	}
-}
-/* @end */
-
-/* @group Retina compatibility */
-@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 144dpi)  {
-	.chosen-rtl .chosen-search input[type="text"],
-	.chosen-container-single .chosen-single abbr,
-	.chosen-container-single .chosen-single div b,
-	.chosen-container-single .chosen-search input[type="text"],
-	.chosen-container-multi .chosen-choices .search-choice .search-choice-close,
-	.chosen-container .chosen-results-scroll-down span,
-	.chosen-container .chosen-results-scroll-up span {
-		background-image: $chosen-sprite-retina !important;
-		background-size: 52px 37px !important;
-		background-repeat: no-repeat !important;
 	}
 }
 /* @end */

@@ -74,6 +74,9 @@ abstract class ModuleCore
 	/** @var array to store the limited country */
 	public $limited_countries = array();
 
+	/** @var array names of the controllers */
+	public $controllers = array();
+
 	/** @var array used by AdminTab to determine which lang file to use (admin.php or module lang file) */
 	public static $classInModule = array();
 
@@ -140,7 +143,7 @@ abstract class ModuleCore
 	const CACHE_FILE_CUSTOMER_MODULES_LIST = '/config/xml/customer_modules_list.xml';
 	
 	const CACHE_FILE_MUST_HAVE_MODULES_LIST = '/config/xml/must_have_modules_list.xml';
-	
+
 	/**
 	 * Constructor
 	 *
@@ -190,7 +193,7 @@ abstract class ModuleCore
 				if (isset(self::$modules_cache[$this->name]['id_module']))
 					$this->id = self::$modules_cache[$this->name]['id_module'];
 				foreach (self::$modules_cache[$this->name] as $key => $value)
-					if (key_exists($key, $this))
+					if (array_key_exists($key, $this))
 						$this->{$key} = $value;
 				$this->_path = __PS_BASE_URI__.'modules/'.$this->name.'/';
 			}
@@ -246,6 +249,9 @@ abstract class ModuleCore
 			$this->uninstallOverrides();
 			return false;
 		}
+
+		if (!$this->installControllers())
+			return false;
 
 		// Install module and retrieve the installation id
 		$result = Db::getInstance()->insert($this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version));
@@ -550,6 +556,16 @@ abstract class ModuleCore
 		{
 			$this->unregisterHook((int)$row['id_hook']);
 			$this->unregisterExceptions((int)$row['id_hook']);
+		}
+
+		foreach ($this->controllers as $controller)
+		{
+			$meta = Meta::getMetaByPage('module-'.$this->name.'-'.$controller, $this->context->language->id);
+			if ((int)$meta['id_meta'] > 0)
+			{
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'theme_meta` WHERE id_meta='.(int)$meta['id_meta']);
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'meta` WHERE id_meta='.(int)$meta['id_meta']);
+			}
 		}
 
 		// Disable the module for all shops
@@ -952,7 +968,7 @@ abstract class ModuleCore
 		if (!Validate::isModuleName($module_name))
 		{
 			if (_PS_MODE_DEV_)
-				die(Tools::displayError($module_name.' is not a valid module name.'));
+				die(Tools::displayError(Tools::safeOutput($module_name).' is not a valid module name.'));
 			return false;
 		}
 
@@ -1678,7 +1694,6 @@ abstract class ModuleCore
 
 	public function isEnabledForShopContext()
 	{
-		$shop_list = Shop::getContextListShopID();
 		return (bool)Db::getInstance()->getValue('
 			SELECT COUNT(*) n
 			FROM `'._DB_PREFIX_.'module_shop`
@@ -1840,13 +1855,24 @@ abstract class ModuleCore
 		return $is_cached;
 	}
 
+
+	/*
+	 * Clear template cache
+	 *
+	 * @param string $template Template name
+	 * @param int null $cache_id
+	 * @param int null $compile_id
+	 * @return int Number of template cleared
+	 */
 	protected function _clearCache($template, $cache_id = null, $compile_id = null)
 	{
 		Tools::enableCache();
 		if ($cache_id === null)
 			$cache_id = $this->name;
-		Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath($template), $cache_id, $compile_id);
+		$number_of_template_cleared = Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath($template), $cache_id, $compile_id);
 		Tools::restoreCacheSettings();
+
+		return $number_of_template_cleared;
 	}
 
 	protected function _generateConfigXml()
@@ -2050,6 +2076,49 @@ abstract class ModuleCore
 		if (!($this->context->controller instanceof AdminController))
 			return false;
 		$this->context->controller->informations[] = $msg;
+	}
+
+	/**
+	 * Install module's controllers using public property $controllers
+	 * @return bool
+	 */
+	private function installControllers()
+	{
+		$themes = Theme::getThemes();
+		$theme_meta_value = array();
+		foreach ($this->controllers as $controller)
+		{
+			if (Meta::getMetaByPage('module-'.$this->name.'-'.$controller, $this->context->language->id))
+				return true;
+			$meta = New Meta();
+			$meta->page = 'module-'.$this->name.'-'.$controller;
+			$meta->configurable = 0;
+			$meta->save();
+			if ((int)$meta->id > 0)
+			{
+				foreach ($themes as $theme)
+				{
+					$theme_meta_value[] = array(
+						'id_theme' => $theme->id,
+						'id_meta' => $meta->id,
+						'left_column' => (int)$theme->default_left_column,
+						'right_column' => (int)$theme->default_right_column
+					);
+
+				}
+			}
+			else
+			{
+				$this->_errors[] = sprintf(Tools::displayError('Unable to install controller: %s'), $controller);
+
+				return false;
+			}
+
+		}
+		if (count($theme_meta_value) > 0)
+			return Db::getInstance()->insert('theme_meta', $theme_meta_value);
+
+		return true;
 	}
 
 	/**

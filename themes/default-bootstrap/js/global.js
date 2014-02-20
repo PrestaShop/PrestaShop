@@ -28,6 +28,8 @@ var responsiveflag = false;
 $(document).ready(function(){
 	highdpi_init();
 	blockHover();
+	if (typeof quickView !== 'undefined' && quickView)
+		quick_view();
 	responsiveResize();
 	$(window).resize(responsiveResize);
 	tmDropDown ('', '#header .current', 'ul.toogle_content', 'active');							// all of this should be defined or left empty brackets
@@ -49,12 +51,6 @@ $(document).ready(function(){
 			display(view);
 		else
 			$('.display').find('li#grid').addClass('selected');
-
-		$(document).delegate('.add_to_compare','click', function(e){
-			e.preventDefault();
-			if (typeof addToCompare != 'undefined')
-				addToCompare(parseInt($(this).data('id-product')));
-		});
 		
 		$('#grid').click(function(e){
 			e.preventDefault();
@@ -75,6 +71,23 @@ $(document).ready(function(){
 	    	});
 		}
 	}
+	
+	jQuery.curCSS = jQuery.css;
+	if (!!$.prototype.cluetip)
+		$('a.cluetip').cluetip({
+			local:true,
+			cursor: 'pointer',
+			dropShadow: false,
+			dropShadowSteps: 0,
+			showTitle: false,
+			tracking: true,
+			sticky: false,
+			mouseOutClose: true,
+			fx: {             
+		    	open:       'fadeIn',
+		    	openSpeed:  'fast'
+			}
+		}).css('opacity', 0.8);
 });
 
 function highdpi_init()
@@ -95,10 +108,9 @@ function highdpi_init()
 	}
 }
 
-function blockHover(status) 
+function blockHover(status)
 {
-	$('.product_list.grid li.ajax_block_product').each(function() {
-		$(this).find('.product-container').hover(
+	$(document).on('mouseenter', '.product_list.grid li.ajax_block_product .product-container',
 		function(){
 			if ($('body').find('.container').width() == 1170){
 				var pcHeight = $(this).parent().outerHeight();
@@ -106,12 +118,15 @@ function blockHover(status)
 				$(this).parent().addClass('hovered'),
 				$(this).parent().css('height', pcHeight + pcPHeight).css('margin-bottom',pcPHeight*-1)
 			}
-		},
+		}
+	);
+
+	$(document).on('mouseleave', '.product_list.grid li.ajax_block_product .product-container',
 		function(){
 			if ($('body').find('.container').width() == 1170)
-			$(this).parent().removeClass('hovered').removeProp('style');
+			$(this).parent().removeClass('hovered').removeAttr('style');
 		}
-	)});	
+	);
 }
 
 function display(view)
@@ -157,7 +172,7 @@ function display(view)
 		$.totalStorage('display', 'list');
 		if (typeof ajaxCart != 'undefined')      // cart button reload
 			ajaxCart.overrideButtonsInThePage();
-		if (typeof quick_view != 'undefined') 	// qick view button reload
+		if (typeof quickView !== 'undefined' && quickView) 	// qick view button reload
 			quick_view();
 	}
 	else 
@@ -199,10 +214,31 @@ function display(view)
 		$.totalStorage('display', 'grid');			
 		if (typeof ajaxCart != 'undefined') 	// cart button reload
 			ajaxCart.overrideButtonsInThePage();
-		if (typeof quick_view != 'undefined') 	// qick view button reload
+		if (typeof quickView !== 'undefined' && quickView) 	// qick view button reload
 			quick_view();
-		blockHover();
 	}	
+}
+
+function quick_view()
+{
+	$(document).on('click', '.quick-view', function(e) 
+	{
+		e.preventDefault();
+		var url = this.rel;
+		if (url.indexOf('?') != -1)
+			url += '&';
+		else
+			url += '?';
+
+		if (!!$.prototype.fancybox)
+			$.fancybox({
+				'padding':  0,
+				'width':    1087,
+				'height':   610,
+				'type':     'iframe',
+				'href':     url + 'content_only=1'
+			});
+	});
 }
 
 /*********************************************************** TMMenuDropDown **********************************/

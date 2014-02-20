@@ -47,7 +47,8 @@ class AttributeCore extends ObjectModel
 			'color' => 				array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
 			'position' => 			array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 
-			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			// Lang fields
+			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		)
 	);
 
@@ -79,7 +80,7 @@ class AttributeCore extends ObjectModel
 				$combination = new Combination($row['id_product_attribute']);
 				$combination->delete();
 			}
-		
+
 			// Delete associated restrictions on cart rules
 			CartRule::cleanProductRuleIntegrity('attributes', $this->id);
 

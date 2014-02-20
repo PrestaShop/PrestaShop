@@ -30,7 +30,7 @@
 		{l s='List of products by supplier:'}&nbsp;{$supplier->name|escape:'html':'UTF-8'}
 	</h1>
 	{if !empty($supplier->description)}
-		<div class="description_box">
+		<div class="description_box rte">
 			<p>{$supplier->description}</p>
 		</div>
 	{/if}

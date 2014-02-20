@@ -31,7 +31,7 @@
 <div id="login-panel">
 	<div id="login-header">
 		<h1 class="text-center">
-			<img id="logo" width="40px" src="{$img_dir}/icon-prestashop.svg"/>
+			<img id="logo" width="40px" src="{$img_dir}icon-prestashop.svg"/>
 			PRESTASHOP
 		</h1>
 		<hr/>

@@ -172,3 +172,18 @@ function validate_isPasswd(s)
 {
 	return (s.length >= 5 && s.length < 255);
 }
+
+$(document).on('keyup blur', 'input.validate, textarea.validate', function() {
+	if ($(this).hasClass('is_required') || $(this).val().length)
+	{
+		if ($(this).attr('name') == 'postcode' && typeof(countriesNeedZipCode[$('#id_country option:selected').val()]) != 'undefined')
+			var result = window['validate_'+$(this).attr('data-validate')]($(this).val(), countriesNeedZipCode[$('#id_country option:selected').val()]);
+		else
+			var result = window['validate_'+$(this).attr('data-validate')]($(this).val())
+
+		if (result)
+			$(this).parent().removeClass('form-error').addClass('form-ok');
+		else
+			$(this).parent().addClass('form-error').removeClass('form-ok');
+	}
+});

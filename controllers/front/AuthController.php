@@ -61,7 +61,6 @@ class AuthControllerCore extends FrontController
 		$this->addJqueryPlugin('typewatch');
 		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
 		$this->addJS(_PS_JS_DIR_.'validate.js');
-		$this->addJS(_THEME_JS_DIR_.'validate_fields.js');
 	}
 
 	/**
@@ -503,15 +502,6 @@ class AuthControllerCore extends FrontController
 				if ($addresses_type == 'address_invoice')
 					$_POST = $post_back;
 
-				// US customer: normalize the address
-				if ($$addresses_type->id_country == Country::getByIso('US') && Configuration::get('PS_TAASC'))
-				{
-					include_once(_PS_TAASC_PATH_.'AddressStandardizationSolution.php');
-					$normalize = new AddressStandardizationSolution;
-					$$addresses_type->address1 = $normalize->AddressLineStandardization($$addresses_type->address1);
-					$$addresses_type->address2 = $normalize->AddressLineStandardization($$addresses_type->address2);
-				}
-	
 				if (!($country = new Country($$addresses_type->id_country)) || !Validate::isLoadedObject($country))
 					$this->errors[] = Tools::displayError('Country cannot be loaded with address->id_country');
 				$postcode = Tools::getValue('postcode');		

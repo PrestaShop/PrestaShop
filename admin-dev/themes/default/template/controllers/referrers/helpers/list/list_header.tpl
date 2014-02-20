@@ -36,7 +36,6 @@
 				btn_submit_calendar.hide();
 				btn_save_calendar.click(function() {
 					btn_submit_calendar.before('<input type="hidden" name="'+btn_submit_calendar.attr("name")+'" value="1" />');
-
 					$('#calendar_form').submit();
 				});
 			}
@@ -49,7 +48,6 @@
 				btn_submit_settings.hide();
 				btn_save_settings.click(function() {
 					btn_submit_settings.before('<input type="hidden" name="'+btn_submit_settings.attr("name")+'" value="1" />');
-
 					$('#settings_form').submit();
 				});
 			}
@@ -62,7 +60,6 @@
 				btn_submit_refresh_index.hide();
 				btn_save_refresh_index.click(function() {
 					btn_submit_refresh_index.before('<input type="hidden" name="'+btn_submit_refresh_index.attr("name")+'" value="1" />');
-
 					$('#refresh_index_form').submit();
 				});
 			}
@@ -75,7 +72,6 @@
 				btn_submit_refresh_cache.hide();
 				btn_save_refresh_cache.click(function() {
 					btn_submit_refresh_cache.before('<input type="hidden" name="'+btn_submit_refresh_cache.attr("name")+'" value="1" />');
-
 					$('#refresh_cache_form').submit();
 				});
 			}

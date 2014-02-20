@@ -347,7 +347,7 @@ class AdminImagesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
-		elseif (Tools::getValue('submitMoveImages'.$this->table))
+		elseif (Tools::isSubmit('submitMoveImages'.$this->table))
 		{
 			if ($this->tabAccess['edit'] === '1')
 		 	{
@@ -357,7 +357,7 @@ class AdminImagesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
-		elseif (Tools::getValue('submitImagePreferences'))
+		elseif (Tools::isSubmit('submitImagePreferences'))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
@@ -385,7 +385,7 @@ class AdminImagesControllerCore extends AdminController
 
 	public static function printEntityActiveIcon($value, $object)
 	{
-		return ($value ? '<i class="icon-check text-success"></i>' : '<i class="icon-remove text-danger"></i>');
+		return ($value ? '<span class="list-action-enable action-enabled"><i class="icon-check"></i></span>' : '<span class="list-action-enable action-disabled"><i class="icon-remove"></i></span>');
 	}
 
 	protected function _childValidation()

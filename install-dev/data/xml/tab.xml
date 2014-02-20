@@ -87,9 +87,6 @@
     <tab id="Suppliers" id_parent="Catalog" active="1">
       <class_name>AdminSuppliers</class_name>
     </tab>
-    <tab id="Image_Mapping" id_parent="Catalog" active="1">
-      <class_name>AdminScenes</class_name>
-    </tab>
     <tab id="Tags" id_parent="Catalog" active="1">
       <class_name>AdminTags</class_name>
     </tab>

@@ -144,7 +144,7 @@ class HelperTreeCategoriesCore extends TreeCore
 		return $this;
 	}
 
-	public function getSelectedCatgories()
+	public function getSelectedCategories()
 	{
 		if (!isset($this->_selected_categories))
 			$this->_selected_categories = array();
@@ -216,6 +216,10 @@ class HelperTreeCategoriesCore extends TreeCore
 			&& !empty($this->_disabled_categories))
 			$this->_disableCategories($data, $this->getDisabledCategories());
 
+		if (isset($this->_selected_categories)
+			&& !empty($this->_selected_categories))
+			$this->_getSelectedChildNumbers($data, $this->getSelectedCategories());
+
 		//Default bootstrap style of search is push-right, so we add this button first
 		if ($this->useSearch())
 		{
@@ -262,7 +266,7 @@ class HelperTreeCategoriesCore extends TreeCore
 			$this->setAttribute('use_checkbox', $this->useCheckBox());
 		}
 
-		$this->setAttribute('selected_categories', $this->getSelectedCatgories());		
+		$this->setAttribute('selected_categories', $this->getSelectedCategories());
 		return parent::render($data);
 	}
 
@@ -315,5 +319,25 @@ class HelperTreeCategoriesCore extends TreeCore
 			else if (array_key_exists('children', $category) && is_array($category['children']))
 				self::_disableCategories($category['children'], $disabled_categories);
 		}
+	}
+
+	private function _getSelectedChildNumbers(&$categories, $selected, &$parent = null)
+	{
+		$selected_childs = 0;
+
+		foreach ($categories as $key => &$category)
+		{
+			if (isset($parent) && in_array($category['id_category'], $selected))
+				$selected_childs++;
+
+			if (isset($category['children']) && !empty($category['children']))
+				$selected_childs += $this->_getSelectedChildNumbers($category['children'], $selected, $category);
+		}
+
+		if (!isset($parent['selected_childs']))
+			$parent['selected_childs'] = 0;
+
+		$parent['selected_childs'] = $selected_childs;
+		return $selected_childs;
 	}
 }

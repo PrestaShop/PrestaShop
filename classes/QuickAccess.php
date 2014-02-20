@@ -64,5 +64,18 @@ class QuickAccessCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'quick_access_lang` qal ON (qa.`id_quick_access` = qal.`id_quick_access` AND qal.`id_lang` = '.(int)$id_lang.')
 		ORDER BY `name` ASC');
 	}
+
+	public function toggleNewWindow()
+	{
+		if (!array_key_exists('new_window', $this))
+			throw new PrestaShopException('property "new_window" is missing in object '.get_class($this));
+
+		$this->setFieldsToUpdate(array('new_window' => true));
+
+		$this->new_window = !(int)$this->new_window;
+
+		return $this->update(false);
+	}
+
 }
 

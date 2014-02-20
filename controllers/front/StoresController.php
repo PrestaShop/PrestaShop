@@ -211,9 +211,7 @@ class StoresControllerCore extends FrontController
 	protected function displayAjax()
 	{
 		$stores = $this->getStores();
-		$dom = new DOMDocument('1.0');
-		$node = $dom->createElement('markers');
-		$parnode = $dom->appendChild($node);
+		$parnode = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><markers></markers>');
 
 		$days[1] = 'Monday';
 		$days[2] = 'Tuesday';
@@ -226,26 +224,25 @@ class StoresControllerCore extends FrontController
 		foreach ($stores as $store)
 		{
 			$other = '';
-			$node = $dom->createElement('marker');
-			$newnode = $parnode->appendChild($node);
-			$newnode->setAttribute('name', $store['name']);
+			$newnode = $parnode->addChild('marker');
+			$newnode->addAttribute('name', $store['name']);
 			$address = $this->processStoreAddress($store);
 
 			$other .= $this->renderStoreWorkingHours($store);
-			$newnode->setAttribute('addressNoHtml', strip_tags(str_replace('<br />', ' ', $address)));
-			$newnode->setAttribute('address', $address);
-			$newnode->setAttribute('other', $other);
-			$newnode->setAttribute('phone', $store['phone']);
-			$newnode->setAttribute('id_store', (int)($store['id_store']));
-			$newnode->setAttribute('has_store_picture', file_exists(_PS_STORE_IMG_DIR_.(int)($store['id_store']).'.jpg'));
-			$newnode->setAttribute('lat', (float)($store['latitude']));
-			$newnode->setAttribute('lng', (float)($store['longitude']));
+			$newnode->addAttribute('addressNoHtml', strip_tags(str_replace('<br />', ' ', $address)));
+			$newnode->addAttribute('address', $address);
+			$newnode->addAttribute('other', $other);
+			$newnode->addAttribute('phone', $store['phone']);
+			$newnode->addAttribute('id_store', (int)($store['id_store']));
+			$newnode->addAttribute('has_store_picture', file_exists(_PS_STORE_IMG_DIR_.(int)($store['id_store']).'.jpg'));
+			$newnode->addAttribute('lat', (float)($store['latitude']));
+			$newnode->addAttribute('lng', (float)($store['longitude']));
 			if (isset($store['distance']))
-				$newnode->setAttribute('distance', (int)($store['distance']));
+				$newnode->addAttribute('distance', (int)($store['distance']));
 		}
 
 		header('Content-type: text/xml');
-		die($dom->saveXML());
+		die($parnode->asXML());
 	}
 
 	/**

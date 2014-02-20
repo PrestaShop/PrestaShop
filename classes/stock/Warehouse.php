@@ -494,7 +494,7 @@ class WarehouseCore extends ObjectModel
 	 * For a given pack, returns the warehouse it can be shipped from
 	 *
 	 * @param int $id_product
-	 * @return int|bool id_warehouse or false
+	 * @return array|bool id_warehouse or false
 	 */
 	public static function getPackWarehouses($id_product, $id_shop = null)
 	{
@@ -522,7 +522,7 @@ class WarehouseCore extends ObjectModel
 			if ($product->advanced_stock_management)
 			{
 				// gets the warehouses of one product
-				$product_warehouses = Warehouse::getProductWarehouseList((int)$product->id, 0, (int)$id_shop);
+				$product_warehouses = Warehouse::getProductWarehouseList((int)$product->id, (int)$product->cache_default_attribute, (int)$id_shop);
 				$list[(int)$product->id] = array();
 				// fills array with warehouses for this product
 				foreach ($product_warehouses as $product_warehouse)

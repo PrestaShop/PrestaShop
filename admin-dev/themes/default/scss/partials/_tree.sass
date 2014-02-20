@@ -7,13 +7,16 @@
 	padding: 0 0 0 20px
 	list-style: none
 	input
+		vertical-align: baseline
 		margin-right: 4px
+		line-height: normal
 	i
 		font-size: $icon-size-base
 	.tree-item-name, .tree-folder-name
-		padding: 0 5px
-		font-weight: normal
-		@include border-radius(6px)
+		padding: 2px 5px
+		@include border-radius(4px)
+		label
+			font-weight: 400
 		&:hover
 			background-color: #eee
 			cursor: pointer
@@ -21,7 +24,7 @@
 		color: white
 		background-color: $brand-primary
 		&:hover
-			color: gray
+			background-color: darken($brand-primary,5%)
 		i.tree-dot
 			background-color: white
 	i.tree-dot
@@ -29,7 +32,7 @@
 		position: relative
 		width: 6px
 		height: 6px
-		margin: 0 4px 0 6px
+		margin: 0 4px
 		background-color: #ccc
 		@include border-radius(6px)
 	.tree-item-disable, .tree-folder-name-disable

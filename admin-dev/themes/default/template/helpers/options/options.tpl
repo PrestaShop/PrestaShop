@@ -29,7 +29,7 @@
 	id_language = Number({$current_id_lang});
 </script>
 {block name="defaultOptions"}
-<form action="{$current}&token={$token}"
+<form action="{$current}&amp;token={$token}"
 	id="{if $table == null}configuration_form{else}{$table}_form{/if}"
 	method="post"
 	enctype="multipart/form-data" class="form-horizontal">

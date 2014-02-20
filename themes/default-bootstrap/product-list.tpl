@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if isset($products)}
+{if isset($products) && $products}
 	{*define numbers of product per line in other page for desktop*}
 	{if $page_name !='index' && $page_name !='product'}
 		{assign var='nbItemsPerLine' value=3}
@@ -54,7 +54,7 @@
 							<img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html':'UTF-8'}" alt="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" title="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} itemprop="image" />
 						</a>
 						{if isset($quick_view) && $quick_view}
-							<a class="quick-view" href="#" rel="{$product.link|escape:'html':'UTF-8'}">
+							<a class="quick-view" href="{$product.link|escape:'html':'UTF-8'}" rel="{$product.link|escape:'html':'UTF-8'}">
 								<span>{l s='Quick view'}</span>
 							</a>
 						{/if}
@@ -178,7 +178,7 @@
 						{hook h='displayProductListFunctionalButtons' product=$product}
 						{if isset($comparator_max_item) && $comparator_max_item}
 							<div class="compare">
-								<a class="add_to_compare" href="#" data-id-product="{$product.id_product}">{l s='Add to Compare'}</a>
+								<a class="add_to_compare" href="{$product.link|escape:'html':'UTF-8'}" data-id-product="{$product.id_product}">{l s='Add to Compare'}</a>
 							</div>
 						{/if}
 					</div>

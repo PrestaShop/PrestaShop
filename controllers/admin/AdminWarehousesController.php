@@ -127,8 +127,7 @@ class AdminWarehousesControllerCore extends AdminController
 		$this->displayInformation($this->l('This interface allows you to manage your warehouses.').'<br />');
 		$this->displayInformation($this->l('Before adding stock in your warehouses, you should check the default currency used.').'<br />');
 		$this->displayInformation($this->l('You should also check the management type (according to the law in your country), the valuation currency and its associated carriers and shops.').'<br />');
-		$this->displayInformation($this->l('You can also see detailed information about your stock, such as its overall value, the number of products and quantities stored, etc.')
-								  .'<br /><br />');
+		$this->displayInformation($this->l('You can also see detailed information about your stock, such as its overall value, the number of products and quantities stored, etc.'));
 		$this->displayInformation($this->l('Be careful! Products from different warehouses will need to be shipped in different packages.'));
 
 		return parent::renderList();
@@ -297,7 +296,7 @@ class AdminWarehousesControllerCore extends AdminController
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
 				'label' => $this->l('Management type'),
-				'hint' => $this->l('Be careful! You won\'t be able to change this value later!'),
+				'hint' => $this->l('Inventory valuation method. Be careful! You won\'t be able to change this value later!'),
 				'name' => 'management_type',
 				'required' => true,
 				'options' => array(
@@ -318,7 +317,6 @@ class AdminWarehousesControllerCore extends AdminController
 					'id' => 'id',
 					'name' => 'name'
 				),
-				'hint' => $this->l('Inventory valuation method.')
 			);
 			
 			// adds input valuation currency

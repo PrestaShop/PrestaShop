@@ -97,9 +97,9 @@ class TabCore extends ObjectModel
 
 		// Add tab
 		if (parent::add($autodate, $null_values))
-		{
-			// refresh cache when adding new tab
-			self::$_getIdFromClassName[strtolower($this->class_name)] = $this->id;
+		{	
+                        //forces cache to be reloaded
+                        self::$_getIdFromClassName = null;
 			return Tab::initAccess($this->id);
 		}
 		return false;
@@ -291,7 +291,7 @@ class TabCore extends ObjectModel
 	 * @static
 	 * @param $module string Module name
 	 * @param null $id_lang integer Language ID
-	 * @return array|Collection Collection of tabs (or empty array)
+	 * @return array|PrestaShopCollection Collection of tabs (or empty array)
 	 */
 	public static function getCollectionFromModule($module, $id_lang = null)
 	{

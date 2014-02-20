@@ -390,34 +390,46 @@ function updateNewAccountToAddressBlock()
 		data: 'ajax=true&method=getAddressBlockAndCarriersAndPayments&token=' + static_token ,
 		success: function(json)
 		{
-			isLogged = 1;
-			if (json.no_address == 1)
-				document.location.href = addressUrl;
-			
-			$('#opc_new_account').fadeOut('fast', function() {
-				$('#opc_new_account').html(json.order_opc_adress);
-				// update block user info
-				if (json.block_user_info !== '' && $('#header_user').length == 1)
-				{
-					var elt = $(json.block_user_info).find('#header_user_info').html();					
-					$('#header_user_info').fadeOut('nortmal', function() {
-						$(this).html(elt).fadeIn();
+			if (json.hasError)
+			{
+				var errors = '';
+				for(var error in json.errors)
+					//IE6 bug fix
+					if(error !== 'indexOf')
+						errors += $('<div />').html(json.errors[error]).text() + "\n";
+				alert(errors);
+			}
+			else
+			{
+				isLogged = 1;
+				if (json.no_address == 1)
+					document.location.href = addressUrl;
+				
+				$('#opc_new_account').fadeOut('fast', function() {
+					$('#opc_new_account').html(json.order_opc_adress);
+					// update block user info
+					if (json.block_user_info !== '' && $('#header_user').length == 1)
+					{
+						var elt = $(json.block_user_info).find('#header_user_info').html();					
+						$('#header_user_info').fadeOut('nortmal', function() {
+							$(this).html(elt).fadeIn();
+						});
+					}
+					$('#opc_new_account').fadeIn('fast', function() {
+						//After login, the products are automatically associated to an address
+						$.each(json.summary.products, function() {
+							updateAddressId(this.id_product, this.id_product_attribute, '0', this.id_address_delivery);
+						});
+						updateAddressesDisplay(true);
+						updateCarrierList(json.carrier_data);
+						updateCarrierSelectionAndGift();
+						updatePaymentMethods(json);
+						if ($('#gift-price').length == 1)
+							$('#gift-price').html(json.gift_price);
+						$('#opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
 					});
-				}
-				$('#opc_new_account').fadeIn('fast', function() {
-					//After login, the products are automatically associated to an address
-					$.each(json.summary.products, function() {
-						updateAddressId(this.id_product, this.id_product_attribute, '0', this.id_address_delivery);
-					});
-					updateAddressesDisplay(true);
-					updateCarrierList(json.carrier_data);
-					updateCarrierSelectionAndGift();
-					updatePaymentMethods(json);
-					if ($('#gift-price').length == 1)
-						$('#gift-price').html(json.gift_price);
-					$('#opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
 				});
-			});
+			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
 			if (textStatus !== 'abort')

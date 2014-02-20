@@ -347,7 +347,7 @@ class FrontControllerCore extends Controller
 			'b2b_enable' => (bool)Configuration::get('PS_B2B_ENABLE'),
 			'request' => $link->getPaginationLink(false, false, false, true),
 			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT'),
-			'quick_view' => Configuration::get('PS_QUICK_VIEW'),
+			'quick_view' => (bool)Configuration::get('PS_QUICK_VIEW'),
 			'shop_phone' => Configuration::get('PS_SHOP_PHONE'),
 			'compared_products' => is_array($compared_products) ? $compared_products : array(),
 			'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM')
@@ -515,7 +515,6 @@ class FrontControllerCore extends Controller
 	public function display()
 	{
 		Tools::safePostVars();
-
 
 		// assign css_files and js_files at the very last time
 		if ((Configuration::get('PS_CSS_THEME_CACHE') || Configuration::get('PS_JS_THEME_CACHE')) && is_writable(_PS_THEME_DIR_.'cache'))
@@ -769,10 +768,7 @@ class FrontControllerCore extends Controller
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 		
 		if (Configuration::get('PS_QUICK_VIEW'))
-		{
 			$this->addjqueryPlugin('fancybox');
-			$this->addJS(_THEME_JS_DIR_.'quick-view.js');
-		}
 
 		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
 			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
@@ -808,7 +804,6 @@ class FrontControllerCore extends Controller
 			'PS_SHOP_NAME' => Configuration::get('PS_SHOP_NAME'),
 			'PS_ALLOW_MOBILE_DEVICE' => isset($_SERVER['HTTP_USER_AGENT']) && (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE') && @filemtime(_PS_THEME_MOBILE_DIR_)
 		));
-
 	}
 	
 	public function checkLiveEditAccess()
@@ -973,7 +968,6 @@ class FrontControllerCore extends Controller
 
 	public function addMedia($media_uri, $css_media_type = null, $offset = null, $remove = false)
 	{
-
 		if (!is_array($media_uri))
 		{
 			if ($css_media_type)
@@ -988,6 +982,7 @@ class FrontControllerCore extends Controller
 			if (!preg_match('/^http(s?):\/\//i', $media))
 			{
 				$different = 0;
+                $different_css = 0;
 				$type = 'css';
 				if (!$css_media_type)
 				{
@@ -995,8 +990,14 @@ class FrontControllerCore extends Controller
 					$file = $media;
 				}
 				$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/'.$type.'/modules/', $file, $different);
+
+                $override_path_css = str_replace(basename ($file), $type.'/'.basename ($file), str_replace(__PS_BASE_URI__, _PS_ROOT_DIR_.'/', $file), $different_css );
+
 				if ($different && file_exists($override_path))
 					$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/'.$type.'/modules/', $file, $different);
+                elseif ($different_css && file_exists($override_path_css))
+                    $file = $override_path_css;
+
 				if ($css_media_type)
 					$list_uri[$file] = $media;
 				else

@@ -51,6 +51,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			{
 				if (Tools::isSubmit('method'))
 				{
+
 					switch (Tools::getValue('method'))
 					{
 						case 'updateMessage':
@@ -292,7 +293,10 @@ class OrderOpcControllerCore extends ParentOrderController
 			}
 		}
 		elseif (Tools::isSubmit('ajax'))
-			throw new PrestaShopException('Method is not defined');
+		{
+			$this->errors[] = Tools::displayError('No product in your cart.');
+			die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
+		}
 	}
 
 	public function setMedia()
@@ -312,7 +316,6 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$this->addJS(_PS_JS_DIR_.'validate.js');
 		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
-		$this->addJS(_THEME_JS_DIR_.'validate_fields.js');
 		$this->addJS(_THEME_JS_DIR_.'order-carrier.js');
 	}
 
@@ -435,7 +438,6 @@ class OrderOpcControllerCore extends ParentOrderController
 			'sl_year' => $birthday[0],
 			'sl_month' => $birthday[1],
 			'sl_day' => $birthday[2],
-			'id_address_invoice' => $id_address_invoice,
 			'company_invoice' => Tools::htmlentitiesUTF8($address_invoice->company),
 			'lastname_invoice' => Tools::htmlentitiesUTF8($address_invoice->lastname),
 			'firstname_invoice' => Tools::htmlentitiesUTF8($address_invoice->firstname),

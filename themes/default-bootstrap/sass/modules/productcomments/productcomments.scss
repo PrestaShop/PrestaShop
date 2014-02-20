@@ -113,13 +113,9 @@
 	border-width: 0;
 }
 #new_comment_form {
-	width: 465px;
 	overflow: hidden;
 	color: $base-text-color;
 	text-align: left;	
-	@media (max-width: $screen-xs-max) { //max 767px
-		width:275px;
-	}
 	h2{
 		margin-bottom: 10px;
 	}			
@@ -162,8 +158,11 @@
 		}
 	} 	
 	.new_comment_form_content {
-		padding: 15px;
+		padding: 15px 25px 15px 15px;
 		background: #f8f8f8;
+		@media (max-width: $screen-xs-max) { //max 767px
+			padding-left:25px;
+		}
 		.intro_form {
 			padding-bottom: 10px;
 			font-weight: bold;
@@ -234,7 +233,8 @@
 				float: left;
 			}
 			.star_content {
-				float: left;
+				display: inline-block;
+				vertical-align: middle;
 				margin: 0 0 0 5px;
 			}
 		}
@@ -256,9 +256,6 @@
 						}
 					}
 				}					
-			}
-			.title_block{
-				text-transform: capitalize;
 			}
 		}			
 	}

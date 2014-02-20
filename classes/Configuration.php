@@ -321,12 +321,7 @@ class ConfigurationCore extends ObjectModel
 			$id_shop_group = Shop::getContextShopGroupID(true);
 
 		if (!is_array($values))
-		{
-			$is_i18n = false;
 			$values = array($values);
-		}
-		else
-			$is_i18n = true;
 
 		$result = true;
 		foreach ($values as $lang => $value)

@@ -40,7 +40,7 @@ class ProductControllerCore extends FrontController
 		if ($this->context->getMobileDevice() == false)
 		{
 			$this->addCSS(_THEME_CSS_DIR_.'product.css');
-			$this->addJqueryPlugin(array('fancybox', 'idTabs', 'scrollTo', 'serialScroll'));
+			$this->addJqueryPlugin(array('fancybox', 'idTabs', 'scrollTo', 'serialScroll', 'bxslider'));
 			$this->addJS(array(
 				_THEME_JS_DIR_.'tools.js',  // retro compat themes 1.5
 				_THEME_JS_DIR_.'product.js'
@@ -317,6 +317,7 @@ class ProductControllerCore extends FrontController
 
 		$quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true, (int)$this->context->customer->id);
 		foreach ($quantity_discounts as &$quantity_discount)
+		{
 			if ($quantity_discount['id_product_attribute'])
 			{
 				$combination = new Combination((int)$quantity_discount['id_product_attribute']);
@@ -325,6 +326,9 @@ class ProductControllerCore extends FrontController
 					$quantity_discount['attributes'] = $attribute['name'].' - ';
 				$quantity_discount['attributes'] = rtrim($quantity_discount['attributes'], ' - ');
 			}
+			if ((int)$quantity_discount['id_currency'] == 0 && $quantity_discount['reduction_type'] == 'amount')
+				$quantity_discount['reduction'] = Tools::convertPriceFull($quantity_discount['reduction'], null, Context::getContext()->currency);
+		}
 
 		$product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
 		$address = new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
@@ -418,6 +422,7 @@ class ProductControllerCore extends FrontController
 				}
 				if (!isset($groups[$row['id_attribute_group']]))
 					$groups[$row['id_attribute_group']] = array(
+						'group_name' => $row['group_name'],
 						'name' => $row['public_group_name'],
 						'group_type' => $row['group_type'],
 						'default' => -1,
@@ -492,11 +497,11 @@ class ProductControllerCore extends FrontController
 			{
 				foreach ($groups as &$group)
 					foreach ($group['attributes_quantity'] as $key => &$quantity)
-						if (!$quantity)
+						if ($quantity <= 0)
 							unset($group['attributes'][$key]);
 
 				foreach ($colors as $key => $color)
-					if (!$color['attributes_quantity'])
+					if ($color['attributes_quantity'] <= 0)
 						unset($colors[$key]);
 			}
 			foreach ($combinations as $id_product_attribute => $comb)

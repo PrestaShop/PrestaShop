@@ -29,7 +29,7 @@ if (!defined('_PS_VERSION_'))
 
 class CrossSelling extends Module
 {
-	private $_html;
+	private $html;
 
 	public function __construct()
 	{
@@ -40,7 +40,7 @@ class CrossSelling extends Module
 		$this->need_instance = 0;
 
 		$this->bootstrap = true;
-		parent::__construct();	
+		parent::__construct();
 
 		$this->displayName = $this->l('Cross-selling');
 		$this->description = $this->l('Adds a "Customers who bought this product also bought..." section to every product page.');
@@ -48,56 +48,71 @@ class CrossSelling extends Module
 
 	public function install()
 	{
-		if (!parent::install() OR
-			!$this->registerHook('productFooter') OR
-			!$this->registerHook('header') OR
-			!$this->registerHook('shoppingCart') OR
-			!$this->registerHook('actionOrderStatusPostUpdate') OR
-			!Configuration::updateValue('CROSSSELLING_DISPLAY_PRICE', 0) OR
-			!Configuration::updateValue('CROSSSELLING_NBR', 10))
+		if (!parent::install() ||
+			!$this->registerHook('productFooter') ||
+			!$this->registerHook('header') ||
+			!$this->registerHook('shoppingCart') ||
+			!$this->registerHook('actionOrderStatusPostUpdate') ||
+			!Configuration::updateValue('CROSSSELLING_DISPLAY_PRICE', 0) ||
+			!Configuration::updateValue('CROSSSELLING_NBR', 10)
+		)
 			return false;
 		$this->_clearCache('crossselling.tpl');
+
 		return true;
 	}
 
 	public function uninstall()
 	{
 		$this->_clearCache('crossselling.tpl');
-		if (!parent::uninstall() OR
-			!Configuration::deleteByName('CROSSSELLING_DISPLAY_PRICE') OR
-			!Configuration::deleteByName('CROSSSELLING_NBR'))
+		if (!parent::uninstall() ||
+			!Configuration::deleteByName('CROSSSELLING_DISPLAY_PRICE') ||
+			!Configuration::deleteByName('CROSSSELLING_NBR')
+		)
 			return false;
+
 		return true;
 	}
 
 	public function getContent()
 	{
-		$this->_html = '';
-		
+		$this->html = '';
+
 		if (Tools::isSubmit('submitCross'))
 		{
-			if (Tools::getValue('displayPrice') != 0 AND Tools::getValue('CROSSSELLING_DISPLAY_PRICE') != 1)
-				$this->_html .= $this->displayError('Invalid displayPrice');
-			else if (!($productNbr = Tools::getValue('CROSSSELLING_NBR')) || empty($productNbr))
-				$this->_html .= $this->displayError('You must fill in the "Number of displayed products" field.');
-			elseif ((int)($productNbr) == 0)
-				$this->_html .= $this->displayError('Invalid number.');
+			if (Tools::getValue('displayPrice') != 0 && Tools::getValue('CROSSSELLING_DISPLAY_PRICE') != 1)
+				$this->html .= $this->displayError('Invalid displayPrice');
+			else if (!($product_nbr = Tools::getValue('CROSSSELLING_NBR')) || empty($product_nbr))
+				$this->html .= $this->displayError('You must fill in the "Number of displayed products" field.');
+			elseif ((int)$product_nbr == 0)
+				$this->html .= $this->displayError('Invalid number.');
 			else
-			{			
+			{
 				Configuration::updateValue('CROSSSELLING_DISPLAY_PRICE', (int)Tools::getValue('CROSSSELLING_DISPLAY_PRICE'));
 				Configuration::updateValue('CROSSSELLING_NBR', (int)Tools::getValue('CROSSSELLING_NBR'));
 				$this->_clearCache('crossselling.tpl');
-				$this->_html .= $this->displayConfirmation($this->l('Settings updated successfully'));
+				$this->html .= $this->displayConfirmation($this->l('Settings updated successfully'));
 			}
 		}
-		return $this->_html.$this->renderForm();
+
+		return $this->html.$this->renderForm();
 	}
 
 	public function hookHeader()
 	{
+		if (!isset($this->context->controller->php_self) || !in_array(
+				$this->context->controller->php_self, array(
+					'product',
+					'order'
+				)
+			)
+		)
+			return;
+		if (in_array($this->context->controller->php_self, array('order')) && Tools::getValue('step'))
+			return;
 		$this->context->controller->addCSS(($this->_path).'crossselling.css', 'all');
 		$this->context->controller->addJS(($this->_path).'js/crossselling.js');
-		$this->context->controller->addJqueryPlugin(array('scrollTo', 'serialScroll'));
+		$this->context->controller->addJqueryPlugin(array('scrollTo', 'serialScroll', 'bxslider'));
 	}
 
 	/**
@@ -111,35 +126,36 @@ class CrossSelling extends Module
 		$cache_id = 'crossselling|shoppingcart|'.(int)$params['products'];
 		if (!$this->isCached('crossselling.tpl', $this->getCacheId($cache_id)))
 		{
-			$qOrders = 'SELECT o.id_order
+			$q_orders = 'SELECT o.id_order
 			FROM '._DB_PREFIX_.'orders o
 			LEFT JOIN '._DB_PREFIX_.'order_detail od ON (od.id_order = o.id_order)
 			WHERE o.valid = 1 AND (';
-			$nProducts = count($params['products']);
+			$nb_products = count($params['products']);
 			$i = 1;
-			$pIds = array();
+			$products_id = array();
 			foreach ($params['products'] as $product)
 			{
-				$qOrders .= 'od.product_id = '.(int)$product['id_product'];
-				if ($i < $nProducts)
-					$qOrders .= ' OR ';
+				$q_orders .= 'od.product_id = '.(int)$product['id_product'];
+				if ($i < $nb_products)
+					$q_orders .= ' OR ';
 				++$i;
-				$pIds[] = (int)$product['id_product'];
+				$products_id[] = (int)$product['id_product'];
 			}
-			$qOrders .= ')';
-			$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($qOrders);
+			$q_orders .= ')';
+			$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($q_orders);
 
-			if (sizeof($orders))
+			if (count($orders))
 			{
 				$list = '';
-				foreach ($orders AS $order)
+				foreach ($orders as $order)
 					$list .= (int)$order['id_order'].',';
 				$list = rtrim($list, ',');
 
-				$list_product_ids = join(',', $pIds);
-				$orderProducts = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-					SELECT DISTINCT od.product_id, pl.name, pl.link_rewrite, p.reference, i.id_image, product_shop.show_price, cl.link_rewrite category, p.ean13
-					FROM '._DB_PREFIX_.'order_detail od
+				$list_product_ids = join(',', $products_id);
+				$order_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+					'
+										SELECT DISTINCT od.product_id, pl.name, pl.link_rewrite, p.reference, i.id_image, product_shop.show_price, cl.link_rewrite category, p.ean13
+										FROM '._DB_PREFIX_.'order_detail od
 					LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
 					'.Shop::addSqlAssociation('product', 'p').'
 					LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
@@ -153,50 +169,61 @@ class CrossSelling extends Module
 						AND product_shop.active = 1
 					ORDER BY RAND()
 					LIMIT '.(int)Configuration::get('CROSSSELLING_NBR').'
-				');
+				'
+				);
 
-				$taxCalc = Product::getTaxCalculationMethod();
-				foreach ($orderProducts AS &$orderProduct)
+				$tax_calc = Product::getTaxCalculationMethod();
+				foreach ($order_products as &$order_product)
 				{
-					$orderProduct['image'] = $this->context->link->getImageLink($orderProduct['link_rewrite'], (int)$orderProduct['product_id'].'-'.(int)$orderProduct['id_image'], ImageType::getFormatedName('home'));
-					$orderProduct['link'] = $this->context->link->getProductLink((int)$orderProduct['product_id'], $orderProduct['link_rewrite'], $orderProduct['category'], $orderProduct['ean13']);
-					if (Configuration::get('CROSSSELLING_DISPLAY_PRICE') AND ($taxCalc == 0 OR $taxCalc == 2))
-						$orderProduct['displayed_price'] = Product::getPriceStatic((int)$orderProduct['product_id'], true, NULL);
-					elseif (Configuration::get('CROSSSELLING_DISPLAY_PRICE') AND $taxCalc == 1)
-						$orderProduct['displayed_price'] = Product::getPriceStatic((int)$orderProduct['product_id'], false, NULL);
+					$order_product['image'] = $this->context->link->getImageLink($order_product['link_rewrite'], (int)$order_product['product_id'].'-'.(int)$order_product['id_image'], ImageType::getFormatedName('home'));
+					$order_product['link'] = $this->context->link->getProductLink((int)$order_product['product_id'], $order_product['link_rewrite'], $order_product['category'], $order_product['ean13']);
+					if (Configuration::get('CROSSSELLING_DISPLAY_PRICE') && ($tax_calc == 0 || $tax_calc == 2))
+						$order_product['displayed_price'] = Product::getPriceStatic((int)$order_product['product_id'], true, null);
+					elseif (Configuration::get('CROSSSELLING_DISPLAY_PRICE') && $tax_calc == 1)
+						$order_product['displayed_price'] = Product::getPriceStatic((int)$order_product['product_id'], false, null);
 				}
 
-				$this->smarty->assign(array('order' => (count($pIds) > 1 ? true : false), 'orderProducts' => $orderProducts, 'middlePosition_crossselling' => round(sizeof($orderProducts) / 2, 0),
-				'crossDisplayPrice' => Configuration::get('CROSSSELLING_DISPLAY_PRICE')));
+				$this->smarty->assign(
+					array(
+						'order' => (count($products_id) > 1 ? true : false),
+						'orderProducts' => $order_products,
+						'middlePosition_crossselling' => round(count($order_products) / 2, 0),
+						'crossDisplayPrice' => Configuration::get('CROSSSELLING_DISPLAY_PRICE')
+					)
+				);
 			}
 		}
+
 		return $this->display(__FILE__, 'crossselling.tpl', $this->getCacheId($cache_id));
 	}
 
 	/**
-	* Returns module content for left column
-	*/
+	 * Returns module content for left column
+	 */
 	public function hookProductFooter($params)
 	{
 		$cache_id = 'crossselling|productfooter|'.(int)$params['product']->id;
 		if (!$this->isCached('crossselling.tpl', $this->getCacheId($cache_id)))
 		{
-			$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT o.id_order
-			FROM '._DB_PREFIX_.'orders o
+			$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+				'
+							SELECT o.id_order
+							FROM '._DB_PREFIX_.'orders o
 			LEFT JOIN '._DB_PREFIX_.'order_detail od ON (od.id_order = o.id_order)
-			WHERE o.valid = 1 AND od.product_id = '.(int)$params['product']->id);
+			WHERE o.valid = 1 AND od.product_id = '.(int)$params['product']->id
+			);
 
-			if (sizeof($orders))
+			if (count($orders))
 			{
 				$list = '';
-				foreach ($orders AS $order)
+				foreach ($orders as $order)
 					$list .= (int)$order['id_order'].',';
 				$list = rtrim($list, ',');
 
-				$orderProducts = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-					SELECT DISTINCT od.product_id, pl.name, pl.link_rewrite, p.reference, i.id_image, product_shop.show_price, cl.link_rewrite category, p.ean13
-					FROM '._DB_PREFIX_.'order_detail od
+				$order_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+					'
+										SELECT DISTINCT od.product_id, pl.name, pl.link_rewrite, p.reference, i.id_image, product_shop.show_price, cl.link_rewrite category, p.ean13
+										FROM '._DB_PREFIX_.'order_detail od
 					LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
 					'.Shop::addSqlAssociation('product', 'p').'
 					LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
@@ -210,31 +237,39 @@ class CrossSelling extends Module
 						AND product_shop.active = 1
 					ORDER BY RAND()
 					LIMIT '.(int)Configuration::get('CROSSSELLING_NBR').'
-				');
+				'
+				);
 
-				$taxCalc = Product::getTaxCalculationMethod();
-				foreach ($orderProducts AS &$orderProduct)
+				$tax_calc = Product::getTaxCalculationMethod();
+				foreach ($order_products as &$order_product)
 				{
-					$orderProduct['image'] = $this->context->link->getImageLink($orderProduct['link_rewrite'], (int)$orderProduct['product_id'].'-'.(int)$orderProduct['id_image'], ImageType::getFormatedName('home'));
-					$orderProduct['link'] = $this->context->link->getProductLink((int)$orderProduct['product_id'], $orderProduct['link_rewrite'], $orderProduct['category'], $orderProduct['ean13']);
-					if (Configuration::get('CROSSSELLING_DISPLAY_PRICE') AND ($taxCalc == 0 OR $taxCalc == 2))
-						$orderProduct['displayed_price'] = Product::getPriceStatic((int)$orderProduct['product_id'], true, NULL);
-					elseif (Configuration::get('CROSSSELLING_DISPLAY_PRICE') AND $taxCalc == 1)
-						$orderProduct['displayed_price'] = Product::getPriceStatic((int)$orderProduct['product_id'], false, NULL);
+					$order_product['image'] = $this->context->link->getImageLink($order_product['link_rewrite'], (int)$order_product['product_id'].'-'.(int)$order_product['id_image'], ImageType::getFormatedName('home'));
+					$order_product['link'] = $this->context->link->getProductLink((int)$order_product['product_id'], $order_product['link_rewrite'], $order_product['category'], $order_product['ean13']);
+					if (Configuration::get('CROSSSELLING_DISPLAY_PRICE') && ($tax_calc == 0 || $tax_calc == 2))
+						$order_product['displayed_price'] = Product::getPriceStatic((int)$order_product['product_id'], true, null);
+					elseif (Configuration::get('CROSSSELLING_DISPLAY_PRICE') && $tax_calc == 1)
+						$order_product['displayed_price'] = Product::getPriceStatic((int)$order_product['product_id'], false, null);
 				}
 
-				$this->smarty->assign(array('order' => false, 'orderProducts' => $orderProducts, 'middlePosition_crossselling' => round(sizeof($orderProducts) / 2, 0),
-				'crossDisplayPrice' => Configuration::get('CROSSSELLING_DISPLAY_PRICE')));
+				$this->smarty->assign(
+					array(
+						'order' => false,
+						'orderProducts' => $order_products,
+						'middlePosition_crossselling' => round(count($order_products) / 2, 0),
+						'crossDisplayPrice' => Configuration::get('CROSSSELLING_DISPLAY_PRICE')
+					)
+				);
 			}
 		}
+
 		return $this->display(__FILE__, 'crossselling.tpl', $this->getCacheId($cache_id));
 	}
-	
+
 	public function hookActionOrderStatusPostUpdate($params)
 	{
 		$this->_clearCache('crossselling.tpl');
 	}
-	
+
 	public function renderForm()
 	{
 		$fields_form = array(
@@ -250,17 +285,17 @@ class CrossSelling extends Module
 						'name' => 'CROSSSELLING_DISPLAY_PRICE',
 						'desc' => $this->l('Show the price on the products in the block.'),
 						'values' => array(
-									array(
-										'id' => 'active_on',
-										'value' => 1,
-										'label' => $this->l('Enabled')
-									),
-									array(
-										'id' => 'active_off',
-										'value' => 0,
-										'label' => $this->l('Disabled')
-									)
-								),
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						),
 					),
 					array(
 						'type' => 'text',
@@ -275,10 +310,10 @@ class CrossSelling extends Module
 				)
 			),
 		);
-		
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
-		$helper->table =  $this->table;
+		$helper->table = $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 		$helper->default_form_language = $lang->id;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
@@ -294,7 +329,7 @@ class CrossSelling extends Module
 
 		return $helper->generateForm(array($fields_form));
 	}
-	
+
 	public function getConfigFieldsValues()
 	{
 		return array(

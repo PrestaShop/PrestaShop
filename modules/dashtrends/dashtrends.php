@@ -39,9 +39,13 @@ class Dashtrends extends Module
 	{
 		$this->name = 'dashtrends';
 		$this->displayName = 'Dashboard Trends';
-		$this->tab = '';
+		$this->description = 'Dashboard Trends';
+		$this->tab = 'dashboard';
 		$this->version = '0.2';
 		$this->author = 'PrestaShop';
+
+		$this->push_filename = _PS_CACHE_DIR_.'push/trends';
+		$this->allow_push = true;
 
 		parent::__construct();
 	}
@@ -52,9 +56,10 @@ class Dashtrends extends Module
 			&& $this->registerHook('dashboardZoneTwo')
 			&& $this->registerHook('dashboardData')
 			&& $this->registerHook('actionAdminControllerSetMedia')
+			&& $this->registerHook('actionOrderStatusPostUpdate')
 		);
 	}
-	
+
 	public function hookActionAdminControllerSetMedia()
 	{
 		if (get_class($this->context->controller) == 'AdminDashboardController')
@@ -124,13 +129,13 @@ class Dashtrends extends Module
 			$refined_data['sales'][$date] = 0;
 			if (isset($gross_data['total_paid_tax_excl'][$date]))
 				$refined_data['sales'][$date] += $gross_data['total_paid_tax_excl'][$date];
-				
+
 			$refined_data['orders'][$date] = isset($gross_data['orders'][$date]) ? $gross_data['orders'][$date] : 0;
-			
+
 			$refined_data['average_cart_value'][$date] = $refined_data['orders'][$date] ? $refined_data['sales'][$date] / $refined_data['orders'][$date] : 0;
-			
+
 			$refined_data['visits'][$date] = isset($gross_data['visits'][$date]) ? $gross_data['visits'][$date] : 0;
-			
+
 			$refined_data['conversion_rate'][$date] = $refined_data['visits'][$date] ? $refined_data['orders'][$date] / $refined_data['visits'][$date] : 0;
 
 			$refined_data['net_profits'][$date] = 0;
@@ -141,9 +146,10 @@ class Dashtrends extends Module
 			if (isset($gross_data['total_expenses'][$date]))
 				$refined_data['net_profits'][$date] -= $gross_data['total_expenses'][$date];
 		}
+
 		return $refined_data;
 	}
-	
+
 	protected function addupData($data)
 	{
 		$summing = array(
@@ -161,6 +167,7 @@ class Dashtrends extends Module
 		$summing['visits'] = array_sum($data['visits']);
 		$summing['conversion_rate'] = $summing['visits'] ? $summing['orders'] / $summing['visits'] : 0;
 		$summing['net_profits'] = array_sum($data['net_profits']);
+
 		return $summing;
 	}
 
@@ -193,7 +200,7 @@ class Dashtrends extends Module
 			)
 		);
 	}
-	
+
 	public function hookDashboardData($params)
 	{
 		// Artificially remove the decimals in order to get a cleaner Dashboard
@@ -211,7 +218,7 @@ class Dashtrends extends Module
 			$tmp_data_compare = $this->getData($params['compare_from'], $params['compare_to']);
 			$this->dashboard_data_compare = $this->refineData($params['compare_from'], $params['compare_to'], $tmp_data_compare);
 			$this->dashboard_data_sum_compare = $this->addupData($this->dashboard_data_compare);
-			
+
 			$this->data_trends = $this->compareData($this->dashboard_data_sum, $this->dashboard_data_sum_compare);
 			$this->dashboard_data_compare = $this->translateCompareData($this->dashboard_data, $this->dashboard_data_compare);
 		}
@@ -229,7 +236,7 @@ class Dashtrends extends Module
 			'data_chart' => array('dash_trends_chart1' => $this->getChartTrends()),
 		);
 	}
-	
+
 	protected function translateCompareData($normal, $compare)
 	{
 		$translated_array = array();
@@ -240,7 +247,7 @@ class Dashtrends extends Module
 			$normal_max = key($normal[$key]);
 			reset($normal[$key]);
 			$normal_size = $normal_max - $normal_min;
-			
+
 			$compare_min = key($compare[$key]);
 			end($compare[$key]); // move the internal pointer to the end of the array
 			$compare_max = key($compare[$key]);
@@ -254,12 +261,14 @@ class Dashtrends extends Module
 				$translated_array[$key][number_format($translation, 0, '', '')] = $value;
 			}
 		}
+
 		return $translated_array;
 	}
-	
+
 	public function getChartTrends()
 	{
 		$chart_data = array();
+		$chart_data_compare = array();
 		foreach (array_keys($this->dashboard_data) as $chart_key)
 		{
 			$chart_data[$chart_key] = $chart_data_compare[$chart_key] = array();
@@ -277,9 +286,12 @@ class Dashtrends extends Module
 			if ($this->dashboard_data_compare)
 				foreach ($this->dashboard_data_compare[$chart_key] as $key => $value)
 					// min(10) is there to limit the growth to 1000%, beyond this limit it becomes unreadable
-					$chart_data_compare[$chart_key][] = array(1000 * $key, $calibration ? min(10, $value / $calibration) : 0);
+					$chart_data_compare[$chart_key][] = array(
+						1000 * $key,
+						$calibration ? min(10, $value / $calibration) : 0
+					);
 		}
-		
+
 		$charts = array(
 			'sales' => $this->l('Sales'),
 			'orders' => $this->l('Orders'),
@@ -288,14 +300,30 @@ class Dashtrends extends Module
 			'conversion_rate' => $this->l('Conversion Rate'),
 			'net_profits' => $this->l('Net Profits')
 		);
-		
+
 		$data = array('chart_type' => 'line_chart_trends', 'data' => array());
 		foreach ($charts as $key => $title)
 		{
-			$data['data'][] = array('id' => $key, 'key' => $title, 'values' => $chart_data[$key], 'disabled' => ($key == 'sales' ? false : true));
+			$data['data'][] = array(
+				'id' => $key,
+				'key' => $title,
+				'values' => $chart_data[$key],
+				'disabled' => ($key == 'sales' ? false : true)
+			);
 			if ($this->dashboard_data_compare)
-				$data['data'][] = array('id' => $key.'_compare', 'key' => sprintf($this->l('%s (previous period)'), $title), 'values' => $chart_data_compare[$key], 'disabled' => ($key == 'sales' ? false : true));
+				$data['data'][] = array(
+					'id' => $key.'_compare',
+					'key' => sprintf($this->l('%s (previous period)'), $title),
+					'values' => $chart_data_compare[$key],
+					'disabled' => ($key == 'sales' ? false : true)
+				);
 		}
+
 		return $data;
+	}
+
+	public function hookActionOrderStatusPostUpdate($params)
+	{
+		Tools::changeFileMTime($this->push_filename);
 	}
 }

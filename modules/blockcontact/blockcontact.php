@@ -32,13 +32,14 @@ class Blockcontact extends Module
 	public function __construct()
 	{
 		$this->name = 'blockcontact';
+		$this->author = 'PrestaShop';
 		$this->tab = 'front_office_features';
 		$this->version = '1.1';
 
 		$this->bootstrap = true;
 		parent::__construct();	
 
-		$this->displayName = $this->l('Contact Block');
+		$this->displayName = $this->l('Contact block');
 		$this->description = $this->l('Allows you to add additional information about your store\'s customer service.');
 	}
 	

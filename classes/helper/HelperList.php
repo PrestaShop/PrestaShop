@@ -145,16 +145,11 @@ class HelperListCore extends Helper
 		$this->orderBy = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderBy);
 		$this->orderWay = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderWay);
 
-		// Display list header (filtering, pagination and column names)
-		$tpl_vars['header'] = $this->displayListHeader();
-
-		// Show the content of the table
-		$tpl_vars['content'] = $this->displayListContent();
-
-		// Close list table and submit button
-		$tpl_vars['footer'] = $this->displayListFooter();
-
-		$this->tpl->assign($tpl_vars);
+		$this->tpl->assign(array(
+			'header' => $this->displayListHeader(), // Display list header (filtering, pagination and column names)
+			'content' => $this->displayListContent(), // Show the content of the table
+			'footer' => $this->displayListFooter() // Close list table and submit button
+		));
 		return parent::generate();
 	}
 
@@ -340,6 +335,8 @@ class HelperListCore extends Helper
 			'has_bulk_actions' =>  (count($this->_list) <= 1 && !$this->force_show_bulk_actions) ? false : !empty($this->bulk_actions),
 			'list_skip_actions' => $this->list_skip_actions,
 			'row_hover' => $this->row_hover,
+			'list_id' => isset($this->list_id) ? $this->list_id : $this->table,
+			'checked_boxes' => Tools::getValue((isset($this->list_id) ? $this->list_id : $this->table).'Box')
 		)));
 		return $this->content_tpl->fetch();
 	}
@@ -597,6 +594,9 @@ class HelperListCore extends Helper
 		{
 			if (isset($field['value']) && $field['value'] !== false && $field['value'] !== '')
 			{
+				if (is_array($field['value']) && trim(implode('', $field['value'])) == '')
+					continue;
+
 				$has_value = true;
 				break;
 			}

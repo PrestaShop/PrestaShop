@@ -24,6 +24,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 $con = new AdminController();
+$tab = new Tab((int)Tab::getIdFromClassName(Tools::getValue('controller')));
+$con->id = $tab->id;
 $con->init();
 $con->initToolbar();
 $con->initPageHeaderToolbar();
@@ -31,7 +33,7 @@ $con->setMedia();
 $con->initHeader();
 $con->initFooter();
 
-$title = array(Translate::getAdminTranslation('Advanced parameters'), Translate::getAdminTranslation('1-Click upgrade'));
+$title = array($tab->getFieldByLang('name'));
 
 Context::getContext()->smarty->assign(array(
 	'navigationPipe', Configuration::get('PS_NAVIGATION_PIPE'),

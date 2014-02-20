@@ -451,7 +451,7 @@ class ToolsCore
 	* Return price with currency sign for a given product
 	*
 	* @param float $price Product price
-	* @param object $currency Current currency (object, id_currency, NULL => context currency)
+	* @param object|array $currency Current currency (object, id_currency, NULL => context currency)
 	* @return string Price correctly formated (sign, decimal separator...)
 	*/
 	public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
@@ -547,8 +547,10 @@ class ToolsCore
 	* Return price converted
 	*
 	* @param float $price Product price
-	* @param object $currency Current currency object
+	* @param object|array $currency Current currency object
 	* @param boolean $to_currency convert to currency or from currency to default currency
+	* @param Context $context
+	* @return float Price
 	*/
 	public static function convertPrice($price, $currency = null, $to_currency = true, Context $context = null)
 	{
@@ -751,9 +753,16 @@ class ToolsCore
  	*/
 	public static function clearXMLCache()
 	{
+		$themes = array();
+		foreach (Theme::getThemes() as $theme)
+			$themes[] = $theme->directory;
+
 		foreach (scandir(_PS_ROOT_DIR_.'/config/xml') as $file)
-			if ((pathinfo($file, PATHINFO_EXTENSION) == 'xml') && ($file != 'default.xml'))
+		{
+			$path_info = pathinfo($file, PATHINFO_EXTENSION);
+			if (($path_info == 'xml') && ($file != 'default.xml') && !in_array(basename($file, '.'.$path_info), $themes))
 				self::deleteFile(_PS_ROOT_DIR_.'/config/xml/'.$file);
+		}
 	}
 
 	/**
@@ -774,10 +783,10 @@ class ToolsCore
 		if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $string == 'Fatal error')
 			return ('<pre>'.print_r(debug_backtrace(), true).'</pre>');
 		if (!is_array($_ERRORS))
-			return str_replace('"', '&quot;', $string);
+			return $htmlentities ? str_replace('"', '&quot;', $string) : $string;
 		$key = md5(str_replace('\'', '\\\'', $string));
 		$str = (isset($_ERRORS) && is_array($_ERRORS) && array_key_exists($key, $_ERRORS)) ? ($htmlentities ? htmlentities($_ERRORS[$key], ENT_COMPAT, 'UTF-8') : $_ERRORS[$key]) : $string;
-		return str_replace('"', '&quot;', stripslashes($str));
+		return $htmlentities ? str_replace('"', '&quot;', stripslashes($str)) : $str;
 	}
 
 	/**
@@ -961,6 +970,33 @@ class ToolsCore
 	{
 		$context = Context::getContext();
 		return Tools::getAdminToken($params['tab'].(int)Tab::getIdFromClassName($params['tab']).(int)$context->employee->id);
+	}
+
+	/**
+	* Get a valid URL to use from BackOffice
+	*
+	* @param string $url An URL to use in BackOffice
+	* @param boolean $entites Set to true to use htmlentities function on URL param
+	*/
+	public static function getAdminUrl($url = null, $entities = false)
+	{
+		$link = Tools::getHttpHost(true).__PS_BASE_URI__;
+
+		if (isset($url))
+			$link .= ($entities ? Tools::htmlentitiesUTF8($url) : $url);
+
+		return $link;
+	}
+
+	/**
+	* Get a valid image URL to use from BackOffice
+	*
+	* @param string $image Image name
+	* @param boolean $entites Set to true to use htmlentities function on image param
+	*/
+	public static function getAdminImageUrl($image = null, $entities = false)
+	{
+		return Tools::getAdminUrl(basename(_PS_IMG_DIR_).'/'.$image, $entities);
 	}
 
 	/**
@@ -1315,7 +1351,7 @@ class ToolsCore
 
 		if (!$exact)
 		{
-			$spacepos = mb_strrpos($truncate, ' ');
+			$spacepos = Tools::strrpos($truncate, ' ');
 			if ($html)
 			{
 				$truncateCheck = Tools::substr($truncate, 0, $spacepos);
@@ -1469,6 +1505,13 @@ class ToolsCore
 		if (function_exists('mb_substr'))
 			return mb_substr($str, (int)$start, ($length === false ? Tools::strlen($str) : (int)$length), $encoding);
 		return substr($str, $start, ($length === false ? Tools::strlen($str) : (int)$length));
+	}
+
+	public static function strpos($str, $find, $offset = 0, $encoding = 'UTF-8')
+	{
+		if (function_exists('mb_strpos'))
+			return mb_strpos($str, $find, $offset, $encoding);
+		return strpos($str, $find, $offset);
 	}
 
 	public static function strrpos($str, $find, $offset = 0, $encoding = 'utf-8')
@@ -2905,3 +2948,4 @@ function cmpPriceDesc($a, $b)
 		return -1;
 	return 0;
 }
+

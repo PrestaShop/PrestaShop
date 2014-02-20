@@ -28,6 +28,9 @@ ob_start();
 
 require_once(dirname(__FILE__).'/../config/config.inc.php');
 
+// Cart is needed for some requests
+Context::getContext()->cart = new Cart();
+
 //set http auth headers for apache+php-cgi work around
 if (isset($_SERVER['HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches))
 {
@@ -100,10 +103,11 @@ if (isset($_SERVER['HTTP_LOCAL_CONTENT_SHA1']) && $_SERVER['HTTP_LOCAL_CONTENT_S
 	$result['status'] = $_SERVER['SERVER_PROTOCOL'].' 304 Not Modified';
 }
 
-foreach ($result['headers'] as $param_value)
-{
-	header($param_value);
-}
+if (is_array($result['headers']))
+	foreach ($result['headers'] as $param_value)
+	{
+		header($param_value);
+	}
 if (isset($result['type']))
 {
 //	header($result['content_sha1']);

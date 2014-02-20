@@ -35,13 +35,12 @@
 			{if $bulk_actions && $has_bulk_actions}
 				{if isset($list_skip_actions.delete)}
 					{if !in_array($tr.$identifier, $list_skip_actions.delete)}
-						<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
+						<input type="checkbox" name="{$list_id}Box[]" value="{$tr.$identifier}"{if isset($checked_boxes) && is_array($checked_boxes) && in_array({$tr.$identifier}, $checked_boxes)} checked="checked"{/if} class="noborder" />
 					{/if}
 				{else}
-					<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
+					<input type="checkbox" name="{$list_id}Box[]" value="{$tr.$identifier}"{if isset($checked_boxes) && is_array($checked_boxes) && in_array({$tr.$identifier}, $checked_boxes)} checked="checked"{/if} class="noborder" />
 				{/if}
 			{/if}
-
 		</td>
 		{foreach $fields_display AS $key => $params}
 			{block name="open_td"}

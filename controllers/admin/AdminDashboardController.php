@@ -244,6 +244,20 @@ class AdminDashboardControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		if (Tools::isSubmit('submitDateRealTime'))
+		{
+			if ($use_realtime = (int)Tools::getValue('submitDateRealTime'))
+			{
+				$this->context->employee->stats_date_from = date('Y-m-d');
+				$this->context->employee->stats_date_to = date('Y-m-d');
+				$this->context->employee->stats_compare_option = HelperCalendar::DEFAULT_COMPARE_OPTION;
+				$this->context->employee->stats_compare_from = null;
+				$this->context->employee->stats_compare_to = null;
+				$this->context->employee->update();
+			}
+			Configuration::updateValue('PS_DASHBOARD_USE_PUSH', $use_realtime);
+		}
+
 		if (Tools::isSubmit('submitDateRange'))
 		{
 			$this->context->employee->stats_date_from = Tools::getValue('date_from');
@@ -379,5 +393,3 @@ class AdminDashboardControllerCore extends AdminController
 		die(Tools::jsonEncode($return));
 	}	
 }
-
-

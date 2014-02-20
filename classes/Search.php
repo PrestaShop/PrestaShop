@@ -447,6 +447,7 @@ class SearchCore
 			WHERE product_shop.indexed = 0
 			AND product_shop.visibility IN ("both", "search")
 			'.($id_product ? 'AND p.id_product = '.(int)$id_product : '').'
+			AND product_shop.`active` = 1
 			LIMIT '.(int)$limit;
 		return Db::getInstance()->executeS($sql);
 	}
@@ -472,6 +473,7 @@ class SearchCore
 				FROM '._DB_PREFIX_.'product p
 				'.Shop::addSqlAssociation('product', 'p').'
 				WHERE product_shop.visibility IN ("both", "search")
+				AND product_shop.`active` = 1
 				AND '.($id_product ? 'p.id_product = '.(int)$id_product : 'product_shop.indexed = 0')
 			);
 

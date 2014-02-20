@@ -50,7 +50,7 @@
 		<label class="control-label col-lg-3" for="meta_description_{$id_lang}">
 			{include file="controllers/products/multishop/checkbox.tpl" field="meta_description" type="default" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='You needed only a single sentence for the HTML header.'}">
+				title="{l s='You need only a single sentence for the HTML header.'}">
 				{l s='Meta description'}
 			</span>
 		</label>
@@ -116,5 +116,5 @@
 	</div>
 </div>
 <script type="text/javascript">
-	hideOtherLanguage({$id_lang});
+	hideOtherLanguage({$default_form_language});
 </script>

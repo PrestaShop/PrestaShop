@@ -177,7 +177,6 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_FAVICON' => array(
 						'title' => $this->l('Favicon'),
-						'hint' => $this->l('Only ICO format allowed'),
 						'hint' => $this->l('Will appear in the address bar of your web browser.'),
 						'type' => 'file',
 						'name' => 'PS_FAVICON',
@@ -185,7 +184,6 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_STORES_ICON' => array(
 						'title' => $this->l('Store icon'),
-						'hint' => $this->l('Only GIF format allowed.'),
 						'hint' => $this->l('Will appear on the store locator (inside Google Maps).').'<br />'.$this->l('Suggested size: 30x30, transparent GIF.'),
 						'type' => 'file',
 						'name' => 'PS_STORES_ICON',
@@ -199,13 +197,13 @@ class AdminThemesControllerCore extends AdminController
 						'size' => 20
 					),
 					'PS_ALLOW_MOBILE_DEVICE' => array(
-						'title' => $this->l('Enable the mobile theme.'),
+						'title' => $this->l('Enable the mobile theme'),
 						'hint' => $this->l('Allows visitors browsing on mobile devices to view a lighter version of your website.'),
 						'type' => 'radio',
 						'required' => true,
 						'validation' => 'isGenericName',
 						'choices' => array(
-							0 => $this->l('I\'d like to disable it, please. '),
+							0 => $this->l('I\'d like to disable it, please.'),
 							1 => $this->l('I\'d like to enable it only on smart phones.'),
 							2 => $this->l('I\'d like to enable it only on tablets.'),
 							3 => $this->l('I\'d like to enable it on both smart phones and tablets.')
@@ -431,7 +429,7 @@ class AdminThemesControllerCore extends AdminController
 					'name' => 'name',
 					'default' => array(
 						'value' => 0,
-						'label' => '&nbsp;-&nbsp;'
+						'label' => '-'
 					),
 					'query' => $theme_query,
 				)
@@ -635,7 +633,14 @@ class AdminThemesControllerCore extends AdminController
 
 				return false;
 			}
-			if (is_dir(_PS_ALL_THEMES_DIR_.$obj->directory))
+			$themes = array();
+			foreach (Theme::getThemes() as $theme)
+			{
+				if ($theme->id != $obj->id)
+					$themes[] = $theme->directory;
+			}
+
+			if (is_dir(_PS_ALL_THEMES_DIR_.$obj->directory) && !in_array($obj->directory, $themes))
 				Tools::deleteDirectory(_PS_ALL_THEMES_DIR_.$obj->directory.'/');
 			$obj->removeMetas();
 		}
@@ -708,8 +713,6 @@ class AdminThemesControllerCore extends AdminController
 			return false;
 		else
 			return true;
-
-		return false;
 	}
 
 	private function checkNames()
@@ -1674,6 +1677,8 @@ class AdminThemesControllerCore extends AdminController
 
 	public function initContent()
 	{
+		if ($this->display == 'list')
+			$this->display = '';
 		if (isset($this->display) && method_exists($this, 'render'.$this->display))
 		{
 			$this->content .= $this->initPageHeaderToolbar();
@@ -2358,40 +2363,34 @@ class AdminThemesControllerCore extends AdminController
 				{
 					if (strncmp($key, 'to_install', strlen('to_install')) == 0)
 					{
-						if (file_exists(_PS_MODULE_DIR_.$value))
+						$module = Module::getInstanceByName($value);
+						if ($module)
 						{
-							if (!class_exists($value) && file_exists(_PS_MODULE_DIR_.$value.'/'.$value.'.php'))
-								require(_PS_MODULE_DIR_.$value.'/'.$value.'.php');
+							if (!Module::isInstalled($module->name))
+								$module->install();
+							if (!Module::isEnabled($module->name))
+								$module->enable();
 
-							if (class_exists($value))
-							{
-								$module = Module::getInstanceByName($value);
-								if (!Module::isInstalled($module->name))
-									$module->install();
-								if (!Module::isEnabled($module->name))
-									$module->enable();
-
-								if ((int)$module->id > 0 && isset($module_hook[$module->name]))
-									$this->hookModule($module->id, $module_hook[$module->name], $id_shop);
-							}
-							unset($module_hook[$module->name]);
+							if ((int)$module->id > 0 && isset($module_hook[$module->name]))
+								$this->hookModule($module->id, $module_hook[$module->name], $id_shop);
 						}
+						unset($module_hook[$module->name]);
+
 					}
 					else if (strncmp($key, 'to_enable', strlen('to_enable')) == 0)
 					{
-						$module_obj = Module::getInstanceByName($value);
-						if (Validate::isLoadedObject($module_obj))
+						$module = Module::getInstanceByName($value);
+						if ($module)
 						{
-							if (!Module::isInstalled($module_obj->name))
-								$module_obj->install();
-							else if (!Module::isEnabled($module_obj->name))
-								$module_obj->enable();
+							if (!Module::isInstalled($module->name))
+								$module->install();
+							if (!Module::isEnabled($module->name))
+								$module->enable();
 
-							if ((int)$module_obj->id > 0 && isset($module_hook[$module_obj->name]))
-								$this->hookModule($module_obj->id, $module_hook[$module_obj->name], $id_shop);
-
-							unset($module_hook[$module_obj->name]);
+							if ((int)$module->id > 0 && isset($module_hook[$module->name]))
+								$this->hookModule($module->id, $module_hook[$module->name], $id_shop);
 						}
+						unset($module_hook[$module->name]);
 
 					}
 					else if (strncmp($key, 'to_disable', strlen('to_disable')) == 0)
@@ -2522,7 +2521,10 @@ class AdminThemesControllerCore extends AdminController
 		if (isset($_FILES[$field_name]['tmp_name']) && $_FILES[$field_name]['tmp_name'])
 		{
 			if ($error = ImageManager::validateUpload($_FILES[$field_name], Tools::getMaxUploadSize()))
+			{
 				$this->errors[] = $error;
+				return false;
+			}
 
 			$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 			if (!$tmp_name || !move_uploaded_file($_FILES[$field_name]['tmp_name'], $tmp_name))
@@ -2549,6 +2551,8 @@ class AdminThemesControllerCore extends AdminController
 
 			unlink($tmp_name);
 		}
+		if (!count($this->errors))
+			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=6');
 	}
 
 	/**
@@ -2639,7 +2643,7 @@ class AdminThemesControllerCore extends AdminController
 
 		parent::initProcess();
 		// This is a composite page, we don't want the "options" display mode
-		if ($this->display == 'options')
+		if ($this->display == 'options' || $this->display == 'list')
 			$this->display = '';
 	}
 

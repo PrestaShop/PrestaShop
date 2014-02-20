@@ -22,7 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
 $(document).ready(function () {
 	$('select[name=id_order]').change(function () {
 		showProductSelect($(this).attr('value'));
@@ -30,8 +29,21 @@ $(document).ready(function () {
 	showProductSelect($('select[name=id_order]').attr('value'));
 });
 
+if (typeof $.uniform.defaults !== 'undefined')
+{
+	if (typeof contact_fileDefaultHtml !== 'undefined')
+		$.uniform.defaults.fileDefaultHtml = contact_fileDefaultHtml;
+	if (typeof contact_fileButtonHtml !== 'undefined')
+		$.uniform.defaults.fileButtonHtml = contact_fileButtonHtml;
+}
+
 function showProductSelect(id_order)
 {
-	$('.product_select').hide().attr('disabled', 'disabled').parent('.selector').hide();
-	$('#'+id_order+'_order_products').show().removeAttr('disabled').parent('.selector').show();
+	$('.product_select').hide().prop('disabled', 'disabled').parent('.selector').hide();
+	$('.product_select').parents('.form-group').find('label').hide();
+	if ($('#' + id_order + '_order_products').length > 0)
+	{
+		$('#' + id_order + '_order_products').removeProp('disabled').show().parent('.selector').removeClass('disabled').show();
+		$('.product_select').parents('.form-group').show().find('label').show();
+	}
 }

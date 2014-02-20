@@ -35,7 +35,7 @@ class Dashactivity extends Module
 	{
 		$this->name = 'dashactivity';
 		$this->displayName = 'Dashboard Activity';
-		$this->tab = '';
+		$this->tab = 'dashboard';
 		$this->version = '0.1';
 		$this->author = 'PrestaShop';
 		$this->push_filename = _PS_CACHE_DIR_.'push/activity';
@@ -51,9 +51,9 @@ class Dashactivity extends Module
 		Configuration::updateValue('DASHACTIVITY_CART_ABANDONED_MIN', 24);
 		Configuration::updateValue('DASHACTIVITY_CART_ABANDONED_MAX', 48);
 		Configuration::updateValue('DASHACTIVITY_VISITOR_ONLINE', 30);
-		
-		return (parent::install() 
-			&& $this->registerHook('dashboardZoneOne') 
+
+		return (parent::install()
+			&& $this->registerHook('dashboardZoneOne')
 			&& $this->registerHook('dashboardData')
 			&& $this->registerHook('actionObjectOrderAddAfter')
 			&& $this->registerHook('actionObjectCustomerAddAfter')
@@ -63,7 +63,7 @@ class Dashactivity extends Module
 			&& $this->registerHook('actionAdminControllerSetMedia')
 		);
 	}
-	
+
 	public function hookActionAdminControllerSetMedia()
 	{
 		if (get_class($this->context->controller) == 'AdminDashboardController')
@@ -72,9 +72,11 @@ class Dashactivity extends Module
 				$this->context->controller->addJquery();
 
 			$this->context->controller->addJs($this->_path.'views/js/'.$this->name.'.js');
-			$this->context->controller->addJs(array(
-				_PS_JS_DIR_.'date.js', 
-				_PS_JS_DIR_.'tools.js') // retro compat themes 1.5
+			$this->context->controller->addJs(
+				array(
+					_PS_JS_DIR_.'date.js',
+					_PS_JS_DIR_.'tools.js'
+				) // retro compat themes 1.5
 			);
 		}
 	}
@@ -88,21 +90,24 @@ class Dashactivity extends Module
 			$gapi_mode = false;
 
 		$this->context->smarty->assign($this->getConfigFieldsValues());
-		$this->context->smarty->assign(array(
-			'gapi_mode' => $gapi_mode,
-			'dashactivity_config_form' => $this->renderConfigForm(),
-			'date_subtitle' => $this->l('(from %s to %s)'),
-			'date_format' => $this->context->language->date_format_lite,
-			'link' => $this->context->link,
-		));
+		$this->context->smarty->assign(
+			array(
+				'gapi_mode' => $gapi_mode,
+				'dashactivity_config_form' => $this->renderConfigForm(),
+				'date_subtitle' => $this->l('(from %s to %s)'),
+				'date_format' => $this->context->language->date_format_lite,
+				'link' => $this->context->link,
+			)
+		);
+
 		return $this->display(__FILE__, 'dashboard_zone_one.tpl');
 	}
-	
+
 	public function hookDashboardData($params)
 	{
-		if (strlen($params['date_from']) == 10)
+		if (Tools::strlen($params['date_from']) == 10)
 			$params['date_from'] .= ' 00:00:00';
-		if (strlen($params['date_to']) == 10)
+		if (Tools::strlen($params['date_to']) == 10)
 			$params['date_to'] .= ' 23:59:59';
 
 		if (Configuration::get('PS_DASHBOARD_SIMULATION'))
@@ -134,14 +139,18 @@ class Dashactivity extends Module
 					'dash_traffic_source' => array(
 						'<i class="icon-circle" style="color:'.self::$colors[0].'"></i> prestashop.com' => round($visits / 2),
 						'<i class="icon-circle" style="color:'.self::$colors[1].'"></i> google.com' => round($visits / 3),
-						'<i class="icon-circle" style="color:'.self::$colors[2].'"></i> Direct Traffic' => round($visits / 4))
+						'<i class="icon-circle" style="color:'.self::$colors[2].'"></i> Direct Traffic' => round($visits / 4)
+					)
 				),
 				'data_chart' => array(
-					'dash_trends_chart1' => array('chart_type' => 'pie_chart_trends', 'data' => array(
-						array('key' => 'prestashop.com', 'y' => round($visits / 2), 'color' => self::$colors[0]),
-						array('key' => 'google.com', 'y' => round($visits / 3), 'color' => self::$colors[1]),
-						array('key' => 'Direct Traffic', 'y' => round($visits / 4), 'color' => self::$colors[2])
-					))
+					'dash_trends_chart1' => array(
+						'chart_type' => 'pie_chart_trends',
+						'data' => array(
+							array('key' => 'prestashop.com', 'y' => round($visits / 2), 'color' => self::$colors[0]),
+							array('key' => 'google.com', 'y' => round($visits / 3), 'color' => self::$colors[1]),
+							array('key' => 'Direct Traffic', 'y' => round($visits / 4), 'color' => self::$colors[2])
+						)
+					)
 				)
 			);
 		}
@@ -158,114 +167,138 @@ class Dashactivity extends Module
 		}
 		else
 		{
-			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT COUNT(*) as visits, COUNT(DISTINCT `id_guest`) as unique_visitors
-			FROM `'._DB_PREFIX_.'connections`
+			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
+				'
+							SELECT COUNT(*) as visits, COUNT(DISTINCT `id_guest`) as unique_visitors
+							FROM `'._DB_PREFIX_.'connections`
 			WHERE `date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
-			'.Shop::addSqlRestriction(false));
+			'.Shop::addSqlRestriction(false)
+			);
 			extract($row);
 		}
 
 		// Online visitors is only available with Analytics Real Time still in private beta at this time (October 18th, 2013).
 		// if ($result = $gapi->requestReportData('', 'ga:activeVisitors', null, null, null, null, 1, 1))
-			// $online_visitor = $result[0]['metrics']['activeVisitors'];
+		// $online_visitor = $result[0]['metrics']['activeVisitors'];
 		if ($maintenance_ips = Configuration::get('PS_MAINTENANCE_IP'))
 			$maintenance_ips = implode(',', array_map('ip2long', array_map('trim', explode(',', $maintenance_ips))));
 		if (Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
 			$sql = 'SELECT COUNT(DISTINCT c.id_connections)
 					FROM `'._DB_PREFIX_.'connections` c
 					LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
-					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < '.((int)Configuration::get('DASHACTIVITY_VISITOR_ONLINE')*60).'
+					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), cp.`time_start`)) < '.((int)Configuration::get('DASHACTIVITY_VISITOR_ONLINE') * 60).'
 					AND cp.`time_end` IS NULL
 					'.Shop::addSqlRestriction(false, 'c').'
 					'.($maintenance_ips ? 'AND c.ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '');
 		else
 			$sql = 'SELECT COUNT(*)
 					FROM `'._DB_PREFIX_.'connections`
-					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), `date_add`)) < '.((int)Configuration::get('DASHACTIVITY_VISITOR_ONLINE')*60).'
+					WHERE TIME_TO_SEC(TIMEDIFF(NOW(), `date_add`)) < '.((int)Configuration::get('DASHACTIVITY_VISITOR_ONLINE') * 60).'
 					'.Shop::addSqlRestriction(false).'
 					'.($maintenance_ips ? 'AND ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '');
 		$online_visitor = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 
-		$pending_orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'orders` o
+		$pending_orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+			'
+					SELECT COUNT(*)
+					FROM `'._DB_PREFIX_.'orders` o
 		LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (o.current_state = os.id_order_state)
 		WHERE os.paid = 1 AND os.shipped = 0
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
+		);
 
-		$abandoned_cart = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'cart`
+		$abandoned_cart = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+			'
+					SELECT COUNT(*)
+					FROM `'._DB_PREFIX_.'cart`
 		WHERE `date_upd` BETWEEN "'.pSQL(date('Y-m-d H:i:s', strtotime('-'.(int)Configuration::get('DASHACTIVITY_CART_ABANDONED_MAX').' MIN'))).'" AND "'.pSQL(date('Y-m-d H:i:s', strtotime('-'.(int)Configuration::get('DASHACTIVITY_CART_ABANDONED_MIN').' MIN'))).'"
 		AND id_cart NOT IN (SELECT id_cart FROM `'._DB_PREFIX_.'orders`)
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
-		
-		$return_exchanges = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'orders` o
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
+		);
+
+		$return_exchanges = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+			'
+					SELECT COUNT(*)
+					FROM `'._DB_PREFIX_.'orders` o
 		LEFT JOIN `'._DB_PREFIX_.'order_return` or2 ON o.id_order = or2.id_order
 		WHERE or2.`date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o')
+		);
 
-		$products_out_of_stock = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT SUM(IF(IFNULL(stock.quantity, 0) > 0, 0, 1))
-		FROM `'._DB_PREFIX_.'product` p
+		$products_out_of_stock = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+			'
+					SELECT SUM(IF(IFNULL(stock.quantity, 0) > 0, 0, 1))
+					FROM `'._DB_PREFIX_.'product` p
 		'.Shop::addSqlAssociation('product', 'p').'
 		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON p.id_product = pa.id_product
-		'.Product::sqlStock('p', 'pa'));
-		
+		'.Product::sqlStock('p', 'pa')
+		);
+
 		$new_messages = AdminStatsController::getPendingMessages();
 
-		$active_shopping_cart = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'cart`
+		$active_shopping_cart = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+			'
+					SELECT COUNT(*)
+					FROM `'._DB_PREFIX_.'cart`
 		WHERE date_upd > "'.pSQL(date('Y-m-d H:i:s', strtotime('-'.(int)Configuration::get('DASHACTIVITY_CART_ACTIVE').' MIN'))).'"
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
+		);
 
-		$new_customers = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'customer`
+		$new_customers = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+			'
+					SELECT COUNT(*)
+					FROM `'._DB_PREFIX_.'customer`
 		WHERE `date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
-		
-		$new_registrations = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'customer`
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
+		);
+
+		$new_registrations = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+			'
+					SELECT COUNT(*)
+					FROM `'._DB_PREFIX_.'customer`
 		WHERE `newsletter_date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
 		AND newsletter = 1
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
-		$total_suscribers = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'customer`
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
+		);
+		$total_suscribers = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+			'
+					SELECT COUNT(*)
+					FROM `'._DB_PREFIX_.'customer`
 		WHERE newsletter = 1
-		'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
+		);
 		if (Module::isInstalled('blocknewsletter'))
 		{
-			$new_registrations += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'newsletter`
+			$new_registrations += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+				'
+							SELECT COUNT(*)
+							FROM `'._DB_PREFIX_.'newsletter`
 			WHERE active = 1
 			AND `newsletter_date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
-			'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
-			$total_suscribers += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'newsletter`
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
+			);
+			$total_suscribers += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+				'
+							SELECT COUNT(*)
+							FROM `'._DB_PREFIX_.'newsletter`
 			WHERE active = 1
-			'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
+			);
 		}
-		
+
 		$product_reviews = 0;
 		if (Module::isInstalled('productcomments'))
 		{
-			$product_reviews += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'product_comment` pc
+			$product_reviews += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+				'
+							SELECT COUNT(*)
+							FROM `'._DB_PREFIX_.'product_comment` pc
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON (pc.id_product = p.id_product)
 			'.Shop::addSqlAssociation('product', 'p').'
 			WHERE pc.deleted = 0
 			AND pc.`date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
-			'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
+			);
 		}
 
 		return array(
@@ -303,6 +336,7 @@ class Dashactivity extends Module
 		$i = 0;
 		foreach ($referers as $referer_name => $n)
 			$return['data'][] = array('key' => $referer_name, 'y' => $n, 'color' => self::$colors[$i++]);
+
 		return $return;
 	}
 
@@ -313,6 +347,7 @@ class Dashactivity extends Module
 		$i = 0;
 		foreach ($referrers as $referrer_name => $n)
 			$traffic_sources['<i class="icon-circle" style="color:'.self::$colors[$i++].'"></i> '.$referrer_name] = $n;
+
 		return $traffic_sources;
 	}
 
@@ -323,24 +358,26 @@ class Dashactivity extends Module
 		{
 			$websites = array();
 			if ($result = $gapi->requestReportData('ga:source', 'ga:visitors', $date_from, $date_to, '-ga:visitors', null, 1, $limit))
-			foreach ($result as $row)
-				$websites[$row['dimensions']['source']] = $row['metrics']['visitors'];
+				foreach ($result as $row)
+					$websites[$row['dimensions']['source']] = $row['metrics']['visitors'];
 		}
 		else
 		{
-			$directLink = $this->l('Direct link');
-			$websites = array($directLink => 0);
+			$direct_link = $this->l('Direct link');
+			$websites = array($direct_link => 0);
 
-			$result = Db::getInstance()->ExecuteS('
-			SELECT http_referer
-			FROM '._DB_PREFIX_.'connections
+			$result = Db::getInstance()->ExecuteS(
+				'
+							SELECT http_referer
+							FROM '._DB_PREFIX_.'connections
 			WHERE date_add BETWEEN "'.$date_from.'" AND "'.$date_to.'"
 			'.Shop::addSqlRestriction().'
-			LIMIT '.(int)$limit);
+			LIMIT '.(int)$limit
+			);
 			foreach ($result as $row)
 			{
 				if (!isset($row['http_referer']) || empty($row['http_referer']))
-					++$websites[$directLink];
+					++$websites[$direct_link];
 				else
 				{
 					$website = preg_replace('/^www./', '', parse_url($row['http_referer'], PHP_URL_HOST));
@@ -352,9 +389,10 @@ class Dashactivity extends Module
 			}
 			arsort($websites);
 		}
+
 		return $websites;
 	}
-	
+
 	public function renderConfigForm()
 	{
 		$fields_form = array(
@@ -371,7 +409,7 @@ class Dashactivity extends Module
 				)
 			),
 		);
-			
+
 		$fields_form['form']['input'][] = array(
 			'label' => $this->l('Active cart'),
 			'hint' => $this->l('How long (in minutes) a cart is to be considered as active after the last recorded change (default: 30 min).'),
@@ -385,14 +423,14 @@ class Dashactivity extends Module
 					array('id' => 60, 'name' => 60),
 					array('id' => 90, 'name' => 90),
 					array('id' => 120, 'name' => 120),
-					),
+				),
 				'id' => 'id',
 				'name' => 'name',
 			),
 		);
 		$fields_form['form']['input'][] = array(
 			'label' => $this->l('Online visitor'),
-			'hint' => $this->l('How long (in minutes) a visitor is to be considered as online after their last action (default: 30 min).'), 
+			'hint' => $this->l('How long (in minutes) a visitor is to be considered as online after their last action (default: 30 min).'),
 			'name' => 'DASHACTIVITY_VISITOR_ONLINE',
 			'type' => 'select',
 			'options' => array(
@@ -403,29 +441,29 @@ class Dashactivity extends Module
 					array('id' => 60, 'name' => 60),
 					array('id' => 90, 'name' => 90),
 					array('id' => 120, 'name' => 120),
-					),
+				),
 				'id' => 'id',
 				'name' => 'name',
 			),
 		);
 		$fields_form['form']['input'][] = array(
-				'label' => $this->l('Abandoned cart (min)'),
-				'hint' => $this->l('How long (in hours) after the last action a cart is to be considered as abandoned (default: 24 hrs).'),
-				'name' => 'DASHACTIVITY_CART_ABANDONED_MIN',
-				'type' => 'text',
-				'suffix' => $this->l('hrs'),
-				);
+			'label' => $this->l('Abandoned cart (min)'),
+			'hint' => $this->l('How long (in hours) after the last action a cart is to be considered as abandoned (default: 24 hrs).'),
+			'name' => 'DASHACTIVITY_CART_ABANDONED_MIN',
+			'type' => 'text',
+			'suffix' => $this->l('hrs'),
+		);
 		$fields_form['form']['input'][] = array(
-				'label' => $this->l('Abandoned cart (max)'),
-				'hint' => $this->l('How long (in hours) after the last action a cart is no longer to be considered as abandoned (default: 24 hrs).'),
-				'name' => 'DASHACTIVITY_CART_ABANDONED_MAX',
-				'type' => 'text',
-				'suffix' => $this->l('hrs'),
-				);
-		
+			'label' => $this->l('Abandoned cart (max)'),
+			'hint' => $this->l('How long (in hours) after the last action a cart is no longer to be considered as abandoned (default: 24 hrs).'),
+			'name' => 'DASHACTIVITY_CART_ABANDONED_MAX',
+			'type' => 'text',
+			'suffix' => $this->l('hrs'),
+		);
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
-		$helper->table =  $this->table;
+		$helper->table = $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 		$helper->default_form_language = $lang->id;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
@@ -441,7 +479,7 @@ class Dashactivity extends Module
 
 		return $helper->generateForm(array($fields_form));
 	}
-	
+
 	public function getConfigFieldsValues()
 	{
 		return array(
@@ -451,7 +489,7 @@ class Dashactivity extends Module
 			'DASHACTIVITY_VISITOR_ONLINE' => Tools::getValue('DASHACTIVITY_VISITOR_ONLINE', Configuration::get('DASHACTIVITY_VISITOR_ONLINE')),
 		);
 	}
-	
+
 	public function hookActionObjectCustomerMessageAddAfter($params)
 	{
 		return $this->hookActionObjectOrderAddAfter($params);

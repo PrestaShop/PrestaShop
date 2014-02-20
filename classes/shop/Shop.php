@@ -350,7 +350,7 @@ class ShopCore extends ObjectModel
 			}
 		}
 
-		if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || Tools::isPHPCLI())
+		if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || Tools::isPHPCLI() || in_array(Tools::getHttpHost(), array(_MEDIA_SERVER_1_, _MEDIA_SERVER_2_, _MEDIA_SERVER_3_)))
 		{
 			// If in admin, we can access to the shop without right URL
 			if ((!$id_shop && Tools::isPHPCLI()) || defined('_PS_ADMIN_DIR_'))
@@ -703,7 +703,7 @@ class ShopCore extends ObjectModel
 	 *
 	 * @param bool $active
 	 * @param int $id_shop_group
-	 * @return Collection
+	 * @return PrestaShopCollection Collection of Shop
 	 */
 	public static function getShopsCollection($active = true, $id_shop_group = null)
 	{

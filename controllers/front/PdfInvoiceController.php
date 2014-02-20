@@ -26,6 +26,7 @@
 
 class PdfInvoiceControllerCore extends FrontController
 {
+	public $php_self = 'pdf-invoice';
 	protected $display_header = false;
 	protected $display_footer = false;
 
