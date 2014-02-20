@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if isset($products)}
+{if isset($products) && $products}
 	{*define numbers of product per line in other page for desktop*}
 	{if $page_name !='index' && $page_name !='product'}
 		{assign var='nbItemsPerLine' value=3}
