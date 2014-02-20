@@ -785,7 +785,7 @@ class ToolsCore
 		if (!is_array($_ERRORS))
 			return $htmlentities ? Tools::htmlentitiesUTF8($string) : $string;
 		$key = md5(str_replace('\'', '\\\'', $string));
-		$str = (isset($_ERRORS) && is_array($_ERRORS) && array_key_exists($key, $_ERRORS)) ? ($htmlentities ? htmlentities($_ERRORS[$key], ENT_COMPAT, 'UTF-8') : $_ERRORS[$key]) : $string;
+		$str = (isset($_ERRORS) && is_array($_ERRORS) && array_key_exists($key, $_ERRORS)) ? $_ERRORS[$key] : $string;
 		return $htmlentities ? Tools::htmlentitiesUTF8(stripslashes($str)) : $str;
 	}
 
