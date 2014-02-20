@@ -400,8 +400,8 @@ class EmployeeCore extends ObjectModel
 	public function getImage()
 	{
 		if (!Validate::isLoadedObject($this))
-			return _PS_IMG_DIR_.'prestashop-avatar.png';
-		return Tools::getShopProtocol().'api.prestashop.com/profile/avatar.php?email='.urlencode($this->email);
+			return Tools::getAdminImageUrl('prestashop-avatar.png');
+		return Tools::getShopProtocol().'api.prestashop.com/profile/avatar.php?email='.urlencode($this->email).'&time='.time();
 	}
 
 	public function getLastElementsForNotify($element)
