@@ -29,12 +29,15 @@ $(document).ready(function(){
 	set_countries();
 	vat_number();
 
-	$('#company').on('input',function(){
+	$('#company, #company_invoice').on('input',function(){
 		vat_number();
 	});
 
 	if (typeof idSelectedState !== 'undefined' && idSelectedState)
-		$('.id_state option[value=' + idSelectedState + ']').attr('selected', true);
+		$('.id_state option[value=' + idSelectedState + ']').prop('selected', true);
+
+	if (typeof idSelectedStateInvoice !== 'undefined' && idSelectedStateInvoice)
+		$('.id_state_invoice option[value=' + idSelectedStateInvoice + ']').prop('selected', true);
 
 	$('#id_country').on('change', function(){
 		if (typeof vatnumber_ajax_call !== 'undefined' && vatnumber_ajax_call)
@@ -80,8 +83,13 @@ function set_countries()
 
 function vat_number()
 {
-	if ($('#company').val() != '')
-		$('#vat_number').show();
+	if (($('#company').length) && ($('#company').val() != ''))
+		$('#vat_number, #vat_number_block').show();
 	else
-		$('#vat_number').hide();
+		$('#vat_number, #vat_number_block').hide();
+
+	if (($('#company_invoice').length) && ($('#company_invoice').val() != ''))
+		$('#vat_number_block_invoice').show();
+	else
+		$('#vat_number_block_invoice').hide();
 }

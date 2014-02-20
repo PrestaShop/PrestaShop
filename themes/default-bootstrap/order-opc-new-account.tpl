@@ -51,58 +51,6 @@
                 </div>
 				<div id="opc_account_form">
 				{$HOOK_CREATE_ACCOUNT_TOP}
-				<script type="text/javascript">
-				// <![CDATA[
-				idSelectedCountry = {if isset($guestInformations) && $guestInformations.id_state}{$guestInformations.id_state|intval}{else}false{/if};
-				{if isset($countries)}
-					{foreach from=$countries item='country'}
-						{if isset($country.states) && $country.contains_states}
-							countries[{$country.id_country|intval}] = new Array();
-							{foreach from=$country.states item='state' name='states'}
-								countries[{$country.id_country|intval}].push({ldelim}'id' : '{$state.id_state}', 'name' : '{$state.name|escape:'html':'UTF-8'}'{rdelim});
-							{/foreach}
-						{/if}
-						{if isset($country.need_identification_number) && $country.need_identification_number}
-							countriesNeedIDNumber.push({$country.id_country|intval});
-						{/if}	
-						{if isset($country.need_zip_code) && $country.need_zip_code}
-							countriesNeedZipCode[{$country.id_country|intval}] = {$country.need_zip_code};
-						{/if}
-					{/foreach}
-				{/if}
-				//]]>
-				{literal}
-				function vat_number()
-				{
-					if (($('#company').length) && ($('#company').val() != ''))
-						$('#vat_number_block').show();
-					else
-						$('#vat_number_block').hide();
-				}
-				function vat_number_invoice()
-				{
-					if (($('#company_invoice').length) && ($('#company_invoice').val() != ''))
-						$('#vat_number_block_invoice').show();
-					else
-						$('#vat_number_block_invoice').hide();
-				}
-				
-				$(document).ready(function() {
-					$('#company').on('input',function(){
-						vat_number();
-					});
-					$('#company_invoice').on('input',function(){
-						vat_number_invoice();
-					});
-					vat_number();
-					vat_number_invoice();
-					{/literal}
-					$('.id_state option[value={if isset($guestInformations.id_state)}{$guestInformations.id_state|intval}{/if}]').prop('selected', true);
-					$('.id_state_invoice option[value={if isset($guestInformations.id_state_invoice)}{$guestInformations.id_state_invoice|intval}{/if}]').prop('selected', true);
-					{literal}
-				});
-				{/literal}
-				</script>
 				<!-- Error return block -->
 				<div id="opc_account_errors" class="alert alert-danger" style="display:none;"></div>
 				<!-- END Error return block -->
@@ -441,3 +389,29 @@
 		</fieldset>
 	</form>
 </div>
+{strip}
+{if isset($guestInformations) && $guestInformations.id_state}
+	{addJsDef idSelectedState=$guestInformations.id_state|intval}
+{else}
+	{addJsDef idSelectedState=false}
+{/if}
+{if isset($guestInformations) && $guestInformations.id_state_invoice}
+	{addJsDef idSelectedStateInvoice=$guestInformations.id_state_invoice|intval}
+{else}
+	{addJsDef idSelectedStateInvoice=false}
+{/if}
+{if isset($guestInformations) && $guestInformations.id_country}
+	{addJsDef idSelectedCountry=$guestInformations.id_country|intval}
+{else}
+	{addJsDef idSelectedCountry=false}
+{/if}
+{if isset($guestInformations) && $guestInformations.id_country_invoice}
+	{addJsDef idSelectedCountryInvoice=$guestInformations.id_country_invoice|intval}
+{else}
+	{addJsDef idSelectedCountryInvoice=false}
+{/if}
+{addJsDef countries=$countries}
+{if isset($vatnumber_ajax_call) && $vatnumber_ajax_call}
+	{addJsDef vatnumber_ajax_call=$vatnumber_ajax_call}
+{/if}
+{/strip}
