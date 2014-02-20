@@ -196,6 +196,9 @@ class BlockBestSellers extends Module
 
 	public function hookDisplayHomeTab($params)
 	{
+		if (!Configuration::get('PS_BLOCK_BESTSELLERS_DISPLAY'))
+			return false;
+
 		if (!$this->isCached('tab.tpl', $this->getCacheId('blockbestsellers-tab')))
 		{
 			BlockBestSellers::$cache_best_sellers = $this->getBestSellers($params);
@@ -207,6 +210,9 @@ class BlockBestSellers extends Module
 
 	public function hookdisplayHomeTabContent($params)
 	{
+		if (!Configuration::get('PS_BLOCK_BESTSELLERS_DISPLAY'))
+			return false;
+
 		if (!$this->isCached('blockbestsellers-home.tpl', $this->getCacheId('blockbestsellers-home')))
 		{
 			$this->smarty->assign(array(
@@ -220,6 +226,9 @@ class BlockBestSellers extends Module
 
 	public function hookRightColumn($params)
 	{
+		if (!Configuration::get('PS_BLOCK_BESTSELLERS_DISPLAY'))
+			return false;
+
 		if (!$this->isCached('blockbestsellers.tpl', $this->getCacheId('blockbestsellers-col')))
 		{
 			if (BlockBestSellers::$cache_best_sellers === null)
