@@ -673,7 +673,7 @@ Country</value>
     <configuration id="UPGRADER_BACKUPFILES_FILENAME" name="UPGRADER_BACKUPFILES_FILENAME">
       <value/>
     </configuration>
-    <configuration id="blockreinsurance_nbblocks" name="blockreinsurance_nbblocks">
+    <configuration id="BLOCKREINSURANCE_NBBLOCKS" name="BLOCKREINSURANCE_NBBLOCKS">
       <value>5</value>
     </configuration>
     <configuration id="HOMESLIDER_WIDTH" name="HOMESLIDER_WIDTH">

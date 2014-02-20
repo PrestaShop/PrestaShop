@@ -77,7 +77,7 @@ class AdminCmsControllerCore extends AdminController
 			'desc' => $this->l('Save and preview', null, null, false)
 		);
 		$this->page_header_toolbar_btn['save-and-stay'] = array(
-			'short' => $this->l('SaveAndStay', null, null, false),
+			'short' => $this->l('Save and stay', null, null, false),
 			'href' => '#',
 			'desc' => $this->l('Save and stay', null, null, false),
 		);
@@ -259,7 +259,7 @@ class AdminCmsControllerCore extends AdminController
 	}
 	
 	public function postProcess()
-	{	
+	{
 		if (Tools::isSubmit('viewcms') && ($id_cms = (int)Tools::getValue('id_cms')))
 		{
 			parent::postProcess();

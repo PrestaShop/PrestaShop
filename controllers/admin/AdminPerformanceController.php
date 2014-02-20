@@ -48,7 +48,7 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Template cache'),
+					'label' => $this->l('Template compilation'),
 					'name' => 'smarty_force_compile',
 					'values' => array(
 						array(
@@ -570,6 +570,7 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->fields_value['ps_cache_fs_directory_depth'] = $depth ? $depth : 1;
 
 		$this->tpl_form_vars['servers'] = CacheMemcache::getMemcachedServers();
+		$this->tpl_form_vars['_PS_CACHE_ENABLED_'] = _PS_CACHE_ENABLED_;
 	}
 
 	public function renderForm()
@@ -582,7 +583,10 @@ class AdminPerformanceControllerCore extends AdminController
 
 		$this->initFieldsetFeaturesDetachables();
 		$this->initFieldsetCCC();
-		$this->initFieldsetMediaServer();
+
+		if (!defined('_PS_HOST_MODE_'))
+			$this->initFieldsetMediaServer();
+
 		$this->initFieldsetCiphering();
 		$this->initFieldsetCaching();
 
@@ -678,7 +682,7 @@ class AdminPerformanceControllerCore extends AdminController
 				Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
 				Configuration::updateValue('PS_SMARTY_CONSOLE', Tools::getValue('smarty_console', 0));
 				Configuration::updateValue('PS_SMARTY_CONSOLE_KEY', Tools::getValue('smarty_console_key', 'SMARTY_DEBUG'));
-				$redirecAdmin = true;
+				$redirectAdmin = true;
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
@@ -723,7 +727,7 @@ class AdminPerformanceControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 
-		if ((bool)Tools::getValue('media_server_up'))
+		if ((bool)Tools::getValue('media_server_up') && !defined('_PS_HOST_MODE_'))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{

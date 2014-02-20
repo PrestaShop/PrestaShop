@@ -142,12 +142,17 @@ class AdminLocalizationControllerCore extends AdminController
 
 			if (Validate::isFileName(Tools::getValue('iso_localization_pack')))
 			{
-				if (Tools::getValue('download_updated_pack') == '1')
+				if (Tools::getValue('download_updated_pack') == '1' || defined('_PS_HOST_MODE_'))
 					$pack = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.Tools::getValue('iso_localization_pack').'.xml');
 				else
 					$pack = false;
+				
+				if (defined('_PS_HOST_MODE_'))
+					$path = _PS_CORE_DIR_.'/localization/'.Tools::getValue('iso_localization_pack').'.xml';
+				else
+					$path = _PS_ROOT_DIR_.'/localization/'.Tools::getValue('iso_localization_pack').'.xml';
 
-				if (!$pack && !($pack = @Tools::file_get_contents(_PS_ROOT_DIR_.'/localization/'.Tools::getValue('iso_localization_pack').'.xml')))
+				if (!$pack && !($pack = @Tools::file_get_contents($path)))
 					$this->errors[] = Tools::displayError('Cannot load the localization pack.');
 
 				if (!$selection = Tools::getValue('selection'))

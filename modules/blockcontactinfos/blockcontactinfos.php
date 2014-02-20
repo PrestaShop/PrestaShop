@@ -33,6 +33,7 @@ class Blockcontactinfos extends Module
 	public function __construct()
 	{
 		$this->name = 'blockcontactinfos';
+		$this->author = 'PrestaShop';
 		if (version_compare(_PS_VERSION_, '1.4.0.0') >= 0)
 			$this->tab = 'front_office_features';
 		else
@@ -42,7 +43,7 @@ class Blockcontactinfos extends Module
 		$this->bootstrap = true;
 		parent::__construct();	
 
-		$this->displayName = $this->l('Block contact info');
+		$this->displayName = $this->l('Contact information block');
 		$this->description = $this->l('This module will allow you to display your e-store\'s contact information in a customizable block.');
 	}
 	

@@ -97,11 +97,11 @@
 </div>
 <div class="panel">
 	<h3><i class="icon-archive"></i> {l s='Stock'}</h3>
-	<a class="btn btn-link" href="index.php?controller=adminstockinstantstate&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockInstantState'}">{l s='See products details'} <i class="icon-external-link-sign"></i></a>
+	<a class="btn btn-link" href="index.php?controller=adminstockinstantstate&amp;id_warehouse={$warehouse->id}&amp;token={getAdminToken tab='AdminStockInstantState'}">{l s='See products details'} <i class="icon-external-link-sign"></i></a>
 </div>
 <div class="panel">
 	<h3><i class="icon-reorder"></i> {l s='History'}</h3>
-	<a class="btn btn-link" href="index.php?controller=adminstockmvt&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockMvt'}">{l s='See warehouse\'s activity details'} <i class="icon-external-link-sign"></i></a>
+	<a class="btn btn-link" href="index.php?controller=adminstockmvt&amp;id_warehouse={$warehouse->id}&amp;token={getAdminToken tab='AdminStockMvt'}">{l s='See warehouse\'s activity details'} <i class="icon-external-link-sign"></i></a>
 </div class="panel">
 {else}
 	<div class="panel"><div class="alert alert danger">{l s='This warehouse does not exist.'}</div></div>

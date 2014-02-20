@@ -1258,11 +1258,11 @@ class ProductCore extends ObjectModel
 	* @param string $supplier_reference DEPRECATED
 	*/
 	public function addCombinationEntity($wholesale_price, $price, $weight, $unit_impact, $ecotax, $quantity,
-		$id_images, $reference, $id_supplier, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1,  array $id_shop_list = array())
+		$id_images, $reference, $id_supplier, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1,  array $id_shop_list = array(), $available_date = null)
 	{
 		$id_product_attribute = $this->addAttribute(
 			$price, $weight, $unit_impact, $ecotax, $id_images,
-			$reference, $ean13, $default, $location, $upc, $minimal_quantity, $id_shop_list);
+			$reference, $ean13, $default, $location, $upc, $minimal_quantity, $id_shop_list, $available_date);
 
 		$this->addSupplierReference($id_supplier, $id_product_attribute);
 		$result = ObjectModel::updateMultishopTable('Combination', array(
@@ -1482,7 +1482,7 @@ class ProductCore extends ObjectModel
 	 * @return mixed $id_product_attribute or false
 	 */
 	public function addAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $ean13,
-								 $default, $location = null, $upc = null, $minimal_quantity = 1, array $id_shop_list = array())
+								 $default, $location = null, $upc = null, $minimal_quantity = 1, array $id_shop_list = array(), $available_date = null)
 	{
 		if (!$this->id)
 			return;
@@ -1503,6 +1503,7 @@ class ProductCore extends ObjectModel
 		$combination->upc = pSQL($upc);
 		$combination->default_on = (int)$default;
 		$combination->minimal_quantity = (int)$minimal_quantity;
+		$combination->available_date = $available_date;
 
 		// if we add a combination for this shop and this product does not use the combination feature in other shop,
 		// we clone the default combination in every shop linked to this product
@@ -2593,7 +2594,7 @@ class ProductCore extends ObjectModel
 			$zipcode,
 			$id_currency,
 			$id_group,
-			$cart_quantity,
+			$quantity,
 			$usetax,
 			$decimals,
 			$only_reduc,
@@ -2604,7 +2605,7 @@ class ProductCore extends ObjectModel
 			$id_customer,
 			$use_customer_price,
 			$id_cart, 
-			$quantity
+			$cart_quantity
 		);
 	}
 
@@ -3504,16 +3505,20 @@ class ProductCore extends ObjectModel
 		}
 
 		$impacts = self::getAttributesImpacts($id_product_old);
-		$impact_sql = 'INSERT INTO `'._DB_PREFIX_.'attribute_impact` (`id_product`, `id_attribute`, `weight`, `price`) VALUES ';
 
-		foreach ($impacts as $id_attribute => $impact)
-			$impact_sql .= '('.(int)$id_product_new.', '.(int)$id_attribute.', '.(float)$impacts[$id_attribute]['weight'].', '
-				.(float)$impacts[$id_attribute]['price'].'),';
+		if (is_array($impacts) && count($impacts))
+		{
+			$impact_sql = 'INSERT INTO `'._DB_PREFIX_.'attribute_impact` (`id_product`, `id_attribute`, `weight`, `price`) VALUES ';
 
-		$impact_sql = substr_replace($impact_sql, '', -1);
-		$impact_sql .= ' ON DUPLICATE KEY UPDATE `price` = VALUES(price), `weight` = VALUES(weight)';
+			foreach ($impacts as $id_attribute => $impact)
+				$impact_sql .= '('.(int)$id_product_new.', '.(int)$id_attribute.', '.(float)$impacts[$id_attribute]['weight'].', '
+					.(float)$impacts[$id_attribute]['price'].'),';
 
-		Db::getInstance()->execute($impact_sql);
+			$impact_sql = substr_replace($impact_sql, '', -1);
+			$impact_sql .= ' ON DUPLICATE KEY UPDATE `price` = VALUES(price), `weight` = VALUES(weight)';
+
+			Db::getInstance()->execute($impact_sql);
+		}
 
 		return !$return ? false : $combination_images;
 	}
@@ -3798,7 +3803,7 @@ class ProductCore extends ObjectModel
 		if (!$this->isFullyLoaded && is_null($this->tags))
 			$this->tags = Tag::getProductTags($this->id);
 
-		if (!($this->tags && key_exists($id_lang, $this->tags)))
+		if (!($this->tags && array_key_exists($id_lang, $this->tags)))
 			return '';
 
 		$result = '';

@@ -203,6 +203,7 @@ function changeLanguage(field, fieldsString, id_language_new, iso_code)
 	id_language = id_language_new;
 }
 
+// kept for retrocompatibility - you should use hideOtherLanguage(id) since 1.6
 function changeFormLanguage(id_language_new, iso_code, employee_cookie)
 {
 	$('.translatable').each(function() {
@@ -214,17 +215,8 @@ function changeFormLanguage(id_language_new, iso_code, employee_cookie)
 
 	// For multishop checkboxes
 	$('.multishop_lang_'+id_language_new).show().siblings('div[class^=\'multishop_lang_\']').hide();
-	$('.language_flags').hide();
-	if (employee_cookie)
-		$.post("index.php", {
-			action: 'formLanguage', 
-			tab: 'AdminEmployees',
-			ajax: 1,
-			token: employee_token,
-			form_language_id: id_language_new 
-		});
 	id_language = id_language_new;
-
+	changeEmployeeLanguage();
 	updateCurrentText();
 }
 
@@ -1069,11 +1061,30 @@ function quickSelect(elt)
 		location.href = eltVal;
 }
 
+function changeEmployeeLanguage()
+{
+	if (allowEmployeeFormLang)
+		$.post("index.php", {
+			action: 'formLanguage', 
+			tab: 'AdminEmployees',
+			ajax: 1,
+			token: employee_token,
+			form_language_id: id_language
+		});
+}
+
 function hideOtherLanguage(id)
 {
 	$('.translatable-field').hide();
 	$('.lang-' + id).show();
+
+	var id_old_language = id_language;
 	id_language = id;
+
+	if (id_old_language != id)
+		changeEmployeeLanguage();
+
+	updateCurrentText();
 }
 
 function sendBulkAction(form, action)
@@ -1130,7 +1141,7 @@ function ajaxStates(id_state_selected)
 	$.ajax({
 		url: "index.php",
 		cache: false,
-		data: "token="+state_token+"&ajax=1&action=states&tab=AdminStates&no_empty=1&id_country="+$('#id_country').val() + "&id_state=" + $('#id_state').val(),
+		data: "token="+state_token+"&ajax=1&action=states&tab=AdminStates&no_empty=0&id_country="+$('#id_country').val() + "&id_state=" + $('#id_state').val(),
 		success: function(html)
 		{
 			if (html == 'false')

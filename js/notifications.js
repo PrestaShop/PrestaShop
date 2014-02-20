@@ -27,6 +27,7 @@ $(document).ready(function() {
 	});
 	// call it once immediately, then use setTimeout if refresh is activated
 	getPush(autorefresh_notifications);
+
 });
 
 function getPush(refresh)
@@ -42,6 +43,9 @@ function getPush(refresh)
 		success: function(json) {
 			if (json)
 			{
+				// Set moment language
+				moment.lang(full_language_code);
+				
 				// Add orders notifications to the list
 				html = "";
 				$.each(json.order.results, function(property, value) {
@@ -49,7 +53,7 @@ function getPush(refresh)
 					html += "<p>" + order_number_msg + "&nbsp;<strong>#" + parseInt(value.id_order) + "</strong></p>";
 					html += "<p class='pull-right'>" + total_msg + "&nbsp;<span class='total badge badge-success'>" + value.total_paid + "</span></p>";
 					html += "<p>" + from_msg + "&nbsp;<strong>" + value.customer_name + "</strong></p>";
-					html += "<small class='text-muted'><i class='icon-time'></i> 1 minute ago</small>";
+					html += "<small class='text-muted'><i class='icon-time'></i> " +  moment(value.update_date).fromNow() + " </small>";
 					html += "</a>";
 				});
 				if (parseInt(json.order.total) > 0)
@@ -65,7 +69,7 @@ function getPush(refresh)
 				$.each(json.customer.results, function(property, value) {
 					html += "<a href='index.php?tab=AdminCustomers&token=" + token_admin_customers + "&viewcustomer&id_customer=" + parseInt(value.id_customer) + "'>";
 					html += "<p>" + customer_name_msg + "&nbsp;<strong>#" + value.customer_name + "</strong></p>";
-					html += "<small class='text-muted'><i class='icon-time'></i> 1 minute ago</small>";
+					html += "<small class='text-muted'><i class='icon-time'></i> " +  moment(value.update_date).fromNow() + " </small>";
 					html += "</a>";
 				});
 				if (parseInt(json.customer.total) > 0)
@@ -81,7 +85,7 @@ function getPush(refresh)
 				$.each(json.customer_message.results, function(property, value) {
 					html += "<a href='index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + parseInt(value.id_customer_thread) + "'>";
 					html += "<p>" + from_msg + "&nbsp;<strong>" + value.customer_name + "</strong></p>";
-					html += "<small class='text-muted'><i class='icon-time'></i> 1 minute ago</small>";
+					html += "<small class='text-muted'><i class='icon-time'></i> " +  moment(value.update_date).fromNow() + " </small>";
 					html += "</a>";
 				});
 				if (parseInt(json.customer_message.total) > 0)

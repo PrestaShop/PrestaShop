@@ -94,7 +94,7 @@ class OrderFollowControllerCore extends FrontController
 					'errorMsg' => true,
 					'ids_order_detail' => Tools::getValue('ids_order_detail', array()),
 					'order_qte_input' => Tools::getValue('order_qte_input', array()),
-					'id_order' => Tools::getValue('id_order'),
+					'id_order' => (int)Tools::getValue('id_order'),
 				)
 			);
 		elseif (Tools::isSubmit('errorDetail1'))

@@ -32,8 +32,8 @@
                         <!-- Scenes -->
                         {include file="$tpl_dir./scenes.tpl" scenes=$scenes}
                         {if $category->description}
-                            <div class="cat_desc">
-                            {if strlen($category->description) > 350}
+                            <div class="cat_desc rte">
+                            {if Tools::strlen($category->description) > 350}
                                 <div id="category_description_short">{$description_short}</div>
                                 <div id="category_description_full" style="display:none">{$category->description}</div>
                                 <a href="#" onclick="$('#category_description_short').hide(); $('#category_description_full').show(); $(this).hide(); return false;" class="lnk_more">{l s='More'}</a>
@@ -56,12 +56,12 @@
                                     {/if}
                                 {/strip}
                             </span>
-                            {if strlen($category->description) > 350}
-                                <div id="category_description_short">{$description_short}</div>
-                                <div id="category_description_full" style="display:none">{$category->description}</div>
+                            {if Tools::strlen($category->description) > 350}
+                                <div id="category_description_short" class="rte">{$description_short}</div>
+                                <div id="category_description_full" class="hidden rte">{$category->description}</div>
                                 <a href="#" onclick="$('#category_description_short').hide(); $('#category_description_full').show(); $(this).hide(); return false;" class="lnk_more">{l s='More'}</a>
                             {else}
-                                <div>{$category->description}</div>
+                                <div class="rte">{$category->description}</div>
                             {/if}
                             </div>
                         {/if}
@@ -70,8 +70,7 @@
                   {/if}
             </div>
 		{/if}
-		<h1 class="page-heading{if (isset($subcategories) && !$products) || (isset($subcategories) && $products) || !isset($subcategories) && $products} product-listing{/if}">{$category->name|escape:'html':'UTF-8'}{if isset($categoryNameComplement)}&nbsp;{$categoryNameComplement|escape:'html':'UTF-8'}{/if}</h1>
-		{include file="$tpl_dir./category-count.tpl"}
+		<h1 class="page-heading{if (isset($subcategories) && !$products) || (isset($subcategories) && $products) || !isset($subcategories) && $products} product-listing{/if}"><span class="cat-name">{$category->name|escape:'html':'UTF-8'}{if isset($categoryNameComplement)}&nbsp;{$categoryNameComplement|escape:'html':'UTF-8'}{/if}</span>{include file="$tpl_dir./category-count.tpl"}</h1>
 		{if isset($subcategories)}
 		<!-- Subcategories -->
 		<div id="subcategories">

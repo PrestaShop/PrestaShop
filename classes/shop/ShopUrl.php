@@ -91,7 +91,7 @@ class ShopUrlCore extends ObjectModel
 	 * Get list of shop urls
 	 *
 	 * @param bool $id_shop
-	 * @return Collection
+	 * @return PrestaShopCollection Collection of ShopUrl
 	 */
 	public static function getShopUrls($id_shop = false)
 	{

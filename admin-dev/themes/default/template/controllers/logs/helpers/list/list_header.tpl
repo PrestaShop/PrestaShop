@@ -29,15 +29,15 @@
 
 	<div class="panel">
 		<h3>
-			<i class="icon-level-up"></i>
+			<i class="icon-warning-sign"></i>
 			{l s='Severity levels'}
 		</h3>
 		<p>{l s='Meaning of severity levels:'}</p>
 		<ol>
-			<li class="text-success">{l s='Informative only'}</li>
-			<li class="text-warning">{l s='Warning'}</li>
-			<li class="text-warning">{l s='Error'}</li>
-			<li class="text-danger">{l s='Major issue (crash)!'}</li>
+			<li><span class="badge badge-success">{l s='Informative only'}</span></li>
+			<li><span class="badge badge-warning">{l s='Warning'}</span></li>
+			<li><span class="badge badge-danger">{l s='Error'}</span></li>
+			<li><span class="badge badge-critical">{l s='Major issue (crash)!'}</span></li>
 		</ol>
 	</div>
 

@@ -5,13 +5,13 @@
 		{/if}
 		<ul class="menu">
 			<li class="searchtab">
-				<form method="post" action="index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}" role="search">
+				<form id="header_search" method="post" action="index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}" role="search">
 					<div class="form-group">
 						<input type="hidden" name="bo_search_type" id="bo_search_type" />
 						<div class="input-group">
 							<div class="input-group-btn">
 								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-									<i id="search_type_icon" class="icon-reorder"></i>
+									<i id="search_type_icon" class="icon-search"></i>
 									<i class="icon-caret-down"></i>
 								</button>
 								<ul id="header_search_options" class="dropdown-menu">
@@ -56,7 +56,7 @@
 									</li>
 								</ul>
 							</div>
-							<input id="bo_query" name="bo_query" type="search" class="form-control" value="{$bo_query}" placeholder="{l s='Search'}" />
+							<input id="bo_query" name="bo_query" type="text" class="form-control" value="{$bo_query}" placeholder="{l s='Search'}" />
 							<a href="javascript:void(0);" class="clear_search hide"><i class="icon-remove"></i></a>
 <!-- 							<span class="input-group-btn">
 								<button type="submit" id="bo_search_submit" class="btn btn-primary">

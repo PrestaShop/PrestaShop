@@ -23,20 +23,26 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if $product['customizedDatas']}
+{* Assign product price *}
+{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
+	{assign var=product_price value=($product['unit_price_tax_excl'] + $product['ecotax'])}
+{else}
+	{assign var=product_price value=$product['unit_price_tax_incl']}
+{/if}
 	<tr class="customized customized-{$product['id_order_detail']|intval} product-line-row">
 		<td>
 			<input type="hidden" class="edit_product_id_order_detail" value="{$product['id_order_detail']|intval}" />
 			{if isset($product['image']) && $product['image']->id|intval}{$product['image_tag']}{else}--{/if}
 		</td>
 		<td>
-			<a href="index.php?controller=adminproducts&id_product={$product['product_id']|intval}&updateproduct&token={getAdminToken tab='AdminProducts'}">
+			<a href="index.php?controller=adminproducts&amp;id_product={$product['product_id']|intval}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">
 			<span class="productName">{$product['product_name']} - {l s='Customized'}</span><br />
 			{if ($product['product_reference'])}{l s='Ref:'} {$product['product_reference']}<br />{/if}
 			{if ($product['product_supplier_reference'])}{l s='Ref Supplier:'} {$product['product_supplier_reference']}{/if}
 			</a>
 		</td>
 		<td>
-			<span class="product_price_show">{displayPrice price=$product['product_price_wt'] currency=$currency->id|intval}</span>
+			<span class="product_price_show">{displayPrice price=$product_price currency=$currency->id|intval}</span>
 			{if $can_edit}
 			<span class="product_price_edit" style="display:none;">
 				<input type="hidden" name="product_id_order_detail" class="edit_product_id_order_detail" value="{$product['id_order_detail']|intval}" />

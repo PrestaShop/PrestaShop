@@ -149,12 +149,7 @@ class MailCore
 				if ($to_name == null || $to_name == $addr)
 					$to_name = '';
 				else
-				{
-					if (function_exists('mb_encode_mimeheader'))
-						$to_name = mb_encode_mimeheader($to_name, 'utf-8');
-					else
-						$to_name = self::mimeEncode($to_name);
-				}
+					$to_name = self::mimeEncode($to_name);
 
 				$to_list->addTo($addr, $to_name);
 			}
@@ -165,12 +160,7 @@ class MailCore
 			if ($to_name == null || $to_name == $to)
 				$to_name = '';
 			else
-			{
-				if (function_exists('mb_encode_mimeheader'))
-					$to_name = mb_encode_mimeheader($to_name, 'utf-8');
-				else
-					$to_name = self::mimeEncode($to_name);
-			}
+				$to_name = self::mimeEncode($to_name);
 
 			$to_list->addTo($to, $to_name);
 		}

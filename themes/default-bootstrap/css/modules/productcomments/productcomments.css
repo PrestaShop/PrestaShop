@@ -93,13 +93,9 @@
   border-width: 0; }
 
 #new_comment_form {
-  width: 465px;
   overflow: hidden;
   color: #333333;
   text-align: left; }
-  @media (max-width: 767px) {
-    #new_comment_form {
-      width: 275px; } }
   #new_comment_form h2 {
     margin-bottom: 10px; }
   #new_comment_form .title {
@@ -132,8 +128,11 @@
         font-size: 13px;
         color: #000; }
   #new_comment_form .new_comment_form_content {
-    padding: 15px;
+    padding: 15px 25px 15px 15px;
     background: #f8f8f8; }
+    @media (max-width: 767px) {
+      #new_comment_form .new_comment_form_content {
+        padding-left: 25px; } }
     #new_comment_form .new_comment_form_content .intro_form {
       padding-bottom: 10px;
       font-weight: bold;
@@ -189,7 +188,8 @@
         line-height-font-weight: bold;
         line-height-float: left; }
       #product_comments_block_tab div.comment .comment_author .star_content {
-        float: left;
+        display: inline-block;
+        vertical-align: middle;
         margin: 0 0 0 5px; }
     #product_comments_block_tab div.comment .comment_details {
       overflow: hidden;
@@ -207,8 +207,6 @@
                 content: "\f0da";
                 color: #333333;
                 margin-right: 8px; } }
-      #product_comments_block_tab div.comment .comment_details .title_block {
-        text-transform: capitalize; }
   #product_comments_block_tab div.star:after {
     content: "\f006";
     font-family: "FontAwesome";

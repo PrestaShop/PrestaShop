@@ -358,7 +358,8 @@ function fancyChooseBox(question, title, buttons, otherParams)
         if (typeof otherParams == 'undefined') otherParams = 0;
         otherParams = escape(JSON.stringify(otherParams));
         action = funcName ? "$.fancybox.close();window['" + funcName + "'](JSON.parse(unescape('" + otherParams + "')), " + i + ")" : "$.fancybox.close()";
-        msg += '<input class="button" style="margin-right: 5px" type="button" value="' + caption + '" onclick="' + action + '" />';
+	  msg += '<button type="submit" class="button btn-default button-medium" style="margin-right: 5px;" value="true" onclick="' + action + '" >';
+	  msg += '<span>' + caption + '</span></button>'
         i++;
     }
     msg += "</p>";
@@ -495,7 +496,7 @@ $(document).ready(function()
 		
 		if (!$(this).attr('eventCheckboxChange'))
 		{
-			$(this).live('change', function() { $(this).checkboxChange(fnChecked, fnUnchecked); });
+			$(this).on('change', function() { $(this).checkboxChange(fnChecked, fnUnchecked); });
 			$(this).attr('eventCheckboxChange', true);
 		}
 	};

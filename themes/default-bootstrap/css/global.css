@@ -5808,7 +5808,8 @@ table.table_block td {
 
 .price {
   font-size: 13px;
-  color: #777777; }
+  color: #777777;
+  white-space: nowrap; }
 
 .price.product-price {
   font: 600 21px/26px "Open Sans", sans-serif;
@@ -6597,7 +6598,7 @@ ul.step {
       ul.step li.step_done.step_done_last a:after {
         background: url(../img/order-step-done-last.png) right 0 no-repeat; } }
     @media (min-width: 992px) {
-      ul.step li#step_end:after {
+      ul.step li#step_end span:after {
         display: none; } }
     ul.step li em {
       font-style: normal; }
@@ -6921,6 +6922,12 @@ div.star a:hover {
 #tinymce ol,
 #tinymce dl {
   margin-left: 20px; }
+
+.rte ul {
+  list-style-type: disc; }
+
+.rte ol {
+  list-style-type: decimal; }
 
 .block_hidden_only_for_screen {
   display: none; }
@@ -7834,15 +7841,17 @@ div.star.star_hover:after {
   background: white !important; }
 
 .fancybox-skin .fancybox-close {
-  top: 8px;
-  right: 8px;
   width: 28px;
   height: 28px;
   background: none;
   font-size: 28px;
   line-height: 28px;
   color: #333333;
-  text-align: center; }
+  text-align: center;
+  background: white;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px; }
   .fancybox-skin .fancybox-close:hover {
     color: #515151; }
   .fancybox-skin .fancybox-close:after {
@@ -7948,6 +7957,19 @@ div.star.star_hover:after {
     @media (max-width: 991px) {
       #cmsinfo_block ul li {
         padding-bottom: 0; } }
+  #cmsinfo_block p em {
+    background: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    margin: 0;
+    font-size: 13px;
+    color: #777777;
+    float: none;
+    height: inherit;
+    line-height: inherit;
+    text-align: left;
+    font-style: italic; }
 
 .ie8 #facebook_block,
 .ie8 #cmsinfo_block {
@@ -7956,10 +7978,10 @@ div.star.star_hover:after {
 @media (max-width: 1199px) {
   .zoomdiv {
     display: none !important; } }
-#product.content_only div#primary_block div#pb-right-column p.resetimg {
+#product.content_only div.pb-left-column p.resetimg {
   margin-bottom: 0px;
   padding-top: 0px; }
-#product.content_only div#primary_block div#pb-right-column #thumbs_list_frame {
+#product.content_only div.pb-left-column #thumbs_list_frame {
   margin-bottom: 0px; }
 
 #product_comparison td.compare_extra_information {

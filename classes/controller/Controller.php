@@ -96,7 +96,7 @@ abstract class ControllerCore
 	public function init()
 	{
 		if (_PS_MODE_DEV_ && $this->controller_type == 'admin')
-			$old_error_handler = set_error_handler(array(__CLASS__, 'myErrorHandler'));
+			set_error_handler(array(__CLASS__, 'myErrorHandler'));
 		if (!defined('_PS_BASE_URL_'))
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
 		if (!defined('_PS_BASE_URL_SSL_'))
@@ -403,12 +403,14 @@ abstract class ControllerCore
 
 		if ($this->controller_type == 'front')
 		{
-			$html = Media::deferInlineScripts($html);
+ 			$dom_available = extension_loaded('dom') ? true : false;
+ 			if ($dom_available)
+				$html = Media::deferInlineScripts($html);
 			$html = trim(str_replace(array('</body>', '</html>'), '', $html))."\n";
 			$this->context->smarty->assign(array(
 				'js_def' => Media::getJsDef(),
 				'js_files' => array_unique($this->js_files),
-				'js_inline' => Media::getInlineScript()
+				'js_inline' => $dom_available ? Media::getInlineScript() : array()
 			));
 			$javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
 			echo $html.$javascript."\t</body>\n</html>";
@@ -429,21 +431,25 @@ abstract class ControllerCore
 	{
 		if (error_reporting() === 0)
 			return false;
-	    switch ($errno)
+		switch ($errno)
 		{
-		    case E_USER_ERROR || E_ERROR:
+			case E_USER_ERROR:
+			case E_ERROR:
 				$type = 'Fatal error';
-				break;
-		    case E_USER_WARNING || E_WARNING:
+				die;
+			break;
+			case E_USER_WARNING:
+			case E_WARNING:
 				$type = 'Warning';
-		        break;
-		    case E_USER_NOTICE || E_NOTICE:
+			break;
+			case E_USER_NOTICE:
+			case E_NOTICE:
 				$type = 'Notice';
-		        break;
-		    default:
+			break;
+			default:
 				$type = 'Unknow error';
-		        break;
-	    }
+			break;
+		}
 
 		Controller::$php_errors[] = array(
 			'type' => $type,

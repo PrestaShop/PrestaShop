@@ -41,8 +41,7 @@
             </strong>
             {foreach from=$wishlists item=wishlist name=i}
                 {if $wishlist.id_wishlist != $current_wishlist.id_wishlist}
-                    <a href="{$base_dir_ssl}modules/blockwishlist/view.php?token={$wishlist.token}" rel="nofollow"
-                       title="{$wishlist.name}">
+                    <a href="{$link->getModuleLink('blockwishlist', 'view', ['token' => $wishlist.token])|escape:'html':'UTF-8'}" rel="nofollow" title="{$wishlist.name}">
                         {$wishlist.name}
                     </a>
                     {if !$smarty.foreach.i.last}

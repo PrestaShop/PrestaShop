@@ -1,6 +1,4 @@
 <?php
-@ini_set('display_errors', 'on');
-	@error_reporting(E_ALL | E_STRICT);
 session_start();
 mb_internal_encoding('UTF-8');
 
@@ -31,7 +29,7 @@ $base_url="http://".$_SERVER['HTTP_HOST'];  // DON'T TOUCH (base url (only domai
 $upload_dir = __PS_BASE_URI__.'img/cms/'; // path from base_url to base of upload folder (with start and final /)
 $current_path = _PS_ROOT_DIR_.'/img/cms/'; // relative path from filemanager folder to upload folder (with final /)
 //thumbs folder can't put inside upload folder
-$thumbs_base_path = _PS_ROOT_DIR_.'/img/cms/'; // relative path from filemanager folder to thumbs folder (with final /)
+$thumbs_base_path = _PS_ROOT_DIR_.'/img/tmp/cms/'; // relative path from filemanager folder to thumbs folder (with final /)
 
 //--------------------------------------------------------------------------------------------------------
 // YOU CAN COPY AND CHANGE THESE VARIABLES INTO FOLDERS config.php FILES TO CUSTOMIZE EACH FOLDER OPTIONS
@@ -39,7 +37,7 @@ $thumbs_base_path = _PS_ROOT_DIR_.'/img/cms/'; // relative path from filemanager
 
 $MaxSizeUpload=100; //Mb
 
-$default_language="en_EN"; //default language file name
+$default_language="en"; //default language file name
 $icon_theme="ico"; //ico or ico_dark you can cusatomize just putting a folder inside filemanager/img
 $show_folder_size=true; //Show or not show folder size in list view feature in filemanager (is possible, if there is a large folder, to greatly increase the calculations)
 $show_sorting_bar=true; //Show or not show sorting feature in filemanager
@@ -104,7 +102,7 @@ $ext=array_merge($ext_img, $ext_file, $ext_misc, $ext_video,$ext_music); //allow
 /******************
  * AVIARY config
 *******************/
-$aviary_active=true;
+$aviary_active=false;
 $aviary_key="dvh8qudbp6yx2bnp";
 $aviary_secret="m6xaym5q42rpw433";
 $aviary_version=3;

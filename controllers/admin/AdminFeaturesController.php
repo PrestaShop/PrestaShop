@@ -155,7 +155,7 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Feature'),
-				'image' => '../img/t/AdminFeatures.gif'
+				'icon' => 'icon-info-sign'
 			),
 			'input' => array(
 				array(
@@ -537,7 +537,7 @@ class AdminFeaturesControllerCore extends AdminController
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = false, $id_lang_shop = false)
 	{
 		if ($this->table == 'feature_value')
-			$this->_where .= ' AND a.custom = 0';
+			$this->_where .= ' AND (a.custom = 0 OR a.custom IS NULL)';
 		
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
@@ -552,7 +552,7 @@ class AdminFeaturesControllerCore extends AdminController
 				$query->select('COUNT(fv.id_feature_value) as count_values');
 				$query->from('feature_value', 'fv');
 				$query->where('fv.id_feature ='.(int)$item['id_feature']);
-				$query->where('fv.custom =0');
+				$query->where('(fv.custom=0 OR fv.custom IS NULL)');
 				$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 				$item['value'] = (int)$res;
 				unset($query);

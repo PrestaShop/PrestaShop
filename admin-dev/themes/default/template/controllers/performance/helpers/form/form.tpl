@@ -24,6 +24,12 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
+{block name="input_row"}
+	{if $input.name == 'caching_system'}<div id="{$input.name}_wrapper"{if isset($_PS_CACHE_ENABLED_) && !$_PS_CACHE_ENABLED_} style="display: none;"{/if}>{/if}
+	{$smarty.block.parent}
+	{if $input.name == 'caching_system'}</div>{/if}
+{/block}
+
 {block name="input"}
 	{if $input.type == 'radio' && $input.name == 'combination' && $input.disabled}
 		<div class="alert alert-warning">
@@ -33,7 +39,7 @@
 	{$smarty.block.parent}
 	{if in_array($input.type, array('radio', 'switch')) && $input.name == 'smarty_cache'}
 		<div class="clearfix row-padding-top">
-			<a href="{$current}&token={$token}&empty_smarty_cache=1" class="btn btn-default">
+			<a href="{$current}&amp;token={$token}&amp;empty_smarty_cache=1" class="btn btn-default">
 				<i class="icon-eraser"></i>
 				{l s='Clear cache'}
 			</a>
@@ -69,7 +75,7 @@
 				</div>
 			</div>
 			<div id="formMemcachedServer" style="display:none;">
-				<form action="{$current}&token={$token}" method="post" class="form-horizontal">
+				<form action="{$current}&amp;token={$token}" method="post" class="form-horizontal">
 					<div class="form-group">
 						<label class="control-label col-lg-3">{l s='IP Address'} </label>
 						<div class="col-lg-9">
@@ -116,7 +122,7 @@
 						<td>{$server.port}</td>
 						<td>{$server.weight}</td>
 						<td>
-							<a class="btn btn-default" href="{$current}&token={$token}&deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
+							<a class="btn btn-default" href="{$current}&amp;token={$token}&amp;deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
 						</td>
 					</tr>
 				{/foreach}
@@ -132,16 +138,16 @@
 
 	function showMemcached() {
 		if ($('input[name="caching_system"]:radio:checked').val() == 'CacheMemcache') {
-			$('#memcachedServers').show();
-			$('#ps_cache_fs_directory_depth').parent().parent().hide();
+			$('#memcachedServers').css('display', $('#cache_active_on').is(':checked') ? 'block' : 'none');
+			$('#ps_cache_fs_directory_depth').closest('.form-group').hide();
 		}
 		else if ($('input[name="caching_system"]:radio:checked').val() == 'CacheFs') {
 			$('#memcachedServers').hide();
-			$('#ps_cache_fs_directory_depth').parent().parent().show();
+			$('#ps_cache_fs_directory_depth').closest('.form-group').css('display', $('#cache_active_on').is(':checked') ? 'block' : 'none');
 		}
 		else {
 			$('#memcachedServers').hide();
-			$('#ps_cache_fs_directory_depth').parent().parent().hide();
+			$('#ps_cache_fs_directory_depth').closest('.form-group').hide();
 		}
 	}
 
@@ -149,9 +155,20 @@
 
 		showMemcached();
 
+		$('input[name="cache_active"]').change(function() {
+			$('#caching_system_wrapper').css('display', ($(this).val() == 1) ? 'block' : 'none');
+			showMemcached();
+
+			if ($('input[name="caching_system"]:radio:checked').val() == 'CacheFs')
+				$('#ps_cache_fs_directory_depth').focus();
+		});
+
 		$('input[name="caching_system"]').change(function() {
 			$('#cache_up').val(1);
 			showMemcached();
+
+			if ($('input[name="caching_system"]:radio:checked').val() == 'CacheFs')
+				$('#ps_cache_fs_directory_depth').focus();
 		});
 
 		$('#addMemcachedServer').click(function() {

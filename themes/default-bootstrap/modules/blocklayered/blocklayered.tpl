@@ -25,16 +25,6 @@
 
 <!-- Block layered navigation module -->
 {if $nbr_filterBlocks != 0}
-<script type="text/javascript">
-	current_friendly_url = '#{$current_friendly_url}';
-	{if version_compare($smarty.const._PS_VERSION_,'1.5','>')}
-		param_product_url = '#{$param_product_url}';
-	{else}
-		param_product_url = '';
-	{/if}
-
-	{addJsDef blocklayeredSliderName=$blocklayeredSliderName}
-</script>
 <div id="layered_block_left" class="block">
 	<p class="title_block">{l s='Catalog' mod='blocklayered'}</p>
 	<div class="block_content">
@@ -154,43 +144,8 @@
 									</label> 
 									<span id="layered_{$filter.type}_range"></span>
 									<div class="layered_slider_container">
-										<div class="layered_slider" id="layered_{$filter.type}_slider"></div>
+										<div class="layered_slider" id="layered_{$filter.type}_slider" data-type="{$filter.type}" data-format="{$filter.format}" data-unit="{$filter.unit}"></div>
 									</div>
-									<script type="text/javascript">
-									{literal}
-										var filterRange = {/literal}{$filter.max}-{$filter.min}{literal};
-										var step = filterRange / 100;
-										if (step > 1)
-											step = parseInt(step);
-										addSlider('{/literal}{$filter.type}{literal}',{
-											range: true,
-											step: step,
-											min: {/literal}{$filter.min}{literal},
-											max: {/literal}{$filter.max}{literal},
-											values: [ {/literal}{$filter.values[0]}{literal}, {/literal}{$filter.values[1]}{literal}],
-											slide: function( event, ui ) {
-												stopAjaxQuery();
-												{/literal}
-												{if $filter.format < 5}
-												{literal}
-													from = blocklayeredFormatCurrency(ui.values[0], {/literal}{$filter.format}{literal}, '{/literal}{$filter.unit}{literal}');
-													to = blocklayeredFormatCurrency(ui.values[1], {/literal}{$filter.format}{literal}, '{/literal}{$filter.unit}{literal}');
-												{/literal}
-												{else}
-												{literal}
-													from = ui.values[0]+'{/literal}{$filter.unit}{literal}';
-													to = ui.values[1]+'{/literal}{$filter.unit}{literal}';
-												{/literal}
-												{/if}
-												{literal}
-												$('#layered_{/literal}{$filter.type}{literal}_range').html(from+' - '+to);
-											},
-											stop: function () {
-												reloadContent();
-											}
-										}, '{/literal}{$filter.unit}{literal}', {/literal}{$filter.format}{literal});
-									{/literal}
-									</script>
 								{else}
 									{if $filter.filter_type == 1}
 									<li class="nomargin row">
@@ -211,12 +166,6 @@
 										<span class="layered_{$filter.type}_format" style="display:none;">
 											{$filter.format}
 										</span>
-										<script type="text/javascript">
-										{literal}
-											$('#layered_{/literal}{$filter.type}{literal}_range_min').attr('limitValue', {/literal}{$filter.min}{literal});
-											$('#layered_{/literal}{$filter.type}{literal}_range_max').attr('limitValue', {/literal}{$filter.max}{literal});
-										{/literal}
-										</script>
 									</li>
 									{else}
 									{foreach from=$filter.list_of_values  item=values}
@@ -237,11 +186,6 @@
 							{/if}
 						</ul>
 					</div>
-					<script type="text/javascript">
-					{literal}
-						$('.layered_{/literal}{$filter.type}{literal}').show();
-					{/literal}
-					</script>
 					{/if}
 				{/foreach}
 			</div>
@@ -279,9 +223,18 @@
 	</div>
 </div>
 {/if}
-<script>
-$(document).ready(function () {
-	$("#layered_form input[type='checkbox'], #layered_form input[type='radio'], select.form-control").uniform();
-});
-</script>
 <!-- /Block layered navigation module -->
+{if $nbr_filterBlocks != 0}
+{strip}
+	{if version_compare($smarty.const._PS_VERSION_,'1.5','>')}
+		{addJsDef param_product_url='#'|cat:$param_product_url}
+	{else}
+		{addJsDef param_product_url=''}
+	{/if}
+	{addJsDef blocklayeredSliderName=$blocklayeredSliderName}
+
+	{if isset($filters) && $filters|@count}
+		{addJsDef filters=$filters}
+	{/if}
+{/strip}
+{/if}

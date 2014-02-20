@@ -145,6 +145,7 @@ class BlockBestSellers extends Module
 						'type' => 'switch',
 						'label' => $this->l('Always display this block'),
 						'name' => 'PS_BLOCK_BESTSELLERS_DISPLAY',
+						'desc' => $this->l('Show the block even if no best sellers are available.'),
 						'is_bool' => true,
 						'values' => array(
 							array(
@@ -191,6 +192,8 @@ class BlockBestSellers extends Module
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return;
+		if (isset($this->context->controller->php_self) && $this->context->controller->php_self == 'index')
+			$this->context->controller->addCSS(_THEME_CSS_DIR_.'product_list.css');
 		$this->context->controller->addCSS($this->_path.'blockbestsellers.css', 'all');
 	}
 
@@ -201,6 +204,9 @@ class BlockBestSellers extends Module
 			BlockBestSellers::$cache_best_sellers = $this->getBestSellers($params);
 			$this->smarty->assign('best_sellers', BlockBestSellers::$cache_best_sellers);
 		}
+
+		if (BlockBestSellers::$cache_best_sellers === false)
+			return false;
 
 		return $this->display(__FILE__, 'tab.tpl', $this->getCacheId('blockbestsellers-tab'));
 	}
@@ -215,6 +221,9 @@ class BlockBestSellers extends Module
 			));
 		}
 
+		if (BlockBestSellers::$cache_best_sellers === false)
+			return false;
+
 		return $this->display(__FILE__, 'blockbestsellers-home.tpl', $this->getCacheId('blockbestsellers-home'));
 	}
 
@@ -222,7 +231,7 @@ class BlockBestSellers extends Module
 	{
 		if (!$this->isCached('blockbestsellers.tpl', $this->getCacheId('blockbestsellers-col')))
 		{
-			if (BlockBestSellers::$cache_best_sellers === null)
+			if (!isset(BlockBestSellers::$cache_best_sellers))
 				BlockBestSellers::$cache_best_sellers = $this->getBestSellers($params);
 			$this->smarty->assign(array(
 				'best_sellers' => BlockBestSellers::$cache_best_sellers,
@@ -230,6 +239,9 @@ class BlockBestSellers extends Module
 				'smallSize' => Image::getSize(ImageType::getFormatedName('small'))
 			));
 		}
+
+		if (BlockBestSellers::$cache_best_sellers === false)
+			return false;
 
 		return $this->display(__FILE__, 'blockbestsellers.tpl', $this->getCacheId('blockbestsellers-col'));
 	}

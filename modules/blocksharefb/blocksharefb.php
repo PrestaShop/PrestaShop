@@ -38,6 +38,7 @@ class blocksharefb extends Module
 		else
 			$this->tab = 'Blocks';
 		$this->version = '1.1';
+		$this->author = 'PrestaShop';
 
 		parent::__construct();
 
@@ -76,4 +77,4 @@ class blocksharefb extends Module
 		}
 	}
 }
-?>
+

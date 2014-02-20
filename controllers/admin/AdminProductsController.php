@@ -903,7 +903,9 @@ class AdminProductsControllerCore extends AdminController
 								Tools::getValue('attribute_default'),
 								Tools::getValue('attribute_location'),
 								Tools::getValue('attribute_upc'),
-								Tools::getValue('attribute_minimal_quantity')
+								Tools::getValue('attribute_minimal_quantity'),
+								Array(),
+								Tools::getValue('available_date_attribute')
 							);
 							StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
 							StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);
@@ -1717,6 +1719,13 @@ class AdminProductsControllerCore extends AdminController
 			$this->updatePackItems($this->object);
 			$this->updateDownloadProduct($this->object);
 
+			if (Configuration::get('PS_FORCE_ASM_NEW_PRODUCT') && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+			{
+				$this->object->advanced_stock_management = 1;
+				StockAvailable::setProductDependsOnStock($this->object->id, true, (int)$this->context->shop->id, 0);
+				$this->object->save();
+			}
+
 			if (empty($this->errors))
 			{
 				$languages = Language::getLanguages(false);
@@ -2520,7 +2529,7 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * renderForm contains all necessary initialization needed for all tabs
 	 *
-	 * @return void
+	 * @return string|void
 	 */
 	public function renderForm()
 	{
@@ -3052,6 +3061,9 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormSeo($product)
 	{
+		if (!$this->default_form_language)
+			$this->getLanguages();
+
 		$data = $this->createTemplate($this->tpl_form);
 
 		$data->assign(array(
@@ -3059,7 +3071,8 @@ class AdminProductsControllerCore extends AdminController
 			'languages' => $this->_languages,
 			'id_lang' => $this->context->language->id,
 			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED'),
-			'curent_shop_url' => $this->context->shop->getBaseURL()
+			'curent_shop_url' => $this->context->shop->getBaseURL(),
+			'default_form_language' => $this->default_form_language
 		));
 
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
@@ -3511,7 +3524,11 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormAttachments($obj)
 	{
+		if (!$this->default_form_language)
+			$this->getLanguages();
+
 		$data = $this->createTemplate($this->tpl_form);
+		$data->assign('default_form_language', $this->default_form_language);
 
 		if ((bool)$obj->id)
 		{
@@ -3561,10 +3578,14 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormInformations($product)
 	{
+		if (!$this->default_form_language)
+			$this->getLanguages();
+
 		$data = $this->createTemplate($this->tpl_form);
 
 		$currency = $this->context->currency;
 		$data->assign('languages', $this->_languages);
+		$data->assign('default_form_language', $this->default_form_language);
 		$data->assign('currency', $currency);
 		$this->object = $product;
 		//$this->display = 'edit';
@@ -4069,7 +4090,11 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormQuantities($obj)
 	{
+		if (!$this->default_form_language)
+			$this->getLanguages();
+
 		$data = $this->createTemplate($this->tpl_form);
+		$data->assign('default_form_language', $this->default_form_language);
 
 		if ($obj->id)
 		{
@@ -4343,7 +4368,12 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormFeatures($obj)
 	{
+		if (!$this->default_form_language)
+			$this->getLanguages();
+
 		$data = $this->createTemplate($this->tpl_form);
+		$data->assign('default_form_language', $this->default_form_language);
+
 		if (!Feature::isFeatureActive())
 			$this->displayWarning($this->l('This feature has been disabled. ').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
 		else

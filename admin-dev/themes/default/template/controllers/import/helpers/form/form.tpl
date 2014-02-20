@@ -49,7 +49,7 @@
 				</ul>
 			</div>
 			<hr />
-			<form id="preview_import" action="{$current}&token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
+			<form id="preview_import" action="{$current}&amp;token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
 				<div class="form-group">
 					<label for="entity" class="control-label col-lg-4">{l s='What kind of entity would you like to import?'} </label>
 					<div class="col-lg-8">
@@ -75,7 +75,7 @@
 				<div class="form-group" id="csv_file_uploader">
 					<label for="file" class="control-label col-lg-4">{l s='Select your CSV file'}</label>
 					<div class="col-lg-8">
-						<input id="file" type="file" name="file" data-url="{$current}&token={$token}&ajax=1&action=uploadCsv" class="hide" />
+						<input id="file" type="file" name="file" data-url="{$current}&amp;token={$token}&amp;ajax=1&amp;action=uploadCsv" class="hide" />
 						<button class="ladda-button btn btn-default" data-style="expand-right" data-size="s" type="button" id="file-add-button">
 							<i class="icon-folder-open"></i>
 							{l s='Add file'}
@@ -147,14 +147,14 @@
 										</button>
 										<ul class="dropdown-menu" role="menu">
 											<li>
-												<a href="{$current}&token={$token}&csvfilename={$filename|@urlencode}" target="_blank">
+												<a href="{$current}&amp;token={$token}&amp;csvfilename={$filename|@urlencode}" target="_blank">
 													<i class="icon-download"></i>
 													{l s='Download'}
 												</a>
 											</li>
 											<li class="divider"></li>
 											<li>
-												<a href="{$current}&token={$token}&csvfilename={$filename|@urlencode}&delete=1">
+												<a href="{$current}&amp;token={$token}&amp;csvfilename={$filename|@urlencode}&amp;delete=1">
 													<i class="icon-trash"></i>
 													{l s='Delete'}
 												</a>

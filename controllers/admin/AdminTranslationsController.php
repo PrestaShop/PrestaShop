@@ -24,12 +24,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define ('TEXTAREA_SIZED', 70);
-
 class AdminTranslationsControllerCore extends AdminController
 {
 	/** Name of theme by default */
-	const DEFAULT_THEME_NAME = 'default-bootstrap';
+	const DEFAULT_THEME_NAME = _PS_DEFAULT_THEME_NAME_;
+	const TEXTAREA_SIZED = 70;
 
 	/** @var string : Link which list all pack of language */
 	protected $link_lang_pack = 'http://www.prestashop.com/download/lang_packs/get_each_language_pack.php';
@@ -47,7 +46,7 @@ class AdminTranslationsControllerCore extends AdminController
 	protected $modules_translations = array();
 
 	/** @var array : List of folder which must be ignored */
-	protected static $ignore_folder = array('.', '..', '.svn', '.htaccess', 'index.php');
+	protected static $ignore_folder = array('.', '..', '.svn', '.git', '.htaccess', 'index.php');
 
 	/** @var array : List of theme by translation type : FRONT, BACK, ERRORS... */
 	protected $translations_informations = array();
@@ -64,7 +63,7 @@ class AdminTranslationsControllerCore extends AdminController
 	/** @var string : Name of translations type */
 	protected $type_selected;
 
-	/** @var object : Language for the selected language */
+	/** @var Language object : Language for the selected language */
 	protected $lang_selected;
 
 	/** @var boolean : Is true if number of var exceed the suhosin request or post limit */
@@ -142,7 +141,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'post_limit_exceeded' => $this->post_limit_exceed,
 			'url_submit' => self::$currentIndex.'&submitTranslations'.ucfirst($this->type_selected).'=1&token='.$this->token,
 			'toggle_button' => $this->displayToggleButton(),
-			'textarea_sized' => TEXTAREA_SIZED
+			'textarea_sized' => AdminTranslationsControllerCore::TEXTAREA_SIZED
 		);
 
 		// Call method initForm for a type
@@ -442,7 +441,7 @@ class AdminTranslationsControllerCore extends AdminController
 			$file_name = _PS_TRANSLATIONS_DIR_.'/export/'.$this->lang_selected->iso_code.'.gzip';
 			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 			$gz = new Archive_Tar($file_name, true);
-			if ($gz->createModify($items, null, _PS_ROOT_DIR_));
+			if ($gz->createModify($items, null, _PS_ROOT_DIR_))
 			{
 				ob_start();
 				header('Pragma: public');
@@ -702,39 +701,57 @@ class AdminTranslationsControllerCore extends AdminController
 					Tools::deleteDirectory($sandbox, true);
 				}
 				
+				$i = 0;
+				$tmp_array = array();
+				foreach($files_paths as $files_path)
+				{
+					$path = dirname($files_path);
+					if (is_dir(_PS_TRANSLATIONS_DIR_.'../'.$path) && !is_writable(_PS_TRANSLATIONS_DIR_.'../'.$path) && !in_array($path, $tmp_array))
+					{
+						$this->errors[] = (!$i++? Tools::displayError('The archive cannot be extracted.').' ' : '').Tools::displayError('The server does not have permissions for writing.').' '.sprintf(Tools::displayError('Please check rights for %s'), $path);
+						$tmp_array[] = $path;
+					}
+
+				}
+
 				if (count($this->errors))
 					return false;
 
-				if ($gz->extractList($files_paths, _PS_TRANSLATIONS_DIR_.'../'))
+				if ($error = $gz->extractList($files_paths, _PS_TRANSLATIONS_DIR_.'../'))
 				{
-					foreach ($files_list as $file2check)
-						if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_.'../'.$file2check['filename'], Tools::getDefaultIndexContent()))
-							continue;
-
-					// Clear smarty modules cache
-					Tools::clearCache();
-
-					if (Validate::isLanguageFileName($filename))
+					if (is_object($error) && !empty($error->message))
+						$this->errors[] = Tools::displayError('The archive cannot be extracted.'). ' '.$error->message;
+					else
 					{
-						if (!Language::checkAndAddLanguage($iso_code))
-							$conf = 20;
-						else
+						foreach ($files_list as $file2check)
+							if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_.'../'.$file2check['filename'], Tools::getDefaultIndexContent()))
+								continue;
+	
+						// Clear smarty modules cache
+						Tools::clearCache();
+	
+						if (Validate::isLanguageFileName($filename))
 						{
-							// Reset cache 
-							Language::loadLanguages();
-							
-							AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
-							$this->checkAndAddThemesFiles($files_list, $themes_selected);
-							$tab_errors = AdminTranslationsController::addNewTabs($iso_code, $files_list);
-							
-							if (count($tab_errors))
+							if (!Language::checkAndAddLanguage($iso_code))
+								$conf = 20;
+							else
 							{
-								$this->errors += $tab_errors;
-								return false;
+								// Reset cache 
+								Language::loadLanguages();
+								
+								AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
+								$this->checkAndAddThemesFiles($files_list, $themes_selected);
+								$tab_errors = AdminTranslationsController::addNewTabs($iso_code, $files_list);
+								
+								if (count($tab_errors))
+								{
+									$this->errors += $tab_errors;
+									return false;
+								}
 							}
 						}
+						$this->redirect(false, (isset($conf) ? $conf : '15'));
 					}
-					$this->redirect(false, (isset($conf) ? $conf : '15'));
 				}
 				$this->errors[] = Tools::displayError('The archive cannot be extracted.');
 			}
@@ -877,7 +894,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		foreach ($files as $file)
 		{
-			if (preg_match('/^(.*).(tpl|php)$/', $file) && Tools::file_exists_cache($dir.$file) && !in_array($file, self::$ignore_folder))
+			if (preg_match('/^(.*)\.(tpl|php)$/', $file) && Tools::file_exists_cache($dir.$file) && !in_array($file, self::$ignore_folder))
 			{
 				// Get content for this file
 				$content = file_get_contents($dir.$file);
@@ -2724,7 +2741,7 @@ class AdminTranslationsControllerCore extends AdminController
 				'count' => $this->total_expression,
 				'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
 				'mod_security_warning' => Tools::apacheModExists('mod_security'),
-				'textarea_sized' => TEXTAREA_SIZED,
+				'textarea_sized' => AdminTranslationsControllerCore::TEXTAREA_SIZED,
 				'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
 				'modules_translations' => isset($this->modules_translations) ? $this->modules_translations : array(),
 				'missing_translations' => $this->missing_translations

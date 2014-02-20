@@ -37,7 +37,7 @@ class ThemeConfigurator extends Module
 	{
 		$this->name = 'themeconfigurator';
 		$this->tab = 'front_office_features';
-		$this->version = '0.2';
+		$this->version = '0.3';
 		$this->bootstrap = true;
 		$this->secure_key = Tools::encrypt($this->name);
 		$this->default_language = Language::getLanguage(Configuration::get('PS_LANG_DEFAULT'));
@@ -335,7 +335,7 @@ class ThemeConfigurator extends Module
 		if (realpath(dirname($file_name)) != realpath($this->uploads_path))
 			Tools::dieOrLog(sprintf('Could not find upload directory'));
 
-		if ($image != '' && is_file($file_name))
+		if ($image != '' && is_file($file_name) && !strpos($file_name, 'banner-img') && !strpos($file_name, 'bg-theme') && !strpos($file_name, 'footer-bg'))
 			unlink($file_name);
 	}
 
@@ -405,7 +405,7 @@ class ThemeConfigurator extends Module
 					image_w = '.(int)$image_w.',
 					image_h = '.(int)$image_h.',
 					active = '.(int)Tools::getValue('item_active').',
-					html = \''.pSQL($content).'\'
+					html = \''.pSQL($content, true).'\'
 			WHERE id_item = '.(int)Tools::getValue('item_id')
 		)
 		)
@@ -570,7 +570,7 @@ class ThemeConfigurator extends Module
 			{
 				$module_instance = Module::getInstanceByName($module['name']);
 				if (Validate::isLoadedObject($module_instance) && method_exists($module_instance, 'getContent'))
-					$desc = '<a href="'.$this->context->link->getAdminLink('AdminModules', true).'&configure='.urlencode($module_instance->name).'&tab_module='.$module_instance->tab.'&module_name='.urlencode($module_instance->name).'">'.$this->l('Configure').'</a>';
+					$desc = '<a class="btn btn-link" href="'.$this->context->link->getAdminLink('AdminModules', true).'&configure='.urlencode($module_instance->name).'&tab_module='.$module_instance->tab.'&module_name='.urlencode($module_instance->name).'">'.$this->l('Configure').' <i class="icon-external-link"></i></a>';
 			}
 			if (!$desc && isset($module['desc']) && $module['desc'])
 				$desc = $module['desc'];

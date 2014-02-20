@@ -26,6 +26,9 @@
 
 class ValidateCore
 {
+	const ADMIN_PASSWORD_LENGTH = 8;
+	const PASSWORD_LENGTH = 5;
+
 	public static function isIp2Long($ip)
 	{
 		return preg_match('#^-?[0-9]+$#', (string)$ip);
@@ -426,14 +429,14 @@ class ValidateCore
 	 * @param int $size
 	 * @return boolean Validity is ok or not
 	 */
-	public static function isPasswd($passwd, $size = 5)
+	public static function isPasswd($passwd, $size = Validate::PASSWORD_LENGTH)
 	{
 		return (Tools::strlen($passwd) >= $size && Tools::strlen($passwd) < 255);
 	}
 
 	public static function isPasswdAdmin($passwd)
 	{
-		return Validate::isPasswd($passwd, 8);
+		return Validate::isPasswd($passwd, Validate::ADMIN_PASSWORD_LENGTH);
 	}
 
 	/**
@@ -832,7 +835,7 @@ class ValidateCore
 	/**
 	 * Check if the value is a sort direction value (DESC/ASC)
 	 *
-	 * @param char $value
+	 * @param string $value
 	 * @return boolean Validity is ok or not
 	 */
 	public static function isSortDirection($value)

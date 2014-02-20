@@ -13,6 +13,10 @@ $menu-item-size: 36px
 		list-style: none
 		li.maintab
 			position: relative
+			a
+				white-space: nowrap
+				text-overflow: ellipsis
+				overflow: hidden
 			> a.title
 				display: block
 				position: relative
@@ -24,8 +28,6 @@ $menu-item-size: 36px
 				line-height: $menu-item-size
 				text-transform: uppercase
 				text-decoration: none
-				white-space: nowrap
-				text-overflow: ellipsis
 				@include transition-property(background-color)
 				@include transition-duration(0.2s)
 				@include transition-timing-function(ease-out)
@@ -61,29 +63,29 @@ $menu-item-size: 36px
 					i
 						color: contrast-color($main-color, black, white, 50%)
 				ul.submenu
-					display: block
-					padding: 8px 9px 8px 8px
-					background-color: white
-					border-right: 1px solid darken($bg-content-color,10%)
-					a
+					body:not(.page-sidebar-closed) &
+						display: block
 						background-color: white
-						color: $brand-primary
-						border-bottom: solid 1px mix(white, $brand-primary, 85%)
-						&:hover
+						border-right: 1px solid darken($bg-content-color,10%)
+						a
+							background-color: white
 							color: $brand-primary
 							border-bottom: solid 1px mix(white, $brand-primary, 85%)
-							background-color: mix(white, $brand-primary, 85%)
-							text-decoration: none
-							@include box-shadow(white 0 -1px)
-					li:last-child a
-						border-bottom: solid 1px white
-					li.active a
-						color: contrast-color($brand-primary, white, #333, 10%)
-						background-color: $brand-primary
-						position: relative
-						top: -1px
-						border-top: solid 1px white
-						border-bottom: solid 1px $brand-primary
+							&:hover
+								color: $brand-primary
+								border-bottom: solid 1px mix(white, $brand-primary, 85%)
+								background-color: mix(white, $brand-primary, 85%)
+								text-decoration: none
+								@include box-shadow(white 0 -1px)
+						li:last-child a
+							border-bottom: solid 1px white
+						li.active a
+							color: contrast-color($brand-primary, white, #333, 10%)
+							background-color: $brand-primary
+							position: relative
+							top: -1px
+							border-top: solid 1px white
+							border-bottom: solid 1px $brand-primary
 			ul.submenu
 				display: none
 				list-style: none
@@ -101,9 +103,37 @@ $menu-item-size: 36px
 							text-decoration: none
 							background-color: darken($main-color,10%)
 							@include box-shadow($brand-primary -4px 0 0 0 inset)
-
 	@media (max-width: $screen-phone)
 		display: none
+
+$min-height: 800px
+@media (max-height: $min-height)
+	body:not(.page-sidebar-closed)
+		#nav-sidebar ul.menu li.maintab > a.title
+			font-size: 12px
+			height: 28px
+			line-height: 28px
+			i
+				text-align: right
+				width: 18px
+				font-size: 14px
+		#nav-sidebar ul.menu li.maintab ul.submenu
+			padding: 1px 1px 0 1px
+			li a
+				padding: 0 6px
+				height: 26px
+				line-height: 26px
+
+		#nav-sidebar ul.menu li.maintab.active ul.submenu
+			display: none
+		#nav-sidebar ul.menu li.maintab.active:hover ul.submenu
+			position: absolute
+			display: block
+			width: 200px
+			z-index: 600
+			left: $widthSidebarNav
+			top: 0
+
 
 .page-sidebar
 	#content
@@ -113,31 +143,33 @@ $menu-item-size: 36px
 	#nav-sidebar
 		overflow: visible
 		width: 50px
-		a.title
-			text-align: center
-			> span
-				display: none
 		ul.submenu
 			display: none!important
 			padding-top: 37px
 			position: relative
 			top: 0
-		> ul > li:hover
+			padding: 1px 4px 3px 4px!important
+		li.maintab.active ul.submenu
+			border: none !important
+		a.title
+			text-align: center
+			i
+				width: 42px !important
+			> span
+				display: none
+		> ul > li.maintab:hover
 			width: 250px!important
 			position: relative
 			a.title
 				text-align: left
-				padding: 0 .35em
 				> span
 					display: inline-block
 			ul.submenu
 				position: absolute!important
 				display: block!important
 				left: 50px!important
-				top: 35px!important
+				top: 36px!important
 				width: 200px!important
-				padding: 8px!important
-				background-color: darken($main-color,10%)!important
 	#content
 		margin-left: 55px
 		@media (max-width: $screen-phone)
@@ -157,7 +189,6 @@ $menu-item-size: 36px
 	padding: 0 40px 0 0
 	z-index: 600
 	background-color: white
-	@include box-shadow(rgba(black,.2) 0 1px)
 	ul.menu
 		margin: 0
 		padding: 0
@@ -172,7 +203,7 @@ $menu-item-size: 36px
 			float: left
 			> a
 				display: block
-				line-height: 30px
+				line-height: 27px
 				color: lighten($main-color,20%)
 				padding: 0 6px
 				margin: 0
@@ -207,10 +238,13 @@ $menu-item-size: 36px
 				width: 200px
 				padding: 0
 				list-style: none
+				&:last-child > a
+					border: none
 				> a
 					display: block
 					padding: 4px 5px 4px 10px
-					border-bottom: solid 1px #eee
+					border-bottom: solid 1px lighten($brand-primary,45%)
+
 					&:hover
 						color: white
 						background-color: $brand-primary
@@ -229,7 +263,7 @@ $menu-item-size: 36px
 		right: 0
 		> a
 			text-align: center
-			font-size: 15px
+			font-size: 14px
 			line-height: 30px
 			color: $main-color
 			cursor: pointer
@@ -266,7 +300,7 @@ $menu-item-size: 36px
 		background: black
 		@include border-radius(40px)
 	ul.menu
-		top: 37px
+		top: 35px
 		position: absolute
 		display: none
 		width: 480px
@@ -351,7 +385,7 @@ $menu-item-size: 36px
 	#content
 		margin-left: 0
 		.page-head
-			top: 65px
+			top: 66px
 		.page-title
 			padding-left: 75px
 		.page-breadcrumb
@@ -359,8 +393,8 @@ $menu-item-size: 36px
 
 
 .searchtab
-	padding: 13px 7px
-	height: 54px
+	padding: 14px 7px
+	height: 55px
 	position: relative
 	background-color: darken($main-color,5%)
 	#bo_query
@@ -370,8 +404,11 @@ $menu-item-size: 36px
 		position: absolute
 		z-index: 900
 		top: 0
-		left: 5px
+		left: 0
+		padding: 14px 13px 0 7px
 		width: 400px
+		height: 55px
+		background-color: darken($main-color,5%)
 		#bo_query
 			width: 100%
 	.clear_search
@@ -380,5 +417,27 @@ $menu-item-size: 36px
 		right: 8px
 	i
 		font-size: $icon-size-base
+
+.page-sidebar-closed:not(.nav-topbar)
+	.searchtab
+		&:before
+			z-index: 1000
+			position: absolute
+			top: 16px
+			left: 14px
+			display: block
+			width: 28px
+			height: 28px
+			color: rgba(white,.5)
+			@extend .icon
+			@extend .icon-2x
+			@extend .icon-search
+		.form-group
+			display: none
+
+.page-topbar
+	.searchtab
+		display: none
+
 
 

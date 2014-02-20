@@ -25,20 +25,20 @@
 
 <div id="referrersContainer">
 	<div id="calendar">
-		<form action="{$current}&token={$token}{if $action && $table}&{$action}{$table}{/if}{if $identifier && $id}&{$identifier}={$id}{/if}" method="post" id="calendar_form" name="calendar_form" class="form-horizontal">
-			<input type="submit" name="submitDateDay" class="btn btn-default submitDateDay" value="{$translations.Day}">
-			<input type="submit" name="submitDateMonth" class="btn btn-default submitDateMonth" value="{$translations.Month}">
-			<input type="submit" name="submitDateYear" class="btn btn-default submitDateYear" value="{$translations.Year}">
-			<input type="submit" name="submitDateDayPrev" class="btn btn-default submitDateDayPrev" value="{$translations.Day}-1">
-			<input type="submit" name="submitDateMonthPrev" class="btn btn-default submitDateMonthPrev" value="{$translations.Month}-1">
-			<input type="submit" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev" value="{$translations.Year}-1">
+		<form action="{$current}&amp;token={$token}{if $action && $table}&amp;{$action}{$table}{/if}{if $identifier && $id}&amp;{$identifier}={$id}{/if}" method="post" id="calendar_form" name="calendar_form" class="form-horizontal">
+			<input type="submit" name="submitDateDay" class="btn btn-default submitDateDay" value="{$translations.Day}" />
+			<input type="submit" name="submitDateMonth" class="btn btn-default submitDateMonth" value="{$translations.Month}" />
+			<input type="submit" name="submitDateYear" class="btn btn-default submitDateYear" value="{$translations.Year}" />
+			<input type="submit" name="submitDateDayPrev" class="btn btn-default submitDateDayPrev" value="{$translations.Day}-1" />
+			<input type="submit" name="submitDateMonthPrev" class="btn btn-default submitDateMonthPrev" value="{$translations.Month}-1" />
+			<input type="submit" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev" value="{$translations.Year}-1" />
 			<p>
 				<span>{if isset($translations.From)}{$translations.From}{else}{l s='From:'}{/if}</span>
-				<input type="text" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom|escape}" class="datepicker">
+				<input type="text" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom|escape}" class="datepicker" />
 			</p>
 			<p>
 				<span>{if isset($translations.To)}{$translations.To}{else}<span>{l s='From:'}</span>{/if}</span>
-				<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" class="datepicker">
+				<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" class="datepicker" />
 			</p>
 			<button type="submit" name="submitDatePicker" id="submitDatePicker" class="btn btn-default">
 				<i class="icon-save"></i> {if isset($translations.Save)}{$translations.Save}{else}{l s='Save'}{/if}

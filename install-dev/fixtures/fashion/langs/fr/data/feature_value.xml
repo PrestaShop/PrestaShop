@@ -4,37 +4,37 @@
     <value>Polyester</value>
   </feature_value>
   <feature_value id="Wool">
-    <value>Wool</value>
+    <value>Laine</value>
   </feature_value>
   <feature_value id="Viscose">
     <value>Viscose</value>
   </feature_value>
   <feature_value id="Elastane">
-    <value>Elastane</value>
+    <value>Elasthanne</value>
   </feature_value>
   <feature_value id="Cotton">
-    <value>Cotton</value>
+    <value>Coton</value>
   </feature_value>
   <feature_value id="Silk">
-    <value>Silk</value>
+    <value>Soie</value>
   </feature_value>
   <feature_value id="Suede">
-    <value>Suede</value>
+    <value>Dain</value>
   </feature_value>
   <feature_value id="Straw">
-    <value>Straw</value>
+    <value>Paille</value>
   </feature_value>
   <feature_value id="Leather">
-    <value>Leather</value>
+    <value>Cuir</value>
   </feature_value>
   <feature_value id="Classic">
-    <value>Classic</value>
+    <value>Classique</value>
   </feature_value>
   <feature_value id="Casual">
-    <value>Casual</value>
+    <value>Sport</value>
   </feature_value>
   <feature_value id="Military">
-    <value>Military</value>
+    <value>Militaire</value>
   </feature_value>
   <feature_value id="Girly">
     <value>Girly</value>
@@ -43,25 +43,25 @@
     <value>Rock</value>
   </feature_value>
   <feature_value id="Basic">
-    <value>Basic</value>
+    <value>Basique</value>
   </feature_value>
   <feature_value id="Dressy">
-    <value>Dressy</value>
+    <value>Habillé</value>
   </feature_value>
   <feature_value id="Short_Sleeve">
-    <value>Short Sleeve</value>
+    <value>Manche courte</value>
   </feature_value>
   <feature_value id="Colorful_Dress">
-    <value>Colorful Dress</value>
+    <value>Robe colorée</value>
   </feature_value>
   <feature_value id="Short_Dress">
-    <value>Short Dress</value>
+    <value>Robe courte</value>
   </feature_value>
   <feature_value id="Midi_Dress">
-    <value>Midi Dress</value>
+    <value>Robe mini</value>
   </feature_value>
   <feature_value id="Maxi_Dress">
-    <value>Maxi Dress</value>
+    <value>Robe maxi</value>
   </feature_value>
   <feature_value id="2_75_in">
     <value>2.75 in</value>

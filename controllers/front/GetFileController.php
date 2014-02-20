@@ -83,7 +83,7 @@ class GetFileControllerCore extends FrontController
 			if (!isset($info['id_product_download']) || empty($info['id_product_download']))
 				$this->displayCustomError('This product has been deleted.');
 
-			if (!Validate::isFileName($filename) || !file_exists(_PS_DOWNLOAD_DIR_.$filename))
+			if (!Validate::isFileName($info['filename']) || !file_exists(_PS_DOWNLOAD_DIR_.$info['filename']))
 				$this->displayCustomError('This file no longer exists.');
 
             if (isset($info['product_quantity_refunded']) && isset($info['product_quantity_return']) &&

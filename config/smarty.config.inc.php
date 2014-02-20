@@ -147,12 +147,16 @@ function smarty_modifier_htmlentitiesUTF8($string)
 }
 function smartyMinifyHTML($tpl_output, &$smarty)
 {
+	if (in_array(Context::getContext()->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip')))
+		return $tpl_output;
     $tpl_output = Media::minifyHTML($tpl_output);
     return $tpl_output;
 }
 
 function smartyPackJSinHTML($tpl_output, &$smarty)
 {
+	if (in_array(Context::getContext()->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip')))
+		return $tpl_output;
     $tpl_output = Media::packJSinHTML($tpl_output);
     return $tpl_output;
 }
@@ -212,7 +216,7 @@ class SmartyLazyRegister
 
 	/**
 	 * Register a function or method to be dynamically called later
-	 * @param $params function name or array(object name, method name)
+	 * @param string|array $params function name or array(object name, method name)
 	 */
 	public function register($params)
 	{
@@ -225,8 +229,8 @@ class SmartyLazyRegister
 	/**
 	 * Dynamically call static function or method
 	 *
-	 * @param $name function name
-	 * @param $arguments function argument
+	 * @param string $name function name
+	 * @param mixed $arguments function argument
 	 * @return mixed function return
 	 */
 	public function __call($name, $arguments)

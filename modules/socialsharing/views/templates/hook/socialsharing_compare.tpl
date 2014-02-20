@@ -29,25 +29,21 @@
 			{if $PS_SC_TWITTER}
 				<button type="button" class="btn btn-default btn-block btn-twitter" onclick="socialsharing_twitter_click({if isset($product)}'{$product->name|addslashes} {$link->getProductLink($product)|addslashes}'{/if});">
 					<i class="icon-twitter"></i> Tweet
-					<!-- <img src="{$link->getMediaLink("`$module_dir`img/twitter.gif")}" alt="Tweet" /> -->
 				</button>
 			{/if}
 			{if $PS_SC_FACEBOOK}
 				<button type="button" class="btn btn-default btn-block btn-facebook" onclick="socialsharing_facebook_click();">
 					<i class="icon-facebook"></i> Share
-					<!-- <img src="{$link->getMediaLink("`$module_dir`img/facebook.gif")}" alt="Facebook Like" /> -->
 				</button>
 			{/if}
 			{if $PS_SC_GOOGLE}
 				<button type="button" class="btn btn-default btn-block btn-google-plus" onclick="socialsharing_google_click();">
 					<i class="icon-google-plus"></i> Google+
-					<!-- <img src="{$link->getMediaLink("`$module_dir`img/google.gif")}" alt="Google Plus" /> -->
 				</button>
 			{/if}
 			{if $PS_SC_PINTEREST}
 				<button type="button" class="btn btn-default btn-block btn-pinterest" onclick="socialsharing_pinterest_click();">
 					<i class="icon-pinterest"></i> Pinterest
-					<!-- <img src="{$link->getMediaLink("`$module_dir`img/pinterest.gif")}" alt="Pinterest" /> -->
 				</button>
 			{/if}
 		</p>

@@ -79,7 +79,15 @@ class EmployeeCore extends ObjectModel
 	/** @var boolean Status */
 	public $active = 1;
 
+	/** @var boolean Optin status */
+	public $optin = 1;
+
 	public $remote_addr;
+
+	/* employee notifications */
+	public $id_last_order;
+	public $id_last_customer_message;
+	public $id_last_customer;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -88,25 +96,29 @@ class EmployeeCore extends ObjectModel
 		'table' => 'employee',
 		'primary' => 'id_employee',
 		'fields' => array(
-			'lastname' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
-			'firstname' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
-			'email' => 				  array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 128),
-			'id_lang' => 			  array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-			'passwd' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isPasswdAdmin', 'required' => true, 'size' => 32),
-			'last_passwd_gen' => 	  array('type' => self::TYPE_STRING),
-			'active' => 			  array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'id_profile' => 		  array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-			'bo_color' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
-			'default_tab' => 		  array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-			'bo_theme' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 32),
-			'bo_css' => 			  array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
-			'bo_width' => 			  array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-			'bo_menu' => 			  array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'stats_date_from' => 	  array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-			'stats_date_to' => 		  array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-			'stats_compare_from' =>   array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-			'stats_compare_to' => 	  array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-			'stats_compare_option' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'lastname' =>					array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'firstname' =>					array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'email' =>						array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 128),
+			'id_lang' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+			'passwd' => 					array('type' => self::TYPE_STRING, 'validate' => 'isPasswdAdmin', 'required' => true, 'size' => 32),
+			'last_passwd_gen' =>			array('type' => self::TYPE_STRING),
+			'active' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'optin' => 			  			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'id_profile' => 		 		array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+			'bo_color' => 			 		array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
+			'default_tab' => 		 		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'bo_theme' => 			 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 32),
+			'bo_css' => 					array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
+			'bo_width' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'bo_menu' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'stats_date_from' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'stats_date_to' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'stats_compare_from' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'stats_compare_to' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'stats_compare_option' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'id_last_order' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'id_last_customer_message' =>	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'id_last_customer' =>			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 		),
 	);
 
@@ -161,6 +173,8 @@ class EmployeeCore extends ObjectModel
 	public function add($autodate = true, $null_values = true)
 	{
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_BACK').'minutes'));
+		$this->saveOptin();
+
 	 	return parent::add($autodate, $null_values);
 	}
 
@@ -170,7 +184,24 @@ class EmployeeCore extends ObjectModel
 			$this->stats_date_from = date('Y-m-d');
 		if (empty($this->stats_date_to) || $this->stats_date_to == '0000-00-00')
 			$this->stats_date_to = date('Y-m-d');
+		$this->saveOptin();
 	 	return parent::update($null_values);
+	}
+	
+	protected function saveOptin()
+	{
+		if ($this->optin && !defined('PS_INSTALLATION_IN_PROGRESS'))
+		{
+			$language = new Language($this->id_lang);
+			$params = http_build_query(array(
+				'email' => $this->email,
+				'method' => 'addMemberToNewsletter',
+				'language' => $language->iso_code,
+				'visitorType' => 1,
+				'source' => 'backoffice'
+			));
+			Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+		}
 	}
 
 	/**
@@ -368,8 +399,22 @@ class EmployeeCore extends ObjectModel
 	
 	public function getImage()
 	{
-		if (!isset($this->id) || empty($this->id) || !file_exists($this->image_dir.$this->id.'.jpg'))
-			return _PS_IMG_DIR_.'prestashop-avatar.png';
-		return $this->image_dir.$this->id.'.jpg';
+		if (!Validate::isLoadedObject($this))
+			return Tools::getAdminImageUrl('prestashop-avatar.png');
+		return Tools::getShopProtocol().'api.prestashop.com/profile/avatar.php?email='.urlencode($this->email).'&time='.time();
+	}
+
+	public function getLastElementsForNotify($element)
+	{
+		$element = bqSQL($element);
+		$max = Db::getInstance()->getValue('
+			SELECT MAX(`id_'.$element.'`) as `id_'.$element.'`
+			FROM `'._DB_PREFIX_.$element.($element == 'order' ? 's': '').'`');
+
+		// if no rows in table, set max to 0
+		if ((int)$max < 1)
+			$max = 0;
+
+		return (int)$max;
 	}
 }

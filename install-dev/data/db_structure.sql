@@ -732,6 +732,7 @@ CREATE TABLE `PREFIX_employee` (
   `bo_width` int(10) unsigned NOT NULL DEFAULT 0,
   `bo_menu` tinyint(1) NOT NULL default '1',
   `active` tinyint(1) unsigned NOT NULL default '0',
+  `optin` tinyint(1) unsigned NOT NULL default '1',
   `id_last_order` int(10) unsigned NOT NULL default '0',
   `id_last_customer_message` int(10) unsigned NOT NULL default '0',
   `id_last_customer` int(10) unsigned NOT NULL default '0',
@@ -999,6 +1000,7 @@ CREATE TABLE `PREFIX_meta` (
   `page` varchar(64) NOT NULL,
 	`configurable` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_meta`),
+  UNIQUE KEY `page` (`page`),
   KEY `meta_name` (`page`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 

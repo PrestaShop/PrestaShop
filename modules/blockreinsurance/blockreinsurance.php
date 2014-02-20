@@ -40,6 +40,7 @@ class Blockreinsurance extends Module
 		else
 			$this->tab = 'Blocks';
 		$this->version = '2.0';
+		$this->author = 'PrestaShop';
 
 		$this->bootstrap = true;
 		parent::__construct();	

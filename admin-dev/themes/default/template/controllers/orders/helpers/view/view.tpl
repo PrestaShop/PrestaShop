@@ -185,7 +185,7 @@
 					<!-- Tab status -->
 					<div class="tab-pane active" id="status">
 						<!-- Change status form -->
-						<form action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post" class="form-horizontal well">
+						<form action="{$currentIndex}&amp;vieworder&amp;token={$smarty.get.token}" method="post" class="form-horizontal well">
 							<div class="row">
 								<div class="col-lg-9">
 									<select id="id_order_state" name="id_order_state">
@@ -243,11 +243,11 @@
 				<ul class="nav nav-tabs" id="myTab">
 					<li class="active"><a href="#shipping">
 						<i class="icon-truck "></i>
-						Shipping</a>
+						{l s='Shipping'}</a>
 					</li>
 					<li><a href="#returns">
 						<i class="icon-undo"></i>
-						Merchandise Returns</a>
+						{l s='Merchandise Returns'}</a>
 					</li>
 				</ul>
 				<!-- Tab content -->
@@ -389,7 +389,7 @@
 						{l s='#'}{$customer->id}
 					</span>
 					<span class="badge">
-						<a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}">
+						<a href="?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;viewcustomer&amp;token={getAdminToken tab='AdminCustomers'}">
 							{if Configuration::get('PS_B2B_ENABLE')}{$customer->company} - {/if}
 							{$gender->name|escape:'html':'UTF-8'}
 							{$customer->firstname}
@@ -403,7 +403,7 @@
 				{if ($customer->isGuest())}
 					{l s='This order has been placed by a guest.'}
 					{if (!Customer::customerExists($customer->email))}
-					<form method="post" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
+					<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;token={getAdminToken tab='AdminCustomers'}">
 						<input type="hidden" name="id_lang" value="{$order->id_lang}" />
 						<input class="btn btn-default" type="submit" name="submitGuestToCustomer" value="{l s='Transform a guest into a customer'}" />
 						<p class="help-block">{l s='This feature will generate a random password and send an email to the customer.'}</p>
@@ -440,6 +440,12 @@
 						<a href="#addressInvoice">
 							<i class="icon-file-text"></i>
 							{l s='Invoice address'}
+						</a>
+					</li>
+					<li>
+						<a href="#messages">
+							<i class="icon-envelope"></i>
+							{l s='Messages'}
 						</a>
 					</li>
 				</ul>
@@ -479,7 +485,7 @@
 							</form>
 							{/if}
 							<div class="well">
-								<a class="btn btn-default pull-right" href="?tab=AdminAddresses&id_address={$addresses.delivery->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=1{/if}&token={getAdminToken tab='AdminAddresses'}&back={$smarty.server.REQUEST_URI|urlencode}">
+								<a class="btn btn-default pull-right" href="?tab=AdminAddresses&amp;id_address={$addresses.delivery->id}&amp;addaddress&realedit=1&amp;id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&amp;address_type=1{/if}&amp;token={getAdminToken tab='AdminAddresses'}&back={$smarty.server.REQUEST_URI|urlencode}">
 									<i class="icon-pencil"></i>
 									{l s='Edit'}
 								</a>
@@ -488,11 +494,11 @@
 									<hr />{$addresses.delivery->other}<br />
 								{/if}
 							</div>
-							<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if} {$addresses.delivery->country}&markers={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if} {$addresses.delivery->country}&zoom=7&size=600x200&scale=2&sensor=false" class="img-thumbnail">
+							<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.delivery->address1|urlencode},{$addresses.delivery->postcode|urlencode},{$addresses.delivery->city|urlencode}{if ($addresses.delivery->id_state)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.delivery->country|urlencode}&amp;markers={$addresses.delivery->address1|urlencode},{$addresses.delivery->postcode|urlencode},{$addresses.delivery->city|urlencode}{if ($addresses.delivery->id_state)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.delivery->country|urlencode}&amp;zoom=7&amp;size=600x200&amp;scale=2&amp;sensor=false" class="img-thumbnail">
 						{/if}
 					</div>
 					<div class="tab-pane" id="addressInvoice">
-						<!-- Invoice address -->						
+						<!-- Invoice address -->
 						{if $can_edit}
 						<form class="form-horizontal" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$order->id}">
 							<div class="form-group">
@@ -522,7 +528,7 @@
 						</form>
 						{/if}
 						<div class="well">
-							<a class="btn btn-default pull-right" href="?tab=AdminAddresses&id_address={$addresses.invoice->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=2{/if}&back={$smarty.server.REQUEST_URI|urlencode}&token={getAdminToken tab='AdminAddresses'}">
+							<a class="btn btn-default pull-right" href="?tab=AdminAddresses&amp;id_address={$addresses.invoice->id}&amp;addaddress&amp;realedit=1&amp;id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&amp;address_type=2{/if}&amp;back={$smarty.server.REQUEST_URI|urlencode}&amp;token={getAdminToken tab='AdminAddresses'}">
 								<i class="icon-pencil"></i>
 								{l s='Edit'}
 							</a>
@@ -531,7 +537,66 @@
 								<hr />{$addresses.invoice->other}<br />
 							{/if}
 						</div>
-						<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.invoice->address1} {$addresses.invoice->postcode} {$addresses.invoice->city} {if ($addresses.invoice->id_state) && isset($addresses.deliveryState)} {$addresses.deliveryState->name}{/if}&markers={$addresses.invoice->address1} {$addresses.invoice->postcode} {$addresses.invoice->city} {if ($addresses.invoice->id_state) && isset($addresses.deliveryState)} {$addresses.deliveryState->name}{/if}&zoom=7&size=600x200&scale=2&sensor=false" class="img-thumbnail">
+						<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.invoice->address1|urlencode},{$addresses.invoice->postcode|urlencode},{$addresses.invoice->city|urlencode}{if ($addresses.invoice->id_state) && isset($addresses.deliveryState)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.invoice->country|urlencode}&amp;markers={$addresses.invoice->address1|urlencode},{$addresses.invoice->postcode|urlencode},{$addresses.invoice->city|urlencode},{$addresses.invoice->country|urlencode}&amp;zoom=7&amp;size=600x200&amp;scale=2&amp;sensor=false" class="img-thumbnail">
+					</div>
+					<div class="tab-pane" id="messages">
+						<form action="{$smarty.server.REQUEST_URI}&amp;token={$smarty.get.token}" method="post" onsubmit="if (getE('visibility').checked == true) return confirm('{l s='Do you want to send this message to the customer?'}');">
+						<div id="message" class="form-horizontal">
+							<div class="form-group">
+								<label class="control-label col-lg-3">{l s='Choose a standard message'}</label>
+								<div class="col-lg-9">
+									<select name="order_message" id="order_message" onchange="orderOverwriteMessage(this, '{l s='Do you want to overwrite your existing message?'}')">
+										<option value="0" selected="selected">-</option>
+										{foreach from=$orderMessages item=orderMessage}
+										<option value="{$orderMessage['message']|escape:'html':'UTF-8'}">{$orderMessage['name']}</option>
+										{/foreach}
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-lg-3">{l s='Display to customer?'}</label>
+								<div class="col-lg-9">
+									<span class="switch prestashop-switch fixed-width-lg">
+										<input type="radio" name="visibility" id="visibility_on" value="0" />
+										<label for="visibility_on">
+											{l s='Yes'}
+										</label>
+										<input type="radio" name="visibility" id="visibility_off" value="1" checked="checked" /> 
+										<label for="visibility_off">
+											{l s='No'}
+										</label>
+										<a class="slide-button btn"></a>
+									</span>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-lg-3">{l s='Message'}</label>
+								<div class="col-lg-9">
+									<textarea id="txt_msg" class="textarea-autosize" name="message">{Tools::getValue('message')|escape:'html':'UTF-8'}</textarea>
+									<p id="nbchars"></p>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-lg-9 col-lg-offset-3">
+									<input type="hidden" name="id_order" value="{$order->id}" />
+									<input type="hidden" name="id_customer" value="{$order->id_customer}" />
+									<button type="submit" id="submitMessage" class="btn btn-default" name="submitMessage">
+										<i class="icon-envelope text-success"></i>
+										{l s='Send'}
+									</button>
+								</div>
+							</div>
+
+							<hr/>
+							<a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}">
+								{l s='Show all messages.'}
+								<i class="icon-external-link"></i>
+							</a>
+						</div>
+					</form>
 					</div>
 				</div>
 				<script>
@@ -540,82 +605,6 @@
 						$(this).tab('show')
 					})
 				</script>
-
-<!-- message -->
-				<form action="{$smarty.server.REQUEST_URI}&token={$smarty.get.token}" method="post" onsubmit="if (getE('visibility').checked == true) return confirm('{l s='Do you want to send this message to the customer?'}');">
-					<!-- <p id="message_m" style="display: {if Tools::getValue('message')}none{else}block{/if}">
-						{l s='to add a comment or send a message to the customer.'}
-					</p> -->
-					<div id="message" class="form-horizontal well" style="display:none">
-						<div class="form-group">
-							<label class="control-label col-lg-3">{l s='Choose a standard message'}</label>
-							<div class="col-lg-9">
-								<select name="order_message" id="order_message" onchange="orderOverwriteMessage(this, '{l s='Do you want to overwrite your existing message?'}')">
-									<option value="0" selected="selected">-</option>
-									{foreach from=$orderMessages item=orderMessage}
-									<option value="{$orderMessage['message']|escape:'html':'UTF-8'}">{$orderMessage['name']}</option>
-									{/foreach}
-								</select>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="control-label col-lg-3">{l s='Display to customer?'}</label>
-							<div class="col-lg-9">
-								<div class="row">
-									<div class="input-group col-lg-2">
-										<span class="switch prestashop-switch">
-											<input type="radio" name="visibility" id="visibility_on" value="0" />
-											<label class="radio" for="visibility_on">
-												<i class="icon-check-sign text-success"></i>
-												{l s='Yes'}
-											</label>
-											<input type="radio" name="visibility" id="visibility_off" value="1" checked="checked" /> 
-											<label class="radio" for="visibility_off">
-												<i class="icon-ban-circle text-danger"></i>
-												{l s='No'}
-											</label>
-											<a class="slide-button btn"></a>
-										</span>
-									</div>
-								</div>				
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="control-label col-lg-3">{l s='Message'}</label>
-							<div class="col-lg-9">
-								<textarea id="txt_msg" class="textarea-autosize" name="message">{Tools::getValue('message')|escape:'html':'UTF-8'}</textarea>
-								<p id="nbchars"></p>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-lg-9 col-lg-offset-3">
-								<input type="hidden" name="id_order" value="{$order->id}" />
-								<input type="hidden" name="id_customer" value="{$order->id_customer}" />
-								<button type="button" id="cancelMessage" class="btn btn-default">
-									<i class="icon-remove text-danger"></i>
-									{l s='Cancel'}
-								</button>
-								<button type="submit" id="submitMessage" class="btn btn-default" name="submitMessage">
-									<i class="icon-ok text-success"></i>
-									{l s='Send'}
-								</button>
-							</div>
-						</div>
-
-						<hr/>
-						<button id="newMessage" type="button" class="btn btn-default">
-							<i class="icon-envelope"></i>
-							{l s='New message'}
-						</button>
-						<a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}">
-							<b>{l s='Click here'}</b> {l s='to see all messages.'}
-							<i class="icon-external-link"></i>
-						</a>
-					</div>
-				</form>
 			</div>
 		</div>
 	</div>
@@ -643,14 +632,14 @@
 								<br />{l s='This warning also concerns the next orders:'}
 							{/if}
 						{/if}
-						<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">
+						<a href="{$current_index}&amp;vieworder&amp;id_order={$brother_order->id}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}">
 							#{'%06d'|sprintf:$brother_order->id}
 						</a>
 					{/foreach}
 				</p>
 				{/if}
 
-				<form id="formAddPayment" method="post" action="{$current_index}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">
+				<form id="formAddPayment" method="post" action="{$current_index}&amp;vieworder&amp;id_order={$order->id}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}">
 					<table class="table">
 						<thead>
 							<tr>
@@ -752,7 +741,7 @@
 												<option value="{$current_currency['id_currency']}"{if $current_currency['id_currency'] == $currency->id} selected="selected"{/if}>{$current_currency['sign']}</option>
 											{/foreach}
 											</select>
-										</div>								
+										</div>
 									</div>
 								</td>
 								{if count($invoices_collection) > 0}
@@ -775,7 +764,7 @@
 					</table>
 				</form>
 				{if (!$order->valid && sizeof($currencies) > 1)}
-				<form class="form-horizontal well" method="post" action="{$currentIndex}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">
+				<form class="form-horizontal well" method="post" action="{$currentIndex}&amp;vieworder&amp;id_order={$order->id}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}">
 					<div class="row">
 						<label class="control-label col-lg-3">{l s='Change currency'}</label>
 						<div class="col-lg-6">
@@ -819,7 +808,7 @@
 				</ul>
 			</div>
 			{/if}
-		
+
 			<!-- linked orders block -->
 			{if count($order->getBrother()) > 0}
 			<div class="panel">
@@ -846,7 +835,7 @@
 						{foreach $order->getBrother() as $brother_order}
 						<tr>
 							<td>
-								<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">#{$brother_order->id}</a>
+								<a href="{$current_index}&amp;vieworder&amp;id_order={$brother_order->id}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}">#{$brother_order->id}</a>
 							</td>
 							<td>
 								{$brother_order->getCurrentOrderState()->name[$current_id_lang]}
@@ -855,7 +844,7 @@
 								{displayPrice price=$brother_order->total_paid_tax_incl currency=$currency->id}
 							</td>
 							<td>
-								<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">
+								<a href="{$current_index}&amp;vieworder&amp;id_order={$brother_order->id}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}">
 									<i class="icon-eye-open"></i>
 									{l s='See the order'}
 								</a>
@@ -869,7 +858,7 @@
 		</div>
 	</div>
 
-	<form class="container-command-top-spacing" action="{$current_index}&vieworder&token={$smarty.get.token}&id_order={$order->id}" method="post" onsubmit="return orderDeleteProduct('{l s='This product cannot be returned.'}', '{l s='Quantity to cancel is greater than quantity available.'}');">
+	<form class="container-command-top-spacing" action="{$current_index}&amp;vieworder&amp;token={$smarty.get.token}&id_order={$order->id}" method="post" onsubmit="return orderDeleteProduct('{l s='This product cannot be returned.'}', '{l s='Quantity to cancel is greater than quantity available.'}');">
 		<input type="hidden" name="id_order" value="{$order->id}" />
 		<div style="display: none">
 			<input type="hidden" value="{$order->getWarehouseList()|implode}" id="warehouse_list" />
@@ -1007,7 +996,7 @@
 									</td>
 									{if $can_edit}
 									<td>
-										<a href="{$current_index}&submitDeleteVoucher&id_order_cart_rule={$discount['id_order_cart_rule']}&id_order={$order->id}&token={$smarty.get.token|escape:'html':'UTF-8'}">
+										<a href="{$current_index}&amp;submitDeleteVoucher&amp;id_order_cart_rule={$discount['id_order_cart_rule']}&amp;id_order={$order->id}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}">
 											<i class="icon-minus-sign"></i>
 											{l s='Delete voucher'}
 										</a>
@@ -1024,10 +1013,18 @@
 					</div>
 					<div class="panel">
 						<table class="table">
+
+							{* Assign order price *}
+							{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
+								{assign var=order_product_price value=($order->total_products)}
+							{else}
+								{assign var=order_product_price value=$order->total_products_wt}
+							{/if}
+
 							<tr id="total_products">
 								<td class="text-right">{l s='Products:'}</td>
 								<td class="amount text-right">
-									{displayPrice price=$order->total_products_wt currency=$currency->id}
+									{displayPrice price=$order_product_price currency=$currency->id}
 								</td>
 								<td class="partial_refund_fields current-edit" style="display:none;"></td>
 							</tr>
@@ -1060,10 +1057,17 @@
 									</div>
 								</td>
 							</tr>
+							{* Assign order price *}
+							{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
+								{assign var=order_total_price value=($order->total_paid_tax_excl)}
+							{else}
+								{assign var=order_total_price value=$order->total_paid_tax_incl}
+							{/if}
+
 							<tr id="total_order">
 								<td class="text-right"><strong>{l s='Total'}</strong></td>
 								<td class="amount text-right">
-									<strong>{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</strong>
+									<strong>{displayPrice price=$order_total_price currency=$currency->id}</strong>
 								</td>
 								<td class="partial_refund_fields current-edit" style="display:none;"></td>
 							</tr>
@@ -1137,7 +1141,7 @@
 		{foreach from=$messages item=message}
 			<div {if $message['is_new_for_me']}class="new_message"{/if}>
 			{if ($message['is_new_for_me'])}
-				<a class="new_message" title="{l s='Mark this message as \'viewed\''}" href="{$smarty.server.REQUEST_URI}&token={$smarty.get.token}&messageReaded={$message['id_message']}">
+				<a class="new_message" title="{l s='Mark this message as \'viewed\''}" href="{$smarty.server.REQUEST_URI}&amp;token={$smarty.get.token}&amp;messageReaded={$message['id_message']}">
 					<i class="icon-ok"></i>
 				</a>
 			{/if}
@@ -1156,6 +1160,6 @@
 		$(document).ready(function(){
 			$(".textarea-autosize").autosize();
 		});
- 	</script>
+	</script>
 
 {/block}

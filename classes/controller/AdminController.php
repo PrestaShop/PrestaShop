@@ -262,7 +262,7 @@ class AdminControllerCore extends Controller
 	/** @var instanciation of the class associated with the AdminController */
 	protected $object;
 
-	/** @var current object ID */
+	/** @var int current object ID */
 	protected $id_object;
 
 	/**
@@ -731,7 +731,7 @@ class AdminControllerCore extends Controller
 		// clean buffer
 		if (ob_get_level() && ob_get_length() > 0)
 			ob_clean();
-		$this->getList($this->context->language->id);
+		$this->getList($this->context->language->id, null, null, 0, false);
 		if (!count($this->_list))
 			return;
 
@@ -1302,8 +1302,6 @@ class AdminControllerCore extends Controller
 					'desc' => $this->l('Save')
 				);
 				break;
-			case 'view':
-				break;
 			default: // list
 				$this->toolbar_btn['new'] = array(
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
@@ -1323,7 +1321,7 @@ class AdminControllerCore extends Controller
 	 * otherwise return an empty object, or die
 	 *
 	 * @param boolean $opt Return an empty object if load fail
-	 * @return object
+	 * @return object|boolean
 	 */
 	protected function loadObject($opt = false)
 	{
@@ -1351,8 +1349,6 @@ class AdminControllerCore extends Controller
 			$this->errors[] = Tools::displayError('The object cannot be loaded (the dentifier is missing or invalid)');
 			return false;
 		}
-
-		return $this->object;
 	}
 
 	/**
@@ -1590,7 +1586,7 @@ class AdminControllerCore extends Controller
 				if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'] && $sub_tab['class_name'] != 'AdminCarrierWizard')
 				{
 					$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
-					$sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this));
+					$sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this) || $sub_tab['class_name'] == Tools::getValue('controller'));
 				}
 				else
 					unset($sub_tabs[$index2]);					
@@ -1610,11 +1606,9 @@ class AdminControllerCore extends Controller
 				'brightness' => Tools::getBrightness($bo_color) < 128 ? 'white' : '#383838',
 				'bo_width' => (int)$this->context->employee->bo_width,
 				'bo_color' => isset($this->context->employee->bo_color) ? Tools::htmlentitiesUTF8($this->context->employee->bo_color) : null,
-				'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS') && $accesses['AdminOrders']['view'],
-				'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS') && $accesses['AdminCustomers']['view'],
-				'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && $accesses['AdminCustomerThreads']['view'],
-				'first_name' => Tools::substr($this->context->employee->firstname, 0, 1),
-				'last_name' => Tools::safeOutput($this->context->employee->lastname),
+				'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS') && isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view'],
+				'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS') && isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view'],
+				'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && isset($accesses['AdminCustomerThreads'])&& $accesses['AdminCustomerThreads']['view'],
 				'employee' => $this->context->employee,
 				'search_type' => Tools::getValue('bo_search_type'),
 				'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
@@ -1628,7 +1622,6 @@ class AdminControllerCore extends Controller
 				'is_multishop' => $is_multishop,
 				'multishop_context' => $this->multishop_context,
 				'default_tab_link' => $this->context->link->getAdminLink(Tab::getClassNameById((int)Context::getContext()->employee->default_tab)),
-				'employee_avatar' => ImageManager::thumbnail($this->context->employee->getImage(), 'employee'.'_'.(int)$this->context->employee->id.'.'.$this->imageType, 150, $this->imageType, true, true),
 				'collapse_menu' => isset($this->context->cookie->collapse_menu) ? (int)$this->context->cookie->collapse_menu : 0
 			));
 		}
@@ -1643,6 +1636,7 @@ class AdminControllerCore extends Controller
 			'country_iso_code' => $this->context->country->iso_code,
 			'version' => _PS_VERSION_,
 			'lang_iso' => $this->context->language->iso_code,
+			'full_language_code' => $this->context->language->language_code,
 			'link' => $this->context->link,
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
 			'base_url' => $this->context->shop->getBaseURL(),
@@ -2083,6 +2077,7 @@ class AdminControllerCore extends Controller
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.min.js');
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.min.js');
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
+		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/moment-with-langs.min.js');
 
 		if (!Tools::getValue('submitFormAjax'))
 			$this->addJs(_PS_JS_DIR_.'notifications.js');
@@ -2169,9 +2164,10 @@ class AdminControllerCore extends Controller
 			'table' => $this->table,
 			'current' => self::$currentIndex,
 			'token' => $this->token,
+			'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
 			'stock_management' => (int)Configuration::get('PS_STOCK_MANAGEMENT')
 		));
-		
+
 		if ($this->display_header)
 			$this->context->smarty->assign('displayBackOfficeHeader', Hook::exec('displayBackOfficeHeader', array()));
 		
@@ -2621,10 +2617,10 @@ class AdminControllerCore extends Controller
 		(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
 		$this->_listTotal = 0;
-		if (!($this->_list = Db::getInstance()->executeS($this->_listsql)))
+		if (!($this->_list = Db::getInstance()->executeS($this->_listsql, true, false)))
 			$this->_list_error = Db::getInstance()->getMsgError();
 		else
-			$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
+			$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`', false);
 
 		Hook::exec('action'.$this->controller_name.'ListingResultsModifier', array(
 			'list' => &$this->_list,
@@ -2899,7 +2895,7 @@ class AdminControllerCore extends Controller
 	{
 		/* Classical fields */
 		foreach ($_POST as $key => $value)
-			if (key_exists($key, $object) && $key != 'id_'.$table)
+			if (array_key_exists($key, $object) && $key != 'id_'.$table)
 			{
 				/* Do not take care of password field if empty */
 				if ($key == 'passwd' && Tools::getValue('id_'.$table) && empty($value))

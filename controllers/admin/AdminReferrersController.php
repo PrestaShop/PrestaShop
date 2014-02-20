@@ -427,8 +427,11 @@ class AdminReferrersControllerCore extends AdminController
 	{
 		if ($this->enableCalendar())
 		{
+			// Warning, instantiating a controller here changes the controller in the Context...
 			$calendar_tab = new AdminStatsController();
 			$calendar_tab->postProcess();
+			// ...so we set it back to the correct one here
+			$this->context->controller = $this;
 		}
 
 		if (Tools::isSubmit('submitSettings'))
