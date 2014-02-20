@@ -1325,6 +1325,8 @@ class AdminModulesControllerCore extends AdminController
 			$this->confirmations[] = sprintf($this->l('The following module(s) were upgraded successfully:').' %s', $html);
 		}
 
+		ConfigurationKPI::updateValue('UPDATE_MODULES', count($upgrade_available));
+
 		// Init tpl vars for smarty
 		$tpl_vars = array();
 
