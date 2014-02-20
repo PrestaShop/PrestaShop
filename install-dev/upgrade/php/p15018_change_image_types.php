@@ -43,7 +43,7 @@ function p15018_change_image_types()
 
 	$new_types = array(
 		'products' => array(
-			'small' => array('cart_default ', '80', '80')
+			'small' => array('cart_default', '80', '80')
 		)
 	);
 
