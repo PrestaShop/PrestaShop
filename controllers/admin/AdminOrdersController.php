@@ -170,8 +170,6 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			// Save context (in order to apply cart rule)
 			$order = new Order((int)Tools::getValue('id_order'));
-			if (!Validate::isLoadedObject($order))
-				throw new PrestaShopException('Cannot load Order object');
 			$this->context->cart = new Cart($order->id_cart);
 			$this->context->customer = new Customer($order->id_customer);
 		}
@@ -397,7 +395,7 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			$order = new Order(Tools::getValue('id_order'));
 			if (!Validate::isLoadedObject($order))
-				throw new PrestaShopException('Can\'t load Order object');
+				$this->errors[] = Tools::displayError('The order cannot be found within your database.');
 			ShopUrl::cacheMainDomainForShop((int)$order->id_shop);
 		}
 
@@ -1439,7 +1437,7 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		$order = new Order(Tools::getValue('id_order'));
 		if (!Validate::isLoadedObject($order))
-			throw new PrestaShopException('object can\'t be loaded');
+			$this->errors[] = Tools::displayError('The order cannot be found within your database.');
 
 		$customer = new Customer($order->id_customer);
 		$carrier = new Carrier($order->id_carrier);
