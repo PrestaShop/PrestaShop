@@ -106,7 +106,7 @@
 			<div class="radio">
 				<label for="simple_product">
 					<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} />
-					{l s='Product'}
+					{l s='Simple product'}
 				</label>
 			</div>
 			<div class="radio">
