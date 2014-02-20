@@ -29,28 +29,25 @@
 <div class="panel">
 	<div class="panel-heading text-center">
 		<form action="{$link->getAdminLink('AdminCustomerThreads')}&viewcustomer_thread&id_customer_thread={$id_customer_thread}" method="post" enctype="multipart/form-data" class="form-horizontal">
+		<div class="btn-group pull-left">
 		{foreach $actions as $action}
 			<button class="btn btn-default pull-left" name="{$action.name|escape:'html':'UTF-8'}" value="{$action.value|intval}">
 				{if isset($action.icon)}<i class="{$action.icon|escape:'html':'UTF-8'}"></i>{/if}{$action.label}
 			</button>
 		{/foreach}
 		</form>
-		<div class="btn-group pull-left">
 			<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">{l s="Forward this discussion to"}</button>
 		</div>
 		
 		<i class="icon-comments"></i>
 		{l s="Thread"} : #<strong>{$id_customer_thread|intval}</strong>
-		<!--
-<div class="btn-group pull-right">
-			<a class="btn btn-default pull-left" href="#">
-				<i class="icon-chevron-left"></i>
-			</a>
-			<a class="btn btn-default pull-left" href="#" disabled="">
-				<i class="icon-chevron-right"></i>
+		{if isset($next_thread) && $next_thread}
+		<div class="btn-group pull-right">
+			<a class="btn btn-default pull-left" href="{$next_thread.href}">
+				<i class="icon-chevron-right"></i> {$next_thread.name}
 			</a> 
 		</div>
--->
+		{/if}
 	</div>
 	<div class="row">
 		<div class="message-item-initial media">
@@ -58,17 +55,21 @@
 			<div class="media-body">
 				<div class="row">
 					<div class="col-sm-6">
+					{if isset($customer->firstname)}
 						<h2>{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} <small>({$customer->email|escape:'html':'UTF-8'})</small></h2>
+					{/if}
 						<span>{l s="TO:"} </span><span class="badge">{$contact|escape:'html':'UTF-8'}</span>
 					</div>
-					<div class="col-sm-6">
-						{if $count_ok}
-							<span class="badge">{$count_ok}</span> {l s="orders validated"} <span class="badge">{$total_ok|intval}</span><br/>
-						{else}
-							{l s="No orders validated for the moment"}<br/>
-						{/if}
-						<span>{l s="Customer since:"} {dateFormat date=$customer->date_add full=0}</span>
-					</div>
+					{if isset($customer->firstname)}
+						<div class="col-sm-6">
+							{if $count_ok}
+								<span class="badge">{$count_ok}</span> {l s="orders validated"} <span class="badge">{$total_ok|intval}</span><br/>
+							{else}
+								{l s="No orders validated for the moment"}<br/>
+							{/if}
+							<span>{l s="Customer since:"} {dateFormat date=$customer->date_add full=0}</span>						
+						</div>
+					{/if}
 				</div>
 				<div class="row">
 					<div class="col-sm-12">
@@ -86,11 +87,11 @@
 </div>
 <div class="panel">
 	<form action="{$link->getAdminLink('AdminCustomerThreads')}&id_customer_thread={$thread->id|intval}&viewcustomer_thread" method="post" enctype="multipart/form-data" class="form-horizontal">
-	<h3>{l s="Answer to"} {$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'}</h3>
+	<h3>{l s="Answer to"} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} {else} {$thread->email}{/if}</h3>
 	<div class="row">
 		<div class="media">
 			<div class="pull-left">
-				<span class="avatar-md"><img src="../img/tmp/employee_{$current_employee->id|intval}.jpg" alt=""></span>
+				<span class="avatar-md">{if isset($current_employee->firstname)}<img src="{$current_employee->getImage()}" alt="">{/if}</span>
 			</div>
 			<div class="media-body">
 				<textarea cols="30" rows="7" name="reply_message">{$PS_CUSTOMER_SERVICE_SIGNATURE|escape:'html':'UTF-8'}</textarea>
@@ -106,13 +107,13 @@
 -->		
 		<button class="btn btn-default pull-right" name="submitReply"><i class="icon-mail-reply"></i> {l s="Send"}</button>
 		<input type="hidden" name="id_customer_thread" value="{$thread->id|intval}" />
-		<input type="hidden" name="msg_email" value="{$thread->email|intval}" />
+		<input type="hidden" name="msg_email" value="{$thread->email}" />
 	</div>
 	</form>
 </div>
 
 
-
+{if count($timeline_items)}
 <div class="panel">
 	<h3>
 		<i class="icon-clock-o"></i>
@@ -126,7 +127,7 @@
 		{/foreach}
 	</div>
 </div>
-
+{/if}
 <script type="text/javascript">
 	var timer;
 		$(document).ready(function(){

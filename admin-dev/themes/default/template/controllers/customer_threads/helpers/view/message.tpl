@@ -36,7 +36,7 @@
 			{if $type == 'customer'}
 				<i class="icon-user icon-3x"></i>
 			{else}
-				<img src="../img/tmp/employee_{$current_employee->id|intval}.jpg">
+				{if isset($current_employee->firstname)}<img src="{$current_employee->getImage()}">{/if}
 			{/if}
 		</div>
 	</div>
