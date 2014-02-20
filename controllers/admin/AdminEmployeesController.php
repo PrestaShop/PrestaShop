@@ -459,9 +459,6 @@ class AdminEmployeesControllerCore extends AdminController
 	{
 		$employee = new Employee((int)Tools::getValue('id_employee'));
 			
-		if (!Validate::isLoadedObject($employee) && !Validate::isPasswd(Tools::getvalue('passwd'), 8))
-			$this->errors[] = Tools::displayError('You must specify a password with a minimum of eight characters.');
-
 		// If the employee is editing its own account
 		if ($this->restrict_edition)
 		{
