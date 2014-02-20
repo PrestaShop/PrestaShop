@@ -41,6 +41,12 @@ $menu-item-size: 36px
 					@include transition-timing-function(ease-out)
 				span
 					padding-left: 0.4em
+			&:hover:not(.hover)
+				> a.title
+					background-color: darken($main-color,8%)
+					color: contrast-color($main-color, black, white, 50%)
+					i
+						color: white
 			&.hover
 				> a.title
 					background-color: darken($main-color,8%)

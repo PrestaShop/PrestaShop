@@ -38,6 +38,7 @@ $(document).ready(function() {
 		toggleShopModuleCheckbox(id, checked);
 	});
 
+	//set main navigation aside
 	function navSidebar(){
 		var sidebar = $('#nav-sidebar');
 		sidebar.off();
@@ -71,6 +72,7 @@ $(document).ready(function() {
 		});
 	}
 
+	//set main navigation on top
 	function navTopbar(){
 		$('#nav-sidebar').attr('id','nav-topbar');
 		var topbar = $('#nav-topbar');
@@ -86,15 +88,15 @@ $(document).ready(function() {
 		});
 		// hide element over menu width on load
 		topbar.find('li.maintab').each(function(){
-			navEllipsis();
+			navTopbarEllipsis();
 		});
 		//hide element over menu width on resize
 		$(window).on('resize', function() {
-			navEllipsis();
+			navTopbarEllipsis();
 		});
 	}
-
-	function navEllipsis() {
+	//agregate out of bounds items from top menu into ellipsis dropdown
+	function navTopbarEllipsis() {
 		var ellipsed = [];
 		$('#ellipsistab').remove();
 		$('#nav-topbar ul.menu').find('li.maintab').each(function(){
@@ -112,6 +114,7 @@ $(document).ready(function() {
 		}
 	}
 
+	//set main navigation for mobile devices
 	function mobileNav() {
 		// clean actual menu type
 		// get it in navigation whatever type it is
@@ -136,7 +139,6 @@ $(document).ready(function() {
 				$(this).addClass('expanded');
 			}
 		});
-
 		//get click for item which has submenu
 		navigation.on('click.submenu','.maintab.has_submenu a.title', function(e){
 			e.preventDefault();
@@ -149,7 +151,6 @@ $(document).ready(function() {
 			navigation.append(submenu);
 			submenu.show();
 		});
-
 		navigation.on('click.back','#nav-mobile-submenu-back',function(e){
 			e.preventDefault();
 			submenu.remove();
@@ -157,6 +158,7 @@ $(document).ready(function() {
 		});
 	}
 
+	//unset mobile nav
 	function removeMobileNav(){
 		var navigation = $('#nav-mobile');
 		$('#nav-mobile-submenu').remove();
@@ -171,6 +173,7 @@ $(document).ready(function() {
 		}
 	}
 
+	// switch between top and side nav without reloading page
 	function navSwitch(){
 		if ($('body').hasClass('page-sidebar')){
 			navTopbar();
@@ -179,6 +182,7 @@ $(document).ready(function() {
 		}
 	}
 
+	//init main navigation
 	function initNav(){
 		if ($('body').hasClass('page-sidebar')){
 			navSidebar();
@@ -187,9 +191,11 @@ $(document).ready(function() {
 			navTopbar();
 		}
 	}
+	
 	initNav();
 
-	// prevent mouseout + direct path to submenu
+
+	// prevent mouseout + direct path to submenu on sidebar uncollapsed navigation
 	var closingMenu, openingMenu;
 	$('li.maintab.has_submenu').not('.active').hover(
 		function(){
@@ -226,7 +232,7 @@ $(document).ready(function() {
 			$('#go-top').stop(true, true).fadeOut();
 		}
 	}
-
+	//show footer when reach bottom
 	function animateFooter(){
 		if($(window).scrollTop() + $(window).height() === $(document).height()) {
 			$('#footer:hidden').removeClass('hide');
@@ -234,8 +240,10 @@ $(document).ready(function() {
 			$('#footer').addClass('hide');
 		}
 	}
+	//init footer
 	animateFooter();
 
+	// go on top of the page
 	$('#go-top').on('click',function() {
 		$('html, body').animate({ scrollTop: 0 }, 'slow');
 		return false;
@@ -246,15 +254,14 @@ $(document).ready(function() {
 		animateFooter();
 	});
 
+	// 
 	function toggleShopModuleCheckbox(id_shop, toggle){
 		var formGroup = $("[for='to_disable_shop"+id_shop+"']").parent();
-		if (toggle === true)
-		{
+		if (toggle === true) {
 			formGroup.removeClass('hide');
 			formGroup.find('input').each(function(){$(this).prop('checked', 'checked');});
 		}
-		else
-		{
+		else {
 			formGroup.addClass('hide');
 			formGroup.find('input').each(function(){$(this).prop('checked', '');});
 		}
@@ -295,6 +302,7 @@ $(document).ready(function() {
 		}
 	});
 
+	// open contextual help into popup
 	$('a.btn-help').on('click', function(e){
 		e.preventDefault();
 		var url = $(this).attr('href');

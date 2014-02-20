@@ -153,6 +153,12 @@ class AdminEmployeesControllerCore extends AdminController
 		}
 	}
 
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/jquery-passy.js');
+	}
+
 	public function initPageHeaderToolbar()
 	{
 		parent::initPageHeaderToolbar();
@@ -208,21 +214,22 @@ class AdminEmployeesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
+					'class' => 'fixed-width-xl',
 					'label' => $this->l('First Name'),
 					'name' => 'firstname',
 					'required' => true
 				),
 				array(
 					'type' => 'text',
+					'class' => 'fixed-width-xl',
 					'label' => $this->l('Last Name'),
 					'name' => 'lastname',
 					'required' => true
 				),
 				array(
 					'type' => 'html',
-					'name' => '<img src="'.$obj->getImage().'&time='.time().'" alt="" class="imgm img-thumbnail" />
-					<div class="clear">&nbsp;</div>
-					<div class="alert alert-info">'.$this->l('To change your avatar log in to prestashop.com and follow the on-screen instructions to change your profile picture.').'</div>',
+					'name' => '<div id="employee-thumbnail"><img src="'.$obj->getImage().'&time='.time().'" class="imgm" /></div>
+					<div class="alert alert-info">'.sprintf($this->l('To change your avatar log in to %s and follow the on-screen instructions to change your profile picture.'), '<a href="http://www.prestashop.com/" class="alert-link" target="_blank">PrestaShop.com</a>').'</div>',
 				),
 			),
 		);
@@ -230,15 +237,16 @@ class AdminEmployeesControllerCore extends AdminController
 		if ($this->restrict_edition)
 			$this->fields_form['input'][] = array(
 				'type' => 'password',
-				'label' => $this->l('Old Password'),
+				'label' => $this->l('Current password'),
 				'name' => 'old_passwd',
 				'required' => true,
-				'hint' => $this->l('Leave this field blank if you do not want to change your password.')
+				'desc' => $this->l('Leave this field blank if you do not want to change your password.')
 				);
 			
 			$this->fields_form['input'][] = array(
 				'type' => 'password',
-				'label' => $this->l('Password'),
+				'ehanced' => true,
+				'label' => $this->l('New password'),
 				'name' => 'passwd',
 				'required' => true,
 				);
@@ -246,7 +254,7 @@ class AdminEmployeesControllerCore extends AdminController
 		if ($this->restrict_edition)
 			$this->fields_form['input'][] = array(
 				'type' => 'password',
-				'label' => $this->l('Password Confirmation'),
+				'label' => $this->l('Confirm password'),
 				'name' => 'passwd2',
 				'required' => true,
 				);
@@ -254,6 +262,8 @@ class AdminEmployeesControllerCore extends AdminController
 		$this->fields_form['input'] = array_merge($this->fields_form['input'], array(
 			array(
 				'type' => 'text',
+				'class'=> 'fixed-width-xxl',
+				'prefix' => '<i class="icon-envelope-o"></i>',
 				'label' => $this->l('Email address'),
 				'name' => 'email',
 				'required' => true,
