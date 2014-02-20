@@ -66,59 +66,74 @@ class AdminOrdersControllerCore extends AdminController
 			$this->statuses_array[$status['id_order_state']] = $status['name'];
 
 		$this->fields_list = array(
-		'id_order' => array(
-			'title' => $this->l('ID'),
-			'align' => 'center'
-		),
-		'reference' => array(
-			'title' => $this->l('Reference'),
-			'align' => 'center'
-		),
-		'new' => array(
-			'title' => $this->l('New'),
-			'align' => 'center',
-			'type' => 'bool',
-			'tmpTableFilter' => true,
-			'orderby' => false
-		),
-		'customer' => array(
-			'title' => $this->l('Customer'),
-			'havingFilter' => true,
-		),
-		'total_paid_tax_incl' => array(
-			'title' => $this->l('Total'),
-			'align' => 'right',
-			'prefix' => '<span class="badge">',
-			'suffix' => '</span>',
-			'type' => 'price',
-			'currency' => true
-		),
-		'payment' => array(
-			'title' => $this->l('Payment')
-		),
-		'osname' => array(
-			'title' => $this->l('Status'),
-			'color' => 'color',
-			'type' => 'select',
-			'list' => $this->statuses_array,
-			'filter_key' => 'os!id_order_state',
-			'filter_type' => 'int',
-			'order_key' => 'osname'
-		),
-		'date_add' => array(
-			'title' => $this->l('Date'),
-			'align' => 'right',
-			'type' => 'datetime',
-			'filter_key' => 'a!date_add'
-		),
-		'id_pdf' => array(
-			'title' => $this->l('PDF'),
-			'align' => 'center',
-			'callback' => 'printPDFIcons',
-			'orderby' => false,
-			'search' => false,
-			'remove_onclick' => true)
+			'id_order' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
+			),
+			'reference' => array(
+				'title' => $this->l('Reference'),
+				'align' => 'center'
+			),
+			'new' => array(
+				'title' => $this->l('New'),
+				'align' => 'center',
+				'type' => 'bool',
+				'tmpTableFilter' => true,
+				'orderby' => false
+			),
+			'customer' => array(
+				'title' => $this->l('Customer'),
+				'havingFilter' => true,
+			),
 		);
+
+		if (Configuration::get('PS_B2B_ENABLE'))
+		{
+			$this->fields_list = array_merge($this->fields_list, array(
+				'company' => array(
+					'title' => $this->l('Company'),
+					'filter_key' => 'c!company'
+				),
+			));
+		}
+
+		$this->fields_list = array_merge($this->fields_list, array(
+			'total_paid_tax_incl' => array(
+				'title' => $this->l('Total'),
+				'align' => 'right',
+				'prefix' => '<span class="badge">',
+				'suffix' => '</span>',
+				'type' => 'price',
+				'currency' => true
+			),
+			'payment' => array(
+				'title' => $this->l('Payment')
+			),
+			'osname' => array(
+				'title' => $this->l('Status'),
+				'color' => 'color',
+				'type' => 'select',
+				'list' => $this->statuses_array,
+				'filter_key' => 'os!id_order_state',
+				'filter_type' => 'int',
+				'order_key' => 'osname'
+			),
+			'date_add' => array(
+				'title' => $this->l('Date'),
+				'align' => 'right',
+				'type' => 'datetime',
+				'filter_key' => 'a!date_add'
+			),
+			'id_pdf' => array(
+				'title' => $this->l('PDF'),
+				'align' => 'center',
+				'callback' => 'printPDFIcons',
+				'orderby' => false,
+				'search' => false,
+				'remove_onclick' => true
+			)
+		));
 		
 		if (Country::isCurrentlyUsed('country', true))
 		{
