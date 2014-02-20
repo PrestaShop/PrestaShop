@@ -220,9 +220,16 @@ class AdminEmployeesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'html',
-					'name' => '<img src="'.$obj->getImage().'&time='.time().'" alt="" class="imgm img-thumbnail" />
+					'name' => '<img src="'.$obj->getImage().'" alt="" class="imgm img-thumbnail" />
 					<div class="clear">&nbsp;</div>
 					<div class="alert alert-info">'.$this->l('To change your avatar log in to prestashop.com and follow the on-screen instructions to change your profile picture.').'</div>',
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Email address'),
+					'name' => 'email',
+					'required' => true,
+					'autocomplete' => false
 				),
 			),
 		);
@@ -239,6 +246,7 @@ class AdminEmployeesControllerCore extends AdminController
 			$this->fields_form['input'][] = array(
 				'type' => 'password',
 				'label' => $this->l('Password'),
+				'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH),
 				'name' => 'passwd',
 				'required' => true,
 				);
@@ -252,13 +260,6 @@ class AdminEmployeesControllerCore extends AdminController
 				);
 			
 		$this->fields_form['input'] = array_merge($this->fields_form['input'], array(
-			array(
-				'type' => 'text',
-				'label' => $this->l('Email address'),
-				'name' => 'email',
-				'required' => true,
-				'autocomplete' => false
-			),
 			array(
 				'type' => 'switch',
 				'label' => $this->l('Connect to PrestaShop'),
