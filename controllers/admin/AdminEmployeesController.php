@@ -228,7 +228,7 @@ class AdminEmployeesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'html',
-					'name' => '<div id="employee-thumbnail"><img src="'.$obj->getImage().'&time='.time().'" class="imgm" /></div>
+					'name' => '<div id="employee-thumbnail"><img src="'.$obj->getImage().'" class="imgm" /></div>
 					<div class="alert alert-info">'.sprintf($this->l('To change your avatar log in to %s and follow the on-screen instructions to change your profile picture.'), '<a href="http://www.prestashop.com/" class="alert-link" target="_blank">PrestaShop.com</a>').'</div>',
 				),
 			),
