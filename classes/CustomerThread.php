@@ -196,7 +196,7 @@ class CustomerThreadCore extends ObjectModel
 			LEFT JOIN '._DB_PREFIX_.'customer c
 				ON (IFNULL(ct.id_customer, ct.email) = IFNULL(c.id_customer, c.email))
 			WHERE ct.id_customer_thread = '.(int)$id_customer_thread.'
-			ORDER BY cm.date_add DESC
+			ORDER BY cm.date_add ASC
 		');
 	}
 

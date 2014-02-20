@@ -62,13 +62,13 @@ function set_countries()
 		var countriesPS = [];
 	    for (var i in countries)
 		{
-			if (typeof countries[i]['states'] !== 'undefined' && countries[i]['states'])
+			var id_country = countries[i]['id_country'];
+			if (typeof countries[i]['states'] !== 'undefined' && countries[i]['states'] && countries[i]['contains_states'])
+			{
+				countriesPS[id_country] = [];
 	    		for (var j in countries[i]['states'])
-				{
-					var id_country = countries[i]['id_country'];
-					countriesPS[id_country] = [];
 					countriesPS[id_country].push({'id' : countries[i]['states'][j]['id_state'], 'name' : countries[i]['states'][j]['name']});
-				}
+			}
 			if (typeof countries[i]['need_identification_number'] !== 'undefined')
 				countriesNeedIDNumber.push(countries[i]['id_country']);
 			if (typeof countries[i]['need_zip_code'] !== 'undefined')

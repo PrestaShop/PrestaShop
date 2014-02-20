@@ -96,6 +96,18 @@ class AdminCustomersControllerCore extends AdminController
 			'email' => array(
 				'title' => $this->l('Email address')
 			),
+		);
+
+		if (Configuration::get('PS_B2B_ENABLE'))
+		{
+			$this->fields_list = array_merge($this->fields_list, array(
+				'company' => array(
+					'title' => $this->l('Company')
+				),
+			));
+		}
+
+		$this->fields_list = array_merge($this->fields_list, array(
 			'total_spent' => array(
 				'title' => $this->l('Sales'),
 				'type' => 'price',
@@ -138,7 +150,7 @@ class AdminCustomersControllerCore extends AdminController
 				'search' => false,
 				'havingFilter' => true
 			)
-		);
+		));
 
 		$this->shopLinkType = 'shop';
 		$this->shopShareDatas = Shop::SHARE_CUSTOMER;
@@ -332,7 +344,8 @@ class AdminCustomersControllerCore extends AdminController
 					'name' => 'passwd',
 					'required' => ($obj->id ? false : true),
 					'col' => '4',
-					'hint' => ($obj->id ? $this->l('Leave this field blank if there\'s no change.') : $this->l('Minimum of five characters.'))
+					'hint' => ($obj->id ? $this->l('Leave this field blank if there\'s no change.') :
+						sprintf($this->l('Minimum of %s characters.'), Validate::PASSWORD_LENGTH))
 				),
 				array(
 					'type' => 'birthday',
