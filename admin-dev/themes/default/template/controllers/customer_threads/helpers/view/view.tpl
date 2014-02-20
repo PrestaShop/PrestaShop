@@ -116,7 +116,7 @@
 </div>
 
 
-
+{if count($timeline_items)}
 <div class="panel">
 	<h3>
 		<i class="icon-clock-o"></i>
@@ -130,7 +130,7 @@
 		{/foreach}
 	</div>
 </div>
-
+{/if}
 <script type="text/javascript">
 	var timer;
 		$(document).ready(function(){
