@@ -231,6 +231,15 @@ class AdminEmployeesControllerCore extends AdminController
 					'name' => '<div id="employee-thumbnail"><img src="'.$obj->getImage().'" class="imgm" /></div>
 					<div class="alert alert-info">'.sprintf($this->l('To change your avatar log in to %s and follow the on-screen instructions to change your profile picture.'), '<a href="http://www.prestashop.com/" class="alert-link" target="_blank">PrestaShop.com</a>').'</div>',
 				),
+				array(
+					'type' => 'text',
+					'class'=> 'fixed-width-xxl',
+					'prefix' => '<i class="icon-envelope-o"></i>',
+					'label' => $this->l('Email address'),
+					'name' => 'email',
+					'required' => true,
+					'autocomplete' => false
+				),
 			),
 		);
 		
@@ -240,13 +249,15 @@ class AdminEmployeesControllerCore extends AdminController
 				'label' => $this->l('Current password'),
 				'name' => 'old_passwd',
 				'required' => true,
-				'desc' => $this->l('Leave this field blank if you do not want to change your password.')
+				'desc' => $this->l('Leave this field blank if you do not want to change your password.'),
+				'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH)
 				);
 			
 			$this->fields_form['input'][] = array(
 				'type' => 'password',
 				'ehanced' => true,
 				'label' => $this->l('New password'),
+				'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH),
 				'name' => 'passwd',
 				'required' => true,
 				);
@@ -255,20 +266,12 @@ class AdminEmployeesControllerCore extends AdminController
 			$this->fields_form['input'][] = array(
 				'type' => 'password',
 				'label' => $this->l('Confirm password'),
+				'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH),
 				'name' => 'passwd2',
 				'required' => true,
 				);
 			
 		$this->fields_form['input'] = array_merge($this->fields_form['input'], array(
-			array(
-				'type' => 'text',
-				'class'=> 'fixed-width-xxl',
-				'prefix' => '<i class="icon-envelope-o"></i>',
-				'label' => $this->l('Email address'),
-				'name' => 'email',
-				'required' => true,
-				'autocomplete' => false
-			),
 			array(
 				'type' => 'switch',
 				'label' => $this->l('Connect to PrestaShop'),
