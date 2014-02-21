@@ -234,7 +234,7 @@ class EmployeeCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'employee`
 		WHERE `active` = 1
 		AND `email` = \''.pSQL($email).'\'
-		'.($passwd ? 'AND `passwd` = \''.Tools::encrypt($passwd).'\'' : ''));
+		'.($passwd !== null ? 'AND `passwd` = \''.Tools::encrypt($passwd).'\'' : ''));
 		if (!$result)
 			return false;
 		$this->id = $result['id_employee'];
