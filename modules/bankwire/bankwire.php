@@ -48,11 +48,11 @@ class BankWire extends PaymentModule
 		$this->currencies_mode = 'checkbox';
 
 		$config = Configuration::getMultiple(array('BANK_WIRE_DETAILS', 'BANK_WIRE_OWNER', 'BANK_WIRE_ADDRESS'));
-		if (isset($config['BANK_WIRE_OWNER']))
+		if (!empty($config['BANK_WIRE_OWNER']))
 			$this->owner = $config['BANK_WIRE_OWNER'];
-		if (isset($config['BANK_WIRE_DETAILS']))
+		if (!empty($config['BANK_WIRE_DETAILS']))
 			$this->details = $config['BANK_WIRE_DETAILS'];
-		if (isset($config['BANK_WIRE_ADDRESS']))
+		if (!empty($config['BANK_WIRE_ADDRESS']))
 			$this->address = $config['BANK_WIRE_ADDRESS'];
 
 		$this->bootstrap = true;
