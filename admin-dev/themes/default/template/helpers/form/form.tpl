@@ -499,30 +499,40 @@
 										</div>
 										
 										<script>
-											$.passy.requirements.length.min = 8;
-
-											var $passwordField = $('#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}');
-											var $output = $('#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-output');
-											var $generateBtn = $('#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-generate-btn');
-											var $generateField = $('#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-generate-field');
 											
-											var feedback = [
-												{ badge: 'badge-danger', text: '{l s="Invalid"}' },
-												{ badge: 'badge-warning', text: '{l s="Okay"}' },
-												{ badge: 'badge-success', text: '{l s="Good"}' },
-												{ badge: 'badge-success', text: '{l s="Fabulous"}' }
-											];
-											$passwordField.passy(function(strength, valid) {
-												$output.text(feedback[strength].text);
-												$output.removeClass('badge-danger').removeClass('badge-warning').removeClass('badge-success');
-												$output.addClass(feedback[strength].badge);
-											});
+											$(function(){
+												var $passwordField = $('#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}');
+												var $output = $('#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-output');
+												var $generateBtn = $('#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-generate-btn');
+												var $generateField = $('#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-generate-field');
+												
+												var feedback = [
+													{ badge: 'badge-danger', text: '{l s="Invalid"}' },
+													{ badge: 'badge-warning', text: '{l s="Okay"}' },
+													{ badge: 'badge-success', text: '{l s="Good"}' },
+													{ badge: 'badge-success', text: '{l s="Fabulous"}' }
+												];
 
-											$generateBtn.click(function() {
-												$generateField.passy( 'generate', 8 );
-												var generatedPassword = $generateField.val();
-												$passwordField.val(generatedPassword);
-												$('#{if isset($input.id)}{$input.id}2{else}{$input.name}2{/if}').val(generatedPassword);
+												$.passy.requirements.length.min = 10;
+
+												$passwordField.passy(function(strength, valid) {
+													$output.text(feedback[strength].text);
+													$output.removeClass('badge-danger').removeClass('badge-warning').removeClass('badge-success');
+													$output.addClass(feedback[strength].badge);
+													if (valid){
+														$output.show();
+													}
+        											else {
+        												$output.hide();
+        											}
+												});
+
+												$generateBtn.click(function() {
+													$generateField.passy( 'generate', 8 );
+													var generatedPassword = $generateField.val();
+													$passwordField.val(generatedPassword);
+													$('#{if isset($input.id)}{$input.id}2{else}{$input.name}2{/if}').val(generatedPassword);
+												});
 											});
 										</script>
 
