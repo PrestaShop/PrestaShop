@@ -191,11 +191,11 @@ $(document).ready(function() {
 			navTopbar();
 		}
 	}
-	
+
 	initNav();
 
 
-	// prevent mouseout + direct path to submenu on sidebar uncollapsed navigation
+	// prevent mouseout + direct path to submenu on sidebar uncollapsed navigation + avoid out of bounds
 	var closingMenu, openingMenu;
 	$('li.maintab.has_submenu').not('.active').hover(
 		function(){
@@ -203,7 +203,21 @@ $(document).ready(function() {
 			clearTimeout(openingMenu);
 			openingMenu = setTimeout(function(){
 				$('li.maintab').removeClass('hover');
+				$('ul.submenu').removeClass('outOfBounds');
 				submenu.addClass('hover');
+				h = $( window ).height();
+				x = submenu.find('.submenu li').last().offset();
+				var out = false;
+
+				var navHeight = $('#nav-sidebar .menu').height();
+				var submenuHeight = submenu.find('.submenu').height();
+
+				var position = (submenu.nextAll().length*submenu.height()) - submenuHeight + submenu.height();
+
+				if ((x.top+100) > h) {
+					out = true;
+					submenu.find('.submenu').addClass('outOfBounds').css('top',position);
+				}
 			},50);
 			clearTimeout(closingMenu);
 		},
@@ -217,6 +231,18 @@ $(document).ready(function() {
 	$('ul.submenu').on('mouseenter', function(){
 		clearTimeout(openingMenu);
 	});
+
+
+	// avoid submenu out of bounds
+	$('li.maintab.has_submenu').hover(
+		function(){
+			//x = $(this).find('ul.submenu li:last-child').offset();
+			//console.log("Top: " + x.top + " Left: " + x.left);
+		},
+		function(){
+		}
+	);
+
 
 	//bootstrap components init
 	$('.dropdown-toggle').dropdown();

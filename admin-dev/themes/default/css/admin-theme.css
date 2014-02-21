@@ -2652,6 +2652,7 @@ a.link-social:hover { text-decoration: none; }
 #nav-sidebar ul.menu li.maintab.hover > a.title, #nav-sidebar ul.menu li.maintab:hover:not(.hover) > a.title { background-color: #272c38; color: white; }
 #nav-sidebar ul.menu li.maintab.hover > a.title i, #nav-sidebar ul.menu li.maintab:hover:not(.hover) > a.title i { color: white; }
 #nav-sidebar ul.menu li.maintab.hover ul.submenu { position: absolute; display: block; width: 200px; left: 210px; top: 0; z-index: 600; }
+#nav-sidebar ul.menu li.maintab.hover ul.submenu.outOfBounds { top: inherit; }
 #nav-sidebar ul.menu li.maintab:first-child > a.title { border-top: none; }
 #nav-sidebar ul.menu li.maintab.active a, #nav-sidebar ul.menu li.maintab.active li.active a { background-color: #4d576e; color: white; }
 #nav-sidebar ul.menu li.maintab.active a i, #nav-sidebar ul.menu li.maintab.active li.active a i { color: white; }
