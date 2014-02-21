@@ -180,7 +180,7 @@ class TranslateCore
 			if ($js)
 				$ret = addslashes($ret);
 			else
-				$ret = Tools::htmlentitiesUTF8($ret);
+				$ret = htmlspecialchars($ret, ENT_COMPAT, 'UTF-8');
 
 			if ($sprintf === null)
 				$lang_cache[$cache_key] = $ret; 
