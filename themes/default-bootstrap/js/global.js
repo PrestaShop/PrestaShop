@@ -115,16 +115,15 @@ function blockHover(status)
 			if ($('body').find('.container').width() == 1170){
 				var pcHeight = $(this).parent().outerHeight();
 				var pcPHeight = $(this).parent().find('.button-container').outerHeight() + $(this).parent().find('.comments_note').outerHeight() + $(this).parent().find('.functional-buttons').outerHeight();
-				$(this).parent().addClass('hovered'),
-				$(this).parent().css('height', pcHeight + pcPHeight).css('margin-bottom',pcPHeight*-1)
+				$(this).parent().addClass('hovered');
+				$(this).parent().css('height', pcHeight + pcPHeight).css('margin-bottom', pcPHeight * (-1));
 			}
 		}
 	);
 
-	$(document).on('mouseleave', '.product_list.grid li.ajax_block_product .product-container',
-		function(){
+	$(document).on('mouseleave', '.product_list.grid li.ajax_block_product .product-container', function(){
 			if ($('body').find('.container').width() == 1170)
-			$(this).parent().removeClass('hovered').removeAttr('style');
+				$(this).parent().removeClass('hovered').removeAttr('style');
 		}
 	);
 }

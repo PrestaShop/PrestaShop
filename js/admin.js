@@ -351,7 +351,8 @@ function noComma(elem)
 function gencode(size)
 {
 	getE('code').value = '';
-	var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	/* There are no O/0 in the codes in order to avoid confusion */
+	var chars = "123456789ABCDEFGHIJKLMNPQRSTUVWXYZ";
 	for (var i = 1; i <= size; ++i)
 		getE('code').value += chars.charAt(Math.floor(Math.random() * chars.length));
 }

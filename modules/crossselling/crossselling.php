@@ -103,7 +103,8 @@ class CrossSelling extends Module
 		if (!isset($this->context->controller->php_self) || !in_array(
 				$this->context->controller->php_self, array(
 					'product',
-					'order'
+					'order', 
+					'order-opc'
 				)
 			)
 		)
