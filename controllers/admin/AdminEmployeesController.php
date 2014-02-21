@@ -228,8 +228,8 @@ class AdminEmployeesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'html',
-					'name' => '<div id="employee-thumbnail"><img src="'.$obj->getImage().'" class="imgm" /></div>
-					<div class="alert alert-info">'.sprintf($this->l('To change your avatar log in to %s and follow the on-screen instructions to change your profile picture.'), '<a href="http://www.prestashop.com/" class="alert-link" target="_blank">PrestaShop.com</a>').'</div>',
+					'name' => '<div id="employee-thumbnail"><a href="http://www.prestashop.com/forums/index.php?app=core&module=usercp" target="_blank"><img src="'.$obj->getImage().'" class="imgm" /></a></div>
+					<div class="alert alert-info">'.sprintf($this->l('Your avatar in PrestaShop 1.6.x is your profile picture on %1$s. To change your avatar, log in to PrestaShop.com with your email %2$s and follow the on-screen instructions.'), '<a href="http://www.prestashop.com/forums/index.php?app=core&module=usercp" class="alert-link" target="_blank">PrestaShop.com</a>', $obj->email).'</div>',
 				),
 				array(
 					'type' => 'text',
@@ -477,8 +477,9 @@ class AdminEmployeesControllerCore extends AdminController
 		// If the employee is editing its own account
 		if ($this->restrict_edition)
 		{
-			if (!$employee->getByEmail($employee->email, Tools::getValue('old_passwd')))
-				$this->errors[] = Tools::displayError('Your old password is invalid.');
+			$current_password = Tools::getValue('old_passwd');
+			if (empty($current_password) || !Validate::isPasswdAdmin($current_password) || !$employee->getByEmail($employee->email, $current_password))
+				$this->errors[] = Tools::displayError('Your current password is invalid.');
 			elseif (!Tools::getIsset('passwd2') || Tools::getValue('passwd') !== Tools::getValue('passwd2'))
 				$this->errors[] = Tools::displayError('The confirmation password doesn\'t match.');
 
