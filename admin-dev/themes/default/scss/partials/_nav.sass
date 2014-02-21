@@ -1,5 +1,8 @@
 $widthSidebarNav: 210px
+$widthSidebarSubmenu: 200px
 $menu-item-size: 36px
+$min-height: 800px
+
 
 #nav-sidebar
 	position: fixed
@@ -13,6 +16,23 @@ $menu-item-size: 36px
 		list-style: none
 		li.maintab
 			position: relative
+			ul.submenu
+				display: none
+				list-style: none
+				padding: 4px
+				background-color: darken($main-color,8%)
+				li
+					a
+						color: mix($main-color, contrast-color($main-color, black, white, 50%), 30%)
+						display: block
+						padding: 4px 5px 4px 10px
+						background-color: $main-color
+						border-bottom: solid 1px darken($main-color,10%)
+						&:hover
+							color: contrast-color($main-color, black, white, 50%)
+							text-decoration: none
+							background-color: darken($main-color,10%)
+							@include box-shadow($brand-primary -4px 0 0 0 inset)
 			a
 				white-space: nowrap
 				text-overflow: ellipsis
@@ -41,78 +61,58 @@ $menu-item-size: 36px
 					@include transition-timing-function(ease-out)
 				span
 					padding-left: 0.4em
-			&:hover:not(.hover)
+			&.hover, &:hover:not(.hover)
 				> a.title
 					background-color: darken($main-color,8%)
 					color: contrast-color($main-color, black, white, 50%)
 					i
 						color: white
 			&.hover
-				> a.title
-					background-color: darken($main-color,8%)
-					color: contrast-color($main-color, black, white, 50%)
-					i
-						color: white
 				ul.submenu
 					position: absolute
 					display: block
-					width: 200px
-					z-index: 600
+					width: $widthSidebarSubmenu
 					left: $widthSidebarNav
 					top: 0
+					z-index: 600
 			&:first-child > a.title
 				border-top: none
 			&.active
-				a.title
-					color: white
-					background-color: lighten($main-color,15%)
+				a, li.active a
+					background-color: lighten($main-color,10%)
+					color: contrast-color($main-color, black, white, 50%)
 					i
-						color: contrast-color($main-color, black, white, 50%)
-				ul.submenu
-					body:not(.page-sidebar-closed) &
-						display: block
-						background-color: white
-						border-right: 1px solid darken($bg-content-color,10%)
-						a
+						color: white
+				@media (min-height: $min-height)
+					ul.submenu
+						body:not(.page-sidebar-closed) &
+							display: block
 							background-color: white
-							color: $brand-primary
-							border-bottom: solid 1px mix(white, $brand-primary, 85%)
-							&:hover
+							border-right: 1px solid darken($bg-content-color,10%)
+							a
+								background-color: white
 								color: $brand-primary
 								border-bottom: solid 1px mix(white, $brand-primary, 85%)
-								background-color: mix(white, $brand-primary, 85%)
-								text-decoration: none
-								@include box-shadow(white 0 -1px)
-						li:last-child a
-							border-bottom: solid 1px white
-						li.active a
-							color: contrast-color($brand-primary, white, #333, 10%)
-							background-color: $brand-primary
-							position: relative
-							top: -1px
-							border-top: solid 1px white
-							border-bottom: solid 1px $brand-primary
-			ul.submenu
-				display: none
-				list-style: none
-				padding: 4px
-				background-color: darken($main-color,8%)
-				li
-					a
-						color: mix($main-color, contrast-color($main-color, black, white, 50%), 30%)
-						display: block
-						padding: 4px 5px 4px 10px
-						background-color: $main-color
-						border-bottom: solid 1px darken($main-color,10%)
-						&:hover
-							color: contrast-color($main-color, black, white, 50%)
-							text-decoration: none
-							background-color: darken($main-color,10%)
-							@include box-shadow($brand-primary -4px 0 0 0 inset)
+								&:hover
+									color: $brand-primary
+									border-bottom: solid 1px mix(white, $brand-primary, 85%)
+									background-color: mix(white, $brand-primary, 85%)
+									text-decoration: none
+									@include box-shadow(white 0 -1px)
+							li:last-child a
+								border-bottom: solid 1px white
+							li.active a
+								color: contrast-color($brand-primary, white, #333, 10%)
+								background-color: $brand-primary
+								position: relative
+								top: -1px
+								border-top: solid 1px white
+								border-bottom: solid 1px $brand-primary
+			
 	@media (max-width: $screen-phone)
 		display: none
 
-$min-height: 800px
+
 @media (max-height: $min-height)
 	body:not(.page-sidebar-closed)
 		#nav-sidebar ul.menu li.maintab > a.title
@@ -396,7 +396,6 @@ $min-height: 800px
 			padding-left: 75px
 		.page-breadcrumb
 			left: 75px
-
 
 .searchtab
 	padding: 14px 7px
