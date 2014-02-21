@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<name>blockcms</name>
-	<displayName><![CDATA[CMS Block]]></displayName>
+	<displayName><![CDATA[CMS block]]></displayName>
 	<version><![CDATA[1.6]]></version>
 	<description><![CDATA[Adds a block with several CMS links.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
