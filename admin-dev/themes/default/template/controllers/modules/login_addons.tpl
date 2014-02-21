@@ -29,7 +29,7 @@
 			<!--start addons login-->
 			<div class="panel-heading">
 				<i class="icon-user"></i>
-				{l s='You are logged into %s' sprintf='<a target="_blank" href="http://addons.prestashop.com/">PrestaShop Addons</a>'}
+				{l s='You are logged into %s' sprintf='<a target="_blank" href="http://addons.prestashop.com/?utm_source=backoffice_modules">PrestaShop Addons</a>'}
 			</div>
 			<div id="addons_login_div">	
 				<p>{l s='Welcome'} {$username_addons}</p>
@@ -50,7 +50,7 @@
 			<!--start addons login-->
 			<div class="panel-heading">
 				<i class="icon-puzzle-piece"></i>
-				<a target="_blank" href="http://addons.prestashop.com/">PrestaShop Addons</a>
+				<a target="_blank" href="http://addons.prestashop.com/?utm_source=backoffice_modules">PrestaShop Addons</a>
 			</div>
 			<form id="addons_login_form" method="post" >
 				<div class="form-group">
