@@ -6,4 +6,4 @@ ALTER TABLE `PREFIX_employee` ADD `optin` tinyint(1) unsigned NOT NULL default '
 
 ALTER IGNORE TABLE `PREFIX_meta` ADD UNIQUE (`page`);
 
-UPDATE `PREFIX_orders` SET module = 'free_order' where total_paid = 0 AND module LIKE '';
+UPDATE `PREFIX_orders` SET module = 'free_order' WHERE total_paid = 0 AND module LIKE '';
