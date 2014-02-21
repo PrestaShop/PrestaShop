@@ -819,7 +819,7 @@ class ProductCore extends ObjectModel
 			!$this->deleteTags() ||
 			!$this->deleteCartProducts() ||
 			!$this->deleteAttributesImpacts() ||
-			!$this->deleteAttachments() ||
+			!$this->deleteAttachments(false) ||
 			!$this->deleteCustomization() ||
 			!SpecificPrice::deleteByProductId((int)$this->id) ||
 			!$this->deletePack() ||
@@ -1608,16 +1608,18 @@ class ProductCore extends ObjectModel
 	/**
 	* Delete product attachments
 	*
+	* @param boolean $update_cache If set to true attachment cache will be updated
 	* @return array Deletion result
 	*/
-	public function deleteAttachments()
+	public function deleteAttachments($update_attachment_cache = true)
 	{
 		$res = Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'product_attachment`
 			WHERE `id_product` = '.(int)$this->id
 		);
 		
-		Product::updateCacheAttachment((int)$this->id);
+		if (isset($update_attachment_cache) && (bool)$update_attachment_cache === true)
+			Product::updateCacheAttachment((int)$this->id);
 
 		return $res;
 	}
