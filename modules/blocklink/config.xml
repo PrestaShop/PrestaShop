@@ -6,7 +6,7 @@
 	<description><![CDATA[Adds a block with additional links.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>
-	<confirmUninstall>Are you sure you want to delete all your links?</confirmUninstall>
+	<confirmUninstall><![CDATA[Are you sure you want to delete all your links?]]></confirmUninstall>
 	<is_configurable>1</is_configurable>
 	<need_instance>0</need_instance>
 	<limited_countries></limited_countries>

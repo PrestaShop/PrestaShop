@@ -3,7 +3,7 @@
 	<name>dashtrends</name>
 	<displayName><![CDATA[Dashboard Trends]]></displayName>
 	<version><![CDATA[0.2]]></version>
-	<description><![CDATA[]]></description>
+	<description><![CDATA[Dashboard Trends]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[dashboard]]></tab>
 	<is_configurable>0</is_configurable>
