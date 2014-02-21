@@ -228,8 +228,17 @@ class AdminEmployeesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'html',
-					'name' => '<div id="employee-thumbnail"><img src="'.$obj->getImage().'" class="imgm" /></div>
-					<div class="alert alert-info">'.sprintf($this->l('To change your avatar log in to %s and follow the on-screen instructions to change your profile picture.'), '<a href="http://www.prestashop.com/" class="alert-link" target="_blank">PrestaShop.com</a>').'</div>',
+					'name' => '<div id="employee-thumbnail"><a href="http://www.prestashop.com/forums/index.php?app=core&module=usercp" target="_blank"><img src="'.$obj->getImage().'" class="imgm" /></a></div>
+					<div class="alert alert-info">'.sprintf($this->l('Your avatar in PrestaShop 1.6.x is your profile picture on %1$s. To change your avatar, log in to PrestaShop.com with your email %2$s and follow the on-screen instructions.'), '<a href="http://www.prestashop.com/forums/index.php?app=core&module=usercp" class="alert-link" target="_blank">PrestaShop.com</a>', $obj->email).'</div>',
+				),
+				array(
+					'type' => 'text',
+					'class'=> 'fixed-width-xxl',
+					'prefix' => '<i class="icon-envelope-o"></i>',
+					'label' => $this->l('Email address'),
+					'name' => 'email',
+					'required' => true,
+					'autocomplete' => false
 				),
 			),
 		);
@@ -240,13 +249,15 @@ class AdminEmployeesControllerCore extends AdminController
 				'label' => $this->l('Current password'),
 				'name' => 'old_passwd',
 				'required' => true,
-				'desc' => $this->l('Leave this field blank if you do not want to change your password.')
+				'desc' => $this->l('Leave this field blank if you do not want to change your password.'),
+				'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH)
 				);
 			
 			$this->fields_form['input'][] = array(
 				'type' => 'password',
 				'ehanced' => true,
 				'label' => $this->l('New password'),
+				'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH),
 				'name' => 'passwd',
 				'required' => true,
 				);
@@ -255,20 +266,12 @@ class AdminEmployeesControllerCore extends AdminController
 			$this->fields_form['input'][] = array(
 				'type' => 'password',
 				'label' => $this->l('Confirm password'),
+				'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH),
 				'name' => 'passwd2',
 				'required' => true,
 				);
 			
 		$this->fields_form['input'] = array_merge($this->fields_form['input'], array(
-			array(
-				'type' => 'text',
-				'class'=> 'fixed-width-xxl',
-				'prefix' => '<i class="icon-envelope-o"></i>',
-				'label' => $this->l('Email address'),
-				'name' => 'email',
-				'required' => true,
-				'autocomplete' => false
-			),
 			array(
 				'type' => 'switch',
 				'label' => $this->l('Connect to PrestaShop'),
@@ -474,8 +477,9 @@ class AdminEmployeesControllerCore extends AdminController
 		// If the employee is editing its own account
 		if ($this->restrict_edition)
 		{
-			if (!$employee->getByEmail($employee->email, Tools::getValue('old_passwd')))
-				$this->errors[] = Tools::displayError('Your old password is invalid.');
+			$current_password = Tools::getValue('old_passwd');
+			if (empty($current_password) || !Validate::isPasswdAdmin($current_password) || !$employee->getByEmail($employee->email, $current_password))
+				$this->errors[] = Tools::displayError('Your current password is invalid.');
 			elseif (!Tools::getIsset('passwd2') || Tools::getValue('passwd') !== Tools::getValue('passwd2'))
 				$this->errors[] = Tools::displayError('The confirmation password doesn\'t match.');
 
