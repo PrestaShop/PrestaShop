@@ -397,7 +397,7 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'hint' => $this->l('Customers will receive your newsletter via email.')
+					'hint' => $this->l('This customer will receive your newsletter via email.')
 				),
 				array(
 					'type' => 'switch',
@@ -418,7 +418,7 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'hint' => $this->l('Customer will receive your ads via email.')
+					'hint' => $this->l('This customer will receive your ads via email.')
 				),
 			)
 		);
