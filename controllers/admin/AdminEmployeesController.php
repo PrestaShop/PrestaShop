@@ -478,9 +478,9 @@ class AdminEmployeesControllerCore extends AdminController
 		if ($this->restrict_edition)
 		{
 			$current_password = Tools::getValue('old_passwd');
-			if (empty($current_password) || !Validate::isPasswdAdmin($current_password) || !$employee->getByEmail($employee->email, $current_password))
+			if (Tools::getValue('passwd') && (empty($current_password) || !Validate::isPasswdAdmin($current_password) || !$employee->getByEmail($employee->email, $current_password)))
 				$this->errors[] = Tools::displayError('Your current password is invalid.');
-			elseif (!Tools::getIsset('passwd2') || Tools::getValue('passwd') !== Tools::getValue('passwd2'))
+			elseif (Tools::getValue('passwd') && (!Tools::getValue('passwd2') || Tools::getValue('passwd') !== Tools::getValue('passwd2')))
 				$this->errors[] = Tools::displayError('The confirmation password doesn\'t match.');
 
 			$_POST['id_profile'] = $_GET['id_profile'] = $employee->id_profile;
