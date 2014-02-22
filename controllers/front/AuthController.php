@@ -59,8 +59,12 @@ class AuthControllerCore extends FrontController
 		if (Context::getContext()->getMobileDevice() === false)
 			$this->addCSS(_THEME_CSS_DIR_.'authentication.css');
 		$this->addJqueryPlugin('typewatch');
-		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
-		$this->addJS(_PS_JS_DIR_.'validate.js');
+		$this->addJS(array(
+			_THEME_JS_DIR_.'tools/vatManagement.js',
+			_THEME_JS_DIR_.'tools/statesManagement.js',
+			_THEME_JS_DIR_.'authentication.js',
+			_PS_JS_DIR_.'validate.js'
+		));
 	}
 
 	/**
@@ -195,26 +199,9 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function assignCountries()
 	{
-		if (isset($this->create_account))
-		{
 			// Select the most appropriate country
 			if (isset($_POST['id_country']) && is_numeric($_POST['id_country']))
 				$selectedCountry = (int)($_POST['id_country']);
-			/* FIXME : language iso and country iso are not similar,
-			 * maybe an associative table with country an language can resolve it,
-			 * But for now it's a bug !
-			 * @see : bug #6968
-			 * @link:http://www.prestashop.com/bug_tracker/view/6968/
-			 elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
-			 {
-			 $array = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-			 if (Validate::isLanguageIsoCode($array[0]))
-			 {
-			 $selectedCountry = Country::getByIso($array[0]);
-			 if (!$selectedCountry)
-			 $selectedCountry = (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
-			 }
-			 }*/
 			if (!isset($selectedCountry))
 				$selectedCountry = (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
 
@@ -223,12 +210,11 @@ class AuthControllerCore extends FrontController
 			else
 				$countries = Country::getCountries($this->context->language->id, true);
 			$this->context->smarty->assign(array(
-					'countries' => $countries,
-					'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
-					'sl_country' => (isset($selectedCountry) ? $selectedCountry : 0),
-					'vat_management' => Configuration::get('VATNUMBER_MANAGEMENT')
-				));
-		}
+				'countries' => $countries,
+				'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
+				'sl_country' => (isset($selectedCountry) ? $selectedCountry : 0),
+				'vat_management' => Configuration::get('VATNUMBER_MANAGEMENT')
+			));
 	}
 
 	/**
