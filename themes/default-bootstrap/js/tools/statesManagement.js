@@ -29,6 +29,11 @@ var countriesNeedZipCode = [];
 $(document).ready(function(){
 	setCountries();
 	bindStateInputAndUpdate();
+	bindUniform();
+	bindCheckbox();
+	$(document).on('click', '#invoice_address', function(){
+		bindCheckbox();
+	});
 });
 
 function setCountries()
@@ -52,6 +57,24 @@ function setCountries()
 		}
 	}
 	countries =  countriesPS;
+}
+
+function bindCheckbox()
+{
+	if ($('#invoice_address:checked').length > 0)
+	{
+		$('#opc_invoice_address').slideDown('slow');
+		if ($('#company_invoice').val() == '')
+			$('#vat_number_block_invoice').hide();
+		bindUniform();
+	}
+	else
+		$('#opc_invoice_address').slideUp('slow');
+}
+
+function bindUniform()
+{
+	$("select.form-control,input[type='radio'],input[type='checkbox']").uniform(); 
 }
 
 function bindStateInputAndUpdate()
