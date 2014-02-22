@@ -211,6 +211,11 @@
 								<label for="address1">{l s='Address'} <sup>*</sup></label>
 								<input type="text" class="form-control" name="address1" id="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}" />
 							</div>
+						{elseif $field_name eq "address2"}
+							<div class="form-group is_customer_param">
+								<label for="address2">{l s='Address (Line 2)'} <sup>*</sup></label>
+								<input type="text" class="form-control" name="address2" id="address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{/if}" />
+							</div>
 						{elseif $field_name eq "postcode"}
 							{assign var='postCodeExist' value=true}
 							<div class="required postcode form-group">
@@ -554,7 +559,7 @@
 							<span class="inline-infos">{l s='Street address, P.O. Box, Company name, etc.'}</span>
 						</p>
 					{elseif $field_name eq "address2"}
-						<p class="form-group">
+						<p class="form-group is_customer_param">
 							<label for="address2">{l s='Address (Line 2)'}</label>
 							<input type="text" class="form-control" name="address2" id="address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{/if}" />
 							<span class="inline-infos">{l s='Apartment, suite, unit, building, floor, etc...'}</span>

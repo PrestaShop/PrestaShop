@@ -32,6 +32,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		submitFunction();
 	});
+	$('.is_customer_param').hide();
 });
 
 function submitFunction()
