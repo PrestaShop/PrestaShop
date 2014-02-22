@@ -143,9 +143,9 @@ class OrderOpcControllerCore extends ParentOrderController
 								$this->context->smarty->assign('isVirtualCart', $this->context->cart->isVirtualCart());
 								$this->_processAddressFormat();
 								$this->_assignAddress();
-								$formatedAddressFieldsValuesList = array();
-								if (isset($this->context->smarty->getTemplateVars('formatedAddressFieldsValuesList')))
-									$formatedAddressFieldsValuesList = $this->context->smarty->getTemplateVars('formatedAddressFieldsValuesList');
+
+								if (!($formatedAddressFieldsValuesList = $this->context->smarty->getTemplateVars('formatedAddressFieldsValuesList')))
+									$formatedAddressFieldsValuesList = array();
 
 								// Wrapping fees
 								$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
