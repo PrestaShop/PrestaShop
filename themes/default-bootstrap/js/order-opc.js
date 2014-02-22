@@ -492,6 +492,8 @@ function updateCarrierSelectionAndGift()
 				updateCarrierList(jsonData.carrier_data);
 				$('#opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
 				refreshDeliveryOptions();
+				if (typeof bindUniform !=='undefined')
+					bindUniform();
 			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -671,8 +673,6 @@ function updateNewAccountToAddressBlock()
 						if ($('#gift-price').length == 1)
 							$('#gift-price').html(json.gift_price);
 						$('#opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
-						if (typeof bindUniform !=='undefined')
-							bindUniform();
 					});
 				});
 			}
