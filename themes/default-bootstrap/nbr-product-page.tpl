@@ -57,7 +57,7 @@
 						{/if}
 					{/foreach}
 				{/if}
-				<select name="n" id="nb_item{if isset($paginationId)}_{$paginationId}{/if}" class="js-nb_item form-control" onchange="this.form.submit();">
+				<select name="n" id="nb_item{if isset($paginationId)}_{$paginationId}{/if}" class="form-control">
 					{assign var="lastnValue" value="0"}
 					{foreach from=$nArray item=nValue}
 						{if $lastnValue <= $nb_products}

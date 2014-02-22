@@ -41,7 +41,7 @@
 		<div class="col-xs-12 col-sm-6">
 			<div class="address_delivery select form-group selector1">
 				<label for="id_address_delivery">{if $cart->isVirtualCart()}{l s='Choose a billing address:'}{else}{l s='Choose a delivery address:'}{/if}</label>
-				<select name="id_address_delivery" id="id_address_delivery" class="address_select form-control" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}">
+				<select name="id_address_delivery" id="id_address_delivery" class="address_select form-control">
 					{foreach from=$addresses key=k item=address}
 						<option value="{$address.id_address|intval}"{if $address.id_address == $cart->id_address_delivery} selected="selected"{/if}>
 							{$address.alias|escape:'html':'UTF-8'}
@@ -58,7 +58,7 @@
 			<div id="address_invoice_form" class="select form-group selector1"{if $cart->id_address_invoice == $cart->id_address_delivery} style="display: none;"{/if}>
 				{if $addresses|@count > 1}
 					<label for="id_address_invoice" class="strong">{l s='Choose a billing address:'}</label>
-					<select name="id_address_invoice" id="id_address_invoice" class="address_select form-control" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}">
+					<select name="id_address_invoice" id="id_address_invoice" class="address_select form-control">
 					{section loop=$addresses step=-1 name=address}
 						<option value="{$addresses[address].id_address|intval}"{if $addresses[address].id_address == $cart->id_address_invoice && $cart->id_address_delivery != $cart->id_address_invoice} selected="selected"{/if}>
 							{$addresses[address].alias|escape:'html':'UTF-8'}
@@ -134,6 +134,7 @@
 {addJsDef addressUrlAdd=$smarty.capture.addressUrlAdd}
 {addJsDef formatedAddressFieldsValuesList=array()}
 {addJsDef formatedAddressFieldsValuesList=$formatedAddressFieldsValuesList}
+{addJsDef opc=$opc|boolval}
 {capture}<h3 class="page-subheading">{l s='Your billing address' js=1}</h3>{/capture}
 {addJsDefL name=titleInvoice}{$smarty.capture.default|@addcslashes:'\''}{/addJsDefL}
 {capture}<h3 class="page-subheading">{l s='Your delivery address' js=1}</h3>{/capture}

@@ -39,13 +39,13 @@
 		<div id="opc_account-overlay" class="opc-overlay" style="display: none;"></div>
 {/if}
 <div class="addresses clearfix">
-	<input type="hidden" name="id_address_delivery" id="id_address_delivery" value="{$cart->id_address_delivery}" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}" />
+	<input type="hidden" name="id_address_delivery" id="id_address_delivery" value="{$cart->id_address_delivery}"/>
 	<p id="address_invoice_form" class="select" {if $cart->id_address_invoice == $cart->id_address_delivery}style="display: none;"{/if}>
 	
 	{if $addresses|@count >= 1}
     <div class="form-group selector1">
 		<label for="id_address_invoice" class="strong">{l s='Choose a billing address:'}</label>
-		<select name="id_address_invoice" id="id_address_invoice" class="address_select form-control" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}">
+		<select name="id_address_invoice" id="id_address_invoice" class="address_select form-control">
 		{section loop=$addresses step=-1 name=address}
 			<option value="{$addresses[address].id_address|intval}" {if $addresses[address].id_address == $cart->id_address_invoice && $cart->id_address_delivery != $cart->id_address_invoice}selected="selected"{/if}>{$addresses[address].alias|escape:'html':'UTF-8'}</option>
 		{/section}
@@ -107,6 +107,7 @@
 {addJsDef addressUrlAdd=$smarty.capture.addressUrlAdd}
 {addJsDef formatedAddressFieldsValuesList=array()}
 {addJsDef formatedAddressFieldsValuesList=$formatedAddressFieldsValuesList}
+{addJsDef opc=$opc|boolval}
 {capture}<h3 class="page-subheading">{l s='Your billing address' js=1}</h3>{/capture}
 {addJsDefL name=titleInvoice}{$smarty.capture.default|@addcslashes:'\''}{/addJsDefL}
 {capture}<h3 class="page-subheading">{l s='Your delivery address' js=1}</h3>{/capture}

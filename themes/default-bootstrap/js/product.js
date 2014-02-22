@@ -106,6 +106,12 @@ $(document).ready(function()
 		}
 		combinations = combinationsJS;
 	}
+
+	$(document).on('change', '.js-attribute_select', function(){
+		findCombination();
+		getProductAttribute();
+	});
+
 	
 	//init the serialScroll for thumbs
 	$('#thumbs_list').serialScroll({

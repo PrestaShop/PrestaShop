@@ -284,8 +284,14 @@ function wishlistRefreshStatus()
 }
 
 $(document).ready(function() {
+
 	if (typeof wishlistProductsIds == 'undefined' || !wishlistProductsIds)
 		wishlistProductsIds = [];
 
 	wishlistRefreshStatus();
+
+	$(document).on('change', 'select[name=wishlists]', function ()
+	{
+		WishlistChangeDefault('wishlist_block_list', $(this).val());
+	});
 });

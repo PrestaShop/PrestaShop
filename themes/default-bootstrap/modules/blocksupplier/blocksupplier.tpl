@@ -58,7 +58,7 @@
 			{if $form_list}
 				<form action="{$smarty.server.SCRIPT_NAME|escape:'html':'UTF-8'}" method="get">
 					<div class="form-group selector1">
-						<select id="supplier_list" class="form-control" onchange="autoUrl('supplier_list', '');">
+						<select class="form-control" name="supplier_list">
 							<option value="0">{l s='All suppliers' mod='blocksupplier'}</option>
 						{foreach from=$suppliers item=supplier}
 							<option value="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html':'UTF-8'}">{$supplier.name|escape:'html':'UTF-8'}</option>
