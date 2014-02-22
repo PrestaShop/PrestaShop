@@ -26,11 +26,11 @@ $(document).ready(function()
 {
 	ajaxCart.overrideButtonsInThePage();
 
-	$('#block_cart_collapse').click(function(){
-			ajaxCart.collapse();
+	$(document).on('click', '#block_cart_collapse', function(e){
+		ajaxCart.collapse();
 	});
-	$('#block_cart_expand').click(function(){
-			ajaxCart.expand();
+	$(document).on('click', '#block_cart_expand', function(e){
+		ajaxCart.expand();
 	});
 
 	var cart_qty = 0;
@@ -69,7 +69,8 @@ $(document).ready(function()
 		}
 	);
 
-	$(document).on('click','.delete_voucher', function() {
+	$(document).on('click', '.delete_voucher', function(e){
+		e.preventDefault();
 		$.ajax({
 			type: 'POST',
 			headers: { "cache-control": "no-cache" },
@@ -85,17 +86,17 @@ $(document).ready(function()
 			else
 				location.reload();
 		}
-		return false;
 	});
 
-	$('#cart_navigation input').click(function(){
+	$(document).on('click', '#cart_navigation input', function(e){
 		$(this).attr('disabled', true).addClass('disabled');
 		$(this).closest("form").get(0).submit();
 	});
 
-	$('#layer_cart .cross, #layer_cart .continue, .layer_cart_overlay').click(function(){
+	$(document).on('click', '#layer_cart .cross, #layer_cart .continue, .layer_cart_overlay', function(e){
+		e.preventDefault();
 		$('.layer_cart_overlay').hide();
-		$('#layer_cart').fadeOut('fast'); return false;
+		$('#layer_cart').fadeOut('fast');
 	});
 });
 
@@ -106,20 +107,20 @@ var ajaxCart = {
 	//override every button in the page in relation to the cart
 	overrideButtonsInThePage : function(){
 		//for every 'add' buttons...
-		$('.ajax_add_to_cart_button').unbind('click').click(function(e){
+		$(document).on('click', '.ajax_add_to_cart_button', function(e){
 			e.preventDefault();
 			var idProduct =  $(this).data('id-product');
 			if ($(this).attr('disabled') != 'disabled')
 				ajaxCart.add(idProduct, null, false, this);
 		});
 		//for product page 'add' button...
-		$('#add_to_cart button').unbind('click').click(function(e){
+		$(document).on('click', '#add_to_cart button', function(e){
 			e.preventDefault();
 			ajaxCart.add( $('#product_page_product_id').val(), $('#idCombination').val(), true, null, $('#quantity_wanted').val(), null);
 		});
 
 		//for 'delete' buttons in the cart block...
-		$('#cart_block_list .ajax_cart_block_remove_link').unbind('click').click(function(e){
+		$(document).on('click', '#cart_block_list .ajax_cart_block_remove_link', function(e){
 			e.preventDefault();
 			// Customized product management
 			var customizationId = 0;

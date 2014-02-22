@@ -52,12 +52,12 @@ $(document).ready(function(){
 		else
 			$('.display').find('li#grid').addClass('selected');
 		
-		$('#grid').click(function(e){
+		$(document).on('click', '#grid', function(e){
 			e.preventDefault();
 			display('grid');
 		});
 
-		$('#list').click(function(e){
+		$(document).on('click', '#list', function(e){
 			e.preventDefault();
 			display('list');
 		});
@@ -111,7 +111,7 @@ function highdpi_init()
 function blockHover(status)
 {
 	$(document).on('mouseenter', '.product_list.grid li.ajax_block_product .product-container',
-		function(){
+		function(e){
 			if ($('body').find('.container').width() == 1170){
 				var pcHeight = $(this).parent().outerHeight();
 				var pcPHeight = $(this).parent().find('.button-container').outerHeight() + $(this).parent().find('.comments_note').outerHeight() + $(this).parent().find('.functional-buttons').outerHeight();
@@ -121,7 +121,7 @@ function blockHover(status)
 		}
 	);
 
-	$(document).on('mouseleave', '.product_list.grid li.ajax_block_product .product-container', function(){
+	$(document).on('mouseleave', '.product_list.grid li.ajax_block_product .product-container', function(e){
 			if ($('body').find('.container').width() == 1170)
 				$(this).parent().removeClass('hovered').removeAttr('style');
 		}

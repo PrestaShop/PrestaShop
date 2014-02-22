@@ -34,7 +34,7 @@ $(document).ready(function()
 	openCloseFilter();
 
 	// Click on color
-	$(document).on('click', '#layered_form input[type=button], #layered_form label.layered_color', function()
+	$(document).on('click', '#layered_form input[type=button], #layered_form label.layered_color', function(e)
 	{
 		if (!$('input[name='+$(this).attr('name')+'][type=hidden]').length)
 			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).val($(this).attr('rel')).appendTo('#layered_form');
@@ -44,13 +44,13 @@ $(document).ready(function()
 	});
 
 	// Click on checkbox
-	$(document).on('change', '#layered_form input[type=checkbox], #layered_form input[type=radio], #layered_form select', function()
+	$(document).on('change', '#layered_form input[type=checkbox], #layered_form input[type=radio], #layered_form select', function(e)
 	{
 		reloadContent();
 	});
 
 	// Changing content of an input text
-	$(document).on('keyup', '#layered_form input.layered_input_range', function()
+	$(document).on('keyup', '#layered_form input.layered_input_range', function(e)
 	{
 		if ($(this).attr('timeout_id'))
 			window.clearTimeout($(this).attr('timeout_id'));
@@ -82,7 +82,8 @@ $(document).ready(function()
 		}, 500, this));
 	});
 
-	$(document).on('click', '#layered_block_left .radio', function() {
+	$(document).on('click', '#layered_block_left .radio', function(e) 
+	{
 		var name = $(this).attr('name');
 		$.each($(this).parent().parent().find('input[type=button]'), function (it, item) {
 			if ($(item).hasClass('on') && $(item).attr('name') != name) {
@@ -94,7 +95,8 @@ $(document).ready(function()
 
 	// Click on label
 	$('#layered_block_left label a').on({
-		click: function() {
+		click: function(e) {
+			e.preventDefault();
 			var disable = $(this).parent().parent().find('input').attr('disabled');
 			if (disable == ''
 			|| typeof(disable) == 'undefined'
@@ -103,12 +105,12 @@ $(document).ready(function()
 				$(this).parent().parent().find('input').click();
 				reloadContent();
 			}
-			return false;
 		}
 	});
 
 	layered_hidden_list = {};
-	$('.hide-action').on('click', function() {
+	$('.hide-action').on('click', function(e)
+	{
 		if (typeof(layered_hidden_list[$(this).parent().find('ul').attr('id')]) == 'undefined' || layered_hidden_list[$(this).parent().find('ul').attr('id')] == false)
 		{
 			layered_hidden_list[$(this).parent().find('ul').attr('id')] = true;
@@ -132,7 +134,8 @@ $(document).ready(function()
 
 	$('.js-nb_item').unbind('change').attr('onchange', '');
 
-	$('.js-nb_item').on('change', function(event) {
+	$('.js-nb_item').on('change', function(e) 
+	{
 		$('.js-nb_item').val($(this).val());
 		reloadContent();
 	});
@@ -292,7 +295,9 @@ function paginationButton(nbProductsIn) {
 		else if ($(this).hasClass('pagination_previous'))
 			nbPage = parseInt($('div.pagination li.current').children().children().html())- 1;
 
-		$(this).children().children().click(function () {
+		$(this).children().children().on('click', function(e)
+		{
+			e.preventDefault();
 			if (nbPage == 0)
 				p = parseInt($(this).html()) + parseInt(nbPage);
 			else
@@ -300,7 +305,6 @@ function paginationButton(nbProductsIn) {
 			p = '&p='+ p;
 			reloadContent(p);
 			nbPage = 0;
-			return false;
 		});
 	});
 
@@ -543,7 +547,9 @@ function reloadContent(params_plus)
 			ajaxLoaderOn = 0;
 
 			// On submiting nb items form, relaod with the good nb of items
-			$('div.pagination form').submit(function() {
+			$('div.pagination form').on('submit', function(e)
+			{
+				e.preventDefault();
 				val = $('div.pagination .js-nb_item').val();
 				$('div.pagination .js-nb_item').children().each(function(it, option) {
 					if (option.value == val)
@@ -553,7 +559,6 @@ function reloadContent(params_plus)
 				});
 				// Reload products and pagination
 				reloadContent();
-				return false;
 			});
 			if (typeof(ajaxCart) != "undefined")
 				ajaxCart.overrideButtonsInThePage();

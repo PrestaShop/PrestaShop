@@ -75,7 +75,6 @@ function loadScene(id_scene)
 		$(this).hide();
 		$('#scenes').find('#screen_scene_' + id_scene).css('opacity', '0').show().fadeTo(500, 1);
 	});
-	return false;
 }
 
 function onSceneMove()
