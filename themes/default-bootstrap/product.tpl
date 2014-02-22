@@ -194,9 +194,9 @@
 			{/if}
 	
 			<h1 itemprop="name">{$product->name|escape:'html':'UTF-8'}</h1>
-			<p id="product_reference"{if isset($groups) || !$product->reference} style="display: none;"{/if}>
+			<p id="product_reference"{if empty($product->reference) || !$product->reference} style="display: none;"{/if}>
 				<label>{l s='Model'} </label>
-				<span class="editable" itemprop="sku">{$product->reference|escape:'html':'UTF-8'}</span>
+				<span class="editable" itemprop="sku">{if !isset($groups)}{$product->reference|escape:'html':'UTF-8'}{/if}</span>
 			</p>
 			{capture name=condition}
 				{if $product->condition == 'new'}{l s='New'}
