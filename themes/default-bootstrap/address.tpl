@@ -187,21 +187,23 @@
 	</li>
 </ul>
 {strip}
-{if isset($smarty.post.id_state)}
+{if isset($smarty.post.id_state) && $smarty.post.id_state}
 	{addJsDef idSelectedState=$smarty.post.id_state|intval}
-{else if isset($address->id_state)}
+{else if isset($address->id_state) && $address->id_state}
 	{addJsDef idSelectedState=$address->id_state|intval}
 {else}
 	{addJsDef idSelectedState=false}
 {/if}
-{if isset($smarty.post.id_country)}
+{if isset($smarty.post.id_country) && $smarty.post.id_country}
 	{addJsDef idSelectedCountry=$smarty.post.id_country|intval}
-{else if isset($address->id_country)}
+{else if isset($address->id_country) && $address->id_country}
 	{addJsDef idSelectedCountry=$address->id_country|intval}
 {else}
 	{addJsDef idSelectedCountry=false}
 {/if}
-{addJsDef countries=$countries}
+{if isset($countries)}
+	{addJsDef countries=$countries}
+{/if}
 {if isset($vatnumber_ajax_call) && $vatnumber_ajax_call}
 	{addJsDef vatnumber_ajax_call=$vatnumber_ajax_call}
 {/if}

@@ -22,67 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {capture name=path}
 	{if !isset($email_create)}{l s='Authentication'}{else}
 		<a href="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Authentication'}">{l s='Authentication'}</a>
 		<span class="navigation-pipe">{$navigationPipe}</span>{l s='Create your account'}
 	{/if}
 {/capture}
-
-<script type="text/javascript">
-	// <![CDATA[
-	var idSelectedCountry = {if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}false{/if};
-	var countries = new Array();
-	var countriesNeedIDNumber = new Array();
-	var countriesNeedZipCode = new Array(); 
-	{if isset($countries)}
-		{foreach from=$countries item='country'}
-			{if isset($country.states) && $country.contains_states}
-				countries[{$country.id_country|intval}] = new Array();
-				{foreach from=$country.states item='state' name='states'}
-					countries[{$country.id_country|intval}].push({ldelim}'id' : '{$state.id_state|intval}', 'name' : '{$state.name|addslashes}'{rdelim});
-				{/foreach}
-			{/if}
-			{if isset($country.need_identification_number) && $country.need_identification_number}
-				countriesNeedIDNumber.push({$country.id_country|intval});
-			{/if}
-			{if isset($country.need_zip_code) && $country.need_zip_code}
-				countriesNeedZipCode[{$country.id_country|intval}] = '{$country.zip_code_format|escape:'htmlall':'UTF-8'}';
-			{/if}
-		{/foreach}
-	{/if}
-	//]]>
-	{literal}
-		$(document).ready(function() {
-			$('#company').on('input',function(){
-				vat_number();
-			});
-			$('#company_invoice').on('input',function(){
-				vat_number_invoice();
-			});
-			function vat_number() {
-				if (($('#company').length) && ($('#company').val() != ''))
-					$('#vat_number').show();
-				else
-					$('#vat_number').hide();
-			}
-			function vat_number_invoice()
-			{
-				if (($('#company_invoice').length) && ($('#company_invoice').val() != ''))
-					$('#vat_number_block_invoice').show();
-				else
-					$('#vat_number_block_invoice').hide();
-			}
-			vat_number();
-			vat_number_invoice();
-			{/literal}
-			$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{/if}]').prop('selected', true);
-			{literal}
-		});
-	{/literal}
-</script>
-
 <h1 class="page-heading">{if !isset($email_create)}{l s='Authentication'}{else}{l s='Create an account'}{/if}</h1>
 {if !isset($back) || $back != 'my-account'}{assign var='current_step' value='login'}{include file="$tpl_dir./order-steps.tpl"}{/if}
 {include file="$tpl_dir./errors.tpl"}
@@ -90,84 +35,6 @@
 {assign var="postCodeExist" value=false}
 {assign var="dniExist" value=false}
 {if !isset($email_create)}
-	<script type="text/javascript">
-		{literal}
-			$(document).ready(function(){
-				$('#create-account_form').submit(function(){
-					submitFunction();
-					return false;
-				});
-
-				$('#invoice_address').click(function(){
-					bindCheckbox();
-				});
-				bindCheckbox();
-			});
-			function submitFunction() {
-				$('#create_account_error').html('').hide();
-				//send the ajax request to the server
-				$.ajax({
-					type: 'POST',
-					url: baseUri,
-					async: true,
-					cache: false,
-					dataType : "json",
-					data: {
-						controller: 'authentication',
-						SubmitCreate: 1,
-						ajax: true,
-						email_create: $('#email_create').val(),
-						back: $('input[name=back]').val(),
-						token: token
-					},
-					success: function(jsonData) {
-						if (jsonData.hasError) {
-							var errors = '';
-							for(error in jsonData.errors)
-								//IE6 bug fix
-								if(error != 'indexOf')
-									errors += '<li>'+jsonData.errors[error]+'</li>';
-							$('#create_account_error').html('<ol>'+errors+'</ol>').show();
-						}
-						else {
-							// adding a div to display a transition
-							$('#center_column').html('<div id="noSlide">'+$('#center_column').html()+'</div>');
-							$('#noSlide').fadeOut('slow', function(){
-								$('#noSlide').html(jsonData.page);
-								// update the state (when this file is called from AJAX you still need to update the state)
-								bindStateInputAndUpdate();
-								$(this).fadeIn('slow', function(){
-									document.location = '#account-creation';
-									$('select.form-control').uniform();
-								});
-							});
-						}
-					},
-					error: function(XMLHttpRequest, textStatus, errorThrown) {
-						alert("TECHNICAL ERROR: unable to load form.\n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
-					}
-				});
-			}
-			function bindCheckbox()
-			{
-				if ($('#invoice_address:checked').length > 0)
-				{
-					$('#opc_invoice_address').slideDown('slow');
-					if ($('#company_invoice').val() == '')
-						$('#vat_number_block_invoice').hide();
-					updateState('invoice');
-					updateNeedIDNumber('invoice');
-					updateZipCode('invoice');
-					{/literal}
-					$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{/if}]').prop('selected', true);
-					$('.id_state_invoice option[value={if isset($smarty.post.id_state_invoice)}{$smarty.post.id_state_invoice|intval}{/if}]').prop('selected', true);
-					{literal}
-				}
-				else
-					$('#opc_invoice_address').slideUp('slow');
-			}
-		{/literal}
-	</script>
 	<!--{if isset($authentification_error)}
 	<div class="alert alert-danger">
 		{if {$authentification_error|@count} == 1}
@@ -778,9 +645,31 @@
 			<p class="pull-right required"><span><sup>*</sup>{l s='Required field'}</span></p>
 		</div>
 	</form>
-	<script>
-		$(document).ready(function () {
-			$("select.form-control,input[type='radio'],input[type='checkbox']").uniform(); 
-		});
-	</script>
 {/if}
+{strip}
+{if isset($smarty.post.id_state) && $smarty.post.id_state}
+	{addJsDef idSelectedState=$smarty.post.id_state|intval}
+{else if isset($address->id_state) && $address->id_state}
+	{addJsDef idSelectedState=$address->id_state|intval}
+{else}
+	{addJsDef idSelectedState=false}
+{/if}
+{if isset($smarty.post.id_country) && $smarty.post.id_country}
+	{addJsDef idSelectedCountry=$smarty.post.id_country|intval}
+{else if isset($address->id_country) && $address->id_country}
+	{addJsDef idSelectedCountry=$address->id_country|intval}
+{else}
+	{addJsDef idSelectedCountry=false}
+{/if}
+{if isset($countries)}
+	{addJsDef countries=$countries}
+{/if}
+{if isset($vatnumber_ajax_call) && $vatnumber_ajax_call}
+	{addJsDef vatnumber_ajax_call=$vatnumber_ajax_call}
+{/if}
+{if isset($email_create) && $email_create}
+	{addJsDef email_create=$email_create|boolval}
+{else}
+	{addJsDef email_create=false}
+{/if}
+{/strip}

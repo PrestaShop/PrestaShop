@@ -315,7 +315,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			$this->addJS(_THEME_MOBILE_JS_DIR_.'opc.js');
 
 		$this->addJS(array(
-			_THEME_JS_DIR_.'address.js',
+			_THEME_JS_DIR_.'tools/vatManagement.js',
 			_THEME_JS_DIR_.'tools/statesManagement.js',
 			_THEME_JS_DIR_.'order-carrier.js',
 			_PS_JS_DIR_.'validate.js'

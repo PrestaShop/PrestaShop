@@ -22,10 +22,37 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-$(document).ready(function()
-{	
+
+var countriesNeedIDNumber = [];
+var countriesNeedZipCode = [];
+
+$(document).ready(function(){	
+	setCountries();
 	bindStateInputAndUpdate();
 });
+
+function setCountries()
+{
+	if (typeof countries !== 'undefined' && countries)
+	{
+		var countriesPS = [];
+	    for (var i in countries)
+		{
+			var id_country = countries[i]['id_country'];
+			if (typeof countries[i]['states'] !== 'undefined' && countries[i]['states'] && countries[i]['contains_states'])
+			{
+				countriesPS[id_country] = [];
+	    		for (var j in countries[i]['states'])
+					countriesPS[id_country].push({'id' : countries[i]['states'][j]['id_state'], 'name' : countries[i]['states'][j]['name']});
+			}
+			if (typeof countries[i]['need_identification_number'] !== 'undefined')
+				countriesNeedIDNumber.push(countries[i]['id_country']);
+			if (typeof countries[i]['need_zip_code'] !== 'undefined')
+				countriesNeedZipCode[countries[i]['id_country']] = countries[i]['zip_code_format'];
+		}
+	}
+	countries =  countriesPS;
+}
 
 function bindStateInputAndUpdate()
 {
@@ -34,15 +61,17 @@ function bindStateInputAndUpdate()
 	updateNeedIDNumber();
 	updateZipCode();
 
-	$('select#id_country').change(function(){
+	$(document).on('change', '#id_country', function()
+	{
 		updateState();
 		updateNeedIDNumber();
 		updateZipCode();
 	});
 
-	if ($('select#id_country_invoice').length !== 0)
+	if ($('#id_country_invoice').length !== 0)
 	{
-		$('select#id_country_invoice').change(function(){   
+		$(document).on('change', '#id_country_invoice', function()
+		{
 			updateState('invoice');
 			updateNeedIDNumber('invoice');
 			updateZipCode('invoice');
@@ -51,18 +80,24 @@ function bindStateInputAndUpdate()
 		updateNeedIDNumber('invoice');
 		updateZipCode('invoice');
 	}
+
+	if (typeof idSelectedState !== 'undefined' && idSelectedState)
+		$('.id_state option[value=' + idSelectedState + ']').prop('selected', true);
+	if (typeof idSelectedStateInvoice !== 'undefined' && idSelectedStateInvoice)
+		$('.id_state_invoice option[value=' + idSelectedStateInvoice + ']').prop('selected', true);
 }
 
 function updateState(suffix)
 {
-	$('select#id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '')+' option:not(:first-child)').remove();
+	$('#id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '')+' option:not(:first-child)').remove();
 	if (typeof countries !== 'undefined')
-		var states = countries[$('select#id_country'+(typeof suffix !== 'undefined' ? '_' + suffix : '')).val()];
+		var states = countries[$('#id_country' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).val()];
 	if (typeof states !== 'undefined')
 	{
-		$(states).each(function (key, item){
-			$('select#id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).append('<option value="' + item.id + '"' + (idSelectedCountry === item.id ? ' selected="selected"' : '') + '>' + item.name + '</option>');
+		$(states).each(function(key, item){
+			$('#id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).append('<option value="' + item.id + '"' + (idSelectedCountry === item.id ? ' selected="selected"' : '') + '>' + item.name + '</option>');
 		});
+
 		$('.id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '') + ':hidden').fadeIn('slow');
 		$('#id_state, #id_state_invoice').uniform();
 	}
@@ -72,7 +107,7 @@ function updateState(suffix)
 
 function updateNeedIDNumber(suffix)
 {
-	var idCountry = parseInt($('select#id_country' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).val());
+	var idCountry = parseInt($('#id_country' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).val());
 	if (typeof countriesNeedIDNumber !== 'undefined' && $.inArray(idCountry, countriesNeedIDNumber) >= 0)
 	{
 		$('.dni' + (typeof suffix !== 'undefined' ? '_' + suffix : '') + ':hidden').fadeIn('slow');
@@ -84,8 +119,7 @@ function updateNeedIDNumber(suffix)
 
 function updateZipCode(suffix)
 {
-	var idCountry = parseInt($('select#id_country' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).val());
-
+	var idCountry = parseInt($('#id_country' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).val());
 	if (typeof countriesNeedZipCode !== 'undefined' && typeof countriesNeedZipCode[idCountry] !== 'undefined')
 	{
 		$('.postcode' + (typeof suffix !== 'undefined' ? '_' + suffix : '') + ':hidden').fadeIn('slow');
