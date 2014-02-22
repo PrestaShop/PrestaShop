@@ -22,11 +22,11 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
+//global variables
 var countriesNeedIDNumber = [];
 var countriesNeedZipCode = [];
 
-$(document).ready(function(){	
+$(document).ready(function(){
 	setCountries();
 	bindStateInputAndUpdate();
 });

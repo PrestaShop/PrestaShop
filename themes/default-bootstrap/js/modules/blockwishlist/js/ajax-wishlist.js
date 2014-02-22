@@ -28,6 +28,16 @@
 *
 * @return void
 */
+//global variables
+var wishlistProductsIds = [];
+$(document).ready(function(){
+	wishlistRefreshStatus();
+
+	$(document).on('change', 'select[name=wishlists]', function(){
+		WishlistChangeDefault('wishlist_block_list', $(this).val());
+	});
+});
+
 function WishlistCart(id, action, id_product, id_product_attribute, quantity)
 {
 	$.ajax({
@@ -275,23 +285,10 @@ function wishlistProductsIdsRemove(id)
 
 function wishlistRefreshStatus()
 {
-	$('.addToWishlist').each(function() {
+	$('.addToWishlist').each(function(){
 		if ($.inArray(parseInt($(this).prop('rel')),wishlistProductsIds)!= -1)
 			$(this).addClass('checked');
 		else
 			$(this).removeClass('checked');
 	});        
 }
-
-$(document).ready(function() {
-
-	if (typeof wishlistProductsIds == 'undefined' || !wishlistProductsIds)
-		wishlistProductsIds = [];
-
-	wishlistRefreshStatus();
-
-	$(document).on('change', 'select[name=wishlists]', function ()
-	{
-		WishlistChangeDefault('wishlist_block_list', $(this).val());
-	});
-});

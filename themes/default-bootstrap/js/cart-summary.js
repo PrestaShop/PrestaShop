@@ -23,14 +23,52 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-$(document).ready(function()
-{
+$(document).ready(function(){
 	$('.cart_quantity_up').off('click').on('click', function(){upQuantity($(this).attr('id').replace('cart_quantity_up_', '')); return false;});
 	$('.cart_quantity_down').off('click').on('click', function(){downQuantity($(this).attr('id').replace('cart_quantity_down_', '')); return false;});
 	$('.cart_quantity_delete' ).off('click').on('click', function(){deleteProductFromSummary($(this).attr('id')); return false;});
 	$('.cart_quantity_input').typeWatch({highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, true, this.el);}});
 	$('.cart_address_delivery').on('change', function(){changeAddressDelivery($(this));});
+
 	cleanSelectAddressDelivery();
+
+	refreshDeliveryOptions();
+	
+	$('.delivery_option_radio').on('change', function() {
+		refreshDeliveryOptions();
+	});
+	
+	$('#allow_seperated_package').on('click', function() {
+		$.ajax({
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			url: baseUri + '?rand=' + new Date().getTime(),
+			async: true,
+			cache: false,
+			data: 'controller=cart&ajax=true&allowSeperatedPackage=true&value='
+				+ ($(this).prop('checked') ? '1' : '0')
+				+ '&token='+static_token
+				+ '&allow_refresh=1',
+			success: function(jsonData)
+			{
+				if (typeof(getCarrierListAndUpdate) !== 'undefined')
+					getCarrierListAndUpdate();
+			}
+		});
+	});
+	
+	$('#gift').checkboxChange(function() { $('#gift_div').show('slow'); }, function() { $('#gift_div').hide('slow'); });
+	
+	$('#enable-multishipping').checkboxChange(
+		function() {
+			$('.standard-checkout').hide(0);
+			$('.multishipping-checkout').show(0);
+		},
+		function() {
+			$('.standard-checkout').show(0);
+			$('.multishipping-checkout').hide(0);
+		}
+	);
 });
 
 function cleanSelectAddressDelivery()
@@ -805,46 +843,6 @@ function refreshDeliveryOptions()
 			$(this).parent().find('.delivery_option_carrier').hide();
 	});
 }
-$(document).ready(function() {
-	
-	refreshDeliveryOptions();
-	
-	$('.delivery_option_radio').on('change', function() {
-		refreshDeliveryOptions();
-	});
-	
-	$('#allow_seperated_package').on('click', function() {
-		$.ajax({
-			type: 'POST',
-			headers: { "cache-control": "no-cache" },
-			url: baseUri + '?rand=' + new Date().getTime(),
-			async: true,
-			cache: false,
-			data: 'controller=cart&ajax=true&allowSeperatedPackage=true&value='
-				+ ($(this).prop('checked') ? '1' : '0')
-				+ '&token='+static_token
-				+ '&allow_refresh=1',
-			success: function(jsonData)
-			{
-				if (typeof(getCarrierListAndUpdate) !== 'undefined')
-					getCarrierListAndUpdate();
-			}
-		});
-	});
-	
-	$('#gift').checkboxChange(function() { $('#gift_div').show('slow'); }, function() { $('#gift_div').hide('slow'); });
-	
-	$('#enable-multishipping').checkboxChange(
-		function() {
-			$('.standard-checkout').hide(0);
-			$('.multishipping-checkout').show(0);
-		},
-		function() {
-			$('.standard-checkout').show(0);
-			$('.multishipping-checkout').hide(0);
-		}
-	);
-});
 
 function updateExtraCarrier(id_delivery_option, id_address)
 {
