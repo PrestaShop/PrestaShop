@@ -28,8 +28,7 @@ var selectedCombination = [];
 var globalQuantity = 0;
 var colors = [];
 
-$(document).ready(function()
-{
+$(document).ready(function(){
 	if (typeof customizationFields !== 'undefined' && customizationFields)
 	{
 		var customizationFields = [];

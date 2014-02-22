@@ -22,8 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-$(document).ready(function()
-{
+$(document).ready(function(){
 	map = new google.maps.Map(document.getElementById('map'), {
 		center: new google.maps.LatLng(defaultLat, defaultLong),
 		zoom: 10,
@@ -44,7 +43,6 @@ $(document).ready(function()
 		if(code.toString() === 13)
 			searchLocations();
 	});
-
 
 	initMarkers();
 });
@@ -221,4 +219,6 @@ function parseXml(str)
 	}
 }
 
-function doNothing() {}
+function doNothing()
+{
+}

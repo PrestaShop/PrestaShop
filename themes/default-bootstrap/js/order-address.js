@@ -22,13 +22,11 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-$(document).ready(function()
-{
+$(document).ready(function(){
 	if (typeof(formatedAddressFieldsValuesList) !== 'undefined')
 		updateAddressesDisplay(true);
 
-	$(document).on('change', 'select[name=id_address_delivery], select[name=id_address_invoice]', function()
-	{
+	$(document).on('change', 'select[name=id_address_delivery], select[name=id_address_invoice]', function(){
 		updateAddressesDisplay();
 		if (typeof opc !=='undefined' && opc)
 			updateAddressSelection();
@@ -79,7 +77,7 @@ function updateAddressesDisplay(first_view)
 
 function updateAddressDisplay(addressType)
 {
-	if (formatedAddressFieldsValuesList.length <= 0)
+	if (typeof formatedAddressFieldsValuesList == 'undefined' || formatedAddressFieldsValuesList.length <= 0)
 		return;
 
 	var idAddress = parseInt($('#id_address_' + addressType + '').val());
