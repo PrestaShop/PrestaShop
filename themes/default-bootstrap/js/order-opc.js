@@ -265,7 +265,6 @@ $(document).ready(function(){
 	}
 	if (typeof(open_multishipping_fancybox) !== 'undefined' && open_multishipping_fancybox)
 		$('#link_multishipping_form').click();
-
 });
 
 function updateCarrierList(json)
