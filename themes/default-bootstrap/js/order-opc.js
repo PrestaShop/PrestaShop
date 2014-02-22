@@ -24,7 +24,7 @@
 */
 $(document).ready(function(){
 	// GUEST CHECKOUT / NEW ACCOUNT MANAGEMENT
-	if ((!isLogged) || (isGuest))
+	if ((typeof isLogged == 'undefined' || !isLogged) || (typeof isGuest !== 'undefined' && isGuest))
 	{
 		if (guestCheckoutEnabled && !isLogged)
 		{
@@ -32,6 +32,7 @@ $(document).ready(function(){
 			$('#opc_account_form, #opc_invoice_address').hide();
 			
 			$(document).on('click', '#opc_createAccount',function(e){
+				e.preventDefault();
 				$('.is_customer_param').show();
 				$('#opc_account_form').slideDown('slow');
 				$('#is_new_customer').val('1');
@@ -40,6 +41,7 @@ $(document).ready(function(){
 					bindUniform();
 			});
 			$(document).on('click', '#opc_guestCheckout', function(e){
+				e.preventDefault();
 				$('.is_customer_param').hide();
 				$('#opc_account_form').slideDown('slow');
 				$('#is_new_customer').val('0');
@@ -645,7 +647,10 @@ function updateNewAccountToAddressBlock()
 					document.location.href = addressUrl;
 				
 				$('#opc_new_account').fadeOut('fast', function() {
-					$('#opc_new_account').html(json.order_opc_adress);
+					if (typeof json.formatedAddressFieldsValuesList !== 'undefined' && json.formatedAddressFieldsValuesList )
+						formatedAddressFieldsValuesList = json.formatedAddressFieldsValuesList;
+					if (typeof json.order_opc_adress !== 'undefined' && json.order_opc_adress)
+						$('#opc_new_account').html(json.order_opc_adress);
 					// update block user info
 					if (json.block_user_info !== '' && $('#header_user').length == 1)
 					{
@@ -654,7 +659,7 @@ function updateNewAccountToAddressBlock()
 							$(this).html(elt).fadeIn();
 						});
 					}
-					$('#opc_new_account').fadeIn('fast', function() {
+					$(this).fadeIn('fast', function() {
 						//After login, the products are automatically associated to an address
 						$.each(json.summary.products, function() {
 							updateAddressId(this.id_product, this.id_product_attribute, '0', this.id_address_delivery);
@@ -666,6 +671,8 @@ function updateNewAccountToAddressBlock()
 						if ($('#gift-price').length == 1)
 							$('#gift-price').html(json.gift_price);
 						$('#opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
+						if (typeof bindUniform !=='undefined')
+							bindUniform();
 					});
 				});
 			}

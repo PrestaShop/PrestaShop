@@ -132,7 +132,6 @@
 {addJsDef addressMultishippingUrl=$smarty.capture.addressUrl|cat:$smarty.capture.default}
 {capture name=addressUrlAdd}{$smarty.capture.addressUrl|cat:'&id_address='}{/capture}
 {addJsDef addressUrlAdd=$smarty.capture.addressUrlAdd}
-{addJsDef formatedAddressFieldsValuesList=array()}
 {addJsDef formatedAddressFieldsValuesList=$formatedAddressFieldsValuesList}
 {addJsDef opc=$opc|boolval}
 {capture}<h3 class="page-subheading">{l s='Your billing address' js=1}</h3>{/capture}
