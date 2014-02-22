@@ -448,7 +448,7 @@ $(function() {
 			$('#opc_account_choice').show();
 			$('#opc_account_form, #opc_invoice_address').hide();
 			
-			$('#opc_createAccount').click(function() {
+			$(document).on('click', '#opc_createAccount',function(e){
 				$('.is_customer_param').show();
 				$('#opc_account_form').slideDown('slow');
 				$('#is_new_customer').val('1');
@@ -458,7 +458,7 @@ $(function() {
 				updateZipCode();
 				$("select.form-control,input[type='checkbox'],input[type='radio']").uniform(); 
 			});
-			$('#opc_guestCheckout').click(function() {
+			$(document).on('click', '#opc_guestCheckout', function(e){
 				$('.is_customer_param').hide();
 				$('#opc_account_form').slideDown('slow');
 				$('#is_new_customer').val('0');
@@ -494,15 +494,16 @@ $(function() {
 		}
 		
 		// LOGIN FORM
-		$('#openLoginFormBlock').click(function() {
+		$(document).on('click', '#openLoginFormBlock', function(e){
+			e.preventDefault();
 			$('#openNewAccountBlock').show();
 			$(this).hide();
 			$('#login_form_content').slideDown('slow');
 			$('#new_account_form_content').slideUp('slow');
-			return false;
 		});
 		// LOGIN FORM SENDING
-		$('#SubmitLogin').click(function() {
+		$(document).on('click', '#SubmitLogin', function(e){
+			e.preventDefault();
 			$.ajax({
 				type: 'POST',
 				headers: { "cache-control": "no-cache" },
@@ -535,16 +536,16 @@ $(function() {
 						alert("TECHNICAL ERROR: unable to send login informations \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 				}
 			});
-			return false;
 		});
 		
 		// INVOICE ADDRESS
-		$('#invoice_address').click(function() {
+		$(document).on('click', '#invoice_address', function(e){
 			bindCheckbox();
 		});
 		
 		// VALIDATION / CREATION AJAX
-		$('#submitAccount').click(function() {
+		$(document).on('click', '#submitAccount', function(e){
+			e.preventDefault();
 			$('#opc_new_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeIn('slow')
 						
 			var callingFile = '';
@@ -671,7 +672,6 @@ $(function() {
 					$('#opc_new_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeIn('slow')
 				}
 			});
-			return false;
 		});
 	}
 	
@@ -741,12 +741,12 @@ function bindInputs()
 	});
 	
 	// Recyclable checkbox
-	$('#recyclable').click(function() {
+	$(document).on('click', '#recyclable', function(e){
 		updateCarrierSelectionAndGift();
 	});
 	
 	// Gift checkbox update
-	$('#gift').click(function() {
+	$(document).on('clcik', '#gift', function(e){
 		if ($('#gift').is(':checked'))
 			$('#gift_div').show();
 		else
@@ -766,7 +766,7 @@ function bindInputs()
 	});
 	
 	// Term Of Service (TOS)
-	$('#cgv').click(function() {
+	$(document).on('click', '#cgv', function(e){
 		updatePaymentMethodsDisplay();
 	});
 	$("select.form-control,input[type='checkbox']").uniform();
@@ -783,10 +783,10 @@ function multishippingMode(it)
 		$('.addressesAreEquals').hide();
 		$('#address_invoice_form').show();
 		
-		$('#link_multishipping_form').click(function() {return false;});
+		$(document).on('click', '#link_multishipping_form', function(e){e.preventDefault();});
 		$('.address_add a').attr('href', addressMultishippingUrl);
 		
-		$('#link_multishipping_form').click(function(){
+		$(document).on('click', '#link_multishipping_form', function(e){
 			$.fancybox({
 			'transitionIn': 'elastic',
 			'transitionOut': 'elastic',
@@ -822,7 +822,7 @@ function multishippingMode(it)
 				$('.fancybox-inner .cart_quantity_input').typeWatch({ highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, false, this.el);} });
 				cleanSelectAddressDelivery();
 				$('.fancybox-outer').append($('<div class="multishipping_close_container"><a id="multishipping-close" class="btn btn-default button button-small" href="#"><span>'+CloseTxt+'</span></a></div>'));
-				$('#multishipping-close').click(function() {
+				$(document).on('click', '#multishipping-close', function(e){
 					var newTotalQty = 0;
 					$('.fancybox-inner .cart_quantity_input').each(function(){
 						newTotalQty += parseInt($(this).val());

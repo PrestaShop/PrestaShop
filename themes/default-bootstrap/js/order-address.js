@@ -72,7 +72,7 @@ function updateAddressesDisplay(first_view)
 function updateAddressDisplay(addressType)
 {
 	if (formatedAddressFieldsValuesList.length <= 0)
-		return false;
+		return;
 
 	var idAddress = parseInt($('#id_address_' + addressType + '').val());
 	buildAddressBlock(idAddress, addressType, $('#address_' + addressType));
