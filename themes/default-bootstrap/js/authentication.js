@@ -23,11 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 $(document).ready(function(){
-	bindUniform();
-	bindCheckbox();
-	$(document).on('click', '#invoice_address', function(){
-		bindCheckbox();
-	});
 	$(document).on('submit', '#create-account_form', function(e){
 		e.preventDefault();
 		submitFunction();
@@ -73,7 +68,8 @@ function submitFunction()
 					$('#noSlide').html(jsonData.page);
 					$(this).fadeIn('slow', function()
 					{
-						bindUniform();
+						if (typeof bindUniform !=='undefined')
+							bindUniform();
 						document.location = '#account-creation';
 					});
 				});
@@ -84,22 +80,4 @@ function submitFunction()
 			alert("TECHNICAL ERROR: unable to load form.\n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 		}
 	});
-}
-
-function bindCheckbox()
-{
-	if ($('#invoice_address:checked').length > 0)
-	{
-		$('#opc_invoice_address').slideDown('slow');
-		if ($('#company_invoice').val() == '')
-			$('#vat_number_block_invoice').hide();
-		bindUniform();
-	}
-	else
-		$('#opc_invoice_address').slideUp('slow');
-}
-
-function bindUniform()
-{
-	$("select.form-control,input[type='radio'],input[type='checkbox']").uniform(); 
 }

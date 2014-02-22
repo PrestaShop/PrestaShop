@@ -36,10 +36,8 @@ $(document).ready(function(){
 				$('#opc_account_form').slideDown('slow');
 				$('#is_new_customer').val('1');
 				$('#opc_account_choice, #opc_invoice_address').hide();
-				updateState();
-				updateNeedIDNumber();
-				updateZipCode();
-				$("select.form-control,input[type='checkbox'],input[type='radio']").uniform(); 
+				if (typeof bindUniform !=='undefined')
+					bindUniform();
 			});
 			$(document).on('click', '#opc_guestCheckout', function(e){
 				$('.is_customer_param').hide();
@@ -48,10 +46,8 @@ $(document).ready(function(){
 				$('#opc_account_choice, #opc_invoice_address').hide();
 				$('#new_account_title').html(txtInstantCheckout);
 				$('#submitAccount').attr({id : 'submitGuestAccount', name : 'submitGuestAccount'});
-				updateState();
-				updateNeedIDNumber();
-				updateZipCode();
-				$("select.form-control,input[type='checkbox']").uniform(); 
+				if (typeof bindUniform !=='undefined')
+					bindUniform();
 			});
 		}
 		else if (isGuest)
@@ -61,9 +57,6 @@ $(document).ready(function(){
 			$('#is_new_customer').val('0');
 			$('#opc_account_choice, #opc_invoice_address').hide();
 			$('#new_account_title').html(txtInstantCheckout);
-			updateState();
-			updateNeedIDNumber();
-			updateZipCode();
 		}
 		else
 		{
@@ -71,9 +64,6 @@ $(document).ready(function(){
 			$('#is_new_customer').val('1');
 			$('.is_customer_param, #opc_account_form').show();
 			$('#opc_invoice_address').hide();
-			updateState();
-			updateNeedIDNumber();
-			updateZipCode();
 		}
 		
 		// LOGIN FORM
@@ -119,11 +109,6 @@ $(document).ready(function(){
 						alert("TECHNICAL ERROR: unable to send login informations \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 				}
 			});
-		});
-		
-		// INVOICE ADDRESS
-		$(document).on('click', '#invoice_address', function(e){
-			bindCheckbox();
 		});
 		
 		// VALIDATION / CREATION AJAX
@@ -258,7 +243,6 @@ $(document).ready(function(){
 		});
 	}
 	
-	bindCheckbox();
 	bindInputs();
 	
 	$('#opc_account_form input,select,textarea').change(function() {
@@ -268,8 +252,6 @@ $(document).ready(function(){
 			$('#submitAccount').show();
 		}
 	});
-
-	$("select.form-control,input[type='checkbox']").uniform();
 
 	// If the multishipping mode is off assure us the checkbox "I want to specify a delivery address for each products I order." is unchecked.
 	$('#multishipping_mode_checkbox').attr('checked', false);
@@ -318,7 +300,8 @@ function updatePaymentMethodsDisplay()
 			success: function(json)
 			{
 				updatePaymentMethods(json);
-				$("select.form-control,input[type='checkbox']").uniform(); 
+				if (typeof bindUniform !=='undefined')
+					bindUniform();
 			}
 		});
 		$(this).fadeOut('slow');		
@@ -695,22 +678,6 @@ function updateNewAccountToAddressBlock()
 	});
 }
 
-function bindCheckbox()
-{
-	if ($('#invoice_address:checked').length > 0)
-	{
-		$('#opc_invoice_address').slideDown('slow');
-		if ($('#company_invoice').val() == '')
-			$('#vat_number_block_invoice').hide();
-		updateState('invoice');
-		updateNeedIDNumber('invoice');
-		updateZipCode('invoice');
-	}
-	else
-		$('#opc_invoice_address').slideUp('slow');
-	$("select.form-control,input[type='checkbox']").uniform();  
-}
-
 function bindInputs()
 {
 	// Order message update
@@ -744,7 +711,8 @@ function bindInputs()
 				$('#opc_delivery_methods-overlay').fadeOut('slow');
 			}
 		});
-		$("select.form-control,input[type='checkbox']").uniform();  
+		if (typeof bindUniform !=='undefined')
+			bindUniform();
 	});
 	
 	// Recyclable checkbox
@@ -776,7 +744,6 @@ function bindInputs()
 	$(document).on('click', '#cgv', function(e){
 		updatePaymentMethodsDisplay();
 	});
-	$("select.form-control,input[type='checkbox']").uniform();
 }
 
 function multishippingMode(it)
@@ -886,5 +853,6 @@ function multishippingMode(it)
 			}
 		});
 	}
-	$("select.form-control,input[type='checkbox']").uniform();  
+	if (typeof bindUniform !=='undefined')
+		bindUniform(); 
 }
