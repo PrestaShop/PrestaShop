@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 $(document).ready(function(){
-	if (typeof(formatedAddressFieldsValuesList) !== 'undefined')
+	if (typeof formatedAddressFieldsValuesList !== 'undefined')
 		updateAddressesDisplay(true);
 
 	$(document).on('change', 'select[name=id_address_delivery], select[name=id_address_invoice]', function(){
@@ -145,10 +145,16 @@ function updateAddresses()
 
 function getAddressesTitles()
 {
-	return {
-		'invoice': titleInvoice,
-		'delivery': titleDelivery
-	};
+	if (typeof titleInvoice !== 'undefined' && typeof titleDelivery !== 'undefined')
+		return {
+			'invoice': titleInvoice,
+			'delivery': titleDelivery
+		};
+	else
+		return {
+			'invoice': '',
+			'delivery': ''
+		};
 }
 
 function buildAddressBlock(id_address, address_type, dest_comp)
@@ -163,10 +169,13 @@ function buildAddressBlock(id_address, address_type, dest_comp)
 	ordered_fields_name = ordered_fields_name.concat(['update']);
 	dest_comp.html('');
 	li_content['title'] = adr_titles_vals[address_type];
-	var items = liUpdate.split(reg);
-	var regUrl = new RegExp('(https?://[^"]*)', 'gi');
-	liUpdate = liUpdate.replace(regUrl, addressUrlAdd + parseInt(id_address));
-	li_content['update'] = liUpdate;
+	if (typeof liUpdate !== 'undefined')
+	{
+		var items = liUpdate.split(reg);
+		var regUrl = new RegExp('(https?://[^"]*)', 'gi');
+		liUpdate = liUpdate.replace(regUrl, addressUrlAdd + parseInt(id_address));
+		li_content['update'] = liUpdate;
+	}
 	appendAddressList(dest_comp, li_content, ordered_fields_name);
 }
 
