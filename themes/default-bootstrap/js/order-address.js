@@ -26,6 +26,14 @@ $(document).ready(function()
 {
 	if (typeof(formatedAddressFieldsValuesList) !== 'undefined')
 		updateAddressesDisplay(true);
+
+	$(document).on('change', 'select[name=id_address_delivery], select[name=id_address_invoice]', function()
+	{
+		updateAddressesDisplay();
+		if (typeof opc !=='undefined' && opc)
+			updateAddressSelection();
+	});
+
 });
 
 //update the display of the addresses

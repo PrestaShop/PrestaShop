@@ -132,11 +132,9 @@ $(document).ready(function()
 			reloadContent();
 	});
 
-	$('.js-nb_item').unbind('change').attr('onchange', '');
-
-	$('.js-nb_item').on('change', function(e) 
+	$(document).off('change').on('change', 'select[name=n]', function(e) 
 	{
-		$('.js-nb_item').val($(this).val());
+		$('select[name=n]').val($(this).val());
 		reloadContent();
 	});
 
@@ -459,9 +457,9 @@ function reloadContent(params_plus)
 		}
 		data += '&orderby='+splitData[0]+'&orderway='+splitData[1];
 	}
-	if ($('.js-nb_item').length)
+	if ($('select[name=n]:first').length)
 	{
-		data += '&n='+$('.js-nb_item').val();
+		data += '&n=' + $('select[name=n]:first').val();
 	}
 
 	var slideUp = true;
@@ -473,9 +471,9 @@ function reloadContent(params_plus)
 
 	// Get nb items per page
 	var n = '';
-	$('div.pagination .js-nb_item').children().each(function(it, option) {
+	$('div.pagination select[name=n]').children().each(function(it, option) {
 		if (option.selected)
-			n = '&n='+option.value;
+			n = '&n=' + option.value;
 	});
 
 	ajaxQuery = $.ajax(
@@ -550,8 +548,8 @@ function reloadContent(params_plus)
 			$('div.pagination form').on('submit', function(e)
 			{
 				e.preventDefault();
-				val = $('div.pagination .js-nb_item').val();
-				$('div.pagination .js-nb_item').children().each(function(it, option) {
+				val = $('div.pagination select[name=n]').val();
+				$('div.pagination select[name=n]').children().each(function(it, option) {
 					if (option.value == val)
 						$(option).attr('selected', true);
 					else

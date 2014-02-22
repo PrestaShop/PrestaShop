@@ -391,7 +391,7 @@
 											{assign var="groupName" value="group_$id_attribute_group"}
 											<div class="attribute_list">
 												{if ($group.group_type == 'select')}
-													<select name="{$groupName}" id="group_{$id_attribute_group|intval}" class="form-control attribute_select" onchange="findCombination();getProductAttribute();">
+													<select name="{$groupName}" id="group_{$id_attribute_group|intval}" class="form-control js-attribute_select">
 														{foreach from=$group.attributes key=id_attribute item=group_attribute}
 															<option value="{$id_attribute|intval}"{if (isset($smarty.get.$groupName) && $smarty.get.$groupName|intval == $id_attribute) || $group.default == $id_attribute} selected="selected"{/if} title="{$group_attribute|escape:'html':'UTF-8'}">{$group_attribute|escape:'html':'UTF-8'}</option>
 														{/foreach}

@@ -62,14 +62,25 @@ $(document).ready(function(){
 			display('list');
 		});
 
-		if (typeof request != 'undefined' && request)
-		{
-	 		$('.selectProductSort').change(function(){
+ 		$(document).on('change', '.selectProductSort', function(){
+			if (typeof request != 'undefined' && request)
 				var requestSortProducts = request;
-	 			var splitData = $(this).val().split(':');
+ 			var splitData = $(this).val().split(':');
+			if (typeof requestSortProducts != 'undefined' && requestSortProducts)
 				document.location.href = requestSortProducts + ((requestSortProducts.indexOf('?') < 0) ? '?' : '&') + 'orderby=' + splitData[0] + '&orderway=' + splitData[1];
-	    	});
-		}
+    	});
+
+		$(document).on('change', 'select[name=n]', function(){
+			$(this.form).submit();
+		});
+
+		$(document).on('change', 'select[name=manufacturer_list], select[name=supplier_list]', function(){
+			autoUrl($(this).attr('id'), '');
+		});
+
+		$(document).on('change', 'select[name=currency_payement]', function(){
+			setCurrency($(this).val());
+		});
 	}
 	
 	jQuery.curCSS = jQuery.css;
