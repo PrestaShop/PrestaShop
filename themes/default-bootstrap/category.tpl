@@ -35,8 +35,8 @@
                             <div class="cat_desc rte">
                             {if Tools::strlen($category->description) > 350}
                                 <div id="category_description_short">{$description_short}</div>
-                                <div id="category_description_full" style="display:none">{$category->description}</div>
-                                <a href="#" onclick="$('#category_description_short').hide(); $('#category_description_full').show(); $(this).hide(); return false;" class="lnk_more">{l s='More'}</a>
+                                <div id="category_description_full" class="unvisible">{$category->description}</div>
+                                <a href="{$link->getCategoryLink($category->id_category, $category.link_rewrite)|escape:'html':'UTF-8'}" class="lnk_more">{l s='More'}</a>
                             {else}
                                 <div>{$category->description}</div>
                             {/if}
@@ -58,8 +58,8 @@
                             </span>
                             {if Tools::strlen($category->description) > 350}
                                 <div id="category_description_short" class="rte">{$description_short}</div>
-                                <div id="category_description_full" class="hidden rte">{$category->description}</div>
-                                <a href="#" onclick="$('#category_description_short').hide(); $('#category_description_full').show(); $(this).hide(); return false;" class="lnk_more">{l s='More'}</a>
+                                <div id="category_description_full" class="unvisible rte">{$category->description}</div>
+                                <a href="{$link->getCategoryLink($category->id_category, $category->link_rewrite)|escape:'html':'UTF-8'}" class="lnk_more">{l s='More'}</a>
                             {else}
                                 <div class="rte">{$category->description}</div>
                             {/if}
