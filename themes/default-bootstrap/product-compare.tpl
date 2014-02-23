@@ -22,9 +22,8 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {if $comparator_max_item}
-	<form method="post" action="{$link->getPageLink('products-comparison')|escape:'html':'UTF-8'}" onsubmit="true" class="compare-form">
+	<form method="post" action="{$link->getPageLink('products-comparison')|escape:'html':'UTF-8'}" class="compare-form">
 		<button type="submit" class="btn btn-default button button-medium bt_compare bt_compare{if isset($paginationId)}_{$paginationId}{/if}" disabled="disabled">
 			<span>{l s='Compare'} (<strong class="total-compare-val">{count($compared_products)}</strong>)<i class="icon-chevron-right right"></i></span>
 		</button>

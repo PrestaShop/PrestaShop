@@ -24,21 +24,41 @@
 */
 
 $(document).ready(function(){
-	$('.cart_quantity_up').off('click').on('click', function(){upQuantity($(this).attr('id').replace('cart_quantity_up_', '')); return false;});
-	$('.cart_quantity_down').off('click').on('click', function(){downQuantity($(this).attr('id').replace('cart_quantity_down_', '')); return false;});
-	$('.cart_quantity_delete' ).off('click').on('click', function(){deleteProductFromSummary($(this).attr('id')); return false;});
-	$('.cart_quantity_input').typeWatch({highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, true, this.el);}});
-	$('.cart_address_delivery').on('change', function(){changeAddressDelivery($(this));});
+	$('.cart_quantity_up').off('click').on('click', function(e){
+		e.preventDefault();
+		upQuantity($(this).attr('id').replace('cart_quantity_up_', ''));
+	});
+	$('.cart_quantity_down').off('click').on('click', function(e){
+		e.preventDefault();
+		downQuantity($(this).attr('id').replace('cart_quantity_down_', '')); 
+	});
+	$('.cart_quantity_delete' ).off('click').on('click', function(e){
+		e.preventDefault();	
+		deleteProductFromSummary($(this).attr('id')); 
+	});
+	$('.cart_address_delivery').on('change', function(e){
+		changeAddressDelivery($(this));
+	});
+
+	$(document).on('click', '.voucher_name', function(e){
+		$('#discount_name').val($(this).data('code'));
+	});
+
+	$('.cart_quantity_input').typeWatch({
+		highlight: true, wait: 600, captureLength: 0, callback: function(val){
+			updateQty(val, true, this.el);
+		}
+	});
 
 	cleanSelectAddressDelivery();
 
 	refreshDeliveryOptions();
 	
-	$('.delivery_option_radio').on('change', function() {
+	$('.delivery_option_radio').on('change', function(){
 		refreshDeliveryOptions();
 	});
 	
-	$('#allow_seperated_package').on('click', function() {
+	$('#allow_seperated_package').on('click', function(){
 		$.ajax({
 			type: 'POST',
 			headers: { "cache-control": "no-cache" },
@@ -57,14 +77,18 @@ $(document).ready(function(){
 		});
 	});
 	
-	$('#gift').checkboxChange(function() { $('#gift_div').show('slow'); }, function() { $('#gift_div').hide('slow'); });
+	$('#gift').checkboxChange(function(){
+		$('#gift_div').show('slow');
+	}, function(){
+		$('#gift_div').hide('slow');
+	});
 	
 	$('#enable-multishipping').checkboxChange(
-		function() {
+		function(){
 			$('.standard-checkout').hide(0);
 			$('.multishipping-checkout').show(0);
 		},
-		function() {
+		function(){
 			$('.standard-checkout').show(0);
 			$('.multishipping-checkout').hide(0);
 		}

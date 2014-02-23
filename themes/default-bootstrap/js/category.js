@@ -27,5 +27,6 @@ $(document).ready(function(){
 		e.preventDefault();
 		$('#category_description_short').hide(); 
 		$('#category_description_full').show(); 
+		$(this).hide();
 	});
 });

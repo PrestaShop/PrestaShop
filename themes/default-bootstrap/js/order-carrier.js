@@ -33,7 +33,7 @@ $(document).ready(function(){
 	if (typeof cart_gift != 'undefined' && cart_gift && $('input#gift').is(':checked'))
 		$('p#gift_div').show();
 
-	$(document).delegate('input.delivery_option_radio', 'change', function(){
+	$(document).on('change', 'input.delivery_option_radio', function(){
 		var key = $(this).data('key');
 		var id_address = parseInt($(this).data('id_address'));
 		if (orderProcess == 'order' && key && id_address)
@@ -41,6 +41,11 @@ $(document).ready(function(){
 		else if(orderProcess == 'order-opc' && typeof updateCarrierSelectionAndGift !== 'undefined')
 			updateCarrierSelectionAndGift();
 	});
+
+	$(document).on('submit', 'form[name=carrier_area]', function(){
+		return acceptCGV();
+	});
+
 });
 
 function acceptCGV()
