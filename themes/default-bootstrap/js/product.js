@@ -105,12 +105,6 @@ $(document).ready(function(){
 		}
 		combinations = combinationsJS;
 	}
-
-	$(document).on('change', '.js-attribute_select', function(){
-		findCombination();
-		getProductAttribute();
-	});
-
 	
 	//init the serialScroll for thumbs
 	$('#thumbs_list').serialScroll({
@@ -180,7 +174,7 @@ $(document).ready(function(){
 	else if (typeof productHasAttributes != 'undefined' && !productHasAttributes && !url_found)
 		refreshProductImages(0);
 
-	$(document).on('click', '#resetImages', function(e){
+	$(document).on('click', 'a[name=resetImages]', function(e){
 		e.preventDefault();
 		refreshProductImages(0);
 		$(this).parent().hide('slow');
@@ -190,6 +184,22 @@ $(document).ready(function(){
 		e.preventDefault();
 		colorPickerClick($(this));
 		getProductAttribute();
+	});
+
+	$(document).on('change', '.attribute_select', function(e){
+		e.preventDefault();
+		findCombination();
+		getProductAttribute();
+	});
+
+	$(document).on('click', '.attribute_radio', function(e){
+		e.preventDefault();
+		findCombination();
+		getProductAttribute();
+	});
+
+	$(document).on('click', 'button[name=saveCustomization]', function(e){
+		saveCustomization();
 	});
 
 	if (contentOnly == false && !!$.prototype.fancybox)
@@ -244,7 +254,24 @@ $(document).ready(function(){
     });
 
 	if (typeof minimalQuantity != 'undefined' && minimalQuantity)
+	{
 		checkMinimalQuantity();
+		$(document).on('keyup', 'input[name=qty]', function(e){
+			checkMinimalQuantity(minimalQuantity);
+		});	
+	}
+
+	if (typeof ad !== 'undefined' && ad && typeof adtoken !== 'undefined' && adtoken)
+	{
+		$(document).on('click', 'input[name=publish_button]', function(e){
+			e.preventDefault();
+			submitPublishProduct(ad, 0, adtoken);
+		});
+		$(document).on('click', 'input[name=lnk_view]', function(e){
+			e.preventDefault();
+			submitPublishProduct(ad, 1, adtoken);
+		});
+	}
 });
 
 function arrayUnique(a)
@@ -801,7 +828,7 @@ function colorPickerClick(elt)
 										});
 									});
 								});
-	$(elt).parent().parent().parent().children('.color_pick_hidden,#color_pick_hidden').val(id_attribute);
+	$(elt).parent().parent().parent().children('.color_pick_hidden').val(id_attribute);
 	findCombination(false);
 }
 

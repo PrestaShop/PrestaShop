@@ -67,6 +67,23 @@ $(document).ready(function(){
 			});
 		}
 	});
+
+	$(document).on('click', '.prev', function(e){
+		e.preventDefault();
+		next_scene_is_at_right = false; 
+		$(this).parent().next().trigger('stop').trigger('prev');
+	});
+
+	$(document).on('click', '.prev', function(e){
+		e.preventDefault();
+		next_scene_is_at_right = true;
+		$(this).parent().prev().trigger('stop').trigger('next');
+	});
+
+	$(document).on('click', '.scene_thumb', function(e){
+		e.preventDefault();
+		loadScene($(this).date('id_scene'));
+	});
 });
 
 function loadScene(id_scene)

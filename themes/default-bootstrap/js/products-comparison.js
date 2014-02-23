@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 $(document).ready(function(){
-	$(document).on('.add_to_compare', 'click', function(e){
+	$(document).on('click', '.add_to_compare', function(e){
 		e.preventDefault();
 		if (typeof addToCompare != 'undefined')
 			addToCompare(parseInt($(this).data('id-product')));

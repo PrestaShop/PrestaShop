@@ -115,9 +115,7 @@
 										<p id="title" class="title-offers">{l s='Take advantage of our exclusive offers:'}</p>
 										<div id="display_cart_vouchers">
 											{foreach $displayVouchers as $voucher}
-												{if $voucher.code != ''}<span onclick="$('#discount_name').val('{$voucher.code}');return false;" class="voucher_name">{$voucher.code}</span> - {/if}
-												{$voucher.name}
-												<br />
+												{if $voucher.code != ''}<span class="voucher_name" data-code="{$voucher.code|escape:'html':'UTF-8'}">{$voucher.code|escape:'html':'UTF-8'}</span> - {/if}{$voucher.name}<br />
 											{/foreach}
 										</div>
 									{/if}
@@ -149,11 +147,7 @@
 										<p id="title" class="title-offers">{l s='Take advantage of our exclusive offers:'}</p>
 										<div id="display_cart_vouchers">
 											{foreach $displayVouchers as $voucher}
-												{if $voucher.code != ''}
-													<span onclick="$('#discount_name').val('{$voucher.code}');return false;" class="voucher_name">{$voucher.code}</span> -
-												{/if}
-												{$voucher.name}
-												<br />
+												{if $voucher.code != ''}<span class="voucher_name" data-code="{$voucher.code|escape:'html':'UTF-8'}">{$voucher.code|escape:'html':'UTF-8'}</span> - {/if}{$voucher.name}<br />
 											{/foreach}
 										</div>
 									{/if}
@@ -188,10 +182,7 @@
 									<p id="title" class="title-offers">{l s='Take advantage of our exclusive offers:'}</p>
 									<div id="display_cart_vouchers">
 										{foreach $displayVouchers as $voucher}
-											{if $voucher.code != ''}
-												<span onclick="$('#discount_name').val('{$voucher.code}');return false;" class="voucher_name">{$voucher.code}</span> -
-											{/if}
-											{$voucher.name}<br />
+											{if $voucher.code != ''}<span class="voucher_name" data-code="{$voucher.code|escape:'html':'UTF-8'}">{$voucher.code|escape:'html':'UTF-8'}</span> - {/if}{$voucher.name}<br />
 										{/foreach}
 									</div>
 								{/if}

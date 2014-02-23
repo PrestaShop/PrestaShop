@@ -57,13 +57,13 @@
 	{if isset($scenes.1)}
 	<div class="thumbs_banner" style="height:{$thumbSceneImageType.height}px;">
 		<span class="space-keeper">
-			<a class="prev" href="#" style="height:{math equation='a+2' a=$thumbSceneImageType.height}px;" onclick="{ldelim}next_scene_is_at_right = false; $(this).parent().next().trigger('stop').trigger('prev'); return false;{rdelim}">&nbsp;</a>
+			<a class="prev" href="#" style="height:{math equation='a+2' a=$thumbSceneImageType.height}px;">&nbsp;</a>
 		</span>
 		<div id="scenes_list">
 			<ul style="width:{math equation='(a*b + (a-1)*10)' a=$scenes|@count b=$thumbSceneImageType.width}px; height:{$thumbSceneImageType.height}px;">
 			{foreach $scenes as $scene}
 				<li id="scene_thumb_{$scene->id}" style="{if !$scene@last} padding-right:10px;{/if}">
-					<a style="width:{$thumbSceneImageType.width}px; height:{$thumbSceneImageType.height}px" title="{$scene->name|escape:'html':'UTF-8'}" href="#" rel="{$scene->id}" onclick="{ldelim}loadScene({$scene->id});return false;{rdelim}">
+					<a style="width:{$thumbSceneImageType.width}px; height:{$thumbSceneImageType.height}px" title="{$scene->name|escape:'html':'UTF-8'}" href="{$base_dir}" data-id_scene="{$scene->id|intval}" class="scene_thumb">
 						<img alt="{$scene->name|escape:'html':'UTF-8'}" src="{$content_dir}img/scenes/thumbs/{$scene->id}-m_scene_default.jpg" width="{$thumbSceneSize.width}" height="{$thumbSceneSize.height}" />
 					</a>
 				</li>
@@ -71,7 +71,7 @@
 		 	</ul>
 		</div>
 		<span class="space-keeper">
-			<a class="next" href="#" style="height:{math equation='a+2' a=$thumbSceneImageType.height}px;" onclick="{ldelim}next_scene_is_at_right = true; $(this).parent().prev().trigger('stop').trigger('next'); return false;{rdelim}">&nbsp;</a>
+			<a class="next" href="{$base_dir}" style="height:{math equation='a+2' a=$thumbSceneImageType.height}px;">&nbsp;</a>
 		</span>
 	</div>
 	{/if}

@@ -31,7 +31,11 @@ $(document).ready(function(){
 		if (typeof opc !=='undefined' && opc)
 			updateAddressSelection();
 	});
-
+	$(document).on('click', 'input[name=same]', function(){
+		updateAddressesDisplay();
+		if (typeof opc !=='undefined' && opc)
+			updateAddressSelection();
+	});
 });
 
 //update the display of the addresses
@@ -48,7 +52,7 @@ function updateAddressesDisplay(first_view)
 	{}
 	// update content of invoice address
 	//if addresses have to be equals...
-	if ($('input[type=checkbox]#addressesAreEquals:checked').length === 1 && ($('#multishipping_mode_checkbox:checked').length === 0))
+	if ($('#addressesAreEquals:checked').length === 1 && ($('#multishipping_mode_checkbox:checked').length === 0))
 	{
 		if ($('#multishipping_mode_checkbox:checked').length === 0) {
 			$('#address_invoice_form:visible').hide('fast');
@@ -96,7 +100,7 @@ function updateAddressDisplay(addressType)
 function updateAddresses()
 {
 	var idAddress_delivery = parseInt($('#id_address_delivery').val());
-	var idAddress_invoice = $('input[type=checkbox]#addressesAreEquals:checked').length === 1 ? idAddress_delivery : parseInt($('#id_address_invoice').val());
+	var idAddress_invoice = $('#addressesAreEquals:checked').length === 1 ? idAddress_delivery : parseInt($('#id_address_invoice').val());
 	
    	if(isNaN(idAddress_delivery) == false && isNaN(idAddress_invoice) == false)	
 	{

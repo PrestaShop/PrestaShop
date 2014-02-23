@@ -81,7 +81,7 @@
     <div class="store-content">
         <div class="address-input">
             <label for="addressInput">{l s='Your location:'}</label>
-            <input class="form-control grey" type="text" name="location" id="addressInput" value="{l s='Address, zip / postal code, city, state or country'}" onclick="this.value='';" />
+            <input class="form-control grey" type="text" name="location" id="addressInput" value="{l s='Address, zip / postal code, city, state or country'}" />
         </div>
         <div class="radius-input">
             <label for="radiusSelect">{l s='Radius:'}</label> 
@@ -94,7 +94,7 @@
             <img src="{$img_ps_dir}loader.gif" class="middle" alt="" id="stores_loader" />
         </div>
         <div>
-            <button onclick="searchLocations();" class="button btn btn-default button-small">
+            <button name="search_locations" class="button btn btn-default button-small">
             	<span>
             		{l s='Search'}<i class="icon-chevron-right right"></i>
             	</span>

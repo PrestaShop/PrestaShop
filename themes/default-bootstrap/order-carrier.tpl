@@ -29,7 +29,7 @@
 		<h1 class="page-heading">{l s='Shipping:'}</h1>
 		{include file="$tpl_dir./order-steps.tpl"}
 		{include file="$tpl_dir./errors.tpl"}
-		<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")|escape:'html':'UTF-8'}" method="post" onsubmit="return acceptCGV();">
+		<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")|escape:'html':'UTF-8'}" method="post" name="carrier_area">
 {else}
 	<div id="carrier_area" class="opc-main-block">
 		<h1 class="page-heading step-num"><span>2</span> {l s='Delivery methods'}</h1>

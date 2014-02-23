@@ -30,8 +30,9 @@ $(document).ready(function(){
 	setCountries();
 	bindStateInputAndUpdate();
 	bindUniform();
+	bindPostcode();
 	bindCheckbox();
-	$(document).on('click', '#invoice_address', function(){
+	$(document).on('click', '#invoice_address', function(e){
 		bindCheckbox();
 	});
 });
@@ -77,6 +78,14 @@ function bindUniform()
 	$("select.form-control,input[type='radio'],input[type='checkbox']").uniform(); 
 }
 
+function bindPostcode()
+{
+	$(document).on('keyup', 'input[name=postcode]', function(e)
+	{
+		$(this).val($(this).val().toUpperCase());
+	});
+}
+
 function bindStateInputAndUpdate()
 {
 	$('.id_state, .dni, .postcode').css({'display':'none'});
@@ -84,7 +93,7 @@ function bindStateInputAndUpdate()
 	updateNeedIDNumber();
 	updateZipCode();
 
-	$(document).on('change', '#id_country', function()
+	$(document).on('change', '#id_country', function(e)
 	{
 		updateState();
 		updateNeedIDNumber();
@@ -93,7 +102,7 @@ function bindStateInputAndUpdate()
 
 	if ($('#id_country_invoice').length !== 0)
 	{
-		$(document).on('change', '#id_country_invoice', function()
+		$(document).on('change', '#id_country_invoice', function(e)
 		{
 			updateState('invoice');
 			updateNeedIDNumber('invoice');

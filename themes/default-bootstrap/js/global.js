@@ -102,6 +102,11 @@ $(document).ready(function(){
 		    	openSpeed:  'fast'
 			}
 		}).css('opacity', 0.8);
+
+		$(document).on('click', '.back', function(e){
+			e.preventDefault();
+			history.back();
+		});
 });
 
 function highdpi_init()
