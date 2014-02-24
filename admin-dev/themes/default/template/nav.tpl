@@ -16,7 +16,7 @@
 								</button>
 								<ul id="header_search_options" class="dropdown-menu">
 									<li class="search-all search-option active">
-										<a href="#" data-value="0" data-placeholder="{l s='What are you looking for?'}" data-icon="icon-reorder">
+										<a href="#" data-value="0" data-placeholder="{l s='What are you looking for?'}" data-icon="icon-search">
 											<i class="icon-search"></i> {l s='Everywhere'}</a>
 									</li>
 									<li class="divider"></li>
@@ -58,7 +58,7 @@
 							</div>
 							<input id="bo_query" name="bo_query" type="text" class="form-control" value="{$bo_query}" placeholder="{l s='Search'}" />
 							<a href="javascript:void(0);" class="clear_search hide"><i class="icon-remove"></i></a>
-<!-- 							<span class="input-group-btn">
+<!--  							<span class="input-group-btn">
 								<button type="submit" id="bo_search_submit" class="btn btn-primary">
 									<i class="icon-search"></i>
 								</button>
