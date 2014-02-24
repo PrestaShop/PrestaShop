@@ -66,6 +66,8 @@ class ProductPaymentLogos extends Module
 
 	public function hookDisplayProductButtons($params)
 	{
+		if (Configuration::get('PS_CATALOG_MODE'))
+			return;
 		if (!$this->isCached('productpaymentlogos.tpl', $this->getCacheId()))
 		{
 			$this->smarty->assign('banner_img', 'img/'.Configuration::get('PRODUCTPAYMENTLOGOS_IMG'));
@@ -85,6 +87,8 @@ class ProductPaymentLogos extends Module
 
 	public function hookHeader($params)
 	{
+		if (Configuration::get('PS_CATALOG_MODE'))
+			return;
 		$this->context->controller->addCSS($this->_path.'productpaymentlogos.css', 'all');
 	}
 
