@@ -1270,11 +1270,9 @@ class AdminModulesControllerCore extends AdminController
 			$this->makeModulesStats($module);
 
 			// Assign warnings
-			if ($module->active && isset($module->warning) && !empty($module->warning))
+			if ($module->active && isset($module->warning) && !empty($module->warning) && !$this->ajax)
 			{
-
 				$href = Context::getContext()->link->getAdminLink('AdminModules', true).'&module_name='.$module->name.'&tab_module='.$module->tab.'&configure='.$module->name;
-
 				$this->context->smarty->assign('text', sprintf($this->l('%1$s: %2$s'), $module->displayName, $module->warning));
 				$this->context->smarty->assign('module_link', $href);
 				$this->displayWarning($this->context->smarty->fetch('controllers/modules/warning_module.tpl'));
@@ -1307,6 +1305,9 @@ class AdminModulesControllerCore extends AdminController
 				
 			if (in_array($module->name, $this->list_partners_modules))
 				$module->type = 'addonsPartner';
+
+			if (isset($module->description_full) && trim($module->description_full) != '')
+				$module->show_quick_view = true;
 		}
 
 		// Don't display categories without modules
@@ -1370,5 +1371,26 @@ class AdminModulesControllerCore extends AdminController
 			$tpl_vars['username_addons'] = $this->context->cookie->username_addons;
 		}
 		$smarty->assign($tpl_vars);
+	}
+
+	public function ajaxProcessGetModuleQuickView()
+	{
+		$modules = Module::getModulesOnDisk();
+
+		foreach ($modules as $module)
+			if ($module->name == Tools::getValue('module'))
+				break;
+
+		$this->context->smarty->assign(array(
+			'displayName' => $module->displayName,
+			'image' => $module->image,
+			'nb_rates' => (int)$module->nb_rates[0],
+			'avg_rate' => (int)$module->avg_rate[0],
+			'badges' => $module->badges,
+			'compatibility' => $module->compatibility,
+			'description_full' => $module->description_full,
+			'additional_description' => $module->additional_description
+		));
+		$this->smartyOutputContent('controllers/modules/quickview.tpl');
 	}
 }
