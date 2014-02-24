@@ -2742,7 +2742,7 @@ class ProductCore extends ObjectModel
 			$price = $product_tax_calculator->addTaxes($price);
 
 		// Reduction
-		$reduc = 0;
+		$specific_price_reduction = 0;
 		if (($only_reduc || $use_reduc) && $specific_price)
 		{
 			if ($specific_price['reduction_type'] == 'amount')
@@ -2751,26 +2751,30 @@ class ProductCore extends ObjectModel
 
 				if (!$specific_price['id_currency'])
 					$reduction_amount = Tools::convertPrice($reduction_amount, $id_currency);
-				$reduc = !$use_tax ? $product_tax_calculator->removeTaxes($reduction_amount) : $reduction_amount;
+				$specific_price_reduction = !$use_tax ? $product_tax_calculator->removeTaxes($reduction_amount) : $reduction_amount;
 			}
 			else
-				$reduc = $price * $specific_price['reduction'];
+				$specific_price_reduction = $price * $specific_price['reduction'];
 		}
 
-		if ($only_reduc)
-			return Tools::ps_round($reduc, $decimals);
 		if ($use_reduc)
-			$price -= $reduc;
+			$price -= $specific_price_reduction;
 
 		// Group reduction
 		if ($use_group_reduction)
 		{
 			$reduction_from_category = GroupReduction::getValueForProduct($id_product, $id_group);
 			if ($reduction_from_category !== false)
-				$price -= $price * (float)$reduction_from_category;
+				$group_reduction = $price * (float)$reduction_from_category;
 			else // apply group reduction if there is no group reduction for this category
-				$price *= ((100 - Group::getReductionByIdGroup($id_group)) / 100);
+				$group_reduction = $price * ((100 - Group::getReductionByIdGroup($id_group)) / 100);
 		}
+		
+		if ($only_reduc)
+			return Tools::ps_round($group_reduction + $specific_price_reduction, $decimals);
+
+		if ($use_reduc)
+			$price -= $group_reduction;
 
 		// Eco Tax
 		if (($result['ecotax'] || isset($result['attribute_ecotax'])) && $with_ecotax)
