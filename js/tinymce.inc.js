@@ -12,8 +12,8 @@ function tinySetup(config)
 //    safari,pagebreak,style,table,advimage,advlink,inlinepopups,media,contextmenu,paste,fullscreen,xhtmlxtras,preview
 	default_config = {
 		selector: ".rte" ,
-		plugins : "colorpicker link image paste pagebreak table contextmenu preview filemanager table code media autoresize textcolor fullscreen",
-		toolbar1 : "code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,|,blockquote,colorpicker,pasteword,|,bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,|,cleanup,|,media,image,|,fullscreen",
+		plugins : "colorpicker link image paste pagebreak table contextmenu filemanager table code media autoresize textcolor",
+		toolbar1 : "code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,|,blockquote,colorpicker,pasteword,|,bullist,numlist,|,outdent,indent,|,link,unlink,|,cleanup,|,media,image",
 		toolbar2: "",
 		external_filemanager_path: ad+"/filemanager/",
 		filemanager_title: "File manager" ,

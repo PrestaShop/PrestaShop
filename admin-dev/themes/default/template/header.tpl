@@ -242,7 +242,7 @@
 			</ul>
 
 			<span id="ajax_running" class="navbar-text">
-				<i class="icon-refresh icon-spin"></i> {l s='Loading...'}
+				<i class="icon-refresh icon-spin icon-fw"></i> {l s='Loading...'}
 			</span>
 		</div>
 {if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}

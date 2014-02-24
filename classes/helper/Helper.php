@@ -377,8 +377,8 @@ class HelperCore
 		$url = $_SERVER['REQUEST_URI'].(($_SERVER['QUERY_STRING']) ? '&' : '?').'setShopContext=';
 		$shop = new Shop(Shop::getContextShopID());
 
-		$html = '';
-		$html .= '<select class="shopList" onchange="location.href = \''.$url.'\'+$(this).val();">';
+		// $html = '<a href="#"><i class="icon-home"></i> '.$shop->name.'</a>';
+		$html = '<select class="shopList" onchange="location.href = \''.$url.'\'+$(this).val();">';
 		$html .= '<option value="" class="first">'.Translate::getAdminTranslation('All shops').'</option>';
 		foreach ($tree as $gID => $group_data)
 		{
