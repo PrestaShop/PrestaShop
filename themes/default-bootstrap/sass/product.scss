@@ -12,9 +12,11 @@
 	margin: 2px 0 31px;
 }
 .product-heading-h5{
-	color: $base-text-color;
-	font-weight: 700;
+	color: $gray-light;
+	font-weight: 200;
 	margin: 3px 0 8px;
+	font-size: 19px;
+	font-family: $font-custom;
 }
 .box-security .product-heading-h5{
 	margin: 3px 0 -8px;
@@ -838,10 +840,8 @@ table.table-produst-discounts{
 
 /* PERSONNALISATION ##################################################################### */
 
-.customization_block p.infoCustomizable {
-	margin: 10px 0 20px;
-	padding: 0 0 0 20px;
-	background: url(../img/icon/infos.gif) no-repeat 0 0 transparent;
+p.infoCustomizable {
+	margin-bottom: 30px;
 }
 
 ul#uploadable_files,
@@ -865,6 +865,7 @@ ul#text_fields {
 	textarea {	
 		width: 50%;
 		border: $main_border;
+		color: $text-color;
 	}
 }
 .customizationUploadBrowse img + a {

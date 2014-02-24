@@ -115,3 +115,25 @@
 
 .input[type='password']
 	font-size: 2em!important
+
+.rating
+	unicode-bidi: bidi-override
+	direction: rtl
+	font-size: 20px
+	span.star
+		font-family: FontAwesome
+		font-weight: normal
+		font-style: normal
+		display: inline-block
+		&:hover
+			cursor: pointer
+		&:before
+			content: "\f006"
+			padding-right: 3px
+			color: #999
+		&:hover:before,
+		&:hover~span.star:before
+		&.active~span.star:before
+			content: "\f005"
+			color: #e3cf7a
+

@@ -9,9 +9,11 @@
   margin: 2px 0 31px; }
 
 .product-heading-h5 {
-  color: #333333;
-  font-weight: 700;
-  margin: 3px 0 8px; }
+  color: #999999;
+  font-weight: 200;
+  margin: 3px 0 8px;
+  font-size: 19px;
+  font-family: "Open Sans", sans-serif; }
 
 .box-security .product-heading-h5 {
   margin: 3px 0 -8px; }
@@ -733,10 +735,8 @@ table.table-produst-discounts {
     text-align: right; }
 
 /* PERSONNALISATION ##################################################################### */
-.customization_block p.infoCustomizable {
-  margin: 10px 0 20px;
-  padding: 0 0 0 20px;
-  background: url(../img/icon/infos.gif) no-repeat 0 0 transparent; }
+p.infoCustomizable {
+  margin-bottom: 30px; }
 
 ul#uploadable_files,
 ul#text_fields {
@@ -755,7 +755,8 @@ ul#text_fields {
     vertical-align: top; }
   .customizationUploadLine textarea {
     width: 50%;
-    border: 1px solid #d6d4d4; }
+    border: 1px solid #d6d4d4;
+    color: #777777; }
 
 .customizationUploadBrowse img + a {
   position: relative;

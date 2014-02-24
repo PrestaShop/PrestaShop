@@ -2589,10 +2589,12 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 #header_shopname { position: relative; margin: 0 15px 0 0; height: 36px; padding-left: 45px !important; }
 #header_shopname img { position: absolute; top: 0; left: 0; width: 35px; height: 35px; }
 
+#header_notifs_icon_wrapper { min-width: 170px; }
 #header_notifs_icon_wrapper > li > a { height: 36px; display: block; }
 #header_notifs_icon_wrapper > li > a:hover i { color: white; }
 #header_notifs_icon_wrapper > li > a > i { font-size: 14px; color: #b3b3b3; vertical-align: middle; }
-#header_notifs_icon_wrapper .notifs_badge { background-color: #8bc954; }
+#header_notifs_icon_wrapper .notifs { width: 40px; position: relative; }
+#header_notifs_icon_wrapper .notifs_badge { position: absolute; font-size: 10px !important; top: 2px; padding: 2px; right: -3px; display: none; }
 #header_notifs_icon_wrapper .notifs_dropdown { background-color: white; border: none; -webkit-box-shadow: rgba(0, 0, 0, 0.7) 0 0 10px; box-shadow: rgba(0, 0, 0, 0.7) 0 0 10px; }
 #header_notifs_icon_wrapper .notifs_dropdown .notifs_panel { width: 300px; }
 #header_notifs_icon_wrapper .notifs_dropdown .notifs_panel .notifs_panel_header h3 { padding: 10px; font-size: 1.3em; margin: 0; border-bottom: solid 1px #cccccc; }
@@ -2649,7 +2651,7 @@ a.link-social:hover { text-decoration: none; }
 #nav-sidebar ul.menu li.searchtab i { font-size: 14px; }
 #nav-sidebar ul.menu li.maintab { position: relative; }
 #nav-sidebar ul.menu li.maintab ul.submenu { display: none; padding: 4px; background-color: #272c38; }
-#nav-sidebar ul.menu li.maintab ul.submenu li a { color: #c3c5ca; display: block; padding: 4px 5px 4px 10px; background-color: #383f50; }
+#nav-sidebar ul.menu li.maintab ul.submenu li a { color: #c3c5ca; display: block; padding: 4px 5px 4px 10px; background-color: #383f50; border-bottom: #232732 solid 1px; }
 #nav-sidebar ul.menu li.maintab ul.submenu li a:hover { color: white; text-decoration: none; background-color: #232732; -webkit-box-shadow: #00aff0 -4px 0 0 0 inset; box-shadow: #00aff0 -4px 0 0 0 inset; }
 #nav-sidebar ul.menu li.maintab a { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 #nav-sidebar ul.menu li.maintab > a.title { display: block; position: relative; padding: 0 0.35em; height: 36px; border-bottom: #232732 solid 1px; background-color: #383f50; color: #c3c5ca; line-height: 36px; text-transform: uppercase; text-decoration: none; -webkit-transition-property: background-color; transition-property: background-color; -webkit-transition-duration: 0.2s; transition-duration: 0.2s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; }
@@ -2807,6 +2809,11 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .alert h4, .bootstrap #carrier_wizard .wizard_error h4 { font-size: 1.45em; margin-bottom: 1em; }
 .bootstrap .overflow-y { max-height: 200px; margin-bottom: 15px; overflow-y: auto; }
 .bootstrap .input[type='password'] { font-size: 2em !important; }
+.bootstrap .rating { unicode-bidi: bidi-override; direction: rtl; font-size: 20px; }
+.bootstrap .rating span.star { font-family: FontAwesome; font-weight: normal; font-style: normal; display: inline-block; }
+.bootstrap .rating span.star:hover { cursor: pointer; }
+.bootstrap .rating span.star:before { content: "\f006"; padding-right: 3px; color: #999999; }
+.bootstrap .rating span.star.active ~ span.star:before { content: "\f005"; color: #e3cf7a; }
 .bootstrap .table { border-collapse: separate; border-spacing: 0 2px 0 0; margin-bottom: 5px; }
 .bootstrap .table thead > tr > th { border: none; font-weight: normal; vertical-align: top; border-bottom: solid 1px #a0d0eb; }
 .bootstrap .table thead > tr > th span.title_box { color: #656565; display: block; word-wrap: nowrap; white-space: nowrap; }
@@ -3168,6 +3175,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .module-badge-popular, .bootstrap .module-badge-partner { font-size: 12px; }
 .bootstrap .module-badge-popular { background-color: #f01778; }
 .bootstrap .module-badge-partner { background-color: #00aff0; }
+.bootstrap .quickview-badge { margin-top: 30px; }
 .bootstrap .adminsearch #content .panel .panel, .bootstrap .adminsearch #content #dash_version .panel, .bootstrap .adminsearch #content .message-item-initial .message-item-initial-body .panel, .bootstrap .message-item-initial .adminsearch #content .message-item-initial-body .panel, .bootstrap .adminsearch #content .timeline .timeline-item .timeline-caption .timeline-panel .panel, .bootstrap .timeline .timeline-item .timeline-caption .adminsearch #content .timeline-panel .panel, .bootstrap .adminsearch #content .panel #dash_version, .bootstrap .adminsearch #content #dash_version #dash_version, .bootstrap .adminsearch #content .message-item-initial .message-item-initial-body #dash_version, .bootstrap .message-item-initial .adminsearch #content .message-item-initial-body #dash_version, .bootstrap .adminsearch #content .timeline .timeline-item .timeline-caption .timeline-panel #dash_version, .bootstrap .timeline .timeline-item .timeline-caption .adminsearch #content .timeline-panel #dash_version, .bootstrap .adminsearch #content .panel .message-item-initial .message-item-initial-body, .bootstrap .message-item-initial .adminsearch #content .panel .message-item-initial-body, .bootstrap .adminsearch #content #dash_version .message-item-initial .message-item-initial-body, .bootstrap .message-item-initial .adminsearch #content #dash_version .message-item-initial-body, .bootstrap .adminsearch #content .message-item-initial .message-item-initial-body .message-item-initial-body, .bootstrap .message-item-initial .adminsearch #content .message-item-initial-body .message-item-initial-body, .bootstrap .adminsearch #content .timeline .timeline-item .timeline-caption .timeline-panel .message-item-initial .message-item-initial-body, .bootstrap .message-item-initial .adminsearch #content .timeline .timeline-item .timeline-caption .timeline-panel .message-item-initial-body, .bootstrap .timeline .timeline-item .timeline-caption .adminsearch #content .timeline-panel .message-item-initial .message-item-initial-body, .bootstrap .message-item-initial .timeline .timeline-item .timeline-caption .adminsearch #content .timeline-panel .message-item-initial-body, .bootstrap .adminsearch #content .panel .timeline .timeline-item .timeline-caption .timeline-panel, .bootstrap .timeline .timeline-item .timeline-caption .adminsearch #content .panel .timeline-panel, .bootstrap .adminsearch #content #dash_version .timeline .timeline-item .timeline-caption .timeline-panel, .bootstrap .timeline .timeline-item .timeline-caption .adminsearch #content #dash_version .timeline-panel, .bootstrap .adminsearch #content .message-item-initial .message-item-initial-body .timeline .timeline-item .timeline-caption .timeline-panel, .bootstrap .timeline .timeline-item .timeline-caption .adminsearch #content .message-item-initial .message-item-initial-body .timeline-panel, .bootstrap .message-item-initial .adminsearch #content .message-item-initial-body .timeline .timeline-item .timeline-caption .timeline-panel, .bootstrap .timeline .timeline-item .timeline-caption .message-item-initial .adminsearch #content .message-item-initial-body .timeline-panel, .bootstrap .adminsearch #content .timeline .timeline-item .timeline-caption .timeline-panel .timeline-panel, .bootstrap .timeline .timeline-item .timeline-caption .adminsearch #content .timeline-panel .timeline-panel { padding: 0; margin: 0; border: none; -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0; border-radius: 0; -webkit-box-shadow: 0; box-shadow: 0; }
 .bootstrap #translations_form .translations-email-panel { margin: 0 0 8px 20px; padding: 8px 12px; }
 .bootstrap #translations_form .block-mail iframe, .bootstrap #translations_form .block-mail textarea { width: 100%; height: 500px; }

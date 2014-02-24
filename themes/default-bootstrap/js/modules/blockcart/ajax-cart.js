@@ -260,8 +260,22 @@ var ajaxCart = {
 	add : function(idProduct, idCombination, addedFromProductPage, callerElement, quantity, whishlist){
 		if (addedFromProductPage && !checkCustomizations())
 		{
-			alert(fieldRequired);
-			return ;
+            if (!!$.prototype.fancybox)
+            {
+                $.fancybox.open([
+                    {
+                        type: 'inline',
+                        autoScale: true,
+                        minHeight: 30,
+                        content: '<p class="fancybox-error">' + fieldRequired + '</p>'
+                    }
+                ], {
+                    padding: 0
+                });
+            }
+            else
+                alert(fieldRequired);
+            return;
 		}
 		emptyCustomizations();
 		//disabled the button when adding to not double add if user double click
@@ -322,7 +336,21 @@ var ajaxCart = {
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown)
 			{
-				alert("Impossible to add the product to the cart.\n\ntextStatus: '" + textStatus + "'\nerrorThrown: '" + errorThrown + "'\nresponseText:\n" + XMLHttpRequest.responseText);
+                if (!!$.prototype.fancybox)
+                {
+                    $.fancybox.open([
+                        {
+                            type: 'inline',
+                            autoScale: true,
+                            minHeight: 30,
+                            content: "<p class='fancybox-error'>Impossible to add the product to the cart.<br/>textStatus: '" + textStatus + "'<br/>errorThrown: '" + errorThrown + "'<br/>responseText:<br/>" + XMLHttpRequest.responseText + '</p>'
+                        }
+                    ], {
+                        padding: 0
+                    });
+                }
+                else
+                    alert("Impossible to add the product to the cart.\n\ntextStatus: '" + textStatus + "'\nerrorThrown: '" + errorThrown + "'\nresponseText:\n" + XMLHttpRequest.responseText);
 				//reactive the button when adding has finished
 				if (addedFromProductPage)
 					$('#add_to_cart button').removeAttr('disabled').removeClass('disabled');
@@ -348,7 +376,24 @@ var ajaxCart = {
 				if ($('body').attr('id') == 'order' || $('body').attr('id') == 'order-opc')
 					deleteProductFromSummary(idProduct+'_'+idCombination+'_'+customizationId+'_'+idAddressDelivery);
 			},
-			error: function() {alert('ERROR: unable to delete the product');}
+			error: function()
+            {
+                if (!!$.prototype.fancybox)
+                {
+                    $.fancybox.open([
+                        {
+                            type: 'inline',
+                            autoScale: true,
+                            minHeight: 30,
+                            content: 'ERROR: unable to delete the product'
+                        }
+                    ], {
+                        padding: 0
+                    });
+                }
+                else
+                    alert('ERROR: unable to delete the product');
+            }
 		});
 	},
 
