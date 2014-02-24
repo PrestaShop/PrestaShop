@@ -14,11 +14,38 @@ $min-height: 800px
 		margin: 0
 		padding: 0
 		list-style: none
+		li.searchtab
+			padding: 14px 7px
+			height: 55px
+			position: relative
+			background-color: darken($main-color,5%)
+			border-bottom: darken($main-color,10%) solid 1px
+			@include box-shadow(rgba(black,0.1s) 0 -3px 0 0 inset)
+			#bo_query
+				color: $main-color
+				background-color: lighten($main-color,60%)
+			.form-group.focus-search
+				position: absolute
+				width: 400px
+				height: 55px
+				z-index: 900
+				padding: 14px 13px 0 7px
+				top: 0
+				left: 0
+				background-color: darken($main-color,5%)
+				border-bottom: darken($main-color,10%) solid 1px
+				#bo_query
+					width: 100%
+			.clear_search
+				position: absolute
+				top: 5px
+				right: 8px
+			i
+				font-size: $icon-size-base
 		li.maintab
 			position: relative
 			ul.submenu
 				display: none
-				list-style: none
 				padding: 4px
 				background-color: darken($main-color,8%)
 				li
@@ -27,7 +54,6 @@ $min-height: 800px
 						display: block
 						padding: 4px 5px 4px 10px
 						background-color: $main-color
-						border-bottom: solid 1px darken($main-color,10%)
 						&:hover
 							color: contrast-color($main-color, black, white, 50%)
 							text-decoration: none
@@ -42,7 +68,7 @@ $min-height: 800px
 				position: relative
 				padding: 0 .35em
 				height: $menu-item-size
-				border-top: darken($main-color,10%) solid 1px
+				border-bottom: darken($main-color,10%) solid 1px
 				background-color: $main-color
 				color: mix($main-color, contrast-color($main-color, black, white, 50%), 30%)
 				line-height: $menu-item-size
@@ -75,10 +101,8 @@ $min-height: 800px
 					left: $widthSidebarNav
 					top: 0
 					z-index: 600
-					&.outOfBounds
-						top: inherit
-			&:first-child > a.title
-				border-top: none
+			&:last-child > a.title
+				border-bottom: none
 			&.active
 				a, li.active a
 					background-color: lighten($main-color,10%)
@@ -131,17 +155,15 @@ $min-height: 800px
 				padding: 0 6px
 				height: 26px
 				line-height: 26px
-
 		#nav-sidebar ul.menu li.maintab.active ul.submenu
 			display: none
-		#nav-sidebar ul.menu li.maintab.active:hover ul.submenu
+		#nav-sidebar ul.menu li.maintab.active.hover ul.submenu
 			position: absolute
 			display: block
 			width: 200px
 			z-index: 600
 			left: $widthSidebarNav
 			top: 0
-
 
 .page-sidebar
 	#content
@@ -157,6 +179,19 @@ $min-height: 800px
 			position: relative
 			top: 0
 			padding: 1px 4px 3px 4px!important
+		li.searchtab
+			color: rgba(white,.5)
+			&:hover
+				cursor: pointer
+				color: white
+			&.search-expanded
+				padding: 14px 13px 0 7px
+				width: 400px
+				background-color: darken($main-color,5%)
+				&:before
+					display: none
+				form .form-group
+					display: block
 		li.maintab.active ul.submenu
 			border: none !important
 		a.title
@@ -399,31 +434,7 @@ $min-height: 800px
 		.page-breadcrumb
 			left: 75px
 
-.searchtab
-	padding: 14px 7px
-	height: 55px
-	position: relative
-	background-color: darken($main-color,5%)
-	#bo_query
-		color: $main-color
-		background-color: lighten($main-color,60%)
-	.form-group.focus-search
-		position: absolute
-		z-index: 900
-		top: 0
-		left: 0
-		padding: 14px 13px 0 7px
-		width: 400px
-		height: 55px
-		background-color: darken($main-color,5%)
-		#bo_query
-			width: 100%
-	.clear_search
-		position: absolute
-		top: 5px
-		right: 8px
-	i
-		font-size: $icon-size-base
+
 
 .page-sidebar-closed:not(.nav-topbar)
 	.searchtab
@@ -435,7 +446,6 @@ $min-height: 800px
 			display: block
 			width: 28px
 			height: 28px
-			color: rgba(white,.5)
 			@extend .icon
 			@extend .icon-2x
 			@extend .icon-search
