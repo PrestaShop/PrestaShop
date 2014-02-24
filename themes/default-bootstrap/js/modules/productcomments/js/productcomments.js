@@ -22,24 +22,24 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-$(document).ready(function() 
-{
+$(document).ready(function(){
 	$('input.star').rating();
 	$('.auto-submit-star').rating();
 
-	$('.open-comment-form').fancybox({
-		'autoSize' : false,
-		'width' : 600,
-		'height' : 'auto',
-		'hideOnContentClick': false
-	});
+	if (!!$.prototype.fancybox)
+		$('.open-comment-form').fancybox({
+			'autoSize' : false,
+			'width' : 600,
+			'height' : 'auto',
+			'hideOnContentClick': false
+		});
 
-	$('#id_new_comment_form .closefb').click(function(e) {
-		$.fancybox.close();
+	$(document).on('click', '#id_new_comment_form .closefb', function(e){
 		e.preventDefault();
+		$.fancybox.close();
 	});
 
-	$('a[href=#idTab5]').click(function(){
+	$(document).on('click', 'a[href=#idTab5]', function(e){
 		$('*[id^="idTab"]').addClass('block_hidden_only_for_screen');
 		$('div#idTab5').removeClass('block_hidden_only_for_screen');
 
@@ -47,7 +47,7 @@ $(document).ready(function()
 		$('a[href="#idTab5"]').addClass('selected');
 	});
 
-	$('button.usefulness_btn').click(function() {
+	$(document).on('click', 'button.usefulness_btn', function(e){
 		var id_product_comment = $(this).data('id-product-comment');
 		var is_usefull = $(this).data('is-usefull');
 		var parent = $(this).parent();
@@ -69,7 +69,7 @@ $(document).ready(function()
 		});
 	});
 
-	$('span.report_btn').click(function() {
+	$(document).on('click', 'span.report_btn', function(e){
 		if (confirm(confirm_report_message))
 		{
 			var idProductComment = $(this).data('id-product-comment');
@@ -92,7 +92,7 @@ $(document).ready(function()
 		}
 	});
 
-	$('#submitNewMessage').click(function(e) {
+	$(document).on('click', '#submitNewMessage', function(e){
 		// Kill default behaviour
 		e.preventDefault();
 
@@ -126,10 +126,10 @@ $(document).ready(function()
 				}
 			}
 		});
-		return false;
 	});
 });
 
-function productcommentRefreshPage() {
+function productcommentRefreshPage()
+{
     window.location.reload();
 }

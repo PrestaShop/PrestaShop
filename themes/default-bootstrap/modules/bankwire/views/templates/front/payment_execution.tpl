@@ -62,11 +62,7 @@
                     {l s='We allow several currencies to be sent via bank wire.' mod='bankwire'}
                     <div class="form-group">
                         <label>{l s='Choose one of the following:' mod='bankwire'}</label>
-                        <select 
-                        id="currency_payement" 
-                        class="form-control" 
-                        name="currency_payement" 
-                        onchange="setCurrency($('#currency_payement').val());">
+                        <select id="currency_payement" class="form-control" name="currency_payement">
                             {foreach from=$currencies item=currency}
                                 <option value="{$currency.id_currency}" {if $currency.id_currency == $cust_currency}selected="selected"{/if}>
                                     {$currency.name}

@@ -143,12 +143,17 @@ class OrderOpcControllerCore extends ParentOrderController
 								$this->context->smarty->assign('isVirtualCart', $this->context->cart->isVirtualCart());
 								$this->_processAddressFormat();
 								$this->_assignAddress();
+
+								if (!($formatedAddressFieldsValuesList = $this->context->smarty->getTemplateVars('formatedAddressFieldsValuesList')))
+									$formatedAddressFieldsValuesList = array();
+
 								// Wrapping fees
 								$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
 								$wrapping_fees_tax_inc = $wrapping_fees = $this->context->cart->getGiftWrappingPrice();
 								$return = array_merge(array(
 									'order_opc_adress' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-address.tpl'),
 									'block_user_info' => (isset($blockUserInfo) ? $blockUserInfo->hookDisplayTop(array()) : ''),
+									'formatedAddressFieldsValuesList' => $formatedAddressFieldsValuesList,
 									'carrier_data' => $this->_getCarrierList(),
 									'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
 									'HOOK_PAYMENT' => $this->_getPaymentMethods(),
@@ -315,7 +320,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			$this->addJS(_THEME_MOBILE_JS_DIR_.'opc.js');
 
 		$this->addJS(array(
-			_THEME_JS_DIR_.'address.js',
+			_THEME_JS_DIR_.'tools/vatManagement.js',
 			_THEME_JS_DIR_.'tools/statesManagement.js',
 			_THEME_JS_DIR_.'order-carrier.js',
 			_PS_JS_DIR_.'validate.js'

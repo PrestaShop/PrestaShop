@@ -25,24 +25,24 @@
 
 $(document).ready(function() {
 	oosHookJsCodeMailAlert();
-	$('#oos_customer_email').bind('keypress', function(e) {
+	$(document).on('keypress', '#oos_customer_email', function(e){
 		if(e.keyCode == 13)
 		{
+			e.preventDefault();
 			addNotification();
-			return false;
 		}
 	});
 
-	$('#oos_customer_email').click(function(e) {
+	$(document).on('click', '#oos_customer_email', function(e){
 		clearText();
 	});
 
-	$('#mailalert_link').click(function(e) {
+	$(document).on('click', '#mailalert_link', function(e){
 		e.preventDefault();
 		addNotification();
 	});
 
-	$('i[rel^=ajax_id_mailalert_]').on('click', function()
+	$(document).on('click', 'i[rel^=ajax_id_mailalert_]', function(e)
 	{
 		var ids =  $(this).attr('rel').replace('ajax_id_mailalert_', '');
 		ids = ids.split('_');

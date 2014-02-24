@@ -29,8 +29,8 @@
 			<p>
 				<span>{l s='This CMS page is not visible to your customers.'}</span>
 				<input type="hidden" id="admin-action-cms-id" value="{$cms->id}" />
-				<input type="submit" value="{l s='Publish'}" class="publish_button button btn btn-default" onclick="submitPublishCMS('{$base_dir}{$smarty.get.ad|escape:'html':'UTF-8'}', 0, '{$smarty.get.adtoken|escape:'html':'UTF-8'}')"/>
-				<input type="submit" value="{l s='Back'}" class="lnk_view button btn btn-default" onclick="submitPublishCMS('{$base_dir}{$smarty.get.ad|escape:'html':'UTF-8'}', 1, '{$smarty.get.adtoken|escape:'html':'UTF-8'}')"/>
+				<input type="submit" value="{l s='Publish'}" name="publish_button" class="button btn btn-default"/>
+				<input type="submit" value="{l s='Back'}" name="lnk_view" class="button btn btn-default"/>
 			</p>
 			<div class="clear" ></div>
 			<p id="admin-action-result"></p>
@@ -70,3 +70,11 @@
 	</div>
 {/if}
 <br />
+{strip}
+{if isset($smarty.get.ad) && $smarty.get.ad}
+{addJsDefL name=ad}{$base_dir|cat:$smarty.get.ad|escape:'html':'UTF-8'}{/addJsDefL}
+{/if}
+{if isset($smarty.get.adtoken) && $smarty.get.adtoken}
+{addJsDefL name=adtoken}{$smarty.get.adtoken|escape:'html':'UTF-8'}{/addJsDefL}
+{/if}
+{/strip}

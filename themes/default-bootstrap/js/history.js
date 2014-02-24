@@ -69,23 +69,23 @@ function showOrder(mode, var_content, file)
 						}
 					});
 					// The button to increment the product return value
-					$('.return_quantity_down').click(function () {
+					$(document).on('click', '.return_quantity_down', function(e){
+						e.preventDefault();
 						var $input = $(this).parent().parent().find('input');
 						var count = parseInt($input.val()) - 1;
 						count = count < 1 ? 1 : count;
 						$input.val(count);
 						$input.change();
-						return false;
 					});
 					// The button to decrement the product return value
-					$('.return_quantity_up').click(function () {
+					$(document).on('click', '.return_quantity_up', function(e){
+						e.preventDefault();
 						var maxQuantity = parseInt($(this).parent().parent().find('.order_qte_span').text());
 						var $input = $(this).parent().parent().find('input');
 						var count = parseInt($input.val()) + 1;
 						count = count > maxQuantity ? maxQuantity : count;
 						$input.val(count);
 						$input.change();
-						return false;
 					});
 				}
 				//catch the submit event of sendOrderMessage form

@@ -23,8 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 $(document).ready(function(){
-
-	$(document).delegate('.add_to_compare','click', function(e){
+	$(document).on('click', '.add_to_compare', function(e){
 		e.preventDefault();
 		if (typeof addToCompare != 'undefined')
 			addToCompare(parseInt($(this).data('id-product')));
@@ -74,15 +73,13 @@ function addToCompare(productId)
 
 function reloadProductComparison()
 {
-	$('a.cmp_remove').click(function() {
+	$(document).on('click', 'a.cmp_remove', function(e){
+		e.preventDefault();
 		var idProduct = parseInt($(this).data('id-product'));
 		$.ajax({
 			url: 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
 			async: false,
-			cache: false,
-			success: function(){
-				return true;
-			}
+			cache: false
 		});
 	});
 };

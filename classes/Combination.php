@@ -113,9 +113,16 @@ class CombinationCore extends ObjectModel
 		if (!$this->hasMultishopEntries() && !$this->deleteAssociations())
 			return false;
 
+		$this->deleteFromSupplier($this->id_product);
 		Product::updateDefaultAttribute($this->id_product);
 		
 		return true;
+	}
+
+	public function deleteFromSupplier($id_product)
+	{
+		return Db::getInstance()->delete('product_supplier', 'id_product = '.(int)$id_product
+			.' AND id_product_attribute = '.(int)$this->id);
 	}
 
 	public function add($autodate = true, $null_values = false)

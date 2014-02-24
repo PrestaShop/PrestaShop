@@ -64,7 +64,7 @@
 		<div class="lnk">
 			{if $wishlists}
 				<div class="form-group selector1">
-					<select name="wishlists" id="wishlists" class="form-control" onchange="WishlistChangeDefault('wishlist_block_list', $('#wishlists').val());">
+					<select name="wishlists" id="wishlists" class="form-control">
 						{foreach from=$wishlists item=wishlist name=i}
 								<option value="{$wishlist.id_wishlist}"{if $id_wishlist eq $wishlist.id_wishlist or ($id_wishlist == false and $smarty.foreach.i.first)} selected="selected"{/if}>
 									{$wishlist.name|truncate:22:'...'|escape:'html':'UTF-8'}

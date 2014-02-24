@@ -22,12 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
+//global variables
 var nb_move_available = null;
 var current_move = 0;
 var next_scene_is_at_right = true;
 
-$(document).ready(function() {
+$(document).ready(function(){
 	/* calcul nb of click to see every scenes */
 	var ul_width = parseInt($('#scenes_list ul').width());
 	var div_width = parseInt($('#scenes_list').width());
@@ -67,6 +67,23 @@ $(document).ready(function() {
 			});
 		}
 	});
+
+	$(document).on('click', '.prev', function(e){
+		e.preventDefault();
+		next_scene_is_at_right = false; 
+		$(this).parent().next().trigger('stop').trigger('prev');
+	});
+
+	$(document).on('click', '.prev', function(e){
+		e.preventDefault();
+		next_scene_is_at_right = true;
+		$(this).parent().prev().trigger('stop').trigger('next');
+	});
+
+	$(document).on('click', '.scene_thumb', function(e){
+		e.preventDefault();
+		loadScene($(this).date('id_scene'));
+	});
 });
 
 function loadScene(id_scene)
@@ -75,7 +92,6 @@ function loadScene(id_scene)
 		$(this).hide();
 		$('#scenes').find('#screen_scene_' + id_scene).css('opacity', '0').show().fadeTo(500, 1);
 	});
-	return false;
 }
 
 function onSceneMove()

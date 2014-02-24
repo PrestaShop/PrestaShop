@@ -275,6 +275,12 @@ class AdminPPreferencesControllerCore extends AdminController
 				 SET `depends_on_stock` = 0, `quantity` = 0
 				 WHERE `depends_on_stock` = 1');
 		}
+
+		if (Tools::getIsset('PS_CATALOG_MODE'))
+		{
+			Tools::clearSmartyCache();
+			Media::clearCache();
+		}
 	}
 
 }

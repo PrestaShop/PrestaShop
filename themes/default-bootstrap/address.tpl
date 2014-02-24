@@ -48,7 +48,7 @@
 			{if $field_name eq 'company'}
 				<div class="form-group">
 					<label for="company">{l s='Company'}</label>
-					<input class="form-control" type="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{else}{if isset($address->company)}{$address->company|escape:'html':'UTF-8'}{/if}{/if}" onkeyup="if($(this).val().length) { if (validate_{$address_validation.$field_name.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok');}" />
+					<input class="form-control validate" data-validate="{$address_validation.$field_name.validate}" type="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{else}{if isset($address->company)}{$address->company|escape:'html':'UTF-8'}{/if}{/if}" />
 				</div>
 			{/if}
 			{if $field_name eq 'vat_number'}
@@ -56,7 +56,7 @@
 					<div id="vat_number">
 						<div class="form-group">
 							<label for="vat-number">{l s='VAT number'}</label>
-							<input type="text" class="form-control" id="vat-number" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{else}{if isset($address->vat_number)}{$address->vat_number|escape:'html':'UTF-8'}{/if}{/if}" onkeyup="if($(this).val().length) { if (validate_{$address_validation.$field_name.validate}($(this).val())) $(this).parent().removeClass('form-error').addClass('form-ok'); else $(this).parent().addClass('form-error').removeClass('form-ok'); }" />
+							<input type="text" class="form-control validate" data-validate="{$address_validation.$field_name.validate}" id="vat-number" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{else}{if isset($address->vat_number)}{$address->vat_number|escape:'html':'UTF-8'}{/if}{/if}" />
 						</div>
 					</div>
 				</div>
@@ -126,7 +126,7 @@
 		{if !$postCodeExist}
 			<div class="required postcode form-group unvisible">
 				<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
-				<input class="is_required validate form-control" data-validate="{$address_validation.postcode.validate}" type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode|escape:'html':'UTF-8'}{/if}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+				<input class="is_required validate form-control" data-validate="{$address_validation.postcode.validate}" type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode|escape:'html':'UTF-8'}{/if}{/if}" />
 			</div>
 		{/if}		
 		{if !$stateExist}
@@ -187,21 +187,23 @@
 	</li>
 </ul>
 {strip}
-{if isset($smarty.post.id_state)}
+{if isset($smarty.post.id_state) && $smarty.post.id_state}
 	{addJsDef idSelectedState=$smarty.post.id_state|intval}
-{else if isset($address->id_state)}
+{else if isset($address->id_state) && $address->id_state}
 	{addJsDef idSelectedState=$address->id_state|intval}
 {else}
 	{addJsDef idSelectedState=false}
 {/if}
-{if isset($smarty.post.id_country)}
+{if isset($smarty.post.id_country) && $smarty.post.id_country}
 	{addJsDef idSelectedCountry=$smarty.post.id_country|intval}
-{else if isset($address->id_country)}
+{else if isset($address->id_country) && $address->id_country}
 	{addJsDef idSelectedCountry=$address->id_country|intval}
 {else}
 	{addJsDef idSelectedCountry=false}
 {/if}
-{addJsDef countries=$countries}
+{if isset($countries)}
+	{addJsDef countries=$countries}
+{/if}
 {if isset($vatnumber_ajax_call) && $vatnumber_ajax_call}
 	{addJsDef vatnumber_ajax_call=$vatnumber_ajax_call}
 {/if}

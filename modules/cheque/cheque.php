@@ -42,6 +42,7 @@ class Cheque extends PaymentModule
 		$this->tab = 'payments_gateways';
 		$this->version = '2.3';
 		$this->author = 'PrestaShop';
+		$this->controllers = array('payment', 'validation');
 
 		$this->currencies = true;
 		$this->currencies_mode = 'checkbox';
