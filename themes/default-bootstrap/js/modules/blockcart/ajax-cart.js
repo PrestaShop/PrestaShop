@@ -691,9 +691,6 @@ var ajaxCart = {
 			$('#cart_block .products dt:first').addClass('first_item');
 			$('#cart_block .products dt:not(:first,:last)').addClass('item');
 			$('#cart_block .products dt:last').addClass('last_item');
-
-			//reset the onlick events in relation to the cart block (it allow to bind the onclick event to the new 'delete' buttons added)
-			ajaxCart.overrideButtonsInThePage();
 		}
 	},
 

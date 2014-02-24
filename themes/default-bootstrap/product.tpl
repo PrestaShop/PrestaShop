@@ -373,7 +373,7 @@
 						{/if}
 					</div> <!-- end product_attributes -->
 					<div class="box-cart-bottom">
-						<div {if (!$allow_oosp && $product->quantity <= 0) || !$product->available_for_order || (isset($restricted_country_mode) && $restricted_country_mode) || $PS_CATALOG_MODE}style="display:none"{/if}>
+						<div{if (!$allow_oosp && $product->quantity <= 0) || !$product->available_for_order || (isset($restricted_country_mode) && $restricted_country_mode) || $PS_CATALOG_MODE} class="unvisible"{/if}>
 							<p id="add_to_cart" class="buttons_bottom_block">
 								<button type="submit" name="Submit" class="exclusive">
 									<span>{l s='Add to cart'}</span>
@@ -696,6 +696,7 @@
 {addJsDef productPrice=$productPrice|floatval}
 {addJsDef productUnitPriceRatio=$product->unit_price_ratio|floatval}
 {addJsDef productShowPrice=(!$PS_CATALOG_MODE && $product->show_price)|boolval}
+{addJsDef PS_CATALOG_MODE=$PS_CATALOG_MODE}
 {if $product->specificPrice && $product->specificPrice|@count}
 	{addJsDef product_specific_price=$product->specificPrice}
 {else}
