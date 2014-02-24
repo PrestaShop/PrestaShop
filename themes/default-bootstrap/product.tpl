@@ -388,6 +388,56 @@
 		</div> <!-- end pb-right-column-->
 	</div> <!-- end primary_block -->
 	{if !$content_only}
+{if (isset($quantity_discounts) && count($quantity_discounts) > 0)}
+			<!-- quantity discount -->
+			<section class="page-product-box product-discounts">
+				<h3 class="page-product-heading">{l s='Volume discounts'}</h3>
+				<div id="quantityDiscount">
+					<table class="std table-product-discounts">
+						<thead>
+							<tr>
+								<th>{l s='Quantity'}</th>
+								<th>{if $display_discount_price}{l s='Price'}{else}{l s='Discount'}{/if}</th>
+								<th>{l s='You Save'}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
+							<tr id="quantityDiscount_{$quantity_discount.id_product_attribute}" class="quantityDiscount_{$quantity_discount.id_product_attribute}">
+							<td>{$quantity_discount.quantity|intval}</td>
+								<td>
+									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
+										{if $display_discount_price}
+											{convertPrice price=$productPrice-$quantity_discount.real_value|floatval}
+										{else}
+											{convertPrice price=$quantity_discount.real_value|floatval}
+										{/if}
+									{else}
+										{if $display_discount_price}
+											{convertPrice price = $productPrice-($productPrice*$quantity_discount.reduction)|floatval}
+										{else}
+											{$quantity_discount.real_value|floatval}%
+										{/if}
+									{/if}
+								</td>
+								<td>
+									<span>{l s='Up to'}</span>
+									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
+										{$discountPrice=$productPrice-$quantity_discount.real_value|floatval}
+									{else}
+										{$discountPrice=$productPrice-($productPrice*$quantity_discount.reduction)|floatval}
+									{/if}
+									{$discountPrice=$discountPrice*$quantity_discount.quantity}
+									{$qtyProductPrice = $productPrice*$quantity_discount.quantity}
+									{convertPrice price=$qtyProductPrice-$discountPrice}
+								</td>
+							</tr>
+							{/foreach}
+						</tbody>
+					</table>
+				</div>
+			</section>
+		{/if}
 		{if $product->description}
 			<!-- More info -->
 			<section class="page-product-box">
@@ -475,56 +525,6 @@
 				</div>	
 			</section>
 			<!--end Accessories -->
-		{/if}
-		{if (isset($quantity_discounts) && count($quantity_discounts) > 0)}
-			<!-- quantity discount -->
-			<section class="page-product-box">
-				<h3 class="page-product-heading">{l s='Volume discounts'}</h3>
-				<div id="quantityDiscount">
-					<table class="std table-produst-discounts">
-						<thead>
-							<tr>
-								<th>{l s='Quantity'}</th>
-								<th>{if $display_discount_price}{l s='Price'}{else}{l s='Discount'}{/if}</th>
-								<th>{l s='You Save'}</th>
-							</tr>
-						</thead>
-						<tbody>
-							{foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
-							<tr id="quantityDiscount_{$quantity_discount.id_product_attribute}" class="quantityDiscount_{$quantity_discount.id_product_attribute}">
-							<td>{$quantity_discount.quantity|intval}</td>
-								<td>
-									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
-										{if $display_discount_price}
-											{convertPrice price=$productPrice-$quantity_discount.real_value|floatval}
-										{else}
-											{convertPrice price=$quantity_discount.real_value|floatval}
-										{/if}
-									{else}
-										{if $display_discount_price}
-											{convertPrice price = $productPrice-($productPrice*$quantity_discount.reduction)|floatval}
-										{else}
-											{$quantity_discount.real_value|floatval}%
-										{/if}
-									{/if}
-								</td>
-								<td>
-									<span>{l s='Up to'}</span>
-									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
-										{$discountPrice=$productPrice-$quantity_discount.real_value|floatval}
-									{else}
-										{$discountPrice=$productPrice-($productPrice*$quantity_discount.reduction)|floatval}
-									{/if}
-									{$discountPrice=$discountPrice*$quantity_discount.quantity}
-									{$qtyProductPrice = $productPrice*$quantity_discount.quantity}
-									{convertPrice price=$qtyProductPrice-$discountPrice}
-								</td>
-							</tr>
-							{/foreach}
-						</tbody>
-					</table>
-				</div>
-			</section>
 		{/if}
 		{if isset($HOOK_PRODUCT_FOOTER) && $HOOK_PRODUCT_FOOTER}{$HOOK_PRODUCT_FOOTER}{/if}
 		<!-- description & features -->
