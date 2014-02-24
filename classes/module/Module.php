@@ -57,6 +57,18 @@ abstract class ModuleCore
 	/** @var string author of the module */
 	public $author;
 
+	public $description_full;
+
+	public $additional_description;
+
+	public $compatibility;
+
+	public $nb_rates;
+
+	public $avg_rate;
+
+	public $badges;
+
 	/** @var int need_instance */
 	public $need_instance = 1;
 
@@ -767,7 +779,7 @@ abstract class ModuleCore
 				$new_hook = new Hook();
 				$new_hook->name = pSQL($hook_name);
 				$new_hook->title = pSQL($hook_name);
-				$new_hook->live_edit  = pSQL($live_edit);
+				$new_hook->live_edit  = (bool)preg_match('/^display/i', $new_hook->name);
 				$new_hook->add();
 				$id_hook = $new_hook->id;
 				if (!$id_hook)
@@ -1174,6 +1186,7 @@ abstract class ModuleCore
 				// If class exists, we just instanciate it
 				if (class_exists($module, false))
 				{
+
 					$tmp_module = new $module;
 
 					$item = new stdClass();
@@ -1193,6 +1206,12 @@ abstract class ModuleCore
 					$item->currencies = isset($tmp_module->currencies) ? $tmp_module->currencies : null;
 					$item->currencies_mode = isset($tmp_module->currencies_mode) ? $tmp_module->currencies_mode : null;
 					$item->confirmUninstall = isset($tmp_module->confirmUninstall) ? $tmp_module->confirmUninstall : null;
+					$item->description_full = stripslashes($tmp_module->description_full);
+					$item->additional_description = isset($tmp_module->additional_description) ? stripslashes($tmp_module->additional_description) : null;
+					$item->compatibility = isset($tmp_module->compatibility) ? (array)$tmp_module->compatibility : null;
+					$item->nb_rates = isset($tmp_module->nb_rates) ? (array)$tmp_module->nb_rates : null;
+					$item->avg_rate = isset($tmp_module->avg_rate) ? (array)$tmp_module->avg_rate : null;
+					$item->badges = isset($tmp_module->badges) ? (array)$tmp_module->badges : null;
 					
 					$item->onclick_option  = method_exists($module, 'onclickOption') ? true : false;
 					if ($item->onclick_option)
@@ -1272,6 +1291,7 @@ abstract class ModuleCore
 							$item->tab = strip_tags((string)$modaddons->tab);
 							$item->displayName = strip_tags((string)$modaddons->displayName);
 							$item->description = stripslashes(strip_tags((string)$modaddons->description));
+							$item->description_full = stripslashes(strip_tags((string)$modaddons->description_full));
 							$item->author = strip_tags((string)$modaddons->author);
 							$item->limited_countries = array();
 							$item->parent_class = '';
@@ -1281,6 +1301,12 @@ abstract class ModuleCore
 							$item->not_on_disk = 1;
 							$item->available_on_addons = 1;
 							$item->active = 0;
+							$item->description_full = stripslashes($modaddons->description_full);
+							$item->additional_description = isset($modaddons->additional_description) ? stripslashes($modaddons->additional_description) : null;
+							$item->compatibility = isset($modaddons->compatibility) ? (array)$modaddons->compatibility : null;
+							$item->nb_rates = isset($modaddons->nb_rates) ? (array)$modaddons->nb_rates : null;
+							$item->avg_rate = isset($modaddons->avg_rate) ? (array)$modaddons->avg_rate : null;
+							$item->badges = isset($modaddons->badges) ? (array)$modaddons->badges : null;
 							if (isset($modaddons->img))
 							{
 								if (!file_exists(_PS_TMP_IMG_DIR_.md5($modaddons->name).'.jpg'))
@@ -1307,7 +1333,7 @@ abstract class ModuleCore
 						}
 					}
 			}
-			
+
 		foreach ($module_list as &$module)
 			if (isset($modules_installed[$module->name]))
 			{

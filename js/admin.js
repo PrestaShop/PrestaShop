@@ -777,13 +777,13 @@ $(document).ready(function()
 
 	$('#ajax_running').ajaxStop(function() {
 		var element = $(this)
-		setTimeout(function(){element.slideUp(150)}, 1000);
+		setTimeout(function(){element.hide()}, 1000);
 		clearTimeout(ajax_running_timeout);
 	});
 
 	$('#ajax_running').ajaxError(function() {
 		var element = $(this)
-		setTimeout(function(){element.slideUp(150)}, 1000);
+		setTimeout(function(){element.hide()}, 1000);
 		clearTimeout(ajax_running_timeout);
 	});
 	
@@ -938,7 +938,7 @@ function stripHTML(oldString)
  */
 function showAjaxOverlay()
 {
-	$('#ajax_running').slideDown('fast');
+	$('#ajax_running').show('fast');
 	clearTimeout(ajax_running_timeout);
 }
 

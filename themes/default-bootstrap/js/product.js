@@ -31,15 +31,16 @@ var colors = [];
 $(document).ready(function(){
 	if (typeof customizationFields !== 'undefined' && customizationFields)
 	{
-		var customizationFields = [];
+		var customizationFieldsBk = customizationFields;
+        customizationFields = [];
 		var j = 0;
 		for (var i = 0; i < customizationFieldsBk.length; ++i)
 		{
 			var key = 'pictures_' + parseInt(id_product) + '_' + parseInt(customizationFieldsBk[i]['id_customization_field']);
-			customizationFields[i] = [];
-			customizationFields[i][0] = (parseInt(customizationFieldsBk[i]['type']) == 0) ? 'img' + i : 'textField' + j++;
-			customizationFields[i][1] = (parseInt(customizationFieldsBk[i]['type']) == 0 && customizationFieldsBk[i][key]) ? 2 : parseInt(customizationFieldsBk[i]['required']);
-		}
+            customizationFields[i] = [];
+            customizationFields[i][0] = (parseInt(customizationFieldsBk[i]['type']) == 0) ? 'img' + i : 'textField' + j++;
+            customizationFields[i][1] = (parseInt(customizationFieldsBk[i]['type']) == 0 && customizationFieldsBk[i][key]) ? 2 : parseInt(customizationFieldsBk[i]['required']);
+        }
 	}
 
 	if (typeof combinationImages !== 'undefined' && combinationImages)
@@ -57,7 +58,7 @@ $(document).ready(function(){
                 {
 					combinationImagesJS[0][k++] = id_image;
 					combinationImagesJS[i][j] = [];
-					combinationImagesJS[i][j] = id_image;	
+					combinationImagesJS[i][j] = id_image;
                 }
             }
 		}
@@ -84,7 +85,7 @@ $(document).ready(function(){
 			combinationsJS[k]['idsAttributes'] = combinations[i]['attributes'];
 			combinationsJS[k]['quantity'] = combinations[i]['quantity'];
 			combinationsJS[k]['price'] = combinations[i]['price'];
-			combinationsJS[k]['ecotax'] = combinations[i]['ecotax']; 
+			combinationsJS[k]['ecotax'] = combinations[i]['ecotax'];
 			combinationsJS[k]['image'] = parseInt(combinations[i]['id_image']);
 			combinationsJS[k]['reference'] = combinations[i]['reference'];
 			combinationsJS[k]['unit_price'] = combinations[i]['unit_impact'];
@@ -95,7 +96,7 @@ $(document).ready(function(){
 				combinationsJS[k]['available_date']['date_formatted'] = combinations[i]['date_formatted'];
 
 			combinationsJS[k]['specific_price'] = [];
-				combinationsJS[k]['specific_price']['reduction_percent'] = (combinations[i]['specific_price'] && combinations[i]['specific_price']['reduction'] && combinations[i]['specific_price']['reduction_type'] == 'percentage') ? combinations[i]['specific_price']['reduction'] * 100 : 0;		
+				combinationsJS[k]['specific_price']['reduction_percent'] = (combinations[i]['specific_price'] && combinations[i]['specific_price']['reduction'] && combinations[i]['specific_price']['reduction_type'] == 'percentage') ? combinations[i]['specific_price']['reduction'] * 100 : 0;
 				combinationsJS[k]['specific_price']['reduction_price'] = (combinations[i]['specific_price'] && combinations[i]['specific_price']['reduction'] && combinations[i]['specific_price']['reduction_type'] == 'amount') ? combinations[i]['specific_price']['reduction'] : 0;
 				combinationsJS[k]['price'] = (combinations[i]['specific_price'] && combinations[i]['specific_price']['price'] && parseInt(combinations[i]['specific_price']['price']) != -1) ? combinations[i]['specific_price']['price'] :  combinations[i]['price'];
 
@@ -105,7 +106,7 @@ $(document).ready(function(){
 		}
 		combinations = combinationsJS;
 	}
-	
+
 	//init the serialScroll for thumbs
 	$('#thumbs_list').serialScroll({
 		items:'li:visible',
@@ -258,7 +259,7 @@ $(document).ready(function(){
 		checkMinimalQuantity();
 		$(document).on('keyup', 'input[name=qty]', function(e){
 			checkMinimalQuantity(minimalQuantity);
-		});	
+		});
 	}
 
 	if (typeof ad !== 'undefined' && ad && typeof adtoken !== 'undefined' && adtoken)
@@ -383,7 +384,7 @@ function findCombination(firstTime)
 
 			//get available_date for combination product
 			selectedCombination['available_date'] = combinations[combination]['available_date'];
-			
+
 			//update the display
 			updateDisplay();
 
@@ -418,7 +419,7 @@ function updateDisplay()
 
 		//hide the hook out of stock
 		$('#oosHook').hide();
-		
+
 		$('#availability_date').fadeOut();
 
 		//availability value management
@@ -552,7 +553,7 @@ function updateDisplay()
 		var priceTaxExclWithoutGroupReduction = '';
 
 		// retrieve price without group_reduction in order to compute the group reduction after
-		// the specific price discount (done in the JS in order to keep backward compatibility)		
+		// the specific price discount (done in the JS in order to keep backward compatibility)
 		priceTaxExclWithoutGroupReduction = ps_round(productPriceTaxExcluded, 6) * (1 / group_reduction);
 
 		var tax = (taxRate / 100) + 1;
@@ -662,7 +663,7 @@ function updateDisplay()
 		else
 			productPricePretaxed = productPriceDisplay;
 		$('#pretaxe_price_display').text(formatCurrency(productPricePretaxed, currencyFormat, currencySign, currencyBlank));
-		// Unit price 
+		// Unit price
 		productUnitPriceRatio = parseFloat(productUnitPriceRatio);
 		if (productUnitPriceRatio > 0 )
 		{
@@ -689,13 +690,13 @@ function displayImage(domAAroundImgThumb, no_animation)
 		if ($('#bigpic').prop('src') != new_src)
 		{
 			$('#bigpic').attr({
-				'src' : new_src, 
-				'alt' : new_title, 
+				'src' : new_src,
+				'alt' : new_title,
 				'title' : new_title
 			}).load(function(){
 				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
 					$(this).attr('rel', new_href);
-			}); 
+			});
 		}
 		$('#views_block li a').removeClass('shown');
 		$(domAAroundImgThumb).addClass('shown');
@@ -787,8 +788,8 @@ function submitPublishProduct(url, redirect, token)
 	$.ajaxSetup({async: false});
 	$.post(url + '/index.php', {
 		action:'publishProduct',
-		id_product: id_product, 
-		status: 1, 
+		id_product: id_product,
+		status: 1,
 		redirect: redirect,
 		ajax: 1,
 		tab: 'AdminProducts',
