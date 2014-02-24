@@ -121,7 +121,7 @@
 				<li id="orders_notif" class="dropdown" data-type="order">
 					<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
 						<i class="icon-shopping-cart"></i>
-						<span id="orders_notif_number_wrapper" class="notifs_badge">
+						<span id="orders_notif_number_wrapper" class="notifs_badge hide">
 							<span id="orders_notif_value">0</span>
 						</span>
 					</a>
@@ -146,7 +146,7 @@
 				<li id="customers_notif" class="dropdown" data-type="customer">
 					<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
 						<i class="icon-user"></i>
-						<span id="customers_notif_number_wrapper" class="notifs_badge">
+						<span id="customers_notif_number_wrapper" class="notifs_badge hide">
 							<span id="customers_notif_value">0</span>
 						</span>
 					</a>
@@ -171,7 +171,7 @@
 				<li id="customer_messages_notif" class="dropdown" data-type="customer_message">
 					<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
 						<i class="icon-envelope"></i>
-						<span id="customer_messages_notif_number_wrapper" class="notifs_badge">
+						<span id="customer_messages_notif_number_wrapper" class="notifs_badge hide">
 							<span id="customer_messages_notif_value" >0</span>
 						</span>
 					</a>

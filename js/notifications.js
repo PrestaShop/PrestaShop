@@ -60,10 +60,10 @@ function getPush(refresh)
 				{
 					$("#list_orders_notif").empty().append(html);
 					$("#orders_notif_value").text(json.order.total);
-					$("#orders_notif_number_wrapper").show();
+					$("#orders_notif_number_wrapper").removeClass('hide');
 				}
 				else
-					$("#orders_notif_number_wrapper").hide();
+					$("#orders_notif_number_wrapper").addClass('hide');
 				// Add customers notifications to the list
 				html = "";
 				$.each(json.customer.results, function(property, value) {
@@ -76,10 +76,10 @@ function getPush(refresh)
 				{
 					$("#list_customers_notif").empty().append(html);
 					$("#customers_notif_value").text(json.customer.total);
-					$("#customers_notif_number_wrapper").show();
+					$("#customers_notif_number_wrapper").removeClass('hide');
 				}
 				else
-					$("#customers_notif_number_wrapper").hide();
+					$("#customers_notif_number_wrapper").addClass('hide');
 				// Add messages notifications to the list
 				html = "";
 				$.each(json.customer_message.results, function(property, value) {
@@ -92,10 +92,10 @@ function getPush(refresh)
 				{
 					$("#list_customer_messages_notif").empty().append(html);
 					$("#customer_messages_notif_value").text(json.customer_message.total);
-					$("#customer_messages_notif_number_wrapper").show();
+					$("#customer_messages_notif_number_wrapper").removeClass('hide');
 				}
 				else
-					$("#customer_messages_notif_number_wrapper").hide();
+					$("#customer_messages_notif_number_wrapper").addClass('hide');
 			}
 			if (refresh)
 				setTimeout("getPush(1)", 120000);
