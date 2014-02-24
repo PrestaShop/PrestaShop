@@ -716,13 +716,13 @@ function displayDiscounts(combination)
 	if ($('#quantityDiscount_' + combination+',.quantityDiscount_' + combination).length != 0)
 	{
 		$('#quantityDiscount').parent().show();
-		$('.page-product-box.parent("section"), #quantityDiscount_' + combination+',.quantityDiscount_' + combination).show();
+		$('#quantityDiscount_' + combination+',.quantityDiscount_' + combination).show();
 		$('#noQuantityDiscount').hide();
 	}
 	else
 	{
 		$('#quantityDiscount').parent().hide();
-		$('.page-product-box, #noQuantityDiscount').show();
+		$('#noQuantityDiscount').show();
 	}
 }
 
