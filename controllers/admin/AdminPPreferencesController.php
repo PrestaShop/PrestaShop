@@ -276,7 +276,7 @@ class AdminPPreferencesControllerCore extends AdminController
 				 WHERE `depends_on_stock` = 1');
 		}
 
-		if (Tools::getValue('PS_CATALOG_MODE'))
+		if (Tools::getIsset('PS_CATALOG_MODE'))
 		{
 			Tools::clearSmartyCache();
 			Media::clearCache();
