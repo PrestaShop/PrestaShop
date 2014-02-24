@@ -470,9 +470,6 @@ class AdminEmployeesControllerCore extends AdminController
 	public function processSave()
 	{
 		$employee = new Employee((int)Tools::getValue('id_employee'));
-			
-		if (!Validate::isLoadedObject($employee) && !Validate::isPasswd(Tools::getvalue('passwd'), 8))
-			$this->errors[] = Tools::displayError('You must specify a password with a minimum of eight characters.');
 
 		// If the employee is editing its own account
 		if ($this->restrict_edition)
@@ -567,6 +564,17 @@ class AdminEmployeesControllerCore extends AdminController
 			return false;
 
 		return parent::processSave();
+	}
+
+	public function validateRules($class_name = false)
+	{
+		$employee = new Employee((int)Tools::getValue('id_employee'));
+
+		if (!Validate::isLoadedObject($employee) && !Validate::isPasswd(Tools::getvalue('passwd'), Validate::ADMIN_PASSWORD_LENGTH))
+			return !($this->errors[] = sprintf(Tools::displayError('You must specify a password with a minimum of %s characters.'),
+				Validate::ADMIN_PASSWORD_LENGTH));
+
+		return parent::validateRules($class_name);
 	}
 
 	public function postProcess()
