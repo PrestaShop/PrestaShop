@@ -4717,8 +4717,6 @@ class ProductCore extends ObjectModel
 		return true;
 	}
 
-       /**
-
 	/**
 	* Webservice getter : get combination ids of current product for association
 	*
