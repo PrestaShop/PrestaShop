@@ -325,7 +325,7 @@
 						{if isset($groups)}
 							<!-- attributes -->
 							<div id="attributes">
-								<div class="clear"></div>
+								<div class="clearfix"></div>
 								{foreach from=$groups key=id_attribute_group item=group}
 									{if $group.attributes|@count}
 										<fieldset class="attribute_fieldset">
