@@ -390,7 +390,7 @@
 	{if !$content_only}
 {if (isset($quantity_discounts) && count($quantity_discounts) > 0)}
 			<!-- quantity discount -->
-			<section class="page-product-box product-discounts">
+			<section class="page-product-box">
 				<h3 class="page-product-heading">{l s='Volume discounts'}</h3>
 				<div id="quantityDiscount">
 					<table class="std table-product-discounts">
