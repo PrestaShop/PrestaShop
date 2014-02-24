@@ -706,7 +706,7 @@ function displayImage(domAAroundImgThumb, no_animation)
 //update display of the discounts table
 function displayDiscounts(combination)
 {
-	$('#quantityDiscount tbody tr').each(function() {
+	$('#quantityDiscount tbody tr').each(function(){
 		if (($(this).attr('id') != 'quantityDiscount_0') &&
 			($(this).attr('id') != 'quantityDiscount_' + combination) &&
 			($(this).attr('id') != 'noQuantityDiscount'))
@@ -715,11 +715,15 @@ function displayDiscounts(combination)
 
 	if ($('#quantityDiscount_' + combination+',.quantityDiscount_' + combination).length != 0)
 	{
+		$('#quantityDiscount').parent().show();
 		$('#quantityDiscount_' + combination+',.quantityDiscount_' + combination).show();
 		$('#noQuantityDiscount').hide();
 	}
 	else
+	{
+		$('#quantityDiscount').parent().hide();
 		$('#noQuantityDiscount').show();
+	}
 }
 
 // Serialscroll exclude option bug ?
