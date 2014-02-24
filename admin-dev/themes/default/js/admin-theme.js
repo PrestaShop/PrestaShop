@@ -296,6 +296,7 @@ $(document).ready(function() {
 		}
 	});
 
+	// search with nav sidebar closed
 	$(document).on('click', '.page-sidebar-closed .searchtab' ,function(){
 		$(this).addClass('search-expanded');
 		$(this).find('#bo_query').focus();

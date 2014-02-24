@@ -30,9 +30,17 @@
 		font-size: $icon-size-base
 		color: darken(white,30%)
 		vertical-align: middle
+	.notifs
+		width: 40px
+		position: relative
 	.notifs_badge
 		@extend .badge
+		position: absolute
+		font-size: 10px!important
+		top: 5px
+		right: 0
 		background-color: $badge-notif-color
+		//display: none
 	.notifs_dropdown
 		background-color: white
 		border: none
