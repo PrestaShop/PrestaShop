@@ -97,6 +97,8 @@
 
 .alert.alert-info
 	@include alert-panel(icon-question-circle, $brand-info)
+	border: solid 1px lighten($brand-info,25%)
+	background-color: lighten($brand-info,37%)
 
 .alert.alert-addons
 	$alert-addons-border: lighten($brand-addons,10%)
@@ -116,6 +118,7 @@
 .input[type='password']
 	font-size: 2em!important
 
+//stars
 .rating
 	unicode-bidi: bidi-override
 	direction: rtl
@@ -132,7 +135,8 @@
 			padding-right: 3px
 			color: #999
 		&:hover:before,
-		&:hover~span.star:before
+		&.active:before,
+		&:hover~span.star:before,
 		&.active~span.star:before
 			content: "\f005"
 			color: #e3cf7a
