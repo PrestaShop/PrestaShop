@@ -211,3 +211,16 @@ ul.sf-menu li li li.sfHover ul {
         font-size: 26px; }
       .cat-title.active:after {
         content: "\f068"; } }
+
+.sf-menu li.sf-search {
+  border: none; }
+  .sf-menu li.sf-search input {
+    display: inline;
+    padding: 0 13px;
+    height: 30px;
+    line-height: 30px;
+    background: white;
+    margin: 13px 10px 0 0;
+    font-size: 13px;
+    color: #9c9b9b;
+    border: 1px solid #d6d4d4; }
