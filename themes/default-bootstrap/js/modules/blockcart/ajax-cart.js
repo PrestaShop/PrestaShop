@@ -260,8 +260,17 @@ var ajaxCart = {
 	add : function(idProduct, idCombination, addedFromProductPage, callerElement, quantity, whishlist){
 		if (addedFromProductPage && !checkCustomizations())
 		{
-			alert(fieldRequired);
-			return ;
+            $.fancybox.open([
+                {
+                    type: 'inline',
+                    autoScale: true,
+                    minHeight: 30,
+                    content: '<p class="fancybox-error">' + fieldRequired + '</p>'
+                }
+            ], {
+                padding: 0
+            });
+            return;
 		}
 		emptyCustomizations();
 		//disabled the button when adding to not double add if user double click
