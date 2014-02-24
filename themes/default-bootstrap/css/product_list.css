@@ -68,7 +68,8 @@ ul.product_list .functional-buttons div.wishlist {
     display: inline-block;
     font-family: "FontAwesome";
     content: "\f08a";
-    margin-right: 3px; }
+    margin-right: 3px;
+    padding: 0 1px; }
   ul.product_list .functional-buttons div.wishlist a.checked:before {
     content: "\f004"; }
   @media (min-width: 992px) and (max-width: 1199px) {
