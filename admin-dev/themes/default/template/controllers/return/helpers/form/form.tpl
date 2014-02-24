@@ -36,6 +36,16 @@
 		<p>
 			<a class="text-muted" href="{$url_order}">{l s='View details on the order page'}</a>
 		</p>
+	{elseif $input.type == 'pdf_order_return'}
+		<p>
+			{if $state_order_return == 2}
+				<a class="btn" href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$id_order_return|intval}")|escape:'html':'UTF-8'}">
+					<i class="icon-file-text"></i> {l s='Print out'}
+				</a>
+			{else}
+				--
+			{/if}
+		</p>
 	{elseif $input.type == 'list_products'}
 		<table class="table">
 			<thead>

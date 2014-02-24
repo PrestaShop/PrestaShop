@@ -114,6 +114,14 @@ class AdminReturnControllerCore extends AdminController
 					'required' => false,
 					'desc' => $this->l('List of products in return package.')
 				),
+				array(
+					'type' => 'pdf_order_return',
+					'label' => $this->l('Return slip'),
+					'name' => '',
+					'size' => '',
+					'required' => false,
+					'desc' => $this->l('The link is only available after vaidation and before the parcel gets delivered')
+				),
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
@@ -144,6 +152,7 @@ class AdminReturnControllerCore extends AdminController
 			'products' => $products,
 			'quantityDisplayed' => $quantityDisplayed,
 			'id_order_return' => $this->object->id,
+			'state_order_return' => $this->object->state,
 		);
 
 		return parent::renderForm();

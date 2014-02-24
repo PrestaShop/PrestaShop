@@ -128,10 +128,7 @@
 					</td>
 					<td class="history_invoice">
 						{if $return.state == 2}
-							<a 
-								class="link-button" 
-								href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$return.id_order_return|intval}")|escape:'html':'UTF-8'}" 
-								title="{l s='Order return'} {l s='#'}{$return.id_order_return|string_format:"%06d"}">
+							<a class="link-button" href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$return.id_order_return|intval}")|escape:'html':'UTF-8'}" title="{l s='Order return'} {l s='#'}{$return.id_order_return|string_format:"%06d"}">
 								<i class="icon-file-text"></i> {l s='Print out'}
 							</a>
 						{else}

@@ -29,6 +29,7 @@
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
+	
 	{foreach $fields as $f => $fieldset}
 		{block name="fieldset"}
 		<div class="panel" id="fieldset_{$f}">
