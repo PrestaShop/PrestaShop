@@ -2592,7 +2592,8 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 #header_notifs_icon_wrapper > li > a { height: 36px; display: block; }
 #header_notifs_icon_wrapper > li > a:hover i { color: white; }
 #header_notifs_icon_wrapper > li > a > i { font-size: 14px; color: #b3b3b3; vertical-align: middle; }
-#header_notifs_icon_wrapper .notifs_badge { background-color: #8bc954; }
+#header_notifs_icon_wrapper .notifs { width: 40px; position: relative; }
+#header_notifs_icon_wrapper .notifs_badge { position: absolute; font-size: 10px !important; top: 5px; right: 0; background-color: #8bc954; }
 #header_notifs_icon_wrapper .notifs_dropdown { background-color: white; border: none; -webkit-box-shadow: rgba(0, 0, 0, 0.7) 0 0 10px; box-shadow: rgba(0, 0, 0, 0.7) 0 0 10px; }
 #header_notifs_icon_wrapper .notifs_dropdown .notifs_panel { width: 300px; }
 #header_notifs_icon_wrapper .notifs_dropdown .notifs_panel .notifs_panel_header h3 { padding: 10px; font-size: 1.3em; margin: 0; border-bottom: solid 1px #cccccc; }
@@ -2807,6 +2808,11 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .alert h4, .bootstrap #carrier_wizard .wizard_error h4 { font-size: 1.45em; margin-bottom: 1em; }
 .bootstrap .overflow-y { max-height: 200px; margin-bottom: 15px; overflow-y: auto; }
 .bootstrap .input[type='password'] { font-size: 2em !important; }
+.bootstrap .rating { unicode-bidi: bidi-override; direction: rtl; font-size: 20px; }
+.bootstrap .rating span.star { font-family: FontAwesome; font-weight: normal; font-style: normal; display: inline-block; }
+.bootstrap .rating span.star:hover { cursor: pointer; }
+.bootstrap .rating span.star:before { content: "\f006"; padding-right: 3px; color: #999999; }
+.bootstrap .rating span.star.active ~ span.star:before { content: "\f005"; color: #e3cf7a; }
 .bootstrap .table { border-collapse: separate; border-spacing: 0 2px 0 0; margin-bottom: 5px; }
 .bootstrap .table thead > tr > th { border: none; font-weight: normal; vertical-align: top; border-bottom: solid 1px #a0d0eb; }
 .bootstrap .table thead > tr > th span.title_box { color: #656565; display: block; word-wrap: nowrap; white-space: nowrap; }
