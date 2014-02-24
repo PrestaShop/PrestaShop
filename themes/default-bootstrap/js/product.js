@@ -28,8 +28,7 @@ var selectedCombination = [];
 var globalQuantity = 0;
 var colors = [];
 
-$(document).ready(function()
-{
+$(document).ready(function(){
 	if (typeof customizationFields !== 'undefined' && customizationFields)
 	{
 		var customizationFields = [];
@@ -147,18 +146,18 @@ $(document).ready(function()
 		});
 	}
 	//add a link on the span 'view full size' and on the big image
-	$('#view_full_size, #image-block img').click(function(){
+	$(document).on('click', '#view_full_size, #image-block img', function(e){
 		$('#views_block .shown').click();
 	});
 
 	//catch the click on the "more infos" button at the top of the page
-	$('#short_description_block .button').click(function(){
+	$(document).on('click', '#short_description_block .button', function(e){
 		$('#more_info_tab_more_info').click();
 		$.scrollTo( '#more_info_tabs', 1200 );
 	});
 
 	// Hide the customization submit button and display some message
-	$('#customizedDatas input').click(function() {
+	$(document).on('click', '#customizedDatas input', function(e){
 		$('#customizedDatas input').hide();
 		$('#ajax-loader').fadeIn();
 		$('#customizedDatas').append(uploading_in_progress);
@@ -175,26 +174,42 @@ $(document).ready(function()
 	else if (typeof productHasAttributes != 'undefined' && !productHasAttributes && !url_found)
 		refreshProductImages(0);
 
-	$('#resetImages').click(function(e) {
+	$(document).on('click', 'a[name=resetImages]', function(e){
 		e.preventDefault();
 		refreshProductImages(0);
 		$(this).parent().hide('slow');
 	});
 
-	$('.color_pick').click(function(e) {
+	$(document).on('click', '.color_pick', function(e){
 		e.preventDefault();
 		colorPickerClick($(this));
 		getProductAttribute();
 	});
 
-	if (contentOnly == false)
+	$(document).on('change', '.attribute_select', function(e){
+		e.preventDefault();
+		findCombination();
+		getProductAttribute();
+	});
+
+	$(document).on('click', '.attribute_radio', function(e){
+		e.preventDefault();
+		findCombination();
+		getProductAttribute();
+	});
+
+	$(document).on('click', 'button[name=saveCustomization]', function(e){
+		saveCustomization();
+	});
+
+	if (contentOnly == false && !!$.prototype.fancybox)
 		$('.thickbox').fancybox({
 			'hideOnContentClick': true,
 			'transitionIn'	: 'elastic',
 			'transitionOut'	: 'elastic'
 		});
 	else
-		$('.thickbox').click(function(){return false});
+		$(document).on('click', '.thickbox', function(e){e.preventDefault();});
 
 	if (!!$.prototype.bxSlider)
 		$('#bxslider').bxSlider({
@@ -211,7 +226,7 @@ $(document).ready(function()
 		});
 
     // The button to increment the product value
-    $('.product_quantity_up').click(function(e){
+    $(document).on('click', '.product_quantity_up', function(e){
         e.preventDefault();
         fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name='+fieldName+']').val());
@@ -225,10 +240,9 @@ $(document).ready(function()
         } else {
             $('input[name='+fieldName+']').val(quantityAvailableT);
         }
-		return false;
     });
 	 // The button to decrement the product value
-    $(".product_quantity_down").click(function(e) {
+    $(document).on('click', '.product_quantity_down', function(e){
         e.preventDefault();
         fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name='+fieldName+']').val());
@@ -237,11 +251,27 @@ $(document).ready(function()
         } else {
             $('input[name='+fieldName+']').val(1);
         }
-		return false;
     });
 
 	if (typeof minimalQuantity != 'undefined' && minimalQuantity)
+	{
 		checkMinimalQuantity();
+		$(document).on('keyup', 'input[name=qty]', function(e){
+			checkMinimalQuantity(minimalQuantity);
+		});	
+	}
+
+	if (typeof ad !== 'undefined' && ad && typeof adtoken !== 'undefined' && adtoken)
+	{
+		$(document).on('click', 'input[name=publish_button]', function(e){
+			e.preventDefault();
+			submitPublishProduct(ad, 0, adtoken);
+		});
+		$(document).on('click', 'input[name=lnk_view]', function(e){
+			e.preventDefault();
+			submitPublishProduct(ad, 1, adtoken);
+		});
+	}
 });
 
 function arrayUnique(a)
@@ -798,7 +828,7 @@ function colorPickerClick(elt)
 										});
 									});
 								});
-	$(elt).parent().parent().parent().children('.color_pick_hidden,#color_pick_hidden').val(id_attribute);
+	$(elt).parent().parent().parent().children('.color_pick_hidden').val(id_attribute);
 	findCombination(false);
 }
 

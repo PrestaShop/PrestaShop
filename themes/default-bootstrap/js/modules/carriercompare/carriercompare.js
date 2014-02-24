@@ -50,10 +50,10 @@ $(document).ready(function(){
 		updateCarriersList();
 	});
 
-	$(document).on('click', '#carriercompare_submit', function(){
+	$(document).on('click', '#carriercompare_submit', function(e){
+		e.preventDefault();
 		resetAjaxQueries();
 		saveSelection();
-		return false;
 	});
 
 	updateStateByIdCountry();

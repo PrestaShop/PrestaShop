@@ -670,7 +670,7 @@ else
 				<a class="folder-link" href="dialog.php?<?php echo $get_params.rawurlencode($src)."&".uniqid() ?>">
 					<div class="img-precontainer">
 						<div class="img-container directory"><span></span>
-							<img class="directory-img" src="img/<?php echo Tools::safeOuput($icon_theme); ?>/folder<?php if ($file == "..")
+							<img class="directory-img" src="img/<?php echo Tools::safeOutput($icon_theme); ?>/folder<?php if ($file == "..")
 							{
 								echo "_back";
 							} ?>.jpg" alt="folder"/>

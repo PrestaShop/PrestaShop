@@ -319,8 +319,9 @@
 		</div>
 		<hr/>
 		<div class="form-group">
-			<label class="control-label col-lg-3">{l s='Image:'}</label>
+			<label class="control-label col-lg-3">{l s='Image'}</label>
 			<div class="col-lg-9">
+				{if $images|count}
 				<ul id="id_image_attr" class="list-inline">
 					{foreach from=$images key=k item=image}
 					<li>
@@ -331,12 +332,15 @@
 					</li>
 					{/foreach}
 				</ul>
+				{else}
+					<div class="alert alert-warning">{l s='Please upload any image before you can select one for this combination'}</div>
+				{/if}
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_default">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_default" type="attribute_default"}
-				{l s='Default:'}
+				{l s='Default'}
 			</label>
 			<div class="col-lg-9">
 				<p class="checkbox">

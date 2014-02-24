@@ -23,36 +23,45 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 $(document).ready(function(){
+	vat_number();
+	vat_number_ajax();
 
-	$("a.iframe").fancybox({
-		'type': 'iframe',
-		'width': 600,
-		'height': 600
+	$(document).on('input', '#company, #company_invoice', function(){
+		vat_number();
 	});
-
-	if (typeof cart_gift != 'undefined' && cart_gift && $('input#gift').is(':checked'))
-		$('p#gift_div').show();
-
-	$(document).on('change', 'input.delivery_option_radio', function(){
-		var key = $(this).data('key');
-		var id_address = parseInt($(this).data('id_address'));
-		if (orderProcess == 'order' && key && id_address)
-			updateExtraCarrier(key, id_address);
-		else if(orderProcess == 'order-opc' && typeof updateCarrierSelectionAndGift !== 'undefined')
-			updateCarrierSelectionAndGift();
-	});
-
-	$(document).on('submit', 'form[name=carrier_area]', function(){
-		return acceptCGV();
-	});
-
 });
 
-function acceptCGV()
+function vat_number()
 {
-	if (typeof msg_order_carrier != 'undefined' && $('#cgv').length && !$('input#cgv:checked').length)
-		alert(msg_order_carrier);
+	if (($('#company').length) && ($('#company').val() != ''))
+		$('#vat_number, #vat_number_block').show();
 	else
-		return true;
-	return false;
+		$('#vat_number, #vat_number_block').hide();
+
+	if (($('#company_invoice').length) && ($('#company_invoice').val() != ''))
+		$('#vat_number_block_invoice').show();
+	else
+		$('#vat_number_block_invoice').hide();
+}
+
+function vat_number_ajax()
+{
+	$(document).on('change', '#id_country', function()
+	{
+		if (typeof vatnumber_ajax_call !== 'undefined' && vatnumber_ajax_call)
+			$.ajax({
+				type: 'POST',
+				headers: {"cache-control": "no-cache"},
+				url: baseDir + 'modules/vatnumber/ajax.php?id_country=' + parseInt($(this).val()) + '&rand=' + new Date().getTime(),
+				success: function(isApplicable){
+					if(isApplicable == "1")
+					{
+						$('#vat_area').show();
+						$('#vat_number').show();
+					}
+					else
+						$('#vat_area').hide();
+				}
+			});
+	});
 }

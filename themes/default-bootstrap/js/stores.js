@@ -22,8 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-$(document).ready(function()
-{
+$(document).ready(function(){
 	map = new google.maps.Map(document.getElementById('map'), {
 		center: new google.maps.LatLng(defaultLat, defaultLong),
 		zoom: 10,
@@ -45,6 +44,15 @@ $(document).ready(function()
 			searchLocations();
 	});
 
+	$(document).on('click', 'input[name=location]', function(e){
+		e.preventDefault();
+		$(this).val('');
+	});
+
+	$(document).on('click', 'button[name=search_locations]', function(e){
+		e.preventDefault();
+		searchLocations();
+	});
 
 	initMarkers();
 });
@@ -72,9 +80,8 @@ function initMarkers()
 		}
 		map.fitBounds(bounds);
 		var zoomOverride = map.getZoom();
-        if(zoomOverride > 10) {
-        zoomOverride = 10;
-        }
+        if(zoomOverride > 10)
+        	zoomOverride = 10;
 		map.setZoom(zoomOverride);
 	});
 }
@@ -211,14 +218,16 @@ function downloadUrl(url, callback)
 
 function parseXml(str)
 {
-	if (window.ActiveXObject) {
+	if (window.ActiveXObject)
+	{
 		var doc = new ActiveXObject('Microsoft.XMLDOM');
 		doc.loadXML(str);
 		return doc;
 	}
-	else if (window.DOMParser) {
+	else if (window.DOMParser)
 		return (new DOMParser()).parseFromString(str, 'text/xml');
-	}
 }
 
-function doNothing() {}
+function doNothing()
+{
+}

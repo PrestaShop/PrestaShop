@@ -22,10 +22,20 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-$(document).ready(function()
-{
-	if (typeof(formatedAddressFieldsValuesList) !== 'undefined')
+$(document).ready(function(){
+	if (typeof formatedAddressFieldsValuesList !== 'undefined')
 		updateAddressesDisplay(true);
+
+	$(document).on('change', 'select[name=id_address_delivery], select[name=id_address_invoice]', function(){
+		updateAddressesDisplay();
+		if (typeof opc !=='undefined' && opc)
+			updateAddressSelection();
+	});
+	$(document).on('click', 'input[name=same]', function(){
+		updateAddressesDisplay();
+		if (typeof opc !=='undefined' && opc)
+			updateAddressSelection();
+	});
 });
 
 //update the display of the addresses
@@ -42,7 +52,7 @@ function updateAddressesDisplay(first_view)
 	{}
 	// update content of invoice address
 	//if addresses have to be equals...
-	if ($('input[type=checkbox]#addressesAreEquals:checked').length === 1 && ($('#multishipping_mode_checkbox:checked').length === 0))
+	if ($('#addressesAreEquals:checked').length === 1 && ($('#multishipping_mode_checkbox:checked').length === 0))
 	{
 		if ($('#multishipping_mode_checkbox:checked').length === 0) {
 			$('#address_invoice_form:visible').hide('fast');
@@ -71,8 +81,8 @@ function updateAddressesDisplay(first_view)
 
 function updateAddressDisplay(addressType)
 {
-	if (formatedAddressFieldsValuesList.length <= 0)
-		return false;
+	if (typeof formatedAddressFieldsValuesList == 'undefined' || formatedAddressFieldsValuesList.length <= 0)
+		return;
 
 	var idAddress = parseInt($('#id_address_' + addressType + '').val());
 	buildAddressBlock(idAddress, addressType, $('#address_' + addressType));
@@ -90,7 +100,7 @@ function updateAddressDisplay(addressType)
 function updateAddresses()
 {
 	var idAddress_delivery = parseInt($('#id_address_delivery').val());
-	var idAddress_invoice = $('input[type=checkbox]#addressesAreEquals:checked').length === 1 ? idAddress_delivery : parseInt($('#id_address_invoice').val());
+	var idAddress_invoice = $('#addressesAreEquals:checked').length === 1 ? idAddress_delivery : parseInt($('#id_address_invoice').val());
 	
    	if(isNaN(idAddress_delivery) == false && isNaN(idAddress_invoice) == false)	
 	{
@@ -139,10 +149,16 @@ function updateAddresses()
 
 function getAddressesTitles()
 {
-	return {
-		'invoice': titleInvoice,
-		'delivery': titleDelivery
-	};
+	if (typeof titleInvoice !== 'undefined' && typeof titleDelivery !== 'undefined')
+		return {
+			'invoice': titleInvoice,
+			'delivery': titleDelivery
+		};
+	else
+		return {
+			'invoice': '',
+			'delivery': ''
+		};
 }
 
 function buildAddressBlock(id_address, address_type, dest_comp)
@@ -157,10 +173,13 @@ function buildAddressBlock(id_address, address_type, dest_comp)
 	ordered_fields_name = ordered_fields_name.concat(['update']);
 	dest_comp.html('');
 	li_content['title'] = adr_titles_vals[address_type];
-	var items = liUpdate.split(reg);
-	var regUrl = new RegExp('(https?://[^"]*)', 'gi');
-	liUpdate = liUpdate.replace(regUrl, addressUrlAdd + parseInt(id_address));
-	li_content['update'] = liUpdate;
+	if (typeof liUpdate !== 'undefined')
+	{
+		var items = liUpdate.split(reg);
+		var regUrl = new RegExp('(https?://[^"]*)', 'gi');
+		liUpdate = liUpdate.replace(regUrl, addressUrlAdd + parseInt(id_address));
+		li_content['update'] = liUpdate;
+	}
 	appendAddressList(dest_comp, li_content, ordered_fields_name);
 }
 

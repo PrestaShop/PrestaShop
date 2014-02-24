@@ -22,26 +22,29 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
+//global variables
 var responsiveflag = false;
 
 $(document).ready(function(){
 	highdpi_init();
 	blockHover();
+
 	if (typeof quickView !== 'undefined' && quickView)
 		quick_view();
+
 	responsiveResize();
 	$(window).resize(responsiveResize);
+
 	tmDropDown ('', '#header .current', 'ul.toogle_content', 'active');							// all of this should be defined or left empty brackets
 	//tmDropDown ('cart', 'li#shopping_cart > a', '#cart_block', 'active');			// all of this should be defined or left empty brackets
 
-	if (navigator.userAgent.match(/Android/i)) {
+	if (navigator.userAgent.match(/Android/i))
+	{
 		var viewport = document.querySelector("meta[name=viewport]");
 		viewport.setAttribute('content', 'initial-scale=1.0,maximum-scale=1.0,user-scalable=0,width=device-width,height=device-height');
 	}
-	if (navigator.userAgent.match(/Android/i)) {
+	if (navigator.userAgent.match(/Android/i))
 		window.scrollTo(0,1);
-	}
 
 	if (typeof page_name != 'undefined' && !in_array(page_name, ['index', 'product']))
 	{
@@ -52,24 +55,35 @@ $(document).ready(function(){
 		else
 			$('.display').find('li#grid').addClass('selected');
 		
-		$('#grid').click(function(e){
+		$(document).on('click', '#grid', function(e){
 			e.preventDefault();
 			display('grid');
 		});
 
-		$('#list').click(function(e){
+		$(document).on('click', '#list', function(e){
 			e.preventDefault();
 			display('list');
 		});
 
-		if (typeof request != 'undefined' && request)
-		{
-	 		$('.selectProductSort').change(function(){
+ 		$(document).on('change', '.selectProductSort', function(){
+			if (typeof request != 'undefined' && request)
 				var requestSortProducts = request;
-	 			var splitData = $(this).val().split(':');
+ 			var splitData = $(this).val().split(':');
+			if (typeof requestSortProducts != 'undefined' && requestSortProducts)
 				document.location.href = requestSortProducts + ((requestSortProducts.indexOf('?') < 0) ? '?' : '&') + 'orderby=' + splitData[0] + '&orderway=' + splitData[1];
-	    	});
-		}
+    	});
+
+		$(document).on('change', 'select[name=n]', function(){
+			$(this.form).submit();
+		});
+
+		$(document).on('change', 'select[name=manufacturer_list], select[name=supplier_list]', function(){
+			autoUrl($(this).attr('id'), '');
+		});
+
+		$(document).on('change', 'select[name=currency_payement]', function(){
+			setCurrency($(this).val());
+		});
 	}
 	
 	jQuery.curCSS = jQuery.css;
@@ -88,6 +102,11 @@ $(document).ready(function(){
 		    	openSpeed:  'fast'
 			}
 		}).css('opacity', 0.8);
+
+		$(document).on('click', '.back', function(e){
+			e.preventDefault();
+			history.back();
+		});
 });
 
 function highdpi_init()
@@ -111,7 +130,7 @@ function highdpi_init()
 function blockHover(status)
 {
 	$(document).on('mouseenter', '.product_list.grid li.ajax_block_product .product-container',
-		function(){
+		function(e){
 			if ($('body').find('.container').width() == 1170){
 				var pcHeight = $(this).parent().outerHeight();
 				var pcPHeight = $(this).parent().find('.button-container').outerHeight() + $(this).parent().find('.comments_note').outerHeight() + $(this).parent().find('.functional-buttons').outerHeight();
@@ -121,7 +140,7 @@ function blockHover(status)
 		}
 	);
 
-	$(document).on('mouseleave', '.product_list.grid li.ajax_block_product .product-container', function(){
+	$(document).on('mouseleave', '.product_list.grid li.ajax_block_product .product-container', function(e){
 			if ($('body').find('.container').width() == 1170)
 				$(this).parent().removeClass('hovered').removeAttr('style');
 		}
