@@ -89,6 +89,9 @@ module_inactive
 								{if isset($module->description) && $module->description ne ''}
 									{$module->description}
 								{/if}
+								{if isset($module->show_quick_view) &&  $module->show_quick_view}
+									<a href="{$currentIndex}&token={$token}&ajax=1&action=GetModuleQuickView&module={$module->name}" class="fancybox-quick-view">{l s='Quick view ?'}</a>
+								{/if}
 							</p>
 							{if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success">{$module->message}</div>{/if}
 						</div>
@@ -196,3 +199,14 @@ module_inactive
 		</tbody>
 	{/if}
 </table>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.fancybox-quick-view').fancybox({
+			type: 'ajax',
+			autoDimensions: false,
+			autoSize: false,
+			width: 600,
+			height: 'auto'
+		});
+	});
+</script>
