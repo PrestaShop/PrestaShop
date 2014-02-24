@@ -145,7 +145,7 @@ class AttributeCore extends ObjectModel
 		');
 	}
 
-	public static function isAttribute($name, $id_lang)
+	public static function isAttribute($id_attribute_group, $name, $id_lang)
 	{
 		if (!Combination::isFeatureActive())
 			return array();
@@ -161,7 +161,7 @@ class AttributeCore extends ObjectModel
 				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 			'.Shop::addSqlAssociation('attribute_group', 'ag').'
 			'.Shop::addSqlAssociation('attribute', 'a').'
-			WHERE al.`name` = \''.pSQL($name).'\'
+			WHERE al.`name` = \''.pSQL($name).'\' AND ag.`id_attribute_group` = '.(int)$id_attribute_group.'
 			ORDER BY agl.`name` ASC, a.`position` ASC
 		');
 

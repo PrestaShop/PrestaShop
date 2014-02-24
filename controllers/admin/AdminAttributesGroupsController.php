@@ -390,8 +390,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		{
 			$object = new $this->className();
 			foreach (Language::getLanguages(false) as $language)
-				if ($object->isAttribute(Tools::getValue('name_'.$language['id_lang']), $language['id_lang']))
-					$this->errors['name_'.$language['id_lang']] = sprintf(Tools::displayError('The attribute value "%1$s" already exist for %2$s language'),
+				if ($object->isAttribute((int)Tools::getValue('id_attribute_group'),
+					Tools::getValue('name_'.$language['id_lang']), $language['id_lang']))
+					$this->errors['name_'.$language['id_lang']] =
+						sprintf(Tools::displayError('The attribute value "%1$s" already exist for %2$s language'),
 						Tools::getValue('name_'.$language['id_lang']), $language['name']);
 
 			if (!empty($this->errors))
