@@ -260,16 +260,21 @@ var ajaxCart = {
 	add : function(idProduct, idCombination, addedFromProductPage, callerElement, quantity, whishlist){
 		if (addedFromProductPage && !checkCustomizations())
 		{
-            $.fancybox.open([
-                {
-                    type: 'inline',
-                    autoScale: true,
-                    minHeight: 30,
-                    content: '<p class="fancybox-error">' + fieldRequired + '</p>'
-                }
-            ], {
-                padding: 0
-            });
+            if (!!$.prototype.fancybox)
+            {
+                $.fancybox.open([
+                    {
+                        type: 'inline',
+                        autoScale: true,
+                        minHeight: 30,
+                        content: '<p class="fancybox-error">' + fieldRequired + '</p>'
+                    }
+                ], {
+                    padding: 0
+                });
+            }
+            else
+                alert(fieldRequired);
             return;
 		}
 		emptyCustomizations();
