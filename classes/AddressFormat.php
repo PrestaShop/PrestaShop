@@ -133,7 +133,7 @@ class AddressFormatCore extends ObjectModel
 			{
 				$propertyName = $property->getName();
 				if (($propertyName == $fieldName) && ($isIdField ||
-						(!preg_match('#id|id_\w#', $propertyName))))
+						(!preg_match('/\bid\b|id_\w+|\bid[A-Z]\w+/', $propertyName))))
 					$isValide = true;
 			}
 
@@ -227,6 +227,7 @@ class AddressFormatCore extends ObjectModel
 					}
 				}
 			}
+
 		return (count($this->_errorFormatList)) ? false : true;
 	}
 
