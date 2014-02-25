@@ -308,7 +308,7 @@ class OrderOpcControllerCore extends ParentOrderController
 	{
 		parent::setMedia();
 
-		if ($this->context->getMobileDevice() == false)
+		if (!$this->useMobileTheme())
 		{
 			// Adding CSS style sheet
 			$this->addCSS(_THEME_CSS_DIR_.'order-opc.css');

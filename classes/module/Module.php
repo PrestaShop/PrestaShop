@@ -1150,7 +1150,7 @@ abstract class ModuleCore
 					$item->author = stripslashes(Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->author), (string)$xml_module->name));
 
 					if (isset($xml_module->confirmUninstall))
-						$item->confirmUninstall = Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->confirmUninstall), (string)$xml_module->name);
+						$item->confirmUninstall = Translate::getModuleTranslation((string)$xml_module->name, html_entity_decode(Module::configXmlStringFormat($xml_module->confirmUninstall)), (string)$xml_module->name);
 
 					$item->active = 0;
 					$item->onclick_option = false;
@@ -1205,7 +1205,7 @@ abstract class ModuleCore
 					$item->active = $tmp_module->active;
 					$item->currencies = isset($tmp_module->currencies) ? $tmp_module->currencies : null;
 					$item->currencies_mode = isset($tmp_module->currencies_mode) ? $tmp_module->currencies_mode : null;
-					$item->confirmUninstall = isset($tmp_module->confirmUninstall) ? $tmp_module->confirmUninstall : null;
+					$item->confirmUninstall = isset($tmp_module->confirmUninstall) ? html_entity_decode($tmp_module->confirmUninstall) : null;
 					$item->description_full = stripslashes($tmp_module->description_full);
 					$item->additional_description = isset($tmp_module->additional_description) ? stripslashes($tmp_module->additional_description) : null;
 					$item->compatibility = isset($tmp_module->compatibility) ? (array)$tmp_module->compatibility : null;
@@ -2119,10 +2119,13 @@ abstract class ModuleCore
 		$theme_meta_value = array();
 		foreach ($this->controllers as $controller)
 		{
-			if (Meta::getMetaByPage('module-'.$this->name.'-'.$controller, $this->context->language->id))
+			$page = 'module-'.$this->name.'-'.$controller;
+			$result = Db::getInstance()->getValue('SELECT * FROM '._DB_PREFIX_.'meta WHERE page="'.pSQL($page).'"');
+			if ((int)$result > 0)
 				return true;
+
 			$meta = New Meta();
-			$meta->page = 'module-'.$this->name.'-'.$controller;
+			$meta->page = $page;
 			$meta->configurable = 0;
 			$meta->save();
 			if ((int)$meta->id > 0)

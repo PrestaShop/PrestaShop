@@ -37,7 +37,7 @@ class ProductControllerCore extends FrontController
 		if (count($this->errors))
 			return ;
 
-		if ($this->context->getMobileDevice() == false)
+		if (!$this->useMobileTheme())
 		{
 			$this->addCSS(_THEME_CSS_DIR_.'product.css');
 			$this->addJqueryPlugin(array('fancybox', 'idTabs', 'scrollTo', 'serialScroll', 'bxslider'));

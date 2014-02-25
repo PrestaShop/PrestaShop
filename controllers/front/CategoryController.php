@@ -37,7 +37,7 @@ class CategoryControllerCore extends FrontController
 	{
 		parent::setMedia();
 
-		if ($this->context->getMobileDevice() == false)
+		if (!$this->useMobileTheme())
 		{
 			//TODO : check why cluetip css is include without js file
 			$this->addCSS(array(
