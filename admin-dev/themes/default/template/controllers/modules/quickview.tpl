@@ -46,11 +46,6 @@
 				<p class="small">{if (int)$nb_rates > 1}{l s="(%s votes)" sprintf=$nb_rates}{else}{l s="(%s vote)" sprintf=$nb_rates}{/if}</p>
 			</div>
 			{/if}
-			{if isset($compatibility) && $compatibility|count == 2}
-			<div class="col-lg-8">
-				<h4>{l s="Compatibility: PrestaShop v%1s - v%2s" sprintf=[$compatibility['from']|escape,$compatibility['to']|escape]}</h4>
-			</div>
-			{/if}
 		</div>
 		<h3>{l s="Description"}</h3>
 		<p class="text-justify">{$description_full}</p>
