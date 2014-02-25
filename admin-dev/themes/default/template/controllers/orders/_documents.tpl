@@ -165,10 +165,13 @@
 			{/if}
 		{foreachelse}
 			<tr>
-				<td colspan="5" class="text-center">
-					<i class="icon-warning-sign"></i> {l s='No documents are available'}
+				<td colspan="5" class="list-empty">
+					<div class="list-empty-msg">
+						<i class="icon-warning-sign list-empty-icon"></i>
+						{l s='No document are available'}
+					</div>
 					{if isset($invoice_management_active) && $invoice_management_active}
-						<a class="btn btn-link" href="{$current_index}&amp;viewOrder&amp;submitGenerateInvoice&amp;id_order={$order->id}{if isset($smarty.get.token)}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}{/if}">
+						<a class="btn btn-default" href="{$current_index}&amp;viewOrder&amp;submitGenerateInvoice&amp;id_order={$order->id}{if isset($smarty.get.token)}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}{/if}">
 							<i class="icon-repeat"></i>
 							{l s='Generate invoice'}
 						</a>

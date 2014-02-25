@@ -62,28 +62,28 @@
 
 	<div class="panel">
 		<div class="row">
-			<div class="col-sm-6 col-lg-3 box-stats color3" >
+			<div class="col-xs-6 col-lg-3 box-stats color3" >
 				<div class="kpi-content">
 					<i class="icon-calendar-empty"></i>
 					<span class="title">{l s='Date'}</span>
 					<span class="value">{dateFormat date=$order->date_add full=false}</span>
 				</div>
 			</div>
-			<div class="col-sm-6 col-lg-3 box-stats color2" >
+			<div class="col-xs-6 col-lg-3 box-stats color2" >
 				<div class="kpi-content">
 					<i class="icon-comments"></i>
 					<span class="title">{l s='Messages'}</span>
 					<span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}">{sizeof($customer_thread_message)}</a></span>
 				</div>
 			</div>
-			<div class="col-sm-6 col-lg-3 box-stats color1" >
+			<div class="col-xs-6 col-lg-3 box-stats color1" >
 				<div class="kpi-content">
 					<i class="icon-book"></i>
 					<span class="title">{l s='Products'}</span>
 					<span class="value">{sizeof($products)}</span>
 				</div>
 			</div>
-			<div class="col-sm-6 col-lg-3 box-stats color4" >
+			<div class="col-xs-6 col-lg-3 box-stats color4" >
 				<div class="kpi-content">
 					<i class="icon-money"></i>
 					<span class="title">{l s='Total'}</span>
@@ -143,8 +143,6 @@
 								{l s='No delivery slip'}
 							</span>
 						{/if}
-					</div>
-					<div class="row">
 						{if Configuration::get('PS_ORDER_RETURN')}
 						<a id="desc-order-standard_refund" class="btn btn-default" href="#refundForm">
 							<i class="icon-exchange"></i>
@@ -211,7 +209,7 @@
 						<form action="{$currentIndex}&amp;vieworder&amp;token={$smarty.get.token}" method="post" class="form-horizontal well">
 							<div class="row">
 								<div class="col-lg-9">
-									<select id="id_order_state" name="id_order_state">
+									<select id="id_order_state" class="chosen form-control" name="id_order_state">
 									{foreach from=$states item=state}
 										<option value="{$state['id_order_state']|intval}"{if $state['id_order_state'] == $currentState->id} selected="selected" disabled="disabled"{/if}>{$state['name']|escape}</option>
 									{/foreach}
@@ -219,7 +217,7 @@
 									<input type="hidden" name="id_order" value="{$order->id}" />
 								</div>
 								<div class="col-lg-3">
-									<button type="submit" name="submitState" class="btn btn-default">
+									<button type="submit" name="submitState" class="btn btn-primary">
 										{l s='Add'}
 									</button>
 								</div>
@@ -336,7 +334,12 @@
 								</tbody>
 							</table>
 							{else}
-							{l s='No merchandise returned yet.'}
+							<div class="list-empty">
+								<div class="list-empty-msg">
+									<i class="icon-warning-sign list-empty-icon"></i>
+									{l s='No merchandise returned yet'}
+								</div>
+							</div>
 							{/if}
 							{if $carrierModuleCall}
 								{$carrierModuleCall}
@@ -375,32 +378,60 @@
 						<a href="mailto:{$customer->email}">{$customer->email}</a>
 					</span>
 				</h3>
-				{if ($customer->isGuest())}
-					{l s='This order has been placed by a guest.'}
-					{if (!Customer::customerExists($customer->email))}
-					<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;token={getAdminToken tab='AdminCustomers'}">
-						<input type="hidden" name="id_lang" value="{$order->id_lang}" />
-						<input class="btn btn-default" type="submit" name="submitGuestToCustomer" value="{l s='Transform a guest into a customer'}" />
-						<p class="help-block">{l s='This feature will generate a random password and send an email to the customer.'}</p>
-					</form>
-					{else}
-					<div class="alert alert-warning">
-						{l s='A registered customer account has already claimed this email address'}
-					</div>
-					{/if}
-				{else}
-					<ul class="list-unstyled well">
-						<li>{l s='Account registered:'} {dateFormat date=$customer->date_add full=true}</li>
-						<li>{l s='Valid orders placed:'} {$customerStats['nb_orders']}</li>
-						<li>{l s='Total spent since registration:'} {displayPrice price=Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $currency), 2) currency=$currency->id}</li>
-						{if Configuration::get('PS_B2B_ENABLE')}
-							<li>{l s='Siret:'} {$customer->siret}</li>
-							<li>{l s='APE:'} {$customer->ape}</li>
-						{/if}
-					</ul>
-					{/if}
-				{/if}
 
+				<div class="row">
+					<div class="col-sm-6">
+						{if ($customer->isGuest())}
+							{l s='This order has been placed by a guest.'}
+							{if (!Customer::customerExists($customer->email))}
+							<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;token={getAdminToken tab='AdminCustomers'}">
+								<input type="hidden" name="id_lang" value="{$order->id_lang}" />
+								<input class="btn btn-default" type="submit" name="submitGuestToCustomer" value="{l s='Transform a guest into a customer'}" />
+								<p class="help-block">{l s='This feature will generate a random password and send an email to the customer.'}</p>
+							</form>
+							{else}
+							<div class="alert alert-warning">
+								{l s='A registered customer account has already claimed this email address'}
+							</div>
+							{/if}
+						{else}
+							<ul class="list-unstyled well">
+								<li>{l s='Account registered:'} {dateFormat date=$customer->date_add full=true}</li>
+								<li>{l s='Valid orders placed:'} {$customerStats['nb_orders']}</li>
+								<li>{l s='Total spent since registration:'} {displayPrice price=Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $currency), 2) currency=$currency->id}</li>
+								{if Configuration::get('PS_B2B_ENABLE')}
+									<li>{l s='Siret:'} {$customer->siret}</li>
+									<li>{l s='APE:'} {$customer->ape}</li>
+								{/if}
+							</ul>
+							{/if}
+						{/if}
+					</div>
+					<div class="col-sm-6">
+						<div class="panel">
+							<div class="panel-heading">
+								{l s='Private note'}
+							</div>
+							<form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote({$customer->id});return false;" >
+								<div class="form-group">
+									<div class="col-lg-12">
+										<textarea name="note" id="noteContent" class="textarea-autosize" onkeyup="$(this).val().length > 0 ? $('#submitCustomerNote').removeAttr('disabled') : $('#submitCustomerNote').attr('disabled', 'disabled')">{$customer->note}</textarea>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-12">
+										<button type="submit" id="submitCustomerNote" class="btn btn-default pull-right" disabled="disabled" />
+											<i class="icon-save"></i>
+											{l s='Save'}
+										</button>
+									</div>
+								</div>
+								<span id="note_feedback"></span>
+							</form>
+						</div>
+					</div>
+				</div>
+				
 				<!-- Tab nav -->
 				<ul class="nav nav-tabs" id="tabAddresses">
 					<li class="active">
@@ -446,7 +477,7 @@
 										</select>
 									</div>
 									<div class="col-lg-3">
-										<input class="btn btn-default" type="submit" name="submitAddressShipping" value="{l s='Change'}" />
+										<button class="btn btn-default" type="submit" name="submitAddressShipping"><i class="icon-refresh"></i> {l s='Change'}</button>
 									</div>
 								</div>
 							</form>
@@ -495,7 +526,7 @@
 									</select>
 								</div>
 								<div class="col-lg-3">
-									<input class="btn btn-default" type="submit" name="submitAddressInvoice" value="{l s='Change'}" />
+									<button class="btn btn-default" type="submit" name="submitAddressInvoice"><i class="icon-refresh"></i> {l s='Change'}</button>
 								</div>
 							</div>
 						</form>
@@ -527,19 +558,64 @@
 				</script>
 			</div>
 			<div class="panel">
-				<h3><i class="icon-envelope"></i> {l s='Messages'}</h3>
-				<div id="messages">
+				<div class="panel-heading">
+					<i class="icon-envelope"></i> {l s='Messages'} <span class="badge">{$messages|@count}</span>
+				</div>
+				{if (sizeof($messages))}
+					<div class="panel panel-info">
+						<div class="message-item">
+							{foreach from=$messages item=message}
+								<div class="message-avatar">
+									<div class="avatar-md">
+										<i class="icon-user icon-2x"></i>
+									</div>
+								</div>
+								<div class="message-body">
+									
+									<span class="message-date">&nbsp;<i class="icon-calendar"></i>
+										{l s='At'}
+										{dateFormat date=$message['date_add']}
+										{l s='from'}
+									</span>
+									<h4 class="message-item-heading">
+										{if ($message['elastname']|escape:'html':'UTF-8')}{$message['efirstname']|escape:'html':'UTF-8'}
+											{$message['elastname']|escape:'html':'UTF-8'}{else}{$message['cfirstname']|escape:'html':'UTF-8'} {$message['clastname']|escape:'html':'UTF-8'}
+										{/if}
+										{if ($message['private'] == 1)}
+											<span class="badge badge-info">{l s='Private'}</span>
+										{/if}
+									</h4>
+									<p class="message-item-text">
+										{$message['message']|escape:'html':'UTF-8'|nl2br}
+									</p>
+								</div>
+								{*if ($message['is_new_for_me'])}
+									<a class="new_message" title="{l s='Mark this message as \'viewed\''}" href="{$smarty.server.REQUEST_URI}&amp;token={$smarty.get.token}&amp;messageReaded={$message['id_message']}">
+										<i class="icon-ok"></i>
+									</a>
+								{/if*}
+							{/foreach}
+						</div>
+					</div>
+				{/if}
+				<div id="messages" class="well">
 					<form action="{$smarty.server.REQUEST_URI}&amp;token={$smarty.get.token}" method="post" onsubmit="if (getE('visibility').checked == true) return confirm('{l s='Do you want to send this message to the customer?'}');">
 						<div id="message" class="form-horizontal">
 							<div class="form-group">
 								<label class="control-label col-lg-3">{l s='Choose a standard message'}</label>
 								<div class="col-lg-9">
-									<select name="order_message" id="order_message" onchange="orderOverwriteMessage(this, '{l s='Do you want to overwrite your existing message?'}')">
+									<select class="chosen form-control" name="order_message" id="order_message" onchange="orderOverwriteMessage(this, '{l s='Do you want to overwrite your existing message?'}')">
 										<option value="0" selected="selected">-</option>
 										{foreach from=$orderMessages item=orderMessage}
 										<option value="{$orderMessage['message']|escape:'html':'UTF-8'}">{$orderMessage['name']}</option>
 										{/foreach}
 									</select>
+									<p class="help-block">
+										<a href="{$link->getAdminLink('AdminOrderMessage')|escape:'html':'UTF-8'}">
+											{l s='Configure predefined messages'}
+											<i class="icon-external-link"></i>
+										</a>
+									</p>
 								</div>
 							</div>
 
@@ -568,25 +644,15 @@
 								</div>
 							</div>
 
-							<div class="row">
-								<div class="col-lg-9 col-lg-offset-3">
-									<input type="hidden" name="id_order" value="{$order->id}" />
-									<input type="hidden" name="id_customer" value="{$order->id_customer}" />
-									<button type="submit" id="submitMessage" class="btn btn-default" name="submitMessage">
-										<i class="icon-check"></i>
-										{l s='Send'}
-									</button>
-								</div>
-							</div>
 
-							<hr/>
+							<input type="hidden" name="id_order" value="{$order->id}" />
+							<input type="hidden" name="id_customer" value="{$order->id_customer}" />
+							<button type="submit" id="submitMessage" class="btn btn-primary pull-right" name="submitMessage">
+								{l s='Send message'}
+							</button>
 							<a class="btn btn-default" href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}">
-								<i class="icon-external-link"></i>
 								{l s='Show all messages'}
-							</a>
-							<a class="btn btn-default" href="{$link->getAdminLink('AdminOrderMessage')|escape:'html':'UTF-8'}">
 								<i class="icon-external-link"></i>
-								{l s='Configure predefined messages'}
 							</a>
 						</div>
 					</form>
@@ -648,7 +714,6 @@
 								{if $invoice = $payment->getOrderInvoice($order->id)}
 									{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
 								{else}
-									{l s='No invoice'}
 								{/if}
 								</td>
 								<td class="actions">
@@ -659,7 +724,7 @@
 								</td>
 							</tr>
 							<tr class="payment_information" style="display: none;">
-								<td colspan="6">
+								<td colspan="5">
 									<p>
 										<b>{l s='Card Number'}</b>&nbsp;
 										{if $payment->card_number}
@@ -696,12 +761,17 @@
 							</tr>
 							{foreachelse}
 							<tr>
-								<td class="text-center" colspan="6">
-									<i class="icon-warning-sign"></i>
-									{l s='No payments are available'}
+								<td class="list-empty" colspan="6">
+									<div class="list-empty-msg">
+										<i class="icon-warning-sign list-empty-icon"></i>
+										{l s='No payments are available'}
+									</div>
 								</td>
 							</tr>
 							{/foreach}
+							
+						</tbody>
+						<tfoot>
 							<tr class="current-edit">
 								<td>
 									<input type="text" name="payment_date" class="datepicker" value="{date('Y-m-d H:i:s')}" />
@@ -730,23 +800,22 @@
 										</div>
 									</div>
 								</td>
-								{if count($invoices_collection) > 0}
 								<td>
-									<select name="payment_invoice" id="payment_invoice">
-									{foreach from=$invoices_collection item=invoice}
-										<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}</option>
-									{/foreach}
-									</select>
+									{if count($invoices_collection) > 0}
+										<select name="payment_invoice" id="payment_invoice">
+										{foreach from=$invoices_collection item=invoice}
+											<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}</option>
+										{/foreach}
+										</select>
+									{/if}
 								</td>
-								{/if}
-								<td>
-									<button class="btn btn-default" type="submit" name="submitAddPayment">
-										<i class="icon-ok"></i>
-										{l s='Save'}
+								<td class="actions">
+									<button class="btn btn-primary btn-block" type="submit" name="submitAddPayment">
+										{l s='Add a payment'}
 									</button>
 								</td>
 							</tr>
-						</tbody>
+						</tfoot>
 					</table>
 				</form>
 				{if (!$order->valid && sizeof($currencies) > 1)}
@@ -1117,30 +1186,6 @@
 			</div>
 		</div>
 	</form>
-
-	{if (sizeof($messages))}
-	<div class="panel">
-		<h3>
-			<i class="icon-envelope-alt"></i>
-			{l s='Messages'}
-		</h3>
-		{foreach from=$messages item=message}
-			<div {if $message['is_new_for_me']}class="new_message"{/if}>
-			{if ($message['is_new_for_me'])}
-				<a class="new_message" title="{l s='Mark this message as \'viewed\''}" href="{$smarty.server.REQUEST_URI}&amp;token={$smarty.get.token}&amp;messageReaded={$message['id_message']}">
-					<i class="icon-ok"></i>
-				</a>
-			{/if}
-			{l s='At'} <i>{dateFormat date=$message['date_add']}</i> 
-			{l s='from'} <b>{if ($message['elastname']|escape:'html':'UTF-8')}{$message['efirstname']|escape:'html':'UTF-8'} {$message['elastname']|escape:'html':'UTF-8'}{else}{$message['cfirstname']|escape:'html':'UTF-8'} {$message['clastname']|escape:'html':'UTF-8'}{/if}</b>
-			{if ($message['private'] == 1)}
-				<span style="color:red; font-weight:bold;">{l s='Private'}</span>
-			{/if}
-			<p>{$message['message']|escape:'html':'UTF-8'|nl2br}</p>
-			</div>
-		{/foreach}
-	</div>
-	{/if}
 
 	<script type="text/javascript">
 		$(document).ready(function(){

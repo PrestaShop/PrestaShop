@@ -115,6 +115,11 @@
 	@include alert-variant(#F3F3F2, $alert-addons-border, $alert-addons-text)
 	@include alert-panel(icon-puzzle-piece, $brand-addons)
 
+.alert.alert-message
+	@include alert-panel(icon-comment, $brand-warning)
+	border: solid 2px $brand-warning
+	background-color: white
+
 .alert h4
 	font-size: 1.45em
 	margin-bottom: 1em

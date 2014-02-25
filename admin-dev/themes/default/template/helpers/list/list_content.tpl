@@ -60,6 +60,8 @@
 			{/block}
 			{block name="td_content"}
 				{if isset($params.prefix)}{$params.prefix}{/if}
+				{if isset($params.badge_success) && $params.badge_success && isset($tr.badge_success) && $tr.badge_success == $params.badge_success}<span class="badge badge-success">{/if}
+				{if isset($params.badge_warning) && $params.badge-warning && isset($tr.badge_warning) && $tr.badge_warning == $params.badge-warning}<span class="badge badge-warning">{/if}
 				{if isset($params.color) && isset($tr[$params.color])}
 					<span class="label color_field" style="background-color:{$tr[$params.color]};color:{if Tools::getBrightness($tr[$params.color]) < 128}white{else}#383838{/if}">
 				{/if}
@@ -142,6 +144,8 @@
 				{if isset($params.color) && isset($tr.color)}
 					</span>
 				{/if}
+				{if isset($params.badge_success) && $params.badge_success && isset($tr.badge_success) && $tr.badge_success == $params.badge_success}</span>{/if}
+				{if isset($params.badge_warning) && $params.badge-warning && isset($tr.badge_warning) && $tr.badge_warning == $params.badge-warning}</span>{/if}
 			{/block}
 			{block name="close_td"}
 				</td>
