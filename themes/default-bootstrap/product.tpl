@@ -60,7 +60,7 @@
 			<!-- product img-->        
 			<div id="image-block" class="clearfix">
 				{if $product->on_sale}
-					<span class="sale-box">
+					<span class="sale-box no-print">
 						<span class="sale-label">{l s='Sale!'}</span>
 					</span>
 				{elseif $product->specificPrice && $product->specificPrice.reduction && $productPriceWithoutReduction > $productPrice}
@@ -75,7 +75,7 @@
 						{else}
 							<img id="bigpic" itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html':'UTF-8'}" title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" alt="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" width="{$largeSize.width}" height="{$largeSize.height}"/>
 							{if !$content_only}
-								<span class="span_link">{l s='View larger'}</span>
+								<span class="span_link no-print">{l s='View larger'}</span>
 							{/if}
 						{/if}
 					</span>
@@ -137,7 +137,7 @@
 				<!-- end thumbnails -->
 			{/if}
 			{if isset($images) && count($images) > 1}
-				<p class="resetimg clear">
+				<p class="resetimg clear no-print">
 					<span id="wrapResetImages" style="display: none;">
 						<a href="{$link->getProductLink($product)|escape:'html':'UTF-8'}" name="resetImages">
 							<i class="icon-repeat"></i>
@@ -221,7 +221,7 @@
 			{if isset($HOOK_EXTRA_RIGHT) && $HOOK_EXTRA_RIGHT}{$HOOK_EXTRA_RIGHT}{/if}
 			{if !$content_only}
 				<!-- usefull links-->
-				<ul id="usefull_link_block" class="clearfix">
+				<ul id="usefull_link_block" class="clearfix no-print">
 					{if $HOOK_EXTRA_LEFT}{$HOOK_EXTRA_LEFT}{/if}
 					<li class="print">
 						<a href="javascript:print();">
@@ -333,7 +333,7 @@
 											{assign var="groupName" value="group_$id_attribute_group"}
 											<div class="attribute_list">
 												{if ($group.group_type == 'select')}
-													<select name="{$groupName}" id="group_{$id_attribute_group|intval}" class="form-control attribute_select">
+													<select name="{$groupName}" id="group_{$id_attribute_group|intval}" class="form-control attribute_select no-print">
 														{foreach from=$group.attributes key=id_attribute item=group_attribute}
 															<option value="{$id_attribute|intval}"{if (isset($smarty.get.$groupName) && $smarty.get.$groupName|intval == $id_attribute) || $group.default == $id_attribute} selected="selected"{/if} title="{$group_attribute|escape:'html':'UTF-8'}">{$group_attribute|escape:'html':'UTF-8'}</option>
 														{/foreach}
@@ -374,7 +374,7 @@
 					</div> <!-- end product_attributes -->
 					<div class="box-cart-bottom">
 						<div{if (!$allow_oosp && $product->quantity <= 0) || !$product->available_for_order || (isset($restricted_country_mode) && $restricted_country_mode) || $PS_CATALOG_MODE} class="unvisible"{/if}>
-							<p id="add_to_cart" class="buttons_bottom_block">
+							<p id="add_to_cart" class="buttons_bottom_block no-print">
 								<button type="submit" name="Submit" class="exclusive">
 									<span>{l s='Add to cart'}</span>
 								</button>
@@ -510,7 +510,7 @@
 										</div>
 										<div class="clearfix" style="margin-top:5px">
 											{if !$PS_CATALOG_MODE && ($accessory.allow_oosp || $accessory.quantity > 0)}
-												<div>
+												<div class="no-print">
 													<a class="exclusive button ajax_add_to_cart_button" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$accessory.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html':'UTF-8'}" data-id-product="{$accessory.id_product|intval}" title="{l s='Add to cart'}">
 														<span>{l s='Add to cart'}</span>
 													</a>
