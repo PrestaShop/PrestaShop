@@ -139,24 +139,24 @@
 							<p class="form-control-static">
 								{if $customer->newsletter}
 									<span class="label label-success">
-										<i class="icon-check-sign"></i>
+										<i class="icon-check"></i>
 										{l s='Newsletter'}
 									</span>
 								{else}
-									<span class="label label-warning">
-										<i class="icon-ban-circle"></i>
+									<span class="label label-danger">
+										<i class="icon-remove"></i>
 										{l s='Newsletter'}
 									</span>
 								{/if}
 								&nbsp;
 								{if $customer->optin}
 									<span class="label label-success">
-										<i class="icon-check-sign"></i>
+										<i class="icon-check"></i>
 										{l s='Opt in'}
 									</span>
 									{else}
-									<span class="label label-warning">
-										<i class="icon-ban-circle"></i>
+									<span class="label label-danger">
+										<i class="icon-remove"></i>
 										{l s='Opt in'}
 									</span>
 								{/if}
@@ -175,12 +175,12 @@
 							<p class="form-control-static">
 								{if $customer->active}
 									<span class="label label-success">
-										<i class="icon-check-sign"></i>
+										<i class="icon-check"></i>
 										{l s='Active'}
 									</span>
 								{else}
-									<span class="label label-warning">
-										<i class="icon-ban-circle"></i>
+									<span class="label label-danger">
+										<i class="icon-remove"></i>
 										{l s='Inactive'}
 									</span>
 								{/if}
@@ -248,9 +248,9 @@
 									<td>{dateFormat date=$order['date_add'] full=0}</td>
 									<td>{$order['payment']}</td>
 									<td>{$order['order_state']}</td>
-									<td align="right">{$order['nb_products']}</td>
-									<td align="right">{$order['total_paid_real']}</td>
-									<td class="text-right">
+									<td>{$order['nb_products']}</td>
+									<td>{$order['total_paid_real']}</td>
+									<td>
 										<a class="btn btn-default" href="?tab=AdminOrders&amp;id_order={$order['id_order']}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">
 											<i class='icon-search'></i> {l s='View'}
 										</a>
@@ -347,7 +347,7 @@
 						<tr onclick="document.location = '?tab=AdminOrders&id_order={$product['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}'">
 							<td>{dateFormat date=$order['date_add'] full=0}</td>
 							<td>
-								<a class="btn btn-default" href="?tab=AdminOrders&amp;id_order={$product['id_order']}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">
+								<a href="?tab=AdminOrders&amp;id_order={$product['id_order']}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">
 									{$product['product_name']}
 								</a>
 							</td>
