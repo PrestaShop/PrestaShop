@@ -48,6 +48,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->lang = true;
 		$this->deleted = false;
 		$this->explicitSelect = true;
+		$this->_defaultOrderBy = 'position';
 		$this->allow_export = true;
 
 		$this->context = Context::getContext();
