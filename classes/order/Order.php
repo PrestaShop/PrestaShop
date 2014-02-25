@@ -1581,16 +1581,8 @@ class OrderCore extends ObjectModel
 		}
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
 
-		// @TODO review
-		function sortDocuments($a, $b)
-		{
-			if ($a->date_add == $b->date_add)
-				return 0;
-			return ($a->date_add < $b->date_add) ? -1 : 1;
-		}
-
 		$documents = array_merge($invoices, $order_slips, $delivery_slips);
-		usort($documents, 'sortDocuments');
+		usort($documents, array('Order', 'sortDocuments'));
 
 		return $documents;
 	}
@@ -1985,6 +1977,12 @@ class OrderCore extends ObjectModel
 				SELECT `id_order_carrier`
 				FROM `'._DB_PREFIX_.'order_carrier`
 				WHERE `id_order` = '.(int)$this->id);
-	}		
-}
+	}
 
+	public static function sortDocuments($a, $b)
+	{
+		if ($a->date_add == $b->date_add)
+			return 0;
+		return ($a->date_add < $b->date_add) ? -1 : 1;
+	}
+}

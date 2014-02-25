@@ -1350,13 +1350,18 @@ abstract class ModuleCore
 			}
 
 		usort($module_list, create_function('$a,$b', 'return strnatcasecmp($a->displayName, $b->displayName);'));
-
 		if ($errors)
 		{
-			echo '<div class="alert error"><h3>'.Tools::displayError('The following module(s) could not be loaded').':</h3><ol>';
-			foreach ($errors as $error)
-				echo '<li>'.$error.'</li>';
-			echo '</ol></div>';
+			if (!isset(Context::getContext()->controller) && !Context::getContext()->controller->controller_name)
+			{
+				echo '<div class="alert error"><h3>'.Tools::displayError('The following module(s) could not be loaded').':</h3><ol>';
+				foreach ($errors as $error)
+					echo '<li>'.$error.'</li>';
+				echo '</ol></div>';
+			}
+			else
+				foreach ($errors as $error)
+					Context::getContext()->controller->errors[] = $error;
 		}
 
 		return $module_list;
