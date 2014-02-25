@@ -2408,6 +2408,31 @@ exit;
 		}
 	}
 
+	public static function chmodr($path, $filemode)
+	{
+	    if (!is_dir($path))
+	        return @chmod($path, $filemode);
+	    $dh = opendir($path);
+	    while (($file = readdir($dh)) !== false)
+		{
+	        if ($file != '.' && $file != '..')
+			{
+	            $fullpath = $path.'/'.$file;
+	            if (is_link($fullpath))
+	                return false;
+	            elseif (!is_dir($fullpath) && !@chmod($fullpath, $filemode))
+	                    return false;
+	            elseif (!Tools::chmodr($fullpath, $filemode))
+	                return false;
+	        }
+	    }
+	    closedir($dh);
+	    if (@chmod($path, $filemode))
+	        return true;
+	    else
+	        return false;
+	}
+
 	/**
 	 * Get products order field name for queries.
 	 *

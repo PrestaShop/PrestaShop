@@ -33,8 +33,11 @@ class AdminReturnControllerCore extends AdminController
 	 	$this->table = 'order_return';
 	 	$this->className = 'OrderReturn';
 		$this->colorOnBackground = true;
-		$this->_select = 'orsl.`name`';
+		$this->_select = 'orsl.`name`, o.`id_shop`';
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = '.(int)$this->context->language->id.')';
+		$this->_join .= ' LEFT JOIN '._DB_PREFIX_.'orders o ON (o.`id_order` = a.`id_order`)';
+		$this->_group = ' GROUP BY o.`id_order`';
+
 
  		$this->fields_list = array(
 			'id_order_return' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -55,6 +58,8 @@ class AdminReturnControllerCore extends AdminController
 		);
 
 		parent::__construct();
+
+		$this->_where = Shop::addSqlRestriction(false, 'o');
 	}
 
 	public function renderForm()

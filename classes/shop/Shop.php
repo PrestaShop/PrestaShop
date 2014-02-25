@@ -677,6 +677,7 @@ class ShopCore extends ObjectModel
 					else
 						$results[$id] = $shop_data;
 				}
+
 		return $results;
 	}
 	
@@ -918,6 +919,7 @@ class ShopCore extends ObjectModel
 			$restriction = ' AND '.$alias.'id_shop_group = '.(int)Shop::getContextShopGroupID();
 		else
 			$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', Shop::getContextListShopID($share)).') ';
+
 		return $restriction;
 	}
 
