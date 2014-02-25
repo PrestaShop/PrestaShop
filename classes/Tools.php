@@ -2413,8 +2413,10 @@ exit;
 	    if (!is_dir($path))
 	        return @chmod($path, $filemode);
 	    $dh = opendir($path);
-	    while (($file = readdir($dh)) !== false) {
-	        if ($file != '.' && $file != '..') {
+	    while (($file = readdir($dh)) !== false)
+		{
+	        if ($file != '.' && $file != '..')
+			{
 	            $fullpath = $path.'/'.$file;
 	            if (is_link($fullpath))
 	                return false;
