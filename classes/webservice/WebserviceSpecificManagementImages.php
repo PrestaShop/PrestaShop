@@ -417,7 +417,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				{
 					if ($this->wsObject->urlSegment[2] == 'header')
 					{
-						list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.'logo.jpg');
+						$logo_name = Configuration::get('PS_LOGO') ? Configuration::get('PS_LOGO') : 'logo.jpg';
+						list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.$logo_name);
 						Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 						Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
 					}

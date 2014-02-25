@@ -392,6 +392,11 @@ class AdminModulesControllerCore extends AdminController
 					$success = true;
 			}
 		}
+
+		$path_parts = pathinfo($file);
+		if (isset($path_parts['filename']) && @filemtime(_PS_MODULE_DIR_.$path_parts['filename']))
+			Tools::chmodr(_PS_MODULE_DIR_.$path_parts['filename'], 0777);
+
 		if (!$success)
 			$this->errors[] = Tools::displayError('There was an error while extracting the module (file may be corrupted).');
 		else

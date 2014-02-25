@@ -26,9 +26,11 @@
 
 function update_image_size_in_db()
 {
-	if (file_exists(realpath(INSTALL_PATH.'/../img').'/logo.jpg'))
+	$logo_name = Configuration::get('PS_LOGO') ? Configuration::get('PS_LOGO') : 'logo.jpg';
+
+	if (file_exists(realpath(INSTALL_PATH.'/../img').'/'.$logo_name))
 	{
-		list($width, $height, $type, $attr) = getimagesize(realpath(INSTALL_PATH.'/../img').'/logo.jpg');
+		list($width, $height, $type, $attr) = getimagesize(realpath(INSTALL_PATH.'/../img').'/'.$logo_name);
 		Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 		Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
 	}

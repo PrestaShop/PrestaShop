@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if $PS_SC_TWITTER || $PS_SC_FACEBOOK || $PS_SC_GOOGLE || $PS_SC_PINTEREST}
-	<p class="socialsharing_product list-inline">
+	<p class="socialsharing_product list-inline no-print">
 		{if $PS_SC_TWITTER}
 			<button type="button" class="btn btn-default btn-twitter" onclick="socialsharing_twitter_click('{$product->name|addslashes} {$link->getProductLink($product)|addslashes}');">
 				<i class="icon-twitter"></i> Tweet

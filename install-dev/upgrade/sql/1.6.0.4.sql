@@ -7,3 +7,6 @@ ALTER TABLE `PREFIX_employee` ADD `optin` tinyint(1) unsigned NOT NULL default '
 ALTER IGNORE TABLE `PREFIX_meta` ADD UNIQUE (`page`);
 
 UPDATE `PREFIX_orders` SET module = 'free_order' WHERE total_paid = 0 AND module LIKE '';
+
+UPDATE `PREFIX_tab` SET `position` = '1' WHERE `id_tab` =48;
+UPDATE `PREFIX_tab` SET `position` = '0' WHERE `id_tab` =49;
