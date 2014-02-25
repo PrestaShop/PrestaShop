@@ -120,7 +120,7 @@
     </head>
     <body>
         <div class="container">
-            <h1>PrestaShop</h1>
+            <h1>{$shop_name}</h1>
             <h2><span>503</span> Overloaded</h2>
             <p style="text-align:center;"><img src="{$logo_url}" alt="logo" /></p>
             <p>{l s='You cannot access this store from your country. We apologize for the inconvenience.'}</p>
