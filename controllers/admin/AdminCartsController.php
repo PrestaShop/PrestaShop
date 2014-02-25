@@ -817,7 +817,7 @@ class AdminCartsControllerCore extends AdminController
 	{
 		// don't display ordered carts
 		foreach ($this->_list as $row)
-			if ($row['id_cart'] == $id && isset($row['id_order']) && $row['id_order'])
+			if ($row['id_cart'] == $id && isset($row['id_order']) && is_numeric($row['id_order']))
 				return ;
 		
 		return $this->helper->displayDeleteLink($token, $id, $name);

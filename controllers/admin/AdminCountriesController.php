@@ -425,14 +425,14 @@ class AdminCountriesControllerCore extends AdminController
 		if (Tools::isSubmit('standardization'))
 			Configuration::updateValue('PS_TAASC', (bool)Tools::getValue('standardization', false));	
 
+		return parent::postProcess();
+	}
+	
+	public function processSave()
+	{
 		if (!count($this->errors))
-			$res = parent::postProcess();
-		else
-			return false;
-
-		if (Tools::getValue('submitAdd'.$this->table) && $res)
 		{
-			$id_country = ($id_country = Tools::getValue('id_country')) ? $id_country : $res['id'];
+			$id_country = Tools::getValue('id_country');
 			$tmp_addr_format = new AddressFormat($id_country);
 
 			$save_status = false;
@@ -445,11 +445,10 @@ class AdminCountriesControllerCore extends AdminController
 			}
 
 			$tmp_addr_format->format = Tools::getValue('address_layout');
-
 			if (strlen($tmp_addr_format->format) > 0)
 			{
 				if ($tmp_addr_format->checkFormatFields())
-					$save_status = ($is_new) ? $tmp_addr_format->save(): $tmp_addr_format->update();
+					$address_format_result = $tmp_addr_format->save();
 				else
 				{
 					$error_list = $tmp_addr_format->getErrorList();
@@ -457,13 +456,13 @@ class AdminCountriesControllerCore extends AdminController
 						$this->errors[] = $error;
 				}
 
-				if (!$save_status)
+				if (!isset($address_format_result) || !$address_format_result)
 					$this->errors[] = Tools::displayError('Invalid address layout '.Db::getInstance()->getMsgError());
 			}
 			unset($tmp_addr_format);
 		}
 
-		return $res;
+		return parent::processSave();
 	}
 	
 	public function processStatus()

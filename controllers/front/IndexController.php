@@ -35,7 +35,6 @@ class IndexControllerCore extends FrontController
 	public function initContent()
 	{
 		parent::initContent();
-
 		$this->addJS(_THEME_JS_DIR_.'index.js');
 
 		$this->context->smarty->assign(array('HOOK_HOME' => Hook::exec('displayHome'), 
