@@ -34,6 +34,7 @@
 	<div class="col-lg-10">
 		<h1>{$displayName}</h1>
 		<div class="row">
+			{if (int)$nb_rates > 0}
 			<div class="col-lg-4">
 				<span class="rating">
 					<span class="star{if $avg_rate == 5} active{/if}"></span>
@@ -42,8 +43,9 @@
 					<span class="star{if $avg_rate == 2} active{/if}"></span>
 					<span class="star{if $avg_rate == 1} active{/if}"></span>
 				</span>
-				<p class="small">{if $nb_rates|count > 1}{l s="(%s votes)" sprintf=$nb_rates}{else}{l s="(%s vote)" sprintf=$nb_rates}{/if}</p>
+				<p class="small">{if (int)$nb_rates > 1}{l s="(%s votes)" sprintf=$nb_rates}{else}{l s="(%s vote)" sprintf=$nb_rates}{/if}</p>
 			</div>
+			{/if}
 			{if isset($compatibility) && $compatibility|count == 2}
 			<div class="col-lg-8">
 				<h4>{l s="Compatibility: PrestaShop v%1s - v%2s" sprintf=[$compatibility['from']|escape,$compatibility['to']|escape]}</h4>
