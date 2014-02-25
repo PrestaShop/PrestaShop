@@ -146,7 +146,7 @@ class AdminThemesControllerCore extends AdminController
 						'hint' => $this->l('Will appear on main page. Recommended height: 52px. Maximum height on default theme: 65px.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO',
-						'thumb' => _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
+						'thumb' => _PS_IMG_.Configuration::get('PS_LOGO')
 					),
 					'PS_LOGO_MOBILE' => array(
 						'title' => $this->l('Header logo for mobile'),
@@ -155,7 +155,7 @@ class AdminThemesControllerCore extends AdminController
 							$this->l('Will appear on the main page of your mobile template. If left undefined, the header logo will be used.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO_MOBILE',
-						'thumb' => (Configuration::get('PS_LOGO_MOBILE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
+						'thumb' => (Configuration::get('PS_LOGO_MOBILE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MOBILE') : _PS_IMG_.Configuration::get('PS_LOGO')
 					),
 					'PS_LOGO_MAIL' => array(
 						'title' => $this->l('Mail logo'),
@@ -164,7 +164,7 @@ class AdminThemesControllerCore extends AdminController
 							$this->l('Will appear on email headers. If undefined, the header logo will be used.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO_MAIL',
-						'thumb' => (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MAIL').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
+						'thumb' => (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MAIL') : _PS_IMG_.Configuration::get('PS_LOGO')
 					),
 					'PS_LOGO_INVOICE' => array(
 						'title' => $this->l('Invoice logo'),
@@ -173,21 +173,21 @@ class AdminThemesControllerCore extends AdminController
 							$this->l('Will appear on invoice headers.').' '.$this->l('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO_INVOICE',
-						'thumb' => (Configuration::get('PS_LOGO_INVOICE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_INVOICE').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
+						'thumb' => (Configuration::get('PS_LOGO_INVOICE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_INVOICE') : _PS_IMG_.Configuration::get('PS_LOGO')
 					),
 					'PS_FAVICON' => array(
 						'title' => $this->l('Favicon'),
 						'hint' => $this->l('Will appear in the address bar of your web browser.'),
 						'type' => 'file',
 						'name' => 'PS_FAVICON',
-						'thumb' => _PS_IMG_.Configuration::get('PS_FAVICON').'?date='.time()
+						'thumb' => _PS_IMG_.Configuration::get('PS_FAVICON')
 					),
 					'PS_STORES_ICON' => array(
 						'title' => $this->l('Store icon'),
 						'hint' => $this->l('Will appear on the store locator (inside Google Maps).').'<br />'.$this->l('Suggested size: 30x30, transparent GIF.'),
 						'type' => 'file',
 						'name' => 'PS_STORES_ICON',
-						'thumb' => _PS_IMG_.Configuration::get('PS_STORES_ICON').'?date='.time()
+						'thumb' => _PS_IMG_.Configuration::get('PS_STORES_ICON')
 					),
 					'PS_NAVIGATION_PIPE' => array(
 						'title' => $this->l('Navigation pipe'),
@@ -619,6 +619,14 @@ class AdminThemesControllerCore extends AdminController
 			$theme->update();
 		}
 		Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=29');
+	}
+
+	protected function processUpdateOptions()
+	{
+		parent::processUpdateOptions();
+
+		if (!count($this->errors))
+			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=6');
 	}
 
 	public function processDelete()
@@ -1721,7 +1729,7 @@ class AdminThemesControllerCore extends AdminController
 			}
 
 			$content = '';
-			if (file_exists(_PS_IMG_DIR_.'logo.jpg') && Configuration::get('PS_LOGO'))
+			if (Configuration::hasKey('PS_LOGO') && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
 			{
 				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO'));
 				Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
@@ -2531,9 +2539,13 @@ class AdminThemesControllerCore extends AdminController
 				return false;
 
 			$ext = ($field_name == 'PS_STORES_ICON') ? '.gif' : '.jpg';
-			$logo_name = $logo_prefix.'-'.(int)$id_shop.$ext;
-			if (Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL || $id_shop == 0 || Shop::isFeatureActive() == false)
-				$logo_name = $logo_prefix.$ext;
+			$logo_name = Tools::link_rewrite(Context::getContext()->shop->name).'-'
+				.Configuration::get('PS_IMG_UPDATE_TIME').'-'.(int)$id_shop.$ext;
+
+			if (Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL || $id_shop == 0
+				|| Shop::isFeatureActive() == false)
+				$logo_name = Tools::link_rewrite(Context::getContext()->shop->name).'-'
+					.Configuration::get('PS_IMG_UPDATE_TIME').$ext;
 
 			if ($field_name == 'PS_STORES_ICON')
 			{
@@ -2546,13 +2558,12 @@ class AdminThemesControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('An error occurred while attempting to copy your logo.');
 			}
 
-			Configuration::updateValue($field_name, $logo_name);
-			$this->fields_options['appearance']['fields'][$field_name]['thumb'] = _PS_IMG_.$logo_name.'?date='.time();
+			if (!count($this->errors) && @filemtime(_PS_IMG_DIR_.Configuration::get($field_name)))
+				@unlink(_PS_IMG_DIR_.Configuration::get($field_name));
 
-			unlink($tmp_name);
+			Configuration::updateValue($field_name, $logo_name);
+			@unlink($tmp_name);
 		}
-		if (!count($this->errors))
-			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=6');
 	}
 
 	/**
