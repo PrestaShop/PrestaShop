@@ -206,7 +206,12 @@ module_inactive
 			autoDimensions: false,
 			autoSize: false,
 			width: 600,
-			height: 'auto'
+			height: 'auto',
+			helpers: {
+				overlay: {
+					locked: false
+				}
+			}
 		});
 	});
 </script>
