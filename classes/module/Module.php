@@ -2119,10 +2119,13 @@ abstract class ModuleCore
 		$theme_meta_value = array();
 		foreach ($this->controllers as $controller)
 		{
-			if (Meta::getMetaByPage('module-'.$this->name.'-'.$controller, $this->context->language->id))
+			$page = 'module-'.$this->name.'-'.$controller;
+			$result = Db::getInstance()->getValue('SELECT * FROM '._DB_PREFIX_.'meta WHERE page="'.pSQL($page).'"');
+			if ((int)$result > 0)
 				return true;
+
 			$meta = New Meta();
-			$meta->page = 'module-'.$this->name.'-'.$controller;
+			$meta->page = $page;
 			$meta->configurable = 0;
 			$meta->save();
 			if ((int)$meta->id > 0)
