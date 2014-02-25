@@ -59,7 +59,7 @@
 					{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}
 				{/if}
 			</td>
-			<td class="right">
+			<td class="actions">
 				<span id="shipping_number_show">{if $line.url && $line.tracking_number}<a target="_blank" href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
 				{if $line.can_edit}
 					<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$order->id|escape:'html':'UTF-8'}">
