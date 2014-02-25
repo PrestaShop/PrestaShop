@@ -606,7 +606,7 @@
 						stock[id_product] = new Array();
 						if (this.customizable == '1')
 						{
-							customization_html += '<div class="panel"><h3>{l s='Customization'}</h3><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
+							customization_html += '<div class="bootstrap"><div class="panel"><h3>{l s='Customization'}</h3><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
 							customization_html += '<input type="hidden" name="id_product" value="'+id_product+'" />';
 							customization_html += '<input type="hidden" name="id_cart" value="'+id_cart+'" />';
 							customization_html += '<input type="hidden" name="action" value="updateCustomizationFields" />';
@@ -623,7 +623,7 @@
 									customization_html += '<input class="form-control customization_field" type="text" name="customization_'+id_product+'_'+this.id_customization_field+'" id="customization_'+id_product+'_'+this.id_customization_field+'">';
 								customization_html += '</div></div>';
 							});
-							customization_html += '</div></form>';
+							customization_html += '</form></div></div>';
 						}
 
 						$.each(this.combinations, function() {
