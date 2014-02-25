@@ -597,7 +597,11 @@ class FrontControllerCore extends Controller
 	protected function displayRestrictedCountryPage()
 	{
 		header('HTTP/1.1 503 temporarily overloaded');
-		$this->context->smarty->assign('favicon_url', _PS_IMG_.Configuration::get('PS_FAVICON'));
+		$this->context->smarty->assign(array(
+			'shop_name' => Context::getContext()->shop->name,
+			'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
+			'logo_url' =>  self::$link->getMediaLink(_PS_IMG_.Configuration::get('PS_LOGO'))
+		));
 		$this->smartyOutputContent($this->getTemplatePath($this->getThemeDir().'restricted-country.tpl'));
 		exit;
 	}
@@ -1235,7 +1239,7 @@ class FrontControllerCore extends Controller
 		if ($mobile_device && Configuration::get('PS_LOGO_MOBILE'))
 			$logo = self::$link->getMediaLink(_PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME'));
 		else
-			$logo = self::$link->getMediaLink(_PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME'));
+			$logo = self::$link->getMediaLink(_PS_IMG_.Configuration::get('PS_LOGO'));
 		
 		return array(
  				'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
