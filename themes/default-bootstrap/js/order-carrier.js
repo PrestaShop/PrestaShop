@@ -51,7 +51,23 @@ $(document).ready(function(){
 function acceptCGV()
 {
 	if (typeof msg_order_carrier != 'undefined' && $('#cgv').length && !$('input#cgv:checked').length)
-		alert(msg_order_carrier);
+	{
+		if (!!$.prototype.fancybox)
+		{
+		    $.fancybox.open([
+	        {
+	            type: 'inline',
+	            autoScale: true,
+	            minHeight: 30,
+	            content: "<p class='fancybox-error'>" + msg_order_carrier + '</p>'
+	        }],
+			{
+		        padding: 0
+		    });
+		}
+		else
+		    alert(msg_order_carrier);
+	}
 	else
 		return true;
 	return false;
