@@ -340,13 +340,13 @@ var ajaxCart = {
 				if (!!$.prototype.fancybox)
 				{
 				    $.fancybox.open([
-				        {
-				            type: 'inline',
-				            autoScale: true,
-				            minHeight: 30,
-				            content: "<p class='fancybox-error'>" + error + '</p>'
-				        }
-				    ], {
+			        {
+			            type: 'inline',
+			            autoScale: true,
+			            minHeight: 30,
+			            content: "<p class='fancybox-error'>" + error + '</p>'
+			        }],
+					{
 				        padding: 0
 				    });
 				}
