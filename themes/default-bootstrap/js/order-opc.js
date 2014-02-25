@@ -108,7 +108,24 @@ $(document).ready(function(){
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
 					if (textStatus !== 'abort')
-						alert("TECHNICAL ERROR: unable to send login informations \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+					{
+						error = "TECHNICAL ERROR: unable to send login informations \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
+			            if (!!$.prototype.fancybox)
+			            {
+			                $.fancybox.open([
+			                    {
+			                        type: 'inline',
+			                        autoScale: true,
+			                        minHeight: 30,
+			                        content: '<p class="fancybox-error">' + error + '</p>'
+			                    }
+			                ], {
+			                    padding: 0
+			                });
+			            }
+			            else
+			                alert(error);
+					}
 				}
 			});
 		});
@@ -238,7 +255,24 @@ $(document).ready(function(){
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
 					if (textStatus !== 'abort')
-						alert("TECHNICAL ERROR: unable to save account \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+					{
+						error = "TECHNICAL ERROR: unable to save account \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
+			            if (!!$.prototype.fancybox)
+			            {
+			                $.fancybox.open([
+			                    {
+			                        type: 'inline',
+			                        autoScale: true,
+			                        minHeight: 30,
+			                        content: '<p class="fancybox-error">' + error + '</p>'
+			                    }
+			                ], {
+			                    padding: 0
+			                });
+			            }
+			            else
+			                alert(error);
+					}
 					$('#opc_new_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeIn('slow')
 				}
 			});
@@ -335,7 +369,21 @@ function updateAddressSelection()
 					//IE6 bug fix
 					if(error !== 'indexOf')
 						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
-				alert(errors);
+	            if (!!$.prototype.fancybox)
+	            {
+	                $.fancybox.open([
+	                    {
+	                        type: 'inline',
+	                        autoScale: true,
+	                        minHeight: 30,
+	                        content: '<p class="fancybox-error">' + errors + '</p>'
+	                    }
+	                ], {
+	                    padding: 0
+	                });
+	            }
+	            else
+	                alert(errors);
 			}
 			else
 			{
@@ -404,7 +452,24 @@ function updateAddressSelection()
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
 			if (textStatus !== 'abort')
-				alert("TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+			{
+				error = "TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
+	            if (!!$.prototype.fancybox)
+	            {
+	                $.fancybox.open([
+	                    {
+	                        type: 'inline',
+	                        autoScale: true,
+	                        minHeight: 30,
+	                        content: '<p class="fancybox-error">' + error + '</p>'
+	                    }
+	                ], {
+	                    padding: 0
+	                });
+	            }
+	            else
+	                alert(error);
+			}
 			$('#opc_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
 		}
 	});
@@ -430,7 +495,37 @@ function getCarrierListAndUpdate()
 					//IE6 bug fix
 					if(error !== 'indexOf')
 						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
-				alert(errors);
+	            if (!!$.prototype.fancybox)
+	            {
+	                $.fancybox.open([
+	                    {
+	                        type: 'inline',
+	                        autoScale: true,
+	                        minHeight: 30,
+	                        content: '<p class="fancybox-error">' + errors + '</p>'
+	                    }
+	                ], {
+	                    padding: 0
+	                });
+	            }
+	            else
+				{
+		            if (!!$.prototype.fancybox)
+		            {
+		                $.fancybox.open([
+		                    {
+		                        type: 'inline',
+		                        autoScale: true,
+		                        minHeight: 30,
+		                        content: '<p class="fancybox-error">' + errors + '</p>'
+		                    }
+		                ], {
+		                    padding: 0
+		                });
+		            }
+		            else
+		                alert(errors);
+				}
 			}
 			else
 				updateCarrierList(jsonData);
@@ -480,7 +575,21 @@ function updateCarrierSelectionAndGift()
 					//IE6 bug fix
 					if(error !== 'indexOf')
 						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
-				alert(errors);
+	            if (!!$.prototype.fancybox)
+	            {
+	                $.fancybox.open([
+	                    {
+	                        type: 'inline',
+	                        autoScale: true,
+	                        minHeight: 30,
+	                        content: '<p class="fancybox-error">' + errors + '</p>'
+	                    }
+	                ], {
+	                    padding: 0
+	                });
+	            }
+	            else
+	                alert(errors);
 			}
 			else
 			{
@@ -533,7 +642,24 @@ function confirmFreeOrder()
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
 			if (textStatus !== 'abort')
-				alert("TECHNICAL ERROR: unable to confirm the order \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+			{
+				error = "TECHNICAL ERROR: unable to confirm the order \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
+	            if (!!$.prototype.fancybox)
+	            {
+	                $.fancybox.open([
+	                    {
+	                        type: 'inline',
+	                        autoScale: true,
+	                        minHeight: 30,
+	                        content: '<p class="fancybox-error">' + error + '</p>'
+	                    }
+	                ], {
+	                    padding: 0
+	                });
+	            }
+	            else
+	                alert(error);
+			}
 		}
 	});
 }
@@ -611,7 +737,24 @@ function saveAddress(type)
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
 			if (textStatus !== 'abort')
-				alert("TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+			{
+				error = "TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
+	            if (!!$.prototype.fancybox)
+	            {
+	                $.fancybox.open([
+	                    {
+	                        type: 'inline',
+	                        autoScale: true,
+	                        minHeight: 30,
+	                        content: '<p class="fancybox-error">' + error + '</p>'
+	                    }
+	                ], {
+	                    padding: 0
+	                });
+	            }
+	            else
+	                alert(error);
+			}
 			$('#opc_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
 		}
 		});

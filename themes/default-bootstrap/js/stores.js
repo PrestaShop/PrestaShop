@@ -95,7 +95,23 @@ function searchLocations()
 		if (status === google.maps.GeocoderStatus.OK)
 			searchLocationsNear(results[0].geometry.location);
 		else
-			alert(address+' '+translation_6);
+		{
+			if (!!$.prototype.fancybox)
+			{
+			    $.fancybox.open([
+			        {
+			            type: 'inline',
+			            autoScale: true,
+			            minHeight: 30,
+			            content: '<p class="fancybox-error">' + address + ' ' + translation_6 + '</p>'
+			        }
+			    ], {
+			        padding: 0
+			    });
+			}
+			else
+			    alert(address + ' ' + translation_6);
+		}
 		$('#stores_loader').hide();
 	});
 }

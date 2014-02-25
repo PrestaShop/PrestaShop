@@ -158,7 +158,22 @@ function changeAddressDelivery(obj)
 			{
 				if (typeof(jsonData.hasErrors) != 'undefined' && jsonData.hasErrors)
 				{
-					alert(jsonData.error);
+					if (!!$.prototype.fancybox)
+					{
+					    $.fancybox.open([
+				        {
+				            type: 'inline',
+				            autoScale: true,
+				            minHeight: 30,
+				            content: "<p class='fancybox-error'>" + jsonData.error + '</p>'
+				        }],
+						{
+					        padding: 0
+					    });
+					}
+					else
+					    alert(jsonData.error);
+				}
 					// Reset the old address
 					$('#select_address_delivery_' + id_product + '_' + id_product_attribute + '_' + old_id_address_delivery).val(old_id_address_delivery);
 				}
@@ -198,7 +213,21 @@ function changeAddressDelivery(obj)
 		// This test is will not usefull in the future
 		if (old_id_address_delivery == 0)
 		{
-			alert(txtSelectAnAddressFirst);
+			if (!!$.prototype.fancybox)
+			{
+			    $.fancybox.open([
+		        {
+		            type: 'inline',
+		            autoScale: true,
+		            minHeight: 30,
+		            content: "<p class='fancybox-error'>" + txtSelectAnAddressFirst + '</p>'
+		        }],
+				{
+			        padding: 0
+			    });
+			}
+			else
+			    alert(txtSelectAnAddressFirst);
 			return false;
 		}
 		
@@ -232,12 +261,22 @@ function changeAddressDelivery(obj)
 				+ '&allow_refresh=1',
 			success: function(jsonData)
 			{
-				if (jsonData.error)
+				if (jsonData.error && !!$.prototype.fancybox)
 				{
-					alert(jsonData.reason);
-					return;
+				    $.fancybox.open([
+			        {
+			            type: 'inline',
+			            autoScale: true,
+			            minHeight: 30,
+			            content: "<p class='fancybox-error'>" + jsonData.error + '</p>'
+			        }],
+					{
+				        padding: 0
+				    });
 				}
-				
+				else
+				    alert(jsonData.error);
+			
 				var line = $('#product_' + id_product + '_' + id_product_attribute + '_0_' + old_id_address_delivery);
 				var new_line = line.clone();
 				updateAddressId(id_product, id_product_attribute, old_id_address_delivery, id_address_delivery, new_line);
@@ -444,7 +483,24 @@ function deleteProductFromSummary(id)
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
 			if (textStatus !== 'abort')
-				alert("TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+			{
+				var error = "TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
+				if (!!$.prototype.fancybox)
+				{
+				    $.fancybox.open([
+			        {
+			            type: 'inline',
+			            autoScale: true,
+			            minHeight: 30,
+			            content: "<p class='fancybox-error'>" + error + '</p>'
+			        }],
+					{
+				        padding: 0
+				    });
+				}
+				else
+				    alert(error);
+			}
 		}
 	});
 }
@@ -518,7 +574,21 @@ function upQuantity(id, qty)
 					//IE6 bug fix
 					if(error !== 'indexOf')
 						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
-				alert(errors);
+				if (!!$.prototype.fancybox)
+				{
+				    $.fancybox.open([
+			        {
+			            type: 'inline',
+			            autoScale: true,
+			            minHeight: 30,
+			            content: "<p class='fancybox-error'>" + error s+ '</p>'
+			        }],
+					{
+				        padding: 0
+				    });
+				}
+				else
+				    alert(errors);
 				$('input[name=quantity_'+ id +']').val($('input[name=quantity_'+ id +'_hidden]').val());
 			}
 			else
@@ -540,7 +610,24 @@ function upQuantity(id, qty)
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
 			if (textStatus !== 'abort')
-				alert("TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+			{
+				error = "TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
+				if (!!$.prototype.fancybox)
+				{
+				    $.fancybox.open([
+			        {
+			            type: 'inline',
+			            autoScale: true,
+			            minHeight: 30,
+			            content: "<p class='fancybox-error'>" + error + '</p>'
+			        }],
+					{
+				        padding: 0
+				    });
+				}
+				else
+				    alert(error);
+			}
 		}
 	});
 }

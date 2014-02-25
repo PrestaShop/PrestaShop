@@ -260,21 +260,21 @@ var ajaxCart = {
 	add : function(idProduct, idCombination, addedFromProductPage, callerElement, quantity, whishlist){
 		if (addedFromProductPage && !checkCustomizations())
 		{
-            if (!!$.prototype.fancybox)
-            {
-                $.fancybox.open([
-                    {
-                        type: 'inline',
-                        autoScale: true,
-                        minHeight: 30,
-                        content: '<p class="fancybox-error">' + fieldRequired + '</p>'
-                    }
-                ], {
-                    padding: 0
-                });
-            }
-            else
-                alert(fieldRequired);
+			if (!!$.prototype.fancybox)
+			{
+			    $.fancybox.open([
+			        {
+			            type: 'inline',
+			            autoScale: true,
+			            minHeight: 30,
+			            content: '<p class="fancybox-error">' + fieldRequired + '</p>'
+			        }
+			    ], {
+			        padding: 0
+			    });
+			}
+			else
+			    alert(fieldRequired);
             return;
 		}
 		emptyCustomizations();
@@ -340,12 +340,12 @@ var ajaxCart = {
 				if (!!$.prototype.fancybox)
 				{
 				    $.fancybox.open([
-			        {
-			            type: 'inline',
-			            autoScale: true,
-			            minHeight: 30,
-			            content: "<p class='fancybox-error'>" + error + '</p>'
-			        }],
+				    {
+				        type: 'inline',
+				        autoScale: true,
+				        minHeight: 30,
+				        content: "<p class='fancybox-error'>" + error + '</p>'
+				    }],
 					{
 				        padding: 0
 				    });
@@ -724,7 +724,21 @@ var ajaxCart = {
 				//IE6 bug fix
 				if (error != 'indexOf')
 					errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
-			alert(errors);
+			if (!!$.prototype.fancybox)
+			{
+			    $.fancybox.open([
+			        {
+			            type: 'inline',
+			            autoScale: true,
+			            minHeight: 30,
+			            content: '<p class="fancybox-error">' + errors + '</p>'
+			        }
+			    ], {
+			        padding: 0
+			    });
+			}
+			else
+			    alert(errors);
 		}
 		else
 		{
