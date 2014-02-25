@@ -1394,7 +1394,8 @@ class AdminModulesControllerCore extends AdminController
 			'badges' => $module->badges,
 			'compatibility' => $module->compatibility,
 			'description_full' => $module->description_full,
-			'additional_description' => $module->additional_description
+			'additional_description' => $module->additional_description,
+			'url' => $module->url
 		));
 		$this->smartyOutputContent('controllers/modules/quickview.tpl');
 	}

@@ -53,5 +53,8 @@
 			<h3>{l s="Merchant benefits"}</h3>
 			<p class="text-justify">{$additional_description}</p>
 		{/if}
+		<div class="row">
+			<a class="btn btn-default" href="{$url}" onclick="return !window.open(this.href);">{l s='More details'}</a>
+		</div>
 	</div>
 </div>
