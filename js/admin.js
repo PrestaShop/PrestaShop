@@ -459,6 +459,8 @@ function orderOverwriteMessage(sl, text)
 			return ;
 		$zone.val(sl_value);
 	}
+
+	$zone.trigger('autosize.resize');
 }
 
 function setCancelQuantity(itself, id_order_detail, quantity)
