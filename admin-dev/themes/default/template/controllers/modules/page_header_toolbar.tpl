@@ -58,7 +58,7 @@
 			{/if}
 			{if $add_permission eq '1'}
 			<li>
-				<a id="desc-module-new" class="toolbar_btn" href="#top_container" onclick="$('#module_install').slideToggle();" title="{l s='Add a new module'}">
+				<a id="desc-module-new" class="toolbar_btn" href="#module_install" onclick="$('#module_install').slideToggle();" title="{l s='Add a new module'}">
 					<i class="process-icon-new" ></i>
 					<div>{l s='Add a new module'}</div>
 				</a>
