@@ -57,7 +57,7 @@ class ParentOrderControllerCore extends FrontController
 
 		$this->nbProducts = $this->context->cart->nbProducts();
 		
-		if (!$this->context->customer->isLogged(true) && $this->context->getMobileDevice() && Tools::getValue('step'))
+		if (!$this->context->customer->isLogged(true) && $this->useMobileTheme() && Tools::getValue('step'))
 			Tools::redirect($this->context->link->getPageLink('authentication', true, (int)$this->context->language->id));
 		
 		// Redirect to the good order process
@@ -142,7 +142,7 @@ class ParentOrderControllerCore extends FrontController
 	{
 		parent::setMedia();
 
-		if ($this->context->getMobileDevice() === false)
+		if (!$this->useMobileTheme())
 			// Adding CSS style sheet
 			$this->addCSS(_THEME_CSS_DIR_.'addresses.css');
 

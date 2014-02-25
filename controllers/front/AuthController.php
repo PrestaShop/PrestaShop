@@ -56,7 +56,7 @@ class AuthControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		if (Context::getContext()->getMobileDevice() === false)
+		if (!$this->useMobileTheme())
 			$this->addCSS(_THEME_CSS_DIR_.'authentication.css');
 		$this->addJqueryPlugin('typewatch');
 		$this->addJS(array(
