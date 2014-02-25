@@ -26,34 +26,6 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-<script type="text/javascript">
-	function saveCustomerNote()
-	{
-		$('#note_feedback').html('<img src="../img/loader.gif" alt="" />').show();
-		var noteContent = $('#noteContent').val();
-
-		$.ajax({
-			type: "POST",
-			url: "index.php",
-			data: "token={getAdminToken tab='AdminCustomers'}&tab=AdminCustomers&ajax=1&action=updateCustomerNote&id_customer={$customer->id}&note="+encodeURIComponent(noteContent),
-			async : true,
-			success: function(r) {
-				$('#note_feedback').html('').hide();
-				if (r == 'ok')
-				{
-					$('#note_feedback').html("<b style='color:green'>{l s='Your note has been saved.'}</b>").fadeIn(400);
-					$('#submitCustomerNote').attr('disabled', true);
-				}
-				else if (r == 'error:validation')
-					$('#note_feedback').html("<b style='color:red'>({l s='Error: Your note is not valid.'}</b>").fadeIn(400);
-				else if (r == 'error:update')
-					$('#note_feedback').html("<b style='color:red'>{l s='Error: Your note cannot be saved.'}</b>").fadeIn(400);
-				$('#note_feedback').fadeOut(3000);
-			}
-		});
-	}
-</script>
-
 <div id="container-customer">
 	<div class="row">
 		{*left*}
@@ -389,7 +361,7 @@
 					<i class="icon-eye-close"></i> {l s='Add a private note'}
 				</div>
 				<div class="alert alert-info">{l s='This note will be displayed to all employees but not to customers.'}</div>
-				<form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote();return false;" >
+				<form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote({$customer->id});return false;" >
 					<div class="form-group">
 						<div class="col-lg-12">
 							<textarea name="note" id="noteContent" onkeyup="$(this).val().length > 0 ? $('#submitCustomerNote').removeAttr('disabled') : $('#submitCustomerNote').attr('disabled', 'disabled')">{$customer_note}</textarea>

@@ -680,14 +680,14 @@
 /* FONT PATH -------------------------- */
 @font-face { font-family: 'FontAwesome'; src: url("../fonts/fontawesome-webfont.eot?v=4.0.4"); src: url("../fonts/fontawesome-webfont.eot?#iefix&v=4.0.4") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff?v=4.0.4") format("woff"), url("../fonts/fontawesome-webfont.ttf?v=4.0.4") format("truetype"), url("../fonts/fontawesome-webfont.svg?v=4.0.4#fontawesomeregular") format("svg"); font-weight: normal; font-style: normal; }
 
-.icon, .page-sidebar-closed:not(.nav-topbar) .searchtab:before, [class^="icon-"], [class^="process-icon-"], [class*="process-icon-"], .bootstrap .alert.alert-warning:before, .bootstrap .alert.alert-danger:before, .bootstrap #carrier_wizard .wizard_error:before, .bootstrap .alert.alert-success:before, .bootstrap .alert.alert-info:before, .bootstrap .alert.alert-addons:before, .bootstrap .table td.dragHandle .dragGroup:before, .bootstrap #dashboard .loading .data_value:before, .bootstrap #employee-thumbnail:before, .mce-ico, .chosen-container-single .chosen-single div b, .chosen-container-single .chosen-search:before { display: inline-block; font-family: FontAwesome; font-style: normal; font-weight: normal; line-height: 1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.icon, .page-sidebar-closed:not(.nav-topbar) .searchtab:before, [class^="icon-"], [class^="process-icon-"], [class*="process-icon-"], .bootstrap .alert.alert-warning:before, .bootstrap .alert.alert-danger:before, .bootstrap #carrier_wizard .wizard_error:before, .bootstrap .alert.alert-success:before, .bootstrap .alert.alert-info:before, .bootstrap .alert.alert-addons:before, .bootstrap .alert.alert-message:before, .bootstrap .table td.dragHandle .dragGroup:before, .bootstrap #dashboard .loading .data_value:before, .bootstrap #employee-thumbnail:before, .mce-ico, .chosen-container-single .chosen-single div b, .chosen-container-single .chosen-search:before { display: inline-block; font-family: FontAwesome; font-style: normal; font-weight: normal; line-height: 1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
 /* makes the font 33% larger relative to the icon container */
 .icon-lg { font-size: 1.33333em; line-height: 0.75em; vertical-align: -15%; }
 
 .icon-2x, .page-sidebar-closed:not(.nav-topbar) .searchtab:before, [class^="icon-Admin"], [class^="process-icon-"], [class*="process-icon-"] { font-size: 2em; }
 
-.icon-3x, .bootstrap .alert.alert-warning:before, .bootstrap .alert.alert-danger:before, .bootstrap #carrier_wizard .wizard_error:before, .bootstrap .alert.alert-success:before, .bootstrap .alert.alert-info:before, .bootstrap .alert.alert-addons:before { font-size: 3em; }
+.icon-3x, .bootstrap .alert.alert-warning:before, .bootstrap .alert.alert-danger:before, .bootstrap #carrier_wizard .wizard_error:before, .bootstrap .alert.alert-success:before, .bootstrap .alert.alert-info:before, .bootstrap .alert.alert-addons:before, .bootstrap .alert.alert-message:before { font-size: 3em; }
 
 .icon-4x { font-size: 4em; }
 
@@ -707,8 +707,8 @@
 
 .pull-left, .bootstrap .page-head h2.page-title { float: left; }
 
-.icon.pull-left, .page-sidebar-closed:not(.nav-topbar) .pull-left.searchtab:before, .page-sidebar-closed:not(.nav-topbar) .bootstrap .page-head h2.searchtab.page-title:before, .bootstrap .page-head .page-sidebar-closed:not(.nav-topbar) h2.searchtab.page-title:before, .pull-left[class^="icon-"], .bootstrap .page-head h2[class^="icon-"].page-title, .pull-left[class^="process-icon-"], .bootstrap .page-head h2[class^="process-icon-"].page-title, .pull-left[class*="process-icon-"], .bootstrap .page-head h2[class*="process-icon-"].page-title, .bootstrap .pull-left.alert.alert-warning:before, .bootstrap .page-head h2.alert.alert-warning.page-title:before, .bootstrap .pull-left.alert.alert-danger:before, .bootstrap .page-head h2.alert.alert-danger.page-title:before, .bootstrap .page-head #carrier_wizard h2.page-title.wizard_error:before, .bootstrap #carrier_wizard .page-head h2.page-title.wizard_error:before, .bootstrap #carrier_wizard .pull-left.wizard_error:before, .bootstrap .pull-left.alert.alert-success:before, .bootstrap .page-head h2.alert.alert-success.page-title:before, .bootstrap .pull-left.alert.alert-info:before, .bootstrap .page-head h2.alert.alert-info.page-title:before, .bootstrap .pull-left.alert.alert-addons:before, .bootstrap .page-head h2.alert.alert-addons.page-title:before, .bootstrap .table td.dragHandle .pull-left.dragGroup:before, .bootstrap .table td.dragHandle .page-head h2.dragGroup.page-title:before, .bootstrap .page-head .table td.dragHandle h2.dragGroup.page-title:before, .bootstrap .page-head h2.icon.page-title, .bootstrap .page-head #dashboard .loading h2.page-title.data_value:before, .bootstrap #dashboard .loading .page-head h2.page-title.data_value:before, .bootstrap .page-head h2.page-title#employee-thumbnail:before, .bootstrap .page-head h2.page-title.mce-ico, .bootstrap .page-head .chosen-container-single h2.page-title.chosen-search:before, .chosen-container-single .bootstrap .page-head h2.page-title.chosen-search:before, .bootstrap #dashboard .loading .pull-left.data_value:before, .bootstrap .pull-left#employee-thumbnail:before, .pull-left.mce-ico, .chosen-container-single .chosen-single div b.pull-left, .chosen-container-single .pull-left.chosen-search:before { margin-right: .3em; }
-.icon.pull-right, .page-sidebar-closed:not(.nav-topbar) .pull-right.searchtab:before, .pull-right[class^="icon-"], .pull-right[class^="process-icon-"], .pull-right[class*="process-icon-"], .bootstrap .pull-right.alert.alert-warning:before, .bootstrap .pull-right.alert.alert-danger:before, .bootstrap #carrier_wizard .pull-right.wizard_error:before, .bootstrap .pull-right.alert.alert-success:before, .bootstrap .pull-right.alert.alert-info:before, .bootstrap .pull-right.alert.alert-addons:before, .bootstrap .table td.dragHandle .pull-right.dragGroup:before, .bootstrap #dashboard .loading .pull-right.data_value:before, .bootstrap .pull-right#employee-thumbnail:before, .pull-right.mce-ico, .chosen-container-single .chosen-single div b.pull-right, .chosen-container-single .pull-right.chosen-search:before { margin-left: .3em; }
+.icon.pull-left, .page-sidebar-closed:not(.nav-topbar) .pull-left.searchtab:before, .page-sidebar-closed:not(.nav-topbar) .bootstrap .page-head h2.searchtab.page-title:before, .bootstrap .page-head .page-sidebar-closed:not(.nav-topbar) h2.searchtab.page-title:before, .pull-left[class^="icon-"], .bootstrap .page-head h2[class^="icon-"].page-title, .pull-left[class^="process-icon-"], .bootstrap .page-head h2[class^="process-icon-"].page-title, .pull-left[class*="process-icon-"], .bootstrap .page-head h2[class*="process-icon-"].page-title, .bootstrap .pull-left.alert.alert-warning:before, .bootstrap .page-head h2.alert.alert-warning.page-title:before, .bootstrap .pull-left.alert.alert-danger:before, .bootstrap .page-head h2.alert.alert-danger.page-title:before, .bootstrap .page-head #carrier_wizard h2.page-title.wizard_error:before, .bootstrap #carrier_wizard .page-head h2.page-title.wizard_error:before, .bootstrap #carrier_wizard .pull-left.wizard_error:before, .bootstrap .pull-left.alert.alert-success:before, .bootstrap .page-head h2.alert.alert-success.page-title:before, .bootstrap .pull-left.alert.alert-info:before, .bootstrap .page-head h2.alert.alert-info.page-title:before, .bootstrap .pull-left.alert.alert-addons:before, .bootstrap .page-head h2.alert.alert-addons.page-title:before, .bootstrap .pull-left.alert.alert-message:before, .bootstrap .page-head h2.alert.alert-message.page-title:before, .bootstrap .table td.dragHandle .pull-left.dragGroup:before, .bootstrap .table td.dragHandle .page-head h2.dragGroup.page-title:before, .bootstrap .page-head .table td.dragHandle h2.dragGroup.page-title:before, .bootstrap .page-head h2.icon.page-title, .bootstrap .page-head #dashboard .loading h2.page-title.data_value:before, .bootstrap #dashboard .loading .page-head h2.page-title.data_value:before, .bootstrap .page-head h2.page-title#employee-thumbnail:before, .bootstrap .page-head h2.page-title.mce-ico, .bootstrap .page-head .chosen-container-single h2.page-title.chosen-search:before, .chosen-container-single .bootstrap .page-head h2.page-title.chosen-search:before, .bootstrap #dashboard .loading .pull-left.data_value:before, .bootstrap .pull-left#employee-thumbnail:before, .pull-left.mce-ico, .chosen-container-single .chosen-single div b.pull-left, .chosen-container-single .pull-left.chosen-search:before { margin-right: .3em; }
+.icon.pull-right, .page-sidebar-closed:not(.nav-topbar) .pull-right.searchtab:before, .pull-right[class^="icon-"], .pull-right[class^="process-icon-"], .pull-right[class*="process-icon-"], .bootstrap .pull-right.alert.alert-warning:before, .bootstrap .pull-right.alert.alert-danger:before, .bootstrap #carrier_wizard .pull-right.wizard_error:before, .bootstrap .pull-right.alert.alert-success:before, .bootstrap .pull-right.alert.alert-info:before, .bootstrap .pull-right.alert.alert-addons:before, .bootstrap .pull-right.alert.alert-message:before, .bootstrap .table td.dragHandle .pull-right.dragGroup:before, .bootstrap #dashboard .loading .pull-right.data_value:before, .bootstrap .pull-right#employee-thumbnail:before, .pull-right.mce-ico, .chosen-container-single .chosen-single div b.pull-right, .chosen-container-single .pull-right.chosen-search:before { margin-left: .3em; }
 
 .icon-spin, .bootstrap #dashboard .loading .data_value:before, .bootstrap #employee-thumbnail:before { -webkit-animation: spin 2s infinite linear; -moz-animation: spin 2s infinite linear; -o-animation: spin 2s infinite linear; animation: spin 2s infinite linear; }
 
@@ -965,7 +965,7 @@
 
 .icon-random:before { content: "\f074"; }
 
-.icon-comment:before { content: "\f075"; }
+.icon-comment:before, .bootstrap .alert.alert-message:before, .bootstrap #carrier_wizard .alert-message.wizard_error:before { content: "\f075"; }
 
 .icon-magnet:before { content: "\f076"; }
 
@@ -2810,6 +2810,8 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .alert.alert-addons hr, .bootstrap #carrier_wizard .alert-addons.wizard_error hr { border-top-color: #f22f86; }
 .bootstrap .alert.alert-addons .alert-link, .bootstrap #carrier_wizard .alert-addons.wizard_error .alert-link { color: #c70d60; }
 .bootstrap .alert.alert-addons:before, .bootstrap #carrier_wizard .alert-addons.wizard_error:before { position: absolute; top: 6px; left: 7px; display: block; height: 25px; width: 25px; color: #f34291; }
+.bootstrap .alert.alert-message, .bootstrap #carrier_wizard .alert-message.wizard_error { padding-left: 50px; position: relative; border: none; border-left: solid 3px #f4c178; border: solid 2px #f0ad4e; background-color: white; }
+.bootstrap .alert.alert-message:before, .bootstrap #carrier_wizard .alert-message.wizard_error:before { position: absolute; top: 6px; left: 7px; display: block; height: 25px; width: 25px; color: #f4c178; }
 .bootstrap .alert h4, .bootstrap #carrier_wizard .wizard_error h4 { font-size: 1.45em; margin-bottom: 1em; }
 .bootstrap .overflow-y { max-height: 200px; margin-bottom: 15px; overflow-y: auto; }
 .bootstrap .input[type='password'] { font-size: 2em !important; }
@@ -2848,9 +2850,9 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .list-action-enable.action-enabled { border: solid #5cb85c 1px; background-color: #80c780; }
 .bootstrap .list-action-enable.action-disabled { border: solid #d9534f 1px; background-color: #e27c79; }
 .bootstrap .list-action-enable:hover { color: white; }
-.bootstrap td.list-empty { background-color: #fcfdfe !important; }
-.bootstrap td.list-empty .list-empty-msg { text-align: center; display: block; width: 50%; margin: 20px auto; color: #999999; font-family: "Ubuntu Condensed", Helvetica, Arial, sans-serif; font-size: 1.4em; }
-.bootstrap td.list-empty .list-empty-icon { color: #dedede; display: block; clear: both; font-size: 84px; text-shadow: white 1px 1px 0; }
+.bootstrap .list-empty { background-color: #fcfdfe !important; }
+.bootstrap .list-empty .list-empty-msg { text-align: center; display: block; width: 50%; margin: 20px auto; color: #999999; font-family: "Ubuntu Condensed", Helvetica, Arial, sans-serif; font-size: 1.4em; }
+.bootstrap .list-empty .list-empty-icon { color: #dedede; display: block; clear: both; font-size: 84px; text-shadow: white 1px 1px 0; }
 .bootstrap .tree-panel-heading-controls { line-height: 2.2em; text-transform: uppercase; }
 .bootstrap .tree-panel-heading-controls i { font-size: 14px; }
 .bootstrap .tree { padding: 0 0 0 20px; list-style: none; }
@@ -3200,9 +3202,9 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .avatar-sm, .bootstrap .employee_avatar_small { height: 32px; width: 32px; display: inline-block; text-align: center; background-color: #eeeeee; overflow: hidden; -webkit-border-radius: 32px; -moz-border-radius: 32px; -ms-border-radius: 32px; -o-border-radius: 32px; border-radius: 32px; }
 .bootstrap .avatar-sm img, .bootstrap .employee_avatar_small img { width: 100%; height: 100%; }
 .bootstrap .avatar-sm i, .bootstrap .employee_avatar_small i { font-size: 21.33333px; line-height: 32px; }
-.bootstrap .avatar-md { height: 64px; width: 64px; display: inline-block; text-align: center; background-color: #eeeeee; overflow: hidden; -webkit-border-radius: 64px; -moz-border-radius: 64px; -ms-border-radius: 64px; -o-border-radius: 64px; border-radius: 64px; }
+.bootstrap .avatar-md { height: 48px; width: 48px; display: inline-block; text-align: center; background-color: #eeeeee; overflow: hidden; -webkit-border-radius: 48px; -moz-border-radius: 48px; -ms-border-radius: 48px; -o-border-radius: 48px; border-radius: 48px; }
 .bootstrap .avatar-md img { width: 100%; height: 100%; }
-.bootstrap .avatar-md i { font-size: 42.66667px; line-height: 64px; }
+.bootstrap .avatar-md i { font-size: 32px; line-height: 48px; }
 .bootstrap .avatar-lg, .bootstrap .employee_avatar { height: 96px; width: 96px; display: inline-block; text-align: center; background-color: #eeeeee; overflow: hidden; -webkit-border-radius: 96px; -moz-border-radius: 96px; -ms-border-radius: 96px; -o-border-radius: 96px; border-radius: 96px; }
 .bootstrap .avatar-lg img, .bootstrap .employee_avatar img { width: 100%; height: 100%; }
 .bootstrap .avatar-lg i, .bootstrap .employee_avatar i { font-size: 64px; line-height: 96px; }
@@ -3215,12 +3217,12 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .message-item-initial h2 { font-size: 1.5em; margin: 0 0 5px 0; }
 .bootstrap .message-item-initial .message-item-initial-body { position: relative; margin-top: 10px; }
 .bootstrap .message-item-initial .message-date { color: #bbbbbb; margin-bottom: 10px; }
-.bootstrap .message-item { position: relative; border-bottom: solid 1px #eeeeee; margin-left: 30px; }
+.bootstrap .message-item { position: relative; border-bottom: solid 1px #eeeeee; margin: 0 0 0 30px; padding: 10px 0; }
 .bootstrap .message-item:last-child { border: none; }
 .bootstrap .message-item .message-item-heading { display: inline-block; }
 .bootstrap .message-item .message-body { margin: 0 0 0 80px; }
 .bootstrap .message-item .message-body .message-item-text { padding: 0 0 0 10px; border-left: 2px solid #cccccc; }
-.bootstrap .message-item .message-avatar { position: absolute; top: 0; left: 0; }
+.bootstrap .message-item .message-avatar { position: absolute; top: 10px; left: 10px; }
 .bootstrap .message-item .message-date { color: #bbbbbb; }
 .bootstrap .arrow:before, .bootstrap .arrow:after { position: absolute; display: inline-block; border-color: transparent; border-style: solid; content: ""; }
 .bootstrap .arrow-left:before { margin-left: -7px; top: 6px; left: 0px; border-right-color: #d1d4d7; border-width: 7px 7px 7px 0; }
