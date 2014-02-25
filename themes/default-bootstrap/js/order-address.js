@@ -132,7 +132,21 @@ function updateAddresses()
 						//IE6 bug fix
 						if(error !== 'indexOf')
 							errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
-					alert(errors);
+		            if (!!$.prototype.fancybox)
+		            {
+		                $.fancybox.open([
+		                    {
+		                        type: 'inline',
+		                        autoScale: true,
+		                        minHeight: 30,
+		                        content: '<p class="fancybox-error">' + errors + '</p>'
+		                    }
+		                ], {
+		                    padding: 0
+		                });
+		            }
+		            else
+		                alert(errors);
 				}
 				$('.addresses .waitimage').hide();
 				$('.button[name="processAddress"]').prop('disabled', '');
@@ -141,7 +155,24 @@ function updateAddresses()
 				$('.addresses .waitimage').hide();                        
 				$('.button[name="processAddress"]').prop('disabled', '');
 				if (textStatus !== 'abort')
-					alert("TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+				{
+					error = "TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
+		            if (!!$.prototype.fancybox)
+		            {
+		                $.fancybox.open([
+		                    {
+		                        type: 'inline',
+		                        autoScale: true,
+		                        minHeight: 30,
+		                        content: '<p class="fancybox-error">' + error + '</p>'
+		                    }
+		                ], {
+		                    padding: 0
+		                });
+		            }
+		            else
+		                alert(error);
+				}
 			}
 		});
 	}

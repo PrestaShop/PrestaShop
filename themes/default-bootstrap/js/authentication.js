@@ -77,7 +77,22 @@ function submitFunction()
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown)
 		{
-			alert("TECHNICAL ERROR: unable to load form.\n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+			error = "TECHNICAL ERROR: unable to load form.\n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
+			if (!!$.prototype.fancybox)
+			{
+			    $.fancybox.open([
+		        {
+		            type: 'inline',
+		            autoScale: true,
+		            minHeight: 30,
+		            content: "<p class='fancybox-error'>" + error + '</p>'
+		        }],
+				{
+			        padding: 0
+			    });
+			}
+			else
+			    alert(error);
 		}
 	});
 }
