@@ -33,7 +33,7 @@ class BlockCategories extends Module
 	{
 		$this->name = 'blockcategories';
 		$this->tab = 'front_office_features';
-		$this->version = '2.3';
+		$this->version = '2.4';
 		$this->author = 'PrestaShop';
 
 		$this->bootstrap = true;
@@ -184,10 +184,14 @@ class BlockCategories extends Module
 	public function hookLeftColumn($params)
 	{
 		$this->setLastVisitedCategory();
-		if (Configuration::get('BLOCK_CATEG_ROOT_CATEGORY') && isset($this->context->cookie->last_visited_category) && $this->context->cookie->last_visited_category)
-			$category = new Category($this->context->cookie->last_visited_category, $this->context->language->id);
-		else
-			$category = new Category(Configuration::get('PS_HOME_CATEGORY'), $this->context->language->id);
+		$phpself = $this->context->controller->php_self;
+		$current_allowed_controllers = array('category', 'product');
+
+		$from_category = Configuration::get('PS_HOME_CATEGORY');
+		if ($phpself != null && in_array($phpself, $current_allowed_controllers) && Configuration::get('BLOCK_CATEG_ROOT_CATEGORY') && isset($this->context->cookie->last_visited_category) && $this->context->cookie->last_visited_category)
+			$from_category = $this->context->cookie->last_visited_category;
+
+		$category = new Category($from_category, $this->context->language->id);
 
 		$cacheId = $this->getCacheId($category ? $category->id : null);
 
