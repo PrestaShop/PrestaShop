@@ -49,7 +49,8 @@ class AdminOrdersControllerCore extends AdminController
 		osl.`name` AS `osname`,
 		os.`color`,
 		IF((SELECT COUNT(so.id_order) FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
-		country_lang.name as cname';
+		country_lang.name as cname,
+		IF(a.valid, 1, 0) badge_success';
 
 		$this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
@@ -68,16 +69,15 @@ class AdminOrdersControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_order' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
+				'align' => 'text-center',
 				'class' => 'fixed-width-xs'
 			),
 			'reference' => array(
-				'title' => $this->l('Reference'),
-				'align' => 'center'
+				'title' => $this->l('Reference')
 			),
 			'new' => array(
-				'title' => $this->l('New'),
-				'align' => 'center',
+				'title' => $this->l('New client'),
+				'align' => 'text-center',
 				'type' => 'bool',
 				'tmpTableFilter' => true,
 				'orderby' => false
@@ -101,11 +101,10 @@ class AdminOrdersControllerCore extends AdminController
 		$this->fields_list = array_merge($this->fields_list, array(
 			'total_paid_tax_incl' => array(
 				'title' => $this->l('Total'),
-				'align' => 'right',
-				'prefix' => '<span class="badge">',
-				'suffix' => '</span>',
+				'align' => 'text-right',
 				'type' => 'price',
-				'currency' => true
+				'currency' => true,
+				'badge_success' => true
 			),
 			'payment' => array(
 				'title' => $this->l('Payment')
@@ -121,13 +120,13 @@ class AdminOrdersControllerCore extends AdminController
 			),
 			'date_add' => array(
 				'title' => $this->l('Date'),
-				'align' => 'right',
+				'align' => 'text-right',
 				'type' => 'datetime',
 				'filter_key' => 'a!date_add'
 			),
 			'id_pdf' => array(
 				'title' => $this->l('PDF'),
-				'align' => 'center',
+				'align' => 'text-center',
 				'callback' => 'printPDFIcons',
 				'orderby' => false,
 				'search' => false,
