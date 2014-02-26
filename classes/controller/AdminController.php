@@ -1859,6 +1859,18 @@ class AdminControllerCore extends Controller
 			return false;
 		}
 
+		if (array_key_exists('active', $this->fields_list) && !empty($this->fields_list['active']))
+			$this->bulk_actions = array_merge($this->bulk_actions, array(
+				'enableSelection' => array(
+					'text' => $this->l('Enable selection'),
+					'icon' => 'icon-power-off text-success'
+				),
+				'disableSelection' => array(
+					'text' => $this->l('Disable selection'),
+					'icon' => 'icon-power-off text-danger'
+				)
+			));
+
 		$this->setHelperDisplay($helper);
 		$helper->tpl_vars = $this->tpl_list_vars;
 		$helper->tpl_delete_link_vars = $this->tpl_delete_link_vars;

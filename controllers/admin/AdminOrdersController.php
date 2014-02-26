@@ -174,7 +174,7 @@ class AdminOrdersControllerCore extends AdminController
 		}
 
 		$this->bulk_actions = array(
-			'updateOrderStatus' => array('text' => $this->l('Change Order Status'))
+			'updateOrderStatus' => array('text' => $this->l('Change Order Status'), 'icon' => 'icon-refresh')
 		);
 
 		parent::__construct();

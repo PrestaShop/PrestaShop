@@ -20,7 +20,7 @@ function tinySetup(config)
 		external_plugins: { "filemanager" : ad+"/filemanager/plugin.min.js"},
 		language: iso,
 		skin: "prestashop",
-		resize: false,
+		statusbar: false,
 		extended_valid_elements : "em[class|name|id]",
 		menu: {
 			edit: {title: 'Edit', items: 'undo redo | cut copy paste | selectall'},
