@@ -76,7 +76,7 @@ class AdminCustomersControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_customer' => array(
 				'title' => $this->l('ID'),
-				'align' => 'center',
+				'align' => 'text-center',
 				'class' => 'fixed-width-xs'
 			),
 			'title' => array(
@@ -111,15 +111,14 @@ class AdminCustomersControllerCore extends AdminController
 			'total_spent' => array(
 				'title' => $this->l('Sales'),
 				'type' => 'price',
-				'prefix' => '<span class="badge badge-success">',
-				'suffix' => '</span>',
 				'search' => false,
 				'havingFilter' => true,
-				'align' => 'right'
+				'align' => 'text-right',
+				'badge_success' => true
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
-				'align' => 'center',
+				'align' => 'text-center',
 				'active' => 'status',
 				'type' => 'bool',
 				'orderby' => false,
@@ -127,14 +126,14 @@ class AdminCustomersControllerCore extends AdminController
 			),
 			'newsletter' => array(
 				'title' => $this->l('News.'),
-				'align' => 'center',
+				'align' => 'text-center',
 				'type' => 'bool',
 				'callback' => 'printNewsIcon',
 				'orderby' => false
 			),
 			'optin' => array(
 				'title' => $this->l('Opt.'),
-				'align' => 'center',
+				'align' => 'text-center',
 				'type' => 'bool',
 				'callback' => 'printOptinIcon',
 				'orderby' => false
@@ -142,7 +141,7 @@ class AdminCustomersControllerCore extends AdminController
 			'date_add' => array(
 				'title' => $this->l('Registration'),
 				'type' => 'date',
-				'align' => 'right'
+				'align' => 'text-right'
 			),
 			'connect' => array(
 				'title' => $this->l('Last visit'),
@@ -198,6 +197,16 @@ class AdminCustomersControllerCore extends AdminController
 			);
 		}
 	}
+
+	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
+	{
+		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, $id_lang_shop);
+
+		if ($this->_list)
+			foreach ($this->_list as &$row)
+				$row['badge_success'] = $row['total_spent'] > 0;
+	}
+
 
 	public function initToolbarTitle()
 	{
