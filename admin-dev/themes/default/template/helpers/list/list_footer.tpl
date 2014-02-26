@@ -33,12 +33,12 @@
 			</button>
 			<ul class="dropdown-menu">
 			<li>
-				<a href="#" onclick="javascript:checkDelBoxes($(this).closest('form').get(0), '{$table}Box[]', true);return false;">
+				<a href="#" onclick="javascript:checkDelBoxes($(this).closest('form').get(0), '{$list_id}Box[]', true);return false;">
 					<i class="icon-check-sign"></i>&nbsp;{l s='Select all'}
 				</a>
 			</li>
 			<li>
-				<a href="#" onclick="javascript:checkDelBoxes($(this).closest('form').get(0), '{$table}Box[]', false);return false;">
+				<a href="#" onclick="javascript:checkDelBoxes($(this).closest('form').get(0), '{$list_id}Box[]', false);return false;">
 					<i class="icon-check-empty"></i>&nbsp;{l s='Unselect all'}
 				</a>
 			</li>
