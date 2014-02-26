@@ -2772,7 +2772,7 @@ a.link-social:hover { text-decoration: none; }
  @keyframes bounceG { 0% { opacity: 0; filter: alpha(opacity=0); -webkit-transform: scaleX(0.1); -moz-transform: scaleX(0.1); -ms-transform: scaleX(0.1); -o-transform: scaleX(0.1); transform: scaleX(0.1); -webkit-transform: scaleY(0.1); -moz-transform: scaleY(0.1); -ms-transform: scaleY(0.1); -o-transform: scaleY(0.1); transform: scaleY(0.1); }
   100% { opacity: 1; filter: alpha(opacity=100); -webkit-transform: scaleX(1); -moz-transform: scaleX(1); -ms-transform: scaleX(1); -o-transform: scaleX(1); transform: scaleX(1); -webkit-transform: scaleY(1); -moz-transform: scaleY(1); -ms-transform: scaleY(1); -o-transform: scaleY(1); transform: scaleY(1); } }
  }
-.bootstrap .fixed-width-xs { width: 40px !important; }
+.bootstrap .fixed-width-xs { width: 48px !important; }
 .bootstrap .fixed-width-sm { width: 80px !important; }
 .bootstrap .fixed-width-md { width: 120px !important; }
 .bootstrap .fixed-width-lg { width: 160px !important; }
@@ -2827,7 +2827,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .table thead > tr > th span.title_box a { text-decoration: none; }
 .bootstrap .table thead > tr > th span.title_box a.active { color: black; }
 .bootstrap .table thead > tr.filter > th { background-color: #ecf6fb; }
-.bootstrap .table thead > tr.filter > th input[type="text"].filter, .bootstrap .table thead > tr.filter > th input[type="password"].filter, .bootstrap .table thead > tr.filter > th select.filter { font-size: 11px; border-color: #a0d0eb; }
+.bootstrap .table thead > tr.filter > th input[type="text"].filter, .bootstrap .table thead > tr.filter > th input[type="password"].filter, .bootstrap .table thead > tr.filter > th select.filter { font-size: 11px; padding: 0 4px; border-color: #a0d0eb; }
 .bootstrap .table input, .bootstrap .table select { margin: 0; }
 .bootstrap .table tbody > tr > td { border-top: none; color: #666666; background-color: white; padding: 3px 7px; vertical-align: middle; word-wrap: nowrap; font-size: 12px; border-bottom: solid 1px #eaedef; }
 .bootstrap .table tbody > tr.odd > td { background-color: #fcfdfe; }

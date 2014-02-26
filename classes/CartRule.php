@@ -304,7 +304,7 @@ class CartRuleCore extends ObjectModel
 		foreach ($result as &$cart_rule)
 		{
 			$cart_rule['value'] = 0;
-			$cart_rule['minimal'] = $cart_rule['minimum_amount'];
+			$cart_rule['minimal'] = Tools::convertPriceFull($cart_rule['minimum_amount'], new Currency($cart_rule['minimum_amount_currency']), Context::getContext()->currency);
 			$cart_rule['cumulable'] = !$cart_rule['cart_rule_restriction'];
 			$cart_rule['id_discount_type'] = false;
 			if ($cart_rule['free_shipping'])
@@ -521,18 +521,10 @@ class CartRuleCore extends ObjectModel
 
 		if ($this->minimum_amount)
 		{
-			// Minimum amount is converted to the default currency
+			// Minimum amount is converted to the contextual currency
 			$minimum_amount = $this->minimum_amount;
-			if ($this->minimum_amount_currency != $context->currency->id)
-			{
-				$minimum_amount_currency = new Currency($this->minimum_amount_currency);
-				if ($this->minimum_amount == 0 || $minimum_amount_currency->conversion_rate == 0)
-					$minimum_amount = 0;
-				else
-					$minimum_amount /= $minimum_amount_currency->conversion_rate;
-
-				$minimum_amount *= $context->currency->conversion_rate;
-			}
+			if ($this->minimum_amount_currency != Context::getContext()->currency->id)
+				$minimum_amount = Tools::convertPriceFull($minimum_amount , new Currency($this->minimum_amount_currency), Context::getContext()->currency);
 
 			$cartTotal = $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_PRODUCTS);
 			if ($this->minimum_amount_shipping)
