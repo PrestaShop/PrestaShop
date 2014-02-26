@@ -656,7 +656,8 @@ class HelperListCore extends Helper
 		{
 			foreach ($this->_list as $key => $row)
 				foreach ($this->bulk_actions as $action => $data)
-					if (!in_array($row[$this->identifier], $this->list_skip_actions[$action]))
+					if (array_key_exists($action, $this->list_skip_actions) &&
+						!in_array($row[$this->identifier], $this->list_skip_actions[$action]))
 						return true;
 
 			return false;
