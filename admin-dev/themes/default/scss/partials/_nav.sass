@@ -13,7 +13,7 @@ $min-height: 800px
 	ul.menu
 		margin: 0
 		padding: 0
-		list-style: none
+		list-style: none !important
 		li.searchtab
 			padding: 14px 7px
 			height: 55px
@@ -79,7 +79,7 @@ $min-height: 800px
 				@include transition-duration(0.2s)
 				@include transition-timing-function(ease-out)
 				i
-					width: $menu-item-size
+					width: $menu-item-size+8!important
 					font-size: $icon-size-base*2
 					vertical-align: middle
 					color: mix($main-color, contrast-color($main-color, black, white, 50%), 60%)
