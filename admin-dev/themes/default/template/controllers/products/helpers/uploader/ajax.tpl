@@ -26,15 +26,15 @@
 	<div class="col-lg-12">
 		<input id="{$id}" type="file" name="{$name}[]"{if isset($url)} data-url="{$url}"{/if}{if isset($multiple) && $multiple} multiple="multiple"{/if} class="hide" />
 		<button class="btn btn-default" data-style="expand-right" data-size="s" type="button" id="{$id}-add-button">
-			<i class="icon-plus-sign"></i> {if isset($multiple) && $multiple}{l s='Add files'}{else}{l s='Add file'}{/if}
-		</button>
-		<button class="ladda-button btn btn-default" data-style="expand-right" type="button" id="{$id}-upload-button" style="display:none;">
-			<i class="icon-cloud-upload text-success"></i> <span class="ladda-label text-success">{if isset($multiple) && $multiple}{l s='Upload files'}{else}{l s='Upload file'}{/if}</span>
+			<i class="icon-folder-open"></i> {if isset($multiple) && $multiple}{l s='Add files...'}{else}{l s='Add file...'}{/if}
 		</button>
 	</div>
 </div>
-<div class="row" style="display:none">
-	<div class="alert alert-info" id="{$id}-files-list"></div>
+<div class="well" style="display:none">
+	<div id="{$id}-files-list"></div>
+	<button class="ladda-button btn btn-primary btn-block" data-style="expand-right" type="button" id="{$id}-upload-button" style="display:none;">
+		<span class="ladda-label">{if isset($multiple) && $multiple}{l s='Upload files'}{else}{l s='Upload file'}{/if}</span>
+	</button>
 </div>
 <div class="row" style="display:none">
 	<div class="alert alert-success" id="{$id}-success"></div>
@@ -142,14 +142,14 @@
 				}
 			}
 
-			data.context = $('<div/>').addClass('row').appendTo($('#{$id}-files-list'));
-			var file_name = $('<span/>').append('<strong>'+data.files[0].name+'</strong> ('+humanizeSize(data.files[0].size)+')').appendTo(data.context);
+			data.context = $('<div/>').addClass('form-group').appendTo($('#{$id}-files-list'));
+			var file_name = $('<span/>').append('<i class="icon-picture-o"></i> <strong>'+data.files[0].name+'</strong> ('+humanizeSize(data.files[0].size)+')').appendTo(data.context);
 
 			var button = $('<button/>').addClass('btn btn-default pull-right').prop('type', 'button').html('<i class="icon-trash"></i> {l s='Remove file'}').appendTo(data.context).on('click', function() {
 				{$id}_total_files--;
 				data.files = null;
 				
-				var total_elements = $(this).parent().siblings('div.row').length;
+				var total_elements = $(this).parent().siblings('div.form-group').length;
 				$(this).parent().remove();
 
 				if (total_elements == 0) {
@@ -168,7 +168,7 @@
 			var index = data.index,	file = data.files[index];
 			
 			if (file.error) {
-				$('#{$id}-errors').append('<div class="row"><strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error+'</div>').parent().show();
+				$('#{$id}-errors').append('<div class="form-group"><i class="icon-picture-o"></i> <strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error+'</div>').parent().show();
 				$('#{$id}-files-list').html('').parent().hide();
 				$(data.context).find('button').trigger('click');
 			}

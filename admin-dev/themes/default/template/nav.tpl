@@ -91,7 +91,7 @@
 				<li id="header_quick" class="maintab has_submenu">
 					<a href="#" id="quick_select" class="title">
 						<i class="icon-AdminFlash"></i>
-						{l s='Quick Access'}
+						<span>{l s='Quick Access'}</span>
 					</a>
 					<ul class="submenu">
 					{foreach $quick_access as $quick}

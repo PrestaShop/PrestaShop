@@ -49,6 +49,7 @@ $min-height: 800px
 				padding: 4px
 				background-color: darken($main-color,8%)
 				li
+					list-style: none !important
 					a
 						color: mix($main-color, contrast-color($main-color, black, white, 50%), 30%)
 						display: block
@@ -79,15 +80,13 @@ $min-height: 800px
 				@include transition-duration(0.2s)
 				@include transition-timing-function(ease-out)
 				i
-					width: $menu-item-size+8!important
+					width: 42px
 					font-size: $icon-size-base*2
 					vertical-align: middle
 					color: mix($main-color, contrast-color($main-color, black, white, 50%), 60%)
 					@include transition-property(color)
 					@include transition-duration(0.4s)
 					@include transition-timing-function(ease-out)
-				span
-					padding-left: 0.4em
 			&.hover, &:hover:not(.hover)
 				> a.title
 					background-color: darken($main-color,8%)
@@ -197,8 +196,6 @@ $min-height: 800px
 			border: none !important
 		a.title
 			text-align: center
-			i
-				width: 42px !important
 			> span
 				display: none
 		> ul > li.maintab:hover
