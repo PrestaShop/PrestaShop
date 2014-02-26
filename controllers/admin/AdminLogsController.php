@@ -115,8 +115,13 @@ class AdminLogsControllerCore extends AdminController
 	
 	public function displayEmployee($value, $tr)
 	{
+		$template = $this->context->smarty->createTemplate('controllers/logs/employee_field.tpl', $this->context->smarty);		
 		$employee = new Employee((int)$tr['id_employee']);
-		return '<span class="employee_avatar_small">'.ImageManager::thumbnail($employee->getImage(), $this->table.'_mini_'.$value.'_'.$this->context->shop->id.'.'.$this->imageType, 45, $this->imageType).'</span> '.$value;
+		$template->assign(array(
+			'employee_image' => $employee->getImage(),
+			'employee_name' => $value
+		));
+		return $template->fetch();
 	}
 }
 
