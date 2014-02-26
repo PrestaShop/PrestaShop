@@ -173,7 +173,7 @@ function changeAddressDelivery(obj)
 					}
 					else
 					    alert(jsonData.error);
-				}
+
 					// Reset the old address
 					$('#select_address_delivery_' + id_product + '_' + id_product_attribute + '_' + old_id_address_delivery).val(old_id_address_delivery);
 				}
@@ -581,7 +581,7 @@ function upQuantity(id, qty)
 			            type: 'inline',
 			            autoScale: true,
 			            minHeight: 30,
-			            content: "<p class='fancybox-error'>" + error s+ '</p>'
+			            content: "<p class='fancybox-error'>" + errors + '</p>'
 			        }],
 					{
 				        padding: 0
