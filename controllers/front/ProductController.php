@@ -97,7 +97,8 @@ class ProductControllerCore extends FrontController
 			 */
 			if (!$this->product->isAssociatedToShop() || !$this->product->active)
 			{
-				if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Tools::getValue('id_employee')))
+
+				if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Tools::getValue('id_employee')) && $this->product->isAssociatedToShop())
 				{
 					// If the product is not active, it's the admin preview mode
 					$this->context->smarty->assign('adminActionDisplay', true);
