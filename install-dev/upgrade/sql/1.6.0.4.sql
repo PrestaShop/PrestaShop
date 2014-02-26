@@ -10,3 +10,5 @@ UPDATE `PREFIX_orders` SET module = 'free_order' WHERE total_paid = 0 AND module
 
 UPDATE `PREFIX_tab` SET `position` = '1' WHERE `id_tab` =48;
 UPDATE `PREFIX_tab` SET `position` = '0' WHERE `id_tab` =49;
+
+ALTER TABLE `PREFIX_theme` CHANGE `product_per_page` `product_per_page` INT( 10 ) UNSIGNED NOT NULL DEFAULT '1';
