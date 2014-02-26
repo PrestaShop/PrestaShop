@@ -208,8 +208,13 @@ $(document).ready(function() {
 			submenu.addClass('hover');
 			h = $( window ).height();
 			x = submenu.find('.submenu li').last().offset();
-			l = x.top + submenu.find('.submenu li').last().height() + 55 ;
-			position = h - l;
+			l = x.top + submenu.find('.submenu li').last().height();
+			f = 25;
+			if ($('#footer').is(':visible')){
+				f = $('#footer').height() + f;
+			}
+			s = $(document).scrollTop();
+			position = h - l - f + s;
 			var out = false;
 			if ( position < 0) {
 				out = true;

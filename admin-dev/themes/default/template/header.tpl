@@ -93,7 +93,7 @@
 	{/if}
 	{if isset($brightness)}
 	<!--
-		/// todo multishop
+		// @todo: multishop color
 		<style type="text/css">
 			div#header_infos, div#header_infos a#header_shopname, div#header_infos a#header_logout, div#header_infos a#header_foaccess {ldelim}color:{$brightness}{rdelim}
 		</style>
@@ -112,7 +112,7 @@
 			</button>
 
 			<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">
-				<img src="{$img_dir}prestashop-avatar.png" height="15" width="15" alt="{$shop_name|escape:'html':'UTF-8'}" />
+				<img src="{$img_dir}prestashop-avatar.png" alt="{$shop_name|escape:'html':'UTF-8'}" />
 				{$shop_name}
 			</a>
 
@@ -195,21 +195,6 @@
 			</ul>
 		</div>
 		<div class="collapse navbar-collapse navbar-collapse-primary">
-			
-
-{if count($quick_access) > 0}
-			<ul id="header_quick">
-				<li class="dropdown">
-					<a href="#" id="quick_select" class="dropdown-toggle" data-toggle="dropdown">{l s='Quick Access'} <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-					{foreach $quick_access as $quick}
-						<li><a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window} onclick="return !window.open(this.href);"{/if}><i class="icon-chevron-right"></i> {$quick.name}</a></li>
-					{/foreach}
-					</ul>
-				</li>
-			</ul>
-{/if}
-
 			<ul id="header_employee_box">
 {if {$base_url}}
 				<li>
