@@ -91,6 +91,14 @@ class AdminCartsControllerCore extends AdminController
 		);
  		$this->shopLinkType = 'shop';
 
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
+
 		parent::__construct();
 	}
 
@@ -821,5 +829,46 @@ class AdminCartsControllerCore extends AdminController
 				return ;
 		
 		return $this->helper->displayDeleteLink($token, $id, $name);
+	}
+
+	public function renderList()
+	{
+		if (!($this->fields_list && is_array($this->fields_list)))
+			return false;
+		$this->getList($this->context->language->id);
+
+		$helper = new HelperList();
+		
+		// Empty list is ok
+		if (!is_array($this->_list))
+		{
+			$this->displayWarning($this->l('Bad SQL query', 'Helper').'<br />'.htmlspecialchars($this->_list_error));
+			return false;
+		}
+
+		$this->setHelperDisplay($helper);
+		$helper->tpl_vars = $this->tpl_list_vars;
+		$helper->tpl_delete_link_vars = $this->tpl_delete_link_vars;
+
+		// For compatibility reasons, we have to check standard actions in class attributes
+		foreach ($this->actions_available as $action)
+		{
+			if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action)
+				$this->actions[] = $action;
+		}
+		$helper->is_cms = $this->is_cms;
+		$skip_list = array();
+
+		foreach ($this->_list as $row)
+			if (isset($row['id_order']) && is_numeric($row['id_order']))
+				$skip_list[] = $row['id_cart'];
+
+		if (array_key_exists('delete', $helper->list_skip_actions))
+			$helper->list_skip_actions['delete'] = array_merge($helper->list_skip_actions['delete'], (array)$skip_list);
+		else
+			$helper->list_skip_actions['delete'] = (array)$skip_list;
+
+		$list = $helper->generateList($this->_list, $this->fields_list);
+		return $list;
 	}
 }
