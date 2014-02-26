@@ -34,7 +34,7 @@
 .avatar-sm
 	@include avatar(32px)
 .avatar-md
-	@include avatar(64px)
+	@include avatar(48px)
 .avatar-lg
 	@include avatar(96px)
 .avatar-xl
@@ -90,7 +90,8 @@
 	@extend .media
 	position: relative
 	border-bottom: solid 1px #EEEEEE
-	margin-left: 30px
+	margin: 0 0 0 30px
+	padding: 10px 0
 	&:last-child
 		border: none
 	.message-item-heading
@@ -102,8 +103,8 @@
 			border-left: 2px solid #ccc
 	.message-avatar
 		position: absolute
-		top: 0
-		left: 0
+		top: 10px
+		left: 10px
 	.message-date
 		color: #bbb
 

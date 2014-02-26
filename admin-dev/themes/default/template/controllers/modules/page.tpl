@@ -38,7 +38,7 @@
 						{l s='Module file'}
 					</span>
 				</label>
-				<div class="col-lg-9">
+				<div class="col-sm-9">
 					<div class="row">
 						<div class="col-lg-7">
 							<input id="file" type="file" name="file" class="hide" />
@@ -85,7 +85,7 @@
 		</div>
 		<!--start sidebar module-->
 		<div class="row">
-			<div class="categoriesTitle col-lg-3">
+			<div class="categoriesTitle col-md-3">
 				<div class="list-group">
 					<form id="filternameForm" method="post" class="list-group-item form-horizontal">
 						<div class="input-group">
@@ -109,7 +109,7 @@
 				</div>
 				{include file='controllers/modules/login_addons.tpl'}
 			</div>
-			<div id="moduleContainer" class="col-lg-9">
+			<div id="moduleContainer" class="col-md-9">
 				{include file='controllers/modules/list.tpl'}
 			</div>
 		</div>
