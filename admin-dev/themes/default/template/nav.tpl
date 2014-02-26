@@ -56,8 +56,8 @@
 									</li>
 								</ul>
 							</div>
-							<input id="bo_query" name="bo_query" type="text" class="form-control" value="{$bo_query}" placeholder="{l s='Search'}" />
 							<a href="javascript:void(0);" class="clear_search hide"><i class="icon-remove"></i></a>
+							<input id="bo_query" name="bo_query" type="text" class="form-control" value="{$bo_query}" placeholder="{l s='Search'}" />
 <!--  							<span class="input-group-btn">
 								<button type="submit" id="bo_search_submit" class="btn btn-primary">
 									<i class="icon-search"></i>
@@ -86,6 +86,23 @@
 					</script>
 				</form>
 			</li>
+
+			{if count($quick_access) > 0}
+				<li id="header_quick" class="maintab has_submenu">
+					<a href="#" id="quick_select" class="title">
+						<i class="icon-AdminFlash"></i>
+						{l s='Quick Access'}
+					</a>
+					<ul class="submenu">
+					{foreach $quick_access as $quick}
+						<li>
+							<a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window} onclick="return !window.open(this.href);"{/if}>{$quick.name}</a>
+						</li>
+					{/foreach}
+					</ul>
+				</li>
+			{/if}
+
 			{foreach $tabs as $t}
 				{if $t.active}
 				<li class="maintab {if $t.current}active{/if} {if $t.sub_tabs|@count}has_submenu{/if}" id="maintab{$t.id_tab}" data-submenu="{$t.id_tab}">
