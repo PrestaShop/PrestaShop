@@ -581,7 +581,7 @@ function upQuantity(id, qty)
 			            type: 'inline',
 			            autoScale: true,
 			            minHeight: 30,
-			            content: "<p class='fancybox-error'>" + errors+ '</p>'
+			            content: "<p class='fancybox-error'>" + errors + '</p>'
 			        }],
 					{
 				        padding: 0
