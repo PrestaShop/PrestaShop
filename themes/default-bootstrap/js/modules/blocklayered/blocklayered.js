@@ -34,8 +34,7 @@ $(document).ready(function()
 	openCloseFilter();
 
 	// Click on color
-	$(document).on('click', '#layered_form input[type=button], #layered_form label.layered_color', function(e)
-	{
+	$(document).on('click', '#layered_form input[type=button], #layered_form label.layered_color', function(e) {
 		if (!$('input[name='+$(this).attr('name')+'][type=hidden]').length)
 			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).val($(this).attr('rel')).appendTo('#layered_form');
 		else
@@ -44,8 +43,11 @@ $(document).ready(function()
 	});
 
 	// Click on checkbox
-	$(document).on('change', '#layered_form input[type=checkbox], #layered_form input[type=radio], #layered_form select', function(e)
-	{
+	$(document).on('change', '#layered_form select', function(e) {
+		reloadContent();
+	});
+
+	$(document).on('click', '#layered_form input[type=checkbox], #layered_form input[type=radio]', function(e) {
 		reloadContent();
 	});
 

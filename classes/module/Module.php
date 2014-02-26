@@ -1212,6 +1212,7 @@ abstract class ModuleCore
 					$item->nb_rates = isset($tmp_module->nb_rates) ? (array)$tmp_module->nb_rates : null;
 					$item->avg_rate = isset($tmp_module->avg_rate) ? (array)$tmp_module->avg_rate : null;
 					$item->badges = isset($tmp_module->badges) ? (array)$tmp_module->badges : null;
+					$item->url = isset($tmp_module->url) ? $tmp_module->url : null;
 					
 					$item->onclick_option  = method_exists($module, 'onclickOption') ? true : false;
 					if ($item->onclick_option)
@@ -1307,6 +1308,7 @@ abstract class ModuleCore
 							$item->nb_rates = isset($modaddons->nb_rates) ? (array)$modaddons->nb_rates : null;
 							$item->avg_rate = isset($modaddons->avg_rate) ? (array)$modaddons->avg_rate : null;
 							$item->badges = isset($modaddons->badges) ? (array)$modaddons->badges : null;
+							$item->url = isset($modaddons->url) ? $modaddons->url : null;
 							if (isset($modaddons->img))
 							{
 								if (!file_exists(_PS_TMP_IMG_DIR_.md5($modaddons->name).'.jpg'))
