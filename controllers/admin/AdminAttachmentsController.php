@@ -66,6 +66,14 @@ class AdminAttachmentsControllerCore extends AdminController
 			),
 		);
 
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'icon' => 'icon-trash',
+				'confirm' => $this->l('Delete selected items?')
+			)
+		);
+
 		parent::__construct();
 	}
 

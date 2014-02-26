@@ -38,7 +38,7 @@
 	</div>
 	{if isset($display_multishop_checkbox) && $display_multishop_checkbox}
 	<input type="checkbox" name="activateModule" value="1"{if $module->active} checked="checked"{/if} 
-		onclick="location.href = '{$current_url}&enable='+(($(this).attr('checked')) ? 1 : 0)" />
+		onclick="location.href = '{$current_url}&module_name={$module_name|escape:'html':'UTF-8'}&enable=' + (($(this).attr('checked')) ? 1 : 0);" />
 	{l s='Activate module for'} {$shop_context}
 	{/if}
 </div>
