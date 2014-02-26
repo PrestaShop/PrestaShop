@@ -179,7 +179,10 @@
 
 		{if !$has_attribute}
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="minimal_quantity">{l s='Minimum quantity'}</label>
+				<label class="control-label col-lg-3" for="minimal_quantity">
+					{include file="controllers/products/multishop/checkbox.tpl" field="minimal_quantity" type="default"}
+					{l s='Minimum quantity'}
+				</label>
 				<div class="col-lg-9">
 					<input class="form-control fixed-width-sm" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$product->minimal_quantity|default:1}" />
 					<p class="help-block">{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
@@ -222,7 +225,10 @@
 			
 			{if !$countAttributes}
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="available_date">{l s='Available date:'}</label>
+				<label class="control-label col-lg-3" for="available_date">
+					{include file="controllers/products/multishop/checkbox.tpl" field="available_date" type="default"}
+					{l s='Available date:'}
+				</label>
 				<div class="col-lg-9">
 					<div class="input-group fixed-width-md">
 						<input id="available_date" name="available_date" value="{$product->available_date}" class="datepicker" type="text" />
