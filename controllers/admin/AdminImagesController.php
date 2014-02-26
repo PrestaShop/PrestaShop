@@ -40,6 +40,14 @@ class AdminImagesControllerCore extends AdminController
 	 	$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
+
 		$this->fields_list = array(
 			'id_image_type' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'name' => array('title' => $this->l('Name')),

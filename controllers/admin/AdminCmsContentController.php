@@ -46,7 +46,13 @@ class AdminCmsContentControllerCore extends AdminController
 
 		$this->table = 'cms';
 		$this->className = 'CMS';
-		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?'), 'icon' => 'icon-trash'));
+				$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
 		$this->admin_cms_categories = new AdminCmsCategoriesController();
 		$this->admin_cms_categories->init();
 		$this->admin_cms = new AdminCmsController();

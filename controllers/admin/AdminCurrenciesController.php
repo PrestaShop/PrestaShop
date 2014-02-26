@@ -43,11 +43,13 @@ class AdminCurrenciesControllerCore extends AdminController
 			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-sm'),
 		);
 
-	 	$this->bulk_actions = array(
-			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-			'enableSelection' => array('text' => $this->l('Enable selection')),
-			'disableSelection' => array('text' => $this->l('Disable selection'))
-			);
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
 
 		$this->fields_options = array(
 			'change' => array(

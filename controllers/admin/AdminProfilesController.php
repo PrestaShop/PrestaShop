@@ -39,9 +39,12 @@ class AdminProfilesControllerCore extends AdminController
 		$this->addRowActionSkipList('delete', array(1));
 
 		$this->bulk_actions = array(
-			'delete' => array('text' => $this->l('Delete selected'), 
-			'confirm' => $this->l('Delete selected items?'))
-			);
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
 
 		$this->fields_list = array(
 			'id_profile' => array(

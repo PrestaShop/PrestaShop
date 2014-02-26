@@ -1860,6 +1860,10 @@ class AdminControllerCore extends Controller
 		}
 
 		if (array_key_exists('active', $this->fields_list) && !empty($this->fields_list['active']))
+		{
+			if (!is_array($this->bulk_actions))
+				$this->bulk_actions = array();
+
 			$this->bulk_actions = array_merge($this->bulk_actions, array(
 				'enableSelection' => array(
 					'text' => $this->l('Enable selection'),
@@ -1870,6 +1874,7 @@ class AdminControllerCore extends Controller
 					'icon' => 'icon-power-off text-danger'
 				)
 			));
+		}
 
 		$this->setHelperDisplay($helper);
 		$helper->tpl_vars = $this->tpl_list_vars;

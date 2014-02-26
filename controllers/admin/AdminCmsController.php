@@ -41,7 +41,13 @@ class AdminCmsControllerCore extends AdminController
 		$this->lang = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?'), 'icon' => 'icon-trash'));
+				$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
 		$this->fields_list = array(
 			'id_cms' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'link_rewrite' => array('title' => $this->l('URL')),

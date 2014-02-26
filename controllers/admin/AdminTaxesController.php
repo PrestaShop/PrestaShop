@@ -35,11 +35,13 @@ class AdminTaxesControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		
-	 	$this->bulk_actions = array(
-			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-			'enableSelection' => array('text' => $this->l('Enable selection')),
-			'disableSelection' => array('text' => $this->l('Disable selection'))
-			);
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
 
 		$this->fields_list = array(
 			'id_tax' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),

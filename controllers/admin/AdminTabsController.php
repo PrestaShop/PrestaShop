@@ -37,14 +37,18 @@ class AdminTabsControllerCore extends AdminController
 		$this->list_id = 'tab';
 		$this->className = 'Tab';
 		$this->lang = true;
-
 		$this->fieldImageSettings = array(
 			'name' => 'icon',
 			'dir' => 't'
 		);
-
 		$this->imageType = 'gif';
-
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
 		$this->fields_list = array(
 			'id_tab' => array(
 				'title' => $this->l('ID'),
