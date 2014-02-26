@@ -2448,7 +2448,7 @@ class AdminProductsControllerCore extends AdminController
 				);
 		if ($this->display == 'edit')
 		{
-			if (($product = $this->loadObject(true)))
+			if (($product = $this->loadObject(true)) && $product->isAssociatedToShop())
 			{
 				// adding button for preview this product
 				if ($url_preview = $this->getPreviewUrl($product))
