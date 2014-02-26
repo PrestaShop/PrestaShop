@@ -1734,8 +1734,10 @@ var ProductMultishop = new function()
 	{
 		$.each(languages, function(k, v)
 		{
+			ProductMultishop.checkField($('input[name=\'multishop_check[minimal_quantity]\']').prop('checked'), 'minimal_quantity');
 			ProductMultishop.checkField($('input[name=\'multishop_check[available_later]['+v.id_lang+']\']').prop('checked'), 'available_later_'+v.id_lang);
 			ProductMultishop.checkField($('input[name=\'multishop_check[available_now]['+v.id_lang+']\']').prop('checked'), 'available_now_'+v.id_lang);
+			ProductMultishop.checkField($('input[name=\'multishop_check[available_date]\']').prop('checked'), 'available_date');
 		});
 	};
 
