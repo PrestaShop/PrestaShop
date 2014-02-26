@@ -654,13 +654,15 @@ class HelperListCore extends Helper
 
 		if (isset($this->list_skip_actions) && count($this->list_skip_actions))
 		{
-			foreach ($this->_list as $key => $row)
-				foreach ($this->bulk_actions as $action => $data)
-					if (array_key_exists($action, $this->list_skip_actions) &&
-						!in_array($row[$this->identifier], $this->list_skip_actions[$action]))
-						return true;
+			foreach ($this->bulk_actions as $action => $data)
+				if (array_key_exists($action, $this->list_skip_actions))
+				{
+					foreach ($this->_list as $key => $row)
+						if (!in_array($row[$this->identifier], $this->list_skip_actions[$action]))
+							return true;
 
-			return false;
+					return false;
+				}
 		}
 
 		return !empty($this->bulk_actions);
