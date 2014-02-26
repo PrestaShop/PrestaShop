@@ -276,8 +276,8 @@ class ProductControllerCore extends FrontController
 				'body_classes' => array(
 					$this->php_self.'-'.$this->product->id, 
 					$this->php_self.'-'.$this->product->link_rewrite,
-					'category-'.$this->category->id,
-					'category-'.$this->category->getFieldByLang('link_rewrite')
+					'category-'.(isset($this->category) ? $this->category->id : ''),
+					'category-'.(isset($this->category) ? $this->category->getFieldByLang('link_rewrite') : '')
 				),
 				'display_discount_price' => Configuration::get('PS_DISPLAY_DISCOUNT_PRICE'),
 			));
@@ -558,17 +558,23 @@ class ProductControllerCore extends FrontController
 		}
 		if (!isset($path) || !$path)
 			$path = Tools::getPath((int)$this->context->shop->id_category, $this->product->name);
-		
-		// various assignements before Hook::exec
-		$this->context->smarty->assign(array(
-			'path' => $path,
-			'category' => $this->category,
-			'subCategories' => $this->category->getSubCategories($this->context->language->id, true),
-			'id_category_current' => (int)$this->category->id,
-			'id_category_parent' => (int)$this->category->id_parent,
-			'return_category_name' => Tools::safeOutput($this->category->getFieldByLang('name')),
-			'categories' => Category::getHomeCategories($this->context->language->id, true, (int)$this->context->shop->id)
-		));
+
+		$subCategories = array();
+		if (Validate::isLoadedObject($this->category))
+		{
+			$subCategories = $this->category->getSubCategories($this->context->language->id, true);
+
+			// various assignements before Hook::exec
+			$this->context->smarty->assign(array(
+				'path' => $path,
+				'category' => $this->category,
+				'subCategories' => $subCategories,
+				'id_category_current' => (int)$this->category->id,
+				'id_category_parent' => (int)$this->category->id_parent,
+				'return_category_name' => Tools::safeOutput($this->category->getFieldByLang('name')),
+				'categories' => Category::getHomeCategories($this->context->language->id, true, (int)$this->context->shop->id)
+			));
+		}
 		$this->context->smarty->assign(array('HOOK_PRODUCT_FOOTER' => Hook::exec('displayFooterProduct', array('product' => $this->product, 'category' => $this->category))));
 	}
 
