@@ -34,7 +34,7 @@
 		<form action="{$REQUEST_URI}" method="post">
 			<div class="radio">
 				<label for="id_order_state">
-					<select id="id_order_state" name="id_order_state">
+					<select id="id_order_state" name="id_order_state" class="chosen">
 {foreach from=$order_statuses item=order_status_name key=id_order_state}
 						<option value="{$id_order_state|intval}">{$order_status_name|escape}</option>
 {/foreach}
@@ -56,7 +56,7 @@
 					{l s='Cancel'}
 				</button>
 				<button type="submit" class="btn btn-default">
-					<i class="icon-trash text-danger"></i>
+					<i class="icon-check"></i>
 					{l s='Update Order Status'}
 				</button>
 			</div>

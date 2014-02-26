@@ -66,9 +66,10 @@ class AdminStatusesControllerCore extends AdminController
 		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
-				'confirm' => $this->l('Delete selected items?')
-				)
-			);
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash',
+			)
+		);
 
 		$this->fields_list = array(
 			'id_order_state' => array(
