@@ -39,7 +39,7 @@ class AdminCartsControllerCore extends AdminController
 		$this->allow_export = true;
 		$this->_orderWay = 'DESC';
 
-		$this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier, IFNULL(o.id_order, \''.$this->l('Non ordered').'\') id_order, IF(o.id_order, 1, 0) badge_success, IF(co.id_guest, 1, 0) id_guest';
+		$this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier, IFNULL(o.id_order, \''.$this->l('Non ordered').'\') id_order, IF(o.id_order, 1, 0) badge_success, IF(o.id_order, 0, 1) badge_danger, IF(co.id_guest, 1, 0) id_guest';
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'customer c ON (c.id_customer = a.id_customer)
 		LEFT JOIN '._DB_PREFIX_.'currency cu ON (cu.id_currency = a.id_currency)
 		LEFT JOIN '._DB_PREFIX_.'carrier ca ON (ca.id_carrier = a.id_carrier)
@@ -54,7 +54,8 @@ class AdminCartsControllerCore extends AdminController
 			),
 			'id_order' => array(
 				'title' => $this->l('Order ID'),
-				'align' => 'text-center'
+				'align' => 'text-center',
+				'badge_danger' => true
 			),
 			'customer' => array(
 				'title' => $this->l('Customer'),

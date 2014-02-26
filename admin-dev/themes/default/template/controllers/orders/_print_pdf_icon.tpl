@@ -24,19 +24,18 @@
 *}
 
 {* Generate HTML code for printing Invoice Icon with link *}
-<span>
-{if ($order_state->invoice || $order->invoice_number)}
-	<a class="btn btn-default" target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}">
-		<i class="icon-file-text"></i>
-	</a>
-{/if}
-</span>
-
-{* Generate HTML code for printing Delivery Icon with link *}
-<span>
-{if ($order_state->delivery || $order->delivery_number)}
-	<a class="btn btn-default"  target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order={$order->id}">
-		<i class="icon-truck"></i>
-	</a>
-{/if}
+<span class="btn-group-action">
+	<span class="btn-group">
+	{if ($order_state->invoice || $order->invoice_number)}
+		<a class="btn btn-default" target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}">
+			<i class="icon-file-text"></i>
+		</a>
+	{/if}
+	{* Generate HTML code for printing Delivery Icon with link *}
+	{if ($order_state->delivery || $order->delivery_number)}
+		<a class="btn btn-default"  target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order={$order->id}">
+			<i class="icon-truck"></i>
+		</a>
+	{/if}
+	</span>
 </span>
