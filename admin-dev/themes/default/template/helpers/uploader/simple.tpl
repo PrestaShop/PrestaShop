@@ -57,7 +57,7 @@
 </div>
 {else}
 <div class="form-group">
-	<div class="col-lg-12">
+	<div class="col-sm-6">
 		<input id="{$id}" type="file" name="{$name}"{if isset($multiple) && $multiple} multiple="multiple"{/if} class="hide" />
 		<div class="dummyfile input-group">
 			<span class="input-group-addon"><i class="icon-file"></i></span>
