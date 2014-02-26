@@ -30,15 +30,15 @@
 	<div class="col-lg-3">
 		<div class="panel">
 			<h3><i class="icon-list"></i> {l s='List of MySQL Tables'}</h3>
-			<div class="row" id="selectTables">
+			<div class="form-group" id="selectTables">
 				<select id="table" size="10">
 					{foreach $tables as $table}
 						<option value="{$table}">{$table}</option>
 					{/foreach}
 				</select>
 			</div>
-			<div class="row">
-				<button type="button" id="add_table" class="btn btn-default">{l s='Add table'}</button>
+			<div class="form-group">
+				<button type="button" id="add_table" class="btn btn-default"><i class="icon-plus-sign"></i> {l s='Add table'}</button>
 			</div>
 		</div>
 	</div>

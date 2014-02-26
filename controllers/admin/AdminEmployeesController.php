@@ -49,8 +49,13 @@ class AdminEmployeesControllerCore extends AdminController
 
 		$this->context = Context::getContext();
 
-		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),
-			'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
 		/*
 		check if there are more than one superAdmin
 		if it's the case then we can delete a superAdmin
