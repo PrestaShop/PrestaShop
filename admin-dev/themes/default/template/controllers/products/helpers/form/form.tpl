@@ -42,14 +42,13 @@
 					}
 				});
 
-				ed.on('keyup', function(ed, e) {
+				ed.on('keydown', function(ed, e) {
 					tinyMCE.triggerSave();
-					textarea = $('#'+ed.id);
+					textarea = $('#'+tinymce.activeEditor.id);
 					max = textarea.parent('div').find('span.counter').attr('max');
 					if (max != 'none')
 					{
-						textarea_value = textarea.val();
-						count = stripHTML(textarea_value).length;
+						count = tinyMCE.activeEditor.getBody().textContent.length;
 						rest = max - count;
 						if (rest < 0)
 							textarea.parent('div').find('span.counter').html('<span style="color:red;">{l s='Maximum'} '+max+' {l s='characters'} : '+rest+'</span>');
