@@ -114,7 +114,7 @@
 				</div>
 				<!-- Orders Actions -->
 				<div class="well">
-					<div class="row row-margin-bottom">
+					<div class="row">
 						<a class="btn btn-default" href="javascript:window.print()">
 							<i class="icon-print"></i>
 							{l s='Print order'}
@@ -143,23 +143,25 @@
 								{l s='No delivery slip'}
 							</span>
 						{/if}
+						&nbsp;
 						{if Configuration::get('PS_ORDER_RETURN')}
-						<a id="desc-order-standard_refund" class="btn btn-default" href="#refundForm">
-							<i class="icon-exchange"></i>
-							{if $order->hasBeenShipped()}
-								{l s='Return products'}
-							{elseif $order->hasBeenPaid()}
-								{l s='Standard refund'}
-							{else}
-								{l s='Cancel products'}
-							{/if}
-						</a>
+							<a id="desc-order-standard_refund" class="btn btn-default" href="#refundForm">
+								<i class="icon-exchange"></i>
+								{if $order->hasBeenShipped()}
+									{l s='Return products'}
+								{elseif $order->hasBeenPaid()}
+									{l s='Standard refund'}
+								{else}
+									{l s='Cancel products'}
+								{/if}
+							</a>
+							&nbsp;
 						{/if}
 						{if $order->hasInvoice()}
-						<a id="desc-order-partial_refund" class="btn btn-default" href="#refundForm">
-							<i class="icon-exchange"></i>
-							{l s='Partial refund'}
-						</a>
+							<a id="desc-order-partial_refund" class="btn btn-default" href="#refundForm">
+								<i class="icon-exchange"></i>
+								{l s='Partial refund'}
+							</a>
 						{/if}
 					</div>
 				</div>
@@ -436,7 +438,7 @@
 				<ul class="nav nav-tabs" id="tabAddresses">
 					<li class="active">
 						<a href="#addressShipping">
-							<i class="icon-time"></i>
+							<i class="icon-truck"></i>
 							{l s='Shipping address'}
 						</a>
 					</li>
@@ -719,7 +721,7 @@
 								<td class="actions">
 									<button class="btn btn-default open_payment_information">
 										<i class="icon-search"></i>
-										{l s='See payment information'}
+										{l s='Details'}
 									</button>
 								</td>
 							</tr>
