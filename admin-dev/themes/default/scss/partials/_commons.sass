@@ -1,6 +1,6 @@
 // helpers class for fixing input width
 .fixed-width-xs
-	width: 40px!important
+	width: 48px!important
 .fixed-width-sm
 	width: 80px!important
 .fixed-width-md
@@ -31,14 +31,14 @@
 
 // highlighting element (ie: a special row in a table)
 .highlight
-	background-color: #FFFF00
+	background-color: $brand-primary
 
 .text-orange
 	color: $amber
 
 .badge
 	font-weight: normal
-	font-size: 1.1em
+	font-size: 1em
 	letter-spacing: 0.0625em
 	background-color: $brand-primary
 	&.badge-info
@@ -52,9 +52,18 @@
 	&.badge-critical
 		background-color: darken($brand-danger,15%)
 
+.label
+	font-size: 12px
+	font-weight: 400
+	&.label-inactive
+		background-color: #999
 //tabs
 .nav-tabs
 	border-bottom: none
+	li .badge
+		background-color: white
+		border: solid 2px #eee
+		color: #666
 	li a
 		font-size: 1.1em
 		font-family: $headings-font-family
@@ -105,6 +114,11 @@
 	$alert-addons-text: $brand-addons
 	@include alert-variant(#F3F3F2, $alert-addons-border, $alert-addons-text)
 	@include alert-panel(icon-puzzle-piece, $brand-addons)
+
+.alert.alert-message
+	@include alert-panel(icon-comment, $brand-warning)
+	border: solid 2px $brand-warning
+	background-color: white
 
 .alert h4
 	font-size: 1.45em

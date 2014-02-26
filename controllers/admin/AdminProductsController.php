@@ -181,7 +181,7 @@ class AdminProductsControllerCore extends AdminController
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')';
 		
 		$this->_select .= 'shop.name as shopname, a.id_shop_default, ';
-		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
+		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`, IF(sav.`quantity`<=0, 1, 0 ) badge_danger';
 		
 		if ($join_category)
 		{
@@ -246,6 +246,7 @@ class AdminProductsControllerCore extends AdminController
 				'align' => 'text-right',
 				'filter_key' => 'sav!quantity',
 				'orderby' => true,
+				'badge_danger' => true,
 				//'hint' => $this->l('This is the quantity available in the current shop/group.'),
 			);
 

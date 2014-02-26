@@ -26,34 +26,6 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-<script type="text/javascript">
-	function saveCustomerNote()
-	{
-		$('#note_feedback').html('<img src="../img/loader.gif" alt="" />').show();
-		var noteContent = $('#noteContent').val();
-
-		$.ajax({
-			type: "POST",
-			url: "index.php",
-			data: "token={getAdminToken tab='AdminCustomers'}&tab=AdminCustomers&ajax=1&action=updateCustomerNote&id_customer={$customer->id}&note="+encodeURIComponent(noteContent),
-			async : true,
-			success: function(r) {
-				$('#note_feedback').html('').hide();
-				if (r == 'ok')
-				{
-					$('#note_feedback').html("<b style='color:green'>{l s='Your note has been saved.'}</b>").fadeIn(400);
-					$('#submitCustomerNote').attr('disabled', true);
-				}
-				else if (r == 'error:validation')
-					$('#note_feedback').html("<b style='color:red'>({l s='Error: Your note is not valid.'}</b>").fadeIn(400);
-				else if (r == 'error:update')
-					$('#note_feedback').html("<b style='color:red'>{l s='Error: Your note cannot be saved.'}</b>").fadeIn(400);
-				$('#note_feedback').fadeOut(3000);
-			}
-		});
-	}
-</script>
-
 <div id="container-customer">
 	<div class="row">
 		{*left*}
@@ -139,24 +111,24 @@
 							<p class="form-control-static">
 								{if $customer->newsletter}
 									<span class="label label-success">
-										<i class="icon-check-sign"></i>
+										<i class="icon-check"></i>
 										{l s='Newsletter'}
 									</span>
 								{else}
-									<span class="label label-warning">
-										<i class="icon-ban-circle"></i>
+									<span class="label label-danger">
+										<i class="icon-remove"></i>
 										{l s='Newsletter'}
 									</span>
 								{/if}
 								&nbsp;
 								{if $customer->optin}
 									<span class="label label-success">
-										<i class="icon-check-sign"></i>
+										<i class="icon-check"></i>
 										{l s='Opt in'}
 									</span>
 									{else}
-									<span class="label label-warning">
-										<i class="icon-ban-circle"></i>
+									<span class="label label-danger">
+										<i class="icon-remove"></i>
 										{l s='Opt in'}
 									</span>
 								{/if}
@@ -175,12 +147,12 @@
 							<p class="form-control-static">
 								{if $customer->active}
 									<span class="label label-success">
-										<i class="icon-check-sign"></i>
+										<i class="icon-check"></i>
 										{l s='Active'}
 									</span>
 								{else}
-									<span class="label label-warning">
-										<i class="icon-ban-circle"></i>
+									<span class="label label-danger">
+										<i class="icon-remove"></i>
 										{l s='Inactive'}
 									</span>
 								{/if}
@@ -248,9 +220,9 @@
 									<td>{dateFormat date=$order['date_add'] full=0}</td>
 									<td>{$order['payment']}</td>
 									<td>{$order['order_state']}</td>
-									<td align="right">{$order['nb_products']}</td>
-									<td align="right">{$order['total_paid_real']}</td>
-									<td class="text-right">
+									<td>{$order['nb_products']}</td>
+									<td>{$order['total_paid_real']}</td>
+									<td>
 										<a class="btn btn-default" href="?tab=AdminOrders&amp;id_order={$order['id_order']}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">
 											<i class='icon-search'></i> {l s='View'}
 										</a>
@@ -347,7 +319,7 @@
 						<tr onclick="document.location = '?tab=AdminOrders&id_order={$product['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}'">
 							<td>{dateFormat date=$order['date_add'] full=0}</td>
 							<td>
-								<a class="btn btn-default" href="?tab=AdminOrders&amp;id_order={$product['id_order']}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">
+								<a href="?tab=AdminOrders&amp;id_order={$product['id_order']}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">
 									{$product['product_name']}
 								</a>
 							</td>
@@ -389,7 +361,7 @@
 					<i class="icon-eye-close"></i> {l s='Add a private note'}
 				</div>
 				<div class="alert alert-info">{l s='This note will be displayed to all employees but not to customers.'}</div>
-				<form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote();return false;" >
+				<form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote({$customer->id});return false;" >
 					<div class="form-group">
 						<div class="col-lg-12">
 							<textarea name="note" id="noteContent" onkeyup="$(this).val().length > 0 ? $('#submitCustomerNote').removeAttr('disabled') : $('#submitCustomerNote').attr('disabled', 'disabled')">{$customer_note}</textarea>
