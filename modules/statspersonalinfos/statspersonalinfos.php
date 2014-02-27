@@ -43,7 +43,7 @@ class StatsPersonalInfos extends ModuleGraph
 		parent::__construct();
 
 		$this->displayName = $this->l('Registered customer information');
-		$this->description = $this->l('Adds information about your registered customers (such as gender and ageà to the Stats dashboard.');
+		$this->description = $this->l('Adds information about your registered customers (such as gender and age) to the Stats dashboard.');
 	}
 
 	public function install()
@@ -65,9 +65,9 @@ class StatsPersonalInfos extends ModuleGraph
 					'<br>'.
 					$this->l('Defining your target audience is essential when choosing the right tools to win them over.').
 					'<br>'.
-					$this->l('It is best to limit action to a group -- or groups -- of clients.').
+					$this->l('It is best to limit an action to a group -- or to groups -- of clients.').
 					'<br>'.
-					$this->l('Storing registered customer information allows you to accurately define customer profile so you can adapt your special deals and promotions.').'
+					$this->l('Storing registered customer information allows you to accurately define customer profiles so you can adapt your special deals and promotions.').'
 				</p>
 				<p>
 					'.$this->l('You can increase your sales by:').'
@@ -117,7 +117,7 @@ class StatsPersonalInfos extends ModuleGraph
 				)).'
 						</div>
 						<div class="col-lg-4">
-							<p>'.$this->l('Gender distribution allows you to determine the percentage of men and women shoppers in your store.').'</p>
+							<p>'.$this->l('Gender distribution allows you to determine the percentage of men and women shoppers on your store.').'</p>
 							<hr/>
 							<a class="btn btn-default export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=gender">
 								<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
@@ -242,7 +242,7 @@ class StatsPersonalInfos extends ModuleGraph
 				break;
 
 			case 'age':
-				$this->_titles['main'] = $this->l('Age Range');
+				$this->_titles['main'] = $this->l('Age range');
 
 				// 0 - 18 years
 				$sql = 'SELECT COUNT(`id_customer`) as total
