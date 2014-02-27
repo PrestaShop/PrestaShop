@@ -212,18 +212,14 @@ class AdminShopControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('id_category'))
 		{
-			$root_category = new Category((int)Tools::getValue('id_category'));
-			$root_category = array(
-				'id_category' => $root_category->id,
-				'name' => $root_category->name[$this->context->language->id]
-			);
-			$selected_cat = array($root_category['id_category']);
-			$children = Category::getChildren($root_category['id_category'], $this->context->language->id);
+			$selected_cat = array((int)Tools::getValue('id_category'));
+			$children = Category::getChildren((int)Tools::getValue('id_category'), $this->context->language->id);
 			foreach ($children as $child)
 				$selected_cat[] = $child['id_category'];
 
-			$helper = new HelperTreeCategories('categories-tree', null, $root_category['id_category']);
-			$this->content = $helper->setSelectedCategories($selected_cat)->setUseSearch(true)->setUseCheckBox(true)->render();
+			$helper = new HelperTreeCategories('categories-tree', null, (int)Tools::getValue('id_category'), null, false);
+			$this->content = $helper->setSelectedCategories($selected_cat)->setUseSearch(true)->setUseCheckBox(true)
+				->render();
 		}
 		parent::displayAjax();
 	}
