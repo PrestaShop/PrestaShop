@@ -54,7 +54,10 @@
   top: 19px; }
 #cart_block #cart_block_list .remove_link a,
 #cart_block #cart_block_list .ajax_cart_block_remove_link {
-  color: #777777; }
+  color: #777777;
+  display: block;
+  width: 100%;
+  height: 100%; }
   #cart_block #cart_block_list .remove_link a:before,
   #cart_block #cart_block_list .ajax_cart_block_remove_link:before {
     display: inline-block;

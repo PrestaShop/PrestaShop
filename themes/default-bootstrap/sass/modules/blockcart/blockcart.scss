@@ -68,6 +68,9 @@
 		.remove_link a,
 		.ajax_cart_block_remove_link {
 			color: $link-color;
+			display: block;
+			width: 100%;
+			height: 100%;
 			&:before {
 				display: inline-block;
 				content: "\f057";
