@@ -38,9 +38,10 @@ class HelperTreeCategoriesCore extends TreeCore
 	private $_shop;
 	private $_use_checkbox;
 	private $_use_search;
+	private $_use_shop_restriction;
 
 	public function __construct($id, $title = null, $root_category = null,
-		$lang = null, $shop = null)
+		$lang = null, $use_shop_restriction = true)
 	{
 		parent::__construct($id);
 
@@ -51,14 +52,14 @@ class HelperTreeCategoriesCore extends TreeCore
 			$this->setRootCategory($root_category);
 
 		$this->setLang($lang);
-		$this->setShop($shop);
+		$this->setUseShopRestriction($use_shop_restriction);
 	}
 
 	public function getData()
 	{
 		if (!isset($this->_data))
 			$this->setData(Category::getNestedCategories(
-				$this->getRootCategory(), $this->getLang(), false));
+				$this->getRootCategory(), $this->getLang(), false, null, $this->useShopRestriction()));
 
 		return $this->_data;
 	}
@@ -197,6 +198,12 @@ class HelperTreeCategoriesCore extends TreeCore
 		return $this;
 	}
 
+	public function setUseShopRestriction($value)
+	{
+		$this->_use_shop_restriction = (bool)$value;
+		return $this;
+	}
+
 	public function useCheckBox()
 	{
 		return (isset($this->_use_checkbox) && $this->_use_checkbox);
@@ -205,6 +212,11 @@ class HelperTreeCategoriesCore extends TreeCore
 	public function useSearch()
 	{
 		return (isset($this->_use_search) && $this->_use_search);
+	}
+
+	public function useShopRestriction()
+	{
+		return (isset($this->_use_shop_restriction) && $this->_use_shop_restriction);
 	}
 
 	public function render($data = NULL)
