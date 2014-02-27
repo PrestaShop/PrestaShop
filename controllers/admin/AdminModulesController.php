@@ -508,13 +508,23 @@ class AdminModulesControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('You do not have the permission to use this module.');
 				else
 				{
-					if ($module->uninstall())
-						if ($module->install())
+					if (Tools::getValue('keep_data') == '1' && method_exists($module, 'reset'))
+					{
+						if ($module->reset())
 							Tools::redirectAdmin(self::$currentIndex.'&conf=21'.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name));
 						else
-							$this->errors[] = Tools::displayError('Cannot install this module.');
+							$this->errors[] = Tools::displayError('Cannot reset this module.');
+					}
 					else
-						$this->errors[] = Tools::displayError('Cannot uninstall this module.');
+					{
+						if ($module->uninstall())
+							if ($module->install())
+								Tools::redirectAdmin(self::$currentIndex.'&conf=21'.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name));
+							else
+								$this->errors[] = Tools::displayError('Cannot install this module.');
+						else
+							$this->errors[] = Tools::displayError('Cannot uninstall this module.');
+					}
 				}
 			}
 			else
@@ -806,22 +816,37 @@ class AdminModulesControllerCore extends AdminController
 							$reset_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&reset&tab_module='.$module->tab;
 							$update_link =  $this->context->link->getAdminLink('AdminModules').'&checkAndUpdate=1';
 
-							$this->context->smarty->assign(array(
-								'module_name' => $module->name,
-								'module_display_name' => $module->displayName,
-								'back_link' => $back_link,
-								'module_hook_link' => $hook_link,
-								'module_disable_link' => $disable_link,
-								'module_uninstall_link' => $uninstall_link,
-								'module_reset_link' => $reset_link,
-								'module_update_link' => $update_link,
-								'trad_link' => $trad_link,
-								'module_languages' => Language::getLanguages(false),
-								'theme_language_dir' => _THEME_LANG_DIR_,
-								'page_header_toolbar_title' => $this->page_header_toolbar_title,
-								'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
-								'add_permission' => $this->tabAccess['add'],
-							));
+							$javascript_action_reset_module = '';
+							if (method_exists($module, 'reset'))
+							{
+								$javascript_action_reset_module = '
+								confirm_modal(\''.$this->l('Confirm reset').'\',
+								 \''.$this->l('Would you like to delete the content related to this module ?').'\',
+								 \''.$this->l('No').'\',
+								 \''.$this->l('Yes').'\',
+								  function(){window.location.href=\''.$reset_link.'&keep_data=1\';return false;},
+								  function(){window.location.href=\''.$reset_link.'&keep_data=0\';return false;});
+								return false;';
+							}
+							$this->context->smarty->assign(
+								array(
+									'module_name' => $module->name,
+									'module_display_name' => $module->displayName,
+									'back_link' => $back_link,
+									'module_hook_link' => $hook_link,
+									'module_disable_link' => $disable_link,
+									'module_uninstall_link' => $uninstall_link,
+									'module_reset_link' => $reset_link,
+									'module_update_link' => $update_link,
+									'trad_link' => $trad_link,
+									'module_languages' => Language::getLanguages(false),
+									'theme_language_dir' => _THEME_LANG_DIR_,
+									'page_header_toolbar_title' => $this->page_header_toolbar_title,
+									'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+									'add_permission' => $this->tabAccess['add'],
+									'javascript_action_reset_module' => $javascript_action_reset_module
+								)
+							);
 							
 							// Display checkbox in toolbar if multishop
 							if (Shop::isFeatureActive())

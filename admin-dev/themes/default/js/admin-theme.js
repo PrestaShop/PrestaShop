@@ -336,3 +336,43 @@ $(document).ready(function() {
 		);
 	});
 });
+
+function confirm_modal(heading, question, left_button_txt, right_button_txt, left_button_callback, right_button_callback) {
+
+	var confirmModal =
+		$('<div class="bootstrap modal hide fade">' +
+			'<div class="modal-dialog">'+
+			'<div class="modal-content">'+
+			'<div class="modal-header">' +
+			'<a class="close" data-dismiss="modal" >&times;</a>' +
+			'<h3>' + heading +'</h3>' +
+			'</div>' +
+
+			'<div class="modal-body">' +
+			'<p>' + question + '</p>' +
+			'</div>' +
+
+			'<div class="modal-footer">' +
+			'<a href="#" id="confirm_modal_left_button" class="btn btn-primary">' +
+			left_button_txt +
+			'</a>' +
+			'<a href="#" id="confirm_modal_right_button" class="btn btn-primary">' +
+			right_button_txt +
+			'</a>' +
+			'</div>' +
+			'</div>'+
+			'</div>'+
+		'</div>');
+
+	confirmModal.find('#confirm_modal_left_button').click(function(event) {
+		left_button_callback();
+		confirmModal.modal('hide');
+	});
+
+	confirmModal.find('#confirm_modal_right_button').click(function(event) {
+		right_button_callback();
+		confirmModal.modal('hide');
+	});
+
+	confirmModal.modal('show');
+};
