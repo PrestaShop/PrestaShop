@@ -333,7 +333,7 @@
 					{/foreach}
 				</ul>
 				{else}
-					<div class="alert alert-warning">{l s='Please upload any image before you can select one for this combination'}</div>
+					<div class="alert alert-warning">{l s='You must upload an image before you can select one for your combination.'}</div>
 				{/if}
 			</div>
 		</div>
