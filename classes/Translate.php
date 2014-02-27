@@ -242,5 +242,31 @@ class TranslateCore
 		}
 		return $string;
 	}
+
+	/**
+	* Perform operations on translations after everything is escaped and before displaying it
+	*/
+	public static function smartyPostProcessTranslation($string, $params)
+	{
+		// If tags were explicitely provided, we want to use them *after* the translation string is escaped.
+		if (!empty($params['tags']))
+		{
+			foreach ($params['tags'] as $position => $tag)
+			{
+				// extract tag name
+				$match = array();
+				if (preg_match('/^\s*<\s*(\w+)/', $tag, $match))
+				{
+					$opener = $tag;
+					$closer = '</'.$match[1].'>';
+
+					$string = str_replace('['.$position.']', $opener, $string);
+					$string = str_replace('[/'.$position.']', $closer, $string);
+				}
+			}
+		}
+
+		return $string;
+	}
 }
 
