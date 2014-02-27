@@ -185,12 +185,21 @@ class AdminCartRulesControllerCore extends AdminController
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_'.$type.'` (`id_cart_rule`, `id_'.$type.'`) VALUES '.implode(',', $values));
 			}
 		// Add cart rule restrictions
-		if (Tools::getValue('cart_rule_restriction') && is_array($array = Tools::getValue('cart_rule_select')) && count($array))
+		if (Tools::getValue('cart_rule_restriction'))
 		{
-			$values = array();
-			foreach ($array as $id)
-				$values[] = '('.(int)$currentObject->id.','.(int)$id.')';
-			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) VALUES '.implode(',', $values));
+			if (Tools::getValue('cartRulesSelection') === 'personnalize') {
+				$values = array();
+				foreach ($array as $id)
+					$values[] = '('.(int)$currentObject->id.','.(int)$id.')';
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) VALUES '.implode(',', $values));
+			}
+			else if (Tools::getValue('cartRulesSelection') === 'select')
+			{
+				Db::getInstance()->execute('
+				INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
+					SELECT id_cart_rule, '.(int)$currentObject->id.' FROM `'._DB_PREFIX_.'cart_rule` WHERE cart_rule_restriction = 1
+				)');
+			}
 		}
 		// Add product rule restrictions
 		if (Tools::getValue('product_restriction') && is_array($ruleGroupArray = Tools::getValue('product_rule_group')) && count($ruleGroupArray))
