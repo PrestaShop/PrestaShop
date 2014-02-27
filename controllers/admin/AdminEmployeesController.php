@@ -261,21 +261,12 @@ class AdminEmployeesControllerCore extends AdminController
 			$this->fields_form['input'][] = array(
 				'type' => 'password',
 				'ehanced' => true,
-				'label' => $this->l('New password'),
+				'label' => $this->l('Password'),
 				'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH),
 				'name' => 'passwd',
 				'required' => true,
 				);
-			
-		if ($this->restrict_edition)
-			$this->fields_form['input'][] = array(
-				'type' => 'password',
-				'label' => $this->l('Confirm password'),
-				'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH),
-				'name' => 'passwd2',
-				'required' => true,
-				);
-			
+						
 		$this->fields_form['input'] = array_merge($this->fields_form['input'], array(
 			array(
 				'type' => 'switch',
