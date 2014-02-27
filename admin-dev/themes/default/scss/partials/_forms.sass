@@ -47,11 +47,13 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 			border-top-color: white!important
 	&.btn-default
 		@include box-shadow(darken($btn-default-bg,10%) 0 -2px 0 inset)
+		i
+			color: $gray
 		&:hover
-			@include box-shadow(none)
 			background-color: $brand-primary
 			color: white
 			border-color: darken($brand-primary,10%)
+			@include box-shadow(none)
 			i
 				color: white
 	&.btn-primary
@@ -60,15 +62,25 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 		text-transform: uppercase
 		border-color: darken($brand-primary,10%)
 		@include box-shadow(darken($brand-primary,10%) 0 -2px 0 inset)
+		&:hover
+			background-color: darken($brand-primary,10%)
+			border-color: darken($brand-primary,20%)
+			@include box-shadow(none)
 	&.btn-default[disabled]
 		border-color: $gray-light
 		color: $gray-light
 		background-color: lighten($gray-light,35%)
 		@include box-shadow(lighten($gray-light,20%) 0 -2px 0 inset)
+
 .dropdown-menu
 	text-align: left
 	> li a
 		padding: 5px 10px
+		i
+			color: $brand-primary
+		&:hover
+			i
+				color: white
 
 .btn-group-action .btn-group
 	white-space: nowrap
@@ -84,7 +96,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 
 //typeahead
 .tt-query
-	+border-right-radius(3px!important)
+	@include border-right-radius(3px!important)
 .tt-dropdown-menu
 	background-color: white
 	border: solid 1px #ccc
@@ -92,7 +104,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 	text-transform: none
 .tt-suggestions
 	padding: 0 6px
-	+box-shadow(rgba(black,0.25) 0 1px 4px)
+	@include box-shadow(rgba(black,0.25) 0 1px 4px)
 .tt-suggestion p
 	border-bottom: solid 1px #ccc
 	margin: 0!important
@@ -106,9 +118,9 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 	padding: 0px 3px
 	min-height: 30px
 	overflow: auto
-	+border-radius(3px)
+	@include border-radius(3px)
 	border: solid 1px #ccc
-	+box-shadow(rgba(0, 0, 0, 0.075) 0 1px 1px inset)
+	@include box-shadow(rgba(0, 0, 0, 0.075) 0 1px 1px inset)
 	span
 		float: left
 	> span
@@ -128,7 +140,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 		margin-top: 2px
 		border: 0 none
 		width: 100px
-		+box-shadow(none)
+		@include box-shadow(none)
 	> input:focus
 		outline: 0
-		+box-shadow(none)
+		@include box-shadow(none)

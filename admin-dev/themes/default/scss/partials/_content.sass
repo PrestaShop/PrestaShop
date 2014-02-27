@@ -28,6 +28,9 @@ body
 		background-color: white
 		@include border-radius(5px)
 		@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
+		&.panel-highlighted
+			border-color: $brand-primary!important
+			@include box-shadow(rgba($brand-primary,.15) 0 0 0 6px inset !important)
 		.panel-heading
 			font-family: $headings-font-family
 			font-weight: $headings-font-weight
@@ -37,7 +40,6 @@ body
 			color: #555
 			height: 32px
 			a.btn
-				//text-transform: none
 				position: relative
 				top: 2px
 			i
@@ -60,15 +62,18 @@ body
 		i, a
 			color: contrasted($bg-panel-heading-color)
 		.badge
-			background: white
-			border: solid 2px lighten($brand-primary,35%)
-			@include border-radius(20px)
-			color: $brand-primary
-			line-height: 1.2em
-			font-size: 1em
+			color: $gray
+			font-size: 1.1em
+			line-height: 1.2em			
 			padding: 0 10px
 			font-weight: 700
 			margin-left: 0.4em
+			border: solid 1px lighten($gray-light,25%)
+			background-color: white
+			@include border-radius(20px)
+			a
+				display: block
+				font-size: 0.8em
 		.panel-heading-action
 			position: absolute
 			top: 2px

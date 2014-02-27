@@ -471,72 +471,133 @@
 								{elseif $input.type == 'password'}
 									{if isset($input.ehanced)}
 										<div class="row">
-											<div class="col-lg-4">
-												<div class="input-group fixed-width-lg pull-left">
-													<span class="input-group-addon">
-														<i class="icon-key"></i>
-													</span>
-													<input type="password"
-														id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
-														name="{$input.name}"
-														class="{if isset($input.class)}{$input.class}{/if}"
-														value=""
-														{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
-												</div>
-												<div class="form-control-static pull-left">
-													&nbsp;&nbsp;
-													<span id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-output" class="badge"></span>
-												</div>
-											</div>
-											<div class="col-lg-2">
-												<input type="text" class="form-control" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-generate-field" disabled="disabled">
-											</div>
-											<div class="col-lg-6">
-												<button id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-generate-btn" class="btn btn-default" type="button">
-													<i class="icon-random"></i>
-													{l s='Generate'}
+											<div class="col-lg-12">
+												<button type="button" id="{if isset($input.id)}{$input.id}-btn-change{else}{$input.name}-btn-change{/if}" class="btn btn-default">
+													<i class="icon-lock"></i>
+													{l s='Change password...'}
 												</button>
+												<div id="{if isset($input.id)}{$input.id}-change-container{else}{$input.name}-change-container{/if}" class="form-password-change well hide">
+													<div class="form-group">
+														
+													</div>
+													<div class="form-group">
+														<label class="control-label col-lg-2">
+															{l s='New password'}
+														</label>
+														<div class="col-lg-4">
+															<div class="input-group fixed-width-lg pull-left">
+																<span class="input-group-addon">
+																	<i class="icon-key"></i>
+																</span>
+																<input type="password"
+																	id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
+																	name="{$input.name}"
+																	class="{if isset($input.class)}{$input.class}{/if}"
+																	value=""
+																	{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
+															</div>
+															<div class="form-control-static pull-left">
+																&nbsp;&nbsp;
+																<span id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-output" class="badge"></span>
+															</div>
+														</div>
+														<div class="col-lg-2">
+															<input type="text" class="form-control" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-generate-field" disabled="disabled">
+														</div>
+														<div class="col-lg-4">
+															<button type="button" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-generate-btn" class="btn btn-default" >
+																<i class="icon-random"></i>
+																{l s='Generate password'}
+															</button>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-lg-2">
+															{l s='Confirm password'}
+														</label>
+														<div class="col-lg-4">
+															<div class="input-group fixed-width-lg pull-left">
+																<span class="input-group-addon">
+																	<i class="icon-key"></i>
+																</span>
+																<input type="password"
+																	id="{if isset($input.id)}{$input.id}2{else}{$input.name}2{/if}"
+																	name="{$input.name}"
+																	class="{if isset($input.class)}{$input.class}{/if}"
+																	value=""
+																	{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
+															</div>
+														</div>
+														<div class="col-lg-4">
+															<p class="checkbox">
+																<label for="">
+																	<input type="checkbox">
+																	{l s='Send me this new password by Email'}
+																</label>
+															</p>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-12">
+															<button type="button" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-cancel-btn" class="btn btn-default">
+																<i class="icon-remove"></i>
+																{l s='Cancel'}
+															</button>
+														</div>
+													</div>
+												</div>
 											</div>
 										</div>
-										
 										<script>
-											
 											$(function(){
 												var $passwordField = $('#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}');
 												var $output = $('#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-output');
 												var $generateBtn = $('#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-generate-btn');
 												var $generateField = $('#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-generate-field');
-												
+												var $cancelBtn = $('#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}-cancel-btn');
+
 												var feedback = [
 													{ badge: 'badge-danger', text: '{l s="Invalid"}' },
 													{ badge: 'badge-warning', text: '{l s="Okay"}' },
 													{ badge: 'badge-success', text: '{l s="Good"}' },
 													{ badge: 'badge-success', text: '{l s="Fabulous"}' }
 												];
-
-												$.passy.requirements.length.min = 10;
-
+												$.passy.requirements.length.min = 8;
+												$.passy.requirements.characters = 'DIGIT';
 												$passwordField.passy(function(strength, valid) {
 													$output.text(feedback[strength].text);
 													$output.removeClass('badge-danger').removeClass('badge-warning').removeClass('badge-success');
 													$output.addClass(feedback[strength].badge);
 													if (valid){
-														$output.show();
+														//$output.show();
 													}
         											else {
-        												$output.hide();
+        												//$output.hide();
         											}
 												});
 
+												var $container = $('#{if isset($input.id)}{$input.id}-change-container{else}{$input.name}-change-container{/if}');
+												var $changeBtn = $('#{if isset($input.id)}{$input.id}-btn-change{else}{$input.name}-btn-change{/if}');
+												var $confirmPwd = $('#{if isset($input.id)}{$input.id}2{else}{$input.name}2{/if}');
+
+												$changeBtn.on('click',function(){
+													$container.removeClass('hide');
+													$changeBtn.addClass('hide');
+												});
 												$generateBtn.click(function() {
 													$generateField.passy( 'generate', 8 );
 													var generatedPassword = $generateField.val();
 													$passwordField.val(generatedPassword);
-													$('#{if isset($input.id)}{$input.id}2{else}{$input.name}2{/if}').val(generatedPassword);
+													$confirmPwd.val(generatedPassword);
 												});
+												$cancelBtn.on('click',function() {
+    												$container.find("input").val("");
+    												$container.addClass('hide');
+    												$changeBtn.removeClass('hide');
+												});
+
 											});
 										</script>
-
 									{else}
 										<div class="input-group fixed-width-lg">
 											<span class="input-group-addon">
