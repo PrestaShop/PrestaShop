@@ -65,26 +65,26 @@
 						</a>
 					</li>
 					<li>
-						<a id="desc-module-hook" class="toolbar_btn" href="{$module_disable_link}" title="{l s='Disable'}">
+						<a id="desc-module-disable" class="toolbar_btn" href="{$module_disable_link}" title="{l s='Disable'}">
 							<i class="process-icon-off"></i>
 							<div>{l s='Disable'}</div>
 						</a>
 					</li>
 					<li>
-						<a id="desc-module-hook" class="toolbar_btn" href="{$module_uninstall_link}" title="{l s='Uninstall'}">
+						<a id="desc-module-uninstall" class="toolbar_btn" href="{$module_uninstall_link}" title="{l s='Uninstall'}">
 							<i class="process-icon-uninstall"></i>
 							<div>{l s='Uninstall'}</div>
 						</a>
 					</li>
 					<li>
-						<a id="desc-module-hook" class="toolbar_btn" href="{$module_reset_link}" title="{l s='Reset'}">
+						<a id="desc-module-reset" class="toolbar_btn" onclick="{$javascript_action_reset_module}" href="{$module_reset_link}" title="{l s='Reset'}">
 							<i class="process-icon-reset"></i>
 							<div>{l s='Reset'}</div>
 						</a>
 					</li>
 					{if isset($module_update_link)}
 					<li>
-						<a id="desc-module-hook" class="toolbar_btn" href="{$module_update_link}" title="{l s='Update'}">
+						<a id="desc-module-update" class="toolbar_btn" href="{$module_update_link}" title="{l s='Update'}">
 							<i class="process-icon-refresh"></i>
 							<div>{l s='Check and update'}</div>
 						</a>

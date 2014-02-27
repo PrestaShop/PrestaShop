@@ -3347,6 +3347,7 @@ class AdminControllerCore extends Controller
 			$this->translationsTab['Delete'] = $this->l('Delete');
 			$this->translationsTab['Install'] = $this->l('Install');
 			$this->translationsTab['Uninstall'] =  $this->l('Uninstall');
+			$this->translationsTab['Would you like to delete the content related to this module ?'] =  $this->l('Would you like to delete the content related to this module ?');
 			$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $this->l('This action will permanently remove the module from the server. Are you sure you want to do this?');
 		}
 
@@ -3370,9 +3371,24 @@ class AdminControllerCore extends Controller
 			'cond' => $module->id,
 			'icon' => 'off',
 		);
+		$link_reset_module = $link_admin_modules.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab;
+		$javascript_action_reset_module = '';
+
+		if (method_exists(Module::getInstanceByName($module->name), 'reset'))
+		{
+			$javascript_action_reset_module = '
+			confirm_modal(\''.$this->l('Confirm reset').'\',
+			 \''.$this->translationsTab['Would you like to delete the content related to this module ?'].'\',
+			 \''.$this->l('No').'\',
+			 \''.$this->l('Yes').'\',
+			  function(){window.location.href=\''.$link_reset_module.'&keep_data=1\';return false;},
+			  function(){window.location.href=\''.$link_reset_module.'&keep_data=0\';return false;});
+			return false;';
+		}
+
 		$reset_module = array(
-			'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab,
-			'onclick' => $module->onclick_option && isset($module->onclick_option_content['reset']) ? $module->onclick_option_content['reset'] : '',
+			'href' => $link_reset_module,
+			'onclick' => $module->onclick_option && isset($module->onclick_option_content['reset']) ? $module->onclick_option_content['reset'] : $javascript_action_reset_module,
 			'title' => '',
 			'text' => $this->translationsTab['Reset'],
 			'cond' => $module->id && $module->active,
