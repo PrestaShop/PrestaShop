@@ -153,7 +153,7 @@
 								<span class="discount">{l s='Reduced price!'}</span>
 							{/if}
 					</div>
-					{if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
+					{if (!$PS_CATALOG_MODE && $PS_STOCK_MANAGEMENT && ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
 						{if isset($product.available_for_order) && $product.available_for_order && !isset($restricted_country_mode)}
 							<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="availability">
 								{if ($product.allow_oosp || $product.quantity > 0)}
