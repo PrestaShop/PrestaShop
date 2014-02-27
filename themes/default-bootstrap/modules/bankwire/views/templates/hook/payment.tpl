@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="row">
-	<div class="col-xs-12 col-md-6">
+	<div class="col-xs-12 col-md-12">
         <p class="payment_module">
             <a 
             class="bankwire" 

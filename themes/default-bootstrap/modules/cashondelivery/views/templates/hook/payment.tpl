@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="row">
-	<div class="col-xs-12 col-md-6">
+	<div class="col-xs-12 col-md-12">
         <p class="payment_module">
             <a class="cash" href="{$link->getModuleLink('cashondelivery', 'validation', [], true)|escape:'html'}" title="{l s='Pay with cash on delivery (COD)' mod='cashondelivery'}" rel="nofollow">
             	{l s='Pay with cash on delivery (COD)' mod='cashondelivery'}<br />
