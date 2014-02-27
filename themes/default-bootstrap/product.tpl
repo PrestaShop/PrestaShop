@@ -167,7 +167,7 @@
 			{/capture}
 			<p id="product_condition"{if !$product->condition} style="display: none;"{/if}>
 				<label>{l s='Condition'} </label>
-				<span class="editable" itemprop="condition">{$smarty.capture.condition|escape:'html':'UTF-8'}</span>
+				<span class="editable" itemprop="condition">{$smarty.capture.condition}</span>
 			</p>
 			{if $product->description_short || $packItems|@count > 0}
 				<div id="short_description_block">
