@@ -125,7 +125,7 @@ class AdminReturnControllerCore extends AdminController
 					'name' => '',
 					'size' => '',
 					'required' => false,
-					'desc' => $this->l('The link is only available after vaidation and before the parcel gets delivered')
+					'desc' => $this->l('The link is only available after validation and before the parcel gets delivered.')
 				),
 			),
 			'submit' => array(
