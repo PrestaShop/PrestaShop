@@ -123,29 +123,6 @@ function smartyTruncate($params, &$smarty)
 	return (isset($params['encode']) ? Tools::htmlentitiesUTF8($text, ENT_NOQUOTES) : $text);
 }
 
-function smartyPostProcessTranslation($string, $params)
-{
-	// If tags were explicitely provided, we want to use them *after* the translation string is escaped.
-	if (!empty($params['tags']))
-	{
-		foreach ($params['tags'] as $position => $tag)
-		{
-			// extract tag name
-			$match = array();
-			if (preg_match('/^\s*<\s*(\w+)/', $tag, $match))
-			{
-				$opener = $tag;
-				$closer = '</'.$match[1].'>';
-
-				$string = str_replace('['.$position.']', $opener, $string);
-				$string = str_replace('[/'.$position.']', $closer, $string);
-			}
-		}
-	}
-
-	return $string;
-}
-
 function smarty_modifier_truncate($string, $length = 80, $etc = '...', $break_words = false, $middle = false, $charset = 'UTF-8')
 {
 	if (!$length)
