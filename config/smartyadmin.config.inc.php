@@ -41,13 +41,13 @@ function smartyTranslate($params, &$smarty)
 	$sprintf = isset($params['sprintf']) ? $params['sprintf'] : false;
 
 	if ($pdf)
-		return Translate::getPdfTranslation($params['s']);
+		return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s']), $params);
 
 	$filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
 
 	// If the template is part of a module
 	if (!empty($params['mod']))
-		return Translate::getModuleTranslation($params['mod'], $params['s'], basename($filename, '.tpl'), $sprintf, isset($params['js']));
+		return Translate::smartyPostProcessTranslation(Translate::getModuleTranslation($params['mod'], $params['s'], basename($filename, '.tpl'), $sprintf, isset($params['js'])), $params);
 
 	// If the tpl is at the root of the template folder
 	if (dirname($filename) == '.')
@@ -80,5 +80,5 @@ function smartyTranslate($params, &$smarty)
 		}
 	}
 
-	return Translate::getAdminTranslation($params['s'], $class, $addslashes, $htmlentities, $sprintf);
+	return Translate::smartyPostProcessTranslation(Translate::getAdminTranslation($params['s'], $class, $addslashes, $htmlentities, $sprintf), $params);
 }

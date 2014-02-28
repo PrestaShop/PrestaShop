@@ -51,9 +51,9 @@ function smartyTranslate($params, &$smarty)
 		$key = 'override_'.$key;
 
 	if ($params['mod'])
-		return Translate::getModuleTranslation($params['mod'], $params['s'], $basename, $params['sprintf'], $params['js']);
+		return Translate::smartyPostProcessTranslation(Translate::getModuleTranslation($params['mod'], $params['s'], $basename, $params['sprintf'], $params['js']), $params);
 	else if ($params['pdf'])
-		return Translate::getPdfTranslation($params['s']);
+		return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s']), $params);
 
 	if ($_LANG != null && isset($_LANG[$key]))
 		$msg = $_LANG[$key];
@@ -70,5 +70,5 @@ function smartyTranslate($params, &$smarty)
 	if ($params['sprintf'] !== null)
 		$msg = Translate::checkAndReplaceArgs($msg, $params['sprintf']);
 
-	return $params['js'] ? $msg : Tools::safeOutput($msg);
+	return Translate::smartyPostProcessTranslation($params['js'] ? $msg : Tools::safeOutput($msg), $params);
 }

@@ -236,7 +236,7 @@
 				<h2>
 					<!-- Plural Case [both cases are needed because page may be updated in Javascript] -->
 					<span class="ajax_cart_product_txt_s {if $cart_qties < 2} unvisible{/if}">
-						{l s='There are'}&nbsp;<span class="ajax_cart_quantity">{$cart_qties|intval}</span>&nbsp;{l s='items in your cart.'}
+						{l s='There are [0]%d[/0] items in your cart.' mod='blockcart' sprintf=[$cart_qties] tags=['<span class="ajax_cart_quantity">']}
 					</span>
 					<!-- Singular Case [both cases are needed because page may be updated in Javascript] -->
 					<span class="ajax_cart_product_txt {if $cart_qties > 1} unvisible{/if}">
