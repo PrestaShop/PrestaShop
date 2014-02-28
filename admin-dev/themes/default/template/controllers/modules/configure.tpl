@@ -55,6 +55,12 @@
 		</ul>
 		{/block}
 		{block name=toolbarBox}
+        <script type="text/javascript">
+            var header_confirm_reset = '{l s='Confirm reset'}';
+            var body_confirm_reset = '{l s='Would you like to delete the content related to this module ?'}';
+            var left_button_confirm_reset = '{l s='No'}';
+            var right_button_confirm_reset = '{l s='Yes'}';
+        </script>
 		<div class="page-bar toolbarBox">
 			<div class="btn-toolbar">
 				<ul class="nav nav-pills pull-right">
@@ -77,7 +83,7 @@
 						</a>
 					</li>
 					<li>
-						<a id="desc-module-reset" class="toolbar_btn" onclick="{$javascript_action_reset_module}" href="{$module_reset_link}" title="{l s='Reset'}">
+						<a id="desc-module-reset" class="toolbar_btn {if $is_reset_ready}reset_ready{/if}" href="{$module_reset_link}" title="{l s='Reset'}">
 							<i class="process-icon-reset"></i>
 							<div>{l s='Reset'}</div>
 						</a>
