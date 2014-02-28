@@ -159,18 +159,16 @@ function changeAddressDelivery(obj)
 				if (typeof(jsonData.hasErrors) != 'undefined' && jsonData.hasErrors)
 				{
 					if (!!$.prototype.fancybox)
-					{
 					    $.fancybox.open([
 				        {
 				            type: 'inline',
 				            autoScale: true,
 				            minHeight: 30,
-				            content: "<p class='fancybox-error'>" + jsonData.error + '</p>'
+				            content: '<p class="fancybox-error">' + jsonData.error + '</p>'
 				        }],
 						{
 					        padding: 0
 					    });
-					}
 					else
 					    alert(jsonData.error);
 
@@ -214,18 +212,16 @@ function changeAddressDelivery(obj)
 		if (old_id_address_delivery == 0)
 		{
 			if (!!$.prototype.fancybox)
-			{
 			    $.fancybox.open([
 		        {
 		            type: 'inline',
 		            autoScale: true,
 		            minHeight: 30,
-		            content: "<p class='fancybox-error'>" + txtSelectAnAddressFirst + '</p>'
+		            content: '<p class="fancybox-error">' + txtSelectAnAddressFirst + '</p>'
 		        }],
 				{
 			        padding: 0
 			    });
-			}
 			else
 			    alert(txtSelectAnAddressFirst);
 			return false;
@@ -262,18 +258,16 @@ function changeAddressDelivery(obj)
 			success: function(jsonData)
 			{
 				if (jsonData.error && !!$.prototype.fancybox)
-				{
 				    $.fancybox.open([
 			        {
 			            type: 'inline',
 			            autoScale: true,
 			            minHeight: 30,
-			            content: "<p class='fancybox-error'>" + jsonData.error + '</p>'
+			            content: '<p class="fancybox-error">' + jsonData.error + '</p>'
 			        }],
 					{
 				        padding: 0
 				    });
-				}
 				else
 				    alert(jsonData.error);
 			
@@ -486,18 +480,16 @@ function deleteProductFromSummary(id)
 			{
 				var error = "TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
 				if (!!$.prototype.fancybox)
-				{
 				    $.fancybox.open([
 			        {
 			            type: 'inline',
 			            autoScale: true,
 			            minHeight: 30,
-			            content: "<p class='fancybox-error'>" + error + '</p>'
+			            content: '<p class="fancybox-error">' + error + '</p>'
 			        }],
 					{
 				        padding: 0
 				    });
-				}
 				else
 				    alert(error);
 			}
@@ -575,18 +567,16 @@ function upQuantity(id, qty)
 					if(error !== 'indexOf')
 						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 				if (!!$.prototype.fancybox)
-				{
 				    $.fancybox.open([
 			        {
 			            type: 'inline',
 			            autoScale: true,
 			            minHeight: 30,
-			            content: "<p class='fancybox-error'>" + errors + '</p>'
+			            content: '<p class="fancybox-error">' + errors + '</p>'
 			        }],
 					{
 				        padding: 0
 				    });
-				}
 				else
 				    alert(errors);
 				$('input[name=quantity_'+ id +']').val($('input[name=quantity_'+ id +'_hidden]').val());
@@ -613,18 +603,16 @@ function upQuantity(id, qty)
 			{
 				error = "TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
 				if (!!$.prototype.fancybox)
-				{
 				    $.fancybox.open([
 			        {
 			            type: 'inline',
 			            autoScale: true,
 			            minHeight: 30,
-			            content: "<p class='fancybox-error'>" + error + '</p>'
+			            content: '<p class="fancybox-error">' + error + '</p>'
 			        }],
 					{
 				        padding: 0
 				    });
-				}
 				else
 				    alert(error);
 			}

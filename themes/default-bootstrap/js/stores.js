@@ -97,7 +97,6 @@ function searchLocations()
 		else
 		{
 			if (!!$.prototype.fancybox)
-			{
 			    $.fancybox.open([
 			        {
 			            type: 'inline',
@@ -108,7 +107,6 @@ function searchLocations()
 			    ], {
 			        padding: 0
 			    });
-			}
 			else
 			    alert(address + ' ' + translation_6);
 		}
