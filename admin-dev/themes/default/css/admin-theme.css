@@ -2786,7 +2786,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .thumbnail, .bootstrap .img-thumbnail { background-color: white; border-color: #cccccc !important; }
 .bootstrap .highlight { background-color: #00aff0; }
 .bootstrap .text-orange { color: #ff9900; }
-.bootstrap .badge, .bootstrap #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper .bootstrap .notifs_badge, .bootstrap .module-badge-popular, .bootstrap .module-badge-partner { font-weight: normal; font-size: 1em; letter-spacing: 0.0625em; background-color: #00aff0; }
+.bootstrap .badge, .bootstrap #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper .bootstrap .notifs_badge, .bootstrap .module-badge-popular, .bootstrap .module-badge-partner { font-weight: normal; font-size: 1em; line-height: inherit; letter-spacing: 0.0625em; background-color: #00aff0; }
 .bootstrap .badge.badge-info, .bootstrap #header_notifs_icon_wrapper .badge-info.notifs_badge, #header_notifs_icon_wrapper .bootstrap .badge-info.notifs_badge, .bootstrap .badge-info.module-badge-popular, .bootstrap .badge-info.module-badge-partner { background-color: #5bc0de; }
 .bootstrap .badge.badge-success, .bootstrap #header_notifs_icon_wrapper .badge-success.notifs_badge, #header_notifs_icon_wrapper .bootstrap .badge-success.notifs_badge, .bootstrap .badge-success.module-badge-popular, .bootstrap .badge-success.module-badge-partner { background-color: #5cb85c; }
 .bootstrap .badge.badge-warning, .bootstrap #header_notifs_icon_wrapper .badge-warning.notifs_badge, #header_notifs_icon_wrapper .bootstrap .badge-warning.notifs_badge, .bootstrap .badge-warning.module-badge-popular, .bootstrap .badge-warning.module-badge-partner { background-color: #f0ad4e; }

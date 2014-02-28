@@ -23,25 +23,30 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {$header}
+
 {if isset($conf)}
-	<div class="alert alert-success">
-		{$conf}
+	<div class="bootstrap">
+		<div class="alert alert-success">
+			{$conf}
+		</div>
 	</div>
 {/if}
 {if count($errors) && (!isset($disableDefaultErrorOutPut) || $disableDefaultErrorOutPut == false)}
-	<div class="alert alert-danger">
-		<button type="button" class="close" data-dismiss="alert">&times;</button>
-	{if count($errors) == 1}
-		{reset($errors)}
-	{else}
-		{l s='%d errors' sprintf=$errors|count}
-		<br/>
-		<ol>
-			{foreach $errors as $error}
-				<li>{$error}</li>
-			{/foreach}
-		</ol>
-	{/if}
+	<div class="bootstrap">
+		<div class="alert alert-danger">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+		{if count($errors) == 1}
+			{reset($errors)}
+		{else}
+			{l s='%d errors' sprintf=$errors|count}
+			<br/>
+			<ol>
+				{foreach $errors as $error}
+					<li>{$error}</li>
+				{/foreach}
+			</ol>
+		{/if}
+		</div>
 	</div>
 {/if}
 {if isset($informations) && count($informations) && $informations}
