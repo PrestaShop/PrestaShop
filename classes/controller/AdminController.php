@@ -1864,7 +1864,7 @@ class AdminControllerCore extends Controller
 			if (!is_array($this->bulk_actions))
 				$this->bulk_actions = array();
 
-			$this->bulk_actions = array_merge($this->bulk_actions, array(
+			$this->bulk_actions = array_merge(array(
 				'enableSelection' => array(
 					'text' => $this->l('Enable selection'),
 					'icon' => 'icon-power-off text-success'
@@ -1872,8 +1872,11 @@ class AdminControllerCore extends Controller
 				'disableSelection' => array(
 					'text' => $this->l('Disable selection'),
 					'icon' => 'icon-power-off text-danger'
+				),
+				'divider' => array(
+					'text' => 'divider'
 				)
-			));
+			), $this->bulk_actions);
 		}
 
 		$this->setHelperDisplay($helper);
