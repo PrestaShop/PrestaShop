@@ -204,13 +204,13 @@ $(document).ready(function(){
 	});
 
 	if (contentOnly == false && !!$.prototype.fancybox)
-		$('.thickbox').fancybox({
+		$('.fancybox').fancybox({
 			'hideOnContentClick': true,
 			'transitionIn'	: 'elastic',
 			'transitionOut'	: 'elastic'
 		});
 	else
-		$(document).on('click', '.thickbox', function(e){e.preventDefault();});
+		$(document).on('click', '.fancybox', function(e){e.preventDefault();});
 
 	if (!!$.prototype.bxSlider)
 		$('#bxslider').bxSlider({

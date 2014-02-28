@@ -133,7 +133,6 @@ function updateAddresses()
 						if(error !== 'indexOf')
 							errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 		            if (!!$.prototype.fancybox)
-		            {
 		                $.fancybox.open([
 		                    {
 		                        type: 'inline',
@@ -144,7 +143,6 @@ function updateAddresses()
 		                ], {
 		                    padding: 0
 		                });
-		            }
 		            else
 		                alert(errors);
 				}
@@ -158,7 +156,6 @@ function updateAddresses()
 				{
 					error = "TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
 		            if (!!$.prototype.fancybox)
-		            {
 		                $.fancybox.open([
 		                    {
 		                        type: 'inline',
@@ -169,7 +166,6 @@ function updateAddresses()
 		                ], {
 		                    padding: 0
 		                });
-		            }
 		            else
 		                alert(error);
 				}

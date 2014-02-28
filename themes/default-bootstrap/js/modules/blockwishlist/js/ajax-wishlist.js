@@ -56,7 +56,6 @@ function WishlistCart(id, action, id_product, id_product_attribute, quantity)
 					wishlistRefreshStatus();
 
 		            if (!!$.prototype.fancybox)
-		            {
 		                $.fancybox.open([
 		                    {
 		                        type: 'inline',
@@ -67,14 +66,12 @@ function WishlistCart(id, action, id_product, id_product_attribute, quantity)
 		                ], {
 		                    padding: 0
 		                });
-		            }
 		            else
 		                alert(added_to_wishlist);
 				}
 				else
 				{
 		            if (!!$.prototype.fancybox)
-		            {
 		                $.fancybox.open([
 		                    {
 		                        type: 'inline',
@@ -85,7 +82,6 @@ function WishlistCart(id, action, id_product, id_product_attribute, quantity)
 		                ], {
 		                    padding: 0
 		                });
-		            }
 		            else
 		                alert(loggin_required);
 				}
@@ -165,7 +161,6 @@ function WishlistAddProductCart(token, id_product, id_product_attribute, id_quan
 				if (data)
 				{
 		            if (!!$.prototype.fancybox)
-		            {
 		                $.fancybox.open([
 		                    {
 		                        type: 'inline',
@@ -176,7 +171,6 @@ function WishlistAddProductCart(token, id_product, id_product_attribute, id_quan
 		                ], {
 		                    padding: 0
 		                });
-		            }
 		            else
 		                alert(data);
 				}
@@ -312,7 +306,6 @@ function WishlistSend(id, id_wishlist, id_email)
 			if (data)
 			{
 	            if (!!$.prototype.fancybox)
-	            {
 	                $.fancybox.open([
 	                    {
 	                        type: 'inline',
@@ -323,7 +316,6 @@ function WishlistSend(id, id_wishlist, id_email)
 	                ], {
 	                    padding: 0
 	                });
-	            }
 	            else
 	                alert(data);
 			}
