@@ -40,6 +40,10 @@
 			font-weight: normal
 			font-size: 12px
 			text-shadow: none
+	a
+		color: #415260
+	.pull-right, .pull-left
+		float: none
 	.clear
 		clear: both
 
@@ -212,5 +216,56 @@
 			&:hover
 				border-color: #AAA #999 #888
 		.panel-footer
+		.tree-panel-heading-controls
+			font-size: 13px
+			background-color: #DDE0E9
+			margin: -8px -8px 20px
+			padding: 5px
+			border-bottom: solid 1px #DFDFDF
+			a
+				display: inline-block
+				padding: 0 8px
+				border-right: solid 1px #888
+		.tree
+			padding: 0 0 0 20px
+			list-style: none
+			input
+				vertical-align: baseline
+				margin-right: 4px
+				line-height: normal
+			i
+				font-size: $icon-size-base
+			.tree-item-name, .tree-folder-name
+				padding: 2px 5px
+				@include border-radius(4px)
+				label
+					font-size: 13px
+					float: none
+					text-shadow: none
+					font-weight: 400
+				&:hover
+					background-color: #eee
+					cursor: pointer
+			.tree-selected
+				background-color: #CCCED7
+				&:hover
+					background-color: darken(#CCCED7,15%)
+				i.tree-dot
+					background-color: #eee
+			.tree-folder, .tree-item
+				margin: 3px 0
+			i.tree-dot
+				display: inline-block
+				position: relative
+				width: 6px
+				height: 6px
+				margin: 0 4px
+				background-color: #ccc
+				@include border-radius(6px)
+			.tree-item-disable, .tree-folder-name-disable
+				color: #ccc
+				&:hover
+					color: #ccc
+					background-color: none
 
 
