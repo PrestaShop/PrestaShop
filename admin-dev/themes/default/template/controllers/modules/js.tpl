@@ -26,6 +26,10 @@
 
 <script type="text/javascript">{$autocompleteList}</script>
 <script type="text/javascript">
+    var header_confirm_reset = '{l s='Confirm reset'}';
+    var body_confirm_reset = '{l s='Would you like to delete the content related to this module ?'}';
+    var left_button_confirm_reset = '{l s='No'}';
+    var right_button_confirm_reset = '{l s='Yes'}';
 	var currentIndex = '{$currentIndex}';
 	var currentIndexWithToken = '{$currentIndex}&token={$token}';
 	var dirNameCurrentIndex = '{$dirNameCurrentIndex}';

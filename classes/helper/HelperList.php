@@ -199,7 +199,9 @@ class HelperListCore extends Helper
 
 		foreach ($this->_list as $index => $tr)
 		{
-			$id = $tr[$this->identifier];
+			$id = null;
+			if (isset($tr[$this->identifier]))
+				$id = $tr[$this->identifier];
 			$name = isset($tr['name']) ? $tr['name'] : null;
 
 			if ($this->shopLinkType)
