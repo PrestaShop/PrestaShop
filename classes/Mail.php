@@ -253,6 +253,9 @@ class MailCore
 
 			$message->headers->setEncoding('Q');
 
+			$template_vars = array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $template_vars);
+			$template_vars = array_map(array('Tools', 'stripslashes'), $template_vars);
+
 			if (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $id_shop)))
 				$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $id_shop);
 			else
