@@ -337,15 +337,15 @@ $(document).ready(function() {
 	});
 });
 
-function confirm_modal(heading, question, left_button_txt, right_button_txt, left_button_callback, right_button_callback) {
-
+function confirm_modal(heading, question, left_button_txt, right_button_txt, left_button_callback, right_button_callback)
+{
 	var confirmModal =
 		$('<div class="bootstrap modal hide fade">' +
-			'<div class="modal-dialog">'+
-			'<div class="modal-content">'+
+			'<div class="modal-dialog">' +
+			'<div class="modal-content">' +
 			'<div class="modal-header">' +
 			'<a class="close" data-dismiss="modal" >&times;</a>' +
-			'<h3>' + heading +'</h3>' +
+			'<h3>' + heading + '</h3>' +
 			'</div>' +
 
 			'<div class="modal-body">' +
@@ -360,19 +360,35 @@ function confirm_modal(heading, question, left_button_txt, right_button_txt, lef
 			right_button_txt +
 			'</a>' +
 			'</div>' +
-			'</div>'+
-			'</div>'+
-		'</div>');
+			'</div>' +
+			'</div>' +
+			'</div>');
 
-	confirmModal.find('#confirm_modal_left_button').click(function(event) {
+	confirmModal.find('#confirm_modal_left_button').click(function (event)
+	{
 		left_button_callback();
 		confirmModal.modal('hide');
 	});
 
-	confirmModal.find('#confirm_modal_right_button').click(function(event) {
+	confirmModal.find('#confirm_modal_right_button').click(function (event)
+	{
 		right_button_callback();
 		confirmModal.modal('hide');
 	});
 
 	confirmModal.modal('show');
 };
+
+$(".reset_ready").click(function ()
+{
+	var href = $(this).attr('href');
+	confirm_modal(header_confirm_reset, body_confirm_reset, left_button_confirm_reset, right_button_confirm_reset,
+		function ()
+		{
+			window.location.href = href + '&keep_data=1';
+		}, function ()
+		{
+			window.location.href = href + '&keep_data=0';
+		});
+	return false;
+});

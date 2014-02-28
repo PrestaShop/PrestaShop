@@ -3375,27 +3375,19 @@ class AdminControllerCore extends Controller
 			'icon' => 'off',
 		);
 		$link_reset_module = $link_admin_modules.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab;
-		$javascript_action_reset_module = '';
 
+		$is_reset_ready = false;
 		if (method_exists(Module::getInstanceByName($module->name), 'reset'))
-		{
-			$javascript_action_reset_module = '
-			confirm_modal(\''.$this->l('Confirm reset').'\',
-			 \''.$this->translationsTab['Would you like to delete the content related to this module ?'].'\',
-			 \''.$this->l('No').'\',
-			 \''.$this->l('Yes').'\',
-			  function(){window.location.href=\''.$link_reset_module.'&keep_data=1\';return false;},
-			  function(){window.location.href=\''.$link_reset_module.'&keep_data=0\';return false;});
-			return false;';
-		}
+			$is_reset_ready = true;
 
 		$reset_module = array(
 			'href' => $link_reset_module,
-			'onclick' => $module->onclick_option && isset($module->onclick_option_content['reset']) ? $module->onclick_option_content['reset'] : $javascript_action_reset_module,
+			'onclick' => $module->onclick_option && isset($module->onclick_option_content['reset']) ? $module->onclick_option_content['reset'] : '',
 			'title' => '',
 			'text' => $this->translationsTab['Reset'],
 			'cond' => $module->id && $module->active,
 			'icon' => 'share-alt',
+			'class' => ($is_reset_ready ? 'reset_ready' : '')
 		);
 
 		$delete_module = array(
@@ -3465,6 +3457,8 @@ class AdminControllerCore extends Controller
 
 					$html = '<a class="';
 
+					if (isset($option['class']))
+						$html .= $option['class'];
 					if (count($return) == 0)
 						$html .= 'btn btn-default';
 
