@@ -823,7 +823,7 @@ class LanguageCore extends ObjectModel
 			$errors[] = Tools::displayError('Archive cannot be downloaded from prestashop.com.');
 		elseif (!$lang_pack = Tools::jsonDecode($lang_pack_link))
 			$errors[] = Tools::displayError('Error occurred when language was checked according to your Prestashop version.');
-		elseif ($content = Tools::file_get_contents('http://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.Tools::strtolower($lang_pack->iso_code.'.gzip')))
+		elseif (empty($lang_pack->error) && ($content = Tools::file_get_contents('http://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.Tools::strtolower($lang_pack->iso_code.'.gzip'))))
 			if (!@file_put_contents($file, $content))
 			{
 				if (is_writable(dirname($file)))
@@ -834,7 +834,10 @@ class LanguageCore extends ObjectModel
 				elseif (!is_writable($file))
 					$errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$file.')';
 			}
-		if ($install && file_exists($file))
+		
+		if (!file_exists($file))
+			$errors[] = Tools::displayError('No language pack is available for your version.');
+		elseif ($install)
 		{
 			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 			$gz = new Archive_Tar($file, true);
@@ -887,8 +890,6 @@ class LanguageCore extends ObjectModel
 				AdminTranslationsController::addNewTabs($iso, $files_list);
 			}
 		}
-		else
-			$errors[] = Tools::displayError('No language pack is available for your version.');
 
 		return count($errors) ? $errors : true;
 	}
@@ -930,7 +931,8 @@ class LanguageCore extends ObjectModel
 
 				clearstatcache();
 				if (@filemtime($filegz) < (time() - (24 * 3600)))
-					Language::downloadAndInstallLanguagePack($lang['iso_code'], null, null, false);
+					if (Language::downloadAndInstallLanguagePack($lang['iso_code'], null, null, false) !== true)
+						break;
 
 				$gz = new Archive_Tar($filegz, true);
 				$files_list = Language::getLanguagePackListContent($lang['iso_code'], $gz);
