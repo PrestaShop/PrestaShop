@@ -713,7 +713,8 @@ function displayDiscounts(combination)
 			$(this).fadeOut('slow');
 	 });
 
-	if ($('#quantityDiscount_' + combination+',.quantityDiscount_' + combination).length != 0)
+	if ($('#quantityDiscount_' + combination+',.quantityDiscount_' + combination).length != 0
+		|| $('#quantityDiscount_0,.quantityDiscount_0').length != 0)
 	{
 		$('#quantityDiscount').parent().show();
 		$('#quantityDiscount_' + combination+',.quantityDiscount_' + combination).show();
