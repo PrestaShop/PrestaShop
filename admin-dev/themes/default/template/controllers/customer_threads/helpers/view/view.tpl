@@ -58,7 +58,9 @@
 					{if isset($customer->firstname)}
 						<h2>{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} <small>({$customer->email|escape:'html':'UTF-8'})</small></h2>
 					{/if}
+					{if isset($contact) && trim($contact) != ''}
 						<span>{l s="TO:"} </span><span class="badge">{$contact|escape:'html':'UTF-8'}</span>
+					{/if}
 					</div>
 					{if isset($customer->firstname)}
 						<div class="col-sm-6">

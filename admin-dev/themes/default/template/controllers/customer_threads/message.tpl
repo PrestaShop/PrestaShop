@@ -107,7 +107,7 @@
 {else}
 		<div class="infoEmployee">
 			{if $id_employee}
-				<a class="btn btn-default pull-right" href="{$email_base_url}{$link->getAdminLink('AdminCustomerThreads')}{$current}&amp;token={getAdminToken tab='AdminCustomerThreads'}&amp;id_customer_thread={$message.id_customer_thread|intval}&amp;viewcustomer_thread=1">
+				<a class="btn btn-default pull-right" href="{$thread_url}">
 					{l s='View this thread'}
 				</a>
 			{/if}
@@ -123,31 +123,32 @@
 			</dl>
 
 			{if !empty($message.id_customer) && empty($message.id_employee)}
-				<dl class="dl-horizontal">
+				<!--<dl class="dl-horizontal">
 					<dt>{l s='Customer ID:'}</dt>
 					<dd>{$message.id_customer}</dd>
-				</dl>
+				</dl>-->
 			{/if}
 
 			{if !empty($message.id_order) && empty($message.id_employee)}
-				<dl class="dl-horizontal">
+				<!--<dl class="dl-horizontal">
 					<dt>{l s='Order #'}:</dt>
 					<dd>{$message.id_order}</dd>
-				</dl>
+				</dl>-->
 			{/if}
 
 			{if !empty($message.id_product) && empty($message.id_employee)}
-				<dl class="dl-horizontal">
+				<!--<dl class="dl-horizontal">
 					<dt>{l s='Product #'}:</dt>
 					<dd>{$message.id_product}</dd>
-				</dl>
+				</dl>-->
 			{/if}
 
-			<dl class="dl-horizontal">
+			<!--<dl class="dl-horizontal">
 				<dt>{l s='Subject:'}</dt>
 				<dd>{$message.subject}</dd>
-			</dl>
+			</dl>-->
 {/if}
+{if !$email}
 			<dl class="dl-horizontal">
 				<dt>{l s='Thread ID:'}</dt>
 				<dd>{$message.id_customer_thread}</dd>
@@ -156,13 +157,14 @@
 				<dt>{l s='Message ID:'}</dt>
 				<dd>{$message.id_customer_message}</dd>
 			</dl>
+{/if}
 			<dl class="dl-horizontal">
 				<dt>{l s='Message:'}</dt>
 				<dd>{$message.message|escape:'html':'UTF-8'|nl2br}</dd>
 			</dl>
-		</div>
-	</div>
+		</div>	
 {if !$email}
+	</div>
 	{if empty($message.id_employee)}
 		<div class="panel">
 			<button class="btn btn-default"

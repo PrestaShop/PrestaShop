@@ -61,9 +61,17 @@
 		</div>
 		<div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">{l s="Close"}</button>
-			<button type="submit" class="btn btn-primary" name="submitForward"><i class="icon-mail-forward"></i> {l s="Forward"}</button>
+			<button type="submit" class="btn btn-primary" name="submitForward" disabled="disabled"><i class="icon-mail-forward"></i> {l s="Forward"}</button>
 		</div>
 		</div>
 	</div>
 </div>
 </form>
+<script type="text/javascript">
+	$("select[name='id_employee_forward']").on('change', function() {
+		if ($(this).val() != '-1')
+			$("button[name='submitForward']").prop('disabled', false);
+		else
+			$("button[name='submitForward']").prop('disabled', 'disabled');
+	});
+</script>
