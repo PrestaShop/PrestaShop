@@ -816,18 +816,10 @@ class AdminModulesControllerCore extends AdminController
 							$reset_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&reset&tab_module='.$module->tab;
 							$update_link =  $this->context->link->getAdminLink('AdminModules').'&checkAndUpdate=1';
 
-							$javascript_action_reset_module = '';
+							$is_reset_ready = false;
 							if (method_exists($module, 'reset'))
-							{
-								$javascript_action_reset_module = '
-								confirm_modal(\''.$this->l('Confirm reset').'\',
-								 \''.$this->l('Would you like to delete the content related to this module ?').'\',
-								 \''.$this->l('No').'\',
-								 \''.$this->l('Yes').'\',
-								  function(){window.location.href=\''.$reset_link.'&keep_data=1\';return false;},
-								  function(){window.location.href=\''.$reset_link.'&keep_data=0\';return false;});
-								return false;';
-							}
+								$is_reset_ready = true;
+
 							$this->context->smarty->assign(
 								array(
 									'module_name' => $module->name,
@@ -844,7 +836,7 @@ class AdminModulesControllerCore extends AdminController
 									'page_header_toolbar_title' => $this->page_header_toolbar_title,
 									'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
 									'add_permission' => $this->tabAccess['add'],
-									'javascript_action_reset_module' => $javascript_action_reset_module
+									'is_reset_ready' => $is_reset_ready
 								)
 							);
 							
