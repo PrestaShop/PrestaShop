@@ -28,8 +28,8 @@
 <script type="text/javascript">
     var header_confirm_reset = '{l s='Confirm reset'}';
     var body_confirm_reset = '{l s='Would you like to delete the content related to this module ?'}';
-    var left_button_confirm_reset = '{l s='No'}';
-    var right_button_confirm_reset = '{l s='Yes'}';
+    var left_button_confirm_reset = '{l s='No - reset only the parameters'}';
+    var right_button_confirm_reset = '{l s='Yes - reset everything'}';
 	var currentIndex = '{$currentIndex}';
 	var currentIndexWithToken = '{$currentIndex}&token={$token}';
 	var dirNameCurrentIndex = '{$dirNameCurrentIndex}';
