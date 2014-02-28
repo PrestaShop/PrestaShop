@@ -676,7 +676,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			{
 				$link = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int)$order->id;
 				$content = '<a class="badge" target="_blank" href="'.$link.'">'.$this->l('Order').' #'.(int)$order->id.'</a></br></br>';
-				$content .= '<span>'.$this->l('Stats:').' '.$history['ostate_name'].'</span>';
+				$content .= '<span>'.$this->l('Status:').' '.$history['ostate_name'].'</span>';
 
 				$timeline[$history['date_add']][] = array(
 					'arrow' => 'right',
