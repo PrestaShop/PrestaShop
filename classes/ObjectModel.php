@@ -909,7 +909,7 @@ abstract class ObjectModelCore
 						return 'Property '.get_class($this).'->'.$field.' is empty';
 
 		// Default value
-		if (!$value && !empty($data['default']))
+		if (!isset($value) && isset($data['default']))
 		{
 			$value = $data['default'];
 			$this->$field = $value;

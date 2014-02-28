@@ -261,4 +261,5 @@ class DbPDOCore extends Db
 
 		return ($result === false) ? false : true;
 	}
+
 }

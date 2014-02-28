@@ -58,7 +58,7 @@ class DbMySQLiCore extends Db
 		if (strpos($host, ':') !== false)
 		{
 			list($host, $port) = explode(':', $host);
-			$link = @new mysqli($host, $this->user, $this->password, null, $port);
+			$link = @new mysqli($host, $user, $password, null, $port);
 		}
 		else
 			$link = @new mysqli($host, $user, $password);
@@ -241,9 +241,20 @@ class DbMySQLiCore extends Db
 	 */
 	static public function tryUTF8($server, $user, $pwd)
 	{
-		$link = @new mysqli($server, $user, $pwd, $db);
+		$link = @new mysqli($server, $user, $pwd);
 		$ret = $link->query("SET NAMES 'UTF8'");
 		$link->close();
 		return $ret;
+	}
+
+	public function ping() {
+		if (!mysqli_ping($this->link))
+		{
+			$this->disconnect();
+
+			return false;
+		}
+
+		return true;
 	}
 }

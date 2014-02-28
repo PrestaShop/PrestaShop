@@ -238,4 +238,15 @@ class MySQLCore extends Db
 		@mysql_close($link);
 		return $ret;
 	}
+
+	public function ping() {
+		if (!mysql_ping($this->link))
+		{
+			$this->disconnect();
+
+			return false;
+		}
+
+		return true;
+	}
 }
