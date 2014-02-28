@@ -132,7 +132,10 @@ function sendOrderMessage()
 		headers: { "cache-control": "no-cache" },
 		url: $('#sendOrderMessage').attr("action") + '?rand=' + new Date().getTime(),
 		data: paramString,
-		success: function (msg){
+		beforeSend: function(){
+			$(".button[name=submitMessage]").prop("disabled", "disabled");
+		},
+		success: function(msg){
 			$('#block-order-detail').fadeOut('slow', function() {
 				$(this).html(msg);
 				//catch the submit event of sendOrderMessage form
@@ -140,7 +143,11 @@ function sendOrderMessage()
 					return sendOrderMessage();
 				});
 				$(this).fadeIn('slow');
+	        	$(".button[name=submitMessage]").prop("disabled", false);
 			});
+		},
+		error: function(){
+			$(".button[name=submitMessage]").prop("disabled", false);
 		}
 	});
 	return false;

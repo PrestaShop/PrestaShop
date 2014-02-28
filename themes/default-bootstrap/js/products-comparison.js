@@ -65,7 +65,6 @@ function addToCompare(productId)
 			else
 			{
 	            if (!!$.prototype.fancybox)
-	            {
 	                $.fancybox.open([
 	                    {
 	                        type: 'inline',
@@ -76,7 +75,6 @@ function addToCompare(productId)
 	                ], {
 	                    padding: 0
 	                });
-	            }
 	            else
 	                alert(max_item);
 			}
