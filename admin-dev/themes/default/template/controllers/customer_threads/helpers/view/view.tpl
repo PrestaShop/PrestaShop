@@ -87,7 +87,7 @@
 </div>
 <div class="panel">
 	<form action="{$link->getAdminLink('AdminCustomerThreads')}&id_customer_thread={$thread->id|intval}&viewcustomer_thread" method="post" enctype="multipart/form-data" class="form-horizontal">
-	<h3>{l s="Answer to"} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} {else} {$thread->email}{/if}</h3>
+	<h3>{l s="Your answer to"} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} {else} {$thread->email}{/if}</h3>
 	<div class="row">
 		<div class="media">
 			<div class="pull-left">
