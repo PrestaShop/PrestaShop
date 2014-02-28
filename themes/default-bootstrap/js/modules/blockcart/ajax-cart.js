@@ -261,7 +261,6 @@ var ajaxCart = {
 		if (addedFromProductPage && !checkCustomizations())
 		{
 			if (!!$.prototype.fancybox)
-			{
 			    $.fancybox.open([
 			        {
 			            type: 'inline',
@@ -272,7 +271,6 @@ var ajaxCart = {
 			    ], {
 			        padding: 0
 			    });
-			}
 			else
 			    alert(fieldRequired);
             return;
@@ -338,18 +336,16 @@ var ajaxCart = {
 			{
 				var error = "Impossible to add the product to the cart.<br/>textStatus: '" + textStatus + "'<br/>errorThrown: '" + errorThrown + "'<br/>responseText:<br/>" + XMLHttpRequest.responseText;
 				if (!!$.prototype.fancybox)
-				{
 				    $.fancybox.open([
 				    {
 				        type: 'inline',
 				        autoScale: true,
 				        minHeight: 30,
-				        content: "<p class='fancybox-error'>" + error + '</p>'
+				        content: '<p class="fancybox-error">' + error + '</p>'
 				    }],
 					{
 				        padding: 0
 				    });
-				}
 				else
 				    alert(error);
 				//reactive the button when adding has finished
@@ -725,7 +721,6 @@ var ajaxCart = {
 				if (error != 'indexOf')
 					errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 			if (!!$.prototype.fancybox)
-			{
 			    $.fancybox.open([
 			        {
 			            type: 'inline',
@@ -736,7 +731,6 @@ var ajaxCart = {
 			    ], {
 			        padding: 0
 			    });
-			}
 			else
 			    alert(errors);
 		}

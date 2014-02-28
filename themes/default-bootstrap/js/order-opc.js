@@ -111,7 +111,6 @@ $(document).ready(function(){
 					{
 						error = "TECHNICAL ERROR: unable to send login informations \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
 			            if (!!$.prototype.fancybox)
-			            {
 			                $.fancybox.open([
 			                    {
 			                        type: 'inline',
@@ -122,7 +121,6 @@ $(document).ready(function(){
 			                ], {
 			                    padding: 0
 			                });
-			            }
 			            else
 			                alert(error);
 					}
@@ -258,7 +256,6 @@ $(document).ready(function(){
 					{
 						error = "TECHNICAL ERROR: unable to save account \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
 			            if (!!$.prototype.fancybox)
-			            {
 			                $.fancybox.open([
 			                    {
 			                        type: 'inline',
@@ -269,7 +266,6 @@ $(document).ready(function(){
 			                ], {
 			                    padding: 0
 			                });
-			            }
 			            else
 			                alert(error);
 					}
@@ -370,7 +366,6 @@ function updateAddressSelection()
 					if(error !== 'indexOf')
 						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 	            if (!!$.prototype.fancybox)
-	            {
 	                $.fancybox.open([
 	                    {
 	                        type: 'inline',
@@ -381,7 +376,6 @@ function updateAddressSelection()
 	                ], {
 	                    padding: 0
 	                });
-	            }
 	            else
 	                alert(errors);
 			}
@@ -455,7 +449,6 @@ function updateAddressSelection()
 			{
 				error = "TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
 	            if (!!$.prototype.fancybox)
-	            {
 	                $.fancybox.open([
 	                    {
 	                        type: 'inline',
@@ -466,7 +459,6 @@ function updateAddressSelection()
 	                ], {
 	                    padding: 0
 	                });
-	            }
 	            else
 	                alert(error);
 			}
@@ -511,7 +503,6 @@ function getCarrierListAndUpdate()
 	            else
 				{
 		            if (!!$.prototype.fancybox)
-		            {
 		                $.fancybox.open([
 		                    {
 		                        type: 'inline',
@@ -522,7 +513,6 @@ function getCarrierListAndUpdate()
 		                ], {
 		                    padding: 0
 		                });
-		            }
 		            else
 		                alert(errors);
 				}
@@ -576,7 +566,6 @@ function updateCarrierSelectionAndGift()
 					if(error !== 'indexOf')
 						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 	            if (!!$.prototype.fancybox)
-	            {
 	                $.fancybox.open([
 	                    {
 	                        type: 'inline',
@@ -587,7 +576,6 @@ function updateCarrierSelectionAndGift()
 	                ], {
 	                    padding: 0
 	                });
-	            }
 	            else
 	                alert(errors);
 			}
@@ -645,7 +633,6 @@ function confirmFreeOrder()
 			{
 				error = "TECHNICAL ERROR: unable to confirm the order \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
 	            if (!!$.prototype.fancybox)
-	            {
 	                $.fancybox.open([
 	                    {
 	                        type: 'inline',
@@ -656,7 +643,6 @@ function confirmFreeOrder()
 	                ], {
 	                    padding: 0
 	                });
-	            }
 	            else
 	                alert(error);
 			}
@@ -740,7 +726,6 @@ function saveAddress(type)
 			{
 				error = "TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
 	            if (!!$.prototype.fancybox)
-	            {
 	                $.fancybox.open([
 	                    {
 	                        type: 'inline',
@@ -751,7 +736,6 @@ function saveAddress(type)
 	                ], {
 	                    padding: 0
 	                });
-	            }
 	            else
 	                alert(error);
 			}

@@ -24,9 +24,10 @@
 */
 $(document).ready(function(){
 
-	$('#send_friend_button').fancybox({
-		'hideOnContentClick': false
-	});
+	if (!!$.prototype.fancybox)
+		$('#send_friend_button').fancybox({
+			'hideOnContentClick': false
+		});
 
 	$('#send_friend_form_content .closefb').click(function(e) {
 		$.fancybox.close();
