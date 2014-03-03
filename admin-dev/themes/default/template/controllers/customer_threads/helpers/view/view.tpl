@@ -51,12 +51,12 @@
 	</div>
 	<div class="row">
 		<div class="message-item-initial media">
-			<div class="avatar-lg pull-left"><i class="icon-user icon-3x"></i></div>
+			<a href="{$link->getAdminLink('AdminCustomers')}&id_customer={$customer->id|intval}&viewcustomer&"><div class="avatar-lg pull-left"><i class="icon-user icon-3x"></i></div></a>
 			<div class="media-body">
 				<div class="row">
 					<div class="col-sm-6">
 					{if isset($customer->firstname)}
-						<h2>{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} <small>({$customer->email|escape:'html':'UTF-8'})</small></h2>
+						<h2><a href="{$link->getAdminLink('AdminCustomers')}&id_customer={$customer->id|intval}&viewcustomer&">{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} <small>({$customer->email|escape:'html':'UTF-8'})</small></a></h2>
 					{/if}
 					{if isset($contact) && trim($contact) != ''}
 						<span>{l s="To:"} </span><span class="badge">{$contact|escape:'html':'UTF-8'}</span>
