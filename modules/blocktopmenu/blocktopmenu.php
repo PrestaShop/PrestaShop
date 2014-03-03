@@ -429,7 +429,7 @@ class Blocktopmenu extends Module
 							$default_language = Configuration::get('PS_LANG_DEFAULT');
 							$link = MenuTopLinks::get($link[0]['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
 						}
-						$this->_menu .= '<li><a href="'.Tools::HtmlEntitiesUTF8($link[0]['link']).'"'.(($link[0]['new_window']) ? ' target="_blank"': '').' title="'.$link[0]['label'].'">'.$link[0]['label'].'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li><a href="'.Tools::HtmlEntitiesUTF8($link[0]['link']).'"'.(($link[0]['new_window']) ? ' onclick="return !window.open(this.href);"': '').' title="'.$link[0]['label'].'">'.$link[0]['label'].'</a></li>'.PHP_EOL;
 					}
 					break;
 			}
