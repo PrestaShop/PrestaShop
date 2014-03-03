@@ -1238,7 +1238,7 @@ class AdminModulesControllerCore extends AdminController
 
 				if (in_array($module->name, $module_names))
 					$module_success[] = array('name' => $module->displayName, 'message' => array(
-							0 => $this->l('Current version: ').$module->version));
+							0 => sprintf($this->l('Current version: %s'),$module->version)));
 			}
 
 			//if we are in favorites view we only display installed modules
@@ -1279,7 +1279,7 @@ class AdminModulesControllerCore extends AdminController
 						require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
 						$object = new $module->name();
 						$module_success[] = array('name' => $module->name, 'message' => array(
-							0 => $this->l('Current version: ').$object->version,
+							0 => sprintf($this->l('Current version: %s'), $object->version),
 							1 => $this->l('No file upgrades applied (none exist).'))
 						);
 					}
