@@ -232,7 +232,6 @@ function WishlistProductManage(id, action, id_wishlist, id_product, id_product_a
 			$("[id^='quantity']").each(function(index, element){
 				nb_products += parseInt(element.value);
 			});
-			console.log(nb_products);
 			$("#wishlist_"+id_wishlist).children('td').eq(1).html(nb_products);
 		}
 	});
