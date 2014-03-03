@@ -345,7 +345,7 @@ class DashProducts extends Module
 				}
 		}
 		else
-			$body = '<div class="alert alert-info">'.$this->l('You must enable "Save global page views" from "Data mining for statistics" module, in order to view most viewed products').'</div>';
+			$body = '<div class="alert alert-info">'.$this->l('You must enable "Save global page views" from "Data mining for statistics" module, in order to view "most viewed products" or use Google Analytics module').'</div>';
 		return array('header' => $header, 'body' => $body);
 	}
 
