@@ -46,7 +46,7 @@
 	{if $nbManufacturers > 0}
     	<div class="content_sortPagiBar">
         	<div class="sortPagiBar clearfix">
-				{if $manufacturer.nb_products > 0}
+				{if isset($manufacturer) && $manufacturer.nb_products > 0}
 					<ul class="display hidden-xs">
 						<li class="display-title">
 							{l s='View:'}
