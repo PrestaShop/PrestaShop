@@ -32,6 +32,37 @@
 </script>
 
 <div id="dashboard">
+
+<div id="wrap_id_advice_20" class="col-lg-6">
+	<section id="" class="panel">
+		<div class="panel-body">
+			<div class="panel-heading">
+				<a href="#" id="20" class="close_link gamification_close" style="display:none">
+					<i class="icon-remove"></i>
+				</a>
+			</div>	
+			<a class="preactivationLink" rel="ebay" href="" style="text-decoration:none">
+			<img src="http://api.prestashop.com/partner/premium/images/ebay.jpg" style="float:left; margin-left: 0; margin-top: 5px; max-width:100%; margin-right: 10px;">
+			<img src="http://gamification.prestashop.com/api/getAdviceImg/20.png"/>
+			<p>Augmentez vos ventes et le nombre de vos clients en installant le module eBay !</p>
+			</a>
+		</div>
+	</section>
+</div>
+
+<div id="wrap_id_advice_26" class="col-lg-6" >
+	<section id="" class="panel panel-highlighted">
+		<a href="#" id="26" class="close_link gamification_close" >
+			<i class="icon-remove"></i>
+		</a>
+		<a class="preactivationLink" rel="ogone" href="" style="text-decoration:none">
+			<img src="http://api.prestashop.com/partner/premium/images/ogone.png" >
+			<img src="http://gamification.prestashop.com/api/getAdviceImg/26.png"/>
+			<p>Choisissez des moyens de paiement adaptés a votre activité.</p>
+		</a>
+	</section>
+</div>
+
 	<div class="row">
 		<div class="col-lg-12">
 {if $warning}
@@ -89,6 +120,11 @@
 		</div>
 		<div class="col-md-8 col-lg-7" id="hookDashboardZoneTwo">
 			{$hookDashboardZoneTwo}
+
+
+
+
+
 			<div id="dashaddons" class="row-margin-bottom">
 				<a href="http://addons.prestashop.com/208-dashboards?utm_source=backoffice_dashboard" target="_blank">
 					<i class="icon-plus"></i> {l s='Add more graph and data'}

@@ -126,7 +126,7 @@ class DashProducts extends Module
 				'id' => 'total_paid',
 				'value' => Tools::displayPrice((float)$order['total_paid'], $currency),
 				'class' => 'text-center',
-				'wrapper_start' => '<span class="badge">',
+				'wrapper_start' => '<span class="badge badge-success">',
 				'wrapper_end' => '<span>',
 			);
 			$tr[] = array(
