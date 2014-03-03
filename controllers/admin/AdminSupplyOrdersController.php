@@ -855,6 +855,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$helper->force_show_bulk_actions = true;
 		$helper->override_folder = 'supply_orders_receipt_history/';
 		$helper->toolbar_btn = $this->toolbar_btn;
+		$helper->list_id = 'supply_order_detail';
 
 		$helper->ajax_params = array(
 			'display_product_history' => 1,

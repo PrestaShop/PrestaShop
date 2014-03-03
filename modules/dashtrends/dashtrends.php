@@ -298,7 +298,7 @@ class Dashtrends extends Module
 			'average_cart_value' => $this->l('Average Cart Value'),
 			'visits' => $this->l('Visits'),
 			'conversion_rate' => $this->l('Conversion Rate'),
-			'net_profits' => $this->l('Net Profits')
+			'net_profits' => $this->l('Net Profit')
 		);
 
 		$gfx_color = array('#1777B6','#2CA121','#E61409','#FF7F00','#6B399C','#B3591F');

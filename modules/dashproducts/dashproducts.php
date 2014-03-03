@@ -289,51 +289,63 @@ class DashProducts extends Module
 			)
 		);
 
-		$products = $this->getTotalViewed($date_from, $date_to, (int)Configuration::get('DASHPRODUCT_NBR_SHOW_MOST_VIEWED'));
-		$body = array();
-		if (is_array($products) && count($products))
-			foreach ($products as $product)
-			{
-				$product_obj = new Product((int)$product['id_object'], true, $this->context->language->id);
-				if (!Validate::isLoadedObject($product_obj))
-					continue;
+		if (Configuration::get('PS_STATSDATA_PAGESVIEWS'))
+		{
+			$products = $this->getTotalViewed($date_from, $date_to, (int)Configuration::get('DASHPRODUCT_NBR_SHOW_MOST_VIEWED'));
+			$body = array();
+			if (is_array($products) && count($products))
+				foreach ($products as $product)
+				{
+					$product_obj = new Product((int)$product['id_object'], true, $this->context->language->id);
+					if (!Validate::isLoadedObject($product_obj))
+						continue;
 
-				$tr = array();
-				$tr[] = array(
-					'id' => 'product',
-					'value' => '<img src="..'._PS_TMP_IMG_.'product_mini_'.(int)$product_obj->id.'.jpg" />',
-					'class' => 'text-center',
-				);
-				$tr[] = array(
-					'id' => 'product',
-					'value' => Tools::htmlentitiesUTF8($product_obj->name).'<br/>'.Tools::displayPrice(Product::getPriceStatic((int)$product_obj->id)),
-					'class' => 'text-center',
-				);
-				$tr[] = array(
-					'id' => 'views',
-					'value' => $product['counter'],
-					'class' => 'text-center',
-				);
-				$added_cart = $this->getTotalProductAddedCart($date_from, $date_to, (int)$product_obj->id);
-				$tr[] = array(
-					'id' => 'added_to_cart',
-					'value' => $added_cart,
-					'class' => 'text-center',
-				);
-				$purchased = $this->getTotalProductPurchased($date_from, $date_to, (int)$product_obj->id);
-				$tr[] = array(
-					'id' => 'purchased',
-					'value' => $this->getTotalProductPurchased($date_from, $date_to, (int)$product_obj->id),
-					'class' => 'text-center',
-				);
-				$tr[] = array(
-					'id' => 'rate',
-					'value' => ($product['counter'] ? round(100 * $purchased / $product['counter'], 1).'%' : '-'),
-					'class' => 'text-center',
-				);
-				$body[] = $tr;
-			}
+					$img = '';
+					if (($row_image = Product::getCover($product_obj->id)) && $row_image['id_image'])
+					{
+						$image = new Image($row_image['id_image']);
+						$path_to_image = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.'.$this->context->controller->imageType;
+						$img = ImageManager::thumbnail($path_to_image, 'product_mini_'.$product_obj->id.'.'.$this->context->controller->imageType, 45, $this->context->controller->imageType);
+					}
 
+					$tr = array();
+					$tr[] = array(
+						'id' => 'product',
+						'value' => $img,
+						'class' => 'text-center'
+					);
+					$tr[] = array(
+						'id' => 'product',
+						'value' => Tools::htmlentitiesUTF8($product_obj->name).'<br/>'.Tools::displayPrice(Product::getPriceStatic((int)$product_obj->id)),
+						'class' => 'text-center',
+					);
+					$tr[] = array(
+						'id' => 'views',
+						'value' => $product['counter'],
+						'class' => 'text-center',
+					);
+					$added_cart = $this->getTotalProductAddedCart($date_from, $date_to, (int)$product_obj->id);
+					$tr[] = array(
+						'id' => 'added_to_cart',
+						'value' => $added_cart,
+						'class' => 'text-center',
+					);
+					$purchased = $this->getTotalProductPurchased($date_from, $date_to, (int)$product_obj->id);
+					$tr[] = array(
+						'id' => 'purchased',
+						'value' => $this->getTotalProductPurchased($date_from, $date_to, (int)$product_obj->id),
+						'class' => 'text-center',
+					);
+					$tr[] = array(
+						'id' => 'rate',
+						'value' => ($product['counter'] ? round(100 * $purchased / $product['counter'], 1).'%' : '-'),
+						'class' => 'text-center',
+					);
+					$body[] = $tr;
+				}
+		}
+		else
+			$body = '<div class="alert alert-info">'.$this->l('You must enable "Save global page views" from "Data mining for statistics" module, in order to view most viewed products').'</div>';
 		return array('header' => $header, 'body' => $body);
 	}
 

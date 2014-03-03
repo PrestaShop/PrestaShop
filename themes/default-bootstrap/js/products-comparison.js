@@ -94,6 +94,7 @@ function reloadProductComparison()
 			async: false,
 			cache: false
 		});
+		$('td.product-'+idProduct).fadeOut(600);
 	});
 };
 
