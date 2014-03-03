@@ -228,6 +228,12 @@ function WishlistProductManage(id, action, id_wishlist, id_product, id_product_a
 				$('#wlp_' + id_product + '_' + id_product_attribute).fadeOut('fast');
 				$('#wlp_' + id_product + '_' + id_product_attribute).fadeIn('fast');
 			}
+			nb_products = 0;
+			$("[id^='quantity']").each(function(index, element){
+				nb_products += parseInt(element.value);
+			});
+			console.log(nb_products);
+			$("#wishlist_"+id_wishlist).children('td').eq(1).html(nb_products);
 		}
 	});
 }
@@ -252,7 +258,11 @@ function WishlistDelete(id, id_wishlist, msg)
 		data: 'deleted&id_wishlist=' + id_wishlist,
 		success: function(data)
 		{
-			$('#' + id).fadeOut('slow');
+			var mywishlist_siblings_count = $('#' + id).siblings().length;
+			$('#' + id).fadeOut('slow').remove();
+			$("#block-order-detail").html('');
+			if (mywishlist_siblings_count == 0)
+				$("#block-history").remove();
 		}
 	});
 }
