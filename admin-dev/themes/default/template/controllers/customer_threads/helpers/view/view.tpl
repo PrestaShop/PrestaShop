@@ -65,7 +65,7 @@
 					{if isset($customer->firstname)}
 						<div class="col-sm-6">
 							{if $count_ok}
-								{l s='[0]%1$d[/0] order(s) validated for a total amount of [1]%2$s[/1]' sprintf=[$count_ok, $total_ok] tags=['<span class="badge">', '<span class="badge">']}
+								{l s='[1]%1$d[/1] order(s) validated for a total amount of [2]%2$s[/2]' sprintf=[$count_ok, $total_ok] tags=['<span class="badge">', '<span class="badge">']}
 							{else}
 								{l s="No orders validated for the moment"}
 							{/if}
