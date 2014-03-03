@@ -47,7 +47,7 @@
 		<label class="control-label col-lg-3" for="id_category_default">
 			{include file="controllers/products/multishop/checkbox.tpl" field="id_category_default" type="default"}
 			<span class="label-tooltip" data-toggle="tooltip"
-			title="{l s='The default category is the category displayed by default.'}">
+			title="{l s='The default category is the main category for your product, and is displayed by default.'}">
 				{l s='Default category'}
 			</span>
 		</label>
@@ -62,7 +62,7 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="product_autocomplete_input">
 			<span class="label-tooltip" data-toggle="tooltip"
-			title="{l s='Start by typing the first letters of the product\'s name, then select the product from the drop-down list.'}{l s='Do not forget to save the product afterward!'}">
+			title="{l s='You can indicate existing products as accessories for this product.'}{l s='Start by typing the first letters of the product\'s name, then select the product from the drop-down list.'}{l s='Do not forget to save the product afterwards!'}">
 			{l s='Accessories'}
 			</span>
 		</label>
