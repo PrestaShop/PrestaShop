@@ -41,7 +41,7 @@
 				{/if}
 				{foreach from=$products item=product name=for_products}
 					{assign var='replace_id' value=$product->id|cat:'|'}
-					<td class="ajax_block_product comparison_infos product-block">
+					<td class="ajax_block_product comparison_infos product-block product-{$product->id}">
 						<div class="remove">
 							<a 
 							class="cmp_remove" 
@@ -175,9 +175,9 @@
 							{assign var='feature_id' value=$feature.id_feature}
 							{if isset($product_features[$product_id])}
 								{assign var='tab' value=$product_features[$product_id]}
-								<td class="{$classname} comparison_infos">{if (isset($tab[$feature_id]))}{$tab[$feature_id]|escape:'html':'UTF-8'}{/if}</td>
+								<td class="{$classname} comparison_infos product-{$product->id}">{if (isset($tab[$feature_id]))}{$tab[$feature_id]|escape:'html':'UTF-8'}{/if}</td>
 							{else}
-								<td class="{$classname} comparison_infos"></td>
+								<td class="{$classname} comparison_infos product-{$product->id}"></td>
 							{/if}
 						{/foreach}
 					</tr>
