@@ -54,7 +54,7 @@
 			<p class="text-justify">{$additional_description}</p>
 		{/if}
 		<div class="row">
-			<a class="btn btn-default" href="{$url}" onclick="return !window.open(this.href);">{l s='More details'}</a>
+			<a class="btn btn-success btn-lg" href="{$url}" onclick="return !window.open(this.href);">{l s='View on PrestaShop Addons'}</a>
 		</div>
 	</div>
 </div>

@@ -331,7 +331,7 @@ abstract class ModuleCore
 		{
 			if ($upgrade_detail['success'])
 			{
-				$this->_confirmations[] = $this->l('Current version: ').$this->version;
+				$this->_confirmations[] = sprintf($this->l('Current version: %s'), $this->version);
 				$this->_confirmations[] = $upgrade_detail['number_upgraded'].' '.$this->l('file upgrade applied');
 			}
 			else
