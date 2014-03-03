@@ -64,16 +64,13 @@
 					</div>
 					{if isset($customer->firstname)}
 						<div class="col-sm-6">
-							<p>
-								{if $count_ok}
-									{l s='[0]%1$d[/0] order(s) validated for a total amount of [1]%2$s[/1]' sprintf=[$count_ok, $total_ok] tags=['<span class="badge">', '<span class="badge">']}
-								{else}
-									{l s="No orders validated for the moment"}<br/>
-								{/if}
-							</p>
-							<p>
-								<span>{l s="Customer since: %s" sprintf=[{dateFormat date=$customer->date_add full=0}]}</span>
-							</p>						
+							{if $count_ok}
+								{l s='[0]%1$d[/0] order(s) validated for a total amount of [1]%2$s[/1]' sprintf=[$count_ok, $total_ok] tags=['<span class="badge">', '<span class="badge">']}
+							{else}
+								{l s="No orders validated for the moment"}
+							{/if}
+							<br/>
+							<span>{l s="Customer since: %s" sprintf=[{dateFormat date=$customer->date_add full=0}]}</span>
 						</div>
 					{/if}
 				</div>
