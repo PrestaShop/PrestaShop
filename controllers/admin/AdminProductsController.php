@@ -4002,11 +4002,11 @@ class AdminProductsControllerCore extends AdminController
 		$default_class = 'highlighted';
 
 		$this->fields_list = array(
-			'attributes' => array('title' => $this->l('Attributes'), 'align' => 'left'),
-			'price' => array('title' => $this->l('Impact'), 'type' => 'price', 'align' => 'left'),
-			'weight' => array('title' => $this->l('Weight'), 'align' => 'left'),
+			'attributes' => array('title' => $this->l('Attribute - value pair'), 'align' => 'left'),
+			'price' => array('title' => $this->l('Impact on price'), 'type' => 'price', 'align' => 'left'),
+			'weight' => array('title' => $this->l('Impact on weight'), 'align' => 'left'),
 			'reference' => array('title' => $this->l('Reference'), 'align' => 'left'),
-			'ean13' => array('title' => $this->l('EAN13'), 'align' => 'left'),
+			'ean13' => array('title' => $this->l('EAN-13'), 'align' => 'left'),
 			'upc' => array('title' => $this->l('UPC'), 'align' => 'left')
 		);
 

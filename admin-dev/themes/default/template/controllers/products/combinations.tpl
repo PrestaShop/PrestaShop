@@ -107,7 +107,7 @@
 			<label class="control-label col-lg-3" for="attribute_reference">
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='Special characters allowed:'} .-_#">
-					{l s='Reference'}
+					{l s='Reference code'}
 				</span>
 			</label>
 			<div class="col-lg-5">
@@ -116,7 +116,7 @@
 		</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_ean13">
-				{l s='EAN13'}
+				{l s='EAN-13 or JAN barcode'}
 			</label>
 			<div class="col-lg-3">
 				<input maxlength="13" type="text" id="attribute_ean13" name="attribute_ean13" value="" />
@@ -124,7 +124,7 @@
 		</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_upc">
-				{l s='UPC'}
+				{l s='UPC barcode'}
 			</label>
 			<div class="col-lg-3">
 				<input maxlength="12" type="text" id="attribute_upc" name="attribute_upc" value="" />
@@ -135,7 +135,7 @@
 			<label class="control-label col-lg-3" for="attribute_wholesale_price">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_wholesale_price" type="default"}
 				<span class="label-tooltip" data-toggle="tooltip"
-					title="{l s='Set to zero if the price does not change'}">
+					title="{l s='Set to zero if the price does not change.'}">
 					{l s='Wholesale price'}
 				</span>
 			</label>
@@ -148,7 +148,7 @@
 					<input type="text" name="attribute_wholesale_price" id="attribute_wholesale_price" value="0" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 				</div>
 			</div>
-			<span style="display:none;" id="attribute_wholesale_price_full">({l s='Overrides wholesale price on "Information" tab'})</span>
+			<span style="display:none;" id="attribute_wholesale_price_full">({l s='Overrides the wholesale price from the "Prices" tab.'})</span>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_price_impact">
@@ -198,7 +198,7 @@
 						<div class="row">
 							<div class="col-lg-12">
 								<div class="alert">
-									{l s='final product price will be set to'}
+									{l s='The final product price will be set to'}
 									{if $currency->format % 2 != 0}{$currency->sign}{/if}
 									<span id="attribute_new_total_price">0.00</span>
 									{if $currency->format % 2 == 0}{$currency->sign}{/if}
@@ -241,6 +241,7 @@
 		</div>
 		<div id="tr_unit_impact" class="form-group">
 			<label class="control-label col-lg-3" for="attribute_unit_impact">
+			<label class="control-label col-lg-3" for="attribute_unit_impact">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_unit_impact" type="attribute_unit_impact"}
 				{l s='Impact on unit price'}
 			</label>
@@ -272,8 +273,8 @@
 			<label class="control-label col-lg-3" for="attribute_ecotax">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_ecotax" type="default"}
 				<span class="label-tooltip" data-toggle="tooltip"
-					title="{l s='overrides Eco-tax in the "Information" tab'}">
-					{l s='Eco-tax (tax excl.)'}
+					title="{l s='Overrides the ecotax from the "Prices" tab.'}">
+					{l s='Ecotax (tax excl.)'}
 				</span>
 			</label>
 			<div class="input-group col-lg-2">
@@ -289,7 +290,7 @@
 			<label class="control-label col-lg-3" for="attribute_minimal_quantity">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_minimal_quantity" type="default"}
 				<span class="label-tooltip" data-toggle="tooltip"
-					title="{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}">
+					title="{l s='The minimum quantity to buy this product (set to 1 to disable this feature).'}">
 					{l s='Minimum quantity'}
 				</span>
 			</label>
@@ -304,7 +305,7 @@
 			<label class="control-label col-lg-3" for="available_date_attribute">
 				{include file="controllers/products/multishop/checkbox.tpl" field="available_date_attribute" type="default"}
 				<span class="label-tooltip" data-toggle="tooltip"
-					title="{l s='The available date when this product is out of stock.'}">
+					title="{l s='If this product is out of stock, you can indicate when the product will be available again.'}">
 					{l s='Available date'}
 				</span>
 			</label>
