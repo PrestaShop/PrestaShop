@@ -164,7 +164,7 @@ abstract class ModuleCore
 	 */
 	public function __construct($name = null, Context $context = null)
 	{
-		if (!(isset($this->ps_versions_compliancy) && is_array($this->ps_versions_compliancy)))
+		if (!(isset($this->ps_versions_compliancy) && is_array($this->ps_versions_compliancy) && isset($this->ps_versions_compliancy['min']) && isset($this->ps_versions_compliancy['max'])))
 			$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 		// Load context and smarty
 		$this->context = $context ? $context : Context::getContext();				
