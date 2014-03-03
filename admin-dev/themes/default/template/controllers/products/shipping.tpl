@@ -65,8 +65,8 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="additional_shipping_cost">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='A carrier tax will be applied.'}">
-				{l s='Additional shipping fees (for one item)'}
+				title="{l s='If a carrier has a tax, it will be added to the shipping fees.'}">
+				{l s='Additional shipping fees (for a single item)'}
 			</span>
 			
 		</label>

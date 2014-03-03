@@ -116,7 +116,7 @@ $(document).ready(function () {
 		<label class="control-label col-lg-3" for="wholesale_price">
 			{include file="controllers/products/multishop/checkbox.tpl" field="wholesale_price" type="default"}
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Wholesale price'}">
+				title="{l s='The wholesale price is the price you paid for the product. Do not include the tax.'}">
 				{l s='Pre-tax wholesale price'}
 			</span>
 
@@ -131,7 +131,7 @@ $(document).ready(function () {
 		<label class="control-label col-lg-3" for="priceTE">
 			{include file="controllers/products/multishop/checkbox.tpl" field="price" type="price"}
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='The pre-tax retail price to sell this product'}">
+				title="{l s='The pre-tax retail price is the price for which you intend sell this product to your customers. It should be higher than the pre-tax wholesale price: the difference between the two will be your margin.'}">
 				{l s='Pre-tax retail price'}
 			</span>
 		</label>
@@ -185,8 +185,8 @@ $(document).ready(function () {
 	<div class="form-group">
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert">
-				{l s='Taxes are currently disabled'} :
-				<a href="{$link->getAdminLink('AdminTaxes')|escape:'html':'UTF-8'}">{l s='Tax options'}</a>
+				{l s='Taxes are currently disabled:'}
+				<a href="{$link->getAdminLink('AdminTaxes')|escape:'html':'UTF-8'}">{l s='Click here to open the Taxes configuration page.'}</a>
 				<input type="hidden" value="{$product->getIdTaxRulesGroup()}" name="id_tax_rules_group" />
 			</div>
 		</div>
@@ -197,8 +197,8 @@ $(document).ready(function () {
 		<label class="control-label col-lg-3" for="ecotax">
 			{include file="controllers/products/multishop/checkbox.tpl" field="ecotax" type="default"}
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='already included in price'}">
-				{l s='Eco-tax (tax incl.)'}
+				title="{l s='The ecotax is a local set of taxes intended to "promote ecologically sustainable activities via economic incentives". It is already included in retail price: the higher this ecotax is, the lower your margin will be.'}">
+				{l s='Ecotax (tax incl.)'}
 			</span>
 		</label>
 		<div class="input-group col-lg-2">
@@ -220,7 +220,7 @@ $(document).ready(function () {
 		<label class="control-label col-lg-3" for="unit_price">
 			{include file="controllers/products/multishop/checkbox.tpl" field="unit_price" type="unit_price"}
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='e.g. per lb.'}">
+				title="{l s='When selling a pack of items, you can indicate the unit price for each item of the pack. For instance, "per bottle" or "per pound".'}">
 				{l s='Unit price'}
 			</span>
 		</label>
@@ -238,7 +238,7 @@ $(document).ready(function () {
 			<div class="alert alert-warning">
 				<span>{l s='or'}
 					{$currency->prefix}<span id="unit_price_with_tax">0.00</span>{$currency->suffix}
-					{l s='per'} <span id="unity_second">{$product->unity}</span> {l s='with tax'}
+					{l s='per'} <span id="unity_second">{$product->unity}</span> {l s='with tax.'}
 				</span>
 			</div>
 		</div>
