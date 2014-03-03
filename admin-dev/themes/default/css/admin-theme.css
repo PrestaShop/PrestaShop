@@ -2468,6 +2468,36 @@ td, th { padding: 0; }
 .bootstrap .tooltip.bottom .tooltip-arrow { top: 0; left: 50%; margin-left: -5px; border-width: 0 5px 5px; border-bottom-color: black; }
 .bootstrap .tooltip.bottom-left .tooltip-arrow { top: 0; left: 5px; border-width: 0 5px 5px; border-bottom-color: black; }
 .bootstrap .tooltip.bottom-right .tooltip-arrow { top: 0; right: 5px; border-width: 0 5px 5px; border-bottom-color: black; }
+.bootstrap .carousel { position: relative; }
+.bootstrap .carousel-inner { position: relative; overflow: hidden; width: 100%; }
+.bootstrap .carousel-inner > .item { display: none; position: relative; -webkit-transition: 0.6s ease-in-out left; transition: 0.6s ease-in-out left; }
+.bootstrap .carousel-inner > .item > img, .bootstrap .carousel-inner > .item > a > img { display: block; max-width: 100%; height: auto; line-height: 1; }
+.bootstrap .carousel-inner > .active, .bootstrap .carousel-inner > .next, .bootstrap .carousel-inner > .prev { display: block; }
+.bootstrap .carousel-inner > .active { left: 0; }
+.bootstrap .carousel-inner > .next, .bootstrap .carousel-inner > .prev { position: absolute; top: 0; width: 100%; }
+.bootstrap .carousel-inner > .next { left: 100%; }
+.bootstrap .carousel-inner > .prev { left: -100%; }
+.bootstrap .carousel-inner > .next.left, .bootstrap .carousel-inner > .prev.right { left: 0; }
+.bootstrap .carousel-inner > .active.left { left: -100%; }
+.bootstrap .carousel-inner > .active.right { left: 100%; }
+.bootstrap .carousel-control { position: absolute; top: 0; left: 0; bottom: 0; width: 15%; opacity: 0.5; filter: alpha(opacity=50); font-size: 20px; color: white; text-align: center; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); }
+.bootstrap .carousel-control.left { background-image: -webkit-linear-gradient(left, color-stop(rgba(0, 0, 0, 0.5) 0%), color-stop(rgba(0, 0, 0, 0.0001) 100%)); background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%); background-repeat: repeat-x; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1); }
+.bootstrap .carousel-control.right { left: auto; right: 0; background-image: -webkit-linear-gradient(left, color-stop(rgba(0, 0, 0, 0.0001) 0%), color-stop(rgba(0, 0, 0, 0.5) 100%)); background-image: linear-gradient(to right, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%); background-repeat: repeat-x; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#80000000', GradientType=1); }
+.bootstrap .carousel-control:hover, .bootstrap .carousel-control:focus { outline: none; color: white; text-decoration: none; opacity: 0.9; filter: alpha(opacity=90); }
+.bootstrap .carousel-control .icon-prev, .bootstrap .carousel-control .icon-next, .bootstrap .carousel-control .glyphicon-chevron-left, .bootstrap .carousel-control .glyphicon-chevron-right { position: absolute; top: 50%; z-index: 5; display: inline-block; }
+.bootstrap .carousel-control .icon-prev, .bootstrap .carousel-control .glyphicon-chevron-left { left: 50%; }
+.bootstrap .carousel-control .icon-next, .bootstrap .carousel-control .glyphicon-chevron-right { right: 50%; }
+.bootstrap .carousel-control .icon-prev, .bootstrap .carousel-control .icon-next { width: 20px; height: 20px; margin-top: -10px; margin-left: -10px; font-family: serif; }
+.bootstrap .carousel-control .icon-prev:before { content: '\2039'; }
+.bootstrap .carousel-control .icon-next:before { content: '\203a'; }
+.bootstrap .carousel-indicators { position: absolute; bottom: 10px; left: 50%; z-index: 15; width: 60%; margin-left: -30%; padding-left: 0; list-style: none; text-align: center; }
+.bootstrap .carousel-indicators li { display: inline-block; width: 10px; height: 10px; margin: 1px; text-indent: -999px; border: 1px solid white; border-radius: 10px; cursor: pointer; background-color: #000 \9; background-color: rgba(0, 0, 0, 0); }
+.bootstrap .carousel-indicators .active { margin: 0; width: 12px; height: 12px; background-color: white; }
+.bootstrap .carousel-caption { position: absolute; left: 15%; right: 15%; bottom: 20px; z-index: 10; padding-top: 20px; padding-bottom: 20px; color: white; text-align: center; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); }
+.bootstrap .carousel-caption .btn { text-shadow: none; }
+@media screen and (min-width: 768px) { .bootstrap .carousel-control .glyphicons-chevron-left, .bootstrap .carousel-control .glyphicons-chevron-right, .bootstrap .carousel-control .icon-prev, .bootstrap .carousel-control .icon-next { width: 30px; height: 30px; margin-top: -15px; margin-left: -15px; font-size: 30px; }
+  .bootstrap .carousel-caption { left: 20%; right: 20%; padding-bottom: 30px; }
+  .bootstrap .carousel-indicators { bottom: 20px; } }
 .bootstrap .clearfix:before, .bootstrap .clearfix:after { content: " "; display: table; }
 .bootstrap .clearfix:after { clear: both; }
 .bootstrap .center-block { display: block; margin-left: auto; margin-right: auto; }
@@ -2597,7 +2627,7 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 #header_notifs_icon_wrapper > li > a:hover i { color: white; }
 #header_notifs_icon_wrapper > li > a > i { font-size: 14px; color: #b3b3b3; vertical-align: middle; }
 #header_notifs_icon_wrapper .notifs { width: 40px; position: relative; }
-#header_notifs_icon_wrapper .notifs_badge { position: absolute; font-size: 10px !important; top: 2px; padding: 2px; right: -3px; display: none; }
+#header_notifs_icon_wrapper .notifs_badge { position: absolute; font-size: 10px !important; top: 2px; padding: 0 5px !important; right: -3px; display: none; }
 #header_notifs_icon_wrapper .notifs_dropdown { background-color: white; border: none; -webkit-box-shadow: rgba(0, 0, 0, 0.7) 0 0 10px; box-shadow: rgba(0, 0, 0, 0.7) 0 0 10px; }
 #header_notifs_icon_wrapper .notifs_dropdown .notifs_panel { width: 300px; }
 #header_notifs_icon_wrapper .notifs_dropdown .notifs_panel .notifs_panel_header h3 { padding: 10px; font-size: 1.3em; margin: 0; border-bottom: solid 1px #cccccc; }
@@ -3191,6 +3221,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .module-badge-partner { background-color: #00aff0; }
 .bootstrap .quickview-badge { margin-top: 30px; }
 .bootstrap .adminsearch #content .panel .panel, .bootstrap .adminsearch #content #dash_version .panel, .bootstrap .adminsearch #content .message-item-initial .message-item-initial-body .panel, .bootstrap .message-item-initial .adminsearch #content .message-item-initial-body .panel, .bootstrap .adminsearch #content .timeline .timeline-item .timeline-caption .timeline-panel .panel, .bootstrap .timeline .timeline-item .timeline-caption .adminsearch #content .timeline-panel .panel, .bootstrap .adminsearch #content .panel #dash_version, .bootstrap .adminsearch #content #dash_version #dash_version, .bootstrap .adminsearch #content .message-item-initial .message-item-initial-body #dash_version, .bootstrap .message-item-initial .adminsearch #content .message-item-initial-body #dash_version, .bootstrap .adminsearch #content .timeline .timeline-item .timeline-caption .timeline-panel #dash_version, .bootstrap .timeline .timeline-item .timeline-caption .adminsearch #content .timeline-panel #dash_version, .bootstrap .adminsearch #content .panel .message-item-initial .message-item-initial-body, .bootstrap .message-item-initial .adminsearch #content .panel .message-item-initial-body, .bootstrap .adminsearch #content #dash_version .message-item-initial .message-item-initial-body, .bootstrap .message-item-initial .adminsearch #content #dash_version .message-item-initial-body, .bootstrap .adminsearch #content .message-item-initial .message-item-initial-body .message-item-initial-body, .bootstrap .message-item-initial .adminsearch #content .message-item-initial-body .message-item-initial-body, .bootstrap .adminsearch #content .timeline .timeline-item .timeline-caption .timeline-panel .message-item-initial .message-item-initial-body, .bootstrap .message-item-initial .adminsearch #content .timeline .timeline-item .timeline-caption .timeline-panel .message-item-initial-body, .bootstrap .timeline .timeline-item .timeline-caption .adminsearch #content .timeline-panel .message-item-initial .message-item-initial-body, .bootstrap .message-item-initial .timeline .timeline-item .timeline-caption .adminsearch #content .timeline-panel .message-item-initial-body, .bootstrap .adminsearch #content .panel .timeline .timeline-item .timeline-caption .timeline-panel, .bootstrap .timeline .timeline-item .timeline-caption .adminsearch #content .panel .timeline-panel, .bootstrap .adminsearch #content #dash_version .timeline .timeline-item .timeline-caption .timeline-panel, .bootstrap .timeline .timeline-item .timeline-caption .adminsearch #content #dash_version .timeline-panel, .bootstrap .adminsearch #content .message-item-initial .message-item-initial-body .timeline .timeline-item .timeline-caption .timeline-panel, .bootstrap .timeline .timeline-item .timeline-caption .adminsearch #content .message-item-initial .message-item-initial-body .timeline-panel, .bootstrap .message-item-initial .adminsearch #content .message-item-initial-body .timeline .timeline-item .timeline-caption .timeline-panel, .bootstrap .timeline .timeline-item .timeline-caption .message-item-initial .adminsearch #content .message-item-initial-body .timeline-panel, .bootstrap .adminsearch #content .timeline .timeline-item .timeline-caption .timeline-panel .timeline-panel, .bootstrap .timeline .timeline-item .timeline-caption .adminsearch #content .timeline-panel .timeline-panel { padding: 0; margin: 0; border: none; -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0; border-radius: 0; -webkit-box-shadow: 0; box-shadow: 0; }
+.bootstrap .highlight { background-color: #f7e69f !important; }
 .bootstrap #translations_form .translations-email-panel { margin: 0 0 8px 20px; padding: 8px 12px; }
 .bootstrap #translations_form .block-mail iframe, .bootstrap #translations_form .block-mail textarea { width: 100%; height: 500px; }
 .bootstrap #translations_form .panel-group { display: none; }
