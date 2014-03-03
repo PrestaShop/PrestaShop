@@ -48,7 +48,7 @@ class HomeFeatured extends Module
 
 	public function install()
 	{
-		$this->_clearCache('homefeatured.tpl');
+		$this->_clearCache('*');
 		Configuration::updateValue('HOME_FEATURED_NBR', 8);
 
 		if (!parent::install()
@@ -56,6 +56,7 @@ class HomeFeatured extends Module
 			|| !$this->registerHook('addproduct')
 			|| !$this->registerHook('updateproduct')
 			|| !$this->registerHook('deleteproduct')
+			|| !$this->registerHook('categoryUpdate')
 			|| !$this->registerHook('displayHomeTab')
 			|| !$this->registerHook('displayHomeTabContent')
 		)
@@ -66,8 +67,7 @@ class HomeFeatured extends Module
 
 	public function uninstall()
 	{
-		$this->_clearCache('homefeatured.tpl');
-		$this->_clearCache('tab.tpl');
+		$this->_clearCache('*');
 
 		return parent::uninstall();
 	}
@@ -104,7 +104,7 @@ class HomeFeatured extends Module
 		$this->context->controller->addCSS(($this->_path).'homefeatured.css', 'all');
 	}
 
-	public function hookDisplayHomeTab($params)
+	public function _cacheProducts()
 	{
 		if (!isset(HomeFeatured::$cache_products))
 		{
@@ -115,6 +115,12 @@ class HomeFeatured extends Module
 
 		if (HomeFeatured::$cache_products === false || empty(HomeFeatured::$cache_products))
 			return false;
+	}
+
+	public function hookDisplayHomeTab($params)
+	{
+		if (!$this->isCached('tab.tpl', $this->getCacheId('homefeatured-tab')))
+			$this->_cacheProducts();
 
 		return $this->display(__FILE__, 'tab.tpl', $this->getCacheId('homefeatured-tab'));
 	}
@@ -123,13 +129,7 @@ class HomeFeatured extends Module
 	{
 		if (!$this->isCached('homefeatured.tpl', $this->getCacheId()))
 		{
-			if (!isset(HomeFeatured::$cache_products))
-			{
-				$category = new Category(Context::getContext()->shop->getCategory(), (int)Context::getContext()->language->id);
-				$nb = (int)Configuration::get('HOME_FEATURED_NBR');
-				HomeFeatured::$cache_products = $category->getProducts((int)Context::getContext()->language->id, 1, ($nb ? $nb : 8), 'position');
-			}
-
+			$this->_cacheProducts();
 			$this->smarty->assign(
 				array(
 					'products' => HomeFeatured::$cache_products,
@@ -138,9 +138,6 @@ class HomeFeatured extends Module
 				)
 			);
 		}
-
-		if (HomeFeatured::$cache_products === false || empty(HomeFeatured::$cache_products))
-			return false;
 
 		return $this->display(__FILE__, 'homefeatured.tpl', $this->getCacheId());
 	}
@@ -152,17 +149,28 @@ class HomeFeatured extends Module
 
 	public function hookAddProduct($params)
 	{
-		$this->_clearCache('homefeatured.tpl');
+		$this->_clearCache('*');
 	}
 
 	public function hookUpdateProduct($params)
 	{
-		$this->_clearCache('homefeatured.tpl');
+		$this->_clearCache('*');
 	}
 
 	public function hookDeleteProduct($params)
 	{
-		$this->_clearCache('homefeatured.tpl');
+		$this->_clearCache('*');
+	}
+
+	public function hookCategoryUpdate($params)
+	{
+		$this->_clearCache('*');
+	}
+
+	public function _clearCache($template, $cache_id = NULL, $compile_id = NULL)
+	{
+		parent::_clearCache('homefeatured.tpl');
+		parent::_clearCache('tab.tpl');
 	}
 
 	public function renderForm()
