@@ -376,6 +376,26 @@ class AdminControllerCore extends Controller
 		
 		$this->admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
 		$this->admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $this->admin_webpath);
+
+		if (array_key_exists('active', $this->fields_list) && !empty($this->fields_list['active']))
+		{
+			if (!is_array($this->bulk_actions))
+				$this->bulk_actions = array();
+
+			$this->bulk_actions = array_merge(array(
+				'enableSelection' => array(
+					'text' => $this->l('Enable selection'),
+					'icon' => 'icon-power-off text-success'
+				),
+				'disableSelection' => array(
+					'text' => $this->l('Disable selection'),
+					'icon' => 'icon-power-off text-danger'
+				),
+				'divider' => array(
+					'text' => 'divider'
+				)
+			), $this->bulk_actions);
+		}
 	}
 
 	/**
@@ -1857,26 +1877,6 @@ class AdminControllerCore extends Controller
 		{
 			$this->displayWarning($this->l('Bad SQL query', 'Helper').'<br />'.htmlspecialchars($this->_list_error));
 			return false;
-		}
-
-		if (array_key_exists('active', $this->fields_list) && !empty($this->fields_list['active']))
-		{
-			if (!is_array($this->bulk_actions))
-				$this->bulk_actions = array();
-
-			$this->bulk_actions = array_merge(array(
-				'enableSelection' => array(
-					'text' => $this->l('Enable selection'),
-					'icon' => 'icon-power-off text-success'
-				),
-				'disableSelection' => array(
-					'text' => $this->l('Disable selection'),
-					'icon' => 'icon-power-off text-danger'
-				),
-				'divider' => array(
-					'text' => 'divider'
-				)
-			), $this->bulk_actions);
 		}
 
 		$this->setHelperDisplay($helper);
