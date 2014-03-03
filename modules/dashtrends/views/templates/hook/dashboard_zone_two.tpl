@@ -62,7 +62,7 @@
 			<dd class="dash_trend"><span id="conversion_rate_score_trends"></span></dd>
 		</dl>
 		<dl class="col-xs-4 col-lg-2" onclick="selectDashtrendsChart(this, 'net_profits');">
-			<dt>{l s='Net Profits' mod='dashtrends'}</dt>
+			<dt>{l s='Net Profit' mod='dashtrends'}</dt>
 			<dd class="data_value size_l"><span id="net_profits_score"></span></dd>
 			<dd class="dash_trend"><span id="net_profits_score_trends"></span></dd>
 		</dl>

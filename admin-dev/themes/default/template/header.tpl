@@ -208,7 +208,7 @@
 						<span class="employee_avatar_small">
 							<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="32" height="32" />
 						</span>
-						{l s="Me"}
+						&nbsp;{$employee->firstname}&nbsp;{$employee->lastname}
 						<i class="caret"></i>
 					</a>
 					<ul id="employee_links" class="dropdown-menu">
