@@ -129,7 +129,7 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3 required" for="name_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='The public name this product.'} {l s='Invalid characters:'} &lt;&gt;;=#{}">
+				title="{l s='The public name for this product.'} {l s='Invalid characters:'} &lt;&gt;;=#{}">
 				{l s='Name'}
 			</span>
 		</label>
