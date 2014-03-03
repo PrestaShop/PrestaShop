@@ -365,7 +365,7 @@ class AdminStatusesControllerCore extends AdminController
 						'name' => 'name'
 					),
 					'hint' => array(
-						$this->l('Only letters, number and hashtags are allowed.'),
+						$this->l('Only letters, numbers and underscores ("_") are allowed.'),
 						$this->l('Email template for both .html and .txt.')
 					)
 				)
