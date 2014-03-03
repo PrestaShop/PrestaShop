@@ -64,17 +64,6 @@ class AdminProductsControllerCore extends AdminController
 		$this->lang = true;
 		$this->explicitSelect = true;
 		$this->bulk_actions = array(
-			'enableSelection' => array(
-				'text' => $this->l('Enable selection'),
-				'icon' => 'icon-power-off text-success'
-			),
-			'disableSelection' => array(
-				'text' => $this->l('Disable selection'),
-				'icon' => 'icon-power-off text-danger'
-			),
-			'divider' => array(
-				'text' => 'divider'
-			),
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
 				'icon' => 'icon-trash',
