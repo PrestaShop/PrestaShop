@@ -226,9 +226,9 @@ class Dashtrends extends Module
 		return array(
 			'data_value' => array(
 				'sales_score' => Tools::displayPrice(round($this->dashboard_data_sum['sales']), $currency),
-				'orders_score' => number_format($this->dashboard_data_sum['orders'], 0, '.', ' '),
+				'orders_score' => Tools::displayNumber($this->dashboard_data_sum['orders'], $currency),
 				'cart_value_score' => Tools::displayPrice($this->dashboard_data_sum['average_cart_value'], $currency),
-				'visits_score' => number_format($this->dashboard_data_sum['visits'], 0, '.', ' '),
+				'visits_score' => Tools::displayNumber($this->dashboard_data_sum['visits'], $currency),
 				'conversion_rate_score' => round(100 * $this->dashboard_data_sum['conversion_rate'], 2).'%',
 				'net_profits_score' => Tools::displayPrice(round($this->dashboard_data_sum['net_profits']), $currency),
 			),
