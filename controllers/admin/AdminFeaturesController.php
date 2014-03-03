@@ -419,7 +419,10 @@ class AdminFeaturesControllerCore extends AdminController
 			}
 		}
 		else
-			$this->displayWarning($this->l('This feature has been disabled. You can activate it at:').'<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performance').'</a>');
+		{
+			$url = '<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performance').'</a>';
+			$this->displayWarning(sprintf($this->l('This feature has been disabled. You can activate it here: %s.'), $url));
+		}
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
