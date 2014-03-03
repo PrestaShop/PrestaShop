@@ -2464,10 +2464,10 @@ class AdminProductsControllerCore extends AdminController
 				if ($this->tabAccess['add'])
 					$this->page_header_toolbar_btn['duplicate'] = array(
 						'short' => $this->l('Duplicate', null, null, false),
-						'href' => '#',
+						'href' => $this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct',
 						'desc' => $this->l('Duplicate', null, null, false),
 						'confirm' => 1,
-						'js' => 'if (confirm(\''.$this->l('Also copy images', null, true, false).' ?\')) document.location = \''.$this->context->link->getAdminLink('AdminProducts', null, true, false).'&id_product='.(int)$product->id.'&duplicateproduct\'; else document.location = \''.$this->context->link->getAdminLink('AdminProducts', null, true, false).'&id_product='.(int)$product->id.'&duplicateproduct&noimage=1\';'
+						'js' => 'if (confirm(\''.$this->l('Also copy images', null, true, false).' ?\')){document.location.href = \''.$this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct\'; return false;} else{document.location.href = \''.$this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct&noimage=1\'; return false;}'
 					);
 
 				// adding button for preview this product statistics
