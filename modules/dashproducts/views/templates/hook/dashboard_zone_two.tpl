@@ -35,10 +35,12 @@
 			</a>
 		</span>
 	</header>
+
 	<section id="dashproducts_config" class="dash_config hide">
 		<header><i class="icon-wrench"></i> {l s='Configuration' mod='dashproducts'}</header>
 		{$dashproducts_config_form}
 	</section>
+
 	<section>
 		<nav>
 			<ul class="nav nav-pills">
@@ -68,8 +70,9 @@
 				</li>
 			</ul>
 		</nav>
+
 		<div class="tab-content panel">
-			<div class="tab-pane  active" id="dash_recent_orders">
+			<div class="tab-pane active" id="dash_recent_orders">
 				<h3>{l s='Last %d orders' sprintf=$DASHPRODUCT_NBR_SHOW_LAST_ORDER|intval mod='dashproducts'}</h3>
 				<div class="table-responsive">
 					<table class="table data_table" id="table_recent_orders">
@@ -81,19 +84,19 @@
 			<div class="tab-pane" id="dash_best_sellers">
 				<h3>
 					{l s='Top %d products' sprintf=$DASHPRODUCT_NBR_SHOW_BEST_SELLER|intval mod='dashproducts'}
-					<span class="badge">{l s="From" mod='dashproducts'} {$date_from} {l s="to" mod='dashproducts'} {$date_to}</span>
+					<span>{l s="From" mod='dashproducts'} {$date_from} {l s="to" mod='dashproducts'} {$date_to}</span>
 				</h3>
 				<div class="table-responsive">
 					<table class="table data_table" id="table_best_sellers">
 						<thead></thead>
 						<tbody></tbody>
 					</table>
-				<div>
+				</div>
 			</div>
 			<div class="tab-pane" id="dash_most_viewed">
 				<h3>
 					{l s="Most Viewed" mod='dashproducts'}
-					<span class="badge">{l s="From" mod='dashproducts'} {$date_from} {l s="to" mod='dashproducts'} {$date_to}</span>
+					<span>{l s="From" mod='dashproducts'} {$date_from} {l s="to" mod='dashproducts'} {$date_to}</span>
 				</h3>
 				<div class="table-responsive">
 					<table class="table data_table" id="table_most_viewed">
@@ -105,7 +108,7 @@
 			<div class="tab-pane" id="dash_top_search">
 				<h3>
 					{l s='Top %d most search terms' sprintf=$DASHPRODUCT_NBR_SHOW_TOP_SEARCH|intval mod='dashproducts'}
-					<span class="badge">{l s="From" mod='dashproducts'} {$date_from} {l s="to" mod='dashproducts'} {$date_to}</span>
+					<span>{l s="From" mod='dashproducts'} {$date_from} {l s="to" mod='dashproducts'} {$date_to}</span>
 				</h3>
 				<div class="table-responsive">
 					<table class="table data_table" id="table_top_10_most_search">
@@ -115,5 +118,6 @@
 				</div>
 			</div>
 		</div>
+
 	</section>
 </section>
