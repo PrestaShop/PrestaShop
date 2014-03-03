@@ -47,7 +47,7 @@
 			<label class="control-label col-lg-3">
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='Invalid characters:'} <>;=#{}">
-					{l s='Legend'}
+					{l s='Caption'}
 				</span>			
 			</label>
 			<div class="col-lg-9">
