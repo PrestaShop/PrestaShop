@@ -139,3 +139,40 @@ tr.highlighted td
 		clear: both
 		font-size: $icon-size-base*6
 		@include text-shadow(white 1px 1px 0)
+
+@media (max-width: $screen-xs-max)
+	.table-responsive
+		width: 100%
+		margin-bottom: ($line-height-computed * 0.75)
+		overflow-y: hidden
+		overflow-x: scroll
+		-ms-overflow-style: -ms-autohiding-scrollbar
+		border: 1px solid $table-border-color
+		-webkit-overflow-scrolling: touch
+		> .table 
+			margin-bottom: 0
+			> thead,
+			> tbody,
+			> tfoot
+				> tr
+					> th,
+					> td
+						white-space: nowrap
+		> .table-bordered
+			border: 0
+			> thead,
+			> tbody,
+			> tfoot
+				> tr
+					> th:first-child,
+					> td:first-child
+						border-left: 0
+					> th:last-child,
+					> td:last-child
+						border-right: 0
+			> tbody,
+			> tfoot
+				> tr:last-child 
+					> th,
+					> td
+						border-bottom: 0

@@ -1235,7 +1235,7 @@
 
 .icon-circle:before { content: "\f111"; }
 
-.icon-mail-reply:before, .icon-reply:before { content: "\f112"; }
+.icon-mail-reply:before, .process-icon-mail-reply:before, .icon-reply:before { content: "\f112"; }
 
 .icon-github-alt:before { content: "\f113"; }
 
@@ -2894,6 +2894,13 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .list-empty { background-color: #fcfdfe !important; }
 .bootstrap .list-empty .list-empty-msg { text-align: center; display: block; width: 50%; margin: 20px auto; color: #999999; font-family: "Ubuntu Condensed", Helvetica, Arial, sans-serif; font-size: 1.4em; }
 .bootstrap .list-empty .list-empty-icon { color: #dedede; display: block; clear: both; font-size: 84px; text-shadow: white 1px 1px 0; }
+@media (max-width: 767px) { .bootstrap .table-responsive { width: 100%; margin-bottom: 12.75px; overflow-y: hidden; overflow-x: scroll; -ms-overflow-style: -ms-autohiding-scrollbar; border: 1px solid #dddddd; -webkit-overflow-scrolling: touch; }
+  .bootstrap .table-responsive > .table { margin-bottom: 0; }
+  .bootstrap .table-responsive > .table > thead > tr > th, .bootstrap .table-responsive > .table > thead > tr > td, .bootstrap .table-responsive > .table > tbody > tr > th, .bootstrap .table-responsive > .table > tbody > tr > td, .bootstrap .table-responsive > .table > tfoot > tr > th, .bootstrap .table-responsive > .table > tfoot > tr > td { white-space: nowrap; }
+  .bootstrap .table-responsive > .table-bordered { border: 0; }
+  .bootstrap .table-responsive > .table-bordered > thead > tr > th:first-child, .bootstrap .table-responsive > .table-bordered > thead > tr > td:first-child, .bootstrap .table-responsive > .table-bordered > tbody > tr > th:first-child, .bootstrap .table-responsive > .table-bordered > tbody > tr > td:first-child, .bootstrap .table-responsive > .table-bordered > tfoot > tr > th:first-child, .bootstrap .table-responsive > .table-bordered > tfoot > tr > td:first-child { border-left: 0; }
+  .bootstrap .table-responsive > .table-bordered > thead > tr > th:last-child, .bootstrap .table-responsive > .table-bordered > thead > tr > td:last-child, .bootstrap .table-responsive > .table-bordered > tbody > tr > th:last-child, .bootstrap .table-responsive > .table-bordered > tbody > tr > td:last-child, .bootstrap .table-responsive > .table-bordered > tfoot > tr > th:last-child, .bootstrap .table-responsive > .table-bordered > tfoot > tr > td:last-child { border-right: 0; }
+  .bootstrap .table-responsive > .table-bordered > tbody > tr:last-child > th, .bootstrap .table-responsive > .table-bordered > tbody > tr:last-child > td, .bootstrap .table-responsive > .table-bordered > tfoot > tr:last-child > th, .bootstrap .table-responsive > .table-bordered > tfoot > tr:last-child > td { border-bottom: 0; } }
 .bootstrap .tree-panel-heading-controls { line-height: 2.2em; font-size: 1.1em; color: #00aff0; }
 .bootstrap .tree-panel-heading-controls i { font-size: 14px; }
 .bootstrap .tree { padding: 0 0 0 20px; list-style: none; }
@@ -3249,9 +3256,9 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .avatar-md { height: 48px; width: 48px; display: inline-block; text-align: center; background-color: #eeeeee; overflow: hidden; -webkit-border-radius: 48px; -moz-border-radius: 48px; -ms-border-radius: 48px; -o-border-radius: 48px; border-radius: 48px; }
 .bootstrap .avatar-md img { width: 100%; height: 100%; }
 .bootstrap .avatar-md i { font-size: 32px; line-height: 48px; }
-.bootstrap .avatar-lg, .bootstrap .employee_avatar { height: 96px; width: 96px; display: inline-block; text-align: center; background-color: #eeeeee; overflow: hidden; -webkit-border-radius: 96px; -moz-border-radius: 96px; -ms-border-radius: 96px; -o-border-radius: 96px; border-radius: 96px; }
+.bootstrap .avatar-lg, .bootstrap .employee_avatar { height: 80px; width: 80px; display: inline-block; text-align: center; background-color: #eeeeee; overflow: hidden; -webkit-border-radius: 80px; -moz-border-radius: 80px; -ms-border-radius: 80px; -o-border-radius: 80px; border-radius: 80px; }
 .bootstrap .avatar-lg img, .bootstrap .employee_avatar img { width: 100%; height: 100%; }
-.bootstrap .avatar-lg i, .bootstrap .employee_avatar i { font-size: 64px; line-height: 96px; }
+.bootstrap .avatar-lg i, .bootstrap .employee_avatar i { font-size: 53.33333px; line-height: 80px; }
 .bootstrap .avatar-xl { height: 128px; width: 128px; display: inline-block; text-align: center; background-color: #eeeeee; overflow: hidden; -webkit-border-radius: 128px; -moz-border-radius: 128px; -ms-border-radius: 128px; -o-border-radius: 128px; border-radius: 128px; }
 .bootstrap .avatar-xl img { width: 100%; height: 100%; }
 .bootstrap .avatar-xl i { font-size: 85.33333px; line-height: 128px; }
