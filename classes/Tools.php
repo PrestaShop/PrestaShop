@@ -532,6 +532,18 @@ class ToolsCore
 		return $ret;
 	}
 
+	// Just to fix a bug
+	// Need real CLDR functions
+	public static function displayNumber($number, $currency)
+	{
+		if (is_array($currency))
+			$format = $currency['format'];
+		elseif (is_object($currency))
+			$format = $currency->format;
+
+		return number_format($number, 0, '.', in_array($format, array(1, 4)) ? ',': ' ');
+	}
+
 	public static function displayPriceSmarty($params, &$smarty)
 	{
 		if (array_key_exists('currency', $params))
