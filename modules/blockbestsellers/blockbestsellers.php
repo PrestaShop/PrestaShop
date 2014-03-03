@@ -48,9 +48,7 @@ class BlockBestSellers extends Module
 
 	public function install()
 	{
-		$this->_clearCache('blockbestsellers.tpl');
-		$this->_clearCache('blockbestsellers-home.tpl');
-		$this->_clearCache('tab.tpl');
+		$this->_clearCache('*');
 
 		if (!parent::install()
 			|| !$this->registerHook('header')
@@ -82,39 +80,36 @@ class BlockBestSellers extends Module
 
 	public function uninstall()
 	{
-		$this->_clearCache('blockbestsellers.tpl');
-		$this->_clearCache('blockbestsellers-home.tpl');
-		$this->_clearCache('tab.tpl');
+		$this->_clearCache('*');
 
 		return parent::uninstall();
 	}
 
 	public function hookAddProduct($params)
 	{
-		$this->_clearCache('blockbestsellers.tpl');
-		$this->_clearCache('blockbestsellers-home.tpl');
-		$this->_clearCache('tab.tpl');
+		$this->_clearCache('*');
 	}
 
 	public function hookUpdateProduct($params)
 	{
-		$this->_clearCache('blockbestsellers.tpl');
-		$this->_clearCache('blockbestsellers-home.tpl');
-		$this->_clearCache('tab.tpl');
+		$this->_clearCache('*');
 	}
 
 	public function hookDeleteProduct($params)
 	{
-		$this->_clearCache('blockbestsellers.tpl');
-		$this->_clearCache('blockbestsellers-home.tpl');
-		$this->_clearCache('tab.tpl');
+		$this->_clearCache('*');
 	}
 
 	public function hookActionOrderStatusPostUpdate($params)
 	{
-		$this->_clearCache('blockbestsellers.tpl');
-		$this->_clearCache('blockbestsellers-home.tpl');
-		$this->_clearCache('tab.tpl');
+		$this->_clearCache('*');
+	}
+
+	public function _clearCache($template, $cache_id = NULL, $compile_id = NULL)
+	{
+		parent::_clearCache('blockbestsellers.tpl');
+		parent::_clearCache('blockbestsellers.tpl');
+		parent::_clearCache('tab.tpl');
 	}
 
 	/**
