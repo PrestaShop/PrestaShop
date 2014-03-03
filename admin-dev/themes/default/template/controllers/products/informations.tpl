@@ -284,15 +284,15 @@
 				<div class="col-lg-5">
 					<p class="checkbox">
 						<input type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
-						<label for="available_for_order">{l s='Available for order.'}</label>
+						<label for="available_for_order">{l s='Available for order'}</label>
 					</p>
 					<p class="checkbox">	
 						<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
-						<label for="show_price">{l s='Show price.'}</label>
+						<label for="show_price">{l s='Show price'}</label>
 					</p>
 					<p class="checkbox">
 						<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
-						<label for="online_only">{l s='Online only (not sold in store).'}</label>
+						<label for="online_only">{l s='Online only (not sold in your retail store)'}</label>
 					</p>
 				</div>
 			</div>
