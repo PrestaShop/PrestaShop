@@ -377,7 +377,8 @@ class AdminControllerCore extends Controller
 		$this->admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
 		$this->admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $this->admin_webpath);
 
-		if (array_key_exists('active', $this->fields_list) && !empty($this->fields_list['active']))
+		if (isset($this->fields_list) && is_array($this->fields_list) && array_key_exists('active', $this->fields_list)
+			&& !empty($this->fields_list['active']))
 		{
 			if (!is_array($this->bulk_actions))
 				$this->bulk_actions = array();
