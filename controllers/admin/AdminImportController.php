@@ -140,7 +140,7 @@ class AdminImportControllerCore extends AdminController
 					),
 					'image_url' => array('label' => $this->l('Image URL')),
 					'delete_existing_images' => array(
-						'label' => $this->l('Delete existing images (0 = No, 1 = Yes)')
+						'label' => $this->l('Delete existing images (0 = No, 1 = Yes).')
 					),
 					'shop' => array(
 						'label' => $this->l('ID / Name of shop'),
@@ -151,12 +151,12 @@ class AdminImportControllerCore extends AdminController
 						'help' => $this->l('Enable Advanced Stock Management on product (0 = No, 1 = Yes)')
 					),
 					'depends_on_stock' => array(
-						'label' => $this->l('Depends On Stock'),
-						'help' => $this->l('0 = Use quantity set in product, 1 = Use quantity from Warehouse')
+						'label' => $this->l('Depends on stock'),
+						'help' => $this->l('0 = Use quantity set in product, 1 = Use quantity from warehouse.')
 					),
 					'warehouse' => array(
 						'label' => $this->l('Warehouse'),
-						'help' => $this->l('ID of the warehouse to set as storeage')
+						'help' => $this->l('ID of the warehouse to set as storage.')
 					),
 				);
 
@@ -275,15 +275,15 @@ class AdminImportControllerCore extends AdminController
 					),
 					'advanced_stock_management' => array(
 						'label' => $this->l('Advanced Stock Management'),
-						'help' => $this->l('Enable Advanced Stock Management on product (0 = No, 1 = Yes)')
+						'help' => $this->l('Enable Advanced Stock Management on product (0 = No, 1 = Yes).')
 					),
 					'depends_on_stock' => array(
-						'label' => $this->l('Depends On Stock'),
-						'help' => $this->l('0 = Use quantity set in product, 1 = Use quantity from Warehouse')
+						'label' => $this->l('Depends on stock'),
+						'help' => $this->l('0 = Use quantity set in product, 1 = Use quantity from warehouse.')
 					),
 					'warehouse' => array(
 						'label' => $this->l('Warehouse'),
-						'help' => $this->l('ID of the warehouse to set as storeage')
+						'help' => $this->l('ID of the warehouse to set as storage.')
 					),
 				);
 
@@ -803,7 +803,7 @@ class AdminImportControllerCore extends AdminController
 
 	protected static function rewindBomAware($handle)
 	{
-		// A rewind wrapper that skip BOM signature wrongly
+		// A rewind wrapper that skips BOM signature wrongly
 		if (!is_resource($handle))
 			return false;
 		rewind($handle);
@@ -927,7 +927,7 @@ class AdminImportControllerCore extends AdminController
 			foreach (self::$column_mask as $type => $nb)
 				$res[$type] = isset($row[$nb]) ? $row[$nb] : null;
 
-		if (Tools::getValue('forceIds')) // if you choose to force table before import the column id is remove from the CSV file.
+		if (Tools::getValue('forceIds')) // if you choose to force table before import the column id is removed from the CSV file.
 			unset($res['id']);
 
 		return $res;
@@ -1021,8 +1021,8 @@ class AdminImportControllerCore extends AdminController
 		if (!ImageManager::checkImageMemoryLimit($url))
 			return false;
 
-		// 'file_exists' doesn't work on distant file, and getimagesize make the import slower.
-		// Just hide the warning, the traitment will be the same.
+		// 'file_exists' doesn't work on distant file, and getimagesize makes the import slower.
+		// Just hide the warning, the processing will be the same.
 		if (Tools::copy($url, $tmpfile))
 		{
 			ImageManager::resize($tmpfile, $path.'.jpg');
@@ -1065,7 +1065,7 @@ class AdminImportControllerCore extends AdminController
 			$tab_categ = array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'));
 			if (isset($info['id']) && in_array((int)$info['id'], $tab_categ))
 			{
-				$this->errors[] = Tools::displayError('The ID category cannot be the same as the ID Root category or the ID Home category.');
+				$this->errors[] = Tools::displayError('The category ID cannot be the same as the Root category ID or the Home category ID.');
 				continue;
 			}
 			AdminImportController::setDefaultValues($info);
@@ -1774,7 +1774,7 @@ class AdminImportControllerCore extends AdminController
 						StockAvailable::synchronize($product->id);
 					}
 					else
-						$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exists, can not set on product %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, can not set on product %1$s.'),$product->name[$default_language_id]);
 				}
 			}
 
@@ -1782,9 +1782,9 @@ class AdminImportControllerCore extends AdminController
 			if (isset($product->depends_on_stock))
 			{
 				if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1)
-					$this->warnings[] = sprintf(Tools::displayError('Incorrect value for depends on stock for product %1$s '),$product->name[$default_language_id]);
+					$this->warnings[] = sprintf(Tools::displayError('Incorrect value for "depends on stock" for product %1$s '),$product->name[$default_language_id]);
 				elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1)
-					$this->warnings[] = sprintf(Tools::displayError('Advanced stock management not enabled, can not set depends on stock %1$s '),$product->name[$default_language_id]);
+					$this->warnings[] = sprintf(Tools::displayError('Advanced stock management not enabled, can not set "depends on stock" for product %1$s '),$product->name[$default_language_id]);
 				else
 					StockAvailable::setProductDependsOnStock($product->id, $product->depends_on_stock);
 
@@ -2192,7 +2192,7 @@ class AdminImportControllerCore extends AdminController
 							StockAvailable::synchronize($product->id);
 						}
 						else
-							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exists, can not set on product %1$s '),$product->name[$default_language_id]);
+							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s '),$product->name[$default_language_id]);
 					}
 				}
 

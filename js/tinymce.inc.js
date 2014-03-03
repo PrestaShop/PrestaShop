@@ -21,6 +21,7 @@ function tinySetup(config)
 		language: iso,
 		skin: "prestashop",
 		statusbar: false,
+		relative_urls : false,
 		extended_valid_elements : "em[class|name|id]",
 		menu: {
 			edit: {title: 'Edit', items: 'undo redo | cut copy paste | selectall'},

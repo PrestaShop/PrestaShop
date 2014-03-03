@@ -72,17 +72,15 @@ class BlockNewProducts extends Module
 			}
 		}
 
-		$this->_clearCache('blocknewproducts.tpl');
-		$this->_clearCache('blocknewproducts_home.tpl');
+		$this->_clearCache('*');
 
 		return $success;
 	}
 
 	public function uninstall()
 	{
-		$this->_clearCache('blocknewproducts.tpl');
-		$this->_clearCache('blocknewproducts_home.tpl');
-		$this->_clearCache('tab.tpl');
+		$this->_clearCache('*');
+
 		return parent::uninstall();
 	}
 
@@ -153,9 +151,7 @@ class BlockNewProducts extends Module
 	public function hookdisplayHomeTab($params)
 	{
 		if (!$this->isCached('tab.tpl', $this->getCacheId('blocknewproducts-tab')))
-		{
 			BlockNewProducts::$cache_new_products = $this->getNewProducts();
-		}
 
 		if (BlockNewProducts::$cache_new_products === false)
 			return false;
@@ -189,20 +185,24 @@ class BlockNewProducts extends Module
 
 	public function hookAddProduct($params)
 	{
-		$this->_clearCache('blocknewproducts.tpl');
-		$this->_clearCache('blocknewproducts_home.tpl');
+		$this->_clearCache('*');
 	}
 
 	public function hookUpdateProduct($params)
 	{
-		$this->_clearCache('blocknewproducts.tpl');
-		$this->_clearCache('blocknewproducts_home.tpl');
+		$this->_clearCache('*');
 	}
 
 	public function hookDeleteProduct($params)
 	{
-		$this->_clearCache('blocknewproducts.tpl');
-		$this->_clearCache('blocknewproducts_home.tpl');
+		$this->_clearCache('*');
+	}
+
+	public function _clearCache($template, $cache_id = NULL, $compile_id = NULL)
+	{
+		parent::_clearCache('blocknewproducts.tpl');
+		parent::_clearCache('blocknewproducts_home.tpl');
+		parent::_clearCache('tab.tpl');
 	}
 
 	public function renderForm()

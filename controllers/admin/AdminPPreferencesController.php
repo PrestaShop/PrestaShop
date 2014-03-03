@@ -239,6 +239,10 @@ class AdminPPreferencesControllerCore extends AdminController
 						'required' => false,
 						'type' => 'bool',
 						'visibility' => Shop::CONTEXT_ALL,
+						'js' => array(
+							'on' => 'onchange="advancedStockManagementActivationAuthorization()"',
+							'off' => 'onchange="advancedStockManagementActivationAuthorization()"'
+						)
 					),
 					'PS_FORCE_ASM_NEW_PRODUCT' => array(
 						'title' => $this->l('New products use advanced stock management'),
@@ -250,7 +254,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL,
 					),
 				),
-				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();</script>',
+				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();advancedStockManagementActivationAuthorization():</script>',
 				'submit' => array('title' => $this->l('Save'))
 			),
 		);

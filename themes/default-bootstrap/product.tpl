@@ -440,22 +440,10 @@
 				</div>
 			</section>
 		{/if}
-		{if $product->description}
-			<!-- More info -->
-			<section class="page-product-box">
-				<h3 class="page-product-heading">{l s='More info'}</h3>{/if}
-				{if isset($product) && $product->description}
-					<!-- full description -->
-					<div  class="rte">{$product->description}</div>
-			</section>
-			<!--end  More info -->
-		{/if}
-		{if $features}
+		{if isset($features) && $features}
 			<!-- Data sheet -->
 			<section class="page-product-box">
 				<h3 class="page-product-heading">{l s='Data sheet'}</h3>
-		{/if}
-		{if isset($features) && $features}
 				<table class="table-data-sheet">			
 					{foreach from=$features item=feature}
 					<tr class="{cycle values="odd,even"}">
@@ -468,6 +456,16 @@
 				</table>
 			</section>
 			<!--end Data sheet -->
+		{/if}
+		{if $product->description}
+			<!-- More info -->
+			<section class="page-product-box">
+				<h3 class="page-product-heading">{l s='More info'}</h3>{/if}
+				{if isset($product) && $product->description}
+					<!-- full description -->
+					<div  class="rte">{$product->description}</div>
+			</section>
+			<!--end  More info -->
 		{/if}
 		<!--HOOK_PRODUCT_TAB -->
 		<section class="page-product-box">
