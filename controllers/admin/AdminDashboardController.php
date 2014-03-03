@@ -79,7 +79,7 @@ class AdminDashboardControllerCore extends AdminController
 		}
 
 		foreach ($modules as $module)
-			if ($module->tab == 'payments_gateways' && $module->id)
+			if ($module->tab == 'payments_gateways' && $module->id && $module->active == 1)
 			{
 				$forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED'] = array(
 					'title' => $module->displayName,
