@@ -490,6 +490,24 @@ function stockManagementActivationAuthorization()
 		getE('PS_ADVANCED_STOCK_MANAGEMENT_off').checked = true;
 		getE('PS_ADVANCED_STOCK_MANAGEMENT_on').disabled = 'disabled';
 		getE('PS_ADVANCED_STOCK_MANAGEMENT_off').disabled = 'disabled';
+		getE('PS_FORCE_ASM_NEW_PRODUCT_off').checked = true;
+		getE('PS_FORCE_ASM_NEW_PRODUCT_on').disabled = 'disabled';
+		getE('PS_FORCE_ASM_NEW_PRODUCT_off').disabled = 'disabled';
+	}
+}
+
+function advancedStockManagementActivationAuthorization()
+{
+	if (getE('PS_ADVANCED_STOCK_MANAGEMENT_on').checked)
+	{
+		getE('PS_FORCE_ASM_NEW_PRODUCT_on').disabled = false;
+		getE('PS_FORCE_ASM_NEW_PRODUCT_off').disabled = false;
+	}
+	else
+	{
+		getE('PS_FORCE_ASM_NEW_PRODUCT_off').checked = true;
+		getE('PS_FORCE_ASM_NEW_PRODUCT_on').disabled = 'disabled';
+		getE('PS_FORCE_ASM_NEW_PRODUCT_off').disabled = 'disabled';
 	}
 }
 

@@ -106,19 +106,19 @@
 			<div class="radio">
 				<label for="simple_product">
 					<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} />
-					{l s='Simple product'}
+					{l s='Standard product'}
 				</label>
 			</div>
 			<div class="radio">
 				<label for="pack_product">
 					<input type="radio" name="type_product" {if $is_in_pack}disabled="disabled"{/if} id="pack_product" value="{Product::PTYPE_PACK}" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} />
-					{l s='Pack'}
+					{l s='Pack of existing products'}
 				</label>
 			</div>
 			<div class="radio">
 				<label for="virtual_product">
 					<input type="radio" name="type_product" id="virtual_product" {if $is_in_pack}disabled="disabled"{/if} value="{Product::PTYPE_VIRTUAL}" {if $product_type == Product::PTYPE_VIRTUAL}checked="checked"{/if} />
-					{l s='Virtual Product (services, booking or downloadable products)'}
+					{l s='Virtual product (services, booking, downloadable products, etc.)'}
 				</label>
 			</div>
 		</div>
@@ -129,7 +129,7 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3 required" for="name_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Invalid characters:'} &lt;&gt;;=#{}">
+				title="{l s='The public name for this product.'} {l s='Invalid characters:'} &lt;&gt;;=#{}">
 				{l s='Name'}
 			</span>
 		</label>
@@ -146,8 +146,8 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="reference">
 			<span class="label-tooltip" data-toggle="tooltip"
-			title="{l s='Allowed special characters:'} .-_#\">
-				{$bullet_common_field} {l s='Reference'}
+			title="{l s='Your internal reference code for this product.'} {l s='Allowed special characters:'} .-_#\">
+				{$bullet_common_field} {l s='Reference code'}
 			</span>
 		</label>
 		<div class="col-lg-5">
@@ -158,8 +158,8 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="ean13">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Specific to Europe and Japan.'}">
-				{$bullet_common_field} {l s='EAN13 or JAN'}
+				title="{l s='This type of product code that is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.'}">
+				{$bullet_common_field} {l s='EAN-13 or JAN barcode'}
 			</span>
 		</label>
 		<div class="col-lg-3">
@@ -170,8 +170,8 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="upc">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Specific to the USA and Canada.'}">
-				{$bullet_common_field} {l s='UPC'}
+				title="{l s='This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.'}">
+				{$bullet_common_field} {l s='UPC barcode'}
 			</span>
 		</label>
 		<div class="col-lg-3">
@@ -191,11 +191,11 @@
 			<span class="switch prestashop-switch fixed-width-lg">
 				<input onclick="toggleDraftWarning(false);showOptions(true);showRedirectProductOptions(false);" type="radio" name="active" id="active_on" value="1" {if $product->active || !$product->isAssociatedToShop()}checked="checked" {/if} />
 				<label for="active_on" class="radioCheck">
-					{l s='Yes'}
+					{l s='Enabled'}
 				</label>
 				<input onclick="toggleDraftWarning(true);showOptions(false);showRedirectProductOptions(true);"  type="radio" name="active" id="active_off" value="0" {if !$product->active && $product->isAssociatedToShop()}checked="checked"{/if} />
 				<label for="active_off" class="radioCheck">
-					{l s='No'}
+					{l s='Disabled'}
 				</label>
 				<a class="slide-button btn"></a>
 			</span>
@@ -210,17 +210,17 @@
 		<div class="col-lg-5">
 			<select name="redirect_type" id="redirect_type">
 				<option value="404" {if $product->redirect_type == '404'} selected="selected" {/if}>{l s='No redirect (404)'}</option>
-				<option value="301" {if $product->redirect_type == '301'} selected="selected" {/if}>{l s='Redirect permanently (301)'}</option>
-				<option value="302" {if $product->redirect_type == '302'} selected="selected" {/if}>{l s='Redirect temporarily (302)'}</option>
+				<option value="301" {if $product->redirect_type == '301'} selected="selected" {/if}>{l s='Redirected permanently (301)'}</option>
+				<option value="302" {if $product->redirect_type == '302'} selected="selected" {/if}>{l s='Redirected temporarily (302)'}</option>
 			</select>
 		</div>
 	</div>
 	<div class="form-group redirect_product_options" style="display:none">
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert alert-info">
-				{l s='404 Not Found = Do not redirect and display a 404 page'}<br/>
-				{l s='301 Moved Permanently = Permanently display another product instead'}<br/>
-				{l s='302 Moved Temporarily = Temporarily display another product instead'}
+				{l s='404 Not Found = Do not redirect and display a 404 page.'}<br/>
+				{l s='301 Moved Permanently = Permanently display another product instead.'}<br/>
+				{l s='302 Moved Temporarily = Temporarily display another product instead.'}
 			</div>	
 		</div>
 	</div>
@@ -239,7 +239,7 @@
 			</div>
 
 			<div class="form-control-static">
-				<span id="related_product_name"><i class="icon-warning-sign"></i>&nbsp;{l s='No related product'}</span>
+				<span id="related_product_name"><i class="icon-warning-sign"></i>&nbsp;{l s='No related product.'}</span>
 				<span id="related_product_remove" style="display:none">
 					<a class="btn btn-default" href="#" onclick="removeRelatedProduct(); return false" id="related_product_remove_link">
 						<i class="icon-remove text-danger"></i>
@@ -284,15 +284,15 @@
 				<div class="col-lg-5">
 					<p class="checkbox">
 						<input type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
-						<label for="available_for_order">{l s='Available for order'}</label>
+						<label for="available_for_order">{l s='Available for order.'}</label>
 					</p>
 					<p class="checkbox">	
 						<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
-						<label for="show_price">{l s='show price'}</label>
+						<label for="show_price">{l s='Show price.'}</label>
 					</p>
 					<p class="checkbox">
 						<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
-						<label for="online_only">{l s='Online only (not sold in store)'}</label>
+						<label for="online_only">{l s='Online only (not sold in store).'}</label>
 					</p>
 				</div>
 			</div>
@@ -319,7 +319,7 @@
 		<label class="control-label col-lg-3" for="description_short_{$id_lang}">
 			{include file="controllers/products/multishop/checkbox.tpl" field="description_short" type="tinymce" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Appears in the product list(s), and on the top of the product page.'}">
+				title="{l s='Appears in the product list(s), and at the top of the product page.'}">
 				{l s='Short description'}
 			</span>
 		</label>
@@ -338,7 +338,7 @@
 		<label class="control-label col-lg-3" for="description_{$id_lang}">
 			{include file="controllers/products/multishop/checkbox.tpl" field="description" type="tinymce" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Appears in the body of the product page'}">
+				title="{l s='Appears in the body of the product page.'}">
 				{l s='Description'}
 			</span>
 		</label>

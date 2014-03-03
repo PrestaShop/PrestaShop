@@ -29,7 +29,7 @@
 			</label>
 			<div class="col-lg-9">
 				<section class="filter_panel">
-					<header>
+					<header class="clearfix">
 						<span class="badge pull-right">{l s='Total filters: %s'|sprintf:$total_filters mod='blocklayered'}</span>
 					</header>
 					<section class="filter_list">
