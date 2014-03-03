@@ -79,7 +79,7 @@
 										disabled="disabled" 
 									{/if} 
 								/>
-								{l s='Available quantities for current product and its combinations are based on warehouse stock. '} 
+								{l s='The available quantities for the current product and its combinations are based on the stock in your warehouse (using the advanced stock management system). '} 
 								{if ($stock_management_active == 0 || $product->advanced_stock_management == 0) && !$product->cache_is_pack} &nbsp;-&nbsp;{l s='This requires you to enable advanced stock management globally or for this product.'}
 								{else if $product->cache_is_pack} &nbsp;-&nbsp;{l s='This parameter depends on the product(s) in the pack.'}
 								{/if}
@@ -150,7 +150,7 @@
 								{l s='Deny orders'}
 								{/if} 
 								<a class="confirm_leave" href="index.php?tab=AdminPPreferences&amp;token={$token_preferences}">
-									{l s='as set in Products Preferences page'}
+									{l s='as set in the Products Preferences page'}
 								</a>
 							</label>
 						</p>
@@ -211,7 +211,7 @@
 					{include file="controllers/products/multishop/checkbox.tpl" field="available_later" type="default" multilang="true"}
 					<span class="label-tooltip" data-toggle="tooltip"
 						title="{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
-						{l s='Displayed text when back-ordering is allowed'}
+						{l s='Displayed text when backordering is allowed'}
 					</span>
 					
 				</label>
