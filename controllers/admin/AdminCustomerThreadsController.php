@@ -550,20 +550,20 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		if ($next_thread)
 			$next_thread = array(
 				'href' => self::$currentIndex.'&id_customer_thread='.(int)$next_thread.'&viewcustomer_thread&token='.$this->token,
-				'name' => $this->l('Reply to the next unanswered message in this category.')
+				'name' => $this->l('Reply to the next unanswered message in this thread')
 			);
 
 		if ($thread->status != 'closed')
 			$actions['closed'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=2&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'label' => $this->l('Mark as "handled".'),
+				'label' => $this->l('Mark as "handled"'),
 				'name' => 'setstatus',
 				'value' => 2
 			);
 		else
 			$actions['open'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'label' => $this->l('Re-open.'),
+				'label' => $this->l('Re-open'),
 				'name' => 'setstatus',
 				'value' => 1
 			);
@@ -571,14 +571,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		if ($thread->status != 'pending1')
 			$actions['pending1'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=3&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'label' => $this->l('Mark as "pending 1" (will be answered later).'),
+				'label' => $this->l('Mark as "pending 1" (will be answered later)'),
 				'name' => 'setstatus',
 				'value' => 3
 			);
 		else
 			$actions['pending1'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'label' => $this->l('Disable pending status.'),
+				'label' => $this->l('Disable pending status'),
 				'name' => 'setstatus',
 				'value' => 1
 			);
@@ -586,14 +586,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		if ($thread->status != 'pending2')
 			$actions['pending2'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=4&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'label' => $this->l('Mark as "pending 2" (will be answered later).'),
+				'label' => $this->l('Mark as "pending 2" (will be answered later)'),
 				'name' => 'setstatus',
 				'value' => 4
 			);
 		else
 			$actions['pending2'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'label' => $this->l('Disable pending status.'),
+				'label' => $this->l('Disable pending status'),
 				'name' => 'setstatus',
 				'value' => 1
 			);
@@ -682,7 +682,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			{
 				$link = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int)$order->id;
 				$content = '<a class="badge" target="_blank" href="'.$link.'">'.$this->l('Order').' #'.(int)$order->id.'</a></br></br>';
-				$content .= '<span>'.$this->l('Stats:').' '.$history['ostate_name'].'</span>';
+				$content .= '<span>'.$this->l('Status:').' '.$history['ostate_name'].'</span>';
 
 				$timeline[$history['date_add']][] = array(
 					'arrow' => 'right',
