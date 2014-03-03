@@ -446,9 +446,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		if (!Combination::isFeatureActive())
 		{
-			$this->displayWarning($this->l('This feature has been disabled. You can activate it at:').
-				' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').
-				'#featuresDetachables">'.$this->l('Performances').'</a>');
+			$url = '<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.
+					$this->l('Performance').'</a>';
+			$this->displayWarning(sprintf($this->l('This feature has been disabled. You can activate it here: %s.'), $url));
 			return;
 		}
 

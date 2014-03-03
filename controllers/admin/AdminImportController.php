@@ -156,7 +156,7 @@ class AdminImportControllerCore extends AdminController
 					),
 					'warehouse' => array(
 						'label' => $this->l('Warehouse'),
-						'help' => $this->l('ID of the warehouse to set as storeage')
+						'help' => $this->l('ID of the warehouse to set as storage')
 					),
 				);
 
