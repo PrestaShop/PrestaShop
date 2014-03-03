@@ -166,7 +166,7 @@
 					border-color: #73ca77;
 				}
 				&:hover {
-					background: #359144;
+					background: lighten(#43b155,15%);
 					color: $light-text-color;
 				}
 			}

@@ -27,18 +27,7 @@
 {block name="override_tpl"}
 {include file="./modal.tpl" }
 <div class="panel">
-	<div class="panel-heading text-center">
-		<form action="{$link->getAdminLink('AdminCustomerThreads')}&viewcustomer_thread&id_customer_thread={$id_customer_thread}" method="post" enctype="multipart/form-data" class="form-horizontal">
-		<div class="btn-group pull-left">
-		{foreach $actions as $action}
-			<button class="btn btn-default pull-left" name="{$action.name|escape:'html':'UTF-8'}" value="{$action.value|intval}">
-				{if isset($action.icon)}<i class="{$action.icon|escape:'html':'UTF-8'}"></i>{/if}{$action.label}
-			</button>
-		{/foreach}
-		</form>
-			<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">{l s="Forward this discussion to another employee"}</button>
-		</div>
-		
+	<div class="panel-heading">
 		<i class="icon-comments"></i>
 		{l s="Thread"}: #<strong>{$id_customer_thread|intval}</strong>
 		{if isset($next_thread) && $next_thread}
@@ -48,10 +37,20 @@
 			</a> 
 		</div>
 		{/if}
+		<div class="btn-group-action pull-right">
+			<form action="{$link->getAdminLink('AdminCustomerThreads')}&viewcustomer_thread&id_customer_thread={$id_customer_thread}" method="post" enctype="multipart/form-data" class="form-horizontal">
+				{foreach $actions as $action}
+					<button class="btn btn-default" name="{$action.name|escape:'html':'UTF-8'}" value="{$action.value|intval}">
+						{if isset($action.icon)}<i class="{$action.icon|escape:'html':'UTF-8'}"></i>{/if}{$action.label}
+					</button>
+				{/foreach}
+				<button class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal">{l s="Forward this discussion to another employee"}</button>
+			</form>
+		</div>
 	</div>
 	<div class="row">
 		<div class="message-item-initial media">
-			<a href="{$link->getAdminLink('AdminCustomers')}&id_customer={$customer->id|intval}&viewcustomer&"><div class="avatar-lg pull-left"><i class="icon-user icon-3x"></i></div></a>
+			<a href="{$link->getAdminLink('AdminCustomers')}&id_customer={$customer->id|intval}&viewcustomer&" class="avatar-lg pull-left"><i class="icon-user icon-3x"></i></a>
 			<div class="media-body">
 				<div class="row">
 					<div class="col-sm-6">
@@ -68,13 +67,14 @@
 					</div>
 					{if isset($customer->firstname)}
 						<div class="col-sm-6">
+							<p>
 							{if $count_ok}
-								{l s='[0]%1$d[/0] order(s) validated for a total amount of [1]%2$s[/1]' sprintf=[$count_ok, $total_ok] tags=['<span class="badge">', '<span class="badge">']}
+								{l s='[0]%1$d[/0] order(s) validated for a total amount of [1]%2$s[/1]' sprintf=[$count_ok, $total_ok] tags=['<span class="badge">', '<span class="badge badge-success">']}
 							{else}
 								{l s="No orders validated for the moment"}
 							{/if}
-							<br/>
-							<span>{l s="Customer since: %s" sprintf=[{dateFormat date=$customer->date_add full=0}]}</span>
+							</p>
+							<p class="text-muted">{l s="Customer since: %s" sprintf=[{dateFormat date=$customer->date_add full=0}]}</p>
 						</div>
 					{/if}
 				</div>
@@ -107,12 +107,12 @@
 	</div>
 	<div class="panel-footer">
 		<!--
-<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 			<i class="icon-magic icon-2x"></i><br>
-			{l s="Utiliser un modèle"}
+			{l s="Choose a template"}
 		</button>
--->		
-		<button class="btn btn-default pull-right" name="submitReply"><i class="icon-mail-reply"></i> {l s="Send"}</button>
+		-->		
+		<button class="btn btn-default pull-right" name="submitReply"><i class="process-icon-mail-reply"></i> {l s="Send"}</button>
 		<input type="hidden" name="id_customer_thread" value="{$thread->id|intval}" />
 		<input type="hidden" name="msg_email" value="{$thread->email}" />
 	</div>
