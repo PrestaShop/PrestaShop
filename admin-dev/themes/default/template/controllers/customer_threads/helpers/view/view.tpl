@@ -36,11 +36,11 @@
 			</button>
 		{/foreach}
 		</form>
-			<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">{l s="Forward this discussion to"}</button>
+			<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">{l s="Forward this discussion to another employee"}</button>
 		</div>
 		
 		<i class="icon-comments"></i>
-		{l s="Thread"} : #<strong>{$id_customer_thread|intval}</strong>
+		{l s="Thread"}: #<strong>{$id_customer_thread|intval}</strong>
 		{if isset($next_thread) && $next_thread}
 		<div class="btn-group pull-right">
 			<a class="btn btn-default pull-left" href="{$next_thread.href}">
@@ -59,13 +59,13 @@
 						<h2>{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} <small>({$customer->email|escape:'html':'UTF-8'})</small></h2>
 					{/if}
 					{if isset($contact) && trim($contact) != ''}
-						<span>{l s="TO:"} </span><span class="badge">{$contact|escape:'html':'UTF-8'}</span>
+						<span>{l s="To:"} </span><span class="badge">{$contact|escape:'html':'UTF-8'}</span>
 					{/if}
 					</div>
 					{if isset($customer->firstname)}
 						<div class="col-sm-6">
 							{if $count_ok}
-								<span class="badge">{$count_ok}</span> {l s="orders validated"} <span class="badge">{$total_ok|intval}</span><br/>
+								<span class="badge">{$count_ok}</span> {l s="order(s) validated for a total amount of"} <span class="badge">{$total_ok}</span><br/>
 							{else}
 								{l s="No orders validated for the moment"}<br/>
 							{/if}
@@ -89,7 +89,7 @@
 </div>
 <div class="panel">
 	<form action="{$link->getAdminLink('AdminCustomerThreads')}&id_customer_thread={$thread->id|intval}&viewcustomer_thread" method="post" enctype="multipart/form-data" class="form-horizontal">
-	<h3>{l s="Answer to"} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} {else} {$thread->email}{/if}</h3>
+	<h3>{l s="Your answer to"} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} {else} {$thread->email}{/if}</h3>
 	<div class="row">
 		<div class="media">
 			<div class="pull-left">
