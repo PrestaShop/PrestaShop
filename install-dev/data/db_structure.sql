@@ -614,6 +614,7 @@ CREATE TABLE `PREFIX_customer_message` (
   `ip_address` int(11) default NULL,
   `user_agent` varchar(128) default NULL,
   `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
   `private` TINYINT NOT NULL DEFAULT  '0',
   `read` tinyint(1) NOT NULL default '0',
   PRIMARY KEY (`id_customer_message`),
