@@ -149,7 +149,7 @@ class AdminDashboardControllerCore extends AdminController
 			);
 		}
 
-		$forms['carriers']['description'] = $this->l('Example: For a delivery that you charge $10 to your customer but that you pay 5€, you need to indicate 50%');
+		$forms['carriers']['description'] = $this->l('Example: If you charge $10 of shipping fees to your customer but for which you pay $4, you need to indicate 40%"');
 
 		$forms['other']['fields']['CONF_AVERAGE_PRODUCT_MARGIN'] = array(
 			'title' => $this->l('Average gross margin (Selling price / Buying price)'),
