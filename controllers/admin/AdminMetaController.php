@@ -428,7 +428,7 @@ class AdminMetaControllerCore extends AdminController
 
 			}
 			if (count($theme_meta_value) > 0)
-				Db::getInstance()->insert('theme_meta', $theme_meta_value);
+				Db::getInstance()->insert('theme_meta', $theme_meta_value, false, true, DB::INSERT_IGNORE);
 		}
 
 
