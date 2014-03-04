@@ -182,7 +182,12 @@ class AdminStatusesControllerCore extends AdminController
 				'color' => $this->getFieldValue($order_return_state, 'color'),
 			);
 		else
-			$helper->fields_value = $this->getFieldsValue($order_return_state);
+		{
+			if ($this->getFieldsValue($order_return_state) !== false)
+				$helper->fields_value = $this->getFieldsValue($order_return_state);
+			else
+				$helper->fields_value =  array('name' => null, 'color' => '#ffffff');
+		}
 		$helper->toolbar_btn = $this->toolbar_btn;
 		$helper->title = $this->l('Edit Order Status');
 		return $helper;
@@ -436,6 +441,7 @@ class AdminStatusesControllerCore extends AdminController
 					'type' => 'color',
 					'label' => $this->l('Color'),
 					'name' => 'color',
+					'value' => '#f12345',
 					'hint' => $this->l('Status will be highlighted in this color. HTML colors only.').' "lightblue", "#CC6600")'
 				)
 			),
