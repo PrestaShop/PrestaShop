@@ -66,15 +66,7 @@
 						<label class="control-label" for="email">{l s='Email address'}</label>
 						<div class="input-group">
 							<span class="input-group-addon"><i class="icon-envelope"></i></span>
-							<input
-								name="email"
-								type="text"
-								id="email"
-								class="form-control"
-								value="{if isset($email)}{$email|escape:'html':'UTF-8'}{/if}"
-								autofocus="autofocus"
-								tabindex="1"
-								placeholder="test@example.com" />
+							<input name="email" type="text" id="email" class="form-control" value="{if isset($email)}{$email|escape:'html':'UTF-8'}{/if}" autofocus="autofocus" tabindex="1" placeholder="test@example.com" />
 						</div>
 					</div>
 					<div class="form-group">
@@ -83,14 +75,7 @@
 						</label>
 						<div class="input-group">
 							<span class="input-group-addon"><i class="icon-key"></i></span>
-							<input
-								name="passwd"
-								type="password"
-								id="passwd"
-								class="form-control"
-								value="{if isset($password)}{$password}{/if}"
-								tabindex="2"
-								placeholder="{l s='Password'}" />
+							<input name="passwd" type="password" id="passwd" class="form-control" value="{if isset($password)}{$password}{/if}" tabindex="2" placeholder="{l s='Password'}" />
 						</div>
 					</div>
 					<div class="form-group clearfix">
@@ -128,14 +113,7 @@
 						</label>
 						<div class="input-group">
 							<span class="input-group-addon"><i class="icon-envelope"></i></span>
-							<input
-								type="text"
-								name="email_forgot"
-								id="email_forgot"
-								class="form-control"
-								autofocus="autofocus"
-								tabindex="5"
-								placeholder="test@example.com" />
+							<input type="text" name="email_forgot" id="email_forgot" class="form-control" autofocus="autofocus" tabindex="5" placeholder="test@example.com" />
 						</div>
 					</div>
 					<div class="panel-footer">
@@ -153,7 +131,7 @@
 		</div>
 		{else}
 		<div class="alert alert-danger">
-			<p>{l s='For security reasons, you cannot connect to the Back Office until after you have:'}</p>
+			<p>{l s='For security reasons, you cannot connect to the Back Office until you have:'}</p>
 			<ul>
 				{if isset($wrong_install_name) && $wrong_install_name == true}
 					<li>{l s='deleted the /install folder'}</li>

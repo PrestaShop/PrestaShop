@@ -162,6 +162,8 @@ class AdminEmployeesControllerCore extends AdminController
 	{
 		parent::setMedia();
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/jquery-passy.js');
+		$this->addjQueryPlugin('validate');
+		$this->addJS(_PS_JS_DIR_.'jquery/plugins/validate/localization/messages_'.$this->context->language->iso_code.'.js');
 	}
 
 	public function initPageHeaderToolbar()
@@ -247,25 +249,24 @@ class AdminEmployeesControllerCore extends AdminController
 				),
 			),
 		);
-		
-		if ($this->restrict_edition)
-			$this->fields_form['input'][] = array(
-				'type' => 'password',
-				'label' => $this->l('Current password'),
-				'name' => 'old_passwd',
-				'required' => true,
-				'desc' => $this->l('Leave this field blank if you do not want to change your password.'),
-				'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH)
-				);
-			
-			$this->fields_form['input'][] = array(
-				'type' => 'password',
-				'ehanced' => true,
+
+		$this->fields_form['input'][] = array(
+				'type' => 'change-password',
 				'label' => $this->l('Password'),
-				'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH),
-				'name' => 'passwd',
-				'required' => true,
+				//'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH),
+				'name' => 'passwd'
 				);
+
+		// if ($this->restrict_edition)
+		// 	$this->fields_form['input'][] = array(
+		// 		'type' => 'password',
+		// 		'label' => $this->l('Current password'),
+		// 		'name' => 'old_passwd',
+		// 		'hint' => $this->l('Leave this field blank if you do not want to change your password.'),
+		// 		//'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH)
+		// 		);
+			
+			
 						
 		$this->fields_form['input'] = array_merge($this->fields_form['input'], array(
 			array(
@@ -299,7 +300,7 @@ class AdminEmployeesControllerCore extends AdminController
 				'type' => 'select',
 				'label' => $this->l('Language'),
 				'name' => 'id_lang',
-				'required' => true,
+				//'required' => true,
 				'options' => array(
 					'query' => Language::getLanguages(false),
 					'id' => 'id_lang',
