@@ -165,10 +165,16 @@ abstract class ModuleCore
 	public function __construct($name = null, Context $context = null)
 	{
 		if (isset($this->ps_versions_compliancy) && !isset($this->ps_versions_compliancy['min']))
-			$this->ps_versions_compliancy['min'] = '1.4';
+			$this->ps_versions_compliancy['min'] = '1.4.0.0';
 		
 		if (isset($this->ps_versions_compliancy) && !isset($this->ps_versions_compliancy['max']))
 			$this->ps_versions_compliancy['max'] = _PS_VERSION_;
+		
+		if (strlen($this->ps_versions_compliancy['min']) == 3)
+			$this->ps_versions_compliancy['min'] .= '.0.0';
+		
+		if (strlen($this->ps_versions_compliancy['max']) == 3)
+			$this->ps_versions_compliancy['min'] .= '.999.999';
 		
 		// Load context and smarty
 		$this->context = $context ? $context : Context::getContext();				
@@ -232,7 +238,7 @@ abstract class ModuleCore
 		}
 
 		// Check PS version compliancy
-		if (version_compare(_PS_VERSION_, $this->ps_versions_compliancy['min']) <= 0 || version_compare(_PS_VERSION_, $this->ps_versions_compliancy['max']) > 0)
+		if (!$this->checkCompliancy())
 		{
 			$this->_errors[] = $this->l('The version of your module is not compliant with your PrestaShop version.');
 			return false;
@@ -311,6 +317,14 @@ abstract class ModuleCore
 			$this->updateModuleTranslations();
 
 		return true;
+	}
+	
+	public function checkCompliancy()
+	{
+		if (version_compare(_PS_VERSION_, $this->ps_versions_compliancy['min'], '<') || version_compare(_PS_VERSION_, $this->ps_versions_compliancy['max'], '>'))
+			return false;
+		else
+			return true;
 	}
 	
 	public static function updateTranslationsAfterInstall($update = true)
