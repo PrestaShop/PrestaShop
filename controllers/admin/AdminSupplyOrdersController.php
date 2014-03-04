@@ -209,7 +209,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$currencies = array_merge(array($default_currency, '-'), $currencies);
 
 			//get suppliers list
-			$suppliers = @array_unique(Supplier::getSuppliers());
+			$suppliers = array_unique(Supplier::getSuppliers(), SORT_REGULAR);
 
 			//get languages list
 			$languages = Language::getLanguages(true);

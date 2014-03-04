@@ -290,6 +290,8 @@ class AdminOrdersControllerCore extends AdminController
 
 		$this->addJqueryUI('ui.datepicker');
 		$this->addJS(_PS_JS_DIR_.'vendor/d3.v3.min.js');
+		$this->addJS('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false');
+
 		if ($this->tabAccess['edit'] == 1 && $this->display == 'view')
 		{
 			$this->addJS(_PS_JS_DIR_.'admin_order.js');
