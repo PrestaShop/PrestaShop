@@ -62,28 +62,28 @@
 
 	<div class="panel">
 		<div class="row">
-			<div class="col-xs-6 col-lg-3 box-stats color3" >
+			<div class="col-xs-6 col-sm-3 box-stats color3" >
 				<div class="kpi-content">
 					<i class="icon-calendar-empty"></i>
 					<span class="title">{l s='Date'}</span>
 					<span class="value">{dateFormat date=$order->date_add full=false}</span>
 				</div>
 			</div>
-			<div class="col-xs-6 col-lg-3 box-stats color4" >
+			<div class="col-xs-6 col-sm-3 box-stats color4" >
 				<div class="kpi-content">
 					<i class="icon-money"></i>
 					<span class="title">{l s='Total'}</span>
 					<span class="value">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
 				</div>
 			</div>
-			<div class="col-xs-6 col-lg-3 box-stats color2" >
+			<div class="col-xs-6 col-sm-3 box-stats color2" >
 				<div class="kpi-content">
 					<i class="icon-comments"></i>
 					<span class="title">{l s='Messages'}</span>
 					<span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}">{sizeof($customer_thread_message)}</a></span>
 				</div>
 			</div>
-			<div class="col-xs-6 col-lg-3 box-stats color1" >
+			<div class="col-xs-6 col-sm-3 box-stats color1" >
 				<div class="kpi-content">
 					<i class="icon-book"></i>
 					<span class="title">{l s='Products'}</span>
@@ -101,13 +101,15 @@
 					{l s='Order'}
 					<span class="badge">{$order->reference}</span>
 					<span class="badge">{l s="#"}{$order->id}</span>
-					<div class="btn-group">
-						<a class="btn btn-default btn-xs" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
-							<i class="icon-backward"></i>
-						</a>
-						<a class="btn btn-default btn-xs" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$nextOrder}" {if !$nextOrder}disabled{/if}>
-							<i class="icon-forward"></i>
-						</a>
+					<div class="btn-group-actions pull-right">
+						<div class="btn-group">
+							<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
+								<i class="icon-backward"></i>
+							</a>
+							<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$nextOrder}" {if !$nextOrder}disabled{/if}>
+								<i class="icon-forward"></i>
+							</a>
+						</div>
 					</div>
 				</div>
 				<!-- Orders Actions -->
@@ -380,134 +382,135 @@
 							{/foreach}
 						</p>
 					{/if}
-					<form id="formAddPayment" method="post" action="{$current_index}&amp;vieworder&amp;id_order={$order->id}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}">
-						<table class="table">
-							<thead>
-								<tr>
-									<th><span class="title_box ">{l s='Date'}</span></th>
-									<th><span class="title_box ">{l s='Payment method'}</span></th>
-									<th><span class="title_box ">{l s='Transaction ID'}</span></th>
-									<th><span class="title_box ">{l s='Amount'}</span></th>
-									<th><span class="title_box ">{l s='Invoice'}</span></th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
-								{foreach from=$order->getOrderPaymentCollection() item=payment}
-								<tr>
-									<td>{dateFormat date=$payment->date_add full=true}</td>
-									<td>{$payment->payment_method|escape:'html':'UTF-8'}</td>
-									<td class="text-center">{$payment->transaction_id|escape:'html':'UTF-8'}</td>
-									<td class="text-right">{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
-									<td>
-									{if $invoice = $payment->getOrderInvoice($order->id)}
-										{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
-									{else}
-									{/if}
-									</td>
-									<td class="actions">
-										<button class="btn btn-default open_payment_information">
-											<i class="icon-search"></i>
-											{l s='Details'}
-										</button>
-									</td>
-								</tr>
-								<tr class="payment_information" style="display: none;">
-									<td colspan="5">
-										<p>
-											<b>{l s='Card Number'}</b>&nbsp;
-											{if $payment->card_number}
-												{$payment->card_number}
-											{else}
-												<i>{l s='Not defined'}</i>
-											{/if}
-										</p>
-										<p>
-											<b>{l s='Card Brand'}</b>&nbsp;
-											{if $payment->card_brand}
-												{$payment->card_brand}
-											{else}
-												<i>{l s='Not defined'}</i>
-											{/if}
-										</p>
-										<p>
-											<b>{l s='Card Expiration'}</b>&nbsp;
-											{if $payment->card_expiration}
-												{$payment->card_expiration}
-											{else}
-												<i>{l s='Not defined'}</i>
-											{/if}
-										</p>
-										<p>
-											<b>{l s='Card Holder'}</b>&nbsp;
-											{if $payment->card_holder}
-												{$payment->card_holder}
-											{else}
-												<i>{l s='Not defined'}</i>
-											{/if}
-										</p>
-									</td>
-								</tr>
-								{foreachelse}
-								<tr>
-									<td class="list-empty" colspan="6">
-										<div class="list-empty-msg">
-											<i class="icon-warning-sign list-empty-icon"></i>
-											{l s='No payments are available'}
-										</div>
-									</td>
-								</tr>
-								{/foreach}
-								
-							</tbody>
-							<tfoot>
-								<tr class="current-edit">
-									<td>
-										<div class="input-group fixed-width-md">
-											<input type="text" name="payment_date" class="datepicker" value="{date('Y-m-d')}" />
-											<div class="input-group-addon">
-												<i class="icon-calendar-o"></i>
+					<div class="table-responsive">
+						<form id="formAddPayment" method="post" action="{$current_index}&amp;vieworder&amp;id_order={$order->id}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}">
+							<table class="table">
+								<thead>
+									<tr>
+										<th><span class="title_box ">{l s='Date'}</span></th>
+										<th><span class="title_box ">{l s='Payment method'}</span></th>
+										<th><span class="title_box ">{l s='Transaction ID'}</span></th>
+										<th><span class="title_box ">{l s='Amount'}</span></th>
+										<th><span class="title_box ">{l s='Invoice'}</span></th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									{foreach from=$order->getOrderPaymentCollection() item=payment}
+									<tr>
+										<td>{dateFormat date=$payment->date_add full=true}</td>
+										<td>{$payment->payment_method|escape:'html':'UTF-8'}</td>
+										<td class="text-center">{$payment->transaction_id|escape:'html':'UTF-8'}</td>
+										<td class="text-right">{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
+										<td>
+										{if $invoice = $payment->getOrderInvoice($order->id)}
+											{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
+										{else}
+										{/if}
+										</td>
+										<td class="actions">
+											<button class="btn btn-default open_payment_information">
+												<i class="icon-search"></i>
+												{l s='Details'}
+											</button>
+										</td>
+									</tr>
+									<tr class="payment_information" style="display: none;">
+										<td colspan="5">
+											<p>
+												<b>{l s='Card Number'}</b>&nbsp;
+												{if $payment->card_number}
+													{$payment->card_number}
+												{else}
+													<i>{l s='Not defined'}</i>
+												{/if}
+											</p>
+											<p>
+												<b>{l s='Card Brand'}</b>&nbsp;
+												{if $payment->card_brand}
+													{$payment->card_brand}
+												{else}
+													<i>{l s='Not defined'}</i>
+												{/if}
+											</p>
+											<p>
+												<b>{l s='Card Expiration'}</b>&nbsp;
+												{if $payment->card_expiration}
+													{$payment->card_expiration}
+												{else}
+													<i>{l s='Not defined'}</i>
+												{/if}
+											</p>
+											<p>
+												<b>{l s='Card Holder'}</b>&nbsp;
+												{if $payment->card_holder}
+													{$payment->card_holder}
+												{else}
+													<i>{l s='Not defined'}</i>
+												{/if}
+											</p>
+										</td>
+									</tr>
+									{foreachelse}
+									<tr>
+										<td class="list-empty" colspan="6">
+											<div class="list-empty-msg">
+												<i class="icon-warning-sign list-empty-icon"></i>
+												{l s='No payments are available'}
 											</div>
-										</div>
-									</td>
-									<td>
-										<select name="payment_method" class="payment_method">
-										{foreach from=$payment_methods item=payment_method}
-											<option value="{$payment_method}">{$payment_method}</option>
-										{/foreach}
-										</select>
-									</td>
-									<td>
-										<input type="text" name="payment_transaction_id" value="" class="form-control fixed-width-sm"/>
-									</td>
-									<td>
-										<div class="form-group fixed-width-md">
-											<input type="text" name="payment_amount" value="" class="form-control pull-left" />
-											<select name="payment_currency" class="payment_currency pull-left">
+										</td>
+									</tr>
+									{/foreach}
+								</tbody>
+							</table>
+							<table class="table">
+								<tbody>
+									<tr class="current-edit">
+										<td>
+											<div class="input-group fixed-width-md">
+												<input type="text" name="payment_date" class="datepicker" value="{date('Y-m-d')}" />
+												<div class="input-group-addon">
+													<i class="icon-calendar-o"></i>
+												</div>
+											</div>
+										</td>
+										<td>
+											<select name="payment_method" class="payment_method">
+											{foreach from=$payment_methods item=payment_method}
+												<option value="{$payment_method}">{$payment_method}</option>
+											{/foreach}
+											</select>
+										</td>
+										<td>
+											<input type="text" name="payment_transaction_id" value="" class="form-control fixed-width-sm"/>
+										</td>
+										<td>
+											<input type="text" name="payment_amount" value="" class="form-control fixed-width-sm pull-left" />
+											<select name="payment_currency" class="payment_currency form-control fixed-width-xs pull-left">
 												{foreach from=$currencies item=current_currency}
 													<option value="{$current_currency['id_currency']}"{if $current_currency['id_currency'] == $currency->id} selected="selected"{/if}>{$current_currency['sign']}</option>
 												{/foreach}
 											</select>
-										</div>
-									</td>
-									<td>
-										{if count($invoices_collection) > 0}
-											<select name="payment_invoice" id="payment_invoice">
-											{foreach from=$invoices_collection item=invoice}
-												<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}</option>
-											{/foreach}
-											</select>
-										{/if}
-									</td>
-									<td class="actions">
-										<button class="btn btn-primary btn-block" type="submit" name="submitAddPayment">
-											{l s='Add payment'}
-										</button>
-									</td>
-								</tr>
-							</tfoot>
-						</table>
-					</form>
+										</td>
+										<td>
+											{if count($invoices_collection) > 0}
+												<select name="payment_invoice" id="payment_invoice">
+												{foreach from=$invoices_collection item=invoice}
+													<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}</option>
+												{/foreach}
+												</select>
+											{/if}
+										</td>
+										<td class="actions">
+											<button class="btn btn-primary btn-block" type="submit" name="submitAddPayment">
+												{l s='Add'}
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+					</div>
 					{if (!$order->valid && sizeof($currencies) > 1)}
 						<form class="form-horizontal well" method="post" action="{$currentIndex}&amp;vieworder&amp;id_order={$order->id}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}">
 							<div class="row">
@@ -549,9 +552,9 @@
 						<span class="badge">
 							{l s='#'}{$customer->id}
 						</span>
-						<span class="badge">
+<!-- 						<span class="badge">
 							<a href="mailto:{$customer->email}">{$customer->email}</a>
-						</span>
+						</span> -->
 					</h3>
 					<div class="row">
 						<div class="col-sm-6">
@@ -570,6 +573,8 @@
 								{/if}
 							{else}
 								<dl class="well list-detail">
+									<dt>{l s='Email'}</dt>
+										<dd><a href="mailto:{$customer->email}"><i class="icon-envelope-o"></i> {$customer->email}</a></dd>
 									<dt>{l s='Account registered'}</dt>
 										<dd class="text-muted"><i class="icon-calendar-o"></i> {dateFormat date=$customer->date_add full=true}</dd>
 									<dt>{l s='Valid orders placed'}</dt>
