@@ -424,28 +424,25 @@ class ToolsCore
 					$cookie->id_currency = (int)$currency->id;
 			}
 		
-		$currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
+		$currency = null;
 		if ((int)$cookie->id_currency)
 			$currency = Currency::getCurrencyInstance((int)$cookie->id_currency);
+		if (!Validate::isLoadedObject($currency) || (bool)$currency->deleted || !(bool)$currency->active)
+			$currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
 
-		if (is_object($currency) && (int)$currency->id && !(bool)$currency->deleted && (bool)$currency->active)
+		$cookie->id_currency = (int)$currency->id;
+		if ($currency->isAssociatedToShop())
+			return $currency;
+		else
 		{
-			$cookie->id_currency = (int)$currency->id;
-			if ($currency->isAssociatedToShop())
-				return $currency;
-			else
+			// get currency from context
+			$currency = Shop::getEntityIds('currency', Context::getContext()->shop->id, true, true);
+			if (isset($currency[0]) && $currency[0]['id_currency'])
 			{
-				// get currency from context
-				$currency = Shop::getEntityIds('currency', Context::getContext()->shop->id, true, true);
-				if (isset($currency[0]) && $currency[0]['id_currency'])
-				{
-					$cookie->id_currency = $currency[0]['id_currency'];
-					return Currency::getCurrencyInstance((int)$cookie->id_currency);
-				}
+				$cookie->id_currency = $currency[0]['id_currency'];
+				return Currency::getCurrencyInstance((int)$cookie->id_currency);
 			}
 		}
-		else
-			$currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
 			
 		return $currency;
 	}
