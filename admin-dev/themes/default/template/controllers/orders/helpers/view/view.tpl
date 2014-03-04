@@ -1214,7 +1214,14 @@
 						mapTypeId: google.maps.MapTypeId.ROADMAP,
 						center: results[0].geometry.location
 					});
-					marker = new google.maps.Marker({ map: delivery_map, position: results[0].geometry.location });
+					var delivery_marker = new google.maps.Marker({
+						map: delivery_map,
+						position: results[0].geometry.location,
+						url: 'http://maps.google.com?q={$addresses.delivery->address1|urlencode},{$addresses.delivery->postcode|urlencode},{$addresses.delivery->city|urlencode}{if ($addresses.delivery->id_state)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.delivery->country|urlencode}'
+					});
+					google.maps.event.addListener(delivery_marker, 'click', function() {
+						window.open(delivery_marker.url);
+					});
 				}
 			});
 
@@ -1228,7 +1235,14 @@
 						mapTypeId: google.maps.MapTypeId.ROADMAP,
 						center: results[0].geometry.location
 					});
-					marker = new google.maps.Marker({ map: invoice_map, position: results[0].geometry.location });
+					invoice_marker = new google.maps.Marker({
+						map: invoice_map,
+						position: results[0].geometry.location,
+						url: 'http://maps.google.com?q={$addresses.invoice->address1|urlencode},{$addresses.invoice->postcode|urlencode},{$addresses.invoice->city|urlencode}{if ($addresses.invoice->id_state) && isset($addresses.deliveryState)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.invoice->country|urlencode}'
+					});
+					google.maps.event.addListener(invoice_marker, 'click', function() {
+						window.open(invoice_marker.url);
+					});
 				}
 			});
 		});
