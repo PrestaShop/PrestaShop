@@ -316,7 +316,8 @@ class AdminOrdersControllerCore extends AdminController
 	
 	public function processBulkUpdateOrderStatus()
 	{
-		if (Tools::isSubmit('submitBulkupdateOrderStatus'.$this->table) && ($id_order_state = (int)Tools::getValue('id_order_state')))
+		if (Tools::isSubmit('submitUpdateOrderStatus')
+			&& ($id_order_state = (int)Tools::getValue('id_order_state')))
 		{
 			if ($this->tabAccess['edit'] !== '1')
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
