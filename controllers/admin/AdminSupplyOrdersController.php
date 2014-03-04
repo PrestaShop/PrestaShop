@@ -1360,6 +1360,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			return;
 		}
 
+		$totaly_received = true;
+
 		foreach ($to_update as $id_supply_order_detail => $quantity)
 		{
 			$supply_order_detail = new SupplyOrderDetail($id_supply_order_detail);
@@ -1373,7 +1375,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					$this->errors[] = sprintf(Tools::displayError($this->l('Quantity (%d) for product #%d is not valid')), (int)$quantity, (int)$id_supply_order_detail);
 				else // everything is valid :  updates
 				{
-
+					if ((int)$quantity < (int)$supply_order_detail->quantity_expected)
+						$totaly_received = false;
 					// creates the history
 					$supplier_receipt_history = new SupplyOrderReceiptHistory();
 					$supplier_receipt_history->id_supply_order_detail = (int)$id_supply_order_detail;
@@ -1446,6 +1449,12 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						$this->errors[] = Tools::displayError($this->l('Something went wrong when setting warehouse on product record'));
 				}
 			}
+		}
+
+		if ($totaly_received)
+		{
+			$supply_order->id_supply_order_state = 5;
+			$supply_order->save();
 		}
 
 		if (!count($this->errors))
