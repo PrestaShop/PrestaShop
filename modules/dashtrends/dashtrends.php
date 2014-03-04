@@ -226,9 +226,9 @@ class Dashtrends extends Module
 		return array(
 			'data_value' => array(
 				'sales_score' => Tools::displayPrice(round($this->dashboard_data_sum['sales']), $currency),
-				'orders_score' => number_format($this->dashboard_data_sum['orders'], 0, '.', ' '),
+				'orders_score' => Tools::displayNumber($this->dashboard_data_sum['orders'], $currency),
 				'cart_value_score' => Tools::displayPrice($this->dashboard_data_sum['average_cart_value'], $currency),
-				'visits_score' => number_format($this->dashboard_data_sum['visits'], 0, '.', ' '),
+				'visits_score' => Tools::displayNumber($this->dashboard_data_sum['visits'], $currency),
 				'conversion_rate_score' => round(100 * $this->dashboard_data_sum['conversion_rate'], 2).'%',
 				'net_profits_score' => Tools::displayPrice(round($this->dashboard_data_sum['net_profits']), $currency),
 			),
@@ -301,24 +301,30 @@ class Dashtrends extends Module
 			'net_profits' => $this->l('Net Profit')
 		);
 
+		$gfx_color = array('#1777B6','#2CA121','#E61409','#FF7F00','#6B399C','#B3591F');
+		$gfx_color_compare = array('#A5CEE4','#B1E086','#FD9997','#FFC068','#CAB1D7','#D2A689');
+
+		$i = 0;
 		$data = array('chart_type' => 'line_chart_trends', 'data' => array());
 		foreach ($charts as $key => $title)
 		{
 			$data['data'][] = array(
 				'id' => $key,
 				'key' => $title,
+				'color' => $gfx_color[$i],
 				'values' => $chart_data[$key],
 				'disabled' => ($key == 'sales' ? false : true)
 			);
 			if ($this->dashboard_data_compare)
 				$data['data'][] = array(
 					'id' => $key.'_compare',
+					'color' => $gfx_color_compare[$i],
 					'key' => sprintf($this->l('%s (previous period)'), $title),
 					'values' => $chart_data_compare[$key],
 					'disabled' => ($key == 'sales' ? false : true)
 				);
+			$i++;
 		}
-
 		return $data;
 	}
 

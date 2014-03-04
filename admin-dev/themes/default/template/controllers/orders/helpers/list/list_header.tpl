@@ -55,7 +55,7 @@
 					<i class="icon-remove"></i>
 					{l s='Cancel'}
 				</button>
-				<button type="submit" class="btn btn-default">
+				<button type="submit" class="btn btn-default" name="submitUpdateOrderStatus">
 					<i class="icon-check"></i>
 					{l s='Update Order Status'}
 				</button>

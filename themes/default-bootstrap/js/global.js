@@ -136,7 +136,7 @@ function highdpi_init()
 
 function blockHover(status)
 {
-	$(document).on('mouseenter', '.product_list.grid li.ajax_block_product .product-container',
+	$(document).off('mouseenter').on('mouseenter', '.product_list.grid li.ajax_block_product .product-container',
 		function(e){
 			if ($('body').find('.container').width() == 1170){
 				var pcHeight = $(this).parent().outerHeight();
@@ -147,7 +147,7 @@ function blockHover(status)
 		}
 	);
 
-	$(document).on('mouseleave', '.product_list.grid li.ajax_block_product .product-container', function(e){
+	$(document).off('mouseleave').on('mouseleave', '.product_list.grid li.ajax_block_product .product-container', function(e){
 			if ($('body').find('.container').width() == 1170)
 				$(this).parent().removeClass('hovered').removeAttr('style');
 		}
