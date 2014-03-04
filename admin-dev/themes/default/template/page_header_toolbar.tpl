@@ -75,14 +75,14 @@
 			{/if}
 			
 			{* Action *}
-			{if $breadcrumbs2.action.name != ''}
+			{*if $breadcrumbs2.action.name != ''}
 				<li class="breadcrumb-action">
 					{if $breadcrumbs2.action.href != ''}<a href="{$breadcrumbs2.action.href|escape}">{/if}
 					{if $breadcrumbs2.action.icon != ''}<i class="{$breadcrumbs2.action.icon|escape}"></i>{/if}
 					{$breadcrumbs2.action.name|escape}
 					{if $breadcrumbs2.action.href != ''}</a>{/if}
 				</li>
-			{/if}
+			{/if*}
 			</ul>
 		{/block}
 
