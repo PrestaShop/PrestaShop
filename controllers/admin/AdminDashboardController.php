@@ -127,7 +127,7 @@ class AdminDashboardControllerCore extends AdminController
 		{
 			$forms['carriers']['fields']['CONF_'.strtoupper($carrier['id_reference']).'_SHIP'] = array(
 				'title' => $carrier['name'],
-				'desc' => sprintf($this->l('%% of what you charged the customer for domestic delivery with %s.'), $carrier['name']),
+				'desc' => sprintf($this->l('What the domestic delivery costs in %% of the price charged to customer with %s.'), $carrier['name']),
 				'validation' => 'isPercentage',
 				'cast' => 'floatval',
 				'type' => 'text',
@@ -136,7 +136,7 @@ class AdminDashboardControllerCore extends AdminController
 			);
 			$forms['carriers']['fields']['CONF_'.strtoupper($carrier['id_reference']).'_SHIP_OVERSEAS'] = array(
 				'title' => $carrier['name'],
-				'desc' => sprintf($this->l('%% of what you charged the customer for overseas delivery with %s.'), $carrier['name']),
+				'desc' => sprintf($this->l('What the overseas delivery costs in %% of the price charged to customer with %s.'), $carrier['name']),
 				'validation' => 'isPercentage',
 				'cast' => 'floatval',
 				'type' => 'text',
@@ -144,6 +144,8 @@ class AdminDashboardControllerCore extends AdminController
 				'suffix' => '%'
 			);
 		}
+
+		$forms['carriers']['description'] = $this->l('Example: For a delivery that you charge $10 to your customer but that you pay 5€, you need to indicate 50%');
 
 		$forms['other']['fields']['CONF_AVERAGE_PRODUCT_MARGIN'] = array(
 			'title' => $this->l('Average gross margin (Selling price / Buying price)'),
