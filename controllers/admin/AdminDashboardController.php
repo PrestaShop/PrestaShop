@@ -79,8 +79,12 @@ class AdminDashboardControllerCore extends AdminController
 		}
 
 		foreach ($modules as $module)
-			if ($module->tab == 'payments_gateways' && $module->id && $module->active == 1)
+			if (isset($module->tab) && $module->tab == 'payments_gateways' && $module->id)
 			{
+				$moduleClass = Module::getInstanceByName($module->name);
+				if (!$moduleClass->isEnabledForShopContext())
+					continue;
+
 				$forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED'] = array(
 					'title' => $module->displayName,
 					'desc' => sprintf($this->l('Choose a fixed fee for each order placed in %1$s with %2$s.'), $currency->iso_code, $module->displayName),
