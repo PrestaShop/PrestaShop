@@ -107,6 +107,15 @@
 				{/foreach}
 			</tbody>
 		</table>
+		<div class="panel-footer">
+			<button type="submit" value="1" id="supply_order_form_submit_btn" name="submitAddsupply_order" class="btn btn-default pull-right">
+				<i class="process-icon-save"></i> {l s='Save order'}
+			</button>
+			<a class="btn btn-default" onclick="window.history.back()">
+				<i class="process-icon-cancel"></i> {l s='Cancel'}
+			</a>
+			<button type="submit" class="btn btn-default btn btn-default pull-right" name="submitAddsupply_orderAndStay"><i class="process-icon-save"></i> {l s='Save order and stay'}</button>
+		</div>
 	</div>
 
 	<script type="text/javascript">

@@ -739,42 +739,36 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->fields_list = array(
 			'supplier_reference' => array(
 				'title' => $this->l('Supplier Reference'),
-				'align' => 'left',
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
 			),
 			'reference' => array(
 				'title' => $this->l('Reference'),
-				'align' => 'left',
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
 			),
 			'ean13' => array(
 				'title' => $this->l('EAN13'),
-				'align' => 'left',
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
 			),
 			'upc' => array(
 				'title' => $this->l('UPC'),
-				'align' => 'left',
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'align' => 'left',
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
 			),
 			'quantity_received_today' => array(
 				'title' => $this->l('Quantity received today?'),
-				'align' => 'left',
 				'type' => 'editable',
 				'orderby' => false,
 				'filter' => false,
@@ -783,23 +777,21 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			),
 			'quantity_received' => array(
 				'title' => $this->l('Quantity received'),
-				'align' => 'left',
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
+				'badge_danger' => true,
+				'badge_success' => true,
 				'hint' => $this->l('Note that you can see details on the receptions - per products.'),
 			),
 			'quantity_expected' => array(
 				'title' => $this->l('Quantity expected'),
-				'align' => 'left',
-				'width' => 40,
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
 			),
 			'quantity_left' => array(
 				'title' => $this->l('Quantity left'),
-				'align' => 'left',
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
@@ -831,7 +823,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			a.quantity_received as quantity_received,
 			a.quantity_expected as quantity_expected,
 			IF (a.quantity_expected < a.quantity_received, 0, a.quantity_expected - a.quantity_received) as quantity_left,
-			IF (a.quantity_expected < a.quantity_received, 0, a.quantity_expected - a.quantity_received) as quantity_received_today';
+			IF (a.quantity_expected < a.quantity_received, 0, a.quantity_expected - a.quantity_received) as quantity_received_today,
+			IF (a.quantity_expected = a.quantity_received, 1, 0) badge_success,
+			IF (a.quantity_expected > a.quantity_received, 1, 0) badge_danger';
 
 		$this->_where = 'AND a.`id_supply_order` = '.(int)$id_supply_order;
 
@@ -1926,21 +1920,13 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if (!Validate::isLoadedObject($supply_order_state))
 			return;
 
-		$content = '<span style="width:20px; margin-right:5px;">';
+		$content = '';
 		if ($supply_order_state->editable == false)
-			$content .= '<a href="'.$this->context->link->getAdminLink('AdminPdf').'&submitAction=generateSupplyOrderFormPDF&id_supply_order='.(int)$supply_order->id.'" title="'.$this->l('Export as PDF').'"><img src="../img/admin/pdf.gif" alt=""/></a>';
-		else
-			$content .= '-';
-		$content .= '</span>';
-
-		$content .= '<span style="width:20px">';
+			$content .= '<a class="btn btn-default" href="'.$this->context->link->getAdminLink('AdminPdf').'&submitAction=generateSupplyOrderFormPDF&id_supply_order='.(int)$supply_order->id.'" title="'.$this->l('Export as PDF').'"><i class="icon-print"></i></a>';
 		if ($supply_order_state->enclosed == true && $supply_order_state->receipt_state == true)
 			$content .= '<a href="'.$this->context->link->getAdminLink('AdminSupplyOrders').'&amp;id_supply_order='.(int)$supply_order->id.'
 						 &csv_order_details" title='.$this->l('Export as CSV').'">
-						 <img src="../img/admin/excel_file.png" alt=""/></a>';
-		else
-			$content .= '-';
-		$content .= '</span>';
+						 <i class="icon-table"></i></a>';
 
 
 		return $content;
