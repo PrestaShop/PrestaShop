@@ -428,7 +428,7 @@ class ToolsCore
 		if ((int)$cookie->id_currency)
 			$currency = Currency::getCurrencyInstance((int)$cookie->id_currency);
 
-		if (is_object($currency) && (int)$currency->id && (int)$currency->deleted != 1 && $currency->active)
+		if (is_object($currency) && (int)$currency->id && !(bool)$currency->deleted && (bool)$currency->active)
 		{
 			$cookie->id_currency = (int)$currency->id;
 			if ($currency->isAssociatedToShop())
@@ -444,6 +444,9 @@ class ToolsCore
 				}
 			}
 		}
+		else
+			$currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
+			
 		return $currency;
 	}
 

@@ -251,8 +251,10 @@ class TranslateCore
 		// If tags were explicitely provided, we want to use them *after* the translation string is escaped.
 		if (!empty($params['tags']))
 		{
-			foreach ($params['tags'] as $position => $tag)
+			foreach ($params['tags'] as $index => $tag)
 			{
+				// Make positions start at 1 so that it behaves similar to the %1$d etc. sprintf positional params
+				$position = $index + 1;
 				// extract tag name
 				$match = array();
 				if (preg_match('/^\s*<\s*(\w+)/', $tag, $match))
@@ -262,6 +264,7 @@ class TranslateCore
 
 					$string = str_replace('['.$position.']', $opener, $string);
 					$string = str_replace('[/'.$position.']', $closer, $string);
+					$string = str_replace('['.$position.'/]', $opener.$closer, $string);
 				}
 			}
 		}
