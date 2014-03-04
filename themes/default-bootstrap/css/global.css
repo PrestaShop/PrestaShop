@@ -5258,7 +5258,6 @@ textarea {
   background: white; }
 
 #columns {
-  z-index: 1;
   position: relative;
   padding-bottom: 50px;
   padding-top: 15px; }
