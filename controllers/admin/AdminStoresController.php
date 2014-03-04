@@ -49,7 +49,7 @@ class AdminStoresControllerCore extends AdminController
 			'name' => array('title' => $this->l('Name'), 'filter_key' => 'a!name'),
 			'address1' => array('title' => $this->l('Address'), 'filter_key' => 'a!address1'),
 			'city' => array('title' => $this->l('City')),
-			'postcode' => array('title' => $this->l('Zip code')),
+			'postcode' => array('title' => $this->l('Zip/postal code')),
 			'state' => array('title' => $this->l('State'), 'filter_key' => 'st!name'),
 			'country' => array('title' => $this->l('Country'), 'filter_key' => 'cl!name'),
 			'phone' => array('title' => $this->l('Phone')),
@@ -203,7 +203,7 @@ class AdminStoresControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Postal Code/Zip Code'),
+					'label' => $this->l('Zip/postal Code'),
 					'name' => 'postcode',
 					'required' => true
 				),
@@ -369,11 +369,11 @@ class AdminStoresControllerCore extends AdminController
 			$postcode = Tools::getValue('postcode');		
 			/* Check zip code format */
 			if ($country->zip_code_format && !$country->checkZipCode($postcode))
-				$this->errors[] = Tools::displayError('Your Postal / Zip Code is incorrect.').'<br />'.Tools::displayError('It must be entered as follows:').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
+				$this->errors[] = Tools::displayError('Your Zip/postal code is incorrect.').'<br />'.Tools::displayError('It must be entered as follows:').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
 			elseif(empty($postcode) && $country->need_zip_code)
-				$this->errors[] = Tools::displayError('A Zip / Postal code is required.');
+				$this->errors[] = Tools::displayError('A Zip/postal code is required.');
 			elseif ($postcode && !Validate::isPostCode($postcode))
-				$this->errors[] = Tools::displayError('The Zip / Postal code is invalid.');
+				$this->errors[] = Tools::displayError('The Zip/postal code is invalid.');
 
 			/* Store hours */
 			$_POST['hours'] = array();
@@ -450,7 +450,7 @@ class AdminStoresControllerCore extends AdminController
 				'type' => 'text'
 			),
 			'PS_SHOP_CODE' => array(
-				'title' => $this->l('Postal Code/Zip code'),
+				'title' => $this->l('Zip/postal code'),
 				'validation' => 'isGenericName',
 				'type' => 'text'
 			),

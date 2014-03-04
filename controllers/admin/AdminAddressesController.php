@@ -359,11 +359,11 @@ class AdminAddressesControllerCore extends AdminController
 		$postcode = Tools::getValue('postcode');		
 		/* Check zip code format */
 		if ($country->zip_code_format && !$country->checkZipCode($postcode))
-			$this->errors[] = Tools::displayError('Your Postal / Zip Code is incorrect.').'<br />'.Tools::displayError('It must be entered as follows:').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
+			$this->errors[] = Tools::displayError('Your Zip/postal code is incorrect.').'<br />'.Tools::displayError('It must be entered as follows:').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
 		elseif(empty($postcode) && $country->need_zip_code)
-			$this->errors[] = Tools::displayError('A Zip / Postal code is required.');
+			$this->errors[] = Tools::displayError('A Zip/postal code is required.');
 		elseif ($postcode && !Validate::isPostCode($postcode))
-			$this->errors[] = Tools::displayError('The Zip / Postal code is invalid.');
+			$this->errors[] = Tools::displayError('The Zip/postal code is invalid.');
 
 		if (Configuration::get('PS_ONE_PHONE_AT_LEAST') && !Tools::getValue('phone') && !Tools::getValue('phone_mobile'))		
 			$this->errors[] = Tools::displayError('You must register at least one phone number.');

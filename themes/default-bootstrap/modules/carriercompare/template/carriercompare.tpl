@@ -41,7 +41,7 @@
 			</select>
 		</div>
 		<div class="form-group last">
-			<label for="zipcode">{l s='Zip Code' mod='carriercompare'}</label>
+			<label for="zipcode">{l s='Zip/postal code' mod='carriercompare'}</label>
 			<input class="form-control" type="text" name="zipcode" id="zipcode" value="{$zipcode|escape:'html':'UTF-8'}"/> ({l s='Needed for certain carriers.' mod='carriercompare'})
 		</div>
 		<div id="carriercompare_errors" style="display: none;">
