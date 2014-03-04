@@ -486,7 +486,7 @@
 													<div class="col-lg-10">
 														<div class="input-group fixed-width-lg">
 															<span class="input-group-addon">
-																<i class="icon-key"></i>
+																<i class="icon-unlock"></i>
 															</span>
 															<input type="password" id="old_passwd" name="old_passwd" class="form-control" value="" required="required">
 														</div>
