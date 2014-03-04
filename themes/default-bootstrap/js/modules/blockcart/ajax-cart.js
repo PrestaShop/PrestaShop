@@ -98,6 +98,9 @@ $(document).ready(function()
 		$('.layer_cart_overlay').hide();
 		$('#layer_cart').fadeOut('fast');
 	});
+	
+	$('#columns .layer_cart_overlay').detach().prependTo('#columns');
+	$('#columns #layer_cart').detach().prependTo('#columns');
 });
 
 //JS Object : update the cart by ajax actions
