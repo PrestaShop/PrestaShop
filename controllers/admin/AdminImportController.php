@@ -374,7 +374,7 @@ class AdminImportControllerCore extends AdminController
 					'firstname' => array('label' => $this->l('First Name *')),
 					'address1' => array('label' => $this->l('Address 1 *')),
 					'address2' => array('label' => $this->l('Address 2')),
-					'postcode' => array('label' => $this->l('Postal code / Zipcode *')),
+					'postcode' => array('label' => $this->l('Zip/postal code *')),
 					'city' => array('label' => $this->l('City *')),
 					'country' => array('label' => $this->l('Country *')),
 					'state' => array('label' => $this->l('State')),
