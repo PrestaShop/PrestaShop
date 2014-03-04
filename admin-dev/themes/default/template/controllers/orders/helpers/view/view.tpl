@@ -557,7 +557,7 @@
 						</span> -->
 					</h3>
 					<div class="row">
-						<div class="col-sm-6">
+						<div class="col-md-6">
 							{if ($customer->isGuest())}
 								{l s='This order has been placed by a guest.'}
 								{if (!Customer::customerExists($customer->email))}
@@ -591,7 +591,7 @@
 							{/if}
 						</div>
 
-						<div class="col-sm-6">
+						<div class="col-md-6">
 							<div class="form-group">
 								<a href="?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;viewcustomer&amp;token={getAdminToken tab='AdminCustomers'}" class="btn btn-default btn-block">{l s='View full details...'}</a>
 							</div>
@@ -639,7 +639,7 @@
 				<!-- Tab content -->
 				<div class="tab-content panel">
 					<!-- Tab status -->
-					<div class="tab-pane active" id="addressShipping">
+					<div class="tab-pane fade in active" id="addressShipping">
 						<!-- Addresses -->
 						{if !$order->isVirtual()}
 						<!-- Shipping address -->
@@ -690,7 +690,7 @@
 							</div>
 						{/if}
 					</div>
-					<div class="tab-pane" id="addressInvoice">
+					<div class="tab-pane fade" id="addressInvoice">
 						<!-- Invoice address -->
 						{if $can_edit}
 							<form class="form-horizontal" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$order->id}">
