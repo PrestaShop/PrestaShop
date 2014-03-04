@@ -117,7 +117,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				'class' => 'fixed-width-md'
 			),
 			'behavior' => array(
-				'title' => $this->l('Behaviour')
+				'title' => $this->l('Behavior')
 			),
 			'rate' => array(
 				'title' => $this->l('Tax'),
@@ -283,7 +283,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Behaviour'),
+					'label' => $this->l('Behavior'),
 					'name' => 'behavior',
 					'required' => false,
 					'options' => array(
@@ -305,7 +305,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 						'name' => 'name'
 					),
 					'hint' => array(
-						$this->l('You must define the behaviour if an address matches multiple rules:').'<br>',
+						$this->l('You must define the behavior if an address matches multiple rules:').'<br>',
 						$this->l('- This tax only: Will apply only this tax').'<br>',
 						$this->l('- Combine: Combine taxes (e.g.: 10% + 5% = 15%)').'<br>',
 						$this->l('- One after another: Apply taxes one after another (e.g.: 0 + 10% = 0 + 5% = 5.5)')
