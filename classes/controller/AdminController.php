@@ -1583,19 +1583,30 @@ class AdminControllerCore extends Controller
 
 			$sub_tabs = Tab::getTabs($this->context->language->id, $tab['id_tab']);
 			foreach ($sub_tabs as $index2 => $sub_tab)
-			{
-				// class_name is the name of the class controller
-				if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'] && $sub_tab['class_name'] != 'AdminCarrierWizard')
+			{	
+				//check if module is enable and 
+				if (isset($sub_tab['module']) && !empty($sub_tab['module']))
+				{
+					$module = Module::getInstanceByName($sub_tab['module']);
+					if (!$module->active)
+					{
+						unset($sub_tabs[$index2]);
+						continue;
+					}
+				}
+				
+				if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'] && $sub_tab['class_name'] != 'AdminCarrierWizard') // class_name is the name of the class controller				
 				{
 					$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
 					$sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this) || $sub_tab['class_name'] == Tools::getValue('controller'));
 				}
 				else
-					unset($sub_tabs[$index2]);					
+					unset($sub_tabs[$index2]);				
 			}
+
 			$tabs[$index]['sub_tabs'] = $sub_tabs;
 		}
-		
+
 		if (Validate::isLoadedObject($this->context->employee))
 		{
 			$accesses = Profile::getProfileAccesses($this->context->employee->id_profile, 'class_name');
