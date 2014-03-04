@@ -72,11 +72,11 @@ $(document).ready(function () {
 		"success": function(result)
 		{
 			if(result.found) {
-				var html = '<ul class="clearfix">';
+				var html = '<ul class="list-unstyled">';
 				jQuery.each(result.customers, function() {
-					html += '<li><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a>'+(this.birthday ? ' - '+this.birthday:'')+'<br/>';
-					html += '<a href="mailto:'+this.email+'">'+this.email+'</a><br />';
-					html += '<a onclick="Customer.select('+this.id_customer+', \''+this.firstname+' '+this.lastname+'\'); return false;" href="#" class="button">{l s='Choose'}</a></li>';
+					html += '<li><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a>'+(this.birthday ? ' - '+this.birthday:'');
+					html += ' - '+this.email;
+					html += '<a onclick="Customer.select('+this.id_customer+', \''+this.firstname+' '+this.lastname+'\'); return false;" href="#" class="btn btn-default">{l s='Choose'}</a></li>';
 				});
 				html += '</ul>';
 			}
@@ -366,12 +366,14 @@ $(document).ready(function () {
 					<input type="hidden" name="sp_id_customer" id="id_customer" value="0" />
 					<div class="input-group">
 						<input type="text" name="customer" value="{l s='All customers'}" id="customer" autocomplete="off" />
-						<span class="input-group-addon"><i class="icon-search"></i></span>
+						<span class="input-group-addon"><i id="customerLoader" class="icon-refresh icon-spin" style="display: none;"></i> <i class="icon-search"></i></span>
 					</div>
-					
 				</div>
-				<img src="../img/admin/field-loader.gif" id="customerLoader" alt="{l s='Loading...'}" style="display: none;" />
-				<div id="customers"></div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-10 col-lg-offset-2">
+					<div id="customers"></div>
+				</div>
 			</div>
 
 			{if $combinations|@count != 0}
