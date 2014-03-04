@@ -848,6 +848,11 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		unset($this->toolbar_btn['export-csv-details']);
 		unset($this->toolbar_btn['new']);
 
+		$this->toolbar_btn['back'] = array(
+			'desc' => $this->l('Back'),
+			'href' => $this->context->link->getAdminLink('AdminSupplyOrders')
+		);
+
 		// renders list
 		$helper = new HelperList();
 		$this->setHelperDisplay($helper);
@@ -873,7 +878,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		// assigns var
 		$this->context->smarty->assign(array(
-			'content' => $content,						
+			'content' => $content,
 			'show_page_header_toolbar' => $this->show_page_header_toolbar,
 			'page_header_toolbar_title' => $this->page_header_toolbar_title,
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
@@ -1111,7 +1116,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$this->errors[] = Tools::displayError($this->l('The selected currency is not valid.'));
 
 			// get delivery date
-			if (strtotime(Tools::getValue('date_delivery_expected')) <= strtotime('-1 day'))
+			if (Tools::getValue('mod') != 'template' && strtotime(Tools::getValue('date_delivery_expected')) <= strtotime('-1 day'))
 				$this->errors[] = Tools::displayError($this->l('The date you specified cannot be in the past.'));
 
 			// gets threshold
