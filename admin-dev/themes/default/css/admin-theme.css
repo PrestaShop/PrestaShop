@@ -2894,7 +2894,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .list-empty { background-color: #fcfdfe !important; }
 .bootstrap .list-empty .list-empty-msg { text-align: center; display: block; width: 50%; margin: 20px auto; color: #999999; font-family: "Ubuntu Condensed", Helvetica, Arial, sans-serif; font-size: 1.4em; }
 .bootstrap .list-empty .list-empty-icon { color: #dedede; display: block; clear: both; font-size: 84px; text-shadow: white 1px 1px 0; }
-@media (max-width: 767px) { .bootstrap .table-responsive { width: 100%; margin-bottom: 12.75px; overflow-y: hidden; overflow-x: scroll; -ms-overflow-style: -ms-autohiding-scrollbar; border: 1px solid #dddddd; -webkit-overflow-scrolling: touch; }
+@media (max-width: 991px) { .bootstrap .table-responsive { width: 100%; margin-bottom: 12.75px; overflow-y: hidden; overflow-x: scroll; -ms-overflow-style: -ms-autohiding-scrollbar; border: 1px solid #dddddd; -webkit-overflow-scrolling: touch; }
   .bootstrap .table-responsive > .table { margin-bottom: 0; }
   .bootstrap .table-responsive > .table > thead > tr > th, .bootstrap .table-responsive > .table > thead > tr > td, .bootstrap .table-responsive > .table > tbody > tr > th, .bootstrap .table-responsive > .table > tbody > tr > td, .bootstrap .table-responsive > .table > tfoot > tr > th, .bootstrap .table-responsive > .table > tfoot > tr > td { white-space: nowrap; }
   .bootstrap .table-responsive > .table-bordered { border: 0; }
@@ -3219,8 +3219,8 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .module_list .module_list_item { display: table; width: 100%; padding: 5px 0; margin-bottom: -1px; background-color: white; border: solid 1px #9ed0ec; }
 .bootstrap .module_list .draggable { cursor: pointer; }
 .bootstrap .module_col_select { display: table-cell; width: 22px; min-height: 35px; vertical-align: middle; text-align: center; border-right: 1px solid #dddddd; }
-.bootstrap .module_col_position { display: table-cell; width: 60px; vertical-align: middle; text-align: right; }
-.bootstrap .module_col_position .positions { border: solid 1px #cccccc; background-color: #eeeeee; padding: 0 5px; font-size: 1.6em; color: #aaaaaa; cursor: move; text-shadow: white 1px 1px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px inset; box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px inset; }
+.bootstrap .module_col_position { display: table-cell; width: 70px; vertical-align: middle; text-align: right; }
+.bootstrap .module_col_position .positions { border: solid 1px #cccccc; background-color: #eeeeee; padding: 0 5px; font-size: 1.4em; color: #aaaaaa; cursor: move; text-shadow: white 1px 1px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px inset; box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px inset; }
 .bootstrap .module_col_icon { display: table-cell; width: 50px; text-align: center; vertical-align: middle; }
 .bootstrap .module_col_infos { display: table-cell; height: 50px; vertical-align: middle; }
 .bootstrap .module_col_actions { display: table-cell; width: 160px; padding: 0 10px; vertical-align: middle; text-align: right; }

@@ -249,7 +249,8 @@ class AdminModulesPositionsControllerCore extends AdminController
 	{
 		$this->page_header_toolbar_btn['save'] = array(
 			'href' => self::$currentIndex.'&addToHook'.($this->display_key ? '&show_modules='.$this->display_key : '').'&token='.$this->token,
-			'desc' => $this->l('Transplant a module', null, null, false)
+			'desc' => $this->l('Transplant a module', null, null, false),
+			'icon' => 'process-icon-anchor'
 		);
 
 		return parent::initPageHeaderToolbar();
