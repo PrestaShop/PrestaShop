@@ -2894,7 +2894,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .list-empty { background-color: #fcfdfe !important; }
 .bootstrap .list-empty .list-empty-msg { text-align: center; display: block; width: 50%; margin: 20px auto; color: #999999; font-family: "Ubuntu Condensed", Helvetica, Arial, sans-serif; font-size: 1.4em; }
 .bootstrap .list-empty .list-empty-icon { color: #dedede; display: block; clear: both; font-size: 84px; text-shadow: white 1px 1px 0; }
-@media (max-width: 767px) { .bootstrap .table-responsive { width: 100%; margin-bottom: 12.75px; overflow-y: hidden; overflow-x: scroll; -ms-overflow-style: -ms-autohiding-scrollbar; border: 1px solid #dddddd; -webkit-overflow-scrolling: touch; }
+@media (max-width: 991px) { .bootstrap .table-responsive { width: 100%; margin-bottom: 12.75px; overflow-y: hidden; overflow-x: scroll; -ms-overflow-style: -ms-autohiding-scrollbar; border: 1px solid #dddddd; -webkit-overflow-scrolling: touch; }
   .bootstrap .table-responsive > .table { margin-bottom: 0; }
   .bootstrap .table-responsive > .table > thead > tr > th, .bootstrap .table-responsive > .table > thead > tr > td, .bootstrap .table-responsive > .table > tbody > tr > th, .bootstrap .table-responsive > .table > tbody > tr > td, .bootstrap .table-responsive > .table > tfoot > tr > th, .bootstrap .table-responsive > .table > tfoot > tr > td { white-space: nowrap; }
   .bootstrap .table-responsive > .table-bordered { border: 0; }
