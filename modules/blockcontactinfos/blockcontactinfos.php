@@ -111,22 +111,22 @@ class Blockcontactinfos extends Module
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Company name :'),
+						'label' => $this->l('Company name'),
 						'name' => 'blockcontactinfos_company',
 					),
 					array(
 						'type' => 'textarea',
-						'label' => $this->l('Address :'),
+						'label' => $this->l('Address'),
 						'name' => 'blockcontactinfos_address',
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Phone number :'),
+						'label' => $this->l('Phone number'),
 						'name' => 'blockcontactinfos_phone',
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Email :'),
+						'label' => $this->l('Email'),
 						'name' => 'blockcontactinfos_email',
 					),
 				),
