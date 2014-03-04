@@ -235,7 +235,7 @@ class AdminCountriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Does it need zip/postal code?'),
+					'label' => $this->l('Does it need Zip/postal code?'),
 					'name' => 'need_zip_code',
 					'required' => false,
 					'is_bool' => true,
@@ -254,10 +254,10 @@ class AdminCountriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Zip/post code format'),
+					'label' => $this->l('Zip/postal code format'),
 					'name' => 'zip_code_format',
 					'required' => true,
-					'hint' => $this->l('Zip Code format (L for a letter, N for a number and C for the ISO code). For example, NNNNN for the United States. No verification if undefined.')
+					'desc' => $this->l('Indicate the format of the postal code: use L for a letter, N for a number, and C for the country\'s ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; ANNNNAAA for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.')
 				),
 				array(
 					'type' => 'address_layout',
