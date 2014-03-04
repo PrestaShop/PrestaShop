@@ -134,7 +134,7 @@ Date.prototype.format = function(format) {
 			break;
 
 			case 'mm':
-			result += (this.getDate() < 9 ? '0' : '')+(this.getMonth() + 1) + formatSeparator;
+			result += (this.getMonth() < 9 ? '0' : '')+(this.getMonth() + 1) + formatSeparator;
 			break;
 
 			case 'yy':
