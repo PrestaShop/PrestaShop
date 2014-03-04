@@ -23,7 +23,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <!-- MODULE Block cart -->
+{if isset($blockcart_top) && $blockcart_top}
 <div class="col-sm-4 clearfix{if $PS_CATALOG_MODE} header_user_catalog{/if}">
+{/if}
 	<div id="shopping_cart">
 		<a href="{$link->getPageLink($order_process, true)|escape:'html':'UTF-8'}" title="{l s='View my shopping cart' mod='blockcart'}" rel="nofollow">
 			<b>{l s='Cart' mod='blockcart'}</b>
@@ -208,8 +210,11 @@
 			</div><!-- #cart_block -->
 		{/if}
 	</div>
+{if isset($blockcart_top) && $blockcart_top}
 </div>
-{if !$PS_CATALOG_MODE}
+{/if}
+{counter name=active_overlay assign=active_overlay}
+{if !$PS_CATALOG_MODE && $active_overlay == 1}
 	<div id="layer_cart">
 		<div class="clearfix">
 			<div class="layer_cart_product col-xs-12 col-md-6">

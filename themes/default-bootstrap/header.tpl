@@ -99,15 +99,11 @@
 						{include file="$tpl_dir./breadcrumb.tpl"}
 					{/if}
 					<div class="row">
-						<div id="top_column" class="center_column col-xs-12 col-sm-12">
-							{hook h="displayTopColumn"}
-						</div>
+						<div id="top_column" class="center_column col-xs-12 col-sm-12">{hook h="displayTopColumn"}</div>
 					</div>
 					<div class="row">
 						{if isset($left_column_size) && !empty($left_column_size)}
-						<div id="left_column" class="column col-xs-12 col-sm-{$left_column_size|intval}">
-							{$HOOK_LEFT_COLUMN}
-						</div>
+						<div id="left_column" class="column col-xs-12 col-sm-{$left_column_size|intval}">{$HOOK_LEFT_COLUMN}</div>
 						{/if}
 						<div id="center_column" class="center_column col-xs-12 col-sm-{12 - $left_column_size - $right_column_size}">
 	{/if}
