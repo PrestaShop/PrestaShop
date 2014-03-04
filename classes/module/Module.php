@@ -646,7 +646,6 @@ abstract class ModuleCore
 	 */
 	public function enable($forceAll = false)
 	{
-
 		// Retrieve all shops where the module is enabled
 		$list = Shop::getContextListShopID();
 		if (!$this->id || !is_array($list))
