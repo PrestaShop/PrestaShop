@@ -33,13 +33,15 @@
 				<div class="pull-left">
 					{include file='controllers/modules/filters.tpl'}
 				</div>
-				<div class="btn-group pull-right">
+				<div class="pull-right">
 					<a class="btn btn-default {if !isset($smarty.get.select)} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&amp;token={$smarty.get.token|htmlentities}" title="{l s='Normal view'}">
 						<i class="icon-list"></i> 
 					</a>
+					<!-- 					
 					<a class="btn btn-default {if isset($smarty.get.select) && $smarty.get.select == 'favorites'} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&amp;token={$smarty.get.token|htmlentities}&select=favorites" title="{l s='Favorites view'}">
 						<i class="icon-star"></i>
 					</a>
+					-->
 				</div>
 			</th>
 		</tr>
