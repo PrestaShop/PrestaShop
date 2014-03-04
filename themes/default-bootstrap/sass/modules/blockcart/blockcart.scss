@@ -3,10 +3,12 @@
 /*******************************************************************
 					Cart Block Styles
 ********************************************************************/
-#shopping_cart {
+#header #shopping_cart {
 	position: relative;
-	width: 270px;
 	float: right;
+}
+#shopping_cart {
+	width: 270px;
 	padding-top: 50px;
 	@media (max-width: $screen-xs) {
 		padding-top: 20px;

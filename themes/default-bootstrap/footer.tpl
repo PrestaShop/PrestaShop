@@ -25,9 +25,7 @@
 {if !$content_only}
 					</div><!-- #center_column -->
 					{if isset($right_column_size) && !empty($right_column_size)}
-						<div id="right_column" class="col-xs-12 col-sm-{$right_column_size|intval} column">
-							{$HOOK_RIGHT_COLUMN}
-						</div>
+						<div id="right_column" class="col-xs-12 col-sm-{$right_column_size|intval} column">{$HOOK_RIGHT_COLUMN}</div>
 					{/if}
 					</div><!-- .row -->
 				</div><!-- #columns -->
@@ -35,9 +33,7 @@
 			<!-- Footer -->
 			<div class="footer-container">
 				<footer id="footer"  class="container">
-					<div class="row">
-						{$HOOK_FOOTER}
-					</div>
+					<div class="row">{$HOOK_FOOTER}</div>
 				</footer>
 			</div><!-- #footer -->
 		</div><!-- #page -->
