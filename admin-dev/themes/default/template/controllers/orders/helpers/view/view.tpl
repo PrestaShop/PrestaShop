@@ -684,7 +684,7 @@
 										{/if}
 									</div>
 									<div class="col-sm-6">
-										<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.delivery->address1|urlencode},{$addresses.delivery->postcode|urlencode},{$addresses.delivery->city|urlencode}{if ($addresses.delivery->id_state)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.delivery->country|urlencode}&amp;markers={$addresses.delivery->address1|urlencode},{$addresses.delivery->postcode|urlencode},{$addresses.delivery->city|urlencode}{if ($addresses.delivery->id_state)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.delivery->country|urlencode}&amp;zoom=5&amp;size=400x210&amp;scale=2&amp;sensor=false" class="img-thumbnail">
+										<div id="map-delivery-canvas" style="height: 190px"></div>
 									</div>
 								</div>
 							</div>
@@ -733,7 +733,7 @@
 									{/if}
 								</div>
 								<div class="col-sm-6">
-									<img src="http://maps.googleapis.com/maps/api/staticmap?center={$addresses.invoice->address1|urlencode},{$addresses.invoice->postcode|urlencode},{$addresses.invoice->city|urlencode}{if ($addresses.invoice->id_state) && isset($addresses.deliveryState)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.invoice->country|urlencode}&amp;markers={$addresses.invoice->address1|urlencode},{$addresses.invoice->postcode|urlencode},{$addresses.invoice->city|urlencode},{$addresses.invoice->country|urlencode}&amp;zoom=5&amp;size=400x210&amp;scale=2&amp;sensor=false" class="img-thumbnail">
+									<div id="map-invoice-canvas" style="height: 190px"></div>
 								</div>
 							</div>
 						</div>
@@ -1199,8 +1199,38 @@
 	</div>
 
 	<script type="text/javascript">
-		$(document).ready(function(){
+		$(document).ready(function()
+		{
 			$(".textarea-autosize").autosize();
+			var geocoder = new google.maps.Geocoder();
+
+			geocoder.geocode({
+				address: '{$addresses.delivery->address1|urlencode},{$addresses.delivery->postcode|urlencode},{$addresses.delivery->city|urlencode}{if ($addresses.delivery->id_state)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.delivery->country|urlencode}'
+				}, function(results, status) {
+				if (status === google.maps.GeocoderStatus.OK)
+				{
+					var delivery_map = new google.maps.Map(document.getElementById('map-delivery-canvas'), {
+						zoom: 10,
+						mapTypeId: google.maps.MapTypeId.ROADMAP,
+						center: results[0].geometry.location
+					});
+					marker = new google.maps.Marker({ map: delivery_map, position: results[0].geometry.location });
+				}
+			});
+
+			geocoder.geocode({
+				address: '{$addresses.invoice->address1|urlencode},{$addresses.invoice->postcode|urlencode},{$addresses.invoice->city|urlencode}{if ($addresses.invoice->id_state) && isset($addresses.deliveryState)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.invoice->country|urlencode}'
+				}, function(results, status) {
+				if (status === google.maps.GeocoderStatus.OK)
+				{
+					var invoice_map = new google.maps.Map(document.getElementById('map-invoice-canvas'), {
+						zoom: 10,
+						mapTypeId: google.maps.MapTypeId.ROADMAP,
+						center: results[0].geometry.location
+					});
+					marker = new google.maps.Marker({ map: invoice_map, position: results[0].geometry.location });
+				}
+			});
 		});
 	</script>
 
