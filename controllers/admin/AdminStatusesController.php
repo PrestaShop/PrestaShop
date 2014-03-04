@@ -182,14 +182,10 @@ class AdminStatusesControllerCore extends AdminController
 				'color' => $this->getFieldValue($order_return_state, 'color'),
 			);
 		else
-		{
-			if ($this->getFieldsValue($order_return_state) !== false)
-				$helper->fields_value = $this->getFieldsValue($order_return_state);
-			else
-				$helper->fields_value =  array('name' => null, 'color' => '#ffffff');
-		}
+			$helper->fields_value = $this->getFieldsValue($order_return_state);
+
 		$helper->toolbar_btn = $this->toolbar_btn;
-		$helper->title = $this->l('Edit Order Status');
+		$helper->title = $this->l('Edit Return Status');
 		return $helper;
 	}
 
@@ -400,8 +396,13 @@ class AdminStatusesControllerCore extends AdminController
 			'send_email_on' => $this->getFieldValue($obj, 'send_email'),
 			'shipped_on' => $this->getFieldValue($obj, 'shipped'),
 			'paid_on' => $this->getFieldValue($obj, 'paid'),
-			'delivery_on' => $this->getFieldValue($obj, 'delivery')
+			'delivery_on' => $this->getFieldValue($obj, 'delivery'),
 		);
+
+		if ($this->getFieldValue($obj, 'color') !== false)
+			$this->fields_value['color'] = $this->getFieldValue($obj, 'color');
+		else
+			$this->fields_value['color'] = "#ffffff";
 
 		return parent::renderForm();
 	}
@@ -422,7 +423,7 @@ class AdminStatusesControllerCore extends AdminController
 		$this->fields_form[0]['form'] = array(
 			'tinymce' => true,
 			'legend' => array(
-				'title' => $this->l('Order status'),
+				'title' => $this->l('Return status'),
 				'icon' => 'icon-time'
 			),
 			'input' => array(
@@ -441,7 +442,6 @@ class AdminStatusesControllerCore extends AdminController
 					'type' => 'color',
 					'label' => $this->l('Color'),
 					'name' => 'color',
-					'value' => '#f12345',
 					'hint' => $this->l('Status will be highlighted in this color. HTML colors only.').' "lightblue", "#CC6600")'
 				)
 			),
