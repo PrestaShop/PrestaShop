@@ -450,7 +450,7 @@
                                             {/if}
                                         </a>
                                         <a class="btn btn-default hide_checkbox{if $input.expand.default == 'show'} hidden {/if}" href="#">
-                                            <i class="icon-{$input.expand.show.icon}"></i>
+                                            <i class="icon-{$input.expand.hide.icon}"></i>
                                             {$input.expand.hide.text}
                                             {if isset($input.expand.print_total) && $input.expand.print_total > 0}
                                                 <span class="badge">{$input.expand.print_total}</span>
