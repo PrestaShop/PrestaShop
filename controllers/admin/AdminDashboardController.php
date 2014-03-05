@@ -131,7 +131,7 @@ class AdminDashboardControllerCore extends AdminController
 		{
 			$forms['carriers']['fields']['CONF_'.strtoupper($carrier['id_reference']).'_SHIP'] = array(
 				'title' => $carrier['name'],
-				'desc' => sprintf($this->l('What the domestic delivery costs in %% of the price charged to customer with %s.'), $carrier['name']),
+				'desc' => sprintf($this->l('For the carrier named %s, indicate the domestic delivery costs  in percentage of the price charged to customers.'), $carrier['name']),
 				'validation' => 'isPercentage',
 				'cast' => 'floatval',
 				'type' => 'text',
@@ -140,7 +140,7 @@ class AdminDashboardControllerCore extends AdminController
 			);
 			$forms['carriers']['fields']['CONF_'.strtoupper($carrier['id_reference']).'_SHIP_OVERSEAS'] = array(
 				'title' => $carrier['name'],
-				'desc' => sprintf($this->l('What the overseas delivery costs in %% of the price charged to customer with %s.'), $carrier['name']),
+				'desc' => sprintf($this->l('For the carrier named %s, indicate the overseas delivery costs in percentage of the price charged to customers.'), $carrier['name']),
 				'validation' => 'isPercentage',
 				'cast' => 'floatval',
 				'type' => 'text',
@@ -149,11 +149,11 @@ class AdminDashboardControllerCore extends AdminController
 			);
 		}
 
-		$forms['carriers']['description'] = $this->l('Example: If you charge $10 of shipping fees to your customer but for which you pay $4, you need to indicate 40%"');
+		$forms['carriers']['description'] = $this->l('Method: Indicate the percentage of your carrier margin. For example, if you charge $10 of shipping fees to your customer for each shipment, but you really pay $4 to this carrier, then you should indicate "40" in the percentage field.');
 
 		$forms['other']['fields']['CONF_AVERAGE_PRODUCT_MARGIN'] = array(
-			'title' => $this->l('Average gross margin (Selling price / Buying price)'),
-			'desc' => $this->l('Only used if you do not specify your buying price for each product.'),
+			'title' => $this->l('Average gross margin'),
+			'desc' => $this->l('This percentage is calculated like this: ((total sales revenue) - (cost of goods sold)) / (total sales revenue) * 100.'.$this->l('This value is only used if you do not specify the wholesale price for each product.'),
 			'validation' => 'isPercentage',
 			'cast' => 'intval',
 			'type' => 'text',
@@ -162,7 +162,8 @@ class AdminDashboardControllerCore extends AdminController
 		);
 
 		$forms['other']['fields']['CONF_ORDER_FIXED'] = array(
-			'title' => $this->l('Other fee per order'),
+			'title' => $this->l('Other fees per order'),
+			'desc' => $this->l('Add up all of your additional costs per order.'),
 			'validation' => 'isPrice',
 			'cast' => 'floatval',
 			'type' => 'text',
@@ -243,7 +244,8 @@ class AdminDashboardControllerCore extends AdminController
 			'calendar' => $calendar_helper->generate(),
 			'PS_DASHBOARD_SIMULATION' => Configuration::get('PS_DASHBOARD_SIMULATION'),
 			'datepickerFrom' => Tools::getValue('datepickerFrom', $this->context->employee->stats_date_from),
-			'datepickerTo' => Tools::getValue('datepickerTo', $this->context->employee->stats_date_to)
+			'datepickerTo' => Tools::getValue('datepickerTo', $this->context->employee->stats_date_to),
+			'preselect_date_range' => Tools::getValue('preselectDateRange', $this->context->employee->preselect_date_range)
 		);
 		return parent::renderView();
 	}
@@ -268,6 +270,7 @@ class AdminDashboardControllerCore extends AdminController
 		{
 			$this->context->employee->stats_date_from = Tools::getValue('date_from');
 			$this->context->employee->stats_date_to = Tools::getValue('date_to');
+			$this->context->employee->preselect_date_range = Tools::getValue('preselectDateRange');
 
 			if (Tools::getValue('datepicker_compare'))
 			{
