@@ -3,13 +3,13 @@ include('config/config.php');
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') die('forbiden');
 include('include/utils.php');
 
-if (strpos($_POST['path'], '/') === 0
-	|| strpos($_POST['path'], '../') !== false
-	|| strpos($_POST['path'], './') === 0
+if (strpos($_POST['path'], DIRECTORY_SEPARATOR) === 0
+	|| strpos($_POST['path'], '..'.DIRECTORY_SEPARATOR) !== false
+	|| strpos($_POST['path'], '.'.DIRECTORY_SEPARATOR) === 0
 )
 	die('wrong path');
 
-if (strpos($_POST['name'], '/') !== false)
+if (strpos($_POST['name'], DIRECTORY_SEPARATOR) !== false)
 	die('wrong path');
 
 $path = $current_path.$_POST['path'];

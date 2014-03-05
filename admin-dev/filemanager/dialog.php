@@ -12,10 +12,10 @@ else
 
 	if (isset($_GET['fldr'])
 		&& !empty($_GET['fldr'])
-		&& strpos($_GET['fldr'], '../') === false
-		&& strpos($_GET['fldr'], './') === false
+		&& strpos(urldecode($_GET['fldr']), '..'.DIRECTORY_SEPARATOR) === false
+		&& strpos(urldecode($_GET['fldr']), '.'.DIRECTORY_SEPARATOR) === false
 	)
-		$subdir = urldecode(trim($_GET['fldr'], '/').'/');
+		$subdir = urldecode(trim($_GET['fldr'], DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR);
 	else
 		$subdir = '';
 
