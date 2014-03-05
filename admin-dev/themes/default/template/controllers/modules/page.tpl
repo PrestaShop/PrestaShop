@@ -95,14 +95,14 @@
 							</div>
 						</div>
 					</form>
-					<a class="categoryModuleFilterLink list-group-item {if isset($categoryFiltered.favorites)}active{/if}" href="{$currentIndex}&amp;token={$token}&amp;filterCategory=favorites">
+					<a class="categoryModuleFilterLink list-group-item {if isset($categoryFiltered.favorites)}active{/if}" href="{$currentIndex}&amp;token={$token}&amp;filterCategory=favorites" id="filter_favorite">
 						{l s='Favorites'} <span id="favorite-count" class="badge pull-right">{$nb_modules_favorites}</span>
 					</a>
-					<a class="categoryModuleFilterLink list-group-item {if count($categoryFiltered) lte 0}active{/if}" href="{$currentIndex}&amp;token={$token}&amp;unfilterCategory=yes">
+					<a class="categoryModuleFilterLink list-group-item {if count($categoryFiltered) lte 0}active{/if}" href="{$currentIndex}&amp;token={$token}&amp;unfilterCategory=yes" id="filter_all">
 						{l s='All'} <span class="badge pull-right">{$nb_modules}</span>
 					</a>
 					{foreach from=$list_modules_categories item=module_category key=module_category_key}
-						<a class="categoryModuleFilterLink list-group-item {if isset($categoryFiltered[$module_category_key])}active{/if}" href="{$currentIndex}&amp;token={$token}&amp;{if isset($categoryFiltered[$module_category_key])}un{/if}filterCategory={$module_category_key}">
+						<a class="categoryModuleFilterLink list-group-item {if isset($categoryFiltered[$module_category_key])}active{/if}" href="{$currentIndex}&amp;token={$token}&amp;{if isset($categoryFiltered[$module_category_key])}un{/if}filterCategory={$module_category_key}" id="filter_{$module_category_key}">
 							{$module_category.name} <span class="badge pull-right">{$module_category.nb}</span>
 						</a>
 					{/foreach}
