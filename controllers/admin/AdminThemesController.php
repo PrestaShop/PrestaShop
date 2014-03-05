@@ -2374,6 +2374,7 @@ class AdminThemesControllerCore extends AdminController
 
 			$this->img_error = $this->updateImages($xml);
 
+			$this->modules_errors = array();
 			foreach ($shops as $id_shop)
 			{
 				foreach ($_POST as $key => $value)
@@ -2383,15 +2384,22 @@ class AdminThemesControllerCore extends AdminController
 						$module = Module::getInstanceByName($value);
 						if ($module)
 						{
+							$is_installed_success = true;
 							if (!Module::isInstalled($module->name))
-								$module->install();
-							if (!Module::isEnabled($module->name))
-								$module->enable();
+								$is_installed_success = $module->install();
+							if ($is_installed_success)
+							{
+								if (!Module::isEnabled($module->name))
+									$module->enable();
 
-							if ((int)$module->id > 0 && isset($module_hook[$module->name]))
-								$this->hookModule($module->id, $module_hook[$module->name], $id_shop);
+								if ((int)$module->id > 0 && isset($module_hook[$module->name]))
+									$this->hookModule($module->id, $module_hook[$module->name], $id_shop);
+							}
+							else
+								$this->modules_errors[] = array('module_name' => $module->name, 'errors' => $module->getErrors());
+
+							unset($module_hook[$module->name]);
 						}
-						unset($module_hook[$module->name]);
 
 					}
 					else if (strncmp($key, 'to_enable', strlen('to_enable')) == 0)
@@ -2399,15 +2407,23 @@ class AdminThemesControllerCore extends AdminController
 						$module = Module::getInstanceByName($value);
 						if ($module)
 						{
+							$is_installed_success = true;
 							if (!Module::isInstalled($module->name))
-								$module->install();
-							if (!Module::isEnabled($module->name))
-								$module->enable();
+								$is_installed_success = $module->install();
 
-							if ((int)$module->id > 0 && isset($module_hook[$module->name]))
-								$this->hookModule($module->id, $module_hook[$module->name], $id_shop);
+							if ($is_installed_success)
+							{
+								if (!Module::isEnabled($module->name))
+									$module->enable();
+
+								if ((int)$module->id > 0 && isset($module_hook[$module->name]))
+									$this->hookModule($module->id, $module_hook[$module->name], $id_shop);
+							}
+							else
+								$this->modules_errors[] = array('module_name' => $module->name, 'errors' => $module->getErrors());
+
+							unset($module_hook[$module->name]);
 						}
-						unset($module_hook[$module->name]);
 
 					}
 					else if (strncmp($key, 'to_disable', strlen('to_disable')) == 0)
@@ -2456,6 +2472,7 @@ class AdminThemesControllerCore extends AdminController
 			'doc' => $this->doc,
 			'theme_name' => $this->theme_name,
 			'img_error' => $this->img_error,
+			'modules_errors' => $this->modules_errors,
 			'back_link' => Context::getContext()->link->getAdminLink('AdminThemes')
 		);
 
