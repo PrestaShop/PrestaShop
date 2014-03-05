@@ -17,7 +17,7 @@
 					<div class="datepicker2" data-date="{$date_to}" data-date-format="{$date_format}"></div>
 				</div>
 				{/if}
-				<div class="col-sm-12 col-lg-4 pull-right">
+				<div class="col-xs-12 col-sm-6 col-lg-4 pull-right">
 					<div id='datepicker-form' class='form-inline'>
 						<div id='date-range' class='form-date-group'>
 							<div  class='form-date-heading'>

@@ -59,10 +59,12 @@
 						<button type="button" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev{if isset($preselect_date_range) && $preselect_date_range == 'prev-year'} active{/if}">
 							{l s='Year'}-1
 						</button>
+						<!--
 						<button type="submit" name="submitDateRealTime" class="hide btn btn-default submitDateRealTime {if $dashboard_use_push}active{/if}" value="{!$dashboard_use_push|intval}">
 							{l s='Real Time'}
-						</button>
+						</button> -->
 					</div>
+
 
 					<input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$date_from|escape}" class="form-control">
 					<input type="hidden" name="datepickerTo" id="datepickerTo" value="{$date_to|escape}" class="form-control">
@@ -71,11 +73,13 @@
 					<div class="form-group pull-right">
 						<button id="datepickerExpand" class="btn btn-default" type="button">
 							<i class="icon-calendar-empty"></i>
-							{l s='From'}
-							<strong class="text-info" id="datepicker-from-info">{$date_from|escape}</strong>
-							{l s='To'}
-							<strong class="text-info" id="datepicker-to-info">{$date_to|escape}</strong>
-							<strong class="text-info" id="datepicker-diff-info"></strong>
+							<span class="hidden-xs">
+								{l s='From'}
+								<strong class="text-info" id="datepicker-from-info">{$date_from|escape}</strong>
+								{l s='To'}
+								<strong class="text-info" id="datepicker-to-info">{$date_to|escape}</strong>
+								<strong class="text-info" id="datepicker-diff-info"></strong>
+							</span>
 							<i class="icon-caret-down"></i>
 						</button>
 					</div>

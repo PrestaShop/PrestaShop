@@ -337,8 +337,7 @@ $(document).ready(function() {
 	});
 });
 
-function confirm_modal(heading, question, left_button_txt, right_button_txt, left_button_callback, right_button_callback)
-{
+function confirm_modal(heading, question, left_button_txt, right_button_txt, left_button_callback, right_button_callback) {
 	var confirmModal =
 		$('<div class="bootstrap modal hide fade">' +
 			'<div class="modal-dialog">' +
@@ -351,7 +350,6 @@ function confirm_modal(heading, question, left_button_txt, right_button_txt, lef
 			'<div class="modal-body">' +
 			'<p>' + question + '</p>' +
 			'</div>' +
-
 			'<div class="modal-footer">' +
 			'<a href="#" id="confirm_modal_left_button" class="btn btn-primary">' +
 			left_button_txt +
@@ -364,23 +362,19 @@ function confirm_modal(heading, question, left_button_txt, right_button_txt, lef
 			'</div>' +
 			'</div>');
 
-	confirmModal.find('#confirm_modal_left_button').click(function (event)
-	{
+	confirmModal.find('#confirm_modal_left_button').click(function (event) {
 		left_button_callback();
 		confirmModal.modal('hide');
 	});
 
-	confirmModal.find('#confirm_modal_right_button').click(function (event)
-	{
+	confirmModal.find('#confirm_modal_right_button').click(function (event) {
 		right_button_callback();
 		confirmModal.modal('hide');
 	});
-
 	confirmModal.modal('show');
 };
 
-$(".reset_ready").click(function ()
-{
+$(".reset_ready").click(function () {
 	var href = $(this).attr('href');
 	confirm_modal(header_confirm_reset, body_confirm_reset, left_button_confirm_reset, right_button_confirm_reset,
 		function ()
