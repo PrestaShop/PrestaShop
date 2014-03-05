@@ -217,7 +217,7 @@ class AdminCountriesControllerCore extends AdminController
 						'id' => 'id_currency',
 						'name' => 'name',
 						'default' => array(
-							'label' => $this->l('Default store currency.'),
+							'label' => $this->l('Default store currency'),
 							'value' => 0
 						)
 					)
