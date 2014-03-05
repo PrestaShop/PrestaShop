@@ -93,14 +93,15 @@ class Blockcmsinfo extends Module
 		if (isset($_POST['nbblocks']))
 		{
 			for ($i = 1; $i <= (int)$_POST['nbblocks']; $i++)
-			{
+				Db::getInstance()->execute('
+					INSERT INTO `'._DB_PREFIX_.'info` (`text`)
+					VALUES ("'.((isset($_POST['info'.$i.'_text']) && $_POST['info'.$i.'_text'] != '') ? pSQL($_POST['info'.$i.'_text']) : '').'")'
+				);
 
-				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'info` (`text`)
-											VALUES ("'.((isset($_POST['info'.$i.'_text']) && $_POST['info'.$i.'_text'] != '') ? pSQL($_POST['info'.$i.'_text']) : '').'")');
-			}
 			return true;
-		} else
-			return false;
+		}
+		
+		return false;
 	}
 
 	public function removeFromDB()
