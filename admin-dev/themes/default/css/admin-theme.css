@@ -2653,7 +2653,8 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 
 #employee_links i { font-size: 14px; }
 
-#ajax_running { position: absolute; top: 0; left: 0; }
+#ajax_running { position: absolute; height: 35px; width: 35px; top: 0; left: 0; background-color: rgba(0, 0, 0, 0.4); text-align: center; }
+#ajax_running i { font-size: 20px; color: rgba(255, 255, 255, 0.6); line-height: 35px; }
 
 #footer { z-index: 600; display: block; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: #aaaaaa; position: fixed; bottom: 0; height: 50px; line-height: 50px; -webkit-animation: fadeInUp 0.3s 0.2s ease both; -moz-animation: fadeInUp 0.3s 0.2s ease both; -ms-animation: fadeInUp 0.3s 0.2s ease both; -o-animation: fadeInUp 0.3s 0.2s ease both; animation: fadeInUp 0.3s 0.2s ease both; }
 #footer a { color: #cccccc; }
@@ -3205,6 +3206,9 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .data_loading, .bootstrap #dashboard .data_value span, .bootstrap #dashboard .data_value .dash_trend { opacity: 1; -webkit-animation-name: bounceG; animation-name: bounceG; -webkit-animation-duration: 0.7s; animation-duration: 0.7s; -webkit-animation-direction: linear; animation-direction: linear; -webkit-transform: scaleX(0.7); -moz-transform: scaleX(0.7); -ms-transform: scaleX(0.7); -o-transform: scaleX(0.7); transform: scaleX(0.7); -webkit-transform: scaleY(0.7); -moz-transform: scaleY(0.7); -ms-transform: scaleY(0.7); -o-transform: scaleY(0.7); transform: scaleY(0.7); }
 .bootstrap #dash_version { padding: 0 !important; overflow: hidden; }
 .bootstrap #dash_version iframe { height: 80px; width: 100%; }
+.bootstrap #calendar button.btn-default.active { border-color: #008abd; color: white; font-weight: 700; background-color: #00aff0; -webkit-box-shadow: none; box-shadow: none; }
+@media (max-width: 480px) { .bootstrap #calendar { padding: 10px !important; }
+  .bootstrap #calendar button.btn-default { padding: 5px 5px; } }
 .bootstrap #login { height: 100%; background-color: #092756; background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 40, color-stop(10%, rgba(104, 128, 138, 0.4)), color-stop(40%, rgba(138, 114, 76, 0))), -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(57, 173, 219, 0.25)), color-stop(100%, rgba(42, 60, 87, 0.4))), -webkit-gradient(linear, 0% 0%, 100% 100%, color-stop(0%, #670d10), color-stop(100%, #092756)); background: -webkit-radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), -webkit-linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), -webkit-linear-gradient(left top, #670d10, #092756); background: -moz-radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), -moz-linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), -moz-linear-gradient(left top, #670d10, #092756); background: -o-radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), -o-linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), -o-linear-gradient(left top, #670d10, #092756); background: radial-gradient(top left, rgba(104, 128, 138, 0.4) 10%, rgba(138, 114, 76, 0) 40%), linear-gradient(top, rgba(57, 173, 219, 0.25), rgba(42, 60, 87, 0.4)), linear-gradient(left top, #670d10, #092756); }
 .bootstrap #login-header { padding-top: 40px; margin-bottom: 30px; color: white; }
 .bootstrap #login-header h1, .bootstrap #login-header h4 { margin: 0; padding: 0; }
