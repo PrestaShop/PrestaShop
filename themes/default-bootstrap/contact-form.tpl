@@ -92,21 +92,21 @@
                     {if (!isset($customerThread.id_order) || $customerThread.id_order > 0)}
                         <div class="form-group selector1">
                             <label>{l s='Order reference'}</label>
-                            {if !isset($customerThread.id_order) && isset($isLogged) && $isLogged}
+                            {if !isset($customerThread.id_order) && isset($is_logged) && $is_logged}
                                 <select name="id_order" class="form-control">
                                     <option value="0">{l s='-- Choose --'}</option>
                                     {foreach from=$orderList item=order}
                                         <option value="{$order.value|intval}"{if $order.selected|intval} selected="selected"{/if}>{$order.label|escape:'html':'UTF-8'}</option>
                                     {/foreach}
                                 </select>
-                            {elseif !isset($customerThread.id_order) && empty($isLogged)}
+                            {elseif !isset($customerThread.id_order) && empty($is_logged)}
                                 <input class="form-control grey" type="text" name="id_order" id="id_order" value="{if isset($customerThread.id_order) && $customerThread.id_order|intval > 0}{$customerThread.id_order|intval}{else}{if isset($smarty.post.id_order) && !empty($smarty.post.id_order)}{$smarty.post.id_order|intval}{/if}{/if}" />
                             {elseif $customerThread.id_order|intval > 0}
                                 <input class="form-control grey" type="text" name="id_order" id="id_order" value="{$customerThread.id_order|intval}" readonly="readonly" />
                             {/if}
                         </div>
                     {/if}
-                    {if isset($isLogged) && $isLogged}
+                    {if isset($is_logged) && $is_logged}
                         <div class="form-group selector1">
                             <label class="unvisible">{l s='Product'}</label>
                             {if !isset($customerThread.id_product)}
