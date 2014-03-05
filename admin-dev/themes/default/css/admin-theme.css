@@ -2653,6 +2653,8 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 
 #employee_links i { font-size: 14px; }
 
+#ajax_running { position: absolute; top: 0; left: 0; }
+
 #footer { z-index: 600; display: block; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: #aaaaaa; position: fixed; bottom: 0; height: 50px; line-height: 50px; -webkit-animation: fadeInUp 0.3s 0.2s ease both; -moz-animation: fadeInUp 0.3s 0.2s ease both; -ms-animation: fadeInUp 0.3s 0.2s ease both; -o-animation: fadeInUp 0.3s 0.2s ease both; animation: fadeInUp 0.3s 0.2s ease both; }
 #footer a { color: #cccccc; }
 #footer.hide { display: none !important; }
@@ -2764,12 +2766,12 @@ a.link-social:hover { text-decoration: none; }
 #nav-mobile.expanded { height: 100%; }
 #nav-mobile li > a > i { display: inline-block; height: 32px; width: 32px; font-size: 20px; line-height: 32px; color: white; text-align: center; }
 #nav-mobile ul.menu { top: 35px; position: absolute; display: none; width: 480px; height: 100%; background-color: rgba(0, 0, 0, 0.8); margin: 0 0 100px 0; padding: 0; border-top: 1px black solid; list-style: none; -webkit-transition: all 0.35s ease-out; transition: all 0.35s ease-out; -webkit-animation: fadeInLeft 0.3s 0.2s ease both; -moz-animation: fadeInLeft 0.3s 0.2s ease both; -ms-animation: fadeInLeft 0.3s 0.2s ease both; -o-animation: fadeInLeft 0.3s 0.2s ease both; animation: fadeInLeft 0.3s 0.2s ease both; }
-#nav-mobile ul.menu li.searchtab { height: 32px; position: relative; background-color: #2d3341; border-bottom: #232732 solid 1px; -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 -3px 0 0 inset; box-shadow: rgba(0, 0, 0, 0.1) 0 -3px 0 0 inset; }
+#nav-mobile ul.menu li.searchtab { height: 42px; position: relative; background-color: #2d3341; border-bottom: #232732 solid 1px; -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 -3px 0 0 inset; box-shadow: rgba(0, 0, 0, 0.1) 0 -3px 0 0 inset; }
 #nav-mobile ul.menu li.searchtab #bo_query { color: #383f50; background-color: #d7dbe3; }
 #nav-mobile ul.menu li.searchtab .form-group.focus-search { position: absolute; width: 400px; height: 55px; z-index: 900; padding: 14px 13px 0 7px; top: 0; left: 0; background-color: #2d3341; border-bottom: #232732 solid 1px; }
 #nav-mobile ul.menu li.searchtab .form-group.focus-search #bo_query { width: 100%; }
 #nav-mobile ul.menu li.searchtab .clear_search { position: absolute; top: 0; right: 0; }
-#nav-mobile ul.menu li.searchtab i { font-size: 14px; }
+#nav-mobile ul.menu li.searchtab i { color: white; font-size: 14px; }
 #nav-mobile ul.menu li { background: #383f50; position: relative; }
 #nav-mobile ul.menu li a { display: block; height: 32px; line-height: 32px; position: relative; padding: 0 0 0 10px; border-bottom: 1px solid #232732; font-size: 12px; color: #c3c5ca; background-color: #383f50; text-transform: uppercase; text-decoration: none; -webkit-transition-property: background-color; transition-property: background-color; -webkit-transition-duration: 0.4s; transition-duration: 0.4s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; }
 #nav-mobile ul.menu li a i { color: rgba(255, 255, 255, 0.6); vertical-align: middle; -webkit-transition-property: color; transition-property: color; -webkit-transition-duration: 0.4s; transition-duration: 0.4s; -webkit-transition-timing-function: ease-out; -moz-transition-timing-function: ease-out; -o-transition-timing-function: ease-out; transition-timing-function: ease-out; }

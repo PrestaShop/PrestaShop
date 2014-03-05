@@ -87,7 +87,7 @@
 				</form>
 			</li>
 
-			{if count($quick_access) > 0}
+			{*if count($quick_access) > 0}
 				<li id="header_quick" class="maintab has_submenu">
 					<a href="#" id="quick_select" class="title">
 						<i class="icon-AdminFlash"></i>
@@ -101,7 +101,7 @@
 					{/foreach}
 					</ul>
 				</li>
-			{/if}
+			{/if*}
 
 			{foreach $tabs as $t}
 				{if $t.active}
