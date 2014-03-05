@@ -1082,7 +1082,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('The reference has to be unique.');
 			}
 			else if (Tools::getValue('id_supply_order') == 0 && (int)SupplyOrder::exists($ref) != 0)
-				$this->errors[] = Tools::displayError($'The reference has to be unique.');
+				$this->errors[] = Tools::displayError('The reference has to be unique.');
 		}
 
 		if ($this->errors)
