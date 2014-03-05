@@ -194,7 +194,21 @@
 {/if}
 			</ul>
 		</div>
-		<div class="collapse navbar-collapse navbar-collapse-primary">
+
+
+{if count($quick_access) > 0}
+			<ul id="header_quick">
+				<li class="dropdown">
+					<a href="#" id="quick_select" class="dropdown-toggle" data-toggle="dropdown">{l s='Quick Access'} <i class="icon-caret-down"></i></a>
+					<ul class="dropdown-menu">
+					{foreach $quick_access as $quick}
+						<li><a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window} onclick="return !window.open(this.href);"{/if}><i class="icon-chevron-right"></i> {$quick.name}</a></li>
+					{/foreach}
+					</ul>
+				</li>
+			</ul>
+{/if}
+
 			<ul id="header_employee_box">
 {if {$base_url}}
 				<li>
@@ -229,7 +243,7 @@
 			<span id="ajax_running" class="navbar-text">
 				<i class="icon-refresh icon-spin icon-fw"></i> {l s='Loading...'}
 			</span>
-		</div>
+
 {if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
 		</nav>{* end header_infos*}
 	</header>
