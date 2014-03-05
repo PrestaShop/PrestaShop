@@ -119,19 +119,11 @@ WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocktopm
 AND id_hook = @id_hook;
 
 UPDATE `PREFIX_hook_module` SET position = 4
-WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'homeslider')
-AND id_hook = @id_hook;
-
-UPDATE `PREFIX_hook_module` SET position = 5
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'themeconfigurator')
 AND id_hook = @id_hook;
 
-UPDATE `PREFIX_hook_module` SET position = 6
+UPDATE `PREFIX_hook_module` SET position = 5
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockwhislist')
-AND id_hook = @id_hook;
-
-UPDATE `PREFIX_hook_module` SET position = 7
-WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockbanner')
 AND id_hook = @id_hook;
 
 /* displayHomeTab && displayHomeTabContent */
