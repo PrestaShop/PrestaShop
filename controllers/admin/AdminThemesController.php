@@ -2275,14 +2275,7 @@ class AdminThemesControllerCore extends AdminController
 		if (isset($xml->images->image))
 			foreach ($xml->images->image as $row)
 			{
-				if ($result = (bool)Db::getInstance()->executes(sprintf('SELECT * FROM `'._DB_PREFIX_.'image_type` WHERE `name` = \'%s\' ', pSQL($row['name']))))
-					$return['error'][] = array(
-						'name' => strval($row['name']),
-						'width' => (int)$row['width'],
-						'height' => (int)$row['height']
-					);
-				else
-				{
+				Db::getInstance()->delete('image_type', '`name` = \''.pSQL($row['name']).'\'');
 					Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'image_type` (`name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`)
 					VALUES (\''.pSQL($row['name']).'\',
@@ -2299,7 +2292,6 @@ class AdminThemesControllerCore extends AdminController
 						'width' => (int)$row['width'],
 						'height' => (int)$row['height']
 					);
-				}
 			}
 
 		return $return;
@@ -2473,7 +2465,8 @@ class AdminThemesControllerCore extends AdminController
 			'theme_name' => $this->theme_name,
 			'img_error' => $this->img_error,
 			'modules_errors' => $this->modules_errors,
-			'back_link' => Context::getContext()->link->getAdminLink('AdminThemes')
+			'back_link' => Context::getContext()->link->getAdminLink('AdminThemes'),
+			'image_link' => Context::getContext()->link->getAdminLink('AdminImages')
 		);
 
 		return parent::renderView();
