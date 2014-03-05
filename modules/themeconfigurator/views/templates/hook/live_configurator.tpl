@@ -57,7 +57,7 @@
 			</p>
 		</div>
 		<div id="font-box">
-			<p>{l s='Title fonts' mod='themeconfigurator'}</p>
+			<p>{l s='Title font' mod='themeconfigurator'}</p>
 			<select name="font" id="font" class="font-list">
 				<option value="">{l s='Choose a font' mod='themeconfigurator'}</option>
 				{foreach $fonts as $key => $font}
