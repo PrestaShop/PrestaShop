@@ -47,7 +47,11 @@
 {/if}
 <div class="alert alert-warning">
     {l s='Warning: You may have to regenerate images to fit with this new theme.'}
+    <a href="{$image_link}">
+        <button class="btn btn-default">{l s='Go to the thumbnails regeneration page'}</button>
+    </a>
 </div>
+
 {if isset($img_error['error'])}
     <div class="alert alert-warning">
         {l s='Warning: Copy/paste your errors if you want to manually set the image type (in the "Images" page under the "Preferences" menu):'}
@@ -78,6 +82,4 @@
 <a href="{$back_link}">
     <button class="btn btn-default">{l s='Finish'}</button>
 </a>
-<a href="{$image_link}">
-    <button class="btn btn-default">{l s='Regenerate thumbnails'}</button>
-</a>
+
