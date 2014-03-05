@@ -491,7 +491,7 @@ else
 									<input id="select-type-5" name="radio-sort" type="radio" data-item="ff-item-type-5" class="hide"/>
 									<label id="ff-item-type-5" title="<?php echo Tools::safeOutput(lang_Music); ?>" for="select-type-5" class="tip btn ff-label-type-5"><i class="icon-music"></i></label>
 								<?php } ?>
-								<input accesskey="f" type="text" class="filter-input" id="filter-input" name="filter" placeholder="<?php echo fix_strtolower(lang_Text_filter); ?>..." value="<?php echo $filter; ?>"/><?php if ($n_files > $file_number_limit_js)
+								<input accesskey="f" type="text" class="filter-input" id="filter-input" name="filter" placeholder="<?php echo fix_strtolower(lang_Text_filter); ?>..." value="<?php echo Tools::safeOutput($filter); ?>"/><?php if ($n_files > $file_number_limit_js)
 								{
 									?><label id="filter" class="btn"><i class="icon-play"></i></label><?php } ?>
 
@@ -853,7 +853,7 @@ else
 		{
 			echo "file";
 		} ?>">
-			<a href="javascript:void('')" class="link" data-file="<?php echo Tools::safeOutput($file); ?>" data-field_id="<?php echo Tools::getValue('field_id'); ?>" data-function="<?php echo Tools::safeOutput($apply); ?>">
+			<a href="javascript:void('')" class="link" data-file="<?php echo Tools::safeOutput($file); ?>" data-field_id="<?php echo Tools::safeOutput(Tools::getValue('field_id')); ?>" data-function="<?php echo Tools::safeOutput($apply); ?>">
 				<div class="img-precontainer">
 					<?php if ($is_icon_thumb)
 					{
@@ -890,7 +890,7 @@ else
 				{
 					echo "ellipsis";
 				} ?>">
-					<a href="javascript:void('')" class="link" data-file="<?php echo $file; ?>" data-field_id="<?php echo Tools::getValue('field_id'); ?>" data-function="<?php echo Tools::safeOutput($apply); ?>">
+					<a href="javascript:void('')" class="link" data-file="<?php echo $file; ?>" data-field_id="<?php echo Tools::safeOutput(Tools::getValue('field_id')); ?>" data-function="<?php echo Tools::safeOutput($apply); ?>">
 						<?php echo Tools::safeOutput($filename); ?></a></h4>
 			</div>
 			<input type="hidden" class="date" value="<?php echo $file_array['date']; ?>"/>
