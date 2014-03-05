@@ -41,31 +41,32 @@
 				<form action="{$action|escape}" method="post" id="calendar_form" name="calendar_form" class="form-inline">
 
 					<div class="btn-group">
-						<button type="button" name="submitDateDay" class="btn btn-default submitDateDay">
+						<button type="button" name="submitDateDay" class="btn btn-default submitDateDay{if isset($preselect_date_range) && $preselect_date_range == 'day'} active{/if}">
 							{l s='Day'}
 						</button>
-						<button type="button" name="submitDateMonth" class="btn btn-default submitDateMonth">
+						<button type="button" name="submitDateMonth" class="btn btn-default submitDateMonth{if isset($preselect_date_range) && $preselect_date_range == 'month'} active{/if}">
 							{l s='Month'}
 						</button>
-						<button type="button" name="submitDateYear" class="btn btn-default submitDateYear">
+						<button type="button" name="submitDateYear" class="btn btn-default submitDateYear{if isset($preselect_date_range) && $preselect_date_range == 'year'} active{/if}">
 							{l s='Year'}
 						</button>
-						<button type="button" name="submitDateDayPrev" class="btn btn-default submitDateDayPrev">
+						<button type="button" name="submitDateDayPrev" class="btn btn-default submitDateDayPrev{if isset($preselect_date_range) && $preselect_date_range == 'prev-day'} active{/if}">
 							{l s='Day'}-1
 						</button>
-						<button type="button" name="submitDateMonthPrev" class="btn btn-default submitDateMonthPrev">
+						<button type="button" name="submitDateMonthPrev" class="btn btn-default submitDateMonthPrev{if isset($preselect_date_range) && $preselect_date_range == 'prev-month'} active{/if}">
 							{l s='Month'}-1
 						</button>
-						<button type="button" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev">
+						<button type="button" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev{if isset($preselect_date_range) && $preselect_date_range == 'prev-year'} active{/if}">
 							{l s='Year'}-1
 						</button>
-						<!--<button type="submit" name="submitDateRealTime" class="btn btn-default submitDateRealTime {if $dashboard_use_push}active{/if}" value="{!$dashboard_use_push|intval}">
+						<button type="submit" name="submitDateRealTime" class="hide btn btn-default submitDateRealTime {if $dashboard_use_push}active{/if}" value="{!$dashboard_use_push|intval}">
 							{l s='Real Time'}
-						</button>-->
+						</button>
 					</div>
 
 					<input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$date_from|escape}" class="form-control">
 					<input type="hidden" name="datepickerTo" id="datepickerTo" value="{$date_to|escape}" class="form-control">
+					<input type="hidden" name="preselectDateRange" id="preselectDateRange" value="{if isset($preselect_date_range)}{$preselect_date_range}{/if}" class="form-control">
 
 					<div class="form-group pull-right">
 						<button id="datepickerExpand" class="btn btn-default" type="button">

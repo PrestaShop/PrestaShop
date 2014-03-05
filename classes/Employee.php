@@ -56,6 +56,8 @@ class EmployeeCore extends ObjectModel
 	public $stats_compare_to;
 	public $stats_compare_option = 1;
 
+	public $preselect_date_range;
+
 	/** @var string Display back office background in the specified color */
 	public $bo_color;
 
@@ -116,6 +118,7 @@ class EmployeeCore extends ObjectModel
 			'stats_compare_from' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'stats_compare_to' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'stats_compare_option' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'preselect_date_range' =>		array('type' => self::TYPE_STRING, 'size' => 32),
 			'id_last_order' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'id_last_customer_message' =>	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'id_last_customer' =>			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
