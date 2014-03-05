@@ -910,7 +910,7 @@ else
 					<input type="hidden" name="path" value="<?php echo Tools::safeOutput($subfolder.$subdir) ?>"/>
 					<input type="hidden" class="name_download" name="name" value="<?php echo Tools::safeOutput($file) ?>"/>
 
-					<a title="<?php echo lang_Download ?>" class="tip-right" href="javascript:void('')" onclick="$('#form<?php echo $nu; ?>').submit();"><i class="icon-download"></i></a>
+					<a title="<?php echo lang_Download ?>" class="tip-right" href="javascript:void('')" onclick="$('#form<?php echo Tools::safeOutput($nu); ?>').submit();"><i class="icon-download"></i></a>
 					<?php if ($is_img && $src_thumb != "")
 					{
 						?>
