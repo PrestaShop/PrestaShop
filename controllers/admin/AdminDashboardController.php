@@ -244,7 +244,8 @@ class AdminDashboardControllerCore extends AdminController
 			'calendar' => $calendar_helper->generate(),
 			'PS_DASHBOARD_SIMULATION' => Configuration::get('PS_DASHBOARD_SIMULATION'),
 			'datepickerFrom' => Tools::getValue('datepickerFrom', $this->context->employee->stats_date_from),
-			'datepickerTo' => Tools::getValue('datepickerTo', $this->context->employee->stats_date_to)
+			'datepickerTo' => Tools::getValue('datepickerTo', $this->context->employee->stats_date_to),
+			'preselect_date_range' => Tools::getValue('preselectDateRange', $this->context->employee->preselect_date_range)
 		);
 		return parent::renderView();
 	}
@@ -269,6 +270,7 @@ class AdminDashboardControllerCore extends AdminController
 		{
 			$this->context->employee->stats_date_from = Tools::getValue('date_from');
 			$this->context->employee->stats_date_to = Tools::getValue('date_to');
+			$this->context->employee->preselect_date_range = Tools::getValue('preselectDateRange');
 
 			if (Tools::getValue('datepicker_compare'))
 			{
