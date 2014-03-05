@@ -1,8 +1,7 @@
 $widthSidebarNav: 210px
 $widthSidebarSubmenu: 200px
-$menu-item-size: 36px
-$min-height: 800px
-
+$menu-item-size: 32px
+$min-height: 850px
 
 #nav-sidebar
 	position: fixed
@@ -53,7 +52,7 @@ $min-height: 800px
 					a
 						color: mix($main-color, contrast-color($main-color, black, white, 50%), 30%)
 						display: block
-						padding: 4px 5px 4px 10px
+						padding: 3px 8px
 						background-color: $main-color
 						border-bottom: darken($main-color,10%) solid 1px
 						&:hover
@@ -138,7 +137,6 @@ $min-height: 800px
 	@media (max-width: $screen-phone)
 		display: none
 
-
 @media (max-height: $min-height)
 	body:not(.page-sidebar-closed)
 		#nav-sidebar ul.menu li.maintab > a.title
@@ -146,6 +144,7 @@ $min-height: 800px
 			height: 28px
 			line-height: 28px
 			i
+				vertical-align: baseline
 				text-align: right
 				width: 18px
 				font-size: 14px
@@ -175,9 +174,8 @@ $min-height: 800px
 		width: 50px
 		ul.submenu
 			display: none!important
-			padding-top: 37px
 			position: relative
-			top: 0
+			top: $menu-item-size
 			padding: 1px 4px 3px 4px!important
 		li.searchtab
 			color: rgba(white,.5)
@@ -209,7 +207,7 @@ $min-height: 800px
 				position: absolute!important
 				display: block!important
 				left: 50px!important
-				top: 36px!important
+				top: $menu-item-size!important
 				width: 200px!important
 	#content
 		margin-left: 55px
@@ -326,20 +324,18 @@ $min-height: 800px
 	left: 0
 	overflow: hidden
 	width: 100%
-	height: 38px
+	height: $menu-item-size
 	z-index: 1100
 	&.expanded
 		height: 100%
 	li > a > i
 		display: inline-block
-		height: 30px
-		width: 30px
+		height: $menu-item-size
+		width: $menu-item-size
 		font-size: 20px
-		line-height: 30px
+		line-height: $menu-item-size
 		color: white
 		text-align: center
-		background: black
-		@include border-radius(40px)
 	ul.menu
 		top: 35px
 		position: absolute
@@ -353,17 +349,45 @@ $min-height: 800px
 		list-style: none
 		@include transition(all 0.35s ease-out)
 		@include animate(fadeInLeft, 0.3s)
+		li.searchtab
+			height: $menu-item-size+10
+			position: relative
+			background-color: darken($main-color,5%)
+			border-bottom: darken($main-color,10%) solid 1px
+			@include box-shadow(rgba(black,0.1s) 0 -3px 0 0 inset)
+			#bo_query
+				color: $main-color
+				background-color: lighten($main-color,60%)
+			.form-group.focus-search
+				position: absolute
+				width: 400px
+				height: 55px
+				z-index: 900
+				padding: 14px 13px 0 7px
+				top: 0
+				left: 0
+				background-color: darken($main-color,5%)
+				border-bottom: darken($main-color,10%) solid 1px
+				#bo_query
+					width: 100%
+			.clear_search
+				position: absolute
+				top: 0
+				right: 0
+			i
+				color: white
+				font-size: $icon-size-base
 		li
 			background: $main-color
 			position: relative
 			a
 				display: block
-				height: 40px
+				height: $menu-item-size
+				line-height: $menu-item-size
 				position: relative
-				padding: 2px 0 2px 10px
+				padding: 0 0 0 10px
 				border-bottom: 1px solid darken($main-color,10%)
 				font-size: 12px
-				line-height: 40px
 				color: mix($main-color, contrast-color($main-color, white, #333, 10%), 30%)
 				background-color: $main-color
 				text-transform: uppercase
@@ -372,8 +396,8 @@ $min-height: 800px
 				@include transition-duration(0.4s)
 				@include transition-timing-function(ease-out)
 				i
-					color: lighten($main-color,25%)
-					background-color: darken($main-color,25%)
+					color: rgba(white,.6)
+					vertical-align: middle
 					@include transition-property(color)
 					@include transition-duration(0.4s)
 					@include transition-timing-function(ease-out)
@@ -432,8 +456,6 @@ $min-height: 800px
 		.page-breadcrumb
 			left: 75px
 
-
-
 .page-sidebar-closed:not(.nav-topbar)
 	.searchtab
 		&:before
@@ -453,6 +475,4 @@ $min-height: 800px
 .page-topbar
 	.searchtab
 		display: none
-
-
 
