@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if (!$content_only && (($nbComments == 0 && $too_early == false && ($logged || $allow_guests)) || ($nbComments != 0)))}
+{if (!$content_only && (($nbComments == 0 && $too_early == false && ($is_logged || $allow_guests)) || ($nbComments != 0)))}
 <div id="product_comments_block_extra" class="no-print" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 	{if $nbComments != 0}
 		<div class="comments_note clearfix">
@@ -52,7 +52,7 @@
 				</a>
 			</li>
 		{/if}
-		{if ($too_early == false AND ($logged OR $allow_guests))}
+		{if ($too_early == false AND ($is_logged OR $allow_guests))}
 			<li>
 				<a class="open-comment-form" href="#new_comment_form">
 					{l s='Write a review' mod='productcomments'}

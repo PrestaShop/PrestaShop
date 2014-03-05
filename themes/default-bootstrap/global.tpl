@@ -30,7 +30,8 @@
 {addJsDef priceDisplayPrecision=$priceDisplayPrecision*$currency->decimals}
 {addJsDef priceDisplayMethod=$priceDisplay}
 {addJsDef roundMode=$roundMode}
-{addJsDef logged=$logged|boolval}
+{addJsDef isLogged=$is_logged|intval}
+{addJsDef isGuest=$is_guest|intval}
 {addJsDef page_name=$page_name|escape:'html':'UTF-8'}
 {addJsDef contentOnly=$content_only|boolval}
 {if isset($cookie->id_lang)}

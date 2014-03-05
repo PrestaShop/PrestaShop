@@ -288,7 +288,7 @@ function bind_inputs()
 {
 	$('input').focus(function () {
 		$(this).closest('div.input-group').removeClass('has-error');
-		$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
+		$('#carrier_wizard .actionBar a.btn').not('.buttonFinish').removeClass('disabled');
 		$('.wizard_error').fadeOut('fast', function () { $(this).remove()});
 	});
 	
