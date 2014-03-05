@@ -22,10 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a href="{$banner_link}" title="{$banner_desc}">
+<a href="{$banner_link|escape:'htmlall':'UTF-8'}" title="{$banner_desc|escape:'htmlall':'UTF-8'}">
 {if isset($banner_img)}
-	<img class="img-responsive" src="{$banner_img}" alt="{$banner_desc}" title="{$banner_desc}" width="1170" height="65" />
+	<img class="img-responsive" src="{$banner_img|escape:'htmlall':'UTF-8'}" alt="{$banner_desc|escape:'htmlall':'UTF-8'}" title="{$banner_desc|escape:'htmlall':'UTF-8'}" width="1170" height="65" />
 {else}
-	{$banner_desc}
+	{$banner_desc|escape:'htmlall':'UTF-8'}
 {/if}
 </a>
