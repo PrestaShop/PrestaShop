@@ -3,13 +3,15 @@ include('config/config.php');
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') die('forbiden');
 include('include/utils.php');
 
+if (!isset($_POST['path_thumb']) && trim($_POST['path_thumb']) == '')
+	die('wrong path');
 
 $thumb_pos = strpos($_POST['path_thumb'], $thumbs_base_path);
-if ($thumb_pos != 0
-	|| strpos($_POST['path_thumb'], '../', strlen($thumbs_base_path) + $thumb_pos) !== false
-	|| strpos($_POST['path'], '/') === 0
-	|| strpos($_POST['path'], '../') !== false
-	|| strpos($_POST['path'], './') === 0
+if ($thumb_pos !== 0
+	|| strpos($_POST['path_thumb'], '..'.DIRECTORY_SEPARATOR, strlen($thumbs_base_path) + $thumb_pos) !== false
+	|| strpos($_POST['path'], DIRECTORY_SEPARATOR) === 0
+	|| strpos($_POST['path'], '..'.DIRECTORY_SEPARATOR) !== false
+	|| strpos($_POST['path'], '.'.DIRECTORY_SEPARATOR) === 0
 )
 	die('wrong path');
 
@@ -23,7 +25,12 @@ if (isset($_GET['lang']) && $_GET['lang'] != 'undefined' && $_GET['lang'] != '')
 require_once $language_file;
 
 $base = $current_path;
-$path = $current_path.$_POST['path'];
+
+if (isset($_POST['path']))
+	$path = $current_path.str_replace("\0", "", $_POST['path']);
+else
+	$path = $current_path;
+
 $cycle = true;
 $max_cycles = 50;
 $i = 0;
@@ -46,7 +53,7 @@ $path_thumb = $_POST['path_thumb'];
 if (isset($_POST['name']))
 {
 	$name = $_POST['name'];
-	if (strpos($name, '../') !== false) die('wrong name');
+	if (strpos($name, '..'.DIRECTORY_SEPARATOR) !== false) die('wrong name');
 }
 
 $info = pathinfo($path);
