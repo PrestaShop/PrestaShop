@@ -15,4 +15,6 @@ ALTER TABLE `PREFIX_theme` CHANGE `product_per_page` `product_per_page` INT( 10 
 
 ALTER TABLE  `PREFIX_customer_message` ADD  `date_upd` DATETIME NOT NULL AFTER  `date_add`;
 
+ALTER TABLE  `PREFIX_employee` ADD  `preselect_date_range` VARCHAR( 32 ) NULL DEFAULT NULL AFTER  `stats_compare_option`;
+
 /* PHP:ps1604_update_employee_date(); */;
