@@ -45,7 +45,7 @@ class infoClass extends ObjectModel
 		'fields' => array(
 			'id_shop' =>				array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt', 'required' => true),
 			// Lang fields
-			'text' =>					array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString', 'required' => true),
+			'text' =>					array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true),
 		)
 	);
 
