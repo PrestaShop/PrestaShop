@@ -335,6 +335,8 @@ class FrontControllerCore extends Controller
 			'languages' => $languages,
 			'meta_language' => implode(',', $meta_language),
 			'priceDisplay' => Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer),
+			'is_logged' => (bool)$this->context->customer->isLogged(),
+			'is_guest' => (bool)$this->context->customer->isGuest(),
 			'add_prod_display' => (int)Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
 			'roundMode' => (int)Configuration::get('PS_PRICE_ROUND_MODE'),

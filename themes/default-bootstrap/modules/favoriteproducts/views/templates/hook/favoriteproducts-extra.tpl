@@ -23,12 +23,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if !$isCustomerFavoriteProduct AND $isLogged}
+{if !$isCustomerFavoriteProduct AND $is_logged}
 <li id="favoriteproducts_block_extra_add" class="add">
 	{l s='Add this product to my list of favorites.' mod='favoriteproducts'}
 </li>
 {/if}
-{if $isCustomerFavoriteProduct AND $isLogged}
+{if $isCustomerFavoriteProduct AND $is_logged}
 <li id="favoriteproducts_block_extra_remove">
 	{l s='Remove this product from my favorite\'s list. ' mod='favoriteproducts'}
 </li>
