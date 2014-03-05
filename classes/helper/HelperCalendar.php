@@ -26,7 +26,7 @@
 
 class HelperCalendarCore extends Helper
 {
-	const DEFAULT_DATE_FORMAT    = 'Y-m-d';
+	const DEFAULT_DATE_FORMAT    = 'Y-mm-dd';
 	const DEFAULT_COMPARE_OPTION = 1;
 
 	private $_actions;

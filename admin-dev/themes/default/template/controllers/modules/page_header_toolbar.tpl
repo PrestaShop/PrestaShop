@@ -50,7 +50,7 @@
 			</li>
 			{else}
 			<li>
-				<a id="desc-module-check-and-update-all" class="toolbar_btn" href="{$currentIndex}&amp;token={$token}" title="{l s='Check for update'}">
+				<a id="desc-module-check-and-update-all" class="toolbar_btn" href="{$currentIndex}&amp;token={$token}&amp;check=1" title="{l s='Check for update'}">
 					<i class="process-icon-refresh" ></i>
 					<div>{l s='Check for update'}</div>
 				</a>
