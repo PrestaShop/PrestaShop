@@ -60,7 +60,7 @@
 	<div>{$hook_invoice}</div>
 	{/if}
 
-	<div class="panel">
+	<div class="panel kpi-container">
 		<div class="row">
 			<div class="col-xs-6 col-sm-3 box-stats color3" >
 				<div class="kpi-content">
@@ -101,7 +101,7 @@
 					{l s='Order'}
 					<span class="badge">{$order->reference}</span>
 					<span class="badge">{l s="#"}{$order->id}</span>
-					<div class="btn-group-actions pull-right">
+					<div class="btn-group-action pull-right">
 						<div class="btn-group">
 							<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
 								<i class="icon-backward"></i>
