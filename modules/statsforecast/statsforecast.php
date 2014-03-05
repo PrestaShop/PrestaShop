@@ -138,7 +138,7 @@ class StatsForecast extends Module
 					<div class="col-lg-2">
 						<input type="hidden" name="submitGranularity" value="1" />
 						<select name="stats_granularity" onchange="this.form.submit();">
-							<option value="10">'.$this->l('Per Day').'</option>
+							<option value="10">'.$this->l('Per day').'</option>
 							<option value="42" '.($this->context->cookie->stats_granularity == '42' ? 'selected="selected"' : '').'>'.$this->l('Per week').'</option>
 							<option value="7" '.($this->context->cookie->stats_granularity == '7' ? 'selected="selected"' : '').'>'.$this->l('Per month').'</option>
 							<option value="4" '.($this->context->cookie->stats_granularity == '4' ? 'selected="selected"' : '').'>'.$this->l('Per year').'</option>
