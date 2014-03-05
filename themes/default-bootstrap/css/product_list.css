@@ -69,7 +69,7 @@ ul.product_list .functional-buttons div.wishlist {
     font-family: "FontAwesome";
     content: "\f08a";
     margin-right: 3px;
-    padding: 0 1px; }
+    padding: 0 3px; }
   ul.product_list .functional-buttons div.wishlist a.checked:before {
     content: "\f004"; }
   @media (min-width: 992px) and (max-width: 1199px) {
