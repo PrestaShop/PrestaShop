@@ -7,17 +7,11 @@ include('include/utils.php');
 $storeFolder = $_POST['path'];
 $storeFolderThumb = $_POST['path_thumb'];
 
-$path_pos = strpos($storeFolder, $current_path);
-$thumb_pos = strpos($_POST['path_thumb'], $thumbs_base_path);
-if ($path_pos !== 0
-	|| $thumb_pos !== 0
-	|| strpos($storeFolderThumb, '..'.DIRECTORY_SEPARATOR, strlen($thumbs_base_path)) !== false
-	|| strpos($storeFolderThumb, '.'.DIRECTORY_SEPARATOR, strlen($thumbs_base_path)) !== false
-	|| strpos($storeFolder, '..'.DIRECTORY_SEPARATOR, strlen($current_path)) !== false
-	|| strpos($storeFolder, '.'.DIRECTORY_SEPARATOR, strlen($current_path)) !== false
-)
-	die('wrong path');
+$path_pos = realpath(strpos($storeFolder, $current_path));
+$thumb_pos = realpath(strpos($_POST['path_thumb'], $thumbs_base_path));
 
+if ($path_pos === false || $thumb_pos === false)
+	die('wrong path');
 
 $path = $storeFolder;
 $cycle = true;

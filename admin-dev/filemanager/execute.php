@@ -6,13 +6,10 @@ include('include/utils.php');
 if (!isset($_POST['path_thumb']) && trim($_POST['path_thumb']) == '')
 	die('wrong path');
 
-$thumb_pos = strpos($_POST['path_thumb'], $thumbs_base_path);
-if ($thumb_pos !== 0
-	|| strpos($_POST['path_thumb'], '..'.DIRECTORY_SEPARATOR, strlen($thumbs_base_path) + $thumb_pos) !== false
-	|| strpos($_POST['path'], DIRECTORY_SEPARATOR) === 0
-	|| strpos($_POST['path'], '..'.DIRECTORY_SEPARATOR) !== false
-	|| strpos($_POST['path'], '.'.DIRECTORY_SEPARATOR) === 0
-)
+$thumb_pos = realpath(strpos($_POST['path_thumb'], $thumbs_base_path));
+$path = realpath($_POST['path']);
+
+if ($thumb_pos === false || $path === false)
 	die('wrong path');
 
 $language_file = 'lang/en.php';
