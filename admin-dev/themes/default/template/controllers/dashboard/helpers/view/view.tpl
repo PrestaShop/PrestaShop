@@ -39,7 +39,6 @@
 {/if}
 			<div id="calendar" class="panel">
 				<form action="{$action|escape}" method="post" id="calendar_form" name="calendar_form" class="form-inline">
-
 					<div class="btn-group">
 						<button type="button" name="submitDateDay" class="btn btn-default submitDateDay{if isset($preselect_date_range) && $preselect_date_range == 'day'} active{/if}">
 							{l s='Day'}
@@ -64,7 +63,6 @@
 							{l s='Real Time'}
 						</button> -->
 					</div>
-
 
 					<input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$date_from|escape}" class="form-control">
 					<input type="hidden" name="datepickerTo" id="datepickerTo" value="{$date_to|escape}" class="form-control">
