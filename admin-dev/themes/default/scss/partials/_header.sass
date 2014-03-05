@@ -18,9 +18,9 @@
 		width: 35px
 		height: 35px
 #header_notifs_icon_wrapper
-	@extend .hidden-xs
 	@extend .nav
 	@extend .navbar-nav
+	@extend .hidden-xs
 	min-width: 170px
 	> li > a
 		height: 36px
@@ -77,6 +77,7 @@
 	@extend .nav
 	@extend .navbar-nav
 	@extend .navbar-right
+	@extend .hidden-xs
 	a img
 		margin-right: 5px
 	#header_foaccess i
@@ -96,3 +97,13 @@
 	i
 		font-size: $icon-size-base
 
+#header_quick
+	@extend .nav
+	@extend .navbar-nav
+	@extend .navbar-left
+	@extend .hidden-xs
+
+#ajax_running
+	position: absolute
+	top: 0
+	left: 0
