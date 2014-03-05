@@ -597,7 +597,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'name' => 'setstatus',
 				'value' => 1
 			);
-
+		
 		if ($thread->id_customer)
 		{
 			$customer = new Customer($thread->id_customer);
@@ -625,8 +625,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		}
 		$timeline_items = $this->getTimeline($messages, $thread->id_order);
 		$first_message = $messages[0];
-		unset($messages[0]);
-				
+
+		if (!$messages[0]['id_employee'])
+			unset($messages[0]);
+
 		$contact = '';
 		foreach ($contacts as $c)
 			if ($c['id_contact'] == $thread->id_contact)
