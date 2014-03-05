@@ -33,6 +33,18 @@
         {/foreach}
     </ul>
 {/if}
+{if $modules_errors|count > 0}
+    <div class="alert alert-warning">
+        {l s='The following module(s) were not installed properly:'}
+        <ul>
+            {foreach $modules_errors as $module_errors}
+                <li>
+                   <b>{$module_errors['module_name']}</b> : {foreach $module_errors['errors'] as $error}<br>  {$error}{/foreach}
+                </li>
+            {/foreach}
+        </ul>
+    </div>
+{/if}
 <div class="alert alert-warning">
     {l s='Warning: You may have to regenerate images to fit with this new theme.'}
 </div>
