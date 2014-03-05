@@ -51,7 +51,7 @@ function WishlistCart(id, action, id_product, id_product_attribute, quantity)
 		{
 			if (action == 'add')
 			{
-				if (isLoggedWishlist == true) {
+				if (isLogged == true) {
 					wishlistProductsIdsAdd(id_product);
 					wishlistRefreshStatus();
 

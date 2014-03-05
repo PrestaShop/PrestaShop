@@ -11,10 +11,10 @@ $path_pos = strpos($storeFolder, $current_path);
 $thumb_pos = strpos($_POST['path_thumb'], $thumbs_base_path);
 if ($path_pos !== 0
 	|| $thumb_pos !== 0
-	|| strpos($storeFolderThumb, '../', strlen($thumbs_base_path)) !== false
-	|| strpos($storeFolderThumb, './', strlen($thumbs_base_path)) !== false
-	|| strpos($storeFolder, '../', strlen($current_path)) !== false
-	|| strpos($storeFolder, './', strlen($current_path)) !== false
+	|| strpos($storeFolderThumb, '..'.DIRECTORY_SEPARATOR, strlen($thumbs_base_path)) !== false
+	|| strpos($storeFolderThumb, '.'.DIRECTORY_SEPARATOR, strlen($thumbs_base_path)) !== false
+	|| strpos($storeFolder, '..'.DIRECTORY_SEPARATOR, strlen($current_path)) !== false
+	|| strpos($storeFolder, '.'.DIRECTORY_SEPARATOR, strlen($current_path)) !== false
 )
 	die('wrong path');
 
@@ -38,7 +38,7 @@ while ($cycle && $i < $max_cycles)
 if (!empty($_FILES))
 {
 	$info = pathinfo($_FILES['file']['name']);
-	if (in_array(fix_strtolower($info['extension']), $ext))
+	if (isset($info['extension']) && in_array(fix_strtolower($info['extension']), $ext))
 	{
 		$tempFile = $_FILES['file']['tmp_name'];
 

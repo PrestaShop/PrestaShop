@@ -83,7 +83,7 @@
                 {l s='Your Account'}
             </h3>
     		<ul>
-        		{if $logged}
+        		{if $is_logged}
         			<li>
                         <a 
                         href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}" 
@@ -144,7 +144,7 @@
                         </a>
                     </li>
         		{/if}
-        		{if $logged}
+        		{if $is_logged}
         			<li>
                         <a 
                         href="{$link->getPageLink('index')}?mylogout" 

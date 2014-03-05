@@ -38,7 +38,7 @@
 		<!-- Shopping Cart -->
 		{include file="$tpl_dir./shopping-cart.tpl"}
 		<!-- End Shopping Cart -->
-		{if $isLogged AND !$isGuest}
+		{if $is_logged AND !$is_guest}
 			{include file="$tpl_dir./order-address.tpl"}
 		{else}
 			<!-- Create account / Guest account / Login block -->
@@ -78,8 +78,6 @@
 {addJsDef errorTOS=$errorTOS|@addcslashes:'\''}
 {addJsDef checkedCarrier=$checked|intval}
 {addJsDef addresses=array()}
-{addJsDef isLogged=$isLogged|intval}
-{addJsDef isGuest=$isGuest|intval}
 {addJsDef isVirtualCart=$isVirtualCart|intval}
 {addJsDef isPaymentStep=$isPaymentStep|intval}
 {addJsDefL name=txtWithTax}{l s='(tax incl.)' js=1}{/addJsDefL}
