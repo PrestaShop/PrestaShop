@@ -7,10 +7,12 @@ include('include/utils.php');
 $storeFolder = $_POST['path'];
 $storeFolderThumb = $_POST['path_thumb'];
 
-$path_pos = realpath(strpos($storeFolder, $current_path));
-$thumb_pos = realpath(strpos($_POST['path_thumb'], $thumbs_base_path));
+$path_pos = strpos(realpath($storeFolder), realpath($current_path));
+$thumb_pos = strpos(realpath($_POST['path_thumb']), realpath($thumbs_base_path));
 
-if ($path_pos === false || $thumb_pos === false)
+if ($path_pos === false || $thumb_pos === false
+	|| preg_match('/\.{1,2}[\/|\\\]/', $_POST['path_thumb']) !== 0
+	|| preg_match('/\.{1,2}[\/|\\\]/', $_POST['path']) !== 0)
 	die('wrong path');
 
 $path = $storeFolder;
