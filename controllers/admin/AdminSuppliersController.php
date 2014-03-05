@@ -150,7 +150,7 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Postal Code/Zip Code'),
+					'label' => $this->l('Zip/postal code'),
 					'name' => 'postcode',
 					'maxlength' => 12,
 					'col' => 2,

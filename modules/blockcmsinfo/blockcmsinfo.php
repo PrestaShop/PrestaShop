@@ -302,19 +302,19 @@ class Blockcmsinfo extends Module
 			array('text' => '<ul>
 <li><em class="icon-truck" id="icon-truck"></em>
 <div class="type-text">
-<h3>Free Shipping</h3>
+<h3>Lorem Ipsum</h3>
 <p>Lorem ipsum dolor sit amet conse ctetur voluptate velit esse cillum dolore eu</p>
 </div>
 </li>
 <li><em class="icon-phone" id="icon-phone"></em>
 <div class="type-text">
-<h3>Call us: (800)2345-6789</h3>
+<h3>Dolor Sit Amet</h3>
 <p>Lorem ipsum dolor sit amet conse ctetur voluptate velit esse cillum dolore eu</p>
 </div>
 </li>
 <li><em class="icon-credit-card" id="icon-credit-card"></em>
 <div class="type-text">
-<h3>Gift cards</h3>
+<h3>Ctetur Voluptate</h3>
 <p>Lorem ipsum dolor sit amet conse ctetur voluptate velit esse cillum dolore eu</p>
 </div>
 </li>

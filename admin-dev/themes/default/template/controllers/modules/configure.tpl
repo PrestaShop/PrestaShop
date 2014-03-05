@@ -70,7 +70,7 @@
 							<div>{l s='Back'}</div>
 						</a>
 					</li>
-					<li>
+					<!-- <li>
 						<a id="desc-module-disable" class="toolbar_btn" href="{$module_disable_link}" title="{l s='Disable'}">
 							<i class="process-icon-off"></i>
 							<div>{l s='Disable'}</div>
@@ -87,7 +87,7 @@
 							<i class="process-icon-reset"></i>
 							<div>{l s='Reset'}</div>
 						</a>
-					</li>
+					</li> -->
 					{if isset($module_update_link)}
 					<li>
 						<a id="desc-module-update" class="toolbar_btn" href="{$module_update_link}" title="{l s='Update'}">
