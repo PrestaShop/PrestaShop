@@ -639,10 +639,10 @@ class AdminCategoriesControllerCore extends AdminController
 			if ($id_category != $id_parent)
 			{
 				if (!Category::checkBeforeMove($id_category, $id_parent))
-					$this->errors[] = Tools::displayError($this->l('The category cannot be moved here.'));
+					$this->errors[] = Tools::displayError('The category cannot be moved here.');
 			}
 			else
-				$this->errors[] = Tools::displayError($this->l('The category cannot be a parent of itself.'));
+				$this->errors[] = Tools::displayError('The category cannot be a parent of itself.');
 		}
 		$object = parent::processAdd();
 

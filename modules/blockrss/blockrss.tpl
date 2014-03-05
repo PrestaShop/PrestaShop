@@ -26,7 +26,7 @@
 <!-- Block RSS module-->
 <div id="rss_block_left" class="block">
 	<h4 class="title_block">{$title}</h4>
-	<div class="block_content">
+	<div class="block_content list-block">
 		{if $rss_links}
 			<ul>
 				{foreach from=$rss_links item='rss_link'}

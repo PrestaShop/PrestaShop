@@ -648,8 +648,10 @@ abstract class ModuleCore
 	{
 		// Retrieve all shops where the module is enabled
 		$list = Shop::getContextListShopID();
+		if (!$this->id || !is_array($list))
+			return false;
 		$sql = 'SELECT `id_shop` FROM `'._DB_PREFIX_.'module_shop`
-				WHERE `id_module` = '.$this->id.
+				WHERE `id_module` = '.(int)$this->id.
 				((!$forceAll) ? ' AND `id_shop` IN('.implode(', ', $list).')' : '');
 
 		// Store the results in an array

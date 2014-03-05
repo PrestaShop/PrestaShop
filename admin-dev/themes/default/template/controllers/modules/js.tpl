@@ -75,7 +75,22 @@
 			$.uiTableFilter($('#moduleContainer').find('table'), module_name);
 		
 		$('#moduleQuicksearch').on('keyup', function(){
-			$.uiTableFilter($('#moduleContainer').find('table'), this.value);
+			val = this.value;
+			if ($('#filter_all').hasClass('active'))
+				$.uiTableFilter($('#moduleContainer').find('table'), val);
+			else
+				$('#filter_all').trigger('click');
+				var interval = setInterval(function () {
+				if (!$('#loader_module_list').length)
+				{
+					$.uiTableFilter($('#moduleContainer').find('table'), val);
+					clearInterval(interval);
+					interval = null;
+				}
+			
+		}, 100);
+	
+			
 		}).on('keydown', function(e){
 			if (e.keyCode == 13)
 				return false;
@@ -122,7 +137,7 @@
 						action : "reloadModulesList"
 					},
 					beforeSend: function(xhr){
-						$('#moduleContainer').html('<img src="../img/loader.gif" alt="" border="0" />');
+						$('#moduleContainer').html('<img id="loader_module_list" src="../img/loader.gif" alt="" border="0" />');
 					},
 					success: function(data, status, request){
 						if (request.getResponseHeader('Login') === 'true')
