@@ -56,7 +56,7 @@
 									{l s='%1$d out of %2$d people found this review useful.' sprintf=[$comment.total_useful,$comment.total_advice] mod='productcomments'}
 								</li>
 							{/if}
-							{if $logged}
+							{if $is_logged}
 								{if !$comment.customer_advice}
 								<li>
 									{l s='Was this comment useful to you?' mod='productcomments'}
@@ -82,7 +82,7 @@
 				</div> <!-- .comment -->
 				{/if}
 			{/foreach}
-			{if (!$too_early AND ($logged OR $allow_guests))}
+			{if (!$too_early AND ($is_logged OR $allow_guests))}
 			<p class="align_center">
 				<a id="new_comment_tab_btn" class="btn btn-default button button-small open-comment-form" href="#new_comment_form">
 					<span>{l s='Write your review' mod='productcomments'} !</span>
@@ -90,7 +90,7 @@
 			</p>
 			{/if}
 		{else}
-			{if (!$too_early AND ($logged OR $allow_guests))}
+			{if (!$too_early AND ($is_logged OR $allow_guests))}
 			<p class="align_center">
 				<a id="new_comment_tab_btn" class="btn btn-default button button-small open-comment-form" href="#new_comment_form">
 					<span>{l s='Be the first to write your review' mod='productcomments'} !</span>
@@ -152,7 +152,7 @@
 						{l s='Comment' mod='productcomments'}: <sup class="required">*</sup>
 					</label>
 					<textarea id="content" name="content"></textarea>
-					{if $allow_guests == true && !$logged}
+					{if $allow_guests == true && !$is_logged}
 						<label>
 							{l s='Your name' mod='productcomments'}: <sup class="required">*</sup>
 						</label>
