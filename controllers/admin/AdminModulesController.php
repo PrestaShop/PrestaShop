@@ -1352,6 +1352,9 @@ class AdminModulesControllerCore extends AdminController
 
 		ConfigurationKPI::updateValue('UPDATE_MODULES', count($upgrade_available));
 
+		if (count($upgrade_available) == 0 && (int)Tools::getValue('check') == 1)
+			$this->confirmations[] = $this->l('Everything is up-to-date');
+
 		// Init tpl vars for smarty
 		$tpl_vars = array();
 
