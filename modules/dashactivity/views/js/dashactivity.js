@@ -89,7 +89,7 @@ Date.prototype.format = function(format) {
 			break;
 
 			case 'mm':
-			result += (this.getDate() < 9 ? '0' : '')+(this.getMonth() + 1) + formatSeparator;
+			result += (this.getMonth() < 9 ? '0' : '')+(this.getMonth() + 1) + formatSeparator;
 			break;
 
 			case 'yy':
@@ -117,7 +117,6 @@ $(document).ready(function() {
 	$('#date-start').change(function() {
 		start = Date.parseDate($('#date-start').val(), 'Y-m-d');
 		end = Date.parseDate($('#date-end').val(), 'Y-m-d');
-
 		$('#customers-newsletters-subtitle').html(sprintf(date_subtitle, start.format(date_format), end.format(date_format)));
 		$('#traffic-subtitle').html(sprintf(date_subtitle, start.format(date_format), end.format(date_format)));
 	});

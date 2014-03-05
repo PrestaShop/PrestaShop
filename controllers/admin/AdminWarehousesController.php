@@ -209,7 +209,7 @@ class AdminWarehousesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Postcode/Zip Code'),
+					'label' => $this->l('Zip/postal code'),
 					'name' => 'postcode',
 					'maxlength' => 12,
 					'required' => true,

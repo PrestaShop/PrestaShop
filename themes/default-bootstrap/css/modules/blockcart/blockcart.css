@@ -1,10 +1,12 @@
 /*******************************************************************
 					Cart Block Styles
 ********************************************************************/
-#shopping_cart {
+#header #shopping_cart {
   position: relative;
+  float: right; }
+
+#shopping_cart {
   width: 270px;
-  float: right;
   padding-top: 50px; }
   @media (max-width: 480px) {
     #shopping_cart {

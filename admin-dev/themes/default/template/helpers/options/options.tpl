@@ -73,7 +73,7 @@
 						<div class="col-lg-12">
 							<p class="help-block">
 								<strong>{l s='Check / Uncheck all'}</strong>
-								{l s='(Check boxes if you want to set a custom value for this shop or group shop context)'}
+								{l s='(If you are editing this page for several shops, some fields may be disabled. If you need to edit them, you will need to check the box for each field)'}
 							</p>
 						</div>
 					</div>

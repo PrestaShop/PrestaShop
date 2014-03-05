@@ -183,7 +183,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'filter_key' => 'a!lastname'
 			),
 			'postcode' => array(
-				'title' => $this->l('Zip Code/Postal Code'),
+				'title' => $this->l('Zip/Postal code'),
 				'align' => 'right'
 			),
 			'city' => array(
@@ -496,7 +496,7 @@ class AdminManufacturersControllerCore extends AdminController
 		);
 		$form['input'][] = array(
 			'type' => 'text',
-			'label' => $this->l('Zip Code/Postal Code'),
+			'label' => $this->l('Zip/postal code'),
 			'name' => 'postcode',
 			'col' => 2,
 			'required' => false,

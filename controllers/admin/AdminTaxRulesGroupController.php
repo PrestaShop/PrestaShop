@@ -113,7 +113,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				'title' => $this->l('State')
 			),
 			'zipcode' => array(
-				'title' => $this->l('Zip Code'),
+				'title' => $this->l('Zip/Postal code'),
 				'class' => 'fixed-width-md'
 			),
 			'behavior' => array(
@@ -276,10 +276,10 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Zip Code range'),
+					'label' => $this->l('Zip/postal code range'),
 					'name' => 'zipcode',
 					'required' => false,
-					'hint' => $this->l('You can define a range of zipcodes (e.g., 75000-75015) or simply use one zipcode.')
+					'hint' => $this->l('You can define a range of Zip/postal codes (e.g., 75000-75015) or simply use one Zip/postal code.')
 				),
 				array(
 					'type' => 'select',
@@ -457,7 +457,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 								if (!$country->checkZipCode($zip_code))
 								{
 									$this->errors[] = sprintf(
-										Tools::displayError('Zip/Postal code is invalid. Must be typed as follows: %s for %s.'),
+										Tools::displayError('The Zip/postal code is invalid. It must be typed as follows: %s for %s.'),
 										str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))), $country->name
 									);
 								}

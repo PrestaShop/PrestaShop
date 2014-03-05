@@ -29,24 +29,26 @@
 <div class="panel">
 	<div class="panel-heading">
 		<i class="icon-comments"></i>
-		{l s="Thread"}: #<strong>{$id_customer_thread|intval}</strong>
+		{l s="Thread"}: <span class="badge">#{$id_customer_thread|intval}</span>
+		
+			
 		{if isset($next_thread) && $next_thread}
-		<div class="btn-group pull-right">
-			<a class="btn btn-default pull-left" href="{$next_thread.href}">
-				<i class="icon-chevron-right"></i> {$next_thread.name}
+			<a class="btn btn-default pull-right" href="{$next_thread.href}">
+				{$next_thread.name} <i class="icon-forward"></i>
 			</a> 
-		</div>
 		{/if}
-		<div class="btn-group-action pull-right">
-			<form action="{$link->getAdminLink('AdminCustomerThreads')}&viewcustomer_thread&id_customer_thread={$id_customer_thread}" method="post" enctype="multipart/form-data" class="form-horizontal">
-				{foreach $actions as $action}
-					<button class="btn btn-default" name="{$action.name|escape:'html':'UTF-8'}" value="{$action.value|intval}">
-						{if isset($action.icon)}<i class="{$action.icon|escape:'html':'UTF-8'}"></i>{/if}{$action.label}
-					</button>
-				{/foreach}
-				<button class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal">{l s="Forward this discussion to another employee"}</button>
-			</form>
-		</div>
+	</div>
+	<div class="well">
+		<form action="{$link->getAdminLink('AdminCustomerThreads')}&viewcustomer_thread&id_customer_thread={$id_customer_thread}" method="post" enctype="multipart/form-data" class="form-horizontal">
+			{foreach $actions as $action}
+				<button class="btn btn-default" name="{$action.name|escape:'html':'UTF-8'}" value="{$action.value|intval}">
+					{if isset($action.icon)}<i class="{$action.icon|escape:'html':'UTF-8'}"></i>{/if}{$action.label}
+				</button>
+			{/foreach}
+			<button class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal">
+				{l s="Forward this discussion to another employee"}
+			</button>
+		</form>
 	</div>
 	<div class="row">
 		<div class="message-item-initial media">
@@ -118,7 +120,6 @@
 	</div>
 	</form>
 </div>
-
 
 {if count($timeline_items)}
 <div class="panel">

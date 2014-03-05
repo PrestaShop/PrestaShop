@@ -79,8 +79,12 @@ class AdminDashboardControllerCore extends AdminController
 		}
 
 		foreach ($modules as $module)
-			if ($module->tab == 'payments_gateways' && $module->id && $module->active == 1)
+			if (isset($module->tab) && $module->tab == 'payments_gateways' && $module->id)
 			{
+				$moduleClass = Module::getInstanceByName($module->name);
+				if (!$moduleClass->isEnabledForShopContext())
+					continue;
+
 				$forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED'] = array(
 					'title' => $module->displayName,
 					'desc' => sprintf($this->l('Choose a fixed fee for each order placed in %1$s with %2$s.'), $currency->iso_code, $module->displayName),
@@ -145,7 +149,7 @@ class AdminDashboardControllerCore extends AdminController
 			);
 		}
 
-		$forms['carriers']['description'] = $this->l('Example: For a delivery that you charge $10 to your customer but that you pay 5€, you need to indicate 50%');
+		$forms['carriers']['description'] = $this->l('Example: If you charge $10 of shipping fees to your customer but for which you pay $4, you need to indicate 40%"');
 
 		$forms['other']['fields']['CONF_AVERAGE_PRODUCT_MARGIN'] = array(
 			'title' => $this->l('Average gross margin (Selling price / Buying price)'),
