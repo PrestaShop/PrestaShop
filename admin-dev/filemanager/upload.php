@@ -38,7 +38,7 @@ while ($cycle && $i < $max_cycles)
 if (!empty($_FILES))
 {
 	$info = pathinfo($_FILES['file']['name']);
-	if (in_array(fix_strtolower($info['extension']), $ext))
+	if (isset($info['extension']) && in_array(fix_strtolower($info['extension']), $ext))
 	{
 		$tempFile = $_FILES['file']['tmp_name'];
 
