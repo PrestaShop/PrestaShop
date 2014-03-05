@@ -26,12 +26,9 @@
 {if !$content_only}
 <div id="product_payment_logos">
 	<div class="box-security">
-    <h5 class="product-heading-h5">{$banner_title}</h5> 
-  	<a href="{$banner_link}" title="{$banner_title}"><img src="{$module_dir}{$banner_img}" alt="{$banner_title}"/></a>
+    <h5 class="product-heading-h5">{$banner_title|escape:'htmlall':'UTF-8'}</h5> 
+  	<a href="{$banner_link|escape:'htmlall':'UTF-8'}" title="{$banner_title|escape:'htmlall':'UTF-8'}"><img src="{$module_dir}{$banner_img|escape:'htmlall':'UTF-8'}" alt="{$banner_title|escape:'htmlall':'UTF-8'}"/></a>
     </div>
 </div>
 {/if}  
-
-
-
 <!-- /Productpaymentlogos module -->
