@@ -78,3 +78,6 @@
 <a href="{$back_link}">
     <button class="btn btn-default">{l s='Finish'}</button>
 </a>
+<a href="{$image_link}">
+    <button class="btn btn-default">{l s='Regenerate thumbnails'}</button>
+</a>
