@@ -471,8 +471,8 @@ class AdminCustomersControllerCore extends AdminController
 					),
 					'col' => '4',
 					'hint' => array(
-						$this->l('The group will be as applied by default.'),
-						$this->l('Apply the discount\'s price of this group.')
+						$this->l('This group will be the user\'s default group.'),
+						$this->l('Only the discount for the selected group will be applied to this customer.')
 					)
 				)
 			)
