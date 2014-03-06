@@ -3,21 +3,19 @@ include('config/config.php');
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') die('forbiden');
 include('include/utils.php');
 
+$_POST['path'] = $current_path.$_POST['path'];
+$_POST['path_thumb'] = $thumbs_base_path.$_POST['path_thumb'];
 
 $storeFolder = $_POST['path'];
 $storeFolderThumb = $_POST['path_thumb'];
 
 $path_pos = strpos($storeFolder, $current_path);
 $thumb_pos = strpos($_POST['path_thumb'], $thumbs_base_path);
-if ($path_pos !== 0
-	|| $thumb_pos !== 0
-	|| strpos($storeFolderThumb, '..'.DIRECTORY_SEPARATOR, strlen($thumbs_base_path)) !== false
-	|| strpos($storeFolderThumb, '.'.DIRECTORY_SEPARATOR, strlen($thumbs_base_path)) !== false
-	|| strpos($storeFolder, '..'.DIRECTORY_SEPARATOR, strlen($current_path)) !== false
-	|| strpos($storeFolder, '.'.DIRECTORY_SEPARATOR, strlen($current_path)) !== false
-)
-	die('wrong path');
 
+if ($path_pos === false || $thumb_pos === false
+	|| preg_match('/\.{1,2}[\/|\\\]/', $_POST['path_thumb']) !== 0
+	|| preg_match('/\.{1,2}[\/|\\\]/', $_POST['path']) !== 0)
+	die('wrong path');
 
 $path = $storeFolder;
 $cycle = true;
@@ -45,6 +43,10 @@ if (!empty($_FILES))
 		$targetPath = $storeFolder;
 		$targetPathThumb = $storeFolderThumb;
 		$_FILES['file']['name'] = fix_filename($_FILES['file']['name'], $transliteration);
+
+		$file_name_splitted = explode('.', $_FILES['file']['name']);
+		array_pop($file_name_splitted);
+		$_FILES['file']['name'] = implode('-', $file_name_splitted).'.'.$info['extension'];
 
 		if (file_exists($targetPath.$_FILES['file']['name']))
 		{

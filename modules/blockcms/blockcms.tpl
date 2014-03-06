@@ -58,7 +58,7 @@
 				{/if}
 			{/foreach}
 			<li><a href="{$link->getPageLink('sitemap')|escape:'html'}" title="{l s='Sitemap' mod='blockcms'}">{l s='Sitemap' mod='blockcms'}</a></li>
-			{if $display_poweredby}<li class="last_item">{l s='Powered by' mod='blockcms'} <a class="_blank" href="http://www.prestashop.com">PrestaShop</a>&trade;</li>{/if}
+			{if $display_poweredby}<li class="last_item">{l s='[1]Ecommerce software by %s[/1]' mod='blockcms' sprintf=['PrestaShop™'] tags=['<a class="_blank" href="http://www.prestashop.com">']}</li>{/if}
 		</ul>
 	{$footer_text}
 	</div>

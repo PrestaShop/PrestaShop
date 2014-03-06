@@ -3,15 +3,14 @@ include('config/config.php');
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') die('forbiden');
 include('include/utils.php');
 
+$_POST['path_thumb'] = $thumbs_base_path.$_POST['path_thumb'];
 if (!isset($_POST['path_thumb']) && trim($_POST['path_thumb']) == '')
 	die('wrong path');
 
 $thumb_pos = strpos($_POST['path_thumb'], $thumbs_base_path);
-if ($thumb_pos !== 0
-	|| strpos($_POST['path_thumb'], '..'.DIRECTORY_SEPARATOR, strlen($thumbs_base_path) + $thumb_pos) !== false
-	|| strpos($_POST['path'], DIRECTORY_SEPARATOR) === 0
-	|| strpos($_POST['path'], '..'.DIRECTORY_SEPARATOR) !== false
-	|| strpos($_POST['path'], '.'.DIRECTORY_SEPARATOR) === 0
+if ($thumb_pos === false
+	|| preg_match('/\.{1,2}[\/|\\\]/', $_POST['path_thumb']) !== 0
+	|| preg_match('/\.{1,2}[\/|\\\]/', $_POST['path']) !== 0
 )
 	die('wrong path');
 
@@ -48,12 +47,12 @@ while ($cycle && $i < $max_cycles)
 	$cycle = false;
 }
 
-$path = $current_path.$_POST['path'];
+$path = $current_path.str_replace("\0", "", $_POST['path']);
 $path_thumb = $_POST['path_thumb'];
 if (isset($_POST['name']))
 {
 	$name = $_POST['name'];
-	if (strpos($name, '..'.DIRECTORY_SEPARATOR) !== false) die('wrong name');
+	if (preg_match('/\.{1,2}[\/|\\\]/', $name) !== 0) die('wrong name');
 }
 
 $info = pathinfo($path);
