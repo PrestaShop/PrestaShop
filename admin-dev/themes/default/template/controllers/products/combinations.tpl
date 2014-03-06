@@ -241,7 +241,6 @@
 		</div>
 		<div id="tr_unit_impact" class="form-group">
 			<label class="control-label col-lg-3" for="attribute_unit_impact">
-			<label class="control-label col-lg-3" for="attribute_unit_impact">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_unit_impact" type="attribute_unit_impact"}
 				{l s='Impact on unit price'}
 			</label>
