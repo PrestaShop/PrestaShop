@@ -949,7 +949,7 @@ class Blocktopmenu extends Module
 		$shop = new Shop((int)Shop::getContextShopID());
 		$html .= '<optgroup label="'.$this->l('Categories').'">';	
 		$html .= $this->generateCategoriesOption(
-			Category::getNestedCategories($shop->getCategory(), (int)$this->context->language->id, true), $items);
+			Category::getNestedCategories(null, (int)$this->context->language->id, true), $items);
 		$html .= '</optgroup>';
 		
 		// BEGIN Shops
