@@ -480,10 +480,7 @@ class CategoryCore extends ObjectModel
 	public static function getNestedCategories($root_category = null, $id_lang = false, $active = true, $groups = null,
 		$use_shop_restriction = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
 	{
-		if (!isset($root_category))
-			$root_category = self::getRootCategory($id_lang)->id;
-
-		if (!Validate::isInt($root_category))
+		if (isset($root_category) && !Validate::isInt($root_category))
 			die(Tools::displayError());
 
 		if (!Validate::isBool($active))
@@ -503,7 +500,7 @@ class CategoryCore extends ObjectModel
 				'.($use_shop_restriction ? Shop::addSqlAssociation('category', 'c') : '').'
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').'
 				'.(isset($groups) && Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON c.`id_category` = cg.`id_category`' : '').'
-				RIGHT JOIN `'._DB_PREFIX_.'category` c2 ON c2.`id_category` = '.(int)$root_category.' AND c.`nleft` >= c2.`nleft` AND c.`nright` <= c2.`nright`		
+				'.(isset($root_category) ? 'RIGHT JOIN `'._DB_PREFIX_.'category` c2 ON c2.`id_category` = '.(int)$root_category.' AND c.`nleft` >= c2.`nleft` AND c.`nright` <= c2.`nright`' : '').'
 				WHERE 1 '.$sql_filter.' '.($id_lang ? 'AND `id_lang` = '.(int)$id_lang : '').'
 				'.($active ? ' AND c.`active` = 1' : '').'
 				'.(isset($groups) && Group::isFeatureActive() ? ' AND cg.`id_group` IN ('.implode(',', $groups).')' : '').'
@@ -515,6 +512,9 @@ class CategoryCore extends ObjectModel
 
 			$categories = array();
 			$buff = array();
+
+			if (!isset($root_category))
+				$root_category = 1;
 
 			foreach ($result as $row)
 			{
