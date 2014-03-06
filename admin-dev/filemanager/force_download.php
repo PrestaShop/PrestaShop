@@ -3,10 +3,7 @@ include('config/config.php');
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') die('forbiden');
 include('include/utils.php');
 
-if (strpos($_POST['path'], DIRECTORY_SEPARATOR) === 0
-	|| strpos($_POST['path'], '..'.DIRECTORY_SEPARATOR) !== false
-	|| strpos($_POST['path'], '.'.DIRECTORY_SEPARATOR) === 0
-)
+if (preg_match('/\.{1,2}[\/|\\\]/', $_POST['path']) !== 0)
 	die('wrong path');
 
 if (strpos($_POST['name'], DIRECTORY_SEPARATOR) !== false)

@@ -39,7 +39,7 @@
         <ul>
             {foreach $modules_errors as $module_errors}
                 <li>
-                   <b>{$module_errors['module_name']}</b> : {foreach $module_errors['errors'] as $error}<br>  {$error}{/foreach}
+                   <b>{$module_errors['module_name']}</b> : {foreach $module_errors['errors'] as $error}<br>  {$error|escape:'html':'UTF-8'}{/foreach}
                 </li>
             {/foreach}
         </ul>
