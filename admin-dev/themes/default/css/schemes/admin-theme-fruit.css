@@ -680,12 +680,12 @@
 /* FONT PATH -------------------------- */
 @font-face { font-family: 'FontAwesome'; src: url("../../fonts/fontawesome-webfont.eot?v=4.0.4"); src: url("../../fonts/fontawesome-webfont.eot?#iefix&v=4.0.4") format("embedded-opentype"), url("../../fonts/fontawesome-webfont.woff?v=4.0.4") format("woff"), url("../../fonts/fontawesome-webfont.ttf?v=4.0.4") format("truetype"), url("../../fonts/fontawesome-webfont.svg?v=4.0.4#fontawesomeregular") format("svg"); font-weight: normal; font-style: normal; }
 
-.icon, .page-sidebar-closed:not(.nav-topbar) .searchtab:before, [class^="icon-"], [class^="process-icon-"], [class*="process-icon-"], .bootstrap .alert.alert-warning:before, .bootstrap .alert.alert-danger:before, .bootstrap #carrier_wizard .wizard_error:before, .bootstrap .alert.alert-success:before, .bootstrap .alert.alert-info:before, .bootstrap .alert.alert-addons:before, .bootstrap .alert.alert-message:before, .bootstrap .table td.dragHandle .dragGroup:before, .bootstrap #dashboard .loading .data_value:before, .bootstrap #employee-thumbnail:before, .mce-ico, .chosen-container-single .chosen-single div b, .chosen-container-single .chosen-search:before { display: inline-block; font-family: FontAwesome; font-style: normal; font-weight: normal; line-height: 1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.icon, .page-sidebar-closed:not(.nav-topbar) .searchtab:before, [class^="icon-"], [class^="process-icon-"], .bootstrap .alert.alert-warning:before, .bootstrap .alert.alert-danger:before, .bootstrap #carrier_wizard .wizard_error:before, .bootstrap .alert.alert-success:before, .bootstrap .alert.alert-info:before, .bootstrap .alert.alert-addons:before, .bootstrap .alert.alert-message:before, .bootstrap .table td.dragHandle .dragGroup:before, .bootstrap #dashboard .loading .data_value:before, .bootstrap #employee-thumbnail:before, .mce-ico, .chosen-container-single .chosen-single div b, .chosen-container-single .chosen-search:before { display: inline-block; font-family: FontAwesome; font-style: normal; font-weight: normal; line-height: 1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
 /* makes the font 33% larger relative to the icon container */
 .icon-lg { font-size: 1.33333em; line-height: 0.75em; vertical-align: -15%; }
 
-.icon-2x, .page-sidebar-closed:not(.nav-topbar) .searchtab:before, [class^="icon-Admin"], [class^="process-icon-"], [class*="process-icon-"] { font-size: 2em; }
+.icon-2x, .page-sidebar-closed:not(.nav-topbar) .searchtab:before, [class^="icon-Admin"], [class^="process-icon-"] { font-size: 2em; }
 
 .icon-3x, .bootstrap .alert.alert-warning:before, .bootstrap .alert.alert-danger:before, .bootstrap #carrier_wizard .wizard_error:before, .bootstrap .alert.alert-success:before, .bootstrap .alert.alert-info:before, .bootstrap .alert.alert-addons:before, .bootstrap .alert.alert-message:before { font-size: 3em; }
 
@@ -693,7 +693,7 @@
 
 .icon-5x { font-size: 5em; }
 
-.icon-fw, [class^="icon-Admin"], [class^="process-icon-"], [class*="process-icon-"] { width: 1.28571em; text-align: center; }
+.icon-fw, [class^="icon-Admin"], [class^="process-icon-"] { width: 1.28571em; text-align: center; }
 
 .icon-ul { padding-left: 0; margin-left: 2.14286em; list-style-type: none; }
 .icon-ul > li { position: relative; }
@@ -707,8 +707,8 @@
 
 .pull-left, .bootstrap .page-head h2.page-title { float: left; }
 
-.icon.pull-left, .page-sidebar-closed:not(.nav-topbar) .pull-left.searchtab:before, .page-sidebar-closed:not(.nav-topbar) .bootstrap .page-head h2.searchtab.page-title:before, .bootstrap .page-head .page-sidebar-closed:not(.nav-topbar) h2.searchtab.page-title:before, .pull-left[class^="icon-"], .bootstrap .page-head h2[class^="icon-"].page-title, .pull-left[class^="process-icon-"], .bootstrap .page-head h2[class^="process-icon-"].page-title, .pull-left[class*="process-icon-"], .bootstrap .page-head h2[class*="process-icon-"].page-title, .bootstrap .pull-left.alert.alert-warning:before, .bootstrap .page-head h2.alert.alert-warning.page-title:before, .bootstrap .pull-left.alert.alert-danger:before, .bootstrap .page-head h2.alert.alert-danger.page-title:before, .bootstrap .page-head #carrier_wizard h2.page-title.wizard_error:before, .bootstrap #carrier_wizard .page-head h2.page-title.wizard_error:before, .bootstrap #carrier_wizard .pull-left.wizard_error:before, .bootstrap .pull-left.alert.alert-success:before, .bootstrap .page-head h2.alert.alert-success.page-title:before, .bootstrap .pull-left.alert.alert-info:before, .bootstrap .page-head h2.alert.alert-info.page-title:before, .bootstrap .pull-left.alert.alert-addons:before, .bootstrap .page-head h2.alert.alert-addons.page-title:before, .bootstrap .pull-left.alert.alert-message:before, .bootstrap .page-head h2.alert.alert-message.page-title:before, .bootstrap .table td.dragHandle .pull-left.dragGroup:before, .bootstrap .table td.dragHandle .page-head h2.dragGroup.page-title:before, .bootstrap .page-head .table td.dragHandle h2.dragGroup.page-title:before, .bootstrap .page-head h2.icon.page-title, .bootstrap .page-head #dashboard .loading h2.page-title.data_value:before, .bootstrap #dashboard .loading .page-head h2.page-title.data_value:before, .bootstrap .page-head h2.page-title#employee-thumbnail:before, .bootstrap .page-head h2.page-title.mce-ico, .bootstrap .page-head .chosen-container-single h2.page-title.chosen-search:before, .chosen-container-single .bootstrap .page-head h2.page-title.chosen-search:before, .bootstrap #dashboard .loading .pull-left.data_value:before, .bootstrap .pull-left#employee-thumbnail:before, .pull-left.mce-ico, .chosen-container-single .chosen-single div b.pull-left, .chosen-container-single .pull-left.chosen-search:before { margin-right: .3em; }
-.icon.pull-right, .page-sidebar-closed:not(.nav-topbar) .pull-right.searchtab:before, .pull-right[class^="icon-"], .pull-right[class^="process-icon-"], .pull-right[class*="process-icon-"], .bootstrap .pull-right.alert.alert-warning:before, .bootstrap .pull-right.alert.alert-danger:before, .bootstrap #carrier_wizard .pull-right.wizard_error:before, .bootstrap .pull-right.alert.alert-success:before, .bootstrap .pull-right.alert.alert-info:before, .bootstrap .pull-right.alert.alert-addons:before, .bootstrap .pull-right.alert.alert-message:before, .bootstrap .table td.dragHandle .pull-right.dragGroup:before, .bootstrap #dashboard .loading .pull-right.data_value:before, .bootstrap .pull-right#employee-thumbnail:before, .pull-right.mce-ico, .chosen-container-single .chosen-single div b.pull-right, .chosen-container-single .pull-right.chosen-search:before { margin-left: .3em; }
+.icon.pull-left, .page-sidebar-closed:not(.nav-topbar) .pull-left.searchtab:before, .page-sidebar-closed:not(.nav-topbar) .bootstrap .page-head h2.searchtab.page-title:before, .bootstrap .page-head .page-sidebar-closed:not(.nav-topbar) h2.searchtab.page-title:before, .pull-left[class^="icon-"], .bootstrap .page-head h2[class^="icon-"].page-title, .pull-left[class^="process-icon-"], .bootstrap .page-head h2[class^="process-icon-"].page-title, .bootstrap .pull-left.alert.alert-warning:before, .bootstrap .page-head h2.alert.alert-warning.page-title:before, .bootstrap .pull-left.alert.alert-danger:before, .bootstrap .page-head h2.alert.alert-danger.page-title:before, .bootstrap .page-head #carrier_wizard h2.page-title.wizard_error:before, .bootstrap #carrier_wizard .page-head h2.page-title.wizard_error:before, .bootstrap #carrier_wizard .pull-left.wizard_error:before, .bootstrap .pull-left.alert.alert-success:before, .bootstrap .page-head h2.alert.alert-success.page-title:before, .bootstrap .pull-left.alert.alert-info:before, .bootstrap .page-head h2.alert.alert-info.page-title:before, .bootstrap .pull-left.alert.alert-addons:before, .bootstrap .page-head h2.alert.alert-addons.page-title:before, .bootstrap .pull-left.alert.alert-message:before, .bootstrap .page-head h2.alert.alert-message.page-title:before, .bootstrap .table td.dragHandle .pull-left.dragGroup:before, .bootstrap .table td.dragHandle .page-head h2.dragGroup.page-title:before, .bootstrap .page-head .table td.dragHandle h2.dragGroup.page-title:before, .bootstrap .page-head h2.icon.page-title, .bootstrap .page-head #dashboard .loading h2.page-title.data_value:before, .bootstrap #dashboard .loading .page-head h2.page-title.data_value:before, .bootstrap .page-head h2.page-title#employee-thumbnail:before, .bootstrap .page-head h2.page-title.mce-ico, .bootstrap .page-head .chosen-container-single h2.page-title.chosen-search:before, .chosen-container-single .bootstrap .page-head h2.page-title.chosen-search:before, .bootstrap #dashboard .loading .pull-left.data_value:before, .bootstrap .pull-left#employee-thumbnail:before, .pull-left.mce-ico, .chosen-container-single .chosen-single div b.pull-left, .chosen-container-single .pull-left.chosen-search:before { margin-right: .3em; }
+.icon.pull-right, .page-sidebar-closed:not(.nav-topbar) .pull-right.searchtab:before, .pull-right[class^="icon-"], .pull-right[class^="process-icon-"], .bootstrap .pull-right.alert.alert-warning:before, .bootstrap .pull-right.alert.alert-danger:before, .bootstrap #carrier_wizard .pull-right.wizard_error:before, .bootstrap .pull-right.alert.alert-success:before, .bootstrap .pull-right.alert.alert-info:before, .bootstrap .pull-right.alert.alert-addons:before, .bootstrap .pull-right.alert.alert-message:before, .bootstrap .table td.dragHandle .pull-right.dragGroup:before, .bootstrap #dashboard .loading .pull-right.data_value:before, .bootstrap .pull-right#employee-thumbnail:before, .pull-right.mce-ico, .chosen-container-single .chosen-single div b.pull-right, .chosen-container-single .pull-right.chosen-search:before { margin-left: .3em; }
 
 .icon-spin, .bootstrap #dashboard .loading .data_value:before, .bootstrap #employee-thumbnail:before { -webkit-animation: spin 2s infinite linear; -moz-animation: spin 2s infinite linear; -o-animation: spin 2s infinite linear; animation: spin 2s infinite linear; }
 
@@ -769,21 +769,21 @@
 
 .icon-th-list:before { content: "\f00b"; }
 
-.icon-check:before, .process-icon-ok:before { content: "\f00c"; }
+.icon-check:before, #content .process-icon-ok:before { content: "\f00c"; }
 
-.icon-times:before, .icon-remove:before, .process-icon-cancel:before { content: "\f00d"; }
+.icon-times:before, .icon-remove:before, #content .process-icon-cancel:before { content: "\f00d"; }
 
 .icon-search-plus:before, .icon-zoom-in:before { content: "\f00e"; }
 
 .icon-search-minus:before, .icon-zoom-out:before { content: "\f010"; }
 
-.icon-power-off:before, .icon-off:before, .process-icon-off:before, .process-icon-power:before { content: "\f011"; }
+.icon-power-off:before, .icon-off:before, #content .process-icon-off:before, #content .process-icon-power:before { content: "\f011"; }
 
 .icon-signal:before { content: "\f012"; }
 
-.icon-gear:before, .icon-cog:before, .icon-AdminAdmin:before, .process-icon-configure:before { content: "\f013"; }
+.icon-gear:before, .icon-cog:before, .icon-AdminAdmin:before, #content .process-icon-configure:before { content: "\f013"; }
 
-.icon-trash-o:before, .icon-trash:before, .process-icon-delete:before, .process-icon-uninstall:before { content: "\f014"; }
+.icon-trash-o:before, .icon-trash:before, #content .process-icon-delete:before, #content .process-icon-uninstall:before { content: "\f014"; }
 
 .icon-home:before { content: "\f015"; }
 
@@ -793,9 +793,9 @@
 
 .icon-road:before { content: "\f018"; }
 
-.icon-download:before, .icon-download-alt:before, .process-icon-download-alt:before, .process-icon-save-date:before, .process-icon-save-status:before { content: "\f019"; }
+.icon-download:before, .icon-download-alt:before, #content .process-icon-download-alt:before, #content .process-icon-save-date:before, #content .process-icon-save-status:before { content: "\f019"; }
 
-.icon-arrow-circle-o-down:before, .icon-download:before, .icon-download-alt:before, .process-icon-download-alt:before, .process-icon-save-date:before, .process-icon-save-status:before { content: "\f01a"; }
+.icon-arrow-circle-o-down:before, .icon-download:before, .icon-download-alt:before, #content .process-icon-download-alt:before, #content .process-icon-save-date:before, #content .process-icon-save-status:before { content: "\f01a"; }
 
 .icon-arrow-circle-o-up:before, .icon-upload:before, .icon-upload-alt:before { content: "\f01b"; }
 
@@ -805,7 +805,7 @@
 
 .icon-rotate-right:before, .icon-repeat:before { content: "\f01e"; }
 
-.icon-refresh:before, .process-icon-update:before, .process-icon-refresh:before, .bootstrap #dashboard .loading .data_value:before, .bootstrap #employee-thumbnail:before { content: "\f021"; }
+.icon-refresh:before, #content .process-icon-update:before, #content .process-icon-refresh:before, .bootstrap #dashboard .loading .data_value:before, .bootstrap #employee-thumbnail:before { content: "\f021"; }
 
 .icon-list-alt:before { content: "\f022"; }
 
@@ -873,7 +873,7 @@
 
 .icon-tint:before { content: "\f043"; }
 
-.icon-edit:before, .process-icon-edit:before, .icon-pencil-square-o:before, .icon-edit:before, .process-icon-edit:before { content: "\f044"; }
+.icon-edit:before, #content .process-icon-edit:before, .icon-pencil-square-o:before, .icon-edit:before, #content .process-icon-edit:before { content: "\f044"; }
 
 .icon-share-square-o:before, .icon-share:before, .icon-share-alt:before { content: "\f045"; }
 
@@ -905,15 +905,15 @@
 
 .icon-chevron-right:before { content: "\f054"; }
 
-.icon-plus-circle:before, .icon-plus-sign:before, .process-icon-newCombination.toolbar-new:before, .process-icon-plus:before { content: "\f055"; }
+.icon-plus-circle:before, .icon-plus-sign:before, #content .process-icon-newCombination.toolbar-new:before, #content .process-icon-plus:before { content: "\f055"; }
 
-.icon-minus-circle:before, .icon-minus-sign:before, .process-icon-newCombination.toolbar-cancel:before, .process-icon-minus:before { content: "\f056"; }
+.icon-minus-circle:before, .icon-minus-sign:before, #content .process-icon-newCombination.toolbar-cancel:before, #content .process-icon-minus:before { content: "\f056"; }
 
 .icon-times-circle:before, .icon-remove-sign:before { content: "\f057"; }
 
 .icon-check-circle:before, .icon-ok-sign:before, .bootstrap .alert.alert-success:before, .bootstrap #carrier_wizard .alert-success.wizard_error:before { content: "\f058"; }
 
-.icon-question-circle:before, .icon-question-sign:before, .process-icon-help:before, .process-icon-help-new:before, .bootstrap .alert.alert-info:before, .bootstrap #carrier_wizard .alert-info.wizard_error:before { content: "\f059"; }
+.icon-question-circle:before, .icon-question-sign:before, #content .process-icon-help:before, #content .process-icon-help-new:before, .bootstrap .alert.alert-info:before, .bootstrap #carrier_wizard .alert-info.wizard_error:before { content: "\f059"; }
 
 .icon-info-circle:before, .icon-info-sign:before { content: "\f05a"; }
 
@@ -939,7 +939,7 @@
 
 .icon-compress:before, .icon-resize-small:before { content: "\f066"; }
 
-.icon-plus:before, .process-icon-new-module:before { content: "\f067"; }
+.icon-plus:before, #content .process-icon-new-module:before { content: "\f067"; }
 
 .icon-minus:before { content: "\f068"; }
 
@@ -953,7 +953,7 @@
 
 .icon-fire:before { content: "\f06d"; }
 
-.icon-eye:before, .icon-eye-open:before, .process-icon-preview:before, .process-icon-previewURL:before { content: "\f06e"; }
+.icon-eye:before, .icon-eye-open:before, #content .process-icon-preview:before, #content .process-icon-previewURL:before { content: "\f06e"; }
 
 .icon-eye-slash:before, .icon-eye-close:before { content: "\f070"; }
 
@@ -985,7 +985,7 @@
 
 .icon-arrows-h:before, .icon-resize-horizontal:before { content: "\f07e"; }
 
-.icon-bar-chart-o:before, .icon-bar-chart:before, .icon-AdminParentStats:before, .process-icon-stats:before { content: "\f080"; }
+.icon-bar-chart-o:before, .icon-bar-chart:before, .icon-AdminParentStats:before, #content .process-icon-stats:before { content: "\f080"; }
 
 .icon-twitter-square:before, .icon-twitter-sign:before { content: "\f081"; }
 
@@ -995,7 +995,7 @@
 
 .icon-key:before { content: "\f084"; }
 
-.icon-gears:before, .icon-cogs:before, .icon-AdminTools:before, .process-icon-cogs:before { content: "\f085"; }
+.icon-gears:before, .icon-cogs:before, .icon-AdminTools:before, #content .process-icon-cogs:before { content: "\f085"; }
 
 .icon-comments:before { content: "\f086"; }
 
@@ -1061,9 +1061,9 @@
 
 .icon-hand-o-down:before, .icon-hand-down:before { content: "\f0a7"; }
 
-.icon-arrow-circle-left:before, .icon-circle-arrow-left:before, .process-icon-back:before { content: "\f0a8"; }
+.icon-arrow-circle-left:before, .icon-circle-arrow-left:before, #content .process-icon-back:before { content: "\f0a8"; }
 
-.icon-arrow-circle-right:before, .icon-circle-arrow-right:before, .process-icon-next:before { content: "\f0a9"; }
+.icon-arrow-circle-right:before, .icon-circle-arrow-right:before, #content .process-icon-next:before { content: "\f0a9"; }
 
 .icon-arrow-circle-up:before, .icon-circle-arrow-up:before { content: "\f0aa"; }
 
@@ -1091,11 +1091,11 @@
 
 .icon-cut:before, .icon-scissors:before, .icon-cut:before { content: "\f0c4"; }
 
-.icon-copy:before, .process-icon-duplicate:before, .icon-files-o:before, .icon-copy:before, .process-icon-duplicate:before { content: "\f0c5"; }
+.icon-copy:before, #content .process-icon-duplicate:before, .icon-files-o:before, .icon-copy:before, #content .process-icon-duplicate:before { content: "\f0c5"; }
 
 .icon-paperclip:before, .icon-paper-clip:before { content: "\f0c6"; }
 
-.icon-save:before, .process-icon-save:before, .process-icon-save-and-stay:before, .process-icon-save-and-preview:before, .icon-floppy-o:before, .icon-save:before, .process-icon-save:before, .process-icon-save-and-stay:before, .process-icon-save-and-preview:before { content: "\f0c7"; }
+.icon-save:before, #content .process-icon-save:before, #content .process-icon-save-and-stay:before, #content .process-icon-save-and-preview:before, .icon-floppy-o:before, .icon-save:before, #content .process-icon-save:before, #content .process-icon-save-and-stay:before, #content .process-icon-save-and-preview:before { content: "\f0c7"; }
 
 .icon-square:before, .icon-sign-blank:before { content: "\f0c8"; }
 
@@ -1145,7 +1145,7 @@
 
 .icon-linkedin:before { content: "\f0e1"; }
 
-.icon-rotate-left:before, .process-icon-reset:before, .icon-undo:before { content: "\f0e2"; }
+.icon-rotate-left:before, #content .process-icon-reset:before, .icon-undo:before { content: "\f0e2"; }
 
 .icon-legal:before, .icon-gavel:before, .icon-legal:before { content: "\f0e3"; }
 
@@ -1165,11 +1165,11 @@
 
 .icon-lightbulb-o:before, .icon-lightbulb:before { content: "\f0eb"; }
 
-.icon-exchange:before, .process-icon-partial_refund:before { content: "\f0ec"; }
+.icon-exchange:before, #content .process-icon-partial_refund:before { content: "\f0ec"; }
 
-.icon-cloud-download:before, .process-icon-download:before { content: "\f0ed"; }
+.icon-cloud-download:before, #content .process-icon-download:before { content: "\f0ed"; }
 
-.icon-cloud-upload:before, .process-icon-import:before, .process-icon-upload:before { content: "\f0ee"; }
+.icon-cloud-upload:before, #content .process-icon-import:before, #content .process-icon-upload:before { content: "\f0ee"; }
 
 .icon-user-md:before { content: "\f0f0"; }
 
@@ -1199,7 +1199,7 @@
 
 .icon-h-square:before, .icon-h-sign:before { content: "\f0fd"; }
 
-.icon-plus-square:before, .icon-plus-sign-alt:before, .process-icon-newAttributes:before, .process-icon-new:before, .process-icon-new-url:before { content: "\f0fe"; }
+.icon-plus-square:before, .icon-plus-sign-alt:before, #content .process-icon-newAttributes:before, #content .process-icon-new:before, #content .process-icon-new-url:before { content: "\f0fe"; }
 
 .icon-angle-double-left:before, .icon-double-angle-left:before { content: "\f100"; }
 
@@ -1235,7 +1235,7 @@
 
 .icon-circle:before { content: "\f111"; }
 
-.icon-mail-reply:before, .process-icon-mail-reply:before, .icon-reply:before { content: "\f112"; }
+.icon-mail-reply:before, #content .process-icon-mail-reply:before, .icon-reply:before { content: "\f112"; }
 
 .icon-github-alt:before { content: "\f113"; }
 
@@ -1287,7 +1287,7 @@
 
 .icon-eraser:before { content: "\f12d"; }
 
-.icon-puzzle-piece:before, .icon-AdminParentModules:before, .process-icon-modules-list:before, .bootstrap .alert.alert-addons:before, .bootstrap #carrier_wizard .alert-addons.wizard_error:before { content: "\f12e"; }
+.icon-puzzle-piece:before, .icon-AdminParentModules:before, #content .process-icon-modules-list:before, .bootstrap .alert.alert-addons:before, .bootstrap #carrier_wizard .alert-addons.wizard_error:before { content: "\f12e"; }
 
 .icon-microphone:before { content: "\f130"; }
 
@@ -1315,7 +1315,7 @@
 
 .icon-css3:before { content: "\f13c"; }
 
-.icon-anchor:before, .process-icon-anchor:before { content: "\f13d"; }
+.icon-anchor:before, #content .process-icon-anchor:before { content: "\f13d"; }
 
 .icon-unlock-alt:before { content: "\f13e"; }
 
@@ -1345,7 +1345,7 @@
 
 .icon-external-link-square:before, .icon-external-link-sign:before { content: "\f14c"; }
 
-.icon-share-square:before, .icon-share-sign:before, .process-icon-export:before { content: "\f14d"; }
+.icon-share-square:before, .icon-share-sign:before, #content .process-icon-export:before { content: "\f14d"; }
 
 .icon-compass:before { content: "\f14e"; }
 
@@ -2802,7 +2802,7 @@ a.link-social:hover { text-decoration: none; }
 
 [class^="icon-"] { font-size: 14px; }
 
-[class^="process-icon-"], [class*="process-icon-"] { display: block; width: 30px; margin: 0 auto; font-size: 28px; background: transparent !important; }
+[class^="process-icon-"] { display: block; width: 30px; height: 30px; margin: 0 auto; font-size: 28px; background: transparent; background-size: 26px; background-position: center; }
 
 .bootstrap { @-webkit-keyframes one { 0% { background-color: #00a4e7; }
   100% { background-color: white; } }
