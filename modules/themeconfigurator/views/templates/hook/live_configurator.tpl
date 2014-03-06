@@ -70,7 +70,7 @@
 			<button type="submit" class="btn btn-2" name="submitLiveConfigurator">{l s='Save' mod='themeconfigurator'}</button>
 		</div>
 		<div id="block-advertisement">
-			<a href="http://addons.prestashop.com/?utm_source=backoffice_configurator">
+			<a href="http://addons.prestashop.com/en/205-premium-templates?utm_source=backoffice_configurator" onclick="return !window.open(this.href)">
 				<img src="{$advertisement_image|escape:'htmlall':'UTF-8'}" alt="{$advertisement_text|escape:'htmlall':'UTF-8'}" />
 			</a>
 		</div>
