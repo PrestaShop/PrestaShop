@@ -42,7 +42,7 @@ class HomeSlider extends Module
 	{
 		$this->name = 'homeslider';
 		$this->tab = 'front_office_features';
-		$this->version = '1.2.6';
+		$this->version = '1.2.7';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->secure_key = Tools::encrypt($this->name);
@@ -446,13 +446,6 @@ class HomeSlider extends Module
 	{
 		if (!$this->isCached('homeslider.tpl', $this->getCacheId()))
 		{
-			$slider = array(
-				'width' => Configuration::get('HOMESLIDER_WIDTH'),
-				'speed' => Configuration::get('HOMESLIDER_SPEED'),
-				'pause' => Configuration::get('HOMESLIDER_PAUSE'),
-				'loop' => Configuration::get('HOMESLIDER_LOOP'),
-			);
-
 			$slides = $this->getSlides(true);
 			if (is_array($slides))
 				foreach ($slides as &$slide)
@@ -466,7 +459,6 @@ class HomeSlider extends Module
 				return false;
 
 			$this->smarty->assign('homeslider_slides', $slides);
-			$this->smarty->assign('homeslider', $slider);
 		}
 
 		return true;
@@ -479,6 +471,16 @@ class HomeSlider extends Module
 		$this->context->controller->addCSS($this->_path.'homeslider.css');
 		$this->context->controller->addJS($this->_path.'js/homeslider.js');
 		$this->context->controller->addJqueryPlugin(array('bxslider'));
+
+		$slider = array(
+			'width' => Configuration::get('HOMESLIDER_WIDTH'),
+			'speed' => Configuration::get('HOMESLIDER_SPEED'),
+			'pause' => Configuration::get('HOMESLIDER_PAUSE'),
+			'loop' => Configuration::get('HOMESLIDER_LOOP'),
+		);
+
+		$this->smarty->assign('homeslider', $slider);
+		return $this->display(__FILE__, 'header.tpl', $this->getCacheId());
 	}
 
 	public function hookdisplayTop($params)
@@ -507,7 +509,8 @@ class HomeSlider extends Module
 
 	public function clearCache()
 	{
-		$this->_clearCache('homeslider.tpl');
+		$this->_clearCache('header.tpl', $this->getCacheId());
+		$this->_clearCache('homeslider.tpl', $this->getCacheId());
 	}
 
 	public function hookActionShopDataDuplication($params)
