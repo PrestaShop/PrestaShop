@@ -43,20 +43,7 @@
                 {/foreach}
             </ul>
         </div>
-        {if isset($homeslider)}
-                {if $homeslider_slides|@count > 1}
-                    {if $homeslider.loop == 1}
-                        {addJsDef homeslider_loop=true}
-                    {else}
-                        {addJsDef homeslider_loop=false}
-                    {/if}
-                {else}
-                    {addJsDef homeslider_loop=false}
-                {/if}
-                {addJsDef homeslider_width=$homeslider.width}
-                {addJsDef homeslider_speed=$homeslider.speed}
-                {addJsDef homeslider_pause=$homeslider.pause}
-        {/if}
+
     {/if}
     <!-- /Module HomeSlider -->
 {/if}

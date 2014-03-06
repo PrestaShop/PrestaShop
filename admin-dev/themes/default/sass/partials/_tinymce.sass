@@ -369,7 +369,7 @@ div.mce-fullscreen
 		position: absolute
 		right: 15px
 		top: 9px
-		font-size: 12px
+		font-size: 18px
 		font-weight: bold
 		line-height: 20px
 		color: #858585
@@ -382,8 +382,8 @@ div.mce-fullscreen
 
 .mce-window-head .mce-title
 	line-height: 20px
-	font-size: 12px
-	font-weight: bold
+	font-size: 14px
+	font-weight: normal
 	text-rendering: optimizelegibility
 	padding-right: 10px
 
@@ -675,6 +675,7 @@ body .mce-abs-layout-item
 		margin: 0
 
 .mce-checkbox
+
 	cursor: pointer
 
 i.mce-i-checkbox
@@ -687,6 +688,10 @@ i.mce-i-checkbox
 	*line-height: 0
 	*text-indent: 0
 	overflow: hidden
+	width: 14px
+	height: 14px
+	text-align: center
+	display: inline-block
 
 .mce-checked i.mce-i-checkbox
 	color: #333
@@ -767,8 +772,6 @@ i.mce-i-checkbox
 	display: inline-block
 	*display: inline
 	*zoom: 1
-	border-radius: 3px
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075)
 	*height: 32px
 	input
 		border: 1px solid #c5c5c5
@@ -781,9 +784,11 @@ i.mce-i-checkbox
 	.mce-btn
 		border-left: 0
 		border-radius: 0 4px 4px 0
+		background-color: #C5C5C5
+		@include box-shadow(rgba(#aaa,1) 0 -2px 0 inset)
+
 	button
-		padding-right: 8px
-		padding-left: 8px
+		height: 26px
 	&.mce-disabled .mce-btn button
 		cursor: default
 		box-shadow: none
@@ -1225,79 +1230,54 @@ i.mce-i-resize
 
 .mce-i-save:before
 	content: "\f0c7"
-
 .mce-i-newdocument:before
 	content: "\f016"
-
 .mce-i-fullpage:before
 	content: "\f065"
-
 .mce-i-alignleft:before
 	content: "\f036"
-
 .mce-i-aligncenter:before
 	content: "\f037"
-
 .mce-i-alignright:before
 	content: "\f038"
-
 .mce-i-alignjustify:before
 	content: "\f039"
-
 .mce-i-cut:before
 	content: "\f0c4"
-
 .mce-i-paste:before
 	content: "\f0ea"
-
 .mce-i-searchreplace:before
 	content: "\e009"
-
 .mce-i-bullist:before
 	content: "\f0ca"
-
 .mce-i-numlist:before
 	content: "\f0cb"
-
 .mce-i-indent:before
 	content: "\f03c"
-
 .mce-i-outdent:before
 	content: "\f03b"
-
 .mce-i-blockquote:before
 	content: "\f10e"
-
 .mce-i-undo:before
 	content: "\f112"
-
 .mce-i-redo:before
 	content: "\f064"
-
 .mce-i-link:before
 	content: "\f0c1"
-
 .mce-i-unlink:before
 	content: "\f127"
-
 .mce-i-anchor:before
 	content: "\f13d"
-
 .mce-i-image:before
 	content: "\f03e"
-
 .mce-i-media:before
 	content: "\f008"
-
 .mce-i-help:before
 	content: "\f059"
-
 .mce-i-code:before
 	content: "\f121"
-
 .mce-i-inserttime:before
 	content: "\f017"
-
 .mce-i-preview:before
 	content: "\f06e"
 
@@ -1309,73 +1289,57 @@ i.mce-i-resize
 
 .mce-i-hr:before
 	content: ""
-
 .mce-i-removeformat:before
 	content: ""
 
 .mce-i-subscript:before
-	content: ""
-
+	content: "\f12c"
 .mce-i-superscript:before
-	content: ""
+	content: "\f12b"
 
 .mce-i-charmap:before
 	content: ""
 
 .mce-i-emoticons:before
 	content: "\f11a"
-
 .mce-i-print:before
 	content: "\f02f"
-
 .mce-i-fullscreen:before
 	content: "\f065"
 
 .mce-i-spellchecker:before
 	content: ""
-
 .mce-i-nonbreaking:before
 	content: ""
-
 .mce-i-template:before
 	content: ""
-
 .mce-i-pagebreak:before
 	content: ""
-
 .mce-i-restoredraft:before
 	content: ""
-
 .mce-i-untitled:before
 	content: ""
 
 .mce-i-bold:before
 	content: "\f032"
-
 .mce-i-italic:before
 	content: "\f033"
-
 .mce-i-underline:before
 	content: "\f0cd"
-
 .mce-i-strikethrough:before
 	content: "\f0cc"
 
 .mce-i-visualchars:before, .mce-i-visualblocks:before
 	content: ""
-
 .mce-i-ltr:before
 	content: ""
 
 .mce-i-rtl:before
 	content: "\e030"
-
 .mce-i-copy:before
 	content: "\f0c5"
-
 .mce-i-resize:before
 	content: "\f07d"
-
 .mce-i-browse:before
 	content: "\f07c"
 
@@ -1383,7 +1347,7 @@ i.mce-i-resize
 	content: ""
 
 .mce-i-checkbox:before
-	content: "\f096"
+	content: "\f00c"
 
 .mce-i-selected
 	visibility: hidden
