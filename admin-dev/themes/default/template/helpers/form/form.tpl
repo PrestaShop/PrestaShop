@@ -481,7 +481,7 @@
 											<div id="{$input.name}-change-container" class="form-password-change well hide">
 												<div class="form-group ">
 													<label for="old_passwd" class="control-label col-lg-2 required">
-														Current password
+														{l s='Current password'}
 													</label>
 													<div class="col-lg-10">
 														<div class="input-group fixed-width-lg">
