@@ -76,7 +76,7 @@ return array(
 		'Is MySQL support is on ?' => 'MySQL est installé ?',
 		'Recursive write permissions on files and folders:' => 'Droits en écriture récursifs sur les fichiers / dossiers',
 		'Can open external URLs ?' => 'Ouverture des URLs externes autorisée ?',
-		'Is PHP register global option off (recommended) ?' => 'Option PHP register_global désactivée (recommandé) ?',
+		'Is PHP register global option off (recommended) ?' => 'Option PHP register_globals désactivée (recommandé) ?',
 		'Is GZIP compression activated (recommended) ?' => 'Compression GZIP activée (recommandé) ?',
 		'Is Mcrypt extension available (recommended) ?' => 'Extension Mcrypt installée (recommandé) ?',
 		'Is PHP magic quotes option deactivated (recommended) ?' => 'Option PHP magic_quotes désactivée (recommandé) ?',
