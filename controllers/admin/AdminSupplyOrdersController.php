@@ -1039,10 +1039,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 							$error_str = '<ul>';
 							foreach ($errors as $e)
-								$error_str .= '<li>'.$this->l('Field').$e.'</li>';
+								$error_str .= '<li>'.sprintf($this->l('Field: %s'), $e).'</li>';
 							$error_str .= '</ul>';
 
-							$this->errors[] = Tools::displayError('Please verify the product information:'.$entry->name.' '.$error_str);
+							$this->errors[] = sprintf(Tools::displayError('Please verify the product information for "%s":'), $entry->name).' '.$error_str;
 						}
 						else
 							$entry->save();
