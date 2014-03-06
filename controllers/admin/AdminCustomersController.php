@@ -347,6 +347,7 @@ class AdminCustomersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
+					'prefix' => '<i class="icon-envelope-o"></i>',
 					'label' => $this->l('Email address'),
 					'name' => 'email',
 					'col' => '4',
