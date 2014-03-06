@@ -42,6 +42,10 @@ if (!empty($_FILES))
 		$targetPathThumb = $storeFolderThumb;
 		$_FILES['file']['name'] = fix_filename($_FILES['file']['name'], $transliteration);
 
+		$file_name_splitted = explode('.', $_FILES['file']['name']);
+		array_pop($file_name_splitted);
+		$_FILES['file']['name'] = implode('-', $file_name_splitted).'.'.$info['extension'];
+
 		if (file_exists($targetPath.$_FILES['file']['name']))
 		{
 			$i = 1;
