@@ -118,7 +118,7 @@ class NotificationCore
 				'id_customer_thread' => ((!empty($value['id_customer_thread'])) ? (int)$value['id_customer_thread'] : 0),
 				'total_paid' => ((!empty($value['total_paid'])) ? Tools::displayPrice((float)$value['total_paid'], (int)$value['id_currency'], false) : 0),
 				'customer_name' => $customer_name,
-				'update_date' => (int)strtotime($value['date_upd']) * 1000, // x1000 because of moment.js (see: http://momentjs.com/docs/#/parsing/unix-timestamp/)
+				'update_date' => isset($value['date_upd']) ? (int)strtotime($value['date_upd']) * 1000 : 0, // x1000 because of moment.js (see: http://momentjs.com/docs/#/parsing/unix-timestamp/)
 			);
 		}
 
