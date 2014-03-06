@@ -123,7 +123,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 					'success' => $this->tests['optional']['success'],
 					'checks' => array(
 						'fopen' => $this->l('Cannot open external URLs'),
-						'register_globals' => $this->l('PHP register global option is on'),
+						'register_globals' => $this->l('PHP register_globals option is enabled'),
 						'gz' => $this->l('GZIP compression is not activated'),
 						'mcrypt' => $this->l('Mcrypt extension is not enabled'),
 						'mbstring' => $this->l('Mbstring extension is not enabled'),
