@@ -523,6 +523,7 @@ class AdminGroupsControllerCore extends AdminController
 		$update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'group` SET show_prices = '.($group->show_prices ? 0 : 1).' WHERE `id_group` = '.(int)$group->id);
 		if (!$update)
 			$this->errors[] = Tools::displayError('An error occurred while updating this group.');
+		Tools::clearSmartyCache();
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
