@@ -22,42 +22,38 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-$(document).ready(function() {
-
-	// Force color "button" to fire event change
-	$('#color_to_pick_list').click(function() {
-		$('#color_pick_hidden').triggerHandler('change');
-	});
-
-	// Catch all attribute changeent of the product
-	$('.product_attributes input, .product_attributes select').change(function() {
-		if (typeof(productPrice) == 'undefined' || typeof(productPriceWithoutReduction) == 'undefined')
+function updateLoyaltyView(new_price) {
+	if (typeof(new_price) == 'undefined' || typeof(productPriceWithoutReduction) == 'undefined')
 			return;
-		
-		var points = Math.round(productPrice / point_rate);
-		var total_points = points_in_cart + points;
-		var voucher = total_points * point_value;
-		if (!none_award && productPriceWithoutReduction != productPrice)
-			$('#loyalty').html(loyalty_already);
-		else if (!points)
-			$('#loyalty').html(loyalty_nopoints);
+
+	var points = Math.round(new_price / point_rate);
+	var total_points = points_in_cart + points;
+	var voucher = total_points * point_value;
+
+
+
+	if (!none_award && productPriceWithoutReduction != new_price) {
+		$('#loyalty').html(loyalty_already);
+	}
+	else if (!points) {
+		$('#loyalty').html(loyalty_nopoints);
+	}
+	else
+	{
+		var content = loyalty_willcollect + " <b><span id=\"loyalty_points\">"+points+'</span> ';
+		if (points > 1)
+			content += loyalty_points + "</b>. ";
 		else
-		{
-			var content = loyalty_nopoints + " <b><span id=\"loyalty_points\">"+points+'</span> ';
-			if (points > 1)
-				content += loyalty_points + "</b>. ";
-			else
-				content += loyalty_point + "</b>. ";
-			
-			content += loyalty_total + " <b><span id=\"total_loyalty_points\">"+total_points+'</span> ';
-			if (total_points > 1)
-				content += loyalty_points;
-			else
-				content += loyalty_point;
-			
-			content += '</b> ' + loyalty_converted + ' ';
-			content += '<span id="loyalty_price">'+formatCurrency(voucher, currencyFormat, currencySign, currencyBlank)+'</span>.';
-			$('#loyalty').html(content);
-		}
-	});
-});
+			content += loyalty_point + "</b>. ";
+
+		content += loyalty_total + " <b><span id=\"total_loyalty_points\">"+total_points+'</span> ';
+		if (total_points > 1)
+			content += loyalty_points;
+		else
+			content += loyalty_point;
+
+		content += '</b> ' + loyalty_converted + ' ';
+		content += '<span id="loyalty_price">'+formatCurrency(voucher, currencyFormat, currencySign, currencyBlank)+'</span>.';
+		$('#loyalty').html(content);
+	}
+}

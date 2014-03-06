@@ -30,8 +30,6 @@
 	<div class="panel-heading">
 		<i class="icon-comments"></i>
 		{l s="Thread"}: <span class="badge">#{$id_customer_thread|intval}</span>
-		
-			
 		{if isset($next_thread) && $next_thread}
 			<a class="btn btn-default pull-right" href="{$next_thread.href}">
 				{$next_thread.name} <i class="icon-forward"></i>
@@ -52,7 +50,7 @@
 	</div>
 	<div class="row">
 		<div class="message-item-initial media">
-			<a href="{$link->getAdminLink('AdminCustomers')}&id_customer={$customer->id|intval}&viewcustomer&" class="avatar-lg pull-left"><i class="icon-user icon-3x"></i></a>
+			<a href="{if isset($customer->id)}{$link->getAdminLink('AdminCustomers')}&id_customer={$customer->id|intval}&viewcustomer&{else}#{/if}" class="avatar-lg pull-left"><i class="icon-user icon-3x"></i></a>
 			<div class="media-body">
 				<div class="row">
 					<div class="col-sm-6">
@@ -62,6 +60,8 @@
 							{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} <small>({$customer->email|escape:'html':'UTF-8'})</small>
 							</a>
 						</h2>
+					{else}
+						<h2>{$thread->email|escape:'html':'UTF-8'}</h2>
 					{/if}
 					{if isset($contact) && trim($contact) != ''}
 						<span>{l s="To:"} </span><span class="badge">{$contact|escape:'html':'UTF-8'}</span>
@@ -82,7 +82,9 @@
 				</div>
 				<div class="row">
 					<div class="col-sm-12">
-						{include file="./message.tpl" message=$first_message initial=true}
+						{if !$first_message.id_employee}
+							{include file="./message.tpl" message=$first_message initial=true}
+						{/if}
 					</div>
 				</div>
 			</div>
