@@ -327,7 +327,7 @@
 					<li>
 						<input type="checkbox" name="id_image_attr[]" value="{$image.id_image}" id="id_image_attr_{$image.id_image}" />
 						<label for="id_image_attr_{$image.id_image}">
-							<img src="{$smarty.const._THEME_PROD_DIR_}{$image.obj->getExistingImgPath()}-{$imageType}.jpg" alt="{$image.legend|escape:'html':'UTF-8'}" title="{$image.legend|escape:'html':'UTF-8'}" />
+							<img class="img-thumbnail" src="{$smarty.const._THEME_PROD_DIR_}{$image.obj->getExistingImgPath()}-{$imageType}.jpg" alt="{$image.legend|escape:'html':'UTF-8'}" title="{$image.legend|escape:'html':'UTF-8'}" />
 						</label>
 					</li>
 					{/foreach}
