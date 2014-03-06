@@ -47,7 +47,7 @@ while ($cycle && $i < $max_cycles)
 	$cycle = false;
 }
 
-$path = $current_path.$_POST['path'];
+$path = $current_path.str_replace("\0", "", $_POST['path']);
 $path_thumb = $_POST['path_thumb'];
 if (isset($_POST['name']))
 {
