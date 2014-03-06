@@ -3,11 +3,11 @@
 /*******************************************************************
 					Cart Block Styles
 ********************************************************************/
-#header #shopping_cart {
+#header .shopping_cart {
 	position: relative;
 	float: right;
 }
-#shopping_cart {
+.shopping_cart {
 	width: 270px;
 	padding-top: 50px;
 	@media (max-width: $screen-xs) {
@@ -60,8 +60,8 @@
 	}
 }
 
-#cart_block {
-	#cart_block_list {
+.cart_block {
+	.cart_block_list {
 		.remove_link {
 			position: absolute;
 			right: 10px;
@@ -134,11 +134,11 @@
 		}
 		
 	}
-	#cart_block_no_products {
+	.cart_block_no_products {
 		margin: 0;
 		padding: 10px 20px;
 	}
-	#cart-prices {
+	.cart-prices {
 		border-top: 1px solid $base-border-color;
 		font-weight: bold;
 		padding: 10px 20px 22px 20px;
@@ -151,7 +151,7 @@
 			}
 		}
 	}
-	#cart-buttons {
+	.cart-buttons {
 		overflow: hidden;
 		padding: 20px 20px 10px 20px;
 		margin: 0;
@@ -179,7 +179,7 @@
 					Cart Block(Header) Styles
 ********************************************************************/
 #header {
-	#cart_block {
+	.cart_block {
 		position: absolute;
 		top: 95px;
 		right: 0;
@@ -202,7 +202,7 @@
 				color: #9c9b9b;
 			}
 		}
-		#cart_block_list {
+		.cart_block_list {
 			.remove_link a,
 			.ajax_cart_block_remove_link {
 				color: $light-text-color;
@@ -232,11 +232,11 @@
 				}
 			}
 		}
-		#cart-prices {
+		.cart-prices {
 			border: none;
 			background: url(../../../img/cart-shadow.png) repeat-x #3d3d3d;
 		}
-		#cart-buttons {
+		.cart-buttons {
 			background: url(../../../img/cart-shadow.png) repeat-x $dark-background;
 		}
 	}
@@ -245,21 +245,22 @@
 	}
 }
 
-#cart_block #cart_block_summary,
-#cart_block .title_block  span,
-#header  #cart_block h4,
-#header  #cart_block .title_block,
-#header  #cart_block h4 {
+.cart_block #cart_block_summary,
+.cart_block .title_block span,
+#header .cart_block h4,
+#header .cart_block .title_block,
+#header .cart_block h4 {
 	display: none
 }
 
-#cart_block #cart_block_shipping_cost,
-#cart_block #cart_block_total,
-#cart_block #cart_block_wrapping_cost {
+.cart_block .cart_block_shipping_cost,
+.cart_block .cart_block_tax_cost,
+.cart_block .cart_block_total,
+.cart_block .cart_block_wrapping_cost {
 	float: right
 }
 
-#cart_block table#vouchers {
+.cart_block table.vouchers {
 	clear: both;
 	width: 80%;
 	margin: 0 auto;
@@ -518,7 +519,7 @@
 					content: "\f138";
 				}
 			}
-			.bx-controls  {
+			.bx-controls {
 				overflow: hidden;
 			}
 		}
