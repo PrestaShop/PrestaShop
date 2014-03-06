@@ -129,10 +129,6 @@ class HelperTreeCategoriesCore extends TreeCore
 
 	public function getRootCategory()
 	{
-		if (!isset($this->_root_category))
-			$this->setRootCategory(Category::getRootCategory($this->getLang())
-				->id);
-
 		return $this->_root_category;
 	}
 

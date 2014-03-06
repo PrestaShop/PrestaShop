@@ -24,7 +24,9 @@
 *}
 <li class="tree-folder">
 	<span class="tree-folder-name{if isset($node['disabled']) && $node['disabled'] == true} tree-folder-name-disable{/if}">
+		{if $node['id_category'] != 1}
 		<input type="radio" name="id_parent" value="{$node['id_category']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
+		{/if}
 		<i class="icon-folder-close"></i>
 		<label class="tree-toggler ">{$node['name']}</label>
 	</span>
