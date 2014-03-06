@@ -675,10 +675,6 @@ function updateDisplay()
 		// Ecotax
 		ecotaxAmount = !displayPrice ? ps_round(selectedCombination['ecotax'] * (1 + ecotaxTax_rate / 100), 2) : selectedCombination['ecotax'];
 		$('#ecotax_price_display').text(formatCurrency(ecotaxAmount, currencyFormat, currencySign, currencyBlank));
-
-		if (typeof updateLoyaltyView == 'function') { 
-			updateLoyaltyView(productPriceDisplay);
-		}
 	}
 }
 
