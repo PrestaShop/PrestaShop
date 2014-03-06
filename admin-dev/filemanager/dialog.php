@@ -317,8 +317,8 @@ else
 					<div class="tab-pane active" id="tab1">
 						<?php } ?>
 						<form action="dialog.php" method="post" enctype="multipart/form-data" id="myAwesomeDropzone" class="dropzone">
-							<input type="hidden" name="path" value="<?php echo Tools::safeOutput($cur_path); ?>"/>
-							<input type="hidden" name="path_thumb" value="<?php echo Tools::safeOutput($thumbs_path.$subdir); ?>"/>
+							<input type="hidden" name="path" value="<?php echo Tools::safeOutput($subfolder.$subdir); ?>"/>
+							<input type="hidden" name="path_thumb" value="<?php echo Tools::safeOutput($subfolder.$subdir); ?>"/>
 
 							<div class="fallback">
 								<?php echo lang_Upload_file ?>:<br/>
