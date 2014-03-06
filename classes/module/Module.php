@@ -1666,7 +1666,8 @@ abstract class ModuleCore
 	{
 	 	$output = '
 	 	<div class="bootstrap">
-		<div class="module_error alert alert-danger">
+		<div class="module_error alert alert-danger" >
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			'.$error.'
 		</div>
 		</div>';
@@ -1679,6 +1680,7 @@ abstract class ModuleCore
 	 	$output = '
 	 	<div class="bootstrap">
 		<div class="module_confirmation conf confirm alert alert-success">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			'.$string.'
 		</div>
 		</div>';
