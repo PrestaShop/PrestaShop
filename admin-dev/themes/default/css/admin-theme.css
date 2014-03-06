@@ -923,7 +923,7 @@
 
 .icon-check-circle-o:before, .icon-ok-circle:before { content: "\f05d"; }
 
-.icon-ban:before, .icon-ban-circle:before { content: "\f05e"; }
+.icon-ban:before { content: "\f05e"; }
 
 .icon-arrow-left:before { content: "\f060"; }
 
