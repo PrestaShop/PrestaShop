@@ -51,7 +51,7 @@ $path_thumb = $_POST['path_thumb'];
 if (isset($_POST['name']))
 {
 	$name = $_POST['name'];
-	if (strpos($name, '..'.DIRECTORY_SEPARATOR) !== false) die('wrong name');
+	if (preg_match('/\.{1,2}[\/|\\\]/', $name) !== 0) die('wrong name');
 }
 
 $info = pathinfo($path);
