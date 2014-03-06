@@ -101,6 +101,13 @@ img{
 				}
 			}
 		}
+		.zoomPad {
+			z-index : auto!important;
+		}
+		.new-box,
+		.sale-box {
+			z-index: 50002
+		}
 	}
 }
 

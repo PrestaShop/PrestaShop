@@ -7,8 +7,8 @@ include('include/utils.php');
 $storeFolder = $_POST['path'];
 $storeFolderThumb = $_POST['path_thumb'];
 
-$path_pos = strpos(realpath($storeFolder), realpath($current_path));
-$thumb_pos = strpos(realpath($_POST['path_thumb']), realpath($thumbs_base_path));
+$path_pos = strpos($storeFolder, $current_path);
+$thumb_pos = strpos($_POST['path_thumb'], $thumbs_base_path);
 
 if ($path_pos === false || $thumb_pos === false
 	|| preg_match('/\.{1,2}[\/|\\\]/', $_POST['path_thumb']) !== 0
@@ -41,6 +41,10 @@ if (!empty($_FILES))
 		$targetPath = $storeFolder;
 		$targetPathThumb = $storeFolderThumb;
 		$_FILES['file']['name'] = fix_filename($_FILES['file']['name'], $transliteration);
+
+		$file_name_splitted = explode('.', $_FILES['file']['name']);
+		array_pop($file_name_splitted);
+		$_FILES['file']['name'] = implode('-', $file_name_splitted).'.'.$info['extension'];
 
 		if (file_exists($targetPath.$_FILES['file']['name']))
 		{

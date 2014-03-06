@@ -12,10 +12,9 @@ else
 
 	if (isset($_GET['fldr'])
 		&& !empty($_GET['fldr'])
-		&& strpos(urldecode($_GET['fldr']), '..'.DIRECTORY_SEPARATOR) === false
-		&& strpos(urldecode($_GET['fldr']), '.'.DIRECTORY_SEPARATOR) === false
+		&& preg_match('/\.{1,2}[\/|\\\]/', urldecode($_GET['fldr'])) === 0
 	)
-		$subdir = urldecode(trim($_GET['fldr'], DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR);
+		$subdir = urldecode(trim($_GET['fldr'], '/').'/');
 	else
 		$subdir = '';
 
@@ -275,7 +274,7 @@ else
 	<input type="hidden" id="popup" value="<?php echo Tools::safeOutput($popup); ?>"/>
 	<input type="hidden" id="view" value="<?php echo Tools::safeOutput($view); ?>"/>
 	<input type="hidden" id="cur_dir" value="<?php echo Tools::safeOutput($cur_dir); ?>"/>
-	<input type="hidden" id="cur_dir_thumb" value="<?php echo Tools::safeOutput($thumbs_path.$subdir); ?>"/>
+	<input type="hidden" id="cur_dir_thumb" value="<?php echo Tools::safeOutput($subdir); ?>"/>
 	<input type="hidden" id="insert_folder_name" value="<?php echo Tools::safeOutput(lang_Insert_Folder_Name); ?>"/>
 	<input type="hidden" id="new_folder" value="<?php echo Tools::safeOutput(lang_New_Folder); ?>"/>
 	<input type="hidden" id="ok" value="<?php echo Tools::safeOutput(lang_OK); ?>"/>
