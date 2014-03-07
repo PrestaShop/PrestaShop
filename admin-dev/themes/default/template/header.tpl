@@ -212,7 +212,7 @@
 			<ul id="header_employee_box">
 {if {$base_url}}
 				<li>
-					<a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">
+					<a href="{if isset($base_url_tc)}{$base_url_tc}{else}{$base_url}{/if}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">
 						<i class="icon-star"></i> {l s='My shop'}
 					</a>
 				</li>
