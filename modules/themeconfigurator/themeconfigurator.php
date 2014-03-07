@@ -156,15 +156,18 @@ class ThemeConfigurator extends Module
 		return $result;
 	}
 
-	public function installFixtures()
+	public function installFixtures($id_lang = null)
 	{
 		$result = true;
 
+		if ($id_lang === null);
+			$id_lang = $this->context->language->id;
+
 		for ($i = 1; $i < 6; $i++)
-			$result &= $this->installFixture('home', $i, $this->context->shop->id, $this->context->language->id);
+			$result &= $this->installFixture('home', $i, $this->context->shop->id, $id_lang);
 
 		for ($i = 6; $i < 8; $i++)
-			$result &= $this->installFixture('top', $i, $this->context->shop->id, $this->context->language->id);
+			$result &= $this->installFixture('top', $i, $this->context->shop->id, $id_lang);
 
 		return $result;
 	}
@@ -220,15 +223,7 @@ class ThemeConfigurator extends Module
 	
 	public function hookActionObjectLanguageAddAfter($params)
 	{
-		$result = true;
-		p($params['object']->id);
-		for ($i = 1; $i < 6; $i++)
-			$result &= $this->installFixture('home', $i, $this->context->shop->id, $params['object']->id);
-
-		for ($i = 6; $i < 8; $i++)
-			$result &= $this->installFixture('top', $i, $this->context->shop->id, $params['object']->id);
-
-		return $result;
+		return $this->installFixtures((int)$params['object']->id);
 	}
 
 	public function hookdisplayTopColumn()
