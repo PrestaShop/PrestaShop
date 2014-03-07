@@ -5,7 +5,7 @@ return array(
 		'forum' => 'http://www.prestashop.com/forums/?lang=fr',
 		'blog' => 'http://www.prestashop.com/blog/fr/',
 		'support' => 'https://www.prestashop.com/fr/support',
-		'documentation' => 'http://doc.prestashop.com/pages/viewpage.action?pageId=11272318',
+		'documentation' => 'http://doc.prestashop.com/pages/viewpage.action?pageId=20840476',
 		'documentation_upgrade' => 'http://doc.prestashop.com/pages/viewpage.action?pageId=11272342'
 	),
 	'translations' => array(
