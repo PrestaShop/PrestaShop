@@ -200,7 +200,7 @@ class ThemeConfigurator extends Module
 		$this->context->controller->addCss($this->_path.'css/hooks.css', 'all');
 
 		if ((int)Configuration::get('PS_TC_ACTIVE') == 1 &&
-			Tools::getValue('live_configurator_token') == ThemeConfigurator::getLiveConfiguratorToken())
+			Tools::getValue('live_configurator_token') == $this->getLiveConfiguratorToken())
 		{
 			$this->context->controller->addCSS($this->_path.'css/live_configurator.css');
 			$this->context->controller->addJS($this->_path.'js/live_configurator.js');
@@ -276,7 +276,7 @@ class ThemeConfigurator extends Module
 		$html = '';
 
 		if ((int)Configuration::get('PS_TC_ACTIVE') == 1 &&
-			Tools::getValue('live_configurator_token') == ThemeConfigurator::getLiveConfiguratorToken()
+			Tools::getValue('live_configurator_token') == $this->getLiveConfiguratorToken()
 			&& Tools::getIsset('id_employee'))
 		{
 			if (Tools::isSubmit('submitLiveConfigurator'))
@@ -294,7 +294,7 @@ class ThemeConfigurator extends Module
 				'themes' => unserialize(Configuration::get('PS_TC_THEMES')),
 				'fonts' => unserialize(Configuration::get('PS_TC_FONTS')),
 				'theme_font' => Tools::getValue('theme_font', Configuration::get('PS_TC_FONT')),
-				'live_configurator_token' => ThemeConfigurator::getLiveConfiguratorToken(),
+				'live_configurator_token' => $this->getLiveConfiguratorToken(),
 				'id_shop' => (int)$this->context->shop->id,
 				'id_employee' => is_object($this->context->employee) ? (int)$this->context->employee->id :
 					Tools::getValue('id_employee'),
@@ -740,7 +740,7 @@ class ThemeConfigurator extends Module
 				'value' => (int)Tools::getValue('PS_TC_ACTIVE', Configuration::get('PS_TC_ACTIVE')),
 				'hint' => $this->l('The customization tool allows you to make color and font changes in your theme.'),
 				'desc' => sprintf($this->l('Only you can see this %s - your visitors will not see this tool.'), $this->context->shop->getBaseURL() ? '<a href="'.$this->context->shop->getBaseURL()
-						.'?live_configurator_token='.ThemeConfigurator::getLiveConfiguratorToken()
+						.'?live_configurator_token='.$this->getLiveConfiguratorToken()
 						.'&id_employee='.(int)$this->context->employee->id
 						.'&id_shop='.(int)$this->context->shop->id
 						.(Configuration::get('PS_TC_THEME') != '' ? '&theme='.Configuration::get('PS_TC_THEME') : '')
@@ -759,9 +759,9 @@ class ThemeConfigurator extends Module
 		return $values;
 	}
 
-	public static function getLiveConfiguratorToken()
+	public function getLiveConfiguratorToken()
 	{
-		return Tools::getAdminToken('themeconfigurator'.(int)Tab::getIdFromClassName('themeconfigurator')
+		return Tools::getAdminToken($this->name.(int)Tab::getIdFromClassName($this->name)
 			.(is_object(Context::getContext()->employee) ? (int)Context::getContext()->employee->id :
 				Tools::getValue('id_employee')));
 	}
