@@ -6,10 +6,10 @@
 #header .shopping_cart {
 	position: relative;
 	float: right;
+	padding-top: 50px;
 }
 .shopping_cart {
 	width: 270px;
-	padding-top: 50px;
 	@media (max-width: $screen-xs) {
 		padding-top: 20px;
 	}

@@ -3,11 +3,11 @@
 ********************************************************************/
 #header .shopping_cart {
   position: relative;
-  float: right; }
+  float: right;
+  padding-top: 50px; }
 
 .shopping_cart {
-  width: 270px;
-  padding-top: 50px; }
+  width: 270px; }
   @media (max-width: 480px) {
     .shopping_cart {
       padding-top: 20px; } }
