@@ -88,6 +88,7 @@ class ThemeConfigurator extends Module
 			!$this->registerHook('displayHome') ||
 			!$this->registerHook('displayFooter') ||
 			!$this->registerHook('displayBackOfficeHeader') ||
+			!$this->registerHook('actionObjectLanguageAddAfter') ||
 			!Configuration::updateValue('PS_TC_THEMES', serialize($themes_colors)) ||
 			!Configuration::updateValue('PS_TC_FONTS', serialize($themes_fonts)) ||
 			!Configuration::updateValue('PS_TC_THEME', '') ||
@@ -125,65 +126,50 @@ class ThemeConfigurator extends Module
 
 	}
 
+	protected function installFixture($hook, $id_image, $id_shop, $id_lang)
+	{
+		$result = true;
+
+		$sizes = @getimagesize((dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'banner-img'.(int)$id_image.'.jpg'));
+		$width = (isset($sizes[0]) && $sizes[0])? (int)$sizes[0] : 0;
+		$height = (isset($sizes[1]) && $sizes[1])? (int)$sizes[1] : 0;
+
+		$result &= Db::getInstance()->Execute('
+			INSERT INTO `'._DB_PREFIX_.'themeconfigurator` ( 
+					`id_shop`, `id_lang`, `item_order`, `title`, `title_use`, `hook`, `url`, `target`, `image`, `image_w`, `image_h`, `html`, `active`
+			) VALUES ( 
+				\''.(int)$id_shop.'\',
+				\''.(int)$id_lang.'\',
+				\''.(int)$id_image.'\',
+				\'\',
+				\'0\',
+				\''.pSQL($hook).'\',
+				\'http://www.prestashop.com/\',
+				\'0\',
+				\'banner-img'.(int)$id_image.'.jpg\',
+				'.$width.',
+				'.$height.',
+				\'\',
+				1)
+			');
+
+		return $result;
+	}
+
 	public function installFixtures()
 	{
 		$result = true;
 
 		for ($i = 1; $i < 6; $i++)
-		{
-			$sizes = @getimagesize((dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'banner-img'.(int)$i.'.jpg'));
-			$width = (isset($sizes[0]) && $sizes[0])? (int)$sizes[0] : 0;
-			$height = (isset($sizes[1]) && $sizes[1])? (int)$sizes[1] : 0;
-
-			$result &= Db::getInstance()->Execute('
-				INSERT INTO `'._DB_PREFIX_.'themeconfigurator` ( 
-						`id_shop`, `id_lang`, `item_order`, `title`, `title_use`, `hook`, `url`, `target`, `image`, `image_w`, `image_h`, `html`, `active`
-				) VALUES ( 
-					\''.(int)$this->context->shop->id.'\',
-					\''.(int)$this->context->language->id.'\',
-					\''.(int)$i.'\',
-					\'\',
-					\'0\',
-					\'home\',
-					\'http://www.prestashop.com/\',
-					\'0\',
-					\'banner-img'.(int)$i.'.jpg\',
-					'.$width.',
-					'.$height.',
-					\'\',
-					1)
-				');
-		}
+			$result &= $this->installFixture('home', $i, $this->context->shop->id, $this->context->language->id);
 
 		for ($i = 6; $i < 8; $i++)
-		{
-			$sizes = @getimagesize((dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'banner-img'.(int)$i.'.jpg'));
-			$width = (isset($sizes[0]) && $sizes[0]) ? (int)$sizes[0] : 0;
-			$height = (isset($sizes[1]) && $sizes[1]) ? (int)$sizes[1] : 0;
-
-			$result &= Db::getInstance()->Execute('
-				INSERT INTO `'._DB_PREFIX_.'themeconfigurator` ( 
-						`id_shop`, `id_lang`, `item_order`, `title`, `title_use`, `hook`, `url`, `target`, `image`, `image_w`, `image_h`, `html`, `active`
-				) VALUES ( 
-					\''.(int)$this->context->shop->id.'\',
-					\''.(int)$this->context->language->id.'\',
-					\''.(int)$i.'\',
-					\'\',
-					\'0\',
-					\'top\',
-					\'http://www.prestashop.com/\',
-					\'0\',
-					\'banner-img'.(int)$i.'.jpg\',
-					'.$width.',
-					'.$height.',
-					\'\',
-					1)
-				');
-		}
+			$result &= $this->installFixture('top', $i, $this->context->shop->id, $this->context->language->id);
 
 		return $result;
 	}
-
+	
+	
 	public function uninstall()
 	{
 		$images = Db::getInstance()->executeS('SELECT image FROM `'._DB_PREFIX_.'themeconfigurator`');
@@ -230,6 +216,19 @@ class ThemeConfigurator extends Module
 			if (Configuration::get('PS_TC_FONT') != '')
 				$this->context->controller->addCss($this->_path.'css/'.Configuration::get('PS_TC_FONT').'.css', 'all');
 		}
+	}
+	
+	public function hookActionObjectLanguageAddAfter($params)
+	{
+		$result = true;
+		p($params['object']->id);
+		for ($i = 1; $i < 6; $i++)
+			$result &= $this->installFixture('home', $i, $this->context->shop->id, $params['object']->id);
+
+		for ($i = 6; $i < 8; $i++)
+			$result &= $this->installFixture('top', $i, $this->context->shop->id, $params['object']->id);
+
+		return $result;
 	}
 
 	public function hookdisplayTopColumn()
