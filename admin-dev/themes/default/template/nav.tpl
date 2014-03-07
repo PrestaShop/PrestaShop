@@ -56,7 +56,7 @@
 									</li>
 								</ul>
 							</div>
-							<a href="javascript:void(0);" class="clear_search hide"><i class="icon-remove"></i></a>
+							<a href="#" class="clear_search hide"><i class="icon-remove"></i></a>
 							<input id="bo_query" name="bo_query" type="text" class="form-control" value="{$bo_query}" placeholder="{l s='Search'}" />
 <!--  							<span class="input-group-btn">
 								<button type="submit" id="bo_search_submit" class="btn btn-primary">

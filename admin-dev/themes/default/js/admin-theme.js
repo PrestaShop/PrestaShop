@@ -317,15 +317,22 @@ $(document).ready(function() {
 		$(this).addClass('search-expanded');
 		$(this).find('#bo_query').focus();
 	});
-	$('#bo_query').on('blur',function(){
+
+	$('.page-sidebar-closed').click(function() {
 		$('.searchtab').removeClass('search-expanded');
+	});
+
+	$('#header_search button').on('click', function(e){
+		e.stopPropagation();
 	});
 
 	//erase button search input
 	if ($('#bo_query').val() !== ''){
 		$('.clear_search').removeClass('hide');
 	}
-	$('.clear_search').on('click', function(e){
+
+	$('#header_search .clear_search').on('click', function(e){
+		e.stopPropagation();
 		e.preventDefault();
 		$('#bo_query').val('').focus();
 		$('.clear_search').addClass('hide');
@@ -396,3 +403,4 @@ $(".reset_ready").click(function () {
 		});
 	return false;
 });
+
