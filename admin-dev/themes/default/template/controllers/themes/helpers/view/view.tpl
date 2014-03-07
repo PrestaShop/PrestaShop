@@ -23,6 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
     {l s='The "%1$s" theme has been successfully installed.'|sprintf:$theme_name}
 </div>
 
@@ -35,6 +36,7 @@
 {/if}
 {if $modules_errors|count > 0}
     <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
         {l s='The following module(s) were not installed properly:'}
         <ul>
             {foreach $modules_errors as $module_errors}
@@ -46,6 +48,7 @@
     </div>
 {/if}
 <div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
     {l s='Warning: You may have to regenerate images to fit with this new theme.'}
     <a href="{$image_link}">
         <button class="btn btn-default">{l s='Go to the thumbnails regeneration page'}</button>
@@ -54,6 +57,7 @@
 
 {if isset($img_error['error'])}
     <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
         {l s='Warning: Copy/paste your errors if you want to manually set the image type (in the "Images" page under the "Preferences" menu):'}
         <ul>
             {foreach $img_error['error'] as $error}
@@ -67,6 +71,7 @@
 {/if}
 {if isset($img_error['ok'])}
     <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
         {l s='Images have been correctly updated in the database:'}
         <ul>
             {foreach $img_error['ok'] as $error}

@@ -544,7 +544,7 @@
 													<div class="col-lg-10 col-lg-offset-2">
 														<p class="checkbox">
 															<label for="{$input.name}-checkbox-mail">
-																<input id="{$input.name}-checkbox-mail" type="checkbox" checked="checked">
+																<input name="passwd_send_email" id="{$input.name}-checkbox-mail" type="checkbox" checked="checked">
 																{l s='Send me this new password by Email'}
 															</label>
 														</p>
