@@ -298,7 +298,7 @@ abstract class CacheCore
 	protected function isBlacklist($query)
 	{
 		foreach ($this->blacklist as $find)
-			if (strpos($query, $find.'`') || strpos($query, $find.' '))
+			if (strpos($query, '`'._DB_PREFIX_.$find.'`') || strpos($query, ' '._DB_PREFIX_.$find.' '))
 				return true;
 		return false;
 	}
