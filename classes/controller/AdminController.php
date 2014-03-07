@@ -110,6 +110,9 @@ class AdminControllerCore extends Controller
 
 	/** @var override of $fields_form */
 	protected $fields_form_override;
+	
+	/** @var override form action */
+	protected $submit_action;
 
 	/** @var array list of option forms to be generated */
 	protected $fields_options = array();
@@ -1664,6 +1667,15 @@ class AdminControllerCore extends Controller
 			'bootstrap' => $this->bootstrap,
 			'default_language' => (int)Configuration::get('PS_LANG_DEFAULT')
 		));
+
+		$module = Module::getInstanceByName('themeconfigurator');
+		if (is_object($module) && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
+			$this->context->smarty->assign('base_url_tc', $this->context->shop->getBaseUrl()
+				.'?live_configurator_token='.$module->getLiveConfiguratorToken()
+				.'&id_employee='.(int)$this->context->employee->id
+				.'&id_shop='.(int)$this->context->shop->id
+				.(Configuration::get('PS_TC_THEME') != '' ? '&theme='.Configuration::get('PS_TC_THEME') : '')
+				.(Configuration::get('PS_TC_FONT') != '' ? '&theme_font='.Configuration::get('PS_TC_FONT') : ''));
 	}
 
 	/**
@@ -1943,6 +1955,7 @@ class AdminControllerCore extends Controller
 			$helper = new HelperForm($this);
 			$this->setHelperDisplay($helper);
 			$helper->fields_value = $fields_value;
+			$helper->submit_action = $this->submit_action;
 			$helper->tpl_vars = $this->tpl_form_vars;
 			$helper->show_cancel_button = (isset($this->show_form_cancel_button)) ? $this->show_form_cancel_button : ($this->display == 'add' || $this->display == 'edit');
 
