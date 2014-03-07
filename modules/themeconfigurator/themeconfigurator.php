@@ -200,7 +200,7 @@ class ThemeConfigurator extends Module
 		$this->context->controller->addCss($this->_path.'css/hooks.css', 'all');
 
 		if ((int)Configuration::get('PS_TC_ACTIVE') == 1 &&
-			Tools::getValue('live_configurator_token') == $this->getLiveConfiguratorToken())
+			Tools::getValue('live_configurator_token') == ThemeConfigurator::getLiveConfiguratorToken())
 		{
 			$this->context->controller->addCSS($this->_path.'css/live_configurator.css');
 			$this->context->controller->addJS($this->_path.'js/live_configurator.js');
@@ -276,7 +276,7 @@ class ThemeConfigurator extends Module
 		$html = '';
 
 		if ((int)Configuration::get('PS_TC_ACTIVE') == 1 &&
-			Tools::getValue('live_configurator_token') == $this->getLiveConfiguratorToken()
+			Tools::getValue('live_configurator_token') == ThemeConfigurator::getLiveConfiguratorToken()
 			&& Tools::getIsset('id_employee'))
 		{
 			if (Tools::isSubmit('submitLiveConfigurator'))
@@ -294,9 +294,9 @@ class ThemeConfigurator extends Module
 				'themes' => unserialize(Configuration::get('PS_TC_THEMES')),
 				'fonts' => unserialize(Configuration::get('PS_TC_FONTS')),
 				'theme_font' => Tools::getValue('theme_font', Configuration::get('PS_TC_FONT')),
-				'live_configurator_token' => $this->getLiveConfiguratorToken(),
+				'live_configurator_token' => ThemeConfigurator::getLiveConfiguratorToken(),
 				'id_shop' => (int)$this->context->shop->id,
-				'id_employee' => isset($this->context->employee) ? (int)$this->context->employee->id :
+				'id_employee' => is_object($this->context->employee) ? (int)$this->context->employee->id :
 					Tools::getValue('id_employee'),
 				'advertisement_image' => $ad_image,
 				'advertisement_url' => 'http://addons.prestashop.com/en/205-premium-templates?utm_source=backoffice_configurator',
@@ -739,13 +739,13 @@ class ThemeConfigurator extends Module
 				'name' => 'live_conf',
 				'value' => (int)Tools::getValue('PS_TC_ACTIVE', Configuration::get('PS_TC_ACTIVE')),
 				'hint' => $this->l('The customization tool allows you to make color and font changes in your theme.'),
-				'desc' => sprintf($this->l('Only you can see this %s - your visitors will not see this tool.'), '<a href="'.$this->context->link->getPageLink('index')
-						.'?live_configurator_token='.$this->getLiveConfiguratorToken()
+				'desc' => sprintf($this->l('Only you can see this %s - your visitors will not see this tool.'), $this->context->shop->getBaseURL() ? '<a href="'.$this->context->shop->getBaseURL()
+						.'?live_configurator_token='.ThemeConfigurator::getLiveConfiguratorToken()
 						.'&id_employee='.(int)$this->context->employee->id
 						.'&id_shop='.(int)$this->context->shop->id
 						.(Configuration::get('PS_TC_THEME') != '' ? '&theme='.Configuration::get('PS_TC_THEME') : '')
 						.(Configuration::get('PS_TC_FONT') != '' ? '&theme_font='.Configuration::get('PS_TC_FONT') : '')
-						.'" onclick="return !window.open($(this).attr(\'href\'));">on your front office</a>')
+						.'" onclick="return !window.open($(this).attr(\'href\'));">on your front office</a>' : 'on your front office')
 			)
 		);
 	}
@@ -759,9 +759,10 @@ class ThemeConfigurator extends Module
 		return $values;
 	}
 
-	public function getLiveConfiguratorToken()
+	public static function getLiveConfiguratorToken()
 	{
-		return Tools::getAdminToken($this->name.(int)Tab::getIdFromClassName($this->name)
-			.(isset($this->context->employee) ? (int)$this->context->employee->id : Tools::getValue('id_employee')));
+		return Tools::getAdminToken('themeconfigurator'.(int)Tab::getIdFromClassName('themeconfigurator')
+			.(is_object(Context::getContext()->employee) ? (int)Context::getContext()->employee->id :
+				Tools::getValue('id_employee')));
 	}
 }
