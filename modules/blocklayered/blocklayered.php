@@ -1928,14 +1928,14 @@ class BlockLayered extends Module
 		
 		$query_filters_from .= Shop::addSqlAssociation('product', 'p');
 		
-		$all_products_out = self::query('
+		$all_products_out = Db::getInstance()->executeS('
 		SELECT p.`id_product` id_product
 		FROM `'._DB_PREFIX_.'product` p
 		'.$price_filter_query_out.'
 		'.$query_filters_from.'
 		WHERE 1 '.$query_filters_where.' GROUP BY id_product');
 		
-		$all_products_in = self::query('
+		$all_products_in = Db::getInstance()->executeS('
 		SELECT p.`id_product` id_product
 		FROM `'._DB_PREFIX_.'product` p
 		'.$price_filter_query_in.'
@@ -1944,10 +1944,10 @@ class BlockLayered extends Module
 
 		$product_id_list = array();
 		
-		while ($product = DB::getInstance()->nextRow($all_products_in))
+		foreach ($all_products_in as $product)
 			$product_id_list[] = (int)$product['id_product'];
 
-		while ($product = DB::getInstance()->nextRow($all_products_out))
+		foreach ($all_products_out as $product)
 			if (isset($price_filter) && $price_filter)
 			{
 				$price = (int)Product::getPriceStatic($product['id_product'], Configuration::get('PS_LAYERED_FILTER_PRICE_USETAX')); // Cast to int because we don't care about cents
@@ -3256,20 +3256,22 @@ class BlockLayered extends Module
 						$done_categories[(int)$id_category]['cat'] = true;
 						$to_insert = true;
 					}
-					foreach ($a as $k_attribute => $attribute)
-						if (!isset($done_categories[(int)$id_category]['a'.(int)$attribute_groups_by_id[(int)$k_attribute]]))
-						{
-							$filter_data['layered_selection_ag_'.(int)$attribute_groups_by_id[(int)$k_attribute]] = array('filter_type' => 0, 'filter_show_limit' => 0);
-							$done_categories[(int)$id_category]['a'.(int)$attribute_groups_by_id[(int)$k_attribute]] = true;
-							$to_insert = true;
-						}
-					foreach ($f as $k_feature => $feature)
-						if (!isset($done_categories[(int)$id_category]['f'.(int)$features_by_id[(int)$k_feature]]))
-						{
-							$filter_data['layered_selection_feat_'.(int)$features_by_id[(int)$k_feature]] = array('filter_type' => 0, 'filter_show_limit' => 0);
-							$done_categories[(int)$id_category]['f'.(int)$features_by_id[(int)$k_feature]] = true;
-							$to_insert = true;
-						}
+					if (is_array($attribute_groups_by_id) && count($attribute_groups_by_id) > 0)
+						foreach ($a as $k_attribute => $attribute)
+							if (!isset($done_categories[(int)$id_category]['a'.(int)$attribute_groups_by_id[(int)$k_attribute]]))
+							{
+								$filter_data['layered_selection_ag_'.(int)$attribute_groups_by_id[(int)$k_attribute]] = array('filter_type' => 0, 'filter_show_limit' => 0);
+								$done_categories[(int)$id_category]['a'.(int)$attribute_groups_by_id[(int)$k_attribute]] = true;
+								$to_insert = true;
+							}
+					if (is_array($features_by_id) && count($features_by_id) > 0)
+						foreach ($f as $k_feature => $feature)
+							if (!isset($done_categories[(int)$id_category]['f'.(int)$features_by_id[(int)$k_feature]]))
+							{
+								$filter_data['layered_selection_feat_'.(int)$features_by_id[(int)$k_feature]] = array('filter_type' => 0, 'filter_show_limit' => 0);
+								$done_categories[(int)$id_category]['f'.(int)$features_by_id[(int)$k_feature]] = true;
+								$to_insert = true;
+							}
 					if (!isset($done_categories[(int)$id_category]['q']))
 					{
 						$filter_data['layered_selection_stock'] = array('filter_type' => 0, 'filter_show_limit' => 0);
