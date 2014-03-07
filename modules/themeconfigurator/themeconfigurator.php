@@ -296,7 +296,7 @@ class ThemeConfigurator extends Module
 				'theme_font' => Tools::getValue('theme_font', Configuration::get('PS_TC_FONT')),
 				'live_configurator_token' => $this->getLiveConfiguratorToken(),
 				'id_shop' => (int)$this->context->shop->id,
-				'id_employee' => isset($this->context->employee) ? (int)$this->context->employee->id :
+				'id_employee' => is_object($this->context->employee) ? (int)$this->context->employee->id :
 					Tools::getValue('id_employee'),
 				'advertisement_image' => $ad_image,
 				'advertisement_url' => 'http://addons.prestashop.com/en/205-premium-templates?utm_source=backoffice_configurator',
