@@ -1791,4 +1791,10 @@ $(document).ready(function() {
 		code = (e.keyCode ? e.keyCode : e.which);
 		return (code == 13) ? false : true;
 	});
+
+	$('#product_form').submit(function(e) {
+		$('#selectedCarriers option').attr('selected', 'selected');
+		$('#selectAttachment1 option').attr('selected', 'selected');
+		return true;
+	});
 });
