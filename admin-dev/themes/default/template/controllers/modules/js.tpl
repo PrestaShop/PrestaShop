@@ -120,6 +120,8 @@
 		// Method to reload filter in ajax
 		$('.categoryModuleFilterLink').click(function()
 		{
+			if ($(this).hasClass('active'))
+				return false;
 			$('.categoryModuleFilterLink').removeClass('active');
 			$(this).addClass('active');
 			try

@@ -36,11 +36,10 @@ $(document).ready(function(){
 	$(window).resize(responsiveResize);
 
 	tmDropDown ('', '#header .current', 'ul.toogle_content', 'active');							// all of this should be defined or left empty brackets
-	//tmDropDown ('cart', 'li#shopping_cart > a', '#cart_block', 'active');			// all of this should be defined or left empty brackets
 
 	if (navigator.userAgent.match(/Android/i))
 	{
-		var viewport = document.querySelector("meta[name=viewport]");
+		var viewport = document.querySelector('meta[name="viewport"]');
 		viewport.setAttribute('content', 'initial-scale=1.0,maximum-scale=1.0,user-scalable=0,width=device-width,height=device-height');
 	}
 	if (navigator.userAgent.match(/Android/i))
@@ -73,15 +72,15 @@ $(document).ready(function(){
 				document.location.href = requestSortProducts + ((requestSortProducts.indexOf('?') < 0) ? '?' : '&') + 'orderby=' + splitData[0] + '&orderway=' + splitData[1];
     	});
 
-		$(document).on('change', 'select[name=n]', function(){
+		$(document).on('change', 'select[name="n"]', function(){
 			$(this.form).submit();
 		});
 
-		$(document).on('change', 'select[name=manufacturer_list], select[name=supplier_list]', function(){
+		$(document).on('change', 'select[name="manufacturer_list"], select[name="supplier_list"]', function(){
 			autoUrl($(this).attr('id'), '');
 		});
 
-		$(document).on('change', 'select[name=currency_payement]', function(){
+		$(document).on('change', 'select[name="currency_payement"]', function(){
 			setCurrency($(this).val());
 		});
 	}
@@ -195,10 +194,6 @@ function display(view)
 		$('.display').find('li#list').addClass('selected');
 		$('.display').find('li#grid').removeAttr('class');
 		$.totalStorage('display', 'list');
-		if (typeof ajaxCart != 'undefined')      // cart button reload
-			ajaxCart.overrideButtonsInThePage();
-		if (typeof quickView !== 'undefined' && quickView) 	// qick view button reload
-			quick_view();
 	}
 	else 
 	{
@@ -236,11 +231,7 @@ function display(view)
 		});
 		$('.display').find('li#grid').addClass('selected');
 		$('.display').find('li#list').removeAttr('class');
-		$.totalStorage('display', 'grid');			
-		if (typeof ajaxCart != 'undefined') 	// cart button reload
-			ajaxCart.overrideButtonsInThePage();
-		if (typeof quickView !== 'undefined' && quickView) 	// qick view button reload
-			quick_view();
+		$.totalStorage('display', 'grid');
 	}	
 }
 

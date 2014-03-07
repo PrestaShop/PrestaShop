@@ -30,12 +30,11 @@ $(document).ready(
 		{
 			var href = this.href;
 			var search = this.search;
-			var href_add = 'live_configurator=1'
+			var href_add = 'live_configurator_token=' + get('live_configurator_token')
 				+ '&id_shop=' + get('id_shop')
 				+ '&id_employee=' + get('id_employee')
 				+ '&theme=' + get('theme')
 				+ '&theme_font=' + get('theme_font')
-				+ '&live_configurator_token=' + get('live_configurator_token');
 			
 			if (href != undefined && href != '#' && href.substr(0, baseDir.length) == baseDir)
 			{
@@ -74,11 +73,13 @@ $(document).ready(
 				{
 					$('#tool_customization').animate({left : '-215px'}, 500);
 					$(this).animate({left : '0px'}, 500);
+					$.totalStorage('live_configurator_visibility', 0);
 				}
 				else
 				{
 					$('#tool_customization').animate({left : '0px'}, 500);
 					$(this).animate({left : '215px'}, 500);
+					$.totalStorage('live_configurator_visibility', 1);
 				}
 			}
 		);
@@ -114,6 +115,18 @@ $(document).ready(
 				}
 			}
 		);
+
+		if (parseInt($.totalStorage('live_configurator_visibility')) == 1)
+		{
+			$('#tool_customization').animate({left : '0px'}, 200);
+			$('#gear-right').animate({left : '215px'}, 200);
+		}
+		else
+		{
+			$('#tool_customization').animate({left : '-215px'}, 200);
+			$('#gear-right').animate({left : '0px'}, 200);
+		}
+
 	}
 );
 
