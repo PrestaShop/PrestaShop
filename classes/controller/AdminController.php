@@ -110,6 +110,9 @@ class AdminControllerCore extends Controller
 
 	/** @var override of $fields_form */
 	protected $fields_form_override;
+	
+	/** @var override form action */
+	protected $submit_action;
 
 	/** @var array list of option forms to be generated */
 	protected $fields_options = array();
@@ -1951,6 +1954,7 @@ class AdminControllerCore extends Controller
 			$helper = new HelperForm($this);
 			$this->setHelperDisplay($helper);
 			$helper->fields_value = $fields_value;
+			$helper->submit_action = $this->submit_action;
 			$helper->tpl_vars = $this->tpl_form_vars;
 			$helper->show_cancel_button = (isset($this->show_form_cancel_button)) ? $this->show_form_cancel_button : ($this->display == 'add' || $this->display == 'edit');
 
