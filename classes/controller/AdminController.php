@@ -1587,6 +1587,8 @@ class AdminControllerCore extends Controller
 				//check if module is enable and 
 				if (isset($sub_tab['module']) && !empty($sub_tab['module']))
 				{
+					if (!Module::getInstanceByName($sub_tab['module']))
+						throw new PrestaShopException(sprintf('Module %s not found',$sub_tab['module']));
 					$module = Module::getInstanceByName($sub_tab['module']);
 					if (is_object($module) && !$module->isEnabledForShopContext())
 					{
