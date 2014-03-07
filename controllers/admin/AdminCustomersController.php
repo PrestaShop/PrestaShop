@@ -231,7 +231,7 @@ class AdminCustomersControllerCore extends AdminController
 			case 'add':
 			case 'edit':
 				if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer))
-					$this->toolbar_title[] = sprintf('Editing Customer: %s', Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
+					$this->toolbar_title[] = sprintf($this->l('Editing Customer: %s'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
 				else
 					$this->toolbar_title[] = $this->l('Creating a new Customer');
 				break;
