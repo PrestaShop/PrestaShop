@@ -72,8 +72,18 @@ $(document).ready(function() {
 		});
 	}
 
+	var ellipsed = [];
+	//reset ellipsis 
+	function navTopbarReset() {
+		ellipsed = [];
+		$('#ellipsistab').remove();
+		$('#nav-topbar ul.menu').find('li.maintab').each(function(){
+			$(this).removeClass('hide');
+		});
+	}
 	//set main navigation on top
 	function navTopbar(){
+		navTopbarReset();
 		$('#nav-sidebar').attr('id','nav-topbar');
 		var topbar = $('#nav-topbar');
 		topbar.off();
@@ -95,12 +105,11 @@ $(document).ready(function() {
 			navTopbarEllipsis();
 		});
 	}
+
 	//agregate out of bounds items from top menu into ellipsis dropdown
 	function navTopbarEllipsis() {
-		var ellipsed = [];
-		$('#ellipsistab').remove();
+		navTopbarReset();
 		$('#nav-topbar ul.menu').find('li.maintab').each(function(){
-			$(this).removeClass('hide');
 			if ($(this).position().top > 0) {
 				ellipsed.push($(this));
 				$(this).addClass('hide');
@@ -116,6 +125,7 @@ $(document).ready(function() {
 
 	//set main navigation for mobile devices
 	function mobileNav() {
+		navTopbarReset();
 		// clean actual menu type
 		// get it in navigation whatever type it is
 		var navigation = $('#nav-sidebar,#nav-topbar');
@@ -167,20 +177,21 @@ $(document).ready(function() {
 		if ($('body').hasClass('page-sidebar')){
 			navigation.attr('id',"nav-sidebar");
 			navSidebar();
-		} else if ($('body').hasClass('page-sidebar')){
+		} else if ($('body').hasClass('page-topbar')){
 			navigation.attr('id',"nav-topbar");
 			navTopbar();
 		}
+		navigation.find('.menu').show();
 	}
 
 	// switch between top and side nav without reloading page
-	function navSwitch(){
-		if ($('body').hasClass('page-sidebar')){
-			navTopbar();
-		} else {
-			navSidebar();
-		}
-	}
+	// function navSwitch(){
+	// 	if ($('body').hasClass('page-sidebar')){
+	// 		navTopbar();
+	// 	} else {
+	// 		navSidebar();
+	// 	}
+	// }
 
 	//init main navigation
 	function initNav(){
@@ -232,6 +243,26 @@ $(document).ready(function() {
 		clearTimeout(openingMenu);
 	});
 
+	//media queries - depends of enquire.js
+	enquire.register('screen and (max-width: 768px)', {
+		match : function() {
+			$('body.page-sidebar').addClass('page-sidebar-closed');
+		},
+		unmatch : function() {
+			$('body.page-sidebar').removeClass('page-sidebar-closed');
+		}
+	});
+	enquire.register('screen and (max-width: 480px)', {
+		match : function() {
+			$('body').addClass('mobile-nav');
+			mobileNav();
+		},
+		unmatch : function() {
+			$('body').removeClass('mobile-nav');
+			removeMobileNav();
+		}
+	});
+
 	//bootstrap components init
 	$('.dropdown-toggle').dropdown();
 	$('.label-tooltip, .help-tooltip').tooltip();
@@ -281,26 +312,6 @@ $(document).ready(function() {
 		}
 	}
 
-	//media queries - depends of enquire.js
-	enquire.register('screen and (max-width: 768px)', {
-		match : function() {
-			$('body.page-sidebar').addClass('page-sidebar-closed');
-		},
-		unmatch : function() {
-			$('body.page-sidebar').removeClass('page-sidebar-closed');
-		}
-	});
-	enquire.register('screen and (max-width: 480px)', {
-		match : function() {
-			$('body').addClass('mobile-nav');
-			mobileNav();
-		},
-		unmatch : function() {
-			$('body').removeClass('mobile-nav');
-			removeMobileNav();
-		}
-	});
-
 	// search with nav sidebar closed
 	$(document).on('click', '.page-sidebar-closed .searchtab' ,function(){
 		$(this).addClass('search-expanded');
@@ -337,6 +348,7 @@ $(document).ready(function() {
 	});
 });
 
+//build confirmation modal
 function confirm_modal(heading, question, left_button_txt, right_button_txt, left_button_callback, right_button_callback) {
 	var confirmModal =
 		$('<div class="bootstrap modal hide fade">' +
@@ -346,7 +358,6 @@ function confirm_modal(heading, question, left_button_txt, right_button_txt, lef
 			'<a class="close" data-dismiss="modal" >&times;</a>' +
 			'<h3>' + heading + '</h3>' +
 			'</div>' +
-
 			'<div class="modal-body">' +
 			'<p>' + question + '</p>' +
 			'</div>' +
@@ -361,18 +372,17 @@ function confirm_modal(heading, question, left_button_txt, right_button_txt, lef
 			'</div>' +
 			'</div>' +
 			'</div>');
-
 	confirmModal.find('#confirm_modal_left_button').click(function (event) {
 		left_button_callback();
 		confirmModal.modal('hide');
 	});
-
 	confirmModal.find('#confirm_modal_right_button').click(function (event) {
 		right_button_callback();
 		confirmModal.modal('hide');
 	});
 	confirmModal.modal('show');
 };
+
 
 $(".reset_ready").click(function () {
 	var href = $(this).attr('href');

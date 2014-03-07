@@ -2789,11 +2789,11 @@ a.link-social:hover { text-decoration: none; }
 .mobile-nav #content h2.page-title { padding-left: 10px !important; }
 .mobile-nav #content ul.page-breadcrumb { left: 10px !important; }
 
-.page-topbar #main { padding-top: 64px; }
-.page-topbar #content { margin-left: 0; }
-.page-topbar #content .page-head { top: 66px; }
-.page-topbar #content .page-title { padding-left: 75px; }
-.page-topbar #content .page-breadcrumb { left: 75px; }
+.page-topbar:not(.mobile-nav) #main { padding-top: 64px; }
+.page-topbar:not(.mobile-nav) #content { margin-left: 0; }
+.page-topbar:not(.mobile-nav) #content .page-head { top: 66px; }
+.page-topbar:not(.mobile-nav) #content .page-title { padding-left: 75px; }
+.page-topbar:not(.mobile-nav) #content .page-breadcrumb { left: 75px; }
 
 .page-sidebar-closed:not(.nav-topbar) .searchtab:before { z-index: 1000; position: absolute; top: 16px; left: 14px; display: block; width: 28px; height: 28px; }
 .page-sidebar-closed:not(.nav-topbar) .searchtab .form-group { display: none; }
