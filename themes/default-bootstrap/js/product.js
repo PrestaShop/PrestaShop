@@ -178,7 +178,6 @@ $(document).ready(function(){
 	$(document).on('click', 'a[name=resetImages]', function(e){
 		e.preventDefault();
 		refreshProductImages(0);
-		$(this).parent().hide('slow');
 	});
 
 	$(document).on('click', '.color_pick', function(e){
@@ -758,17 +757,14 @@ function refreshProductImages(id_product_attribute)
 				$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show().children('a.shown').trigger('click');
 			else
 				$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show();
-		if (parseInt($('#thumbs_list_frame >li:visible').length) < parseInt($('#thumbs_list_frame >li').length))
-			$('#wrapResetImages').show('slow');
-		else
-			$('#wrapResetImages').hide('slow');
 	}
 	else
-	{
 		$('#thumbs_list li').show();
-		if (parseInt($('#thumbs_list_frame >li').length) == parseInt($('#thumbs_list_frame >li:visible').length))
-			$('#wrapResetImages').hide('slow');
-	}
+
+	if (parseInt($('#thumbs_list_frame >li:visible').length) != parseInt($('#thumbs_list_frame >li').length))
+		$('#wrapResetImages').stop(true, true).show();
+	else
+		$('#wrapResetImages').stop(true, true).hide();
 
 	var thumb_width = $('#thumbs_list_frame >li').width() + parseInt($('#thumbs_list_frame >li').css('marginRight'));
 	$('#thumbs_list_frame').width((parseInt((thumb_width) * $('#thumbs_list_frame >li').length)) + 'px');

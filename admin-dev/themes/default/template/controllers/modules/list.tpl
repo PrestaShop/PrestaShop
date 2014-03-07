@@ -95,7 +95,7 @@ module_inactive
 									<br><a href="{$currentIndex}&token={$token}&ajax=1&action=GetModuleQuickView&module={$module->name}" class="fancybox-quick-view"><i class="icon-search"></i> {l s='Read more'}</a>
 								{/if}
 							</p>
-							{if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success">{$module->message}</div>{/if}
+							{if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>{$module->message}</div>{/if}
 						</div>
 					</td>
 					<td class="actions">

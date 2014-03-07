@@ -93,7 +93,7 @@
 			{if isset($images) && count($images) > 0}
 				<!-- thumbnails -->
 				<div id="views_block" class="clearfix {if isset($images) && count($images) < 2}hidden{/if}">
-					{if isset($images) && count($images) > 3}
+					{if isset($images) && count($images) > 4}
 						<span class="view_scroll_spacer">
 							<a id="view_scroll_left" class="" title="{l s='Other views'}" href="javascript:{ldelim}{rdelim}">
 								{l s='Previous'}
@@ -128,7 +128,7 @@
 						{/if}
 						</ul>
 					</div> <!-- end thumbs_list -->
-					{if isset($images) && count($images) > 3}
+					{if isset($images) && count($images) > 4}
 						<a id="view_scroll_right" title="{l s='Other views'}" href="javascript:{ldelim}{rdelim}">
 							{l s='Next'}
 						</a>

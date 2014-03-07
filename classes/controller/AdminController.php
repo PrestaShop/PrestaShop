@@ -1588,7 +1588,7 @@ class AdminControllerCore extends Controller
 				if (isset($sub_tab['module']) && !empty($sub_tab['module']))
 				{
 					$module = Module::getInstanceByName($sub_tab['module']);
-					if (!$module->isEnabledForShopContext())
+					if (is_object($module) && !$module->isEnabledForShopContext())
 					{
 						unset($sub_tabs[$index2]);
 						continue;

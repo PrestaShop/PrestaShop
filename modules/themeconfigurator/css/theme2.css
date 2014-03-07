@@ -14,7 +14,7 @@ body {
   background: #dadada;
 }
 #header #nav-row .shop-phone {
-  color: #333333;
+  color: white
 }
 #header #nav-row .shop-phone i,
 #header #nav-row .shop-phone strong {
@@ -28,7 +28,7 @@ body {
 #header #currencies-block-top div.current,
 #header #languages-block-top div.current,
 #header #nav-row .header_user_info a {
-  color: #333333;
+  color: white
 }
 #header #currencies-block-top div.current:hover, #header #currencies-block-top div.current.active,
 #header #languages-block-top div.current:hover,
@@ -40,7 +40,7 @@ body {
 }
 #header #currencies-block-top div.current strong,
 #header #languages-block-top div.current strong {
-  color: #333333;
+  color: white
 }
 #header #currencies-block-top div.current:hover strong, #header #currencies-block-top div.current:hover:after, #header #currencies-block-top div.current.active strong, #header #currencies-block-top div.current.active:after,
 #header #languages-block-top div.current:hover strong,
@@ -54,7 +54,7 @@ body {
   border-color: #c6c6c6;
 }
 #header #contact-link a {
-  color: #333333;
+  color: white
 }
 #header #contact-link a:hover, #header #contact-link a.active {
   background: #b7b7b7;

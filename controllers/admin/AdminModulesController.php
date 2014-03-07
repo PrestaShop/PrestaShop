@@ -75,8 +75,8 @@ class AdminModulesControllerCore extends AdminController
 		$this->list_modules_categories['administration']['name'] = $this->l('Administration');
 		$this->list_modules_categories['advertising_marketing']['name'] = $this->l('Advertising and Marketing');
 		$this->list_modules_categories['analytics_stats']['name'] = $this->l('Analytics and Stats');
-		$this->list_modules_categories['billing_invoicing']['name'] = $this->l('Billing and Invoicing');
-		$this->list_modules_categories['checkout']['name'] = $this->l('Checkout');
+		$this->list_modules_categories['billing_invoicing']['name'] = $this->l('Taxes & Invoicing');
+/* 		$this->list_modules_categories['checkout']['name'] = $this->l('Checkout'); */
 		$this->list_modules_categories['content_management']['name'] = $this->l('Content Management');
 		$this->list_modules_categories['export']['name'] = $this->l('Export');
 		$this->list_modules_categories['emailing']['name'] = $this->l('Emailing');
@@ -85,19 +85,22 @@ class AdminModulesControllerCore extends AdminController
 		$this->list_modules_categories['merchandizing']['name'] = $this->l('Merchandizing');
 		$this->list_modules_categories['migration_tools']['name'] = $this->l('Migration Tools');
 		$this->list_modules_categories['payments_gateways']['name'] = $this->l('Payments and Gateways');
-		$this->list_modules_categories['payment_security']['name'] = $this->l('Payment Security');
+		$this->list_modules_categories['payment_security']['name'] = $this->l('Site certification & Fraud prevention');
 		$this->list_modules_categories['pricing_promotion']['name'] = $this->l('Pricing and Promotion');
 		$this->list_modules_categories['quick_bulk_update']['name'] = $this->l('Quick / Bulk update');
-		$this->list_modules_categories['search_filter']['name'] = $this->l('Search and Filter');
+/* 		$this->list_modules_categories['search_filter']['name'] = $this->l('Search and Filter'); */
 		$this->list_modules_categories['seo']['name'] = $this->l('SEO');
 		$this->list_modules_categories['shipping_logistics']['name'] = $this->l('Shipping and Logistics');
 		$this->list_modules_categories['slideshows']['name'] = $this->l('Slideshows');
-		$this->list_modules_categories['smart_shopping']['name'] = $this->l('Smart Shopping');
+		$this->list_modules_categories['smart_shopping']['name'] = $this->l('Comparison site & Feed management');
 		$this->list_modules_categories['market_place']['name'] = $this->l('Marketplace');
 		$this->list_modules_categories['social_networks']['name'] = $this->l('Social Networks');
 		$this->list_modules_categories['others']['name'] = $this->l('Other Modules');
 		$this->list_modules_categories['mobile']['name'] = $this->l('Mobile');
 		$this->list_modules_categories['dashboard']['name'] = $this->l('Dashboard');
+		$this->list_modules_categories['dashboard']['name'] = $this->l('Internationalization & Localization');
+		$this->list_modules_categories['dashboard']['name'] = $this->l('Emailing & SMS');
+		$this->list_modules_categories['dashboard']['name'] = $this->l('Social Networks');
 
 		uasort($this->list_modules_categories, array($this, 'checkCategoriesNames'));
 

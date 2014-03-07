@@ -2,8 +2,8 @@
 [class^="icon-"]
 	font-size: 14px
 	@extend .icon
-.icon-ban-circle
-	@extend .icon-ban
+//.icon-ban-circle
+//	@extend .icon-ban
 .icon-bar-chart
 	@extend .icon-bar-chart-o
 .icon-beaker
@@ -329,83 +329,86 @@
 	@extend .icon-flash
 
 //Toolbar
-[class^="process-icon-"],[class*="process-icon-"]
+[class^="process-icon-"]
 	display: block
 	width: 30px
+	height: 30px
 	margin: 0 auto
 	font-size: 28px
 	@extend .icon
 	@extend .icon-2x
 	@extend .icon-fw
-	//@extend .icon-puzzle-piece
-	background: transparent!important
-.process-icon-save, .process-icon-save-and-stay, .process-icon-save-and-preview
-	@extend .icon-save
-.process-icon-ok
-	@extend .icon-check
-.process-icon-cancel
-	@extend .icon-remove
-.process-icon-back
-	@extend .icon-circle-arrow-left
-.process-icon-next
-	@extend .icon-circle-arrow-right
-.process-icon-help
-	@extend .icon-question-sign
-.process-icon-export
-	@extend .icon-share-square
-.process-icon-import
-	@extend .icon-cloud-upload
-.process-icon-help-new
-	@extend .icon-question-sign
-.process-icon-edit
-	@extend .icon-edit
-.process-icon-newAttributes, .process-icon-new, .process-icon-new-url
-	@extend .icon-plus-sign-alt
-.process-icon-modules-list
-	@extend .icon-puzzle-piece
-.process-icon-save-date
-	@extend .icon-download
-.process-icon-save-status
-	@extend .icon-download
-.process-icon-new-module
-	@extend .icon-plus
-.process-icon-delete
-	@extend .icon-trash
-.process-icon-update
-	@extend .icon-refresh
-.process-icon-preview, .process-icon-previewURL
-	@extend .icon-eye-open
-.process-icon-stats
-	@extend .icon-bar-chart
-.process-icon-duplicate
-	@extend .icon-copy
-.process-icon-newCombination.toolbar-new, .process-icon-plus
-	@extend .icon-plus-sign
-.process-icon-newCombination.toolbar-cancel, .process-icon-minus
-	@extend .icon-minus-sign
-.process-icon-partial_refund
-	@extend .icon-exchange
-.process-icon-anchor
-	@extend .icon-anchor
-.process-icon-refresh
-	@extend .icon-refresh
-.process-icon-configure
-	@extend .icon-cog
-.process-icon-uninstall
-	@extend .icon-trash
-.process-icon-off
-	@extend .icon-off
-.process-icon-reset
-	@extend .icon-rotate-left
-.process-icon-upload
-	@extend .icon-cloud-upload
-.process-icon-download
-	@extend .icon-cloud-download
-.process-icon-cogs
-	@extend .icon-cogs
-.process-icon-download-alt
-	@extend .icon-download-alt
-.process-icon-mail-reply
-	@extend .icon-mail-reply
-.process-icon-power
-	@extend .icon-power-off
+	background: transparent
+	background-size: 26px
+	background-position: center
+#content
+	.process-icon-save, .process-icon-save-and-stay, .process-icon-save-and-preview
+		@extend .icon-save
+	.process-icon-ok
+		@extend .icon-check
+	.process-icon-cancel
+		@extend .icon-remove
+	.process-icon-back
+		@extend .icon-circle-arrow-left
+	.process-icon-next
+		@extend .icon-circle-arrow-right
+	.process-icon-help
+		@extend .icon-question-sign
+	.process-icon-export
+		@extend .icon-share-square
+	.process-icon-import
+		@extend .icon-cloud-upload
+	.process-icon-help-new
+		@extend .icon-question-sign
+	.process-icon-edit
+		@extend .icon-edit
+	.process-icon-newAttributes, .process-icon-new, .process-icon-new-url
+		@extend .icon-plus-sign-alt
+	.process-icon-modules-list
+		@extend .icon-puzzle-piece
+	.process-icon-save-date
+		@extend .icon-download
+	.process-icon-save-status
+		@extend .icon-download
+	.process-icon-new-module
+		@extend .icon-plus
+	.process-icon-delete
+		@extend .icon-trash
+	.process-icon-update
+		@extend .icon-refresh
+	.process-icon-preview, .process-icon-previewURL
+		@extend .icon-eye-open
+	.process-icon-stats
+		@extend .icon-bar-chart
+	.process-icon-duplicate
+		@extend .icon-copy
+	.process-icon-newCombination.toolbar-new, .process-icon-plus
+		@extend .icon-plus-sign
+	.process-icon-newCombination.toolbar-cancel, .process-icon-minus
+		@extend .icon-minus-sign
+	.process-icon-partial_refund
+		@extend .icon-exchange
+	.process-icon-anchor
+		@extend .icon-anchor
+	.process-icon-refresh
+		@extend .icon-refresh
+	.process-icon-configure
+		@extend .icon-cog
+	.process-icon-uninstall
+		@extend .icon-trash
+	.process-icon-off
+		@extend .icon-off
+	.process-icon-reset
+		@extend .icon-rotate-left
+	.process-icon-upload
+		@extend .icon-cloud-upload
+	.process-icon-download
+		@extend .icon-cloud-download
+	.process-icon-cogs
+		@extend .icon-cogs
+	.process-icon-download-alt
+		@extend .icon-download-alt
+	.process-icon-mail-reply
+		@extend .icon-mail-reply
+	.process-icon-power
+		@extend .icon-power-off
