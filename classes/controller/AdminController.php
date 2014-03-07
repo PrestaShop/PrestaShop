@@ -1668,9 +1668,10 @@ class AdminControllerCore extends Controller
 			'default_language' => (int)Configuration::get('PS_LANG_DEFAULT')
 		));
 
-		if ((int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
+		$module = Module::getInstanceByName('themeconfigurator');
+		if (is_object($module) && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
 			$this->context->smarty->assign('base_url_tc', $this->context->shop->getBaseUrl()
-				.'?live_configurator_token='.ThemeConfigurator::getLiveConfiguratorToken()
+				.'?live_configurator_token='.$module->getLiveConfiguratorToken()
 				.'&id_employee='.(int)$this->context->employee->id
 				.'&id_shop='.(int)$this->context->shop->id
 				.(Configuration::get('PS_TC_THEME') != '' ? '&theme='.Configuration::get('PS_TC_THEME') : '')
