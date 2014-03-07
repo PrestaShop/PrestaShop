@@ -91,7 +91,8 @@ class ThemeConfigurator extends Module
 			!Configuration::updateValue('PS_TC_THEMES', serialize($themes_colors)) ||
 			!Configuration::updateValue('PS_TC_FONTS', serialize($themes_fonts)) ||
 			!Configuration::updateValue('PS_TC_THEME', '') ||
-			!Configuration::updateValue('PS_TC_FONT', '')
+			!Configuration::updateValue('PS_TC_FONT', '') ||
+			!Configuration::updateValue('PS_TC_ACTIVE', 1)
 		)
 			return false;
 
@@ -209,7 +210,8 @@ class ThemeConfigurator extends Module
 	{
 		$this->context->controller->addCss($this->_path.'css/hooks.css', 'all');
 
-		if (Tools::getValue('live_configurator', 0) == 1 && Tools::getValue('live_configurator_token') == Tools::getAdminToken($this->name))
+		if ((int)Configuration::get('PS_TC_ACTIVE') == 1 &&
+			Tools::getValue('live_configurator_token') == $this->getLiveConfiguratorToken())
 		{
 			$this->context->controller->addCSS($this->_path.'css/live_configurator.css');
 			$this->context->controller->addJS($this->_path.'js/live_configurator.js');
@@ -279,13 +281,14 @@ class ThemeConfigurator extends Module
 	{
 		$html = '';
 
-		if (Tools::getValue('live_configurator', 0) == 1 && Tools::getValue('live_configurator_token') == Tools::getAdminToken($this->name))
+		if ((int)Configuration::get('PS_TC_ACTIVE') == 1 &&
+			Tools::getValue('live_configurator_token') == $this->getLiveConfiguratorToken()
+			&& Tools::getIsset('id_employee'))
 		{
 			if (Tools::isSubmit('submitLiveConfigurator'))
 			{
 				Configuration::updateValue('PS_TC_THEME', Tools::getValue('theme'));
 				Configuration::updateValue('PS_TC_FONT', Tools::getValue('theme_font'));
-				Tools::redirect('index.php');
 			}
 
 			$ad_image = $this->_path.'img/'.$this->context->language->iso_code.'/advertisement.png';
@@ -297,10 +300,12 @@ class ThemeConfigurator extends Module
 				'themes' => unserialize(Configuration::get('PS_TC_THEMES')),
 				'fonts' => unserialize(Configuration::get('PS_TC_FONTS')),
 				'theme_font' => Tools::getValue('theme_font', Configuration::get('PS_TC_FONT')),
+				'live_configurator_token' => $this->getLiveConfiguratorToken(),
 				'id_shop' => (int)$this->context->shop->id,
-				'id_employee' => isset($this->context->employee) ? (int)$this->context->employee->id : 0,
-				'live_configurator_token' => Tools::getValue('live_configurator_token', ''),
+				'id_employee' => isset($this->context->employee) ? (int)$this->context->employee->id :
+					Tools::getValue('id_employee'),
 				'advertisement_image' => $ad_image,
+				'advertisement_url' => 'http://addons.prestashop.com/en/205-premium-templates?utm_source=backoffice_configurator',
 				'advertisement_text' => $this->l('Over 500+ PrestaShop premium templates! Browse now!')
 			));
 
@@ -450,6 +455,7 @@ class ThemeConfigurator extends Module
 		if (Tools::isSubmit('submitModule'))
 		{
 			Configuration::updateValue('PS_QUICK_VIEW', (int)Tools::getValue('quick_view'));
+			Configuration::updateValue('PS_TC_ACTIVE', (int)Tools::getValue('live_conf'));
 			foreach ($this->getConfigurableModules() as $module)
 			{
 				if (!isset($module['is_module']) || !$module['is_module'] || !Validate::isModuleName($module['name']) || !Tools::isSubmit($module['name']))
@@ -595,12 +601,6 @@ class ThemeConfigurator extends Module
 			);
 		}
 
-		$inputs[] = array(
-			'type' => 'free',
-			'label' => $this->l('Live configurator'),
-			'name' => 'live-conf'
-		);
-
 		$fields_form = array(
 			'form' => array(
 				'legend' => array(
@@ -628,16 +628,7 @@ class ThemeConfigurator extends Module
 		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
 		$helper->token = Tools::getAdminTokenLite('AdminModules');
 		$helper->tpl_vars = array(
-			'fields_value' => array_merge($this->getConfigFieldsValues(),
-				array(
-					'live-conf' => '<a href="'.$this->context->link->getPageLink('index')
-						.'?live_configurator=1&id_employee='.(int)$this->context->employee->id
-						.'&id_shop='.(int)$this->context->shop->id
-						.'&live_configurator_token='.Tools::getAdminToken($this->name)
-						.(Configuration::get('PS_TC_THEME') != '' ? '&theme='.Configuration::get('PS_TC_THEME') : '')
-						.(Configuration::get('PS_TC_FONT') != '' ? '&theme_font='.Configuration::get('PS_TC_FONT') : '')
-						.'" class="btn btn-default" onclick="return !window.open($(this).attr(\'href\'));"><i class="icon-cogs"></i> Live configurator</a>'
-				)),
+			'fields_value' => $this->getConfigFieldsValues(),
 			'languages' => $this->context->controller->getLanguages(),
 			'id_language' => $this->context->language->id
 		);
@@ -748,6 +739,19 @@ class ThemeConfigurator extends Module
 				'name' => 'productpaymentlogos',
 				'value' => (int)Validate::isLoadedObject($module = Module::getInstanceByName('productpaymentlogos')) && $module->isEnabledForShopContext(),
 				'is_module' => true,
+			),
+			array(
+				'label' => $this->l('Enable Live Configurator'),
+				'name' => 'live_conf',
+				'value' => (int)Tools::getValue('PS_TC_ACTIVE', Configuration::get('PS_TC_ACTIVE')),
+				'hint' => $this->l('The customization tool allows you to make color and font changes in your theme.'),
+				'desc' => sprintf($this->l('Only you can see this %s - your visitors will not see this tool.'), '<a href="'.$this->context->link->getPageLink('index')
+						.'?live_configurator_token='.$this->getLiveConfiguratorToken()
+						.'&id_employee='.(int)$this->context->employee->id
+						.'&id_shop='.(int)$this->context->shop->id
+						.(Configuration::get('PS_TC_THEME') != '' ? '&theme='.Configuration::get('PS_TC_THEME') : '')
+						.(Configuration::get('PS_TC_FONT') != '' ? '&theme_font='.Configuration::get('PS_TC_FONT') : '')
+						.'" onclick="return !window.open($(this).attr(\'href\'));">on your front office</a>')
 			)
 		);
 	}
@@ -759,5 +763,11 @@ class ThemeConfigurator extends Module
 			$values[$module['name']] = $module['value'];
 
 		return $values;
+	}
+
+	public function getLiveConfiguratorToken()
+	{
+		return Tools::getAdminToken($this->name.(int)Tab::getIdFromClassName($this->name)
+			.(isset($this->context->employee) ? (int)$this->context->employee->id : Tools::getValue('id_employee')));
 	}
 }
