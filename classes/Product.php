@@ -4133,7 +4133,11 @@ class ProductCore extends ObjectModel
 		return Pack::noPackPrice($this->id);
 	}
 
-	public function checkAccess($id_customer)
+	public function checkAccess($id_customer) {
+		self::checkAccess_static ($this->id, $id_customer);
+	}
+	
+	{public function checkAccess_static($id_customer)
 	{
 		if (!$id_customer)
 			return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
