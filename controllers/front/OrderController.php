@@ -44,7 +44,7 @@ class OrderControllerCore extends ParentOrderController
 			$this->step = -1;
 
 		// If some products have disappear
-		if (!$this->context->cart->checkQuantities())
+		if (!$this->context->cart->checkQuantities() || !$this->context->cart->checkProductsAccess())
 		{
 			$this->step = 0;
 			$this->errors[] = Tools::displayError('An item in your cart is no longer available in this quantity, you cannot proceed with your order.');
