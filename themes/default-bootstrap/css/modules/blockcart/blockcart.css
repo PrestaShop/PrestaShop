@@ -119,6 +119,8 @@
     padding: 7px 0; }
     .cart_block .cart-prices .cart-prices-line.last-line {
       border: none; }
+#cart_block_display_tax_label {
+  margin-left: 20px; }
 .cart_block .cart-buttons {
   overflow: hidden;
   padding: 20px 20px 10px 20px;
