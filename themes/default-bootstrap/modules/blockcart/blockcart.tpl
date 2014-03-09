@@ -183,12 +183,12 @@
 						</div>
 						{if $use_taxes && $display_tax_label == 1 && $show_tax}
 							{if $priceDisplay == 0}
-								<p>
+								<p id="cart_block_display_tax_label">
 									{l s='Prices are tax included' mod='blockcart'}
 								</p>
 							{/if}
 							{if $priceDisplay == 1}
-								<p>
+								<p id="cart_block_display_tax_label">
 									{l s='Prices are tax excluded' mod='blockcart'}
 								</p>
 							{/if}
