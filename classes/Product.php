@@ -4137,21 +4137,21 @@ class ProductCore extends ObjectModel
 		self::checkAccess_static ($this->id, $id_customer);
 	}
 	
-	{public function checkAccess_static($id_customer)
+	{public function checkAccess_static($id_cart, $id_customer)
 	{
 		if (!$id_customer)
 			return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT ctg.`id_group`
 			FROM `'._DB_PREFIX_.'category_product` cp
 			INNER JOIN `'._DB_PREFIX_.'category_group` ctg ON (ctg.`id_category` = cp.`id_category`)
-			WHERE cp.`id_product` = '.(int)$this->id.' AND ctg.`id_group` = 1');
+			WHERE cp.`id_product` = '.(int)$id_cart.' AND ctg.`id_group` = 1');
 		else
 			return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT cg.`id_group`
 			FROM `'._DB_PREFIX_.'category_product` cp
 			INNER JOIN `'._DB_PREFIX_.'category_group` ctg ON (ctg.`id_category` = cp.`id_category`)
 			INNER JOIN `'._DB_PREFIX_.'customer_group` cg ON (cg.`id_group` = ctg.`id_group`)
-			WHERE cp.`id_product` = '.(int)$this->id.' AND cg.`id_customer` = '.(int)$id_customer);
+			WHERE cp.`id_product` = '.(int)$id_cart.' AND cg.`id_customer` = '.(int)$id_customer);
 	}
 
 
