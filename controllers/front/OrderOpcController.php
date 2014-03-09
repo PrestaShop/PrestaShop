@@ -449,7 +449,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			return '<p class="warning">'.Tools::displayError('Please accept the Terms of Service').'</p>';
 		
 		/* If some products have disappear */
-		if (!$this->context->cart->checkQuantities())
+		if (!$this->context->cart->checkQuantities()  || !$this->context->cart->checkProductsAccess())
 			return '<p class="warning">'.Tools::displayError('An item in your cart is no longer available, you cannot proceed with your order.').'</p>';
 
 		/* Check minimal amount */
