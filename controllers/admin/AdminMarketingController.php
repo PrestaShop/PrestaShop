@@ -57,9 +57,47 @@ class AdminMarketingControllerCore extends AdminController
 	
 	public function renderView()
 	{
+		// Load cache file modules list (natives and partners modules)
+		$xmlModules = false;
+		if (file_exists(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST))
+			$xmlModules = @simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST);
+		if ($xmlModules)
+			foreach ($xmlModules->children() as $xmlModule)
+				foreach ($xmlModule->children() as $module)
+					foreach ($module->attributes() as $key => $value)
+					{
+						if ($xmlModule->attributes() == 'native' && $key == 'name')
+							$this->list_natives_modules[] = (string)$value;
+						if ($xmlModule->attributes() == 'partner' && $key == 'name')
+							$this->list_partners_modules[] = (string)$value;
+					}
+
 		$this->tpl_view_vars = array(
 			'modules_list' => $this->renderModulesList(),
 		);
 		return parent::renderView();
+	}
+
+	public function ajaxProcessGetModuleQuickView()
+	{
+		$modules = Module::getModulesOnDisk();
+
+		foreach ($modules as $module)
+			if ($module->name == Tools::getValue('module'))
+				break;
+
+		$this->context->smarty->assign(array(
+			'displayName' => $module->displayName,
+			'image' => $module->image,
+			'nb_rates' => (int)$module->nb_rates[0],
+			'avg_rate' => (int)$module->avg_rate[0],
+			'badges' => $module->badges,
+			'compatibility' => $module->compatibility,
+			'description_full' => $module->description_full,
+			'additional_description' => $module->additional_description,
+			'url' => $module->url
+		));
+		$this->smartyOutputContent('controllers/modules/quickview.tpl');
+		die(1);
 	}
 }
