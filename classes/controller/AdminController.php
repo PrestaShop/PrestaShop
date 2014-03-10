@@ -1669,8 +1669,12 @@ class AdminControllerCore extends Controller
 		));
 
 		$module = Module::getInstanceByName('themeconfigurator');
+		$lang = '';
+		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
+			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
 		if (is_object($module) && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
 			$this->context->smarty->assign('base_url_tc', $this->context->shop->getBaseUrl()
+				.$lang
 				.'?live_configurator_token='.$module->getLiveConfiguratorToken()
 				.'&id_employee='.(int)$this->context->employee->id
 				.'&id_shop='.(int)$this->context->shop->id
