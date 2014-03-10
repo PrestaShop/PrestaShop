@@ -177,35 +177,6 @@ UPDATE `PREFIX_hook_module` SET position = 2
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockpaymentlogo')
 AND id_hook = @id_hook;
 
-/* Exceptions for pages without left column */
-SET @id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn');
-INSERT INTO `PREFIX_hook_module_exceptions` (`id_shop`, `id_module`, `id_hook`, `file_name`) (
-	SELECT 1, id_module, id_hook, pages.page
-	FROM `PREFIX_hook_module`
-	JOIN (
-		SELECT 'index' as page
-		UNION SELECT 'auth' as page
-		UNION SELECT 'cart' as page
-		UNION SELECT 'order' as page
-		UNION SELECT 'orderopc' as page
-		UNION SELECT 'sitemap' as page
-		UNION SELECT 'stores' as page
-		UNION SELECT 'cms' as page
-		UNION SELECT 'contact' as page
-		UNION SELECT 'myaccount' as page
-		UNION SELECT 'identity' as page
-		UNION SELECT 'address' as page
-		UNION SELECT 'addresses' as page
-		UNION SELECT 'pagenotfound' as page
-		UNION SELECT 'password' as page
-		UNION SELECT 'orderfollow' as page
-		UNION SELECT 'orderslip' as page
-		UNION SELECT 'discount' as page
-		UNION SELECT 'product' as page
-	) pages
-	WHERE id_hook = @id_hook
-);
-
 INSERT INTO `PREFIX_linksmenutop` (`id_linksmenutop`, `id_shop`, `new_window`) VALUES (1, 1, 1);
 INSERT INTO `PREFIX_linksmenutop_lang` (`id_linksmenutop`, `id_lang`, `id_shop`, `label`, `link`) VALUES (1, 1, 1, 'Blog', 'http://www.prestashop.com/blog/');
 
