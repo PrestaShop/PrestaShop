@@ -39,7 +39,7 @@
 	{$module_name = $module_name|escape:'html':'UTF-8'}
 	{capture}{'/&module_name='|cat:$module_name|cat:'/'}{/capture}
 	{if isset($display_multishop_checkbox) && $display_multishop_checkbox}
-	<input type="checkbox" name="activateModule" value="1"{if $module->active} checked="checked"{/if} 
+	<input type="checkbox" name="activateModule" value="1"{if $module->isEnabledForShopContext()} checked="checked"{/if} 
 		onclick="location.href = '{$current_url|regex_replace:$smarty.capture.default:''}&module_name={$module_name}&enable=' + (($(this).attr('checked')) ? 1 : 0);" />
 	{l s='Activate module for'} {$shop_context}
 	{/if}
