@@ -114,6 +114,11 @@ public function hookDisplayMobileHeader($params)
 		Media::addJsDef(array('blocksearch_type' => 'top'));
 		return $this->display(__FILE__, 'blocksearch-top.tpl', Tools::getValue('search_query') ? null : $key);
 	}
+	
+	public function hookDisplayNav($params)
+	{
+		return $this->hookTop($params);
+	}
 
 	private function calculHookCommon($params)
 	{
