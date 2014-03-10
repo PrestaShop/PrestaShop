@@ -38,6 +38,8 @@ class SpecificPriceRuleCore extends ObjectModel
 	public	$from;
 	public	$to;
 
+	protected static $rules_application_enable = true;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -89,6 +91,16 @@ class SpecificPriceRuleCore extends ObjectModel
 				Db::getInstance()->delete('specific_price_rule_condition', 'id_specific_price_rule_condition_group='.(int)$row['id_specific_price_rule_condition_group']);
 			}
 	}
+	
+	public static function disableAnyApplication()
+	{
+		SpecificPriceRule::$rules_application_enable = false;
+	}
+
+	public static function enableAnyApplication()
+	{
+		SpecificPriceRule::$rules_application_enable = true;
+	}
 
 	public function addConditions($conditions)
 	{
@@ -116,6 +128,9 @@ class SpecificPriceRuleCore extends ObjectModel
 
 	public function apply($products = false)
 	{
+		if (!SpecificPriceRule::$rules_application_enable)
+			return;
+
 		$this->resetApplication($products);
 		$products = $this->getAffectedProducts($products);
 		foreach ($products as $product)
@@ -135,6 +150,9 @@ class SpecificPriceRuleCore extends ObjectModel
 	 */
 	public static function applyAllRules($products = false)
 	{
+		if (!SpecificPriceRule::$rules_application_enable)
+			return;
+
 		$rules = new PrestaShopCollection('SpecificPriceRule');
 		foreach ($rules as $rule)
 			$rule->apply($products);
