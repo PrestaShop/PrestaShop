@@ -1873,16 +1873,15 @@ class AdminControllerCore extends Controller
 						if ($xmlModule->attributes() == 'partner' && $key == 'name')
 							$this->list_partners_modules[] = (string)$value;
 					}
-
 		if ($this->getModulesList($this->filter_modules_list))
 		{
 			foreach ($this->modules_list as $key => $module)
+			{
 				if (in_array($module->name, $this->list_partners_modules))
-				{
 					$this->modules_list[$key]->type = 'addonsPartner';
-					$this->modules_list[$key]->show_quick_view = 1;
-				}
-
+				if (isset($module->description_full) && trim($module->description_full) != '')
+					$module->show_quick_view = true;
+			}
 			$helper = new Helper();
 			return $helper->renderModulesList($this->modules_list);
 		}

@@ -97,6 +97,8 @@ class AdminPaymentControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		if (Tools::getValue('action') == 'GetModuleQuickView' && Tools::getValue('ajax') == '1')
+			$this->ajaxProcessGetModuleQuickView();
 		if ($this->action)
 			$this->saveRestrictions($this->action);
 	}
@@ -164,7 +166,7 @@ class AdminPaymentControllerCore extends AdminController
 			$this->tpl_view_vars = array('shop_context' => $shop_context);
 			return parent::renderView();
 		}
-	
+
 		// link to modules page
 		if (isset($this->payment_modules[0]))
 			$token_modules = Tools::getAdminToken('AdminModules'.(int)Tab::getIdFromClassName('AdminModules').(int)$this->context->employee->id);
@@ -246,5 +248,29 @@ class AdminPaymentControllerCore extends AdminController
 
 		return parent::renderView();
 	}
+
+	public function ajaxProcessGetModuleQuickView()
+	{
+		$modules = Module::getModulesOnDisk();
+
+		foreach ($modules as $module)
+			if ($module->name == Tools::getValue('module'))
+				break;
+
+		$this->context->smarty->assign(array(
+			'displayName' => $module->displayName,
+			'image' => $module->image,
+			'nb_rates' => (int)$module->nb_rates[0],
+			'avg_rate' => (int)$module->avg_rate[0],
+			'badges' => $module->badges,
+			'compatibility' => $module->compatibility,
+			'description_full' => $module->description_full,
+			'additional_description' => $module->additional_description,
+			'url' => $module->url
+		));
+		$this->smartyOutputContent('controllers/modules/quickview.tpl');
+		die(1);
+	}
+
 }
 
