@@ -163,7 +163,7 @@ class AdminDashboardControllerCore extends AdminController
 
 		$forms['other']['fields']['CONF_ORDER_FIXED'] = array(
 			'title' => $this->l('Other fees per order'),
-			'desc' => $this->l('You should calculate this value by addin up all of your additional costs per order.'),
+			'desc' => $this->l('You should calculate this value by making the sum of all of your additional costs per order.'),
 			'validation' => 'isPrice',
 			'cast' => 'floatval',
 			'type' => 'text',
