@@ -345,7 +345,7 @@ function findCombination(firstTime)
 	//create a temporary 'choice' array containing the choices of the customer
 	var choice = [];
 	$('#attributes select, #attributes input[type=hidden], #attributes input[type=radio]:checked').each(function(){
-		choice.push($(this).val());
+		choice.push(parseInt($(this).val()));
 	});
 
 	if (typeof combinations == 'undefined' || !combinations)
@@ -357,7 +357,7 @@ function findCombination(firstTime)
 		var combinationMatchForm = true;
 		$.each(combinations[combination]['idsAttributes'], function(key, value)
 		{
-			if (!in_array(value, choice))
+			if (!in_array(parseInt(value), choice))
 				combinationMatchForm = false;
 		});
 
