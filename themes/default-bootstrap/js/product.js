@@ -213,10 +213,10 @@ $(document).ready(function(){
 	}
 	else
 	{
-		$(document).off('click').on('click', '.fancybox', function(e){
+		$(document).on('click', '.fancybox', function(e){
 			e.preventDefault();
 		});
-		$(document).off('click').on('click', '#bigpic', function(e){
+		$(document).on('click', '#bigpic', function(e){
 			var data = window.document.location.href.replace(window.document.location.search, '');
 			window.parent.document.location.href = data;
  			location.reload(); 
