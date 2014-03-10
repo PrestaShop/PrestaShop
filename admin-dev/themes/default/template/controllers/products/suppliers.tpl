@@ -78,7 +78,7 @@
 			<div class="panel-heading">
 				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-supplier" href="#supplier-{$supplier->id}">{if isset($supplier->name)}{$supplier->name}{/if}</a>
 			</div>
-			<div id="supplier-{$supplier->id}" class="panel-collapse collapse{if $smarty.foreach.data.first} in{/if}">
+			<div id="supplier-{$supplier->id}">
 				<div class="panel-body">
 					<table class="table">
 						<thead>
