@@ -160,7 +160,7 @@ class ThemeConfigurator extends Module
 	{
 		$result = true;
 
-		if ($id_lang === null);
+		if ($id_lang === null)
 			$id_lang = $this->context->language->id;
 
 		for ($i = 1; $i < 6; $i++)
