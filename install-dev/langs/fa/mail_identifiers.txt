@@ -1,9 +1,9 @@
-Hi {firstname} {lastname},
+سلام {firstname} {lastname},
 
-Here is your personal login information for {shop_name}:
+اطلاعات ورود شما به سایت {shop_name}:
 
-Password: {passwd}
-E-mail address: {email}
+رمزعبور: {passwd}
+آدرس ایمیل: {email}
 
 {shop_name} - {shop_url}
 

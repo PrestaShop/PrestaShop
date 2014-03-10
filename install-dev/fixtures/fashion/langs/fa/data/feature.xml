@@ -1,24 +1,24 @@
 <?xml version="1.0"?>
 <entity_feature>
   <feature id="Height">
-    <name>Height</name>
+    <name>بلندی</name>
   </feature>
   <feature id="Width">
-    <name>Width</name>
+    <name>پهنا</name>
   </feature>
   <feature id="Depth">
-    <name>Depth</name>
+    <name>عمق</name>
   </feature>
   <feature id="Weight">
-    <name>Weight</name>
+    <name>وزن</name>
   </feature>
   <feature id="Compositions">
-    <name>Compositions</name>
+    <name>ترکیب</name>
   </feature>
   <feature id="Styles">
-    <name>Styles</name>
+    <name>سبک</name>
   </feature>
   <feature id="Properties">
-    <name>Properties</name>
+    <name>خواص</name>
   </feature>
 </entity_feature>

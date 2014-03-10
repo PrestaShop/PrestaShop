@@ -10,46 +10,46 @@
     <name>L</name>
   </attribute>
   <attribute id="One_size">
-    <name>One size</name>
+    <name>تک سایز</name>
   </attribute>
   <attribute id="Grey">
-    <name>Grey</name>
+    <name>خاکستری</name>
   </attribute>
   <attribute id="Taupe">
-    <name>Taupe</name>
+    <name>مازویی</name>
   </attribute>
   <attribute id="Beige">
-    <name>Beige</name>
+    <name>بژ</name>
   </attribute>
   <attribute id="White">
-    <name>White</name>
+    <name>سفید</name>
   </attribute>
   <attribute id="Off_White">
-    <name>Off White</name>
+    <name>کرم</name>
   </attribute>
   <attribute id="Red">
-    <name>Red</name>
+    <name>قرمز</name>
   </attribute>
   <attribute id="Black">
-    <name>Black</name>
+    <name>مشکی</name>
   </attribute>
   <attribute id="Camel">
-    <name>Camel</name>
+    <name>شتری</name>
   </attribute>
   <attribute id="Orange">
-    <name>Orange</name>
+    <name>نارنجی</name>
   </attribute>
   <attribute id="Blue">
-    <name>Blue</name>
+    <name>آبی</name>
   </attribute>
   <attribute id="Green">
-    <name>Green</name>
+    <name>سبز</name>
   </attribute>
   <attribute id="Yellow">
-    <name>Yellow</name>
+    <name>زرد</name>
   </attribute>
   <attribute id="Brown">
-    <name>Brown</name>
+    <name>قهوه ای</name>
   </attribute>
   <attribute id="35">
     <name>35</name>
@@ -70,6 +70,6 @@
     <name>40</name>
   </attribute>
   <attribute id="Pink">
-    <name>Pink</name>
+    <name>صورتی</name>
   </attribute>
 </entity_attribute>

@@ -1,79 +1,79 @@
 <?xml version="1.0"?>
 <entity_product>
   <product id="Faded_Short_Sleeve_T-shirts" id_shop="1">
-    <description>&lt;p&gt;Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which has since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Faded short sleeve t-shirt with high neckline. Soft and stretchy material for a comfortable fit. Accessorize with a straw hat and you're ready for summer!&lt;/p&gt;</description_short>
+      <description>&lt;p&gt;مُد اصطلاح کلی در حیطه هنر طراحی پوشاک است که تحت تاثیر اوضاع فرهنگی و اجتماعی جامعه در یک دوره زمانی مشخص انجام می‌پذیرد. برای تعریف مد (انگلیسی: Fashion) دو تعریف دیگر نیز ارائه شده است: "شیوه رفتاری که به طور موقت توسط بخش مشخصی از اعضاء یک گروه اجتماعی اتخاذ می شود، به این دلیل که آن رفتار انتخابی را از نظر اجتماعی برای آن زمان و موقعیت مناسب تشخیص می دهند. مد نوع لباسی است که اخیراً پذیرفته شده است. مد در یک زبان و قابل فهم درک خواص ظاهری لباس و شناخت موقعیت اجتماع نسبت به پوشش افراد است.&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;تیشرت آستین کوتاه کمرنگ یقه دار ، مواد نرم و چسبناک، مناسب برای تابستان. به همراه یک کلاه حصیری زیبا!&lt;/p&gt;</description_short>
     <link_rewrite>faded-short-sleeve-tshirts</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Faded Short Sleeve T-shirts</name>
+    <name>تیشرت آستین کوتاه کمرنگ</name>
     <available_now>In stock</available_now>
     <available_later/>
   </product>
   <product id="Blouse" id_shop="1">
-    <description>&lt;p&gt;Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which has since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Short sleeved blouse with feminine draped sleeve detail.&lt;/p&gt;</description_short>
+      <description>&lt;p&gt;مُد اصطلاح کلی در حیطه هنر طراحی پوشاک است که تحت تاثیر اوضاع فرهنگی و اجتماعی جامعه در یک دوره زمانی مشخص انجام می‌پذیرد. برای تعریف مد (انگلیسی: Fashion) دو تعریف دیگر نیز ارائه شده است: "شیوه رفتاری که به طور موقت توسط بخش مشخصی از اعضاء یک گروه اجتماعی اتخاذ می شود، به این دلیل که آن رفتار انتخابی را از نظر اجتماعی برای آن زمان و موقعیت مناسب تشخیص می دهند. مد نوع لباسی است که اخیراً پذیرفته شده است. مد در یک زبان و قابل فهم درک خواص ظاهری لباس و شناخت موقعیت اجتماع نسبت به پوشش افراد است.&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;بلوز آستین کوتاه با آستین کار شده.&lt;/p&gt;</description_short>
     <link_rewrite>blouse</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Blouse</name>
+    <name>بلوز</name>
     <available_now>In stock</available_now>
     <available_later/>
   </product>
   <product id="Printed_Dress" id_shop="1">
-    <description>&lt;p&gt;Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which has since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;100% cotton double printed dress. Black and white striped top and orange high waisted skater skirt bottom.&lt;/p&gt;</description_short>
+      <description>&lt;p&gt;مُد اصطلاح کلی در حیطه هنر طراحی پوشاک است که تحت تاثیر اوضاع فرهنگی و اجتماعی جامعه در یک دوره زمانی مشخص انجام می‌پذیرد. برای تعریف مد (انگلیسی: Fashion) دو تعریف دیگر نیز ارائه شده است: "شیوه رفتاری که به طور موقت توسط بخش مشخصی از اعضاء یک گروه اجتماعی اتخاذ می شود، به این دلیل که آن رفتار انتخابی را از نظر اجتماعی برای آن زمان و موقعیت مناسب تشخیص می دهند. مد نوع لباسی است که اخیراً پذیرفته شده است. مد در یک زبان و قابل فهم درک خواص ظاهری لباس و شناخت موقعیت اجتماع نسبت به پوشش افراد است.&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;100% نخ و طراحی بیشتر رنگ سیاه و سفید راه راه با دامن نارنجی.&lt;/p&gt;</description_short>
     <link_rewrite>printed-dress</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Printed Dress</name>
+    <name>پیراهن طرح دار</name>
     <available_now>In stock</available_now>
     <available_later/>
   </product>
   <product id="Printed_Dress_1" id_shop="1">
-    <description>&lt;p&gt;Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which has since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Printed evening dress with straight sleeves with black thin waist belt and ruffled linings.&lt;/p&gt;</description_short>
+      <description>&lt;p&gt;مُد اصطلاح کلی در حیطه هنر طراحی پوشاک است که تحت تاثیر اوضاع فرهنگی و اجتماعی جامعه در یک دوره زمانی مشخص انجام می‌پذیرد. برای تعریف مد (انگلیسی: Fashion) دو تعریف دیگر نیز ارائه شده است: "شیوه رفتاری که به طور موقت توسط بخش مشخصی از اعضاء یک گروه اجتماعی اتخاذ می شود، به این دلیل که آن رفتار انتخابی را از نظر اجتماعی برای آن زمان و موقعیت مناسب تشخیص می دهند. مد نوع لباسی است که اخیراً پذیرفته شده است. مد در یک زبان و قابل فهم درک خواص ظاهری لباس و شناخت موقعیت اجتماع نسبت به پوشش افراد است.&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;پیراهن های مجلسی طرح دار با آستین راسته و  با کمربند سیاه و سفید نازک.&lt;/p&gt;</description_short>
     <link_rewrite>printed-dress</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Printed Dress</name>
+    <name>پیراهن طرح دار</name>
     <available_now>In stock</available_now>
     <available_later/>
   </product>
   <product id="Printed_Summer_Dress" id_shop="1">
-    <description>&lt;p&gt;Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which has since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Long printed dress with thin adjustable straps. V-neckline and wiring under the bust with ruffles at the bottom of the dress.&lt;/p&gt;</description_short>
+      <description>&lt;p&gt;مُد اصطلاح کلی در حیطه هنر طراحی پوشاک است که تحت تاثیر اوضاع فرهنگی و اجتماعی جامعه در یک دوره زمانی مشخص انجام می‌پذیرد. برای تعریف مد (انگلیسی: Fashion) دو تعریف دیگر نیز ارائه شده است: "شیوه رفتاری که به طور موقت توسط بخش مشخصی از اعضاء یک گروه اجتماعی اتخاذ می شود، به این دلیل که آن رفتار انتخابی را از نظر اجتماعی برای آن زمان و موقعیت مناسب تشخیص می دهند. مد نوع لباسی است که اخیراً پذیرفته شده است. مد در یک زبان و قابل فهم درک خواص ظاهری لباس و شناخت موقعیت اجتماع نسبت به پوشش افراد است.&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;پیراهن بلند طرح دار با بند قابل تنظیم. دارای چین در پایین پیراهن.&lt;/p&gt;</description_short>
     <link_rewrite>printed-summer-dress</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Printed Summer Dress</name>
+    <name>پیراهن طرح دار تابستانه</name>
     <available_now>In stock</available_now>
     <available_later/>
   </product>
   <product id="Printed_Summer_Dress_1" id_shop="1">
-    <description>&lt;p&gt;Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which has since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Sleeveless knee-length chiffon dress. V-neckline with elastic under the bust lining.&lt;/p&gt;</description_short>
+      <description>&lt;p&gt;مُد اصطلاح کلی در حیطه هنر طراحی پوشاک است که تحت تاثیر اوضاع فرهنگی و اجتماعی جامعه در یک دوره زمانی مشخص انجام می‌پذیرد. برای تعریف مد (انگلیسی: Fashion) دو تعریف دیگر نیز ارائه شده است: "شیوه رفتاری که به طور موقت توسط بخش مشخصی از اعضاء یک گروه اجتماعی اتخاذ می شود، به این دلیل که آن رفتار انتخابی را از نظر اجتماعی برای آن زمان و موقعیت مناسب تشخیص می دهند. مد نوع لباسی است که اخیراً پذیرفته شده است. مد در یک زبان و قابل فهم درک خواص ظاهری لباس و شناخت موقعیت اجتماع نسبت به پوشش افراد است.&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;پیراهن ابریشمی بدون آستین و روی زانو.&lt;/p&gt;</description_short>
     <link_rewrite>printed-summer-dress</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Printed Summer Dress</name>
+    <name>پیراهن طرح دار تابستانه</name>
     <available_now>In stock</available_now>
     <available_later/>
   </product>
   <product id="Printed_Chiffon_Dress" id_shop="1">
-    <description>&lt;p&gt;Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which has since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Printed chiffon knee length dress with tank straps. Deep v-neckline.&lt;/p&gt;</description_short>
+      <description>&lt;p&gt;مُد اصطلاح کلی در حیطه هنر طراحی پوشاک است که تحت تاثیر اوضاع فرهنگی و اجتماعی جامعه در یک دوره زمانی مشخص انجام می‌پذیرد. برای تعریف مد (انگلیسی: Fashion) دو تعریف دیگر نیز ارائه شده است: "شیوه رفتاری که به طور موقت توسط بخش مشخصی از اعضاء یک گروه اجتماعی اتخاذ می شود، به این دلیل که آن رفتار انتخابی را از نظر اجتماعی برای آن زمان و موقعیت مناسب تشخیص می دهند. مد نوع لباسی است که اخیراً پذیرفته شده است. مد در یک زبان و قابل فهم درک خواص ظاهری لباس و شناخت موقعیت اجتماع نسبت به پوشش افراد است.&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;پیراهن طرح دار روی زانو.&lt;/p&gt;</description_short>
     <link_rewrite>printed-chiffon-dress</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Printed Chiffon Dress</name>
+    <name>پیراهن طرح دار ابریشمی</name>
     <available_now>In stock</available_now>
     <available_later/>
   </product>
