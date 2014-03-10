@@ -57,21 +57,6 @@ class AdminMarketingControllerCore extends AdminController
 	
 	public function renderView()
 	{
-		// Load cache file modules list (natives and partners modules)
-		$xmlModules = false;
-		if (file_exists(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST))
-			$xmlModules = @simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST);
-		if ($xmlModules)
-			foreach ($xmlModules->children() as $xmlModule)
-				foreach ($xmlModule->children() as $module)
-					foreach ($module->attributes() as $key => $value)
-					{
-						if ($xmlModule->attributes() == 'native' && $key == 'name')
-							$this->list_natives_modules[] = (string)$value;
-						if ($xmlModule->attributes() == 'partner' && $key == 'name')
-							$this->list_partners_modules[] = (string)$value;
-					}
-
 		$this->tpl_view_vars = array(
 			'modules_list' => $this->renderModulesList(),
 		);
