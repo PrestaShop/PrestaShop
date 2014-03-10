@@ -1,5 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=Ubuntu+Condensed);
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+@import url(//fonts.googleapis.com/css?family=Ubuntu+Condensed);
+@import url(//fonts.googleapis.com/css?family=Open+Sans:300,400,700);
 /* This is a fairly big mixin. The reason for this is that at the time of writing (09/01/2013), Sass does not include functions for substring or find/replace in string. Chris Eppstein sent a Pull Request to Sass with the str-extract (substring) function back in June, but it still has not been merged, due to lack of minor comments. That was five months ago. */
 @-webkit-keyframes fadeIn { 0% { opacity: 0; }
   100% { opacity: 1; } }
