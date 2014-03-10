@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <entity_order_return_state>
   <order_return_state id="Waiting_for_confirmation">
-    <name>Waiting for confirmation</name>
+    <name>منتظر تاييد</name>
   </order_return_state>
   <order_return_state id="Waiting_for_package">
-    <name>Waiting for package</name>
+    <name>منتظر بسته بندي</name>
   </order_return_state>
   <order_return_state id="Package_received">
-    <name>Package received</name>
+    <name>بسته دريافت شده</name>
   </order_return_state>
   <order_return_state id="Return_denied">
-    <name>Return denied</name>
+    <name>بازگشت ناموفق</name>
   </order_return_state>
   <order_return_state id="Return_completed">
-    <name>Return completed</name>
+    <name>بازگشت موفقيت آميز </name>
   </order_return_state>
 </entity_order_return_state>

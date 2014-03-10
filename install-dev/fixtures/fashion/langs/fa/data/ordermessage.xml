@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <list_ordermessage>
 	<ordermessage id="delay">
-		<name><![CDATA[Delay]]></name>
-		<message><![CDATA[Hi,Unfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.Please accept our apologies and rest assured that we are working hard to rectify this.Best regards,]]></message>
+		<name><![CDATA[تحویل]]></name>
+		<message><![CDATA[درود,
+
+متأسفانه، یکی از موارد سفارش شما در انبار موجود نیست. این ممکن است باعث یک تأخیر کوتاه در تحویل شود.
+لطفاً عذرخواهی ما را پذیرا باشید و مطمئن باشید برای رفع آن سخت تلاش خواهیم کرد.
+
+پیروز باشید,]]></message>
 	</ordermessage>
 </list_ordermessage>
