@@ -3431,8 +3431,9 @@ class AdminControllerCore extends Controller
 		$link_reset_module = $link_admin_modules.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab;
 
 		$is_reset_ready = false;
-		if (method_exists(Module::getInstanceByName($module->name), 'reset'))
-			$is_reset_ready = true;
+		if (Validate::isModuleName($module->name))
+			if (method_exists(Module::getInstanceByName($module->name), 'reset'))
+				$is_reset_ready = true;
 
 		$reset_module = array(
 			'href' => $link_reset_module,
