@@ -510,7 +510,11 @@ class ProductCore extends ObjectModel
 			return false;
 			
 		if ($this->getType() == Product::PTYPE_VIRTUAL)
+		{
 			StockAvailable::setProductOutOfStock((int)$this->id, 1);
+			if ($this->active && !Configuration::get('PS_VIRTUAL_PROD_FEATURE_ACTIVE'))
+				Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
+		}
 		else
 			StockAvailable::setProductOutOfStock((int)$this->id, 2);
 
@@ -524,6 +528,10 @@ class ProductCore extends ObjectModel
 		$return = parent::update($null_values);
 		$this->setGroupReduction();
 		Hook::exec('actionProductSave', array('id_product' => $this->id));
+
+		if ($this->getType() == Product::PTYPE_VIRTUAL && $this->active && !Configuration::get('PS_VIRTUAL_PROD_FEATURE_ACTIVE'))
+			Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
+
 		return $return;
 	}
 

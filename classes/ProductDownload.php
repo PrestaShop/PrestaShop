@@ -100,14 +100,7 @@ class ProductDownloadCore extends ObjectModel
 
 	public function add($autodate = true, $null_values = false)
 	{
-		if (parent::add($autodate, $null_values))
-		{
-			// Set cache of feature detachable to true
-			if ($this->active)
-				Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
-			return true;
-		}
-		return false;
+		return (bool)parent::add($autodate, $null_values);
 	}
 
 	public function update($null_values = false)
