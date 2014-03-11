@@ -29,32 +29,32 @@
 		<img class="img-thumbnail" alt="{$module->name}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}">
 	</td>
 	<td>
-		<div id="anchor{$module->name|ucfirst}">
-			<span>
-				{$module->displayName|truncate:40:'…'} {$module->version}
-				{if isset($module->type) && $module->type == 'addonsPartner'}
-					- <a href="#" class="module-badge-partner help-tooltip text-warning" data-title="{l s="This module is available for free thanks to our partner."}"><i class="icon-pushpin"></i> <small>{l s="Partner"}</small></a>
+		<div id="anchor{$module->name|ucfirst}" title="{$module->displayName}">
+			<div class="module_name">
+				<span style="display:none">{$module->name}</span>
+				{$module->displayName}
+				<small class="text-muted">v{$module->version} - by {$module->author}</small>
+				{if isset($module->type) && $module->type == 'addonsMustHave'}
+					- <span class="module-badge-popular help-tooltip text-primary" data-title="{l s="This module is available on PrestaShop Addons"}"><i class="icon-group"></i> <small>{l s="Popular"}</small></span>
+				{elseif isset($module->type) && $module->type == 'addonsPartner'}
+					- <span class="module-badge-partner help-tooltip text-warning" data-title="{l s="This module is available for free thanks to our partner."}"><i class="icon-pushpin"></i> <small>{l s="Partner"}</small></span>
+				{elseif isset($module->id) && $module->id gt 0}
+					{if isset($module->version_addons) && $module->version_addons}
+						<span class="label label-warning">{l s='Need update'}</span>
+					{/if}
 				{/if}
-				{*if isset($module->id) && $module->id gt 0 }
-					{if $module->active}
-						<span class="label label-success">{l s='Enabled'}</span>
-					{else}
-						<span class="label label-warning">{l s='Disabled'}</span>
-					{/if}
-				{else}
-					{if isset($module->type) && $module->type == 'addonsMustHave'}
-						<span class="label label-danger">{l s='Must Have'}</span>
-					{else}
-						<span class="label label-warning">{l s='Not installed'}</span>
-					{/if}
-				{/if*}
-			</span>
-			{if isset($module->description) && $module->description ne ''}
-			<p class="text-muted">
-				{$module->description|truncate:100:'…'}
+			</div>
+			<p class="module_description">
+				{if isset($module->description) && $module->description ne ''}
+					{$module->description}
+				{/if}
+				{if isset($module->show_quick_view) &&  $module->show_quick_view}
+					<br><a href="{$currentIndex}&token={$token}&ajax=1&action=GetModuleQuickView&module={$module->name}" class="fancybox-quick-view"><i class="icon-search"></i> {l s='Read more'}</a>
+				{/if}
 			</p>
-			{/if}
+			{if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>{$module->message}</div>{/if}
 		</div>
+
 	</td>
 	{if isset($module->type) && $module->type == 'addonsMustHave'}
 		<td>&nbsp;</td>

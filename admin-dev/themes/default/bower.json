@@ -1,9 +1,9 @@
 {
-  "name": "admin-theme",
-  "version": "0.0.0",
+  "name": "prestashop-admin",
+  "version": "1.6.0",
   "dependencies": {
-    "font-awesome": "~4.0.0",
-    "bootstrap-sass": "~3.0.0",
+    "font-awesome": "4.0.3",
+    "bootstrap-sass-official": "3.1.1",
     "enquire": "2.1.0"
   },
   "devDependencies": {}

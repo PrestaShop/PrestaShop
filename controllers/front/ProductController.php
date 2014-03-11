@@ -392,6 +392,7 @@ class ProductControllerCore extends FrontController
 			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 			'largeSize' => Image::getSize(ImageType::getFormatedName('large')),
 			'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
+			'cartSize' => Image::getSize(ImageType::getFormatedName('cart')),
 			'col_img_dir' => _PS_COL_IMG_DIR_));
 		if (count($product_images))
 			$this->context->smarty->assign('images', $product_images);

@@ -40,7 +40,7 @@
 					{/if}
 					{if $hItem.html}
 						<div class="item-html">
-							{$hItem.html|escape:'UTF-8'} <i class="icon-double-angle-right"></i>
+							{$hItem.html|escape:'htmlall':'UTF-8'} <i class="icon-double-angle-right"></i>
 						</div>
 					{/if}
 				{if $hItem.url}

@@ -1,5 +1,6 @@
 .page-head
 	width: 100%
+	min-width: 450px
 	height: 55px
 	padding: 0 0 0 0
 	margin: 0
@@ -28,7 +29,48 @@
 		color: white
 		text-decoration: none
 	.toolbarBox
-
+		position: absolute
+		right: 0
+		background-color: transparent!important
+		@media (max-width: $screen-sm)
+			background-color: $secondary-color
+		#toolbar-nav
+			border: none
+			background-color: $secondary-color
+		.btn-toolbar
+			margin: 0
+			padding: 3px 0 0 0
+			> ul.nav
+			.toolbar_btn
+				height: 46px
+				position: relative
+				padding: 2px 5px !important
+				margin: 0 3px 2px 0
+				font-size: 12px
+				line-height: 8px
+				color: white
+				background-color: $secondary-color
+				text-align: center
+				text-shadow: none
+				text-align: center
+				white-space: nowrap
+				overflow: hidden
+				text-overflow: ellipsis
+				@media (max-width: $screen-desktop)
+					width: 46px
+					border: solid 1px darken($secondary-color,15%)
+					font-size: 11px
+				&:hover
+					color: $secondary-color
+					border-color: white
+					background-color: white!important
+			.dropdown-toolbar
+				float: right
+				display: none
+				background-color: $secondary-color
+				@include border-radius(3px)
+				@media (max-width: $screen-sm)
+					display: block
 	ul.page-breadcrumb
 		position: absolute
 		list-style: none
@@ -65,37 +107,7 @@
 				color: rgba(white,0.6)
 				&:hover
 					color: white
-	.btn-toolbar
-		margin: 0
-		padding: 0
-		> ul.nav
-			position: relative
-			top: 3px
 
-
-.toolbar_btn
-	height: 46px
-	position: relative
-	padding: 2px 5px !important
-	margin-right: 3px
-	font-size: 12px
-	color: white
-	background-color: $secondary-color
-	text-align: center
-	text-shadow: none
-	text-align: center
-	white-space: nowrap
-	overflow: hidden
-	text-overflow: ellipsis
-	@media (max-width: $screen-desktop)
-		width: 46px
-		border: solid 1px darken($secondary-color,15%)
-		font-size: 11px
-	&:hover
-		color: $secondary-color
-		border-color: white
-		background-color: white!important
-		
 .page-header-toolbar-back
 	border: none!important
 	display: inline-block

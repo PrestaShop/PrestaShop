@@ -3,11 +3,22 @@
 ********************************************************************/
 #header .shopping_cart {
   position: relative;
-  float: right; }
+  float: right;
+  padding-top: 50px; }
+  #header .shopping_cart > a:first-child:after {
+    content: "\f0d7";
+    font-family: "FontAwesome";
+    display: inline-block;
+    float: right;
+    font-size: 18px;
+    color: #686666;
+    padding: 6px 0 0 0; }
+  #header .shopping_cart > a:first-child:hover:after {
+    content: "\f0d8";
+    padding: 4px 0px 2px 0px; }
 
 .shopping_cart {
-  width: 270px;
-  padding-top: 50px; }
+  width: 270px; }
   @media (max-width: 480px) {
     .shopping_cart {
       padding-top: 20px; } }
@@ -39,16 +50,19 @@
       line-height: 23px;
       color: white;
       padding-right: 15px; }
-    .shopping_cart > a:first-child:after {
-      content: "\f0d7";
-      font-family: "FontAwesome";
-      display: inline-block;
-      float: right;
-      font-size: 18px;
-      color: #686666;
-      padding: 6px 0 0 0; }
   .shopping_cart .ajax_cart_total {
     display: none !important; }
+  .shopping_cart .block_cart_expand:after, .shopping_cart .block_cart_collapse:after {
+    content: "\f0d7";
+    font-family: "FontAwesome";
+    display: inline-block;
+    float: right;
+    font-size: 18px;
+    color: #686666;
+    padding: 6px 0 0 0; }
+  .shopping_cart .block_cart_collapse:after {
+    content: "\f0d8";
+    padding: 4px 0px 2px 0px; }
 
 .cart_block .cart_block_list .remove_link {
   position: absolute;
@@ -125,17 +139,22 @@
   margin: 0;
   background: #f6f6f6; }
   .cart_block .cart-buttons a {
+    width: 100%;
     float: left;
+    text-align: center;
     margin-bottom: 10px;
     margin-right: 10px; }
     .cart_block .cart-buttons a#button_order_cart {
       margin-right: 0;
-      background: #43b155;
-      border-color: #399b49 #369946 #208931 #369946; }
+      border: none; }
       .cart_block .cart-buttons a#button_order_cart span {
-        border-color: #73ca77; }
-      .cart_block .cart-buttons a#button_order_cart:hover {
-        background: #76cb84;
+        padding: 7px 0;
+        font-size: 1.1em;
+        border: solid 1px #63c473;
+        background: #43b155; }
+      .cart_block .cart-buttons a#button_order_cart:hover span {
+        border: solid 1px #358c43;
+        background: #2e7a3a;
         color: white; }
 
 /*******************************************************************
