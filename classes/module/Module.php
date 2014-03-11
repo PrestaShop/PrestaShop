@@ -478,6 +478,7 @@ abstract class ModuleCore
 	 * @param $module_version
 	 * @return bool
 	 */
+	public static function needUpgrade($module)
 	{
 		self::$modules_cache[$module->name]['upgrade']['upgraded_from'] = $module->database_version;
 		// Check the version of the module with the registered one and look if any upgrade file exist
