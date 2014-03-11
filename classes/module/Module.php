@@ -174,7 +174,7 @@ abstract class ModuleCore
 			$this->ps_versions_compliancy['min'] .= '.0.0';
 		
 		if (strlen($this->ps_versions_compliancy['max']) == 3)
-			$this->ps_versions_compliancy['min'] .= '.999.999';
+			$this->ps_versions_compliancy['max'] .= '.999.999';
 		
 		// Load context and smarty
 		$this->context = $context ? $context : Context::getContext();				
@@ -478,7 +478,6 @@ abstract class ModuleCore
 	 * @param $module_version
 	 * @return bool
 	 */
-	public static function needUpgrade($module)
 	{
 		self::$modules_cache[$module->name]['upgrade']['upgraded_from'] = $module->database_version;
 		// Check the version of the module with the registered one and look if any upgrade file exist
