@@ -4458,6 +4458,7 @@ class AdminProductsControllerCore extends AdminController
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined id product attribute'))));
 
 				StockAvailable::setQuantity($product->id, (int)Tools::getValue('id_product_attribute'), (int)Tools::getValue('value'));
+				Hook::exec('actionProductUpdate', array('product' => $this->object));
 				break;
 			case 'advanced_stock_management' :
 				if (Tools::getValue('value') === false)
