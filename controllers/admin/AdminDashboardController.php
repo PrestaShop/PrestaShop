@@ -68,8 +68,7 @@ class AdminDashboardControllerCore extends AdminController
 		$forms = array(
 			'payment' => array('title' => $this->l('Average bank fees per payment method'), 'id' => 'payment'),
 			'carriers' => array('title' => $this->l('Average shipping fees per shipping method'), 'id' => 'carriers'),
-			'other' => array('title' => $this->l('Other settings'), 'id' => 'other'),
-			'expenses' => array('title' => $this->l('Other expenses (monthly)'), 'id' => 'expenses')
+			'other' => array('title' => $this->l('Other settings'), 'id' => 'other')
 		);
 		foreach ($forms as &$form)
 		{
@@ -170,25 +169,6 @@ class AdminDashboardControllerCore extends AdminController
 			'defaultValue' => '0',
 			'suffix' => $currency->iso_code
 		);
-
-		$expense_types = array(
-			'hosting' => $this->l('Hosting'),
-			'tools' => $this->l('Tools (E-mailing, etc.)'),
-			'acounting' => $this->l('Accounting'),
-			'development' => $this->l('Development'),
-			'marketing' => $this->l('Marketing (Adwords, etc.)'),
-			'others' => $this->l('Others')
-		);
-
-		foreach ($expense_types as $expense_type => $expense_label)
-			$forms['expenses']['fields']['CONF_MONTHLY_'.strtoupper($expense_type)] = array(
-				'title' => $expense_label,
-				'validation' => 'isPrice',
-				'cast' => 'floatval',
-				'type' => 'text',
-				'defaultValue' => '0',
-				'suffix' => $currency->iso_code
-			);
 
 		return $forms;
 	}

@@ -461,36 +461,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 	
 	public static function getExpenses($date_from, $date_to, $granularity = false)
 	{
-		if ($granularity == 'day')
-		{
-			$expenses = array();
-			$from = strtotime($date_from.' 00:00:00');
-			$to = strtotime($date_to.' 23:59:59');
-			for ($date = $from; $date <= $to; $date = strtotime('+1 day', $date))
-			{
-				$expenses[$date] =
-					Configuration::get('CONF_MONTHLY_ACOUNTING')
-					+ Configuration::get('CONF_MONTHLY_DEVELOPMENT')
-					+ Configuration::get('CONF_MONTHLY_HOSTING')
-					+ Configuration::get('CONF_MONTHLY_MARKETING')
-					+ Configuration::get('CONF_MONTHLY_OTHERS')
-					+ Configuration::get('CONF_MONTHLY_TOOLS');
-				$expenses[$date] /= date('t', $date);
-			}
-		}
-		else
-		{
-			$secs_per_month = 30.4375 * 86400;
-			$total_secs = (strtotime($date_to) - min(strtotime($date_from), time())) / 86400;
-			$expenses =
-				Configuration::get('CONF_MONTHLY_ACOUNTING')
-				+ Configuration::get('CONF_MONTHLY_DEVELOPMENT')
-				+ Configuration::get('CONF_MONTHLY_HOSTING')
-				+ Configuration::get('CONF_MONTHLY_MARKETING')
-				+ Configuration::get('CONF_MONTHLY_OTHERS')
-				+ Configuration::get('CONF_MONTHLY_TOOLS');
-			$expenses *= $total_secs / $secs_per_month;
-		}
+		$expenses = 0;
 
 		$orders = Db::getInstance()->ExecuteS('
 		SELECT
