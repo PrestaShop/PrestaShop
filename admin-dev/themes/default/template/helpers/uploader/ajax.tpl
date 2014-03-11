@@ -57,7 +57,7 @@
 {else}
 <div class="form-group">
 	<div class="col-lg-12">
-		<input id="{$id}" type="file" name="{$name}[]"{if isset($url)} data-url="{$url}"{/if}{if isset($multiple) && $multiple} multiple="multiple"{/if} style="opacity:0;width:0px;height:0px;" />
+		<input id="{$id}" type="file" name="{$name}[]"{if isset($url)} data-url="{$url}"{/if}{if isset($multiple) && $multiple} multiple="multiple"{/if} style="width:0px;height:0px;" />
 		<button class="btn btn-default" data-style="expand-right" data-size="s" type="button" id="{$id}-add-button">
 			<i class="icon-folder-open"></i> {if isset($multiple) && $multiple}{l s='Add files...'}{else}{l s='Add file...'}{/if}
 		</button>
