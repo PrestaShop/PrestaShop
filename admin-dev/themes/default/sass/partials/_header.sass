@@ -5,10 +5,14 @@
 	@extend .navbar-inverse
 	@extend .navbar-fixed-top
 	height: 36px !important
+	min-width: 450px
+	.navbar-header
+		width: 100%
 #header_shopname
 	@extend .navbar-brand
+	font-size: 1.3em!important
 	position: relative
-	margin: 0 15px 0 0
+	margin: 0 5px 0 0
 	height: 36px
 	padding-left: 45px !important
 	img
@@ -77,7 +81,19 @@
 	@extend .nav
 	@extend .navbar-nav
 	@extend .navbar-right
-	@extend .hidden-xs
+	margin: 0 !important
+	@media (max-width: $screen-sm)
+		float: right
+		> li
+			display: inline-block
+			float: left
+	span.string-long
+		@media (max-width: $screen-sm)
+			display: none
+	span.string-short
+		display: none
+		@media (max-width: $screen-sm)
+			display: inline-block
 	a img
 		margin-right: 5px
 	#header_foaccess i
@@ -96,6 +112,20 @@
 #employee_links
 	i
 		font-size: $icon-size-base
+	@media (max-width: $screen-sm)
+		position: fixed!important
+		top: 36px!important
+		left: 0!important
+		width: 100%!important
+		height: 100%!important
+		background-color: #383F50!important
+		li
+			color: white
+			font-size: 1.2em
+			text-transform: uppercase
+			i
+				font-size: 1.3em
+				color: $brand-primary
 
 #header_quick
 	@extend .nav
@@ -116,6 +146,4 @@
 		font-size: 20px
 		color: rgba(white,.6)
 		line-height: 35px
-
-
 

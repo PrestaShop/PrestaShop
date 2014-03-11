@@ -412,14 +412,17 @@ class DispatcherCore
 		$modules_routes = Hook::exec('moduleRoutes', array('id_shop' => $id_shop), null, true, false);
 		if (is_array($modules_routes) && count($modules_routes))
 			foreach($modules_routes as $module_route)
-				foreach($module_route as $route => $route_details)
-					if (array_key_exists('controller', $route_details) && array_key_exists('rule', $route_details) 
-						&& array_key_exists('keywords', $route_details) && array_key_exists('params', $route_details))
-					{
-						if (!isset($this->default_routes[$route]))
-						$this->default_routes[$route] = array();
-						$this->default_routes[$route] = array_merge($this->default_routes[$route], $route_details);
-					}
+			{
+				if (is_array($module_route) && count($module_route))
+					foreach($module_route as $route => $route_details)
+						if (array_key_exists('controller', $route_details) && array_key_exists('rule', $route_details) 
+							&& array_key_exists('keywords', $route_details) && array_key_exists('params', $route_details))
+						{
+							if (!isset($this->default_routes[$route]))
+							$this->default_routes[$route] = array();
+							$this->default_routes[$route] = array_merge($this->default_routes[$route], $route_details);
+						}
+			}
 		
 		if (!in_array($context->language->id, $languages = Language::getLanguages()))
 			$languages[] = (int)$context->language->id;

@@ -56,7 +56,7 @@
 									</li>
 								</ul>
 							</div>
-							<a href="javascript:void(0);" class="clear_search hide"><i class="icon-remove"></i></a>
+							<a href="#" class="clear_search hide"><i class="icon-remove"></i></a>
 							<input id="bo_query" name="bo_query" type="text" class="form-control" value="{$bo_query}" placeholder="{l s='Search'}" />
 <!--  							<span class="input-group-btn">
 								<button type="submit" id="bo_search_submit" class="btn btn-primary">
@@ -67,17 +67,6 @@
 					</div>
 
 					<script>
-						$('#bo_query').on('blur', function(){ $('#header_search .form-group').removeClass('focus-search'); });
-						$('#header_search *').on('focus', function(){ $('#header_search .form-group').addClass('focus-search'); });
-						$('#header_search_options').on('click','li a', function(e){
-							e.preventDefault();
-							$('#header_search_options .search-option').removeClass('active');
-							$(this).closest('li').addClass('active');
-							$('#bo_search_type').val($(this).data('value'));
-							$('#search_type_icon').removeAttr("class").addClass($(this).data('icon'));
-							$('#bo_query').attr("placeholder",$(this).data('placeholder'));
-							$('#bo_query').focus();
-						});
 						{if isset($search_type) && $search_type}
 							$(document).ready(function() {
 								$('.search-option a[data-value='+{$search_type|intval}+']').click();

@@ -88,6 +88,7 @@ class ThemeConfigurator extends Module
 			!$this->registerHook('displayHome') ||
 			!$this->registerHook('displayFooter') ||
 			!$this->registerHook('displayBackOfficeHeader') ||
+			!$this->registerHook('actionObjectLanguageAddAfter') ||
 			!Configuration::updateValue('PS_TC_THEMES', serialize($themes_colors)) ||
 			!Configuration::updateValue('PS_TC_FONTS', serialize($themes_fonts)) ||
 			!Configuration::updateValue('PS_TC_THEME', '') ||
@@ -125,65 +126,53 @@ class ThemeConfigurator extends Module
 
 	}
 
-	public function installFixtures()
+	protected function installFixture($hook, $id_image, $id_shop, $id_lang)
 	{
 		$result = true;
 
-		for ($i = 1; $i < 6; $i++)
-		{
-			$sizes = @getimagesize((dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'banner-img'.(int)$i.'.jpg'));
-			$width = (isset($sizes[0]) && $sizes[0])? (int)$sizes[0] : 0;
-			$height = (isset($sizes[1]) && $sizes[1])? (int)$sizes[1] : 0;
+		$sizes = @getimagesize((dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'banner-img'.(int)$id_image.'.jpg'));
+		$width = (isset($sizes[0]) && $sizes[0])? (int)$sizes[0] : 0;
+		$height = (isset($sizes[1]) && $sizes[1])? (int)$sizes[1] : 0;
 
-			$result &= Db::getInstance()->Execute('
-				INSERT INTO `'._DB_PREFIX_.'themeconfigurator` ( 
-						`id_shop`, `id_lang`, `item_order`, `title`, `title_use`, `hook`, `url`, `target`, `image`, `image_w`, `image_h`, `html`, `active`
-				) VALUES ( 
-					\''.(int)$this->context->shop->id.'\',
-					\''.(int)$this->context->language->id.'\',
-					\''.(int)$i.'\',
-					\'\',
-					\'0\',
-					\'home\',
-					\'http://www.prestashop.com/\',
-					\'0\',
-					\'banner-img'.(int)$i.'.jpg\',
-					'.$width.',
-					'.$height.',
-					\'\',
-					1)
-				');
-		}
-
-		for ($i = 6; $i < 8; $i++)
-		{
-			$sizes = @getimagesize((dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'banner-img'.(int)$i.'.jpg'));
-			$width = (isset($sizes[0]) && $sizes[0]) ? (int)$sizes[0] : 0;
-			$height = (isset($sizes[1]) && $sizes[1]) ? (int)$sizes[1] : 0;
-
-			$result &= Db::getInstance()->Execute('
-				INSERT INTO `'._DB_PREFIX_.'themeconfigurator` ( 
-						`id_shop`, `id_lang`, `item_order`, `title`, `title_use`, `hook`, `url`, `target`, `image`, `image_w`, `image_h`, `html`, `active`
-				) VALUES ( 
-					\''.(int)$this->context->shop->id.'\',
-					\''.(int)$this->context->language->id.'\',
-					\''.(int)$i.'\',
-					\'\',
-					\'0\',
-					\'top\',
-					\'http://www.prestashop.com/\',
-					\'0\',
-					\'banner-img'.(int)$i.'.jpg\',
-					'.$width.',
-					'.$height.',
-					\'\',
-					1)
-				');
-		}
+		$result &= Db::getInstance()->Execute('
+			INSERT INTO `'._DB_PREFIX_.'themeconfigurator` ( 
+					`id_shop`, `id_lang`, `item_order`, `title`, `title_use`, `hook`, `url`, `target`, `image`, `image_w`, `image_h`, `html`, `active`
+			) VALUES ( 
+				\''.(int)$id_shop.'\',
+				\''.(int)$id_lang.'\',
+				\''.(int)$id_image.'\',
+				\'\',
+				\'0\',
+				\''.pSQL($hook).'\',
+				\'http://www.prestashop.com/\',
+				\'0\',
+				\'banner-img'.(int)$id_image.'.jpg\',
+				'.$width.',
+				'.$height.',
+				\'\',
+				1)
+			');
 
 		return $result;
 	}
 
+	public function installFixtures($id_lang = null)
+	{
+		$result = true;
+
+		if ($id_lang === null)
+			$id_lang = $this->context->language->id;
+
+		for ($i = 1; $i < 6; $i++)
+			$result &= $this->installFixture('home', $i, $this->context->shop->id, $id_lang);
+
+		for ($i = 6; $i < 8; $i++)
+			$result &= $this->installFixture('top', $i, $this->context->shop->id, $id_lang);
+
+		return $result;
+	}
+	
+	
 	public function uninstall()
 	{
 		$images = Db::getInstance()->executeS('SELECT image FROM `'._DB_PREFIX_.'themeconfigurator`');
@@ -230,6 +219,11 @@ class ThemeConfigurator extends Module
 			if (Configuration::get('PS_TC_FONT') != '')
 				$this->context->controller->addCss($this->_path.'css/'.Configuration::get('PS_TC_FONT').'.css', 'all');
 		}
+	}
+	
+	public function hookActionObjectLanguageAddAfter($params)
+	{
+		return $this->installFixtures((int)$params['object']->id);
 	}
 
 	public function hookdisplayTopColumn()
@@ -302,7 +296,7 @@ class ThemeConfigurator extends Module
 				'theme_font' => Tools::getValue('theme_font', Configuration::get('PS_TC_FONT')),
 				'live_configurator_token' => $this->getLiveConfiguratorToken(),
 				'id_shop' => (int)$this->context->shop->id,
-				'id_employee' => isset($this->context->employee) ? (int)$this->context->employee->id :
+				'id_employee' => is_object($this->context->employee) ? (int)$this->context->employee->id :
 					Tools::getValue('id_employee'),
 				'advertisement_image' => $ad_image,
 				'advertisement_url' => 'http://addons.prestashop.com/en/205-premium-templates?utm_source=backoffice_configurator',
@@ -745,13 +739,14 @@ class ThemeConfigurator extends Module
 				'name' => 'live_conf',
 				'value' => (int)Tools::getValue('PS_TC_ACTIVE', Configuration::get('PS_TC_ACTIVE')),
 				'hint' => $this->l('The customization tool allows you to make color and font changes in your theme.'),
-				'desc' => sprintf($this->l('Only you can see this %s - your visitors will not see this tool.'), '<a href="'.$this->context->link->getPageLink('index')
+				'desc' => sprintf($this->l('Only you can see this %s - your visitors will not see this tool.'), $this->context->shop->getBaseURL() ? '<a href="'.$this->context->shop->getBaseURL()
+						.((Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1) ? Language::getIsoById($this->context->employee->id_lang).'/' : '')
 						.'?live_configurator_token='.$this->getLiveConfiguratorToken()
 						.'&id_employee='.(int)$this->context->employee->id
 						.'&id_shop='.(int)$this->context->shop->id
 						.(Configuration::get('PS_TC_THEME') != '' ? '&theme='.Configuration::get('PS_TC_THEME') : '')
 						.(Configuration::get('PS_TC_FONT') != '' ? '&theme_font='.Configuration::get('PS_TC_FONT') : '')
-						.'" onclick="return !window.open($(this).attr(\'href\'));">on your front office</a>')
+						.'" onclick="return !window.open($(this).attr(\'href\'));">on your front office</a>' : 'on your front office')
 			)
 		);
 	}
@@ -768,6 +763,7 @@ class ThemeConfigurator extends Module
 	public function getLiveConfiguratorToken()
 	{
 		return Tools::getAdminToken($this->name.(int)Tab::getIdFromClassName($this->name)
-			.(isset($this->context->employee) ? (int)$this->context->employee->id : Tools::getValue('id_employee')));
+			.(is_object(Context::getContext()->employee) ? (int)Context::getContext()->employee->id :
+				Tools::getValue('id_employee')));
 	}
 }

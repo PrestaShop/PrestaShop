@@ -174,7 +174,7 @@ abstract class ModuleCore
 			$this->ps_versions_compliancy['min'] .= '.0.0';
 		
 		if (strlen($this->ps_versions_compliancy['max']) == 3)
-			$this->ps_versions_compliancy['min'] .= '.999.999';
+			$this->ps_versions_compliancy['max'] .= '.999.999';
 		
 		// Load context and smarty
 		$this->context = $context ? $context : Context::getContext();				

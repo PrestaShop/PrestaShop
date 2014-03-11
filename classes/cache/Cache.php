@@ -255,8 +255,13 @@ abstract class CacheCore
 
 	protected function getTables($string)
 	{
-		if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.'[a-z_-]+)`?(?:,\s{0,}`?('._DB_PREFIX_.'[a-z_-]+)`?)?\s.*/Umsi', $string, $res))
-			return array_merge($res[1], $res[2]);
+		if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.'[0-9a-z_-]+)(?:`?\s{0,},\s{0,}`?('._DB_PREFIX_.'[0-9a-z_-]+)`?)?(?:`|\s+|\Z)(?!\s*,)/Umsi', $string, $res))
+		{
+			foreach ($res[2] as $table)
+				if ($table != '')
+					$res[1][] = $table;
+			return array_unique($res[1]);
+		}
 		else
 			return false;
 	}

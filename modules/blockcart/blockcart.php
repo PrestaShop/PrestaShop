@@ -236,6 +236,12 @@ class BlockCart extends Module
 		return $this->hookRightColumn($params);
 	}
 	
+	public function hookDisplayNav($params)
+	{
+		$params['blockcart_top'] = true;
+		return $this->hookTop($params);
+	}
+	
 	public function renderForm()
 	{
 		$fields_form = array(

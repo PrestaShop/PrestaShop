@@ -44,21 +44,16 @@
 				{/if}
 			</span>
 			<span class="ajax_cart_no_product{if $cart_qties > 0} unvisible{/if}">{l s='(empty)' mod='blockcart'}</span>
+			{if $ajax_allowed && isset($blockcart_top) && !$blockcart_top}
+				<span class="block_cart_expand{if !isset($colapseExpandStatus) || (isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded')} unvisible{/if}">&nbsp;</span>
+				<span class="block_cart_collapse{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'collapsed'} unvisible{/if}">&nbsp;</span>
+			{/if}
 		</a>
 		{if !$PS_CATALOG_MODE}
 			<div class="cart_block block exclusive">
-				{*<p class="title_block">
-					<a href="{$link->getPageLink("$order_process", true)|escape:'html':'UTF-8'}" title="{l s='View my shopping cart' mod='blockcart'}" rel="nofollow">
-						{l s='Cart' mod='blockcart'}
-						{if $ajax_allowed}
-							<span class="block_cart_expand"{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded' || !isset($colapseExpandStatus)} class="unvisible"{/if}>&nbsp;</span>
-							<span class="block_cart_collapse"{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'collapsed'} class="unvisible"{/if}>&nbsp;</span>
-						{/if}
-					</a>
-				</p>*}
 				<div class="block_content">
 					<!-- block list of products -->
-					<div class="cart_block_list{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded' || !$ajax_allowed || !isset($colapseExpandStatus)} expanded{else} collapsed{/if}">
+					<div class="cart_block_list{if isset($blockcart_top) && !$blockcart_top}{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded' || !$ajax_allowed || !isset($colapseExpandStatus)} expanded{else} collapsed unvisible{/if}{/if}">
 						{if $products}
 							<dl class="products">
 								{foreach from=$products item='product' name='myLoop'}
@@ -180,26 +175,18 @@
 								<span class="price cart_block_total ajax_block_cart_total">{$total}</span>
 								<span>{l s='Total' mod='blockcart'}</span>
 							</div>
-						</div>
-						{if $use_taxes && $display_tax_label == 1 && $show_tax}
-							{if $priceDisplay == 0}
+							{if $use_taxes && $display_tax_label == 1 && $show_tax}
 								<p>
+								{if $priceDisplay == 0}
 									{l s='Prices are tax included' mod='blockcart'}
-								</p>
-							{/if}
-							{if $priceDisplay == 1}
-								<p>
+								{elseif $priceDisplay == 1}
 									{l s='Prices are tax excluded' mod='blockcart'}
+								{/if}
 								</p>
 							{/if}
-						{/if}
+						</div>
 						<p class="cart-buttons">
-							<a 
-							id="button_order_cart" 
-							class="btn btn-default button button-small" 
-							href='{$link->getPageLink("$order_process", true)|escape:"html":"UTF-8"}' 
-							title="{l s='Check out' mod='blockcart'}" 
-							rel="nofollow">
+							<a id="button_order_cart" class="btn btn-default button button-small" href="{$link->getPageLink("$order_process", true)|escape:"html":"UTF-8"}" title="{l s='Check out' mod='blockcart'}" rel="nofollow">
 								<span>
 									{l s='Check out' mod='blockcart'}<i class="icon-chevron-right right"></i>
 								</span>
@@ -327,11 +314,7 @@
 							<i class="icon-chevron-left left"></i>{l s='Continue shopping' mod='blockcart'}
 						</span>
 					</span>
-					<a 
-					class="btn btn-default button button-medium" 
-					href='{$link->getPageLink("$order_process", true)|escape:"html":"UTF-8"}' 
-					title="{l s='Proceed to checkout' mod='blockcart'}" 
-					rel="nofollow">
+					<a class="btn btn-default button button-medium"	href="{$link->getPageLink("$order_process", true)|escape:"html":"UTF-8"}" title="{l s='Proceed to checkout' mod='blockcart'}" rel="nofollow">
 						<span>
 							{l s='Proceed to checkout' mod='blockcart'}<i class="icon-chevron-right right"></i>
 						</span>

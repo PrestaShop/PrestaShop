@@ -88,8 +88,9 @@
 
 		{block name=toolbarBox}
 		<div class="page-bar toolbarBox">
-			<div class="btn-toolbar">				
-				<ul class="nav nav-pills pull-right">
+			<div class="btn-toolbar">
+				<a href="#" class="toolbar_btn dropdown-toolbar" class="navbar-toggle" data-toggle="collapse" data-target="#toolbar-nav"><i class="process-icon-dropdown"></i><span>{l s='Menu'}</span></a>
+				<ul id="toolbar-nav" class="nav nav-pills pull-right collapse navbar-collapse">
 					{foreach from=$toolbar_btn item=btn key=k}
 					{if $k != 'back' && $k != 'modules-list'}
 					<li>

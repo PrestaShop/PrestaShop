@@ -98,9 +98,9 @@ class AdminModulesControllerCore extends AdminController
 		$this->list_modules_categories['others']['name'] = $this->l('Other Modules');
 		$this->list_modules_categories['mobile']['name'] = $this->l('Mobile');
 		$this->list_modules_categories['dashboard']['name'] = $this->l('Dashboard');
-		$this->list_modules_categories['dashboard']['name'] = $this->l('Internationalization & Localization');
-		$this->list_modules_categories['dashboard']['name'] = $this->l('Emailing & SMS');
-		$this->list_modules_categories['dashboard']['name'] = $this->l('Social Networks');
+		$this->list_modules_categories['i18n_localization']['name'] = $this->l('Internationalization & Localization');
+		$this->list_modules_categories['emailing']['name'] = $this->l('Emailing & SMS');
+		$this->list_modules_categories['social_networks']['name'] = $this->l('Social Networks');
 
 		uasort($this->list_modules_categories, array($this, 'checkCategoriesNames'));
 
