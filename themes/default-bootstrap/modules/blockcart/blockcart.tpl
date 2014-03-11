@@ -44,21 +44,16 @@
 				{/if}
 			</span>
 			<span class="ajax_cart_no_product{if $cart_qties > 0} unvisible{/if}">{l s='(empty)' mod='blockcart'}</span>
+			{if $ajax_allowed && isset($blockcart_top) && !$blockcart_top}
+				<span class="block_cart_expand{if !isset($colapseExpandStatus) || (isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded')} unvisible{/if}">&nbsp;</span>
+				<span class="block_cart_collapse{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'collapsed'} unvisible{/if}">&nbsp;</span>
+			{/if}
 		</a>
 		{if !$PS_CATALOG_MODE}
 			<div class="cart_block block exclusive">
-				{*<p class="title_block">
-					<a href="{$link->getPageLink("$order_process", true)|escape:'html':'UTF-8'}" title="{l s='View my shopping cart' mod='blockcart'}" rel="nofollow">
-						{l s='Cart' mod='blockcart'}
-						{if $ajax_allowed}
-							<span class="block_cart_expand"{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded' || !isset($colapseExpandStatus)} class="unvisible"{/if}>&nbsp;</span>
-							<span class="block_cart_collapse"{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'collapsed'} class="unvisible"{/if}>&nbsp;</span>
-						{/if}
-					</a>
-				</p>*}
 				<div class="block_content">
 					<!-- block list of products -->
-					<div class="cart_block_list{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded' || !$ajax_allowed || !isset($colapseExpandStatus)} expanded{else} collapsed{/if}">
+					<div class="cart_block_list{if isset($blockcart_top) && !$blockcart_top}{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded' || !$ajax_allowed || !isset($colapseExpandStatus)} expanded{else} collapsed unvisible{/if}{/if}">
 						{if $products}
 							<dl class="products">
 								{foreach from=$products item='product' name='myLoop'}
