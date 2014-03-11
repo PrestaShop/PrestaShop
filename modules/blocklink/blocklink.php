@@ -430,11 +430,11 @@ class BlockLink extends Module
 		<fieldset class="space">
 			<legend><img src="'.$this->_path.'prefs.gif" alt="" title="" /> '.$this->l('Settings').'</legend>
 			<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">
-				<label>'.$this->l('Order list:').'</label>
+				<label>'.$this->l('Order list by:').'</label>
 				<div class="margin-form">
 					<select name="orderWay">
-						<option value="0"'.(!Configuration::get('PS_BLOCKLINK_ORDERWAY') ? 'selected="selected"' : '').'>'.$this->l('by most recent links').'</option>
-						<option value="1"'.(Configuration::get('PS_BLOCKLINK_ORDERWAY') ? 'selected="selected"' : '').'>'.$this->l('by oldest links').'</option>
+						<option value="0"'.(!Configuration::get('PS_BLOCKLINK_ORDERWAY') ? 'selected="selected"' : '').'>'.$this->l('most recent links').'</option>
+						<option value="1"'.(Configuration::get('PS_BLOCKLINK_ORDERWAY') ? 'selected="selected"' : '').'>'.$this->l('oldest links').'</option>
 					</select>
 				</div>
 				<div class="margin-form"><input type="submit" class="button" name="submitOrderWay" value="'.$this->l('Update').'" /></div>
