@@ -599,9 +599,9 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->color = 'color1';
 		$helper->title = $this->l('Customers', null, null, false);
 		$helper->subtitle = $this->l('All Time', null, null, false);
-		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER') !== false)
-			$helper->value = ConfigurationKPI::get('CUSTOMER_MAIN_GENDER');
-		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER_EXPIRE') < $time)
+		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER', $this->context->language->id) !== false)
+			$helper->value = ConfigurationKPI::get('CUSTOMER_MAIN_GENDER', $this->context->language->id);
+		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER_EXPIRE', $this->context->language->id) < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=customer_main_gender';
 		$kpis[] = $helper->generate();
 
