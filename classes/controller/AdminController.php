@@ -3441,7 +3441,7 @@ class AdminControllerCore extends Controller
 			'title' => '',
 			'text' => $this->translationsTab['Reset'],
 			'cond' => $module->id && $module->active,
-			'icon' => 'share-alt',
+			'icon' => 'undo',
 			'class' => ($is_reset_ready ? 'reset_ready' : '')
 		);
 
@@ -3451,7 +3451,8 @@ class AdminControllerCore extends Controller
 			'title' => '',
 			'text' => $this->translationsTab['Delete'],
 			'cond' => true,
-			'icon' => 'remove',
+			'icon' => 'trash',
+			'class' => 'text-danger'
 		);
 
 		$display_mobile = array(
@@ -3460,7 +3461,8 @@ class AdminControllerCore extends Controller
 			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles']),
 			'text' => $module->enable_device & Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles'],
 			'cond' => $module->id,
-			'icon' => ($module->enable_device & Context::DEVICE_MOBILE) ? 'off' : 'ok',
+			'icon' => ($module->enable_device & Context::DEVICE_MOBILE) ? 'mobile' : 'mobile',
+			'class' => ($module->enable_device & Context::DEVICE_MOBILE) ? 'btn-success' : 'btn-danger',
 		);
 
 		$display_tablet = array(
@@ -3469,7 +3471,7 @@ class AdminControllerCore extends Controller
 			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets']),
 			'text' => $module->enable_device & Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets'],
 			'cond' => $module->id,
-			'icon' => ($module->enable_device & Context::DEVICE_TABLET) ? 'off' : 'ok',
+			'icon' => ($module->enable_device & Context::DEVICE_TABLET) ? 'tablet' : 'tablet',
 		);
 
 		$display_computer = array(
@@ -3478,7 +3480,7 @@ class AdminControllerCore extends Controller
 			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers']),
 			'text' => $module->enable_device & Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers'],
 			'cond' => $module->id,
-			'icon' =>  ($module->enable_device & Context::DEVICE_COMPUTER) ? 'off' : 'ok',
+			'icon' =>  ($module->enable_device & Context::DEVICE_COMPUTER) ? 'desktop' : 'desktop',
 		);
 
 		if ($module->active)
