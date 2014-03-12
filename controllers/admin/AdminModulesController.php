@@ -260,6 +260,13 @@ class AdminModulesControllerCore extends AdminController
 		{
 			$tab_modules_list = explode(',', $tab_modules_list);
 			$all_modules = Module::getModulesOnDisk(true, $this->logged_on_addons, $this->id_employee);
+			
+			$all_unik_modules = array();
+			foreach ($all_modules as $mod)
+				if (!isset($all_unik_modules[$mod->name]))
+					$all_unik_modules[$mod->name] = $mod;
+			$all_modules = $all_unik_modules;
+			
 			foreach($all_modules as $module)
 			{
 				if (in_array($module->name, $tab_modules_list))
@@ -290,6 +297,7 @@ class AdminModulesControllerCore extends AdminController
 				}		
 			}
 		}
+		
 		$this->context->smarty->assign(array(
 			'tab_modules_list' => $modules_list,
 			'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites'
