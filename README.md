@@ -55,6 +55,8 @@ You can discuss, help and contribute to improving PrestaShop with the PrestaShop
 
 Thank you for downloading and using the PrestaShop e-commerce Open-source solution!
 
+[![Crowdin](https://crowdin.net/badges/prestashop-official/localized.png)](https://crowdin.net/project/prestashop-official)
+
 [1]: http://www.prestashop.com/en/progress-1-6
 [2]: http://www.prestashop.com/en/download
 [3]: http://doc.prestashop.com/display/PS16/Misc.+information#Misc.information-ActivatingPHP5

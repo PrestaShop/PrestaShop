@@ -253,7 +253,7 @@ return array(
 		'To enjoy the many features that are offered for free by PrestaShop, please read the license terms below. PrestaShop core is licensed under OSL 3.0, while the modules and themes are licensed under AFL 3.0.' => '要自由使用 PrestaShop 的許多功能，請先詳閱下面的授權條款。PrestaShop 程式碼是以 OSL 3.0 發布，模組與佈景則是 AFL 3.0 。',
 		'For security purposes, you must delete the "install" folder.' => '基於安全考量，您必須刪除 install 資料夾',
 		'http://doc.prestashop.com/display/PS16/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation' => 'http://doc.prestashop.com/display/PS16/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation',
-		'The installation of PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 150,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'PrestaShop 的安裝快又容易，只要一下子，您就可以加入超過 150,000 個網站構成的社群。您正在建立一個屬於自己且獨一無二的線上商店，每天都可以輕鬆的管理。',
+		'The installation of PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 165,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'PrestaShop 的安裝快又容易，只要一下子，您就可以加入超過 165,000 個網站構成的社群。您正在建立一個屬於自己且獨一無二的線上商店，每天都可以輕鬆的管理。',
 		'Must be at least 8 characters' => '最少 8 個字元',
 	),
 );

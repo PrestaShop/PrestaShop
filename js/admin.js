@@ -1084,7 +1084,7 @@ function quickSelect(elt)
 
 function changeEmployeeLanguage()
 {
-	if (allowEmployeeFormLang)
+	if (typeof allowEmployeeFormLang !== 'undefined' && allowEmployeeFormLang)
 		$.post("index.php", {
 			action: 'formLanguage', 
 			tab: 'AdminEmployees',

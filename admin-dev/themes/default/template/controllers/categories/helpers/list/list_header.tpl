@@ -34,10 +34,10 @@
 			{if $i++ == 0}
 				<i class="icon-home"></i>
 				{assign var=params_url value=""}
-			{else}
+			{elseif isset($category.id_category)}
 				{assign var=params_url value="&id_category={$category.id_category|intval}&viewcategory"}
 			{/if}
-			{if $category.id_category == $categories_tree_current_id}
+			{if isset($category.id_category) && $category.id_category == $categories_tree_current_id}
 				{$category.name}
 			{else}
 				<a href="{$currentIndex}{$params_url}&amp;token={$token}">{$category.name}</a>

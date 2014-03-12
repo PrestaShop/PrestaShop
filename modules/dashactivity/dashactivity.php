@@ -159,7 +159,7 @@ class Dashactivity extends Module
 		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{
 			$visits = $unique_visitors = $online_visitor = 0;
-			if ($result = $gapi->requestReportData('', 'ga:visits,ga:visitors', $params['date_from'], $params['date_to'], null, null, 1, 1))
+			if ($result = $gapi->requestReportData('', 'ga:visits,ga:visitors', substr($params['date_from'], 0, 10), substr($params['date_to'], 0, 10), null, null, 1, 1))
 			{
 				$visits = $result[0]['metrics']['visits'];
 				$unique_visitors = $result[0]['metrics']['visitors'];
@@ -357,7 +357,7 @@ class Dashactivity extends Module
 		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{
 			$websites = array();
-			if ($result = $gapi->requestReportData('ga:source', 'ga:visitors', $date_from, $date_to, '-ga:visitors', null, 1, $limit))
+			if ($result = $gapi->requestReportData('ga:source', 'ga:visitors', substr($date_from, 0, 10), substr($date_to, 0, 10), '-ga:visitors', null, 1, $limit))
 				foreach ($result as $row)
 					$websites[$row['dimensions']['source']] = $row['metrics']['visitors'];
 		}
