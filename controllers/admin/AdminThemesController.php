@@ -350,6 +350,7 @@ class AdminThemesControllerCore extends AdminController
 					'type' => 'switch',
 					'label' => $this->l('Responsive'),
 					'name' => 'responsive',
+					'hint' => $this->l('Please indicate if the theme is adapted to all screen sizes (mobile, tablet, desktop)'),
 					'values' => array(
 						array(
 							'id' => 'responsive_on',
@@ -367,6 +368,7 @@ class AdminThemesControllerCore extends AdminController
 					'type' => 'switch',
 					'label' => $this->l('Default left column'),
 					'name' => 'default_left_column',
+					'hint' => $this->l('Choose a default behavior when displaying the column in a new page added by you or by a module'),
 					'values' => array(
 						array(
 							'id' => 'default_left_column_on',
@@ -384,6 +386,7 @@ class AdminThemesControllerCore extends AdminController
 					'type' => 'switch',
 					'label' => $this->l('Default right column'),
 					'name' => 'default_right_column',
+					'hint' => $this->l('Choose a default behavior when displaying the column in a new page added by you or by a module'),
 					'values' => array(
 						array(
 							'id' => 'default_right_column_on',
@@ -401,6 +404,7 @@ class AdminThemesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Number of products per page'),
 					'name' => 'product_per_page',
+					'hint' => $this->l('This value will be used when activating the theme'),
 				)
 			),
 			'submit' => array(
