@@ -3461,8 +3461,7 @@ class AdminControllerCore extends Controller
 			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles']),
 			'text' => $module->enable_device & Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles'],
 			'cond' => $module->id,
-			'icon' => ($module->enable_device & Context::DEVICE_MOBILE) ? 'mobile' : 'mobile',
-			'class' => ($module->enable_device & Context::DEVICE_MOBILE) ? 'btn-success' : 'btn-danger',
+			'icon' => 'mobile'
 		);
 
 		$display_tablet = array(
@@ -3471,7 +3470,7 @@ class AdminControllerCore extends Controller
 			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets']),
 			'text' => $module->enable_device & Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets'],
 			'cond' => $module->id,
-			'icon' => ($module->enable_device & Context::DEVICE_TABLET) ? 'tablet' : 'tablet',
+			'icon' => 'tablet'
 		);
 
 		$display_computer = array(
@@ -3480,7 +3479,7 @@ class AdminControllerCore extends Controller
 			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers']),
 			'text' => $module->enable_device & Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers'],
 			'cond' => $module->id,
-			'icon' =>  ($module->enable_device & Context::DEVICE_COMPUTER) ? 'desktop' : 'desktop',
+			'icon' => 'desktop'
 		);
 
 		if ($module->active)
