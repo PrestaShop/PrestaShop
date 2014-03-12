@@ -268,13 +268,13 @@ class BlockCMSModel extends ObjectModel
 		{
 			$ids = explode('_', $cmsCategory);
 
-			if ($ids[0] == 1)
+			if ($ids[0] == 1 && isset($ids[1]))
 			{
 				$query = BlockCMSModel::getBlockName($ids[1]);
 				$content[$cmsCategory]['link'] = $context->link->getCMSCategoryLink((int)$ids[1], $query['link_rewrite']);
 				$content[$cmsCategory]['meta_title'] = $query['name'];
 			}
-			else if ($ids[0] == 0)
+			else if ($ids[0] == 0 && isset($ids[1]))
 			{
 				$query = BlockCMSModel::getCMSMetaTitle($ids[1]);
 				$content[$cmsCategory]['link'] = $context->link->getCMSLink((int)$ids[1], $query['link_rewrite']);

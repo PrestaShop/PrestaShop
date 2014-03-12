@@ -85,6 +85,11 @@ img {
     max-width: 10000px; }
   .pb-left-column #image-block a.jqzoom div div .zoomWrapper {
     border: none; }
+  .pb-left-column #image-block .zoomPad {
+    z-index: auto !important; }
+  .pb-left-column #image-block .new-box,
+  .pb-left-column #image-block .sale-box {
+    z-index: 50002; }
 
 /* miniatures */
 .pb-left-column #views_block {
@@ -111,7 +116,7 @@ img {
     list-style-type: none;
     padding-left: 0;
     overflow: hidden;
-    height: 100px; }
+    height: 90px; }
   #thumbs_list li {
     float: left;
     height: 90px;
@@ -145,9 +150,9 @@ img {
       #thumbs_list li a:hover, #thumbs_list li a.shown {
         border-color: #dbdbdb; }
     #thumbs_list li img {
-      border: 2px solid white;
-      width: 82px;
-      height: 82px;
+      border: 1px solid white;
+      width: 100%;
+      height: 100%;
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box; }

@@ -57,8 +57,8 @@
 	</div>
 	{if $combination_exists}
 	<div class="alert alert-info" style="display:block">
-		{l s='Some combinations already exist. If you want to generate new combinations, the quantities for the existing combinations will be lost.'}<br/>
-		{l s='You can add a combination by clicking the link "Add new combination" on the toolbar.'}
+		{l s='Some combinations already exist. If you want to generate a set of new combinations, the quantities for the existing combinations will be lost.'}<br/>
+		{l s='You can add a single combination by clicking the "New combination" button.'}
 	</div>
 	{/if}
 	{if isset($display_multishop_checkboxes) && $display_multishop_checkboxes}
@@ -66,7 +66,7 @@
 		{include file="controllers/products/multishop/check_fields.tpl" product_tab="Combinations"}
 	{/if}
 	<div id="add_new_combination" class="panel" style="display: none;">
-		<div class="panel-heading">{l s='Add or modify combinations for this product.'}</div>
+		<div class="panel-heading">{l s='Add or modify combinations for this product'}</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_group">{l s='Attribute'}</label>
 			<div class="col-lg-5">
@@ -161,7 +161,7 @@
 						<select name="attribute_price_impact" id="attribute_price_impact" onchange="check_impact(); calcImpactPriceTI();">
 							<option value="0">{l s='None'}</option>
 							<option value="1">{l s='Increase'}</option>
-							<option value="-1">{l s='Reduction'}</option>
+							<option value="-1">{l s='Decrease'}</option>
 						</select>
 					</div>
 					<div id="span_impact" class="col-lg-8">
@@ -240,7 +240,6 @@
 			</div>
 		</div>
 		<div id="tr_unit_impact" class="form-group">
-			<label class="control-label col-lg-3" for="attribute_unit_impact">
 			<label class="control-label col-lg-3" for="attribute_unit_impact">
 				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_unit_impact" type="attribute_unit_impact"}
 				{l s='Impact on unit price'}
@@ -328,7 +327,7 @@
 					<li>
 						<input type="checkbox" name="id_image_attr[]" value="{$image.id_image}" id="id_image_attr_{$image.id_image}" />
 						<label for="id_image_attr_{$image.id_image}">
-							<img src="{$smarty.const._THEME_PROD_DIR_}{$image.obj->getExistingImgPath()}-{$imageType}.jpg" alt="{$image.legend|escape:'html':'UTF-8'}" title="{$image.legend|escape:'html':'UTF-8'}" />
+							<img class="img-thumbnail" src="{$smarty.const._THEME_PROD_DIR_}{$image.obj->getExistingImgPath()}-{$imageType}.jpg" alt="{$image.legend|escape:'html':'UTF-8'}" title="{$image.legend|escape:'html':'UTF-8'}" />
 						</label>
 					</li>
 					{/foreach}

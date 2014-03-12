@@ -150,7 +150,7 @@ class TranslateCore
 		}
 		$key = md5(str_replace('\'', '\\\'', $string));
 
-		$cache_key = $name.'|'.$string.'|'.$source;
+		$cache_key = $name.'|'.$string.'|'.$source.'|'.(int)$js;
 
 		if (!isset($lang_cache[$cache_key]))
 		{

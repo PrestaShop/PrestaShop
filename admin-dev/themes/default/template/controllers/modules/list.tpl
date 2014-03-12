@@ -95,7 +95,7 @@ module_inactive
 									<br><a href="{$currentIndex}&token={$token}&ajax=1&action=GetModuleQuickView&module={$module->name}" class="fancybox-quick-view"><i class="icon-search"></i> {l s='Read more'}</a>
 								{/if}
 							</p>
-							{if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success">{$module->message}</div>{/if}
+							{if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>{$module->message}</div>{/if}
 						</div>
 					</td>
 					<td class="actions">
@@ -126,37 +126,93 @@ module_inactive
 											<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
 										</a>
 									{/if}
-									{if !isset($module->not_on_disk)}
-									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
-										<span class="caret">&nbsp;</span>
-									</button>
 
-									<ul class="dropdown-menu">
-										{foreach $module->optionsHtml key=key item=option}
-											{if $key != 0}
-												<li>{$option}</li>
+									{if !isset($module->not_on_disk) && isset($module->id)}
+										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
+											<span class="caret">&nbsp;</span>
+										</button>
+										
+										<ul class="dropdown-menu">
+
+											{foreach $module->optionsHtml key=key item=option}
+												{if $key != 0}
+													<li>{$option}</li>
+												{/if}
+											{/foreach}
+
+											{if isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1}
+												<li>
+													<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">
+														<i class="icon-star"></i> {l s='Remove from Favorites'}
+													</a>
+													<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#" style="display: none;">
+														<i class="icon-star"></i> {l s='Mark as Favorite'}
+													</a>
+												</li>
+											{else}
+												<li>
+													<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#" style="display: none;">
+														<i class="icon-star"></i> {l s='Remove from Favorites'}
+													</a>
+													<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#">
+														<i class="icon-star"></i> {l s='Mark as Favorite'}
+													</a>
+												</li>
 											{/if}
-										{/foreach}
-										{if isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1}
-										<li>
-											<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">
-												<i class="icon-star"></i> {l s='Remove from Favorites'}
-											</a>
-											<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#" style="display: none;">
-												<i class="icon-star"></i> {l s='Mark as Favorite'}
-											</a>
-										</li>
-										{else}
-										<li>
-											<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#" style="display: none;">
-												<i class="icon-star"></i> {l s='Remove from Favorites'}
-											</a>
-											<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#">
-												<i class="icon-star"></i> {l s='Mark as Favorite'}
-											</a>
-										</li>
-										{/if}
-									</ul>
+										</ul>
+									{else if !isset($module->not_on_disk) && !isset($module->id)}
+										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
+											<span class="caret">&nbsp;</span>
+										</button>
+										<ul class="dropdown-menu">
+											{foreach $module->optionsHtml key=key item=option}
+												<li>{$option}</li>
+											{/foreach}
+											{if isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1}
+												<li>
+													<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">
+														<i class="icon-star"></i> {l s='Remove from Favorites'}
+													</a>
+													<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#" style="display: none;">
+														<i class="icon-star"></i> {l s='Mark as Favorite'}
+													</a>
+												</li>
+											{else}
+												<li>
+													<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#" style="display: none;">
+														<i class="icon-star"></i> {l s='Remove from Favorites'}
+													</a>
+													<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#">
+														<i class="icon-star"></i> {l s='Mark as Favorite'}
+													</a>
+												</li>
+											{/if}
+										</ul>
+									{else if isset($module->not_on_disk)}
+										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
+											<span class="caret">&nbsp;</span>
+										</button>
+										<ul class="dropdown-menu">
+											{if isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1}
+												<li>
+													<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">
+														<i class="icon-star"></i> {l s='Remove from Favorites'}
+													</a>
+													<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#" style="display: none;">
+														<i class="icon-star"></i> {l s='Mark as Favorite'}
+													</a>
+												</li>
+											{else}
+												<li>
+													<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#" style="display: none;">
+														<i class="icon-star"></i> {l s='Remove from Favorites'}
+													</a>
+													<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#">
+														<i class="icon-star"></i> {l s='Mark as Favorite'}
+													</a>
+												</li>
+											{/if}
+										</ul>
 									{else}
 										&nbsp;
 									{/if}

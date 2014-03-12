@@ -72,8 +72,18 @@ $(document).ready(function() {
 		});
 	}
 
+	var ellipsed = [];
+	//reset ellipsis 
+	function navTopbarReset() {
+		ellipsed = [];
+		$('#ellipsistab').remove();
+		$('#nav-topbar ul.menu').find('li.maintab').each(function(){
+			$(this).removeClass('hide');
+		});
+	}
 	//set main navigation on top
 	function navTopbar(){
+		navTopbarReset();
 		$('#nav-sidebar').attr('id','nav-topbar');
 		var topbar = $('#nav-topbar');
 		topbar.off();
@@ -95,12 +105,11 @@ $(document).ready(function() {
 			navTopbarEllipsis();
 		});
 	}
+
 	//agregate out of bounds items from top menu into ellipsis dropdown
 	function navTopbarEllipsis() {
-		var ellipsed = [];
-		$('#ellipsistab').remove();
+		navTopbarReset();
 		$('#nav-topbar ul.menu').find('li.maintab').each(function(){
-			$(this).removeClass('hide');
 			if ($(this).position().top > 0) {
 				ellipsed.push($(this));
 				$(this).addClass('hide');
@@ -116,9 +125,11 @@ $(document).ready(function() {
 
 	//set main navigation for mobile devices
 	function mobileNav() {
+		navTopbarReset();
 		// clean actual menu type
 		// get it in navigation whatever type it is
 		var navigation = $('#nav-sidebar,#nav-topbar');
+		navigation.find('.menu').hide();
 		var submenu = "";
 		// clean trigger
 		navigation.off().attr('id','nav-mobile');
@@ -167,20 +178,21 @@ $(document).ready(function() {
 		if ($('body').hasClass('page-sidebar')){
 			navigation.attr('id',"nav-sidebar");
 			navSidebar();
-		} else if ($('body').hasClass('page-sidebar')){
+		} else if ($('body').hasClass('page-topbar')){
 			navigation.attr('id',"nav-topbar");
 			navTopbar();
 		}
+		navigation.find('.menu').show();
 	}
 
-	// switch between top and side nav without reloading page
-	function navSwitch(){
-		if ($('body').hasClass('page-sidebar')){
-			navTopbar();
-		} else {
-			navSidebar();
-		}
-	}
+	//switch between top and side nav without reloading page
+	//function navSwitch(){
+	//	if ($('body').hasClass('page-sidebar')){
+	//		navTopbar();
+	//	} else {
+	//		navSidebar();
+	//	}
+	//}
 
 	//init main navigation
 	function initNav(){
@@ -206,15 +218,15 @@ $(document).ready(function() {
 			$('li.maintab').removeClass('hover');
 			$('ul.submenu.outOfBounds').removeClass('outOfBounds').css('top',0);
 			submenu.addClass('hover');
-			h = $( window ).height();
-			x = submenu.find('.submenu li').last().offset();
-			l = x.top + submenu.find('.submenu li').last().height();
-			f = 25;
+			var h = $( window ).height();
+			var x = submenu.find('.submenu li').last().offset();
+			var l = x.top + submenu.find('.submenu li').last().height();
+			var f = 25;
 			if ($('#footer').is(':visible')){
 				f = $('#footer').height() + f;
 			}
-			s = $(document).scrollTop();
-			position = h - l - f + s;
+			var s = $(document).scrollTop();
+			var position = h - l - f + s;
 			var out = false;
 			if ( position < 0) {
 				out = true;
@@ -228,8 +240,28 @@ $(document).ready(function() {
 		},250);
 	});
 
-	$('ul.submenu').on('mouseenter', function(e){
+	$('ul.submenu').on('mouseenter', function(){
 		clearTimeout(openingMenu);
+	});
+
+	//media queries - depends of enquire.js
+	enquire.register('screen and (max-width: 768px)', {
+		match : function() {
+			$('body.page-sidebar').addClass('page-sidebar-closed');
+		},
+		unmatch : function() {
+			$('body.page-sidebar').removeClass('page-sidebar-closed');
+		}
+	});
+	enquire.register('screen and (max-width: 480px)', {
+		match : function() {
+			$('body').addClass('mobile-nav');
+			mobileNav();
+		},
+		unmatch : function() {
+			$('body').removeClass('mobile-nav');
+			removeMobileNav();
+		}
 	});
 
 	//bootstrap components init
@@ -281,48 +313,58 @@ $(document).ready(function() {
 		}
 	}
 
-	//media queries - depends of enquire.js
-	enquire.register('screen and (max-width: 768px)', {
-		match : function() {
-			$('body.page-sidebar').addClass('page-sidebar-closed');
-		},
-		unmatch : function() {
-			$('body.page-sidebar').removeClass('page-sidebar-closed');
-		}
-	});
-	enquire.register('screen and (max-width: 480px)', {
-		match : function() {
-			$('body').addClass('mobile-nav');
-			mobileNav();
-		},
-		unmatch : function() {
-			$('body').removeClass('mobile-nav');
-			removeMobileNav();
-		}
-	});
-
 	// search with nav sidebar closed
-	$(document).on('click', '.page-sidebar-closed .searchtab' ,function(){
+	$(document).on('click', '.page-sidebar-closed .searchtab' ,function() {
 		$(this).addClass('search-expanded');
 		$(this).find('#bo_query').focus();
 	});
-	$('#bo_query').on('blur',function(){
+
+	$('.page-sidebar-closed').click(function() {
 		$('.searchtab').removeClass('search-expanded');
+	});
+
+	$('#header_search button').on('click', function(e){
+		e.stopPropagation();
 	});
 
 	//erase button search input
 	if ($('#bo_query').val() !== ''){
 		$('.clear_search').removeClass('hide');
 	}
-	$('.clear_search').on('click', function(e){
+	$('#header_search .clear_search').on('click', function(e){
+		e.stopPropagation();
 		e.preventDefault();
 		$('#bo_query').val('').focus();
 		$('.clear_search').addClass('hide');
 	});
-	$('#bo_query').on('change', function(){
+	$('#bo_query').on('keydown', function(){
 		if ($('#bo_query').val() !== ''){
 			$('.clear_search').removeClass('hide');
 		}
+	});
+
+	//search with nav sidebar opened
+	$('.page-sidebar').click(function() {
+		$('#header_search .form-group').removeClass('focus-search');
+	});
+	$('#header_search #bo_query').on('click', function(e){
+		e.stopPropagation();
+		e.preventDefault();
+		if($('body').hasClass('mobile-nav')){
+			return false;
+		}
+		$('#header_search .form-group').addClass('focus-search');
+	});
+	
+	//select list for search type
+	$('#header_search_options').on('click','li a', function(e){
+		e.preventDefault();
+		$('#header_search_options .search-option').removeClass('active');
+		$(this).closest('li').addClass('active');
+		$('#bo_search_type').val($(this).data('value'));
+		$('#search_type_icon').removeAttr("class").addClass($(this).data('icon'));
+		$('#bo_query').attr("placeholder",$(this).data('placeholder'));
+		$('#bo_query').focus();
 	});
 
 	// open contextual help into popup
@@ -335,54 +377,73 @@ $(document).ready(function() {
 			'width=500,height=600,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=50,top=50'
 		);
 	});
-});
 
-function confirm_modal(heading, question, left_button_txt, right_button_txt, left_button_callback, right_button_callback) {
-	var confirmModal =
-		$('<div class="bootstrap modal hide fade">' +
-			'<div class="modal-dialog">' +
-			'<div class="modal-content">' +
-			'<div class="modal-header">' +
-			'<a class="close" data-dismiss="modal" >&times;</a>' +
-			'<h3>' + heading + '</h3>' +
-			'</div>' +
-
-			'<div class="modal-body">' +
-			'<p>' + question + '</p>' +
-			'</div>' +
-			'<div class="modal-footer">' +
-			'<a href="#" id="confirm_modal_left_button" class="btn btn-primary">' +
-			left_button_txt +
-			'</a>' +
-			'<a href="#" id="confirm_modal_right_button" class="btn btn-primary">' +
-			right_button_txt +
-			'</a>' +
-			'</div>' +
-			'</div>' +
-			'</div>' +
-			'</div>');
-
-	confirmModal.find('#confirm_modal_left_button').click(function (event) {
-		left_button_callback();
-		confirmModal.modal('hide');
-	});
-
-	confirmModal.find('#confirm_modal_right_button').click(function (event) {
-		right_button_callback();
-		confirmModal.modal('hide');
-	});
-	confirmModal.modal('show');
-};
-
-$(".reset_ready").click(function () {
-	var href = $(this).attr('href');
-	confirm_modal(header_confirm_reset, body_confirm_reset, left_button_confirm_reset, right_button_confirm_reset,
-		function ()
-		{
-			window.location.href = href + '&keep_data=1';
-		}, function ()
-		{
-			window.location.href = href + '&keep_data=0';
+	//build confirmation modal
+	function confirm_modal(heading, question, left_button_txt, right_button_txt, left_button_callback, right_button_callback) {
+		var confirmModal =
+			$('<div class="bootstrap modal hide fade">' +
+				'<div class="modal-dialog">' +
+				'<div class="modal-content">' +
+				'<div class="modal-header">' +
+				'<a class="close" data-dismiss="modal" >&times;</a>' +
+				'<h3>' + heading + '</h3>' +
+				'</div>' +
+				'<div class="modal-body">' +
+				'<p>' + question + '</p>' +
+				'</div>' +
+				'<div class="modal-footer">' +
+				'<a href="#" id="confirm_modal_left_button" class="btn btn-primary">' +
+				left_button_txt +
+				'</a>' +
+				'<a href="#" id="confirm_modal_right_button" class="btn btn-primary">' +
+				right_button_txt +
+				'</a>' +
+				'</div>' +
+				'</div>' +
+				'</div>' +
+				'</div>');
+		confirmModal.find('#confirm_modal_left_button').click(function () {
+			left_button_callback();
+			confirmModal.modal('hide');
 		});
-	return false;
+		confirmModal.find('#confirm_modal_right_button').click(function () {
+			right_button_callback();
+			confirmModal.modal('hide');
+		});
+		confirmModal.modal('show');
+	}
+
+	// reset form
+	$(".reset_ready").click(function () {
+		var href = $(this).attr('href');
+		confirm_modal(header_confirm_reset, body_confirm_reset, left_button_confirm_reset, right_button_confirm_reset,
+			function () {
+				window.location.href = href + '&keep_data=1';
+			},
+			function () {
+				window.location.href = href + '&keep_data=0';
+		});
+		return false;
+	});
+
+	//move to hash after clicking on anchored links
+	function scroll_if_anchor(href) {
+		href = typeof(href) == "string" ? href : $(this).attr("href");
+		var fromTop = 120;
+
+		if(href.indexOf("#") == 0) {
+			var $target = $(href);
+
+			if($target.length) {
+				$('html, body').animate({ scrollTop: $target.offset().top - fromTop });
+				if(history && "pushState" in history) {
+					history.pushState({}, document.title, window.location.pathname + href);
+					return false;
+				}
+			}
+		}
+	}
+	scroll_if_anchor(window.location.hash);
+	$("body").on("click", "a[data-toggle!='tab']", scroll_if_anchor);
+
 });

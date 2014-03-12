@@ -43,6 +43,7 @@
 {addJsDef points_in_cart=$points_in_cart}
 {addJsDef none_award=$none_award}
 
+{addJsDefL name=loyalty_willcollect}{l s='By buying this product you can collect up to' mod='loyalty' js=1}{/addJsDefL}
 {addJsDefL name=loyalty_already}{l s='No reward points for this product because there\'s already a discount.' mod='loyalty' js=1}{/addJsDefL}
 {addJsDefL name=loyalty_nopoints}{l s='No reward points for this product.' mod='loyalty' js=1}{/addJsDefL}
 {addJsDefL name=loyalty_points}{l s='loyalty points' mod='loyalty' js=1}{/addJsDefL}

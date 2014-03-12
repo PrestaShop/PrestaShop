@@ -275,6 +275,7 @@ class HelperTreeCategoriesCore extends TreeCore
 		}
 
 		$this->setAttribute('selected_categories', $this->getSelectedCategories());
+		$this->getContext()->smarty->assign('root_category', Configuration::get('PS_ROOT_CATEGORY'));
 		return parent::render($data);
 	}
 

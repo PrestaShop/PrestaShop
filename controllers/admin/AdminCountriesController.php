@@ -41,8 +41,6 @@ class AdminCountriesControllerCore extends AdminController
 		
 		$this->bulk_actions = array(
 			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-			'enableSelection' => array('text' => $this->l('Enable selection')),
-			'disableSelection' => array('text' => $this->l('Disable selection')),
 			'affectzone' => array('text' => $this->l('Assign to a new zone'))
 		);
 		
@@ -217,7 +215,7 @@ class AdminCountriesControllerCore extends AdminController
 						'id' => 'id_currency',
 						'name' => 'name',
 						'default' => array(
-							'label' => $this->l('Default store currency.'),
+							'label' => $this->l('Default store currency'),
 							'value' => 0
 						)
 					)

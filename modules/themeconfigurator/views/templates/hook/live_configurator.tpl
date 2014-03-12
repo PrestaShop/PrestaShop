@@ -57,7 +57,7 @@
 			</p>
 		</div>
 		<div id="font-box">
-			<p>{l s='Title fonts' mod='themeconfigurator'}</p>
+			<p>{l s='Title font' mod='themeconfigurator'}</p>
 			<select name="font" id="font" class="font-list">
 				<option value="">{l s='Choose a font' mod='themeconfigurator'}</option>
 				{foreach $fonts as $key => $font}
@@ -70,7 +70,7 @@
 			<button type="submit" class="btn btn-2" name="submitLiveConfigurator">{l s='Save' mod='themeconfigurator'}</button>
 		</div>
 		<div id="block-advertisement">
-			<a href="http://addons.prestashop.com/en/205-premium-templates?utm_source=backoffice_configurator" onclick="return !window.open(this.href)">
+			<a href="{$advertisement_url|escape:'htmlall':'UTF-8'}" onclick="return !window.open(this.href)">
 				<img src="{$advertisement_image|escape:'htmlall':'UTF-8'}" alt="{$advertisement_text|escape:'htmlall':'UTF-8'}" />
 			</a>
 		</div>

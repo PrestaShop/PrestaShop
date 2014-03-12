@@ -222,6 +222,13 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->action = (isset($_POST['submitReset'.$this->table]) ? 'reset_filters' : '');
 
 		$this->fields_list = $this->getAddressFieldsList();
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'icon' => 'icon-trash',
+				'confirm' => $this->l('Delete selected items?')
+			)
+		);
 
 		$this->_select = 'cl.`name` as country, m.`name` AS manufacturer_name';
 		$this->_join = '
