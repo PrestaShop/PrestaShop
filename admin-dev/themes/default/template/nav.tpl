@@ -67,17 +67,6 @@
 					</div>
 
 					<script>
-						$('#bo_query').on('blur', function(){ $('#header_search .form-group').removeClass('focus-search'); });
-						$('#header_search *').on('focus', function(){ $('#header_search .form-group').addClass('focus-search'); });
-						$('#header_search_options').on('click','li a', function(e){
-							e.preventDefault();
-							$('#header_search_options .search-option').removeClass('active');
-							$(this).closest('li').addClass('active');
-							$('#bo_search_type').val($(this).data('value'));
-							$('#search_type_icon').removeAttr("class").addClass($(this).data('icon'));
-							$('#bo_query').attr("placeholder",$(this).data('placeholder'));
-							$('#bo_query').focus();
-						});
 						{if isset($search_type) && $search_type}
 							$(document).ready(function() {
 								$('.search-option a[data-value='+{$search_type|intval}+']').click();

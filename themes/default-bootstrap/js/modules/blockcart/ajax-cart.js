@@ -26,9 +26,11 @@ $(document).ready(function(){
 	ajaxCart.overrideButtonsInThePage();
 
 	$(document).on('click', '.block_cart_collapse', function(e){
+		e.preventDefault();
 		ajaxCart.collapse();
 	});
 	$(document).on('click', '.block_cart_expand', function(e){
+		e.preventDefault();
 		ajaxCart.expand();
 	});
 
@@ -167,16 +169,11 @@ var ajaxCart = {
 	expand : function(){
 		if ($('.cart_block_list').hasClass('collapsed'))
 		{
-			$('#cart_block_summary').slideUp(200, function(){
-				$(this).addClass('collapsed').removeClass('expanded');
-				$('.cart_block_list').slideDown({
-					duration: 450,
-					complete: function(){$(this).addClass('expanded').removeClass('collapsed');}
-				});
-			});
-			// toogle the button expand/collapse button
-			$('.block_cart_expand').fadeOut('slow', function(){
-				$('.block_cart_collapse').fadeIn('fast');
+			$('.cart_block_list.collapsed').slideDown({
+				duration: 450,
+				complete: function(){
+					$(this).addClass('expanded').removeClass('collapsed');
+				}
 			});
 
 			// save the expand statut in the user cookie
@@ -186,7 +183,12 @@ var ajaxCart = {
 				url: baseDir + 'modules/blockcart/blockcart-set-collapse.php' + '?rand=' + new Date().getTime(),
 				async: true,
 				cache: false,
-				data: 'ajax_blockcart_display=expand'
+				data: 'ajax_blockcart_display=expand',
+				complete: function(){
+					$('.block_cart_expand').fadeOut('fast', function(){
+						$('.block_cart_collapse').fadeIn('fast');
+					});
+				}			
 			});
 		}
 	},
@@ -195,14 +197,8 @@ var ajaxCart = {
 	collapse : function(){
 		if ($('.cart_block_list').hasClass('expanded'))
 		{
-			$('.cart_block_list').slideUp('slow', function(){
+			$('.cart_block_list.expanded').slideUp('slow', function(){
 				$(this).addClass('collapsed').removeClass('expanded');
-				$('#cart_block_summary').slideDown(450, function(){
-					$(this).addClass('expanded').removeClass('collapsed');
-				});
-			});
-			$('.block_cart_collapse').fadeOut('slow', function(){
-				$('.block_cart_expand').fadeIn('fast');
 			});
 
 			// save the expand statut in the user cookie
@@ -212,7 +208,12 @@ var ajaxCart = {
 				url: baseDir + 'modules/blockcart/blockcart-set-collapse.php' + '?rand=' + new Date().getTime(),
 				async: true,
 				cache: false,
-				data: 'ajax_blockcart_display=collapse' + '&rand=' + new Date().getTime()
+				data: 'ajax_blockcart_display=collapse' + '&rand=' + new Date().getTime(),
+				complete: function(){
+					$('.block_cart_collapse').fadeOut('fast', function(){
+						$('.block_cart_expand').fadeIn('fast');
+					});
+				}
 			});
 		}
 	},

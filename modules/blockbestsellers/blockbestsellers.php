@@ -108,7 +108,7 @@ class BlockBestSellers extends Module
 	public function _clearCache($template, $cache_id = NULL, $compile_id = NULL)
 	{
 		parent::_clearCache('blockbestsellers.tpl');
-		parent::_clearCache('blockbestsellers.tpl');
+		parent::_clearCache('blockbestsellers-home.tpl');
 		parent::_clearCache('tab.tpl');
 	}
 

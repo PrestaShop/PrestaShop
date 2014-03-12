@@ -202,14 +202,26 @@ $(document).ready(function(){
 		saveCustomization();
 	});
 
-	if (contentOnly == false && !!$.prototype.fancybox)
-		$('.fancybox').fancybox({
-			'hideOnContentClick': true,
-			'transitionIn'	: 'elastic',
-			'transitionOut'	: 'elastic'
-		});
+	if (contentOnly == false)
+	{
+		if(!!$.prototype.fancybox)
+			$('.fancybox').fancybox({
+				'hideOnContentClick': true,
+				'transitionIn'	: 'elastic',
+				'transitionOut'	: 'elastic'
+			});
+	}
 	else
-		$(document).on('click', '.fancybox', function(e){e.preventDefault();});
+	{
+		$(document).on('click', '.fancybox', function(e){
+			e.preventDefault();
+		});
+		$(document).on('click', '#bigpic', function(e){
+			var data = window.document.location.href.replace(window.document.location.search, '');
+			window.parent.document.location.href = data;
+ 			location.reload(); 
+		});
+	}
 
 	if (!!$.prototype.bxSlider)
 		$('#bxslider').bxSlider({
@@ -333,7 +345,7 @@ function findCombination(firstTime)
 	//create a temporary 'choice' array containing the choices of the customer
 	var choice = [];
 	$('#attributes select, #attributes input[type=hidden], #attributes input[type=radio]:checked').each(function(){
-		choice.push($(this).val());
+		choice.push(parseInt($(this).val()));
 	});
 
 	if (typeof combinations == 'undefined' || !combinations)
@@ -345,7 +357,7 @@ function findCombination(firstTime)
 		var combinationMatchForm = true;
 		$.each(combinations[combination]['idsAttributes'], function(key, value)
 		{
-			if (!in_array(value, choice))
+			if (!in_array(parseInt(value), choice))
 				combinationMatchForm = false;
 		});
 

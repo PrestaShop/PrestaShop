@@ -335,18 +335,10 @@ $min-height: 850px
 			left: 0
 			position: absolute
 			z-index: 1200
-	li > a > i
-		display: inline-block
-		height: $menu-item-size
-		width: $menu-item-size
-		font-size: 20px
-		line-height: $menu-item-size
-		color: white
-		text-align: center
 	ul.menu
 		position: absolute
 		display: none
-		width: 480px
+		width: 100%
 		height: 100%
 		background-color: rgba(black,0.8)
 		margin: 0 0 100px 0
@@ -355,47 +347,23 @@ $min-height: 850px
 		list-style: none
 		@include transition(all 0.35s ease-out)
 		@include animate(fadeInLeft, 0.3s)
-		li.searchtab
-			height: $menu-item-size+10
+		> li.searchtab
+			padding: 15px
 			position: relative
-			background-color: darken($main-color,5%)
-			border-bottom: darken($main-color,10%) solid 1px
 			@include box-shadow(rgba(black,0.1s) 0 -3px 0 0 inset)
 			#bo_query
 				color: $main-color
 				background-color: lighten($main-color,60%)
-			.form-group.focus-search
-				display: block
-				position: absolute
-				width: 400px
-				height: 55px
-				z-index: 900
-				padding: 14px 13px 0 7px
-				top: 0
-				left: 0
-				background-color: darken($main-color,5%)
-				border-bottom: darken($main-color,10%) solid 1px
-				#bo_query
-					width: 100%
+			.form-group
+				margin: 0
 			.clear_search
 				position: absolute
-				top: 0
-				right: 0
-			&:before
-				position: absolute
-				top: 0
-				left: 0
-				width: 40px
-				height: 40px
-				background-color: red
-				color: white
-				font-size: $icon-size-base*2
-				line-height: 40px
-				text-align: center
-		li
+				top: 5px
+				right: 5px
+		> li
 			background: $main-color
 			position: relative
-			a
+			> a
 				display: block
 				height: $menu-item-size
 				line-height: $menu-item-size
@@ -421,6 +389,14 @@ $min-height: 850px
 					color: white
 					i
 						color: white
+			> a > i
+				display: inline-block
+				height: $menu-item-size
+				width: $menu-item-size
+				font-size: 20px
+				line-height: $menu-item-size
+				color: white
+				text-align: center
 	ul.submenu
 		display: none
 	#nav-mobile-submenu
@@ -471,7 +447,7 @@ $min-height: 850px
 		.page-breadcrumb
 			left: 75px
 
-.page-sidebar-closed:not(.nav-topbar)
+.page-sidebar-closed:not(.nav-topbar):not(.mobile-nav)
 	.searchtab
 		&:before
 			z-index: 1000

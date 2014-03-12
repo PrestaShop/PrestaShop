@@ -130,16 +130,16 @@ class OrderInvoiceCore extends ObjectModel
 		elseif (is_string($id_invoice))
 		{
 			$matches = array();
-			if (preg_match('/^['.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).']*([0-9]+)?/i', $id_invoice, $matches) !== FALSE)
+			if (preg_match('/^(?:'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).')\s*([0-9]+)$/i', $id_invoice, $matches))
 				$id_invoice = $matches[1];
 		}
-		else
+		if (!$id_invoice)
 			return false;
-
+		
 		$id_order_invoice = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_order_invoice`
 			FROM `'._DB_PREFIX_.'order_invoice`
-			WHERE number = '.$id_invoice
+			WHERE number = '.(int)$id_invoice
 		);
 
 		return ($id_order_invoice ? new OrderInvoice($id_order_invoice) : false);

@@ -299,8 +299,8 @@ class BlockCategories extends Module
 				$resultIds[$row['id_category']] = &$row;
 			}
 			//$nbrColumns = Configuration::get('BLOCK_CATEG_NBR_COLUMNS_FOOTER');
-			$nbrColumns = Configuration::get('BLOCK_CATEG_NBR_COLUMN_FOOTER');
-			if (!$nbrColumns)
+			$nbrColumns = (int)Configuration::get('BLOCK_CATEG_NBR_COLUMN_FOOTER');
+			if (!$nbrColumns or empty($nbrColumns))
 				$nbrColumns = 3;
 			$numberColumn = abs(count($result) / $nbrColumns);
 			$widthColumn = floor(100 / $nbrColumns);
