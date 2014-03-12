@@ -110,6 +110,9 @@ class AdminControllerCore extends Controller
 
 	/** @var override of $fields_form */
 	protected $fields_form_override;
+	
+	/** @var override form action */
+	protected $submit_action;
 
 	/** @var array list of option forms to be generated */
 	protected $fields_options = array();
@@ -1588,7 +1591,7 @@ class AdminControllerCore extends Controller
 				if (isset($sub_tab['module']) && !empty($sub_tab['module']))
 				{
 					$module = Module::getInstanceByName($sub_tab['module']);
-					if (!$module->isEnabledForShopContext())
+					if (is_object($module) && !$module->isEnabledForShopContext())
 					{
 						unset($sub_tabs[$index2]);
 						continue;
@@ -1664,6 +1667,19 @@ class AdminControllerCore extends Controller
 			'bootstrap' => $this->bootstrap,
 			'default_language' => (int)Configuration::get('PS_LANG_DEFAULT')
 		));
+
+		$module = Module::getInstanceByName('themeconfigurator');
+		$lang = '';
+		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
+			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
+		if (is_object($module) && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
+			$this->context->smarty->assign('base_url_tc', $this->context->shop->getBaseUrl()
+				.$lang
+				.'?live_configurator_token='.$module->getLiveConfiguratorToken()
+				.'&id_employee='.(int)$this->context->employee->id
+				.'&id_shop='.(int)$this->context->shop->id
+				.(Configuration::get('PS_TC_THEME') != '' ? '&theme='.Configuration::get('PS_TC_THEME') : '')
+				.(Configuration::get('PS_TC_FONT') != '' ? '&theme_font='.Configuration::get('PS_TC_FONT') : ''));
 	}
 
 	/**
@@ -1847,8 +1863,29 @@ class AdminControllerCore extends Controller
 	
 	public function renderModulesList()
 	{
+		// Load cache file modules list (natives and partners modules)
+		$xmlModules = false;
+		if (file_exists(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST))
+			$xmlModules = @simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST);
+		if ($xmlModules)
+			foreach ($xmlModules->children() as $xmlModule)
+				foreach ($xmlModule->children() as $module)
+					foreach ($module->attributes() as $key => $value)
+					{
+						if ($xmlModule->attributes() == 'native' && $key == 'name')
+							$this->list_natives_modules[] = (string)$value;
+						if ($xmlModule->attributes() == 'partner' && $key == 'name')
+							$this->list_partners_modules[] = (string)$value;
+					}
 		if ($this->getModulesList($this->filter_modules_list))
 		{
+			foreach ($this->modules_list as $key => $module)
+			{
+				if (in_array($module->name, $this->list_partners_modules))
+					$this->modules_list[$key]->type = 'addonsPartner';
+				if (isset($module->description_full) && trim($module->description_full) != '')
+					$module->show_quick_view = true;
+			}
 			$helper = new Helper();
 			return $helper->renderModulesList($this->modules_list);
 		}
@@ -1863,6 +1900,28 @@ class AdminControllerCore extends Controller
 		if (!($this->fields_list && is_array($this->fields_list)))
 			return false;
 		$this->getList($this->context->language->id);
+
+		// If list has 'active' field, we automatically create bulk action
+		if (isset($this->fields_list) && is_array($this->fields_list) && array_key_exists('active', $this->fields_list)
+			&& !empty($this->fields_list['active']))
+		{
+			if (!is_array($this->bulk_actions))
+				$this->bulk_actions = array();
+
+			$this->bulk_actions = array_merge(array(
+				'enableSelection' => array(
+					'text' => $this->l('Enable selection'),
+					'icon' => 'icon-power-off text-success'
+				),
+				'disableSelection' => array(
+					'text' => $this->l('Disable selection'),
+					'icon' => 'icon-power-off text-danger'
+				),
+				'divider' => array(
+					'text' => 'divider'
+				)
+			), $this->bulk_actions);
+		}
 
 		$helper = new HelperList();
 		
@@ -1943,6 +2002,7 @@ class AdminControllerCore extends Controller
 			$helper = new HelperForm($this);
 			$this->setHelperDisplay($helper);
 			$helper->fields_value = $fields_value;
+			$helper->submit_action = $this->submit_action;
 			$helper->tpl_vars = $this->tpl_form_vars;
 			$helper->show_cancel_button = (isset($this->show_form_cancel_button)) ? $this->show_form_cancel_button : ($this->display == 'add' || $this->display == 'edit');
 
@@ -2270,28 +2330,6 @@ class AdminControllerCore extends Controller
 	{
 		if (!isset($this->list_id))
 			$this->list_id = $this->table;
-
-		// If list has 'active' field, we automatically create bulk action
-		if (isset($this->fields_list) && is_array($this->fields_list) && array_key_exists('active', $this->fields_list)
-			&& !empty($this->fields_list['active']))
-		{
-			if (!is_array($this->bulk_actions))
-				$this->bulk_actions = array();
-
-			$this->bulk_actions = array_merge(array(
-				'enableSelection' => array(
-					'text' => $this->l('Enable selection'),
-					'icon' => 'icon-power-off text-success'
-				),
-				'disableSelection' => array(
-					'text' => $this->l('Disable selection'),
-					'icon' => 'icon-power-off text-danger'
-				),
-				'divider' => array(
-					'text' => 'divider'
-				)
-			), $this->bulk_actions);
-		}
 
 		// Manage list filtering
 		if (Tools::isSubmit('submitFilter'.$this->list_id) 
@@ -3393,8 +3431,9 @@ class AdminControllerCore extends Controller
 		$link_reset_module = $link_admin_modules.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab;
 
 		$is_reset_ready = false;
-		if (method_exists(Module::getInstanceByName($module->name), 'reset'))
-			$is_reset_ready = true;
+		if (Validate::isModuleName($module->name))
+			if (method_exists(Module::getInstanceByName($module->name), 'reset'))
+				$is_reset_ready = true;
 
 		$reset_module = array(
 			'href' => $link_reset_module,
@@ -3402,7 +3441,7 @@ class AdminControllerCore extends Controller
 			'title' => '',
 			'text' => $this->translationsTab['Reset'],
 			'cond' => $module->id && $module->active,
-			'icon' => 'share-alt',
+			'icon' => 'undo',
 			'class' => ($is_reset_ready ? 'reset_ready' : '')
 		);
 
@@ -3412,7 +3451,8 @@ class AdminControllerCore extends Controller
 			'title' => '',
 			'text' => $this->translationsTab['Delete'],
 			'cond' => true,
-			'icon' => 'remove',
+			'icon' => 'trash',
+			'class' => 'text-danger'
 		);
 
 		$display_mobile = array(
@@ -3421,7 +3461,7 @@ class AdminControllerCore extends Controller
 			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles']),
 			'text' => $module->enable_device & Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles'],
 			'cond' => $module->id,
-			'icon' => ($module->enable_device & Context::DEVICE_MOBILE) ? 'off' : 'ok',
+			'icon' => 'mobile'
 		);
 
 		$display_tablet = array(
@@ -3430,7 +3470,7 @@ class AdminControllerCore extends Controller
 			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets']),
 			'text' => $module->enable_device & Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets'],
 			'cond' => $module->id,
-			'icon' => ($module->enable_device & Context::DEVICE_TABLET) ? 'off' : 'ok',
+			'icon' => 'tablet'
 		);
 
 		$display_computer = array(
@@ -3439,7 +3479,7 @@ class AdminControllerCore extends Controller
 			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers']),
 			'text' => $module->enable_device & Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers'],
 			'cond' => $module->id,
-			'icon' =>  ($module->enable_device & Context::DEVICE_COMPUTER) ? 'off' : 'ok',
+			'icon' => 'desktop'
 		);
 
 		if ($module->active)

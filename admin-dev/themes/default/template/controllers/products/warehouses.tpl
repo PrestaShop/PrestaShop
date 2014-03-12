@@ -45,7 +45,7 @@
 					<div class="panel-heading">
 							<a class="accordion-toggle" data-toggle="collapse" data-parent="#warehouse-accordion" href="#warehouse-{$warehouse['id_warehouse']}">{$warehouse['name']}</a>
 					</div>
-					<div id="warehouse-{$warehouse['id_warehouse']}" class="panel-collapse collapse{if $smarty.foreach.data.first} in{/if}">
+					<div id="warehouse-{$warehouse['id_warehouse']}">
 							<table class="table">
 								<thead>
 									<tr>

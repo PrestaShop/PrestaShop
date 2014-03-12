@@ -58,6 +58,11 @@ class BlockPermanentLinks extends Module
 	{
 		return $this->display(__FILE__, 'blockpermanentlinks-header.tpl', $this->getCacheId('blockpermanentlinks-header'));
 	}
+	
+	public function hookDisplayNav($params)
+	{
+		return $this->hookTop($params);
+	}
 
 	/**
 	* Returns module content for left column

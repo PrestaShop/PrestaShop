@@ -26,7 +26,7 @@
 {if isset($blockcart_top) && $blockcart_top}
 <div class="col-sm-4 clearfix{if $PS_CATALOG_MODE} header_user_catalog{/if}">
 {/if}
-	<div id="shopping_cart">
+	<div class="shopping_cart">
 		<a href="{$link->getPageLink($order_process, true)|escape:'html':'UTF-8'}" title="{l s='View my shopping cart' mod='blockcart'}" rel="nofollow">
 			<b>{l s='Cart' mod='blockcart'}</b>
 			<span class="ajax_cart_quantity{if $cart_qties == 0} unvisible{/if}">{$cart_qties}</span>
@@ -44,27 +44,22 @@
 				{/if}
 			</span>
 			<span class="ajax_cart_no_product{if $cart_qties > 0} unvisible{/if}">{l s='(empty)' mod='blockcart'}</span>
+			{if $ajax_allowed && isset($blockcart_top) && !$blockcart_top}
+				<span class="block_cart_expand{if !isset($colapseExpandStatus) || (isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded')} unvisible{/if}">&nbsp;</span>
+				<span class="block_cart_collapse{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'collapsed'} unvisible{/if}">&nbsp;</span>
+			{/if}
 		</a>
 		{if !$PS_CATALOG_MODE}
-			<div id="cart_block" class="block exclusive">
-				{*<p class="title_block">
-					<a href="{$link->getPageLink("$order_process", true)|escape:'html':'UTF-8'}" title="{l s='View my shopping cart' mod='blockcart'}" rel="nofollow">
-						{l s='Cart' mod='blockcart'}
-						{if $ajax_allowed}
-							<span id="block_cart_expand"{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded' || !isset($colapseExpandStatus)} class="unvisible"{/if}>&nbsp;</span>
-							<span id="block_cart_collapse"{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'collapsed'} class="unvisible"{/if}>&nbsp;</span>
-						{/if}
-					</a>
-				</p>*}
+			<div class="cart_block block exclusive">
 				<div class="block_content">
 					<!-- block list of products -->
-					<div id="cart_block_list" class="{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded' || !$ajax_allowed || !isset($colapseExpandStatus)}expanded{else}collapsed{/if}">
+					<div class="cart_block_list{if isset($blockcart_top) && !$blockcart_top}{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded' || !$ajax_allowed || !isset($colapseExpandStatus)} expanded{else} collapsed unvisible{/if}{/if}">
 						{if $products}
 							<dl class="products">
 								{foreach from=$products item='product' name='myLoop'}
 									{assign var='productId' value=$product.id_product}
 									{assign var='productAttributeId' value=$product.id_product_attribute}
-									<dt id="cart_block_product_{$product.id_product}_{if $product.id_product_attribute}{$product.id_product_attribute}{else}0{/if}_{if $product.id_address_delivery}{$product.id_address_delivery}{else}0{/if}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
+									<dt data-id="cart_block_product_{$product.id_product}_{if $product.id_product_attribute}{$product.id_product_attribute}{else}0{/if}_{if $product.id_address_delivery}{$product.id_address_delivery}{else}0{/if}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
 										<a class="cart-images" href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category)|escape:'html':'UTF-8'}" title="{$product.name|escape:'html':'UTF-8'}"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')}" alt="{$product.name|escape:'html':'UTF-8'}" /></a>
 										<div class="cart-info">
 											<div class="product-name">
@@ -90,17 +85,17 @@
 										</span>
 									</dt>
 									{if isset($product.attributes_small)}
-										<dd id="cart_block_combination_of_{$product.id_product}{if $product.id_product_attribute}_{$product.id_product_attribute}{/if}_{$product.id_address_delivery|intval}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
+										<dd data-id="cart_block_combination_of_{$product.id_product}{if $product.id_product_attribute}_{$product.id_product_attribute}{/if}_{$product.id_address_delivery|intval}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
 									{/if}
 									<!-- Customizable datas -->
 									{if isset($customizedDatas.$productId.$productAttributeId[$product.id_address_delivery])}
 										{if !isset($product.attributes_small)}
-											<dd id="cart_block_combination_of_{$product.id_product}_{if $product.id_product_attribute}{$product.id_product_attribute}{else}0{/if}_{if $product.id_address_delivery}{$product.id_address_delivery}{else}0{/if}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
+											<dd data-id="cart_block_combination_of_{$product.id_product}_{if $product.id_product_attribute}{$product.id_product_attribute}{else}0{/if}_{if $product.id_address_delivery}{$product.id_address_delivery}{else}0{/if}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
 										{/if}
-										<ul class="cart_block_customizations" id="customization_{$productId}_{$productAttributeId}">
+										<ul class="cart_block_customizations" data-id="customization_{$productId}_{$productAttributeId}">
 											{foreach from=$customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] key='id_customization' item='customization' name='customizations'}
 												<li name="customization">
-													<div id="deleteCustomizableProduct_{$id_customization|intval}_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}" class="deleteCustomizableProduct">
+													<div data-id="deleteCustomizableProduct_{$id_customization|intval}_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}" class="deleteCustomizableProduct">
 														<a class="ajax_cart_block_remove_link" href="{$link->getPageLink("cart", true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;token={$static_token}", true)|escape:"html":"UTF-8"}" rel="nofollow">&nbsp;</a>
 													</div>
 													{if isset($customization.datas.$CUSTOMIZE_TEXTFIELD.0)}
@@ -117,14 +112,14 @@
 								{/foreach}
 							</dl>
 						{/if}
-						<p class="cart_block_no_products{if $products} unvisible{/if}" id="cart_block_no_products">
+						<p class="cart_block_no_products{if $products} unvisible{/if}">
 							{l s='No products' mod='blockcart'}
 						</p>
 						{if $discounts|@count > 0}
-							<table id="vouchers"{if $discounts|@count == 0} style="display:none;"{/if}>
+							<table class="vouchers"{if $discounts|@count == 0} style="display:none;"{/if}>
 								{foreach from=$discounts item=discount}
 									{if $discount.value_real > 0}
-										<tr class="bloc_cart_voucher" id="bloc_cart_voucher_{$discount.id_discount}">
+										<tr class="bloc_cart_voucher" data-id="bloc_cart_voucher_{$discount.id_discount}">
 											<td class="quantity">1x</td>
 											<td class="name" title="{$discount.description}">
 												{$discount.name|cat:' : '|cat:$discount.description|truncate:18:'...'|escape:'html':'UTF-8'}
@@ -144,9 +139,9 @@
 								{/foreach}
 							</table>
 						{/if}
-						<div id="cart-prices">
+						<div class="cart-prices">
 							<div class="cart-prices-line first-line">
-								<span id="cart_block_shipping_cost" class="price ajax_cart_shipping_cost">
+								<span class="price cart_block_shipping_cost ajax_cart_shipping_cost">
 									{if $shipping_cost_float == 0}
 										{l s='Free shipping!' mod='blockcart'}
 									{else}
@@ -160,7 +155,7 @@
 							{if $show_wrapping}
 								<div class="cart-prices-line">
 									{assign var='cart_flag' value='Cart::ONLY_WRAPPING'|constant}
-									<span id="cart_block_wrapping_cost" class="price cart_block_wrapping_cost">
+									<span class="price cart_block_wrapping_cost">
 										{if $priceDisplay == 1}
 											{convertPrice price=$cart->getOrderTotal(false, $cart_flag)}{else}{convertPrice price=$cart->getOrderTotal(true, $cart_flag)}
 										{/if}
@@ -172,34 +167,26 @@
 							{/if}
 							{if $show_tax && isset($tax_cost)}
 								<div class="cart-prices-line">
-									<span id="cart_block_tax_cost" class="price ajax_cart_tax_cost">{$tax_cost}</span>
+									<span class="price cart_block_tax_cost ajax_cart_tax_cost">{$tax_cost}</span>
 									<span>{l s='Tax' mod='blockcart'}</span>
 								</div>
 							{/if}
 							<div class="cart-prices-line last-line">
-								<span id="cart_block_total" class="price ajax_block_cart_total">{$total}</span>
+								<span class="price cart_block_total ajax_block_cart_total">{$total}</span>
 								<span>{l s='Total' mod='blockcart'}</span>
 							</div>
-						</div>
-						{if $use_taxes && $display_tax_label == 1 && $show_tax}
-							{if $priceDisplay == 0}
-								<p id="cart-price-precisions">
+							{if $use_taxes && $display_tax_label == 1 && $show_tax}
+								<p>
+								{if $priceDisplay == 0}
 									{l s='Prices are tax included' mod='blockcart'}
-								</p>
-							{/if}
-							{if $priceDisplay == 1}
-								<p id="cart-price-precisions">
+								{elseif $priceDisplay == 1}
 									{l s='Prices are tax excluded' mod='blockcart'}
+								{/if}
 								</p>
 							{/if}
-						{/if}
-						<p id="cart-buttons">
-							<a 
-							id="button_order_cart" 
-							class="btn btn-default button button-small" 
-							href='{$link->getPageLink("$order_process", true)|escape:"html":"UTF-8"}' 
-							title="{l s='Check out' mod='blockcart'}" 
-							rel="nofollow">
+						</div>
+						<p class="cart-buttons">
+							<a id="button_order_cart" class="btn btn-default button button-small" href="{$link->getPageLink("$order_process", true)|escape:"html":"UTF-8"}" title="{l s='Check out' mod='blockcart'}" rel="nofollow">
 								<span>
 									{l s='Check out' mod='blockcart'}<i class="icon-chevron-right right"></i>
 								</span>
@@ -207,7 +194,7 @@
 						</p>
 					</div>
 				</div>
-			</div><!-- #cart_block -->
+			</div><!-- .cart_block -->
 		{/if}
 	</div>
 {if isset($blockcart_top) && $blockcart_top}
@@ -299,7 +286,7 @@
 				{if $show_tax && isset($tax_cost)}
 					<div class="layer_cart_row">
 						<strong class="dark">{l s='Tax' mod='blockcart'}</strong>
-						<span id="cart_block_tax_cost" class="price ajax_cart_tax_cost">{$tax_cost}</span>
+						<span class="price cart_block_tax_cost ajax_cart_tax_cost">{$tax_cost}</span>
 					</div>
 				{/if}
 				<div class="layer_cart_row">	
@@ -327,11 +314,7 @@
 							<i class="icon-chevron-left left"></i>{l s='Continue shopping' mod='blockcart'}
 						</span>
 					</span>
-					<a 
-					class="btn btn-default button button-medium" 
-					href='{$link->getPageLink("$order_process", true)|escape:"html":"UTF-8"}' 
-					title="{l s='Proceed to checkout' mod='blockcart'}" 
-					rel="nofollow">
+					<a class="btn btn-default button button-medium"	href="{$link->getPageLink("$order_process", true)|escape:"html":"UTF-8"}" title="{l s='Proceed to checkout' mod='blockcart'}" rel="nofollow">
 						<span>
 							{l s='Proceed to checkout' mod='blockcart'}<i class="icon-chevron-right right"></i>
 						</span>

@@ -30,9 +30,12 @@ CREATE TABLE `PREFIX_configuration_kpi_lang` (
 
 /* PHP:ps1600_add_missing_index(); */;
 
-UPDATE `PREFIX_configuration` SET `value`='-' WHERE `name` = 'PS_ATTRIBUTE_ANCHOR_SEPARATOR';
+UPDATE `PREFIX_configuration` SET `value` = '-' WHERE `name` = 'PS_ATTRIBUTE_ANCHOR_SEPARATOR';
 
-UPDATE `PREFIX_tab` SET class_name = 'AdminDashboard', id_parent = 0, active = 1, module = "" WHERE class_name = 'AdminHome';
+UPDATE `PREFIX_tab` SET class_name = 'AdminDashboard', id_parent = 0, active = 1, module = '' WHERE class_name = 'AdminHome';
+UPDATE `PREFIX_tab_lang` SET name = 'Dashboard' WHERE id_tab IN (SELECT id_tab FROM `PREFIX_tab` WHERE class_name = 'AdminDashboard') AND id_lang IN (SELECT id_lang FROM `PREFIX_lang` WHERE iso_code = 'en');
+UPDATE `PREFIX_tab_lang` SET name = 'Tableau de Bord' WHERE id_tab IN (SELECT id_tab FROM `PREFIX_tab` WHERE class_name = 'AdminDashboard') AND id_lang IN (SELECT id_lang FROM `PREFIX_lang` WHERE iso_code = 'fr');
+
 
 INSERT INTO `PREFIX_module` (`name`, `active`, `version`)
 VALUES ('graphnvd3', '1', '1.0'),('dashactivity', '1', '0.1'),('dashtrends', '1', '0.1'),('dashgoals', '1', '0.1'),('dashproducts', '1', '0.1');
@@ -68,6 +71,8 @@ INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
 INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`) (
 	SELECT m.id_module, s.id_shop, h.id_hook, 0 FROM `PREFIX_module` m, `PREFIX_shop` s, `PREFIX_hook` h WHERE m.name IN ('graphnvd3') AND h.name IN ('GraphEngine', 'actionAdminControllerSetMedia')
 );
+
+INSERT INTO `PREFIX_configuration` (`id_shop_group`, `id_shop`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, NULL, 'CONF_AVERAGE_PRODUCT_MARGIN', '40', NOW(), NOW());
 
 ALTER TABLE  `PREFIX_employee` ADD  `stats_compare_from` DATE NULL DEFAULT NULL AFTER  `stats_date_to` , ADD  `stats_compare_to` DATE NULL DEFAULT NULL AFTER  `stats_compare_from`;
 

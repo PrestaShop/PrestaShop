@@ -1075,6 +1075,6 @@ class ValidateCore
 
 	public static function isOrderInvoiceNumber($id)
 	{
-		return (preg_match('/^['.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).']*([0-9]+)?/i', $id));
+		return (preg_match('/^(?:'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).')\s*([0-9]+)$/i', $id));
 	}
 }

@@ -3256,20 +3256,22 @@ class BlockLayered extends Module
 						$done_categories[(int)$id_category]['cat'] = true;
 						$to_insert = true;
 					}
-					foreach ($a as $k_attribute => $attribute)
-						if (!isset($done_categories[(int)$id_category]['a'.(int)$attribute_groups_by_id[(int)$k_attribute]]))
-						{
-							$filter_data['layered_selection_ag_'.(int)$attribute_groups_by_id[(int)$k_attribute]] = array('filter_type' => 0, 'filter_show_limit' => 0);
-							$done_categories[(int)$id_category]['a'.(int)$attribute_groups_by_id[(int)$k_attribute]] = true;
-							$to_insert = true;
-						}
-					foreach ($f as $k_feature => $feature)
-						if (!isset($done_categories[(int)$id_category]['f'.(int)$features_by_id[(int)$k_feature]]))
-						{
-							$filter_data['layered_selection_feat_'.(int)$features_by_id[(int)$k_feature]] = array('filter_type' => 0, 'filter_show_limit' => 0);
-							$done_categories[(int)$id_category]['f'.(int)$features_by_id[(int)$k_feature]] = true;
-							$to_insert = true;
-						}
+					if (is_array($attribute_groups_by_id) && count($attribute_groups_by_id) > 0)
+						foreach ($a as $k_attribute => $attribute)
+							if (!isset($done_categories[(int)$id_category]['a'.(int)$attribute_groups_by_id[(int)$k_attribute]]))
+							{
+								$filter_data['layered_selection_ag_'.(int)$attribute_groups_by_id[(int)$k_attribute]] = array('filter_type' => 0, 'filter_show_limit' => 0);
+								$done_categories[(int)$id_category]['a'.(int)$attribute_groups_by_id[(int)$k_attribute]] = true;
+								$to_insert = true;
+							}
+					if (is_array($attribute_groups_by_id) && count($attribute_groups_by_id) > 0)
+						foreach ($f as $k_feature => $feature)
+							if (!isset($done_categories[(int)$id_category]['f'.(int)$features_by_id[(int)$k_feature]]))
+							{
+								$filter_data['layered_selection_feat_'.(int)$features_by_id[(int)$k_feature]] = array('filter_type' => 0, 'filter_show_limit' => 0);
+								$done_categories[(int)$id_category]['f'.(int)$features_by_id[(int)$k_feature]] = true;
+								$to_insert = true;
+							}
 					if (!isset($done_categories[(int)$id_category]['q']))
 					{
 						$filter_data['layered_selection_stock'] = array('filter_type' => 0, 'filter_show_limit' => 0);

@@ -26,11 +26,11 @@
 	background: #333333;
 	display: block;
 	height: 50px;
-	left: 215px;
+	left: 0px;
 	position: fixed;
 	top: 150px;
 	width: 50px;
-	z-index: 20;
+	z-index: 10000;
 	cursor: pointer;
 }
 #gear-right i {
@@ -40,9 +40,9 @@
 }
 #tool_customization{
 	position: fixed;
-	left: 0;
+	left: -215px;
 	top: 150px;
-	z-index: 20; 
+	z-index: 10000; 
 	height: auto;
 	width: 215px;
 	background: #333333

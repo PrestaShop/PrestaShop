@@ -174,7 +174,7 @@ abstract class ModuleCore
 			$this->ps_versions_compliancy['min'] .= '.0.0';
 		
 		if (strlen($this->ps_versions_compliancy['max']) == 3)
-			$this->ps_versions_compliancy['min'] .= '.999.999';
+			$this->ps_versions_compliancy['max'] .= '.999.999';
 		
 		// Load context and smarty
 		$this->context = $context ? $context : Context::getContext();				
@@ -1666,7 +1666,8 @@ abstract class ModuleCore
 	{
 	 	$output = '
 	 	<div class="bootstrap">
-		<div class="module_error alert alert-danger">
+		<div class="module_error alert alert-danger" >
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			'.$error.'
 		</div>
 		</div>';
@@ -1679,6 +1680,7 @@ abstract class ModuleCore
 	 	$output = '
 	 	<div class="bootstrap">
 		<div class="module_confirmation conf confirm alert alert-success">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			'.$string.'
 		</div>
 		</div>';
