@@ -8,13 +8,13 @@
 	</fields>
 	<entities>
 		<theme_meta id="theme_meta_1" id_theme="1" id_meta="1" left_column="0" right_column="0"/>
-		<theme_meta id="theme_meta_2" id_theme="1" id_meta="2" left_column="0" right_column="0"/>
+		<theme_meta id="theme_meta_2" id_theme="1" id_meta="2" left_column="1" right_column="0"/>
 		<theme_meta id="theme_meta_3" id_theme="1" id_meta="3" left_column="0" right_column="0"/>
 		<theme_meta id="theme_meta_4" id_theme="1" id_meta="4" left_column="0" right_column="0"/>
 		<theme_meta id="theme_meta_5" id_theme="1" id_meta="5" left_column="1" right_column="0"/>
 		<theme_meta id="theme_meta_6" id_theme="1" id_meta="6" left_column="1" right_column="0"/>
 		<theme_meta id="theme_meta_7" id_theme="1" id_meta="7" left_column="0" right_column="0"/>
-		<theme_meta id="theme_meta_8" id_theme="1" id_meta="8" left_column="0" right_column="0"/>
+		<theme_meta id="theme_meta_8" id_theme="1" id_meta="8" left_column="1" right_column="0"/>
 		<theme_meta id="theme_meta_10" id_theme="1" id_meta="9" left_column="1" right_column="0"/>
 		<theme_meta id="theme_meta_11" id_theme="1" id_meta="10" left_column="0" right_column="0"/>
 		<theme_meta id="theme_meta_12" id_theme="1" id_meta="11" left_column="0" right_column="0"/>
