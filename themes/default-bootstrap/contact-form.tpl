@@ -64,7 +64,6 @@
                                 <input type="hidden" name="id_contact" value="{$contact.id_contact}" />
                             {/if}
                         {/foreach}
-                </div>
                 {else}
                     <select id="id_contact" class="form-control" name="id_contact">
                         <option value="0">{l s='-- Choose --'}</option>
@@ -72,7 +71,7 @@
                             <option value="{$contact.id_contact|intval}" {if isset($smarty.request.id_contact) && $smarty.request.id_contact == $contact.id_contact}selected="selected"{/if}>{$contact.name|escape:'html':'UTF-8'}</option>
                         {/foreach}
                     </select>
-                </div> <!-- .col-xs-12 .col-md-3 -->
+                </div>
                     <p id="desc_contact0" class="desc_contact">&nbsp;</p>
                     {foreach from=$contacts item=contact}
                         <p id="desc_contact{$contact.id_contact|intval}" class="desc_contact contact-title" style="display:none;">
