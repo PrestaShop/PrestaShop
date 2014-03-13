@@ -421,7 +421,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Status'),
+						'label' => $this->l('Enabled'),
 						'name' => 'active',
 						'required' => false,
 						'class' => 't',
@@ -429,13 +429,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'values' => array(
 							array(
 								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Enabled')
+								'value' => 1
 							),
 							array(
 								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('Disabled')
+								'value' => 0
 							)
 						),
 						'hint' => $this->l('Enable the carrier in the Front Office.')
