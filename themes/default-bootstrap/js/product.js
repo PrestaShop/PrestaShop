@@ -181,7 +181,6 @@ $(document).ready(function(){
 	});
 
 	$(document).on('click', '.color_pick', function(e){
-		console.log('qsd');
 		e.preventDefault();
 		colorPickerClick($(this));
 		getProductAttribute();
