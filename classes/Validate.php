@@ -383,7 +383,7 @@ class ValidateCore
 	 */
 	public static function isGenericName($name)
 	{
-		return empty($name) || preg_match('/^[^<>={}]*$/u', $name);
+		return empty($name) || preg_match('/^[^<>{}]*$/u', $name);
 	}
 
 	/**
@@ -704,7 +704,7 @@ class ValidateCore
 	public static function isLoadedObject($object)
 	{
 		return is_object($object) && $object->id;
-	}
+	}ge
 
 	/**
 	 * Check object validity
