@@ -81,7 +81,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 		$this->tests_render = array(
 			'required' => array(
 				array(
-					'title' => $this->l('PHP parameters:'),
+					'title' => $this->l('Required PHP parameters'),
 					'success' => 1,
 					'checks' => array(
 						'phpversion' => $this->l('PHP 5.1.2 or later is not enabled'),
@@ -119,7 +119,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 			),
 			'optional' => array(
 				array(
-					'title' => $this->l('PHP parameters:'),
+					'title' => $this->l('Recommended PHP parameters'),
 					'success' => $this->tests['optional']['success'],
 					'checks' => array(
 						'fopen' => $this->l('Cannot open external URLs'),
