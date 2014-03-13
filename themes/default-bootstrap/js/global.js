@@ -131,27 +131,28 @@ function responsiveResize()
 
 function blockHover(status)
 {
-	$(document).off('mouseenter').on('mouseenter', '.product_list.grid li.ajax_block_product .product-container',
-		function(e){
-			if ($('body').find('.container').width() == 1170){
-				var pcHeight = $(this).parent().outerHeight();
-				var pcPHeight = $(this).parent().find('.button-container').outerHeight() + $(this).parent().find('.comments_note').outerHeight() + $(this).parent().find('.functional-buttons').outerHeight();
-				$(this).parent().addClass('hovered');
-				$(this).parent().css('height', pcHeight + pcPHeight).css('margin-bottom', pcPHeight * (-1));
-			}
+	$(document).off('mouseenter').on('mouseenter', '.product_list.grid li.ajax_block_product .product-container', function(e){
+
+		if ('ontouchstart' in document.documentElement)
+			return;
+		if ($('body').find('.container').width() == 1170)
+		{
+			var pcHeight = $(this).parent().outerHeight();
+			var pcPHeight = $(this).parent().find('.button-container').outerHeight() + $(this).parent().find('.comments_note').outerHeight() + $(this).parent().find('.functional-buttons').outerHeight();
+			$(this).parent().addClass('hovered');
+			$(this).parent().css('height', pcHeight + pcPHeight).css('margin-bottom', pcPHeight * (-1));
 		}
-	);
+	});
 
 	$(document).off('mouseleave').on('mouseleave', '.product_list.grid li.ajax_block_product .product-container', function(e){
-			if ($('body').find('.container').width() == 1170)
-				$(this).parent().removeClass('hovered').removeAttr('style');
-		}
-	);
+		if ($('body').find('.container').width() == 1170)
+			$(this).parent().removeClass('hovered').removeAttr('style');
+	});
 }
 
 function quick_view()
 {
-	$(document).on('click', '.quick-view', function(e) 
+	$(document).on('click', '.quick-view:visible', function(e) 
 	{
 		e.preventDefault();
 		var url = this.rel;
