@@ -704,7 +704,7 @@ class ValidateCore
 	public static function isLoadedObject($object)
 	{
 		return is_object($object) && $object->id;
-	}ge
+	}
 
 	/**
 	 * Check object validity
