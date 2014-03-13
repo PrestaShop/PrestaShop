@@ -32,4 +32,6 @@
 <meta property="og:locality" content="" />
 <meta property="og:country-name" content="" />
 <meta property="og:postal-code" content="" />
+{if isset($link_rewrite) && isset($cover) && isset($cover.id_image)}
 <meta property="og:image" content="{$link->getImageLink($link_rewrite, $cover.id_image, large_default)}" />
+{/if}

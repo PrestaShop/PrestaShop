@@ -250,15 +250,18 @@ class SceneCore extends ObjectModel
 			foreach ($products as &$product)
 			{
 				$product['details'] = new Product($product['id_product'], !$lite_result, $id_lang);
-				$product['link'] = $context->link->getProductLink(
-					$product['details']->id,
-					$product['details']->link_rewrite,
-					$product['details']->category,
-					$product['details']->ean13
-				);
-				$cover = Product::getCover($product['details']->id);
-				if (is_array($cover))
-					$product = array_merge($cover, $product);
+				if (Validate::isLoadedObject($product['details']))
+				{
+					$product['link'] = $context->link->getProductLink(
+						$product['details']->id,
+						$product['details']->link_rewrite,
+						$product['details']->category,
+						$product['details']->ean13
+					);
+					$cover = Product::getCover($product['details']->id);
+					if (is_array($cover))
+						$product = array_merge($cover, $product);
+				}
 			}
 		return $products;
 	}
