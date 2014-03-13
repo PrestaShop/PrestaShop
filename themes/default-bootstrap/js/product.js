@@ -213,13 +213,14 @@ $(document).ready(function(){
 	}
 	else
 	{
-		$(document).on('click', '.fancybox', function(e){
+		$(document).off('click').on('click', '.fancybox', function(e){
 			e.preventDefault();
 		});
-		$(document).on('click', '#bigpic', function(e){
-			var data = window.document.location.href.replace(window.document.location.search, '');
+		$(document).off('click').on('click', '#bigpic', function(e){
+			e.preventDefault();
+			var productUrl= window.document.location.href + '';
+			var data = productUrl.replace('content_only=1', '');
 			window.parent.document.location.href = data;
- 			location.reload(); 
 		});
 	}
 
