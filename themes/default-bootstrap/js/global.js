@@ -29,6 +29,12 @@ $(document).ready(function(){
 	highdpiInit();
 	responsiveResize();
 	$(window).resize(responsiveResize);
+	if (navigator.userAgent.match(/Android/i))
+	{
+		var viewport = document.querySelector('meta[name="viewport"]');
+		viewport.setAttribute('content', 'initial-scale=1.0,maximum-scale=1.0,user-scalable=0,width=device-width,height=device-height');
+		window.scrollTo(0, 1);
+	}
 	blockHover();
 	if (typeof quickView !== 'undefined' && quickView)
 		quick_view();
@@ -109,13 +115,6 @@ function highdpiInit()
 
 function responsiveResize()
 {
-	if (navigator.userAgent.match(/Android/i))
-	{
-		var viewport = document.querySelector('meta[name="viewport"]');
-		viewport.setAttribute('content', 'initial-scale=1.0,maximum-scale=1.0,user-scalable=0,width=device-width,height=device-height');
-		window.scrollTo(0, 1);
-	}
-
 	if ($(document).width() <= 767 && responsiveflag == false)
 	{
 		accordion('enable');
