@@ -82,7 +82,7 @@
 				{else}
 					{l s='When one of them makes at least %d order, ' sprintf=$orderQuantity mod='referralprogram'}
 				{/if},
-				{l s='he or she will receive a %s voucher and you will receive your own voucher worth %s.' sprintf=[$discount] mod='referralprogram'}
+				{l s='he or she will receive a %1$s voucher and you will receive your own voucher worth %1$s.' sprintf=[$discount] mod='referralprogram'}
 			</p>
 			<form method="post" action="{$link->getModuleLink('referralprogram', 'program', [], true)|escape:'html':'UTF-8'}" class="std">
 				<table class="table table-bordered">
