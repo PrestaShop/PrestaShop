@@ -237,7 +237,7 @@ class AdminThemesControllerCore extends AdminController
 			'responsive' => array(
 				'title' => $this->l('Responsive'),
 				'type' => 'bool',
-				'active' => 'responsive',
+				'callback' => 'printResponsiveIcon',
 				'align' => 'center',
 				'class' => 'fixed-width-xs'
 			),
@@ -343,26 +343,8 @@ class AdminThemesControllerCore extends AdminController
 					'label' => $this->l('Preview image for the theme'),
 					'name' => 'image_preview',
 					'display_image' => true,
-					'hint' => sprintf($this->l('Max image size:%1s'), Tools::formatBytes(Tools::getMaxUploadSize())),
+					'hint' => sprintf($this->l('Max image size: %1s'), Tools::formatBytes(Tools::getMaxUploadSize())),
 					'image' => $image_url,
-				),
-				array(
-					'type' => 'switch',
-					'label' => $this->l('Responsive'),
-					'name' => 'responsive',
-					'hint' => $this->l('Please indicate if the theme is adapted to all screen sizes (mobile, tablet, desktop).'),
-					'values' => array(
-						array(
-							'id' => 'responsive_on',
-							'value' => 1,
-							'label' => $this->l('Yes')
-						),
-						array(
-							'id' => 'responsive_off',
-							'value' => 0,
-							'label' => $this->l('No')
-						)
-					),
 				),
 				array(
 					'type' => 'switch',
@@ -437,6 +419,25 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'query' => $theme_query,
 				)
+			);
+
+			$this->fields_form['input'][] = array(
+				'type' => 'switch',
+				'label' => $this->l('Responsive'),
+				'name' => 'responsive',
+				'hint' => $this->l('Please indicate if the theme is adapted to all screen sizes (mobile, tablet, desktop).'),
+				'values' => array(
+					array(
+						'id' => 'responsive_on',
+						'value' => 1,
+						'label' => $this->l('Yes')
+					),
+					array(
+						'id' => 'responsive_off',
+						'value' => 0,
+						'label' => $this->l('No')
+					)
+				),
 			);
 		}
 		else
@@ -1899,7 +1900,7 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	private function getNativeModule($type = 0)
 	{
-		$xml = simplexml_load_string(Tools::file_get_contents('http://api.prestashop.com/xml/modules_list_15.xml'));
+		$xml = simplexml_load_string(Tools::file_get_contents('http://api.prestashop.com/xml/modules_list_16.xml'));
 
 		if ($xml)
 		{
@@ -2679,6 +2680,11 @@ class AdminThemesControllerCore extends AdminController
 		// This is a composite page, we don't want the "options" display mode
 		if ($this->display == 'options' || $this->display == 'list')
 			$this->display = '';
+	}
+
+	public function printResponsiveIcon($value)
+	{
+		return ($value ? '<span class="list-action-enable  action-enabled"><i class="icon-check"></i></span>' : '<span class="list-action-enable  action-disabled"><i class="icon-remove"></i></span>');
 	}
 
 	public function processResponsive()
