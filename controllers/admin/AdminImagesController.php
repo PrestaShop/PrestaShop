@@ -495,10 +495,13 @@ class AdminImagesControllerCore extends AdminController
 							if (!file_exists($dir.$image) || !filesize($dir.$image))
 							{
 								$errors = true;
-								$this->errors[] = sprintf(Tools::displayError('Source file does not exist or is empty (%s)', $dir.$image));
+								$this->errors[] = sprintf(Tools::displayError('Source file does not exist or is empty (%s)'), $dir.$image);
 							}
 							elseif (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height']))
+							{
 								$errors = true;
+								$this->errors[] = sprintf(Tools::displayError('Failed to resize image file (%s)'), $dir.$image);
+							}
 						}
 						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the timeout, just enough time to process the end of the page on a slow server
 							return 'timeout';
