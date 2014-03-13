@@ -426,4 +426,24 @@ $(document).ready(function() {
 		return false;
 	});
 
+	//move to hash after clicking on anchored links
+	function scroll_if_anchor(href) {
+		href = typeof(href) == "string" ? href : $(this).attr("href");
+		var fromTop = 120;
+
+		if(href.indexOf("#") == 0) {
+			var $target = $(href);
+
+			if($target.length) {
+				$('html, body').animate({ scrollTop: $target.offset().top - fromTop });
+				if(history && "pushState" in history) {
+					history.pushState({}, document.title, window.location.pathname + href);
+					return false;
+				}
+			}
+		}
+	}
+	scroll_if_anchor(window.location.hash);
+	$("body").on("click", "a[data-toggle!='tab']", scroll_if_anchor);
+
 });

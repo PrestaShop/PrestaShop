@@ -700,7 +700,12 @@ class AdminModulesControllerCore extends AdminController
 				// Browse modules list
 				foreach ($modules_on_disk as $km => $module_on_disk)
 				{
-					if (isset($module_on_disk->version_addons) && $module_on_disk->version_addons)
+					if ($module_name = Tools::getValue('module_name'))
+					{
+						if ($module_on_disk->name == $module_name && isset($module_on_disk->version_addons) && $module_on_disk->version_addons)
+							$modules[] = $module_on_disk->name;
+					}
+					else if (isset($module_on_disk->version_addons) && $module_on_disk->version_addons)
 						$modules[] = $module_on_disk->name;
 				}
 
@@ -817,7 +822,7 @@ class AdminModulesControllerCore extends AdminController
 							$disable_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&enable=0&tab_module='.$module->tab;
 							$uninstall_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&uninstall='.$module->name.'&tab_module='.$module->tab;
 							$reset_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&reset&tab_module='.$module->tab;
-							$update_link =  $this->context->link->getAdminLink('AdminModules').'&checkAndUpdate=1';
+							$update_link =  $this->context->link->getAdminLink('AdminModules').'&checkAndUpdate=1&module_name='.$module->name;
 
 							$is_reset_ready = false;
 							if (method_exists($module, 'reset'))

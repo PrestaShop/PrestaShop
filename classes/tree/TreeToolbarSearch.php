@@ -69,14 +69,7 @@ class TreeToolbarSearchCore extends TreeToolbarButtonCore implements
 
 		foreach ($data as $item)
 		{
-			$html .= '{';
-
-			foreach ($item as $key => $value)
-				if (!is_array($value))
-					$html .= $key.':'.(is_numeric($value) ? $value : '"'.$value.'"').',';
-
-			$html .= '},';
-
+			$html .= Tools::jsonEncode($item).',';
 			if (array_key_exists('children', $item) && !empty($item['children']))
 				$html .= $this->_renderData($item['children']);
 		}

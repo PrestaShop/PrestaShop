@@ -1674,6 +1674,7 @@ class AdminControllerCore extends Controller
 			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
 		if (is_object($module) && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
 			$this->context->smarty->assign('base_url_tc', $this->context->shop->getBaseUrl()
+				.(Configuration::get('PS_REWRITING_SETTINGS') ? '' : 'index.php')
 				.$lang
 				.'?live_configurator_token='.$module->getLiveConfiguratorToken()
 				.'&id_employee='.(int)$this->context->employee->id
@@ -3441,7 +3442,7 @@ class AdminControllerCore extends Controller
 			'title' => '',
 			'text' => $this->translationsTab['Reset'],
 			'cond' => $module->id && $module->active,
-			'icon' => 'share-alt',
+			'icon' => 'undo',
 			'class' => ($is_reset_ready ? 'reset_ready' : '')
 		);
 
@@ -3451,7 +3452,8 @@ class AdminControllerCore extends Controller
 			'title' => '',
 			'text' => $this->translationsTab['Delete'],
 			'cond' => true,
-			'icon' => 'remove',
+			'icon' => 'trash',
+			'class' => 'text-danger'
 		);
 
 		$display_mobile = array(
@@ -3460,7 +3462,7 @@ class AdminControllerCore extends Controller
 			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles']),
 			'text' => $module->enable_device & Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles'],
 			'cond' => $module->id,
-			'icon' => ($module->enable_device & Context::DEVICE_MOBILE) ? 'off' : 'ok',
+			'icon' => 'mobile'
 		);
 
 		$display_tablet = array(
@@ -3469,7 +3471,7 @@ class AdminControllerCore extends Controller
 			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets']),
 			'text' => $module->enable_device & Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets'],
 			'cond' => $module->id,
-			'icon' => ($module->enable_device & Context::DEVICE_TABLET) ? 'off' : 'ok',
+			'icon' => 'tablet'
 		);
 
 		$display_computer = array(
@@ -3478,7 +3480,7 @@ class AdminControllerCore extends Controller
 			'title' => htmlspecialchars($module->enable_device & Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers']),
 			'text' => $module->enable_device & Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers'],
 			'cond' => $module->id,
-			'icon' =>  ($module->enable_device & Context::DEVICE_COMPUTER) ? 'off' : 'ok',
+			'icon' => 'desktop'
 		);
 
 		if ($module->active)

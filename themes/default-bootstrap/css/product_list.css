@@ -44,7 +44,7 @@ ul.product_list .product-image-container {
     box-shadow: rgba(0, 0, 0, 0.16) 0 2px 8px; }
     @media (min-width: 1200px) {
       ul.product_list .product-image-container .quick-view {
-        display: none; } }
+        display: block; } }
     @media (max-width: 767px) {
       ul.product_list .product-image-container .quick-view {
         display: none; } }

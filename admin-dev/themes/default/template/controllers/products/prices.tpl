@@ -494,6 +494,7 @@ $(document).ready(function () {
 		});
 	</script>
 
+	<div class="table-responsive">
 	<table id="specific_prices_list" class="table table-bordered">
 		<thead>
 			<tr>

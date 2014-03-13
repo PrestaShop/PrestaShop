@@ -44,7 +44,11 @@
 		{assign var='requestPage' value=$link->getPaginationLink('supplier', $supplier, false, false, true, false)}
 		{assign var='requestNb' value=$link->getPaginationLink('supplier', $supplier, true, false, false, true)}
 	{else}
-		{assign var='requestPage' value=$link->getPaginationLink(false, false, false, false, true, false)}
+		{if !isset($current_url)}
+			{assign var='requestPage' value=$link->getPaginationLink(false, false, false, false, true, false)}
+		{else}
+			{assign var='requestPage' value=$current_url}
+		{/if}
 		{assign var='requestNb' value=$link->getPaginationLink(false, false, true, false, false, true)}
 	{/if}
 	<!-- Pagination -->
