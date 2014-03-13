@@ -2109,7 +2109,7 @@ class ToolsCore
 	ExpiresByType application/javascript \"access plus 1 week\"
 	ExpiresByType application/x-javascript \"access plus 1 week\"
 	ExpiresByType image/x-icon \"access plus 1 year\"
-	ExpiresByType image/svg+xml \"access plus 1 year
+	ExpiresByType image/svg+xml \"access plus 1 year\"
 	ExpiresByType image/vnd.microsoft.icon \"access plus 1 year\"
 	ExpiresByType application/font-woff \"access plus 1 year\"
 	ExpiresByType application/x-font-woff \"access plus 1 year\"

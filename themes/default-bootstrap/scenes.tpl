@@ -28,13 +28,17 @@
 		{foreach $scenes as $scene_key=>$scene}
 		<div class="screen_scene" id="screen_scene_{$scene->id}" style="background:transparent url({$base_dir}img/scenes/{$scene->id}-scene_default.jpg); height:{$largeSceneImageType.height}px; width:{$largeSceneImageType.width}px;{if !$scene@first} display:none;{/if}">
 			{foreach $scene->products as $product_key=>$product}
-			{assign var=imageIds value="`$product.id_product`-`$product.id_image`"}
+			{if isset($product.id_image)}
+				{assign var=imageIds value="`$product.id_product`-`$product.id_image`"}
+			{/if}
 				<a href="{$product.link|escape:'html':'UTF-8'}" class="popover-button" style="width:{$product.zone_width}px; height:{$product.zone_height}px; margin-left:{$product.x_axis}px ;margin-top:{$product.y_axis}px;" data-id_product_scene="{$scene_key|intval}_{$product_key|intval}_{$product.id_product|intval}">
 					<span style="margin-top:{math equation='a/2 -10' a=$product.zone_height}px; margin-left:{math equation='a/2 -10' a=$product.zone_width}px;"></span>
 				</a>
 				<div id="scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}" style="display:none;">
                 	<div class="product-image-container">
-						<img class="img-responsive replace-2x" src="{$link->getImageLink($product.id_product, $imageIds, 'home_default')|escape:'html':'UTF-8'}" alt="" />
+						{if isset($imageIds)}
+							<img class="img-responsive replace-2x" src="{$link->getImageLink($product.id_product, $imageIds, 'home_default')|escape:'html':'UTF-8'}" alt="" />
+						{/if}
                     </div>
 					<p class="product-name"><span class="product_name">{$product.details->name}</span></p>
 					<div class="description">{$product.details->description_short|strip_tags|truncate:170:'...'}</div>
