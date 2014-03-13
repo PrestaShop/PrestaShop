@@ -26,6 +26,7 @@
 
 class Hook extends HookCore
 {
+	private static $executedModules = array();
 	private static $hookTime = array();
 	private static $hookMemoryUsage = array();
 	
@@ -38,9 +39,22 @@ class Hook extends HookCore
 	{
 		return self::$hookMemoryUsage;
 	}
+	
+	public static function getExecutedModules()
+	{
+		return self::$executedModules;
+	}
 
 	public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true, $use_push = false, $id_shop = null)
 	{
+		$module_list = Hook::getHookModuleExecList($hook_name);
+		if (is_array($module_list))
+		{
+			$module_list_ids = array();
+			foreach ($module_list as $module)
+				$module_list_ids[] = $module['id_module'];
+			self::$executedModules = array_merge(self::$executedModules, $module_list_ids);
+		}
 		$memoryUsage = memory_get_usage();
 		$t0 = microtime(true);
 		$result = parent::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
