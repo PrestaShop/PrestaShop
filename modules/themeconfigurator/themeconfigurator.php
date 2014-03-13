@@ -199,8 +199,7 @@ class ThemeConfigurator extends Module
 	{
 		$this->context->controller->addCss($this->_path.'css/hooks.css', 'all');
 
-		if ((int)Configuration::get('PS_TC_ACTIVE') == 1 &&
-			Tools::getValue('live_configurator_token') == $this->getLiveConfiguratorToken())
+		if ((int)Configuration::get('PS_TC_ACTIVE') == 1 && Tools::getValue('live_configurator_token') && Tools::getValue('live_configurator_token') == $this->getLiveConfiguratorToken())
 		{
 			$this->context->controller->addCSS($this->_path.'css/live_configurator.css');
 			$this->context->controller->addJS($this->_path.'js/live_configurator.js');
