@@ -231,7 +231,7 @@ class AdminCustomersControllerCore extends AdminController
 			case 'add':
 			case 'edit':
 				if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer))
-					$this->toolbar_title[] = sprintf('Editing Customer: %s', Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
+					$this->toolbar_title[] = sprintf($this->l('Editing Customer: %s'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
 				else
 					$this->toolbar_title[] = $this->l('Creating a new Customer');
 				break;
@@ -347,6 +347,7 @@ class AdminCustomersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
+					'prefix' => '<i class="icon-envelope-o"></i>',
 					'label' => $this->l('Email address'),
 					'name' => 'email',
 					'col' => '4',
@@ -471,8 +472,8 @@ class AdminCustomersControllerCore extends AdminController
 					),
 					'col' => '4',
 					'hint' => array(
-						$this->l('The group will be as applied by default.'),
-						$this->l('Apply the discount\'s price of this group.')
+						$this->l('This group will be the user\'s default group.'),
+						$this->l('Only the discount for the selected group will be applied to this customer.')
 					)
 				)
 			)
@@ -598,9 +599,9 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->color = 'color1';
 		$helper->title = $this->l('Customers', null, null, false);
 		$helper->subtitle = $this->l('All Time', null, null, false);
-		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER') !== false)
-			$helper->value = ConfigurationKPI::get('CUSTOMER_MAIN_GENDER');
-		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER_EXPIRE') < $time)
+		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER', $this->context->language->id) !== false)
+			$helper->value = ConfigurationKPI::get('CUSTOMER_MAIN_GENDER', $this->context->language->id);
+		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER_EXPIRE', $this->context->language->id) < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=customer_main_gender';
 		$kpis[] = $helper->generate();
 

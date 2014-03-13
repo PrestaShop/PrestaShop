@@ -400,8 +400,8 @@
 									<tr>
 										<td>{dateFormat date=$payment->date_add full=true}</td>
 										<td>{$payment->payment_method|escape:'html':'UTF-8'}</td>
-										<td class="text-center">{$payment->transaction_id|escape:'html':'UTF-8'}</td>
-										<td class="text-right">{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
+										<td>{$payment->transaction_id|escape:'html':'UTF-8'}</td>
+										<td>{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
 										<td>
 										{if $invoice = $payment->getOrderInvoice($order->id)}
 											{$invoice->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
@@ -461,13 +461,9 @@
 										</td>
 									</tr>
 									{/foreach}
-								</tbody>
-							</table>
-							<table class="table">
-								<tbody>
 									<tr class="current-edit">
 										<td>
-											<div class="input-group fixed-width-md">
+											<div class="input-group fixed-width-xl">
 												<input type="text" name="payment_date" class="datepicker" value="{date('Y-m-d')}" />
 												<div class="input-group-addon">
 													<i class="icon-calendar-o"></i>
@@ -1244,6 +1240,23 @@
 						window.open(invoice_marker.url);
 					});
 				}
+			});
+			
+			var date = new Date();
+			var hours = date.getHours();
+			if (hours < 10)
+				hours = "0" + hours;
+			var mins = date.getMinutes();
+			if (mins < 10)
+				mins = "0" + mins;
+			var secs = date.getSeconds();
+			if (secs < 10)
+				secs = "0" + secs;
+
+			$('.datepicker').datetimepicker({
+				prevText: '',
+				nextText: '',
+				dateFormat: 'yy-mm-dd ' + hours + ':' + mins + ':' + secs
 			});
 		});
 	</script>

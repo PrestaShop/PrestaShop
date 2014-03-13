@@ -178,7 +178,6 @@ $(document).ready(function(){
 	$(document).on('click', 'a[name=resetImages]', function(e){
 		e.preventDefault();
 		refreshProductImages(0);
-		$(this).parent().hide('slow');
 	});
 
 	$(document).on('click', '.color_pick', function(e){
@@ -203,14 +202,26 @@ $(document).ready(function(){
 		saveCustomization();
 	});
 
-	if (contentOnly == false && !!$.prototype.fancybox)
-		$('.fancybox').fancybox({
-			'hideOnContentClick': true,
-			'transitionIn'	: 'elastic',
-			'transitionOut'	: 'elastic'
-		});
+	if (contentOnly == false)
+	{
+		if(!!$.prototype.fancybox)
+			$('.fancybox').fancybox({
+				'hideOnContentClick': true,
+				'transitionIn'	: 'elastic',
+				'transitionOut'	: 'elastic'
+			});
+	}
 	else
-		$(document).on('click', '.fancybox', function(e){e.preventDefault();});
+	{
+		$(document).on('click', '.fancybox', function(e){
+			e.preventDefault();
+		});
+		$(document).on('click', '#bigpic', function(e){
+			var data = window.document.location.href.replace(window.document.location.search, '');
+			window.parent.document.location.href = data;
+ 			location.reload(); 
+		});
+	}
 
 	if (!!$.prototype.bxSlider)
 		$('#bxslider').bxSlider({
@@ -334,7 +345,7 @@ function findCombination(firstTime)
 	//create a temporary 'choice' array containing the choices of the customer
 	var choice = [];
 	$('#attributes select, #attributes input[type=hidden], #attributes input[type=radio]:checked').each(function(){
-		choice.push($(this).val());
+		choice.push(parseInt($(this).val()));
 	});
 
 	if (typeof combinations == 'undefined' || !combinations)
@@ -346,7 +357,7 @@ function findCombination(firstTime)
 		var combinationMatchForm = true;
 		$.each(combinations[combination]['idsAttributes'], function(key, value)
 		{
-			if (!in_array(value, choice))
+			if (!in_array(parseInt(value), choice))
 				combinationMatchForm = false;
 		});
 
@@ -649,6 +660,7 @@ function updateDisplay()
 		} else {
 			our_price = formatCurrency(0, currencyFormat, currencySign, currencyBlank);
 		}
+
 		$('#our_price_display').text(our_price);
 		$('#old_price_display').text(formatCurrency(productPriceWithoutReductionDisplay, currencyFormat, currencySign, currencyBlank));
 
@@ -757,17 +769,14 @@ function refreshProductImages(id_product_attribute)
 				$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show().children('a.shown').trigger('click');
 			else
 				$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show();
-		if (parseInt($('#thumbs_list_frame >li:visible').length) < parseInt($('#thumbs_list_frame >li').length))
-			$('#wrapResetImages').show('slow');
-		else
-			$('#wrapResetImages').hide('slow');
 	}
 	else
-	{
 		$('#thumbs_list li').show();
-		if (parseInt($('#thumbs_list_frame >li').length) == parseInt($('#thumbs_list_frame >li:visible').length))
-			$('#wrapResetImages').hide('slow');
-	}
+
+	if (parseInt($('#thumbs_list_frame >li:visible').length) != parseInt($('#thumbs_list_frame >li').length))
+		$('#wrapResetImages').stop(true, true).show();
+	else
+		$('#wrapResetImages').stop(true, true).hide();
 
 	var thumb_width = $('#thumbs_list_frame >li').width() + parseInt($('#thumbs_list_frame >li').css('marginRight'));
 	$('#thumbs_list_frame').width((parseInt((thumb_width) * $('#thumbs_list_frame >li').length)) + 'px');

@@ -107,147 +107,148 @@
 	<header id="header" class="bootstrap">
 		<nav id="header_infos" role="navigation">
 			<div class="navbar-header">
-			<button id="header_nav_toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-primary">
-				<i class="icon-reorder"></i>
-			</button>
+				<button id="header_nav_toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-primary">
+					<i class="icon-reorder"></i>
+				</button>
 
-			<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">
-				<img src="{$img_dir}prestashop-avatar.png" alt="{$shop_name|escape:'html':'UTF-8'}" />
-				{$shop_name}
-			</a>
+				<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">
+					<img src="{$img_dir}prestashop-avatar.png" alt="{$shop_name|escape:'html':'UTF-8'}" />
+					{$shop_name}
+				</a>
 
-			<ul id="header_notifs_icon_wrapper">
+				<ul id="header_notifs_icon_wrapper">
 {if {$show_new_orders} == 1}
-				<li id="orders_notif" class="dropdown" data-type="order">
-					<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
-						<i class="icon-shopping-cart"></i>
-						<span id="orders_notif_number_wrapper" class="notifs_badge hide">
-							<span id="orders_notif_value">0</span>
-						</span>
-					</a>
-					<div class="dropdown-menu notifs_dropdown">
-						<section id="orders_notif_wrapper" class="notifs_panel">
-							<div class="notifs_panel_header">
-								<h3>{l s='Latest Orders'}</h3>
-							</div>
-							<div id="list_orders_notif" class="list_notif">
-								<span class="no_notifs">
-									{l s='No new orders has been placed on your shop'}
-								</span>
-							</div>
-							<div class="notifs_panel_footer">
-								<a href="index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a>
-							</div>
-						</section>
-					</div>
-				</li>
+					<li id="orders_notif" class="dropdown" data-type="order">
+						<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
+							<i class="icon-shopping-cart"></i>
+							<span id="orders_notif_number_wrapper" class="notifs_badge hide">
+								<span id="orders_notif_value">0</span>
+							</span>
+						</a>
+						<div class="dropdown-menu notifs_dropdown">
+							<section id="orders_notif_wrapper" class="notifs_panel">
+								<div class="notifs_panel_header">
+									<h3>{l s='Latest Orders'}</h3>
+								</div>
+								<div id="list_orders_notif" class="list_notif">
+									<span class="no_notifs">
+										{l s='No new orders has been placed on your shop'}
+									</span>
+								</div>
+								<div class="notifs_panel_footer">
+									<a href="index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a>
+								</div>
+							</section>
+						</div>
+					</li>
 {/if}
 {if {$show_new_customers} == 1}
-				<li id="customers_notif" class="dropdown" data-type="customer">
-					<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
-						<i class="icon-user"></i>
-						<span id="customers_notif_number_wrapper" class="notifs_badge hide">
-							<span id="customers_notif_value">0</span>
-						</span>
-					</a>
-					<div class="dropdown-menu notifs_dropdown">
-						<section id="customers_notif_wrapper" class="notifs_panel">
-							<div class="notifs_panel_header">
-								<h3>{l s='Latest Registrations'}</h3>
-							</div>
-							<div id="list_customers_notif" class="list_notif">
-								<span class="no_notifs">
-									{l s='No new customers registered on your shop'}
-								</span>
-							</div>
-							<div class="notifs_panel_footer">
-								<a href="index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'}</a>
-							</div>
-						</section>
-					</div>
-				</li>
+					<li id="customers_notif" class="dropdown" data-type="customer">
+						<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
+							<i class="icon-user"></i>
+							<span id="customers_notif_number_wrapper" class="notifs_badge hide">
+								<span id="customers_notif_value">0</span>
+							</span>
+						</a>
+						<div class="dropdown-menu notifs_dropdown">
+							<section id="customers_notif_wrapper" class="notifs_panel">
+								<div class="notifs_panel_header">
+									<h3>{l s='Latest Registrations'}</h3>
+								</div>
+								<div id="list_customers_notif" class="list_notif">
+									<span class="no_notifs">
+										{l s='No new customers registered on your shop'}
+									</span>
+								</div>
+								<div class="notifs_panel_footer">
+									<a href="index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'}</a>
+								</div>
+							</section>
+						</div>
+					</li>
 {/if}
 {if {$show_new_messages} == 1}
-				<li id="customer_messages_notif" class="dropdown" data-type="customer_message">
-					<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
-						<i class="icon-envelope"></i>
-						<span id="customer_messages_notif_number_wrapper" class="notifs_badge hide">
-							<span id="customer_messages_notif_value" >0</span>
-						</span>
-					</a>
-					<div class="dropdown-menu notifs_dropdown">
-						<section id="customer_messages_notif_wrapper" class="notifs_panel">
-							<div class="notifs_panel_header">
-								<h3>{l s='Latest Messages'}</h3>
-							</div>
-							<div id="list_customer_messages_notif" class="list_notif">
-								<span class="no_notifs">
-									{l s='No new messages posted on your shop'}
-								</span>
-							</div>
-							<div class="notifs_panel_footer">
-								<a href="index.php?controller=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a>
-							</div>
-						</section>
-					</div>
-				</li>
+					<li id="customer_messages_notif" class="dropdown" data-type="customer_message">
+						<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
+							<i class="icon-envelope"></i>
+							<span id="customer_messages_notif_number_wrapper" class="notifs_badge hide">
+								<span id="customer_messages_notif_value" >0</span>
+							</span>
+						</a>
+						<div class="dropdown-menu notifs_dropdown">
+							<section id="customer_messages_notif_wrapper" class="notifs_panel">
+								<div class="notifs_panel_header">
+									<h3>{l s='Latest Messages'}</h3>
+								</div>
+								<div id="list_customer_messages_notif" class="list_notif">
+									<span class="no_notifs">
+										{l s='No new messages posted on your shop'}
+									</span>
+								</div>
+								<div class="notifs_panel_footer">
+									<a href="index.php?controller=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a>
+								</div>
+							</section>
+						</div>
+					</li>
 {/if}
-			</ul>
-		</div>
-
+				</ul>
 
 {if count($quick_access) > 0}
-			<ul id="header_quick">
-				<li class="dropdown">
-					<a href="#" id="quick_select" class="dropdown-toggle" data-toggle="dropdown">{l s='Quick Access'} <i class="icon-caret-down"></i></a>
-					<ul class="dropdown-menu">
-					{foreach $quick_access as $quick}
-						<li><a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window} onclick="return !window.open(this.href);"{/if}><i class="icon-chevron-right"></i> {$quick.name}</a></li>
-					{/foreach}
-					</ul>
-				</li>
-			</ul>
+				<ul id="header_quick">
+					<li class="dropdown">
+						<a href="#" id="quick_select" class="dropdown-toggle" data-toggle="dropdown">{l s='Quick Access'} <i class="icon-caret-down"></i></a>
+						<ul class="dropdown-menu">
+						{foreach $quick_access as $quick}
+							<li><a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window} onclick="return !window.open(this.href);"{/if}><i class="icon-chevron-right"></i> {$quick.name}</a></li>
+						{/foreach}
+						</ul>
+					</li>
+				</ul>
 {/if}
 
-			<ul id="header_employee_box">
+				<ul id="header_employee_box">
 {if {$base_url}}
-				<li>
-					<a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">
-						<i class="icon-star"></i> {l s='My shop'}
-					</a>
-				</li>
+					<li>
+						<a href="{if isset($base_url_tc)}{$base_url_tc}{else}{$base_url}{/if}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">
+							<i class="icon-star"></i>
+							<span class="string-long">{l s='My shop'}</span>
+							<span class="string-short">{l s='Shop'}</span>
+						</a>
+					</li>
 {/if}
-				<li id="employee_infos" class="dropdown">
-					<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
-						<span class="employee_avatar_small">
-							<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="32" height="32" />
-						</span>
-						&nbsp;{$employee->firstname}&nbsp;{$employee->lastname}
-						<i class="caret"></i>
-					</a>
-					<ul id="employee_links" class="dropdown-menu">
-						<li>
-							<span class="employee_avatar">
-								<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="96" height="96" />
+					<li id="employee_infos" class="dropdown">
+						<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
+							<span class="employee_avatar_small">
+								<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="32" height="32" />
 							</span>
-						</li>
-						<li class="text-center">{$employee->firstname} {$employee->lastname}</li>
-						<li class="divider"></li>
-						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
-						<li class="divider"></li>
-						<li><a id="header_logout" href="{$default_tab_link}&amp;logout"><i class="icon-signout"></i> {l s='Log out'}</a></li>
-					</ul>
-				</li>
-			</ul>
+							<span class="string-long">{$employee->firstname}&nbsp;{$employee->lastname}</span>
+							<span class="string-short">{l s='Me'}</span>
+							<i class="caret"></i>
+						</a>
+						<ul id="employee_links" class="dropdown-menu">
+							<li>
+								<span class="employee_avatar">
+									<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="96" height="96" />
+								</span>
+							</li>
+							<li class="text-center">{$employee->firstname} {$employee->lastname}</li>
+							<li class="divider"></li>
+							<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
+							<li class="divider"></li>
+							<li><a id="header_logout" href="{$default_tab_link}&amp;logout"><i class="icon-signout"></i> {l s='Log out'}</a></li>
+						</ul>
+					</li>
+				</ul>
 
-			<span id="ajax_running">
-				<i class="icon-refresh icon-spin icon-fw"></i>
-			</span>
+				<span id="ajax_running">
+					<i class="icon-refresh icon-spin icon-fw"></i>
+				</span>
 
-{if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
+	{if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
+			</div>
 		</nav>{* end header_infos*}
 	</header>
-
 
 	<div id="main">
 		{include file='nav.tpl'}

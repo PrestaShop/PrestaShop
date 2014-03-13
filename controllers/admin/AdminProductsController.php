@@ -3342,6 +3342,7 @@ class AdminProductsControllerCore extends AdminController
 		$content .= '
 				</tbody>
 			</table>
+			</div>
 			<div class="panel-footer">
 				<a href="'.$this->context->link->getAdminLink('AdminProducts').'" class="btn btn-default"><i class="process-icon-cancel"></i> '.$this->l('Cancel').'</a>
 				<button id="product_form_submit_btn"  type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> '.$this->l('Save') .'</button>
@@ -4458,6 +4459,7 @@ class AdminProductsControllerCore extends AdminController
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined id product attribute'))));
 
 				StockAvailable::setQuantity($product->id, (int)Tools::getValue('id_product_attribute'), (int)Tools::getValue('value'));
+				Hook::exec('actionProductUpdate', array('product' => $this->object));
 				break;
 			case 'advanced_stock_management' :
 				if (Tools::getValue('value') === false)

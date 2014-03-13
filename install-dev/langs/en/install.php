@@ -3,7 +3,7 @@ return array(
 	'informations' => array(
 		'phone' => '+1 (888) 947-6543',
 		'documentation' => 'http://doc.prestashop.com/',
-		'documentation_upgrade' => 'http://docs.prestashop.com/display/PS15/Updating+PrestaShop',
+		'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
 		'forum' => 'http://www.prestashop.com/forums/',
 		'blog' => 'http://www.prestashop.com/blog/',
 		'support' => 'https://www.prestashop.com/en/support',

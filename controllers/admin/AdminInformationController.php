@@ -113,7 +113,7 @@ class AdminInformationControllerCore extends AdminController
 			'customizable_products_dir' => $this->l('Set write permissions for the "upload" folder and subfolders.'),
 			'virtual_products_dir' => $this->l('Set write permissions for the "download" folder and subfolders.'),
 			'fopen' => $this->l('Allow the PHP fopen() function on your server.'),
-			'register_globals' => $this->l('Set PHP "register_global" option to "Off".'),
+			'register_globals' => $this->l('Set PHP "register_globals" option to "Off".'),
 			'gz' => $this->l('Enable GZIP compression on your server.')
 		);
 

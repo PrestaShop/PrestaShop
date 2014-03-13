@@ -24,7 +24,7 @@
       <name>South America</name>
     </zone>
     <zone id="Europe_out_E_U" active="1">
-      <name>Europe (out E.U)</name>
+      <name>Europe (non-EU)</name>
     </zone>
     <zone id="Central_America_Antilla" active="1">
       <name>Central America/Antilla</name>

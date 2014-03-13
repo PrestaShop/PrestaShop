@@ -481,7 +481,7 @@
 											<div id="{$input.name}-change-container" class="form-password-change well hide">
 												<div class="form-group ">
 													<label for="old_passwd" class="control-label col-lg-2 required">
-														Current password
+														{l s='Current password'}
 													</label>
 													<div class="col-lg-10">
 														<div class="input-group fixed-width-lg">
@@ -544,7 +544,7 @@
 													<div class="col-lg-10 col-lg-offset-2">
 														<p class="checkbox">
 															<label for="{$input.name}-checkbox-mail">
-																<input id="{$input.name}-checkbox-mail" type="checkbox" checked="checked">
+																<input name="passwd_send_email" id="{$input.name}-checkbox-mail" type="checkbox" checked="checked">
 																{l s='Send me this new password by Email'}
 															</label>
 														</p>

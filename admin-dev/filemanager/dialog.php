@@ -317,8 +317,8 @@ else
 					<div class="tab-pane active" id="tab1">
 						<?php } ?>
 						<form action="dialog.php" method="post" enctype="multipart/form-data" id="myAwesomeDropzone" class="dropzone">
-							<input type="hidden" name="path" value="<?php echo Tools::safeOutput($cur_path); ?>"/>
-							<input type="hidden" name="path_thumb" value="<?php echo Tools::safeOutput($thumbs_path.$subdir); ?>"/>
+							<input type="hidden" name="path" value="<?php echo Tools::safeOutput($subfolder.$subdir); ?>"/>
+							<input type="hidden" name="path_thumb" value="<?php echo Tools::safeOutput($subfolder.$subdir); ?>"/>
 
 							<div class="fallback">
 								<?php echo lang_Upload_file ?>:<br/>
@@ -714,9 +714,9 @@ else
 					<div class="file-size"><?php echo makeSize($file_array['size']) ?></div><?php } ?>
 					<div class='file-extension'><?php echo lang_Type_dir; ?></div>
 					<figcaption>
-						<a href="javascript:void('')" class="tip-left edit-button <?php if ($rename_folders) echo "rename-folder"; ?>" title="<?php echo lang_Rename ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file); ?>" data-thumb="<?php echo Tools::safeOutput($thumbs_path.$subdir.$file); ?>">
+						<a href="javascript:void('')" class="tip-left edit-button <?php if ($rename_folders) echo "rename-folder"; ?>" title="<?php echo lang_Rename ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file); ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file); ?>">
 							<i class="icon-pencil <?php if (!$rename_folders) echo 'icon-white'; ?>"></i></a>
-						<a href="javascript:void('')" class="tip-left erase-button <?php if ($delete_folders) echo "delete-folder"; ?>" title="<?php echo lang_Erase ?>" data-confirm="<?php echo lang_Confirm_Folder_del; ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file); ?>" data-thumb="<?php echo Tools::safeOutput($thumbs_path.$subdir.$file); ?>">
+						<a href="javascript:void('')" class="tip-left erase-button <?php if ($delete_folders) echo "delete-folder"; ?>" title="<?php echo lang_Erase ?>" data-confirm="<?php echo lang_Confirm_Folder_del; ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file); ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file); ?>">
 							<i class="icon-trash <?php if (!$delete_folders) echo 'icon-white'; ?>"></i>
 						</a>
 					</figcaption>
@@ -889,7 +889,7 @@ else
 				{
 					echo "ellipsis";
 				} ?>">
-					<a href="javascript:void('')" class="link" data-file="<?php echo $file; ?>" data-field_id="<?php echo Tools::safeOutput(Tools::getValue('field_id')); ?>" data-function="<?php echo Tools::safeOutput($apply); ?>">
+					<a href="javascript:void('')" class="link" data-file="<?php echo Tools::safeOutput($file); ?>" data-field_id="<?php echo Tools::safeOutput(Tools::getValue('field_id')); ?>" data-function="<?php echo Tools::safeOutput($apply); ?>">
 						<?php echo Tools::safeOutput($filename); ?></a></h4>
 			</div>
 			<input type="hidden" class="date" value="<?php echo $file_array['date']; ?>"/>
@@ -933,10 +933,10 @@ else
 						?>
 						<a class="preview disabled"><i class="icon-eye-open icon-white"></i></a>
 					<?php } ?>
-					<a href="javascript:void('')" class="tip-left edit-button <?php if ($rename_files) echo "rename-file"; ?>" title="<?php echo lang_Rename ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file); ?>" data-thumb="<?php echo Tools::safeOutput($thumbs_path.$subdir.$file); ?>">
+					<a href="javascript:void('')" class="tip-left edit-button <?php if ($rename_files) echo "rename-file"; ?>" title="<?php echo lang_Rename ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file); ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file); ?>">
 						<i class="icon-pencil <?php if (!$rename_files) echo 'icon-white'; ?>"></i></a>
 
-					<a href="javascript:void('')" class="tip-left erase-button <?php if ($delete_files) echo "delete-file"; ?>" title="<?php echo lang_Erase ?>" data-confirm="<?php echo lang_Confirm_del; ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file); ?>" data-thumb="<?php echo Tools::safeOutput($thumbs_path.$subdir.$file); ?>">
+					<a href="javascript:void('')" class="tip-left erase-button <?php if ($delete_files) echo "delete-file"; ?>" title="<?php echo lang_Erase ?>" data-confirm="<?php echo lang_Confirm_del; ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file); ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file); ?>">
 						<i class="icon-trash <?php if (!$delete_files) echo 'icon-white'; ?>"></i>
 					</a>
 				</form>
