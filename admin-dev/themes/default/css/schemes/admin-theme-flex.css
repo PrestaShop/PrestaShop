@@ -1,5 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=Ubuntu+Condensed);
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,700");
+@import url("//fonts.googleapis.com/css?family=Ubuntu+Condensed");
 /* This is a fairly big mixin. The reason for this is that at the time of writing (09/01/2013), Sass does not include functions for substring or find/replace in string. Chris Eppstein sent a Pull Request to Sass with the str-extract (substring) function back in June, but it still has not been merged, due to lack of minor comments. That was five months ago. */
 @-webkit-keyframes fadeIn { 0% { opacity: 0; }
   100% { opacity: 1; } }
@@ -754,7 +754,7 @@
 
 .icon-search:before, .page-sidebar-closed:not(.nav-topbar):not(.mobile-nav) .searchtab:before, .icon-AdminSearch:before, .chosen-container-single .chosen-search:before { content: "\f002"; }
 
-.icon-envelope-o:before, .icon-envelope-alt:before { content: "\f003"; }
+.icon-envelope-o:before, .icon-envelope-alt:before, #content .process-icon-envelope:before { content: "\f003"; }
 
 .icon-heart:before { content: "\f004"; }
 
@@ -2581,7 +2581,7 @@ td, th { padding: 0; }
   .carousel-indicators { bottom: 20px; } }
 html, body { min-height: 100%; height: 100%; }
 
-body { font: 400 12px/1.42857 "Open Sans", Helvetica, Arial, sans-serif; color: #555555; background-color: white; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+body { font: 400 12px/1.42857 "Open Sans", Helvetica, Arial, sans-serif; color: #555555; min-width: 450px; background-color: white; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 
 #main { z-index: 10; float: left; width: 100%; padding: 36px 0 60px; margin: 0 0 -50px 0; }
 
@@ -2616,6 +2616,7 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 
 .bootstrap .panel .panel-footer, .bootstrap #dash_version .panel-footer, .bootstrap .message-item-initial .message-item-initial-body .panel-footer, .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-footer { margin: 15px -20px -20px; height: 73px; border-color: #eeeeee; background-color: #fcfdfe; }
 .bootstrap .panel .panel-footer .btn.pull-right:not(:first-child), .bootstrap #dash_version .panel-footer .btn.pull-right:not(:first-child), .bootstrap .message-item-initial .message-item-initial-body .panel-footer .btn.pull-right:not(:first-child), .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-footer .btn.pull-right:not(:first-child) { margin-right: 5px; }
+.bootstrap .panel .panel-footer .btn, .bootstrap #dash_version .panel-footer .btn, .bootstrap .message-item-initial .message-item-initial-body .panel-footer .btn, .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-footer .btn { line-height: 1em; }
 
 #header .panel-footer { margin: 15px 0 0 !important; height: 40px !important; }
 
@@ -2625,7 +2626,7 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 
 #header { z-index: 20; }
 
-#header_infos { height: 36px !important; }
+#header_infos { height: 36px !important; min-width: 450px; }
 #header_infos .navbar-header { width: 100%; }
 
 #header_shopname { font-size: 1.3em !important; position: relative; margin: 0 5px 0 0; height: 36px; padding-left: 45px !important; }
@@ -2701,7 +2702,7 @@ a.link-social:hover { text-decoration: none; }
 #nav-sidebar ul.menu li.searchtab #bo_query { color: #2e2e42; background-color: #c9c9d9; }
 #nav-sidebar ul.menu li.searchtab .form-group.focus-search { position: absolute; width: 400px; height: 55px; z-index: 900; padding: 14px 13px 0 7px; top: 0; left: 0; background-color: #242433; border-bottom: #191924 solid 1px; }
 #nav-sidebar ul.menu li.searchtab .form-group.focus-search #bo_query { width: 100%; }
-#nav-sidebar ul.menu li.searchtab .clear_search { position: absolute; top: 5px; right: 8px; }
+#nav-sidebar ul.menu li.searchtab .clear_search { position: absolute; top: 6px; right: 8px; z-index: 10; }
 #nav-sidebar ul.menu li.searchtab i { font-size: 14px; }
 #nav-sidebar ul.menu li.maintab { position: relative; }
 #nav-sidebar ul.menu li.maintab ul.submenu { display: none; padding: 4px; background-color: #1d1d2a; }
@@ -3040,13 +3041,13 @@ a.link-social:hover { text-decoration: none; }
   .bootstrap .prestashop-switch.switch-light input ~ a { border: solid 1px #d9534f; background-color: #e27c79; -webkit-box-shadow: #d9534f 0 -1px 0 inset; box-shadow: #d9534f 0 -1px 0 inset; }
   .bootstrap .prestashop-switch.switch-light input ~ span span:first-of-type { color: #cccccc; }
   .bootstrap .prestashop-switch.switch-light input ~ span span:last-of-type { color: white; } }
-.bootstrap .page-head { width: 100%; height: 55px; padding: 0 0 0 0; margin: 0; border-bottom: 4px solid #00615a; position: fixed; top: 36px; left: 0px; z-index: 499; background-color: #00948a; -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; }
+.bootstrap .page-head { width: 100%; min-width: 450px; height: 55px; padding: 0 0 0 0; margin: 0; border-bottom: 4px solid #00615a; position: fixed; top: 36px; left: 0px; z-index: 499; background-color: #00948a; -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; }
 .bootstrap .page-head h2.page-title { position: relative; padding: 23px 0 0 280px; margin: 0; font: 300 22px/1em "Open Sans", Helvetica, Arial, sans-serif; color: white; }
 @media (max-width: 768px) { .bootstrap .page-head h2.page-title { padding: 26px 0 0 70px; } }
 .bootstrap .page-head h2.page-title a { border-bottom: dotted 1px white; }
 .bootstrap .page-head h2.page-title a:hover { color: black; border-color: black; }
 .bootstrap .page-head a { color: white; text-decoration: none; }
-.bootstrap .page-head .toolbarBox { position: absolute; right: 0; width: 100%; background-color: transparent !important; }
+.bootstrap .page-head .toolbarBox { position: absolute; right: 0; background-color: transparent !important; }
 @media (max-width: 768px) { .bootstrap .page-head .toolbarBox { background-color: #00948a; } }
 .bootstrap .page-head .toolbarBox #toolbar-nav { border: none; background-color: #00948a; }
 .bootstrap .page-head .toolbarBox .btn-toolbar { margin: 0; padding: 3px 0 0 0; }
