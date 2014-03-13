@@ -578,8 +578,7 @@ class AdminPerformanceControllerCore extends AdminController
 		// Initialize fieldset for a form
 		$this->initFieldsetSmarty();
 
-		if (_PS_MODE_DEV_)
-			$this->initFieldsetDebugMode();
+		$this->initFieldsetDebugMode();
 
 		$this->initFieldsetFeaturesDetachables();
 		$this->initFieldsetCCC();
