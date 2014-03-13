@@ -181,6 +181,7 @@ $(document).ready(function(){
 	});
 
 	$(document).on('click', '.color_pick', function(e){
+		console.log('qsd');
 		e.preventDefault();
 		colorPickerClick($(this));
 		getProductAttribute();
@@ -213,10 +214,10 @@ $(document).ready(function(){
 	}
 	else
 	{
-		$(document).off('click').on('click', '.fancybox', function(e){
+		$(document).on('click', '.fancybox', function(e){
 			e.preventDefault();
 		});
-		$(document).off('click').on('click', '#bigpic', function(e){
+		$(document).on('click', '#bigpic', function(e){
 			e.preventDefault();
 			var productUrl= window.document.location.href + '';
 			var data = productUrl.replace('content_only=1', '');
