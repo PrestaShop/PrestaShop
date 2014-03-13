@@ -964,8 +964,6 @@ Quick View Styles
               padding: 12px 22px 14px 70px;
               font-size: 20px; } }
       #product.content_only div.primary_block div.pb-right-column .box-info-product .box-cart-bottom {
-        position: absolute;
-        bottom: 0;
         right: 0;
         left: 0; }
     #product.content_only div.primary_block div.pb-right-column #attributes .attribute_list .form-control {

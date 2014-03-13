@@ -49,12 +49,12 @@ function setCountries()
 			{
 				countriesPS[id_country] = [];
 	    		for (var j in countries[i]['states'])
-					countriesPS[id_country].push({'id' : countries[i]['states'][j]['id_state'], 'name' : countries[i]['states'][j]['name']});
+					countriesPS[parseInt(id_country)].push({'id' : parseInt(countries[i]['states'][j]['id_state']), 'name' : countries[i]['states'][j]['name']});
 			}
 			if (typeof countries[i]['need_identification_number'] !== 'undefined')
-				countriesNeedIDNumber.push(countries[i]['id_country']);
+				countriesNeedIDNumber.push(parseInt(countries[i]['id_country']));
 			if (typeof countries[i]['need_zip_code'] !== 'undefined')
-				countriesNeedZipCode[countries[i]['id_country']] = countries[i]['zip_code_format'];
+				countriesNeedZipCode[parseInt(countries[i]['id_country'])] = countries[i]['zip_code_format'];
 		}
 	}
 	countries =  countriesPS;
@@ -123,11 +123,11 @@ function updateState(suffix)
 {
 	$('#id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '')+' option:not(:first-child)').remove();
 	if (typeof countries !== 'undefined')
-		var states = countries[$('#id_country' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).val()];
+		var states = countries[parseInt($('#id_country' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).val())];
 	if (typeof states !== 'undefined')
 	{
 		$(states).each(function(key, item){
-			$('#id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).append('<option value="' + item.id + '"' + (idSelectedCountry === item.id ? ' selected="selected"' : '') + '>' + item.name + '</option>');
+			$('#id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).append('<option value="' + parseInt(item.id) + '"' + (idSelectedCountry === item.id ? ' selected="selected"' : '') + '>' + item.name + '</option>');
 		});
 
 		$('.id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '') + ':hidden').fadeIn('slow');
@@ -140,7 +140,7 @@ function updateState(suffix)
 function updateNeedIDNumber(suffix)
 {
 	var idCountry = parseInt($('#id_country' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).val());
-	if (typeof countriesNeedIDNumber !== 'undefined' && $.inArray(idCountry, countriesNeedIDNumber) >= 0)
+	if (typeof countriesNeedIDNumber !== 'undefined' && in_array(idCountry, countriesNeedIDNumber) >= 0)
 	{
 		$('.dni' + (typeof suffix !== 'undefined' ? '_' + suffix : '') + ':hidden').fadeIn('slow');
 		$('#dni').uniform();

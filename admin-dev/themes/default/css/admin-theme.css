@@ -754,7 +754,7 @@
 
 .icon-search:before, .page-sidebar-closed:not(.nav-topbar):not(.mobile-nav) .searchtab:before, .icon-AdminSearch:before, .chosen-container-single .chosen-search:before { content: "\f002"; }
 
-.icon-envelope-o:before, .icon-envelope-alt:before { content: "\f003"; }
+.icon-envelope-o:before, .icon-envelope-alt:before, #content .process-icon-envelope:before { content: "\f003"; }
 
 .icon-heart:before { content: "\f004"; }
 

@@ -37,10 +37,10 @@
 		{if isset($categoryData['top'])}{$categoryData['top']}{/if}
 		<div class="panel {if isset($categoryData['class'])}{$categoryData['class']}{/if}" id="{$table}_fieldset_{$category}">
 			{* Options category title *}
-			<h3>
+			<div class="panel-heading">
 				<i class="{if isset($categoryData['icon'])}{$categoryData['icon']}{else}icon-cogs{/if}"></i>
 				{if isset($categoryData['title'])}{$categoryData['title']}{else}{l s='Options'}{/if}
-			</h3>
+			</div>
 
 			{* Category description *}
 
