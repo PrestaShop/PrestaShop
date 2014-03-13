@@ -48,8 +48,8 @@ class FrontControllerCore extends Controller
 	protected $restrictedCountry = false;
 	protected $maintenance = false;
 
-	public $display_column_left;
-	public $display_column_right;
+	public $display_column_left = true;
+	public $display_column_right = true;
 
 	public static $initialized = false;
 
@@ -64,7 +64,7 @@ class FrontControllerCore extends Controller
 		global $useSSL;
 
 		parent::__construct();
-		
+
 		if (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'))
 			$this->ssl = true;
 
@@ -72,9 +72,13 @@ class FrontControllerCore extends Controller
 			$this->ssl = $useSSL;
 		else
 			$useSSL = $this->ssl;
-			
-		$this->display_column_left = ((isset($this->php_self) && is_object(Context::getContext()->theme)) ? Context::getContext()->theme->hasLeftColumn($this->php_self) : true);
-		$this->display_column_right = ((isset($this->php_self) && is_object(Context::getContext()->theme)) ? Context::getContext()->theme->hasRightColumn($this->php_self) : true);
+
+		if (isset($this->php_self)  && is_object(Context::getContext()->theme))
+		{
+			$colums = Context::getContext()->theme->hasColumns($this->php_self);
+			$this->display_column_left = $colums['left_column'];
+			$this->display_column_right = $colums['right_column'];
+		}
 	}
 
 	/**
