@@ -172,7 +172,6 @@
   width: 270px; }
   @media (max-width: 480px) {
     #header .cart_block {
-      top: 65px;
       width: 100%; } }
   @media (max-width: 1200px) {
     #header .cart_block {

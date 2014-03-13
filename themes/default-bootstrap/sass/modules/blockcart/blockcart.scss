@@ -220,7 +220,6 @@
 		color: $light-text-color;
 		width: 270px;
 		@media (max-width: $screen-xs) {
-			top: 65px;
 			width: 100%;
 		}
 		@media (max-width: $screen-lg){
