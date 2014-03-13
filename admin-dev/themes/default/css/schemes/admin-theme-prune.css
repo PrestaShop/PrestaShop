@@ -1,5 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=Ubuntu+Condensed);
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+@import url("//fonts.googleapis.com/css?family=Droid+Sans:300,400,700");
+@import url("//fonts.googleapis.com/css?family=Ubuntu+Condensed");
 /* This is a fairly big mixin. The reason for this is that at the time of writing (09/01/2013), Sass does not include functions for substring or find/replace in string. Chris Eppstein sent a Pull Request to Sass with the str-extract (substring) function back in June, but it still has not been merged, due to lack of minor comments. That was five months ago. */
 @-webkit-keyframes fadeIn { 0% { opacity: 0; }
   100% { opacity: 1; } }
@@ -754,7 +754,7 @@
 
 .icon-search:before, .page-sidebar-closed:not(.nav-topbar):not(.mobile-nav) .searchtab:before, .icon-AdminSearch:before, .chosen-container-single .chosen-search:before { content: "\f002"; }
 
-.icon-envelope-o:before, .icon-envelope-alt:before { content: "\f003"; }
+.icon-envelope-o:before, .icon-envelope-alt:before, #content .process-icon-envelope:before { content: "\f003"; }
 
 .icon-heart:before { content: "\f004"; }
 
@@ -1576,7 +1576,7 @@ td, th { padding: 0; }
 .bootstrap * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
 .bootstrap *:before, .bootstrap *:after { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
 .bootstrap html { font-size: 62.5%; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
-.bootstrap body { font-family: "Open Sans", Helvetica, Arial, sans-serif; font-size: 12px; line-height: 1.42857; color: #555555; background-color: #8b8589; }
+.bootstrap body { font-family: "Droid Sans", Helvetica, Arial, sans-serif; font-size: 12px; line-height: 1.42857; color: #555555; background-color: #8b8589; }
 .bootstrap input, .bootstrap button, .bootstrap select, .bootstrap textarea { font-family: inherit; font-size: inherit; line-height: inherit; }
 .bootstrap a { color: #2ba6cb; text-decoration: none; }
 .bootstrap a:hover, .bootstrap a:focus { color: #1e728c; text-decoration: underline; }
@@ -2581,7 +2581,7 @@ td, th { padding: 0; }
   .carousel-indicators { bottom: 20px; } }
 html, body { min-height: 100%; height: 100%; }
 
-body { font: 400 12px/1.42857 "Open Sans", Helvetica, Arial, sans-serif; color: #555555; background-color: #8b8589; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+body { font: 400 12px/1.42857 "Droid Sans", Helvetica, Arial, sans-serif; color: #555555; min-width: 450px; background-color: #8b8589; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 
 #main { z-index: 10; float: left; width: 100%; padding: 36px 0 60px; margin: 0 0 -50px 0; }
 
@@ -2589,7 +2589,7 @@ body { font: 400 12px/1.42857 "Open Sans", Helvetica, Arial, sans-serif; color: 
 #content.bootstrap .panel, #content.bootstrap #dash_version, #content.bootstrap .message-item-initial .message-item-initial-body, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel { position: relative; padding: 20px; margin-bottom: 20px; border: solid 1px #716c6f; background-color: white; -webkit-border-radius: 5px; -moz-border-radius: 5px; -ms-border-radius: 5px; -o-border-radius: 5px; border-radius: 5px; -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset; box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset; }
 #content.bootstrap .panel.panel-highlighted, #content.bootstrap .panel-highlighted#dash_version, #content.bootstrap .message-item-initial .panel-highlighted.message-item-initial-body, #content.bootstrap .timeline .timeline-item .timeline-caption .panel-highlighted.timeline-panel { border-color: #2ba6cb !important; -webkit-box-shadow: rgba(43, 166, 203, 0.15) 0 0 0 6px inset !important; box-shadow: rgba(43, 166, 203, 0.15) 0 0 0 6px inset !important; }
 #content.bootstrap .panel .panel-heading, #content.bootstrap #dash_version .panel-heading, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading { font-family: "Ubuntu Condensed", Helvetica, Arial, sans-serif; font-weight: 400; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; color: #555555; height: 32px; }
-#content.bootstrap .panel .panel-heading a.btn, #content.bootstrap #dash_version .panel-heading a.btn, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading a.btn, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading a.btn { font-family: "Open Sans", Helvetica, Arial, sans-serif; text-transform: none; position: relative; top: 2px; }
+#content.bootstrap .panel .panel-heading a.btn, #content.bootstrap #dash_version .panel-heading a.btn, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading a.btn, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading a.btn { font-family: "Droid Sans", Helvetica, Arial, sans-serif; text-transform: none; position: relative; top: 2px; }
 #content.bootstrap .panel .panel-heading i, #content.bootstrap #dash_version .panel-heading i, #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading i, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading i { font-size: 14px; }
 #content.bootstrap .panel .panel, #content.bootstrap #dash_version .panel, #content.bootstrap .message-item-initial .message-item-initial-body .panel, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel, #content.bootstrap .panel #dash_version, #content.bootstrap #dash_version #dash_version, #content.bootstrap .message-item-initial .message-item-initial-body #dash_version, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel #dash_version, #content.bootstrap .panel .message-item-initial .message-item-initial-body, #content.bootstrap .message-item-initial .panel .message-item-initial-body, #content.bootstrap #dash_version .message-item-initial .message-item-initial-body, #content.bootstrap .message-item-initial #dash_version .message-item-initial-body, #content.bootstrap .message-item-initial .message-item-initial-body .message-item-initial-body, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .message-item-initial .message-item-initial-body, #content.bootstrap .message-item-initial .timeline .timeline-item .timeline-caption .timeline-panel .message-item-initial-body, #content.bootstrap .panel .timeline .timeline-item .timeline-caption .timeline-panel, #content.bootstrap .timeline .timeline-item .timeline-caption .panel .timeline-panel, #content.bootstrap #dash_version .timeline .timeline-item .timeline-caption .timeline-panel, #content.bootstrap .timeline .timeline-item .timeline-caption #dash_version .timeline-panel, #content.bootstrap .message-item-initial .message-item-initial-body .timeline .timeline-item .timeline-caption .timeline-panel, #content.bootstrap .timeline .timeline-item .timeline-caption .message-item-initial .message-item-initial-body .timeline-panel, #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .timeline-panel { border: solid 1px #cccccc; -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset; box-shadow: rgba(0, 0, 0, 0.1) 0 2px 0, white 0 0 0 3px inset; }
 #content.bootstrap h3:not(.modal-title), #content.bootstrap .panel-heading { border: none; padding: 0 0 0 5px; margin: -20px -16px 15px -16px; font-size: 1.2em; line-height: 2.2em; height: 2.2em; text-transform: uppercase; border-bottom: solid 1px #eeeeee; }
@@ -2616,6 +2616,7 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 
 .bootstrap .panel .panel-footer, .bootstrap #dash_version .panel-footer, .bootstrap .message-item-initial .message-item-initial-body .panel-footer, .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-footer { margin: 15px -20px -20px; height: 73px; border-color: #eeeeee; background-color: #fcfdfe; }
 .bootstrap .panel .panel-footer .btn.pull-right:not(:first-child), .bootstrap #dash_version .panel-footer .btn.pull-right:not(:first-child), .bootstrap .message-item-initial .message-item-initial-body .panel-footer .btn.pull-right:not(:first-child), .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-footer .btn.pull-right:not(:first-child) { margin-right: 5px; }
+.bootstrap .panel .panel-footer .btn, .bootstrap #dash_version .panel-footer .btn, .bootstrap .message-item-initial .message-item-initial-body .panel-footer .btn, .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-footer .btn { line-height: 1em; }
 
 #header .panel-footer { margin: 15px 0 0 !important; height: 40px !important; }
 
@@ -2625,7 +2626,7 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 
 #header { z-index: 20; }
 
-#header_infos { height: 36px !important; }
+#header_infos { height: 36px !important; min-width: 450px; }
 #header_infos .navbar-header { width: 100%; }
 
 #header_shopname { font-size: 1.3em !important; position: relative; margin: 0 5px 0 0; height: 36px; padding-left: 45px !important; }
@@ -2701,7 +2702,7 @@ a.link-social:hover { text-decoration: none; }
 #nav-sidebar ul.menu li.searchtab #bo_query { color: #36454f; background-color: #d5dde2; }
 #nav-sidebar ul.menu li.searchtab .form-group.focus-search { position: absolute; width: 400px; height: 55px; z-index: 900; padding: 14px 13px 0 7px; top: 0; left: 0; background-color: #2c3840; border-bottom: #212b31 solid 1px; }
 #nav-sidebar ul.menu li.searchtab .form-group.focus-search #bo_query { width: 100%; }
-#nav-sidebar ul.menu li.searchtab .clear_search { position: absolute; top: 5px; right: 8px; }
+#nav-sidebar ul.menu li.searchtab .clear_search { position: absolute; top: 6px; right: 8px; z-index: 10; }
 #nav-sidebar ul.menu li.searchtab i { font-size: 14px; }
 #nav-sidebar ul.menu li.maintab { position: relative; }
 #nav-sidebar ul.menu li.maintab ul.submenu { display: none; padding: 4px; background-color: #253037; }
@@ -2943,7 +2944,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap label.control-label { font-size: 13px; font-weight: normal; color: #666666; }
 .bootstrap label.control-label span.label-tooltip { text-decoration: none; font-size: 13px; color: #3586ae; background-color: #edf7fb; border: none; border-bottom: solid 1px #d8edf7; padding: 0 5px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
 .bootstrap label.required:before { content: "*"; color: red; font-size: 14px; position: relative; line-height: 12px; }
-.bootstrap .tooltip { font-size: 12px; font-family: "Open Sans", Helvetica, Arial, sans-serif; }
+.bootstrap .tooltip { font-size: 12px; font-family: "Droid Sans", Helvetica, Arial, sans-serif; }
 .bootstrap select.input-tiny, .bootstrap input[type="text"].input-tiny, .bootstrap input[type="password"].input-tiny { width: 80px; float: left; }
 .bootstrap textarea { resize: none; }
 .bootstrap textarea:focus, .bootstrap input[type="text"]:focus, .bootstrap input[type="password"]:focus, .bootstrap input[type="datetime"]:focus, .bootstrap input[type="datetime-local"]:focus, .bootstrap input[type="date"]:focus, .bootstrap input[type="month"]:focus, .bootstrap input[type="time"]:focus, .bootstrap input[type="week"]:focus, .bootstrap input[type="number"]:focus, .bootstrap input[type="email"]:focus, .bootstrap input[type="url"]:focus, .bootstrap input[type="search"]:focus, .bootstrap input[type="tel"]:focus, .bootstrap input[type="color"]:focus, .bootstrap .uneditable-input:focus { background-color: #fefbe2; -webkit-box-shadow: none; box-shadow: none; }
@@ -2959,7 +2960,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .dropdown-menu { text-align: left; }
 .bootstrap .dropdown-menu > li a { padding: 5px 10px; }
 .bootstrap .dropdown-menu > li a:hover i { color: white; }
-.bootstrap .btn-group-action .btn { font-family: "Open Sans", Helvetica, Arial, sans-serif; }
+.bootstrap .btn-group-action .btn { font-family: "Droid Sans", Helvetica, Arial, sans-serif; }
 .bootstrap .btn-group-action .btn-group { white-space: nowrap; float: right; }
 .bootstrap .btn-group-action .btn-group > a, .bootstrap .btn-group-action .btn-group button { text-decoration: none; display: inline-block; float: none; }
 .bootstrap .btn-group-action .btn-group > a:first-child { margin-right: -3px; }
@@ -3040,13 +3041,13 @@ a.link-social:hover { text-decoration: none; }
   .bootstrap .prestashop-switch.switch-light input ~ a { border: solid 1px #d9534f; background-color: #e27c79; -webkit-box-shadow: #d9534f 0 -1px 0 inset; box-shadow: #d9534f 0 -1px 0 inset; }
   .bootstrap .prestashop-switch.switch-light input ~ span span:first-of-type { color: #cccccc; }
   .bootstrap .prestashop-switch.switch-light input ~ span span:last-of-type { color: white; } }
-.bootstrap .page-head { width: 100%; height: 55px; padding: 0 0 0 0; margin: 0; border-bottom: 4px solid #61364e; position: fixed; top: 36px; left: 0px; z-index: 499; background-color: #824868; -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; }
-.bootstrap .page-head h2.page-title { position: relative; padding: 23px 0 0 280px; margin: 0; font: 300 22px/1em "Open Sans", Helvetica, Arial, sans-serif; color: white; }
+.bootstrap .page-head { width: 100%; min-width: 450px; height: 55px; padding: 0 0 0 0; margin: 0; border-bottom: 4px solid #61364e; position: fixed; top: 36px; left: 0px; z-index: 499; background-color: #824868; -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; }
+.bootstrap .page-head h2.page-title { position: relative; padding: 23px 0 0 280px; margin: 0; font: 300 22px/1em "Droid Sans", Helvetica, Arial, sans-serif; color: white; }
 @media (max-width: 768px) { .bootstrap .page-head h2.page-title { padding: 26px 0 0 70px; } }
 .bootstrap .page-head h2.page-title a { border-bottom: dotted 1px white; }
 .bootstrap .page-head h2.page-title a:hover { color: black; border-color: black; }
 .bootstrap .page-head a { color: white; text-decoration: none; }
-.bootstrap .page-head .toolbarBox { position: absolute; right: 0; width: 100%; background-color: transparent !important; }
+.bootstrap .page-head .toolbarBox { position: absolute; right: 0; background-color: transparent !important; }
 @media (max-width: 768px) { .bootstrap .page-head .toolbarBox { background-color: #824868; } }
 .bootstrap .page-head .toolbarBox #toolbar-nav { border: none; background-color: #824868; }
 .bootstrap .page-head .toolbarBox .btn-toolbar { margin: 0; padding: 3px 0 0 0; }
@@ -3176,7 +3177,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .dash_trend_right { color: darkblue; }
 .bootstrap .dash_trend_right:before { margin-right: 4px; font-family: FontAwesome; content: "\f0a9"; }
 .bootstrap #dashboard section > section header { padding: 3px 8px; margin: 0 0 3px 0; color: white; font-size: 1.2em; background-color: #2ba6cb; }
-.bootstrap #dashboard section > section header .small { display: block; clear: both; font-variant: small-cap; text-transform: uppercase; font-size: 0.8em; font-family: "Open Sans", Helvetica, Arial, sans-serif; }
+.bootstrap #dashboard section > section header .small { display: block; clear: both; font-variant: small-cap; text-transform: uppercase; font-size: 0.8em; font-family: "Droid Sans", Helvetica, Arial, sans-serif; }
 .bootstrap #dashboard .data_list { margin: 0 0 10px 0; padding: 0; }
 .bootstrap #dashboard .data_list li { position: relative; }
 .bootstrap #dashboard .data_list .data_value { line-height: 39px; position: absolute; top: 0; right: 0; padding: 0 10px 0 0; }

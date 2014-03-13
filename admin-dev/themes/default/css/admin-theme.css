@@ -1,5 +1,5 @@
-@import url(//fonts.googleapis.com/css?family=Ubuntu+Condensed);
-@import url(//fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,700");
+@import url("//fonts.googleapis.com/css?family=Ubuntu+Condensed");
 /* This is a fairly big mixin. The reason for this is that at the time of writing (09/01/2013), Sass does not include functions for substring or find/replace in string. Chris Eppstein sent a Pull Request to Sass with the str-extract (substring) function back in June, but it still has not been merged, due to lack of minor comments. That was five months ago. */
 @-webkit-keyframes fadeIn { 0% { opacity: 0; }
   100% { opacity: 1; } }
@@ -2616,6 +2616,7 @@ body.display-modal #content, body.display-modal #main { margin: 0; padding: 0; b
 
 .bootstrap .panel .panel-footer, .bootstrap #dash_version .panel-footer, .bootstrap .message-item-initial .message-item-initial-body .panel-footer, .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-footer { margin: 15px -20px -20px; height: 73px; border-color: #eeeeee; background-color: #fcfdfe; }
 .bootstrap .panel .panel-footer .btn.pull-right:not(:first-child), .bootstrap #dash_version .panel-footer .btn.pull-right:not(:first-child), .bootstrap .message-item-initial .message-item-initial-body .panel-footer .btn.pull-right:not(:first-child), .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-footer .btn.pull-right:not(:first-child) { margin-right: 5px; }
+.bootstrap .panel .panel-footer .btn, .bootstrap #dash_version .panel-footer .btn, .bootstrap .message-item-initial .message-item-initial-body .panel-footer .btn, .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-footer .btn { line-height: 1em; }
 
 #header .panel-footer { margin: 15px 0 0 !important; height: 40px !important; }
 
@@ -2701,7 +2702,7 @@ a.link-social:hover { text-decoration: none; }
 #nav-sidebar ul.menu li.searchtab #bo_query { color: #383f50; background-color: #d7dbe3; }
 #nav-sidebar ul.menu li.searchtab .form-group.focus-search { position: absolute; width: 400px; height: 55px; z-index: 900; padding: 14px 13px 0 7px; top: 0; left: 0; background-color: #2d3341; border-bottom: #232732 solid 1px; }
 #nav-sidebar ul.menu li.searchtab .form-group.focus-search #bo_query { width: 100%; }
-#nav-sidebar ul.menu li.searchtab .clear_search { position: absolute; top: 5px; right: 8px; }
+#nav-sidebar ul.menu li.searchtab .clear_search { position: absolute; top: 6px; right: 8px; z-index: 10; }
 #nav-sidebar ul.menu li.searchtab i { font-size: 14px; }
 #nav-sidebar ul.menu li.maintab { position: relative; }
 #nav-sidebar ul.menu li.maintab ul.submenu { display: none; padding: 4px; background-color: #272c38; }
