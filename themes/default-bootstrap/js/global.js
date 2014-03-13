@@ -307,13 +307,6 @@ function dropDown()
 		$(elementHide).slideUp();
 		$(elementClick).removeClass('active');
 	});
-
-	if ('ontouchstart' in document.documentElement)
-	{
-		$('.shopping_cart > a:first, #block_top_menu > ul:first > li > a').on('click', function(e){
-			e.preventDefault();
-		});
-	}
 }
 
 function accordionFooter(status)
