@@ -567,7 +567,7 @@ class ThemeConfigurator extends Module
 			{
 				$module_instance = Module::getInstanceByName($module['name']);
 				if (Validate::isLoadedObject($module_instance) && method_exists($module_instance, 'getContent'))
-					$desc = '<a class="btn btn-link" href="'.$this->context->link->getAdminLink('AdminModules', true).'&configure='.urlencode($module_instance->name).'&tab_module='.$module_instance->tab.'&module_name='.urlencode($module_instance->name).'">'.$this->l('Configure').' <i class="icon-external-link"></i></a>';
+					$desc = '<a class="btn btn-default" href="'.$this->context->link->getAdminLink('AdminModules', true).'&configure='.urlencode($module_instance->name).'&tab_module='.$module_instance->tab.'&module_name='.urlencode($module_instance->name).'">'.$this->l('Configure').' <i class="icon-external-link"></i></a>';
 			}
 			if (!$desc && isset($module['desc']) && $module['desc'])
 				$desc = $module['desc'];
