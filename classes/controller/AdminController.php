@@ -1604,8 +1604,17 @@ class AdminControllerCore extends Controller
 					$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
 					$sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this) || $sub_tab['class_name'] == Tools::getValue('controller'));
 				}
+				elseif ($sub_tab['class_name'] == 'AdminCarrierWizard' && $sub_tab['class_name'].'Controller' == get_class($this))
+				{
+					foreach ($sub_tabs as $i => $tab) {
+						if($tab['class_name'] == 'AdminCarriers')
+							break;
+					}
+					$sub_tabs[$i]['current'] = true;
+					unset($sub_tabs[$index2]);
+				}
 				else
-					unset($sub_tabs[$index2]);				
+					unset($sub_tabs[$index2]);
 			}
 
 			$tabs[$index]['sub_tabs'] = $sub_tabs;

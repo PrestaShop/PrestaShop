@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,700");
 @import url("//fonts.googleapis.com/css?family=Ubuntu+Condensed");
 /* This is a fairly big mixin. The reason for this is that at the time of writing (09/01/2013), Sass does not include functions for substring or find/replace in string. Chris Eppstein sent a Pull Request to Sass with the str-extract (substring) function back in June, but it still has not been merged, due to lack of minor comments. That was five months ago. */
@@ -3042,7 +3043,7 @@ a.link-social:hover { text-decoration: none; }
   .bootstrap .prestashop-switch.switch-light input ~ span span:first-of-type { color: #cccccc; }
   .bootstrap .prestashop-switch.switch-light input ~ span span:last-of-type { color: white; } }
 .bootstrap .page-head { width: 100%; min-width: 450px; height: 55px; padding: 0 0 0 0; margin: 0; border-bottom: 4px solid #00615a; position: fixed; top: 36px; left: 0px; z-index: 499; background-color: #00948a; -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; }
-.bootstrap .page-head h2.page-title { position: relative; padding: 23px 0 0 280px; margin: 0; font: 300 22px/1em "Open Sans", Helvetica, Arial, sans-serif; color: white; }
+.bootstrap .page-head h2.page-title { position: relative; padding: 28px 0 0 280px; margin: 0; font: 300 20px/1em "Open Sans", Helvetica, Arial, sans-serif; color: white; }
 @media (max-width: 768px) { .bootstrap .page-head h2.page-title { padding: 26px 0 0 70px; } }
 .bootstrap .page-head h2.page-title a { border-bottom: dotted 1px white; }
 .bootstrap .page-head h2.page-title a:hover { color: black; border-color: black; }
@@ -3130,6 +3131,12 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .chevron-right:before { left: 0; top: 0; border-width: 1.2em 0 1.2em 0.5em; border-color: transparent transparent transparent #1bbdff; background-color: #00a4e7; }
 .bootstrap .input-complete { -webkit-animation: one 0.2s ease-in-out; -moz-animation: one 0.2s ease-in-out; -ms-animation: one 0.2s ease-in-out; -o-animation: one 0.2s ease-in-out; animation: one 0.2s ease-in-out; }
 .bootstrap .multishop-well { padding: 20px 20px 10px; margin-bottom: 15px; background-color: #faf8f0; border: none; border-left: 3px solid #fbeccb; }
+.bootstrap .breadcrumb-multishop select { display: inline-block; height: 20px; line-height: 18px; border: 1px solid #004843; padding: 0 25px 0 8px; margin: 0; outline: none; color: #666666; background: white; position: relative; -webkit-appearance: none; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; -o-border-radius: 4px; border-radius: 4px; }
+@media screen and (-webkit-min-device-pixel-ratio: 0) { .bootstrap .custom-select select { padding-right: 30px; } }
+.bootstrap .breadcrumb-multishop select:focus { box-shadow: 0 0 0 1px #004843; }
+.bootstrap .breadcrumb-multishop { width: auto; position: relative; }
+.bootstrap .breadcrumb-multishop:after { content: "▼"; position: absolute; top: 0; right: 0; bottom: 0; font-size: 60%; line-height: 22px; padding: 0 7px; background-color: #004843; color: white; pointer-events: none; -webkit-border-radius: 0 4px 4px 0; -moz-border-radius: 0 4px 4px 0; -ms-border-radius: 0 4px 4px 0; -o-border-radius: 0 4px 4px 0; border-radius: 0 4px 4px 0; }
+.bootstrap .no-pointer-events .custom-select:after { content: none; }
 .bootstrap #carrier_wizard { position: relative; display: block; }
 .bootstrap #carrier_wizard .stepContainer { position: relative; display: block; clear: both; }
 .bootstrap #carrier_wizard .stepContainer div.content { position: absolute; display: block; width: 100%; clear: both; }

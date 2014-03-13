@@ -409,7 +409,7 @@ class InstallXmlLoader
 				$type = Db::REPLACE;
 
 			if (!Db::getInstance()->insert($entity, $queries, false, true, $type))
-				$this->setError($this->language->l('An SQL error occured for entity <i>%1$s</i>: <i>%2$s</i>', $entity, Db::getInstance()->getMsgError()));
+				$this->setError($this->language->l('An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>', $entity, Db::getInstance()->getMsgError()));
 			unset($this->delayed_inserts[$entity]);
 		}
 	}
