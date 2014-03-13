@@ -89,8 +89,8 @@ class Blockcontact extends Module
 			$tpl = $params['blockcontact_tpl'];
 		if (!$this->isCached($tpl.'.tpl', $this->getCacheId()))
 			$smarty->assign(array(
-				'telnumber' => Configuration::get('blockcontact_telnumber'),
-				'email' => Configuration::get('blockcontact_email')
+				'telnumber' => Configuration::get('BLOCKCONTACT_TELNUMBER'),
+				'email' => Configuration::get('BLOCKCONTACT_EMAIL')
 			));
 		return $this->display(__FILE__, $tpl.'.tpl', $this->getCacheId());
 	}
