@@ -30,6 +30,7 @@ class AdminModulesControllerCore extends AdminController
 	** @var array map with $_GET keywords and their callback
 	*/
 	protected $map = array(
+		'check' => 'check',
 		'install' => 'install',
 		'uninstall' => 'uninstall',
 		'configure' => 'getContent',
@@ -699,7 +700,9 @@ class AdminModulesControllerCore extends AdminController
 			if (!Tools::getValue($key))
 				continue;
 
-			if ($key == 'checkAndUpdate')
+			if ($key == 'check')
+				$this->ajaxProcessRefreshModuleList(true);
+			elseif ($key == 'checkAndUpdate')
 			{
 				$modules = array();
 				$this->ajaxProcessRefreshModuleList(true);
