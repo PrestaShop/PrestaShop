@@ -57,7 +57,7 @@ ul.product_list {
 			text-align: center;
 			@include box-shadow(rgba(black, 0.16) 0 2px 8px);
 			@media (min-width: $screen-lg) { // min 1200px
-				display: block;
+				display: none;
 			}
 			@media (max-width: $screen-xs-max) { // max 767px
 				display: none;
