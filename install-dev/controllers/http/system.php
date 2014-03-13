@@ -95,7 +95,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 					'title' => $this->l('Files'),
 					'success' => 1,
 					'checks' => array(
-						'files' => $this->l('All files are not successfuly uploaded on your server')
+						'files' => $this->l('All files are not successfully uploaded on your server')
 					)
 				),
 				array(
