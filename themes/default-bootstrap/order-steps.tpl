@@ -47,10 +47,10 @@
 	<li class="{if $current_step=='login'}step_current{elseif $current_step=='address'}step_done step_done_last{else}{if $current_step=='payment' || $current_step=='shipping' || $current_step=='address'}step_done{else}step_todo{/if}{/if} second">
 		{if $current_step=='payment' || $current_step=='shipping' || $current_step=='address'}
 		<a href="{$link->getPageLink('order', true, NULL, "{$smarty.capture.url_back}&step=1&multi-shipping={$multi_shipping}")|escape:'html':'UTF-8'}">
-			<em>02.</em> {l s='Login'}
+			<em>02.</em> {l s='Sign in'}
 		</a>
 		{else}
-			<span><em>02.</em> {l s='Login'}</span>
+			<span><em>02.</em> {l s='Sign in'}</span>
 		{/if}
 	</li>
 	<li class="{if $current_step=='address'}step_current{elseif $current_step=='shipping'}step_done step_done_last{else}{if $current_step=='payment' || $current_step=='shipping'}step_done{else}step_todo{/if}{/if} third">
