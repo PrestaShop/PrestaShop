@@ -149,8 +149,8 @@
                         <a 
                         href="{$link->getPageLink('index')}?mylogout" 
                         rel="nofollow"
-                        title="{l s='Log out'}" >
-                            {l s='Log out'}
+                        title="{l s='Sign out'}" >
+                            {l s='Sign out'}
                         </a>
                     </li>
         		{/if}

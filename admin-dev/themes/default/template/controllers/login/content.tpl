@@ -93,7 +93,7 @@
 						<button name="submitLogin" type="submit" tabindex="4" class="btn btn-default btn-lg btn-block ladda-button" data-style="slide-up" data-spinner-color="black" >
 							<span class="ladda-label">
 								<i class="icon-check text-success"></i>
-								{l s='Log in'}
+								{l s='Sign in'}
 							</span>
 						</button>
 					</div>

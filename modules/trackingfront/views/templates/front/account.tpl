@@ -28,7 +28,7 @@
 <div style="width: 800px; height: 75px; background-color: #8AB50E; margin: 0 auto; color: white; font-family: arial; border-bottom: 5px solid #567500;">
     <div style="float: left; font-size: 36px;  margin-left: 20px; font-weight: bold; height: 75px; line-height: 75px; vertical-align: middle;">{l s='Affiliation space' mod='trackingfront'}</div>
     <div style="float: right; font-size: 18px; margin-right: 20px; font-weight: bold; height: 75px; line-height: 75px; vertical-align: middle;">
-        <a href="{$smarty.server.PHP_SELF|escape:'html':'UTF-8'}?logout_tracking">{l s='Logout' mod='trackingfront'}</a>
+        <a href="{$smarty.server.PHP_SELF|escape:'html':'UTF-8'}?logout_tracking">{l s='Sign out' mod='trackingfront'}</a>
     </div>
 </div>
 <div style="width: 800px; height: 250px; background-color: #EEEEEE; margin: 0 auto; font-family: arial;">
