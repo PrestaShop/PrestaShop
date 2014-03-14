@@ -462,7 +462,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 	
 	public static function getExpenses($date_from, $date_to, $granularity = false)
 	{
-		$expenses = 0;
+		$expenses = ($granularity == 'day' ? array() : 0);
 
 		$orders = Db::getInstance()->ExecuteS('
 		SELECT

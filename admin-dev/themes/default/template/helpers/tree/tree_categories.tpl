@@ -79,14 +79,6 @@
 	{/if}
 	$(document).ready(function () {
 		$("#{$id}").tree("collapseAll");
-		$("#{$id}").find(":input[type=radio]").click(
-			function()
-			{
-				location.href = location.href.replace(
-					/&id_category=[0-9]*/, "")+"&id_category="
-					+$(this).val();
-			}
-		);
 
 		{if isset($selected_categories)}
 			{assign var=imploded_selected_categories value='","'|implode:$selected_categories}
