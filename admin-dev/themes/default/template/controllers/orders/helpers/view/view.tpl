@@ -189,10 +189,10 @@
 									{foreach from=$history item=row key=key}
 										{if ($key == 0)}
 											<tr>
-												<td style="background-color:{$row['color']};color:white"><img src="../img/os/{$row['id_order_state']|intval}.gif" /></td>
-												<td style="background-color:{$row['color']};color:white"><span class="title_box ">{$row['ostate_name']|stripslashes}</span></td>
-												<td style="background-color:{$row['color']};color:white"><span class="title_box ">{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</span></td>
-												<td style="background-color:{$row['color']};color:white"><span class="title_box ">{dateFormat date=$row['date_add'] full=true}</span></td>
+												<td style="background-color:{$row['color']}"><img src="../img/os/{$row['id_order_state']|intval}.gif" /></td>
+												<td style="background-color:{$row['color']};color:{$row['text-color']}">{$row['ostate_name']|stripslashes}</td>
+												<td style="background-color:{$row['color']};color:{$row['text-color']}">{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</td>
+												<td style="background-color:{$row['color']};color:{$row['text-color']}">{dateFormat date=$row['date_add'] full=true}</td>
 											</tr>
 										{else}
 											<tr>
