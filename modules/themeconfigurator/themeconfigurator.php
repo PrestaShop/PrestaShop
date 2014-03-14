@@ -80,7 +80,7 @@ class ThemeConfigurator extends Module
 
 		if (!parent::install()
 			|| !$this->installDB()
-			|| !$this->installFixtures() ||
+			|| !$this->installFixtures(Language::getLanguages(true)) ||
 			!$this->registerHook('displayHeader') ||
 			!$this->registerHook('displayTopColumn') ||
 			!$this->registerHook('displayLeftColumn') ||
@@ -156,18 +156,21 @@ class ThemeConfigurator extends Module
 		return $result;
 	}
 
-	public function installFixtures($id_lang = null)
+	public function installFixtures($languages = null)
 	{
 		$result = true;
 
-		if ($id_lang === null)
-			$id_lang = $this->context->language->id;
+		if ($languages === null)
+			$languages = Language::getLanguages(true);
+		
+		foreach ($languages as $language)
+		{
+			for ($i = 1; $i < 6; $i++)
+				$result &= $this->installFixture('home', $i, $this->context->shop->id, $language['id_lang']);
 
-		for ($i = 1; $i < 6; $i++)
-			$result &= $this->installFixture('home', $i, $this->context->shop->id, $id_lang);
-
-		for ($i = 6; $i < 8; $i++)
-			$result &= $this->installFixture('top', $i, $this->context->shop->id, $id_lang);
+			for ($i = 6; $i < 8; $i++)
+				$result &= $this->installFixture('top', $i, $this->context->shop->id, $language['id_lang']);
+		}
 
 		return $result;
 	}
@@ -222,7 +225,7 @@ class ThemeConfigurator extends Module
 	
 	public function hookActionObjectLanguageAddAfter($params)
 	{
-		return $this->installFixtures((int)$params['object']->id);
+		return $this->installFixtures(array((int)$params['object']->id));
 	}
 
 	public function hookdisplayTopColumn()
