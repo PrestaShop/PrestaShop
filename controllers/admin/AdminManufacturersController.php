@@ -427,6 +427,11 @@ class AdminManufacturersControllerCore extends AdminController
 	 	// Create Object Address
 		$address = new Address($id_address);
 
+		$res = $address->getFieldsRequiredDatabase();
+		$required_fields = array();
+		foreach ($res as $row)
+			$required_fields[(int)$row['id_required_field']] = $row['field_name'];
+
 		$form = array(
 			'legend' => array(
 				'title' => $this->l('Addresses'),
@@ -499,14 +504,14 @@ class AdminManufacturersControllerCore extends AdminController
 			'label' => $this->l('Address (2)'),
 			'name' => 'address2',
 			'col' => 6,
-			'required' => false,
+			'required' => in_array('address2', $required_fields)
 		);
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Zip/postal code'),
 			'name' => 'postcode',
 			'col' => 2,
-			'required' => false,
+			'required' => in_array('postcode', $required_fields)
 		);
 		$form['input'][] = array(
 			'type' => 'text',
@@ -545,14 +550,14 @@ class AdminManufacturersControllerCore extends AdminController
 			'label' => $this->l('Home phone'),
 			'name' => 'phone',
 			'col' => 4,
-			'required' => false,
+			'required' => in_array('phone', $required_fields)
 		);
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Mobile phone'),
 			'name' => 'phone_mobile',
 			'col' => 4,
-			'required' => false,
+			'required' => in_array('phone_mobile', $required_fields)
 		);
 		$form['input'][] = array(
 			'type' => 'textarea',
