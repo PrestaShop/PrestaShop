@@ -532,19 +532,7 @@ class HomeSlider extends Module
 
 		$this->context->controller->addJqueryUI('ui.sortable');
 		/* Style & js for fieldset 'slides configuration' */
-		$html = '
-		<style>
-		#slides li {
-			list-style: none;
-			margin: 0 0 4px 0;
-			padding: 10px;
-			background-color: #F4E6C9;
-			border: #CCCCCC solid 1px;
-			color:#000;
-		}
-		</style>
-		
-		<script type="text/javascript">
+		$html = '<script type="text/javascript">
 			$(function() {
 				var $mySlides = $("#slides");
 				$mySlides.sortable({
