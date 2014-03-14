@@ -34,7 +34,7 @@
 			<div id="addons_login_div">	
 				<p>{l s='Welcome'} {$username_addons}</p>
 				<a class="btn btn-default" href="#" id="addons_logout_button">
-					<i class="icon-signout"></i> {l s='Log out from PrestaShop Addons.'}
+					<i class="icon-signout"></i> {l s='Sign out from PrestaShop Addons.'}
 				</a>
 			</div>
 			<!--end addons login-->
@@ -69,7 +69,7 @@
 				</div>
 				<div class="row">
 					<button id="addons_login_button" class="btn btn-default btn-block btn-lg" type="submit">
-						<i class="icon-unlock"></i> {l s='Log in'}
+						<i class="icon-unlock"></i> {l s='Sign in'}
 					</button>
 				</div>
 				<div id="addons_loading" class="help-block"></div>

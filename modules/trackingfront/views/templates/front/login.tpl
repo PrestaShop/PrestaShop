@@ -36,14 +36,14 @@
 				<div style="font-size: 36px;  margin: 5px auto; font-weight: bold; height: 65x; line-height: 65px; vertical-align: middle;">{l s='Affiliation space' mod='trackingfront'}</div>
 			</div>
 			<form action="{$request_uri|escape:'html':'UTF-8'}" method="post" style="margin: 20px 50px; text-align: left; font-weight: bold;">
-				<label>{l s='Login' mod='trackingfront'}</label><br />
+				<label>{l s='Sign in' mod='trackingfront'}</label><br />
 				<input type="text" id="email" name="login" value="{if isset($smarty.post.login)}{$smarty.post.login|escape:'html'|stripslashes}{/if}" class="input" />
 				<div style="margin: 2.0em 0 0 0;">
 					<label>{l s='Password' mod='trackingfront'}</label><br />
 					<input type="password" name="passwd" class="input" />
 				</div>
 				<div style="margin: 2.0em 0 0 0; text-align :right">
-					<div id="submit"><input type="submit" name="submitLoginTracking" value="{l s='Log in' mod='trackingfront'}" class="button" style="border: none; background-color: #567500; color: white; font-weight: bold; width: 90px; height: 30px;" /></div>
+					<div id="submit"><input type="submit" name="submitLoginTracking" value="{l s='Sign in' mod='trackingfront'}" class="button" style="border: none; background-color: #567500; color: white; font-weight: bold; width: 90px; height: 30px;" /></div>
 				</div>
 			</form>
 		</div>
