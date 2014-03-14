@@ -3877,7 +3877,8 @@ class AdminProductsControllerCore extends AdminController
 
 				$languages = Language::getLanguages(true);
 				$image_uploader = new HelperImageUploader('file');
-				$image_uploader->setMultiple(true)->setUseAjax(true)->setUrl(
+				$image_uploader->setMultiple(!(Tools::getUserBrowser() == 'Apple Safari' && Tools::getUserPlatform() == 'Windows'))
+					->setUseAjax(true)->setUrl(
 					Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$obj->id
 					.'&action=addProductImage');
 					
