@@ -401,7 +401,9 @@ abstract class ControllerCore
 		else
 			$html = $this->context->smarty->fetch($content);
 
-		if ($this->controller_type == 'front')
+		$html = trim($html);
+
+		if ($this->controller_type == 'front' && !empty($html))
 		{
  			$dom_available = extension_loaded('dom') ? true : false;
  			if ($dom_available)
