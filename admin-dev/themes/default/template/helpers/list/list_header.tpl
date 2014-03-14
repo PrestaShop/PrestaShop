@@ -28,7 +28,6 @@
         $(".ajax_table_link").click(function () {
             var link = $(this);
             $.post($(this).attr('href'), function (data) {
-                console.log(data);
                 if (data.success == 1) {
                     showSuccessMessage(data.text);
 

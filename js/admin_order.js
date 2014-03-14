@@ -594,7 +594,6 @@ function init()
 		$('.cancel_product_change_link:visible').trigger('click');
 		closeAddProduct();
 		var element = $(this);
-		console.log(element.closest('tr.product-line-row').find('input.edit_product_id_order_detail').val());
 		$.ajax({
 			type: 'POST',
 			url: admin_order_tab_link,
