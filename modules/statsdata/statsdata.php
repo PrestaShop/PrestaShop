@@ -93,7 +93,6 @@ class StatsData extends Module
 						navinfo.type = "navinfo";
 						navinfo.id_guest = "'.(int)$params['cookie']->id_guest.'";
 						navinfo.token = "'.$token.'";
-						console.log(navinfo);
 						$.post("'.Context::getContext()->link->getPageLink('statistics', (bool)(Tools::getShopProtocol() == 'https://')).'", navinfo);
 					});
 				</script>';
