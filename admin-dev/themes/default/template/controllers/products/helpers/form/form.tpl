@@ -152,7 +152,6 @@
 					tabs_manager.onLoad(id, function(){
 						$("#product-tab-content-"+id).show(0, function(){
 							$(this).trigger('displayed');
-							//console.log('show tab'+id);
 						});
 						$("#link-"+id).addClass('active');
 					});

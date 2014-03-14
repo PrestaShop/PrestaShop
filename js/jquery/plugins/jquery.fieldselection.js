@@ -16,7 +16,6 @@
 				/* mozilla / dom 3.0 */
 				('selectionStart' in e && function() {
 					var l = e.selectionEnd - e.selectionStart;
-					console.log(e);
 					return { start: e.selectionStart, end: e.selectionEnd, length: l, text: e.value.substr(e.selectionStart, l) };
 				}) ||
 
