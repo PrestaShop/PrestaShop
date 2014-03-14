@@ -38,7 +38,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.10.4';
+		$this->version = '1.10.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -2655,7 +2655,7 @@ class BlockLayered extends Module
 		foreach ($filter_blocks as $type_filter)
 		{
 			$filter_name = (!empty($type_filter['url_name']) ? $type_filter['url_name'] : $type_filter['name']);
-			$filter_meta = (!empty($type_filter['meta_title']) ? $type_filter['meta_title'] : '');
+			$filter_meta = (!empty($type_filter['meta_title']) ? $type_filter['meta_title'] : $type_filter['name']);
 			$attr_key = $type_filter['type'].'_'.$type_filter['id_key'];
 			
 			$param_group_selected = '';
@@ -2668,9 +2668,9 @@ class BlockLayered extends Module
 					.$this->getAnchor().str_replace($this->getAnchor(), '_', $type_filter['values'][1]);
 				$param_group_selected_array[Tools::link_rewrite($filter_name)][] = Tools::link_rewrite($filter_name);
 			
-				if (!isset($title_values[$filter_name]))
-					$title_values[$filter_name] = array();
-				$title_values[$filter_name][] = $filter_name;
+				if (!isset($title_values[$filter_meta]))
+					$title_values[$filter_meta] = array();
+				$title_values[$filter_meta][] = $filter_meta;
 				if (!isset($meta_values[$attr_key]))
 					$meta_values[$attr_key] = array('title' => $filter_meta, 'values' => array());
 				$meta_values[$attr_key]['values'][] = $filter_meta;
@@ -2686,9 +2686,9 @@ class BlockLayered extends Module
 						$param_group_selected .= $this->getAnchor().str_replace($this->getAnchor(), '_', Tools::link_rewrite($value_name));
 						$param_group_selected_array[Tools::link_rewrite($filter_name)][] = Tools::link_rewrite($value_name);
 					
-						if (!isset($title_values[$filter_name]))
-							$title_values[$filter_name] = array();
-						$title_values[$filter_name][] = $value_name;
+						if (!isset($title_values[$filter_meta]))
+							$title_values[$filter_meta] = array();
+						$title_values[$filter_meta][] = $value_name;
 						if (!isset($meta_values[$attr_key]))
 							$meta_values[$attr_key] = array('title' => $filter_meta, 'values' => array());
 						$meta_values[$attr_key]['values'][] = $value_meta;
@@ -2810,6 +2810,7 @@ class BlockLayered extends Module
 			'param_product_url' => $param_product_url,
 			'no_follow' => (!empty($param_selected) || $global_nofollow)
 		);
+
 		return $cache;
 	}
 	
