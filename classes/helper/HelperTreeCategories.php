@@ -37,7 +37,6 @@ class HelperTreeCategoriesCore extends TreeCore
 	private $_selected_categories;
 	private $_shop;
 	private $_use_checkbox;
-	private $_unique;
 	private $_use_search;
 	private $_use_shop_restriction;
 
@@ -189,12 +188,6 @@ class HelperTreeCategoriesCore extends TreeCore
 		return $this;
 	}
 
-	public function setUnique($value)
-	{
-		$this->_unique = (bool)$value;
-		return $this;
-	}
-
 	public function setUseSearch($value)
 	{
 		$this->_use_search = (bool)$value;
@@ -210,11 +203,6 @@ class HelperTreeCategoriesCore extends TreeCore
 	public function useCheckBox()
 	{
 		return (isset($this->_use_checkbox) && $this->_use_checkbox);
-	}
-
-	public function isUnique()
-	{
-		return (isset($this->_unique) && $this->_unique);
 	}
 
 	public function useSearch()
@@ -286,7 +274,6 @@ class HelperTreeCategoriesCore extends TreeCore
 			$this->setAttribute('use_checkbox', $this->useCheckBox());
 		}
 
-		$this->setAttribute('unique', $this->isUnique());
 		$this->setAttribute('selected_categories', $this->getSelectedCategories());
 		$this->getContext()->smarty->assign('root_category', Configuration::get('PS_ROOT_CATEGORY'));
 		return parent::render($data);
