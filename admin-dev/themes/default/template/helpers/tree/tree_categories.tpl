@@ -82,9 +82,9 @@
 		$("#{$id}").find(":input[type=radio]").click(
 			function()
 			{
-				location.href = location.href.replace(
-					/&id_category=[0-9]*/, "")+"&id_category="
-					+$(this).val();
+				{if (!(isset($unique) && $unique))}
+					location.href = location.href.replace(/&id_category=[0-9]*/, "")+"&id_category="+$(this).val();
+				{/if}
 			}
 		);
 
