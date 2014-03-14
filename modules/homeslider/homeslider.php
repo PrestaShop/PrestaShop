@@ -602,11 +602,12 @@ class HomeSlider extends Module
 	public function displayStatus($id_slide, $active)
 	{
 		$title = ((int)$active == 0 ? $this->l('Disabled') : $this->l('Enabled'));
-		$img = ((int)$active == 0 ? 'disabled.gif' : 'enabled.gif');
-		$html = '<a href="'.AdminController::$currentIndex.
+		$icon = ((int)$active == 0 ? 'icon-remove' : 'icon-check');
+		$class = ((int)$active == 0 ? 'btn-danger' : 'btn-success');
+		$html = '<a class="btn '.$class.'" href="'.AdminController::$currentIndex.
 			'&configure='.$this->name.'
 				&token='.Tools::getAdminTokenLite('AdminModules').'
-				&changeStatus&id_slide='.(int)$id_slide.'" title="'.$title.'"><img src="'._PS_ADMIN_IMG_.''.$img.'" alt="" /></a>';
+				&changeStatus&id_slide='.(int)$id_slide.'" title="'.$title.'"><i class="'.$icon.'"></i> '.$title.'</a>';
 
 		return $html;
 	}
