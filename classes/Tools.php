@@ -29,6 +29,8 @@ class ToolsCore
 	protected static $file_exists_cache = array();
 	protected static $_forceCompile;
 	protected static $_caching;
+	protected static $_user_plateform;
+	protected static $_user_browser;
 
 	/**
 	* Random password generator
@@ -717,17 +719,22 @@ class ToolsCore
 			if ($files = scandir($dirname))
 			{
 				foreach ($files as $file)
-
     				if ($file != '.' && $file != '..' && $file != '.svn')
     				{
     					if (is_dir($dirname.$file))
     						Tools::deleteDirectory($dirname.$file, true);
     					elseif (file_exists($dirname.$file))
-    						unlink($dirname.$file);
+						{
+							@chmod($dirname.$file, 0777); // NT ?
+							unlink($dirname.$file);
+						}
     				}
-				if ($delete_self)
+				if ($delete_self && file_exists($dirname))
 					if (!rmdir($dirname))
+					{
+						@chmod($dirname, 0777); // NT ?
                         return false;
+					}
                 return true;                    
 			}
         return false;
@@ -745,7 +752,10 @@ class ToolsCore
 			$exclude_files = array($exclude_files);
 
 		if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files) === FALSE)
+		{
+			@chmod($dirname.$file, 0777); // NT ?
 			unlink($file);
+		}
     }
     
 	/**
@@ -2962,6 +2972,48 @@ exit;
 		if (empty($value))
 			$value = false;
 		return (bool)$value;
+	}
+
+	public static function getUserPlatform()
+	{
+		if (isset(self::$_user_plateform))
+			return self::$_user_plateform;
+
+		$user_agent = $_SERVER['HTTP_USER_AGENT'];
+		self::$_user_plateform = 'unknown';
+
+		if (preg_match('/linux/i', $user_agent))
+			self::$_user_plateform = 'Linux';
+		elseif (preg_match('/macintosh|mac os x/i', $user_agent))
+			self::$_user_plateform = 'Mac';
+		elseif (preg_match('/windows|win32/i', $user_agent))
+			self::$_user_plateform = 'Windows';
+
+		return self::$_user_plateform;
+	}
+
+	public static function getUserBrowser()
+	{
+		if (isset(self::$_user_browser))
+			return self::$_user_browser;
+
+		$user_agent = $_SERVER['HTTP_USER_AGENT'];
+		self::$_user_browser = 'unknown';
+
+		if(preg_match('/MSIE/i',$user_agent) && !preg_match('/Opera/i',$user_agent))
+			self::$_user_browser = 'Internet Explorer';
+		elseif(preg_match('/Firefox/i',$user_agent))
+			self::$_user_browser = 'Mozilla Firefox';
+		elseif(preg_match('/Chrome/i',$user_agent))
+			self::$_user_browser = 'Google Chrome';
+		elseif(preg_match('/Safari/i',$user_agent))
+			self::$_user_browser = 'Apple Safari';
+		elseif(preg_match('/Opera/i',$user_agent))
+			self::$_user_browser = 'Opera';
+		elseif(preg_match('/Netscape/i',$user_agent))
+			self::$_user_browser = 'Netscape';
+
+		return self::$_user_browser;
 	}
 }
 

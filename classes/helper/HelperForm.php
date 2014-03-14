@@ -91,6 +91,9 @@ class HelperFormCore extends Helper
 							{
 								$tree = new HelperTreeCategories($params['tree']['id'], isset($params['tree']['title']) ? $params['tree']['title'] : null);
 
+								if (isset($params['name']))
+									$tree->setInputName($params['name']);
+
 								if (isset($params['tree']['selected_categories']))
 									$tree->setSelectedCategories($params['tree']['selected_categories']);
 

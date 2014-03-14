@@ -849,12 +849,12 @@ function bindInputs()
 	});
 	
 	// Recyclable checkbox
-	$(document).on('click', '#recyclable', function(e){
+	$('#recyclable').on('click', function(e){
 		updateCarrierSelectionAndGift();
 	});
 	
 	// Gift checkbox update
-	$(document).on('clcik', '#gift', function(e){
+	$('#gift').off('click').on('click', function(e){
 		if ($('#gift').is(':checked'))
 			$('#gift_div').show();
 		else
@@ -864,17 +864,16 @@ function bindInputs()
 	
 	if ($('#gift').is(':checked'))
 		$('#gift_div').show();
-		
 	else
 		$('#gift_div').hide();
 
 	// Gift message update
-	$('#gift_message').change(function() {
+	$('#gift_message').on('change', function() {
 		updateCarrierSelectionAndGift();
 	});
 	
 	// Term Of Service (TOS)
-	$(document).on('click', '#cgv', function(e){
+	$('#cgv').on('click', function(e){
 		updatePaymentMethodsDisplay();
 	});
 }

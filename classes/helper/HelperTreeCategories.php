@@ -78,6 +78,7 @@ class HelperTreeCategoriesCore extends TreeCore
 	public function setInputName($value)
 	{
 		$this->_input_name = $value;
+		return $this;
 	}
 
 	public function getInputName()
@@ -289,7 +290,6 @@ class HelperTreeCategoriesCore extends TreeCore
 			throw new PrestaShopException('Data value must be an traversable array');
 
 		$html = '';
-
 		foreach ($data as $item)
 		{
 			if (array_key_exists('children', $item)
