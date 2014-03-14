@@ -139,7 +139,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'name' => 'phone_mobile',
 					'maxlength' => 16,
 					'col' => 4,
-					'hint' => $this->l('Mobile phone number for this supplier')
+					'hint' => $this->l('Mobile phone number for this supplier.')
 				),
 				array(
 					'type' => 'text',
