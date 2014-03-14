@@ -101,7 +101,7 @@
 					{l s='Order'}
 					<span class="badge">{$order->reference}</span>
 					<span class="badge">{l s="#"}{$order->id}</span>
-					<div class="btn-group-action pull-right">
+					<div class="panel-heading-action">
 						<div class="btn-group">
 							<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
 								<i class="icon-backward"></i>
@@ -114,56 +114,54 @@
 				</div>
 				<!-- Orders Actions -->
 				<div class="well">
-					<div class="row">
-						<a class="btn btn-default" href="javascript:window.print()">
-							<i class="icon-print"></i>
-							{l s='Print order'}
+					<a class="btn btn-default" href="javascript:window.print()">
+						<i class="icon-print"></i>
+						{l s='Print order'}
+					</a>
+					&nbsp;
+					{if (count($invoices_collection))}
+						<a class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}" target="_blank">
+							<i class="icon-file"></i>
+							{l s='View invoice'}
+						</a>
+					{else}
+						<span class="span label label-inactive">
+							<i class="icon-remove"></i>
+							{l s='No invoice'}
+						</span>
+					{/if}
+					&nbsp;
+					{if (($currentState && $currentState->delivery) || $order->delivery_number)}
+						<a class="btn btn-default"  href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order={$order->id}" target="_blank">
+							<i class="icon-truck"></i>
+							{l s='View delivery slip'}
+						</a>
+					{else}
+						<span class="span label label-inactive">
+							<i class="icon-remove"></i>
+							{l s='No delivery slip'}
+						</span>
+					{/if}
+					&nbsp;
+					{if Configuration::get('PS_ORDER_RETURN')}
+						<a id="desc-order-standard_refund" class="btn btn-default" href="#refundForm">
+							<i class="icon-exchange"></i>
+							{if $order->hasBeenShipped()}
+								{l s='Return products'}
+							{elseif $order->hasBeenPaid()}
+								{l s='Standard refund'}
+							{else}
+								{l s='Cancel products'}
+							{/if}
 						</a>
 						&nbsp;
-						{if (count($invoices_collection))}
-							<a class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}" target="_blank">
-								<i class="icon-file"></i>
-								{l s='View invoice'}
-							</a>
-						{else}
-							<span class="span label label-inactive">
-								<i class="icon-remove"></i>
-								{l s='No invoice'}
-							</span>
-						{/if}
-						&nbsp;
-						{if (($currentState && $currentState->delivery) || $order->delivery_number)}
-							<a class="btn btn-default"  href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order={$order->id}" target="_blank">
-								<i class="icon-truck"></i>
-								{l s='View delivery slip'}
-							</a>
-						{else}
-							<span class="span label label-inactive">
-								<i class="icon-remove"></i>
-								{l s='No delivery slip'}
-							</span>
-						{/if}
-						&nbsp;
-						{if Configuration::get('PS_ORDER_RETURN')}
-							<a id="desc-order-standard_refund" class="btn btn-default" href="#refundForm">
-								<i class="icon-exchange"></i>
-								{if $order->hasBeenShipped()}
-									{l s='Return products'}
-								{elseif $order->hasBeenPaid()}
-									{l s='Standard refund'}
-								{else}
-									{l s='Cancel products'}
-								{/if}
-							</a>
-							&nbsp;
-						{/if}
-						{if $order->hasInvoice()}
-							<a id="desc-order-partial_refund" class="btn btn-default" href="#refundForm">
-								<i class="icon-exchange"></i>
-								{l s='Partial refund'}
-							</a>
-						{/if}
-					</div>
+					{/if}
+					{if $order->hasInvoice()}
+						<a id="desc-order-partial_refund" class="btn btn-default" href="#refundForm">
+							<i class="icon-exchange"></i>
+							{l s='Partial refund'}
+						</a>
+					{/if}
 				</div>
 				<!-- Tab nav -->
 				<ul class="nav nav-tabs" id="tabOrder">

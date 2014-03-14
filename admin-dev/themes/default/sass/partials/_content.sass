@@ -59,9 +59,6 @@ body
 		height: 2.2em
 		text-transform: uppercase
 		border-bottom: solid 1px #EEEEEE
-		.btn-group
-			position: relative
-			top: -3px
 		i, a
 			color: contrasted($bg-panel-heading-color)
 		.badge
@@ -78,9 +75,22 @@ body
 				display: block
 				font-size: 0.8em
 		.panel-heading-action
+			line-height: 0
 			position: absolute
 			top: 2px
 			right: 0
+			.btn-group
+				position: absolute
+				top: -2px
+				right: 2px
+				//width: 100px
+				white-space: nowrap
+				a.btn
+					float: none
+			> a.btn
+				position: absolute
+				top: 0
+				right: 2px
 			a.list-toolbar-btn
 				float: left
 				height: 30px
