@@ -116,7 +116,7 @@ function onFinishCallback(obj, context)
 		url : validate_url,
 		async: false,
 		dataType: 'json',
-		data : $('#carrier_wizard .stepContainer .content form').serialize() + '&action=finish_step&ajax=1',
+		data : $('#carrier_wizard .stepContainer .content form').serialize() + '&action=finish_step&ajax=1&step_number='+context.fromStep,
 		success : function(data) {
 			if (data.has_error)
 			{				
