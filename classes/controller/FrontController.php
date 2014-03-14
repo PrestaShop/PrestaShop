@@ -770,9 +770,7 @@ class FrontControllerCore extends Controller
 			$this->addjqueryPlugin('fancybox');
 			$this->addJS(_PS_JS_DIR_.'hookLiveEdit.js');
 		}
-		if ($this->context->language->is_rtl)
-			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
-		
+
 		if (Configuration::get('PS_QUICK_VIEW'))
 			$this->addjqueryPlugin('fancybox');
 
@@ -810,6 +808,15 @@ class FrontControllerCore extends Controller
 			'PS_SHOP_NAME' => Configuration::get('PS_SHOP_NAME'),
 			'PS_ALLOW_MOBILE_DEVICE' => isset($_SERVER['HTTP_USER_AGENT']) && (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE') && @filemtime(_PS_THEME_MOBILE_DIR_)
 		));
+		//RTL support
+		//rtl.css overrides theme css files for rtl
+		//iso_code.css overrides default font for every language (optional)
+		if ($this->context->language->is_rtl)
+		{
+			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
+			$this->addCSS(_._THEME_CSS_DIR_.$this->context->language->iso_code.'.css');
+		}
+
 	}
 	
 	public function checkLiveEditAccess()

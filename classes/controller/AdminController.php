@@ -311,7 +311,7 @@ class AdminControllerCore extends Controller
 		$this->bo_css = ((Validate::isLoadedObject($this->context->employee) && $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'admin-theme.css');
 		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.$this->bo_css))
 			$this->bo_css = 'admin-theme.css';
-		
+		__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.
 		$this->context->smarty->setTemplateDir(array(
 			_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'template',
 			_PS_OVERRIDE_DIR_.'controllers'.DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.'templates'
@@ -1860,6 +1860,17 @@ class AdminControllerCore extends Controller
 	 */
 	public function initFooter()
 	{
+		//RTL Support
+		//rtl.js overrides inline styles
+		//rtl.css overrides css styles
+		//iso_code.css overrides default fonts for every language (optional)
+		if ($this->context->language->is_rtl)
+		{
+			$this->addJS(_PS_JS_DIR_.'rtl.js');
+			$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/rtl.css', 'all', false);
+			$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->context->language->iso_code.'.css', 'all', false);
+		}
+
 		// We assign js and css files on the last step before display template, because controller can add many js and css files
 		$this->context->smarty->assign('css_files', $this->css_files);
 		$this->context->smarty->assign('js_files', array_unique($this->js_files));
@@ -2142,9 +2153,7 @@ class AdminControllerCore extends Controller
 		if (!$this->bootstrap)
 			$this->setDeprecatedMedia();
 		
-		//@Todo: css for rtl support
-		if ($this->context->language->is_rtl)
-			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
+		//RTL Support moved to footer
 
 		$this->addJquery();
 		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize'));
