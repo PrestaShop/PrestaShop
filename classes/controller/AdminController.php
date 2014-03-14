@@ -311,7 +311,7 @@ class AdminControllerCore extends Controller
 		$this->bo_css = ((Validate::isLoadedObject($this->context->employee) && $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'admin-theme.css');
 		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.$this->bo_css))
 			$this->bo_css = 'admin-theme.css';
-		__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.
+
 		$this->context->smarty->setTemplateDir(array(
 			_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'template',
 			_PS_OVERRIDE_DIR_.'controllers'.DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.'templates'
