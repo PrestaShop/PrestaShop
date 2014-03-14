@@ -111,7 +111,6 @@ class AdminOrdersControllerCore extends AdminController
 			),
 			'osname' => array(
 				'title' => $this->l('Status'),
-				'color' => 'color',
 				'type' => 'select',
 				'list' => $this->statuses_array,
 				'filter_key' => 'os!id_order_state',
@@ -1539,6 +1538,11 @@ class AdminOrdersControllerCore extends AdminController
 
 		$gender = new Gender((int)$customer->id_gender, $this->context->language->id);
 
+		$history = $order->getHistory($this->context->language->id);
+
+		foreach ($history as &$order_state)
+			$order_state['text-color'] = Tools::getBrightness($order_state['color']) < 128 ? 'white' : 'black';
+
 		// Smarty assign
 		$this->tpl_view_vars = array(
 			'order' => $order,
@@ -1562,7 +1566,7 @@ class AdminOrdersControllerCore extends AdminController
 			'orderMessages' => OrderMessage::getOrderMessages($order->id_lang),
 			'messages' => Message::getMessagesByOrderId($order->id, true),
 			'carrier' => new Carrier($order->id_carrier),
-			'history' => $order->getHistory($this->context->language->id),
+			'history' => $history,
 			'states' => OrderState::getOrderStates($this->context->language->id),
 			'warehouse_list' => $warehouse_list,
 			'sources' => ConnectionsSource::getOrderSources($order->id),
