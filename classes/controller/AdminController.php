@@ -1797,23 +1797,13 @@ class AdminControllerCore extends Controller
 				'tab_modules_open' => (int)Tools::getValue('tab_modules_open')
 			));
 		}
+
 	}
 
 	protected function addPageHeaderToolBarModulesListButton()
 	{
-		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
-			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
+		$this->filterTabModuleList();
 		
-		$country_module_list = file_get_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
-		if (!empty($country_module_list) && $country_module_list_xml = simplexml_load_string($country_module_list))
-		{			
-			$country_module_list_array = array();
-			foreach ($country_module_list_xml->module as $k => $m)
-				$country_module_list_array[] = (string)$m->name;
-			
-			$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $country_module_list_array);
-		}
-
 		if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
 			$this->page_header_toolbar_btn['modules-list'] = array(
 				'href' => '#',
@@ -1823,25 +1813,46 @@ class AdminControllerCore extends Controller
 	
 	protected function addToolBarModulesListButton()
 	{
-		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
-			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
-		
-		libxml_use_internal_errors(true);
-		$country_module_list = file_get_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
-		if (!empty($country_module_list) && is_string($country_module_list) && $country_module_list_xml = simplexml_load_string($country_module_list))
-		{
-			$country_module_list_array = array();
-			if (is_object($country_module_list_xml->module))
-				foreach ($country_module_list_xml->module as $k => $m)
-					$country_module_list_array[] = (string)$m->name;
-			$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $country_module_list_array);
-		}
-		
+		$this->filterTabModuleList();
+			
 		if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
 			$this->toolbar_btn['modules-list'] = array(
 				'href' => '#',
 				'desc' => $this->l('Recommended Modules')
 			);
+	}
+	
+	protected function filterTabModuleList()
+	{
+		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
+			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
+		
+		if (!$this->isFresh(Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, 86400))
+			@file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, Tools::addonsRequest('must-have'));
+		
+		libxml_use_internal_errors(true);
+		
+		$country_module_list = file_get_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
+		$must_have_module_list = file_get_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_MUST_HAVE_MODULES_LIST);
+		$all_module_list = array();
+		
+		if (!empty($country_module_list) && $country_module_list_xml = simplexml_load_string($country_module_list))
+		{			
+			$country_module_list_array = array();
+			if (is_object($country_module_list_xml->module))
+				foreach ($country_module_list_xml->module as $k => $m)
+					$all_module_list[] = (string)$m->name;
+		}
+		
+		if (!empty($must_have_module_list) && $must_have_module_list_xml = simplexml_load_string($must_have_module_list))
+		{			
+			$must_have_module_list_array = array();
+			if (is_object($country_module_list_xml->module))
+				foreach ($must_have_module_list_xml->module as $l => $mo)
+					$all_module_list[] = (string)$mo->name;
+		}
+
+		$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $all_module_list);
 	}
 
 	/**
@@ -1886,6 +1897,7 @@ class AdminControllerCore extends Controller
 						if ($xmlModule->attributes() == 'partner' && $key == 'name')
 							$this->list_partners_modules[] = (string)$value;
 					}
+
 		if ($this->getModulesList($this->filter_modules_list))
 		{
 			foreach ($this->modules_list as $key => $module)
