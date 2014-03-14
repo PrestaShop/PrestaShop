@@ -98,6 +98,9 @@ header {
 			}
 		}
 	}
+	.col-sm-4 + .col-sm-4 + .col-sm-4 {
+		float: right;
+	}
 }
 
 .ie8 #header #header_logo {
