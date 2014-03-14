@@ -31,14 +31,14 @@
 		{l s='Your account has been created.'}
 	</p>
 {/if}
-<p class="info-account">{l s='Welcome to your account. Here you can manage al of your personal information and orders. '}</p>
+<p class="info-account">{l s='Welcome to your account. Here you can manage all of your personal information and orders.'}</p>
 <div class="row addresses-lists">
 	<div class="col-xs-12 col-sm-6 col-lg-4">
 		<ul class="myaccount-link-list">
             {if $has_customer_an_address}
             <li><a href="{$link->getPageLink('address', true)|escape:'html':'UTF-8'}" title="{l s='Add my first address'}"><i class="icon-building"></i><span>{l s='Add my first address'}</span></a></li>
             {/if}
-            <li><a href="{$link->getPageLink('history', true)|escape:'html':'UTF-8'}" title="{l s='Orders'}"><i class="icon-list-ol"></i><span>{l s='Order history and details '}</span></a></li>
+            <li><a href="{$link->getPageLink('history', true)|escape:'html':'UTF-8'}" title="{l s='Orders'}"><i class="icon-list-ol"></i><span>{l s='Order history and details'}</span></a></li>
             {if $returnAllowed}
                 <li><a href="{$link->getPageLink('order-follow', true)|escape:'html':'UTF-8'}" title="{l s='Merchandise returns'}"><i class="icon-refresh"></i><span>{l s='My merchandise returns'}</span></a></li>
             {/if}
