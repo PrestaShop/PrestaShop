@@ -42,6 +42,9 @@
 								</button>
 							</span>
 						</div>
+						{if isset($fields[0]['form']['images'])}
+						<img src="{$image_baseurl}{$fields[0]['form']['images'][$language.id_lang]}" class="thumbnail col-lg-2" />
+						{/if}
 					</div>
 				{if $languages|count > 1}
 					<div class="col-lg-2">
