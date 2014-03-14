@@ -37,7 +37,6 @@ class AdminManufacturersControllerCore extends AdminController
 	 	$this->lang = false;
 	 	$this->deleted = false;
 		$this->allow_export = true;
-
 		$this->_orderBy = 'name';
 		$this->_orderWay = 'ASC';
 
@@ -196,6 +195,14 @@ class AdminManufacturersControllerCore extends AdminController
 				'filter_key' => 'cl!id_country'
 			)
 		);
+	}
+
+	public function processExport($text_delimiter = '"')
+	{
+		if (strtolower($this->table) == 'address')
+			$this->_orderBy = null;
+
+		return parent::processExport($text_delimiter);
 	}
 
 	public function initListManufacturerAddresses()
