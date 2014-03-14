@@ -250,15 +250,15 @@
 	var base_folder = '{$base_folder}';
 	var translations = new Array();
 
-	translations['in_progress']                   = '{l s='(in progress)'|addslashes mod='blocklayered'}';
-	translations['url_indexation_finished']       = '{l s='URL indexation finished'|addslashes mod='blocklayered'}';
-	translations['attribute_indexation_finished'] = '{l s='Attribute indexation finished'|addslashes mod='blocklayered'}';
-	translations['url_indexation_failed']         = '{l s='URL indexation failed'|addslashes mod='blocklayered'}';
-	translations['attribute_indexation_failed']   = '{l s='Attribute indexation failed'|addslashes mod='blocklayered'}';
-	translations['price_indexation_finished']     = '{l s='Price indexation finished'|addslashes mod='blocklayered'}';
-	translations['price_indexation_failed']       = '{l s='Price indexation failed'|addslashes mod='blocklayered'}';
-	translations['price_indexation_in_progress']  = '{l s='(in progress, %s products price to index)'|addslashes mod='blocklayered'}';
-	translations['loading']                       = '{l s='Loading...'|addslashes mod='blocklayered'}';
-	translations['delete_all_filters_templates']  = '{l s='You selected -All categories-, all existing filter templates will be deleted, OK?'|addslashes mod='blocklayered'}';
-	translations['no_selected_categories']        = '{l s='You must select at least a category'|addslashes mod='blocklayered'}';
+	translations['in_progress']                   = '{l s='(in progress)' js=1 mod='blocklayered'}';
+	translations['url_indexation_finished']       = '{l s='URL indexation finished' js=1 mod='blocklayered'}';
+	translations['attribute_indexation_finished'] = '{l s='Attribute indexation finished' js=1 mod='blocklayered'}';
+	translations['url_indexation_failed']         = '{l s='URL indexation failed' js=1 mod='blocklayered'}';
+	translations['attribute_indexation_failed']   = '{l s='Attribute indexation failed' js=1 mod='blocklayered'}';
+	translations['price_indexation_finished']     = '{l s='Price indexation finished' js=1 mod='blocklayered'}';
+	translations['price_indexation_failed']       = '{l s='Price indexation failed' js=1 mod='blocklayered'}';
+	translations['price_indexation_in_progress']  = '{l s='(in progress, %s products price to index)' js=1 mod='blocklayered'}';
+	translations['loading']                       = '{l s='Loading...' js=1 mod='blocklayered'}';
+	translations['delete_all_filters_templates']  = '{l s='You selected -All categories-, all existing filter templates will be deleted, OK?' js=1 mod='blocklayered'}';
+	translations['no_selected_categories']        = '{l s='You must select at least a category' js=1 mod='blocklayered'}';
 </script>

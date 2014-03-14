@@ -37,7 +37,6 @@ class AdminManufacturersControllerCore extends AdminController
 	 	$this->lang = false;
 	 	$this->deleted = false;
 		$this->allow_export = true;
-
 		$this->_orderBy = 'name';
 		$this->_orderWay = 'ASC';
 
@@ -196,6 +195,14 @@ class AdminManufacturersControllerCore extends AdminController
 				'filter_key' => 'cl!id_country'
 			)
 		);
+	}
+
+	public function processExport($text_delimiter = '"')
+	{
+		if (strtolower($this->table) == 'address')
+			$this->_orderBy = null;
+
+		return parent::processExport($text_delimiter);
 	}
 
 	public function initListManufacturerAddresses()
@@ -427,6 +434,11 @@ class AdminManufacturersControllerCore extends AdminController
 	 	// Create Object Address
 		$address = new Address($id_address);
 
+		$res = $address->getFieldsRequiredDatabase();
+		$required_fields = array();
+		foreach ($res as $row)
+			$required_fields[(int)$row['id_required_field']] = $row['field_name'];
+
 		$form = array(
 			'legend' => array(
 				'title' => $this->l('Addresses'),
@@ -499,14 +511,14 @@ class AdminManufacturersControllerCore extends AdminController
 			'label' => $this->l('Address (2)'),
 			'name' => 'address2',
 			'col' => 6,
-			'required' => false,
+			'required' => in_array('address2', $required_fields)
 		);
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Zip/postal code'),
 			'name' => 'postcode',
 			'col' => 2,
-			'required' => false,
+			'required' => in_array('postcode', $required_fields)
 		);
 		$form['input'][] = array(
 			'type' => 'text',
@@ -545,14 +557,14 @@ class AdminManufacturersControllerCore extends AdminController
 			'label' => $this->l('Home phone'),
 			'name' => 'phone',
 			'col' => 4,
-			'required' => false,
+			'required' => in_array('phone', $required_fields)
 		);
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Mobile phone'),
 			'name' => 'phone_mobile',
 			'col' => 4,
-			'required' => false,
+			'required' => in_array('phone_mobile', $required_fields)
 		);
 		$form['input'][] = array(
 			'type' => 'textarea',

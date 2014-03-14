@@ -96,6 +96,12 @@ class AdminSuppliersControllerCore extends AdminController
 			$this->imageType, true, true);
 		$image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
+		$tmp_addr = new Address();
+		$res = $tmp_addr->getFieldsRequiredDatabase();
+		$required_fields = array();
+		foreach ($res as $row)
+			$required_fields[(int)$row['id_required_field']] = $row['field_name'];
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Suppliers'),
@@ -129,9 +135,19 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Phone'),
 					'name' => 'phone',
+					'required' => in_array('phone', $required_fields),
 					'maxlength' => 16,
 					'col' => 4,
 					'hint' => $this->l('Phone number for this supplier')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Mobile phone'),
+					'name' => 'phone_mobile',
+					'required' => in_array('phone_mobile', $required_fields),
+					'maxlength' => 16,
+					'col' => 4,
+					'hint' => $this->l('Mobile phone number for this supplier.')
 				),
 				array(
 					'type' => 'text',
@@ -145,6 +161,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Address').' (2)',
 					'name' => 'address2',
+					'required' => in_array('address2', $required_fields),
 					'col' => 6,
 					'maxlength' => 128,
 				),
@@ -152,9 +169,9 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Zip/postal code'),
 					'name' => 'postcode',
+					'required' => in_array('postcode', $required_fields),
 					'maxlength' => 12,
 					'col' => 2,
-					'required' => true,
 				),
 				array(
 					'type' => 'text',
@@ -266,6 +283,7 @@ class AdminSuppliersControllerCore extends AdminController
 			$this->fields_value = array(
 				'id_address' => $address->id,
 				'phone' => $address->phone,
+				'phone_mobile' => $address->phone_mobile,
 				'address' => $address->address1,
 				'address2' => $address->address2,
 				'postcode' => $address->postcode,
@@ -425,6 +443,7 @@ class AdminSuppliersControllerCore extends AdminController
 			$address->address2 = Tools::getValue('address2', null);
 			$address->postcode = Tools::getValue('postcode', null);
 			$address->phone = Tools::getValue('phone', null);
+			$address->phone_mobile = Tools::getValue('phone_mobile', null);
 			$address->id_country = Tools::getValue('id_country', null);
 			$address->id_state = Tools::getValue('id_state', null);
 			$address->city = Tools::getValue('city', null);

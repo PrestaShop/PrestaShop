@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "CP850";
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -46,7 +46,7 @@ a img {
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
   display: block; }
 
-/*!
+/*
  * Bootstrap v3.0.0
  *
  * Copyright 2013 Twitter, Inc
@@ -55,7 +55,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
  *
  * Designed and built with all the love in the world by @mdo and @fat.
  */
-/*! normalize.css v2.1.0 | MIT License | git.io/normalize */
+/* normalize.css v2.1.0 | MIT License | git.io/normalize */
 article,
 aside,
 details,
@@ -3785,7 +3785,7 @@ td.visible-print {
   th.hidden-print,
   td.hidden-print {
     display: none !important; } }
-/*!
+/*
  *  Font Awesome 3.2.1
  *  the iconic font designed for Bootstrap
  *  ------------------------------------------------------------------------------
@@ -5298,6 +5298,8 @@ header {
           padding-top: 15px; }
           header .row #header_logo img {
             margin: 0 auto; } }
+  header .col-sm-4 + .col-sm-4 + .col-sm-4, header .row #header_logo + .col-sm-4 + .col-sm-4, header .row .col-sm-4 + #header_logo + .col-sm-4, header .row #header_logo + #header_logo + .col-sm-4, header .row .col-sm-4 + .col-sm-4 + #header_logo, header .row #header_logo + .col-sm-4 + #header_logo, header .row .col-sm-4 + #header_logo + #header_logo, header .row #header_logo + #header_logo + #header_logo {
+    float: right; }
 
 .ie8 #header #header_logo {
   width: 350px; }
