@@ -61,6 +61,9 @@
 				{
 					if ($(this).val() == datum.id_category)
 					{
+						{if (!(isset($use_checkbox) && $use_checkbox == true))}
+							$("#{$id} label").removeClass("tree-selected");
+						{/if}
 						$(this).prop("checked", true);
 						$(this).parent().addClass("tree-selected");
 						$(this).parents("ul.tree").each(
