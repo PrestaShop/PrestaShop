@@ -40,6 +40,8 @@
 		<ul id="slides">
 			{foreach from=$slides item=slide}
 				<li id="slides_{$slide.id_slide}">
+					<img src="{$image_baseurl}{$slide.image}" alt="{$slide.title}" class="thumbnail col-lg-2" />
+					<div class="clearfix">&nbsp;</div>
 					<strong>#{$slide.id_slide}</strong> {$slide.title}
 					<div>
 						{$slide.status}
