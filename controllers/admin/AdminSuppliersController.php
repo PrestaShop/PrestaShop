@@ -135,6 +135,14 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
+					'label' => $this->l('Mobile phone'),
+					'name' => 'phone_mobile',
+					'maxlength' => 16,
+					'col' => 4,
+					'hint' => $this->l('Mobile phone number for this supplier')
+				),
+				array(
+					'type' => 'text',
 					'label' => $this->l('Address'),
 					'name' => 'address',
 					'maxlength' => 128,
@@ -266,6 +274,7 @@ class AdminSuppliersControllerCore extends AdminController
 			$this->fields_value = array(
 				'id_address' => $address->id,
 				'phone' => $address->phone,
+				'phone_mobile' => $address->phone_mobile,
 				'address' => $address->address1,
 				'address2' => $address->address2,
 				'postcode' => $address->postcode,
@@ -425,6 +434,7 @@ class AdminSuppliersControllerCore extends AdminController
 			$address->address2 = Tools::getValue('address2', null);
 			$address->postcode = Tools::getValue('postcode', null);
 			$address->phone = Tools::getValue('phone', null);
+			$address->phone_mobile = Tools::getValue('phone_mobile', null);
 			$address->id_country = Tools::getValue('id_country', null);
 			$address->id_state = Tools::getValue('id_state', null);
 			$address->city = Tools::getValue('city', null);
