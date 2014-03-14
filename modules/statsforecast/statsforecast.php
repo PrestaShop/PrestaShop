@@ -249,43 +249,39 @@ class StatsForecast extends Module
 		$ca = $this->getRealCA();
 
 		$sql = 'SELECT COUNT(DISTINCT c.id_guest)
-				FROM '._DB_PREFIX_.'connections c
-				WHERE c.date_add BETWEEN '.ModuleGraph::getDateBetween()
-			.Shop::addSqlRestriction(false, 'c');
+		FROM '._DB_PREFIX_.'connections c
+		WHERE c.date_add BETWEEN '.ModuleGraph::getDateBetween().'
+		'.Shop::addSqlRestriction(false, 'c');
 		$visitors = Db::getInstance()->getValue($sql);
 
 		$sql = 'SELECT COUNT(DISTINCT g.id_customer)
-				FROM '._DB_PREFIX_.'connections c
-				INNER JOIN '._DB_PREFIX_.'guest g ON c.id_guest = g.id_guest
-				WHERE g.id_customer != 0
-					AND c.date_add BETWEEN '.ModuleGraph::getDateBetween()
-			.Shop::addSqlRestriction(false, 'c');
+		FROM '._DB_PREFIX_.'connections c
+		INNER JOIN '._DB_PREFIX_.'guest g ON c.id_guest = g.id_guest
+		WHERE g.id_customer != 0
+		AND c.date_add BETWEEN '.ModuleGraph::getDateBetween().'
+		'.Shop::addSqlRestriction(false, 'c');
 		$customers = Db::getInstance()->getValue($sql);
 
-		$sql = 'SELECT COUNT(*)
-				FROM '._DB_PREFIX_.'cart
-				WHERE id_cart IN (
-						SELECT id_cart FROM '._DB_PREFIX_.'cart_product
-					) AND (
-						date_add BETWEEN '.ModuleGraph::getDateBetween().' OR date_upd BETWEEN '.ModuleGraph::getDateBetween().'
-					)'.Shop::addSqlRestriction();
+		$sql = 'SELECT COUNT(DISTINCT c.id_cart)
+		FROM '._DB_PREFIX_.'cart c 
+		INNER JOIN '._DB_PREFIX_.'cart_product cp on c.id_cart = cp.id_cart
+		WHERE (c.date_add BETWEEN '.ModuleGraph::getDateBetween().' OR c.date_upd BETWEEN '.ModuleGraph::getDateBetween().')
+		'.Shop::addSqlRestriction(false, 'c');
 		$carts = Db::getInstance()->getValue($sql);
 
-		$sql = 'SELECT COUNT(*)
-				FROM '._DB_PREFIX_.'cart
-				WHERE id_cart IN (
-						SELECT id_cart FROM '._DB_PREFIX_.'cart_product
-					) AND id_address_invoice != 0
-					AND (
-						date_add BETWEEN '.ModuleGraph::getDateBetween().' OR date_upd BETWEEN '.ModuleGraph::getDateBetween().'
-					)'.Shop::addSqlRestriction();
+		$sql = 'SELECT COUNT(DISTINCT c.id_cart)
+		FROM '._DB_PREFIX_.'cart c 
+		INNER JOIN '._DB_PREFIX_.'cart_product cp on c.id_cart = cp.id_cart
+		WHERE (c.date_add BETWEEN '.ModuleGraph::getDateBetween().' OR c.date_upd BETWEEN '.ModuleGraph::getDateBetween().')
+		AND id_address_invoice != 0
+		'.Shop::addSqlRestriction(false, 'c');
 		$fullcarts = Db::getInstance()->getValue($sql);
 
 		$sql = 'SELECT COUNT(*)
-				FROM '._DB_PREFIX_.'orders o
-				WHERE o.valid = 1
-					AND o.date_add BETWEEN '.ModuleGraph::getDateBetween()
-			.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o');
+		FROM '._DB_PREFIX_.'orders o
+		WHERE o.valid = 1
+		AND o.date_add BETWEEN '.ModuleGraph::getDateBetween().'
+		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o');
 		$orders = Db::getInstance()->getValue($sql);
 
 		$this->html .= '
@@ -607,7 +603,7 @@ class StatsForecast extends Module
 
 		$sql = 'SELECT SUM(od.`product_price` * od.`product_quantity` / o.conversion_rate) as orderSum, SUM(od.product_quantity) as orderQty, cl.name, AVG(od.`product_price` / o.conversion_rate) as priveAvg
 				FROM `'._DB_PREFIX_.'orders` o
-				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
+				STRAIGHT_JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = od.product_id
 				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (product_shop.id_category_default = cl.id_category AND cl.id_lang = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('cl').')
