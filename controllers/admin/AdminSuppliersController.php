@@ -96,6 +96,12 @@ class AdminSuppliersControllerCore extends AdminController
 			$this->imageType, true, true);
 		$image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
+		$tmp_addr = new Address();
+		$res = $tmp_addr->getFieldsRequiredDatabase();
+		$required_fields = array();
+		foreach ($res as $row)
+			$required_fields[(int)$row['id_required_field']] = $row['field_name'];
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Suppliers'),
@@ -129,6 +135,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Phone'),
 					'name' => 'phone',
+					'required' => in_array('phone', $required_fields),
 					'maxlength' => 16,
 					'col' => 4,
 					'hint' => $this->l('Phone number for this supplier')
@@ -137,6 +144,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Mobile phone'),
 					'name' => 'phone_mobile',
+					'required' => in_array('phone_mobile', $required_fields),
 					'maxlength' => 16,
 					'col' => 4,
 					'hint' => $this->l('Mobile phone number for this supplier.')
@@ -153,6 +161,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Address').' (2)',
 					'name' => 'address2',
+					'required' => in_array('address2', $required_fields),
 					'col' => 6,
 					'maxlength' => 128,
 				),
@@ -160,9 +169,9 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Zip/postal code'),
 					'name' => 'postcode',
+					'required' => in_array('postcode', $required_fields),
 					'maxlength' => 12,
 					'col' => 2,
-					'required' => true,
 				),
 				array(
 					'type' => 'text',
