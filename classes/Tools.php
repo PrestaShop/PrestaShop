@@ -717,7 +717,6 @@ class ToolsCore
 			if ($files = scandir($dirname))
 			{
 				foreach ($files as $file)
-
     				if ($file != '.' && $file != '..' && $file != '.svn')
     				{
     					if (is_dir($dirname.$file))
@@ -725,7 +724,7 @@ class ToolsCore
     					elseif (file_exists($dirname.$file))
     						unlink($dirname.$file);
     				}
-				if ($delete_self)
+				if ($delete_self && file_exists($dirname))
 					if (!rmdir($dirname))
                         return false;
                 return true;                    
