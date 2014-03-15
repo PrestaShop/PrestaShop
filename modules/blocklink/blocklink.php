@@ -472,7 +472,7 @@ class BlockLink extends Module
 		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
 		$links = $this->getLinks();
 		if (is_array($links) && count($links))
-			return $helper->generateList($this->getLinks(), $fields_list);
+			return $helper->generateList($links, $fields_list);
 		else
 			return false;
 	}
