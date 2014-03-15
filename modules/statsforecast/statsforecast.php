@@ -50,7 +50,7 @@ class StatsForecast extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Stats Dashboard');
-		$this->description = 'This is the main module for the Stats dashboard. It displays a summary of all your current statistics.';
+		$this->description = $this->l('This is the main module for the Stats dashboard. It displays a summary of all your current statistics.');
 	}
 
 	public function install()
