@@ -1,5 +1,4 @@
-/* @Todo: create a difference file for deleting _rtl files*/
-
+html { direction: rtl; font-family: tahoma, sans-serif;}
 
 /* fix SVG */
 .chart svg {direction:ltr}
