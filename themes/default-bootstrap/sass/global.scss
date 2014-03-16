@@ -98,8 +98,10 @@ header {
 			}
 		}
 	}
-	.col-sm-4 + .col-sm-4 + .col-sm-4 {
-		float: right;
+	@media (min-width: $screen-xs-max){
+		.col-sm-4 + .col-sm-4 + .col-sm-4 {
+			float: right;
+		}
 	}
 }
 
