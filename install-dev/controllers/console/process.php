@@ -71,6 +71,9 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 		if (!isset(Context::getContext()->country) || !Validate::isLoadedObject(Context::getContext()->country))
 			if ($id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT'))
 				Context::getContext()->country = new Country((int)$id_country);
+		if (!isset(Context::getContext()->currency) || !Validate::isLoadedObject(Context::getContext()->currency))
+			if ($id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT'))
+				Context::getContext()->currency = new Currency((int)$id_currency);
 
 		Context::getContext()->cart = new Cart();
 		Context::getContext()->employee = new Employee(1);

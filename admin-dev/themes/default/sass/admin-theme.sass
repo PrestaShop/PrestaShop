@@ -16,9 +16,9 @@
 @import "vendor/bootstrap-sass/normalize"
 //@import "vendor/bootstrap-sass/print"
 
-//fonts
-@import url(//fonts.googleapis.com/css?family=Ubuntu+Condensed)
-@import url(//fonts.googleapis.com/css?family=Open+Sans:300,400,700)
+//import fonts
+@import url($url-font-content)
+@import url($url-font-headings)
 
 //Bootstrap's rules applied only on div#content.bootstrap, nav.bootstrap, header.bootstrap, footer.bootstrap
 .bootstrap
@@ -72,7 +72,6 @@
 
 .bootstrap
 	//Partials
-	//@import "partials/message"
 	@import "partials/commons"
 	@import "partials/tables"
 	@import "partials/tree"
@@ -81,8 +80,8 @@
 	@import "partials/switch"
 	@import "partials/toolbar"
 	@import "partials/date-range-picker"
-	@import "partials/multishop"
 	@import "partials/rtl"
+	@import "partials/multistore"
 
 	//Controllers
 	@import "controllers/carrier-wizard"

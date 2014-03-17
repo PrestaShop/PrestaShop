@@ -112,9 +112,9 @@ class Dashactivity extends Module
 
 		if (Configuration::get('PS_DASHBOARD_SIMULATION'))
 		{
-			$days = round((strtotime($params['date_to']) - strtotime($params['date_from'])) / 3600 / 24);
-			$online_visitor = round(rand(10, 50));
-			$visits = round(rand(200, 2000) * $days);
+			$days = (strtotime($params['date_to']) - strtotime($params['date_from'])) / 3600 / 24;
+			$online_visitor = rand(10, 50);
+			$visits = rand(200, 2000) * $days;
 
 			return array(
 				'data_value' => array(
@@ -125,11 +125,11 @@ class Dashactivity extends Module
 					'new_messages' => round(rand(1, 10) * $days),
 					'product_reviews' => round(rand(5, 50) * $days),
 					'new_customers' => round(rand(1, 5) * $days),
-					'online_visitor' => $online_visitor,
+					'online_visitor' => round($online_visitor),
 					'active_shopping_cart' => round($online_visitor / 10),
 					'new_registrations' => round(rand(1, 5) * $days),
 					'total_suscribers' => round(rand(200, 2000)),
-					'visits' => $visits,
+					'visits' => round($visits),
 					'unique_visitors' => round($visits * 0.6),
 				),
 				'data_trends' => array(
@@ -303,19 +303,19 @@ class Dashactivity extends Module
 
 		return array(
 			'data_value' => array(
-				'pending_orders' => $pending_orders,
-				'return_exchanges' => $return_exchanges,
-				'abandoned_cart' => $abandoned_cart,
-				'products_out_of_stock' => $products_out_of_stock,
-				'new_messages' => $new_messages,
-				'product_reviews' => $product_reviews,
-				'new_customers' => $new_customers,
-				'online_visitor' => $online_visitor,
-				'active_shopping_cart' => $active_shopping_cart,
-				'new_registrations' => $new_registrations,
-				'total_suscribers' => $total_suscribers,
-				'visits' => $visits,
-				'unique_visitors' => $unique_visitors,
+				'pending_orders' => (int)$pending_orders,
+				'return_exchanges' => (int)$return_exchanges,
+				'abandoned_cart' => (int)$abandoned_cart,
+				'products_out_of_stock' => (int)$products_out_of_stock,
+				'new_messages' => (int)$new_messages,
+				'product_reviews' => (int)$product_reviews,
+				'new_customers' => (int)$new_customers,
+				'online_visitor' => (int)$online_visitor,
+				'active_shopping_cart' => (int)$active_shopping_cart,
+				'new_registrations' => (int)$new_registrations,
+				'total_suscribers' => (int)$total_suscribers,
+				'visits' => (int)$visits,
+				'unique_visitors' => (int)$unique_visitors,
 			),
 			'data_trends' => array(
 				'orders_trends' => array('way' => 'down', 'value' => 0.42),

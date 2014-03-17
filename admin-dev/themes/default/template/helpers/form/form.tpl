@@ -29,6 +29,9 @@
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
+	{if !empty($submit_action)}
+		<input type="hidden" name="{$submit_action}" value="1" />
+	{/if}
 	
 	{foreach $fields as $f => $fieldset}
 		{block name="fieldset"}
@@ -36,11 +39,11 @@
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
                     {block name="legend"}
-                        <h3>
+                        <div class="panel-heading">
                             {if isset($field.image) && isset($field.title)}<img src="{$field.image}" alt="{$field.title|escape:'html':'UTF-8'}" />{/if}
                             {if isset($field.icon)}<i class="{$field.icon}"></i>{/if}
                             {$field.title}
-                        </h3>
+                        </div>
                     {/block}
 				{elseif $key == 'description' && $field}
 					<div class="alert alert-info">{$field}</div>
@@ -269,28 +272,27 @@
 										</div>
 										<div class="col-lg-2">
 											<button type="button" class="btn btn-default{if isset($input.button.attributes['class'])} {$input.button.attributes['class']}{/if}{if isset($input.button.class)} {$input.button.class}{/if}"
-											{foreach from=$input.button.attributes key=name item=value}
-												{if $name|lower != 'class'}
-												 {$name}="{$value}"
-												{/if}
-											{/foreach}
-											>{$input.button.label}</button>
+												{foreach from=$input.button.attributes key=name item=value}
+													{if $name|lower != 'class'}
+													 {$name}="{$value}"
+													{/if}
+												{/foreach} >
+												{$input.button.label}
+											</button>
 										</div>
 									</div>
 									{if isset($input.maxchar)}
 									<script type="text/javascript">
-									function countDown($source, $target) {
-										var max = $source.attr("data-maxchar");
-										$target.html(max-$source.val().length);
-
-										$source.keyup(function(){
+										function countDown($source, $target) {
+											var max = $source.attr("data-maxchar");
 											$target.html(max-$source.val().length);
+											$source.keyup(function(){
+												$target.html(max-$source.val().length);
+											});
+										}
+										$(document).ready(function() {
+											countDown($("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"), $("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter"));
 										});
-									}
-
-									$(document).ready(function(){
-										countDown($("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"), $("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter"));
-									});
 									</script>
 									{/if}
 								{elseif $input.type == 'select'}
