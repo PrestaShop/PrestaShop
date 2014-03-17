@@ -97,8 +97,12 @@
 			{foreach $tabsArray as $k => $newLang}
 				{if !empty($newLang)}
 					<div class="panel">
-						<h3 onclick="$('#{$k}-tpl').slideToggle();">
-							{$k} - <span class="badge">{$newLang|count}</span> {l s='expressions'}
+						<h3>
+							<a href="javascript:$('#{$k}-tpl').slideToggle();">
+								<i class="icon-caret-down"></i>
+								{$k}
+							</a>
+							- {$newLang|count} {l s='expressions'}
 							{if isset($missing_translations[$k])} <span class="label label-danger">{$missing_translations[$k]} {l s='missing'}</span>{/if}
 						</h3>
 						<div name="{$type}_div" id="{$k}-tpl" style="display:{if isset($missing_translations[$k])}block{else}none{/if}">
@@ -129,12 +133,13 @@
 									</tr>
 								{/foreach}
 							</table>
-						</div>
-						<div class="panel-footer">
+							<div class="panel-footer">
 							<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
 							<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
 							<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 						</div>
+						</div>
+						
 					</div>
 				{/if}
 			{/foreach}			
