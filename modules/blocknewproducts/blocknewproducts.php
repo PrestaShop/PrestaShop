@@ -162,7 +162,7 @@ class BlockNewProducts extends Module
 
 	public function hookdisplayHomeTabContent($params)
 	{
-		if (!$this->isCached('blocknewproducts_home.tpl', $this->getCacheId()))
+		if (!$this->isCached('blocknewproducts_home.tpl', $this->getCacheId('blocknewproducts_home')))
 		{
 			$this->smarty->assign(array(
 				'new_products' => BlockNewProducts::$cache_new_products,
@@ -174,7 +174,7 @@ class BlockNewProducts extends Module
 		if (BlockNewProducts::$cache_new_products === false)
 			return false;
 
-		return $this->display(__FILE__, 'blocknewproducts_home.tpl', $this->getCacheId());
+		return $this->display(__FILE__, 'blocknewproducts_home.tpl', $this->getCacheId('blocknewproducts_home'));
 	}
 
 	public function hookHeader($params)
