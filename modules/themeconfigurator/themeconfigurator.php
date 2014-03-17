@@ -741,6 +741,7 @@ class ThemeConfigurator extends Module
 				'hint' => $this->l('The customization tool allows you to make color and font changes in your theme.'),
 				'desc' => sprintf($this->l('Only you can see this %s - your visitors will not see this tool.'), $this->context->shop->getBaseURL() ? '<a href="'.$this->context->shop->getBaseURL()
 						.((Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1) ? Language::getIsoById($this->context->employee->id_lang).'/' : '')
+						.(Configuration::get('PS_REWRITING_SETTINGS') ? '' : 'index.php')
 						.'?live_configurator_token='.$this->getLiveConfiguratorToken()
 						.'&id_employee='.(int)$this->context->employee->id
 						.'&id_shop='.(int)$this->context->shop->id

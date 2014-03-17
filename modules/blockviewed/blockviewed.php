@@ -156,6 +156,11 @@ class BlockViewed extends Module
 		return $this->hookRightColumn($params);
 	}
 
+	public function hookFooter($params)
+	{
+		return $this->hookRightColumn($params);
+	}
+
 	public function hookHeader($params)
 	{
 		$id_product = (int)Tools::getValue('id_product');

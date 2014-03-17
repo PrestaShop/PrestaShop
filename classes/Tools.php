@@ -719,17 +719,22 @@ class ToolsCore
 			if ($files = scandir($dirname))
 			{
 				foreach ($files as $file)
-
     				if ($file != '.' && $file != '..' && $file != '.svn')
     				{
     					if (is_dir($dirname.$file))
     						Tools::deleteDirectory($dirname.$file, true);
     					elseif (file_exists($dirname.$file))
-    						unlink($dirname.$file);
+						{
+							@chmod($dirname.$file, 0777); // NT ?
+							unlink($dirname.$file);
+						}
     				}
-				if ($delete_self)
+				if ($delete_self && file_exists($dirname))
 					if (!rmdir($dirname))
+					{
+						@chmod($dirname, 0777); // NT ?
                         return false;
+					}
                 return true;                    
 			}
         return false;
@@ -747,7 +752,10 @@ class ToolsCore
 			$exclude_files = array($exclude_files);
 
 		if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files) === FALSE)
+		{
+			@chmod($dirname.$file, 0777); // NT ?
 			unlink($file);
+		}
     }
     
 	/**
