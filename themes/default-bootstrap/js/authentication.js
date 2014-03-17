@@ -70,6 +70,8 @@ function submitFunction()
 					{
 						if (typeof bindUniform !=='undefined')
 							bindUniform();
+						if (typeof bindStateInputAndUpdate !=='undefined')
+							bindStateInputAndUpdate();
 						document.location = '#account-creation';
 					});
 				});
