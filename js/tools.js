@@ -179,14 +179,14 @@ function toggleDiv(name, option)
 
 function toggleButtonValue(id_button, text1, text2)
 {
-	if ($('#'+id_button).find('i').first().hasClass('process-icon-minus'))
+	if ($('#'+id_button).find('i').first().hasClass('process-icon-compress'))
 	{
-		$('#'+id_button).find('i').first().removeClass('process-icon-minus').addClass('process-icon-plus');
+		$('#'+id_button).find('i').first().removeClass('process-icon-compress').addClass('process-icon-expand');
 		$('#'+id_button).find('span').first().html(text1);
 	}
 	else
 	{
-		$('#'+id_button).find('i').first().removeClass('process-icon-plus').addClass('process-icon-minus');
+		$('#'+id_button).find('i').first().removeClass('process-icon-expand').addClass('process-icon-compress');
 		$('#'+id_button).find('span').first().html(text2);
 	}
 }

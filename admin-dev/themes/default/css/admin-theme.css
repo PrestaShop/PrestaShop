@@ -939,9 +939,9 @@
 
 .icon-mail-forward:before, .icon-share:before, .icon-share-alt:before { content: "\f064"; }
 
-.icon-expand:before, .icon-resize-full:before { content: "\f065"; }
+.icon-expand:before, .icon-resize-full:before, #content .process-icon-expand:before { content: "\f065"; }
 
-.icon-compress:before, .icon-resize-small:before { content: "\f066"; }
+.icon-compress:before, .icon-resize-small:before, #content .process-icon-compress:before { content: "\f066"; }
 
 .icon-plus:before, #content .process-icon-new-module:before { content: "\f067"; }
 
@@ -1357,7 +1357,7 @@
 
 .icon-toggle-up:before, .icon-caret-square-o-up:before, .icon-collapse-top:before { content: "\f151"; }
 
-.icon-toggle-right:before, .icon-caret-square-o-right:before, .icon-expand:before, .icon-resize-full:before { content: "\f152"; }
+.icon-toggle-right:before, .icon-caret-square-o-right:before { content: "\f152"; }
 
 .icon-euro:before, .icon-eur:before { content: "\f153"; }
 
