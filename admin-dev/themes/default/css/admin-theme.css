@@ -3133,13 +3133,13 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .chevron-left:before { right: 0; top: 0; border-width: 1.2em 0 1.2em 0.5em; border-color: transparent transparent transparent #00a4e7; background-color: #1bbdff; }
 .bootstrap .chevron-right:before { left: 0; top: 0; border-width: 1.2em 0 1.2em 0.5em; border-color: transparent transparent transparent #1bbdff; background-color: #00a4e7; }
 .bootstrap .input-complete { -webkit-animation: one 0.2s ease-in-out; -moz-animation: one 0.2s ease-in-out; -ms-animation: one 0.2s ease-in-out; -o-animation: one 0.2s ease-in-out; animation: one 0.2s ease-in-out; }
-.bootstrap .multishop-well { padding: 20px 20px 10px; margin-bottom: 15px; background-color: #faf8f0; border: none; border-left: 3px solid #fbeccb; }
 .bootstrap .breadcrumb-multishop select { display: inline-block; height: 22px; line-height: 20px; border: 1px solid #659e32; padding: 0 5px 0 8px; margin: 0; outline: none; color: #666666; background: white; position: relative; -webkit-appearance: none; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; -o-border-radius: 4px; border-radius: 4px; }
 @media screen and (-webkit-min-device-pixel-ratio: 0) { .bootstrap .custom-select select { padding-right: 30px; } }
 .bootstrap .breadcrumb-multishop select:focus { box-shadow: 0 0 0 1px #659e32; }
 .bootstrap .breadcrumb-multishop { width: auto; position: relative; }
 .bootstrap .breadcrumb-multishop:after { content: "▼"; position: absolute; top: 0; right: 0; bottom: 0; font-size: 60%; line-height: 22px; padding: 0 7px; background-color: #659e32; color: white; pointer-events: none; -webkit-border-radius: 0 4px 4px 0; -moz-border-radius: 0 4px 4px 0; -ms-border-radius: 0 4px 4px 0; -o-border-radius: 0 4px 4px 0; border-radius: 0 4px 4px 0; }
 .bootstrap .no-pointer-events .custom-select:after { content: none; }
+.bootstrap .multishop-well { padding: 20px 20px 10px; margin-bottom: 15px; background-color: #faf8f0; border: none; border-left: 3px solid #fbeccb; }
 .bootstrap #carrier_wizard { position: relative; display: block; }
 .bootstrap #carrier_wizard .stepContainer { position: relative; display: block; clear: both; }
 .bootstrap #carrier_wizard .stepContainer div.content { position: absolute; display: block; width: 100%; clear: both; }
