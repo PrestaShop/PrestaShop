@@ -139,8 +139,8 @@ ul.product_list.grid > li .product-container .product-image-container .product_i
 }
 .button.ajax_add_to_cart_button span {
   filter: none;
-  background: #719f41;
-  border-color: #719f41;
+  background: linear-gradient(to bottom, #6FB828 0%, #5F8E2F 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  border: 1px solid #69C412;
 }
 .button.ajax_add_to_cart_button:hover {
   border-color: #333333;
