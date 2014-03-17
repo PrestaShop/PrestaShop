@@ -1191,7 +1191,7 @@
   ),
   'Cart' => 
   array (
-    'path' => 'override/classes/Cart.php',
+    'path' => '',
     'type' => 'class',
   ),
   'CartController' => 
