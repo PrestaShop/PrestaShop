@@ -1833,6 +1833,9 @@ abstract class ModuleCore
 			return Tools::displayError('No template found for module').' '.basename($file, '.php');
 		else
 		{
+			if (Tools::getIsset('live_edit'))
+				$cacheId = null;
+		
 			$this->smarty->assign(array(
 				'module_dir' =>	__PS_BASE_URI__.'modules/'.basename($file, '.php').'/',
 				'module_template_dir' => ($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/',
@@ -1904,6 +1907,9 @@ abstract class ModuleCore
 
 	public function isCached($template, $cacheId = null, $compileId = null)
 	{
+		if (Tools::getIsset('live_edit'))
+			return false;
+
 		Tools::enableCache();
 		$is_cached = $this->getCurrentSubTemplate($this->getTemplatePath($template), $cacheId, $compileId)->isCached($this->getTemplatePath($template), $cacheId, $compileId);
 		Tools::restoreCacheSettings();
