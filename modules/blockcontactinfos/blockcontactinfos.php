@@ -75,7 +75,7 @@ class Blockcontactinfos extends Module
 			Configuration::updateValue('BLOCKCONTACTINFOS_PHONE', Tools::getValue('blockcontactinfos_phone'));
 			Configuration::updateValue('BLOCKCONTACTINFOS_EMAIL', Tools::getValue('blockcontactinfos_email'));
 			$this->_clearCache('blockcontactinfos.tpl');
-			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
+			$html .= $this->displayConfirmation($this->l('Configuration updated'));
 		}
 
 		$html .= $this->renderForm();

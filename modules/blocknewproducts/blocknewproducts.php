@@ -98,7 +98,7 @@ class BlockNewProducts extends Module
 				Configuration::updateValue('PS_NB_DAYS_NEW_PRODUCT', (int)(Tools::getValue('PS_NB_DAYS_NEW_PRODUCT')));
 				Configuration::updateValue('PS_BLOCK_NEWPRODUCTS_DISPLAY', (int)(Tools::getValue('PS_BLOCK_NEWPRODUCTS_DISPLAY')));
 				Configuration::updateValue('NEW_PRODUCTS_NBR', (int)($productNbr));
-				Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
+				$output .= $this->displayConfirmation($this->l('Settings updated'));
 			}
 		}
 		return $output.$this->renderForm();

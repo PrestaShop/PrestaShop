@@ -107,7 +107,7 @@ class Blocknewsletter extends Module
 			else
 			{
 				Configuration::updateValue('NW_VOUCHER_CODE', pSQL($voucher));
-				Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
+				$this->_html .= $this->displayConfirmation($this->l('Settings updated'));
 			}
 		}
 		return $this->_html.$this->renderForm();

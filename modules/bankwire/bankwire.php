@@ -109,7 +109,7 @@ class BankWire extends PaymentModule
 			Configuration::updateValue('BANK_WIRE_OWNER', Tools::getValue('BANK_WIRE_OWNER'));
 			Configuration::updateValue('BANK_WIRE_ADDRESS', Tools::getValue('BANK_WIRE_ADDRESS'));
 		}
-		Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
+		$this->_html .= $this->displayConfirmation($this->l('Settings updated'));
 	}
 
 	private function _displayBankWire()

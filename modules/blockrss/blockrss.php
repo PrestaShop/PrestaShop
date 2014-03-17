@@ -112,7 +112,7 @@ class Blockrss extends Module
 				Configuration::updateValue('RSS_FEED_TITLE', $title);
 				Configuration::updateValue('RSS_FEED_NBR', $nbr);
 
-				Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
+				$output .= $this->displayConfirmation($this->l('Settings updated'));
 			}
 			else
 				$output .= $this->displayError(implode('<br />', $errors));
