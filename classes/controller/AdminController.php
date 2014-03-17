@@ -2395,7 +2395,8 @@ class AdminControllerCore extends Controller
 		}
 		elseif (Tools::isSubmit('submitAdd'.$this->table)
 				 || Tools::isSubmit('submitAdd'.$this->table.'AndStay')
-				 || Tools::isSubmit('submitAdd'.$this->table.'AndPreview'))
+				 || Tools::isSubmit('submitAdd'.$this->table.'AndPreview')
+				 || Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
 		{
 			// case 1: updating existing entry
 			if ($this->id_object)

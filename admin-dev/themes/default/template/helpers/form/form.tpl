@@ -29,6 +29,9 @@
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
+	{if !empty($submit_action)}
+		<input type="hidden" name="{$submit_action}" value="1" />
+	{/if}
 	
 	{foreach $fields as $f => $fieldset}
 		{block name="fieldset"}
