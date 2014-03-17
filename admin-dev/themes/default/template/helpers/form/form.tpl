@@ -25,7 +25,7 @@
 {if isset($fields.title)}<h3>{$fields.title}</h3>{/if}
 
 {block name="defaultForm"}
-<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{/if}" class="defaultForm {$name_controller} form-horizontal" action="{$current}&amp;{if !empty($submit_action)}{$submit_action}=1{/if}&amp;token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if} novalidate>
+<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{/if}" class="defaultForm {$name_controller} form-horizontal" action="{$current}&amp;token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if} novalidate>
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
