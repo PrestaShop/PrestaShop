@@ -127,6 +127,7 @@ class BlockNewProducts extends Module
 			$this->smarty->assign(array(
 				'new_products' => BlockNewProducts::$cache_new_products,
 				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+				'homeSize' => Image::getSize(ImageType::getFormatedName('home'))
 			));
 		}
 
@@ -166,6 +167,7 @@ class BlockNewProducts extends Module
 			$this->smarty->assign(array(
 				'new_products' => BlockNewProducts::$cache_new_products,
 				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+				'homeSize' => Image::getSize(ImageType::getFormatedName('home'))
 			));
 		}
 
