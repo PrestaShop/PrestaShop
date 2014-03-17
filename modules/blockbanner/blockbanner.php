@@ -151,7 +151,7 @@ class BlockBanner extends Module
 			Configuration::updateValue('BLOCKBANNER_DESC', $values['BLOCKBANNER_DESC']);
 
 			$this->_clearCache('blockbanner.tpl');
-			return $this->displayConfirmation($this->l('The settings have been updated.'));
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
 		}
 		return '';
 	}

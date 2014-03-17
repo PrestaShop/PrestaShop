@@ -78,7 +78,7 @@ class BlockTags extends Module
 			else
 			{
 				Configuration::updateValue('BLOCKTAGS_NBR', (int)$tagsNbr);
-				$output .= $this->displayConfirmation($this->l('Settings updated'));
+				Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
 			}
 		}
 		return $output.$this->renderForm();

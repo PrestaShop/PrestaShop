@@ -122,7 +122,7 @@ class BlockManufacturer extends Module
 			if (isset($errors) && count($errors))
 				$output .= $this->displayError(implode('<br />', $errors));
 			else
-				$output .= $this->displayConfirmation($this->l('Settings updated.'));
+				Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
 		}
 		return $output.$this->renderForm();
 	}
