@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -211,9 +211,7 @@ class StoresControllerCore extends FrontController
 	protected function displayAjax()
 	{
 		$stores = $this->getStores();
-		$dom = new DOMDocument('1.0');
-		$node = $dom->createElement('markers');
-		$parnode = $dom->appendChild($node);
+		$parnode = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><markers></markers>');
 
 		$days[1] = 'Monday';
 		$days[2] = 'Tuesday';
@@ -226,26 +224,25 @@ class StoresControllerCore extends FrontController
 		foreach ($stores as $store)
 		{
 			$other = '';
-			$node = $dom->createElement('marker');
-			$newnode = $parnode->appendChild($node);
-			$newnode->setAttribute('name', $store['name']);
+			$newnode = $parnode->addChild('marker');
+			$newnode->addAttribute('name', $store['name']);
 			$address = $this->processStoreAddress($store);
 
 			$other .= $this->renderStoreWorkingHours($store);
-			$newnode->setAttribute('addressNoHtml', strip_tags(str_replace('<br />', ' ', $address)));
-			$newnode->setAttribute('address', $address);
-			$newnode->setAttribute('other', $other);
-			$newnode->setAttribute('phone', $store['phone']);
-			$newnode->setAttribute('id_store', (int)($store['id_store']));
-			$newnode->setAttribute('has_store_picture', file_exists(_PS_STORE_IMG_DIR_.(int)($store['id_store']).'.jpg'));
-			$newnode->setAttribute('lat', (float)($store['latitude']));
-			$newnode->setAttribute('lng', (float)($store['longitude']));
+			$newnode->addAttribute('addressNoHtml', strip_tags(str_replace('<br />', ' ', $address)));
+			$newnode->addAttribute('address', $address);
+			$newnode->addAttribute('other', $other);
+			$newnode->addAttribute('phone', $store['phone']);
+			$newnode->addAttribute('id_store', (int)($store['id_store']));
+			$newnode->addAttribute('has_store_picture', file_exists(_PS_STORE_IMG_DIR_.(int)($store['id_store']).'.jpg'));
+			$newnode->addAttribute('lat', (float)($store['latitude']));
+			$newnode->addAttribute('lng', (float)($store['longitude']));
 			if (isset($store['distance']))
-				$newnode->setAttribute('distance', (int)($store['distance']));
+				$newnode->addAttribute('distance', (int)($store['distance']));
 		}
 
 		header('Content-type: text/xml');
-		die($dom->saveXML());
+		die($parnode->asXML());
 	}
 
 	/**
@@ -276,9 +273,12 @@ class StoresControllerCore extends FrontController
 	{
 		parent::setMedia();
 		$this->addCSS(_THEME_CSS_DIR_.'stores.css');
+
 		if (!Configuration::get('PS_STORES_SIMPLIFIED'))
+		{
+			$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+			$this->addJS('http'.((Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 's' : '').'://maps.google.com/maps/api/js?sensor=true&amp;region='.substr($default_country->iso_code, 0, 2));
 			$this->addJS(_THEME_JS_DIR_.'stores.js');
-        $default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-		$this->addJS('http'.((Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 's' : '').'://maps.google.com/maps/api/js?sensor=true&amp;region='.substr($default_country->iso_code, 0, 2));
+		}
 	}
 }

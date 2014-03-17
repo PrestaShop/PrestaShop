@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -980,8 +980,11 @@ abstract class ObjectModelCore
 	{
 		global $_FIELDS;
 
-		if ($_FIELDS === null && file_exists(_PS_TRANSLATIONS_DIR_.Context::getContext()->language->iso_code.'/fields.php'))
-			include_once(_PS_TRANSLATIONS_DIR_.Context::getContext()->language->iso_code.'/fields.php');
+		if(!isset($context))
+			$context = Context::getContext();
+
+		if ($_FIELDS === null && file_exists(_PS_TRANSLATIONS_DIR_.$context->language->iso_code.'/fields.php'))
+			include_once(_PS_TRANSLATIONS_DIR_.$context->language->iso_code.'/fields.php');
 
 		$key = $class.'_'.md5($field);
 		return ((is_array($_FIELDS) && array_key_exists($key, $_FIELDS)) ? ($htmlentities ? htmlentities($_FIELDS[$key], ENT_QUOTES, 'utf-8') : $_FIELDS[$key]) : $field);
@@ -1109,6 +1112,9 @@ abstract class ObjectModelCore
  							);
 			}
 			$resource_parameters['fields'][$field_name] = array_merge($resource_parameters['fields'][$field_name], $current_field);
+
+			if (isset($details['ws_modifier']))
+				$resource_parameters['fields'][$field_name]['modifier'] = $details['ws_modifier'];
 		}
 		if (isset($this->date_add))
 			$resource_parameters['fields']['date_add']['setter'] = false;
@@ -1542,7 +1548,7 @@ abstract class ObjectModelCore
 			$definition['classname'] = $class;
 
 			if (!empty($definition['multilang']))
-				$definition['associations'][Collection::LANG_ALIAS] = array(
+				$definition['associations'][PrestaShopCollection::LANG_ALIAS] = array(
 					'type' => self::HAS_MANY,
 					'field' => $definition['primary'],
 					'foreign_field' => $definition['primary'],

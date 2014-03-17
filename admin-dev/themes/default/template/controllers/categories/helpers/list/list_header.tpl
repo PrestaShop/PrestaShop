@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,74 +18,94 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {extends file="helpers/list/list_header.tpl"}
 
+
+{block name=override_header}
+	<ul class="breadcrumb cat_bar2">
+		{assign var=i value=0}
+		{foreach $categories_tree key=key item=category}
+		<li>
+			{if $i++ == 0}
+				<i class="icon-home"></i>
+				{assign var=params_url value=""}
+			{elseif isset($category.id_category)}
+				{assign var=params_url value="&id_category={$category.id_category|intval}&viewcategory"}
+			{/if}
+			{if isset($category.id_category) && $category.id_category == $categories_tree_current_id}
+				{$category.name}
+			{else}
+				<a href="{$currentIndex}{$params_url}&amp;token={$token}">{$category.name}</a>
+			{/if}
+		</li>
+		{/foreach}
+	</ul>
+{/block}
+
+
 {block name=leadin}
-<div class="cat_bar2">
-	{assign var=i value=0}
-	{foreach $categories_tree key=key item=category}
-		{if $i++ == 0}
-			&nbsp;<img src="../img/admin/home.gif" alt="" />
-			{assign var=params_url value=""}
-		{else}
-			{assign var=params_url value="&id_category={$category.id_category|intval}&viewcategory"}
-		{/if}
-		{if $category.id_category == $categories_tree_current_id}
-			{$category.name}
-		{else}
-			<a href="{$currentIndex}{$params_url}&token={$token}">{$category.name}</a>&nbsp;>&nbsp;
-		{/if}
-	{/foreach}
-</div>
 	{if isset($delete_category) && $delete_category}
-		<form action="{$REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">
-			<div class="warn">
-				<h2>
-					{if $need_delete_mode}
-						{l s='Do you want to delete the products too?'}
-					{else}
-						{l s='Deleting this category will remove products linked only within this category and no others. Are you sure you want to continue?'}
-					{/if}
-				</h2>
+		<div class="panel">
+			<form action="{$REQUEST_URI}" method="post">
+			<div class="panel-heading">
 				{if $need_delete_mode}
-				<ul class="listForm">
-				<li>
-					<input type="radio" name="deleteMode" value="linkanddisable" id="deleteMode_linkanddisable" />
-					<label for="deleteMode_linkanddisable" style="float:none;">{l s='No. I want to link products without other categories -- within the parent category -- and then disable them.'}</label>
-				</li>
-				<li>
-					<input type="radio" name="deleteMode" value="link" id="deleteMode_link" />
-					<label for="deleteMode_link" style="float:none;">{l s='No. I want to link products without other categories and within the parent category.'}</label>
-				</li>
-				<li>
-					<input type="radio" name="deleteMode" value="delete" id="deleteMode_delete" />
-					<label for="deleteMode_delete" style="float:none">{l s='Yes. I want to remove products linked only within this category and no others.'}</label>
-				</li>
-				</ul>
+					{l s='What do you want to do with the products associated with this category?'}
 				{else}
-					<input type="hidden" name="deleteMode" value="delete" id="deleteMode_delete" />
+					{l s='Deleting multiple categories'}
 				{/if}
-				{foreach $POST as $key => $value}
-					{if $key != 'deleteMode'}
-						{if is_array($value)}
-							{foreach $value as $val}
-								<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}[]" value="{$val|escape:'htmlall':'UTF-8'}" />
-							{/foreach}
-						{else}
-							<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}" value="{$value|escape:'htmlall':'UTF-8'}" />
-						{/if}
-					{/if}
-				{/foreach}
-				<br />
-				<input type="submit" name="cancel" class="button" value="{l s='Cancel'}" />
-				<input type="submit" class="button" value="{l s='Validate'}" />
 			</div>
-		</form>
-		<div class="clear">&nbsp;</div>
+
+			{if $need_delete_mode}
+				<div class="radio">
+					<label for="deleteMode_linkanddisable">
+						<input type="radio" name="deleteMode" value="linkanddisable" id="deleteMode_linkanddisable" checked="checked" />
+						{l s='I want to associate the products without other categories with the parent category and then disable them.'} <strong>{l s='(Recommended)'}</strong>
+					</label>
+				</div>
+				<div class="radio">
+					<label for="deleteMode_link">
+						<input type="radio" name="deleteMode" value="link" id="deleteMode_link" />
+						{l s='I want to associate the products without other categories with the parent category.'}
+					</label>
+				</div>
+				<div class="radio">
+					<label for="deleteMode_delete">
+						<input type="radio" name="deleteMode" value="delete" id="deleteMode_delete" />
+						{l s='I want to remove products linked only within this category and no others.'}
+					</label>
+				</div>
+			{else}
+				<div class="alert alert-warning">{l s='Deleting this category will remove products linked only within this category and no others. Are you sure you want to continue?'}</div>
+				<input type="hidden" name="deleteMode" value="delete" id="deleteMode_delete" />
+
+			{/if}
+			{foreach $POST as $key => $value}
+				{if $key != 'deleteMode'}
+					{if is_array($value)}
+						{foreach $value as $val}
+							<input type="hidden" name="{$key|escape:'html':'UTF-8'}[]" value="{$val|escape:'html':'UTF-8'}" />
+						{/foreach}
+					{else}
+						<input type="hidden" name="{$key|escape:'html':'UTF-8'}" value="{$value|escape:'html':'UTF-8'}" />
+					{/if}
+				{/if}
+			{/foreach}
+				<div class="panel-footer">
+					<button type="submit" name="cancel" class="btn btn-default">
+						<i class="icon-remove"></i>
+						{l s='Cancel'}
+					</button>
+					<button type="submit" class="btn btn-default">
+						<i class="icon-trash text-danger"></i>
+						{l s='Delete'}
+					</button>
+				</div>
+			</form>
+		</div>
 	{/if}
 {/block}

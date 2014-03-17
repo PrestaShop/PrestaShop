@@ -68,7 +68,7 @@
       <name>actionOrderStatusUpdate</name><title>Order status update - Event</title><description>This hook launches modules when the status of an order changes.</description>
     </hook>
     <hook id="displayAdminOrder" live_edit="0">
-      <name>displayAdminOrder</name><title>Display new elements in the Back Office, tab AdminOrder</title><description>This hook launches modules when the AdminOrder" tab is displayed in the Back Office"</description>
+      <name>displayAdminOrder</name><title>Display new elements in the Back Office, tab AdminOrder</title><description>This hook launches modules when the AdminOrder tab is displayed in the Back Office</description>
     </hook>
     <hook id="displayFooter" live_edit="0">
       <name>displayFooter</name><title>Footer</title><description>This hook displays new blocks in the footer</description>
@@ -77,7 +77,7 @@
       <name>displayPDFInvoice</name><title>PDF Invoice</title><description>This hook allows you to display additional information on PDF invoices</description>
     </hook>
     <hook id="displayAdminCustomers" live_edit="0">
-      <name>displayAdminCustomers</name><title>Display new elements in the Back Office, tab AdminCustomers</title><description>This hook launches modules when the AdminCustomers" tab is displayed in the Back Office"</description>
+      <name>displayAdminCustomers</name><title>Display new elements in the Back Office, tab AdminCustomers</title><description>This hook launches modules when the AdminCustomers tab is displayed in the Back Office</description>
     </hook>
     <hook id="displayOrderConfirmation" live_edit="0">
       <name>displayOrderConfirmation</name><title>Order confirmation page</title><description>This hook is called within an order's confirmation page</description>
@@ -273,6 +273,24 @@
     </hook>
     <hook id="actionModuleInstallAfter" live_edit="0">
       <name>actionModuleInstallAfter</name><title>actionModuleInstallAfter</title><description></description>
+    </hook>
+	<hook id="displayHomeTab" live_edit="1">
+      <name>displayHomeTab</name><title>Home Page Tabs</title><description>This hook displays new elements on the homepage tabs</description>
+    </hook>
+    <hook id="displayHomeTabContent" live_edit="1">
+      <name>displayHomeTabContent</name><title>Home Page Tabs Content</title><description>This hook displays new elements on the homepage tabs content</description>
+    </hook>
+	<hook id="displayTopColumn" live_edit="1">
+       <name>displayTopColumn</name><title>Top column blocks</title><description>This hook displays new elements in the top of columns</description>
+    </hook>
+    <hook id="displayBackOfficeCategory" live_edit="0">
+      <name>displayBackOfficeCategory</name><title>Display new elements in the Back Office, tab AdminCategories</title><description>This hook launches modules when the AdminCategories tab is displayed in the Back Office</description>
+    </hook>
+    <hook id="displayProductListFunctionalButtons" live_edit="0">
+      <name>displayProductListFunctionalButtons</name><title>Display new elements in the Front Office, products list</title><description>This hook launches modules when the products list is displayed in the Front Office</description>
+    </hook>
+    <hook id="displayNav" live_edit="1">
+      <name>displayNav</name><title>Navigation</title><description></description>
     </hook>
   </entities>
 </entity_hook>

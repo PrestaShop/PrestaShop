@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -116,7 +116,7 @@ abstract class AdminTabCore
 	protected $_tmpTableFilter = '';
 
 	/** @var array Number of results in list per page (used in select field) */
-	protected $_pagination = array(20, 50, 100, 300);
+	protected $_pagination = array(20, 50, 100, 300, 1000);
 
 	/** @var string ORDER BY clause determined by field/arrows in list header */
 	protected $_orderBy;
@@ -254,7 +254,7 @@ abstract class AdminTabCore
                 $class = 'AdminTab';
 
 		$key = md5(str_replace('\'', '\\\'', $string));
-		$str = (key_exists(get_class($this).$key, $_LANGADM)) ? $_LANGADM[get_class($this).$key] : ((key_exists($class.$key, $_LANGADM)) ? $_LANGADM[$class.$key] : $string);
+		$str = (array_key_exists(get_class($this).$key, $_LANGADM)) ? $_LANGADM[get_class($this).$key] : ((array_key_exists($class.$key, $_LANGADM)) ? $_LANGADM[$class.$key] : $string);
 		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
 		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
 	}
@@ -518,7 +518,7 @@ abstract class AdminTabCore
 		Tools::displayAsDeprecated();
 		$dir = null;
 		/* Deleting object images and thumbnails (cache) */
-		if (key_exists('dir', $this->fieldImageSettings))
+		if (array_key_exists('dir', $this->fieldImageSettings))
 		{
 			$dir = $this->fieldImageSettings['dir'].'/';
 			if (file_exists(_PS_IMG_DIR_.$dir.$id.'.'.$this->imageType) && !unlink(_PS_IMG_DIR_.$dir.$id.'.'.$this->imageType))
@@ -1127,7 +1127,7 @@ abstract class AdminTabCore
 	{
 		/* Classical fields */
 		foreach ($_POST as $key => $value)
-			if (key_exists($key, $object) && $key != 'id_'.$table)
+			if (array_key_exists($key, $object) && $key != 'id_'.$table)
 			{
 				/* Do not take care of password field if empty */
 				if ($key == 'passwd' && Tools::getValue('id_'.$table) && empty($value))
@@ -2295,6 +2295,11 @@ abstract class AdminTabCore
 		echo $output;
 	}
 
+	/**
+	 * @param $key
+	 * @param $filter
+	 * @return mixed
+	 */
 	protected function filterToField($key, $filter)
 	{
 		foreach ($this->fieldsDisplay as $field)

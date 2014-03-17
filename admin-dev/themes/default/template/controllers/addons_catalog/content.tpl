@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,10 +18,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<iframe frameborder="no" style="margin:0px;padding:0px;width:100%;height:920px" src="http://addons.prestashop.com/iframe/search.php?parentUrl={$parentDomain}"></iframe>
-<div class="clear">&nbsp;</div>
-
+{if $display_addons_content}
+	{$addons_content}
+{else}
+	<iframe frameborder="no" class="clearfix" style="margin:0px;padding:0px;width:100%;height:920px" src="//addons.prestashop.com/iframe/search.php?isoLang={$iso_lang}&isoCurrency={$iso_currency}&isoCountry={$iso_country}&parentUrl={$parent_domain}"></iframe>
+{/if}

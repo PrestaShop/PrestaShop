@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -97,7 +97,7 @@ abstract class InstallControllerHttp
 	{
 		$session = InstallSession::getInstance();
 		if (!$session->last_step || $session->last_step == 'welcome')
-			Autoload::getInstance()->generateIndex();
+			PrestaShopAutoload::getInstance()->generateIndex();
 
 		if (Tools::getValue('compile_templates'))
 		{
@@ -195,9 +195,6 @@ abstract class InstallControllerHttp
 		$this->init();
 	}
 
-	/**
-	 * Initialize model
-	 */
 	public function init()
 	{
 	}
@@ -321,13 +318,16 @@ abstract class InstallControllerHttp
 	 */
 	public function getPhone()
 	{
+		if (InstallSession::getInstance()->support_phone != null)
+			return InstallSession::getInstance()->support_phone;
 		if ($this->phone === null)
 		{
 			$this->phone = $this->language->getInformation('phone', false);
-			if ($iframe = Tools::file_get_contents('http://api.prestashop.com/iframe/install.php?lang='.$this->language->getLanguageIso()))
+			if ($iframe = Tools::file_get_contents('http://api.prestashop.com/iframe/install.php?lang='.$this->language->getLanguageIso(), false, null, 3))
 				if (preg_match('/<img.+alt="([^"]+)".*>/Ui', $iframe, $matches) && isset($matches[1]))
 					$this->phone = $matches[1];
 		}
+		InstallSession::getInstance()->support_phone = $this->phone;
 		return $this->phone;
 	}
 

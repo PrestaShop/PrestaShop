@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -28,75 +28,123 @@
 {block name="override_tpl"}
 
 	{$tinyMCE}
-
-	{if !empty($limit_warning)}
-	<div class="warn">
-		{if $limit_warning['error_type'] == 'suhosin'}
-			{l s='Warning: Your hosting provider is using the suhosin patch for PHP, which limits the maximum number of fields allowed in a form:'}
-
-			<b>{$limit_warning['post.max_vars']}</b> {l s='for suhosin.post.max_vars.'}<br/>
-			<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
-			{l s='Please ask your hosting provider to increase the suhosin limit to'}
-		{else}
-			{l s='Warning! Your PHP configuration limits the maximum number of fields allowed in a form:'}<br/>
-			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
-			{l s='Please ask your hosting provider to increase the this limit to'}
-		{/if}
-		{l s='%s at least or edit the translation file manually.' sprintf=$limit_warning['needed_limit']}
+	{if $mod_security_warning}
+	<div class="alert alert-warning">
+		{l s='Apache mod_security is activated on your server. This could result in some Bad Request errors'}
 	</div>
+	{/if}
+	{if !empty($limit_warning)}
+		<div class="alert alert-warning">
+			{if $limit_warning['error_type'] == 'suhosin'}
+				{l s='Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:'}
+
+				<b>{$limit_warning['post.max_vars']}</b> {l s='for suhosin.post.max_vars.'}<br/>
+				<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
+				{l s='Please ask your hosting provider to increase the Suhosin limit to'}
+			{else}
+				{l s='Warning! Your PHP configuration limits the maximum number of fields allowed in a form:'}<br/>
+				<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
+				{l s='Please ask your hosting provider to increase this limit to'}
+			{/if}
+			{l s='%s at least, or you will have to edit the translation files.' sprintf=$limit_warning['needed_limit']}
+		</div>
 	{else}
-
-		<div class="hint" style="display:block;">
-			<ul style="margin-left:30px;list-style-type:disc;">
-				<li>{l s='Click on titles to open fieldsets'}.</li>
-				<li>{l s='Some sentences to translate use this syntax: %s... These are variables, and PrestaShop take care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}</li>
-			</ul>
-		</div><br /><br />
-
-		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
-			{$toggle_button}
-			<input type="hidden" name="lang" value="{$lang}" />
-			<input type="hidden" name="type" value="{$type}" />
-			<input type="hidden" name="theme" value="{$theme}" />
-			<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
-
-			<script type="text/javascript">
-				$(document).ready(function(){
-					$('a.useSpecialSyntax').click(function(){
-						var syntax = $(this).find('img').attr('alt');
-						$('#BoxUseSpecialSyntax .syntax span').html(syntax+".");
-						$('#BoxUseSpecialSyntax').toggle(1000);
+		<form method="post" id="{$table}_form" action="{$url_submit}" class="form-horizontal">
+			<div class="panel">
+				<input type="hidden" name="lang" value="{$lang}" />
+				<input type="hidden" name="type" value="{$type}" />
+				<input type="hidden" name="theme" value="{$theme}" />
+				<script type="text/javascript">
+					$(document).ready(function(){
+						$('a.useSpecialSyntax').click(function(){
+							var syntax = $(this).find('img').attr('alt');
+							$('#BoxUseSpecialSyntax .syntax span').html(syntax+".");
+						});
 					});
-					$('#BoxUseSpecialSyntax').click(function(){
-						$('#BoxUseSpecialSyntax').toggle(1000);
-					});
-				});
-			</script>
-
-			<div id="BoxUseSpecialSyntax">
-				<div class="warn">
-					<p class="syntax">
-						{l s='This expression uses this special syntax:'} <span>%d.</span><br />
-						{l s='You must use this syntax in your translations. Here are several examples:'}
-					</p>
-					<ul>
-						<li><em>There are <strong>%d</strong> products</em> ("<strong>%d</strong>" {l s='will be replaced by a number'}).</li>
-						<li><em>List of pages in <strong>%s</strong>:</em> ("<strong>%s</strong>" {l s='will be replaced by a string'}).</li>
-						<li><em>Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)</em> ("<strong>n$</strong>" {l s='is used for the order of the arguments'}).</li>
-					</ul>
+				</script>
+				<div id="BoxUseSpecialSyntax">
+					<div class="alert alert-warning">
+						<p>
+							{l s='Some of these expressions use this special syntax:'} <strong>%d</strong><br><br>
+							{l s='You MUST use this syntax in your translations. Here are several examples:'}
+						</p>
+						<ul>
+							<li>"There are <strong>%d</strong> products": "<strong>%d</strong>" {l s='will be replaced by a number.'}).</li>
+							<li>"List of pages in <strong>%s</strong>": "<strong>%s</strong>" {l s='will be replaced by a string.'}).</li>
+							<li>"Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)": "<strong>n$</strong>" {l s='helps you reorder the arguments when necessary.'}).</li>
+						</ul>
+					</div>
+				</div>
+				<div id="translation_mails-control-actions" class="panel-footer">
+					<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url}" class="btn btn-default">
+						<i class="process-icon-cancel"></i> {l s='Cancel'}
+					</a>
+					{*$toggle_button*}
+					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right">
+						<i class="process-icon-save"></i>
+						{l s='Save'}
+					</button>
+					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right">
+						<i class="process-icon-save"></i>
+						{l s='Save and stay'}
+					</button>
 				</div>
 			</div>
-
-			<h2>{l s='Core emails:'}</h2>
-			<p class="preference_description">{l s='List of emails in the folder'} <strong>"mails/{$lang|strtolower}/"</strong></p>
-			{$mail_content}
-
-			<h2>{l s='Module emails:'}</h2>
-			<p class="preference_description">{l s='List of emails in the folder'} <strong>"modules/name_of_module/mails/{$lang|strtolower}/"</strong></p>
-			{foreach $module_mails as $module_name => $mails}
-				{$mails['display']}
-			{/foreach}
+			<div class="panel">
+				<h3>
+					<i class="icon-envelope"></i>
+					{l s='Core emails'}
+					<span class="badge">
+						<i class="icon-folder"></i>
+						mails/{$lang|strtolower}/
+					</span>
+				</h3>
+				{$mail_content}
+				{literal}
+				<script type="text/javascript">
+				//<![CDATA[
+					$(document).ready(function () {
+						$('.mails_field').on('shown.bs.collapse', function () {
+							// get active email
+							var active_email = $(this).find('.email-collapse.in');
+							// get iframe container for active email
+							var frame = active_email.find('.email-html-frame');
+							// get source url for active email
+							var src = frame.data('email-src');
+							// get rte container for active email
+							var rte_mail_selector = active_email.find('textarea.rte-mail').data('rte');
+							// create special config
+							var rte_mail_config = {};
+							rte_mail_config['editor_selector'] = 'rte-mail-' + rte_mail_selector;
+							rte_mail_config['height'] = '500px';
+							// move controls to active panel
+							$('#translation_mails-control-actions').appendTo($(this).find('.panel-collapse.in'));
+							// when user first open email
+							if (frame.find('iframe.email-frame').length == 0) {
+								// load iframe
+								frame.append('<iframe class="email-frame" src="'+src+'"/>');
+								// init tinyMCE with special config
+								tinySetup(rte_mail_config);
+							}
+						});
+					})
+				//]]>
+				</script>
+				{/literal}
+			</div>
+			<div class="panel">
+				<h3>
+					<i class="icon-puzzle-piece"></i>
+					{l s='Module emails'}
+					<span class="badge">
+						<i class="icon-folder"></i>
+						modules/name_of_module/mails/{$lang|strtolower}/
+					</span>
+				</h3>
+				{foreach $module_mails as $module_name => $mails}
+					{$mails['display']}
+				{/foreach}
+			</div>
 		</form>
 	{/if}
-
 {/block}

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,13 +19,19 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class AdminSearchControllerCore extends AdminController
 {
+	public function __construct()
+	{
+		$this->bootstrap = true;
+		parent::__construct();
+	}
+
 	public function postProcess()
 	{
 		$this->context = Context::getContext();
@@ -118,8 +124,8 @@ class AdminSearchControllerCore extends AdminController
 			/* Invoices */
 			if ($searchType == 4)
 			{
-				if ((int)$this->query && Validate::isUnsignedInt((int)$this->query) && ($invoice = Order::getInvoice((int)$this->query)))
-					Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateInvoicePDF&id_order='.(int)($invoice['id_order']));
+				if (Validate::isOrderInvoiceNumber($this->query) && ($invoice = OrderInvoice::getInvoiceByNumber($this->query)))
+					Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateInvoicePDF&id_order='.(int)($invoice->id_order));
 				$this->errors[] = Tools::displayError('No invoice was found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
 			}
 
@@ -138,7 +144,7 @@ class AdminSearchControllerCore extends AdminController
 			{
 				/* Handle module name */
 				if ($searchType == 7 && Validate::isModuleName($this->query) AND ($module = Module::getInstanceByName($this->query)) && Validate::isLoadedObject($module))
-					Tools::redirectAdmin('index.php?tab=AdminModules&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).'&token='.Tools::getAdminTokenLite('AdminModules'));
+					Tools::redirectAdmin('index.php?tab=AdminModules&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).'&token='.Tools::getAdminTokenLite('AdminModules'));
 				
 				/* Normal catalog search */
 				$this->searchModule();
@@ -187,9 +193,17 @@ class AdminSearchControllerCore extends AdminController
 		foreach ($all_modules as $module)
 			if (stripos($module->name, $this->query) !== false || stripos($module->displayName, $this->query) !== false || stripos($module->description, $this->query) !== false)
 			{
-				$module->linkto = 'index.php?tab=AdminModules&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).'&token='.Tools::getAdminTokenLite('AdminModules');
+				$module->linkto = 'index.php?tab=AdminModules&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).'&token='.Tools::getAdminTokenLite('AdminModules');
 				$this->_list['modules'][] = $module;
 			}
+
+		if (!is_numeric(trim($this->query)) && !Validate::isEmail($this->query))
+		{
+			$iso_lang = Tools::strtolower(Context::getContext()->language->iso_code);
+			$iso_country = Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+			if (($json_content = Tools::file_get_contents('https://api.addons.prestashop.com/'._PS_VERSION_.'/search/'.urlencode($this->query).'/'.$iso_country.'/'.$iso_lang.'/')) != false)
+				$this->_list['addons'] = Tools::jsonDecode($json_content, true);
+		}
 	}
 
 	/**
@@ -199,14 +213,21 @@ class AdminSearchControllerCore extends AdminController
 	*/
 	public function searchFeatures()
 	{
+		$this->_list['features'] = array();
+
 		global $_LANGADM;
+		if ($_LANGADM === null)
+			return;
+		
 		$tabs = array();
 		$key_match = array();
 		$result = Db::getInstance()->executeS('
 		SELECT class_name, name
 		FROM '._DB_PREFIX_.'tab t
-		INNER JOIN '._DB_PREFIX_.'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->language->id.')
-		WHERE active = 1');
+		INNER JOIN '._DB_PREFIX_.'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->employee->id_lang.')
+		LEFT JOIN '._DB_PREFIX_.'access a ON (a.id_tab = t.id_tab AND a.id_profile = '.(int)$this->context->employee->id_profile.')
+		WHERE active = 1
+		'.($this->context->employee->id_profile != 1 ? 'AND view = 1' : ''));
 		foreach ($result as $row)
 		{
 			$tabs[strtolower($row['class_name'])] = $row['name'];
@@ -215,9 +236,12 @@ class AdminSearchControllerCore extends AdminController
 		foreach (AdminTab::$tabParenting as $key => $value)
 		{
 			$value = stripslashes($value);
+			if (!isset($tabs[strtolower($key)]) || !isset($tabs[strtolower($value)]))
+				continue;
 			$tabs[strtolower($key)] = $tabs[strtolower($value)];
 			$key_match[strtolower($key)] = $key;
 		}
+
 		$this->_list['features'] = array();
 		foreach ($_LANGADM as $key => $value)
 		{
@@ -235,11 +259,6 @@ class AdminSearchControllerCore extends AdminController
 				$this->_list['features'][$tabs[$key]][] = array('link' => Context::getContext()->link->getAdminLink($key_match[$key]), 'value' => Tools::safeOutput($value));
 			}
 		}
-
-		if (!count($this->_list['features']))
-			$this->_list['features'] = false;
-		else
-			$this->_list['features'];
 	}
 
 	protected function initOrderList()
@@ -304,7 +323,7 @@ class AdminSearchControllerCore extends AdminController
 
 	public function initToolbarTitle()
 	{
-		$this->toolbar_title = $this->l('Search results');
+		$this->toolbar_title = $this->l('Search results', null, null, false);
 	}
 
 	public function renderView()
@@ -316,16 +335,22 @@ class AdminSearchControllerCore extends AdminController
 			return parent::renderView();
 		else
 		{
-			if (isset($this->_list['features']))
+			$nb_results = 0;
+			foreach ($this->_list as $list)
+				if ($list != false)
+					$nb_results += count($list);
+			$this->tpl_view_vars['nb_results'] = $nb_results;
+
+			if (isset($this->_list['features']) && count($this->_list['features']))
 				$this->tpl_view_vars['features'] = $this->_list['features'];
-			if (isset($this->_list['categories']))
+			if (isset($this->_list['categories']) && count($this->_list['categories']))
 			{
 				$categories = array();
 				foreach ($this->_list['categories'] as $category)
 					$categories[] = getPath($this->context->link->getAdminLink('AdminCategories', false), $category['id_category']);
 				$this->tpl_view_vars['categories'] = $categories;
 			}
-			if (isset($this->_list['products']))
+			if (isset($this->_list['products']) && count($this->_list['products']))
 			{
 				$view = '';
 				$this->initProductList();
@@ -345,7 +370,7 @@ class AdminSearchControllerCore extends AdminController
 
 				$this->tpl_view_vars['products'] = $view;
 			}
-			if (isset($this->_list['customers']))
+			if (isset($this->_list['customers']) && count($this->_list['customers']))
 			{
 				$view = '';
 				$this->initCustomerList();
@@ -368,7 +393,7 @@ class AdminSearchControllerCore extends AdminController
 				}
 				$this->tpl_view_vars['customers'] = $view;
 			}
-			if (isset($this->_list['orders']))
+			if (isset($this->_list['orders']) && count($this->_list['orders']))
 			{
 				$view = '';
 				$this->initOrderList();
@@ -388,8 +413,10 @@ class AdminSearchControllerCore extends AdminController
 				$this->tpl_view_vars['orders'] = $view;
 			}
 
-			if (isset($this->_list['modules']))
+			if (isset($this->_list['modules']) && count($this->_list['modules']))
 				$this->tpl_view_vars['modules'] = $this->_list['modules'];
+			if (isset($this->_list['addons']) && count($this->_list['addons']))
+				$this->tpl_view_vars['addons'] = $this->_list['addons'];
 
 			return parent::renderView();
 		}

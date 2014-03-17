@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -29,6 +29,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
@@ -43,19 +44,19 @@ class AdminAdminPreferencesControllerCore extends AdminController
 		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('General'),
-				'icon' =>	'tab-preferences',
+				'icon' =>	'icon-cogs',
 				'fields' =>	array(
 					'PRESTASTORE_LIVE' => array(
 						'title' => $this->l('Automatically check for module updates'),
-						'desc' => $this->l('New modules and updates are displayed on the modules page.'),
+						'hint' => $this->l('New modules and updates are displayed on the modules page.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_COOKIE_CHECKIP' => array(
-						'title' => $this->l('Check the IP address on the cookie'),
-						'desc' => $this->l('Check the IP address of the cookie in order to prevent your cookie from being stolen.'),
+						'title' => $this->l('Check the cookie\'s IP address'),
+						'hint' => $this->l('Check the IP address of the cookie in order to prevent your cookie from being stolen.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
@@ -64,7 +65,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 					),
 					'PS_COOKIE_LIFETIME_FO' => array(
 						'title' => $this->l('Lifetime of Front Office cookies'),
-						'desc' => $this->l('Indicate the number of hours'),
+						'hint' => $this->l('Set the value in hours.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -73,7 +74,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 					),
 					'PS_COOKIE_LIFETIME_BO' => array(
 						'title' => $this->l('Lifetime of Back Office cookies'),
-						'desc' => $this->l('Indicate the number of hours'),
+						'hint' => $this->l('Set the value in hours.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -81,16 +82,19 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 				),
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'upload' => array(
 				'title' =>	$this->l('Upload quota'),
-				'icon' =>	'tab-preferences',
+				'icon' =>	'icon-cloud-upload',
 				'fields' => array(
 					'PS_ATTACHMENT_MAXIMUM_SIZE' => array(
 						'title' => $this->l('Maximum size for attachment'),
-						'desc' => $this->l('Set the maximum size allowed for attachment files (in MegaBytes).').' '.$this->l('Maximum:').' '.
+						'hint' => $this->l('Set the maximum size allowed for attachment files (in megabytes).'),
+						/***** TO DO - ajouter cette ligne dans le hint ? 
+						.' '.$this->l('Maximum:').' '.
 							((int)str_replace('M', '', ini_get('post_max_size')) > (int)str_replace('M', '', ini_get('upload_max_filesize')) ? ini_get('upload_max_filesize') : ini_get('post_max_size')),
+							*****/
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -98,8 +102,8 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'default' => '2'
 					),
 					'PS_LIMIT_UPLOAD_FILE_VALUE' => array(
-						'title' => $this->l('File value upload limit'),
-						'desc' => $this->l('Define the limit upload for a downloadable product. This value has to be less than or equal to the maximum file upload allotted by your server. ').sprintf('(%s MB).', $upload_mb),
+						'title' => $this->l('Maximum size for a downloadable product'),
+						'hint' => $this->l('Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server. ').sprintf('(%s MB).', $upload_mb),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -107,8 +111,8 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'default' => '1'
 					),
 					'PS_LIMIT_UPLOAD_IMAGE_VALUE' => array(
-						'title' => $this->l('Image value upload limit'),
-						'desc' => $this->l('Define the limit upload for an image. This value has to be less than or equal to the maximum file upload allotted by your server. ').sprintf('(%s MB).', $upload_mb),
+						'title' => $this->l('Maximum size for a product\'s image'),
+						'hint' => $this->l('Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server. ').sprintf('(%s MB).', $upload_mb),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -116,54 +120,50 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'default' => '1'
 					),
 				),
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'help' => array(
 				'title' =>	$this->l('Help'),
-				'icon' =>	'tab-preferences',
+				'icon' =>	'icon-question-sign',
 				'fields' =>	array(
 					'PS_HELPBOX' => array(
 						'title' => $this->l('Back Office help boxes'),
-						'desc' => $this->l('Allow yellow help boxes to be displayed under the form fields in the Back Office.'),
+						'hint' => $this->l('Allow yellow help boxes to be displayed under the form fields in the Back Office.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
 						'visibility' => Shop::CONTEXT_ALL
 					),
-					'PS_HIDE_OPTIMIZATION_TIPS' => array(
-						'title' => $this->l('Hide optimization tips'),
-						'desc' => $this->l('Hide optimization tips on the Back Office homepage'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'type' => 'bool'
-					),
 				),
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'notifications' => array(
 				'title' =>	$this->l('Notifications'),
-				'icon' =>	'tab-preferences',
+				'icon' =>	'icon-list-alt',
 				'fields' =>	array(
 					'PS_SHOW_NEW_ORDERS' => array(
 						'title' => $this->l('Show notifications for new orders'),
-						'desc' => $this->l('This will display notifications when new orders are made in your shop.'),
+						'hint' => $this->l('This will display notifications when new orders are made in your shop.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_SHOW_NEW_CUSTOMERS' => array(
 						'title' => $this->l('Show notifications for new customers'),
-						'desc' => $this->l('This will display notifications every time a new customer registers in your shop.'),
+						'hint' => $this->l('This will display notifications every time a new customer registers in your shop.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_SHOW_NEW_MESSAGES' => array(
 						'title' => $this->l('Show notifications for new messages'),
-						'desc' => $this->l('This will display notifications when new messages are posted in your shop.'),
+						'hint' => $this->l('This will display notifications when new messages are posted in your shop.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 				),
+				'submit' => array('title' => $this->l('Save'))
 			),
 		);
 	}

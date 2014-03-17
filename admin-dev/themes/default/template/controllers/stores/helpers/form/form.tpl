@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -34,60 +34,43 @@
 
 {block name="input"}
 	{if $input.type == 'latitude'}
-		<input type="text"
-			{if isset($input.size)}size="{$input.size}"{/if}
-			{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
-			name="latitude"
-			id="latitude"
-			value="{$fields_value[$input.name]|escape:'htmlall'}" /> /
-		<input type="text"
-			{if isset($input.size)}size="{$input.size}"{/if}
-			{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
-			name="longitude"
-			id="longitude"
-			value="{$fields_value['longitude']|escape:'htmlall'}" />
+	<div class="row">
+		<div class="col-lg-3">
+			<input type="text"
+				{if isset($input.size)}size="{$input.size}"{/if}
+				{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
+				name="latitude"
+				id="latitude"
+				value="{$fields_value[$input.name]|escape:'html'}" />
+		</div>
+		<div class="col-lg-1">
+			<div class="form-control-static text-center"> / </div>
+		</div>
+		<div class="col-lg-3">
+			<input type="text"
+				{if isset($input.size)}size="{$input.size}"{/if}
+				{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
+				name="longitude"
+				id="longitude"
+				value="{$fields_value['longitude']|escape:'html'}" />
+		</div>
+	</div>
 	{else}
 		{$smarty.block.parent}
 	{/if}
 {/block}
 
 {block name="other_input"}
-	{if $key == 'rightCols'}
-		{foreach $field as $input}
-			{if $input.type == 'file'}
-				<label style="text-align: left; width: inherit;width:250px;text-align:right">{$input.label} </label>
-				<div class="margin-form">
-					<input type="file" name="{$input.name}" />
-					<p class="clear">{$input.desc}</p>
-					{if isset($fields_value.image) && $fields_value.image}
-						<div id="image" style="width:370px;">
-							{$fields_value.image}
-							<p align="center">{l s='File size'} {$fields_value.size}kb</p>
-							<a href="{$current}&id_store={$form_id}&token={$token}&deleteImage=1">
-								<img src="../img/admin/delete.gif" alt="{l s='Delete'}" /> {l s='Delete'}
-							</a>
-						</div>
-					{/if}
-				</div>
-			{/if}
-			<table cellpadding="2" cellspacing="2" style="padding: 10px; margin: 15px 0 20px 260px; border: 1px solid #BBB;">
-				<tr>
-					<th colspan="2">{l s='Hours:'}</th>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td style="font-size: 0.85em;">{l s='e.g. 10:00AM - 9:30PM'}</td>
-				</tr>
-
-				{foreach $fields_value.days as $k => $value}
-					<tr style="color: #7F7F7F; font-size: 0.85em;">
-						<td>{$value}</td>
-						<td><input type="text" size="25" name="hours_{$k}" value="{if isset($fields_value.hours[$k-1])}{$fields_value.hours[$k-1]|escape:'htmlall'}{/if}" /><br /></td>
-					</tr>
-				{/foreach}
-			</table>
-		<div class="clear"></div>
-		{/foreach}
+	{if $key == 'hours'}
+			<div class="form-group">
+				<label class="control-label col-lg-3">{l s='Hours:'}</label>
+				<div class="col-lg-9"><p class="form-control-static">{l s='e.g. 10:00AM - 9:30PM'}</p></div>
+			</div>
+			{foreach $fields_value.days as $k => $value}
+			<div class="form-group">
+				<label class="control-label col-lg-3">{$value}</label>
+				<div class="col-lg-9"><input type="text" size="25" name="hours_{$k}" value="{if isset($fields_value.hours[$k-1])}{$fields_value.hours[$k-1]|escape:'html'}{/if}" /></div>
+			</div>
+			{/foreach}
 	{/if}
 {/block}
-

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -36,6 +36,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'request_sql';
 		$this->className = 'RequestSql';
 	 	$this->lang = false;
@@ -44,9 +45,9 @@ class AdminRequestSqlControllerCore extends AdminController
 		$this->context = Context::getContext();
 
 		$this->fields_list = array(
-			'id_request_sql' => array('title' => $this->l('ID'), 'width' => 25),
-			'name' => array('title' => $this->l('Name'), 'width' => 300),
-			'sql' => array('title' => $this->l('Request'), 'width' => 500)
+			'id_request_sql' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs'),
+			'name' => array('title' => $this->l('Name')),
+			'sql' => array('title' => $this->l('Request'))
 		);
 
 		$this->fields_options = array(
@@ -54,7 +55,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				'title' =>	$this->l('Settings'),
 				'fields' =>	array(
 					'PS_ENCODING_FILE_MANAGER_SQL' => array(
-						'title' => $this->l('Select your encoding file by default'),
+						'title' => $this->l('Select your default file encoding'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'value',
@@ -62,11 +63,17 @@ class AdminRequestSqlControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					)
 				),
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			)
 		);
 
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
 
 		parent::__construct();
 	}
@@ -94,8 +101,6 @@ class AdminRequestSqlControllerCore extends AdminController
 
 		if ($this->display == 'options')
 			unset($this->toolbar_btn['new']);
-		else
-			unset($this->toolbar_btn['save']);
 	}
 
 	public function renderList()
@@ -104,14 +109,14 @@ class AdminRequestSqlControllerCore extends AdminController
 		$this->display = null;
 		$this->initToolbar();
 
-		$this->displayWarning($this->l('When saving the query, only the request type "SELECT" is allowed.'));
+		$this->displayWarning($this->l('When saving the query, only the "SELECT" request type is allowed.'));
 		$this->displayInformation('
 		<strong>'.$this->l('How do I create a new sql query?').'</strong><br />
 		<ul>
 			<li>'.$this->l('Click "Add New".').'</li>
 			<li>'.$this->l('Fill in the fields and click "Save".').'</li>
-			<li>'.$this->l('You can then view the query results by clicking on the tab:').' <img src="../img/admin/details.gif" /></li>
-			<li>'.$this->l('You can also export the query results as CSV file by clicking on the tab:').' <img src="../img/admin/export.gif" /></li>
+			<li>'.$this->l('You can then view the query results by clicking on this icon in the dropdown menu:').' <i class="icon-pencil"></i></li>
+			<li>'.$this->l('You can also export the query results as CSV file by clicking on this icon in the dropdown menu:').' <i class="icon-upload"></i></li>
 		</ul>');
 
 		$this->addRowAction('export');
@@ -126,19 +131,20 @@ class AdminRequestSqlControllerCore extends AdminController
 	{
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Request')
+				'title' => $this->l('Request'),
+				'icon' => 'icon-cog'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'size' => 103,
 					'required' => true
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Request:'),
+					'label' => $this->l('Request'),
 					'name' => 'sql',
 					'cols' => 100,
 					'rows' => 10,
@@ -146,8 +152,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'button'
+				'title' => $this->l('Save')
 			)
 		);
 
@@ -211,6 +216,8 @@ class AdminRequestSqlControllerCore extends AdminController
 			$view['key'] = $tab_key;
 			$view['results'] = $results;
 
+			$this->toolbar_title = $obj->name;
+
 			$request_sql = new RequestSql();
 			$view['attributes'] = $request_sql->attributes;
 		}
@@ -266,6 +273,7 @@ class AdminRequestSqlControllerCore extends AdminController
 		$this->initTabModuleList();
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
+		$this->initPageHeaderToolbar();
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			if (!$this->loadObject(true))
@@ -290,8 +298,23 @@ class AdminRequestSqlControllerCore extends AdminController
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
-			'url_post' => self::$currentIndex.'&token='.$this->token,
+			'url_post' => self::$currentIndex.'&token='.$this->token,			
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_request'] = array(
+				'href' => self::$currentIndex.'&addrequest_sql&token='.$this->token,
+				'desc' => $this->l('Add new SQL request', null, null, false),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
 	}
 
 	/**
@@ -340,7 +363,7 @@ class AdminRequestSqlControllerCore extends AdminController
 						die();
 					}
 					else
-						$this->errors[] = Tools::DisplayError('The file is too large and can not be downloaded. Please use the clause "LIMIT" in this query.');
+						$this->errors[] = Tools::DisplayError('The file is too large and can not be downloaded. Please use the LIMIT clause in this query.');
 				}
 			}
 		}
@@ -359,10 +382,10 @@ class AdminRequestSqlControllerCore extends AdminController
 			{
 				case 'checkedFrom':
 					if (isset($e[$key]['table']))
-						$this->errors[] = sprintf(Tools::displayError('The Table "%s" doesn\'t exist.'), $e[$key]['table']);
+						$this->errors[] = sprintf(Tools::displayError('The "%s" table does not exist.'), $e[$key]['table']);
 					else if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
-							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
 							$e[$key]['attribut'][0],
 							$e[$key]['attribut'][1]
 						);
@@ -372,17 +395,17 @@ class AdminRequestSqlControllerCore extends AdminController
 
 				case 'checkedSelect':
 					if (isset($e[$key]['table']))
-						$this->errors[] = sprintf(Tools::displayError('The Table "%s" doesn\'t exist.'), $e[$key]['table']);
+						$this->errors[] = sprintf(Tools::displayError('The "%s" table does not exist.'), $e[$key]['table']);
 					else if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
-							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
 							$e[$key]['attribut'][0],
 							$e[$key]['attribut'][1]
 						);
 					else if (isset($e[$key]['*']))
-						$this->errors[] = Tools::displayError('The operator "*" can be used in a nested query.');
+						$this->errors[] = Tools::displayError('The "*" operator cannot be used in a nested query.');
 					else
-						$this->errors[] = Tools::displayError('Error');
+						$this->errors[] = Tools::displayError('Error.');
 				break;
 
 				case 'checkedWhere':
@@ -390,20 +413,20 @@ class AdminRequestSqlControllerCore extends AdminController
 						$this->errors[] = sprintf(Tools::displayError('The operator "%s" is incorrect.'), $e[$key]['operator']);
 					else if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
-							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
 							$e[$key]['attribut'][0],
 							$e[$key]['attribut'][1]
 						);
 					else
-						$this->errors[] = Tools::displayError('Error');
+						$this->errors[] = Tools::displayError('Error.');
 				break;
 
 				case 'checkedHaving':
 					if (isset($e[$key]['operator']))
-						$this->errors[] = sprintf(Tools::displayError('The operator "%s" is incorrect.'), $e[$key]['operator']);
+						$this->errors[] = sprintf(Tools::displayError('The "%s" operator is incorrect.'), $e[$key]['operator']);
 					else if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
-							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
 							$e[$key]['attribut'][0],
 							$e[$key]['attribut'][1]
 						);
@@ -414,7 +437,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				case 'checkedOrder':
 					if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
-							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
 							$e[$key]['attribut'][0],
 							$e[$key]['attribut'][1]
 						);
@@ -425,7 +448,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				case 'checkedGroupBy':
 					if (isset($e[$key]['attribut']))
 						$this->errors[] = sprintf(
-							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
 							$e[$key]['attribut'][0],
 							$e[$key]['attribut'][1]
 						);
@@ -440,7 +463,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				case 'returnNameTable':
 						if (isset($e[$key]['reference']))
 							$this->errors[] = sprintf(
-								Tools::displayError('The reference "%1$s" does not exist in the table: %2$s.'),
+								Tools::displayError('The "%1$s" reference does not exist in the "%2$s" table.'),
 								$e[$key]['reference'][0],
 								$e[$key]['attribut'][1]
 							);
@@ -449,7 +472,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				break;
 
 				case 'testedRequired':
-						$this->errors[] = sprintf(Tools::displayError('%s doesn\'t exist.'), $e[$key]);
+						$this->errors[] = sprintf(Tools::displayError('%s does not exist.'), $e[$key]);
 					break;
 
 				case 'testedUnauthorized':

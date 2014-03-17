@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -26,6 +26,10 @@
 
 class WebserviceRequestCore
 {
+	const HTTP_GET = 1;
+	const HTTP_POST = 2;
+	const HTTP_PUT = 4;
+	
 	protected $_available_languages = null;
 	/**
 	 * Errors triggered at execution
@@ -55,7 +59,7 @@ class WebserviceRequestCore
 	 * PrestaShop Webservice Documentation URL
 	 * @var string
 	 */
-	protected $_docUrl = 'http://doc.prestashop.com/display/PS15/Using+the+PrestaShop+Web+Service';
+	protected $_docUrl = 'http://doc.prestashop.com/display/PS16/Using+the+PrestaShop+Web+Service';
 
 	/**
 	 * Set if the authentication key was checked
@@ -249,6 +253,7 @@ class WebserviceRequestCore
 			'orders' => array('description' => 'The Customers orders','class' => 'Order'),
 			'order_payments' => array('description' => 'The Order payments','class' => 'OrderPayment'),
 			'order_states' => array('description' => 'The Order states','class' => 'OrderState'),
+			'order_slip' => array('description' => 'The Order slips', 'class' => 'OrderSlip'),
 			'price_ranges' => array('description' => 'Price ranges', 'class' => 'RangePrice'),
 			'product_features' => array('description' => 'The product features','class' => 'Feature'),
 			'product_feature_values' => array('description' => 'The product feature values','class' => 'FeatureValue'),
@@ -1518,6 +1523,14 @@ class WebserviceRequestCore
 						$object->{$fieldName} = (string)$attributes->$fieldName;
 				}
 			}
+
+			// Apply the modifiers if they exist
+			foreach ($this->resourceConfiguration['fields'] as $fieldName => $fieldProperties)
+			{				
+				if (isset($fieldProperties['modifier']) && isset($fieldProperties['modifier']['modifier']) && $fieldProperties['modifier']['http_method'] & constant('WebserviceRequest::HTTP_'.$this->method))
+					$object->{$fieldProperties['modifier']['modifier']}();
+			}
+
 			if (!$this->hasErrors())
 			{
 				if ($i18n && ($retValidateFieldsLang = $object->validateFieldsLang(false, true)) !== true)

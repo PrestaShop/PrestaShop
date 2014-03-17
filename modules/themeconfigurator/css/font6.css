@@ -1,0 +1,10 @@
+@font-face {
+  font-family: 'Abril Fatface';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Abril Fatface'), local('AbrilFatface-Regular'), url(http://themes.googleusercontent.com/static/fonts/abrilfatface/v6/X1g_KwGeBV3ajZIXQ9VnDvn8qdNnd5eCmWXua5W-n7c.woff) format('woff');
+}
+
+h1, h2, h3, h4, h5 {
+	font-family: 'Abril Fatface', sans-serif !important;
+}

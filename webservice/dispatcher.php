@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -27,6 +27,9 @@
 ob_start();
 
 require_once(dirname(__FILE__).'/../config/config.inc.php');
+
+// Cart is needed for some requests
+Context::getContext()->cart = new Cart();
 
 //set http auth headers for apache+php-cgi work around
 if (isset($_SERVER['HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches))
@@ -100,10 +103,11 @@ if (isset($_SERVER['HTTP_LOCAL_CONTENT_SHA1']) && $_SERVER['HTTP_LOCAL_CONTENT_S
 	$result['status'] = $_SERVER['SERVER_PROTOCOL'].' 304 Not Modified';
 }
 
-foreach ($result['headers'] as $param_value)
-{
-	header($param_value);
-}
+if (is_array($result['headers']))
+	foreach ($result['headers'] as $param_value)
+	{
+		header($param_value);
+	}
 if (isset($result['type']))
 {
 //	header($result['content_sha1']);

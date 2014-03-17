@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -279,11 +279,11 @@ class SupplyOrderCore extends ObjectModel
 	/**
 	 * Retrieves the details entries (i.e. products) collection for the current order
 	 *
-	 * @return Collection of SupplyOrderDetail
+	 * @return PrestaShopCollection Collection of SupplyOrderDetail
 	 */
 	public function getEntriesCollection()
 	{
-		$details = new Collection('SupplyOrderDetail');
+		$details = new PrestaShopCollection('SupplyOrderDetail');
 		$details->where('id_supply_order', '=', $this->id);
 		return $details;
 	}
@@ -455,12 +455,13 @@ class SupplyOrderCore extends ObjectModel
 		$query->select('id_supply_order');
 		$query->from('supply_order', 'so');
 		$query->where('so.reference = "'.pSQL($reference).'"');
-		$id = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+		$id_supply_order = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
-		if ($id == false)
+		if (!$id_supply_order)
 			return false;
 
-		return (new SupplyOrder((int)$id));
+		$supply_order = new SupplyOrder($id_supply_order);
+		return $supply_order;
 	}
 
 	/**

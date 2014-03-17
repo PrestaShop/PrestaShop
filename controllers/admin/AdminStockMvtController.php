@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -31,6 +31,7 @@ class AdminStockMvtControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->context = Context::getContext();
 	 	$this->table = 'stock_mvt';
 	 	$this->className = 'StockMvt';
@@ -44,17 +45,14 @@ class AdminStockMvtControllerCore extends AdminController
 		$this->fields_list = array(
 			'product_reference' => array(
 				'title' => $this->l('Reference'),
-				'width' => 100,
 				'havingFilter' => true
 			),
 			'product_ean13' => array(
 				'title' => $this->l('EAN 13'),
-				'width' => 75,
 				'havingFilter' => true
 			),
 			'product_upc' => array(
 				'title' => $this->l('UPC'),
-				'width' => 75,
 				'havingFilter' => true
 			),
 			'product_name' => array(
@@ -69,7 +67,6 @@ class AdminStockMvtControllerCore extends AdminController
 			),
 			'sign' => array(
 				'title' => $this->l('Sign'),
-				'width' => 100,
 				'align' => 'center',
 				'type' => 'select',
 				'filter_key' => 'a!sign',
@@ -81,40 +78,51 @@ class AdminStockMvtControllerCore extends AdminController
 					-1 => 'remove_stock.png',
 					1 => 'add_stock.png'
 				),
+				'class' => 'fixed-width-xs'
 			),
 			'physical_quantity' => array(
 				'title' => $this->l('Quantity'),
-				'width' => 40,
-				'filter_key' => 'a!physical_quantity'
+				'align' => 'center',
+				'filter_key' => 'a!physical_quantity',
+				'class' => 'fixed-width-sm'
 			),
 			'price_te' => array(
 				'title' => $this->l('Price (tax excl.)'),
-				'width' => 70,
-				'align' => 'right',
 				'type' => 'price',
 				'currency' => true,
 				'filter_key' => 'a!price_te'
 			),
 			'reason' => array(
 				'title' => $this->l('Label'),
-				'width' => 100,
 				'havingFilter' => true
 			),
 			'employee' => array(
 				'title' => $this->l('Employee'),
-				'width' => 100,
 				'havingFilter' => true
 			),
 			'date_add' => array(
 				'title' => $this->l('Date'),
-				'width' => 150,
-				'align' => 'right',
 				'type' => 'datetime',
 				'filter_key' => 'a!date_add'
 			),
 		);
 
 		parent::__construct();
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		$this->page_header_toolbar_title = $this->l('Stock movement');
+
+		if (Tools::isSubmit('id_warehouse') && (int)Tools::getValue('id_warehouse') != -1)
+			$this->page_header_toolbar_btn['export-stock-mvt-csv'] = array(
+				'short' => $this->l('Export this list as CSV', null, null, false),
+				'href' => $this->context->link->getAdminLink('AdminStockMvt').'&csv&id_warehouse='.(int)$this->getCurrentWarehouseId(),
+				'desc' => $this->l('Export (CSV)', null, null, false),
+				'imgclass' => 'export'
+			);
+
+		parent::initPageHeaderToolbar();
 	}
 
 	/**
@@ -151,6 +159,7 @@ class AdminStockMvtControllerCore extends AdminController
 							LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = stock.id_product_attribute)
 							LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (
 								al.id_attribute = pac.id_attribute
+								AND pac.id_product_attribute <> 0
 								AND al.id_lang = '.(int)$this->context->language->id.'
 							)';
 		// overrides group
@@ -245,13 +254,13 @@ class AdminStockMvtControllerCore extends AdminController
 	public function initToolbar()
 	{
 		if (Tools::isSubmit('id_warehouse') && (int)Tools::getValue('id_warehouse') != -1)
-		{
 			$this->toolbar_btn['export-stock-mvt-csv'] = array(
 				'short' => 'Export this list as CSV',
 				'href' => $this->context->link->getAdminLink('AdminStockMvt').'&amp;csv&amp;id_warehouse='.(int)$this->getCurrentWarehouseId(),
 				'desc' => $this->l('Export (CSV)'),
+				'imgclass' => 'export'
 			);
-		}
+
 		parent::initToolbar();
 		unset($this->toolbar_btn['new']);
 	}

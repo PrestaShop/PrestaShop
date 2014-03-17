@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -62,8 +62,7 @@
 			{if isset($params.active)}
 				{$tr.$key}
 			{elseif isset($params.activeVisu)}
-				<img src="../img/admin/{if $tr.$key}enabled.gif{else}disabled.gif{/if}"
-				alt="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" title="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" />
+				<i class="{if $tr.$key}icon-check-sign{else}icon-ban-circle{/if}"></i>
 			{elseif isset($params.position)}
 				{if $order_by == 'position' && $order_way != 'DESC'}
 					<a href="{$tr.$key.position_url_down}" {if !($tr.$key.position != $positions[count($positions) - 1])}style="display: none;"{/if}>
@@ -90,7 +89,7 @@
 				{$tr.$key}
 			{* If type is 'editable', an input is created *}
 			{elseif isset($params.type) && $params.type == 'editable' && isset($tr.id)}
-				<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'htmlall':'UTF-8'}" class="{$key}" />
+				<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'html':'UTF-8'}" class="{$key}" />
 			{elseif isset($params.callback)}
 				{$tr.$key}
 			{elseif isset($tr.$key) && $key == 'color'}
@@ -100,7 +99,7 @@
 					<div style="float: left; width: 18px; height: 12px; border: 1px solid #996633; background-color: {$tr.$key}; margin-right: 4px;"></div>
 				{/if}
 			{elseif isset($tr.$key)}
-				{$tr.$key|escape:'htmlall':'UTF-8'}
+				{$tr.$key|escape:'html':'UTF-8'}
 			{else}
 				--
 			{/if}
@@ -131,6 +130,6 @@
 	</tr>
 {/foreach}
 {else}
-	<tr><td class="center" colspan="{count($fields_display) + 2}">{l s='No items found'}</td></tr>
+	<tr><td class="center" colspan="{count($fields_display) + 2}">{l s='No records found'}</td></tr>
 {/if}
 </tbody>

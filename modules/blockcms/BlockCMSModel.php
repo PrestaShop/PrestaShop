@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -45,7 +45,7 @@ class BlockCMSModel extends ObjectModel
 	 */
 	public static $definition = array(
 		'table' => 'cms_block',
-		'primary' => 'id_customer',
+		'primary' => 'id_cms_block',
 		'fields' => array(
 			'id_cms_block' =>       array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
 			'id_cms_category' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
@@ -268,13 +268,13 @@ class BlockCMSModel extends ObjectModel
 		{
 			$ids = explode('_', $cmsCategory);
 
-			if ($ids[0] == 1)
+			if ($ids[0] == 1 && isset($ids[1]))
 			{
 				$query = BlockCMSModel::getBlockName($ids[1]);
 				$content[$cmsCategory]['link'] = $context->link->getCMSCategoryLink((int)$ids[1], $query['link_rewrite']);
 				$content[$cmsCategory]['meta_title'] = $query['name'];
 			}
-			else if ($ids[0] == 0)
+			else if ($ids[0] == 0 && isset($ids[1]))
 			{
 				$query = BlockCMSModel::getCMSMetaTitle($ids[1]);
 				$content[$cmsCategory]['link'] = $context->link->getCMSLink((int)$ids[1], $query['link_rewrite']);

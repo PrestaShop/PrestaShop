@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -148,11 +148,12 @@ class CurrencyCore extends ObjectModel
 	public function deleteSelection($selection)
 	{
 		if (!is_array($selection))
-			die(Tools::displayError());
+			return false;
 
+		$res = array();
 		foreach ($selection as $id)
 		{
-			$obj = new Currency((int)($id));
+			$obj = new Currency((int)$id);
 			$res[$id] = $obj->delete();
 		}
 
@@ -207,16 +208,15 @@ class CurrencyCore extends ObjectModel
 	 *
 	 * @return array Currencies
 	 */
-	public static function getCurrencies($object = false, $active = 1)
+	public static function getCurrencies($object = false, $active = true)
 	{
-		$sql = 'SELECT *
-				FROM `'._DB_PREFIX_.'currency` c
-				'.Shop::addSqlAssociation('currency', 'c').'
-				WHERE `deleted` = 0'
-					.($active == 1 ? ' AND c.`active` = 1' : '').'
-				GROUP BY c.id_currency
-				ORDER BY `name` ASC';
-		$tab = Db::getInstance()->executeS($sql);
+		$tab = Db::getInstance()->executeS('
+		SELECT *
+		FROM `'._DB_PREFIX_.'currency` c
+		'.Shop::addSqlAssociation('currency', 'c').'
+		WHERE `deleted` = 0
+		'.($active ? ' AND c.`active` = 1' : '').'
+		ORDER BY `name` ASC');
 		if ($object)
 			foreach ($tab as $key => $currency)
 				$tab[$key] = Currency::getCurrencyInstance($currency['id_currency']);
@@ -225,14 +225,12 @@ class CurrencyCore extends ObjectModel
 
 	public static function getCurrenciesByIdShop($id_shop = 0)
 	{
-		$sql = 'SELECT *
-				FROM `'._DB_PREFIX_.'currency` c
-				LEFT JOIN `'._DB_PREFIX_.'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
-				'.($id_shop != 0 ? ' WHERE cs.`id_shop` = '.(int)$id_shop : '').'
-				GROUP BY c.id_currency
-				ORDER BY `name` ASC';
-
-		return Db::getInstance()->executeS($sql);
+		return Db::getInstance()->executeS('
+		SELECT *
+		FROM `'._DB_PREFIX_.'currency` c
+		LEFT JOIN `'._DB_PREFIX_.'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
+		'.($id_shop ? ' WHERE cs.`id_shop` = '.(int)$id_shop : '').'
+		ORDER BY `name` ASC');
 	}
 
 

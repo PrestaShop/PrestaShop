@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -34,54 +34,50 @@ class blocksocial extends Module
 		$this->name = 'blocksocial';
 		$this->tab = 'front_office_features';
 		$this->version = '1.0';
+		$this->author = 'PrestaShop';
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Social networking block');
-		$this->description = $this->l('Allows you to add information about your brand\'s social networking sites.');
+		$this->description = $this->l('Allows you to add information about your brand\'s social networking accounts.');
 	}
 	
 	public function install()
 	{
-		return (parent::install() AND Configuration::updateValue('blocksocial_facebook', '') && Configuration::updateValue('blocksocial_twitter', '') && Configuration::updateValue('blocksocial_rss', '') && $this->registerHook('displayHeader') && $this->registerHook('displayFooter'));
+		return (parent::install() AND Configuration::updateValue('BLOCKSOCIAL_FACEBOOK', '') && 
+			Configuration::updateValue('BLOCKSOCIAL_TWITTER', '') && 
+			Configuration::updateValue('BLOCKSOCIAL_RSS', '') && 
+			$this->registerHook('displayHeader') && 
+			$this->registerHook('displayFooter'));
 	}
 	
 	public function uninstall()
 	{
-		//Delete configuration			
-		return (Configuration::deleteByName('blocksocial_facebook') AND Configuration::deleteByName('blocksocial_twitter') AND Configuration::deleteByName('blocksocial_rss') AND parent::uninstall());
+		//Delete configuration
+		return (Configuration::deleteByName('BLOCKSOCIAL_FACEBOOK') AND 
+			Configuration::deleteByName('BLOCKSOCIAL_TWITTER') AND 
+			Configuration::deleteByName('BLOCKSOCIAL_RSS') AND 
+			parent::uninstall());
 	}
 	
 	public function getContent()
 	{
 		// If we try to update the settings
 		$output = '';
-		if (isset($_POST['submitModule']))
+		if (Tools::isSubmit('submitModule'))
 		{	
-			Configuration::updateValue('blocksocial_facebook', (($_POST['facebook_url'] != '') ? $_POST['facebook_url']: ''));
-			Configuration::updateValue('blocksocial_twitter', (($_POST['twitter_url'] != '') ? $_POST['twitter_url']: ''));		
-			Configuration::updateValue('blocksocial_rss', (($_POST['rss_url'] != '') ? $_POST['rss_url']: ''));				
+			Configuration::updateValue('BLOCKSOCIAL_FACEBOOK', Tools::getValue('blocksocial_facebook', ''));
+			Configuration::updateValue('BLOCKSOCIAL_TWITTER', Tools::getValue('blocksocial_twitter', ''));
+			Configuration::updateValue('BLOCKSOCIAL_RSS', Tools::getValue('blocksocial_rss', ''));
+			Configuration::updateValue('BLOCKSOCIAL_YOUTUBE', Tools::getValue('blocksocial_youtube', ''));
+			Configuration::updateValue('BLOCKSOCIAL_GOOGLE_PLUS', Tools::getValue('blocksocial_google_plus', ''));
+			Configuration::updateValue('BLOCKSOCIAL_PINTEREST', Tools::getValue('blocksocial_pinterest', ''));
 			$this->_clearCache('blocksocial.tpl');
-			$output = '<div class="conf confirm">'.$this->l('Configuration updated').'</div>';
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
 		}
 		
-		return '
-		<h2>'.$this->displayName.'</h2>
-		'.$output.'
-		<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset class="width2">				
-				<label for="facebook_url">'.$this->l('Facebook URL: ').'</label>
-				<input type="text" id="facebook_url" name="facebook_url" value="'.Tools::safeOutput((Configuration::get('blocksocial_facebook') != "") ? Configuration::get('blocksocial_facebook') : "").'" />
-				<div class="clear">&nbsp;</div>		
-				<label for="twitter_url">'.$this->l('Twitter URL: ').'</label>
-				<input type="text" id="twitter_url" name="twitter_url" value="'.Tools::safeOutput((Configuration::get('blocksocial_twitter') != "") ? Configuration::get('blocksocial_twitter') : "").'" />
-				<div class="clear">&nbsp;</div>		
-				<label for="rss_url">'.$this->l('RSS URL: ').'</label>
-				<input type="text" id="rss_url" name="rss_url" value="'.Tools::safeOutput((Configuration::get('blocksocial_rss') != "") ? Configuration::get('blocksocial_rss') : "").'" />
-				<div class="clear">&nbsp;</div>						
-				<br /><center><input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
-			</fieldset>
-		</form>';
+		return $output.$this->renderForm();
 	}
 	
 	public function hookDisplayHeader()
@@ -93,12 +89,98 @@ class blocksocial extends Module
 	{
 		if (!$this->isCached('blocksocial.tpl', $this->getCacheId()))
 			$this->smarty->assign(array(
-				'facebook_url' => Configuration::get('blocksocial_facebook'),
-				'twitter_url' => Configuration::get('blocksocial_twitter'),
-				'rss_url' => Configuration::get('blocksocial_rss')
+				'facebook_url' => Configuration::get('BLOCKSOCIAL_FACEBOOK'),
+				'twitter_url' => Configuration::get('BLOCKSOCIAL_TWITTER'),
+				'rss_url' => Configuration::get('BLOCKSOCIAL_RSS'),
+				'youtube_url' => Configuration::get('BLOCKSOCIAL_YOUTUBE'),
+				'google_plus_url' => Configuration::get('BLOCKSOCIAL_GOOGLE_PLUS'),
+				'pinterest_url' => Configuration::get('BLOCKSOCIAL_PINTEREST'),
 			));
 
 		return $this->display(__FILE__, 'blocksocial.tpl', $this->getCacheId());
 	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Facebook URL'),
+						'name' => 'blocksocial_facebook',
+						'desc' => $this->l('Your Facebook fan page.'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Twitter URL'),
+						'name' => 'blocksocial_twitter',
+						'desc' => $this->l('Your official Twitter accounts.'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('RSS URL'),
+						'name' => 'blocksocial_rss',
+						'desc' => $this->l('The RSS feed of your choice (your blog, your store, etc.).'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('YouTube URL'),
+						'name' => 'blocksocial_youtube',
+						'desc' => $this->l('Your official YouTube account.'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Google Plus URL:'),
+						'name' => 'blocksocial_google_plus',
+						'desc' => $this->l('You official Google Plus page.'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Pinterest URL:'),
+						'name' => 'blocksocial_pinterest',
+						'desc' => $this->l('Your official Pinterest account.'),
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitModule';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'blocksocial_facebook' => Tools::getValue('blocksocial_facebook', Configuration::get('BLOCKSOCIAL_FACEBOOK')),
+			'blocksocial_twitter' => Tools::getValue('blocksocial_twitter', Configuration::get('BLOCKSOCIAL_TWITTER')),
+			'blocksocial_rss' => Tools::getValue('blocksocial_rss', Configuration::get('BLOCKSOCIAL_RSS')),
+			'blocksocial_youtube' => Tools::getValue('blocksocial_youtube', Configuration::get('BLOCKSOCIAL_YOUTUBE')),
+			'blocksocial_google_plus' => Tools::getValue('blocksocial_google_plus', Configuration::get('BLOCKSOCIAL_GOOGLE_PLUS')),
+			'blocksocial_pinterest' => Tools::getValue('blocksocial_pinterest', Configuration::get('BLOCKSOCIAL_PINTEREST')),
+		);
+	}
+
 }
-?>

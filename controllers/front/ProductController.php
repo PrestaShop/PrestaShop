@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -27,14 +27,8 @@
 class ProductControllerCore extends FrontController
 {
 	public $php_self = 'product';
-	/**
-	 * @var Product
-	 */
-	protected $product;
 
-	/**
-	 * @var Category
-	 */
+	protected $product;
 	protected $category;
 
 	public function setMedia()
@@ -43,13 +37,13 @@ class ProductControllerCore extends FrontController
 		if (count($this->errors))
 			return ;
 
-		if ($this->context->getMobileDevice() == false)
+		if (!$this->useMobileTheme())
 		{
 			$this->addCSS(_THEME_CSS_DIR_.'product.css');
-			$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'screen');
-			$this->addJqueryPlugin(array('fancybox', 'idTabs', 'scrollTo', 'serialScroll'));
+			$this->addCSS(_THEME_CSS_DIR_.'print.css');
+			$this->addJqueryPlugin(array('fancybox', 'idTabs', 'scrollTo', 'serialScroll', 'bxslider'));
 			$this->addJS(array(
-				_THEME_JS_DIR_.'tools.js',
+				_THEME_JS_DIR_.'tools.js',  // retro compat themes 1.5
 				_THEME_JS_DIR_.'product.js'
 			));
 		}
@@ -57,7 +51,7 @@ class ProductControllerCore extends FrontController
 		{
 			$this->addJqueryPlugin(array('scrollTo', 'serialScroll'));
 			$this->addJS(array(
-				_THEME_JS_DIR_.'tools.js',
+				_THEME_JS_DIR_.'tools.js',  // retro compat themes 1.5
 				_THEME_MOBILE_JS_DIR_.'product.js',
 				_THEME_MOBILE_JS_DIR_.'jquery.touch-gallery.js'
 			));
@@ -103,7 +97,8 @@ class ProductControllerCore extends FrontController
 			 */
 			if (!$this->product->isAssociatedToShop() || !$this->product->active)
 			{
-				if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Tools::getValue('id_employee')))
+
+				if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Tools::getValue('id_employee')) && $this->product->isAssociatedToShop())
 				{
 					// If the product is not active, it's the admin preview mode
 					$this->context->smarty->assign('adminActionDisplay', true);
@@ -252,7 +247,7 @@ class ProductControllerCore extends FrontController
 
 			$this->context->smarty->assign(array(
 				'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
-				'customizationFields' => ($this->product->customizable) ? $this->product->getCustomizationFields($this->context->language->id) : false,
+				'customizationFields' => $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false,
 				'accessories' => $this->product->getAccessories($this->context->language->id),
 				'return_link' => $return_link,
 				'product' => $this->product,
@@ -268,6 +263,7 @@ class ProductControllerCore extends FrontController
 				'HOOK_PRODUCT_ACTIONS' => Hook::exec('displayProductButtons', array('product' => $this->product)),
 				'HOOK_PRODUCT_TAB' =>  Hook::exec('displayProductTab', array('product' => $this->product)),
 				'HOOK_PRODUCT_TAB_CONTENT' =>  Hook::exec('displayProductTabContent', array('product' => $this->product)),
+				'HOOK_PRODUCT_CONTENT' =>  Hook::exec('displayProductContent', array('product' => $this->product)),
 				'display_qties' => (int)Configuration::get('PS_DISPLAY_QTIES'),
 				'display_ht' => !Tax::excludeTaxeOption(),
 				'currencySign' => $this->context->currency->sign,
@@ -276,11 +272,17 @@ class ProductControllerCore extends FrontController
 				'currencyBlank' => $this->context->currency->blank,
 				'jqZoomEnabled' => Configuration::get('PS_DISPLAY_JQZOOM'),
 				'ENT_NOQUOTES' => ENT_NOQUOTES,
-				'outOfStockAllowed' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK')
+				'outOfStockAllowed' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK'),
+				'errors' => $this->errors,
+				'body_classes' => array(
+					$this->php_self.'-'.$this->product->id, 
+					$this->php_self.'-'.$this->product->link_rewrite,
+					'category-'.(isset($this->category) ? $this->category->id : ''),
+					'category-'.(isset($this->category) ? $this->category->getFieldByLang('link_rewrite') : '')
+				),
+				'display_discount_price' => Configuration::get('PS_DISPLAY_DISCOUNT_PRICE'),
 			));
 		}
-
-		$this->context->smarty->assign('errors', $this->errors);
 		$this->setTemplate(_PS_THEME_DIR_.'product.tpl');
 	}
 
@@ -317,6 +319,7 @@ class ProductControllerCore extends FrontController
 
 		$quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true, (int)$this->context->customer->id);
 		foreach ($quantity_discounts as &$quantity_discount)
+		{
 			if ($quantity_discount['id_product_attribute'])
 			{
 				$combination = new Combination((int)$quantity_discount['id_product_attribute']);
@@ -325,6 +328,9 @@ class ProductControllerCore extends FrontController
 					$quantity_discount['attributes'] = $attribute['name'].' - ';
 				$quantity_discount['attributes'] = rtrim($quantity_discount['attributes'], ' - ');
 			}
+			if ((int)$quantity_discount['id_currency'] == 0 && $quantity_discount['reduction_type'] == 'amount')
+				$quantity_discount['reduction'] = Tools::convertPriceFull($quantity_discount['reduction'], null, Context::getContext()->currency);
+		}
 
 		$product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
 		$address = new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
@@ -386,6 +392,7 @@ class ProductControllerCore extends FrontController
 			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 			'largeSize' => Image::getSize(ImageType::getFormatedName('large')),
 			'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
+			'cartSize' => Image::getSize(ImageType::getFormatedName('cart')),
 			'col_img_dir' => _PS_COL_IMG_DIR_));
 		if (count($product_images))
 			$this->context->smarty->assign('images', $product_images);
@@ -408,7 +415,7 @@ class ProductControllerCore extends FrontController
 			foreach ($attributes_groups as $k => $row)
 			{
 				// Color management
-				if ((isset($row['attribute_color']) && $row['attribute_color']) || (file_exists(_PS_COL_IMG_DIR_.$row['id_attribute'].'.jpg')))
+				if (isset($row['is_color_group']) && $row['is_color_group'] && (isset($row['attribute_color']) && $row['attribute_color']) || (file_exists(_PS_COL_IMG_DIR_.$row['id_attribute'].'.jpg')))
 				{
 					$colors[$row['id_attribute']]['value'] = $row['attribute_color'];
 					$colors[$row['id_attribute']]['name'] = $row['attribute_name'];
@@ -418,6 +425,7 @@ class ProductControllerCore extends FrontController
 				}
 				if (!isset($groups[$row['id_attribute_group']]))
 					$groups[$row['id_attribute_group']] = array(
+						'group_name' => $row['group_name'],
 						'name' => $row['public_group_name'],
 						'group_type' => $row['group_type'],
 						'default' => -1,
@@ -449,7 +457,10 @@ class ProductControllerCore extends FrontController
 				$combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
 				$combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
 				if ($row['available_date'] != '0000-00-00')
+				{
 					$combinations[$row['id_product_attribute']]['available_date'] = $row['available_date'];
+					$combinations[$row['id_product_attribute']]['date_formatted'] = Tools::displayDate($row['available_date']);
+				}
 				else
 					$combinations[$row['id_product_attribute']]['available_date'] = '';
 
@@ -489,11 +500,11 @@ class ProductControllerCore extends FrontController
 			{
 				foreach ($groups as &$group)
 					foreach ($group['attributes_quantity'] as $key => &$quantity)
-						if (!$quantity)
+						if ($quantity <= 0)
 							unset($group['attributes'][$key]);
 
 				foreach ($colors as $key => $color)
-					if (!$color['attributes_quantity'])
+					if ($color['attributes_quantity'] <= 0)
 						unset($colors[$key]);
 			}
 			foreach ($combinations as $id_product_attribute => $comb)
@@ -504,11 +515,13 @@ class ProductControllerCore extends FrontController
 				$attribute_list = rtrim($attribute_list, ',');
 				$combinations[$id_product_attribute]['list'] = $attribute_list;
 			}
+
 			$this->context->smarty->assign(array(
 				'groups' => $groups,
-				'combinations' => $combinations,
 				'colors' => (count($colors)) ? $colors : false,
-				'combinationImages' => $combination_images));
+				'combinations' => $combinations,
+				'combinationImages' => $combination_images
+			));
 		}
 	}
 
@@ -521,10 +534,14 @@ class ProductControllerCore extends FrontController
 		if (is_array($attributes_combinations) && count($attributes_combinations))
 			foreach ($attributes_combinations as &$ac)
 				foreach ($ac as &$val)
-					$val = str_replace('-', '_', Tools::link_rewrite(str_replace(array(',', '.'), '-', $val)));
+					$val = str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', Tools::link_rewrite(str_replace(array(',', '.'), '-', $val)));
 		else
 			$attributes_combinations = array();
-		$this->context->smarty->assign('attributesCombinations', $attributes_combinations);
+		$this->context->smarty->assign(array(
+			'attributesCombinations' =>  $attributes_combinations,
+			'attribute_anchor_separator' => Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR')
+			)
+		);
 	}
 
 	/**
@@ -543,17 +560,23 @@ class ProductControllerCore extends FrontController
 		}
 		if (!isset($path) || !$path)
 			$path = Tools::getPath((int)$this->context->shop->id_category, $this->product->name);
-		
-		// various assignements before Hook::exec
-		$this->context->smarty->assign(array(
-			'path' => $path,
-			'category' => $this->category,
-			'subCategories' => $this->category->getSubCategories($this->context->language->id, true),
-			'id_category_current' => (int)$this->category->id,
-			'id_category_parent' => (int)$this->category->id_parent,
-			'return_category_name' => Tools::safeOutput($this->category->name),
-			'categories' => Category::getHomeCategories($this->context->language->id, true, (int)$this->context->shop->id)
-		));
+
+		$subCategories = array();
+		if (Validate::isLoadedObject($this->category))
+		{
+			$subCategories = $this->category->getSubCategories($this->context->language->id, true);
+
+			// various assignements before Hook::exec
+			$this->context->smarty->assign(array(
+				'path' => $path,
+				'category' => $this->category,
+				'subCategories' => $subCategories,
+				'id_category_current' => (int)$this->category->id,
+				'id_category_parent' => (int)$this->category->id_parent,
+				'return_category_name' => Tools::safeOutput($this->category->getFieldByLang('name')),
+				'categories' => Category::getHomeCategories($this->context->language->id, true, (int)$this->context->shop->id)
+			));
+		}
 		$this->context->smarty->assign(array('HOOK_PRODUCT_FOOTER' => Hook::exec('displayFooterProduct', array('product' => $this->product, 'category' => $this->category))));
 	}
 
@@ -618,14 +641,14 @@ class ProductControllerCore extends FrontController
 				
 		$indexes = array_flip($authorized_text_fields);
 		foreach ($_POST as $field_name => $value)
-			if (in_array($field_name, $authorized_text_fields) && !empty($value))
+			if (in_array($field_name, $authorized_text_fields) && $value != '')
 			{
 				if (!Validate::isMessage($value))
 					$this->errors[] = Tools::displayError('Invalid message');
 				else
 					$this->context->cart->addTextFieldToProduct($this->product->id, $indexes[$field_name], Product::CUSTOMIZE_TEXTFIELD, $value);
 			}
-			else if (in_array($field_name, $authorized_text_fields) && empty($value))
+			else if (in_array($field_name, $authorized_text_fields) && $value == '')
 				$this->context->cart->deleteCustomizationToProduct((int)$this->product->id, $indexes[$field_name]);
 	}
 
@@ -669,5 +692,10 @@ class ProductControllerCore extends FrontController
 	public function getProduct()
 	{
 	    return $this->product;
+	}
+	
+	public function getCategory()
+	{
+	    return $this->category;
 	}
 }

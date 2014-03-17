@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,12 +19,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTab = null)
+function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {
 	if (!is_null($parentTab) && !empty($parentTab))
 		$id_parent = (int)Db::getInstance()->getValue('SELECT `id_tab` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($parentTab).'\'');
@@ -37,7 +37,7 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
 	}
 	
 	if (!(int)Db::getInstance()->getValue('SELECT count(id_tab) FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($className).'\' '))
-		Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'tab` (`id_parent`, `class_name`, `module`, `position`) VALUES ('.(int)$id_parent.', \''.pSQL($className).'\', \'\', 
+		Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'tab` (`id_parent`, `class_name`, `module`, `position`) VALUES ('.(int)$id_parent.', \''.pSQL($className).'\', \''.pSQL($module).'\', 
 									(SELECT IFNULL(MAX(t.position),0)+ 1 FROM `'._DB_PREFIX_.'tab` t WHERE t.id_parent = '.(int)$id_parent.'))');
 	
 	$languages = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM `'._DB_PREFIX_.'lang`');
@@ -60,7 +60,7 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
 								WHERE `class_name` = \''.pSQL($className).'\' LIMIT 0,1
 								), 1, 1, 1, 1 FROM `'._DB_PREFIX_.'profile` )');
 
-	if($returnId) {
+	if ($returnId) {
 		return (int)Db::getInstance()->getValue('SELECT `id_tab`
 								FROM `'._DB_PREFIX_.'tab`
 								WHERE `class_name` = \''.pSQL($className).'\'');

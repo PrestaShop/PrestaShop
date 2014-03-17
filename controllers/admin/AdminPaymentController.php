@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -30,6 +30,7 @@ class AdminPaymentControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		parent::__construct();
 
 		$shop_id = Context::getContext()->shop->id;
@@ -83,8 +84,21 @@ class AdminPaymentControllerCore extends AdminController
 			}
 	}
 
+	public function initToolbarTitle()
+	{
+		$this->toolbar_title = array_unique($this->breadcrumbs);
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+		$this->page_header_toolbar_btn = array();
+	}
+
 	public function postProcess()
 	{
+		if (Tools::getValue('action') == 'GetModuleQuickView' && Tools::getValue('ajax') == '1')
+			$this->ajaxProcessGetModuleQuickView();
 		if ($this->action)
 			$this->saveRestrictions($this->action);
 	}
@@ -143,7 +157,7 @@ class AdminPaymentControllerCore extends AdminController
 
 	public function renderView()
 	{
-		$this->toolbar_title = $this->l('Payment: ');
+		$this->toolbar_title = $this->l('Payment');
 		unset($this->toolbar_btn['back']);
 		
 		$shop_context = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
@@ -152,7 +166,7 @@ class AdminPaymentControllerCore extends AdminController
 			$this->tpl_view_vars = array('shop_context' => $shop_context);
 			return parent::renderView();
 		}
-	
+
 		// link to modules page
 		if (isset($this->payment_modules[0]))
 			$token_modules = Tools::getAdminToken('AdminModules'.(int)Tab::getIdFromClassName('AdminModules').(int)$this->context->employee->id);
@@ -171,21 +185,21 @@ class AdminPaymentControllerCore extends AdminController
 						  'desc' => $this->l('Please mark each checkbox for the currency, or currencies, in which you want the payment module(s) to be available.'),
 						  'name_id' => 'currency',
 						  'identifier' => 'id_currency',
-						  'icon' => 'dollar',
+						  'icon' => 'icon-money',
 					),
 					array('items' => Group::getGroups($this->context->language->id),
 						  'title' => $this->l('Group restrictions'),
 						  'desc' => $this->l('Please mark each checkbox for the customer group(s), in which you want the payment module(s) to be available.'),
 						  'name_id' => 'group',
 						  'identifier' => 'id_group',
-						  'icon' => 'group',
+						  'icon' => 'icon-group',
 					),
 					array('items' =>Country::getCountries($this->context->language->id),
 						  'title' => $this->l('Country restrictions'),
 						  'desc' => $this->l('Please mark each checkbox for the country, or countries, in which you want the payment module(s) to be available.'),
 						  'name_id' => 'country',
 						  'identifier' => 'id_country',
-						  'icon' => 'world',
+						  'icon' => 'icon-globe',
 					)
 				);
 
@@ -234,5 +248,29 @@ class AdminPaymentControllerCore extends AdminController
 
 		return parent::renderView();
 	}
+
+	public function ajaxProcessGetModuleQuickView()
+	{
+		$modules = Module::getModulesOnDisk();
+
+		foreach ($modules as $module)
+			if ($module->name == Tools::getValue('module'))
+				break;
+
+		$this->context->smarty->assign(array(
+			'displayName' => $module->displayName,
+			'image' => $module->image,
+			'nb_rates' => (int)$module->nb_rates[0],
+			'avg_rate' => (int)$module->avg_rate[0],
+			'badges' => $module->badges,
+			'compatibility' => $module->compatibility,
+			'description_full' => $module->description_full,
+			'additional_description' => $module->additional_description,
+			'url' => $module->url
+		));
+		$this->smartyOutputContent('controllers/modules/quickview.tpl');
+		die(1);
+	}
+
 }
 

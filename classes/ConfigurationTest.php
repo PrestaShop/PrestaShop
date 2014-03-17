@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -36,31 +36,36 @@ class ConfigurationTestCore
 	 */
 	public static function getDefaultTests()
 	{
-		return array(
-			'system' => array(
-				'fopen', 'fclose', 'fread', 'fwrite',
-				'rename', 'file_exists', 'unlink', 'rmdir', 'mkdir',
-				'getcwd', 'chdir', 'chmod'
-				),
-
-			'phpversion' => false,
+		$tests = array(
 			'upload' => false,
-			'gd' => false,
-			'mysql_support' => false,
-			'config_dir' => 'config',
 			'cache_dir' => 'cache',
 			'log_dir' => 'log',
 			'img_dir' => 'img',
-			'mails_dir' => 'mails',
 			'module_dir' => 'modules',
 			'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang/',
 			'theme_pdf_lang_dir' => 'themes/'._THEME_NAME_.'/pdf/lang/',
 			'theme_cache_dir' => 'themes/'._THEME_NAME_.'/cache/',
 			'translations_dir' => 'translations',
 			'customizable_products_dir' => 'upload',
-			'virtual_products_dir' => 'download',
-			'files' => false
+			'virtual_products_dir' => 'download'
 		);
+
+		if (!defined('_PS_HOST_MODE_'))
+			$tests = array_merge($tests, array(
+				'system' => array(
+					'fopen', 'fclose', 'fread', 'fwrite',
+					'rename', 'file_exists', 'unlink', 'rmdir', 'mkdir',
+					'getcwd', 'chdir', 'chmod'
+				),
+				'phpversion' => false,
+				'gd' => false,
+				'mysql_support' => false,
+				'config_dir' => 'config',
+				'files' => false,
+				'mails_dir' => 'mails',
+			));
+
+		return $tests;
 	}
 
 	/**

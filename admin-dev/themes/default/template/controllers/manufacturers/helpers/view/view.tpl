@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,82 +26,121 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-
-	<h2>{$manufacturer->name}</h2>
-
-	<h3>{l s='Total addresses'} {count($addresses)}</h3>
-	<hr />
-
+<div class="panel">
+	<h3>{l s='Addresses'} <span class="badge">{count($addresses)}</span></h3>
 	{if !count($addresses)}
 		{l s='No address has been found for this manufacturer.'}
 	{else}
 		{foreach $addresses AS $addresse}
-			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width: 600px;">
-				<tr>
-					<th><strong>{$addresse.firstname} {$addresse.lastname} <a href="{$link->getAdminLink('AdminManufacturers')}&id_address={$addresse.id_address}&editaddresses=1"><img src="../img/admin/edit.gif"></a></strong></th>
-				</tr>
-				<tr>
-					<td>
-						<div style="padding:5px; float:left; width:350px;">
+		<div class="panel">
+			<div class="panel-heading">
+				{$addresse.firstname} {$addresse.lastname}
+				<div class="pull-right">
+					<a class="btn btn-default" href="{$link->getAdminLink('AdminManufacturers')}&id_address={$addresse.id_address}&editaddresses=1">
+						<i class="icon-edit"></i>
+						{l s='Edit'}</a>
+				</div>
+			</div>
+
+			<table class="table">
+				<tbody>
+					<tr>
+						<td>
 							{$addresse.address1}<br />
 							{if $addresse.address2}{$addresse.address2}<br />{/if}
 							{$addresse.postcode} {$addresse.city}<br />
 							{if $addresse.state}{$addresse.state}<br />{/if}
 							<b>{$addresse.country}</b><br />
-						</div>
-						<div style="padding:5px; float:left;">
 							{if $addresse.phone}{$addresse.phone}<br />{/if}
 							{if $addresse.phone_mobile}{$addresse.phone_mobile}<br />{/if}
-						</div>
-						{if $addresse.other}<div style="padding:5px; clear:both;"><br /><i>{$addresse.other}</i></div>{/if}
-					</td>
-				</tr>
-			</table><br />
+							{if $addresse.other}<div ><br />
+								<i>{$addresse.other|nl2br}</i></div>
+							{/if}
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		{/foreach}
 	{/if}
+</div>
+<div class="panel">
+	<h3>{l s='Products'} <span class="badge">{count($products)}</span></h3>
 
-	<h3>{l s='Total products'} {count($products)}</h3>
 	{foreach $products AS $product}
-		<hr />
 		{if !$product->hasAttributes()}
-			<div style="float:right;">
-				<a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}" class="button">{l s='Edit'}</a>
-				<a href="?tab=AdminProducts&id_product={$product->id}&deleteproduct&token={getAdminToken tab='AdminProducts'}" class="button" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">{l s='Delete'}</a>
+			<div class="panel">
+				<div class="panel-heading">
+					{$product->name}
+					<div class="pull-right">
+						<a href="?tab=AdminProducts&amp;id_product={$product->id}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm">
+							<i class="icon-edit"></i> {l s='Edit'}
+						</a>
+						<a href="?tab=AdminProducts&amp;id_product={$product->id}&amp;deleteproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
+							<i class="icon-trash"></i> {l s='Delete'}
+						</a>
+					</div>
+				</div>
+
+				<table class="table">
+					<thead>
+						<tr>
+							{if !empty($product->reference)}<th><span class="title_box">{l s='Ref:'}</span> {$product->reference}</th>{/if}
+							{if !empty($product->ean13)}<th><span class="title_box">{l s='EAN13:'}</span> {$product->ean13}</th>{/if}
+							{if !empty($product->upc)}<th><span class="title_box">{l s='UPC:'}</span> {$product->upc}</th>{/if}
+							{if $stock_management}<th><span class="title_box">{l s='Qty:'}</span> {$product->quantity}</th>{/if}
+						</tr>
+					</thead>
+				</table>
 			</div>
-			<br/><br/>
-			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:100%;">
-				<tr>
-					<th height="39">{$product->name}</th>
-					{if !empty($product->reference)}<th width="150">{l s='Ref:'} {$product->reference}</th>{/if}
-					{if !empty($product->ean13)}<th width="120">{l s='EAN13:'} {$product->ean13}</th>{/if}
-					{if !empty($product->upc)}<th width="120">{l s='UPC:'} {$product->upc}</th>{/if}
-					{if $stock_management}<th class="right" width="50">{l s='Qty:'} {$product->quantity}</th>{/if}
-				</tr>
-			</table>
 		{else}
-			<div style="float:right;">
-				<a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}" class="button">{l s='Edit'}</a>
-				<a href="?tab=AdminProducts&id_product={$product->id}&deleteproduct&token={getAdminToken tab='AdminProducts'}" class="button" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">{l s='Delete'}</a>
+			<div class="panel">
+				<div class="panel-heading">
+
+					<a href="?tab=AdminProducts&amp;id_product={$product->id}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">
+						{$product->name}
+					</a>
+					<div class="pull-right">
+						<a href="?tab=AdminProducts&amp;id_product={$product->id}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm">
+							<i class="icon-edit"></i>
+							{l s='Edit'}
+						</a>
+						<a href="?tab=AdminProducts&amp;id_product={$product->id}&amp;deleteproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
+							<i class="icon-trash"></i>
+							{l s='Delete'}
+						</a>
+					</div>
+
+				</div>
+
+				<table class="table">
+					<thead>
+						<tr>
+							<th><span class="title_box">{l s='Attribute name'}</span></th>
+							<th><span class="title_box">{l s='Reference'}</span></th>
+							<th><span class="title_box">{l s='EAN13'}</span></th>
+							<th><span class="title_box">{l s='UPC'}</span></th>
+							{if $stock_management && $shopContext != Shop::CONTEXT_ALL}
+								<th><span class="title_box">{l s='Available Quantity'}</span></th>
+							{/if}
+						</tr>
+					</thead>
+					<tbody>
+					{foreach $product->combination AS $id_product_attribute => $product_attribute}
+						<tr {if $id_product_attribute %2}class="alt_row"{/if} >
+							<td>{$product_attribute.attributes}</td>
+							<td>{$product_attribute.reference}</td>
+							<td>{$product_attribute.ean13}</td>
+							<td>{$product_attribute.upc}</td>
+							{if $stock_management && $shopContext != Shop::CONTEXT_ALL}
+								<td class="right">{$product_attribute.quantity}</td>
+							{/if}
+						</tr>
+					{/foreach}
+					</tbody>
+				</table>
 			</div>
-			<h3><a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}">{$product->name}</a></h3>
-			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:100%;">
-				<tr>
-					<th height="39">{l s='Attribute name'}</th>
-					<th width="80">{l s='Reference'}</th>
-					<th width="80">{l s='EAN13'}</th>
-					<th width="80">{l s='UPC'}</th>
-					{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<th class="right" width="150">{l s='Available Quantity'}</th>{/if}
-				</tr>
-				{foreach $product->combination AS $id_product_attribute => $product_attribute}
-					<tr {if $id_product_attribute %2}class="alt_row"{/if} >
-						<td>{$product_attribute.attributes}</td>
-						<td>{$product_attribute.reference}</td>
-						<td>{$product_attribute.ean13}</td>
-						<td>{$product_attribute.upc}</td>
-						{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<td class="right">{$product_attribute.quantity}</td>{/if}
-					</tr>
-				{/foreach}
-			</table>
 		{/if}
 	{/foreach}
+</div>
 {/block}

@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,83 +18,156 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-			<script type="text/javascript">
-				var there_are = '{l s='There are'}';
-				var there_is = '{l s='There is'}';
-				var label_errors = '{l s='errors'}';
-				var label_error = '{l s='error'}';
-			</script>
-			<div id="container">	
-				<div id="error" {if !isset($errors)}class="hide"{/if}>
-{if isset($errors)}
-					<h3>{if $nbErrors > 1}{l s='There are %d errors.' sprintf=$nbErrors}{else}{l s='There is %d error.' sprintf=$nbErrors}{/if}</h3>
-					<ol style="margin: 0 0 0 20px;">
-					{foreach from=$errors item="error"}
-						<li>{$error}</li>
-					{/foreach}
-					</ol>
-{/if}
-				</div>
-				<br />
-{if isset($warningSslMessage)}
-				<div class="warn">{$warningSslMessage}</div>
-{/if}
-				<div id="login">
-					<h1>{$shop_name}</h1>
-{if !isset($wrong_folder_name) && !isset($wrong_install_name)}
-						<form action="#" id="login_form" method="post">
-							<div class="field">
-								<label for="email">{l s='Email address:'}</label>
-								<input type="text" id="email" name="email" class="input email_field" tabindex="1" value="{if isset($email)}{$email|escape:'htmlall':'UTF-8'}{/if}" />
-							</div>					
-							<div class="field">
-								<label for="passwd">{l s='Password:'}</label>
-								<input id="passwd" type="password" name="passwd" class="input password_field" tabindex="2" value="{if isset($password)}{$password}{/if}"/>
-							</div>					
-							<div class="field">
-								<input type="submit" name="submitLogin" value="{l s='Log in'}" tabindex="3" class="button fl margin-right-5" />					
-								<p class="fl no-margin hide ajax-loader">
-									<img src="../img/loader.gif" alt="" />
-								</p>					
-								<p class="fr no-margin">
-									<a href="#" class="show-forgot-password">{l s='Lost password?'}</a>
-								</p>
-								<div class="clear"></div>
-							</div>
-							<input type="hidden" name="redirect" id="redirect" value="{$redirect}"/>
-						</form>					
-						<form action="#" id="forgot_password_form" method="post" class="hide">
-							<h2 class="no-margin">{l s='Forgot your password?'}</h2>
-							<p class="bold">{l s='In order to receive your access code by email, please enter the address you provided during the registration process.'}</p>					
-							<div class="field">
-								<label>{l s='Email address:'}</label>
-								<input type="text" name="email_forgot" id="email_forgot" class="input email_field" />
-							</div>					
-							<div class="field">
-								<input type="submit" name="submit" value="{l s='Send'}" class="button fl margin-right-5" />					
-								<p class="fl no-margin hide ajax-loader">
-									<img src="../img/loader.gif" alt=""  />
-								</p>					
-								<p class="fr no-margin">
-									<a href="#" class="show-login-form">{l s='Back to login'}</a>
-								</p>
-								<div class="clear"></div>
-							</div>
-						</form>
-{else}
-						<div class="padding-30">
-							<p>{l s='For security reasons, you cannot connect to the Back Office until after you have:'}</p>
-							<ul>
-								{if isset($wrong_install_name) && $wrong_install_name == true}<li>{l s='deleted the /install folder'}</li>{/if}
-								{if isset($wrong_folder_name) && $wrong_folder_name == true}<li>{l s='renamed the /admin folder (e.g. %s)' sprintf=$randomNb}</li>{/if}
-							</ul>
-							<p><a href="{$adminUrl|escape:'htmlall':'UTF-8'}">{l s='Please then access this page by the new URL (e.g. %s)' sprintf=$adminUrl}</a></p>
+<script type="text/javascript">
+	var there_are = '{l s='There are'}';
+	var there_is = '{l s='There is'}';
+	var label_errors = '{l s='errors'}';
+	var label_error = '{l s='error'}';
+</script>
+<div id="login-panel">
+	<div id="login-header">
+		<h1 class="text-center">
+			<img id="logo" width="40px" src="{$img_dir}icon-prestashop.svg"/>
+			PRESTASHOP
+		</h1>
+		<hr/>
+		<h4 class="text-center">{$shop_name}</h4>
+		<hr/>
+		<div id="error" class="hide alert alert-danger">
+		{if isset($errors)}
+			<h4>
+				{if $nbErrors > 1}
+					{l s='There are %d errors.' sprintf=$nbErrors}
+				{else}{l s='There is %d error.' sprintf=$nbErrors}
+				{/if}
+			</h4>
+			<ol>
+				{foreach from=$errors item="error"}
+				<li>{$error}</li>
+				{/foreach}
+			</ol>
+		{/if}
+		</div>
+
+		{if isset($warningSslMessage)}
+		<div class="alert alert-warning">{$warningSslMessage}</div>
+		{/if}
+	</div>
+	<div class="flip-container">
+		<div class="flipper">
+			<div class="front panel">
+				{if !isset($wrong_folder_name) && !isset($wrong_install_name)}
+				<form action="#" id="login_form" method="post">
+					<div class="form-group">
+						<label class="control-label" for="email">{l s='Email address'}</label>
+						<div class="input-group">
+							<span class="input-group-addon"><i class="icon-envelope"></i></span>
+							<input name="email" type="text" id="email" class="form-control" value="{if isset($email)}{$email|escape:'html':'UTF-8'}{/if}" autofocus="autofocus" tabindex="1" placeholder="test@example.com" />
 						</div>
-{/if}
-				</div>
-				<h2><a href="http://www.prestashop.com">&copy; 2005 - {$smarty.now|date_format:"%Y"} Copyright by PrestaShop. all rights reserved.</a></h2>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="passwd">
+							{l s='Password'}
+						</label>
+						<div class="input-group">
+							<span class="input-group-addon"><i class="icon-key"></i></span>
+							<input name="passwd" type="password" id="passwd" class="form-control" value="{if isset($password)}{$password}{/if}" tabindex="2" placeholder="{l s='Password'}" />
+						</div>
+					</div>
+					<div class="form-group clearfix">
+						<div id="remind-me" class="checkbox pull-left">
+							<label for="stay_logged_in">
+								<input name="stay_logged_in" type="checkbox" id="stay_logged_in" value="1"	tabindex="3"/>
+								{l s='Keep me logged in'}
+							</label>
+						</div>
+						<a href="#" class="show-forgot-password pull-right" >
+							{l s='Lost password'}
+						</a>
+					</div>
+					<div class="panel-footer">
+						<button name="submitLogin" type="submit" tabindex="4" class="btn btn-default btn-lg btn-block ladda-button" data-style="slide-up" data-spinner-color="black" >
+							<span class="ladda-label">
+								<i class="icon-check text-success"></i>
+								{l s='Log in'}
+							</span>
+						</button>
+					</div>
+					<input type="hidden" name="redirect" id="redirect" value="{$redirect}"/>
+				</form>
 			</div>
+
+			<div class="back panel">
+				<form action="#" id="forgot_password_form" method="post">
+					<div class="alert alert-info">
+						<h4>{l s='Forgot your password?'}</h4>
+						<p>{l s='In order to receive your access code by email, please enter the address you provided during the registration process.'}</p>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="email_forgot">
+							{l s='Email'}
+						</label>
+						<div class="input-group">
+							<span class="input-group-addon"><i class="icon-envelope"></i></span>
+							<input type="text" name="email_forgot" id="email_forgot" class="form-control" autofocus="autofocus" tabindex="5" placeholder="test@example.com" />
+						</div>
+					</div>
+					<div class="panel-footer">
+						<button type="button" href="#" class="btn btn-default show-login-form" tabindex="7">
+							<i class="icon-caret-left"></i>
+							{l s='Back to login'}
+						</button>
+						<button class="btn btn-default pull-right" name="submitLogin" type="submit" tabindex="6">
+							<i class="icon-ok text-success"></i>
+							{l s='Send'}
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		{else}
+		<div class="alert alert-danger">
+			<p>{l s='For security reasons, you cannot connect to the Back Office until you have:'}</p>
+			<ul>
+				{if isset($wrong_install_name) && $wrong_install_name == true}
+					<li>{l s='deleted the /install folder'}</li>
+				{/if}
+				{if isset($wrong_folder_name) && $wrong_folder_name == true}
+					<li>{l s='renamed the /admin folder (e.g. %s)' sprintf=$randomNb}</li>
+				{/if}
+			</ul>
+			<p>
+				<a href="{$adminUrl|escape:'html':'UTF-8'}">
+					{l s='Please then access this page by the new URL (e.g. %s)' sprintf=$adminUrl}
+				</a>
+			</p>
+		</div>
+		{/if}
+	</div>
+	<div id="login-footer">
+		<p class="text-center text-muted">
+			<a href="http://www.prestashop.com/" onclick="return !window.open(this.href);">
+				&copy; PrestaShop&#8482; 2007-{$smarty.now|date_format:"%Y"} - All rights reserved
+			</a>
+		</p>
+		<p class="text-center">
+			<a class="link-social link-twitter" href="https://twitter.com/PrestaShop" target="_blank" title="Twitter">
+				<i class="icon-twitter"></i>
+			</a>
+			<a class="link-social link-facebook" href="https://www.facebook.com/prestashop" target="_blank" title="Facebook">
+				<i class="icon-facebook"></i>
+			</a>
+			<a class="link-social link-github" href="https://github.com/PrestaShop/PrestaShop/" target="_blank" title="Github">
+				<i class="icon-github"></i>
+			</a>
+			<a class="link-social link-google" href="https://plus.google.com/+prestashop/" target="_blank" title="Google">
+				<i class="icon-google-plus"></i>
+			</a>
+		</p>
+	</div>
+</div>
+	

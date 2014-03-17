@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,7 +40,7 @@ if (!headers_sent())
 	header('Content-Type: text/html; charset=utf-8');
 
 /* No settings file? goto installer... */
-if (!file_exists(dirname(__FILE__).'/settings.inc.php'))
+if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 {
 	$dir = ((substr($_SERVER['REQUEST_URI'], -1) == '/' || is_dir($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : dirname($_SERVER['REQUEST_URI']).'/');
 	if (!file_exists(dirname(__FILE__).'/../install'))
@@ -48,10 +48,9 @@ if (!file_exists(dirname(__FILE__).'/settings.inc.php'))
 	header('Location: install/');
 	exit;
 }
-
-require_once(dirname(__FILE__).'/settings.inc.php');
-
-require_once(dirname(__FILE__).'/autoload.php');
+//include settings file only if we are not in multi-tenancy mode 
+require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
+require_once(_PS_CONFIG_DIR_.'autoload.php');
 
 if (_PS_DEBUG_PROFILING_)
 {
@@ -93,14 +92,14 @@ $context = Context::getContext();
 try 
 {
 	$context->shop = Shop::initialize();
-	if (Tools::isEmpty($theme_name = $context->shop->getTheme()) && !defined('_PS_ADMIN_DIR_'))
- 		throw new PrestaShopException(Tools::displayError('Current theme unselected. Please check your theme configuration.'));
+	$context->theme = new Theme((int)$context->shop->id_theme);
+	if ((Tools::isEmpty($theme_name = $context->shop->getTheme()) || !Validate::isLoadedObject($context->theme)) && !defined('_PS_ADMIN_DIR_'))
+		throw new PrestaShopException(Tools::displayError('Current theme unselected. Please check your theme configuration.'));
 }
 catch (PrestaShopException $e)
 {
 	$e->displayMessage();
 }
-
 define('_THEME_NAME_', $theme_name);
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
@@ -124,15 +123,14 @@ $context->country = $defaultCountry;
 @date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
 
 /* Set locales */
-$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY').'.UTF-8');
-setlocale(LC_COLLATE, $locale);
-setlocale(LC_CTYPE, $locale);
-setlocale(LC_TIME, $locale);
-setlocale(LC_NUMERIC, 'en_US.UTF-8');
+$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY'));
+/* Please do not use LC_ALL here http://www.php.net/manual/fr/function.setlocale.php#25041 */
+setlocale(LC_COLLATE, $locale.'.UTF-8', $locale.'.utf8');
+setlocale(LC_CTYPE, $locale.'.UTF-8', $locale.'.utf8');
+setlocale(LC_TIME, $locale.'.UTF-8', $locale.'.utf8');
+setlocale(LC_NUMERIC, 'en_US.UTF-8', 'en_US.utf8');
 
 /* Instantiate cookie */
-
-
 $cookie_lifetime = (int)(defined('_PS_ADMIN_DIR_') ? Configuration::get('PS_COOKIE_LIFETIME_BO') : Configuration::get('PS_COOKIE_LIFETIME_FO'));
 $cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
 
@@ -179,12 +177,11 @@ if (!defined('_PS_ADMIN_DIR_'))
 	if (isset($cookie->id_customer) && (int)$cookie->id_customer)
 	{
 		$customer = new Customer($cookie->id_customer);
-		if(!Validate::isLoadedObject($customer))
-			$customer->logout();
+		if (!Validate::isLoadedObject($customer))
+			$context->cookie->logout();
 		else
 		{
-			$customer->logged = $cookie->logged;
-
+			$customer->logged = true;
 			if ($customer->id_lang != $context->language->id)
 			{
 				$customer->id_lang = $context->language->id;
@@ -199,7 +196,7 @@ if (!defined('_PS_ADMIN_DIR_'))
 		
 		// Change the default group
 		if (Group::isFeatureActive())
-			$customer->id_default_group = Configuration::get('PS_UNIDENTIFIED_GROUP');
+			$customer->id_default_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
 	}
 	$customer->id_guest = $cookie->id_guest;
 	$context->customer = $customer;

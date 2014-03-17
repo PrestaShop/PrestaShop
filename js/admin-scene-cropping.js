@@ -1,5 +1,5 @@
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -81,10 +81,10 @@ function editThisZone(aInFixedZoneElement) {
 	$fixedZoneElement = $(aInFixedZoneElement).parent();
 	var x1 = $fixedZoneElement.css('margin-left');	
 	x1 = x1.substring(0,x1.indexOf('px'));
-	x1 = parseInt(x1);
+	x1 = parseInt(x1)-parseInt($('#large_scene_image').css('margin-left').replace('px', ''));
 	var y1 = $fixedZoneElement.css('margin-top');	
 	y1 = y1.substring(0,y1.indexOf('px'));
-	y1 = parseInt(y1);
+	y1 = parseInt(y1)-parseInt($('#large_scene_image').css('margin-top').replace('px', ''));
 	var width = $fixedZoneElement.css('width');	
 	width = width.substring(0,width.indexOf('px'));
 	var x2 = x1 + parseInt(width);
@@ -105,7 +105,6 @@ function editThisZone(aInFixedZoneElement) {
 	
 	$('#product_autocomplete_input').val( $fixedZoneElement.find('p').text() );
 	showAutocompleteBox(x1, y1+parseInt(height));
-	
 	$('#large_scene_image').imgAreaSelect({ x1: x1, y1: y1, x2: x2, y2: y2 });
 }
 
@@ -131,21 +130,22 @@ function afterTextInserted (event, data, formatted) {
 	zoneCurrent++;
 	var idProduct = data[1];
 	var nameProduct = data[0];
-	var x1 = selectionCurrent.x1;
-	var y1 = selectionCurrent.y1;
+	var x1 = parseInt($('#large_scene_image').css('margin-left').replace('px', '')) + selectionCurrent.x1;
+	var y1 = parseInt($('#large_scene_image').css('margin-top').replace('px', '')) + selectionCurrent.y1;
 	var width = selectionCurrent.width;
 	var height = selectionCurrent.height;
+
 	addProduct(zoneCurrent, x1, y1, width, height, idProduct, nameProduct);
 	
 }
 
-function addProduct(zoneIndex, x1, y1, width, height, idProduct, nameProduct){
+function addProduct(zoneIndex, x1, y1, width, height, idProduct, nameProduct) {
 	$('#large_scene_image') 
 		.imgAreaSelect({hide:true})
 		.before('\
 			<div class="fixed_zone" id="visual_zone_' + zoneIndex + '" style="color:black;overflow:hidden;margin-left:' + x1 + 'px; margin-top:' + y1 + 'px; width:' + width + 'px; height :' + height + 'px; background-color:white;border:1px solid black; position:absolute;" title="' + nameProduct + '">\
-				<input type="hidden" name="zones[' + zoneIndex + '][x1]" value="' + x1 + '"/>\
-				<input type="hidden" name="zones[' + zoneIndex + '][y1]" value="' + y1 + '"/>\
+				<input type="hidden" name="zones[' + zoneIndex + '][x1]" value="' + (x1-parseInt($('#large_scene_image').css('margin-left').replace('px', ''))) + '"/>\
+				<input type="hidden" name="zones[' + zoneIndex + '][y1]" value="' + (y1-parseInt($('#large_scene_image').css('margin-top').replace('px', ''))) + '"/>\
 				<input type="hidden" name="zones[' + zoneIndex + '][width]" value="' + width + '"/>\
 				<input type="hidden" name="zones[' + zoneIndex + '][height]" value="' + height + '"/>\
 				<input type="hidden" name="zones[' + zoneIndex + '][id_product]" value="' + idProduct + '"/>\
@@ -191,7 +191,9 @@ $(window).load(function () {
 	/* load existing products zone */
 	for(var i = 0; i < startingData.length; i++)
 	{
-		addProduct(i, startingData[i][2], startingData[i][3], startingData[i][4], startingData[i][5], startingData[i][1], startingData[i][0]);
+		addProduct(i, startingData[i][2]+parseInt($('#large_scene_image').css('margin-left').replace('px', '')), 
+			startingData[i][3]+parseInt($('#large_scene_image').css('margin-top').replace('px', '')),
+			startingData[i][4], startingData[i][5], startingData[i][1], startingData[i][0]);
 	}
 	zoneCurrent = startingData.length;
 	

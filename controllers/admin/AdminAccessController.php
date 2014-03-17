@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -31,6 +31,8 @@ class AdminAccessControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
+		$this->show_toolbar = false;
 		$this->table = 'access';
 		$this->className = 'Profile';
 		$this->multishop_context = Shop::CONTEXT_ALL;
@@ -79,15 +81,17 @@ class AdminAccessControllerCore extends AdminController
 				WHERE id_profile = '.(int)$profile['id_profile'].'
 				ORDER BY m.name
 			');
-			foreach ($modules[$profile['id_profile']] as &$module)
+			foreach ($modules[$profile['id_profile']] as $k => &$module)
 			{
 				$m = Module::getInstanceById($module['id_module']);
 				// the following condition handles invalid modules
 				if ($m)
 					$module['name'] = $m->displayName;
 				else
-					$this->warnings[] = sprintf($this->l('%s module is installed in the database but its files are missing/incompatible.'), '<b>'.$module['name'].'</b>');
+					unset($modules[$profile['id_profile']][$k]);
 			}
+
+			uasort($modules[$profile['id_profile']], array($this, 'sortModuleByName'));
 		}
 
 		$this->fields_form = array('');
@@ -114,20 +118,31 @@ class AdminAccessControllerCore extends AdminController
 	{
 		$this->initTabModuleList();
 		$this->display = 'edit';
-		// toolbar (save, cancel, new, ..)
-		$this->initToolbar();
-		unset($this->toolbar_btn['save']);
-		unset($this->toolbar_btn['cancel']);
-
+		$this->initTabModuleList();
 		if (!$this->loadObject(true))
 			return;
 
-		$this->content .= $this->renderForm();
+		$this->initPageHeaderToolbar();
 
+		$this->content .= $this->renderForm();
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
+	}
+
+	public function initToolbarTitle()
+	{
+		$this->toolbar_title = array_unique($this->breadcrumbs);
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+		unset($this->page_header_toolbar_btn['cancel']);
 	}
 
 	public function ajaxProcessUpdateAccess()
@@ -141,7 +156,7 @@ class AdminAccessControllerCore extends AdminController
 		{
 			$perm = Tools::getValue('perm');
 			if (!in_array($perm, array('view', 'add', 'edit', 'delete', 'all')))
-				throw new PrestaShopException('permission not exists');
+				throw new PrestaShopException('permission does not exist');
 
 			$enabled = (int)Tools::getValue('enabled');
 			$id_tab = (int)Tools::getValue('id_tab');
@@ -202,7 +217,7 @@ class AdminAccessControllerCore extends AdminController
 			$id_profile = (int)Tools::getValue('id_profile');
 
 			if (!in_array($perm, array('view', 'configure')))
-				throw new PrestaShopException('permission not exists');
+				throw new PrestaShopException('permission does not exist');
 
 			if ($id_module == -1)
 				$sql = '
@@ -230,5 +245,10 @@ class AdminAccessControllerCore extends AdminController
 	public function getCurrentProfileId()
 	{
 		return (isset($_GET['id_profile']) && !empty($_GET['id_profile']) && is_numeric($_GET['id_profile'])) ? (int)$_GET['id_profile'] : 1;
+	}
+
+	private function sortModuleByName($a, $b)
+	{
+		return strnatcmp($a['name'], $b['name']);
 	}
 }

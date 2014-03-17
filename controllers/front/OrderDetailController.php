@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -170,9 +170,9 @@ class OrderDetailControllerCore extends FrontController
 				$this->context->smarty->assign(array(
 					'shop_name' => strval(Configuration::get('PS_SHOP_NAME')),
 					'order' => $order,
-					'return_allowed' => (int)($order->isReturnable()),
+					'return_allowed' => (int)$order->isReturnable(),
 					'currency' => new Currency($order->id_currency),
-					'order_state' => (int)($id_order_state),
+					'order_state' => (int)$id_order_state,
 					'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
 					'invoice' => (OrderState::invoiceAvailable($id_order_state) && count($order->getInvoicesCollection())),
 					'order_history' => $order->getHistory($this->context->language->id, false, true),

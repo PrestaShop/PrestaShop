@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -37,13 +37,16 @@ class ModuleFrontControllerCore extends FrontController
 	public function __construct()
 	{
 		$this->controller_type = 'modulefront';
-		
+
 		$this->module = Module::getInstanceByName(Tools::getValue('module'));
 		if (!$this->module->active)
 			Tools::redirect('index');
 		$this->page_name = 'module-'.$this->module->name.'-'.Dispatcher::getInstance()->getController();
 
 		parent::__construct();
+
+		$this->display_column_left = Context::getContext()->theme->hasLeftColumn($this->page_name);
+		$this->display_column_right = Context::getContext()->theme->hasRightColumn($this->page_name);
 	}
 
 	/**
@@ -53,14 +56,10 @@ class ModuleFrontControllerCore extends FrontController
 	 */
 	public function setTemplate($template)
 	{
-		if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$this->module->name.'/'.$template))
-			$this->template = _PS_THEME_DIR_.'modules/'.$this->module->name.'/'.$template;
-		elseif (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$template))
-			$this->template = _PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$template;
-		elseif (Tools::file_exists_cache($this->getTemplatePath().$template))
-			$this->template = $this->getTemplatePath().$template;
-		else
+		if (!$path = $this->getTemplatePath($template))
 			throw new PrestaShopException("Template '$template' not found");
+
+		$this->template = $path;
 	}
 
 	/**
@@ -68,8 +67,15 @@ class ModuleFrontControllerCore extends FrontController
 	 *
 	 * @return string
 	 */
-	public function getTemplatePath()
+	public function getTemplatePath($template)
 	{
-		return _PS_MODULE_DIR_.$this->module->name.'/views/templates/front/';
+		if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$this->module->name.'/'.$template))
+			return _PS_THEME_DIR_.'modules/'.$this->module->name.'/'.$template;
+		elseif (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$template))
+			return _PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$template;
+		elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$this->module->name.'/views/templates/front/'.$template))
+			return _PS_MODULE_DIR_.$this->module->name.'/views/templates/front/'.$template;
+
+		return false;
 	}
 }

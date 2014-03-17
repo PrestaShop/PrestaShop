@@ -1,5 +1,5 @@
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,11 +18,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+var fees_is_hide = false;
 
 $(document).ready(function() {
 	bind_inputs();
@@ -30,7 +31,37 @@ $(document).ready(function() {
 	if (parseInt($('input[name="is_free"]:checked').val()))
 		is_freeClick($('input[name="is_free"]:checked'));
 	displayRangeType();
-	
+
+	$('#attachement_fileselectbutton').click(function(e) {
+		$('#carrier_logo_input').trigger('click');
+	});
+
+	$('#attachement_filename').click(function(e) {
+		$('#carrier_logo_input').trigger('click');
+	});
+
+	$('#carrier_logo_input').change(function(e) {
+		if ($(this)[0].files !== undefined)
+		{
+			var files = $(this)[0].files;
+			var name  = '';
+
+			$.each(files, function(index, value) {
+				name += value.name+', ';
+			});
+
+			$('#attachement_filename').val(name.slice(0, -2));
+		}
+		else // Internet Explorer 9 Compatibility
+		{
+			var name = $(this).val().split(/[\\/]/);
+			$('#attachement_filename').val(name[name.length-1]);
+		}
+	});
+
+	$('#carrier_logo_remove').click(function(e) {
+		$('#attachement_filename').val('');
+	});
 });
 
 function initCarrierWizard()
@@ -70,10 +101,10 @@ function displayRangeType()
 
 function onShowStepCallback()
 {
-	$('.anchor li a').each( function () {
-		$(this).parent('li').addClass($(this).attr('class'));
+	$('.anchor li a').each(function () {
+		$(this).closest('li').addClass($(this).attr('class'));
 	});
-	$('#carrier_logo_block').prependTo($('div.content').filter(function() { return $(this).css('display') != 'none' }).children('.defaultForm').children('fieldset'));
+	$('#carrier_logo_block').prependTo($('div.content').filter(function() { return $(this).css('display') != 'none' }).find('.defaultForm').find('fieldset'));
 	resizeWizard();
 }
 
@@ -85,7 +116,7 @@ function onFinishCallback(obj, context)
 		url : validate_url,
 		async: false,
 		dataType: 'json',
-		data : $('#carrier_wizard .stepContainer .content form').serialize() + '&action=finish_step&ajax=1',
+		data : $('#carrier_wizard .stepContainer .content form').serialize() + '&action=finish_step&ajax=1&step_number='+context.fromStep,
 		success : function(data) {
 			if (data.has_error)
 			{				
@@ -151,13 +182,13 @@ function displaySummary()
 	var range_inf = summary_translation_undefined;
 	var range_sup = summary_translation_undefined;
 	
-	$('tr.range_inf td input').each( function()
+	$('tr.range_inf td input').each(function()
 	{
 		if (!isNaN(parseFloat($(this).val())) && (range_inf == summary_translation_undefined || parseFloat(range_inf) > parseFloat($(this).val())))
 			range_inf = $(this).val();
 	});
 
-	$('tr.range_sup td input').each( function(){
+	$('tr.range_sup td input').each(function(){
 
 		if (!isNaN(parseFloat($(this).val())) && (range_sup == summary_translation_undefined || parseFloat(range_sup) < parseFloat($(this).val())))
 			range_sup = $(this).val();
@@ -175,21 +206,21 @@ function displaySummary()
 	$('#summary_zones').html('');
 	$('.input_zone').each(function(){
 		if ($(this).attr('checked'))
-			$('#summary_zones').html($('#summary_zones').html() + '<li><strong>' + $(this).parent().prev().text() + '</strong></li>');
+			$('#summary_zones').html($('#summary_zones').html() + '<li><strong>' + $(this).closest('tr').find('label').text() + '</strong></li>');
 	});
 	
 	// Group restrictions
 	$('#summary_groups').html('');
 	$('input[name$="groupBox[]"]').each(function(){
 		if ($(this).attr('checked'))
-			$('#summary_groups').html($('#summary_groups').html() + '<li><strong>' + $(this).parent().next().next().text() + '</strong></li>');
+			$('#summary_groups').html($('#summary_groups').html() + '<li><strong>' + $(this).closest('tr').find('td:eq(2)').text() + '</strong></li>');
 	});
 	
 	// shop restrictions
 	$('#summary_shops').html('');
 	$('.input_shop').each(function(){
 		if ($(this).attr('checked'))
-			$('#summary_shops').html($('#summary_shops').html() + '<li><strong>' + $(this).parent().text() + '</strong></li>');
+			$('#summary_shops').html($('#summary_shops').html() + '<li><strong>' + $(this).closest().text() + '</strong></li>');
 	});
 }
 
@@ -217,9 +248,8 @@ function validateSteps(fromStep, toStep)
 				if (datas.has_error)
 				{
 					is_ok = false;
-					
-					$('input').focus( function () {
-						$(this).removeClass('field_error');
+					$('div.input-group input').focus(function () {
+						$(this).closest('div.input-group').removeClass('has-error');
 					});
 					displayError(datas.errors, fromStep);
 					resizeWizard();
@@ -235,16 +265,18 @@ function validateSteps(fromStep, toStep)
 
 function displayError(errors, step_number)
 {
+	$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
 	$('.wizard_error').remove();
-	str_error = '<div class="error wizard_error" style="display:none"><span style="float:right"><a id="hideError" href="#"><img alt="X" src="../img/admin/close.png" /></a></span><ul>';
+	str_error = '<div class="error wizard_error" style="display:none"><ul>';
 	for (var error in errors)
 	{
-		$('#carrier_wizard').smartWizard('setError',{stepnum:step_number,iserror:true});
-		$('input[name="'+error+'"]').addClass('field_error');
+		$('#carrier_wizard .actionBar a.btn').addClass('disabled');
+		$('input[name="'+error+'"]').closest('div.input-group').addClass('has-error');
 		str_error += '<li>'+errors[error]+'</li>';
 	}
 	$('#step-'+step_number).prepend(str_error+'</ul></div>');
 	$('.wizard_error').fadeIn('fast');
+	bind_inputs();
 }
 
 function resizeWizard()
@@ -254,44 +286,52 @@ function resizeWizard()
 
 function bind_inputs()
 {
-	$('input').focus( function () {
-		$(this).removeClass('field_error');
+	$('input').focus(function () {
+		$(this).closest('div.input-group').removeClass('has-error');
+		$('#carrier_wizard .actionBar a.btn').not('.buttonFinish').removeClass('disabled');
 		$('.wizard_error').fadeOut('fast', function () { $(this).remove()});
 	});
 	
 	$('tr.delete_range td button').off('click').on('click', function () {
 		if (confirm(delete_range_confirm))
 		{
-			index = $(this).parent('td').index();
+			index = $(this).closest('td').index();
 			$('tr.range_sup td:eq('+index+'), tr.range_inf td:eq('+index+'), tr.fees_all td:eq('+index+'), tr.delete_range td:eq('+index+')').remove();
-			$('tr.fees').each( function () {
-				$(this).children('td:eq('+index+')').remove();
+			$('tr.fees').each(function () {
+				$(this).find('td:eq('+index+')').remove();
 			});
 			rebuildTabindex();
 		}
 		return false;
 	});
 	
-	$('tr.fees td input:checkbox').off('change').on('change', function () {
+	$('tr.fees td input:checkbox').off('change').on('change', function () 
+	{
 		if($(this).is(':checked'))
 		{
-			$(this).closest('tr').children('td').each( function () {
+			$(this).closest('tr').find('td').each(function () {
 				index = $(this).index();
 				if ($('tr.fees_all td:eq('+index+')').hasClass('validated'))
-					$(this).children('input:text').removeAttr('disabled');
+				{
+					enableGlobalFees(index);
+					$(this).find('div.input-group input:text').removeAttr('disabled');
+				}
+				else
+					disabledGlobalFees(index);
 			});
 		}
 		else
-			$(this).closest('tr').children('td').children('input:text').attr('disabled', 'disabled');
+			$(this).closest('tr').find('td').find('div.input-group input:text').attr('disabled', 'disabled').val('');
+			
 		return false;
 	});
 	
-	$('tr.range_sup td input:text, tr.range_inf td input:text').focus( function () {
-		$(this).removeClass('field_error');
+	$('tr.range_sup td input:text, tr.range_inf td input:text').focus(function () {
+		$(this).closest('div.input-group').removeClass('has-error');
 	});
 	
-	$('tr.range_sup td input:text, tr.range_inf td input:text').keypress( function (evn) {
-		index = $(this).parent('td').index();
+	$('tr.range_sup td input:text, tr.range_inf td input:text').keypress(function (evn) {
+		index = $(this).closest('td').index();
 		if (evn.keyCode == 13)
 		{
 			if (validateRange(index))
@@ -302,7 +342,7 @@ function bind_inputs()
 		}
 	});
 	
-	$('tr.fees_all td input:text').keypress( function (evn) {
+	$('tr.fees_all td input:text').keypress(function (evn) {
 		index = $(this).parent('td').index();
 		if (evn.keyCode == 13)
 			return false;
@@ -313,10 +353,9 @@ function bind_inputs()
 		highlight: false,
 		wait: 1000,
 		callback: function() { 
-
-			index = $(this.el).parent('td').index();
-			range_sup = $('tr.range_sup td:eq('+index+')').children('input:text').val().trim();
-			range_inf = $('tr.range_inf td:eq('+index+')').children('input:text').val().trim();
+			index = $(this.el).closest('td').index();
+			range_sup = $('tr.range_sup td:eq('+index+')').find('div.input-group input:text').val().trim();
+			range_inf = $('tr.range_inf td:eq('+index+')').find('div.input-group input:text').val().trim();
 			if (range_sup != '' && range_inf != '')
 			{
 				if (validateRange(index))
@@ -328,10 +367,10 @@ function bind_inputs()
 	});
 	
 	$(document.body).off('change', 'tr.fees_all td input').on('change', 'tr.fees_all td input', function() {
-	   index = $(this).parent('td').index();
+	   index = $(this).closest('td').index();
 		val = $(this).val();
 		$(this).val('');
-		$('tr.fees').each( function () {
+		$('tr.fees').each(function () {
 			$(this).find('td:eq('+index+') input:text:enabled').val(val);
 		});
 		
@@ -370,32 +409,32 @@ function is_freeClick(elt)
 	var is_free = $(elt);
 	if (parseInt(is_free.val()))
 		hideFees();
-	else
+	else if (fees_is_hide)
 		showFees();
 }
 
 function hideFees()
 {
-	$('tr.range_inf td, tr.range_sup td, tr.fees_all td, tr.fees td').each( function () {
+	$('tr.range_inf td, tr.range_sup td, tr.fees_all td, tr.fees td').each(function () {
 		if ($(this).index() >= 2)
 		{
 			$(this).find('input:text, button').val('').attr('disabled', 'disabled').css('background-color', '#999999').css('border-color', '#999999');
 			$(this).css('background-color', '#999999');
 		}
 	});
+	fees_is_hide = true;
 }
 
 function showFees()
 {
-	$('tr.range_inf td, tr.range_sup td, tr.fees_all td, tr.fees td').each( function () {
+	$('tr.range_inf td, tr.range_sup td, tr.fees_all td, tr.fees td').each(function () {
 		if ($(this).index() >= 2)
 		{
 			//enable only if zone is active
-			tr = $(this).parent('tr');
+			tr = $(this).closest('tr');
 			validate = $('tr.fees_all td:eq('+$(this).index()+')').hasClass('validated');
-			if ($(tr).index() > 2 && $(tr).find('td:eq(1) input').prop('checked') && (validate || !$(tr).hasClass('range_sup') || !$(tr).hasClass('range_inf')))
-					$(this).find('input:text').removeAttr('disabled');
-			
+			if ($(tr).index() > 2 && $(tr).find('td:eq(1) input').attr('checked') && validate || !$(tr).hasClass('range_sup') || !$(tr).hasClass('range_inf'))
+				$(this).find('div.input-group input:text').removeAttr('disabled');
 			$(this).find('input:text, button').css('background-color', '').css('border-color', '');
 			$(this).find('button').css('background-color', '').css('border-color', '').removeAttr('disabled');
 			$(this).css('background-color', '');
@@ -405,44 +444,45 @@ function showFees()
 
 function validateRange(index)
 {
+	$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
 	$('.wizard_error').remove();
 	//reset error css
-	$('tr.range_sup td input:text').removeClass('field_error');
-	$('tr.range_inf td input:text').removeClass('field_error');
+	$('tr.range_sup td input:text').closest('div.input-group').removeClass('has-error');
+	$('tr.range_inf td input:text').closest('div.input-group').removeClass('has-error');
 	
 	is_ok = true;
-	range_sup = parseFloat($('tr.range_sup td:eq('+index+')').children('input:text').val().trim());
-	range_inf = parseFloat($('tr.range_inf td:eq('+index+')').children('input:text').val().trim());
+	range_sup = parseFloat($('tr.range_sup td:eq('+index+')').find('div.input-group input:text').val().trim());
+	range_inf = parseFloat($('tr.range_inf td:eq('+index+')').find('div.input-group input:text').val().trim());
 
 	if (isNaN(range_sup) || range_sup.length === 0)
 	{
-		$('tr.range_sup td:eq('+index+')').children('input:text').addClass('field_error');
+		$('tr.range_sup td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
 		is_ok = false;
 		displayError([invalid_range], $("#carrier_wizard").smartWizard('currentStep'));
 	}
 	else if (is_ok && (isNaN(range_inf) || range_inf.length === 0))
 	{
-		$('tr.range_inf td:eq('+index+')').children('input:text').addClass('field_error');
+		$('tr.range_inf td:eq('+index+')').closest('div.input-group input:text').closest('div.input-group').addClass('has-error');
 		is_ok = false;
 		displayError([invalid_range], $("#carrier_wizard").smartWizard('currentStep'));
 	}
 	else if (is_ok && range_inf >= range_sup)
 	{
-		$('tr.range_sup td:eq('+index+')').children('input:text').addClass('field_error');
-		$('tr.range_inf td:eq('+index+')').children('input:text').addClass('field_error');
+		$('tr.range_sup td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
+		$('tr.range_inf td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
 		is_ok = false;
 		displayError([invalid_range], $("#carrier_wizard").smartWizard('currentStep'));
 	}
 	else if (is_ok && index > 2) //check range only if it's not the first range
 	{	
-		$('tr.range_sup td').not('.range_type, .range_sign, tr.range_sup td:last').each( function () 
+		$('tr.range_sup td').not('.range_type, .range_sign, tr.range_sup td:last').each(function () 
 		{
 			if ($('tr.fees_all td:eq('+index+')').hasClass('validated'))
 			{
 				is_ok = false;
 				curent_index = $(this).index();
 	
-				current_sup = $(this).find('input').val();
+				current_sup = $(this).find('div.input-group input').val();
 				current_inf = $('tr.range_inf td:eq('+curent_index+') input').val();
 				
 				if ($('tr.range_inf td:eq('+curent_index+1+') input').length)
@@ -460,40 +500,41 @@ function validateRange(index)
 
 		if (!is_ok)
 		{
-			$('tr.range_sup td:eq('+index+')').children('input:text').addClass('field_error');
-			$('tr.range_inf td:eq('+index+')').children('input:text').addClass('field_error');
+			$('tr.range_sup td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
+			$('tr.range_inf td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
 			displayError([range_is_overlapping], $("#carrier_wizard").smartWizard('currentStep'));
 		}
 		else
-			checkRangeContinuity();
+			isOverlapping();
 	}
 	return is_ok;
 }
 
 function enableZone(index)
 {
-	$('tr.fees').each( function () {
-		if ($(this).find('td:eq(1)').children('input[type=checkbox]:checked').length)	
-			$(this).find('td:eq('+index+')').children('input').removeAttr('disabled');
+	$('tr.fees').each(function () {
+		if ($(this).find('td:eq(1)').find('input[type=checkbox]:checked').length)	
+			$(this).find('td:eq('+index+')').find('div.input-group input').removeAttr('disabled');
 	});
 }
 
 function disableZone(index)
 {
-	$('tr.fees').each( function () {
-		$(this).find('td:eq('+index+')').children('input').attr('disabled', 'disabled');
+	$('tr.fees').each(function () {
+		$(this).find('td:eq('+index+')').find('div.input-group input').attr('disabled', 'disabled');
 	});
 }
 
 function enableRange(index)
 {
-	$('tr.fees').each( function () {
+	$('tr.fees').each(function () {
 		//only enable fees for enabled zones
-		if ($(this).children('td').children('input:checkbox').attr('checked') == 'checked')
+		if ($(this).find('td').find('input:checkbox').attr('checked') == 'checked')
 			enableZone(index);
 	});
 	$('tr.fees_all td:eq('+index+')').addClass('validated').removeClass('not_validated');
-	if ($('.zone input[type=checkbox]:checked').length)
+	
+	//if ($('.zone input[type=checkbox]:checked').length)
 		enableGlobalFees(index);
 	bind_inputs();
 }
@@ -501,19 +542,26 @@ function enableRange(index)
 function enableGlobalFees(index)
 {
 	$('span.fees_all').show();
-	$('tr.fees_all td:eq('+index+')').children('input').show().removeAttr('disabled');
-	$('tr.fees_all td:eq('+index+')').children('.currency_sign').show();
-	
+	$('tr.fees_all td:eq('+index+')').find('div.input-group input').show().removeAttr('disabled');
+	$('tr.fees_all td:eq('+index+')').find('div.input-group .currency_sign').show();	
 }
+
+function disabledGlobalFees(index)
+{
+	$('span.fees_all').hide();
+	$('tr.fees_all td:eq('+index+')').find('div.input-group input').hide().attr('disabled', 'disabled');
+	$('tr.fees_all td:eq('+index+')').find('div.input-group .currency_sign').hide();	
+}
+
 
 function disableRange(index)
 {
-	$('tr.fees').each( function () {
+	$('tr.fees').each(function () {
 		//only enable fees for enabled zones
-		if ($(this).children('td').children('input:checkbox').attr('checked') == 'checked')
+		if ($(this).find('td').find('input:checkbox').attr('checked') == 'checked')
 			disableZone(index);
 	});
-	$('tr.fees_all td:eq('+index+')').children('input').attr('disabled', 'disabled');
+	$('tr.fees_all td:eq('+index+')').find('div.input-group input').attr('disabled', 'disabled');
 	$('tr.fees_all td:eq('+index+')').removeClass('validated').addClass('not_validated');
 }
 
@@ -527,16 +575,15 @@ function add_new_range()
 	
 	last_sup_val = $('tr.range_sup td:last input').val();
 	//add new rand sup input
-	$('tr.range_sup td:last').after('<td class="center"><input name="range_sup[]" type="text" /><sup>*</sup><span class="weight_unit" style="display: none;">&nbsp; '+PS_WEIGHT_UNIT+'</span><span class="price_unit" style="display: none;">&nbsp; '+currency_sign+'</span></td>');
+	$('tr.range_sup td:last').after('<td class="range_data"><div class="input-group fixed-width-md"><span class="input-group-addon weight_unit" style="display: none;">'+PS_WEIGHT_UNIT+'</span><span class="input-group-addon price_unit" style="display: none;">'+currency_sign+'</span><input class="form-control" name="range_sup[]" type="text" /></div></td>');
 	//add new rand inf input
-	$('tr.range_inf td:last').after('<td class="border_bottom center"><input name="range_inf[]" type="text" value="'+last_sup_val+'" /><sup>*</sup><span class="weight_unit" style="display: none;">&nbsp; '+PS_WEIGHT_UNIT+'</span><span class="price_unit" style="display: none;">&nbsp; '+currency_sign+'</span></td>');
-	
-	$('tr.fees_all td:last').after('<td class="center border_top border_bottom"><input style="display:none" type="text" /><span class="currency_sign" style="display:none" >&nbsp;'+currency_sign+'</span></td>');
+	$('tr.range_inf td:last').after('<td class="border_bottom"><div class="input-group fixed-width-md"><span class="input-group-addon weight_unit" style="display: none;">'+PS_WEIGHT_UNIT+'</span><span class="input-group-addon price_unit" style="display: none;">'+currency_sign+'</span><input class="form-control" name="range_inf[]" type="text" value="'+last_sup_val+'" /></div></td>');
+	$('tr.fees_all td:last').after('<td class="border_top border_bottom"><div class="input-group fixed-width-md"><span class="input-group-addon currency_sign" style="display:none" >'+currency_sign+'</span><input class="form-control" style="display:none" type="text" /></div></td>');
 
-	$('tr.fees').each( function () {
-		$(this).children('td:last').after('<td class="center"><input disabled="disabled" name="fees['+$(this).data('zoneid')+'][]" type="text" /> &nbsp; '+currency_sign+'</td>');
+	$('tr.fees').each(function () {
+		$(this).find('td:last').after('<td><div class="input-group fixed-width-md"><span class="input-group-addon currency_sign">'+currency_sign+'</span><input class="form-control" disabled="disabled" name="fees['+$(this).data('zoneid')+'][]" type="text" /></div></td>');
 	});
-	$('tr.delete_range td:last').after('<td class="center"><button class="button">'+labelDelete+'</button</td>');
+	$('tr.delete_range td:last').after('<td><button class="btn btn-default">'+labelDelete+'</button</td>');
 	
 	bind_inputs();
 	rebuildTabindex();
@@ -547,29 +594,30 @@ function add_new_range()
 
 function delete_new_range()
 {
-	if ($('#new_range_form_placeholder').children('td').length = 1)
+	if ($('#new_range_form_placeholder').find('td').length = 1)
 		return false;
 }
 
 function checkAllFieldIsNumeric()
 {
-	$('#zones_table td input[type=text]').each( function () {
+	$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
+	$('#zones_table td input[type=text]').each(function () {
 		if (!$.isNumeric($(this).val()) && $(this).val() != '')
-			$(this).addClass('field_error');
+			$(this).closest('div.input-group').addClass('has-error');
 	});
 }
 
 function rebuildTabindex()
 {
 	i = 1;
-	$('#zones_table tr').each( function () 
+	$('#zones_table tr').each(function () 
 	{	
 		j = i;
-		$(this).children('td').each( function () 
+		$(this).find('td').each(function () 
 		{
 			j = zones_nbr + j;
-			if ($(this).index() >= 2 && $(this).find('input'))
-				$(this).find('input').attr('tabindex', j);
+			if ($(this).index() >= 2 && $(this).find('div.input-group input'))
+				$(this).find('div.input-group input').attr('tabindex', j);
 		});
 		i++;
 	});
@@ -578,8 +626,8 @@ function rebuildTabindex()
 function repositionRange(current_index, new_index)
 {
 	$('tr.range_sup, tr.range_inf, tr.fees_all, tr.fees, tr.delete_range ').each(function () {
-		$(this).find('td:eq('+current_index+')').each( function () {
-			$(this).parent('tr').find('td:eq('+new_index+')').after(this.outerHTML);
+		$(this).find('td:eq('+current_index+')').each(function () {
+			$(this).closest('tr').find('td:eq('+new_index+')').after(this.outerHTML);
 			$(this).remove();
 		});
 	});
@@ -587,20 +635,20 @@ function repositionRange(current_index, new_index)
 
 function checkRangeContinuity(reordering)
 {
-	return true;
 	reordering = typeof reordering !== 'undefined' ? reordering : false;
 	res = true;
 
-	$('tr.range_sup td').not('.range_type, .range_sign').each( function () 
+	$('tr.range_sup td').not('.range_type, .range_sign').each(function () 
 	{
 		index = $(this).index();
 		if (index > 2)
 		{
-			range_sup = parseFloat($('tr.range_sup td:eq('+index+')').children('input:text').val().trim());
-			range_inf = parseFloat($('tr.range_inf td:eq('+index+')').children('input:text').val().trim());
+			range_sup = parseFloat($('tr.range_sup td:eq('+index+')').find('div.input-group input:text').val().trim());
+			range_inf = parseFloat($('tr.range_inf td:eq('+index+')').find('div.input-group input:text').val().trim());
 			prev_index = index-1;
-			prev_range_sup = parseFloat($('tr.range_sup td:eq('+prev_index+')').children('input:text').val().trim());
-			prev_range_inf = parseFloat($('tr.range_inf td:eq('+prev_index+')').children('input:text').val().trim());
+			prev_range_sup = parseFloat($('tr.range_sup td:eq('+prev_index+')').find('div.input-group input:text').val().trim());
+			prev_range_inf = parseFloat($('tr.range_inf td:eq('+prev_index+')').find('div.input-group input:text').val().trim());
+			
 			if (range_inf < prev_range_inf || range_sup < prev_range_sup)
 			{
 				res = false;
@@ -623,17 +671,43 @@ function checkRangeContinuity(reordering)
 function getCorrectRangePosistion(current_inf, current_sup)
 {
 	new_position = false;
-	$('tr.range_sup td').not('.range_type, .range_sign').each( function () 
+	$('tr.range_sup td').not('.range_type, .range_sign').each(function () 
 	{
 		index = $(this).index();
-		range_sup = parseFloat($('tr.range_sup td:eq('+index+')').children('input:text').val().trim());
+		range_sup = parseFloat($('tr.range_sup td:eq('+index+')').find('div.input-group input:text').val().trim());
 		next_range_inf = 0
 		if ($('tr.range_inf td:eq('+index+1+')').length)
-			next_range_inf = parseFloat($('tr.range_inf td:eq('+index+1+')').children('input:text').val().trim());
+			next_range_inf = parseFloat($('tr.range_inf td:eq('+index+1+')').find('div.input-group input:text').val().trim());
 		if (current_inf >= range_sup && current_sup < next_range_inf)
 			new_position = index;
 	});
 	return new_position;
+}
+
+function isOverlapping()
+{
+	$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
+	$('tr.range_sup td').not('.range_type, .range_sign').each( function (){
+		index = $(this).index();
+		current_inf = parseInt($('.range_inf td:eq('+index+') input').val());
+		current_sup = parseInt($('.range_sup td:eq('+index+') input').val());
+
+		$('tr.range_sup td').not('.range_type, .range_sign').each( function (){
+			testing_index = $(this).index();
+			
+			if (testing_index != index) //do not test himself
+			{
+				testing_inf = parseInt($('.range_inf td:eq('+testing_index+') input').val());
+				testing_sup = parseInt($('.range_sup td:eq('+testing_index+') input').val());
+
+				if ((current_inf >= testing_inf && current_inf < testing_sup) || (current_sup > testing_inf && current_sup < testing_sup))
+				{
+					$('tr.range_sup td:eq('+testing_index+') div.input-group, tr.range_inf td:eq('+testing_index+') div.input-group').addClass('has-error');
+					displayError([overlapping_range], $("#carrier_wizard").smartWizard('currentStep'));
+				}
+			}
+		});
+	});
 }
 
 function checkAllZones(elt)
@@ -641,20 +715,20 @@ function checkAllZones(elt)
 	if($(elt).is(':checked'))
 	{
 		$('.input_zone').attr('checked', 'checked');
-		$('.fees input:text').each( function () {
+		$('.fees div.input-group input:text').each(function () {
 			index = $(this).closest('td').index();
 			enableGlobalFees(index);
 			if ($('tr.fees_all td:eq('+index+')').hasClass('validated'))
 			{
 				$(this).removeAttr('disabled');
-				$('.fees_all td:eq('+index+') input:text').removeAttr('disabled');
+				$('.fees_all td:eq('+index+') div.input-group input:text').removeAttr('disabled');
 			}
 		});
 	}
 	else
 	{
 		$('.input_zone').removeAttr('checked');
-		$('.fees input:text, .fees_all input:text').attr('disabled', 'disabled').val('');
+		$('.fees div.input-group input:text, .fees_all div.input-group input:text').attr('disabled', 'disabled');
 	}
 	
 }

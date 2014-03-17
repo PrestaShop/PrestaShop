@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,12 +19,13 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('_PS_ADMIN_DIR_', getcwd());
+if (!defined('_PS_ADMIN_DIR_'))
+	define('_PS_ADMIN_DIR_', getcwd());
 include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 
 /* Getting cookie or logout */
@@ -33,9 +34,7 @@ require_once(_PS_ADMIN_DIR_.'/init.php');
 $context = Context::getContext();
 
 if (Tools::isSubmit('ajaxReferrers'))
-{
 	require(_PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php');
-}
 
 if (Tools::getValue('page') == 'prestastore' AND @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
 	readfile('http://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
@@ -66,16 +65,6 @@ if (Tools::isSubmit('ajaxProductPackItems'))
 	foreach ($products AS $packItem)
 		$jsonArray[] = '{"value": "'.(int)($packItem['id_product']).'-'.addslashes($packItem['name']).'", "text":"'.(int)($packItem['id_product']).' - '.addslashes($packItem['name']).'"}';
 	die('['.implode(',', $jsonArray).']');
-}
-
-
-if (Tools::isSubmit('submitTrackClickOnHelp'))
-{
-    $label = Tools::getValue('label');
-    $version = Tools::getValue('version');
-
-    if (!empty($label) && !empty($version))
-        HelpAccess::trackClick($label, $version);
 }
 
 if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent'))
@@ -127,13 +116,10 @@ if (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('
 
 if (Tools::isSubmit('getZones'))
 {
-	$zones = Zone::getZones();
 	$html = '<select id="zone_to_affect" name="zone_to_affect">';
-	foreach ($zones as $z)
-	{
+	foreach (Zone::getZones() as $z)
 		$html .= '<option value="'.$z['id_zone'].'">'.$z['name'].'</option>';
-	}
 	$html .= '</select>';
 	$array = array('hasError' => false, 'errors' => '', 'data' => $html);
-	die(Tools::jsonEncode($html));
+	die(Tools::jsonEncode($array));
 }

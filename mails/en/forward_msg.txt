@@ -1,3 +1,4 @@
+
 [{shop_url}] 
 
 Hi {firstname} {lastname}, 

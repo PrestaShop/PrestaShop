@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -103,14 +103,16 @@ class TaxCore extends ObjectModel
 
 			// remove the id in order to create a new object
 			$this->id = 0;
-			$this->add();
+			$res = $this->add();
 
 			// change tax id in the tax rule table
-			TaxRule::swapTaxId($historized_tax->id, $this->id);
-		} else if (parent::update($nullValues))
-	            return $this->_onStatusChange();
+			$res &= TaxRule::swapTaxId($historized_tax->id, $this->id);
+			return $res;
+		} 
+		elseif (parent::update($nullValues))
+			return $this->_onStatusChange();
 
-        return false;
+		return false;
 	}
 
 	protected function _onStatusChange()

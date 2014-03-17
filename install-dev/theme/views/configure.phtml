@@ -73,7 +73,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 	<div id="timezone_div" class="field clearfix" <?php if (!in_array($this->session->shop_timezone, array('us','ca','au','ru','me','id'))) echo 'style="display:none"'; ?>>
 		<label for="infosTimezone" class="aligned"><?php echo $this->l('Shop timezone:') ?></label>
 		<div class="contentinput">
-			<select name="shop_timezone" id="infosTimezone" class="chosen">
+			<select name="shop_timezone" id="infosTimezone" class="chosen no-chosen">
 				<option value="0" style="font-weight: bold"><?php echo $this->l('Select your timezone') ?></option>
 				<?php foreach ($this->getTimezones() as $timezone): ?>
 					<option value="<?php echo $timezone ?>" <?php if ($this->session->shop_timezone == $timezone): ?>selected="selected"<?php endif; ?>><?php echo $timezone ?></option>

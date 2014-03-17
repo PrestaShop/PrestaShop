@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -49,6 +49,8 @@ class HelperFormCore extends Helper
 	public $languages = null;
 	public $default_form_language = null;
 	public $allow_employee_form_lang = null;
+	public $show_cancel_button = false;
+	public $back_url = '#';
 
 	public function __construct()
 	{
@@ -69,12 +71,12 @@ class HelperFormCore extends Helper
 		if (is_null($this->submit_action))
 			$this->submit_action = 'submitAdd'.$this->table;
 
-		$this->context->controller->addJS(_PS_JS_DIR_.'form.js');
-
 		$categories = true;
 		$color = true;
 		$date = true;
 		$tinymce = true;
+		$textarea_autosize = true;
+		$file = true;
 		foreach ($this->fields_form as $fieldset_key => &$fieldset)
 			if (isset($fieldset['form']['input']))
 				foreach ($fieldset['form']['input'] as $key => &$params)
@@ -87,18 +89,69 @@ class HelperFormCore extends Helper
 						case 'categories':
 							if ($categories)
 							{
-								// Added Jquery plugin treeview (css and js files)
-								$this->context->controller->addJqueryPlugin('treeview-categories');
+								$tree = new HelperTreeCategories($params['tree']['id'], isset($params['tree']['title']) ? $params['tree']['title'] : null);
 
-								// Added JS files
-								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.async.js');
-								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.edit.js');
-								$this->context->controller->addJS(_PS_JS_DIR_.'admin-categories-tree.js');
+								if (isset($params['name']))
+									$tree->setInputName($params['name']);
 
-								if (isset($params['use_search']) && $params['use_search'])
-									$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
+								if (isset($params['tree']['selected_categories']))
+									$tree->setSelectedCategories($params['tree']['selected_categories']);
+
+								if (isset($params['tree']['disabled_categories']))
+									$tree->setDisabledCategories($params['tree']['disabled_categories']);
+
+								if (isset($params['tree']['root_category']))
+									$tree->setRootCategory($params['tree']['root_category']);
+
+								if (isset($params['tree']['use_search']))
+									$tree->setUseSearch($params['tree']['use_search']);
+
+								if (isset($params['tree']['use_checkbox']))
+									$tree->setUseCheckBox($params['tree']['use_checkbox']);
+
+								$this->context->smarty->assign('categories_tree', $tree->render());
 								$categories = false;
 							}
+						break;
+
+						case 'file':
+							$uploader = new HelperUploader();
+							$uploader->setId(isset($params['id'])?$params['id']:null);
+							$uploader->setName($params['name']);
+							$uploader->setUrl(isset($params['url'])?$params['url']:null);
+							$uploader->setMultiple(isset($params['multiple'])?$params['multiple']:false);
+							$uploader->setUseAjax(isset($params['ajax'])?$params['ajax']:false);
+							$uploader->setMaxFiles(isset($params['max_files'])?$params['max_files']:null);
+
+							if (isset($params['files']) && $params['files'])
+								$uploader->setFiles($params['files']);
+							elseif (isset($params['image']) && $params['image']) // Use for retrocompatibility							
+								$uploader->setFiles(array(
+									0 => array(
+									'type'       => HelperUploader::TYPE_IMAGE,
+									'image'      => isset($params['image'])?$params['image']:null,
+									'size'       => isset($params['size'])?$params['size']:null,
+									'delete_url' => isset($params['delete_url'])?$params['delete_url']:null
+								)));
+
+							if (isset($params['file']) && $params['file']) // Use for retrocompatibility							
+								$uploader->setFiles(array(
+									0 => array(
+									'type'       => HelperUploader::TYPE_FILE,
+									'size'       => isset($params['size'])?$params['size']:null,
+									'delete_url' => isset($params['delete_url'])?$params['delete_url']:null,
+									'download_url' => isset($params['file'])?$params['file']:null
+								)));
+
+							if (isset($params['thumb']) && $params['thumb']) // Use for retrocompatibility							
+								$uploader->setFiles(array(
+									0 => array(
+									'type'       => HelperUploader::TYPE_IMAGE,
+									'image'      => isset($params['thumb'])?'<img src="'.$params['thumb'].'" alt="'.(isset($params['title']) ? $params['title'] : '').'" title="'.(isset($params['title']) ? $params['title'] : '').'" />':null,
+								)));
+
+							$uploader->setTitle(isset($params['title'])?$params['title']:null);
+							$params['file'] = $uploader->render();
 						break;
 
 						case 'color':
@@ -122,14 +175,20 @@ class HelperFormCore extends Helper
 							if ($tinymce)
 							{
 								$iso = $this->context->language->iso_code;
-								$this->tpl_vars['iso'] = file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
+								$this->tpl_vars['iso'] = file_exists(_PS_CORE_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
 								$this->tpl_vars['path_css'] = _THEME_CSS_DIR_;
-								$this->tpl_vars['ad'] = dirname($_SERVER['PHP_SELF']);
+								$this->tpl_vars['ad'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_);
 								$this->tpl_vars['tinymce'] = true;
 
 								$this->context->controller->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
 								$this->context->controller->addJS(_PS_JS_DIR_.'tinymce.inc.js');
 								$tinymce = false;
+							}
+
+							if ($textarea_autosize)
+							{
+								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.autosize.min.js');
+								$textarea_autosize = false;
 							}
 						break;
 
@@ -155,6 +214,7 @@ class HelperFormCore extends Helper
 			'identifier' => $this->identifier,
 			'name_controller' => $this->name_controller,
 			'languages' => $this->languages,
+			'current_id_lang' => $this->context->language->id,
 			'defaultFormLanguage' => $this->default_form_language,
 			'allowEmployeeFormLang' => $this->allow_employee_form_lang,
 			'form_id' => $this->id,
@@ -163,7 +223,10 @@ class HelperFormCore extends Helper
 			'required_fields' => $this->getFieldsRequired(),
 			'vat_number' => file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
 			'module_dir' => _MODULE_DIR_,
+			'base_url' => $this->context->shop->getBaseURL(),
 			'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
+			'show_cancel_button' => $this->show_cancel_button,
+			'back_url' => $this->back_url
 		));
 		return parent::generate();
 	}
@@ -187,7 +250,7 @@ class HelperFormCore extends Helper
 	 *
 	 * @return string
 	 */
-	public function renderAssoShop($disable_shared = false)
+	public function renderAssoShop($disable_shared = false, $template_directory = null)
 	{
 		if (!Shop::isFeatureActive())
 			return;
@@ -222,26 +285,18 @@ class HelperFormCore extends Helper
 			}
 		}
 
-		$tpl = $this->createTemplate('assoshop.tpl');
-		$tree = Shop::getTree();
-		$nb_shop = 0;
+		/*$nb_shop = 0;
 		foreach ($tree as &$value)
 		{
 			$value['disable_shops'] = (isset($value[$disable_shared]) && $value[$disable_shared]);
 			$nb_shop += count($value['shops']);
-		}
-		$tpl->assign(array(
-				'input' => array(
-					'type' => 'shop',
-					'values' => $tree,
-				),
-				'fields_value' => array(
-					'shop' => $assos
-				),
-				'form_id' => $this->id,
-				'table' => $this->table,
-				'nb_shop' => $nb_shop
-			));
-		return $tpl->fetch();
+		}*/
+
+		$tree = new HelperTreeShops('shop-tree', 'Shops');
+		if (isset($template_directory))
+			$tree->setTemplateDirectory($template_directory);
+		$tree->setSelectedShops($assos);
+		$tree->setAttribute('table', $this->table);
+		return $tree->render();
 	}
 }

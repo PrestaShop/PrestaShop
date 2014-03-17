@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -234,13 +234,13 @@ abstract class CacheCore
 
 		if (is_null($this->sql_tables_cached))
 		{
-			$this->sql_tables_cached = $this->get(_COOKIE_IV_.self::SQL_TABLES_NAME);
+			$this->sql_tables_cached = $this->get(Tools::encryptIV(self::SQL_TABLES_NAME));
 			if (!is_array($this->sql_tables_cached))
 				$this->sql_tables_cached = array();
 		}
 
 		// Store query results in cache if this query is not already cached
-		$key = md5(_COOKIE_IV_.$query);
+		$key = Tools::encryptIV($query);
 		if ($this->exists($key))
 			return true;
 		$this->set($key, $result);
@@ -250,13 +250,18 @@ abstract class CacheCore
 			foreach ($tables as $table)
 				if (!isset($this->sql_tables_cached[$table][$key]))
 					$this->sql_tables_cached[$table][$key] = true;
-		$this->set(_COOKIE_IV_.self::SQL_TABLES_NAME, $this->sql_tables_cached);
+		$this->set(Tools::encryptIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
 	}
 
 	protected function getTables($string)
 	{
-		if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.'[a-z_-]+)`?(?:,\s{0,}`?('._DB_PREFIX_.'[a-z_-]+)`?)?\s.*/Umsi', $string, $res))
-			return array_merge($res[1], $res[2]);
+		if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.'[0-9a-z_-]+)(?:`?\s{0,},\s{0,}`?('._DB_PREFIX_.'[0-9a-z_-]+)`?)?(?:`|\s+|\Z)(?!\s*,)/Umsi', $string, $res))
+		{
+			foreach ($res[2] as $table)
+				if ($table != '')
+					$res[1][] = $table;
+			return array_unique($res[1]);
+		}
 		else
 			return false;
 	}
@@ -270,7 +275,7 @@ abstract class CacheCore
 	{
 		if (is_null($this->sql_tables_cached))
 		{
-			$this->sql_tables_cached = $this->get(_COOKIE_IV_.self::SQL_TABLES_NAME);
+			$this->sql_tables_cached = $this->get(Tools::encryptIV(self::SQL_TABLES_NAME));
 			if (!is_array($this->sql_tables_cached))
 				$this->sql_tables_cached = array();
 		}
@@ -286,7 +291,7 @@ abstract class CacheCore
 					}
 					unset($this->sql_tables_cached[$table]);
 				}
-		$this->set(_COOKIE_IV_.self::SQL_TABLES_NAME, $this->sql_tables_cached);
+		$this->set(Tools::encryptIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
 	}
 
 	/**
@@ -298,7 +303,7 @@ abstract class CacheCore
 	protected function isBlacklist($query)
 	{
 		foreach ($this->blacklist as $find)
-			if (strpos($query, $find))
+			if (strpos($query, '`'._DB_PREFIX_.$find.'`') || strpos($query, ' '._DB_PREFIX_.$find.' '))
 				return true;
 		return false;
 	}

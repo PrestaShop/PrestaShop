@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -97,13 +97,10 @@ class OrderHistoryCore extends ObjectModel
 
 		// executes hook
 		if (in_array($new_os->id, array(Configuration::get('PS_OS_PAYMENT'), Configuration::get('PS_OS_WS_PAYMENT'))))
-			Hook::exec('actionPaymentConfirmation', array('id_order' => (int)$order->id));
+			Hook::exec('actionPaymentConfirmation', array('id_order' => (int)$order->id), null, false, true, false, $order->id_shop);
 
 		// executes hook
-		Hook::exec('actionOrderStatusUpdate', array(
-			'newOrderStatus' => $new_os,
-			'id_order' => (int)$order->id
-		));
+		Hook::exec('actionOrderStatusUpdate', array('newOrderStatus' => $new_os, 'id_order' => (int)$order->id), null, false, true, false, $order->id_shop);
 
 		if (Validate::isLoadedObject($order) && ($new_os instanceof OrderState))
 		{
@@ -140,9 +137,9 @@ class OrderHistoryCore extends ObjectModel
 					$links .= '<li>';
 					$links .= '<a href="'.$product['link'].'">'.Tools::htmlentitiesUTF8($product['name']).'</a>';
 					if (isset($product['deadline']))
-						$links .= '&nbsp;'.Tools::htmlentitiesUTF8(Tools::displayError('expires on')).'&nbsp;'.$product['deadline'];
+						$links .= '&nbsp;'.Tools::htmlentitiesUTF8(Tools::displayError('expires on', false)).'&nbsp;'.$product['deadline'];
 					if (isset($product['downloadable']))
-						$links .= '&nbsp;'.Tools::htmlentitiesUTF8(sprintf(Tools::displayError('downloadable %d time(s)'), (int)$product['downloadable']));	
+						$links .= '&nbsp;'.Tools::htmlentitiesUTF8(sprintf(Tools::displayError('downloadable %d time(s)', false), (int)$product['downloadable']));	
 					$links .= '</li>';
 				}
 				$links .= '</ul>';
@@ -331,10 +328,7 @@ class OrderHistoryCore extends ObjectModel
 			$order->setDelivery();
 
 		// executes hook
-		Hook::exec('actionOrderStatusPostUpdate', array(
-			'newOrderStatus' => $new_os,
-			'id_order' => (int)$order->id,
-		));
+		Hook::exec('actionOrderStatusPostUpdate', array('newOrderStatus' => $new_os,'id_order' => (int)$order->id,), null, false, true, false, $order->id_shop);
 
 		ShopUrl::resetMainDomainCache();
 	}
@@ -444,7 +438,7 @@ class OrderHistoryCore extends ObjectModel
 		$order->current_state = $this->id_order_state;
 		$order->update();
 
-		Hook::exec('actionOrderHistoryAddAfter', array('order_history' => $this));
+		Hook::exec('actionOrderHistoryAddAfter', array('order_history' => $this), null, false, true, false, $order->id_shop);
 
 		return true;
 	}

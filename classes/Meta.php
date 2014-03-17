@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,15 +19,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class MetaCore extends ObjectModel
 {
-	/** @var string Name */
 	public $page;
+	public $configurable = 1;
 	public $title;
 	public $description;
 	public $keywords;
@@ -43,6 +43,7 @@ class MetaCore extends ObjectModel
 		'multilang_shop' => true,
 		'fields' => array(
 			'page' => 			array('type' => self::TYPE_STRING, 'validate' => 'isFileName', 'required' => true, 'size' => 64),
+			'configurable' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 
 			/* Lang fields */
 			'title' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
@@ -55,7 +56,7 @@ class MetaCore extends ObjectModel
 	public static function getPages($exclude_filled = false, $add_page = false)
 	{
 		$selected_pages = array();
-		if (!$files = Tools::scandir(_PS_ROOT_DIR_.'/controllers/front/', 'php', '', true))
+		if (!$files = Tools::scandir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'front'.DIRECTORY_SEPARATOR, 'php', '', true))
 			die(Tools::displayError('Cannot scan root directory'));
 
 		// Exclude pages forbidden
@@ -69,15 +70,13 @@ class MetaCore extends ObjectModel
 			if ($file != 'index.php' && !in_array(strtolower(str_replace('Controller.php', '', $file)), $exlude_pages))
 			{
 				$class_name = str_replace('.php', '', $file);
-				if (class_exists($class_name))
-					$reflection = new ReflectionClass(str_replace('.php', '', $file));
-				if (isset($reflection) && $reflection)
-					$properties = $reflection->getDefaultProperties();
+				$reflection = class_exists($class_name) ? new ReflectionClass(str_replace('.php', '', $file)) : false;
+				$properties = $reflection ? $reflection->getDefaultProperties() : array();
 				if (isset($properties['php_self']))
 					$selected_pages[$properties['php_self']] = $properties['php_self'];
-				else if (preg_match('/^[a-z0-9_.-]*\.php$/i', $file))
+				elseif (preg_match('/^[a-z0-9_.-]*\.php$/i', $file))
 					$selected_pages[strtolower(str_replace('Controller.php', '', $file))] = strtolower(str_replace('Controller.php', '', $file));
-				else if (preg_match('/^([a-z0-9_.-]*\/)?[a-z0-9_.-]*\.php$/i', $file))
+				elseif (preg_match('/^([a-z0-9_.-]*\/)?[a-z0-9_.-]*\.php$/i', $file))
 					$selected_pages[strtolower(sprintf(Tools::displayError('%2$s (in %1$s)'), dirname($file), str_replace('Controller.php', '', basename($file))))] = strtolower(str_replace('Controller.php', '', basename($file)));
 			}	
 		}
@@ -115,33 +114,32 @@ class MetaCore extends ObjectModel
 
 	public static function getMetas()
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT *
-		FROM '._DB_PREFIX_.'meta
-		ORDER BY page ASC');
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM '._DB_PREFIX_.'meta ORDER BY page ASC');
 	}
 
 	public static function getMetasByIdLang($id_lang)
 	{
-		$sql = 'SELECT *
-				FROM `'._DB_PREFIX_.'meta` m
-				LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON m.`id_meta` = ml.`id_meta`
-				WHERE ml.`id_lang` = '.(int)$id_lang
-					.Shop::addSqlRestrictionOnLang('ml').
-				'ORDER BY page ASC';
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT *
+		FROM `'._DB_PREFIX_.'meta` m
+		LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON m.`id_meta` = ml.`id_meta`
+		WHERE ml.`id_lang` = '.(int)$id_lang
+			.Shop::addSqlRestrictionOnLang('ml').
+		'ORDER BY page ASC');
 	}
 
 	public static function getMetaByPage($page, $id_lang)
 	{
-		$sql = 'SELECT *
-				FROM '._DB_PREFIX_.'meta m
-				LEFT JOIN '._DB_PREFIX_.'meta_lang ml on (m.id_meta = ml.id_meta)
-				WHERE (m.page = \''.pSQL($page).'\' OR m.page=\''.pSQL(str_replace('-', '', strtolower($page))).'\')
-					AND ml.id_lang = '.(int)$id_lang
-					.Shop::addSqlRestrictionOnLang('ml');
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		SELECT *
+		FROM '._DB_PREFIX_.'meta m
+		LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON m.id_meta = ml.id_meta
+		WHERE (
+			m.page = "'.pSQL($page).'"
+			OR m.page = "'.pSQL(str_replace('-', '', strtolower($page))).'"
+		)
+		AND ml.id_lang = '.(int)$id_lang.'
+		'.Shop::addSqlRestrictionOnLang('ml'));
 	}
 
 	public function update($null_values = false)

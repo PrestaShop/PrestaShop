@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -75,7 +75,7 @@ class TranslateCore
 			$str = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);
 
 		if ($htmlentities)
-			$str = htmlentities($str, ENT_QUOTES, 'utf-8');
+			$str = htmlspecialchars($str, ENT_QUOTES, 'utf-8');
 		$str = str_replace('"', '&quot;', $str);
 
 		if ($sprintf !== null)
@@ -150,7 +150,7 @@ class TranslateCore
 		}
 		$key = md5(str_replace('\'', '\\\'', $string));
 
-		$cache_key = $name.'|'.$string.'|'.$source;
+		$cache_key = $name.'|'.$string.'|'.$source.'|'.(int)$js;
 
 		if (!isset($lang_cache[$cache_key]))
 		{
@@ -179,13 +179,13 @@ class TranslateCore
 
 			if ($js)
 				$ret = addslashes($ret);
+			else
+				$ret = htmlspecialchars($ret, ENT_COMPAT, 'UTF-8');
 
-                        $ret = str_replace('"', '&quot;', $ret);
-
-                        if ($sprintf === null)
-                                $lang_cache[$cache_key] = $ret; 
-                        else    
-                                return $ret;
+			if ($sprintf === null)
+				$lang_cache[$cache_key] = $ret; 
+			else    
+         	return $ret;
 
 		}
 		return $lang_cache[$cache_key];
@@ -240,6 +240,35 @@ class TranslateCore
 
 			return vsprintf($string, $args);
 		}
+		return $string;
+	}
+
+	/**
+	* Perform operations on translations after everything is escaped and before displaying it
+	*/
+	public static function smartyPostProcessTranslation($string, $params)
+	{
+		// If tags were explicitely provided, we want to use them *after* the translation string is escaped.
+		if (!empty($params['tags']))
+		{
+			foreach ($params['tags'] as $index => $tag)
+			{
+				// Make positions start at 1 so that it behaves similar to the %1$d etc. sprintf positional params
+				$position = $index + 1;
+				// extract tag name
+				$match = array();
+				if (preg_match('/^\s*<\s*(\w+)/', $tag, $match))
+				{
+					$opener = $tag;
+					$closer = '</'.$match[1].'>';
+
+					$string = str_replace('['.$position.']', $opener, $string);
+					$string = str_replace('[/'.$position.']', $closer, $string);
+					$string = str_replace('['.$position.'/]', $opener.$closer, $string);
+				}
+			}
+		}
+
 		return $string;
 	}
 }

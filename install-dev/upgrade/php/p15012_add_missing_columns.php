@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -115,7 +115,7 @@ function p15012_add_missing_columns()
 		SET `id_order_invoice` = 0 WHERE `id_order_invoice` LIKE "" OR `id_order_invoice` IS NULL';
 
   $q_list['order_payment']['id_order_invoice']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_payment`
-		CHANGE `id_order_invoice` id_order_invoice int(10) unsigned DEFAULT NULL';
+		CHANGE `id_order_invoice` id_order_invoice int(10) unsigned NOT NULL DEFAULT 0';
 
   $q_list['orders']['reference']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'orders`
 		CHANGE `reference` reference varchar(9) DEFAULT NULL';

@@ -33,8 +33,7 @@
   <tab id="General" name="Generale"/>
   <tab id="Geolocation" name="Geolocalizzazione"/>
   <tab id="Groups" name="Gruppi"/>
-  <tab id="Home" name="Home page"/>
-  <tab id="Image_Mapping" name="Mapping Immagine"/>
+  <tab id="Dashboard" name="Dashboard"/>
   <tab id="Images" name="Immagini"/>
   <tab id="Instant_Stock_Status" name="Stato dello stock Istantaneo"/>
   <tab id="Invoices" name="Fatture"/>
@@ -100,4 +99,5 @@
   <tab id="Warehouses" name="Magazzino"/>
   <tab id="Webservice" name="Webservice"/>
   <tab id="Zones" name="Zone"/>
+  <tab id="CarrierWizard" name="Carrier"/>
 </entity_tab>

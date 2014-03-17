@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,6 +28,7 @@ class AdminPPreferencesControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
@@ -39,7 +40,7 @@ class AdminPPreferencesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_CATALOG_MODE' => array(
 						'title' => $this->l('Catalog mode'),
-						'desc' => $this->l('When active, all shopping features will be disabled.'),
+						'hint' => $this->l('When active, all shopping features will be disabled.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -47,7 +48,7 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_COMPARATOR_MAX_ITEM' => array(
 						'title' => $this->l('Product comparison'),
-						'desc' => $this->l('Set the maximum number of products that can be selected for comparison.').' '.$this->l('Set to "0" to disable this feature.'),
+						'hint' => $this->l('Set the maximum number of products that can be selected for comparison. Set to "0" to disable this feature.'),
 						'validation' => 'isUnsignedId',
 						'required' => true,
 						'cast' => 'intval',
@@ -61,7 +62,7 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_CART_REDIRECT' => array(
 						'title' => $this->l('Redirect after adding product to cart'),
-						'desc' => $this->l('Only for non-AJAX versions of the cart.'),
+						'hint' => $this->l('Only for non-AJAX versions of the cart.'),
 						'cast' => 'intval',
 						'show' => true,
 						'required' => false,
@@ -74,7 +75,7 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_PRODUCT_SHORT_DESC_LIMIT' => array(
 						'title' => $this->l('Max size of short description'),
-						'desc' => $this->l('Set the maximum size of product short description (in characters).'),
+						'hint' => $this->l('Set the maximum size of product short description (in characters).'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -82,32 +83,41 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_QTY_DISCOUNT_ON_COMBINATION' => array(
 						'title' => $this->l('Quantity discounts based on'),
-						'desc' => $this->l('How to calculate quantity discounts'),
+						'hint' => $this->l('How to calculate quantity discounts.'),
 						'cast' => 'intval',
 						'show' => true,
 						'required' => false,
 						'type' => 'radio',
 						'validation' => 'isBool',
 						'choices' => array(
-							0 => $this->l('Products:'),
+							0 => $this->l('Products'),
 							1 => $this->l('Combinations')
 						)
+					),
+					'PS_FORCE_FRIENDLY_PRODUCT' => array(
+						'title' => $this->l('Force update of friendly URL'),
+						'hint' => $this->l('When active, friendly URL will be updated on every save.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'required' => false,
+						'type' => 'bool'
 					)
 				),
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'order_by_pagination' => array(
 				'title' =>	$this->l('Pagination'),
 				'fields' =>	array(
 					'PS_PRODUCTS_PER_PAGE' => array(
 						'title' => $this->l('Products per page'),
-						'desc' => $this->l('Number of products displayed per page. Default is 10.'),
+						'hint' => $this->l('Number of products displayed per page. Default is 10.'),
 						'validation' => 'isUnsignedInt',
 						'cast' => 'intval',
 						'type' => 'text'
 					),
 					'PS_PRODUCTS_ORDER_BY' => array(
 						'title' => $this->l('Default order by'),
-						'desc' => $this->l('The order in which products are displayed in the product list.'),
+						'hint' => $this->l('The order in which products are displayed in the product list.'),
 						'type' => 'select',
 						'list' => array(
 							array('id' => '0', 'name' => $this->l('Product name')),
@@ -123,7 +133,7 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_PRODUCTS_ORDER_WAY' => array(
 						'title' => $this->l('Default order method'),
-						'desc' => $this->l('Default order method for product list'),
+						'hint' => $this->l('Default order method for product list.'),
 						'type' => 'select',
 						'list' => array(
 							array(
@@ -137,22 +147,22 @@ class AdminPPreferencesControllerCore extends AdminController
 						),
 						'identifier' => 'id'
 					)
-				)
+				),
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'fo_product_page' => array(
 				'title' =>	$this->l('Product page'),
 				'fields' =>	array(
 					'PS_DISPLAY_QTIES' => array(
 						'title' => $this->l('Display available quantities on the product page'),
-						'desc' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
 						'type' => 'bool'
 					),
 					'PS_LAST_QTIES' => array(
-						'title' => $this->l('Display remaining quantities when the qty is lower than'),
-						'desc' => $this->l('Set to "0" to disable this feature.'),
+						'title' => $this->l('Display remaining quantities when the quantity is lower than'),
+						'hint' => $this->l('Set to "0" to disable this feature.'),
 						'validation' => 'isUnsignedId',
 						'required' => true,
 						'cast' => 'intval',
@@ -160,7 +170,6 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_DISPLAY_JQZOOM' => array(
 						'title' => $this->l('Enable JqZoom instead of Thickbox on the product page'),
-						'desc' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -168,7 +177,6 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_DISP_UNAVAILABLE_ATTR' => array(
 						'title' => $this->l('Display unavailable product attributes on the product page'),
-						'desc' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -176,27 +184,37 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_ATTRIBUTE_CATEGORY_DISPLAY' => array(
 						'title' => $this->l('Display the "add to cart" button when a product has attributes'),
-						'desc' => $this->l('Display or hide the "add to cart" button on category pages for products that have attributes forcing customers to see product details.'),
+						'hint' => $this->l('Display or hide the "add to cart" button on category pages for products that have attributes forcing customers to see product details.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
+					'PS_ATTRIBUTE_ANCHOR_SEPARATOR' => array(
+						'title' => $this->l('Separator of attribute anchor on the product links'),
+						'type' => 'select',
+						'list' => array(
+							array('id' => '-', 'name' => '-'),
+							array('id' => ',', 'name' => ','),
+						),
+						'identifier' => 'id'
+					),
 					'PS_DISPLAY_DISCOUNT_PRICE' => array(
 						'title' => $this->l('Display discounted price'),
-						'desc' => $this->l('Instead of showing the discount (-5%) it will instead show the new price with the discount applied'),
+						'desc' => $this->l('In the volume discounts board, display the new price with the applied discount instead of showing the discount (ie. "-5%").'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
 						'type' => 'bool'
 					),
-				)
+				),
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'stock' => array(
 				'title' =>	$this->l('Products stock'),
 				'fields' =>	array(
 					'PS_ORDER_OUT_OF_STOCK' => array(
 		 				'title' => $this->l('Allow ordering of out-of-stock products'),
-		 				'desc' => $this->l('Add to cart button is hidden when a product is unavailable'),
+		 				'hint' => $this->l('By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.'),
 		 				'validation' => 'isBool',
 		 				'cast' => 'intval',
 		 				'required' => false,
@@ -204,7 +222,6 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_STOCK_MANAGEMENT' => array(
 						'title' => $this->l('Enable stock management'),
-						'desc' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -215,8 +232,21 @@ class AdminPPreferencesControllerCore extends AdminController
 						)
 					),
 					'PS_ADVANCED_STOCK_MANAGEMENT' => array(
-						'title' => $this->l('Enable advanced-stock management'),
-						'desc' => $this->l('Allows you to manage physical stock, warehouses and supply orders.'),
+						'title' => $this->l('Enable advanced stock management'),
+						'hint' => $this->l('Allows you to manage physical stock, warehouses and supply orders in a new Stock menu.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'required' => false,
+						'type' => 'bool',
+						'visibility' => Shop::CONTEXT_ALL,
+						'js' => array(
+							'on' => 'onchange="advancedStockManagementActivationAuthorization()"',
+							'off' => 'onchange="advancedStockManagementActivationAuthorization()"'
+						)
+					),
+					'PS_FORCE_ASM_NEW_PRODUCT' => array(
+						'title' => $this->l('New products use advanced stock management'),
+						'hint' => $this->l('New products will automaticlly use advanced stock management and depends on stock, but no warehouse will be selected'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -224,8 +254,8 @@ class AdminPPreferencesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL,
 					),
 				),
-				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();</script>',
-				'submit' => array()
+				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();advancedStockManagementActivationAuthorization():</script>',
+				'submit' => array('title' => $this->l('Save'))
 			),
 		);
 	}
@@ -248,6 +278,12 @@ class AdminPPreferencesControllerCore extends AdminController
 				'UPDATE `'._DB_PREFIX_.'stock_available`
 				 SET `depends_on_stock` = 0, `quantity` = 0
 				 WHERE `depends_on_stock` = 1');
+		}
+
+		if (Tools::getIsset('PS_CATALOG_MODE'))
+		{
+			Tools::clearSmartyCache();
+			Media::clearCache();
 		}
 	}
 

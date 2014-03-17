@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,18 +28,19 @@ class AdminEmailsControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
 		parent::__construct();
-
+				
 		foreach (Contact::getContacts($this->context->language->id) as $contact)
 			$arr[] = array('email_message' => $contact['id_contact'], 'name' => $contact['name']);
 
 		$this->fields_options = array(
 			'email' => array(
 				'title' => $this->l('Email'),
-				'icon' => 'email',
+				'icon' => 'icon-envelope',
 				'fields' =>	array(
 					'PS_MAIL_EMAIL_MESSAGE' => array(
 						'title' => $this->l('Send email to'), 
@@ -56,68 +57,62 @@ class AdminEmailsControllerCore extends AdminController
 						'type' => 'radio',
 						'required' => true,
 						'choices' => array(
-							3 => $this->l('Never send emails (may be useful for test purpose)'), 
-							1 => $this->l('Use PHP mail() function. Recommended; works in most cases'), 
-							2 => $this->l('Set my own SMTP parameters. For advanced users ONLY')
+							3 => $this->l('Never send emails (may be useful for testing purposes)'),
+							2 => $this->l('Set my own SMTP parameters (for advanced users ONLY)')
 						),
 						'js' => array(
-							1 => 'onclick="$(\'#smtp\').slideUp();"', 
-							2 => 'onclick="$(\'#smtp\').slideDown();"',
-							3 => 'onclick="$(\'#smtp\').slideUp();"'
+							1 => 'onclick="$(\'#configuration_fieldset_smtp\').slideUp();"', 
+							2 => 'onclick="$(\'#configuration_fieldset_smtp\').slideDown();"',
+							3 => 'onclick="$(\'#configuration_fieldset_smtp\').slideUp();"'
 						),
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_MAIL_TYPE' => array('title' => '', 'validation' => 'isGenericName', 'type' => 'radio', 'required' => true, 'choices' => array(
-						Mail::TYPE_HTML => $this->l('Send email in HTML format. '), 
+						Mail::TYPE_HTML => $this->l('Send email in HTML format'), 
 						Mail::TYPE_TEXT => $this->l('Send email in text format'), 
 						Mail::TYPE_BOTH => $this->l('Both')
 						)
 					),
 				),
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'smtp' => array(
 				'title' => $this->l('Email'),
-				'icon' => 'email',
-				'top' => '<div id="smtp" style="display: '.((Configuration::get('PS_MAIL_METHOD') == 2) ? 'block' : 'none').';">',
-				'bottom' => '</div>',
 				'fields' =>	array(
 					'PS_MAIL_DOMAIN' => array(
-						'title' => $this->l('Mail domain name:'),
-						'desc' => $this->l('Fully qualified domain name (keep this field empty if you don\'t know).'),
+						'title' => $this->l('Mail domain name'),
+						'hint' => $this->l('Fully qualified domain name (keep this field empty if you don\'t know).'),
 						'empty' => true, 'validation' =>
-						'isUrl', 'size' => 30,
+						'isUrl',
 						'type' => 'text',
 						'visibility' => Shop::CONTEXT_ALL
 						),
 					'PS_MAIL_SERVER' => array(
-						'title' => $this->l('SMTP server:'),
-						'desc' => $this->l('IP address or server name (e.g. smtp.mydomain.com)'),
+						'title' => $this->l('SMTP server'),
+						'hint' => $this->l('IP address or server name (e.g. smtp.mydomain.com).'),
 						'validation' => 'isGenericName',
-						'size' => 30,
 						'type' => 'text',
 						'visibility' => Shop::CONTEXT_ALL
 						),
 					'PS_MAIL_USER' => array(
-						'title' => $this->l('SMTP user:'),
-						'desc' => $this->l('Leave blank if not applicable.'),
+						'title' => $this->l('SMTP user'),
+						'hint' => $this->l('Leave blank if not applicable.'),
 						'validation' => 'isGenericName',
-						'size' => 30,
 						'type' => 'text',
 						'visibility' => Shop::CONTEXT_ALL
 						),
 					'PS_MAIL_PASSWD' => array(
-						'title' => $this->l('SMTP password:'),
-						'desc' => $this->l('Leave blank if not applicable.'),
+						'title' => $this->l('SMTP password'),
+						'hint' => $this->l('Leave blank if not applicable.'),
 						'validation' => 'isAnything',
-						'size' => 30,
 						'type' => 'password',
 						'visibility' => Shop::CONTEXT_ALL,
 						'autocomplete' => false
 						),
 					'PS_MAIL_SMTP_ENCRYPTION' => array(
-						'title' => $this->l('Encryption:'),
-						'desc' => $this->l('Use an encrypt protocol'),
+						'title' => $this->l('Encryption'),
+						'hint' => $this->l('Use an encrypt protocol'),
+						'desc' => Tools::apacheModExists('mod_ssl') ? '/!\\  '.$this->l('SSL mod seems to not be installed on your server.') : '',
 						'type' => 'select',
 						'cast' => 'strval',
 						'identifier' => 'mode',
@@ -138,43 +133,56 @@ class AdminEmailsControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 						),
 					'PS_MAIL_SMTP_PORT' => array(
-						'title' => $this->l('Port:'),
-						'desc' => $this->l('Port number to use'),
+						'title' => $this->l('Port'),
+						'hint' => $this->l('Port number to use.'),
 						'validation' => 'isInt',
-						'size' => 5,
 						'type' => 'text',
 						'cast' => 'intval',
 						'visibility' => Shop::CONTEXT_ALL
 						),
 				),
-				'submit' => array()
+				'submit' => array('title' => $this->l('Save'))
 			),
 			'test' => array(
 				'title' =>	$this->l('Test your email configuration'),
-				'icon' =>	'email',
+				'hide_multishop_checkbox' => true,
 				'fields' =>	array(
 					'PS_SHOP_EMAIL' => array(
 						'title' => $this->l('Send a test email to'),
 						'type' => 'text',
-						'size' => 40,
-						'id' => 'testEmail'
+						'id' => 'testEmail',
+						'no_multishop_checkbox' => true
 						),
 				),
-				'bottom' => '<div class="margin-form"><input type="button" class="button" name="btEmailTest" id="btEmailTest" value="'.$this->l('Send an email test').'" onclick="verifyMail();" /><br />
-					<p id="mailResultCheck" style="display:none;"></p></div>',
+				'bottom' => '<div class="row"><div class="col-lg-9 col-lg-offset-3">
+					<div class="alert" id="mailResultCheck" style="display:none;"></div>
+				</div></div>',
+				'buttons' => array(
+					array('title' => $this->l('Send an email test'),
+						'icon' => 'process-icon-envelope',
+						'name' => 'btEmailTest',
+						'js' => 'verifyMail()',
+						'class' => 'btn btn-default pull-right'
+					)
+				)
 			)
 		);
+
+		if (!defined('_PS_HOST_MODE_'))
+			$this->fields_options['email']['fields']['PS_MAIL_METHOD']['choices'][1] =
+				$this->l('Use PHP\'s mail() function (recommended; works in most cases)');
+
+		ksort($this->fields_options['email']['fields']['PS_MAIL_METHOD']['choices']);
 	}
-	
+
 	public function updateOptionPsMailPasswd($value)
 	{
 		if (Tools::getValue('PS_MAIL_PASSWD') == '' && Configuration::get('PS_MAIL_PASSWD'))
 			return true;
 		else
 			Configuration::updateValue('PS_MAIL_PASSWD', Tools::getValue('PS_MAIL_PASSWD'));
-	}	
-	
-	
+	}
+
 	/**
 	 * AdminController::initContent() override
 	 * @see AdminController::initContent()
@@ -183,9 +191,10 @@ class AdminEmailsControllerCore extends AdminController
 	{
 		$this->initTabModuleList();
 		$this->initToolbar();
+		$this->initPageHeaderToolbar();
 		$this->addToolBarModulesListButton();
 		unset($this->toolbar_btn['save']);
-		$back = $this->context->link->getAdminLink('AdminHome');
+		$back = $this->context->link->getAdminLink('AdminDashboard');
 		
 		$this->toolbar_btn['back'] = array(
 			'href' => $back,
@@ -197,6 +206,9 @@ class AdminEmailsControllerCore extends AdminController
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 	}
 
@@ -214,7 +226,8 @@ class AdminEmailsControllerCore extends AdminController
 		if (isset($_POST['PS_SHOP_EMAIL']))
 			$_POST['PS_SHOP_EMAIL'] = Configuration::get('PS_SHOP_EMAIL');
 
-		if (isset($_POST['PS_MAIL_METHOD']) && $_POST['PS_MAIL_METHOD'] == 2 && (empty($_POST['PS_MAIL_SERVER']) || empty($_POST['PS_MAIL_SMTP_PORT'])))
+		if (isset($_POST['PS_MAIL_METHOD']) && $_POST['PS_MAIL_METHOD'] == 2
+			&& (empty($_POST['PS_MAIL_SERVER']) || empty($_POST['PS_MAIL_SMTP_PORT'])))
 			$this->errors[] = Tools::displayError('You must define an SMTP server and an SMTP port. If you do not know it, use the PHP mail() function instead.');
 	}
 

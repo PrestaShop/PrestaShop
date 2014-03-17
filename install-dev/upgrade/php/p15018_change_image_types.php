@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,18 +28,31 @@ function p15018_change_image_types()
 {
 	$replace_types = array(
 		'products' => array(
-			'small' => array('small_default', '45', '45'),
-			'medium' => array('medium_default', '58', '58'),
-			'large' => array('large_default', '264', '264'),
-			'thickbox' => array('thickbox_default', '600', '600'),
-			'home' => array('home_default', '124', '124')
+			'small' => array('small_default', '98', '98'),
+			'medium' => array('medium_default', '125', '125'),
+			'large' => array('large_default', '458', '458'),
+			'thickbox' => array('thickbox_default', '800', '800'),
+			'home' => array('home_default', '270', '270')
 		),
 		'others' => array(
-			'category' => array('category_default', '500', '500'),
+			'category' => array('category_default', '870', '217'),
 			'large_scene' => array('scene_default', '520', '189'),
 			'thumb_scene' => array('m_scene_default', '161', '58')
 		)
 	);
+
+	$new_types = array(
+		'products' => array(
+			'small' => array('cart_default', '80', '80')
+		)
+	);
+
+	foreach ($new_types as $type => $type_array)
+		foreach ($type_array as $old_type => $new_type)
+			if (is_array($new_type) && count($new_type))
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'image_type` (
+					SELECT NULL, "'.$new_type[0].'", "'.$new_type[1].'", "'.$new_type[2].'", products, categories, manufacturers, suppliers, scenes, stores
+					FROM `'._DB_PREFIX_.'image_type` WHERE name = "'.$old_type.'" LIMIT 1)');
 
 	$option = (bool)Db::getInstance()->getValue('SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE directory != "default" AND directory != "prestashop"');
 		

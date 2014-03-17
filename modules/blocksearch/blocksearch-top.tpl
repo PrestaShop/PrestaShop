@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -29,7 +29,7 @@
 		<input type="hidden" name="controller" value="search" />
 		<input type="hidden" name="orderby" value="position" />
 		<input type="hidden" name="orderway" value="desc" />
-		<input class="search_query" type="search" id="search_query_top" name="search_query" placeholder="{l s='Search' mod='blocksearch'}" value="{$search_query|escape:'htmlall':'UTF-8'|stripslashes}" />
+		<input class="search_query" type="search" id="search_query_top" name="search_query" placeholder="{l s='Search' mod='blocksearch'}" value="{$search_query|escape:'html':'UTF-8'|stripslashes}" />
 	</form>
 </div>
 {else}
@@ -41,7 +41,7 @@
 			<input type="hidden" name="controller" value="search" />
 			<input type="hidden" name="orderby" value="position" />
 			<input type="hidden" name="orderway" value="desc" />
-			<input class="search_query" type="text" id="search_query_top" name="search_query" value="{$search_query|escape:'htmlall':'UTF-8'|stripslashes}" />
+			<input class="search_query" type="text" id="search_query_top" name="search_query" value="{$search_query|escape:'html':'UTF-8'|stripslashes}" />
 			<input type="submit" name="submit_search" value="{l s='Search' mod='blocksearch'}" class="button" />
 		</p>
 	</form>

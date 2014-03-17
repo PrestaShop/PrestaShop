@@ -3,34 +3,35 @@ function tinySetup(config)
 	if(!config)
 		config = {};
 
+	//var editor_selector = 'rte';
+	//if (typeof config['editor_selector'] !== 'undefined')
+		//var editor_selector = config['editor_selector'];
+	if (typeof config['editor_selector'] != 'undefined')
+		config['selector'] = '.'+config['editor_selector'];
+
+//    safari,pagebreak,style,table,advimage,advlink,inlinepopups,media,contextmenu,paste,fullscreen,xhtmlxtras,preview
 	default_config = {
-		mode : "specific_textareas",
-		theme : "advanced",
-		skin:"cirkuit",
-		editor_selector : "rte",
-		editor_deselector : "noEditor",
-		plugins : "safari,pagebreak,style,table,advimage,advlink,inlinepopups,media,contextmenu,paste,fullscreen,xhtmlxtras,preview",
-		// Theme options
-		theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
-		theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,,|,forecolor,backcolor, media, fullscreen",
-	//	theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,|,ltr,rtl,|",
-	//	theme_advanced_buttons4 : "styleprops,|,cite,abbr,acronym,del,ins,attribs,pagebreak",
-		theme_advanced_buttons3 : "",
-		theme_advanced_buttons4 : "",	
-		theme_advanced_toolbar_location : "top",
-		theme_advanced_toolbar_align : "left",
-		theme_advanced_statusbar_location : "bottom",
-		theme_advanced_resizing : true,
-		content_css : pathCSS+"global.css",
-		document_base_url : ad,
-		width: "600",
-		height: "auto",
-		font_size_style_values : "8pt, 10pt, 12pt, 14pt, 18pt, 24pt, 36pt",
-		elements : "nourlconvert,ajaxfilemanager",
-		file_browser_callback : "ajaxfilemanager",
-		entity_encoding: "raw",
-		convert_urls : false,
-		language : iso
+		selector: ".rte" ,
+		plugins : "colorpicker link image paste pagebreak table contextmenu filemanager table code media autoresize textcolor",
+		toolbar1 : "code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,|,blockquote,colorpicker,pasteword,|,bullist,numlist,|,outdent,indent,|,link,unlink,|,cleanup,|,media,image",
+		toolbar2: "",
+		external_filemanager_path: ad+"/filemanager/",
+		filemanager_title: "File manager" ,
+		external_plugins: { "filemanager" : ad+"/filemanager/plugin.min.js"},
+		language: iso,
+		skin: "prestashop",
+		statusbar: false,
+		relative_urls : false,
+		extended_valid_elements : "em[class|name|id]",
+		menu: {
+			edit: {title: 'Edit', items: 'undo redo | cut copy paste | selectall'},
+			insert: {title: 'Insert', items: 'media image link | pagebreak'},
+			view: {title: 'View', items: 'visualaid'},
+			format: {title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat'},
+			table: {title: 'Table', items: 'inserttable tableprops deletetable | cell row column'},
+			tools: {title: 'Tools', items: 'code'}
+		}
+
 	}
 
 	$.each(default_config, function(index, el)
@@ -38,32 +39,7 @@ function tinySetup(config)
 		if (config[index] === undefined )
 			config[index] = el;
 	});
+
 	tinyMCE.init(config);
+
 };
-
-
-	function ajaxfilemanager(field_name, url, type, win) {
-		var ajaxfilemanagerurl = ad+"/ajaxfilemanager/ajaxfilemanager.php";
-		switch (type) {
-			case "image":
-				break;
-			case "media":
-				break;
-			case "flash": 
-				break;
-			case "file":
-				break;
-			default:
-				return false;
-	}
-    tinyMCE.activeEditor.windowManager.open({
-        url: ajaxfilemanagerurl,
-        width: 782,
-        height: 440,
-        inline : "yes",
-        close_previous : "no"
-    },{
-        window : win,
-        input : field_name
-    });
-}

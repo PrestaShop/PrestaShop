@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,6 +28,7 @@ class AdminShopUrlControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'shop_url';
 		$this->className = 'ShopUrl';
 	 	$this->lang = false;
@@ -44,11 +45,10 @@ class AdminShopUrlControllerCore extends AdminController
 			'id_shop_url' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
-				'width' => 25
+				'class' => 'fixed-width-xs'
 			),
 			'shop_name' => array(
 				'title' => $this->l('Shop name'),
-				'width' => 150,
 				'filter_key' => 's!name'
 			),
 			'url' => array(
@@ -63,7 +63,7 @@ class AdminShopUrlControllerCore extends AdminController
 				'type' => 'bool',
 				'orderby' => false,
 				'filter_key' => 'main',
-				'width' => 100,
+				'class' => 'fixed-width-md'
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
@@ -72,7 +72,7 @@ class AdminShopUrlControllerCore extends AdminController
 				'type' => 'bool',
 				'orderby' => false,
 				'filter_key' => 'active',
-				'width' => 50,
+				'class' => 'fixed-width-md'
 			),
 		);
 
@@ -118,12 +118,13 @@ class AdminShopUrlControllerCore extends AdminController
 			array(
 				'form' => array(
 					'legend' => array(
-						'title' => $this->l('URL options')
+						'title' => $this->l('URL options'),
+						'icon' => 'icon-cogs' 
 					),
 					'input' => array(
 						array(
 							'type' => 'select',
-							'label' => $this->l('Shop:'),
+							'label' => $this->l('Shop'),
 							'name' => 'id_shop',
 							'onchange' => 'checkMainUrlInfo(this.value);',
 							'options' => array(
@@ -139,20 +140,18 @@ class AdminShopUrlControllerCore extends AdminController
 							)
 						),
 						array(
-							'type' => 'radio',
-							'label' => $this->l('Main URL:'),
+							'type' => 'switch',
+							'label' => $this->l('Main URL'),
 							'name' => 'main',
 							'class' => 't',
 							'values' => array(
 								array(
 									'id' => 'main_on',
-									'value' => 1,
-									'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" />'
+									'value' => 1
 								),
 								array(
 									'id' => 'main_off',
-									'value' => 0,
-									'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
+									'value' => 0
 								)
 							),
 							'desc' => array(
@@ -168,79 +167,92 @@ class AdminShopUrlControllerCore extends AdminController
 							)
 						),
 						array(
-							'type' => 'radio',
-							'label' => $this->l('Status:'),
+							'type' => 'switch',
+							'label' => $this->l('Enabled'),
 							'name' => 'active',
 							'required' => false,
 							'class' => 't',
 							'values' => array(
 								array(
 									'id' => 'active_on',
-									'value' => 1,
-									'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" />'
+									'value' => 1
 								),
 								array(
 									'id' => 'active_off',
-									'value' => 0,
-									'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
+									'value' => 0
 								)
-							),
-							'desc' => $this->l('Enabled or disabled')
+							)
 						)
 					),
 					'submit' => array(
 						'title' => $this->l('Save'),
-						'class' => 'button'
 					),
 				),
 			),
 			array(
 				'form' => array(
 					'legend' => array(
-						'title' => $this->l('Shop URL')
+						'title' => $this->l('Shop URL'),
+						'icon' => 'icon-shopping-cart'
 					),
 					'input' => array(
 						array(
 							'type' => 'text',
-							'label' => $this->l('Domain:'),
+							'label' => $this->l('Domain'),
 							'name' => 'domain',
 							'size' => 50,
 						),
 						array(
 							'type' => 'text',
-							'label' => $this->l('Domain SSL:'),
+							'label' => $this->l('Domain SSL'),
 							'name' => 'domain_ssl',
 							'size' => 50,
 						),
-						array(
-							'type' => 'text',
-							'label' => $this->l('Physical URL:'),
-							'name' => 'physical_uri',
-							'desc' => $this->l('This is the physical folder for your store on the server. Leave this field empty if your store is installed on the root path (e.g. if your store is available at www.my-prestashop.com/my-store/, you input my-store/ in this field).'),
-							'size' => 50,
-						),
-						array(
-							'type' => 'text',
-							'label' => $this->l('Virtual URL:'),
-							'name' => 'virtual_uri',
-							'desc' => $desc_virtual_uri,
-							'size' => 50,
-							'hint' => (!$update_htaccess) ? $this->l('Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your URL doesn\'t work, please check with your host provider on how to activate URL rewriting.') : '',
-						),
-						array(
-							'type' => 'text',
-							'label' => $this->l('Your final URL will be:'),
-							'name' => 'final_url',
-							'size' => 76,
-							'readonly' => true
-						),
+					),
+					'submit' => array(
+						'title' => $this->l('Save'),
 					),
 				),
 			),
 		);
+		
+		if (!defined('_PS_HOST_MODE_'))
+			$this->fields_form[1]['form']['input'] = array_merge($this->fields_form[1]['form']['input'],
+				array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Physical URL'),
+						'name' => 'physical_uri',
+						'desc' => $this->l('This is the physical folder for your store on the server. Leave this field empty if your store is installed on the root path (e.g. if your store is available at www.my-prestashop.com/my-store/, you input my-store/ in this field).'),
+						'size' => 50,
+					)
+				)
+			);
+
+		$this->fields_form[1]['form']['input'] = array_merge($this->fields_form[1]['form']['input'],
+			array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Virtual URL'),
+					'name' => 'virtual_uri',
+					'desc' => $desc_virtual_uri,
+					'size' => 50,
+					'hint' => (!$update_htaccess) ? $this->l('Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your URL doesn\'t work, please check with your host provider on how to activate URL rewriting.') : null,
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Your final URL will be'),
+					'name' => 'final_url',
+					'size' => 76,
+					'readonly' => true
+				),
+			)
+		);
 
 		if (!($obj = $this->loadObject(true)))
 			return;
+
+		self::$currentIndex = self::$currentIndex.'&id_shop='.$obj->id;
 		$current_shop = Shop::initialize();
 
 		$list_shop_with_url = array();
@@ -261,41 +273,94 @@ class AdminShopUrlControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+
+		if ($this->display != 'add' && $this->display != 'edit')
+		{
+			if ($this->id_object)
+				$this->loadObject();
+
+			if (!$this->id_shop && $this->object && $this->object->id_shop)
+				$this->id_shop = $this->object->id_shop;
+
+			$this->page_header_toolbar_btn['edit'] = array(
+				'desc' => $this->l('Edit this shop'),
+				'href' => $this->context->link->getAdminLink('AdminShop').'&updateshop&id_shop='.$this->id_shop,
+			);
+
+			$this->page_header_toolbar_btn['new'] = array(
+				'desc' => $this->l('Add a new URL'),
+				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&add'.$this->table.'&id_shop='
+					.$this->id_shop,
+			);
+		}
+	}
+
 	public function initToolbar()
 	{
-		if ($this->id_object)
-			$this->loadObject();
-
-		if (!$this->id_shop && $this->object && $this->object->id_shop)
-			$this->id_shop = $this->object->id_shop;
-
-		if (!$this->display && $this->id_shop)
-			$this->toolbar_btn['edit'] = array(
-				'desc' => $this->l('Edit this shop'),
-				'href' => $this->context->link->getAdminLink('AdminShop').'&amp;updateshop&amp;id_shop='.$this->id_shop,
-			);
-
 		parent::initToolbar();
 
-		$this->show_toolbar = false;
-		if (isset($this->toolbar_btn['new']))
+		if ($this->display != 'add' && $this->display != 'edit')
+		{
+			if ($this->id_object)
+				$this->loadObject();
+
+			if (!$this->id_shop && $this->object && $this->object->id_shop)
+				$this->id_shop = $this->object->id_shop;
+
 			$this->toolbar_btn['new'] = array(
 				'desc' => $this->l('Add a new URL'),
-				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&amp;add'.$this->table.'&amp;id_shop='.$this->id_shop,
+				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&amp;add'.$this->table.'&amp;id_shop='
+					.$this->id_shop,
 			);
-
-		if (isset($this->toolbar_btn['back']))
-			$this->toolbar_btn['back']['href'] .= '&amp;id_shop='.$this->id_shop;
+		}
 	}
 
 	public function initContent()
 	{
-		$this->list_simple_header = true;
 		parent::initContent();
 
 		$this->addJqueryPlugin('cooki-plugin');
-		$this->addJqueryPlugin('jstree');
-		$this->addCSS(_PS_JS_DIR_.'jquery/plugins/jstree/themes/classic/style.css');
+		$data = Shop::getTree();
+
+		foreach ($data as $key_group => &$group)
+			foreach ($group['shops'] as $key_shop => &$shop)
+			{
+				$current_shop = new Shop($shop['id_shop']);
+				$urls = $current_shop->getUrls();
+
+				foreach ($urls as $key_url => &$url)
+				{
+					$title = $url['domain'].$url['physical_uri'].$url['virtual_uri'];
+					if (strlen($title) > 23)
+						$title = substr($title, 0, 23).'...';
+
+					$url['name'] = $title;
+					$shop['urls'][$url['id_shop_url']] = $url;
+				}
+			}
+
+		$shops_tree = new HelperTreeShops('shops-tree', 'Multistore tree');
+		$shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
+			->setHeaderTemplate('shop_tree_header.tpl')->setActions(array(
+				new TreeToolbarLink(
+					'Collapse All',
+					'#',
+					'$(\'#'.$shops_tree->getId().'\').tree(\'collapseAll\'); return false;',
+					'icon-collapse-alt'),
+				new TreeToolbarLink(
+					'Expand All',
+					'#',
+					'$(\'#'.$shops_tree->getId().'\').tree(\'expandAll\'); return false;',
+					'icon-expand-alt')
+			))
+			->setAttribute('url_shop_group', $this->context->link->getAdminLink('AdminShopGroup'))
+			->setAttribute('url_shop', $this->context->link->getAdminLink('AdminShop'))
+			->setAttribute('url_shop_url', $this->context->link->getAdminLink('AdminShopUrl'))
+			->setData($data);
+		$shops_tree = $shops_tree->render(null, false, false);
 
 		if (!$this->display && $this->id_shop)
 		{
@@ -307,7 +372,7 @@ class AdminShopUrlControllerCore extends AdminController
 			'toolbar_scroll' => 1,
 			'toolbar_btn' => $this->toolbar_btn,
 			'title' => $this->toolbar_title,
-			'selected_tree_id' => ($this->display == 'edit' ? 'tree-url-'.$this->id_object : (Tools::getValue('id_shop') ? 'tree-shop-'.Tools::getValue('id_shop') : '')),
+			'shops_tree' => $shops_tree
 		));
 	}
 
@@ -352,7 +417,11 @@ class AdminShopUrlControllerCore extends AdminController
 
 		$return = parent::processSave();
 		if (!$this->errors)
+		{
 			Tools::generateHtaccess();
+			Tools::clearSmartyCache();
+			Media::clearCache();
+		}
 
 		return $return;
 	}

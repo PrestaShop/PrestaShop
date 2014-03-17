@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,19 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
 {if isset($controller) && !empty($controller) && $controller != 'adminnotfound'}
-<h1>{l s='The controller %s is missing or invalid.' sprintf=$controller}</h1>
+	<h1>{l s='The controller %s is missing or invalid.' sprintf=$controller}</h1>
 {/if}
-<ul>
-<li><a href="index.php">{l s='Go to the dashboard.'}</a></li>
-<li><a href="#" onclick="window.history.back();">{l s='Back to the previous page.'}</a></li>
-</ul>
+<a class="btn btn-default" href="javascript:window.history.back();">
+	<i class="icon-arrow-left"></i>
+	{l s='Back to the previous page'}
+</a>
+<a class="btn btn-default" href="index.php">
+	<i class="icon-dashboard"></i>
+	{l s='Go to the dashboard'}
+</a>

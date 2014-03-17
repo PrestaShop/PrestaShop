@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,7 +40,8 @@ class Blocknewsletter extends Module
 		$this->tab = 'front_office_features';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Newsletter block');
 		$this->description = $this->l('Adds a block for newsletter subscription.');
@@ -61,8 +62,7 @@ class Blocknewsletter extends Module
 
 	public function install()
 	{
-		if (parent::install() == false || $this->registerHook('leftColumn') == false || $this->registerHook('header') == false
-			|| $this->registerHook('actionCustomerAccountAdd') == false)
+		if (!parent::install() || !$this->registerHook(array('header', 'footer', 'actionCustomerAccountAdd')))
 			return false;
 
 		Configuration::updateValue('NW_SALT', Tools::passwdGen(16));
@@ -83,62 +83,34 @@ class Blocknewsletter extends Module
 
 	public function uninstall()
 	{
-		if (!parent::uninstall())
-			return false;
-		return Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'newsletter');
+		Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'newsletter');
+		return parent::uninstall();
 	}
 
 	public function getContent()
 	{
-		$this->_html = '<h2>'.$this->displayName.'</h2>';
+		$this->_html = '';
 
 		if (Tools::isSubmit('submitUpdate'))
 		{
-			if (isset($_POST['conf_email']) && Validate::isBool((int)$_POST['conf_email']))
-				Configuration::updateValue('NW_CONFIRMATION_EMAIL', pSQL($_POST['conf_email']));
+			$conf_email = Tools::getValue('NW_CONFIRMATION_EMAIL');
+			if ($conf_email && Validate::isBool((int)$conf_email))
+				Configuration::updateValue('NW_CONFIRMATION_EMAIL', (int)$conf_email);
 
-			if (isset($_POST['verif_email']) && Validate::isBool((int)$_POST['verif_email']))
-				Configuration::updateValue('NW_VERIFICATION_EMAIL', (int)$_POST['verif_email']);
-
-			if (!empty($_POST['voucher']) && !Validate::isDiscountName($_POST['voucher']))
-				$this->_html .= '<div class="alert">'.$this->l('The coucher code is invalid.').'</div>';
+			$verif_email = Tools::getValue('NW_VERIFICATION_EMAIL');
+			if ($verif_email && Validate::isBool((int)$verif_email))
+				Configuration::updateValue('NW_VERIFICATION_EMAIL', (int)$verif_email);
+			
+			$voucher = Tools::getValue('NW_VOUCHER_CODE');
+			if ($voucher && !Validate::isDiscountName($voucher))
+				$this->_html .= $this->displayError($this->l('The voucher code is invalid.'));
 			else
 			{
-				Configuration::updateValue('NW_VOUCHER_CODE', pSQL($_POST['voucher']));
-				$this->_html .= '<div class="conf ok">'.$this->l('Updated').'</div>';
+				Configuration::updateValue('NW_VOUCHER_CODE', pSQL($voucher));
+				$this->_html .= $this->displayConfirmation($this->l('Settings updated'));
 			}
 		}
-		return $this->_displayForm();
-	}
-
-	private function _displayForm()
-	{
-		$this->_html .= '
-		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">
-			<fieldset>
-				<legend><img src="'.$this->_path.'logo.gif" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Would you like to send a verification email after subscription?').'</label>
-				<div class="margin-form">
-					<input type="radio" name="verif_email" value="1" '.(Configuration::get('NW_VERIFICATION_EMAIL') ? 'checked="checked" ' : '').'/>'.$this->l('Yes').'
-					<input type="radio" name="verif_email" value="0" '.(!Configuration::get('NW_VERIFICATION_EMAIL') ? 'checked="checked" ' : '').'/>'.$this->l('No').'
-				</div>
-				<div class="clear"></div>
-				<label>'.$this->l('Would you like to send a confirmation email after subscription?').'</label>
-				<div class="margin-form">
-					<input type="radio" name="conf_email" value="1" '.(Configuration::get('NW_CONFIRMATION_EMAIL') ? 'checked="checked" ' : '').'/>'.$this->l('Yes').'
-					<input type="radio" name="conf_email" value="0" '.(!Configuration::get('NW_CONFIRMATION_EMAIL') ? 'checked="checked" ' : '').'/>'.$this->l('No').'
-				</div>
-				<div class="clear"></div>
-				<label>'.$this->l('Welcome voucher code').'</label>
-				<div class="margin-form">
-					<input type="text" name="voucher" value="'.Configuration::get('NW_VOUCHER_CODE').'" />
-					<p>'.$this->l('Leave blank to disable by default.').'</p>
-				</div>
-				<div class="margin-form clear pspace"><input type="submit" name="submitUpdate" value="'.$this->l('Update').'" class="button" /></div>
-			</fieldset>
-		</form>';
-
-		return $this->_html;
+		return $this->_html.$this->renderForm();
 	}
 
 	/**
@@ -180,26 +152,20 @@ class Blocknewsletter extends Module
 	private function newsletterRegistration()
 	{
 		if (empty($_POST['email']) || !Validate::isEmail($_POST['email']))
-			return $this->error = $this->l('Invalid email address');
+			return $this->error = $this->l('Invalid email address.');
 
 		/* Unsubscription */
 		else if ($_POST['action'] == '1')
 		{
 			$register_status = $this->isNewsletterRegistered($_POST['email']);
+
 			if ($register_status < 1)
 				return $this->error = $this->l('This email address is not registered.');
-			else if ($register_status == self::GUEST_REGISTERED)
-			{
-				if (!Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->id))
-					return $this->error = $this->l('An error occurred while attempting to unsubscribe.');
-				return $this->valid = $this->l('Unsubscription successful');
-			}
-			else if ($register_status == self::CUSTOMER_REGISTERED)
-			{
-				if (!Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'customer SET `newsletter` = 0 WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->id))
-					return $this->error = $this->l('An error occurred while attempting to unsubscribe.');
-				return $this->valid = $this->l('Unsubscription successful');
-			}
+
+			if (!$this->unregister($_POST['email'], $register_status))
+				return $this->error = $this->l('An error occurred while attempting to unsubscribe.');
+
+			return $this->valid = $this->l('Unsubscription successful.');
 		}
 		/* Subscription */
 		else if ($_POST['action'] == '0')
@@ -259,20 +225,31 @@ class Blocknewsletter extends Module
 	 * Subscribe an email to the newsletter. It will create an entry in the newsletter table
 	 * or update the customer table depending of the register status
 	 *
-	 * @param unknown_type $email
-	 * @param unknown_type $register_status
+	 * @param string $email
+	 * @param int $register_status
 	 */
 	protected function register($email, $register_status)
 	{
-		if ($register_status == self::GUEST_NOT_REGISTERED)
-		{
-			if (!$this->registerGuest(Tools::getValue('email')))
-				return false;
+		if ($register_status == self::GUEST_NOT_REGISTERED) {
+			return $this->registerGuest($email);
 		}
-		else if ($register_status == self::CUSTOMER_NOT_REGISTERED)
-		{
-		 	if (!$this->registerUser(Tools::getValue('email')))
-	 			return false;
+
+		if ($register_status == self::CUSTOMER_NOT_REGISTERED) {
+	 		return $this->registerUser($email);
+		}
+
+		return false;
+	}
+
+	protected function unregister($email, $register_status) {
+		if ($register_status == self::GUEST_REGISTERED) {
+			$sql = 'DELETE FROM '._DB_PREFIX_.'newsletter WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->id;
+		} else if ($register_status == self::CUSTOMER_REGISTERED) {
+			$sql = 'UPDATE '._DB_PREFIX_.'customer SET `newsletter` = 0 WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->id;
+		}
+
+		if (!isset($sql) || !Db::getInstance()->execute($sql)) {
+			return false;
 		}
 
 		return true;
@@ -512,6 +489,7 @@ class Blocknewsletter extends Module
 	public function hookDisplayHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'blocknewsletter.css', 'all');
+		$this->context->controller->addJS($this->_path.'blocknewsletter.js');
 	}
 
 	/**
@@ -529,5 +507,90 @@ class Blocknewsletter extends Module
 		if ($newsletter && Validate::isEmail($email))
 			return (bool)Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE id_shop='.(int)$id_shop.' AND email=\''.pSQL($email)."'");
 		return true;
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Would you like to send a verification email after subscription?'),
+						'name' => 'NW_VERIFICATION_EMAIL',
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Yes')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('No')
+									)
+								),
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Would you like to send a confirmation email after subscription?'),
+						'name' => 'NW_CONFIRMATION_EMAIL',
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Yes')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('No')
+									)
+								),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Welcome voucher code'),
+						'name' => 'NW_VOUCHER_CODE',
+						'class' => 'fixed-width-md',
+						'desc' => $this->l('Leave blank to disable by default.')
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitUpdate';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{		
+		return array(
+			'NW_VERIFICATION_EMAIL' => Tools::getValue('NW_VERIFICATION_EMAIL', Configuration::get('NW_VERIFICATION_EMAIL')),
+			'NW_CONFIRMATION_EMAIL' => Tools::getValue('NW_CONFIRMATION_EMAIL', Configuration::get('NW_CONFIRMATION_EMAIL')),
+			'NW_VOUCHER_CODE' => Tools::getValue('NW_VOUCHER_CODE', Configuration::get('NW_VOUCHER_CODE')),
+		);
 	}
 }

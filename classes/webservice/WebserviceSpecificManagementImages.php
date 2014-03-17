@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -117,25 +117,38 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		if ($this->output != '')
 			return $this->objOutput->getObjectRender()->overrideContent($this->output);
 		// display image content if needed
-		else if ($this->imgToDisplay)
+		elseif ($this->imgToDisplay)
 		{
-			if(empty($this->imgExtension)){
+			if (empty($this->imgExtension))
+			{
 				$imginfo = getimagesize($this->imgToDisplay);
-				$this->imgExtension = image_type_to_extension($imginfo[2],false);
+				$this->imgExtension = image_type_to_extension($imginfo[2], false);
 			}
 
 			$imageResource = false;
 			$types = array(
-				'jpg' => array('function' => 'imagecreatefromjpeg', 'Content-Type' => 'image/jpeg'),
-				'jpeg' => array('function' => 'imagecreatefromjpeg', 'Content-Type' => 'image/jpeg'),
-				'png' => array('function' => 'imagecreatefrompng', 'Content-Type' => 'image/png'),
-				'gif' => array('function' => 'imagecreatefromgif', 'Content-Type' => 'image/gif')
+				'jpg' => array(
+					'function' => 'imagecreatefromjpeg', 
+					'Content-Type' => 'image/jpeg'
+				),
+				'jpeg' => array(
+					'function' => 'imagecreatefromjpeg', 
+					'Content-Type' => 'image/jpeg'
+				),
+				'png' => array('function' => 
+					'imagecreatefrompng', 
+					'Content-Type' => 'image/png'
+				),
+				'gif' => array(
+					'function' => 'imagecreatefromgif', 
+					'Content-Type' => 'image/gif'
+				)
 			);
 
 			if (array_key_exists($this->imgExtension, $types))
 				$imageResource = @$types[$this->imgExtension]['function']($this->imgToDisplay);
 
-			if(!$imageResource)
+			if (!$imageResource)
 				throw new WebserviceException(sprintf('Unable to load the image "%s"', str_replace(_PS_ROOT_DIR_, '[SHOP_ROOT_DIR]', $this->imgToDisplay)), array(47, 500));
 			else
 			{
@@ -404,7 +417,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				{
 					if ($this->wsObject->urlSegment[2] == 'header')
 					{
-						list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.'logo.jpg');
+						$logo_name = Configuration::get('PS_LOGO') ? Configuration::get('PS_LOGO') : 'logo.jpg';
+						list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.$logo_name);
 						Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 						Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
 					}
@@ -692,15 +706,15 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				break;
 			// Delete the image
 			case 'DELETE':
-				if ($filename_exists)
+				// Delete products image in DB
+				if ($this->imageType == 'products')
 				{
-					// Delete products image in DB
-					if ($this->imageType == 'products')
-					{
 						$image = new Image((int)$this->wsObject->urlSegment[3]);
 						return $image->delete();
-					}
-					elseif (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores')))
+				}
+				elseif ($filename_exists)
+				{
+					if (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores')))
 					{
 						$object = new $this->wsObject->resourceList[$this->imageType]['class']((int)$this->wsObject->urlSegment[2]);
 						return $object->deleteImage(true);

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <entity_gender>
-  <gender id="1" name="先生"/>
-  <gender id="2" name="女士"/>
+  <gender id="Mr" name="先生"/>
+  <gender id="Mrs" name="女士"/>
 </entity_gender>

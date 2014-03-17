@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -54,11 +54,11 @@
 			<li class="item"><a href="{$link->getPageLink($contact_url, true)|escape:'html'}" title="{l s='Contact us' mod='blockcms'}">{l s='Contact us' mod='blockcms'}</a></li>
 			{foreach from=$cmslinks item=cmslink}
 				{if $cmslink.meta_title != ''}
-					<li class="item"><a href="{$cmslink.link|addslashes|escape:'html'}" title="{$cmslink.meta_title|escape:'htmlall':'UTF-8'}">{$cmslink.meta_title|escape:'htmlall':'UTF-8'}</a></li>
+					<li class="item"><a href="{$cmslink.link|addslashes|escape:'html'}" title="{$cmslink.meta_title|escape:'html':'UTF-8'}">{$cmslink.meta_title|escape:'html':'UTF-8'}</a></li>
 				{/if}
 			{/foreach}
 			<li><a href="{$link->getPageLink('sitemap')|escape:'html'}" title="{l s='Sitemap' mod='blockcms'}">{l s='Sitemap' mod='blockcms'}</a></li>
-			{if $display_poweredby}<li class="last_item">{l s='Powered by' mod='blockcms'} <a class="_blank" href="http://www.prestashop.com">PrestaShop</a>&trade;</li>{/if}
+			{if $display_poweredby}<li class="last_item">{l s='[1]Ecommerce software by %s[/1]' mod='blockcms' sprintf=['PrestaShop™'] tags=['<a class="_blank" href="http://www.prestashop.com">']}</li>{/if}
 		</ul>
 	{$footer_text}
 	</div>

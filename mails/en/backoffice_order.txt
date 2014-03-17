@@ -1,9 +1,13 @@
-Hi {firstname} {lastname},
 
-A new order has been generated to you.
+[{shop_url}] 
 
-Go on {order_link} to finalize the payment.
+Hi {firstname} {lastname}, 
 
-{shop_name} - {shop_url}
+A new order has been generated on your behalf. 
 
-{shop_url} powered by PrestaShop™
+Please go on {order_link} [{order_link}] to
+finalize the payment. 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

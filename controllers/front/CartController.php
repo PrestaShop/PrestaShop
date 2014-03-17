@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -116,7 +116,8 @@ class CartControllerCore extends FrontController
 				$this->context->cart->update();
 			}
 		}
-		$removed = CartRule::autoAddToCart();
+		$removed = CartRule::autoRemoveFromCart();
+		CartRule::autoAddToCart();
 		if (count($removed) && (int)Tools::getValue('allow_refresh'))
 			$this->ajax_refresh = true;
 	}
@@ -181,14 +182,14 @@ class CartControllerCore extends FrontController
 		$mode = (Tools::getIsset('update') && $this->id_product) ? 'update' : 'add';
 
 		if ($this->qty == 0)
-			$this->errors[] = Tools::displayError('Null quantity.');
+			$this->errors[] = Tools::displayError('Null quantity.', !Tools::getValue('ajax'));
 		elseif (!$this->id_product)
-			$this->errors[] = Tools::displayError('Product not found');
+			$this->errors[] = Tools::displayError('Product not found', !Tools::getValue('ajax'));
 
 		$product = new Product($this->id_product, true, $this->context->language->id);
 		if (!$product->id || !$product->active)
 		{
-			$this->errors[] = Tools::displayError('This product is no longer available.', false);
+			$this->errors[] = Tools::displayError('This product is no longer available.', !Tools::getValue('ajax'));
 			return;
 		}
 
@@ -216,7 +217,7 @@ class CartControllerCore extends FrontController
 		if ($this->id_product_attribute)
 		{
 			if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check))
-				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
+				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.', !Tools::getValue('ajax'));
 		}
 		elseif ($product->hasAttributes())
 		{
@@ -226,10 +227,10 @@ class CartControllerCore extends FrontController
 			if (!$this->id_product_attribute)
 				Tools::redirectAdmin($this->context->link->getProductLink($product));
 			elseif (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check))
-				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
+				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.', !Tools::getValue('ajax'));
 		}
 		elseif (!$product->checkQty($qty_to_check))
-			$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
+			$this->errors[] = Tools::displayError('There isn\'t enough product in stock.', !Tools::getValue('ajax'));
 
 		// If no errors, process product addition
 		if (!$this->errors && $mode == 'add')
@@ -249,7 +250,7 @@ class CartControllerCore extends FrontController
 
 			// Check customizable fields
 			if (!$product->hasAllRequiredCustomizableFields() && !$this->customization_id)
-				$this->errors[] = Tools::displayError('Please fill in all of the required fields, and then save your customizations.');
+				$this->errors[] = Tools::displayError('Please fill in all of the required fields, and then save your customizations.', !Tools::getValue('ajax'));
 
 			if (!$this->errors)
 			{
@@ -259,10 +260,10 @@ class CartControllerCore extends FrontController
 				{
 					// If product has attribute, minimal quantity is set with minimal quantity of attribute
 					$minimal_quantity = ($this->id_product_attribute) ? Attribute::getAttributeMinimalQty($this->id_product_attribute) : $product->minimal_quantity;
-					$this->errors[] = sprintf(Tools::displayError('You must add %d minimum quantity', false), $minimal_quantity);
+					$this->errors[] = sprintf(Tools::displayError('You must add %d minimum quantity', !Tools::getValue('ajax')), $minimal_quantity);
 				}
 				elseif (!$update_quantity)
-					$this->errors[] = Tools::displayError('You already have the maximum quantity available for this product.', false);
+					$this->errors[] = Tools::displayError('You already have the maximum quantity available for this product.', !Tools::getValue('ajax'));
 				elseif ((int)Tools::getValue('allow_refresh'))
 				{
 					// If the cart rules has changed, we need to refresh the whole cart
@@ -319,6 +320,9 @@ class CartControllerCore extends FrontController
 			die(Tools::jsonEncode(array('hasError' => true, 'errors' => $this->errors)));
 		if ($this->ajax_refresh)
 			die(Tools::jsonEncode(array('refresh' => true)));
+		
+		// write cookie if can't on destruct
+		$this->context->cookie->write();
 
 		if (Tools::getIsset('summary'))
 		{

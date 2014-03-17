@@ -63,6 +63,7 @@ CREATE TABLE `PREFIX_attachment` (
   `id_attachment` int(10) unsigned NOT NULL auto_increment,
   `file` varchar(40) NOT NULL,
   `file_name` varchar(128) NOT NULL,
+  `file_size` bigint(10) unsigned NOT NULL DEFAULT 0,
   `mime` varchar(128) NOT NULL,
   PRIMARY KEY (`id_attachment`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
@@ -423,7 +424,7 @@ CREATE TABLE `PREFIX_configuration` (
   `id_configuration` int(10) unsigned NOT NULL auto_increment,
   `id_shop_group` INT(11) UNSIGNED DEFAULT NULL,
   `id_shop` INT(11) UNSIGNED DEFAULT NULL,
-  `name` varchar(32) NOT NULL,
+  `name` varchar(254) NOT NULL,
   `value` text,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
@@ -439,6 +440,28 @@ CREATE TABLE `PREFIX_configuration_lang` (
   `value` text,
   `date_upd` datetime default NULL,
   PRIMARY KEY (`id_configuration`,`id_lang`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_configuration_kpi` (
+  `id_configuration_kpi` int(10) unsigned NOT NULL auto_increment,
+  `id_shop_group` INT(11) UNSIGNED DEFAULT NULL,
+  `id_shop` INT(11) UNSIGNED DEFAULT NULL,
+  `name` varchar(32) NOT NULL,
+  `value` text,
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
+  PRIMARY KEY (`id_configuration_kpi`),
+  KEY `name` (`name`),
+  KEY `id_shop` (`id_shop`),
+  KEY `id_shop_group` (`id_shop_group`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_configuration_kpi_lang` (
+  `id_configuration_kpi` int(10) unsigned NOT NULL,
+  `id_lang` int(10) unsigned NOT NULL,
+  `value` text,
+  `date_upd` datetime default NULL,
+  PRIMARY KEY (`id_configuration_kpi`,`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_connections` (
@@ -591,6 +614,7 @@ CREATE TABLE `PREFIX_customer_message` (
   `ip_address` int(11) default NULL,
   `user_agent` varchar(128) default NULL,
   `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
   `private` TINYINT NOT NULL DEFAULT  '0',
   `read` tinyint(1) NOT NULL default '0',
   PRIMARY KEY (`id_customer_message`),
@@ -699,12 +723,18 @@ CREATE TABLE `PREFIX_employee` (
   `last_passwd_gen` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `stats_date_from` date default NULL,
   `stats_date_to` date default NULL,
+  `stats_compare_from` date default NULL,
+  `stats_compare_to` date default NULL,
+  `stats_compare_option` int(1) unsigned NOT NULL DEFAULT 1,
+  `preselect_date_range` varchar(32) default NULL,
   `bo_color` varchar(32) default NULL,
   `bo_theme` varchar(32) default NULL,
+  `bo_css` varchar(64) default NULL,
   `default_tab` int(10) unsigned NOT NULL DEFAULT 0,
   `bo_width` int(10) unsigned NOT NULL DEFAULT 0,
-  `bo_show_screencast` tinyint(1) NOT NULL default '1',
+  `bo_menu` tinyint(1) NOT NULL default '1',
   `active` tinyint(1) unsigned NOT NULL default '0',
+  `optin` tinyint(1) unsigned NOT NULL default '1',
   `id_last_order` int(10) unsigned NOT NULL default '0',
   `id_last_customer_message` int(10) unsigned NOT NULL default '0',
   `id_last_customer` int(10) unsigned NOT NULL default '0',
@@ -970,7 +1000,9 @@ CREATE TABLE `PREFIX_message_readed` (
 CREATE TABLE `PREFIX_meta` (
   `id_meta` int(10) unsigned NOT NULL auto_increment,
   `page` varchar(64) NOT NULL,
+	`configurable` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_meta`),
+  UNIQUE KEY `page` (`page`),
   KEY `meta_name` (`page`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -1095,7 +1127,9 @@ CREATE TABLE `PREFIX_order_detail_tax` (
   `id_order_detail` int(11) NOT NULL,
   `id_tax` int(11) NOT NULL,
   `unit_amount` DECIMAL(16, 6) NOT NULL DEFAULT '0.00',
-  `total_amount` DECIMAL(16, 6) NOT NULL DEFAULT '0.00'
+  `total_amount` DECIMAL(16, 6) NOT NULL DEFAULT '0.00',
+   PRIMARY KEY (`id_order_detail`),
+   KEY `id_tax` (`id_tax`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_order_invoice` (
@@ -1758,7 +1792,7 @@ CREATE TABLE `PREFIX_tab` (
 CREATE TABLE `PREFIX_tab_lang` (
   `id_tab` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(32) default NULL,
+  `name` varchar(64) default NULL,
   PRIMARY KEY (`id_tab`,`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -1902,14 +1936,6 @@ CREATE TABLE `PREFIX_tax_rules_group` (
 `active` INT NOT NULL
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_help_access` (
-  `id_help_access` int(11) NOT NULL AUTO_INCREMENT,
-  `label` varchar(45) NOT NULL,
-  `version` varchar(8) NOT NULL,
-  PRIMARY KEY (`id_help_access`),
-  UNIQUE KEY `label` (`label`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-
 CREATE TABLE `PREFIX_specific_price_priority` (
 	`id_specific_price_priority` INT NOT NULL AUTO_INCREMENT ,
 	`id_product` INT NOT NULL ,
@@ -1983,8 +2009,24 @@ CREATE TABLE IF NOT EXISTS `PREFIX_theme` (
   `id_theme` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   `directory` varchar(64) NOT NULL,
+  `responsive` tinyint(1) NOT NULL DEFAULT '0',
+  `default_left_column` tinyint(1) NOT NULL DEFAULT '0',
+  `default_right_column` tinyint(1) NOT NULL DEFAULT '0',
+  `product_per_page` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id_theme`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_theme_meta` (
+  `id_theme_meta` int(11) NOT NULL AUTO_INCREMENT,
+  `id_theme` int(11) NOT NULL,
+  `id_meta` int(10) unsigned NOT NULL,
+  `left_column` tinyint(1) NOT NULL DEFAULT '1',
+  `right_column` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id_theme_meta`),
+  UNIQUE KEY `id_theme_2` (`id_theme`,`id_meta`),
+  KEY `id_theme` (`id_theme`),
+  KEY `id_meta` (`id_meta`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_theme_specific` (
   `id_theme` int(11) unsigned NOT NULL,
@@ -2117,6 +2159,7 @@ PRIMARY KEY (`id_store`, `id_shop`),
 CREATE TABLE `PREFIX_module_shop` (
 `id_module` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
+`enable_device` TINYINT(1) NOT NULL DEFAULT  '7',
 PRIMARY KEY (`id_module` , `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,8 +28,9 @@ global $smarty;
 $smarty->debugging = false;
 $smarty->debugging_ctrl = 'NONE';
 
-/* Smarty should be in compile check mode in the BackOffice */
-$smarty->force_compile = false;
+// Let user choose to force compilation
+$smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
+// But force compile_check since the performance impact is small and it is better for debugging
 $smarty->compile_check = true;
 
 function smartyTranslate($params, &$smarty)
@@ -40,13 +41,13 @@ function smartyTranslate($params, &$smarty)
 	$sprintf = isset($params['sprintf']) ? $params['sprintf'] : false;
 
 	if ($pdf)
-		return Translate::getPdfTranslation($params['s']);
+		return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s']), $params);
 
 	$filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
 
 	// If the template is part of a module
 	if (!empty($params['mod']))
-		return Translate::getModuleTranslation($params['mod'], $params['s'], basename($filename, '.tpl'), $sprintf);
+		return Translate::smartyPostProcessTranslation(Translate::getModuleTranslation($params['mod'], $params['s'], basename($filename, '.tpl'), $sprintf, isset($params['js'])), $params);
 
 	// If the tpl is at the root of the template folder
 	if (dirname($filename) == '.')
@@ -79,5 +80,5 @@ function smartyTranslate($params, &$smarty)
 		}
 	}
 
-	return Translate::getAdminTranslation($params['s'], $class, $addslashes, $htmlentities, $sprintf);
+	return Translate::smartyPostProcessTranslation(Translate::getAdminTranslation($params['s'], $class, $addslashes, $htmlentities, $sprintf), $params);
 }

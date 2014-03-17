@@ -1,53 +1,105 @@
 $(document).ready(function() {
-	// Focus on email address field
-	$('#email').focus();
-
 	// Initialize events
-	$('#login_form').submit(function(e) {
-		// Kill default behaviour
-		e.preventDefault();
-		doAjaxLogin($('#redirect').val());
+	$("#login_form").validate({
+		rules: {
+			"email":{
+				"email": true,
+				"required": true
+			},
+			"passwd": {
+				"required": true
+			}
+		},
+		submitHandler: function(form) {
+			doAjaxLogin($('#redirect').val());
+		},
+		// override jquery validate plugin defaults for bootstrap 3
+		highlight: function(element) {
+			$(element).closest('.form-group').addClass('has-error');
+		},
+		unhighlight: function(element) {
+			$(element).closest('.form-group').removeClass('has-error');
+		},
+		errorElement: 'span',
+		errorClass: 'help-block',
+		errorPlacement: function(error, element) {
+			if(element.parent('.input-group').length) {
+				error.insertAfter(element.parent());
+			} else {
+				error.insertAfter(element);
+			}
+		}
 	});
 
-	$('#forgot_password_form').submit(function(e) {
-		// Kill default behaviour
-		e.preventDefault();
-		doAjaxForgot();
+	$("#forgot_password_form").validate({
+		rules: {
+			"email_forgot": {
+				"email": true,
+				"required": true
+			}
+		},
+		submitHandler: function(form) {
+		  doAjaxForgot();
+		},
+		// override jquery validate plugin defaults for bootstrap 3
+		highlight: function(element) {
+			$(element).closest('.form-group').addClass('has-error');
+		},
+		unhighlight: function(element) {
+			$(element).closest('.form-group').removeClass('has-error');
+		},
+		errorElement: 'span',
+		errorClass: 'help-block',
+		errorPlacement: function(error, element) {
+			if(element.parent('.input-group').length) {
+				error.insertAfter(element.parent());
+			} else {
+				error.insertAfter(element);
+			}
+		}
 	});
 
-	$('.show-forgot-password').click(function(e) {
-		// Kill default behaviour
+	$('.show-forgot-password').on('click',function(e) {
 		e.preventDefault();
 		displayForgotPassword();
 	});
 
-	$('.show-login-form').click(function(e) {
-		// Kill default behaviour
+	$('.show-login-form').on('click',function(e) {
 		e.preventDefault();
 		displayLogin();
 	});
+
+	$('#email').focus();
+
+	//Tab-index loop
+	$('form').each(function(){
+		var list  = $(this).find('*[tabindex]').sort(function(a,b){ return a.tabIndex < b.tabIndex ? -1 : 1; }),
+			first = list.first();
+		list.last().on('keydown', function(e){
+			if( e.keyCode === 9 ) {
+				first.focus();
+				return false;
+			}
+		});
+	});
 });
 
+//todo: ladda init
+var l = new Object();
+function feedbackSubmit() {
+	l = Ladda.create( document.querySelector( 'button[type=submit]' ) );
+}
 
 function displayForgotPassword() {
 	$('#error').hide();
-	$('#login_form').fadeOut('fast', function () {
-		$("#forgot_password_form").fadeIn('fast');
-		// Focus on email address forgot field
-		$('#email_forgot').select();
-	});
-
+	$("#login").find('.flip-container').toggleClass("flip");
+	$('#email_forgot').select();
 }
 
 function displayLogin() {
 	$('#error').hide();
-
-	$('#forgot_password_form').fadeOut('fast', function () {
-		$('#login_form').fadeIn('fast');
-		// Focus on email address field
-		$('#email').select();
-	});
-
+	$("#login").find('.flip-container').toggleClass("flip");
+	$('#email').select();
 	return false;
 }
 
@@ -58,7 +110,7 @@ function displayLogin() {
  */
 function doAjaxLogin(redirect) {
 	$('#error').hide();
-	$('#login_form .ajax-loader').fadeIn('slow', function() {
+	$('#login_form').fadeIn('slow', function() {
 		$.ajax({
 			type: "POST",
 			headers: { "cache-control": "no-cache" },
@@ -72,61 +124,64 @@ function doAjaxLogin(redirect) {
 				submitLogin: "1",
 				passwd: $('#passwd').val(),
 				email: $('#email').val(),
-				redirect: redirect
+				redirect: redirect,
+				stay_logged_in: $('#stay_logged_in:checked').val()
+			},
+			beforeSend: function() {
+				feedbackSubmit();
+				l.start();
 			},
 			success: function(jsonData) {
-				if (jsonData.hasErrors)
+				if (jsonData.hasErrors) {
 					displayErrors(jsonData.errors);
-				else
+					l.stop();
+				} else {
 					window.location.assign(jsonData.redirect);
+				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				$('#error').html('<h3>TECHNICAL ERROR:</h3><p>Details: Error thrown: ' + XMLHttpRequest + '</p><p>Text status: ' + textStatus + '</p>').show();
-				$('#login_form .ajax-loader').fadeOut('slow');
+				l.stop();
+				$('#error').html('<h3>TECHNICAL ERROR:</h3><p>Details: Error thrown: ' + XMLHttpRequest + '</p><p>Text status: ' + textStatus + '</p>').removeClass('hide');
+				$('#login_form').fadeOut('slow');
 			}
 		});
 	});
 }
+
 function doAjaxForgot() {
 	$('#error').hide();
-	$('#forgot_password_form .ajax-loader').fadeIn('slow', function() {
+	$('#forgot_password_form').fadeIn('slow', function() {
 		$.ajax({
-			type: "POST",
-			headers: { "cache-control": "no-cache" },
-			url: "ajax-tab.php" + '?rand=' + new Date().getTime(),
+			type: 'POST',
+			headers: {'cache-control': 'no-cache'},
+			url: 'ajax-tab.php' + '?rand=' + new Date().getTime(),
 			async: true,
-			dataType: "json",
+			dataType: 'json',
 			data: {
-				ajax: "1",
-				token: "",
-				controller: "AdminLogin",
-				submitForgot: "1",
+				ajax: 1,
+				controller: 'AdminLogin',
+				submitForgot: 1,
 				email_forgot: $('#email_forgot').val()
 			},
 			success: function(jsonData) {
-				if (jsonData.hasErrors)
+				if (jsonData.hasErrors) {
 					displayErrors(jsonData.errors);
-				else
-				{
+				} else {
 					alert(jsonData.confirm);
-					$('#forgot_password_form .ajax-loader').hide();
+					$('#forgot_password_form').hide();
 					displayLogin();
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				$('#error').html('<h3>TECHNICAL ERROR:</h3><p>Details: Error thrown: ' + XMLHttpRequest + '</p><p>Text status: ' + textStatus + '</p>').show();
-				$('#forgot_password_form .ajax-loader').fadeOut('slow');
+				$('#error').html(XMLHttpRequest.responseText).removeClass('hide').fadeIn('slow');
 			}
 		});
 	});
 }
+
 function displayErrors(errors) {
-	str_errors = '<h3>' + (errors.length > 1 ? there_are : there_is) + ' ' + errors.length + ' ' + (errors.length > 1 ? label_errors : label_error) + '</h3><ol>';
+	str_errors = '<p><strong>' + (errors.length > 1 ? there_are : there_is) + ' ' + errors.length + ' ' + (errors.length > 1 ? label_errors : label_error) + '</strong></p><ol>';
 	for (var error in errors) //IE6 bug fix
 		if (error != 'indexOf') str_errors += '<li>' + errors[error] + '</li>';
-	$('.ajax-loader').hide();
-	$('#error').html(str_errors + '</ol>').fadeIn('slow');
-	$("#login").effect("shake", {
-		times: 4
-	}, 100);
+	$('#error').html(str_errors + '</ol>').removeClass('hide').fadeIn('slow');
 }

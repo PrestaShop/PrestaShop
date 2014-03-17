@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,25 +18,24 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {* Generate HTML code for printing Invoice Icon with link *}
-<span style="width:20px; margin-right:5px;">
-{if ($order_state->invoice || $order->invoice_number)}
-	<a href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}"><img src="../img/admin/tab-invoice.gif" alt="invoice" /></a>
-{else}
-	-
-{/if}
-</span>
-
-{* Generate HTML code for printing Delivery Icon with link *}
-<span style="width:20px;">
-{if ($order_state->delivery || $order->delivery_number)}
-	<a href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order={$order->id}"><img src="../img/admin/delivery.gif" alt="delivery" /></a>
-{else}
-	-
-{/if}
+<span class="btn-group-action">
+	<span class="btn-group">
+	{if ($order_state->invoice || $order->invoice_number)}
+		<a class="btn btn-default" target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}">
+			<i class="icon-file-text"></i>
+		</a>
+	{/if}
+	{* Generate HTML code for printing Delivery Icon with link *}
+	{if ($order_state->delivery || $order->delivery_number)}
+		<a class="btn btn-default"  target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order={$order->id}">
+			<i class="icon-truck"></i>
+		</a>
+	{/if}
+	</span>
 </span>

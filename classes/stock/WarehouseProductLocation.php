@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -123,11 +123,11 @@ class WarehouseProductLocationCore extends ObjectModel
 	 * For a given product, gets its warehouses
 	 *
 	 * @param int $id_product
-	 * @return Collection The type of the collection is WarehouseProductLocation
+	 * @return PrestaShopCollection The type of the collection is WarehouseProductLocation
 	 */
 	public static function getCollection($id_product)
 	{
-		$collection = new Collection('WarehouseProductLocation');
+		$collection = new PrestaShopCollection('WarehouseProductLocation');
 		$collection->where('id_product', '=', (int)$id_product);
 		return $collection;
 	}

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,24 +19,28 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 class AdminFeaturesControllerCore extends AdminController
 {
+	public $bootstrap = true;
 	protected $position_identifier = 'id_feature';
+	protected $feature_name;
 
 	public function __construct()
 	{
-	 	$this->table = 'feature';
+		$this->table = 'feature';
 		$this->className = 'Feature';
-	 	$this->lang = true;
+		$this->list_id = 'feature';
+		$this->lang = true;
 
 		$this->fields_list = array(
 			'id_feature' => array(
 				'title' => $this->l('ID'),
-				'width' => 25
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
@@ -45,21 +49,27 @@ class AdminFeaturesControllerCore extends AdminController
 			),
 			'value' => array(
 				'title' => $this->l('Values'),
-				'width' => 255,
 				'orderby' => false,
-				'search' => false
+				'search' => false,
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'position' => array(
 				'title' => $this->l('Position'),
-				'width' => 40,
 				'filter_key' => 'a!position',
 				'align' => 'center',
+				'class' => 'fixed-width-xs',
 				'position' => 'position'
 			)
 		);
 
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
-
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'icon' => 'icon-trash',
+				'confirm' => $this->l('Delete selected items?')
+			)
+		);
 		parent::__construct();
 	}
 
@@ -71,19 +81,8 @@ class AdminFeaturesControllerCore extends AdminController
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->addRowAction('details');
-	 	$this->_defaultOrderBy = 'position';
-
-	 	// Added specific button in toolbar
-	 	$this->toolbar_btn['newAttributes'] = array(
-			'href' => self::$currentIndex.'&amp;addfeature_value&amp;token='.$this->token,
-			'desc' => $this->l('Add new feature values')
-		);
-
-	 	$this->toolbar_btn['new'] = array(
-			'href' => self::$currentIndex.'&amp;addfeature&amp;token='.$this->token,
-			'desc' => $this->l('Add a new feature')
-		);
+		$this->addRowAction('view');
+		$this->_defaultOrderBy = 'position';
 
 		return parent::renderList();
 	}
@@ -108,31 +107,31 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->identifier = 'id_feature';
 	}
 
-	/**
-	 * method call when ajax request is made with the details row action
-	 * @see AdminController::postProcess()
-	 */
-	public function ajaxProcessDetails()
+	public function renderView()
 	{
-		if (($id = Tools::getValue('id')))
+		if (($id = Tools::getValue('id_feature')))
 		{
 			$this->setTypeValue();
+			$this->list_id = 'feature_value';
 			$this->lang = true;
-
-			// override attributes
-			$this->display = 'list';
 
 			// Action for list
 			$this->addRowAction('edit');
 			$this->addRowAction('delete');
 
 			if (!Validate::isLoadedObject($obj = new Feature((int)$id)))
+			{
 				$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+				return;
+			}
 
+			$this->feature_name = $obj->name;
+			$this->toolbar_title = $this->feature_name[$this->context->employee->id_lang];
 			$this->fields_list = array(
 				'id_feature_value' => array(
 					'title' => $this->l('ID'),
-					'width' => 25
+					'align' => 'center',
+					'class' => 'fixed-width-xs'
 				),
 				'value' => array(
 					'title' => $this->l('Value')
@@ -140,27 +139,9 @@ class AdminFeaturesControllerCore extends AdminController
 			);
 
 			$this->_where = sprintf('AND `id_feature` = %d', (int)$id);
-
-			// get list and force no limit clause in the request
-			$this->getList($this->context->language->id, 'id_feature_value', 'ASC');
-
-			// Render list
-			$helper = new HelperList();
-			$helper->actions = $this->actions;
-			$helper->no_link = true;
-			$helper->shopLinkType = '';
-			$helper->identifier = $this->identifier;
-			$helper->toolbar_scroll = false;
-			$helper->currentIndex = self::$currentIndex;
-			$helper->token = $this->token;
-			$helper->table = $this->table;
-			$helper->simple_header = true;
-			$helper->show_toolbar = false;
-			$helper->bulk_actions = $this->bulk_actions;
-			$content = $helper->generateList($this->_list, $this->fields_list);
-
-			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
-			exit;
+			self::$currentIndex = self::$currentIndex.'&id_feature='.(int)$id.'&viewfeature';
+			$this->processFilter();
+			return parent::renderList();
 		}
 	}
 
@@ -174,12 +155,12 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Feature'),
-				'image' => '../img/t/AdminFeatures.gif'
+				'icon' => 'icon-info-sign'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'lang' => true,
 					'size' => 33,
@@ -193,17 +174,43 @@ class AdminFeaturesControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('   Save   '),
-			'class' => 'button'
+			'title' => $this->l('Save'),
 		);
 
 		return parent::renderForm();
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+		{
+			$this->page_header_toolbar_btn['new_feature'] = array(
+				'href' => self::$currentIndex.'&addfeature&token='.$this->token,
+				'desc' => $this->l('Add new feature', null, null, false),
+				'icon' => 'process-icon-new'
+			);
+
+			$this->page_header_toolbar_btn['new_feature_value'] = array(
+				'href' => self::$currentIndex.'&addfeature_value&id_feature='.(int)Tools::getValue('id_feature').'&token='.$this->token,
+				'desc' => $this->l('Add new feature value', null, null, false),
+				'icon' => 'process-icon-new'
+			);
+		}
+
+		if ($this->display == 'view')
+			$this->page_header_toolbar_btn['new_feature_value'] = array(
+				'href' => self::$currentIndex.'&addfeature_value&id_feature='.(int)Tools::getValue('id_feature').'&token='.$this->token,
+				'desc' => $this->l('Add new feature value', null, null, false),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
 	}
 
 	/**
@@ -240,10 +247,59 @@ class AdminFeaturesControllerCore extends AdminController
 					'desc' => $this->l('Back to the list')
 				);
 			break;
-
-			default:
+			case 'view':
+				$this->toolbar_btn['newAttributes'] = array(
+					'href' => self::$currentIndex.'&addfeature_value&id_feature='.(int)Tools::getValue('id_feature').'&token='.$this->token,
+					'desc' => $this->l('Add new feature values')
+				);
+				$this->toolbar_btn['back'] = array(
+					'href' => self::$currentIndex.'&token='.$this->token,
+					'desc' => $this->l('Back to the list')
+				);
+				break;
+			default:				
 				parent::initToolbar();
 		}
+	}
+
+	public function initToolbarTitle()
+	{
+		$bread_extended = $this->breadcrumbs;
+
+		switch ($this->display)
+		{
+			case 'edit':
+				$bread_extended[] = $this->l('Edit New Feature');
+				break;
+
+			case 'add':
+				$bread_extended[] = $this->l('Add New Feature');
+				break;
+
+			case 'view':
+				$bread_extended[] = $this->feature_name[$this->context->employee->id_lang];
+				break;
+
+			case 'editFeatureValue':
+				if (($id_feature_value = Tools::getValue('id_feature_value')))
+				{
+					if (($id = Tools::getValue('id_feature')))
+					{
+						if (Validate::isLoadedObject($obj = new Feature((int)$id)))
+							$bread_extended[] = '<a href="'.Context::getContext()->link->getAdminLink('AdminFeatures').'&id_feature='.$id.'&viewfeature">'.$obj->name[$this->context->employee->id_lang].'</a>';
+						
+						if (Validate::isLoadedObject($obj = new FeatureValue((int)Tools::getValue('id_feature_value'))))
+							$bread_extended[] =  sprintf($this->l('Edit: %s'), $obj->value[$this->context->employee->id_lang]);
+					}
+					else
+						$bread_extended[] = $this->l('Edit Value');
+				}
+				else
+					$bread_extended[] = $this->l('Add New Value');
+				break;
+		}
+
+		$this->toolbar_title = $bread_extended;
 	}
 
 	/**
@@ -257,21 +313,12 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->fields_form[0]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Feature value'),
-				'image' => '../img/t/AdminFeatures.gif'
+				'icon' => 'icon-info-sign'
 			),
 			'input' => array(
 				array(
-					'type' => 'text',
-					'label' => $this->l('Value:'),
-					'name' => 'value',
-					'lang' => true,
-					'size' => 33,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'required' => true
-				),
-				array(
 					'type' => 'select',
-					'label' => $this->l('Feature:'),
+					'label' => $this->l('Feature'),
 					'name' => 'id_feature',
 					'options' => array(
 						'query' => Feature::getFeatures($this->context->language->id),
@@ -279,13 +326,32 @@ class AdminFeaturesControllerCore extends AdminController
 						'name' => 'name'
 					),
 					'required' => true
-				)
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Value'),
+					'name' => 'value',
+					'lang' => true,
+					'size' => 33,
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'required' => true
+				),
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
-				'class' => 'button'
+				'title' => $this->l('Save'),
+			),
+			'buttons' => array(
+				'save-and-stay' => array(
+					'title' => $this->l('Save then add another value'),
+					'name' => 'submitAdd'.$this->table.'AndStay',
+					'type' => 'submit',
+					'class' => 'btn btn-default pull-right',
+					'icon' => 'process-icon-save'
+				)
 			)
 		);
+
+		$this->fields_value['id_feature'] = (int)Tools::getValue('id_feature');
 
 		// Create Object FeatureValue
 		$feature_value = new FeatureValue(Tools::getValue('id_feature_value'));
@@ -296,6 +362,15 @@ class AdminFeaturesControllerCore extends AdminController
 
 		$this->getlanguages();
 		$helper = new HelperForm();
+		$helper->show_cancel_button = true;
+
+		$back = Tools::safeOutput(Tools::getValue('back', ''));
+		if (empty($back))
+			$back = self::$currentIndex.'&token='.$this->token;
+		if (!Validate::isCleanHtml($back))
+			die(Tools::displayError());
+
+		$helper->back_url = $back;
 		$helper->currentIndex = self::$currentIndex;
 		$helper->token = $this->token;
 		$helper->table = $this->table;
@@ -323,7 +398,9 @@ class AdminFeaturesControllerCore extends AdminController
 		if (Feature::isFeatureActive())
 		{
 			// toolbar (save, cancel, new, ..)
+			$this->initTabModuleList();
 			$this->initToolbar();
+			$this->initPageHeaderToolbar();
 			if ($this->display == 'edit' || $this->display == 'add')
 			{
 				if (!$this->loadObject(true))
@@ -352,11 +429,17 @@ class AdminFeaturesControllerCore extends AdminController
 			}
 		}
 		else
-			$this->displayWarning($this->l('This feature has been disabled. You can activate it at:').'<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performance').'</a>');
+		{
+			$url = '<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performance').'</a>';
+			$this->displayWarning(sprintf($this->l('This feature has been disabled. You can activate it here: %s.'), $url));
+		}
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
+			'show_page_header_toolbar' => $this->show_page_header_toolbar,
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 	}
 
@@ -370,6 +453,16 @@ class AdminFeaturesControllerCore extends AdminController
 			|| Tools::isSubmit('updatefeature_value')
 			|| Tools::isSubmit('submitBulkdeletefeature_value'))
 			$this->setTypeValue();
+
+		if (Tools::getIsset('viewfeature'))
+		{
+			$this->list_id = 'feature_value';
+
+			if (isset($_POST['submitReset'.$this->list_id]))
+				$this->processResetFilters();
+		}
+		else
+			$this->list_id = 'feature';
 
 		parent::initProcess();
 
@@ -457,7 +550,7 @@ class AdminFeaturesControllerCore extends AdminController
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = false, $id_lang_shop = false)
 	{
 		if ($this->table == 'feature_value')
-			$this->_where .= ' AND a.custom = 0';
+			$this->_where .= ' AND (a.custom = 0 OR a.custom IS NULL)';
 		
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
@@ -472,7 +565,7 @@ class AdminFeaturesControllerCore extends AdminController
 				$query->select('COUNT(fv.id_feature_value) as count_values');
 				$query->from('feature_value', 'fv');
 				$query->where('fv.id_feature ='.(int)$item['id_feature']);
-				$query->where('fv.custom =0');
+				$query->where('(fv.custom=0 OR fv.custom IS NULL)');
 				$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 				$item['value'] = (int)$res;
 				unset($query);

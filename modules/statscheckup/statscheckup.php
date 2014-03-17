@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -42,20 +42,20 @@ class StatsCheckUp extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Catalog evaluation');
-		$this->description = $this->l('Quick evaluation of your catalog quality.');
+		$this->description = $this->l('Adds a quick evaluation of your catalog quality to the Stats dashboard.');
 	}
 
 	public function install()
 	{
 		$confs = array(
-			'CHECKUP_DESCRIPTIONS_LT'=>100,
-			'CHECKUP_DESCRIPTIONS_GT'=>400,
-			'CHECKUP_IMAGES_LT'=>1,
-			'CHECKUP_IMAGES_GT'=>2,
-			'CHECKUP_SALES_LT'=>1,
-			'CHECKUP_SALES_GT'=>2,
-			'CHECKUP_STOCK_LT'=>1,
-			'CHECKUP_STOCK_GT'=>3
+			'CHECKUP_DESCRIPTIONS_LT' => 100,
+			'CHECKUP_DESCRIPTIONS_GT' => 400,
+			'CHECKUP_IMAGES_LT' => 1,
+			'CHECKUP_IMAGES_GT' => 2,
+			'CHECKUP_SALES_LT' => 1,
+			'CHECKUP_SALES_GT' => 2,
+			'CHECKUP_STOCK_LT' => 1,
+			'CHECKUP_STOCK_GT' => 3
 		);
 		foreach ($confs as $confname => $confdefault)
 			if (!Configuration::get($confname))
@@ -101,12 +101,12 @@ class StatsCheckUp extends Module
 				.Shop::addSqlAssociation('lang', 'l');
 		$languages = $db->executeS($sql);
 
-		$arrayColors = array(
-			0 => '<img src="../modules/'.$this->name.'/red.png" alt="'.$this->l('Bad').'" />',
-			1 => '<img src="../modules/'.$this->name.'/orange.png" alt="'.$this->l('Average').'" />',
-			2 => '<img src="../modules/'.$this->name.'/green.png" alt="'.$this->l('Good').'" />'
+		$array_colors = array(
+			0 => '<img src="../modules/'.$this->name.'/img/red.png" alt="'.$this->l('Bad').'" />',
+			1 => '<img src="../modules/'.$this->name.'/img/orange.png" alt="'.$this->l('Average').'" />',
+			2 => '<img src="../modules/'.$this->name.'/img/green.png" alt="'.$this->l('Good').'" />'
 		);
-		$tokenProducts = Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).(int)Context::getContext()->employee->id);
+		$token_products = Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Context::getContext()->employee->id);
 		$divisor = 4;
 		$totals = array('products' => 0, 'active' => 0, 'images' => 0, 'sales' => 0, 'stock' => 0);
 		foreach ($languages as $language)
@@ -115,11 +115,11 @@ class StatsCheckUp extends Module
 			$totals['description_'.$language['iso_code']] = 0;
 		}
 
-		$orderBy = 'p.id_product';
+		$order_by = 'p.id_product';
 		if ($this->context->cookie->checkup_order == 2)
-			$orderBy = 'pl.name';
+			$order_by = 'pl.name';
 		else if ($this->context->cookie->checkup_order == 3)
-			$orderBy = 'nbSales DESC';
+			$order_by = 'nbSales DESC';
 
 		// Get products stats
 		$sql = 'SELECT p.id_product, product_shop.active, pl.name, (
@@ -141,75 +141,95 @@ class StatsCheckUp extends Module
 				'.Product::sqlStock('p', 0).'
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl
 					ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('pl').')
-				ORDER BY '.$orderBy;
+				ORDER BY '.$order_by;
 		$result = $db->executeS($sql);
 
 		if (!$result)
 			return $this->l('No product was found.');
 
-		$arrayConf = array(
-			'DESCRIPTIONS' => array('name' => $this->l('Descriptions'), 'text' => $this->l('Chars (without HTML)')),
-			'IMAGES' => array('name' => $this->l('Images'), 'text' => $this->l('Images')),
+		$array_conf = array(
+			'DESCRIPTIONS' => array('name' => $this->l('Descriptions'), 'text' => $this->l('chars (without HTML)')),
+			'IMAGES' => array('name' => $this->l('Images'), 'text' => $this->l('images')),
 			'SALES' => array('name' => $this->l('Sales'), 'text' => $this->l('orders / month')),
-			'STOCK' => array('name' => $this->l('Available quantity for sale'), 'text' => $this->l('Items'))
+			'STOCK' => array('name' => $this->l('Available quantity for sale'), 'text' => $this->l('items'))
 		);
 
 		$this->html = '
-		<style type="text/css">
-			form.checkup input[type=text] {width:30px}
-			form.checkup div {margin-top:20px}
-			table.checkup th {text-align:center}
-			table.checkup td {padding:5px 10px}
-			table.checkup2 td {text-align:right}
-		</style>
-		<div class="blocStats">
-		<form action="'.AdminController::$currentIndex.'&token='.Tools::safeOutput(Tools::getValue('token')).'&module='.$this->name.'" method="post" class="checkup">
-			<table class="table checkup" border="0" cellspacing="0" cellspacing="0">
-				<tr>
-					<th></th>
-					<th>'.$arrayColors[0].' '.$this->l('Not enough').'</th>
-					<th>'.$arrayColors[2].' '.$this->l('Alright').'</th>
-				</tr>';
-			foreach ($arrayConf as $conf => $translations)
-				$this->html .= '<tr>
-					<th>'.$translations['name'].'</th>
-					<td>'.$this->l('Less than').'
-						 <input type="text" name="CHECKUP_'.$conf.'_LT"
-						 	value="'.Tools::safeOutput(Tools::getValue('CHECKUP_'.$conf.'_LT', Configuration::get('CHECKUP_'.$conf.'_LT'))).'" /> '.$translations['text'].'
-					</td>
-					<td>'.$this->l('Greater than').'
-						 <input type="text" name="CHECKUP_'.$conf.'_GT"
-						 	value="'.Tools::safeOutput(Tools::getValue('CHECKUP_'.$conf.'_GT', Configuration::get('CHECKUP_'.$conf.'_GT'))).'" /> '.$translations['text'].'
-					</td>
-				</tr>';
-			$this->html .= '</table>
-			<div><input type="submit" name="submitCheckup" class="button" value="'.$this->l('   Save   ').'" /></div>
-		</form>
+		<div class="panel-heading">'
+			.$this->displayName.'
 		</div>
-		<br />
-		<div class="blocStats">
-		<form action="'.AdminController::$currentIndex.'&token='.Tools::safeOutput(Tools::getValue('token')).'&module='.$this->name.'" method="post">
-			'.$this->l('Order by').'
-			<select name="submitCheckupOrder" onchange="this.form.submit();" style="width:100px">
-				<option value="1">'.$this->l('ID').'</option>
-				<option value="2" '.($this->context->cookie->checkup_order == 2 ? 'selected="selected"' : '').'>'.$this->l('Name').'</option>
-				<option value="3" '.($this->context->cookie->checkup_order == 3 ? 'selected="selected"' : '').'>'.$this->l('Sales').'</option>
-			</select>
+		<form action="'.AdminController::$currentIndex.'&token='.Tools::safeOutput(Tools::getValue('token')).'&module='.$this->name.'" method="post" class="checkup form-horizontal">
+			<table class="table checkup">
+				<thead>
+					<tr>
+						<th></th>
+						<th><span class="title_box active">'.$array_colors[0].' '.$this->l('Not enough').'</span></th>
+						<th><span class="title_box active">'.$array_colors[2].' '.$this->l('Alright').'</span></th>
+					</tr>
+				</thead>';
+			foreach ($array_conf as $conf => $translations)
+				$this->html .= '
+				<tbody>
+					<tr>
+						<td>
+							<label class="control-label col-lg-12">'.$translations['name'].'</label>
+						</td>
+						<td>
+							<div class="row">
+								<div class="col-lg-11 input-group">
+									<span class="input-group-addon">'.$this->l('Less than').'</span>
+									<input type="text" name="CHECKUP_'.$conf.'_LT" value="'.Tools::safeOutput(Tools::getValue('CHECKUP_'.$conf.'_LT', Configuration::get('CHECKUP_'.$conf.'_LT'))).'" />
+									<span class="input-group-addon">'.$translations['text'].'</span>
+								 </div>
+							 </div>
+						</td>
+						<td>
+							<div class="row">
+								<div class="col-lg-12 input-group">
+									<span class="input-group-addon">'.$this->l('Greater than').'</span>
+									<input type="text" name="CHECKUP_'.$conf.'_GT" value="'.Tools::safeOutput(Tools::getValue('CHECKUP_'.$conf.'_GT', Configuration::get('CHECKUP_'.$conf.'_GT'))).'" />
+									<span class="input-group-addon">'.$translations['text'].'</span>
+								 </div>
+							 </div>
+						</td>
+					</tr>
+				</tbody>';
+			$this->html .= '</table>
+			<button type="submit" name="submitCheckup" class="btn btn-default pull-right">
+				<i class="icon-save"></i> '.$this->l('Save').'
+			</button> 
 		</form>
-		<br />
-		<table class="table checkup2" border="0" cellspacing="0" cellspacing="0">
-			<tr>
-				<th>'.$this->l('ID').'</th>
-				<th>'.$this->l('Item').'</th>
-				<th>'.$this->l('Active').'</th>';
-		foreach ($languages as $language)
-			$this->html .= '<th>'.$this->l('Desc.').' ('.strtoupper($language['iso_code']).')</th>';
-		$this->html .= '
-				<th>'.$this->l('Images').'</th>
-				<th>'.$this->l('Sales').'</th>
-				<th>'.$this->l('Available quantity for sale').'</th>
-				<th>'.$this->l('Global').'</th>
-			</tr>';
+		<form action="'.AdminController::$currentIndex.'&token='.Tools::safeOutput(Tools::getValue('token')).'&module='.$this->name.'" method="post" class="form-horizontal alert">
+			<div class="row">
+				<div class="col-lg-12">
+					<label class="control-label pull-left">'.$this->l('Order by').'</label>
+					<div class="col-lg-3">
+						<select name="submitCheckupOrder" onchange="this.form.submit();">
+							<option value="1">'.$this->l('ID').'</option>
+							<option value="2" '.($this->context->cookie->checkup_order == 2 ? 'selected="selected"' : '').'>'.$this->l('Name').'</option>
+							<option value="3" '.($this->context->cookie->checkup_order == 3 ? 'selected="selected"' : '').'>'.$this->l('Sales').'</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</form>
+		<div style="overflow-x:auto">
+		<table class="table checkup2">
+			<thead>
+				<tr>
+					<th><span class="title_box active">'.$this->l('ID').'</span></th>
+					<th><span class="title_box active">'.$this->l('Item').'</span></th>
+					<th class="center"><span class="title_box active">'.$this->l('Active').'</span></th>';
+			foreach ($languages as $language)
+				$this->html .= '<th><span class="title_box active">'.$this->l('Desc.').' ('.Tools::strtoupper($language['iso_code']).')</span></th>';
+			$this->html .= '
+					<th class="center"><span class="title_box active">'.$this->l('Images').'</span></th>
+					<th class="center"><span class="title_box active">'.$this->l('Sales').'</span></th>
+					<th class="center"><span class="title_box active">'.$this->l('Available quantity for sale').'</span></th>
+					<th class="center"><span class="title_box active">'.$this->l('Global').'</span></th>
+				</tr>
+			</thead>
+			<tbody>';
 		foreach ($result as $row)
 		{
 			$totals['products']++;
@@ -238,22 +258,25 @@ class StatsCheckUp extends Module
 			$scores['average'] = array_sum($scores) / $divisor;
 			$scores['average'] = ($scores['average'] < 1 ? 0 : ($scores['average'] > 1.5 ? 2 : 1));
 
-			$this->html .= '<tr>
-				<td>'.$row['id_product'].'</td>
-				<td style="text-align:left"><a href="index.php?tab=AdminProducts&updateproduct&id_product='.$row['id_product'].'&token='.$tokenProducts.'">'.Tools::substr($row['name'], 0, 42).'</a></td>
-				<td>'.$arrayColors[$scores['active']].'</td>';
-			foreach ($languages as $language)
-				if (isset($row['desclength_'.$language['iso_code']]))
-					$this->html .= '<td>'.(int)$row['desclength_'.$language['iso_code']].' '.$arrayColors[$scores['description_'.$language['iso_code']]].'</td>';
-				else
-					$this->html .= '<td>0 '.$arrayColors[0].'</td>';
 			$this->html .= '
-				<td>'.(int)$row['nbImages'].' '.$arrayColors[$scores['images']].'</td>
-				<td>'.(int)$row['nbSales'].' '.$arrayColors[$scores['sales']].'</td>
-				<td>'.(int)$row['stock'].' '.$arrayColors[$scores['stock']].'</td>
-				<td>'.$arrayColors[$scores['average']].'</td>
-			</tr>';
+				<tr>
+					<td>'.$row['id_product'].'</td>
+					<td><a href="index.php?tab=AdminProducts&updateproduct&id_product='.$row['id_product'].'&token='.$token_products.'">'.Tools::substr($row['name'], 0, 42).'</a></td>
+					<td class="center">'.$array_colors[$scores['active']].'</td>';
+				foreach ($languages as $language)
+					if (isset($row['desclength_'.$language['iso_code']]))
+						$this->html .= '<td class="center">'.(int)$row['desclength_'.$language['iso_code']].' '.$array_colors[$scores['description_'.$language['iso_code']]].'</td>';
+					else
+						$this->html .= '<td>0 '.$array_colors[0].'</td>';
+				$this->html .= '
+					<td class="center">'.(int)$row['nbImages'].' '.$array_colors[$scores['images']].'</td>
+					<td class="center">'.(int)$row['nbSales'].' '.$array_colors[$scores['sales']].'</td>
+					<td class="center">'.(int)$row['stock'].' '.$array_colors[$scores['stock']].'</td>
+					<td class="center">'.$array_colors[$scores['average']].'</td>
+				</tr>';
 		}
+
+		$this->html .= '</tbody>';
 
 		$totals['active'] = $totals['active'] / $totals['products'];
 		$totals['active'] = ($totals['active'] < 1 ? 0 : ($totals['active'] > 1.5 ? 2 : 1));
@@ -272,31 +295,31 @@ class StatsCheckUp extends Module
 		$totals['average'] = ($totals['average'] < 1 ? 0 : ($totals['average'] > 1.5 ? 2 : 1));
 
 		$this->html .= '
-			<tr>
-				<th colspan="2"></th>
-				<th>'.$this->l('Active').'</th>';
-		foreach ($languages as $language)
-			$this->html .= '<th>'.$this->l('Desc.').' ('.strtoupper($language['iso_code']).')</th>';
-		$this->html .= '
-				<th>'.$this->l('Images').'</th>
-				<th>'.$this->l('Sales').'</th>
-				<th>'.$this->l('Available quantity for sale').'</th>
-				<th>'.$this->l('Global').'</th>
-			</tr>
-			<tr>
-				<td colspan="2"></td>
-				<td>'.$arrayColors[$totals['active']].'</td>';
-		foreach ($languages as $language)
-			$this->html .= '<td>'.$arrayColors[$totals['description_'.$language['iso_code']]].'</td>';
-		$this->html .= '
-				<td>'.$arrayColors[$totals['images']].'</td>
-				<td>'.$arrayColors[$totals['sales']].'</td>
-				<td>'.$arrayColors[$totals['stock']].'</td>
-				<td>'.$arrayColors[$totals['average']].'</td>
-			</tr>
-		</table>
-		</div>
-		<div class="clear">&nbsp;</div>';
+			<tfoot>
+				<tr>
+					<th colspan="2"></th>
+					<th class="center"><span class="title_box active">'.$this->l('Active').'</span></th>';
+			foreach ($languages as $language)
+				$this->html .= '<th class="center"><span class="title_box active">'.$this->l('Desc.').' ('.Tools::strtoupper($language['iso_code']).')</span></th>';
+			$this->html .= '
+					<th class="center"><span class="title_box active">'.$this->l('Images').'</span></th>
+					<th class="center"><span class="title_box active">'.$this->l('Sales').'</span></th>
+					<th class="center"><span class="title_box active">'.$this->l('Available quantity for sale').'</span></th>
+					<th class="center"><span class="title_box active">'.$this->l('Global').'</span></th>
+				</tr>
+				<tr>
+					<td colspan="2"></td>
+					<td class="center">'.$array_colors[$totals['active']].'</td>';
+			foreach ($languages as $language)
+				$this->html .= '<td class="center">'.$array_colors[$totals['description_'.$language['iso_code']]].'</td>';
+			$this->html .= '
+					<td class="center">'.$array_colors[$totals['images']].'</td>
+					<td class="center">'.$array_colors[$totals['sales']].'</td>
+					<td class="center">'.$array_colors[$totals['stock']].'</td>
+					<td class="center">'.$array_colors[$totals['average']].'</td>
+				</tr>
+			</tfoot>
+		</table></div>';
 
 		return $this->html;
 	}

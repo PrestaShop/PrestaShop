@@ -33,7 +33,6 @@
     <access id="access_1_25" id_profile="SuperAdmin" id_tab="Features" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_26" id_profile="SuperAdmin" id_tab="Manufacturers" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_27" id_profile="SuperAdmin" id_tab="Suppliers" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_28" id_profile="SuperAdmin" id_tab="Image_Mapping" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_29" id_profile="SuperAdmin" id_tab="Tags" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_30" id_profile="SuperAdmin" id_tab="Attachments" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_32" id_profile="SuperAdmin" id_tab="Invoices" view="1" add="1" edit="1" delete="1"/>
@@ -98,5 +97,6 @@
     <access id="access_1_99" id_profile="SuperAdmin" id_tab="Stock_cover" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_100" id_profile="SuperAdmin" id_tab="Supply_orders" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_101" id_profile="SuperAdmin" id_tab="Configuration" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_1_102" id_profile="SuperAdmin" id_tab="Dashboard" view="1" add="1" edit="1" delete="1"/>
   </entities>
 </entity_access>

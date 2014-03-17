@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -36,7 +36,7 @@ class CacheFsCore extends Cache
 		$this->depth = Db::getInstance()->getValue('SELECT value FROM '._DB_PREFIX_.'configuration WHERE name= \'PS_CACHEFS_DIRECTORY_DEPTH\'', false);
 
 		$keys_filename = $this->getFilename(self::KEYS_NAME);
-		if (file_exists($keys_filename))
+		if (@filemtime($keys_filename))
 			$this->keys = unserialize(file_get_contents($keys_filename));
 	}
 
@@ -60,7 +60,7 @@ class CacheFsCore extends Cache
 		}
 
 		$filename = $this->getFilename($key);
-		if (!file_exists($filename))
+		if (!@filemtime($filename))
 		{
 			unset($this->keys[$key]);
 			$this->_writeKeys();
@@ -81,7 +81,7 @@ class CacheFsCore extends Cache
 			return false;
 		}
 
-		return isset($this->keys[$key]) && file_exists($this->getFilename($key));
+		return isset($this->keys[$key]) && @filemtime($this->getFilename($key));
 	}
 
 	/**
@@ -90,7 +90,7 @@ class CacheFsCore extends Cache
 	protected function _delete($key)
 	{
 		$filename = $this->getFilename($key);
-		if (!file_exists($filename))
+		if (!@filemtime($filename))
 			return true;
 		return unlink($filename);
 	}
@@ -153,6 +153,9 @@ class CacheFsCore extends Cache
 		$path = _PS_CACHEFS_DIRECTORY_;
 		for ($i = 0; $i < $this->depth; $i++)
 			$path .= $key[$i].'/';
+
+		if (!is_dir($path))
+			@mkdir($path, 0777, true);
 
 		return $path.$key;
 	}

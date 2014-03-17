@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,13 +19,13 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if (file_exists(dirname(__FILE__).'/../../config/settings.inc.php'))
-	include_once(dirname(__FILE__).'/../../config/settings.inc.php');
+if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
+	include_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 
 abstract class DbCore
 {
@@ -479,27 +479,36 @@ abstract class DbCore
 
 		$this->result = false;
 		$this->last_query = $sql;
-		if ($use_cache && $this->is_cache_enabled && $array && ($result = Cache::getInstance()->get(md5($sql))))
+
+		if ($use_cache && $this->is_cache_enabled && $array && ($result = Cache::getInstance()->get(Tools::encryptIV($sql))) !== false)
 		{
 			$this->last_cached = true;
 			return $result;
 		}
 
 		$this->result = $this->query($sql);
+
 		if (!$this->result)
-			return false;
+			$result = false;
+		else
+		{
+			if (!$array)
+			{
+				$use_cache = false;
+				$result = $this->result;
+			}
+			else
+			{
+				$result = array();
+				while ($row = $this->nextRow($this->result))
+					$result[] = $row;
+			}
+		}
 
 		$this->last_cached = false;
-		if (!$array)
-			return $this->result;
-
-		$result_array = array();
-		while ($row = $this->nextRow($this->result))
-			$result_array[] = $row;
-
 		if ($use_cache && $this->is_cache_enabled)
-			Cache::getInstance()->setQuery($sql, $result_array);
-		return $result_array;
+			Cache::getInstance()->setQuery($sql, $result);
+		return $result;
 	}
 
 	/**
@@ -518,16 +527,17 @@ abstract class DbCore
 		$sql .= ' LIMIT 1';
 		$this->result = false;
 		$this->last_query = $sql;
-		if ($use_cache && $this->is_cache_enabled && ($result = Cache::getInstance()->get(md5($sql))))
+		if ($use_cache && $this->is_cache_enabled && ($result = Cache::getInstance()->get(Tools::encryptIV($sql))) !== false)
 		{
 			$this->last_cached = true;
 			return $result;
 		}
 		$this->result = $this->query($sql);
 		if (!$this->result)
-			return false;
-		$this->last_cached = false;
-		$result = $this->nextRow($this->result);
+			$result = false;
+		else
+			$result = $this->nextRow($this->result);
+		$this->last_cached = false;		
 		if (is_null($result))
 			$result = false;
 		if ($use_cache && $this->is_cache_enabled)
@@ -563,11 +573,11 @@ abstract class DbCore
 		{
 			$nrows = $this->_numRows($this->result);
 			if ($this->is_cache_enabled)
-				Cache::getInstance()->set(md5($this->last_query).'_nrows', $nrows);
+				Cache::getInstance()->set(Tools::encryptIV($this->last_query).'_nrows', $nrows);
 			return $nrows;
 		}
 		else if ($this->is_cache_enabled && $this->last_cached)
-			return Cache::getInstance()->get(md5($this->last_query).'_nrows');
+			return Cache::getInstance()->get(Tools::encryptIV($this->last_query).'_nrows');
 	}
 
 	/**

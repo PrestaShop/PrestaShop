@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -31,19 +31,17 @@
 		var home = '{$categories.trads.Root.name|@addcslashes:'\''}';
 		var use_radio = {if $categories.use_radio}1{else}0{/if};
 		var use_context = {if isset($categories.use_context)}1{else}0{/if};
-		$(document).ready(function(){
-			buildTreeView(use_context);
-		});
 	</script>
-	<div class="category-filter">
-		<span><a href="#" id="collapse_all">{$categories.trads['Collapse All']}</a>|&nbsp;</span>
-	 	<span><a href="#" id="expand_all">{$categories.trads['Expand All']}</a>|&nbsp;</span>		 
+<div class="panel">
+	<div class="category-filter panel-heading">
+		<a href="#" id="collapse_all" class="btn btn-link"><i class="icon-collapse-alt icon-large"></i> {$categories.trads['Collapse All']}</a>
+	 	<a href="#" id="expand_all" class="btn btn-link"><i class="icon-expand-alt icon-large"></i> {$categories.trads['Expand All']}</a> 
 		{if !$categories.use_radio}
-		<span><a href="#" id="check_all">{$categories.trads['Check All']}</a>|&nbsp;</span>
-		<span><a href="#" id="uncheck_all">{$categories.trads['Uncheck All']}</a>|&nbsp;</span>
+		<a href="#" id="check_all" class="btn btn-link"><i class="icon-check-sign"></i> {$categories.trads['Check All']}</a>
+		<a href="#" id="uncheck_all" class="btn btn-link"><i class="icon-check-empty"></i> {$categories.trads['Uncheck All']}</a>
 		{/if}
 		{if $categories.use_search}
-			<span style="margin-left:20px">
+			<span>
 				{$categories.trads.search}:&nbsp;
 				<form method="post" id="filternameForm">
 					<input type="text" name="search_cat" id="search_cat"/>
@@ -91,4 +89,5 @@
 		searchCategory();
 	</script>
 	{/if}
+</div>
 {/if}

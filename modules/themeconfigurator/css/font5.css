@@ -1,0 +1,5 @@
+@import url('http://fonts.googleapis.com/css?family=Volkorn');
+
+h1, h2, h3, h4, h5 {
+	font-family: 'Volkorn', sans-serif !important;
+}

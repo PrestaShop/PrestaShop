@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -42,7 +42,7 @@
 <form id="liveEdit-action-form" action="./{$ad}/index.php" method="post">
 	<input type="hidden" name="ajax" value="1" />
 	<input type="hidden" name="id_shop" value="{$id_shop}" />
-	<input type="hidden" name="token" value="{$smarty.get.liveToken|escape:'htmlall':'UTF-8'}" />
+	<input type="hidden" name="token" value="{$smarty.get.liveToken|escape:'html':'UTF-8'}" />
 	<input type="hidden" name="tab" value="AdminModulesPositions" />
 	<input type="hidden" name="action" value="saveHook" />
 	{foreach from=$hook_list key=hook_id item=hook_name}

@@ -1,19 +1,30 @@
+
+[{shop_url}] 
+
 Hi {firstname} {lastname},
 
-Thank you for creating a customer account at {shop_name}.
+Thank you for creating a customer account at {shop_name}. 
 
 Here are your login details:
 
-E-mail address: {email}
-Password: {passwd}
- 
-You can now place orders on our shop: {shop_url}
+E-MAIL ADDRESS: {email}
+
+PASSWORD: {passwd} 
 
 Important Security Tips:
 
-1. Always keep your account details safe.
-2. Never disclose your login details to anyone.
-3. Change your password regularly.
-4. Should you suspect someone is using your account illegally, please notify us immediately.
+* Always keep your account details safe.
 
-{shop_url} powered by PrestaShop™
+* Never disclose your login details to anyone.
+
+* Change your password regularly.
+
+* Should you suspect someone is using your account illegally, please
+notify us immediately.
+
+You can now place orders on our shop: {shop_name}
+[{shop_url}] 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

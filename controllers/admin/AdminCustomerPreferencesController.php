@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,6 +28,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
@@ -47,11 +48,11 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('General'),
-				'icon' =>	'tab-preferences',
+				'icon' =>	'icon-cogs',
 				'fields' =>	array(
 					'PS_REGISTRATION_PROCESS_TYPE' => array(
 						'title' => $this->l('Registration process type'),
-						'desc' => $this->l('The "Only account creation" registration option allows the customer to register faster, and create his/her address later.'),
+						'hint' => $this->l('The "Only account creation" registration option allows the customer to register faster, and create his/her address later.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'select',
@@ -60,29 +61,28 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 					),
 					'PS_ONE_PHONE_AT_LEAST' => array(
 						'title' => $this->l('Phone number'),
-						'desc' => $this->l('If you chose yes, your customer will have to provide at least one phone number to register.'),
+						'hint' => $this->l('If you chose yes, your customer will have to provide at least one phone number to register.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_CART_FOLLOWING' => array(
 						'title' => $this->l('Cart re-display at login'),
-						'desc' => $this->l('After customer logs in, you can recall and display the content of his/her last shopping cart.'),
+						'hint' => $this->l('After customer logs in, you can recall and display the content of his/her last shopping cart.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_CUSTOMER_CREATION_EMAIL' => array(
 						'title' => $this->l('Send an email after registration'),
-						'desc' => $this->l('Send an email with summary account (email, password) after registration.'),
-						'validation' => 'isUnsignedInt',
+						'hint' => $this->l('Send an email with summary of the account information (email, password) after registration.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_PASSWD_TIME_FRONT' => array(
 						'title' => $this->l('Regenerate password'),
-						'desc' => $this->l('Minimum time required to regenerate a password.'),
+						'hint' => $this->l('Minimum time required to regenerate a password.'),
 						'validation' => 'isUnsignedInt',
 						'cast' => 'intval',
 						'size' => 5,
@@ -91,13 +91,13 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 					),
 					'PS_B2B_ENABLE' => array(
 						'title' => $this->l('Enable B2B mode'),
-						'desc' => $this->l('Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.'),
+						'hint' => $this->l('Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 				),
-				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),
+				'submit' => array('title' => $this->l('Save')),
 			),
 		);
 	}

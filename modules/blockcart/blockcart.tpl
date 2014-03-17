@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -34,7 +34,7 @@ var img_dir = '{$img_dir|addslashes}';
 {/if}
 <script type="text/javascript">
 var customizationIdMessage = '{l s='Customization #' mod='blockcart' js=1}';
-var removingLinkText = '{l s='Please remove this product from my cart.' mod='blockcart' js=1}';
+var removingLinkText = '{l s='remove this product from my cart' mod='blockcart' js=1}';
 var freeShippingTranslation = '{l s='Free shipping!' mod='blockcart' js=1}';
 var freeProductTranslation = '{l s='Free!' mod='blockcart' js=1}';
 var delete_txt = '{l s='Delete' mod='blockcart' js=1}';
@@ -123,7 +123,7 @@ var generated_date = {$smarty.now|intval};
 				{if $discount.value_real > 0}
 				<tr class="bloc_cart_voucher" id="bloc_cart_voucher_{$discount.id_discount}">
 					<td class="quantity">1x</td>
-					<td class="name" title="{$discount.description}">{$discount.name|cat:' : '|cat:$discount.description|truncate:18:'...'|escape:'htmlall':'UTF-8'}</td>
+					<td class="name" title="{$discount.description}">{$discount.name|cat:' : '|cat:$discount.description|truncate:18:'...'|escape:'html':'UTF-8'}</td>
 					<td class="price">-{if $priceDisplay == 1}{convertPrice price=$discount.value_tax_exc}{else}{convertPrice price=$discount.value_real}{/if}</td>
 					<td class="delete">
 						{if strlen($discount.code)}
@@ -156,18 +156,18 @@ var generated_date = {$smarty.now|intval};
 		{if $use_taxes && $display_tax_label == 1 && $show_tax}
 			{if $priceDisplay == 0}
 				<p id="cart-price-precisions">
-					{l s='Prices include tax.' mod='blockcart'}
+					{l s='Prices are tax included' mod='blockcart'}
 				</p>
 			{/if}
 			{if $priceDisplay == 1}
 				<p id="cart-price-precisions">
-					{l s='Prices do not include tax.' mod='blockcart'}
+					{l s='Prices are tax excluded' mod='blockcart'}
 				</p>
 			{/if}
 		{/if}
 		<p id="cart-buttons">
 			{if $order_process == 'order'}<a href="{$link->getPageLink("$order_process", true)|escape:'html'}" class="button_small" title="{l s='View my shopping cart' mod='blockcart'}" rel="nofollow">{l s='Cart' mod='blockcart'}</a>{/if}
-			<a href="{$link->getPageLink("$order_process", true)|escape:'html'}" id="button_order_cart" class="exclusive{if $order_process == 'order-opc'}_large{/if}" title="{l s='Checkout' mod='blockcart'}" rel="nofollow"><span></span>{l s='Checkout' mod='blockcart'}</a>
+			<a href="{$link->getPageLink("$order_process", true)|escape:'html'}" id="button_order_cart" class="exclusive{if $order_process == 'order-opc'}_large{/if}" title="{l s='Check out' mod='blockcart'}" rel="nofollow"><span></span>{l s='Check out' mod='blockcart'}</a>
 		</p>
 	</div>
 	</div>

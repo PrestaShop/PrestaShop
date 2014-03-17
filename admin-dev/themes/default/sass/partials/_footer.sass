@@ -1,0 +1,90 @@
+#footer
+	z-index: 600
+	display: block
+	width: 100%
+	background-color: rgba(black,0.8)
+	color: #aaa
+	position: fixed
+	bottom: 0
+	height: 50px
+	line-height: 50px
+	@include animate(fadeInUp, 0.3s)
+	a
+		color: #ccc
+	&.hide
+		display: none!important
+	#go-top
+		position: fixed
+		bottom: 10px
+		height: 30px
+		width: 30px
+		text-align: center
+		line-height: 30px
+		right: 10px
+		z-index: 9003
+		display: block
+		padding: 0px 6px 0px 6px
+		margin: -2px 0px 0px
+		text-decoration: none
+		color: #fff
+		cursor: pointer
+		font-size: 16px
+		background-color: $main-color
+		&:hover
+			background-color: $brand-primary
+	.social-networks
+		margin: 4px 0 0 0
+	a.footer_link
+		color: $brand-primary
+		&:hover
+			color: white
+			text-decoration: none
+		i
+			font-size: 14px
+			color: white
+	.footer-contact
+		padding: 7px 0 0 0
+		p
+			line-height: 1.3em
+			margin: 0 0 6px
+			strong
+				font-weight: 400
+				color: white
+
+a.link-social
+	i
+		font-size: 28px
+		width: 34px
+		height: 34px
+		display: inline-block
+		line-height: 34px!important
+		text-align: center
+		margin: 0 4px 0 0
+		@include border-radius(30px)
+	&:hover
+		text-decoration: none
+
+.link-twitter i
+	color: white
+	background-color: #7CCEEF
+	&:hover
+		color: #7CCEEF
+		background-color: white
+.link-facebook i
+	color: white
+	background-color: #557DBB
+	&:hover
+		color: #557DBB
+		background-color: white
+.link-github i
+	color: black
+	background-color: white
+	&:hover
+		color: white
+		background-color: black
+.link-google i
+	color: white
+	background-color: #E6644E
+	&:hover
+		color: #E6644E
+		background-color: white

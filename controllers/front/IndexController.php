@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,8 +35,12 @@ class IndexControllerCore extends FrontController
 	public function initContent()
 	{
 		parent::initContent();
+		$this->addJS(_THEME_JS_DIR_.'index.js');
 
-		$this->context->smarty->assign('HOOK_HOME', Hook::exec('displayHome'));
+		$this->context->smarty->assign(array('HOOK_HOME' => Hook::exec('displayHome'), 
+			'HOOK_HOME_TAB' => Hook::exec('displayHomeTab'),
+			'HOOK_HOME_TAB_CONTENT' => Hook::exec('displayHomeTabContent')
+		));
 		$this->setTemplate(_PS_THEME_DIR_.'index.tpl');
 	}
 }

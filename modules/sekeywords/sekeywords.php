@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -30,8 +30,8 @@ if (!defined('_PS_VERSION_'))
 class SEKeywords extends ModuleGraph
 {
 	private $html = '';
-	private $_query = '';
-	private $_query2 = '';
+	private $query = '';
+	private $query2 = '';
 
 	public function __construct()
 	{
@@ -43,18 +43,18 @@ class SEKeywords extends ModuleGraph
 
 		parent::__construct();
 
-		$this->_query = 'SELECT `keyword`, COUNT(TRIM(`keyword`)) as occurences
+		$this->query = 'SELECT `keyword`, COUNT(TRIM(`keyword`)) as occurences
 				FROM `'._DB_PREFIX_.'sekeyword`
 				WHERE '.(Configuration::get('SEK_FILTER_KW') == '' ? '1' : '`keyword` REGEXP \''.pSQL(Configuration::get('SEK_FILTER_KW')).'\'')
-					.Shop::addSqlRestriction().
-					' AND `date_add` BETWEEN ';
+			.Shop::addSqlRestriction().
+			' AND `date_add` BETWEEN ';
 
-		$this->_query2 = 'GROUP BY TRIM(`keyword`)
+		$this->query2 = 'GROUP BY TRIM(`keyword`)
 				HAVING occurences > '.(int)Configuration::get('SEK_MIN_OCCURENCES').'
 				ORDER BY occurences DESC';
 
 		$this->displayName = $this->l('Search engine keywords');
-		$this->description = $this->l('Display which keywords have led visitors to your website.');
+		$this->description = $this->l('Displays which keywords have led visitors to your website.');
 	}
 
 	public function install()
@@ -63,6 +63,7 @@ class SEKeywords extends ModuleGraph
 			return false;
 		Configuration::updateValue('SEK_MIN_OCCURENCES', 1);
 		Configuration::updateValue('SEK_FILTER_KW', '');
+
 		return Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'sekeyword` (
 			id_sekeyword INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -78,6 +79,7 @@ class SEKeywords extends ModuleGraph
 	{
 		if (!parent::uninstall())
 			return false;
+
 		return (Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'sekeyword`'));
 	}
 
@@ -102,54 +104,77 @@ class SEKeywords extends ModuleGraph
 
 		if (Tools::getValue('export'))
 			$this->csvExport(array('type' => 'pie'));
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.ModuleGraph::getDateBetween().$this->_query2);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query.ModuleGraph::getDateBetween().$this->query2);
 		$total = count($result);
-		$this->html = '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
+		$this->html = '
+		<div class="panel-heading">'
+			.$this->displayName.'
+		</div>
+		<h4>'.$this->l('Guide').'</h4>
+		<div class="alert alert-warning">
+			<h4>'.$this->l('Identify external search engine keywords').'</h4>
+			<p>'
+			.$this->l('This is one of the most common ways of finding a website through a search engine.').
+			$this->l('Identifying the most popular keywords entered by your new visitors allows you to see the products you should put in front if you want to achieve better visibility in search engines.').'
+			</p>
+			<p>&nbsp;</p>
+			<h4>'.$this->l('How does it work?').'</h4>
+			<p>'
+			.$this->l('When a visitor comes to your website, the web server notes the URL of the site he/she comes from. This module then parses the URL, and if it finds a reference to a known search engine, it finds the keywords in it.').'<br>'.
+			$this->l('This module can recognize all the search engines listed in PrestaShop\'s Stats/Search Engine page -- and you can add more!').'<br>'.
+			$this->l('IMPORTANT NOTE: in September 2013, Google chose to encrypt its searches queries using SSL. This means all the referer-based tools in the World (including this one) cannot identify Google keywords anymore.').'
+			</p>
+		</div>
 		<p>'.($total == 1 ? sprintf($this->l('%d keyword matches your query.'), $total) : sprintf($this->l('%d keywords match your query.'), $total)).'</p>';
-		
-		$form = '<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
-				'.$this->l('Filter by keyword').' <input type="text" name="SEK_FILTER_KW" value="'.Tools::htmlentitiesUTF8(Configuration::get('SEK_FILTER_KW')).'" />
-				'.$this->l('And min occurrences').' <input type="text" name="SEK_MIN_OCCURENCES" value="'.(int)Configuration::get('SEK_MIN_OCCURENCES').'" />
-				<input type="submit" class="button" name="submitSEK" value="'.$this->l('Apply   ').'" />
-			</form>';
-		
+
+		$form = '
+		<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post" class="form-horizontal">
+			<div class="row row-margin-bottom">
+				<label class="control-label col-lg-3">'.$this->l('Filter by keyword').'</label>
+				<div class="col-lg-9">
+					<input type="text" name="SEK_FILTER_KW" value="'.Tools::htmlentitiesUTF8(Configuration::get('SEK_FILTER_KW')).'" />
+				</div>
+			</div>
+			<div class="row row-margin-bottom">
+				<label class="control-label col-lg-3">'.$this->l('And min occurrences').'</label>
+				<div class="col-lg-9">
+					<input type="text" name="SEK_MIN_OCCURENCES" value="'.(int)Configuration::get('SEK_MIN_OCCURENCES').'" />
+				</div>
+			</div>
+			<div class="row row-margin-bottom">
+				<div class="col-lg-9 col-lg-offset-3">
+					<button type="submit" class="btn btn-default" name="submitSEK">
+						<i class="icon-ok"></i> '.$this->l('Apply').'
+					</button>
+				</div>
+			</div>
+		</form>';
+
 		if ($result && $total)
 		{
 			$table = '
-			<div style="overflow-y: scroll; height: 600px;">
-			<table class="table" border="0" cellspacing="0" cellspacing="0">
-			<thead>
-				<tr><th style="width:400px;">'.$this->l('Keywords').'</th>
-				<th style="width:50px; text-align: right">'.$this->l('Occurrences').'</th></tr>
-			</thead><tbody>';
-			foreach ($result as $index => $row)
+			<table class="table">
+				<thead>
+					<tr>
+						<th><span class="title_box active">'.$this->l('Keywords').'</span></th>
+						<th><span class="title_box active">'.$this->l('Occurrences').'</span></th>
+					</tr>
+				</thead>
+				<tbody>';
+			foreach ($result as $row)
 			{
 				$keyword =& $row['keyword'];
 				$occurences =& $row['occurences'];
-				$table .= '<tr><td>'.$keyword.'</td><td style="text-align: right">'.$occurences.'</td></tr>';
+				$table .= '<tr><td>'.$keyword.'</td><td>'.$occurences.'</td></tr>';
 			}
-			$table .= '</tbody></table></div>';
+			$table .= '</tbody></table>';
 			$this->html .= '<div>'.$this->engine(array('type' => 'pie')).'</div>
-			<br/>
-			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><img src="../img/admin/asterisk.gif" /> '.$this->l('CSV Export').'</a></p><br/>
+			<a class="btn btn-default" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'</a>
 			'.$form.'<br/>'.$table;
 		}
 		else
 			$this->html .= '<p>'.$form.'<strong>'.$this->l('No keywords').'</strong></p>';
 
-		$this->html .= '</div><br/>
-		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
-			<h2>'.$this->l('Identify external search engine keywords').'</h2>
-			<p>'.$this->l('One of the most common ways of finding a website through a search engine.').
-			$this->l('Identifying the most popular keywords entered by your new visitors allows you to see the products you should put in front if you want to achieve SEO. ').'
-			</p><br />
-			<h3>'.$this->l('How does it work?').'</h2>
-			<p>'.$this->l('When a visitor comes to your website, the server notes their previous location. This module parses the URL and finds the keywords in it.').
-			sprintf($this->l('Currently, it manages the following search engines: %1$s and %2$s.'),
-				'<b>Google, AOL, Yandex, Ask, NHL, Yahoo, Baidu, Lycos, Exalead, Live, Voila</b>',
-				'<b>Altavista</b>'
-			).$this->l('Soon, it will be possible to dynamically add new search engines and contribute to this module.').'</p><br />
-		</div>';
 		return $this->html;
 	}
 
@@ -158,46 +183,48 @@ class SEKeywords extends ModuleGraph
 		if (!Validate::isAbsoluteUrl($url))
 			return false;
 
-		$parsedUrl = parse_url($url);
-		if (!isset($parsedUrl['query']) && isset($parsedUrl['fragment']))
-			$parsedUrl['query'] = $parsedUrl['fragment'];
+		$parsed_url = parse_url($url);
+		if (!isset($parsed_url['query']) && isset($parsed_url['fragment']))
+			$parsed_url['query'] = $parsed_url['fragment'];
 
-		if (!isset($parsedUrl['query']))
+		if (!isset($parsed_url['query']))
 			return false;
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `server`, `getvar` FROM `'._DB_PREFIX_.'search_engine`');
-		foreach ($result as $index => $row)
+		foreach ($result as $row)
 		{
 			$host =& $row['server'];
 			$varname =& $row['getvar'];
-			if (strstr($parsedUrl['host'], $host))
+			if (strstr($parsed_url['host'], $host))
 			{
-				$kArray = array();
-				preg_match('/[^a-zA-Z&]?'.$varname.'=.*\&'.'/U', $parsedUrl['query'], $kArray);
+				$k_array = array();
+				preg_match('/[^a-zA-Z&]?'.$varname.'=.*\&'.'/U', $parsed_url['query'], $k_array);
 
-				if (!isset($kArray[0]) || empty($kArray[0]))
-					preg_match('/[^a-zA-Z&]?'.$varname.'=.*$'.'/', $parsedUrl['query'], $kArray);
+				if (!isset($k_array[0]) || empty($k_array[0]))
+					preg_match('/[^a-zA-Z&]?'.$varname.'=.*$'.'/', $parsed_url['query'], $k_array);
 
-				if (!isset($kArray[0]) || empty($kArray[0]))
+				if (!isset($k_array[0]) || empty($k_array[0]))
 					return false;
 
-				if ($kArray[0][0] == '&' && Tools::strlen($kArray[0]) == 1)
+				if ($k_array[0][0] == '&' && Tools::strlen($k_array[0]) == 1)
 					return false;
 
-				return urldecode(str_replace('+', ' ', ltrim(substr(rtrim($kArray[0], '&'), strlen($varname) + 1), '=')));
+				return urldecode(str_replace('+', ' ', ltrim(Tools::substr(rtrim($k_array[0], '&'), Tools::strlen($varname) + 1), '=')));
 			}
 		}
+
+		return false;
 	}
 
 	protected function getData($layers)
 	{
 		$this->_titles['main'] = $this->l('Top 10 keywords');
-		$totalResult = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate().$this->_query2);
+		$total_result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query.$this->getDate().$this->query2);
 		$total = 0;
 		$total2 = 0;
-		foreach ($totalResult as $totalRow)
-			$total += $totalRow['occurences'];
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate().$this->_query2.' LIMIT 9');
+		foreach ($total_result as $total_row)
+			$total += $total_row['occurences'];
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query.$this->getDate().$this->query2.' LIMIT 9');
 		foreach ($result as $row)
 		{
 			$this->_legend[] = $row['keyword'];

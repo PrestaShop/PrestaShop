@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -346,7 +346,7 @@ if (empty($fail_result))
 					if (strpos($phpString, '::') === false)
 					{
 						$func_name = str_replace($pattern[0], '', $php[0]);
-						require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.$func_name.'.php');
+						require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.Tools::strtolower($func_name).'.php');
 						$phpRes = call_user_func_array($func_name, $parameters);
 					}
 					/* Or an object method */

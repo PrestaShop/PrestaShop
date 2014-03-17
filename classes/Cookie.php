@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -55,8 +55,8 @@ class CookieCore
 	/**
 	 * Get data if the cookie exists and else initialize an new one
 	 *
-	 * @param $name Cookie name before encrypting
-	 * @param $path
+	 * @param $name string Cookie name before encrypting
+	 * @param $path string
 	 */
 	public function __construct($name, $path = '', $expire = null, $shared_urls = null, $standalone = false)
 	{
@@ -132,7 +132,7 @@ class CookieCore
 	/**
 	 * Magic method wich return cookie data from _content array
 	 *
-	 * @param $key key wanted
+	 * @param string $key key wanted
 	 * @return string value corresponding to the key
 	 */
 	public function __get($key)
@@ -143,7 +143,7 @@ class CookieCore
 	/**
 	 * Magic method which check if key exists in the cookie
 	 *
-	 * @param $key key wanted
+	 * @param string $key key wanted
 	 * @return boolean key existence
 	 */
 	public function __isset($key)
@@ -154,7 +154,7 @@ class CookieCore
 	/**
 	 * Magic method wich add data into _content array
 	 *
-	 * @param $key key desired
+	 * @param string $key key desired
 	 * @param $value value corresponding to the key
 	 */
 	public function __set($key, $value)
@@ -171,7 +171,7 @@ class CookieCore
 	/**
 	 * Magic method wich delete data into _content array
 	 *
-	 * @param $key key wanted
+	 * @param string $key key wanted
 	 */
 	public function __unset($key)
 	{
@@ -270,7 +270,10 @@ class CookieCore
 			//printf("\$content = %s<br />", $content);
 			
 			/* Get cookie checksum */
-			$checksum = crc32($this->_salt.substr($content, 0, strrpos($content, '¤') + 2));
+			$tmpTab = explode('¤', $content);
+			array_pop($tmpTab);
+			$content_for_checksum = implode('¤', $tmpTab).'¤';
+			$checksum = crc32($this->_salt.$content_for_checksum);
 			//printf("\$checksum = %s<br />", $checksum);
 			
 			/* Unserialize cookie content */

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,21 +28,24 @@ class AdminCartRulesControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->table = 'cart_rule';
 	 	$this->className = 'CartRule';
 	 	$this->lang = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->_orderWay = 'DESC';
+
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'icon' => 'icon-trash', 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fields_list = array(
-			'id_cart_rule' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'id_cart_rule' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'name' => array('title' => $this->l('Name')),
-			'priority' => array('title' => $this->l('Priority')),
-			'code' => array('title' => $this->l('Code')),
-			'quantity' => array('title' => $this->l('Quantity')),
-			'date_to' => array('title' => $this->l('Until')),
-			'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
+			'priority' => array('title' => $this->l('Priority'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+			'code' => array('title' => $this->l('Code'), 'class' => 'fixed-width-sm'),
+			'quantity' => array('title' => $this->l('Quantity'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+			'date_to' => array('title' => $this->l('Until'), 'type' => 'datetime'),
+			'active' => array('title' => $this->l('Status'), 'active' => 'status', 'type' => 'bool', 'orderby' => false),
 		);
 
 		parent::__construct();
@@ -52,6 +55,18 @@ class AdminCartRulesControllerCore extends AdminController
 	{
 		parent::setMedia();
 		$this->addJqueryPlugin(array('typewatch', 'fancybox', 'autocomplete'));
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_cart_rule'] = array(
+				'href' => self::$currentIndex.'&addcart_rule&token='.$this->token,
+				'desc' => $this->l('Add new cart rule', null, null, false),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
 	}
 
 	public function postProcess()
@@ -123,7 +138,7 @@ class AdminCartRulesControllerCore extends AdminController
 			if ((int)Tools::getValue('minimum_amount') < 0)
 				$this->errors[] = Tools::displayError('The minimum amount cannot be lower than zero.');
 			if ((float)Tools::getValue('reduction_percent') < 0 || (float)Tools::getValue('reduction_percent') > 100)
-				$this->errors[] = Tools::displayError('Reduction percent must be between 0% and 100%');
+				$this->errors[] = Tools::displayError('Reduction percentage must be between 0% and 100%');
 			if ((int)Tools::getValue('reduction_amount') < 0)
 				$this->errors[] = Tools::displayError('Reduction amount cannot be lower than zero.');
 			if (Tools::getValue('code') && ($same_code = (int)CartRule::getIdByCode(Tools::getValue('code'))) && $same_code != Tools::getValue('id_cart_rule'))
@@ -524,7 +539,7 @@ class AdminCartRulesControllerCore extends AdminController
 				
 				if (count($product['combinations']))
 				{
-					$gift_product_attribute_select .= '<select class="id_product_attribute" id="ipa_'.$product['id_product'].'" name="ipa_'.$product['id_product'].'">';
+					$gift_product_attribute_select .= '<select class="control-form id_product_attribute" id="ipa_'.$product['id_product'].'" name="ipa_'.$product['id_product'].'">';
 					foreach ($product['combinations'] as $combination)
 					{
 						$gift_product_attribute_select .= '

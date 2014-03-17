@@ -24,7 +24,7 @@
 *}
 <div class="form-group">
 	<label class="control-label col-lg-3">
-		<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="'.$this->l('Invalid characters:').' <>;=#{}_">{l s='URL:' mod='blocklayered'}</span>
+		<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="{l s='Invalid characters: <>;=#{}_' mod='blocklayered'}">{l s='URL' mod='blocklayered'}</span>
 	</label>
 	<div class="col-lg-9">
 		<div class="row">
@@ -47,13 +47,13 @@
 			</div>
 			{/foreach}
 			<div class="col-lg-9">
-				<p class="help-block">{l s='Specific URL format in block layered generation' mod='blocklayered'}</p>
+				<p class="help-block">{l s='Specific URL format in block layered generation.' mod='blocklayered'}</p>
 			</div>
 		</div>
 	</div>
 </div>
 <div class="form-group">
-	<label class="control-label col-lg-3">{l s='Meta title:' mod='blocklayered'}</label>
+	<label class="control-label col-lg-3">{l s='Meta title' mod='blocklayered'}</label>
 	<div class="col-lg-9">
 		<div class="row">
 			{foreach $languages as $language}
@@ -66,7 +66,7 @@
 						{$language['iso_code']}
 						<span class="caret"></span>
 					</button>
-					<ul class="dropdown-menu">';
+					<ul class="dropdown-menu">
 						{foreach $languages as $language}
 						<li><a href="javascript:hideOtherLanguage({$language['id_lang']});" tabindex="-1">{$language['name']}</a></li>
 						{/foreach}
@@ -75,7 +75,7 @@
 			</div>
 			{/foreach}
 			<div class="col-lg-9">
-				<p class="help-block">{l s='Specific format for meta title' mod='blocklayered'}</p>
+				<p class="help-block">{l s='Specific format for meta title.' mod='blocklayered'}</p>
 			</div>
 		</div>
 	</div>

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,10 +40,11 @@ class BlockSpecials extends Module
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Specials block');
-		$this->description = $this->l('Adds a block displaying current product specials.');
+		$this->description = $this->l('Adds a block displaying your current discounted products.');
 	}
 
 	public function install()
@@ -52,13 +53,28 @@ class BlockSpecials extends Module
 			Configuration::updateValue('BLOCKSPECIALS_NB_CACHES', 20);
 		$this->_clearCache('blockspecials.tpl');
 
-		return (parent::install()
-			&& $this->registerHook('rightColumn')
+		$success = (
+			parent::install()
 			&& $this->registerHook('header')
 			&& $this->registerHook('addproduct')
 			&& $this->registerHook('updateproduct')
 			&& $this->registerHook('deleteproduct')
 		);
+
+		if ($success)
+		{
+			// Hook the module either on the left or right column
+			$theme = new Theme(Context::getContext()->shop->id_theme);
+			if ((!$theme->default_right_column || !$this->registerHook('rightColumn'))
+				&& (!$theme->default_left_column || !$this->registerHook('leftColumn')))
+			{
+				// If there are no colums implemented by the template, throw an error and uninstall the module
+				$this->_errors[] = $this->l('This module need to be hooked in a column and your theme does not implement one');
+				parent::uninstall();
+				return false;
+			}
+		}
+		return $success;
 	}
 	
 	public function uninstall()
@@ -69,38 +85,14 @@ class BlockSpecials extends Module
 
 	public function getContent()
 	{
-		$output = '<h2>'.$this->displayName.'</h2>';
+		$output = '';
 		if (Tools::isSubmit('submitSpecials'))
 		{
-			Configuration::updateValue('PS_BLOCK_SPECIALS_DISPLAY', (int)Tools::getValue('always_display'));
+			Configuration::updateValue('PS_BLOCK_SPECIALS_DISPLAY', (int)Tools::getValue('PS_BLOCK_SPECIALS_DISPLAY'));
 			Configuration::updateValue('BLOCKSPECIALS_NB_CACHES', (int)Tools::getValue('BLOCKSPECIALS_NB_CACHES'));
-			$output .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
+			$output .= $this->displayConfirmation($this->l('Settings updated'));
 		}
-		return $output.$this->displayForm();
-	}
-
-	public function displayForm()
-	{
-		return '
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset>
-				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Always display this block.').'</label>
-				<div class="margin-form">
-					<input type="radio" name="always_display" id="display_on" value="1" '.(Tools::getValue('always_display', Configuration::get('PS_BLOCK_SPECIALS_DISPLAY')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="display_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
-					<input type="radio" name="always_display" id="display_off" value="0" '.(!Tools::getValue('always_display', Configuration::get('PS_BLOCK_SPECIALS_DISPLAY')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="display_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-					<p class="clear">'.$this->l('Show the block even if no product is available.').'</p>
-				</div>
-				<label>'.$this->l('Number of cache files.').'</label>
-				<div class="margin-form">
-					<input type="text" name="BLOCKSPECIALS_NB_CACHES" value="'.(int)Configuration::get('BLOCKSPECIALS_NB_CACHES').'" />
-					<p class="clear">'.$this->l('Specials are displayed randomly on the front end, but since it takes a lot of ressources, it is better to cache the results. Cache is reset everyday. 0 will disable the cache.').'</p>
-				</div>
-				<center><input type="submit" name="submitSpecials" value="'.$this->l('Save').'" class="button" /></center>
-			</fieldset>
-		</form>';
+		return $output.$this->renderForm();
 	}
 
 	public function hookRightColumn($params)
@@ -151,5 +143,72 @@ class BlockSpecials extends Module
 	public function hookDeleteProduct($params)
 	{
 		$this->_clearCache('blockspecials.tpl');
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Always display this block'),
+						'name' => 'PS_BLOCK_SPECIALS_DISPLAY',
+						'desc' => $this->l('Show the block even if no products are available.'),
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Number of cached files'),
+						'name' => 'BLOCKSPECIALS_NB_CACHES',
+						'desc' => $this->l('Specials are displayed randomly on the front-end, but since it takes a lot of ressources, it is better to cache the results. The cache is reset daily. 0 will disable the cache.'),
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitSpecials';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'PS_BLOCK_SPECIALS_DISPLAY' => Tools::getValue('PS_BLOCK_SPECIALS_DISPLAY', Configuration::get('PS_BLOCK_SPECIALS_DISPLAY')),
+			'BLOCKSPECIALS_NB_CACHES' => Tools::getValue('BLOCKSPECIALS_NB_CACHES', Configuration::get('BLOCKSPECIALS_NB_CACHES')),
+		);
 	}
 }

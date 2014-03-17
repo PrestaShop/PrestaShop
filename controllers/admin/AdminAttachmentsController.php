@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,13 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class AdminAttachmentsControllerCore extends AdminController
 {
+	public $bootstrap = true ;
 
 	protected $product_attachements = array();
 
@@ -36,59 +37,115 @@ class AdminAttachmentsControllerCore extends AdminController
 	 	$this->lang = true;
 
 		$this->addRowAction('edit');
+		$this->addRowAction('view');
 		$this->addRowAction('delete');
+
+		$this->_select = 'IFNULL(virtual.products, 0) as products';
+		$this->_join = 'LEFT JOIN (SELECT id_attachment, COUNT(*) as products FROM '._DB_PREFIX_.'product_attachment GROUP BY id_attachment) virtual ON a.id_attachment = virtual.id_attachment';
 
 		$this->fields_list = array(
 			'id_attachment' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
-				'width' => 25
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Name')
 			),
 			'file' => array(
 				'title' => $this->l('File')
+			),
+			'file_size' => array(
+				'title' => $this->l('Size'),
+				'callback' => 'displayHumanReadableSize'
+			),
+			'products' => array(
+				'title' => $this->l('Associated to'),
+				'suffix' => $this->l('product(s)'),
+				'filter_key' => 'virtual!products',
+			),
+		);
+
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'icon' => 'icon-trash',
+				'confirm' => $this->l('Delete selected items?')
 			)
 		);
 
 		parent::__construct();
 	}
 
+	public static function displayHumanReadableSize($size)
+	{
+		return Tools::formatBytes($size);
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_attachment'] = array(
+				'href' => self::$currentIndex.'&addattachment&token='.$this->token,
+				'desc' => $this->l('Add new attachment', null, null, false),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
+	}
+
+	public function renderView()
+	{
+		if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj))
+		{
+			$link = $this->context->link->getPageLink('attachment', true, NULL, 'id_attachment='.$obj->id);
+			Tools::redirectLink($link);
+		}
+		return $this->displayWarning($this->l('File not found'));
+	}
+
 	public function renderForm()
 	{
+		if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj))
+		{
+			$link = $this->context->link->getPageLink('attachment', true, NULL, 'id_attachment='.$obj->id);
+
+			if (file_exists(_PS_DOWNLOAD_DIR_.$obj->file))
+				$size = round(filesize(_PS_DOWNLOAD_DIR_.$obj->file) / 1024);
+		}
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Attachment'),
-				'image' => '../img/t/AdminAttachments.gif'
+				'icon' => 'icon-paper-clip'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Filename:'),
+					'label' => $this->l('Filename'),
 					'name' => 'name',
-					'size' => 33,
 					'required' => true,
 					'lang' => true,
+					'col' => 4
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Description:'),
+					'label' => $this->l('Description'),
 					'name' => 'description',
-					'cols' => 40,
-					'rows' => 10,
 					'lang' => true,
+					'col' => 6
 				),
 				array(
 					'type' => 'file',
-					'label' => $this->l('File:'),
+					'file' => isset($link) ? $link : null,
+					'size' => isset($size) ? $size : null,
+					'label' => $this->l('File'),
 					'name' => 'file',
-					'desc' => $this->l('Upload a file from your computer.')
+					'col' => 6
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('Save   '),
-				'class' => 'button'
+				'title' => $this->l('Save'),
 			)
 		);
 
@@ -145,7 +202,7 @@ class AdminAttachmentsControllerCore extends AdminController
 				{
 					if ($_FILES['file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
 						$this->errors[] = sprintf(
-							$this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you\'re trying to upload is:  %2$d kB.'),
+							$this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.'),
 							(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
 							number_format(($_FILES['file']['size'] / 1024), 2, '.', '')
 						);
@@ -163,7 +220,7 @@ class AdminAttachmentsControllerCore extends AdminController
 						$_POST['mime'] = $_FILES['file']['type'];
 					}
 				}
-				else if (array_key_exists('file', $_FILES) && (int)$_FILES['file']['error'] === 1)
+				elseif (array_key_exists('file', $_FILES) && (int)$_FILES['file']['error'] === 1)
 				{
 					$max_upload = (int)ini_get('upload_max_filesize');
 					$max_post = (int)ini_get('post_max_size');
@@ -174,8 +231,8 @@ class AdminAttachmentsControllerCore extends AdminController
 						'<b>'.$upload_mb.'</b>'
 					);
 				}
-				else
-					$this->errors[] = $this->l('Upload error.  Please check your server configurations for the maximum upload size allowed.');
+				elseif (!isset($a) || (isset($a) && !file_exists(_PS_DOWNLOAD_DIR_.$a->file)))
+					$this->errors[] = $this->l('Upload error. Please check your server configurations for the maximum upload size allowed.');
 			}
 			$this->validateRules();
 		}

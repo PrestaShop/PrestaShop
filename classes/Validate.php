@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,13 +19,16 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class ValidateCore
 {
+	const ADMIN_PASSWORD_LENGTH = 8;
+	const PASSWORD_LENGTH = 5;
+
 	public static function isIp2Long($ip)
 	{
 		return preg_match('#^-?[0-9]+$#', (string)$ip);
@@ -229,7 +232,7 @@ class ValidateCore
 	 */
 	public static function isPrice($price)
 	{
-		return preg_match('/^[0-9]{1,10}(\.[0-9]{1,9})?$/', sprintf('%f', $price));
+		return preg_match('/^[0-9]{1,10}(\.[0-9]{1,9})?$/', $price);
 	}
 
 	/**
@@ -240,7 +243,7 @@ class ValidateCore
 	*/
 	public static function isNegativePrice($price)
 	{
-		return preg_match('/^[-]?[0-9]{1,10}(\.[0-9]{1,9})?$/', sprintf('%f', $price));
+		return preg_match('/^[-]?[0-9]{1,10}(\.[0-9]{1,9})?$/', $price);
 	}
 
 	/**
@@ -426,14 +429,14 @@ class ValidateCore
 	 * @param int $size
 	 * @return boolean Validity is ok or not
 	 */
-	public static function isPasswd($passwd, $size = 5)
+	public static function isPasswd($passwd, $size = Validate::PASSWORD_LENGTH)
 	{
 		return (Tools::strlen($passwd) >= $size && Tools::strlen($passwd) < 255);
 	}
 
 	public static function isPasswdAdmin($passwd)
 	{
-		return Validate::isPasswd($passwd, 8);
+		return Validate::isPasswd($passwd, Validate::ADMIN_PASSWORD_LENGTH);
 	}
 
 	/**
@@ -496,7 +499,9 @@ class ValidateCore
 			return true;
 		if (preg_match('/^([0-9]{4})-((?:0?[1-9])|(?:1[0-2]))-((?:0?[1-9])|(?:[1-2][0-9])|(?:3[01]))([0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $birth_date))
 		{
-			if ($birth_date[1] > date('Y') && $birth_date[2] > date('m') && $birth_date[3] > date('d'))
+			if ($birth_date[1] > date('Y') && $birth_date[2] > date('m') && $birth_date[3] > date('d')
+				|| $birth_date[1] == date('Y') && $birth_date[2] == date('m') && $birth_date[3] > date('d')
+				|| $birth_date[1] == date('Y') && $birth_date[2] > date('m'))
 				return false;
 			return true;
 		}
@@ -804,7 +809,7 @@ class ValidateCore
 	 */
 	public static function isTabName($name)
 	{
-		return preg_match('/^[a-zA-Z0-9_-]*$/', $name);
+		return preg_match('/^[^<>]+$/u', $name);
 	}
 
 	public static function isWeightUnit($unit)
@@ -830,7 +835,7 @@ class ValidateCore
 	/**
 	 * Check if the value is a sort direction value (DESC/ASC)
 	 *
-	 * @param char $value
+	 * @param string $value
 	 * @return boolean Validity is ok or not
 	 */
 	public static function isSortDirection($value)
@@ -930,7 +935,7 @@ class ValidateCore
 	 */
 	public static function isLocalizationPackSelection($data)
 	{
-		return ($data === 'states' || $data === 'taxes' || $data === 'currencies' || $data === 'languages' || $data === 'units');
+		return in_array((string)$data, array('states', 'taxes', 'currencies', 'languages', 'units', 'groups'));
 	}
 
 	/**
@@ -974,7 +979,7 @@ class ValidateCore
 	 */
 	public static function isLanguageFileName($file_name)
 	{
-		return (bool)preg_match('/^[a-zA-Z]{2,3}\.gzip$/s', $file_name);
+		return (bool)preg_match('/^[a-zA-Z]{2,3}\.(?:gzip|tar\.gz)$/s', $file_name);
 	}
 
 	/**
@@ -1066,5 +1071,10 @@ class ValidateCore
 	public static function isPrestaShopVersion($version)
 	{
 		return (preg_match('/^[0-1]\.[0-9]{1,2}(\.[0-9]{1,2}){0,2}$/', $version) && ip2long($version));
+	}
+
+	public static function isOrderInvoiceNumber($id)
+	{
+		return (preg_match('/^(?:'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).')\s*([0-9]+)$/i', $id));
 	}
 }

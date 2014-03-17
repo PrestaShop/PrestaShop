@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,13 +19,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class AdminSuppliersControllerCore extends AdminController
 {
+	public $bootstrap = true ;
+
 	public function __construct()
 	{
 		$this->table = 'supplier';
@@ -35,8 +37,17 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		$this->allow_export = true;
+
+		$this->_orderBy = 'name';
+		$this->_orderWay = 'ASC';
 		
-		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'icon' => 'icon-trash',
+				'confirm' => $this->l('Delete selected items?')
+			)
+		);
 
 		$this->_select = 'COUNT(DISTINCT ps.`id_product`) AS products';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_supplier` ps ON (a.`id_supplier` = ps.`id_supplier`)';
@@ -45,11 +56,11 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->fieldImageSettings = array('name' => 'logo', 'dir' => 'su');
 
 		$this->fields_list = array(
-			'id_supplier' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'logo' => array('title' => $this->l('Logo'), 'width' => 150, 'align' => 'center', 'image' => 'su', 'orderby' => false, 'search' => false),
-			'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
-			'products' => array('title' => $this->l('Number of products'), 'width' => 70, 'align' => 'right', 'filter_type' => 'int', 'tmpTableFilter' => true),
-			'active' => array('title' => $this->l('Enabled'), 'width' => 70, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+			'id_supplier' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+			'logo' => array('title' => $this->l('Logo'), 'align' => 'center', 'image' => 'su', 'orderby' => false, 'search' => false),
+			'name' => array('title' => $this->l('Name')),
+			'products' => array('title' => $this->l('Number of products'), 'align' => 'right', 'filter_type' => 'int', 'tmpTableFilter' => true),
+			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-xs')
 		);
 
 		parent::__construct();
@@ -62,16 +73,39 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->addJqueryPlugin('tagify');
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_supplier'] = array(
+				'href' => self::$currentIndex.'&addsupplier&token='.$this->token,
+				'desc' => $this->l('Add new supplier', null, null, false),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
+	}
+
 	public function renderForm()
 	{
 		// loads current warehouse
 		if (!($obj = $this->loadObject(true)))
 			return;
 
+		$image = _PS_SUPP_IMG_DIR_.$obj->id.'.jpg';
+		$image_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350,
+			$this->imageType, true, true);
+		$image_size = file_exists($image) ? filesize($image) / 1000 : false;
+
+		$tmp_addr = new Address();
+		$res = $tmp_addr->getFieldsRequiredDatabase();
+		$required_fields = array();
+		foreach ($res as $row)
+			$required_fields[(int)$row['id_required_field']] = $row['field_name'];
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Suppliers'),
-				'image' => '../img/admin/suppliers.gif'
+				'icon' => 'icon-truck'
 			),
 			'input' => array(
 				array(
@@ -82,65 +116,77 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Name'),
 					'name' => 'name',
-					'size' => 40,
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'col' => 4,
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}',
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Description:'),
+					'label' => $this->l('Description'),
 					'name' => 'description',
-					'cols' => 60,
-					'rows' => 10,
 					'lang' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('Will appear in the supplier list'),
+					'hint' => array(
+						$this->l('Invalid characters:').' &lt;&gt;;=#{}',
+						$this->l('Will appear in the list of suppliers.')
+					),
 					'autoload_rte' => 'rte' //Enable TinyMCE editor for short description
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Phone:'),
+					'label' => $this->l('Phone'),
 					'name' => 'phone',
-					'size' => 15,
+					'required' => in_array('phone', $required_fields),
 					'maxlength' => 16,
-					'desc' => $this->l('Phone number for this supplier')
+					'col' => 4,
+					'hint' => $this->l('Phone number for this supplier')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Address:'),
+					'label' => $this->l('Mobile phone'),
+					'name' => 'phone_mobile',
+					'required' => in_array('phone_mobile', $required_fields),
+					'maxlength' => 16,
+					'col' => 4,
+					'hint' => $this->l('Mobile phone number for this supplier')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Address'),
 					'name' => 'address',
-					'size' => 100,
 					'maxlength' => 128,
+					'col' => 6,
 					'required' => true
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Address:').' (2)',
+					'label' => $this->l('Address').' (2)',
 					'name' => 'address2',
-					'size' => 100,
+					'required' => in_array('address2', $required_fields),
+					'col' => 6,
 					'maxlength' => 128,
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Postal Code/Zip Code:'),
+					'label' => $this->l('Zip/postal code'),
 					'name' => 'postcode',
-					'size' => 10,
+					'required' => in_array('postcode', $required_fields),
 					'maxlength' => 12,
-					'required' => true,
+					'col' => 2,
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('City:'),
+					'label' => $this->l('City'),
 					'name' => 'city',
-					'size' => 20,
 					'maxlength' => 32,
+					'col' => 4,
 					'required' => true,
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Country:'),
+					'label' => $this->l('Country'),
 					'name' => 'id_country',
 					'required' => true,
+					'col' => 4,
 					'default_value' => (int)$this->context->country->id,
 					'options' => array(
 						'query' => Country::getCountries($this->context->language->id, false),
@@ -152,6 +198,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'select',
 					'label' => $this->l('State'),
 					'name' => 'id_state',
+					'col' => 4,
 					'options' => array(
 						'id' => 'id_state',
 						'query' => array(),
@@ -160,36 +207,43 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'file',
-					'label' => $this->l('Logo:'),
+					'label' => $this->l('Logo'),
 					'name' => 'logo',
 					'display_image' => true,
-					'desc' => $this->l('Upload a supplier logo from your computer')
+					'image' => $image_url ? $image_url : false,
+					'size' => $image_size,
+					'hint' => $this->l('Upload a supplier logo from your computer.')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Meta title:'),
+					'label' => $this->l('Meta title'),
 					'name' => 'meta_title',
 					'lang' => true,
-					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
+					'col' => 4,
+					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Meta description:'),
+					'label' => $this->l('Meta description'),
 					'name' => 'meta_description',
 					'lang' => true,
-					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
+					'col' => 6,
+					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
 				array(
 					'type' => 'tags',
-					'label' => $this->l('Meta keywords:'),
+					'label' => $this->l('Meta keywords'),
 					'name' => 'meta_keywords',
 					'lang' => true,
-					'hint' => $this->l('Forbidden characters:').' <>;=#{}',
-					'desc' => $this->l('To add "tags" click in the field, write something and then press "Enter"')
+					'col' => 6,
+					'hint' => array(
+						$this->l('To add "tags" click in the field, write something and then press "Enter".'),
+						$this->l('Forbidden characters:').' &lt;&gt;;=#{}'
+					)
 				),
 				array(
-					'type' => 'radio',
-					'label' => $this->l('Enable:'),
+					'type' => 'switch',
+					'label' => $this->l('Enable'),
 					'name' => 'active',
 					'required' => false,
 					'class' => 't',
@@ -209,8 +263,7 @@ class AdminSuppliersControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
-				'class' => 'button'
+				'title' => $this->l('Save'),
 			)
 		);
 
@@ -230,6 +283,7 @@ class AdminSuppliersControllerCore extends AdminController
 			$this->fields_value = array(
 				'id_address' => $address->id,
 				'phone' => $address->phone,
+				'phone_mobile' => $address->phone_mobile,
 				'address' => $address->address1,
 				'address2' => $address->address2,
 				'postcode' => $address->postcode,
@@ -249,15 +303,10 @@ class AdminSuppliersControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}
-
-		// set logo image
-		$image = ImageManager::thumbnail(_PS_SUPP_IMG_DIR_.'/'.$this->object->id.'.jpg', $this->table.'_'.(int)$this->object->id.'.'.$this->imageType, 350, $this->imageType, true);
-		$this->fields_value['image'] = $image ? $image : false;
-		$this->fields_value['size'] = $image ? filesize(_PS_SUPP_IMG_DIR_.'/'.$this->object->id.'.jpg') / 1000 : false;
 
 		return parent::renderForm();
 	}
@@ -269,19 +318,19 @@ class AdminSuppliersControllerCore extends AdminController
 	 */
 	public function initToolbar()
 	{
-		switch ($this->display)
-		{
-			default:
-				parent::initToolbar();
-				$this->toolbar_btn['import'] = array(
-					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
-					'desc' => $this->l('Import')
-				);
-		}
+		parent::initToolbar();
+		$this->addPageHeaderToolBarModulesListButton();
+		if (empty($this->display))
+			$this->toolbar_btn['import'] = array(
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
+				'desc' => $this->l('Import')
+			);
 	}
 
 	public function renderView()
 	{
+		$this->initTabModuleList();
+		$this->toolbar_title = $this->object->name;
 		$products = $this->object->getProductsLite($this->context->language->id);
 		$total_product = count($products);
 		for ($i = 0; $i < $total_product; $i++)
@@ -394,6 +443,7 @@ class AdminSuppliersControllerCore extends AdminController
 			$address->address2 = Tools::getValue('address2', null);
 			$address->postcode = Tools::getValue('postcode', null);
 			$address->phone = Tools::getValue('phone', null);
+			$address->phone_mobile = Tools::getValue('phone_mobile', null);
 			$address->id_country = Tools::getValue('id_country', null);
 			$address->id_state = Tools::getValue('id_state', null);
 			$address->city = Tools::getValue('city', null);

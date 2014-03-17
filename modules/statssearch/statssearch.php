@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -29,9 +29,9 @@ if (!defined('_PS_VERSION_'))
 
 class StatsSearch extends ModuleGraph
 {
-	private $_html = '';
-	private $_query = '';
-	private $_query2 = '';
+	private $html = '';
+	private $query = '';
+	private $query_group_by = '';
 
 	public function __construct()
 	{
@@ -43,24 +43,25 @@ class StatsSearch extends ModuleGraph
 
 		parent::__construct();
 
-		$this->_query = 'SELECT `keywords`, COUNT(TRIM(`keywords`)) as occurences, MAX(results) as total
+		$this->query = 'SELECT `keywords`, COUNT(TRIM(`keywords`)) as occurences, MAX(results) as total
 				FROM `'._DB_PREFIX_.'statssearch`
 				WHERE 1
 					'.Shop::addSqlRestriction().'
 					AND `date_add` BETWEEN ';
 
-		$this->_query2 = 'GROUP BY `keywords`
+		$this->query_group_by = 'GROUP BY `keywords`
 				HAVING occurences > 1
 				ORDER BY occurences DESC';
 
 		$this->displayName = $this->l('Shop search');
-		$this->description = $this->l('Display which keywords have been searched by your store\'s visitors.');
+		$this->description = $this->l('Adds a tab showing which keywords have been searched by your store\'s visitors.');
 	}
 
 	public function install()
 	{
 		if (!parent::install() || !$this->registerHook('search') || !$this->registerHook('AdminStatsModules'))
 			return false;
+
 		return Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'statssearch` (
 			id_statssearch INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -77,6 +78,7 @@ class StatsSearch extends ModuleGraph
 	{
 		if (!parent::uninstall())
 			return false;
+
 		return (Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'statssearch`'));
 	}
 
@@ -95,49 +97,55 @@ class StatsSearch extends ModuleGraph
 		if (Tools::getValue('export'))
 			$this->csvExport(array('type' => 'pie'));
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.ModuleGraph::getDateBetween().$this->_query2);
-		$this->_html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>';
-		$table = '<div style="overflow-y: scroll; height: 600px;">
-		<table class="table" border="0" cellspacing="0" cellspacing="0">
-		<thead>
-			<tr>
-				<th style="width:400px;">'.$this->l('Keywords').'</th>
-				<th style="width:50px; text-align: right">'.$this->l('Occurrences').'</th>
-				<th style="width:50px; text-align: right">'.$this->l('Results').'</th>
-			</tr>
-		</thead><tbody>';
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query.ModuleGraph::getDateBetween().$this->query_group_by);
+		$this->html = '
+		<div class="panel-heading">
+			'.$this->displayName.'
+		</div>';
+		$table = '
+		<table class="table">
+			<thead>
+				<tr>
+					<th><span class="title_box active">'.$this->l('Keywords').'</span></th>
+					<th><span class="title_box active">'.$this->l('Occurrences').'</span></th>
+					<th><span class="title_box active">'.$this->l('Results').'</span></th>
+				</tr>
+			</thead>
+			<tbody>';
 
 		foreach ($result as $row)
 		{
 			if (Tools::strlen($row['keywords']) >= Configuration::get('PS_SEARCH_MINWORDLEN'))
 				$table .= '<tr>
 					<td>'.$row['keywords'].'</td>
-					<td style="text-align: right">'.$row['occurences'].'</td>
-					<td style="text-align: right">'.$row['total'].'</td>
+					<td>'.$row['occurences'].'</td>
+					<td>'.$row['total'].'</td>
 				</tr>';
 		}
-		$table .= '</tbody></table></div>';
+		$table .= '
+			</tbody>
+		</table>';
 
 		if (count($result))
-			$this->_html .= '<div>'.$this->engine(array('type' => 'pie')).'</div>
-									<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
-									<br class="clear" />'.$table;
+			$this->html .= '<div>'.$this->engine(array('type' => 'pie')).'</div>
+							<a class="btn btn-default" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1">
+								<i class="icon-cloud-upload"></i> '.$this->l('CSV Export').'
+							</a>'.$table;
 		else
-			$this->_html .= '<p>'.$this->l('No keywords searched more than once have been found.').'</p>';
-		$this->_html .= '</div>';
-		return $this->_html;
+			$this->html .= '<p>'.$this->l('No keywords searched more than once have been found.').'</p>';
+
+		return $this->html;
 	}
 
 	protected function getData($layers)
 	{
 		$this->_titles['main'] = $this->l('Top 10 keywords');
-		$totalResult = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate().$this->_query2);
+		$total_result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query.$this->getDate().$this->query_group_by);
 		$total = 0;
 		$total2 = 0;
-		foreach ($totalResult as $totalRow)
-			$total += $totalRow['occurences'];
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate().$this->_query2.' LIMIT 9');
+		foreach ($total_result as $total_row)
+			$total += $total_row['occurences'];
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query.$this->getDate().$this->query_group_by.' LIMIT 9');
 		foreach ($result as $row)
 		{
 			if (!$row['occurences'])

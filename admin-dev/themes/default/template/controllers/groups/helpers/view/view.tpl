@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,39 +26,62 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-
-	<fieldset>
-		<ul>
-			<li><span style="font-weight: bold; font-size: 13px; color:#000;">{l s='Name:'}</span> {$group->name[$language->id]}</li>
-		<li><span style="font-weight: bold; font-size: 13px; color:#000;">{l s='Discount: %.2f%%' sprintf=$group->reduction}</span></li>
-		<li><span style="font-weight: bold; font-size: 13px; color:#000;">{l s='Current category discount:'}</span>
+<div class="row">
+	<div class="col-lg-6">
+		<div class="panel">
+			<h3><i class="icon-group"></i> {l s='Group information'}</h3>
+			<h2><i class="icon-group"></i> {$group->name[$language->id]}</h2>
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-lg-3 control-label">{l s='Discount:'}</label>
+					<div class="col-lg-3"><p class="form-control-static">{l s='Discount: %.2f%%' sprintf=$group->reduction}</p></div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">{l s='Price display method:'}</label>
+					<div class="col-lg-3"><p class="form-control-static">{if $group->price_display_method}
+					{l s='Tax excluded'}
+				{else}
+					{l s='Tax included'}
+				{/if}</p></div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 control-label">{l s='Show prices:'}</label>
+					<div class="col-lg-3"><p class="form-control-static">{if $group->show_prices}{l s='Yes'}{else}{l s='No'}{/if}</p></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-6">
+		<div class="panel">
+			<h3><i class="icon-dollar"></i> {l s='Current category discount'}</h3>
 			{if !$categorieReductions}
-				{l s='None'}
+				<div class="alert alert-warning">{l s='None'}</div>
 			{else}
-				<table cellspacing="0" cellpadding="0" class="table" style="margin-top:10px">
+				<table class="table">
+					<thead>
+						<tr>
+							<th><span class="title_box">{l s='Category'}</span></th>
+							<th><span class="title_box">{l s='Discount'}</span></th>
+						</tr>
+					</thead>
+					<tbody>
 					{foreach $categorieReductions key=key item=category }
 						<tr class="alt_row">
 							<td>{$category.path}</td>
 							<td>{l s='Discount: %.2f%%' sprintf=$category.reduction}</td>
 						</tr>
 					{/foreach}
+					<tbody>
 				</table>
 			{/if}
-			</li>
-			
-		<li><span style="font-weight: bold; font-size: 13px; color:#000;">{l s='Price display method:'}</span>
-			{if $group->price_display_method}
-				{l s='Tax excluded'}
-			{else}
-				{l s='Tax included'}
-			{/if}
-		</li>
-		<li><span style="font-weight: bold; font-size: 13px; color:#000;">{l s='Show prices:'}</span> {if $group->show_prices}{l s='Yes'}{else}{l s='No'}{/if}
-		</li>
-		</ul>
-	</fieldset>
-	<h2>{l s='Members of this customer group'}</h2>
-	<p>{l s='Limited to the first 100 customers.'} {l s='Please use filters to narrow your search.'}</p>
-	{$customerList}
-
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<h2>{l s='Members of this customer group'}</h2>
+		<p>{l s='Limited to the first 100 customers.'} {l s='Please use filters to narrow your search.'}</p>
+		{$customerList}
+	</div>
+</div>
 {/block}

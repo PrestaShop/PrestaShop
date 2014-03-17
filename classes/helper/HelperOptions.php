@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -92,7 +92,51 @@ class HelperOptionsCore extends Helper
 
 				if ($field['type'] == 'color')
 					$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.colorpicker.js');
-					
+
+				if ($field['type'] == 'texarea' || $field['type'] == 'textareaLang')
+					$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.autosize.min.js');
+
+				if ($field['type'] == 'file')
+				{
+					$uploader = new HelperUploader();
+					$uploader->setId(isset($field['id'])?$field['id']:null);
+					$uploader->setName($field['name']);
+					$uploader->setUrl(isset($field['url'])?$field['url']:null);
+					$uploader->setMultiple(isset($field['multiple'])?$field['multiple']:false);
+					$uploader->setUseAjax(isset($field['ajax'])?$field['ajax']:false);
+					$uploader->setMaxFiles(isset($field['max_files'])?$field['max_files']:null);
+
+					if (isset($field['files']) && $field['files'])
+						$uploader->setFiles($field['files']);
+					elseif (isset($field['image']) && $field['image']) // Use for retrocompatibility							
+						$uploader->setFiles(array(
+							0 => array(
+							'type'       => HelperUploader::TYPE_IMAGE,
+							'image'      => isset($field['image'])?$field['image']:null,
+							'size'       => isset($field['size'])?$field['size']:null,
+							'delete_url' => isset($field['delete_url'])?$field['delete_url']:null
+						)));
+
+					if (isset($field['file']) && $field['file']) // Use for retrocompatibility							
+						$uploader->setFiles(array(
+							0 => array(
+							'type'       => HelperUploader::TYPE_FILE,
+							'size'       => isset($field['size'])?$field['size']:null,
+							'delete_url' => isset($field['delete_url'])?$field['delete_url']:null,
+							'download_url' => isset($field['file'])?$field['file']:null
+						)));
+
+					if (isset($field['thumb']) && $field['thumb']) // Use for retrocompatibility							
+						$uploader->setFiles(array(
+							0 => array(
+							'type'       => HelperUploader::TYPE_IMAGE,
+							'image'      => isset($field['thumb'])?'<img src="'.$field['thumb'].'" alt="'.$field['title'].'" title="'.$field['title'].'" />':null,
+						)));
+
+					$uploader->setTitle(isset($field['title'])?$field['title']:null);
+					$field['file'] = $uploader->render();
+				}
+
 				// Cast options values if specified
 				if ($field['type'] == 'select' && isset($field['cast']))
 					foreach ($field['list'] as $option_key => $option)
@@ -104,7 +148,7 @@ class HelperOptionsCore extends Helper
 					foreach ($languages as $language)
 					{
 						if ($field['type'] == 'textLang')
-							$value = Tools::safeOutput(Tools::getValue($key.'_'.$language['id_lang'], Configuration::get($key, $language['id_lang'])));
+							$value = Tools::getValue($key.'_'.$language['id_lang'], Configuration::get($key, $language['id_lang']));
 						elseif ($field['type'] == 'textareaLang')
 							$value = Configuration::get($key, $language['id_lang']);
 						elseif ($field['type'] == 'selectLang')
@@ -129,7 +173,7 @@ class HelperOptionsCore extends Helper
 									$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
 							}
 						</script>';
-					$field['link_remove_ip'] = ' &nbsp<a href="#" class="button" onclick="addRemoteAddr(); return false;">'.$this->l('Add my IP', 'Helper').'</a>';
+					$field['link_remove_ip'] = '<button type="button" class="btn btn-default" onclick="addRemoteAddr();"><i class="icon-plus"></i> '.$this->l('Add my IP', 'Helper').'</button>';
 				}
 
 				// Multishop default value

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,13 +28,13 @@ abstract class ModuleGraphCore extends Module
 {
 	protected $_employee;
 
-	/** @var integer array graph data */
+	/** @var array of integers graph data */
 	protected	$_values = array();
 
-	/** @var string array graph legends (X axis) */
+	/** @var array of strings graph legends (X axis) */
 	protected	$_legend = array();
 
-	/**@var string graph titles */
+	/**@var array string graph titles */
 	protected	$_titles = array('main' => null, 'x' => null, 'y' => null);
 
 	/** @var ModuleGraphEngine graph engine */

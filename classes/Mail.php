@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -149,12 +149,7 @@ class MailCore
 				if ($to_name == null || $to_name == $addr)
 					$to_name = '';
 				else
-				{
-					if (function_exists('mb_encode_mimeheader'))
-						$to_name = mb_encode_mimeheader($to_name, 'utf-8');
-					else
-						$to_name = self::mimeEncode($to_name);
-				}
+					$to_name = self::mimeEncode($to_name);
 
 				$to_list->addTo($addr, $to_name);
 			}
@@ -165,12 +160,7 @@ class MailCore
 			if ($to_name == null || $to_name == $to)
 				$to_name = '';
 			else
-			{
-				if (function_exists('mb_encode_mimeheader'))
-					$to_name = mb_encode_mimeheader($to_name, 'utf-8');
-				else
-					$to_name = self::mimeEncode($to_name);
-			}
+				$to_name = self::mimeEncode($to_name);
 
 			$to_list->addTo($to, $to_name);
 		}
@@ -262,6 +252,9 @@ class MailCore
 			$message->setId(Mail::generateId());
 
 			$message->headers->setEncoding('Q');
+
+			$template_vars = array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $template_vars);
+			$template_vars = array_map(array('Tools', 'stripslashes'), $template_vars);
 
 			if (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $id_shop)))
 				$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $id_shop);

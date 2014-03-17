@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -60,7 +60,7 @@ class TabCore extends ObjectModel
 			'active' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
 			// Lang fields
-			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isGenericName', 'size' => 32),
+			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 64),
 		),
 	);
 
@@ -97,12 +97,18 @@ class TabCore extends ObjectModel
 
 		// Add tab
 		if (parent::add($autodate, $null_values))
-		{
-			// refresh cache when adding new tab
-			self::$_getIdFromClassName[strtolower($this->class_name)] = $this->id;
+		{	
+                        //forces cache to be reloaded
+                        self::$_getIdFromClassName = null;
 			return Tab::initAccess($this->id);
 		}
 		return false;
+	}
+
+	public function save($null_values = false, $autodate = true)
+	{
+		self::$_getIdFromClassName = null;
+		return parent::save();
 	}
 
 	/** When creating a new tab $id_tab, this add default rights to the table access
@@ -237,13 +243,12 @@ class TabCore extends ObjectModel
 		if (!isset(self::$_cache_tabs[$id_lang]))
 		{
 			self::$_cache_tabs[$id_lang] = array();
+			// Keep t.*, tl.name instead of only * because if translations are missing, the join on tab_lang will overwrite the id_tab in the results
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT *
-				FROM `'._DB_PREFIX_.'tab` t
-				LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl
-					ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
-				ORDER BY t.`position` ASC
-			');
+			SELECT t.*, tl.name
+			FROM `'._DB_PREFIX_.'tab` t
+			LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
+			ORDER BY t.`position` ASC');
 			foreach ($result as $row)
 			{
 				if (!isset(self::$_cache_tabs[$id_lang][$row['id_parent']]))
@@ -258,6 +263,7 @@ class TabCore extends ObjectModel
 				$array_all = array_merge($array_all, $array_parent);
 			return $array_all;
 		}
+			
 		return (isset(self::$_cache_tabs[$id_lang][$id_parent]) ? self::$_cache_tabs[$id_lang][$id_parent] : array());
 	}
 
@@ -273,7 +279,7 @@ class TabCore extends ObjectModel
 		if (self::$_getIdFromClassName === null)
 		{
 			self::$_getIdFromClassName = array();
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM `'._DB_PREFIX_.'tab`');
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM `'._DB_PREFIX_.'tab`', true, false);
 			foreach ($result as $row)
 				self::$_getIdFromClassName[strtolower($row['class_name'])] = $row['id_tab'];
 		}
@@ -285,7 +291,7 @@ class TabCore extends ObjectModel
 	 * @static
 	 * @param $module string Module name
 	 * @param null $id_lang integer Language ID
-	 * @return array|Collection Collection of tabs (or empty array)
+	 * @return array|PrestaShopCollection Collection of tabs (or empty array)
 	 */
 	public static function getCollectionFromModule($module, $id_lang = null)
 	{
@@ -295,7 +301,7 @@ class TabCore extends ObjectModel
 		if (!Validate::isModuleName($module))
 			return array();
 
-		$tabs = new Collection('Tab', (int)$id_lang);
+		$tabs = new PrestaShopCollection('Tab', (int)$id_lang);
 		$tabs->where('module', '=', $module);
 		return $tabs;
 	}
@@ -346,12 +352,13 @@ class TabCore extends ObjectModel
 	 * Get Instance from tab class name
 	 *
 	 * @param $class_name string Name of tab class
+	 * @param $id_lang integer id_lang
 	 * @return Tab Tab object (empty if bad id or class name)
 	 */
-	public static function getInstanceFromClassName($class_name)
+	public static function getInstanceFromClassName($class_name, $id_lang = null)
 	{
 		$id_tab = (int)Tab::getIdFromClassName($class_name);
-		return new Tab($id_tab);
+		return new Tab($id_tab, $id_lang);
 	}
 
 	public static function getNbTabs($id_parent = null)

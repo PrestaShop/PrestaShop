@@ -10,7 +10,7 @@
  * CHANGELOG: http://users.tpg.com.au/j_birch/plugins/superfish/changelog.txt
  */
 
-;(function($){
+(function($){
 	$.fn.superfish = function(op){
 
 		var sf = $.fn.superfish,

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -133,8 +133,8 @@ class WebserviceOutputBuilderCore
 	}
 
 	/**
-	 * @param $key The normalized key expected for an http response
-	 * @param $value
+	 * @param string $key The normalized key expected for an http response
+	 * @param string $value
 	 * @throw WebserviceException if the key or the value are corrupted
 	 * 		  (use Validate::isCleanHtml method)
 	 * @return $this
@@ -406,8 +406,8 @@ class WebserviceOutputBuilderCore
 	/**
 	 * Create the tree diagram with no details
 	 *
-	 * @param $object create by the entity
-	 * @param $depth the depth for the tree diagram
+	 * @param ObjectModel $object create by the entity
+	 * @param int $depth the depth for the tree diagram
 	 * @return string
 	 */
 	public function renderEntityMinimum($object, $depth)
@@ -426,8 +426,8 @@ class WebserviceOutputBuilderCore
 	/**
 	 * Build a schema blank or synopsis
 	 *
-	 * @param $object create by the entity
-	 * @param $ws_params webserviceParams from the entity
+	 * @param ObjectModel $object create by the entity
+	 * @param array $ws_params webserviceParams from the entity
 	 * @return string
 	 */
 	protected function renderSchema($object, $ws_params)

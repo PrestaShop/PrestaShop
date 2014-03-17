@@ -138,7 +138,7 @@ $(document).ready(function() {
 // init hookable_list 
 function getHookableList() {
 	hooks_list = new Array();
-	$("input[name^=hook_list]}").each(function(e){
+	$("input[name^=hook_list]").each(function(e){
 		hooks_list.push($(this).val());
 	}); 
 

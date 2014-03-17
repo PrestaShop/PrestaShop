@@ -1,0 +1,50 @@
+#login
+	height: 100%
+	background-color: #092756
+	@include background(radial-gradient(color-stops(rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%), top left),linear-gradient(top,rgba(57,173,219,.25),rgba(42,60,87,.4)),linear-gradient(left top,#670D10,#092756))
+
+#login-header
+	padding-top: 40px
+	margin-bottom: 30px
+	color: white
+	h1, h4
+		margin: 0
+		padding: 0
+
+#login-panel
+	margin: 0 auto
+	width: 420px
+	@media (max-width: $screen-phone)
+		width: 90%
+	.panel
+		@include box-shadow(rgba(white,0.45) 0 0 0 6px)
+	.panel-footer
+		height: inherit
+		margin: 0 -20px -20px
+	.flip-container
+		height: 370px
+		@include perspective(1000px)
+		//@include animate(fadeInDown, 0.3s)
+		&.flip .flipper
+			@include rotateY(180deg)
+	.flipper
+		@include transition-duration(0.6s)
+		@include transform-style
+		position: relative
+	.front, .back
+		@include backface-visibility(hidden)
+		width: 100%
+		padding: 20px
+		position: absolute
+		top: 0
+		left: 0
+	.front
+		z-index: 2
+	.back
+		@include rotateY(180deg)
+	#remind-me
+		margin-top: 0
+
+#login-footer
+	a
+		color: #A0AAB5

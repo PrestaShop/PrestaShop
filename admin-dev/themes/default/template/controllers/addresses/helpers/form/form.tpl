@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -31,7 +31,7 @@
 	{/if}
 
 	{if $input.type == 'text_customer' && !isset($customer)}
-		<label>{l s='Customer email'}</label>
+		<label class="control-label col-lg-3 required" for="email">{l s='Customer email'}</label>
 	{else}
 		{$smarty.block.parent}
 	{/if}
@@ -40,7 +40,11 @@
 {block name="field"}
 	{if $input.type == 'text_customer'}
 		{if isset($customer)}
-			<div class="margin-form"><a style="display: block; padding-top: 4px;" href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={$tokenCustomer}">{$customer->lastname} {$customer->firstname} ({$customer->email})</a></div>
+			<div class="col-lg-9">
+				<a class="btn btn-default" href="?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;viewcustomer&amp;token={$tokenCustomer}">
+					<i class="icon-eye-open"></i> {$customer->lastname} {$customer->firstname} ({$customer->email})
+				</a>
+			</div>
 			<input type="hidden" name="id_customer" value="{$customer->id}" />
 			<input type="hidden" name="email" value="{$customer->email}" />
 		{else}
@@ -80,8 +84,9 @@
 				}
 			});
 			</script>
-			<div class="margin-form">
-				<input type="text" size="33" name="email" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" style="text-transform: lowercase;" /> <sup>*</sup>
+
+			<div class="col-lg-4">
+				<input type="text" id="email" name="email" value="{$fields_value[$input.name]|escape:'html':'UTF-8'}"/>
 			</div>
 		{/if}
 	{else}

@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,75 +18,103 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+<div id="product-seo" class="panel product-tab">
+	<input type="hidden" name="submitted_tabs[]" value="Seo" />
+	<h3>{l s='SEO'}</h3>
 
-<input type="hidden" name="submitted_tabs[]" value="Seo" />
-<h4>{l s='SEO'}</h4>
+	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Seo"}
 
-{include file="controllers/products/multishop/check_fields.tpl" product_tab="Seo"}
-
-<div class="separation"></div>
-
-<table>
-	<tr>
-		<td class="col-left">
+	<div class="form-group">
+		<label class="control-label col-lg-3" for="meta_title_{$id_lang}">
 			{include file="controllers/products/multishop/checkbox.tpl" field="meta_title" type="default" multilang="true"}
-			<label>{l s='Meta title:'}</label>
-		</td>
-		<td>
+			<span class="label-tooltip" data-toggle="tooltip"
+				title="{l s='Public title for the product\'s page, and for search engines. Leave blank to use the product name.'}">
+				{l s='Meta title'}
+			</span>
+		</label>
+		<div class="col-lg-8">
 			{include file="controllers/products/input_text_lang.tpl"
 				languages=$languages
 				input_name='meta_title'
-				input_value=$product->meta_title}
-			<p class="preference_description">{l s='Product page title: Leave blank to use the product name'}</p>
-		</td>
-	</tr>
-	<tr>
-		<td class="col-left">
+				input_value=$product->meta_title
+				maxchar=70
+			}
+		</div>
+	</div>
+
+	<div class="form-group">		
+		<label class="control-label col-lg-3" for="meta_description_{$id_lang}">
 			{include file="controllers/products/multishop/checkbox.tpl" field="meta_description" type="default" multilang="true"}
-			<label>{l s='Meta description:'}</label>
-		</td>
-		<td>
+			<span class="label-tooltip" data-toggle="tooltip"
+				title="{l s='This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces).'}">
+				{l s='Meta description'}
+			</span>
+		</label>
+		<div class="col-lg-8">
 			{include file="controllers/products/input_text_lang.tpl"
 				languages=$languages
 				input_name='meta_description'
 				input_value=$product->meta_description
-				input_hint='{l s=\'Forbidden characters:\'\} <>;=#{\}'}
-			<p class="preference_description">{l s='A single sentence for the HTML header is needed. '}</p>
-		</td>
-	</tr>
-	<tr>
-		<td class="col-left">
+				maxchar=160
+			}
+		</div>
+	</div>
+	{* Removed for simplicity *}
+	<div class="form-group hide">
+		<label class="control-label col-lg-3" for="meta_keywords_{$id_lang}">
 			{include file="controllers/products/multishop/checkbox.tpl" field="meta_keywords" type="default" multilang="true"}
-			<label>{l s='Meta keywords:'}</label>
-		</td>
-		<td>
+			<span class="label-tooltip" data-toggle="tooltip"
+				title="{l s='Keywords for search engines, separated by commas.'}">
+				{l s='Meta keywords'}
+			</span>
+		</label>
+		<div class="col-lg-8">
 			{include file="controllers/products/input_text_lang.tpl" languages=$languages
 				input_value=$product->meta_keywords
 				input_name='meta_keywords'}
-			<p class="preference_description">{l s='Keywords for HTML header, separated by commas.'}</p>
-		</td>
-	</tr>
-	<tr>
-		<td class="col-left">
-			{include file="controllers/products/multishop/checkbox.tpl" field="link_rewrite" type="default" multilang="true"}
-			<label>{l s='Friendly URL:'}</label>
-		</td>
-		<td>
-			{include file="controllers/products/input_text_lang.tpl"
-				languages=$languages
-				input_value=$product->link_rewrite
-				input_name='link_rewrite'}
-			
-			<p class="clear" style="padding:10px 0 0 0">
-			<a style="cursor:pointer" class="button"
-			onmousedown="updateFriendlyURLByName();">{l s='Generate'}</a>&nbsp;
-			{l s='friendly URL from the product name.'}<br /><br />
-			{l s='The product link will look like this:'}
-			{$curent_shop_url|escape:'htmlall':'UTF-8'}lang/{if isset($product->id)}{$product->id}{else}<b>id_product</b>{/if}-<span id="friendly-url">{$product->link_rewrite[$default_language]}</span>.html</p>
-		</td>
-	</tr>
-</table>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-lg-3" for="link_rewrite_{$id_lang}">
+			{include file="controllers/products/multishop/checkbox.tpl" field="link_rewrite" type="seo_friendly_url" multilang="true"}
+			<span class="label-tooltip" data-toggle="tooltip"
+				title="{l s='This is the human-readable URL, as generated from the product\'s name. You can change it if you want.'}">
+				{l s='Friendly URL:'}
+			</span>
+
+		</label>
+		<div class="col-lg-6">
+				{include file="controllers/products/input_text_lang.tpl"
+					languages=$languages
+					input_value=$product->link_rewrite
+					input_name='link_rewrite'}
+		</div>
+		<div class="col-lg-2">
+			<button type="button" class="btn btn-default" id="generate-friendly-url" onmousedown="updateFriendlyURLByName();"><i class="icon-random"></i> {l s='Generate'}</button>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-9 col-lg-offset-3">
+			{foreach from=$languages item=language}
+			<div class="alert alert-warning translatable-field lang-{$language.id_lang}">
+				<i class="icon-link"></i> {l s='The product link will look like this:'}<br/>
+				<strong>{$curent_shop_url|escape:'html':'UTF-8'}lang/{if isset($product->id)}{$product->id}{else}id_product{/if}-<span id="friendly-url_{$language.id_lang}">{$product->link_rewrite[$default_language]|escape:'html':'UTF-8'}</span>.html</strong>
+			</div>
+			{/foreach}
+		</div>
+	</div>
+	<div class="panel-footer">
+		<a href="{$link->getAdminLink('AdminProducts')}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
+		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
+	</div>
+</div>
+<script type="text/javascript">
+	hideOtherLanguage({$default_form_language});
+</script>

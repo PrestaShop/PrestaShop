@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,7 +26,8 @@
 {extends file="helpers/options/options.tpl"}
 {block name="field"}
 	{if $field['type'] == 'checkbox_table'}
-		<div class="margin-form" style="float: left; padding-left: 0; width: 317px; margin-top: 6px; height: 300px; overflow-y: auto;">
+		{*TODO : overflow*}
+		<div class="well margin-form" style="height: 300px; overflow-y: auto;">
 			<table class="table" cellspacing="0">
 				<thead>
 					<tr>
@@ -38,14 +39,12 @@
 					{foreach $field['list'] as $country}
 						<tr>
 							<td><input type="checkbox" name="countries[]" value="{$country[$field['identifier']]}" {if in_array(strtoupper($country['iso_code']), $allowed_countries)}checked="checked"{/if} /></td>
-							<td>{$country['name']|escape:'htmlall':'UTF-8'}</td>
+							<td>{$country['name']|escape:'html':'UTF-8'}</td>
 						</tr>
 					{/foreach}
 				</tbody>
 			</table>
 		</div>
-		<div class="clear"></div>
-		<br />
 	{else}
 		{$smarty.block.parent}
 	{/if}
@@ -53,7 +52,9 @@
 
 {block name="input"}
 	{if $field['type'] == 'textarea_newlines'}
-		<textarea name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|replace:';':"\n"|escape:'htmlall':'UTF-8'}</textarea>
+		<div class="col-lg-9">
+			<textarea name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|replace:';':"\n"|escape:'html':'UTF-8'}</textarea>
+		</div>
 	{else}
 		{$smarty.block.parent}
 	{/if}

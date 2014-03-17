@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *	@author PrestaShop SA <contact@prestashop.com>
-*	@copyright	2007-2013 PrestaShop SA
+*	@copyright	2007-2014 PrestaShop SA
 *	@license		http://opensource.org/licenses/afl-3.0.php	Academic Free License (AFL 3.0)
 *	International Registered Trademark & Property of PrestaShop SA
 *}
@@ -40,27 +40,37 @@
 	var currency_sign = '{$currency_sign}';
 	var PS_WEIGHT_UNIT = '{$PS_WEIGHT_UNIT}';
 	var invalid_range = '{l s='This range is not valid' js=1}';
+	var overlapping_range = '{l s='Ranges are overlapping' js=1}';
 	var range_is_overlapping = '{l s='Ranges are overlapping' js=1}';
 	var multistore_enable = '{$multistore_enable}';
 </script>
-<div id="carrier_wizard" class="swMain">
-	<ul class="nbr_steps_{$wizard_steps.steps|count}">
-	{foreach from=$wizard_steps.steps key=step_nbr item=step}
-		<li>
-			<a href="#step-{$step_nbr + 1}">
-				<label class="stepNumber">{$step_nbr + 1}</label>
-				<span class="stepDesc">
-					{$step.title}<br />
-					{if isset($step.desc)}<small>{$step.desc}</small>{/if}
-				</span>
-			</a>
-		</li>
-	{/foreach}
-	</ul>
-	{foreach from=$wizard_contents.contents key=step_nbr item=content}
-		<div id="step-{$step_nbr + 1}" class="step_container"> 	
-			{$content}
+
+<div class="row">
+	<div class="col-lg-10">
+		<div id="carrier_wizard" class="panel swMain">
+			<ul class="steps nbr_steps_{$wizard_steps.steps|count}">
+			{foreach from=$wizard_steps.steps key=step_nbr item=step}
+				<li>
+					<a href="#step-{$step_nbr + 1}">
+						<span class="stepNumber">{$step_nbr + 1}</span>
+						<span class="stepDesc">
+							{$step.title}<br />
+							{if isset($step.desc)}<small>{$step.desc}</small>{/if}
+						</span>
+						<span class="chevron"></span>
+					</a>
+				</li>
+			{/foreach}
+			</ul>
+			{foreach from=$wizard_contents.contents key=step_nbr item=content}
+				<div id="step-{$step_nbr + 1}" class="step_container"> 	
+					{$content}
+				</div>
+			{/foreach}
 		</div>
-	{/foreach}
+	</div>
+	<div class="col-lg-2">
+		{$logo_content}
+	</div>
 </div>
 {/block}

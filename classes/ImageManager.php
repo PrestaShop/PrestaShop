@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -31,6 +31,10 @@
  */
 class ImageManagerCore
 {
+	const ERROR_FILE_NOT_EXIST = 1;
+	const ERROR_FILE_WIDTH     = 2;
+	const ERROR_MEMORY_LIMIT   = 3;
+
 	/**
 	 * Generate a cached thumbnail for object lists (eg. carrier, order states...etc)
 	 *
@@ -39,14 +43,18 @@ class ImageManagerCore
 	 * @param int $size Desired size
 	 * @param string $image_type Image type
 	 * @param bool $disable_cache When turned on a timestamp will be added to the image URI to disable the HTTP cache
+	 * @param bool $regenerate When turned on and the file already exist, the file will be regenerated
 	 * @return string
 	 */
-	public static function thumbnail($image, $cache_image, $size, $image_type = 'jpg', $disable_cache = false)
+	public static function thumbnail($image, $cache_image, $size, $image_type = 'jpg', $disable_cache = true, $regenerate = false)
 	{
 		if (!file_exists($image))
 			return '';
 
-		if (!file_exists(_PS_TMP_IMG_DIR_.$cache_image))
+		if (file_exists(_PS_TMP_IMG_DIR_.$cache_image) && $regenerate)
+			@unlink(_PS_TMP_IMG_DIR_.$cache_image);
+
+		if ($regenerate || !file_exists(_PS_TMP_IMG_DIR_.$cache_image))
 		{
 			$infos = getimagesize($image);
 
@@ -76,9 +84,9 @@ class ImageManagerCore
 		}
 		// Relative link will always work, whatever the base uri set in the admin
 		if (Context::getContext()->controller->controller_type == 'admin')
-			return '<img src="../img/tmp/'.$cache_image.(!$disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
+			return '<img src="../img/tmp/'.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
 		else
-			return '<img src="'._PS_TMP_IMG_.$cache_image.(!$disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
+			return '<img src="'._PS_TMP_IMG_.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
 	}
 
 	/**
@@ -117,7 +125,7 @@ class ImageManagerCore
 	 * @param string $file_type
 	 * @return boolean Operation result
 	 */
-	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false)
+	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false, &$error = 0)
 	{
 		if (PHP_VERSION_ID < 50300)
 			clearstatcache();
@@ -125,7 +133,8 @@ class ImageManagerCore
 			clearstatcache(true, $src_file);
 		
 		if (!file_exists($src_file) || !filesize($src_file))
-			return false;
+			return !($error = self::ERROR_FILE_NOT_EXIST);
+
 		list($src_width, $src_height, $type) = getimagesize($src_file);
 
 		// If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
@@ -136,7 +145,7 @@ class ImageManagerCore
 			$file_type = 'png';
 
 		if (!$src_width)
-			return false;
+			return !($error = self::ERROR_FILE_WIDTH);
 		if (!$dst_width)
 			$dst_width = $src_width;
 		if (!$dst_height)
@@ -169,7 +178,7 @@ class ImageManagerCore
 		}
 
 		if (!ImageManager::checkImageMemoryLimit($src_file))
-			return false;
+			return !($error = self::ERROR_MEMORY_LIMIT);
 		
 		$dest_image = imagecreatetruecolor($dst_width, $dst_height);
 
@@ -243,10 +252,11 @@ class ImageManagerCore
 	 * @param $filename real filename
 	 * @return bool true if it's correct
 	 */
-	public static function isCorrectImageFileExt($filename)
+	public static function isCorrectImageFileExt($filename, $authorized_extensions = null)
 	{
 		// Filter on file extension
-		$authorized_extensions = array('gif', 'jpg', 'jpeg', 'jpe', 'png');
+		if ($authorized_extensions === null)
+			$authorized_extensions = array('gif', 'jpg', 'jpeg', 'jpe', 'png');
 		$name_explode = explode('.', $filename);
 		if (count($name_explode) >= 2)
 		{
@@ -267,11 +277,11 @@ class ImageManagerCore
 	 * @param integer $max_file_size Maximum upload size
 	 * @return bool|string Return false if no error encountered
 	 */
-	public static function validateUpload($file, $max_file_size = 0)
+	public static function validateUpload($file, $max_file_size = 0, $types = null)
 	{
 		if ((int)$max_file_size > 0 && $file['size'] > (int)$max_file_size)
 			return sprintf(Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'), $file['size'] / 1024, $max_file_size / 1024);
-		if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name']))
+		if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types))
 			return Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png');
 		if ($file['error'])
 			return sprintf(Tools::displayError('Error while uploading image; please change your server\'s settings. (Error code: %s)'), $file['error']);

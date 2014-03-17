@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -79,13 +79,14 @@ class ConnectionCore extends ObjectModel
 
 	public static function setPageConnection($cookie, $full = true)
 	{
+		$id_page = false;
 		// The connection is created if it does not exist yet and we get the current page id
 		if (!isset($cookie->id_connections) || !strstr(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', Tools::getHttpHost(false, false)))
 			$id_page = Connection::setNewConnection($cookie);
 		// If we do not track the pages, no need to get the page id
 		if (!Configuration::get('PS_STATSDATA_PAGESVIEWS') && !Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
 			return array();
-		if (!isset($id_page) || !$id_page)
+		if (!$id_page)
 			$id_page = Page::getCurrentId();
 		// If we do not track the page views by customer, the id_page is the only information needed
 		if (!Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))

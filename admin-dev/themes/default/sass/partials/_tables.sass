@@ -1,0 +1,178 @@
+.table
+	border-collapse: separate
+	border-spacing: 0 2px 0 0
+	margin-bottom: 5px
+	thead 
+		> tr > th
+			border: none
+			font-weight: normal
+			vertical-align: top
+			border-bottom: solid 1px darken(#CAE5F4,10%)
+			span.title_box
+				color: #656565
+				display: block
+				word-wrap: nowrap
+				white-space: nowrap
+				&.active
+					font-weight: bold
+				a
+					text-decoration: none
+				a.active
+					color: black
+		> tr.filter > th
+			background-color: lighten(#CAE5F4,8%)
+			input[type="text"].filter, input[type="password"].filter, select.filter
+				font-size: 11px
+
+				padding: 0 4px
+				border-color: darken(#CAE5F4,10%)
+	input, select
+		margin: 0
+	tbody
+		> tr > td
+			border-top: none
+			color: lighten(black,40%)
+			background-color: white
+			padding: 3px 7px
+			vertical-align: middle
+			word-wrap: nowrap
+			font-size: 12px
+			border-bottom: solid 1px #EAEDEF
+		> tr.odd > td
+			background-color: #FCFDFE
+		> tr:hover > td
+			background-color: darken(#FCFDFE,2%)
+	td.center, th.center
+		text-align: center
+	td.pointer
+		cursor: pointer
+	td.dragHandle
+		.dragGroup
+			width: 80px
+			cursor: move
+			text-align: center
+			position: relative
+			font-size: $icon-size-base
+			padding: 4px 4px 4px 20px
+			@include border-radius(5px)
+			&:hover
+				color: white
+				background-color: $brand-primary !important
+			&:before
+				@extend .icon
+				@extend .icon-arrows
+				display: block
+				height: 16px
+				width: 16px
+				position: absolute
+				top: 18px
+				left: 6px
+			.btn-group
+
+			.positions
+				display: inline-block
+				border: solid 1px #ccc
+				background-color: #eee
+				padding: 0 5px
+				color: #aaa
+				width: 43px
+				@include text-shadow(white 1px 1px)
+				@include border-radius(3px)
+				@include box-shadow(rgba(0,0,0,0.2) 0 1px 3px inset)
+
+	.actions
+		text-align: right
+	th.actions .btn,
+		margin-bottom: 4px !important
+
+	tr.myDragClass
+		padding: 10px
+		background-color: #EEEEEE
+		td
+			color: white !important
+			background-color: $brand-primary !important
+			@include transform(translate(5px,10px))
+
+	&.tableDnD td
+		@include transition-property(all)
+		@include transition-duration(0.2s)
+		@include transition-timing-function(ease-out)
+
+tr.highlighted td
+	background-color: $brand-primary!important
+	color: white !important
+
+.bulk-actions
+	margin: 17px 0 0 0
+	ul i
+		font-size: 14px
+
+.list-action-enable
+	font-size: 1.3em
+	display: inline-block
+	width: 30px
+	text-align: center
+	color: rgba(white,0.8)
+	@include border-radius(3px)
+	&.action-enabled
+		border: solid $brand-success 1px
+		background-color: lighten($brand-success,10%)
+	&.action-disabled
+		border: solid $brand-danger 1px
+		background-color: lighten($brand-danger,10%)
+	&:hover
+		color: white
+
+.list-empty
+	background-color: #FCFDFE !important
+	.list-empty-msg
+		text-align: center
+		display: block
+		width: 50%
+		margin: 20px auto
+		color: #999
+		font-family: $headings-font-family
+		font-size: 1.4em
+	.list-empty-icon
+		color: #dedede
+		display: block
+		clear: both
+		font-size: $icon-size-base*6
+		@include text-shadow(white 1px 1px 0)
+
+@media (max-width: $screen-sm-max)
+	.table-responsive
+		width: 100%
+		margin-bottom: ($line-height-computed * 0.75)
+		overflow-y: hidden
+		overflow-x: scroll
+		-ms-overflow-style: -ms-autohiding-scrollbar
+		border: 1px solid $table-border-color
+		-webkit-overflow-scrolling: touch
+		> .table 
+			margin-bottom: 0
+			> thead,
+			> tbody,
+			> tfoot
+				> tr
+					> th,
+					> td
+						white-space: nowrap
+		> .table-bordered
+			border: 0
+			> thead,
+			> tbody,
+			> tfoot
+				> tr
+					> th:first-child,
+					> td:first-child
+						border-left: 0
+					> th:last-child,
+					> td:last-child
+						border-right: 0
+			> tbody,
+			> tfoot
+				> tr:last-child 
+					> th,
+					> td
+						border-bottom: 0

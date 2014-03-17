@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -196,7 +196,7 @@ class CustomerThreadCore extends ObjectModel
 			LEFT JOIN '._DB_PREFIX_.'customer c
 				ON (IFNULL(ct.id_customer, ct.email) = IFNULL(c.id_customer, c.email))
 			WHERE ct.id_customer_thread = '.(int)$id_customer_thread.'
-			ORDER BY cm.date_add DESC
+			ORDER BY cm.date_add ASC
 		');
 	}
 

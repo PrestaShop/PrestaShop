@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,15 +26,16 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
+<div class="panel">
+	<h3><i class="icon-cog"></i> {l s='Request result'}</h3>
 	{if isset($view['error'])}
-		<p>{l s='This query has no result.'}</p>
+		<div class="alert alert-warning">{l s='This request has no result.'}</div>
 	{else}
-		<h2>{$view['name']}</h2>
-		<table cellpadding="0" cellspacing="0" class="table" id="viewRequestSql">
+		<table class="table" id="viewRequestSql">
 			<thead>
 				<tr>
 					{foreach $view['key'] AS $key}
-						<th align="center">{$key}</th>
+					<th><span class="title_box">{$key}</span></th>
 					{/foreach}
 				</tr>
 			</thead>
@@ -62,5 +63,5 @@
 			});
 		</script>
 	{/if}
+</div>
 {/block}
-

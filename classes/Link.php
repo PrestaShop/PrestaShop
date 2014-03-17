@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -168,8 +168,8 @@ class LinkCore
 		$params = array();
 		$params['id'] = $category->id;
 		$params['rewrite'] = (!$alias) ? $category->link_rewrite : $alias;
-		$params['meta_keywords'] =	Tools::str2url($category->meta_keywords);
-		$params['meta_title'] = Tools::str2url($category->meta_title);
+		$params['meta_keywords'] =	Tools::str2url($category->getFieldByLang('meta_keywords'));
+		$params['meta_title'] = Tools::str2url($category->getFieldByLang('meta_title'));
 
 		// Selected filters is used by the module blocklayered
 		$selected_filters = is_null($selected_filters) ? '' : $selected_filters;
@@ -358,7 +358,7 @@ class LinkCore
 	 *
 	 * @param string $controller
 	 * @param boolean $with_token include or not the token in the url
-	 * @return controller url
+	 * @return string url
 	 */
 	public function getAdminLink($controller, $with_token = true)
 	{
@@ -407,7 +407,7 @@ class LinkCore
 
 	public function getMediaLink($filepath)
 	{
-		return Tools::getProtocol().Tools::getMediaServer($filepath).$filepath;
+		return $this->protocol_content.Tools::getMediaServer($filepath).$filepath;
 	}
 
 	/**
@@ -501,17 +501,17 @@ class LinkCore
 			if (!empty($module))
 			{
 				unset($params['fc'], $params['module']);
-				return $this->getModuleLink($module, $controller, $params, false, (int)$id_lang);
+				return $this->getModuleLink($module, $controller, $params, null, (int)$id_lang);
 			}
 		}		
 
-		return $this->getPageLink($controller, false, $id_lang, $params);
+		return $this->getPageLink($controller, null, $id_lang, $params);
 	}
 
 	public function goPage($url, $p)
 	{
 		$url = rtrim(str_replace('?&', '?', $url), '?');
-		return $url.($p == 1 ? '' : (!strstr($url, '?') ? '?' : '&amp;').'p='.(int)$p);
+		return $url.($p == 1 ? '' : (!strstr($url, '?') ? '?' : '&').'p='.(int)$p);
 	}
 
 	/**

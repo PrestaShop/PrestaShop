@@ -8,24 +8,20 @@
 	<meta http-equiv="Cache" content="no store" />
 	<meta http-equiv="Expires" content="-1" />
 	<meta name="robots" content="noindex" />
-
 	<link rel="shortcut icon" href="theme/img/favicon.ico" />
 	<link rel="stylesheet" type="text/css" media="all" href="theme/view.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="theme/js/jquery.chosen/jquery.chosen.css" />
-
-	<script type="text/javascript" src="theme/js/jquery-1.7.2.min.js"></script>
-	<script type="text/javascript" src="theme/js/jquery.ajaxfileupload.js"></script>
-	<script type="text/javascript" src="theme/js/jquery.chosen/jquery.chosen.js"></script>
+	<?php if ( ($this->language->getLanguage()->getMetaInformation('is_rtl')) == 'true'): ?>
+		<link rel="stylesheet" type="text/css" media="all" href="theme/rtl.css" />
+	<?php endif; ?>
+	<script type="text/javascript" src="../js/jquery/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="../js/jquery/plugins/jquery.chosen.js"></script>
 	<script type="text/javascript" src="theme/js/install.js"></script>
 	<script type="text/javascript" src="//www.prestashop.com/js/user-assistance.js"></script>
 	<?php if (file_exists(_PS_INSTALL_PATH_.'theme/js/'.$this->step.'.js')): ?>
 		<script type="text/javascript" src="theme/js/<?php echo $this->step ?>.js"></script>
 	<?php endif; ?>
-
 	<script type="text/javascript">
-	<!--
-	var ps_base_uri = '<?php echo addslashes(__PS_BASE_URI__) ?>';
-	-->
+		var ps_base_uri = '<?php echo addslashes(__PS_BASE_URI__) ?>';
 	</script>
 </head>
 
@@ -55,6 +51,20 @@
 <div id="loaderSpace">
 	<div id="loader">&nbsp;</div>
 </div>
+
+<!--This comment is necessary!
+
+	Purpose is to make some strings available for translation, 
+	that would not be 'seen' by the translations parser otherwise.
+	
+	$this->l('menu_welcome');
+	$this->l('menu_license');
+	$this->l('menu_system');
+	$this->l('menu_configure');
+	$this->l('menu_database');
+	$this->l('menu_process');
+
+-->
 
 <!-- List of steps -->
 <div id="leftpannel">
@@ -94,7 +104,7 @@
 	<noscript>
 		<h4 class="errorBlock" style="margin-bottom:10px">
 			<?php echo $this->l('To install PrestaShop, you need to have JavaScript enabled in your browser.') ?>
-			<a href="<?php echo $this->l('http://doc.prestashop.com/display/PS15/What+you+need+to+get+started#HowtoenableJavaScript-HowtoenableJavaScript') ?>" target="_blank">
+			<a href="<?php echo $this->l('http://doc.prestashop.com/display/PS16/What+you+need+to+get+started#HowtoenableJavaScript-HowtoenableJavaScript') ?>" target="_blank">
 				<img src="theme/img/help.png" style="height:16px;width:16px" />
 			</a>
 		</h4>

@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -32,11 +32,13 @@
 	var errorMail = "{l s='This email address is not valid' js=1}";
 	$(document).ready(function() {
 		if ($('input[name=PS_MAIL_METHOD]:checked').val() == 2)
-			$('#smtp').show();
+			$('#configuration_fieldset_smtp').show();
+		else
+			$('#configuration_fieldset_smtp').hide();
 	});
 </script>
-<script type="text/javascript" src="../js/sendMailTest.js"></script>
 
-{$content}
-
+{if isset($content)}
+	{$content}
+{/if}
 

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -132,12 +132,7 @@ class CartRuleCore extends ObjectModel
 	public function update($null_values = false)
 	{
 		Cache::clean('getContextualValue_'.$this->id.'_*');
-		if (!parent::update($null_values))
-			return false;
-
-		Configuration::updateGlobalValue('PS_CART_RULE_FEATURE_ACTIVE', CartRule::isCurrentlyUsed($this->def['table'], true));
-
-		return true;
+		return parent::update($null_values);	
 	}
 
 	/**
@@ -172,7 +167,7 @@ class CartRuleCore extends ObjectModel
 	 */
 	public static function copyConditions($id_cart_rule_source, $id_cart_rule_destination)
 	{
-		Db::getInstance()->execute('
+		Db::getInstance()->execute(' 
 		INSERT INTO `'._DB_PREFIX_.'cart_rule_shop` (`id_cart_rule`, `id_shop`)
 		(SELECT '.(int)$id_cart_rule_destination.', id_shop FROM `'._DB_PREFIX_.'cart_rule_shop` WHERE `id_cart_rule` = '.(int)$id_cart_rule_source.')');
 		Db::getInstance()->execute('
@@ -192,6 +187,40 @@ class CartRuleCore extends ObjectModel
 		// Todo : should be changed soon, be must be copied too
 		// Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule` WHERE `id_cart_rule` = '.(int)$this->id);
 		// Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule_value` WHERE `id_product_rule` NOT IN (SELECT `id_product_rule` FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
+
+		// Copy products/category filters
+		$products_rules_group_source = Db::getInstance()->ExecuteS('
+		SELECT id_product_rule_group,quantity FROM `'._DB_PREFIX_.'cart_rule_product_rule_group` 
+		WHERE `id_cart_rule` = '.(int)$id_cart_rule_source.' ');
+
+		foreach ($products_rules_group_source as $product_rule_group_source)
+		{
+			Db::getInstance()->execute('
+			INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`) 
+			VALUES ('.(int)$id_cart_rule_destination.','.(int)$product_rule_group_source['quantity'].')');
+			$id_product_rule_group_destination = Db::getInstance()->Insert_ID();
+
+			$products_rules_source = Db::getInstance()->ExecuteS('
+			SELECT id_product_rule,type FROM `'._DB_PREFIX_.'cart_rule_product_rule` 
+			WHERE `id_product_rule_group` = '.(int)$product_rule_group_source['id_product_rule_group'].' ');
+
+			foreach ($products_rules_source as $product_rule_source)
+			{
+				Db::getInstance()->execute('
+				INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule` (`id_product_rule_group`, `type`) 
+				VALUES ('.(int)$id_product_rule_group_destination.',"'.pSQL($product_rule_source['type']).'")');
+				$id_product_rule_destination = Db::getInstance()->Insert_ID();
+
+				$products_rules_values_source = Db::getInstance()->ExecuteS('
+				SELECT id_item FROM `'._DB_PREFIX_.'cart_rule_product_rule_value` 
+				WHERE `id_product_rule` = '.(int)$product_rule_source['id_product_rule'].' ');
+
+				foreach ($products_rules_values_source as $product_rule_value_source)
+					Db::getInstance()->execute('
+					INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) 
+					VALUES ('.(int)$id_product_rule_destination.','.(int)$product_rule_value_source['id_item'].')');
+			}
+		}
 	}
 
 	/**
@@ -275,7 +304,7 @@ class CartRuleCore extends ObjectModel
 		foreach ($result as &$cart_rule)
 		{
 			$cart_rule['value'] = 0;
-			$cart_rule['minimal'] = $cart_rule['minimum_amount'];
+			$cart_rule['minimal'] = Tools::convertPriceFull($cart_rule['minimum_amount'], new Currency($cart_rule['minimum_amount_currency']), Context::getContext()->currency);
 			$cart_rule['cumulable'] = !$cart_rule['cart_rule_restriction'];
 			$cart_rule['id_discount_type'] = false;
 			if ($cart_rule['free_shipping'])
@@ -333,7 +362,7 @@ class CartRuleCore extends ObjectModel
 	public static function deleteByIdCustomer($id_customer)
 	{
 		$return = true;
-		$cart_rules = new Collection('CartRule');
+		$cart_rules = new PrestaShopCollection('CartRule');
 		$cart_rules->where('id_customer', '=', $id_customer);
 		foreach ($cart_rules as $cart_rule)
 			$return &= $cart_rule->delete();
@@ -413,13 +442,8 @@ class CartRuleCore extends ObjectModel
 			LEFT JOIN '._DB_PREFIX_.'order_cart_rule od ON o.id_order = od.id_order
 			WHERE o.id_customer = '.$context->cart->id_customer.'
 			AND od.id_cart_rule = '.(int)$this->id.'
-			AND '.(int)Configuration::get('PS_OS_ERROR').' != (
-				SELECT oh.id_order_state
-				FROM '._DB_PREFIX_.'order_history oh
-				WHERE oh.id_order = o.id_order
-				ORDER BY oh.date_add DESC
-				LIMIT 1
-			)');
+			AND '.(int)Configuration::get('PS_OS_ERROR').' != o.current_state
+			');
 			if ($quantityUsed + 1 > $this->quantity_per_user)
 				return (!$display_error) ? false : Tools::displayError('You cannot use this voucher anymore (usage limit reached)');
 		}
@@ -497,18 +521,10 @@ class CartRuleCore extends ObjectModel
 
 		if ($this->minimum_amount)
 		{
-			// Minimum amount is converted to the default currency
+			// Minimum amount is converted to the contextual currency
 			$minimum_amount = $this->minimum_amount;
-			if ($this->minimum_amount_currency != $context->currency->id)
-			{
-				$minimum_amount_currency = new Currency($this->minimum_amount_currency);
-				if ($this->minimum_amount == 0 || $minimum_amount_currency->conversion_rate == 0)
-					$minimum_amount = 0;
-				else
-					$minimum_amount /= $minimum_amount_currency->conversion_rate;
-
-				$minimum_amount *= $context->currency->conversion_rate;
-			}
+			if ($this->minimum_amount_currency != Context::getContext()->currency->id)
+				$minimum_amount = Tools::convertPriceFull($minimum_amount , new Currency($this->minimum_amount_currency), Context::getContext()->currency);
 
 			$cartTotal = $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_PRODUCTS);
 			if ($this->minimum_amount_shipping)
@@ -596,7 +612,7 @@ class CartRuleCore extends ObjectModel
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON cp.id_product_attribute = pac.id_product_attribute
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')
+							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligibleProductsList)).')
 							AND cp.id_product_attribute > 0');
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
@@ -604,7 +620,7 @@ class CartRuleCore extends ObjectModel
 								if (in_array($cartAttribute['id_attribute'], $productRule['values']))
 								{
 									$countMatchingProducts += $cartAttribute['quantity'];
-									if ($alreadyInCart && $this->gift_product == $cartProduct['id_product']&& $this->gift_product_attribute == $cartProduct['id_product_attribute'])
+									if ($alreadyInCart && $this->gift_product == $cartAttribute['id_product'] && $this->gift_product_attribute == $cartAttribute['id_product_attribute'])
 										--$countMatchingProducts;
 									$matchingProductsList[] = $cartAttribute['id_product'].'-'.$cartAttribute['id_product_attribute'];
 								}
@@ -617,7 +633,7 @@ class CartRuleCore extends ObjectModel
 							SELECT cp.quantity, cp.`id_product`
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')');
+							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligibleProductsList)).')');
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
 							foreach ($cartProducts as $cartProduct)
@@ -638,7 +654,7 @@ class CartRuleCore extends ObjectModel
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							LEFT JOIN `'._DB_PREFIX_.'category_product` catp ON cp.id_product = catp.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')
+							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligibleProductsList)).')
 							AND cp.`id_product` <> '.(int)$this->gift_product);
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
@@ -663,7 +679,7 @@ class CartRuleCore extends ObjectModel
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							LEFT JOIN `'._DB_PREFIX_.'product` p ON cp.id_product = p.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')');
+							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligibleProductsList)).')');
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
 							foreach ($cartManufacturers as $cartManufacturer)
@@ -682,7 +698,7 @@ class CartRuleCore extends ObjectModel
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							LEFT JOIN `'._DB_PREFIX_.'product` p ON cp.id_product = p.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')');
+							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligibleProductsList)).')');
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
 							foreach ($cartSuppliers as $cartSupplier)
@@ -990,18 +1006,17 @@ class CartRuleCore extends ObjectModel
 				OR '.(int)$this->id.' = id_cart_rule_2
 			)
 		)');
+
 		$array['unselected'] = Db::getInstance()->executeS('
 		SELECT cr.*, crl.*, 1 as selected
 		FROM '._DB_PREFIX_.'cart_rule cr
-		LEFT JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)Context::getContext()->language->id.')
+		INNER JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)Context::getContext()->language->id.')
+		LEFT JOIN '._DB_PREFIX_.'cart_rule_combination crc1 ON (cr.id_cart_rule = crc1.id_cart_rule_1 AND crc1.id_cart_rule_2 = '.(int)$this->id.')
+		LEFT JOIN '._DB_PREFIX_.'cart_rule_combination crc2 ON (cr.id_cart_rule = crc2.id_cart_rule_2 AND crc2.id_cart_rule_1 = '.(int)$this->id.')
 		WHERE cr.cart_rule_restriction = 1
 		AND cr.id_cart_rule != '.(int)$this->id.'
-		AND cr.id_cart_rule NOT IN (
-			SELECT IF(id_cart_rule_1 = '.(int)$this->id.', id_cart_rule_2, id_cart_rule_1)
-			FROM '._DB_PREFIX_.'cart_rule_combination
-			WHERE '.(int)$this->id.' = id_cart_rule_1
-			OR '.(int)$this->id.' = id_cart_rule_2
-		)');
+		AND crc1.id_cart_rule_1 IS NULL
+		AND crc2.id_cart_rule_1 IS NULL');
 		return $array;
 	}
 
@@ -1063,7 +1078,7 @@ class CartRuleCore extends ObjectModel
 		if (!CartRule::isFeatureActive() || !Validate::isLoadedObject($context->cart))
 			return array();
 
-		$errors = array();
+		static $errors = array();
 		foreach ($context->cart->getCartRules() as $cart_rule)
 		{
 			if ($error = $cart_rule['obj']->checkValidity($context, true))

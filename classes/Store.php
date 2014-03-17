@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -114,7 +114,7 @@ class StoreCore extends ObjectModel
 
 	public function __construct($id_store = null, $id_lang = null)
 	{
-		parent::__construct($id_store, $id_lang);
+		parent::__construct($id_store);
 		$this->id_image = ($this->id && file_exists(_PS_STORE_IMG_DIR_.(int)$this->id.'.jpg')) ? (int)$this->id : false;
 		$this->image_dir = _PS_STORE_IMG_DIR_;
 	}

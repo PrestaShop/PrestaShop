@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,12 +18,13 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{$export_precontent}{foreach from=$export_headers item=header}{$header};{/foreach}
-{foreach from=$export_content item=line}
+{$export_precontent}{foreach from=$export_headers item=header}{$text_delimiter}{$header}{$text_delimiter};{/foreach}
 
-{foreach from=$line item=content}{$content};{/foreach}
+{foreach from=$export_content item=line}
+{foreach from=$line item=content}{$text_delimiter}{$content}{$text_delimiter};{/foreach}
+
 {/foreach}

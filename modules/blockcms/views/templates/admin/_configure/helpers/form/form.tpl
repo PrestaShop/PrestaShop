@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,17 +18,44 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {extends file="helpers/form/form.tpl"}
 
+{block name="label"}
+	{if $input.type == 'cms_blocks'}
+		
+	{else}
+		{$smarty.block.parent}
+	{/if}
+{/block}
+
+{block name="legend"}
+    <h3>
+        {if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'html':'UTF-8'}" />{/if}
+        {if isset($field.icon)}<i class="{$field.icon}"></i>{/if}
+        {$field.title}
+        <span class="panel-heading-action">
+			{foreach from=$toolbar_btn item=btn key=k}
+				{if $k != 'modules-list' && $k != 'back'}
+					<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-toolbar-btn" {if isset($btn.href)}href="{$btn.href}"{/if} {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
+						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s=$btn.desc}" data-html="true">
+							<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i>
+						</span>
+					</a>
+				{/if}
+			{/foreach}
+			</span>
+    </h3>
+{/block}
+
 {block name="input"}
 
     {if $input.type == 'cms_blocks'}
-
+	<div class="row">
         <script type="text/javascript">
             var come_from = '{$name_controller}';
             var token = '{$token}';
@@ -39,8 +66,7 @@
         {if isset($cms_blocks_positions) && count($cms_blocks_positions) > 0}
 
             {foreach $cms_blocks_positions as $key => $cms_blocks_position}
-                <div style="float:left;{if $key == 0}margin-right:2em;{/if}">
-
+                <div class="col-lg-6">
                     <h3 style="margin-top:1px;">
                         {if $key == 0}
                             {l s='Left blocks' mod='blockcms'}
@@ -70,20 +96,20 @@
                                             {if (($key == (sizeof($cms_blocks_position) - 1)) || (sizeof($cms_blocks_position) == 1))}
                                                     style="display: none;"
                                             {/if}
-                                                    href="{$current}&configure=blockcms&id_cms_block={$cms_block['id_cms_block']}&way=1&position={(int)$cms_block['position'] + 1}&location=0&token={$token}">
+                                                    href="{$current}&amp;configure=blockcms&amp;id_cms_block={$cms_block['id_cms_block']}&amp;way=1&amp;position={(int)$cms_block['position'] + 1}&location=0&token={$token}">
                                             <img src="{$smarty.const._PS_ADMIN_IMG_}down.gif" alt="{l s='Down' mod='blockcms'}" title="{l s='Down' mod='blockcms'}" />
                                         </a>
                                         <a
                                             {if (($cms_block['position'] == 0) || ($key == 0))}
                                                     style="display: none;"
                                             {/if}
-                                                    href="{$current}&configure=blockcms&id_cms_block={$cms_block['id_cms_block']}&way=0&position={(int)$cms_block['position'] - 1}&location=0&token={$token}">
+                                                    href="{$current}&amp;configure=blockcms&amp;id_cms_block={$cms_block['id_cms_block']}&amp;way=0&amp;position={(int)$cms_block['position'] - 1}&amp;location=0&amp;token={$token}">
                                             <img src="{$smarty.const._PS_ADMIN_IMG_}up.gif" alt="{l s='Up' mod='blockcms'}" title="{l s='Up' mod='blockcms'}" />
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="{$current}&token={$token}&editBlockCMS&id_cms_block={(int)$cms_block['id_cms_block']}" title="{l s='Edit' mod='blockcms'}"><img src="{$smarty.const._PS_ADMIN_IMG_}edit.gif" alt="" /></a>
-                                        <a href="{$current}&token={$token}&deleteBlockCMS&id_cms_block={(int)$cms_block['id_cms_block']}" title="{l s='Delete' mod='blockcms'}"><img src="{$smarty.const._PS_ADMIN_IMG_}delete.gif" alt="" /></a>
+                                        <a href="{$current}&amp;token={$token}&amp;editBlockCMS&amp;id_cms_block={(int)$cms_block['id_cms_block']}" title="{l s='Edit' mod='blockcms'}"><img src="{$smarty.const._PS_ADMIN_IMG_}edit.gif" alt="" /></a>
+                                        <a href="{$current}&amp;token={$token}&amp;deleteBlockCMS&amp;id_cms_block={(int)$cms_block['id_cms_block']}" title="{l s='Delete' mod='blockcms'}"><img src="{$smarty.const._PS_ADMIN_IMG_}delete.gif" alt="" /></a>
                                     </td>
                                 </tr>
                             {/foreach}
@@ -94,6 +120,7 @@
                 </div>
             {/foreach}
         {/if}
+	</div>
     {elseif $input.type == 'select_category'}
 
         {function name=render_select level=0}

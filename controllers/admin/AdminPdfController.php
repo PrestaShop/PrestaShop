@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -36,12 +36,19 @@ class AdminPdfControllerCore extends AdminController
 
 	public function initProcess()
 	{
-		parent::initProcess();	
+		parent::initProcess();
+		$this->checkCacheFolder();
 		$access = Profile::getProfileAccess($this->context->employee->id_profile, (int)Tab::getIdFromClassName('AdminOrders'));
 		if ($access['view'] === '1' && ($action = Tools::getValue('submitAction')))
 			$this->action = $action;
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to view this.');
+	}
+	
+	public function checkCacheFolder()
+	{
+		if (!is_dir(_PS_CACHE_DIR_.'tcpdf/'))
+			mkdir(_PS_CACHE_DIR_.'tcpdf/');
 	}
 
 	public function processGenerateInvoicePdf()

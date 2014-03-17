@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -33,19 +33,19 @@
 	{foreach from=$suppliers item=supplier name=supplier_list}
 		{if $smarty.foreach.supplier_list.iteration <= $text_list_nb}
 		<li class="{if $smarty.foreach.supplier_list.last}last_item{elseif $smarty.foreach.supplier_list.first}first_item{else}item{/if}">
-			<a href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html'}" title="{l s='More about' mod='blocksupplier'} {$supplier.name}">{$supplier.name|escape:'htmlall':'UTF-8'}</a>
+            {if $display_link_supplier}<a href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html'}" title="{l s='More about' mod='blocksupplier'} {$supplier.name}">{/if}{$supplier.name|escape:'html':'UTF-8'}{if $display_link_supplier}</a>{/if}
 		</li>
 		{/if}
 	{/foreach}
 	</ul>
 	{/if}
 	{if $form_list}
-		<form action="{$smarty.server.SCRIPT_NAME|escape:'htmlall':'UTF-8'}" method="get">
+		<form action="{$smarty.server.SCRIPT_NAME|escape:'html':'UTF-8'}" method="get">
 			<p>
 				<select id="supplier_list" onchange="autoUrl('supplier_list', '');">
 					<option value="0">{l s='All suppliers' mod='blocksupplier'}</option>
 				{foreach from=$suppliers item=supplier}
-					<option value="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html'}">{$supplier.name|escape:'htmlall':'UTF-8'}</option>
+					<option value="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html'}">{$supplier.name|escape:'html':'UTF-8'}</option>
 				{/foreach}
 				</select>
 			</p>

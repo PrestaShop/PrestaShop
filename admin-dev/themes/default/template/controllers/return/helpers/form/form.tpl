@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,80 +27,102 @@
 
 {block name="input"}
 	{if $input.type == 'text_customer'}
-		<span class="normal-text">{$customer->firstname} {$customer->lastname}</span>
-		<p style="clear: both">
-			<a href="{$url_customer}">{l s='View details on the customer page'}</a>
+		<span>{$customer->firstname} {$customer->lastname}</span>
+		<p>
+			<a class="text-muted" href="{$url_customer}">{l s='View details on the customer page'}</a>
 		</p>
 	{elseif $input.type == 'text_order'}
-		<span class="normal-text">{$text_order}</span>
-		<p style="clear: both">
-			<a href="{$url_order}">{l s='View details on the order page'}</a>
+		<span>{$text_order}</span>
+		<p>
+			<a class="text-muted" href="{$url_order}">{l s='View details on the order page'}</a>
+		</p>
+	{elseif $input.type == 'pdf_order_return'}
+		<p>
+			{if $state_order_return == 2}
+				<a class="btn" href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$id_order_return|intval}")|escape:'html':'UTF-8'}">
+					<i class="icon-file-text"></i> {l s='Print out'}
+				</a>
+			{else}
+				--
+			{/if}
 		</p>
 	{elseif $input.type == 'list_products'}
-		<table cellpadding="0" cellspacing="0">
-			<tr>
-				<td class="col-left">&nbsp;</td>
-				<td>
-					<table cellspacing="0" cellpadding="0" class="table">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>{l s='Reference'}</th>
+					<th>{l s='Product name'}</th>
+					<th class="text-center">{l s='Quantity'}</th>
+					<th class="text-center">{l s='Action'}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{foreach $returnedCustomizations as $returnedCustomization}
 					<tr>
-						<th style="width: 100px;">{l s='Reference'}</th>
-						<th>{l s='Product name'}</th>
-						<th>{l s='Quantity'}</th>
-						<th>{l s='Action'}</th>
+						<td>{$returnedCustomization['reference']}</td>
+						<td>{$returnedCustomization['name']}</td>
+						<td class="text-center">{$returnedCustomization['product_quantity']|intval}</td>
+						<td class="text-center">
+							<a class="btn btn-default" href="{$current}&amp;deleteorder_return_detail&amp;id_order_detail={$returnedCustomization['id_order_detail']}&amp;id_order_return={$id_order_return}&amp;id_customization={$returnedCustomization['id_customization']}&amp;token={$token}">
+								<i class="icon-remove"></i>
+								{l s='Delete'}
+							</a>
+						</td>
 					</tr>
-
-					{foreach $returnedCustomizations as $returnedCustomization}
+					{assign var='productId' value=$returnedCustomization.product_id}
+					{assign var='productAttributeId' value=$returnedCustomization.product_attribute_id}
+					{assign var='customizationId' value=$returnedCustomization.id_customization}
+					{assign var='addressDeliveryId' value=$returnedCustomization.id_address_delivery}
+					{foreach $customizedDatas.$productId.$productAttributeId.$addressDeliveryId.$customizationId.datas as $type => $datas}
 						<tr>
-							<td>{$returnedCustomization['reference']}</td>
-							<td class="center">{$returnedCustomization['name']}</td>
-							<td class="center">{$returnedCustomization['product_quantity']|intval}</td>
-							<td class="center">
-								<a href="{$current}&deleteorder_return_detail&id_order_detail={$returnedCustomization['id_order_detail']}&id_order_return={$id_order_return}&id_customization={$returnedCustomization['id_customization']}&token={$token}">
-									<img src="../img/admin/delete.gif">
+							<td colspan="4">
+								<div class="form-horizontal">
+									{if $type == $smarty.const._CUSTOMIZE_FILE_}
+										{foreach from=$datas item='data'}
+											<div class="form-group">
+												<span class="col-lg-3 control-label"><strong>{l s='Attachment'}</strong></span>
+												<div class="col-lg-9">
+													<a href="displayImage.php?img={$data['value']}&name={$returnedCustomization['id_order_detail']|intval}-file{$smarty.foreach.data.iteration.iteration}" target="_blank"><img class="img-thumbnail" src="{$picture_folder}{$data['value']}_small" alt="" /></a>
+												</div>
+											</div>
+										{/foreach}
+									{elseif $type == $smarty.const._CUSTOMIZE_TEXTFIELD_}
+
+										
+											{foreach from=$datas item='data'}
+												<div class="form-group">
+													<span class="control-label col-lg-3"><strong>{if $data['name']}{$data['name']}{else}{l s='Text #%d' sprintf=$smarty.foreach.data.iteration}{/if}</strong></span>
+													<div class="col-lg-9">
+														<p class="form-control-static">
+															{$data['value']}
+														</p>
+													</div>
+												</div>
+											{/foreach}
+									{/if}
+								</div>
+							</td>
+						</tr>
+					{/foreach}
+				{/foreach}
+
+				{* Classic products *}
+				{foreach $products as $k => $product}
+					{if !isset($quantityDisplayed[$product['id_order_detail']]) || $product['product_quantity']|intval > $quantityDisplayed[$product['id_order_detail']]|intval}
+						<tr>
+							<td>{$product['product_reference']}</td>
+							<td class="text-center">{$product['product_name']}</td>
+							<td class="text-center">{$product['product_quantity']}</td>
+							<td class="text-center">
+								<a class="btn btn-default"  href="{$current}&amp;deleteorder_return_detail&amp;id_order_detail={$product['id_order_detail']}&amp;id_order_return={$id_order_return}&amp;token={$token}">
+									<i class="icon-remove"></i>
+									{l s='Delete'}
 								</a>
 							</td>
 						</tr>
-						{foreach $customizationDatas as $type => $datas}
-							<tr>
-								<td colspan="4">
-								{if $type == 'type_file'}
-									<ul style="margin: 4px 0px 4px 0px; padding: 0px; list-style-type: none;">
-									{foreach $datas a $data name='loop'}
-										<li style="display: inline; margin: 2px;">
-											<a href="displayImage.php?img={$data['value']}&name={$order->id|intval}-file{$loop.iteration}" target="_blank"><img src="{$picture_folder}{$data['value']}_small" alt="" /></a>
-										</li>
-									{/foreach}
-									</ul>
-								{elseif $type == 'type_textfield'}
-									<ul style="margin: 0px 0px 4px 0px; padding: 0px 0px 0px 6px; list-style-type: none;">
-										{foreach $datas as $data name='loop'}
-											<li>{if $data['name']}$data['name']{else}{l s='Text #%d' sprintf=$loop.iteration}{/if}{l s=':'} {$data['value']}</li>
-										{/foreach}
-									</ul>
-								{/if}
-								</td>
-							</tr>
-						{/foreach}
-					{/foreach}
-			
-					{* Classic products *}
-					{foreach $products as $k => $product}
-						{if !isset($quantityDisplayed[$product['id_order_detail']]) || $product['product_quantity']|intval > $quantityDisplayed[$product['id_order_detail']]|intval}
-							<tr>
-								<td>{$product['product_reference']}</td>
-								<td class="center">{$product['product_name']}</td>
-								<td class="center">{$product['product_quantity']}</td>
-								<td class="center">
-									<a href="{$current}&deleteorder_return_detail&id_order_detail={$product['id_order_detail']}&id_order_return={$id_order_return}&token={$token}">
-										<img src="../img/admin/delete.gif">
-									</a>
-								</td>
-							</tr>
-						{/if}
-					{/foreach}
-					</table>
-				</td>
-			</tr>
+					{/if}
+				{/foreach}
+			</tbody>
 		</table>
 	{else}
 		{$smarty.block.parent}

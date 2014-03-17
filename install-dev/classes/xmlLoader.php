@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -84,7 +84,7 @@ class InstallXmlLoader
 	public function setFixturesPath($path = null)
 	{
 		if ($path === null)
-			$path = _PS_INSTALL_FIXTURES_PATH_.'apple/';
+			$path = _PS_INSTALL_FIXTURES_PATH_.'fashion/';
 
 		$this->path_type = 'fixture';
 		$this->data_path = $path.'data/';
@@ -322,6 +322,11 @@ class InstallXmlLoader
 		unset($this->cache_xml_entity[$this->path_type][$entity]);
 	}
 
+	protected function getFallBackToDefaultLanguage($iso)
+	{
+		return file_exists($this->lang_path.$iso.'/data/') ? $iso : 'en';
+	}
+
 	/**
 	 * Special case for "tag" entity
 	 */
@@ -329,10 +334,10 @@ class InstallXmlLoader
 	{
 		foreach ($this->languages as $id_lang => $iso)
 		{
-			if (!file_exists($this->lang_path.$iso.'/data/tag.xml'))
+			if (!file_exists($this->lang_path.$this->getFallBackToDefaultLanguage($iso).'/data/tag.xml'))
 				continue;
 
-			$xml = $this->loadEntity('tag', $iso);
+			$xml = $this->loadEntity('tag', $this->getFallBackToDefaultLanguage($iso));
 			$tags = array();
 			foreach ($xml->tag as $tag_node)
 			{
@@ -367,7 +372,7 @@ class InstallXmlLoader
 		{
 			$path = $this->data_path.$entity.'.xml';
 			if ($iso)
-				$path = $this->lang_path.$iso.'/data/'.$entity.'.xml';
+				$path = $this->lang_path.$this->getFallBackToDefaultLanguage($iso).'/data/'.$entity.'.xml';
 
 			if (!file_exists($path))
 				throw new PrestashopInstallerException('XML data file '.$entity.'.xml not found');
@@ -409,7 +414,7 @@ class InstallXmlLoader
 				$type = Db::REPLACE;
 
 			if (!Db::getInstance()->insert($entity, $queries, false, true, $type))
-				$this->setError($this->language->l('An SQL error occured for entity <i>%1$s</i>: <i>%2$s</i>', $entity, Db::getInstance()->getMsgError()));
+				$this->setError($this->language->l('An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>', $entity, Db::getInstance()->getMsgError()));
 			unset($this->delayed_inserts[$entity]);
 		}
 	}
@@ -595,7 +600,7 @@ class InstallXmlLoader
 			$dst_path =  _PS_IMG_DIR_.$p.'/';
 			$entity_id = $this->retrieveId($entity, $identifier);
 
-			if (!copy($from_path.$identifier.'.'.$extension, $dst_path.$entity_id.'.'.$extension))
+			if (!@copy($from_path.$identifier.'.'.$extension, $dst_path.$entity_id.'.'.$extension))
 			{
 				$this->setError($this->language->l('Cannot create image "%1$s" for entity "%2$s"', $identifier, $entity));
 				return;
@@ -970,12 +975,12 @@ class InstallXmlLoader
 					continue;
 
 				$iso = $this->languages[$id_lang];
-				if (!is_dir($this->lang_path.$iso.'/data'))
-					mkdir($this->lang_path.$iso.'/data');
+				if (!is_dir($this->lang_path.$this->getFallBackToDefaultLanguage($iso).'/data'))
+					mkdir($this->lang_path.$this->getFallBackToDefaultLanguage($iso).'/data');
 
 				$xml_node = new InstallSimplexmlElement('<entity_'.$entity.' />');
 				$this->createXmlEntityNodes($entity, $nodes, $xml_node);
-				$xml_node->asXML($this->lang_path.$iso.'/data/'.$entity.'.xml');
+				$xml_node->asXML($this->lang_path.$this->getFallBackToDefaultLanguage($iso).'/data/'.$entity.'.xml');
 			}
 
 		if ($xml->fields['image'])

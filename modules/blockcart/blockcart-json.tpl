@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -31,9 +31,10 @@
 	{ldelim}
 		"id":            {$product.id_product},
 		"link":          "{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|addslashes|replace:'\\\'':'\''}",
-		"quantity":      {$product.cart_quantity},
+		"quantity":      {$product.cart_quantity|intval},
 		"priceByLine":   "{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total}{else}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total_wt}{/if}",
-		"name":          "{$product.name|html_entity_decode:2:'UTF-8'|truncate:15:'...':true|escape:'htmlall'}",
+		"image":         "{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|addslashes|replace:'\\\'':'\''}",		
+		"name":          "{$product.name|html_entity_decode:2:'UTF-8'|truncate:15:'...':true|escape:'html'}",
 		"price":         "{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total}{else}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total_wt}{/if}",
 		"price_float":   "{$product.total}",
 		"idCombination": {if isset($product.attributes_small)}{$productAttributeId}{else}0{/if},
@@ -99,6 +100,8 @@
 "nbTotalProducts": "{$nb_total_products}",
 "total": "{$total|html_entity_decode:2:'UTF-8'}",
 "productTotal": "{$product_total|html_entity_decode:2:'UTF-8'}",
+"freeShipping": "{displayWtPrice|html_entity_decode:2:'UTF-8' p=$free_shipping}",
+"freeShippingFloat": "{$free_shipping|html_entity_decode:2:'UTF-8'}",
 {if isset($errors) && $errors}
 "hasError" : true,
 "errors" : [

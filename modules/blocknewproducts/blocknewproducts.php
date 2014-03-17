@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -29,14 +29,17 @@ if (!defined('_PS_VERSION_'))
 
 class BlockNewProducts extends Module
 {
+	protected static $cache_new_products;
+
 	public function __construct()
 	{
 		$this->name = 'blocknewproducts';
 		$this->tab = 'front_office_features';
-		$this->version = '1.5';
+		$this->version = '1.7';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
+		$this->bootstrap = true;
 		parent::__construct();
 
 		$this->displayName = $this->l('New products block');
@@ -45,119 +48,237 @@ class BlockNewProducts extends Module
 
 	public function install()
 	{
-		if (!parent::install()
-			|| !$this->registerHook('rightColumn')
-			|| !$this->registerHook('header')
-			|| !$this->registerHook('addproduct')
-			|| !$this->registerHook('updateproduct')
-			|| !$this->registerHook('deleteproduct')
-			|| !Configuration::updateValue('NEW_PRODUCTS_NBR', 5)
-		)
-			return false;
-		$this->_clearCache('blocknewproducts.tpl');
-		return true;
+		$success = (parent::install()
+			&& $this->registerHook('header')
+			&& $this->registerHook('addproduct')
+			&& $this->registerHook('updateproduct')
+			&& $this->registerHook('deleteproduct')
+			&& Configuration::updateValue('NEW_PRODUCTS_NBR', 5)
+			&& $this->registerHook('displayHomeTab')
+			&& $this->registerHook('displayHomeTabContent')
+		);
+
+		if ($success)
+		{
+			// Hook the module either on the left or right column
+			$theme = new Theme(Context::getContext()->shop->id_theme);
+			if ((!$theme->default_left_column || !$this->registerHook('leftColumn'))
+				&& (!$theme->default_right_column || !$this->registerHook('rightColumn')))
+			{
+				// If there are no colums implemented by the template, throw an error and uninstall the module
+				$this->_errors[] = $this->l('This module need to be hooked in a column and your theme does not implement one');
+				parent::uninstall();
+				return false;
+			}
+		}
+
+		$this->_clearCache('*');
+
+		return $success;
 	}
-	
+
 	public function uninstall()
 	{
-		$this->_clearCache('blocknewproducts.tpl');
+		$this->_clearCache('*');
+
 		return parent::uninstall();
 	}
 
 	public function getContent()
 	{
-		$output = '<h2>'.$this->displayName.'</h2>';
+		$output = '';
 		if (Tools::isSubmit('submitBlockNewProducts'))
 		{
-			if (!($productNbr = Tools::getValue('productNbr')) || empty($productNbr))
-				$output .= '<div class="alert error">'.$this->l('Please complete the "products to display" field.').'</div>';
+			if (!($productNbr = Tools::getValue('NEW_PRODUCTS_NBR')) || empty($productNbr))
+				$output .= $this->displayError($this->l('Please complete the "products to display" field.'));
 			elseif ((int)($productNbr) == 0)
-				$output .= '<div class="alert error">'.$this->l('Invalid number.').'</div>';
+				$output .= $this->displayError($this->l('Invalid number.'));
 			else
 			{
-				Configuration::updateValue('PS_BLOCK_NEWPRODUCTS_DISPLAY', (int)(Tools::getValue('always_display')));
+				Configuration::updateValue('PS_NB_DAYS_NEW_PRODUCT', (int)(Tools::getValue('PS_NB_DAYS_NEW_PRODUCT')));
+				Configuration::updateValue('PS_BLOCK_NEWPRODUCTS_DISPLAY', (int)(Tools::getValue('PS_BLOCK_NEWPRODUCTS_DISPLAY')));
 				Configuration::updateValue('NEW_PRODUCTS_NBR', (int)($productNbr));
-				$output .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
+				$output .= $this->displayConfirmation($this->l('Settings updated'));
 			}
 		}
-		return $output.$this->displayForm();
+		return $output.$this->renderForm();
 	}
 
-	public function displayForm()
+	private function getNewProducts()
 	{
-		$output = '
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-		<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Products to display.').'</label>
-					<div class="margin-form">
-						<input type="text" name="productNbr" value="'.(int)(Configuration::get('NEW_PRODUCTS_NBR')).'" />
-						<p class="clear">'.$this->l('Define the number of products to be displayed in this block.').'</p>
-					</div>
-					<label>'.$this->l('Always display this block.').'</label>
-					<div class="margin-form">
-						<input type="radio" name="always_display" id="display_on" value="1" '.(Tools::getValue('always_display', Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY')) ? 'checked="checked" ' : '').'/>
-						<label class="t" for="display_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
-						<input type="radio" name="always_display" id="display_off" value="0" '.(!Tools::getValue('always_display', Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY')) ? 'checked="checked" ' : '').'/>
-						<label class="t" for="display_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-						<p class="clear">'.$this->l('Show the block even if no products are available.').'</p>
-					</div>
-					<center><input type="submit" name="submitBlockNewProducts" value="'.$this->l('Save').'" class="button" /></center>
-				</fieldset>
-			</form>';
-		return $output;
+		if (!Configuration::get('NEW_PRODUCTS_NBR'))
+			return;
+		$newProducts = false;
+		if (Configuration::get('PS_NB_DAYS_NEW_PRODUCT'))
+			$newProducts = Product::getNewProducts((int) $this->context->language->id, 0, (int)Configuration::get('NEW_PRODUCTS_NBR'));
+
+		if (!$newProducts && Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
+			return;
+		return $newProducts;
 	}
 
 	public function hookRightColumn($params)
 	{
 		if (!$this->isCached('blocknewproducts.tpl', $this->getCacheId()))
 		{
-			if (!Configuration::get('NEW_PRODUCTS_NBR'))
-				return;
-			$newProducts = false;
-			if (Configuration::get('PS_NB_DAYS_NEW_PRODUCT'))
-				$newProducts = Product::getNewProducts((int) $params['cookie']->id_lang, 0, (int)Configuration::get('NEW_PRODUCTS_NBR'));
-			if (!$newProducts && !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
-				return;
+			if (!isset(BlockNewProducts::$cache_new_products))
+				BlockNewProducts::$cache_new_products = $this->getNewProducts();
+
 			$this->smarty->assign(array(
-				'new_products' => $newProducts,
+				'new_products' => BlockNewProducts::$cache_new_products,
 				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+				'homeSize' => Image::getSize(ImageType::getFormatedName('home'))
 			));
 		}
+
+		if (BlockNewProducts::$cache_new_products === false)
+			return false;
+
 		return $this->display(__FILE__, 'blocknewproducts.tpl', $this->getCacheId());
 	}
 
 	protected function getCacheId($name = null)
 	{
-		return parent::getCacheId('blocknewproducts|'.date('Ymd'));
+		if ($name === null)
+			$name = 'blocknewproducts';
+		return parent::getCacheId($name.'|'.date('Ymd'));
 	}
 
 	public function hookLeftColumn($params)
 	{
 		return $this->hookRightColumn($params);
 	}
-	
-	public function hookHome($params)
+
+	public function hookdisplayHomeTab($params)
 	{
-		return $this->hookRightColumn($params);
+		if (!$this->isCached('tab.tpl', $this->getCacheId('blocknewproducts-tab')))
+			BlockNewProducts::$cache_new_products = $this->getNewProducts();
+
+		if (BlockNewProducts::$cache_new_products === false)
+			return false;
+
+		return $this->display(__FILE__, 'tab.tpl', $this->getCacheId('blocknewproducts-tab'));
+	}
+
+	public function hookdisplayHomeTabContent($params)
+	{
+		if (!$this->isCached('blocknewproducts_home.tpl', $this->getCacheId('blocknewproducts-home')))
+		{
+			$this->smarty->assign(array(
+				'new_products' => BlockNewProducts::$cache_new_products,
+				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+				'homeSize' => Image::getSize(ImageType::getFormatedName('home'))
+			));
+		}
+
+		if (BlockNewProducts::$cache_new_products === false)
+			return false;
+
+		return $this->display(__FILE__, 'blocknewproducts_home.tpl', $this->getCacheId('blocknewproducts-home'));
 	}
 
 	public function hookHeader($params)
 	{
-		$this->context->controller->addCSS(($this->_path).'blocknewproducts.css', 'all');
+		if (isset($this->context->controller->php_self) && $this->context->controller->php_self == 'index')
+			$this->context->controller->addCSS(_THEME_CSS_DIR_.'product_list.css');
+
+		$this->context->controller->addCSS($this->_path.'blocknewproducts.css', 'all');
 	}
 
 	public function hookAddProduct($params)
 	{
-		$this->_clearCache('blocknewproducts.tpl');
+		$this->_clearCache('*');
 	}
 
 	public function hookUpdateProduct($params)
 	{
-		$this->_clearCache('blocknewproducts.tpl');
+		$this->_clearCache('*');
 	}
 
 	public function hookDeleteProduct($params)
 	{
-		$this->_clearCache('blocknewproducts.tpl');
+		$this->_clearCache('*');
+	}
+
+	public function _clearCache($template, $cache_id = NULL, $compile_id = NULL)
+	{
+		parent::_clearCache('blocknewproducts.tpl');
+		parent::_clearCache('blocknewproducts_home.tpl', $this->getCacheId('blocknewproducts-home'));
+		parent::_clearCache('tab.tpl', $this->getCacheId('blocknewproducts-tab'));
+	}
+
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Products to display'),
+						'name' => 'NEW_PRODUCTS_NBR',
+						'class' => 'fixed-width-xs',
+						'desc' => $this->l('Define the number of products to be displayed in this block.')
+					),
+					array(
+						'type'  => 'text',
+						'label' => $this->l('Number of days for which the product is considered \'new\''),
+						'name'  => 'PS_NB_DAYS_NEW_PRODUCT',
+						'class' => 'fixed-width-xs',
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Always display this block'),
+						'name' => 'PS_BLOCK_NEWPRODUCTS_DISPLAY',
+						'desc' => $this->l('Show the block even if no new products are available.'),
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						),
+					)
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
+			),
+		);
+
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitBlockNewProducts';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'PS_NB_DAYS_NEW_PRODUCT' => Tools::getValue('PS_NB_DAYS_NEW_PRODUCT', Configuration::get('PS_NB_DAYS_NEW_PRODUCT')),
+			'PS_BLOCK_NEWPRODUCTS_DISPLAY' => Tools::getValue('PS_BLOCK_NEWPRODUCTS_DISPLAY', Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY')),
+			'NEW_PRODUCTS_NBR' => Tools::getValue('NEW_PRODUCTS_NBR', Configuration::get('NEW_PRODUCTS_NBR')),
+		);
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -41,10 +41,11 @@ class Blockrss extends Module
  	 	$this->tab = 'front_office_features';
 		$this->need_instance = 0;
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('RSS feed block');
-		$this->description = $this->l('Adds a block displaying an RSS feed.');
+		$this->description = $this->l('Adds a block displaying a RSS feed.');
 
 		$this->version = '1.1';
 		$this->author = 'PrestaShop';
@@ -54,23 +55,36 @@ class Blockrss extends Module
 
  	function install()
  	{
+ 	 	if (!parent::install())
+			return false;
+
+		// Hook the module either on the left or right column
+		$theme = new Theme(Context::getContext()->shop->id_theme);
+		if ((!$theme->default_left_column || !$this->registerHook('leftColumn'))
+			&& (!$theme->default_right_column || !$this->registerHook('rightColumn')))
+		{
+			// If there are no colums implemented by the template, throw an error and uninstall the module
+			$this->_errors[] = $this->l('This module need to be hooked in a column and your theme does not implement one');
+			parent::uninstall();
+			return false;
+		}
+
 		Configuration::updateValue('RSS_FEED_TITLE', $this->l('RSS feed'));
 		Configuration::updateValue('RSS_FEED_NBR', 5);
- 	 	if (parent::install() == false OR $this->registerHook('leftColumn') == false OR $this->registerHook('header') == false) 
- 	 		return false;
-		return true;
+
+		return $this->registerHook('header');
   	}
 
 	public function getContent()
 	{
-		$output = '<h2>'.$this->displayName.'</h2>';
+		$output = '';
 		
 		if (Tools::isSubmit('submitBlockRss'))
 		{
 			$errors = array();
-			$urlfeed = Tools::getValue('urlfeed');
-			$title = Tools::getValue('title');
-			$nbr = (int)Tools::getValue('nbr');
+			$urlfeed = Tools::getValue('RSS_FEED_URL');
+			$title = Tools::getValue('RSS_FEED_TITLE');
+			$nbr = (int)Tools::getValue('RSS_FEED_NBR');
 
 			if ($urlfeed AND !Validate::isAbsoluteUrl($urlfeed))
 				$errors[] = $this->l('Invalid feed URL');
@@ -79,7 +93,7 @@ class Blockrss extends Module
 			elseif (!$nbr OR $nbr <= 0 OR !Validate::isInt($nbr))
 				$errors[] = $this->l('Invalid number of feeds');				
 			elseif (stristr($urlfeed, $_SERVER['HTTP_HOST'].__PS_BASE_URI__))
-				$errors[] = $this->l('You have selected a feed URL on your own website. Please choose another URL');
+				$errors[] = $this->l('You have selected a feed URL from your own website. Please choose another URL.');
 			elseif (!($contents = Tools::file_get_contents($urlfeed)))
 				$errors[] = $this->l('Feed is unreachable, check your URL');
 			/* Even if the feed was reachable, We need to make sure that the feed is well formated */
@@ -107,42 +121,13 @@ class Blockrss extends Module
 		{
 			$errors = array();
 			if (stristr(Configuration::get('RSS_FEED_URL'), $_SERVER['HTTP_HOST'].__PS_BASE_URI__))
-				$errors[] = $this->l('You have selected a feed URL on your own website. Please choose another URL');
+				$errors[] = $this->l('You have selected a feed URL from your own website. Please choose another URL.');
 			
 			if (sizeof($errors))
 				$output .= $this->displayError(implode('<br />', $errors));
 		}
 
-		return $output.$this->displayForm();
-	}
-
-	public function displayForm()
-	{					
-		$output = '
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Block title').'</label>
-				<div class="margin-form">
-					<input type="text" name="title" value="'.Tools::safeOutput(Tools::getValue('title', Configuration::get('RSS_FEED_TITLE'))).'" />
-					<p class="clear">'.$this->l('Create a title for the block (default: \'RSS feed\')').'</p>
-
-				</div>
-				<label>'.$this->l('Add a feed URL').'</label>
-				<div class="margin-form">
-					<input type="text" size="85" name="urlfeed" value="'.Tools::safeOutput(Tools::getValue('urlfeed', Configuration::get('RSS_FEED_URL'))).'" />
-					<p class="clear">'.$this->l('Add the URL of the feed you want to use (sample: http://news.google.com/?output=rss)').'</p>
-
-				</div>
-				<label>'.$this->l('Number of threads displayed').'</label>
-				<div class="margin-form">
-					<input type="text" size="5" name="nbr" value="'.(int)Tools::getValue('nbr', Configuration::get('RSS_FEED_NBR')).'" />
-					<p class="clear">'.$this->l('Number of threads displayed by the block (default value: 5)').'</p>
-
-				</div>
-				<center><input type="submit" name="submitBlockRss" value="'.$this->l('Save').'" class="button" /></center>
-			</fieldset>
-		</form>';
-		return $output;
+		return $output.$this->renderForm();
 	}
 
 	function hookLeftColumn($params)
@@ -152,36 +137,36 @@ class Blockrss extends Module
 		$url = strval(Configuration::get('RSS_FEED_URL'));
 		$nb = (int)(Configuration::get('RSS_FEED_NBR'));
 
-		// Getting data
-		$rss_links = array();
-		if ($url && ($contents = Tools::file_get_contents($url)))
-			try
-			{
-				if (@$src = new XML_Feed_Parser($contents)) {
-					for ($i = 0; $i < ($nb ? $nb : 5); $i++) {
-						if (@$item = $src->getEntryByOffset($i)) {
-							
-							$xmlValues = array();
-							foreach(self::$xmlFields as $xmlField) {
-								$xmlValues[$xmlField] = $item->__get($xmlField);
+		$cacheId = $this->getCacheId($this->name.'-'.date("YmdH"));
+		if (!$this->isCached('blockrss.tpl', $cacheId))
+		{
+			// Getting data
+			$rss_links = array();
+			if ($url && ($contents = Tools::file_get_contents($url)))
+				try
+				{
+					if (@$src = new XML_Feed_Parser($contents))
+						for ($i = 0; $i < ($nb ? $nb : 5); $i++)
+							if (@$item = $src->getEntryByOffset($i))
+							{
+								$xmlValues = array();
+								foreach(self::$xmlFields as $xmlField)
+									$xmlValues[$xmlField] = $item->__get($xmlField);
+								$xmlValues['enclosure'] = $item->getEnclosure();
+								# Compatibility
+								$xmlValues['url'] = $xmlValues['link']; 
+								$rss_links[] = $xmlValues;
 							}
-							$xmlValues['enclosure'] = $item->getEnclosure();
-							# Compatibility
-							$xmlValues['url'] = $xmlValues['link']; 
-							$rss_links[] = $xmlValues;
-						}
-					}
 				}
-			}
-			catch (XML_Feed_Parser_Exception $e)
-			{
-				Tools::dieOrLog(sprintf($this->l('Error: invalid RSS feed in "blockrss" module: %s'), $e->getMessage()), false);
-			}
+				catch (XML_Feed_Parser_Exception $e)
+				{
+					Tools::dieOrLog(sprintf($this->l('Error: invalid RSS feed in "blockrss" module: %s'), $e->getMessage()), false);
+				}
+			// Display smarty
+			$this->smarty->assign(array('title' => ($title ? $title : $this->l('RSS feed')), 'rss_links' => $rss_links));
+		}
 
-		// Display smarty
-		$this->smarty->assign(array('title' => ($title ? $title : $this->l('RSS feed')), 'rss_links' => $rss_links));
-
- 	 	return $this->display(__FILE__, 'blockrss.tpl');
+ 	 	return $this->display(__FILE__, 'blockrss.tpl', $cacheId);
  	}
 
 	function hookRightColumn($params)
@@ -192,5 +177,68 @@ class Blockrss extends Module
 	function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockrss.css', 'all');
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Block title'),
+						'name' => 'RSS_FEED_TITLE',
+						'desc' => $this->l('Create a title for the block (default: \'RSS feed\').'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Add a feed URL'),
+						'name' => 'RSS_FEED_URL',
+						'desc' => $this->l('Add the URL of the feed you want to use (sample: http://news.google.com/?output=rss).'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Number of threads displayed'),
+						'name' => 'RSS_FEED_NBR',
+						'class' => 'fixed-width-sm',
+						'desc' => $this->l('Number of threads displayed in the block (default value: 5).'),
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitBlockRss';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'RSS_FEED_TITLE' => Tools::getValue('RSS_FEED_TITLE', Configuration::get('RSS_FEED_TITLE')),
+			'RSS_FEED_URL' => Tools::getValue('RSS_FEED_URL', Configuration::get('RSS_FEED_URL')),
+			'RSS_FEED_NBR' => Tools::getValue('RSS_FEED_NBR', Configuration::get('RSS_FEED_NBR')),
+		);
 	}
 }

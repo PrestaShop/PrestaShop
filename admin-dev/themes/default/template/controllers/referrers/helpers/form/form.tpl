@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,14 +26,14 @@
 
 {block name="other_fieldsets"}
 	{if $f == 1}
-		<br class="clear" />
-		<fieldset>
-			<legend onclick="$('#tracking_help').slideToggle();" style="cursor:pointer;">
-				<img src="../img/admin/help.png" /> {l s='Help'}
-			</legend>
+		<div class="panel">
+			<h3>
+				<i class="icon-question-sign"></i> {l s='Help'}
+			</h3>
+			<div class="row"><button type="button" class="btn btn-default toggle_help"><i class="icon-chevron-sign-down"></i> {l s='Show me more'}</button></div>
 			<div id="tracking_help" style="display: none;">
 				<p>{l s='Definitions:'}</p>
-				<ul style="list-style: disc; margin-left: 20px;">
+				<ul>
 					<li>
 						{l s='The field `http_referer` is the website from which your customers arrive.'}<br />
 						{l s='For example, visitors coming from Google will have an `http_referer` like this one: "http://www.google.com/search?q=prestashop".'}<br />
@@ -67,54 +67,52 @@
 					<br />
 					<li>
 						{l s='The simple mode uses the MySQL "LIKE", but for a higher potency you can use MySQL regular expressions.'}
-						<a href="http://dev.mysql.com/doc/refman/5.0/en/regexp.html" target="_blank" style="font-style: italic;">{l s='Take a look at our documentation for more details.'}</a>
+						<a class="btn btn-link" href="http://dev.mysql.com/doc/refman/5.0/en/regexp.html" target="_blank" style="font-style: italic;"><i class="icon-external-link-sign"></i> {l s='Take a look at our documentation for more details.'}</a>
 					</li>
 				</ul>
 			</div>
-		</fieldset>
-	{/if}
-{/block}
-
-{block name="other_input"}
-
-	{if $key == 'help'}
-		<a style="cursor:pointer;font-style:italic;" onclick="$('#tracking_help').slideToggle();">
-			<img src="../img/admin/help.png" /> {l s='Get help!'}
-		</a>
-	{/if}
-
-{/block}
-
-{block name="label"}
-
-	{if $input.name == 'http_referer_regexp'}
-		<div id="tracking_expert" style="display: none;">
-	{/if}
-
-	{if isset($input.h3)}
-		<h3>{$input.h3}</h3>
-	{/if}
-
-	{if isset($input.label)}
-		<label>{$input.label} </label>
-	{/if}
-
-{/block}
-
-{block name="field"}
-	{$smarty.block.parent}
-	{if $input.name == 'request_uri_regexp_not'}
 		</div>
 	{/if}
 {/block}
 
-{block name="script"}
+{block name="other_input"}
+	{if $key == 'help'}
+		<a class="btn btn-default toggle_help">
+			<i class="icon-question-sign"></i> {l s='Get help!'}
+		</a>
+	{/if}
+{/block}
 
-	$(document).ready(function() {
-		$('fieldset#fieldset_3 legend').css('cursor', 'pointer');
-		$('fieldset#fieldset_3 legend').click(function(){
-			$('#tracking_expert').slideToggle();
+
+{block name="fieldset"}
+	{if $f == 3}
+		<div id="tracking_expert" style="display: none;">
+		{$smarty.block.parent}
+		</div>
+	{else}
+		{$smarty.block.parent}
+	{/if}	
+{/block}
+
+{block name="label"}
+	{if isset($input.legend)}
+		<legend>{$input.legend}</legend>		
+	{/if}
+
+	{if isset($input.label)}
+		<label class="control-label col-lg-3" for="{$input.name}">{$input.label}</label>
+	{/if}
+{/block}
+
+{block name="script"}
+	$( document ).ready(function() {
+		$('.toggle_help').click(function() {
+			$('#tracking_help').slideToggle();
+
+			if ($(this).find('i').hasClass('icon-chevron-sign-down'))
+				$(this).find('i').removeClass('icon-chevron-sign-down').addClass('icon-chevron-sign-up');
+			else if ($(this).find('i').hasClass('icon-chevron-sign-up'))
+				$(this).find('i').removeClass('icon-chevron-sign-up').addClass('icon-chevron-sign-down');
 		});
 	});
-
 {/block}

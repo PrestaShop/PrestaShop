@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,15 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *	@author PrestaShop SA <contact@prestashop.com>
-*	@copyright	2007-2013 PrestaShop SA
+*	@copyright	2007-2014 PrestaShop SA
 *	@license		http://opensource.org/licenses/afl-3.0.php	Academic Free License (AFL 3.0)
 *	International Registered Trademark & Property of PrestaShop SA
 *}
 
 <div id="carrier_logo_block">
-	<img id="carrier_logo_img" src="{if $carrier_logo}{$carrier_logo}{else}../img/admin/carrier-default.jpg{/if}" />
-	<br/>
-	<a id="carrier_logo_remove" {if !$carrier_logo}style="display:none"{/if} href="javascript:removeCarrierLogo();"><img src="../img/admin/disabled.gif" /> {l s='Remove the logo'}</a>
+	<img id="carrier_logo_img" src="{if $carrier_logo}{$carrier_logo}{else}../img/admin/carrier-default.jpg{/if}" class="thumbnail" />
+	<a id="carrier_logo_remove" class="btn btn-default" {if !$carrier_logo}style="display:none"{/if} href="javascript:removeCarrierLogo();"><i class="icon-trash"></i> {l s='Remove the logo'}</a>
 </div>
 
 <script type="text/javascript">
@@ -34,10 +33,13 @@
 
 	function removeCarrierLogo()
 	{
-		$('#carrier_logo_img').attr('src', '../img/admin/carrier-default.jpg');
-		$('#logo').val('null');
-		fixCarrierLogoDisplay();
-		$('#carrier_logo_remove').hide();
+		if (confirm('{l s='Are you sure you want to delete the logo?' js=1}'))
+		{
+			$('#carrier_logo_img').attr('src', '../img/admin/carrier-default.jpg');
+			$('#logo').val('null');
+			fixCarrierLogoDisplay();
+			$('#carrier_logo_remove').hide();
+		}
 	}
 	
 	function uploadCarrierLogo()

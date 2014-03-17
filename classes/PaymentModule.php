@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -52,6 +52,15 @@ abstract class PaymentModuleCore extends Module
 
 		// Insert countries availability
 		$return = $this->addCheckboxCountryRestrictionsForModule();
+		
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_FIXED'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_FIXED', '0.2');
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_VAR'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_VAR', '2');
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_FIXED_FOREIGN'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_FIXED_FOREIGN', '0.2');
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_VAR_FOREIGN'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_VAR_FOREIGN', '2');
 
 		return $return;
 	}
@@ -170,7 +179,11 @@ abstract class PaymentModuleCore extends Module
 
 			$order_list = array();
 			$order_detail_list = array();
-			$reference = Order::generateReference();
+			
+			do
+				$reference = Order::generateReference();
+			while(Order::getByReference($reference)->count());
+			
 			$this->currentOrderReference = $reference;
 
 			$order_creation_failed = false;
@@ -354,6 +367,76 @@ abstract class PaymentModuleCore extends Module
 						$price = Product::getPriceStatic((int)$product['id_product'], false, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 						$price_wt = Product::getPriceStatic((int)$product['id_product'], true, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
+
+						$products_list .=
+						'<tr>
+							<td style="border:1px solid #D6D4D4;">
+								<table class="table">
+									<tr>
+										<td width="10">&nbsp;</td>
+										<td>
+											<font size="2" face="Open-sans, sans-serif" color="#555454">
+												'.$product['reference'].'
+											</font>
+										</td>
+										<td width="10">&nbsp;</td>
+									</tr>
+								</table>
+							</td>
+							<td style="border:1px solid #D6D4D4;">
+								<table class="table">
+										<tr>
+											<td width="10">&nbsp;</td>
+											<td>
+												<font size="2" face="Open-sans, sans-serif" color="#555454">
+													<strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').'</strong>
+												</font>
+											</td>
+										<td width="10">&nbsp;</td>
+									</tr>
+								</table>
+							</td>
+							<td style="border:1px solid #D6D4D4;">
+								<table class="table">
+									<tr>
+										<td width="10">&nbsp;</td>
+										<td align="right">
+											<font size="2" face="Open-sans, sans-serif" color="#555454">
+												'.Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ?  Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'
+											</font>
+										</td>
+										<td width="10">&nbsp;</td>
+									</tr>
+								</table>
+							</td>
+							<td style="border:1px solid #D6D4D4;">
+								<table class="table">
+									<tr>
+										<td width="10">&nbsp;</td>
+										<td align="right">
+											<font size="2" face="Open-sans, sans-serif" color="#555454">
+												'.$product['quantity'].'
+											</font>
+										</td>
+										<td width="10">&nbsp;</td>
+									</tr>
+								</table>
+							</td>
+							<td style="border:1px solid #D6D4D4;">
+								<table class="table">
+									<tr>
+										<td width="10">&nbsp;</td>
+										<td align="right">
+											<font size="2" face="Open-sans, sans-serif" color="#555454">
+												'.Tools::displayPrice($product['quantity'] * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $this->context->currency, false).'
+											</font>
+										</td>
+										<td width="10">&nbsp;</td>
+									</tr>
+								</table>
+							</td>
+						</tr>';
+
 						$customization_quantity = 0;
 						$customized_datas = Product::getAllCustomizedDatas((int)$order->id_cart);
 						if (isset($customized_datas[$product['id_product']][$product['id_product_attribute']]))
@@ -367,31 +450,72 @@ abstract class PaymentModuleCore extends Module
 
 								if (isset($customization['datas'][Product::CUSTOMIZE_FILE]))
 									$customization_text .= sprintf(Tools::displayError('%d image(s)'), count($customization['datas'][Product::CUSTOMIZE_FILE])).'<br />';
-								$customization_text .= '---<br />';
+
+								$customization_quantity = (int)$product['customization_quantity'];
+
+								$products_list .=
+									'<tr>
+										<td colspan="2" style="border:1px solid #D6D4D4;">
+											<table class="table">
+													<tr>
+														<td width="10">&nbsp;</td>
+														<td>
+															<font size="2" face="Open-sans, sans-serif" color="#555454">
+																<strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').'</strong><br>
+																'.$customization_text.'
+															</font>
+														</td>
+													<td width="10">&nbsp;</td>
+												</tr>
+											</table>
+										</td>
+										<td style="border:1px solid #D6D4D4;">
+											<table class="table">
+												<tr>
+													<td width="10">&nbsp;</td>
+													<td align="right">
+														<font size="2" face="Open-sans, sans-serif" color="#555454">
+															'.Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ?  Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'
+														</font>
+													</td>
+													<td width="10">&nbsp;</td>
+												</tr>
+											</table>
+										</td>
+										<td style="border:1px solid #D6D4D4;">
+											<table class="table">
+												<tr>
+													<td width="10">&nbsp;</td>
+													<td align="right">
+														<font size="2" face="Open-sans, sans-serif" color="#555454">
+															'.$customization_quantity.'
+														</font>
+													</td>
+													<td width="10">&nbsp;</td>
+												</tr>
+											</table>
+										</td>
+										<td style="border:1px solid #D6D4D4;">
+											<table class="table">
+												<tr>
+													<td width="10">&nbsp;</td>
+													<td align="right">
+														<font size="2" face="Open-sans, sans-serif" color="#555454">
+															'.Tools::displayPrice($customization_quantity * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $this->context->currency, false).'
+														</font>
+													</td>
+													<td width="10">&nbsp;</td>
+												</tr>
+											</table>
+										</td>
+									</tr>';
 							}
 
-							$customization_text = Tools::rtrimString($customization_text, '---<br />');
 
-							$customization_quantity = (int)$product['customization_quantity'];
-							$products_list .=
-							'<tr style="background-color: '.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
-								<td style="padding: 0.6em 0.4em;width: 15%;">'.$product['reference'].'</td>
-								<td style="padding: 0.6em 0.4em;width: 30%;"><strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').' - '.Tools::displayError('Customized').(!empty($customization_text) ? ' - '.$customization_text : '').'</strong></td>
-								<td style="padding: 0.6em 0.4em; width: 20%;">'.Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ?  Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'</td>
-								<td style="padding: 0.6em 0.4em; width: 15%;">'.$customization_quantity.'</td>
-								<td style="padding: 0.6em 0.4em; width: 20%;">'.Tools::displayPrice($customization_quantity * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $this->context->currency, false).'</td>
-							</tr>';
+
+
 						}
-
-						if (!$customization_quantity || (int)$product['cart_quantity'] > $customization_quantity)
-							$products_list .=
-							'<tr style="background-color: '.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
-								<td style="padding: 0.6em 0.4em;width: 15%;">'.$product['reference'].'</td>
-								<td style="padding: 0.6em 0.4em;width: 30%;"><strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').'</strong></td>
-								<td style="padding: 0.6em 0.4em; width: 20%;">'.Tools::displayPrice(Product::getTaxCalculationMethod((int)$this->context->customer->id) == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'</td>
-								<td style="padding: 0.6em 0.4em; width: 15%;">'.((int)$product['cart_quantity'] - $customization_quantity).'</td>
-								<td style="padding: 0.6em 0.4em; width: 20%;">'.Tools::displayPrice(((int)$product['cart_quantity'] - $customization_quantity) * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $this->context->currency, false).'</td>
-							</tr>';
+						
 
 						// Check if is not a virutal product for the displaying of shipping
 						if (!$product['is_virtual'])
@@ -674,7 +798,7 @@ abstract class PaymentModuleCore extends Module
 				else
 				{
 					$error = Tools::displayError('Order creation failed');
-					Logger::addLog($error, 4, '0000002', 'Cart', intval($order->id_cart));
+					PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', intval($order->id_cart));
 					die($error);
 				}
 			} // End foreach $order_detail_list
@@ -685,7 +809,7 @@ abstract class PaymentModuleCore extends Module
 		else
 		{
 			$error = Tools::displayError('Cart cannot be loaded or an order has already been placed using this cart');
-			Logger::addLog($error, 4, '0000001', 'Cart', intval($this->context->cart->id));
+			PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', intval($this->context->cart->id));
 			die($error);
 		}
 	}
@@ -757,7 +881,8 @@ abstract class PaymentModuleCore extends Module
 		}
 		if (!isset($id_currency) || empty($id_currency))
 			return false;
-		return (new Currency($id_currency));
+		$currency = new Currency($id_currency);
+		return $currency;
 	}
 
 	/**

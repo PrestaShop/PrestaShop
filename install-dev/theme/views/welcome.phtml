@@ -14,29 +14,21 @@
 <?php endif; ?>
 
 <h2><?php echo $this->l('Welcome to the PrestaShop %s Installer', _PS_INSTALL_VERSION_) ?></h2>
-<p><?php echo $this->l('The installation of PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 150,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.') ?></p>
+<p><?php echo $this->l('The installation of PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 165,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.') ?></p>
 <p><?php echo $this->l('If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s', $this->getDocumentationLink(), $this->getPhone()) ?></p>
 
 <!-- List of languages -->
 <?php if (count($this->language->getIsoList()) > 1): ?>
-	<h2><?php echo $this->l('Continue the installation in') ?></h2>
-	<ul id="langList" style="line-height: 20px;">
+	<h3><?php echo $this->l('Continue the installation in:') ?></h3>
+	<select id="langList" name="language">
 	<?php foreach ($this->language->getIsoList() as $iso): ?>
-		<li>
-			<label>
-				<input type="radio" value="<?php echo $iso ?>" <?php echo ($iso == $this->language->getLanguageIso()) ? 'checked="checked"' : '' ?> name="language" style="vertical-align: middle; margin-right: 0;" />
-				<?php if (file_exists(_PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg')): ?>
-					<img src="langs/<?php echo $iso ?>/flag.jpg" alt="<?php echo $iso ?>" style="vertical-align: middle;" />
-				<?php else: ?>
-					<img src="theme/img/noflag.jpg" alt="<?php echo $iso ?>" style="vertical-align: middle;" />
-				<?php endif; ?>
-				<?php echo $this->language->getLanguage($iso)->getMetaInformation('name') ?>
-			</label>
-		</li>
+		<option value="<?php echo $iso ?>" <?php if ($iso == $this->language->getLanguageIso()) echo 'selected="selected"' ?>>
+			<?php echo $this->language->getLanguage($iso)->getMetaInformation('name') ?>
+		</option>
 	<?php endforeach; ?>
-	</ul>
+	</select>
 <?php endif; ?>
 
-<p><?php echo $this->l('The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!', 55); ?> </p>
+<p><?php echo $this->l('The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!', 60); ?> </p>
 
 <?php $this->displayTemplate('footer') ?>

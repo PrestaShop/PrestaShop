@@ -1,68 +1,128 @@
-<table cellpadding="0" cellspacing="0">
-	<tr>
-		<td>
-			<label>{l s='Name'}</label>
-			<div class="margin-form">
-				<div class="translatable">
-				{foreach from=$languages item=language}
-					<div class="lang_{$language.id_lang|intval}" style="display:{if $language.id_lang == $id_lang_default}block{else}none{/if};float:left">
-						<input type="text" id="name_{$language.id_lang|intval}" name="name_{$language.id_lang|intval}" value="{$currentTab->getFieldValue($currentObject, 'name', $language.id_lang|intval)|escape:html:'UTF-8'}" style="width:400px" />
-						<sup>*</sup>
-					</div>
-				{/foreach}
+<div class="form-group">
+	<label class="control-label col-lg-3 required">
+		<span class="label-tooltip" data-toggle="tooltip"
+		title="{l s='This will be displayed in the cart summary, as well as on the invoice.'}">
+			{l s='Name'}
+		</span>
+	</label>
+	<div class="col-lg-8">	
+		{foreach from=$languages item=language}
+		{if $languages|count > 1}
+		<div class="row">
+			<div class="translatable-field lang-{$language.id_lang}" {if $language.id_lang != $id_lang_default}style="display:none"{/if}>
+				<div class="col-lg-9">
+		{/if}
+					<input id="name_{$language.id_lang|intval}" type="text"  name="name_{$language.id_lang|intval}" value="{$currentTab->getFieldValue($currentObject, 'name', $language.id_lang|intval)|escape:html:'UTF-8'}">
+		{if $languages|count > 1}
 				</div>
-				<p class="preference_description">{l s='This will be displayed in the cart summary, as well as on the invoice.'}</p>
+				<div class="col-lg-2">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						{$language.iso_code} 
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						{foreach from=$languages item=language}
+						<li><a href="javascript:hideOtherLanguage({$language.id_lang});" tabindex="-1">{$language.name}</a></li>
+						{/foreach}
+					</ul>
+				</div>		
 			</div>
-			<label>{l s='Description'}</label>
-			<div class="margin-form">
-				<textarea name="description" style="width:80%;height:100px">{$currentTab->getFieldValue($currentObject, 'description')|escape}</textarea>
-				<p class="preference_description">{l s='For your eyes only. This will never be displayed to the customer.'}</p>
-			</div>
-			<label>{l s='Code'}</label>
-			<div class="margin-form">
-				<input type="text" id="code" name="code" value="{$currentTab->getFieldValue($currentObject, 'code')|escape}" />
-				<a href="javascript:gencode(8);" class="button">{l s='(Click to generate random code)'}</a>
-				<p class="preference_description">{l s='Caution! The rule will automatically be applied if you leave this field blank.'}</p>
-			</div>
-			<label>{l s='Highlight'}</label>
-			<div class="margin-form">
-				&nbsp;&nbsp;
-				<input type="radio" name="highlight" id="highlight_on" value="1" {if $currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if} />
-				<label class="t" for="highlight_on"> <img src="../img/admin/enabled.gif" alt="{l s='Yes'}" title="{l s='Yes'}" style="cursor:pointer" /></label>
-				&nbsp;&nbsp;
-				<input type="radio" name="highlight" id="highlight_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if} />
-				<label class="t" for="highlight_off"> <img src="../img/admin/disabled.gif" alt="{l s='No'}" title="{l s='No'}" style="cursor:pointer" /></label>
-				<p class="preference_description">
-					{l s='If the voucher is not yet in the cart, it will be displayed in the cart summary.'}
-				</p>
-			</div>
-			<label>{l s='Partial use'}</label>
-			<div class="margin-form">
-				&nbsp;&nbsp;
-				<input type="radio" name="partial_use" id="partial_use_on" value="1" {if $currentTab->getFieldValue($currentObject, 'partial_use')|intval}checked="checked"{/if} />
-				<label class="t" for="partial_use_on"> <img src="../img/admin/enabled.gif" alt="{l s='Allowed'}" title="{l s='Allowed'}" style="cursor:pointer" /></label>
-				&nbsp;&nbsp;
-				<input type="radio" name="partial_use" id="partial_use_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'partial_use')|intval}checked="checked"{/if} />
-				<label class="t" for="partial_use_off"> <img src="../img/admin/disabled.gif" alt="{l s='Not allowed'}" title="{l s='Not allowed'}" style="cursor:pointer" /></label>
-				<p class="preference_description">
-					{l s='Only applicable if the voucher value is greater than the cart total.'}<br />
-					{l s='If you do not allow partial use, the voucher value will be lowered to the total order amount. If you allow partial use, however, a new voucher will be created with the remainder.'}
-				</p>
-			</div>
-			<label>{l s='Priority'}</label>
-			<div class="margin-form">
-				<input type="text" name="priority" value="{$currentTab->getFieldValue($currentObject, 'priority')|intval}" />
-				<p class="preference_description">{l s='Cart rules are applied by priority. A cart rule with a priority of "1" will be processed before a cart rule with a priority of "2".'}</p>
-			</div>
-			<label>{l s='Status'}</label>
-			<div class="margin-form">
-				&nbsp;&nbsp;
-				<input type="radio" name="active" id="active_on" value="1" {if $currentTab->getFieldValue($currentObject, 'active')|intval}checked="checked"{/if} />
-				<label class="t" for="active_on"> <img src="../img/admin/enabled.gif" alt="{l s='Enabled'}" title="{l s='Enabled'}" style="cursor:pointer" /></label>
-				&nbsp;&nbsp;
-				<input type="radio" name="active" id="active_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'active')|intval}checked="checked"{/if} />
-				<label class="t" for="active_off"> <img src="../img/admin/disabled.gif" alt="{l s='Disabled'}" title="{l s='Disabled'}" style="cursor:pointer" /></label>
-			</div>
-		</td>
-	</tr>
-</table>
+		</div>
+		{/if}
+		{/foreach}
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+		title="{l s='For your eyes only. This will never be displayed to the customer.'}">
+			{l s='Description'}
+		</span>
+	</label>
+	<div class="col-lg-8">
+		<textarea name="description" rows="2" class="textarea-autosize">{$currentTab->getFieldValue($currentObject, 'description')|escape}</textarea>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+		title="{l s='Caution! The rule will automatically be applied if you leave this field blank.'}">
+			{l s='Code'}
+		</span>
+	</label>
+	<div class="col-lg-9">
+		<div class="input-group col-lg-4">
+			<input type="text" id="code" name="code" value="{$currentTab->getFieldValue($currentObject, 'code')|escape}" />
+			<span class="input-group-btn">
+				<a href="javascript:gencode(8);" class="btn btn-default"><i class="icon-random"></i> {l s='Generate'}</a>
+			</span>
+		</div>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+		title="{l s='If the voucher is not yet in the cart, it will be displayed in the cart summary.'}">
+			{l s='Highlight'}
+		</span>
+	</label>
+	<div class="col-lg-9">
+		<span class="switch prestashop-switch fixed-width-lg">
+			<input type="radio" name="highlight" id="highlight_on" value="1" {if $currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if}/>
+			<label for="highlight_on">{l s='Yes'}</label>
+			<input type="radio" name="highlight" id="highlight_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if} />
+			<label for="highlight_off">{l s='No'}</label>
+			<a class="slide-button btn"></a>
+		</span>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+		title="{l s='Only applicable if the voucher value is greater than the cart total.'}
+		{l s='If you do not allow partial use, the voucher value will be lowered to the total order amount. If you allow partial use, however, a new voucher will be created with the remainder.'}">
+			{l s='Partial use'}
+		</span>
+	</label>
+	<div class="col-lg-9">
+		<span class="switch prestashop-switch fixed-width-lg">
+			<input type="radio" name="partial_use" id="partial_use_on" value="1" {if $currentTab->getFieldValue($currentObject, 'partial_use')|intval}checked="checked"{/if} />
+			<label class="t" for="partial_use_on">{l s='Yes'}</label>
+			<input type="radio" name="partial_use" id="partial_use_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'partial_use')|intval}checked="checked"{/if} />
+			<label class="t" for="partial_use_off">{l s='No'}</label>
+			<a class="slide-button btn"></a>
+		</span>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
+		title="{l s='Cart rules are applied by priority. A cart rule with a priority of "1" will be processed before a cart rule with a priority of "2".'}">
+			{l s='Priority'}
+		</span>
+	</label>
+	<div class="col-lg-1">
+		<input type="text" class="input-mini" name="priority" value="{$currentTab->getFieldValue($currentObject, 'priority')|intval}" />
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="control-label col-lg-3">{l s='Status'}</label>
+	<div class="col-lg-9">
+		<span class="switch prestashop-switch fixed-width-lg">
+			<input type="radio" name="active" id="active_on" value="1" {if $currentTab->getFieldValue($currentObject, 'active')|intval}checked="checked"{/if} />
+			<label class="t" for="active_on">{l s='Yes'}</label>
+			<input type="radio" name="active" id="active_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'active')|intval}checked="checked"{/if} />
+			<label class="t" for="active_off">{l s='No'}</label>
+			<a class="slide-button btn"></a>
+		</span>
+	</div>
+</div>
+<script type="text/javascript">
+	$(".textarea-autosize").autosize();
+</script>

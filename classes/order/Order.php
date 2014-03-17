@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license	http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -239,6 +239,9 @@ class OrderCore extends ObjectModel
 					'product_attribute_id' => array('required' => true),
 					'product_quantity' => array('required' => true),
 					'product_name' => array('setter' => false),
+					'product_reference' => array('setter' => false),
+					'product_ean13' => array('setter' => false),
+					'product_upc' => array('setter' => false),
 					'product_price' => array('setter' => false),
 					'unit_price_tax_incl' => array('setter' => false),
 					'unit_price_tax_excl' => array('setter' => false),
@@ -319,14 +322,20 @@ class OrderCore extends ObjectModel
 	public function getCartProducts()
 	{
 		$product_id_list = array();
-		foreach ($this->getProducts() as $product)
+        	$products = $this->getProducts();
+		foreach ($products as &$product)
+        	{
+			$product['id_product_attribute'] = $product['product_attribute_id'];
+			$product['cart_quantity'] = $product['product_quantity'];
 			$product_id_list[] = $this->id_address_delivery.'_'
 				.$product['product_id'].'_'
 				.$product['product_attribute_id'].'_'
 				.(isset($product['id_customization']) ? $product['id_customization'] : '0');
+	        }
+	        unset($product);
 
 		$product_list = array();
-		foreach ($this->getProducts() as $product)
+		foreach ($products as $product)
 		{
 			$key = $this->id_address_delivery.'_'
 				.$product['id_product'].'_'
@@ -463,7 +472,7 @@ class OrderCore extends ObjectModel
 		{
 			$id_lang = $id_lang ? (int)($id_lang) : 'o.`id_lang`';
 			$result = Db::getInstance()->executeS('
-			SELECT oh.*, e.`firstname` AS employee_firstname, e.`lastname` AS employee_lastname, osl.`name` AS ostate_name
+			SELECT os.*, oh.*, e.`firstname` as employee_firstname, e.`lastname` as employee_lastname, osl.`name` as ostate_name
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON o.`id_order` = oh.`id_order`
 			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON os.`id_order_state` = oh.`id_order_state`
@@ -830,7 +839,7 @@ class OrderCore extends ObjectModel
 		foreach ($res as $key => $val)
 		{
 			$res2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT os.`id_order_state`, osl.`name` AS order_state, os.`invoice`
+				SELECT os.`id_order_state`, osl.`name` AS order_state, os.`invoice`, os.`color` as order_state_color
 				FROM `'._DB_PREFIX_.'order_history` oh
 				LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
 				INNER JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$context->language->id.')
@@ -1137,9 +1146,9 @@ class OrderCore extends ObjectModel
 			$order_invoice = new OrderInvoice();
 			$order_invoice->id_order = $this->id;
 			$order_invoice->number = 0;
-			$invoice_address = new Address((int)$this->id_address_invoice);
+			$address = new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 			$carrier = new Carrier((int)$this->id_carrier);
-			$tax_calculator = $carrier->getTaxCalculator($invoice_address);
+			$tax_calculator = $carrier->getTaxCalculator($address);
 
 			$order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
 			$order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
@@ -1292,11 +1301,11 @@ class OrderCore extends ObjectModel
 	 * @since 1.5.0.14
 	 * 
 	 * @param string $reference
-	 * @return Collection of Order
+	 * @return PrestaShopCollection Collection of Order
 	 */
 	public static function getByReference($reference)
 	{
-		$orders = new Collection('Order');
+		$orders = new PrestaShopCollection('Order');
 		$orders->where('reference', '=', $reference);
 		return $orders;
 	}
@@ -1354,9 +1363,22 @@ class OrderCore extends ObjectModel
 
 	public function getWsOrderRows()
 	{
-		$query = 'SELECT id_order_detail as `id`, `product_id`, `product_price`, `id_order`, `product_attribute_id`, `product_quantity`, `product_name`, `unit_price_tax_incl`, `unit_price_tax_excl`
-		FROM `'._DB_PREFIX_.'order_detail`
-		WHERE id_order = '.(int)$this->id;
+		$query = '
+			SELECT 
+			`id_order_detail` as `id`, 
+			`product_id`, 
+			`product_price`, 
+			`id_order`, 
+			`product_attribute_id`, 
+			`product_quantity`, 
+			`product_name`, 
+			`product_reference`,
+			`product_ean13`,
+			`product_upc`,
+			`unit_price_tax_incl`, 
+			`unit_price_tax_excl`
+			FROM `'._DB_PREFIX_.'order_detail`
+			WHERE id_order = '.(int)$this->id;
 		$result = Db::getInstance()->executeS($query);
 		return $result;
 	}
@@ -1480,11 +1502,11 @@ class OrderCore extends ObjectModel
 	/**
 	 * This method allows to get all Order Payment for the current order
 	 * @since 1.5.0.1
-	 * @return Collection of Order Payment
+	 * @return PrestaShopCollection Collection of OrderPayment
 	 */
 	public function getOrderPaymentCollection()
 	{
-		$order_payments = new Collection('OrderPayment');
+		$order_payments = new PrestaShopCollection('OrderPayment');
 		$order_payments->where('order_reference', '=', $this->reference);
 		return $order_payments;
 	}
@@ -1559,16 +1581,8 @@ class OrderCore extends ObjectModel
 		}
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
 
-		// @TODO review
-		function sortDocuments($a, $b)
-		{
-			if ($a->date_add == $b->date_add)
-				return 0;
-			return ($a->date_add < $b->date_add) ? -1 : 1;
-		}
-
 		$documents = array_merge($invoices, $order_slips, $delivery_slips);
-		usort($documents, 'sortDocuments');
+		usort($documents, array('Order', 'sortDocuments'));
 
 		return $documents;
 	}
@@ -1604,11 +1618,11 @@ class OrderCore extends ObjectModel
 	 *
 	 * Get all order_slips for the current order
 	 * @since 1.5.0.2
-	 * @return Collection of Order slip
+	 * @return PrestaShopCollection Collection of OrderSlip
 	 */
 	public function getOrderSlipsCollection()
 	{
-		$order_slips = new Collection('OrderSlip');
+		$order_slips = new PrestaShopCollection('OrderSlip');
 		$order_slips->where('id_order', '=', $this->id);
 		return $order_slips;
 	}
@@ -1617,11 +1631,11 @@ class OrderCore extends ObjectModel
 	 *
 	 * Get all invoices for the current order
 	 * @since 1.5.0.1
-	 * @return Collection of Order invoice
+	 * @return PrestaShopCollection Collection of OrderInvoice
 	 */
 	public function getInvoicesCollection()
 	{
-		$order_invoices = new Collection('OrderInvoice');
+		$order_invoices = new PrestaShopCollection('OrderInvoice');
 		$order_invoices->where('id_order', '=', $this->id);
 		return $order_invoices;
 	}
@@ -1630,11 +1644,11 @@ class OrderCore extends ObjectModel
 	 *
 	 * Get all delivery slips for the current order
 	 * @since 1.5.0.2
-	 * @return Collection of Order invoice
+	 * @return PrestaShopCollection Collection of OrderInvoice
 	 */
 	public function getDeliverySlipsCollection()
 	{
-		$order_invoices = new Collection('OrderInvoice');
+		$order_invoices = new PrestaShopCollection('OrderInvoice');
 		$order_invoices->where('id_order', '=', $this->id);
 		$order_invoices->where('delivery_number', '!=', '0');
 		return $order_invoices;
@@ -1643,7 +1657,7 @@ class OrderCore extends ObjectModel
 	/**
 	 * Get all not paid invoices for the current order
 	 * @since 1.5.0.2
-	 * @return Collection of Order invoice not paid
+	 * @return PrestaShopCollection Collection of Order invoice not paid
 	 */
 	public function getNotPaidInvoicesCollection()
 	{
@@ -1897,7 +1911,7 @@ class OrderCore extends ObjectModel
 	 */
 	public function getBrother()
 	{
-		$collection = new Collection('order');
+		$collection = new PrestaShopCollection('order');
 		$collection->where('reference', '=', $this->reference);
 		$collection->where('id_order', '<>', $this->id);
 		return $collection;
@@ -1963,6 +1977,12 @@ class OrderCore extends ObjectModel
 				SELECT `id_order_carrier`
 				FROM `'._DB_PREFIX_.'order_carrier`
 				WHERE `id_order` = '.(int)$this->id);
-	}		
-}
+	}
 
+	public static function sortDocuments($a, $b)
+	{
+		if ($a->date_add == $b->date_add)
+			return 0;
+		return ($a->date_add < $b->date_add) ? -1 : 1;
+	}
+}

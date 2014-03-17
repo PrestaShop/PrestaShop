@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -57,14 +57,8 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 		$this->session->database_password = trim(Tools::getValue('dbPassword'));
 		$this->session->database_prefix = trim(Tools::getValue('db_prefix'));
 		$this->session->database_clear = Tools::getValue('database_clear');
-
-		// Save email config
-		$this->session->use_smtp = (bool)Tools::getValue('smtpChecked');
-		$this->session->smtp_server = trim(Tools::getValue('smtpSrv'));
-		$this->session->smtp_encryption = Tools::getValue('smtpEnc');
-		$this->session->smtp_port = (int)Tools::getValue('smtpPort');
-		$this->session->smtp_login = trim(Tools::getValue('smtpLogin'));
-		$this->session->smtp_password = trim(Tools::getValue('smtpPassword'));
+		
+		$this->session->rewrite_engine = Tools::getValue('rewrite_engine');
 	}
 
 	/**
@@ -166,11 +160,8 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 
 			$this->database_clear = true;
 			$this->use_smtp = false;
-			$this->smtp_server = 'smtp.';
 			$this->smtp_encryption = 'off';
 			$this->smtp_port = 25;
-			$this->smtp_login = '';
-			$this->smtp_password = '';
 		}
 		else
 		{
@@ -183,11 +174,8 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 			$this->database_clear = $this->session->database_clear;
 
 			$this->use_smtp = $this->session->use_smtp;
-			$this->smtp_server = $this->session->smtp_server;
 			$this->smtp_encryption = $this->session->smtp_encryption;
 			$this->smtp_port = $this->session->smtp_port;
-			$this->smtp_login = $this->session->smtp_login;
-			$this->smtp_password = $this->session->smtp_password;
 		}
 
 		$this->displayTemplate('database');

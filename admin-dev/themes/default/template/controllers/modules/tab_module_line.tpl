@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,61 +18,86 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<tr class="{$class_row}">
-	<td>
-		<table border="0" cellpadding="0" cellspacing="5">
-			<tr>
-				<td valign="top" width="32" align="center">
-					<img class="imgm" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}">
-				</td>
-				<td valign="top">
-					<div class="moduleDesc" id="anchor{$module->name|ucfirst}">
-						<h3>
-							<span style="display:none">{$module->name}</span> 
-							{$module->displayName|truncate:36:'…'} {$module->version}
-							{if isset($module->id) && $module->id gt 0 }
-								{if $module->active}
-									<span class="setup">{l s='Enabled'}</span>
-								{else}
-									<span class="setup off">{l s='Disabled'}</span>
-								{/if}
-							{else}
-								{if isset($module->type) && $module->type == 'addonsMustHave'}
-									<span class="setup must-have">{l s='Must Have'}</span>
-								{else}
-									<span class="setup off">{l s='Not installed'}</span>
-								{/if}
-								
-							{/if}
-						</h3>
-						<p class="desc">
-							{if isset($module->description) && $module->description ne ''}
-								{$module->description|truncate:86:'…'}
-							{else}
-								&nbsp;
-							{/if}
-						</p>
-					</div>
-				</td>
-				<td border="0" valign="middle" align="right">
-					{if isset($module->type) && $module->type == 'addonsMustHave'}
-						<a href="{$module->addons_buy_url}" target="_blank" class="button updated">
-						<span><img src="../img/admin/cart_addons.png">&nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}</span></a>
-					{else if !isset($module->not_on_disk)}
-						{$module->optionsHtml}
-						<div class="clear">&nbsp;</div>
-						<a href="#" class="button action_tab_module" data-option="select_{$module->name}" class="button">{l s='Submit'}</a>
-					{else}
-						<a href="{$module->options.install_url}" class="button">{l s='Install'}</a>
-					{/if}
-				</td>
-			</tr>
-		</table>
+<tr>
+	<td class="fixed-width-sm center">
+		<img class="img-thumbnail" alt="{$module->name}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}">
 	</td>
+	<td>
+		<div id="anchor{$module->name|ucfirst}" title="{$module->displayName}">
+			<div class="module_name">
+				<span style="display:none">{$module->name}</span>
+				{$module->displayName}
+				<small class="text-muted">v{$module->version} - by {$module->author}</small>
+				{if isset($module->type) && $module->type == 'addonsMustHave'}
+					- <span class="module-badge-popular help-tooltip text-primary" data-title="{l s="This module is available on PrestaShop Addons"}"><i class="icon-group"></i> <small>{l s="Popular"}</small></span>
+				{elseif isset($module->type) && $module->type == 'addonsPartner'}
+					- <span class="module-badge-partner help-tooltip text-warning" data-title="{l s="This module is available for free thanks to our partner."}"><i class="icon-pushpin"></i> <small>{l s="Partner"}</small></span>
+				{elseif isset($module->id) && $module->id gt 0}
+					{if isset($module->version_addons) && $module->version_addons}
+						<span class="label label-warning">{l s='Need update'}</span>
+					{/if}
+				{/if}
+			</div>
+			<p class="module_description">
+				{if isset($module->description) && $module->description ne ''}
+					{$module->description}
+				{/if}
+				{if isset($module->show_quick_view) &&  $module->show_quick_view}
+					<br><a href="{$currentIndex}&token={$token}&ajax=1&action=GetModuleQuickView&module={$module->name}" class="fancybox-quick-view"><i class="icon-search"></i> {l s='Read more'}</a>
+				{/if}
+			</p>
+			{if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>{$module->message}</div>{/if}
+		</div>
+
+	</td>
+	{if isset($module->type) && $module->type == 'addonsMustHave'}
+		<td>&nbsp;</td>
+		<td align="right">
+			<p>
+				<a href="{$module->addons_buy_url}" target="_blank" class="button updated">
+					<span class="btn btn-default">
+						<i class="icon-shopping-cart"></i> &nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}
+					</span>
+				</a>
+			</p>
+		</td>
+	{else if !isset($module->not_on_disk)}
+		<td>&nbsp;</td>
+		<td align="right">
+			{if $module->optionsHtml|count > 0}
+			<div id="list-action-button" class="btn-group">
+				{assign var=option value=$module->optionsHtml[0]}
+				{$option}
+				{if $module->optionsHtml|count > 1}
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
+					<span class="caret">&nbsp;</span>
+				</button>
+				<ul class="dropdown-menu">
+				{foreach $module->optionsHtml key=key item=option}
+					{if $key != 0}
+						<li>{$option}</li>
+					{/if}
+				{/foreach}
+				</ul>
+				{/if}
+			</div>
+			{/if}
+		</td>
+	{else}
+		<td>&nbsp;</td>
+		<td align="right">
+			<p>
+				<a href="{$module->options.install_url}" class="btn btn-success">
+					<i class="icon-plus-sign-alt"></i>
+					{l s='Install'}
+				</a>
+			</p>
+		</td>
+	{/if}
 </tr>

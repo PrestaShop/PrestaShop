@@ -1,0 +1,53 @@
+/* Home hook CSS */
+#htmlcontent_home ul {
+  margin: 0 -5px; }
+  #htmlcontent_home ul li {
+    padding: 0 5px 10px; }
+    @media (max-width: 479px) {
+      #htmlcontent_home ul li {
+        width: 100%; } }
+    #htmlcontent_home ul li img {
+      max-width: 100%;
+      height: auto; }
+      @media (max-width: 479px) {
+        #htmlcontent_home ul li img {
+          min-width: 100%; } }
+    #htmlcontent_home ul li.htmlcontent-item-5 {
+      width: 66.6667%; }
+      @media (max-width: 479px) {
+        #htmlcontent_home ul li.htmlcontent-item-5 {
+          width: 100%; } }
+
+/* Top hook CSS */
+#htmlcontent_top {
+  float: left;
+  width: 33.4%;
+  max-width: 391px;
+  padding-left: 10px; }
+  @media (max-width: 767px) {
+    #htmlcontent_top {
+      width: 100%;
+      max-width: 100%;
+      padding-left: 0;
+      padding-top: 0px; } }
+  @media (max-width: 767px) {
+    #htmlcontent_top ul {
+      margin: 0 -5px; } }
+  #htmlcontent_top ul li {
+    width: 100%;
+    margin-bottom: 10px; }
+    @media (max-width: 767px) {
+      #htmlcontent_top ul li {
+        float: left;
+        padding-left: 5px;
+        padding-right: 5px;
+        width: 50%; } }
+    #htmlcontent_top ul li:last-child {
+      margin-bottom: 0; }
+    #htmlcontent_top ul li img {
+      max-width: 100%;
+      height: auto; }
+
+/* Left hook CSS */
+/* Right hook CSS */
+/* Footer hook CSS */

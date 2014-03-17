@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -228,16 +228,10 @@ class SpecificPriceCore extends ObjectModel
 					AND
 					(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 				)
-				AND id_cart IN (0, '.(int)$id_cart.') ';
+				AND id_cart IN (0, '.(int)$id_cart.') 
+				AND IF(`from_quantity` > 1, `from_quantity`, 0) <= ';
 
-			if ($real_quantity != 0 && !Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION'))
-				$query .= ' AND IF(`from_quantity` > 1, `from_quantity`, 0) <= IF(id_product_attribute=0,'.(int)$quantity.' ,'.(int)$real_quantity.')';
-			else
-			{
-				$qty_to_use = $id_cart ? (int)$quantity : (int)$real_quantity;
-				$query .= 'AND `from_quantity` <= '.max(1, $qty_to_use);
-			}
-
+			$query .= (Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION') || !$id_cart || !$real_quantity) ? (int)$quantity : max(1, (int)$real_quantity);			
 			$query .= ' ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC';
 			
 			SpecificPrice::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);

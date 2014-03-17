@@ -8040,7 +8040,7 @@ class TCPDF {
 			// check for cached images with alpha channel
 			$tempfile_plain = K_PATH_CACHE.'mskp_'.$filehash;
 			$tempfile_alpha = K_PATH_CACHE.'mska_'.$filehash;
-			if (in_array($tempfile_plain, $this->imagekeys)) {
+			if (in_array($tempfile_plain, $this->imagekeys) && Tools::file_exists_no_cache($tempfile_plain)) {
 				// get existing image data
 				$info = $this->getImageBuffer($tempfile_plain);
 				// check if the newer image is larger

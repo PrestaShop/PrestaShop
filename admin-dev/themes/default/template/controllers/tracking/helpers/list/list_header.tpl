@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,13 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {extends file="helpers/list/list_header.tpl"}
-
-{block name="override_header"}
-	<h2>{$sub_title}</h2>
+{block name="preTable"}
+	{if $list_id == 'empty_categories'}
+		<div class="alert alert-info">{l s='An empty category is a category that has no product directly associated to it. An empty category may however contain products through its subcategories.'}</div>
+	{/if}
 {/block}

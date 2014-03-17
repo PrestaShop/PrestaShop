@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,12 +26,12 @@
 {extends file="helpers/view/view.tpl"}
 {block name="override_tpl"}
 	{if !$shop_context}
-		<div class="warn">{l s='You have more than one shop and must select one to configure payment.'}</div>
+		<div class="alert alert-warning">{l s='You have more than one shop and must select one to configure payment.'}</div>
 	{else}
 		{if isset($modules_list)}
 			{$modules_list}
 		{/if}
-		<div class="space info">
+		<div class="alert alert-info">
 			{l s='This is where you decide what payment modules are available for different variations like your customers\' currency, group, and country.'}
 			<br />
 			{l s='A check mark indicates you want the payment module available.'}
@@ -40,14 +40,11 @@
 			{l s='Please make sure to click Save for each section.'}
 		</div>
 		{if $display_restrictions}
-			<br /><h2 class="space">{l s='Payment module restrictions'}</h2>
 			{foreach $lists as $list}
 				{include file='controllers/payment/restrictions.tpl'}
-				<br />
 			{/foreach}
 		{else}
-			<br />
-			<div class='warn'>{l s='No payment module installed'}</div>
+			<div class="alert alert-warning">{l s='No payment module installed'}</div>
 		{/if}
 	{/if}
 {/block}

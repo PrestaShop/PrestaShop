@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,11 +26,13 @@
 {extends file="helpers/list/list_footer.tpl"}
 
 {block name="after"}
-
-	<div class="hint" style="display:block">
+	<div class="alert alert-info" style="display:block">
 		<ul>
-			<li>{l s='The row in blue is the default combination.'}</li>
-			<li>{l s='A default combination must be designated for each product.'}</li>
+			<li>{l s='The blue row indicates the default combination.'}</li>
+			<li>{l s='Each product that has combinations must have one default combination.'}</li>
 		</ul>
 	</div>
+{/block}
+
+{block name="endForm"}
 {/block}

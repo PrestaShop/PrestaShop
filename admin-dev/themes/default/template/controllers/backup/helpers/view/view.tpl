@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,15 +26,13 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-
-	<div class="conf">{l s='Beginning the download ...'}</div>
-
-	<p>{l s='Backup files should automatically download.'}</p>
-
-	<p>{l s='If not,'} <b><a href="{$url_backup}">{l s='please click here!'}</a></b></p>
-
-	<iframe width="0" height="0" scrolling="no" frameborder="0" src="{$url_backup}"></iframe>
-
+	{if !isset($errors) || $errors|count == 0}
+	<div class="panel">
+		<h3><i class="icon-download"></i> {l s='Download'}</h3>
+		<div class="alert alert-success">{l s='Beginning the download ...'}</div>
+		<p>{l s='Backup files should automatically download.'}</p>
+		<p>{l s='If not,'} <b><a href="{$url_backup}" class="btn btn-default"><i class="icon-download"></i> {l s='please click here!'}</a></b></p>
+		<iframe width="0" height="0" scrolling="no" frameborder="0" src="{$url_backup}"></iframe>
+	</div>
+	{/if}
 {/block}
-
-

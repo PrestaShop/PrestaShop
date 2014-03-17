@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,6 +28,7 @@ class AdminLanguagesControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'lang';
 		$this->className = 'Language';
 	 	$this->lang = false;
@@ -42,7 +43,7 @@ class AdminLanguagesControllerCore extends AdminController
  				'dir' => 'l'
  			),
  			array(
- 				'name' => 'no-picture',
+ 				'name' => 'no_picture',
  				'dir' => 'p'
  			)
  		);
@@ -51,28 +52,28 @@ class AdminLanguagesControllerCore extends AdminController
 			'id_lang' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
-				'width' => 25
+				'class' => 'fixed-width-xs'
 			),
 			'flag' => array(
-				'title' => $this->l('Logo'),
+				'title' => $this->l('Flag'),
 				'align' => 'center',
 				'image' => 'l',
 				'orderby' => false,
-				'search' => false
+				'search' => false,
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
-				'title' => $this->l('Name'),
-				'width' => 120
+				'title' => $this->l('Name')
 			),
 			'iso_code' => array(
 				'title' => $this->l('ISO code'),
-				'width' => 70,
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'language_code' => array(
 				'title' => $this->l('Language code'),
-				'width' => 70,
-				'align' => 'center'
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
 			),
 			'date_format_lite' => array(
 				'title' => $this->l('Date format')
@@ -84,18 +85,33 @@ class AdminLanguagesControllerCore extends AdminController
 				'title' => $this->l('Enabled'),
 				'align' => 'center',
 				'active' => 'status',
-				'type' => 'bool'
+				'type' => 'bool',
+				'class' => 'fixed-width-sm'
 			)
 		);
 
 		$this->bulk_actions = array(
-			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-			'enableSelection' => array('text' => $this->l('Enable selection')),
-			'disableSelection' => array('text' => $this->l('Disable selection'))
-			);
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
 		$this->specificConfirmDelete = $this->l('When you delete a language, all related translations in the database will be deleted. Are you sure you want to proceed?');
 
 		parent::__construct();
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_language'] = array(
+				'href' => self::$currentIndex.'&addlang&token='.$this->token,
+				'desc' => $this->l('Add new language', null, null, false),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
 	}
 
 	public function renderList()
@@ -114,7 +130,7 @@ class AdminLanguagesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Languages'),
-				'image' => '../img/admin/world.gif'
+				'icon' => 'icon-globe'
 			),
 			'input' => array(
 				array(
@@ -123,65 +139,65 @@ class AdminLanguagesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
-					'size' => 32,
 					'maxlength' => 32,
 					'required' => true
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('ISO code:'),
+					'label' => $this->l('ISO code'),
 					'name' => 'iso_code',
 					'required' => true,
-					'size' => 2,
 					'maxlength' => 2,
-					'desc' => $this->l('Two-letter ISO code (e.g. FR, EN, DE)')
+					'hint' => $this->l('Two-letter ISO code (e.g. FR, EN, DE).')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Language code:'),
+					'label' => $this->l('Language code'),
 					'name' => 'language_code',
 					'required' => true,
-					'size' => 2,
 					'maxlength' => 5,
-					'desc' => $this->l('IETF language tag (e.g. en-US, pt-BR).').' '.sprintf('<a href="http://en.wikipedia.org/wiki/IETF_language_tag" target="_blank">%s <img src="../img/admin/external_link.png" class="icon-top" /></a>', $this->l('IETF on Wikipedia'))
+					'hint' => $this->l('IETF language tag (e.g. en-US, pt-BR).')
+					/* TO DO - ajouter les liens dans le hint ? */
+					/*'desc' => $this->l('IETF language tag (e.g. en-US, pt-BR).').' '.sprintf('<a href="http://en.wikipedia.org/wiki/IETF_language_tag" target="_blank">%s <img src="../img/admin/external_link.png" class="icon-top" /></a>', $this->l('IETF on Wikipedia'))*/
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Date format:'),
+					'label' => $this->l('Date format'),
 					'name' => 'date_format_lite',
 					'required' => true,
-					'size' => 15,
-					'desc' => sprintf($this->l('Short date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d</a>')
+					'hint' => sprintf($this->l('Short date format (e.g., %s).'), 'Y-m-d')
+					/* TO DO - ajouter les liens dans le hint ? */
+					/*'desc' => sprintf($this->l('Short date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d</a>')*/
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Date format (full):'),
+					'label' => $this->l('Date format (full)'),
 					'name' => 'date_format_full',
 					'required' => true,
-					'size' => 25,
-					'desc' => sprintf($this->l('Full date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d H:i:s</a>')
+					'hint' => sprintf($this->l('Full date format (e.g., %s).'), 'Y-m-d H:i:s')
+					/* TO DO - ajouter les liens dans le hint ? */
+					/*'desc' => sprintf($this->l('Full date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d H:i:s</a>')*/
 				),
 				array(
 					'type' => 'file',
-					'label' => $this->l('Flag:'),
+					'label' => $this->l('Flag'),
 					'name' => 'flag',
 					'required' => true,
-					'desc' => $this->l('Upload the country flag from your computer')
+					'hint' => $this->l('Upload the country flag from your computer.')
 				),
 				array(
 					'type' => 'file',
-					'label' => $this->l('"No-picture" image:'),
-					'name' => 'no-picture',
-					'desc' => $this->l('Image is displayed when "no picture is found"')
+					'label' => $this->l('"No-picture" image'),
+					'name' => 'no_picture',
+					'hint' => $this->l('Image is displayed when "no picture is found".')
 				),
 				array(
-					'type' => 'radio',
-					'label' => $this->l('Is RTL language:'),
+					'type' => 'switch',
+					'label' => $this->l('Is RTL language'),
 					'name' => 'is_rtl',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -195,15 +211,16 @@ class AdminLanguagesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Enable if this language is read from right to left').' '.
-							$this->l('(Experimental: your theme must be compliant with RTL languages)')
+					'hint' => array(
+						$this->l('Enable if this language is read from right to left.').' '.
+						$this->l('(Experimental: your theme must be compliant with RTL languages).')
+					)
 				),
 				array(
-					'type' => 'radio',
-					'label' => $this->l('Status:'),
+					'type' => 'switch',
+					'label' => $this->l('Status'),
 					'name' => 'active',
 					'required' => false,
-					'class' => 't',
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -217,7 +234,7 @@ class AdminLanguagesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Activate this language')
+					'hint' => $this->l('Activate this language.')
 				),
 				array(
 					'type' => 'special',
@@ -232,14 +249,13 @@ class AdminLanguagesControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('Save   '),
-			'class' => 'button'
+			'title' => $this->l('Save'),
 		);
 
 		if (!($obj = $this->loadObject(true)))
@@ -254,26 +270,22 @@ class AdminLanguagesControllerCore extends AdminController
 				),
 				'list_files' => array(
 					array(
-						'label' => $this->l('Translation files:'),
+						'label' => $this->l('Translation files'),
 						'files' => Language::getFilesList($obj->iso_code, _THEME_NAME_, false, false, 'tr', true)
 					),
 					array(
-						'label' => $this->l('Theme files:'),
+						'label' => $this->l('Theme files'),
 						'files' => Language::getFilesList($obj->iso_code, _THEME_NAME_, false, false, 'theme', true)
 					),
 					array(
-						'label' => $this->l('Mail files:'),
+						'label' => $this->l('Mail files'),
 						'files' => Language::getFilesList($obj->iso_code, _THEME_NAME_, false, false, 'mail', true)
 					)
 				)
 			);
 		}
 
-		$this->fields_value = array(
-			'ps_version' => _PS_VERSION_
-		);
-
-		$this->addJS(_PS_JS_DIR_.'checkLangPack.js');
+		$this->fields_value = array('ps_version' => _PS_VERSION_);
 
 		return parent::renderForm();
 	}
@@ -370,11 +382,11 @@ class AdminLanguagesControllerCore extends AdminController
 	{
 		if (isset($_POST['iso_code']) && !empty($_POST['iso_code']) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Language::getIdByIso($_POST['iso_code']))
 			$this->errors[] = Tools::displayError('This ISO code is already linked to another language.');
-		if ((!empty($_FILES['no-picture']['tmp_name']) || !empty($_FILES['flag']['tmp_name'])) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
+		if ((!empty($_FILES['no_picture']['tmp_name']) || !empty($_FILES['flag']['tmp_name'])) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
 		{
-			if ($_FILES['no-picture']['error'] == UPLOAD_ERR_OK)
+			if ($_FILES['no_picture']['error'] == UPLOAD_ERR_OK)
 				$this->copyNoPictureImage(strtolower(Tools::getValue('iso_code')));
-			unset($_FILES['no-picture']);
+			unset($_FILES['no_picture']);
 		}
 		else
 			$this->errors[] = Tools::displayError('Flag and "No picture" image fields are required.');
@@ -384,13 +396,13 @@ class AdminLanguagesControllerCore extends AdminController
 
 	public function processUpdate()
 	{
-		if (( isset($_FILES['no-picture']) && !$_FILES['no-picture']['error'] || isset($_FILES['flag']) && !$_FILES['flag']['error'])
+		if (( isset($_FILES['no_picture']) && !$_FILES['no_picture']['error'] || isset($_FILES['flag']) && !$_FILES['flag']['error'])
 				&& Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
 			{
-				if ($_FILES['no-picture']['error'] == UPLOAD_ERR_OK)
+				if ($_FILES['no_picture']['error'] == UPLOAD_ERR_OK)
 					$this->copyNoPictureImage(strtolower(Tools::getValue('iso_code')));
-						// class AdminTab deal with every $_FILES content, don't do that for no-picture
-					unset($_FILES['no-picture']);
+						// class AdminTab deal with every $_FILES content, don't do that for no_picture
+					unset($_FILES['no_picture']);
 			}
 			$object = $this->loadObject();
 			if (Tools::getValue('active') != (int)$object->active)
@@ -404,16 +416,16 @@ class AdminLanguagesControllerCore extends AdminController
 	/**
 	 * Copy a no-product image
 	 *
-	 * @param string $language Language iso_code for no-picture image filename
+	 * @param string $language Language iso_code for no_picture image filename
 	 */
 	public function copyNoPictureImage($language)
 	{
-		if (isset($_FILES['no-picture']) && $_FILES['no-picture']['error'] === 0)
-			if ($error = ImageManager::validateUpload($_FILES['no-picture'], Tools::getMaxUploadSize()))
+		if (isset($_FILES['no_picture']) && $_FILES['no_picture']['error'] === 0)
+			if ($error = ImageManager::validateUpload($_FILES['no_picture'], Tools::getMaxUploadSize()))
 				$this->errors[] = $error;
 			else
 			{
-				if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['no-picture']['tmp_name'], $tmp_name))
+				if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['no_picture']['tmp_name'], $tmp_name))
 					return false;
 				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'.jpg'))
 					$this->errors[] = Tools::displayError('An error occurred while copying "No Picture" image to your product folder.');
@@ -506,7 +518,7 @@ class AdminLanguagesControllerCore extends AdminController
 		else
 		{
 			$this->status = 'error';
-			$this->errors[] = $this->l('Technical Error: translation server unreachable');
+			$this->errors[] = $this->l('Technical Error: translation server unreachable.');
 		}
 	}
 
@@ -514,5 +526,21 @@ class AdminLanguagesControllerCore extends AdminController
 	{
 		//update employee lang if current id lang is disabled
 		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'employee` set `id_lang`='.(int)Configuration::get('PS_LANG_DEFAULT').' WHERE `id_lang`='.(int)$current_id_lang);
+	}
+
+	protected function afterImageUpload()
+	{
+		parent::afterImageUpload();
+
+		if (($id_lang = (int)Tools::getValue('id_lang')) &&
+			 isset($_FILES) && count($_FILES) && file_exists(_PS_LANG_IMG_DIR_.$id_lang.'.jpg'))
+		{
+			$current_file = _PS_TMP_IMG_DIR_.'lang_mini_'.$id_lang.'_'.$this->context->shop->id.'.jpg';
+
+			if (file_exists($current_file))
+				unlink($current_file);
+		}
+
+		return true;
 	}
 }

@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,43 +18,45 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {extends file="helpers/form/form.tpl"}
 
-{block name="label"}
-	{if $input.type == 'text' && $input.name == 'ps_cache_fs_directory_depth'}
-		<div id="directory_depth">
-			<div class="warn">{l s='The CacheFS system should be used only when the infrastructure contains one front-end server. If you are not sure, ask your hosting company.'}</div>
-	{else}
-		{$smarty.block.parent}
-	{/if}
+{block name="input_row"}
+	{if $input.name == 'caching_system'}<div id="{$input.name}_wrapper"{if isset($_PS_CACHE_ENABLED_) && !$_PS_CACHE_ENABLED_} style="display: none;"{/if}>{/if}
+	{$smarty.block.parent}
+	{if $input.name == 'caching_system'}</div>{/if}
 {/block}
 
 {block name="input"}
 	{if $input.type == 'radio' && $input.name == 'combination' && $input.disabled}
-		<div class="warn">
+		<div class="alert alert-warning">
 			{l s='This feature cannot be disabled because it is currently in use.'}
 		</div>
 	{/if}
 	{$smarty.block.parent}
-	{if $input.type == 'radio' && $input.name == 'smarty_cache'}
-			<a href="{$current}&token={$token}&empty_smarty_cache=1" class="clear button" href="">{l s='Clear Smarty cache & Autoload cache'}</a>
+	{if in_array($input.type, array('radio', 'switch')) && $input.name == 'smarty_cache'}
+		<div class="clearfix row-padding-top">
+			<a href="{$current}&amp;token={$token}&amp;empty_smarty_cache=1" class="btn btn-default">
+				<i class="icon-eraser"></i>
+				{l s='Clear cache'}
+			</a>
+		</div>
 	{/if}		
 {/block}
 
 {block name="description"}
 	{$smarty.block.parent}
 	{if $input.type == 'radio' && $input.name == 'combination'}
-		<ul style="list-style-type:disc;margin:0 0 0 30px;">
+		<ul>
 			<li>{l s='Combinations tab on product page'}</li>
 			<li>{l s='Value'}</li>
 			<li>{l s='Attribute'}</li>
 		</ul>
 	{elseif $input.type == 'radio' && $input.name == 'feature'}
-		<ul style="list-style-type:disc;margin:0 0 0 30px;">
+		<ul>
 			<li>{l s='Features tab on product page'}</li>
 			<li>{l s='Feature'}</li>
 			<li>{l s='Feature value'}</li>
@@ -62,64 +64,71 @@
 	{/if}
 {/block}
 
-{block name="field"}
-	{$smarty.block.parent}
-	{if $input.type == 'text' && $input.name == 'ps_cache_fs_directory_depth'}
-		</div>
-	{/if}
-{/block}
-
 {block name="other_input"}
 	{if $key == 'memcachedServers'}
 		<div id="memcachedServers">
-			<div class="margin-form">
-				<a id="addMemcachedServer"  class="button" href="#" ><img src="../img/admin/add.gif" />{l s='Add server'}</a>
+			<div class="form-group">
+				<div class="col-lg-9 col-lg-push-3">
+					<button id="addMemcachedServer" class="btn btn-default" type="button" >
+						<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Add server'}
+					</button>
+				</div>
 			</div>
-			<div id="formMemcachedServer" style="margin-top: 10px; display:none;">
-				<form action="{$current}&token={$token}" method="post">
-					<label>{l s='IP Address'} </label>
-					<div class="margin-form">
-						<input type="text" name="memcachedIp" />
+			<div id="formMemcachedServer" style="display:none;">
+				<form action="{$current}&amp;token={$token}" method="post" class="form-horizontal">
+					<div class="form-group">
+						<label class="control-label col-lg-3">{l s='IP Address'} </label>
+						<div class="col-lg-9">
+							<input class="form-control" type="text" name="memcachedIp" />
+						</div>
 					</div>
-					<label>{l s='Port'} </label>
-					<div class="margin-form">
-						<input type="text" name="memcachedPort" value="11211" />
+					<div class="form-group">
+						<label class="control-label col-lg-3">{l s='Port'} </label>
+						<div class="col-lg-9">
+							<input class="form-control" type="text" name="memcachedPort" value="11211" />
+						</div>
 					</div>
-					<label>{l s='Weight'} </label>
-					<div class="margin-form">
-						<input type="text" name="memcachedWeight" value="1" />
+					<div class="form-group">	
+						<label class="control-label col-lg-3">{l s='Weight'} </label>
+						<div class="col-lg-9">
+							<input class="form-control" type="text" name="memcachedWeight" value="1" />
+						</div>
 					</div>
-					<div class="margin-form">
-						<input type="submit" value="{l s='   Add Server   '}" name="submitAddServer" class="button" />
-                        <input type="button" value="{l s='   Test Server   '}" id="testMemcachedServer" class="button" />
+					<div class="form-group">
+						<div class="col-lg-9 col-lg-push-3">
+							<input type="submit" value="{l s='Add Server'}" name="submitAddServer" class="btn btn-default" />
+							<input type="button" value="{l s='Test Server'}" id="testMemcachedServer" class="btn btn-default" />
+	                	</div>
 					</div>
 				</form>
 			</div>
 			{if $servers}
-				<div class="margin-form">
-					<table style="width: 320px;" cellspacing="0" cellpadding="0" class="table">
-					<tr>
-						<th style="width: 20px; text-align: center">{l s='ID'}</th>
-						<th style="width: 200px; text-align: center">{l s='IP address'}</th>
-						<th style="width: 50px; text-align: center">{l s='Port'}</th>
-						<th style="width: 30px; text-align: right; font-weight: bold;">{l s='Weight'}</th>
-						<th style="width: 20px; text-align: right;">&nbsp;</th>
-					</tr>
-					{foreach $servers AS $server}
+			<div class="form-group">
+				<table class="table">
+					<thead>
 						<tr>
-							<td>{$server.id_memcached_server}</td>
-							<td>{$server.ip}</td>
-							<td>{$server.port}</td>
-							<td>{$server.weight}</td>
-							<td>
-								<a href="{$current}&token={$token}&deleteMemcachedServer={$server.id_memcached_server}" >
-									<img src="../img/admin/delete.gif" />
-								</a>
-							</td>
+							<th class="fixed-width-xs"><span class="title_box">{l s='ID'}</span></th>
+							<th><span class="title_box">{l s='IP address'}</span></th>
+							<th class="fixed-width-xs"><span class="title_box">{l s='Port'}</span></th>
+							<th class="fixed-width-xs"><span class="title_box">{l s='Weight'}</span></th>
+							<th>&nbsp;</th>
 						</tr>
-					{/foreach}
-					</table>
-				</div>
+					</thead>
+					<tbody>
+				{foreach $servers AS $server}
+					<tr>
+						<td>{$server.id_memcached_server}</td>
+						<td>{$server.ip}</td>
+						<td>{$server.port}</td>
+						<td>{$server.weight}</td>
+						<td>
+							<a class="btn btn-default" href="{$current}&amp;token={$token}&amp;deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
+						</td>
+					</tr>
+				{/foreach}
+					</tbody>
+				</table>
+			</div>
 			{/if}
 		</div>
 	{/if}
@@ -127,17 +136,18 @@
 
 {block name="script"}
 
-	function showMemcached()
-	{
-		if ($('#caching_system option:selected').val() == 'CacheMemcache')
-		{
-			$('#memcachedServers').show();
-			$('#directory_depth').hide();
+	function showMemcached() {
+		if ($('input[name="caching_system"]:radio:checked').val() == 'CacheMemcache') {
+			$('#memcachedServers').css('display', $('#cache_active_on').is(':checked') ? 'block' : 'none');
+			$('#ps_cache_fs_directory_depth').closest('.form-group').hide();
 		}
-		else
-		{
+		else if ($('input[name="caching_system"]:radio:checked').val() == 'CacheFs') {
 			$('#memcachedServers').hide();
-			$('#directory_depth').show();
+			$('#ps_cache_fs_directory_depth').closest('.form-group').css('display', $('#cache_active_on').is(':checked') ? 'block' : 'none');
+		}
+		else {
+			$('#memcachedServers').hide();
+			$('#ps_cache_fs_directory_depth').closest('.form-group').hide();
 		}
 	}
 
@@ -145,8 +155,20 @@
 
 		showMemcached();
 
-		$('#caching_system').change(function() {
+		$('input[name="cache_active"]').change(function() {
+			$('#caching_system_wrapper').css('display', ($(this).val() == 1) ? 'block' : 'none');
 			showMemcached();
+
+			if ($('input[name="caching_system"]:radio:checked').val() == 'CacheFs')
+				$('#ps_cache_fs_directory_depth').focus();
+		});
+
+		$('input[name="caching_system"]').change(function() {
+			$('#cache_up').val(1);
+			showMemcached();
+
+			if ($('input[name="caching_system"]:radio:checked').val() == 'CacheFs')
+				$('#ps_cache_fs_directory_depth').focus();
 		});
 
 		$('#addMemcachedServer').click(function() {
@@ -193,7 +215,7 @@
 			$('#smarty_up').val(1);
 		});
 
-		$('input[name="combination"], input[name="feature"]').change(function(){
+		$('input[name="combination"], input[name="feature"], input[name="group"]').change(function(){
 			$('#features_detachables_up').val('true');
 		});
 
@@ -205,10 +227,9 @@
 			$('#ciphering_up').val(1);
 		});
 
-		$('input[name="active"], select[name="caching_system"]').change(function(){
+		$('input[name="cache_active"]').change(function(){
 			$('#cache_up').val(1);
 		});
-
 	});
 
 {/block}

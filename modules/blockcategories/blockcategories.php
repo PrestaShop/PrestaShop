@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -33,10 +33,11 @@ class BlockCategories extends Module
 	{
 		$this->name = 'blockcategories';
 		$this->tab = 'front_office_features';
-		$this->version = '2.0';
+		$this->version = '2.5';
 		$this->author = 'PrestaShop';
 
-		parent::__construct();
+		$this->bootstrap = true;
+		parent::__construct();	
 
 		$this->displayName = $this->l('Categories block');
 		$this->description = $this->l('Adds a block featuring product categories.');
@@ -44,8 +45,18 @@ class BlockCategories extends Module
 
 	public function install()
 	{
-		if (!parent::install() ||
-			!$this->registerHook('leftColumn') ||
+		// Prepare tab
+		$tab = new Tab();
+		$tab->active = 1;
+		$tab->class_name = "AdminBlockCategories";
+		$tab->name = array();
+		foreach (Language::getLanguages(true) as $lang)
+			$tab->name[$lang['id_lang']] = 'BlockCategories';
+		$tab->id_parent = -1;
+		$tab->module = $this->name;
+
+		if (!$tab->add() ||
+			!parent::install() ||
 			!$this->registerHook('footer') ||
 			!$this->registerHook('header') ||
 			// Temporary hooks. Do NOT hook any module on it. Some CRUD hook will replace them as soon as possible.
@@ -54,88 +65,70 @@ class BlockCategories extends Module
 			!$this->registerHook('categoryDeletion') ||
 			!$this->registerHook('actionAdminMetaControllerUpdate_optionsBefore') ||
 			!$this->registerHook('actionAdminLanguagesControllerStatusBefore') ||
+			!$this->registerHook('displayBackOfficeCategory') ||
 			!Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', 4) ||
-			!Configuration::updateValue('BLOCK_CATEG_DHTML', 1))
+			!Configuration::updateValue('BLOCK_CATEG_DHTML', 1) ||
+			!Configuration::updateValue('BLOCK_CATEG_ROOT_CATEGORY', 1))
 			return false;
+
+		// Hook the module either on the left or right column
+		$theme = new Theme(Context::getContext()->shop->id_theme);
+		if ((!$theme->default_left_column || !$this->registerHook('leftColumn'))
+			&& (!$theme->default_right_column || !$this->registerHook('rightColumn')))
+		{
+			// If there are no colums implemented by the template, throw an error and uninstall the module
+			$this->_errors[] = $this->l('This module need to be hooked in a column and your theme does not implement one');
+			parent::uninstall();
+			return false;
+		}
 		return true;
 	}
 
 	public function uninstall()
 	{
+		$id_tab = (int)Tab::getIdFromClassName('AdminBlockCategories');
+		
+		if ($id_tab)
+		{
+			$tab = new Tab($id_tab);
+			$tab->delete();
+		}
+
 		if (!parent::uninstall() ||
 			!Configuration::deleteByName('BLOCK_CATEG_MAX_DEPTH') ||
-			!Configuration::deleteByName('BLOCK_CATEG_DHTML'))
+			!Configuration::deleteByName('BLOCK_CATEG_DHTML') ||
+			!Configuration::deleteByName('BLOCK_CATEG_ROOT_CATEGORY'))
 			return false;
 		return true;
 	}
 
 	public function getContent()
 	{
-		$output = '<h2>'.$this->displayName.'</h2>';
+		$output = '';
 		if (Tools::isSubmit('submitBlockCategories'))
 		{
-			$maxDepth = (int)(Tools::getValue('maxDepth'));
-			$dhtml = Tools::getValue('dhtml');
-			$nbrColumns = Tools::getValue('nbrColumns', 4);
+			$maxDepth = (int)(Tools::getValue('BLOCK_CATEG_MAX_DEPTH'));
+			$dhtml = Tools::getValue('BLOCK_CATEG_DHTML');
+			$nbrColumns = Tools::getValue('BLOCK_CATEG_NBR_COLUMN_FOOTER', 4);
 			if ($maxDepth < 0)
-				$output .= '<div class="alert error">'.$this->l('Maximum depth: Invalid number.').'</div>';
+				$output .= $this->displayError($this->l('Maximum depth: Invalid number.'));
 			elseif ($dhtml != 0 && $dhtml != 1)
-				$output .= '<div class="alert error">'.$this->l('Dynamic HTML: Invalid choice.').'</div>';
+				$output .= $this->displayError($this->l('Dynamic HTML: Invalid choice.'));
 			else
 			{
-				Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', (int)($maxDepth));
-				Configuration::updateValue('BLOCK_CATEG_DHTML', (int)($dhtml));
-				Configuration::updateValue('BLOCK_CATEG_NBR_COLUMN_FOOTER', $nbrColumns);
+				Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', (int)$maxDepth);
+				Configuration::updateValue('BLOCK_CATEG_DHTML', (int)$dhtml);
+				Configuration::updateValue('BLOCK_CATEG_NBR_COLUMN_FOOTER', (int)$nbrColumns);
 				Configuration::updateValue('BLOCK_CATEG_SORT_WAY', Tools::getValue('BLOCK_CATEG_SORT_WAY'));
 				Configuration::updateValue('BLOCK_CATEG_SORT', Tools::getValue('BLOCK_CATEG_SORT'));
+				Configuration::updateValue('BLOCK_CATEG_ROOT_CATEGORY', Tools::getValue('BLOCK_CATEG_ROOT_CATEGORY'));
 
 				$this->_clearBlockcategoriesCache();
-				$output .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
+
+				Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&conf=6');
 			}
 		}
-		return $output.$this->displayForm();
-	}
-
-	public function displayForm()
-	{
-		return '
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset>
-				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Maximum depth').'</label>
-				<div class="margin-form">
-					<input type="text" name="maxDepth" value="'.(int)Configuration::get('BLOCK_CATEG_MAX_DEPTH').'" />
-					<p class="clear">'.$this->l('Set the maximum depth of sublevels displayed in this block (0 = infinite)').'</p>
-				</div>
-				<label>'.$this->l('Dynamic').'</label>
-
-				<div class="margin-form">
-					<input type="radio" name="dhtml" id="dhtml_on" value="1" '.(Tools::getValue('dhtml', Configuration::get('BLOCK_CATEG_DHTML')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="dhtml_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
-					<input type="radio" name="dhtml" id="dhtml_off" value="0" '.(!Tools::getValue('dhtml', Configuration::get('BLOCK_CATEG_DHTML')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="dhtml_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-					<p class="clear">'.$this->l('Activate dynamic (animated) mode for sublevels.').'</p>
-				</div>
-				<label>'.$this->l('Sort').'</label>
-
-				<div class="margin-form">
-					<input type="radio" name="BLOCK_CATEG_SORT" id="sort_on" value="0" '.(!Tools::getValue('BLOCK_CATEG_SORT', Configuration::get('BLOCK_CATEG_SORT')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="sort_on"> <img src="../modules/'.$this->name.'/sort_number.png" alt="'.$this->l('Enabled').'" title="'.$this->l('By position').'" />'.$this->l('By position').'</label>
-					<input type="radio" name="BLOCK_CATEG_SORT" id="sort_off" value="1" '.(Tools::getValue('BLOCK_CATEG_SORT', Configuration::get('BLOCK_CATEG_SORT')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="sort_off"> <img src="../modules/'.$this->name.'/sort_alphabet.png" alt="'.$this->l('Disabled').'" title="'.$this->l('By name').'" />'.$this->l('By name').'</label> -
-					<select name="BLOCK_CATEG_SORT_WAY">
-						<option value="0" '.(!Tools::getValue('BLOCK_CATEG_SORT_WAY', Configuration::get('BLOCK_CATEG_SORT_WAY')) ? 'selected="selected" ' : '').'>'.$this->l('Ascending').'</option>
-						<option value="1" '.(Tools::getValue('BLOCK_CATEG_SORT_WAY', Configuration::get('BLOCK_CATEG_SORT_WAY')) ? 'selected="selected" ' : '').'>'.$this->l('Descending').'</option>
-					</select>
-				</div>
-				<label>'.$this->l('How many footer columns would you like?').'</label>
-				<div class="margin-form">
-					<input type="text" name="nbrColumns" value="'.(int)Configuration::get('BLOCK_CATEG_NBR_COLUMN_FOOTER').'" />
-					<p class="clear">'.$this->l('Define the number of footer columns.').'</p>
-				</div>
-				<center><input type="submit" name="submitBlockCategories" value="'.$this->l('Save').'" class="button" /></center>
-			</fieldset>
-		</form>';
+		return $output.$this->renderForm();
 	}
 
 	public function getTree($resultParents, $resultIds, $maxDepth, $id_category = null, $currentDepth = 0)
@@ -147,98 +140,144 @@ class BlockCategories extends Module
 		if (isset($resultParents[$id_category]) && count($resultParents[$id_category]) && ($maxDepth == 0 || $currentDepth < $maxDepth))
 			foreach ($resultParents[$id_category] as $subcat)
 				$children[] = $this->getTree($resultParents, $resultIds, $maxDepth, $subcat['id_category'], $currentDepth + 1);
+
 		if (!isset($resultIds[$id_category]))
 			return false;
-		$return = array('id' => $id_category, 'link' => $this->context->link->getCategoryLink($id_category, $resultIds[$id_category]['link_rewrite']),
-					 'name' => $resultIds[$id_category]['name'], 'desc'=> $resultIds[$id_category]['description'],
-					 'children' => $children);
+		
+		$return = array(
+			'id' => $id_category,
+			'link' => $this->context->link->getCategoryLink($id_category, $resultIds[$id_category]['link_rewrite']),
+			'name' =>  $resultIds[$id_category]['name'],
+			'desc'=>  $resultIds[$id_category]['description'],
+			'children' => $children
+		);
+
 		return $return;
 	}
 
-	public function hookLeftColumn($params)
-	{	
-		if (!$this->isCached('blockcategories.tpl', $this->getCacheId()))
+	public function hookDisplayBackOfficeCategory($params)
+	{
+		$category = new Category((int)Tools::getValue('id_category'));
+		$files   = array();
+
+		if ($category->level_depth != 2)
+			return;
+
+		for ($i=0;$i<3;$i++)
 		{
-			// Get all groups for this customer and concatenate them as a string: "1,2,3..."
-			$groups = implode(', ', Customer::getGroupsStatic((int)$this->context->customer->id));
+			if (file_exists(_PS_CAT_IMG_DIR_.(int)$category->id.'-'.$i.'_thumb.jpg'))
+			{
+				$files[$i]['type'] = HelperImageUploader::TYPE_IMAGE;
+				$files[$i]['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.(int)$category->id.'-'.$i.'_thumb.jpg', $this->context->controller->table.'_'.(int)$category->id.'-'.$i.'_thumb.jpg', 100, 'jpg', true, true);
+				$files[$i]['delete_url'] = Context::getContext()->link->getAdminLink('AdminBlockCategories').'&deleteThumb='.$i.'&id_category='.(int)$category->id;
+			}
+		}
+
+		$helper = new HelperImageUploader();
+		$helper->setMultiple(true)->setUseAjax(true)->setName('thumbnail')->setFiles($files)->setMaxFiles(3)->setUrl(
+			Context::getContext()->link->getAdminLink('AdminBlockCategories').'&ajax=1&id_category='.$category->id
+			.'&action=uploadThumbnailImages');
+		$this->smarty->assign('helper', $helper->render());
+		return $this->display(__FILE__, 'views/blockcategories_admin.tpl');
+	}
+
+	public function hookLeftColumn($params)
+	{
+		$this->setLastVisitedCategory();
+		$phpself = $this->context->controller->php_self;
+		$current_allowed_controllers = array('category');
+
+		$from_category = Configuration::get('PS_HOME_CATEGORY');
+		if ($phpself != null && in_array($phpself, $current_allowed_controllers) && Configuration::get('BLOCK_CATEG_ROOT_CATEGORY') && isset($this->context->cookie->last_visited_category) && $this->context->cookie->last_visited_category)
+			$from_category = $this->context->cookie->last_visited_category;
+
+		$category = new Category($from_category, $this->context->language->id);
+
+		$cacheId = $this->getCacheId($category ? $category->id : null);
+
+		if (!$this->isCached('blockcategories.tpl', $cacheId))
+		{
+			$range = '';
 			$maxdepth = Configuration::get('BLOCK_CATEG_MAX_DEPTH');
-			if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT DISTINCT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
-				FROM `'._DB_PREFIX_.'category` c
-				INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('cl').')
-				INNER JOIN `'._DB_PREFIX_.'category_shop` cs ON (cs.`id_category` = c.`id_category` AND cs.`id_shop` = '.(int)$this->context->shop->id.')
-				WHERE (c.`active` = 1 OR c.`id_category` = '.(int)Configuration::get('PS_HOME_CATEGORY').')
-				AND c.`id_category` != '.(int)Configuration::get('PS_ROOT_CATEGORY').'
-				'.((int)$maxdepth != 0 ? ' AND `level_depth` <= '.(int)$maxdepth : '').'
-				AND c.id_category IN (SELECT id_category FROM `'._DB_PREFIX_.'category_group` WHERE `id_group` IN ('.pSQL($groups).'))
-				ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'cs.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC')))
-				return;
+			if ($category)
+			{
+				if ($maxdepth > 0)
+					$maxdepth += $category->level_depth;
+				$range = 'AND nleft >= '.$category->nleft.' AND nright <= '.$category->nright;
+			}
 
-			$resultParents = array();
 			$resultIds = array();
-			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
-
+			$resultParents = array();
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
+			FROM `'._DB_PREFIX_.'category` c
+			INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('cl').')
+			INNER JOIN `'._DB_PREFIX_.'category_shop` cs ON (cs.`id_category` = c.`id_category` AND cs.`id_shop` = '.(int)$this->context->shop->id.')
+			WHERE (c.`active` = 1 OR c.`id_category` = '.(int)Configuration::get('PS_HOME_CATEGORY').')
+			AND c.`id_category` != '.(int)Configuration::get('PS_ROOT_CATEGORY').'
+			'.((int)$maxdepth != 0 ? ' AND `level_depth` <= '.(int)$maxdepth : '').'
+			'.$range.'
+			AND c.id_category IN (
+				SELECT id_category
+				FROM `'._DB_PREFIX_.'category_group`
+				WHERE `id_group` IN ('.pSQL(implode(', ', Customer::getGroupsStatic((int)$this->context->customer->id))).')
+			)
+			ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'cs.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC'));
 			foreach ($result as &$row)
 			{
 				$resultParents[$row['id_parent']][] = &$row;
 				$resultIds[$row['id_category']] = &$row;
 			}
 
-			$blockCategTree = $this->getTree($resultParents, $resultIds, Configuration::get('BLOCK_CATEG_MAX_DEPTH'));
-			unset($resultParents, $resultIds);
-
+			$blockCategTree = $this->getTree($resultParents, $resultIds, $maxdepth, ($category ? $category->id : null));
 			$this->smarty->assign('blockCategTree', $blockCategTree);
 
+			if ($category)
+				$this->smarty->assign(array('currentCategory' => $category, 'currentCategoryId' => $category->id));
+
+			$this->smarty->assign('isDhtml', Configuration::get('BLOCK_CATEG_DHTML'));
 			if (file_exists(_PS_THEME_DIR_.'modules/blockcategories/blockcategories.tpl'))
 				$this->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
 			else
 				$this->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
-			$this->smarty->assign('isDhtml', $isDhtml);
 		}
-
-		$id_category = (int)Tools::getValue('id_category');
-		$id_product = (int)Tools::getValue('id_product');
-		
-		if (Tools::isSubmit('id_category'))
-		{
-			$this->context->cookie->last_visited_category = (int)$id_category;
-			$this->smarty->assign('currentCategoryId', $this->context->cookie->last_visited_category);
-		}
-
-		if (Tools::isSubmit('id_product'))
-		{
-			if (!isset($this->context->cookie->last_visited_category)
-				|| !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $this->context->cookie->last_visited_category)))
-				|| !Category::inShopStatic($this->context->cookie->last_visited_category, $this->context->shop))
-			{
-				$product = new Product((int)$id_product);
-				if (isset($product) && Validate::isLoadedObject($product))
-					$this->context->cookie->last_visited_category = (int)$product->id_category_default;
-			}
-			$this->smarty->assign('currentCategoryId', (int)$this->context->cookie->last_visited_category);
-		}
-
-		$display = $this->display(__FILE__, 'blockcategories.tpl', $this->getCacheId());
-		return $display;
+		return $this->display(__FILE__, 'blockcategories.tpl', $cacheId);
 	}
 
 	protected function getCacheId($name = null)
 	{
-		parent::getCacheId($name);
+		$cache_id = parent::getCacheId();
 
-		$groups = implode(', ', Customer::getGroupsStatic((int)$this->context->customer->id));
-		$id_product = (int)Tools::getValue('id_product', 0);
-		$id_category = (int)Tools::getValue('id_category', 0);
-		$id_lang = (int)$this->context->language->id;
-		return 'blockcategories|'.(int)Tools::usingSecureMode().'|'.$this->context->shop->id.'|'.$groups.'|'.$id_lang.'|'.$id_product.'|'.$id_category;
+		if ($name !== null)
+			$cache_id .= '|'.$name;
+
+		return $cache_id.'|'.implode('-', Customer::getGroupsStatic($this->context->customer->id));
+	}
+
+	public function setLastVisitedCategory()
+	{
+		$cache_id = 'blockcategories::setLastVisitedCategory';
+		if (!Cache::isStored($cache_id))
+		{
+			if (method_exists($this->context->controller, 'getCategory') && ($category = $this->context->controller->getCategory()))
+				$this->context->cookie->last_visited_category = $category->id;
+			elseif (method_exists($this->context->controller, 'getProduct') && ($product = $this->context->controller->getProduct()))
+				if (!isset($this->context->cookie->last_visited_category)
+					|| !Product::idIsOnCategoryId($product->id, array(array('id_category' => $this->context->cookie->last_visited_category)))
+					|| !Category::inShopStatic($this->context->cookie->last_visited_category, $this->context->shop))
+						$this->context->cookie->last_visited_category = (int)$product->id_category_default;
+			Cache::store($cache_id, $this->context->cookie->last_visited_category);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	public function hookFooter($params)
 	{
-		// Get all groups for this customer and concatenate them as a string: "1,2,3..."
+		$this->setLastVisitedCategory();
 		if (!$this->isCached('blockcategories_footer.tpl', $this->getCacheId()))
 		{
 			$maxdepth = Configuration::get('BLOCK_CATEG_MAX_DEPTH');
+			// Get all groups for this customer and concatenate them as a string: "1,2,3..."
 			$groups = implode(', ', Customer::getGroupsStatic((int)$this->context->customer->id));
 			if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT DISTINCT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
@@ -260,8 +299,8 @@ class BlockCategories extends Module
 				$resultIds[$row['id_category']] = &$row;
 			}
 			//$nbrColumns = Configuration::get('BLOCK_CATEG_NBR_COLUMNS_FOOTER');
-			$nbrColumns = Configuration::get('BLOCK_CATEG_NBR_COLUMN_FOOTER');
-			if (!$nbrColumns)
+			$nbrColumns = (int)Configuration::get('BLOCK_CATEG_NBR_COLUMN_FOOTER');
+			if (!$nbrColumns or empty($nbrColumns))
 				$nbrColumns = 3;
 			$numberColumn = abs(count($result) / $nbrColumns);
 			$widthColumn = floor(100 / $nbrColumns);
@@ -276,21 +315,6 @@ class BlockCategories extends Module
 			$id_category = (int)Tools::getValue('id_category');
 			$id_product = (int)Tools::getValue('id_product');
 
-			if (Tools::isSubmit('id_category'))
-			{
-				$this->context->cookie->last_visited_category = $id_category;
-				$this->smarty->assign('currentCategoryId', $this->context->cookie->last_visited_category);
-			}
-			if (Tools::isSubmit('id_product'))
-			{
-				if (!isset($this->context->cookie->last_visited_category) || !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $this->context->cookie->last_visited_category))))
-				{
-					$product = new Product($id_product);
-					if (isset($product) && Validate::isLoadedObject($product))
-						$this->context->cookie->last_visited_category = (int)($product->id_category_default);
-				}
-				$this->smarty->assign('currentCategoryId', (int)($this->context->cookie->last_visited_category));
-			}
 			$this->smarty->assign('blockCategTree', $blockCategTree);
 
 			if (file_exists(_PS_THEME_DIR_.'modules/blockcategories/blockcategories_footer.tpl'))
@@ -339,5 +363,132 @@ class BlockCategories extends Module
 	public function hookActionAdminMetaControllerUpdate_optionsBefore($params)
 	{
 		$this->_clearBlockcategoriesCache();
+	}
+	
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Settings'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'radio',
+						'label' => $this->l('Category root'),
+						'name' => 'BLOCK_CATEG_ROOT_CATEGORY',
+						'values' => array(
+							array(
+								'id' => 'home',
+								'value' => 0,
+								'label' => $this->l('Home')
+							),
+							array(
+								'id' => 'current',
+								'value' => 1,
+								'label' => $this->l('Current')
+							),
+						)
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Maximum depth'),
+						'name' => 'BLOCK_CATEG_MAX_DEPTH',
+						'desc' => $this->l('Set the maximum depth of sublevels displayed in this block (0 = infinite).'),
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Dynamic'),
+						'name' => 'BLOCK_CATEG_DHTML',
+						'desc' => $this->l('Activate dynamic (animated) mode for sublevels.'),
+						'values' => array(
+									array(
+										'id' => 'active_on',
+										'value' => 1,
+										'label' => $this->l('Enabled')
+									),
+									array(
+										'id' => 'active_off',
+										'value' => 0,
+										'label' => $this->l('Disabled')
+									)
+								),
+					),
+					array(
+						'type' => 'radio',
+						'label' => $this->l('Sort'),
+						'name' => 'BLOCK_CATEG_SORT',
+						'values' => array(
+							array(
+								'id' => 'name',
+								'value' => 1,
+								'label' => $this->l('By name')
+							),
+							array(
+								'id' => 'position',
+								'value' => 0,
+								'label' => $this->l('By position')
+							),
+						)
+					),
+					array(
+						'type' => 'radio',
+						'label' => $this->l('Sort order'),
+						'name' => 'BLOCK_CATEG_SORT_WAY',
+						'values' => array(
+							array(
+								'id' => 'name',
+								'value' => 1,
+								'label' => $this->l('Descending')
+							),
+							array(
+								'id' => 'position',
+								'value' => 0,
+								'label' => $this->l('Ascending')
+							),
+						)
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('How many footer columns would you like?'),
+						'name' => 'BLOCK_CATEG_NBR_COLUMN_FOOTER',
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
+			),
+		);
+		
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitBlockCategories';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+	
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'BLOCK_CATEG_MAX_DEPTH' => Tools::getValue('BLOCK_CATEG_MAX_DEPTH', Configuration::get('BLOCK_CATEG_MAX_DEPTH')),
+			'BLOCK_CATEG_DHTML' => Tools::getValue('BLOCK_CATEG_DHTML', Configuration::get('BLOCK_CATEG_DHTML')),
+			'BLOCK_CATEG_NBR_COLUMN_FOOTER' => Tools::getValue('BLOCK_CATEG_NBR_COLUMN_FOOTER', Configuration::get('BLOCK_CATEG_NBR_COLUMN_FOOTER')),
+			'BLOCK_CATEG_SORT_WAY' => Tools::getValue('BLOCK_CATEG_SORT_WAY', Configuration::get('BLOCK_CATEG_SORT_WAY')),
+			'BLOCK_CATEG_SORT' => Tools::getValue('BLOCK_CATEG_SORT', Configuration::get('BLOCK_CATEG_SORT')),
+			'BLOCK_CATEG_ROOT_CATEGORY' => Tools::getValue('BLOCK_CATEG_ROOT_CATEGORY', Configuration::get('BLOCK_CATEG_ROOT_CATEGORY'))
+		);
 	}
 }

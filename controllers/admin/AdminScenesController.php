@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,13 +19,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class AdminScenesControllerCore extends AdminController
 {
+	public $bootstrap = true ;
+
 	public function __construct()
 	{
 	 	$this->table = 'scene';
@@ -44,7 +46,7 @@ class AdminScenesControllerCore extends AdminController
 			'id_scene' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
-				'width' => 25
+				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
 				'title' => $this->l('Image Maps'),
@@ -52,8 +54,8 @@ class AdminScenesControllerCore extends AdminController
 			),
 			'active' => array(
 				'title' => $this->l('Activated'),
-				'width' => 70,
 				'align' => 'center',
+				'class' => 'fixed-width-xs',
 				'active' => 'status',
 				'type' => 'bool',
 				'orderby' => false
@@ -75,15 +77,9 @@ class AdminScenesControllerCore extends AdminController
 			$images_types = ImageType::getImagesTypes('scenes');
 
 			foreach ($images_types as $k => $image_type)
-			{						
-				if ($image_type['name'] == 'scene_default' AND isset($_FILES['image']) AND isset($_FILES['image']['tmp_name']) AND !$_FILES['image']['error'])				
-					ImageManager::resize(
-						$base_img_path,
-						_PS_SCENE_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
-						(int)$image_type['width'],
-						(int)$image_type['height']);					
-				else if ($image_type['name'] == 'm_scene_default')
-				{				
+			{
+				if ($image_type['name'] == 'm_scene_default')
+				{
 					if (isset($_FILES['thumb']) && !$_FILES['thumb']['error'])
 						$base_thumb_path = _PS_SCENE_THUMB_IMG_DIR_.$obj->id.'.jpg';
 					else
@@ -94,6 +90,12 @@ class AdminScenesControllerCore extends AdminController
 						(int)$image_type['width'],
 						(int)$image_type['height']);
 				}
+				elseif (isset($_FILES['image']) AND isset($_FILES['image']['tmp_name']) AND !$_FILES['image']['error'])
+					ImageManager::resize(
+						$base_img_path,
+						_PS_SCENE_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
+						(int)$image_type['width'],
+						(int)$image_type['height']);
 			}
 		}
 
@@ -110,6 +112,18 @@ class AdminScenesControllerCore extends AdminController
 		$this->tpl_form_vars['products'] = $obj->getProducts(true, $this->context->language->id, false, $this->context);
 
 		return parent::renderForm();
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_scene'] = array(
+				'href' => self::$currentIndex.'&addscene&token='.$this->token,
+				'desc' => $this->l('Add new image map', null, null, false),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
 	}
 
 	public function initToolbar()
@@ -140,37 +154,31 @@ class AdminScenesControllerCore extends AdminController
 		$fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Image Maps'),
-				'image' => '../img/admin/photo.gif',
-				),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'button'
+				'icon' => 'icon-picture',
 			),
+			'description' => '
+				<h4>'.$this->l('How to map products in the image:').'</h4>
+				<p>
+					'.$this->l('When a customer hovers over the image, a pop-up appears displaying a brief description of the product.').'
+					'.$this->l('The customer can then click to open the full product page.').'<br/>
+					'.$this->l('To achieve this, please define the \'mapping zone\' that, when hovered over, will display the pop-up.').'
+					'.$this->l('Left click with your mouse to draw the four-sided mapping zone, then release.').'<br/>
+					'.$this->l('Then begin typing the name of the associated product, and  a list of products will appear.').'
+					'.$this->l('Click the appropriate product and then click OK. Repeat these steps for each mapping zone you wish to create.').'<br/>
+					'.$this->l('When you have finished mapping zones, click "Save Image Map."').'
+				</p>',
 			'input' => array(
 				array(
-					'type' => 'description',
-					'name' => 'description',
-					'label' => $this->l('How to map products in the image:'),
-					'text' => $this->l('When a customer hovers over the image, a pop-up appears displaying a brief description of the product.').
-						$this->l('The customer can then click to open the full product page.').
-						$this->l('To achieve this, please define the \'mapping zone\' that, when hovered over, will display the pop-up.').
-						$this->l('Left click with your mouse to draw the four-sided mapping zone, then release.').
-						$this->l('Then begin typing the name of the associated product, and  a list of products will appear.').
-						$this->l('Click the appropriate product and then click OK. Repeat these steps for each mapping zone you wish to create.').
-						$this->l('When you have finished mapping zones, click "Save Image Map."')
-				),
-				array(
 					'type' => 'text',
-					'label' => $this->l('Image map name:'),
+					'label' => $this->l('Image map name'),
 					'name' => 'name',
 					'lang' => true,
-					'size' => 48,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
-					'type' => 'radio',
-					'label' => $this->l('Status:'),
+					'type' => 'switch',
+					'label' => $this->l('Status'),
 					'name' => 'active',
 					'required' => false,
 					'class' => 't',
@@ -189,37 +197,49 @@ class AdminScenesControllerCore extends AdminController
 					)
 				),
 			),
+			'submit' => array(
+				'title' => $this->l('Save')
+			),
 		);
 		$this->fields_form = $fields_form;
 
 		$image_to_map_desc = '';
-		$image_to_map_desc .= $this->l('Format:').' JPG, GIF, PNG. '.$this->l('File size:').' '
+		$image_to_map_desc .= '<div class="help-block">'.$this->l('Format:').' JPG, GIF, PNG. '.$this->l('File size:').' '
 				.(Tools::getMaxUploadSize() / 1024).''.$this->l('Kb max.').' '
 				.sprintf($this->l('If an image is too large, it will be reduced to %1$d x %2$dpx (width x height).'),
 				$large_scene_image_type['width'], $large_scene_image_type['height'])
 				.$this->l('If an image is deemed too small, a white background will be added in order to achieve the correct image size.').'<br />'.
-				$this->l('Note: To change image dimensions, please change the \'large_scene\' image type settings to the desired size (in Back Office > Preferences > Images).');
+				$this->l('Note: To change image dimensions, please change the \'large_scene\' image type settings to the desired size (in Back Office > Preferences > Images).')
+				.'</div>';
+
 		if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.$obj->id.'-scene_default.jpg'))
 		{
 			$this->addJqueryPlugin('autocomplete');
 			$this->addJqueryPlugin('imgareaselect');
 			$this->addJs(_PS_JS_DIR_.'admin-scene-cropping.js' );
-			$image_to_map_desc .= '<br /><img id="large_scene_image" alt="" src="'.
-				_THEME_SCENE_DIR_.$obj->id.'-scene_default.jpg?rand='.(int)rand().'" /><br />';
+			$image_to_map_desc .= '<div class="panel panel-default"><span class="thumbnail row-margin-bottom"><img id="large_scene_image" alt="" src="'.
+				_THEME_SCENE_DIR_.$obj->id.'-scene_default.jpg?rand='.(int)rand().'" /></span>';
 
 			$image_to_map_desc .= '
-						<div id="ajax_choose_product" style="display:none; padding:6px; padding-top:2px; width:600px;">
-							'.$this->l('Begin typing the first few letters of the product name, then select the product you are looking for from the drop-down list:').'
-								<br /><input type="text" value="" id="product_autocomplete_input" style="width: 450px"/> 
-								<input type="button" class="button" value="'.$this->l('OK').'" onclick="$(this).prev().search();" />
-								<input type="button" class="button" value="'.$this->l('Delete').'" onclick="undoEdit();" />
-						</div>
+				<div id="ajax_choose_product" class="row" style="display:none;">
+					<div class="col-lg-12">
+					<p class="alert alert-info">'
+					.$this->l('Begin typing the first few letters of the product name, then select the product you are looking for from the drop-down list:').'
+					</p>
+					<div class="input-group row-margin-bottom">
+						<span class="input-group-addon">
+							<i class="icon-search"></i>
+						</span>
+						<input type="text" value="" id="product_autocomplete_input" />
+					</div>
+					<button type="button" class="btn btn-default" onclick="undoEdit();"><i class="icon-remove"></i>&nbsp;'.$this->l('Delete').'</button>
+					<button type="button" class="btn btn-default" onclick="$(this).prev().search();"><i class="icon-check-sign"></i>&nbsp;'.$this->l('Ok').'</button>
+					</div>
+				</div>
 				';
 
 			if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.'thumbs/'.$obj->id.'-m_scene_default.jpg'))
-				$image_to_map_desc .= '<br/>
-					<img id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'._THEME_SCENE_DIR_.'thumbs/'.$obj->id.'-m_scene_default.jpg?rand='.(int)rand().'" />
-					<br />';
+				$image_to_map_desc .= '</div><hr/><img class="thumbnail" id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'._THEME_SCENE_DIR_.'thumbs/'.$obj->id.'-m_scene_default.jpg?rand='.(int)rand().'" />';
 
 			$img_alt_desc = '';
 			$img_alt_desc .= $this->l('If you want to use a thumbnail other than one generated from simply reducing the mapped image, please upload it here.')
@@ -231,7 +251,7 @@ class AdminScenesControllerCore extends AdminController
 
 			$input_img_alt = array(
 				'type' => 'file',
-				'label' => $this->l('Alternative thumbnail:'),
+				'label' => $this->l('Alternative thumbnail'),
 				'name' => 'thumb',
 				'desc' => $img_alt_desc
 			);
@@ -244,54 +264,34 @@ class AdminScenesControllerCore extends AdminController
 				foreach (Scene::getIndexedCategories($obj->id) as $row)
 					$selected_cat[] = $row['id_category'];
 
-			$root_category = Category::getRootCategory();
-			if (!$root_category->id)
-			{
-				$root_category->id = 0;
-				$root_category->name = $this->l('Root');
-			}
-			$root_category = array('id_category' => (int)$root_category->id, 'name' => $root_category->name);
-			$trads = array(
-							'Root' => $root_category,
-							'selected' => $this->l('Selected'),
-							'Check all' => $this->l('Check all'),
-							'Check All' => $this->l('Check All'),
-							'Uncheck All'  => $this->l('Uncheck All'),
-							'Collapse All' => $this->l('Collapse All'),
-							'Expand All' => $this->l('Expand All'),
-							'search' => $this->l('Search a category')
-
-						);
 			$this->fields_form['input'][] = array(
-					'type' => 'categories',
+					'type'  => 'categories',
 					'label' => $this->l('Categories'),
-					'name' => 'categories',
-					'values' => array('trads' => $trads,
-						'selected_cat' => $selected_cat,
-						'input_name' => 'categories[]',
-						'use_radio' => false,
-						'use_search' => true,
-						'disabled_categories' => array(4),
-						'top_category' => Category::getTopCategory(),
-						'use_context' => true,
+					'name'  => 'categories',
+					'tree'  => array(
+						'id'                  => 'categories-tree',
+						'title'               => 'Categories',
+						'selected_categories' => $selected_cat,
+						'use_search'          => true,
+						'use_checkbox'        => true
 					)
 				);
 		}
 		else
-			$image_to_map_desc .= '<br/><span class="bold">'.$this->l('Please add a picture to continue mapping the image.').'</span><br/><br/>';
+			$image_to_map_desc .= '<span>'.$this->l('Please add a picture to continue mapping the image.').'</span>';
 
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}
 
 		$this->fields_form['input'][] = array(
 			'type' => 'file',
-			'label' => $this->l('Image to be mapped:'),
+			'label' => $this->l('Image to be mapped'),
 			'name' => 'image',
 			'display_image' => true,
 			'desc' => $image_to_map_desc,

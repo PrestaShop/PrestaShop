@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,16 +19,18 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 function update_image_size_in_db()
 {
-	if (file_exists(realpath(INSTALL_PATH.'/../img').'/logo.jpg'))
+	$logo_name = Configuration::get('PS_LOGO') ? Configuration::get('PS_LOGO') : 'logo.jpg';
+
+	if (file_exists(realpath(INSTALL_PATH.'/../img').'/'.$logo_name))
 	{
-		list($width, $height, $type, $attr) = getimagesize(realpath(INSTALL_PATH.'/../img').'/logo.jpg');
+		list($width, $height, $type, $attr) = getimagesize(realpath(INSTALL_PATH.'/../img').'/'.$logo_name);
 		Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 		Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
 	}

@@ -38,13 +38,14 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.10.2';
+		$this->version = '1.10.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
 
 		parent::__construct();
 
+		$this->ps_versions_compliancy = array('min' => '1.5', 'max' => _PS_VERSION_);
 		$this->displayName = $this->l('Layered navigation block');
 		$this->description = $this->l('Displays a block with layered navigation filters.');
 		
@@ -54,7 +55,7 @@ class BlockLayered extends Module
 	
 	public function install()
 	{
-		if (parent::install() && $this->registerHook('header') && $this->registerHook('footer')
+		if (parent::install() && $this->registerHook('header')
 		&& $this->registerHook('categoryAddition') && $this->registerHook('categoryUpdate') && $this->registerHook('attributeGroupForm')
 		&& $this->registerHook('afterSaveAttributeGroup') && $this->registerHook('afterDeleteAttributeGroup') && $this->registerHook('featureForm')
 		&& $this->registerHook('afterDeleteFeature') && $this->registerHook('afterSaveFeature') && $this->registerHook('categoryDeletion')
@@ -650,7 +651,7 @@ class BlockLayered extends Module
 
 		if (is_array($filter_block['title_values']))
 			foreach ($filter_block['title_values'] as $key => $val)
-				$title .= ' – '.$key.' '.implode('/', $val);
+				$title .= ' > '.$key.' '.implode('/', $val);
 
 		$smarty->assign('categoryNameComplement', $title);
 		$this->getProducts($selected_filters, $params['catProducts'], $params['nbProducts'], $p, $n, $pages_nb, $start, $stop, $range);
@@ -694,36 +695,25 @@ class BlockLayered extends Module
 
 		// Generate meta title and meta description
 		$category_title = (empty($category->meta_title[$id_lang]) ? $category->name[$id_lang] : $category->meta_title[$id_lang]);
+		$category_metas = Meta::getMetaTags($id_lang, 'category');
 		$title = '';
-		$description = '';
 		$keywords = '';
-		if (is_array($filter_block['meta_values']))
-			foreach ($filter_block['meta_values'] as $key => $val)
-			{
-				if (!empty($val['title']))
-					$val['title'] = $val['title'].' ';
 
-				foreach ($val['values'] as $value)
-				{
-					$title .= $category_title.' '.$val['title'].$value.' - ';
-					$description .= $category_title.' '.$val['title'].$value.', ';
-					$keywords .= $val['title'].$value.', ';
-				}
+		if (is_array($filter_block['title_values']))
+			foreach ($filter_block['title_values'] as $key => $val)
+			{
+				$title .= ' > '.$key.' '.implode('/', $val);
+				$keywords .= $key.' '.implode('/', $val).', ';
 			}
-		// Title attributes (ex: <attr1> <value1>/<value2> - <attr2> <value1>)
-		$title = strtolower(rtrim(substr($title, 0, -3)));
-		// Title attributes (ex: <attr1> <value1>/<value2>, <attr2> <value1>)
-		$description = strtolower(rtrim(substr($description, 0, -2)));
-		// kewords attributes (ex: <attr1> <value1>, <attr1> <value2>, <attr2> <value1>)
-		$category_metas = Meta::getMetaTags($id_lang, 'category', $title);
+
+		$title = $category_title.$title;
 
 		if (!empty($title))
-		{
-			$smarty->assign('meta_title', ucfirst($title));
-			$smarty->assign('meta_description', $description.'. '.$category_metas['meta_description']);
-		}
+			$smarty->assign('meta_title', $title.' - '.Configuration::get('PS_SHOP_NAME'));
 		else
 			$smarty->assign('meta_title', $category_metas['meta_title']);
+
+		$smarty->assign('meta_description', $category_metas['meta_description']);
 
 		$keywords = substr(strtolower($keywords), 0, 1000);
 		if (!empty($keywords))
@@ -733,8 +723,12 @@ class BlockLayered extends Module
 		$this->context->controller->addJS(($this->_path).'blocklayered.js');
 		$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
 		$this->context->controller->addJQueryUI('ui.slider');
-		$this->context->controller->addCSS(_PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css"');		
-		$this->context->controller->addCSS(($this->_path).'blocklayered-15.css', 'all');
+		$this->context->controller->addCSS(_PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css');		
+
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
+			$this->context->controller->addCSS(($this->_path).'blocklayered.css', 'all');
+		else
+			$this->context->controller->addCSS(($this->_path).'blocklayered-15.css', 'all');
 		$this->context->controller->addJQueryPlugin('scrollTo');
 
 		$filters = $this->getSelectedFilters();
@@ -816,18 +810,7 @@ class BlockLayered extends Module
 				return false;
 		
 		if (Dispatcher::getInstance()->getController() == 'category')
-			return '
-			<script type="text/javascript">
-				//<![CDATA[
-				$(document).ready(function()
-				{
-					$(\'#selectProductSort\').unbind(\'change\').bind(\'change\', function()
-					{
-						reloadContent();
-					})
-				});
-				//]]>
-			</script>';
+			$this->context->controller->addJS($this->_path.'blocklayered-footer.js');
 	}
 
 	public function hookCategoryAddition($params)
@@ -1664,7 +1647,8 @@ class BlockLayered extends Module
 				'index_cdt' => Configuration::get('PS_LAYERED_FILTER_INDEX_CDT'),
 				'index_qty' => Configuration::get('PS_LAYERED_FILTER_INDEX_QTY'),
 				'index_mnf' => Configuration::get('PS_LAYERED_FILTER_INDEX_MNF'),
-				'index_cat' => Configuration::get('PS_LAYERED_FILTER_INDEX_CAT')
+				'index_cat' => Configuration::get('PS_LAYERED_FILTER_INDEX_CAT'),
+				'limit_warning' => $this->displayLimitPostWarning(21+count($attribute_groups)*3+count($features)*3)
 			));
 			
 			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
@@ -1672,6 +1656,25 @@ class BlockLayered extends Module
 			else
 				return $this->display(__FILE__, 'views/templates/admin/view.tpl');
 		}
+	}
+
+	public function displayLimitPostWarning($count)
+	{
+		$return = array();
+		if ((ini_get('suhosin.post.max_vars') && ini_get('suhosin.post.max_vars') < $count) || (ini_get('suhosin.request.max_vars') && ini_get('suhosin.request.max_vars') < $count))
+		{
+			$return['error_type'] = 'suhosin';
+			$return['post.max_vars'] = ini_get('suhosin.post.max_vars');
+			$return['request.max_vars'] = ini_get('suhosin.request.max_vars');
+			$return['needed_limit'] = $count + 100;
+		}
+		elseif (ini_get('max_input_vars') && ini_get('max_input_vars') < $count)
+		{
+			$return['error_type'] = 'conf';
+			$return['max_input_vars'] = ini_get('max_input_vars');
+			$return['needed_limit'] = $count + 100;
+		}
+		return $return;
 	}
 
 	private function getSelectedFilters()
@@ -1881,6 +1884,7 @@ class BlockLayered extends Module
 				case 'weight':
 					if ($selected_filters['weight'][0] != 0 || $selected_filters['weight'][1] != 0)
 						$query_filters_where .= ' AND p.`weight` BETWEEN '.(float)($selected_filters['weight'][0] - 0.001).' AND '.(float)($selected_filters['weight'][1] + 0.001);
+				break;
 
 				case 'price':
 					if (isset($selected_filters['price']))
@@ -1969,7 +1973,7 @@ class BlockLayered extends Module
 				MAX(image_shop.`id_image`) id_image,
 				il.legend, 
 				m.name manufacturer_name,
-				MAX(pa.id_product_attribute) id_product_attribute,
+				MAX(product_attribute_shop.id_product_attribute) id_product_attribute,
 				DATEDIFF('.$alias_where.'.`date_add`, DATE_SUB(NOW(), INTERVAL '.(int)$nb_day_new_product.' DAY)) > 0 AS new,
 				stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
 			FROM `'._DB_PREFIX_.'category_product` cp
@@ -1982,7 +1986,8 @@ class BlockLayered extends Module
 			Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$cookie->id_lang.')
 			LEFT JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer)
-			LEFT JOIN '._DB_PREFIX_.'product_attribute pa ON (p.id_product = pa.id_product)
+			LEFT JOIN '._DB_PREFIX_.'product_attribute pa ON (p.id_product = pa.id_product)'.
+			Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
 			WHERE '.$alias_where.'.`active` = 1 AND '.$alias_where.'.`visibility` IN ("both", "catalog")
 			AND '.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 			AND c.active = 1
@@ -2646,32 +2651,53 @@ class BlockLayered extends Module
 		$meta_values = array();
 
 		//get filters checked by group
+
 		foreach ($filter_blocks as $type_filter)
 		{
 			$filter_name = (!empty($type_filter['url_name']) ? $type_filter['url_name'] : $type_filter['name']);
-			$filter_meta = (!empty($type_filter['meta_title']) ? $type_filter['meta_title'] : '');
+			$filter_meta = (!empty($type_filter['meta_title']) ? $type_filter['meta_title'] : $type_filter['name']);
 			$attr_key = $type_filter['type'].'_'.$type_filter['id_key'];
 			
 			$param_group_selected = '';
-			foreach ($type_filter['values'] as $key => $value)
+
+			if (in_array(strtolower($type_filter['type']), array('price', 'weight'))
+				&& (float)$type_filter['values'][0] > (float)$type_filter['min']
+				&& (float)$type_filter['values'][1] > (float)$type_filter['max'])
 			{
-				if (is_array($value) && array_key_exists('checked', $value ))
-				{
-					$value_name = !empty($value['url_name']) ? $value['url_name'] : $value['name'];
-					$value_meta = !empty($value['meta_title']) ? $value['meta_title'] : $value['name'];
-					$param_group_selected .= $this->getAnchor().str_replace($this->getAnchor(), '_', Tools::link_rewrite($value_name));
-					$param_group_selected_array[Tools::link_rewrite($filter_name)][] = Tools::link_rewrite($value_name);
-				
-					if (!isset($title_values[$filter_name]))
-						$title_values[$filter_name] = array();
-					$title_values[$filter_name][] = $value_name;
-					if (!isset($meta_values[$attr_key]))
-						$meta_values[$attr_key] = array('title' => $filter_meta, 'values' => array());
-					$meta_values[$attr_key]['values'][] = $value_meta;
-				}
-				else
-					$param_group_selected_array[Tools::link_rewrite($filter_name)][] = array();
+				$param_group_selected .= $this->getAnchor().str_replace($this->getAnchor(), '_', $type_filter['values'][0])
+					.$this->getAnchor().str_replace($this->getAnchor(), '_', $type_filter['values'][1]);
+				$param_group_selected_array[Tools::link_rewrite($filter_name)][] = Tools::link_rewrite($filter_name);
+			
+				if (!isset($title_values[$filter_meta]))
+					$title_values[$filter_meta] = array();
+				$title_values[$filter_meta][] = $filter_meta;
+				if (!isset($meta_values[$attr_key]))
+					$meta_values[$attr_key] = array('title' => $filter_meta, 'values' => array());
+				$meta_values[$attr_key]['values'][] = $filter_meta;
 			}
+			else
+			{
+				foreach ($type_filter['values'] as $key => $value)
+				{
+					if (is_array($value) && array_key_exists('checked', $value ))
+					{
+						$value_name = !empty($value['url_name']) ? $value['url_name'] : $value['name'];
+						$value_meta = !empty($value['meta_title']) ? $value['meta_title'] : $value['name'];
+						$param_group_selected .= $this->getAnchor().str_replace($this->getAnchor(), '_', Tools::link_rewrite($value_name));
+						$param_group_selected_array[Tools::link_rewrite($filter_name)][] = Tools::link_rewrite($value_name);
+					
+						if (!isset($title_values[$filter_meta]))
+							$title_values[$filter_meta] = array();
+						$title_values[$filter_meta][] = $value_name;
+						if (!isset($meta_values[$attr_key]))
+							$meta_values[$attr_key] = array('title' => $filter_meta, 'values' => array());
+						$meta_values[$attr_key]['values'][] = $value_meta;
+					}
+					else
+						$param_group_selected_array[Tools::link_rewrite($filter_name)][] = array();
+				}
+			}
+
 			if (!empty($param_group_selected))
 			{
 				$param_selected .= '/'.str_replace($this->getAnchor(), '_', Tools::link_rewrite($filter_name)).$param_group_selected;
@@ -2682,7 +2708,7 @@ class BlockLayered extends Module
 				$param_product_url .= '/'.str_replace($this->getAnchor(), '_', Tools::link_rewrite($filter_name)).$param_group_selected;
 			
 		}
-		
+
 		if ($this->page > 1)
 			$param_selected .= '/page-'.$this->page;
 
@@ -2754,7 +2780,7 @@ class BlockLayered extends Module
 						if (strpos($parameters, '/'.$value) !== false)
 							$nofollow = true;
 
-					$type_filter['values'][$key]['link'] = Context::getContext()->link->getCategoryLink($parent, null, null, ltrim($parameters, '/'));
+					$type_filter['values'][$key]['link'] = Context::getContext()->link->getCategoryLink($parent, null, null).'#'.ltrim($parameters, '/');
 					$type_filter['values'][$key]['rel'] = ($nofollow) ? 'nofollow' : '';
 				}
 			}
@@ -2770,7 +2796,7 @@ class BlockLayered extends Module
 				
 		foreach ($selected_filters as $filters)
 			$n_filters += count($filters);
-		
+
 		$cache = array(
 			'layered_show_qties' => (int)Configuration::get('PS_LAYERED_SHOW_QTIES'),
 			'id_category_layered' => (int)$id_parent,
@@ -2784,6 +2810,7 @@ class BlockLayered extends Module
 			'param_product_url' => $param_product_url,
 			'no_follow' => (!empty($param_selected) || $global_nofollow)
 		);
+
 		return $cache;
 	}
 	
@@ -2958,6 +2985,7 @@ class BlockLayered extends Module
 		global $smarty, $cookie;
 
 		$selected_filters = $this->getSelectedFilters();
+		$filter_block = $this->getFilterBlock($this->getSelectedFilters());
 		$this->getProducts($selected_filters, $products, $nb_products, $p, $n, $pages_nb, $start, $stop, $range);
 		
 		// Add pagination variable
@@ -2968,6 +2996,34 @@ class BlockLayered extends Module
 
 		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
 			$this->context->controller->addColorsToProductList($products);
+
+		$category = new Category(Tools::getValue('id_category_layered', Configuration::get('PS_HOME_CATEGORY')), (int)$cookie->id_lang);
+
+		// Generate meta title and meta description
+		$category_title = (empty($category->meta_title) ? $category->name : $category->meta_title);		
+		$category_metas = Meta::getMetaTags((int)$cookie->id_lang, 'category');
+		$title = '';
+		$keywords = '';
+
+		if (is_array($filter_block['title_values']))
+			foreach ($filter_block['title_values'] as $key => $val)
+			{
+				$title .= ' > '.$key.' '.implode('/', $val);
+				$keywords .= $key.' '.implode('/', $val).', ';
+			}
+
+		$title = $category_title.$title;
+
+		if (!empty($title))
+			$meta_title = $title;
+		else
+			$meta_title = $category_metas['meta_title'];
+
+		$meta_description = $category_metas['meta_description'];
+
+		$keywords = substr(strtolower($keywords), 0, 1000);
+		if (!empty($keywords))
+			$meta_keywords = rtrim($category_title.', '.$keywords.', '.$category_metas['meta_keywords'], ', ');
 
 		$smarty->assign(
 			array(
@@ -3006,7 +3062,13 @@ class BlockLayered extends Module
 		'filtersBlock' => utf8_encode($this->generateFiltersBlock($selected_filters)),
 		'productList' => utf8_encode($product_list),
 		'pagination' => $smarty->fetch(_PS_THEME_DIR_.'pagination.tpl'),
-		'categoryCount' => $category_count));
+		'categoryCount' => $category_count,
+		'meta_title' => $meta_title.' - '.Configuration::get('PS_SHOP_NAME'),
+		'heading' => $meta_title,
+		'meta_keywords' => isset($meta_keywords) ? $meta_keywords : null,
+		'meta_description' => $meta_description,
+		'current_friendly_url' => '#'.$filter_block['current_friendly_url'],
+		'filters' => $filter_block['filters']));
 	}
 	
 	public function getProducts($selected_filters, &$products, &$nb_products, &$p, &$n, &$pages_nb, &$start, &$stop, &$range)
@@ -3019,6 +3081,10 @@ class BlockLayered extends Module
 		$range = 2; /* how many pages around page selected */
 
 		$n = (int)Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'));
+
+		if ($n <= 0)
+			$n = 1;
+
 		$p = $this->page;
 
 		if ($p < 0)
@@ -3191,20 +3257,22 @@ class BlockLayered extends Module
 						$done_categories[(int)$id_category]['cat'] = true;
 						$to_insert = true;
 					}
-					foreach ($a as $k_attribute => $attribute)
-						if (!isset($done_categories[(int)$id_category]['a'.(int)$attribute_groups_by_id[(int)$k_attribute]]))
-						{
-							$filter_data['layered_selection_ag_'.(int)$attribute_groups_by_id[(int)$k_attribute]] = array('filter_type' => 0, 'filter_show_limit' => 0);
-							$done_categories[(int)$id_category]['a'.(int)$attribute_groups_by_id[(int)$k_attribute]] = true;
-							$to_insert = true;
-						}
-					foreach ($f as $k_feature => $feature)
-						if (!isset($done_categories[(int)$id_category]['f'.(int)$features_by_id[(int)$k_feature]]))
-						{
-							$filter_data['layered_selection_feat_'.(int)$features_by_id[(int)$k_feature]] = array('filter_type' => 0, 'filter_show_limit' => 0);
-							$done_categories[(int)$id_category]['f'.(int)$features_by_id[(int)$k_feature]] = true;
-							$to_insert = true;
-						}
+					if (is_array($attribute_groups_by_id) && count($attribute_groups_by_id) > 0)
+						foreach ($a as $k_attribute => $attribute)
+							if (!isset($done_categories[(int)$id_category]['a'.(int)$attribute_groups_by_id[(int)$k_attribute]]))
+							{
+								$filter_data['layered_selection_ag_'.(int)$attribute_groups_by_id[(int)$k_attribute]] = array('filter_type' => 0, 'filter_show_limit' => 0);
+								$done_categories[(int)$id_category]['a'.(int)$attribute_groups_by_id[(int)$k_attribute]] = true;
+								$to_insert = true;
+							}
+					if (is_array($attribute_groups_by_id) && count($attribute_groups_by_id) > 0)
+						foreach ($f as $k_feature => $feature)
+							if (!isset($done_categories[(int)$id_category]['f'.(int)$features_by_id[(int)$k_feature]]))
+							{
+								$filter_data['layered_selection_feat_'.(int)$features_by_id[(int)$k_feature]] = array('filter_type' => 0, 'filter_show_limit' => 0);
+								$done_categories[(int)$id_category]['f'.(int)$features_by_id[(int)$k_feature]] = true;
+								$to_insert = true;
+							}
 					if (!isset($done_categories[(int)$id_category]['q']))
 					{
 						$filter_data['layered_selection_stock'] = array('filter_type' => 0, 'filter_show_limit' => 0);

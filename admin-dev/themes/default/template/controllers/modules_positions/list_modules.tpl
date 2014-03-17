@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,115 +18,183 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <script type="text/javascript">
-	var token = '{$token}';
 	var come_from = 'AdminModulesPositions';
 </script>
-<script type="text/javascript" src="../js/admin-dnd.js"></script>
 
-{include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
-<div class="leadin">{block name="leadin"}{/block}</div>
-
-<div class="filter-module">
-<form>
-	{l s='Show'} :
-	<select id="show_modules" onChange="autoUrl('show_modules', '{$url_show_modules}')">
-		<option value="all">{l s='All modules'}&nbsp;</option>
-		<option>-</option>
-
-		{foreach $modules as $module}
-			<option value="{$module->id|intval}" {if $display_key == $module->id}selected="selected"{/if}>{$module->displayName}</option>
-		{/foreach}
-	</select>
-	<br /><br />
-	<input type="checkbox" id="hook_position" onclick="autoUrlNoList('hook_position', '{$url_show_invisible}')" {if $hook_position}checked="checked"{/if} />&nbsp;
-	<label class="t" for="hook_position">{l s='Display non-positionable hooks'}</label>
-</form>
-</div>
-<br/>
-<div>
-
-<div id="modulePosition">
-<div class="blocLiveEdit"><h2>{l s='LiveEdit'}</h2>
-{if $live_edit}
-	<p>{l s='You have to select a shop to use LiveEdit'}</p>
-{else}
-	<p>{l s='Click here to be redirected to the Front Office of your shop where you can move and delete modules directly.'}</p>
-		<a href="{$url_live_edit}" target="_blank" class="button">{l s='Run LiveEdit'}</a>
-{/if}
-</div>
-<form method="post" action="{$url_submit}">
-<div id="unhook_button_position_top">
-	<input class="button floatr" type="submit" name="unhookform" value="{l s='Unhook the selection'}"/></div>
+<div>{block name="leadin"}{/block}</div>
 
 {if !$can_move}
-	<br /><div><b>{l s='If you want to order/move the following data, please select a shop from the shop list.'}</b></div>
+					<p class="alert alert-warning">
+						{l s='If you want to order/move the following data, please select a shop from the shop list.'}
+					</p>
 {/if}
+
+<div class="row">
+	<div class="col-lg-9">
+		<div class="panel">
+			<form class="form-inline well">
+				<label>{l s='Show'}</label>
+				<span>
+					<select id="show_modules" onChange="autoUrl('show_modules', '{$url_show_modules}')" class="filter fixed-width-lg">
+						<option value="all">{l s='All modules'}&nbsp;</option>
+						<option>-</option>
+						{foreach $modules as $module}
+							<option value="{$module->id|intval}" {if $display_key == $module->id}selected="selected"{/if}>{$module->displayName}</option>
+						{/foreach}
+					</select>
+				</span>
+				<p class="checkbox">
+					<label class="control-label" for="hook_position">
+						<input type="checkbox" id="hook_position" onclick="autoUrlNoList('hook_position', '{$url_show_invisible}')" {if $hook_position}checked="checked"{/if} />
+						{l s='Display non-positionable hooks'}
+					</label>
+				</p>
+			</form>
+			<div id="modulePosition">
+				<form method="post" action="{$url_submit}" >
+
 {foreach $hooks as $hook}
-	<a name="{$hook['name']}"/>
-	<table cellpadding="0" cellspacing="0" class="table widthfull space {if $hook['module_count'] >= 2} tableDnD{/if}" id="{$hook['id_hook']}">
-		<colgroup>
-			<col width="10">
-			<col width="30">
-			<col width="40">
-			<col width="">
-			<col width="50">
-		</colgroup>
-	<tr class="nodrag nodrop"><th colspan="5">	{if $hook['module_count'] && $can_move}
-		<input type="checkbox" id="Ghook{$hook['id_hook']}" style="margin-right: 2px;" onclick="hookCheckboxes({$hook['id_hook']}, 0, this)"/>
-	{/if}{$hook['title']} - <span style="color: red">{$hook['module_count']}</span> {if $hook['module_count'] > 1}{l s='Modules'}{else}{l s='Module'}{/if}
+					<section class="hook_panel">
+						<a name="{$hook['name']}"></a>
+						<header class="hook_panel_header">
+							<span class="hook_name">{$hook['name']}</span>
+							<!-- <span class="hook_title">{$hook['title']}</span> -->
+							<span class="badge pull-right">
+	{if $hook['module_count'] && $can_move}
+								<input type="checkbox" id="Ghook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 0, this)"/>
+	{/if}
+								{$hook['module_count']} {if $hook['module_count'] > 1}{l s='Modules'}{else}{l s='Module'}{/if}
+							</span>
 
 	{if !empty($hook['description'])}
-		&nbsp;<span style="font-size:0.8em; font-weight: normal">[{$hook['description']}]</span>
+							<div class="hook_description">{$hook['description']}</div>
 	{/if}
-	<span style="color:grey;">({l s='Technical name: '}{$hook['name']})</span></th></tr>
-	{if $hook['module_count']}
-		{foreach $hook['modules'] as $position => $module}
-			{if isset($module['instance'])}
-			<tr id="{$hook['id_hook']}_{$module['instance']->id}" {cycle values='class="alt_row",'} style="height: 42px;">
-			<td align=center ><input type="checkbox" id="mod{$hook['id_hook']}_{$module['instance']->id}" class="hook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 1, this)" name="unhooks[]" value="{$hook['id_hook']}_{$module['instance']->id}"/></td>
-			{if !$display_key}
-				<td align=center  class="positions">{$module@iteration}</td>
-				<td {if $can_move && $hook['module_count'] >= 2} align=center class="dragHandle"{/if} id="td_{$hook['id_hook']}_{$module['instance']->id}">
-					{if $can_move}
-						<a {if {$module@iteration} == 1} style="display: none;"{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=0&token={$token}&changePosition#{$hook['name']}">
-							<img src="../img/admin/up.gif" alt="{l s='Up'}" title="{l s='Up'}" />
-						</a><br />
-						<a {if {$module@iteration} == count($hook['modules'])} style="display: none;"{/if} href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&direction=1&token={$token}&changePosition#{$hook['name']}">
-							<img src="../img/admin/down.gif" alt="{l s='Down'}" title="{l s='Down'}" />
-						</a>
-					{/if}
-				</td>
-				<td><div class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}">
-			{else}
-				<td colspan="3"><div class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}">
-			{/if}
-			<img src="../modules/{$module['instance']->name}/logo.png" alt="{$module['instance']->name|stripslashes}" /> <h3>{$module['instance']->displayName|stripslashes}</h3>
-				<span>{if $module['instance']->version}v{if $module['instance']->version|intval == $module['instance']->version}{sprintf('%.1f', $module['instance']->version)}{else}{$module['instance']->version|floatval}{/if}{/if}</span><p>{$module['instance']->description}</p>
-			</div></td>
-				<td>
-					<a href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&editGraft{if $display_key}&show_modules={$display_key}{/if}&token={$token}">
-						<img src="../img/admin/edit.gif" border="0" alt="{l s='Edit'}" title="{l s='Edit'}" />
-					</a>
-					<a href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&deleteGraft{if $display_key}&show_modules={$display_key}{/if}&token={$token}">
-						<img src="../img/admin/delete.gif" border="0" alt="{l s='Delete'}" title="{l s='Delete'}" />
-					</a>
-				</td>
-			</tr>
-			{/if}
-		{/foreach}
-	{else}
-		<tr><td colspan="5">{l s='No module was found for this hook.'}</td></tr>
-	{/if}
-	</table>
-{/foreach}
-<div id="unhook_button_position_bottom"><input class="button floatr" type="submit" name="unhookform" value="{l s='Unhook the selection'}"/></div>
+						</header>
 
+	{if $hook['module_count']}
+						<section class="module_list">
+						<ul class="list-unstyled{if $hook['modules']|count > 1} sortable{/if}">
+
+						{foreach $hook['modules'] as $position => $module}
+							{if isset($module['instance'])}
+							<li id="{$hook['id_hook']}_{$module['instance']->id}" class="module_list_item{if $can_move && $hook['module_count'] >= 2} draggable{/if}">
+								<div class="module_col_select">
+									<input type="checkbox" id="mod{$hook['id_hook']}_{$module['instance']->id}" class="hook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 1, this)" name="unhooks[]" value="{$hook['id_hook']}_{$module['instance']->id}"/>
+								</div>
+								{if !$display_key}
+								<div class="module_col_position" {if $can_move && $hook['module_count'] >= 2}class="dragHandle"{/if} id="td_{$hook['id_hook']}_{$module['instance']->id}">
+									<span class="positions">{$module@iteration}</span>
+									{if $can_move}
+									<div class="btn-group-vertical">
+										<a class="btn btn-default btn-xs" {if {$module@iteration} == 1} disabled{/if} href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;direction=0&amp;token={$token}&amp;changePosition#{$hook['name']}">
+											<i class="icon-chevron-up"></i>
+										</a>
+
+										<a class="btn btn-default btn-xs" {if {$module@iteration} == count($hook['modules'])}disabled{/if} href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;direction=1&amp;token={$token}&amp;changePosition#{$hook['name']}">
+											<i class="icon-chevron-down"></i>
+										</a>
+									</div>
+									{/if}
+								</div>
+								{/if}
+								<div class="module_col_icon">
+									<img src="../modules/{$module['instance']->name}/logo.png" alt="{$module['instance']->name|stripslashes}" />
+								</div>
+								<div class="module_col_infos">
+									<span class="module_name">
+										{$module['instance']->displayName|stripslashes} {if $module['instance']->version}
+										<small class="text-muted">&nbsp;-&nbsp;v{if $module['instance']->version|intval == $module['instance']->version}{sprintf('%.1f', $module['instance']->version)}{else}{$module['instance']->version|floatval}{/if}</small>{/if}
+									</span>
+									<div class="module_description">{$module['instance']->description}</div>
+								</div>
+								<div class="module_col_actions">
+									<!-- <div class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}"></div> -->
+									<div class="btn-group">
+										<a class="btn btn-default" href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;editGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token}">
+											<i class="icon-pencil"></i>
+											{l s='Edit'}
+										</a>
+										<a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+											<span class="caret"></span>&nbsp;
+										</a>
+										<ul class="dropdown-menu">
+											<li>
+												<a href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;deleteGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token}">
+													<i class="icon-minus-sign-alt"></i>
+													{l s='Unhook'}
+												</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</li>
+							{/if}
+						{/foreach}
+						</ul>
+						</section>
+	{else}
+							<!-- <p>{l s='No module was found for this hook.'}</p> -->
+	{/if}
+					</section>
+{/foreach}
+					<div id="unhook_button_position_bottom">
+						<button type="submit" class="btn btn-default" name="unhookform">
+							<i class="icon-minus-sign-alt"></i>
+							{l s='Unhook the selection'}
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3">
+		<div class="panel">
+			<h3><i class="icon-eye-open"></i> {l s='Live Edit'}</h3>
+			{if $live_edit}
+				<p>{l s='You have to select a shop to use Live Edit'}</p>
+			{else}
+				<p>{l s='Click here to be redirected to the Front Office of your shop where you can move and delete modules directly.'}</p>
+					<a class="btn btn-default" href="{$url_live_edit}" target="_blank">
+						<i class="icon-edit"></i>
+						{l s='Run Live Edit'}
+					</a>
+			{/if}
+		</div>
+	</div>
 </div>
-</div>
-</form>
+<script type="text/javascript">
+	$('.sortable').sortable({
+		forcePlaceholderSize: true
+	}).bind('sortupdate', function(e, ui) {
+		var ids = ui.item.attr('id').split('_');
+		var way = (ui.start_index < ui.end_index)? 1 : 0;
+		var data = ids[0]+'[]=';
+
+		$.each(e.target.children, function(index, element) {
+			data += '&'+ids[0]+'[]='+$(element).attr('id');
+		});
+
+		$.ajax({
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			async: false,
+			url: currentIndex + '&token=' + token + '&' + 'rand=' + new Date().getTime(),
+			data: data + '&action=updatePositions&id_hook='+ids[0]+'&id_module='+ids[1]+'&way='+way+'&ajax=1' ,
+			success: function(data) {
+				start = 0;
+
+				$.each(e.target.children, function(index, element) {
+					$(element).find('.positions').html(++start);
+				});
+
+				showSuccessMessage(update_success_msg);
+			}
+		});
+	});
+</script>

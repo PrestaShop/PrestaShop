@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,18 +38,6 @@ $smarty->setConfigDir(_PS_SMARTY_DIR_.'configs');
 $smarty->caching = false;
 $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
 $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') >= _PS_SMARTY_CHECK_COMPILE_) ? true : false;
-
-// Production mode
-$smarty->debugging = false;
-$smarty->debugging_ctrl = 'NONE';
-
-if (Configuration::get('PS_SMARTY_CONSOLE') == _PS_SMARTY_CONSOLE_OPEN_BY_URL_)
-{
-	$smarty->debugging_ctrl = 'URL';
-	$smarty->smarty_debug_id = Configuration::get('PS_SMARTY_CONSOLE_KEY');
-}
-else if (Configuration::get('PS_SMARTY_CONSOLE') == _PS_SMARTY_CONSOLE_OPEN_)
-	$smarty->debugging = true;
 
 /* Use this constant if you want to load smarty without all PrestaShop functions */
 if (defined('_PS_SMARTY_FAST_LOAD_') && _PS_SMARTY_FAST_LOAD_)
@@ -83,7 +71,9 @@ smartyRegisterFunction($smarty, 'function', 'getAdminToken', array('Tools', 'get
 smartyRegisterFunction($smarty, 'function', 'displayAddressDetail', array('AddressFormat', 'generateAddressSmarty'));
 smartyRegisterFunction($smarty, 'function', 'getWidthSize', array('Image', 'getWidth'));
 smartyRegisterFunction($smarty, 'function', 'getHeightSize', array('Image', 'getHeight'));
-
+smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef'));
+smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
+smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
 
 function smartyDieObject($params, &$smarty)
 {
@@ -145,19 +135,23 @@ function smarty_modifier_htmlentitiesUTF8($string)
 }
 function smartyMinifyHTML($tpl_output, &$smarty)
 {
+	if (in_array(Context::getContext()->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip')))
+		return $tpl_output;
     $tpl_output = Media::minifyHTML($tpl_output);
     return $tpl_output;
 }
 
 function smartyPackJSinHTML($tpl_output, &$smarty)
 {
+	if (in_array(Context::getContext()->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip')))
+		return $tpl_output;
     $tpl_output = Media::packJSinHTML($tpl_output);
     return $tpl_output;
 }
 
 function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true)
 {
-	if (!in_array($type, array('function', 'modifier')))
+	if (!in_array($type, array('function', 'modifier', 'block')))
 		return false;
 
 	// lazy is better if the function is not called on every page
@@ -210,7 +204,7 @@ class SmartyLazyRegister
 
 	/**
 	 * Register a function or method to be dynamically called later
-	 * @param $params function name or array(object name, method name)
+	 * @param string|array $params function name or array(object name, method name)
 	 */
 	public function register($params)
 	{
@@ -223,8 +217,8 @@ class SmartyLazyRegister
 	/**
 	 * Dynamically call static function or method
 	 *
-	 * @param $name function name
-	 * @param $arguments function argument
+	 * @param string $name function name
+	 * @param mixed $arguments function argument
 	 * @return mixed function return
 	 */
 	public function __call($name, $arguments)

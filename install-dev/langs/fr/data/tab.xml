@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <entity_tab>
   <tab id="Addresses" name="Adresses"/>
+  <tab id="Dashboard" name="Tableau de Bord"/>
   <tab id="Administration" name="Administration"/>
   <tab id="Advanced_Parameters" name="Param&#xE8;tres avanc&#xE9;s"/>
   <tab id="Attachments" name="Documents joints"/>
@@ -33,8 +34,6 @@
   <tab id="General" name="G&#xE9;n&#xE9;rales"/>
   <tab id="Geolocation" name="G&#xE9;olocalisation"/>
   <tab id="Groups" name="Groupes"/>
-  <tab id="Home" name="Accueil"/>
-  <tab id="Image_Mapping" name="Sc&#xE8;nes"/>
   <tab id="Images" name="Images"/>
   <tab id="Instant_Stock_Status" name="Etat instantan&#xE9; du stock"/>
   <tab id="Invoices" name="Factures"/>
@@ -100,4 +99,5 @@
   <tab id="Warehouses" name="Entrep&#xF4;ts"/>
   <tab id="Webservice" name="Service web"/>
   <tab id="Zones" name="Zones"/>
+  <tab id="CarrierWizard" name="Transporteur"/>
 </entity_tab>

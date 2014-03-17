@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,13 +27,22 @@
 {block name="field"}
 	{if $field['type'] == 'theme'}
 		{if $field['can_display_themes']}
-			{foreach $field.themes as $theme}
-				<div class="select_theme {if $theme->id == $field['id_theme']}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
-					{$theme->name}<br />
-					<img src="../themes/{$theme->directory}/preview.jpg" alt="{$theme->directory}" /><br />
-					<input type="radio" name="id_theme" value="{$theme->id}" {if $theme->id == $field['id_theme']}checked="checked"{/if} />
+			<div class="col-lg-12">
+				<div class="row">
+				{foreach $field.themes as $theme}
+					<div class="col-lg-2 {if $theme->id == $field['id_theme']}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
+						<div class="radio">
+							<label>
+								<input type="radio" name="id_theme" value="{$theme->id}" {if $theme->id == $field['id_theme']}checked="checked"{/if} /> {$theme->name}
+							</label>
+						</div>
+						<div class="theme_container">
+							<img class="img-thumbnail" src="../themes/{$theme->directory}/preview.jpg" alt="{$theme->directory}" />
+						</div>
+					</div>
+				{/foreach}
 				</div>
-			{/foreach}
+			</div>
 		{/if}
 	{else}
 		{$smarty.block.parent}
@@ -41,19 +50,25 @@
 {/block}
 
 {block name="after"}
-	<br/><br/>
-	<fieldset id="prestastore-content" class="width3"></fieldset>
+	<div class="panel clearfix" id="prestastore-content"></div>
 	<script type="text/javascript">
-		$.post(
-			"ajax-tab.php",
-			{
+		$.ajax({
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			url: 'ajax-tab.php?rand=' + new Date().getTime(),
+			async: true,
+			cache: false,
+			dataType : "html",
+			data: {
 				tab: 'AdminThemes',
 				token: '{$token}',
 				ajax: '1',
 				action:'getAddonsThemes',
 				page:'themes'
-			}, function(a){
-				$("#prestastore-content").html("<legend><img src='../img/admin/prestastore.gif' class='middle' />{l s='Live from PrestaShop Addons!'}</legend>"+a);
-			});
+			},
+			success: function(htmlData) {
+				$("#prestastore-content").html("<h3><i class='icon-picture-o'></i> {l s='Live from PrestaShop Addons!'}</h3>"+htmlData);
+			}
+		});
 	</script>
 {/block}

@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,270 +18,353 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<script type="text/javascript">
-	var msg_combination_1 = '{l s='Please choose an attribute.'}';
-	var msg_combination_2 = '{l s='Please choose a value.'}';
-	var msg_combination_3 = '{l s='You can only add one combination per attribute type.'}';
-	var msg_new_combination = '{l s='New combination'}';
-</script>
-
 {if isset($product->id) && !$product->is_virtual}
-	<input type="hidden" name="submitted_tabs[]" value="Combinations" />
+<div id="product-combinations" class="panel product-tab">
 	<script type="text/javascript">
+		var msg_combination_1 = '{l s='Please choose an attribute.'}';
+		var msg_combination_2 = '{l s='Please choose a value.'}';
+		var msg_combination_3 = '{l s='You can only add one combination per attribute type.'}';
+		var msg_new_combination = '{l s='New combination'}';
+		var msg_cancel_combination = '{l s='Cancel combination'}';
 		var attrs = new Array();
 		var modifyattributegroup = "{l s='Modify this attribute combination.' js=1}";
 		attrs[0] = new Array(0, "---");
-	{foreach from=$attributeJs key=idgrp item=group}
-		attrs[{$idgrp}] = new Array(0
-		, '---'
-		{foreach from=$group key=idattr item=attrname}
-			, "{$idattr}", "{$attrname|addslashes}"
+		{foreach from=$attributeJs key=idgrp item=group}
+			attrs[{$idgrp}] = new Array(0
+			, '---'
+			{foreach from=$group key=idattr item=attrname}
+				, "{$idattr}", "{$attrname|addslashes}"
+			{/foreach}
+			);
 		{/foreach}
-		);
-	{/foreach}
+		$(document).ready(function(){
+			populate_attrs();
+			$(".datepicker").datepicker({
+				prevText: '',
+				nextText: '',
+				dateFormat: 'yy-mm-dd'
+			});
+		});
 	</script>
-	<h4>{l s='Add or modify combinations for this product.'}</h4>
-	<div class="separation"></div> {l s='Or use the'}
-		&nbsp;<a class="button bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" /><span>{l s='Product combinations generator'}</span></a> 
-		{l s='in order to automatically create a set of combinations.'}
+	<input type="hidden" name="submitted_tabs[]" value="Combinations" />
+	<h3>{l s='Add or modify combinations for this product'}</h3>
+	<div class="alert alert-info">
+		{l s='You can also use the [1]Product Combinations Generator[2/][/1] in order to automatically create a set of combinations.' tags=["<a class='btn btn-link bt-icon confirm_leave' href='index.php?tab=AdminAttributeGenerator&amp;id_product={$product->id}&amp;attributegenerator&amp;token={$token_generator}'>", '<i class="icon-external-link-sign">']}
+	</div>
 	{if $combination_exists}
-	<div class="warn" style="display:block">
-		<ul>
-			<li>{l s='Some combinations already exist. If you want to generate new combinations, the quantities for the existing combinations will be lost.'}</li>
-			<li>{l s='You can add a combination by clicking the link "Add new combination" on the toolbar.'}</li>
-		</ul>
+	<div class="alert alert-info" style="display:block">
+		{l s='Some combinations already exist. If you want to generate a set of new combinations, the quantities for the existing combinations will be lost.'}<br/>
+		{l s='You can add a single combination by clicking the "New combination" button.'}
 	</div>
 	{/if}
 	{if isset($display_multishop_checkboxes) && $display_multishop_checkboxes}
 		<br />
 		{include file="controllers/products/multishop/check_fields.tpl" product_tab="Combinations"}
 	{/if}
-	<div class="separation"></div>
-	
-	<div id="add_new_combination" style="display: none;">
-		<table cellpadding="5" style="width:100%">
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" valign="top">
-					<label>{l s='Attribute:'}</label>
-				</td>
-				<td style="padding-bottom:5px;">
-					<select name="attribute_group" id="attribute_group" style="width: 200px;" onchange="populate_attrs();">
-						{if isset($attributes_groups)}
-							{foreach from=$attributes_groups key=k item=attribute_group}
-								<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name|escape:'htmlall':'UTF-8'}&nbsp;&nbsp;</option>
-							{/foreach}
-						{/if}
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" valign="top">
-					<label>{l s='Value:'}</label>
-				</td>
-				<td style="padding-bottom:5px;">
-					<select name="attribute" id="attribute" style="width: 200px;">
-						<option value="0">-</option>
-					</select>
-					<script type="text/javascript">
-					$(document).ready(function(){
-						populate_attrs();
-					});
-					</script>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" valign="top">
-				<input style="width: 140px; margin-bottom: 10px;" type="button" value="{l s='Add'}" class="button" onclick="add_attr();"/><br />
-				<input style="width: 140px;" type="button" value="{l s='Delete'}" class="button" onclick="del_attr()"/></td>
-				<td align="left">
-					<select id="product_att_list" name="attribute_combination_list[]" multiple="multiple" size="4" style="width: 320px;"></select>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<div class="separation"></div>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;"><label>{l s='Reference:'}</label></td>
-				<td style="padding-bottom:5px;">
-					<input size="55" type="text" id="attribute_reference" name="attribute_reference" value="" style="width: 130px; margin-right: 44px;" />
-					{l s='EAN13:'}<input size="55" maxlength="13" type="text" id="attribute_ean13" name="attribute_ean13" value="" style="width: 110px; margin-left: 10px; margin-right: 44px;" />
-					{l s='UPC:'}<input size="55" maxlength="12" type="text" id="attribute_upc" name="attribute_upc" value="" style="width: 110px; margin-left: 10px; margin-right: 44px;" />
-					<span class="hint" name="help_box">{l s='Special characters allowed:'} .-_#<span class="hint-pointer">&nbsp;</span></span>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<div class="separation"></div>
-				</td>
-			</tr>
-		</table>
-		<table>
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
-					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_wholesale_price" type="default"}
-					<label>{l s='Wholesale price:'}</label>
-				</td>
-				<td style="padding-bottom:5px;">
+	<div id="add_new_combination" class="panel" style="display: none;">
+		<div class="panel-heading">{l s='Add or modify combinations for this product'}</div>
+		<div class="form-group">
+			<label class="control-label col-lg-3" for="attribute_group">{l s='Attribute'}</label>
+			<div class="col-lg-5">
+				<select name="attribute_group" id="attribute_group" onchange="populate_attrs();">
+				{if isset($attributes_groups)}
+					{foreach from=$attributes_groups key=k item=attribute_group}
+					<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name|escape:'html':'UTF-8'}&nbsp;&nbsp;</option>
+					{/foreach}
+				{/if}
+				</select>
+			</div>
+		</div>
+		<div class="row">
+			<label class="control-label col-lg-3" for="attribute">{l s='Value'}</label>
+			<div class="col-lg-9">
+				<div class="form-group">
+					<div class="col-lg-8">
+						<select name="attribute" id="attribute">
+							<option value="0">-</option>
+						</select>
+					</div>
+					<div class="col-lg-4">
+						<button type="button" class="btn btn-default btn-block" onclick="add_attr();"><i class="icon-plus-sign-alt"></i> {l s='Add'}</button>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-8">
+						<select id="product_att_list" name="attribute_combination_list[]" multiple="multiple" ></select>
+					</div>
+					<div class="col-lg-4">
+						<button type="button" class="btn btn-default btn-block" onclick="del_attr()"><i class="icon-minus-sign-alt"></i> {l s='Delete'}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr/>
+		<div class="form-group">
+			<label class="control-label col-lg-3" for="attribute_reference">
+				<span class="label-tooltip" data-toggle="tooltip"
+					title="{l s='Special characters allowed:'} .-_#">
+					{l s='Reference code'}
+				</span>
+			</label>
+			<div class="col-lg-5">
+				<input type="text" id="attribute_reference" name="attribute_reference" value="" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-lg-3" for="attribute_ean13">
+				{l s='EAN-13 or JAN barcode'}
+			</label>
+			<div class="col-lg-3">
+				<input maxlength="13" type="text" id="attribute_ean13" name="attribute_ean13" value="" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-lg-3" for="attribute_upc">
+				{l s='UPC barcode'}
+			</label>
+			<div class="col-lg-3">
+				<input maxlength="12" type="text" id="attribute_upc" name="attribute_upc" value="" />
+			</div>
+		</div>
+		<hr/>
+		<div class="form-group">
+			<label class="control-label col-lg-3" for="attribute_wholesale_price">
+				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_wholesale_price" type="default"}
+				<span class="label-tooltip" data-toggle="tooltip"
+					title="{l s='Set to zero if the price does not change.'}">
+					{l s='Wholesale price'}
+				</span>
+			</label>
+			<div class="col-lg-9">
+				<div class="input-group col-lg-2">
+					<span class="input-group-addon">
+						{if $currency->format % 2 != 0}{$currency->sign}{/if}
+						{if $currency->format % 2 == 0}{$currency->sign}{/if}
+					</span>
+					<input type="text" name="attribute_wholesale_price" id="attribute_wholesale_price" value="0" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+				</div>
+			</div>
+			<span style="display:none;" id="attribute_wholesale_price_full">({l s='Overrides the wholesale price from the "Prices" tab.'})</span>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-lg-3" for="attribute_price_impact">
+				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_price_impact" type="attribute_price_impact"}
+				{l s='Impact on price'}
+			</label>
+			<div class="col-lg-9">
+				<div class="row">
+					<div class="col-lg-4">
+						<select name="attribute_price_impact" id="attribute_price_impact" onchange="check_impact(); calcImpactPriceTI();">
+							<option value="0">{l s='None'}</option>
+							<option value="1">{l s='Increase'}</option>
+							<option value="-1">{l s='Decrease'}</option>
+						</select>
+					</div>
+					<div id="span_impact" class="col-lg-8">
+						<div class="form-group">
+							<label class="control-label col-lg-1" for="attribute_price">
+								{l s='of'}
+							</label>
+							<div class="input-group col-lg-5">
+								<div class="input-group-addon">
+									{if $currency->format % 2 != 0}{$currency->sign}{/if}
+									{if $currency->format % 2 == 0} {$currency->sign}{/if}
+									{if $country_display_tax_label}
+									{l s='(tax excl.)'}
+									{/if}
+								</div>
+								<input type="hidden"  id="attribute_priceTEReal" name="attribute_price" value="0.00" />
+
+								<input type="text" id="attribute_price" value="0.00" onkeyup="$('#attribute_priceTEReal').val(this.value.replace(/,/g, '.')); if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTI();"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-lg-1" for="attribute_priceTI">
+									{l s='or'}
+							</label>
+							<div class="input-group col-lg-5">
+								<div class="input-group-addon" {if $tax_exclude_option}style="display:none"{/if}>
+									{if $currency->format % 2 != 0}{$currency->sign}{/if}
+									{if $currency->format % 2 == 0} {$currency->sign}{/if}
+									{l s='(tax incl.)'}
+								</div>
+								<input type="text" name="attribute_priceTI" id="attribute_priceTI" value="0.00" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTE();"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="alert">
+									{l s='The final product price will be set to'}
+									{if $currency->format % 2 != 0}{$currency->sign}{/if}
+									<span id="attribute_new_total_price">0.00</span>
+									{if $currency->format % 2 == 0}{$currency->sign}{/if}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-lg-3" for="attribute_weight_impact">
+				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_weight_impact" type="attribute_weight_impact"}
+				{l s='Impact on weight'}
+			</label>
+			<div class="col-lg-9">
+				<div class="row">
+					<div class="col-lg-4">
+						<select name="attribute_weight_impact" id="attribute_weight_impact" onchange="check_weight_impact();">
+							<option value="0">{l s='None'}</option>
+							<option value="1">{l s='Increase'}</option>
+							<option value="-1">{l s='Reduction'}</option>
+						</select>
+					</div>
+					<div id="span_weight_impact" class="col-lg-8">
+						<div class="row">
+							<label class="control-label col-lg-1" for="attribute_weight">
+								{l s='of'}
+							</label>
+							<div class="input-group col-lg-5">
+								<div class="input-group-addon">
+									{$ps_weight_unit}
+								</div>
+								<input type="text" name="attribute_weight" id="attribute_weight" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="tr_unit_impact" class="form-group">
+			<label class="control-label col-lg-3" for="attribute_unit_impact">
+				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_unit_impact" type="attribute_unit_impact"}
+				{l s='Impact on unit price'}
+			</label>
+			<div class="col-lg-3">
+				<select name="attribute_unit_impact" id="attribute_unit_impact" onchange="check_unit_impact();">
+					<option value="0">{l s='None'}</option>
+					<option value="1">{l s='Increase'}</option>
+					<option value="-1">{l s='Reduction'}</option>
+				</select>
+			</div>
+			<div class="col-lg-6">
+				<div class="row">
+					<label class="control-label col-lg-1" for="attribute_unity">
+						{l s='of'}
+					</label>
+					<div class="input-group col-lg-5">
+						<div class="input-group-addon">
+							{if $currency->format % 2 != 0}{$currency->sign}{/if}
+							{if $currency->format % 2 == 0}{$currency->sign}{/if}
+							/ <span id="unity_third">{$field_value_unity}</span>	
+						</div>
+						<input type="text" name="attribute_unity" id="attribute_unity" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+					</div>
+				</div>
+			</div>
+		</div>
+		{if $ps_use_ecotax}
+		<div class="form-group">
+			<label class="control-label col-lg-3" for="attribute_ecotax">
+				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_ecotax" type="default"}
+				<span class="label-tooltip" data-toggle="tooltip"
+					title="{l s='Overrides the ecotax from the "Prices" tab.'}">
+					{l s='Ecotax (tax excl.)'}
+				</span>
+			</label>
+			<div class="input-group col-lg-2">
+				<div class="input-group-addon">		
 					{if $currency->format % 2 != 0}{$currency->sign}{/if}
-					<input type="text" size="6"  name="attribute_wholesale_price" id="attribute_wholesale_price" value="" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
-					{if $currency->format % 2 == 0} {$currency->sign} {/if}<span id="attribute_wholesale_price_blank">({l s='Leave blank if the price does not change'})</span>
-					<span style="display:none" id="attribute_wholesale_price_full">({l s='Overrides wholesale price on "Information" tab'})</span>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
-					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_price_impact" type="attribute_price_impact"}
-					<label>{l s='Impact on price:'}</label>
-				</td>
-				<td colspan="2" style="padding-bottom:5px;">
-					<select name="attribute_price_impact" id="attribute_price_impact" style="width: 140px;" onchange="check_impact(); calcImpactPriceTI();">
-						<option value="0">{l s='None'}</option>
-						<option value="1">{l s='Increase'}</option>
-						<option value="-1">{l s='Reduction'}</option>
-					</select>
-					<span id="span_impact">&nbsp;&nbsp;{l s='of'}&nbsp;&nbsp;{if $currency->format % 2 != 0}{$currency->sign} {/if}
-						<input type="hidden"  id="attribute_priceTEReal" name="attribute_price" value="0.00" />
-						<input type="text" size="6" id="attribute_price" value="0.00" onkeyup="$('#attribute_priceTEReal').val(this.value.replace(/,/g, '.')); if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTI();"/>{if $currency->format % 2 == 0} {$currency->sign}{/if}
-						{if $country_display_tax_label}
-							{l s='(tax excl.)'}
-							<span {if $tax_exclude_option}style="display:none"{/if}> {l s='or'}
-							{if $currency->format % 2 != 0}{$currency->sign} {/if}
-							<input type="text" size="6" name="attribute_priceTI" id="attribute_priceTI" value="0.00" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTE();"/>
-							{if $currency->format % 2 == 0} {$currency->sign}{/if} {l s='(tax incl.)'}
-							</span> {l s='final product price will be set to'}
-							{if $currency->format % 2 != 0}{$currency->sign} {/if}
-							<span id="attribute_new_total_price">0.00</span>
-							{if $currency->format % 2 == 0}{$currency->sign} {/if}
-						{/if}
-					</span>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
-					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_weight_impact" type="attribute_weight_impact"}
-					<label>{l s='Impact on weight:'}</label>
-				</td>
-				<td colspan="2" style="padding-bottom:5px;">
-					<select name="attribute_weight_impact" id="attribute_weight_impact" style="width: 140px;" onchange="check_weight_impact();">
-						<option value="0">{l s='None'}</option>
-						<option value="1">{l s='Increase'}</option>
-						<option value="-1">{l s='Reduction'}</option>
-					</select>
-					<span id="span_weight_impact">&nbsp;&nbsp;{l s='of'}&nbsp;&nbsp;
-						<input type="text" size="6" name="attribute_weight" id="attribute_weight" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
-						{$ps_weight_unit}
-					</span>
-				</td>
-			</tr>
-			<tr id="tr_unit_impact">
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
-					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_unit_impact" type="attribute_unit_impact"}
-					<label style="width: 100px; float: right">{l s='Impact on unit price :'}</label>
-				</td>
-				<td colspan="2" style="padding-bottom:5px;">
-					<select name="attribute_unit_impact" id="attribute_unit_impact" style="width: 140px;" onchange="check_unit_impact();">
-						<option value="0">{l s='None'}</option>
-						<option value="1">{l s='Increase'}</option>
-						<option value="-1">{l s='Reduction'}</option>
-					</select>
-					<span id="span_weight_impact">&nbsp;&nbsp;{l s='of'}&nbsp;&nbsp;&nbsp;&nbsp;
-						{if $currency->format % 2 != 0} {$currency->sign} {/if}
-						<input type="text" size="6" name="attribute_unity" id="attribute_unity" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />{if $currency->format % 2 == 0} {$currency->sign}{/if} / <span id="unity_third">{$field_value_unity}</span>
-					</span>
-				</td>
-			</tr>
-			{if $ps_use_ecotax}
-				<tr>
-					<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
-						{include file="controllers/products/multishop/checkbox.tpl" field="attribute_ecotax" type="default"}
-						<label>{l s='Eco-tax (tax excl.):'}</label>
-					</td>
-					<td style="padding-bottom:5px;">{if $currency->format % 2 != 0}{$currency->sign}{/if}
-						<input type="text" size="3" name="attribute_ecotax" id="attribute_ecotax" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
-						{if $currency->format % 2 == 0} {$currency->sign}{/if} 
-						({l s='overrides Eco-tax in the "Information" tab'})
-					</td>
-				</tr>
-			{/if}
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left">
-					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_minimal_quantity" type="default"}
-					<label>{l s='Minimum quantity:'}</label>
-				</td>
-				<td style="padding-bottom:5px;">
-					<input size="3" maxlength="6" name="attribute_minimal_quantity" id="attribute_minimal_quantity" type="text" value="{$minimal_quantity}" />
-					<p>{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left">
-					{include file="controllers/products/multishop/checkbox.tpl" field="available_date_attribute" type="default"}
-					<label>{l s='Available date:'}</label>
-				</td>
-				<td style="padding-bottom:5px;">
-					<input class="datepicker" id="available_date_attribute" name="available_date_attribute" value="{$available_date}" style="text-align: center;" type="text" />
-					<p>{l s='The available date when this product is out of stock.'}</p>
-					<script type="text/javascript">
-						$(document).ready(function(){
-							$(".datepicker").datepicker({
-								prevText: '',
-								nextText: '',
-								dateFormat: 'yy-mm-dd'
-							});
-						});
-					</script>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<div class="separation"></div>
-				</td>
-			</tr>
-			<tr>
-				<td style="width:150px"><label>{l s='Image:'}</label></td>
-				<td style="padding-bottom:5px;">
-					<ul id="id_image_attr">
-						{foreach from=$images key=k item=image}
-							<li style="float: left; width: {$imageWidth}px;">
-								<input type="checkbox" name="id_image_attr[]" value="{$image.id_image}" id="id_image_attr_{$image.id_image}" />
-								<label for="id_image_attr_{$image.id_image}" style="float: none;">
-									<img src="{$smarty.const._THEME_PROD_DIR_}{$image.obj->getExistingImgPath()}-{$imageType}.jpg" alt="{$image.legend|escape:'htmlall':'UTF-8'}" title="{$image.legend|escape:'htmlall':'UTF-8'}" />
-								</label>
-							</li>
-						{/foreach}
-					</ul>
-					<img id="pic" alt="" title="" style="display: none; width: 100px; height: 100px; float: left; border: 1px dashed #BBB; margin-left: 20px;" />
-				</td>
-			</tr>
-			<tr>
-				<td style="width:150px">
-					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_default" type="attribute_default"}
-					<label>{l s='Default:'}</label><br /><br />
-				</td>
-				<td style="padding-bottom:5px;">
+					{if $currency->format % 2 == 0} {$currency->sign}{/if}
+				</div>
+				<input type="text" name="attribute_ecotax" id="attribute_ecotax" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+			</div>
+		</div>
+		{/if}
+		<div class="form-group">
+			<label class="control-label col-lg-3" for="attribute_minimal_quantity">
+				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_minimal_quantity" type="default"}
+				<span class="label-tooltip" data-toggle="tooltip"
+					title="{l s='The minimum quantity to buy this product (set to 1 to disable this feature).'}">
+					{l s='Minimum quantity'}
+				</span>
+			</label>
+			<div class="col-lg-9">
+				<div class="input-group col-lg-2">
+					<div class="input-group-addon">&times;</div>
+					<input maxlength="6" name="attribute_minimal_quantity" id="attribute_minimal_quantity" type="text" value="{$minimal_quantity}" />
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-lg-3" for="available_date_attribute">
+				{include file="controllers/products/multishop/checkbox.tpl" field="available_date_attribute" type="default"}
+				<span class="label-tooltip" data-toggle="tooltip"
+					title="{l s='If this product is out of stock, you can indicate when the product will be available again.'}">
+					{l s='Available date'}
+				</span>
+			</label>
+			<div class="col-lg-9">
+				<div class="input-group col-lg-3">
+					<input class="datepicker" id="available_date_attribute" name="available_date_attribute" value="{$available_date}" type="text" />
+					<div class="input-group-addon">
+						<i class="icon-calendar-empty"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr/>
+		<div class="form-group">
+			<label class="control-label col-lg-3">{l s='Image'}</label>
+			<div class="col-lg-9">
+				{if $images|count}
+				<ul id="id_image_attr" class="list-inline">
+					{foreach from=$images key=k item=image}
+					<li>
+						<input type="checkbox" name="id_image_attr[]" value="{$image.id_image}" id="id_image_attr_{$image.id_image}" />
+						<label for="id_image_attr_{$image.id_image}">
+							<img class="img-thumbnail" src="{$smarty.const._THEME_PROD_DIR_}{$image.obj->getExistingImgPath()}-{$imageType}.jpg" alt="{$image.legend|escape:'html':'UTF-8'}" title="{$image.legend|escape:'html':'UTF-8'}" />
+						</label>
+					</li>
+					{/foreach}
+				</ul>
+				{else}
+					<div class="alert alert-warning">{l s='You must upload an image before you can select one for your combination.'}</div>
+				{/if}
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-lg-3" for="attribute_default">
+				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_default" type="attribute_default"}
+				{l s='Default'}
+			</label>
+			<div class="col-lg-9">
+				<p class="checkbox">
+				<label for="attribute_default">
 					<input type="checkbox" name="attribute_default" id="attribute_default" value="1" />
-					&nbsp;<label for="attribute_default" style="float:none;">{l s='Make this combination the default combination for this product'}</label><br /><br />
-				</td>
-			</tr>
-			<tr>
-				<td style="width:150px">&nbsp;</td>
-				<td style="padding-bottom:5px;">
-					<span id="ResetSpan" style="float:left;margin-left:8px;display:none;">
-						<input type="reset" name="ResetBtn" id="ResetBtn" onclick="getE('id_product_attribute').value = 0;" class="button" value="{l s='Cancel modification'}" />
-					</span>
-					<span class="clear"></span>
-				</td>
-			</tr>
-		</table>
-		<div class="separation"></div>
+					{l s='Make this combination the default combination for this product.'}
+				</label>
+				</p>
+			</div>
+		</div>
+		<div class="panel-footer">
+			<span id="ResetSpan">
+				<button type="reset" name="ResetBtn" id="ResetBtn" onclick="$('#desc-product-newCombination').click();" class="btn btn-default">
+					<i class="icon-undo"></i> {l s='Cancel modification'}
+				</button>
+			</span>
+		</div>
 	</div>
-	
 	{$list}
+	<div class="panel-footer">
+		<a href="{$link->getAdminLink('AdminProducts')}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
+		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
+		<a href="#" id="desc-product-newCombination" class="btn btn-default pull-right"><i class="process-icon-new"></i> <span>{l s="New combination"}</span></a>
+	</div>
+</div>
 {/if}

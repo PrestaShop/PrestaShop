@@ -1,5 +1,5 @@
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -109,8 +109,29 @@ for (i in restrictions)
 	$('#' + restrictions[i] + '_select_remove').click(function() {removeCartRuleOption(this);});
 	$('#' + restrictions[i] + '_select_add').click(function() {addCartRuleOption(this);});
 }
+
 toggleCartRuleFilter($('#product_restriction'));
-$('#product_restriction').click(function() {toggleCartRuleFilter(this);});
+
+$('#product_restriction').click(function() {
+	toggleCartRuleFilter(this);
+
+	if ($(this).prop('checked'))
+	{
+		$('#apply_discount_to_selection').removeAttr('disabled');
+		$('#apply_discount_to_selection_warning').hide();
+	}
+	else
+	{
+		$('#apply_discount_to_selection').attr('disabled', 'disabled');
+		$('#apply_discount_to_selection_warning').show();
+	}
+});
+
+$('#apply_discount_to_selection_shortcut').click(function() {
+	displayCartRuleTab('conditions');
+	$('#product_restriction').focus();
+	return false;
+});
 
 function toggleApplyDiscount(percent, amount, apply_to)
 {
@@ -146,6 +167,12 @@ function toggleApplyDiscount(percent, amount, apply_to)
 	{
 		$('#apply_discount_amount_div').hide(200);
 		$('#reduction_amount').val('0');
+
+		if ($('#apply_discount_off').prop('checked'))
+		{
+			$('#apply_discount_to_product').removeProp('checked')
+			toggleApplyDiscountTo();
+		}
 	}
 		
 	if (apply_to)
@@ -303,16 +330,16 @@ $('#customerFilter')
 function displayCartRuleTab(tab)
 {
 	$('.cart_rule_tab').hide();
-	$('.tab-page').removeClass('selected');
+	$('.tab-row.active').removeClass('active');
 	$('#cart_rule_' + tab).show();
-	$('#cart_rule_link_' + tab).addClass('selected');
+	$('#cart_rule_link_' + tab).parent().addClass('active');
 	$('#currentFormTab').val(tab);
 }
 
 $('.cart_rule_tab').hide();
-$('.tab-page').removeClass('selected');
+$('.tab-row.active').removeClass('active');
 $('#cart_rule_' + currentFormTab).show();
-$('#cart_rule_link_' + currentFormTab).addClass('selected');
+$('#cart_rule_link_' + currentFormTab).parent().addClass('active');
 
 var date = new Date();
 var hours = date.getHours();

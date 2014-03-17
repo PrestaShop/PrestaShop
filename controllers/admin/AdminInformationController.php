@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,21 +19,41 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class AdminInformationControllerCore extends AdminController
 {
+
+	public function __construct()
+	{
+		$this->bootstrap = true;
+		parent::__construct();
+	}
+
 	public function initContent()
 	{
+		$this->show_toolbar = false;
 		$this->display = 'view';
 		parent::initContent();
 	}
 
+	public function initToolbarTitle()
+	{
+		$this->toolbar_title = array_unique($this->breadcrumbs);
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+		unset($this->page_header_toolbar_btn['back']);
+	}
+
 	public function renderView()
 	{
+		$this->initPageHeaderToolbar();
 		$this->tpl_view_vars = array(
 			'version' => array(
 				'php' => phpversion(),
@@ -67,12 +87,6 @@ class AdminInformationControllerCore extends AdminController
 
 		return parent::renderView();
 	}
-	
-	public function initToolBar()
-	{
-		return;
-	}
-	
 
 	/**
 	 * get all tests
@@ -81,14 +95,9 @@ class AdminInformationControllerCore extends AdminController
 	 */
 	public function getTestResult()
 	{
-		// Functions list to test with 'test_system'
-		// Test to execute (function/args) : lets uses the default test
-		$tests = ConfigurationTest::getDefaultTests();
-		$tests_op = ConfigurationTest::getDefaultTestsOp();
-
 		$tests_errors = array(
-			'phpversion' => $this->l('Update your PHP version'),
-			'upload' => $this->l('Configure your server to allow file uploads'),
+			'phpversion' => $this->l('Update your PHP version.'),
+			'upload' => $this->l('Configure your server to allow file uploads.'),
 			'system' => $this->l('Configure your server to allow the creation of directories and files with write permissions.'),
 			'gd' => $this->l('Enable the GD library on your server.'),
 			'mysql_support' => $this->l('Enable the MySQL support on your server.'),
@@ -103,21 +112,31 @@ class AdminInformationControllerCore extends AdminController
 			'translations_dir' => $this->l('Set write permissions for the "translations" folder and subfolders.'),
 			'customizable_products_dir' => $this->l('Set write permissions for the "upload" folder and subfolders.'),
 			'virtual_products_dir' => $this->l('Set write permissions for the "download" folder and subfolders.'),
-			'fopen' => $this->l('Allow the PHP fopen() function on your server'),
-			'register_globals' => $this->l('Set PHP "register_global" option to "Off"'),
+			'fopen' => $this->l('Allow the PHP fopen() function on your server.'),
+			'register_globals' => $this->l('Set PHP "register_globals" option to "Off".'),
 			'gz' => $this->l('Enable GZIP compression on your server.')
 		);
 
-		$params_required_results = ConfigurationTest::check($tests);
-		$params_optional_results = ConfigurationTest::check($tests_op);
+		// Functions list to test with 'test_system'
+		// Test to execute (function/args): lets uses the default test
+		$params_required_results = ConfigurationTest::check(ConfigurationTest::getDefaultTests());
 
-		return array(
+		if (!defined('_PS_HOST_MODE_'))
+			$params_optional_results = ConfigurationTest::check(ConfigurationTest::getDefaultTestsOp());
+
+		$results = array(
 			'failRequired' => in_array('fail', $params_required_results),
-			'failOptional' => in_array('fail', $params_optional_results),
 			'testsErrors' => $tests_errors,
 			'testsRequired' => $params_required_results,
-			'testsOptional' => $params_optional_results,
 		);
+
+		if (!defined('_PS_HOST_MODE_'))
+			$results = array_merge($results, array(
+				'failOptional' => in_array('fail', $params_optional_results),
+				'testsOptional' => $params_optional_results,
+			));
+
+		return $results;
 	}
 
 	public function displayAjaxCheckFiles()

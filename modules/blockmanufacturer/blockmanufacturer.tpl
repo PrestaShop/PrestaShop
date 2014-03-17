@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -32,18 +32,18 @@
 	<ul class="bullet">
 	{foreach from=$manufacturers item=manufacturer name=manufacturer_list}
 		{if $smarty.foreach.manufacturer_list.iteration <= $text_list_nb}
-		<li class="{if $smarty.foreach.manufacturer_list.last}last_item{elseif $smarty.foreach.manufacturer_list.first}first_item{else}item{/if}"><a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html'}" title="{l s='Learn more about' mod='blockmanufacturer'} {$manufacturer.name}">{$manufacturer.name|escape:'htmlall':'UTF-8'}</a></li>
+		<li class="{if $smarty.foreach.manufacturer_list.last}last_item{elseif $smarty.foreach.manufacturer_list.first}first_item{else}item{/if}"><a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html'}" title="{l s='More about %s' sprintf=[$manufacturer.name] mod='blockmanufacturer'}">{$manufacturer.name|escape:'html':'UTF-8'}</a></li>
 		{/if}
 	{/foreach}
 	</ul>
 	{/if}
 	{if $form_list}
-		<form action="{$smarty.server.SCRIPT_NAME|escape:'htmlall':'UTF-8'}" method="get">
+		<form action="{$smarty.server.SCRIPT_NAME|escape:'html':'UTF-8'}" method="get">
 			<p>
 				<select id="manufacturer_list" onchange="autoUrl('manufacturer_list', '');">
 					<option value="0">{l s='All manufacturers' mod='blockmanufacturer'}</option>
 				{foreach from=$manufacturers item=manufacturer}
-					<option value="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html'}">{$manufacturer.name|escape:'htmlall':'UTF-8'}</option>
+					<option value="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html'}">{$manufacturer.name|escape:'html':'UTF-8'}</option>
 				{/foreach}
 				</select>
 			</p>

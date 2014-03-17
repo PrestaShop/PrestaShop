@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -41,6 +41,7 @@ $_LANGMAIL['Product out of stock'] = 'One or more products are almost out of sto
 $_LANGMAIL['We miss you'] = 'We miss you';
 $_LANGMAIL['Email verification'] = 'Email verification';
 $_LANGMAIL['Newsletter voucher'] = 'Newsletter voucher';
+$_LANGMAIL['New order'] = 'New order : #%d - %s';
 $_LANGMAIL['Stock coverage'] = 'Stock coverage';
 $_LANGMAIL['Congratulations!'] = 'Congratulations!';
 $_LANGMAIL['Your wishlist\\\'s link'] = 'Your wishlist\'s link';

@@ -29,7 +29,7 @@
 			</label>
 			<div class="col-lg-9">
 				<section class="filter_panel">
-					<header>
+					<header class="clearfix">
 						<span class="badge pull-right">{l s='Total filters: %s'|sprintf:$total_filters mod='blocklayered'}</span>
 					</header>
 					<section class="filter_list">
@@ -270,7 +270,7 @@
 										</label>
 									</div>
 									<div class="col-lg-4">
-										<h4>
+										<span class="module_name">
 										{if $attribute_group['n'] > 1}
 											{l s='Attribute group: %1$s (%2$d attributes)'|sprintf:$attribute_group['name']:$attribute_group['n'] mod='blocklayered'}
 										{else}
@@ -279,7 +279,7 @@
 										{if $attribute_group['is_color_group']}
 											<img src="../img/admin/color_swatch.png" alt="" title="{l s='This group will allow user to select a color' mod='blocklayered'}" />
 										{/if}
-										</h4>
+										</span>
 									</div>
 									<div class="col-lg-3 pull-right">
 										<label class="control-label col-lg-6">{l s='Filter result limit:' mod='blocklayered'}</label>
@@ -321,9 +321,9 @@
 										</label>
 									</div>
 									<div class="col-lg-4">
-										<h4>
+										<span class="module_name">
 									{if $feature['n'] > 1}{l s='Feature: %1$s (%2$d values)'|sprintf:$feature['name']:$feature['n'] mod='blocklayered'}{else}{l s='Feature: %1$s (%2$d value)'|sprintf:$feature['name']:$feature['n'] mod='blocklayered'}{/if}
-										</h4>
+										</span>
 									</div>
 									<div class="col-lg-3 pull-right">
 										<label class="control-label col-lg-6">{l s='Filter result limit:' mod='blocklayered'}</label>

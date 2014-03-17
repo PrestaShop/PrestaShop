@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,41 +18,51 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<br />
-<p>
-	<a class="button" href="#" onclick="if ($('.requiredFieldsParameters:visible').length == 0) $('.requiredFieldsParameters').slideDown('slow'); else $('.requiredFieldsParameters').slideUp('slow'); return false;"><img src="../img/admin/duplicate.gif" alt="" /> {l s='Set required fields for this section'}</a>
-</p>
-<fieldset style="display:none" class="width1 requiredFieldsParameters">
-	<legend>{l s='Required Fields'}</legend>
-	<form name="updateFields" action="{$current}&submitFields=1&token={$token}" method="post">
-		<p>
-			<b>{l s='Select the fields you would like to be required for this section.'}</b><br />
-			<table cellspacing="0" cellpadding="0" class="table width1 clear">
+<a class="btn btn-default" href="#" onclick="if ($('.requiredFieldsParameters:visible').length == 0) $('.requiredFieldsParameters').slideDown('slow'); else $('.requiredFieldsParameters').slideUp('slow'); return false;">
+	<i class="icon-plus-sign"></i> {l s='Set required fields for this section'}
+</a>
+<div class="clearfix">&nbsp;</div>
+<div style="display:none" class="panel requiredFieldsParameters">
+	<h3><i class="icon-asterisk"></i> {l s='Required Fields'}</h3>
+	<form name="updateFields" action="{$current}&amp;submitFields=1&amp;token={$token}" method="post">
+		<div class="alert alert-info">
+			{l s='Select the fields you would like to be required for this section.'}
+		</div>
+		<div class="row">
+			<table class="table">
 				<thead>
 					<tr>
-						<th><input type="checkbox" onclick="checkDelBoxes(this.form, 'fieldsBox[]', this.checked)" class="noborder" name="checkme"></th>
-						<th>{l s='Field Name'}</th>
+						<th class="fixed-width-xs">
+							<input type="checkbox" onclick="checkDelBoxes(this.form, 'fieldsBox[]', this.checked)" class="noborder" name="checkme">
+						</th>
+						<th><span class="title_box">{l s='Field Name'}</span></th>
 					</tr>
 				</thead>
 				<tbody>
 				{foreach $table_fields as $field}
 					{if !in_array($field, $required_class_fields)}
-						<tr class="{if $irow++ % 2}alt_row{/if}">
-							<td class="noborder"><input type="checkbox" name="fieldsBox[]" value="{$field}" {if in_array($field, $required_fields)} checked="checked"{/if} /></td>
-							<td>{$field}</td>
-						</tr>
+					<tr>
+						<td class="noborder">
+							<input type="checkbox" name="fieldsBox[]" value="{$field}" {if in_array($field, $required_fields)} checked="checked"{/if} />
+						</td>
+						<td>
+							{$field}
+						</td>
+					</tr>
 					{/if}
 				{/foreach}
 				</tbody>
-			</table><br />
-			<center>
-				<input style="margin-left:15px;" class="button" type="submit" value="{l s='Save'}" name="submitFields" />
-			</center>
-		</p>
+			</table>
+		</div>
+		<div class="panel-footer">
+			<button name="submitFields" type="submit" class="btn btn-default pull-right">
+				<i class="process-icon-save "></i> <span>{l s='Save'}</span>
+			</button>					
+		</div>
 	</form>
-</fieldset>
+</div>

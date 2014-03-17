@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,11 +18,11 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<a class="pointer" id="details_{$params.action}_{$id}" title="{$action}" onclick="display_action_details('{$id}', '{$controller}', '{$token}', '{$params.action}', {$json_params|escape}); return false">
-	<img src="../img/admin/more.png" alt="{$action}" />
+<a href="{$href}" id="details_{$params.action}_{$id}" title="{$action}" class="">
+	<i class="icon-eye-open"></i> {$action}
 </a>
