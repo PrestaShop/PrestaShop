@@ -46,21 +46,36 @@ class BlockBanner extends Module
 
 	public function install()
 	{
+		return 
+			parent::install() && 
+			$this->registerHook('displayBanner') && 
+			$this->registerHook('displayHeader') && 
+			$this->registerHook('actionObjectLanguageAddAfter') &&
+			$this->installFixtures();
+	}
+	
+	public function hookActionObjectLanguageAddAfter($params)
+	{
+		return $this->installFixture((int)$params['object']->id, Configuration::get('BLOCKBANNER_IMG', (int)Configuration::get('PS_LANG_DEFAULT')));
+	}
+	
+	protected function installFixtures()
+	{
 		$languages = Language::getLanguages(false);
-		$values = array();
-
 		foreach ($languages as $lang)
-		{
-			$values['BLOCKBANNER_IMG'][$lang['id_lang']] = 'sale70.png';
-			$values['BLOCKBANNER_LINK'][$lang['id_lang']] = '';
-			$values['BLOCKBANNER_DESC'][$lang['id_lang']] = '';
-		}
+			$this->installFixture((int)$lang['id_lang'], 'sale70.png');
 
+		return true;
+	}
+	
+	protected function installFixture($id_lang, $image = null)
+	{
+		$values['BLOCKBANNER_IMG'][(int)$id_lang] = $image;
+		$values['BLOCKBANNER_LINK'][(int)$id_lang] = '';
+		$values['BLOCKBANNER_DESC'][(int)$id_lang] = '';
 		Configuration::updateValue('BLOCKBANNER_IMG', $values['BLOCKBANNER_IMG']);
 		Configuration::updateValue('BLOCKBANNER_LINK', $values['BLOCKBANNER_LINK']);
 		Configuration::updateValue('BLOCKBANNER_DESC', $values['BLOCKBANNER_DESC']);
-
-		return parent::install() && $this->registerHook('displayBanner') && $this->registerHook('displayHeader');
 	}
 
 	public function uninstall()
