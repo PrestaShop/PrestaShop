@@ -74,7 +74,7 @@ class blocksocial extends Module
 			Configuration::updateValue('BLOCKSOCIAL_GOOGLE_PLUS', Tools::getValue('blocksocial_google_plus', ''));
 			Configuration::updateValue('BLOCKSOCIAL_PINTEREST', Tools::getValue('blocksocial_pinterest', ''));
 			$this->_clearCache('blocksocial.tpl');
-			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
 		}
 		
 		return $output.$this->renderForm();
