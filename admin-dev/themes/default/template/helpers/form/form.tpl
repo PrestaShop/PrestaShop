@@ -35,13 +35,13 @@
 		<div class="panel" id="fieldset_{$f}">
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
-                    {block name="legend"}
-                        <div class="panel-heading">
-                            {if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'html':'UTF-8'}" />{/if}
-                            {if isset($field.icon)}<i class="{$field.icon}"></i>{/if}
-                            {$field.title}
-                        </div>
-                    {/block}
+					{block name="legend"}
+						<div class="panel-heading">
+							{if isset($field.image) && isset($field.title)}<img src="{$field.image}" alt="{$field.title|escape:'html':'UTF-8'}" />{/if}
+							{if isset($field.icon)}<i class="{$field.icon}"></i>{/if}
+							{$field.title}
+						</div>
+					{/block}
 				{elseif $key == 'description' && $field}
 					<div class="alert alert-info">{$field}</div>
 				{elseif $key == 'input'}
@@ -440,22 +440,22 @@
 									{/if}
 
 								{elseif $input.type == 'checkbox'}
-                                    {if isset($input.expand)}
-                                        <a class="btn btn-default show_checkbox{if $input.expand.default == 'hide'} hidden {/if}" href="#">
-                                            <i class="icon-{$input.expand.show.icon}"></i>
-                                            {$input.expand.show.text}
-                                            {if isset($input.expand.print_total) && $input.expand.print_total > 0}
-                                                <span class="badge">{$input.expand.print_total}</span>
-                                            {/if}
-                                        </a>
-                                        <a class="btn btn-default hide_checkbox{if $input.expand.default == 'show'} hidden {/if}" href="#">
-                                            <i class="icon-{$input.expand.hide.icon}"></i>
-                                            {$input.expand.hide.text}
-                                            {if isset($input.expand.print_total) && $input.expand.print_total > 0}
-                                                <span class="badge">{$input.expand.print_total}</span>
-                                            {/if}
-                                        </a>
-                                    {/if}
+									{if isset($input.expand)}
+										<a class="btn btn-default show_checkbox{if $input.expand.default == 'hide'} hidden {/if}" href="#">
+											<i class="icon-{$input.expand.show.icon}"></i>
+											{$input.expand.show.text}
+											{if isset($input.expand.print_total) && $input.expand.print_total > 0}
+												<span class="badge">{$input.expand.print_total}</span>
+											{/if}
+										</a>
+										<a class="btn btn-default hide_checkbox{if $input.expand.default == 'show'} hidden {/if}" href="#">
+											<i class="icon-{$input.expand.hide.icon}"></i>
+											{$input.expand.hide.text}
+											{if isset($input.expand.print_total) && $input.expand.print_total > 0}
+												<span class="badge">{$input.expand.print_total}</span>
+											{/if}
+										</a>
+									{/if}
 									{foreach $input.values.query as $value}
 										{assign var=id_checkbox value=$input.name|cat:'_'|cat:$value[$input.values.id]}
 										<div class="checkbox{if isset($input.expand) && $input.expand.default == 'show'} hidden {/if}">
@@ -584,9 +584,9 @@
 												if (valid){
 													$output.show();
 												}
-    											else {
-    												$output.hide();
-    											}
+												else {
+													$output.hide();
+												}
 											});
 											var $container = $('#{$input.name}-change-container');
 											var $changeBtn = $('#{$input.name}-btn-change');
@@ -888,18 +888,18 @@
 
 		$(document).ready(function() {
 
-            $(".show_checkbox").click(function () {
-                $(this).addClass('hidden')
-                $(this).siblings('.checkbox').removeClass('hidden');
-                $(this).siblings('.hide_checkbox').removeClass('hidden');
-                return false;
-            });
-            $(".hide_checkbox").click(function () {
-                $(this).addClass('hidden')
-                $(this).siblings('.checkbox').addClass('hidden');
-                $(this).siblings('.show_checkbox').removeClass('hidden');
-                return false;
-            });
+			$(".show_checkbox").click(function () {
+				$(this).addClass('hidden')
+				$(this).siblings('.checkbox').removeClass('hidden');
+				$(this).siblings('.hide_checkbox').removeClass('hidden');
+				return false;
+			});
+			$(".hide_checkbox").click(function () {
+				$(this).addClass('hidden')
+				$(this).siblings('.checkbox').addClass('hidden');
+				$(this).siblings('.show_checkbox').removeClass('hidden');
+				return false;
+			});
 
 			{if isset($fields_value.id_state)}
 				if ($('#id_country') && $('#id_state'))
