@@ -24,10 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-//
-// IMPORTANT : don't forget to delete the underscore _ in the file name if you want to use it !
-//
-
 function developpementErrorHandler($errno, $errstr, $errfile, $errline)
 {
 	if (!(error_reporting() & $errno))
@@ -320,6 +316,7 @@ abstract class Controller extends ControllerCore
 		foreach (Db::getInstance()->queries as $data)
 			$totalQueryTime += $data['time'];
 
+		$executedModules = Hook::getExecutedModules();
 		$hooktime = Hook::getHookTime();
 		arsort($hooktime);
 		$totalHookTime = 0;
@@ -363,7 +360,8 @@ abstract class Controller extends ControllerCore
 		echo '</div>
 		
 		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">
-			<b>Hook processing</b>: '.$this->displayLoadTimeColor($totalHookTime).' / '.$this->displayMemoryColor($totalHookMemoryUsage).'
+			<b>Hook processing</b>: '.$this->displayLoadTimeColor($totalHookTime).' / '.$this->displayMemoryColor($totalHookMemoryUsage).'<br />
+			'.(int)count($executedModules).' methods called in '.(int)count(array_unique($executedModules)).' modules
 			<ul>';
 		foreach ($hooktime as $hook => $time)
 			echo '<li>'.$hook.': '.$this->displayLoadTimeColor($time).' / '.$this->displayMemoryColor($hookMemoryUsage[$hook]).'</li>';
@@ -439,6 +437,7 @@ abstract class Controller extends ControllerCore
 				<li><a href="#tables">Go to Tables</a></li>
 				'.(isset(ObjectModel::$debug_list) ? '<li><a href="#objectModels">Go to ObjectModels</a></li>' : '').'
 				<li><a onclick="$(\'#queries_table\').toggle();" style="cursor:pointer">Display queries table</a></li>
+				<li><a href="#includedFiles">Go to files</a></li>
 			</ul>
 		</div>
 		<div id="queries_table" style="display:none;margin:4px">

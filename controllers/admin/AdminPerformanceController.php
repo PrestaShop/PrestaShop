@@ -90,36 +90,6 @@ class AdminPerformanceControllerCore extends AdminController
 					),
 					'hint' => $this->l('Should be enabled except for debugging.')
 				),
-				array(
-					'type' => 'radio',
-					'label' => $this->l('Debug console'),
-					'name' => 'smarty_console',
-					'values' => array(
-						array(
-							'id' => 'smarty_console_none',
-							'value' => 0,
-							'label' => $this->l('Do not open console.')
-						),
-						array(
-							'id' => 'smarty_console_url',
-							'value' => 1,
-							'label' => $this->l('Open console with URL parameter (SMARTY_DEBUG)'),
-							'hint' => $this->l('To open the debug console, simply pass the SMARTY_DEBUG=1 parameter in the URL.')
-						),
-						array(
-							'id' => 'smarty_console_open',
-							'value' => 2,
-							'label' => $this->l('Always open console'),
-							'hint' => $this->l('Choose this option to always force the debug console to open.')
-						)
-					)
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Debug console key'),
-					'name' => 'smarty_console_key',
-					'hint' => $this->l('You can change the URL parameter for the console (default is SMARTY_DEBUG).')
-				),
 			),
 			'submit' => array(
 				'title' => $this->l('Save')
@@ -578,8 +548,7 @@ class AdminPerformanceControllerCore extends AdminController
 		// Initialize fieldset for a form
 		$this->initFieldsetSmarty();
 
-		if (_PS_MODE_DEV_)
-			$this->initFieldsetDebugMode();
+		$this->initFieldsetDebugMode();
 
 		$this->initFieldsetFeaturesDetachables();
 		$this->initFieldsetCCC();
@@ -680,8 +649,6 @@ class AdminPerformanceControllerCore extends AdminController
 			{
 				Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', _PS_SMARTY_NO_COMPILE_));
 				Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
-				Configuration::updateValue('PS_SMARTY_CONSOLE', Tools::getValue('smarty_console', 0));
-				Configuration::updateValue('PS_SMARTY_CONSOLE_KEY', Tools::getValue('smarty_console_key', 'SMARTY_DEBUG'));
 				$redirectAdmin = true;
 			}
 			else

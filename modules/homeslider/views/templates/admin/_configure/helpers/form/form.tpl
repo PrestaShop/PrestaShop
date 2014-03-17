@@ -32,6 +32,9 @@
 					<div class="translatable-field lang-{$language.id_lang}" {if $language.id_lang != $defaultFormLanguage}style="display:none"{/if}>
 				{/if}
 					<div class="col-lg-6">
+						{if isset($fields[0]['form']['images'])}
+						<img src="{$image_baseurl}{$fields[0]['form']['images'][$language.id_lang]}" class="img-thumbnail" />
+						{/if}
 						<input id="{$input.name}_{$language.id_lang}" type="file" name="{$input.name}_{$language.id_lang}" class="hide" />
 						<div class="dummyfile input-group">
 							<span class="input-group-addon"><i class="icon-file"></i></span>

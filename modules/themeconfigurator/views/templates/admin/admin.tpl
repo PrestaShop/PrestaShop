@@ -23,8 +23,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div id="htmlcontent">
-    <h2>{$htmlcontent.info.name|escape:'htmlall':'UTF-8'} (v.{$htmlcontent.info.version|escape:'htmlall':'UTF-8'})</h2>
+<div id="htmlcontent" class="panel">
+    <div class="panel-heading">{$htmlcontent.info.name|escape:'htmlall':'UTF-8'} (v.{$htmlcontent.info.version|escape:'htmlall':'UTF-8'})</div>
     {if isset($error) && $error}
         {include file="{$htmlcontent.admin_tpl_path|escape:'htmlall':'UTF-8'}messages.tpl" id="main" text=$error class='error'}
     {/if}

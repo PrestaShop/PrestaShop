@@ -444,6 +444,6 @@ $(document).ready(function() {
 		}
 	}
 	scroll_if_anchor(window.location.hash);
-	$("body").on("click", "a[data-toggle!='tab']", scroll_if_anchor);
+	$("body").on("click", "a.anchor", scroll_if_anchor);
 
 });

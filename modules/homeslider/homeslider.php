@@ -140,32 +140,27 @@ class HomeSlider extends Module
 	protected function createTables()
 	{
 		/* Slides */
-		$res = (bool)Db::getInstance()->execute(
-			'
-						CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider` (
+		$res = (bool)Db::getInstance()->execute('
+			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider` (
 				`id_homeslider_slides` int(10) unsigned NOT NULL AUTO_INCREMENT,
 				`id_shop` int(10) unsigned NOT NULL,
 				PRIMARY KEY (`id_homeslider_slides`, `id_shop`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=UTF8;
-		'
-		);
+		');
 
 		/* Slides configuration */
-		$res &= Db::getInstance()->execute(
-			'
-						CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider_slides` (
+		$res &= Db::getInstance()->execute('
+			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider_slides` (
 			  `id_homeslider_slides` int(10) unsigned NOT NULL AUTO_INCREMENT,
 			  `position` int(10) unsigned NOT NULL DEFAULT \'0\',
 			  `active` tinyint(1) unsigned NOT NULL DEFAULT \'0\',
 			  PRIMARY KEY (`id_homeslider_slides`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=UTF8;
-		'
-		);
+		');
 
 		/* Slides lang configuration */
-		$res &= Db::getInstance()->execute(
-			'
-						CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider_slides_lang` (
+		$res &= Db::getInstance()->execute('
+			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider_slides_lang` (
 			  `id_homeslider_slides` int(10) unsigned NOT NULL,
 			  `id_lang` int(10) unsigned NOT NULL,
 			  `title` varchar(255) NOT NULL,
@@ -175,8 +170,7 @@ class HomeSlider extends Module
 			  `image` varchar(255) NOT NULL,
 			  PRIMARY KEY (`id_homeslider_slides`,`id_lang`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=UTF8;
-		'
-		);
+		');
 
 		return $res;
 	}
@@ -193,11 +187,9 @@ class HomeSlider extends Module
 			$to_del->delete();
 		}
 
-		return Db::getInstance()->execute(
-			'
-						DROP TABLE IF EXISTS `'._DB_PREFIX_.'homeslider`, `'._DB_PREFIX_.'homeslider_slides`, `'._DB_PREFIX_.'homeslider_slides_lang`;
-		'
-		);
+		return Db::getInstance()->execute('
+			DROP TABLE IF EXISTS `'._DB_PREFIX_.'homeslider`, `'._DB_PREFIX_.'homeslider_slides`, `'._DB_PREFIX_.'homeslider_slides_lang`;
+		');
 	}
 
 	public function getContent()
@@ -515,12 +507,11 @@ class HomeSlider extends Module
 
 	public function hookActionShopDataDuplication($params)
 	{
-		Db::getInstance()->execute(
-			'
-					INSERT IGNORE INTO '._DB_PREFIX_.'homeslider (id_homeslider_slides, id_shop)
-		SELECT id_homeslider_slides, '.(int)$params['new_id_shop'].'
-		FROM '._DB_PREFIX_.'homeslider
-		WHERE id_shop = '.(int)$params['old_id_shop']
+		Db::getInstance()->execute('
+			INSERT IGNORE INTO '._DB_PREFIX_.'homeslider (id_homeslider_slides, id_shop)
+			SELECT id_homeslider_slides, '.(int)$params['new_id_shop'].'
+			FROM '._DB_PREFIX_.'homeslider
+			WHERE id_shop = '.(int)$params['old_id_shop']
 		);
 		$this->clearCache();
 	}
@@ -532,19 +523,7 @@ class HomeSlider extends Module
 
 		$this->context->controller->addJqueryUI('ui.sortable');
 		/* Style & js for fieldset 'slides configuration' */
-		$html = '
-		<style>
-		#slides li {
-			list-style: none;
-			margin: 0 0 4px 0;
-			padding: 10px;
-			background-color: #F4E6C9;
-			border: #CCCCCC solid 1px;
-			color:#000;
-		}
-		</style>
-		
-		<script type="text/javascript">
+		$html = '<script type="text/javascript">
 			$(function() {
 				var $mySlides = $("#slides");
 				$mySlides.sortable({
@@ -569,11 +548,10 @@ class HomeSlider extends Module
 
 	public function getNextPosition()
 	{
-		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
-			'
-							SELECT MAX(hss.`position`) AS `next_position`
-							FROM `'._DB_PREFIX_.'homeslider_slides` hss, `'._DB_PREFIX_.'homeslider` hs
-				WHERE hss.`id_homeslider_slides` = hs.`id_homeslider_slides` AND hs.`id_shop` = '.(int)$this->context->shop->id
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+			SELECT MAX(hss.`position`) AS `next_position`
+			FROM `'._DB_PREFIX_.'homeslider_slides` hss, `'._DB_PREFIX_.'homeslider` hs
+			WHERE hss.`id_homeslider_slides` = hs.`id_homeslider_slides` AND hs.`id_shop` = '.(int)$this->context->shop->id
 		);
 
 		return (++$row['next_position']);
@@ -585,17 +563,10 @@ class HomeSlider extends Module
 		$id_shop = $this->context->shop->id;
 		$id_lang = $this->context->language->id;
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-			'
-						SELECT hs.`id_homeslider_slides` as id_slide,
-								   hssl.`image`,
-								   hss.`position`,
-								   hss.`active`,
-								   hssl.`title`,
-								   hssl.`url`,
-								   hssl.`legend`,
-								   hssl.`description`
-						FROM '._DB_PREFIX_.'homeslider hs
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT hs.`id_homeslider_slides` as id_slide, hssl.`image`, hss.`position`, hss.`active`, hssl.`title`,
+			hssl.`url`, hssl.`legend`, hssl.`description`, hssl.`image`
+			FROM '._DB_PREFIX_.'homeslider hs
 			LEFT JOIN '._DB_PREFIX_.'homeslider_slides hss ON (hs.id_homeslider_slides = hss.id_homeslider_slides)
 			LEFT JOIN '._DB_PREFIX_.'homeslider_slides_lang hssl ON (hss.id_homeslider_slides = hssl.id_homeslider_slides)
 			WHERE id_shop = '.(int)$id_shop.'
@@ -605,14 +576,38 @@ class HomeSlider extends Module
 		);
 	}
 
+	public function getAllImagesBySlidesId($id_slides, $active = null, $id_shop = null)
+	{
+		$this->context = Context::getContext();
+		$images = array();
+
+		if (!isset($id_shop))
+			$id_shop = $this->context->shop->id;
+
+		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT hssl.`image`, hssl.`id_lang`
+			FROM '._DB_PREFIX_.'homeslider hs
+			LEFT JOIN '._DB_PREFIX_.'homeslider_slides hss ON (hs.id_homeslider_slides = hss.id_homeslider_slides)
+			LEFT JOIN '._DB_PREFIX_.'homeslider_slides_lang hssl ON (hss.id_homeslider_slides = hssl.id_homeslider_slides)
+			WHERE hs.`id_homeslider_slides` = '.(int)$id_slides.' AND hs.`id_shop` = '.(int)$id_shop.
+			($active ? ' AND hss.`active` = 1' : ' ')
+		);
+
+		foreach ($results as $result)
+			$images[$result['id_lang']] = $result['image'];
+
+		return $images;
+	}
+
 	public function displayStatus($id_slide, $active)
 	{
 		$title = ((int)$active == 0 ? $this->l('Disabled') : $this->l('Enabled'));
-		$img = ((int)$active == 0 ? 'disabled.gif' : 'enabled.gif');
-		$html = '<a href="'.AdminController::$currentIndex.
+		$icon = ((int)$active == 0 ? 'icon-remove' : 'icon-check');
+		$class = ((int)$active == 0 ? 'btn-danger' : 'btn-success');
+		$html = '<a class="btn '.$class.'" href="'.AdminController::$currentIndex.
 			'&configure='.$this->name.'
 				&token='.Tools::getAdminTokenLite('AdminModules').'
-				&changeStatus&id_slide='.(int)$id_slide.'" title="'.$title.'"><img src="'._PS_ADMIN_IMG_.''.$img.'" alt="" /></a>';
+				&changeStatus&id_slide='.(int)$id_slide.'" title="'.$title.'"><i class="'.$icon.'"></i> '.$title.'</a>';
 
 		return $html;
 	}
@@ -637,6 +632,7 @@ class HomeSlider extends Module
 			array(
 				'link' => $this->context->link,
 				'slides' => $slides,
+				'image_baseurl' => $this->_path.'images/'
 			)
 		);
 
@@ -712,6 +708,7 @@ class HomeSlider extends Module
 		{
 			$slide = new HomeSlide((int)Tools::getValue('id_slide'));
 			$fields_form['form']['input'][] = array('type' => 'hidden', 'name' => 'id_slide');
+			$fields_form['form']['images'] = $slide->image;
 
 			$has_picture = true;
 
@@ -744,7 +741,8 @@ class HomeSlider extends Module
 			),
 			'fields_value' => $this->getAddFieldsValues(),
 			'languages' => $this->context->controller->getLanguages(),
-			'id_language' => $this->context->language->id
+			'id_language' => $this->context->language->id,
+			'image_baseurl' => $this->_path.'images/'
 		);
 
 		$helper->override_folder = '/';
