@@ -1045,7 +1045,7 @@
 			{l s='Customer'}
 		</h3>
 
-		<div id="search-customer-form-group" class="form-group ">
+		<div id="search-customer-form-group" class="form-group">
 			<label class="control-label col-lg-3">
 				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search for an existing customer by typing the first letters of his/her name.'}">
 					{l s='Search for a customer'}

@@ -1589,7 +1589,19 @@ class AdminOrdersControllerCore extends AdminController
 
 	public function ajaxProcessSearchCustomers()
 	{
-		if ($customers = Customer::searchByName(pSQL(Tools::getValue('customer_search'))))
+		$searches = explode(' ', Tools::getValue('customer_search'));
+		$customers = array();
+		$searches = array_unique($searches);
+		foreach ($searches as $search)
+			if (!empty($search) && $results = Customer::searchByName($search))
+			{
+				foreach ($results as $key => $result)
+					if (array_key_exists($key, $customers))
+						unset($results[$key]);
+				$customers = array_unique(array_merge($customers, $results));
+			}
+
+		if (count($customers))
 			$to_return = array('customers' => $customers,
 									'found' => true);
 		else
