@@ -300,7 +300,7 @@ class BlockLink extends Module
 				$this->_html .= $this->displayError($this->l('Bad URL'));
 			else
 				if ($this->addLink())
-					$this->_html .= $this->displayConfirmation($this->l('The link has been added.'));
+					Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
 				else
 					$this->_html .= $this->displayError($this->l('An error occurred during link creation.'));
 		}
@@ -317,7 +317,7 @@ class BlockLink extends Module
 			elseif (!$this->updateTitle())
 				$this->_html .= $this->displayError($this->l('An error occurred during title updating.'));
 			else
-				$this->_html .= $this->displayConfirmation($this->l('The block title has been updated.'));
+				Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);		
 		}
 		// Delete a link
 		elseif (Tools::isSubmit('deleteblocklink') && Tools::getValue('id'))
@@ -326,13 +326,13 @@ class BlockLink extends Module
 			if (!is_numeric(Tools::getValue('id')) || !$this->deleteLink())
 				$this->_html .= $this->displayError($this->l('An error occurred during link deletion.'));
 			else
-				$this->_html .= $this->displayConfirmation($this->l('The link has been deleted.'));
+				Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=1&module_name='.$this->name);
 		}
 
 		if (isset($_POST['submitOrderWay']))
 		{
 			if (Configuration::updateValue('PS_BLOCKLINK_ORDERWAY', (int)(Tools::getValue('orderWay'))))
-				$this->_html .= $this->displayConfirmation($this->l('Sort order updated'));
+				Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
 			else
 				$this->_html .= $this->displayError($this->l('An error occurred during sort order set-up.'));
 		}

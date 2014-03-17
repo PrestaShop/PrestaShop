@@ -190,6 +190,8 @@ class VatNumber extends TaxManagerModule
 
 			if (Configuration::updateValue('VATNUMBER_CHECKING', (int)Tools::getValue('VATNUMBER_CHECKING')))
 				$echo .= ((bool)Tools::getValue('VATNUMBER_CHECKING') ? $this->displayConfirmation($this->l('The check of the VAT number with the WebService is now enabled.')) : $this->displayConfirmation($this->l('The check of the VAT number with the WebService is now disabled.')));
+
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
 		}
 		$echo .= $this->renderForm();
 

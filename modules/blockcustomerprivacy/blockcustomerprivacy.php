@@ -75,7 +75,7 @@ class Blockcustomerprivacy extends Module
 				}
 			Configuration::updateValue('CUSTPRIV_MESSAGE', $message_trads, true);
 			$this->_clearCache('blockcustomerprivacy.tpl');
-			$output .= $this->displayConfirmation($this->l('Configuration updated'));
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
 		}		
 		
 		return $output.$this->renderForm();

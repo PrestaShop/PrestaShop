@@ -80,7 +80,7 @@ class BlockPaymentLogo extends Module
 			{
 				Configuration::updateValue('PS_PAYMENT_LOGO_CMS_ID', (int)(Tools::getValue('PS_PAYMENT_LOGO_CMS_ID')));
 				$this->_clearCache('blockpaymentlogo.tpl');
-				$html .= $this->displayConfirmation($this->l('The settings have been updated.'));
+				Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
 			}
 
 		$cmss = CMS::listCms($this->context->language->id);

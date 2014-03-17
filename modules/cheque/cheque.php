@@ -104,7 +104,7 @@ class Cheque extends PaymentModule
 			Configuration::updateValue('CHEQUE_NAME', Tools::getValue('CHEQUE_NAME'));
 			Configuration::updateValue('CHEQUE_ADDRESS', Tools::getValue('CHEQUE_ADDRESS'));
 		}
-		$this->_html .= $this->displayConfirmation($this->l('Settings updated'));
+		Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
 	}
 
 	private function _displayCheque()

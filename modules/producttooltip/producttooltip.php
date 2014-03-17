@@ -85,7 +85,7 @@ class ProductToolTip extends Module
 			Configuration::updateValue('PS_PTOOLTIP_DAYS', ((int)(Tools::getValue('PS_PTOOLTIP_DAYS') < 0 ? 0 : (int)Tools::getValue('PS_PTOOLTIP_DAYS'))));
 			Configuration::updateValue('PS_PTOOLTIP_LIFETIME', ((int)(Tools::getValue('PS_PTOOLTIP_LIFETIME') < 0 ? 0 : (int)Tools::getValue('PS_PTOOLTIP_LIFETIME'))));
 
-			$html .= $this->displayConfirmation($this->l('Settings updated'));
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
 		}
 
 		/* Configuration form */
