@@ -83,7 +83,7 @@ class ProductsCategory extends Module
 				Tools::getValue('PRODUCTSCATEGORY_DISPLAY_PRICE')
 			);
 			$this->_clearCache('productscategory.tpl');
-			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
+			$this->html .= $this->displayConfirmation($this->l('Settings updated successfully.'));
 		}
 		$this->html .= $this->renderForm();
 

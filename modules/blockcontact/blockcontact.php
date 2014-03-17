@@ -68,7 +68,7 @@ class Blockcontact extends Module
 			Configuration::updateValue('BLOCKCONTACT_EMAIL', Tools::getValue('blockcontact_email'));
 			$this->_clearCache('blockcontact.tpl');
 			$this->_clearCache('nav.tpl');
-			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
+			$html .= $this->displayConfirmation($this->l('Configuration updated'));
 		}
 
 		$html .= $this->renderForm();

@@ -121,7 +121,7 @@ class BlockBestSellers extends Module
 		if (Tools::isSubmit('submitBestSellers'))
 		{
 			Configuration::updateValue('PS_BLOCK_BESTSELLERS_DISPLAY', (int)Tools::getValue('PS_BLOCK_BESTSELLERS_DISPLAY'));
-			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
+			$output .= $this->displayConfirmation($this->l('Settings updated'));
 		}
 
 		return $output.$this->renderForm();

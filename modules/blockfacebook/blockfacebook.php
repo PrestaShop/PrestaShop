@@ -64,8 +64,8 @@ class BlockFacebook extends Module
 		if (Tools::isSubmit('submitModule'))
 		{				
 			Configuration::updateValue('blockfacebook_url', Tools::getValue('blockfacebook_url'));
+			$html .= $this->displayConfirmation($this->l('Configuration updated'));
 			$this->_clearCache('blockfacebook.tpl');
-			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
 		}
 
 		$html .= $this->renderForm();

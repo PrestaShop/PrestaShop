@@ -77,7 +77,7 @@ class BlockViewed extends Module
 			else
 			{
 				Configuration::updateValue('PRODUCTS_VIEWED_NBR', (int)$productNbr);
-				Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
+				$output .= $this->displayConfirmation($this->l('Settings updated.'));
 			}
 		}
 		return $output.$this->renderForm();
