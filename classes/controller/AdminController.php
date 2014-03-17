@@ -2484,7 +2484,18 @@ class AdminControllerCore extends Controller
 		elseif (Tools::isSubmit('submitFields') && $this->required_database && $this->tabAccess['add'] === '1' && $this->tabAccess['delete'] === '1')
 			$this->action = 'update_fields';
 		elseif (is_array($this->bulk_actions))
-			foreach ($this->bulk_actions as $bulk_action => $params)
+		{
+			$submit_bulk_actions = array_merge(array(
+				'enableSelection' => array(
+					'text' => $this->l('Enable selection'),
+					'icon' => 'icon-power-off text-success'
+				),
+				'disableSelection' => array(
+					'text' => $this->l('Disable selection'),
+					'icon' => 'icon-power-off text-danger'
+				)
+			), $this->bulk_actions);
+			foreach ($submit_bulk_actions as $bulk_action => $params)
 			{
 				if (Tools::isSubmit('submitBulk'.$bulk_action.$this->table) || Tools::isSubmit('submitBulk'.$bulk_action))
 				{
@@ -2509,6 +2520,7 @@ class AdminControllerCore extends Controller
 					break;
 				}
 			}
+		}
 		elseif (!empty($this->fields_options) && empty($this->fields_list))
 			$this->display = 'options';
 	}
