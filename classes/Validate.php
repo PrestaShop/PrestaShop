@@ -725,7 +725,7 @@ class ValidateCore
 	 */
 	public static function isUrl($url)
 	{
-		return preg_match('/^[~:#,%&_=\(\)\.\? \+\-@\/a-zA-Z0-9]+$/', $url);
+		return preg_match('/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9]+$/', $url);
 	}
 
 	/**
@@ -759,7 +759,7 @@ class ValidateCore
 	public static function isAbsoluteUrl($url)
 	{
 		if (!empty($url))
-			return preg_match('/^https?:\/\/[~:#,%&_=\(\)\[\]\.\? \+\-@\/a-zA-Z0-9]+$/', $url);
+			return preg_match('/^https?:\/\/[$~:#,%&_=\(\)\[\]\.\? \+\-@\/a-zA-Z0-9]+$/', $url);
 		return true;
 	}
 

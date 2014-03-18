@@ -1,13 +1,9 @@
-
 [{shop_url}] 
 
 Hi {firstname} {lastname}, 
 
 Your order with the reference {order_name} from {shop_name} has been
-cancelled.
-
-You can check for it in the "TOOLS" > "LOGS" section of your Back
-Office. 
+canceled.
 
 You can review your order and download your invoice from the
 "Order history" [{history_url}] section of your

@@ -179,14 +179,14 @@ function toggleDiv(name, option)
 
 function toggleButtonValue(id_button, text1, text2)
 {
-	if ($('#'+id_button).find('i').first().hasClass('process-icon-minus'))
+	if ($('#'+id_button).find('i').first().hasClass('process-icon-compress'))
 	{
-		$('#'+id_button).find('i').first().removeClass('process-icon-minus').addClass('process-icon-plus');
+		$('#'+id_button).find('i').first().removeClass('process-icon-compress').addClass('process-icon-expand');
 		$('#'+id_button).find('span').first().html(text1);
 	}
 	else
 	{
-		$('#'+id_button).find('i').first().removeClass('process-icon-plus').addClass('process-icon-minus');
+		$('#'+id_button).find('i').first().removeClass('process-icon-expand').addClass('process-icon-compress');
 		$('#'+id_button).find('span').first().html(text2);
 	}
 }
@@ -204,13 +204,10 @@ function toggleElemValue(id_button, text1, text2)
 
 function addBookmark(url, title)
 {
-	if (window.sidebar)
+	if (window.sidebar && window.sidebar.addPanel)
 		return window.sidebar.addPanel(title, url, "");
 	else if ( window.external && ('AddFavorite' in window.external))
 		return window.external.AddFavorite( url, title);
-	else if (window.opera && window.print)
-		return true;
-	return true;
 }
 
 function writeBookmarkLink(url, title, text, img)
@@ -219,8 +216,8 @@ function writeBookmarkLink(url, title, text, img)
 	if (img)
 		insert = writeBookmarkLinkObject(url, title, '<img src="' + img + '" alt="' + escape(text) + '" title="' + removeQuotes(text) + '" />') + '&nbsp';
 	insert += writeBookmarkLinkObject(url, title, text);
-	if (window.sidebar || window.opera && window.print || (window.external && ('AddFavorite' in window.external)))	
-		document.write(insert);
+	if (window.sidebar || window.opera && window.print || (window.external && ('AddFavorite' in window.external)))
+		$('.add_bookmark, #header_link_bookmark').append(insert);
 }
 
 function writeBookmarkLinkObject(url, title, insert)

@@ -89,7 +89,7 @@ class PrestaShopAutoload
 	{
 		// Retrocompatibility 
 		if (isset(PrestaShopAutoload::$class_aliases[$classname]) && !interface_exists($classname, false) && !class_exists($classname, false))
-			eval('class '.$classname.' extends '.PrestaShopAutoload::$class_aliases[$classname].' {}');
+			return eval('class '.$classname.' extends '.PrestaShopAutoload::$class_aliases[$classname].' {}');
 
 		// regenerate the class index if the requested file doesn't exists
 		if ((isset($this->index[$classname]) && $this->index[$classname]['path'] && !is_file($this->root_dir.$this->index[$classname]['path']))

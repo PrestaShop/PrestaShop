@@ -49,11 +49,7 @@
 	{else}
 		<div class="alert alert-info">
 			<p>
-				{l s='Some sentences to translate use this syntax: "You have %%s items...". These "%s" are variables, and PrestaShop takes care of replacing them before displaying your translation.' sprintf='%d, %s, %1$s, %2$d'}<br>
-				<strong>{l s='You must leave these in your translations, and place them appropriately in your sentence.'}</strong>
-			</p>
-			<p>
-				{l s='Click on titles to open fieldsets'}.
+				{l s='Click on the title of a section to open its fieldsets.'}
 			</p>
 		</div>
 		<div class="panel">
@@ -69,13 +65,14 @@
 				<div id="BoxUseSpecialSyntax">
 					<div class="alert alert-warning">
 						<p>
-							{l s='Some of these expressions use this special syntax:'} <span>%d.</span><br />
+							{l s='Some of these expressions use this special syntax: %s.' sprintf='%d'}
+							<br />
 							{l s='You MUST use this syntax in your translations. Here are several examples:'}
 						</p>
 						<ul>
-							<li>"There are <strong>%d</strong> products": "<strong>%d</strong>" {l s='will be replaced by a number.'}).</li>
-							<li>"List of pages in <strong>%s</strong>": "<strong>%s</strong>" {l s='will be replaced by a string.'}).</li>
-							<li>"Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)": "<strong>n$</strong>" {l s='helps you reorder the arguments when necessary.'}).</li>
+							<li>"There are <strong>%d</strong> products": {l s='"%s" will be replaced by a number.' sprintf='%d'}</li>
+							<li>"List of pages in <strong>%s</strong>": {l s='"%s" will be replaced by a string.' sprintf='%s'}</li>
+							<li>"Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)": {l s='The numbers enable you to reorder the variables when necessary.'}</li>
 						</ul>
 					</div>
 				</div>				
@@ -88,7 +85,10 @@
 					});
 				</script>
 				<div class="panel-footer">
-					<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+					<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url}" class="btn btn-default">
+						<i class="process-icon-cancel"></i>
+						{l s='Cancel'}
+					</a>
 					{$toggle_button}
 					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
 					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>

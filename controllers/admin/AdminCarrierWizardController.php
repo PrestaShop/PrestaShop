@@ -241,7 +241,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Shipping and handling'),
+						'label' => $this->l('Add handling costs'),
 						'name' => 'shipping_handling',
 						'required' => false,
 						'class' => 't',
@@ -258,11 +258,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 								'label' => $this->l('Disabled')
 							)
 						),
-						'hint' => $this->l('Include the shipping and handling costs in the carrier price.')
+						'hint' => $this->l('Include the handling costs (as set in Shipping > Preferences) in the final carrier price.')
 					),
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Free Shipping'),
+						'label' => $this->l('Free shipping'),
 						'name' => 'is_free',
 						'required' => false,
 						'class' => 't',
@@ -421,7 +421,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Status'),
+						'label' => $this->l('Enabled'),
 						'name' => 'active',
 						'required' => false,
 						'class' => 't',
@@ -429,13 +429,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'values' => array(
 							array(
 								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Enabled')
+								'value' => 1
 							),
 							array(
 								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('Disabled')
+								'value' => 0
 							)
 						),
 						'hint' => $this->l('Enable the carrier in the Front Office.')
@@ -601,7 +599,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		die($template->fetch());
 	}
 
-	public function ajaxProcessValidateStep()
+	protected function validateForm($die = true)
 	{
 		$step_number = (int)Tools::getValue('step_number');
 		$return = array('has_error' => false);
@@ -627,7 +625,15 @@ class AdminCarrierWizardControllerCore extends AdminController
 			$return['has_error'] = true;
 			$return['errors'] = $this->errors;
 		}
-		die(Tools::jsonEncode($return));
+		if (count($this->errors) || $die)
+			die(Tools::jsonEncode($return));
+
+	}
+
+
+	public function ajaxProcessValidateStep()
+	{
+			$this->validateForm(true);
 	}
 
 	public function processRanges($id_carrier)
@@ -738,14 +744,14 @@ class AdminCarrierWizardControllerCore extends AdminController
 	public function ajaxProcessFinishStep()
 	{
 		$return = array('has_error' => false);
-
 		if (!$this->tabAccess['edit'])
 			$return = array(
 				'has_error' =>  true,
 				$return['errors'][] = Tools::displayError('You do not have permission to use this wizard.')
 			);
 		else
-		{
+		{	
+			$this->validateForm(false);
 			if ($id_carrier = Tools::getValue('id_carrier'))
 			{
 				$current_carrier = new Carrier((int)$id_carrier);
@@ -894,18 +900,18 @@ class AdminCarrierWizardControllerCore extends AdminController
 			3 => array('range_behavior', 'max_height', 'max_width', 'max_depth', 'max_weight'),
 			4 => array(),
 		);
-
 		if (Shop::isFeatureActive())
 		{
-			$multistore_field = array(array('shop'));
-			array_splice($step_fields, 1, 0, $multistore_field);
+			$tmp = $step_fields;
+			$step_fields = array_slice($tmp, 0, 1, true) + array(2 => array('shop'));
+			$step_fields[3] = $tmp[2];
+			$step_fields[4] = $tmp[3];
 		}
 
 		$definition = ObjectModel::getDefinition('Carrier');
 		foreach ($definition['fields'] as $field => $def)
 			if (!in_array($field, $step_fields[$step_number]))
 				unset($definition['fields'][$field]);
-
 		return $definition;
 	}
 

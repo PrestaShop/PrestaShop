@@ -51,9 +51,9 @@ function setCountries()
 	    		for (var j in countries[i]['states'])
 					countriesPS[parseInt(id_country)].push({'id' : parseInt(countries[i]['states'][j]['id_state']), 'name' : countries[i]['states'][j]['name']});
 			}
-			if (typeof countries[i]['need_identification_number'] !== 'undefined')
+			if (typeof countries[i]['need_identification_number'] !== 'undefined' && parseInt(countries[i]['need_identification_number']) > 0)
 				countriesNeedIDNumber.push(parseInt(countries[i]['id_country']));
-			if (typeof countries[i]['need_zip_code'] !== 'undefined')
+			if (typeof countries[i]['need_zip_code'] !== 'undefined' && parseInt(countries[i]['need_zip_code']) > 0)
 				countriesNeedZipCode[parseInt(countries[i]['id_country'])] = countries[i]['zip_code_format'];
 		}
 	}
@@ -140,7 +140,7 @@ function updateState(suffix)
 function updateNeedIDNumber(suffix)
 {
 	var idCountry = parseInt($('#id_country' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).val());
-	if (typeof countriesNeedIDNumber !== 'undefined' && in_array(idCountry, countriesNeedIDNumber) >= 0)
+	if (typeof countriesNeedIDNumber !== 'undefined' && in_array(idCountry, countriesNeedIDNumber))
 	{
 		$('.dni' + (typeof suffix !== 'undefined' ? '_' + suffix : '') + ':hidden').fadeIn('slow');
 		$('#dni').uniform();

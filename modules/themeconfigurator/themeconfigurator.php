@@ -80,7 +80,7 @@ class ThemeConfigurator extends Module
 
 		if (!parent::install()
 			|| !$this->installDB()
-			|| !$this->installFixtures() ||
+			|| !$this->installFixtures(Language::getLanguages(true)) ||
 			!$this->registerHook('displayHeader') ||
 			!$this->registerHook('displayTopColumn') ||
 			!$this->registerHook('displayLeftColumn') ||
@@ -156,18 +156,21 @@ class ThemeConfigurator extends Module
 		return $result;
 	}
 
-	public function installFixtures($id_lang = null)
+	public function installFixtures($languages = null)
 	{
 		$result = true;
 
-		if ($id_lang === null)
-			$id_lang = $this->context->language->id;
+		if ($languages === null)
+			$languages = Language::getLanguages(true);
+		
+		foreach ($languages as $language)
+		{
+			for ($i = 1; $i < 6; $i++)
+				$result &= $this->installFixture('home', $i, $this->context->shop->id, $language['id_lang']);
 
-		for ($i = 1; $i < 6; $i++)
-			$result &= $this->installFixture('home', $i, $this->context->shop->id, $id_lang);
-
-		for ($i = 6; $i < 8; $i++)
-			$result &= $this->installFixture('top', $i, $this->context->shop->id, $id_lang);
+			for ($i = 6; $i < 8; $i++)
+				$result &= $this->installFixture('top', $i, $this->context->shop->id, $language['id_lang']);
+		}
 
 		return $result;
 	}
@@ -199,8 +202,7 @@ class ThemeConfigurator extends Module
 	{
 		$this->context->controller->addCss($this->_path.'css/hooks.css', 'all');
 
-		if ((int)Configuration::get('PS_TC_ACTIVE') == 1 &&
-			Tools::getValue('live_configurator_token') == $this->getLiveConfiguratorToken())
+		if ((int)Configuration::get('PS_TC_ACTIVE') == 1 && Tools::getValue('live_configurator_token') && Tools::getValue('live_configurator_token') == $this->getLiveConfiguratorToken())
 		{
 			$this->context->controller->addCSS($this->_path.'css/live_configurator.css');
 			$this->context->controller->addJS($this->_path.'js/live_configurator.js');
@@ -223,7 +225,7 @@ class ThemeConfigurator extends Module
 	
 	public function hookActionObjectLanguageAddAfter($params)
 	{
-		return $this->installFixtures((int)$params['object']->id);
+		return $this->installFixtures(array((int)$params['object']->id));
 	}
 
 	public function hookdisplayTopColumn()
@@ -275,9 +277,7 @@ class ThemeConfigurator extends Module
 	{
 		$html = '';
 
-		if ((int)Configuration::get('PS_TC_ACTIVE') == 1 &&
-			Tools::getValue('live_configurator_token') == $this->getLiveConfiguratorToken()
-			&& Tools::getIsset('id_employee'))
+		if ((int)Configuration::get('PS_TC_ACTIVE') == 1 && Tools::getValue('live_configurator_token') && Tools::getValue('live_configurator_token') == $this->getLiveConfiguratorToken() && Tools::getIsset('id_employee'))
 		{
 			if (Tools::isSubmit('submitLiveConfigurator'))
 			{
@@ -570,7 +570,7 @@ class ThemeConfigurator extends Module
 			{
 				$module_instance = Module::getInstanceByName($module['name']);
 				if (Validate::isLoadedObject($module_instance) && method_exists($module_instance, 'getContent'))
-					$desc = '<a class="btn btn-link" href="'.$this->context->link->getAdminLink('AdminModules', true).'&configure='.urlencode($module_instance->name).'&tab_module='.$module_instance->tab.'&module_name='.urlencode($module_instance->name).'">'.$this->l('Configure').' <i class="icon-external-link"></i></a>';
+					$desc = '<a class="btn btn-default" href="'.$this->context->link->getAdminLink('AdminModules', true).'&configure='.urlencode($module_instance->name).'&tab_module='.$module_instance->tab.'&module_name='.urlencode($module_instance->name).'">'.$this->l('Configure').' <i class="icon-external-link"></i></a>';
 			}
 			if (!$desc && isset($module['desc']) && $module['desc'])
 				$desc = $module['desc'];

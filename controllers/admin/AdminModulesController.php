@@ -77,7 +77,7 @@ class AdminModulesControllerCore extends AdminController
 		$this->list_modules_categories['advertising_marketing']['name'] = $this->l('Advertising and Marketing');
 		$this->list_modules_categories['analytics_stats']['name'] = $this->l('Analytics and Stats');
 		$this->list_modules_categories['billing_invoicing']['name'] = $this->l('Taxes & Invoicing');
-/* 		$this->list_modules_categories['checkout']['name'] = $this->l('Checkout'); */
+ 		$this->list_modules_categories['checkout']['name'] = $this->l('Checkout');
 		$this->list_modules_categories['content_management']['name'] = $this->l('Content Management');
 		$this->list_modules_categories['export']['name'] = $this->l('Export');
 		$this->list_modules_categories['emailing']['name'] = $this->l('Emailing');
@@ -261,6 +261,13 @@ class AdminModulesControllerCore extends AdminController
 		{
 			$tab_modules_list = explode(',', $tab_modules_list);
 			$all_modules = Module::getModulesOnDisk(true, $this->logged_on_addons, $this->id_employee);
+			
+			$all_unik_modules = array();
+			foreach ($all_modules as $mod)
+				if (!isset($all_unik_modules[$mod->name]))
+					$all_unik_modules[$mod->name] = $mod;
+			$all_modules = $all_unik_modules;
+			
 			foreach($all_modules as $module)
 			{
 				if (in_array($module->name, $tab_modules_list))
@@ -291,6 +298,7 @@ class AdminModulesControllerCore extends AdminController
 				}		
 			}
 		}
+		
 		$this->context->smarty->assign(array(
 			'tab_modules_list' => $modules_list,
 			'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites'
@@ -542,7 +550,7 @@ class AdminModulesControllerCore extends AdminController
 	public function postProcessDownload()
 	{
 	 	// PrestaShop demo mode
-		if (_PS_MODE_DEMO_)
+		if (_PS_MODE_DEMO_ || defined('_PS_HOST_MODE_'))
 		{
 			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 			return;
@@ -732,7 +740,7 @@ class AdminModulesControllerCore extends AdminController
 				{
 					$full_report = null;
 					// If Addons module, download and unzip it before installing it
-					if (!file_exists('../modules/'.$name.'/'.$name.'.php') || $key == 'update' || $key == 'checkAndUpdate')
+					if (!file_exists(_PS_MODULE_DIR_.$name.'/'.$name.'.php') || $key == 'update' || $key == 'checkAndUpdate')
 					{
 						$filesList = array(
 							array('type' => 'addonsNative', 'file' => Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0),

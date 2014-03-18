@@ -43,7 +43,7 @@ class StatsVisits extends ModuleGraph
 		parent::__construct();
 
 		$this->displayName = $this->l('Visits and Visitors');
-		$this->description = $this->l('Adds statistics about your visits and visitors tot the Stats dashboard.');
+		$this->description = $this->l('Adds statistics about your visits and visitors to the Stats dashboard.');
 	}
 
 	public function install()

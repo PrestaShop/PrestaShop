@@ -127,6 +127,7 @@ class BlockNewProducts extends Module
 			$this->smarty->assign(array(
 				'new_products' => BlockNewProducts::$cache_new_products,
 				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+				'homeSize' => Image::getSize(ImageType::getFormatedName('home'))
 			));
 		}
 
@@ -161,18 +162,19 @@ class BlockNewProducts extends Module
 
 	public function hookdisplayHomeTabContent($params)
 	{
-		if (!$this->isCached('blocknewproducts_home.tpl', $this->getCacheId()))
+		if (!$this->isCached('blocknewproducts_home.tpl', $this->getCacheId('blocknewproducts-home')))
 		{
 			$this->smarty->assign(array(
 				'new_products' => BlockNewProducts::$cache_new_products,
 				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+				'homeSize' => Image::getSize(ImageType::getFormatedName('home'))
 			));
 		}
 
 		if (BlockNewProducts::$cache_new_products === false)
 			return false;
 
-		return $this->display(__FILE__, 'blocknewproducts_home.tpl', $this->getCacheId());
+		return $this->display(__FILE__, 'blocknewproducts_home.tpl', $this->getCacheId('blocknewproducts-home'));
 	}
 
 	public function hookHeader($params)
@@ -201,8 +203,8 @@ class BlockNewProducts extends Module
 	public function _clearCache($template, $cache_id = NULL, $compile_id = NULL)
 	{
 		parent::_clearCache('blocknewproducts.tpl');
-		parent::_clearCache('blocknewproducts_home.tpl');
-		parent::_clearCache('tab.tpl');
+		parent::_clearCache('blocknewproducts_home.tpl', $this->getCacheId('blocknewproducts-home'));
+		parent::_clearCache('tab.tpl', $this->getCacheId('blocknewproducts-tab'));
 	}
 
 	public function renderForm()
