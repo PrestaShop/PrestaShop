@@ -92,9 +92,31 @@ class AdminPatternsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('input text with suffix'),
+					'label' => $this->l('input text with character counter'),
 					'name' => 'type_text_maxchar',
 					'maxchar' => 30
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('input text with suffix'),
+					'name' => 'type_text_maxchar'
+				),
+				array(
+					'type' => 'text',
+					'lang' => true,
+					'label' => $this->l('input text multilang'),
+					'name' => 'type_text_maxchar'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('input readonly'),
+					'readonly' => true,
+					'name' => 'type_text_readonly'
+				),
+				array(
+					'type' => 'tags',
+					'label' => $this->l('input tags'),
+					'name' => 'type_text_tags'
 				),
 			),
 			'submit' => array(
@@ -105,6 +127,12 @@ class AdminPatternsControllerCore extends AdminController
 		return parent::renderForm();
 	}
 	
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addjQueryPlugin('tagify', null, false);
+	}
+
 	public function renderList()
 	{
 		$this->fields_list = array(
