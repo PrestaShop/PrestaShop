@@ -241,7 +241,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Shipping and handling'),
+						'label' => $this->l('Handling'),
 						'name' => 'shipping_handling',
 						'required' => false,
 						'class' => 't',
