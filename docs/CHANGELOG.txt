@@ -24,6 +24,141 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.0.5 - (2014-03-17)  #
+####################################
+
+	Fixed bugs:
+
+	[-] Installer : fixed string
+	[-] Installer : wrong module name caused wrong position
+
+	[-] FO : Fix bug #PSCSX-1145, bindStateInputAndUpdate after email_create
+	[-] FO : Fix bug #PSCSX-1135, bad cache id for homlefeatured
+	[-] FO : no cache when live edit !
+	[-] FO : Fix bug #PSCSX-920, bug on gift_div
+	[-] FO : Fix bug #PSCSX-1117, bad assignement
+	[-] Fo : Fix bug #PSCSX-1111
+	[-] FO : Fix bug #PSCSX-1081 Bad cache on home modules when qty update
+	[-] FO : Fix bug #PSCSX-1075, pagination for module
+	[-] FO : Fix bug #PSCSX-1056, could not seize DNI
+	[-] FO : Fix bug #PSCSX-1038, wrong cast in products.js
+	[-] FO : Fix bug #PSCSX-1032, click on #bigpic in fancybox
+	[-] FO : Fix display for #PSCSX-750
+	[-] FO : Fix bug #PSCFV-11781, bad display of resetImages
+
+	[-] BO : Always test bulk enable/disable in initProcess
+	[-] BO : Fix carrier wizzard validation
+	[-] BO : FixBug #PSCSX-1124 - Wrong order by for addresses export
+	[-] BO : fixed upgrade with dashgoals module
+	[-] BO : HelperTreeCategory, set name attr for inputs and remove useless override
+	[-] BO : FixBug #PSCSX-1105 - Wrong image path
+	[-] BO : fixed bad parenthesis in adminimages #PSCFV-11811
+	[-] BO : fixed language installation with multilanguage modules #PSCSX-778 #PSCFV-11786
+	[-] BO : Fix bug #PSCSX-1091, setAdvancedStockManagement called without validateFields
+	[-] BO : Fix bug #PSCSX-1087, parserror on category tree
+	[-] BO : fixed a few configuration issue with 1.6 upgrade #PSCSX-1010
+	[-] BO : fixed KPI #PSCSX-924
+	[-] BO : fix an issue when a module does not have a valid name
+	[-] BO : Fix bug #PSCSX-1042, live config lang in FO url
+	[-] BO : FixBug #PSCSX-989 - Bulk change order state
+	[-] Bo : Fix bug #PSCSX-1012, duplicates in order currencies
+	[-] BO : Fix bug #PNM-1783, bad display of group shop active
+	[-] BO : FixBug #PSCSX-1026 Missing date time input
+	[-] BO : Fix #PSCSX-864, display correct multishop checkbox for translatable fields
+	[-] BO : FixBug #PSCSX-998 - Missing translations
+	[-] BO : FixBug #PSCSX-991 - Wrong theme font color
+	[-] BO : FixBug #PSCSX-987 Missing translated string
+	[-] BO : FixBug #PSCSX-985 - Missing Save and add a new value in Features
+
+	[-] CORE : Fix bug #PSCSX-1097, typo in cache_control
+	[-] CORE : Fix bug #PSCSX-1079, PS_VIRTUAL_PROD_FEATURE_ACTIVE undefined
+	[-] CORE: Fix bug #PSCSX-1005 Remove warning
+	[-] CORE : Fix blacklist cache
+
+	[-] MO : Fix bug #PSCSX-1135, home bad cache id
+	[-] MO : fixed #PSCSX-1137
+	[-] MO : Blocksearch #PSCSX-1088, ac_results to blocksearch width
+	[-] MO : BlockLayered - FixBug #PSCSX-1085 - Wrong meta in products list breadcrumb
+	[-] MO : Refresh modules list cache on check and update
+	[-] MO : CarrierCompare, Update override for v2.0
+	[-] MO : Fixed blocklayered's CSS include
+	[-] MO : fixed gapi request #PSCSX-1036
+	[-] MO : Blockcart, fix bug #PSCSX-609 last part
+	[-] MO : Blockbestsellers clear cache on home
+	[-] MO : Fix #PNM-2140, Display correct referal amount for any currency
+	[-] MO : Blocklayered - adding cache
+	[-] MO : Blockcart Fix bug #PSCSX-609 second part
+	[-] MO : homeslider fix configuration issue
+
+	Improved/changed features:
+
+	[*] INSTALLER : Switch doc URLs to 1.6.
+
+	[*] FO : one less frontend query
+	[*] FO : optimize condition for a faster frontend
+	[*] FO : button_order_cart hover
+
+	[*] BO : UI Translations
+	[*] BO : refacto homeslider
+	[*] BO : HelperTreeCategory, remove selected class on search, only with radio inputs
+	[*] BO : Orders current state color - fix PSCSX-1120
+	[*] BO : UI Firefox - fix PSCSX-1121 - fix PSCSX-1122
+	[*] BO : Chosen style PSCSX-1102
+	[*] BO : stats optimization
+	[*] BO : Multistore select
+	[*] BO : Bug #PSCSX-1110, Fix menu active for CarrierWizard
+	[*] BO : Carrier Wizard  - Status/Enabled switch
+	[*] BO : Schemes update
+	[*] BO : UI fixes
+	[*] BO : Order details - responsive tables
+	[*] BO : Change fonts in themes
+	[*] BO : Javascript for anchor link
+	[*] BO : Module Theme Configurator
+	[*] BO: updating hints and errors in AdminThemesController.
+	[*] BO : Module - clean icons
+	[*] BO : Product - Specific Price - table responsive
+	[*] BO : Module - delete uninstalled module
+	[*] BO : Dashboard - Prevent scroll to anchor for tabs
+	[*] BO : Helper - Image Upload - Safari
+	[*] BO : Product - Image Upload - Safari - Fix PSCSX-1065
+	[*] BO :  Added process-icon-envelope fix PSCSX-1049
+	[*] BO : fixed PSCSX-1048 - Adjust position for anchor elements
+	[*] BO : Fix #PSCSX-1037, Remove monthly expenses in Dashboard
+	[*] BO : Moved bulk actions 'enable' and 'disable'
+	[*] BO : min width
+	[*] BO : Fix module list for AdminPayment
+	[*] BO : Display Marketing modules list like the main module list
+	[*] BO : switch global.sass to .scss
+	[*] BO : vendor update (bootstrap+fontawesome)
+	[*] BO : navigation
+	[*] BO: rewording in AdminDashboard.
+	[*] BO : navigation + toolbar
+	[*] BO : navigation - fix PSCSX-988
+	[*] BO: updating labels and descriptions for combinations.tpl.
+	[*] BO : close button for alerts
+	[*] BO : Improvement #PSCSX-983 - Live configurator
+	[*] BO : list-toolbar-btn icons for modules
+	[*] BO : Miss override form action    Hi,    In form.tpl, form action can be overrided by $submit_action var.    $submit_action is assigned in HelperForm.php, but in AdminController.php, the variable and the assignment of the variable HelperForm->submit_action is missing.    This is usefull for generate Form with different action that add-Table-.    Thanks
+	[*] BO : tiny mce - fixs PSCSX-896
+
+	[*] MO : Redirect after configuration is saved
+	[*] MO: Blocklink, better wording for translations
+	[*] MO: in referralprogram, no need to differentiate localized variables: it's the same value.
+
+	[*] LO: fix localization for Persian
+
+	Added Features:
+
+	[+] Installer: Add Persian lang and sample data to installer
+	[+] Installer: Add RTL Support with override css file
+
+	[+] LO : Added Catalan installer. Want yours? Join us on Crowdin!
+	[+] LO : Added Turkish installer - want yours? Join us on Crowdin!
+	[+] LO : Added Czech installer - want yours? Join us on Crowdin!
+	[+] LO : Added Farsi installer and Installer RTL support
+
+
+####################################
 #   v1.6.0.4 - (2014-03-06)  #
 ####################################
 

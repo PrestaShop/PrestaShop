@@ -182,7 +182,10 @@ class AdminStatusesControllerCore extends AdminController
 				'color' => $this->getFieldValue($order_return_state, 'color'),
 			);
 		else
-			$helper->fields_value = $this->getFieldsValue($order_return_state);
+			$helper->fields_value = array(
+				'name' => $this->getFieldValue($order_return_state, 'name'),
+				'color' => "#ffffff",
+			);
 
 		$helper->toolbar_btn = $this->toolbar_btn;
 		$helper->title = $this->l('Edit Return Status');

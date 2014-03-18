@@ -147,7 +147,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'required' => in_array('phone_mobile', $required_fields),
 					'maxlength' => 16,
 					'col' => 4,
-					'hint' => $this->l('Mobile phone number for this supplier')
+					'hint' => $this->l('Mobile phone number for this supplier.')
 				),
 				array(
 					'type' => 'text',

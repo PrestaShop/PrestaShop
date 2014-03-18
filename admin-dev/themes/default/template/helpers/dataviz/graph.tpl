@@ -58,7 +58,7 @@
 	<div class="boxchart-overlay">
 		<div class="boxchart"></div>
 	</div>	
-	<span class="title">{l s='Trafic'}</span>
+	<span class="title">{l s='Traffic'}</span>
 	<span class="value">4 589</span>
 </div>
 

@@ -45,13 +45,20 @@ class blocksocial extends Module
 	
 	public function install()
 	{
-		return (parent::install() AND Configuration::updateValue('BLOCKSOCIAL_FACEBOOK', '') && Configuration::updateValue('BLOCKSOCIAL_TWITTER', '') && Configuration::updateValue('BLOCKSOCIAL_RSS', '') && $this->registerHook('displayHeader') && $this->registerHook('displayFooter'));
+		return (parent::install() AND Configuration::updateValue('BLOCKSOCIAL_FACEBOOK', '') && 
+			Configuration::updateValue('BLOCKSOCIAL_TWITTER', '') && 
+			Configuration::updateValue('BLOCKSOCIAL_RSS', '') && 
+			$this->registerHook('displayHeader') && 
+			$this->registerHook('displayFooter'));
 	}
 	
 	public function uninstall()
 	{
 		//Delete configuration
-		return (Configuration::deleteByName('BLOCKSOCIAL_FACEBOOK') AND Configuration::deleteByName('BLOCKSOCIAL_TWITTER') AND Configuration::deleteByName('BLOCKSOCIAL_RSS') AND parent::uninstall());
+		return (Configuration::deleteByName('BLOCKSOCIAL_FACEBOOK') AND 
+			Configuration::deleteByName('BLOCKSOCIAL_TWITTER') AND 
+			Configuration::deleteByName('BLOCKSOCIAL_RSS') AND 
+			parent::uninstall());
 	}
 	
 	public function getContent()
@@ -60,14 +67,14 @@ class blocksocial extends Module
 		$output = '';
 		if (Tools::isSubmit('submitModule'))
 		{	
-			Configuration::updateValue('BLOCKSOCIAL_FACEBOOK', (($_POST['blocksocial_facebook'] != '') ? $_POST['blocksocial_facebook']: ''));
-			Configuration::updateValue('BLOCKSOCIAL_TWITTER', (($_POST['blocksocial_twitter'] != '') ? $_POST['blocksocial_twitter']: ''));
-			Configuration::updateValue('BLOCKSOCIAL_RSS', (($_POST['blocksocial_rss'] != '') ? $_POST['blocksocial_rss']: ''));
-			Configuration::updateValue('BLOCKSOCIAL_YOUTUBE', (($_POST['blocksocial_youtube'] != '') ? $_POST['blocksocial_youtube']: ''));
-			Configuration::updateValue('BLOCKSOCIAL_GOOGLE_PLUS', (($_POST['blocksocial_google_plus'] != '') ? $_POST['blocksocial_google_plus']: ''));
-			Configuration::updateValue('BLOCKSOCIAL_PINTEREST', (($_POST['blocksocial_pinterest'] != '') ? $_POST['blocksocial_pinterest']: ''));
+			Configuration::updateValue('BLOCKSOCIAL_FACEBOOK', Tools::getValue('blocksocial_facebook', ''));
+			Configuration::updateValue('BLOCKSOCIAL_TWITTER', Tools::getValue('blocksocial_twitter', ''));
+			Configuration::updateValue('BLOCKSOCIAL_RSS', Tools::getValue('blocksocial_rss', ''));
+			Configuration::updateValue('BLOCKSOCIAL_YOUTUBE', Tools::getValue('blocksocial_youtube', ''));
+			Configuration::updateValue('BLOCKSOCIAL_GOOGLE_PLUS', Tools::getValue('blocksocial_google_plus', ''));
+			Configuration::updateValue('BLOCKSOCIAL_PINTEREST', Tools::getValue('blocksocial_pinterest', ''));
 			$this->_clearCache('blocksocial.tpl');
-			$output .= $this->displayConfirmation($this->l('Configuration updated'));
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
 		}
 		
 		return $output.$this->renderForm();
