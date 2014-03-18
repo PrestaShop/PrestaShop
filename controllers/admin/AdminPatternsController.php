@@ -44,16 +44,57 @@ class AdminPatternsControllerCore extends AdminController
 	{
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Title'),
+				'title' => $this->l('patterns of helper form.tpl'),
 				'icon' => 'icon-envelope-alt'
 			),
+			'description' => 'You can use image instead of icon for the title.',
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('input type text'),
-					'name' => 'type_text',
-					'required' => false,
+					'label' => $this->l('simple input text'),
+					'name' => 'type_text'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('input text with desc'),
+					'name' => 'type_text_desc',
+					'desc' => $this->l('desc input text')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('required input text'),
+					'name' => 'type_text_required',
+					'required' => true
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('input text with hint'),
+					'name' => 'type_text_hint',
 					'hint' => $this->l('hint input text')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('input text with prefix'),
+					'name' => 'type_text_prefix',
+					'prefix' => 'prefix'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('input text with suffix'),
+					'name' => 'type_text_suffix',
+					'suffix' => 'suffix'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('input text with placeholder'),
+					'name' => 'type_text_placeholder',
+					'placeholder' => 'placeholder'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('input text with suffix'),
+					'name' => 'type_text_maxchar',
+					'maxchar' => 30
 				),
 			),
 			'submit' => array(
@@ -79,7 +120,9 @@ class AdminPatternsControllerCore extends AdminController
 			'general' => array(
 				'title' =>	$this->l('General'),
 				'icon' =>	'icon-cogs',
-				'fields' =>	array(),
+				'fields' =>	array(
+
+					),
 				'submit' => array('title' => $this->l('Save'))
 			)
 		);
