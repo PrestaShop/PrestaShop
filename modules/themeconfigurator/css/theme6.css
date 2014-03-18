@@ -99,11 +99,17 @@ body {
   color: white;
 }
 
-.new-label, .sale-label {
+.new-label {
   background: #719f41;
 }
-.new-label:before, .new-label:after, .sale-label:before, .sale-label:after {
+.sale-label {
+  background: #f13340;
+}
+.new-label:before, .new-label:after {
   border-color: #719f41  transparent   transparent transparent;
+}
+.sale-label:before, .sale-label:after {
+  border-color: #AD2B34  transparent   transparent transparent;
 }
 
 ul.product_list.grid > li .product-container {
