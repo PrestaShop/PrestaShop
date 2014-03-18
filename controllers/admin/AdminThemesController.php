@@ -601,13 +601,12 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processUpdate()
 	{
-		if (Tools::getIsset('id_theme') && Tools::getIsset('name') && Tools::getIsset('responsive') && Tools::getIsset('directory'))
+		if (Tools::getIsset('id_theme') && Tools::getIsset('name') && Tools::getIsset('directory'))
 		{
 
 			$theme = New Theme((int)Tools::getValue('id_theme'));
 			$theme->name = Tools::getValue('name');
 			$theme->directory = Tools::getValue('directory');
-			$theme->responsive = Tools::getValue('responsive');
 			$theme->default_left_column = Tools::getValue('default_left_column');
 			$theme->default_right_column = Tools::getValue('default_right_column');
 			$nb_product_per_page = (int)Tools::getValue('product_per_page');
