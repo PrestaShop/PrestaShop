@@ -550,7 +550,7 @@ class AdminModulesControllerCore extends AdminController
 	public function postProcessDownload()
 	{
 	 	// PrestaShop demo mode
-		if (_PS_MODE_DEMO_)
+		if (_PS_MODE_DEMO_ || defined('_PS_HOST_MODE_'))
 		{
 			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 			return;
