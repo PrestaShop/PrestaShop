@@ -84,7 +84,7 @@ class HelperTreeCategoriesCore extends TreeCore
 	public function getInputName()
 	{
 		if (!isset($this->_input_name))
-			$this->_input_name = 'categoryBox';
+			$this->setInputName('categoryBox');
 
 		return $this->_input_name;
 	}
