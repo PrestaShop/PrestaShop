@@ -179,11 +179,16 @@ class Blockcmsinfo extends Module
 
 	protected function getListContent($id_lang)
 	{
-		return  Db::getInstance()->executeS('
+		$content =  Db::getInstance()->executeS('
 			SELECT r.`id_info`, r.`id_shop`, rl.`text`
 			FROM `'._DB_PREFIX_.'info` r
 			LEFT JOIN `'._DB_PREFIX_.'info_lang` rl ON (r.`id_info` = rl.`id_info`)
 			WHERE `id_lang` = '.(int)$id_lang.' '.Shop::addSqlRestrictionOnLang());
+		
+		foreach ($content as $key => $value)
+			$content[$key]['text'] = substr(strip_tags($value['text']), 0, 200);
+
+		return $content;
 	}
 
 	protected function initForm()
@@ -252,7 +257,11 @@ class Blockcmsinfo extends Module
 		
 			'id_info' => array(
 				'title' => $this->l('Custom block number'),
-				'width' => 40,
+				'type' => 'text',
+				'search'  => false,
+			),
+			'text' => array(
+				'title' => $this->l('Custom block text'),
 				'type' => 'text',
 				'search'  => false,
 			),
