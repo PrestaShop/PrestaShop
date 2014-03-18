@@ -99,6 +99,12 @@ body {
   color: white;
 }
 
+.alert-info {
+	background-color: #719f41;
+	border-color: #5F862F;
+	color: white;
+	font-weight: bold;
+}
 .new-label {
   background: #719f41;
 }
