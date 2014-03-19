@@ -144,6 +144,7 @@ class AdminLocalizationControllerCore extends AdminController
 			{
 				if (Tools::getValue('download_updated_pack') == '1' || defined('_PS_HOST_MODE_'))
 					$pack = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.Tools::getValue('iso_localization_pack').'.xml');
+					// https://crowdin.net/download/project/prestashop-official/sv-SE.zip
 				else
 					$pack = false;
 				
