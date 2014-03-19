@@ -615,6 +615,9 @@ class AdminThemesControllerCore extends AdminController
 
 			$theme->product_per_page = $nb_product_per_page;
 
+			if ($this->context->shop->id_theme == (int)Tools::getValue('id_theme'))
+				Configuration::updateValue('PS_PRODUCTS_PER_PAGE', $nb_product_per_page);
+
 			if (isset($_FILES['image_preview']) && $_FILES['image_preview']['error'] == 0)
 			{
 				if (@getimagesize($_FILES['image_preview']['tmp_name']) && !ImageManager::validateUpload($_FILES['image_preview'], 300000))
