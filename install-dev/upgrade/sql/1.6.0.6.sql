@@ -17,3 +17,5 @@ INSERT IGNORE INTO `PREFIX_theme_meta` ( `id_theme` , `id_meta` , `left_column` 
   FROM `PREFIX_theme` , `PREFIX_meta`;
   
 ALTER TABLE `PREFIX_tab` ADD `hide_host_mode` tinyint(1) NOT NULL DEFAULT '0' AFTER  `active`;
+
+UPDATE `PREFIX_employee` SET `bo_theme` = 'default';

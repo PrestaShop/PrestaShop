@@ -47,13 +47,18 @@ class AdminPatternsControllerCore extends AdminController
 			'type_text_readonly' => 'with value that you can\'t edit',
 			'days' => 17,
 			'months' => 3,
-			'years' => 2014
+			'years' => 2014,
+			'groupBox_1' => false,
+			'groupBox_2' => true,
+			'groupBox_3' => false,
+			'type_color' => '#8BC954',
+			'type_free' => '<p class="form-control-static">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lacinia in enim iaculis malesuada. Quisque congue fermentum leo et porta. Pellentesque a quam dui. Pellentesque sed augue id sem aliquet faucibus eu vel odio. Nullam non libero volutpat, pulvinar turpis non, gravida mauris. Nullam tincidunt id est at euismod. Quisque euismod quam in pellentesque mollis. Nulla suscipit porttitor massa, nec eleifend risus egestas in. Aenean luctus porttitor tempus. Morbi dolor leo, dictum id interdum vel, semper ac est. Maecenas justo augue, accumsan in velit nec, consectetur fringilla orci. Nunc ut ante erat. Curabitur dolor augue, eleifend a luctus non, aliquet a mi. Curabitur ultricies lectus in rhoncus sodales. Maecenas quis dictum erat. Suspendisse blandit lacus sed felis facilisis, in interdum quam congue.<p>'
 		);
 
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('patterns of helper form.tpl'),
-				'icon' => 'icon-envelope-alt'
+				'icon' => 'icon-edit'
 			),
 			'description' => 'You can use image instead of icon for the title.',
 			'input' => array(
@@ -239,14 +244,28 @@ class AdminPatternsControllerCore extends AdminController
 					'name' => 'type_switch',
 					'values' => array(
 						array(
-							'id' => 'type_male',
-							'value' => 0,
-							'label' => $this->l('first')
+							'id' => 'type_switch_on',
+							'value' => 0
 						),
 						array(
-							'id' => 'type_female',
-							'value' => 1,
-							'label' => $this->l('second')
+							'id' => 'type_switch_off',
+							'value' => 1
+						)
+					)
+				),
+				array(
+					'type' => 'switch',
+					'label' => $this->l('switch disabled'),
+					'name' => 'type_switch_disabled',
+					'disabled' => 'true',
+					'values' => array(
+						array(
+							'id' => 'type_switch_disabled_on',
+							'value' => 0
+						),
+						array(
+							'id' => 'type_switch_disabled_off',
+							'value' => 1
 						)
 					)
 				),
@@ -275,6 +294,51 @@ class AdminPatternsControllerCore extends AdminController
 						'months' => Tools::dateMonths(),
 						'years' => Tools::dateYears()
 					)
+				),
+				array(
+					'type' => 'group',
+					'label' => $this->l('group'),
+					'name' => 'type_group',
+					'values' => Group::getGroups(Context::getContext()->language->id)
+				),
+				array(
+					'type' => 'categories',
+					'label' => $this->l('tree categories'),
+					'name' => 'type_categories',
+					'tree' => array(
+						'id' => 'id_category',
+						'name' => 'name_category',
+						'selected_categories' => array(3),
+					)
+				),
+				array(
+					'type' => 'file',
+					'label' => $this->l('input file'),
+					'name' => 'type_file'
+				),
+				array(
+					'type' => 'color',
+					'label' => $this->l('input color'),
+					'name' => 'type_color'
+				),
+				array(
+					'type' => 'date',
+					'label' => $this->l('input date'),
+					'name' => 'type_date'
+				),
+				array(
+					'type' => 'datetime',
+					'label' => $this->l('input date and time'),
+					'name' => 'type_datetime'
+				),
+				array(
+					'type' => 'html',
+					'name' => '<hr><strong>html:</strong> for writing free html like this <span class="label label-danger">i\'m a label</span> <span class="badge badge-info">i\'m a badge</span> <button type="button" class="btn btn-default">i\'m a button</button><hr>'
+				),
+				array(
+					'type' => 'free',
+					'label' => $this->l('input free'),
+					'name' => 'type_free'
 				),
 				//...
 			),
@@ -307,9 +371,7 @@ class AdminPatternsControllerCore extends AdminController
 			'general' => array(
 				'title' =>	$this->l('General'),
 				'icon' =>	'icon-cogs',
-				'fields' =>	array(
-
-					),
+				'fields' =>	array(),
 				'submit' => array('title' => $this->l('Save'))
 			)
 		);
