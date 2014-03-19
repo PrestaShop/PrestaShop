@@ -185,7 +185,7 @@ abstract class DbCore
 		
 		// Add here your slave(s) server(s) in this file
 		if (file_exists(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php'))
-			self::$_servers = array_merge(self::$_servers, include_once(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php'));
+			self::$_servers = array_merge(self::$_servers, require(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php'));
 			
 		$total_servers = count(self::$_servers);
 		if ($master || $total_servers == 1)
