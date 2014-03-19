@@ -335,7 +335,7 @@ class AdminGroupsControllerCore extends AdminController
 		$this->fields_value['reduction'] = isset($group->reduction) ? $group->reduction : 0;
 
 		$tree = new HelperTreeCategories('categories-tree');
-		$this->tpl_form_vars['categoryTreeView'] = $tree->render();
+		$this->tpl_form_vars['categoryTreeView'] = $tree->setRootCategory(Category::getRootCategory())->render();
 
 		return parent::renderForm();
 	}
