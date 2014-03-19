@@ -25,39 +25,39 @@
 	</table>
 </div>
 <div class="row">
-	<div class="col-lg-8">
+	<div class="col-lg-6">
 		{if $bulk_actions && $has_bulk_actions}
 		<div class="btn-group bulk-actions">
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				{l s='Bulk actions'} <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">
-			<li>
-				<a href="#" onclick="javascript:checkDelBoxes($(this).closest('form').get(0), '{$list_id}Box[]', true);return false;">
-					<i class="icon-check-sign"></i>&nbsp;{l s='Select all'}
-				</a>
-			</li>
-			<li>
-				<a href="#" onclick="javascript:checkDelBoxes($(this).closest('form').get(0), '{$list_id}Box[]', false);return false;">
-					<i class="icon-check-empty"></i>&nbsp;{l s='Unselect all'}
-				</a>
-			</li>
-			<li class="divider"></li>
-			{foreach $bulk_actions as $key => $params}
-				<li{if $params.text == 'divider'} class="divider"{/if}>
-					{if $params.text != 'divider'}
-					<a href="#" onclick="{if isset($params.confirm)}if (confirm('{$params.confirm}')){/if}sendBulkAction($(this).closest('form').get(0), 'submitBulk{$key}{$table}');">
-						{if isset($params.icon)}<i class="{$params.icon}"></i>{/if}&nbsp;{$params.text}
+				<li>
+					<a href="#" onclick="javascript:checkDelBoxes($(this).closest('form').get(0), '{$list_id}Box[]', true);return false;">
+						<i class="icon-check-sign"></i>&nbsp;{l s='Select all'}
 					</a>
-					{/if}
 				</li>
-			{/foreach}
+				<li>
+					<a href="#" onclick="javascript:checkDelBoxes($(this).closest('form').get(0), '{$list_id}Box[]', false);return false;">
+						<i class="icon-check-empty"></i>&nbsp;{l s='Unselect all'}
+					</a>
+				</li>
+				<li class="divider"></li>
+				{foreach $bulk_actions as $key => $params}
+					<li{if $params.text == 'divider'} class="divider"{/if}>
+						{if $params.text != 'divider'}
+						<a href="#" onclick="{if isset($params.confirm)}if (confirm('{$params.confirm}')){/if}sendBulkAction($(this).closest('form').get(0), 'submitBulk{$key}{$table}');">
+							{if isset($params.icon)}<i class="{$params.icon}"></i>{/if}&nbsp;{$params.text}
+						</a>
+						{/if}
+					</li>
+				{/foreach}
 			</ul>
 		</div>
 		{/if}
 	</div>
 	{if !$simple_header && $list_total > $pagination[0]}
-	<div class="col-lg-4">
+	<div class="col-lg-6">
 		{* Choose number of results per page *}
 		<span class="pagination">
 			{l s='Display'}: 

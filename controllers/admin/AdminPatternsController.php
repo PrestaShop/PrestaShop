@@ -344,7 +344,8 @@ class AdminPatternsControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-			)
+			),
+			'buttons' => array(),
 		);
 
 		return parent::renderForm();
@@ -358,9 +359,31 @@ class AdminPatternsControllerCore extends AdminController
 
 	public function renderList()
 	{
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
 		$this->fields_list = array(
-			'id' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-			);
+			'id_carrier' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
+			),
+			'name' => array(
+				'title' => $this->l('Name')
+			),
+			'image' => array(
+				'title' => $this->l('Logo'),
+				'align' => 'center',
+				'image' => 's',
+				'class' => 'fixed-width-xs',
+				'orderby' => false,
+				'search' => false
+			)
+		);
 		
 		return parent::renderList();
 	}
