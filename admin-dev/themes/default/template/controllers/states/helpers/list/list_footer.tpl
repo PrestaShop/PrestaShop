@@ -173,7 +173,7 @@
 				cache: false,
 				dataType: 'json',
 				success: function(data) {
-					var html = $(data);
+					var html = $(data.data);
 					html.hide();
 					$('#select_submitBulk').after(html);
 					html.fadeIn('slow');

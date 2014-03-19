@@ -23,9 +23,13 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-function ps1604_update_employee_date()
-{
-	if (defined('_PS_CREATION_DATE_'))
-		return Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'employee` SET stats_date_from = \''.addslashes(_PS_CREATION_DATE_).'\' WHERE `stats_date_from` < \''.addslashes(_PS_CREATION_DATE_).'\'');
-	return true;
-}
+
+
+/*
+return array(
+	array('server' => '192.168.0.15', 'user' => 'rep', 'password' => '123456', 'database' => 'rep'),
+	array('server' => '192.168.0.3', 'user' => 'myuser', 'password' => 'mypassword', 'database' => 'mydatabase'),
+	);
+*/
+
+return array();

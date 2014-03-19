@@ -131,7 +131,8 @@
 													{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if}
 													{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}
 													{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if}
-													{if isset($input.required) && $input.required } required="required" {/if} />
+													{if isset($input.required) && $input.required} required="required" {/if}
+													{if isset($input.placeholder) && $input.placeholder} placeholder="{$input.placeholder}"{/if} />
 													{if isset($input.suffix)}
 													<span class="input-group-addon">
 													  {$input.suffix}
@@ -216,6 +217,7 @@
 											{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}
 											{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if}
 											{if isset($input.required) && $input.required } required="required" {/if}
+											{if isset($input.placeholder) && $input.placeholder } placeholder="{$input.placeholder}"{/if}
 											/>
 										{if isset($input.suffix)}
 										<span class="input-group-addon">
@@ -236,7 +238,6 @@
 												$target.html(max-$source.val().length);
 											});
 										}
-
 										$(document).ready(function(){
 											countDown($("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"), $("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter"));
 										});
@@ -245,7 +246,7 @@
 									{/if}
 								{elseif $input.type == 'textbutton'}
 									{assign var='value_text' value=$fields_value[$input.name]}
-									<div class="form-group">
+									<div class="row">
 										<div class="col-lg-9">
 										{if isset($input.maxchar)}
 										<div class="input-group">
@@ -264,7 +265,9 @@
 											{if isset($input.class)} class="{$input.class}"{/if}
 											{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if}
 											{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}
-											{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if} />
+											{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if}
+											{if isset($input.placeholder) && $input.placeholder } placeholder="{$input.placeholder}"{/if}
+											/>
 										{if isset($input.suffix)}{$input.suffix}{/if}
 										{if isset($input.maxchar)}
 										</div>
