@@ -67,7 +67,7 @@ class TabCore extends ObjectModel
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 64),
 		),
 	);
-
+	
 	protected static $_getIdFromClassName = null;
 
 	/**
@@ -209,7 +209,7 @@ class TabCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'tab` t
 				LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl
 					ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
-				WHERE t.`id_tab` = '.(int)$id_tab
+				WHERE t.`id_tab` = '.(int)$id_tab.(defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '')
 			);
 			Cache::store($cache_id, $result);
 		}
@@ -252,6 +252,7 @@ class TabCore extends ObjectModel
 			SELECT t.*, tl.name
 			FROM `'._DB_PREFIX_.'tab` t
 			LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
+			WHERE 1 '.(defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '').'
 			ORDER BY t.`position` ASC');
 			foreach ($result as $row)
 			{
@@ -521,6 +522,7 @@ class TabCore extends ObjectModel
 			AND a.`delete` = 1
 			AND a.`add` = 1
 			AND t.`id_parent` != 0 AND t.`id_parent` != -1
+			'.(defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '').'
 			ORDER BY t.`id_parent` ASC
 		');
 	}
