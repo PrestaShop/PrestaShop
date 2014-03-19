@@ -235,6 +235,8 @@ class ThemeConfigurator extends Module
 
 	public function hookdisplayTop()
 	{
+		if (!isset($this->context->controller->php_self) || $this->context->controller->php_self != 'index')
+			return;
 		$this->context->smarty->assign(array(
 			'htmlitems' => $this->getItemsFromHook('top'),
 			'hook' => 'top'
