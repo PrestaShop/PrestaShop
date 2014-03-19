@@ -70,6 +70,11 @@
 							var syntax = $(this).find('img').attr('alt');
 							$('#BoxUseSpecialSyntax .syntax span').html(syntax+".");
 						});
+
+						$("a.sidetoggle").click(function(){
+							$('#'+$(this).attr('data-slidetoggle')).slideToggle();
+							return false;
+						});
 					});
 				</script>
 
@@ -98,7 +103,7 @@
 				{if !empty($newLang)}
 					<div class="panel">
 						<h3>
-							<a href="javascript:$('#{$k}-tpl').slideToggle();">
+							<a href="#" class="sidetoggle" data-slidetoggle="{$k}-tpl">
 								<i class="icon-caret-down"></i>
 								{$k}
 							</a>
