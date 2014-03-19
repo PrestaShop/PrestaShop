@@ -36,7 +36,7 @@
 	
 		<span class="title">{$title|escape}</span>
 		<span cLass="subtitle">{$subtitle|escape}</span>
-		<span class="value">{$value|escape}</span>
+		<span class="value">{$value|escape|replace:'&amp;':'&'}</span>
 	</div>
 	
 </{if isset($href) && $href}a{else}div{/if}>
