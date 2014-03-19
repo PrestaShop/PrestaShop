@@ -48,7 +48,7 @@ function p15014_copy_missing_images_tab_from_installer()
 		{
 			if ($img[0] == '.')
 				continue;
-			if (!file_exists(_PS_ROOT_DIR_.$DIR_SEP.'img'.$DIR_SEP.$dir.$DIR_SEP.$img))
+			if (!file_exists(_PS_ROOT_DIR_.$DIR_SEP.'img'.$DIR_SEP.$dir.$DIR_SEP.$img) && file_exists($install_dir_path.$DIR_SEP.$dir.$DIR_SEP.$img))
 				$res &= copy($install_dir_path.$DIR_SEP.$dir.$DIR_SEP.$img, _PS_ROOT_DIR_.$DIR_SEP.'img'.$DIR_SEP.$dir.$DIR_SEP.$img);
 		}
 	}
