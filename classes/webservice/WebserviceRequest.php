@@ -353,7 +353,7 @@ class WebserviceRequestCore
 			$id_county = (int)(isset($value['county']) ? $value['county'] : 0);
 			$return_value = Product::priceCalculation($id_shop, $value['object_id'], $id_product_attribute, $id_country, $id_state, $id_county, $id_currency, $id_group, $quantity,
 									$use_tax, $decimals, $only_reduc, $use_reduc, $use_ecotax, $specific_price_output, null);
-			$arr_return[$name] = array('sqlId'=>strtolower($name), 'value'=>$return_value);
+			$arr_return[$name] = array('sqlId'=>strtolower($name), 'value'=>sprintf('%f', $return_value));
 		}
 		return $arr_return;
 	}
