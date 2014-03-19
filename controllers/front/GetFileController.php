@@ -275,15 +275,52 @@ class GetFileControllerCore extends FrontController
         }
 
 		/* Set headers for download */
-		header('Content-Transfer-Encoding: binary');
-		header('Content-Type: '.$mimeType);
-		header('Content-Length: '.filesize($file));
-		header('Content-Disposition: attachment; filename="'.$filename.'"');
-		$fp = fopen($file, 'rb');
-		while (!feof($fp))
-			echo fgets($fp, 16384);
+        $fileSize = sprintf('%u', filesize($file));
+        header("Pragma: public");
+        header("Expires: -1");
+        header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
+        header('Accept-Ranges: bytes');
+        header('Content-Transfer-Encoding: binary');
+        header('Content-Type: ' . $mimeType);
 
-		exit;
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+        if (isset($_SERVER['HTTP_RANGE'])) {
+            list($size_unit, $range_orig) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+            if ($size_unit == 'bytes') {
+                //multiple ranges could be specified at the same time, but for simplicity only serve the first range
+                //http://tools.ietf.org/id/draft-ietf-http-range-retrieval-00.txt
+                list($range, $extra_ranges) = explode(',', $range_orig, 2);
+            } else {
+                $range = '';
+                header('HTTP/1.1 416 Requested Range Not Satisfiable');
+                exit;
+            }
+        } else {
+            $range = '';
+        }
+        list($seek_start, $seek_end) = explode('-', $range, 2);
+        $seek_end = (empty($seek_end)) ? ($fileSize - 1) : min(abs(intval($seek_end)), ($fileSize - 1));
+        $seek_start = (empty($seek_start) || $seek_end < abs(intval($seek_start))) ? 0 : max(abs(intval($seek_start)), 0);
+
+        //Only send partial content header if downloading a piece of the file (IE workaround)
+        if ($seek_start > 0 || $seek_end < ($fileSize - 1)) {
+            header('HTTP/1.1 206 Partial Content');
+            header('Content-Range: bytes ' . $seek_start . '-' . $seek_end . '/' . $fileSize);
+            header('Content-Length: ' . ($seek_end - $seek_start + 1));
+        } else {
+            header('Content-Length: ' . $fileSize);
+        }
+
+        @set_time_limit(0);
+
+        $fp = fopen($file, 'rb');
+        fseek($fp, $seek_start);
+        while (!feof($fp)) {
+            echo fgets($fp, 16384);
+        }
+        fclose($fp);
+        exit;
 	}
 
 	/**
