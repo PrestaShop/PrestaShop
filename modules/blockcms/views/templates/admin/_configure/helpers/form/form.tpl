@@ -66,7 +66,7 @@
         {if isset($cms_blocks_positions) && count($cms_blocks_positions) > 0}
 
             {foreach $cms_blocks_positions as $key => $cms_blocks_position}
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <h3 style="margin-top:1px;">
                         {if $key == 0}
                             {l s='Left blocks' mod='blockcms'}
