@@ -155,6 +155,12 @@ class AdminPaymentControllerCore extends AdminController
 		return parent::initContent();
 	}
 
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJqueryPlugin('fancybox');
+	}
+
 	public function renderView()
 	{
 		$this->toolbar_title = $this->l('Payment');
