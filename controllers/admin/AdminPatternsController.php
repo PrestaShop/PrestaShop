@@ -42,6 +42,12 @@ class AdminPatternsControllerCore extends AdminController
 
 	public function renderForm()
 	{
+
+		$this->fields_value = array(
+			'type_text' => 'with value',
+			'type_text_readonly' => 'with value that you can\'t edit'
+		);
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('patterns of helper form.tpl'),
@@ -98,14 +104,9 @@ class AdminPatternsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('input text with suffix'),
-					'name' => 'type_text_maxchar'
-				),
-				array(
-					'type' => 'text',
 					'lang' => true,
 					'label' => $this->l('input text multilang'),
-					'name' => 'type_text_maxchar'
+					'name' => 'type_text_multilang'
 				),
 				array(
 					'type' => 'text',
@@ -114,9 +115,77 @@ class AdminPatternsControllerCore extends AdminController
 					'name' => 'type_text_readonly'
 				),
 				array(
+					'type' => 'text',
+					'label' => $this->l('input fixed-width-xs'),
+					'name' => 'type_text_xs',
+					'class' => 'input fixed-width-xs'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('input fixed-width-sm'),
+					'name' => 'type_text_sm',
+					'class' => 'input fixed-width-sm'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('input fixed-width-md'),
+					'name' => 'type_text_md',
+					'class' => 'input fixed-width-md'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('input fixed-width-lg'),
+					'name' => 'type_text_lg',
+					'class' => 'input fixed-width-lg'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('input fixed-width-xl'),
+					'name' => 'type_text_xl',
+					'class' => 'input fixed-width-xl'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('input fixed-width-xxl'),
+					'name' => 'type_text_xxl',
+					'class' => 'fixed-width-xxl'
+				),
+				array(
 					'type' => 'tags',
 					'label' => $this->l('input tags'),
 					'name' => 'type_text_tags'
+				),
+				array(
+					'type' => 'textbutton',
+					'label' => $this->l('input with button'),
+					'name' => 'type_textbutton',
+					'button' => array(
+						'label' => $this->l('do something'),
+						'attributes' => array(
+							'onclick' => 'alert(\'something done\');'
+						)
+					)
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('select'),
+					'name' => 'type_select',
+					'options' => array(
+						'query' => Zone::getZones(),
+						'id' => 'id_zone',
+						'name' => 'name'
+					),
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('select with chosen'),
+					'name' => 'type_select_chosen',
+					'class' => 'chosen',
+					'options' => array(
+						'query' => Country::getCountries((int)Context::getContext()->cookie->id_lang),
+						'id' => 'id_zone',
+						'name' => 'name'
+					),
 				),
 			),
 			'submit' => array(
