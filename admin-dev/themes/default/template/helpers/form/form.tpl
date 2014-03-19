@@ -238,7 +238,6 @@
 												$target.html(max-$source.val().length);
 											});
 										}
-
 										$(document).ready(function(){
 											countDown($("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"), $("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter"));
 										});
@@ -247,7 +246,7 @@
 									{/if}
 								{elseif $input.type == 'textbutton'}
 									{assign var='value_text' value=$fields_value[$input.name]}
-									<div class="form-group">
+									<div class="row">
 										<div class="col-lg-9">
 										{if isset($input.maxchar)}
 										<div class="input-group">
