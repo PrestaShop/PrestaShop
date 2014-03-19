@@ -562,31 +562,27 @@ function updateDisplay()
 	//update display of the the prices in relation to tax, discount, ecotax, and currency criteria
 	if (!selectedCombination['unavailable'] && productShowPrice == 1)
 	{
-		var priceTaxExclWithoutGroupReduction = '';
-
 		// retrieve price without group_reduction in order to compute the group reduction after
 		// the specific price discount (done in the JS in order to keep backward compatibility)
-		priceTaxExclWithoutGroupReduction = ps_round(productPriceTaxExcluded, 6) * (1 / group_reduction);
 
 		var tax = (taxRate / 100) + 1;
-		var taxExclPrice = priceTaxExclWithoutGroupReduction + (selectedCombination['price'] * currencyRate);
 
-		if (selectedCombination.specific_price && selectedCombination.specific_price['id_product_attribute'])
+		combID = $('#idCombination').val();
+		comb2 = combinationsFromController[combID];
+		if (comb2.price != 0)
 		{
-			if (selectedCombination.specific_price['price'] && selectedCombination.specific_price['price'] >=0)
-				var taxExclPrice = (specific_currency ? selectedCombination.specific_price['price'] : selectedCombination.specific_price['price'] * currencyRate);
-			else
-				var taxExclPrice = productBasePriceTaxExcluded * currencyRate + (selectedCombination['price'] * currencyRate);
+			var taxExclPrice = productPriceTaxExcluded + comb2.price;
+			productPriceWithoutReductionDisplay = productPriceWithoutReductionDisplay + (comb2.price * tax);
 		}
-		else if (product_specific_price.price && product_specific_price.price >= 0)
-			var taxExclPrice = (specific_currency ? product_specific_price.price : product_specific_price.price * currencyRate) + (selectedCombination['price'] * currencyRate);
+		else
+			var taxExclPrice = productPriceTaxExcluded;
+
 
 		if (!displayPrice && !noTaxForThisProduct)
 			productPriceDisplay = ps_round(taxExclPrice * tax, 2); // Need to be global => no var
 		else
 			productPriceDisplay = ps_round(taxExclPrice, 2); // Need to be global => no var
 
-		productPriceWithoutReductionDisplay = productPriceDisplay * group_reduction;
 		var reduction = 0;
 		if (selectedCombination['specific_price'].reduction_price || selectedCombination['specific_price'].reduction_percent)
 		{
@@ -640,8 +636,9 @@ function updateDisplay()
 		else
 			$('#not_impacted_by_discount').hide();
 
+
 		productPriceDisplay -= reduction;
-		productPriceDisplay = ps_round(productPriceDisplay * group_reduction, 2);
+		productPriceDisplay = ps_round(productPriceDisplay * (1 - group_reduction), 2);
 
 		var ecotaxAmount = !displayPrice ? ps_round(selectedCombination['ecotax'] * (1 + ecotaxTax_rate / 100), 2) : selectedCombination['ecotax'];
 
