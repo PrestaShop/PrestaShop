@@ -58,10 +58,16 @@
 						{$store.name|escape:'html':'UTF-8'}
 					</td>
 		            <td class="address">
-						{$store.address1|escape:'html':'UTF-8'}
-						{if $store.address2}{$store.address2|escape:'html':'UTF-8'}{/if}
-						{$store.postcode} {$store.city|escape:'html':'UTF-8'}{if $store.state}, {$store.state}{/if}
-						{$store.country|escape:'html':'UTF-8'}
+		            {assign value=$store.id_store var="id_store"}
+		            {foreach from=$addresses_formated.$id_store.ordered name=adr_loop item=pattern}
+	                    {assign var=addressKey value=" "|explode:$pattern}
+	                    {foreach from=$addressKey item=key name="word_loop"}
+	                        <span {if isset($addresses_style[$key])} class="{$addresses_style[$key]}"{/if}>
+	                            {$addresses_formated.$id_store.formated[$key|replace:',':'']|escape:'html':'UTF-8'}
+	                        </span>
+	                    {/foreach}
+	                {/foreach}
+	                	<br/>
 						{if $store.phone}{l s='Phone:' js=0} {$store.phone}{/if}
 					</td>
 		            <td class="store-hours">
