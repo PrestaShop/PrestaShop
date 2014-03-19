@@ -193,7 +193,7 @@ class StatsSales extends ModuleGraph
 
 	public function setOption($options, $layers = 1)
 	{
-		list($this->_option, $this->id_country) = explode('-', $options);
+		list($this->option, $this->id_country) = explode('-', $options);
 		switch ($this->option)
 		{
 			case 1:
