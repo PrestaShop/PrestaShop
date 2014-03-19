@@ -22,8 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{if $page_name =='index'}
 {if isset($htmlitems) && $htmlitems}
 <div id="htmlcontent_{$hook|escape:'htmlall':'UTF-8'}">
 	<ul class="htmlcontent-home clearfix row">
@@ -50,5 +48,4 @@
 		{/foreach}
 	</ul>
 </div>
-{/if}
 {/if}
