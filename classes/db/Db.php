@@ -182,11 +182,9 @@ abstract class DbCore
 			self::$_servers = array(
 				array('server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_), /* MySQL Master server */
 			);
-		
-		// Add here your slave(s) server(s) in this file
-		if (file_exists(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php'))
-			self::$_servers = array_merge(self::$_servers, require(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php'));
-			
+
+		Db::loadSlaveServers();
+
 		$total_servers = count(self::$_servers);
 		if ($master || $total_servers == 1)
 			$id_server = 0;
@@ -208,6 +206,19 @@ abstract class DbCore
 		}
 
 		return self::$instance[$id_server];
+	}
+
+	protected static function loadSlaveServers()
+	{
+		static $is_loaded = null;
+		if ($is_loaded !== null)
+			return;
+
+		// Add here your slave(s) server(s) in this file
+		if (file_exists(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php'))
+			self::$_servers = array_merge(self::$_servers, require(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php'));
+
+		$is_loaded = true;
 	}
 
 	/**

@@ -173,7 +173,7 @@ function validate_isPasswd(s)
 	return (s.length >= 5 && s.length < 255);
 }
 
-$(document).on('keyup blur', 'input.validate, textarea.validate', function() {
+$(document).on('focusout', 'input.validate, textarea.validate', function() {
 	if ($(this).hasClass('is_required') || $(this).val().length)
 	{
 		if ($(this).attr('name') == 'postcode' && typeof(countriesNeedZipCode[$('#id_country option:selected').val()]) != 'undefined')
