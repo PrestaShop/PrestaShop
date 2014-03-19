@@ -42,10 +42,12 @@ class AdminPatternsControllerCore extends AdminController
 
 	public function renderForm()
 	{
-
 		$this->fields_value = array(
 			'type_text' => 'with value',
-			'type_text_readonly' => 'with value that you can\'t edit'
+			'type_text_readonly' => 'with value that you can\'t edit',
+			'days' => 17,
+			'months' => 3,
+			'years' => 2014
 		);
 
 		$this->fields_form = array(
@@ -187,6 +189,94 @@ class AdminPatternsControllerCore extends AdminController
 						'name' => 'name'
 					),
 				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('select multiple with chosen'),
+					'name' => 'type_select_multiple_chosen',
+					'class' => 'chosen',
+					'multiple' => true,
+					'options' => array(
+						'query' => Country::getCountries((int)Context::getContext()->cookie->id_lang),
+						'id' => 'id_zone',
+						'name' => 'name'
+					),
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('radios'),
+					'name' => 'type_radio',
+					'values' => array(
+						array(
+							'id' => 'type_male',
+							'value' => 0,
+							'label' => $this->l('first')
+						),
+						array(
+							'id' => 'type_female',
+							'value' => 1,
+							'label' => $this->l('second')
+						),
+						array(
+							'id' => 'type_neutral',
+							'value' => 2,
+							'label' => $this->l('third')
+						)
+					)
+				),
+				array(
+					'type' => 'checkbox',
+					'label' => $this->l('checkbox'),
+					'name' => 'type_checkbox',
+					'values' => array(
+						'query' => Zone::getZones(),
+						'id' => 'id_zone',
+						'name' => 'name'
+					)
+				),
+				array(
+					'type' => 'switch',
+					'label' => $this->l('switch'),
+					'name' => 'type_switch',
+					'values' => array(
+						array(
+							'id' => 'type_male',
+							'value' => 0,
+							'label' => $this->l('first')
+						),
+						array(
+							'id' => 'type_female',
+							'value' => 1,
+							'label' => $this->l('second')
+						)
+					)
+				),
+				array(
+					'type' => 'textarea',
+					'label' => $this->l('text area (with autoresize)'),
+					'name' => 'type_textarea'
+				),
+				array(
+					'type' => 'textarea',
+					'label' => $this->l('text area with rich text editor'),
+					'name' => 'type_textarea_rte',
+					'autoload_rte' => true
+				),
+				array(
+					'type' => 'password',
+					'label' => $this->l('input password'),
+					'name' => 'type_password'
+				),
+				array(
+					'type' => 'birthday',
+					'label' => $this->l('input birthday'),
+					'name' => 'type_birthday',
+					'options' => array(
+						'days' => Tools::dateDays(),
+						'months' => Tools::dateMonths(),
+						'years' => Tools::dateYears()
+					)
+				),
+				//...
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
