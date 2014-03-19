@@ -346,13 +346,11 @@ class WebserviceRequestCore
 			$use_tax = (int)(isset($value['use_tax']) ? $value['use_tax'] : Configuration::get('PS_TAX'));
 			$decimals = (int)(isset($value['decimals']) ? $value['decimals'] : Configuration::get('PS_PRICE_ROUND_MODE'));
 			$id_product_attribute = (int)(isset($value['product_attribute']) ? $value['product_attribute'] : null);
-			$id_county = (int)(isset($value['county']) ? $value['county'] : null);
-
 			$only_reduc = (int)(isset($value['only_reduction']) ? $value['only_reduction'] : false);
 			$use_reduc = (int)(isset($value['use_reduction']) ? $value['use_reduction'] : true);
 			$use_ecotax = (int)(isset($value['use_ecotax']) ? $value['use_ecotax'] : Configuration::get('PS_USE_ECOTAX'));
 			$specific_price_output = null;
-			$id_county = (isset($value['county']) ? $value['county'] : 0);
+			$id_county = (int)(isset($value['county']) ? $value['county'] : 0);
 			$return_value = Product::priceCalculation($id_shop, $value['object_id'], $id_product_attribute, $id_country, $id_state, $id_county, $id_currency, $id_group, $quantity,
 									$use_tax, $decimals, $only_reduc, $use_reduc, $use_ecotax, $specific_price_output, null);
 			$arr_return[$name] = array('sqlId'=>strtolower($name), 'value'=>$return_value);
