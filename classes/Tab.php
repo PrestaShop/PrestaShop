@@ -40,8 +40,11 @@ class TabCore extends ObjectModel
 	/** @var integer position */
 	public $position;
 
-	/** @var integer active */
+	/** @var boolean active */
 	public $active = true;
+	
+	/** @var integer hide_host_mode */
+	public $hide_host_mode = false;
 	
 	const TAB_MODULE_LIST_URL = 'api.prestashop.com/xml/tab_modules_list.xml';
 
@@ -58,6 +61,7 @@ class TabCore extends ObjectModel
 			'module' => 	array('type' => self::TYPE_STRING, 'validate' => 'isTabName', 'size' => 64),
 			'class_name' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 64),
 			'active' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'hide_host_mode' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
 			// Lang fields
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 64),
@@ -98,8 +102,8 @@ class TabCore extends ObjectModel
 		// Add tab
 		if (parent::add($autodate, $null_values))
 		{	
-                        //forces cache to be reloaded
-                        self::$_getIdFromClassName = null;
+            //forces cache to be reloaded
+            self::$_getIdFromClassName = null;
 			return Tab::initAccess($this->id);
 		}
 		return false;
