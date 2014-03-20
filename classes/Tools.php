@@ -1671,9 +1671,7 @@ class ToolsCore
 	{
 		if ($stream_context == null && preg_match('/^https?:\/\//', $url))
 			$stream_context = @stream_context_create(array('http' => array('timeout' => $curl_timeout)));
-		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $url))
-			return @file_get_contents($url, $use_include_path, $stream_context);
-		elseif (function_exists('curl_init'))
+		if (function_exists('curl_init'))
 		{
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -1697,6 +1695,8 @@ class ToolsCore
 			curl_close($curl);
 			return $content;
 		}
+		elseif (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $url))
+			return @file_get_contents($url, $use_include_path, $stream_context);
 		else
 			return false;
 	}
