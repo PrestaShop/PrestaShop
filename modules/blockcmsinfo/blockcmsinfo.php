@@ -36,7 +36,7 @@ class Blockcmsinfo extends Module
 	{
 		$this->name = 'blockcmsinfo';
 		$this->tab = 'front_office_features';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->author = 'PrestaShop';
 		$this->bootstrap = true;
 		$this->need_instance = 0;
@@ -47,30 +47,32 @@ class Blockcmsinfo extends Module
 
 	public function install()
 	{
-			return parent::install() &&
-			$this->installDB() &&
-			Configuration::updateValue('BLOCKCMSINFO_NBBLOCKS', 2) &&
-			$this->registerHook('home') && $this->installFixtures() &&
-			$this->disableDevice(Context::DEVICE_TABLET | Context::DEVICE_MOBILE);
+		return parent::install() &&
+		$this->installDB() &&
+		Configuration::updateValue('BLOCKCMSINFO_NBBLOCKS', 2) &&
+		$this->registerHook('home') && $this->installFixtures() &&
+		$this->disableDevice(Context::DEVICE_TABLET | Context::DEVICE_MOBILE);
 	}
 
 	public function installDB()
 	{
 		$return = true;
 		$return &= Db::getInstance()->execute('
-			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'info` (
+				CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'info` (
 				`id_info` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 				`id_shop` int(10) unsigned NOT NULL ,
 				PRIMARY KEY (`id_info`)
-			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
+			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;'
+		);
 
 		$return &= Db::getInstance()->execute('
-			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'info_lang` (
+				CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'info_lang` (
 				`id_info` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 				`id_lang` int(10) unsigned NOT NULL ,
 				`text` text NOT NULL,
 				PRIMARY KEY (`id_info`, `id_lang`)
-			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
+			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;'
+		);
 
 		return $return;
 	}
@@ -78,9 +80,9 @@ class Blockcmsinfo extends Module
 	public function uninstall()
 	{
 		// Delete configuration
-			return Configuration::deleteByName('BLOCKCMSINFO_NBBLOCKS') &&
-			$this->uninstallDB() &&
-			parent::uninstall();
+		return Configuration::deleteByName('BLOCKCMSINFO_NBBLOCKS') &&
+		$this->uninstallDB() &&
+		parent::uninstall();
 	}
 
 	public function uninstallDB()
@@ -100,7 +102,7 @@ class Blockcmsinfo extends Module
 
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -122,7 +124,7 @@ class Blockcmsinfo extends Module
 				$info = new infoClass();
 			$info->copyFromPost();
 			$info->id_shop = $this->context->shop->id;
-			
+
 			if ($info->validateFields(false) && $info->validateFieldsLang(false))
 			{
 				$info->save();
@@ -147,7 +149,7 @@ class Blockcmsinfo extends Module
 			{
 				$this->fields_form[0]['form']['input'][] = array('type' => 'hidden', 'name' => 'id_info');
 				$helper->fields_value['id_info'] = (int)$id_info;
- 			}
+			}
 
 			return $html.$helper->generateForm($this->fields_form);
 		}
@@ -161,6 +163,7 @@ class Blockcmsinfo extends Module
 		else
 		{
 			$helper = $this->initList();
+
 			return $html.$helper->generateList($this->getListContent((int)Configuration::get('PS_LANG_DEFAULT')), $this->fields_list);
 		}
 
@@ -179,12 +182,15 @@ class Blockcmsinfo extends Module
 
 	protected function getListContent($id_lang)
 	{
-		$content =  Db::getInstance()->executeS('
+		$content = Db::getInstance()->executeS('
 			SELECT r.`id_info`, r.`id_shop`, rl.`text`
 			FROM `'._DB_PREFIX_.'info` r
 			LEFT JOIN `'._DB_PREFIX_.'info_lang` rl ON (r.`id_info` = rl.`id_info`)
-			WHERE `id_lang` = '.(int)$id_lang.' '.Shop::addSqlRestrictionOnLang());
-		
+			WHERE `id_lang` = '.(int)$id_lang.
+			(Tools::getIsset('blockcmsinfoOrderby') && Tools::getIsset('blockcmsinfoOrderway') ?
+				' ORDER BY '.Tools::getValue('blockcmsinfoOrderby').' '.Tools::getValue('blockcmsinfoOrderway') : '')
+		);
+
 		foreach ($content as $key => $value)
 			$content[$key]['text'] = substr(strip_tags($value['text']), 0, 200);
 
@@ -195,9 +201,9 @@ class Blockcmsinfo extends Module
 	{
 		$default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 		$this->fields_form[0]['form'] = array(
-					'tinymce' => true,
-					'legend' => array(
-					'title' => $this->l('New custom CMS block'),
+			'tinymce' => true,
+			'legend' => array(
+				'title' => $this->l('New custom CMS block'),
 			),
 			'input' => array(
 				array(
@@ -208,12 +214,19 @@ class Blockcmsinfo extends Module
 					'cols' => 40,
 					'rows' => 10,
 					'class' => 'rte',
-					'autoload_rte' => true, 
+					'autoload_rte' => true,
 
 				)
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
+			),
+			'buttons' => array(
+				array(
+					'href' => AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
+					'title' => $this->l('Back to list'),
+					'icon' => 'process-icon-back'
+				)
 			)
 		);
 
@@ -236,53 +249,60 @@ class Blockcmsinfo extends Module
 		$helper->toolbar_scroll = true;
 		$helper->title = $this->displayName;
 		$helper->submit_action = 'saveblockcmsinfo';
-		$helper->toolbar_btn =  array(
+		$helper->toolbar_btn = array(
 			'save' =>
-			array(
-				'desc' => $this->l('Save'),
-				'href' => AdminController::$currentIndex.'&configure='.$this->name.'&save'.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
-			),
+				array(
+					'desc' => $this->l('Save'),
+					'href' => AdminController::$currentIndex.'&configure='.$this->name.'&save'.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
+				),
 			'back' =>
-			array(
-				'href' => AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
-				'desc' => $this->l('Back to list')
-			)
+				array(
+					'href' => AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
+					'desc' => $this->l('Back to list')
+				)
 		);
+
 		return $helper;
 	}
 
 	protected function initList()
 	{
-		$this->fields_list =  array(
-		
+		$this->fields_list = array(
 			'id_info' => array(
 				'title' => $this->l('Custom block number'),
 				'type' => 'text',
-				'search'  => false,
+				'search' => false,
+				'orderby' => false,
 			),
 			'text' => array(
 				'title' => $this->l('Custom block text'),
 				'type' => 'text',
-				'search'  => false,
+				'search' => false,
+				'orderby' => false,
 			),
-			
 		);
 
+		$simple_header = true;
 		if (Shop::isFeatureActive())
-			$this->fields_list['id_shop'] = array('title'   => $this->l('ID Shop'),
-												  'align'   => 'center',
-												  'width'   => 25,
-												  'type'    => 'int'
+		{
+			$simple_header = false;
+			$this->fields_list['id_shop'] = array(
+				'title' => $this->l('ID Shop'),
+				'align' => 'center',
+				'width' => 25,
+				'type' => 'int',
+				'search' => false
 			);
+		}
 
 		$helper = new HelperList();
 		$helper->shopLinkType = '';
-		$helper->simple_header = false;
+		$helper->simple_header = $simple_header;
 		$helper->identifier = 'id_info';
 		$helper->actions = array('edit', 'delete');
 		$helper->show_toolbar = true;
 		$helper->imageType = 'jpg';
-		$helper->toolbar_btn['new'] =  array(
+		$helper->toolbar_btn['new'] = array(
 			'href' => AdminController::$currentIndex.'&configure='.$this->name.'&add'.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
 			'desc' => $this->l('Add new')
 		);
@@ -291,6 +311,7 @@ class Blockcmsinfo extends Module
 		$helper->table = $this->name;
 		$helper->token = Tools::getAdminTokenLite('AdminModules');
 		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+
 		return $helper;
 	}
 
@@ -302,6 +323,7 @@ class Blockcmsinfo extends Module
 			$infos = $this->getListContent($this->context->language->id);
 			$this->context->smarty->assign(array('infos' => $infos, 'nbblocks' => count($infos)));
 		}
+
 		return $this->display(__FILE__, 'blockcmsinfo.tpl', $this->getCacheId());
 	}
 
@@ -309,7 +331,8 @@ class Blockcmsinfo extends Module
 	{
 		$return = true;
 		$tab_texts = array(
-			array('text' => '<ul>
+			array(
+				'text' => '<ul>
 <li><em class="icon-truck" id="icon-truck"></em>
 <div class="type-text">
 <h3>Lorem Ipsum</h3>
@@ -328,19 +351,23 @@ class Blockcmsinfo extends Module
 <p>Lorem ipsum dolor sit amet conse ctetur voluptate velit esse cillum dolore eu</p>
 </div>
 </li>
-</ul>'),
-			array('text' => '<h3>Custom Block</h3>
+</ul>'
+			),
+			array(
+				'text' => '<h3>Custom Block</h3>
 <p><strong class="dark">Lorem ipsum dolor sit amet conse ctetu</strong></p>
-<p>Sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.</p>'),
+<p>Sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.</p>'
+			),
 		);
-		foreach($tab_texts as $tab)
+		foreach ($tab_texts as $tab)
 		{
 			$info = new infoClass();
 			foreach (Language::getLanguages(false) as $lang)
-			$info->text[$lang['id_lang']] =  $tab['text'];
+				$info->text[$lang['id_lang']] = $tab['text'];
 			$info->id_shop = $this->context->shop->id;
 			$return &= $info->save();
 		}
+
 		return $return;
 	}
 }

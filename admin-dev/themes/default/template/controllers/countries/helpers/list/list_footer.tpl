@@ -149,7 +149,7 @@
 				else
 					return true;
 			});
-			$('#select_submitBulk').change(function(){
+			$('#select_submitBulk').change(function() {
 				if ($(this).val() == 'affectzone')
 					loadZones();
 				else if (loaded)
@@ -171,7 +171,7 @@
 				cache: false,
 				dataType: 'json',
 				success: function(data) {
-					var html = $(data);
+					var html = $(data.data);
 					html.hide();
 					$('#select_submitBulk').after(html);
 					html.fadeIn('slow');

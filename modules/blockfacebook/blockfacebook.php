@@ -25,15 +25,15 @@
 */
 
 if (!defined('_PS_VERSION_'))
-	exit;	
-	
+	exit;
+
 class BlockFacebook extends Module
 {
 	public function __construct()
 	{
 		$this->name = 'blockfacebook';
 		$this->tab = 'front_office_features';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->author = 'PrestaShop';
 
 		$this->bootstrap = true;
@@ -46,33 +46,37 @@ class BlockFacebook extends Module
 	public function install()
 	{
 		return parent::install() &&
-			Configuration::updateValue('blockfacebook_url', 'prestashop') &&
+			Configuration::updateValue('blockfacebook_url', 'https://www.facebook.com/prestashop') &&
 			$this->registerHook('displayHome') &&
 			$this->registerHook('displayHeader');
 	}
-	
+
 	public function uninstall()
 	{
 		// Delete configuration
 		return Configuration::deleteByName('blockfacebook_url') && parent::uninstall();
 	}
-	
+
 	public function getContent()
 	{
 		$html = '';
 		// If we try to update the settings
 		if (Tools::isSubmit('submitModule'))
-		{				
+		{
 			Configuration::updateValue('blockfacebook_url', Tools::getValue('blockfacebook_url'));
 			$html .= $this->displayConfirmation($this->l('Configuration updated'));
 			$this->_clearCache('blockfacebook.tpl');
+			Tools::redirectAdmin('index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
 		}
 
 		$html .= $this->renderForm();
-
+		$this->context->smarty->assign('facebookurl', Configuration::get('blockfacebook_url'));
+		$this->context->smarty->assign('facebook_js_url', $this->_path.'blockfacebook.js');
+		$this->context->smarty->assign('facebook_css_url', $this->_path.'css/blockfacebook.css');
+		$html .= $this->context->smarty->fetch($this->local_path.'views/admin/_configure/preview.tpl');
 		return $html;
 	}
-	
+
 	public function hookDisplayHome()
 	{
 		if (!$this->isCached('blockfacebook.tpl', $this->getCacheId()))
@@ -102,7 +106,7 @@ class BlockFacebook extends Module
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Facebook name'),
+						'label' => $this->l('Facebook link'),
 						'name' => 'blockfacebook_url',
 					),
 				),
@@ -111,7 +115,7 @@ class BlockFacebook extends Module
 				)
 			),
 		);
-		
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;

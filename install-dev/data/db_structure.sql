@@ -1785,6 +1785,7 @@ CREATE TABLE `PREFIX_tab` (
   `module` varchar(64) NULL,
   `position` int(10) unsigned NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1,
+  `hide_host_mode` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id_tab`),
   KEY `class_name` (`class_name`),
   KEY `id_parent` (`id_parent`)

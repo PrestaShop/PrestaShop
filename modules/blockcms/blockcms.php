@@ -126,9 +126,7 @@ class BlockCms extends Module
 	{
 		$current_index = AdminController::$currentIndex;
 		$token = Tools::getAdminTokenLite('AdminModules');
-
 		$back = Tools::safeOutput(Tools::getValue('back', ''));
-
 		if (!isset($back) || empty($back))
 			$back = $current_index.'&amp;configure='.$this->name.'&token='.$token;
 
@@ -155,9 +153,6 @@ class BlockCms extends Module
 			default:
 				break;
 		}
-
-
-
 		return $this->toolbar_btn;
 	}
 
@@ -165,13 +160,16 @@ class BlockCms extends Module
 	{
 		$this->context->controller->addJqueryPlugin('tablednd');
 		$this->context->controller->addJS(_PS_JS_DIR_.'admin-dnd.js');
+		
+		$current_index = AdminController::$currentIndex;
+		$token = Tools::getAdminTokenLite('AdminModules');
 
 		$this->_display = 'index';
 
 		$this->fields_form[0]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('CMS block configuration'),
-				'image' => _PS_ADMIN_IMG_.'information.png'
+				'icon' => 'icon-list-alt'
 			),
 			'input' => array(
 				array(
@@ -182,14 +180,21 @@ class BlockCms extends Module
 						0 => BlockCMSModel::getCMSBlocksByLocation(BlockCMSModel::LEFT_COLUMN, Shop::getContextShopID()),
 						1 => BlockCMSModel::getCMSBlocksByLocation(BlockCMSModel::RIGHT_COLUMN, Shop::getContextShopID()))
 				)
+			),
+			'buttons' => array(
+				'newBlock' => array(
+					'title' => $this->l('New block'),
+					'href' => $current_index.'&amp;configure='.$this->name.'&amp;token='.$token.'&amp;addBlockCMS',
+					'class' => 'pull-right', 
+					'icon' => 'process-icon-new'
+				)
 			)
 		);
-
 		$this->fields_form[1]['form'] = array(
 			'tinymce' => true,
 			'legend' => array(
 				'title' => $this->l('Footer\'s various links Configuration'),
-				'image' => _PS_ADMIN_IMG_.'information.png'
+				'icon' => 'icon-link'
 			),
 			'input' => array(
 				array(
@@ -289,6 +294,12 @@ class BlockCms extends Module
 
 	protected function displayAddForm()
 	{
+		$token = Tools::getAdminTokenLite('AdminModules');
+		$back = Tools::safeOutput(Tools::getValue('back', ''));
+		$current_index = AdminController::$currentIndex;
+		if (!isset($back) || empty($back))
+			$back = $current_index.'&amp;configure='.$this->name.'&token='.$token;
+
 		if (Tools::isSubmit('editBlockCMS') && Tools::getValue('id_cms_block'))
 		{
 			$this->_display = 'edit';
@@ -304,7 +315,7 @@ class BlockCms extends Module
 			'tinymce' => true,
 			'legend' => array(
 				'title' => isset($cmsBlock) ? $this->l('Edit the CMS block.') : $this->l('New CMS block.'),
-				'image' => isset($cmsBlock) ? _PS_ADMIN_IMG_.'edit.gif' : _PS_ADMIN_IMG_.'add.gif'
+				'icon' => isset($cmsBlock) ? 'icon-edit' : 'icon-plus-square'
 			),
 			'input' => array(
 				array(
@@ -342,11 +353,9 @@ class BlockCms extends Module
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Display stores'),
 					'name' => 'display_stores',
-					'class' => 't',
-					'required' => true,
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -367,6 +376,13 @@ class BlockCms extends Module
 					'values' => BlockCMSModel::getAllCMSStructure(),
 					'desc' => $this->l('Please mark every page that you want to display in this block.')
 				),
+			),
+			'buttons' => array(
+				'cancelBlock' => array(
+					'title' => $this->l('Cancel'),
+					'href' => $back,
+					'icon' => 'process-icon-cancel'
+				)
 			),
 			'submit' => array(
 				'name' => 'submitBlockCMS',
@@ -416,7 +432,7 @@ class BlockCms extends Module
 				foreach ($cmsBlockCategories as $item)
 					$this->fields_value['1_'.$item['id_cms']] = true;
 		}
-
+		
 		$helper = $this->initForm();
 
 		if (isset($id_cms_block))
@@ -544,7 +560,7 @@ class BlockCms extends Module
 		if (count($this->_errors))
 		{
 			foreach ($this->_errors as $err)
-				$this->_html .= '<div class="alert error">'.$err.'</div>';
+				$this->_html .= '<div class="alert alert-danger">'.$err.'</div>';
 
 			return false;
 		}
