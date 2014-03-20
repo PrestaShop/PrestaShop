@@ -1159,7 +1159,8 @@ CREATE TABLE IF NOT EXISTS `PREFIX_order_invoice_tax` (
   `id_order_invoice` int(11) NOT NULL,
   `type` varchar(15) NOT NULL,
   `id_tax` int(11) NOT NULL,
-  `amount` decimal(10,6) NOT NULL DEFAULT '0.000000'
+  `amount` decimal(10,6) NOT NULL DEFAULT '0.000000',
+  KEY `id_tax` (`id_tax`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_order_detail` (
@@ -1784,6 +1785,7 @@ CREATE TABLE `PREFIX_tab` (
   `module` varchar(64) NULL,
   `position` int(10) unsigned NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1,
+  `hide_host_mode` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id_tab`),
   KEY `class_name` (`class_name`),
   KEY `id_parent` (`id_parent`)

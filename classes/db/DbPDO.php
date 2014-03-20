@@ -98,6 +98,8 @@ class DbPDOCore extends Db
 	{
 		if (!$result)
 			$result = $this->result;
+		if (!is_object($result))
+			return false;
 		return $result->fetch(PDO::FETCH_ASSOC);
 	}
 

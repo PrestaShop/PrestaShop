@@ -50,7 +50,7 @@
 				{elseif $key == 'input'}
 					{foreach $field as $input}
 						{block name="input_row"}
-						<div class="form-group {if isset($input.form_group_class)} {$input.form_group_class} {/if}{if $input.type == 'hidden'}hide{/if}" {if $input.name == 'id_state'}id="contains_states"{if !$contains_states}style="display:none;"{/if}{/if}>
+						<div class="form-group{if isset($input.form_group_class)} {$input.form_group_class}{/if}{if $input.type == 'hidden'} hide{/if}"{if $input.name == 'id_state'} id="contains_states"{if !$contains_states} style="display:none;"{/if}{/if}>
 						{if $input.type == 'hidden'}
 							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 						{else}
@@ -131,7 +131,8 @@
 													{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if}
 													{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}
 													{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if}
-													{if isset($input.required) && $input.required } required="required" {/if} />
+													{if isset($input.required) && $input.required} required="required" {/if}
+													{if isset($input.placeholder) && $input.placeholder} placeholder="{$input.placeholder}"{/if} />
 													{if isset($input.suffix)}
 													<span class="input-group-addon">
 													  {$input.suffix}
@@ -216,6 +217,7 @@
 											{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}
 											{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if}
 											{if isset($input.required) && $input.required } required="required" {/if}
+											{if isset($input.placeholder) && $input.placeholder } placeholder="{$input.placeholder}"{/if}
 											/>
 										{if isset($input.suffix)}
 										<span class="input-group-addon">
@@ -236,7 +238,6 @@
 												$target.html(max-$source.val().length);
 											});
 										}
-
 										$(document).ready(function(){
 											countDown($("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"), $("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter"));
 										});
@@ -245,7 +246,7 @@
 									{/if}
 								{elseif $input.type == 'textbutton'}
 									{assign var='value_text' value=$fields_value[$input.name]}
-									<div class="form-group">
+									<div class="row">
 										<div class="col-lg-9">
 										{if isset($input.maxchar)}
 										<div class="input-group">
@@ -264,7 +265,9 @@
 											{if isset($input.class)} class="{$input.class}"{/if}
 											{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if}
 											{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}
-											{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if} />
+											{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if}
+											{if isset($input.placeholder) && $input.placeholder } placeholder="{$input.placeholder}"{/if}
+											/>
 										{if isset($input.suffix)}{$input.suffix}{/if}
 										{if isset($input.maxchar)}
 										</div>
@@ -481,7 +484,7 @@
 												{l s='Change password...'}
 											</button>
 											<div id="{$input.name}-change-container" class="form-password-change well hide">
-												<div class="form-group ">
+												<div class="form-group">
 													<label for="old_passwd" class="control-label col-lg-2 required">
 														{l s='Current password'}
 													</label>
@@ -840,7 +843,11 @@
 						{/if}
 						{if isset($fieldset['form']['buttons'])}
 						{foreach from=$fieldset['form']['buttons'] item=btn key=k}
-							<button type="{if isset($btn['type'])}{$btn['type']}{else}button{/if}" {if isset($btn['id'])}id="{$btn['id']}"{/if} class="btn btn-default{if isset($btn['class'])} {$btn['class']}{/if}" name="{if isset($btn['name'])}{$btn['name']}{else}submitOptions{$table}{/if}"{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>{if isset($btn['icon'])}<i class="{$btn['icon']}" ></i> {/if}{$btn.title}</button>
+							{if isset($btn.href) && trim($btn.href) != ''}
+								<a href="{$btn.href}" {if isset($btn['id'])}id="{$btn['id']}"{/if} class="btn btn-default{if isset($btn['class'])} {$btn['class']}{/if}" {if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>{if isset($btn['icon'])}<i class="{$btn['icon']}" ></i> {/if}{$btn.title}</a>
+							{else}
+								<button type="{if isset($btn['type'])}{$btn['type']}{else}button{/if}" {if isset($btn['id'])}id="{$btn['id']}"{/if} class="btn btn-default{if isset($btn['class'])} {$btn['class']}{/if}" name="{if isset($btn['name'])}{$btn['name']}{else}submitOptions{$table}{/if}"{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>{if isset($btn['icon'])}<i class="{$btn['icon']}" ></i> {/if}{$btn.title}</button>
+							{/if}
 						{/foreach}
 						{/if}
 					</div>

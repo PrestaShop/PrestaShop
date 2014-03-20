@@ -210,7 +210,7 @@ class AdminAttachmentsControllerCore extends AdminController
 					{
 						do $uniqid = sha1(microtime());
 						while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
-						if (!copy($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid))
+						if (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid))
 							$this->errors[] = $this->l('Failed to copy the file.');
 						$_POST['file_name'] = $_FILES['file']['name'];
 						@unlink($_FILES['file']['tmp_name']);

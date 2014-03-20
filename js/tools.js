@@ -204,13 +204,10 @@ function toggleElemValue(id_button, text1, text2)
 
 function addBookmark(url, title)
 {
-	if (window.sidebar)
+	if (window.sidebar && window.sidebar.addPanel)
 		return window.sidebar.addPanel(title, url, "");
 	else if ( window.external && ('AddFavorite' in window.external))
 		return window.external.AddFavorite( url, title);
-	else if (window.opera && window.print)
-		return true;
-	return true;
 }
 
 function writeBookmarkLink(url, title, text, img)
@@ -219,8 +216,8 @@ function writeBookmarkLink(url, title, text, img)
 	if (img)
 		insert = writeBookmarkLinkObject(url, title, '<img src="' + img + '" alt="' + escape(text) + '" title="' + removeQuotes(text) + '" />') + '&nbsp';
 	insert += writeBookmarkLinkObject(url, title, text);
-	if (window.sidebar || window.opera && window.print || (window.external && ('AddFavorite' in window.external)))	
-		document.write(insert);
+	if (window.sidebar || window.opera && window.print || (window.external && ('AddFavorite' in window.external)))
+		$('.add_bookmark, #header_link_bookmark').append(insert);
 }
 
 function writeBookmarkLinkObject(url, title, insert)

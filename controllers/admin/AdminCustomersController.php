@@ -335,7 +335,7 @@ class AdminCustomersControllerCore extends AdminController
 					'name' => 'firstname',
 					'required' => true,
 					'col' => '4',
-					'hint' => $this->l('Forbidden characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:'
+					'hint' => $this->l('Forbidden characters:').' 0-9!&lt;&gt;,;?=+()@#"°{}_$%:'
 				),
 				array(
 					'type' => 'text',
@@ -343,7 +343,7 @@ class AdminCustomersControllerCore extends AdminController
 					'name' => 'lastname',
 					'required' => true,
 					'col' => '4',
-					'hint' => $this->l('Invalid characters:').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:'
+					'hint' => $this->l('Invalid characters:').' 0-9!&lt;&gt;,;?=+()@#"°{}_$%:'
 				),
 				array(
 					'type' => 'text',
@@ -1018,7 +1018,7 @@ class AdminCustomersControllerCore extends AdminController
 		$customers = array();
 		$searches = array_unique($searches);
 		foreach ($searches as $search)
-			if (!empty($search) && $results = Customer::searchByName($search)))
+			if (!empty($search) && $results = Customer::searchByName($search))
 			{
 				foreach ($results as $key => $result)
 					if (array_key_exists($key, $customers))

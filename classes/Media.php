@@ -185,13 +185,13 @@ class MediaCore
 			$css_content = str_replace(array(':0px', ':0em', ':0pt', ':0%'), ':0', $css_content);
 			$css_content = str_replace(array(' 0px', ' 0em', ' 0pt', ' 0%'), ' 0', $css_content);
 			$css_content = str_replace('\'images_ie/', '\'images/', $css_content);
-			$css_content = preg_replace_callback('#(AlphaImageLoader\(src=\')([^\']*\',)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content);
-						
+			$css_content = preg_replace_callback('#(AlphaImageLoader\(src=\')([^\']*\',)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content);	
 			// Store all import url
-			preg_match_all('#@import .*?;#i', $css_content, $m);
+			preg_match_all('#@(import|charset) .*?;#i', $css_content, $m);
 			for ($i = 0, $total = count($m[0]); $i < $total; $i++)
 			{
-				$import_url[] = $m[0][$i];
+				if (isset($m[1][$i]) && $m[1][$i] == 'import')
+					$import_url[] = $m[0][$i];
 				$css_content = str_replace($m[0][$i], '', $css_content);
 			}
 
@@ -534,6 +534,7 @@ class MediaCore
 				else
 					$content = $compressed_css_files[$media];
 
+				$content = '@charset "UTF-8";'."\n".$content;
 				$content = implode('', $import_url).$content;
 				file_put_contents($cache_filename, $content);
 				chmod($cache_filename, 0777);
