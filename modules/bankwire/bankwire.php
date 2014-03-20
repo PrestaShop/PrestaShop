@@ -40,7 +40,7 @@ class BankWire extends PaymentModule
 	{
 		$this->name = 'bankwire';
 		$this->tab = 'payments_gateways';
-		$this->version = '0.6';
+		$this->version = '0.7';
 		$this->author = 'PrestaShop';
 		$this->controllers = array('payment', 'validation');
 		
@@ -85,9 +85,22 @@ class BankWire extends PaymentModule
 		if (!Configuration::deleteByName('BANK_WIRE_DETAILS')
 				|| !Configuration::deleteByName('BANK_WIRE_OWNER')
 				|| !Configuration::deleteByName('BANK_WIRE_ADDRESS')
+				|| !$this->_delExtraDetails()
 				|| !parent::uninstall())
 			return false;
 		return true;
+	}
+
+	private function _delExtraDetails()
+	{
+		$result = true;
+		$currencies = Currency::getPaymentCurrencies($this->id);
+		foreach ($currencies as $currency)
+		{
+			if (!Configuration::deleteByName('BANK_WIRE_DETAILS_'.$currency['iso_code']))
+				$result = false;
+		}
+		return $result;
 	}
 
 	private function _postValidation()
@@ -108,6 +121,11 @@ class BankWire extends PaymentModule
 			Configuration::updateValue('BANK_WIRE_DETAILS', Tools::getValue('BANK_WIRE_DETAILS'));
 			Configuration::updateValue('BANK_WIRE_OWNER', Tools::getValue('BANK_WIRE_OWNER'));
 			Configuration::updateValue('BANK_WIRE_ADDRESS', Tools::getValue('BANK_WIRE_ADDRESS'));
+			$currencies = Currency::getPaymentCurrencies($this->id);
+			foreach ($currencies as $currency)
+			{
+				Configuration::updateValue('BANK_WIRE_DETAILS_'.$currency['iso_code'], Tools::getValue('BANK_WIRE_DETAILS_'.$currency['iso_code']));
+			}
 		}
 		$this->_html .= $this->displayConfirmation($this->l('Settings updated'));
 	}
@@ -169,6 +187,14 @@ class BankWire extends PaymentModule
 				'status' => 'ok',
 				'id_order' => $params['objOrder']->id
 			));
+
+			$smartyCurrency =  array();
+			$currency = Currency::getCurrency(Context::getContext()->currency->id);
+			$details = Configuration::get('BANK_WIRE_DETAILS_'.$currency['iso_code']);
+			if(!empty($details))
+				$smartyCurrency['bankwireDetails'] = Tools::nl2br(Configuration::get('BANK_WIRE_DETAILS_'.$currency['iso_code']));
+			$this->smarty->assign($smartyCurrency);
+
 			if (isset($params['objOrder']->reference) && !empty($params['objOrder']->reference))
 				$this->smarty->assign('reference', $params['objOrder']->reference);
 		}
@@ -176,7 +202,7 @@ class BankWire extends PaymentModule
 			$this->smarty->assign('status', 'failed');
 		return $this->display(__FILE__, 'payment_return.tpl');
 	}
-	
+
 	public function checkCurrency($cart)
 	{
 		$currency_order = new Currency($cart->id_currency);
@@ -205,7 +231,7 @@ class BankWire extends PaymentModule
 					),
 					array(
 						'type' => 'textarea',
-						'label' => $this->l('Details'),
+						'label' => $this->l('Default details'),
 						'name' => 'BANK_WIRE_DETAILS',
 						'desc' => $this->l('Such as bank branch, IBAN number, BIC, etc.')
 					),
@@ -220,7 +246,18 @@ class BankWire extends PaymentModule
 				)
 			),
 		);
-		
+
+		$currencies = Currency::getPaymentCurrencies($this->id);
+		foreach ($currencies as $currency)
+		{
+			$fields_form['form']['input'][] = array(
+				'type' => 'textarea',
+				'label' => $this->l('Details for').' '.$currency['name'],
+				'name' => 'BANK_WIRE_DETAILS_'.$currency['iso_code'],
+				'desc' => $this->l('Only enter details here if you don\'t use the default account details for this currency.')
+			);
+		}
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
@@ -244,10 +281,18 @@ class BankWire extends PaymentModule
 	
 	public function getConfigFieldsValues()
 	{
-		return array(
+		$fields = array(
 			'BANK_WIRE_DETAILS' => Tools::getValue('BANK_WIRE_DETAILS', Configuration::get('BANK_WIRE_DETAILS')),
 			'BANK_WIRE_OWNER' => Tools::getValue('BANK_WIRE_OWNER', Configuration::get('BANK_WIRE_OWNER')),
 			'BANK_WIRE_ADDRESS' => Tools::getValue('BANK_WIRE_ADDRESS', Configuration::get('BANK_WIRE_ADDRESS')),
 		);
+
+		$currencies = Currency::getPaymentCurrencies($this->id);
+		foreach ($currencies as $currency)
+		{
+			$fields['BANK_WIRE_DETAILS_'.$currency['iso_code'] ] = Tools::getValue('BANK_WIRE_DETAILS_'.$currency['iso_code'], Configuration::get('BANK_WIRE_DETAILS_'.$currency['iso_code']));
+		}
+
+		return $fields;
 	}
 }
