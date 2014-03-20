@@ -532,7 +532,10 @@ class AdminTranslationsControllerCore extends AdminController
 			$dir_iso_code = substr($file_iso_code, 0, -(strlen($file_iso_code) - strrpos($file_iso_code, '/') - 1));
 
 			if (!file_exists($dir_iso_code))
+			{
 				mkdir($dir_iso_code);
+				file_put_contents($dir_iso_code.'/index.php', Tools::getDefaultIndexContent());
+			}
 
 			if (Tools::file_exists_cache($file_en))
 				copy($file_en, $file_iso_code);
