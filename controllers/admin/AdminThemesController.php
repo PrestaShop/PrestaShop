@@ -601,13 +601,12 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processUpdate()
 	{
-		if (Tools::getIsset('id_theme') && Tools::getIsset('name') && Tools::getIsset('responsive') && Tools::getIsset('directory'))
+		if (Tools::getIsset('id_theme') && Tools::getIsset('name') && Tools::getIsset('directory'))
 		{
 
 			$theme = New Theme((int)Tools::getValue('id_theme'));
 			$theme->name = Tools::getValue('name');
 			$theme->directory = Tools::getValue('directory');
-			$theme->responsive = Tools::getValue('responsive');
 			$theme->default_left_column = Tools::getValue('default_left_column');
 			$theme->default_right_column = Tools::getValue('default_right_column');
 			$nb_product_per_page = (int)Tools::getValue('product_per_page');
@@ -615,6 +614,9 @@ class AdminThemesControllerCore extends AdminController
 				$nb_product_per_page = 1;
 
 			$theme->product_per_page = $nb_product_per_page;
+
+			if ($this->context->shop->id_theme == (int)Tools::getValue('id_theme'))
+				Configuration::updateValue('PS_PRODUCTS_PER_PAGE', $nb_product_per_page);
 
 			if (isset($_FILES['image_preview']) && $_FILES['image_preview']['error'] == 0)
 			{
@@ -1743,13 +1745,15 @@ class AdminThemesControllerCore extends AdminController
 			}
 
 			$content = '';
-			if (Configuration::hasKey('PS_LOGO') && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
+			if (Configuration::hasKey('PS_LOGO') && trim(Configuration::get('PS_LOGO')) != ''
+				&& file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
 			{
 				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO'));
 				Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
 				Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 			}
-			if (file_exists(_PS_IMG_DIR_.'logo_mobile.jpg') && Configuration::get('PS_LOGO_MOBILE'))
+			if (file_exists(_PS_IMG_DIR_.'logo_mobile.jpg') && Configuration::get('PS_LOGO_MOBILE')
+				 && trim(Configuration::get('PS_LOGO_MOBILE')) != '')
 			{
 				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE'));
 				Configuration::updateValue('SHOP_LOGO_MOBILE_HEIGHT', (int)round($height));

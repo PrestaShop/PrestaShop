@@ -559,6 +559,16 @@
     'path' => 'controllers/admin/AdminPPreferencesController.php',
     'type' => 'class',
   ),
+  'AdminPatternsController' => 
+  array (
+    'path' => '',
+    'type' => 'class',
+  ),
+  'AdminPatternsControllerCore' => 
+  array (
+    'path' => 'controllers/admin/AdminPatternsController.php',
+    'type' => 'class',
+  ),
   'AdminPaymentController' => 
   array (
     'path' => '',

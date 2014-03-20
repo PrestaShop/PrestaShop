@@ -26,7 +26,7 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-	{if !$smarty.const._PS_HOST_MODE_}
+	{if !$host_mode}
 	<script type="text/javascript">
 		$(document).ready(function()
 		{
@@ -227,7 +227,7 @@
 			</div>
 		</div>
 	</div>
-	{if !$smarty.const._PS_HOST_MODE_}
+	{if !$host_mode}
 	<div class="panel">
 		<h3>
 			<i class="icon-info"></i> 

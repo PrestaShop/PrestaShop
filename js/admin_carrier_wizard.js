@@ -234,6 +234,10 @@ function validateSteps(fromStep, toStep)
 	}
 	
 	$('.wizard_error').remove();
+	
+	if (is_ok && isOverlapping())
+		is_ok = false;
+	
 	if (is_ok)
 	{
 		form = $('#carrier_wizard #step-'+fromStep+' form');
@@ -686,13 +690,16 @@ function getCorrectRangePosistion(current_inf, current_sup)
 
 function isOverlapping()
 {
+	is_ok = false;
 	$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
-	$('tr.range_sup td').not('.range_type, .range_sign').each( function (){
+	$('tr.range_sup td').not('.range_type, .range_sign').each( function ()
+	{
 		index = $(this).index();
 		current_inf = parseInt($('.range_inf td:eq('+index+') input').val());
 		current_sup = parseInt($('.range_sup td:eq('+index+') input').val());
 
-		$('tr.range_sup td').not('.range_type, .range_sign').each( function (){
+		$('tr.range_sup td').not('.range_type, .range_sign').each( function ()
+		{
 			testing_index = $(this).index();
 			
 			if (testing_index != index) //do not test himself
@@ -704,10 +711,12 @@ function isOverlapping()
 				{
 					$('tr.range_sup td:eq('+testing_index+') div.input-group, tr.range_inf td:eq('+testing_index+') div.input-group').addClass('has-error');
 					displayError([overlapping_range], $("#carrier_wizard").smartWizard('currentStep'));
+					is_ok = true;
 				}
 			}
 		});
 	});
+	return is_ok;
 }
 
 function checkAllZones(elt)

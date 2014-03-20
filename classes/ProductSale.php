@@ -219,7 +219,7 @@ class ProductSaleCore
 				(Product::$_taxCalculationMethod == PS_TAX_EXC ? 2 : 6)
 			);
 		}
-		return $result;
+		return Product::getProductsProperties($id_lang, $result);
 	}
 
 	public static function addProductSale($product_id, $qty = 1)

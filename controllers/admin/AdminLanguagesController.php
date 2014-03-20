@@ -303,6 +303,12 @@ class AdminLanguagesControllerCore extends AdminController
 
 	protected function processBulkDelete()
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
+
 		$can_bulk = true;
 		if (is_array($this->boxes) && !empty($this->boxes))
 		{
@@ -365,6 +371,12 @@ class AdminLanguagesControllerCore extends AdminController
 
 	protected function processBulkDisableSelection()
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
+
 		if (is_array($this->boxes) && !empty($this->boxes))
 		{
 			foreach ($this->boxes as $id_lang)
@@ -380,6 +392,12 @@ class AdminLanguagesControllerCore extends AdminController
 
 	public function processAdd()
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
+
 		if (isset($_POST['iso_code']) && !empty($_POST['iso_code']) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Language::getIdByIso($_POST['iso_code']))
 			$this->errors[] = Tools::displayError('This ISO code is already linked to another language.');
 		if ((!empty($_FILES['no_picture']['tmp_name']) || !empty($_FILES['flag']['tmp_name'])) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
@@ -396,6 +414,12 @@ class AdminLanguagesControllerCore extends AdminController
 
 	public function processUpdate()
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
+
 		if (( isset($_FILES['no_picture']) && !$_FILES['no_picture']['error'] || isset($_FILES['flag']) && !$_FILES['flag']['error'])
 				&& Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
 			{

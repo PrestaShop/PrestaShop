@@ -27,5 +27,5 @@ function ps1604_update_employee_date()
 {
 	if (defined('_PS_CREATION_DATE_'))
 		return Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'employee` SET stats_date_from = \''.addslashes(_PS_CREATION_DATE_).'\' WHERE `stats_date_from` < \''.addslashes(_PS_CREATION_DATE_).'\'');
-	return false;
+	return true;
 }

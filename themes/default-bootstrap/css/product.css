@@ -89,7 +89,7 @@ img {
     z-index: auto !important; }
   .pb-left-column #image-block .new-box,
   .pb-left-column #image-block .sale-box {
-    z-index: 50002; }
+    z-index: 5002; }
 
 /* miniatures */
 .pb-left-column #views_block {

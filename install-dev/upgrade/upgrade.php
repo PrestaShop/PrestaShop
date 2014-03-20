@@ -253,12 +253,12 @@ Cache::clean('*');
 
 Context::getContext()->shop = new Shop(1);
 Shop::setContext(Shop::CONTEXT_SHOP, 1);
-Configuration::loadConfiguration();
+
 if (!isset(Context::getContext()->language) || !Validate::isLoadedObject(Context::getContext()->language))
-	if ($id_lang = (int)Configuration::get('PS_LANG_DEFAULT'))
+	if ($id_lang = (int)getConfValue('PS_LANG_DEFAULT'))
 		Context::getContext()->language = new Language($id_lang);
 if (!isset(Context::getContext()->country) || !Validate::isLoadedObject(Context::getContext()->country))
-	if ($id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT'))
+	if ($id_country = (int)getConfValue('PS_COUNTRY_DEFAULT'))
 		Context::getContext()->country = new Country((int)$id_country);
 
 Context::getContext()->cart = new Cart();
@@ -410,7 +410,7 @@ if (empty($fail_result))
 					unlink($dir.DIRECTORY_SEPARATOR.$file);
 
 	// delete cache filesystem if activated
-	$depth = Configuration::get('PS_CACHEFS_DIRECTORY_DEPTH');
+	$depth = getConfValue('PS_CACHEFS_DIRECTORY_DEPTH');
 	if (defined('_PS_CACHE_ENABLED_') && _PS_CACHE_ENABLED_  && $depth)
 	{
 		CacheFs::deleteCacheDirectory();
@@ -477,4 +477,24 @@ else
 				break;
 		}
 	}
+}
+function getConfValue($name)
+{
+	$full = version_compare('1.5.0.10', _PS_VERSION_) < 0;
+
+	$sql = 'SELECT IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value
+			FROM `'._DB_PREFIX_.'configuration` c
+			LEFT JOIN `'._DB_PREFIX_.'configuration_lang` cl ON (c.`id_configuration` = cl.`id_configuration`)
+			WHERE c.`name` LIKE \''.pSQL($name).'\'';
+
+	if ($full)
+	{
+		$id_shop = Shop::getContextShopID(true);
+		$id_shop_group = Shop::getContextShopGroupID(true);
+		if ($id_shop)
+			$sql .= ' AND c.`id_shop` = '.(int)$id_shop;
+		if ($id_shop_group)
+			$sql .= ' AND c.`id_shop_group` = '.(int)$id_shop_group;
+	}
+	return Db::getInstance()->getValue($sql);
 }
