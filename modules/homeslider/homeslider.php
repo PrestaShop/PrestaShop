@@ -26,7 +26,6 @@
 
 /**
  * @since   1.5.0
- * @version 1.3 (2012-03-14)
  */
 
 if (!defined('_PS_VERSION_'))
