@@ -34,9 +34,6 @@ class BlockCms extends Module
 {
 	private $_html;
 	private $_display;
-	private $_current_index;
-	private $_token;
-	private $_back;
 
 	public function __construct()
 	{
@@ -52,12 +49,6 @@ class BlockCms extends Module
 		$this->displayName = $this->l('CMS block');
 		$this->description = $this->l('Adds a block with several CMS links.');
 		$this->secure_key = Tools::encrypt($this->name);
-		$this->_current_index = AdminController::$currentIndex;
-		$this->_token = Tools::getAdminTokenLite('AdminModules');
-		
-		$this->_back = Tools::safeOutput(Tools::getValue('back', ''));
-		if (!isset($this->_back) || empty($this->_back))
-			$this->_back = $this->_current_index.'&amp;configure='.$this->name.'&token='.$this->_token;
 	}
 
 	public function install()
@@ -133,23 +124,29 @@ class BlockCms extends Module
 
 	public function initToolbar()
 	{
+		$current_index = AdminController::$currentIndex;
+		$token = Tools::getAdminTokenLite('AdminModules');
+		$back = Tools::safeOutput(Tools::getValue('back', ''));
+		if (!isset($back) || empty($back))
+			$back = $current_index.'&amp;configure='.$this->name.'&token='.$token;
+
 		switch ($this->_display)
 		{
 			case 'add':
 				$this->toolbar_btn['cancel'] = array(
-					'href' => $this->_back,
+					'href' => $back,
 					'desc' => $this->l('Cancel')
 				);
 				break;
 			case 'edit':
 				$this->toolbar_btn['cancel'] = array(
-					'href' => $this->_back,
+					'href' => $back,
 					'desc' => $this->l('Cancel')
 				);
 				break;
 			case 'index':
 				$this->toolbar_btn['new'] = array(
-					'href' => $this->_current_index.'&amp;configure='.$this->name.'&amp;token='.$this->_token.'&amp;addBlockCMS',
+					'href' => $current_index.'&amp;configure='.$this->name.'&amp;token='.$token.'&amp;addBlockCMS',
 					'desc' => $this->l('Add new')
 				);
 				break;
@@ -163,6 +160,9 @@ class BlockCms extends Module
 	{
 		$this->context->controller->addJqueryPlugin('tablednd');
 		$this->context->controller->addJS(_PS_JS_DIR_.'admin-dnd.js');
+		
+		$current_index = AdminController::$currentIndex;
+		$token = Tools::getAdminTokenLite('AdminModules');
 
 		$this->_display = 'index';
 
@@ -184,7 +184,7 @@ class BlockCms extends Module
 			'buttons' => array(
 				'newBlock' => array(
 					'title' => $this->l('New block'),
-					'href' => $this->_current_index.'&amp;configure='.$this->name.'&amp;token='.$this->_token.'&amp;addBlockCMS',
+					'href' => $current_index.'&amp;configure='.$this->name.'&amp;token='.$token.'&amp;addBlockCMS',
 					'class' => 'pull-right', 
 					'icon' => 'process-icon-new'
 				)
@@ -294,6 +294,12 @@ class BlockCms extends Module
 
 	protected function displayAddForm()
 	{
+		$token = Tools::getAdminTokenLite('AdminModules');
+		$back = Tools::safeOutput(Tools::getValue('back', ''));
+		$current_index = AdminController::$currentIndex;
+		if (!isset($back) || empty($back))
+			$back = $current_index.'&amp;configure='.$this->name.'&token='.$token;
+
 		if (Tools::isSubmit('editBlockCMS') && Tools::getValue('id_cms_block'))
 		{
 			$this->_display = 'edit';
@@ -374,7 +380,7 @@ class BlockCms extends Module
 			'buttons' => array(
 				'cancelBlock' => array(
 					'title' => $this->l('Cancel'),
-					'href' => $this->_back,
+					'href' => $back,
 					'icon' => 'process-icon-cancel'
 				)
 			),
