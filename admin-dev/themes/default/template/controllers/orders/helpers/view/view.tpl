@@ -637,7 +637,7 @@
 				<!-- Tab content -->
 				<div class="tab-content panel">
 					<!-- Tab status -->
-					<div class="tab-pane fade in active" id="addressShipping">
+					<div class="tab-pane  in active" id="addressShipping">
 						<!-- Addresses -->
 						{if !$order->isVirtual()}
 						<!-- Shipping address -->
@@ -688,7 +688,7 @@
 							</div>
 						{/if}
 					</div>
-					<div class="tab-pane fade" id="addressInvoice">
+					<div class="tab-pane " id="addressInvoice">
 						<!-- Invoice address -->
 						{if $can_edit}
 							<form class="form-horizontal" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$order->id}">
@@ -1201,17 +1201,19 @@
 	</div>
 
 	<script type="text/javascript">
+		var geocoder = new google.maps.Geocoder();
+		var delivery_map, invoice_map;
+
 		$(document).ready(function()
 		{
 			$(".textarea-autosize").autosize();
-			var geocoder = new google.maps.Geocoder();
 
 			geocoder.geocode({
-				address: '{$addresses.delivery->address1|urlencode},{$addresses.delivery->postcode|urlencode},{$addresses.delivery->city|urlencode}{if ($addresses.delivery->id_state)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.delivery->country|urlencode}'
+				address: '{$addresses.delivery->address1},{$addresses.delivery->postcode},{$addresses.delivery->city}{if ($addresses.delivery->id_state)},{$addresses.deliveryState->name}{/if},{$addresses.delivery->country}'
 				}, function(results, status) {
 				if (status === google.maps.GeocoderStatus.OK)
 				{
-					var delivery_map = new google.maps.Map(document.getElementById('map-delivery-canvas'), {
+					delivery_map = new google.maps.Map(document.getElementById('map-delivery-canvas'), {
 						zoom: 10,
 						mapTypeId: google.maps.MapTypeId.ROADMAP,
 						center: results[0].geometry.location
@@ -1228,11 +1230,11 @@
 			});
 
 			geocoder.geocode({
-				address: '{$addresses.invoice->address1|urlencode},{$addresses.invoice->postcode|urlencode},{$addresses.invoice->city|urlencode}{if ($addresses.invoice->id_state) && isset($addresses.deliveryState)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.invoice->country|urlencode}'
+				address: '{$addresses.invoice->address1},{$addresses.invoice->postcode},{$addresses.invoice->city}{if ($addresses.invoice->id_state)},{$addresses.deliveryState->name}{/if},{$addresses.invoice->country}'
 				}, function(results, status) {
 				if (status === google.maps.GeocoderStatus.OK)
 				{
-					var invoice_map = new google.maps.Map(document.getElementById('map-invoice-canvas'), {
+					invoice_map = new google.maps.Map(document.getElementById('map-invoice-canvas'), {
 						zoom: 10,
 						mapTypeId: google.maps.MapTypeId.ROADMAP,
 						center: results[0].geometry.location
@@ -1240,7 +1242,7 @@
 					invoice_marker = new google.maps.Marker({
 						map: invoice_map,
 						position: results[0].geometry.location,
-						url: 'http://maps.google.com?q={$addresses.invoice->address1|urlencode},{$addresses.invoice->postcode|urlencode},{$addresses.invoice->city|urlencode}{if ($addresses.invoice->id_state) && isset($addresses.deliveryState)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.invoice->country|urlencode}'
+						url: 'http://maps.google.com?q={$addresses.invoice->address1|urlencode},{$addresses.invoice->postcode|urlencode},{$addresses.invoice->city|urlencode}{if ($addresses.invoice->id_state)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.invoice->country|urlencode}'
 					});
 					google.maps.event.addListener(invoice_marker, 'click', function() {
 						window.open(invoice_marker.url);
@@ -1264,6 +1266,21 @@
 				nextText: '',
 				dateFormat: 'yy-mm-dd ' + hours + ':' + mins + ':' + secs
 			});
+		});
+
+		// Fix wrong maps center when map is hidden
+		$('#tabAddresses').click(function(){
+			x = delivery_map.getZoom();
+			c = delivery_map.getCenter();
+			google.maps.event.trigger(delivery_map, 'resize');
+			delivery_map.setZoom(x);
+			delivery_map.setCenter(c);
+
+			x = invoice_map.getZoom();
+			c = invoice_map.getCenter();
+			google.maps.event.trigger(invoice_map, 'resize');
+			invoice_map.setZoom(x);
+			invoice_map.setCenter(c);
 		});
 	</script>
 
