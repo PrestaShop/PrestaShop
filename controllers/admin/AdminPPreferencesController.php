@@ -246,7 +246,7 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_FORCE_ASM_NEW_PRODUCT' => array(
 						'title' => $this->l('New products use advanced stock management'),
-						'hint' => $this->l('New products will automaticlly use advanced stock management and depends on stock, but no warehouse will be selected'),
+						'hint' => $this->l('New products will automatically use advanced stock management and depends on stock, but no warehouse will be selected'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
