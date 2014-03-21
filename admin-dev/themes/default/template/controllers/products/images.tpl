@@ -86,7 +86,7 @@
 		<thead>
 			<tr class="nodrag nodrop"> 
 				<th class="fixed-width-lg"><span class="title_box">{l s='Image'}</span></th>
-				<th class="fixed-width-lg"><span class="title_box">{l s='Legend'}</span></th>
+				<th class="fixed-width-lg"><span class="title_box">{l s='Caption'}</span></th>
 				<th class="fixed-width-xs"><span class="title_box">{l s='Position'}</span></th>
 				{if $shops}
 					{foreach from=$shops item=shop}
