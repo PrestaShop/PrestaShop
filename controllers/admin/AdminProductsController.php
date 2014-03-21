@@ -1741,6 +1741,16 @@ class AdminProductsControllerCore extends AdminController
 						Search::indexation(false, $this->object->id);
 				}
 
+				if (Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT') != 0 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+				{
+					$warehouse_location_entity = new WarehouseProductLocation();
+					$warehouse_location_entity->id_product = $this->object->id;
+					$warehouse_location_entity->id_product_attribute = 0;
+					$warehouse_location_entity->id_warehouse = Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT');
+					$warehouse_location_entity->location = pSQL('');
+					$warehouse_location_entity->save();
+				}
+
 				// Save and preview
 				if (Tools::isSubmit('submitAddProductAndPreview'))
 					$this->redirect_after = $this->getPreviewUrl($this->object);
