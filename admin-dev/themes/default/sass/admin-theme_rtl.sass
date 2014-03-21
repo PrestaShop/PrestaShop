@@ -8,7 +8,7 @@
 @import "modules/mixins"
 @import "modules/web-fonts"
 
-@import "vendor/bi-app/bi-app-ltr"
+@import "vendor/bi-app/bi-app-rtl"
 
 @import "vendor/animate"
 @import "vendor/font-awesome/font-awesome"
@@ -84,7 +84,6 @@
 	@import "partials/toolbar"
 	@import "partials/date-range-picker"
 	@import "partials/multistore"
-
 	//Controllers
 	@import "controllers/carrier-wizard"
 	@import "controllers/dashboard"
@@ -93,6 +92,7 @@
 	@import "controllers/search"
 	@import "controllers/translations"
 	@import "controllers/customer-thread"
+	@import "vendor/bootstrap-rtl-sass/bootstrap-rtl"
 
 //Plug-ins
 @import "partials/tinymce"
@@ -100,5 +100,9 @@
 @import "vendor/chosen"
 @import "vendor/ladda"
 
+//RTL
+@import "partials/rtl"
+
 //Backward compatibility
 @import "partials/backward"
+
