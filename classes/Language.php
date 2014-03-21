@@ -955,7 +955,7 @@ class LanguageCore extends ObjectModel
 					if (isset($file['filename']) && is_string($file['filename']))
 						$files_listing[] = $file['filename'];
 			}
-			if ($gz) // $gz is initialized inside th eforeach... it may not be initialized if no loop is done (case of not conencted to the internet)
+			if (isset($gz) && $gz) // $gz is initialized inside the foreach... it may not be initialized if no loop is done (case of not connected to the internet)
 				$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
 		}
 	}
