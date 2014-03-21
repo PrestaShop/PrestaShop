@@ -303,12 +303,6 @@ class AdminLanguagesControllerCore extends AdminController
 
 	protected function processBulkDelete()
 	{
-		if (_PS_MODE_DEMO_)
-		{
-				$this->errors[] = Tools::displayError('This functionality has been disabled.');
-				return;
-		}
-
 		$can_bulk = true;
 		if (is_array($this->boxes) && !empty($this->boxes))
 		{
@@ -329,6 +323,12 @@ class AdminLanguagesControllerCore extends AdminController
 
 	protected function checkDeletion($object)
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
+
 		if (Validate::isLoadedObject($object))
 		{
 			if ($object->id == Configuration::get('PS_LANG_DEFAULT'))
@@ -346,6 +346,11 @@ class AdminLanguagesControllerCore extends AdminController
 
 	protected function checkDisableStatus($object)
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
 		if (!Validate::isLoadedObject($object))
 			$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		else
@@ -371,12 +376,6 @@ class AdminLanguagesControllerCore extends AdminController
 
 	protected function processBulkDisableSelection()
 	{
-		if (_PS_MODE_DEMO_)
-		{
-				$this->errors[] = Tools::displayError('This functionality has been disabled.');
-				return;
-		}
-
 		if (is_array($this->boxes) && !empty($this->boxes))
 		{
 			foreach ($this->boxes as $id_lang)
