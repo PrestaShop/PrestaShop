@@ -259,7 +259,7 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_DEFAULT_WAREHOUSE_NEW_PRODUCT' => array(
 						'title' => $this->l('Default warehouse on new products'),
-						'hint' => $this->l('Automaiclly set a default warehouse when new product is created'),
+						'hint' => $this->l('Automatically set a default warehouse when new product is created'),
 						'type' => 'select',
 						'list' => $warehouse_list,
 						'identifier' => 'id_warehouse'
