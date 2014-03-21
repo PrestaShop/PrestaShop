@@ -757,11 +757,9 @@ class AdminModulesControllerCore extends AdminController
 										if ($name == $modaddons->name && isset($modaddons->id) && ($this->logged_on_addons || $f['loggedOnAddons'] == 0))
 										{
 											$download_ok = false;
-											if ($f['loggedOnAddons'] == 0)
-												if (file_put_contents(_PS_MODULE_DIR_.$modaddons->name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($modaddons->id)))))
+											if ($f['loggedOnAddons'] == 0 && file_put_contents(_PS_MODULE_DIR_.$modaddons->name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($modaddons->id)))))
 													$download_ok = true;
-											elseif ($f['loggedOnAddons'] == 1 && $this->logged_on_addons)
-												if (file_put_contents(_PS_MODULE_DIR_.$modaddons->name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($modaddons->id), 'username_addons' => pSQL(trim($this->context->cookie->username_addons)), 'password_addons' => pSQL(trim($this->context->cookie->password_addons))))))
+											elseif ($f['loggedOnAddons'] == 1 && $this->logged_on_addons && file_put_contents(_PS_MODULE_DIR_.$modaddons->name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($modaddons->id), 'username_addons' => pSQL(trim($this->context->cookie->username_addons)), 'password_addons' => pSQL(trim($this->context->cookie->password_addons))))))
 													$download_ok = true;
 
 											if (!$download_ok)
@@ -914,7 +912,7 @@ class AdminModulesControllerCore extends AdminController
 							unset(Context::getContext()->tmpOldShop);
 						}
 					}
-					if ($key != 'configure' && isset($_GET['bpay']))
+					if ($key != 'configure' && Tools::getIsset('bpay'))
 						Tools::redirectAdmin('index.php?tab=AdminPayment&token='.Tools::getAdminToken('AdminPayment'.(int)(Tab::getIdFromClassName('AdminPayment')).(int)$this->id_employee));
 				}
 			if (count($module_errors))
@@ -939,7 +937,7 @@ class AdminModulesControllerCore extends AdminController
 		{
 			if (isset($modules_list_save))
 				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1&module_name='.$modules_list_save);
-			elseif ($module)
+			elseif (isset($module))
 				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : ''));
 		}
 	}
