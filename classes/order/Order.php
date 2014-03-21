@@ -1551,7 +1551,7 @@ class OrderCore extends ObjectModel
 		if (!is_null($order_invoice))
 		{
 			$res = Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
+			INSERT INTO `'._DB_PREFIX_.'order_invoice_payment` (`id_order_invoice`, `id_order_payment`, `id_order`)
 			VALUES('.(int)$order_invoice->id.', '.(int)$order_payment->id.', '.(int)$this->id.')');
 
 			// Clear cache
