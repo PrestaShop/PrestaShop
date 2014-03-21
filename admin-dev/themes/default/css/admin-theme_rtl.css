@@ -3045,26 +3045,26 @@ a.link-social:hover { text-decoration: none; }
   .bootstrap .prestashop-switch.switch-light input ~ a { border: solid 1px #d9534f; background-color: #e27c79; -webkit-box-shadow: #d9534f 0 -1px 0 inset; box-shadow: #d9534f 0 -1px 0 inset; }
   .bootstrap .prestashop-switch.switch-light input ~ span span:first-of-type { color: #cccccc; }
   .bootstrap .prestashop-switch.switch-light input ~ span span:last-of-type { color: white; } }
-.bootstrap .page-head { width: 100%; min-width: 450px; height: 55px; padding: 0 0 0 0; margin: 0; border-bottom: 4px solid #71b238; position: fixed; top: 36px; left: 0px; z-index: 499; background-color: #8bc954; -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; }
-.bootstrap .page-head h2.page-title { position: relative; padding: 28px 0 0 280px; margin: 0; font: 300 20px/1em "Open Sans", Helvetica, Arial, sans-serif; color: white; }
-@media (max-width: 768px) { .bootstrap .page-head h2.page-title { padding: 26px 0 0 70px; } }
+.bootstrap .page-head { width: 100%; min-width: 450px; height: 55px; padding: 0; margin: 0; border-bottom: 4px solid #71b238; position: fixed; top: 36px; right: 0; z-index: 499; background-color: #8bc954; -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; box-shadow: rgba(0, 0, 0, 0.15) 0 7px 0; }
+.bootstrap .page-head h2.page-title { position: relative; margin: 0; font: 300 20px/1em "Open Sans", Helvetica, Arial, sans-serif; color: white; padding: 28px 280px 0 0; }
+@media (max-width: 768px) { .bootstrap .page-head h2.page-title { padding: 26px 70px 0 0; } }
 .bootstrap .page-head h2.page-title a { border-bottom: dotted 1px white; }
 .bootstrap .page-head h2.page-title a:hover { color: black; border-color: black; }
 .bootstrap .page-head a { color: white; text-decoration: none; }
-.bootstrap .page-head .toolbarBox { position: absolute; right: 0; background-color: transparent !important; }
+.bootstrap .page-head .toolbarBox { position: absolute; background-color: transparent !important; left: 0; }
 @media (max-width: 768px) { .bootstrap .page-head .toolbarBox { background-color: #8bc954; } }
 .bootstrap .page-head .toolbarBox #toolbar-nav { border: none; background-color: #8bc954; }
 .bootstrap .page-head .toolbarBox .btn-toolbar { margin: 0; padding: 3px 0 0 0; }
-.bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn { height: 46px; position: relative; padding: 2px 5px !important; margin: 0 3px 2px 0; font-size: 12px; line-height: 8px; color: white; background-color: #8bc954; text-align: center; text-shadow: none; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn { height: 46px; position: relative; padding: 2px 5px !important; font-size: 12px; line-height: 8px; color: white; background-color: #8bc954; text-align: center; text-shadow: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0 0 2px 3px; }
 @media (max-width: 992px) { .bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn { width: 46px; border: solid 1px #659e32; font-size: 11px; } }
 .bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn:hover { color: #8bc954; border-color: white; background-color: white !important; }
-.bootstrap .page-head .toolbarBox .btn-toolbar .dropdown-toolbar { float: right; display: none; background-color: #8bc954; -webkit-border-radius: 3px; border-radius: 3px; }
+.bootstrap .page-head .toolbarBox .btn-toolbar .dropdown-toolbar { display: none; background-color: #8bc954; float: left; -webkit-border-radius: 3px; border-radius: 3px; }
 @media (max-width: 768px) { .bootstrap .page-head .toolbarBox .btn-toolbar .dropdown-toolbar { display: block; } }
-.bootstrap .page-head ul.page-breadcrumb { position: absolute; list-style: none; margin: 0; padding: 0; left: 280px; top: 4px; height: 20px; line-height: 20px; color: black; font-size: 12px; color: rgba(0, 0, 0, 0.5); background: transparent !important; border: none !important; white-space: nowrap; -webkit-border-radius: 0; border-radius: 0; }
+.bootstrap .page-head ul.page-breadcrumb { position: absolute; list-style: none; margin: 0; padding: 0; top: 4px; height: 20px; line-height: 20px; color: black; font-size: 12px; color: rgba(0, 0, 0, 0.5); background: transparent !important; border: none !important; white-space: nowrap; -webkit-border-radius: 0; border-radius: 0; right: 280px; }
 @media (max-width: 768px) { .bootstrap .page-head ul.page-breadcrumb { left: 70px; } }
 .bootstrap .page-head ul.page-breadcrumb li { text-transform: uppercase; }
 .bootstrap .page-head ul.page-breadcrumb li i { font-size: 14px; }
-.bootstrap .page-head ul.page-breadcrumb li.breadcrumb-container i, .bootstrap .page-head ul.page-breadcrumb li.breadcrumb-current i { position: absolute; left: -60px; top: 2px; font-size: 42px; padding-right: 5px; color: #659e32; border-right: solid 1px #659e32; }
+.bootstrap .page-head ul.page-breadcrumb li.breadcrumb-container i, .bootstrap .page-head ul.page-breadcrumb li.breadcrumb-current i { position: absolute; top: 2px; font-size: 42px; padding-right: 5px; color: #659e32; border-left: solid 1px #659e32; right: -60px; }
 .bootstrap .page-head ul.page-breadcrumb li:before { color: #659e32; }
 .bootstrap .page-head ul.page-breadcrumb li a { color: rgba(255, 255, 255, 0.6); }
 .bootstrap .page-head ul.page-breadcrumb li a:hover { color: white; }
