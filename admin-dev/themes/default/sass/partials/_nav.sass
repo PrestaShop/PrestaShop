@@ -9,6 +9,7 @@ $min-height: 850px
 	height: 100%
 	z-index: 500
 	background-color: darken($main-color,15%)
+	@include left(0)
 	ul.menu
 		margin: 0
 		padding: 0
@@ -28,18 +29,18 @@ $min-height: 850px
 				width: 400px
 				height: 55px
 				z-index: 900
-				padding: 14px 13px 0 7px
 				top: 0
-				left: 0
 				background-color: darken($main-color,5%)
 				border-bottom: darken($main-color,10%) solid 1px
+				@include left(0)
+				@include padding(14px,13px, 0, 7px)
 				#bo_query
 					width: 100%
 			.clear_search
 				position: absolute
 				top: 6px
-				right: 8px
 				z-index: 10
+				@include right(8px)
 			i
 				font-size: $icon-size-base
 		li.maintab
@@ -98,9 +99,9 @@ $min-height: 850px
 					position: absolute
 					display: block
 					width: $widthSidebarSubmenu
-					left: $widthSidebarNav
 					top: 0
 					z-index: 600
+					@include left($widthSidebarNav)
 			&:last-child > a.title
 				border-bottom: none
 			&.active
@@ -114,7 +115,7 @@ $min-height: 850px
 						body:not(.page-sidebar-closed) &
 							display: block
 							background-color: white
-							border-right: 1px solid darken($bg-content-color,10%)
+							@include border-right(1px solid darken($bg-content-color,10%))
 							a
 								background-color: white
 								color: $brand-primary
@@ -146,11 +147,11 @@ $min-height: 850px
 			line-height: 28px
 			i
 				vertical-align: baseline
-				text-align: right
 				width: 18px
-				font-size: 14px
+				font-size: $icon-size-base
+				@include text-align(right)
 		#nav-sidebar ul.menu li.maintab ul.submenu
-			padding: 1px 1px 0 1px
+			@include padding(1px, 1px, 0, 1px)
 			li a
 				padding: 0 6px
 				height: 26px
@@ -162,12 +163,12 @@ $min-height: 850px
 			display: block
 			width: 200px
 			z-index: 600
-			left: $widthSidebarNav
+			@include left($widthSidebarNav)
 			top: 0
 
 .page-sidebar
 	#content
-		margin-left: $widthSidebarNav
+		@include margin-left($widthSidebarNav)
 
 .page-sidebar-closed
 	#nav-sidebar
@@ -177,22 +178,22 @@ $min-height: 850px
 			display: none!important
 			position: relative
 			top: $menu-item-size
-			padding: 1px 4px 3px 4px!important
+			padding-top: 0!important
 		li.searchtab
 			color: rgba(white,.5)
 			&:hover
 				cursor: pointer
 				color: white
 			&.search-expanded
-				padding: 14px 13px 0 7px
 				width: 400px
 				background-color: darken($main-color,5%)
+				@include padding(14px, 13px, 0, 7px)
 				&:before
 					display: none
 				form .form-group
 					display: block
 		li.maintab.active ul.submenu
-			border: none !important
+			border: none!important
 		a.title
 			text-align: center
 			> span
@@ -200,24 +201,29 @@ $min-height: 850px
 		> ul > li.maintab:hover
 			width: 250px!important
 			position: relative
+			z-index: 500
 			a.title
-				text-align: left
+				@include text-align(left)
 				> span
 					display: inline-block
 			ul.submenu
 				position: absolute!important
 				display: block!important
-				left: 50px!important
 				top: $menu-item-size!important
 				width: 200px!important
+				@include rtl
+					right: 50px
+				@include ltr
+					left: 50px
 	#content
-		margin-left: 55px
+		@include margin-left(55px)
 		@media (max-width: $screen-phone)
 			margin-left: 0
 		h2.page-title
 			white-space: nowrap
-			padding: 26px 0 0 120px!important
+			@include padding(26px, 0, 0, 120px)
 		ul.page-breadcrumb
+			//@include left(120px!important)
 			left: 120px!important
 	.submenu_expand
 		display: none
