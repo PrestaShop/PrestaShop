@@ -265,7 +265,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'identifier' => 'id_warehouse'
 					),
 				),
-				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();advancedStockManagementActivationAuthorization():</script>',
+				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();advancedStockManagementActivationAuthorization();</script>',
 				'submit' => array('title' => $this->l('Save'))
 			),
 		);
