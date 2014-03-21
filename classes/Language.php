@@ -935,6 +935,7 @@ class LanguageCore extends ObjectModel
 		$languages = Language::getLanguages(false);
 		foreach ($languages as $lang)
 		{
+			$gz = false;
 			$files_listing = array();
 			foreach ($modules_list as $module_name)
 			{
@@ -955,7 +956,7 @@ class LanguageCore extends ObjectModel
 					if (isset($file['filename']) && is_string($file['filename']))
 						$files_listing[] = $file['filename'];
 			}
-			if (isset($gz) && $gz) // $gz is initialized inside the foreach... it may not be initialized if no loop is done (case of not connected to the internet)
+			if ($gz)
 				$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
 		}
 	}
