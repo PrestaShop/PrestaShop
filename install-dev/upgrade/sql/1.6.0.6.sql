@@ -20,7 +20,7 @@ ALTER TABLE `PREFIX_tab` ADD `hide_host_mode` tinyint(1) NOT NULL DEFAULT '0' AF
 
 UPDATE `PREFIX_employee` SET `bo_theme` = 'default';
 
-DELETE FROM `PREFIX_image_type` WHERE `name` = 'cart_default' AND `width` = 80 AND height = 80;
+DELETE FROM `PREFIX_image_type` WHERE `name` = 'cart_default';
 
 INSERT INTO `PREFIX_image_type` (`id_image_type`,`name`,`width`,`height`,`products`,`categories`,`manufacturers`,`suppliers`,`scenes`,`stores`)
 VALUES (NULL, 'cart_default', '80', '80', '1', '0', '0', '0', '0', '0');
