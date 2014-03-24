@@ -80,18 +80,18 @@
 
 //alert boxs
 @mixin alert-panel($icon,$color)
-	padding-left: 50px
 	position: relative
 	border: none
+	@include padding-left(50px)
 	@include border-left(solid 3px lighten($color,9%))
 	&:before
 		position: absolute
 		top: 6px
-		left: 7px
 		display: block
 		height: 25px
 		width: 25px
 		color: lighten($color,9%)
+		@include left(7px)
 		@extend .icon
 		@extend .icon-3x
 		@extend .#{$icon}

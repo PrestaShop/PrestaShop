@@ -7,12 +7,12 @@
 	border-bottom: 4px solid darken($secondary-color,10%)
 	position: fixed
 	top: 36px
-	@include left(0)
 	z-index: 499
 	background-color: $secondary-color
+	@include left(0)
 	@include box-shadow(rgba(black,0.15) 0 7px 0)
 	h2.page-title
-		@extend .pull-left
+		@include float(left)
 		position: relative
 		margin: 0
 		font: 300 20px/1em $font-family-sans-serif
@@ -87,7 +87,7 @@
 		@include border-radius(0)
 		@include left($widthSidebarNav+70px)
 		@media (max-width: $screen-tablet)
-			left: 70px
+			@include left(70px)
 		li
 			text-transform: uppercase
 			i
@@ -96,8 +96,8 @@
 				position: absolute
 				top: 2px
 				font-size: 42px
-				padding-right: 5px
 				color: darken($secondary-color,15%)
+				@include padding-right(5px)
 				@include border-right(solid 1px darken($secondary-color,15%))
 				@include left(-60px)
 			&:before
