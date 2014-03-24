@@ -3693,7 +3693,8 @@ class ProductCore extends ObjectModel
 					SELECT MAX(`id_feature_value`) AS nb
 					FROM `'._DB_PREFIX_.'feature_value`');
 				$new_id_feature_value = $max_fv['nb'];
-				$languages = Language::getLanguages();
+				$languages = Language::getLanguages(false);
+
 				foreach ($languages as $language)
 				{
 					$result3 = Db::getInstance()->getRow('
