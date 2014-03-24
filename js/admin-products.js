@@ -668,28 +668,29 @@ product_tabs['Prices'] = new function(){
 	 * @param parent
 	 */
 	this.deleteSpecificPrice = function (url, parent){
-		$.ajax({
-			url: url,
-			data: {
-				ajax: true
-			},
-			context: document.body,
-			dataType: 'json',
-			context: this,
-			async: false,
-			success: function(data) {
-				if (data !== null)
-				{
-					if (data.status == 'ok')
+		if (typeof url !== 'undefined')
+			$.ajax({
+				url: url,
+				data: {
+					ajax: true
+				},
+				context: document.body,
+				dataType: 'json',
+				context: this,
+				async: false,
+				success: function(data) {
+					if (data !== null)
 					{
-						showSuccessMessage(data.message);
-						parent.remove();
+						if (data.status == 'ok')
+						{
+							showSuccessMessage(data.message);
+							parent.remove();
+						}
+						else
+							showErrorMessage(data.message);
 					}
-					else
-						showErrorMessage(data.message);
 				}
-			}
-		});
+			});
 	};
 
 	// Bind to delete specific price link
