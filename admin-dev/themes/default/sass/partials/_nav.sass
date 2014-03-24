@@ -33,7 +33,7 @@ $min-height: 850px
 				background-color: darken($main-color,5%)
 				border-bottom: darken($main-color,10%) solid 1px
 				@include left(0)
-				@include padding(14px,13px, 0, 7px)
+				@include padding(14px, 13px, 0, 7px)
 				#bo_query
 					width: 100%
 			.clear_search
@@ -218,13 +218,12 @@ $min-height: 850px
 	#content
 		@include margin-left(55px)
 		@media (max-width: $screen-phone)
-			margin-left: 0
+			@include margin-left(0)
 		h2.page-title
 			white-space: nowrap
 			@include padding(26px, 0, 0, 120px)
 		ul.page-breadcrumb
-			//@include left(120px!important)
-			left: 120px!important
+			@include left(120px!important)
 	.submenu_expand
 		display: none
 
@@ -233,9 +232,9 @@ $min-height: 850px
 	height: 28px
 	top: 37px
 	width: 100%
-	padding: 0 40px 0 0
 	z-index: 600
 	background-color: white
+	@include padding(0, 40px, 0, 0)
 	ul.menu
 		margin: 0
 		padding: 0
@@ -247,7 +246,7 @@ $min-height: 850px
 			margin: 0
 			list-style: none
 			position: relative
-			float: left
+			@include float(left)
 			> a
 				display: block
 				line-height: 27px
@@ -277,7 +276,7 @@ $min-height: 850px
 			position: absolute
 			margin: 0
 			padding: 0
-			left: 0
+			@include left(0)
 			top: 28px
 			width: 200px!important
 			@include box-shadow(rgba(black,0.3) 0 2px 4px)
@@ -289,9 +288,8 @@ $min-height: 850px
 					border: none
 				> a
 					display: block
-					padding: 4px 5px 4px 10px
+					@include padding(4px, 5px, 4px, 10px)
 					border-bottom: solid 1px lighten($brand-primary,45%)
-
 					&:hover
 						color: white
 						background-color: $brand-primary
@@ -307,7 +305,7 @@ $min-height: 850px
 		padding: 0
 		margin: 0
 		position: absolute
-		right: 0
+		@include right(0)
 		> a
 			text-align: center
 			font-size: 14px
@@ -315,43 +313,43 @@ $min-height: 850px
 			color: $main-color
 			cursor: pointer
 		ul#ellipsis_submenu
-			right: 0
+			@include right(0)
 			left: inherit
 			a.title
 				padding: 0 8px
-				text-align: left
+				@include text-align(left)
 			li.subtab.expanded > ul
-				left: -200px
 				top: 0
+				@include left(-200px)
 	.menu-collapse
 		display: none
 
 #nav-mobile
 	position: fixed
 	top: 0
-	left: 0
 	width: 35px
 	height: 35px
 	z-index: 1100
+	@include left(0)
 	&.expanded
 		width: 100%
 		height: 100%
 		top: 35px
 		.menu-collapse
 			top: -35px
-			left: 0
 			position: absolute
 			z-index: 1200
+			@include left(0)
 	ul.menu
 		position: absolute
 		display: none
 		width: 100%
 		height: 100%
 		background-color: rgba(black,0.8)
-		margin: 0 0 100px 0
 		padding: 0
 		border-top: 1px black solid
 		list-style: none
+		@include margin(0, 0, 100px, 0)
 		@include transition(all 0.35s ease-out)
 		@include animate(fadeInLeft, 0.3s)
 		> li.searchtab
@@ -366,7 +364,7 @@ $min-height: 850px
 			.clear_search
 				position: absolute
 				top: 5px
-				right: 5px
+				@include right(5px)
 		> li
 			background: $main-color
 			position: relative
@@ -375,13 +373,13 @@ $min-height: 850px
 				height: $menu-item-size
 				line-height: $menu-item-size
 				position: relative
-				padding: 0 0 0 10px
 				border-bottom: 1px solid darken($main-color,10%)
 				font-size: 12px
 				color: mix($main-color, contrast-color($main-color, white, #333, 10%), 30%)
 				background-color: $main-color
 				text-transform: uppercase
 				text-decoration: none
+				@include padding(0, 0, 0, 10px)
 				@include transition-property(background-color)
 				@include transition-duration(0.4s)
 				@include transition-timing-function(ease-out)
@@ -409,8 +407,8 @@ $min-height: 850px
 	#nav-mobile-submenu
 		a:not(#nav-mobile-submenu-back)
 			font-size: 1.2em
-			padding-left: 50px
 			text-transform: none
+			@include padding-left(50px)
 	a#nav-mobile-submenu-back
 		background-color: darken($main-color,5%)
 		font-size: 1.5em
@@ -423,7 +421,6 @@ $min-height: 850px
 		height: 35px
 		text-align: center
 		line-height: 1.3em
-
 
 .menu-collapse
 	cursor: pointer
@@ -438,21 +435,21 @@ $min-height: 850px
 .mobile-nav
 	#content
 		h2.page-title
-			padding-left: 10px!important
+			@include padding-left(10px!important)
 		ul.page-breadcrumb
-			left: 10px!important
+			@include left(10px!important)
 
 .page-topbar:not(.mobile-nav)
 	#main
 		padding-top: 64px
 	#content
-		margin-left: 0
+		@include margin-left(0)
 		.page-head
 			top: 66px
 		.page-title
-			padding-left: 75px
+			@include padding-left(75px)
 		.page-breadcrumb
-			left: 75px
+			@include left(75px)
 
 .page-sidebar-closed:not(.nav-topbar):not(.mobile-nav)
 	.searchtab
@@ -460,10 +457,10 @@ $min-height: 850px
 			z-index: 1000
 			position: absolute
 			top: 16px
-			left: 14px
 			display: block
 			width: 28px
 			height: 28px
+			@include left(14px)
 			@extend .icon
 			@extend .icon-2x
 			@extend .icon-search
@@ -473,4 +470,3 @@ $min-height: 850px
 .page-topbar
 	.searchtab
 		display: none
-

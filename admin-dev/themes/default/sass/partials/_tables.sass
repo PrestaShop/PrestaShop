@@ -23,7 +23,6 @@
 			background-color: lighten(#CAE5F4,8%)
 			input[type="text"].filter, input[type="password"].filter, select.filter
 				font-size: 11px
-
 				padding: 0 4px
 				border-color: darken(#CAE5F4,10%)
 	input, select
@@ -53,7 +52,7 @@
 			text-align: center
 			position: relative
 			font-size: $icon-size-base
-			padding: 4px 4px 4px 20px
+			@include padding(4px, 4px, 4px, 20px)
 			@include border-radius(5px)
 			&:hover
 				color: white
@@ -66,9 +65,8 @@
 				width: 16px
 				position: absolute
 				top: 18px
-				left: 6px
+				@include left(6px)
 			.btn-group
-
 			.positions
 				display: inline-block
 				border: solid 1px #ccc
@@ -103,7 +101,7 @@ tr.highlighted td
 	color: white !important
 
 .bulk-actions
-	margin: 17px 0 0 0
+	@include margin(17px, 0, 0, 0)
 	ul i
 		font-size: 14px
 
@@ -146,8 +144,8 @@ tr.highlighted td
 		margin-bottom: ($line-height-computed * 0.75)
 		overflow-y: hidden
 		overflow-x: scroll
-		-ms-overflow-style: -ms-autohiding-scrollbar
 		border: 1px solid $table-border-color
+		-ms-overflow-style: -ms-autohiding-scrollbar
 		-webkit-overflow-scrolling: touch
 		> .table 
 			margin-bottom: 0
@@ -166,10 +164,10 @@ tr.highlighted td
 				> tr
 					> th:first-child,
 					> td:first-child
-						border-left: 0
+						@include border-left(0)
 					> th:last-child,
 					> td:last-child
-						border-right: 0
+						@include border-right(0)
 			> tbody,
 			> tfoot
 				> tr:last-child 

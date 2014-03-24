@@ -6,8 +6,8 @@
 	i
 		font-size: $icon-size-base
 .tree
-	padding: 0 0 0 20px
 	list-style: none
+	@include padding(0, 0, 0, 20px)
 	input
 		vertical-align: baseline
 		margin-right: 4px
@@ -52,9 +52,9 @@
 
 .tree-actions
 	.twitter-typeahead
-		padding: 0 0 0 4px
+		@include padding(0,0,0,4px)
 
 .tree-panel-label-title
 	font-weight: 400
-	padding: 0 0 0 8px
 	margin: 0
+	@include padding(0, 0, 0, 8px)
