@@ -1140,7 +1140,7 @@
 		</h3>
 		<div class="form-group">
 			<label class="control-label col-lg-3">
-				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search for an existing product by typing the first letters of his/her name.'}">
+				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search for an existing product by typing the first letters of its name.'}">
 					{l s='Search for a product'}
 				</span>
 			</label>
