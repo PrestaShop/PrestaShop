@@ -115,10 +115,10 @@ $chosen-sprite-path: 'chosen-sprite.png'
 		height: $chosen-height
 		overflow: hidden
 		line-height: $chosen-height
-		padding: 0 0 0 8px
 		position: relative
 		text-decoration: none
 		white-space: nowrap
+		@include padding(0, 0, 0, 8px)
 		@include box-shadow($chosen-box-shadow)
 		@include border-radius($input-border-radius)
 		&:hover
