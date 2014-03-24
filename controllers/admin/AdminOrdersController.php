@@ -104,6 +104,7 @@ class AdminOrdersControllerCore extends AdminController
 				'align' => 'text-right',
 				'type' => 'price',
 				'currency' => true,
+				'callback' => 'setOrderCurrency',
 				'badge_success' => true
 			),
 			'payment' => array(
@@ -178,6 +179,12 @@ class AdminOrdersControllerCore extends AdminController
 		);
 
 		parent::__construct();
+	}
+
+	public static function setOrderCurrency($echo, $tr)
+	{
+		$order = new Order($tr['id_order']);
+		return Tools::displayPrice($echo, (int)$order->id_currency);
 	}
 
 	public function initPageHeaderToolbar()
