@@ -2901,7 +2901,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .table td.pointer { cursor: pointer; }
 .bootstrap .table td.dragHandle .dragGroup { width: 80px; cursor: move; text-align: center; position: relative; font-size: 14px; padding: 4px 20px 4px 4px; -webkit-border-radius: 5px; border-radius: 5px; }
 .bootstrap .table td.dragHandle .dragGroup:hover { color: white; background-color: #00aff0 !important; }
-.bootstrap .table td.dragHandle .dragGroup:before { display: block; height: 16px; width: 16px; position: absolute; top: 18px; right: 6px; }
+.bootstrap .table td.dragHandle .dragGroup:before { display: block; height: 16px; width: 16px; position: absolute; top: 8px; right: 6px; }
 .bootstrap .table td.dragHandle .dragGroup .positions { display: inline-block; border: solid 1px #cccccc; background-color: #eeeeee; padding: 0 5px; color: #aaaaaa; width: 43px; text-shadow: white 1px 1px; -webkit-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px inset; box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px inset; }
 .bootstrap .table .actions { text-align: right; }
 .bootstrap .table th.actions .btn { margin-bottom: 4px !important; }

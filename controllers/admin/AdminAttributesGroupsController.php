@@ -188,7 +188,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'lang' => true,
 					'required' => true,
 					'col' => '4',
-					'hint' => $this->l('Your internal name for this attribute.').'&nbsp;'$this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Your internal name for this attribute.').'&nbsp;'.$this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
 					'type' => 'text',

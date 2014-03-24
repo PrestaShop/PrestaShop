@@ -2208,7 +2208,7 @@ class AdminTranslationsControllerCore extends AdminController
 			}
 		}
 		else
-			$this->warnings[] = sprintf(Tools::displayError('A mail directory exists for %1$s but not for English in %2$s'),
+			$this->warnings[] = sprintf(Tools::displayError('A mail directory exists for the "%1$s" language, but not for the English language in %2$s'),
 				$this->lang_selected->iso_code, str_replace(_PS_ROOT_DIR_, '', $dir));
 		return $arr_return;
 	}

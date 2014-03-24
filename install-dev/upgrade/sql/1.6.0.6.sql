@@ -15,7 +15,12 @@ INSERT IGNORE INTO `PREFIX_meta` (`id_meta`, `page`, `configurable`) VALUES
 INSERT IGNORE INTO `PREFIX_theme_meta` ( `id_theme` , `id_meta` , `left_column` , `right_column` )
   SELECT `PREFIX_theme`.`id_theme` , `PREFIX_meta`.`id_meta` , `default_left_column` , `default_right_column`
   FROM `PREFIX_theme` , `PREFIX_meta`;
-  
+
 ALTER TABLE `PREFIX_tab` ADD `hide_host_mode` tinyint(1) NOT NULL DEFAULT '0' AFTER  `active`;
 
 UPDATE `PREFIX_employee` SET `bo_theme` = 'default';
+
+DELETE FROM `PREFIX_image_type` WHERE `name` = 'cart_default';
+
+INSERT INTO `PREFIX_image_type` (`id_image_type`,`name`,`width`,`height`,`products`,`categories`,`manufacturers`,`suppliers`,`scenes`,`stores`)
+VALUES (NULL, 'cart_default', '80', '80', '1', '0', '0', '0', '0', '0');
