@@ -92,9 +92,9 @@
 			@include right(0)
 
 	.data_list_large
-		@include margin(8px, 0, 10px, 0)
-		padding: 0
 		@extend .list-unstyled
+		padding: 0
+		@include margin(8px, 0, 10px, 0)
 		li
 			padding: 6px 0
 			position: relative
@@ -109,7 +109,7 @@
 			line-height: 0.6em
 			position: absolute
 			top: 0
-			right: 0
+			@include right(0)
 			@include padding(8px, 0, 0, 0)
 			small
 				font-size: 0.5em
