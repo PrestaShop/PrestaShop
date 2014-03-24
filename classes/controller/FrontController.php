@@ -1147,7 +1147,7 @@ class FrontControllerCore extends Controller
 	
 	protected function getOverrideThemeDir()
 	{
-		return $this->useMobileTheme() ? _PS_THEME_MOBILE_OVERRIDE_DIR_ : _PS_THEME_MOBILE_DIR_;
+		return $this->useMobileTheme() ? _PS_THEME_MOBILE_OVERRIDE_DIR_ : _PS_THEME_OVERRIDE_DIR_;
 	}
 	
 	/**

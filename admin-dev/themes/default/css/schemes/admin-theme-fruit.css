@@ -1,7 +1,7 @@
 @charset "UTF-8";
+/* This is a fairly big mixin. The reason for this is that at the time of writing (09/01/2013), Sass does not include functions for substring or find/replace in string. Chris Eppstein sent a Pull Request to Sass with the str-extract (substring) function back in June, but it still has not been merged, due to lack of minor comments. That was five months ago. */
 @import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,700");
 @import url("//fonts.googleapis.com/css?family=Ubuntu+Condensed");
-/* This is a fairly big mixin. The reason for this is that at the time of writing (09/01/2013), Sass does not include functions for substring or find/replace in string. Chris Eppstein sent a Pull Request to Sass with the str-extract (substring) function back in June, but it still has not been merged, due to lack of minor comments. That was five months ago. */
 @-webkit-keyframes fadeIn { 0% { opacity: 0; }
   100% { opacity: 1; } }
 
@@ -2902,7 +2902,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .table td.pointer { cursor: pointer; }
 .bootstrap .table td.dragHandle .dragGroup { width: 80px; cursor: move; text-align: center; position: relative; font-size: 14px; padding: 4px 4px 4px 20px; -webkit-border-radius: 5px; -moz-border-radius: 5px; -ms-border-radius: 5px; -o-border-radius: 5px; border-radius: 5px; }
 .bootstrap .table td.dragHandle .dragGroup:hover { color: white; background-color: #00c8ab !important; }
-.bootstrap .table td.dragHandle .dragGroup:before { display: block; height: 16px; width: 16px; position: absolute; top: 18px; left: 6px; }
+.bootstrap .table td.dragHandle .dragGroup:before { display: block; height: 16px; width: 16px; position: absolute; top: 8px; left: 6px; }
 .bootstrap .table td.dragHandle .dragGroup .positions { display: inline-block; border: solid 1px #cccccc; background-color: #eeeeee; padding: 0 5px; color: #aaaaaa; width: 43px; text-shadow: white 1px 1px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px inset; box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px inset; }
 .bootstrap .table .actions { text-align: right; }
 .bootstrap .table th.actions .btn { margin-bottom: 4px !important; }

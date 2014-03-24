@@ -36,7 +36,7 @@
             {/if}
             {if $blockcontactinfos_phone != ''}
             	<li>
-            		<i class="icon-phone"></i>{l s='Call us now toll free:' mod='blockcontactinfos'} 
+            		<i class="icon-phone"></i>{l s='Call us now:' mod='blockcontactinfos'} 
             		<span>{$blockcontactinfos_phone|escape:'html':'UTF-8'}</span>
             	</li>
             {/if}

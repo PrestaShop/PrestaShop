@@ -34,6 +34,10 @@ class AdminPPreferencesControllerCore extends AdminController
 
 		parent::__construct();
 
+		$warehouse_list = Warehouse::getWarehouses();
+		$warehouse_no = array(array('id_warehouse' => 0,'name' => $this->l('No default warehouse (Standard)')));
+		$warehouse_list = array_merge($warehouse_no,$warehouse_list);
+
 		$this->fields_options = array(
 			'products' => array(
 				'title' =>	$this->l('Products (general)'),
@@ -253,8 +257,15 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'bool',
 						'visibility' => Shop::CONTEXT_ALL,
 					),
+					'PS_DEFAULT_WAREHOUSE_NEW_PRODUCT' => array(
+						'title' => $this->l('Default warehouse on new products'),
+						'hint' => $this->l('Automatically set a default warehouse when new product is created'),
+						'type' => 'select',
+						'list' => $warehouse_list,
+						'identifier' => 'id_warehouse'
+					),
 				),
-				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();advancedStockManagementActivationAuthorization():</script>',
+				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();advancedStockManagementActivationAuthorization();</script>',
 				'submit' => array('title' => $this->l('Save'))
 			),
 		);

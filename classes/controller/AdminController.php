@@ -288,6 +288,9 @@ class AdminControllerCore extends Controller
 	public $show_form_cancel_button;
 
 	public $admin_webpath;
+	
+	protected $list_natives_modules = array();
+	protected $list_partners_modules = array();
 
 	public function __construct()
 	{
@@ -1397,7 +1400,10 @@ class AdminControllerCore extends Controller
 
 	public function displayAjax()
 	{
-		if ($this->json)
+		if (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
+			$requestJson = true;
+
+		if ($this->json || (isset($requestJson) && $requestJson))
 		{
 			$this->context->smarty->assign(array(
 				'json' => true,
