@@ -182,7 +182,7 @@ class HelperListCore extends Helper
 		{
 			if ($this->position_identifier)
 				if (isset($this->position_group_identifier))
-					$position_group_identifier = (int)Tools::getValue($this->position_group_identifier);
+					$position_group_identifier = Tools::getIsset($this->position_group_identifier) ? Tools::getIsset($this->position_group_identifier) : $this->position_group_identifier;
 				else
 					$position_group_identifier = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', ($this->is_cms ? '1' : Category::getRootCategory()->id ));
 			else
