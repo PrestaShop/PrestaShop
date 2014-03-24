@@ -274,7 +274,7 @@ class AdminReferrersControllerCore extends AdminController
 
 		$this->fields_form[2] = array('form' => array(
 			'legend' => array(
-				'title' => $this->l('Technical information -- Simple mode.'),
+				'title' => $this->l('Technical information -- Simple mode'),
 				'icon' => 'icon-cogs'
 			),
 			'help' => true,
