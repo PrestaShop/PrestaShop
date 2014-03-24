@@ -549,7 +549,7 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		/* Bypass payment step if total is 0 */
 		if ($this->context->cart->getOrderTotal() <= 0)
-			return '<p class="center"><input type="button" class="exclusive_large" name="confirmOrder" id="confirmOrder" value="'.Tools::displayError('I confirm my order.').'" onclick="confirmFreeOrder();" /></p>';
+			return '<p class="center"><button class="button btn btn-default button-medium" name="confirmOrder" id="confirmOrder" onclick="confirmFreeOrder();" type="submit"> <span>'.Tools::displayError('I confirm my order.').'</span></button></p>';
 
 		$return = Hook::exec('displayPayment');
 		if (!$return)
