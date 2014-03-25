@@ -1085,6 +1085,20 @@ abstract class ModuleCore
 		return Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name);
 	}
 
+	protected static function useTooMuchMemory()
+	{
+		$memory_limit = Tools::getMemoryLimit();
+		if (function_exists('memory_get_usage') && $memory_limit != '-1')
+		{
+			$current_memory = memory_get_usage(true);
+			$memory_threshold = (int)max($memory_limit * 0.15, Tools::isX86_64arch() ? 4194304 : 2097152);
+			$memory_left = $memory_limit - $current_memory;
+			
+			if ($memory_left <= $memory_threshold)
+				return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Return available modules
@@ -1104,7 +1118,6 @@ abstract class ModuleCore
 
 		// Get modules directory list and memory limit
 		$modules_dir = Module::getModulesDirOnDisk();
-		$memory_limit = Tools::getMemoryLimit();
 		
 		$modules_installed = array();
 		$result = Db::getInstance()->executeS('
@@ -1117,17 +1130,10 @@ abstract class ModuleCore
 
 		foreach ($modules_dir as $module)
 		{
-			// Memory usage checking
-			if (function_exists('memory_get_usage') && $memory_limit != '-1')
+			if (Module::useTooMuchMemory())
 			{
-				$current_memory = memory_get_usage(true);
-				// memory_threshold in MB
-				$memory_threshold = (Tools::isX86_64arch() ? 3 : 1.5);
-				if (($memory_limit - $current_memory) <= ($memory_threshold * 1024 * 1024))
-				{
-					$errors[] = Tools::displayError('All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration');
-					break;
-				}
+				$errors[] = Tools::displayError('All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration');
+				break;
 			}
 
 			$iso = substr(Context::getContext()->language->iso_code, 0, 2);
@@ -1288,6 +1294,12 @@ abstract class ModuleCore
 		foreach ($files_list as $f)
 			if (file_exists($f['file']) && ($f['loggedOnAddons'] == 0 || $loggedOnAddons))
 			{
+				if (Module::useTooMuchMemory())
+				{
+					$errors[] = Tools::displayError('All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration');
+					break;
+				}
+
 				$file = $f['file'];
 				$content = Tools::file_get_contents($file);
 				$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);

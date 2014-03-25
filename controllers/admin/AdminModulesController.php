@@ -1201,11 +1201,9 @@ class AdminModulesControllerCore extends AdminController
 		$categoryFiltered = array();
 		$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
 		if (count($filterCategories) > 0)
-		{
 			foreach ($filterCategories as $fc)
 				if (!empty($fc))
 					$categoryFiltered[$fc] = 1;
-		}
 
 		if (empty($categoryFiltered) && Tools::getValue('tab_module'))
 			$categoryFiltered[Tools::getValue('tab_module')] = 1;
