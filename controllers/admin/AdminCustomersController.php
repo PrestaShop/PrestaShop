@@ -698,7 +698,7 @@ class AdminCustomersControllerCore extends AdminController
 		foreach ($orders as $order)
 		{
 			if (!isset($order['order_state']))
-				$order['order_state'] = $this->l('There is no state defined for this order.');
+				$order['order_state'] = $this->l('There is no status defined for this order.');
 
 			if ($order['valid'])
 			{
