@@ -56,8 +56,9 @@ $(document).ready(function(){
 			$(this.form).submit();
 		});
 
-		$(document).on('change', 'select[name="manufacturer_list"], select[name="supplier_list"]', function(){
-			autoUrl($(this).attr('id'), '');
+		$(document).on('change', 'select[name="manufacturer_list"], select[name="supplier_list"]', function() {
+			if (this.value != '')
+				location.href = this.value;
 		});
 
 		$(document).on('change', 'select[name="currency_payement"]', function(){
