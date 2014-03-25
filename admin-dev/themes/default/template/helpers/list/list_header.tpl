@@ -255,11 +255,11 @@
 				</tr>
 			{if !$simple_header && $show_filters}
 				<tr class="nodrag nodrop filter {if $row_hover}row_hover{/if}">
-					<th class="text-center">
-						{if $has_bulk_actions}
+					{if $has_bulk_actions}
+						<th class="text-center">
 							--
-						{/if}
-					</th>
+						</th>
+					{/if}
 					{* Filters (input, select, date or bool) *}
 					{foreach $fields_display AS $key => $params}
 						<th {if isset($params.align)} class="{$params.align}" {/if}>
