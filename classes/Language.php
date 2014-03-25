@@ -96,7 +96,7 @@ class LanguageCore extends ObjectModel
 	 */
 	public function getFields()
 	{
-		$this->language_code = strtolower($this->iso_code);
+		$this->iso_code = strtolower($this->iso_code);
 		if (empty($this->language_code))
 			$this->language_code = $this->iso_code;
 
