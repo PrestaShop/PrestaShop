@@ -26,9 +26,9 @@
 {if count($list)}
 {foreach $list AS $index => $tr}
 	<tr
-	{if $position_identifier}id="tr_{$position_group_identifier}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if}
-	class="{if isset($tr.class)} {$tr.class}{/if} {if $tr@iteration is odd by 1}odd{/if}"
-	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if} >
+		{if $position_identifier}id="tr_{$position_group_identifier}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if}
+		class="{if isset($tr.class)} {$tr.class}{/if} {if $tr@iteration is odd by 1}odd{/if}"
+		{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if} >
 		{if $bulk_actions && $has_bulk_actions}
 			<td class="text-center">
 				{if isset($list_skip_actions.delete)}

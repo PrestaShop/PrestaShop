@@ -26,12 +26,11 @@
 {if count($list)}
 {foreach $list AS $index => $tr}
 	<tr
-	{if $position_identifier}id="tr_{$tr.id_attribute_group}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if}
-	{if $index is odd}class="alt_row"{/if}
-	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
-	>
-		<td class="center">
-			{if {$has_bulk_actions}}
+		{if $position_identifier}id="tr_{$tr.id_attribute_group}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if}
+		{if $index is odd}class="alt_row"{/if}
+		{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if} >
+		{if {$has_bulk_actions}}
+			<td class="text-center">
 				{if isset($list_skip_actions.delete)}
 					{if !in_array($tr.$identifier, $list_skip_actions.delete)}
 						<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
@@ -39,8 +38,8 @@
 				{else}
 					<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
 				{/if}
-			{/if}
-		</td>
+			</td>
+		{/if}
 		{foreach $fields_display AS $key => $params}
 			<td
 				{if isset($params.position)}
