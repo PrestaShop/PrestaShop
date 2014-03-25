@@ -284,7 +284,8 @@ class AdminTranslationsControllerCore extends AdminController
 			elseif (!touch($file_path))
 				throw new PrestaShopException(sprintf(Tools::displayError('File "%s" cannot be created'), $file_path));
 		}
-		$kpi_key = substr(strtoupper(Tools::getValue('theme').'_'.Tools::getValue('lang')), 0, 16);
+		$thm_name = str_replace('.', '', Tools::getValue('theme'));
+		$kpi_key = substr(strtoupper($thm_name.'_'.Tools::getValue('lang')), 0, 16);
 
 		if ($fd = fopen($file_path, 'w'))
 		{
