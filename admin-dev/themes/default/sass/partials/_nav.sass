@@ -240,6 +240,10 @@ $min-height: 850px
 		padding: 0
 		display: block
 		list-style: none
+		li.searchtab
+			width: 200px
+			@include margin-right(5px)
+			@include float(right)
 		li.maintab, li.subtab
 			height: 28px
 			padding: 0
@@ -466,7 +470,3 @@ $min-height: 850px
 			@extend .icon-search
 		.form-group
 			display: none
-
-.page-topbar
-	.searchtab
-		display: none
