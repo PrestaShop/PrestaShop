@@ -119,8 +119,7 @@ class AdminStockManagementControllerCore extends AdminController
 		$this->displayInformation($this->l('Through this interface, you can increase and decrease product stock for an given warehouse.'));
 		$this->displayInformation($this->l('Furthermore, you can alter product quantities between warehouses, or within one warehouse.').'<br />');
 		$this->displayInformation($this->l('If you want to increase quantities of multiple products at once, you can use the "Supply orders" page under the "Stock" menu.').'<br />');
-		$this->displayInformation($this->l('Finally, you need to provide the quantity that you\'ll be adding:'));
-		$this->displayInformation($this->l('"Usable for sale" means that this quantity will be available in your shop(s), otherwise it will be considered reserved (i.e. for other purposes).'));
+		$this->displayInformation($this->l('Finally, you need to provide the quantity that you\'ll be adding: "Usable for sale" means that this quantity will be available in your shop(s), otherwise it will be considered reserved (i.e. for other purposes).'));
 
 		return parent::renderList();
 	}
