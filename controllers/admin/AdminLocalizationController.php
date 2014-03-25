@@ -135,6 +135,11 @@ class AdminLocalizationControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
 		if (Tools::isSubmit('submitLocalizationPack'))
 		{
 			$version = str_replace('.', '', _PS_VERSION_);

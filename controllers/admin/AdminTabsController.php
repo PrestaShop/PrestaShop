@@ -205,8 +205,8 @@ class AdminTabsControllerCore extends AdminController
 	public function renderList()
 	{
 		$this->addRowAction('edit');
-		$this->addRowAction('delete');
 		$this->addRowAction('details');
+		$this->addRowAction('delete');
 
 		$this->_where = 'AND a.`id_parent` = 0';
 		$this->_orderBy = 'position';
