@@ -132,7 +132,8 @@ setlocale(LC_NUMERIC, 'en_US.UTF-8', 'en_US.utf8');
 
 /* Instantiate cookie */
 $cookie_lifetime = (int)(defined('_PS_ADMIN_DIR_') ? Configuration::get('PS_COOKIE_LIFETIME_BO') : Configuration::get('PS_COOKIE_LIFETIME_FO'));
-$cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
+if ($cookie_lifetime > 0)
+	$cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
 
 if (defined('_PS_ADMIN_DIR_'))
 	$cookie = new Cookie('psAdmin', '', $cookie_lifetime);
