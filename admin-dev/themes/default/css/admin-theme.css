@@ -2757,6 +2757,7 @@ a.link-social:hover { text-decoration: none; }
 
 #nav-topbar { position: fixed; height: 28px; top: 37px; width: 100%; z-index: 600; background-color: white; padding: 0 40px 0 0; }
 #nav-topbar ul.menu { margin: 0; padding: 0; display: block; list-style: none; }
+#nav-topbar ul.menu li.searchtab { width: 200px; margin-right: 5px; float: right; }
 #nav-topbar ul.menu li.maintab, #nav-topbar ul.menu li.subtab { height: 28px; padding: 0; margin: 0; list-style: none; position: relative; float: left; }
 #nav-topbar ul.menu li.maintab > a, #nav-topbar ul.menu li.subtab > a { display: block; line-height: 27px; color: #626e8c; padding: 0 6px; margin: 0; font-size: 12px; }
 #nav-topbar ul.menu li.maintab > a i, #nav-topbar ul.menu li.subtab > a i { margin: 0; width: 15px; color: #4d576e; background-color: transparent; font-size: 14px; }
@@ -2810,8 +2811,6 @@ a.link-social:hover { text-decoration: none; }
 
 .page-sidebar-closed:not(.nav-topbar):not(.mobile-nav) .searchtab:before { z-index: 1000; position: absolute; top: 16px; display: block; width: 28px; height: 28px; left: 14px; }
 .page-sidebar-closed:not(.nav-topbar):not(.mobile-nav) .searchtab .form-group { display: none; }
-
-.page-topbar .searchtab { display: none; }
 
 [class^="icon-"] { font-size: 14px; }
 
