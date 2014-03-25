@@ -403,7 +403,7 @@ abstract class ControllerCore
 
 		$html = trim($html);
 
-		if ($this->controller_type == 'front' && !empty($html))
+		if ($this->controller_type == 'front' && !empty($html) && $this->getLayout())
 		{
  			$dom_available = extension_loaded('dom') ? true : false;
  			if ($dom_available)

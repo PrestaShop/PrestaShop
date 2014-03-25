@@ -194,6 +194,8 @@ class EmployeeCore extends ObjectModel
 
 	protected function updateTextDirection()
 	{
+		if (!defined('_PS_ADMIN_DIR_'))
+			return;
 		$path = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.$this->bo_theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR;
 		$language = new Language($this->id_lang);
 		if ($language->is_rtl && !strpos($this->bo_css, '_rtl'))

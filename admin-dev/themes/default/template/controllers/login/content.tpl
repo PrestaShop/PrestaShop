@@ -40,9 +40,10 @@
 		<div id="error" class="hide alert alert-danger">
 		{if isset($errors)}
 			<h4>
-				{if $nbErrors > 1}
+				{if isset($nbErrors) && $nbErrors > 1}
 					{l s='There are %d errors.' sprintf=$nbErrors}
-				{else}{l s='There is %d error.' sprintf=$nbErrors}
+				{else}
+					{l s='There is %d error.' sprintf=$nbErrors}
 				{/if}
 			</h4>
 			<ol>
