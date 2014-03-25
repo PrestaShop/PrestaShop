@@ -2882,7 +2882,6 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .list-detail dd:not(:last-child) { margin-bottom: 10px; }
 .bootstrap .rating { unicode-bidi: bidi-override; direction: rtl; font-size: 20px; }
 .bootstrap .rating span.star { font-family: "FontAwesome"; display: inline-block; }
-.bootstrap .rating span.star:hover { cursor: pointer; }
 .bootstrap .rating span.star:before { content: "\f006"; padding-right: 3px; color: #999999; }
 .bootstrap .rating span.star:hover:before, .bootstrap .rating span.star.active:before, .bootstrap .rating span.star:hover ~ span.star:before, .bootstrap .rating span.star.active ~ span.star:before { content: "\f005"; color: #e3cf7a; }
 .bootstrap .table { border-collapse: separate; border-spacing: 0 2px 0 0; margin-bottom: 5px; }
