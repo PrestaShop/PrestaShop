@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div id="container" class="row">
-	<div class="sidebar navigation col-lg-3">
+	<div class="sidebar navigation col-md-3">
 		<nav class="list-group categorieList">
 		{if count($modules)}
 			{foreach $modules as $module}
