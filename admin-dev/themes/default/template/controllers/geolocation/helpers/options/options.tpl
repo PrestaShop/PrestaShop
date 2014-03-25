@@ -31,14 +31,14 @@
 			<table class="table" cellspacing="0">
 				<thead>
 					<tr>
-						<th><input type="checkbox" name="checkAll" onclick="checkDelBoxes(this.form, 'countries[]', this.checked)" /></th>
+						<th><input type="checkbox" name="checkAll" onclick="checkDelBoxes(this.form, '{$key}[]', this.checked)" /></th>
 						<th>{l s='Name'}</th>
 					<tr>
 				</thead>
 				<tbody>
 					{foreach $field['list'] as $country}
 						<tr>
-							<td><input type="checkbox" name="countries[]" value="{$country[$field['identifier']]}" {if in_array(strtoupper($country['iso_code']), $allowed_countries)}checked="checked"{/if} /></td>
+							<td><input type="checkbox" name="{$key}[]" value="{$country[$field['identifier']]}" {if in_array(strtoupper($country['iso_code']), $allowed_countries)}checked="checked"{/if} /></td>
 							<td>{$country['name']|escape:'html':'UTF-8'}</td>
 						</tr>
 					{/foreach}

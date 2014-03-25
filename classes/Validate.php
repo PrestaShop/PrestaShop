@@ -998,6 +998,20 @@ class ValidateCore
 
 	/**
 	 *
+	 * @param array $identifiers
+	 * @return boolean return true if the array contain only iso identifiers value
+	 */
+	public static function isArrayWithLangIsoCodes($identifiers)
+	{
+		if (count($identifiers))
+			foreach ($identifiers as $iso_code)
+				if (empty($iso_code) || !Validate::isLangIsoCode($iso_code))
+					return false;
+		return true;
+	}
+
+	/**
+	 *
 	 * @param array $zones
 	 * @return boolean return true if array contain all value required for an image map zone
 	 */
