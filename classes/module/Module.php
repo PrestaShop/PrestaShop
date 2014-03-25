@@ -249,7 +249,7 @@ abstract class ModuleCore
 			foreach ($this->dependencies as $dependency)
 				if (!Db::getInstance()->getRow('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($dependency).'\''))
 				{
-					$error = $this->l('Before installing this module, you have to installed these/this module(s) first :').'<br />';
+					$error = $this->l('Before installing this module, you have to install this/these module(s) first:').'<br />';
 					foreach ($this->dependencies as $d)
 						$error .= '- '.$d.'<br />';
 					$this->_errors[] = $error;
@@ -280,7 +280,7 @@ abstract class ModuleCore
 		$result = Db::getInstance()->insert($this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version));
 		if (!$result)
 		{
-			$this->_errors[] = $this->l('Technical error : PrestaShop could not installed this module.');
+			$this->_errors[] = $this->l('Technical error: PrestaShop could not installed this module.');
 			return false;
 		}
 		$this->id = Db::getInstance()->Insert_ID();

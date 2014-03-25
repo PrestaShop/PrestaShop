@@ -119,7 +119,7 @@ class AdminMetaControllerCore extends AdminController
 		else
 		{
 			$url_description = $this->l('Before you can use this tool, you need to:');
-			$url_description .= $this->l('Create a blank .htaccess in your root directory.');
+			$url_description .= $this->l('Create a blank .htaccess file in your root directory.');
 			$url_description .= $this->l('Give it write permissions (CHMOD 666 on Unix system).');
 		}
 
