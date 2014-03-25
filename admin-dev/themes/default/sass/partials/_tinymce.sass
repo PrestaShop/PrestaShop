@@ -17,8 +17,8 @@
 	-webkit-tap-highlight-color: transparent
 	line-height: normal
 	font-weight: normal
-	text-align: left
 	box-sizing: content-box
+	@include text-align(left)
 	direction: ltr
 	*
 		margin: 0
@@ -118,9 +118,9 @@
 div.mce-fullscreen
 	position: fixed
 	top: 0
-	left: 0
 	width: 100%
 	height: auto
+	@include left(0)
 
 .mce-tinymce
 	display: block
@@ -129,8 +129,8 @@ div.mce-fullscreen
 .mce-wordcount
 	position: absolute
 	top: 0
-	right: 0
 	padding: 8px
+	@include right(0)
 
 div.mce-edit-area
 	background: #FFF
@@ -168,8 +168,8 @@ div.mce-edit-area
 		height: 12px
 		margin: 2px
 		cursor: pointer
-	border-spacing: 2px
-	border-collapse: separate
+		border-spacing: 2px
+		border-collapse: separate
 	a
 		display: block
 		border: 1px solid transparent
@@ -201,8 +201,8 @@ div.mce-tinymce-inline
 		margin-bottom: 0
 
 .mce-rtl .mce-wordcount
-	left: 0
-	right: auto
+	@include left(0)
+	@include right(auto)
 
 .mce-container, .mce-container-body
 	display: block
@@ -215,18 +215,18 @@ div.mce-tinymce-inline
 	width: 7px
 	height: 100%
 	top: 2px
-	right: 2px
 	opacity: .4
 	filter: alpha(opacity = 40)
 	zoom: 1
+	@include right(2px)
 
 .mce-scrollbar-h
 	top: auto
-	right: auto
-	left: 2px
 	bottom: 2px
 	width: 100%
 	height: 7px
+	@include right(auto)
+	@include left(2px)
 
 .mce-scrollbar-thumb
 	position: absolute
@@ -235,9 +235,7 @@ div.mce-tinymce-inline
 	border-color: rgba(85, 85, 85, 0.6)
 	width: 5px
 	height: 100%
-	-webkit-border-radius: 7px
-	-moz-border-radius: 7px
-	border-radius: 7px
+	@include border-radius(7px)
 
 .mce-scrollbar-h .mce-scrollbar-thumb
 	width: 100%
@@ -249,9 +247,7 @@ div.mce-tinymce-inline
 		opacity: .6
 		filter: alpha(opacity = 60)
 		zoom: 1
-		-webkit-border-radius: 7px
-		-moz-border-radius: 7px
-		border-radius: 7px
+		@include border-radius(7px)
 
 .mce-scroll
 	position: relative
@@ -283,38 +279,37 @@ div.mce-tinymce-inline
 			content: ""
 		border-width: 11px
 	&.mce-popover
-		background: transparent
-		border-radius: 6px
-		box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2)
 		top: 0
-		left: 0
+		background: transparent
 		background: #fff
-		border: 1px solid #9e9e9e
 		border: 1px solid rgba(0, 0, 0, 0.25)
+		@include border-radius(6px)
+		@include box-shadow(0 5px 10px rgba(0, 0, 0, 0.2))
+		@include left(0)
 		&.mce-bottom
 			margin-top: 10px
 			*margin-top: 0
 			> .mce-arrow
-				left: 50%
-				margin-left: -11px
 				border-top-width: 0
 				border-bottom-color: #9e9e9e
 				border-bottom-color: rgba(0, 0, 0, 0.25)
 				top: -11px
+				@include left(50%)
+				@include margin-left(-11px)
 				&:after
 					top: 1px
-					margin-left: -10px
 					border-top-width: 0
 					border-bottom-color: #fff
+					@include margin-left(-10px)
 			&.mce-start
-				margin-left: -22px
+				@include margin-left(-22px)
 				> .mce-arrow
-					left: 20px
+					@include left(20px)
 			&.mce-end
-				margin-left: 22px
+				@include margin-left(22px)
 				> .mce-arrow
-					right: 10px
-					left: auto
+					@include right(10px)
+					@include left(auto)
 
 .mce-fullscreen
 	border: 0
@@ -327,18 +322,18 @@ div.mce-tinymce-inline
 div.mce-fullscreen
 	position: fixed
 	top: 0
-	left: 0
+	@include left(0)
 
 #mce-modal-block
 	opacity: 0
 	filter: alpha(opacity = 0)
 	zoom: 1
 	position: fixed
-	left: 0
 	top: 0
 	width: 100%
 	height: 100%
 	background: #000
+	@include left(0)
 	&.mce-in
 		opacity: .3
 		filter: alpha(opacity = 30)
@@ -348,16 +343,16 @@ div.mce-fullscreen
 	cursor: move
 
 .mce-window
-	border-radius: 6px
-	box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3)
 	background: transparent
 	background: #fff
 	position: fixed
 	top: 0
-	left: 0
 	opacity: 0
 	-webkit-transition: opacity 150ms ease-in
 	transition: opacity 150ms ease-in
+	@include left(0)
+	@include box-shadow(0 3px 7px rgba(0, 0, 0, 0.3))
+	@include border-radius(6px)
 	&.mce-in
 		opacity: 1
 
@@ -367,7 +362,6 @@ div.mce-fullscreen
 	position: relative
 	.mce-close
 		position: absolute
-		right: 15px
 		top: 9px
 		font-size: 18px
 		font-weight: bold
@@ -376,6 +370,7 @@ div.mce-fullscreen
 		cursor: pointer
 		height: 20px
 		overflow: hidden
+		@include right(15px)
 
 .mce-close:hover
 	color: #adadad
@@ -385,7 +380,7 @@ div.mce-fullscreen
 	font-size: 14px
 	font-weight: normal
 	text-rendering: optimizelegibility
-	padding-right: 10px
+	@include padding-right(10px)
 
 .mce-window .mce-container-body
 	display: block
@@ -394,40 +389,36 @@ div.mce-fullscreen
 	display: block
 	background-color: #fff
 	border-top: 1px solid #c5c5c5
-	border-radius: 0 0 6px 6px
+	@include border-radius(0 0 6px 6px)
 
 .mce-window-head .mce-dragh
 	position: absolute
 	top: 0
-	left: 0
 	cursor: move
 	width: 90%
 	height: 100%
+	@include left(0)
 
 .mce-window
 	iframe
 		width: 100%
 		height: 100%
 	&.mce-fullscreen
-		-webkit-border-radius: 0
-		-moz-border-radius: 0
-		border-radius: 0
+		@include border-radius(0)
 		.mce-foot
-			-webkit-border-radius: 0
-			-moz-border-radius: 0
-			border-radius: 0
+			@include border-radius(0)
 
 .mce-rtl .mce-window-head
 	.mce-close
 		position: absolute
-		right: auto
-		left: 15px
+		@include right(auto)
+		@include left(15px)
 	.mce-dragh
-		left: auto
-		right: 0
+		@include left(auto)
+		@include right(0)
 	.mce-title
 		direction: rtl
-		text-align: right
+		@include text-align(right)
 
 .mce-abs-layout
 	position: relative
@@ -453,10 +444,10 @@ body .mce-abs-layout-item
 	background-color: #000
 	color: #fff
 	max-width: 200px
-	padding: 5px 8px 4px 8px
 	text-align: center
 	white-space: normal
-	border-radius: 3px
+	@include border-radius(3px)
+	@include padding(5px, 8px, 4px, 8px)
 
 .mce-tooltip-arrow
 	position: absolute
@@ -472,81 +463,91 @@ body .mce-abs-layout-item
 	border-top-color: #000
 
 .mce-tooltip-arrow-e
-	border-left-color: #000
+	@include rtl
+		border-left-color: #000
+	@include ltr
+		border-right-color: #000
 
 .mce-tooltip-arrow-w
-	border-right-color: #000
+	@include rtl
+		border-right-color: #000
+	@include ltr
+		border-left-color: #000
 
 .mce-tooltip-nw, .mce-tooltip-sw
-	margin-left: -14px
+	@include margin-left(-14px)
 
 .mce-tooltip-n .mce-tooltip-arrow
 	top: 0px
-	left: 50%
-	margin-left: -5px
 	border-bottom-style: solid
 	border-top: none
 	border-left-color: transparent
 	border-right-color: transparent
+	@include left(50%)
+	@include margin-left(-5px)
 
 .mce-tooltip-nw .mce-tooltip-arrow
 	top: 0
-	left: 10px
 	border-bottom-style: solid
 	border-top: none
 	border-left-color: transparent
 	border-right-color: transparent
+	@include left(10px)
 
 .mce-tooltip-ne .mce-tooltip-arrow
 	top: 0
-	right: 10px
 	border-bottom-style: solid
 	border-top: none
 	border-left-color: transparent
 	border-right-color: transparent
+	@include right(10px)
 
 .mce-tooltip-s .mce-tooltip-arrow
 	bottom: 0
-	left: 50%
-	margin-left: -5px
 	border-top-style: solid
 	border-bottom: none
 	border-left-color: transparent
 	border-right-color: transparent
+	@include left(50%)
+	@include margin-left(-5px)
 
 .mce-tooltip-sw .mce-tooltip-arrow
 	bottom: 0
-	left: 10px
 	border-top-style: solid
 	border-bottom: none
 	border-left-color: transparent
 	border-right-color: transparent
+	@include left(10px)
 
 .mce-tooltip-se .mce-tooltip-arrow
 	bottom: 0
-	right: 10px
 	border-top-style: solid
 	border-bottom: none
 	border-left-color: transparent
 	border-right-color: transparent
+	@include right(10px)
 
 .mce-tooltip-e .mce-tooltip-arrow
-	right: 0
 	top: 50%
 	margin-top: -5px
 	border-left-style: solid
 	border-right: none
 	border-top-color: transparent
 	border-bottom-color: transparent
+	@include right(0)
 
 .mce-tooltip-w .mce-tooltip-arrow
-	left: 0
 	top: 50%
 	margin-top: -5px
-	border-right-style: solid
-	border-left: none
 	border-top-color: transparent
 	border-bottom-color: transparent
+	@include left(0)
+	@include rtl
+		border-left-style: solid
+		border-right: none
+	@include ltr
+		border-left-style: solid
+		border-right: none
 
 .mce-btn
 	position: relative
@@ -595,12 +596,10 @@ body .mce-abs-layout-item
 	&.mce-disabled
 		button, &:hover button
 			cursor: default
-			-webkit-box-shadow: none
-			-moz-box-shadow: none
-			box-shadow: none
 			opacity: .4
 			filter: alpha(opacity = 40)
 			zoom: 1
+			@include box-shadow(none)
 	&.mce-active
 		background-color: #005299
 		&:hover
@@ -617,9 +616,7 @@ body .mce-abs-layout-item
 		padding: 9px 14px
 		font-size: 12px
 		line-height: normal
-		-webkit-border-radius: 5px
-		-moz-border-radius: 5px
-		border-radius: 5px
+		@include border-radius(5px)
 	i
 		margin-top: 2px
 
@@ -635,7 +632,7 @@ body .mce-abs-layout-item
 
 .mce-btn .mce-caret, .mce-btn-small .mce-caret
 	margin-top: 8px
-	margin-left: 0
+	@include margin-left(0)
 
 .mce-caret
 	display: inline-block
@@ -662,13 +659,13 @@ body .mce-abs-layout-item
 .mce-btn-group
 	.mce-btn
 		border: solid 1px #ccc
-		border-right: none
 		border-radius: 0
+		@include border-right(none)
 	.mce-first
-		border-radius: 3px 0 0 3px
+		@include border-radius(3px, 0, 0, 3px)
 	.mce-last
-		border-right: solid 1px #ccc
-		border-radius: 0 3px 3px 0
+		@include border-right(solid 1px #ccc)
+		@include border-radius(0 3px 3px 0)
 	.mce-first.mce-last
 		border-radius: 3px
 	.mce-btn.mce-flow-layout-item
@@ -679,7 +676,6 @@ body .mce-abs-layout-item
 	cursor: pointer
 
 i.mce-i-checkbox
-	margin: 0 3px 0 0
 	border: 1px solid #c5c5c5
 	border-radius: 3px
 	background-color: #f0f0f0
@@ -692,6 +688,7 @@ i.mce-i-checkbox
 	height: 14px
 	text-align: center
 	display: inline-block
+	@include margin(0, 3px, 0, 0)
 
 .mce-checked i.mce-i-checkbox
 	color: #333
@@ -702,7 +699,7 @@ i.mce-i-checkbox
 .mce-checkbox
 	&:focus i.mce-i-checkbox, &.mce-focus i.mce-i-checkbox
 		border: 1px solid rgba(82, 168, 236, 0.8)
-		box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.65)
+		@include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.65))
 	&.mce-disabled
 		.mce-label, i.mce-i-checkbox
 			color: #acacac
@@ -710,9 +707,9 @@ i.mce-i-checkbox
 .mce-rtl
 	.mce-checkbox
 		direction: rtl
-		text-align: right
+		@include text-align(right)
 	i.mce-i-checkbox
-		margin: 0 0 0 3px
+		@include margin(0, 0, 0, 3px)
 
 .mce-colorbutton .mce-ico
 	position: relative
@@ -722,45 +719,45 @@ i.mce-i-checkbox
 
 .mce-colorbutton
 	button
-		padding-right: 4px
+		@include padding-right(4px)
 	.mce-preview
-		padding-right: 3px
 		display: block
 		position: absolute
-		left: 50%
 		top: 50%
-		margin-left: -14px
 		margin-top: 7px
 		background: gray
 		width: 13px
 		height: 2px
 		overflow: hidden
+		@include margin-left(-14px)
+		@include left(50%)
+		@include padding-right(3px)
 	&.mce-btn-small .mce-preview
-		margin-left: -16px
-		padding-right: 0
 		width: 16px
+		@include padding-right(0)
+		@include margin-left(-16px)
 	.mce-open
-		padding-left: 4px
 		border-left: 1px solid transparent
 		border-right: 1px solid transparent
+		@include padding-left(4px)
 	&:hover .mce-open
 		border-left-color: #bdbdbd
 		border-right-color: #bdbdbd
 	&.mce-btn-small .mce-open
-		padding: 0 3px 0 3px
+		@include padding(0, 3px, 0, 3px)
 
 .mce-rtl .mce-colorbutton
 	direction: rtl
 	.mce-preview
-		margin-left: 0
-		padding-right: 0
-		padding-left: 4px
-		margin-right: -14px
+		@include margin-left(0)
+		@include padding-right(0)
+		@include padding-left(4px)
+		@include margin-right(14px)
 	&.mce-btn-small .mce-preview
-		margin-left: 0
-		padding-right: 0
-		margin-right: -17px
-		padding-left: 0
+		@include margin-left(0)
+		@include padding-right(0)
+		@include margin-right(-17px)
+		@include padding-left(0)
 	button
 		padding-right: 10px
 		padding-left: 10px
@@ -780,10 +777,10 @@ i.mce-i-checkbox
 	&.mce-disabled input
 		color: #adadad
 	&.mce-has-open input
-		border-radius: 4px 0 0 4px
+		@include border-radius(4px 0 0 4px)
 	.mce-btn
-		border-left: 0
-		border-radius: 0 4px 4px 0
+		@include border-left(0)
+		@include border-radius(0 4px 4px 0)
 		background-color: #C5C5C5
 		@include box-shadow(rgba(#aaa,1) 0 -2px 0 inset)
 
@@ -804,7 +801,7 @@ i.mce-i-checkbox
 	white-space: normal
 	.mce-txt
 		display: inline-block
-		padding-right: 3px
+		@include padding-right(3px)
 	.mce-path-body
 		display: inline-block
 
@@ -836,8 +833,8 @@ i.mce-i-checkbox
 		margin-top: -15px
 
 .mce-fieldset-title
-	margin-left: 5px
-	padding: 0 5px 0 5px
+	@include margin-left(5px)
+	@include padding(0, 5px, 0, 5px)
 
 .mce-fit-layout
 	display: inline-block
@@ -851,9 +848,9 @@ i.mce-i-checkbox
 	display: inline-block
 	*display: inline
 	*zoom: 1
-	margin: 2px 0 2px 2px
+	@include margin(2px, 0, 2px, 2px)
 	&.mce-last
-		margin-right: 2px
+		@include margin-right(2px)
 
 .mce-flow-layout
 	white-space: normal
@@ -863,12 +860,12 @@ i.mce-i-checkbox
 
 .mce-rtl
 	.mce-flow-layout
-		text-align: right
+		@include text-align(right)
 		direction: rtl
 	.mce-flow-layout-item
-		margin: 2px 2px 2px 0
+		@include margin(2px, 2px, 2px, 0)
 		&.mce-last
-			margin-left: 2px
+			@include margin-left(2px)
 
 .mce-iframe
 	border: 0 solid #9e9e9e
@@ -889,7 +886,7 @@ i.mce-i-checkbox
 		white-space: pre-wrap
 
 .mce-rtl .mce-label
-	text-align: right
+	@include text-align(right)
 	direction: rtl
 
 .mce-menubar

@@ -10,17 +10,17 @@
 		width: 100%
 #header_shopname
 	@extend .navbar-brand
-	font-size: 1.3em!important
+	font-size: 1.3em !important
 	position: relative
-	margin: 0 5px 0 0
 	height: 36px
 	padding-left: 45px !important
+	@include margin(0, 5px, 0, 0)
 	img
 		position: absolute
 		top: 0
-		left: 0
 		width: 35px
 		height: 35px
+		@include left(0)
 #header_notifs_icon_wrapper
 	@extend .nav
 	@extend .navbar-nav
@@ -41,11 +41,11 @@
 	.notifs_badge
 		@extend .badge
 		position: absolute
-		font-size: 10px!important
+		font-size: 10px !important
 		top: 2px
 		padding: 0 5px !important
-		right: -3px
 		display: none
+		@include right(-3px)
 	.notifs_dropdown
 		background-color: white
 		border: none
@@ -80,13 +80,16 @@
 #header_employee_box
 	@extend .nav
 	@extend .navbar-nav
-	@extend .navbar-right
 	margin: 0 !important
+	@include ltr
+		@extend .navbar-right
+	@include rtl
+		@extend .navbar-left
 	@media (max-width: $screen-sm)
-		float: right
+		@include float(right)
 		> li
 			display: inline-block
-			float: left
+			@include float(left)
 	span.string-long
 		@media (max-width: $screen-sm)
 			display: none
@@ -95,17 +98,20 @@
 		@media (max-width: $screen-sm)
 			display: inline-block
 	a img
-		margin-right: 5px
+		@include margin-right(5px)
 	#header_foaccess i
 		font-size: 1.2em
 #employee_infos
 	.employee_name
 		position: relative
-		padding-left: 34px!important
+		@include ltr
+			padding-left: 34px !important
+		@include rtl
+			padding-right: 34px !important
 	.employee_avatar_small
 		position: absolute
 		top: 2px
-		left: 0
+		@include left(0)
 	img
 		border: none
 		padding: 0
@@ -113,12 +119,15 @@
 	i
 		font-size: $icon-size-base
 	@media (max-width: $screen-sm)
-		position: fixed!important
-		top: 36px!important
-		left: 0!important
-		width: 100%!important
-		height: 100%!important
-		background-color: #383F50!important
+		position: fixed !important
+		top: 36px !important
+		width: 100% !important
+		height: 100% !important
+		background-color: #383F50 !important
+		@include ltr
+			left: 0 !important
+		@include rtl
+			right: 0 !important
 		li
 			color: white
 			font-size: 1.2em
@@ -130,18 +139,20 @@
 #header_quick
 	@extend .nav
 	@extend .navbar-nav
-	@extend .navbar-left
 	@extend .hidden-xs
-
+	@include ltr
+		@extend .navbar-left
+	@include rtl
+		@extend .navbar-right
+	
 #ajax_running
 	position: absolute
 	height: 35px
 	width: 35px
 	top: 0
-	left: 0
 	background-color: rgba(black,.4)
 	text-align: center
-	
+	@include left(0)
 	i
 		font-size: 20px
 		color: rgba(white,.6)

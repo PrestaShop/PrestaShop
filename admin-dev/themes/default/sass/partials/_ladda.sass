@@ -59,11 +59,11 @@ $spinnerSize: 32px
 		position: absolute
 		width: 0
 		height: 100%
-		left: 0
 		top: 0
 		background: rgba( 0, 0, 0, 0.2 )
 		visibility: hidden
 		opacity: 0
+		@include left(0)
 		@include transition( 0.1s linear all )
 		&[data-loading] .ladda-progress
 			opacity: 1
@@ -83,40 +83,40 @@ $spinnerSize: 32px
 // EXPAND LEFT
 .ladda-button[data-style=expand-right]
 	.ladda-spinner
-		right: 14px
+		@include right(14px)
 	&[data-size="s"] .ladda-spinner,
 	&[data-size="xs"] .ladda-spinner
-		right: 4px
+		@include right(4px)
 	&[data-loading]
-		padding-right: 56px
+		@include padding-right(56px)
 		.ladda-spinner
 			opacity: 1
 		&[data-size="s"],
 		&[data-size="xs"]
-			padding-right: 40px
+			@include padding-right(40px)
 
 // EXPAND RIGHT
 .ladda-button[data-style=expand-left]
 	.ladda-spinner
-		left: 14px
+		@include left(14px)
 	&[data-size="s"] .ladda-spinner,
 	&[data-size="xs"] .ladda-spinner
-		left: 4px
+		@include left(4px)
 	&[data-loading]
-		padding-left: 56px
+		@include padding-left(56px)
 		.ladda-spinner
 			opacity: 1
 		&[data-size="s"],
 		&[data-size="xs"]
-			padding-left: 40px
+			@include padding-left(40px)
 
 // EXPAND UP
 .ladda-button[data-style=expand-up]
 	overflow: hidden
 	.ladda-spinner
 		top: -$spinnerSize
-		left: 50%
-		margin-left: -$spinnerSize/2
+		@include margin-left(-$spinnerSize/2)
+		@include left(50%)
 	&[data-loading]
 		padding-top: 54px
 		.ladda-spinner
@@ -135,7 +135,7 @@ $spinnerSize: 32px
  	overflow: hidden
  	.ladda-spinner
  		top: 62px
- 		left: 50%
+ 		@include left(50%)
  		margin-left: -$spinnerSize/2
  	&[data-size="s"] .ladda-spinner,
  	&[data-size="xs"] .ladda-spinner
@@ -155,15 +155,15 @@ $spinnerSize: 32px
 	.ladda-label
 		position: relative
 	.ladda-spinner
-		left: 100%
-		margin-left: -$spinnerSize/2
+		@include left(100%)
+		@include margin-left(-$spinnerSize/2)
 	&[data-loading]
 		.ladda-label
 			opacity: 0
-			left: -100%
+			@include left(-100%)
 		.ladda-spinner
 			opacity: 1
-			left: 50%
+			@include left(50%)
 
 // SLIDE RIGHT
 .ladda-button[data-style=slide-right]
@@ -171,16 +171,15 @@ $spinnerSize: 32px
 	.ladda-label
 		position: relative
 	.ladda-spinner
-		right: 100%
-		margin-left: -$spinnerSize/2
+		@include right(100%)
+		@include margin-left(-$spinnerSize/2)
 	&[data-loading]
 		.ladda-label
 			opacity: 0
-			left: 100%
+			@include left(100%)
 		.ladda-spinner
 			opacity: 1
-			left: 50%
-
+			@include left(50%)
 
 // SLIDE UP
 .ladda-button[data-style=slide-up]
@@ -188,9 +187,9 @@ $spinnerSize: 32px
 	.ladda-label
 		position: relative
 	.ladda-spinner
-		left: 50%
-		margin-left: -$spinnerSize/2
 		margin-top: 1em
+		@include left(50%)
+		@include margin-left(-$spinnerSize/2)
 	&[data-loading]
 		.ladda-label
 			opacity: 0
@@ -199,16 +198,15 @@ $spinnerSize: 32px
 			opacity: 1
 			margin-top: -$spinnerSize/2
 
-
 // SLIDE DOWN
 .ladda-button[data-style=slide-down]
 	overflow: hidden
 	.ladda-label
 		position: relative
 	.ladda-spinner
-		left: 50%
-		margin-left: -$spinnerSize/2
 		margin-top: -2em
+		@include margin-left(-$spinnerSize/2)
+		@include left(50%)
 	&[data-loading]
 		.ladda-label
 			opacity: 0
@@ -221,8 +219,8 @@ $spinnerSize: 32px
 .ladda-button[data-style=zoom-out]
 	overflow: hidden
 	.ladda-spinner
-		left: 50%
-		margin-left: -$spinnerSize/2
+		@include left(50%)
+		@include margin-left(-$spinnerSize/2)
 		@include vendor-transform( scale( 2.5 ) )
 	.ladda-label
 		position: relative
@@ -239,8 +237,8 @@ $spinnerSize: 32px
 .ladda-button[data-style=zoom-in]
 	overflow: hidden
 	.ladda-spinner
-		left: 50%
-		margin-left: -$spinnerSize/2
+		@include margin-left(-$spinnerSize/2)
+		@include left(50%)
 		@include vendor-transform( scale( 0.2 ) )
 	.ladda-label
 		position: relative
@@ -258,8 +256,8 @@ $spinnerSize: 32px
 	overflow: hidden
 	width: 100px
 	.ladda-spinner
-		left: 50%
-		margin-left: -16px
+		@include left(50%)
+		@include margin-left(-16px)
 
 .ladda-button[data-style=contract][data-loading]
 	border-radius: 50%
@@ -269,31 +267,28 @@ $spinnerSize: 32px
 	.ladda-spinner
 		opacity: 1
 
-
 // OVERLAY
 .ladda-button[data-style=contract-overlay]
 	overflow: hidden
 	width: 100px
-	box-shadow: 0px 0px 0px 3000px rgba(0,0,0,0)
+	@include ltr
+		box-shadow: 0px 0px 0px 3000px rgba(0,0,0,0)
+	@include rtl
+		box-shadow: 0px 3000px 0px 0px rgba(0,0,0,0)
 	.ladda-spinner
-		left: 50%
-		margin-left: -16px
+		@include left(50%)
+		@include margin-left(-16px)
 	&[data-loading]
 		border-radius: 50%
 		width: 52px
-		/*outline: 10000px solid rgba( 0, 0, 0, 0.5 );*/
-		box-shadow: 0px 0px 0px 3000px rgba(0,0,0,0.8)
+		@include ltr
+			box-shadow: 0px 0px 0px 3000px rgba(0,0,0,0.8)
+		@include rtl
+			box-shadow: 0px 3000px 0px 0px rgba(0,0,0,0.8)
 		.ladda-label
 			opacity: 0
 		.ladda-spinner
 			opacity: 1
-
-// THEME
-$red: #ea8557
-$purple: #9973C2
-$mint: #16a085
-$green: #2aca76
-$blue: #53b5e6
 
 .ladda-button
 	&[disabled],
