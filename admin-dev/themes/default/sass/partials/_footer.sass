@@ -20,16 +20,16 @@
 		width: 30px
 		text-align: center
 		line-height: 30px
-		right: 10px
 		z-index: 9003
 		display: block
-		padding: 0px 6px 0px 6px
+		padding: 0px 6px
 		margin: -2px 0px 0px
 		text-decoration: none
 		color: #fff
 		cursor: pointer
 		font-size: 16px
 		background-color: $main-color
+		@include right(10px)
 		&:hover
 			background-color: $brand-primary
 	.social-networks
@@ -40,10 +40,10 @@
 			color: white
 			text-decoration: none
 		i
-			font-size: 14px
+			font-size: $icon-size-base
 			color: white
 	.footer-contact
-		padding: 7px 0 0 0
+		@include padding(7px, 0, 0, 0)
 		p
 			line-height: 1.3em
 			margin: 0 0 6px
@@ -59,7 +59,7 @@ a.link-social
 		display: inline-block
 		line-height: 34px!important
 		text-align: center
-		margin: 0 4px 0 0
+		@include margin(0, 4px, 0, 0)
 		@include border-radius(30px)
 	&:hover
 		text-decoration: none

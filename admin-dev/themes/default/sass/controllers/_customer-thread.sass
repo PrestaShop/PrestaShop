@@ -2,7 +2,7 @@
 .employee_avatar_small
 	@extend .avatar-sm
 	vertical-align: middle
-	margin-right: 4px
+	@include margin-right(4px)
 	img
 		padding: 0
 		border: none
@@ -56,12 +56,12 @@
 		@extend .icon-refresh
 		position: absolute
 		top: 10px
-		left: 10px
 		display: block
 		text-align: center
 		font-size: 2em
 		z-index: 10
 		color: #ccc
+		@include left(10px)
 	a
 		width: 100px
 		height: 100px
@@ -69,11 +69,11 @@
 		display: block
 		position: absolute
 		top: 1px
-		left: 1px
 		z-index: 100
 		background-position: center
 		background-size: contain
 		border: none
+		@include left(1px)
 		@include box-shadow(white 0 0 0 3px inset)
 
 			
@@ -81,7 +81,7 @@
 .message-item-initial
 	h2
 		font-size: 1.5em
-		margin: 0 0 5px 0
+		@include margin(0, 0, 5px, 0)
 	.message-item-initial-body
 		@extend .panel
 		position: relative
@@ -95,21 +95,21 @@
 	@extend .media
 	position: relative
 	border-bottom: solid 1px #EEEEEE
-	margin: 0 0 0 30px
+	@include margin(0, 0, 0, 30px)
 	padding: 10px 0
 	&:last-child
 		border: none
 	.message-item-heading
 		display: inline-block
 	.message-body
-		margin: 0 0 0 80px 
+		@include margin(0, 0, 0, 80px)
 		.message-item-text
-			padding: 0 0 0 10px
-			border-left: 2px solid #ccc
+			@include padding(0, 0, 0, 10px)
+			@include border-left(2px solid #ccc)
 	.message-avatar
 		position: absolute
 		top: 10px
-		left: 10px
+		@include left(10px)
 	.message-date
 		color: #bbb
 
@@ -121,29 +121,45 @@
 	border-style: solid
 	content: ""
 .arrow-left:before
-	margin-left: -7px
 	top: 6px
-	left: 0px
-	border-right-color: #d1d4d7
-	border-width: 7px 7px 7px 0
+	@include ltr
+		border-right-color: #d1d4d7
+		border-width: 7px 7px 7px 0
+	@include rtl
+		border-left-color: #d1d4d7
+		border-width: 7px 0 7px 7px
+	@include margin-left(-7px)
+	@include left(0)
 .arrow-left:after
-	margin-left: -6px
 	top: 7px
-	left: 0px
-	border-right-color: #fff
-	border-width: 6px 6px 6px 0
+	@include ltr
+		border-right-color: #fff
+		border-width: 6px 6px 6px 0
+	@include rtl
+		border-left-color: #fff
+		border-width: 6px 0 6px 6px
+	@include left(0)
+	@include margin-left(-6px)
 .arrow-right:before
-	margin-right: -7px
 	top: 6px
-	right: 0px
-	border-left-color: #d1d4d7
-	border-width: 7px 0 7px 7px
+	@include ltr
+		border-left-color: #d1d4d7
+		border-width: 7px 0 7px 7px
+	@include rtl
+		border-right-color: #d1d4d7
+		border-width: 7px 7px 7px 0
+	@include right(0px)
+	@include margin-right(-7px)
 .arrow-right:after
-	margin-right: -6px
 	top: 7px
-	right: 0px
-	border-left-color: #fff
-	border-width: 6px 0 6px 6px
+	@include ltr
+		border-left-color: #fff
+		border-width: 6px 0 6px 6px
+	@include rtl
+		border-right-color: #fff
+		border-width: 6px 6px 6px 0
+	@include right(0px)
+	@include margin-right(-6px)
 
 //Timeline
 $time-icon-size: 40px
@@ -157,13 +173,13 @@ $time-icon-size: 40px
 	&:before
 		content: ""
 		width: 6px
-		margin-left: -4px
 		position: absolute
-		left: 50%
 		top: 0
 		bottom: 30px
 		background-color: #ddd
 		z-index: 0
+		@include margin-left(-4px)
+		@include left(50%)
 	.timeline-item
 		display: table-row
 		.timeline-caption
@@ -172,12 +188,11 @@ $time-icon-size: 40px
 			width: 50%
 			.timeline-panel
 				@extend .panel
-				@include box-shadow(0)
 				display: inline-block
 				position: relative
-				margin-left: $time-icon-size + 2px
-				position: relative
-				text-align: left
+				@include text-align(left)
+				@include margin-left($time-icon-size + 2px)
+				@include box-shadow(0)
 			h5
 				margin: 0
 				span
@@ -192,12 +207,11 @@ $time-icon-size: 40px
 		.timeline-date
 			position: absolute
 			width: 150px
-			left: -220px
 			top: 10px
-			text-align: right
+			@include text-align(right)
+			@include left(-220px)
 		.timeline-icon
 			position: absolute
-			left: -($time-icon-size + $time-icon-size/2 + 2px)
 			width: $time-icon-size
 			height: $time-icon-size
 			line-height: $time-icon-size
@@ -206,6 +220,7 @@ $time-icon-size: 40px
 			text-align: center
 			border: 2px solid #fff
 			background-color: #666
+			@include left(-($time-icon-size + $time-icon-size/2 + 2px))
 			i
 				font-size: ($time-icon-size/2)
 				margin-top: 5px
@@ -215,26 +230,26 @@ $time-icon-size: 40px
 			display: block
 			width: 50%
 		&.alt
-			text-align: right
+			@include text-align(right)
 			&:before
 				display: none
 			.timeline-panel
-				margin-right: $time-icon-size
-				margin-left: 0
+				@include margin-right($time-icon-size)
+				@include margin-left(0)
 			.timeline-date
-				left: auto
-				right: -220px
-				text-align: left
+				@include right(-220px)
+				@include text-align(left)
+				@include left(auto)
 			.timeline-icon
-				left: auto
-				right: -($time-icon-size+$time-icon-size/2)
+				@include left(auto)
+				@include right(-($time-icon-size+$time-icon-size/2))
 		&.active
 			display: table-caption
 			text-align: center
 			&:before
 				width: 1%
 			.timeline-panel
-				margin-left: 0
+				@include margin-left(0)
 			.timeline-caption
 				display: inline-block
 				width: auto

@@ -216,10 +216,20 @@ class MediaCore
 	 *
 	 * @param mixed $css_uri
 	 * @param string $css_media_type
+	 * @param bool $need_rtl
 	 * @return string
 	 */
-	public static function getCSSPath($css_uri, $css_media_type = 'all')
+	public static function getCSSPath($css_uri, $css_media_type = 'all', $need_rtl = true)
 	{
+		// RTL Ready: search and load rtl css file if it's not originally rtl
+		if($need_rtl && Context::getContext()->language->is_rtl)
+		{
+			$css_uri_rtl = preg_replace('/(^[^.].*)(\.css)$/', '$1_rtl.css', $css_uri);
+			$rtl_media = Media::getMediaPath($css_uri_rtl, $css_media_type);
+			if($rtl_media != false)
+				return $rtl_media;
+		}
+		// End RTL
 		return Media::getMediaPath($css_uri, $css_media_type);
 	}
 

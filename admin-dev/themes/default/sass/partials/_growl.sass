@@ -13,25 +13,25 @@ $duration: 0.4s
 	
 	&.default
 		top: 100px
-		right: 10px
+		@include right(10px)
 	&.tl
 		top: 10px
-		left: 10px
+		@include left(10px)
 	&.tr
 		top: 10px
-		right: 10px
+		@include right(10px)
 	&.bl
 		bottom: 10px
-		left: 10px
+		@include left(10px)
 	&.br
 		bottom: 10px
-		right: 10px
+		@include right(10px)
 
 .growl
 	opacity: 1
 	position: relative
-	border-radius: 4px
-	+transition(all $duration ease-in-out)
+	@include border-radius(4px)
+	@include transition(all $duration ease-in-out)
 
 	&.#{$namespace}-incoming
 		opacity: 0.0
@@ -66,11 +66,11 @@ $duration: 0.4s
 		background: rgba($brand-warning,0.8)
 	.#{$namespace}-close
 		cursor: pointer
-		float: right
 		font-size: 14px
 		line-height: 18px
 		font-weight: normal
 		font-family: helvetica, verdana, sans-serif
+		@include float(right)
 	.#{$namespace}-title
 		font-size: 18px
 		line-height: 24px

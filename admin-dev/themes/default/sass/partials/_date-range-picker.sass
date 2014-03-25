@@ -32,7 +32,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 		.form-date-heading
 			height: 30px
 			line-height: 30px
-			padding: 0 0 0 8px
+			@include padding(0, 0, 0, 8px)
 			.title, .checkbox-title label
 				font-size: 1.15em
 				color: $color-bright
@@ -45,7 +45,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 				color: $color-bright
 				border: none
 			select
-				margin: 2px 2px 0 0
+				@include margin(2px,2px,0,0)
 		.form-date-body, .form-date-actions
 			width: 100%
 			padding: 10px
@@ -56,25 +56,25 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 		.form-date-group
 			clear: both
 			width: 100%
-			margin: 0 auto 6px auto
+			margin: 0 auto 6px
 			label
 				font-size: 0.8em
 				font-weight: 700
 				text-transform: uppercase
 				color: #666
 			input
-				margin: 4px 4px 0 0
+				@include margin(4px, 4px, 0, 0)
 			input[type='text']
 				width: 35%
 			button
-				margin: 5px 0 0 0
+				@include margin(5px, 0, 0, 0)
 
 	.daterangepicker
 		position: relative
-		margin: 0 0 8px 0
 		width: 100%
 		font-size: 13px
 		border: solid 1px #ccc
+		@include margin(0, 0, 8px, 0)
 		table
 			width: 100%
 			margin: 0
@@ -86,7 +86,6 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 				font-size: 0.7em
 				height: 1.5em
 				text-transform: uppercase
-
 			tr:first-child th
 				background-color: $color-bright
 				border-bottom: 1px solid darken($color-calendar,5%)
@@ -111,77 +110,74 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 				position: absolute
 				display: block
 				top: 0
-				left: 0
 				width: 100%
 				z-index: 0
 				background-color: transparent
+				@include left(0)
 			&.day:hover
 				cursor: pointer
 			&.day.disabled
 				color: $color-calendar-outrange
 			&.old, &.new
 				color: $color-calendar-outrange
-
 			&.start-selected:not(.old):not(.new):not(.end-selected)
 				color: $color-bright
 				font-weight: 700
 				background-color: $color-calendar-day-selected
-				+border-left-radius(15px)
+				@include border-left-radius(15px)
 				//@extend .chevron-left
 				&.range-compare
 					background-color: mix($color-calendar-day-selected,$color-calendar-range-compare,70%)
-					+border-left-radius(0)
+					@include border-left-radius(0)
 				&.end-selected-compare, &.start-selected-compare
 					background-color: mix($color-calendar-day-selected,$color-calendar-day-selected-compare,70%)
 				&.end-selected-compare
-					+border-radius(0)
+					@include border-radius(0)
 			&.end-selected:not(.old):not(.new):not(.start-selected)
 				color: $color-bright
 				font-weight: 700
 				background-color: $color-calendar-day-selected
 				//@extend .chevron-right
-				+border-right-radius(15px)
+				@include border-right-radius(15px)
 				&.range-compare
 					background-color: mix($color-calendar-day-selected,$color-calendar-range-compare,70%)
-					+border-right-radius(0)
+					@include border-right-radius(0)
 				&.end-selected-compare, &.start-selected-compare
 					background-color: mix($color-calendar-day-selected,$color-calendar-day-selected-compare,70%)
 				&.start-selected-compare
-					+border-radius(0)
+					@include border-radius(0)
 			&.start-selected-compare:not(.old):not(.new):not(.end-selected-compare)
 				color: $color-bright
 				font-weight: 700
 				background-color: $color-calendar-day-selected-compare
-				+border-left-radius(15px)
-				//@extend .chevron-left
+				@include border-left-radius(15px)
 				&.range
 					background-color: mix($color-calendar-day-selected-compare,$color-calendar-range,70%)
-					+border-left-radius(0)
+					@include border-left-radius(0)
 			&.end-selected-compare:not(.old):not(.new):not(.start-selected-compare)
 				color: $color-bright
 				font-weight: 700
 				background-color: $color-calendar-day-selected-compare
-				//@extend .chevron-right
-				+border-right-radius(15px)
+				@include border-right-radius(15px)
 				&.range
 					background-color: mix($color-calendar-day-selected-compare,$color-calendar-range,70%)
-					+border-right-radius(0)
+					@include border-right-radius(0)
 			&.end-selected.start-selected
 				color: $color-bright
-				+border-radius(15px)
+				@include border-radius(15px)
 				font-weight: 700
 				background-color: $color-calendar-day-selected
 				&.range-compare
 					background-color: mix($color-calendar-day-selected,$color-calendar-range-compare,70%)
-					+border-radius(0)
+					@include border-radius(0)
 			&.end-selected-compare.start-selected-compare
 				color: $color-bright
-				+border-radius(15px)
+				@include border-radius(15px)
 				font-weight: 700
 				background-color: $color-calendar-day-selected-compare
 				&.range
 					background-color: mix($color-calendar-day-selected-compare,$color-calendar-range,70%)
-					+border-radius(0)
+					@include border-radius(0)
 			&.range
 				color: lighten($color-calendar-range,35%)
 				background-color: $color-calendar-range
@@ -214,11 +210,11 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 					color: $color-calendar-outrange
 		th
 			&.next
-				text-align: right
-				padding: 0 10px 0 0
+				@include text-align(right)
+				@include padding(0, 10px, 0, 0)
 			&.prev
-				text-align: left
-				padding: 0 0 0 10px 
+				@include text-align(left)
+				@include padding(0, 0, 0, 10px)
 			&.next, &.prev, &.month-switch
 				font-size: 1.3em
 				line-height: 2em
@@ -240,17 +236,17 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 	border-style: solid
 	position: absolute
 .chevron-left:before
-	right: 0
 	top: 0
-	border-width: 1.2em 0 1.2em 0.5em
 	border-color: transparent transparent transparent $color-calendar-day-selected
 	background-color: $color-calendar-range
+	@include right(0)
+	@include border-width(1.2em, 0, 1.2em, 0.5em)
 .chevron-right:before
-	left: 0
 	top: 0
-	border-width: 1.2em 0 1.2em 0.5em
 	border-color: transparent transparent transparent $color-calendar-range
 	background-color: $color-calendar-day-selected
+	@include left(0)
+	@include border-width(1.2em, 0, 1.2em, 0.5em)
 .input-complete
 	-webkit-animation: one 0.2s ease-in-out
 	-moz-animation: one 0.2s ease-in-out
@@ -269,4 +265,3 @@ $color-calendar-range-compare: lighten($color-calendar-compare,10%)
 		+box-shadow($color-calendar 0 0 0 20px inset)
 	100%
 		+box-shadow($color-calendar 0 0 0 inset)
-			
