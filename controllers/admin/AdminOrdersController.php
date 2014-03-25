@@ -462,7 +462,7 @@ class AdminOrdersControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 
-		/* Change order state, add a new entry in order history and send an e-mail to the customer if needed */
+		/* Change order status, add a new entry in order history and send an e-mail to the customer if needed */
 		elseif (Tools::isSubmit('submitState') && isset($order))
 		{
 			if ($this->tabAccess['edit'] === '1')

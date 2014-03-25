@@ -125,7 +125,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 
 	public function init()
 	{
-		// if we are managing the second list (i.e. supply order state)
+		// if we are managing the second list (i.e. supply order status)
 		if (Tools::isSubmit('submitAddsupply_order_state') ||
 			Tools::isSubmit('addsupply_order_state') ||
 			Tools::isSubmit('updatesupply_order_state') ||
@@ -193,7 +193,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 				)
 			);
 		}
-		// else, if we are managing Supply Order State
+		// else, if we are managing Supply Order Status
 		else if (Tools::isSubmit('addsupply_order_state') ||
 				 Tools::isSubmit('updatesupply_order_state') ||
 				 Tools::isSubmit('submitAddsupply_order_state') ||
@@ -260,7 +260,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 						),
 						array(
 							'type' => 'switch',
-							'label' => $this->l('Delivery state'),
+							'label' => $this->l('Delivery status'),
 							'name' => 'receipt_state',
 							'required' => true,
 							'is_bool' => true,
@@ -457,7 +457,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'ajax' => true
 			),
 			'receipt_state' => array(
-				'title' => $this->l('Delivery state?'),
+				'title' => $this->l('Delivery status?'),
 				'align' => 'center',
 				'active' => 'receiptState',
 				'type' => 'bool',
@@ -466,7 +466,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'ajax' => true
 			),
 			'enclosed' => array(
-				'title' => $this->l('Enclosed order state?'),
+				'title' => $this->l('Enclosed order status?'),
 				'align' => 'center',
 				'active' => 'enclosed',
 				'type' => 'bool',
