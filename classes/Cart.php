@@ -636,6 +636,7 @@ class CartCore extends ObjectModel
 				$row['price_wt'] = Tools::ps_round($row['price_wt'], 2);
 				$row['total_wt'] = $row['price_wt'] * (int)$row['cart_quantity'];
 				$row['total'] = Tools::ps_round($row['price'] * (int)$row['cart_quantity'], 2);
+				$row['description_short'] = Tools::nl2br($row['description_short']);
 			}
 
 			if (!isset($row['pai_id_image']) || $row['pai_id_image'] == 0)
