@@ -28,16 +28,16 @@
 		&.flip .flipper
 			@include rotateY(180deg)
 	.flipper
+		position: relative
 		@include transition-duration(0.6s)
 		@include transform-style
-		position: relative
 	.front, .back
-		@include backface-visibility(hidden)
 		width: 100%
 		padding: 20px
 		position: absolute
 		top: 0
-		left: 0
+		@include backface-visibility(hidden)
+		@include left(0)
 	.front
 		z-index: 2
 	.back
