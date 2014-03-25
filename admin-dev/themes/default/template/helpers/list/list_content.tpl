@@ -161,6 +161,9 @@
 					{if $key == 0}
 						{assign var='action' value=$action}
 					{/if}
+					{if $action == 'delete' && $actions|@count > 2}
+						{$compiled_actions[] = 'divider'}
+					{/if}
 					{$compiled_actions[] = $tr.$action}
 				{/if}
 			{/foreach}
@@ -175,8 +178,8 @@
 						<ul class="dropdown-menu">
 						{foreach $compiled_actions AS $key => $action}
 							{if $key != 0}
-							<li>
-								{$action}
+							<li {if $action == 'divider'}class="divider"{/if}>
+								{if $action != 'divider'}{$action}{/if}
 							</li>
 							{/if}
 						{/foreach}
