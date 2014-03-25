@@ -4472,6 +4472,14 @@ class AdminProductsControllerCore extends AdminController
 
 				StockAvailable::setQuantity($product->id, (int)Tools::getValue('id_product_attribute'), (int)Tools::getValue('value'));
 				Hook::exec('actionProductUpdate', array('product' => $this->object));
+				
+				// Catch potential echo from modules
+				$error = ob_get_contents();
+				if (!empty($error))
+				{
+					ob_end_clean();
+					die (Tools::jsonEncode(array('error' => $error)));
+				}
 				break;
 			case 'advanced_stock_management' :
 				if (Tools::getValue('value') === false)
