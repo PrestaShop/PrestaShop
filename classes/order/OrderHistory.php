@@ -29,7 +29,7 @@ class OrderHistoryCore extends ObjectModel
 	/** @var integer Order id */
 	public $id_order;
 
-	/** @var integer Order state id */
+	/** @var integer Order status id */
 	public $id_order_state;
 
 	/** @var integer Employee id for this history entry */
@@ -275,7 +275,7 @@ class OrderHistoryCore extends ObjectModel
 		
 		// changes invoice number of order ?
 		if (!Validate::isLoadedObject($new_os) || !Validate::isLoadedObject($order))
-			die(Tools::displayError('Invalid new order state'));
+			die(Tools::displayError('Invalid new order status'));
 
 		// the order is valid if and only if the invoice is available and the order is not cancelled
 		$order->current_state = $this->id_order_state;
@@ -334,7 +334,7 @@ class OrderHistoryCore extends ObjectModel
 	}
 
 	/**
-	 * Returns the last order state
+	 * Returns the last order status
 	 * @param int $id_order
 	 * @return OrderState|bool
 	 * @deprecated 1.5.0.4
@@ -406,7 +406,7 @@ class OrderHistoryCore extends ObjectModel
 
 			if (Validate::isLoadedObject($order))
 			{
-				// Join PDF invoice if order state is "payment accepted"
+				// Join PDF invoice if order status is "payment accepted"
 				if ((int)$result['id_order_state'] === 2 && (int)Configuration::get('PS_INVOICE') && $order->invoice_number)
 				{
 					$context = Context::getContext();
