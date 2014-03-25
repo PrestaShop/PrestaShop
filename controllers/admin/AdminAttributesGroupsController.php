@@ -172,7 +172,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			),
 			array(
 				'id' => 'color',
-				'name' => $this->l('Color picker')
+				'name' => $this->l('Color or texture')
 			),
 		);
 

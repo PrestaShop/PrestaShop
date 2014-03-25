@@ -79,8 +79,8 @@ class AdminFeaturesControllerCore extends AdminController
 	 */
 	public function renderList()
 	{
-		$this->addRowAction('edit');
 		$this->addRowAction('view');
+		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		$this->_defaultOrderBy = 'position';
 
