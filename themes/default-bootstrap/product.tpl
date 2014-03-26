@@ -405,8 +405,10 @@
 						</thead>
 						<tbody>
 							{foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
-							<tr id="quantityDiscount_{$quantity_discount.id_product_attribute}" class="quantityDiscount_{$quantity_discount.id_product_attribute}">
-							<td>{$quantity_discount.quantity|intval}</td>
+							<tr id="quantityDiscount_{$quantity_discount.id_product_attribute}" class="quantityDiscount_{$quantity_discount.id_product_attribute}" data-discount-type="{$quantity_discount.reduction_type}" data-discount="{$quantity_discount.real_value|floatval}" data-discount-quantity="{$quantity_discount.quantity|intval}">
+								<td>
+									{$quantity_discount.quantity|intval}
+								</td>
 								<td>
 									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
 										{if $display_discount_price}
@@ -666,6 +668,8 @@
 {if isset($combinations) && $combinations}
 	{addJsDef combinations=$combinations}
 	{addJsDef combinationsFromController=$combinations}
+	{addJsDef displayDiscountPrice=$display_discount_price}
+	{addJsDefL name='upToTxt'}{l s='Up to' js=1}{/addJsDefL}
 {/if}
 {if isset($combinationImages) && $combinationImages}
 	{addJsDef combinationImages=$combinationImages}

@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "CP850";
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -5282,8 +5282,6 @@ header {
       margin: 0px; }
     header .nav nav {
       width: 100%; }
-      header .nav nav #currencies-block-top {
-        float: right; }
   header .row {
     position: relative; }
     header .row > .container {
