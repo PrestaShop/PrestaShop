@@ -678,11 +678,12 @@ class AdminThemesControllerCore extends AdminController
 
 		if (empty($this->display))
 		{
-			$this->page_header_toolbar_btn['import_theme'] = array(
-				'href' => self::$currentIndex.'&action=importtheme&token='.$this->token,
-				'desc' => $this->l('Add new theme', null, null, false),
-				'icon' => 'process-icon-new'
-			);
+			if (!defined('_PS_HOST_MODE_'))
+				$this->page_header_toolbar_btn['import_theme'] = array(
+					'href' => self::$currentIndex.'&action=importtheme&token='.$this->token,
+					'desc' => $this->l('Add new theme', null, null, false),
+					'icon' => 'process-icon-new'
+				);
 			$this->page_header_toolbar_btn['export_theme'] = array(
 				'href' => self::$currentIndex.'&action=exporttheme&token='.$this->token,
 				'desc' => $this->l('Export theme', null, null, false),
@@ -1406,7 +1407,8 @@ class AdminThemesControllerCore extends AdminController
 	public function processImportTheme()
 	{
 		$this->display = 'importtheme';
-
+		if (defined('_PS_HOST_MODE_'))
+			return true;
 		if (isset($_FILES['themearchive']) && isset($_POST['filename']) && Tools::isSubmit('theme_archive_server'))
 		{
 			$uniqid = uniqid();
