@@ -684,6 +684,8 @@ class AdminThemesControllerCore extends AdminController
 					'desc' => $this->l('Add new theme', null, null, false),
 					'icon' => 'process-icon-new'
 				);
+			if (defined('_PS_HOST_MODE_'))
+				unset($this->toolbar_btn['new']);
 			$this->page_header_toolbar_btn['export_theme'] = array(
 				'href' => self::$currentIndex.'&action=exporttheme&token='.$this->token,
 				'desc' => $this->l('Export theme', null, null, false),
