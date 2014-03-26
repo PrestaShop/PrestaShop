@@ -759,15 +759,13 @@ class ToolsCore
     }
     
 	/**
-	* Clear smarty cache folders
+	* Clear smarty cache
  	*/
 	public static function clearSmartyCache()
 	{
-		foreach (array(_PS_CACHE_DIR_.'smarty/cache', _PS_CACHE_DIR_.'smarty/compile') as $dir)
-			if (file_exists($dir))
-				foreach (scandir($dir) as $file)
-					if ($file[0] != '.' && $file != 'index.php')
-						self::deleteDirectory($dir.DIRECTORY_SEPARATOR.$file);
+        	$smarty = Context::getContext()->smarty;
+        	$smarty->clearAllCache();
+        	$smarty->clearCompiledTemplate();
 	}
     
 	/**
