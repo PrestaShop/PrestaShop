@@ -253,7 +253,11 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		if ($this->display == 'view')
 		{
-			$order = new Order((int)Tools::getValue('id_order'));
+			$order = $this->loadObject();
+			$customer = $this->context->customer;
+
+			$this->toolbar_title[] = sprintf($this->l('Order %s from %s %s'), $order->reference, $customer->firstname, $customer->lastname);
+
 			if ($order->hasBeenShipped())
 				$type = $this->l('Return products');
 			elseif ($order->hasBeenPaid())
