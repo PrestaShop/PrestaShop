@@ -2952,7 +2952,6 @@ class ProductCore extends ObjectModel
 	*/
 	public static function getQuantity($id_product, $id_product_attribute = null, $cache_is_pack = null)
 	{
-		$lang = Configuration::get('PS_LANG_DEFAULT');
 		if ((int)$cache_is_pack || ($cache_is_pack === null && Pack::isPack((int)$id_product)))
 		{
 			if (!Pack::isInStock((int)$id_product))

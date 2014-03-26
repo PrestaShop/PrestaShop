@@ -57,7 +57,7 @@ class AdminInvoicesControllerCore extends AdminController
 					),
 					'PS_INVOICE_START_NUMBER' => array(
 						'title' => $this->l('Invoice number'),
-						'desc' => $this->l('The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number.').(Order::getLastInvoiceNumber() + 1).').',
+						'desc' => sprintf($this->l('The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%s).'), Order::getLastInvoiceNumber() + 1),
 						'size' => 6,
 						'type' => 'text',
 						'cast' => 'intval'

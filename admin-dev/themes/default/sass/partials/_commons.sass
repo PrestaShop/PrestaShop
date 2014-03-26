@@ -137,34 +137,16 @@
 .pagination
 	@include margin(17px, 0, 0, 0)
 
-.panel.panel-sm
-	padding: 8px!important
-	.panel-heading
-		font-size: 13px!important
-		@include padding-left(8px!important)
-		@include margin(-8px,-8px,10px,-8px)
-	.form-group
-		margin-bottom: 8px
-
 .list-detail
 	dd:not(:last-child)
 		margin-bottom: 10px
 
-//stars
-.rating
-	unicode-bidi: bidi-override
-	direction: rtl
-	font-size: 20px
-	span.star
-		font-family: $icon-font-family
-		display: inline-block
-		&:before
-			content: "\f006"
-			@include padding-right(3px)
-			color: #999
-		&:hover:before,
-		&.active:before,
-		&:hover~span.star:before,
-		&.active~span.star:before
-			content: "\f005"
-			color: #e3cf7a
+//colors
+.attributes-color-container
+	width: 40px
+	height: 25px
+	display: block
+	border: solid 1px black
+
+#mColorPickerInput
+	color: #000000 

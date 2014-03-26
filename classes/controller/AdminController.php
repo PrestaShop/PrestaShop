@@ -165,7 +165,7 @@ class AdminControllerCore extends Controller
 	protected $_orderWay;
 
 	/** @var array list of available actions for each list row - default actions are view, edit, delete, duplicate */
-	protected $actions_available = array('view', 'edit', 'delete', 'duplicate');
+	protected $actions_available = array('view', 'edit', 'duplicate', 'delete');
 
 	/** @var array list of required actions for each list row */
 	protected $actions = array();
@@ -1400,10 +1400,7 @@ class AdminControllerCore extends Controller
 
 	public function displayAjax()
 	{
-		if (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
-			$requestJson = true;
-
-		if ($this->json || (isset($requestJson) && $requestJson))
+		if ($this->json)
 		{
 			$this->context->smarty->assign(array(
 				'json' => true,

@@ -78,8 +78,11 @@
 				@include border-radius(3px)
 				@include box-shadow(rgba(0,0,0,0.2) 0 1px 3px inset)
 
-	.actions
-		text-align: right
+	tr.actions
+		@include text-align(right)
+	td.actions
+		@include text-align(right)
+		@include padding-right(5px)
 	th.actions .btn,
 		margin-bottom: 4px !important
 
@@ -143,7 +146,7 @@ tr.highlighted td
 		width: 100%
 		margin-bottom: ($line-height-computed * 0.75)
 		overflow-y: hidden
-		overflow-x: scroll
+		overflow-x: auto
 		border: 1px solid $table-border-color
 		-ms-overflow-style: -ms-autohiding-scrollbar
 		-webkit-overflow-scrolling: touch

@@ -87,9 +87,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 */
 	public function renderList()
 	{
+		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->addRowAction('view');
+		
 
 		return parent::renderList();
 	}
@@ -171,7 +172,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			),
 			array(
 				'id' => 'color',
-				'name' => $this->l('Color picker')
+				'name' => $this->l('Color or texture')
 			),
 		);
 
