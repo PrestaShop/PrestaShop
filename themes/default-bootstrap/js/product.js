@@ -684,6 +684,10 @@ function updateDisplay()
 		// Ecotax
 		ecotaxAmount = !displayPrice ? ps_round(selectedCombination['ecotax'] * (1 + ecotaxTax_rate / 100), 2) : selectedCombination['ecotax'];
 		$('#ecotax_price_display').text(formatCurrency(ecotaxAmount, currencyFormat, currencySign, currencyBlank));
+
+
+		updateDiscountTable(productPriceDisplay);
+
 	}
 }
 
@@ -735,6 +739,31 @@ function displayDiscounts(combination)
 		$('#quantityDiscount').parent().hide();
 		$('#noQuantityDiscount').show();
 	}
+}
+
+function updateDiscountTable(newPrice)
+{
+	console.log(displayDiscountPrice);
+	$('#quantityDiscount tbody tr').each(function(){
+		var type = $(this).data("discount-type");
+		var discount = $(this).data("discount");
+		var quantity = $(this).data("discount-quantity");
+
+		if (type == 'percentage')
+		{
+			var discountedPrice = newPrice * (1 - discount/100);
+			var discountUpTo = newPrice * (discount/100) * quantity;
+		}
+		else if (type == 'amount')
+		{
+			var discountedPrice = newPrice - discount;
+			var discountUpTo = discount * quantity;
+		}
+
+		if (displayDiscountPrice != 0)
+			$(this).children('td').eq(1).text( formatCurrency(discountedPrice, currencyFormat, currencySign, currencyBlank) );
+		$(this).children('td').eq(2).text(upToTxt + ' ' + formatCurrency(discountUpTo, currencyFormat, currencySign, currencyBlank));
+	});
 }
 
 // Serialscroll exclude option bug ?
