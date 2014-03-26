@@ -1400,10 +1400,7 @@ class AdminControllerCore extends Controller
 
 	public function displayAjax()
 	{
-		if (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
-			$requestJson = true;
-
-		if ($this->json || (isset($requestJson) && $requestJson))
+		if ($this->json)
 		{
 			$this->context->smarty->assign(array(
 				'json' => true,
