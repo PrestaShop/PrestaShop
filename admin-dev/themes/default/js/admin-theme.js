@@ -266,7 +266,7 @@ $(document).ready(function() {
 
 	//bootstrap components init
 	$('.dropdown-toggle').dropdown();
-	$('.label-tooltip, .help-tooltip').tooltip({placement:'left'});
+	$('.label-tooltip, .help-tooltip').tooltip();
 	$('#error-modal').modal('show');
 
 	//scroll top
