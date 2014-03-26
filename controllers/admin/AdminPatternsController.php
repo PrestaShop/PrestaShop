@@ -45,6 +45,7 @@ class AdminPatternsControllerCore extends AdminController
 		$this->fields_value = array(
 			'type_text' => 'with value',
 			'type_text_readonly' => 'with value that you can\'t edit',
+			'type_switch' => 1,
 			'days' => 17,
 			'months' => 3,
 			'years' => 2014,
@@ -245,11 +246,11 @@ class AdminPatternsControllerCore extends AdminController
 					'values' => array(
 						array(
 							'id' => 'type_switch_on',
-							'value' => 0
+							'value' => 1
 						),
 						array(
 							'id' => 'type_switch_off',
-							'value' => 1
+							'value' => 0
 						)
 					)
 				),
@@ -261,11 +262,11 @@ class AdminPatternsControllerCore extends AdminController
 					'values' => array(
 						array(
 							'id' => 'type_switch_disabled_on',
-							'value' => 0
+							'value' => 1
 						),
 						array(
 							'id' => 'type_switch_disabled_off',
-							'value' => 1
+							'value' => 0
 						)
 					)
 				),
