@@ -1330,12 +1330,12 @@ class AdminModulesControllerCore extends AdminController
 				unset($modules[$km]);
 			else
 			{
-				$this->fillModuleData($module, 'array');
-				$module->categoryName = (isset($this->list_modules_categories[$module->tab]['name']) ? $this->list_modules_categories[$module->tab]['name'] : $this->list_modules_categories['others']['name']);
-
 				if (isset($modules_preferences[$modules[$km]->name]))
 					$modules[$km]->preferences = $modules_preferences[$modules[$km]->name];
-			}
+
+				$this->fillModuleData($module, 'array');
+				$module->categoryName = (isset($this->list_modules_categories[$module->tab]['name']) ? $this->list_modules_categories[$module->tab]['name'] : $this->list_modules_categories['others']['name']);
+					}
 			unset($object);
 			if ($module->installed && isset($module->version_addons) && $module->version_addons)
 				$upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->name, 'displayName' => $module->displayName);

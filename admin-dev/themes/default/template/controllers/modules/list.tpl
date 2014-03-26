@@ -133,32 +133,15 @@ module_inactive
 										</button>
 										
 										<ul class="dropdown-menu">
-
 											{foreach $module->optionsHtml key=key item=option}
 												{if $key != 0}
-													<li>{$option}</li>
+													{if strpos($option, 'title="divider"') !== false}
+														<li class="divider"></li>
+													{else}
+														<li>{$option}</li>
+													{/if}
 												{/if}
 											{/foreach}
-
-											{if isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1}
-												<li>
-													<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">
-														<i class="icon-star"></i> {l s='Remove from Favorites'}
-													</a>
-													<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#" style="display: none;">
-														<i class="icon-star"></i> {l s='Mark as Favorite'}
-													</a>
-												</li>
-											{else}
-												<li>
-													<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#" style="display: none;">
-														<i class="icon-star"></i> {l s='Remove from Favorites'}
-													</a>
-													<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#">
-														<i class="icon-star"></i> {l s='Mark as Favorite'}
-													</a>
-												</li>
-											{/if}
 										</ul>
 									{else if !isset($module->not_on_disk) && !isset($module->id)}
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
@@ -166,27 +149,12 @@ module_inactive
 										</button>
 										<ul class="dropdown-menu">
 											{foreach $module->optionsHtml key=key item=option}
-												<li>{$option}</li>
+												{if strpos($option, 'title="divider"') !== false}
+													<li class="divider"></li>
+												{else}
+													<li>{$option}</li>
+												{/if}
 											{/foreach}
-											{if isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1}
-												<li>
-													<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#">
-														<i class="icon-star"></i> {l s='Remove from Favorites'}
-													</a>
-													<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#" style="display: none;">
-														<i class="icon-star"></i> {l s='Mark as Favorite'}
-													</a>
-												</li>
-											{else}
-												<li>
-													<a class="action_module action_unfavorite toggle_favorite" data-module="{$module->name}" data-value="0" href="#" style="display: none;">
-														<i class="icon-star"></i> {l s='Remove from Favorites'}
-													</a>
-													<a class="action_module action_favorite toggle_favorite" data-module="{$module->name}" data-value="1" href="#">
-														<i class="icon-star"></i> {l s='Mark as Favorite'}
-													</a>
-												</li>
-											{/if}
 										</ul>
 									{else if isset($module->not_on_disk)}
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
