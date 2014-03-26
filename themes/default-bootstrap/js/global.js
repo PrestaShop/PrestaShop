@@ -56,8 +56,9 @@ $(document).ready(function(){
 			$(this.form).submit();
 		});
 
-		$(document).on('change', 'select[name="manufacturer_list"], select[name="supplier_list"]', function(){
-			autoUrl($(this).attr('id'), '');
+		$(document).on('change', 'select[name="manufacturer_list"], select[name="supplier_list"]', function() {
+			if (this.value != '')
+				location.href = this.value;
 		});
 
 		$(document).on('change', 'select[name="currency_payement"]', function(){
@@ -89,7 +90,7 @@ $(document).ready(function(){
 
 	if (!!$.prototype.fancybox)
 		$.extend($.fancybox.defaults.tpl, {
-			closeBtn : '<a title="' + FancyboxboxI18nClose + '" class="fancybox-item fancybox-close" href="javascript:;"></a>',
+			closeBtn : '<a title="' + FancyboxI18nClose + '" class="fancybox-item fancybox-close" href="javascript:;"></a>',
 			next     : '<a title="' + FancyboxI18nNext + '" class="fancybox-nav fancybox-next" href="javascript:;"><span></span></a>',
 			prev     : '<a title="' + FancyboxI18nPrev + '" class="fancybox-nav fancybox-prev" href="javascript:;"><span></span></a>'
 		});

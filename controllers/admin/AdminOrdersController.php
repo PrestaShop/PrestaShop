@@ -253,7 +253,11 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		if ($this->display == 'view')
 		{
-			$order = new Order((int)Tools::getValue('id_order'));
+			$order = $this->loadObject();
+			$customer = $this->context->customer;
+
+			$this->toolbar_title[] = sprintf($this->l('Order %s from %s %s'), $order->reference, $customer->firstname, $customer->lastname);
+
 			if ($order->hasBeenShipped())
 				$type = $this->l('Return products');
 			elseif ($order->hasBeenPaid())
@@ -462,7 +466,7 @@ class AdminOrdersControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 
-		/* Change order state, add a new entry in order history and send an e-mail to the customer if needed */
+		/* Change order status, add a new entry in order history and send an e-mail to the customer if needed */
 		elseif (Tools::isSubmit('submitState') && isset($order))
 		{
 			if ($this->tabAccess['edit'] === '1')

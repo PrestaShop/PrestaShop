@@ -153,7 +153,7 @@ abstract class PaymentModuleCore extends Module
 
 		$order_status = new OrderState((int)$id_order_state, (int)$this->context->language->id);
 		if (!Validate::isLoadedObject($order_status))
-			throw new PrestaShopException('Can\'t load Order state status');
+			throw new PrestaShopException('Can\'t load Order status');
 
 		if (!$this->active)
 			die(Tools::displayError());
@@ -673,7 +673,7 @@ abstract class PaymentModuleCore extends Module
 						if ($order_status->logable)
 							ProductSale::addProductSale((int)$product['id_product'], (int)$product['cart_quantity']);
 
-					// Set the order state
+					// Set the order status
 					$new_history = new OrderHistory();
 					$new_history->id_order = (int)$order->id;
 					$new_history->changeIdOrderState((int)$id_order_state, $order, true);

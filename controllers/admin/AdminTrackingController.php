@@ -94,8 +94,8 @@ class AdminTrackingControllerCore extends AdminController
 		$this->_list_token = Tools::getAdminTokenLite('AdminCategories');
 
 		$this->addRowAction('edit');
-		$this->addRowAction('delete');
 		$this->addRowAction('view');
+		$this->addRowAction('delete');
 		$this->addRowActionSkipList('delete', array(Category::getTopCategory()->id));
 		$this->addRowActionSkipList('edit', array(Category::getTopCategory()->id));
 

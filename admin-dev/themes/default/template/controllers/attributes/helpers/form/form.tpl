@@ -42,7 +42,7 @@
 	{if $input.name == 'current_texture'}
 		<div class="col-lg-9">
 			{if isset($imageTextureExists) && $imageTextureExists}
-				<img src="{$imageTexture}" alt="{l s='Texture'}" />
+				<img src="{$imageTexture}" alt="{l s='Texture'}" class="img-thumbnail" />
 			{else}
 				<p class="form-control-static">{l s='None'}</p>
 			{/if}

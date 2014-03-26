@@ -48,8 +48,10 @@ body
 			i
 				font-size: $icon-size-base
 		.panel
-			border: solid 1px #CCC
+			border: solid 1px #DDDDDD
 			@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
+		.panel.tab-content
+			@include border-radius(0 0 3px 3px)
 	h3:not(.modal-title), .panel-heading
 		border: none
 		font-size: 1.2em
@@ -117,6 +119,17 @@ body
 	.breadcrumb
 		background-color: white
 		border: solid 1px darken($bg-content-color,10%)
+	.panel.panel-sm
+		padding: 8px!important
+		.panel-heading
+			font-size: 13px
+			margin: -8px -8px 10px
+			@include ltr
+				padding-left: 8px
+			@include rtl
+				padding-right: 8px
+		.form-group
+			margin-bottom: 8px
 
 //data-focus
 .data-focus
@@ -161,13 +174,3 @@ body.display-modal
 	.panel-footer
 		margin: 15px 0 0!important
 		height: 40px!important
-
-//colors
-.attributes-color-container
-	width: 40px
-	height: 25px
-	display: block
-	border: solid 1px black
-
-#mColorPickerInput
-	color: #000000 

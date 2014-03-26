@@ -36,7 +36,7 @@ class ImageManagerCore
 	const ERROR_MEMORY_LIMIT   = 3;
 
 	/**
-	 * Generate a cached thumbnail for object lists (eg. carrier, order states...etc)
+	 * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc)
 	 *
 	 * @param string $image Real image filename
 	 * @param string $cache_image Cached filename

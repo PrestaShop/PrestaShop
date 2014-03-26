@@ -208,7 +208,7 @@ $context->link = new Link($https_link, $https_link);
 
 /**
  * @deprecated : these defines are going to be deleted on 1.6 version of Prestashop
- * USE : Configuration::get() method in order to getting the id of order state
+ * USE : Configuration::get() method in order to getting the id of order status
  */
 define('_PS_OS_CHEQUE_',      Configuration::get('PS_OS_CHEQUE'));
 define('_PS_OS_PAYMENT_',     Configuration::get('PS_OS_PAYMENT'));

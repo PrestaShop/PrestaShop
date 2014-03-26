@@ -118,8 +118,8 @@ if (!defined('_PS_MAGIC_QUOTES_GPC_'))
 
 define('_CAN_LOAD_FILES_', 1);
 
-/* Order states
-Order states has been moved in config.inc.php file for backward compatibility reasons */
+/* Order statuses
+Order statuses have been moved into config.inc.php file for backward compatibility reasons */
 
 /* Tax behavior */
 define('PS_PRODUCT_TAX', 0);

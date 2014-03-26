@@ -208,7 +208,7 @@
 									<th class="center"><span class="title_box ">{l s='ID'}</span></th>
 									<th><span class="title_box">{l s='Date'}</span></th>
 									<th><span class="title_box">{l s='Payment'}</span></th>
-									<th><span class="title_box">{l s='State'}</span></th>
+									<th><span class="title_box">{l s='Status'}</span></th>
 									<th><span class="title_box">{l s='Products'}</span></th>
 									<th><span class="title_box ">{l s='Total spent'}</span></th>
 									<th></th>
@@ -241,7 +241,7 @@
 									<th><span class="title_box ">{l s='ID'}</span></th>
 									<th><span class="title_box ">{l s='Date'}</span></th>
 									<th><span class="title_box ">{l s='Payment'}</span></th>
-									<th><span class="title_box ">{l s='State'}</span></th>
+									<th><span class="title_box ">{l s='Status'}</span></th>
 									<th><span class="title_box ">{l s='Products'}</span></th>
 									<th><span class="title_box ">{l s='Total spent'}</span></th>
 								</tr>

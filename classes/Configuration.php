@@ -266,7 +266,7 @@ class ConfigurationCore extends ObjectModel
 	public static function set($key, $values, $id_shop_group = null, $id_shop = null)
 	{
 		if (!Validate::isConfigName($key))
-			die(Tools::displayError());
+			die(sprintf(Tools::displayError('[%s] is not a valid configuration key'), $key));
 
 		if ($id_shop === null)
 			$id_shop = Shop::getContextShopID(true);
@@ -313,7 +313,7 @@ class ConfigurationCore extends ObjectModel
 	public static function updateValue($key, $values, $html = false, $id_shop_group = null, $id_shop = null)
 	{
 		if (!Validate::isConfigName($key))
-			die(Tools::displayError());
+			die(sprintf(Tools::displayError('[%s] is not a valid configuration key'), $key));
 
 		if ($id_shop === null)
 			$id_shop = Shop::getContextShopID(true);
