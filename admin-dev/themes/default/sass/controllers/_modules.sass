@@ -101,6 +101,21 @@ td.module_inactive
 	background-color: $brand-addons
 .module-badge-partner
 	background-color: $brand-primary
+
+.categoriesTitle
+	.list-group
+		.filternameForm
+			@include padding-right(15px)
+		.list-group-item
+			position: relative
+			overflow: hidden
+			white-space: nowrap
+			text-overflow: ellipsis
+			@include padding-right(35px)
+			.badge
+				position: absolute
+				right: 5px
+
 .quickview-badge
 	margin-top: 30px
 //stars
