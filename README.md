@@ -10,9 +10,11 @@ PrestaShop is a free and open-source e-commerce web application, committed to pr
 ABOUT THIS REPOSITORY
 --------
 
-This repository contains the latest version of PrestaShop currently in development: version 1.6. This means that clicking the "Download ZIP" button from the root of this repository will download the current state of PrestaShop 1.6 -- a branch that is currently under development, and not for production use. You can learn more about the upcoming features of version 1.6 by going to [the progress page][1].
+This repository contains the latest version of PrestaShop: version 1.6. You can learn more about the new features of version 1.6 on [the progress page][1].
 
-If you want to download the latest stable version of PrestaShop (currently v1.5.6), you need to go to [the download page][2] on the official PrestaShop site.
+Clicking the "Download ZIP" button from the root of this repository will download the current state of PrestaShop 1.6 -- a branch that is in active development, and ready for production use. Note that the zip file will not contain the default modules: you need to make a recursive clone using Git in order to downloaded these files too. See [CONTRIBUTING.md][7] for more information about using Git.
+
+If you want to download the latest stable version of PrestaShop (currently v1.6.0.5), go to [the download page][2] on the official PrestaShop site.
 
 
 SERVER CONFIGURATION
@@ -22,7 +24,7 @@ To install PrestaShop, you need a web server running PHP5 and any flavor of MySQ
 You will also need a database administration tool, such as phpMyAdmin, in order to create a database for PrestaShop.
 We recommend the Apache or Nginx web servers.
 
-If your host does not offer PHP5 by default, [here are a few explanations][3] about PHP5 or the .htaccess file for certain hosting services (1&1, Free, OVH, Infomaniak, Amen, GoDaddy, etc.).
+If your host does not offer PHP5 by default, [here are a few explanations][3] about PHP5 or the .htaccess file for certain hosting services (1&amp;1, Free, OVH, Infomaniak, Amen, GoDaddy, etc.).
 
 If you want your own store with nothing to download and install, visit [http://www.prestabox.com][4]: it lets you create your online store in less than 10 minutes without any technical knowledge.
 
@@ -47,15 +49,23 @@ CONTRIBUTING
 
 If you want to contribute to PrestaShop, read the [CONTRIBUTING.md][7] file in this repository or read the [tutorials about contribution][8] on the documentation site.
 
+If you want to help translate PrestaShop in your language, join us on [Crowdin][8]!
+
+[![Crowdin](https://crowdin.net/badges/prestashop-official/localized.png)](https://crowdin.net/project/prestashop-official)
+
 
 FORUMS
 --------
 
 You can discuss, help and contribute to improving PrestaShop with the PrestaShop community on [the PrestaShop forums][5].
 
-Thank you for downloading and using the PrestaShop e-commerce Open-source solution!
+SUPPORT
+--------
 
-[![Crowdin](https://crowdin.net/badges/prestashop-official/localized.png)](https://crowdin.net/project/prestashop-official)
+If you need help, contact the PrestaShop support team: http://support.prestashop.com/.
+
+
+Thank you for downloading and using the PrestaShop e-commerce Open-source solution!
 
 [1]: http://www.prestashop.com/en/progress-1-6
 [2]: http://www.prestashop.com/en/download
@@ -65,3 +75,4 @@ Thank you for downloading and using the PrestaShop e-commerce Open-source soluti
 [6]: http://doc.prestashop.com
 [7]: CONTRIBUTING.md
 [8]: http://doc.prestashop.com/display/PS16/Contributing+to+PrestaShop
+[9]: https://crowdin.net/project/prestashop-official
