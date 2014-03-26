@@ -33,28 +33,25 @@
 	</div>
 	<div class="col-lg-10">
 		<h1>{$displayName}</h1>
-		<div class="row">
-			{if (int)$nb_rates > 0}
-			<div class="col-lg-4">
-				<span class="rating">
-					<span class="star{if $avg_rate == 5} active{/if}"></span>
-					<span class="star{if $avg_rate == 4} active{/if}"></span>
-					<span class="star{if $avg_rate == 3} active{/if}"></span>
-					<span class="star{if $avg_rate == 2} active{/if}"></span>
-					<span class="star{if $avg_rate == 1} active{/if}"></span>
-				</span>
-				<p class="small">{if (int)$nb_rates > 1}{l s="(%s votes)" sprintf=$nb_rates}{else}{l s="(%s vote)" sprintf=$nb_rates}{/if}</p>
-			</div>
-			{/if}
-		</div>
+		{if (int)$nb_rates > 0}
+			<span class="rating">
+				<span class="star{if $avg_rate == 5} active{/if}"></span>
+				<span class="star{if $avg_rate == 4} active{/if}"></span>
+				<span class="star{if $avg_rate == 3} active{/if}"></span>
+				<span class="star{if $avg_rate == 2} active{/if}"></span>
+				<span class="star{if $avg_rate == 1} active{/if}"></span>
+			</span>
+			<p class="small">{if (int)$nb_rates > 1}{l s="(%s votes)" sprintf=$nb_rates}{else}{l s="(%s vote)" sprintf=$nb_rates}{/if}</p>
+		{/if}
+		<hr>
 		<h3>{l s="Description"}</h3>
 		<p class="text-justify">{$description_full}</p>
 		{if isset($additional_description) && trim($additional_description) != ''}
+			<hr>
 			<h3>{l s="Merchant benefits"}</h3>
 			<p class="text-justify">{$additional_description}</p>
 		{/if}
-		<div class="row">
-			<a class="btn btn-success btn-lg" href="{$url}" onclick="return !window.open(this.href);">{l s='View on PrestaShop Addons'}</a>
-		</div>
+		<hr>
+		<a class="btn btn-success btn-lg pull-right" href="{$url}" onclick="return !window.open(this.href);">{l s='View on PrestaShop Addons'}</a>
 	</div>
 </div>

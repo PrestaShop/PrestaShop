@@ -149,22 +149,3 @@
 .list-detail
 	dd:not(:last-child)
 		margin-bottom: 10px
-
-//stars
-.rating
-	unicode-bidi: bidi-override
-	direction: rtl
-	font-size: 20px
-	span.star
-		font-family: $icon-font-family
-		display: inline-block
-		&:before
-			content: "\f006"
-			@include padding-right(3px)
-			color: #999
-		&:hover:before,
-		&.active:before,
-		&:hover~span.star:before,
-		&.active~span.star:before
-			content: "\f005"
-			color: #e3cf7a

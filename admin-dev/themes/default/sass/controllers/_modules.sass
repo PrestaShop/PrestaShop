@@ -103,3 +103,19 @@ td.module_inactive
 	background-color: $brand-primary
 .quickview-badge
 	margin-top: 30px
+//stars
+.rating
+	unicode-bidi: bidi-override
+	direction: rtl
+	font-size: 20px
+	span.star
+		font-family: $icon-font-family
+		display: inline-block
+		&:before
+			content: "\f006"
+			@include padding-right(3px)
+			color: #bbb
+		&.active:before,
+		&.active~span.star:before
+			content: "\f005"
+			color: #F5AB35
