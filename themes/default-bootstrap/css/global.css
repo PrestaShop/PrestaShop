@@ -5281,10 +5281,7 @@ header {
     header .nav .row {
       margin: 0px; }
     header .nav nav {
-      width: 100%;
-      max-height: 37px; }
-      header .nav nav #currencies-block-top {
-        float: right; }
+      width: 100%; }
   header .row {
     position: relative; }
     header .row > .container {

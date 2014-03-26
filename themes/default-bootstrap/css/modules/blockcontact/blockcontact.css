@@ -1,6 +1,7 @@
 .shop-phone {
   float: left;
-  padding: 5px 0 10px; }
+  padding: 5px 0 10px;
+  line-height: 18px; }
   @media (max-width: 767px) {
     .shop-phone {
       display: none; } }
@@ -25,7 +26,8 @@
     font-weight: bold;
     padding: 8px 10px 11px 10px;
     text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
-    cursor: pointer; }
+    cursor: pointer;
+    line-height: 18px; }
     @media (max-width: 479px) {
       #contact-link a {
         font-size: 11px;
