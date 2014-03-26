@@ -80,7 +80,7 @@
 {if $discounts}{foreach from=$discounts item=discount name='discounts'}
 	{ldelim}
 		"id": {$discount.id_discount|intval},
-		"name": {$discount.name|cat:' : '|cat:$discount.description|trim|truncate:18:'...'|json_encode},
+		"name": {$discount.name|trim|truncate:18:'...'|json_encode},
 		"description": {$discount.description|json_encode},
 		"nameDescription": {$discount.name|cat:' : '|cat:$discount.description|trim|truncate:18:'...'|json_encode},
 		"code": {$discount.code|json_encode},
