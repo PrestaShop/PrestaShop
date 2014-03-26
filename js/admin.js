@@ -435,17 +435,17 @@ function selectCheckbox(obj)
 	$(obj).parent().parent().find('td.cancelCheck input[type=checkbox]').attr("checked", true);
 }
 
-function toggleShippingCost(obj)
+function toggleShippingCost()
 {
-	generateDiscount = $(obj).parent().find('#generateDiscount').attr("checked");
-	generateCreditSlip = $(obj).parent().find('#generateCreditSlip').attr("checked");
+	generateDiscount = $('#generateDiscount').attr("checked");
+	generateCreditSlip = $('#generateCreditSlip').attr("checked");
 	if (generateDiscount != 'checked' && generateCreditSlip != 'checked')
 	{
-		$(obj).parent().find('#spanShippingBack input[type=checkbox]').attr("checked", false);
-		$(obj).parent().find('#spanShippingBack').css('display', 'none');
+		$('#spanShippingBack input[type=checkbox]').attr("checked", false);
+		$('#spanShippingBack').css('display', 'none');
 	}
 	else
-		$(obj).parent().find('#spanShippingBack').css('display', 'block');
+		$('#spanShippingBack').css('display', 'block');
 }
 
 function orderOverwriteMessage(sl, text)
