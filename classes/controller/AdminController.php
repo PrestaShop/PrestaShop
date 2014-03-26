@@ -3452,6 +3452,8 @@ class AdminControllerCore extends Controller
 			$this->translationsTab['Uninstall'] =  $this->l('Uninstall');
 			$this->translationsTab['Would you like to delete the content related to this module ?'] =  $this->l('Would you like to delete the content related to this module ?');
 			$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $this->l('This action will permanently remove the module from the server. Are you sure you want to do this?');
+			$this->translationsTab['Remove from Favorites'] = $this->l('Remove from Favorites');
+			$this->translationsTab['Mark as Favorite'] = $this->l('Mark as Favorite');
 		}
 
 		$link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
@@ -3528,6 +3530,56 @@ class AdminControllerCore extends Controller
 			'icon' => 'desktop'
 		);
 
+		$install = array(
+			'href' => $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : ''),
+			'onclick' => '',
+			'title' => $this->translationsTab['Install'],
+			'text' => $this->translationsTab['Install'],
+			'cond' => $module->id,
+			'icon' => 'plus-sign-alt'
+		);
+
+		$uninstall = array(
+			'href' => $link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : ''),
+			'onclick' => (isset($module->onclick_option_content['uninstall']) ? $module->onclick_option_content['uninstall'] : 'return confirm(\''.$this->translationsTab['confirm_uninstall_popup'].'\');'),
+			'title' => $this->translationsTab['Uninstall'],
+			'text' => $this->translationsTab['Uninstall'],
+			'cond' => $module->id,
+			'icon' => 'minus-sign-alt'
+		);
+
+		$remove_from_favorite = array(
+			'href' => '#',
+			'class' => 'action_unfavorite toggle_favorite',
+			'onclick' =>'',
+			'title' => $this->translationsTab['Remove from Favorites'],
+			'text' => $this->translationsTab['Remove from Favorites'],
+			'cond' => $module->id,
+			'icon' => 'star',
+			'data-value' => '0',
+			'data-module' => $module->name
+		);
+
+		$mark_as_favorite = array(
+			'href' => '#',
+			'class' => 'action_favorite toggle_favorite',
+			'onclick' => '',
+			'title' => $this->translationsTab['Mark as Favorite'],
+			'text' => $this->translationsTab['Mark as Favorite'],
+			'cond' => $module->id,
+			'icon' => 'star',
+			'data-value' => '1',
+			'data-module' => $module->name
+		);
+
+		$divider = array(
+			'href' => '#',
+			'onclick' => '',
+			'title' => 'divider',
+			'text' => 'divider',
+			'cond' => $module->id,
+		);
+
 		if ($module->active)
 		{
 			$modules_options[] = $configure_module;
@@ -3543,7 +3595,35 @@ class AdminControllerCore extends Controller
 		}
 		
 		$modules_options[] = $reset_module;
-		$modules_options[] = $delete_module; 
+
+		if ($output_type == 'select')
+		{
+			if (!$module->id)
+				$modules_options[] = $install;
+			else
+				$modules_options[] = $uninstall;
+		}
+		else if ($output_type == 'array')
+			if ($module->id)
+				$modules_options[] = $uninstall;
+
+		if (isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1)
+		{
+			$remove_from_favorite['style'] = '';
+			$mark_as_favorite['style'] = 'display:none;';
+			$modules_options[] = $remove_from_favorite;
+			$modules_options[] = $mark_as_favorite;
+		}
+		else
+		{
+			$mark_as_favorite['style'] = '';
+			$remove_from_favorite['style'] = 'display:none;';
+			$modules_options[] = $remove_from_favorite;
+			$modules_options[] = $mark_as_favorite;
+		}
+		
+		$modules_options[] = $divider;
+		$modules_options[] = $delete_module;
 		
 		$return = '';
 		foreach ($modules_options as $option_name => $option)
@@ -3551,7 +3631,11 @@ class AdminControllerCore extends Controller
 			if ($option['cond'])
 			{
 				if ($output_type == 'link')
-					$return .= '<li><a class="'.$option_name.' action_module" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i>&nbsp;'.$option['text'].'</a></li>';
+				{
+					$return .= '<li><a class="'.$option_name.' action_module';
+					$return .='" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'"';
+					$return .=' onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i>&nbsp;'.$option['text'].'</a></li>';
+				}
 				elseif ($output_type == 'array')
 				{
 					if (!is_array($return))
@@ -3564,29 +3648,27 @@ class AdminControllerCore extends Controller
 					if (count($return) == 0)
 						$html .= ' btn btn-default';
 
-					$html .= '" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'</a>';
+					$html .= '"';
+
+					if (isset($option['data-value']))
+						$html .= ' data-value="'.$option['data-value'].'"';
+
+					if (isset($option['data-module']))
+						$html .= ' data-module="'.$option['data-module'].'"';
+
+					if (isset($option['style']))
+						$html .= ' style="'.$option['style'].'"';
+
+					$html .= ' href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'</a>';
 					$return[] = $html;
 				}
 				elseif ($output_type == 'select')
 					$return .= '<option id="'.$option_name.'" data-href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
 			}
 		}
+
 		if ($output_type == 'select')
-		{
-			if (!$module->id)
-				$return = '<option data-onclick="" data-href="'.$link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Install'].'</option>'.$return;
-			else
-				$return .= '<option data-onclick=""  data-href="'.$link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Uninstall'].'</option>';
 			$return = '<select id="select_'.$module->name.'">'.$return.'</select>';
-		}
-		else if ($output_type == 'array')
-		{
-			if ($module->id)
-				$return[] = '<a href="'.$link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'"
-				onclick="'.(isset($module->onclick_option_content['uninstall']) ? $module->onclick_option_content['uninstall'] : 'return confirm(\''.$this->translationsTab['confirm_uninstall_popup'].'\');').'"
-				title="'.$this->translationsTab['Uninstall'].'">
-				<i class="icon-minus-sign-alt"></i>&nbsp;'.$this->translationsTab['Uninstall'].'</a>';
-		}
 
 		return $return;
 	}
