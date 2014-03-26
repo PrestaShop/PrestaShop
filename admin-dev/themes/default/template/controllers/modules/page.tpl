@@ -89,10 +89,10 @@
 				<div class="list-group">
 					<form id="filternameForm" method="post" class="list-group-item form-horizontal">
 						<div class="input-group">
-							<input class="form-control" placeholder="{l s='Search'}" type="text" value="" name="moduleQuicksearch" id="moduleQuicksearch" autocomplete="off" />
-							<div class="input-group-addon">
+							<span class="input-group-addon">
 								<i class="icon-search"></i>
-							</div>
+							</span>
+							<input class="form-control" placeholder="{l s='Search'}" type="text" value="" name="moduleQuicksearch" id="moduleQuicksearch" autocomplete="off" />
 						</div>
 					</form>
 					<a class="categoryModuleFilterLink list-group-item {if isset($categoryFiltered.favorites)}active{/if}" href="{$currentIndex}&amp;token={$token}&amp;filterCategory=favorites" id="filter_favorite">
