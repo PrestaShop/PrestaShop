@@ -468,28 +468,49 @@ class ProductControllerCore extends FrontController
 					$combinations[$row['id_product_attribute']]['id_image'] = -1;
 				else
 				{
-					$combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int)$combination_images[$row['id_product_attribute']][0]['id_image'];
-					if ($row['default_on'] && $id_image > 0)
+					if ($row['default_on'])
 					{
-						if (isset($this->context->smarty->tpl_vars['images']->value))
-							$product_images = $this->context->smarty->tpl_vars['images']->value;
-						if (isset($product_images) && is_array($product_images) && isset($product_images[$id_image]))
-						{
-							$product_images[$id_image]['cover'] = 1;
-							$this->context->smarty->assign('mainImage', $product_images[$id_image]);
-							if (count($product_images))
-								$this->context->smarty->assign('images', $product_images);
-						}
 						if (isset($this->context->smarty->tpl_vars['cover']->value))
-							$cover = $this->context->smarty->tpl_vars['cover']->value;
-						if (isset($cover) && is_array($cover) && isset($product_images) && is_array($product_images))
+							$current_cover = $this->context->smarty->tpl_vars['cover']->value;
+						
+						$flag = false;
+						if (is_array($combination_images[$row['id_product_attribute']]))
 						{
-							$product_images[$cover['id_image']]['cover'] = 0;
-							if (isset($product_images[$id_image]))
-								$cover = $product_images[$id_image];
-							$cover['id_image'] = (Configuration::get('PS_LEGACY_IMAGES') ? ($this->product->id.'-'.$id_image) : (int)$id_image);
-							$cover['id_image_only'] = (int)$id_image;
-							$this->context->smarty->assign('cover', $cover);
+							foreach ($combination_images[$row['id_product_attribute']] as $tmp) 
+								if ($tmp['id_image'] == $current_cover['id_image'])
+								{
+									$combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int)$tmp['id_image'];
+
+									$flag = true;
+									break;
+								}
+						}
+
+						if (!$flag)
+							$combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int)$combination_images[$row['id_product_attribute']][0]['id_image'];
+					
+						if ($id_image > 0)
+						{
+							if (isset($this->context->smarty->tpl_vars['images']->value))
+								$product_images = $this->context->smarty->tpl_vars['images']->value;
+							if (isset($product_images) && is_array($product_images) && isset($product_images[$id_image]))
+							{
+								$product_images[$id_image]['cover'] = 1;
+								$this->context->smarty->assign('mainImage', $product_images[$id_image]);
+								if (count($product_images))
+									$this->context->smarty->assign('images', $product_images);
+							}
+							if (isset($this->context->smarty->tpl_vars['cover']->value))
+								$cover = $this->context->smarty->tpl_vars['cover']->value;
+							if (isset($cover) && is_array($cover) && isset($product_images) && is_array($product_images))
+							{
+								$product_images[$cover['id_image']]['cover'] = 0;
+								if (isset($product_images[$id_image]))
+									$cover = $product_images[$id_image];
+								$cover['id_image'] = (Configuration::get('PS_LEGACY_IMAGES') ? ($this->product->id.'-'.$id_image) : (int)$id_image);
+								$cover['id_image_only'] = (int)$id_image;
+								$this->context->smarty->assign('cover', $cover);
+							}
 						}
 					}
 				}
