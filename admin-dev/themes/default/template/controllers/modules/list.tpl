@@ -223,40 +223,35 @@ module_inactive
 				</tr>
 			{/foreach}
 		</tbody>
-		<tfoot>
-			<tr>
-				<td colspan="4">
-					<div class="btn-group pull-left">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							{l s='bulk actions'}
-							 <span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu">
-							<li>
-							 	<a href="#" onclick="modules_management('install')">
-									<i class="icon-plus-sign-alt"></i>&nbsp;
-									{l s='Install the selection'}
-								</a>
-							</li>
-							<li>
-								<a href="#" onclick="modules_management('uninstall')">
-									<i class="icon-minus-sign-alt"></i>&nbsp;
-									{l s='Uninstall the selection'}
-								</a>
-							</li>
-						</ul>
-					</div>
-				</td>
-			</tr>
-		</tfoot>
+	</table>
+	<div class="btn-group pull-left">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			{l s='bulk actions'}
+			 <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+			<li>
+			 	<a href="#" onclick="modules_management('install')">
+					<i class="icon-plus-sign-alt"></i>&nbsp;
+					{l s='Install the selection'}
+				</a>
+			</li>
+			<li>
+				<a href="#" onclick="modules_management('uninstall')">
+					<i class="icon-minus-sign-alt"></i>&nbsp;
+					{l s='Uninstall the selection'}
+				</a>
+			</li>
+		</ul>
+	</div>
 	{else}
 		<tbody>
 			<tr>
 				<td colspan="4" class="text-center"><i class="icon-warning-sign"></i> {l s='No modules available in this section.'}</td>
 			</tr>
 		</tbody>
+	</table>
 	{/if}
-</table>
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('.fancybox-quick-view').fancybox({
