@@ -37,7 +37,7 @@
 {if isset($cookie->id_lang)}
 	{addJsDef id_lang=$cookie->id_lang|intval}
 {/if}
-{addJsDefL name=FancyboxboxI18nClose}{l s='Close'}{/addJsDefL}
+{addJsDefL name=FancyboxI18nClose}{l s='Close'}{/addJsDefL}
 {addJsDefL name=FancyboxI18nNext}{l s='Next'}{/addJsDefL}
 {addJsDefL name=FancyboxI18nPrev}{l s='Previous'}{/addJsDefL}
 {addJsDef usingSecureMode=Tools::usingSecureMode()|boolval}
