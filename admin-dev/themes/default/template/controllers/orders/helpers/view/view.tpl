@@ -1081,13 +1081,13 @@
 							{if ((!$order->hasBeenDelivered() && $order->hasBeenPaid()) || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
 							<p class="checkbox">
 								<label for="generateCreditSlip">
-									<input type="checkbox" id="generateCreditSlip" name="generateCreditSlip" onclick="toggleShippingCost(this)" />
+									<input type="checkbox" id="generateCreditSlip" name="generateCreditSlip" onclick="toggleShippingCost()" />
 									{l s='Generate a credit card slip'}
 								</label>
 							</p>
 							<p class="checkbox">
 								<label for="generateDiscount">
-									<input type="checkbox" id="generateDiscount" name="generateDiscount" onclick="toggleShippingCost(this)" />
+									<input type="checkbox" id="generateDiscount" name="generateDiscount" onclick="toggleShippingCost()" />
 									{l s='Generate a voucher'}
 								</label>
 							</p>
@@ -1107,14 +1107,14 @@
 					</div>
 					<div style="display:none;" class="partial_refund_fields">
 						<p class="checkbox">
-							<label for="reinjectQuantities">
-								<input type="checkbox" id="reinjectQuantities" name="reinjectQuantities" />
+							<label for="reinjectQuantitiesRefund">
+								<input type="checkbox" id="reinjectQuantitiesRefund" name="reinjectQuantities" />
 								{l s='Re-stock products'}
 							</label>
 						</p>
 						<p class="checkbox">
 							<label for="generateDiscountRefund">
-								<input type="checkbox" id="generateDiscountRefund" name="generateDiscountRefund" onclick="toggleShippingCost(this)" />
+								<input type="checkbox" id="generateDiscountRefund" name="generateDiscountRefund" onclick="toggleShippingCost()" />
 								{l s='Generate a voucher'}
 							</label>
 						</p>
