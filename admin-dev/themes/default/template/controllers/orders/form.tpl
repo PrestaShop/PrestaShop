@@ -1159,7 +1159,7 @@
 			<hr/>
 			<div id="product_list" class="form-group"></div>
 			<div id="attributes_list" class="form-group"></div>
-			<!-- TODO - please be kind : refacto -->
+			<!-- @TODO: please be kind refacto -->
 			<div class="form-group">
 				<div class="col-lg-9 col-lg-offset-3">
 					<iframe id="customization_list" seamless>
@@ -1473,7 +1473,6 @@
 						<textarea name="order_message" id="order_message" rows="3" cols="45"></textarea>
 					</div>
 				</div>
-
 				<div class="form-group">
 					<div class="col-lg-9 col-lg-offset-3">
 						<a href="javascript:void(0);" id="send_email_to_customer" class="btn btn-default">
@@ -1486,7 +1485,6 @@
 						</a>
 					</div>
 				</div>
-
 				<div class="form-group">
 					<label class="control-label col-lg-3">{l s='Payment'}</label>
 					<div class="col-lg-9">
@@ -1497,7 +1495,6 @@
 						</select>
 					</div>
 				</div>
-
 				<div class="form-group">
 					<label class="control-label col-lg-3">{l s='Order status'}</label>
 					<div class="col-lg-9">
@@ -1508,7 +1505,6 @@
 						</select>
 					</div>
 				</div>
-
 				<div class="form-group">
 					<div class="col-lg-9 col-lg-offset-3">
 						<button type="submit" name="submitAddOrder" class="btn btn-default" />
