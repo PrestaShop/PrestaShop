@@ -311,7 +311,6 @@ class HookCore extends ObjectModel
 			{
 				$sql->join(Shop::addSqlAssociation('module', 'm', true, 'module_shop.enable_device & '.(int)Context::getContext()->getDevice()));
 				$sql->innerJoin('module_shop', 'ms', 'ms.`id_module` = m.`id_module`');
-				$sql->where('h.name = "displayBackOfficeHeader"');
 			}
 			$sql->innerJoin('hook_module', 'hm', 'hm.`id_module` = m.`id_module`');
 			$sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
