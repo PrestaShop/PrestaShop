@@ -256,7 +256,7 @@ class AdminOrdersControllerCore extends AdminController
 			$order = $this->loadObject();
 			$customer = $this->context->customer;
 
-			$this->toolbar_title[] = sprintf($this->l('Order %s from %s %s'), $order->reference, $customer->firstname, $customer->lastname);
+			$this->toolbar_title[] = sprintf($this->l('Order %1$s from %2$s %3$s'), $order->reference, $customer->firstname, $customer->lastname);
 
 			if ($order->hasBeenShipped())
 				$type = $this->l('Return products');
