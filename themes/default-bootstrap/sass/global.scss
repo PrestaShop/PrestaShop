@@ -1920,6 +1920,9 @@ div.star a:hover {
 							display: inline-block;
 							font-family: $font-icon;
 							vertical-align: -5px;
+							font-weight: normal;
+							-webkit-font-smoothing: antialiased;
+							-moz-osx-font-smoothing: grayscale;
 						}
 						&:hover {
 							color: $light-text-color;
