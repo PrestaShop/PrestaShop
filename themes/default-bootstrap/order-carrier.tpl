@@ -40,7 +40,6 @@
 	{if isset($virtual_cart) && $virtual_cart}
 		<input id="input_virtual_carrier" class="hidden" type="hidden" name="id_carrier" value="0" />
 	{else}
-		<p class="carrier_title">{l s='Choose your delivery method'}</p>
 		<div id="HOOK_BEFORECARRIER">
 			{if isset($carriers) && isset($HOOK_BEFORECARRIER)}
 				{$HOOK_BEFORECARRIER}
