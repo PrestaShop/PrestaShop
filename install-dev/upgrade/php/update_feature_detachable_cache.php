@@ -41,8 +41,12 @@ function update_feature_detachable_cache()
 	{
 		// array_features is an array defined above, so please don't add bqSql !
 		$count = (int)Db::getInstance()->getValue('SELECT count(*) FROM `'._DB_PREFIX_.$feature.'`');
-		$res &= Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'configuration` (name, value) values ("'.$config_key.'", "'.$count.'")');
 
+		$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \''.pSQL($config_key).'\'');
+		if ($exist)
+			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.(int)$count.'" WHERE `name` LIKE \''.pSQL($config_key).'\'');
+		else
+			$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) values ("'.pSQL($config_key).'", "'.(int)$count.'")');
 	}
 	return $res;
 }
