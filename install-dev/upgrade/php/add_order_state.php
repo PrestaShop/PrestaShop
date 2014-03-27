@@ -65,6 +65,9 @@ function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unre
 		');
 	}
 	
-	$res &= Db::getInstance()->getValue('REPLACE INTO `'._DB_PREFIX_.'configuration`
-		(name, value) VALUES ("'.$conf_name.'", "'.$id_order_state.'"');
+	$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \''.pSQL($conf_name).'\'');
+	if ($exist)
+		$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.(int)$id_order_state.'" WHERE `name` LIKE \''.pSQL($conf_name).'\'');
+	else
+		$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("'.pSQL($conf_name).'", "'.(int)$id_order_state.'"');
 }
