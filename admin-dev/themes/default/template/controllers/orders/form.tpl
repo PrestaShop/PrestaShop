@@ -443,13 +443,12 @@
 	{
 		$.ajax({
 			type:"POST",
-			url : "{$link->getAdminLink('AdminOrders')|escape:'html'}",
+			url : "{$link->getAdminLink('AdminCustomers')}",
 			async: true,
 			dataType: "json",
 			data : {
 				ajax: "1",
-				token: "{$token}",
-				tab: "AdminOrders",
+				tab: "AdminCustomers",
 				action: "searchCustomers",
 				customer_search: $('#customer').val()},
 			success : function(res)
