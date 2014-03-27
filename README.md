@@ -15,7 +15,7 @@ About this repository
 
 This repository contains the latest version of PrestaShop: version 1.6. You can learn more about the new features of this version on [the progress page][1].
 
-Clicking the "Download ZIP" button from the root of this repository will download the current state of PrestaShop 1.6 -- a branch that is in active development, and ready for production use. Note that the ZIP file will not contain the default modules: you need to make a recursive clone using Git in order to downloaded these files too. See [CONTRIBUTING.md][7] for more information about using Git.
+Clicking the "Download ZIP" button from the root of this repository will download the current state of PrestaShop 1.6 -- a branch that is in active development, and ready for production use. Note that the ZIP file will not contain the default modules: you need to make a recursive clone using Git in order to download these files too. See [CONTRIBUTING.md][7] for more information about using Git.
 
 
 Server configuration
@@ -58,7 +58,7 @@ If you want to help translate PrestaShop in your language, [join us on Crowdin][
 Forums
 --------
 
-You can discuss about e-commece, help other merchants and get help, and contribute to improving PrestaShop together with the PrestaShop community on [the PrestaShop forums][5].
+You can discuss about e-commerce, help other merchants and get help, and contribute to improving PrestaShop together with the PrestaShop community on [the PrestaShop forums][5].
 
 
 Support
