@@ -2588,7 +2588,7 @@ exit;
 	/**
 	 * Clear compile for Smarty
  	*/
-	public static function clearCompile()
+	public static function clearCompile($smarty = null)
 	{
 		if ($smarty === null)
 			$smarty = Context::getContext()->smarty;
