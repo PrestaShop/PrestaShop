@@ -207,18 +207,6 @@ class ProductSaleCore
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
 
-		foreach ($result as &$row)
-		{
-		 	$row['link'] = $context->link->getProductLink($row['id_product'], $row['link_rewrite'], $row['category'], $row['ean13']);
-		 	$row['id_image'] = Product::defineProductImage($row, $id_lang);
-			$row['allow_oosp'] = Product::isAvailableWhenOutOfStock($row['out_of_stock']);
-			$row['price_tax_exc'] = Product::getPriceStatic(
-				(int)$row['id_product'],
-				false,
-				((isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int)$row['id_product_attribute'] : null),
-				(Product::$_taxCalculationMethod == PS_TAX_EXC ? 2 : 6)
-			);
-		}
 		return Product::getProductsProperties($id_lang, $result);
 	}
 
