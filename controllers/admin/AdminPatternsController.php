@@ -26,6 +26,8 @@
 
 class AdminPatternsControllerCore extends AdminController
 {
+	public $name = "patterns";
+
 	public function __construct()
 	{
 		$this->bootstrap = true;
@@ -157,6 +159,20 @@ class AdminPatternsControllerCore extends AdminController
 					'label' => $this->l('input fixed-width-xxl'),
 					'name' => 'type_text_xxl',
 					'class' => 'fixed-width-xxl'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('input fixed-width-md with prefix'),
+					'name' => 'type_text_md',
+					'class' => 'input fixed-width-md',
+					'prefix' => 'prefix'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('input fixed-width-md with sufix'),
+					'name' => 'type_text_md',
+					'class' => 'input fixed-width-md',
+					'suffix' => 'suffix'
 				),
 				array(
 					'type' => 'tags',
@@ -360,6 +376,209 @@ class AdminPatternsControllerCore extends AdminController
 
 	public function renderList()
 	{
+		$return  = '';
+
+		$return .= $this->renderListSimpleHeader();
+		$return .= $this->renderListSmallColumns();
+		$return .= $this->renderListWithParentClass();
+		
+		return $return;
+	}
+
+	public function renderListSimpleHeader()
+	{
+		$content = array(
+			array(
+				"id_carrier" => 5,
+				"name" => "Lorem ipsum dolor, sit amet, consectetur adipiscing elit. Nunc lacinia in enim iaculis malesuada. Quisque congue ferm",
+				"type_name" => "Azerty",
+				"active" => 1,
+			),
+			array(
+				"id_carrier" => 6,
+				"name" => "Lorem ipsum dolor sit amet, consectetur lacinia in enim iaculis malesuada. Quisque congue ferm",
+				"type_name" => "Qwerty",
+				"active" => 1,
+			),
+			array(
+				"id_carrier" => 9,
+				"name" => "Lorem ipsum dolor sit amet: \ / : * ? \" < > |",
+				"type_name" => "Azerty",
+				"active" => 0,
+			),
+			array(
+				"id_carrier" => 3,
+				"name" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lacinia in enim iaculis malesuada. Quisque congue ferm",
+				"type_name" => "Azerty",
+				"active" => 1,
+			),
+		);
+
+		$fields_list = array(
+			'id_carrier' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
+			),
+			'name' => array(
+				'title' => $this->l('Name')
+			),
+			'type_name' => array(
+				'title' => $this->l('Type'),
+				'type' => 'text',
+			),
+			'active' => array(
+				'title' => $this->l('Status'),
+				'active' => 'status',
+				'type' => 'bool',
+			),
+		);
+
+		$helper = new HelperList();
+		$helper->shopLinkType = '';
+		$helper->simple_header = true;
+		$helper->actions = array("edit", "delete");
+		$helper->show_toolbar = false;
+		$helper->module = $this;
+		$helper->listTotal = count($content);
+		$helper->identifier = 'id_carrier';
+		$helper->title = $this->l('This list use a simple Header with no toolbar');
+		$helper->table = $this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+
+		return $helper->generateList($content, $fields_list);
+	}
+
+	public function renderListSmallColumns()
+	{
+		$content = array(
+			array(
+				'id' => 5,
+				'badge_success' => 153,
+				'badge_warning' => 6,
+				'badge_danger' => -2,
+				'text' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+				'color_value' => 'red',
+				'blue' => 'Content in custom color in blue field',
+				'activeVisu_field' => 1,
+				'editable_text' => "PrestaShop",
+			),
+			array(
+				'id' => 1,
+				'badge_success' => 15561533,
+				'badge_warning' => 0,
+				'badge_danger' => 0,
+				'text' => 'Lorem ip, consectetur adipiscing elit.',
+				'color_value' => 'blue',
+				'blue' => 'Content in custom color in blue field',
+				'activeVisu_field' => 0,
+				'editable_text' => "PrestaShop",
+			),
+			array(
+				'id' => 2,
+				'badge_success' => 0,
+				'badge_warning' => 65,
+				'badge_danger' => -200,
+				'text' => 'WITH VERY LONG TEXT: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
+				'color_value' => 'yellow',
+				'blue' => 'Content in custom color in blue field',
+				'activeVisu_field' => 1,
+				'editable_text' => "PrestaShop Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+			),
+			array(
+				'id' => 9,
+				'badge_success' => 3,
+				'badge_warning' => 2,
+				'badge_danger' => 1,
+				'text' => "WITH HTML: <br> <strong>strong</strong> <span style='background: black;'>span content</span>",
+				'color_value' => '#CCCC99',
+				'blue' => 'Content in custom color in blue field',
+				'activeVisu_field' => 1,
+				'editable_text' => "PrestaShop",
+			),
+		);
+
+		$fields_list = array(
+			'id' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'class' => 'fixed-width-xs',
+			),
+			'badge_success' => array(
+				'title' => "Success",
+				'badge_success' => true,
+			),
+			'badge_warning' => array(
+				'title' => "Warning",
+				'badge_warning' => true,
+			),
+			'badge_danger' => array(
+				'title' => "Danger",
+				'badge_danger' => true,
+			),
+			'text' => array(
+				'title' => "Content with prefix",
+				'prefix' => "This is a prefix: ",
+				'class' => "class-prefix",
+			),
+			'blue' => array(
+				'title' => "Content with no link",
+				'color' => "color_value",
+				'class' => "class-custom-nolink",
+			),
+			'activeVisu_field' => array(
+				'title' => "ActiveVisu",
+				'activeVisu' => true,
+
+			),
+			'editable_text' => array(
+				'title' => "edit this !",
+				'type' => 'editable',
+				'class' => 'another-custom_class',
+			),
+		);
+
+		$helper = new HelperList();
+		$helper->shopLinkType = '';
+		$helper->simple_header = false;
+		$helper->actions = array();
+		$helper->show_toolbar = false;
+		$helper->module = $this;
+		$helper->listTotal = count($content);
+		$helper->identifier = 'id';
+		$helper->title = $this->l('This list shows a lot of small columns');
+		$helper->table = $this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+
+		return $helper->generateList($content, $fields_list);
+	}
+
+	public function renderListModel()
+	{
+		$content = array();
+
+		$fields_list = array();
+
+		$helper = new HelperList();
+		$helper->shopLinkType = '';
+		$helper->simple_header = true;
+		$helper->actions = null;
+		$helper->show_toolbar = false;
+		$helper->module = $this;
+		$helper->listTotal = count($content);
+		$helper->identifier = 'id_product_comment';
+		$helper->title = $this->l('Moderate Comments');
+		$helper->table = $this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+
+		return $helper->generateList($content, $fields_list);
+	}
+	
+	public function renderListWithParentClass()
+	{
 		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
@@ -373,9 +592,6 @@ class AdminPatternsControllerCore extends AdminController
 				'align' => 'center',
 				'class' => 'fixed-width-xs'
 			),
-			'name' => array(
-				'title' => $this->l('Name')
-			),
 			'image' => array(
 				'title' => $this->l('Logo'),
 				'align' => 'center',
@@ -383,12 +599,15 @@ class AdminPatternsControllerCore extends AdminController
 				'class' => 'fixed-width-xs',
 				'orderby' => false,
 				'search' => false
-			)
+			),
+			'name' => array(
+				'title' => $this->l('Name')
+			),
 		);
 		
 		return parent::renderList();
 	}
-	
+
 	public function renderOptions()
 	{
 		$this->fields_options = array(

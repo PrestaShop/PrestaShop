@@ -468,27 +468,22 @@ class ProductControllerCore extends FrontController
 					$combinations[$row['id_product_attribute']]['id_image'] = -1;
 				else
 				{
+					$combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int)$combination_images[$row['id_product_attribute']][0]['id_image'];
 					if ($row['default_on'])
 					{
 						if (isset($this->context->smarty->tpl_vars['cover']->value))
 							$current_cover = $this->context->smarty->tpl_vars['cover']->value;
-						
-						$flag = false;
+
 						if (is_array($combination_images[$row['id_product_attribute']]))
 						{
 							foreach ($combination_images[$row['id_product_attribute']] as $tmp) 
 								if ($tmp['id_image'] == $current_cover['id_image'])
 								{
 									$combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int)$tmp['id_image'];
-
-									$flag = true;
 									break;
 								}
 						}
 
-						if (!$flag)
-							$combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int)$combination_images[$row['id_product_attribute']][0]['id_image'];
-					
 						if ($id_image > 0)
 						{
 							if (isset($this->context->smarty->tpl_vars['images']->value))
