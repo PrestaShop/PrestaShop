@@ -743,7 +743,6 @@ function displayDiscounts(combination)
 
 function updateDiscountTable(newPrice)
 {
-	console.log(displayDiscountPrice);
 	$('#quantityDiscount tbody tr').each(function(){
 		var type = $(this).data("discount-type");
 		var discount = $(this).data("discount");

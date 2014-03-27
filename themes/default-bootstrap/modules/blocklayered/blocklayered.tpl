@@ -56,7 +56,7 @@
 												{if $id_value == $filter_key && !is_numeric($filter_value) && ($filter.type eq 'id_attribute_group' || $filter.type eq 'id_feature') || $id_value == $filter_value && $filter.type neq 'id_attribute_group' && $filter.type neq 'id_feature'}
 													<li>
 														<a href="#" rel="layered_{$filter.type_lite}_{$id_value}" title="{l s='Cancel' mod='blocklayered'}"><i class="icon-remove"></i></a>
-														{$filter.name|escape:'html':'UTF-8'}{l s=':' mod='blocklayered'} {$value.name|escape:'html':'UTF-8'}
+														{l s='%1$s: %2$s' mod='blocklayered' sprintf=[$filter.name, $value.name]}
 													</li>
 												{/if}
 											{/foreach}

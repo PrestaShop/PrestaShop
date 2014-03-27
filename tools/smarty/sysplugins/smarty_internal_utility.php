@@ -231,7 +231,7 @@ class Smarty_Internal_Utility {
         }
         $_compile = new RecursiveIteratorIterator($_compileDirs, RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($_compile as $_file) {
-            if (substr(basename($_file->getPathname()), 0, 1) == '.' || strpos($_file, '.svn') !== false)
+            if (substr(basename($_file->getPathname()), 0, 1) == '.' || strpos($_file, '.svn') !== false || strpos($_file, 'index.php') !== false)
                 continue;
 
             $_filepath = (string) $_file;

@@ -26,18 +26,19 @@
 
 function update_image_size_in_db()
 {
-	$logo_name = Configuration::get('PS_LOGO') ? Configuration::get('PS_LOGO') : 'logo.jpg';
+	$logo_name = Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \'PS_LOGO\'');
+	$logo_name = (!empty($logo_name)) ? $logo_name : 'logo.jpg';
 
 	if (file_exists(realpath(INSTALL_PATH.'/../img').'/'.$logo_name))
 	{
 		list($width, $height, $type, $attr) = getimagesize(realpath(INSTALL_PATH.'/../img').'/'.$logo_name);
-		Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
-		Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.(int)round($width).'" WHERE `name` LIKE \'SHOP_LOGO_WIDTH\'');
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.(int)round($height).'" WHERE `name` LIKE \'SHOP_LOGO_HEIGHT\'');
 	}
 	if (file_exists(realpath(INSTALL_PATH.'/../modules/editorial').'/homepage_logo.jpg'))
 	{
 		list($width, $height, $type, $attr) = getimagesize(realpath(INSTALL_PATH.'/../modules/editorial').'/homepage_logo.jpg');
-		Configuration::updateValue('EDITORIAL_IMAGE_WIDTH', (int)round($width));
-		Configuration::updateValue('EDITORIAL_IMAGE_HEIGHT', (int)round($height));
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.(int)round($width).'" WHERE `name` LIKE \'EDITORIAL_IMAGE_WIDTH\'');
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.(int)round($height).'" WHERE `name` LIKE \'EDITORIAL_IMAGE_HEIGHT\'');
 	}
 }
