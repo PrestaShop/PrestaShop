@@ -67,7 +67,7 @@
 		{foreach from=$order_history item=state name="orderStates"}
 			<tr class="{if $smarty.foreach.orderStates.first}first_item{elseif $smarty.foreach.orderStates.last}last_item{/if} {if $smarty.foreach.orderStates.index % 2}alternate_item{else}item{/if}">
 				<td class="step-by-step-date">{dateFormat date=$state.date_add full=0}</td>
-				<td><span class="label{if $state.id_order_state == 1 || $state.id_order_state == 10 || $state.id_order_state == 11} label-info{elseif $state.id_order_state == 5 || $state.id_order_state == 2 || $state.id_order_state == 12} label-success{elseif $state.id_order_state == 6 || $state.id_order_state == 7 || $state.id_order_state == 8} label-danger{elseif $state.id_order_state == 3 || $state.id_order_state == 9 || $state.id_order_state == 4} label-warning{/if}">{$state.ostate_name|escape:'html':'UTF-8'}</span></td>
+				<td><span class="label{if $state.id_order_state == 1 || $state.id_order_state == 10 || $state.id_order_state == 11} label-info{elseif $state.id_order_state == 5 || $state.id_order_state == 2 || $state.id_order_state == 12} label-success{elseif $state.id_order_state == 6 || $state.id_order_state == 7 || $state.id_order_state == 8} label-danger{elseif $state.id_order_state == 3 || $state.id_order_state == 9 || $state.id_order_state == 4} label-warning{/if}" {if $state.id_order_state > 12}style="background-color:{$state.color};"{/if}>{$state.ostate_name|escape:'html':'UTF-8'}</span></td>
 			</tr>
 		{/foreach}
 		</tbody>
