@@ -469,8 +469,10 @@ class AdminTranslationsControllerCore extends AdminController
 			$default_language = 'en';
 		else
 			$default_language = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
+
 		if (!$default_language || !Validate::isLanguageIsoCode($default_language))
 			return false;
+
 		// 1 - Scan mails files
 		$mails = array();
 		if (Tools::file_exists_cache(_PS_MAIL_DIR_.$default_language.'/'))
@@ -1518,8 +1520,8 @@ class AdminTranslationsControllerCore extends AdminController
 	}
 
 	/**
-	 * This method is used to wright translation for mails.
-	 * This wrights subject translation files
+	 * This method is used to write translation for mails.
+	 * This writes subject translation files
 	 * (in root/mails/lang_choosen/lang.php or root/_PS_THEMES_DIR_/mails/lang_choosen/lang.php)
 	 * and mails files.
 	 */
@@ -2152,7 +2154,7 @@ class AdminTranslationsControllerCore extends AdminController
 	}
 
 	/**
-	 * Get each informations for each mails founded in the folder $dir.
+	 * Get each informations for each mails found in the folder $dir.
 	 *
 	 * @since 1.4.0.14
 	 * @param string $dir
@@ -2183,6 +2185,7 @@ class AdminTranslationsControllerCore extends AdminController
 			// Get all english files to compare with the language to translate
 			foreach (scandir($dir_en) as $email_file)
 			{
+				p($dir_en);
 				if (strripos($email_file, '.html') > 0 || strripos($email_file, '.txt') > 0)
 				{
 					$email_name = substr($email_file, 0, strripos($email_file, '.'));
@@ -2209,7 +2212,7 @@ class AdminTranslationsControllerCore extends AdminController
 			}
 		}
 		else
-			$this->warnings[] = sprintf(Tools::displayError('A mail directory exists for the "%1$s" language, but not for the English language in %2$s'),
+			$this->warnings[] = sprintf(Tools::displayError('A mail directory exists for the "%1$s" language, but not for the default language in %2$s'),
 				$this->lang_selected->iso_code, str_replace(_PS_ROOT_DIR_, '', $dir));
 		return $arr_return;
 	}
@@ -2487,6 +2490,9 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$files_by_directiories = $this->getFileToParseByTypeTranslation();
 
+		if (!($this->theme_selected && @filemtime($this->translations_informations[$this->type_selected]['override']['dir'])))
+			$this->copyMailFilesForDefautLanguage();
+
 		foreach ($files_by_directiories['php'] as $dir => $files)
 			foreach ($files as $file)
 				// If file exist and is not in ignore_folder, in the next step we check if a folder or mail
@@ -2508,7 +2514,7 @@ class AdminTranslationsControllerCore extends AdminController
 			$module_mails[$module_name]['subject'] = $core_mails['subject'];
 			$module_mails[$module_name]['display'] = $this->displayMailContent($module_mails[$module_name], $subject_mail, $this->lang_selected, Tools::strtolower($module_name), $module_name, $module_name);
 		}
-
+die();
 		if ($no_display)
 		{
 			$empty = 0;
@@ -2536,6 +2542,51 @@ class AdminTranslationsControllerCore extends AdminController
 		$this->initToolbar();
 		$this->base_tpl_view = 'translation_mails.tpl';
 		return parent::renderView();
+	}
+
+	public function copyMailFilesForDefautLanguage()
+	{
+		if (Language::getIdByIso('en'))
+			$default_language = 'en';
+		else	
+			$default_language = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
+		if (!$default_language || !Validate::isLanguageIsoCode($default_language))
+			return false;
+
+		$dir_to_copy_en = array();
+		$files_to_copy_en = array();
+		
+		$dir_to_copy_en[] = _PS_MAIL_DIR_.$default_language.'/';
+
+		$modules_has_mails = $this->getModulesHasMails(true);
+		foreach ($modules_has_mails as $module_name => $module_path)
+		{
+			if ($pos = strpos($module_path, '/modules'))
+				$dir_to_copy_en[] = _PS_ROOT_DIR_.substr($module_path, $pos).'mails/'.$default_language.'/';
+		}
+
+		foreach ($dir_to_copy_en as $dir)
+			foreach (scandir($dir) as $file)
+				if (!in_array($file, self::$ignore_folder))
+					$files_to_copy_en[] = array(
+							"from" => $dir.$file,
+							"to" => str_replace(_PS_ROOT_DIR_, _PS_ROOT_DIR_.'/themes/'.$this->theme_selected, $dir).$file
+						);
+
+		foreach ($files_to_copy_en as $file)
+		{
+			$content = file_get_contents($file['from']);
+			
+			if (!is_dir(dirname($file['to'])))
+				mkdir(dirname($file['to']));
+			
+			$success = file_put_contents($file['to'], $content);
+
+			if ($success === false)
+				Tools::dieOrLog(sprintf("%s cannot be copied to %s", $file['from'], $file['to']), false);
+		}
+
+		return true;
 	}
 
 	/**
@@ -2575,7 +2626,7 @@ class AdminTranslationsControllerCore extends AdminController
 				}
 			}
 		}
-		// Of if is colder, we scan colder for check if find in folder and subfolder
+		// Or if is colder, we scan colder for check if find in folder and subfolder
 		else if (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file))
 			foreach( scandir($dir.'/'.$file ) as $temp )
 				$subject_mail = $this->getSubjectMail($dir.'/'.$file, $temp, $subject_mail);
