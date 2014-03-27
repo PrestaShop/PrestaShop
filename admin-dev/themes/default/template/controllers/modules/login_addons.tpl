@@ -75,10 +75,10 @@
 					</div>
 				</div>
 				<div class="row">
-					<a target="_blank" href="http://addons.prestashop.com/en/login#createnow">{l s="Don't have an account ?"}</a>
 					<button id="addons_login_button" class="btn btn-default btn-block btn-lg" type="submit">
 						<i class="icon-unlock"></i> {l s='Sign in'}
 					</button>
+					<a target="_blank" href="http://addons.prestashop.com/en/login#createnow">{l s="Don't have an account ?"}</a>
 				</div>
 				<div id="addons_loading" class="help-block"></div>
 			</form>
