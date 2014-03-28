@@ -2663,9 +2663,10 @@ p.cheque-indent {
 #new_account_form,
 #opc_account_form,
 #authentication {
-	.box {}
-	padding-bottom: 20px;
-	line-height: 20px;
+	.box {
+		padding-bottom: 20px;
+		line-height: 20px;
+	}
 	p.required {
 		color: #f13340;
 		margin: 9px 0 16px 0;
@@ -2751,8 +2752,9 @@ p.cheque-indent {
 }
 
 #authentication {
-	fieldset.account_creation {}
-	margin-bottom: 20px;
+	fieldset.account_creation {
+		margin-bottom: 20px;
+	}
 }
 
 // PASSWORD
