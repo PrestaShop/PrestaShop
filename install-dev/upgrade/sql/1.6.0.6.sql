@@ -24,3 +24,5 @@ DELETE FROM `PREFIX_image_type` WHERE `name` = 'cart_default';
 
 INSERT INTO `PREFIX_image_type` (`id_image_type`,`name`,`width`,`height`,`products`,`categories`,`manufacturers`,`suppliers`,`scenes`,`stores`)
 VALUES (NULL, 'cart_default', '80', '80', '1', '0', '0', '0', '0', '0');
+
+/* PHP:p1606module_exceptions(); */;
