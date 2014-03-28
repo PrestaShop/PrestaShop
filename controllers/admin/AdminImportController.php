@@ -2172,7 +2172,7 @@ class AdminImportControllerCore extends AdminController
 				}
 
 				// Check if warehouse exists
-				if ($info['warehouse'])
+				if (isset($info['warehouse']) && $info['warehouse'])
 				{
 					if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse not set on product with id %s '),$product->id);

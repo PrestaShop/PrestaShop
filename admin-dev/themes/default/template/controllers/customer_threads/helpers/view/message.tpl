@@ -53,6 +53,7 @@
 			</h4>
 		{/if}
 		<span class="message-date">&nbsp;<i class="icon-calendar"></i> - {dateFormat date=$message.date_add full=0} - <i class="icon-time"></i> {$message.date_add|substr:11:5}</span>
+		{if isset($message.file_name)} <span class="message-attachment">&nbsp;<i class="icon-link"></i> <a href="{$message.file_name}" target="_blank">{l s="Attachment"}</a>{/if}
 		<p class="message-item-text">{$message.message}</p>
 	</div>
 </div>
