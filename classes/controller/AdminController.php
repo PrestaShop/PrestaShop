@@ -3399,12 +3399,14 @@ class AdminControllerCore extends Controller
 		if (@filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$module->name
 			.DIRECTORY_SEPARATOR.'logo.png'))
 			$module->logo = 'logo.png';
-		$module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back);
+
 		$link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
 
 		$module->options['install_url'] = $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
 		$module->options['update_url'] = $link_admin_modules.'&update='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
 		$module->options['uninstall_url'] = $link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
+
+		$module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back);
 
 		$module->options['uninstall_onclick'] = ((!$module->onclick_option) ?
 			((empty($module->confirmUninstall)) ? 'return confirm(\''.$this->l('Do you really want to uninstall this module?').'\');' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') :
@@ -3572,6 +3574,15 @@ class AdminControllerCore extends Controller
 			'data-module' => $module->name
 		);
 
+		$update = array(
+			'href' => $module->options['update_url'],
+			'onclick' => '',
+			'title' => 'Update it!',
+			'text' => 'Update it!',
+			'icon' => 'refresh',
+			'cond' => $module->id,
+		);
+
 		$divider = array(
 			'href' => '#',
 			'onclick' => '',
@@ -3579,6 +3590,9 @@ class AdminControllerCore extends Controller
 			'text' => 'divider',
 			'cond' => $module->id,
 		);
+
+		if (isset($module->version_addons) && $module->version_addons)
+			$modules_options[] = $update;
 
 		if ($module->active)
 		{
