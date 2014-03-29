@@ -759,7 +759,7 @@ class DispatcherCore
 									$_GET[$k] = $v;
 		
 							// A patch for module friendly urls
-							if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9]+)$#i', $controller, $m))
+							if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9_]+)$#i', $controller, $m))
 							{
 								$_GET['module'] = $m[1];
 								$_GET['fc'] = 'module';
