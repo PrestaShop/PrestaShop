@@ -1288,7 +1288,7 @@
 
 .icon-subscript:before { content: "\f12c"; }
 
-.icon-eraser:before { content: "\f12d"; }
+.icon-eraser:before, #content .process-icon-eraser:before { content: "\f12d"; }
 
 .icon-puzzle-piece:before, .icon-AdminParentModules:before, #content .process-icon-modules-list:before, .bootstrap .alert.alert-addons:before, .bootstrap #carrier_wizard .alert-addons.wizard_error:before { content: "\f12e"; }
 
