@@ -711,18 +711,15 @@ class AdminModulesControllerCore extends AdminController
 				// Browse modules list
 				foreach ($modules_on_disk as $km => $module_on_disk)
 				{
-					if ($module_name = Tools::getValue('module_name'))
-					{
-						if ($module_on_disk->name == $module_name && isset($module_on_disk->version_addons) && $module_on_disk->version_addons)
-							$modules[] = $module_on_disk->name;
-					}
-					else if (isset($module_on_disk->version_addons) && $module_on_disk->version_addons)
+					if (!Tools::getValue('module_name') && isset($module_on_disk->version_addons) && $module_on_disk->version_addons)
 						$modules[] = $module_on_disk->name;
 				}
+				
+				if (!Tools::getValue('module_name'))
+					$modules_list_save = implode('|', $modules);
 
-				$modules_list_save = implode('|', $modules);
 			}
-			elseif (($modules = Tools::getValue($key)))
+			elseif (($modules = Tools::getValue($key)) && $key != 'checkAndUpdate')
 			{
 				if (strpos($modules, '|'))
 				{
@@ -740,7 +737,7 @@ class AdminModulesControllerCore extends AdminController
 				{
 					$full_report = null;
 					// If Addons module, download and unzip it before installing it
-					if (!file_exists(_PS_MODULE_DIR_.$name.'/'.$name.'.php') || $key == 'update' || $key == 'checkAndUpdate')
+					if (!file_exists(_PS_MODULE_DIR_.$name.'/'.$name.'.php') || $key == 'update')
 					{
 						$filesList = array(
 							array('type' => 'addonsNative', 'file' => Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0),
@@ -935,10 +932,20 @@ class AdminModulesControllerCore extends AdminController
 
 		if (Tools::getValue('update') || Tools::getValue('checkAndUpdate'))
 		{
+			$updated = '&updated=1';
+			if (Tools::getValue('checkAndUpdate'))
+			{
+				$updated = '';
+				$module = Tools::getValue('module_name');
+				$module = Module::getInstanceByName($module);
+				if (!Validate::isLoadedObject($module))
+					unset($module);
+			}
+			
 			if (isset($modules_list_save))
 				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1&module_name='.$modules_list_save);
 			elseif (isset($module))
-				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : ''));
+				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.$updated.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : ''));
 		}
 	}
 	
