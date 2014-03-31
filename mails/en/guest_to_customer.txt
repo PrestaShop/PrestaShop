@@ -8,7 +8,7 @@ customer account.
 
 E-MAIL ADDRESS: {email}
 
-PASSWORD: {passwd} 
+PASSWORD: {passwd} 		 
 
 Please be careful when sharing these login details with others. 
 
