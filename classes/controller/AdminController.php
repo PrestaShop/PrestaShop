@@ -729,7 +729,7 @@ class AdminControllerCore extends Controller
 					$this->content = 'ok';
 			}
 		}
-		$this->errors[] = Tools::displayError('An error occurred while attempting to delet the image. (cannot load object).');
+		$this->errors[] = Tools::displayError('An error occurred while attempting to delete the image. (cannot load object).');
 		return $object;
 	}
 	
@@ -1354,7 +1354,7 @@ class AdminControllerCore extends Controller
 		}
 		else
 		{
-			$this->errors[] = Tools::displayError('The object cannot be loaded (the dentifier is missing or invalid)');
+			$this->errors[] = Tools::displayError('The object cannot be loaded (the identifier is missing or invalid)');
 			return false;
 		}
 	}

@@ -160,7 +160,7 @@ class AdminThemesControllerCore extends AdminController
 					'PS_LOGO_MAIL' => array(
 						'title' => $this->l('Mail logo'),
 						'desc' =>
-							((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: No email logo has been indentified. The header logo will be used instead.').'</span><br />' : '').
+							((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: No email logo has been identified. The header logo will be used instead.').'</span><br />' : '').
 							$this->l('Will appear on email headers. If undefined, the header logo will be used.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO_MAIL',
