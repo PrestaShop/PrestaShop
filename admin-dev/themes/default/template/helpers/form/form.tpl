@@ -369,7 +369,7 @@
 									{/if}
 								{elseif $input.type == 'radio'}
 									{foreach $input.values as $value}
-										<div class="radio {if isset($input.class)}"{$input.class}"{/if}">
+										<div class="radio {if isset($input.class)}{$input.class}{/if}">
 											<label>
 											<input type="radio"	name="{$input.name}" id="{$value.id}" value="{$value.value|escape:'html':'UTF-8'}"
 												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
