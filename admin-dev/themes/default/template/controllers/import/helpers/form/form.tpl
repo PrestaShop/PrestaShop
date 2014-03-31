@@ -26,7 +26,7 @@
 <div class="leadin">{block name="leadin"}{/block}</div>
 {if $module_confirmation}
 <div class="module_confirmation conf confirm">
-	{l s='Your .CSV file has been sucessfully imported into your shop. Don\'t forget to Re-build the products search index.'}
+	{l s='Your .CSV file has been successfully imported into your shop. Don\'t forget to Re-build the products search index.'}
 </div>
 {/if}
 

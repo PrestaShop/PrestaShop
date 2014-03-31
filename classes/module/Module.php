@@ -2274,7 +2274,7 @@ abstract class ModuleCore
 			// Check if none of the methods already exists in the override class
 			foreach ($module_class->getMethods() as $method)
 				if ($override_class->hasMethod($method->getName()))
-					throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overriden.'), $method->getName(), $classname));
+					throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overridden.'), $method->getName(), $classname));
 
 			// Check if none of the properties already exists in the override class
 			foreach ($module_class->getProperties() as $property)

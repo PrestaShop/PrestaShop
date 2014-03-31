@@ -4446,7 +4446,7 @@ class AdminProductsControllerCore extends AdminController
 				if (Tools::getValue('value') === false)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
 				if ((int)Tools::getValue('value') != 0 && (int)Tools::getValue('value') != 1)
-					die (Tools::jsonEncode(array('error' =>  $this->l('Uncorrect value'))));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Incorrect value'))));
 				if (!$product->advanced_stock_management && (int)Tools::getValue('value') == 1)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Not possible if advanced stock management is disabled. '))));
 				if ($product->advanced_stock_management && Pack::isPack($product->id))
@@ -4459,7 +4459,7 @@ class AdminProductsControllerCore extends AdminController
 				if (Tools::getValue('value') === false)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
 				if (!in_array((int)Tools::getValue('value'), array(0, 1, 2)))
-					die (Tools::jsonEncode(array('error' =>  $this->l('Uncorrect value'))));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Incorrect value'))));
 
 				StockAvailable::setProductOutOfStock($product->id, (int)Tools::getValue('value'));
 				break;
@@ -4485,7 +4485,7 @@ class AdminProductsControllerCore extends AdminController
 				if (Tools::getValue('value') === false)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
 				if ((int)Tools::getValue('value') != 1 && (int)Tools::getValue('value') != 0)
-					die (Tools::jsonEncode(array('error' =>  $this->l('Uncorrect value'))));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Incorrect value'))));
 				if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)Tools::getValue('value') == 1)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Not possible if advanced stock management is disabled. '))));
 				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && Pack::isPack($product->id))
