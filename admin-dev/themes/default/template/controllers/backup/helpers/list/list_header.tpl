@@ -76,7 +76,7 @@
 				<li>{l s='Unless you enabled the "Drop existing tables" option, you must delete all tables from your current database.'}</li>
 				<li>{l s='At the top of the screen, please select the "Import" tab'}</li>
 				<li>{l s='Click on the "Browse" button and select the backup file from your hard drive.'}</li>
-				<li>{l s='Check the maximum filesize allowed (e.g. Max: 16MB)'}<br />{l s='If your backup file exceeds this limit, contact your hosting provider for assistence. '}</li>
+				<li>{l s='Check the maximum filesize allowed (e.g. Max: 16MB)'}<br />{l s='If your backup file exceeds this limit, contact your hosting provider for assistance. '}</li>
 				<li>{l s='Click on the "Go" button and please wait patiently for the import  process to conclude. This may take several minutes.'}</li>
 			</ol>
 		</div>
