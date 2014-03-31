@@ -52,6 +52,10 @@
 			<p class="text-justify">{$additional_description}</p>
 		{/if}
 		<hr>
-		<a class="btn btn-success btn-lg pull-right" href="{$url}" onclick="return !window.open(this.href);">{l s='View on PrestaShop Addons'}</a>
+		{if $is_addons_partner}
+			<a class="btn btn-success btn-lg pull-right" href="{$url}">{l s='Install module'}</a>
+		{else}
+			<a class="btn btn-success btn-lg pull-right" href="{$url}" onclick="return !window.open(this.href);">{l s='View on PrestaShop Addons'}</a>
+		{/if}
 	</div>
 </div>
