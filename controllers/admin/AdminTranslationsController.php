@@ -2185,7 +2185,6 @@ class AdminTranslationsControllerCore extends AdminController
 			// Get all english files to compare with the language to translate
 			foreach (scandir($dir_en) as $email_file)
 			{
-				p($dir_en);
 				if (strripos($email_file, '.html') > 0 || strripos($email_file, '.txt') > 0)
 				{
 					$email_name = substr($email_file, 0, strripos($email_file, '.'));
@@ -2490,8 +2489,8 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$files_by_directiories = $this->getFileToParseByTypeTranslation();
 
-		if (!($this->theme_selected && @filemtime($this->translations_informations[$this->type_selected]['override']['dir'])))
-			$this->copyMailFilesForDefautLanguage();
+		if (!$this->theme_selected || !@filemtime($this->translations_informations[$this->type_selected]['override']['dir']))
+			$this->copyMailFilesForAllLanguages();
 
 		foreach ($files_by_directiories['php'] as $dir => $files)
 			foreach ($files as $file)
@@ -2514,7 +2513,7 @@ class AdminTranslationsControllerCore extends AdminController
 			$module_mails[$module_name]['subject'] = $core_mails['subject'];
 			$module_mails[$module_name]['display'] = $this->displayMailContent($module_mails[$module_name], $subject_mail, $this->lang_selected, Tools::strtolower($module_name), $module_name, $module_name);
 		}
-die();
+
 		if ($no_display)
 		{
 			$empty = 0;
@@ -2544,46 +2543,48 @@ die();
 		return parent::renderView();
 	}
 
-	public function copyMailFilesForDefautLanguage()
+	public function copyMailFilesForAllLanguages()
 	{
-		if (Language::getIdByIso('en'))
-			$default_language = 'en';
-		else	
-			$default_language = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
-		if (!$default_language || !Validate::isLanguageIsoCode($default_language))
-			return false;
+		$languages = Language::getLanguages();
 
-		$dir_to_copy_en = array();
-		$files_to_copy_en = array();
-		
-		$dir_to_copy_en[] = _PS_MAIL_DIR_.$default_language.'/';
+		foreach ($languages as $key => $lang) {
 
-		$modules_has_mails = $this->getModulesHasMails(true);
-		foreach ($modules_has_mails as $module_name => $module_path)
-		{
-			if ($pos = strpos($module_path, '/modules'))
-				$dir_to_copy_en[] = _PS_ROOT_DIR_.substr($module_path, $pos).'mails/'.$default_language.'/';
-		}
-
-		foreach ($dir_to_copy_en as $dir)
-			foreach (scandir($dir) as $file)
-				if (!in_array($file, self::$ignore_folder))
-					$files_to_copy_en[] = array(
-							"from" => $dir.$file,
-							"to" => str_replace(_PS_ROOT_DIR_, _PS_ROOT_DIR_.'/themes/'.$this->theme_selected, $dir).$file
-						);
-
-		foreach ($files_to_copy_en as $file)
-		{
-			$content = file_get_contents($file['from']);
+			$dir_to_copy_iso = array();
+			$files_to_copy_iso = array();
+			$current_iso_code = $lang['iso_code'];
 			
-			if (!is_dir(dirname($file['to'])))
-				mkdir(dirname($file['to']));
-			
-			$success = file_put_contents($file['to'], $content);
+			$dir_to_copy_iso[] = _PS_MAIL_DIR_.$current_iso_code.'/';
 
-			if ($success === false)
-				Tools::dieOrLog(sprintf("%s cannot be copied to %s", $file['from'], $file['to']), false);
+			$modules_has_mails = $this->getModulesHasMails(true);
+			foreach ($modules_has_mails as $module_name => $module_path)
+			{
+				if ($pos = strpos($module_path, '/modules'))
+					$dir_to_copy_iso[] = _PS_ROOT_DIR_.substr($module_path, $pos).'mails/'.$current_iso_code.'/';
+			}
+
+			foreach ($dir_to_copy_iso as $dir)
+				foreach (scandir($dir) as $file)
+					if (!in_array($file, self::$ignore_folder))
+						$files_to_copy_iso[] = array(
+								"from" => $dir.$file,
+								"to" => str_replace(_PS_ROOT_DIR_, _PS_ROOT_DIR_.'/themes/'.$this->theme_selected, $dir).$file
+							);
+
+			foreach ($files_to_copy_iso as $file)
+			{
+				if (!file_exists($file['to']))
+				{
+					$content = file_get_contents($file['from']);
+					
+					if (!is_dir(dirname($file['to'])))
+						mkdir(dirname($file['to']));
+					
+					$success = file_put_contents($file['to'], $content);
+
+					if ($success === false)
+						Tools::dieOrLog(sprintf("%s cannot be copied to %s", $file['from'], $file['to']), false);	
+				}
+			}
 		}
 
 		return true;
