@@ -483,7 +483,7 @@ else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tool
 			if ($this->tabAccess['edit'] === '1')
 			{
 				if (Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT'))
-					$this->errors[] = Tools::displayError('You cannot disable the default carrier, however you can change your defeault carrier. ');
+					$this->errors[] = Tools::displayError('You cannot disable the default carrier, however you can change your default carrier. ');
 				else
 					parent::postProcess();
 			}
