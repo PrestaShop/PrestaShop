@@ -378,6 +378,33 @@ class AdminModulesControllerCore extends AdminController
 		return $url;
 	}
 
+	protected function setModuleDirPerm($dir_path)
+	{
+		$black_list = array('translations', 'mails', 'img');
+
+		$dir_name = dirname($dir_path);
+		$module_content = scandir($dir_path);
+
+		foreach ($module_content as $sub_files)
+		{
+			if ($sub_files == '.' || $sub_files == '..')
+				continue;
+
+			$full_path = $dir_path.DIRECTORY_SEPARATOR.$sub_files;
+			$ext = pathinfo($full_path, PATHINFO_EXTENSION);
+
+			if (is_dir($full_path))
+			{
+				chmod($full_path, 0777);
+				$this->setModuleDirPerm($full_path);
+			}
+			else if ($ext == 'php' && !in_array($dir_name, $black_list))
+				chmod($full_path, 0644);
+			else
+				chmod($full_path, 0777);
+		}
+	}
+
 	protected function extractArchive($file, $redirect = true)
 	{
 		$zip_folders = array();
@@ -407,7 +434,7 @@ class AdminModulesControllerCore extends AdminController
 
 		$path_parts = pathinfo($file);
 		if (isset($path_parts['filename']) && @filemtime(_PS_MODULE_DIR_.$path_parts['filename']))
-			Tools::chmodr(_PS_MODULE_DIR_.$path_parts['filename'], 0777);
+			$this->setModuleDirPerm(_PS_MODULE_DIR_.$path_parts['filename']);
 
 		if (!$success)
 			$this->errors[] = Tools::displayError('There was an error while extracting the module (file may be corrupted).');
