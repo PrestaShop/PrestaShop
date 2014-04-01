@@ -1472,7 +1472,7 @@ class AdminThemesControllerCore extends AdminController
 						$imported_theme = $this->importThemeXmlConfig(simplexml_load_file($sandbox.'uploaded/Config.xml'));
 						if (Validate::isLoadedObject($imported_theme))
 						{
-							if (!copy($sandbox.'uploaded/Config.xml', _PS_ROOT_DIR_.'/config/xml/'.$imported_theme->directory.'.xml'))
+							if (!copy($sandbox.'uploaded/Config.xml', _PS_ROOT_DIR_.'/config/xml/themes/'.$imported_theme->directory.'.xml'))
 								$this->errors[] = $this->l('Can\'t copy configuration file');
 
 							$target_dir = _PS_ALL_THEMES_DIR_.$imported_theme->directory;
@@ -1735,8 +1735,8 @@ class AdminThemesControllerCore extends AdminController
 				{
 
 					$config_file = false;
-					$default_config = _PS_ROOT_DIR_.'/config/xml/default.xml';
-					$theme_config = _PS_ROOT_DIR_.'/config/xml/'.$theme_dir.'.xml';
+					$default_config = _PS_ROOT_DIR_.'/config/xml/themes/default.xml';
+					$theme_config = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme_dir.'.xml';
 
 					if (file_exists($theme_config))
 						$config_file = $theme_config;
@@ -2094,10 +2094,10 @@ class AdminThemesControllerCore extends AdminController
 		$theme = New Theme((int)Tools::getValue('id_theme'));
 
 		$xml = false;
-		if (file_exists(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml');
-		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/default.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/default.xml');
+		if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
+			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml');
+		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/default.xml'))
+			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/default.xml');
 
 		if ($xml)
 		{
@@ -2213,10 +2213,10 @@ class AdminThemesControllerCore extends AdminController
 					continue;
 
 				$old_xml_name = 'default.xml';
-				if (file_exists(_PS_ROOT_DIR_.'/config/xml/'.$shop_theme->directory.'.xml'))
+				if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$shop_theme->directory.'.xml'))
 					$old_xml_name = $shop_theme->directory.'.xml';
 
-				$shop_xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$old_xml_name);
+				$shop_xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$old_xml_name);
 				$theme_shop_module = $this->getModules($shop_xml);
 
 				$to_shop_uninstall = array_merge($theme_shop_module['to_install'], $theme_shop_module['to_enable']);
@@ -2355,10 +2355,10 @@ class AdminThemesControllerCore extends AdminController
 			$shops = Tools::getValue('checkBoxShopAsso_theme');
 
 		$xml = false;
-		if (file_exists(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml');
-		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/default.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/default.xml');
+		if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
+			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml');
+		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/default.xml'))
+			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/default.xml');
 
 		if ($xml)
 		{
