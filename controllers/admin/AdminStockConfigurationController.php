@@ -216,7 +216,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 							'type' => 'color',
 							'label' => $this->l('Color'),
 							'name' => 'color',
-							'hint' => $this->l('Status will be highlited in this color. HTML colors only.'),
+							'hint' => $this->l('Status will be highlighted in this color. HTML colors only.'),
 						),
 						array(
 							'type' => 'switch',
@@ -332,7 +332,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'type' => 'color',
 									'label' => $this->l('Color'),
 									'name' => 'color',
-									'desc' => $this->l('Status will be highlited in this color. HTML colors only.'),
+									'desc' => $this->l('Status will be highlighted in this color. HTML colors only.'),
 								),
 							),
 							'submit' => array(
