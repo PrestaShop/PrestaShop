@@ -4528,7 +4528,7 @@ class AdminProductsControllerCore extends AdminController
 
 	protected function initPack(Product $product)
 	{
-		$this->tpl_form_vars['is_pack'] = ($product->id && Pack::isPack($product->id)) || Tools::getValue('ppack') || Tools::getValue('type_product') == Product::PTYPE_PACK;
+		$this->tpl_form_vars['is_pack'] = ($product->id && Pack::isPack($product->id)) || Tools::getValue('type_product') == Product::PTYPE_PACK;
 		$product->packItems = Pack::getItems($product->id, $this->context->language->id);
 
 		$input_pack_items = '';

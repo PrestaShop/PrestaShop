@@ -1,0 +1,52 @@
+.media-product
+
+.media-product-pack
+	width: 200px
+	border: solid 2px #eee
+	padding: 4px
+	overflow: hidden
+	position: relative
+	margin-bottom: 10px
+	@include margin-right(10px)
+	@include border-radius(4px)
+	@include float(left)
+	.media-product-pack-img
+		width: 100%
+		padding-bottom: 5px
+		border-bottom: 1px solid #ccc
+		margin-bottom: 5px
+	.media-product-pack-title
+		width: 100%
+		padding: 0 5px
+		display: inline-block
+		overflow: hidden
+		text-overflow: ellipsis
+		white-space: nowrap
+	.media-product-pack-ref
+		color: #aaa
+		width: 100%
+		padding: 0 5px
+		display: inline-block
+		overflow: hidden
+		text-overflow: ellipsis
+		white-space: nowrap
+
+	.media-product-pack-action
+		position: absolute
+		top: 5px
+		border: solid 1px #ccc
+		text-align: center
+		@include right(5px)
+		@include border-radius(4px)
+
+	.media-product-pack-quantity
+		background-color: white
+		position: absolute
+		top: 5px
+		height: 25px
+		min-width: 35px
+		line-height: 23px
+		border: solid 1px #ccc
+		text-align: center
+		@include left(5px)
+		@include border-radius(4px)

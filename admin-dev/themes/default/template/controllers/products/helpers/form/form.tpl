@@ -254,11 +254,13 @@
 
 			{* all input are here *}
 			{foreach $product_tabs key=numStep item=tab}
+				{if $tab.name != "Pack" }
 				<div id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content" {if !$tab.selected}style="display:none"{/if}>
 					{if $tab.selected}
 						{$custom_form}
 					{/if}
 				</div>
+				{/if}
 			{/foreach}
 			<input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
 			<input type="hidden" name="key_tab" id="key_tab" value="Informations" />

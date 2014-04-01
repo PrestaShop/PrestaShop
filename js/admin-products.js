@@ -39,10 +39,9 @@ function ProductTabsManager(){
 	/**
 	 * Schedule execution of onReady() function for each tab and bind events
 	 */
-	this.init = function(){
-		for (var tab_name in this.product_tabs)
-		{
-			if (this.product_tabs[tab_name].onReady !== undefined)
+	this.init = function() {
+		for (var tab_name in this.product_tabs) {
+			if (this.product_tabs[tab_name].onReady !== undefined && this.product_tabs[tab_name] !== this.product_tabs['Pack'] )
 				this.onLoad(tab_name, this.product_tabs[tab_name].onReady);
 		}
 
@@ -180,6 +179,32 @@ function ProductTabsManager(){
 		}
 	}
 }
+
+function loadPack() {
+	var container = $('#product-pack-container');
+	var id_product = $('input[name=id_product]').first().val();
+	var data;
+	$.ajax({
+		url : "index.php?controller=AdminProducts" + "&token=" + token + "&id_product=" + id_product + "&action=Pack" + "&updateproduct" + "&ajax=1" + '&rand=' + new Date().getTime(),
+		async : true,
+		cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
+		type: 'POST',
+		headers: { "cache-control": "no-cache" },
+		data: data,
+		success : function(data){
+			$('#product-pack-container').html(data);
+			product_tabs['Pack'].onReady();
+		}
+	});
+}
+
+$(function(){
+	$('#product_form').on('click','button[name=submitAddproduct]',function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		alert($('#product_form').serialize());
+	})
+});
 
 // array of product tab objects containing methods and dom bindings
 // The ProductTabsManager instance will make sure the onReady() methods of each tabs are executed once the tab has loaded
@@ -653,7 +678,6 @@ product_tabs['Prices'] = new function(){
 		{
 			$('#add_specific_price').slideToggle();
 			$('#add_specific_price').find('input[name=submitPriceAddition]').remove();
-
 			$('#hide_specific_price').hide();
 			$('#show_specific_price').show();
 			return false;
@@ -1033,9 +1057,10 @@ product_tabs['Informations'] = new function(){
 		$('input[name="type_product"]').on('click', function(e)
 		{
 			// Reset settings
-			$('a[id*="Pack"]').hide();
 			$('a[id*="VirtualProduct"]').hide();
-			$('div.ppack').hide();
+			
+			$('#product-pack-container').hide();
+
 			$('div.is_virtual_good').hide();
 			$('#is_virtual').val(0);
 			tabs_manager.onLoad('VirtualProduct', function(){
@@ -1049,13 +1074,12 @@ product_tabs['Informations'] = new function(){
 			if (product_type == product_type_pack)
 			{
 				//when you change the type of the product, directly go to the pack tab
-				$('a[id*="Pack"]').show();
-				$('#ppack').val(1).attr('checked', true).attr('disabled', true);
-				$('#ppackdiv').show();
+				//$('a[id*="Pack"]').show();
+				//$('#ppack').val(1).attr('checked', true).attr('disabled', true);
+				$('#product-pack-container').show();
 				// If the pack tab has not finished loaded the changes will be made when the loading event is triggered
 				$("#product-tab-content-Pack").bind('loaded', function(){
 					$('#ppack').val(1).attr('checked', true).attr('disabled', true);
-					$('#ppackdiv').show();
 				});
 				$("#product-tab-content-Quantities").bind('loaded', function(){
 					$('.stockForVirtualProduct').show();
@@ -1110,6 +1134,7 @@ product_tabs['Informations'] = new function(){
 		});
 	};
 	this.onReady = function(){
+		loadPack();
 		self.bindAvailableForOrder();
 		self.bindTagImage();
 		self.switchProductType();
@@ -1137,20 +1162,12 @@ product_tabs['Informations'] = new function(){
 	};
 }
 
-product_tabs['Pack'] = new function(){
+product_tabs['Pack'] = new function() {
 	var self = this;
-	this.bindPackEvents = function (){
-		if ($('#ppack').prop('checked'))
-		{
-			$('#ppack').attr('disabled', true);
-			$('#ppackdiv').show();
-		}
-
-		$('.delPackItem').on('click', function(){
-			delPackItem($(this).attr('name'));
+	this.bindPackEvents = function () {
+		$('.delPackItem').on('click', function() {
+			delPackItem($(this).data('delete'));
 		})
-
-		$('div.ppack').hide();
 
 		$('#curPackItemName').autocomplete('ajax_products_list.php', {
 			delay: 100,
@@ -1158,13 +1175,13 @@ product_tabs['Pack'] = new function(){
 			autoFill: true,
 			max:20,
 			matchContains: true,
-			mustMatch:true,
+			//mustMatch:true,
 			scroll:false,
 			cacheLength:0,
 			// param multipleSeparator:'||' ajouté à cause de bug dans lib autocomplete
 			multipleSeparator:'||',
 			formatItem: function(item) {
-				return item[1]+' - '+item[0];
+				return item[1] + ' - ' + item[0] + '- REF:' + item[2];
 			},
 			extraParams: {
 				excludeIds : getSelectedIds(),
@@ -1173,84 +1190,89 @@ product_tabs['Pack'] = new function(){
 			}
 		}).result(function(event, item){
 			$('#curPackItemId').val(item[1]);
+			$('#curPackItemRef').val(item[2]);
+			$('#curPackItemImage').val(item[3]);
 		});
 
-		$('#add_pack_item').bind('click', addPackItem);
+		$('#add_pack_item').on('click', addPackItem);
 
-		function addPackItem()
-		{
+		function addPackItem() {
 			var curPackItemId = $('#curPackItemId').val();
 			var curPackItemName = $('#curPackItemName').val();
+			var curPackItemImage = $('#curPackItemImage').val();
 			var curPackItemQty = $('#curPackItemQty').val();
-			if (curPackItemId == '' || curPackItemName == '')
-			{
+			var curPackItemRef = $('#curPackItemRef').val();
+
+			$('.pack-empty-warning').hide();
+
+			if (curPackItemId == '' || curPackItemName == '') {
 				jAlert(msg_select_one);
 				return false;
-			}
-			else if (curPackItemId == '' || curPackItemQty == '')
-			{
+			} else if (curPackItemId == '' || curPackItemQty == '') {
 				jAlert(msg_set_quantity);
 				return false;
 			}
 
-			var lineDisplay = curPackItemQty+ 'x ' +curPackItemName;
-
 			var divContent = $('#divPackItems').html();
-			divContent += '<li><button class="btn btn-default delPackItem" name="' + curPackItemId + '" ><i class="icon-remove text-danger"></i></button>'+
-			lineDisplay+'</li>';
+			divContent += '<li class="product-pack-item media-product-pack" data-product-name="' + curPackItemName + '" data-product-qty="' + curPackItemQty + '" data-product-id="' + curPackItemId + '">';
+			divContent += '<img class="media-product-pack-img" src="' + curPackItemImage +'"/>';
+			divContent += '<span class="media-product-pack-title">' + curPackItemName + '</span>';
+			divContent += '<span class="media-product-pack-ref">REF: ' + curPackItemRef + '</span>';
+			divContent += '<span class="media-product-pack-quantity"><span class="text-muted">x</span> ' + curPackItemQty + '</span>';
+			divContent += '<button type="button" class="btn btn-default delPackItem media-product-pack-action" data-delete="' + curPackItemId + '" ><i class="icon-trash"></i></button>';
+			divContent += '</li>';
 
 			// QTYxID-QTYxID
 			// @todo : it should be better to create input for each items and each qty
 			// instead of only one separated by x, - and ¤
 			var line = curPackItemQty+ 'x' +curPackItemId;
+			var lineDisplay = curPackItemQty + 'x ' + curPackItemName;
 
-			$('#inputPackItems').val($('#inputPackItems').val() + line  + '-');
 			$('#divPackItems').html(divContent);
-				$('#namePackItems').val($('#namePackItems').val() + lineDisplay + '¤');
+			$('#inputPackItems').val($('#inputPackItems').val() + line  + '-');
+			$('#namePackItems').val($('#namePackItems').val() + lineDisplay + '¤');
 
-			$('#curPackItemId').val('');
-			$('#curPackItemName').val('');
-			$('p.listOfPack').show();
+			//reset current placeholder hidden field
+			$('#curPackItemId, #curPackItemName, #curPackItemImage, #curPackItemRef').val('');
 
 			$('#curPackItemName').setOptions({
 				extraParams: {
 					excludeIds :  getSelectedIds()
 				}
 			});
-			// show / hide save buttons
-			// if product has a name
-			handleSaveButtons();
+
+			$('.delPackItem').on('click', function(e){
+				e.preventDefault();
+				e.stopPropagation();
+				delPackItem($(this).data('delete'));
+			})
 		}
 
-		function delPackItem(id)
-		{
+		function delPackItem(id) {
+
 			var reg = new RegExp('-', 'g');
 			var regx = new RegExp('x', 'g');
 
-			var div = getE('divPackItems');
-			var input = getE('inputPackItems');
-			var name = getE('namePackItems');
-			var select = getE('curPackItemId');
-			var select_quantity = getE('curPackItemQty');
+			var input = $('#inputPackItems');
+			var name = $('#namePackItems');
 
-			var inputCut = input.value.split(reg);
-			var nameCut = name.value.split(new RegExp('¤', 'g'));
+			var inputCut = input.val().split(reg);
+			var nameCut = name.val().split(new RegExp('¤', 'g'));
 
-			input.value = '';
-			name.value = '';
-			div.innerHTML = '';
+			input.val(null);
+			name.val(null);
 
 			for (var i = 0; i < inputCut.length; ++i)
-				if (inputCut[i])
-				{
+				if (inputCut[i]) {
 					var inputQty = inputCut[i].split(regx);
-					if (inputQty[1] != id)
-					{
-						input.value += inputCut[i] + '-';
-						name.value += nameCut[i] + '¤';
-						div.innerHTML += nameCut[i] + '<li><button class="btn btn-default delPackItem" name="' + inputQty[1] + '"><i class="icon-remove text-danger"></i></button></li>';
+					if (inputQty[1] != id) {
+						input.val( input.val() + inputCut[i] + '-' );
+						name.val( name.val() + nameCut[i] + '¤');
 					}
 				}
+
+			var elem = $('.product-pack-item[data-product-id = "' + id + '"]');
+			elem.remove();
 
 			$('#curPackItemName').setOptions({
 				extraParams: {
@@ -1258,8 +1280,9 @@ product_tabs['Pack'] = new function(){
 				}
 			});
 
-			// if no item left in the pack, disable save buttons
-			handleSaveButtons();
+			if ($('.product-pack-item').length === 0){
+				$('.pack-empty-warning').show();
+			}
 		}
 
 		function getSelectedIds()
