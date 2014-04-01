@@ -336,7 +336,7 @@ class AdminDashboardControllerCore extends AdminController
 					$return['rss'][] = array(
 						'date' => Tools::displayDate(date('Y-m-d', strtotime((string)$item->pubDate))),
 						'title' => (string)Tools::htmlentitiesUTF8($item->title),
-						'short_desc' => substr((string)Tools::htmlentitiesUTF8($item->description), 0, 100).'...',
+						'short_desc' => substr((string)$item->description, 0, 150).'...',
 						'link' => (string)$item->link,
 					);
 				else
