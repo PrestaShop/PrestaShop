@@ -24,9 +24,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+
 <tr>
 	<td class="fixed-width-sm center">
-		<img class="img-thumbnail" alt="{$module->name}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}">
+		<img class="img-thumbnail" alt="{$module->name}" src="{if isset($module->image)}{$module->image}{else}{$smarty.const._MODULE_DIR_}{$module->name}/{$module->logo}{/if}">
 	</td>
 	<td>
 		<div id="anchor{$module->name|ucfirst}" title="{$module->displayName}">
@@ -69,25 +70,27 @@
 		</td>
 	{else if !isset($module->not_on_disk)}
 		<td>&nbsp;</td>
-		<td align="right">
-			{if $module->optionsHtml|count > 0}
-			<div id="list-action-button" class="btn-group">
-				{assign var=option value=$module->optionsHtml[0]}
-				{$option}
-				{if $module->optionsHtml|count > 1}
-				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
-					<span class="caret">&nbsp;</span>
-				</button>
-				<ul class="dropdown-menu">
-				{foreach $module->optionsHtml key=key item=option}
-					{if $key != 0}
-						<li>{$option}</li>
+		<td>
+			<div class="btn-group-action">
+				{if $module->optionsHtml|count > 0}
+				<div class="btn-group">
+					{assign var=option value=$module->optionsHtml[0]}
+					{$option}
+					{if $module->optionsHtml|count > 1}
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
+						<span class="caret">&nbsp;</span>
+					</button>
+					<ul class="dropdown-menu">
+					{foreach $module->optionsHtml key=key item=option}
+						{if $key != 0}
+							<li>{$option}</li>
+						{/if}
+					{/foreach}
+					</ul>
 					{/if}
-				{/foreach}
-				</ul>
+				</div>
 				{/if}
 			</div>
-			{/if}
 		</td>
 	{else}
 		<td>&nbsp;</td>
