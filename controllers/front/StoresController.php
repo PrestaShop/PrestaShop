@@ -209,14 +209,11 @@ class StoresControllerCore extends FrontController
 		$distanceUnit = Configuration::get('PS_DISTANCE_UNIT');
 		if (!in_array($distanceUnit, array('km', 'mi')))
 			$distanceUnit = 'km';
-		$stores = $this->getStores();
-		foreach ($stores as $store)
-			d($store);
-		
+
 		$this->context->smarty->assign(array(
 			'distance_unit' => $distanceUnit,
 			'simplifiedStoresDiplay' => false,
-			'stores' => $stores,
+			'stores' => $this->getStores(),
 		));
 	}
 
