@@ -32,6 +32,10 @@
 	<input type="hidden" name="submitted_tabs[]" value="Informations" />
 	<h3 class="tab"> <i class="icon-info"></i> {l s='Information'}</h3>
 	<script type="text/javascript">
+		
+		var msg_select_one = "{l s='Please select at least one product.' js=1}";
+		var msg_set_quantity = "{l s='Please set a quantity to add a product.' js=1}";
+
 		{if isset($ps_force_friendly_product) && $ps_force_friendly_product}
 			var ps_force_friendly_product = 1;
 		{else}
@@ -124,7 +128,9 @@
 		</div>
 	</div>
 
-	<hr/>
+	<div id="product-pack-container" {if $product_type != Product::PTYPE_PACK}style="display:none"{/if}></div>
+
+	<hr>
 
 	<div class="form-group">
 		<label class="control-label col-lg-3 required" for="name_{$id_lang}">
