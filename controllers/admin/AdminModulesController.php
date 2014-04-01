@@ -301,9 +301,9 @@ class AdminModulesControllerCore extends AdminController
 		
 		$this->context->smarty->assign(array(
 			'tab_modules_list' => $modules_list,
-			'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites'
+			'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
 		));
-		
+
 		$this->smartyOutputContent('controllers/modules/tab_modules_list.tpl');
 		exit;
 	}
@@ -378,33 +378,6 @@ class AdminModulesControllerCore extends AdminController
 		return $url;
 	}
 
-	protected function setModuleDirPerm($dir_path)
-	{
-		$black_list = array('translations', 'mails', 'img');
-
-		$dir_name = dirname($dir_path);
-		$module_content = scandir($dir_path);
-
-		foreach ($module_content as $sub_files)
-		{
-			if ($sub_files == '.' || $sub_files == '..')
-				continue;
-
-			$full_path = $dir_path.DIRECTORY_SEPARATOR.$sub_files;
-			$ext = pathinfo($full_path, PATHINFO_EXTENSION);
-
-			if (is_dir($full_path))
-			{
-				chmod($full_path, 0777);
-				$this->setModuleDirPerm($full_path);
-			}
-			else if ($ext == 'php' && !in_array($dir_name, $black_list))
-				chmod($full_path, 0644);
-			else
-				chmod($full_path, 0777);
-		}
-	}
-
 	protected function extractArchive($file, $redirect = true)
 	{
 		$zip_folders = array();
@@ -431,10 +404,6 @@ class AdminModulesControllerCore extends AdminController
 					$success = true;
 			}
 		}
-
-		$path_parts = pathinfo($file);
-		if (isset($path_parts['filename']) && @filemtime(_PS_MODULE_DIR_.$path_parts['filename']))
-			$this->setModuleDirPerm(_PS_MODULE_DIR_.$path_parts['filename']);
 
 		if (!$success)
 			$this->errors[] = Tools::displayError('There was an error while extracting the module (file may be corrupted).');
@@ -877,7 +846,7 @@ class AdminModulesControllerCore extends AdminController
 									'page_header_toolbar_title' => $this->page_header_toolbar_title,
 									'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
 									'add_permission' => $this->tabAccess['add'],
-									'is_reset_ready' => $is_reset_ready
+									'is_reset_ready' => $is_reset_ready,
 								)
 							);
 							
@@ -1404,6 +1373,10 @@ class AdminModulesControllerCore extends AdminController
 		if (count($upgrade_available) == 0 && (int)Tools::getValue('check') == 1)
 			$this->confirmations[] = $this->l('Everything is up-to-date');
 
+		// Iso needed to generate Addons login
+		$language = new Language($this->context->employee->id_lang);
+		$iso_code_caps = strtoupper($language->iso_code);
+
 		// Init tpl vars for smarty
 		$tpl_vars = array();
 
@@ -1438,6 +1411,7 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['page_header_toolbar_title'] = $this->page_header_toolbar_title;
 		$tpl_vars['page_header_toolbar_btn'] = $this->page_header_toolbar_btn;
 		$tpl_vars['modules_uri'] = __PS_BASE_URI__.basename(_PS_MODULE_DIR_);
+		$tpl_vars['addons_register_link'] = "//addons.prestashop.com/fr/login?utm_source=back-office&utm_medium=connect-to-addons&utm_campaign=back-office-".$iso_code_caps."#createnow";
 
 		if ($this->logged_on_addons)
 		{
@@ -1455,6 +1429,11 @@ class AdminModulesControllerCore extends AdminController
 			if ($module->name == Tools::getValue('module'))
 				break;
 
+		$url = $module->url;
+
+		if (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative'))
+			$url = $this->context->link->getAdminLink('AdminModules').'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
+
 		$this->context->smarty->assign(array(
 			'displayName' => $module->displayName,
 			'image' => $module->image,
@@ -1464,7 +1443,9 @@ class AdminModulesControllerCore extends AdminController
 			'compatibility' => $module->compatibility,
 			'description_full' => $module->description_full,
 			'additional_description' => $module->additional_description,
-			'url' => $module->url
+			'is_addons_partner' => (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')),
+			'url' => $url,
+			'price' => $module->price
 		));
 		$this->smartyOutputContent('controllers/modules/quickview.tpl');
 	}

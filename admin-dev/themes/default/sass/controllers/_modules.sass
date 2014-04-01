@@ -114,10 +114,15 @@ td.module_inactive
 			@include padding-right(35px)
 			.badge
 				position: absolute
-				right: 5px
+				@include right(5px)
 
 .quickview-badge
 	margin-top: 30px
+.quickview-price
+	color: #666
+	font-size: 1.8em
+	@include float(right)
+
 //stars
 .rating
 	unicode-bidi: bidi-override
