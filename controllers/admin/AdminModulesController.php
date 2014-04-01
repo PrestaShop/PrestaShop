@@ -1470,7 +1470,8 @@ class AdminModulesControllerCore extends AdminController
 			'description_full' => $module->description_full,
 			'additional_description' => $module->additional_description,
 			'is_addons_partner' => (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')),
-			'url' => $url
+			'url' => $url,
+			'price' => $module->price
 		));
 		$this->smartyOutputContent('controllers/modules/quickview.tpl');
 	}
