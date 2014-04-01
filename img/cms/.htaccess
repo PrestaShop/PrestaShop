@@ -1,3 +1,6 @@
+<IfModule mod_php5.c>
+	php_flag engine off
+</IfModule>
 deny from all
 <Files ~ "^[a-zA-Z0-9_-]+\.(jpg|jpeg|gif|png)$">
 	order deny,allow
