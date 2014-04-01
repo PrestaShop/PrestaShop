@@ -301,9 +301,9 @@ class AdminModulesControllerCore extends AdminController
 		
 		$this->context->smarty->assign(array(
 			'tab_modules_list' => $modules_list,
-			'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites'
+			'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
 		));
-		
+
 		$this->smartyOutputContent('controllers/modules/tab_modules_list.tpl');
 		exit;
 	}
@@ -877,7 +877,7 @@ class AdminModulesControllerCore extends AdminController
 									'page_header_toolbar_title' => $this->page_header_toolbar_title,
 									'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
 									'add_permission' => $this->tabAccess['add'],
-									'is_reset_ready' => $is_reset_ready
+									'is_reset_ready' => $is_reset_ready,
 								)
 							);
 							
@@ -1404,6 +1404,10 @@ class AdminModulesControllerCore extends AdminController
 		if (count($upgrade_available) == 0 && (int)Tools::getValue('check') == 1)
 			$this->confirmations[] = $this->l('Everything is up-to-date');
 
+		// Iso needed to generate Addons login
+		$language = new Language($this->context->employee->id_lang);
+		$iso_code_caps = strtoupper($language->iso_code);
+
 		// Init tpl vars for smarty
 		$tpl_vars = array();
 
@@ -1438,6 +1442,7 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['page_header_toolbar_title'] = $this->page_header_toolbar_title;
 		$tpl_vars['page_header_toolbar_btn'] = $this->page_header_toolbar_btn;
 		$tpl_vars['modules_uri'] = __PS_BASE_URI__.basename(_PS_MODULE_DIR_);
+		$tpl_vars['addons_register_link'] = "//addons.prestashop.com/fr/login?utm_source=back-office&utm_medium=connect-to-addons&utm_campaign=back-office-".$iso_code_caps."#createnow";
 
 		if ($this->logged_on_addons)
 		{
