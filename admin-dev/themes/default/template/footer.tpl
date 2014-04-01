@@ -71,7 +71,7 @@
 			/&nbsp;
 			<a href="http://www.prestashop.com/en/training-prestashop?utm_source=backoffice_footer" target="_blank" class="footer_link">
 				<i class="icon-book"></i>
-				{l s='Formation'}
+				{l s='Training'}
 			</a>
 		</p>
 		{if $iso_is_fr}
