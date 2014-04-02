@@ -26,7 +26,58 @@
 
 function p1606module_exceptions()
 {
-	$modules_controllers = Dispatcher::getModuleControllers();
+	$modules_dir = scandir(_PS_MODULE_DIR_);
+	$modules_controllers = $core_controllers = array();
+	
+	foreach ($modules_dir as $module_dir)
+	{
+		$module_path = _PS_MODULE_DIR_.$module_dir;
+		
+		if ($module_dir[0] == '.' || $module_dir == 'index.php')
+			continue;
+		
+		if (is_dir($module_path.'/controllers/'))
+		{
+			$module_path_admin = $module_path.'/controllers/admin/';
+			if (is_dir($module_path_admin))
+			{
+				$admin = scandir($module_path_admin);
+				foreach ($admin as $a_controller)
+				{
+					if ($a_controller[0] == '.' || $a_controller == 'index.php')
+						continue;
+					if (isset($modules_controllers[$module_dir]))
+						$modules_controllers[$module_dir][] = str_replace('.php', '', $a_controller);
+					else
+						$modules_controllers[$module_dir] = array(str_replace('.php', '', $a_controller));
+				}
+			}
+			
+			$module_path_front = $module_path.'/controllers/front/';
+			if (is_dir($module_path_front))
+			{
+				$front = scandir($module_path_front);
+				foreach ($front as $f_controller)
+				{
+					if ($f_controller[0] == '.' || $f_controller == 'index.php')
+						continue;
+					if (isset($modules_controllers[$module_dir]))
+						$modules_controllers[$module_dir][] = str_replace('.php', '', $f_controller);
+					else
+						$modules_controllers[$module_dir] = array(str_replace('.php', '', $f_controller));
+				}
+			}
+		}
+	}
+	
+	$controller_dir = scandir(_PS_CONTROLLER_DIR_.'front');
+	foreach ($controller_dir as $controller)
+	{
+		if ($controller[0] == '.' || $controller == 'index.php')
+			continue;
+		$core_controllers[] = strtolower(str_replace('Controller.php', '', $controller));
+	}
+
 	$core_controllers = array_keys(Dispatcher::getControllers(_PS_CONTROLLER_DIR_));
 	
 	$hook_module_exceptions = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'hook_module_exceptions`');
