@@ -46,7 +46,7 @@ a img {
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
   display: block; }
 
-/*
+/*!
  * Bootstrap v3.0.0
  *
  * Copyright 2013 Twitter, Inc
@@ -55,7 +55,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
  *
  * Designed and built with all the love in the world by @mdo and @fat.
  */
-/* normalize.css v2.1.0 | MIT License | git.io/normalize */
+/*! normalize.css v2.1.0 | MIT License | git.io/normalize */
 article,
 aside,
 details,
@@ -3785,7 +3785,7 @@ td.visible-print {
   th.hidden-print,
   td.hidden-print {
     display: none !important; } }
-/*
+/*!
  *  Font Awesome 3.2.1
  *  the iconic font designed for Bootstrap
  *  ------------------------------------------------------------------------------
@@ -5261,11 +5261,6 @@ textarea {
   position: relative;
   padding-bottom: 50px;
   padding-top: 15px; }
-
-@media (min-width: 992px) and (max-width: 1199px) {
-  #slider_row {
-    padding-left: 60px;
-  } } 
 
 #index .tab-content {
   margin-top: 35px;
@@ -7037,11 +7032,9 @@ a.price_discount_delete {
     display: inline-block; }
   #cart_summary tbody td.cart_unit .price span.old-price {
     text-decoration: line-through; }
-#cart_summary tbody td.cart_description {
-  width: 480px; }
-  #cart_summary tbody td.cart_description small {
-    display: block;
-    padding: 5px 0 0 0; }
+#cart_summary tbody td.cart_description small {
+  display: block;
+  padding: 5px 0 0 0; }
 #cart_summary tfoot td.text-right {
   font-weight: bold;
   color: #333333; }
@@ -7055,6 +7048,9 @@ a.price_discount_delete {
   font: 600 21px/25px "Open Sans", sans-serif;
   color: #333333;
   background: white; }
+
+#cart_summary .stock-management-on tbody td.cart_description {
+  width: 480px; }
 
 @media (max-width: 767px) {
   #order-detail-content #cart_summary table, #order-detail-content #cart_summary thead, #order-detail-content #cart_summary tbody, #order-detail-content #cart_summary th, #order-detail-content #cart_summary td, #order-detail-content #cart_summary tr {
