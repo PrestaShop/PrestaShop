@@ -2163,7 +2163,6 @@ a.price_discount_delete {
 				}
 			}
 			&.cart_description {
-				width: 480px;
 				small {
 					display: block;
 					padding: 5px 0 0 0;
@@ -2192,6 +2191,16 @@ a.price_discount_delete {
 				font: 600 21px / 25px $font-custom;
 				color: $product-price-color;
 				background: $light-background;
+			}
+		}
+	}
+}
+
+#cart_summary .stock-management-on {
+	tbody {
+		td {
+			&.cart_description {
+				width: 480px;
 			}
 		}
 	}
