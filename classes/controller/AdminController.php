@@ -3650,10 +3650,15 @@ class AdminControllerCore extends Controller
 			$modules_options[] = $remove_from_favorite;
 			$modules_options[] = $mark_as_favorite;
 		}
-		
+
+		if ($module->id == 0)
+		{
+			$install['cond'] = 1;
+			$modules_options[] = $install;
+		}
 		$modules_options[] = $divider;
 		$modules_options[] = $delete_module;
-		
+
 		$return = '';
 		foreach ($modules_options as $option_name => $option)
 		{
