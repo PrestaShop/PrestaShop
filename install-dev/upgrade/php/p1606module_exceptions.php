@@ -37,10 +37,10 @@ function p1606module_exceptions()
 		if ($module_dir[0] == '.' || $module_dir == 'index.php')
 			continue;
 		
-		if (is_dir($module_path.'/controllers/'))
+		if (file_exists($module_path.'/controllers/') && is_dir($module_path.'/controllers/'))
 		{
 			$module_path_admin = $module_path.'/controllers/admin/';
-			if (is_dir($module_path_admin))
+			if (file_exists($module_path_admin) && is_dir($module_path_admin))
 			{
 				$admin = scandir($module_path_admin);
 				foreach ($admin as $a_controller)
@@ -55,7 +55,7 @@ function p1606module_exceptions()
 			}
 			
 			$module_path_front = $module_path.'/controllers/front/';
-			if (is_dir($module_path_front))
+			if (file_exists($module_path_front) && is_dir($module_path_front))
 			{
 				$front = scandir($module_path_front);
 				foreach ($front as $f_controller)
@@ -71,12 +71,18 @@ function p1606module_exceptions()
 		}
 	}
 	
-	$controller_dir = scandir(_PS_CONTROLLER_DIR_.'front');
-	foreach ($controller_dir as $controller)
+	$controller_dir = _PS_ROOT_DIR_.'/controllers/front/';
+
+	if (file_exists($controller_dir) && is_dir($controller_dir))
 	{
-		if ($controller[0] == '.' || $controller == 'index.php')
-			continue;
-		$core_controllers[] = strtolower(str_replace('Controller.php', '', $controller));
+		$front_controllers = scandir($controller_dir);
+
+		foreach ($front_controllers as $controller)
+		{
+			if ($controller[0] == '.' || $controller == 'index.php')
+				continue;
+			$core_controllers[] = strtolower(str_replace('Controller.php', '', $controller));
+		}
 	}
 
 	$hook_module_exceptions = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'hook_module_exceptions`');
