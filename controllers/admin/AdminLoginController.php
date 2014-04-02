@@ -111,6 +111,9 @@ class AdminLoginControllerCore extends AdminController
 				'disableDefaultErrorOutPut' => true,
 			));
 
+		if ($email = Tools::getValue('email'))
+			$this->context->smarty->assign('email', $email);
+
 		$this->setMedia();
 		$this->initHeader();
 		parent::initContent();
