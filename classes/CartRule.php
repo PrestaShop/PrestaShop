@@ -300,6 +300,17 @@ class CartRuleCore extends ObjectModel
 				unset($result[$key]);
 			}
 
+		if (isset($cart) && isset($cart->id))
+			foreach ($result as $cart_rule)
+				if ($cart_rule['product_restriction'])
+				{
+					$cr = new CartRule((int)$cart_rule['id_cart_rule']);
+					$r = $cr->checkProductRestrictions(Context::getContext(), false, false);
+					if ($r !== false)
+						continue;
+					unset($result[$key]);
+				}
+
 		// Retrocompatibility with 1.4 discounts
 		foreach ($result as &$cart_rule)
 		{
