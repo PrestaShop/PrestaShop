@@ -2697,49 +2697,64 @@ class AdminControllerCore extends Controller
 				$having_clause .= $this->_having.' ';
 		}
 
-		$this->_listsql = '
-		SELECT SQL_CALC_FOUND_ROWS
-		'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '');
-		
-		if ($this->explicitSelect)
+		do
 		{
-			foreach ($this->fields_list as $key => $array_value)
-			{
-				// Add it only if it is not already in $this->_select
-				if (isset($this->_select) && preg_match('/[\s]`?'.preg_quote($key, '/').'`?\s*,/', $this->_select))
-					continue;
+			$this->_listsql = '
+			SELECT SQL_CALC_FOUND_ROWS
+			'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '');
 			
-				if (isset($array_value['filter_key']))
-					$this->_listsql .= str_replace('!', '.', $array_value['filter_key']).' as '.$key.',';
-				elseif ($key == 'id_'.$this->table)
-					$this->_listsql .= 'a.`'.bqSQL($key).'`,';
-				elseif ($key != 'image' && !preg_match('/'.preg_quote($key, '/').'/i', $this->_select))
-					$this->_listsql .= '`'.bqSQL($key).'`,';
+			if ($this->explicitSelect)
+			{
+				foreach ($this->fields_list as $key => $array_value)
+				{
+					// Add it only if it is not already in $this->_select
+					if (isset($this->_select) && preg_match('/[\s]`?'.preg_quote($key, '/').'`?\s*,/', $this->_select))
+						continue;
+				
+					if (isset($array_value['filter_key']))
+						$this->_listsql .= str_replace('!', '.', $array_value['filter_key']).' as '.$key.',';
+					elseif ($key == 'id_'.$this->table)
+						$this->_listsql .= 'a.`'.bqSQL($key).'`,';
+					elseif ($key != 'image' && !preg_match('/'.preg_quote($key, '/').'/i', $this->_select))
+						$this->_listsql .= '`'.bqSQL($key).'`,';
+				}
+				$this->_listsql = rtrim($this->_listsql, ',');
 			}
-			$this->_listsql = rtrim($this->_listsql, ',');
-		}
-		else
-			$this->_listsql .= ($this->lang ? 'b.*,' : '').' a.*';
+			else
+				$this->_listsql .= ($this->lang ? 'b.*,' : '').' a.*';
 
-		$this->_listsql .= '
-		'.(isset($this->_select) ? ', '.rtrim($this->_select, ', ') : '').$select_shop.'
-		FROM `'._DB_PREFIX_.$sql_table.'` a
-		'.$lang_join.'
-		'.(isset($this->_join) ? $this->_join.' ' : '').'
-		'.$join_shop.'
-		WHERE 1 '.(isset($this->_where) ? $this->_where.' ' : '').($this->deleted ? 'AND a.`deleted` = 0 ' : '').
-		(isset($this->_filter) ? $this->_filter : '').$where_shop.'
-		'.(isset($this->_group) ? $this->_group.' ' : '').'
-		'.$having_clause.'
-		ORDER BY '.((str_replace('`', '', $order_by) == $this->identifier) ? 'a.' : '').$order_by.' '.pSQL($order_way).
-		($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
-		(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
+			$this->_listsql .= '
+			'.(isset($this->_select) ? ', '.rtrim($this->_select, ', ') : '').$select_shop.'
+			FROM `'._DB_PREFIX_.$sql_table.'` a
+			'.$lang_join.'
+			'.(isset($this->_join) ? $this->_join.' ' : '').'
+			'.$join_shop.'
+			WHERE 1 '.(isset($this->_where) ? $this->_where.' ' : '').($this->deleted ? 'AND a.`deleted` = 0 ' : '').
+			(isset($this->_filter) ? $this->_filter : '').$where_shop.'
+			'.(isset($this->_group) ? $this->_group.' ' : '').'
+			'.$having_clause.'
+			ORDER BY '.((str_replace('`', '', $order_by) == $this->identifier) ? 'a.' : '').$order_by.' '.pSQL($order_way).
+			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
+			(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
-		$this->_listTotal = 0;
-		if (!($this->_list = Db::getInstance()->executeS($this->_listsql, true, false)))
-			$this->_list_error = Db::getInstance()->getMsgError();
-		else
+			$this->_list = Db::getInstance()->executeS($this->_listsql, true, false);
+
+			if ($this->_list === false)
+			{
+				$this->_list_error = Db::getInstance()->getMsgError();
+				break;
+			}
+
 			$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`', false);
+
+			if ($use_limit === true)
+			{
+				$start = (int)$start - (int)$limit;
+				if ($start < 0)
+					break;
+			}
+
+		} while (empty($this->_list));
 
 		Hook::exec('action'.$this->controller_name.'ListingResultsModifier', array(
 			'list' => &$this->_list,
