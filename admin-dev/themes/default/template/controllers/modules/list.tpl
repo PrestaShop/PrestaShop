@@ -131,7 +131,7 @@ module_inactive
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
 											<span class="caret">&nbsp;</span>
 										</button>
-										
+
 										<ul class="dropdown-menu">
 											{foreach $module->optionsHtml key=key item=option}
 												{if $key != 0}
@@ -149,10 +149,12 @@ module_inactive
 										</button>
 										<ul class="dropdown-menu">
 											{foreach $module->optionsHtml key=key item=option}
-												{if strpos($option, 'title="divider"') !== false}
-													<li class="divider"></li>
-												{else}
-													<li>{$option}</li>
+												{if $key != 0}
+													{if strpos($option, 'title="divider"') !== false}
+														<li class="divider"></li>
+													{else}
+														<li>{$option}</li>
+													{/if}
 												{/if}
 											{/foreach}
 										</ul>
