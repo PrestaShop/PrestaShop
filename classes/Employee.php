@@ -177,7 +177,8 @@ class EmployeeCore extends ObjectModel
 	{
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_BACK').'minutes'));
 		$this->saveOptin();
-		$this->updateTextDirection();
+		if(defined('_PS_ADMIN_DIR_'))
+			$this->updateTextDirection();
 	 	return parent::add($autodate, $null_values);
 	}
 
@@ -188,7 +189,8 @@ class EmployeeCore extends ObjectModel
 		if (empty($this->stats_date_to) || $this->stats_date_to == '0000-00-00')
 			$this->stats_date_to = date('Y-m-d');
 		$this->saveOptin();
-		$this->updateTextDirection();
+		if(defined('_PS_ADMIN_DIR_'))
+			$this->updateTextDirection();
 	 	return parent::update($null_values);
 	}
 
