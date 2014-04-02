@@ -28,6 +28,7 @@ function p1606module_exceptions()
 {
 	$modules_dir = scandir(_PS_MODULE_DIR_);
 	$modules_controllers = $core_controllers = array();
+	$core_controllers = array();
 	
 	foreach ($modules_dir as $module_dir)
 	{
@@ -78,8 +79,6 @@ function p1606module_exceptions()
 		$core_controllers[] = strtolower(str_replace('Controller.php', '', $controller));
 	}
 
-	$core_controllers = array_keys(Dispatcher::getControllers(_PS_CONTROLLER_DIR_));
-	
 	$hook_module_exceptions = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'hook_module_exceptions`');
 	$sql_insert = 'INSERT INTO `'._DB_PREFIX_.'hook_module_exceptions` (`id_hook_module_exceptions`, `id_shop`, `id_module`, `id_hook`, `file_name`) VALUES ';
 	$sql_delete = 'DELETE FROM `'._DB_PREFIX_.'hook_module_exceptions` WHERE ';
