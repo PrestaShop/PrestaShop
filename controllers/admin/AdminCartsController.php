@@ -874,3 +874,4 @@ class AdminCartsControllerCore extends AdminController
 		return $list;
 	}
 }
+
