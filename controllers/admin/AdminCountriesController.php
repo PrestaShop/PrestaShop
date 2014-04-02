@@ -96,7 +96,7 @@ class AdminCountriesControllerCore extends AdminController
 				'list' => $zones_array,
 				'filter_key' => 'z!id_zone',
 				'filter_type' => 'int',
-				'order_key' => 'zone'
+				'order_key' => 'z!name'
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
