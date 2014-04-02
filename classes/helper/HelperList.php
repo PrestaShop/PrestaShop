@@ -527,8 +527,12 @@ class HelperListCore extends Helper
 
 		/* Determine current page number */
 		$page = (int)Tools::getValue('submitFilter'.$this->list_id);
+
 		if (!$page)
 			$page = 1;
+
+		if ($page > $total_pages)
+			$page = $total_pages;
 
 		/* Choose number of results per page */
 		$selected_pagination = Tools::getValue($this->list_id.'_pagination',
