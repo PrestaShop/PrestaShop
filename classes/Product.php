@@ -508,7 +508,7 @@ class ProductCore extends ObjectModel
 	{
 		if (!parent::add($autodate, $null_values))
 			return false;
-			
+
 		if ($this->getType() == Product::PTYPE_VIRTUAL)
 		{
 			StockAvailable::setProductOutOfStock((int)$this->id, 1);
@@ -525,6 +525,21 @@ class ProductCore extends ObjectModel
 
 	public function update($null_values = false)
 	{
+		$context = Context::getContext();
+		// If you add an existing product in Shop A to Shop B
+		if (Validate::isLoadedObject($this) && Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP && !$this->isAssociatedToShop($context->shop->id))
+		{
+			if ($this->getType() == Product::PTYPE_VIRTUAL)
+			{
+				StockAvailable::setProductOutOfStock((int)$this->id, 1);
+				if ($this->active && !Configuration::get('PS_VIRTUAL_PROD_FEATURE_ACTIVE'))
+					Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
+			}
+			else
+				StockAvailable::setProductOutOfStock((int)$this->id, 2);
+		}
+			
+
 		$return = parent::update($null_values);
 		$this->setGroupReduction();
 		Hook::exec('actionProductSave', array('id_product' => $this->id));
