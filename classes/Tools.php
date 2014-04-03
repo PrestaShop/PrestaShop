@@ -1410,7 +1410,8 @@ class ToolsCore
 	{
 		$last = $directory[strlen($directory) - 1];
 
-		if (in_array($last, array('/', '\\'))) {
+		if (in_array($last, array('/', '\\')))
+		{
 			$directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 			return $directory;
 		}
