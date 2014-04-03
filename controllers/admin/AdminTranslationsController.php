@@ -2575,10 +2575,17 @@ class AdminTranslationsControllerCore extends AdminController
 				if (!file_exists($file['to']))
 				{
 					$content = file_get_contents($file['from']);
-					
-					if (!is_dir(dirname($file['to'])))
-						mkdir(dirname($file['to']));
-					
+
+					$dirs = explode('/', dirname($file['to']));
+					$path = "";
+					foreach ($dirs as $dir)
+						if (!empty($dir))
+						{
+							$path .= "/".$dir;
+							if (!is_dir($path))
+								mkdir($path);
+						}
+
 					$success = file_put_contents($file['to'], $content);
 
 					if ($success === false)
