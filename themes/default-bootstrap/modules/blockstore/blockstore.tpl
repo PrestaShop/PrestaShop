@@ -36,9 +36,11 @@
 				<img class="img-responsive" src="{$link->getMediaLink("`$module_dir``$store_img|escape:'htmlall':'UTF-8'`")}" alt="{l s='Our stores' mod='blockstore'}" />
 			</a>
 		</p>
+		{if !empty($store_text)}
         <p class="store-description">
-        	Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magn.
+        	{$store_text}
         </p>
+        {/if}
 		<div>
 			<a 
 			class="btn btn-default button button-small" 
