@@ -27,8 +27,7 @@ var responsiveflagMenu = false;
 var categoryMenu = $('ul.sf-menu');
 var mCategoryGrover = $('.sf-contener .cat-title');
 
-$(document).ready(function()
-{
+$(document).ready(function(){
 	responsiveMenu();
 	$(window).resize(responsiveMenu);
 });
@@ -56,12 +55,13 @@ function desktopInit()
 	$('.sf-menu > li > ul').removeClass('menu-mobile').parent().find('.menu-mobile-grover').remove();
 	$('.sf-menu').removeAttr('style');
 	categoryMenu.superfish('init');
-	$('.sf-menu > li > ul').addClass('submenu-container clearfix'); //add class for width define
-    $('.sf-menu > li > ul').each(function() 
-    { // loop through each sublist under each top list item
+	//add class for width define
+	$('.sf-menu > li > ul').addClass('submenu-container clearfix'); 
+	 // loop through each sublist under each top list item
+    $('.sf-menu > li > ul').each(function(){
         i = 0;
-        $(this).each(function() //add classes for clearing
-        { 
+        //add classes for clearing
+        $(this).each(function(){ 
                 if ($(this).attr('id') != "category-thumbnail") 
                 {
                     i++;
@@ -79,15 +79,13 @@ function mobileInit()
 	categoryMenu.superfish('destroy');
 	$('.sf-menu').removeAttr('style');
 
-	mCategoryGrover.on('click', function()
-	{
+	mCategoryGrover.on('click', function(){
 		$(this).toggleClass('active').parent().find('ul.menu-content').stop().slideToggle('medium');
 	});
 
 	$('.sf-menu > li > ul').addClass('menu-mobile clearfix').parent().prepend('<span class="menu-mobile-grover"></span>');
 
-	$(".sf-menu .menu-mobile-grover").on('click touchstart', function()
-	{
+	$(".sf-menu .menu-mobile-grover").on('click touchstart', function(){
 		var catSubUl = $(this).next().next('.menu-mobile');
 		if (catSubUl.is(':hidden'))
 		{
@@ -104,8 +102,7 @@ function mobileInit()
 
 	if ('ontouchstart' in document.documentElement)
 	{
-		$('#block_top_menu > ul:first > li > a').on('click', function(e)
-		{
+		$('#block_top_menu > ul:first > li > a').on('click', function(e){
 			if ($(this).parent('li').find('ul').length)
 				e.preventDefault();
 		});
