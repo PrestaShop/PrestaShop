@@ -72,7 +72,7 @@
 						$(this).parent().addClass('tree-selected');
 						$(this).parents('ul.tree').each(function(){
 							$(this).show();
-							$(this).find('.tree-selected .icon-folder-close').removeClass('icon-folder-close').addClass('icon-folder-open');
+							$(this).prev().find('.tree-selected .icon-folder-close').removeClass('icon-folder-close').addClass('icon-folder-open');
 						});
 					}
 				}
