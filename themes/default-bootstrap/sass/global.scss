@@ -2151,7 +2151,7 @@ a.price_discount_delete {
 			&.cart_unit {
 				.price {
 					span {
-						display: block;
+						display: inline-block;
 						&.price-percent-reduction {
 							margin: 5px auto;
 							display: inline-block;

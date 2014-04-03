@@ -7030,7 +7030,7 @@ a.price_discount_delete {
   #cart_summary tbody td.cart_product img {
     border: 1px solid #d6d4d4; }
 #cart_summary tbody td.cart_unit .price span {
-  display: block; }
+  display: inline-block; }
   #cart_summary tbody td.cart_unit .price span.price-percent-reduction {
     margin: 5px auto;
     display: inline-block; }
