@@ -37,7 +37,7 @@
 			</a>
 		</p>
         <p class="store-description">
-        	Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magn.
+        	{l s='Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magn.' mod='blockstore'}
         </p>
 		<div>
 			<a 
