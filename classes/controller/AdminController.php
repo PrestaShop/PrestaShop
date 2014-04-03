@@ -3369,7 +3369,7 @@ class AdminControllerCore extends Controller
 			$this->status = 'error';
 	}
 
-	public function isFresh($file, $timeout = 604800000)
+	public function isFresh($file, $timeout = 604800)
 	{
 		if (file_exists(_PS_ROOT_DIR_.$file) && filesize(_PS_ROOT_DIR_.$file) > 0)
 			return ((time() - filemtime(_PS_ROOT_DIR_.$file)) < $timeout);

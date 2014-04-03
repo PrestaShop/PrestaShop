@@ -153,7 +153,7 @@ class AdminModulesControllerCore extends AdminController
 	public function ajaxProcessRefreshModuleList($force_reload_cache = false)
 	{
 		// Refresh modules_list.xml every week
-		if (!$this->isFresh(Module::CACHE_FILE_MODULES_LIST, 604800) || $force_reload_cache)
+		if (!$this->isFresh(Module::CACHE_FILE_MODULES_LIST, 86400) || $force_reload_cache)
 		{
 			if ($this->refresh(Module::CACHE_FILE_MODULES_LIST, 'https://'.$this->xml_modules_list))
 				$this->status = 'refresh';
