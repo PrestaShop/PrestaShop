@@ -182,7 +182,7 @@ class AdminProductsControllerCore extends AdminController
 				LEFT JOIN `'._DB_PREFIX_.'product_download` pd ON (pd.`id_product` = a.`id_product`)';
 		
 		$this->_select .= 'shop.name as shopname, a.id_shop_default, ';
-		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, a.`is_virtual`, pd.`nb_downloadable`, IF(a.`is_virtual` = 1, pd.`nb_downloadable`, sav.`quantity`) as sav_quantity, '.$alias.'.`active`, IF(a.`is_virtual` = 1, 0, IF(sav.`quantity`<=0, 1, 0 )) badge_danger';
+		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, a.`is_virtual`, pd.`nb_downloadable`, sav.`quantity` as sav_quantity, '.$alias.'.`active`, IF(sav.`quantity`<=0, 1, 0) badge_danger';
 		
 		if ($join_category)
 		{
@@ -248,7 +248,6 @@ class AdminProductsControllerCore extends AdminController
 				'filter_key' => 'sav!quantity',
 				'orderby' => true,
 				'badge_danger' => true,
-				'callback' => 'getQuantities',
 				//'hint' => $this->l('This is the quantity available in the current shop/group.'),
 			);
 
