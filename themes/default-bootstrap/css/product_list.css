@@ -161,7 +161,7 @@ ul.product_list.grid > li {
       ul.product_list.grid > li .product-container .button-container .ajax_add_to_cart_button,
       ul.product_list.grid > li .product-container .button-container span.button,
       ul.product_list.grid > li .product-container .button-container .lnk_view {
-        margin: 0 6px 10px 0; }
+        margin: 0 6px 10px 6px; }
     ul.product_list.grid > li .product-container .functional-buttons {
       background: url(../img/functional-bt-shadow.png) repeat-x;
       padding: 11px 0 5px; }
