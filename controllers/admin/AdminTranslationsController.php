@@ -2576,15 +2576,15 @@ class AdminTranslationsControllerCore extends AdminController
 				{
 					$content = file_get_contents($file['from']);
 
-					$dirs = explode(DIRECTORY_SEPARATOR, dirname($file['to']));
-					$path = "";
-					foreach ($dirs as $dir)
-						if (!empty($dir))
-						{
-							$path .= "/".$dir;
-							if (!is_dir($path))
-								mkdir($path);
-						}
+					$stack = array();
+					$folder = dirname($file['to']);
+					while (!is_dir($folder))
+					{
+						array_push($stack, $folder);
+						$folder = dirname($folder);
+					}
+					while ($folder = array_pop($stack))
+						mkdir($folder);
 
 					$success = file_put_contents($file['to'], $content);
 
