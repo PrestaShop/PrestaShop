@@ -2576,7 +2576,7 @@ class AdminTranslationsControllerCore extends AdminController
 				{
 					$content = file_get_contents($file['from']);
 
-					$dirs = explode('/', dirname($file['to']));
+					$dirs = explode(DIRECTORY_SEPARATOR, dirname($file['to']));
 					$path = "";
 					foreach ($dirs as $dir)
 						if (!empty($dir))
