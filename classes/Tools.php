@@ -1056,9 +1056,9 @@ class ToolsCore
 				foreach ($categories as $category)
 				{
 					$full_path .=
-					(($n < $n_categories || $link_on_the_item) ? '<a href="'.Tools::safeOutput($context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
-					htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').
-					(($n < $n_categories || $link_on_the_item) ? '</a>' : '').
+					'<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">'.(($n < $n_categories || $link_on_the_item) ? '<a itemprop="url" href="'.Tools::safeOutput($context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').'<span itemprop="title">'.
+					htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'</span>'.
+					(($n < $n_categories || $link_on_the_item) ? '</a>' : '').'</span>'.
 					(($n++ != $n_categories || !empty($path)) ? '<span class="navigation-pipe">'.$pipe.'</span>' : '');
 				}
 
@@ -1073,9 +1073,9 @@ class ToolsCore
 			$category_link = $context->link->getCMSCategoryLink($category);
 
 			if ($path != $category->name)
-				$full_path .= '<a href="'.Tools::safeOutput($category_link).'">'.htmlentities($category->name, ENT_NOQUOTES, 'UTF-8').'</a><span class="navigation-pipe">'.$pipe.'</span>'.$path;
+				$full_path .= '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a itemprop="url" href="'.Tools::safeOutput($category_link).'">'.'<span itemprop="title">'.htmlentities($category->name, ENT_NOQUOTES, 'UTF-8').'</span>'.'</a></span><span class="navigation-pipe">'.$pipe.'</span>'.$path;
 			else
-				$full_path = ($link_on_the_item ? '<a href="'.Tools::safeOutput($category_link).'">' : '').htmlentities($path, ENT_NOQUOTES, 'UTF-8').($link_on_the_item ? '</a>' : '');
+				$full_path = ($link_on_the_item ? '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a itemprop="url" href="'.Tools::safeOutput($category_link).'">' : '').'<span itemprop="title">'.htmlentities($path, ENT_NOQUOTES, 'UTF-8').'</span>'.($link_on_the_item ? '</a>' : '').'</span>';
 
 			return Tools::getPath($category->id_parent, $full_path, $link_on_the_item, $category_type);
 		}
