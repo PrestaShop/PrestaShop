@@ -821,7 +821,6 @@ class DispatcherCore
 		{
 			foreach (Dispatcher::getControllersInDirectory(_PS_MODULE_DIR_.$mod->name.'/controllers/') as $controller)
 			{
-				var_dump(strpos($controller, 'Admin'));
 				if ($type == 'admin')
 				{
 					if (strpos($controller, 'Admin') !== false)
