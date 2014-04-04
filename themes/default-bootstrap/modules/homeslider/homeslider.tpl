@@ -26,7 +26,7 @@
 {if $page_name =='index'}
     <!-- Module HomeSlider -->
     {if isset($homeslider_slides)}
-        <div id="homepage-slider">
+        <div id="homepage-slider" class="{$slider_class}">
 			{if isset($homeslider_slides.0) && isset($homeslider_slides.0.sizes.1)}{capture name='height'}{$homeslider_slides.0.sizes.1}{/capture}{/if}
             <ul id="homeslider"{if isset($smarty.capture.height) && $smarty.capture.height} style="max-height:{$smarty.capture.height}px;"{/if}>
                 {foreach from=$homeslider_slides item=slide}
