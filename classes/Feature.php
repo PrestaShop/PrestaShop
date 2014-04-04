@@ -314,7 +314,7 @@ class FeatureCore extends ObjectModel
 	public static function cleanPositions()
 	{
 		//Reordering positions to remove "holes" in them (after delete for instance)
-		$sql = "SELECT id_feature, position FROM "._DB_PREFIX_."feature ORDER BY id_feature";
+		$sql = "SELECT id_feature, position FROM "._DB_PREFIX_."feature ORDER BY position";
 		$db = Db::getInstance();
 		$r = $db->executeS($sql, false);
 		$shiftTable = array(); //List of update queries (one query is necessary for each "hole" in the table)
