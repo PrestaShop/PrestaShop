@@ -695,8 +695,8 @@ function isOverlapping()
 	$('tr.range_sup td').not('.range_type, .range_sign').each( function ()
 	{
 		index = $(this).index();
-		current_inf = parseInt($('.range_inf td:eq('+index+') input').val());
-		current_sup = parseInt($('.range_sup td:eq('+index+') input').val());
+		current_inf = parseFloat($('.range_inf td:eq('+index+') input').val());
+		current_sup = parseFloat($('.range_sup td:eq('+index+') input').val());
 
 		$('tr.range_sup td').not('.range_type, .range_sign').each( function ()
 		{
@@ -704,8 +704,8 @@ function isOverlapping()
 			
 			if (testing_index != index) //do not test himself
 			{
-				testing_inf = parseInt($('.range_inf td:eq('+testing_index+') input').val());
-				testing_sup = parseInt($('.range_sup td:eq('+testing_index+') input').val());
+				testing_inf = parseFloat($('.range_inf td:eq('+testing_index+') input').val());
+				testing_sup = parseFloat($('.range_sup td:eq('+testing_index+') input').val());
 
 				if ((current_inf >= testing_inf && current_inf < testing_sup) || (current_sup > testing_inf && current_sup < testing_sup))
 				{
