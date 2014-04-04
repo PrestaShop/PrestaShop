@@ -1392,7 +1392,7 @@ ul.step {
 	margin-bottom: 30px;
 	overflow: hidden;
 	//min 480px
-	@media (min-width: $screen-xs) {
+	@media (min-width: $screen-sm) {
 		@include border-radius(4px);
 	}
 	li {
@@ -1405,7 +1405,7 @@ ul.step {
 		border-right-color: #b7b7b7;
 		border-left-width: 0px;
 		// max 480px
-		@media (max-width: $screen-xs - 1) {
+		@media (max-width: $screen-sm - 1) {
 			width: 100%;
 			border-left-width: 1px;
 		}
@@ -1449,7 +1449,7 @@ ul.step {
 			border-left-width: 1px;
 			border-left-color: #b7b7b7;
 			//min 480px
-			@media (min-width: $screen-xs) {
+			@media (min-width: $screen-sm) {
 				@include border-top-left-radius(4px);
 				@include border-bottom-left-radius(4px);
 			}
@@ -1458,7 +1458,7 @@ ul.step {
 				z-index: 5;
 				padding-left: 13px !important;
 				//min 480px
-				@media (min-width: $screen-xs) {
+				@media (min-width: $screen-sm) {
 					@include border-top-left-radius(4px);
 					@include border-bottom-left-radius(4px);
 				}
@@ -1484,7 +1484,7 @@ ul.step {
 				z-index: 1;
 			}
 			//min 480px
-			@media (min-width: $screen-xs) {
+			@media (min-width: $screen-sm) {
 				@include border-top-right-radius(4px);
 				@include border-bottom-right-radius(4px);
 				span {
@@ -1589,7 +1589,7 @@ ul.step {
 		em {
 			font-style: normal;
 			// min 480px max 767px
-			@media (min-width: $screen-xs) and (max-width: $screen-xs-max) {
+			@media (min-width: $screen-sm) and (max-width: $screen-sm-max) {
 				display: none;
 			}
 		}
