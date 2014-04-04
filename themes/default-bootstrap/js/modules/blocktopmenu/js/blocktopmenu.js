@@ -55,15 +55,23 @@ function desktopInit()
 	$('.sf-menu > li > ul').removeClass('menu-mobile').parent().find('.menu-mobile-grover').remove();
 	$('.sf-menu').removeAttr('style');
 	categoryMenu.superfish('init');
-	$('.sf-menu > li > ul').addClass('submenu-container clearfix'); //add class for width define
-	i = 0;
-	$('.sf-menu > li > ul > li:not(#category-thumbnail)').each(function(){  //add classes for clearing
-		i++;
-		if(i%2 == 1)
-			$(this).addClass('first-in-line-xs');
-		else if (i%5 == 1)
-			$(this).addClass('first-in-line-lg');
-	});
+	//add class for width define
+	$('.sf-menu > li > ul').addClass('submenu-container clearfix'); 
+	 // loop through each sublist under each top list item
+    $('.sf-menu > li > ul').each(function(){
+        i = 0;
+        //add classes for clearing
+        $(this).each(function(){ 
+                if ($(this).attr('id') != "category-thumbnail") 
+                {
+                    i++;
+                    if(i % 2 == 1)
+                        $(this).addClass('first-in-line-xs');
+                    else if (i % 5 == 1)
+                        $(this).addClass('first-in-line-lg');
+                }
+        });
+    });
 }
 
 function mobileInit()
