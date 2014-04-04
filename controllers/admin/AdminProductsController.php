@@ -1811,6 +1811,8 @@ class AdminProductsControllerCore extends AdminController
 	
 	public function processUpdate()
 	{
+		$existing_product = $this->object;
+
 		$this->checkProduct();
 
 		if (!empty($this->errors))
@@ -1861,6 +1863,15 @@ class AdminProductsControllerCore extends AdminController
 
 				if ($object->update())
 				{
+					// If the product doesn't exist in the current shop but exists in another shop
+					if (Shop::getContext() == Shop::CONTEXT_SHOP && !$existing_product->isAssociatedToShop($context->shop->id))
+					{
+						$out_of_stock = StockAvailable::outOfStock($existing_product->id, $existing_product->id_shop_default);
+						$depends_on_stock = StockAvailable::dependsOnStock($existing_product->id, $existing_product->id_shop_default);
+						StockAvailable::setProductOutOfStock((int)$this->object->id, $out_of_stock, $context->shop->id);
+						StockAvailable::setProductDependsOnStock((int)$this->object->id, $depends_on_stock, $context->shop->id);
+					}
+
 					PrestaShopLogger::addLog(sprintf($this->l('%s edition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 					if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL)))
 					{
@@ -1883,6 +1894,7 @@ class AdminProductsControllerCore extends AdminController
 							$this->processCustomizationConfiguration();
 						if ($this->isTabSubmitted('Attachments'))
 							$this->processAttachments();
+
 
 						$this->updatePackItems($object);
 						// Disallow avanced stock management if the product become a pack
