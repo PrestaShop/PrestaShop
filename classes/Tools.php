@@ -2072,6 +2072,13 @@ class ToolsCore
 					fwrite($write_fd, $domain_rewrite_cond);
 				fwrite($write_fd, 'RewriteRule ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ js/jquery/plugins/fancybox/images/$1.$2 [L]'."\n");
 			}
+			// Sitemap.xml redirect
+			if ($rewrite_settings)
+                        {
+                        fwrite($write_fd, "\n# Sitemap for Shop ID: ".Context::getContext()->shop->id." and Defaul language: ".Context::getContext()->language->iso_code."\n");
+                        fwrite($write_fd, $domain_rewrite_cond);
+                        fwrite($write_fd, "RewriteRule ^sitemap.xml$ ".Context::getContext()->shop->id."_".Context::getContext()->language->iso_code."_0_sitemap.xml");
+                        }
 			// Redirections to dispatcher
 			if ($rewrite_settings)
 			{
