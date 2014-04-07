@@ -597,7 +597,7 @@ class AdminStockManagementControllerCore extends AdminController
 			// get usable flag
 			$usable = Tools::getValue('usable', null);
 			if (is_null($usable))
-				$this->errors[] = Tools::displayError('You have to specify if the product quantity is usable for sale on shops.');
+				$this->errors[] = Tools::displayError('You have to specify whether the product quantity is usable for sale on shops or not.');
 			$usable = (bool)$usable;
 		}
 
