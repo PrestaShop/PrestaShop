@@ -755,10 +755,24 @@ class AdminModulesControllerCore extends AdminController
 											elseif ($f['loggedOnAddons'] == 1 && $this->logged_on_addons && file_put_contents(_PS_MODULE_DIR_.$modaddons->name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($modaddons->id), 'username_addons' => pSQL(trim($this->context->cookie->username_addons)), 'password_addons' => pSQL(trim($this->context->cookie->password_addons))))))
 													$download_ok = true;
 
+											if (Tools::file_exists_cache(_PS_MODULE_DIR_.$modaddons->name.'/img') && $download_ok)
+											{
+												$uniqid = uniqid();
+												$sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
+												mkdir($sandbox);
+												Tools::recurseCopy(_PS_MODULE_DIR_.$modaddons->name.'/img', $sandbox);
+											}
+
 											if (!$download_ok)
 												$this->errors[] = $this->l('Error on downloading the lastest version');
 											elseif (!$this->extractArchive(_PS_MODULE_DIR_.$modaddons->name.'.zip', false))
 												$this->errors[] = $this->l(sprintf("Module %s can't be upgraded: ", $modaddons->name));
+
+											if (Tools::file_exists_cache(_PS_MODULE_DIR_.$modaddons->name.'/img') && $download_ok)
+											{
+												Tools::recurseCopy($sandbox, _PS_MODULE_DIR_.$modaddons->name.'/img');
+												Tools::deleteDirectory($sandbox);
+											}
 										}
 							}
 					}
@@ -937,7 +951,7 @@ class AdminModulesControllerCore extends AdminController
 				if (!Validate::isLoadedObject($module))
 					unset($module);
 			}
-			
+
 			if (isset($modules_list_save))
 				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1&module_name='.$modules_list_save);
 			elseif (isset($module))

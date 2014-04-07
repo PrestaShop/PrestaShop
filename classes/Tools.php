@@ -2722,6 +2722,27 @@ exit;
 	}
 
 
+	public static function recurseCopy($src, $dst)
+	{
+		$dir = opendir($src);
+		@mkdir($dst);
+		while (false !== ($file = readdir($dir)))
+		{
+			if (($file != '.') && ($file != '..'))
+			{
+				if (is_dir($src.DIRECTORY_SEPARATOR.$file))
+				{
+					self::recurseCopy($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file);
+				}
+				else
+				{
+					copy($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file);
+				}
+			}
+		}
+		closedir($dir);
+	}
+
 	/**
 	 * @params string $path Path to scan
 	 * @params string $ext Extention to filter files
