@@ -1423,11 +1423,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 										 		true,
 										 		$supply_order->id);
 
-					if ($res)
-						StockAvailable::synchronize($supply_order_detail->id_product);
-					else
-						$this->errors[] = Tools::displayError('Something went wrong when adding products to the warehouse.');
-
 					$location = Warehouse::getProductLocation($supply_order_detail->id_product,
 										 					  $supply_order_detail->id_product_attribute,
 									 						  $warehouse->id);
@@ -1442,6 +1437,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						$supplier_receipt_history->add();
 						$supply_order_detail->save();
 						$supply_order->save();
+						StockAvailable::synchronize($supply_order_detail->id_product);
 					}
 					else
 						$this->errors[] = Tools::displayError('Something went wrong when setting warehouse on product record');
