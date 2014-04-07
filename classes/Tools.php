@@ -1410,7 +1410,8 @@ class ToolsCore
 	{
 		$last = $directory[strlen($directory) - 1];
 
-		if (in_array($last, array('/', '\\'))) {
+		if (in_array($last, array('/', '\\')))
+		{
 			$directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 			return $directory;
 		}
@@ -1865,7 +1866,7 @@ class ToolsCore
 
 	public static function getMediaServer($filename)
 	{
-		if (self::$_cache_nb_media_servers === null)
+		if (self::$_cache_nb_media_servers === null && defined('_MEDIA_SERVER_1_') && defined('_MEDIA_SERVER_2_') && defined('_MEDIA_SERVER_3_'))
 		{
 			if (_MEDIA_SERVER_1_ == '')
 				self::$_cache_nb_media_servers = 0;
@@ -1972,7 +1973,7 @@ class ToolsCore
 
 		fwrite($write_fd, "RewriteEngine on\n");
 	
-		if (!$medias)
+		if (!$medias && defined('_MEDIA_SERVER_1_') && defined('_MEDIA_SERVER_2_') && defined('_MEDIA_SERVER_3_'))
 			$medias = array(_MEDIA_SERVER_1_, _MEDIA_SERVER_2_, _MEDIA_SERVER_3_);
 		
 		$media_domains = '';

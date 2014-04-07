@@ -1,0 +1,11 @@
+.colorClass { color: #d35400; }
+
+.colorMethod { color: #f5ab35; }
+
+.colorFunction { color: #52b3d9; }
+
+.colorClass:hover { color: #a04000; }
+
+.colorMethod:hover { color: #eb950c; }
+
+.colorFunction:hover { color: #2d9fcb; }

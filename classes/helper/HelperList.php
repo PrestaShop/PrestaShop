@@ -527,8 +527,12 @@ class HelperListCore extends Helper
 
 		/* Determine current page number */
 		$page = (int)Tools::getValue('submitFilter'.$this->list_id);
+
 		if (!$page)
 			$page = 1;
+
+		if ($page > $total_pages)
+			$page = $total_pages;
 
 		/* Choose number of results per page */
 		$selected_pagination = Tools::getValue($this->list_id.'_pagination',
@@ -619,7 +623,7 @@ class HelperListCore extends Helper
 			'has_bulk_actions' => $this->hasBulkActions($has_value),
 		));
 
-		$this->header_tpl->assign(array_merge($this->tpl_vars, array(
+		$this->header_tpl->assign(array_merge(array(
 			'ajax' => $ajax,
 			'title' => array_key_exists('title', $this->tpl_vars) ? $this->tpl_vars['title'] : $this->title,
 			'show_filters' => (count($this->_list) <= 1 && !$has_value) ? false : true,
@@ -641,7 +645,7 @@ class HelperListCore extends Helper
 			'name_id' => isset($name_id) ? $name_id : null,
 			'row_hover' => $this->row_hover,
 			'list_id' => isset($this->list_id) ? $this->list_id : $this->table
-		)));
+		), $this->tpl_vars));
 
 		return $this->header_tpl->fetch();
 	}
