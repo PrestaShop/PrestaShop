@@ -46,7 +46,10 @@
 </script>
 
 <div class="row">
-	<div class="col-lg-10">
+	<div class="col-sm-2">
+		{$logo_content}
+	</div>
+	<div class="col-sm-10">
 		<div id="carrier_wizard" class="panel swMain">
 			<ul class="steps nbr_steps_{$wizard_steps.steps|count}">
 			{foreach from=$wizard_steps.steps key=step_nbr item=step}
@@ -68,9 +71,6 @@
 				</div>
 			{/foreach}
 		</div>
-	</div>
-	<div class="col-lg-2">
-		{$logo_content}
 	</div>
 </div>
 {/block}

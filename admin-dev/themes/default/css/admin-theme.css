@@ -1288,7 +1288,7 @@
 
 .icon-subscript:before { content: "\f12c"; }
 
-.icon-eraser:before { content: "\f12d"; }
+.icon-eraser:before, #content .process-icon-eraser:before { content: "\f12d"; }
 
 .icon-puzzle-piece:before, .icon-AdminParentModules:before, #content .process-icon-modules-list:before, .bootstrap .alert.alert-addons:before, .bootstrap #carrier_wizard .alert-addons.wizard_error:before { content: "\f12e"; }
 
@@ -3173,11 +3173,10 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .number-monospace { font-family: "Droid Sans Mono", Helvetica, Arial, sans-serif !important; word-spacing: -0.3em; font-weight: 200; }
 .bootstrap .color_success { color: #79bd3c; }
 .bootstrap .color_danger { color: #d9534f; }
-.bootstrap .dash_trend_down { color: red; }
+.bootstrap .dash_trend_down { color: #d9534f; }
 .bootstrap .dash_trend_down:before { font-family: FontAwesome; content: "\f0ab"; margin-right: 4px; }
-.bootstrap .dash_trend_up { color: green; }
+.bootstrap .dash_trend_up { color: #79bd3c; }
 .bootstrap .dash_trend_up:before { font-family: FontAwesome; content: "\f0aa"; margin-right: 4px; }
-.bootstrap .dash_trend_right { color: darkblue; }
 .bootstrap .dash_trend_right:before { font-family: FontAwesome; content: "\f0a9"; margin-right: 4px; }
 .bootstrap #dashboard section > section header { padding: 3px 8px; color: white; font-size: 1.2em; background-color: #00aff0; margin: 0 0 3px 0; }
 .bootstrap #dashboard section > section header .small { display: block; clear: both; font-variant: small-cap; text-transform: uppercase; font-size: 0.8em; font-family: "Open Sans", Helvetica, Arial, sans-serif; }
@@ -3201,11 +3200,17 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap #dashboard .data_list_vertical .data_value { display: block; text-align: center; }
 .bootstrap #dashboard #dashtrends header { margin-bottom: 0; }
 .bootstrap #dashboard #dashtrends #dashtrends_toolbar { margin: 0 -16px 10px; }
-.bootstrap #dashboard #dashtrends dl { cursor: pointer; margin: 0; min-height: 90px; text-align: center; background-color: white; padding: 10px; border-bottom: 1px solid #dddddd; border-left: 1px solid #dddddd; }
+.bootstrap #dashboard #dashtrends #dashtrends_toolbar dl { -webkit-box-shadow: 0 0 0 2px white inset; box-shadow: 0 0 0 2px white inset; }
+.bootstrap #dashboard #dashtrends #dashtrends_toolbar dl dt { color: #777777; padding: 0; margin: 0; height: 20px; }
+.bootstrap #dashboard #dashtrends #dashtrends_toolbar dl dd.data_value { color: #aaaaaa; margin-bottom: 8px; }
+.bootstrap #dashboard #dashtrends #dashtrends_toolbar dl dd.dash_trend { background-color: white; width: 80px; margin: 0 auto; -webkit-border-radius: 3px; border-radius: 3px; }
+.bootstrap #dashboard #dashtrends #dashtrends_toolbar dl:hover dt, .bootstrap #dashboard #dashtrends #dashtrends_toolbar dl:hover dd.data_value { color: #00aff0; }
+.bootstrap #dashboard #dashtrends #dashtrends_toolbar dl:hover dt { text-decoration: underline; }
+.bootstrap #dashboard #dashtrends #dashtrends_toolbar dl.active dt, .bootstrap #dashboard #dashtrends #dashtrends_toolbar dl.active dd.data_value { color: white; }
+.bootstrap #dashboard #dashtrends dl { cursor: pointer; margin: 0; min-height: 70px; text-align: center; background-color: white; padding: 10px; border-bottom: 1px solid #dddddd; border-left: 1px solid #dddddd; }
 .bootstrap #dashboard #dashtrends dl:first-child { border-left: none; }
 .bootstrap #dashboard #dashtrends dl.active { background-color: #00aff0; -webkit-box-shadow: white 0 0 0 2px inset; box-shadow: white 0 0 0 2px inset; }
 .bootstrap #dashboard #dashtrends dl.active dt { color: white; font-size: 1.2em; }
-.bootstrap #dashboard #dashtrends dl.active dd { color: white; }
 .bootstrap #dashboard #dashtrends dt { text-align: center; height: 37px; line-height: 1em; font: 400 1.1em/120% "Ubuntu Condensed", Helvetica, Arial, sans-serif; }
 .bootstrap #dashboard #dashtrends dd span { font-size: 0.9em; white-space: nowrap; }
 .bootstrap #dashboard #dashtrends svg { height: 350px; }
@@ -3268,6 +3273,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .categoriesTitle .list-group .list-group-item, .bootstrap .categoriesTitle #dashboard .data_list .list-group-item, .bootstrap #dashboard .categoriesTitle .data_list .list-group-item, .bootstrap #dashboard .data_list .categoriesTitle .list-group li, .bootstrap .categoriesTitle #dashboard .data_list li, .bootstrap #dashboard .categoriesTitle .data_list li { position: relative; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-right: 35px; }
 .bootstrap .categoriesTitle .list-group .list-group-item .badge, .bootstrap .categoriesTitle #dashboard .data_list .list-group-item .badge, .bootstrap #dashboard .categoriesTitle .data_list .list-group-item .badge, .bootstrap #dashboard .data_list .categoriesTitle .list-group li .badge, .bootstrap .categoriesTitle #dashboard .data_list li .badge, .bootstrap #dashboard .categoriesTitle .data_list li .badge, .bootstrap .categoriesTitle .list-group .list-group-item #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper .bootstrap .categoriesTitle .list-group .list-group-item .notifs_badge, .bootstrap .categoriesTitle #dashboard .data_list .list-group-item #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper .bootstrap .categoriesTitle #dashboard .data_list .list-group-item .notifs_badge, .bootstrap #dashboard .categoriesTitle .data_list .list-group-item #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper .bootstrap #dashboard .categoriesTitle .data_list .list-group-item .notifs_badge, .bootstrap #dashboard .data_list .categoriesTitle .list-group li #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper .bootstrap #dashboard .data_list .categoriesTitle .list-group li .notifs_badge, .bootstrap .categoriesTitle #dashboard .data_list li #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper .bootstrap .categoriesTitle #dashboard .data_list li .notifs_badge, .bootstrap #dashboard .categoriesTitle .data_list li #header_notifs_icon_wrapper .notifs_badge, #header_notifs_icon_wrapper .bootstrap #dashboard .categoriesTitle .data_list li .notifs_badge, .bootstrap .categoriesTitle .list-group .list-group-item .module-badge-popular, .bootstrap .categoriesTitle #dashboard .data_list .list-group-item .module-badge-popular, .bootstrap #dashboard .categoriesTitle .data_list .list-group-item .module-badge-popular, .bootstrap #dashboard .data_list .categoriesTitle .list-group li .module-badge-popular, .bootstrap .categoriesTitle #dashboard .data_list li .module-badge-popular, .bootstrap #dashboard .categoriesTitle .data_list li .module-badge-popular, .bootstrap .categoriesTitle .list-group .list-group-item .module-badge-partner, .bootstrap .categoriesTitle #dashboard .data_list .list-group-item .module-badge-partner, .bootstrap #dashboard .categoriesTitle .data_list .list-group-item .module-badge-partner, .bootstrap #dashboard .data_list .categoriesTitle .list-group li .module-badge-partner, .bootstrap .categoriesTitle #dashboard .data_list li .module-badge-partner, .bootstrap #dashboard .categoriesTitle .data_list li .module-badge-partner { position: absolute; right: 5px; }
 .bootstrap .quickview-badge { margin-top: 30px; }
+.bootstrap .quickview-price { color: #666666; font-size: 1.8em; float: right; }
 .bootstrap .rating { unicode-bidi: bidi-override; direction: rtl; font-size: 20px; }
 .bootstrap .rating span.star { font-family: "FontAwesome"; display: inline-block; }
 .bootstrap .rating span.star:before { content: "\f006"; padding-right: 3px; color: #bbbbbb; }

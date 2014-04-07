@@ -529,7 +529,7 @@ class AdminImportControllerCore extends AdminController
 	public function renderForm()
 	{
 		if (!is_dir(AdminImportController::getPath()))
-			return !($this->errors[] = Tools::displayError('The import directory does not extist.'));
+			return !($this->errors[] = Tools::displayError('The import directory does not exist.'));
 
 		if (!is_writable(AdminImportController::getPath()))
 			$this->displayWarning($this->l('The import directory must be writable (CHMOD 755 / 777).'));

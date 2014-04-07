@@ -14,12 +14,12 @@ ul.product_list {
 			padding: 3px 8px 4px 8px;
 			margin-bottom: 20px;
 			&.available-now {
-				background: #46a74e;
+				background: #55c65e;
 				border: 1px solid #36943e;
 			}
 			&.out-of-stock{
-				background: #ff7430;
-				border: 1px solid #ea5e1a;
+				background: #fe9126;
+				border: 1px solid #e4752b;
 			}
 		}
 	}
@@ -216,7 +216,7 @@ ul.product_list.grid {
 				.ajax_add_to_cart_button, 
 				span.button,
 				.lnk_view { 
-					margin: 0 6px 10px 0;
+					margin: 0 6px 10px 6px;
 				}	
 			}
 			.functional-buttons {

@@ -508,7 +508,7 @@ class ProductCore extends ObjectModel
 	{
 		if (!parent::add($autodate, $null_values))
 			return false;
-			
+
 		if ($this->getType() == Product::PTYPE_VIRTUAL)
 		{
 			StockAvailable::setProductOutOfStock((int)$this->id, 1);

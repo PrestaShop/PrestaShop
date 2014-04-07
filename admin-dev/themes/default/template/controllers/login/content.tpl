@@ -76,7 +76,7 @@
 						</label>
 						<div class="input-group">
 							<span class="input-group-addon"><i class="icon-key"></i></span>
-							<input name="passwd" type="password" id="passwd" class="form-control" value="{if isset($password)}{$password}{/if}" tabindex="2" placeholder="{l s='Password'}" />
+							<input name="passwd" type="password" id="passwd" class="form-control" value="{if isset($password)}{$password|escape:'html':'UTF-8'}{/if}" tabindex="2" placeholder="{l s='Password'}" />
 						</div>
 					</div>
 					<div class="form-group clearfix">
@@ -171,4 +171,3 @@
 		</p>
 	</div>
 </div>
-	
