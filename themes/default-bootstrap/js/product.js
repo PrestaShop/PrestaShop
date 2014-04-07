@@ -207,8 +207,8 @@ $(document).ready(function(){
 		if(!!$.prototype.fancybox)
 			$('.fancybox').fancybox({
 				'hideOnContentClick': true,
-				'transitionIn'	: 'elastic',
-				'transitionOut'	: 'elastic'
+				'openEffect'	: 'elastic',
+				'closeEffect'	: 'elastic'
 			});
 	}
 	else
