@@ -2169,7 +2169,7 @@ class AdminControllerCore extends Controller
 		//RTL Support moved to footer
 
 		$this->addJquery();
-		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize'));
+		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox'));
 		$this->addjQueryPlugin('growl', null, false);
 		$this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
