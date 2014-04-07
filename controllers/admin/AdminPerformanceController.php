@@ -886,7 +886,7 @@ class AdminPerformanceControllerCore extends AdminController
 		}
 	}
 
-	public function ajaxProcess()
+	public function displayAjaxTestServer()
 	{
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
