@@ -349,7 +349,6 @@ function accordion(status)
 function resizeCatimg()
 {
 	var div = $('.cat_desc').parent('div');
-	var image = div.css('');
 	var image = new Image;
 	$(image).load(function(){
 	    var width  = image.width;
