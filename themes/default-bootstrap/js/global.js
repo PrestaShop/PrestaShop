@@ -56,8 +56,9 @@ $(document).ready(function(){
 			$(this.form).submit();
 		});
 
-		$(document).on('change', 'select[name="manufacturer_list"], select[name="supplier_list"]', function(){
-			autoUrl($(this).attr('id'), '');
+		$(document).on('change', 'select[name="manufacturer_list"], select[name="supplier_list"]', function() {
+			if (this.value != '')
+				location.href = this.value;
 		});
 
 		$(document).on('change', 'select[name="currency_payement"]', function(){
@@ -89,7 +90,7 @@ $(document).ready(function(){
 
 	if (!!$.prototype.fancybox)
 		$.extend($.fancybox.defaults.tpl, {
-			closeBtn : '<a title="' + FancyboxboxI18nClose + '" class="fancybox-item fancybox-close" href="javascript:;"></a>',
+			closeBtn : '<a title="' + FancyboxI18nClose + '" class="fancybox-item fancybox-close" href="javascript:;"></a>',
 			next     : '<a title="' + FancyboxI18nNext + '" class="fancybox-nav fancybox-next" href="javascript:;"><span></span></a>',
 			prev     : '<a title="' + FancyboxI18nPrev + '" class="fancybox-nav fancybox-prev" href="javascript:;"><span></span></a>'
 		});
@@ -331,14 +332,14 @@ function accordion(status)
 	leftColumnBlocks = $('#left_column');
 	if(status == 'enable')
 	{
-		$('#right_column .block:not(#layered_block_left) .title_block, #left_column .block:not(#layered_block_left) .title_block, #left_column #newsletter_block_left h4').on('click', function(){
+		$('#right_column .block .title_block, #left_column .block .title_block, #left_column #newsletter_block_left h4').on('click', function(){
 			$(this).toggleClass('active').parent().find('.block_content').stop().slideToggle('medium');
 		})
-		$('#right_column, #left_column').addClass('accordion').find('.block:not(#layered_block_left) .block_content').slideUp('fast');
+		$('#right_column, #left_column').addClass('accordion').find('.block .block_content').slideUp('fast');
 	}
 	else
 	{
-		$('#right_column .block:not(#layered_block_left) .title_block, #left_column .block:not(#layered_block_left) .title_block, #left_column #newsletter_block_left h4').removeClass('active').off().parent().find('.block_content').removeAttr('style').slideDown('fast');
+		$('#right_column .block .title_block, #left_column .block .title_block, #left_column #newsletter_block_left h4').removeClass('active').off().parent().find('.block_content').removeAttr('style').slideDown('fast');
 		$('#left_column, #right_column').removeClass('accordion');
 	}
 }

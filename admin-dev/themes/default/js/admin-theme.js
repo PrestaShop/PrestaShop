@@ -416,7 +416,10 @@ $(document).ready(function() {
 	// reset form
 	$(".reset_ready").click(function () {
 		var href = $(this).attr('href');
-		confirm_modal(header_confirm_reset, body_confirm_reset, left_button_confirm_reset, right_button_confirm_reset,
+		confirm_modal( header_confirm_reset,
+			body_confirm_reset,
+			left_button_confirm_reset,
+			right_button_confirm_reset,
 			function () {
 				window.location.href = href + '&keep_data=1';
 			},
@@ -428,10 +431,10 @@ $(document).ready(function() {
 
 	//move to hash after clicking on anchored links
 	function scroll_if_anchor(href) {
-		href = typeof(href) == "string" ? href : $(this).attr("href");
+		href = typeof(href) === "string" ? href : $(this).attr("href");
 		var fromTop = 120;
 
-		if(href.indexOf("#") == 0) {
+		if(href.indexOf("#") === 0) {
 			var $target = $(href);
 
 			if($target.length) {
@@ -443,7 +446,7 @@ $(document).ready(function() {
 			}
 		}
 	}
-	scroll_if_anchor(window.location.hash);
+	//scroll_if_anchor(window.location.hash);
 	$("body").on("click", "a.anchor", scroll_if_anchor);
 
 });

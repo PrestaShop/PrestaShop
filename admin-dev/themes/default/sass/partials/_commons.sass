@@ -80,18 +80,18 @@
 
 //alert boxs
 @mixin alert-panel($icon,$color)
-	padding-left: 50px
 	position: relative
 	border: none
-	border-left: solid 3px lighten($color,9%)
+	@include padding-left(50px)
+	@include border-left(solid 3px lighten($color,9%))
 	&:before
 		position: absolute
 		top: 6px
-		left: 7px
 		display: block
 		height: 25px
 		width: 25px
 		color: lighten($color,9%)
+		@include left(7px)
 		@extend .icon
 		@extend .icon-3x
 		@extend .#{$icon}
@@ -135,40 +135,18 @@
 	font-size: 2em!important
 
 .pagination
-	margin: 17px 0 0 0 !important
-
-.panel.panel-sm
-	padding: 8px!important
-	.panel-heading
-		margin: -8px -8px 10px -8px !important
-		font-size: 13px!important
-		padding-left: 8px !important
-	.form-group
-		margin-bottom: 8px
+	@include margin(17px, 0, 0, 0)
 
 .list-detail
 	dd:not(:last-child)
 		margin-bottom: 10px
 
-//stars
-.rating
-	unicode-bidi: bidi-override
-	direction: rtl
-	font-size: 20px
-	span.star
-		font-family: FontAwesome
-		font-weight: normal
-		font-style: normal
-		display: inline-block
-		&:hover
-			cursor: pointer
-		&:before
-			content: "\f006"
-			padding-right: 3px
-			color: #999
-		&:hover:before,
-		&.active:before,
-		&:hover~span.star:before,
-		&.active~span.star:before
-			content: "\f005"
-			color: #e3cf7a
+//colors
+.attributes-color-container
+	width: 40px
+	height: 25px
+	display: block
+	border: solid 1px black
+
+#mColorPickerInput
+	color: #000000 

@@ -153,7 +153,7 @@ abstract class PaymentModuleCore extends Module
 
 		$order_status = new OrderState((int)$id_order_state, (int)$this->context->language->id);
 		if (!Validate::isLoadedObject($order_status))
-			throw new PrestaShopException('Can\'t load Order state status');
+			throw new PrestaShopException('Can\'t load Order status');
 
 		if (!$this->active)
 			die(Tools::displayError());
@@ -623,11 +623,34 @@ abstract class PaymentModuleCore extends Module
 							$cart_rule_to_update->update();
 						}
 
-						$cart_rules_list .= '
-						<tr>
-							<td colspan="4" style="padding:0.6em 0.4em;text-align:right">'.Tools::displayError('Voucher name:').' '.$cart_rule['obj']->name.'</td>
-							<td style="padding:0.6em 0.4em;text-align:right">'.($values['tax_incl'] != 0.00 ? '-' : '').Tools::displayPrice($values['tax_incl'], $this->context->currency, false).'</td>
-						</tr>';
+						$cart_rules_list .= '<tr class="conf_body">
+						<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+							<table class="table" style="width:100%;border-collapse:collapse">
+								<tr>
+									<td width="10" style="color:#333;padding:0"></td>
+									<td align="right" style="color:#333;padding:0">
+										<font size="2" face="Open-sans, sans-serif" color="#555454">
+											<strong>'.Tools::displayError('Voucher name:').' '.$cart_rule['obj']->name.'</strong>
+										</font>
+									</td>
+									<td width="10" style="color:#333;padding:0"></td>
+								</tr>
+							</table>
+						</td>
+						<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+							<table class="table" style="width:100%;border-collapse:collapse">
+								<tr>
+									<td width="10" style="color:#333;padding:0"></td>
+									<td align="right" style="color:#333;padding:0">
+										<font size="2" face="Open-sans, sans-serif" color="#555454">
+											'.($values['tax_incl'] != 0.00 ? '-' : '').Tools::displayPrice($values['tax_incl'], $this->context->currency, false).'
+										</font>
+									</td>
+									<td width="10" style="color:#333;padding:0"></td>
+								</tr>
+							</table>
+						</td>
+					</tr>';
 					}
 
 					// Specify order id for message
@@ -673,7 +696,7 @@ abstract class PaymentModuleCore extends Module
 						if ($order_status->logable)
 							ProductSale::addProductSale((int)$product['id_product'], (int)$product['cart_quantity']);
 
-					// Set the order state
+					// Set the order status
 					$new_history = new OrderHistory();
 					$new_history->id_order = (int)$order->id;
 					$new_history->changeIdOrderState((int)$id_order_state, $order, true);

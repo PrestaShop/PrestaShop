@@ -797,7 +797,47 @@ class DispatcherCore
 			$controllers = array_merge($controllers, Dispatcher::getControllersInDirectory($dir));
 		return $controllers;
 	}
+	
+	/**
+	 * Get list of all available Module Front controllers
+	 *
+	 * @return array
+	 */
+	public static function getModuleControllers($type = 'all', $module = null)
+	{
+		$modules_controllers = array();
+		if (is_null($module))
+			$modules = Module::getModulesOnDisk(true);
+		else if (!is_array($modules))
+			$modules = array(Module::getInstanceByName($module));
+		else
+		{
+			$modules = array();
+			foreach ($module as $_mod)
+				$modules[] = Module::getInstanceByName($_mod);
+		}
 
+		foreach ($modules as $mod)
+		{
+			foreach (Dispatcher::getControllersInDirectory(_PS_MODULE_DIR_.$mod->name.'/controllers/') as $controller)
+			{
+				if ($type == 'admin')
+				{
+					if (strpos($controller, 'Admin') !== false)
+						$modules_controllers[$mod->name][] = $controller;
+				}				
+				else if ($type == 'front')
+				{
+					if (strpos($controller, 'Admin') === false)
+						$modules_controllers[$mod->name][] = $controller;
+				}
+				else
+					$modules_controllers[$mod->name][] = $controller;
+			}
+		}
+		return $modules_controllers;
+	}
+	
 	/**
 	 * Get list of available controllers from the specified dir
 	 *

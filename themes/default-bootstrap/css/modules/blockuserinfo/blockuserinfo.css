@@ -7,7 +7,8 @@
     font-weight: bold;
     display: block;
     padding: 8px 9px 11px 8px;
-    cursor: pointer; }
+    cursor: pointer;
+    line-height: 18px; }
     @media (max-width: 479px) {
       .header_user_info a {
         font-size: 11px; } }

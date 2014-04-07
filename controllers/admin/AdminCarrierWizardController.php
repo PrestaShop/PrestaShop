@@ -241,7 +241,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Shipping and handling'),
+						'label' => $this->l('Add handling costs'),
 						'name' => 'shipping_handling',
 						'required' => false,
 						'class' => 't',
@@ -258,11 +258,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 								'label' => $this->l('Disabled')
 							)
 						),
-						'hint' => $this->l('Include the shipping and handling costs in the carrier price.')
+						'hint' => $this->l('Include the handling costs (as set in Shipping > Preferences) in the final carrier price.')
 					),
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Free Shipping'),
+						'label' => $this->l('Free shipping'),
 						'name' => 'is_free',
 						'required' => false,
 						'class' => 't',

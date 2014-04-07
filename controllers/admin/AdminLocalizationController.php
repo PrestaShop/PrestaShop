@@ -135,6 +135,11 @@ class AdminLocalizationControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
 		if (Tools::isSubmit('submitLocalizationPack'))
 		{
 			$version = str_replace('.', '', _PS_VERSION_);
@@ -199,10 +204,14 @@ class AdminLocalizationControllerCore extends AdminController
 				$xml_localization = simplexml_load_file($localization_file);
 		}
 
+		// Array to hold the list of country ISOs that have a localization pack hosted on prestashop.com
+		$remote_isos = array();
+
 		$i = 0;
 		if ($xml_localization)
 			foreach ($xml_localization->pack as $key => $pack)
 			{
+				$remote_isos[(string)$pack->iso] = true;
 				$localizations_pack[$i]['iso_localization_pack'] = (string)$pack->iso;
 				$localizations_pack[$i]['name'] = (string)$pack->name;
 				$i++;
@@ -210,6 +219,23 @@ class AdminLocalizationControllerCore extends AdminController
 
 		if (!$localizations_pack)
 			return $this->displayWarning($this->l('Cannot connect to prestashop.com'));
+
+		// Add local localization .xml files to the list if they are not already there
+		foreach (scandir(_PS_ROOT_DIR_.'/localization/') as $entry)
+		{
+			$m = array();
+			if (preg_match('/^([a-z]{2})\.xml$/', $entry, $m))
+			{
+				$iso = $m[1];
+				if (empty($remote_isos[$iso])) // if the pack is only there locally and not on prestashop.com
+				{
+					$xml_pack = simplexml_load_file(_PS_ROOT_DIR_.'/localization/'.$entry);
+					$localizations_pack[$i]['iso_localization_pack'] = $iso;
+					$localizations_pack[$i]['name'] = sprintf($this->l('%s (local)'), (string)$xml_pack['name']);
+					$i++;
+				}
+			}
+		}
 
 		usort($localizations_pack, array($this, 'sortLocalizationsPack'));
 

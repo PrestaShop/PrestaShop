@@ -115,17 +115,19 @@ class AdminEmployeesControllerCore extends AdminController
 				'submit' => array('title' => $this->l('Save'))
 			)
 		);
-
+		$rtl = $this->context->language->is_rtl ? '_rtl' : '';
 		$path = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR;
 		foreach (scandir($path) as $theme)
-			if ($theme[0] != '.' && is_dir($path.$theme) && (@filemtime($path.$theme.DIRECTORY_SEPARATOR.'css'
-				.DIRECTORY_SEPARATOR.'admin-theme.css')))
+			if ($theme[0] != '.' && is_dir($path.$theme) && (@filemtime($path.$theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'admin-theme.css')))
 			{
-				$this->themes[] = array('id' => $theme.'|admin-theme.css', 'name' => $theme.' - admin-theme.css');
-				if (file_exists($path.$theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'schemes'))
-					foreach (scandir($path.$theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'schemes') as $css)
+				$this->themes[] = array('id' => $theme.'|admin-theme'.$rtl.'.css', 'name' => $this->l('Default'));
+				if (file_exists($path.$theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'schemes'.$rtl))
+					foreach (scandir($path.$theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'schemes'.$rtl) as $css)
 						if ($css[0] != '.' && preg_match('/\.css$/', $css))
-							$this->themes[] = array('id' => $theme.'|schemes/'.$css, 'name' => $theme.' - schemes/'.$css);
+						{
+							$name = (strpos($css,'admin-theme-') !== false ? Tools::ucfirst(preg_replace('/^admin-theme-(.*)\.css$/', '$1', $css)) : $css);
+							$this->themes[] = array('id' => $theme.'|schemes'.$rtl.'/'.$css, 'name' => $name);
+						}
 			}
 
 		$home_tab = Tab::getInstanceFromClassName('AdminDashboard', $this->context->language->id);
@@ -584,7 +586,7 @@ class AdminEmployeesControllerCore extends AdminController
 	public function postProcess()
 	{
 		/* PrestaShop demo mode */
-		if ((Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee') || Tools::isSubmit('submitAddemployee')) && _PS_MODE_DEMO_)
+		if ((Tools::isSubmit('submitBulkdeleteemployee') || Tools::isSubmit('submitBulkdisableSelectionemployee') || Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee') || Tools::isSubmit('submitAddemployee')) && _PS_MODE_DEMO_)
 		{
 				$this->errors[] = Tools::displayError('This functionality has been disabled.');
 				return;

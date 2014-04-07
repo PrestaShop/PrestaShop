@@ -234,6 +234,10 @@ function validateSteps(fromStep, toStep)
 	}
 	
 	$('.wizard_error').remove();
+	
+	if (is_ok && isOverlapping())
+		is_ok = false;
+	
 	if (is_ok)
 	{
 		form = $('#carrier_wizard #step-'+fromStep+' form');
@@ -450,36 +454,36 @@ function validateRange(index)
 	$('tr.range_sup td input:text').closest('div.input-group').removeClass('has-error');
 	$('tr.range_inf td input:text').closest('div.input-group').removeClass('has-error');
 	
-	is_ok = true;
+	var is_valid = true;
 	range_sup = parseFloat($('tr.range_sup td:eq('+index+')').find('div.input-group input:text').val().trim());
 	range_inf = parseFloat($('tr.range_inf td:eq('+index+')').find('div.input-group input:text').val().trim());
 
 	if (isNaN(range_sup) || range_sup.length === 0)
 	{
 		$('tr.range_sup td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
-		is_ok = false;
+		is_valid = false;
 		displayError([invalid_range], $("#carrier_wizard").smartWizard('currentStep'));
 	}
-	else if (is_ok && (isNaN(range_inf) || range_inf.length === 0))
+	else if (is_valid && (isNaN(range_inf) || range_inf.length === 0))
 	{
 		$('tr.range_inf td:eq('+index+')').closest('div.input-group input:text').closest('div.input-group').addClass('has-error');
-		is_ok = false;
+		is_valid = false;
 		displayError([invalid_range], $("#carrier_wizard").smartWizard('currentStep'));
 	}
-	else if (is_ok && range_inf >= range_sup)
+	else if (is_valid && range_inf >= range_sup)
 	{
 		$('tr.range_sup td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
 		$('tr.range_inf td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
-		is_ok = false;
+		is_valid = false;
 		displayError([invalid_range], $("#carrier_wizard").smartWizard('currentStep'));
 	}
-	else if (is_ok && index > 2) //check range only if it's not the first range
+	else if (is_valid && index > 2) //check range only if it's not the first range
 	{	
 		$('tr.range_sup td').not('.range_type, .range_sign, tr.range_sup td:last').each(function () 
 		{
 			if ($('tr.fees_all td:eq('+index+')').hasClass('validated'))
 			{
-				is_ok = false;
+				is_valid = false;
 				curent_index = $(this).index();
 	
 				current_sup = $(this).find('div.input-group input').val();
@@ -493,12 +497,12 @@ function validateRange(index)
 				//check if range already exist
 				//check if ranges is overlapping
 				if ((range_sup != current_sup && range_inf != current_inf) && ((range_sup > current_sup || range_sup <= current_inf) && (range_inf < current_inf || range_inf >= current_sup)))
-					is_ok = true;
+					is_valid = true;
 			}
 			
 		});
-
-		if (!is_ok)
+		
+		if (!is_valid)
 		{
 			$('tr.range_sup td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
 			$('tr.range_inf td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
@@ -507,7 +511,7 @@ function validateRange(index)
 		else
 			isOverlapping();
 	}
-	return is_ok;
+	return is_valid;
 }
 
 function enableZone(index)
@@ -686,28 +690,33 @@ function getCorrectRangePosistion(current_inf, current_sup)
 
 function isOverlapping()
 {
+	var is_valid = false;
 	$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
-	$('tr.range_sup td').not('.range_type, .range_sign').each( function (){
+	$('tr.range_sup td').not('.range_type, .range_sign').each( function ()
+	{
 		index = $(this).index();
-		current_inf = parseInt($('.range_inf td:eq('+index+') input').val());
-		current_sup = parseInt($('.range_sup td:eq('+index+') input').val());
+		current_inf = parseFloat($('.range_inf td:eq('+index+') input').val());
+		current_sup = parseFloat($('.range_sup td:eq('+index+') input').val());
 
-		$('tr.range_sup td').not('.range_type, .range_sign').each( function (){
+		$('tr.range_sup td').not('.range_type, .range_sign').each( function ()
+		{
 			testing_index = $(this).index();
 			
 			if (testing_index != index) //do not test himself
 			{
-				testing_inf = parseInt($('.range_inf td:eq('+testing_index+') input').val());
-				testing_sup = parseInt($('.range_sup td:eq('+testing_index+') input').val());
+				testing_inf = parseFloat($('.range_inf td:eq('+testing_index+') input').val());
+				testing_sup = parseFloat($('.range_sup td:eq('+testing_index+') input').val());
 
 				if ((current_inf >= testing_inf && current_inf < testing_sup) || (current_sup > testing_inf && current_sup < testing_sup))
 				{
 					$('tr.range_sup td:eq('+testing_index+') div.input-group, tr.range_inf td:eq('+testing_index+') div.input-group').addClass('has-error');
 					displayError([overlapping_range], $("#carrier_wizard").smartWizard('currentStep'));
+					is_valid = true;
 				}
 			}
 		});
 	});
+	return is_valid;
 }
 
 function checkAllZones(elt)

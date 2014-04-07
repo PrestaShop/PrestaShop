@@ -89,7 +89,7 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 			);
 
-			if (Configuration::get('PS_SSL_ENABLED'))
+			if (Tools::getValue('PS_SSL_ENABLED', Configuration::get('PS_SSL_ENABLED')))
 				$fields['PS_SSL_ENABLED_EVERYWHERE'] = array(
 					'title' => $this->l('Force the SSL on all the pages'),
 					'desc' => $this->l('Force all your store to use SSL.'),

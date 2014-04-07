@@ -24,9 +24,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+
 <tr>
 	<td class="fixed-width-sm center">
-		<img class="img-thumbnail" alt="{$module->name}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}">
+		<img class="img-thumbnail" alt="{$module->name}" src="{if isset($module->image)}{$module->image}{else}{$smarty.const._MODULE_DIR_}{$module->name}/{$module->logo}{/if}">
 	</td>
 	<td>
 		<div id="anchor{$module->name|ucfirst}" title="{$module->displayName}">
@@ -37,7 +38,7 @@
 				{if isset($module->type) && $module->type == 'addonsMustHave'}
 					- <span class="module-badge-popular help-tooltip text-primary" data-title="{l s="This module is available on PrestaShop Addons"}"><i class="icon-group"></i> <small>{l s="Popular"}</small></span>
 				{elseif isset($module->type) && $module->type == 'addonsPartner'}
-					- <span class="module-badge-partner help-tooltip text-warning" data-title="{l s="This module is available for free thanks to our partner."}"><i class="icon-pushpin"></i> <small>{l s="Partner"}</small></span>
+					- <span class="module-badge-partner help-tooltip text-warning" data-title="{l s="This module is available for free thanks to our partner."}"><i class="icon-pushpin"></i> <small>{l s="Official"}</small></span>
 				{elseif isset($module->id) && $module->id gt 0}
 					{if isset($module->version_addons) && $module->version_addons}
 						<span class="label label-warning">{l s='Need update'}</span>
@@ -69,25 +70,27 @@
 		</td>
 	{else if !isset($module->not_on_disk)}
 		<td>&nbsp;</td>
-		<td align="right">
-			{if $module->optionsHtml|count > 0}
-			<div id="list-action-button" class="btn-group">
-				{assign var=option value=$module->optionsHtml[0]}
-				{$option}
-				{if $module->optionsHtml|count > 1}
-				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
-					<span class="caret">&nbsp;</span>
-				</button>
-				<ul class="dropdown-menu">
-				{foreach $module->optionsHtml key=key item=option}
-					{if $key != 0}
-						<li>{$option}</li>
+		<td>
+			<div class="btn-group-action">
+				{if $module->optionsHtml|count > 0}
+				<div class="btn-group">
+					{assign var=option value=$module->optionsHtml[0]}
+					{$option}
+					{if $module->optionsHtml|count > 1}
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
+						<span class="caret">&nbsp;</span>
+					</button>
+					<ul class="dropdown-menu">
+					{foreach $module->optionsHtml key=key item=option}
+						{if $key != 0}
+							<li>{$option}</li>
+						{/if}
+					{/foreach}
+					</ul>
 					{/if}
-				{/foreach}
-				</ul>
+				</div>
 				{/if}
 			</div>
-			{/if}
 		</td>
 	{else}
 		<td>&nbsp;</td>

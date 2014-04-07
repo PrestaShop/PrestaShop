@@ -26,10 +26,9 @@
 	{foreach $list AS $index => $tr}
 		<tr
 		{if $position_identifier}id="tr_{$id_category}_{$tr.$identifier}_{$tr.position['position']}"{/if}
-		{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
-		>
-			<td>
-				{if $bulk_actions}
+		{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if} >
+			{if $bulk_actions && $has_bulk_actions}
+				<td class="text-center">
 					{assign var=bulkActionPossible value=true}
 					{foreach $list_skip_actions as $key => $value}
 						{if in_array($tr.$identifier, $value) == true}
@@ -39,8 +38,8 @@
 					{if $bulkActionPossible == true}
 						<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
 					{/if}
-				{/if}
-			</td>
+				</td>
+			{/if}
 			{foreach $fields_display AS $key => $params}
 				<td
 					{if isset($params.position)}

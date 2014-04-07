@@ -443,13 +443,12 @@
 	{
 		$.ajax({
 			type:"POST",
-			url : "{$link->getAdminLink('AdminOrders')|escape:'html'}",
+			url : "{$link->getAdminLink('AdminCustomers')}",
 			async: true,
 			dataType: "json",
 			data : {
 				ajax: "1",
-				token: "{$token}",
-				tab: "AdminOrders",
+				tab: "AdminCustomers",
 				action: "searchCustomers",
 				customer_search: $('#customer').val()},
 			success : function(res)
@@ -529,7 +528,7 @@
 						html_orders += '<td>'+this.id_order+'</td><td>'+this.date_add+'</td><td>'+(this.nb_products ? this.nb_products : '0')+'</td><td>'+this.total_paid_real+'</span></td><td>'+this.payment+'</td><td>'+this.order_state+'</td>';
 						html_orders += '<td class="text-right">';
 						html_orders += '<a href="{$link->getAdminLink('AdminOrders')}&id_order='+this.id_order+'&vieworder&liteDisplaying=1#" title="{l s='View this order'}" class="fancybox btn btn-default"><i class="icon-search"></i>&nbsp;{l s="Details"}</a>';
-						html_orders += '&nbsp;<a href="#" "title="{l s='Duplicate this order'}" class="duplicate_order btn btn-default" rel="'+this.id_order+'"><i class="icon-arrow-right"></i>&nbsp;{l s="Utiliser"}</a>';
+						html_orders += '&nbsp;<a href="#" "title="{l s='Duplicate this order'}" class="duplicate_order btn btn-default" rel="'+this.id_order+'"><i class="icon-arrow-right"></i>&nbsp;{l s="Use"}</a>';
 						html_orders += '</td>';
 						html_orders += '</tr>';
 					});
@@ -1045,7 +1044,7 @@
 			{l s='Customer'}
 		</h3>
 
-		<div id="search-customer-form-group" class="form-group ">
+		<div id="search-customer-form-group" class="form-group">
 			<label class="control-label col-lg-3">
 				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search for an existing customer by typing the first letters of his/her name.'}">
 					{l s='Search for a customer'}
@@ -1140,7 +1139,7 @@
 		</h3>
 		<div class="form-group">
 			<label class="control-label col-lg-3">
-				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search for an existing product by typing the first letters of his/her name.'}">
+				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search for an existing product by typing the first letters of its name.'}">
 					{l s='Search for a product'}
 				</span>
 			</label>
@@ -1159,7 +1158,7 @@
 			<hr/>
 			<div id="product_list" class="form-group"></div>
 			<div id="attributes_list" class="form-group"></div>
-			<!-- TODO - please be kind : refacto -->
+			<!-- @TODO: please be kind refacto -->
 			<div class="form-group">
 				<div class="col-lg-9 col-lg-offset-3">
 					<iframe id="customization_list" seamless>
@@ -1473,7 +1472,6 @@
 						<textarea name="order_message" id="order_message" rows="3" cols="45"></textarea>
 					</div>
 				</div>
-
 				<div class="form-group">
 					<div class="col-lg-9 col-lg-offset-3">
 						<a href="javascript:void(0);" id="send_email_to_customer" class="btn btn-default">
@@ -1486,7 +1484,6 @@
 						</a>
 					</div>
 				</div>
-
 				<div class="form-group">
 					<label class="control-label col-lg-3">{l s='Payment'}</label>
 					<div class="col-lg-9">
@@ -1497,7 +1494,6 @@
 						</select>
 					</div>
 				</div>
-
 				<div class="form-group">
 					<label class="control-label col-lg-3">{l s='Order status'}</label>
 					<div class="col-lg-9">
@@ -1508,7 +1504,6 @@
 						</select>
 					</div>
 				</div>
-
 				<div class="form-group">
 					<div class="col-lg-9 col-lg-offset-3">
 						<button type="submit" name="submitAddOrder" class="btn btn-default" />
