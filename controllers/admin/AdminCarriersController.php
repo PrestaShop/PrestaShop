@@ -30,7 +30,8 @@ class AdminCarriersControllerCore extends AdminController
 
 	public function __construct()
 	{
-		if ($id_carrier = Tools::getValue('id_carrier'))
+		
+		if ($id_carrier = Tools::getValue('id_carrier') && !Tools::isSubmit('deletecarrier') && !Tools::isSubmit('statuscarrier'))
 			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCarrierWizard').'&id_carrier='.(int)$id_carrier);
 		
 		$this->bootstrap = true;
@@ -326,28 +327,28 @@ class AdminCarriersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Maximium package height'),
+					'label' => $this->l('Maximum package height'),
 					'name' => 'max_height',
 					'required' => false,
 					'hint' => $this->l('Maximum height managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Maximium package width'),
+					'label' => $this->l('Maximum package width'),
 					'name' => 'max_width',
 					'required' => false,
 					'hint' => $this->l('Maximum width managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Maximium package depth'),
+					'label' => $this->l('Maximum package depth'),
 					'name' => 'max_depth',
 					'required' => false,
 					'hint' => $this->l('Maximum depth managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Maximium package weight'),
+					'label' => $this->l('Maximum package weight'),
 					'name' => 'max_weight',
 					'required' => false,
 					'hint' => $this->l('Maximum weight managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
@@ -482,7 +483,7 @@ else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tool
 			if ($this->tabAccess['edit'] === '1')
 			{
 				if (Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT'))
-					$this->errors[] = Tools::displayError('You cannot disable the default carrier, however you can change your defeault carrier. ');
+					$this->errors[] = Tools::displayError('You cannot disable the default carrier, however you can change your default carrier. ');
 				else
 					parent::postProcess();
 			}

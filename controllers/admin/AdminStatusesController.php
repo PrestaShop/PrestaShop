@@ -182,7 +182,10 @@ class AdminStatusesControllerCore extends AdminController
 				'color' => $this->getFieldValue($order_return_state, 'color'),
 			);
 		else
-			$helper->fields_value = $this->getFieldsValue($order_return_state);
+			$helper->fields_value = array(
+				'name' => $this->getFieldValue($order_return_state, 'name'),
+				'color' => "#ffffff",
+			);
 
 		$helper->toolbar_btn = $this->toolbar_btn;
 		$helper->title = $this->l('Edit Return Status');
@@ -195,12 +198,12 @@ class AdminStatusesControllerCore extends AdminController
 		{
 			$this->page_header_toolbar_btn['new_order_state'] = array(
 				'href' => self::$currentIndex.'&addorder_state&token='.$this->token,
-				'desc' => $this->l('Add new order state', null, null, false),
+				'desc' => $this->l('Add new order status', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 			$this->page_header_toolbar_btn['new_order_return_state'] = array(
 				'href' => self::$currentIndex.'&addorder_return_state&token='.$this->token,
-				'desc' => $this->l('Add new order return state', null, null, false),
+				'desc' => $this->l('Add new order return status', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		}
@@ -488,7 +491,7 @@ class AdminStatusesControllerCore extends AdminController
 
 			// Update object
 			if (!$order_return_state->save())
-				$this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current order\'s return state.');
+				$this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current order\'s return status.');
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 		}
@@ -509,7 +512,7 @@ class AdminStatusesControllerCore extends AdminController
 			$order_return_state = new OrderReturnState((int)$id_order_return_state);
 
 			if (!$order_return_state->delete())
-				$this->errors[] = Tools::displayError('An error has occurred: Can\'t delete the current order\'s return state.');
+				$this->errors[] = Tools::displayError('An error has occurred: Can\'t delete the current order\'s return status.');
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$this->token);
 		}

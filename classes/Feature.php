@@ -216,12 +216,13 @@ class FeatureCore extends ObjectModel
 			$feature->add();
 			return $feature->id;
 		}
-		else
+		elseif(isset($rq['id_feature']) && $rq['id_feature'])
 		{
-			if ($position && $feature = new Feature((int)$rq['id_feature']))
+			if (is_numeric($position) && $feature = new Feature((int)$rq['id_feature']))
 			{
 				$feature->position = (int)$position;
-				$feature->update();
+				if (Validate::isLoadedObject($feature))
+					$feature->update();
 			}
 
 			return (int)$rq['id_feature'];
@@ -313,34 +314,37 @@ class FeatureCore extends ObjectModel
 	public static function cleanPositions()
 	{
 		//Reordering positions to remove "holes" in them (after delete for instance)
-		$sql = "SELECT id_feature, position FROM "._DB_PREFIX_."feature ORDER BY id_feature";
+		$sql = "SELECT id_feature, position FROM "._DB_PREFIX_."feature ORDER BY position";
 		$db = Db::getInstance();
 		$r = $db->executeS($sql, false);
 		$shiftTable = array(); //List of update queries (one query is necessary for each "hole" in the table)
 		$currentDelta = 0;
 		$minId = 0;
 		$maxId = 0;
-		$futurePosition = 1;
-		while ($line = $db->nextRow($r)) {
+		$futurePosition = 0;
+		while ($line = $db->nextRow($r))
+		{
 			$delta = $futurePosition - $line['position']; //Difference between current position and future position
-			if ($delta != $currentDelta) {
+			if ($delta != $currentDelta)
+			{
 				$shiftTable[] = array('minId' => $minId, 'maxId' => $maxId, 'delta' => $currentDelta);
 				$currentDelta = $delta;
 				$minId = $line['id_feature'];
 			}
-			$maxId = $line['id_feature'];
 			$futurePosition++;
 		}
-		$shiftTable[] = array('minId' => $minId, 'maxId' => $maxId, 'delta' => $currentDelta);
+
+		$shiftTable[] = array('minId' => $minId, 'delta' => $currentDelta);
 		
 		//Executing generated queries
-		foreach ($shiftTable as $line) {
+		foreach ($shiftTable as $line)
+		{
 			$delta = $line['delta'];
-			if ($delta == 0) continue;
-			$delta = $delta > 0 ? '+' . (int)$delta : (int)$delta;
-			$minId = (int)$line['minId'];
-			$maxId = (int)$line['maxId'];
-			$sql = "UPDATE "._DB_PREFIX_."feature SET position = position $delta WHERE id_feature >= $minId AND id_feature <= $maxId";
+			if ($delta == 0)
+				continue;
+			$delta = $delta > 0 ? '+'.(int)$delta : (int)$delta;
+			$minId = $line['minId'];
+			$sql = 'UPDATE '._DB_PREFIX_.'feature SET position = position '.(int)$delta.' WHERE id_feature = '.(int)$minId;
 			Db::getInstance()->execute($sql);
 		}
 	}

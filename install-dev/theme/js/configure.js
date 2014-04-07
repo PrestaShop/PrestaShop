@@ -45,7 +45,7 @@ function checkTimeZone(elt)
 		success: function(json) {
 			if (json.success) {
 				$('#infosTimezone').val(json.message).trigger("liszt:updated");
-				if (in_array(iso, ['us','ca','ru','me','au','id']))
+				if (in_array(iso, ['br','us','ca','ru','me','au','id']))
 				{
 					if ($('#infosTimezone:visible').length == 0 && $('#infosTimezone_chosen').length == 0)
 					{

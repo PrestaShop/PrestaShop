@@ -42,7 +42,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-				$this->bulk_actions = array(
+		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
 				'confirm' => $this->l('Delete selected items?'),

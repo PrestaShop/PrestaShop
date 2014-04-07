@@ -26,13 +26,11 @@
 {if count($list)}
 {foreach $list AS $index => $tr}
 	<tr
-	{if $position_identifier}id="tr_{$position_group_identifier}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if}
-	class="{if isset($tr.class)} {$tr.class}{/if} {if $tr@iteration is odd by 1}odd{/if}"
-	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
-
-	>
-		<td class="text-center">
-			{if $bulk_actions && $has_bulk_actions}
+		{if $position_identifier}id="tr_{$position_group_identifier}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if}
+		class="{if isset($tr.class)} {$tr.class}{/if} {if $tr@iteration is odd by 1}odd{/if}"
+		{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if} >
+		{if $bulk_actions && $has_bulk_actions}
+			<td class="text-center">
 				{if isset($list_skip_actions.delete)}
 					{if !in_array($tr.$identifier, $list_skip_actions.delete)}
 						<input type="checkbox" name="{$list_id}Box[]" value="{$tr.$identifier}"{if isset($checked_boxes) && is_array($checked_boxes) && in_array({$tr.$identifier}, $checked_boxes)} checked="checked"{/if} class="noborder" />
@@ -40,8 +38,8 @@
 				{else}
 					<input type="checkbox" name="{$list_id}Box[]" value="{$tr.$identifier}"{if isset($checked_boxes) && is_array($checked_boxes) && in_array({$tr.$identifier}, $checked_boxes)} checked="checked"{/if} class="noborder" />
 				{/if}
-			{/if}
-		</td>
+			</td>
+		{/if}
 		{foreach $fields_display AS $key => $params}
 			{block name="open_td"}
 				<td
@@ -81,14 +79,6 @@
 							<div class="dragGroup">
 								<div class="positions">
 									{$tr.$key.position}
-								</div>
-								<div class="btn-group">
-									<a class="btn btn-default btn-xs" href="{$tr.$key.position_url_down}" {if !($tr.$key.position != $positions[count($positions) - 1])}disabled{/if}>
-										<i class="icon-chevron-{if $order_way == 'ASC'}down{else}up{/if}"></i>
-									</a>
-									<a class="btn btn-default btn-xs" href="{$tr.$key.position_url_up}" {if !($tr.$key.position != $positions.0)}disabled{/if}>
-										<i class="icon-chevron-{if $order_way == 'ASC'}up{else}down{/if}"></i>
-									</a>
 								</div>
 							</div>
 						{else}
@@ -171,6 +161,9 @@
 					{if $key == 0}
 						{assign var='action' value=$action}
 					{/if}
+					{if $action == 'delete' && $actions|@count > 2}
+						{$compiled_actions[] = 'divider'}
+					{/if}
 					{$compiled_actions[] = $tr.$action}
 				{/if}
 			{/foreach}
@@ -185,8 +178,8 @@
 						<ul class="dropdown-menu">
 						{foreach $compiled_actions AS $key => $action}
 							{if $key != 0}
-							<li>
-								{$action}
+							<li {if $action == 'divider'}class="divider"{/if}>
+								{if $action != 'divider'}{$action}{/if}
 							</li>
 							{/if}
 						{/foreach}

@@ -8,11 +8,11 @@ ul.product_list .availability span {
   padding: 3px 8px 4px 8px;
   margin-bottom: 20px; }
   ul.product_list .availability span.available-now {
-    background: #46a74e;
+    background: #55c65e;
     border: 1px solid #36943e; }
   ul.product_list .availability span.out-of-stock {
-    background: #ff7430;
-    border: 1px solid #ea5e1a; }
+    background: #fe9126;
+    border: 1px solid #e4752b; }
 ul.product_list .color-list-container {
   margin-bottom: 12px; }
   ul.product_list .color-list-container ul li {

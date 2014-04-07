@@ -282,9 +282,8 @@ class AdminWarehousesControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shops:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
-				'hint' => $this->l('Associated shops'),
 				'disable_shared' => Shop::SHARE_STOCK
 			);
 		}

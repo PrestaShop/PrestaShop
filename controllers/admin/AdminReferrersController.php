@@ -274,7 +274,7 @@ class AdminReferrersControllerCore extends AdminController
 
 		$this->fields_form[2] = array('form' => array(
 			'legend' => array(
-				'title' => $this->l('Technical information -- Simple mode.'),
+				'title' => $this->l('Technical information -- Simple mode'),
 				'icon' => 'icon-cogs'
 			),
 			'help' => true,
@@ -285,7 +285,7 @@ class AdminReferrersControllerCore extends AdminController
 					'name' => 'http_referer_like',
 					'cols' => 40,
 					'rows' => 1,
-					'legend' => $this->l('HTTP referrer.')
+					'legend' => $this->l('HTTP referrer')
 				),
 				array(
 					'type' => 'textarea',
@@ -300,7 +300,7 @@ class AdminReferrersControllerCore extends AdminController
 					'name' => 'request_uri_like',
 					'cols' => 40,
 					'rows' => 1,
-					'legend' => $this->l('Request URI.')
+					'legend' => $this->l('Request URI')
 				),
 				array(
 					'type' => 'textarea',
@@ -329,7 +329,7 @@ class AdminReferrersControllerCore extends AdminController
 					'name' => 'http_referer_regexp',
 					'cols' => 40,
 					'rows' => 1,
-					'legend' => $this->l('HTTP referrer.')
+					'legend' => $this->l('HTTP referrer')
 				),
 				array(
 					'type' => 'textarea',
@@ -344,7 +344,7 @@ class AdminReferrersControllerCore extends AdminController
 					'name' => 'request_uri_regexp',
 					'cols' => 40,
 					'rows' => 1,
-					'legend' => $this->l('Request URI.')
+					'legend' => $this->l('Request URI')
 				),
 				array(
 					'type' => 'textarea',

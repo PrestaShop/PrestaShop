@@ -24,30 +24,30 @@
 .dash_trend_down
 	color: red
 	&:before
-		margin-right: 4px
 		font-family: FontAwesome
 		content: "\f0ab"
+		@include margin-right(4px)
 .dash_trend_up
 	color: green
 	&:before
-		margin-right: 4px
 		font-family: FontAwesome
 		content: "\f0aa"
+		@include margin-right(4px)
 .dash_trend_right
 	color: darkblue
 	&:before
-		margin-right: 4px
 		font-family: FontAwesome
 		content: "\f0a9"
+		@include margin-right(4px)
 
 #dashboard
 	section > section
 		header
 			padding: 3px 8px
-			margin: 0 0 3px 0
 			color: white
 			font-size: 1.2em
 			background-color: $brand-primary
+			@include margin(0, 0, 3px, 0)
 			.small
 				display: block
 				clear: both
@@ -57,8 +57,8 @@
 				font-family: $font-family-sans-serif
 	.data_list
 		@extend .list-group
-		margin: 0 0 10px 0
 		padding: 0
+		@include margin(0, 0, 10px, 0)
 		li
 			@extend .list-group-item
 			position: relative
@@ -68,13 +68,13 @@
 			line-height: 39px
 			position: absolute
 			top: 0
-			right: 0
-			padding: 0 10px 0 0
+			@include right(0)
+			@include padding(0, 10px, 0, 0)
 
 	.data_list_small
-		margin: 8px 0 10px 0
-		padding: 0 0 0 0
+		padding: 0
 		border-top: solid 1px #ddd
+		@include margin(8px, 0, 10px, 0)
 		li
 			padding: 3px 0
 			position: relative
@@ -88,13 +88,13 @@
 			line-height: 25px
 			position: absolute
 			top: 0
-			right: 0
 			padding: 0
+			@include right(0)
 
 	.data_list_large
-		margin: 8px 0 10px 0
-		padding: 0
 		@extend .list-unstyled
+		padding: 0
+		@include margin(8px, 0, 10px, 0)
 		li
 			padding: 6px 0
 			position: relative
@@ -109,8 +109,8 @@
 			line-height: 0.6em
 			position: absolute
 			top: 0
-			right: 0
-			padding: 8px 0 0 0
+			@include right(0)
+			@include padding(8px, 0, 0, 0)
 			small
 				font-size: 0.5em
 
@@ -118,13 +118,13 @@
 		@extend .list-unstyled
 		@extend .row
 		padding: 0
-		margin: 0 0 10px 0
 		border: 1px solid #ddd
+		@include margin(0, 0, 10px, 0)
 		@include border-radius(3px)
 		li
-			border-left: solid 1px #ddd
 			@extend .col-xs-6
 			padding: 6px
+			@include border-left(solid 1px #ddd)
 			&:first-child
 				border: none
 		.data_label
@@ -148,10 +148,10 @@
 			text-align: center
 			background-color: white
 			padding: 10px
-			border-left: 1px solid #ddd
 			border-bottom: 1px solid #ddd
+			@include border-left(1px solid #ddd)
 			&:first-child
-				border-left: none
+				@include border-left(none)
 			&.active
 				background-color: $brand-primary
 				@include box-shadow(white 0 0 0 2px inset)

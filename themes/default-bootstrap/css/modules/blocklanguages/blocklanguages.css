@@ -10,6 +10,7 @@
   #languages-block-top div.current {
     font-weight: bold;
     padding: 8px 10px 10px 10px;
+    line-height: 18px;
     color: white;
     text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
     cursor: pointer; }

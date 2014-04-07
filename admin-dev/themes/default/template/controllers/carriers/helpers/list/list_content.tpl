@@ -35,6 +35,6 @@
 					{if (!isset($params.position) && !$no_link && !isset($params.remove_onclick))}
 						onclick="document.location = '{$link->getAdminLink('AdminCarrierWizard', true)}&{$identifier}={$tr.$identifier}'">
 					{else}
-					>
-				{/if}
+						>
+					{/if}
 			{/block}

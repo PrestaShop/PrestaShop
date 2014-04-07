@@ -26,7 +26,7 @@
 
 function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {
-	if (!is_null($parentTab) && !empty($parentTab))
+	if (!is_null($parentTab) && !empty($parentTab) && strtolower(trim($parentTab)) !== 'null')
 		$id_parent = (int)Db::getInstance()->getValue('SELECT `id_tab` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($parentTab).'\'');
 	
 	$array = array();
@@ -60,7 +60,7 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
 								WHERE `class_name` = \''.pSQL($className).'\' LIMIT 0,1
 								), 1, 1, 1, 1 FROM `'._DB_PREFIX_.'profile` )');
 
-	if ($returnId) {
+	if ($returnId && strtolower(trim($returnId)) !== 'false') {
 		return (int)Db::getInstance()->getValue('SELECT `id_tab`
 								FROM `'._DB_PREFIX_.'tab`
 								WHERE `class_name` = \''.pSQL($className).'\'');

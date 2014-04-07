@@ -626,8 +626,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
 			case 'avg_customer_age':
 				$value = sprintf($this->l('%d years', null, null, false), AdminStatsController::getAverageCustomerAge(), 1);
-				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE', $value);
-				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE_EXPIRE', strtotime('+1 day'));
+				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE', array($this->context->language->id => $value));
+				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE_EXPIRE', array($this->context->language->id => strtotime('+1 day')));
 				break;
 
 			case 'pending_messages':

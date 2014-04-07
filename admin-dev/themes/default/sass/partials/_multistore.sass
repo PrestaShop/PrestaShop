@@ -3,19 +3,19 @@
 	height: 22px
 	line-height: 20px
 	border: 1px solid darken($secondary-color,15%)
-	padding: 0 5px 0 8px
 	margin: 0
 	outline: none //remove focus ring from Webkit
 	color: #666
 	background: white
 	position: relative
 	-webkit-appearance: none //remove the strong OSX influence from Webkit
+	@include padding(0, 5px, 0, 8px)
 	@include border-radius(4px)
 
 //for Webkit's CSS-only solution
 @media screen and (-webkit-min-device-pixel-ratio:0)
 	.custom-select select
-		padding-right: 30px
+		@include padding-right(30px)
 
 // Since we removed the default focus styles, we have to add our own
 .breadcrumb-multishop select:focus
@@ -29,7 +29,6 @@
 		content: "▼"
 		position: absolute
 		top: 0
-		right: 0
 		bottom: 0
 		font-size: 60%
 		line-height: 22px
@@ -37,6 +36,7 @@
 		background-color: darken($secondary-color,15%)
 		color: white
 		pointer-events: none
+		@include right(0)
 		@include border-radius(0 4px 4px 0)
 
 .no-pointer-events .custom-select:after
@@ -48,4 +48,4 @@
 	margin-bottom: 15px
 	background-color: #FAF8F0
 	border: none
-	border-left: 3px solid #FBECCB
+	@include border-left(3px solid #FBECCB)

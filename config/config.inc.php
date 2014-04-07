@@ -132,7 +132,8 @@ setlocale(LC_NUMERIC, 'en_US.UTF-8', 'en_US.utf8');
 
 /* Instantiate cookie */
 $cookie_lifetime = (int)(defined('_PS_ADMIN_DIR_') ? Configuration::get('PS_COOKIE_LIFETIME_BO') : Configuration::get('PS_COOKIE_LIFETIME_FO'));
-$cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
+if ($cookie_lifetime > 0)
+	$cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
 
 if (defined('_PS_ADMIN_DIR_'))
 	$cookie = new Cookie('psAdmin', '', $cookie_lifetime);
@@ -208,7 +209,7 @@ $context->link = new Link($https_link, $https_link);
 
 /**
  * @deprecated : these defines are going to be deleted on 1.6 version of Prestashop
- * USE : Configuration::get() method in order to getting the id of order state
+ * USE : Configuration::get() method in order to getting the id of order status
  */
 define('_PS_OS_CHEQUE_',      Configuration::get('PS_OS_CHEQUE'));
 define('_PS_OS_PAYMENT_',     Configuration::get('PS_OS_PAYMENT'));

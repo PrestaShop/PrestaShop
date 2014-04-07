@@ -23,16 +23,17 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($json)}
+{strip}
 {
-	"status" : "{$status}",
-	"confirmations" : {$confirmations},
-	"informations" : {$informations},
-	"error" : {$errors},
-	"warnings" : {$warnings},
-	"content" : {$page}
+{if isset($status) && trim($status) != ''}{assign 'hasresult' 'ok'}"status" : "{$status}"{/if}
+{if isset($confirmations) && $confirmations|count > 0}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"confirmations" : {$confirmations}{/if}
+{if isset($informations) && $informations|count > 0}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"informations" : {$informations}{/if}
+{if isset($errors) && $errors|count > 0}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"error" : {$errors}{/if}
+{if isset($warnings) && $warnings|count > 0}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"warnings" : {$warnings}{/if}
+{if isset($content) && trim($content) != ''}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"content" : {$page}{/if}
 }
+{/strip}
 {else}
-
 	{if isset($conf)}
 		<div class="alert alert-success">
 			{$conf}

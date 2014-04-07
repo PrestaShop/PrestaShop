@@ -6,7 +6,9 @@
 @import "modules/colors"
 @import "modules/variables"
 @import "modules/mixins"
-@import "modules/web-fonts"
+
+@import "vendor/bi-app/bi-app-ltr"
+
 @import "vendor/animate"
 @import "vendor/font-awesome/font-awesome"
 
@@ -80,7 +82,6 @@
 	@import "partials/switch"
 	@import "partials/toolbar"
 	@import "partials/date-range-picker"
-	@import "partials/rtl"
 	@import "partials/multistore"
 
 	//Controllers
@@ -92,12 +93,11 @@
 	@import "controllers/translations"
 	@import "controllers/customer-thread"
 
-@import "partials/tinymce"
-
 //Plug-ins
-@import "vendor/growl"
-@import "vendor/chosen"
-@import "vendor/ladda"
+@import "partials/tinymce"
+@import "partials/growl"
+@import "partials/chosen"
+@import "partials/ladda"
 
 //Backward compatibility
 @import "partials/backward"

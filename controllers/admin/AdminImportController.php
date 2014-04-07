@@ -529,7 +529,7 @@ class AdminImportControllerCore extends AdminController
 	public function renderForm()
 	{
 		if (!is_dir(AdminImportController::getPath()))
-			return !($this->errors[] = Tools::displayError('The import directory does not extist.'));
+			return !($this->errors[] = Tools::displayError('The import directory does not exist.'));
 
 		if (!is_writable(AdminImportController::getPath()))
 			$this->displayWarning($this->l('The import directory must be writable (CHMOD 755 / 777).'));
@@ -1698,7 +1698,7 @@ class AdminImportControllerCore extends AdminController
 							$error = true;
 
 						if ($error)
-							$this->warnings[] = sprintf(Tools::displayError('Product n°%1$d: the picture cannot be saved: %2$s'), $image->id_product, $url);
+							$this->warnings[] = sprintf(Tools::displayError('Product #%1$d: the picture (%2$s) cannot be saved.'), $image->id_product, $url);
 					}
 				}
 				if (isset($product->id_category))
@@ -1719,7 +1719,7 @@ class AdminImportControllerCore extends AdminController
 						$tab_feature = explode(':', $single_feature);
 						$feature_name = isset($tab_feature[0]) ? trim($tab_feature[0]) : '';
 						$feature_value = isset($tab_feature[1]) ? trim($tab_feature[1]) : '';
-						$position = isset($tab_feature[2]) ? (int)$tab_feature[2] : false;
+						$position = isset($tab_feature[2]) ? (int)$tab_feature[2] - 1 : false;
 						$custom = isset($tab_feature[3]) ? (int)$tab_feature[3] : false;
 						if(!empty($feature_name) && !empty($feature_value))
 						{
@@ -2172,7 +2172,7 @@ class AdminImportControllerCore extends AdminController
 				}
 
 				// Check if warehouse exists
-				if ($info['warehouse'])
+				if (isset($info['warehouse']) && $info['warehouse'])
 				{
 					if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse not set on product with id %s '),$product->id);

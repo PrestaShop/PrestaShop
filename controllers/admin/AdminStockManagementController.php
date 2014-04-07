@@ -62,7 +62,7 @@ class AdminStockManagementControllerCore extends AdminController
 				'search' => false,
 				'class' => 'fixed-width-sm',
 				'align' => 'center',
-				'hint' => $this->l('Quantitity total for all warehouses.')
+				'hint' => $this->l('Quantity total for all warehouses.')
 			),
 		);
 
@@ -119,8 +119,7 @@ class AdminStockManagementControllerCore extends AdminController
 		$this->displayInformation($this->l('Through this interface, you can increase and decrease product stock for an given warehouse.'));
 		$this->displayInformation($this->l('Furthermore, you can alter product quantities between warehouses, or within one warehouse.').'<br />');
 		$this->displayInformation($this->l('If you want to increase quantities of multiple products at once, you can use the "Supply orders" page under the "Stock" menu.').'<br />');
-		$this->displayInformation($this->l('Finally, you need to provide the quantity that you\'ll be adding:'));
-		$this->displayInformation($this->l('"Usable for sale" means that this quantity will be available in your shop(s), otherwise it will be considered reserved (i.e. for other purposes).'));
+		$this->displayInformation($this->l('Finally, you need to provide the quantity that you\'ll be adding: "Usable for sale" means that this quantity will be available in your shop(s), otherwise it will be considered reserved (i.e. for other purposes).'));
 
 		return parent::renderList();
 	}
@@ -696,13 +695,13 @@ class AdminStockManagementControllerCore extends AdminController
 			// get usable flag for source warehouse
 			$usable_from = Tools::getValue('usable_from', null);
 			if (is_null($usable_from))
-				$this->errors[] = Tools::displayError('You have to specify if the product quantity in your source warehous(es) is ready for sale.');
+				$this->errors[] = Tools::displayError('You have to specify if the product quantity in your source warehouse(s) is ready for sale.');
 			$usable_from = (bool)$usable_from;
 
 			// get usable flag for destination warehouse
 			$usable_to = Tools::getValue('usable_to', null);
 			if (is_null($usable_to))
-				$this->errors[] = Tools::displayError('You have to specify if the product quantity in your destination warehous(es) is ready for sale.');
+				$this->errors[] = Tools::displayError('You have to specify if the product quantity in your destination warehouse(s) is ready for sale.');
 			$usable_to = (bool)$usable_to;
 
 			// if we can process stock transfers

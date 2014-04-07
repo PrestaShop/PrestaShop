@@ -160,7 +160,7 @@ class AdminThemesControllerCore extends AdminController
 					'PS_LOGO_MAIL' => array(
 						'title' => $this->l('Mail logo'),
 						'desc' =>
-							((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: No email logo has been indentified. The header logo will be used instead.').'</span><br />' : '').
+							((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: No email logo has been identified. The header logo will be used instead.').'</span><br />' : '').
 							$this->l('Will appear on email headers. If undefined, the header logo will be used.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO_MAIL',
@@ -343,7 +343,7 @@ class AdminThemesControllerCore extends AdminController
 					'label' => $this->l('Preview image for the theme'),
 					'name' => 'image_preview',
 					'display_image' => true,
-					'hint' => sprintf($this->l('Max image size:%1s'), Tools::formatBytes(Tools::getMaxUploadSize())),
+					'hint' => sprintf($this->l('Max image size: %1s'), Tools::formatBytes(Tools::getMaxUploadSize())),
 					'image' => $image_url,
 				),
 				array(
@@ -601,13 +601,12 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processUpdate()
 	{
-		if (Tools::getIsset('id_theme') && Tools::getIsset('name') && Tools::getIsset('responsive') && Tools::getIsset('directory'))
+		if (Tools::getIsset('id_theme') && Tools::getIsset('name') && Tools::getIsset('directory'))
 		{
 
 			$theme = New Theme((int)Tools::getValue('id_theme'));
 			$theme->name = Tools::getValue('name');
 			$theme->directory = Tools::getValue('directory');
-			$theme->responsive = Tools::getValue('responsive');
 			$theme->default_left_column = Tools::getValue('default_left_column');
 			$theme->default_right_column = Tools::getValue('default_right_column');
 			$nb_product_per_page = (int)Tools::getValue('product_per_page');
@@ -615,6 +614,9 @@ class AdminThemesControllerCore extends AdminController
 				$nb_product_per_page = 1;
 
 			$theme->product_per_page = $nb_product_per_page;
+
+			if ($this->context->shop->id_theme == (int)Tools::getValue('id_theme'))
+				Configuration::updateValue('PS_PRODUCTS_PER_PAGE', $nb_product_per_page);
 
 			if (isset($_FILES['image_preview']) && $_FILES['image_preview']['error'] == 0)
 			{
@@ -676,11 +678,14 @@ class AdminThemesControllerCore extends AdminController
 
 		if (empty($this->display))
 		{
-			$this->page_header_toolbar_btn['import_theme'] = array(
-				'href' => self::$currentIndex.'&action=importtheme&token='.$this->token,
-				'desc' => $this->l('Add new theme', null, null, false),
-				'icon' => 'process-icon-new'
-			);
+			if (!defined('_PS_HOST_MODE_'))
+				$this->page_header_toolbar_btn['import_theme'] = array(
+					'href' => self::$currentIndex.'&action=importtheme&token='.$this->token,
+					'desc' => $this->l('Add new theme', null, null, false),
+					'icon' => 'process-icon-new'
+				);
+			if (defined('_PS_HOST_MODE_'))
+				unset($this->toolbar_btn['new']);
 			$this->page_header_toolbar_btn['export_theme'] = array(
 				'href' => self::$currentIndex.'&action=exporttheme&token='.$this->token,
 				'desc' => $this->l('Export theme', null, null, false),
@@ -1404,7 +1409,8 @@ class AdminThemesControllerCore extends AdminController
 	public function processImportTheme()
 	{
 		$this->display = 'importtheme';
-
+		if (defined('_PS_HOST_MODE_'))
+			return true;
 		if (isset($_FILES['themearchive']) && isset($_POST['filename']) && Tools::isSubmit('theme_archive_server'))
 		{
 			$uniqid = uniqid();
@@ -1466,7 +1472,7 @@ class AdminThemesControllerCore extends AdminController
 						$imported_theme = $this->importThemeXmlConfig(simplexml_load_file($sandbox.'uploaded/Config.xml'));
 						if (Validate::isLoadedObject($imported_theme))
 						{
-							if (!copy($sandbox.'uploaded/Config.xml', _PS_ROOT_DIR_.'/config/xml/'.$imported_theme->directory.'.xml'))
+							if (!copy($sandbox.'uploaded/Config.xml', _PS_ROOT_DIR_.'/config/xml/themes/'.$imported_theme->directory.'.xml'))
 								$this->errors[] = $this->l('Can\'t copy configuration file');
 
 							$target_dir = _PS_ALL_THEMES_DIR_.$imported_theme->directory;
@@ -1729,8 +1735,8 @@ class AdminThemesControllerCore extends AdminController
 				{
 
 					$config_file = false;
-					$default_config = _PS_ROOT_DIR_.'/config/xml/default.xml';
-					$theme_config = _PS_ROOT_DIR_.'/config/xml/'.$theme_dir.'.xml';
+					$default_config = _PS_ROOT_DIR_.'/config/xml/themes/default.xml';
+					$theme_config = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme_dir.'.xml';
 
 					if (file_exists($theme_config))
 						$config_file = $theme_config;
@@ -1743,13 +1749,15 @@ class AdminThemesControllerCore extends AdminController
 			}
 
 			$content = '';
-			if (Configuration::hasKey('PS_LOGO') && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
+			if (Configuration::hasKey('PS_LOGO') && trim(Configuration::get('PS_LOGO')) != ''
+				&& file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
 			{
 				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO'));
 				Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
 				Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 			}
-			if (file_exists(_PS_IMG_DIR_.'logo_mobile.jpg') && Configuration::get('PS_LOGO_MOBILE'))
+			if (file_exists(_PS_IMG_DIR_.'logo_mobile.jpg') && Configuration::get('PS_LOGO_MOBILE')
+				 && trim(Configuration::get('PS_LOGO_MOBILE')) != '')
 			{
 				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE'));
 				Configuration::updateValue('SHOP_LOGO_MOBILE_HEIGHT', (int)round($height));
@@ -2086,10 +2094,10 @@ class AdminThemesControllerCore extends AdminController
 		$theme = New Theme((int)Tools::getValue('id_theme'));
 
 		$xml = false;
-		if (file_exists(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml');
-		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/default.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/default.xml');
+		if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
+			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml');
+		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/default.xml'))
+			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/default.xml');
 
 		if ($xml)
 		{
@@ -2205,10 +2213,10 @@ class AdminThemesControllerCore extends AdminController
 					continue;
 
 				$old_xml_name = 'default.xml';
-				if (file_exists(_PS_ROOT_DIR_.'/config/xml/'.$shop_theme->directory.'.xml'))
+				if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$shop_theme->directory.'.xml'))
 					$old_xml_name = $shop_theme->directory.'.xml';
 
-				$shop_xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$old_xml_name);
+				$shop_xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$old_xml_name);
 				$theme_shop_module = $this->getModules($shop_xml);
 
 				$to_shop_uninstall = array_merge($theme_shop_module['to_install'], $theme_shop_module['to_enable']);
@@ -2347,10 +2355,10 @@ class AdminThemesControllerCore extends AdminController
 			$shops = Tools::getValue('checkBoxShopAsso_theme');
 
 		$xml = false;
-		if (file_exists(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml');
-		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/default.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/default.xml');
+		if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
+			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml');
+		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/default.xml'))
+			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/default.xml');
 
 		if ($xml)
 		{

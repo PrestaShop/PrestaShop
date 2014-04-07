@@ -1494,7 +1494,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
     public function displayChangestateLink($token = null, $id)
     {
         if (!array_key_exists('State', self::$cache_lang))
-            self::$cache_lang['State'] = $this->l('Change state');
+            self::$cache_lang['State'] = $this->l('Change status');
 
         $this->context->smarty->assign(array(
             'href' => self::$currentIndex.

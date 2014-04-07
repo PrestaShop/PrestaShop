@@ -146,7 +146,7 @@ class PrestaShopAutoload
 		$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
 		if ($filename_tmp !== false && file_put_contents($filename_tmp, $content) !== false)
 		{
-			if (!rename($filename_tmp, $filename))
+			if (!@rename($filename_tmp, $filename))
 				unlink($filename_tmp);
 			else
 				@chmod($filename, 0666);
