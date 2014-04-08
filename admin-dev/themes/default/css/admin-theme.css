@@ -3072,6 +3072,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap #login-panel #remind-me { margin-top: 0; }
 .bootstrap #login-footer a { color: #a0aab5; }
 .bootstrap #module-list h3 { position: relative; top: 0; margin: 0; padding: 0; background-color: transparent; color: #383f50; left: 0; }
+.bootstrap #module-list select.active { background-color: #00aff0; color: white; }
 .bootstrap .hook_panel { margin-bottom: 10px !important; border: solid #e6e6e6 1px; -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 -2px 0 inset; box-shadow: rgba(0, 0, 0, 0.1) 0 -2px 0 inset; -webkit-border-radius: 3px; border-radius: 3px; padding: 10px 10px 5px 10px; }
 .bootstrap .module_name { font-size: 1.2em; }
 .bootstrap .hook_panel_header { margin: 0 -10px 0 -10px; padding: 0 10px 10px 10px; }
@@ -3938,12 +3939,10 @@ i.mce-i-backcolor { background: #bbbbbb; }
 .nobootstrap .panel:not(.bootstrap) .tree .tree-item-disable:hover, .nobootstrap .bootstrap #dash_version:not(.bootstrap) .tree .tree-item-disable:hover, .bootstrap .nobootstrap #dash_version:not(.bootstrap) .tree .tree-item-disable:hover, .nobootstrap .bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) .tree .tree-item-disable:hover, .bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) .tree .tree-item-disable:hover, .nobootstrap .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) .tree .tree-item-disable:hover, .bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) .tree .tree-item-disable:hover, .nobootstrap .panel:not(.bootstrap) .tree .tree-folder-name-disable:hover, .nobootstrap .bootstrap #dash_version:not(.bootstrap) .tree .tree-folder-name-disable:hover, .bootstrap .nobootstrap #dash_version:not(.bootstrap) .tree .tree-folder-name-disable:hover, .nobootstrap .bootstrap .message-item-initial .message-item-initial-body:not(.bootstrap) .tree .tree-folder-name-disable:hover, .bootstrap .message-item-initial .nobootstrap .message-item-initial-body:not(.bootstrap) .tree .tree-folder-name-disable:hover, .nobootstrap .bootstrap .timeline .timeline-item .timeline-caption .timeline-panel:not(.bootstrap) .tree .tree-folder-name-disable:hover, .bootstrap .timeline .timeline-item .timeline-caption .nobootstrap .timeline-panel:not(.bootstrap) .tree .tree-folder-name-disable:hover { color: #cccccc; background-color: none; }
 
 @media print { * { color: black !important; border-color: black !important; background: transparent !important; font-family: Georgia, "Times New Roman", Times, serif !important; text-shadow: none !important; -webkit-box-shadow: none !important; box-shadow: none !important; }
-  .page-sidebar #content { margin-left: 10px !important; }
   [class^="icon-"], [class^="process-icon-"] { font-family: "FontAwesome" !important; }
-  #header, #footer, #nav-sidebar, .hidden-print { display: none !important; }
+  #header, #footer, #nav-sidebar, #nav-topbar, .hidden-print { display: none !important; }
   .visible-print { display: block !important; }
   hr { display: none !important; }
-  h4 { margin: 0 0 10px 0 !important; }
   #main { width: 8.5in !important; float: none !important; margin: 0 auto !important; padding: 0 !important; }
   #main #content.bootstrap { margin: 0 !important; padding: 0 !important; }
   #main #content.bootstrap .page-head { display: none !important; }
@@ -3957,6 +3956,7 @@ i.mce-i-backcolor { background: #bbbbbb; }
   #main #content.bootstrap .panel-heading-action { display: none; }
   #main #content.bootstrap .nav-tabs li a { display: none; border-bottom-color: white !important; background-color: white !important; }
   #main #content.bootstrap .tab-content > .tab-pane { display: block !important; opacity: 1 !important; }
+  #main #content.bootstrap h4 { margin: 0 0 10px 0 !important; }
   #main #content.bootstrap #shipping .form-horizontal { padding-bottom: 10px !important; }
   #main #content.bootstrap #addressShipping { width: 49% !important; float: left !important; margin-bottom: 0 !important; }
   #main #content.bootstrap #addressInvoice { width: 49% !important; float: right !important; margin-bottom: 0 !important; }
