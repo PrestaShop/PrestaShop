@@ -2139,7 +2139,8 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'submit' => array(
 						'title' => $this->l('Save'),
-					)
+					),
+					'desc' => $this->l('The themes include their own modules in order to work properly. This option determines which module should be enabled or disabled. If you are unsure of what to do next, just press the "Save" button and proceed to the next step.')
 				)
 			);
 
@@ -2157,8 +2158,8 @@ class AdminThemesControllerCore extends AdminController
 					'expand' => array(
 						'print_total' => count($to_install),
 						'default' => 'show',
-						'show' => array('text' => $this->l('show'), 'icon' => 'plus-sign-alt'),
-						'hide' => array('text' => $this->l('hide'), 'icon' => 'minus-sign-alt')
+						'show' => array('text' => $this->l('Show'), 'icon' => 'plus-sign-alt'),
+						'hide' => array('text' => $this->l('Hide'), 'icon' => 'minus-sign-alt')
 					),
 				);
 			if (count($to_enable) > 0)
@@ -2174,8 +2175,8 @@ class AdminThemesControllerCore extends AdminController
 					'expand' => array(
 						'print_total' => count($to_enable),
 						'default' => 'show',
-						'show' => array('text' => $this->l('show'), 'icon' => 'plus-sign-alt'),
-						'hide' => array('text' => $this->l('hide'), 'icon' => 'minus-sign-alt')
+						'show' => array('text' => $this->l('Show'), 'icon' => 'plus-sign-alt'),
+						'hide' => array('text' => $this->l('Hide'), 'icon' => 'minus-sign-alt')
 					),
 				);
 			if (count($to_disable) > 0)
@@ -2191,8 +2192,8 @@ class AdminThemesControllerCore extends AdminController
 					'expand' => array(
 						'print_total' => count($to_disable),
 						'default' => 'show',
-						'show' => array('text' => $this->l('show'), 'icon' => 'plus-sign-alt'),
-						'hide' => array('text' => $this->l('hide'), 'icon' => 'minus-sign-alt')
+						'show' => array('text' => $this->l('Show'), 'icon' => 'plus-sign-alt'),
+						'hide' => array('text' => $this->l('Hide'), 'icon' => 'minus-sign-alt')
 					),
 				);
 			$shops = array();
@@ -2248,8 +2249,8 @@ class AdminThemesControllerCore extends AdminController
 					'expand' => array(
 						'print_total' => count($to_shop_uninstall_formated),
 						'default' => 'show',
-						'show' => array('text' => $this->l('show'), 'icon' => 'plus-sign-alt'),
-						'hide' => array('text' => $this->l('hide'), 'icon' => 'minus-sign-alt')
+						'show' => array('text' => $this->l('Show'), 'icon' => 'plus-sign-alt'),
+						'hide' => array('text' => $this->l('Hide'), 'icon' => 'minus-sign-alt')
 					),
 					'name' => 'to_disable_shop'.$shop['id_shop']
 				);
