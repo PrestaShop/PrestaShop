@@ -1807,7 +1807,7 @@ class ToolsCore
 		$protocol_link = Tools::getCurrentUrlProtocolPrefix();
 		if (array_key_exists(1, $matches) && array_key_exists(2, $matches))
 		{
-			if (!preg_match('/^https?:\/\//iUs', $matches[2]))
+			if (!preg_match('/^(?:https?:)?\/\//iUs', $matches[2]))
 			{
 				$tmp = dirname($current_css_file).'/'.$matches[2];
 				return $matches[1].$protocol_link.Tools::getMediaServer($tmp).$tmp;
