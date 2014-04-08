@@ -302,6 +302,3 @@
 	path = modules/cheque
 	url = https://github.com/PrestaShop/cheque.git
 	branch = master
-[submodule "modules/customerbackoffice"]
-	path = modules/customerbackoffice
-	url = http://vAugagneur@stash.prestashop.com/scm/prhosting/customer-back-office-module.git
