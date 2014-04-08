@@ -5795,10 +5795,7 @@ table.table_block td {
   font-size: 17px;
   line-height: 23px;
   color: #3a3939;
-  margin-bottom: 0;
-  display: inline-block;
-  width: 100%;
-  overflow: hidden; }
+  margin-bottom: 0; }
   .product-name a {
     font-size: 17px;
     line-height: 23px;
