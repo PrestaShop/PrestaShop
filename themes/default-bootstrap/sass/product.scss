@@ -473,7 +473,16 @@ span.view_scroll_spacer {
 .box-cart-bottom{
 	padding: 0;	
 }
-
+#short_description_content,
+.page-product-box {
+	a{
+		color: #333333;
+		text-decoration: underline;
+	}
+	a.btn{
+		text-decoration: none;
+	}
+}
 .box-info-product {
 	background: $list-info-bg;	
 	border: 1px solid #d2d0d0;
