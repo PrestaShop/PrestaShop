@@ -2721,26 +2721,35 @@ exit;
 		return false;
 	}
 
-
-	public static function recurseCopy($src, $dst)
+	/**
+	 * Copy the folder $src into $dst, $dst is created if it do not exist
+	 * @param      $src
+	 * @param      $dst
+	 * @param bool $del if true, delete the file after copy
+	 */
+	public static function recurseCopy($src, $dst, $del = false)
 	{
 		$dir = opendir($src);
-		@mkdir($dst);
+
+		if (!Tools::file_exists_cache($dst))
+			mkdir($dst);
 		while (false !== ($file = readdir($dir)))
 		{
 			if (($file != '.') && ($file != '..'))
 			{
 				if (is_dir($src.DIRECTORY_SEPARATOR.$file))
-				{
-					self::recurseCopy($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file);
-				}
+					self::recurseCopy($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file, $del);
 				else
 				{
 					copy($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file);
+					if ($del && is_writable($src.DIRECTORY_SEPARATOR.$file))
+						unlink($src.DIRECTORY_SEPARATOR.$file);
 				}
 			}
 		}
 		closedir($dir);
+		if ($del && is_writable($src))
+			rmdir($src);
 	}
 
 	/**
