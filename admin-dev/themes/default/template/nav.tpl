@@ -95,7 +95,7 @@
 			{foreach $tabs as $t}
 				{if $t.active}
 				<li class="maintab {if $t.current}active{/if} {if $t.sub_tabs|@count}has_submenu{/if}" id="maintab{$t.id_tab}" data-submenu="{$t.id_tab}">
-					<a href="{if $t.sub_tabs|@count}{$t.sub_tabs[0].href}{else}{$t.href}{/if}" class="title" >
+					<a href="{if $t.sub_tabs|@count && isset($t.sub_tabs[0].href)}{$t.sub_tabs[0].href}{else}{$t.href}{/if}" class="title" >
 						<i class="icon-{$t.class_name}"></i>
 						<span>{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}</span>
 					</a>
