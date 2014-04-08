@@ -77,14 +77,14 @@
 							</div>
 						{/if}
 						{if isset($product.new) && $product.new == 1}
-							<span class="new-box">
+							<a class="new-box" href="{$product.link|escape:'html':'UTF-8'}">
 								<span class="new-label">{l s='New'}</span>
-							</span>
+							</a>
 						{/if}
 						{if isset($product.on_sale) && $product.on_sale && isset($product.show_price) && $product.show_price && !$PS_CATALOG_MODE}
-							<span class="sale-box">
+							<a class="sale-box" href="{$product.link|escape:'html':'UTF-8'}">
 								<span class="sale-label">{l s='Sale!'}</span>
-							</span>
+							</a>
 						{/if}
 					</div>
 				</div>
