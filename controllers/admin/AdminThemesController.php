@@ -2140,7 +2140,7 @@ class AdminThemesControllerCore extends AdminController
 					'submit' => array(
 						'title' => $this->l('Save'),
 					),
-					'desc' => $this->l('In order to work properly, themes come with their own modules. This option determines which modules have to be enabled/disabled. If you are not sure what to do, just press the "Save" button to go to the next step')
+					'desc' => $this->l('The themes include their own modules in order to work properly. This option determines which module should be enabled or disabled. If you are unsure of what to do next, just press the "Save" button and proceed to the next step.')
 				)
 			);
 
