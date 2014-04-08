@@ -300,7 +300,7 @@ class DispatcherCore
 
 			// Dispatch back office controller + module back office controller
 			case self::FC_ADMIN :
-				if ($this->use_default_controller && !Tools::getValue('token'))
+				if ($this->use_default_controller && !Tools::getValue('token') && Validate::isLoadedObject(Context::getContext()->employee) && Context::getContext()->employee->isLoggedBack())
 					Tools::redirectAdmin('index.php?controller='.$this->controller.'&token='.Tools::getAdminTokenLite($this->controller));
 
 				$tab = Tab::getInstanceFromClassName($this->controller, Configuration::get('PS_LANG_DEFAULT'));
