@@ -398,6 +398,14 @@ span.view_scroll_spacer {
 .box-cart-bottom {
   padding: 0; }
 
+#short_description_content a,
+.page-product-box a {
+  color: #333333;
+  text-decoration: underline; }
+#short_description_content a.btn,
+.page-product-box a.btn {
+  text-decoration: none; }
+
 .box-info-product {
   background: #f6f6f6;
   border: 1px solid #d2d0d0;
