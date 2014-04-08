@@ -26,14 +26,10 @@
 <table id="module-list" class="table">
 	<thead>
 		<tr>
-			<th width="1%">
-				<!-- <input type="checkbox" rel="false" class="noborder" id="checkme"> -->
-			</th>
-			<th colspan="3">
-				<div class="pull-left">
-					{include file='controllers/modules/filters.tpl'}
-				</div>
-				<!-- 
+			<th colspan="4">
+				{include file='controllers/modules/filters.tpl'}
+				<!--
+				<input type="checkbox" rel="false" class="noborder" id="checkme">
 				<div class="pull-right">
 					<a class="btn btn-default {if !isset($smarty.get.select)} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&amp;token={$smarty.get.token|htmlentities}" title="{l s='Normal view'}">
 						<i class="icon-list"></i> 
@@ -41,7 +37,7 @@
 					<a class="btn btn-default {if isset($smarty.get.select) && $smarty.get.select == 'favorites'} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&amp;token={$smarty.get.token|htmlentities}&select=favorites" title="{l s='Favorites view'}">
 						<i class="icon-star"></i>
 					</a>
-				</div>
+				</div> 
 				-->
 			</th>
 		</tr>
@@ -217,7 +213,11 @@ module_inactive
 	{else}
 		<tbody>
 			<tr>
-				<td colspan="4" class="text-center"><i class="icon-warning-sign"></i> {l s='No modules available in this section.'}</td>
+				<td colspan="4" class="list-empty">
+					<div class="list-empty-msg">
+						<i class="icon-warning-sign list-empty-icon"></i> {l s='No modules available in this section.'}
+					</div>
+				</td>
 			</tr>
 		</tbody>
 	</table>
