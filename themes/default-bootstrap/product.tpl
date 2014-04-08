@@ -59,6 +59,11 @@
 		<div class="pb-left-column col-xs-12 col-sm-4 col-md-5">
 			<!-- product img-->        
 			<div id="image-block" class="clearfix">
+				{if $product->new}
+					<span class="new-box">
+						<span class="new-label">{l s='New'}</span>
+					</span>
+				{/if}
 				{if $product->on_sale}
 					<span class="sale-box no-print">
 						<span class="sale-label">{l s='Sale!'}</span>
