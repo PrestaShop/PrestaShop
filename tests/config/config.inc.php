@@ -25,5 +25,5 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-require dirname(__FILE__).'/../classes/PrestaShopPHPUnit.php';
-include (dirname(__FILE__).'/../../config/config.inc.php');
+require(dirname(__FILE__).'/../classes/PrestaShopPHPUnit.php');
+require(dirname(__FILE__).'/../../config/config.inc.php');
