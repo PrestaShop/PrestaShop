@@ -385,7 +385,8 @@ abstract class PaymentModuleCore extends Module
 							'name' => $product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : ''),
 							'unit_price' => Tools::displayPrice($product_price, $this->context->currency, false),
 							'price' => Tools::displayPrice($product_price * $product['quantity'], $this->context->currency, false),
-							'quantity' => $product['quantity']
+							'quantity' => $product['quantity'],
+							'customization' => array()
 						);
 
 						$customized_datas = Product::getAllCustomizedDatas((int)$order->id_cart);
