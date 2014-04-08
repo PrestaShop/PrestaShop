@@ -678,10 +678,13 @@ table.table_block td {
 	line-height: 23px;
 	color: $product-name-color;
 	margin-bottom: 0;
+	display: inline-block;
+	width: 100%;
+	overflow: hidden;
 	a {
 		font-size: 17px;
 		line-height: 23px;
-		color: $product-name-color;
+		color: $product-name-color;	
 		&:hover {
 			color: $product-name-hover-color;
 		}
