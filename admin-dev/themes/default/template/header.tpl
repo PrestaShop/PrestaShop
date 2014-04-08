@@ -77,7 +77,7 @@
 {/if}
 {if isset($css_files)}
 {foreach from=$css_files key=css_uri item=media}
-	<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
+	<link href="{$css_uri}" rel="stylesheet" type="text/css"/>
 {/foreach}
 {/if}
 {if isset($js_files)}
