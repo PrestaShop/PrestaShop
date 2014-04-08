@@ -30,10 +30,7 @@ class AdminCarriersControllerCore extends AdminController
 
 	public function __construct()
 	{
-<<<<<<< HEAD
-=======
-		
->>>>>>> 8ca35036d0a62a434a9d2665627d45125edc3f12
+
 		if ($id_carrier = Tools::getValue('id_carrier') && !Tools::isSubmit('deletecarrier') && !Tools::isSubmit('statuscarrier') && !Tools::isSubmit('isFreecarrier'))
 			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCarrierWizard').'&id_carrier='.(int)$id_carrier);
 
