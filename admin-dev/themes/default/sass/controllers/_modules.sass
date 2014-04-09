@@ -8,8 +8,10 @@
 		color: $main-color
 		@include left(0)
 	select.active
-		background-color: $brand-primary
-		color: white
+		border: solid 1px $brand-primary
+		background: lighten($brand-primary,40%)
+		option
+			background: white!important
 
 .hook_panel
 	margin-bottom: 10px!important
