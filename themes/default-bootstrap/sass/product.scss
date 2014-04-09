@@ -46,6 +46,8 @@ img{
 
 	#image-block {
 		position: relative;
+		display: block;
+		cursor: pointer;
 		padding: 5px;
 		border: 1px solid $product-image-border;
 		background: $light-background;
@@ -59,8 +61,6 @@ img{
 		}
 
 		#view_full_size {
-			display: block;
-			cursor: pointer;
 			.span_link {
 				position: absolute;
 				bottom: 20px;
