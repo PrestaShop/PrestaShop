@@ -390,7 +390,8 @@ class DispatcherCore
 			$this->request_uri = $_SERVER['HTTP_X_REWRITE_URL'];
 		$this->request_uri = rawurldecode($this->request_uri);
 		
-		$this->request_uri = preg_replace('#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i', '/', $this->request_uri);
+		if (isset(Context::getContext()->shop) && is_object(Context::getContext()->shop))
+			$this->request_uri = preg_replace('#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i', '/', $this->request_uri);
 
 		// If there are several languages, get language from uri
 		if ($this->use_routes && Language::isMultiLanguageActivated())
