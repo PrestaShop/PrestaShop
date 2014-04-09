@@ -450,7 +450,7 @@ class DispatcherCore
 			$iso_lang = Tools::getValue('isolang');
 			if (isset($context->language))
 				$id_lang = (int)$context->language->id;
-			if (Validate::isLanguageIsoCode($iso_lang) && !empty($iso_lang) || !isset($id_lang))
+			if ((!empty($iso_lang) && Validate::isLanguageIsoCode($iso_lang)) || !isset($id_lang))
 				$id_lang = Language::getIdByIso($iso_lang);
 
 			// Load routes from meta table
