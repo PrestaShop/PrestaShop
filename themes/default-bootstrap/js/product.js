@@ -207,8 +207,8 @@ $(document).ready(function(){
 		if(!!$.prototype.fancybox)
 			$('.fancybox').fancybox({
 				'hideOnContentClick': true,
-				'transitionIn'	: 'elastic',
-				'transitionOut'	: 'elastic'
+				'openEffect'	: 'elastic',
+				'closeEffect'	: 'elastic'
 			});
 	}
 	else
@@ -216,12 +216,16 @@ $(document).ready(function(){
 		$(document).on('click', '.fancybox', function(e){
 			e.preventDefault();
 		});
+
 		$(document).on('click', '#bigpic', function(e){
 			e.preventDefault();
 			var productUrl= window.document.location.href + '';
 			var data = productUrl.replace('content_only=1', '');
 			window.parent.document.location.href = data;
 		});
+
+		if (typeof ajax_allowed != 'undefined' && !ajax_allowed)
+			$('#buy_block').attr('target', '_top');
 	}
 
 	if (!!$.prototype.bxSlider)

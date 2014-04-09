@@ -59,6 +59,11 @@
 		<div class="pb-left-column col-xs-12 col-sm-4 col-md-5">
 			<!-- product img-->        
 			<div id="image-block" class="clearfix">
+				{if $product->new}
+					<span class="new-box">
+						<span class="new-label">{l s='New'}</span>
+					</span>
+				{/if}
 				{if $product->on_sale}
 					<span class="sale-box no-print">
 						<span class="sale-label">{l s='Sale!'}</span>
@@ -239,7 +244,7 @@
 		<div class="pb-right-column col-xs-12 col-sm-4 col-md-3">
 			{if ($product->show_price && !isset($restricted_country_mode)) || isset($groups) || $product->reference || (isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS)}
 			<!-- add to cart form-->
-			<form id="buy_block" {if $PS_CATALOG_MODE && !isset($groups) && $product->quantity > 0}class="hidden"{/if} action="{$link->getPageLink('cart')|escape:'html':'UTF-8'}" method="post">
+			<form id="buy_block"{if $PS_CATALOG_MODE && !isset($groups) && $product->quantity > 0} class="hidden"{/if} action="{$link->getPageLink('cart')|escape:'html':'UTF-8'}" method="post">
 				<!-- hidden datas -->
 				<p class="hidden">
 					<input type="hidden" name="token" value="{$static_token}" />

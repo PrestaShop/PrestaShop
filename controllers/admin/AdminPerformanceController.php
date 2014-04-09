@@ -587,11 +587,14 @@ class AdminPerformanceControllerCore extends AdminController
 		));
 	}
 
-	public function initToolbar()
+	public function initPageHeaderToolbar()
 	{
-		$this->toolbar_btn['save'] = array(
-			'href' => '#',
-			'desc' => $this->l('Save')
+		parent::initPageHeaderToolbar();
+
+		$this->page_header_toolbar_btn['clear_cache'] = array(
+			'href' => self::$currentIndex.'&token='.$this->token.'&empty_smarty_cache=1',
+			'desc' => $this->l('Clear cache'),
+			'icon' => 'process-icon-eraser'
 		);
 	}
 
@@ -883,7 +886,7 @@ class AdminPerformanceControllerCore extends AdminController
 		}
 	}
 
-	public function ajaxProcess()
+	public function displayAjaxTestServer()
 	{
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)

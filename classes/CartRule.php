@@ -300,6 +300,40 @@ class CartRuleCore extends ObjectModel
 				unset($result[$key]);
 			}
 
+		if (isset($cart) && isset($cart->id))
+			foreach ($result as $cart_rule)
+				if ($cart_rule['product_restriction'])
+				{
+					$cr = new CartRule((int)$cart_rule['id_cart_rule']);
+					$r = $cr->checkProductRestrictions(Context::getContext(), false, false);
+					if ($r !== false)
+						continue;
+					unset($result[$key]);
+				}
+
+		foreach ($result as $cart_rule)
+			if ($cart_rule['country_restriction'])
+			{
+				$countries = Db::getInstance()->ExecuteS('
+					SELECT `id_country`
+					FROM `'._DB_PREFIX_.'address`
+					WHERE `id_customer` = '.(int)$id_customer.'
+					AND `deleted` = 0'
+				);
+
+				if (is_array($countries) && count($countries))
+					foreach($countries as $country)
+					{
+						$id_cart_rule = (bool)Db::getInstance()->getValue('
+							SELECT crc.id_cart_rule
+							FROM '._DB_PREFIX_.'cart_rule_country crc
+							WHERE crc.id_cart_rule = '.(int)$cart_rule['id_cart_rule'].'
+							AND crc.id_country = '.(int)$country['id_country']);
+						if (!$id_cart_rule)
+							unset($result[$key]);
+					}
+			}
+
 		// Retrocompatibility with 1.4 discounts
 		foreach ($result as &$cart_rule)
 		{
