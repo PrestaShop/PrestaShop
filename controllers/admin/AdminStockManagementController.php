@@ -62,7 +62,7 @@ class AdminStockManagementControllerCore extends AdminController
 				'search' => false,
 				'class' => 'fixed-width-sm',
 				'align' => 'center',
-				'hint' => $this->l('Quantitity total for all warehouses.')
+				'hint' => $this->l('Quantity total for all warehouses.')
 			),
 		);
 
@@ -597,7 +597,7 @@ class AdminStockManagementControllerCore extends AdminController
 			// get usable flag
 			$usable = Tools::getValue('usable', null);
 			if (is_null($usable))
-				$this->errors[] = Tools::displayError('You have to specify if the product quantity is usable for sale on shops.');
+				$this->errors[] = Tools::displayError('You have to specify whether the product quantity is usable for sale on shops or not.');
 			$usable = (bool)$usable;
 		}
 
@@ -695,13 +695,13 @@ class AdminStockManagementControllerCore extends AdminController
 			// get usable flag for source warehouse
 			$usable_from = Tools::getValue('usable_from', null);
 			if (is_null($usable_from))
-				$this->errors[] = Tools::displayError('You have to specify if the product quantity in your source warehous(es) is ready for sale.');
+				$this->errors[] = Tools::displayError('You have to specify whether the product quantity in your source warehouse(s) is ready for sale or not.');
 			$usable_from = (bool)$usable_from;
 
 			// get usable flag for destination warehouse
 			$usable_to = Tools::getValue('usable_to', null);
 			if (is_null($usable_to))
-				$this->errors[] = Tools::displayError('You have to specify if the product quantity in your destination warehous(es) is ready for sale.');
+				$this->errors[] = Tools::displayError('You have to specify whether the product quantity in your destination warehouse(s) is ready for sale or not.');
 			$usable_to = (bool)$usable_to;
 
 			// if we can process stock transfers

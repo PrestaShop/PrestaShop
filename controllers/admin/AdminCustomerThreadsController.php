@@ -166,7 +166,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					),
 					'PS_SAV_IMAP_DELETE_MSG' => array(
 						'title' => $this->l('Delete messages'),
-						'hint' => $this->l('Delete messages after synchronization. If you do not enable this option, the synchrozination will take more time.'),
+						'hint' => $this->l('Delete messages after synchronization. If you do not enable this option, the synchronization will take more time.'),
 						'type' => 'bool',
 					),
 					'PS_SAV_IMAP_CREATE_THREADS' => array(

@@ -1410,7 +1410,8 @@ class ToolsCore
 	{
 		$last = $directory[strlen($directory) - 1];
 
-		if (in_array($last, array('/', '\\'))) {
+		if (in_array($last, array('/', '\\')))
+		{
 			$directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 			return $directory;
 		}
@@ -1807,7 +1808,7 @@ class ToolsCore
 		$protocol_link = Tools::getCurrentUrlProtocolPrefix();
 		if (array_key_exists(1, $matches) && array_key_exists(2, $matches))
 		{
-			if (!preg_match('/^https?:\/\//iUs', $matches[2]))
+			if (!preg_match('/^(?:https?:)?\/\//iUs', $matches[2]))
 			{
 				$tmp = dirname($current_css_file).'/'.$matches[2];
 				return $matches[1].$protocol_link.Tools::getMediaServer($tmp).$tmp;
@@ -1865,7 +1866,7 @@ class ToolsCore
 
 	public static function getMediaServer($filename)
 	{
-		if (self::$_cache_nb_media_servers === null)
+		if (self::$_cache_nb_media_servers === null && defined('_MEDIA_SERVER_1_') && defined('_MEDIA_SERVER_2_') && defined('_MEDIA_SERVER_3_'))
 		{
 			if (_MEDIA_SERVER_1_ == '')
 				self::$_cache_nb_media_servers = 0;
@@ -1972,7 +1973,7 @@ class ToolsCore
 
 		fwrite($write_fd, "RewriteEngine on\n");
 	
-		if (!$medias)
+		if (!$medias && defined('_MEDIA_SERVER_1_') && defined('_MEDIA_SERVER_2_') && defined('_MEDIA_SERVER_3_'))
 			$medias = array(_MEDIA_SERVER_1_, _MEDIA_SERVER_2_, _MEDIA_SERVER_3_);
 		
 		$media_domains = '';
@@ -2720,6 +2721,36 @@ exit;
 		return false;
 	}
 
+	/**
+	 * Copy the folder $src into $dst, $dst is created if it do not exist
+	 * @param      $src
+	 * @param      $dst
+	 * @param bool $del if true, delete the file after copy
+	 */
+	public static function recurseCopy($src, $dst, $del = false)
+	{
+		$dir = opendir($src);
+
+		if (!Tools::file_exists_cache($dst))
+			mkdir($dst);
+		while (false !== ($file = readdir($dir)))
+		{
+			if (($file != '.') && ($file != '..'))
+			{
+				if (is_dir($src.DIRECTORY_SEPARATOR.$file))
+					self::recurseCopy($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file, $del);
+				else
+				{
+					copy($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file);
+					if ($del && is_writable($src.DIRECTORY_SEPARATOR.$file))
+						unlink($src.DIRECTORY_SEPARATOR.$file);
+				}
+			}
+		}
+		closedir($dir);
+		if ($del && is_writable($src))
+			rmdir($src);
+	}
 
 	/**
 	 * @params string $path Path to scan

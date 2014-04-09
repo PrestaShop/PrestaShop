@@ -2088,7 +2088,7 @@ class CartCore extends ObjectModel
 			}
 		}
 
-		$cart_rules = CartRule::getCustomerCartRules(Context::getContext()->cookie->id_lang, Context::getContext()->cookie->id_customer, true);
+		$cart_rules = CartRule::getCustomerCartRules(Context::getContext()->cookie->id_lang, Context::getContext()->cookie->id_customer, true, true, false, $this);
 
 		$free_carriers_rules = array();
 		foreach ($cart_rules as $cart_rule)

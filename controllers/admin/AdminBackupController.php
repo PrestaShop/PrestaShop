@@ -245,7 +245,7 @@ class AdminBackupControllerCore extends AdminController
 		}
 		while (($file = readdir($dh)) !== false)
 		{
-			if (preg_match('/^([\d]+-[a-z\d]+)\.sql(\.gz|\.bz2)?$/', $file, $matches) == 0)
+			if (preg_match('/^([_a-zA-Z0-9\-]*[\d]+-[a-z\d]+)\.sql(\.gz|\.bz2)?$/', $file, $matches) == 0)
 				continue;
 			$timestamp = (int)$matches[1];
 			$date = date('Y-m-d H:i:s', $timestamp);

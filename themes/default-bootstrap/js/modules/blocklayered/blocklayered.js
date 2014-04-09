@@ -42,8 +42,7 @@ $(document).ready(function()
 		reloadContent();
 	});
 
-	// Click on checkbox
-	$(document).on('change', '#layered_form select', function(e) {
+	$(document).on('click', '#layered_form .select', function(e) {
 		reloadContent();
 	});
 

@@ -74,11 +74,13 @@
 						<input id="password_addons" class="form-control" name="password_addons" type="password" value=""  autocomplete="off" class="form-control ac_input">
 					</div>
 				</div>
-				<div class="row">
+				<div class="form-group">
 					<button id="addons_login_button" class="btn btn-default btn-block btn-lg" type="submit">
 						<i class="icon-unlock"></i> {l s='Sign in'}
 					</button>
-					<a target="_blank" href="http://addons.prestashop.com/en/login#createnow">{l s="Don't have an account ?"}</a>
+				</div>
+				<div class="row">
+					<a target="_blank" href="{$addons_register_link}">{l s="Don't have an account ?"}</a>
 				</div>
 				<div id="addons_loading" class="help-block"></div>
 			</form>
