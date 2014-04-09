@@ -425,28 +425,32 @@ class DispatcherCore
 						}
 			}
 		
+		$languages = array();
 		if (isset($context->language) && !in_array($context->language->id, $languages = Language::getLanguages()))
+		{
 			$languages[] = (int)$context->language->id;
-		// Set default routes
-		foreach ($languages as $lang)
-			foreach ($this->default_routes as $id => $route)
-				$this->addRoute(
-					$id,
-					$route['rule'],
-					$route['controller'],
-					$lang['id_lang'],
-					$route['keywords'],
-					isset($route['params']) ? $route['params'] : array(),
-					$id_shop
-				);
-		
+			// Set default routes
+			foreach ($languages as $lang)
+				foreach ($this->default_routes as $id => $route)
+					$this->addRoute(
+						$id,
+						$route['rule'],
+						$route['controller'],
+						$lang['id_lang'],
+						$route['keywords'],
+						isset($route['params']) ? $route['params'] : array(),
+						$id_shop
+					);
+		}
+
 		// Load the custom routes prior the defaults to avoid infinite loops
 		if ($this->use_routes)
 		{
 			// Get iso lang
 			$iso_lang = Tools::getValue('isolang');
-			$id_lang = (int)$context->language->id;
-			if (!empty($iso_lang))
+			if (isset($context->language))
+				$id_lang = (int)$context->language->id;
+			if (!empty($iso_lang) || !isset($id_lang))
 				$id_lang = Language::getIdByIso($iso_lang);
 
 			// Load routes from meta table
