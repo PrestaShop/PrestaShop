@@ -147,7 +147,7 @@ $(document).ready(function(){
 		});
 	}
 	//add a link on the span 'view full size' and on the big image
-	$(document).on('click', '#view_full_size, #image-block img', function(e){
+	$(document).on('click', '#view_full_size, #image-block', function(e){
 		$('#views_block .shown').click();
 	});
 
@@ -217,7 +217,7 @@ $(document).ready(function(){
 			e.preventDefault();
 		});
 
-		$(document).on('click', '#bigpic', function(e){
+		$(document).on('click', '#image-block', function(e){
 			e.preventDefault();
 			var productUrl= window.document.location.href + '';
 			var data = productUrl.replace('content_only=1', '');

@@ -40,6 +40,8 @@ img {
 /* .pb-left-column ***************************************************************************** */
 .pb-left-column #image-block {
   position: relative;
+  display: block;
+  cursor: pointer;
   padding: 5px;
   border: 1px solid #dbdbdb;
   background: white; }
@@ -50,36 +52,33 @@ img {
   .pb-left-column #image-block img {
     background: #fbfbfb;
     width: 100%; }
-  .pb-left-column #image-block #view_full_size {
+  .pb-left-column #image-block #view_full_size .span_link {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    margin-left: -68px;
     display: block;
-    cursor: pointer; }
-    .pb-left-column #image-block #view_full_size .span_link {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      margin-left: -68px;
-      display: block;
-      padding: 10px 0;
-      text-align: center;
+    padding: 10px 0;
+    text-align: center;
+    line-height: 22px;
+    color: #777676;
+    width: 136px;
+    text-align: center;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.5);
+    -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+    -moz-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16); }
+    .pb-left-column #image-block #view_full_size .span_link:after {
+      font-family: "FontAwesome";
+      color: #c0c0c0;
+      font-size: 20px;
       line-height: 22px;
-      color: #777676;
-      width: 136px;
-      text-align: center;
-      font-weight: 700;
-      background: rgba(255, 255, 255, 0.5);
-      -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
-      -moz-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16); }
-      .pb-left-column #image-block #view_full_size .span_link:after {
-        font-family: "FontAwesome";
-        color: #c0c0c0;
-        font-size: 20px;
-        line-height: 22px;
-        content: "\f00e";
-        font-weight: normal;
-        margin: 0 0 0 4px; }
-      .pb-left-column #image-block #view_full_size .span_link:hover:after {
-        color: #333333; }
+      content: "\f00e";
+      font-weight: normal;
+      margin: 0 0 0 4px; }
+    .pb-left-column #image-block #view_full_size .span_link:hover:after {
+      color: #333333; }
   .pb-left-column #image-block a.jqzoom div div img {
     width: auto;
     max-width: 10000px; }
