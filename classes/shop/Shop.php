@@ -971,7 +971,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function addSqlRestrictionOnLang($alias = null, $id_shop = null)
 	{
-		if (is_null($id_shop))
+		if (isset(Context::getContext()->shop) && is_null($id_shop))
 			$id_shop = (int)Context::getContext()->shop->id;
 		if (!$id_shop)
 			$id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');

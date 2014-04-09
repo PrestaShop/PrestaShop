@@ -425,7 +425,7 @@ class DispatcherCore
 						}
 			}
 		
-		if (!in_array($context->language->id, $languages = Language::getLanguages()))
+		if (isset($context->language) && !in_array($context->language->id, $languages = Language::getLanguages()))
 			$languages[] = (int)$context->language->id;
 		// Set default routes
 		foreach ($languages as $lang)
@@ -445,7 +445,7 @@ class DispatcherCore
 		{
 			// Get iso lang
 			$iso_lang = Tools::getValue('isolang');
-			$id_lang = $context->language->id;
+			$id_lang = (int)$context->language->id;
 			if (!empty($iso_lang))
 				$id_lang = Language::getIdByIso($iso_lang);
 
@@ -473,7 +473,7 @@ class DispatcherCore
 			foreach ($this->default_routes as $route_id => $route_data)
 				if ($custom_route = Configuration::get('PS_ROUTE_'.$route_id, null, null, $id_shop))
 				{
-					if (!in_array($context->language->id, $languages = Language::getLanguages()))
+					if (isset($context->language) && !in_array($context->language->id, $languages = Language::getLanguages()))
 						$languages[] = (int)$context->language->id;
 					foreach ($languages as $lang)
 						$this->addRoute(
@@ -499,10 +499,10 @@ class DispatcherCore
 	 */
 	public function addRoute($route_id, $rule, $controller, $id_lang = null, array $keywords = array(), array $params = array(), $id_shop = null)
 	{
-		if ($id_lang === null)
+		if (isset(Context::getContext()->language) && $id_lang === null)
 			$id_lang = (int)Context::getContext()->language->id;
 		
-		if ($id_shop === null)
+		if (isset(Context::getContext()->shop) && $id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
 		
 		$regexp = preg_quote($rule, '#');
@@ -562,9 +562,9 @@ class DispatcherCore
 	 */
 	public function hasRoute($route_id, $id_lang = null, $id_shop = null)
 	{
-		if ($id_lang === null)
+		if (isset(Context::getContext()->language) && $id_lang === null)
 			$id_lang = (int)Context::getContext()->language->id;
-		if ($id_shop === null)
+		if (isset(Context::getContext()->shop) && $id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
 		
 		return isset($this->routes[$id_shop]) && isset($this->routes[$id_shop][$id_lang]) && isset($this->routes[$id_shop][$id_lang][$route_id]);
@@ -714,7 +714,7 @@ class DispatcherCore
 			return $this->controller;
 		}
 
-		if ($id_shop === null)
+		if (isset(Context::getContext()->shop) && $id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
 
 		$controller = Tools::getValue('controller');
