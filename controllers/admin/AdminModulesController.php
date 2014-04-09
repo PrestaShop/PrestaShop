@@ -764,7 +764,7 @@ class AdminModulesControllerCore extends AdminController
 											}
 
 											if (!$download_ok)
-												$this->errors[] = $this->l('Error on downloading the lastest version');
+												$this->errors[] = $this->l('Error on downloading the latest version');
 											elseif (!$this->extractArchive(_PS_MODULE_DIR_.$modaddons->name.'.zip', false))
 												$this->errors[] = $this->l(sprintf("Module %s can't be upgraded: ", $modaddons->name));
 
