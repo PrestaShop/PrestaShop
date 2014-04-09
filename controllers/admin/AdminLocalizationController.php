@@ -268,7 +268,7 @@ class AdminLocalizationControllerCore extends AdminController
 			array(
 				'id' => 'groups',
 				'val' => 'groups',
-				'name' => $this->l('Change the behavior of the taxes display for the groups')
+				'name' => $this->l('Change the behavior of the taxes displayed to the groups')
 			)
 		);
 
