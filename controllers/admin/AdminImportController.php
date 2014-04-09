@@ -262,7 +262,7 @@ class AdminImportControllerCore extends AdminController
 					'delete_existing_images' => array(
 						'label' => $this->l('Delete existing images (0 = No, 1 = Yes)')
 					),
-					'features' => array('label' => $this->l('Feature(Name:Value:Position:Customized)')),
+					'features' => array('label' => $this->l('Feature (Name:Value:Position:Customized)')),
 					'online_only' => array('label' => $this->l('Available online only (0 = No, 1 = Yes)')),
 					'condition' => array('label' => $this->l('Condition')),
 					'customizable' => array('label' => $this->l('Customizable (0 = No, 1 = Yes)')),
