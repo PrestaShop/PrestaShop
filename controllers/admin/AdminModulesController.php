@@ -827,8 +827,6 @@ class AdminModulesControllerCore extends AdminController
 						if ($key == 'configure' && Module::isInstalled($module->name))
 						{
 							$this->bootstrap = (isset($module->bootstrap) && $module->bootstrap);
-							if (!$this->bootstrap)
-								$this->setDeprecatedMedia();
 							if (isset($module->multishop_context))
 								$this->multishop_context = $module->multishop_context;
 
