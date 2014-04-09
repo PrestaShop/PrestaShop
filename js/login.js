@@ -93,12 +93,16 @@ function feedbackSubmit() {
 function displayForgotPassword() {
 	$('#error').hide();
 	$("#login").find('.flip-container').toggleClass("flip");
+	setTimeout(function(){$('.front').hide()},200);
+	setTimeout(function(){$('.back').show()},200);
 	$('#email_forgot').select();
 }
 
 function displayLogin() {
 	$('#error').hide();
 	$("#login").find('.flip-container').toggleClass("flip");
+	setTimeout(function(){$('.back').hide()},200);
+	setTimeout(function(){$('.front').show()},200);
 	$('#email').select();
 	return false;
 }
