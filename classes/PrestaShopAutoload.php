@@ -62,7 +62,7 @@ class PrestaShopAutoload
 	{
 		$this->root_dir = _PS_CORE_DIR_.'/';
 		$file = $this->root_dir.PrestaShopAutoload::INDEX_FILE;
-		if (filemtime($file) && is_readable($file))
+		if (@filemtime($file) && is_readable($file))
 			$this->index = include($file);
 		else
 			$this->generateIndex();
