@@ -302,3 +302,6 @@
 	path = modules/cheque
 	url = https://github.com/PrestaShop/cheque.git
 	branch = master
+[submodule "modules/sendtoafriend"]
+	path = modules/sendtoafriend
+	url = https://github.com/PrestaShop/sendtoafriend
