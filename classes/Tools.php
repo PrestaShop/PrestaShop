@@ -2140,8 +2140,9 @@ FileETag INode MTime Size
 		if ($specific_after)
 			fwrite($write_fd, "\n\n".trim($specific_after));
 		fclose($write_fd);
-
-		Hook::exec('actionHtaccessCreate');
+		
+		if (!defined('PS_INSTALLATION_IN_PROGRESS'))
+			Hook::exec('actionHtaccessCreate');
 
 		return true;
 	}
