@@ -495,15 +495,13 @@ class AdminFeaturesControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 		{
-			// If it is editing or adding feature values and stays to add new feature value after submitting, redirection should be feature value adding page for current feature.
 			if( $this->table == 'feature_value' && ($this->display == 'edit' || $this->display == 'add') )
 				$this->redirect_after = self::$currentIndex.'&addfeature_value&id_feature='.(int)Tools::getValue('id_feature').'&token='.$this->token;
 			else
 				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token;
 		}
 		elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && count($this->errors))
-		$this->display = 'editFeatureValue';
-		
+			$this->display = 'editFeatureValue';
 
 		return $object;
 	}
