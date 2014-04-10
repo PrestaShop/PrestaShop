@@ -302,7 +302,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'query' => array(
 						array(
 							'id' => 'WA',
-							'name' => $this->l('Average Weight')
+							'name' => $this->l('Weighted Average')
 						),
 						array(
 							'id' => 'FIFO',
@@ -467,15 +467,15 @@ class AdminWarehousesControllerCore extends AdminController
 			switch ($item['management_type']) // management type can be either WA/FIFO/LIFO
 			{
 				case 'WA':
-					$item['management_type'] = $this->l('WA');
+					$item['management_type'] = $this->l('WA: Weighted Average');
 				break;
 
 				case 'FIFO':
-					$item['management_type'] = $this->l('FIFO');
+					$item['management_type'] = $this->l('FIFO: First In, First Out');
 				break;
 
 				case 'LIFO':
-					$item['management_type'] = $this->l('LIFO');
+					$item['management_type'] = $this->l('LIFO: Last In, First Out');
 				break;
 			}
 		}
