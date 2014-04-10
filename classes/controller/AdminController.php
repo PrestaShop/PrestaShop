@@ -2065,6 +2065,10 @@ class AdminControllerCore extends Controller
 	{
 	}
 
+	public function renderModals()
+	{
+	}
+
 	/**
 	 * Function used to render the options for this controller
 	 */

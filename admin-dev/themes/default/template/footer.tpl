@@ -77,7 +77,7 @@
 		{if $iso_is_fr}
 		<p>Questions • Renseignements • Formations : 
 			<strong>+33 (0)1.40.18.30.04</strong>
-		<p>
+		</p>
 		{/if}
 	</div>
 	<div class="col-sm-4">
@@ -89,5 +89,12 @@
 {if isset($php_errors)}
 	{include file="error.tpl"}
 {/if}
+
+{if isset($modals)}
+<div class="bootstrap">
+	{$modals}
+</div>
+{/if}
+
 </body>
 </html>
