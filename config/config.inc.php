@@ -43,9 +43,12 @@ if (!headers_sent())
 if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 {
 	$dir = ((substr($_SERVER['REQUEST_URI'], -1) == '/' || is_dir($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : dirname($_SERVER['REQUEST_URI']).'/');
-	if (!file_exists(dirname(__FILE__).'/../install'))
+	if (file_exists(dirname(__FILE__).'/../install'))
+		header('Location: install/');
+	elseif (file_exists(dirname(__FILE__).'/../install-dev'))
+		header('Location: install-dev/');
+	else
 		die('Error: "install" directory is missing');
-	header('Location: install/');
 	exit;
 }
 //include settings file only if we are not in multi-tenancy mode 
