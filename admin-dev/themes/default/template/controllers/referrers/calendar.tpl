@@ -37,7 +37,7 @@
 				<input type="text" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom|escape}" class="datepicker" />
 			</p>
 			<p>
-				<span>{if isset($translations.To)}{$translations.To}{else}<span>{l s='From:'}</span>{/if}</span>
+				<span>{if isset($translations.To)}{$translations.To}{else}<span>{l s='To:'}</span>{/if}</span>
 				<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" class="datepicker" />
 			</p>
 			<button type="submit" name="submitDatePicker" id="submitDatePicker" class="btn btn-default">
