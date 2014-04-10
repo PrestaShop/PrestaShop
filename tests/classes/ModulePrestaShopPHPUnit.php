@@ -37,13 +37,17 @@ class	ModulePrestaShopPHPUnit extends PrestaShopPHPUnit
 
 	public function testInstall()
 	{
-		Module::getInstanceByName(Tools::strtolower($this->getClass()))->uninstall();
-		$this->assertTrue(Module::getInstanceByName(Tools::strtolower($this->getClass()))->install());
+		$module = Module::getInstanceByName(Tools::strtolower($this->getClass()));
+		if ($module->id)
+			$module->uninstall();
+		$this->assertTrue($module->install());
 	}
 
 	public function testUninstall()
 	{
-		Module::getInstanceByName(Tools::strtolower($this->getClass()))->install();
-		$this->assertTrue(Module::getInstanceByName(Tools::strtolower($this->getClass()))->uninstall());
+		$module = Module::getInstanceByName(Tools::strtolower($this->getClass()));
+		if (!$module->id)
+			$module->install();
+		$this->assertTrue($module->uninstall());
 	}
 }
