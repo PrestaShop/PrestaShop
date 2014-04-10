@@ -25,6 +25,25 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-require(dirname(__FILE__).'/../classes/PrestaShopPHPUnit.php');
-require(dirname(__FILE__).'/../classes/ModulePrestaShopPHPUnit.php');
-require(dirname(__FILE__).'/../../config/config.inc.php');
+class	ModulePrestaShopPHPUnit extends PrestaShopPHPUnit
+{
+	public function setUp()
+	{
+		Module::updateTranslationsAfterInstall(false);
+		Context::getContext()->employee = new Employee();
+		Context::getContext()->employee->id = 1;
+		Context::getContext()->employee->id_profile = _PS_ADMIN_PROFILE_;
+	}
+
+	public function testInstall()
+	{
+		Module::getInstanceByName(Tools::strtolower($this->getClass()))->uninstall();
+		$this->assertTrue(Module::getInstanceByName(Tools::strtolower($this->getClass()))->install());
+	}
+
+	public function testUninstall()
+	{
+		Module::getInstanceByName(Tools::strtolower($this->getClass()))->install();
+		$this->assertTrue(Module::getInstanceByName(Tools::strtolower($this->getClass()))->uninstall());
+	}
+}

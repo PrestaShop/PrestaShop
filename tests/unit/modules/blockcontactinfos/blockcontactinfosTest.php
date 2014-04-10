@@ -25,6 +25,22 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-require(dirname(__FILE__).'/../classes/PrestaShopPHPUnit.php');
-require(dirname(__FILE__).'/../classes/ModulePrestaShopPHPUnit.php');
-require(dirname(__FILE__).'/../../config/config.inc.php');
+class	BlockcontactinfosTest extends ModulePrestaShopPHPUnit
+{
+	public function setUp()
+	{
+		Module::updateTranslationsAfterInstall(false);
+	}
+
+	public function testInstall()
+	{
+		Module::getInstanceByName(Tools::strtolower($this->getClass()))->uninstall();
+		$this->assertTrue(Module::getInstanceByName(Tools::strtolower($this->getClass()))->install());
+	}
+
+	public function testUninstall()
+	{
+		Module::getInstanceByName(Tools::strtolower($this->getClass()))->install();
+		$this->assertTrue(Module::getInstanceByName(Tools::strtolower($this->getClass()))->uninstall());
+	}
+}
