@@ -898,6 +898,7 @@ class AdminModulesControllerCore extends AdminController
 							$header = $this->context->smarty->fetch('controllers/modules/configure.tpl');
 							$configuration_bar = $this->context->smarty->fetch('controllers/modules/configuration_bar.tpl');
 							$this->context->smarty->assign('module_content', $header.$echo.$configuration_bar );
+							$this->context->smarty->assign('modals', $this->renderModals() );
 						}
 						elseif ($echo === true)
 						{
@@ -1196,6 +1197,27 @@ class AdminModulesControllerCore extends AdminController
 		$helper = new HelperKpiRow();
 		$helper->kpis = $kpis;
 		return $helper->generate();
+	}
+
+	public function renderModals()
+	{
+		$modals = Parent::renderModals();
+
+		$this->context->smarty->assign(array(
+			'trad_link' => 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=',
+			'module_languages' => Language::getLanguages(false),
+		));
+		$modal_content = $this->context->smarty->fetch('controllers/modules/modal_translation.tpl');
+
+
+		$this->context->smarty->assign(array(
+			'modal_id' => "moduleTradLangSelect",
+			'modal_title' => $this->l('Translate this module'),
+			'modal_content' => $modal_content
+		));
+		$modals .= $this->context->smarty->fetch('modal.tpl');
+
+		return $modals;
 	}
 	
 	public function initContent()
