@@ -1201,7 +1201,7 @@ class AdminModulesControllerCore extends AdminController
 
 	public function renderModals()
 	{
-		$modals = Parent::renderModals();
+		$modals = parent::renderModals();
 
 		$this->context->smarty->assign(array(
 			'trad_link' => 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=',
