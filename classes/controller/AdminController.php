@@ -2744,6 +2744,10 @@ class AdminControllerCore extends Controller
 				if ($start < 0)
 					break;
 			}
+			else
+			{
+				break;
+			}
 
 		} while (empty($this->_list));
 
