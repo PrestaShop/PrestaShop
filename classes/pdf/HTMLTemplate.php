@@ -41,7 +41,11 @@ abstract class HTMLTemplateCore
 	 */
 	public function getHeader()
 	{
-		$shop_name = Configuration::get('PS_SHOP_NAME', null, null, (int)$this->order->id_shop);
+		if (isset($this->order) && Validate::isLoadedObject($this->order))
+			$id_shop = $this->order->id_shop;
+		else
+			$id_shop = Context::getContext()->shop->id;
+		$shop_name = Configuration::get('PS_SHOP_NAME', null, null, (int)$id_shop);
 		$path_logo = $this->getLogo();
 
 		$width = 0;
@@ -70,13 +74,17 @@ abstract class HTMLTemplateCore
 	public function getFooter()
 	{
 		$shop_address = $this->getShopAddress();
+		if (isset($this->order) && Validate::isLoadedObject($this->order))
+			$id_shop = $this->order->id_shop;
+		else
+			$id_shop = Context::getContext()->shop->id;
 		$this->smarty->assign(array(
 			'available_in_your_account' => $this->available_in_your_account,
 			'shop_address' => $shop_address,
-			'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, (int)$this->order->id_shop),
-			'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, (int)$this->order->id_shop),
-			'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int)$this->order->id_shop),
-			'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int)Context::getContext()->language->id, null, (int)$this->order->id_shop)
+			'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, (int)$id_shop),
+			'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, (int)$id_shop),
+			'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int)$id_shop),
+			'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int)Context::getContext()->language->id, null, (int)$id_shop)
 		));
 
 		return $this->smarty->fetch($this->getTemplate('footer'));
@@ -108,11 +116,15 @@ abstract class HTMLTemplateCore
 		$logo = '';
 
 		$physical_uri = Context::getContext()->shop->physical_uri.'img/';
+		if (isset($this->order) && Validate::isLoadedObject($this->order))
+			$id_shop = $this->order->id_shop;
+		else
+			$id_shop = Context::getContext()->shop->id;
 
-		if (Configuration::get('PS_LOGO_INVOICE', null, null, (int)$this->order->id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)$this->order->id_shop)))
-			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)$this->order->id_shop);
-		elseif (Configuration::get('PS_LOGO', null, null, (int)$this->order->id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int)$this->order->id_shop)))
-			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int)$this->order->id_shop);
+		if (Configuration::get('PS_LOGO_INVOICE', null, null, (int)$id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)$id_shop)))
+			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)$id_shop);
+		elseif (Configuration::get('PS_LOGO', null, null, (int)$id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int)$id_shop)))
+			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int)$id_shop);
 		return $logo;
 	}
 
