@@ -210,23 +210,6 @@ if (!defined('_PS_ADMIN_DIR_'))
 $https_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 $context->link = new Link($https_link, $https_link);
 
-/**
- * @deprecated : these defines are going to be deleted on 1.6 version of Prestashop
- * USE : Configuration::get() method in order to getting the id of order status
- */
-define('_PS_OS_CHEQUE_',      Configuration::get('PS_OS_CHEQUE'));
-define('_PS_OS_PAYMENT_',     Configuration::get('PS_OS_PAYMENT'));
-define('_PS_OS_PREPARATION_', Configuration::get('PS_OS_PREPARATION'));
-define('_PS_OS_SHIPPING_',    Configuration::get('PS_OS_SHIPPING'));
-define('_PS_OS_DELIVERED_',   Configuration::get('PS_OS_DELIVERED'));
-define('_PS_OS_CANCELED_',    Configuration::get('PS_OS_CANCELED'));
-define('_PS_OS_REFUND_',      Configuration::get('PS_OS_REFUND'));
-define('_PS_OS_ERROR_',       Configuration::get('PS_OS_ERROR'));
-define('_PS_OS_OUTOFSTOCK_',  Configuration::get('PS_OS_OUTOFSTOCK'));
-define('_PS_OS_BANKWIRE_',    Configuration::get('PS_OS_BANKWIRE'));
-define('_PS_OS_PAYPAL_',      Configuration::get('PS_OS_PAYPAL'));
-define('_PS_OS_WS_PAYMENT_', Configuration::get('PS_OS_WS_PAYMENT'));
-
 /* Get smarty */
 require_once(dirname(__FILE__).'/smarty.config.inc.php');
 $context->smarty = $smarty;
