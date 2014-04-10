@@ -24,6 +24,166 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.0.6 - (2014-04-10)  #
+####################################
+
+	Fixed bugs:
+
+	[-] Installer : BR was missing from the timezones in the installer
+
+	[-] FO : Made ribbon NEW and SALE clickable on product page and quickview    Conflicts:    	themes/default-bootstrap/css/product.css
+	[-] FO : Fix #PSCFV-11235, transitionIn is fancybox 2
+	[-] FO: Bad redirection on add to cart in quick view without PS_BLOCK_CART_AJAX
+	[-] FO : Fix bug #PSCFV-11457, missing available_ values in queries
+	[-] FO : Fix bug #PSCFV-11178, tpl and ajax not truncating at same car
+	[-] FO : Fix bug #PSCSX-1599, hide blocklayered in accordion
+	[-] FO : Fix css bug #PSCSX-602
+	[-] FO : Fixed display issues #PSCSX-1529
+	[-] FO : FixBug #PSCSX-1550
+	[-] FO : Fix bug #PSCSX-886, #PSCSX-812, bad availability display
+	[-] FO : Fix css bug #PSCSX-757, #PSCSX-1100, #PSCSX-852
+	[-] FO : FixBug #PSCSX-1473 - Category image problem
+	[-] FO : css fix #PSCSX-1402
+	[-] FO : Css fix #PSCSX-1406
+	[-] FO : Fix #PSCSX-1434, remove OutOfStock itemprop
+	[-] FO : Fix bug #PSCSX-1441, bad displayimage on color pick
+	[-] FO: redirect to http when SSL is disabled
+	[-] FO : fixed products properties for best sellers
+	[-] FO : Fix css bug #PSCSX-1355
+	[-] FO : Update discount table on combination change
+	[-] FO : removed cart rule description from the name in the blockcart
+	[-] FO : Fix bug #PSCSX-1285, carriage returns in description_short
+	[-] FO : 1.5 theme on opc free order
+	[-] FO : Bug #PSCSX-1228, hide cart step when loging in
+	[-] FO : Fix bug #PSCSX-1233, bad column count on payment
+	[-] FO : Bug #PSCSX-1216, Change z-index for promo
+	[-] FO : Fix #PSCSX-1165, display correct Group reduction price
+	[-] FO : fixed bug #PSCFV-8805 Store contact Postcode and city are displayed in wrong order
+	[-] FO : Fix bug #PSCSX-1127, retro compat for writeBookmarkLink
+
+	[-] BO : Fix bug #PSCFV-11505, bad tax display on finalPrice
+	[-] BO : Fix bug #PSCFV-10539, memcache_connect
+	[-] BO : Fix bug #PSCFV-11124, Feature cleanPositions order by position
+	[-] BO : Fix bug #PSCFV-11124, bad feature position import
+	[-] BO : Bug #PSCSX-1542, Fix range testing for carrier wizard
+	[-] BO : fix a display issue on adminmodules
+	[-] BO : Recommended Modules display fix
+	[-] BO : change permissions when installing a module from zip
+	[-] BO : Copy all mail files for every lang on first translation/modification
+	[-] BO : FixBug #PSCSX-1431 - Missing configuration option for modules
+	[-] BO : fixed bug #PSCSX-938 - SAV attachment display in thread
+	[-] BO : Fix bug #PSCSX-1374, undefined
+	[-] BO : #PSCSX-1436, Add text to addon login
+	[-] BO : Translatable string in Configuration error
+	[-] BO : Language iso code should be lowercase
+	[-] BO : strip dots in KPI key name
+	[-] BO : fixed bug #PSCSX-1199 - Admin Customer Threads are not showing customer messages
+	[-] BO : catch potential error from modules called in ajax requests
+	[-] BO : FixBug #PSCSX-1134 - No position for Cms pages
+	[-] BO : FixBug #PSCSX-1009 - Force json content with json request header
+	[-] BO : FixBug #PSCFV-11740 - Inactive language not duplicated for attributes
+	[-] BO : fix an issue when updating carriers status
+	[-] BO : FixBug #PSCSX-1136 - Product accesories autocomplete - thanks to @Tiago
+	[-] BO : FixBug #PSCSX-1295 wrong orders currencies in orders list
+	[-] BO : fixed bug #PSCSX-1299 - Cannot delete Carrier
+	[-] BO : Update JS control for advanced stock management
+	[-] BO : fixed #PSCSX-1236 - validate range bug fixed
+	[-] BO : Bug #PSCSX-1201, Add column names in SQL
+	[-] BO : Bug #PSCSX-1218, Fix Path in Tiny MCE
+	[-] BO : fixed bad encoding #PSCSX-1207
+	[-] BO : Fixbug #PSCSX-1152 - wrong google maps center
+	[-] BO : AdminThemes : update product_per_page when updating current theme
+	[-] BO : Change Handling label
+	[-] BO : Fix bug #PSCFV-11828, open_base_dir
+	[-] BO: HelperTreeCategory, Call setInputName in getInputName
+	[-] BO : Fix bug #PSCFV-11825, double encoding
+	[-] BO : Fix default color for Order return states
+	[-] BO : Fix bug #PSCFV-11819, bad ajax query for customers
+
+	[-] CORE : Fix bug #PSCSX-1241, replaceByAbsoluteURL should handle url starting with //
+	[-] CORE : Fix bug #PSCFV-11124, bad features position cleaning
+	[-] Core: Fix #PSCFV-9986, Moved stock assignement to Controller
+	[-] Core: Fix #PSCFV-9986, Set out of stock behavior when coping product to another shop
+	[-] CORE : FixBug #PSCSX-1493 - Double quoted class
+	[-] CORE : Fix bug #PSCSX-1258, js stack repeated for 1.4 template
+	[-] CORE : Use correct theme override directory
+	[-] CORE : Fix template files directory for helper tree and uploader
+	[-] CORE : Fix bug #PSCSX-847, one charset for cccCSS
+	[-] CORE : fixed bug #PSCSX-1151 isUrl & isAbsoluteUrl now accept $
+	[-] CORE : Fix bug #PSCSX-1167, missing index
+
+	[-] MO : homeslider - resolve #PSCSX-1529 responsive issue
+	[-] MO : BlockLayered - FixBug #PSCSX-1497 - Correct Change select value problem
+	[-] MO : Fix bug #PSCSX-654, could not delete a wishlist
+	[-] MO : fixed bug #PSCSX-1198 css path fixed
+	[-] MO : Fix bug #PSCSX-1158, getProductsProperties for bestsellers on home
+
+	[-] WS : Fix bug #PSCFI-5696, Price empty when = 0    It seems the fix never made it to the current version.
+
+	Improved/changed features:
+
+	[*] Project : Add if defined to _PS_OVERRIDE_DIR_ constant
+
+	[*] FO : a string you can actually translate.
+	[*] FO : Antialias Social Icons
+	[*] FO : Fix feature #PSCFV-11822, assign default combination image depending on cover if matches
+	[*] FO : blockcms : options added to display each links
+
+	[*] BO : Module quickview price - fix PSCSX-1522
+	[*] BO : Rewording of supply order status names in AdminStockConfiguration.
+	[*] BO : Add some lists content to Patters
+	[*] BO : Helper Switch fix
+	[*] BO : AdminPatterns
+	[*] BO : UI fixes - thx @devnet
+	[*] BO : Hook displayBackOfficeHeader is now executed even if the module is disabled
+	[*] BO : Order details - applied a badge on quantity when more than one product ordered
+	[*] BO : Order details - fix repay shipping costs when returning products - PSCSX-1383
+	[*] BO : Order detail UI fixes
+	[*] BO : some UI fixes
+	[*] BO : Modules - some UI fixes
+	[*] BO : Changed 'state' for 'status' in many strings.
+	[*] BO : Search input for top nav - fix PSCSX-1382
+	[*] BO : Responsive table scroll
+	[*] BO : Tooltip placement
+	[*] BO : Attributes//Features - UI fixes
+	[*] BO : List actions - delete moved bottom (added a divider)
+	[*] BO : Stats - better breakpoints
+	[*] BO : Helper List - Removed bulk action row when empty
+	[*] BO : improved memory check for modules page
+	[*] BO : Update nvd3
+	[*] BO : Modules - remove hover on rating's star
+	[*] BO : KPI - cache multi-language
+	[*] BO : Various string updates.
+	[*] BO : RTL - Switch themes/schemes
+	[*] BO : RTL - WIP
+	[*] BO : updating labels and descriptions for order document section.
+	[*] BO : Init
+	[*] BO : RTL
+	[*] BO : missing name change to Default-bootstrap
+	[*] BO : updating labels and descriptions for AdminAttributesGroups.
+	[*] BO : fixed misspelled automatically
+	[*] BO : Add index.php in MODULES/mails/ISO_CODE
+	[*] BO : Login - fix cache problem
+	[*] BO : Remove references to back-office screens in e-mails sent to the customer.
+	[*] BO : Wording in translation_modules.tpl    Removed duplicate information and simplified strings in order to make life easier for translators.
+	[*] BO : Wording in translation_mails.tpl    Removed duplicate information and simplified strings in order to make life easier for translators.
+	[*] BO : Wording in translation_form.tpl    Removed duplicate information and simplified strings in order to make life easier for translators.
+	[*] BO : better wording in AdminCarrierWizard.
+	[*] BO : Update indications in default e-mails.
+	[*] BO : Schemes + remove _multistore.sass
+
+	[*] MO : Remove "toll free" from blockcontact strings.
+	[*] MO : CMS block fix
+	[*] MO : blockfacebook shows a preview
+	[*] MO : CMS block refacto
+
+	Added Features:
+
+	[+] LO : Added Serbian localization pack
+	[+] LO : Added Serbian installer! Want yours? Join us on Crowdin!
+
+
+####################################
 #   v1.6.0.5 - (2014-03-17)  #
 ####################################
 
