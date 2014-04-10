@@ -54,4 +54,9 @@ $(document).ready(function(){
     $('.homeslider-description').click(function () {
         window.location.href = $(this).prev('a').prop('href');
     });
+
+    if ($('#htmlcontent_top').length > 0)
+    	$('#homepage-slider').addClass('col-xs-8');
+    else
+    	$('#homepage-slider').addClass('col-xs-12');
 });

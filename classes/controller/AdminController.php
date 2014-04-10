@@ -2150,23 +2150,14 @@ class AdminControllerCore extends Controller
 		$this->helper = $helper;
 	}
 	
-	public function setDeprecatedMedia()
-	{
-		//$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-old.css', 'all', 1);
-		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-bootstrap-reset.css', 'all', 2);
-		
-	}
+	// @deprecated 1.6.0
+	public function setDeprecatedMedia(){}
 
 	public function setMedia()
 	{
 		//Bootstrap + Specific Admin Theme
 		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
-
-		//Deprecated stylesheets + reset bootstrap style for the #nobootstrap field - Backward compatibility
-		if (!$this->bootstrap)
-			$this->setDeprecatedMedia();
-		
-		//RTL Support moved to footer
+		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', 99);
 
 		$this->addJquery();
 		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize'));

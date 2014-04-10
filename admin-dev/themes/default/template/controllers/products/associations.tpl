@@ -51,8 +51,8 @@
 				{l s='Default category'}
 			</span>
 		</label>
-		<div class="col-lg-5">
-			<select id="id_category_default" name="id_category_default">
+		<div class="col-lg-9">
+			<select id="id_category_default" class="fixed-width-xxl" name="id_category_default">
 				{foreach from=$selected_cat item=cat}
 					<option value="{$cat.id_category}" {if $id_category_default == $cat.id_category}selected="selected"{/if} >{$cat.name}</option>
 				{/foreach}
@@ -66,40 +66,36 @@
 			{l s='Accessories'}
 			</span>
 		</label>
-		<div class="col-lg-5">
+		<div class="col-lg-9">
 			<input type="hidden" name="inputAccessories" id="inputAccessories" value="{foreach from=$accessories item=accessory}{$accessory.id_product}-{/foreach}" />
 			<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|escape:'html':'UTF-8'}¤{/foreach}" />
 			<div id="ajax_choose_product">
-				<div class="input-group">
+				<div class="input-group fixed-width-xxl">
 					<input type="text" id="product_autocomplete_input" />
 					<span class="input-group-addon"><i class="icon-search"></i></span>
 				</div>
 			</div>
-
 			<div id="divAccessories">
 			{foreach from=$accessories item=accessory}
-			<div class="form-control-static">
-				<button type="button" class="btn btn-default delAccessory" name="{$accessory.id_product}">
-					<i class="icon-remove text-danger"></i>
-				</button>
-				{$accessory.name|escape:'html':'UTF-8'}{if !empty($accessory.reference)} (ref: {$accessory.reference}){/if}
-			</div>
+				<div class="form-control-static">
+					<button type="button" class="btn btn-default delAccessory" name="{$accessory.id_product}">
+						<i class="icon-remove text-danger"></i>
+					</button>
+					{$accessory.name|escape:'html':'UTF-8'}{if !empty($accessory.reference)} (ref: {$accessory.reference}){/if}
+				</div>
 			{/foreach}
 			</div>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="id_manufacturer">{l s='Manufacturer'}</label>
-		<div class="col-lg-5">
-			<select name="id_manufacturer" id="id_manufacturer">
-				<option value="0">- {l s='Choose (optional)'} -</option>
+		<div class="col-lg-9">
+			<select class="fixed-width-xxl" name="id_manufacturer" id="id_manufacturer">
+				<option value="0">{l s='None (optional)'}</option>
 				{if $product->id_manufacturer}
-				<option value="{$product->id_manufacturer}" selected="selected">{$product->manufacturer_name}</option>
+					<option value="{$product->id_manufacturer}" selected="selected">{$product->manufacturer_name}</option>
 				{/if}
-				<option disabled="disabled">-</option>
 			</select>
-		</div>
-		<div class="col-lg-4">
 			<a class="btn btn-link bt-icon confirm_leave" style="margin-bottom:0" href="{$link->getAdminLink('AdminManufacturers')|escape:'html':'UTF-8'}&addmanufacturer">
 				<i class="icon-plus-sign"></i> {l s='Create new manufacturer'} <i class="icon-external-link-sign"></i>
 			</a>

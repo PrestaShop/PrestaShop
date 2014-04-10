@@ -54,7 +54,7 @@ module_inactive
 {/if}
 {/capture}
 				<tr>
-					<td class="{{$smarty.capture.moduleStatutClass}}">
+					<td class="{{$smarty.capture.moduleStatutClass}} text-center" width="1%">
 						{if (isset($module->id) && $module->id > 0) || !isset($module->type) || $module->type != 'addonsMustHave'}
 						<input type="checkbox" name="modules" value="{$module->name}"
 							{if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)}rel="false"{else}rel="{$module->confirmUninstall|addslashes}"{/if}
