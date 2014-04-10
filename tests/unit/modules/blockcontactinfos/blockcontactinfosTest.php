@@ -27,20 +27,5 @@
 
 class	BlockcontactinfosTest extends ModulePrestaShopPHPUnit
 {
-	public function setUp()
-	{
-		Module::updateTranslationsAfterInstall(false);
-	}
 
-	public function testInstall()
-	{
-		Module::getInstanceByName(Tools::strtolower($this->getClass()))->uninstall();
-		$this->assertTrue(Module::getInstanceByName(Tools::strtolower($this->getClass()))->install());
-	}
-
-	public function testUninstall()
-	{
-		Module::getInstanceByName(Tools::strtolower($this->getClass()))->install();
-		$this->assertTrue(Module::getInstanceByName(Tools::strtolower($this->getClass()))->uninstall());
-	}
 }
