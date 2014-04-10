@@ -2745,7 +2745,7 @@ class AdminControllerCore extends Controller
 					break;
 			}
 
-		} while (empty($this->_list));
+		} while (empty($this->_list) && ( $use_limit === true )  );// Exit loop if there is no row count limit. 
 
 		Hook::exec('action'.$this->controller_name.'ListingResultsModifier', array(
 			'list' => &$this->_list,
