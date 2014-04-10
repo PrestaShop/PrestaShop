@@ -836,11 +836,13 @@ product_tabs['Associations'] = new function(){
 					action : 'productManufacturers'
 				},
 				success: function(j) {
-					var options = $('select#id_manufacturer').html();
-					if (j)
-					for (var i = 0; i < j.length; i++)
-						options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
-					$("select#id_manufacturer").html(options);
+					var options;
+					if (j) {
+						for (var i = 0; i < j.length; i++) {
+							options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
+						}
+					}
+					$('select#id_manufacturer').chosen({width: '250px'}).append(options).trigger("chosen:updated");
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown)
 				{
@@ -855,7 +857,6 @@ product_tabs['Associations'] = new function(){
 		$('#divAccessories').delegate('.delAccessory', 'click', function(){
 			self.delAccessory($(this).attr('name'));
 		});
-
 		if (display_multishop_checkboxes)
 			ProductMultishop.checkAllAssociations();
 	};
