@@ -1864,7 +1864,7 @@ class AdminProductsControllerCore extends AdminController
 				if ($object->update())
 				{
 					// If the product doesn't exist in the current shop but exists in another shop
-					if (Shop::getContext() == Shop::CONTEXT_SHOP && !$existing_product->isAssociatedToShop($context->shop->id))
+					if (Shop::getContext() == Shop::CONTEXT_SHOP && !$existing_product->isAssociatedToShop($this->context->shop->id))
 					{
 						$out_of_stock = StockAvailable::outOfStock($existing_product->id, $existing_product->id_shop_default);
 						$depends_on_stock = StockAvailable::dependsOnStock($existing_product->id, $existing_product->id_shop_default);
