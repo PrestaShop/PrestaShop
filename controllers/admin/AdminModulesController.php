@@ -1212,6 +1212,7 @@ class AdminModulesControllerCore extends AdminController
 
 		$this->context->smarty->assign(array(
 			'modal_id' => "moduleTradLangSelect",
+			'modal_class' => "modal-sm",
 			'modal_title' => $this->l('Translate this module'),
 			'modal_content' => $modal_content
 		));
