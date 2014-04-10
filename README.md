@@ -1,5 +1,5 @@
 PrestaShop
-===========
+======
 ![PrestaShop](http://www.prestashop.com/images/banners/general/banner-github-165_728x90.png "PrestaShop")
 
 About PrestaShop
