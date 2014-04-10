@@ -23,12 +23,14 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="modal fade" id="{$modal_id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog {if isset($modal_class)}{$modal_class}{/if}">
 		<div class="modal-content">
+			{if isset($modal_title)}
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h4 class="modal-title" id="myModalLabel">{$modal_title}</h4>
 			</div>
+			{/if}
 			<div class="modal-body">
 				{$modal_content}
 			</div>
