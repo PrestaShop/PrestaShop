@@ -280,11 +280,16 @@ class AdminModulesPositionsControllerCore extends AdminController
 			// Get all modules for this hook or only the filtered module
 			$hooks[$key]['modules'] = Hook::getModulesFromHook($hook['id_hook'], $this->display_key);
 			$hooks[$key]['module_count'] = count($hooks[$key]['modules']);
-			// If modules were found, link to the previously created Module instances
-			if (is_array($hooks[$key]['modules']) && !empty($hooks[$key]['modules']))
-				foreach ($hooks[$key]['modules'] as $module_key => $module)
-					if (isset($assoc_modules_id[$module['id_module']]))
-						$hooks[$key]['modules'][$module_key]['instance'] = $module_instances[$assoc_modules_id[$module['id_module']]];
+			if($hooks[$key]['module_count'])
+			{
+				// If modules were found, link to the previously created Module instances
+				if (is_array($hooks[$key]['modules']) && !empty($hooks[$key]['modules']))
+					foreach ($hooks[$key]['modules'] as $module_key => $module)
+						if (isset($assoc_modules_id[$module['id_module']]))
+							$hooks[$key]['modules'][$module_key]['instance'] = $module_instances[$assoc_modules_id[$module['id_module']]];
+			}
+			else
+				unset($hooks[$key]);
 		}
 
 		$this->addJqueryPlugin('tablednd');
