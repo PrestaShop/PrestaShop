@@ -239,7 +239,7 @@ class MailCore
 				include_once(_PS_MAIL_DIR_.$iso.'/lang.php');
 			else
 			{
-				Tools::dieOrLog(Tools::displayError('Error - The lang file is missing for :').' '.$iso, $die);
+				Tools::dieOrLog(Tools::displayError('Error - The language file is missing for:').' '.$iso, $die);
 				return false;
 			}
 

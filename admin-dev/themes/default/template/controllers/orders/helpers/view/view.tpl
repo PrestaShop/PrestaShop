@@ -748,7 +748,7 @@
 			</div>
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-envelope"></i> {l s='Messages'} <span class="badge">{$messages|@count}</span>
+					<i class="icon-envelope"></i> {l s='Messages'} <span class="badge">{sizeof($customer_thread_message)}</span>
 				</div>
 				{if (sizeof($messages))}
 					<div class="panel panel-highlighted">
