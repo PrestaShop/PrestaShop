@@ -107,7 +107,7 @@
 													{/literal}
 												{/if}
 												{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
-												<div class="input-group">
+												<div class="input-group {if isset($input.class)}{$input.class}{/if}">
 												{/if}
 												{if isset($input.maxchar)}
 												<span id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter" class="input-group-addon">
@@ -194,7 +194,7 @@
 										{/if}
 										{assign var='value_text' value=$fields_value[$input.name]}
 										{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
-										<div class="input-group">
+										<div class="input-group {if isset($input.class)}{$input.class}{/if}">
 										{/if}
 										{if isset($input.maxchar)}
 										<span id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter" class="input-group-addon"><span class="text-count-down">{$input.maxchar}</span></span>
