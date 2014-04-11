@@ -594,6 +594,7 @@ class HelperListCore extends Helper
 		}
 
 		$has_value = false;
+		$has_search_field = false;
 
 		foreach ($this->fields_list as $key => $field)
 		{
@@ -605,6 +606,8 @@ class HelperListCore extends Helper
 				$has_value = true;
 				break;
 			}
+			if (!(isset($field['search']) && $field['search'] === false))
+				$has_search_field = true;
 		}
 
 		Context::getContext()->smarty->assign(array(
@@ -626,7 +629,7 @@ class HelperListCore extends Helper
 		$this->header_tpl->assign(array_merge(array(
 			'ajax' => $ajax,
 			'title' => array_key_exists('title', $this->tpl_vars) ? $this->tpl_vars['title'] : $this->title,
-			'show_filters' => (count($this->_list) <= 1 && !$has_value) ? false : true,
+			'show_filters' => (count($this->_list) > 1 && !$has_value && $has_search_field),
 			'filters_has_value' => $has_value,
 			'currentIndex' => $this->currentIndex,
 			'action' => $action,
