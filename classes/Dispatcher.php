@@ -771,8 +771,8 @@ class DispatcherCore
 							break;
 						}
 			}
-			
-			if ($controller == 'index' || $this->request_uri == '/index.php') 
+
+			if ($controller == 'index' || preg_match('/^\/index.php(?:\?.*)?$/', $this->request_uri))
 				$controller = $this->useDefaultController();
 		}
 
