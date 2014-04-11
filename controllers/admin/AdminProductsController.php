@@ -1873,12 +1873,12 @@ class AdminProductsControllerCore extends AdminController
 				if ($object->update())
 				{
 					// If the product doesn't exist in the current shop but exists in another shop
-					if (Shop::getContext() == Shop::CONTEXT_SHOP && !$existing_product->isAssociatedToShop($context->shop->id))
+					if (Shop::getContext() == Shop::CONTEXT_SHOP && !$existing_product->isAssociatedToShop($this->context->shop->id))
 					{
 						$out_of_stock = StockAvailable::outOfStock($existing_product->id, $existing_product->id_shop_default);
 						$depends_on_stock = StockAvailable::dependsOnStock($existing_product->id, $existing_product->id_shop_default);
-						StockAvailable::setProductOutOfStock((int)$this->object->id, $out_of_stock, $context->shop->id);
-						StockAvailable::setProductDependsOnStock((int)$this->object->id, $depends_on_stock, $context->shop->id);
+						StockAvailable::setProductOutOfStock((int)$this->object->id, $out_of_stock, $this->context->shop->id);
+						StockAvailable::setProductDependsOnStock((int)$this->object->id, $depends_on_stock, $this->context->shop->id);
 					}
 
 					PrestaShopLogger::addLog(sprintf($this->l('%s edition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
