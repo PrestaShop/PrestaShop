@@ -481,6 +481,7 @@ class AdminThemesControllerCore extends AdminController
 			$helper_list->shopLinkType = '';
 			$helper_list->identifier = 'id_theme_meta';
 			$helper_list->table = 'meta';
+			$helper_list->tpl_vars['show_filters'] = false;
 			$helper_list->currentIndex = $this->context->link->getAdminLink('AdminThemes', false);
 			$helper_list->token = Tools::getAdminTokenLite('AdminThemes');
 			$list = $helper_list->generateList($formated_metas, $fields_list);
