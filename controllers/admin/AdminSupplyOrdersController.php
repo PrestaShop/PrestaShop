@@ -1469,7 +1469,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
     public function displayUpdateReceiptLink($token = null, $id)
     {
         if (!array_key_exists('Receipt', self::$cache_lang))
-            self::$cache_lang['Receipt'] = $this->l('Update ongoing receipt of products.');
+            self::$cache_lang['Receipt'] = $this->l('Update ongoing receipt of products');
 
         $this->context->smarty->assign(array(
             'href' => self::$currentIndex.
