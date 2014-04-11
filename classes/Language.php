@@ -807,7 +807,7 @@ class LanguageCore extends ObjectModel
 
 	public static function countActiveLanguages($id_shop = null)
 	{
-		if ($id_shop === null)
+		if (isset(Context::getContext()->shop) && is_object(Context::getContext()->shop) && $id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
 
 		if (!isset(self::$countActiveLanguages[$id_shop]))

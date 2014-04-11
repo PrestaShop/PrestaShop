@@ -68,11 +68,11 @@
 		    $('#{$id}').find(':input').each(function(){
 					if ($(this).val() == datum.id_category)
 					{
-						$(this).prop('checked', true);
-						$(this).parent().addClass('tree-selected');
+						$(this).prop("checked", true);
+						$(this).parent().addClass("tree-selected");
 						$(this).parents('ul.tree').each(function(){
 							$(this).show();
-							$(this).prev().find('.tree-selected .icon-folder-close').removeClass('icon-folder-close').addClass('icon-folder-open');
+							$(this).prev().find('.icon-folder-close').removeClass('icon-folder-close').addClass('icon-folder-open');
 						});
 					}
 				}
@@ -93,12 +93,15 @@
 			$('#{$id}').find(':input').each(function(){
 				if ($.inArray($(this).val(), selected_categories) != -1)
 				{
-					$(this).prop('checked', true);
-					$(this).parent().addClass('tree-selected');
-					$(this).parents('ul.tree').each(function(){
-						$(this).show();
-						$(this).prev().find('.icon-folder-close').removeClass('icon-folder-close').addClass('icon-folder-open');	
-					});
+					if ($.inArray($(this).val(), selected_categories) != -1)
+					{
+						$(this).prop("checked", true);
+						$(this).parent().addClass("tree-selected");
+						$(this).parents('ul.tree').each(function(){
+							$(this).show();
+							$(this).prev().find('.icon-folder-close').removeClass('icon-folder-close').addClass('icon-folder-open');	
+						});
+					}
 				}
 			});
 		{/if}

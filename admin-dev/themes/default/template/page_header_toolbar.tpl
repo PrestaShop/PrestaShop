@@ -48,7 +48,7 @@
 		<ul class="breadcrumb page-breadcrumb">
 
 			{* Shop *}
-			{if isset($is_multishop) && $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+			{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
 				<li class="breadcrumb-multishop">
 					{$shop_list}
 				</li>
