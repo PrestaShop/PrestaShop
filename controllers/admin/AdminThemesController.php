@@ -1548,6 +1548,7 @@ class AdminThemesControllerCore extends AdminController
 		if (isset($xml->variations->variation[0]['default_right_column']))
 			$new_theme->default_right_column = (bool)strval($xml->variations->variation[0]['default_right_column']);
 
+		$fill_default_meta = true;
 		$metas_xml = array();
 		if ($xml->metas->meta)
 		{
@@ -1560,22 +1561,29 @@ class AdminThemesControllerCore extends AdminController
 					$tmp_meta['id_meta'] = (int)$meta_id;
 					$tmp_meta['left'] = intval($meta['left']);
 					$tmp_meta['right'] = intval($meta['right']);
-					$metas_xml[] = $tmp_meta;
+					$metas_xml[(int)$meta_id] = $tmp_meta;
 				}
 			}
+			$fill_default_meta = false;
+			if (count($xml->metas->meta) < (int)Db::getInstance()->getValue('SELECT count(*) FROM '._DB_PREFIX_.'meta'))
+				$fill_default_meta = true;
+
 		}
-		else
+
+		if ($fill_default_meta == true)
 		{
 			$metas = Db::getInstance()->executeS('SELECT id_meta FROM '._DB_PREFIX_.'meta');
 			foreach ($metas as $meta)
 			{
-				$tmp_meta['id_meta'] = (int)$meta['id_meta'];
-				$tmp_meta['left'] = 1;
-				$tmp_meta['right'] = 1;
-				$metas_xml[] = $tmp_meta;
+				if (!isset($metas_xml[(int)$meta['id_meta']]))
+				{
+					$tmp_meta['id_meta'] = (int)$meta['id_meta'];
+					$tmp_meta['left'] = $new_theme->default_left_column;
+					$tmp_meta['right'] = $new_theme->default_right_column;
+					$metas_xml[(int)$meta['id_meta']] = $tmp_meta;
+				}
 			}
 		}
-
 		if (!is_dir(_PS_ALL_THEMES_DIR_.$new_theme->directory))
 			mkdir(_PS_ALL_THEMES_DIR_.$new_theme->directory);
 
