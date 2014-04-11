@@ -931,28 +931,28 @@ product_tabs['Shipping'] = new function(){
 	this.bindCarriersEvents = function (){
 		$("#addCarrier").on('click', function() {
 			$('#availableCarriers option:selected').each( function() {
-	                $('#selectedCarriers').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
-	            $(this).remove();
-	        });
-	        $('#selectedCarriers option').prop('selected', true);
-	       
-	       	if ($('#selectedCarriers').find("option").length == 0)
-	       		$('#no-selected-carries-alert').show();
-	       	else
-	       		$('#no-selected-carries-alert').hide();
+					$('#selectedCarriers').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+				$(this).remove();
+			});
+			$('#selectedCarriers option').prop('selected', true);
+		   
+			if ($('#selectedCarriers').find("option").length == 0)
+				$('#no-selected-carries-alert').show();
+			else
+				$('#no-selected-carries-alert').hide();
 		});
 
 		$("#removeCarrier").on('click', function() {
 			$('#selectedCarriers option:selected').each( function() {
-	            $('#availableCarriers').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
-	            $(this).remove();
-	        });
+				$('#availableCarriers').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+				$(this).remove();
+			});
 			$('#selectedCarriers option').prop('selected', true);
 
 			if ($('#selectedCarriers').find("option").length == 0)
-	       		$('#no-selected-carries-alert').show();
-	       	else
-	       		$('#no-selected-carries-alert').hide();
+				$('#no-selected-carries-alert').show();
+			else
+				$('#no-selected-carries-alert').hide();
 		});
 	};
 
@@ -1164,82 +1164,104 @@ product_tabs['Informations'] = new function(){
 
 product_tabs['Pack'] = new function() {
 	var self = this;
+
 	this.bindPackEvents = function () {
+
 		$('.delPackItem').on('click', function() {
 			delPackItem($(this).data('delete'));
-		})
+		});
 
-		$('#curPackItemName').autocomplete('ajax_products_list.php', {
-			delay: 100,
-			minChars: 1,
-			autoFill: true,
-			max:20,
-			matchContains: true,
-			//mustMatch:true,
-			scroll:false,
-			cacheLength:0,
-			// param multipleSeparator:'||' ajouté à cause de bug dans lib autocomplete
-			multipleSeparator:'||',
-			formatItem: function(item) {
-				return item[1] + ' - ' + item[0] + '- REF:' + item[2];
+		function productFormatResult(item) {
+			itemTemplate = "<div class='media'>";
+			itemTemplate += "<div class='pull-left'>";
+			itemTemplate += "<img class='media-object' width='40' src='" + item.image + "' alt='" + item.name + "'>";
+			itemTemplate += "</div>";
+			itemTemplate += "<div class='media-body'>";
+			itemTemplate += "<h4 class='media-heading'>" + item.name + "</h4>";
+			itemTemplate += "<span>REF: " + item.ref + "</span>";
+			itemTemplate += "</div>";
+			itemTemplate += "</div>";
+			return itemTemplate;
+		}
+
+		function productFormatSelection(item) {
+			return item.name;
+		}
+
+		var selectedProduct;
+		$('#curPackItemName').select2({
+			placeholder: search_product_msg,
+			minimumInputLength: 2,
+			width: '100%',
+			dropdownCssClass: "bootstrap",
+			ajax: {
+				url: "ajax_products_list.php",
+				dataType: 'json',
+				data: function (term) {
+					return {
+						q: term
+					};
+				},
+				results: function (data) {
+					var excludeIds = getSelectedIds();
+					var returnIds = new Array();
+					if (data) {
+						for (var i = data.length - 1; i >= 0; i--) {
+							if ($.inArray(data[i].id, excludeIds) <= -1) {
+								returnIds.push(data[i]);
+							}
+						}
+						return {
+							results: returnIds
+						}
+					} else {
+						return {
+							results: []
+						}
+					}
+				}
 			},
-			extraParams: {
-				excludeIds : getSelectedIds(),
-				excludeVirtuals : 1,
-				exclude_packs: 1
-			}
-		}).result(function(event, item){
-			$('#curPackItemId').val(item[1]);
-			$('#curPackItemRef').val(item[2]);
-			$('#curPackItemImage').val(item[3]);
+			formatResult: productFormatResult,
+			formatSelection: productFormatSelection,
+		})
+		.on("select2-selecting", function(e) {
+			selectedProduct = e.object
 		});
 
 		$('#add_pack_item').on('click', addPackItem);
 
 		function addPackItem() {
-			var curPackItemId = $('#curPackItemId').val();
-			var curPackItemName = $('#curPackItemName').val();
-			var curPackItemImage = $('#curPackItemImage').val();
-			var curPackItemQty = $('#curPackItemQty').val();
-			var curPackItemRef = $('#curPackItemRef').val();
 
+			$('#curPackItemName').select2("val", "");
 			$('.pack-empty-warning').hide();
+			selectedProduct.qty = $('#curPackItemQty').val();
 
-			if (curPackItemId == '' || curPackItemName == '') {
+			if (selectedProduct.id == '' || selectedProduct.name == '') {
 				jAlert(msg_select_one);
 				return false;
-			} else if (curPackItemId == '' || curPackItemQty == '') {
+			} else if (selectedProduct.id == '' || selectedProduct.qty == '') {
 				jAlert(msg_set_quantity);
 				return false;
 			}
 
 			var divContent = $('#divPackItems').html();
-			divContent += '<li class="product-pack-item media-product-pack" data-product-name="' + curPackItemName + '" data-product-qty="' + curPackItemQty + '" data-product-id="' + curPackItemId + '">';
-			divContent += '<img class="media-product-pack-img" src="' + curPackItemImage +'"/>';
-			divContent += '<span class="media-product-pack-title">' + curPackItemName + '</span>';
-			divContent += '<span class="media-product-pack-ref">REF: ' + curPackItemRef + '</span>';
-			divContent += '<span class="media-product-pack-quantity"><span class="text-muted">x</span> ' + curPackItemQty + '</span>';
-			divContent += '<button type="button" class="btn btn-default delPackItem media-product-pack-action" data-delete="' + curPackItemId + '" ><i class="icon-trash"></i></button>';
+			divContent += '<li class="product-pack-item media-product-pack" data-product-name="' + selectedProduct.name + '" data-product-qty="' + selectedProduct.qty + '" data-product-id="' + selectedProduct.id + '">';
+			divContent += '<img class="media-product-pack-img" src="' + selectedProduct.image +'"/>';
+			divContent += '<span class="media-product-pack-title">' + selectedProduct.name + '</span>';
+			divContent += '<span class="media-product-pack-ref">REF: ' + selectedProduct.ref + '</span>';
+			divContent += '<span class="media-product-pack-quantity"><span class="text-muted">x</span> ' + selectedProduct.qty + '</span>';
+			divContent += '<button type="button" class="btn btn-default delPackItem media-product-pack-action" data-delete="' + selectedProduct.id + '" ><i class="icon-trash"></i></button>';
 			divContent += '</li>';
 
 			// QTYxID-QTYxID
 			// @todo : it should be better to create input for each items and each qty
 			// instead of only one separated by x, - and ¤
-			var line = curPackItemQty+ 'x' +curPackItemId;
-			var lineDisplay = curPackItemQty + 'x ' + curPackItemName;
+			var line = selectedProduct.qty + 'x' + selectedProduct.id ;
+			var lineDisplay = selectedProduct.qty + 'x ' + selectedProduct.name;
 
 			$('#divPackItems').html(divContent);
 			$('#inputPackItems').val($('#inputPackItems').val() + line  + '-');
 			$('#namePackItems').val($('#namePackItems').val() + lineDisplay + '¤');
-
-			//reset current placeholder hidden field
-			$('#curPackItemId, #curPackItemName, #curPackItemImage, #curPackItemRef').val('');
-
-			$('#curPackItemName').setOptions({
-				extraParams: {
-					excludeIds :  getSelectedIds()
-				}
-			});
 
 			$('.delPackItem').on('click', function(e){
 				e.preventDefault();
@@ -1274,12 +1296,6 @@ product_tabs['Pack'] = new function() {
 			var elem = $('.product-pack-item[data-product-id = "' + id + '"]');
 			elem.remove();
 
-			$('#curPackItemName').setOptions({
-				extraParams: {
-					excludeIds :  getSelectedIds()
-				}
-			});
-
 			if ($('.product-pack-item').length === 0){
 				$('.pack-empty-warning').show();
 			}
@@ -1287,14 +1303,23 @@ product_tabs['Pack'] = new function() {
 
 		function getSelectedIds()
 		{
+			//console.log($('#inputPackItems').val());
 			if ($('#inputPackItems').val() === undefined)
 				return '';
 			var ids = '';
 			if (typeof(id_product) != 'undefined')
 				ids += id_product + ',';
+
 			ids += $('#inputPackItems').val().replace(/\d*x/g, '').replace(/\-/g,',');
 			ids = ids.replace(/\,$/,'');
-			return ids;
+			ids = ids.split(',');
+			ints = new Array();
+
+			for (var i=0; i < ids.length; i++) {
+		        ints[i] = parseInt(ids[i]);
+		    }
+
+			return ints;
 		}
 	};
 
