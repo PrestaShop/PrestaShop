@@ -60,6 +60,7 @@ modules/*/mails/*
 !modules/*/mails/en
 translations/*
 !translations/*.gzip
+modules/awesomehosting
 modules/atos/*
 modules/addshoppers
 modules/alliedwallet
