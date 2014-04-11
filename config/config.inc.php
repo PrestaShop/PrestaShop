@@ -64,7 +64,7 @@ if (_PS_DEBUG_PROFILING_)
 	include_once(_PS_TOOL_DIR_.'profiling/Tools.php');
 }
 
-if (Tools::isPHPCLI())
+if (Tools::isPHPCLI() && isset($argc) && isset($argv))
 	Tools::argvToGET($argc, $argv);
 
 /* Redefine REQUEST_URI if empty (on some webservers...) */
