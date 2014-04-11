@@ -390,7 +390,8 @@ class DispatcherCore
 			$this->request_uri = $_SERVER['HTTP_X_REWRITE_URL'];
 		$this->request_uri = rawurldecode($this->request_uri);
 		
-		$this->request_uri = preg_replace('#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i', '/', $this->request_uri);
+		if (isset(Context::getContext()->shop) && is_object(Context::getContext()->shop))
+			$this->request_uri = preg_replace('#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i', '/', $this->request_uri);
 
 		// If there are several languages, get language from uri
 		if ($this->use_routes && Language::isMultiLanguageActivated())
@@ -424,28 +425,32 @@ class DispatcherCore
 						}
 			}
 		
-		if (!in_array($context->language->id, $languages = Language::getLanguages()))
+		$languages = array();
+		if (isset($context->language) && !in_array($context->language->id, $languages = Language::getLanguages()))
+		{
 			$languages[] = (int)$context->language->id;
-		// Set default routes
-		foreach ($languages as $lang)
-			foreach ($this->default_routes as $id => $route)
-				$this->addRoute(
-					$id,
-					$route['rule'],
-					$route['controller'],
-					$lang['id_lang'],
-					$route['keywords'],
-					isset($route['params']) ? $route['params'] : array(),
-					$id_shop
-				);
-		
+			// Set default routes
+			foreach ($languages as $lang)
+				foreach ($this->default_routes as $id => $route)
+					$this->addRoute(
+						$id,
+						$route['rule'],
+						$route['controller'],
+						$lang['id_lang'],
+						$route['keywords'],
+						isset($route['params']) ? $route['params'] : array(),
+						$id_shop
+					);
+		}
+
 		// Load the custom routes prior the defaults to avoid infinite loops
 		if ($this->use_routes)
 		{
 			// Get iso lang
 			$iso_lang = Tools::getValue('isolang');
-			$id_lang = $context->language->id;
-			if (!empty($iso_lang))
+			if (isset($context->language))
+				$id_lang = (int)$context->language->id;
+			if ((!empty($iso_lang) && Validate::isLanguageIsoCode($iso_lang)) || !isset($id_lang))
 				$id_lang = Language::getIdByIso($iso_lang);
 
 			// Load routes from meta table
@@ -472,7 +477,7 @@ class DispatcherCore
 			foreach ($this->default_routes as $route_id => $route_data)
 				if ($custom_route = Configuration::get('PS_ROUTE_'.$route_id, null, null, $id_shop))
 				{
-					if (!in_array($context->language->id, $languages = Language::getLanguages()))
+					if (isset($context->language) && !in_array($context->language->id, $languages = Language::getLanguages()))
 						$languages[] = (int)$context->language->id;
 					foreach ($languages as $lang)
 						$this->addRoute(
@@ -498,10 +503,10 @@ class DispatcherCore
 	 */
 	public function addRoute($route_id, $rule, $controller, $id_lang = null, array $keywords = array(), array $params = array(), $id_shop = null)
 	{
-		if ($id_lang === null)
+		if (isset(Context::getContext()->language) && $id_lang === null)
 			$id_lang = (int)Context::getContext()->language->id;
 		
-		if ($id_shop === null)
+		if (isset(Context::getContext()->shop) && $id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
 		
 		$regexp = preg_quote($rule, '#');
@@ -561,9 +566,9 @@ class DispatcherCore
 	 */
 	public function hasRoute($route_id, $id_lang = null, $id_shop = null)
 	{
-		if ($id_lang === null)
+		if (isset(Context::getContext()->language) && $id_lang === null)
 			$id_lang = (int)Context::getContext()->language->id;
-		if ($id_shop === null)
+		if (isset(Context::getContext()->shop) && $id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
 		
 		return isset($this->routes[$id_shop]) && isset($this->routes[$id_shop][$id_lang]) && isset($this->routes[$id_shop][$id_lang][$route_id]);
@@ -713,7 +718,7 @@ class DispatcherCore
 			return $this->controller;
 		}
 
-		if ($id_shop === null)
+		if (isset(Context::getContext()->shop) && $id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
 
 		$controller = Tools::getValue('controller');

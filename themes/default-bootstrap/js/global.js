@@ -334,14 +334,14 @@ function accordion(status)
 	leftColumnBlocks = $('#left_column');
 	if(status == 'enable')
 	{
-		$('#right_column .block:not(#layered_block_left) .title_block, #left_column .block:not(#layered_block_left) .title_block, #left_column #newsletter_block_left h4').on('click', function(){
+		$('#right_column .block .title_block, #left_column .block .title_block, #left_column #newsletter_block_left h4').on('click', function(){
 			$(this).toggleClass('active').parent().find('.block_content').stop().slideToggle('medium');
 		})
-		$('#right_column, #left_column').addClass('accordion').find('.block:not(#layered_block_left) .block_content').slideUp('fast');
+		$('#right_column, #left_column').addClass('accordion').find('.block .block_content').slideUp('fast');
 	}
 	else
 	{
-		$('#right_column .block:not(#layered_block_left) .title_block, #left_column .block:not(#layered_block_left) .title_block, #left_column #newsletter_block_left h4').removeClass('active').off().parent().find('.block_content').removeAttr('style').slideDown('fast');
+		$('#right_column .block .title_block, #left_column .block .title_block, #left_column #newsletter_block_left h4').removeClass('active').off().parent().find('.block_content').removeAttr('style').slideDown('fast');
 		$('#left_column, #right_column').removeClass('accordion');
 	}
 }

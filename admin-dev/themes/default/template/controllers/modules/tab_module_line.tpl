@@ -38,7 +38,7 @@
 				{if isset($module->type) && $module->type == 'addonsMustHave'}
 					- <span class="module-badge-popular help-tooltip text-primary" data-title="{l s="This module is available on PrestaShop Addons"}"><i class="icon-group"></i> <small>{l s="Popular"}</small></span>
 				{elseif isset($module->type) && $module->type == 'addonsPartner'}
-					- <span class="module-badge-partner help-tooltip text-warning" data-title="{l s="This module is available for free thanks to our partner."}"><i class="icon-pushpin"></i> <small>{l s="Partner"}</small></span>
+					- <span class="module-badge-partner help-tooltip text-warning" data-title="{l s="This module is available for free thanks to our partner."}"><i class="icon-pushpin"></i> <small>{l s="Official"}</small></span>
 				{elseif isset($module->id) && $module->id gt 0}
 					{if isset($module->version_addons) && $module->version_addons}
 						<span class="label label-warning">{l s='Need update'}</span>
