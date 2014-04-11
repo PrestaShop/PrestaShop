@@ -56,22 +56,21 @@ function desktopInit()
 	$('.sf-menu').removeAttr('style');
 	categoryMenu.superfish('init');
 	//add class for width define
-	$('.sf-menu > li > ul').addClass('submenu-container clearfix');
-	// loop through each sublist under each top list item
-	$('.sf-menu > li > ul').each(function(){
-		i = 0;
-		//add classes for clearing
-		$(this).each(function(){
-			if ($(this).attr('id') != "category-thumbnail")
-			{
-				i++;
-				if(i % 2 == 1)
-					$(this).addClass('first-in-line-xs');
-				else if (i % 5 == 1)
-					$(this).addClass('first-in-line-lg');
-			}
-		});
-	});
+	$('.sf-menu > li > ul').addClass('submenu-container clearfix'); 
+	 // loop through each sublist under each top list item
+    $('.sf-menu > li > ul').each(function(){
+        i = 0;
+        //add classes for clearing
+        $(this).each(function(){ 
+            if ($(this).attr('id') != "category-thumbnail"){
+                i++;
+                if(i % 2 == 1)
+                    $(this).addClass('first-in-line-xs');
+                else if (i % 5 == 1)
+                    $(this).addClass('first-in-line-lg');
+            }
+        });
+    });
 }
 
 function mobileInit()
