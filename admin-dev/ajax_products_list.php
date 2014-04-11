@@ -62,16 +62,27 @@ $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, MAX(
 		WHERE (pl.name LIKE \'%'.pSQL($query).'%\' OR p.reference LIKE \'%'.pSQL($query).'%\')'.
 		(!empty($excludeIds) ? ' AND p.id_product NOT IN ('.$excludeIds.') ' : ' ').
 		($excludeVirtuals ? 'AND p.id_product NOT IN (SELECT pd.id_product FROM `'._DB_PREFIX_.'product_download` pd WHERE (pd.id_product = p.id_product))' : '').
-		($exclude_packs ? 'AND (p.cache_is_pack IS NULL OR p.cache_is_pack = 0)' : '');
+		($exclude_packs ? 'AND (p.cache_is_pack IS NULL OR p.cache_is_pack = 0)' : '').
+		' GROUP BY p.id_product';
 
-$items = Db::getInstance()->executeS($sql);
+$result = Db::getInstance()->executeS($sql);
 
-if ($items)
-	foreach ($items AS $item){
-		$item_image = Context::getContext()->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default' );
-		$item_name = $item['name'];
-		$item_ref = (!empty($item['reference']) ? $item['reference'] : '');
-		$item_id = (int)($item['id_product']);
-
-		echo trim($item_name.'|'.$item_id.'|'.$item_ref.'|'.$item_image."\n");
+if ($result)
+{
+	$items = array();
+	foreach ($result AS $item)
+	{
+		$product = array(
+			'id' => (int)($item['id_product']),
+			'name' => $item['name'],
+			'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
+			'image' => Context::getContext()->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default' ),
+		);
+		array_push($items, $product);
 	}
+	echo Tools::jsonEncode($items);
+}
+else
+{
+	json_encode (new stdClass);
+}
