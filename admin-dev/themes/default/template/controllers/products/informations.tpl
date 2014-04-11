@@ -158,7 +158,7 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="ean13">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='This type of product code that is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.'}">
+				title="{l s='This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.'}">
 				{$bullet_common_field} {l s='EAN-13 or JAN barcode'}
 			</span>
 		</label>
