@@ -48,7 +48,6 @@ textarea {
 	padding-top: 15px;
 }
 
-
 #index {
 	.tab-content {
 		margin-top: 35px;
@@ -681,7 +680,7 @@ table.table_block td {
 	a {
 		font-size: 17px;
 		line-height: 23px;
-		color: $product-name-color;	
+		color: $product-name-color;
 		&:hover {
 			color: $product-name-hover-color;
 		}
@@ -2137,14 +2136,17 @@ a.price_discount_delete {
 #cart_summary {
 	tbody {
 		td {
+			padding: 7px 8px 9px 18px;
 			&.cart_product {
-				padding: 19px;
+				@extend .text-center;			
+				padding: 7px;
 				width: 137px;
 				img {
 					border: 1px solid $table-border-color;
 				}
 			}
 			&.cart_unit {
+				@extend .text-right;
 				.price {
 					span {
 						display: inline-block;
@@ -2164,7 +2166,12 @@ a.price_discount_delete {
 					padding: 5px 0 0 0;
 				}
 			}
-			&.cart_avail {}
+			&.cart_avail{
+				@extend .text-center;
+			}
+			&.cart_total {
+				@extend .text-right;
+			}	
 		}
 	}
 	tfoot {
