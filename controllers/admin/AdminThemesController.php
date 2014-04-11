@@ -394,7 +394,7 @@ class AdminThemesControllerCore extends AdminController
 			)
 		);
 		// adding a new theme, you can create a directory, and copy from an existing theme
-		if ($this->display == 'add' || !$this->object->id)
+		if ($this->display == 'add' || !Validate::isLoadedObject($this->object))
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
@@ -536,6 +536,12 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processAdd()
 	{
+		if (Tools::getValue('directory') == '' || Tools::getValue('name') == '')
+		{
+			$this->errors[] = $this->l('Form invalid');
+			$this->display = 'form';
+			return false;
+		}
 		if (($new_dir = Tools::getValue('directory')) != '')
 		{
 			if (!Validate::isDirName($new_dir))
