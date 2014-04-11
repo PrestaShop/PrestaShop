@@ -61,8 +61,9 @@ class PrestaShopAutoload
 	protected function __construct()
 	{
 		$this->root_dir = _PS_CORE_DIR_.'/';
-		if (file_exists($this->root_dir.PrestaShopAutoload::INDEX_FILE))
-			$this->index = include($this->root_dir.PrestaShopAutoload::INDEX_FILE);
+		$file = $this->root_dir.PrestaShopAutoload::INDEX_FILE;
+		if (@filemtime($file) && is_readable($file))
+			$this->index = include($file);
 		else
 			$this->generateIndex();
 	}
@@ -146,7 +147,7 @@ class PrestaShopAutoload
 		$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
 		if ($filename_tmp !== false && file_put_contents($filename_tmp, $content) !== false)
 		{
-			if (!rename($filename_tmp, $filename))
+			if (!@rename($filename_tmp, $filename))
 				unlink($filename_tmp);
 			else
 				@chmod($filename, 0666);

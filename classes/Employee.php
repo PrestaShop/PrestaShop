@@ -177,7 +177,7 @@ class EmployeeCore extends ObjectModel
 	{
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_BACK').'minutes'));
 		$this->saveOptin();
-
+		$this->updateTextDirection();
 	 	return parent::add($autodate, $null_values);
 	}
 
@@ -188,7 +188,28 @@ class EmployeeCore extends ObjectModel
 		if (empty($this->stats_date_to) || $this->stats_date_to == '0000-00-00')
 			$this->stats_date_to = date('Y-m-d');
 		$this->saveOptin();
+		$this->updateTextDirection();
 	 	return parent::update($null_values);
+	}
+
+	protected function updateTextDirection()
+	{
+		if (!defined('_PS_ADMIN_DIR_'))
+			return;
+		$path = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.$this->bo_theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR;
+		$language = new Language($this->id_lang);
+		if ($language->is_rtl && !strpos($this->bo_css, '_rtl'))
+		{
+			$bo_css = preg_replace('/^(.*)\.css$/', '$1_rtl.css', $this->bo_css);
+			if (file_exists($path.$bo_css))
+				$this->bo_css = $bo_css;
+		}
+		elseif (!$language->is_rtl && strpos($this->bo_css, '_rtl'))
+		{
+			$bo_css = preg_replace('/^(.*)_rtl\.css$/', '$1.css', $this->bo_css);
+			if (file_exists($path.$bo_css))
+				$this->bo_css = $bo_css;
+		}
 	}
 	
 	protected function saveOptin()

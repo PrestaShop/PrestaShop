@@ -12,7 +12,8 @@
     padding: 8px 10px 10px 10px;
     color: white;
     text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
-    cursor: pointer; }
+    cursor: pointer;
+    line-height: 18px; }
     @media (max-width: 479px) {
       #currencies-block-top div.current {
         text-align: center;

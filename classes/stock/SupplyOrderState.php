@@ -93,7 +93,7 @@ class SupplyOrderStateCore extends ObjectModel
 	);
 
 	/**
-	 * Gets the list of supply order states
+	 * Gets the list of supply order statuses
 	 *
 	 * @param int $id_state_referrer Optional, used to know what state is available after this one
 	 * @param int $id_lang Optional Id Language
@@ -143,7 +143,7 @@ class SupplyOrderStateCore extends ObjectModel
 	}
 
 	/**
-	 * Gets the list of supply order states
+	 * Gets the list of supply order statuses
 	 *
 	 * @param array $ids Optional Do not include these ids in the result
 	 * @param int $id_lang Optional

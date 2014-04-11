@@ -248,10 +248,13 @@ function WishlistDelete(id, id_wishlist, msg)
 	if (res == false)
 		return (false);
 
+	if (typeof mywishlist_url == 'undefined')
+		return (false);
+
 	$.ajax({
 		type: 'GET',
 		async: true,
-		url: baseDir + 'modules/blockwishlist/mywishlist.php?rand=' + new Date().getTime(),
+		url: mywishlist_url + '&rand=' + new Date().getTime(),
 		headers: { "cache-control": "no-cache" },
 		cache: false,
 		data: 'deleted&id_wishlist=' + id_wishlist,

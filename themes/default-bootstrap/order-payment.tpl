@@ -53,7 +53,9 @@
 									<tr>
 										<th class="cart_product first_item">{l s='Product'}</th>
 										<th class="cart_description item">{l s='Description'}</th>
-										<th class="cart_availability item">{l s='Avail.'}</th>
+										{if $PS_STOCK_MANAGEMENT}
+											<th class="cart_availability item">{l s='Avail.'}</th>
+										{/if}
 										<th class="cart_unit item">{l s='Unit price'}</th>
 										<th class="cart_quantity item">{l s='Qty'}</th>
 										<th class="cart_total last_item">{l s='Total'}</th>

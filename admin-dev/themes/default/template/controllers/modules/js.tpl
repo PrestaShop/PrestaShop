@@ -373,8 +373,8 @@
 	              // res.status  = cache or refresh
 	              if (data == 'OK')
 	              {
-	                el.parent('li').find('.toggle_favorite').toggle();
-
+	                el.toggle();
+	                el.parent('li').siblings().find('a.toggle_favorite').toggle();
 
 					if (value_pref)
 						$('#favorite-count').html(total_favorites+1);

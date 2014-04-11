@@ -48,7 +48,8 @@
 		<ul class="breadcrumb page-breadcrumb">
 
 			{* Shop *}
-			{if $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+
+			{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
 				<li class="breadcrumb-multishop">
 					{$shop_list}
 				</li>
@@ -89,7 +90,7 @@
 		{block name=toolbarBox}
 		<div class="page-bar toolbarBox">
 			<div class="btn-toolbar">
-				<a href="#" class="toolbar_btn dropdown-toolbar" class="navbar-toggle" data-toggle="collapse" data-target="#toolbar-nav"><i class="process-icon-dropdown"></i><span>{l s='Menu'}</span></a>
+				<a href="#" class="toolbar_btn dropdown-toolbar navbar-toggle" data-toggle="collapse" data-target="#toolbar-nav"><i class="process-icon-dropdown"></i><span>{l s='Menu'}</span></a>
 				<ul id="toolbar-nav" class="nav nav-pills pull-right collapse navbar-collapse">
 					{foreach from=$toolbar_btn item=btn key=k}
 					{if $k != 'back' && $k != 'modules-list'}
@@ -119,7 +120,7 @@
 					{/if}
 				</ul>
 
-				<script language="javascript" type="text/javascript">
+				<script type="text/javascript">
 				//<![CDATA[
 					var modules_list_loaded = false;
 

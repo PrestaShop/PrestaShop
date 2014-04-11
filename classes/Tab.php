@@ -40,8 +40,11 @@ class TabCore extends ObjectModel
 	/** @var integer position */
 	public $position;
 
-	/** @var integer active */
+	/** @var boolean active */
 	public $active = true;
+	
+	/** @var integer hide_host_mode */
+	public $hide_host_mode = false;
 	
 	const TAB_MODULE_LIST_URL = 'api.prestashop.com/xml/tab_modules_list.xml';
 
@@ -58,12 +61,13 @@ class TabCore extends ObjectModel
 			'module' => 	array('type' => self::TYPE_STRING, 'validate' => 'isTabName', 'size' => 64),
 			'class_name' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 64),
 			'active' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'hide_host_mode' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
 			// Lang fields
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 64),
 		),
 	);
-
+	
 	protected static $_getIdFromClassName = null;
 
 	/**
@@ -98,8 +102,8 @@ class TabCore extends ObjectModel
 		// Add tab
 		if (parent::add($autodate, $null_values))
 		{	
-                        //forces cache to be reloaded
-                        self::$_getIdFromClassName = null;
+            //forces cache to be reloaded
+            self::$_getIdFromClassName = null;
 			return Tab::initAccess($this->id);
 		}
 		return false;
@@ -205,7 +209,7 @@ class TabCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'tab` t
 				LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl
 					ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
-				WHERE t.`id_tab` = '.(int)$id_tab
+				WHERE t.`id_tab` = '.(int)$id_tab.(defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '')
 			);
 			Cache::store($cache_id, $result);
 		}
@@ -248,6 +252,7 @@ class TabCore extends ObjectModel
 			SELECT t.*, tl.name
 			FROM `'._DB_PREFIX_.'tab` t
 			LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
+			WHERE 1 '.(defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '').'
 			ORDER BY t.`position` ASC');
 			foreach ($result as $row)
 			{
@@ -517,6 +522,7 @@ class TabCore extends ObjectModel
 			AND a.`delete` = 1
 			AND a.`add` = 1
 			AND t.`id_parent` != 0 AND t.`id_parent` != -1
+			'.(defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '').'
 			ORDER BY t.`id_parent` ASC
 		');
 	}

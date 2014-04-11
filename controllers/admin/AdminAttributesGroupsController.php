@@ -87,9 +87,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 */
 	public function renderList()
 	{
+		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->addRowAction('view');
+		
 
 		return parent::renderList();
 	}
@@ -167,11 +168,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			),
 			array(
 				'id' => 'radio',
-				'name' => $this->l('Radio button')
+				'name' => $this->l('Radio buttons')
 			),
 			array(
 				'id' => 'color',
-				'name' => $this->l('Color')
+				'name' => $this->l('Color or texture')
 			),
 		);
 
@@ -188,7 +189,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'lang' => true,
 					'required' => true,
 					'col' => '4',
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Your internal name for this attribute.').'&nbsp;'.$this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
 					'type' => 'text',
@@ -197,7 +198,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'lang' => true,
 					'required' => true,
 					'col' => '4',
-					'hint' => $this->l('Group name displayed to the customer').'&nbsp;'.$this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('The public name for this attribute, displayed to the customers.').'&nbsp;'.$this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
 					'type' => 'select',
@@ -210,7 +211,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						'name' => 'name'
 					),
 					'col' => '2',
-					'hint' => $this->l('Choose the type of the attribute.')
+					'hint' => $this->l('The way the attribute\'s values will be presented to the customers in the product\'s page.')
 				)
 			)
 		);
@@ -258,7 +259,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						'id' => 'id_attribute_group',
 						'name' => 'name'
 					),
-					'hint' => $this->l('Choose the group of the attribute.')
+					'hint' => $this->l('Choose the attribute group for this value.')
 				),
 				array(
 					'type' => 'text',
@@ -304,7 +305,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'label' => $this->l('Texture'),
 			'name' => 'texture',
 			'hint' => array(
-				$this->l('Upload color texture from your computer.'),
+				$this->l('Upload an image file containing the color texture from your computer.'),
 				$this->l('This will override the HTML color!')
 			)
 		);

@@ -508,7 +508,7 @@ class ProductCore extends ObjectModel
 	{
 		if (!parent::add($autodate, $null_values))
 			return false;
-			
+
 		if ($this->getType() == Product::PTYPE_VIRTUAL)
 		{
 			StockAvailable::setProductOutOfStock((int)$this->id, 1);
@@ -688,7 +688,7 @@ class ProductCore extends ObjectModel
 					WHERE pa.id_product = '.(int)$id_product;
 			$result = Db::getInstance()->getValue($sql);
 		}
-		
+
 		$combinations[$id_product][$minimum_quantity] = $result;
 		return $result;
 	}
@@ -2069,7 +2069,7 @@ class ProductCore extends ObjectModel
 		$sql = new DbQuery();
 		$sql->select(
 			'p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
-			pl.`meta_keywords`, pl.`meta_title`, pl.`name`, MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` AS manufacturer_name,
+			pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`, MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` AS manufacturer_name,
 			product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'" as new'
 		);
 
@@ -2120,7 +2120,6 @@ class ProductCore extends ObjectModel
 			$products_ids[] = $row['id_product'];
 		// Thus you can avoid one query per product, because there will be only one query for all the products of the cart
 		Product::cacheFrontFeatures($products_ids, $id_lang);
-
 		return Product::getProductsProperties((int)$id_lang, $result);
 	}
 
@@ -2197,7 +2196,7 @@ class ProductCore extends ObjectModel
 				return false;
 
 			$sql = 'SELECT p.*, product_shop.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
-						pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
+						pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
 						p.`ean13`, p.`upc`, MAX(image_shop.`id_image`) id_image, il.`legend`,
 						DATEDIFF(product_shop.`date_add`, DATE_SUB(NOW(),
 						INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
@@ -2678,7 +2677,6 @@ class ProductCore extends ObjectModel
 			$id_cart,
 			$real_quantity
 		);
-
 		if (isset(self::$_prices[$cache_id]))
 			return self::$_prices[$cache_id];
 
@@ -2701,7 +2699,7 @@ class ProductCore extends ObjectModel
 				$sql->select('0 as id_product_attribute');
 
 			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-			
+
 			foreach ($res as $row)
 			{
 				$array_tmp = array(
@@ -2775,8 +2773,10 @@ class ProductCore extends ObjectModel
 			if ($reduction_from_category !== false)
 				$group_reduction = $price * (float)$reduction_from_category;
 			else // apply group reduction if there is no group reduction for this category
-				$group_reduction = (($reduc = Group::getReductionByIdGroup($id_group)) != 0) ? ($price * (100 - $reduc) / 100) : 0;
+				$group_reduction = (($reduc = Group::getReductionByIdGroup($id_group)) != 0) ? ($price * $reduc / 100) : 0;
 		}
+		else
+			$group_reduction = 0;
 		
 		if ($only_reduc)
 			return Tools::ps_round($group_reduction + $specific_price_reduction, $decimals);
@@ -2952,7 +2952,6 @@ class ProductCore extends ObjectModel
 	*/
 	public static function getQuantity($id_product, $id_product_attribute = null, $cache_is_pack = null)
 	{
-		$lang = Configuration::get('PS_LANG_DEFAULT');
 		if ((int)$cache_is_pack || ($cache_is_pack === null && Pack::isPack((int)$id_product)))
 		{
 			if (!Pack::isInStock((int)$id_product))
@@ -3224,7 +3223,7 @@ class ProductCore extends ObjectModel
 			$context = Context::getContext();
 
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`,
-					pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
+					pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
 					MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` as manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(
 						p.`date_add`,
@@ -3693,7 +3692,8 @@ class ProductCore extends ObjectModel
 					SELECT MAX(`id_feature_value`) AS nb
 					FROM `'._DB_PREFIX_.'feature_value`');
 				$new_id_feature_value = $max_fv['nb'];
-				$languages = Language::getLanguages();
+				$languages = Language::getLanguages(false);
+
 				foreach ($languages as $language)
 				{
 					$result3 = Db::getInstance()->getRow('
@@ -3829,8 +3829,7 @@ class ProductCore extends ObjectModel
 
 	public static function defineProductImage($row, $id_lang)
 	{
-		if (isset($row['id_image']))
-		if ($row['id_image'])
+		if (isset($row['id_image']) && $row['id_image'])
 			return $row['id_product'].'-'.$row['id_image'];
 
 		return Language::getIsoById((int)$id_lang).'-default';
@@ -3971,7 +3970,6 @@ class ProductCore extends ObjectModel
 			$row['quantity'] = 0;
 
 		$row = Product::getTaxesInformations($row, $context);
-
 		self::$producPropertiesCache[$cache_key] = $row;
 		return self::$producPropertiesCache[$cache_key];
 	}

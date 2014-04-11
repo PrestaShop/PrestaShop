@@ -227,7 +227,9 @@ class AdminSearchControllerCore extends AdminController
 		INNER JOIN '._DB_PREFIX_.'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->employee->id_lang.')
 		LEFT JOIN '._DB_PREFIX_.'access a ON (a.id_tab = t.id_tab AND a.id_profile = '.(int)$this->context->employee->id_profile.')
 		WHERE active = 1
-		'.($this->context->employee->id_profile != 1 ? 'AND view = 1' : ''));
+		'.($this->context->employee->id_profile != 1 ? 'AND view = 1' : '').
+		(defined('_PS_HOST_MODE_') ? ' AND t.`hide_host_mode` = 0' : '')
+		);
 		foreach ($result as $row)
 		{
 			$tabs[strtolower($row['class_name'])] = $row['name'];

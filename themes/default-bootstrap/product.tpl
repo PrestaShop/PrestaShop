@@ -59,6 +59,11 @@
 		<div class="pb-left-column col-xs-12 col-sm-4 col-md-5">
 			<!-- product img-->        
 			<div id="image-block" class="clearfix">
+				{if $product->new}
+					<span class="new-box">
+						<span class="new-label">{l s='New'}</span>
+					</span>
+				{/if}
 				{if $product->on_sale}
 					<span class="sale-box no-print">
 						<span class="sale-label">{l s='Sale!'}</span>
@@ -239,7 +244,7 @@
 		<div class="pb-right-column col-xs-12 col-sm-4 col-md-3">
 			{if ($product->show_price && !isset($restricted_country_mode)) || isset($groups) || $product->reference || (isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS)}
 			<!-- add to cart form-->
-			<form id="buy_block" {if $PS_CATALOG_MODE && !isset($groups) && $product->quantity > 0}class="hidden"{/if} action="{$link->getPageLink('cart')|escape:'html':'UTF-8'}" method="post">
+			<form id="buy_block"{if $PS_CATALOG_MODE && !isset($groups) && $product->quantity > 0} class="hidden"{/if} action="{$link->getPageLink('cart')|escape:'html':'UTF-8'}" method="post">
 				<!-- hidden datas -->
 				<p class="hidden">
 					<input type="hidden" name="token" value="{$static_token}" />
@@ -253,7 +258,7 @@
 							<!-- prices -->
 							<div class="price">
 								<p class="our_price_display" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-									<link itemprop="availability" {if $product->quantity <= 0}href="http://schema.org/OutOfStock"{else}href="http://schema.org/InStock"{/if}>
+									{if $product->quantity > 0}<link itemprop="availability" href="http://schema.org/InStock"/>{/if}
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
 										<span id="our_price_display" itemprop="price">{convertPrice price=$productPrice}</span>
 										<!--{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) || !isset($display_tax_label))}
@@ -267,7 +272,7 @@
 										{if $product->specificPrice && $product->specificPrice.reduction_type == 'percentage'}-{$product->specificPrice.reduction*100}%{/if}
 									</span>
 								</p>
-								<p id="old_price"{if (!$product->specificPrice || !$product->specificPrice.reduction) && $group_reduction == 1} class="hidden"{/if}>
+								<p id="old_price"{if (!$product->specificPrice || !$product->specificPrice.reduction) && $group_reduction == 0} class="hidden"{/if}>
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
 										<span id="old_price_display">{if $productPriceWithoutReduction > $productPrice}{convertPrice price=$productPriceWithoutReduction}{/if}</span>
 										<!-- {if $tax_enabled && $display_tax_label == 1}{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if} -->
@@ -405,8 +410,10 @@
 						</thead>
 						<tbody>
 							{foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
-							<tr id="quantityDiscount_{$quantity_discount.id_product_attribute}" class="quantityDiscount_{$quantity_discount.id_product_attribute}">
-							<td>{$quantity_discount.quantity|intval}</td>
+							<tr id="quantityDiscount_{$quantity_discount.id_product_attribute}" class="quantityDiscount_{$quantity_discount.id_product_attribute}" data-discount-type="{$quantity_discount.reduction_type}" data-discount="{$quantity_discount.real_value|floatval}" data-discount-quantity="{$quantity_discount.quantity|intval}">
+								<td>
+									{$quantity_discount.quantity|intval}
+								</td>
 								<td>
 									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
 										{if $display_discount_price}
@@ -665,6 +672,9 @@
 {addJsDef currentDate=$smarty.now|date_format:'%Y-%m-%d %H:%M:%S'}
 {if isset($combinations) && $combinations}
 	{addJsDef combinations=$combinations}
+	{addJsDef combinationsFromController=$combinations}
+	{addJsDef displayDiscountPrice=$display_discount_price}
+	{addJsDefL name='upToTxt'}{l s='Up to' js=1}{/addJsDefL}
 {/if}
 {if isset($combinationImages) && $combinationImages}
 	{addJsDef combinationImages=$combinationImages}
@@ -723,7 +733,7 @@
 {else}
 	{addJsDef specific_price=0}
 {/if}
-{addJsDef specific_currency=($product->specificPrice && $product->specificPrice.id_currency)|boolval}
+{addJsDef specific_currency=($product->specificPrice && $product->specificPrice.id_currency)|boolval} {* TODO: remove if always false *}
 {addJsDef stock_management=$stock_management|intval}
 {addJsDef taxRate=$tax_rate|floatval}
 {addJsDefL name=doesntExist}{l s='This combination does not exist for this product. Please select another combination.' js=1}{/addJsDefL}

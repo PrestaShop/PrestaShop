@@ -251,6 +251,9 @@ class AdminShopControllerCore extends AdminController
 
 		$result = parent::postProcess();
 
+		if ($result !== false && (Tools::isSubmit('submitAddshopAndStay') || Tools::isSubmit('submitAddshop')) && (int)$result->id_category != (int)Configuration::get('PS_HOME_CATEGORY', null, null, (int)$result->id))
+			Configuration::updateValue('PS_HOME_CATEGORY', (int)$result->id_category, false, null, (int)$result->id);
+
 		if ($this->redirect_after)
 			$this->redirect_after .= '&id_shop_group='.$this->id_shop_group;
 
@@ -642,13 +645,7 @@ class AdminShopControllerCore extends AdminController
 			return;
 		}
 
-		// specific import for stock
-		if (isset($import_data['stock_available']) && isset($import_data['product']) && Tools::isSubmit('useImportData'))
-		{
-			$id_src_shop = (int)Tools::getValue('importFromShop');
-			if ($object->getGroup()->share_stock == false)
-				StockAvailable::copyStockAvailableFromShopToShop($id_src_shop, $object->id);
-		}
+		$object->associateSuperAdmins();
 
 		$categories = Tools::getValue('categoryBox');
 		array_unshift($categories, Configuration::get('PS_ROOT_CATEGORY'));

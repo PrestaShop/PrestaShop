@@ -385,11 +385,14 @@ class CategoryCore extends ObjectModel
 	  */
 	public static function regenerateEntireNtree()
 	{
+		$id = Context::getContext()->shop->id;
+		$id_shop = $id ? $id: Configuration::get('PS_SHOP_DEFAULT');
 		$categories = Db::getInstance()->executeS('
 		SELECT c.`id_category`, c.`id_parent`
 		FROM `'._DB_PREFIX_.'category` c
-		'.Shop::addSqlAssociation('category', 'c').'
-		ORDER BY c.`id_parent`, category_shop.`position` ASC');
+		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
+		ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
+		ORDER BY c.`id_parent`, cs.`position` ASC');
 		$categories_array = array();
 		foreach ($categories as $category)
 			$categories_array[$category['id_parent']]['subcategories'][] = $category['id_category'];
@@ -1159,7 +1162,7 @@ class CategoryCore extends ObjectModel
 			return false;
 
 		return Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'category_group`
+		INSERT INTO `'._DB_PREFIX_.'category_group` (`id_category`, `id_group`)
 		VALUES ('.(int)Context::getContext()->shop->getCategory().', '.(int)$id_group.')');
 	}
 

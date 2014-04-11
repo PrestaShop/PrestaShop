@@ -46,7 +46,7 @@ a img {
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
   display: block; }
 
-/*
+/*!
  * Bootstrap v3.0.0
  *
  * Copyright 2013 Twitter, Inc
@@ -55,7 +55,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
  *
  * Designed and built with all the love in the world by @mdo and @fat.
  */
-/* normalize.css v2.1.0 | MIT License | git.io/normalize */
+/*! normalize.css v2.1.0 | MIT License | git.io/normalize */
 article,
 aside,
 details,
@@ -3785,7 +3785,7 @@ td.visible-print {
   th.hidden-print,
   td.hidden-print {
     display: none !important; } }
-/*
+/*!
  *  Font Awesome 3.2.1
  *  the iconic font designed for Bootstrap
  *  ------------------------------------------------------------------------------
@@ -5282,8 +5282,6 @@ header {
       margin: 0px; }
     header .nav nav {
       width: 100%; }
-      header .nav nav #currencies-block-top {
-        float: right; }
   header .row {
     position: relative; }
     header .row > .container {
@@ -6436,7 +6434,7 @@ ul.footer_links {
 ul.step {
   margin-bottom: 30px;
   overflow: hidden; }
-  @media (min-width: 480px) {
+  @media (min-width: 768px) {
     ul.step {
       -webkit-border-radius: 4px;
       -moz-border-radius: 4px;
@@ -6450,7 +6448,7 @@ ul.step {
     border-bottom-color: #9a9a9a;
     border-right-color: #b7b7b7;
     border-left-width: 0px; }
-    @media (max-width: 479px) {
+    @media (max-width: 767px) {
       ul.step li {
         width: 100%;
         border-left-width: 1px; } }
@@ -6488,7 +6486,7 @@ ul.step {
     ul.step li.first {
       border-left-width: 1px;
       border-left-color: #b7b7b7; }
-      @media (min-width: 480px) {
+      @media (min-width: 768px) {
         ul.step li.first {
           -moz-border-radius-topleft: 4px;
           -webkit-border-top-left-radius: 4px;
@@ -6500,7 +6498,7 @@ ul.step {
       ul.step li.first a {
         z-index: 5;
         padding-left: 13px !important; }
-        @media (min-width: 480px) {
+        @media (min-width: 768px) {
           ul.step li.first span,
           ul.step li.first a {
             -moz-border-radius-topleft: 4px;
@@ -6517,7 +6515,7 @@ ul.step {
       z-index: 2; }
     ul.step li.last span {
       z-index: 1; }
-    @media (min-width: 480px) {
+    @media (min-width: 768px) {
       ul.step li.last {
         -moz-border-radius-topright: 4px;
         -webkit-border-top-right-radius: 4px;
@@ -6604,7 +6602,7 @@ ul.step {
         display: none; } }
     ul.step li em {
       font-style: normal; }
-      @media (min-width: 480px) and (max-width: 767px) {
+      @media (min-width: 768px) and (max-width: 991px) {
         ul.step li em {
           display: none; } }
 
@@ -6879,7 +6877,10 @@ div.star a:hover {
             .footer-container #footer #social_block ul li a:before {
               display: inline-block;
               font-family: "FontAwesome";
-              vertical-align: -5px; }
+              vertical-align: -5px;
+              font-weight: normal;
+              -webkit-font-smoothing: antialiased;
+              -moz-osx-font-smoothing: grayscale; }
             .footer-container #footer #social_block ul li a:hover {
               color: white; }
           .footer-container #footer #social_block ul li.facebook a:before {
@@ -7025,17 +7026,15 @@ a.price_discount_delete {
   #cart_summary tbody td.cart_product img {
     border: 1px solid #d6d4d4; }
 #cart_summary tbody td.cart_unit .price span {
-  display: block; }
+  display: inline-block; }
   #cart_summary tbody td.cart_unit .price span.price-percent-reduction {
     margin: 5px auto;
     display: inline-block; }
   #cart_summary tbody td.cart_unit .price span.old-price {
     text-decoration: line-through; }
-#cart_summary tbody td.cart_description {
-  width: 480px; }
-  #cart_summary tbody td.cart_description small {
-    display: block;
-    padding: 5px 0 0 0; }
+#cart_summary tbody td.cart_description small {
+  display: block;
+  padding: 5px 0 0 0; }
 #cart_summary tfoot td.text-right {
   font-weight: bold;
   color: #333333; }
@@ -7049,6 +7048,9 @@ a.price_discount_delete {
   font: 600 21px/25px "Open Sans", sans-serif;
   color: #333333;
   background: white; }
+
+#cart_summary .stock-management-on tbody td.cart_description {
+  width: 480px; }
 
 @media (max-width: 767px) {
   #order-detail-content #cart_summary table, #order-detail-content #cart_summary thead, #order-detail-content #cart_summary tbody, #order-detail-content #cart_summary th, #order-detail-content #cart_summary td, #order-detail-content #cart_summary tr {
@@ -7385,93 +7387,93 @@ p.cheque-indent {
 .delivery_option_carrier.not-displayable {
   display: none; }
 
-#address,
-#identity,
-#account-creation_form,
-#new_account_form,
-#opc_account_form,
-#authentication {
+#address .box,
+#identity .box,
+#account-creation_form .box,
+#new_account_form .box,
+#opc_account_form .box,
+#authentication .box {
   padding-bottom: 20px;
   line-height: 20px; }
-  #address p.required,
-  #identity p.required,
-  #account-creation_form p.required,
-  #new_account_form p.required,
-  #opc_account_form p.required,
-  #authentication p.required {
-    color: #f13340;
-    margin: 9px 0 16px 0; }
-  #address p.inline-infos,
-  #identity p.inline-infos,
-  #account-creation_form p.inline-infos,
-  #new_account_form p.inline-infos,
-  #opc_account_form p.inline-infos,
-  #authentication p.inline-infos {
-    color: red; }
-  #address .form-group,
-  #identity .form-group,
-  #account-creation_form .form-group,
-  #new_account_form .form-group,
-  #opc_account_form .form-group,
-  #authentication .form-group {
-    margin-bottom: 4px; }
-    #address .form-group .form-control,
-    #identity .form-group .form-control,
-    #account-creation_form .form-group .form-control,
-    #new_account_form .form-group .form-control,
-    #opc_account_form .form-group .form-control,
-    #authentication .form-group .form-control {
-      max-width: 271px; }
-      #address .form-group .form-control#adress_alias,
-      #identity .form-group .form-control#adress_alias,
-      #account-creation_form .form-group .form-control#adress_alias,
-      #new_account_form .form-group .form-control#adress_alias,
-      #opc_account_form .form-group .form-control#adress_alias,
-      #authentication .form-group .form-control#adress_alias {
-        margin-bottom: 20px; }
-    @media (min-width: 1200px) {
-      #address .form-group.phone-number,
-      #identity .form-group.phone-number,
-      #account-creation_form .form-group.phone-number,
-      #new_account_form .form-group.phone-number,
-      #opc_account_form .form-group.phone-number,
-      #authentication .form-group.phone-number {
-        float: left;
-        width: 270px;
-        margin-right: 13px; } }
-    @media (min-width: 1200px) {
-      #address .form-group.phone-number + p,
-      #identity .form-group.phone-number + p,
-      #account-creation_form .form-group.phone-number + p,
-      #new_account_form .form-group.phone-number + p,
-      #opc_account_form .form-group.phone-number + p,
-      #authentication .form-group.phone-number + p {
-        padding: 23px 0 0 0px;
-        margin-bottom: 0; } }
-  #address .gender-line,
-  #identity .gender-line,
-  #account-creation_form .gender-line,
-  #new_account_form .gender-line,
-  #opc_account_form .gender-line,
-  #authentication .gender-line {
-    margin-bottom: 4px;
-    padding-top: 4px; }
-    #address .gender-line > label,
-    #identity .gender-line > label,
-    #account-creation_form .gender-line > label,
-    #new_account_form .gender-line > label,
-    #opc_account_form .gender-line > label,
-    #authentication .gender-line > label {
-      margin-right: 10px;
-      margin-bottom: 0; }
-    #address .gender-line .radio-inline label,
-    #identity .gender-line .radio-inline label,
-    #account-creation_form .gender-line .radio-inline label,
-    #new_account_form .gender-line .radio-inline label,
-    #opc_account_form .gender-line .radio-inline label,
-    #authentication .gender-line .radio-inline label {
-      font-weight: normal;
-      color: #777777; }
+#address p.required,
+#identity p.required,
+#account-creation_form p.required,
+#new_account_form p.required,
+#opc_account_form p.required,
+#authentication p.required {
+  color: #f13340;
+  margin: 9px 0 16px 0; }
+#address p.inline-infos,
+#identity p.inline-infos,
+#account-creation_form p.inline-infos,
+#new_account_form p.inline-infos,
+#opc_account_form p.inline-infos,
+#authentication p.inline-infos {
+  color: red; }
+#address .form-group,
+#identity .form-group,
+#account-creation_form .form-group,
+#new_account_form .form-group,
+#opc_account_form .form-group,
+#authentication .form-group {
+  margin-bottom: 4px; }
+  #address .form-group .form-control,
+  #identity .form-group .form-control,
+  #account-creation_form .form-group .form-control,
+  #new_account_form .form-group .form-control,
+  #opc_account_form .form-group .form-control,
+  #authentication .form-group .form-control {
+    max-width: 271px; }
+    #address .form-group .form-control#adress_alias,
+    #identity .form-group .form-control#adress_alias,
+    #account-creation_form .form-group .form-control#adress_alias,
+    #new_account_form .form-group .form-control#adress_alias,
+    #opc_account_form .form-group .form-control#adress_alias,
+    #authentication .form-group .form-control#adress_alias {
+      margin-bottom: 20px; }
+  @media (min-width: 1200px) {
+    #address .form-group.phone-number,
+    #identity .form-group.phone-number,
+    #account-creation_form .form-group.phone-number,
+    #new_account_form .form-group.phone-number,
+    #opc_account_form .form-group.phone-number,
+    #authentication .form-group.phone-number {
+      float: left;
+      width: 270px;
+      margin-right: 13px; } }
+  @media (min-width: 1200px) {
+    #address .form-group.phone-number + p,
+    #identity .form-group.phone-number + p,
+    #account-creation_form .form-group.phone-number + p,
+    #new_account_form .form-group.phone-number + p,
+    #opc_account_form .form-group.phone-number + p,
+    #authentication .form-group.phone-number + p {
+      padding: 23px 0 0 0px;
+      margin-bottom: 0; } }
+#address .gender-line,
+#identity .gender-line,
+#account-creation_form .gender-line,
+#new_account_form .gender-line,
+#opc_account_form .gender-line,
+#authentication .gender-line {
+  margin-bottom: 4px;
+  padding-top: 4px; }
+  #address .gender-line > label,
+  #identity .gender-line > label,
+  #account-creation_form .gender-line > label,
+  #new_account_form .gender-line > label,
+  #opc_account_form .gender-line > label,
+  #authentication .gender-line > label {
+    margin-right: 10px;
+    margin-bottom: 0; }
+  #address .gender-line .radio-inline label,
+  #identity .gender-line .radio-inline label,
+  #account-creation_form .gender-line .radio-inline label,
+  #new_account_form .gender-line .radio-inline label,
+  #opc_account_form .gender-line .radio-inline label,
+  #authentication .gender-line .radio-inline label {
+    font-weight: normal;
+    color: #777777; }
 
 #identity #center_column form.std .row,
 #authentication #center_column form.std .row,
@@ -7503,7 +7505,7 @@ p.cheque-indent {
   #new_account_form .box .customerprivacy {
     padding-top: 15px; }
 
-#authentication {
+#authentication fieldset.account_creation {
   margin-bottom: 20px; }
 
 #password {

@@ -51,7 +51,7 @@ class OrderCore extends ObjectModel
 	/** @var integer Carrier id */
 	public $id_carrier;
 
-	/** @var integer Order State id */
+	/** @var integer Order Status id */
 	public $current_state;
 
 	/** @var string Secure key */
@@ -439,7 +439,7 @@ class OrderCore extends ObjectModel
 	 * Get order history
 	 *
 	 * @param integer $id_lang Language id
-	 * @param integer $id_order_state Filter a specific order state
+	 * @param integer $id_order_state Filter a specific order status
 	 * @param integer $no_hidden Filter no hidden status
 	 * @param integer $filters Flag to use specific field filter
 	 *
@@ -744,9 +744,9 @@ class OrderCore extends ObjectModel
 	}
 
 	/**
-	 * Get current order state (eg. Awaiting payment, Delivered...)
+	 * Get current order status (eg. Awaiting payment, Delivered...)
 	 *
-	 * @return int Order state id
+	 * @return int Order status id
 	 */
 	public function getCurrentState()
 	{
@@ -754,9 +754,9 @@ class OrderCore extends ObjectModel
 	}
 
 	/**
-	 * Get current order state name (eg. Awaiting payment, Delivered...)
+	 * Get current order status name (eg. Awaiting payment, Delivered...)
 	 *
-	 * @return array Order state details
+	 * @return array Order status details
 	 */
 	public function getCurrentStateFull($id_lang)
 	{
@@ -803,7 +803,7 @@ class OrderCore extends ObjectModel
 	}
 
 	/**
-	 * Checks if the current order state is paid and shipped
+	 * Checks if the current order status is paid and shipped
 	 *
 	 * @return bool
 	 */
@@ -1383,7 +1383,7 @@ class OrderCore extends ObjectModel
 		return $result;
 	}
 
-	/** Set current order state
+	/** Set current order status
 	 * @param int $id_order_state
 	 * @param int $id_employee (/!\ not optional except for Webservice.
 	 */
@@ -1551,7 +1551,7 @@ class OrderCore extends ObjectModel
 		if (!is_null($order_invoice))
 		{
 			$res = Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
+			INSERT INTO `'._DB_PREFIX_.'order_invoice_payment` (`id_order_invoice`, `id_order_payment`, `id_order`)
 			VALUES('.(int)$order_invoice->id.', '.(int)$order_payment->id.', '.(int)$this->id.')');
 
 			// Clear cache

@@ -71,7 +71,8 @@ define('_PS_DOWNLOAD_DIR_',          _PS_ROOT_DIR_.'/download/');
 define('_PS_MAIL_DIR_',              _PS_CORE_DIR_.'/mails/');
 if (!defined('_PS_MODULE_DIR_'))
 	define('_PS_MODULE_DIR_',        _PS_ROOT_DIR_.'/modules/');
-define('_PS_OVERRIDE_DIR_',          _PS_ROOT_DIR_.'/override/');
+if (!defined('_PS_OVERRIDE_DIR_'))
+    define('_PS_OVERRIDE_DIR_',          _PS_ROOT_DIR_.'/override/');
 define('_PS_PDF_DIR_',               _PS_CORE_DIR_.'/pdf/');
 define('_PS_TRANSLATIONS_DIR_',      _PS_ROOT_DIR_.'/translations/');
 define('_PS_UPLOAD_DIR_',			 _PS_ROOT_DIR_.'/upload/');
@@ -117,8 +118,8 @@ if (!defined('_PS_MAGIC_QUOTES_GPC_'))
 
 define('_CAN_LOAD_FILES_', 1);
 
-/* Order states
-Order states has been moved in config.inc.php file for backward compatibility reasons */
+/* Order statuses
+Order statuses have been moved into config.inc.php file for backward compatibility reasons */
 
 /* Tax behavior */
 define('PS_PRODUCT_TAX', 0);

@@ -418,13 +418,15 @@ class ParentOrderControllerCore extends FrontController
 				$customerAddresses = array_values($customerAddresses);
 
 			if (!count($customerAddresses) && !Tools::isSubmit('ajax'))
-				if (!Address::isCountryActiveById((int)$this->context->cart->id_address_delivery) || !Address::isCountryActiveById((int)$this->context->cart->id_address_invoice))
+			{
+				$bad_delivery = false;
+				if (($bad_delivery = (bool)!Address::isCountryActiveById((int)$this->context->cart->id_address_delivery)) || !Address::isCountryActiveById((int)$this->context->cart->id_address_invoice))
 				{
 					$back_url = $this->context->link->getPageLink('order', true, (int)$this->context->language->id, array('step' => Tools::getValue('step'), 'multi-shipping' => (int)Tools::getValue('multi-shipping')));
 					$params = array('multi-shipping' => (int)Tools::getValue('multi-shipping'), 'id_address' => ($bad_delivery ? (int)$this->context->cart->id_address_delivery : (int)$this->context->cart->id_address_invoice), 'back' => $back_url);
 					Tools::redirect($this->context->link->getPageLink('address', true, (int)$this->context->language->id, $params));
 				}
-
+			}
 			$this->context->smarty->assign(array(
 				'addresses' => $customerAddresses,
 				'formatedAddressFieldsValuesList' => $formatedAddressFieldsValuesList)

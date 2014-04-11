@@ -17,6 +17,7 @@
 		color: $light-text-color;
 		text-shadow: 1px 1px rgba(0,0,0,0.2);
 		cursor: pointer;
+		line-height:18px;
 		@media (max-width: $screen-xs - 1) {
 			text-align: center;
 			padding: 9px 5px 10px;

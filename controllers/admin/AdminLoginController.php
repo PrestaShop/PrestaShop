@@ -51,7 +51,6 @@ class AdminLoginControllerCore extends AdminController
 		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css');
 		$this->addJS(_PS_JS_DIR_.'vendor/spin.js');
 		$this->addJS(_PS_JS_DIR_.'vendor/ladda.js');
-		$this->addJS(_PS_JS_DIR_.'login.js');
 	}
 	
 	public function initContent()
@@ -111,6 +110,11 @@ class AdminLoginControllerCore extends AdminController
 				'shop_name' => Tools::safeOutput(Configuration::get('PS_SHOP_NAME')),
 				'disableDefaultErrorOutPut' => true,
 			));
+
+		if ($email = Tools::getValue('email'))
+			$this->context->smarty->assign('email', $email);
+		if ($password = Tools::getValue('password'))
+			$this->context->smarty->assign('password', $password);
 
 		$this->setMedia();
 		$this->initHeader();

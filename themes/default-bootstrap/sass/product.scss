@@ -46,6 +46,8 @@ img{
 
 	#image-block {
 		position: relative;
+		display: block;
+		cursor: pointer;
 		padding: 5px;
 		border: 1px solid $product-image-border;
 		background: $light-background;
@@ -59,8 +61,6 @@ img{
 		}
 
 		#view_full_size {
-			display: block;
-			cursor: pointer;
 			.span_link {
 				position: absolute;
 				bottom: 20px;
@@ -106,7 +106,7 @@ img{
 		}
 		.new-box,
 		.sale-box {
-			z-index: 50002
+			z-index: 5002
 		}
 	}
 }
@@ -787,13 +787,13 @@ table.table-product-discounts{
 	line-height: 18px;
 	display: inline-block;
 	padding: 3px 8px 4px;
-	background: #46a74e;
+	background: #55c65e;
 	border: 1px solid #36943e;
 	margin-left: 5px;
 }
 #last_quantities{
-	background: #ff7430;
-	border: 1px solid #ea5e1a;
+	background: #fe9126;
+	border: 1px solid #e4752b;
 	padding: 4px 8px 3px;
 	position: relative;
 	top: 1px;
@@ -1089,8 +1089,6 @@ Quick View Styles
 							}
 						}
 						.box-cart-bottom {
-							position: absolute;
-							bottom: 0;
 							right: 0;
 							left: 0;
 						}

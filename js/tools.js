@@ -204,13 +204,10 @@ function toggleElemValue(id_button, text1, text2)
 
 function addBookmark(url, title)
 {
-	if (window.sidebar)
+	if (window.sidebar && window.sidebar.addPanel)
 		return window.sidebar.addPanel(title, url, "");
 	else if ( window.external && ('AddFavorite' in window.external))
 		return window.external.AddFavorite( url, title);
-	else if (window.opera && window.print)
-		return true;
-	return true;
 }
 
 function writeBookmarkLink(url, title, text, img)
@@ -219,8 +216,8 @@ function writeBookmarkLink(url, title, text, img)
 	if (img)
 		insert = writeBookmarkLinkObject(url, title, '<img src="' + img + '" alt="' + escape(text) + '" title="' + removeQuotes(text) + '" />') + '&nbsp';
 	insert += writeBookmarkLinkObject(url, title, text);
-	if (window.sidebar || window.opera && window.print || (window.external && ('AddFavorite' in window.external)))	
-		document.write(insert);
+	if (window.sidebar || window.opera && window.print || (window.external && ('AddFavorite' in window.external)))
+		$('.add_bookmark, #header_link_bookmark').append(insert);
 }
 
 function writeBookmarkLinkObject(url, title, insert)
@@ -336,7 +333,8 @@ function fancyMsgBox(msg, title)
 {
     if (title) msg = "<h2>" + title + "</h2><p>" + msg + "</p>";
     msg += "<br/><p class=\"submit\" style=\"text-align:right; padding-bottom: 0\"><input class=\"button\" type=\"button\" value=\"OK\" onclick=\"$.fancybox.close();\" /></p>";
-    $.fancybox( msg, {'autoDimensions': false, 'autoSize': false, 'width': 500, 'height': 'auto', 'transitionIn': 'none', 'transitionOut': 'none'} );
+	if(!!$.prototype.fancybox)
+    	$.fancybox( msg, {'autoDimensions': false, 'autoSize': false, 'width': 500, 'height': 'auto', 'openEffect': 'none', 'closeEffect': 'none'} );
 }
 
 /**
@@ -349,7 +347,9 @@ function fancyMsgBox(msg, title)
 function fancyChooseBox(question, title, buttons, otherParams)
 {
     var msg, funcName, action;
-    if (title) msg = "<h2>" + title + "</h2><p>" + question + "</p>";
+	msg = '';
+    if (title)
+		msg = "<h2>" + title + "</h2><p>" + question + "</p>";
     msg += "<br/><p class=\"submit\" style=\"text-align:right; padding-bottom: 0\">";
     var i = 0;
     for (var caption in buttons) {
@@ -363,7 +363,8 @@ function fancyChooseBox(question, title, buttons, otherParams)
         i++;
     }
     msg += "</p>";
-    $.fancybox( msg, {'autoDimensions': false, 'width': 500, 'height': 'auto', 'transitionIn': 'none', 'transitionOut': 'none'} );
+	if(!!$.prototype.fancybox)
+    	$.fancybox(msg, {'autoDimensions': false, 'width': 500, 'height': 'auto', 'openEffect': 'none', 'closeEffect': 'none'});
 }
 
 function toggleLayer(whichLayer, flag)

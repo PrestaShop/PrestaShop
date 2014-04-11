@@ -126,7 +126,9 @@ class AdminGroupsControllerCore extends AdminController
 							'identifier' => 'id_group'
 						),
 					),
-					'submit' => array()
+					'submit' => array(
+						'title' => $this->l('Save'),
+					)
 				),
 			);
 	}
@@ -335,7 +337,7 @@ class AdminGroupsControllerCore extends AdminController
 		$this->fields_value['reduction'] = isset($group->reduction) ? $group->reduction : 0;
 
 		$tree = new HelperTreeCategories('categories-tree');
-		$this->tpl_form_vars['categoryTreeView'] = $tree->render();
+		$this->tpl_form_vars['categoryTreeView'] = $tree->setRootCategory((int)Category::getRootCategory()->id)->render();
 
 		return parent::renderForm();
 	}

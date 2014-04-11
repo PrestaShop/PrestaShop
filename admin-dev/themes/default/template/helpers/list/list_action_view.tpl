@@ -23,5 +23,5 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <a href="{$href}" class="" title="{$action}" >
-	<i class="icon-eye-open"></i> {$action}
+	<i class="icon-search-plus"></i> {$action}
 </a>

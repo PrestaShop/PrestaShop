@@ -94,9 +94,20 @@ class StoresControllerCore extends FrontController
 		LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 		LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
 		WHERE s.active = 1 AND cl.id_lang = '.(int)$this->context->language->id);
-
+		
+		$addresses_formated = array();
+		
 		foreach ($stores as &$store)
 		{
+			$address = new Address();
+			$address->country = Country::getNameById($this->context->language->id, $store['id_country']);
+			$address->address1 = $store['address1'];
+			$address->address2 = $store['address2'];
+			$address->postcode = $store['postcode'];
+			$address->city = $store['city'];
+			
+			$addresses_formated[$store['id_store']] = AddressFormat::getFormattedLayoutData($address); 
+			
 			$store['has_picture'] = file_exists(_PS_STORE_IMG_DIR_.(int)($store['id_store']).'.jpg');
 			if ($working_hours = $this->renderStoreWorkingHours($store))
 				$store['working_hours'] = $working_hours;
@@ -104,7 +115,8 @@ class StoresControllerCore extends FrontController
 
 		$this->context->smarty->assign(array(
 			'simplifiedStoresDiplay' => true,
-			'stores' => $stores
+			'stores' => $stores,
+			'addresses_formated' => $addresses_formated,
 		));
 	}
 	
@@ -201,7 +213,7 @@ class StoresControllerCore extends FrontController
 		$this->context->smarty->assign(array(
 			'distance_unit' => $distanceUnit,
 			'simplifiedStoresDiplay' => false,
-			'stores' => $this->getStores()
+			'stores' => $this->getStores(),
 		));
 	}
 

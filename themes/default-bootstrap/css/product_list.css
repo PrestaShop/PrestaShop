@@ -8,11 +8,11 @@ ul.product_list .availability span {
   padding: 3px 8px 4px 8px;
   margin-bottom: 20px; }
   ul.product_list .availability span.available-now {
-    background: #46a74e;
+    background: #55c65e;
     border: 1px solid #36943e; }
   ul.product_list .availability span.out-of-stock {
-    background: #ff7430;
-    border: 1px solid #ea5e1a; }
+    background: #fe9126;
+    border: 1px solid #e4752b; }
 ul.product_list .color-list-container {
   margin-bottom: 12px; }
   ul.product_list .color-list-container ul li {
@@ -161,7 +161,7 @@ ul.product_list.grid > li {
       ul.product_list.grid > li .product-container .button-container .ajax_add_to_cart_button,
       ul.product_list.grid > li .product-container .button-container span.button,
       ul.product_list.grid > li .product-container .button-container .lnk_view {
-        margin: 0 6px 10px 0; }
+        margin: 0 6px 10px 6px; }
     ul.product_list.grid > li .product-container .functional-buttons {
       background: url(../img/functional-bt-shadow.png) repeat-x;
       padding: 11px 0 5px; }

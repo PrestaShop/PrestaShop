@@ -71,6 +71,11 @@ class AdminMarketingControllerCore extends AdminController
 			if ($module->name == Tools::getValue('module'))
 				break;
 
+		$url = $module->url;
+
+		if (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative'))
+			$url = $this->context->link->getAdminLink('AdminModules').'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
+
 		$this->context->smarty->assign(array(
 			'displayName' => $module->displayName,
 			'image' => $module->image,
@@ -80,7 +85,8 @@ class AdminMarketingControllerCore extends AdminController
 			'compatibility' => $module->compatibility,
 			'description_full' => $module->description_full,
 			'additional_description' => $module->additional_description,
-			'url' => $module->url
+			'is_addons_partner' => (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')),
+			'url' => $url
 		));
 		$this->smartyOutputContent('controllers/modules/quickview.tpl');
 		die(1);

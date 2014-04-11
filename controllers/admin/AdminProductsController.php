@@ -1741,6 +1741,16 @@ class AdminProductsControllerCore extends AdminController
 						Search::indexation(false, $this->object->id);
 				}
 
+				if (Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT') != 0 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+				{
+					$warehouse_location_entity = new WarehouseProductLocation();
+					$warehouse_location_entity->id_product = $this->object->id;
+					$warehouse_location_entity->id_product_attribute = 0;
+					$warehouse_location_entity->id_warehouse = Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT');
+					$warehouse_location_entity->location = pSQL('');
+					$warehouse_location_entity->save();
+				}
+
 				// Save and preview
 				if (Tools::isSubmit('submitAddProductAndPreview'))
 					$this->redirect_after = $this->getPreviewUrl($this->object);
@@ -1801,6 +1811,8 @@ class AdminProductsControllerCore extends AdminController
 	
 	public function processUpdate()
 	{
+		$existing_product = $this->object;
+
 		$this->checkProduct();
 
 		if (!empty($this->errors))
@@ -1851,6 +1863,15 @@ class AdminProductsControllerCore extends AdminController
 
 				if ($object->update())
 				{
+					// If the product doesn't exist in the current shop but exists in another shop
+					if (Shop::getContext() == Shop::CONTEXT_SHOP && !$existing_product->isAssociatedToShop($this->context->shop->id))
+					{
+						$out_of_stock = StockAvailable::outOfStock($existing_product->id, $existing_product->id_shop_default);
+						$depends_on_stock = StockAvailable::dependsOnStock($existing_product->id, $existing_product->id_shop_default);
+						StockAvailable::setProductOutOfStock((int)$this->object->id, $out_of_stock, $this->context->shop->id);
+						StockAvailable::setProductDependsOnStock((int)$this->object->id, $depends_on_stock, $this->context->shop->id);
+					}
+
 					PrestaShopLogger::addLog(sprintf($this->l('%s edition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 					if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL)))
 					{
@@ -1873,6 +1894,7 @@ class AdminProductsControllerCore extends AdminController
 							$this->processCustomizationConfiguration();
 						if ($this->isTabSubmitted('Attachments'))
 							$this->processAttachments();
+
 
 						$this->updatePackItems($object);
 						// Disallow avanced stock management if the product become a pack
@@ -4436,7 +4458,7 @@ class AdminProductsControllerCore extends AdminController
 				if (Tools::getValue('value') === false)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
 				if ((int)Tools::getValue('value') != 0 && (int)Tools::getValue('value') != 1)
-					die (Tools::jsonEncode(array('error' =>  $this->l('Uncorrect value'))));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Incorrect value'))));
 				if (!$product->advanced_stock_management && (int)Tools::getValue('value') == 1)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Not possible if advanced stock management is disabled. '))));
 				if ($product->advanced_stock_management && Pack::isPack($product->id))
@@ -4449,7 +4471,7 @@ class AdminProductsControllerCore extends AdminController
 				if (Tools::getValue('value') === false)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
 				if (!in_array((int)Tools::getValue('value'), array(0, 1, 2)))
-					die (Tools::jsonEncode(array('error' =>  $this->l('Uncorrect value'))));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Incorrect value'))));
 
 				StockAvailable::setProductOutOfStock($product->id, (int)Tools::getValue('value'));
 				break;
@@ -4462,12 +4484,20 @@ class AdminProductsControllerCore extends AdminController
 
 				StockAvailable::setQuantity($product->id, (int)Tools::getValue('id_product_attribute'), (int)Tools::getValue('value'));
 				Hook::exec('actionProductUpdate', array('product' => $this->object));
+				
+				// Catch potential echo from modules
+				$error = ob_get_contents();
+				if (!empty($error))
+				{
+					ob_end_clean();
+					die (Tools::jsonEncode(array('error' => $error)));
+				}
 				break;
 			case 'advanced_stock_management' :
 				if (Tools::getValue('value') === false)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
 				if ((int)Tools::getValue('value') != 1 && (int)Tools::getValue('value') != 0)
-					die (Tools::jsonEncode(array('error' =>  $this->l('Uncorrect value'))));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Incorrect value'))));
 				if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)Tools::getValue('value') == 1)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Not possible if advanced stock management is disabled. '))));
 				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && Pack::isPack($product->id))

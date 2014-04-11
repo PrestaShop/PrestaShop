@@ -147,7 +147,7 @@ $(document).ready(function(){
 		});
 	}
 	//add a link on the span 'view full size' and on the big image
-	$(document).on('click', '#view_full_size, #image-block img', function(e){
+	$(document).on('click', '#view_full_size, #image-block', function(e){
 		$('#views_block .shown').click();
 	});
 
@@ -207,8 +207,8 @@ $(document).ready(function(){
 		if(!!$.prototype.fancybox)
 			$('.fancybox').fancybox({
 				'hideOnContentClick': true,
-				'transitionIn'	: 'elastic',
-				'transitionOut'	: 'elastic'
+				'openEffect'	: 'elastic',
+				'closeEffect'	: 'elastic'
 			});
 	}
 	else
@@ -216,12 +216,16 @@ $(document).ready(function(){
 		$(document).on('click', '.fancybox', function(e){
 			e.preventDefault();
 		});
-		$(document).on('click', '#bigpic', function(e){
+
+		$(document).on('click', '#image-block', function(e){
 			e.preventDefault();
 			var productUrl= window.document.location.href + '';
 			var data = productUrl.replace('content_only=1', '');
 			window.parent.document.location.href = data;
 		});
+
+		if (typeof ajax_allowed != 'undefined' && !ajax_allowed)
+			$('#buy_block').attr('target', '_top');
 	}
 
 	if (!!$.prototype.bxSlider)
@@ -562,31 +566,27 @@ function updateDisplay()
 	//update display of the the prices in relation to tax, discount, ecotax, and currency criteria
 	if (!selectedCombination['unavailable'] && productShowPrice == 1)
 	{
-		var priceTaxExclWithoutGroupReduction = '';
-
 		// retrieve price without group_reduction in order to compute the group reduction after
 		// the specific price discount (done in the JS in order to keep backward compatibility)
-		priceTaxExclWithoutGroupReduction = ps_round(productPriceTaxExcluded, 6) * (1 / group_reduction);
 
 		var tax = (taxRate / 100) + 1;
-		var taxExclPrice = priceTaxExclWithoutGroupReduction + (selectedCombination['price'] * currencyRate);
 
-		if (selectedCombination.specific_price && selectedCombination.specific_price['id_product_attribute'])
+		combID = $('#idCombination').val();
+		comb2 = combinationsFromController[combID];
+		if (comb2.price != 0)
 		{
-			if (selectedCombination.specific_price['price'] && selectedCombination.specific_price['price'] >=0)
-				var taxExclPrice = (specific_currency ? selectedCombination.specific_price['price'] : selectedCombination.specific_price['price'] * currencyRate);
-			else
-				var taxExclPrice = productBasePriceTaxExcluded * currencyRate + (selectedCombination['price'] * currencyRate);
+			var taxExclPrice = productPriceTaxExcluded + comb2.price;
+			productPriceWithoutReductionDisplay = productPriceWithoutReductionDisplay + (comb2.price * tax);
 		}
-		else if (product_specific_price.price && product_specific_price.price >= 0)
-			var taxExclPrice = (specific_currency ? product_specific_price.price : product_specific_price.price * currencyRate) + (selectedCombination['price'] * currencyRate);
+		else
+			var taxExclPrice = productPriceTaxExcluded;
+
 
 		if (!displayPrice && !noTaxForThisProduct)
 			productPriceDisplay = ps_round(taxExclPrice * tax, 2); // Need to be global => no var
 		else
 			productPriceDisplay = ps_round(taxExclPrice, 2); // Need to be global => no var
 
-		productPriceWithoutReductionDisplay = productPriceDisplay * group_reduction;
 		var reduction = 0;
 		if (selectedCombination['specific_price'].reduction_price || selectedCombination['specific_price'].reduction_percent)
 		{
@@ -640,8 +640,9 @@ function updateDisplay()
 		else
 			$('#not_impacted_by_discount').hide();
 
+
 		productPriceDisplay -= reduction;
-		productPriceDisplay = ps_round(productPriceDisplay * group_reduction, 2);
+		productPriceDisplay = ps_round(productPriceDisplay * (1 - group_reduction), 2);
 
 		var ecotaxAmount = !displayPrice ? ps_round(selectedCombination['ecotax'] * (1 + ecotaxTax_rate / 100), 2) : selectedCombination['ecotax'];
 
@@ -687,6 +688,10 @@ function updateDisplay()
 		// Ecotax
 		ecotaxAmount = !displayPrice ? ps_round(selectedCombination['ecotax'] * (1 + ecotaxTax_rate / 100), 2) : selectedCombination['ecotax'];
 		$('#ecotax_price_display').text(formatCurrency(ecotaxAmount, currencyFormat, currencySign, currencyBlank));
+
+
+		updateDiscountTable(productPriceDisplay);
+
 	}
 }
 
@@ -738,6 +743,30 @@ function displayDiscounts(combination)
 		$('#quantityDiscount').parent().hide();
 		$('#noQuantityDiscount').show();
 	}
+}
+
+function updateDiscountTable(newPrice)
+{
+	$('#quantityDiscount tbody tr').each(function(){
+		var type = $(this).data("discount-type");
+		var discount = $(this).data("discount");
+		var quantity = $(this).data("discount-quantity");
+
+		if (type == 'percentage')
+		{
+			var discountedPrice = newPrice * (1 - discount/100);
+			var discountUpTo = newPrice * (discount/100) * quantity;
+		}
+		else if (type == 'amount')
+		{
+			var discountedPrice = newPrice - discount;
+			var discountUpTo = discount * quantity;
+		}
+
+		if (displayDiscountPrice != 0)
+			$(this).children('td').eq(1).text( formatCurrency(discountedPrice, currencyFormat, currencySign, currencyBlank) );
+		$(this).children('td').eq(2).text(upToTxt + ' ' + formatCurrency(discountUpTo, currencyFormat, currencySign, currencyBlank));
+	});
 }
 
 // Serialscroll exclude option bug ?

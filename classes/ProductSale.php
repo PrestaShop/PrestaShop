@@ -99,7 +99,7 @@ class ProductSaleCore
 		//Main query
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
-					pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
+					pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
 					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
 					MAX(image_shop.`id_image`) id_image, il.`legend`,
 					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
@@ -176,7 +176,7 @@ class ProductSaleCore
 		//Main query
 		$sql = '
 		SELECT
-			p.id_product,  MAX(product_attribute_shop.id_product_attribute) id_product_attribute, pl.`link_rewrite`, pl.`name`, pl.`description_short`,
+			p.id_product,  MAX(product_attribute_shop.id_product_attribute) id_product_attribute, pl.`link_rewrite`, pl.`name`, pl.`description_short`, product_shop.`id_category_default`,
 			MAX(image_shop.`id_image`) id_image, il.`legend`,
 			ps.`quantity` AS sales, p.`ean13`, p.`upc`, cl.`link_rewrite` AS category, p.show_price, p.available_for_order, IFNULL(stock.quantity, 0) as quantity, p.customizable,
 			IFNULL(pa.minimal_quantity, p.minimal_quantity) as minimal_quantity, stock.out_of_stock,
@@ -207,19 +207,7 @@ class ProductSaleCore
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
 
-		foreach ($result as &$row)
-		{
-		 	$row['link'] = $context->link->getProductLink($row['id_product'], $row['link_rewrite'], $row['category'], $row['ean13']);
-		 	$row['id_image'] = Product::defineProductImage($row, $id_lang);
-			$row['allow_oosp'] = Product::isAvailableWhenOutOfStock($row['out_of_stock']);
-			$row['price_tax_exc'] = Product::getPriceStatic(
-				(int)$row['id_product'],
-				false,
-				((isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int)$row['id_product_attribute'] : null),
-				(Product::$_taxCalculationMethod == PS_TAX_EXC ? 2 : 6)
-			);
-		}
-		return $result;
+		return Product::getProductsProperties($id_lang, $result);
 	}
 
 	public static function addProductSale($product_id, $qty = 1)

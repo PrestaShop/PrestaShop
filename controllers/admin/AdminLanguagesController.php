@@ -323,6 +323,12 @@ class AdminLanguagesControllerCore extends AdminController
 
 	protected function checkDeletion($object)
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
+
 		if (Validate::isLoadedObject($object))
 		{
 			if ($object->id == Configuration::get('PS_LANG_DEFAULT'))
@@ -340,6 +346,11 @@ class AdminLanguagesControllerCore extends AdminController
 
 	protected function checkDisableStatus($object)
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
 		if (!Validate::isLoadedObject($object))
 			$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		else
@@ -380,6 +391,12 @@ class AdminLanguagesControllerCore extends AdminController
 
 	public function processAdd()
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
+
 		if (isset($_POST['iso_code']) && !empty($_POST['iso_code']) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Language::getIdByIso($_POST['iso_code']))
 			$this->errors[] = Tools::displayError('This ISO code is already linked to another language.');
 		if ((!empty($_FILES['no_picture']['tmp_name']) || !empty($_FILES['flag']['tmp_name'])) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
@@ -396,6 +413,12 @@ class AdminLanguagesControllerCore extends AdminController
 
 	public function processUpdate()
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
+
 		if (( isset($_FILES['no_picture']) && !$_FILES['no_picture']['error'] || isset($_FILES['flag']) && !$_FILES['flag']['error'])
 				&& Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
 			{

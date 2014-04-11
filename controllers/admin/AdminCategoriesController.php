@@ -203,11 +203,11 @@ class AdminCategoriesControllerCore extends AdminController
 		if (isset($this->_filter) && trim($this->_filter) == '')
 			$this->_filter = $this->original_filter;
 
+		$this->addRowAction('view');
+		$this->addRowAction('add');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->addRowAction('add');
-		$this->addRowAction('view');
-
+		
 		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());	
 		$categories_tree = $this->_category->getParentsCategories();
 
