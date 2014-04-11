@@ -346,10 +346,10 @@ cite {
 .text-left {
   text-align: left; }
 
-.text-right {
+.text-right, #cart_summary tbody td.cart_unit, #cart_summary tbody td.cart_total {
   text-align: right; }
 
-.text-center {
+.text-center, #cart_summary tbody td.cart_product, #cart_summary tbody td.cart_avail {
   text-align: center; }
 
 h1, h2, h3, h4, h5, h6,
@@ -7020,22 +7020,24 @@ a.price_discount_delete {
   a.price_discount_delete:hover {
     color: silver; }
 
-#cart_summary tbody td.cart_product {
-  padding: 19px;
-  width: 137px; }
-  #cart_summary tbody td.cart_product img {
-    border: 1px solid #d6d4d4; }
-#cart_summary tbody td.cart_unit .price span {
-  display: inline-block; }
-  #cart_summary tbody td.cart_unit .price span.price-percent-reduction {
-    margin: 5px auto;
+#cart_summary tbody td {
+  padding: 7px 8px 9px 18px; }
+  #cart_summary tbody td.cart_product {
+    padding: 7px;
+    width: 137px; }
+    #cart_summary tbody td.cart_product img {
+      border: 1px solid #d6d4d4; }
+  #cart_summary tbody td.cart_unit .price span {
     display: inline-block; }
-  #cart_summary tbody td.cart_unit .price span.old-price {
-    text-decoration: line-through; }
-#cart_summary tbody td.cart_description small {
-  display: block;
-  padding: 5px 0 0 0; }
-#cart_summary tfoot td.text-right {
+    #cart_summary tbody td.cart_unit .price span.price-percent-reduction {
+      margin: 5px auto;
+      display: inline-block; }
+    #cart_summary tbody td.cart_unit .price span.old-price {
+      text-decoration: line-through; }
+  #cart_summary tbody td.cart_description small {
+    display: block;
+    padding: 5px 0 0 0; }
+#cart_summary tfoot td.text-right, #cart_summary tfoot tbody td.cart_unit, #cart_summary tbody tfoot td.cart_unit, #cart_summary tfoot tbody td.cart_total, #cart_summary tbody tfoot td.cart_total {
   font-weight: bold;
   color: #333333; }
 #cart_summary tfoot td.price {
@@ -7092,7 +7094,7 @@ a.price_discount_delete {
     width: 100%; }
     #order-detail-content #cart_summary tfoot td:before {
       display: inline; }
-  #order-detail-content #cart_summary tfoot tr .text-right, #order-detail-content #cart_summary tfoot tr .price {
+  #order-detail-content #cart_summary tfoot tr .text-right, #order-detail-content #cart_summary tfoot tr tbody td.cart_unit, #order-detail-content #cart_summary tbody tfoot tr td.cart_unit, #order-detail-content #cart_summary tfoot tr tbody td.cart_total, #order-detail-content #cart_summary tbody tfoot tr td.cart_total, #order-detail-content #cart_summary tfoot tr .price {
     display: block;
     float: left;
     width: 50%; } }
