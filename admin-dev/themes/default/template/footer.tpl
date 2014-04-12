@@ -68,11 +68,16 @@
 				<i class="icon-puzzle-piece"></i>
 				{l s='Addons'}
 			</a>
+			/&nbsp;
+			<a href="http://www.prestashop.com/en/training-prestashop?utm_source=backoffice_footer" target="_blank" class="footer_link">
+				<i class="icon-book"></i>
+				{l s='Training'}
+			</a>
 		</p>
 		{if $iso_is_fr}
 		<p>Questions • Renseignements • Formations : 
 			<strong>+33 (0)1.40.18.30.04</strong>
-		<p>
+		</p>
 		{/if}
 	</div>
 	<div class="col-sm-4">
@@ -84,5 +89,12 @@
 {if isset($php_errors)}
 	{include file="error.tpl"}
 {/if}
+
+{if isset($modals)}
+<div class="bootstrap">
+	{$modals}
+</div>
+{/if}
+
 </body>
 </html>

@@ -114,7 +114,7 @@
 								{if $document->getRestPaid()}
 									<a href="#" class="js-set-payment btn btn-default" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}">
 										<i class="icon-money"></i>
-										{l s='Enter Payment'}
+										{l s='Enter payment'}
 									</a>
 								{/if}
 
@@ -162,7 +162,7 @@
 					<td colspan="5" class="list-empty">
 						<div class="list-empty-msg">
 							<i class="icon-warning-sign list-empty-icon"></i>
-							{l s='No document are available'}
+							{l s='There is no available document'}
 						</div>
 						{if isset($invoice_management_active) && $invoice_management_active}
 							<a class="btn btn-default" href="{$current_index}&amp;viewOrder&amp;submitGenerateInvoice&amp;id_order={$order->id}{if isset($smarty.get.token)}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}{/if}">

@@ -1423,11 +1423,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 										 		true,
 										 		$supply_order->id);
 
-					if ($res)
-						StockAvailable::synchronize($supply_order_detail->id_product);
-					else
-						$this->errors[] = Tools::displayError('Something went wrong when adding products to the warehouse.');
-
 					$location = Warehouse::getProductLocation($supply_order_detail->id_product,
 										 					  $supply_order_detail->id_product_attribute,
 									 						  $warehouse->id);
@@ -1442,6 +1437,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						$supplier_receipt_history->add();
 						$supply_order_detail->save();
 						$supply_order->save();
+						StockAvailable::synchronize($supply_order_detail->id_product);
 					}
 					else
 						$this->errors[] = Tools::displayError('Something went wrong when setting warehouse on product record');
@@ -1473,7 +1469,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
     public function displayUpdateReceiptLink($token = null, $id)
     {
         if (!array_key_exists('Receipt', self::$cache_lang))
-            self::$cache_lang['Receipt'] = $this->l('Update ongoing receipt of products.');
+            self::$cache_lang['Receipt'] = $this->l('Update ongoing receipt of products');
 
         $this->context->smarty->assign(array(
             'href' => self::$currentIndex.
@@ -1494,7 +1490,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
     public function displayChangestateLink($token = null, $id)
     {
         if (!array_key_exists('State', self::$cache_lang))
-            self::$cache_lang['State'] = $this->l('Change state');
+            self::$cache_lang['State'] = $this->l('Change status');
 
         $this->context->smarty->assign(array(
             'href' => self::$currentIndex.

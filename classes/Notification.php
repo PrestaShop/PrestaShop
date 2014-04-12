@@ -80,7 +80,7 @@ class NotificationCore
 
 			case 'customer_message':
 				$sql = '
-					SELECT SQL_CALC_FOUND_ROWS c.`id_customer_message`, ct.`id_customer`, ct.`id_customer_thread`, ct.`email`
+					SELECT SQL_CALC_FOUND_ROWS c.`id_customer_message`, ct.`id_customer`, ct.`id_customer_thread`, ct.`email`, c.`date_add` as date_upd
 					FROM `'._DB_PREFIX_.'customer_message` as c
 					LEFT JOIN `'._DB_PREFIX_.'customer_thread` as ct ON (c.`id_customer_thread` = ct.`id_customer_thread`)
 					WHERE c.`id_customer_message` > '.(int)$id_last_element.'

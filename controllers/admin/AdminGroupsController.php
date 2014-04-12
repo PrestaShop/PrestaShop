@@ -126,7 +126,9 @@ class AdminGroupsControllerCore extends AdminController
 							'identifier' => 'id_group'
 						),
 					),
-					'submit' => array()
+					'submit' => array(
+						'title' => $this->l('Save'),
+					)
 				),
 			);
 	}

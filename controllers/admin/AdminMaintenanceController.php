@@ -40,7 +40,7 @@ class AdminMaintenanceControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_SHOP_ENABLE' => array(
 						'title' => $this->l('Enable Shop'),
-						'hint' => $this->l('Activate or deactivate your shop (It is a good idea to deactivate your shop while you perform maintenance. Please note that the webservice will not be disabled).'),
+						'desc' => $this->l('Activate or deactivate your shop (It is a good idea to deactivate your shop while you perform maintenance. Please note that the webservice will not be disabled).'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'

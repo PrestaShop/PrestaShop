@@ -668,28 +668,29 @@ product_tabs['Prices'] = new function(){
 	 * @param parent
 	 */
 	this.deleteSpecificPrice = function (url, parent){
-		$.ajax({
-			url: url,
-			data: {
-				ajax: true
-			},
-			context: document.body,
-			dataType: 'json',
-			context: this,
-			async: false,
-			success: function(data) {
-				if (data !== null)
-				{
-					if (data.status == 'ok')
+		if (typeof url !== 'undefined')
+			$.ajax({
+				url: url,
+				data: {
+					ajax: true
+				},
+				context: document.body,
+				dataType: 'json',
+				context: this,
+				async: false,
+				success: function(data) {
+					if (data !== null)
 					{
-						showSuccessMessage(data.message);
-						parent.remove();
+						if (data.status == 'ok')
+						{
+							showSuccessMessage(data.message);
+							parent.remove();
+						}
+						else
+							showErrorMessage(data.message);
 					}
-					else
-						showErrorMessage(data.message);
 				}
-			}
-		});
+			});
 	};
 
 	// Bind to delete specific price link
@@ -756,11 +757,7 @@ product_tabs['Associations'] = new function(){
 	{
 		if ($('#inputAccessories').val() === undefined)
 			return '';
-		var ids = id_product + ',';
-		ids += $('#inputAccessories').val().replace(/\\-/g,',').replace(/\\,$/,'');
-		ids = ids.replace(/\,$/,'');
-
-		return ids;
+		return $('#inputAccessories').val().replace(/\-/g,',');
 	}
 
 	this.addAccessory = function(event, data, formatted)
@@ -839,11 +836,13 @@ product_tabs['Associations'] = new function(){
 					action : 'productManufacturers'
 				},
 				success: function(j) {
-					var options = $('select#id_manufacturer').html();
-					if (j)
-					for (var i = 0; i < j.length; i++)
-						options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
-					$("select#id_manufacturer").html(options);
+					var options;
+					if (j) {
+						for (var i = 0; i < j.length; i++) {
+							options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
+						}
+					}
+					$('select#id_manufacturer').chosen({width: '250px'}).append(options).trigger("chosen:updated");
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown)
 				{
@@ -858,7 +857,6 @@ product_tabs['Associations'] = new function(){
 		$('#divAccessories').delegate('.delAccessory', 'click', function(){
 			self.delAccessory($(this).attr('name'));
 		});
-
 		if (display_multishop_checkboxes)
 			ProductMultishop.checkAllAssociations();
 	};

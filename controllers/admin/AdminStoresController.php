@@ -534,7 +534,7 @@ class AdminStoresControllerCore extends AdminController
 						AND `id_state` = '.(int)Tools::getValue('PS_SHOP_STATE_ID');
 			$isStateOk = Db::getInstance()->getValue($sql);
 			if ($isStateOk != 1)
-				$this->errors[] = Tools::displayError('The state specified is not located in this country.');
+				$this->errors[] = Tools::displayError('The specified state is not located in this country.');
 		}
 	}
 

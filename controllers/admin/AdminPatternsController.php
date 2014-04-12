@@ -26,6 +26,8 @@
 
 class AdminPatternsControllerCore extends AdminController
 {
+	public $name = "patterns";
+
 	public function __construct()
 	{
 		$this->bootstrap = true;
@@ -45,6 +47,7 @@ class AdminPatternsControllerCore extends AdminController
 		$this->fields_value = array(
 			'type_text' => 'with value',
 			'type_text_readonly' => 'with value that you can\'t edit',
+			'type_switch' => 1,
 			'days' => 17,
 			'months' => 3,
 			'years' => 2014,
@@ -57,117 +60,131 @@ class AdminPatternsControllerCore extends AdminController
 
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('patterns of helper form.tpl'),
+				'title' => 'patterns of helper form.tpl',
 				'icon' => 'icon-edit'
 			),
 			'description' => 'You can use image instead of icon for the title.',
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('simple input text'),
+					'label' => 'simple input text',
 					'name' => 'type_text'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('input text with desc'),
+					'label' => 'input text with desc',
 					'name' => 'type_text_desc',
-					'desc' => $this->l('desc input text')
+					'desc' => 'desc input text'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('required input text'),
+					'label' => 'required input text',
 					'name' => 'type_text_required',
 					'required' => true
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('input text with hint'),
+					'label' => 'input text with hint',
 					'name' => 'type_text_hint',
-					'hint' => $this->l('hint input text')
+					'hint' => 'hint input text'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('input text with prefix'),
+					'label' => 'input text with prefix',
 					'name' => 'type_text_prefix',
 					'prefix' => 'prefix'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('input text with suffix'),
+					'label' => 'input text with suffix',
 					'name' => 'type_text_suffix',
 					'suffix' => 'suffix'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('input text with placeholder'),
+					'label' => 'input text with placeholder',
 					'name' => 'type_text_placeholder',
 					'placeholder' => 'placeholder'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('input text with character counter'),
+					'label' => 'input text with character counter',
 					'name' => 'type_text_maxchar',
 					'maxchar' => 30
 				),
 				array(
 					'type' => 'text',
 					'lang' => true,
-					'label' => $this->l('input text multilang'),
+					'label' => 'input text multilang',
 					'name' => 'type_text_multilang'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('input readonly'),
+					'label' => 'input readonly',
 					'readonly' => true,
 					'name' => 'type_text_readonly'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('input fixed-width-xs'),
+					'label' => 'input fixed-width-xs',
 					'name' => 'type_text_xs',
 					'class' => 'input fixed-width-xs'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('input fixed-width-sm'),
+					'label' => 'input fixed-width-sm',
 					'name' => 'type_text_sm',
 					'class' => 'input fixed-width-sm'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('input fixed-width-md'),
+					'label' => 'input fixed-width-md',
 					'name' => 'type_text_md',
 					'class' => 'input fixed-width-md'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('input fixed-width-lg'),
+					'label' => 'input fixed-width-lg',
 					'name' => 'type_text_lg',
 					'class' => 'input fixed-width-lg'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('input fixed-width-xl'),
+					'label' => 'input fixed-width-xl',
 					'name' => 'type_text_xl',
 					'class' => 'input fixed-width-xl'
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('input fixed-width-xxl'),
+					'label' => 'input fixed-width-xxl',
 					'name' => 'type_text_xxl',
 					'class' => 'fixed-width-xxl'
 				),
 				array(
+					'type' => 'text',
+					'label' => 'input fixed-width-md with prefix',
+					'name' => 'type_text_md',
+					'class' => 'input fixed-width-md',
+					'prefix' => 'prefix'
+				),
+				array(
+					'type' => 'text',
+					'label' => 'input fixed-width-md with sufix',
+					'name' => 'type_text_md',
+					'class' => 'input fixed-width-md',
+					'suffix' => 'suffix'
+				),
+				array(
 					'type' => 'tags',
-					'label' => $this->l('input tags'),
+					'label' => 'input tags',
 					'name' => 'type_text_tags'
 				),
 				array(
 					'type' => 'textbutton',
-					'label' => $this->l('input with button'),
+					'label' => 'input with button',
 					'name' => 'type_textbutton',
 					'button' => array(
-						'label' => $this->l('do something'),
+						'label' => 'do something',
 						'attributes' => array(
 							'onclick' => 'alert(\'something done\');'
 						)
@@ -175,7 +192,7 @@ class AdminPatternsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('select'),
+					'label' => 'select',
 					'name' => 'type_select',
 					'options' => array(
 						'query' => Zone::getZones(),
@@ -185,7 +202,7 @@ class AdminPatternsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('select with chosen'),
+					'label' => 'select with chosen',
 					'name' => 'type_select_chosen',
 					'class' => 'chosen',
 					'options' => array(
@@ -196,7 +213,7 @@ class AdminPatternsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('select multiple with chosen'),
+					'label' => 'select multiple with chosen',
 					'name' => 'type_select_multiple_chosen',
 					'class' => 'chosen',
 					'multiple' => true,
@@ -208,29 +225,29 @@ class AdminPatternsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('radios'),
+					'label' => 'radios',
 					'name' => 'type_radio',
 					'values' => array(
 						array(
 							'id' => 'type_male',
 							'value' => 0,
-							'label' => $this->l('first')
+							'label' => 'first'
 						),
 						array(
 							'id' => 'type_female',
 							'value' => 1,
-							'label' => $this->l('second')
+							'label' => 'second'
 						),
 						array(
 							'id' => 'type_neutral',
 							'value' => 2,
-							'label' => $this->l('third')
+							'label' => 'third'
 						)
 					)
 				),
 				array(
 					'type' => 'checkbox',
-					'label' => $this->l('checkbox'),
+					'label' => 'checkbox',
 					'name' => 'type_checkbox',
 					'values' => array(
 						'query' => Zone::getZones(),
@@ -240,54 +257,54 @@ class AdminPatternsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('switch'),
+					'label' => 'switch',
 					'name' => 'type_switch',
 					'values' => array(
 						array(
 							'id' => 'type_switch_on',
-							'value' => 0
+							'value' => 1
 						),
 						array(
 							'id' => 'type_switch_off',
-							'value' => 1
+							'value' => 0
 						)
 					)
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('switch disabled'),
+					'label' => 'switch disabled',
 					'name' => 'type_switch_disabled',
 					'disabled' => 'true',
 					'values' => array(
 						array(
 							'id' => 'type_switch_disabled_on',
-							'value' => 0
+							'value' => 1
 						),
 						array(
 							'id' => 'type_switch_disabled_off',
-							'value' => 1
+							'value' => 0
 						)
 					)
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('text area (with autoresize)'),
+					'label' => 'text area (with autoresize)',
 					'name' => 'type_textarea'
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('text area with rich text editor'),
+					'label' => 'text area with rich text editor',
 					'name' => 'type_textarea_rte',
 					'autoload_rte' => true
 				),
 				array(
 					'type' => 'password',
-					'label' => $this->l('input password'),
+					'label' => 'input password',
 					'name' => 'type_password'
 				),
 				array(
 					'type' => 'birthday',
-					'label' => $this->l('input birthday'),
+					'label' => 'input birthday',
 					'name' => 'type_birthday',
 					'options' => array(
 						'days' => Tools::dateDays(),
@@ -297,13 +314,13 @@ class AdminPatternsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'group',
-					'label' => $this->l('group'),
+					'label' => 'group',
 					'name' => 'type_group',
 					'values' => Group::getGroups(Context::getContext()->language->id)
 				),
 				array(
 					'type' => 'categories',
-					'label' => $this->l('tree categories'),
+					'label' => 'tree categories',
 					'name' => 'type_categories',
 					'tree' => array(
 						'id' => 'id_category',
@@ -313,22 +330,22 @@ class AdminPatternsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'file',
-					'label' => $this->l('input file'),
+					'label' => 'input file',
 					'name' => 'type_file'
 				),
 				array(
 					'type' => 'color',
-					'label' => $this->l('input color'),
+					'label' => 'input color',
 					'name' => 'type_color'
 				),
 				array(
 					'type' => 'date',
-					'label' => $this->l('input date'),
+					'label' => 'input date',
 					'name' => 'type_date'
 				),
 				array(
 					'type' => 'datetime',
-					'label' => $this->l('input date and time'),
+					'label' => 'input date and time',
 					'name' => 'type_datetime'
 				),
 				array(
@@ -337,13 +354,13 @@ class AdminPatternsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'free',
-					'label' => $this->l('input free'),
+					'label' => 'input free',
 					'name' => 'type_free'
 				),
 				//...
 			),
 			'submit' => array(
-				'title' => $this->l('Save'),
+				'title' => 'Save',
 			),
 			'buttons' => array(),
 		);
@@ -359,43 +376,246 @@ class AdminPatternsControllerCore extends AdminController
 
 	public function renderList()
 	{
+		$return  = '';
+
+		$return .= $this->renderListSimpleHeader();
+		$return .= $this->renderListSmallColumns();
+		$return .= $this->renderListWithParentClass();
+		
+		return $return;
+	}
+
+	public function renderListSimpleHeader()
+	{
+		$content = array(
+			array(
+				"id_carrier" => 5,
+				"name" => "Lorem ipsum dolor, sit amet, consectetur adipiscing elit. Nunc lacinia in enim iaculis malesuada. Quisque congue ferm",
+				"type_name" => "Azerty",
+				"active" => 1,
+			),
+			array(
+				"id_carrier" => 6,
+				"name" => "Lorem ipsum dolor sit amet, consectetur lacinia in enim iaculis malesuada. Quisque congue ferm",
+				"type_name" => "Qwerty",
+				"active" => 1,
+			),
+			array(
+				"id_carrier" => 9,
+				"name" => "Lorem ipsum dolor sit amet: \ / : * ? \" < > |",
+				"type_name" => "Azerty",
+				"active" => 0,
+			),
+			array(
+				"id_carrier" => 3,
+				"name" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lacinia in enim iaculis malesuada. Quisque congue ferm",
+				"type_name" => "Azerty",
+				"active" => 1,
+			),
+		);
+
+		$fields_list = array(
+			'id_carrier' => array(
+				'title' => 'ID',
+				'align' => 'center',
+				'class' => 'fixed-width-xs'
+			),
+			'name' => array(
+				'title' => 'Name'
+			),
+			'type_name' => array(
+				'title' => 'Type',
+				'type' => 'text',
+			),
+			'active' => array(
+				'title' => 'Status',
+				'active' => 'status',
+				'type' => 'bool',
+			),
+		);
+
+		$helper = new HelperList();
+		$helper->shopLinkType = '';
+		$helper->simple_header = true;
+		$helper->actions = array("edit", "delete");
+		$helper->show_toolbar = false;
+		$helper->module = $this;
+		$helper->listTotal = count($content);
+		$helper->identifier = 'id_carrier';
+		$helper->title = 'This list use a simple Header with no toolbar';
+		$helper->table = $this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+
+		return $helper->generateList($content, $fields_list);
+	}
+
+	public function renderListSmallColumns()
+	{
+		$content = array(
+			array(
+				'id' => 5,
+				'badge_success' => 153,
+				'badge_warning' => 6,
+				'badge_danger' => -2,
+				'text' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+				'color_value' => 'red',
+				'blue' => 'Content in custom color in blue field',
+				'activeVisu_field' => 1,
+				'editable_text' => "PrestaShop",
+			),
+			array(
+				'id' => 1,
+				'badge_success' => 15561533,
+				'badge_warning' => 0,
+				'badge_danger' => 0,
+				'text' => 'Lorem ip, consectetur adipiscing elit.',
+				'color_value' => 'blue',
+				'blue' => 'Content in custom color in blue field',
+				'activeVisu_field' => 0,
+				'editable_text' => "PrestaShop",
+			),
+			array(
+				'id' => 2,
+				'badge_success' => 0,
+				'badge_warning' => 65,
+				'badge_danger' => -200,
+				'text' => 'WITH VERY LONG TEXT: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
+				'color_value' => 'yellow',
+				'blue' => 'Content in custom color in blue field',
+				'activeVisu_field' => 1,
+				'editable_text' => "PrestaShop Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+			),
+			array(
+				'id' => 9,
+				'badge_success' => 3,
+				'badge_warning' => 2,
+				'badge_danger' => 1,
+				'text' => "WITH HTML: <br> <strong>strong</strong> <span style='background: black;'>span content</span>",
+				'color_value' => '#CCCC99',
+				'blue' => 'Content in custom color in blue field',
+				'activeVisu_field' => 1,
+				'editable_text' => "PrestaShop",
+			),
+		);
+
+		$fields_list = array(
+			'id' => array(
+				'title' => 'ID',
+				'align' => 'center',
+				'class' => 'fixed-width-xs',
+			),
+			'badge_success' => array(
+				'title' => "Success",
+				'badge_success' => true,
+			),
+			'badge_warning' => array(
+				'title' => "Warning",
+				'badge_warning' => true,
+			),
+			'badge_danger' => array(
+				'title' => "Danger",
+				'badge_danger' => true,
+			),
+			'text' => array(
+				'title' => "Content with prefix",
+				'prefix' => "This is a prefix: ",
+				'class' => "class-prefix",
+			),
+			'blue' => array(
+				'title' => "Content with no link",
+				'color' => "color_value",
+				'class' => "class-custom-nolink",
+			),
+			'activeVisu_field' => array(
+				'title' => "ActiveVisu",
+				'activeVisu' => true,
+
+			),
+			'editable_text' => array(
+				'title' => "edit this !",
+				'type' => 'editable',
+				'class' => 'another-custom_class',
+			),
+		);
+
+		$helper = new HelperList();
+		$helper->shopLinkType = '';
+		$helper->simple_header = false;
+		$helper->actions = array();
+		$helper->show_toolbar = false;
+		$helper->module = $this;
+		$helper->listTotal = count($content);
+		$helper->identifier = 'id';
+		$helper->title = 'This list shows a lot of small columns';
+		$helper->table = $this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+
+		return $helper->generateList($content, $fields_list);
+	}
+
+	public function renderListModel()
+	{
+		$content = array();
+
+		$fields_list = array();
+
+		$helper = new HelperList();
+		$helper->shopLinkType = '';
+		$helper->simple_header = true;
+		$helper->actions = null;
+		$helper->show_toolbar = false;
+		$helper->module = $this;
+		$helper->listTotal = count($content);
+		$helper->identifier = 'id_product_comment';
+		$helper->title = 'Moderate Comments';
+		$helper->table = $this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+
+		return $helper->generateList($content, $fields_list);
+	}
+	
+	public function renderListWithParentClass()
+	{
 		$this->bulk_actions = array(
 			'delete' => array(
-				'text' => $this->l('Delete selected'),
-				'confirm' => $this->l('Delete selected items?'),
+				'text' => 'Delete selected',
+				'confirm' => 'Delete selected items?',
 				'icon' => 'icon-trash'
 			)
 		);
 		$this->fields_list = array(
 			'id_carrier' => array(
-				'title' => $this->l('ID'),
+				'title' => 'ID',
 				'align' => 'center',
 				'class' => 'fixed-width-xs'
 			),
-			'name' => array(
-				'title' => $this->l('Name')
-			),
 			'image' => array(
-				'title' => $this->l('Logo'),
+				'title' => 'Logo',
 				'align' => 'center',
 				'image' => 's',
 				'class' => 'fixed-width-xs',
 				'orderby' => false,
 				'search' => false
-			)
+			),
+			'name' => array(
+				'title' => 'Name'
+			),
 		);
 		
 		return parent::renderList();
 	}
-	
+
 	public function renderOptions()
 	{
 		$this->fields_options = array(
 			'general' => array(
-				'title' =>	$this->l('General'),
+				'title' =>	'General',
 				'icon' =>	'icon-cogs',
 				'fields' =>	array(),
-				'submit' => array('title' => $this->l('Save'))
+				'submit' => array('title' => 'Save')
 			)
 		);
 		return parent::renderOptions();
@@ -404,7 +624,7 @@ class AdminPatternsControllerCore extends AdminController
 	public function initContent()
 	{
 		$this->display = 'view';
-		$this->page_header_toolbar_title = $this->toolbar_title = $this->l('Kevin');
+		$this->page_header_toolbar_title = $this->toolbar_title = 'Kevin';
 		
 		parent::initContent();
 

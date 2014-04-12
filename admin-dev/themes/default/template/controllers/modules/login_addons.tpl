@@ -54,6 +54,13 @@
 			</div>
 			<form id="addons_login_form" method="post" >
 				<div class="form-group">
+					<div class="input-group">
+						<span class="help-tooltip" data-toggle="tooltip" title="" data-original-title="{l s='PrestaShop Addons is PrestaShop\'s marketplace with more than 3,500 modules and themes available.'}">
+							{l s="Connect your shop with PrestaShop's marketplace in order to import automatically all your purchases."}
+						</span>
+					</div>
+				</div>
+				<div class="form-group">
 					<label for="username_addons">{l s='Addons Login'} :</label> 
 					<div class="input-group">
 						<span class="input-group-addon"><i class="icon-user"></i></span>
@@ -67,10 +74,13 @@
 						<input id="password_addons" class="form-control" name="password_addons" type="password" value=""  autocomplete="off" class="form-control ac_input">
 					</div>
 				</div>
-				<div class="row">
+				<div class="form-group">
 					<button id="addons_login_button" class="btn btn-default btn-block btn-lg" type="submit">
 						<i class="icon-unlock"></i> {l s='Sign in'}
 					</button>
+				</div>
+				<div class="row">
+					<a target="_blank" href="{$addons_register_link}">{l s="Don't have an account ?"}</a>
 				</div>
 				<div id="addons_loading" class="help-block"></div>
 			</form>

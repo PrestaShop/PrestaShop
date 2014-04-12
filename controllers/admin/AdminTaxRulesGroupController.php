@@ -214,7 +214,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			$this->no_back = true;
 			$this->page_header_toolbar_btn['new'] = array(
 				'href' => '#',
-				'desc' => $this->l('Add a new tax rule.')
+				'desc' => $this->l('Add a new tax rule')
 			);
 			$content = parent::renderForm();
 			$this->tpl_folder = 'tax_rules/';

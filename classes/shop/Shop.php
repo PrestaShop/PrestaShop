@@ -167,7 +167,7 @@ class ShopCore extends ObjectModel
 			'store' => array('type' => 'shop'),
 			'webservice_account' => array('type' => 'shop'),
 			'warehouse' => array('type' => 'shop'),
-			'stock_available' => array('type' => 'fk_shop'),
+			'stock_available' => array('type' => 'fk_shop', 'primary' => 'id_stock_available'),
 			'carrier_tax_rules_group_shop' => array('type' => 'fk_shop'),
 			'attribute' => array('type' => 'shop'),
 			'feature' => array('type' => 'shop'),
@@ -225,8 +225,17 @@ class ShopCore extends ObjectModel
 	{
 		$res = parent::add($autodate, $null_values);
 		Shop::cacheShops(true);
-		Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'employee_shop (id_employee, id_shop) (SELECT id_employee, '.(int)$this->id.' FROM '._DB_PREFIX_.'employee WHERE id_profile = '.(int)_PS_ADMIN_PROFILE_.')');
 		return $res;
+	}
+
+	public function associateSuperAdmins()
+	{
+		$super_admins = Employee::getEmployeesByProfile(_PS_ADMIN_PROFILE_);
+		foreach ($super_admins as $super_admin)
+		{
+			$employee = new Employee((int)$super_admin['id_employee']);
+			$employee->associateTo((int)$this->id);
+		}
 	}
 
 	/**
@@ -962,7 +971,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function addSqlRestrictionOnLang($alias = null, $id_shop = null)
 	{
-		if (is_null($id_shop))
+		if (isset(Context::getContext()->shop) && is_null($id_shop))
 			$id_shop = (int)Context::getContext()->shop->id;
 		if (!$id_shop)
 			$id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');

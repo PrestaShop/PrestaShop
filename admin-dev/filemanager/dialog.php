@@ -852,7 +852,7 @@ else
 		{
 			echo "file";
 		} ?>">
-			<a href="javascript:void('')" class="link" data-file="<?php echo Tools::safeOutput($file); ?>" data-field_id="<?php echo Tools::safeOutput(Tools::getValue('field_id')); ?>" data-function="<?php echo Tools::safeOutput($apply); ?>">
+			<a href="javascript:void('')" class="link" data-file="<?php echo Tools::safeOutput($file); ?>" data-field_id="" data-function="<?php echo Tools::safeOutput($apply); ?>">
 				<div class="img-precontainer">
 					<?php if ($is_icon_thumb)
 					{
@@ -889,7 +889,7 @@ else
 				{
 					echo "ellipsis";
 				} ?>">
-					<a href="javascript:void('')" class="link" data-file="<?php echo Tools::safeOutput($file); ?>" data-field_id="<?php echo Tools::safeOutput(Tools::getValue('field_id')); ?>" data-function="<?php echo Tools::safeOutput($apply); ?>">
+					<a href="javascript:void('')" class="link" data-file="<?php echo Tools::safeOutput($file); ?>" data-field_id="" data-function="<?php echo Tools::safeOutput($apply); ?>">
 						<?php echo Tools::safeOutput($filename); ?></a></h4>
 			</div>
 			<input type="hidden" class="date" value="<?php echo $file_array['date']; ?>"/>

@@ -43,9 +43,12 @@ if (!headers_sent())
 if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 {
 	$dir = ((substr($_SERVER['REQUEST_URI'], -1) == '/' || is_dir($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : dirname($_SERVER['REQUEST_URI']).'/');
-	if (!file_exists(dirname(__FILE__).'/../install'))
+	if (file_exists(dirname(__FILE__).'/../install'))
+		header('Location: install/');
+	elseif (file_exists(dirname(__FILE__).'/../install-dev'))
+		header('Location: install-dev/');
+	else
 		die('Error: "install" directory is missing');
-	header('Location: install/');
 	exit;
 }
 //include settings file only if we are not in multi-tenancy mode 
@@ -61,7 +64,7 @@ if (_PS_DEBUG_PROFILING_)
 	include_once(_PS_TOOL_DIR_.'profiling/Tools.php');
 }
 
-if (Tools::isPHPCLI())
+if (Tools::isPHPCLI() && isset($argc) && isset($argv))
 	Tools::argvToGET($argc, $argv);
 
 /* Redefine REQUEST_URI if empty (on some webservers...) */
@@ -132,7 +135,8 @@ setlocale(LC_NUMERIC, 'en_US.UTF-8', 'en_US.utf8');
 
 /* Instantiate cookie */
 $cookie_lifetime = (int)(defined('_PS_ADMIN_DIR_') ? Configuration::get('PS_COOKIE_LIFETIME_BO') : Configuration::get('PS_COOKIE_LIFETIME_FO'));
-$cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
+if ($cookie_lifetime > 0)
+	$cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
 
 if (defined('_PS_ADMIN_DIR_'))
 	$cookie = new Cookie('psAdmin', '', $cookie_lifetime);
@@ -208,7 +212,7 @@ $context->link = new Link($https_link, $https_link);
 
 /**
  * @deprecated : these defines are going to be deleted on 1.6 version of Prestashop
- * USE : Configuration::get() method in order to getting the id of order state
+ * USE : Configuration::get() method in order to getting the id of order status
  */
 define('_PS_OS_CHEQUE_',      Configuration::get('PS_OS_CHEQUE'));
 define('_PS_OS_PAYMENT_',     Configuration::get('PS_OS_PAYMENT'));

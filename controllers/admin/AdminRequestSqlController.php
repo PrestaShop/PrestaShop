@@ -46,8 +46,8 @@ class AdminRequestSqlControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_request_sql' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs'),
-			'name' => array('title' => $this->l('Name')),
-			'sql' => array('title' => $this->l('Request'))
+			'name' => array('title' => $this->l('SQL query Name')),
+			'sql' => array('title' => $this->l('SQL query'))
 		);
 
 		$this->fields_options = array(
@@ -94,7 +94,7 @@ class AdminRequestSqlControllerCore extends AdminController
 		if ($this->display == 'view' && $id_request = Tools::getValue('id_request_sql'))
 			$this->toolbar_btn['edit'] = array(
 				'href' => self::$currentIndex.'&amp;updaterequest_sql&amp;token='.$this->token.'&amp;id_request_sql='.(int)$id_request,
-				'desc' => $this->l('Edit this request')
+				'desc' => $this->l('Edit this SQL query')
 			);
 
 		parent::initToolbar();
@@ -109,14 +109,14 @@ class AdminRequestSqlControllerCore extends AdminController
 		$this->display = null;
 		$this->initToolbar();
 
-		$this->displayWarning($this->l('When saving the query, only the "SELECT" request type is allowed.'));
+		$this->displayWarning($this->l('When saving the query, only the "SELECT" SQL statement is allowed.'));
 		$this->displayInformation('
-		<strong>'.$this->l('How do I create a new sql query?').'</strong><br />
+		<strong>'.$this->l('How do I create a new SQL query?').'</strong><br />
 		<ul>
 			<li>'.$this->l('Click "Add New".').'</li>
 			<li>'.$this->l('Fill in the fields and click "Save".').'</li>
-			<li>'.$this->l('You can then view the query results by clicking on this icon in the dropdown menu:').' <i class="icon-pencil"></i></li>
-			<li>'.$this->l('You can also export the query results as CSV file by clicking on this icon in the dropdown menu:').' <i class="icon-upload"></i></li>
+			<li>'.$this->l('You can then view the query results by clicking on the Edit action in the dropdown menu: ').' <i class="icon-pencil"></i></li>
+			<li>'.$this->l('You can also export the query results as a CSV file by clicking on the Export button: ').' <i class="icon-upload"></i></li>
 		</ul>');
 
 		$this->addRowAction('export');
@@ -131,20 +131,20 @@ class AdminRequestSqlControllerCore extends AdminController
 	{
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Request'),
+				'title' => $this->l('SQL query'),
 				'icon' => 'icon-cog'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name'),
+					'label' => $this->l('SQL query name'),
 					'name' => 'name',
 					'size' => 103,
 					'required' => true
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Request'),
+					'label' => $this->l('SQL query'),
 					'name' => 'sql',
 					'cols' => 100,
 					'rows' => 10,
@@ -310,7 +310,7 @@ class AdminRequestSqlControllerCore extends AdminController
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_request'] = array(
 				'href' => self::$currentIndex.'&addrequest_sql&token='.$this->token,
-				'desc' => $this->l('Add new SQL request', null, null, false),
+				'desc' => $this->l('Add new SQL query', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 

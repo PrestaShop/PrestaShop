@@ -96,6 +96,7 @@ class LanguageCore extends ObjectModel
 	 */
 	public function getFields()
 	{
+		$this->iso_code = strtolower($this->iso_code);
 		if (empty($this->language_code))
 			$this->language_code = $this->iso_code;
 
@@ -806,7 +807,7 @@ class LanguageCore extends ObjectModel
 
 	public static function countActiveLanguages($id_shop = null)
 	{
-		if ($id_shop === null)
+		if (isset(Context::getContext()->shop) && is_object(Context::getContext()->shop) && $id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
 
 		if (!isset(self::$countActiveLanguages[$id_shop]))
@@ -935,6 +936,7 @@ class LanguageCore extends ObjectModel
 		$languages = Language::getLanguages(false);
 		foreach ($languages as $lang)
 		{
+			$gz = false;
 			$files_listing = array();
 			foreach ($modules_list as $module_name)
 			{
@@ -955,7 +957,8 @@ class LanguageCore extends ObjectModel
 					if (isset($file['filename']) && is_string($file['filename']))
 						$files_listing[] = $file['filename'];
 			}
-			$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
+			if ($gz)
+				$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
 		}
 	}
 }

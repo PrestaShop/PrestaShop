@@ -29,7 +29,7 @@ select.input-tiny,
 input[type="text"].input-tiny,
 input[type="password"].input-tiny
 	width: 80px
-	float: left
+	@include float(left)
 
 textarea
 	resize: none
@@ -50,8 +50,8 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 		i
 			color: $gray
 		&:hover
-			background-color: $brand-primary
 			color: white
+			background-color: $brand-primary
 			border-color: darken($brand-primary,10%)
 			@include box-shadow(none)
 			i
@@ -73,7 +73,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 		@include box-shadow(lighten($gray-light,20%) 0 -2px 0 inset)
 
 .dropdown-menu
-	text-align: left
+	@include text-align(left)
 	> li a
 		padding: 5px 10px
 		&:hover
@@ -91,7 +91,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 			display: inline-block
 			float: none
 		> a:first-child
-			margin-right: -3px
+			@include margin-right(-3px)
 		i
 			font-size: 14px
 
@@ -119,11 +119,11 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 	padding: 0px 3px
 	min-height: 30px
 	overflow: auto
-	@include border-radius(3px)
 	border: solid 1px #ccc
+	@include border-radius(3px)
 	@include box-shadow(rgba(0, 0, 0, 0.075) 0 1px 1px inset)
 	span
-		float: left
+		@include float(left)
 	> span
 		display: inline-block
 		padding: 2px 5px
@@ -133,10 +133,10 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 		background-color: lighten($brand-primary,15%)
 		color: white
 		> a
-			padding-left: 5px
 			color: $brand-primary
 			text-decoration: none
 			font-weight: bold
+			@include padding-left(5px)
 	> input
 		margin-top: 2px
 		border: 0 none

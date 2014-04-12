@@ -96,7 +96,7 @@ class AdminCountriesControllerCore extends AdminController
 				'list' => $zones_array,
 				'filter_key' => 'z!id_zone',
 				'filter_type' => 'int',
-				'order_key' => 'zone'
+				'order_key' => 'z!name'
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
@@ -190,7 +190,7 @@ class AdminCountriesControllerCore extends AdminController
 					'maxlength' => 3,
 					'class' => 'uppercase',
 					'required' => true,
-					'hint' => $this->l('Two -- or three -- letter ISO code (e.g. U.S. for United States).')
+					'hint' => $this->l('Two -- or three -- letter ISO code (e.g. "us for United States).')
 					 /* TO DO - ajouter les liens dans le hint ? */
 					/*'desc' => $this->l('Two -- or three -- letter ISO code (e.g. U.S. for United States)').'.
 							<a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm" target="_blank">'.
@@ -266,25 +266,6 @@ class AdminCountriesControllerCore extends AdminController
 					'encoding_default_layout' => urlencode($default_layout),
 					'display_valid_fields' => $this->displayValidFields()
 				),
-				array(
-					'type' => 'switch',
-					'label' => $this->l('Address Standardization'),
-					'name' => 'standardization',
-					'required' => false,
-					'is_bool' => true,
-					'values' => array(
-						array(
-							'id' => 'standardization_on',
-							'value' => 1,
-							'label' => $this->l('Enabled')
-						),
-						array(
-							'id' => 'standardization_off',
-							'value' => 0,
-							'label' => $this->l('Disabled')
-						)
-					),
-				),					
 				array(
 					'type' => 'switch',
 					'label' => $this->l('Active'),
@@ -376,9 +357,6 @@ class AdminCountriesControllerCore extends AdminController
 			'title' => $this->l('Save')
 		);
 		
-		if ($this->object->iso_code == 'US')
-			$this->object->standardization = Configuration::get('PS_TAASC');
-		
 		return parent::renderForm();
 	}
 	
@@ -419,9 +397,6 @@ class AdminCountriesControllerCore extends AdminController
 			if (!is_null($id_country) && $id_country != Tools::getValue('id_'.$this->table))
 				$this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
 		}
-		
-		if (Tools::isSubmit('standardization'))
-			Configuration::updateValue('PS_TAASC', (bool)Tools::getValue('standardization', false));	
 
 		return parent::postProcess();
 	}

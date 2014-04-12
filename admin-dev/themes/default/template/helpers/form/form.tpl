@@ -38,13 +38,13 @@
 		<div class="panel" id="fieldset_{$f}">
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
-                    {block name="legend"}
-                        <div class="panel-heading">
-                            {if isset($field.image) && isset($field.title)}<img src="{$field.image}" alt="{$field.title|escape:'html':'UTF-8'}" />{/if}
-                            {if isset($field.icon)}<i class="{$field.icon}"></i>{/if}
-                            {$field.title}
-                        </div>
-                    {/block}
+					{block name="legend"}
+						<div class="panel-heading">
+							{if isset($field.image) && isset($field.title)}<img src="{$field.image}" alt="{$field.title|escape:'html':'UTF-8'}" />{/if}
+							{if isset($field.icon)}<i class="{$field.icon}"></i>{/if}
+							{$field.title}
+						</div>
+					{/block}
 				{elseif $key == 'description' && $field}
 					<div class="alert alert-info">{$field}</div>
 				{elseif $key == 'input'}
@@ -107,7 +107,7 @@
 													{/literal}
 												{/if}
 												{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
-												<div class="input-group">
+												<div class="input-group {if isset($input.class)}{$input.class}{/if}">
 												{/if}
 												{if isset($input.maxchar)}
 												<span id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter" class="input-group-addon">
@@ -194,7 +194,7 @@
 										{/if}
 										{assign var='value_text' value=$fields_value[$input.name]}
 										{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
-										<div class="input-group">
+										<div class="input-group {if isset($input.class)}{$input.class}{/if}">
 										{/if}
 										{if isset($input.maxchar)}
 										<span id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter" class="input-group-addon"><span class="text-count-down">{$input.maxchar}</span></span>
@@ -369,7 +369,7 @@
 									{/if}
 								{elseif $input.type == 'radio'}
 									{foreach $input.values as $value}
-										<div class="radio {if isset($input.class)}"{$input.class}"{/if}">
+										<div class="radio {if isset($input.class)}{$input.class}{/if}">
 											<label>
 											<input type="radio"	name="{$input.name}" id="{$value.id}" value="{$value.value|escape:'html':'UTF-8'}"
 												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
@@ -380,38 +380,36 @@
 										{if isset($value.p) && $value.p}<p class="help-block">{$value.p}</p>{/if}
 									{/foreach}
 								{elseif $input.type == 'switch'}
-									<div "col-lg-9">
-										<span class="switch prestashop-switch fixed-width-lg">
-											{foreach $input.values as $value}
-											<input
-												type="radio"
-												name="{$input.name}"
-												{if $value.value == 1}
-													id="{$input.name}_on"
-												{else}
-													id="{$input.name}_off"
-												{/if}
-												value="{$value.value}"
-												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
-												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
-											/>
-											<label
-												{if $value.value == 1}
-													for="{$input.name}_on"
-												{else}
-													for="{$input.name}_off"
-												{/if}
-											>
-												{if $value.value == 1}
-													{l s='Yes'}
-												{else}
-													{l s='No'}
-												{/if}
-											</label>
-											{/foreach}
-											<a class="slide-button btn"></a>
-										</span>
-									</div>
+									<span class="switch prestashop-switch fixed-width-lg">
+										{foreach $input.values as $value}
+										<input
+											type="radio"
+											name="{$input.name}"
+											{if $value.value == 1}
+												id="{$input.name}_on"
+											{else}
+												id="{$input.name}_off"
+											{/if}
+											value="{$value.value}"
+											{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
+											{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
+										/>
+										<label
+											{if $value.value == 1}
+												for="{$input.name}_on"
+											{else}
+												for="{$input.name}_off"
+											{/if}
+										>
+											{if $value.value == 1}
+												{l s='Yes'}
+											{else}
+												{l s='No'}
+											{/if}
+										</label>
+										{/foreach}
+										<a class="slide-button btn"></a>
+									</span>
 								{elseif $input.type == 'textarea'}
 									{assign var=use_textarea_autosize value=true}
 									{if isset($input.lang) AND $input.lang}
@@ -446,25 +444,25 @@
 									{/if}
 
 								{elseif $input.type == 'checkbox'}
-                                    {if isset($input.expand)}
-                                        <a class="btn btn-default show_checkbox{if $input.expand.default == 'hide'} hidden {/if}" href="#">
-                                            <i class="icon-{$input.expand.show.icon}"></i>
-                                            {$input.expand.show.text}
-                                            {if isset($input.expand.print_total) && $input.expand.print_total > 0}
-                                                <span class="badge">{$input.expand.print_total}</span>
-                                            {/if}
-                                        </a>
-                                        <a class="btn btn-default hide_checkbox{if $input.expand.default == 'show'} hidden {/if}" href="#">
-                                            <i class="icon-{$input.expand.hide.icon}"></i>
-                                            {$input.expand.hide.text}
-                                            {if isset($input.expand.print_total) && $input.expand.print_total > 0}
-                                                <span class="badge">{$input.expand.print_total}</span>
-                                            {/if}
-                                        </a>
-                                    {/if}
+									{if isset($input.expand)}
+										<a class="btn btn-default show_checkbox{if strtolower($input.expand.default) == 'hide'} hidden {/if}" href="#">
+											<i class="icon-{$input.expand.show.icon}"></i>
+											{$input.expand.show.text}
+											{if isset($input.expand.print_total) && $input.expand.print_total > 0}
+												<span class="badge">{$input.expand.print_total}</span>
+											{/if}
+										</a>
+										<a class="btn btn-default hide_checkbox{if strtolower($input.expand.default) == 'show'} hidden {/if}" href="#">
+											<i class="icon-{$input.expand.hide.icon}"></i>
+											{$input.expand.hide.text}
+											{if isset($input.expand.print_total) && $input.expand.print_total > 0}
+												<span class="badge">{$input.expand.print_total}</span>
+											{/if}
+										</a>
+									{/if}
 									{foreach $input.values.query as $value}
 										{assign var=id_checkbox value=$input.name|cat:'_'|cat:$value[$input.values.id]}
-										<div class="checkbox{if isset($input.expand) && $input.expand.default == 'show'} hidden {/if}">
+										<div class="checkbox{if isset($input.expand) && strtolower($input.expand.default) == 'show'} hidden {/if}">
 											<label for="{$id_checkbox}">
 												<input type="checkbox"
 													name="{$id_checkbox}"
@@ -590,9 +588,9 @@
 												if (valid){
 													$output.show();
 												}
-    											else {
-    												$output.hide();
-    											}
+												else {
+													$output.hide();
+												}
 											});
 											var $container = $('#{$input.name}-change-container');
 											var $changeBtn = $('#{$input.name}-btn-change');
@@ -898,18 +896,18 @@
 
 		$(document).ready(function() {
 
-            $(".show_checkbox").click(function () {
-                $(this).addClass('hidden')
-                $(this).siblings('.checkbox').removeClass('hidden');
-                $(this).siblings('.hide_checkbox').removeClass('hidden');
-                return false;
-            });
-            $(".hide_checkbox").click(function () {
-                $(this).addClass('hidden')
-                $(this).siblings('.checkbox').addClass('hidden');
-                $(this).siblings('.show_checkbox').removeClass('hidden');
-                return false;
-            });
+			$(".show_checkbox").click(function () {
+				$(this).addClass('hidden')
+				$(this).siblings('.checkbox').removeClass('hidden');
+				$(this).siblings('.hide_checkbox').removeClass('hidden');
+				return false;
+			});
+			$(".hide_checkbox").click(function () {
+				$(this).addClass('hidden')
+				$(this).siblings('.checkbox').addClass('hidden');
+				$(this).siblings('.show_checkbox').removeClass('hidden');
+				return false;
+			});
 
 			{if isset($fields_value.id_state)}
 				if ($('#id_country') && $('#id_state'))

@@ -166,7 +166,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					),
 					'PS_SAV_IMAP_DELETE_MSG' => array(
 						'title' => $this->l('Delete messages'),
-						'hint' => $this->l('Delete messages after synchronization. If you do not enable this option, the synchrozination will take more time.'),
+						'hint' => $this->l('Delete messages after synchronization. If you do not enable this option, the synchronization will take more time.'),
 						'type' => 'bool',
 					),
 					'PS_SAV_IMAP_CREATE_THREADS' => array(
@@ -540,6 +540,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$employees = Employee::getEmployees();
 
 		$messages = CustomerThread::getMessageCustomerThreads($id_customer_thread);
+		
+		foreach ($messages as $key => $mess)
+			if (isset($mess['file_name']) && $mess['file_name'] != '')
+				$messages[$key]['file_name'] = _THEME_PROD_PIC_DIR_.$mess['file_name'];
+			else
+				unset($messages[$key]['file_name']);
 
 		$next_thread = CustomerThread::getNextThread((int)$thread->id);
 		

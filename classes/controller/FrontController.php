@@ -125,7 +125,7 @@ class FrontControllerCore extends Controller
 		$js_files = $this->js_files;
 
 		// If we call a SSL controller without SSL or a non SSL controller with SSL, we redirect with the right protocol
-		if (Configuration::get('PS_SSL_ENABLED') && ($_SERVER['REQUEST_METHOD'] != 'POST') && $this->ssl != Tools::usingSecureMode())
+		if (Configuration::get('PS_SSL_ENABLED') && $_SERVER['REQUEST_METHOD'] != 'POST' && $this->ssl != Tools::usingSecureMode())
 		{	
 			header('HTTP/1.1 301 Moved Permanently');
 			header('Cache-Control: no-cache');
@@ -480,7 +480,7 @@ class FrontControllerCore extends Controller
 
 		$this->context->smarty->assign(array(
 			'css_files' => $this->css_files,
-			'js_files' => array() // assign moved to smartyOutputContent since 1.6
+			'js_files' => $this->getLayout() ? array() : $this->js_files
 		));
 
 		$this->display_header = $display;
@@ -535,7 +535,7 @@ class FrontControllerCore extends Controller
 
 		$this->context->smarty->assign(array(
 			'css_files' => $this->css_files,
-			'js_files' => array(), // assign moved to smartyOutputContent since 1.6
+			'js_files' => $this->getLayout() ? array() : $this->js_files,
 			'errors' => $this->errors,
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,
@@ -617,8 +617,7 @@ class FrontControllerCore extends Controller
 		if (!$canonical_url || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET' || Tools::getValue('live_edit'))
 			return;
 
-		$match_url = (Configuration::get('PS_SSL_ENABLED') && ($this->ssl || Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-		$match_url = rawurldecode($match_url);
+		$match_url = rawurldecode(Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 		if (!preg_match('/^'.Tools::pRegexp(rawurldecode($canonical_url), '/').'([&?].*)?$/', $match_url))
 		{
 			$params = array();
@@ -774,9 +773,7 @@ class FrontControllerCore extends Controller
 			$this->addjqueryPlugin('fancybox');
 			$this->addJS(_PS_JS_DIR_.'hookLiveEdit.js');
 		}
-		if ($this->context->language->is_rtl)
-			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
-		
+
 		if (Configuration::get('PS_QUICK_VIEW'))
 			$this->addjqueryPlugin('fancybox');
 
@@ -814,6 +811,15 @@ class FrontControllerCore extends Controller
 			'PS_SHOP_NAME' => Configuration::get('PS_SHOP_NAME'),
 			'PS_ALLOW_MOBILE_DEVICE' => isset($_SERVER['HTTP_USER_AGENT']) && (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE') && @filemtime(_PS_THEME_MOBILE_DIR_)
 		));
+		//RTL support
+		//rtl.css overrides theme css files for rtl
+		//iso_code.css overrides default font for every language (optional)
+		if ($this->context->language->is_rtl)
+		{
+			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
+			$this->addCSS(_THEME_CSS_DIR_.$this->context->language->iso_code.'.css');
+		}
+
 	}
 	
 	public function checkLiveEditAccess()
@@ -1140,7 +1146,7 @@ class FrontControllerCore extends Controller
 	
 	protected function getOverrideThemeDir()
 	{
-		return $this->useMobileTheme() ? _PS_THEME_MOBILE_OVERRIDE_DIR_ : _PS_THEME_MOBILE_DIR_;
+		return $this->useMobileTheme() ? _PS_THEME_MOBILE_OVERRIDE_DIR_ : _PS_THEME_OVERRIDE_DIR_;
 	}
 	
 	/**

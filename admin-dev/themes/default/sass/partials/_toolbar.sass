@@ -2,24 +2,24 @@
 	width: 100%
 	min-width: 450px
 	height: 55px
-	padding: 0 0 0 0
+	padding: 0
 	margin: 0
 	border-bottom: 4px solid darken($secondary-color,10%)
 	position: fixed
 	top: 36px
-	left: 0px
 	z-index: 499
 	background-color: $secondary-color
+	@include left(0)
 	@include box-shadow(rgba(black,0.15) 0 7px 0)
 	h2.page-title
-		@extend .pull-left
+		@include float(left)
 		position: relative
-		padding: 28px 0 0 ($widthSidebarNav+70px)
 		margin: 0
 		font: 300 20px/1em $font-family-sans-serif
 		color: white
+		@include padding(28px, 0, 0, ($widthSidebarNav+70px))
 		@media (max-width: $screen-tablet)
-			padding: 26px 0 0 70px
+			@include padding(26px, 0, 0, 70px)
 		a
 			border-bottom: dotted 1px white
 			&:hover
@@ -30,8 +30,8 @@
 		text-decoration: none
 	.toolbarBox
 		position: absolute
-		right: 0
 		background-color: transparent!important
+		@include right(0)
 		@media (max-width: $screen-sm)
 			background-color: $secondary-color
 		#toolbar-nav
@@ -39,23 +39,22 @@
 			background-color: $secondary-color
 		.btn-toolbar
 			margin: 0
-			padding: 3px 0 0 0
+			@include padding(3px, 0, 0, 0)
 			> ul.nav
 			.toolbar_btn
 				height: 46px
 				position: relative
 				padding: 2px 5px !important
-				margin: 0 3px 2px 0
 				font-size: 12px
 				line-height: 8px
 				color: white
 				background-color: $secondary-color
 				text-align: center
 				text-shadow: none
-				text-align: center
 				white-space: nowrap
 				overflow: hidden
 				text-overflow: ellipsis
+				@include margin(0, 3px, 2px, 0)
 				@media (max-width: $screen-desktop)
 					width: 46px
 					border: solid 1px darken($secondary-color,15%)
@@ -65,9 +64,9 @@
 					border-color: white
 					background-color: white!important
 			.dropdown-toolbar
-				float: right
 				display: none
 				background-color: $secondary-color
+				@include float(right)
 				@include border-radius(3px)
 				@media (max-width: $screen-sm)
 					display: block
@@ -76,7 +75,6 @@
 		list-style: none
 		margin: 0
 		padding: 0
-		left: ($widthSidebarNav+70px)
 		top: 4px
 		height: 20px
 		line-height: 20px
@@ -87,20 +85,21 @@
 		border: none !important
 		white-space: nowrap
 		@include border-radius(0)
+		@include left($widthSidebarNav+70px)
 		@media (max-width: $screen-tablet)
-			left: 70px
+			@include left(70px)
 		li
 			text-transform: uppercase
 			i
 				font-size: 14px
 			&.breadcrumb-container i, &.breadcrumb-current i
 				position: absolute
-				left: -60px
 				top: 2px
 				font-size: 42px
-				padding-right: 5px
 				color: darken($secondary-color,15%)
-				border-right: solid 1px darken($secondary-color,15%)
+				@include padding-right(5px)
+				@include border-right(solid 1px darken($secondary-color,15%))
+				@include left(-60px)
 			&:before
 				color: darken($secondary-color,15%)
 			a

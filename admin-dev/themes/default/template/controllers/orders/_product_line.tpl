@@ -31,13 +31,14 @@
 {/if}
 
 {if ($product['product_quantity'] > $product['customizationQuantityTotal'])}
-<tr class="product-line-row" {if isset($product.image) && $product.image->id && isset($product.image_size)} height="{$product['image_size'][1] + 7}"{/if}>
+<tr class="product-line-row">
 	<td>{if isset($product.image) && $product.image->id}{$product.image_tag}{/if}</td>
-	<td><a href="index.php?controller=adminproducts&amp;id_product={$product['product_id']}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">
-		<span class="productName">{$product['product_name']}</span><br />
-		{if $product.product_reference}{l s='Ref:'} {$product.product_reference}<br />{/if}
-		{if $product.product_supplier_reference}{l s='Ref Supplier:'} {$product.product_supplier_reference}{/if}
-	</a>
+	<td>
+		<a href="index.php?controller=adminproducts&amp;id_product={$product['product_id']}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">
+			<span class="productName">{$product['product_name']}</span><br />
+			{if $product.product_reference}{l s='Ref:'} {$product.product_reference}<br />{/if}
+			{if $product.product_supplier_reference}{l s='Ref Supplier:'} {$product.product_supplier_reference}{/if}
+		</a>
 	</td>
 	<td>
 		<span class="product_price_show">{displayPrice price=$product_price currency=$currency->id}</span>
@@ -64,48 +65,48 @@
 		</span>
 		{/if}
 	</td>
-	<td class="productQuantity">
-		<span class="product_quantity_show{if (int)$product['product_quantity'] > 1} red bold{/if}">{$product['product_quantity']}</span>
+	<td class="productQuantity text-center">
+		<span class="product_quantity_show{if (int)$product['product_quantity'] > 1} badge{/if}">{$product['product_quantity']}</span>
 		{if $can_edit}
 		<span class="product_quantity_edit" style="display:none;">
 			<input type="text" name="product_quantity" class="edit_product_quantity" value="{$product['product_quantity']|htmlentities}"/>
 		</span>
 		{/if}
 	</td>
-	{if $display_warehouse}<td align="center">{$product.warehouse_name|escape:'html':'UTF-8'}</td>{/if}
+	{if $display_warehouse}<td>{$product.warehouse_name|escape:'html':'UTF-8'}</td>{/if}
 	{if ($order->hasBeenPaid())}
-		<td class="productQuantity">
+		<td class="productQuantity text-center">
 			{$product['product_quantity_refunded']}
 			{if count($product['refund_history'])}
 				<span class="tooltip">
 					<span class="tooltip_label tooltip_button">+</span>
-					<div class="tooltip_content">
+					<span class="tooltip_content">
 					<span class="title">{l s='Refund history'}</span>
 					{foreach $product['refund_history'] as $refund}
 						{l s='%1s - %2s' sprintf=[{dateFormat date=$refund.date_add}, {displayPrice price=$refund.amount_tax_incl}]}<br />
 					{/foreach}
-					</div>
+					</span>
 				</span>
 			{/if}
 		</td>
 	{/if}
 	{if $order->hasBeenDelivered() || $order->hasProductReturned()}
-		<td class="productQuantity">
+		<td class="productQuantity text-center">
 			{$product['product_quantity_return']}
 			{if count($product['return_history'])}
 				<span class="tooltip">
 					<span class="tooltip_label tooltip_button">+</span>
-					<div class="tooltip_content">
+					<span class="tooltip_content">
 					<span class="title">{l s='Return history'}</span>
 					{foreach $product['return_history'] as $return}
 						{l s='%1s - %2s - %3s' sprintf=[{dateFormat date=$return.date_add}, $return.product_quantity, $return.state]}<br />
 					{/foreach}
-					</div>
+					</span>
 				</span>
 			{/if}
 		</td>
 	{/if}
-	{if $stock_management}<td class="productQuantity product_stock">{$product['current_stock']}</td>{/if}
+	{if $stock_management}<td class="productQuantity product_stock text-center">{$product['current_stock']}</td>{/if}
 	<td class="total_product">
 		{displayPrice price=(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal'])) currency=$currency->id}
 	</td>

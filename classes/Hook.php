@@ -282,7 +282,7 @@ class HookCore extends ObjectModel
 	{
 		$context = Context::getContext();
 		$cache_id = 'hook_module_exec_list_'.(isset($context->shop->id) ? '_'.$context->shop->id : '' ).((isset($context->customer)) ? '_'.$context->customer->id : '');
-		if (!Cache::isStored($cache_id) || $hook_name == 'displayPayment')
+		if (!Cache::isStored($cache_id) || $hook_name == 'displayPayment' || $hook_name == 'displayBackOfficeHeader')
 		{
 			$frontend = true;
 			$groups = array();
@@ -307,8 +307,11 @@ class HookCore extends ObjectModel
 			$sql = new DbQuery();
 			$sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module, h.`live_edit`');
 			$sql->from('module', 'm');
-			$sql->join(Shop::addSqlAssociation('module', 'm', true, 'module_shop.enable_device & '.(int)Context::getContext()->getDevice()));
-			$sql->innerJoin('module_shop', 'ms', 'ms.`id_module` = m.`id_module`');
+			if ($hook_name != 'displayBackOfficeHeader')
+			{
+				$sql->join(Shop::addSqlAssociation('module', 'm', true, 'module_shop.enable_device & '.(int)Context::getContext()->getDevice()));
+				$sql->innerJoin('module_shop', 'ms', 'ms.`id_module` = m.`id_module`');
+			}
 			$sql->innerJoin('hook_module', 'hm', 'hm.`id_module` = m.`id_module`');
 			$sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
 			if ($hook_name != 'displayPayment')
@@ -354,7 +357,7 @@ class HookCore extends ObjectModel
 						'live_edit' => $row['live_edit'],
 					);
 				}
-			if ($hook_name != 'displayPayment')
+			if ($hook_name != 'displayPayment' && $hook_name != 'displayBackOfficeHeader')
 			{
 				Cache::store($cache_id, $list);
 				// @todo remove this in 1.6, we keep it in 1.5 for retrocompatibility
@@ -464,8 +467,14 @@ class HookCore extends ObjectModel
 			if ($check_exceptions)
 			{
 				$exceptions = $moduleInstance->getExceptions($array['id_hook']);
-				$controller = Dispatcher::getInstance()->getController();
 
+				$controller = Dispatcher::getInstance()->getController();
+				$controller_obj = Context::getContext()->controller;
+				
+				//check if current controller is a module controller
+				if (isset($controller_obj->module) && Validate::isLoadedObject($controller_obj->module))
+					$controller = 'module-'.$controller_obj->module->name.'-'.$controller;
+				
 				if (in_array($controller, $exceptions))
 					continue;
 				

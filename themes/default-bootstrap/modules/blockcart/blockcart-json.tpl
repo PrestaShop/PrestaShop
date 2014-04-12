@@ -35,7 +35,7 @@
 		"image": {$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|json_encode},
 		"image_cart": {$link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')|json_encode},
 		"priceByLine": {if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice|json_encode p=$product.total}{else}{displayWtPrice|json_encode p=$product.total_wt}{/if},
-		"name": {$product.name|trim|html_entity_decode:2:'UTF-8'|truncate:15:'...':true|json_encode},
+		"name": {$product.name|trim|html_entity_decode:2:'UTF-8'|json_encode},
 		"price": {if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice|json_encode p=$product.total}{else}{displayWtPrice|json_encode p=$product.total_wt}{/if},
 		"price_float": {$product.total|floatval|json_encode},
 		"idCombination": {if isset($product.attributes_small)}{$productAttributeId|intval}{else}0{/if},
@@ -80,7 +80,7 @@
 {if $discounts}{foreach from=$discounts item=discount name='discounts'}
 	{ldelim}
 		"id": {$discount.id_discount|intval},
-		"name": {$discount.name|cat:' : '|cat:$discount.description|trim|truncate:18:'...'|json_encode},
+		"name": {$discount.name|trim|truncate:18:'...'|json_encode},
 		"description": {$discount.description|json_encode},
 		"nameDescription": {$discount.name|cat:' : '|cat:$discount.description|trim|truncate:18:'...'|json_encode},
 		"code": {$discount.code|json_encode},

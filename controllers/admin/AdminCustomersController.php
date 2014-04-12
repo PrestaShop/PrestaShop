@@ -611,9 +611,9 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->color = 'color2';
 		$helper->title = $this->l('Average Age', 'AdminTab', null, false);
 		$helper->subtitle = $this->l('All Time', null, null, false);
-		if (ConfigurationKPI::get('AVG_CUSTOMER_AGE') !== false)
-			$helper->value = ConfigurationKPI::get('AVG_CUSTOMER_AGE');
-		if (ConfigurationKPI::get('AVG_CUSTOMER_AGE_EXPIRE') < $time)
+		if (ConfigurationKPI::get('AVG_CUSTOMER_AGE', $this->context->language->id) !== false)
+			$helper->value = ConfigurationKPI::get('AVG_CUSTOMER_AGE', $this->context->language->id);
+		if (ConfigurationKPI::get('AVG_CUSTOMER_AGE_EXPIRE', $this->context->language->id) < $time)
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=avg_customer_age';
 		$kpis[] = $helper->generate();
 
@@ -698,7 +698,7 @@ class AdminCustomersControllerCore extends AdminController
 		foreach ($orders as $order)
 		{
 			if (!isset($order['order_state']))
-				$order['order_state'] = $this->l('There is no state defined for this order.');
+				$order['order_state'] = $this->l('There is no status defined for this order.');
 
 			if ($order['valid'])
 			{
@@ -1019,15 +1019,14 @@ class AdminCustomersControllerCore extends AdminController
 		$searches = array_unique($searches);
 		foreach ($searches as $search)
 			if (!empty($search) && $results = Customer::searchByName($search))
-			{
-				foreach ($results as $key => $result)
-					if (array_key_exists($key, $customers))
-						unset($results[$key]);
-				$customers = array_unique(array_merge($customers, $results));
-			}
+				foreach ($results as $result)
+					$customers[$result['id_customer']] = $result;
 
 		if (count($customers))
-			$to_return = array('customers' => $customers, 'found' => true);
+			$to_return = array(
+				'customers' => $customers,
+				'found' => true
+			);
 		else
 			$to_return = array('found' => false);
 
