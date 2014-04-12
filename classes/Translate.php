@@ -163,8 +163,19 @@ class TranslateCore
 
 			$current_key = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source).'_'.$key;
 			$default_key = strtolower('<{'.$name.'}prestashop>'.$source).'_'.$key;
-
-			if (isset($_MODULES[$current_key]))
+			// strip "controller"
+			if(substr($source,-10) == 'controller')
+			{
+				$file = substr($source,0,-10);
+				$current_key_file = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$file).'_'.$key;
+				$default_key_file = strtolower('<{'.$name.'}prestashop>'.$file).'_'.$key;
+			}
+			
+			if (isset($current_key_file) AND isset($_MODULES[$current_key_file]))
+				$ret = stripslashes($_MODULES[$current_key_file]);
+			elseif(isset($default_key_file) AND isset($_MODULES[$default_key_file]))
+				$ret = stripslashes($_MODULES[$default_key_file]);
+			elseif (isset($_MODULES[$current_key]))
 				$ret = stripslashes($_MODULES[$current_key]);
 			elseif (isset($_MODULES[$default_key]))
 				$ret = stripslashes($_MODULES[$default_key]);
