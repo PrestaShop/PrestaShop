@@ -1062,27 +1062,35 @@ product_tabs['Informations'] = new function(){
 
 			product_type = $(this).val();
 			$('#warn_virtual_combinations').hide();
+			$('#warn_pack_combinations').hide();
 			// until a product is added in the pack
 			// if product is PTYPE_PACK, save buttons will be disabled
 			if (product_type == product_type_pack)
 			{
-				//when you change the type of the product, directly go to the pack tab
-				//$('a[id*="Pack"]').show();
-				//$('#ppack').val(1).attr('checked', true).attr('disabled', true);
-				$('#product-pack-container').show();
-				// If the pack tab has not finished loaded the changes will be made when the loading event is triggered
-				$("#product-tab-content-Pack").bind('loaded', function(){
-					$('#ppack').val(1).attr('checked', true).attr('disabled', true);
-				});
-				$("#product-tab-content-Quantities").bind('loaded', function(){
-					$('.stockForVirtualProduct').show();
-				});
+				if (has_combinations)
+				{
+					$('#simple_product').attr('checked', true);
+					$('#warn_pack_combinations').show();
+				}
+				else
+				{
+					$('#product-pack-container').show();
+					// If the pack tab has not finished loaded the changes will be made when the loading event is triggered
+					$("#product-tab-content-Pack").bind('loaded', function(){
+						$('#ppack').val(1).attr('checked', true).attr('disabled', true);
+					});
+					$("#product-tab-content-Quantities").bind('loaded', function(){
+						$('.stockForVirtualProduct').show();
+					});
 
-				$('a[id*="Shipping"]').show();
-				$('#condition').removeAttr('disabled');
-				$('#condition option[value=new]').removeAttr('selected');
-				$('.stockForVirtualProduct').show();
-				// if pack is enabled, if you choose pack, automatically switch to pack page
+					$('a[id*="Combinations"]').hide();
+					$('a[id*="Shipping"]').show();
+
+					$('#condition').removeAttr('disabled');
+					$('#condition option[value=new]').removeAttr('selected');
+					$('.stockForVirtualProduct').show();
+					// if pack is enabled, if you choose pack, automatically switch to pack page
+				}
 			}
 			else if (product_type == product_type_virtual)
 			{
@@ -1105,6 +1113,7 @@ product_tabs['Informations'] = new function(){
 						$('.stockForVirtualProduct').hide();
 					});
 
+					$('a[id*="Combinations"]').hide();
 					$('a[id*="Shipping"]').hide();
 
 					tabs_manager.onLoad('Informations', function(){
@@ -1117,6 +1126,7 @@ product_tabs['Informations'] = new function(){
 			else
 			{
 				// 3rd case : product_type is PTYPE_SIMPLE (0)
+				$('a[id*="Combinations"]').show();
 				$('a[id*="Shipping"]').show();
 				$('#condition').removeAttr('disabled');
 				$('#condition option[value=new]').removeAttr('selected');

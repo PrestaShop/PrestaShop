@@ -100,30 +100,34 @@
 
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Informations"}
 
-	<div id="warn_virtual_combinations" class="alert alert-warning" style="display:none">{l s='You cannot use combinations with a virtual product.'}</div>
-
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="simple_product">
 			{$bullet_common_field} {l s='Type'}
 		</label>
 		<div class="col-lg-9">
-			<div class="radio">
-				<label for="simple_product">
-					<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} />
-					{l s='Standard product'}
-				</label>
+			<div class="form-group">
+				<div class="radio">
+					<label for="simple_product">
+						<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} />
+						{l s='Standard product'}
+					</label>
+				</div>
+				<div class="radio">
+					<label for="pack_product">
+						<input type="radio" name="type_product" {if $is_in_pack}disabled="disabled"{/if} id="pack_product" value="{Product::PTYPE_PACK}" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} />
+						{l s='Pack of existing products'}
+					</label>
+				</div>
+				<div class="radio">
+					<label for="virtual_product">
+						<input type="radio" name="type_product" id="virtual_product" {if $is_in_pack}disabled="disabled"{/if} value="{Product::PTYPE_VIRTUAL}" {if $product_type == Product::PTYPE_VIRTUAL}checked="checked"{/if} />
+						{l s='Virtual product (services, booking, downloadable products, etc.)'}
+					</label>
+				</div>
 			</div>
-			<div class="radio">
-				<label for="pack_product">
-					<input type="radio" name="type_product" {if $is_in_pack}disabled="disabled"{/if} id="pack_product" value="{Product::PTYPE_PACK}" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} />
-					{l s='Pack of existing products'}
-				</label>
-			</div>
-			<div class="radio">
-				<label for="virtual_product">
-					<input type="radio" name="type_product" id="virtual_product" {if $is_in_pack}disabled="disabled"{/if} value="{Product::PTYPE_VIRTUAL}" {if $product_type == Product::PTYPE_VIRTUAL}checked="checked"{/if} />
-					{l s='Virtual product (services, booking, downloadable products, etc.)'}
-				</label>
+			<div class="row">
+				<div id="warn_virtual_combinations" class="alert alert-warning" style="display:none">{l s='You cannot use combinations with a virtual product.'}</div>
+				<div id="warn_pack_combinations" class="alert alert-warning" style="display:none">{l s='You cannot use combinations with a pack.'}</div>
 			</div>
 		</div>
 	</div>

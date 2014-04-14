@@ -420,7 +420,7 @@ function error_modal(heading, msg) {
 			'<p>' + msg + '</p>' +
 			'</div>' +
 			'<div class="modal-footer">' +
-			'<a href="#" id="error_modal_right_button" class="btn btn-primary">' +
+			'<a href="#" id="error_modal_right_button" class="btn btn-default">' +
 			error_continue_msg +
 			'</a>' +
 			'</div>' +
@@ -447,7 +447,7 @@ function confirm_modal(heading, question, left_button_txt, right_button_txt, lef
 			'<p>' + question + '</p>' +
 			'</div>' +
 			'<div class="modal-footer">' +
-			'<a href="#" id="confirm_modal_left_button" class="btn btn-primary">' +
+			'<a href="#" id="confirm_modal_left_button" class="btn btn-default">' +
 			left_button_txt +
 			'</a>' +
 			'<a href="#" id="confirm_modal_right_button" class="btn btn-primary">' +
