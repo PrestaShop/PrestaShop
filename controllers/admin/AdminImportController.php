@@ -2161,9 +2161,9 @@ class AdminImportControllerCore extends AdminController
 				if (isset($info['advanced_stock_management']))
 				{
 					if ($info['advanced_stock_management'] != 1 && $info['advanced_stock_management'] != 0)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product with id %s '),$product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product with id %s.'),$product->id);
 					elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $info['advanced_stock_management'] == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product with id %s '),$product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product with id %s.'),$product->id);
 					else
 						$product->setAdvancedStockManagement($info['advanced_stock_management']);
 					// automaticly disable depends on stock, if a_s_m set to disabled
@@ -2175,7 +2175,7 @@ class AdminImportControllerCore extends AdminController
 				if (isset($info['warehouse']) && $info['warehouse'])
 				{
 					if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse not set on product with id %s '),$product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse is not set on product with id %s.'),$product->id);
 					else
 					{
 						if (Warehouse::exists($info['warehouse']))
@@ -2191,7 +2191,7 @@ class AdminImportControllerCore extends AdminController
 							StockAvailable::synchronize($product->id);
 						}
 						else
-							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s '),$product->name[$default_language_id]);
+							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s.'),$product->name[$default_language_id]);
 					}
 				}
 
@@ -2201,7 +2201,7 @@ class AdminImportControllerCore extends AdminController
 					if ($info['depends_on_stock'] != 0 && $info['depends_on_stock'] != 1)
 						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for depends on stock for product %1$s '),$product->name[$default_language_id]);
 					elseif ((!$info['advanced_stock_management'] || $info['advanced_stock_management'] == 0) && $info['depends_on_stock'] == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management not enabled, can not set depends on stock %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot set depends on stock %1$s '),$product->name[$default_language_id]);
 					else
 						StockAvailable::setProductDependsOnStock($product->id, $info['depends_on_stock'],null,$id_product_attribute);
 
@@ -2525,7 +2525,7 @@ class AdminImportControllerCore extends AdminController
 
 					if (count($customer_list) == 0)
 						$this->errors[] = sprintf(
-							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s) cannot be saved'),
+							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved.'),
 							Db::getInstance()->getMsgError(),
 							$address->customer_email,
 							(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
@@ -2533,7 +2533,7 @@ class AdminImportControllerCore extends AdminController
 				}
 				else
 				{
-					$this->errors[] = sprintf(Tools::displayError('"%s": Is not a valid email address'), $address->customer_email);
+					$this->errors[] = sprintf(Tools::displayError('"%s" is not a valid email address.'), $address->customer_email);
 					continue;
 				}
 			}
@@ -2548,14 +2548,14 @@ class AdminImportControllerCore extends AdminController
 
 					if (count($customer_list) == 0)
 						$this->errors[] = sprintf(
-							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s) cannot be saved'),
+							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved.'),
 							Db::getInstance()->getMsgError(),
 							$customer->email,
 							(int)$address->id_customer
 						);
 				}
 				else
-					$this->errors[] = sprintf(Tools::displayError('The customer ID n.%d does not exist in the database (ID: %d) cannot be saved'), $address->id_customer);
+					$this->errors[] = sprintf(Tools::displayError('The customer ID #%d does not exist in the database, and therefore cannot be saved.'), $address->id_customer);
 			}
 			else
 			{
