@@ -82,8 +82,8 @@
 			var has_combinations = {$has_combinations};
 
 			var toload = new Array();
-			var empty_pack_msg = '{l s='This pack is empty. You will need to add at least one product to the pack before you can save.' slashes=1}';
-			var empty_name_msg = '{l s='The product name is empty. You will at least need to enter a name for the default language before you can save the product.' slashes=1}';
+			var empty_pack_msg = '{l s='This pack is empty. You will need to add at least one product to the pack before you can save.' js=1}';
+			var empty_name_msg = '{l s='The product name is empty. You will at least need to enter a name for the default language before you can save the product.' js=1}';
 			var empty_link_rewrite_msg = '{l s='The friendly URL is empty. You will at least need to enter a friendly URL for the default language before you can save the product.' slashes=1}';
 			var reload_tab_title = '{l s='Confirmation' slashes=1}';
 			var reload_tab_description = '{l s='Some tabs was not loaded correctly. Would you like to reload them?' slashes=1}';
@@ -91,6 +91,8 @@
 			$('#product-tab-content-wait').show();
 			var post_data = {$post_data};
 			var save_error = {if $save_error}true{else}false{/if};
+			var error_heading_msg = '{l s='Error' js=1}';
+			var error_continue_msg = '{l s='Continue' js=1}';
 
 			var product_type = {$product_type};
 			{*var mce_maximum = '{l s='Maximum'}';*}
@@ -221,8 +223,52 @@
 				// Recursively load tabs starting with the first element of stack
 				tabs_manager.displayBulk(tabs_to_preload);
 				$('.productTabs').show();
-				$('#product_form').show();
 				$('#product-tab-content-wait').hide();
+
+				function checkIfProductTypeIsPack() {
+					var typeIsPack = $('#pack_product').is(':checked');
+					if (typeIsPack && $('#inputPackItems').val()=='' ) {
+						$('.pack-empty-warning').removeClass('alert-warning').addClass('alert-danger');
+						$('#curPackItemName').select2('open');
+					}
+					return typeIsPack;
+				}
+				$("#product_form").validate({
+					debug: true,
+					ignore: [],
+					rules: {
+						inputPackItems: {
+							required: {
+								depends: checkIfProductTypeIsPack
+							},
+						}
+					},
+					messages: {
+						inputPackItems: {
+							required: ""
+						}
+					},
+					submitHandler: function(form) {
+						console.log('submited: ' + $('#divPackItems li').length );
+						form.submit();
+					},
+					// override jquery validate plugin defaults for bootstrap 3
+					highlight: function(element) {
+						$(element).closest('.form-group').addClass('has-error');
+					},
+					unhighlight: function(element) {
+						$(element).closest('.form-group').removeClass('has-error');
+					},
+					errorElement: 'span',
+					errorClass: 'help-block',
+					errorPlacement: function(error, element) {
+						if(element.parent('.input-group').length) {
+							error.insertAfter(element.parent());
+						} else {
+							error.insertAfter(element);
+						}
+					}
+				});
 			});
 		</script>
 
@@ -242,7 +288,7 @@
 			<div id="loading"><i class="icon-refresh icon-spin"></i>&nbsp;{l s='Loading...'}</div>
 		</div>
 
-		<form id="product_form" class="form-horizontal col-lg-10" action="{$form_action}" method="post" enctype="multipart/form-data" name="product" style="display:none;">
+		<form id="product_form" class="form-horizontal col-lg-10" action="{$form_action}" method="post" enctype="multipart/form-data" name="product" novalidate>
 			<input type="hidden" name="id_product" value="{$id_product}" />
 			<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual|escape:html:'UTF-8'}" />
 

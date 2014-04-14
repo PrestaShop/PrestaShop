@@ -198,14 +198,6 @@ function loadPack() {
 	});
 }
 
-$(function(){
-	$('#product_form').on('click','button[name=submitAddproduct]',function(e){
-		e.preventDefault();
-		e.stopPropagation();
-		alert($('#product_form').serialize());
-	})
-});
-
 // array of product tab objects containing methods and dom bindings
 // The ProductTabsManager instance will make sure the onReady() methods of each tabs are executed once the tab has loaded
 var product_tabs = [];
@@ -1232,42 +1224,46 @@ product_tabs['Pack'] = new function() {
 
 		function addPackItem() {
 
-			$('#curPackItemName').select2("val", "");
-			$('.pack-empty-warning').hide();
-			selectedProduct.qty = $('#curPackItemQty').val();
+			if (selectedProduct) {
+				selectedProduct.qty = $('#curPackItemQty').val();
+				if (selectedProduct.id == '' || selectedProduct.name == '' && $('#curPackItemQty').valid()) {
+					error_modal(error_heading_msg, msg_select_one);
+					return false;
+				} else if (selectedProduct.qty == '' || !$('#curPackItemQty').valid() || isNaN($('#curPackItemQty').val()) ) {
+					error_modal(error_heading_msg, msg_set_quantity);
+					return false;
+				}
+				var divContent = $('#divPackItems').html();
+				divContent += '<li class="product-pack-item media-product-pack" data-product-name="' + selectedProduct.name + '" data-product-qty="' + selectedProduct.qty + '" data-product-id="' + selectedProduct.id + '">';
+				divContent += '<img class="media-product-pack-img" src="' + selectedProduct.image +'"/>';
+				divContent += '<span class="media-product-pack-title">' + selectedProduct.name + '</span>';
+				divContent += '<span class="media-product-pack-ref">REF: ' + selectedProduct.ref + '</span>';
+				divContent += '<span class="media-product-pack-quantity"><span class="text-muted">x</span> ' + selectedProduct.qty + '</span>';
+				divContent += '<button type="button" class="btn btn-default delPackItem media-product-pack-action" data-delete="' + selectedProduct.id + '" ><i class="icon-trash"></i></button>';
+				divContent += '</li>';
 
-			if (selectedProduct.id == '' || selectedProduct.name == '') {
-				jAlert(msg_select_one);
-				return false;
-			} else if (selectedProduct.id == '' || selectedProduct.qty == '') {
-				jAlert(msg_set_quantity);
+				// QTYxID-QTYxID
+				// @todo : it should be better to create input for each items and each qty
+				// instead of only one separated by x, - and ¤
+				var line = selectedProduct.qty + 'x' + selectedProduct.id ;
+				var lineDisplay = selectedProduct.qty + 'x ' + selectedProduct.name;
+
+				$('#divPackItems').html(divContent);
+				$('#inputPackItems').val($('#inputPackItems').val() + line  + '-');
+				$('#namePackItems').val($('#namePackItems').val() + lineDisplay + '¤');
+
+				$('.delPackItem').on('click', function(e){
+					e.preventDefault();
+					e.stopPropagation();
+					delPackItem($(this).data('delete'));
+				})
+				selectedProduct = null;
+				$('#curPackItemName').select2("val", "");
+				$('.pack-empty-warning').hide();
+			} else {
+				error_modal(error_heading_msg, msg_select_one);
 				return false;
 			}
-
-			var divContent = $('#divPackItems').html();
-			divContent += '<li class="product-pack-item media-product-pack" data-product-name="' + selectedProduct.name + '" data-product-qty="' + selectedProduct.qty + '" data-product-id="' + selectedProduct.id + '">';
-			divContent += '<img class="media-product-pack-img" src="' + selectedProduct.image +'"/>';
-			divContent += '<span class="media-product-pack-title">' + selectedProduct.name + '</span>';
-			divContent += '<span class="media-product-pack-ref">REF: ' + selectedProduct.ref + '</span>';
-			divContent += '<span class="media-product-pack-quantity"><span class="text-muted">x</span> ' + selectedProduct.qty + '</span>';
-			divContent += '<button type="button" class="btn btn-default delPackItem media-product-pack-action" data-delete="' + selectedProduct.id + '" ><i class="icon-trash"></i></button>';
-			divContent += '</li>';
-
-			// QTYxID-QTYxID
-			// @todo : it should be better to create input for each items and each qty
-			// instead of only one separated by x, - and ¤
-			var line = selectedProduct.qty + 'x' + selectedProduct.id ;
-			var lineDisplay = selectedProduct.qty + 'x ' + selectedProduct.name;
-
-			$('#divPackItems').html(divContent);
-			$('#inputPackItems').val($('#inputPackItems').val() + line  + '-');
-			$('#namePackItems').val($('#namePackItems').val() + lineDisplay + '¤');
-
-			$('.delPackItem').on('click', function(e){
-				e.preventDefault();
-				e.stopPropagation();
-				delPackItem($(this).data('delete'));
-			})
 		}
 
 		function delPackItem(id) {
@@ -1819,19 +1815,17 @@ $(document).ready(function() {
 	tabs_manager.init();
 	updateCurrentText();
 	$("#name_" + id_lang_default + ",#link_rewrite_" + id_lang_default)
-		.on("change", function(e)
-		{
+		.on("change", function(e) {
 			$(this).trigger("handleSaveButtons");
 		});
 	// bind that custom event
 	$("#name_" + id_lang_default + ",#link_rewrite_" + id_lang_default)
-		.on("handleSaveButtons", function(e)
-		{
+		.on("handleSaveButtons", function(e) {
 			handleSaveButtons()
 		});
 
 	// Pressing enter in an input field should not submit the form
-	$('#product_form').delegate('input', 'keypress', function(e){
+	$('#product_form').delegate('input', 'keypress', function(e) {
 			var code = null;
 		code = (e.keyCode ? e.keyCode : e.which);
 		return (code == 13) ? false : true;

@@ -2971,7 +2971,7 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .tagify-container span { float: right; }
 .bootstrap .tagify-container > span { display: inline-block; padding: 2px 5px; margin: 3px; border-radius: 2px; border: 1px solid #00aff0; background-color: #3ecbff; color: white; }
 .bootstrap .tagify-container > span > a { color: #00aff0; text-decoration: none; font-weight: bold; padding-right: 5px; }
-.bootstrap .tagify-container > input { margin-top: 2px; border: 0 none; width: 100px; -webkit-box-shadow: none; box-shadow: none; }
+.bootstrap .tagify-container > input { margin-top: 2px; border: 0 none; width: 140px; height: auto; -webkit-box-shadow: none; box-shadow: none; }
 .bootstrap .tagify-container > input:focus { outline: 0; -webkit-box-shadow: none; box-shadow: none; }
 .bootstrap .kpi-container { padding-bottom: 10px !important; }
 .bootstrap .box-stats { display: block; height: 64px; margin-bottom: 10px; }
@@ -3137,8 +3137,8 @@ a.link-social:hover { text-decoration: none; }
 .bootstrap .media-product-pack .media-product-pack-img { width: 100%; padding-bottom: 5px; border-bottom: 1px solid #cccccc; margin-bottom: 5px; }
 .bootstrap .media-product-pack .media-product-pack-title { width: 100%; padding: 0 5px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .bootstrap .media-product-pack .media-product-pack-ref { color: #aaaaaa; width: 100%; padding: 0 5px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.bootstrap .media-product-pack .media-product-pack-action { position: absolute; top: 5px; border: solid 1px #cccccc; text-align: center; left: 5px; -webkit-border-radius: 4px; border-radius: 4px; }
-.bootstrap .media-product-pack .media-product-pack-quantity { background-color: white; position: absolute; top: 5px; height: 25px; min-width: 35px; line-height: 23px; border: solid 1px #cccccc; text-align: center; right: 5px; -webkit-border-radius: 4px; border-radius: 4px; }
+.bootstrap .media-product-pack .media-product-pack-action { position: absolute; top: 7px; border: solid 1px #cccccc; text-align: center; left: 7px; -webkit-border-radius: 4px; border-radius: 4px; }
+.bootstrap .media-product-pack .media-product-pack-quantity { background-color: white; position: absolute; padding: 0 4px; top: 7px; height: 25px; min-width: 35px; line-height: 23px; border: solid 1px #cccccc; text-align: center; right: 7px; -webkit-border-radius: 4px; border-radius: 4px; }
 .bootstrap #carrier_wizard { position: relative; display: block; }
 .bootstrap #carrier_wizard .stepContainer { position: relative; display: block; clear: both; }
 .bootstrap #carrier_wizard .stepContainer div.content { position: absolute; display: block; width: 100%; clear: both; }

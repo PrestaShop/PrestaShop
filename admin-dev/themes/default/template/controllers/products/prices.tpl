@@ -212,7 +212,7 @@ $(document).ready(function () {
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
 			<input id="priceType" name="priceType" type="hidden" value="TE" />
-			<input maxlength="14" id="priceTI" type="text" value="" onchange="noComma('priceTI');" onkeyup="$('#priceType').val('TI');if (isArrowKey(event)) return;  calcPriceTE();" />
+			<input id="priceTI" name="priceTI" type="text" value="" onchange="noComma('priceTI');" maxlength="14" onkeyup="$('#priceType').val('TI');if (isArrowKey(event)) return;  calcPriceTE();" />
 		</div>
 	</div>
 
@@ -226,9 +226,9 @@ $(document).ready(function () {
 		</label>
 		<div class="input-group col-lg-4">
 			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-			<input maxlength="14" id="unit_price" name="unit_price" type="text" value="{$unit_price|string_format:'%.2f'}" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>
+			<input id="unit_price" name="unit_price" type="text" value="{$unit_price|string_format:'%.2f'}" maxlength="14" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>
 			<span class="input-group-addon">{l s='per'}</span>
-			<input maxlength="10" id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
+			<input id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}"  maxlength="10" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
 		</div>
 	</div>
 
@@ -397,14 +397,14 @@ $(document).ready(function () {
 						<div class="col-lg-4">
 							<div class="input-group">
 								<span class="input-group-addon">{l s='from'}</span>
-								<input class="datepicker" type="text" name="sp_from" value="" style="text-align: center" id="sp_from" />
+								<input type="text" name="sp_from" class="datepicker" value="" style="text-align: center" id="sp_from" />
 								<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
 							</div>
 						</div>
 						<div class="col-lg-4">
 							<div class="input-group">
 								<span class="input-group-addon">{l s='to'}</span>
-								<input class="datepicker" type="text" name="sp_to" value="" style="text-align: center" id="sp_to" />
+								<input type="text" name="sp_to" class="datepicker" value="" style="text-align: center" id="sp_to" />
 								<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
 							</div>
 						</div>
@@ -435,7 +435,7 @@ $(document).ready(function () {
 						<div class="col-lg-8">
 							<p class="checkbox">
 								<label for="leave_bprice">{l s='Leave base price:'}</label>
-								<input id="leave_bprice" type="checkbox" value="1" checked="checked" name="leave_bprice" />
+								<input type="checkbox" id="leave_bprice" name="leave_bprice"  value="1" checked="checked"  />
 							</p>
 						</div>
 					</div>

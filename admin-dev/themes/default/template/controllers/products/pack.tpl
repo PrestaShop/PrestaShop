@@ -24,11 +24,13 @@
 *}
 
 <input type="hidden" name="submitted_tabs[]" value="Pack" />
+
 <!-- <div class="alert alert-info">{l s='You cannot add combinations to a pack.'}</div> -->
 <!-- <div class="ppack">
 	<label class="t" for="ppack">{l s='Pack'}</label>
 	<input type="checkbox" name="ppack" id="ppack" value="1" />
 </div> -->
+
 <hr>
 <div class="form-group listOfPack">
 	<label class="control-label col-lg-3 product_description">
@@ -49,7 +51,7 @@
 		</ul>
 	</div>
 </div>
-<div class="form-group">
+<div class="form-group addProductToPack">
 	<label class="control-label col-lg-3" for="curPackItemName">
 		<span class="label-tooltip" data-toggle="tooltip" title="{l s='Start by typing the first letters of the product name, then select the product from the drop-down list.'}">
 			{l s='Add product in your pack'}
@@ -58,12 +60,12 @@
 	<div class="col-lg-9">
 		<div class="row">
 			<div class="col-lg-6">
-				<input type="text" id="curPackItemName" />
+				<input type="text" id="curPackItemName" name="curPackItemName" class="form-control" />
 			</div>					
 			<div class="col-lg-2">
 				<div class="input-group">
 					<span class="input-group-addon">&times;</span>
-					<input type="text" name="curPackItemQty" id="curPackItemQty" value="1"/>
+					<input type="number" name="curPackItemQty" id="curPackItemQty" class="form-control" min="1" value="1"/>
 				</div>
 			</div>
 			<div class="col-lg-2">
