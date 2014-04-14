@@ -26,10 +26,10 @@
 {strip}
 <span class="heading-counter">
 {if $category->id == 1 OR $nb_products == 0}
-	{l s='There are no products in  this category'}
+	{l s='There are no products in this category.'}
 {else}
 	{if $nb_products == 1}
-		{l s='There is %d product.' sprintf=$nb_products}
+		{l s='There is 1 product.'}
 	{else}
 		{l s='There are %d products.' sprintf=$nb_products}
 	{/if}
