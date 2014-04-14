@@ -6,7 +6,7 @@ Hi {firstname} {lastname},
 We have updated the progress on your return #{id_order_return}, the
 new status is: "{state_order_return}"
 
-MESSAGE: {message} 
+MESSAGE: {message} 		 
 
 You can review your order and download your invoice from the
 "Order history" [{history_url}] section of your

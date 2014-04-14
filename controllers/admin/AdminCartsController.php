@@ -140,7 +140,9 @@ class AdminCartsControllerCore extends AdminController
 		$helper->icon = 'icon-shopping-cart';
 		$helper->color = 'color2';
 		$helper->title = $this->l('Abandoned Carts', null, null, false);
-		$helper->subtitle = $this->l('Today', null, null, false);
+		$date_from = date(Context::getContext()->language->date_format_lite, strtotime('-2 day'));
+		$date_to = date(Context::getContext()->language->date_format_lite, strtotime('-1 day'));
+		$helper->subtitle = $this->l('From '.$date_from.' to '.$date_to, null, null, false);
 		$helper->href = $this->context->link->getAdminLink('AdminCarts');
 		if (ConfigurationKPI::get('ABANDONED_CARTS') !== false)
 			$helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
@@ -872,3 +874,4 @@ class AdminCartsControllerCore extends AdminController
 		return $list;
 	}
 }
+

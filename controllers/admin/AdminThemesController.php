@@ -160,7 +160,7 @@ class AdminThemesControllerCore extends AdminController
 					'PS_LOGO_MAIL' => array(
 						'title' => $this->l('Mail logo'),
 						'desc' =>
-							((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: No email logo has been indentified. The header logo will be used instead.').'</span><br />' : '').
+							((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: No email logo has been identified. The header logo will be used instead.').'</span><br />' : '').
 							$this->l('Will appear on email headers. If undefined, the header logo will be used.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO_MAIL',
@@ -394,7 +394,7 @@ class AdminThemesControllerCore extends AdminController
 			)
 		);
 		// adding a new theme, you can create a directory, and copy from an existing theme
-		if ($this->display == 'add' || !$this->object->id)
+		if ($this->display == 'add' || !Validate::isLoadedObject($this->object))
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
@@ -481,6 +481,7 @@ class AdminThemesControllerCore extends AdminController
 			$helper_list->shopLinkType = '';
 			$helper_list->identifier = 'id_theme_meta';
 			$helper_list->table = 'meta';
+			$helper_list->tpl_vars['show_filters'] = false;
 			$helper_list->currentIndex = $this->context->link->getAdminLink('AdminThemes', false);
 			$helper_list->token = Tools::getAdminTokenLite('AdminThemes');
 			$list = $helper_list->generateList($formated_metas, $fields_list);
@@ -535,6 +536,12 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processAdd()
 	{
+		if (Tools::getValue('directory') == '' || Tools::getValue('name') == '')
+		{
+			$this->errors[] = $this->l('Form invalid');
+			$this->display = 'form';
+			return false;
+		}
 		if (($new_dir = Tools::getValue('directory')) != '')
 		{
 			if (!Validate::isDirName($new_dir))
@@ -1472,7 +1479,7 @@ class AdminThemesControllerCore extends AdminController
 						$imported_theme = $this->importThemeXmlConfig(simplexml_load_file($sandbox.'uploaded/Config.xml'));
 						if (Validate::isLoadedObject($imported_theme))
 						{
-							if (!copy($sandbox.'uploaded/Config.xml', _PS_ROOT_DIR_.'/config/xml/'.$imported_theme->directory.'.xml'))
+							if (!copy($sandbox.'uploaded/Config.xml', _PS_ROOT_DIR_.'/config/xml/themes/'.$imported_theme->directory.'.xml'))
 								$this->errors[] = $this->l('Can\'t copy configuration file');
 
 							$target_dir = _PS_ALL_THEMES_DIR_.$imported_theme->directory;
@@ -1548,6 +1555,7 @@ class AdminThemesControllerCore extends AdminController
 		if (isset($xml->variations->variation[0]['default_right_column']))
 			$new_theme->default_right_column = (bool)strval($xml->variations->variation[0]['default_right_column']);
 
+		$fill_default_meta = true;
 		$metas_xml = array();
 		if ($xml->metas->meta)
 		{
@@ -1560,22 +1568,29 @@ class AdminThemesControllerCore extends AdminController
 					$tmp_meta['id_meta'] = (int)$meta_id;
 					$tmp_meta['left'] = intval($meta['left']);
 					$tmp_meta['right'] = intval($meta['right']);
-					$metas_xml[] = $tmp_meta;
+					$metas_xml[(int)$meta_id] = $tmp_meta;
 				}
 			}
+			$fill_default_meta = false;
+			if (count($xml->metas->meta) < (int)Db::getInstance()->getValue('SELECT count(*) FROM '._DB_PREFIX_.'meta'))
+				$fill_default_meta = true;
+
 		}
-		else
+
+		if ($fill_default_meta == true)
 		{
 			$metas = Db::getInstance()->executeS('SELECT id_meta FROM '._DB_PREFIX_.'meta');
 			foreach ($metas as $meta)
 			{
-				$tmp_meta['id_meta'] = (int)$meta['id_meta'];
-				$tmp_meta['left'] = 1;
-				$tmp_meta['right'] = 1;
-				$metas_xml[] = $tmp_meta;
+				if (!isset($metas_xml[(int)$meta['id_meta']]))
+				{
+					$tmp_meta['id_meta'] = (int)$meta['id_meta'];
+					$tmp_meta['left'] = $new_theme->default_left_column;
+					$tmp_meta['right'] = $new_theme->default_right_column;
+					$metas_xml[(int)$meta['id_meta']] = $tmp_meta;
+				}
 			}
 		}
-
 		if (!is_dir(_PS_ALL_THEMES_DIR_.$new_theme->directory))
 			mkdir(_PS_ALL_THEMES_DIR_.$new_theme->directory);
 
@@ -1735,8 +1750,8 @@ class AdminThemesControllerCore extends AdminController
 				{
 
 					$config_file = false;
-					$default_config = _PS_ROOT_DIR_.'/config/xml/default.xml';
-					$theme_config = _PS_ROOT_DIR_.'/config/xml/'.$theme_dir.'.xml';
+					$default_config = _PS_ROOT_DIR_.'/config/xml/themes/default.xml';
+					$theme_config = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme_dir.'.xml';
 
 					if (file_exists($theme_config))
 						$config_file = $theme_config;
@@ -2094,10 +2109,10 @@ class AdminThemesControllerCore extends AdminController
 		$theme = New Theme((int)Tools::getValue('id_theme'));
 
 		$xml = false;
-		if (file_exists(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml');
-		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/default.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/default.xml');
+		if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
+			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml');
+		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/default.xml'))
+			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/default.xml');
 
 		if ($xml)
 		{
@@ -2139,7 +2154,8 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'submit' => array(
 						'title' => $this->l('Save'),
-					)
+					),
+					'desc' => $this->l('The themes include their own modules in order to work properly. This option determines which module should be enabled or disabled. If you are unsure of what to do next, just press the "Save" button and proceed to the next step.')
 				)
 			);
 
@@ -2157,8 +2173,8 @@ class AdminThemesControllerCore extends AdminController
 					'expand' => array(
 						'print_total' => count($to_install),
 						'default' => 'show',
-						'show' => array('text' => $this->l('show'), 'icon' => 'plus-sign-alt'),
-						'hide' => array('text' => $this->l('hide'), 'icon' => 'minus-sign-alt')
+						'show' => array('text' => $this->l('Show'), 'icon' => 'plus-sign-alt'),
+						'hide' => array('text' => $this->l('Hide'), 'icon' => 'minus-sign-alt')
 					),
 				);
 			if (count($to_enable) > 0)
@@ -2174,8 +2190,8 @@ class AdminThemesControllerCore extends AdminController
 					'expand' => array(
 						'print_total' => count($to_enable),
 						'default' => 'show',
-						'show' => array('text' => $this->l('show'), 'icon' => 'plus-sign-alt'),
-						'hide' => array('text' => $this->l('hide'), 'icon' => 'minus-sign-alt')
+						'show' => array('text' => $this->l('Show'), 'icon' => 'plus-sign-alt'),
+						'hide' => array('text' => $this->l('Hide'), 'icon' => 'minus-sign-alt')
 					),
 				);
 			if (count($to_disable) > 0)
@@ -2191,8 +2207,8 @@ class AdminThemesControllerCore extends AdminController
 					'expand' => array(
 						'print_total' => count($to_disable),
 						'default' => 'show',
-						'show' => array('text' => $this->l('show'), 'icon' => 'plus-sign-alt'),
-						'hide' => array('text' => $this->l('hide'), 'icon' => 'minus-sign-alt')
+						'show' => array('text' => $this->l('Show'), 'icon' => 'plus-sign-alt'),
+						'hide' => array('text' => $this->l('Hide'), 'icon' => 'minus-sign-alt')
 					),
 				);
 			$shops = array();
@@ -2213,10 +2229,10 @@ class AdminThemesControllerCore extends AdminController
 					continue;
 
 				$old_xml_name = 'default.xml';
-				if (file_exists(_PS_ROOT_DIR_.'/config/xml/'.$shop_theme->directory.'.xml'))
+				if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$shop_theme->directory.'.xml'))
 					$old_xml_name = $shop_theme->directory.'.xml';
 
-				$shop_xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$old_xml_name);
+				$shop_xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$old_xml_name);
 				$theme_shop_module = $this->getModules($shop_xml);
 
 				$to_shop_uninstall = array_merge($theme_shop_module['to_install'], $theme_shop_module['to_enable']);
@@ -2248,8 +2264,8 @@ class AdminThemesControllerCore extends AdminController
 					'expand' => array(
 						'print_total' => count($to_shop_uninstall_formated),
 						'default' => 'show',
-						'show' => array('text' => $this->l('show'), 'icon' => 'plus-sign-alt'),
-						'hide' => array('text' => $this->l('hide'), 'icon' => 'minus-sign-alt')
+						'show' => array('text' => $this->l('Show'), 'icon' => 'plus-sign-alt'),
+						'hide' => array('text' => $this->l('Hide'), 'icon' => 'minus-sign-alt')
 					),
 					'name' => 'to_disable_shop'.$shop['id_shop']
 				);
@@ -2355,10 +2371,10 @@ class AdminThemesControllerCore extends AdminController
 			$shops = Tools::getValue('checkBoxShopAsso_theme');
 
 		$xml = false;
-		if (file_exists(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/'.$theme->directory.'.xml');
-		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/default.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/default.xml');
+		if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
+			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml');
+		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/default.xml'))
+			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/default.xml');
 
 		if ($xml)
 		{

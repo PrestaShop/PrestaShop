@@ -93,7 +93,7 @@
 		<div class="col-md-8 col-lg-7" id="hookDashboardZoneTwo">
 			{$hookDashboardZoneTwo}
 			<div id="dashaddons" class="row-margin-bottom">
-				<a href="http://addons.prestashop.com/208-dashboards?utm_source=backoffice_dashboard" target="_blank">
+				<a href="http://addons.prestashop.com/en/209-dashboards?utm_source=backoffice_dashboard" target="_blank">
 					<i class="icon-plus"></i> {l s='Add more graph and data'}
 				</a>
 			</div>
@@ -102,6 +102,7 @@
 			<section class="dash_news panel">
 				<h3><i class="icon-rss"></i> PrestaShop News</h3>
 				<div class="dash_news_content"></div>
+				<div class="text-center"><h4><a href="http://www.prestashop.com/blog/" onclick="return !window.open(this.href);">{l s='PrestaShop Blog'}</a></h4>
 			</section>
 
 			<section id="dash_version" class="visible-lg">

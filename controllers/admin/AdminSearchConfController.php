@@ -67,14 +67,14 @@ class AdminSearchConfControllerCore extends AdminController
 
 		$this->fields_options = array(
 			'indexation' => array(
-				'title' => $this->l('Indexation'),
+				'title' => $this->l('Indexing'),
 				'icon' => 'icon-cogs',
 				'info' =>
 						$this->l('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a Front Office search.').'<br />
 						'.$this->l('Indexed products').' <strong>'.(int)$indexed.' / '.(int)$total.'</strong>.
 						</p>
 						<p>'.$this->l('Building the product index may take a few minutes.')
-						.$this->l('If your server stops before the process ends, you can resume the indexation by clicking "Add missing products."').'</p>
+						.$this->l('If your server stops before the process ends, you can resume the indexing by clicking "Add missing products."').'</p>
 						<a href="searchcron.php?token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="btn-link"><i class="icon-external-link-sign"></i> '.
 							$this->l('Add missing products to the index.').'</a><br />
 						<a href="searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="btn-link"><i class="icon-external-link-sign"></i> '.
@@ -82,11 +82,11 @@ class AdminSearchConfControllerCore extends AdminController
 						'.$this->l('You can set a cron job that will rebuild your index using the following URL:').' <a href="'.$cron_url.'"><i class="icon-external-link-sign"></i> '.$cron_url.'</a>',
 				'fields' =>	array(
 					'PS_SEARCH_INDEXATION' => array(
-						'title' => $this->l('Indexation'),
+						'title' => $this->l('Indexing'),
 						'validation' => 'isBool',
 						'type' => 'bool',
 						'cast' => 'intval',
-						'desc' => $this->l('Enable the automatic indexation of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.')
+						'desc' => $this->l('Enable the automatic indexing of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.')
 					)
 				),
 				'submit' => array('title' => $this->l('Save'))

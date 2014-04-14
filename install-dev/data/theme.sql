@@ -174,7 +174,7 @@ UPDATE `PREFIX_hook_module` SET position = 1
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockwishlist')
 AND id_hook = @id_hook;
 UPDATE `PREFIX_hook_module` SET position = 2
-WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'productpaymentlogo')
+WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'productpaymentlogos')
 AND id_hook = @id_hook;
 
 INSERT INTO `PREFIX_linksmenutop` (`id_linksmenutop`, `id_shop`, `new_window`) VALUES (1, 1, 1);

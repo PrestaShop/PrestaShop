@@ -147,7 +147,7 @@ $(document).ready(function(){
 		});
 	}
 	//add a link on the span 'view full size' and on the big image
-	$(document).on('click', '#view_full_size, #image-block img', function(e){
+	$(document).on('click', '#view_full_size, #image-block', function(e){
 		$('#views_block .shown').click();
 	});
 
@@ -207,8 +207,8 @@ $(document).ready(function(){
 		if(!!$.prototype.fancybox)
 			$('.fancybox').fancybox({
 				'hideOnContentClick': true,
-				'transitionIn'	: 'elastic',
-				'transitionOut'	: 'elastic'
+				'openEffect'	: 'elastic',
+				'closeEffect'	: 'elastic'
 			});
 	}
 	else
@@ -216,12 +216,16 @@ $(document).ready(function(){
 		$(document).on('click', '.fancybox', function(e){
 			e.preventDefault();
 		});
-		$(document).on('click', '#bigpic', function(e){
+
+		$(document).on('click', '#image-block', function(e){
 			e.preventDefault();
 			var productUrl= window.document.location.href + '';
 			var data = productUrl.replace('content_only=1', '');
 			window.parent.document.location.href = data;
 		});
+
+		if (typeof ajax_allowed != 'undefined' && !ajax_allowed)
+			$('#buy_block').attr('target', '_top');
 	}
 
 	if (!!$.prototype.bxSlider)

@@ -6,13 +6,13 @@
     <field name="position"/>
   </fields>
   <entities>
-    <category_product id="category_product_2_1" id_category="category_2" id_product="Faded_Short_Sleeve_T-shirts" position="0"/>
-    <category_product id="category_product_2_2" id_category="category_2" id_product="Blouse" position="1"/>
-    <category_product id="category_product_2_3" id_category="category_2" id_product="Printed_Dress" position="2"/>
-    <category_product id="category_product_2_4" id_category="category_2" id_product="Printed_Dress_1" position="3"/>
-    <category_product id="category_product_2_5" id_category="category_2" id_product="Printed_Summer_Dress" position="4"/>
-    <category_product id="category_product_2_6" id_category="category_2" id_product="Printed_Summer_Dress_1" position="5"/>
-    <category_product id="category_product_2_7" id_category="category_2" id_product="Printed_Chiffon_Dress" position="6"/>
+    <category_product id="category_product_2_1" id_category="2" id_product="Faded_Short_Sleeve_T-shirts" position="0"/>
+    <category_product id="category_product_2_2" id_category="2" id_product="Blouse" position="1"/>
+    <category_product id="category_product_2_3" id_category="2" id_product="Printed_Dress" position="2"/>
+    <category_product id="category_product_2_4" id_category="2" id_product="Printed_Dress_1" position="3"/>
+    <category_product id="category_product_2_5" id_category="2" id_product="Printed_Summer_Dress" position="4"/>
+    <category_product id="category_product_2_6" id_category="2" id_product="Printed_Summer_Dress_1" position="5"/>
+    <category_product id="category_product_2_7" id_category="2" id_product="Printed_Chiffon_Dress" position="6"/>
     <category_product id="category_product_3_1" id_category="Women" id_product="Faded_Short_Sleeve_T-shirts" position="0"/>
     <category_product id="category_product_3_2" id_category="Women" id_product="Blouse" position="1"/>
     <category_product id="category_product_3_3" id_category="Women" id_product="Printed_Dress" position="2"/>

@@ -508,7 +508,7 @@ class ProductCore extends ObjectModel
 	{
 		if (!parent::add($autodate, $null_values))
 			return false;
-			
+
 		if ($this->getType() == Product::PTYPE_VIRTUAL)
 		{
 			StockAvailable::setProductOutOfStock((int)$this->id, 1);
@@ -2069,7 +2069,7 @@ class ProductCore extends ObjectModel
 		$sql = new DbQuery();
 		$sql->select(
 			'p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
-			pl.`meta_keywords`, pl.`meta_title`, pl.`name`, MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` AS manufacturer_name,
+			pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`, MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` AS manufacturer_name,
 			product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'" as new'
 		);
 
@@ -2196,7 +2196,7 @@ class ProductCore extends ObjectModel
 				return false;
 
 			$sql = 'SELECT p.*, product_shop.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
-						pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
+						pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
 						p.`ean13`, p.`upc`, MAX(image_shop.`id_image`) id_image, il.`legend`,
 						DATEDIFF(product_shop.`date_add`, DATE_SUB(NOW(),
 						INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
@@ -3223,7 +3223,7 @@ class ProductCore extends ObjectModel
 			$context = Context::getContext();
 
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`,
-					pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
+					pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
 					MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` as manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(
 						p.`date_add`,
