@@ -107,11 +107,13 @@
 				if (product_type == product_type_pack)
 				{
 					$('a[id*="VirtualProduct"]').hide();
+					$('a[id*="Combinations"]').hide();
 				}
 				else if (product_type == product_type_virtual)
 				{
 					$('a[id*="Pack"]').hide();
 					$('a[id*="Shipping"]').hide();
+					$('a[id*="Combinations"]').hide();
 				}
 				else
 				{
@@ -234,7 +236,6 @@
 					return typeIsPack;
 				}
 				$("#product_form").validate({
-					debug: true,
 					ignore: [],
 					rules: {
 						inputPackItems: {

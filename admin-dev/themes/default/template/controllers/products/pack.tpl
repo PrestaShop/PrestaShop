@@ -24,13 +24,6 @@
 *}
 
 <input type="hidden" name="submitted_tabs[]" value="Pack" />
-
-<!-- <div class="alert alert-info">{l s='You cannot add combinations to a pack.'}</div> -->
-<!-- <div class="ppack">
-	<label class="t" for="ppack">{l s='Pack'}</label>
-	<input type="checkbox" name="ppack" id="ppack" value="1" />
-</div> -->
-
 <hr>
 <div class="form-group listOfPack">
 	<label class="control-label col-lg-3 product_description">
