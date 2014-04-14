@@ -1014,6 +1014,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 						$this->output = $this->objOutput->renderEntity($image, 1);
 						$image_content = array('sqlId' => 'content', 'value' => base64_encode(file_get_contents($this->imgToDisplay)), 'encode' => 'base64');
 						$this->output .= $this->objOutput->objectRender->renderField($image_content);
+						
+						Hook::exec('actionWatermark', array('id_image' => $image->id, 'id_product' => $product->id));
 					}
 					elseif (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores')))
 					{
