@@ -22,5 +22,4 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{counter name=active_li assign=active_li}
-<li{if $active_li == 1} class="active"{/if}><a data-toggle="tab" href="#blockbestsellers" class="blockbestsellers">{l s='Best Sellers' mod='blockbestsellers'}</a></li>
+<li><a data-toggle="tab" href="#blockbestsellers" class="blockbestsellers">{l s='Best Sellers' mod='blockbestsellers'}</a></li>
