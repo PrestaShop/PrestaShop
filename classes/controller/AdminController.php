@@ -3047,9 +3047,8 @@ class AdminControllerCore extends Controller
 		foreach ($fields as $field => $params) {
 			if (array_key_exists('lang', $params) && $params['lang']) {
 				foreach ($languages as $language) {
-					if (isset($_POST[$field.'_'.(int)$language['id_lang']])) {
-						$object->{$field}[(int)$language['id_lang']] = $_POST[$field.'_'.(int)$language['id_lang']];
-					}
+					if (Tools::getValue($field.'_'.(int)($language['id_lang'])))
+						$object->{$field}[(int)($language['id_lang'])] = Tools::getValue($field.'_'.(int)($language['id_lang']));
 				}
 			}
 		}
