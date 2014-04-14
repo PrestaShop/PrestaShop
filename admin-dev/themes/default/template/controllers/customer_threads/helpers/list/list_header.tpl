@@ -26,9 +26,7 @@
 {extends file="helpers/list/list_header.tpl"}
 
 {block name="leadin"}
-
 	<div id="CustomerThreadContacts" class="row">
-
 		{assign var=nb_categories value=count($categories)}
 		{foreach $categories as $key => $val}
 
@@ -41,7 +39,6 @@
 					{assign var=id_customer_thread value=$tmp2.id_customer_thread}
 				{/if}
 			{/foreach}
-
 			<div class="col-lg-3">
 				<div class="panel">
 					<div class="panel-heading">
@@ -61,21 +58,19 @@
 				</div>
 			</div>
 		{/foreach}
-
 		<div class="col-lg-3">
 			<div id="MeaningStatus" class="panel">
 				<div class="panel-heading">
 					{l s='Meaning of status'}
 				</div>
 				<ul class="list-unstyled">
-					<li class="label label-success">{l s='Open'}</li>
-					<li class="label label-danger">{l s='Closed'}</li>
-					<li class="label label-warning">{l s='Pending 1'}</li>
-					<li class="label label-warning">{l s='Pending 2'}</li>
+					<li class="text-success"><i class="icon-circle"></i> {l s='Open'}</li>
+					<li class="text-danger"><i class="icon-circle"></i> {l s='Closed'}</li>
+					<li class="text-warning"><i class="icon-circle"></i> {l s='Pending 1'}</li>
+					<li class="text-warning"><i class="icon-circle"></i> {l s='Pending 2'}</li>
 				</ul>
 			</div>
 		</div>
-
 		<div class="col-lg-3">
 			<div id="CustomerService" class="panel">
 				<div class="panel-heading">

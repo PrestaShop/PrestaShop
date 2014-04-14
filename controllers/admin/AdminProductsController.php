@@ -178,10 +178,11 @@ class AdminProductsControllerCore extends AdminController
 		$this->_join .= ' JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = '.$id_shop.')
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = '.$id_shop.')
 				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.$id_shop.') 
-				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')';
+				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')
+				LEFT JOIN `'._DB_PREFIX_.'product_download` pd ON (pd.`id_product` = a.`id_product`)';
 		
 		$this->_select .= 'shop.name as shopname, a.id_shop_default, ';
-		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`, IF(sav.`quantity`<=0, 1, 0 ) badge_danger';
+		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, a.`is_virtual`, pd.`nb_downloadable`, sav.`quantity` as sav_quantity, '.$alias.'.`active`, IF(sav.`quantity`<=0, 1, 0) badge_danger';
 		
 		if ($join_category)
 		{
@@ -267,6 +268,14 @@ class AdminProductsControllerCore extends AdminController
 				'align' => 'center',
 				'position' => 'position'
 			);
+	}
+
+	public static function getQuantities($echo, $tr)
+	{
+		if ((int)$tr['is_virtual'] == 1 && $tr['nb_downloadable'] == 0)
+			return '&infin;';
+		else
+			return $echo;
 	}
 
 	public function setMedia()
@@ -1184,6 +1193,26 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initProcess()
 	{
+		if (Tools::isSubmit('submitAddproductAndStay') || Tools::isSubmit('submitAddproduct'))
+		{
+			$this->id_object = (int)Tools::getValue('id_product');
+			$this->object = new Product($this->id_object);
+
+			if ((bool)$this->object->is_virtual && (int)Tools::getValue('type_product') != 2)
+			{
+				if (!($id_product_download = ProductDownload::getIdFromIdProduct($this->id_object)))
+					$this->errors[] = Tools::displayError('Cannot retrieve file');
+				else
+				{
+					$product_download = new ProductDownload((int)$id_product_download);
+
+					if (!$product_download->deleteFile((int)$id_product_download))
+						$this->errors[] = Tools::displayError('Cannot delete file');
+				}
+
+			}
+		}
+
 		// Delete a product in the download folder
 		if (Tools::getValue('deleteVirtualProduct'))
 		{
@@ -1816,6 +1845,8 @@ class AdminProductsControllerCore extends AdminController
 	
 	public function processUpdate()
 	{
+		$existing_product = $this->object;
+
 		$this->checkProduct();
 
 		if (!empty($this->errors))
@@ -1866,6 +1897,15 @@ class AdminProductsControllerCore extends AdminController
 
 				if ($object->update())
 				{
+					// If the product doesn't exist in the current shop but exists in another shop
+					if (Shop::getContext() == Shop::CONTEXT_SHOP && !$existing_product->isAssociatedToShop($this->context->shop->id))
+					{
+						$out_of_stock = StockAvailable::outOfStock($existing_product->id, $existing_product->id_shop_default);
+						$depends_on_stock = StockAvailable::dependsOnStock($existing_product->id, $existing_product->id_shop_default);
+						StockAvailable::setProductOutOfStock((int)$this->object->id, $out_of_stock, $this->context->shop->id);
+						StockAvailable::setProductDependsOnStock((int)$this->object->id, $depends_on_stock, $this->context->shop->id);
+					}
+
 					PrestaShopLogger::addLog(sprintf($this->l('%s edition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 					if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL)))
 					{
@@ -1888,6 +1928,7 @@ class AdminProductsControllerCore extends AdminController
 							$this->processCustomizationConfiguration();
 						if ($this->isTabSubmitted('Attachments'))
 							$this->processAttachments();
+
 
 						$this->updatePackItems($object);
 						// Disallow avanced stock management if the product become a pack
@@ -4459,7 +4500,7 @@ class AdminProductsControllerCore extends AdminController
 				if (Tools::getValue('value') === false)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
 				if ((int)Tools::getValue('value') != 0 && (int)Tools::getValue('value') != 1)
-					die (Tools::jsonEncode(array('error' =>  $this->l('Uncorrect value'))));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Incorrect value'))));
 				if (!$product->advanced_stock_management && (int)Tools::getValue('value') == 1)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Not possible if advanced stock management is disabled. '))));
 				if ($product->advanced_stock_management && Pack::isPack($product->id))
@@ -4472,7 +4513,7 @@ class AdminProductsControllerCore extends AdminController
 				if (Tools::getValue('value') === false)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
 				if (!in_array((int)Tools::getValue('value'), array(0, 1, 2)))
-					die (Tools::jsonEncode(array('error' =>  $this->l('Uncorrect value'))));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Incorrect value'))));
 
 				StockAvailable::setProductOutOfStock($product->id, (int)Tools::getValue('value'));
 				break;
@@ -4498,7 +4539,7 @@ class AdminProductsControllerCore extends AdminController
 				if (Tools::getValue('value') === false)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
 				if ((int)Tools::getValue('value') != 1 && (int)Tools::getValue('value') != 0)
-					die (Tools::jsonEncode(array('error' =>  $this->l('Uncorrect value'))));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Incorrect value'))));
 				if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)Tools::getValue('value') == 1)
 					die (Tools::jsonEncode(array('error' =>  $this->l('Not possible if advanced stock management is disabled. '))));
 				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && Pack::isPack($product->id))

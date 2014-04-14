@@ -6,6 +6,7 @@
 .svn
 .DS_Store
 .sass-cache
+config.codekit
 *.sublime-project
 *.sublime-workspace
 robots.txt
@@ -60,6 +61,7 @@ modules/*/mails/*
 !modules/*/mails/en
 translations/*
 !translations/*.gzip
+modules/awesomehosting
 modules/atos/*
 modules/addshoppers
 modules/alliedwallet

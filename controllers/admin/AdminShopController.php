@@ -251,6 +251,9 @@ class AdminShopControllerCore extends AdminController
 
 		$result = parent::postProcess();
 
+		if ($result !== false && (Tools::isSubmit('submitAddshopAndStay') || Tools::isSubmit('submitAddshop')) && (int)$result->id_category != (int)Configuration::get('PS_HOME_CATEGORY', null, null, (int)$result->id))
+			Configuration::updateValue('PS_HOME_CATEGORY', (int)$result->id_category, false, null, (int)$result->id);
+
 		if ($this->redirect_after)
 			$this->redirect_after .= '&id_shop_group='.$this->id_shop_group;
 
@@ -642,13 +645,7 @@ class AdminShopControllerCore extends AdminController
 			return;
 		}
 
-		// specific import for stock
-		if (isset($import_data['stock_available']) && isset($import_data['product']) && Tools::isSubmit('useImportData'))
-		{
-			$id_src_shop = (int)Tools::getValue('importFromShop');
-			if ($object->getGroup()->share_stock == false)
-				StockAvailable::copyStockAvailableFromShopToShop($id_src_shop, $object->id);
-		}
+		$object->associateSuperAdmins();
 
 		$categories = Tools::getValue('categoryBox');
 		array_unshift($categories, Configuration::get('PS_ROOT_CATEGORY'));
@@ -708,7 +705,7 @@ class AdminShopControllerCore extends AdminController
 						'icon' => 'themes/'.$this->context->employee->bo_theme.'/img/tree-multishop-groups.png',
 						'attr' => array(
 							'href' => $this->context->link->getAdminLink('AdminShop').'&id_shop_group='.$id_shop_group,
-							'title' => sprintf($this->l('Click here to display the shops in group %s', 'AdminShop', false, false), $row['group_name']),
+							'title' => sprintf($this->l('Click here to display the shops in the %s shop group', 'AdminShop', false, false), $row['group_name']),
 						),
 					),
 					'attr' => array(
@@ -728,7 +725,7 @@ class AdminShopControllerCore extends AdminController
 						'icon' => 'themes/'.$this->context->employee->bo_theme.'/img/tree-multishop-shop.png',
 						'attr' => array(
 							'href' => $this->context->link->getAdminLink('AdminShopUrl').'&id_shop='.$id_shop,
-							'title' => sprintf($this->l('Click here to display the URLs of shops %s', 'AdminShop', false, false), $row['shop_name']),
+							'title' => sprintf($this->l('Click here to display the URLs of the %s shop', 'AdminShop', false, false), $row['shop_name']),
 						)
 					),
 					'attr' => array(

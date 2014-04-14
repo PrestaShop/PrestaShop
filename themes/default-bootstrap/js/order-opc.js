@@ -893,60 +893,58 @@ function multishippingMode(it)
 		$('.address_add a').attr('href', addressMultishippingUrl);
 		
 		$(document).on('click', '#link_multishipping_form', function(e){
-			$.fancybox({
-			'transitionIn': 'elastic',
-			'transitionOut': 'elastic',
-			'type': 'ajax',
-			'href':     this.href,
-			'beforeClose': function()
-			{
-				// Reload the cart
-				$.ajax({
-					type: 'POST',
-					headers: { "cache-control": "no-cache" },
-					url: orderOpcUrl + '?rand=' + new Date().getTime(),
-					data: 'ajax=true&method=cartReload',
-					dataType : 'html',
-					cache: false,
-					success: function(data) {
-						$('#cart_summary').replaceWith($(data).find('#cart_summary'));
-						$('.cart_quantity_input').typeWatch({ highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, true, this.el); } });
-					}
-				});
-				updateCarrierSelectionAndGift();
-			},
-			'beforeLoad': function()
-			{
-				// Removing all ids on the cart to avoid conflic with the new one on the fancybox
-				// This action could "break" the cart design, if css rules use ids of the cart
-				$.each($('#cart_summary *'), function(it, el) {
-					$(el).attr('id', '');
-				});
-			},
-			'afterLoad': function()
-			{
-				$('.fancybox-inner .cart_quantity_input').typeWatch({ highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, false, this.el);} });
-				cleanSelectAddressDelivery();
-				$('.fancybox-outer').append($('<div class="multishipping_close_container"><a id="multishipping-close" class="btn btn-default button button-small" href="#"><span>'+CloseTxt+'</span></a></div>'));
-				$(document).on('click', '#multishipping-close', function(e){
-					var newTotalQty = 0;
-					$('.fancybox-inner .cart_quantity_input').each(function(){
-						newTotalQty += parseInt($(this).val());
-					});
-					if (newTotalQty !== totalQty) {
-						if(!confirm(QtyChanged)) {
+			if(!!$.prototype.fancybox)
+				$.fancybox({
+					'openEffect': 'elastic',
+					'closeEffect': 'elastic',
+					'type': 'ajax',
+					'href':     this.href,
+					'beforeClose': function(){
+						// Reload the cart
+						$.ajax({
+							type: 'POST',
+							headers: { "cache-control": "no-cache" },
+							url: orderOpcUrl + '?rand=' + new Date().getTime(),
+							data: 'ajax=true&method=cartReload',
+							dataType : 'html',
+							cache: false,
+							success: function(data) {
+								$('#cart_summary').replaceWith($(data).find('#cart_summary'));
+								$('.cart_quantity_input').typeWatch({ highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, true, this.el); } });
+							}
+						});
+						updateCarrierSelectionAndGift();
+					},
+					'beforeLoad': function(){
+						// Removing all ids on the cart to avoid conflic with the new one on the fancybox
+						// This action could "break" the cart design, if css rules use ids of the cart
+						$.each($('#cart_summary *'), function(it, el) {
+							$(el).attr('id', '');
+						});
+					},
+					'afterLoad': function(){
+						$('.fancybox-inner .cart_quantity_input').typeWatch({ highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, false, this.el);} });
+						cleanSelectAddressDelivery();
+						$('.fancybox-outer').append($('<div class="multishipping_close_container"><a id="multishipping-close" class="btn btn-default button button-small" href="#"><span>'+CloseTxt+'</span></a></div>'));
+						$(document).on('click', '#multishipping-close', function(e){
+							var newTotalQty = 0;
+							$('.fancybox-inner .cart_quantity_input').each(function(){
+								newTotalQty += parseInt($(this).val());
+							});
+							if (newTotalQty !== totalQty) {
+								if(!confirm(QtyChanged)) {
+									return false;
+								}
+							}
+							$.fancybox.close();
 							return false;
-						}
+						});
+						totalQty = 0;
+						$('.fancybox-inner .cart_quantity_input').each(function(){
+							totalQty += parseInt($(this).val());
+						});
 					}
-					$.fancybox.close();
-					return false;
 				});
-				totalQty = 0;
-				$('.fancybox-inner .cart_quantity_input').each(function(){
-					totalQty += parseInt($(this).val());
-				});
-			}
-			})
 		});
 	}
 	else

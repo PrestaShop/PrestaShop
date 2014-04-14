@@ -232,13 +232,13 @@ $(document).ready(function () {
 		</div>
 	</div>
 
-	{if $ps_tax && $country_display_tax_label}
+	{if isset($product->unity) && $product->unity}
 	<div class="form-group">
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert alert-warning">
 				<span>{l s='or'}
 					{$currency->prefix}<span id="unit_price_with_tax">0.00</span>{$currency->suffix}
-					{l s='per'} <span id="unity_second">{$product->unity}</span> {l s='with tax.'}
+					{l s='per'} <span id="unity_second">{$product->unity}</span>{if $ps_tax && $country_display_tax_label} {l s='with tax.'}{/if}
 				</span>
 			</div>
 		</div>
@@ -267,9 +267,9 @@ $(document).ready(function () {
 					{$currency->prefix}
 					<span id="finalPrice" >0.00</span>
 					{$currency->suffix}
-					<span {if $ps_tax}style="display:none;"{/if}> ({l s='tax incl.'})</span>
+					<span{if !$ps_tax} style="display:none;"{/if}> ({l s='tax incl.'})</span>
 				</span>
-				<span {if $ps_tax}style="display:none;"{/if} >
+				<span{if !$ps_tax} style="display:none;"{/if} >
 				{if $country_display_tax_label}
 					/
 				{/if}

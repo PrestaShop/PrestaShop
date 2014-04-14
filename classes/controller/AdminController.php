@@ -489,7 +489,7 @@ class AdminControllerCore extends Controller
 	
 	public function addFiltersToBreadcrumbs()
 	{
-		if (Tools::isSubmit('submitFilter') && is_array($this->fields_list))
+		if ($this->filter && is_array($this->fields_list))
 		{
 			$filters = array();
 			foreach ($this->fields_list as $field => $t)
@@ -729,7 +729,7 @@ class AdminControllerCore extends Controller
 					$this->content = 'ok';
 			}
 		}
-		$this->errors[] = Tools::displayError('An error occurred while attempting to delet the image. (cannot load object).');
+		$this->errors[] = Tools::displayError('An error occurred while attempting to delete the image. (cannot load object).');
 		return $object;
 	}
 	
@@ -1354,7 +1354,7 @@ class AdminControllerCore extends Controller
 		}
 		else
 		{
-			$this->errors[] = Tools::displayError('The object cannot be loaded (the dentifier is missing or invalid)');
+			$this->errors[] = Tools::displayError('The object cannot be loaded (the identifier is missing or invalid)');
 			return false;
 		}
 	}
@@ -2065,6 +2065,10 @@ class AdminControllerCore extends Controller
 	{
 	}
 
+	public function renderModals()
+	{
+	}
+
 	/**
 	 * Function used to render the options for this controller
 	 */
@@ -2150,26 +2154,17 @@ class AdminControllerCore extends Controller
 		$this->helper = $helper;
 	}
 	
-	public function setDeprecatedMedia()
-	{
-		//$this->addCSS(__PS_BASE_URI__.$admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-old.css', 'all', 1);
-		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/backward-admin-bootstrap-reset.css', 'all', 2);
-		
-	}
+	// @deprecated 1.6.0
+	public function setDeprecatedMedia(){}
 
 	public function setMedia()
 	{
 		//Bootstrap + Specific Admin Theme
 		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
-
-		//Deprecated stylesheets + reset bootstrap style for the #nobootstrap field - Backward compatibility
-		if (!$this->bootstrap)
-			$this->setDeprecatedMedia();
-		
-		//RTL Support moved to footer
+		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', 99);
 
 		$this->addJquery();
-		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize'));
+		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox'));
 		$this->addjQueryPlugin('growl', null, false);
 		$this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
@@ -2245,7 +2240,7 @@ class AdminControllerCore extends Controller
 		{
 			if (isset($this->context->employee))
 				$this->context->employee->logout();
-			Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound') ? '&redirect='.$this->controller_name : ''));
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound' && Tools::getValue('controller')) ? '&redirect='.$this->controller_name : ''));
 		}
 
 		// Set current index
@@ -2697,49 +2692,68 @@ class AdminControllerCore extends Controller
 				$having_clause .= $this->_having.' ';
 		}
 
-		$this->_listsql = '
-		SELECT SQL_CALC_FOUND_ROWS
-		'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '');
-		
-		if ($this->explicitSelect)
+		do
 		{
-			foreach ($this->fields_list as $key => $array_value)
-			{
-				// Add it only if it is not already in $this->_select
-				if (isset($this->_select) && preg_match('/[\s]`?'.preg_quote($key, '/').'`?\s*,/', $this->_select))
-					continue;
+			$this->_listsql = '
+			SELECT SQL_CALC_FOUND_ROWS
+			'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '');
 			
-				if (isset($array_value['filter_key']))
-					$this->_listsql .= str_replace('!', '.', $array_value['filter_key']).' as '.$key.',';
-				elseif ($key == 'id_'.$this->table)
-					$this->_listsql .= 'a.`'.bqSQL($key).'`,';
-				elseif ($key != 'image' && !preg_match('/'.preg_quote($key, '/').'/i', $this->_select))
-					$this->_listsql .= '`'.bqSQL($key).'`,';
+			if ($this->explicitSelect)
+			{
+				foreach ($this->fields_list as $key => $array_value)
+				{
+					// Add it only if it is not already in $this->_select
+					if (isset($this->_select) && preg_match('/[\s]`?'.preg_quote($key, '/').'`?\s*,/', $this->_select))
+						continue;
+				
+					if (isset($array_value['filter_key']))
+						$this->_listsql .= str_replace('!', '.', $array_value['filter_key']).' as '.$key.',';
+					elseif ($key == 'id_'.$this->table)
+						$this->_listsql .= 'a.`'.bqSQL($key).'`,';
+					elseif ($key != 'image' && !preg_match('/'.preg_quote($key, '/').'/i', $this->_select))
+						$this->_listsql .= '`'.bqSQL($key).'`,';
+				}
+				$this->_listsql = rtrim($this->_listsql, ',');
 			}
-			$this->_listsql = rtrim($this->_listsql, ',');
-		}
-		else
-			$this->_listsql .= ($this->lang ? 'b.*,' : '').' a.*';
+			else
+				$this->_listsql .= ($this->lang ? 'b.*,' : '').' a.*';
 
-		$this->_listsql .= '
-		'.(isset($this->_select) ? ', '.rtrim($this->_select, ', ') : '').$select_shop.'
-		FROM `'._DB_PREFIX_.$sql_table.'` a
-		'.$lang_join.'
-		'.(isset($this->_join) ? $this->_join.' ' : '').'
-		'.$join_shop.'
-		WHERE 1 '.(isset($this->_where) ? $this->_where.' ' : '').($this->deleted ? 'AND a.`deleted` = 0 ' : '').
-		(isset($this->_filter) ? $this->_filter : '').$where_shop.'
-		'.(isset($this->_group) ? $this->_group.' ' : '').'
-		'.$having_clause.'
-		ORDER BY '.((str_replace('`', '', $order_by) == $this->identifier) ? 'a.' : '').$order_by.' '.pSQL($order_way).
-		($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
-		(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
+			$this->_listsql .= '
+			'.(isset($this->_select) ? ', '.rtrim($this->_select, ', ') : '').$select_shop.'
+			FROM `'._DB_PREFIX_.$sql_table.'` a
+			'.$lang_join.'
+			'.(isset($this->_join) ? $this->_join.' ' : '').'
+			'.$join_shop.'
+			WHERE 1 '.(isset($this->_where) ? $this->_where.' ' : '').($this->deleted ? 'AND a.`deleted` = 0 ' : '').
+			(isset($this->_filter) ? $this->_filter : '').$where_shop.'
+			'.(isset($this->_group) ? $this->_group.' ' : '').'
+			'.$having_clause.'
+			ORDER BY '.((str_replace('`', '', $order_by) == $this->identifier) ? 'a.' : '').$order_by.' '.pSQL($order_way).
+			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
+			(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
-		$this->_listTotal = 0;
-		if (!($this->_list = Db::getInstance()->executeS($this->_listsql, true, false)))
-			$this->_list_error = Db::getInstance()->getMsgError();
-		else
+			$this->_list = Db::getInstance()->executeS($this->_listsql, true, false);
+
+			if ($this->_list === false)
+			{
+				$this->_list_error = Db::getInstance()->getMsgError();
+				break;
+			}
+
 			$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`', false);
+
+			if ($use_limit === true)
+			{
+				$start = (int)$start - (int)$limit;
+				if ($start < 0)
+					break;
+			}
+			else
+			{
+				break;
+			}
+
+		} while (empty($this->_list));
 
 		Hook::exec('action'.$this->controller_name.'ListingResultsModifier', array(
 			'list' => &$this->_list,
@@ -3026,14 +3040,18 @@ class AdminControllerCore extends Controller
 			}
 
 		/* Multilingual fields */
-		$rules = call_user_func(array(get_class($object), 'getValidationRules'), get_class($object));
-		if (count($rules['validateLang']))
-		{
-			$languages = Language::getLanguages(false);
-			foreach ($languages as $language)
-				foreach (array_keys($rules['validateLang']) as $field)
-					if (isset($_POST[$field.'_'.(int)$language['id_lang']]))
+		$languages = Language::getLanguages(false);
+		$class = get_class($object);
+		$fields = $class::$definition['fields'];
+
+		foreach ($fields as $field => $params) {
+			if (array_key_exists('lang', $params) && $params['lang']) {
+				foreach ($languages as $language) {
+					if (isset($_POST[$field.'_'.(int)$language['id_lang']])) {
 						$object->{$field}[(int)$language['id_lang']] = $_POST[$field.'_'.(int)$language['id_lang']];
+					}
+				}
+			}
 		}
 	}
 
@@ -3369,7 +3387,7 @@ class AdminControllerCore extends Controller
 			$this->status = 'error';
 	}
 
-	public function isFresh($file, $timeout = 604800000)
+	public function isFresh($file, $timeout = 604800)
 	{
 		if (file_exists(_PS_ROOT_DIR_.$file) && filesize(_PS_ROOT_DIR_.$file) > 0)
 			return ((time() - filemtime(_PS_ROOT_DIR_.$file)) < $timeout);
@@ -3399,12 +3417,14 @@ class AdminControllerCore extends Controller
 		if (@filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$module->name
 			.DIRECTORY_SEPARATOR.'logo.png'))
 			$module->logo = 'logo.png';
-		$module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back);
+
 		$link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
 
 		$module->options['install_url'] = $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
 		$module->options['update_url'] = $link_admin_modules.'&update='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
 		$module->options['uninstall_url'] = $link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
+
+		$module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back);
 
 		$module->options['uninstall_onclick'] = ((!$module->onclick_option) ?
 			((empty($module->confirmUninstall)) ? 'return confirm(\''.$this->l('Do you really want to uninstall this module?').'\');' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') :
@@ -3572,6 +3592,15 @@ class AdminControllerCore extends Controller
 			'data-module' => $module->name
 		);
 
+		$update = array(
+			'href' => $module->options['update_url'],
+			'onclick' => '',
+			'title' => 'Update it!',
+			'text' => 'Update it!',
+			'icon' => 'refresh',
+			'cond' => $module->id,
+		);
+
 		$divider = array(
 			'href' => '#',
 			'onclick' => '',
@@ -3579,6 +3608,9 @@ class AdminControllerCore extends Controller
 			'text' => 'divider',
 			'cond' => $module->id,
 		);
+
+		if (isset($module->version_addons) && $module->version_addons)
+			$modules_options[] = $update;
 
 		if ($module->active)
 		{
@@ -3621,10 +3653,15 @@ class AdminControllerCore extends Controller
 			$modules_options[] = $remove_from_favorite;
 			$modules_options[] = $mark_as_favorite;
 		}
-		
+
+		if ($module->id == 0)
+		{
+			$install['cond'] = 1;
+			$modules_options[] = $install;
+		}
 		$modules_options[] = $divider;
 		$modules_options[] = $delete_module;
-		
+
 		$return = '';
 		foreach ($modules_options as $option_name => $option)
 		{

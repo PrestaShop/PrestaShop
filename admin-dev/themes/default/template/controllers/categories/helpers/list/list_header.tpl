@@ -64,19 +64,19 @@
 				<div class="radio">
 					<label for="deleteMode_linkanddisable">
 						<input type="radio" name="deleteMode" value="linkanddisable" id="deleteMode_linkanddisable" checked="checked" />
-						{l s='I want to associate the products without other categories with the parent category and then disable them.'} <strong>{l s='(Recommended)'}</strong>
+						{l s='I want to associate the products without other categories to the parent category, then disable these products for now. I re-enable them when they are moved in their new category.'} <strong>{l s='(Recommended)'}</strong>
 					</label>
 				</div>
 				<div class="radio">
 					<label for="deleteMode_link">
 						<input type="radio" name="deleteMode" value="link" id="deleteMode_link" />
-						{l s='I want to associate the products without other categories with the parent category.'}
+						{l s='I want to associate the products without other categories to the parent category, and keep them enabled.'}
 					</label>
 				</div>
 				<div class="radio">
 					<label for="deleteMode_delete">
 						<input type="radio" name="deleteMode" value="delete" id="deleteMode_delete" />
-						{l s='I want to remove products linked only within this category and no others.'}
+						{l s='I want to remove the products which are listed only within this category and no others.'}
 					</label>
 				</div>
 			{else}

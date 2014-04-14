@@ -96,7 +96,7 @@ class PasswordControllerCore extends FrontController
 							$this->errors[] = Tools::displayError('An error occurred while sending the email.');
 					}
 					else
-						$this->errors[] = Tools::displayError('An error occurred with your account, which prevents us from sending you a new password. Please report your this issue using the contact form.');
+						$this->errors[] = Tools::displayError('An error occurred with your account, which prevents us from sending you a new password. Please report this issue using the contact form.');
 				}
 			}
 			else

@@ -738,7 +738,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// re-defines fields_list
 		$this->fields_list = array(
 			'supplier_reference' => array(
-				'title' => $this->l('Supplier Reference'),
+				'title' => $this->l('Supplier reference'),
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
@@ -750,13 +750,13 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'search' => false,
 			),
 			'ean13' => array(
-				'title' => $this->l('EAN13'),
+				'title' => $this->l('EAN-13 or JAN barcode'),
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
 			),
 			'upc' => array(
-				'title' => $this->l('UPC'),
+				'title' => $this->l('UPC barcode'),
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
@@ -773,7 +773,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
-				'hint' => $this->l('Enter the quantity you received today.'),
+				'hint' => $this->l('The quantity that you received today.'),
 			),
 			'quantity_received' => array(
 				'title' => $this->l('Quantity received'),
@@ -782,7 +782,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'search' => false,
 				'badge_danger' => true,
 				'badge_success' => true,
-				'hint' => $this->l('Note that you can see details on the receptions - per products.'),
+				'hint' => $this->l('The quantity that you received so far.'),
 			),
 			'quantity_expected' => array(
 				'title' => $this->l('Quantity expected'),
@@ -795,7 +795,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
-				'hint' => $this->l('This is the quantity left to receive.'),
+				'hint' => $this->l('The quantity left to receive for this order.'),
 			)
 		);
 
@@ -1423,11 +1423,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 										 		true,
 										 		$supply_order->id);
 
-					if ($res)
-						StockAvailable::synchronize($supply_order_detail->id_product);
-					else
-						$this->errors[] = Tools::displayError('Something went wrong when adding products to the warehouse.');
-
 					$location = Warehouse::getProductLocation($supply_order_detail->id_product,
 										 					  $supply_order_detail->id_product_attribute,
 									 						  $warehouse->id);
@@ -1442,6 +1437,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						$supplier_receipt_history->add();
 						$supply_order_detail->save();
 						$supply_order->save();
+						StockAvailable::synchronize($supply_order_detail->id_product);
 					}
 					else
 						$this->errors[] = Tools::displayError('Something went wrong when setting warehouse on product record');
@@ -1473,7 +1469,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
     public function displayUpdateReceiptLink($token = null, $id)
     {
         if (!array_key_exists('Receipt', self::$cache_lang))
-            self::$cache_lang['Receipt'] = $this->l('Update ongoing receipt of products.');
+            self::$cache_lang['Receipt'] = $this->l('Update ongoing receipt of products');
 
         $this->context->smarty->assign(array(
             'href' => self::$currentIndex.

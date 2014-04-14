@@ -107,7 +107,7 @@
 													{/literal}
 												{/if}
 												{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
-												<div class="input-group">
+												<div class="input-group {if isset($input.class)}{$input.class}{/if}">
 												{/if}
 												{if isset($input.maxchar)}
 												<span id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter" class="input-group-addon">
@@ -194,7 +194,7 @@
 										{/if}
 										{assign var='value_text' value=$fields_value[$input.name]}
 										{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
-										<div class="input-group">
+										<div class="input-group {if isset($input.class)}{$input.class}{/if}">
 										{/if}
 										{if isset($input.maxchar)}
 										<span id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter" class="input-group-addon"><span class="text-count-down">{$input.maxchar}</span></span>
@@ -369,7 +369,7 @@
 									{/if}
 								{elseif $input.type == 'radio'}
 									{foreach $input.values as $value}
-										<div class="radio {if isset($input.class)}"{$input.class}"{/if}">
+										<div class="radio {if isset($input.class)}{$input.class}{/if}">
 											<label>
 											<input type="radio"	name="{$input.name}" id="{$value.id}" value="{$value.value|escape:'html':'UTF-8'}"
 												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
@@ -445,14 +445,14 @@
 
 								{elseif $input.type == 'checkbox'}
 									{if isset($input.expand)}
-										<a class="btn btn-default show_checkbox{if $input.expand.default == 'hide'} hidden {/if}" href="#">
+										<a class="btn btn-default show_checkbox{if strtolower($input.expand.default) == 'hide'} hidden {/if}" href="#">
 											<i class="icon-{$input.expand.show.icon}"></i>
 											{$input.expand.show.text}
 											{if isset($input.expand.print_total) && $input.expand.print_total > 0}
 												<span class="badge">{$input.expand.print_total}</span>
 											{/if}
 										</a>
-										<a class="btn btn-default hide_checkbox{if $input.expand.default == 'show'} hidden {/if}" href="#">
+										<a class="btn btn-default hide_checkbox{if strtolower($input.expand.default) == 'show'} hidden {/if}" href="#">
 											<i class="icon-{$input.expand.hide.icon}"></i>
 											{$input.expand.hide.text}
 											{if isset($input.expand.print_total) && $input.expand.print_total > 0}
@@ -462,7 +462,7 @@
 									{/if}
 									{foreach $input.values.query as $value}
 										{assign var=id_checkbox value=$input.name|cat:'_'|cat:$value[$input.values.id]}
-										<div class="checkbox{if isset($input.expand) && $input.expand.default == 'show'} hidden {/if}">
+										<div class="checkbox{if isset($input.expand) && strtolower($input.expand.default) == 'show'} hidden {/if}">
 											<label for="{$id_checkbox}">
 												<input type="checkbox"
 													name="{$id_checkbox}"

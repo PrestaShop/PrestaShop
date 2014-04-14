@@ -1,8 +1,10 @@
-#login
-	height: 100%
-	background-color: #092756
-	@include background(radial-gradient(color-stops(rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%), top left),linear-gradient(top,rgba(57,173,219,.25),rgba(42,60,87,.4)),linear-gradient(left top,#670D10,#092756))
 
+#login
+	min-height: 100%
+	background-color: #092756
+	padding-bottom: 45px
+	@include background(radial-gradient(color-stops(rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%), top left),linear-gradient(top,rgba(57,173,219,.25),rgba(42,60,87,.4)),linear-gradient(left top,#670D10,#092756))
+	
 #login-header
 	padding-top: 40px
 	margin-bottom: 30px
@@ -41,6 +43,7 @@
 	.front
 		z-index: 2
 	.back
+		display: none
 		@include rotateY(180deg)
 	#remind-me
 		margin-top: 0

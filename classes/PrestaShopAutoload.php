@@ -61,8 +61,9 @@ class PrestaShopAutoload
 	protected function __construct()
 	{
 		$this->root_dir = _PS_CORE_DIR_.'/';
-		if (file_exists($this->root_dir.PrestaShopAutoload::INDEX_FILE))
-			$this->index = include($this->root_dir.PrestaShopAutoload::INDEX_FILE);
+		$file = $this->root_dir.PrestaShopAutoload::INDEX_FILE;
+		if (@filemtime($file) && is_readable($file))
+			$this->index = include($file);
 		else
 			$this->generateIndex();
 	}
@@ -117,7 +118,7 @@ class PrestaShopAutoload
 			}
 		}
 		// Call directly ProductCore, ShopCore class
-		else
+		elseif (isset($this->index[$classname]['path']) && $this->index[$classname]['path'])
 			require($this->root_dir.$this->index[$classname]['path']);
 	}
 

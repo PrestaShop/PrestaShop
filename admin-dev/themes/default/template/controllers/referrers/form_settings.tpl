@@ -27,7 +27,7 @@
 			<form action="{$current}&amp;token={$token}" method="post" id="refresh_index_form" name="refresh_index_form" class="form-horizontal">
 				<div class="panel">
 					<h3>
-						<i class="icon-fullscreen"></i> {l s='Indexation'}
+						<i class="icon-fullscreen"></i> {l s='Indexing'}
 					</h3>
 					<div class="alert alert-info">{l s='There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the "Refresh index" button. This process may take a while, and it\'s only needed if you modified or added a referrer, or if you want changes to be retroactive.'}</div>
 					<button type="submit" class="btn btn-default" name="submitRefreshIndex" id="submitRefreshIndex">
