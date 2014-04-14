@@ -25,7 +25,7 @@
 
 {foreach from=$languages item=language}
 {if $languages|count > 1}
-<div class="translatable-field lang-{$language.id_lang}">
+<div class="translatable-field row lang-{$language.id_lang}">
 	<div class="col-lg-9">
 {/if}
 		<textarea

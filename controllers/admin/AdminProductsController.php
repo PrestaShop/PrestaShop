@@ -1341,7 +1341,8 @@ class AdminProductsControllerCore extends AdminController
 				'ajaxfileupload',
 				'date',
 				'tagify',
-				'select2'
+				'select2',
+				'validate'
 			));
 
 			$this->addJS(array(
@@ -1357,10 +1358,10 @@ class AdminProductsControllerCore extends AdminController
 			));
 
 			$this->addJS(_PS_JS_DIR_.'jquery/plugins/select2/select2_locale_'.$this->context->language->iso_code.'.js');
+			$this->addJS(_PS_JS_DIR_.'jquery/plugins/validate/localization/messages_'.$this->context->language->iso_code.'.js');
 
 			$this->addCSS(array(
-				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.css',
-				_PS_JS_DIR_.'jquery/plugins/select2/select2.css',
+				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.css'
 			));
 		}
 	}

@@ -42,7 +42,7 @@
 		{if isset($toolbar)}{$toolbar}{/if}
 	</div>
 	<label class="tree-panel-label-title">
-		<input type="checkbox" id="filter-by-category" {if $is_category_filter}checked="checked"{/if} />
+		<input type="checkbox" id="filter-by-category" name="filter-by-category" {if $is_category_filter}checked="checked"{/if} />
 		<i class="icon-tags"></i>
 		{$title}
 	</label>

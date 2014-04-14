@@ -145,6 +145,7 @@
 				input_class="{$class_input_ajax}{if !$product->id || Configuration::get('PS_FORCE_FRIENDLY_PRODUCT')}copy2friendlyUrl{/if} updateCurrentText"
 				input_value=$product->name
 				input_name="name"
+				required=true
 			}
 		</div>
 	</div>
@@ -240,7 +241,7 @@
 			<input type="hidden" value="" name="id_product_redirected" />
 
 			<div class="input-group">
-				<input type="text" id="related_product_autocomplete_input" autocomplete="off" class="ac_input" />
+				<input type="text" id="related_product_autocomplete_input" name="related_product_autocomplete_input" autocomplete="off" class="ac_input" />
 				<span class="input-group-addon"><i class="icon-search"></i></span>
 			</div>
 
