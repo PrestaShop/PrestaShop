@@ -945,10 +945,12 @@ class AdminModulesControllerCore extends AdminController
 			if (Tools::getValue('checkAndUpdate'))
 			{
 				$updated = '';
-				$module = Tools::getValue('module_name');
-				$module = Module::getInstanceByName($module);
-				if (!Validate::isLoadedObject($module))
-					unset($module);
+				if (Tools::getValue('module_name'))
+				{
+					$module = Module::getInstanceByName(Tools::getValue('module_name'));
+					if (!Validate::isLoadedObject($module))
+						unset($module);
+				}
 			}
 
 			if (isset($modules_list_save))
