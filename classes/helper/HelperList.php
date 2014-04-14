@@ -236,6 +236,8 @@ class HelperListCore extends Helper
 					// If method is defined in calling controller, use it instead of the Helper method
 					if (method_exists($this->context->controller, 'displayEnableLink'))
 						$calling_obj = $this->context->controller;
+					elseif (isset($this->module) && method_exists($this->module, 'displayEnableLink'))
+						$calling_obj = $this->module;
 					else
 						$calling_obj = $this;
 
