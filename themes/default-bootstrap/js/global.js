@@ -149,7 +149,7 @@ function blockHover(status)
 
 	$(document).off('mouseleave').on('mouseleave', '.product_list.grid li.ajax_block_product .product-container', function(e){
 		if ($('body').find('.container').width() == 1170)
-			$(this).parent().removeClass('hovered').removeAttr('style');
+			$(this).parent().removeClass('hovered').css('height', 'auto').css('margin-bottom', '0');
 	});
 }
 
