@@ -1145,8 +1145,8 @@ abstract class AdminTabCore
 			$languages = Language::getLanguages(false);
 			foreach ($languages as $language)
 				foreach (array_keys($rules['validateLang']) as $field)
-					if (isset($_POST[$field.'_'.(int)($language['id_lang'])]))
-						$object->{$field}[(int)($language['id_lang'])] = $_POST[$field.'_'.(int)($language['id_lang'])];
+					if (Tools::getValue($field.'_'.(int)($language['id_lang'])))
+						$object->{$field}[(int)($language['id_lang'])] = Tools::getValue($field.'_'.(int)($language['id_lang']));
 		}
 	}
 
