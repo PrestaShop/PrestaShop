@@ -228,12 +228,21 @@
 								{/if}
 							</label>
 						</p>
-						<p id="gift_div" class="form-group">
+						<p id="gift_div">
 							<label for="gift_message">{l s='If you\'d like, you can add a note to the gift:'}</label>
-							<textarea rows="5" cols="35" id="gift_message" class="form-control" name="gift_message">{$cart->gift_message|escape:'html':'UTF-8'}</textarea>
+							<textarea rows="2" cols="120" id="gift_message" class="form-control" name="gift_message">{$cart->gift_message|escape:'html':'UTF-8'}</textarea>
 						</p>
 					{/if}
 				{/if}
+			{/if}
+			{if $opc}
+				<p class="carrier_title">{l s='Leave a message'}</p>
+	 			<div>
+	 				<p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
+	 				<textarea class="form-control" cols="120" rows="2" name="message" id="message">{strip}
+	 					{if isset($oldMessage)}{$oldMessage|escape:'html':'UTF-8'}{/if}
+	 				{/strip}</textarea>
+	 			</div>
 			{/if}
 			{if $conditions AND $cms_id}
 				<p class="carrier_title">{l s='Terms of service'}</p>
