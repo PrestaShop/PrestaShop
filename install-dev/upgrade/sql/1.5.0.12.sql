@@ -60,6 +60,8 @@ UPDATE `PREFIX_tab` SET `class_name`="AdminShopGroup" WHERE class_name="AdminGro
 /* PHP:migrate_tabs_multi_shop(); */;
 /* PHP:add_default_restrictions_modules_groups(); */;
 
+UPDATE `PREFIX_order_payment` SET `id_order_invoice` = 0 WHERE `id_order_invoice` LIKE "" OR `id_order_invoice` IS NULL;
+
 /* PHP:p15012_add_missing_columns(); */;
 
 UPDATE `PREFIX_specific_price` SET `price` = -1 WHERE `price` = 0;
