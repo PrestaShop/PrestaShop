@@ -631,7 +631,7 @@ class HelperListCore extends Helper
 		$this->header_tpl->assign(array_merge(array(
 			'ajax' => $ajax,
 			'title' => array_key_exists('title', $this->tpl_vars) ? $this->tpl_vars['title'] : $this->title,
-			'show_filters' => (count($this->_list) > 1 && !$has_value && $has_search_field),
+			'show_filters' => (count($this->_list) > 1 || $has_value || $has_search_field),
 			'filters_has_value' => $has_value,
 			'currentIndex' => $this->currentIndex,
 			'action' => $action,
