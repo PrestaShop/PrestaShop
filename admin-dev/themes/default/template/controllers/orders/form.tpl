@@ -260,7 +260,16 @@
 		$('.fancybox').fancybox({
 			'type': 'iframe',
 			'width': '90%',
-			'height': '90%'
+			'height': '90%',
+		});
+		
+		$('.fancybox_customer').fancybox({
+			'type': 'iframe',
+			'width': '90%',
+			'height': '90%',
+			'afterClose' : function () {
+				searchCustomers();
+			}
 		});
 		/*$("#new_address").fancybox({
 			onClosed: useCart(id_cart)
@@ -1058,7 +1067,7 @@
 					</div>
 					<div class="col-lg-6">
 						<span class="form-control-static">{l s='Or'}&nbsp;</span>
-						<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
+						<a class="fancybox_customer btn btn-default" href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
 							<i class="icon-plus-sign-alt"></i>
 							{l s='Add new customer'}
 						</a>
