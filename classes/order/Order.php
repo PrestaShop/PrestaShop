@@ -946,7 +946,7 @@ class OrderCore extends ObjectModel
 	/**
 	 * Get product total without taxes
 	 *
-	 * @return Product total with taxes
+	 * @return Product total without taxes
 	 */
 	public function getTotalProductsWithoutTaxes($products = false)
 	{
