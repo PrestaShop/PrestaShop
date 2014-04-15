@@ -38,12 +38,7 @@ class AdminSearchControllerCore extends AdminController
 		$this->query = trim(Tools::getValue('bo_query'));
 		$searchType = (int)Tools::getValue('bo_search_type');
 		/* Handle empty search field */
-		if (empty($this->query))
-		{
-			$this->errors[] = Tools::displayError('Please complete the search form first.');
-			return;
-		}
-		else
+		if (!empty($this->query))
 		{
 			if (!$searchType && strlen($this->query) > 1)
 				$this->searchFeatures();
