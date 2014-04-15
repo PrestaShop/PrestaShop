@@ -370,7 +370,7 @@ INSERT IGNORE INTO `PREFIX_order_payment` (`id_order_invoice`, `id_order`, `id_c
 		(
 			SELECT oi.`id_order_invoice`
 			  FROM `PREFIX_order_invoice` oi
-			  WHERE oi.`id_order` = o.`id_order`
+			  WHERE oi.`id_order` = o.`id_order` LIMIT 1
 		),
 		o.`id_order`, o.`id_currency`, o.`total_paid_real`, o.`payment`, o.`conversion_rate`, o.`date_add`
 		FROM `PREFIX_orders` o
