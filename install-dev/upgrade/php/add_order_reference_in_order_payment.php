@@ -33,18 +33,18 @@ function add_order_reference_in_order_payment()
 	INNER JOIN `'._DB_PREFIX_.'orders` o
 	ON o.id_order = op.id_order');
 	
-	if (!is_object($payments))
+	if (!is_resource($payments) || !$payments)
 		return true;
 	
 	$errors = array();
 	// Populate "order_reference"
 	while ($payment = Db::getInstance()->nextRow($payments))
 	{
-		if(isset($payment['id_order_payment']))
+		if(isset($payment['id_order_payment']) && $payment['id_order_payment'])
 		{
 			$res = Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'order_payment`
-			SET order_reference = \''.$payment['reference'].'\'
+			SET order_reference = \''.pSQL($payment['reference']).'\'
 			WHERE id_order_payment = '.(int)$payment['id_order_payment']);
 			if (!$res)
 				$errors[] = Db::getInstance()->getMsgError();
@@ -61,7 +61,7 @@ function add_order_reference_in_order_payment()
 	GROUP BY order_reference, date_add
 	HAVING COUNT(*) > 1');
 	
-	if (!is_object($duplicate_lines))
+	if (!is_resource($duplicate_lines) || !$duplicate_lines)
 		return true;
 
 	$order_payments_to_remove = array();

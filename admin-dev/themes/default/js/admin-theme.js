@@ -331,11 +331,12 @@ $(document).ready(function() {
 	if ($('#bo_query').val() !== ''){
 		$('.clear_search').removeClass('hide');
 	}
-	$('#header_search .clear_search').on('click', function(e){
+	$('.clear_search').on('click', function(e){
 		e.stopPropagation();
 		e.preventDefault();
-		$('#bo_query').val('').focus();
-		$('.clear_search').addClass('hide');
+		var id = $(this).closest('form').attr('id');
+		$('#'+id+' #bo_query').val('').focus();
+		$('#'+id+' .clear_search').addClass('hide');
 	});
 	$('#bo_query').on('keydown', function(){
 		if ($('#bo_query').val() !== ''){
