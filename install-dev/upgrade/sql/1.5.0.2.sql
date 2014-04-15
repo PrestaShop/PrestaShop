@@ -348,18 +348,18 @@ UPDATE `PREFIX_order_detail` od
 SET od.`id_order_invoice` = IFNULL((
 	SELECT oi.`id_order_invoice`
 	FROM `PREFIX_order_invoice` oi
-	WHERE oi.`id_order` = od.`id_order`
+	WHERE oi.`id_order` = od.`id_order` LIMIT 1
 ), 0);
 
 INSERT INTO `PREFIX_order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `tracking_number`, `date_add`) (
 	SELECT `id_order`, `id_carrier`, (
 		SELECT oi.`id_order_invoice`
 		FROM `PREFIX_order_invoice` oi
-		WHERE oi.`id_order` = o.`id_order`
+		WHERE oi.`id_order` = o.`id_order` LIMIT 1
 	), (
 		SELECT SUM(`product_weight`)
 		FROM `PREFIX_order_detail` od
-		WHERE od.`id_order` = o.`id_order`
+		WHERE od.`id_order` = o.`id_order` LIMIT 1
 	), `total_shipping_tax_excl`, `total_shipping_tax_incl`, `shipping_number`, `date_add`
 	FROM `PREFIX_orders` o
 );
