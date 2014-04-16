@@ -147,6 +147,7 @@
 
 						$('#moduleContainer').html(data);
 						$('.dropdown-toggle').dropdown();
+						$('.help-tooltip').tooltip();
 					}
 				});
 			}
