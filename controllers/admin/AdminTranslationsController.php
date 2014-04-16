@@ -2336,7 +2336,8 @@ class AdminTranslationsControllerCore extends AdminController
 					}
 
 					$str_return .= '<div class="tab-pane" id="'.$mail_name.'-editor">';
-					$str_return .= $this->displayMailEditor($mail_files['html'], $obj_lang->iso_code, $url_mail, $mail_name, $group_name, $name_for_module);
+					if (isset($mail_files['html']))
+						$str_return .= $this->displayMailEditor($mail_files['html'], $obj_lang->iso_code, $url_mail, $mail_name, $group_name, $name_for_module);
 					$str_return .= '</div>';
 
 					$str_return .= '</div>';
