@@ -662,11 +662,15 @@ class AdminPerformanceControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				if (Tools::getValue('combination') || !Combination::isCurrentlyUsed())
-					Configuration::updateValue('PS_COMBINATION_FEATURE_ACTIVE', Tools::getValue('combination'));
-				if (Tools::getValue('customer_group') && !Group::isCurrentlyUsed())
-					Configuration::updateValue('PS_GROUP_FEATURE_ACTIVE', Tools::getValue('customer_group'));
-				Configuration::updateValue('PS_FEATURE_FEATURE_ACTIVE', Tools::getValue('feature'));
+				if (Tools::isSubmit('combination'))
+					if ((!Tools::getValue('combination') && Combination::isCurrentlyUsed()) === false)
+						Configuration::updateValue('PS_COMBINATION_FEATURE_ACTIVE', (bool)Tools::getValue('combination'));
+
+				if (Tools::isSubmit('customer_group'))
+					if ((!Tools::getValue('customer_group') && Group::isCurrentlyUsed()) === false)
+						Configuration::updateValue('PS_GROUP_FEATURE_ACTIVE', (bool)Tools::getValue('customer_group'));
+
+				Configuration::updateValue('PS_FEATURE_FEATURE_ACTIVE', (bool)Tools::getValue('feature'));
 				$redirectAdmin = true;
 			}
 			else
