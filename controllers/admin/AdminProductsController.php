@@ -2404,6 +2404,7 @@ class AdminProductsControllerCore extends AdminController
 		$helper->id = 'box-disabled-products';
 		$helper->icon = 'icon-off';
 		$helper->color = 'color4';
+		$helper->href = $this->context->link->getAdminLink('AdminProducts');
 		$helper->title = $this->l('Disabled Products', null, null, false);
 		if (ConfigurationKPI::get('DISABLED_PRODUCTS') !== false)
 			$helper->value = ConfigurationKPI::get('DISABLED_PRODUCTS');

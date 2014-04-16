@@ -364,6 +364,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->id = 'box-empty-categories';
 		$helper->icon = 'icon-bookmark-empty';
 		$helper->color = 'color2';
+		$helper->href = $this->context->link->getAdminLink('AdminTracking');
 		$helper->title = $this->l('Empty Categories', null, null, false);
 		if (ConfigurationKPI::get('EMPTY_CATEGORIES') !== false)
 			$helper->value = ConfigurationKPI::get('EMPTY_CATEGORIES');

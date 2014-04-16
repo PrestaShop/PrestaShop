@@ -1350,6 +1350,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$helper->id = 'box-languages';
 		$helper->icon = 'icon-microphone';
 		$helper->color = 'color1';
+		$helper->href = $this->context->link->getAdminLink('AdminLanguages');
 		$helper->title = $this->l('Enabled Languages', null, null, false);
 		if (ConfigurationKPI::get('ENABLED_LANGUAGES') !== false)
 			$helper->value = ConfigurationKPI::get('ENABLED_LANGUAGES');
