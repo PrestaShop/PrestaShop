@@ -1149,6 +1149,7 @@ function openModulesList() {
 				$('#modules_list_container_tab').html(data).slideDown();
 				$('#modules_list_loader').hide();
 				modules_list_loaded = true;
+				$('.help-tooltip').tooltip();
 			}
 		});
 	}
