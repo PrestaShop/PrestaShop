@@ -207,8 +207,8 @@
 			$('#smarty_up').val(1);
 		});
 
-		$('input[name="combination"], input[name="feature"], input[name="group"]').change(function(){
-			$('#features_detachables_up').val('true');
+		$('input[name="combination"], input[name="feature"], input[name="customer_group"]').change(function(){
+			$('#features_detachables_up').val(1);
 		});
 
 		$('input[name="_MEDIA_SERVER_1_"], input[name="_MEDIA_SERVER_2_"], input[name="_MEDIA_SERVER_3_"]').change(function(){
