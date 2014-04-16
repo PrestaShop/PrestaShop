@@ -1230,8 +1230,10 @@ class OrderCore extends ObjectModel
 		if (!$order_invoice_id)
 			return false;
 
+		$id_shop = shop::getTotalShops() > 1 ? $id_shop : null;
+
 		$number = Configuration::get('PS_DELIVERY_NUMBER', null, null, $id_shop);
-		// If invoice start number has been set, you clean the value of this configuration
+		// If delivery slip start number has been set, you clean the value of this configuration
 		if ($number)
 			Configuration::updateValue('PS_DELIVERY_NUMBER', false, false, null, $id_shop);
 
