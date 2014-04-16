@@ -342,7 +342,7 @@ class ConfigurationTestCore
 			'/js/jquery/plugins/fancybox/jquery.fancybox.js',
 			'/localization/fr.xml',
 			'/mails/index.php',
-			'/modules/homeslider/images/sample-1.jpg',
+			'/modules/index.php',
 			'/override/controllers/front/index.php',
 			'/pdf/order-return.tpl',
 			'/themes/default-bootstrap/css/global.css',
