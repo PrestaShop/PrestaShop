@@ -51,30 +51,29 @@ $(document).ready(function(){
 		$('.shopping_cart > a:first').on('click', function(e){
 			e.preventDefault();
 		});
-
-		$(document).on('touchstart', '#header .shopping_cart a:first', function(){
-			if ($(this).next('.cart_block:visible').length)
-				$("#header .cart_block").stop(true, true).slideUp(450);
-			else
-				$("#header .cart_block").stop(true, true).slideDown(450);
-			e.preventDefault();
-			e.stopPropagation();
-		});
 	}
-	else
-		$("#header .shopping_cart a:first").hover(
-			function(){
-				if (ajaxCart.nb_total_products > 0 || cart_qty > 0)
-					$("#header .cart_block").stop(true, true).slideDown(450);
-			},
-			function(){
-				setTimeout(function(){
-					if (!shopping_cart.isHoveringOver() && !cart_block.isHoveringOver())
-						$("#header .cart_block").stop(true, true).slideUp(450);
-						
-				}, 200);
-			}
-		);
+
+	$(document).on('touchstart', '#header .shopping_cart a:first', function(){
+		if ($(this).next('.cart_block:visible').length)
+			$("#header .cart_block").stop(true, true).slideUp(450);
+		else
+			$("#header .cart_block").stop(true, true).slideDown(450);
+		e.preventDefault();
+		e.stopPropagation();
+	});
+
+	$("#header .shopping_cart a:first").hover(
+		function(){
+			if (ajaxCart.nb_total_products > 0 || cart_qty > 0)
+				$("#header .cart_block").stop(true, true).slideDown(450);
+		},
+		function(){
+			setTimeout(function(){
+				if (!shopping_cart.isHoveringOver() && !cart_block.isHoveringOver())
+					$("#header .cart_block").stop(true, true).slideUp(450);				
+			}, 200);
+		}
+	);
 
 	$("#header .cart_block").hover(
 		function(){
