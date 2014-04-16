@@ -811,7 +811,9 @@ $(document).ready(function()
 	});
 	
 	bindTabModuleListAction();
-
+	
+	bindAddonsButtons();
+	
 	//Check filters value on submit filter
 	$("[name='submitFilter']").click(function(event) {
 		var list_id = $(this).data('list-id');
@@ -1130,7 +1132,8 @@ function sendBulkAction(form, action)
 	$(form).submit();
 }
 
-function openModulesList() {
+function openModulesList() 
+{
 	if (!modules_list_loaded)
 	{
 		$.ajax({
@@ -1159,6 +1162,82 @@ function openModulesList() {
 		$('#modules_list_loader').hide();
 	}
 	return false;
+}
+
+function bindAddonsButtons()
+{
+	// Method to log on PrestaShop Addons WebServices
+	$('#addons_login_button').click(function()
+	{
+		var username_addons = $("#username_addons").val();
+		var password_addons = $("#password_addons").val();
+		try
+		{
+			resAjax = $.ajax({
+				type:"POST",
+				url : ajaxCurrentIndex,
+				async: true,
+				data : {
+					ajax : "1",
+					token : token,
+					controller : "AdminModules",
+					action : "logOnAddonsWebservices",
+					username_addons : username_addons,
+					password_addons : password_addons
+				},
+				beforeSend: function(xhr){
+					$('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
+				},
+				success : function(data){
+					if (data == 'OK')
+					{
+						$('#addons_loading').html('');
+						$('#addons_login_div').fadeOut();
+						window.location.href = currentIndexWithToken + '&conf=32';
+					}
+					else
+						$('#addons_loading').html(errorLogin);
+				}
+			});
+		}
+		catch(e){}
+		return false;
+	});
+	
+	// Method to log out PrestaShop Addons WebServices
+	$('#addons_logout_button').click(function()
+	{
+		try
+		{
+			resAjax = $.ajax({
+				type:"POST",
+				url : ajaxCurrentIndex,
+				async: true,
+				data : {
+					ajax : "1",
+					token : token,
+					controller : "AdminModules",
+					action : "logOutAddonsWebservices"
+				},
+				beforeSend: function(xhr){
+					$('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
+				},
+				success: function(data) {
+					if (data == 'OK')
+					{
+						$('#addons_loading').html('');
+						$('#addons_login_div').fadeOut();
+						window.location.href = currentIndexWithToken;
+					}
+					else
+						$('#addons_loading').html(errorLogin);
+				}
+			});
+		}
+		catch(e){}
+		return false;
+	});
+
 }
 
 function ajaxStates(id_state_selected)

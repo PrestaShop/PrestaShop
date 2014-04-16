@@ -25,7 +25,7 @@
 
 {if $add_permission eq '1'}
 	<div class="panel">
-	{if isset($logged_on_addons)}
+	{if isset($logged_on_addons) && $logged_on_addons}
 			<!--start addons login-->
 			<div class="panel-heading">
 				<i class="icon-user"></i>
@@ -48,10 +48,6 @@
 			</div>
 		{else}
 			<!--start addons login-->
-			<div class="panel-heading">
-				<i class="icon-puzzle-piece"></i>
-				<a target="_blank" href="http://addons.prestashop.com/?utm_source=backoffice_modules">PrestaShop Addons</a>
-			</div>
 			<form id="addons_login_form" method="post" >
 				<div class="form-group">
 					<div class="input-group">

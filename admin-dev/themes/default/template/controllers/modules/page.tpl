@@ -107,7 +107,6 @@
 						</a>
 					{/foreach}
 				</div>
-				{include file='controllers/modules/login_addons.tpl'}
 			</div>
 			<div id="moduleContainer" class="col-md-9">
 				{include file='controllers/modules/list.tpl'}
