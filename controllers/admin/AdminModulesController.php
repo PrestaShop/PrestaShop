@@ -55,7 +55,7 @@ class AdminModulesControllerCore extends AdminController
 	protected $filter_configuration = array();
 
  	protected $xml_modules_list = 'api.prestashop.com/xml/modules_list_16.xml';
-	protected $logged_on_addons = false;
+
 
 	/**
 	 * Admin Modules Controller Constructor
@@ -130,10 +130,6 @@ class AdminModulesControllerCore extends AdminController
 						if ($xmlModule->attributes() == 'partner' && $key == 'name')
 							$this->list_partners_modules[] = (string)$value;
 					}
-
-		// Check if logged on Addons
-		if (isset($this->context->cookie->username_addons) && isset($this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons))
-			$this->logged_on_addons = true;
 	}
 
 	public function checkCategoriesNames($a, $b)
@@ -884,7 +880,6 @@ class AdminModulesControllerCore extends AdminController
 							$header = $this->context->smarty->fetch('controllers/modules/configure.tpl');
 							$configuration_bar = $this->context->smarty->fetch('controllers/modules/configuration_bar.tpl');
 							$this->context->smarty->assign('module_content', $header.$echo.$configuration_bar );
-							$this->context->smarty->assign('modals', $this->renderModals() );
 						}
 						elseif ($echo === true)
 						{
@@ -1187,26 +1182,23 @@ class AdminModulesControllerCore extends AdminController
 		return $helper->generate();
 	}
 
-	public function renderModals()
+	public function initModal()
 	{
-		$modals = parent::renderModals();
+		parent::initModal();
 
 		$this->context->smarty->assign(array(
 			'trad_link' => 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=',
 			'module_languages' => Language::getLanguages(false),
+			'module_name' => Tools::getValue('module_name'),
 		));
 		$modal_content = $this->context->smarty->fetch('controllers/modules/modal_translation.tpl');
 
-
-		$this->context->smarty->assign(array(
+		$this->modals[] = array(
 			'modal_id' => "moduleTradLangSelect",
 			'modal_class' => "modal-sm",
 			'modal_title' => $this->l('Translate this module'),
 			'modal_content' => $modal_content
-		));
-		$modals .= $this->context->smarty->fetch('modal.tpl');
-
-		return $modals;
+		);
 	}
 
 	public function initContent()
@@ -1395,10 +1387,6 @@ class AdminModulesControllerCore extends AdminController
 		if (count($upgrade_available) == 0 && (int)Tools::getValue('check') == 1)
 			$this->confirmations[] = $this->l('Everything is up-to-date');
 
-		// Iso needed to generate Addons login
-		$language = new Language($this->context->employee->id_lang);
-		$iso_code_caps = strtoupper($language->iso_code);
-
 		// Init tpl vars for smarty
 		$tpl_vars = array();
 
@@ -1424,8 +1412,6 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['nb_modules_unactivated'] = $tpl_vars['nb_modules_installed'] - $tpl_vars['nb_modules_activated'];
 		$tpl_vars['list_modules_categories'] = $cleaned_list;
 		$tpl_vars['list_modules_authors'] = $this->modules_authors;
-		$tpl_vars['check_url_fopen'] = (ini_get('allow_url_fopen') ? 'ok' : 'ko');
-		$tpl_vars['check_openssl'] = (extension_loaded('openssl') ? 'ok' : 'ko');
 		$tpl_vars['add_permission'] = $this->tabAccess['add'];
 		$tpl_vars['tab_modules_preferences'] = $tab_modules_preferences;
 		$tpl_vars['kpis'] = $this->renderKpis();
@@ -1433,7 +1419,6 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['page_header_toolbar_title'] = $this->page_header_toolbar_title;
 		$tpl_vars['page_header_toolbar_btn'] = $this->page_header_toolbar_btn;
 		$tpl_vars['modules_uri'] = __PS_BASE_URI__.basename(_PS_MODULE_DIR_);
-		$tpl_vars['addons_register_link'] = "//addons.prestashop.com/fr/login?utm_source=back-office&utm_medium=connect-to-addons&utm_campaign=back-office-".$iso_code_caps."#createnow";
 
 		if ($this->logged_on_addons)
 		{

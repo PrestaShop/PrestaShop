@@ -291,7 +291,11 @@ class AdminControllerCore extends Controller
 	
 	protected $list_natives_modules = array();
 	protected $list_partners_modules = array();
-
+	
+	public $modals = array();
+	
+	protected $logged_on_addons = false;
+	
 	public function __construct()
 	{
 		global $timer_start;
@@ -382,7 +386,10 @@ class AdminControllerCore extends Controller
 		
 		$this->admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
 		$this->admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $this->admin_webpath);
-
+		
+		// Check if logged on Addons
+		if (isset($this->context->cookie->username_addons) && isset($this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons))
+			$this->logged_on_addons = true;
 
 	}
 
@@ -1891,7 +1898,51 @@ class AdminControllerCore extends Controller
 			'ps_version' => _PS_VERSION_,
 			'timer_start' => $this->timer_start,
 			'iso_is_fr' => strtoupper($this->context->language->iso_code) == 'FR',
+			'modals' => $this->renderModal(),
 		));
+	}
+	
+	public function initModal()
+	{
+		if ($this->logged_on_addons)
+		{
+			$this->context->smarty->assign(array(
+				'logged_on_addons' => 1,
+				'username_addons' => $this->context->cookie->username_addons
+			));
+		}
+		
+		// Iso needed to generate Addons login
+		$language = new Language($this->context->employee->id_lang);
+		$iso_code_caps = strtoupper($language->iso_code);
+		
+		$this->context->smarty->assign(array(
+			'check_url_fopen' => (ini_get('allow_url_fopen') ? 'ok' : 'ko'),
+			'check_openssl' => (extension_loaded('openssl') ? 'ok' : 'ko'),
+			'add_permission' => 1,
+			'addons_register_link' => "//addons.prestashop.com/fr/login?utm_source=back-office&utm_medium=connect-to-addons&utm_campaign=back-office-".$iso_code_caps."#createnow",
+		));
+		
+		$this->modals[] = array(
+			'modal_id' => "modal_addons_connect",
+			'modal_class' => "modal-sm",
+			'modal_title' => '<i class="icon-puzzle-piece"></i> <a target="_blank" href="http://addons.prestashop.com/?utm_source=backoffice_modules">PrestaShop Addons</a>',
+			'modal_content' => $this->context->smarty->fetch('controllers/modules/login_addons.tpl'),
+		);
+	}
+	
+	public function renderModal()
+	{
+		$modal_render = '';
+		if (is_array($this->modals) && count($this->modals))
+		{
+			foreach ($this->modals as $modal)
+			{
+				$this->context->smarty->assign($modal);
+				$modal_render .= $this->context->smarty->fetch('modal.tpl');
+			}
+		}
+		return $modal_render;
 	}
 	
 	public function renderModulesList()
@@ -1924,7 +1975,6 @@ class AdminControllerCore extends Controller
 			return $helper->renderModulesList($this->modules_list);
 		}
 	}
-	
 	
 	/**
 	 * Function used to render the list to display for this controller
@@ -2062,10 +2112,6 @@ class AdminControllerCore extends Controller
 	}
 	
 	public function renderKpis()
-	{
-	}
-
-	public function renderModals()
 	{
 	}
 
@@ -2279,6 +2325,7 @@ class AdminControllerCore extends Controller
 
 		$this->initProcess();
 		$this->initBreadcrumbs();
+		$this->initModal();
 	}
 
 	public function initShopContext()
