@@ -99,13 +99,12 @@ function mobileInit()
 		return false;
 	});
 
-	if ('ontouchstart' in document.documentElement)
-	{
-		$('#block_top_menu > ul:first > li > a').on('click', function(e){
-			if ($(this).parent('li').find('ul').length)
-				e.preventDefault();
-		});
-	}
+	
+	$('#block_top_menu > ul:first > li > a').on('touchstart', function(e){
+		if ($(this).parent('li').find('ul').length)
+			e.preventDefault();
+	});
+	
 }
 
 // change the menu display at different resolutions
