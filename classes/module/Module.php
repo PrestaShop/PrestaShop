@@ -2208,26 +2208,11 @@ abstract class ModuleCore
 		if (!is_dir($this->getLocalPath().'override'))
 			return true;
 
-		return $this->scanOverridesDir($this->getLocalPath().'override');;
-	}
-
-	protected function scanOverridesDir($path)
-	{
-		$result = true;
-
-		foreach (Tools::scandir($path, 'php', '', true) as $file)
+		foreach (Tools::scandir($this->getLocalPath().'override', 'php', '', true) as $file)
 		{
-			if ($file == '.' || $file == '..')
-				continue;
-
-			if (is_dir($file))
-				$result &= $this->scanOverridesDir($file);
-			else
-			{
-				$class = basename($file, '.php');
-				if (PrestaShopAutoload::getInstance()->getClassPath($class.'Core'))
-					$result &= $this->addOverride($class);
-			}
+			$class = basename($file, '.php');
+			if (PrestaShopAutoload::getInstance()->getClassPath($class.'Core'))
+				$result &= $this->addOverride($class);
 		}
 
 		return $result;
@@ -2309,7 +2294,7 @@ abstract class ModuleCore
 				throw new Exception(sprintf(Tools::displayError('directory (%s) not writable'), dirname($override_dest)));
 			copy($override_src, $override_dest);
 			// Re-generate the class index
-			PrestaShopAutoload::getInstance()->generateIndex();
+			Tools::generateIndex();
 		}
 		return true;
 	}
@@ -2394,7 +2379,7 @@ abstract class ModuleCore
 		file_put_contents($override_path, $code);
 
 		// Re-generate the class index
-		PrestaShopAutoload::getInstance()->generateIndex();
+		Tools::generateIndex();
 
 		return true;
 	}
