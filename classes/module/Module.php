@@ -2208,26 +2208,11 @@ abstract class ModuleCore
 		if (!is_dir($this->getLocalPath().'override'))
 			return true;
 
-		return $this->scanOverridesDir($this->getLocalPath().'override');;
-	}
-
-	protected function scanOverridesDir($path)
-	{
-		$result = true;
-
-		foreach (Tools::scandir($path, 'php', '', true) as $file)
+		foreach (Tools::scandir($this->getLocalPath().'override', 'php', '', true) as $file)
 		{
-			if ($file == '.' || $file == '..')
-				continue;
-
-			if (is_dir($file))
-				$result &= $this->scanOverridesDir($file);
-			else
-			{
-				$class = basename($file, '.php');
-				if (PrestaShopAutoload::getInstance()->getClassPath($class.'Core'))
-					$result &= $this->addOverride($class);
-			}
+			$class = basename($file, '.php');
+			if (PrestaShopAutoload::getInstance()->getClassPath($class.'Core'))
+				$result &= $this->addOverride($class);
 		}
 
 		return $result;
