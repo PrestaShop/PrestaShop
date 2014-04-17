@@ -158,6 +158,13 @@ function quick_view()
 	{
 		e.preventDefault();
 		var url = this.rel;
+		var anchor = '';
+
+		if (url.indexOf('#') != -1) {
+			var anchor = url.substring(url.indexOf('#'), url.length);
+			var url = url.substring(0, url.indexOf('#'));
+		}
+
 		if (url.indexOf('?') != -1)
 			url += '&';
 		else
@@ -169,7 +176,7 @@ function quick_view()
 				'width':    1087,
 				'height':   610,
 				'type':     'iframe',
-				'href':     url + 'content_only=1'
+				'href':     url + 'content_only=1' + anchor
 			});
 	});
 }
