@@ -110,5 +110,5 @@ function mobileInit()
 // change the menu display at different resolutions
 function menuChange(status)
 {
-	status == 'enable'? mobileInit(): desktopInit();
+	status == 'enable' ? mobileInit(): desktopInit();
 }
