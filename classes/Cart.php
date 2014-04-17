@@ -3239,7 +3239,7 @@ class CartCore extends ObjectModel
 		{
 			Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'customization` (id_cart, id_product_attribute, id_product, `id_address_delivery`, quantity, `quantity_refunded`, `quantity_returned`, `in_cart`)
-				VALUES('.(int)$id_address_delivery.', '.(int)$val['id_product_attribute'].', '.(int)$val['id_product'].', '.(int)$this->id_address_delivery.', '.(int)$val['quantity'].', 0, 0, 1)'
+				VALUES('.(int)$cart->id.', '.(int)$val['id_product_attribute'].', '.(int)$val['id_product'].', '.(int)$id_address_delivery.', '.(int)$val['quantity'].', 0, 0, 1)'
 			);
 			$custom_ids[$customization_id] = Db::getInstance(_PS_USE_SQL_SLAVE_)->Insert_ID();
 		}
