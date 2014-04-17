@@ -136,8 +136,6 @@ function blockHover(status)
 {
 	$(document).off('mouseenter').on('mouseenter', '.product_list.grid li.ajax_block_product .product-container', function(e){
 
-		/*if ('ontouchstart' in document.documentElement)
-			return;*/
 		if ($('body').find('.container').width() == 1170)
 		{
 			var pcHeight = $(this).parent().outerHeight();
