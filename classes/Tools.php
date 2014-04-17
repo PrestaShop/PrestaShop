@@ -2147,6 +2147,13 @@ FileETag INode MTime Size
 
 		return true;
 	}
+
+	public static function generateIndex()
+	{
+		if (Configuration::get('PS_DISABLE_OVERRIDES'))
+			PrestaShopAutoload::getInstance()->_include_override_path = false;
+		PrestaShopAutoload::getInstance()->generateIndex();
+	}
 	
 	public static function getDefaultIndexContent()
 	{
@@ -2186,7 +2193,6 @@ header("Pragma: no-cache");
 header("Location: ../");
 exit;
 ';
-		
 	}
 
 	/**
