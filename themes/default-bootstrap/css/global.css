@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "CP850";
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -7053,6 +7053,12 @@ a.price_discount_delete {
 
 #cart_summary .stock-management-on tbody td.cart_description {
   width: 480px; }
+
+.cart_discount_price {
+  text-align: right; }
+
+.cart_discount_delete {
+  text-align: center; }
 
 @media (max-width: 767px) {
   #order-detail-content #cart_summary table, #order-detail-content #cart_summary thead, #order-detail-content #cart_summary tbody, #order-detail-content #cart_summary th, #order-detail-content #cart_summary td, #order-detail-content #cart_summary tr {
