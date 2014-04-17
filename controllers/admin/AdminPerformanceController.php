@@ -869,18 +869,14 @@ class AdminPerformanceControllerCore extends AdminController
 			Tools::clearSmartyCache();
 			Tools::clearXMLCache();
 			Media::clearCache();
-			PrestaShopAutoload::getInstance()->generateIndex();
+			Tools::generateIndex();
 		}
 
 		if (Tools::isSubmit('submitAddconfiguration'))
 		{
 			Configuration::updateGlobalValue('PS_DISABLE_NON_NATIVE_MODULE', (int)Tools::getValue('native_module'));
 			Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', (int)Tools::getValue('overrides'));
-
-			if (Tools::getValue('overrides'))
-				PrestaShopAutoload::getInstance()->_include_override_path = false;
-
-			PrestaShopAutoload::getInstance()->generateIndex();
+			Tools::generateIndex();
 		}
 
 		if ($redirectAdmin && (!isset($this->errors) || !count($this->errors)))
