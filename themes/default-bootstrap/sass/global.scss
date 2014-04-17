@@ -2209,6 +2209,14 @@ a.price_discount_delete {
 	}
 }
 
+.cart_discount_price{
+  text-align: right;
+}
+
+.cart_discount_delete{
+  text-align: center;
+}
+
 @media (max-width: $screen-xs-max) {
 	#order-detail-content {
 		#cart_summary {
