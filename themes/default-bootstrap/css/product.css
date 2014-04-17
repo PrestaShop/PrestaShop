@@ -344,7 +344,8 @@ span.view_scroll_spacer {
   padding: 0 20px 20px;
   word-wrap: break-word; }
   #page .rte p {
-    margin-bottom: 0; }
+    margin-bottom: 1em;
+    min-height: 1px; }
 
 #attributes fieldset {
   padding-bottom: 3px; }
