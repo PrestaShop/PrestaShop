@@ -2309,7 +2309,7 @@ abstract class ModuleCore
 				throw new Exception(sprintf(Tools::displayError('directory (%s) not writable'), dirname($override_dest)));
 			copy($override_src, $override_dest);
 			// Re-generate the class index
-			PrestaShopAutoload::getInstance()->generateIndex();
+			Tools::generateIndex();
 		}
 		return true;
 	}
@@ -2394,7 +2394,7 @@ abstract class ModuleCore
 		file_put_contents($override_path, $code);
 
 		// Re-generate the class index
-		PrestaShopAutoload::getInstance()->generateIndex();
+		Tools::generateIndex();
 
 		return true;
 	}
