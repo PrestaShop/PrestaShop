@@ -872,7 +872,7 @@ class AdminPerformanceControllerCore extends AdminController
 			PrestaShopAutoload::getInstance()->generateIndex();
 		}
 
-		if (Tools::isSubmit('submitAddconfiguration') && _PS_MODE_DEV_)
+		if (Tools::isSubmit('submitAddconfiguration'))
 		{
 			Configuration::updateGlobalValue('PS_DISABLE_NON_NATIVE_MODULE', (int)Tools::getValue('native_module'));
 			Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', (int)Tools::getValue('overrides'));
