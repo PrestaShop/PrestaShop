@@ -881,7 +881,7 @@ class OrderCore extends ObjectModel
 					WHERE osl.`id_order_state` = o.`current_state`
 					AND osl.`id_lang` = '.(int)$context->language->id.'
 					LIMIT 1
-				) AS `state_name`
+				) AS `state_name`, o.`date_add` AS `date_add`, o.`date_upd` AS `date_upd`
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = o.`id_customer`)
 				WHERE 1
