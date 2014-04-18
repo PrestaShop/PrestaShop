@@ -63,8 +63,8 @@
       line-height: 30px;
       margin-right: 6px;
       text-align: center;
-      width: 30px;
-      /*max 1199px*/ }
+      width: 30px; }
+      /*max 1199px*/ 
       @media (max-width: 1199px) {
         .comments_advices a:before {
           display: none; } }
