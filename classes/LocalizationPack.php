@@ -83,12 +83,15 @@ class LocalizationPackCore
 			foreach ($xml->states->state as $data)
 			{
 				$attributes = $data->attributes();
-				if (!$id_state = State::getIdByName($attributes['name']))
+				$id_country = ($attributes['country']) ? (int)Country::getByIso(strval($attributes['country'])) : false;
+				$id_state = ($id_country) ? State::getIdByIso($attributes['iso_code'], $id_country) : State::getIdByName($attributes['name']);
+
+				if (!$id_state)
 				{
 					$state = new State();
 					$state->name = strval($attributes['name']);
 					$state->iso_code = strval($attributes['iso_code']);
-					$state->id_country = Country::getByIso(strval($attributes['country']));
+					$state->id_country = $id_country;
 
 					$id_zone = (int)Zone::getIdByName(strval($attributes['zone']));
 					if (!$id_zone)
