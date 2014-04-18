@@ -34,7 +34,7 @@
 		<label class="control-label col-lg-3" for="width">{$bullet_common_field} {l s='Package width'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_dimension_unit}</span>
-			<input maxlength="14" id="width" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />			
+			<input maxlength="14" id="width" name="width" type="text" value="{$product->width}" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />			
 		</div>
 	</div>
 
@@ -42,7 +42,7 @@
 		<label class="control-label col-lg-3" for="height">{$bullet_common_field} {l s='Package height'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_dimension_unit}</span>
-			<input maxlength="14" id="height" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+			<input maxlength="14" id="height" name="height" type="text" value="{$product->height}" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		</div>
 	</div>
 	
@@ -50,7 +50,7 @@
 		<label class="control-label col-lg-3" for="depth">{$bullet_common_field} {l s='Package depth'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_dimension_unit}</span>
-			<input maxlength="14" id="depth" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+			<input maxlength="14" id="depth" name="depth" type="text" value="{$product->depth}" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		</div>
 	</div>
 
@@ -58,7 +58,7 @@
 		<label class="control-label col-lg-3" for="weight">{$bullet_common_field} {l s='Package weight'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_weight_unit}</span>
-			<input maxlength="14" id="weight" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+			<input maxlength="14" id="weight" name="weight" type="text" value="{$product->weight}" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		</div>
 	</div>
 
@@ -82,7 +82,7 @@
 			<div class="form-control-static row">
 				<div class="col-xs-6">
 					<p>{l s='Available carriers'}</p>
-					<select multiple id="availableCarriers" name="availableCarriers">
+					<select id="availableCarriers" name="availableCarriers" multiple="multiple">
 						{foreach $carrier_list as $carrier}
 							{if !isset($carrier.selected) || !$carrier.selected}
 								<option value="{$carrier.id_reference}">{$carrier.name}</option>
@@ -93,7 +93,7 @@
 				</div>
 				<div class="col-xs-6">
 					<p>{l s='Selected carriers'}</p>
-					<select multiple id="selectedCarriers" name="selectedCarriers[]">
+					<select id="selectedCarriers" name="selectedCarriers[]" multiple="multiple">
 						{foreach $carrier_list as $carrier}
 							{if isset($carrier.selected) && $carrier.selected}
 								<option value="{$carrier.id_reference}">{$carrier.name}</option>
