@@ -1353,7 +1353,7 @@ class CartCore extends ObjectModel
 		if ($virtual && $type == Cart::BOTH)
 			$type = Cart::BOTH_WITHOUT_SHIPPING;
 
-		if ($with_shipping)
+		if ($with_shipping || $type == Cart::ONLY_DISCOUNTS)
 		{
 			if (is_null($products) && is_null($id_carrier))
 				$shipping_fees = $this->getTotalShippingCost(null, (boolean)$with_taxes);
