@@ -131,10 +131,10 @@ class AdminCarriersControllerCore extends AdminController
 	public function renderList()
 	{
 		$this->_select = 'b.*';
-		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').'
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').' AND b.id_lang = '.$this->context->language->id.'
 							LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier`
 								AND ctrgs.id_shop='.(int)$this->context->shop->id.')';
-		$this->_where = 'AND b.id_lang = '.$this->context->language->id;
+		//$this->_where = ';
 
 		return parent::renderList();
 	}
