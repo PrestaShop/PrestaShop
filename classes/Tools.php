@@ -3065,6 +3065,16 @@ exit;
 
 		return self::$_user_browser;
 	}
+
+	/**
+	  * Allows to display the category description without HTML tags and slashes
+	  *
+	  * @return string
+	  */
+	public static function getDescriptionClean($description)
+	{
+		return strip_tags(stripslashes($description));
+	}
 }
 
 /**
