@@ -2167,7 +2167,7 @@ abstract class ModuleCore
 			$page = 'module-'.$this->name.'-'.$controller;
 			$result = Db::getInstance()->getValue('SELECT * FROM '._DB_PREFIX_.'meta WHERE page="'.pSQL($page).'"');
 			if ((int)$result > 0)
-				return true;
+				continue;
 
 			$meta = New Meta();
 			$meta->page = $page;
@@ -2187,11 +2187,7 @@ abstract class ModuleCore
 				}
 			}
 			else
-			{
 				$this->_errors[] = sprintf(Tools::displayError('Unable to install controller: %s'), $controller);
-
-				return false;
-			}
 
 		}
 		if (count($theme_meta_value) > 0)
