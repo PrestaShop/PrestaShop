@@ -26,6 +26,11 @@
 
 class AdminModulesControllerCore extends AdminController
 {
+	private $_modules_ad = array(
+		'blockcart' => array('cartabandonmentpro'),
+		//'bloctopmenu' => array('advancedtopmenu'),
+		'blocklayered' => array('pm_advancedsearch4')
+	);
 	/*
 	** @var array map with $_GET keywords and their callback
 	*/
@@ -256,43 +261,7 @@ class AdminModulesControllerCore extends AdminController
 		if ($tab_modules_list)
 		{
 			$tab_modules_list = explode(',', $tab_modules_list);
-			$all_modules = Module::getModulesOnDisk(true, $this->logged_on_addons, $this->id_employee);
-
-			$all_unik_modules = array();
-			foreach ($all_modules as $mod)
-				if (!isset($all_unik_modules[$mod->name]))
-					$all_unik_modules[$mod->name] = $mod;
-			$all_modules = $all_unik_modules;
-
-			foreach($all_modules as $module)
-			{
-				if (in_array($module->name, $tab_modules_list))
-				{
-					$perm = true;
-					if ($module->id)
-						$perm &= Module::getPermissionStatic($module->id, 'configure');
-					else
-					{
-						$id_admin_module = Tab::getIdFromClassName('AdminModules');
-						$access = Profile::getProfileAccess($this->context->employee->id_profile, $id_admin_module);
-						if (!$access['edit'])
-							$perm &= false;
-					}
-
-					if (in_array($module->name, $this->list_partners_modules))
-						$module->type = 'addonsPartner';
-
-					if ($perm)
-					{
-						$this->fillModuleData($module, 'array');
-						if ($module->id)
-							$modules_list['installed'][] = $module;
-						else
-							$modules_list['not_installed'][] = $module;
-
-					}
-				}
-			}
+			$modules_list = $this->getModulesByInstallation($tab_modules_list);
 		}
 
 		$this->context->smarty->assign(array(
@@ -876,10 +845,34 @@ class AdminModulesControllerCore extends AdminController
 								Context::getContext()->shop = clone(Context::getContext()->tmpOldShop);
 								unset(Context::getContext()->tmpOldShop);
 							}
+
 							// Display module configuration
 							$header = $this->context->smarty->fetch('controllers/modules/configure.tpl');
 							$configuration_bar = $this->context->smarty->fetch('controllers/modules/configuration_bar.tpl');
-							$this->context->smarty->assign('module_content', $header.$echo.$configuration_bar );
+
+							$output = $header.$echo;
+
+							if (isset($this->_modules_ad[$module->name]))
+							{
+								$ad_modules = $this->getModulesByInstallation($this->_modules_ad[$module->name]);
+
+								foreach ($ad_modules['not_installed'] as $key => &$module)
+								{
+									if (isset($module->addons_buy_url))
+										$module->addons_buy_url = str_replace('utm_source=v1trunk_api', 'utm_source=back-office', $module->addons_buy_url)
+											.'&utm_medium=related-modules&utm_campaign=back-office-'.strtoupper($this->context->language->iso_code);
+									if (isset($module->description_full) && trim($module->description_full) != '')
+										$module->show_quick_view = true;
+								}
+								$this->context->smarty->assign(array(
+									'ad_modules' => $ad_modules,
+									'currentIndex' => self::$currentIndex
+								));
+								$ad_bar = $this->context->smarty->fetch('controllers/modules/ad_bar.tpl');
+								$output .= $ad_bar;
+							}
+
+							$this->context->smarty->assign('module_content', $output.$configuration_bar );
 						}
 						elseif ($echo === true)
 						{
@@ -939,6 +932,50 @@ class AdminModulesControllerCore extends AdminController
 			elseif (isset($module))
 				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.$updated.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : ''));
 		}
+	}
+
+	protected function getModulesByInstallation($tab_modules_list = null)
+	{
+		$all_modules = Module::getModulesOnDisk(true, $this->logged_on_addons, $this->id_employee);
+		$all_unik_modules = array();
+		$modules_list = array('installed' =>array(), 'not_installed' => array());
+
+		foreach ($all_modules as $mod)
+			if (!isset($all_unik_modules[$mod->name]))
+				$all_unik_modules[$mod->name] = $mod;
+
+		$all_modules = $all_unik_modules;
+
+		foreach($all_modules as $module)
+		{
+			if (!isset($tab_modules_list) || in_array($module->name, $tab_modules_list))
+			{
+				$perm = true;
+				if ($module->id)
+					$perm &= Module::getPermissionStatic($module->id, 'configure');
+				else
+				{
+					$id_admin_module = Tab::getIdFromClassName('AdminModules');
+					$access = Profile::getProfileAccess($this->context->employee->id_profile, $id_admin_module);
+					if (!$access['edit'])
+						$perm &= false;
+				}
+
+				if (in_array($module->name, $this->list_partners_modules))
+					$module->type = 'addonsPartner';
+
+				if ($perm)
+				{
+					$this->fillModuleData($module, 'array');
+					if ($module->id)
+						$modules_list['installed'][] = $module;
+					else
+						$modules_list['not_installed'][] = $module;
+				}
+			}
+		}
+		
+		return $modules_list;
 	}
 
 	public function postProcess()
