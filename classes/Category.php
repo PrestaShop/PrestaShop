@@ -139,14 +139,9 @@ class CategoryCore extends ObjectModel
 		$this->image_dir = _PS_CAT_IMG_DIR_;
 	}
 
-	/**
-	  * Allows to display the category description without HTML tags and slashes
-	  *
-	  * @return string
-	  */
 	public static function getDescriptionClean($description)
 	{
-		return strip_tags(stripslashes($description));
+		return Tools::getDescriptionClean($description);
 	}
 
 	public function add($autodate = true, $null_values = false)
