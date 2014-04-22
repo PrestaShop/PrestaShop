@@ -596,6 +596,7 @@ abstract class ModuleCore
 			if ((int)$meta > 0)
 			{
 				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'theme_meta` WHERE id_meta='.$meta);
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'meta_lang` WHERE id_meta='.$meta);
 				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'meta` WHERE id_meta='.$meta);
 			}
 		}
