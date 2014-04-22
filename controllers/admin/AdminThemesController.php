@@ -1477,24 +1477,25 @@ class AdminThemesControllerCore extends AdminController
 					else
 					{
 						$imported_theme = $this->importThemeXmlConfig(simplexml_load_file($sandbox.'uploaded/Config.xml'));
-						if (Validate::isLoadedObject($imported_theme))
+						foreach ($imported_theme as $theme)
 						{
-							if (!copy($sandbox.'uploaded/Config.xml', _PS_ROOT_DIR_.'/config/xml/themes/'.$imported_theme->directory.'.xml'))
-								$this->errors[] = $this->l('Can\'t copy configuration file');
+							if (Validate::isLoadedObject($theme))
+							{
+								if (!copy($sandbox.'uploaded/Config.xml', _PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
+									$this->errors[] = $this->l('Can\'t copy configuration file');
 
-							$target_dir = _PS_ALL_THEMES_DIR_.$imported_theme->directory;
+								$target_dir = _PS_ALL_THEMES_DIR_.$theme->directory;
 
-							$theme_doc_dir = $target_dir.'/docs/';
-							if (file_exists($theme_doc_dir))
-								Tools::deleteDirectory($theme_doc_dir);
+								$theme_doc_dir = $target_dir.'/docs/';
+								if (file_exists($theme_doc_dir))
+									Tools::deleteDirectory($theme_doc_dir);
 
-							$this->recurseCopy($sandbox.'uploaded/themes/'.$imported_theme->directory, $target_dir);
-							$this->recurseCopy($sandbox.'uploaded/doc/', $theme_doc_dir);
-							$this->recurseCopy($sandbox.'uploaded/modules/', _PS_MODULE_DIR_);
+								$this->recurseCopy($sandbox.'uploaded/themes/'.$theme->directory, $target_dir);
+								$this->recurseCopy($sandbox.'uploaded/doc/', $theme_doc_dir);
+								$this->recurseCopy($sandbox.'uploaded/modules/', _PS_MODULE_DIR_);
+							} else
+								$this->errors[] = $theme;
 						}
-						else
-							$this->errors[] = $imported_theme;
-
 					}
 				}
 
@@ -1509,99 +1510,109 @@ class AdminThemesControllerCore extends AdminController
 	}
 
 	/**
-	 * @param SimpleXMLElement $xml
-	 * @param bool             $theme_dir only used if the theme directory to import is already located on the shop
+	 * @param SimpleXMLElement	$xml
+	 * @param bool 				$theme_dir only used if the theme directory to import is already located on the shop
 	 *
-	 * @return string|Theme return theme on success, otherwise the error as a string is returned
+	 * @return array|string		return array of themes on success, otherwise the error as a string is returned
 	 */
 	protected function importThemeXmlConfig(SimpleXMLElement $xml, $theme_dir = false)
 	{
 		$themes = Theme::getThemes();
 
-		$name = strval($xml->variations->variation[0]['name']);
-
-		$new_theme = new Theme();
-		$new_theme->name = $name;
-
-		$new_theme->directory = strval($xml->variations->variation[0]['directory']);
-
-		if ($theme_dir)
+		$new_theme_array = array();
+		foreach ($xml->variations->variation as $variation)
 		{
-			$new_theme->name = $theme_dir;
-			$new_theme->directory = $theme_dir;
-		}
+			var_dump($variation);
 
-		foreach ($themes as $theme_object)
-		{
-			if ($theme_object->name == $new_theme->name)
-				return $this->l('Theme already installed.');
-		}
+			$name = strval($variation['name']);
 
-		$new_theme->product_per_page = Configuration::get('PS_PRODUCTS_PER_PAGE');
+			$new_theme = new Theme();
+			$new_theme->name = $name;
 
-		if (isset($xml->variations->variation[0]['product_per_page']))
-			$new_theme->product_per_page = intval($xml->variations->variation[0]['product_per_page']);
+			$new_theme->directory = strval($variation['directory']);
 
-		$new_theme->responsive = false;
-		if (isset($xml->variations->variation[0]['responsive']))
-			$new_theme->responsive = (bool)strval($xml->variations->variation[0]['responsive']);
-
-		$new_theme->default_left_column = true;
-		$new_theme->default_right_column = true;
-
-		if (isset($xml->variations->variation[0]['default_left_column']))
-			$new_theme->default_left_column = (bool)strval($xml->variations->variation[0]['default_left_column']);
-
-		if (isset($xml->variations->variation[0]['default_right_column']))
-			$new_theme->default_right_column = (bool)strval($xml->variations->variation[0]['default_right_column']);
-
-		$fill_default_meta = true;
-		$metas_xml = array();
-		if ($xml->metas->meta)
-		{
-			foreach ($xml->metas->meta as $meta)
+			if ($theme_dir)
 			{
-				$meta_id = Db::getInstance()->getValue('SELECT id_meta FROM '._DB_PREFIX_.'meta WHERE page=\''.pSQL($meta['meta_page']).'\'');
-				if ((int)$meta_id > 0)
+				$new_theme->name = $theme_dir;
+				$new_theme->directory = $theme_dir;
+			}
+
+			foreach ($themes as $theme_object)
+			{
+				if ($theme_object->name == $new_theme->name)
+					return $this->l('Theme already installed.');
+			}
+
+			$new_theme->product_per_page = Configuration::get('PS_PRODUCTS_PER_PAGE');
+
+			if (isset($variation['product_per_page']))
+				$new_theme->product_per_page = intval($variation['product_per_page']);
+
+			$new_theme->responsive = false;
+			if (isset($variation['responsive']))
+				$new_theme->responsive = (bool)strval($variation['responsive']);
+
+			$new_theme->default_left_column = true;
+			$new_theme->default_right_column = true;
+
+			if (isset($variation['default_left_column']))
+				$new_theme->default_left_column = (bool)strval($variation['default_left_column']);
+
+			if (isset($variation['default_right_column']))
+				$new_theme->default_right_column = (bool)strval($variation['default_right_column']);
+
+			$fill_default_meta = true;
+			$metas_xml = array();
+			if ($xml->metas->meta)
+			{
+				foreach ($xml->metas->meta as $meta)
 				{
-					$tmp_meta = array();
-					$tmp_meta['id_meta'] = (int)$meta_id;
-					$tmp_meta['left'] = intval($meta['left']);
-					$tmp_meta['right'] = intval($meta['right']);
-					$metas_xml[(int)$meta_id] = $tmp_meta;
+					$meta_id = Db::getInstance()->getValue('SELECT id_meta FROM '._DB_PREFIX_.'meta WHERE page=\''.pSQL($meta['meta_page']).'\'');
+					if ((int)$meta_id > 0)
+					{
+						$tmp_meta = array();
+						$tmp_meta['id_meta'] = (int)$meta_id;
+						$tmp_meta['left'] = intval($meta['left']);
+						$tmp_meta['right'] = intval($meta['right']);
+						$metas_xml[(int)$meta_id] = $tmp_meta;
+					}
+				}
+				$fill_default_meta = false;
+				if (count($xml->metas->meta) < (int)Db::getInstance()->getValue('SELECT count(*) FROM '._DB_PREFIX_.'meta'))
+					$fill_default_meta = true;
+
+			}
+
+			if ($fill_default_meta == true)
+			{
+				$metas = Db::getInstance()->executeS('SELECT id_meta FROM '._DB_PREFIX_.'meta');
+				foreach ($metas as $meta)
+				{
+					if (!isset($metas_xml[(int)$meta['id_meta']]))
+					{
+						$tmp_meta['id_meta'] = (int)$meta['id_meta'];
+						$tmp_meta['left'] = $new_theme->default_left_column;
+						$tmp_meta['right'] = $new_theme->default_right_column;
+						$metas_xml[(int)$meta['id_meta']] = $tmp_meta;
+					}
 				}
 			}
-			$fill_default_meta = false;
-			if (count($xml->metas->meta) < (int)Db::getInstance()->getValue('SELECT count(*) FROM '._DB_PREFIX_.'meta'))
-				$fill_default_meta = true;
+			if (!is_dir(_PS_ALL_THEMES_DIR_.$new_theme->directory))
+				mkdir(_PS_ALL_THEMES_DIR_.$new_theme->directory);
 
-		}
+			$new_theme->add();
 
-		if ($fill_default_meta == true)
-		{
-			$metas = Db::getInstance()->executeS('SELECT id_meta FROM '._DB_PREFIX_.'meta');
-			foreach ($metas as $meta)
+			if ($new_theme->id > 0)
 			{
-				if (!isset($metas_xml[(int)$meta['id_meta']]))
-				{
-					$tmp_meta['id_meta'] = (int)$meta['id_meta'];
-					$tmp_meta['left'] = $new_theme->default_left_column;
-					$tmp_meta['right'] = $new_theme->default_right_column;
-					$metas_xml[(int)$meta['id_meta']] = $tmp_meta;
-				}
+				$new_theme->updateMetas($metas_xml);
+				$new_theme_array[] = $new_theme;
 			}
+			else
+				$new_theme_array[] = sprintf($this->l('Error while installing theme %s'), $new_theme->name);
+
 		}
-		if (!is_dir(_PS_ALL_THEMES_DIR_.$new_theme->directory))
-			mkdir(_PS_ALL_THEMES_DIR_.$new_theme->directory);
 
-		$new_theme->add();
-
-		if ($new_theme->id > 0)
-			$new_theme->updateMetas($metas_xml);
-		else
-			return $this->l('Error while installing theme');
-
-		return $new_theme;
+		return $new_theme_array;
 	}
 
 	public function renderImportTheme()
