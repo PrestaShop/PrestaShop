@@ -1522,8 +1522,6 @@ class AdminThemesControllerCore extends AdminController
 		$new_theme_array = array();
 		foreach ($xml->variations->variation as $variation)
 		{
-			var_dump($variation);
-
 			$name = strval($variation['name']);
 
 			$new_theme = new Theme();
