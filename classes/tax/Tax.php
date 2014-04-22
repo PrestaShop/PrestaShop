@@ -27,6 +27,11 @@
 
 class TaxCore extends ObjectModel
 {
+	const TAX_ROUND_ITEM = 1;
+	const TAX_ROUND_LINE = 2;
+	const TAX_ROUND_TOTAL = 3;
+
+
  	/** @var string Name */
 	public $name;
 
