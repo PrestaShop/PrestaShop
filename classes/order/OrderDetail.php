@@ -349,9 +349,23 @@ class OrderDetailCore extends ObjectModel
 		$values = '';
 		foreach ($this->tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $amount)
 		{
-			$unit_amount = (float)Tools::ps_round($amount, 2);
-			$total_amount = $unit_amount * $this->product_quantity;
-			$values .= '('.(int)$this->id.','.(float)$id_tax.','.$unit_amount.','.(float)$total_amount.'),';
+			switch (Configuration::get('PS_TAX_ROUND_TYPE'))
+			{
+				case Tax::TAX_ROUND_ITEM:
+					$unit_amount = (float)Tools::ps_round($amount, _PS_PRICE_DISPLAY_PRECISION_);
+					$total_amount = $unit_amount * $this->product_quantity;
+					break;
+				case Tax::TAX_ROUND_LINE:
+					$unit_amount = $amount;
+					$total_amount = Tools::ps_round($unit_amount * $this->product_quantity, _PS_PRICE_DISPLAY_PRECISION_);
+					break;
+				case Tax::TAX_ROUND_TOTAL:
+					$unit_amount = $amount;
+					$total_amount = $unit_amount * $this->product_quantity;
+					break;
+			}
+
+			$values .= '('.(int)$this->id.','.(int)$id_tax.','.(float)$unit_amount.','.(float)$total_amount.'),';
 		}
 
 		if ($replace)

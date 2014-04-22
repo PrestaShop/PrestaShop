@@ -82,6 +82,26 @@ class AdminTaxesControllerCore extends AdminController
 								),
 						'identifier' => 'id'
 						),
+					'PS_TAX_ROUND_TYPE' => array(
+						'title' => $this->l('Round taxes'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'list' => array(
+							array(
+								'name' => $this->l('Round the taxes on each item'),
+								'id' => Tax::TAX_ROUND_ITEM
+								),
+							array(
+								'name' => $this->l('Round the taxes on each line'),
+								'id' => Tax::TAX_ROUND_LINE
+								),
+							array(
+								'name' => $this->l('Round the taxes on the total'),
+								'id' => Tax::TAX_ROUND_TOTAL
+								),
+							),
+						'identifier' => 'id'
+					),
 					'PS_USE_ECOTAX' => array(
 						'title' => $this->l('Use ecotax'),
 						'desc' => $ecotax_desc,
