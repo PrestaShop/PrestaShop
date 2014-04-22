@@ -1509,6 +1509,18 @@ class AdminThemesControllerCore extends AdminController
 		}
 	}
 
+	protected function isThemeInstalled($theme_name)
+	{
+		$themes = Theme::getThemes();
+
+		foreach ($themes as $theme_object)
+		{
+			if ($theme_object->name == $theme_name)
+				return true;
+		}
+		return false;
+	}
+
 	/**
 	 * @param SimpleXMLElement	$xml
 	 * @param bool 				$theme_dir only used if the theme directory to import is already located on the shop
@@ -1517,8 +1529,6 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	protected function importThemeXmlConfig(SimpleXMLElement $xml, $theme_dir = false)
 	{
-		$themes = Theme::getThemes();
-
 		$new_theme_array = array();
 		foreach ($xml->variations->variation as $variation)
 		{
@@ -1535,10 +1545,10 @@ class AdminThemesControllerCore extends AdminController
 				$new_theme->directory = $theme_dir;
 			}
 
-			foreach ($themes as $theme_object)
+			if ($this->isThemeInstalled($new_theme->name))
 			{
-				if ($theme_object->name == $new_theme->name)
-					return $this->l('Theme already installed.');
+				$new_theme_array[] = sprintf($this->l('Theme %s already installed.'), $new_theme->name);
+				continue;
 			}
 
 			$new_theme->product_per_page = Configuration::get('PS_PRODUCTS_PER_PAGE');
