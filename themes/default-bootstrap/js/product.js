@@ -611,21 +611,6 @@ function updateDisplay()
 				reduction = ps_round(reduction / tax, 6);
 		}
 
-		if (selectedCombination.specific_price)
-		{
-			if (selectedCombination.specific_price.reduction_percent > 0) {
-				$('#reduction_amount').hide();
-				$('#reduction_percent_display').html('-' + parseFloat(selectedCombination['specific_price'].reduction_percent) + '%');
-				$('#reduction_percent').show();
-			} else if (selectedCombination.specific_price.reduction_price > 0) {
-				$('#reduction_amount_display').html('-' + formatCurrency(reduction_price, currencyFormat, currencySign, currencyBlank));
-				$('#reduction_percent').hide();
-				$('#reduction_amount').show();
-			} else {
-				$('#reduction_percent').hide();
-				$('#reduction_amount').hide();
-			}
-		}
 
 		if (product_specific_price['reduction_type'] != '' || selectedCombination.specific_price.reduction_percent > 0 || selectedCombination.specific_price.reduction_price > 0)
 			$('#discount_reduced_price,#old_price').show();
@@ -689,6 +674,21 @@ function updateDisplay()
 		ecotaxAmount = !displayPrice ? ps_round(selectedCombination['ecotax'] * (1 + ecotaxTax_rate / 100), 2) : selectedCombination['ecotax'];
 		$('#ecotax_price_display').text(formatCurrency(ecotaxAmount, currencyFormat, currencySign, currencyBlank));
 
+		if (selectedCombination.specific_price)
+		{
+			if (selectedCombination.specific_price.reduction_percent > 0) {
+				$('#reduction_amount').hide();
+				$('#reduction_percent_display').html('-' + parseFloat((1-(productPriceDisplay/productPriceWithoutReductionDisplay))*100).toFixed(0) + '%');
+				$('#reduction_percent').show();
+			} else if (selectedCombination.specific_price.reduction_price > 0) {
+				$('#reduction_amount_display').html('-' + formatCurrency(parseFloat(productPriceWithoutReductionDisplay-productPriceDisplay), currencyFormat, currencySign, currencyBlank));
+				$('#reduction_percent').hide();
+				$('#reduction_amount').show();
+			} else {
+				$('#reduction_percent').hide();
+				$('#reduction_amount').hide();
+			}
+		}
 
 		updateDiscountTable(productPriceDisplay);
 
