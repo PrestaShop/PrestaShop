@@ -243,8 +243,8 @@ class AdminImportControllerCore extends AdminController
 					'minimal_quantity' => array('label' => $this->l('Minimal quantity')),
 					'visibility' => array('label' => $this->l('Visibility')),
 					'additional_shipping_cost' => array('label' => $this->l('Additional shipping cost')),
-					'unity' => array('label' => $this->l('Unity')),
-					'unit_price_ratio' => array('label' => $this->l('Unit price ratio')),
+					'unity' => array('label' => $this->l('Unit for the unit price')),
+					'unit_price_ratio' => array('label' => $this->l('Unit price')),
 					'description_short' => array('label' => $this->l('Short description')),
 					'description' => array('label' => $this->l('Description')),
 					'tags' => array('label' => $this->l('Tags (x,y,z...)')),
@@ -262,7 +262,7 @@ class AdminImportControllerCore extends AdminController
 					'delete_existing_images' => array(
 						'label' => $this->l('Delete existing images (0 = No, 1 = Yes)')
 					),
-					'features' => array('label' => $this->l('Feature(Name:Value:Position:Customized)')),
+					'features' => array('label' => $this->l('Feature (Name:Value:Position:Customized)')),
 					'online_only' => array('label' => $this->l('Available online only (0 = No, 1 = Yes)')),
 					'condition' => array('label' => $this->l('Condition')),
 					'customizable' => array('label' => $this->l('Customizable (0 = No, 1 = Yes)')),
