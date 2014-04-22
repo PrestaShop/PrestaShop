@@ -2141,6 +2141,7 @@ class AdminThemesControllerCore extends AdminController
 						'title' => $this->l('Modules to install'),
 						'icon' => 'icon-picture'
 					),
+					'description' => $this->l('The themes include their own modules in order to work properly. This option determines which module should be enabled or disabled. If you are unsure of what to do next, just press the "Save" button and proceed to the next step.'),
 					'input' => array(
 						array(
 							'type' => 'shop',
@@ -2154,8 +2155,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'submit' => array(
 						'title' => $this->l('Save'),
-					),
-					'desc' => $this->l('The themes include their own modules in order to work properly. This option determines which module should be enabled or disabled. If you are unsure of what to do next, just press the "Save" button and proceed to the next step.')
+					),					
 				)
 			);
 
