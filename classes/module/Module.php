@@ -1599,7 +1599,7 @@ abstract class ModuleCore
 	 * Reposition module
 	 *
 	 * @param boolean $id_hook Hook ID
-	 * @param boolean $way Up (1) or Down (0)
+	 * @param boolean $way Up (0) or Down (1)
 	 * @param int $position
 	 */
 	public function updatePosition($id_hook, $way, $position = null)
