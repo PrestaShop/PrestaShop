@@ -2736,6 +2736,8 @@ exit;
 	 */
 	public static function recurseCopy($src, $dst, $del = false)
 	{
+		if (!Tools::file_exists_cache($src))
+			return false;
 		$dir = opendir($src);
 
 		if (!Tools::file_exists_cache($dst))
