@@ -68,7 +68,10 @@
 	                    {/foreach}
 	                {/foreach}
 	                	<br/>
-						{if $store.phone}{l s='Phone:' js=0} {$store.phone}{/if}
+						{if $store.phone}<br/>{l s='Phone:'} {$store.phone|escape:'html':'UTF-8'}{/if}
+						{if $store.fax}<br/>{l s='Fax:'} {$store.fax|escape:'html':'UTF-8'}{/if}
+						{if $store.email}<br/>{l s='Email:'} {$store.email|escape:'html':'UTF-8'}{/if}
+						{if $store.note}<br/><br/>{$store.note|escape:'html':'UTF-8'|nl2br}{/if}
 					</td>
 		            <td class="store-hours">
 						{if isset($store.working_hours)}{$store.working_hours}{/if}
