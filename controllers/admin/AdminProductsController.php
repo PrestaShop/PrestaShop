@@ -489,7 +489,7 @@ class AdminProductsControllerCore extends AdminController
 				$max_post = (int)ini_get('post_max_size');
 				$upload_mb = min($max_upload, $max_post);
 				$_FILES['attachment_file']['error'][] = sprintf(
-					$this->l('The file %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.'),
+					$this->l('File %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.'),
 					'<b>'.$_FILES['attachment_file']['name'].'</b> ',
 					'<b>'.$upload_mb.'</b>'
 				);
@@ -3241,7 +3241,7 @@ class AdminProductsControllerCore extends AdminController
 		if (!file_exists($exists_file)
 			&& !empty($product->productDownload->display_filename)
 			&& empty($product->cache_default_attribute))
-			$msg = sprintf(Tools::displayError('This file "%s" is missing'),
+			$msg = sprintf(Tools::displayError('File "%s" is missing'),
 				$product->productDownload->display_filename);
 		else
 			$msg = '';
