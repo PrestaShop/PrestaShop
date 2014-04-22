@@ -654,7 +654,11 @@ class AdminControllerCore extends Controller
 						elseif ($type == 'select')
 							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = \''.pSQL($value).'\' ';
 						else
+						{
+							if ($type == 'price')
+								$value = (float)str_replace(',', '.', $value);
 							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL($value).'%\' ';
+						}
 					}
 				}
 			}
