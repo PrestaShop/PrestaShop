@@ -885,7 +885,9 @@ class FrontControllerCore extends Controller
 		// Retrieve the default number of products per page and the other available selections
 		$default_products_per_page = max(1, (int)Configuration::get('PS_PRODUCTS_PER_PAGE'));
 		$nArray = array($default_products_per_page, $default_products_per_page * 2, $default_products_per_page * 5);
-		
+
+		if ((int)Tools::getValue('n') && (int)$total_products > 0)
+			$nArray[] = $total_products;
 		// Retrieve the current number of products per page (either the default, the GET parameter or the one in the cookie)
 		$this->n = $default_products_per_page;
 		if ((int)Tools::getValue('n') > 0 && in_array((int)Tools::getValue('n'), $nArray))
