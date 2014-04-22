@@ -1784,14 +1784,14 @@ class AdminThemesControllerCore extends AdminController
 
 			$content = '';
 			if (Configuration::hasKey('PS_LOGO') && trim(Configuration::get('PS_LOGO')) != ''
-				&& file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
+				&& file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')) && filesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
 			{
 				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO'));
 				Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
 				Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 			}
-			if (file_exists(_PS_IMG_DIR_.'logo_mobile.jpg') && Configuration::get('PS_LOGO_MOBILE')
-				 && trim(Configuration::get('PS_LOGO_MOBILE')) != '')
+			if (Configuration::get('PS_LOGO_MOBILE') && trim(Configuration::get('PS_LOGO_MOBILE')) != '' 
+				&& file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE')) && filesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE')))
 			{
 				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE'));
 				Configuration::updateValue('SHOP_LOGO_MOBILE_HEIGHT', (int)round($height));
