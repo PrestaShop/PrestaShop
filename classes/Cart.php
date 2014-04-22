@@ -1391,6 +1391,8 @@ class CartCore extends ObjectModel
 			$with_taxes = false;
 
 		$products_total = array();
+		$ecotax_total = 0;
+
 		foreach ($products as $product) // products refer to the cart details
 		{
 			if ($virtual_context->shop->id != $product['id_shop'])
@@ -1402,7 +1404,7 @@ class CartCore extends ObjectModel
 				$id_address = (int)$product['id_address_delivery']; // Get delivery address of the product from the cart
 			if (!Address::addressExists($id_address))
 				$id_address = null;
-		
+
 			$price = Product::getPriceStatic(
 				(int)$product['id_product'],
 				false,
@@ -1417,17 +1419,29 @@ class CartCore extends ObjectModel
 				(int)$this->id,
 				$id_address,
 				$null,
-				true,
+				false,
 				true,
 				$virtual_context
 			);
-			
+
+			if (Configuration::get('PS_USE_ECOTAX'))
+			{
+				$ecotax = $product['ecotax'];
+				if (isset($product['attribute_ecotax']) && $product['attribute_ecotax'] > 0)
+					$ecotax = $product['attribute_ecotax'];
+			}
+			else
+				$ecotax = 0;
+
 			if ($with_taxes)
-			{				
+			{		
 				$address = Address::initialize($id_address, true);
 
 				$id_tax_rules_group = Product::getIdTaxRulesGroupByIdProduct((int)$product['id_product'], $virtual_context);
 				$tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
+
+				if ($ecotax)
+					$ecotax_tax_calculator = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID'))->getTaxCalculator();
 				
 				if (in_array(Configuration::get('PS_TAX_ROUND_TYPE'), array(Tax::TAX_ROUND_ITEM, Tax::TAX_ROUND_LINE)))
 				{
@@ -1442,12 +1456,18 @@ class CartCore extends ObjectModel
 				{
 					case Tax::TAX_ROUND_ITEM:
 						$products_total[$id_tax_rules_group] += Tools::ps_round($tax_calculator->addTaxes($price), _PS_PRICE_DISPLAY_PRECISION_) * (int)$product['cart_quantity'];
+						if ($ecotax)
+							$ecotax_total += Tools::ps_round($ecotax_tax_calculator->addTaxes($ecotax), _PS_PRICE_DISPLAY_PRECISION_) * (int)$product['cart_quantity'];
 						break;
 					case Tax::TAX_ROUND_LINE:
 						$products_total[$id_tax_rules_group] += Tools::ps_round($tax_calculator->addTaxes($price) * (int)$product['cart_quantity'], _PS_PRICE_DISPLAY_PRECISION_);
+						if ($ecotax)
+							$ecotax_total += Tools::ps_round($ecotax_tax_calculator->addTaxes($ecotax) * (int)$product['cart_quantity'], _PS_PRICE_DISPLAY_PRECISION_);
 						break;
 					case Tax::TAX_ROUND_TOTAL:
 						$products_total[$id_tax_rules_group.'_'.$id_address] += $price * (int)$product['cart_quantity'];
+						if ($ecotax)
+							$ecotax_total += $ecotax * (int)$product['cart_quantity'];
 						break;
 				}
 			}
@@ -1455,8 +1475,10 @@ class CartCore extends ObjectModel
 			{
 				if (!isset($products_total[0]))
 					$products_total[0] = 0;
-
 				$products_total[0] += $price * (int)$product['cart_quantity'];
+
+				if ($ecotax)
+					$ecotax_total += $ecotax * (int)$product['cart_quantity'];
 			}
 		}
 
@@ -1473,6 +1495,10 @@ class CartCore extends ObjectModel
 				$order_total += $price;
 		}
 
+		if ($with_taxes && Configuration::get('PS_TAX_ROUND_TYPE') == Tax::TAX_ROUND_TOTAL)
+			$ecotax_total = Tools::ps_round($ecotax_tax_calculator->addTaxes($ecotax_total), _PS_PRICE_DISPLAY_PRECISION_);
+
+		$order_total += $ecotax_total;
 		$order_total_products = $order_total;
 
 		if ($type == Cart::ONLY_DISCOUNTS)
