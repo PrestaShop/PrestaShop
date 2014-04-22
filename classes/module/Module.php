@@ -591,11 +591,12 @@ abstract class ModuleCore
 
 		foreach ($this->controllers as $controller)
 		{
-			$meta = Meta::getMetaByPage('module-'.$this->name.'-'.$controller, $this->context->language->id);
-			if ((int)$meta['id_meta'] > 0)
+			$page_name = 'module-'.$this->name.'-'.$controller;
+			$meta = Db::getInstance()->getValue('SELECT id_meta FROM `'._DB_PREFIX_.'meta` WHERE page="'.$page_name.'"');
+			if ((int)$meta > 0)
 			{
-				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'theme_meta` WHERE id_meta='.(int)$meta['id_meta']);
-				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'meta` WHERE id_meta='.(int)$meta['id_meta']);
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'theme_meta` WHERE id_meta='.$meta);
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'meta` WHERE id_meta='.$meta);
 			}
 		}
 
