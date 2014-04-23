@@ -58,7 +58,7 @@ abstract class ModuleCore
 	public $author;
 
 	/** @var string Module key provided by addons.prestashop.com */
-	public $key;
+	public $key = '';
 
 	public $description_full;
 
@@ -1147,18 +1147,17 @@ abstract class ModuleCore
 			$iso = substr(Context::getContext()->language->iso_code, 0, 2);
 
 			// Check if config.xml module file exists and if it's not outdated
-			$xml_exist = true;
-			$configFile = _PS_MODULE_DIR_.$module.'/config_'.$iso.'.xml';
-			if ($iso == 'en' || !file_exists($configFile))
-			{
+
+			if ($iso == 'en')
+				$configFile = _PS_MODULE_DIR_.$module.'/config.xml';
+			else
 				$configFile = _PS_MODULE_DIR_.$module.'/config_'.$iso.'.xml';
-				if (!file_exists($configFile))
-					$xml_exist = false;
-			}
+
+			$xml_exist = (file_exists($configFile));
 			$needNewConfigFile = $xml_exist ? (@filemtime($configFile) < @filemtime(_PS_MODULE_DIR_.$module.'/'.$module.'.php')) : true;
 
 			// If config.xml exists and that the use config flag is at true
-			if ($useConfig && $xml_exist)
+			if ($useConfig && $xml_exist && !$needNewConfigFile)
 			{
 				// Load config.xml
 				libxml_use_internal_errors(true);
@@ -1168,7 +1167,7 @@ abstract class ModuleCore
 				libxml_clear_errors();
 
 				// If no errors in Xml, no need instand and no need new config.xml file, we load only translations
-				if (!count($errors) && (int)$xml_module->need_instance == 0 && !$needNewConfigFile)
+				if (!count($errors) && (int)$xml_module->need_instance == 0)
 				{
 					$file = _PS_MODULE_DIR_.$module.'/'.Context::getContext()->language->iso_code.'.php';
 					if (Tools::file_exists_cache($file) && include_once($file))
@@ -1316,13 +1315,15 @@ abstract class ModuleCore
 					foreach ($xml->module as $modaddons)
 					{
 						$flag_found = 0;
-						foreach ($module_list as $k => $m)
+						foreach ($module_list as $k => &$m)
 							if ($m->name == $modaddons->name && !isset($m->available_on_addons))
 							{
 								$flag_found = 1;
+								$m->type = strip_tags((string)$f['type']);
 								if ($m->version != $modaddons->version && version_compare($m->version, $modaddons->version) === -1)
 									$module_list[$k]->version_addons = $modaddons->version;
 							}
+
 						if ($flag_found == 0)
 						{
 							$item = new stdClass();
@@ -1343,8 +1344,8 @@ abstract class ModuleCore
 							$item->need_instance = 0;
 							$item->not_on_disk = 1;
 							$item->available_on_addons = 1;
+							$item->trusted = true;
 							$item->active = 0;
-							$item->trusted = Module::isModuleTrusted($tmp_module->name, $tmp_module->key);
 							$item->description_full = stripslashes($modaddons->description_full);
 							$item->additional_description = isset($modaddons->additional_description) ? stripslashes($modaddons->additional_description) : null;
 							$item->compatibility = isset($modaddons->compatibility) ? (array)$modaddons->compatibility : null;
@@ -1505,13 +1506,25 @@ abstract class ModuleCore
 	 */
 	public static function isModuleTrusted($name, $key)
 	{
-		/*$params = array(
-					'module_name' => $name,
-					'module_key' => $key,
-				);
-		$xml = Tools::addonsRequest('check_module', $params);
-		*/
-		return false;
+		// Native and MustHave module might not have keys but they are trusted
+		$haystack  = '';
+		$haystack .= Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
+		$haystack .= Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_MUST_HAVE_MODULES_LIST);
+
+		if (strstr($haystack, $name))
+			return true;
+		elseif ($key === '')
+			return false;
+		else
+		{
+			$params = array(
+						'module_name' => $name,
+						'module_key' => $key,
+					);
+			$xml = Tools::addonsRequest('check_module', $params);
+
+			return (stristr($xml, 'success'));
+		}
 	}
 
 	/**
@@ -1987,6 +2000,7 @@ abstract class ModuleCore
 	<author><![CDATA['.Tools::htmlentitiesUTF8($this->author).']]></author>
 	<tab><![CDATA['.Tools::htmlentitiesUTF8($this->tab).']]></tab>'.(isset($this->confirmUninstall) ? "\n\t".'<confirmUninstall><![CDATA['.$this->confirmUninstall.']]></confirmUninstall>' : '').'
 	<is_configurable>'.(isset($this->is_configurable) ? (int)$this->is_configurable : 0).'</is_configurable>
+	<trusted>'.(int)Module::isModuleTrusted($this->name, $this->key).'</trusted>
 	<need_instance>'.(int)$this->need_instance.'</need_instance>'.(isset($this->limited_countries) ? "\n\t".'<limited_countries>'.(count($this->limited_countries) == 1 ? $this->limited_countries[0] : '').'</limited_countries>' : '').'
 </module>';
 		if (is_writable(_PS_MODULE_DIR_.$this->name.'/'))
