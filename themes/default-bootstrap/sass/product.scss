@@ -531,6 +531,7 @@ span.view_scroll_spacer {
 		&.added.disabled, 
 		&.disabled {
 			&:before {
+				height: 51px;
 				content: "\f110";
 				animation: 2s linear 0s normal none infinite spin;
 				-webkit-animation: 2s linear 0s normal none infinite spin;
