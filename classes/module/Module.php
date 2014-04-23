@@ -57,6 +57,9 @@ abstract class ModuleCore
 	/** @var string author of the module */
 	public $author;
 
+	/** @var string Module key provided by addons.prestashop.com */
+	public $key;
+
 	public $description_full;
 
 	public $additional_description;
@@ -77,6 +80,9 @@ abstract class ModuleCore
 
 	/** @var boolean Status */
 	public $active = false;
+
+	/** @var boolean Is the module certified by addons.prestashop.com */
+	public $trusted = false;
 
 	/** @var string Fill it if the module is installed but not yet set up */
 	public $warning;
@@ -1232,6 +1238,7 @@ abstract class ModuleCore
 					$item->is_configurable = $tmp_module->is_configurable = method_exists($tmp_module, 'getContent') ? 1 : 0;
 					$item->need_instance = isset($tmp_module->need_instance) ? $tmp_module->need_instance : 0;
 					$item->active = $tmp_module->active;
+					$item->trusted = Module::isModuleTrusted($tmp_module->name, $tmp_module->key);
 					$item->currencies = isset($tmp_module->currencies) ? $tmp_module->currencies : null;
 					$item->currencies_mode = isset($tmp_module->currencies_mode) ? $tmp_module->currencies_mode : null;
 					$item->confirmUninstall = isset($tmp_module->confirmUninstall) ? html_entity_decode($tmp_module->confirmUninstall) : null;
@@ -1242,7 +1249,7 @@ abstract class ModuleCore
 					$item->avg_rate = isset($tmp_module->avg_rate) ? (array)$tmp_module->avg_rate : null;
 					$item->badges = isset($tmp_module->badges) ? (array)$tmp_module->badges : null;
 					$item->url = isset($tmp_module->url) ? $tmp_module->url : null;
-					
+
 					$item->onclick_option  = method_exists($module, 'onclickOption') ? true : false;
 					if ($item->onclick_option)
 					{
@@ -1337,6 +1344,7 @@ abstract class ModuleCore
 							$item->not_on_disk = 1;
 							$item->available_on_addons = 1;
 							$item->active = 0;
+							$item->trusted = Module::isModuleTrusted($tmp_module->name, $tmp_module->key);
 							$item->description_full = stripslashes($modaddons->description_full);
 							$item->additional_description = isset($modaddons->additional_description) ? stripslashes($modaddons->additional_description) : null;
 							$item->compatibility = isset($modaddons->compatibility) ? (array)$modaddons->compatibility : null;
@@ -1461,7 +1469,6 @@ abstract class ModuleCore
 		$native_modules = simplexml_load_file($module_list_xml);
 		$native_modules = $native_modules->modules;
 		$modules = array();
-
 		foreach ($native_modules as $native_modules_type)
 			if (in_array($native_modules_type['type'], array('native', 'partner')))
 			{
@@ -1487,6 +1494,24 @@ abstract class ModuleCore
 				 WHERE k.`position` = 1
 				 GROUP BY m.id_module';
 		return Db::getInstance()->executeS($sql);
+	}
+
+	/**
+	 * Return if the module is provided by addons.prestashop.com or not
+	 *
+	 * @param string $name The module name (the folder name)
+	 * @param string $key The key provided by addons
+	 * @return boolean
+	 */
+	public static function isModuleTrusted($name, $key)
+	{
+		/*$params = array(
+					'module_name' => $name,
+					'module_key' => $key,
+				);
+		$xml = Tools::addonsRequest('check_module', $params);
+		*/
+		return false;
 	}
 
 	/**

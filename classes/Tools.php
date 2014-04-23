@@ -2916,6 +2916,9 @@ exit;
 			case 'check_customer':
 				$postData .= '&method=check_customer&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
 				break;
+			case 'check_module':
+				$postData .= '&method=check&module_name='.urlencode($params['module_name']).'&module_key='.urlencode($params['module_key']);
+				break;
 			case 'module':
 				$postData .= '&method=module&id_module='.urlencode($params['id_module']);
 				if (isset($params['username_addons']) && isset($params['password_addons']))
