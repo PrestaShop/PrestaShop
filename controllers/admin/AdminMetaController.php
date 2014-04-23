@@ -101,7 +101,7 @@ class AdminMetaControllerCore extends AdminController
 		if ($this->checkConfiguration($this->ht_file))
 		{
 			$general_fields['PS_HTACCESS_DISABLE_MULTIVIEWS'] = array(
-				'title' => $this->l('Disable apache multiviews'),
+				'title' => $this->l('Disable Apache\'s MultiViews option'),
 				'hint' => $this->l('Enable this option only if you have problems with URL rewriting.'),
 				'validation' => 'isBool',
 				'cast' => 'intval',
@@ -109,8 +109,8 @@ class AdminMetaControllerCore extends AdminController
 			);
 
 			$general_fields['PS_HTACCESS_DISABLE_MODSEC'] = array(
-				'title' => $this->l('Disable apache mod security'),
-				'hint' => $this->l('Some features could not work correctly with a specific configuration of Apache mod_security. We recommend to turn it off.'),
+				'title' => $this->l('Disable Apache\'s mod_security module'),
+				'hint' => $this->l('Some of PrestaShop\'s features might not work correctly with a specific configuration of Apache\'s mod_security module. We recommend to turn it off.'),
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool',
@@ -119,12 +119,12 @@ class AdminMetaControllerCore extends AdminController
 		else
 		{
 			$url_description = $this->l('Before you can use this tool, you need to:');
-			$url_description .= $this->l('Create a blank .htaccess file in your root directory.');
-			$url_description .= $this->l('Give it write permissions (CHMOD 666 on Unix system).');
+			$url_description .= $this->l('1) Create a blank .htaccess file in your root directory.');
+			$url_description .= $this->l('2) Give it write permissions (CHMOD 666 on Unix system).');
 		}
 
 		// Options to generate robot.txt
-		$robots_description = $this->l('Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.yoursite.com/robots.txt).');
+		$robots_description = $this->l('Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.example.com/robots.txt).');
 		if ($this->checkConfiguration($this->rb_file))
 		{
 			$robots_description .= $this->l('Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)');
@@ -133,8 +133,8 @@ class AdminMetaControllerCore extends AdminController
 		else
 		{
 			$robots_description .= $this->l('Before you can use this tool, you need to:');
-			$robots_description .= $this->l('Create a blank robots.txt file in your root directory.');
-			$robots_description .= $this->l('Give it write permissions (CHMOD 666 on Unix system).');
+			$robots_description .= $this->l('1) Create a blank robots.txt file in your root directory.');
+			$robots_description .= $this->l('2) Give it write permissions (CHMOD 666 on Unix system).');
 		}
 
 		$robots_options = array(
@@ -201,7 +201,7 @@ class AdminMetaControllerCore extends AdminController
 		{
 			$this->fields_options['routes'] = array(
 				'title' =>	$this->l('Schema of URLs'),
-				'description' => $this->l('Change the pattern of your links. There are some available keywords for each route listed below, keywords with * are required. To add a keyword in your URL use {keyword} syntax. You can add text before or after the keyword if the keyword is not empty with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set. Friendly URL and rewriting Apache option must be activated on your web server to use this functionality.'),
+				'description' => $this->l('This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.').'<br />'.$this->l('There are several available keywords for each route listed below; note that keywords with * are required!').'<br />'.$this->l('To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.'),
 				'fields' => array(),
 				'submit' => array('title' => $this->l('Save'))
 			);
