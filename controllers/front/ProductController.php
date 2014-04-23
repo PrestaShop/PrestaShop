@@ -145,9 +145,9 @@ class ProductControllerCore extends FrontController
 					// If the previous page was a category and is a parent category of the product use this category as parent category
 					$id_object = false;
 					if (isset($regs[1]) && is_numeric($regs[1]))
-						$id_object = (int)$regs[2];
+						$id_object = (int)$regs[1];
 					elseif (isset($regs[5]) && is_numeric($regs[5]))
-						$id_object = (int)$regs[6];
+						$id_object = (int)$regs[5];
 					if ($id_object)
 					{
 						$referers = array($_SERVER['HTTP_REFERER'],urldecode($_SERVER['HTTP_REFERER']));

@@ -1560,7 +1560,7 @@ class AdminControllerCore extends Controller
 		$current_id = Tab::getCurrentParentId();
 		foreach ($tabs as $index => $tab)
 		{
-			if (!checkTabRights($tab['id_tab'])
+			if (!Tab::checkTabRights($tab['id_tab'])
 				|| ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
 				|| $tab['class_name'] == 'AdminCarrierWizard')
 			{
