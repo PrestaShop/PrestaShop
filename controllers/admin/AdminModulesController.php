@@ -1236,6 +1236,21 @@ class AdminModulesControllerCore extends AdminController
 			'modal_title' => $this->l('Translate this module'),
 			'modal_content' => $modal_content
 		);
+
+		if (true) // Find correct test
+		{
+			$this->context->smarty->assign(array(
+				'catalog_link' => $this->context->link->getAdminLink('AdminAddonsCatalog'),
+			));
+			$modal_content = $this->context->smarty->fetch('controllers/modules/modal_not_trusted.tpl');
+
+			$this->modals[] = array(
+				'modal_id' => "moduleNotTrusted",
+				'modal_class' => "modal-lg",
+				'modal_title' => null,
+				'modal_content' => $modal_content
+			);
+		}
 	}
 
 	public function initContent()
