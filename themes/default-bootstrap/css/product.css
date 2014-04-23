@@ -566,6 +566,7 @@ span.view_scroll_spacer {
     #center_column.col-sm-9 .col-md-3 .box-info-product .exclusive.added:before {
       content: "\f00c"; }
     #center_column.col-sm-9 .col-md-3 .box-info-product .exclusive.added.disabled:before, #center_column.col-sm-9 .col-md-3 .box-info-product .exclusive.disabled:before {
+      height:51px;      
       content: "\f110";
       animation: 2s linear 0s normal none infinite spin;
       -webkit-animation: 2s linear 0s normal none infinite spin;
