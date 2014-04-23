@@ -120,9 +120,15 @@ module_inactive
 											</a>
 										{/if}
 									{else}
+										{if isset($module->trusted) && $module->trusted}
 										<a class="btn btn-success" href="{$module->options.install_url}">
 											<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
 										</a>
+										{else}
+										<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrusted" data-toggle="modal" data-link="{$module->options.install_url}" data-module-name="{$module->displayName}">
+											<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
+										</a>
+										{/if}
 									{/if}
 
 									{if !isset($module->not_on_disk) && isset($module->id)}

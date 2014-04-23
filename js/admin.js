@@ -882,6 +882,15 @@ $(document).ready(function()
 		});
 	}); // end bind
 
+	$(document).on('click', '.untrustedaddon', function(e){
+		e.preventDefault();
+		var moduleName = $(this).data('module-name');
+		var moduleLink = $(this).data('link');
+
+		$('.modal .module-name-placeholder').text(moduleName);
+		$('.modal #proceed-install-anyway').attr('href', moduleLink);
+	});
+
 	// if count errors
 	$('#hideError').on('click', function(e)
 	{
