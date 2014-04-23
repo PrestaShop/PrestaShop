@@ -698,7 +698,7 @@ class InstallModelInstall extends InstallAbstractModel
 			$xml_loader = new $class();
 			if (!$xml_loader instanceof InstallXmlLoader)
 			{
-				$this->setError($this->language->l('"%s" must be an instane of "InstallXmlLoader"', $class));
+				$this->setError($this->language->l('"%s" must be an instance of "InstallXmlLoader"', $class));
 				return false;
 			}
 		}

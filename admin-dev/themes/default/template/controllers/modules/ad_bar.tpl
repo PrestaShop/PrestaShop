@@ -22,24 +22,32 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if !isset($content_only) || !$content_only}
-					</div><!-- #center_column -->
-					{if isset($right_column_size) && !empty($right_column_size)}
-						<div id="right_column" class="col-xs-12 col-sm-{$right_column_size|intval} column">{$HOOK_RIGHT_COLUMN}</div>
-					{/if}
-					</div><!-- .row -->
-				</div><!-- #columns -->
-			</div><!-- .columns-container -->
-			{if isset($HOOK_FOOTER)}
-				<!-- Footer -->
-				<div class="footer-container">
-					<footer id="footer"  class="container">
-						<div class="row">{$HOOK_FOOTER}</div>
-					</footer>
-				</div><!-- #footer -->
-			{/if}
-		</div><!-- #page -->
+{if count($ad_modules.not_installed)}
+<div class="bootstrap panel">
+	<h3><i class="icon-certificate"></i> {l s='You might be interested in'}</h3>
+	<div class="row">
+		<table id="tab_modules_list_not_installed" class="table">
+			{foreach from=$ad_modules.not_installed item=module}
+				{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
+			{/foreach}
+		</table>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.fancybox-quick-view').fancybox({
+			type: 'ajax',
+			autoDimensions: false,
+			autoSize: false,
+			width: 600,
+			height: 'auto',
+			helpers: {
+				overlay: {
+					locked: false
+				}
+			}
+		});
+	});
+</script>
 {/if}
-{include file="$tpl_dir./global.tpl"}
-	</body>
-</html>
+
