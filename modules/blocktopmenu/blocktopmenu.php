@@ -138,7 +138,7 @@ class Blocktopmenu extends Module
 		$links_label = Tools::getValue('link') ? array_filter(Tools::getValue('link'), 'strlen') : array();
 		$spacer = str_repeat('&nbsp;', $this->spacer_size);
 		$divLangName = 'link_label';
-		
+
 		$update_cache = false;
 
 		if (Tools::isSubmit('submitBlocktopmenu'))
@@ -195,10 +195,10 @@ class Blocktopmenu extends Module
 			}
 			$update_cache = true;
 		}
-		
+
 		if ($update_cache)
 			$this->clearMenuCache();
-		
+
 		$this->_html .= '
 		<fieldset>
 			<div class="multishop_info">
@@ -228,7 +228,7 @@ class Blocktopmenu extends Module
 		// BEGIN SUPPLIER
 		$this->_html .= '<optgroup label="'.$this->l('Supplier').'">';
 		// Option to show all Suppliers
-		$this->_html .= '<option value="ALLSUP0">'.$this->l('All suppliers').'</option>';
+		$this->_html .= '<option value="ALLSUP0">'.$this->l('All suppliers').'</option></option><option value="NOLINKALLSUP0">'.$this->l('All suppliers without link to page').'</option>';
 		$suppliers = Supplier::getSuppliers(false, $id_lang);
 		foreach ($suppliers as $supplier)
 			$this->_html .= '<option value="SUP'.$supplier['id_supplier'].'">'.$spacer.$supplier['name'].'</option>';
@@ -237,7 +237,7 @@ class Blocktopmenu extends Module
 		// BEGIN Manufacturer
 		$this->_html .= '<optgroup label="'.$this->l('Manufacturer').'">';
 		// Option to show all Manufacturers
-		$this->_html .= '<option value="ALLMAN0">'.$this->l('All manufacturers').'</option>';
+		$this->_html .= '<option value="ALLMAN0">'.$this->l('All manufacturers').'</option><option value="NOLINKALLMAN0">'.$this->l('All manufacturers without link to page').'</option>';
 		$manufacturers = Manufacturer::getManufacturers(false, $id_lang);
 		foreach ($manufacturers as $manufacturer)
 			$this->_html .= '<option value="MAN'.$manufacturer['id_manufacturer'].'">'.$spacer.$manufacturer['name'].'</option>';
@@ -247,7 +247,7 @@ class Blocktopmenu extends Module
 		$this->_html .= '<optgroup label="'.$this->l('Categories').'">';
 		$this->getCategoryOption(1, (int)$id_lang, (int)Shop::getContextShopID());
 		$this->_html .= '</optgroup>';
-		
+
 		// BEGIN Shops
 		if (Shop::isFeatureActive())
 		{
@@ -258,10 +258,10 @@ class Blocktopmenu extends Module
 				if (!$shop->setUrl() && !$shop->getBaseURL())
 					continue;
 				$this->_html .= '<option value="SHOP'.(int)$shop->id.'">'.$spacer.$shop->name.'</option>';
-			}	
+			}
 			$this->_html .= '</optgroup>';
 		}
-		
+
 		// BEGIN Products
 		$this->_html .= '<optgroup label="'.$this->l('Products').'">';
 		$this->_html .= '<option value="PRODUCT" style="font-style:italic">'.$spacer.$this->l('Choose product ID').'</option>';
@@ -294,7 +294,7 @@ class Blocktopmenu extends Module
 								<a href="#" id="removeItem" style="border: 1px solid rgb(170, 170, 170); margin: 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">&lt;&lt; '.$this->l('Remove').'</a>
 							</td>
 							<td style="vertical-align:top;padding:5px 15px;">
-								<h4 style="margin-top:5px;">'.$this->l('Change position').'</h4> 
+								<h4 style="margin-top:5px;">'.$this->l('Change position').'</h4>
 								<a href="#" id="menuOrderUp" class="button" style="font-size:20px;display:block;">&uarr;</a><br/>
 								<a href="#" id="menuOrderDown" class="button" style="font-size:20px;display:block;">&darr;</a><br/>
 							</td>
@@ -519,6 +519,11 @@ class Blocktopmenu extends Module
 					$this->_html .= '<option value="ALLMAN0">'.$this->l('All manufacturers').'</option>'.PHP_EOL;
 					break;
 
+				// Case to handle the option to show all Manufacturers without the link to the related page
+				case 'NOLINKALLMAN':
+					$html .= '<option selected="selected" value="NOLINKALLMAN0">'.$this->l('All manufacturers without link to page').'</option>'.PHP_EOL;
+					break;
+
 				case 'MAN':
 					$manufacturer = new Manufacturer((int)$id, (int)$id_lang);
 					if (Validate::isLoadedObject($manufacturer))
@@ -529,7 +534,12 @@ class Blocktopmenu extends Module
 				case 'ALLSUP':
 					$this->_html .= '<option value="ALLSUP0">'.$this->l('All suppliers').'</option>'.PHP_EOL;
 					break;
-					
+
+				// Case to handle the option to show all Suppliers without the link to the related page
+				case 'NOLINKALLSUP':
+					$html .= '<option selected="selected" value="NOLINKALLSUP0">'.$this->l('All suppliers without link to page').'</option>'.PHP_EOL;
+					break;
+
 				case 'SUP':
 					$supplier = new Supplier((int)$id, (int)$id_lang);
 					if (Validate::isLoadedObject($supplier))
@@ -611,6 +621,16 @@ class Blocktopmenu extends Module
 					$this->_menu .= '</ul>';
 					break;
 
+				// Case to handle the option to show all Manufacturers without the link to the related page
+				case 'NOLINKALLMAN':
+					$link = new Link;
+					$this->_menu .= '<li><a href="#" title="'.$this->l('All manufacturers').'">'.$this->l('All manufacturers').'</a><ul>'.PHP_EOL;
+					$manufacturers = Manufacturer::getManufacturers();
+					foreach ($manufacturers as $key => $manufacturer)
+						$this->_menu .= '<li><a href="'.$link->getManufacturerLink((int)$manufacturer['id_manufacturer'], $manufacturer['link_rewrite']).'" title="'.Tools::safeOutput($manufacturer['name']).'">'.Tools::safeOutput($manufacturer['name']).'</a></li>'.PHP_EOL;
+					$this->_menu .= '</ul>';
+					break;
+
 				case 'MAN':
 					$selected = ($this->page_name == 'manufacturer' && (Tools::getValue('id_manufacturer') == $id)) ? ' class="sfHover"' : '';
 					$manufacturer = new Manufacturer((int)$id, (int)$id_lang);
@@ -632,6 +652,16 @@ class Blocktopmenu extends Module
 					$suppliers = Supplier::getSuppliers();
 					foreach ($suppliers as $key => $supplier)
 						$this->_menu .= '<li><a href="'.$link->getSupplierLink((int)$supplier['id_supplier'], $supplier['link_rewrite']).'">'.$supplier['name'].'</a></li>'.PHP_EOL;
+					$this->_menu .= '</ul>';
+					break;
+
+				// Case to handle the option to show all Suppliers without the link to the related page
+				case 'NOLINKALLSUP':
+					$link = new Link;
+					$this->_menu .= '<li><a href="#" title="'.$this->l('All suppliers').'">'.$this->l('All suppliers').'</a><ul>'.PHP_EOL;
+					$suppliers = Supplier::getSuppliers();
+					foreach ($suppliers as $key => $supplier)
+						$this->_menu .= '<li><a href="'.$link->getSupplierLink((int)$supplier['id_supplier'], $supplier['link_rewrite']).'" title="'.Tools::safeOutput($supplier['name']).'">'.Tools::safeOutput($supplier['name']).'</a></li>'.PHP_EOL;
 					$this->_menu .= '</ul>';
 					break;
 
@@ -783,7 +813,7 @@ class Blocktopmenu extends Module
 		foreach ($pages as $page)
 			$this->_html .= '<option value="CMS'.$page['id_cms'].'">'.$spacer.$page['meta_title'].'</option>';
 	}
-	
+
 	public function hookDisplayHeader($params)
 	{
 		$configuration = Configuration::getMultiple(array('PS_SEARCH_AJAX', 'PS_INSTANT_SEARCH'));
@@ -807,7 +837,7 @@ class Blocktopmenu extends Module
 		}
 
 	}
-	
+
 	protected function getCacheId($name = null)
 	{
 		parent::getCacheId($name);
@@ -902,37 +932,37 @@ class Blocktopmenu extends Module
 	{
 		$this->clearMenuCache();
 	}
-	
+
 	public function hookActionObjectCategoryDeleteAfter($params)
 	{
 		$this->clearMenuCache();
 	}
-	
+
 	public function hookActionObjectCmsUpdateAfter($params)
 	{
 		$this->clearMenuCache();
 	}
-	
+
 	public function hookActionObjectCmsDeleteAfter($params)
 	{
 		$this->clearMenuCache();
 	}
-	
+
 	public function hookActionObjectCmsAddAfter($params)
 	{
 		$this->clearMenuCache();
 	}
-	
+
 	public function hookActionObjectSupplierUpdateAfter($params)
 	{
 		$this->clearMenuCache();
 	}
-	
+
 	public function hookActionObjectSupplierDeleteAfter($params)
 	{
 		$this->clearMenuCache();
 	}
-	
+
 	public function hookActionObjectSupplierAddAfter($params)
 	{
 		$this->clearMenuCache();
@@ -942,72 +972,72 @@ class Blocktopmenu extends Module
 	{
 		$this->clearMenuCache();
 	}
-	
+
 	public function hookActionObjectManufacturerDeleteAfter($params)
 	{
 		$this->clearMenuCache();
 	}
-	
+
 	public function hookActionObjectManufacturerAddAfter($params)
 	{
 		$this->clearMenuCache();
 	}
-	
+
 	public function hookActionObjectProductUpdateAfter($params)
 	{
 		$this->clearMenuCache();
 	}
-	
+
 	public function hookActionObjectProductDeleteAfter($params)
 	{
 		$this->clearMenuCache();
 	}
-	
+
 	public function hookActionObjectProductAddAfter($params)
 	{
 		$this->clearMenuCache();
 	}
-	
+
 	public function hookCategoryUpdate($params)
 	{
 		$this->clearMenuCache();
 	}
-	
+
 	private function clearMenuCache()
 	{
 		$this->_clearCache('blocktopmenu.tpl');
 	}
-	
+
 	public function hookActionShopDataDuplication($params)
 	{
 		$linksmenutop = Db::getInstance()->executeS('
 			SELECT *
-			FROM '._DB_PREFIX_.'linksmenutop 
+			FROM '._DB_PREFIX_.'linksmenutop
 			WHERE id_shop = '.(int)$params['old_id_shop']
 			);
 
 		foreach($linksmenutop as $id => $link)
 		{
 			Db::getInstance()->execute('
-				INSERT IGNORE INTO '._DB_PREFIX_.'linksmenutop (id_linksmenutop, id_shop, new_window) 
+				INSERT IGNORE INTO '._DB_PREFIX_.'linksmenutop (id_linksmenutop, id_shop, new_window)
 				VALUES (null, '.(int)$params['new_id_shop'].', '.(int)$link['new_window'].')');
-			
+
 			$linksmenutop[$id]['new_id_linksmenutop'] = Db::getInstance()->Insert_ID();
 		}
-		
+
 		foreach($linksmenutop as $id => $link)
 		{
 			$lang = Db::getInstance()->executeS('
-					SELECT id_lang, '.(int)$params['new_id_shop'].', label, link 
-					FROM '._DB_PREFIX_.'linksmenutop_lang 
+					SELECT id_lang, '.(int)$params['new_id_shop'].', label, link
+					FROM '._DB_PREFIX_.'linksmenutop_lang
 					WHERE id_linksmenutop = '.(int)$link['id_linksmenutop'].' AND id_shop = '.(int)$params['old_id_shop']);
-			
+
 			foreach($lang as $l)
 				Db::getInstance()->execute('
-					INSERT IGNORE INTO '._DB_PREFIX_.'linksmenutop_lang (id_linksmenutop, id_lang, id_shop, label, link) 
+					INSERT IGNORE INTO '._DB_PREFIX_.'linksmenutop_lang (id_linksmenutop, id_lang, id_shop, label, link)
 					VALUES ('.(int)$link['new_id_linksmenutop'].', '.(int)$l['id_lang'].', '.(int)$params['new_id_shop'].', '.(int)$l['label'].', '.(int)$l['link'].' )');
 		}
-		
-		
+
+
 	}
 }
