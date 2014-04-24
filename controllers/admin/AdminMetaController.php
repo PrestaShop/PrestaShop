@@ -477,7 +477,7 @@ class AdminMetaControllerCore extends AdminController
 				fwrite($write_fd, "# Files\n");
 				foreach ($this->rb_data['Files'] as $iso_code => $files)
 					foreach ($files as $file)
-						if (count($languages))
+						if (count($languages) > 1)
 							fwrite($write_fd, 'Disallow: /*'.$iso_code.'/'.$file."\n");
 						else
 							fwrite($write_fd, 'Disallow: /'.$file."\n");
