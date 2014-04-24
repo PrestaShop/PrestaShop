@@ -340,6 +340,7 @@ function formSubmit(e, button)
 	{
 		getE(button).focus();
 		getE(button).click();
+		e.preventDefault();
 	}
 }
 function noComma(elem)
