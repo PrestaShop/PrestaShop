@@ -523,7 +523,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'unidentified' => $unidentified_group_information,
 					'guest' => $guest_group_information,
 					'customer' => $default_group_information,
-					'hint' => $this->l('Mark all of the customer groups you;d like to have access to this category.')
+					'hint' => $this->l('Mark all of the customer groups which you would like to have access to this category.')
 				)
 			),
 			'submit' => array(
