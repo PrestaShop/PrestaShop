@@ -67,6 +67,7 @@ class Blocktopmenu extends Module
 			!$this->registerHook('displayTop') ||
 			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_ITEMS', 'CAT1,CMS1,CMS2,PRD1') ||
 			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_SEARCH', '1') ||
+			!$this->registerHook('displayHeader') ||
 			!$this->registerHook('actionObjectCategoryUpdateAfter') ||
 			!$this->registerHook('actionObjectCategoryDeleteAfter') ||
 			!$this->registerHook('actionObjectCategoryAddAfter') ||
@@ -110,6 +111,7 @@ class Blocktopmenu extends Module
 		if (!parent::uninstall() ||
 			!Configuration::deleteByName('MOD_BLOCKTOPMENU_ITEMS') ||
 			!Configuration::deleteByName('MOD_BLOCKTOPMENU_SEARCH') ||
+			!$this->unregisterHook('displayHeader') ||
 			!$this->uninstallDB())
 			return false;
 		return true;
@@ -753,6 +755,30 @@ class Blocktopmenu extends Module
 		parent::getCacheId($name);
 		$page_name = in_array($this->page_name, array('category', 'supplier', 'manufacturer', 'cms', 'product')) ? $this->page_name : 'index';
 		return 'blocktopmenu|'.(int)Tools::usingSecureMode().'|'.$page_name.'|'.(int)$this->context->shop->id.'|'.implode(', ',$this->user_groups).'|'.(int)$this->context->language->id.'|'.(int)Tools::getValue('id_category').'|'.(int)Tools::getValue('id_manufacturer').'|'.(int)Tools::getValue('id_supplier').'|'.(int)Tools::getValue('id_cms').'|'.(int)Tools::getValue('id_product');
+	}
+	
+	public function hookDisplayHeader($params)
+	{
+		$configuration = Configuration::getMultiple(array('PS_SEARCH_AJAX', 'PS_INSTANT_SEARCH'));
+
+		if ($configuration['PS_SEARCH_AJAX'] || $configuration['PS_INSTANT_SEARCH']) {
+
+			$this->context->controller->addCSS(_THEME_CSS_DIR_.'product_list.css');
+			$this->context->controller->addCSS(($this->_path).'blocksearch.css', 'all');
+			$this->context->controller->addJqueryPlugin('autocomplete');
+
+			$secure_mode = Tools::usingSecureMode();
+			Media::addJsDef(array('search_url' => $this->context->link->getPageLink('search', $secure_mode)));
+
+			$this->context->smarty->assign(array(
+				'ENT_QUOTES' 		=> ENT_QUOTES,
+				'search_ssl' 		=> $secure_mode,
+				'ajaxsearch'    => $configuration['PS_SEARCH_AJAX'],
+				'instantsearch' => $configuration['PS_INSTANT_SEARCH'],
+			));
+
+		}
+
 	}
 
 	public function hookDisplayTop($param)
