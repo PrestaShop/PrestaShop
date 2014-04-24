@@ -1495,7 +1495,7 @@ class CartCore extends ObjectModel
 				$order_total += $price;
 		}
 
-		if ($with_taxes && Configuration::get('PS_TAX_ROUND_TYPE') == Tax::TAX_ROUND_TOTAL)
+		if ($ecotax_total && $with_taxes && Configuration::get('PS_TAX_ROUND_TYPE') == Tax::TAX_ROUND_TOTAL)
 			$ecotax_total = Tools::ps_round($ecotax_tax_calculator->addTaxes($ecotax_total), _PS_PRICE_DISPLAY_PRECISION_);
 
 		$order_total += $ecotax_total;
