@@ -119,7 +119,7 @@
 						{l s='Print order'}
 					</a>
 					&nbsp;
-					{if (count($invoices_collection))}
+					{if Configuration::get('PS_INVOICE') && count($invoices_collection)}
 						<a class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}" target="_blank">
 							<i class="icon-file"></i>
 							{l s='View invoice'}

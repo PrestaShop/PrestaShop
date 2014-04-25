@@ -1141,7 +1141,7 @@ class OrderCore extends ObjectModel
 	 */
 	public function setInvoice($use_existing_payment = false)
 	{
-		if (!$this->hasInvoice())
+		if (Configuration::get('PS_INVOICE') && !$this->hasInvoice())
 		{
 			$order_invoice = new OrderInvoice();
 			$order_invoice->id_order = $this->id;
