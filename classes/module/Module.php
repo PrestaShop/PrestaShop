@@ -162,6 +162,9 @@ abstract class ModuleCore
 	
 	const CACHE_FILE_MUST_HAVE_MODULES_LIST = '/config/xml/must_have_modules_list.xml';
 
+	const CACHE_FILE_TRUSTED_MODULES_LIST = '/config/xml/trusted_modules_list.xml';
+	const CACHE_FILE_UNTRUSTED_MODULES_LIST = '/config/xml/untrusted_modules_list.xml';
+
 	/**
 	 * Constructor
 	 *
@@ -1188,6 +1191,8 @@ abstract class ModuleCore
 
 					$item->active = 0;
 					$item->onclick_option = false;
+
+					$item->trusted = Module::isModuleTrusted($item->name);
 					
 					$module_list[] = $item;
 					$module_name_list[] = '\''.pSQL($item->name).'\'';
@@ -1237,7 +1242,7 @@ abstract class ModuleCore
 					$item->is_configurable = $tmp_module->is_configurable = method_exists($tmp_module, 'getContent') ? 1 : 0;
 					$item->need_instance = isset($tmp_module->need_instance) ? $tmp_module->need_instance : 0;
 					$item->active = $tmp_module->active;
-					$item->trusted = Module::isModuleTrusted($tmp_module->name, $tmp_module->key);
+					$item->trusted = Module::isModuleTrusted($tmp_module->name);
 					$item->currencies = isset($tmp_module->currencies) ? $tmp_module->currencies : null;
 					$item->currencies_mode = isset($tmp_module->currencies_mode) ? $tmp_module->currencies_mode : null;
 					$item->confirmUninstall = isset($tmp_module->confirmUninstall) ? html_entity_decode($tmp_module->confirmUninstall) : null;
@@ -1323,7 +1328,7 @@ abstract class ModuleCore
 								if ($m->version != $modaddons->version && version_compare($m->version, $modaddons->version) === -1)
 									$module_list[$k]->version_addons = $modaddons->version;
 							}
-
+ 
 						if ($flag_found == 0)
 						{
 							$item = new stdClass();
@@ -1344,7 +1349,7 @@ abstract class ModuleCore
 							$item->need_instance = 0;
 							$item->not_on_disk = 1;
 							$item->available_on_addons = 1;
-							$item->trusted = true;
+							$item->trusted = Module::isModuleTrusted($item->name);
 							$item->active = 0;
 							$item->description_full = stripslashes($modaddons->description_full);
 							$item->additional_description = isset($modaddons->additional_description) ? stripslashes($modaddons->additional_description) : null;
@@ -1504,23 +1509,115 @@ abstract class ModuleCore
 	 * @param string $key The key provided by addons
 	 * @return boolean
 	 */
-	public static function isModuleTrusted($name, $key)
+	public static function isModuleTrusted($module_name)
 	{
-		// Native and MustHave module might not have keys but they are trusted
-		$haystack  = '';
-		$haystack .= Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
-		$haystack .= Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_MUST_HAVE_MODULES_LIST);
+		// If the xml file exist, isn't empty and isn't too old
+		// we use the file, otherwise we regenerate it 
+		if (!(file_exists(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST)
+			&& filesize(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST) > 0 
+			&& ((time() - filemtime(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST)) < 86400)))
+			self::generateTrustedXml();
 
-		if (strstr($haystack, $name))
+		if (strstr(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST), $module_name))
 			return true;
-		elseif ($key === '')
+		elseif (strstr(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_UNTRUSTED_MODULES_LIST), $module_name))
+			return false;
+		else
+		{
+			// If the module isn't in one of the xml files
+			// It might have been uploaded recenlty so we check
+			// Addons API and clear XML files to be regenerated next time
+			Tools::deleteFile(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST);
+			Tools::deleteFile(_PS_ROOT_DIR_.self::CACHE_FILE_UNTRUSTED_MODULES_LIST);
+
+			return Module::checkModuleFromAddonsApi($module_name);
+		}
+
+
+	}
+
+	/**
+	 * Generate XML files for trusted and untrusted modules
+	 *
+	 */
+	public static function generateTrustedXml()
+	{
+
+		$modules_on_disk = Module::getModulesDirOnDisk();
+		$trusted   = array();
+		$untrusted = array();
+
+		$files = array(_PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, _PS_ROOT_DIR_.self::CACHE_FILE_MUST_HAVE_MODULES_LIST);
+
+		foreach ($files as $file)
+		{
+			$content  = Tools::file_get_contents($file);
+			$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
+
+			if ($xml && isset($xml->module))
+				foreach ($xml->module as $modaddons)
+					$trusted[] = (string)$modaddons->name;
+		}
+
+		// Create 2 arrays with trusted and untrusted modules
+		foreach ($modules_on_disk as $name)
+		{
+			if (!in_array($name, $trusted))
+			{
+				if (Module::checkModuleFromAddonsApi($name))
+					$trusted[] = $name;
+				else
+					$untrusted[] = $name;
+			}
+		}
+
+		// Save the 2 arrays into XML files
+		$trusted_xml = new SimpleXMLElement('<modules_list/>');
+		$modules = $trusted_xml->addChild('modules');
+		$modules->addAttribute('type', 'trusted');
+		foreach ($trusted as $key => $name)
+		{
+			$module = $modules->addChild('module');
+			$module->addAttribute('name', $name);
+		}
+		$success = file_put_contents( _PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST, $trusted_xml->asXML());
+
+		$untrusted_xml = new SimpleXMLElement('<modules_list/>');
+		$modules = $untrusted_xml->addChild('modules');
+		$modules->addAttribute('type', 'untrusted');
+		foreach ($untrusted as $key => $name)
+		{
+			$module = $modules->addChild('module');
+			$module->addAttribute('name', $name);
+		}
+		$success &= file_put_contents( _PS_ROOT_DIR_.self::CACHE_FILE_UNTRUSTED_MODULES_LIST, $untrusted_xml->asXML());
+
+		if ($success)
+			return true;
+		else
+			Tools::displayError('Trusted and Untrusted XML have not been generated properly');
+	}
+
+	/**
+	 * Create the Addons API call from the module name only
+	 *
+	 * @param string $name Module dir name
+	 * @return boolean Returns if the module is trusted by addons.prestashop.com
+	 */
+	public static function checkModuleFromAddonsApi($module_name)
+	{
+		$obj = Module::getInstanceByName($module_name);
+
+		if (!Validate::isLoadedObject($obj))
+			return false;
+		elseif ($obj->key === '')
 			return false;
 		else
 		{
 			$params = array(
-						'module_name' => $name,
-						'module_key' => $key,
-					);
+				'module_name' => $obj->name,
+				'module_key' => $obj->key,
+			);
 			$xml = Tools::addonsRequest('check_module', $params);
 
 			return (stristr($xml, 'success'));
@@ -2000,7 +2097,6 @@ abstract class ModuleCore
 	<author><![CDATA['.Tools::htmlentitiesUTF8($this->author).']]></author>
 	<tab><![CDATA['.Tools::htmlentitiesUTF8($this->tab).']]></tab>'.(isset($this->confirmUninstall) ? "\n\t".'<confirmUninstall><![CDATA['.$this->confirmUninstall.']]></confirmUninstall>' : '').'
 	<is_configurable>'.(isset($this->is_configurable) ? (int)$this->is_configurable : 0).'</is_configurable>
-	<trusted>'.(int)Module::isModuleTrusted($this->name, $this->key).'</trusted>
 	<need_instance>'.(int)$this->need_instance.'</need_instance>'.(isset($this->limited_countries) ? "\n\t".'<limited_countries>'.(count($this->limited_countries) == 1 ? $this->limited_countries[0] : '').'</limited_countries>' : '').'
 </module>';
 		if (is_writable(_PS_MODULE_DIR_.$this->name.'/'))
