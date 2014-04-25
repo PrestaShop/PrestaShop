@@ -183,6 +183,9 @@ class AddressCore extends ObjectModel
 		if (isset(self::$_idZones[$this->id]))
 			unset(self::$_idZones[$this->id]);
 
+		if (Validate::isUnsignedId($this->id_customer))
+			Customer::resetAddressCache($this->id_customer);
+
 		return parent::update($null_values);
 	}
 
