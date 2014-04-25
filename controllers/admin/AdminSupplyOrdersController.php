@@ -287,10 +287,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Global discount rate (%)'),
+						'label' => $this->l('Global discount percentage'),
 						'name' => 'discount_rate',
 						'required' => false,
-						'hint' => $this->l('This is the global discount rate in percent for the order.'),
+						'hint' => $this->l('This is the global discount percentage for the order.'),
 					),
 					array(
 						'type' => 'text',
@@ -299,7 +299,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'required' => false,
 						'hint' => array(
 							$this->l('This will reset the order.'),
-							$this->l('If specified, each product quantity less than or equal to this value will be loaded.'),
+							$this->l('If a value specified, each of your current product (from the selected supplier and warehouse) with a quantity lower than or equal to this value will be loaded. This means that PrestaShop will pre-fill this order with the products that are low on quantity.'),
 						),
 					),
 				),
@@ -448,7 +448,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	public function renderList()
 	{
 		$this->displayInformation($this->l('This interface allows you to manage supply orders.').'<br />');
-		$this->displayInformation($this->l('You can create templates to generate actual orders.').'<br />');
+		$this->displayInformation($this->l('You can create pre-filled order templates, from which you can build actual orders much quicker.').'<br />');
 
 		if (count($this->warehouses) <= 1)
 			$this->displayWarning($this->l('You must choose at least one warehouse before creating supply orders. For more information, see Stock/Warehouses.'));
@@ -505,7 +505,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				die;
 			}
 			else
-				$this->displayWarning($this->l('There is nothing to export as a CSV.'));
+				$this->displayWarning($this->l('There is nothing to export as a CSV file.'));
 		}
 
 		// second list : templates
@@ -619,7 +619,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			)
 		);
 
-		$this->displayInformation($this->l('Be careful when changing status\'. Some of those changes cannot be canceled. '));
+		$this->displayInformation($this->l('Be careful when changing status. Some of those changes cannot be canceled. '));
 
 		// sets up the helper
 		$helper = new HelperForm();
@@ -773,7 +773,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
-				'hint' => $this->l('The quantity that you received today.'),
+				'hint' => $this->l('The quantity of supplies that you received today.'),
 			),
 			'quantity_received' => array(
 				'title' => $this->l('Quantity received'),
@@ -782,7 +782,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'search' => false,
 				'badge_danger' => true,
 				'badge_success' => true,
-				'hint' => $this->l('The quantity that you received so far.'),
+				'hint' => $this->l('The quantity of supplies that you received so far (today and the days before, if it applies).'),
 			),
 			'quantity_expected' => array(
 				'title' => $this->l('Quantity expected'),
@@ -795,7 +795,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
-				'hint' => $this->l('The quantity left to receive for this order.'),
+				'hint' => $this->l('The quantity of supplies left to receive for this order.'),
 			)
 		);
 
@@ -865,7 +865,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// display these global order informations
 		$this->displayInformation($this->l('This interface allows you to update the quantities of this ongoing order.').'<br />');
 		$this->displayInformation($this->l('Be careful! Once you update, you cannot go back unless you add new negative stock movements.').'<br />');
-		$this->displayInformation($this->l('A green line means that you\'ve received what you expected. A red line means that you\'ve received more than expected.').'<br />');
+		$this->displayInformation($this->l('A green line means that you\'ve received exactly the quantity you expected. A red line means that you\'ve received more than expected.').'<br />');
 
 		// generates content
 		$content = $helper->generateList($this->_list, $this->fields_list);
@@ -887,7 +887,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to using this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate the Advanced Stock Management feature prior to using this feature.');
 			return false;
 		}
 		// Manage the add stock form
@@ -1111,7 +1111,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			// get delivery date
 			if (Tools::getValue('mod') != 'template' && strtotime(Tools::getValue('date_delivery_expected')) <= strtotime('-1 day'))
-				$this->errors[] = Tools::displayError('The date you specified cannot be in the past.');
+				$this->errors[] = Tools::displayError('The specified date cannot be in the past.');
 
 			// gets threshold
 			$quantity_threshold = Tools::getValue('load_products');
@@ -1686,9 +1686,11 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$ids = explode('_', $item['id']);
 			$prices = ProductSupplier::getProductSupplierPrice($ids[0], $ids[1], $id_supplier, true);
 			if (count($prices))
-				$item['unit_price_te'] = Tools::convertPriceFull($prices['product_supplier_price_te'],
-															     new Currency((int)$prices['id_currency']),
-															     new Currency($id_currency));
+				$item['unit_price_te'] = Tools::convertPriceFull(
+					$prices['product_supplier_price_te'],
+					new Currency((int)$prices['id_currency']),
+					new Currency($id_currency)
+				);
 		}
 		if ($items)
 			die(Tools::jsonEncode($items));
@@ -1763,14 +1765,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					'search' => false,
 				),
 				'ean13' => array(
-					'title' => $this->l('EAN13'),
+					'title' => $this->l('EAN-13 or JAN barcore'),
 					'align' => 'center',
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
 				),
 				'upc' => array(
-					'title' => $this->l('UPC'),
+					'title' => $this->l('UPC barcode'),
 					'align' => 'center',
 					'orderby' => false,
 					'filter' => false,
@@ -1808,7 +1810,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					'currency' => true,
 				),
 				'discount_rate' => array(
-					'title' => $this->l('Discount rate'),
+					'title' => $this->l('Discount percentage'),
 					'align' => 'right',
 					'orderby' => false,
 					'filter' => false,
