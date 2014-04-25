@@ -31,11 +31,11 @@ $(function() {
 
 {if $query}
 	<h2>
-	{if $nb_results == 0}
+	{if isset($nb_results) && $nb_results == 0}
 		<h2>{l s='There are no results matching your query "%s".' sprintf=$query}</h2>
-	{elseif $nb_results == 1}
+	{elseif isset($nb_results) && $nb_results == 1}
 		{l s='1 result matches your query "%s".' sprintf=$query}
-	{else}
+	{elseif isset($nb_results)}
 		{l s='%d results match your query "%s".' sprintf=[$nb_results|intval, $query]}
 	{/if}
 	</h2>
@@ -52,7 +52,7 @@ $(function() {
 </div>
 
 
-{if $query && $nb_results}
+{if $query && isset($nb_results) && $nb_results}
 
 	{if isset($features)}
 	<div class="panel">
