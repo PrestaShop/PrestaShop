@@ -1324,7 +1324,6 @@ abstract class ModuleCore
 							if ($m->name == $modaddons->name && !isset($m->available_on_addons))
 							{
 								$flag_found = 1;
-								$m->type = strip_tags((string)$f['type']);
 								if ($m->version != $modaddons->version && version_compare($m->version, $modaddons->version) === -1)
 									$module_list[$k]->version_addons = $modaddons->version;
 							}
