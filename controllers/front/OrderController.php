@@ -125,11 +125,6 @@ class OrderControllerCore extends ParentOrderController
 				$this->setTemplate(_PS_THEME_DIR_.'shopping-cart.tpl');
 			break;
 
-			case 0:
-				$this->_assignSummaryInformations();
-				$this->setTemplate(_PS_THEME_DIR_.'shopping-cart.tpl');
-			break;
-
 			case 1:
 				$this->_assignAddress();
 				$this->processAddressFormat();
@@ -152,7 +147,6 @@ class OrderControllerCore extends ParentOrderController
 			break;
 
 			case 3:
-			default:
 				// Check that the conditions (so active) were accepted by the customer
 				$cgv = Tools::getValue('cgv') || $this->context->cookie->check_cgv;
 				if (Configuration::get('PS_CONDITIONS') && (!Validate::isBool($cgv) || $cgv == false))
@@ -197,7 +191,10 @@ class OrderControllerCore extends ParentOrderController
 				$this->setTemplate(_PS_THEME_DIR_.'order-payment.tpl');
 			break;
 
-
+			default:
+				$this->_assignSummaryInformations();
+				$this->setTemplate(_PS_THEME_DIR_.'shopping-cart.tpl');
+			break;
 		}
 
 		$this->context->smarty->assign(array(
