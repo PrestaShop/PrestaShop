@@ -295,9 +295,15 @@ $(document).ready(function() {
 		return false;
 	});
 
+	var timer;
 	$(window).scroll(function() {
-		animateGoTop();
-		animateFooter();
+		if(timer) {
+			window.clearTimeout(timer);
+		}
+		timer = window.setTimeout(function() {
+			animateGoTop();
+			animateFooter();
+		}, 100);
 	});
 
 	// 
