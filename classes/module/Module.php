@@ -58,7 +58,7 @@ abstract class ModuleCore
 	public $author;
 
 	/** @var string Module key provided by addons.prestashop.com */
-	public $key = '';
+	public $module_key = '';
 
 	public $description_full;
 
@@ -1610,13 +1610,13 @@ abstract class ModuleCore
 
 		if (!Validate::isLoadedObject($obj))
 			return false;
-		elseif ($obj->key === '')
+		elseif ($obj->module_key === '')
 			return false;
 		else
 		{
 			$params = array(
 				'module_name' => $obj->name,
-				'module_key' => $obj->key,
+				'module_key' => $obj->module_key,
 			);
 			$xml = Tools::addonsRequest('check_module', $params);
 
