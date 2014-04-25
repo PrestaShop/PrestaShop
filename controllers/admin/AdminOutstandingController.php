@@ -45,6 +45,7 @@ class AdminOutstandingControllerCore  extends AdminController
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = o.`id_customer`)
 		LEFT JOIN `'._DB_PREFIX_.'risk` r ON (r.`id_risk` = c.`id_risk`)
 		LEFT JOIN `'._DB_PREFIX_.'risk_lang` rl ON (r.`id_risk` = rl.`id_risk` AND rl.`id_lang` = '.(int)$this->context->language->id.')';
+		$this->_where = 'AND number > 0';
 
 		$risks = array();
 		foreach (Risk::getRisks() as $risk)
