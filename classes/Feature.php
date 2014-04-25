@@ -344,7 +344,7 @@ class FeatureCore extends ObjectModel
 				continue;
 			$delta = $delta > 0 ? '+'.(int)$delta : (int)$delta;
 			$minId = $line['minId'];
-			$sql = 'UPDATE '._DB_PREFIX_.'feature SET position = position '.(int)$delta.' WHERE id_feature = '.(int)$minId;
+			$sql = 'UPDATE '._DB_PREFIX_.'feature SET position = '.(int)$delta.' WHERE id_feature = '.(int)$minId;
 			Db::getInstance()->execute($sql);
 		}
 	}
