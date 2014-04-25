@@ -131,14 +131,14 @@ class AdminCustomersControllerCore extends AdminController
 				'filter_key' => 'a!active'
 			),
 			'newsletter' => array(
-				'title' => $this->l('News.'),
+				'title' => $this->l('Newsletter'),
 				'align' => 'text-center',
 				'type' => 'bool',
 				'callback' => 'printNewsIcon',
 				'orderby' => false
 			),
 			'optin' => array(
-				'title' => $this->l('Opt.'),
+				'title' => $this->l('Opt-in'),
 				'align' => 'text-center',
 				'type' => 'bool',
 				'callback' => 'printOptinIcon',
@@ -417,7 +417,7 @@ class AdminCustomersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Opt in'),
+					'label' => $this->l('Opt-in'),
 					'name' => 'optin',
 					'required' => false,
 					'class' => 't',
