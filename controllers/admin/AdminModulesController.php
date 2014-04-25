@@ -1247,7 +1247,7 @@ class AdminModulesControllerCore extends AdminController
 			$this->modals[] = array(
 				'modal_id' => "moduleNotTrusted",
 				'modal_class' => "modal-lg",
-				'modal_title' => null,
+				'modal_title' => $this->l('This module is Untrusted'),
 				'modal_content' => $modal_content
 			);
 		}
