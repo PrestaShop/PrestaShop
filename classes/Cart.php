@@ -3194,7 +3194,13 @@ class CartCore extends ObjectModel
 
 		$cart->add();
 
-		$id_address_delivery = (Configuration::get('PS_ALLOW_MULTISHIPPING')?$cart->id_address_delivery:0);
+		$id_address_delivery = Configuration::get('PS_ALLOW_MULTISHIPPING') ? $cart->id_address_delivery : 0;
+
+		if ($id_address_delivery)
+		{
+			if (Customer::customerHasAddress((int)$cart->id_customer, $product['id_address_delivery']))
+				$id_address_delivery = $product['id_address_delivery'];
+		}
 
 		if (!Validate::isLoadedObject($cart))
 			return false;
@@ -3209,7 +3215,7 @@ class CartCore extends ObjectModel
 				(int)$product['id_product_attribute'],
 				null,
 				'up',
-				(int)($id_address_delivery?(Customer::customerHasAddress((int)$cart->id_customer,$product['id_address_delivery'])?$product['id_address_delivery']:$id_address_delivery):$id_address_delivery),
+				(int)$id_address_delivery,
 				new Shop($cart->id_shop)
 			);
 
