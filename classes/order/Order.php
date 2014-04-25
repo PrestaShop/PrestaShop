@@ -1225,6 +1225,23 @@ class OrderCore extends ObjectModel
 		}
 	}
 
+	/**
+	 * This method allows to generate first delivery slip of the current order
+	 */
+	public function setDeliverySlip()
+	{
+		if (!$this->hasInvoice())
+		{
+			$order_invoice = new OrderInvoice();
+			$order_invoice->id_order = $this->id;
+			$order_invoice->number = 0;
+			$order_invoice->add();
+			$this->delivery_date = $order_invoice->date_add;
+			$this->delivery_number = $this->getDeliveryNumber($order_invoice->id);
+			$this->update();
+		}
+	}
+
 	public function setDeliveryNumber($order_invoice_id, $id_shop)
 	{
 		if (!$order_invoice_id)
@@ -1574,12 +1591,17 @@ class OrderCore extends ObjectModel
 	public function getDocuments()
 	{
 		$invoices = $this->getInvoicesCollection()->getResults();
+		foreach($invoices as $key => $invoice)
+		if (!$invoice->number)
+			unset($invoices[$key]);
 		$delivery_slips = $this->getDeliverySlipsCollection()->getResults();
 		// @TODO review
-		foreach ($delivery_slips as $delivery)
+		foreach ($delivery_slips as $key => $delivery)
 		{
 			$delivery->is_delivery = true;
 			$delivery->date_add = $delivery->delivery_date;
+			if (!$invoice->delivery_number)
+				unset($delivery_slips[$key]);
 		}
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
 
