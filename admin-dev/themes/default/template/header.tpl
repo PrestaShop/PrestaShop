@@ -102,7 +102,7 @@
 </head>
 
 {if $display_header}
-	<body class="{if $employee->bo_menu}page-sidebar {if $collapse_menu}page-sidebar-closed{/if}{else}page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
+	<body class="ps_back-office {if $employee->bo_menu}page-sidebar {if $collapse_menu}page-sidebar-closed{/if}{else}page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
 	{* begin  HEADER *}
 	<header id="header" class="bootstrap">
 		<nav id="header_infos" role="navigation">
@@ -276,7 +276,7 @@
 {* end display_header*}
 
 {else}
-	<body{if isset($lite_display) && $lite_display} class="display-modal"{/if}>		
+	<body{if isset($lite_display) && $lite_display} class="ps_back-office display-modal"{/if}>		
 		<div id="main">
 			<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}">
 {/if}
