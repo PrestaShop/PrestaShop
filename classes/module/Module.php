@@ -156,6 +156,7 @@ abstract class ModuleCore
 	
 	const CACHE_FILE_TAB_MODULES_LIST = '/config/xml/tab_modules_list.xml';
 	
+	const CACHE_FILE_ALL_COUNTRY_MODULES_LIST     = '/config/xml/modules_native_addons.xml';
 	const CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST = '/config/xml/default_country_modules_list.xml';
 	
 	const CACHE_FILE_CUSTOMER_MODULES_LIST = '/config/xml/customer_modules_list.xml';
@@ -1550,16 +1551,9 @@ abstract class ModuleCore
 		$untrusted = array();
 
 		$trusted_modules_xml = array(
+									_PS_ROOT_DIR_.self::CACHE_FILE_ALL_COUNTRY_MODULES_LIST,
 									_PS_ROOT_DIR_.self::CACHE_FILE_MUST_HAVE_MODULES_LIST,
 								);
-
-		// AutoUpgrade module another xml with native modules for ALL countries
-		// so we either use this one on the default country file
-		$native_all_countries = _PS_ROOT_DIR_.'/config/xml/modules_native_addons.xml';
-		if (file_exists($native_all_countries))
-			$trusted_modules_xml[] = $native_all_countries;
-		else
-			$trusted_modules_xml[] = _PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST;
 
 		// Create 2 arrays with trusted and untrusted modules
 		foreach ($trusted_modules_xml as $file)
