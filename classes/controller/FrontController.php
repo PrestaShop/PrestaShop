@@ -540,25 +540,21 @@ class FrontControllerCore extends Controller
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,
 		));
-		
-		$live_edit_content = '';
-		// Don't use live edit if on mobile theme
-		if (!$this->useMobileTheme() && $this->checkLiveEditAccess())
-			$live_edit_content = $this->getLiveEditFooter();
-		
+				
 		$layout = $this->getLayout();
 		if ($layout)
 		{
 			if ($this->template)
-				$this->context->smarty->assign('template', $this->context->smarty->fetch($this->template).$live_edit_content);
+				$template = $this->context->smarty->fetch($this->template);
 			else // For retrocompatibility with 1.4 controller
 			{
 				ob_start();
 				$this->displayContent();
 				$template = ob_get_contents();
 				ob_clean();
-				$this->context->smarty->assign('template', $template.$live_edit_content);
+
 			}
+			$template = $this->context->smarty->assign('template', $template);
 			$this->smartyOutputContent($layout);
 		}
 		else

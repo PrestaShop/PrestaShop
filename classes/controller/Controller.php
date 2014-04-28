@@ -405,6 +405,10 @@ abstract class ControllerCore
 
 		if ($this->controller_type == 'front' && !empty($html) && $this->getLayout())
 		{
+			$live_edit_content = '';
+			if (!$this->useMobileTheme() && $this->checkLiveEditAccess())
+				$live_edit_content = $this->getLiveEditFooter();
+
  			$dom_available = extension_loaded('dom') ? true : false;
  			if ($dom_available)
 				$html = Media::deferInlineScripts($html);
@@ -415,7 +419,7 @@ abstract class ControllerCore
 				'js_inline' => $dom_available ? Media::getInlineScript() : array()
 			));
 			$javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
-			echo $html.$javascript."\t</body>\n</html>";
+			echo $html.$javascript.$live_edit_content."\t</body>\n</html>";
 		}
 		else
 			echo $html;
