@@ -47,6 +47,10 @@ class AdminCartsControllerCore extends AdminController
 		LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_cart = a.id_cart)
 		LEFT JOIN `'._DB_PREFIX_.'connections` co ON (a.id_guest = co.id_guest AND TIME_TO_SEC(TIMEDIFF(NOW(), co.`date_add`)) < 1800)';
 
+		if (Tools::getValue('action') && Tools::getValue('action') == 'filterOnlyAbandonedCarts')
+			$this->_having = 'id_order = \''.$this->l('Abandoned cart').'\'';
+
+
 		$this->fields_list = array(
 			'id_cart' => array(
 				'title' => $this->l('ID'),
@@ -144,7 +148,7 @@ class AdminCartsControllerCore extends AdminController
 		$date_from = date(Context::getContext()->language->date_format_lite, strtotime('-2 day'));
 		$date_to = date(Context::getContext()->language->date_format_lite, strtotime('-1 day'));
 		$helper->subtitle = sprintf($this->l('From %s to %s', null, null, false), $date_from, $date_to);
-		$helper->href = $this->context->link->getAdminLink('AdminCarts');
+		$helper->href = $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts';
 		if (ConfigurationKPI::get('ABANDONED_CARTS') !== false)
 			$helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
 		if (ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time)
@@ -179,6 +183,7 @@ class AdminCartsControllerCore extends AdminController
 		$helper->kpis = $kpis;
 		return $helper->generate();
 	}
+
 
 	public function renderView()
 	{
