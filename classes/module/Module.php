@@ -1566,20 +1566,20 @@ abstract class ModuleCore
 					$trusted[] = (string)$modaddons->name;
 		}
 
-		$context = Context::getContext();
-		$theme = new Theme($context->shop->id_theme);
-		if ($theme->directory != 'default-bootstrap')
-		{
-			$theme_xml = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml';
-			if(file_exists($theme_xml))
+		$themes = Theme::getAvailable(true);
+		foreach ($themes as $theme)
+			if ($theme != 'default-bootstrap')
 			{
-				$content  = Tools::file_get_contents($theme_xml);
-				$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
-				foreach ($xml->modules->module as $modaddons)
-					if((string)$modaddons['action'] == 'install')
-						$trusted[] = (string)$modaddons['name'];
+				$theme_xml = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme.'.xml';
+				if(file_exists($theme_xml))
+				{
+					$content  = Tools::file_get_contents($theme_xml);
+					$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
+					foreach ($xml->modules->module as $modaddons)
+						if((string)$modaddons['action'] == 'install')
+							$trusted[] = (string)$modaddons['name'];
+				}
 			}
-		}
 
 		foreach ($modules_on_disk as $name)
 		{
@@ -1591,6 +1591,9 @@ abstract class ModuleCore
 					$untrusted[] = $name;
 			}
 		}
+
+		$context = Context::getContext();
+		$theme = new Theme($context->shop->id_theme);
 
 		// Save the 2 arrays into XML files
 		$trusted_xml = new SimpleXMLElement('<modules_list/>');
