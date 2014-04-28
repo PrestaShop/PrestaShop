@@ -2906,6 +2906,10 @@ exit;
 				$protocols[] = 'http';
 				$postData .= '&method=listing&action=native';
 				break;
+			case 'native_all':
+				$protocols[] = 'http';
+				$postData .= '&method=listing&action=native&iso_code=all';
+				break;
 			case 'must-have':
 				$protocols[] = 'http';
 				$postData .= '&method=listing&action=must-have';
