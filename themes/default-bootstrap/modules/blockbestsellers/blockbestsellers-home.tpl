@@ -23,11 +23,10 @@
 * @license http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 *}
-{counter name=active_ul assign=active_ul}
 {if isset($best_sellers) && $best_sellers}
-{include file="$tpl_dir./product-list.tpl" products=$best_sellers class='blockbestsellers tab-pane' id='blockbestsellers' active=$active_ul}
+{include file="$tpl_dir./product-list.tpl" products=$best_sellers class='blockbestsellers tab-pane' id='blockbestsellers'}
 {else}
-<ul id="blockbestsellers" class="blockbestsellers tab-pane{if isset($active_ul) && $active_ul == 1} active{/if}">
+<ul id="blockbestsellers" class="blockbestsellers tab-pane">
 	<li class="alert alert-info">{l s='No best sellers at this time.' mod='blockbestsellers'}</li>
 </ul>
 {/if}
