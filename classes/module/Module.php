@@ -1510,11 +1510,15 @@ abstract class ModuleCore
 	 */
 	public static function isModuleTrusted($module_name)
 	{
-		// If the xml file exist, isn't empty and isn't too old
+		$context = Context::getContext();
+		$theme = new Theme($context->shop->id_theme);
+		// If the xml file exist, isn't empty, isn't too old
+		// and if the theme hadn't change
 		// we use the file, otherwise we regenerate it 
 		if (!(file_exists(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST)
 			&& filesize(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST) > 0 
-			&& ((time() - filemtime(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST)) < 86400)))
+			&& ((time() - filemtime(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST)) < 86400)
+			&& strstr(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST), $theme->name)))
 			self::generateTrustedXml();
 
 		if (strstr(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST), $module_name))
@@ -1531,8 +1535,6 @@ abstract class ModuleCore
 
 			return Module::checkModuleFromAddonsApi($module_name);
 		}
-
-
 	}
 
 	/**
@@ -1546,9 +1548,22 @@ abstract class ModuleCore
 		$trusted   = array();
 		$untrusted = array();
 
-		$files = array(_PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, _PS_ROOT_DIR_.self::CACHE_FILE_MUST_HAVE_MODULES_LIST);
+		$trusted_modules_xml = array(
+									_PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST,
+									_PS_ROOT_DIR_.self::CACHE_FILE_MUST_HAVE_MODULES_LIST
+								);
 
-		foreach ($files as $file)
+		$context = Context::getContext();
+		$theme = new Theme($context->shop->id_theme);
+		if ($theme->directory != 'default-bootstrap')
+		{
+			$theme_xml = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml';
+			if(file_exists($theme_xml))
+				$trusted_modules_xml[] = $theme_xml;
+		}
+
+
+		foreach ($trusted_modules_xml as $file)
 		{
 			$content  = Tools::file_get_contents($file);
 			$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
@@ -1572,6 +1587,7 @@ abstract class ModuleCore
 
 		// Save the 2 arrays into XML files
 		$trusted_xml = new SimpleXMLElement('<modules_list/>');
+		$trusted_xml->addAttribute('theme', $theme->name);
 		$modules = $trusted_xml->addChild('modules');
 		$modules->addAttribute('type', 'trusted');
 		foreach ($trusted as $key => $name)
