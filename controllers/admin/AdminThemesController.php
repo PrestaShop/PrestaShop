@@ -116,6 +116,38 @@ class AdminThemesControllerCore extends AdminController
 
 		$themes = Theme::getThemes();
 
+		$themes_directory = array();
+		foreach ($themes as $theme)
+			$themes_directory[] = $theme->directory;
+
+		foreach (scandir(_PS_ALL_THEMES_DIR_) as $theme_dir)
+		{
+			if ($theme_dir[0] != '.' && Validate::isDirName($theme_dir)
+				&& is_dir(_PS_ALL_THEMES_DIR_.$theme_dir)
+				&& file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/preview.jpg')
+				&& !in_array($theme_dir, $themes_directory)
+			)
+			{
+
+				$config_file = false;
+				$default_config = _PS_ROOT_DIR_.'/config/xml/themes/default.xml';
+				$theme_config = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme_dir.'.xml';
+
+				if (file_exists($theme_config))
+					$config_file = $theme_config;
+				elseif (file_exists($default_config))
+					$config_file = $default_config;
+
+				if ($config_file)
+				{
+					$theme_installed = $this->importThemeXmlConfig(simplexml_load_file($config_file), $theme_dir);
+					foreach($theme_installed as $item)
+						if (Validate::isLoadedObject($item) && file_exists(_PS_ALL_THEMES_DIR_.$theme->directory.'/preview.jpg'))
+							$themes[] = $item;
+				}
+			}
+		}
+
 		foreach ($themes as $key => $theme)
 		{
 			if (!file_exists(_PS_ALL_THEMES_DIR_.$theme->directory.'/preview.jpg'))
@@ -1755,32 +1787,6 @@ class AdminThemesControllerCore extends AdminController
 		}
 		else
 		{
-			$themes = array();
-			foreach (Theme::getThemes() as $theme)
-				$themes[] = $theme->directory;
-
-			foreach (scandir(_PS_ALL_THEMES_DIR_) as $theme_dir)
-			{
-				if ($theme_dir[0] != '.' && Validate::isDirName($theme_dir)
-					&& is_dir(_PS_ALL_THEMES_DIR_.$theme_dir)
-					&& file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/preview.jpg')
-					&& !in_array($theme_dir, $themes)
-				)
-				{
-
-					$config_file = false;
-					$default_config = _PS_ROOT_DIR_.'/config/xml/themes/default.xml';
-					$theme_config = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme_dir.'.xml';
-
-					if (file_exists($theme_config))
-						$config_file = $theme_config;
-					elseif (file_exists($default_config))
-						$config_file = $default_config;
-
-					if ($config_file)
-						$this->importThemeXmlConfig(simplexml_load_file($config_file), $theme_dir);
-				}
-			}
 
 			$content = '';
 			if (Configuration::hasKey('PS_LOGO') && trim(Configuration::get('PS_LOGO')) != ''
