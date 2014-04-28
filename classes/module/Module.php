@@ -811,7 +811,8 @@ abstract class ModuleCore
 				$new_hook = new Hook();
 				$new_hook->name = pSQL($hook_name);
 				$new_hook->title = pSQL($hook_name);
-				$new_hook->live_edit  = (bool)preg_match('/^display/i', $new_hook->name);
+				$new_hook->live_edit = (bool)preg_match('/^display/i', $new_hook->name);
+				$new_hook->position = (bool)$new_hook->live_edit;
 				$new_hook->add();
 				$id_hook = $new_hook->id;
 				if (!$id_hook)
