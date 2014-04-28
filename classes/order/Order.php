@@ -1893,7 +1893,7 @@ class OrderCore extends ObjectModel
 
 	/**
 	 *
-	 * Has invoice return true if this order has already an delivery slip
+	 * Has Delivery return true if this order has already a delivery slip
 	 * @return bool
 	 */
 	public function hasDelivery()
