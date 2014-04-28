@@ -1410,7 +1410,7 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->color = 'color2';
 		$helper->title = $this->l('Abandoned Carts', null, null, false);
 		$helper->subtitle = $this->l('Today', null, null, false);
-		$helper->href = $this->context->link->getAdminLink('AdminCarts');
+		$helper->href = $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts';
 		if (ConfigurationKPI::get('ABANDONED_CARTS') !== false)
 			$helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
 		if (ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time)
