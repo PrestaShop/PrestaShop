@@ -1553,16 +1553,9 @@ abstract class ModuleCore
 									_PS_ROOT_DIR_.self::CACHE_FILE_MUST_HAVE_MODULES_LIST
 								);
 
-		$context = Context::getContext();
-		$theme = new Theme($context->shop->id_theme);
-		if ($theme->directory != 'default-bootstrap')
-		{
-			$theme_xml = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml';
-			if(file_exists($theme_xml))
-				$trusted_modules_xml[] = $theme_xml;
-		}
 
 
+		// Create 2 arrays with trusted and untrusted modules
 		foreach ($trusted_modules_xml as $file)
 		{
 			$content  = Tools::file_get_contents($file);
@@ -1573,7 +1566,21 @@ abstract class ModuleCore
 					$trusted[] = (string)$modaddons->name;
 		}
 
-		// Create 2 arrays with trusted and untrusted modules
+		$context = Context::getContext();
+		$theme = new Theme($context->shop->id_theme);
+		if ($theme->directory != 'default-bootstrap')
+		{
+			$theme_xml = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml';
+			if(file_exists($theme_xml))
+			{
+				$content  = Tools::file_get_contents($theme_xml);
+				$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
+				foreach ($xml->modules->module as $modaddons)
+					if((string)$modaddons['action'] == 'install')
+						$trusted[] = (string)$modaddons['name'];
+			}
+		}
+
 		foreach ($modules_on_disk as $name)
 		{
 			if (!in_array($name, $trusted))
@@ -2356,6 +2363,7 @@ abstract class ModuleCore
 		if (!is_dir($this->getLocalPath().'override'))
 			return true;
 
+		$result = true;
 		foreach (Tools::scandir($this->getLocalPath().'override', 'php', '', true) as $file)
 		{
 			$class = basename($file, '.php');
