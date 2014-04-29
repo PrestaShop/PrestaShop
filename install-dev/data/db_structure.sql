@@ -1130,7 +1130,7 @@ CREATE TABLE `PREFIX_order_detail_tax` (
   `id_tax` int(11) NOT NULL,
   `unit_amount` DECIMAL(16, 6) NOT NULL DEFAULT '0.00',
   `total_amount` DECIMAL(16, 6) NOT NULL DEFAULT '0.00',
-   PRIMARY KEY (`id_order_detail`),
+   KEY (`id_order_detail`),
    KEY `id_tax` (`id_tax`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
