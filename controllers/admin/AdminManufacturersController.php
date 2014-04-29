@@ -772,7 +772,7 @@ class AdminManufacturersControllerCore extends AdminController
 
 	public function initProcess()
 	{
-		if (Tools::getValue('submitAddaddress') || Tools::isSubmit('deleteaddress') || Tools::isSubmit('submitBulkdeleteaddress') || Tools::isSubmit('exportaddress'))
+		if (Tools::isSubmit('submitAddaddress') || Tools::isSubmit('deleteaddress') || Tools::isSubmit('submitBulkdeleteaddress') || Tools::isSubmit('exportaddress'))
 		{
 			$this->table = 'address';
 			$this->className = 'Address';
@@ -819,5 +819,12 @@ class AdminManufacturersControllerCore extends AdminController
 	protected function beforeDelete($object)
 	{
 		return true;
+	}
+	
+	public function processSave()
+	{
+		parent::processSave();
+		if (Tools::isSubmit('submitAddaddress'))
+			$this->display = 'editaddresses';
 	}
 }
