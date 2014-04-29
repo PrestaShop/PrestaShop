@@ -237,7 +237,8 @@ class AdminProductsControllerCore extends AdminController
 			'type' => 'price',
 			'align' => 'text-right',
 			'havingFilter' => true,
-			'orderby' => false
+			'orderby' => false,
+			'search' => false
 		);
 
 		if (Configuration::get('PS_STOCK_MANAGEMENT'))
