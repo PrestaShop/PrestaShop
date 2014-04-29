@@ -37,7 +37,7 @@
 	var currency_sign = "{$currency->sign}";
 	var currency_format = "{$currency->format}";
 	var currency_blank = "{$currency->blank}";
-	var priceDisplayPrecision = 2;
+	var priceDisplayPrecision = {$smarty.const._PS_PRICE_DISPLAY_PRECISION_|intval};
 	var use_taxes = {if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}true{else}false{/if};
 	var stock_management = {$stock_management|intval};
 	var txt_add_product_stock_issue = "{l s='Are you sure you want to add this quantity?' js=1}";
@@ -119,7 +119,7 @@
 						{l s='Print order'}
 					</a>
 					&nbsp;
-					{if (count($invoices_collection))}
+					{if Configuration::get('PS_INVOICE') && count($invoices_collection) && (($currentState && $currentState->invoice && $order->invoice_number) || $order->invoice_number)}
 						<a class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}" target="_blank">
 							<i class="icon-file"></i>
 							{l s='View invoice'}
@@ -131,7 +131,7 @@
 						</span>
 					{/if}
 					&nbsp;
-					{if (($currentState && $currentState->delivery) || $order->delivery_number)}
+					{if (($currentState && $currentState->delivery && $order->delivery_number) || $order->delivery_number)}
 						<a class="btn btn-default"  href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order={$order->id}" target="_blank">
 							<i class="icon-truck"></i>
 							{l s='View delivery slip'}

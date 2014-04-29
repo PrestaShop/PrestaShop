@@ -102,7 +102,7 @@ class AdminTrackingControllerCore extends AdminController
 		$this->fields_list = (array(
 			'id_category' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
 			'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
-			'description' => array('title' => $this->l('Description')),
+			'description' => array('title' => $this->l('Description'), 'callback' => 'getDescriptionClean'),
 			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
 		));
 		$this->clearFilters();
@@ -327,6 +327,11 @@ class AdminTrackingControllerCore extends AdminController
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, Context::getContext()->shop->id);
+	}
+
+	public static function getDescriptionClean($description)
+	{
+		return Tools::getDescriptionClean($description);
 	}
 }
 

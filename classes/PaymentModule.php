@@ -210,6 +210,29 @@ abstract class PaymentModuleCore extends Module
 					}
 			// Make sure CarRule caches are empty
 			CartRule::cleanCache();
+			$cart_rules = $this->context->cart->getCartRules();
+			foreach ($cart_rules as $cart_rule)
+			{
+				if (($rule = new CartRule((int)$cart_rule['obj']->id)) && Validate::isLoadedObject($rule))
+				{
+					if ($error = $rule->checkValidity($this->context, true, true))
+					{
+						$this->context->cart->removeCartRule((int)$rule->id);
+						if (isset($this->context->cookie) && isset($this->context->cookie->id_customer) && $this->context->cookie->id_customer)
+						{
+							if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
+								Tools::redirect('index.php?controller=order-opc&submitAddDiscount=1&discount_name='.urlencode($rule->code));
+							Tools::redirect('index.php?controller=order&submitAddDiscount=1&discount_name='.urlencode($rule->code));
+						}
+						else
+						{
+							$rule_name = isset($rule->name[(int)$this->context->cart->id_lang]) ? $rule->name[(int)$this->context->cart->id_lang] : $rule->code;
+							$error = Tools::displayError(sprintf('CartRule ID %1s (%2s) used in this cart is not valid and has been withdrawn from cart', (int)$rule->id, $rule_name));
+							PrestaShopLogger::addLog($error, 3, '0000002', 'Cart', (int)$this->context->cart->id);
+						}
+					}
+				}
+			}
 
 			foreach ($package_list as $id_address => $packageByAddress)
 				foreach ($packageByAddress as $id_package => $package)
@@ -339,7 +362,6 @@ abstract class PaymentModuleCore extends Module
 			$only_one_gift = false;
 			$cart_rule_used = array();
 			$products = $this->context->cart->getProducts();
-			$cart_rules = $this->context->cart->getCartRules();
 
 			// Make sure CarRule caches are empty
 			CartRule::cleanCache();

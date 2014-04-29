@@ -540,25 +540,21 @@ class FrontControllerCore extends Controller
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,
 		));
-		
-		$live_edit_content = '';
-		// Don't use live edit if on mobile theme
-		if (!$this->useMobileTheme() && $this->checkLiveEditAccess())
-			$live_edit_content = $this->getLiveEditFooter();
-		
+				
 		$layout = $this->getLayout();
 		if ($layout)
 		{
 			if ($this->template)
-				$this->context->smarty->assign('template', $this->context->smarty->fetch($this->template).$live_edit_content);
+				$template = $this->context->smarty->fetch($this->template);
 			else // For retrocompatibility with 1.4 controller
 			{
 				ob_start();
 				$this->displayContent();
 				$template = ob_get_contents();
 				ob_clean();
-				$this->context->smarty->assign('template', $template.$live_edit_content);
+
 			}
+			$template = $this->context->smarty->assign('template', $template);
 			$this->smartyOutputContent($layout);
 		}
 		else
@@ -885,7 +881,9 @@ class FrontControllerCore extends Controller
 		// Retrieve the default number of products per page and the other available selections
 		$default_products_per_page = max(1, (int)Configuration::get('PS_PRODUCTS_PER_PAGE'));
 		$nArray = array($default_products_per_page, $default_products_per_page * 2, $default_products_per_page * 5);
-		
+
+		if ((int)Tools::getValue('n') && (int)$total_products > 0)
+			$nArray[] = $total_products;
 		// Retrieve the current number of products per page (either the default, the GET parameter or the one in the cookie)
 		$this->n = $default_products_per_page;
 		if ((int)Tools::getValue('n') > 0 && in_array((int)Tools::getValue('n'), $nArray))

@@ -28,7 +28,7 @@
 <div class="row">
 	<div class="col-lg-8">
 		<div class="form-group">
-			<label>{l s='Sort by'}</label>
+			<label>{l s='Filter by'}</label>
 			<select name="module_install" id="module_install_filter" class="form-control {if isset($showInstalledModules) && $showInstalledModules && $showInstalledModules != 'installedUninstalled' }active{/if}" {if $showInstalledModules ne 'installedUninstalled' && $showInstalledModules ne ''}{/if}>
 				<option value="installedUninstalled" {if $showInstalledModules eq 'installedUninstalled'}selected="selected"{/if}>{l s='Installed & Not Installed'}</option>
 				<option value="installed" {if $showInstalledModules eq 'installed'}selected="selected"{/if}>{l s='Installed Modules'}</option>

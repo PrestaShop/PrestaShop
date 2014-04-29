@@ -23,6 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+<div class="modal-body">
 {if $add_permission eq '1'}
 	<div class="panel">
 	{if isset($logged_on_addons) && $logged_on_addons}
@@ -85,3 +86,4 @@
 	{/if}
 	</div>
 {/if}
+</div>

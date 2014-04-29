@@ -2147,6 +2147,13 @@ FileETag INode MTime Size
 
 		return true;
 	}
+
+	public static function generateIndex()
+	{
+		if (defined('_DB_PREFIX_') && Configuration::get('PS_DISABLE_OVERRIDES'))
+			PrestaShopAutoload::getInstance()->_include_override_path = false;
+		PrestaShopAutoload::getInstance()->generateIndex();
+	}
 	
 	public static function getDefaultIndexContent()
 	{
@@ -2186,7 +2193,6 @@ header("Pragma: no-cache");
 header("Location: ../");
 exit;
 ';
-		
 	}
 
 	/**
@@ -2730,6 +2736,8 @@ exit;
 	 */
 	public static function recurseCopy($src, $dst, $del = false)
 	{
+		if (!Tools::file_exists_cache($src))
+			return false;
 		$dir = opendir($src);
 
 		if (!Tools::file_exists_cache($dst))
@@ -2898,6 +2906,10 @@ exit;
 				$protocols[] = 'http';
 				$postData .= '&method=listing&action=native';
 				break;
+			case 'native_all':
+				$protocols[] = 'http';
+				$postData .= '&method=listing&action=native&iso_code=all';
+				break;
 			case 'must-have':
 				$protocols[] = 'http';
 				$postData .= '&method=listing&action=must-have';
@@ -2914,6 +2926,9 @@ exit;
 				break;
 			case 'check_customer':
 				$postData .= '&method=check_customer&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
+				break;
+			case 'check_module':
+				$postData .= '&method=check&module_name='.urlencode($params['module_name']).'&module_key='.urlencode($params['module_key']);
 				break;
 			case 'module':
 				$postData .= '&method=module&id_module='.urlencode($params['id_module']);
@@ -3065,6 +3080,16 @@ exit;
 			self::$_user_browser = 'Netscape';
 
 		return self::$_user_browser;
+	}
+
+	/**
+	  * Allows to display the category description without HTML tags and slashes
+	  *
+	  * @return string
+	  */
+	public static function getDescriptionClean($description)
+	{
+		return strip_tags(stripslashes($description));
 	}
 }
 

@@ -407,7 +407,8 @@ span.view_scroll_spacer {
 	padding: 0 20px 20px;
 	word-wrap: break-word;
 	p{
-		margin-bottom: 0;
+		margin-bottom: 1em;
+		min-height: 1px
 	}
 }
 #attributes{
@@ -530,6 +531,7 @@ span.view_scroll_spacer {
 		&.added.disabled, 
 		&.disabled {
 			&:before {
+				height: 51px;
 				content: "\f110";
 				animation: 2s linear 0s normal none infinite spin;
 				-webkit-animation: 2s linear 0s normal none infinite spin;

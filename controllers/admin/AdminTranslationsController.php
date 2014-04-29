@@ -1052,9 +1052,11 @@ class AdminTranslationsControllerCore extends AdminController
 		switch ($this->type_selected)
 		{
 			case 'front':
-				$directories['tpl'] = array(_PS_ALL_THEMES_DIR_.'/' => scandir(_PS_ALL_THEMES_DIR_));
+				$directories['tpl'] = array(_PS_ALL_THEMES_DIR_ => scandir(_PS_ALL_THEMES_DIR_));
 				self::$ignore_folder[] = 'modules';
 				$directories['tpl'] = array_merge($directories['tpl'], $this->listFiles(_PS_THEME_SELECTED_DIR_));
+				if (isset($directories['tpl'][_PS_THEME_SELECTED_DIR_.'pdf/']))
+					unset($directories['tpl'][_PS_THEME_SELECTED_DIR_.'pdf/']);
 
 				if (Tools::file_exists_cache(_PS_THEME_OVERRIDE_DIR_))
 					$directories['tpl'] = array_merge($directories['tpl'], $this->listFiles(_PS_THEME_OVERRIDE_DIR_));
@@ -1064,15 +1066,15 @@ class AdminTranslationsControllerCore extends AdminController
 			case 'back':
 				$directories = array(
 					'php' => array(
-						_PS_ADMIN_CONTROLLER_DIR_.'/' => scandir(_PS_ADMIN_CONTROLLER_DIR_),
+						_PS_ADMIN_CONTROLLER_DIR_ => scandir(_PS_ADMIN_CONTROLLER_DIR_),
 						_PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_.'controllers/admin/'),
 						_PS_CLASS_DIR_.'helper/' => scandir(_PS_CLASS_DIR_.'helper/'),
 						_PS_CLASS_DIR_.'controller/' => array('AdminController.php'),
 						_PS_CLASS_DIR_ => array('PaymentModule.php')
 					),
-					'tpl' => $this->listFiles(_PS_ADMIN_DIR_.'/themes/'),
+					'tpl' => $this->listFiles(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes/'),
 					'specific' => array(
-						_PS_ADMIN_DIR_.'/' => array(
+						_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR => array(
 							'header.inc.php',
 							'footer.inc.php',
 							'index.php',
@@ -1089,8 +1091,8 @@ class AdminTranslationsControllerCore extends AdminController
 
 			case 'errors':
 				$directories['php'] = array(
-					_PS_ROOT_DIR_.'/' => scandir(_PS_ROOT_DIR_),
-					_PS_ADMIN_DIR_.'/' => scandir(_PS_ADMIN_DIR_),
+					_PS_ROOT_DIR_ => scandir(_PS_ROOT_DIR_),
+					_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR => scandir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR),
 					_PS_FRONT_CONTROLLER_DIR_ => scandir(_PS_FRONT_CONTROLLER_DIR_),
 					_PS_ADMIN_CONTROLLER_DIR_ => scandir(_PS_ADMIN_CONTROLLER_DIR_),
 					_PS_OVERRIDE_DIR_.'controllers/front/' => scandir(_PS_OVERRIDE_DIR_.'controllers/front/'),
@@ -1126,8 +1128,8 @@ class AdminTranslationsControllerCore extends AdminController
 					_PS_ADMIN_CONTROLLER_DIR_ => scandir(_PS_ADMIN_CONTROLLER_DIR_),
 					_PS_OVERRIDE_DIR_.'controllers/front/' => scandir(_PS_OVERRIDE_DIR_.'controllers/front/'),
 					_PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_.'controllers/admin/'),
-					_PS_ADMIN_DIR_.'/' => scandir(_PS_ADMIN_DIR_),
-					_PS_ADMIN_DIR_.'/tabs/' => scandir(_PS_ADMIN_DIR_.'/tabs')
+					_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR => scandir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR),
+					_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'tabs/' => scandir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'/tabs')
 				);
 
 				// Get all files for folders classes/ and override/classes/ recursively
@@ -1880,7 +1882,7 @@ class AdminTranslationsControllerCore extends AdminController
 				if (preg_match('/^(.*).tpl$/', $file) && Tools::file_exists_cache($file_path = $dir.$file))
 				{
 					// get controller name instead of file name
-					$prefix_key = Tools::toCamelCase(str_replace(_PS_ADMIN_DIR_.'/themes', '', $file_path), true);
+					$prefix_key = Tools::toCamelCase(str_replace(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes', '', $file_path), true);
 					$pos = strrpos($prefix_key, DIRECTORY_SEPARATOR);
 					$tmp = substr($prefix_key, 0, $pos);
 

@@ -881,7 +881,7 @@ class OrderCore extends ObjectModel
 					WHERE osl.`id_order_state` = o.`current_state`
 					AND osl.`id_lang` = '.(int)$context->language->id.'
 					LIMIT 1
-				) AS `state_name`
+				) AS `state_name`, o.`date_add` AS `date_add`, o.`date_upd` AS `date_upd`
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = o.`id_customer`)
 				WHERE 1
@@ -1141,15 +1141,18 @@ class OrderCore extends ObjectModel
 	 */
 	public function setInvoice($use_existing_payment = false)
 	{
-		if (!$this->hasInvoice())
+		if (Configuration::get('PS_INVOICE') && !$this->hasInvoice())
 		{
-			$order_invoice = new OrderInvoice();
+			if ($id = (int)$this->hasDelivery())
+				$order_invoice = new OrderInvoice($id);
+			else
+				$order_invoice = new OrderInvoice();
 			$order_invoice->id_order = $this->id;
-			$order_invoice->number = 0;
+			if (!$id)
+				$order_invoice->number = 0;
 			$address = new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 			$carrier = new Carrier((int)$this->id_carrier);
 			$tax_calculator = $carrier->getTaxCalculator($address);
-
 			$order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
 			$order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
 			$order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
@@ -1163,7 +1166,8 @@ class OrderCore extends ObjectModel
 			$order_invoice->total_wrapping_tax_incl = $this->total_wrapping_tax_incl;
 
 			// Save Order invoice
-			$order_invoice->add();
+
+			$order_invoice->save();
 			$this->setLastInvoiceNumber($order_invoice->id, $this->id_shop);
 
 			$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
@@ -1221,6 +1225,23 @@ class OrderCore extends ObjectModel
 			// Keep it for backward compatibility, to remove on 1.6 version
 			$this->invoice_date = $order_invoice->date_add;
 			$this->invoice_number = $this->getInvoiceNumber($order_invoice->id);
+			$this->update();
+		}
+	}
+
+	/**
+	 * This method allows to generate first delivery slip of the current order
+	 */
+	public function setDeliverySlip()
+	{
+		if (!$this->hasInvoice())
+		{
+			$order_invoice = new OrderInvoice();
+			$order_invoice->id_order = $this->id;
+			$order_invoice->number = 0;
+			$order_invoice->add();
+			$this->delivery_date = $order_invoice->date_add;
+			$this->delivery_number = $this->getDeliveryNumber($order_invoice->id);
 			$this->update();
 		}
 	}
@@ -1574,12 +1595,17 @@ class OrderCore extends ObjectModel
 	public function getDocuments()
 	{
 		$invoices = $this->getInvoicesCollection()->getResults();
+		foreach($invoices as $key => $invoice)
+		if (!$invoice->number)
+			unset($invoices[$key]);
 		$delivery_slips = $this->getDeliverySlipsCollection()->getResults();
 		// @TODO review
-		foreach ($delivery_slips as $delivery)
+		foreach ($delivery_slips as $key => $delivery)
 		{
 			$delivery->is_delivery = true;
 			$delivery->date_add = $delivery->delivery_date;
+			if (!$invoice->delivery_number)
+				unset($delivery_slips[$key]);
 		}
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
 
@@ -1856,11 +1882,28 @@ class OrderCore extends ObjectModel
 	 */
 	public function hasInvoice()
 	{
-		if (Db::getInstance()->getRow('
-				SELECT *
+		if ($res = (int)Db::getInstance()->getvalue('
+				SELECT `id_order_invoice`
 				FROM `'._DB_PREFIX_.'order_invoice`
-				WHERE `id_order` =  '.(int)$this->id))
-			return true;
+				WHERE `id_order` =  '.(int)$this->id.' 
+				AND `number` > 0'));
+			return $res;
+		return false;
+	}
+
+	/**
+	 *
+	 * Has Delivery return true if this order has already a delivery slip
+	 * @return bool
+	 */
+	public function hasDelivery()
+	{
+		if ($res = (int)Db::getInstance()->getValue('
+				SELECT `id_order_invoice`
+				FROM `'._DB_PREFIX_.'order_invoice`
+				WHERE `id_order` =  '.(int)$this->id.'
+				AND `delivery_number` > 0'));
+			return $res;
 		return false;
 	}
 

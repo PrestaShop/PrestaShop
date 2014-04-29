@@ -46,7 +46,7 @@ $(document).ready(function(){
 			pager: false,
 			autoHover: true,
 			auto: homeslider_loop,
-			speed: homeslider_speed,
+			speed: parseInt(homeslider_speed),
 			pause: homeslider_pause,
 			controls: true
 		});
