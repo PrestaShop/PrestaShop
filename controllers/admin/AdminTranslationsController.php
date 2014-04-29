@@ -2290,7 +2290,7 @@ class AdminTranslationsControllerCore extends AdminController
 							$value_subject_mail = isset($mails['subject'][$subject_mail]) ? $mails['subject'][$subject_mail] : '';
 							$str_return .= '
 							<div class="label-subject row">
-								<label class="control-label col-lg-3">'.sprintf($this->l('Subject'));
+								<label class="control-label col-lg-3">'.sprintf($this->l('Email subject'));
 							if (isset($value_subject_mail['use_sprintf']) && $value_subject_mail['use_sprintf'])
 								$str_return .= '<span class="useSpecialSyntax" title="'.$this->l('This expression uses a special syntax:').' '.$value_subject_mail['use_sprintf'].'">
 									<i class="icon-exclamation-triangle"></i>
@@ -2394,7 +2394,7 @@ class AdminTranslationsControllerCore extends AdminController
 		return '<div class="block-mail" >
 					<div class="mail-form">
 						<div class="form-group">
-							<label class="control-label col-lg-3">'.$this->l('"title" tag:').'</label>
+							<label class="control-label col-lg-3">'.$this->l('HTML "title" tag').'</label>
 							<div class="col-lg-9">
 								<input class="form-control" type="text" name="title_'.$group_name.'_'.$mail_name.'" value="'.(isset($title[$lang]) ? $title[$lang] : '').'" />
 								<p class="help-block">'.(isset($title['en']) ? $title['en'] : '').'</p>
@@ -2669,7 +2669,7 @@ class AdminTranslationsControllerCore extends AdminController
 			}
 		}
 		else
-			$this->errors[] = sprintf($this->l('Subject mail translation file not found in "%s"'), $directory);
+			$this->errors[] = sprintf($this->l('Email subject translation file not found in "%s".'), $directory);
 		return $subject_mail_content;
 	}
 
