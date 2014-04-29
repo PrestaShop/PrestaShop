@@ -61,6 +61,11 @@
 								src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')|escape:'html':'UTF-8'}" 
 								alt="{$product->name|escape:'html':'UTF-8'}" />
 							</a>
+							{if isset($product->new) && $product->new == 1}
+								<a class="new-box" href="{$product->link|escape:'html':'UTF-8'}">
+									<span class="new-label">{l s='New'}</span>
+								</a>
+							{/if}
 							{if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
 								{if $product->on_sale}
 									<div class="sale-box">
