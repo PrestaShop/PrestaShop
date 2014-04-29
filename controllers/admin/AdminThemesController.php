@@ -114,14 +114,45 @@ class AdminThemesControllerCore extends AdminController
 		parent::init();
 		$this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP) ? true : false;
 
-		$themes = Theme::getThemes();
-
-		foreach ($themes as $key => $theme)
+		$all_themes = Theme::getThemes();
+		$themes = array();
+		foreach ($all_themes as $key => $theme)
 		{
-			if (!file_exists(_PS_ALL_THEMES_DIR_.$theme->directory.'/preview.jpg'))
-				unset($themes[$key]);
+			if (file_exists(_PS_ALL_THEMES_DIR_.$theme->directory.'/preview.jpg'))
+				$themes[] = array('id' => $theme->id, 'name' => $theme->name, 'preview' => '../themes/'.$theme->directory.'/preview.jpg');
 
 		}
+		
+		libxml_use_internal_errors(true);
+				
+		//get addons themes
+		if ($this->logged_on_addons)
+		{
+			if (!$this->isFresh(Theme::CACHE_FILE_CUSTOMER_THEMES_LIST, 86400))
+				file_put_contents(_PS_ROOT_DIR_.Theme::CACHE_FILE_CUSTOMER_THEMES_LIST, Tools::addonsRequest('customer_themes'));
+			
+			$customer_themes_list = file_get_contents(_PS_ROOT_DIR_.Theme::CACHE_FILE_CUSTOMER_THEMES_LIST);
+			if (!empty($customer_themes_list) && $customer_themes_list_xml = simplexml_load_string($customer_themes_list))
+			{			
+				$customer_module_list_array = array();
+				
+			}
+		}
+		
+		//get must have themes
+		if (!$this->isFresh(Theme::CACHE_FILE_MUST_HAVE_THEMES_LIST, 86400))
+		{
+			file_put_contents(_PS_ROOT_DIR_.Theme::CACHE_FILE_MUST_HAVE_THEMES_LIST, Tools::addonsRequest('native'));
+			$must_have_themes_list = file_get_contents(_PS_ROOT_DIR_.Theme::CACHE_FILE_CUSTOMER_THEMES_LIST);
+			if (!empty($must_have_themes_list) && $must_have_themes_list_xml = simplexml_load_string($customer_themes_list))
+			{			
+				$must_have_module_list_array = array();
+				
+			}
+			
+		}
+		
+		
 		$this->fields_options = array(
 			'theme' => array(
 				'title' => sprintf($this->l('Select a theme for shop %s'), $this->context->shop->name),
