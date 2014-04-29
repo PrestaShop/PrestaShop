@@ -394,6 +394,7 @@ class AdminModulesControllerCore extends AdminController
 
 	protected function recursiveDeleteOnDisk($dir)
 	{
+		$hasOverrides = false;
 		if (strpos(realpath($dir), realpath(_PS_MODULE_DIR_)) === false)
 			return;
 		if (is_dir($dir))
@@ -405,7 +406,17 @@ class AdminModulesControllerCore extends AdminController
 					if (filetype($dir.'/'.$object) == 'dir')
 						$this->recursiveDeleteOnDisk($dir.'/'.$object);
 					else
+					{
+						if ($hasOverrides === true)
+						{
+							if (file_exists(_PS_ROOT_DIR_ ."/cache/class_index.php") === true)
+								unlink(_PS_ROOT_DIR_ ."/cache/class_index.php");
+							$overrideDir = strstr($dir, "/override");
+							$overrideFileAbsPath = _PS_ROOT_DIR_ . $overrideDir . "/" . $object;
+							unlink($overrideFileAbsPath);
+						}
 						unlink($dir.'/'.$object);
+					}
 				}
 			reset($objects);
 			rmdir($dir);
