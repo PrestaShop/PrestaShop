@@ -344,15 +344,12 @@ class LinkCore
 		// Set available keywords
 		$params['module'] = $module;
 		$params['controller'] = $controller ? $controller : 'default';
-		
+			
 		// If the module has its own route ... just use it !
 		if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller, $id_lang, $id_shop))
 			return $this->getPageLink('module-'.$module.'-'.$controller, $ssl, $id_lang, $params);
 		else
-		{
-					
 			return $url.Dispatcher::getInstance()->createUrl('module', $id_lang, $params, $this->allow, '', $id_shop);
-		}
 	}
 
 	/**
@@ -425,7 +422,6 @@ class LinkCore
 	 */
 	public function getPageLink($controller, $ssl = null, $id_lang = null, $request = null, $request_url_encode = false, $id_shop = null)
 	{
-		
 		//If $controller contains '&' char, it means that $controller contains request data and must be parsed first
 		$p = strpos($controller, '&');
 		if ($p !== false) {
@@ -437,7 +433,13 @@ class LinkCore
 		$controller = Tools::strReplaceFirst('.php', '', $controller);
 		if (!$id_lang)
 			$id_lang = (int)Context::getContext()->language->id;
-
+		
+		//need to be unset because getModuleLink need those params when rewrite is enable
+		if (isset($request['module']))
+			unset($request['module']);
+		if (isset($request['controller']))
+			unset($request['controller']);	
+		
 		if (!is_array($request))
 		{
 			// @FIXME html_entity_decode has been added due to '&amp;' => '%3B' ...
