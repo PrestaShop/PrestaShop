@@ -259,8 +259,7 @@ class AdminMetaControllerCore extends AdminController
 		$files = Meta::getPages(true, ($this->object->page ? $this->object->page : false));
 		
 		$is_index = false;
-
-		if (is_object($this->object))
+		if (is_object($this->object) && is_array($this->object->url_rewrite) &&  count($this->object->url_rewrite))
 			foreach ($this->object->url_rewrite as $rewrite)
 				if($is_index != true)
 					$is_index = ($this->object->page == 'index' && empty($rewrite)) ? true : false;
