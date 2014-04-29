@@ -9,3 +9,5 @@ UPDATE `PREFIX_hook` SET  live_edit = '1' WHERE `name` IN('displayTop','displayA
 'displayFeatureValueForm','displayFooter','displayLeftColumnProduct','displayMyAccountBlock','displayMyAccountBlockfooter','displayOrderConfirmation',
 'displayOrderDetail','displayPaymentReturn','displayPaymentTop','displayProductButtons','displayProductComparison','displayProductListFunctionalButtons',
 'displayProductTab','displayProductTabContent','displayRightColumnProduct','displayShoppingCart','displayShoppingCartFooter');
+
+ALTER TABLE `PREFIX_order_detail_tax` DROP PRIMARY KEY, ADD INDEX id_order_detail (`id_order_detail`);
