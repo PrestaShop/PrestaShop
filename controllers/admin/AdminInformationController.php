@@ -108,7 +108,7 @@ class AdminInformationControllerCore extends AdminController
 			'log_dir' => $this->l('Set write permissions for the "log" folder and subfolders.'),
 			'mails_dir' => $this->l('Set write permissions for the "mails" folder and subfolders.'),
 			'module_dir' => $this->l('Set write permissions for the "modules" folder and subfolders.'),
-			'theme_lang_dir' => $this->l('Set the write permissions for the "themes')._THEME_NAME_.$this->l('/lang/" folder and subfolders, recursively.'),
+			'theme_lang_dir' => sprintf($this->l('Set the write permissions for the "themes%s/lang/" folder and subfolders, recursively.'), _THEME_NAME_),
 			'translations_dir' => $this->l('Set write permissions for the "translations" folder and subfolders.'),
 			'customizable_products_dir' => $this->l('Set write permissions for the "upload" folder and subfolders.'),
 			'virtual_products_dir' => $this->l('Set write permissions for the "download" folder and subfolders.'),
