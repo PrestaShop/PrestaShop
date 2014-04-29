@@ -191,7 +191,7 @@ abstract class DbCore
 		else
 		{
 			$id++;
-			$id_server = ($total_servers > 2 && ($id % $total_servers) != 0) ? $id : 1;
+			$id_server = ($total_servers > 2 && ($id % $total_servers) != 0) ? $id % $total_servers : 1;
 		}
 
 		if (!isset(self::$instance[$id_server]))
