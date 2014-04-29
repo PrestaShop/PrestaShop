@@ -5577,22 +5577,18 @@ span.exclusive {
 
 .button.button-medium.exclusive {
   border-color: #db8600 #d98305 #c86d26 #d98305;
-  background: #fdaa02;
-  background: -moz-linear-gradient(top, #fdaa02 0%, #fe9702 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fdaa02), color-stop(100%, #fe9702));
-  background: -webkit-linear-gradient(top, #fdaa02 0%, #fe9702 100%);
-  background: -o-linear-gradient(top, #fdaa02 0%, #fe9702 100%);
-  background: -ms-linear-gradient(top, #fdaa02 0%, #fe9702 100%);
-  background: linear-gradient(to bottom, #fdaa02 0%, #fe9702 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fdaa02', endColorstr='#fe9702',GradientType=0 ); }
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fdaa02), color-stop(100%, #fe9702));
+  background-image: -webkit-linear-gradient(top, #fdaa02, #fe9702);
+  background-image: -moz-linear-gradient(top, #fdaa02, #fe9702);
+  background-image: -o-linear-gradient(top, #fdaa02, #fe9702);
+  background-image: linear-gradient(top, #fdaa02, #fe9702); }
   .button.button-medium.exclusive span {
     border-color: #fec133 #febc33 #feb233 #febc33; }
-    .button.button-medium.exclusive span:hover {
-      filter: none;
-      background: #f89609;
-      border-color: #a6550c #ba6708 #db8600 #ba6708; }
-      .button.button-medium.exclusive span:hover span {
-        border-color: #fec133; }
+  .button.button-medium.exclusive:hover {
+    background: #f89609;
+    border-color: #a6550c #ba6708 #db8600 #ba6708; }
+    .button.button-medium.exclusive:hover span {
+      border-color: #fec133; }
 
 .link-button {
   font-weight: bold; }
@@ -7053,6 +7049,12 @@ a.price_discount_delete {
 
 #cart_summary .stock-management-on tbody td.cart_description {
   width: 480px; }
+
+.cart_discount_price {
+  text-align: right; }
+
+.cart_discount_delete {
+  text-align: center; }
 
 @media (max-width: 767px) {
   #order-detail-content #cart_summary table, #order-detail-content #cart_summary thead, #order-detail-content #cart_summary tbody, #order-detail-content #cart_summary th, #order-detail-content #cart_summary td, #order-detail-content #cart_summary tr {

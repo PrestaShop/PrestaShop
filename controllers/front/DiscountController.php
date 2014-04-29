@@ -42,7 +42,21 @@ class DiscountControllerCore extends FrontController
 		$cart_rules = CartRule::getCustomerCartRules($this->context->language->id, $this->context->customer->id, true, false);
 		$nb_cart_rules = count($cart_rules);
 
-		$this->context->smarty->assign(array('nb_cart_rules' => (int)$nb_cart_rules, 'cart_rules' => $cart_rules, 'discount' => $cart_rules, 'nbDiscounts' => (int)$nb_cart_rules));
+		foreach ($cart_rules as &$discount)
+		{
+			$discount['value'] = Tools::convertPriceFull(
+											$discount['value'],
+											new Currency((int)$discount['reduction_currency']),
+											new Currency((int)$this->context->cart->id_currency)
+										);
+		}
+
+		$this->context->smarty->assign(array(
+											'nb_cart_rules' => (int)$nb_cart_rules,
+											'cart_rules' => $cart_rules,
+											'discount' => $cart_rules,
+											'nbDiscounts' => (int)$nb_cart_rules)
+										);
 		$this->setTemplate(_PS_THEME_DIR_.'discount.tpl');
 	}
 }

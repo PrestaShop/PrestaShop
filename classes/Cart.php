@@ -1353,7 +1353,7 @@ class CartCore extends ObjectModel
 		if ($virtual && $type == Cart::BOTH)
 			$type = Cart::BOTH_WITHOUT_SHIPPING;
 
-		if ($with_shipping)
+		if ($with_shipping || $type == Cart::ONLY_DISCOUNTS)
 		{
 			if (is_null($products) && is_null($id_carrier))
 				$shipping_fees = $this->getTotalShippingCost(null, (boolean)$with_taxes);
@@ -3185,7 +3185,22 @@ class CartCore extends ObjectModel
 		$cart->id = null;
 		$cart->id_shop = $this->id_shop;
 		$cart->id_shop_group = $this->id_shop_group;
+		
+		if (!Customer::customerHasAddress((int)$cart->id_customer, (int)$id_address_delivery))
+			$cart->id_address_delivery = (int)Address::getFirstCustomerAddressId((int)$cart->id_customer);
+
+		if (!Customer::customerHasAddress((int)$cart->id_customer, (int)$id_address_invoice))
+			$cart->id_address_invoice = (int)Address::getFirstCustomerAddressId((int)$cart->id_customer);
+
 		$cart->add();
+
+		$id_address_delivery = Configuration::get('PS_ALLOW_MULTISHIPPING') ? $cart->id_address_delivery : 0;
+
+		if ($id_address_delivery)
+		{
+			if (Customer::customerHasAddress((int)$cart->id_customer, $product['id_address_delivery']))
+				$id_address_delivery = $product['id_address_delivery'];
+		}
 
 		if (!Validate::isLoadedObject($cart))
 			return false;
@@ -3200,7 +3215,7 @@ class CartCore extends ObjectModel
 				(int)$product['id_product_attribute'],
 				null,
 				'up',
-				(int)$product['id_address_delivery'],
+				(int)$id_address_delivery,
 				new Shop($cart->id_shop)
 			);
 
@@ -3230,7 +3245,7 @@ class CartCore extends ObjectModel
 		{
 			Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'customization` (id_cart, id_product_attribute, id_product, `id_address_delivery`, quantity, `quantity_refunded`, `quantity_returned`, `in_cart`)
-				VALUES('.(int)$cart->id.', '.(int)$val['id_product_attribute'].', '.(int)$val['id_product'].', '.(int)$this->id_address_delivery.', '.(int)$val['quantity'].', 0, 0, 1)'
+				VALUES('.(int)$cart->id.', '.(int)$val['id_product_attribute'].', '.(int)$val['id_product'].', '.(int)$id_address_delivery.', '.(int)$val['quantity'].', 0, 0, 1)'
 			);
 			$custom_ids[$customization_id] = Db::getInstance(_PS_USE_SQL_SLAVE_)->Insert_ID();
 		}

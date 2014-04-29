@@ -813,7 +813,7 @@ class DispatcherCore
 		$modules_controllers = array();
 		if (is_null($module))
 			$modules = Module::getModulesOnDisk(true);
-		else if (!is_array($modules))
+		else if (!is_array($module))
 			$modules = array(Module::getInstanceByName($module));
 		else
 		{

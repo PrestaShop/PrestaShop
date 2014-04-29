@@ -31,14 +31,20 @@
 				<h4 class="modal-title" id="myModalLabel">{$modal_title}</h4>
 			</div>
 			{/if}
-			<div class="modal-body">
-				{$modal_content}
-			</div>
+
+			{$modal_content}
+
 			{if isset($modal_actions)}
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">{l s='Close'}</button>
 				{foreach $modal_actions as $action}
-					<a href="{$action.link}" class="btn {$action.class}">{$action.label}</a>
+					{if $action.type == 'link'}
+						<a href="{$action.href}" class="btn {$action.class}">{$action.label}</a>
+					{elseif $action.type == 'button'}
+						<button type="button" value="{$action.value}" class="btn {$action.class}">
+							{$action.label}
+						</button>
+					{/if}
 				{/foreach}
 			</div>
 			{/if}

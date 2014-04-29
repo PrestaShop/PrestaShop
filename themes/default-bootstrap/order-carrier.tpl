@@ -313,6 +313,8 @@
 	{addJsDef orderUrl=$link->getPageLink("order", true)|addslashes}
 	{addJsDefL name=txtProduct}{l s='Product' js=1}{/addJsDefL}
 	{addJsDefL name=txtProducts}{l s='Products' js=1}{/addJsDefL}
+{/if}
+{if $conditions}
 	{addJsDefL name=msg_order_carrier}{l s='You must agree to the terms of service before continuing.' js=1}{/addJsDefL}
 {/if}
 {/strip}

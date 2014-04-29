@@ -514,32 +514,33 @@ function reloadContent(params_plus)
 				$('.product_list').css('filter', '');
 
 			if (result.pagination.search(/[^\s]/) >= 0) {
-				var data = $('<div/>').html(result.pagination);
+				var pagination = $('<div/>').html(result.pagination)
+				var pagination_bottom = $('<div/>').html(result.pagination_bottom);
 
-				if (data.find('ul.pagination').length)
+				if ($('<div/>').html(pagination).find('#pagination').length)
 				{
-					$('div.pagination').show();
-					$('ul.pagination').each(function () {
-						$(this).replaceWith(data.find('ul.pagination'));
-					});
-				}
-				else if (!$('ul.pagination').length)
-				{
-					$('div.pagination').show();
-					$('div.pagination').each(function () {
-						$(this).html(data.find('div.pagination').innerHTML);
-					});
+					$('#pagination').show();
+					$('#pagination').replaceWith(pagination.find('#pagination'));
 				}
 				else
 				{
-					$('ul.pagination').html('');
-					$('div.pagination').hide();
+					$('#pagination').hide();
+				}
+
+				if ($('<div/>').html(pagination_bottom).find('#pagination_bottom').length)
+				{
+					$('#pagination_bottom').show();
+					$('#pagination_bottom').replaceWith(pagination_bottom.find('#pagination_bottom'));
+				}
+				else
+				{
+					$('#pagination_bottom').hide();
 				}
 			}
 			else
 			{
-				$('ul.pagination').html('');
-				$('div.pagination').hide();
+				$('#pagination').hide();
+				$('#pagination_bottom').hide();
 			}
 
 			paginationButton(parseInt(result.categoryCount.replace(/[^0-9]/g,'')));

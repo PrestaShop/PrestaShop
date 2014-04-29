@@ -237,7 +237,7 @@
 						{/if}
 					{else}
 						<tr class="cart_total_delivery"{if $total_shipping_tax_exc <= 0} style="display:none;"{/if}>
-							<td colspan="3" class="text-right">{l s='Total shipping'}</td>
+							<td colspan="{$col_span_subtotal}" class="text-right">{l s='Total shipping'}</td>
 							<td colspan="2" class="price" id="total_shipping" >{displayPrice price=$total_shipping_tax_exc}</td>
 						</tr>
 					{/if}
@@ -410,7 +410,7 @@
 				<tbody>
 					{foreach $discounts as $discount}
 						<tr class="cart_discount {if $discount@last}last_item{elseif $discount@first}first_item{else}item{/if}" id="cart_discount_{$discount.id_discount}">
-							<td class="cart_discount_name" colspan="3">{$discount.name}</td>
+							<td class="cart_discount_name" colspan="{if $PS_STOCK_MANAGEMENT}3{else}2{/if}">{$discount.name}</td>
 							<td class="cart_discount_price">
 								<span class="price-discount">
 								{if !$priceDisplay}{displayPrice price=$discount.value_real*-1}{else}{displayPrice price=$discount.value_tax_exc*-1}{/if}

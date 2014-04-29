@@ -355,8 +355,8 @@ class AdminControllerCore extends Controller
 			23 => $this->l('Localization pack imported successfully.'),
 			24 => $this->l('Localization pack imported successfully.'),
 			25 => $this->l('The selected images have successfully been moved.'),
-			26 => $this->l('Your cover selection has been saved.'),
-			27 => $this->l('The image shop association has been modified.'),
+			26 => $this->l('Your cover image selection has been saved.'),
+			27 => $this->l('The image\'s shop association has been modified.'),
 			28 => $this->l('A zone has been assigned to the selection successfully.'),
 			29 => $this->l('Upgrade successful'),
 			30 => $this->l('A partial refund was successfully created.'),
@@ -654,7 +654,11 @@ class AdminControllerCore extends Controller
 						elseif ($type == 'select')
 							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = \''.pSQL($value).'\' ';
 						else
+						{
+							if ($type == 'price')
+								$value = (float)str_replace(',', '.', $value);
 							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL($value).'%\' ';
+						}
 					}
 				}
 			}
@@ -1556,7 +1560,7 @@ class AdminControllerCore extends Controller
 		$current_id = Tab::getCurrentParentId();
 		foreach ($tabs as $index => $tab)
 		{
-			if (!checkTabRights($tab['id_tab'])
+			if (!Tab::checkTabRights($tab['id_tab'])
 				|| ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
 				|| $tab['class_name'] == 'AdminCarrierWizard')
 			{
@@ -1837,6 +1841,9 @@ class AdminControllerCore extends Controller
 	{
 		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
 			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
+
+		if (!$this->isFresh(Module::CACHE_FILE_ALL_COUNTRY_MODULES_LIST, 86400))
+			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_ALL_COUNTRY_MODULES_LIST, Tools::addonsRequest('native_all'));
 		
 		if (!$this->isFresh(Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, 86400))
 			@file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, Tools::addonsRequest('must-have'));

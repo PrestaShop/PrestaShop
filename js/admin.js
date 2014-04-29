@@ -736,6 +736,10 @@ $(document).ready(function()
 	$('select.chosen').each(function(k, item){
 		$(item).chosen({disable_search_threshold: 10});
 	});
+	// Apply chosen() when modal is loaded
+	$(document).on('shown.bs.modal', function (e) {
+		$('select.chosen-modal').chosen();
+	})
 
 	$('.isInvisible input, .isInvisible select, .isInvisible textarea').attr('disabled', true);
 	$('.isInvisible label.conf_title').addClass('isDisabled');
@@ -877,6 +881,15 @@ $(document).ready(function()
 			}
 		});
 	}); // end bind
+
+	$(document).on('click', '.untrustedaddon', function(e){
+		e.preventDefault();
+		var moduleName = $(this).data('module-name');
+		var moduleLink = $(this).data('link');
+
+		$('.modal .module-name-placeholder').text(moduleName);
+		$('.modal #proceed-install-anyway').attr('href', moduleLink);
+	});
 
 	// if count errors
 	$('#hideError').on('click', function(e)

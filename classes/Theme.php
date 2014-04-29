@@ -32,6 +32,10 @@ class ThemeCore extends ObjectModel
 	public $default_left_column;
 	public $default_right_column;
 	public $product_per_page;
+	
+	const CACHE_FILE_CUSTOMER_THEMES_LIST = '/config/xml/customer_themes_list.xml';
+	
+	const CACHE_FILE_MUST_HAVE_THEMES_LIST = '/config/xml/must_have_themes_list.xml';
 
 	/** @var int access rights of created folders (octal) */
 	public static $access_rights = 0775;
