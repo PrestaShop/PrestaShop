@@ -1584,11 +1584,22 @@ class ToolsCore
 		if ($method == null)
 			$method = (int)Configuration::get('PS_PRICE_ROUND_MODE');
 
-		if ($method == PS_ROUND_UP)
-			return Tools::ceilf($value, $precision);
-		elseif ($method == PS_ROUND_DOWN)
-			return Tools::floorf($value, $precision);
-		return round($value, $precision);
+		switch ($method)
+		{
+			case PS_ROUND_UP:
+				return Tools::ceilf($value, $precision);
+			case PS_ROUND_DOWN:
+				return Tools::floorf($value, $precision);
+			case PS_ROUND_HALF_DOWN:
+				return round($value, $precision, PHP_ROUND_HALF_DOWN);
+			case PS_ROUND_HALF_EVEN:
+				return round($value, $precision, PHP_ROUND_HALF_EVEN);
+			case PS_ROUND_HALF_ODD:
+				return round($value, $precision, PHP_ROUND_HALF_ODD);
+			case PS_ROUND_HALF_UP:
+			default:
+				return round($value, $precision, PHP_ROUND_HALF_UP);
+		}
 	}
 
 	/**

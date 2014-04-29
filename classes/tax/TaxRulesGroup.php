@@ -32,6 +32,8 @@ class TaxRulesGroupCore extends ObjectModel
     /** @var bool active state */
     public $active;
 
+    public $deleted = 0;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -39,8 +41,11 @@ class TaxRulesGroupCore extends ObjectModel
 		'table' => 'tax_rules_group',
 		'primary' => 'id_tax_rules_group',
 		'fields' => array(
-			'name' =>	array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-			'active' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'name' =>		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'active' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'deleted' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'date_add' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+			'date_upd' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
 		),
 	);
 
@@ -52,6 +57,41 @@ class TaxRulesGroupCore extends ObjectModel
 	);
 
 	protected static $_taxes = array();
+
+
+	public function update($null_values = false)
+	{
+		if (!$this->deleted && $this->isUsed())
+		{
+			$current_tax_rules_group = new TaxRulesGroup((int)$this->id);
+			if ((!$new_tax_rules_group = $current_tax_rules_group->duplicateObject()) || !$current_tax_rules_group->historize($new_tax_rules_group))
+				return false;
+
+			$this->id = (int)$new_tax_rules_group->id;
+		}
+
+		return parent::update($null_values);
+	}
+
+	/**
+	 * Save the object with the field deleted to true
+	 *
+	 *  @return bool
+	 */
+	public function historize(TaxRulesGroup $tax_rules_group)
+	{
+		$this->deleted = true;
+
+		return parent::update() && Db::getInstance()->execute('
+		INSERT INTO '._DB_PREFIX_.'tax_rule 
+		(id_tax_rules_group, id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior, description)
+		(
+			SELECT '.(int)$tax_rules_group->id.', id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior, description
+			FROM '._DB_PREFIX_.'tax_rule 
+			WHERE id_tax_rules_group='.(int)$this->id.'
+		)');
+		
+	}
 
 	public static function getTaxRulesGroups($only_active = true)
 	{
@@ -125,6 +165,15 @@ class TaxRulesGroupCore extends ObjectModel
 		return false;
 	}
 
+	public function isUsed()
+	{
+		return Db::getInstance()->getValue('
+		SELECT `id_tax_rules_group`
+		FROM `'._DB_PREFIX_.'order_detail`
+		WHERE `id_tax_rules_group` = '.(int)$this->id
+		);
+	}
+
 	/**
 	* @deprecated since 1.5
 	*/
@@ -147,6 +196,4 @@ class TaxRulesGroupCore extends ObjectModel
 		Tools::displayAsDeprecated();
 		return array();
 	}
-
 }
-

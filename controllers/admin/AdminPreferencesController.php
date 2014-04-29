@@ -39,6 +39,22 @@ class AdminPreferencesControllerCore extends AdminController
 		{
 			$round_mode = array(
 				array(
+					'value' => PS_ROUND_HALF_UP,
+					'name' => $this->l('classical superior')
+				),
+				array(
+					'value' => PS_ROUND_HALF_DOWN,
+					'name' => $this->l('classical inferior')
+				),
+				array(
+					'value' => PS_ROUND_HALF_EVEN,
+					'name' => $this->l('classical to the next even value')
+				),
+				array(
+					'value' => PS_ROUND_HALF_ODD,
+					'name' => $this->l('classical to the next odd value')
+				),
+				array(
 					'value' => PS_ROUND_UP,
 					'name' => $this->l('superior')
 				),
@@ -46,10 +62,6 @@ class AdminPreferencesControllerCore extends AdminController
 					'value' => PS_ROUND_DOWN,
 					'name' => $this->l('inferior')
 				),
-				array(
-					'value' => PS_ROUND_HALF,
-					'name' => $this->l('classical')
-				)
 			);
 			$activities1 = array(
 				0 => $this->l('-- Please choose your main activity --'),

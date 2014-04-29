@@ -1191,6 +1191,7 @@ CREATE TABLE `PREFIX_order_detail` (
   `product_reference` varchar(32) default NULL,
   `product_supplier_reference` varchar(32) default NULL,
   `product_weight` DECIMAL(20,6) NOT NULL,
+  `id_tax_rules_group` INT(11) UNSIGNED NOT NULL,
   `tax_computation_method` tinyint(1) unsigned NOT NULL default '0',
   `tax_name` varchar(16) NOT NULL,
   `tax_rate` DECIMAL(10,3) NOT NULL DEFAULT '0.000',
@@ -1212,6 +1213,7 @@ CREATE TABLE `PREFIX_order_detail` (
   KEY `order_detail_order` (`id_order`),
   KEY `product_id` (`product_id`),
   KEY `product_attribute_id` (`product_attribute_id`),
+  KEY `id_tax_rules_group` (`id_tax_rules_group`),
   KEY `id_order_id_order_detail` (`id_order`, `id_order_detail`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -1289,11 +1291,16 @@ CREATE TABLE `PREFIX_order_return_state_lang` (
   PRIMARY KEY (`id_order_return_state`,`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+
 CREATE TABLE `PREFIX_order_slip` (
   `id_order_slip` int(10) unsigned NOT NULL auto_increment,
   `conversion_rate` decimal(13,6) NOT NULL default 1,
   `id_customer` int(10) unsigned NOT NULL,
   `id_order` int(10) unsigned NOT NULL,
+  `total_products_tax_excl` DECIMAL(20, 6) NULL,
+  `total_products_tax_incl` DECIMAL(20, 6) NULL,
+  `total_shipping_tax_excl` DECIMAL(20, 6) NULL,
+  `total_shipping_tax_incl` DECIMAL(20, 6) NULL,  
   `shipping_cost` tinyint(3) unsigned NOT NULL default '0',
   `amount` DECIMAL(10,2) NOT NULL,
   `shipping_cost_amount` DECIMAL(10,2) NOT NULL,
@@ -1309,8 +1316,12 @@ CREATE TABLE `PREFIX_order_slip_detail` (
   `id_order_slip` int(10) unsigned NOT NULL,
   `id_order_detail` int(10) unsigned NOT NULL,
   `product_quantity` int(10) unsigned NOT NULL default '0',
-  `amount_tax_excl` DECIMAL(10,2) default NULL,
-  `amount_tax_incl` DECIMAL(10,2) default NULL,
+  `unit_price_tax_excl` DECIMAL(20, 6) NULL,
+  `unit_price_tax_incl` DECIMAL(20, 6) NULL,
+  `total_price_tax_excl` DECIMAL(20, 6) NULL,
+  `total_price_tax_incl` DECIMAL(20, 6),
+  `amount_tax_excl` DECIMAL(20, 6) default NULL,
+  `amount_tax_incl` DECIMAL(20, 6) default NULL,
   PRIMARY KEY (`id_order_slip`,`id_order_detail`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -1933,11 +1944,14 @@ CREATE TABLE `PREFIX_tax_rule` (
   KEY `id_tax` (`id_tax`),
   KEY `category_getproducts` ( `id_tax_rules_group` , `id_country` , `id_state` , `zipcode_from` )
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
+ALTER TABLE  `PREFIX_tax_rules_group` ADD 
 CREATE TABLE `PREFIX_tax_rules_group` (
 `id_tax_rules_group` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-`name` VARCHAR( 50 ) NOT NULL ,
-`active` INT NOT NULL
+`name` VARCHAR( 50 ) NOT NULL,
+`active` INT NOT NULL,
+`deleted` TINYINT(1) UNSIGNED NOT NULL, 
+`date_add` DATETIME NOT NULL, 
+`date_upd` DATETIME NOT NULL
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_specific_price_priority` (
@@ -2512,4 +2526,11 @@ CREATE TABLE `PREFIX_order_invoice_payment` (
 	KEY `id_order` (`id_order`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-
+CREATE TABLE IF NOT EXISTS `PREFIX_order_slip_detail_tax` (
+  `id_order_slip_detail` int(11) NOT NULL,
+  `id_tax` int(11) NOT NULL,
+  `unit_amount` decimal(16,6) NOT NULL DEFAULT '0.000000',
+  `total_amount` decimal(16,6) NOT NULL DEFAULT '0.000000',
+  KEY (`id_order_slip_detail`),
+  KEY `id_tax` (`id_tax`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
