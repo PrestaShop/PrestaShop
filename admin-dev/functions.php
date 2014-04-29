@@ -105,7 +105,12 @@ function rewriteSettingsFile($baseUrls = null, $theme = null, $arrayDB = null)
 	$defines['_PS_VERSION_'] = addslashes(_PS_VERSION_);
 	$content = "<?php\n\n";
 	foreach ($defines as $k => $value)
+	{
+		if ($k == '_PS_VERSION_')
+			$content .= 'if (!defined(\''.$k.'\'))'."\n\t";
+
 		$content .= 'define(\''.$k.'\', \''.addslashes($value).'\');'."\n";
+	}
 	copy(_PS_ADMIN_DIR_.'/../config/settings.inc.php', _PS_ADMIN_DIR_.'/../config/settings.old.php');
 	if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'w'))
 	{

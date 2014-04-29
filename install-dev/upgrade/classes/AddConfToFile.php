@@ -58,8 +58,12 @@ class	AddConfToFile
 	
 	public function writeInFile($name, $data)
 	{
-		if (!$res = @fwrite($this->fd,
-			'define(\''.$name.'\', \''.$this->checkString($data).'\');'."\n"))
+		if ($name == '_PS_VERSION_' && strpos($this->file, 'settings.inc') !== false)
+			$string = 'if (!defined(\''.$name.'\'))'."\n\t".'define(\''.$name.'\', \''.$this->checkString($data).'\');'."\n";
+		else
+			$string = 'define(\''.$name.'\', \''.$this->checkString($data).'\');'."\n";
+
+		if (!$res = @fwrite($this->fd, $string))
 		{
 			$this->error = 6;
 			return false;
