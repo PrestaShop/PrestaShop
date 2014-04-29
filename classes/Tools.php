@@ -2902,7 +2902,14 @@ exit;
 				$protocols[] = 'http';
 				$postData .= '&method=listing&action=must-have';
 				break;
+			case 'must-have-themes':
+				$protocols[] = 'http';
+				$postData .= '&method=listing&action=must-have-themes';
+				break;
 			case 'customer':
+				$postData .= '&method=listing&action=customer&username='.urlencode(trim(Context::getContext()->cookie->username_addons)).'&password='.urlencode(trim(Context::getContext()->cookie->password_addons));
+				break;
+			case 'customer_themes':
 				$postData .= '&method=listing&action=customer&username='.urlencode(trim(Context::getContext()->cookie->username_addons)).'&password='.urlencode(trim(Context::getContext()->cookie->password_addons));
 				break;
 			case 'check_customer':
@@ -2914,7 +2921,6 @@ exit;
 					$postData .= '&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
 				else
 					$protocols[] = 'http';
-
 				break;
 			case 'install-modules':
 				$protocols[] = 'http';
@@ -2932,6 +2938,7 @@ exit;
 				'timeout' => 5,
 			)
 		));
+		
 		foreach ($protocols as $protocol)
 			if ($content = Tools::file_get_contents($protocol.'://api.addons.prestashop.com', false, $context))
 				return $content;
