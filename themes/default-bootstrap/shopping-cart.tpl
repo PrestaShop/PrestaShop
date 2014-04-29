@@ -509,12 +509,13 @@
 								{assign var=addressKey value=" "|explode:$pattern}
 								{assign var=addedli value=false}
 								{foreach from=$addressKey item=key name=foo}
-									{if isset($address.formated[$key]) && !empty($address.formated[$key])}
+								{$key_str = $key|regex_replace:AddressFormat::_CLEANING_REGEX_:""}
+									{if isset($address.formated[$key_str]) && !empty($address.formated[$key_str])}
 										{if (!$addedli)}
 											{$addedli = true}
-											<li><span class="{if isset($addresses_style[$key])}{$addresses_style[$key]}{/if}">
+											<li><span class="{if isset($addresses_style[$key_str])}{$addresses_style[$key_str]}{/if}">
 										{/if}
-										{$address.formated[$key]|escape:'html':'UTF-8'}
+										{$address.formated[$key_str]|escape:'html':'UTF-8'}
 									{/if}
 									{if ($smarty.foreach.foo.last && $addedli)}
 										</span></li>
