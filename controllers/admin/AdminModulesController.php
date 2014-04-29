@@ -399,6 +399,8 @@ class AdminModulesControllerCore extends AdminController
 			return;
 		if (is_dir($dir))
 		{
+			if (strpos($dir, "override") !== false)
+				$hasOverrides = true;
 			$objects = scandir($dir);
 			foreach ($objects as $object)
 				if ($object != '.' && $object != '..')
