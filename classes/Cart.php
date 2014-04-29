@@ -3186,21 +3186,15 @@ class CartCore extends ObjectModel
 		$cart->id_shop = $this->id_shop;
 		$cart->id_shop_group = $this->id_shop_group;
 		
-		if (!Customer::customerHasAddress((int)$cart->id_customer, (int)$id_address_delivery))
+		if (!Customer::customerHasAddress((int)$cart->id_customer, (int)$cart->$id_address_delivery))
 			$cart->id_address_delivery = (int)Address::getFirstCustomerAddressId((int)$cart->id_customer);
 
-		if (!Customer::customerHasAddress((int)$cart->id_customer, (int)$id_address_invoice))
+		if (!Customer::customerHasAddress((int)$cart->id_customer, (int)$cart->$id_address_invoice))
 			$cart->id_address_invoice = (int)Address::getFirstCustomerAddressId((int)$cart->id_customer);
 
 		$cart->add();
 
 		$id_address_delivery = Configuration::get('PS_ALLOW_MULTISHIPPING') ? $cart->id_address_delivery : 0;
-
-		if ($id_address_delivery)
-		{
-			if (Customer::customerHasAddress((int)$cart->id_customer, $product['id_address_delivery']))
-				$id_address_delivery = $product['id_address_delivery'];
-		}
 
 		if (!Validate::isLoadedObject($cart))
 			return false;
@@ -3209,6 +3203,13 @@ class CartCore extends ObjectModel
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id);
 
 		foreach ($products as $product)
+		{
+			if ($id_address_delivery)
+			{
+				if (Customer::customerHasAddress((int)$cart->id_customer, $product['id_address_delivery']))
+					$id_address_delivery = $product['id_address_delivery'];
+			}
+			
 			$success &= $cart->updateQty(
 				$product['quantity'],
 				(int)$product['id_product'],
@@ -3218,6 +3219,7 @@ class CartCore extends ObjectModel
 				(int)$id_address_delivery,
 				new Shop($cart->id_shop)
 			);
+		}
 
 		// Customized products
 		$customs = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
