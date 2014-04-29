@@ -162,7 +162,7 @@
 					</div>
 				</div>
 				{if $customer->isGuest()}
-					{l s='This customer is registered as a Guest.'}</b>
+					{l s='This customer is registered as a Guest.'}
 					{if !$customer_exists}
 					<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;token={getAdminToken tab='AdminCustomers'}">
 						<input type="hidden" name="id_lang" value="{$id_lang}" />
