@@ -2446,7 +2446,7 @@ class ProductCore extends ObjectModel
 	* @param integer $id_lang Language id for multilingual legends
 	* @return array Product images and legends
 	*/
-	public function	getImages($id_lang, Context $context = null)
+	public function getImages($id_lang, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -4867,7 +4867,7 @@ class ProductCore extends ObjectModel
 	*
 	* @return array
 	*/
-	public function	getWsImages()
+	public function getWsImages()
 	{
 		return Db::getInstance()->executeS('
 		SELECT i.`id_image` as id
