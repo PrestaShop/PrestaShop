@@ -3185,16 +3185,14 @@ class CartCore extends ObjectModel
 		$cart->id = null;
 		$cart->id_shop = $this->id_shop;
 		$cart->id_shop_group = $this->id_shop_group;
-		
-		if (!Customer::customerHasAddress((int)$cart->id_customer, (int)$cart->$id_address_delivery))
+
+		if (!Customer::customerHasAddress((int)$cart->id_customer, (int)$cart->id_address_delivery))
 			$cart->id_address_delivery = (int)Address::getFirstCustomerAddressId((int)$cart->id_customer);
 
-		if (!Customer::customerHasAddress((int)$cart->id_customer, (int)$cart->$id_address_invoice))
+		if (!Customer::customerHasAddress((int)$cart->id_customer, (int)$cart->id_address_invoice))
 			$cart->id_address_invoice = (int)Address::getFirstCustomerAddressId((int)$cart->id_customer);
 
 		$cart->add();
-
-		$id_address_delivery = Configuration::get('PS_ALLOW_MULTISHIPPING') ? $cart->id_address_delivery : 0;
 
 		if (!Validate::isLoadedObject($cart))
 			return false;
