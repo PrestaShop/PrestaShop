@@ -650,7 +650,7 @@ class ProductCore extends ObjectModel
 		if (isset($combinations[$id_product][$minimum_quantity]))
 			return $combinations[$id_product][$minimum_quantity];
 
-		$sql = 'SELECT pa.id_product_attribute
+		$sql = 'SELECT product_attribute_shop.id_product_attribute
 				FROM '._DB_PREFIX_.'product_attribute pa
 				'.Shop::addSqlAssociation('product_attribute', 'pa').'
 				'.($minimum_quantity > 0 ? Product::sqlStock('pa', 'pa') : '').
@@ -661,31 +661,34 @@ class ProductCore extends ObjectModel
 
 		if (!$result)
 		{
-			$sql = 'SELECT pa.id_product_attribute
+			$sql = 'SELECT product_attribute_shop.id_product_attribute
 					FROM '._DB_PREFIX_.'product_attribute pa
 					'.Shop::addSqlAssociation('product_attribute', 'pa').'
 					'.($minimum_quantity > 0 ? Product::sqlStock('pa', 'pa') : '').
 					' WHERE pa.id_product = '.(int)$id_product
 					.($minimum_quantity > 0 ? ' AND IFNULL(stock.quantity, 0) >= '.(int)$minimum_quantity : '');
+
 			$result = Db::getInstance()->getValue($sql);
 		}
 
 		if (!$result)
 		{
-			$sql = 'SELECT pa.id_product_attribute
+			$sql = 'SELECT product_attribute_shop.id_product_attribute
 					FROM '._DB_PREFIX_.'product_attribute pa
 					'.Shop::addSqlAssociation('product_attribute', 'pa').'
 					WHERE product_attribute_shop.`default_on` = 1
 					AND pa.id_product = '.(int)$id_product;
+
 			$result = Db::getInstance()->getValue($sql);
 		}
 
 		if (!$result)
 		{
-			$sql = 'SELECT pa.id_product_attribute
+			$sql = 'SELECT product_attribute_shop.id_product_attribute
 					FROM '._DB_PREFIX_.'product_attribute pa
 					'.Shop::addSqlAssociation('product_attribute', 'pa').'
 					WHERE pa.id_product = '.(int)$id_product;
+
 			$result = Db::getInstance()->getValue($sql);
 		}
 
@@ -1344,10 +1347,11 @@ class ProductCore extends ObjectModel
 		$id_default_attribute = (int)Product::getDefaultAttribute($id_product);
 		$result =  Db::getInstance()->update('product_shop', array(
 			'cache_default_attribute' => $id_default_attribute,
-		), 'id_product = '.(int)$id_product);
+		), 'id_product = '.(int)$id_product. Shop::addSqlRestriction(_DB_PREFIX_.'product_shop'));
 		$result &=  Db::getInstance()->update('product', array(
 			'cache_default_attribute' => $id_default_attribute,
 		), 'id_product = '.(int)$id_product);
+		
 		return $result;
 	}
 
@@ -1512,16 +1516,6 @@ class ProductCore extends ObjectModel
 		$combination->default_on = (int)$default;
 		$combination->minimal_quantity = (int)$minimal_quantity;
 		$combination->available_date = $available_date;
-
-		// if we add a combination for this shop and this product does not use the combination feature in other shop,
-		// we clone the default combination in every shop linked to this product
-		if ($default && !$this->hasAttributesInOtherShops())
-		{
-			$id_shop_list_array = Product::getShopsByProduct($this->id);
-			foreach ($id_shop_list_array as $array_shop)
-				$id_shop_list[] = $array_shop['id_shop'];
-			$id_shop_list = array_unique($id_shop_list);
-		}
 
 		if (count($id_shop_list))
 			$combination->id_shop_list = array_unique($id_shop_list);
