@@ -36,8 +36,8 @@
 	<td>
 		<a href="index.php?controller=adminproducts&amp;id_product={$product['product_id']}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">
 			<span class="productName">{$product['product_name']}</span><br />
-			{if $product.product_reference}{l s='Ref:'} {$product.product_reference}<br />{/if}
-			{if $product.product_supplier_reference}{l s='Ref Supplier:'} {$product.product_supplier_reference}{/if}
+			{if $product.product_reference}{l s='Reference number:'} {$product.product_reference}<br />{/if}
+			{if $product.product_supplier_reference}{l s='Supplier reference:'} {$product.product_supplier_reference}{/if}
 		</a>
 	</td>
 	<td>
