@@ -77,7 +77,7 @@
 					</button>
 				</div>
 				<div class="row">
-					<a target="_blank" href="{$addons_register_link}">{l s="Don\'t have an account?"}</a>
+					<a target="_blank" href="{$addons_register_link}">{l s="Don't have an account?"}</a>
 				</div>
 				<div id="addons_loading" class="help-block"></div>
 			</form>
