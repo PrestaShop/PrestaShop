@@ -706,7 +706,6 @@ class CartRuleCore extends ObjectModel
 							foreach ($matchingProductsList as &$matchingProduct)
 								$matchingProduct = preg_replace('/^([0-9]+)-[0-9]+$/', '$1-0', $matchingProduct);
 							$eligibleProductsList = CartRule::array_uintersect($eligibleProductsList, $matchingProductsList);
-							$catProducts = $eligibleProductsList;
 							break;
 						case 'manufacturers':
 							$cartManufacturers = Db::getInstance()->executeS('
@@ -751,13 +750,7 @@ class CartRuleCore extends ObjectModel
 					if (!count($eligibleProductsList))
 						return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
 				}
-
-				$selectedProducts = array_unique(array_merge($selectedProducts, $eligibleProductsList));
-
-				if (isset($catProducts) && is_array($catProducts) && count($catProducts))
-					foreach($selectedProducts as $key => $product)
-						if (!in_array($product, $catProducts))
-							unset($selectedProducts[$key]);
+				$selectedProducts = array_merge($selectedProducts, $eligibleProductsList);
 			}
 		}
 
