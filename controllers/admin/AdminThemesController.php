@@ -116,13 +116,13 @@ class AdminThemesControllerCore extends AdminController
 
 		$all_themes = Theme::getThemes();
 		$themes = array();
-		foreach ($all_themes as $key => $theme)
+		foreach ($all_themes as $theme)
 		{
 			if (file_exists(_PS_ALL_THEMES_DIR_.$theme->directory.'/preview.jpg'))
 				$themes[] = array('id' => $theme->id, 'name' => $theme->name, 'preview' => '../themes/'.$theme->directory.'/preview.jpg');
 
 		}
-		
+
 		/*
 libxml_use_internal_errors(true);
 				
@@ -153,7 +153,6 @@ libxml_use_internal_errors(true);
 			}
 		}
 */
-				
 		$_themes = Theme::getThemes();
 
 		$themes_directory = array();
@@ -181,9 +180,9 @@ libxml_use_internal_errors(true);
 				if ($config_file)
 				{
 					$theme_installed = $this->importThemeXmlConfig(simplexml_load_file($config_file), $theme_dir);
-					foreach($theme_installed as $item)
-						if (Validate::isLoadedObject($item) && file_exists(_PS_ALL_THEMES_DIR_.$theme->directory.'/preview.jpg'))
-							$themes[] = $item;
+					foreach ($theme_installed as $item)
+						if (Validate::isLoadedObject($item) && file_exists(_PS_ALL_THEMES_DIR_.$item->directory.'/preview.jpg'))
+							$themes[] = array('id' => $item->id, 'name' => $item->name, 'preview' => '../themes/'.$item->directory.'/preview.jpg');
 				}
 			}
 		}
