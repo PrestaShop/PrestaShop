@@ -1345,14 +1345,19 @@ class ProductCore extends ObjectModel
 	public static function updateDefaultAttribute($id_product)
 	{
 		$id_default_attribute = (int)Product::getDefaultAttribute($id_product);
+
 		$result =  Db::getInstance()->update('product_shop', array(
 			'cache_default_attribute' => $id_default_attribute,
 		), 'id_product = '.(int)$id_product. Shop::addSqlRestriction());
+
 		$result &=  Db::getInstance()->update('product', array(
 			'cache_default_attribute' => $id_default_attribute,
 		), 'id_product = '.(int)$id_product);
 
-		return $result;
+		if ($result && $id_default_attribute)
+			return $id_default_attribute;
+		else
+			return $result;
 	}
 
 	/**
@@ -1471,7 +1476,9 @@ class ProductCore extends ObjectModel
 		if (!empty($id_images))
 			$combination->setImages($id_images);
 
-		Product::updateDefaultAttribute($this->id);
+		$id_default_attribute = (int)Product::updateDefaultAttribute($this->id);
+		if ($id_default_attribute)
+			$this->cache_default_attribute = $id_default_attribute;
 
 		Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => $id_product_attribute));
 
@@ -1525,7 +1532,9 @@ class ProductCore extends ObjectModel
 		if (!$combination->id)
 			return false;
 
-		Product::updateDefaultAttribute($this->id);
+		$id_default_attribute = Product::updateDefaultAttribute($this->id);
+		if ($id_default_attribute)
+			$this->cache_default_attribute = $id_default_attribute;
 
 		if (!empty($id_images))
 			$combination->setImages($id_images);
