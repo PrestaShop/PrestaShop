@@ -33,9 +33,9 @@
 				{l s='You are logged into %s' sprintf='<a target="_blank" href="http://addons.prestashop.com/?utm_source=backoffice_modules">PrestaShop Addons</a>'}
 			</div>
 			<div id="addons_login_div">	
-				<p>{l s='Welcome'} {$username_addons}</p>
+				<p>{l s='Welcome %s' sprintf=$username_addons}</p>
 				<a class="btn btn-default" href="#" id="addons_logout_button">
-					<i class="icon-signout"></i> {l s='Sign out from PrestaShop Addons.'}
+					<i class="icon-signout"></i> {l s='Sign out from PrestaShop Addons'}
 				</a>
 			</div>
 			<!--end addons login-->
@@ -44,8 +44,8 @@
 			<div class="alert alert-warning">
 				{l s='If you want to be able to fully use the AdminModules panel and have free modules available, you should enable the following configuration on your server:'}
 				<br />
-				{if $check_url_fopen eq 'ko'}- {l s='Enable allow_url_fopen'}<br />{/if}
-				{if $check_openssl eq 'ko'}- {l s='Enable php openSSL extension'}<br />{/if}
+				{if $check_url_fopen eq 'ko'}- {l s='Enable PHP\'s allow_url_fopen setting'}<br />{/if}
+				{if $check_openssl eq 'ko'}- {l s='Enable PHP\'s OpenSSL extension'}<br />{/if}
 			</div>
 		{else}
 			<!--start addons login-->
@@ -53,19 +53,19 @@
 				<div class="form-group">
 					<div class="input-group">
 						<span class="help-tooltip" data-toggle="tooltip" title="" data-original-title="{l s='PrestaShop Addons is PrestaShop\'s marketplace with more than 3,500 modules and themes available.'}">
-							{l s="Connect your shop with PrestaShop's marketplace in order to import automatically all your purchases."}
+							{l s="Connect your shop with PrestaShop's marketplace in order to automatically import all your Addons purchases."}
 						</span>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="username_addons">{l s='Addons Login'} :</label> 
+					<label for="username_addons">{l s='Addons login'}</label> 
 					<div class="input-group">
 						<span class="input-group-addon"><i class="icon-user"></i></span>
 						<input id="username_addons" class="form-control" name="username_addons" type="text" value=""  autocomplete="off" class="form-control ac_input">
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="password_addons">{l s= 'Password Addons'} :</label>
+					<label for="password_addons">{l s= 'Addons password'}</label>
 					<div class="input-group">
 						<span class="input-group-addon"><i class="icon-key"></i></span>
 						<input id="password_addons" class="form-control" name="password_addons" type="password" value=""  autocomplete="off" class="form-control ac_input">
@@ -77,7 +77,7 @@
 					</button>
 				</div>
 				<div class="row">
-					<a target="_blank" href="{$addons_register_link}">{l s="Don't have an account ?"}</a>
+					<a target="_blank" href="{$addons_register_link}">{l s="Don't have an account?"}</a>
 				</div>
 				<div id="addons_loading" class="help-block"></div>
 			</form>
