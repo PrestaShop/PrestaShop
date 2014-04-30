@@ -216,7 +216,16 @@ class ImageManagerCore
 			$mime_type_list = array('image/gif', 'image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png');
 
 		// Try 4 different methods to determine the mime type
-		if (function_exists('finfo_open'))
+		if (function_exists('getimagesize'))
+		{
+			$image_info = @getimagesize($filename);
+
+			if ($image_info)
+				$mime_type = $image_info['mime'];
+			else
+				$file_mime_type = false;
+		}
+		else if (function_exists('finfo_open'))
 		{
 			$const = defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME;
 			$finfo = finfo_open($const);
