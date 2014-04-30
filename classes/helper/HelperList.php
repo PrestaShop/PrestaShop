@@ -354,7 +354,7 @@ class HelperListCore extends Helper
 			self::$cache_lang['Duplicate'] = $this->l('Duplicate', 'Helper');
 
 		if (!array_key_exists('Copy images too?', self::$cache_lang))
-			self::$cache_lang['Copy images too?'] = $this->l('Copy images too?', 'Helper');
+			self::$cache_lang['Copy images too?'] = $this->l('Would you like to copy the images too?', 'Helper');
 
 		$duplicate = $this->currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
 

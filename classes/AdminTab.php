@@ -1737,7 +1737,7 @@ abstract class AdminTabCore
     protected function _displayDuplicate($token = NULL, $id)
     {
         $_cacheLang['Duplicate'] = $this->l('Duplicate');
-		$_cacheLang['Copy images too?'] = $this->l('Copy images too?', __CLASS__, TRUE, FALSE);
+		$_cacheLang['Copy images too?'] = $this->l('Would you like to copy the images too?', __CLASS__, TRUE, FALSE);
 
     	$duplicate = self::$currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
 
