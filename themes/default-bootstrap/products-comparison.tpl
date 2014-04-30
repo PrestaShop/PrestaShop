@@ -62,13 +62,13 @@
 								alt="{$product->name|escape:'html':'UTF-8'}" />
 							</a>
 							{if isset($product->new) && $product->new == 1}
-								<a class="new-box" href="{$product->getlink()|escape:'html':'UTF-8'}">
+								<a class="new-box" href="{$product->getLink()|escape:'html':'UTF-8'}">
 									<span class="new-label">{l s='New'}</span>
 								</a>
 							{/if}
 							{if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
 								{if $product->on_sale}
-									<a class="sale-box" href="{$product->getlink()|escape:'html':'UTF-8'}">
+									<a class="sale-box" href="{$product->getLink()|escape:'html':'UTF-8'}">
 										<span class="sale-label">{l s='Sale!'}</span>
 									</a>
 								{/if}
