@@ -5483,7 +5483,7 @@ class ProductCore extends ObjectModel
 						FROM '._DB_PREFIX_.'product p
 						'.Shop::addSqlAssociation('product', 'p').'
 						JOIN '._DB_PREFIX_.'tax_rules_group trg ON (product_shop.id_tax_rules_group = trg.id_tax_rules_group)
-						WHERE trg.active = 1
+						WHERE trg.active = 1 AND trg.deleted = 0
 						GROUP BY product_shop.id_tax_rules_group
 						ORDER BY n DESC
 						LIMIT 1
