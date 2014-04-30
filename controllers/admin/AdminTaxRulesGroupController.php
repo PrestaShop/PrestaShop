@@ -510,11 +510,17 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		{
 			$tax_rule = new TaxRule((int)$id_tax_rule);
 			if (Validate::isLoadedObject($tax_rule))
-				$result &= $tax_rule->delete();
+			{
+				$tax_rules_group = new TaxRulesGroup((int)$tax_rule->id_tax_rules_group);
+				$tax_rules_group = $this->updateTaxRulesGroup($tax_rules_group);
+				$tax_rule = new TaxRule($tax_rules_group->getIdTaxRuleGroupFromHistorizedId((int)$id_tax_rule));
+				if (Validate::isLoadedObject($tax_rule))
+					$result &= $tax_rule->delete();
+			}
 		}
 
 		Tools::redirectAdmin(
-			self::$currentIndex.'&'.$this->identifier.'='.(int)$tax_rule->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token
+			self::$currentIndex.'&'.$this->identifier.'='.(int)$tax_rules_group->id.'&conf=4&update'.$this->table.'&token='.$this->token
 		);
 	}
 
