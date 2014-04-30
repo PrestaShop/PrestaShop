@@ -37,7 +37,7 @@
 	{if isset($delete_customer) && $delete_customer}
 		<form action="{$REQUEST_URI|escape:'html':'UTF-8'}" method="post">
 			<div class="alert alert-warning">
-				<h4>{l s='How do you want to delete these customer(s)?'}</h4>
+				<h4>{l s='How do you want to delete the selected customers?'}</h4>
 				<p>{l s='There are two ways of deleting a customer. Please choose your preferred method.'}</p>
 				<br>
 				<ul class="listForm list-unstyled">
