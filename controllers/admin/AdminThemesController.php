@@ -255,8 +255,8 @@ libxml_use_internal_errors(true);
 						'thumb' => _PS_IMG_.Configuration::get('PS_STORES_ICON')
 					),
 					'PS_NAVIGATION_PIPE' => array(
-						'title' => $this->l('Navigation pipe'),
-						'hint' => $this->l('Used for the navigation path: Store Name > Category Name > Product Name.'),
+						'title' => $this->l('Navigation separator'),
+						'hint' => $this->l('Used for the breadcrumb navigation. For instance, with ">": Store Name > Category Name > Product Name.'),
 						'cast' => 'strval',
 						'type' => 'text',
 						'size' => 20
