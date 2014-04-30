@@ -70,8 +70,8 @@ class AdminInformationControllerCore extends AdminController
 			'apache_instaweb' => Tools::apacheModExists('mod_instaweb'),
 			'shop' => array(
 				'ps' => _PS_VERSION_,
-				'url' => Tools::getHttpHost(true).__PS_BASE_URI__,
-				'theme' => _THEME_NAME_,
+				'url' => $this->context->shop->getBaseURL(),
+				'theme' => $this->context->shop->theme_name,
 			),
 			'mail' => Configuration::get('PS_MAIL_METHOD') == 1,
 			'smtp' => array(
