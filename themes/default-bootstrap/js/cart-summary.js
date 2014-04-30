@@ -678,7 +678,19 @@ function downQuantity(id, qty)
 						//IE6 bug fix
 						if(error !== 'indexOf')
 							errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
-					alert(errors);
+                    if (!!$.prototype.fancybox)
+                        $.fancybox.open([
+                            {
+                                type: 'inline',
+                                autoScale: true,
+                                minHeight: 30,
+                                content: '<p class="fancybox-error">' + errors + '</p>'
+                            }],
+                            {
+                                padding: 0
+                            });
+                    else
+                        alert(errors);
 					$('input[name=quantity_' + id + ']').val($('input[name=quantity_' + id + '_hidden]').val());
 				}
 				else
