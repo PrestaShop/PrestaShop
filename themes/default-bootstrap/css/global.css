@@ -6923,10 +6923,14 @@ div.star a:hover {
   margin-left: 20px; }
 
 .rte ul {
-  list-style-type: disc; }
+	list-style-type: disc; 
+	padding-left: 15px;
+}
 
 .rte ol {
-  list-style-type: decimal; }
+	list-style-type: decimal; 
+	padding-left: 15px;
+}
 
 .block_hidden_only_for_screen {
   display: none; }
