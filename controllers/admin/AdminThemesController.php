@@ -1705,7 +1705,8 @@ libxml_use_internal_errors(true);
 				'input' => array(
 					array(
 						'type' => 'file',
-						'label' => $this->l('Zip of the theme'),
+						'label' => $this->l('Zip file'),
+						'desc' => $this->l('Browse your computer files and select the Zip file for your new theme.'),
 						'name' => 'themearchive'
 					),
 				),
@@ -1727,6 +1728,7 @@ libxml_use_internal_errors(true);
 					array(
 						'type' => 'text',
 						'label' => $this->l('Archive URL'),
+						'desc' => $this->l('Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".'),
 						'name' => 'themearchiveUrl'
 					),
 				),
@@ -1763,7 +1765,7 @@ libxml_use_internal_errors(true);
 						'type' => 'select',
 						'label' => $this->l('Select the archive'),
 						'name' => 'theme_archive_server',
-						'desc' => $this->l('This field will list the zip files in the \'themes\' folder'),
+						'desc' => $this->l('This selector lists the Zip files that you uploaded in the \'/themes\' folder.'),
 						'options' => array(
 							'id' => 'id',
 							'name' => 'name',
