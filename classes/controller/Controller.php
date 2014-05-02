@@ -413,13 +413,14 @@ abstract class ControllerCore
  			if ($dom_available)
 				$html = Media::deferInlineScripts($html);
 			$html = trim(str_replace(array('</body>', '</html>'), '', $html))."\n";
+
 			$this->context->smarty->assign(array(
 				'js_def' => Media::getJsDef(),
 				'js_files' => array_unique($this->js_files),
 				'js_inline' => $dom_available ? Media::getInlineScript() : array()
 			));
 			$javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
-			echo $html.$javascript.$live_edit_content."\t</body>\n</html>";
+			echo $html.$javascript.$live_edit_content."</body></html>";
 		}
 		else
 			echo $html;
