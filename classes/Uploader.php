@@ -129,7 +129,7 @@ class UploaderCore
 		return uniqid($prefix, true);
 	}
 
-	public function process()
+	public function process($dest = null)
 	{
 		$upload = isset($_FILES[$this->getName()]) ? $_FILES[$this->getName()] : null;
 
@@ -146,13 +146,13 @@ class UploaderCore
 					'error'    => $upload['error'][$index]
 				);
 
-				$this->files[] = $this->upload($tmp[$index]);
+				$this->files[] = $this->upload($tmp[$index], $dest);
 			}
 		}
 		elseif ($upload)
 		{
 
-			$this->files[] = $this->upload($upload);
+			$this->files[] = $this->upload($upload, $dest);
 		}
 
 		return $this->files;
@@ -190,8 +190,42 @@ class UploaderCore
 		return $file;
 	}
 
+	protected function checkUploadError($error_code)
+	{
+		$error = 0;
+		switch ($error_code)
+		{
+			case 1:
+				$error = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini');
+				break;
+			case 2:
+				$error = Tools::displayError('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form');
+				break;
+			case 3:
+				$error = Tools::displayError('The uploaded file was only partially uploaded');
+				break;
+			case 4:
+				$error = Tools::displayError('No file was uploaded');
+				break;
+			case 6:
+				$error = Tools::displayError('Missing a temporary folder');
+				break;
+			case 7:
+				$error = Tools::displayError('Failed to write file to disk');
+				break;
+			case 8:
+				$error = Tools::displayError(' A PHP extension stopped the file upload');
+				break;
+			default;
+				break;
+		}
+		return $error;
+	}
+
 	protected function validate(&$file)
 	{
+		$file['error'] = $this->checkUploadError($file['error']);
+
 		$post_max_size = $this->getPostMaxSizeBytes();
 
 		if ($post_max_size && ($this->_getServerVars('CONTENT_LENGTH') > $post_max_size))

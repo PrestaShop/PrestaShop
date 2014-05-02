@@ -1492,16 +1492,20 @@ libxml_use_internal_errors(true);
 
 			if (Tools::getValue('filename') != '')
 			{
-				if ($_FILES['themearchive']['error'] || !file_exists($_FILES['themearchive']['tmp_name']))
-					$this->errors[] = sprintf($this->l('An error has occurred during the file upload (%s)'), $_FILES['themearchive']['error']);
-				elseif (substr($_FILES['themearchive']['name'], -4) != '.zip')
-					$this->errors[] = $this->l('Only zip files are allowed');
-				elseif (!move_uploaded_file($_FILES['themearchive']['tmp_name'], $sandbox.'uploaded.zip'))
-					$this->errors[] = $this->l('An error has occurred during the file copy.');
-				elseif (Tools::ZipTest($sandbox.'uploaded.zip'))
-					$archive_uploaded = true;
+				$uploader = new Uploader('themearchive');
+				$uploader->setAcceptTypes(array('zip'));
+				$uploader->setSavePath($sandbox);
+				$file = $uploader->process('uploaded.zip');
+
+				if ($file[0]['error'] === 0)
+				{
+					if (Tools::ZipTest($sandbox.'uploaded.zip'))
+						$archive_uploaded = true;
+					else
+						$this->errors[] = $this->l('Zip file seems to be broken');
+				}
 				else
-					$this->errors[] = $this->l('Zip file seems to be broken');
+					$this->errors[] = $file[0]['error'];
 
 			}
 			elseif (Tools::getValue('themearchiveUrl') != '')
