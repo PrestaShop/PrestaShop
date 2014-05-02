@@ -66,7 +66,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		$customer = new Customer((int)$this->order->id_customer);
 
-		$this->smarty->assign(array(
+		$data = array(
 			'order' => $this->order,
 			'order_details' => $this->order_invoice->getProducts(),
 			'cart_rules' => $this->order->getCartRules($this->order_invoice->id),
@@ -75,7 +75,12 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'tax_excluded_display' => Group::getPriceDisplayMethod($customer->id_default_group),
 			'tax_tab' => $this->getTaxTabContent(),
 			'customer' => $customer
-		));
+		);
+
+		if (Tools::getValue('debug'))
+			die(json_encode($data));
+
+		$this->smarty->assign($data);
 
 		return $this->smarty->fetch($this->getTemplateByCountry($country->iso_code));
 	}
