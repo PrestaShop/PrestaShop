@@ -34,7 +34,7 @@
 				{/if}
 			{/section}
 			<meta itemprop="worstRating" content = "0" />
-			<meta itemprop="ratingValue" content = "2" />
+			<meta itemprop="ratingValue" content = "{$averageTotal|escape:'html':'UTF-8'}" />
 			<meta itemprop="bestRating" content = "5" />
 		</div>
 		<span class="nb-comments">{l s='%s Review(s)'|sprintf:$nbComments mod='productcomments'}</span>
