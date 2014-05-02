@@ -31,6 +31,11 @@ class AdminSlipControllerCore extends AdminController
 		$this->bootstrap = true;
 	 	$this->table = 'order_slip';
 		$this->className = 'OrderSlip';
+
+		$this->_select = ' o.`id_shop`';
+		$this->_join .= ' LEFT JOIN '._DB_PREFIX_.'orders o ON (o.`id_order` = a.`id_order`)';
+		$this->_group = ' GROUP BY o.`id_order`';
+
 		$this->fields_list = array(
 			'id_order_slip' => array(
 				'title' => $this->l('ID'),
@@ -75,6 +80,8 @@ class AdminSlipControllerCore extends AdminController
 		);
 
 		parent::__construct();
+
+		$this->_where = Shop::addSqlRestriction(false, 'o');
 	}
 
 	public function initPageHeaderToolbar()
