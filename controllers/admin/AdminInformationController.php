@@ -152,7 +152,7 @@ class AdminInformationControllerCore extends AdminController
 
 	public function getListOfUpdatedFiles(SimpleXMLElement $dir, $path = '')
 	{
-		$exclude_regexp = '(install(-dev|-new)?|themes|tools|cache|docs|download|img|localization|log|mails|translations|upload)';
+		$exclude_regexp = '(install(-dev|-new)?|themes|tools|cache|docs|download|img|localization|log|mails|translations|upload|modules|override/(:?.*)index.php$)';
 		$admin_dir = basename(_PS_ADMIN_DIR_);
 
 		foreach ($dir->md5file as $file)
