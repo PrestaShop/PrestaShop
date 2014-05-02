@@ -91,10 +91,10 @@ class HelperOptionsCore extends Helper
 				$field['required'] = isset($field['required']) ? $field['required'] : $this->required;
 
 				if ($field['type'] == 'color')
-					$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.colorpicker.js');
+					$this->context->controller->addJqueryPlugin('colorpicker');
 
 				if ($field['type'] == 'texarea' || $field['type'] == 'textareaLang')
-					$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.autosize.min.js');
+					$this->context->controller->addJqueryPlugin('autosize');
 
 				if ($field['type'] == 'file')
 				{
