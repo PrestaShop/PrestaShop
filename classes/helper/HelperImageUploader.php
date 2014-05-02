@@ -44,6 +44,8 @@ class HelperImageUploaderCore extends HelperUploader
 
 	protected function validate(&$file)
 	{
+		$file['error'] = $this->checkUploadError($file['error']);
+
 		$post_max_size = $this->getPostMaxSizeBytes();
 
 		if ($post_max_size && ($this->_getServerVars('CONTENT_LENGTH') > $post_max_size))
