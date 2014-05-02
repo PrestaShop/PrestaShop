@@ -762,9 +762,7 @@
 								<div class="message-body">
 									
 									<span class="message-date">&nbsp;<i class="icon-calendar"></i>
-										{l s='At'}
-										{dateFormat date=$message['date_add']}
-										{l s='from'}
+										{dateFormat date=$message['date_add']} - 
 									</span>
 									<h4 class="message-item-heading">
 										{if ($message['elastname']|escape:'html':'UTF-8')}{$message['efirstname']|escape:'html':'UTF-8'}
