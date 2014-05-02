@@ -158,7 +158,7 @@ class HelperFormCore extends Helper
 							if ($color)
 							{
 								// Added JS file
-								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.colorpicker.js');
+								$this->context->controller->addJqueryPlugin('colorpicker');
 								$color = false;
 							}
 						break;
