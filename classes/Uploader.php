@@ -196,10 +196,10 @@ class UploaderCore
 		switch ($error_code)
 		{
 			case 1:
-				$error = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini');
+				$error = Tools::displayError(sprintf('The uploaded file exceeds %s', ini_get('post_max_size')));
 				break;
 			case 2:
-				$error = Tools::displayError('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form');
+				$error = Tools::displayError(sprintf('The uploaded file exceeds %s', Tools::formatBytes((int)$_POST['MAX_FILE_SIZE'])));
 				break;
 			case 3:
 				$error = Tools::displayError('The uploaded file was only partially uploaded');
@@ -214,7 +214,7 @@ class UploaderCore
 				$error = Tools::displayError('Failed to write file to disk');
 				break;
 			case 8:
-				$error = Tools::displayError(' A PHP extension stopped the file upload');
+				$error = Tools::displayError('A PHP extension stopped the file upload');
 				break;
 			default;
 				break;
