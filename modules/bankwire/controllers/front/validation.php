@@ -62,7 +62,7 @@ class BankwireValidationModuleFrontController extends ModuleFrontController
 		);
 			$currency = Currency::getCurrency(Context::getContext()->currency->id);
 			$details = Configuration::get('BANK_WIRE_DETAILS_'.$currency['iso_code']);
-			if(!empty($details))
+			if (!empty($details))
 				$mailVars['{bankwire_details}'] = Tools::nl2br(Configuration::get('BANK_WIRE_DETAILS_'.$currency['iso_code']));
 
 		$this->module->validateOrder($cart->id, Configuration::get('PS_OS_BANKWIRE'), $total, $this->module->displayName, NULL, $mailVars, (int)$currency->id, false, $customer->secure_key);

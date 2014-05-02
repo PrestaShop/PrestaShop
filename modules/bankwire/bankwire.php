@@ -40,7 +40,7 @@ class BankWire extends PaymentModule
 	{
 		$this->name = 'bankwire';
 		$this->tab = 'payments_gateways';
-		$this->version = '0.7';
+		$this->version = '0.8';
 		$this->author = 'PrestaShop';
 		$this->controllers = array('payment', 'validation');
 		
@@ -96,10 +96,9 @@ class BankWire extends PaymentModule
 		$result = true;
 		$currencies = Currency::getPaymentCurrencies($this->id);
 		foreach ($currencies as $currency)
-		{
 			if (!Configuration::deleteByName('BANK_WIRE_DETAILS_'.$currency['iso_code']))
 				$result = false;
-		}
+
 		return $result;
 	}
 
@@ -123,9 +122,7 @@ class BankWire extends PaymentModule
 			Configuration::updateValue('BANK_WIRE_ADDRESS', Tools::getValue('BANK_WIRE_ADDRESS'));
 			$currencies = Currency::getPaymentCurrencies($this->id);
 			foreach ($currencies as $currency)
-			{
 				Configuration::updateValue('BANK_WIRE_DETAILS_'.$currency['iso_code'], Tools::getValue('BANK_WIRE_DETAILS_'.$currency['iso_code']));
-			}
 		}
 		$this->_html .= $this->displayConfirmation($this->l('Settings updated'));
 	}
@@ -191,7 +188,7 @@ class BankWire extends PaymentModule
 			$smartyCurrency =  array();
 			$currency = Currency::getCurrency(Context::getContext()->currency->id);
 			$details = Configuration::get('BANK_WIRE_DETAILS_'.$currency['iso_code']);
-			if(!empty($details))
+			if (!empty($details))
 				$smartyCurrency['bankwireDetails'] = Tools::nl2br(Configuration::get('BANK_WIRE_DETAILS_'.$currency['iso_code']));
 			$this->smarty->assign($smartyCurrency);
 
@@ -249,14 +246,12 @@ class BankWire extends PaymentModule
 
 		$currencies = Currency::getPaymentCurrencies($this->id);
 		foreach ($currencies as $currency)
-		{
 			$fields_form['form']['input'][] = array(
 				'type' => 'textarea',
 				'label' => $this->l('Details for').' '.$currency['name'],
 				'name' => 'BANK_WIRE_DETAILS_'.$currency['iso_code'],
 				'desc' => $this->l('Only enter details here if you don\'t use the default account details for this currency.')
 			);
-		}
 
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
@@ -289,9 +284,7 @@ class BankWire extends PaymentModule
 
 		$currencies = Currency::getPaymentCurrencies($this->id);
 		foreach ($currencies as $currency)
-		{
 			$fields['BANK_WIRE_DETAILS_'.$currency['iso_code'] ] = Tools::getValue('BANK_WIRE_DETAILS_'.$currency['iso_code'], Configuration::get('BANK_WIRE_DETAILS_'.$currency['iso_code']));
-		}
 
 		return $fields;
 	}
