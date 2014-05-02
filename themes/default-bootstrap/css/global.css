@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "CP850";
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -6791,7 +6791,8 @@ div.star a:hover {
     .footer-container #footer h4 {
       font: 600 18px/22px "Open Sans", sans-serif;
       color: white;
-      margin: 0 0 13px 0; }
+      margin: 0 0 13px 0;
+      cursor: pointer; }
       @media (max-width: 767px) {
         .footer-container #footer h4 {
           position: relative;
@@ -6923,14 +6924,12 @@ div.star a:hover {
   margin-left: 20px; }
 
 .rte ul {
-	list-style-type: disc; 
-	padding-left: 15px;
-}
+  list-style-type: disc;
+  padding-left: 15px; }
 
 .rte ol {
-	list-style-type: decimal; 
-	padding-left: 15px;
-}
+  list-style-type: decimal;
+  padding-left: 15px; }
 
 .block_hidden_only_for_screen {
   display: none; }

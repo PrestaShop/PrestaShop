@@ -1807,6 +1807,7 @@ div.star a:hover {
 			font: 600 18px / 22px $font-custom;
 			color: $light-text-color;
 			margin: 0 0 13px 0;
+			cursor: pointer;
 			// max 767px
 			@media (max-width: $screen-xs-max) {
 				position: relative;
