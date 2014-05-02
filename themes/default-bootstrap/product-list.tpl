@@ -64,7 +64,7 @@
 									<span itemprop="price" class="price product-price">
 										{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}
 									</span>
-									<meta itemprop="priceCurrency" content="{$priceDisplay}" />
+									<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
 									{if isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
 										<span class="old-price product-price">
 											{displayWtPrice p=$product.price_without_reduction}
@@ -105,7 +105,7 @@
 							<span itemprop="price" class="price product-price">
 								{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}
 							</span>
-							<meta itemprop="priceCurrency" content="{$priceDisplay}" />
+							<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
 							{if isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
 								<span class="old-price product-price">
 									{displayWtPrice p=$product.price_without_reduction}
