@@ -435,12 +435,14 @@ class LinkCore
 			$id_lang = (int)Context::getContext()->language->id;
 		
 		//need to be unset because getModuleLink need those params when rewrite is enable
-		if (isset($request['module']))
-			unset($request['module']);
-		if (isset($request['controller']))
-			unset($request['controller']);	
-		
-		if (!is_array($request))
+		if (is_array($request))
+		{
+			if (isset($request['module']))
+				unset($request['module']);
+			if (isset($request['controller']))
+				unset($request['controller']);	
+		}
+		else
 		{
 			// @FIXME html_entity_decode has been added due to '&amp;' => '%3B' ...
 			$request = html_entity_decode($request);
