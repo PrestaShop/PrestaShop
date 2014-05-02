@@ -3734,9 +3734,13 @@ class AdminControllerCore extends Controller
 
 					$html = '<a class="';
 
+					$bs_btn_class = isset($option['title']) ? (string)$option['title'] : null;
+
 					if (isset($option['class']))
 						$html .= $option['class'];
-					if (count($return) == 0)
+					if ($bs_btn_class == 'Install')
+						$html .= ' btn btn-success';
+					if ($bs_btn_class != 'Install' && count($return) == 0)
 						$html .= ' btn btn-default';
 
 					$html .= '"';
