@@ -585,9 +585,7 @@ class MediaCore
 		// get js files infos
 		foreach ($js_files as $filename)
 		{
-			$expr = explode(':', $filename);
-
-			if ($expr[0] == 'http')
+			if (Validate::isAbsoluteUrl($filename))
 				$js_external_files[] = $filename;
 			else
 			{
