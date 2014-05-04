@@ -338,6 +338,7 @@ class HelperListCore extends Helper
 			'has_actions' => !empty($this->actions),
 			'list_skip_actions' => $this->list_skip_actions,
 			'row_hover' => $this->row_hover,
+			'module_configure' => isset($this->module_configure) ? $this->module_configure : null,
 			'list_id' => isset($this->list_id) ? $this->list_id : $this->table,
 			'checked_boxes' => Tools::getValue((isset($this->list_id) ? $this->list_id : $this->table).'Box')
 		)));
@@ -649,6 +650,7 @@ class HelperListCore extends Helper
 			'name' => isset($name) ? $name : null,
 			'name_id' => isset($name_id) ? $name_id : null,
 			'row_hover' => $this->row_hover,
+			'module_configure' => isset($this->module_configure) ? $this->module_configure : null,
 			'list_id' => isset($this->list_id) ? $this->list_id : $this->table
 		), $this->tpl_vars));
 
