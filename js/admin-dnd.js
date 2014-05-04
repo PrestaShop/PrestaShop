@@ -115,6 +115,16 @@ function initTableDnD(table)
 						way: way
 					};
 				}
+				// from module with $HelperList->module_configure = 'modulename'
+				else if(module_configure != '')
+				{
+					params = {
+						action : 'updatePositions',
+						configure : module_configure,
+						id : ids[2],
+						way: way
+					}
+				}
 				// default
 				else
 				{
