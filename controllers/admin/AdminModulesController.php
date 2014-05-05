@@ -751,8 +751,10 @@ class AdminModulesControllerCore extends AdminController
 						// If we install a module, force temporary global context for multishop
 						if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && $method != 'getContent')
 						{
+							$shop_id = (int)Context::getContext()->shop->id;
 							Context::getContext()->tmpOldShop = clone(Context::getContext()->shop);
-							Context::getContext()->shop = new Shop();
+							if ($shop_id)
+								Context::getContext()->shop = new Shop($shop_id);
 						}
 
 						//retrocompatibility
