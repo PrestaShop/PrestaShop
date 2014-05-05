@@ -415,6 +415,8 @@ class AdminShopUrlControllerCore extends AdminController
 		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
 			$this->errors[] = Tools::displayError('A shop URL that uses this domain already exists.');
 
+		if (str_replace('/', '', Tools::getValue('virtual_uri')) == 'c')
+			$this->errors[] = Tools::displayError('A shop virtual URL can not be "/c/", because "/c/" is the virtual url prefix for category images.');
 		$return = parent::processSave();
 		if (!$this->errors)
 		{
