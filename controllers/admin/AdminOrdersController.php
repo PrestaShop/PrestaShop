@@ -612,18 +612,23 @@ class AdminOrdersControllerCore extends AdminController
 					$order_detail_list = array();
 					foreach ($_POST['partialRefundProduct'] as $id_order_detail => $amount_detail)
 					{
-						$order_detail_list[$id_order_detail]['quantity'] = (int)$_POST['partialRefundProductQuantity'][$id_order_detail];
+						$order_detail_list[$id_order_detail] = array(
+							'quantity' => (int)$_POST['partialRefundProductQuantity'][$id_order_detail],
+							'id_order_detail' => (int)$id_order_detail
+						);
 
+						$order_detail = new OrderDetail((int)$id_order_detail);
 						if (empty($amount_detail))
 						{
-							$order_detail = new OrderDetail((int)$id_order_detail);
+							$order_detail_list[$id_order_detail]['unit_price'] = $order_detail->unit_price_tax_excl;
 							$order_detail_list[$id_order_detail]['amount'] = $order_detail->unit_price_tax_incl * $order_detail_list[$id_order_detail]['quantity'];
 						}
 						else
+						{
+							$order_detail_list[$id_order_detail]['unit_price'] = (float)str_replace(',', '.', $amount_detail / $order_detail_list[$id_order_detail]['quantity']);
 							$order_detail_list[$id_order_detail]['amount'] = (float)str_replace(',', '.', $amount_detail);
+						}
 						$amount += $order_detail_list[$id_order_detail]['amount'];
-
-						$order_detail = new OrderDetail((int)$id_order_detail);
 						if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Tools::isSubmit('reinjectQuantities')) && $order_detail_list[$id_order_detail]['quantity'] > 0)
 							$this->reinjectQuantity($order_detail, $order_detail_list[$id_order_detail]['quantity']);
 					}
@@ -642,7 +647,7 @@ class AdminOrdersControllerCore extends AdminController
 
 					if ($amount > 0)
 					{
-						if (!OrderSlip::createPartialOrderSlip($order, $amount, $shipping_cost_amount, $order_detail_list))
+						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount))
 							$this->errors[] = Tools::displayError('You cannot generate a partial credit slip.');
 
 						// Generate voucher
