@@ -64,9 +64,11 @@ if (!defined('_PS_ROOT_DIR_') && (getenv('_PS_ROOT_DIR_') || getenv('REDIRECT__P
 if (!defined('_PS_ROOT_DIR_'))
 {
 	define('_PS_ROOT_DIR_', realpath($currentDir.'/..'));
-	define('_PS_CORE_DIR_', _PS_ROOT_DIR_);
+
+	if (!defined('_PS_CORE_DIR_'))
+		define('_PS_CORE_DIR_', _PS_ROOT_DIR_);
 }
-else
+elseif (!defined('_PS_CORE_DIR_'))
 	define('_PS_CORE_DIR_', realpath($currentDir.'/..'));
 
 define('_PS_ALL_THEMES_DIR_',        _PS_ROOT_DIR_.'/themes/');
