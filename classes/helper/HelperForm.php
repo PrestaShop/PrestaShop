@@ -226,6 +226,7 @@ class HelperFormCore extends Helper
 			'base_url' => $this->context->shop->getBaseURL(),
 			'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
 			'show_cancel_button' => $this->show_cancel_button,
+			'confirm' => $this->l('Are you sure?'),
 			'back_url' => $this->back_url
 		));
 		return parent::generate();
