@@ -1544,7 +1544,7 @@ class AdminThemesControllerCore extends AdminController
 				$this->errors[] = $this->l('You must upload or enter a location of your zip');
 
 			if ($archive_uploaded)
-				$thiq->extractTheme($sandbox.'uploaded.zip', $sandbox);
+				$this->extractTheme($sandbox.'uploaded.zip', $sandbox);
 
 			Tools::deleteDirectory($sandbox);
 
