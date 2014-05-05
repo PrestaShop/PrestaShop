@@ -67,7 +67,7 @@ class AdminCustomersControllerCore extends AdminController
 
 		$this->_select = '
 		a.date_add, gl.name as title, (
-			SELECT SUM(total_paid_tax_excl / conversion_rate) FROM '._DB_PREFIX_.'orders o
+			SELECT SUM(total_paid_real / conversion_rate) FROM '._DB_PREFIX_.'orders o
 			WHERE o.id_customer = a.id_customer
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 			AND a.active = 1
