@@ -55,6 +55,7 @@
 	{else}
 		{capture name=path}{l s='Your shopping cart'}{/capture}
 		<h2 class="page-heading">{l s='Your shopping cart'}</h2>
+		{include file="$tpl_dir./errors.tpl"}
 		<p class="alert alert-warning">{l s='Your shopping cart is empty.'}</p>
 	{/if}
 {strip}
