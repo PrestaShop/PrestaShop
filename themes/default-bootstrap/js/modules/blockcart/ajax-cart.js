@@ -316,7 +316,10 @@ var ajaxCart = {
 				
 				if (!jsonData.hasError)
 				{
-					window.parent.ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
+					if (contentOnly)
+						window.parent.ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
+					else
+						ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
 
 					if (jsonData.crossSelling)
 						$('.crossseling').html(jsonData.crossSelling);
@@ -324,12 +327,18 @@ var ajaxCart = {
 					if (idCombination)
 						$(jsonData.products).each(function(){
 							if (this.id != undefined && this.id == parseInt(idProduct) && this.idCombination == parseInt(idCombination))
-								window.parent.ajaxCart.updateLayer(this);
+								if (contentOnly)
+									window.parent.ajaxCart.updateLayer(this);	
+								else
+									ajaxCart.updateLayer(this);
 						});
 					else
 						$(jsonData.products).each(function(){
 							if (this.id != undefined && this.id == parseInt(idProduct))
-								window.parent.ajaxCart.updateLayer(this);
+								if (contentOnly)
+									window.parent.ajaxCart.updateLayer(this);
+								else
+									ajaxCart.updateLayer(this);					
 						});
 					if (contentOnly)
 						parent.$.fancybox.close();
