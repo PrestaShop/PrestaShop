@@ -886,9 +886,11 @@ $(document).ready(function()
 		e.preventDefault();
 		var moduleName = $(this).data('module-name');
 		var moduleLink = $(this).data('link');
+		var addonsSearchLink = 'http://addons.prestashop.com/en/search?search_query='+encodeURIComponent(moduleName)+'&utm_source=back-office&utm_medium=addons-certified&utm_campaign=back-office-'+iso_user.toUpperCase();
 
 		$('.modal .module-name-placeholder').text(moduleName);
 		$('.modal #proceed-install-anyway').attr('href', moduleLink);
+		$('.modal .catalog-link').attr('href', addonsSearchLink);
 	});
 
 	// if count errors
