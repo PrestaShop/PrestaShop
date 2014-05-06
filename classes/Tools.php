@@ -153,7 +153,7 @@ class ToolsCore
 	public static function getShopProtocol()
 	{
 		$protocol = (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS'])
-			&& strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+			&& Tools::strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
 		return $protocol;
 	}
 
@@ -1156,7 +1156,7 @@ class ToolsCore
 		// If it was not possible to lowercase the string with mb_strtolower, we do it after the transformations.
 		// This way we lose fewer special chars.
 		if (!function_exists('mb_strtolower'))
-			$str = strtolower($str);
+			$str = Tools::strtolower($str);
 
 		return $str;
 	}
@@ -1541,14 +1541,14 @@ class ToolsCore
 	{
 		if (function_exists('mb_convert_case'))
 			return mb_convert_case($str, MB_CASE_TITLE);
-		return ucwords(strtolower($str));
+		return ucwords(Tools::strtolower($str));
 	}
 
 	public static function orderbyPrice(&$array, $order_way)
 	{
 		foreach ($array as &$row)
 			$row['price_tmp'] = Product::getPriceStatic($row['id_product'], true, ((isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int)$row['id_product_attribute'] : null), 2);
-		if (strtolower($order_way) == 'desc')
+		if (Tools::strtolower($order_way) == 'desc')
 			uasort($array, 'cmpPriceDesc');
 		else
 			uasort($array, 'cmpPriceAsc');
@@ -1733,7 +1733,7 @@ class ToolsCore
 	{
 		// 'CMSCategories' => 'cms_categories'
 		// 'RangePrice' => 'range_price'
-		return strtolower(trim(preg_replace('/([A-Z][a-z])/', '_$1', $string), '_'));
+		return Tools::strtolower(trim(preg_replace('/([A-Z][a-z])/', '_$1', $string), '_'));
 	}
 
 	public static function getBrightness($hex)
@@ -2508,7 +2508,7 @@ exit;
 		{
 			$value_length = strlen($value);
 			$qty = (int)substr($value, 0, $value_length - 1 );
-			$unit = strtolower(substr($value, $value_length - 1));
+			$unit = Tools::strtolower(substr($value, $value_length - 1));
 			switch ($unit)
 			{
 				case 'k':
@@ -2847,7 +2847,7 @@ exit;
 	{
 		if (Tools::apacheModExists('mod_rewrite'))
 			return true;
-		if ((isset($_SERVER['HTTP_MOD_REWRITE']) && strtolower($_SERVER['HTTP_MOD_REWRITE']) == 'on') || strtolower(getenv('HTTP_MOD_REWRITE')) == 'on')
+		if ((isset($_SERVER['HTTP_MOD_REWRITE']) && Tools::strtolower($_SERVER['HTTP_MOD_REWRITE']) == 'on') || Tools::strtolower(getenv('HTTP_MOD_REWRITE')) == 'on')
 				return true;
 		return false;
 	}
