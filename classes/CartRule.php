@@ -1171,7 +1171,7 @@ class CartRuleCore extends ObjectModel
 				WHERE cr.`id_cart_rule` = crg.`id_cart_rule`
 				AND cg.`id_customer` = '.(int)$context->customer->id.'
 				LIMIT 1
-			)' : 'OR crg.`id_group` = 1').'
+			)' : (Group::isFeatureActive() ? 'OR crg.`id_group` = '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : '')).'
 		)
 		AND (
 			cr.`reduction_product` <= 0
