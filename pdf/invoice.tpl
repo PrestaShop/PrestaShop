@@ -166,7 +166,6 @@
 						{foreach $customizationPerAddress as $customizationId => $customization}
 							<tr style="line-height:6px;background-color:{$bgcolor};">
 								<td style="line-height:3px; text-align: left; width: 45%; vertical-align: top">
-
 										<blockquote>
 											{if isset($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) && count($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) > 0}
 												{foreach $customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_] as $customization_infos}
