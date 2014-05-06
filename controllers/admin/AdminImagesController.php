@@ -140,7 +140,7 @@ class AdminImagesControllerCore extends AdminController
 					),
 					'PS_PRODUCT_PICTURE_WIDTH' => array(
 						'title' => $this->l('Product picture width'),
-						'hint' => $this->l('Width resize of product customization pictures that customers can upload (in pixels).'),
+						'hint' => $this->l('Width of product customization pictures that customers can upload (in pixels).'),
 						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
@@ -151,7 +151,7 @@ class AdminImagesControllerCore extends AdminController
 					),
 					'PS_PRODUCT_PICTURE_HEIGHT' => array(
 						'title' => $this->l('Product picture height'),
-						'hint' => $this->l('Height resize of product customization pictures that customers can upload (in pixels).'),
+						'hint' => $this->l('Height of product customization pictures that customers can upload (in pixels).'),
 						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
