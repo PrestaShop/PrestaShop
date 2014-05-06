@@ -39,9 +39,9 @@ class InstallModelMail extends InstallAbstractModel
 	{
 		parent::__construct();
 
-		require_once(_PS_INSTALL_PATH_.'../tools/swift/Swift.php');
-		require_once(_PS_INSTALL_PATH_.'../tools/swift/Swift/Connection/SMTP.php');
-		require_once(_PS_INSTALL_PATH_.'../tools/swift/Swift/Connection/NativeMail.php');
+		require_once(_PS_CORE_DIR_.'/tools/swift/Swift.php');
+		require_once(_PS_CORE_DIR_.'/tools/swift/Swift/Connection/SMTP.php');
+		require_once(_PS_CORE_DIR_.'/tools/swift/Swift/Connection/NativeMail.php');
 
 		$this->smtp_checked = $smtp_checked;
 		$this->server = $server;
