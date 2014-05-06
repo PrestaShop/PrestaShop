@@ -22,14 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <div class="leadin">{block name="leadin"}{/block}</div>
 {if $module_confirmation}
-<div class="module_confirmation conf confirm">
+<div class="alert alert-success clearfix">
 	{l s='Your .CSV file has been successfully imported into your shop. Don\'t forget to re-build the products\' search index.'}
 </div>
 {/if}
-
 <div class="row">
 	<div class="col-lg-8">
 		{* Import fieldset *}

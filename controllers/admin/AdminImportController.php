@@ -602,7 +602,7 @@ class AdminImportControllerCore extends AdminController
 
 		$this->tpl_form_vars = array(
 			'post_max_size' => (int)$bytes,
-			'module_confirmation' => (Tools::getValue('import')) && (isset($this->warnings) && !count($this->warnings)),
+			'module_confirmation' => Tools::isSubmit('import') && (isset($this->warnings) && !count($this->warnings)),
 			'path_import' => AdminImportController::getPath(),
 			'entities' => $this->entities,
 			'entity_selected' => $entity_selected,
