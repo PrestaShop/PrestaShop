@@ -11,3 +11,5 @@ UPDATE `PREFIX_hook` SET  live_edit = '1' WHERE `name` IN('displayTop','displayA
 'displayProductTab','displayProductTabContent','displayRightColumnProduct','displayShoppingCart','displayShoppingCartFooter');
 
 ALTER TABLE `PREFIX_order_detail_tax` DROP PRIMARY KEY, ADD INDEX id_order_detail (`id_order_detail`);
+
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('PS_DISPLAY_BEST_SELLERS', '1', NOW(), NOW());

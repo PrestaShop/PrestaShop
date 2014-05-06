@@ -133,6 +133,13 @@ class AdminPreferencesControllerCore extends AdminController
 					'cast' => 'intval',
 					'type' => 'bool'
 				),
+				'PS_DISPLAY_BEST_SELLERS' => array(
+					'title' => $this->l('Display best sellers'),
+					'desc' => $this->l('Enable best sellers page on your Front Office even when it\'s respective module is disabled.'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool'
+				),
 				'PS_MULTISHOP_FEATURE_ACTIVE' => array(
 					'title' => $this->l('Enable Multistore'),
 					'desc' => $this->l('The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.'),
