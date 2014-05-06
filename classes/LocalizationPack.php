@@ -42,7 +42,9 @@ class LocalizationPackCore
 		$this->version = (string)$main_attributes['version'];
 		if ($iso_localization_pack)
 		{
-			$country = new Country($state->id_country);
+
+			$id_country = Country::getByIso($iso_localization_pack);
+			$country = new Country($id_country);
 			if (!$country->active)
 			{
 				$country->active = 1;
