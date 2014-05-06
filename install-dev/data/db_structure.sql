@@ -1928,7 +1928,6 @@ CREATE TABLE `PREFIX_product_country_tax` (
   PRIMARY KEY (`id_product`,`id_country`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-
 CREATE TABLE `PREFIX_tax_rule` (
   `id_tax_rule` int(11) NOT NULL AUTO_INCREMENT,
   `id_tax_rules_group` int(11) NOT NULL,
@@ -1944,9 +1943,9 @@ CREATE TABLE `PREFIX_tax_rule` (
   KEY `id_tax` (`id_tax`),
   KEY `category_getproducts` ( `id_tax_rules_group` , `id_country` , `id_state` , `zipcode_from` )
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-ALTER TABLE  `PREFIX_tax_rules_group` ADD 
+
 CREATE TABLE `PREFIX_tax_rules_group` (
-`id_tax_rules_group` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`id_tax_rules_group` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 `name` VARCHAR( 50 ) NOT NULL,
 `active` INT NOT NULL,
 `deleted` TINYINT(1) UNSIGNED NOT NULL, 

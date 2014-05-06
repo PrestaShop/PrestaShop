@@ -34,6 +34,12 @@ class TaxRulesGroupCore extends ObjectModel
 
     public $deleted = 0;
 
+	/** @var string Object creation date */
+	public $date_add;
+
+	/** @var string Object last modification date */
+	public $date_upd;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
