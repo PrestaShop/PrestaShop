@@ -193,5 +193,3 @@ define('_PS_SMARTY_CONSOLE_OPEN_BY_URL_', 1);
 define('_PS_SMARTY_CONSOLE_OPEN_', 2);
 
 define('_PS_JQUERY_VERSION_', '1.11.0');
-
-$hosted_modules_blacklist = array('autoupgrade');

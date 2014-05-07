@@ -166,6 +166,8 @@ abstract class ModuleCore
 	const CACHE_FILE_TRUSTED_MODULES_LIST = '/config/xml/trusted_modules_list.xml';
 	const CACHE_FILE_UNTRUSTED_MODULES_LIST = '/config/xml/untrusted_modules_list.xml';
 
+	public static $hosted_modules_blacklist = array('autoupgrade');
+
 	/**
 	 * Constructor
 	 *
@@ -1122,7 +1124,6 @@ abstract class ModuleCore
 	public static function getModulesOnDisk($useConfig = false, $loggedOnAddons = false, $id_employee = false)
 	{
 		global $_MODULES;
-		global $hosted_modules_blacklist;
 
 		// Init var
 		$module_list = array();
@@ -1388,7 +1389,7 @@ abstract class ModuleCore
 			}
 
 		foreach ($module_list as $key => &$module)
-			if (defined('_PS_HOST_MODE_') && in_array($module->name, $hosted_modules_blacklist))
+			if (defined('_PS_HOST_MODE_') && in_array($module->name, self::$hosted_modules_blacklist))
 				unset($module_list[$key]);
 			elseif (isset($modules_installed[$module->name]))
 			{

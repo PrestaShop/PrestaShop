@@ -654,8 +654,6 @@ class AdminModulesControllerCore extends AdminController
 
 	public function postProcessCallback()
 	{
-		global $hosted_modules_blacklist;
-
 		$return = false;
 		$installed_modules = array();
 
@@ -737,7 +735,7 @@ class AdminModulesControllerCore extends AdminController
 					// Check potential error
 					if (!($module = Module::getInstanceByName(urldecode($name))))
 						$this->errors[] = $this->l('Module not found');
-					elseif (defined('_PS_HOST_MODE_') && in_array($module->name, $hosted_modules_blacklist))
+					elseif (defined('_PS_HOST_MODE_') && in_array($module->name, Module::$hosted_modules_blacklist))
 						$this->errors[] = Tools::displayError('You do not have permission to access this module.');
 					elseif ($key == 'install' && $this->tabAccess['add'] !== '1')
 						$this->errors[] = Tools::displayError('You do not have permission to install this module.');
