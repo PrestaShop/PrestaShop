@@ -32,7 +32,7 @@
 		{if isset($product.attributes) && $product.attributes}<small><a href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'html':'UTF-8'}">{$product.attributes|escape:'html':'UTF-8'}</a></small>{/if}
 	</td>
 	{if $PS_STOCK_MANAGEMENT}
-		<td class="cart_avail"><span class="{if $product.quantity_available <= 0}label label-warning{else}label label-success{/if}">{if $product.quantity_available <= 0}{if $product.allow_oosp}{$product.available_later}{else}{l s='Out of stock'}{/if}{else}{if isset($product.available_now) && $product.available_now}{$product.available_now}{else}{l s='In Stock'}{/if}{/if}</span></td>
+		<td class="cart_avail"><span class="{if $product.quantity_available <= 0 && !$product.allow_oosp}label label-available_later{else}label label-success{/if}">{if $product.quantity_available <= 0}{if $product.allow_oosp}{if isset($product.available_later) && $product.available_later}{$product.available_later}{else}{l s='In Stock'}{/if}{else}{l s='Out of stock'}{/if}{else}{if isset($product.available_now) && $product.available_now}{$product.available_now}{else}{l s='In Stock'}{/if}{/if}</span></td>
 	{/if}
 	<td class="cart_unit" data-title="{l s='Unit price'}">
 		<span class="price" id="product_price_{$product.id_product}_{$product.id_product_attribute}{if $quantityDisplayed > 0}_nocustom{/if}_{$product.id_address_delivery|intval}{if !empty($product.gift)}_gift{/if}">

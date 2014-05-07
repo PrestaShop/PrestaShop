@@ -210,7 +210,7 @@
 				<label class="control-label col-lg-3" for="available_later_{$default_language}">
 					{include file="controllers/products/multishop/checkbox.tpl" field="available_later" type="default" multilang="true"}
 					<span class="label-tooltip" data-toggle="tooltip"
-						title="{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
+						title="{l s='If empty, the message "in stock" will be displayed.'} {l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
 						{l s='Displayed text when backordering is allowed'}
 					</span>
 					
