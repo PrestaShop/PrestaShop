@@ -1870,7 +1870,8 @@ class AdminThemesControllerCore extends AdminController
 		$iso_lang = $this->context->language->iso_code;
 		$iso_currency = $this->context->currency->iso_code;
 		$iso_country = $this->context->country->iso_code;
-		$addons_url = 'http://addons.prestashop.com/iframe/search-1.6.php?psVersion='._PS_VERSION_.'&onlyThemes=1&isoLang='.$iso_lang.'&isoCurrency='.$iso_currency.'&isoCountry='.$iso_country.'&parentUrl='.$parent_domain;
+		$activity = Configuration::get('PS_SHOP_ACTIVITY');
+		$addons_url = 'http://addons.prestashop.com/iframe/search-1.6.php?psVersion='._PS_VERSION_.'&onlyThemes=1&isoLang='.$iso_lang.'&isoCurrency='.$iso_currency.'&isoCountry='.$iso_country.'&activity='.(int)$activity.'&parentUrl='.$parent_domain;
 
 		die(Tools::file_get_contents($addons_url));
 	}

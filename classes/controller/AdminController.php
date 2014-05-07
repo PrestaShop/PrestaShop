@@ -390,7 +390,6 @@ class AdminControllerCore extends Controller
 		// Check if logged on Addons
 		if (isset($this->context->cookie->username_addons) && isset($this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons))
 			$this->logged_on_addons = true;
-
 	}
 
 	/**
