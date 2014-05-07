@@ -70,6 +70,11 @@ class ContextCore
 	public $controller;
 
 	/**
+	 * @var string
+	 */
+	public $override_controller_name_for_translations;
+
+	/**
 	 * @var Language
 	 */
 	public $language;
