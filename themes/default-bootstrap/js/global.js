@@ -175,6 +175,9 @@ function quick_view()
 function bindGrid()
 {
 	var view = $.totalStorage('display');
+	
+	if (!view && (typeof displayList != 'undefined') && displayList)
+		view = 'list';
 
 	if (view && view != 'grid')
 		display(view);
