@@ -58,7 +58,9 @@ function smartyTranslate($params, &$smarty)
 	// If the tpl is used by a Controller
 	else
 	{
-		if (isset(Context::getContext()->controller))
+		if (!empty(Context::getContext()->override_controller_name_for_translations))
+			$class = Context::getContext()->override_controller_name_for_translations;
+		elseif (isset(Context::getContext()->controller))
 		{
 			$class_name = get_class(Context::getContext()->controller);
 			$class = substr($class_name, 0, strpos(Tools::strtolower($class_name), 'controller'));
