@@ -1122,6 +1122,7 @@ abstract class ModuleCore
 	public static function getModulesOnDisk($useConfig = false, $loggedOnAddons = false, $id_employee = false)
 	{
 		global $_MODULES;
+		global $hosted_modules_blacklist;
 
 		// Init var
 		$module_list = array();
@@ -1386,8 +1387,10 @@ abstract class ModuleCore
 					}
 			}
 
-		foreach ($module_list as &$module)
-			if (isset($modules_installed[$module->name]))
+		foreach ($module_list as $key => &$module)
+			if (defined('_PS_HOST_MODE_') && in_array($module->name, $hosted_modules_blacklist))
+				unset($module_list[$key]);
+			elseif (isset($modules_installed[$module->name]))
 			{
 				$module->installed = true;
 				$module->database_version = $modules_installed[$module->name]['version'];
@@ -1439,6 +1442,7 @@ abstract class ModuleCore
 				$module_list[] = $name;
 			}
 		}
+
 		return $module_list;
 	}
 
