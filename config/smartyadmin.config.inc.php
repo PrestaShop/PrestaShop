@@ -44,7 +44,7 @@ function smartyTranslate($params, &$smarty)
 		return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s']), $params);
 
 	$filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
-	$dbg = (basename($filename) === 'tab_module_line.tpl');
+
 	// If the template is part of a module
 	if (!empty($params['mod']))
 		return Translate::smartyPostProcessTranslation(Translate::getModuleTranslation($params['mod'], $params['s'], basename($filename, '.tpl'), $sprintf, isset($params['js'])), $params);
@@ -81,8 +81,6 @@ function smartyTranslate($params, &$smarty)
 			$class = null;
 		}
 	}
-
-	//if ($dbg) die($class);
 
 	return Translate::smartyPostProcessTranslation(Translate::getAdminTranslation($params['s'], $class, $addslashes, $htmlentities, $sprintf), $params);
 }
