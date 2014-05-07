@@ -105,6 +105,14 @@ class AdminPPreferencesControllerCore extends AdminController
 						'cast' => 'intval',
 						'required' => false,
 						'type' => 'bool'
+					),
+					'PS_GRID_PRODUCT' => array(
+						'title' => $this->l('Display products categories in list'),
+						'hint' => $this->l('When active, products listings will be displayed in list, otherwise it will be displayed in grid.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'required' => false,
+						'type' => 'bool'
 					)
 				),
 				'submit' => array('title' => $this->l('Save'))
