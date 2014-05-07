@@ -354,7 +354,6 @@ function resizeCatimg()
 		var calc = Math.round(ratio * parseInt(div.outerWidth(false)));
 		div.css('min-height', calc);
 	});
-
 	if (div.length)
-		image.src = div.css('background-image').replace(/url\(|\)$/ig, '');
+		image.src = div.css('background-image').replace(/url\("?|"?\)$/ig, '');
 }
