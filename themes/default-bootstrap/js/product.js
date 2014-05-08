@@ -808,7 +808,7 @@ function refreshProductImages(id_product_attribute)
 	else
 		$('#wrapResetImages').stop(true, true).hide();
 
-	var thumb_width = $('#thumbs_list_frame >li').width() + parseInt($('#thumbs_list_frame >li').css('marginRight'));
+	var thumb_width = $('#thumbs_list_frame >li').outerWidth() + parseInt($('#thumbs_list_frame >li').css('marginRight'));
 	$('#thumbs_list_frame').width((parseInt((thumb_width) * $('#thumbs_list_frame >li').length)) + 'px');
 	$('#thumbs_list').trigger('goto', 0);
 	serialScrollFixLock('', '', '', '', 0);// SerialScroll Bug on goto 0 ?
