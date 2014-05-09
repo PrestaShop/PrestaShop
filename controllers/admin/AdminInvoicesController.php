@@ -100,13 +100,9 @@ class AdminInvoicesControllerCore extends AdminController
 		LEFT JOIN `'._DB_PREFIX_.'order_invoice_payment` oip ON (oip.`id_order_invoice`= a.`id_order_invoice`)
 		LEFT JOIN `'._DB_PREFIX_.'order_payment` op ON (op.`id_order_payment`= oip.`id_order_payment`)';
 
-		// This where allows partaily paid and unpaid invoices to be listed
+		// This _having allows partaily paid unpaid and overpaid invoices to be listed
 		$this->_having = 'unpaid_amount <> 0';
-		$this->_where = 'AND (
-		(a.`id_order_invoice` = oip.`id_order_invoice` AND op.`amount` < a.`total_paid_tax_incl`)
-		OR
-		a.`id_order_invoice` NOT IN (SELECT id_order_invoice FROM `'._DB_PREFIX_.'order_invoice_payment`)
-		)';
+
 
 		// Force sort by date, with the earlies invoice first
 		$this->_orderBy = 'date_add';
