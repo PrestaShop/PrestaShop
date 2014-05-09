@@ -277,7 +277,7 @@
 					<td colspan="{$col_span_subtotal}" class="total_price_container text-right">
 						<span>{l s='Total'}</span>
 					</td>
-					{if $use_taxes}
+					{if ($use_taxes && !$priceDisplay) || $show_taxes}
 						<td colspan="2" class="price" id="total_price_container">
 							<span id="total_price">{displayPrice price=$total_price}</span>
 						</td>
