@@ -836,7 +836,7 @@
 							id="{if isset($fieldset['form']['reset']['id'])}{$fieldset['form']['reset']['id']}{else}{$table}_form_reset_btn{/if}"
 							class="{if isset($fieldset['form']['reset']['class'])}{$fieldset['form']['reset']['class']}{else}btn btn-default{/if}"
 							>
-							{if isset($fieldset['form']['reset']['icon'])}<i class="{$fieldset['form']['reset']['icon']}"></i> {/if} {$fieldset['form']['reset']['title']}
+							<i class="{if isset($fieldset['form']['reset']['icon'])}{$fieldset['form']['reset']['icon']}{else}process-icon-delete{/if}"></i> {$fieldset['form']['reset']['title']}
 						</button>
 						{/if}
 						{if isset($fieldset['form']['buttons'])}
