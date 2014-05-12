@@ -208,7 +208,7 @@ class UploaderCore
 				$error = Tools::displayError('No file was uploaded');
 				break;
 			case 6:
-				$error = Tools::displayError('Missing a temporary folder');
+				$error = Tools::displayError('Missing temporary folder');
 				break;
 			case 7:
 				$error = Tools::displayError('Failed to write file to disk');
