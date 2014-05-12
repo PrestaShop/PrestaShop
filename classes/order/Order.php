@@ -322,17 +322,17 @@ class OrderCore extends ObjectModel
 	public function getCartProducts()
 	{
 		$product_id_list = array();
-        	$products = $this->getProducts();
+		$products = $this->getProducts();
 		foreach ($products as &$product)
-        	{
+		{
 			$product['id_product_attribute'] = $product['product_attribute_id'];
 			$product['cart_quantity'] = $product['product_quantity'];
 			$product_id_list[] = $this->id_address_delivery.'_'
 				.$product['product_id'].'_'
 				.$product['product_attribute_id'].'_'
 				.(isset($product['id_customization']) ? $product['id_customization'] : '0');
-	        }
-	        unset($product);
+		}
+		unset($product);
 
 		$product_list = array();
 		foreach ($products as $product)
@@ -472,20 +472,21 @@ class OrderCore extends ObjectModel
 		{
 			$id_lang = $id_lang ? (int)($id_lang) : 'o.`id_lang`';
 			$result = Db::getInstance()->executeS('
-			SELECT os.*, oh.*, e.`firstname` as employee_firstname, e.`lastname` as employee_lastname, osl.`name` as ostate_name
-			FROM `'._DB_PREFIX_.'orders` o
-			LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON o.`id_order` = oh.`id_order`
-			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON os.`id_order_state` = oh.`id_order_state`
-			LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)($id_lang).')
-			LEFT JOIN `'._DB_PREFIX_.'employee` e ON e.`id_employee` = oh.`id_employee`
-			WHERE oh.id_order = '.(int)($this->id).'
-			'.($no_hidden ? ' AND os.hidden = 0' : '').'
-			'.($logable ? ' AND os.logable = 1' : '').'
-			'.($delivery ? ' AND os.delivery = 1' : '').'
-			'.($paid ? ' AND os.paid = 1' : '').'
-			'.($shipped ? ' AND os.shipped = 1' : '').'
-			'.((int)($id_order_state) ? ' AND oh.`id_order_state` = '.(int)($id_order_state) : '').'
-			ORDER BY oh.date_add DESC, oh.id_order_history DESC');
+				SELECT os.*, oh.*, e.`firstname` as employee_firstname, e.`lastname` as employee_lastname, osl.`name` as ostate_name
+				FROM `'._DB_PREFIX_.'orders` o
+				LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON o.`id_order` = oh.`id_order`
+				LEFT JOIN `'._DB_PREFIX_.'order_state` os ON os.`id_order_state` = oh.`id_order_state`
+				LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)($id_lang).')
+				LEFT JOIN `'._DB_PREFIX_.'employee` e ON e.`id_employee` = oh.`id_employee`
+				WHERE oh.id_order = '.(int)($this->id).'
+				'.($no_hidden ? ' AND os.hidden = 0' : '').'
+				'.($logable ? ' AND os.logable = 1' : '').'
+				'.($delivery ? ' AND os.delivery = 1' : '').'
+				'.($paid ? ' AND os.paid = 1' : '').'
+				'.($shipped ? ' AND os.shipped = 1' : '').'
+				'.((int)($id_order_state) ? ' AND oh.`id_order_state` = '.(int)($id_order_state) : '').'
+				ORDER BY oh.date_add DESC, oh.id_order_history DESC
+			');
 			if ($no_hidden)
 				return $result;
 			self::$_historyCache[$this->id.'_'.$id_order_state.'_'.$filters] = $result;
@@ -496,11 +497,12 @@ class OrderCore extends ObjectModel
 	public function getProductsDetail()
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'order_detail` od
-		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = od.product_id)
-		LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
-		WHERE od.`id_order` = '.(int)($this->id));
+			SELECT *
+			FROM `'._DB_PREFIX_.'order_detail` od
+			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = od.product_id)
+			LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
+			WHERE od.`id_order` = '.(int)($this->id)
+		);
 	}
 
 	public function getFirstMessage()

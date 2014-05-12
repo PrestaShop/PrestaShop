@@ -474,7 +474,7 @@ class FrontControllerCore extends Controller
 		}
 
 		// Call hook before assign of css_files and js_files in order to include correctly all css and javascript files
-        $this->context->smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'HOOK_HEADER' => $hook_header,
 			'HOOK_TOP' => Hook::exec('displayTop'),
 			'HOOK_LEFT_COLUMN' => ($this->display_column_left ? Hook::exec('displayLeftColumn') : ''),
@@ -1002,7 +1002,7 @@ class FrontControllerCore extends Controller
 			if (!preg_match('/^http(s?):\/\//i', $media))
 			{
 				$different = 0;
-                $different_css = 0;
+				$different_css = 0;
 				$type = 'css';
 				if (!$css_media_type)
 				{
@@ -1011,12 +1011,12 @@ class FrontControllerCore extends Controller
 				}
 				$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/'.$type.'/modules/', $file, $different);
 
-                $override_path_css = str_replace(basename ($file), $type.'/'.basename ($file), str_replace(__PS_BASE_URI__, _PS_ROOT_DIR_.'/', $file), $different_css );
+				$override_path_css = str_replace(basename ($file), $type.'/'.basename ($file), str_replace(__PS_BASE_URI__, _PS_ROOT_DIR_.'/', $file), $different_css );
 
 				if ($different && file_exists($override_path))
 					$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/'.$type.'/modules/', $file, $different);
-                elseif ($different_css && file_exists($override_path_css))
-                    $file = $override_path_css;
+				elseif ($different_css && file_exists($override_path_css))
+					$file = $override_path_css;
 
 				if ($css_media_type)
 					$list_uri[$file] = $media;

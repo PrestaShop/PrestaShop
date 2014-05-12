@@ -27,10 +27,10 @@
 
 class TaxRulesGroupCore extends ObjectModel
 {
-    public $name;
+	public $name;
 
-    /** @var bool active state */
-    public $active;
+	/** @var bool active state */
+	public $active;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -45,8 +45,8 @@ class TaxRulesGroupCore extends ObjectModel
 	);
 
 	protected $webserviceParameters = array(
-	'objectsNodeName' => 'tax_rule_groups',
-	'objectNodeName' => 'tax_rule_group',
+		'objectsNodeName' => 'tax_rule_groups',
+		'objectNodeName' => 'tax_rule_group',
 		'fields' => array(
 		),
 	);
@@ -149,4 +149,3 @@ class TaxRulesGroupCore extends ObjectModel
 	}
 
 }
-

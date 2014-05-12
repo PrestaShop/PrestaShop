@@ -102,8 +102,8 @@ class TabCore extends ObjectModel
 		// Add tab
 		if (parent::add($autodate, $null_values))
 		{	
-            //forces cache to be reloaded
-            self::$_getIdFromClassName = null;
+			//forces cache to be reloaded
+			self::$_getIdFromClassName = null;
 			return Tab::initAccess($this->id);
 		}
 		return false;

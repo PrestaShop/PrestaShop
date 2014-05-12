@@ -3555,7 +3555,7 @@ class ProductCore extends ObjectModel
 			$return[$impact['id_attribute']]['weight'] = (float)$impact['weight'];
 		}
 		return $return;
-    }
+	}
 
 	/**
 	* Get product attribute image associations
@@ -3952,8 +3952,8 @@ class ProductCore extends ObjectModel
 		if ($row['id_product_attribute'])
 			$row['quantity'] = Product::getQuantity(
 				(int)$row['id_product'],
-    			$row['id_product_attribute'],
-			   isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null
+				$row['id_product_attribute'],
+				isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null
 			);
 
 		$row['id_image'] = Product::defineProductImage($row, $id_lang);

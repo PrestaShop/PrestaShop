@@ -458,29 +458,29 @@ class OrderHistoryCore extends ObjectModel
 		AND os.`logable` = 1');
 	}
 
-    /**
-     * Add method for webservice create resource Order History      
-     * If sendemail=1 GET parameter is present sends email to customer otherwise does not
-     * @return bool
-     */
+	/**
+	 * Add method for webservice create resource Order History      
+	 * If sendemail=1 GET parameter is present sends email to customer otherwise does not
+	 * @return bool
+	 */
 	public function addWs()
 	{
-	    $sendemail = (bool)Tools::getValue('sendemail', false);
-	    $this->changeIdOrderState($this->id_order_state, $this->id_order);
-	    
-	    if ($sendemail)
-	    {
-	        //Mail::Send requires link object on context and is not set when getting here
-	        $context = Context::getContext();
-	        if ($context->link == null)
-	        {
-	            $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-	            $protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-	            $context->link = new Link($protocol_link, $protocol_content);
-	        }
-	        return $this->addWithemail();            
-	    }
+		$sendemail = (bool)Tools::getValue('sendemail', false);
+		$this->changeIdOrderState($this->id_order_state, $this->id_order);
+
+		if ($sendemail)
+		{
+			//Mail::Send requires link object on context and is not set when getting here
+			$context = Context::getContext();
+			if ($context->link == null)
+			{
+				$protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+				$protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+				$context->link = new Link($protocol_link, $protocol_content);
+			}
+			return $this->addWithemail();            
+		}
 		else
-	        return $this->add();
+			return $this->add();
 	}
 }

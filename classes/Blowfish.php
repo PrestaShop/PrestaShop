@@ -31,9 +31,9 @@ class BlowfishCore extends Crypt_Blowfish
 {
 	function encrypt($plaintext)
 	{
-        if (($length = strlen($plaintext)) >= 1048576)
+		if (($length = strlen($plaintext)) >= 1048576)
 			return false;
-			
+
 		$ciphertext = '';
 		$paddedtext = $this->maxi_pad($plaintext);
 		$strlen = strlen($paddedtext);

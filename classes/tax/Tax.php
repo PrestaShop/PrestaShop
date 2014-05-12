@@ -88,10 +88,10 @@ class TaxCore extends ObjectModel
 
 	public function toggleStatus()
 	{
-	    if (parent::toggleStatus())
-            return $this->_onStatusChange();
+		if (parent::toggleStatus())
+			return $this->_onStatusChange();
 
-        return false;
+		return false;
 	}
 
 	public function update($nullValues = false)
@@ -117,10 +117,10 @@ class TaxCore extends ObjectModel
 
 	protected function _onStatusChange()
 	{
-        if (!$this->active)
-            return TaxRule::deleteTaxRuleByIdTax($this->id);
+		if (!$this->active)
+			return TaxRule::deleteTaxRuleByIdTax($this->id);
 
-        return true;
+		return true;
 	}
 
 	/**
@@ -265,4 +265,3 @@ class TaxCore extends ObjectModel
 		return $tax_calculator->getTotalRate();
 	}
 }
-

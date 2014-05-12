@@ -50,7 +50,7 @@ class MailCore
 	 * @param bool $modeSMTP
 	 * @param string $template_path
 	 * @param bool $die
-         * @param string $bcc Bcc recipient
+	 * @param string $bcc Bcc recipient
 	 */
 	public static function Send($id_lang, $template, $subject, $template_vars, $to,
 		$to_name = null, $from = null, $from_name = null, $file_attachment = null, $mode_smtp = null,

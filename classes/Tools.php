@@ -616,7 +616,7 @@ class ToolsCore
 			$amount *= $currency_to->conversion_rate;
 		else
 		{
-            $conversion_rate = ($currency_from->conversion_rate == 0 ? 1 : $currency_from->conversion_rate);
+			$conversion_rate = ($currency_from->conversion_rate == 0 ? 1 : $currency_from->conversion_rate);
 			// Convert amount to default currency (using the old currency rate)
 			$amount = Tools::ps_round($amount / $conversion_rate, 2);
 			// Convert to new currency
@@ -716,38 +716,42 @@ class ToolsCore
 	{
 		$dirname = rtrim($dirname, '/').'/';
 		if (file_exists($dirname))
+		{
 			if ($files = scandir($dirname))
 			{
 				foreach ($files as $file)
-    				if ($file != '.' && $file != '..' && $file != '.svn')
-    				{
-    					if (is_dir($dirname.$file))
-    						Tools::deleteDirectory($dirname.$file, true);
-    					elseif (file_exists($dirname.$file))
+					if ($file != '.' && $file != '..' && $file != '.svn')
+					{
+						if (is_dir($dirname.$file))
+							Tools::deleteDirectory($dirname.$file, true);
+						elseif (file_exists($dirname.$file))
 						{
 							@chmod($dirname.$file, 0777); // NT ?
 							unlink($dirname.$file);
 						}
-    				}
+					}
 				if ($delete_self && file_exists($dirname))
+				{
 					if (!rmdir($dirname))
 					{
 						@chmod($dirname, 0777); // NT ?
-                        return false;
+						return false;
 					}
-                return true;                    
+				}
+				return true;
 			}
-        return false;
-    }
+		}
+		return false;
+	}
 
-    /**
+	/**
 	* Delete file
 	*
 	* @param string File path
 	* @param array  Excluded files
 	*/
-    public static function deleteFile($file, $exclude_files = array())
-    {
+	public static function deleteFile($file, $exclude_files = array())
+	{
 		if (isset($exclude_files) && !is_array($exclude_files))
 			$exclude_files = array($exclude_files);
 
@@ -756,11 +760,11 @@ class ToolsCore
 			@chmod($dirname.$file, 0777); // NT ?
 			unlink($file);
 		}
-    }
-        
+	}
+
 	/**
 	* Clear XML cache folder
- 	*/
+	*/
 	public static function clearXMLCache()
 	{
 		$themes = array();
@@ -3118,4 +3122,3 @@ function cmpPriceDesc($a, $b)
 		return -1;
 	return 0;
 }
-

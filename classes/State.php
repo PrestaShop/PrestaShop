@@ -181,17 +181,17 @@ class StateCore extends ObjectModel
 		return $result;
 	}
 
-    public static function getStatesByIdCountry($id_country)
-    {
-        if (empty($id_country))
-            die(Tools::displayError());
+	public static function getStatesByIdCountry($id_country)
+	{
+		if (empty($id_country))
+			die(Tools::displayError());
 
-        return Db::getInstance()->executeS('
-        SELECT *
-        FROM `'._DB_PREFIX_.'state` s
-        WHERE s.`id_country` = '.(int)$id_country
-        );
-    }
+		return Db::getInstance()->executeS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'state` s
+			WHERE s.`id_country` = '.(int)$id_country
+		);
+	}
 
 	public static function hasCounties($id_state)
 	{
@@ -224,4 +224,3 @@ class StateCore extends ObjectModel
 		');
 	}
 }
-

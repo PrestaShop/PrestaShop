@@ -620,20 +620,20 @@ class WebserviceRequestCore
 			return;
 			
 		$errortype = array (
-                E_ERROR              => 'Error',
-                E_WARNING            => 'Warning',
-                E_PARSE              => 'Parse',
-                E_NOTICE             => 'Notice',
-                E_CORE_ERROR         => 'Core Error',
-                E_CORE_WARNING       => 'Core Warning',
-                E_COMPILE_ERROR      => 'Compile Error',
-                E_COMPILE_WARNING    => 'Compile Warning',
-                E_USER_ERROR         => 'Error',
-                E_USER_WARNING       => 'User warning',
-                E_USER_NOTICE        => 'User notice',
-                E_STRICT             => 'Runtime Notice',
-                E_RECOVERABLE_ERROR => 'Recoverable error'
-                );
+			E_ERROR              => 'Error',
+			E_WARNING            => 'Warning',
+			E_PARSE              => 'Parse',
+			E_NOTICE             => 'Notice',
+			E_CORE_ERROR         => 'Core Error',
+			E_CORE_WARNING       => 'Core Warning',
+			E_COMPILE_ERROR      => 'Compile Error',
+			E_COMPILE_WARNING    => 'Compile Warning',
+			E_USER_ERROR         => 'Error',
+			E_USER_WARNING       => 'User warning',
+			E_USER_NOTICE        => 'User notice',
+			E_STRICT             => 'Runtime Notice',
+			E_RECOVERABLE_ERROR => 'Recoverable error'
+		);
 		$type = (isset($errortype[$errno]) ? $errortype[$errno] : 'Unknown error');
 		error_log('[PHP '.$type.' #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')');
 

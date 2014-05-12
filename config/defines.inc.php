@@ -47,8 +47,8 @@ $currentDir = dirname(__FILE__);
 
 if (!defined('PHP_VERSION_ID'))
 {
-    $version = explode('.', PHP_VERSION);
-    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
+	$version = explode('.', PHP_VERSION);
+	define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 }
 
 if (!defined('_PS_VERSION_') && (getenv('_PS_VERSION_') || getenv('REDIRECT__PS_VERSION_')))
@@ -75,18 +75,18 @@ define('_PS_ALL_THEMES_DIR_',        _PS_ROOT_DIR_.'/themes/');
 /* BO THEMES */
 if (defined('_PS_ADMIN_DIR_'))
 	define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
-define('_PS_CACHE_DIR_',			 _PS_ROOT_DIR_.'/cache/');
-define('_PS_CONFIG_DIR_',			 _PS_CORE_DIR_.'/config/');
+define('_PS_CACHE_DIR_',             _PS_ROOT_DIR_.'/cache/');
+define('_PS_CONFIG_DIR_',            _PS_CORE_DIR_.'/config/');
 define('_PS_CLASS_DIR_',             _PS_CORE_DIR_.'/classes/');
 define('_PS_DOWNLOAD_DIR_',          _PS_ROOT_DIR_.'/download/');
 define('_PS_MAIL_DIR_',              _PS_CORE_DIR_.'/mails/');
 if (!defined('_PS_MODULE_DIR_'))
 	define('_PS_MODULE_DIR_',        _PS_ROOT_DIR_.'/modules/');
 if (!defined('_PS_OVERRIDE_DIR_'))
-    define('_PS_OVERRIDE_DIR_',          _PS_ROOT_DIR_.'/override/');
+	define('_PS_OVERRIDE_DIR_',      _PS_ROOT_DIR_.'/override/');
 define('_PS_PDF_DIR_',               _PS_CORE_DIR_.'/pdf/');
 define('_PS_TRANSLATIONS_DIR_',      _PS_ROOT_DIR_.'/translations/');
-define('_PS_UPLOAD_DIR_',			 _PS_ROOT_DIR_.'/upload/');
+define('_PS_UPLOAD_DIR_',            _PS_ROOT_DIR_.'/upload/');
 
 define('_PS_CONTROLLER_DIR_',        _PS_CORE_DIR_.'/controllers/');
 define('_PS_ADMIN_CONTROLLER_DIR_',  _PS_CORE_DIR_.'/controllers/admin/');
@@ -107,7 +107,7 @@ else
 	define('_PS_CORE_IMG_DIR_',      _PS_ROOT_DIR_.'/img/');
 
 define('_PS_CAT_IMG_DIR_',           _PS_IMG_DIR_.'c/');
-define('_PS_COL_IMG_DIR_',			 _PS_IMG_DIR_.'co/');
+define('_PS_COL_IMG_DIR_',           _PS_IMG_DIR_.'co/');
 define('_PS_EMPLOYEE_IMG_DIR_',      _PS_IMG_DIR_.'e/');
 define('_PS_GENDERS_DIR_',           _PS_IMG_DIR_.'genders/');
 define('_PS_LANG_IMG_DIR_',          _PS_IMG_DIR_.'l/');
@@ -117,7 +117,7 @@ define('_PS_PROD_IMG_DIR_',          _PS_IMG_DIR_.'p/');
 define('_PS_SCENE_IMG_DIR_',         _PS_IMG_DIR_.'scenes/');
 define('_PS_SCENE_THUMB_IMG_DIR_',   _PS_IMG_DIR_.'scenes/thumbs/');
 define('_PS_SHIP_IMG_DIR_',          _PS_IMG_DIR_.'s/');
-define('_PS_STORE_IMG_DIR_',		 _PS_IMG_DIR_.'st/');
+define('_PS_STORE_IMG_DIR_',         _PS_IMG_DIR_.'st/');
 define('_PS_SUPP_IMG_DIR_',          _PS_IMG_DIR_.'su/');
 define('_PS_TMP_IMG_DIR_',           _PS_IMG_DIR_.'tmp/');
 

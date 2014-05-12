@@ -142,9 +142,9 @@ class SpecificPriceCore extends ObjectModel
 	public static function deleteByIdCart($id_cart, $id_product = false, $id_product_attribute = false)
 	{
 		return Db::getInstance()->execute('
-		    DELETE FROM `'._DB_PREFIX_.'specific_price`
-            WHERE id_cart='.(int)$id_cart.
-            ($id_product ? ' AND id_product='.(int)$id_product.' AND id_product_attribute='.(int)$id_product_attribute : ''));
+			DELETE FROM `'._DB_PREFIX_.'specific_price`
+			WHERE id_cart='.(int)$id_cart.
+			($id_product ? ' AND id_product='.(int)$id_product.' AND id_product_attribute='.(int)$id_product_attribute : ''));
 	}
 
 	public static function getIdsByProductId($id_product, $id_product_attribute = false, $id_cart = 0)
@@ -162,21 +162,21 @@ class SpecificPriceCore extends ObjectModel
 	 */
 	protected static function _getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer)
 	{
-	    $select = '(';
+		$select = '(';
 
-       $now = date('Y-m-d H:i:s');
-       $select .= ' IF (\''.$now.'\' >= `from` AND \''.$now.'\' <= `to`, '.pow(2, 0).', 0) + ';
+		$now = date('Y-m-d H:i:s');
+		$select .= ' IF (\''.$now.'\' >= `from` AND \''.$now.'\' <= `to`, '.pow(2, 0).', 0) + ';
 
-	    $priority = SpecificPrice::getPriority($id_product);
-	    foreach (array_reverse($priority) as $k => $field)
+		$priority = SpecificPrice::getPriority($id_product);
+		foreach (array_reverse($priority) as $k => $field)
 			if (!empty($field))
 				$select .= ' IF (`'.bqSQL($field).'` = '.(int)$$field.', '.pow(2, $k + 1).', 0) + ';
 
-	    return rtrim($select, ' +').') AS `score`';
+		return rtrim($select, ' +').') AS `score`';
 	}
 
-    public static function getPriority($id_product)
-    {
+	public static function getPriority($id_product)
+	{
 		if (!SpecificPrice::isFeatureActive())
 			return explode(';', Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES'));
 
@@ -192,12 +192,12 @@ class SpecificPriceCore extends ObjectModel
 
 		$priority = SpecificPrice::$_cache_priorities[(int)$id_product];
 
-	    if (!$priority)
-	        $priority = Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES');
+		if (!$priority)
+			$priority = Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES');
 		$priority = 'id_customer;'.$priority;
 
-	    return preg_split('/;/', $priority);
-    }
+		return preg_split('/;/', $priority);
+	}
 
 	public static function getSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null, $id_customer = 0, $id_cart = 0, $real_quantity = 0)
 	{
@@ -247,7 +247,7 @@ class SpecificPriceCore extends ObjectModel
 			foreach ($priorities as $priority)
 				$value .= pSQL($priority).';';
 
-        SpecificPrice::deletePriorities();
+		SpecificPrice::deletePriorities();
 
 		return Configuration::updateValue('PS_SPECIFIC_PRICE_PRIORITIES', rtrim($value, ';'));
 	}
@@ -307,11 +307,11 @@ class SpecificPriceCore extends ObjectModel
 			if (!isset($last_quantity[(int)$specific_price['id_product_attribute']]))
 				 $last_quantity[(int)$specific_price['id_product_attribute']] = $specific_price['from_quantity'];
 			elseif ($last_quantity[(int)$specific_price['id_product_attribute']] == $specific_price['from_quantity'])
-		        continue;
+				continue;
 
 			$last_quantity[(int)$specific_price['id_product_attribute']] = $specific_price['from_quantity'];
-            if ($specific_price['from_quantity'] > 1)
-    		    $targeted_prices[] = $specific_price;
+			if ($specific_price['from_quantity'] > 1)
+				$targeted_prices[] = $specific_price;
 		}
 
 		return $targeted_prices;
@@ -424,4 +424,3 @@ class SpecificPriceCore extends ObjectModel
 																	 `to` <= \''.pSQL($to).'\''.$rule);
 	}
 }
-

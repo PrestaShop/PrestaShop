@@ -171,7 +171,7 @@ class StockMvtWSCore extends ObjectModelCore
 		),
 	);
 
-    /**
+	/**
 	 * @see ObjectModel::$webserviceParameters
 	 */
  	protected $webserviceParameters = array(

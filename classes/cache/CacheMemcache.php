@@ -50,35 +50,33 @@ class CacheMemcacheCore extends Cache
 				$this->keys = array();
 		}
 
-       
-
-        /*
+		/*
 		// Get keys (this code comes from Doctrine 2 project)
 		if(is_array($servers) && count($servers) > 0 && method_exists('Memcache', 'getStats'))
-        	$all_slabs = $this->memcache->getStats('slabs');
-	    	        	
+			$all_slabs = $this->memcache->getStats('slabs');
+
 		if(isset($all_slabs) && is_array($all_slabs))
 			foreach ($all_slabs as $server => $slabs)
 			{
-			    if (is_array($slabs))
-			    {
+				if (is_array($slabs))
+				{
 					foreach (array_keys($slabs) as $i => $slab_id) // $slab_id is not an int but a string, using the key instead ?
 					{
 						if(is_int($i))
 						{		
-					        $dump = $this->memcache->getStats('cachedump', (int)$i);
-					        if ($dump)
-					        {
-					           foreach ($dump as $entries)
-					           {
+							$dump = $this->memcache->getStats('cachedump', (int)$i);
+							if ($dump)
+							{
+								foreach ($dump as $entries)
+								{
 									if($entries)
 										foreach ($entries as $key => $data)
 											$this->keys[$key] = $data[1];
-					           }
-					        }
-					    }
+								}
+							}
+						}
 					}
-			    }
+				}
 			}*/
 	}
 
