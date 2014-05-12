@@ -1023,37 +1023,37 @@ class CartRuleCore extends ObjectModel
 		self::$only_one_gift = array();
 	}
 
-	  protected function getCartRuleCombinations()
-		{
-	    $array = array();
-	    $array['selected'] = Db::getInstance()->executeS('SELECT cr.*, crl.*, 1 as selected
-			FROM '._DB_PREFIX_.'cart_rule cr
-			INNER JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)Context::getContext()->language->id.')
-			WHERE cr.id_cart_rule !='.(int)$this->id.'
-	      and (cr.cart_rule_restriction = 0 or cr.id_cart_rule IN
-	      (SELECT id_cart_rule_2
-	      			FROM ps_cart_rule_combination
-	      			WHERE '.(int)$this->id.' = id_cart_rule_1
-	      union 
-	      SELECT id_cart_rule_1
-				FROM ps_cart_rule_combination
-				WHERE '.(int)$this->id.' = id_cart_rule_2))'); 
-	   
-	    $array['unselected'] = Db::getInstance()->executeS('SELECT cr.*, crl.*, 1 as selected
-			FROM '._DB_PREFIX_.'cart_rule cr
-			INNER JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)Context::getContext()->language->id.')
-			WHERE cr.id_cart_rule !='.(int)$this->id.'
-	      and cr.cart_rule_restriction = 1 and cr.id_cart_rule NOT IN
-	      (SELECT id_cart_rule_2
-	      			FROM ps_cart_rule_combination
-	      			WHERE '.(int)$this->id.' = id_cart_rule_1
-	      union 
-	      SELECT id_cart_rule_1
-				FROM ps_cart_rule_combination
-				WHERE '.(int)$this->id.' = id_cart_rule_2)');
-	      
-	    return $array;
-	  }
+	protected function getCartRuleCombinations()
+	{
+		$array = array();
+		$array['selected'] = Db::getInstance()->executeS('SELECT cr.*, crl.*, 1 as selected
+		FROM '._DB_PREFIX_.'cart_rule cr
+		INNER JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)Context::getContext()->language->id.')
+		WHERE cr.id_cart_rule !='.(int)$this->id.'
+		and (cr.cart_rule_restriction = 0 or cr.id_cart_rule IN
+		(SELECT id_cart_rule_2
+		      FROM ps_cart_rule_combination
+		      WHERE '.(int)$this->id.' = id_cart_rule_1
+		union 
+		SELECT id_cart_rule_1
+		FROM ps_cart_rule_combination
+		WHERE '.(int)$this->id.' = id_cart_rule_2))'); 
+		
+		$array['unselected'] = Db::getInstance()->executeS('SELECT cr.*, crl.*, 1 as selected
+		FROM '._DB_PREFIX_.'cart_rule cr
+		INNER JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)Context::getContext()->language->id.')
+		WHERE cr.id_cart_rule !='.(int)$this->id.'
+		and cr.cart_rule_restriction = 1 and cr.id_cart_rule NOT IN
+		(SELECT id_cart_rule_2
+		      FROM ps_cart_rule_combination
+		      WHERE '.(int)$this->id.' = id_cart_rule_1
+		union 
+		SELECT id_cart_rule_1
+		FROM ps_cart_rule_combination
+		WHERE '.(int)$this->id.' = id_cart_rule_2)');
+		
+		return $array;
+	}
 	public function getAssociatedRestrictions($type, $active_only, $i18n)
 	{
 		$array = array('selected' => array(), 'unselected' => array());
