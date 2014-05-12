@@ -890,10 +890,12 @@ class FrontControllerCore extends Controller
 			$nArray[] = $total_products;
 		// Retrieve the current number of products per page (either the default, the GET parameter or the one in the cookie)
 		$this->n = $default_products_per_page;
-		if ((int)Tools::getValue('n') > 0 && in_array((int)Tools::getValue('n'), $nArray))
+		if ((int)Tools::getValue('n') && in_array((int)Tools::getValue('n'), $nArray))
+		{
 			$this->n = (int)Tools::getValue('n');
-		elseif (isset($this->context->cookie->nb_item_per_page) && in_array($this->context->cookie->nb_item_per_page, $nArray))
-			$this->n = (int)$this->context->cookie->nb_item_per_page;
+			if (isset($this->context->cookie->nb_item_per_page) && in_array($this->context->cookie->nb_item_per_page, $nArray))
+				$this->n = (int)$this->context->cookie->nb_item_per_page;
+		}
 
 		// Retrieve the page number (either the GET parameter or the first page)
 		$this->p = (int)Tools::getValue('p', 1);
