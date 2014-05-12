@@ -38,7 +38,7 @@
 	<h3>{l s='What Should I Do?'}</h3>
 	<p>{l s='If you understand what this module does and you are certain that it is safe, you can proceed with the installation.'}</p>
 
-	<p>{l s='If you are unsure about the safety of this module, you can look for similar modules on the official marketplace.'} <a href="{$catalog_link}">{l s='Click here to browse PrestaShop Addons.'}</a></p>
+	<p>{l s='If you are unsure about the safety of this module, you can look for similar modules on the official marketplace.'} <a class="catalog-link" target="_blank" href="#">{l s='Click here to browse PrestaShop Addons.'}</a></p>
 </div>
 
 <div class="modal-footer">
