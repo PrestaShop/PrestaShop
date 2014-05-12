@@ -448,8 +448,6 @@ abstract class ObjectModelCore
 		}
 		
 		// Database insertion
-		if (isset($this->id))
-			unset($this->id);
 		if (Shop::checkIdShopDefault($this->def['table']))
 			$this->id_shop_default = min($id_shop_list);
 		if (!$result = ObjectModel::$db->insert($this->def['table'], $this->getFields(), $null_values))
