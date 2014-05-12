@@ -107,7 +107,7 @@ class AdminShopUrlControllerCore extends AdminController
 		$this->multiple_fieldsets = true;
 		if (!$update_htaccess)
 			$desc_virtual_uri = array(
-				'<span class="warning_mod_rewrite">'.$this->l('iI you want to add a virtual URL, you need to activate URL rewriting on your web server.').'</span>'
+				'<span class="warning_mod_rewrite">'.$this->l('If you want to add a virtual URL, you need to activate URL rewriting on your web server.').'</span>'
 			);
 		else
 			$desc_virtual_uri = array(
