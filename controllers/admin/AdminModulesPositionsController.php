@@ -448,7 +448,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		$modules_controllers_type = array('admin' => $this->l('Admin modules controller'), 'front' => $this->l('Front modules controller'));
 		foreach ($modules_controllers_type as $type => $label)
 		{
-			$content .= '<option disabled="disabled">'.$this->l('____________ '.$label.' ____________').'</option>';
+			$content .= '<option disabled="disabled">____________ '.$label.' ____________</option>';
 			$all_modules_controllers = Dispatcher::getModuleControllers($type);
 			foreach ($all_modules_controllers as $module => $modules_controllers)
 				foreach ($modules_controllers as $cont)
