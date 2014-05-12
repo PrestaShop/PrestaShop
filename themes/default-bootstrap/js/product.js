@@ -412,10 +412,12 @@ function findCombination(firstTime)
 			return;
 		}
 	}
+	console.log('doesnt exist');
 	//this combination doesn't exist (not created in back office)
 	selectedCombination['unavailable'] = true;
 	if (typeof(selectedCombination['available_date']) != 'undefined')
 		delete selectedCombination['available_date'];
+	console.log("HIDE PRICES FOR COMBINATION THAT DOESNT EXIST");
 	updateDisplay();
 }
 
@@ -666,6 +668,7 @@ function updateDisplay()
 		productUnitPriceRatio = parseFloat(productUnitPriceRatio);
 		if (productUnitPriceRatio > 0 )
 		{
+			console.log(productPriceDisplay);
 			newUnitPrice = (productPriceDisplay / parseFloat(productUnitPriceRatio)) + parseFloat(selectedCombination['unit_price']);
 			$('#unit_price_display').text(formatCurrency(newUnitPrice, currencyFormat, currencySign, currencyBlank));
 		}
@@ -690,7 +693,7 @@ function updatePrice()
 	combination = combinationsFromController[combID];
 
 	// Set product (not the combination) base price
-	var basePriceWithoutTax = productBasePriceTaxExcluded;
+	var basePriceWithoutTax = productBasePriceTaxExcl;
 	var priceWithGroupReductionWithoutTax = 0;
 
 	// Apply combination price impact
@@ -713,19 +716,23 @@ function updatePrice()
 			priceWithDiscountsWithoutTax = priceWithGroupReductionWithoutTax * (1 - combination.specific_price.reduction);
 
 	// Apply Tax if necessary
-	if (!noTaxForThisProduct)
-	{
-		basePriceDisplay = basePriceWithoutTax * (taxRate/100 + 1);
-		priceWithDiscountsDisplay = priceWithDiscountsWithoutTax * (taxRate/100 + 1);
-	}
-	else
+	if (noTaxForThisProduct)
 	{
 		basePriceDisplay = basePriceWithoutTax;
 		priceWithDiscountsDisplay = priceWithDiscountsWithoutTax;
 	}
+	else
+	{
+		basePriceDisplay = basePriceWithoutTax * (taxRate/100 + 1);
+		priceWithDiscountsDisplay = priceWithDiscountsWithoutTax * (taxRate/100 + 1);
 
-	// TODO: ECOTAX
-	// TODO: Unit price
+		if (default_eco_tax)
+		{
+			// combination.ecotax doesn't modify the price but only the display
+			basePriceDisplay = basePriceDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
+			priceWithDiscountsDisplay = priceWithDiscountsDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
+		}
+	}
 
 	// Compute discount value and percentage
 	// Done just before display update so we have final prices
@@ -740,10 +747,12 @@ function updatePrice()
 			Update the page content, no price calculation happens after
 		***************************************************************** */
 
-	// Hide everything. It will be shown if needed
+	// Hide everything then show what needs to be shown
 	$('#reduction_percent').hide();
 	$('#reduction_amount').hide();
 	$('#old_price,#old_price_display,#old_price_display_taxes').hide();
+	$('.price-ecotax').hide();
+	$('.unit-price').hide();
 
 
 	$('#our_price_display').text(formatCurrency(priceWithDiscountsDisplay * currencyRate, currencyFormat, currencySign, currencyBlank));
@@ -769,6 +778,32 @@ function updatePrice()
 				$('#reduction_percent').show();
 			}
 		}
+	}
+
+	// Green Tax (Eco tax)
+	// Update display of Green Tax
+	if (default_eco_tax)
+	{
+		ecotax = default_eco_tax;
+
+		// If the default product ecotax is overridden by the combination
+		if(combination.ecotax)
+			ecotax = combination.ecotax;
+
+		if (!noTaxForThisProduct)
+			ecotax = ecotax * (1 + ecotaxTax_rate/100)
+
+		$('#ecotax_price_display').text(formatCurrency(ecotax * currencyRate, currencyFormat, currencySign, currencyBlank));
+		$('.price-ecotax').show();
+	}
+
+	// Unit price are the price per piece, per Kg, per m²
+	// It doesn't modify the price, it's only for display
+	if (productUnitPriceRatio > 0)
+	{
+		unit_price = priceWithDiscountsDisplay / productUnitPriceRatio;
+		$('#unit_price_display').text(formatCurrency(unit_price * currencyRate, currencyFormat, currencySign, currencyBlank));
+		$('.unit-price').show();
 	}
 
 	// If there is a quantity discount table,
