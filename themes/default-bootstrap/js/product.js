@@ -565,8 +565,9 @@ function updateDisplay()
 	else
 		$('#product_reference:visible').hide('slow');
 
-	// Update price section: amounts, currency, discount amounts,...
-	updatePrice()
+	// If we have combinations, update price section: amounts, currency, discount amounts,...
+	if (productHasAttributes)
+		updatePrice();
 }
 
 function updatePrice()
@@ -593,15 +594,8 @@ function updatePrice()
 	priceWithGroupReductionWithoutTax = ps_round(basePriceWithoutTax * (1 - group_reduction), 2);
 	var priceWithDiscountsWithoutTax = priceWithGroupReductionWithoutTax;
 
-	// Apply specific price (discount)
-	if (combination.specific_price && combination.specific_price.reduction > 0)
-		if (combination.specific_price.reduction_type == 'amount')
-			priceWithDiscountsWithoutTax = priceWithGroupReductionWithoutTax - combination.specific_price.reduction;
-		else if (combination.specific_price.reduction_type == 'percentage')
-			priceWithDiscountsWithoutTax = priceWithGroupReductionWithoutTax * (1 - combination.specific_price.reduction);
-
 	// Apply Tax if necessary
-	if (noTaxForThisProduct)
+	if (noTaxForThisProduct || customerGroupWithoutTax)
 	{
 		basePriceDisplay = basePriceWithoutTax;
 		priceWithDiscountsDisplay = priceWithDiscountsWithoutTax;
@@ -619,6 +613,22 @@ function updatePrice()
 		}
 	}
 
+	// Apply specific price (discount)
+	// Note: Reduction amounts are given after tax
+	if (combination.specific_price && combination.specific_price.reduction > 0)
+		if (combination.specific_price.reduction_type == 'amount')
+		{
+			priceWithDiscountsDisplay = priceWithDiscountsDisplay - combination.specific_price.reduction;
+			// We recalculate the price without tax in order to keep the data consistency
+			priceWithDiscountsWithoutTax = priceWithDiscountsDisplay * ( 1/(1+taxRate) / 100 );
+		}
+		else if (combination.specific_price.reduction_type == 'percentage')
+		{
+			priceWithDiscountsDisplay = priceWithDiscountsDisplay * (1 - combination.specific_price.reduction);
+			// We recalculate the price without tax in order to keep the data consistency
+			priceWithDiscountsWithoutTax = priceWithDiscountsDisplay * ( 1/(1+taxRate) / 100 );
+		}
+
 	// Compute discount value and percentage
 	// Done just before display update so we have final prices
 	if (basePriceDisplay != priceWithDiscountsDisplay)
@@ -626,7 +636,6 @@ function updatePrice()
 		var discountValue = basePriceDisplay - priceWithDiscountsDisplay;
 		var discountPercentage = (1-(priceWithDiscountsDisplay/basePriceDisplay))*100;
 	}
-
 
 	/*  *****************************************************************
 			Update the page content, no price calculation happens after

@@ -343,7 +343,8 @@ class ProductControllerCore extends FrontController
 			'group_reduction' => $group_reduction,
 			'no_tax' => Tax::excludeTaxeOption() || !$this->product->getTaxesRate($address),
 			'ecotax' => (!count($this->errors) && $this->product->ecotax > 0 ? Tools::convertPrice((float)$this->product->ecotax) : 0),
-			'tax_enabled' => Configuration::get('PS_TAX')
+			'tax_enabled' => Configuration::get('PS_TAX'),
+			'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
 		));
 	}
 
