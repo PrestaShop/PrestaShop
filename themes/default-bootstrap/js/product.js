@@ -412,12 +412,12 @@ function findCombination(firstTime)
 			return;
 		}
 	}
-	console.log('doesnt exist');
+
 	//this combination doesn't exist (not created in back office)
 	selectedCombination['unavailable'] = true;
 	if (typeof(selectedCombination['available_date']) != 'undefined')
 		delete selectedCombination['available_date'];
-	console.log("HIDE PRICES FOR COMBINATION THAT DOESNT EXIST");
+
 	updateDisplay();
 }
 
@@ -565,124 +565,7 @@ function updateDisplay()
 	else
 		$('#product_reference:visible').hide('slow');
 
-	//update display of the the prices in relation to tax, discount, ecotax, and currency criteria
-	/*if (!selectedCombination['unavailable'] && productShowPrice == 1)
-	{
-		// retrieve price without group_reduction in order to compute the group reduction after
-		// the specific price discount (done in the JS in order to keep backward compatibility)
-
-		var tax = (taxRate / 100) + 1;
-
-		combID = $('#idCombination').val();
-		comb2 = combinationsFromController[combID];
-		if (comb2.price != 0)
-		{
-			var taxExclPrice = productPriceTaxExcluded + comb2.price;
-			productPriceWithoutReductionDisplay = productPriceWithoutReductionDisplay + (comb2.price * tax);
-		}
-		else
-			var taxExclPrice = productPriceTaxExcluded;
-
-
-		if (!displayPrice && !noTaxForThisProduct)
-			productPriceDisplay = ps_round(taxExclPrice * tax, 2); // Need to be global => no var
-		else
-			productPriceDisplay = ps_round(taxExclPrice, 2); // Need to be global => no var
-
-		var reduction = 0;
-		if (selectedCombination['specific_price'].reduction_price || selectedCombination['specific_price'].reduction_percent)
-		{
-			reduction_price = (specific_currency ? selectedCombination['specific_price'].reduction_price : selectedCombination['specific_price'].reduction_price * currencyRate);
-			reduction = productPriceDisplay * (parseFloat(selectedCombination['specific_price'].reduction_percent) / 100) + reduction_price;
-			if (reduction_price && (displayPrice || noTaxForThisProduct))
-				reduction = ps_round(reduction / tax, 6);
-
-		}
-		else if (product_specific_price && product_specific_price.reduction && !selectedCombination.specific_price)
-		{
-			if (product_specific_price.reduction_type == 'amount')
-				reduction_price = (specific_currency ? product_specific_price.reduction : product_specific_price.reduction * currencyRate);
-			else
-				reduction_price = 0;
-
-			if (product_specific_price.reduction_type == 'percentage')
-				reduction_percent = productPriceDisplay * parseFloat(product_specific_price.reduction);
-
-			reduction = reduction_price + reduction_percent;
-			if (reduction_price && (displayPrice || noTaxForThisProduct))
-				reduction = ps_round(reduction / tax, 6);
-		}
-
-
-		if (product_specific_price['reduction_type'] != '' || selectedCombination.specific_price.reduction_percent > 0 || selectedCombination.specific_price.reduction_price > 0)
-			$('#discount_reduced_price,#old_price').show();
-		else
-			$('#discount_reduced_price,#old_price').hide();
-		if ((product_specific_price['reduction_type'] == 'percentage' && selectedCombination.specific_price.reduction_percent > 0) || selectedCombination['specific_price'].reduction_type == 'percentage')
-			$('#reduction_percent').show();
-		else
-			$('#reduction_percent').hide();
-		if (product_specific_price['price'] || (selectedCombination.specific_price && selectedCombination.specific_price['price']))
-			$('#not_impacted_by_discount').show();
-		else
-			$('#not_impacted_by_discount').hide();
-
-
-		productPriceDisplay -= reduction;
-		productPriceDisplay = ps_round(productPriceDisplay * (1 - group_reduction), 2);
-
-		var ecotaxAmount = !displayPrice ? ps_round(selectedCombination['ecotax'] * (1 + ecotaxTax_rate / 100), 2) : selectedCombination['ecotax'];
-
-		if (ecotaxAmount != default_eco_tax)
-			productPriceDisplay += ecotaxAmount - default_eco_tax;
-		else
-			productPriceDisplay += ecotaxAmount;
-
-		if (ecotaxAmount != default_eco_tax)
-			productPriceWithoutReductionDisplay += ecotaxAmount - default_eco_tax;
-		else
-			productPriceWithoutReductionDisplay += ecotaxAmount;
-
-		var our_price = '';
-		if (productPriceDisplay > 0) {
-			our_price = formatCurrency(productPriceDisplay, currencyFormat, currencySign, currencyBlank);
-		} else {
-			our_price = formatCurrency(0, currencyFormat, currencySign, currencyBlank);
-		}
-
-		$('#our_price_display').text(our_price);
-		$('#old_price_display').text(formatCurrency(productPriceWithoutReductionDisplay, currencyFormat, currencySign, currencyBlank));
-
-		if (productPriceWithoutReductionDisplay > productPriceDisplay)
-			$('#old_price,#old_price_display,#old_price_display_taxes').show();
-		else
-			$('#old_price,#old_price_display,#old_price_display_taxes').hide();
-		// Special feature: "Display product price tax excluded on product page"
-		var productPricePretaxed = '';
-		if (!noTaxForThisProduct)
-			productPricePretaxed = productPriceDisplay / tax;
-		else
-			productPricePretaxed = productPriceDisplay;
-		$('#pretaxe_price_display').text(formatCurrency(productPricePretaxed, currencyFormat, currencySign, currencyBlank));
-		// Unit price
-		productUnitPriceRatio = parseFloat(productUnitPriceRatio);
-		if (productUnitPriceRatio > 0 )
-		{
-			console.log(productPriceDisplay);
-			newUnitPrice = (productPriceDisplay / parseFloat(productUnitPriceRatio)) + parseFloat(selectedCombination['unit_price']);
-			$('#unit_price_display').text(formatCurrency(newUnitPrice, currencyFormat, currencySign, currencyBlank));
-		}
-
-		// Ecotax
-		ecotaxAmount = !displayPrice ? ps_round(selectedCombination['ecotax'] * (1 + ecotaxTax_rate / 100), 2) : selectedCombination['ecotax'];
-		$('#ecotax_price_display').text(formatCurrency(ecotaxAmount, currencyFormat, currencySign, currencyBlank));
-
-
-
-		updateDiscountTable(productPriceDisplay);
-
-	}*/
-
+	// Update price section: amounts, currency, discount amounts,...
 	updatePrice()
 }
 
@@ -691,6 +574,8 @@ function updatePrice()
 	// Get combination prices
 	combID = $('#idCombination').val();
 	combination = combinationsFromController[combID];
+	if (typeof combination == 'undefined')
+		return;
 
 	// Set product (not the combination) base price
 	var basePriceWithoutTax = productBasePriceTaxExcl;
