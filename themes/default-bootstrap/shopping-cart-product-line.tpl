@@ -44,7 +44,6 @@
 				{else}
                	 	<span class="price{if isset($product.is_discounted) && $product.is_discounted} special-price{/if}">{convertPrice price=$product.price}</span>
 				{/if}
-
 				{if isset($product.is_discounted) && $product.is_discounted}
                 	<span class="price-percent-reduction small">
             			{if !$priceDisplay}
