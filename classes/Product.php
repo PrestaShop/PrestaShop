@@ -613,22 +613,13 @@ class ProductCore extends ObjectModel
 	 *
 	 * @param int $id_category
 	 */
-	public static function cleanPositions($id_category)
+	public static function cleanPositions($id_category,$position=0)
 	{
 		$return = true;
 
-		$result = Db::getInstance()->executeS('
-			SELECT `id_product`
-			FROM `'._DB_PREFIX_.'category_product`
-			WHERE `id_category` = '.(int)$id_category.'
-			ORDER BY `position`
-		');
-		$total = count($result);
-
-		for ($i = 0; $i < $total; $i++)
-			$return &= Db::getInstance()->update('category_product', array(
-				'position' => $i,
-			), '`id_category` = '.(int)$id_category.' AND `id_product` = '.(int)$result[$i]['id_product']);
+		$return &= Db::getInstance()->update('category_product', array(
+                        'position' => array('type' => 'sql', 'value' => '`position`-1')
+                ), '`id_category` = '.(int)$id_category.' AND `position` > '.(int)$position);
 
 		return $return;
 	}
@@ -820,8 +811,6 @@ class ProductCore extends ObjectModel
 		if ($this->hasMultishopEntries())
 			return true;
 		
-		Product::cleanPositions($this->id);
-		
 		Hook::exec('actionProductDelete', array('product' => $this));
 		if (!$result ||
 			!GroupReduction::deleteProductReduction($this->id) ||
@@ -969,7 +958,7 @@ class ProductCore extends ObjectModel
 	public function deleteCategory($id_category, $clean_positions = true)
 	{
 		$result = Db::getInstance()->executeS(
-			'SELECT `id_category`
+			'SELECT `id_category`,`position`
 			FROM `'._DB_PREFIX_.'category_product`
 			WHERE `id_product` = '.(int)$this->id.'
 			AND id_category = '.(int)$id_category.''
@@ -978,7 +967,7 @@ class ProductCore extends ObjectModel
 		$return = Db::getInstance()->delete('category_product', 'id_product = '.(int)$this->id.' AND id_category = '.(int)$id_category);
 		if ($clean_positions === true)
 			foreach ($result as $row)
-				$this->cleanPositions((int)$row['id_category']);
+				$this->cleanPositions((int)$row['id_category'],(int)$row['position']);
 		SpecificPriceRule::applyAllRules(array((int)$this->id));
 		return $return;
 	}
@@ -993,7 +982,7 @@ class ProductCore extends ObjectModel
 	{
 		if ($clean_positions === true)
 			$result = Db::getInstance()->executeS(
-				'SELECT `id_category`
+				'SELECT `id_category`,`position`
 				FROM `'._DB_PREFIX_.'category_product`
 				WHERE `id_product` = '.(int)$this->id
 			);
@@ -1001,7 +990,7 @@ class ProductCore extends ObjectModel
 		$return = Db::getInstance()->delete('category_product', 'id_product = '.(int)$this->id);
 		if ($clean_positions === true && is_array($result))
 			foreach ($result as $row)
-					$return &= $this->cleanPositions((int)$row['id_category']);
+					$return &= $this->cleanPositions((int)$row['id_category'],(int)$row['position']);
 		
 		return $return;
 	}
