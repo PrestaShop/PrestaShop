@@ -44,9 +44,14 @@
 				{else}
                	 	<span class="price{if isset($product.is_discounted) && $product.is_discounted} special-price{/if}">{convertPrice price=$product.price}</span>
 				{/if}
+
 				{if isset($product.is_discounted) && $product.is_discounted}
                 	<span class="price-percent-reduction small">
-                    	{assign var='priceReductonPercent' value=(($product.price_without_specific_price - $product.price_wt)/$product.price_without_specific_price) * 100 * -1}
+            			{if !$priceDisplay}
+                    		{assign var='priceReductonPercent' value=(($product.price_without_specific_price - $product.price_wt)/$product.price_without_specific_price) * 100 * -1}
+						{else}
+                    		{assign var='priceReductonPercent' value=(($product.price_without_specific_price - $product.price)/$product.price_without_specific_price) * 100 * -1}
+						{/if}
 						{$priceReductonPercent|round|string_format:"%d"}%
                     </span>
 					<span class="old-price">{convertPrice price=$product.price_without_specific_price}</span>
