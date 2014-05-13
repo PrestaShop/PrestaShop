@@ -615,9 +615,7 @@ class ProductCore extends ObjectModel
 	 */
 	public static function cleanPositions($id_category,$position=0)
 	{
-		$return = true;
-
-		$return &= Db::getInstance()->update('category_product', array(
+		$return =  Db::getInstance()->update('category_product', array(
                         'position' => array('type' => 'sql', 'value' => '`position`-1')
                 ), '`id_category` = '.(int)$id_category.' AND `position` > '.(int)$position);
 
