@@ -63,8 +63,10 @@
 	{/if}
 	<script type="text/javascript">
 		$(function() {
-			$('table.{$list_id} .filter').keypress(function(event){
-				formSubmit(event, 'submitFilterButton{$list_id}')
+			$('table.{$list_id} .filter').keypress(function(e){
+				var key = (e.keyCode ? e.keyCode : e.which);
+				if (key == 13)
+					formSubmit(event, 'submitFilterButton{$list_id}');
 			})
 			$('#submitFilterButton{$list_id}').click(function() {
 				$('#submitFilter{$list_id}').val(1);
