@@ -1032,8 +1032,8 @@ class CartRuleCore extends ObjectModel
 		WHERE cr.id_cart_rule !='.(int)$this->id.'
 		and (cr.cart_rule_restriction = 0 or cr.id_cart_rule IN
 		(SELECT id_cart_rule_2
-		      FROM ps_cart_rule_combination
-		      WHERE '.(int)$this->id.' = id_cart_rule_1
+		FROM ps_cart_rule_combination
+		WHERE '.(int)$this->id.' = id_cart_rule_1
 		union 
 		SELECT id_cart_rule_1
 		FROM ps_cart_rule_combination
@@ -1045,8 +1045,8 @@ class CartRuleCore extends ObjectModel
 		WHERE cr.id_cart_rule !='.(int)$this->id.'
 		and cr.cart_rule_restriction = 1 and cr.id_cart_rule NOT IN
 		(SELECT id_cart_rule_2
-		      FROM ps_cart_rule_combination
-		      WHERE '.(int)$this->id.' = id_cart_rule_1
+		FROM ps_cart_rule_combination
+		WHERE '.(int)$this->id.' = id_cart_rule_1
 		union 
 		SELECT id_cart_rule_1
 		FROM ps_cart_rule_combination
