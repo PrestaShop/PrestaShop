@@ -461,7 +461,7 @@
 									<td class="list-empty hidden-print" colspan="6">
 										<div class="list-empty-msg">
 											<i class="icon-warning-sign list-empty-icon"></i>
-											{l s='No payments are available'}
+											{l s='No payment methods are available'}
 										</div>
 									</td>
 								</tr>
