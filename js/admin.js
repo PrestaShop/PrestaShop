@@ -1190,11 +1190,10 @@ function bindAddonsButtons()
 		{
 			resAjax = $.ajax({
 				type:"POST",
-				url : ajaxCurrentIndex,
+				url : admin_modules_link,
 				async: true,
 				data : {
 					ajax : "1",
-					token : token,
 					controller : "AdminModules",
 					action : "logOnAddonsWebservices",
 					username_addons : username_addons,
@@ -1208,7 +1207,7 @@ function bindAddonsButtons()
 					{
 						$('#addons_loading').html('');
 						$('#addons_login_div').fadeOut();
-						window.location.href = currentIndexWithToken + '&conf=32';
+						window.location.href = admin_modules_link + '&conf=32';
 					}
 					else
 						$('#addons_loading').html(errorLogin);
@@ -1226,11 +1225,10 @@ function bindAddonsButtons()
 		{
 			resAjax = $.ajax({
 				type:"POST",
-				url : ajaxCurrentIndex,
+				url : admin_modules_link,
 				async: true,
 				data : {
 					ajax : "1",
-					token : token,
 					controller : "AdminModules",
 					action : "logOutAddonsWebservices"
 				},
@@ -1242,7 +1240,7 @@ function bindAddonsButtons()
 					{
 						$('#addons_loading').html('');
 						$('#addons_login_div').fadeOut();
-						window.location.href = currentIndexWithToken;
+						window.location.href = admin_modules_link;
 					}
 					else
 						$('#addons_loading').html(errorLogin);
