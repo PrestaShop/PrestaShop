@@ -28,7 +28,7 @@
 <div class="modal-body">
 
 	<div class="alert alert-warning">
-		<h4>{l s='You are about to install "%", a module that could not be identified securely by PrestaShop.' sprintf=$module_name}</h4>
+		<h4>{l s='You are about to install "%s", a module that could not be identified securely by PrestaShop.' sprintf=$module_name}</h4>
 
 		<p>{l s='This generally happens when the module is not distributed through our official marketplace, PrestaShop Addons - or when your server failed to communicate with PrestaShop Addons.'}
 		{l s='Since you did not download the module from PrestaShop Addons, we cannot assert that the module is safe (i.e. that it is not adding some undisclosed functionality like backdoors, ads, hidden links, spam, etc.).'}
