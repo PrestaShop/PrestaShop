@@ -483,14 +483,6 @@ function reloadContent(params_plus)
 		});
 	}
 
-
-
-	//
-	console.log('AJAX CALL to : '+ baseDir + 'modules/blocklayered/blocklayered-ajax.php')
-	console.log('DATA : '+data);
-	console.log('PARAM PLUS : '+params_plus);
-	console.log('N : '+n);
-	console.log('------')
 	ajaxQuery = $.ajax(
 	{
 		type: 'GET',
@@ -500,7 +492,6 @@ function reloadContent(params_plus)
 		cache: false, // @todo see a way to use cache and to add a timestamps parameter to refresh cache each 10 minutes for example
 		success: function(result)
 		{
-			console.log('AJAX CALL SUCCESS');
 			if (result.meta_description != '')
 				$('meta[name="description"]').attr('content', result.meta_description);
 
@@ -519,7 +510,6 @@ function reloadContent(params_plus)
 			$('#layered_block_left').replaceWith(utf8_decode(result.filtersBlock));
 			$('.category-product-count, .heading-counter').html(result.categoryCount);
 
-			console.log('response = '+result.nbRenderedProducts+ ' //// n = '+result.nbAskedProducts);
 			if (result.nbRenderedProducts == result.nbAskedProducts)
 				$('div.clearfix.selector1').hide();
 
