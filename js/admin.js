@@ -733,6 +733,26 @@ function showNoticeMessage(msg) {
 
 $(document).ready(function()
 {
+	if (typeof tabs != 'undefined')
+	{
+		$.each(tabs, function(index) {
+			$(".form-wrapper").append('<ul class="nav nav-tabs" />');
+			$(".form-wrapper").append('<div class="tab-content" />');
+			$.each(tabs[index], function(key, value) {
+				// Move every form-group into the correct .tab-content > .tab-pane
+				$('#theme_fieldset_'+index+' .tab-content').append('<div id="'+key+'" class="tab-pane" />');
+				var elemts = $('#theme_fieldset_'+index).find("[data-tab-id='" + key + "']");
+				$(elemts).appendTo('#'+key);
+				// Add the item to the .nav-tabs
+				if (elemts.length != 0)
+					$('#theme_fieldset_'+index+' .nav-tabs').append('<li><a href="#'+key+'" data-toggle="tab">'+value+'</a></li>');
+			});
+			// Activate the first tab
+			$('#theme_fieldset_'+index+' .tab-content div').first().addClass('active');
+			$('#theme_fieldset_'+index+' .nav-tabs li').first().addClass('active');
+		});
+	}
+
 	$('select.chosen').each(function(k, item){
 		$(item).chosen({disable_search_threshold: 10});
 	});
