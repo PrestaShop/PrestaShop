@@ -265,7 +265,7 @@
 								</p>
 								<p id="reduction_amount" {if !$product->specificPrice || $product->specificPrice.reduction_type != 'amount' || $product->specificPrice.reduction|floatval ==0} style="display:none"{/if}>
 									<span id="reduction_amount_display">
-									{if $product->specificPrice && $product->specificPrice.reduction_type == 'amount' && $product->specificPrice.reduction|intval !=0}
+									{if $product->specificPrice && $product->specificPrice.reduction_type == 'amount' && $product->specificPrice.reduction|floatval !=0}
 										-{convertPrice price=$productPriceWithoutReduction-$productPrice|floatval}
 									{/if}
 									</span>
@@ -687,10 +687,12 @@
 {addJsDef maxQuantityToAllowDisplayOfLastQuantityMessage=$last_qties|intval}
 {addJsDef minimalQuantity=$product->minimal_quantity|intval}
 {addJsDef noTaxForThisProduct=$no_tax|boolval}
+{addJsDef customerGroupWithoutTax=$customer_group_without_tax|boolval}
 {addJsDef oosHookJsCodeFunctions=Array()}
 {addJsDef productHasAttributes=isset($groups)|boolval}
 {addJsDef productPriceTaxExcluded=($product->getPriceWithoutReduct(true)|default:'null' - $product->ecotax)|floatval}
 {addJsDef productBasePriceTaxExcluded=($product->base_price - $product->ecotax)|floatval}
+{addJsDef productBasePriceTaxExcl=($product->base_price|floatval)}
 {addJsDef productReference=$product->reference|escape:'html':'UTF-8'}
 {addJsDef productAvailableForOrder=$product->available_for_order|boolval}
 {addJsDef productPriceWithoutReduction=$productPriceWithoutReduction|floatval}
