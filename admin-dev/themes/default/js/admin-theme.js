@@ -24,6 +24,18 @@
 
 $(document).ready(function() {
 
+	$('div.thumbnail-wrapper').hover(
+		function() {
+			var w = $(this).children('img').outerWidth(true);
+			var h = $(this).children('img').outerHeight(true);
+			$(this).children('.action-wrapper').css('width', w+'px');
+			$(this).children('.action-wrapper').css('height', h+'px');
+			$(this).children('.action-wrapper').show();
+		}, function() {
+			$('.thumbnail-wrapper .action-wrapper').hide();
+		}
+	);
+
 	$("[name^='checkBoxShopGroupAsso_theme']").change(function(){
 		$(this).parents('.tree-folder').find("[name^='checkBoxShopAsso_theme']").each(function(){
 			var id = $(this).attr('value');
