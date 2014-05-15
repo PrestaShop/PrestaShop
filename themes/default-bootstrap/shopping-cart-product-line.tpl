@@ -47,11 +47,23 @@
 				{if isset($product.is_discounted) && $product.is_discounted}
                 	<span class="price-percent-reduction small">
             			{if !$priceDisplay}
-                    		{assign var='priceReductonPercent' value=(($product.price_without_specific_price - $product.price_wt)/$product.price_without_specific_price) * 100 * -1}
+            				{if isset($product.reduction_type) && $product.reduction_type == 'amount'}
+                    			{assign var='priceReduction' value=($product.price_wt - $product.price_without_specific_price)}
+                    			{assign var='symbol' value=$currency->sign}
+                    		{else}
+                    			{assign var='priceReduction' value=(($product.price_without_specific_price - $product.price_wt)/$product.price_without_specific_price) * 100 * -1}
+                    			{assign var='symbol' value='%'}
+                    		{/if}	
 						{else}
-                    		{assign var='priceReductonPercent' value=(($product.price_without_specific_price - $product.price)/$product.price_without_specific_price) * 100 * -1}
+							{if isset($product.reduction_type) && $product.reduction_type == 'amount'}
+								{assign var='priceReduction' value=($product.price - $product.price_without_specific_price)} 
+								{assign var='symbol' value=$currency->sign}                   			
+                    		{else}
+                    			{assign var='priceReduction' value=(($product.price_without_specific_price - $product.price)/$product.price_without_specific_price) * 100 * -1}
+                    			{assign var='symbol' value='%'}
+                    		{/if}
 						{/if}
-						{$priceReductonPercent|round|string_format:"%d"}%
+						{$priceReduction|round|string_format:"%d"}{$symbol}
                     </span>
 					<span class="old-price">{convertPrice price=$product.price_without_specific_price}</span>
 				{/if}

@@ -766,8 +766,19 @@ class MediaCore
 		/* This is an external script, if it already belongs to js_files then remove it from content */
 
 		preg_match('/src\s*=\s*["\']?([^"\']*)[^>]/ims', $original, $results);
-		if (isset($results[1]) && (in_array($results[1], Context::getContext()->controller->js_files) || in_array($results[1], Media::$inline_script_src)))
-			return '';
+
+
+		if (array_key_exists(1, $results))
+		{
+			if (substr($results[1], 0, 2) == '//')
+			{
+				$protocol_link = Tools::getCurrentUrlProtocolPrefix();
+				$results[1] = $protocol_link.ltrim($results[1], '/');
+			}
+
+			if (in_array($results[1], Context::getContext()->controller->js_files) || in_array($results[1], Media::$inline_script_src))
+				return '';
+		}
 
 		/* return original string because no match was found */
 		return $original;

@@ -29,7 +29,7 @@
 	{/if}
 {/capture}
 <h1 class="page-heading">{if !isset($email_create)}{l s='Authentication'}{else}{l s='Create an account'}{/if}</h1>
-{if isset($display_guest_checkout)}{assign var='current_step' value='login'}{include file="$tpl_dir./order-steps.tpl"}{/if}
+{if isset($back) && preg_match("/^http/", $back)}{assign var='current_step' value='login'}{include file="$tpl_dir./order-steps.tpl"}{/if}
 {include file="$tpl_dir./errors.tpl"}
 {assign var='stateExist' value=false}
 {assign var="postCodeExist" value=false}
