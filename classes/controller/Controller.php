@@ -403,7 +403,7 @@ abstract class ControllerCore
 
 		$html = trim($html);
 
-		if ($this->controller_type == 'front' && !empty($html) && $this->getLayout())
+		if ((bool)Configuration::get('PS_JS_DEFER') && $this->controller_type == 'front' && !empty($html) && $this->getLayout())
 		{
 			$live_edit_content = '';
 			if (!$this->useMobileTheme() && $this->checkLiveEditAccess())
