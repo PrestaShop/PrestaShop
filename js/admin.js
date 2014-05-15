@@ -737,7 +737,7 @@ $(document).ready(function()
 	{
 		$.each(tabs, function(index) {
 			$(".form-wrapper").append('<ul class="nav nav-tabs" />');
-			$(".form-wrapper").append('<div class="tab-content" />');
+			$(".form-wrapper").append('<div class="tab-content panel" />');
 			$.each(tabs[index], function(key, value) {
 				// Move every form-group into the correct .tab-content > .tab-pane
 				$('#theme_fieldset_'+index+' .tab-content').append('<div id="'+key+'" class="tab-pane" />');
