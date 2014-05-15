@@ -1571,11 +1571,11 @@ abstract class ModuleCore
 					$trusted[] = (string)$modaddons->name;
 		}
 
-		$themes = Theme::getAvailable(true);
+		$themes = Theme::getThemes();
 		foreach ($themes as $theme)
-			if ($theme != 'default-bootstrap')
+			if ($theme->directory != 'default-bootstrap')
 			{
-				$theme_xml = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme.'.xml';
+				$theme_xml = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml';
 				if(file_exists($theme_xml))
 				{
 					$content  = Tools::file_get_contents($theme_xml);
