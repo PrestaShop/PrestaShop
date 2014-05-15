@@ -115,7 +115,7 @@ class AdminThemesControllerCore extends AdminController
 		$this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP) ? true : false;
 
 		libxml_use_internal_errors(true);
-				
+
 		//get addons themes
 		if ($this->logged_on_addons)
 		{
@@ -153,16 +153,44 @@ class AdminThemesControllerCore extends AdminController
 				}
 			}
 		}
-		
+
 		$all_themes = Theme::getThemes();
 		$themes = array();
+		$other_themes = array();
 		foreach ($all_themes as $theme)
 		{
 			if (file_exists(_PS_ALL_THEMES_DIR_.$theme->directory.'/preview.jpg'))
+			{
 				$themes[] = array('id' => $theme->id, 'name' => $theme->name, 'preview' => '../themes/'.$theme->directory.'/preview.jpg');
+				if ($theme->id == $this->context->shop->id_theme)
+				{
+					if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
+						$config_file = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml';
+					else
+						$config_file = _PS_ROOT_DIR_.'/config/xml/themes/default.xml';
+
+					if ($config_file)
+					{
+						$cur_theme = array();
+						$cur_theme['theme_id'] = $theme->id;
+						$xml_theme = @simplexml_load_file($config_file);
+						foreach ($xml_theme->attributes() as $key => $value)
+							$cur_theme['theme_'.$key] = (string)$value;
+						foreach ($xml_theme->author->attributes() as $key => $value)
+							$cur_theme['author_'.$key] = (string)$value;
+
+						if ($cur_theme['theme_name'] == 'default-bootstrap')
+						{
+							$cur_theme['tc'] = Module::isEnabled('themeconfigurator');
+						}
+					}
+				}
+				else
+					$other_themes[] = array('id' => $theme->id, 'name' => $theme->name, 'preview' => '../themes/'.$theme->directory.'/preview.jpg');
+			}
 			$themes_directory[] = $theme->directory;
 		}
-		
+
 		foreach (scandir(_PS_ALL_THEMES_DIR_) as $theme_dir)
 		{
 			if ($theme_dir[0] != '.' && Validate::isDirName($theme_dir)
@@ -190,31 +218,28 @@ class AdminThemesControllerCore extends AdminController
 				}
 			}
 		}
-		
+
+		// Employee languages used for link and utm_source
+		$lang = new Language($this->context->language->id);
+		$iso_lang_uc = strtoupper($lang->iso_code);
+
 		$this->fields_options = array(
-			'theme' => array(
-				'title' => sprintf($this->l('Select a theme for shop %s'), $this->context->shop->name),
-				'description' => (!$this->can_display_themes) ? $this->l('You must select a shop from the above list if you wish to choose a theme.') : '',
-				'fields' => array(
-					'theme_for_shop' => array(
-						'type' => 'theme',
-						'themes' => $themes,
-						'id_theme' => $this->context->shop->id_theme,
-						'can_display_themes' => $this->can_display_themes,
-						'no_multishop_checkbox' => true,
-					),
-				),
-				'submit' => array('title' => $this->l('Save'))
-			),
 			'appearance' => array(
-				'title' => $this->l('Appearance'),
+				'title' => $this->l('Your current theme'),
 				'icon' => 'icon-html5',
+				'tabs' => array(
+					'logo' => $this->l('Logo'),
+					'logo2' => $this->l('Invoice & Email Logos'),
+					'icons' => $this->l('Icons'),
+					'mobile' => $this->l('Mobile'),
+					),
 				'fields' => array(
 					'PS_LOGO' => array(
 						'title' => $this->l('Header logo'),
 						'hint' => $this->l('Will appear on main page. Recommended height: 52px. Maximum height on default theme: 65px.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO',
+						'tab' => 'logo',
 						'thumb' => _PS_IMG_.Configuration::get('PS_LOGO')
 					),
 					'PS_LOGO_MOBILE' => array(
@@ -224,6 +249,7 @@ class AdminThemesControllerCore extends AdminController
 							$this->l('Will appear on the main page of your mobile template. If left undefined, the header logo will be used.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO_MOBILE',
+						'tab' => 'mobile',
 						'thumb' => (Configuration::get('PS_LOGO_MOBILE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MOBILE') : _PS_IMG_.Configuration::get('PS_LOGO')
 					),
 					'PS_LOGO_MAIL' => array(
@@ -233,6 +259,7 @@ class AdminThemesControllerCore extends AdminController
 							$this->l('Will appear on email headers. If undefined, the header logo will be used.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO_MAIL',
+						'tab' => 'logo2',
 						'thumb' => (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MAIL') : _PS_IMG_.Configuration::get('PS_LOGO')
 					),
 					'PS_LOGO_INVOICE' => array(
@@ -242,6 +269,7 @@ class AdminThemesControllerCore extends AdminController
 							$this->l('Will appear on invoice headers.').' '.$this->l('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO_INVOICE',
+						'tab' => 'logo2',
 						'thumb' => (Configuration::get('PS_LOGO_INVOICE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_INVOICE') : _PS_IMG_.Configuration::get('PS_LOGO')
 					),
 					'PS_FAVICON' => array(
@@ -249,6 +277,7 @@ class AdminThemesControllerCore extends AdminController
 						'hint' => $this->l('Will appear in the address bar of your web browser.'),
 						'type' => 'file',
 						'name' => 'PS_FAVICON',
+						'tab' => 'icons',
 						'thumb' => _PS_IMG_.Configuration::get('PS_FAVICON')
 					),
 					'PS_STORES_ICON' => array(
@@ -256,14 +285,8 @@ class AdminThemesControllerCore extends AdminController
 						'hint' => $this->l('Will appear on the store locator (inside Google Maps).').'<br />'.$this->l('Suggested size: 30x30, transparent GIF.'),
 						'type' => 'file',
 						'name' => 'PS_STORES_ICON',
+						'tab' => 'icons',
 						'thumb' => _PS_IMG_.Configuration::get('PS_STORES_ICON')
-					),
-					'PS_NAVIGATION_PIPE' => array(
-						'title' => $this->l('Navigation separator'),
-						'hint' => $this->l('Used for the breadcrumb navigation. For instance, with ">": Store Name > Category Name > Product Name.'),
-						'cast' => 'strval',
-						'type' => 'text',
-						'size' => 20
 					),
 					'PS_ALLOW_MOBILE_DEVICE' => array(
 						'title' => $this->l('Enable the mobile theme'),
@@ -271,6 +294,7 @@ class AdminThemesControllerCore extends AdminController
 						'type' => 'radio',
 						'required' => true,
 						'validation' => 'isGenericName',
+						'tab' => 'mobile',
 						'choices' => array(
 							0 => $this->l('I\'d like to disable it, please.'),
 							1 => $this->l('I\'d like to enable it only on smart phones.'),
@@ -278,52 +302,26 @@ class AdminThemesControllerCore extends AdminController
 							3 => $this->l('I\'d like to enable it on both smart phones and tablets.')
 						)
 					),
-					'PS_MAIL_COLOR' => array(
-						'title' => $this->l('Mail color'),
-						'hint' => $this->l('Your mail will be highlighted in this color. HTML colors only, please (e.g. "lightblue", "#CC6600").'),
-						'type' => 'color',
-						'name' => 'PS_MAIL_COLOR',
-						'size' => 30,
-						'value' => Configuration::get('PS_MAIL_COLOR'),
-					)
+				),
+				'after_tabs' => array(
+					'cur_theme' => $cur_theme,
 				),
 				'submit' => array('title' => $this->l('Save'))
-			)
-		);
-
-		$this->fields_list = array(
-			'id_theme' => array(
-				'title' => $this->l('ID'),
-				'align' => 'center',
-				'class' => 'fixed-width-xs'
 			),
-			'name' => array(
-				'title' => $this->l('Name'),
+			'theme' => array(
+				'title' => sprintf($this->l('Select a theme for shop %s'), $this->context->shop->name),
+				'description' => (!$this->can_display_themes) ? $this->l('You must select a shop from the above list if you wish to choose a theme.') : '',
+				'fields' => array(
+					'theme_for_shop' => array(
+						'type' => 'theme',
+						'themes' => $other_themes,
+						'id_theme' => $this->context->shop->id_theme,
+						'can_display_themes' => $this->can_display_themes,
+						'no_multishop_checkbox' => true,
+						'addons_link' => 'http://addons.prestashop.com/en/3-templates-prestashop?utm_source=back-office&utm_medium=theme-button&utm_campaign=back-office-'.$iso_lang_uc,
+					),
+				),
 			),
-			'directory' => array(
-				'title' => $this->l('Directory'),
-			),
-			'responsive' => array(
-				'title' => $this->l('Responsive'),
-				'type' => 'bool',
-				'callback' => 'printResponsiveIcon',
-				'align' => 'center',
-				'class' => 'fixed-width-xs'
-			),
-			'default_left_column' => array(
-				'title' => $this->l('Default left column'),
-				'type' => 'bool',
-				'active' => 'default_left_column',
-				'align' => 'center',
-				'class' => 'fixed-width-xs'
-			),
-			'default_right_column' => array(
-				'title' => $this->l('Default right column'),
-				'type' => 'bool',
-				'active' => 'default_right_column',
-				'align' => 'center',
-				'class' => 'fixed-width-xs'
-			)
 		);
 	}
 
@@ -561,8 +559,6 @@ class AdminThemesControllerCore extends AdminController
 
 	public function renderList()
 	{
-		$this->addRowAction('edit');
-		$this->addRowAction('delete');
 
 		return parent::renderList();
 	}
@@ -1870,7 +1866,8 @@ class AdminThemesControllerCore extends AdminController
 		$iso_lang = $this->context->language->iso_code;
 		$iso_currency = $this->context->currency->iso_code;
 		$iso_country = $this->context->country->iso_code;
-		$addons_url = 'http://addons.prestashop.com/iframe/search-1.6.php?psVersion='._PS_VERSION_.'&onlyThemes=1&isoLang='.$iso_lang.'&isoCurrency='.$iso_currency.'&isoCountry='.$iso_country.'&parentUrl='.$parent_domain;
+		$activity = Configuration::get('PS_SHOP_ACTIVITY');
+		$addons_url = 'http://addons.prestashop.com/iframe/search-1.6.php?psVersion='._PS_VERSION_.'&onlyThemes=1&isoLang='.$iso_lang.'&isoCurrency='.$iso_currency.'&isoCountry='.$iso_country.'&activity='.(int)$activity.'&parentUrl='.$parent_domain;
 
 		die(Tools::file_get_contents($addons_url));
 	}

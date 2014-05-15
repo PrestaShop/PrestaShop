@@ -296,13 +296,21 @@ class AuthControllerCore extends FrontController
 					$this->context->cart = new Cart($id_cart);
 				else
 				{
+					$id_carrier = (int)$this->context->cart->id_carrier;
 					$this->context->cart->id_carrier = 0;
 					$this->context->cart->setDeliveryOption(null);
-					$this->context->cart->id_address_delivery = Address::getFirstCustomerAddressId((int)($customer->id));
-					$this->context->cart->id_address_invoice = Address::getFirstCustomerAddressId((int)($customer->id));
+					$this->context->cart->id_address_delivery = (int)Address::getFirstCustomerAddressId((int)($customer->id));
+					$this->context->cart->id_address_invoice = (int)Address::getFirstCustomerAddressId((int)($customer->id));
 				}
 				$this->context->cart->id_customer = (int)$customer->id;
 				$this->context->cart->secure_key = $customer->secure_key;
+
+				if ($this->ajax && isset($id_carrier) && $id_carrier && Configuration::get('PS_ORDER_PROCESS_TYPE'))
+				{
+					$delivery_option = array($this->context->cart->id_address_delivery => $id_carrier.',');
+					$this->context->cart->setDeliveryOption($delivery_option);
+				}
+
 				$this->context->cart->save();
 				$this->context->cookie->id_cart = (int)$this->context->cart->id;
 				$this->context->cookie->write();
@@ -576,6 +584,12 @@ class AuthControllerCore extends FrontController
 						$this->context->cart->id_address_invoice = (int)Address::getFirstCustomerAddressId((int)$customer->id);
 						if (isset($address_invoice) && Validate::isLoadedObject($address_invoice))
 							$this->context->cart->id_address_invoice = (int)$address_invoice->id;
+
+						if ($this->ajax && Configuration::get('PS_ORDER_PROCESS_TYPE'))
+						{
+							$delivery_option = array((int)$this->context->cart->id_address_delivery => (int)$this->context->cart->id_carrier.',');
+							$this->context->cart->setDeliveryOption($delivery_option);
+						}
 
 						// If a logged guest logs in as a customer, the cart secure key was already set and needs to be updated
 						$this->context->cart->update();

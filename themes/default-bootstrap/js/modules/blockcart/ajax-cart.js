@@ -134,7 +134,7 @@ var ajaxCart = {
 		//for product page 'add' button...
 		$(document).on('click', '#add_to_cart button', function(e){
 			e.preventDefault();
-			ajaxCart.add( $('#product_page_product_id').val(), $('#idCombination').val(), true, null, $('#quantity_wanted').val(), null);
+			ajaxCart.add($('#product_page_product_id').val(), $('#idCombination').val(), true, null, $('#quantity_wanted').val(), null);
 		});
 
 		//for 'delete' buttons in the cart block...
@@ -292,7 +292,6 @@ var ajaxCart = {
 		{
 			$('#add_to_cart button').prop('disabled', 'disabled').addClass('disabled');
 			$('.filled').removeClass('filled');
-
 		}
 		else
 			$(callerElement).prop('disabled', 'disabled');
@@ -345,6 +344,10 @@ var ajaxCart = {
 				}
 				else 
 				{
+					if (contentOnly)
+						window.parent.ajaxCart.updateCart(jsonData);
+					else
+						ajaxCart.updateCart(jsonData);	
 					if (addedFromProductPage)
 						$('#add_to_cart button').removeProp('disabled').removeClass('disabled');
 					else

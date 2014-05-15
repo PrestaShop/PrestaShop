@@ -72,7 +72,7 @@
 		</td>
 	{else if !isset($module->not_on_disk)}
 		<td>&nbsp;</td>
-		<td>
+		<td class="actions">
 			<div class="btn-group-action">
 				{if $module->optionsHtml|count > 0}
 				<div class="btn-group">
@@ -82,10 +82,15 @@
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
 						<span class="caret">&nbsp;</span>
 					</button>
-					<ul class="dropdown-menu">
+					<ul class="dropdown-menu pull-right">
+
 					{foreach $module->optionsHtml key=key item=option}
 						{if $key != 0}
-							<li>{$option}</li>
+							{if strpos($option, 'title="divider"') !== false}
+								<li class="divider"></li>
+							{else}
+								<li>{$option}</li>
+							{/if}
 						{/if}
 					{/foreach}
 					</ul>

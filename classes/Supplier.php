@@ -119,6 +119,7 @@ class SupplierCore extends ObjectModel
 			$query->where('s.`active` = 1');
 		$query->orderBy(' s.`name` ASC');
 		$query->limit($n, ($p - 1) * $n);
+		$query->groupBy('s.id_supplier');
 
 		$suppliers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		if ($suppliers === false)

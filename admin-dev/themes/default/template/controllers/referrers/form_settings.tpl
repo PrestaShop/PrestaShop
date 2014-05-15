@@ -71,7 +71,7 @@
 										{l s='Yes'}
 									</label>
 									<input type="radio" name="tracking_dt" id="tracking_dt_off" value="0" {if !$tracking_dt}checked="checked"{/if}  />
-									<label class="t" for="tracking_dt_off"> 
+									<label class="t" for="tracking_dt_off">
 										{l s='No'}
 									</label>
 									<a class="slide-button btn"></a>
@@ -86,6 +86,15 @@
 			</div>
 		</form>
 	</div>
+	{if $statsdata_name}
+		<div class="col-lg-3">
+			<div class="panel">
+				<div class="alert alert-info">
+					{l s="The module '%s' must be activated and configurated in order to have all the statistics" sprintf=$statsdata_name}
+				</div>
+			</div>
+		</div>
+	{/if}
 	</div>
 
 
