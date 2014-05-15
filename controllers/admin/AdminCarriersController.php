@@ -31,7 +31,7 @@ class AdminCarriersControllerCore extends AdminController
 	public function __construct()
 	{
 
-		if ($id_carrier = Tools::getValue('id_carrier') && !Tools::isSubmit('deletecarrier') && !Tools::isSubmit('statuscarrier') && !Tools::isSubmit('isFreecarrier'))
+		if ($id_carrier = Tools::getValue('id_carrier') && !Tools::isSubmit('deletecarrier') && !Tools::isSubmit('statuscarrier') && !Tools::isSubmit('isFreecarrier') && !Tools::isSubmit('onboarding_carrier'))
 			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCarrierWizard').'&id_carrier='.(int)$id_carrier);
 
 		$this->bootstrap = true;
@@ -106,28 +106,41 @@ class AdminCarriersControllerCore extends AdminController
 			)
 		);
 		parent::__construct();
+		
+		if (Tools::isSubmit('onboarding_carrier'))
+			$this->display = 'view';
 	}
 
 	public function initToolbar()
 	{
 		parent::initToolbar();
 		
-		if (isset($this->toolbar_btn['new']))
-			$this->toolbar_btn['new']['href'] = $this->context->link->getAdminLink('AdminCarrierWizard');
+		if (isset($this->toolbar_btn['new']) && $this->display != 'view')
+			$this->toolbar_btn['new']['href'] = $this->context->link->getAdminLink('AdminCarriers').'&onboarding_carrier';
 	}
 
 	public function initPageHeaderToolbar()
 	{
 		$this->page_header_toolbar_title = $this->l('Carriers');
-		$this->page_header_toolbar_btn['new_carrier'] = array(
-			'href' => $this->context->link->getAdminLink('AdminCarrierWizard'),
-			'desc' => $this->l('Add new carrier', null, null, false),
-			'icon' => 'process-icon-new'
-		);
+		if ($this->display != 'view')
+			$this->page_header_toolbar_btn['new_carrier'] = array(
+				'href' => $this->context->link->getAdminLink('AdminCarriers').'&onboarding_carrier',
+				'desc' => $this->l('Add new carrier', null, null, false),
+				'icon' => 'process-icon-new'
+			);
 
 		parent::initPageHeaderToolbar();
 	}
-
+	
+	public function renderView()
+	{
+		$this->initTabModuleList();
+		$this->filterTabModuleList();
+		$this->tpl_view_vars = array('modules_list' => $this->renderModulesList());
+		unset($this->page_header_toolbar_btn['modules-list']);
+		return parent::renderView();
+	}
+	
 	public function renderList()
 	{
 		$this->_select = 'b.*';
@@ -703,7 +716,15 @@ else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tool
 		else
 			return;
 	}
-
+	
+	protected function initTabModuleList()
+	{
+		if (Tools::isSubmit('onboarding_carrier'))
+		{
+			parent::initTabModuleList();
+			$this->filter_modules_list = $this->tab_modules_list['default_list'] = $this->tab_modules_list['slider_list'];
+		}
+	}
 }
 
 

@@ -24,6 +24,13 @@
 *}
 {if isset($fields.title)}<h3>{$fields.title}</h3>{/if}
 
+{if isset($tabs) && $tabs|count}
+<script type="text/javascript">
+	var tabs = {$tabs|json_encode};
+	var unique_field_id = '';
+</script>
+{/if}
+
 {block name="defaultForm"}
 <form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{/if}" class="defaultForm {$name_controller} form-horizontal" action="{$current}&amp;token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if} novalidate>
 	{if $form_id}
@@ -48,9 +55,10 @@
 				{elseif $key == 'description' && $field}
 					<div class="alert alert-info">{$field}</div>
 				{elseif $key == 'input'}
+					<div class="form-wrapper">
 					{foreach $field as $input}
 						{block name="input_row"}
-						<div class="form-group{if isset($input.form_group_class)} {$input.form_group_class}{/if}{if $input.type == 'hidden'} hide{/if}"{if $input.name == 'id_state'} id="contains_states"{if !$contains_states} style="display:none;"{/if}{/if}>
+						<div class="form-group{if isset($input.form_group_class)} {$input.form_group_class}{/if}{if $input.type == 'hidden'} hide{/if}"{if $input.name == 'id_state'} id="contains_states"{if !$contains_states} style="display:none;"{/if}{/if} {if isset($tabs) && isset($input.tab)}data-tab-id="{$input.tab}"{/if}>
 						{if $input.type == 'hidden'}
 							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 						{else}
@@ -793,6 +801,7 @@
 						{capture name=hookName assign=hookName}display{$smarty.get.controller|ucfirst|htmlentities}Form{/capture}
 						{hook h=$hookName fieldset=$f}
 					{/if}
+				</div><!-- /.form-wrapper -->
 				{elseif $key == 'desc'}
 					<div class="alert alert-info col-lg-offset-3">
 						{if is_array($field)}
