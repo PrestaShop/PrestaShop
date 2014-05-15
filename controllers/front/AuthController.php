@@ -112,7 +112,7 @@ class AuthControllerCore extends FrontController
 			{
 				// get all countries as language (xy) or language-country (wz-XY)
 				$array = array();
-				preg_match("#(?<=-)\w\w|\w\w(?!-)#",$_SERVER['HTTP_ACCEPT_LANGUAGE'],$array);
+				preg_match("#(?<=-)\w\w|\w\w(?!-)#", $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
 				if (!Validate::isLanguageIsoCode($array[0]) || !($sl_country = Country::getByIso($array[0])))
 					$sl_country = (int)Configuration::get('PS_COUNTRY_DEFAULT');
 			}
