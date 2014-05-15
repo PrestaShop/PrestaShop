@@ -29,6 +29,7 @@
 	id_language = Number({$current_id_lang});
 	{if isset($tabs) && $tabs|count}
 		var tabs = {$tabs|json_encode};
+		var unique_field_id = '{$table}_';
 	{/if}
 </script>
 {block name="defaultOptions"}
@@ -89,7 +90,7 @@
 					{if $field['type'] == 'hidden'}
 						<input type="hidden" name="{$key}" value="{$field['value']}" />
 					{else}
-						<div class="form-group {if isset($field.form_group_class)} {$field.form_group_class} {/if}" {if isset($tabs)}{if isset($field.tab)}data-tab-id="{$field.tab}"{else}data-tab-id="misc"{/if}{/if}>
+						<div class="form-group {if isset($field.form_group_class)} {$field.form_group_class} {/if}" {if isset($tabs) && isset($field.tab)}data-tab-id="{$field.tab}"{/if}>
 							<div id="conf_id_{$key}" {if $field['is_invisible']} class="isInvisible"{/if}>								
 								{block name="label"}
 									{if isset($field['title']) && isset($field['hint'])}
