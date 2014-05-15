@@ -27,12 +27,12 @@
 {block name="input"}
 	{if $field['type'] == 'theme'}
 		{if $field['can_display_themes']}
+			{if $field.themes|count > 1}
 			<div class="col-lg-12">
-				<a class="btn btn-link pull-right" href="{$field['addons_link']}"><i class="icon icon-share-alt"></i> Visit Theme store</a>
+				<a class="btn btn-link pull-right" href="{$field['addons_link']}" onclick="return !window.open(this.href)"><i class="icon icon-share-alt"></i> Visit Theme store</a>
 			</div>
 			<div class="col-lg-12">
 				<div class="row">
-				{if $field.themes|count > 1}
 					{foreach $field.themes as $theme}
 						<div class="col-lg-3">
 							<div class="theme_container">
@@ -64,7 +64,11 @@
 							</div>
 						</div>
 					{/foreach}
-				{else}
+				</div>
+			</div>
+			{else}
+			<div class="col-lg-12">
+				<div class="row">
 					<div style="text-align:center;">
 						{l s='You currently have no other themes. Choose a new theme:'}
 						<br />	
@@ -73,9 +77,9 @@
 							{l s='Visit Theme store'}
 						</a>
 					</div>
-				{/if}
 				</div>
 			</div>
+			{/if}
 		{/if}
 	{else}
 		{$smarty.block.parent}
@@ -101,10 +105,10 @@
 				<p>
 					Designed by {$cur_theme.author_name}
 					{if isset($cur_theme.author_url) && $cur_theme.author_url != ''}
-					 | <a href="{$cur_theme.author_url}">{$cur_theme.author_url}</a>
+					 | <a href="{$cur_theme.author_url}" onclick="return !window.open(this.href)">{$cur_theme.author_url}</a>
 					{/if}
 					{if isset($cur_theme.author_email) && $cur_theme.author_email != ''}
-					 | <a href="mailto:{$cur_theme.author_email}">{$cur_theme.author_email}</a>
+					 | <a href="mailto:{$cur_theme.author_email}" onclick="return !window.open(this.href)">{$cur_theme.author_email}</a>
 					{/if}
 				</p>
 
@@ -117,7 +121,7 @@
 					</div>
 					<div class="col-md-4 col-sm-4" style="text-align:center;">
 						<h4>&nbsp;</h4>
-						<a class="btn btn-default">Theme Configurator</a>
+						<a class="btn btn-default" href="{$link->getAdminLink('AdminModules')|addslashes}&configure=themeconfigurator"><i class="icon icon-list-alt"></i> Theme Configurator</a>
 					</div>
 				</div>
 				{/if}
@@ -130,7 +134,7 @@
 					</div>
 					<div class="col-md-4 col-sm-4" style="text-align:center;">
 						<h4>&nbsp;</h4>
-						<a href="{$link->getAdminLink('AdminThemes')|addslashes}&updatetheme&id_theme={$cur_theme.theme_id}" class="btn btn-default">Advanced settings</a>
+						<a href="{$link->getAdminLink('AdminThemes')|addslashes}&updatetheme&id_theme={$cur_theme.theme_id}" class="btn btn-default"><i class="icon icon-cog"></i> Advanced settings</a>
 					</div>
 				</div>
 			</div>
