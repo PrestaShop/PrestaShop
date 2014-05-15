@@ -135,6 +135,7 @@ class AdminModulesControllerCore extends AdminController
 						if ($xmlModule->attributes() == 'partner' && $key == 'name')
 							$this->list_partners_modules[] = (string)$value;
 					}
+
 	}
 
 	public function checkCategoriesNames($a, $b)
@@ -734,6 +735,8 @@ class AdminModulesControllerCore extends AdminController
 					// Check potential error
 					if (!($module = Module::getInstanceByName(urldecode($name))))
 						$this->errors[] = $this->l('Module not found');
+					elseif (defined('_PS_HOST_MODE_') && in_array($module->name, Module::$hosted_modules_blacklist))
+						$this->errors[] = Tools::displayError('You do not have permission to access this module.');
 					elseif ($key == 'install' && $this->tabAccess['add'] !== '1')
 						$this->errors[] = Tools::displayError('You do not have permission to install this module.');
 					elseif ($key == 'delete' && ($this->tabAccess['delete'] !== '1' || !$module->getPermission('configure')))

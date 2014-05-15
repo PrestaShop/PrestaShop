@@ -166,6 +166,8 @@ abstract class ModuleCore
 	const CACHE_FILE_TRUSTED_MODULES_LIST = '/config/xml/trusted_modules_list.xml';
 	const CACHE_FILE_UNTRUSTED_MODULES_LIST = '/config/xml/untrusted_modules_list.xml';
 
+	public static $hosted_modules_blacklist = array('autoupgrade');
+
 	/**
 	 * Constructor
 	 *
@@ -1386,8 +1388,10 @@ abstract class ModuleCore
 					}
 			}
 
-		foreach ($module_list as &$module)
-			if (isset($modules_installed[$module->name]))
+		foreach ($module_list as $key => &$module)
+			if (defined('_PS_HOST_MODE_') && in_array($module->name, self::$hosted_modules_blacklist))
+				unset($module_list[$key]);
+			elseif (isset($modules_installed[$module->name]))
 			{
 				$module->installed = true;
 				$module->database_version = $modules_installed[$module->name]['version'];
@@ -1439,6 +1443,7 @@ abstract class ModuleCore
 				$module_list[] = $name;
 			}
 		}
+
 		return $module_list;
 	}
 

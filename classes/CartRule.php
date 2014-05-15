@@ -267,6 +267,7 @@ class CartRuleCore extends ObjectModel
 
 		// Remove cart rule that does not match the customer groups
 		$customerGroups = Customer::getGroupsStatic($id_customer);
+
 		foreach ($result as $key => $cart_rule)
 			if ($cart_rule['group_restriction'])
 			{
@@ -274,7 +275,6 @@ class CartRuleCore extends ObjectModel
 				foreach ($cartRuleGroups as $cartRuleGroup)
 					if (in_array($cartRuleGroup['id_group'], $customerGroups))
 						continue 2;
-
 				unset($result[$key]);
 			}
 
@@ -289,8 +289,8 @@ class CartRuleCore extends ObjectModel
 			else
 				$cart_rule['quantity_for_user'] = 0;
 		unset($cart_rule);
-		
-		foreach ($result as $cart_rule)
+	
+		foreach ($result as $key => $cart_rule)
 			if ($cart_rule['shop_restriction'])
 			{
 				$cartRuleShops = Db::getInstance()->executeS('SELECT id_shop FROM '._DB_PREFIX_.'cart_rule_shop WHERE id_cart_rule = '.(int)$cart_rule['id_cart_rule']);
@@ -299,9 +299,9 @@ class CartRuleCore extends ObjectModel
 						continue 2;
 				unset($result[$key]);
 			}
-
+	
 		if (isset($cart) && isset($cart->id))
-			foreach ($result as $cart_rule)
+			foreach ($result as $key => $cart_rule)
 				if ($cart_rule['product_restriction'])
 				{
 					$cr = new CartRule((int)$cart_rule['id_cart_rule']);
@@ -311,7 +311,7 @@ class CartRuleCore extends ObjectModel
 					unset($result[$key]);
 				}
 
-		foreach ($result as $cart_rule)
+		foreach ($result as $key => $cart_rule)
 			if ($cart_rule['country_restriction'])
 			{
 				$countries = Db::getInstance()->ExecuteS('
@@ -354,6 +354,7 @@ class CartRuleCore extends ObjectModel
 				$cart_rule['value'] = $cart_rule['reduction_amount'];
 			}
 		}
+		unset($cart_rule);
 
 		return $result;
 	}
@@ -1141,6 +1142,7 @@ class CartRuleCore extends ObjectModel
 		SELECT cr.*
 		FROM '._DB_PREFIX_.'cart_rule cr
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_shop crs ON cr.id_cart_rule = crs.id_cart_rule
+		'.(!$context->customer->id && Group::isFeatureActive() ? ' LEFT JOIN '._DB_PREFIX_.'cart_rule_group crg ON cr.id_cart_rule = crg.id_cart_rule' : '').' 
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_carrier crca ON cr.id_cart_rule = crca.id_cart_rule
 		'.($context->cart->id_carrier ? 'LEFT JOIN '._DB_PREFIX_.'carrier c ON (c.id_reference = crca.id_carrier AND c.deleted = 0)' : '').'		
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_country crco ON cr.id_cart_rule = crco.id_cart_rule
@@ -1170,7 +1172,7 @@ class CartRuleCore extends ObjectModel
 				WHERE cr.`id_cart_rule` = crg.`id_cart_rule`
 				AND cg.`id_customer` = '.(int)$context->customer->id.'
 				LIMIT 1
-			)' : '').'
+			)' : (Group::isFeatureActive() ? 'OR crg.`id_group` = '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP') : '')).'
 		)
 		AND (
 			cr.`reduction_product` <= 0

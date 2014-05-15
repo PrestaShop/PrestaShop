@@ -927,9 +927,6 @@ class AdminImportControllerCore extends AdminController
 			foreach (self::$column_mask as $type => $nb)
 				$res[$type] = isset($row[$nb]) ? $row[$nb] : null;
 
-		if (Tools::getValue('forceIds')) // if you choose to force table before import the column id is removed from the CSV file.
-			unset($res['id']);
-
 		return $res;
 	}
 

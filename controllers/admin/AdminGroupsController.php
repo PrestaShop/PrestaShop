@@ -214,7 +214,7 @@ class AdminGroupsControllerCore extends AdminController
 		$this->list_id = 'customer_group';
 		$this->actions = array();
 		$this->addRowAction('edit');
-		$this->identifier = 'id_group';
+		$this->identifier = 'id_customer';
 		$this->bulk_actions = false;
 		$this->list_no_link = true;
 		$this->explicitSelect = true;

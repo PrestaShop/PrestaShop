@@ -280,6 +280,8 @@ class AdminPaymentControllerCore extends AdminController
 			'is_addons_partner' => (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')),
 			'url' => $url
 		));
+		// Fetch the translations in the right place - they are not defined by our current controller!
+		Context::getContext()->override_controller_name_for_translations = 'AdminModules';
 		$this->smartyOutputContent('controllers/modules/quickview.tpl');
 		die(1);
 	}

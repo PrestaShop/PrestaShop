@@ -390,7 +390,6 @@ class AdminControllerCore extends Controller
 		// Check if logged on Addons
 		if (isset($this->context->cookie->username_addons) && isset($this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons))
 			$this->logged_on_addons = true;
-
 	}
 
 	/**
@@ -714,7 +713,6 @@ class AdminControllerCore extends Controller
 					// Hook After Action
 					Hook::exec('actionAdmin'.ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
 					Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
-
 					return $return;
 				}
 			}
@@ -3711,6 +3709,7 @@ class AdminControllerCore extends Controller
 		if ($module->id == 0)
 		{
 			$install['cond'] = 1;
+			$install['flag_install'] = 1;
 			$modules_options[] = $install;
 		}
 		$modules_options[] = $divider;
@@ -3734,13 +3733,13 @@ class AdminControllerCore extends Controller
 
 					$html = '<a class="';
 
-					$bs_btn_class = isset($option['title']) ? (string)$option['title'] : null;
+					$is_install = isset($option['flag_install']) ? true : false;
 
 					if (isset($option['class']))
 						$html .= $option['class'];
-					if ($bs_btn_class == 'Install')
+					if ($is_install)
 						$html .= ' btn btn-success';
-					if ($bs_btn_class != 'Install' && count($return) == 0)
+					if (!$is_install && count($return) == 0)
 						$html .= ' btn btn-default';
 
 					$html .= '"';
