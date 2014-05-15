@@ -27,7 +27,7 @@
 {block name="input"}
 	{if $field['type'] == 'theme'}
 		{if $field['can_display_themes']}
-			{if $field.themes|count > 1}
+			{if $field.themes|count > 0}
 			<div class="col-lg-12">
 				<a class="btn btn-link pull-right" href="{$field['addons_link']}" onclick="return !window.open(this.href)"><i class="icon icon-share-alt"></i> Visit Theme store</a>
 			</div>
@@ -112,7 +112,7 @@
 					{/if}
 				</p>
 
-				{if $cur_theme.tc}
+				{if isset($cur_theme.tc) && $cur_theme.tc}
 				<hr style="margin 24px 0;">
 				<div class="row">
 					<div class="col-md-8 col-sm-8">
