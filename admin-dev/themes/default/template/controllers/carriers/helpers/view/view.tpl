@@ -40,4 +40,15 @@
 		</div>
 	</div>
 </div>
-{$modules_list}
+{if is_null($modules_list)}
+<div class="panel">
+	<h3>{l s="Use recommended shipping"}</h3>
+	<p>{l s="It seems there are no recommended carriers for your country."}</p>
+	<p><a href="http://www.prestashop.com/en/contribute-prestashop-localization">{l s="Do you think there should be one? Tell usl"}</a></p>
+</div>
+{else}
+	{$modules_list}
+{/if}
+
+
+

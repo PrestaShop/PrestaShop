@@ -26,7 +26,7 @@
 <div class="panel">
 	<h3>
 		<i class="icon-list-ul"></i>
-		{l s='Modules list'}
+		{$panel_title}
 	</h3>
 	<div id="modules_list_container_tab" class="row">
 		<div class="col-lg-12">
