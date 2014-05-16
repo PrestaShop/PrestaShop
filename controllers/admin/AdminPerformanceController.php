@@ -327,6 +327,23 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
+					'label' => $this->l('Defer JavaScript in HTML'),
+					'name' => 'PS_JS_DEFER',
+					'values' => array(
+						array(
+							'id' => 'PS_JS_DEFER_1',
+							'value' => 1,
+							'label' => $this->l('Defer JavaScript at the end of html document')
+						),
+						array(
+							'id' => 'PS_JS_DEFER_0',
+							'value' => 0,
+							'label' => $this->l('Keep JavaScript in HTML as original')
+						)
+					)
+				),
+				array(
+					'type' => 'switch',
 					'label' => $this->l('Apache optimization'),
 					'name' => 'PS_HTACCESS_CACHE_CONTROL',
 					'hint' => $this->l('This will add directives to your .htaccess file, which should improve caching and compression.'),
@@ -354,6 +371,7 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->fields_value['PS_HTML_THEME_COMPRESSION'] = Configuration::get('PS_HTML_THEME_COMPRESSION');
 		$this->fields_value['PS_JS_HTML_THEME_COMPRESSION'] = Configuration::get('PS_JS_HTML_THEME_COMPRESSION');
 		$this->fields_value['PS_HTACCESS_CACHE_CONTROL'] = Configuration::get('PS_HTACCESS_CACHE_CONTROL');
+		$this->fields_value['PS_JS_DEFER'] = Configuration::get('PS_JS_DEFER');
 		$this->fields_value['ccc_up'] = 1;
 	}
 
@@ -688,6 +706,7 @@ class AdminPerformanceControllerCore extends AdminController
 					!Configuration::updateValue('PS_JS_THEME_CACHE', (int)Tools::getValue('PS_JS_THEME_CACHE')) ||
 					!Configuration::updateValue('PS_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_HTML_THEME_COMPRESSION')) ||
 					!Configuration::updateValue('PS_JS_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_JS_HTML_THEME_COMPRESSION')) ||
+					!Configuration::updateValue('PS_JS_DEFER', (int)Tools::getValue('PS_JS_DEFER')) ||
 					!Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', (int)Tools::getValue('PS_HTACCESS_CACHE_CONTROL')))
 					$this->errors[] = Tools::displayError('Unknown error.');
 				else
