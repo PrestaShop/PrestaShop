@@ -275,7 +275,7 @@ class AdminPaymentControllerCore extends AdminController
 
 			if (isset($active_list))
 			{
-				$this->context->smarty->assign('modules_list_title', $this->l('Active payment'));
+				$this->context->smarty->assign('panel_title', $this->l('Active payment'));
 				$fetch = $helper->renderModulesList($active_list);
 			}
 
