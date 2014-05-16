@@ -280,7 +280,7 @@ class AdminPaymentControllerCore extends AdminController
 			}
 
 			$this->context->smarty->assign(array(
-				'modules_list_title' => $this->l('Recommended payment gateways'),
+				'panel_title' => $this->l('Recommended payment gateways'),
 				'view_all' => true
 			));
 			$fetch .= $helper->renderModulesList($unactive_list);
