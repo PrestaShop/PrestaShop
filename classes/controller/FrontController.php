@@ -484,7 +484,7 @@ class FrontControllerCore extends Controller
 
 		$this->context->smarty->assign(array(
 			'css_files' => $this->css_files,
-			'js_files' => $this->getLayout() ? array() : $this->js_files
+			'js_files' => ($this->getLayout() && (bool)Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files
 		));
 
 		$this->display_header = $display;
@@ -539,7 +539,8 @@ class FrontControllerCore extends Controller
 
 		$this->context->smarty->assign(array(
 			'css_files' => $this->css_files,
-			'js_files' => $this->getLayout() ? array() : $this->js_files,
+			'js_files' => ($this->getLayout() && (bool)Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files,
+			'js_defer' => (bool)Configuration::get('PS_JS_DEFER'),
 			'errors' => $this->errors,
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,
