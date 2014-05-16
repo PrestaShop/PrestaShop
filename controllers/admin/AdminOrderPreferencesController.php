@@ -75,6 +75,13 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
+					'PS_DISALLOW_HISTORY_REORDERING' => array(
+						'title' => $this->l('Disable Reordering Option'),
+						'hint' => $this->l('Disable the option to allow customers to reorder in one click from the order history page (required in some European countries).'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
 					'PS_PURCHASE_MINIMUM' => array(
 						'title' => $this->l('Minimum purchase total required in order to validate the order'),
 						'hint' => $this->l('Set to 0 to disable this feature.'),
