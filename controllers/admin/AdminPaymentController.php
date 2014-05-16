@@ -255,6 +255,39 @@ class AdminPaymentControllerCore extends AdminController
 		return parent::renderView();
 	}
 
+	public function renderModulesList()
+	{
+		parent::renderModulesList();
+
+		if ($this->getModulesList($this->filter_modules_list))
+		{
+			$active_list = array();
+			foreach ($this->modules_list as $key => $module)
+			{
+				if ($module->active)
+					$active_list[] = $module; 
+				else
+					$unactive_list[] = $module; 
+			}
+
+			$helper = new Helper();
+			$fetch = '';
+
+			if (isset($active_list))
+			{
+				$this->context->smarty->assign('modules_list_title', $this->l('Active payment'));
+				$fetch = $helper->renderModulesList($active_list);
+			}
+
+			$this->context->smarty->assign(array(
+				'modules_list_title' => $this->l('Recommended payment gateways'),
+				'view_all' => true
+			));
+			$fetch .= $helper->renderModulesList($unactive_list);
+			return $fetch;
+		}
+	}
+
 	public function ajaxProcessGetModuleQuickView()
 	{
 		$modules = Module::getModulesOnDisk();
