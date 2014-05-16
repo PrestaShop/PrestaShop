@@ -186,6 +186,9 @@ class Datas
 
 			if ($res[1] == 'license' && !isset($res[2]))
 				$res[2] = 1;
+			elseif (!isset($res[2]))
+				continue;
+
 			$args_ok[$res[1]] = $res[2];
 		}
 

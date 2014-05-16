@@ -1950,7 +1950,7 @@ class AdminControllerCore extends Controller
 		return $modal_render;
 	}
 	
-	public function renderModulesList()
+	public function renderModulesList($panel_title = null)
 	{
 		// Load cache file modules list (natives and partners modules)
 		$xmlModules = false;
@@ -1977,7 +1977,7 @@ class AdminControllerCore extends Controller
 					$module->show_quick_view = true;
 			}
 			$helper = new Helper();
-			return $helper->renderModulesList($this->modules_list);
+			return $helper->renderModulesList($this->modules_list, $panel_title);
 		}
 	}
 	

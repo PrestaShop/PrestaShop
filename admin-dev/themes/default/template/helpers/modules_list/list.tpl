@@ -25,7 +25,7 @@
 <div class="panel">
 	<h3>
 		<i class="icon-list-ul"></i>
-		{if isset($modules_list_title)}{$modules_list_title|escape:'html':'UTF-8'}{else}{l s='Modules list'}{/if}
+		{if isset($panel_title)}{$panel_title|escape:'html':'UTF-8'}{else}{l s='Modules list'}{/if}
 	</h3>
 	<div id="modules_list_container_tab" class="row">
 		<div class="col-lg-12">
