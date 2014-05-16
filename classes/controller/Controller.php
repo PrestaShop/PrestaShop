@@ -395,6 +395,10 @@ abstract class ControllerCore
 	protected function smartyOutputContent($content)
 	{
 		$this->context->cookie->write();
+
+		$js_tag = 'js_def';
+		$this->context->smarty->assign($js_tag, $js_tag);
+
 		if (is_array($content))
 			foreach ($content as $tpl)
 				$html = $this->context->smarty->fetch($tpl);
@@ -403,24 +407,27 @@ abstract class ControllerCore
 
 		$html = trim($html);
 
-		if ((bool)Configuration::get('PS_JS_DEFER') && $this->controller_type == 'front' && !empty($html) && $this->getLayout())
+		if ($this->controller_type == 'front' && !empty($html) && $this->getLayout())
 		{
 			$live_edit_content = '';
 			if (!$this->useMobileTheme() && $this->checkLiveEditAccess())
 				$live_edit_content = $this->getLiveEditFooter();
 
  			$dom_available = extension_loaded('dom') ? true : false;
- 			if ($dom_available)
+			$defer = (bool)Configuration::get('PS_JS_DEFER');
+
+ 			if ($defer && $dom_available)
 				$html = Media::deferInlineScripts($html);
 			$html = trim(str_replace(array('</body>', '</html>'), '', $html))."\n";
 
 			$this->context->smarty->assign(array(
-				'js_def' => Media::getJsDef(),
-				'js_files' => array_unique($this->js_files),
-				'js_inline' => $dom_available ? Media::getInlineScript() : array()
+				$js_tag => Media::getJsDef(),
+				'js_files' =>  $defer ? array_unique($this->js_files) : array(),
+				'js_inline' => ($defer && $dom_available) ? Media::getInlineScript() : array()
 			));
+
 			$javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
-			echo $html.$javascript.$live_edit_content."</body></html>";
+			echo ($defer ? $html.$javascript : str_replace($js_tag, $javascript, $html)).$live_edit_content.'</body></html>';
 		}
 		else
 			echo $html;

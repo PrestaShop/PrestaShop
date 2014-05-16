@@ -45,7 +45,13 @@
 		<link rel="shortcut icon" type="image/x-icon" href="{$favicon_url}?{$img_update_time}" />
 {if isset($css_files)}
 	{foreach from=$css_files key=css_uri item=media}
-		<link rel="stylesheet" href="{$css_uri}" type="text/css" media="{$media}" />
+		<link rel="stylesheet" href="{$css_uri|escape:'html':'UTF-8'}" type="text/css" media="{$media|escape:'html':'UTF-8'}" />
+	{/foreach}
+{/if}
+{if isset($js_defer) && !$js_defer && isset($js_files) && isset($js_def)}
+	{$js_def}
+	{foreach from=$js_files item=js_uri}
+	<script type="text/javascript" src="{$js_uri|escape:'html':'UTF-8'}"></script>
 	{/foreach}
 {/if}
 		{$HOOK_HEADER}
@@ -59,7 +65,7 @@
 	{if !isset($content_only) || !$content_only}
 		{if isset($restricted_country_mode) && $restricted_country_mode}
 			<div id="restricted-country">
-				<p>{l s='You cannot place a new order from your country.'} <span class="bold">{$geolocation_country}</span></p>
+				<p>{l s='You cannot place a new order from your country.'} <span class="bold">{$geolocation_country|escape:'html':'UTF-8'}</span></p>
 			</div>
 		{/if}
 		<div id="page">
