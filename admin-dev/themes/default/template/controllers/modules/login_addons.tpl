@@ -26,20 +26,7 @@
 <div class="modal-body">
 {if $add_permission eq '1'}
 	<div class="panel">
-	{if isset($logged_on_addons) && $logged_on_addons}
-			<!--start addons login-->
-			<div class="panel-heading">
-				<i class="icon-user"></i>
-				{l s='You are logged into %s' sprintf='<a target="_blank" href="http://addons.prestashop.com/?utm_source=backoffice_modules">PrestaShop Addons</a>'}
-			</div>
-			<div id="addons_login_div">	
-				<p>{l s='Welcome %s' sprintf=$username_addons}</p>
-				<a class="btn btn-default" href="#" id="addons_logout_button">
-					<i class="icon-signout"></i> {l s='Sign out from PrestaShop Addons'}
-				</a>
-			</div>
-			<!--end addons login-->
-	{else}
+	{if !isset($logged_on_addons) || !$logged_on_addons}
 		{if $check_url_fopen eq 'ko'  OR $check_openssl eq 'ko'}
 			<div class="alert alert-warning">
 				{l s='If you want to be able to fully use the AdminModules panel and have free modules available, you should enable the following configuration on your server:'}
