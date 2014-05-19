@@ -43,22 +43,22 @@
 					{assign var='replace_id' value=$product->id|cat:'|'}
 					<td class="ajax_block_product comparison_infos product-block product-{$product->id}">
 						<div class="remove">
-							<a 
-							class="cmp_remove" 
-							href="{$link->getPageLink('products-comparison', true)|escape:'html':'UTF-8'}" 
-							title="{l s='Remove'}" 
+							<a
+							class="cmp_remove"
+							href="{$link->getPageLink('products-comparison', true)|escape:'html':'UTF-8'}"
+							title="{l s='Remove'}"
 							data-id-product="{$product->id}">
 								<i class="icon-trash"></i>
 							</a>
 						</div>
 						<div class="product-image-block">
 							<a
-							class="product_image" 
-							href="{$product->getLink()|escape:'html':'UTF-8'}" 
+							class="product_image"
+							href="{$product->getLink()|escape:'html':'UTF-8'}"
 							title="{$product->name|escape:'html':'UTF-8'}">
-								<img 
-								class="img-responsive" 
-								src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')|escape:'html':'UTF-8'}" 
+								<img
+								class="img-responsive"
+								src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')|escape:'html':'UTF-8'}"
 								alt="{$product->name|escape:'html':'UTF-8'}" />
 							</a>
 							{if isset($product->new) && $product->new == 1}
@@ -75,9 +75,9 @@
 							{/if}
 						</div> <!-- end product-image-block -->
 						<h5>
-							<a 
-							class="product-name" 
-							href="{$product->getLink()|escape:'html':'UTF-8'}" 
+							<a
+							class="product-name"
+							href="{$product->getLink()|escape:'html':'UTF-8'}"
 							title="{$product->name|truncate:32:'...'|escape:'html':'UTF-8'}">
 								{$product->name|truncate:45:'...'|escape:'html':'UTF-8'}
 							</a>
@@ -85,6 +85,8 @@
 						<div class="prices-container">
 							{if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
 								<span class="price product-price">{convertPrice price=$product->getPrice($taxes_behavior)}</span>
+								{* eu-legal: Additional Price Information *}
+								{hook h="displayProductPriceBlock" id_product=$product->id type="price"}
 								{if isset($product->specificPrice) && $product->specificPrice}
 									{if {$product->specificPrice.reduction_type == 'percentage'}}
 										<span class="old-price product-price">
@@ -101,6 +103,8 @@
 											-{convertPrice price=$product->specificPrice.reduction}
 										</span>
 									{/if}
+									{* eu-legal: Additional Price Information *}
+									{hook h="displayProductPriceBlock" id_product=$product->id type="old_price"}
 								{/if}
 								{if $product->on_sale}
 									{elseif $product->specificPrice AND $product->specificPrice.reduction}
@@ -113,6 +117,8 @@
 										<span class="comparison_unit_price">
 											&nbsp;{convertPrice price=$unit_price} {l s='per %s' sprintf=$product->unity|escape:'html':'UTF-8'}
 										</span>
+										{* eu-legal: Additional Price Information *}
+										{hook h="displayProductPriceBlock" id_product=$product->id type="unit_price"}
 									{else}
 								{/if}
 							{/if}
@@ -121,7 +127,7 @@
 						<div class="product_desc">
 							{$product->description_short|strip_tags|truncate:60:'...'}
 						</div>
-						
+
 						<div class="comparison_product_infos">
 							<p class="comparison_availability_statut">
 								{if !(($product->quantity <= 0 && !$product->available_later) OR ($product->quantity != 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE)}
@@ -139,6 +145,8 @@
 									</span>
 								{/if}
 							</p>
+							{* eu-legal: Product Availability *}
+							{hook h="displayProductAvailability" id_product=$product->id}
 							<div class="clearfix">
 								<div class="button-container">
 									{if (!$product->hasAttributes() OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product->minimal_quantity == 1 AND $product->customizable != 2 AND !$PS_CATALOG_MODE}
@@ -156,9 +164,9 @@
 											</span>
 										{/if}
 									{/if}
-									<a 
-									class="button lnk_view btn btn-default" 
-									href="{$product->getLink()|escape:'html':'UTF-8'}" 
+									<a
+									class="button lnk_view btn btn-default"
+									href="{$product->getLink()|escape:'html':'UTF-8'}"
 									title="{l s='View'}">
 										<span>{l s='View'}</span>
 									</a>

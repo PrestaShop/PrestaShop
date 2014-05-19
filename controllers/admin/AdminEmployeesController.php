@@ -251,6 +251,7 @@ class AdminEmployeesControllerCore extends AdminController
 				),
 			),
 		);
+
 		if ($this->restrict_edition)
 			$this->fields_form['input'][] = array(
 				'type' => 'change-password',
@@ -263,20 +264,13 @@ class AdminEmployeesControllerCore extends AdminController
 				'label' => $this->l('Password'),
 				'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH),
 				'name' => 'passwd'
-				);
+				);	
+		$this->fields_form['input'][] = array(
+			'type' => 'prestashop_addons',
+			'label' => 'PrestaShop Addons',
+			'name' => 'prestashop_addons',
+		);
 
-
-		// if ($this->restrict_edition)
-		// 	$this->fields_form['input'][] = array(
-		// 		'type' => 'password',
-		// 		'label' => $this->l('Current password'),
-		// 		'name' => 'old_passwd',
-		// 		'hint' => $this->l('Leave this field blank if you do not want to change your password.'),
-		// 		//'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH)
-		// 		);
-			
-			
-						
 		$this->fields_form['input'] = array_merge($this->fields_form['input'], array(
 			array(
 				'type' => 'switch',

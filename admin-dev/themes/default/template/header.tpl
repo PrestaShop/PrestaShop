@@ -207,15 +207,16 @@
 					</li>
 				</ul>
 {/if}
-
 				<ul id="header_employee_box">
-					<li>
-						<a href="#" id="addons_connect" data-toggle="modal" data-target="#modal_addons_connect" class="toolbar_btn" title="{l s='Addons'}">
-							<i class=""></i>
-							<span class="string-long">{l s='Addons'}</span>
-							<span class="string-short">{l s='Addons'}</span>
-						</a>
-					</li>
+					{if !isset($logged_on_addons) || !$logged_on_addons}
+						<li>
+							<a href="#" class="addons_connect" data-toggle="modal" data-target="#modal_addons_connect" class="toolbar_btn" title="{l s='Addons'}">
+								<i class="icon-chain-broken"></i>
+								<span class="string-long">{l s='Not connected to PrestaShop Addons'}</span>
+								<span class="string-short">{l s='Addons'}</span>
+							</a>
+						</li>
+					{/if}
 {if {$base_url}}
 					<li>
 						<a href="{if isset($base_url_tc)}{$base_url_tc}{else}{$base_url}{/if}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">

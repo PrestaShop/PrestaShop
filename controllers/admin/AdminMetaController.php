@@ -57,7 +57,7 @@ class AdminMetaControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_meta' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'page' => array('title' => $this->l('Page')),
-			'title' => array('title' => $this->l('Title')),
+			'title' => array('title' => $this->l('Page title')),
 			'url_rewrite' => array('title' => $this->l('Friendly URL'))
 		);
 		$this->_where = ' AND a.configurable = 1';
@@ -367,6 +367,14 @@ class AdminMetaControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		/* PrestaShop demo mode */
+		if (_PS_MODE_DEMO_ && Tools::isSubmit('submitOptionsmeta')
+			&& (Tools::getValue('domain') != Configuration::get('PS_SHOP_DOMAIN') || Tools::getValue('domain_ssl') != Configuration::get('PS_SHOP_DOMAIN_SSL')))
+		{
+			$this->errors[] = Tools::displayError('This functionality has been disabled.');
+			return;
+		}
+
 		if (Tools::isSubmit('submitAddmeta'))
 		{
 			$langs = Language::getLanguages(false);
@@ -402,7 +410,7 @@ class AdminMetaControllerCore extends AdminController
 
 			Hook::exec('actionAdminMetaSave');
 		}
-		else if (Tools::isSubmit('submitRobots'))
+		elseif (Tools::isSubmit('submitRobots'))
 			$this->generateRobotsFile();
 
 		if (Tools::isSubmit('PS_ROUTE_product_rule'))
@@ -430,7 +438,6 @@ class AdminMetaControllerCore extends AdminController
 			if (count($theme_meta_value) > 0)
 				Db::getInstance()->insert('theme_meta', $theme_meta_value, false, true, DB::INSERT_IGNORE);
 		}
-
 
 		return $ret;
 	}
