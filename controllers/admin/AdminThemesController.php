@@ -1688,8 +1688,10 @@ class AdminThemesControllerCore extends AdminController
 					}
 				}
 			}
+
 			if (!is_dir(_PS_ALL_THEMES_DIR_.$new_theme->directory))
-				mkdir(_PS_ALL_THEMES_DIR_.$new_theme->directory);
+				if (!mkdir(_PS_ALL_THEMES_DIR_.$new_theme->directory))
+					return sprintf($this->l('Error while creating %s directory'), _PS_ALL_THEMES_DIR_.$new_theme->directory);
 
 			$new_theme->add();
 
