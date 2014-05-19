@@ -1026,8 +1026,7 @@ class CartRuleCore extends ObjectModel
 	protected function getCartRuleCombinations()
 	{
 		$array = array();
-		$array['selected'] = Db::getInstance()->executeS('
-		SELECT cr.*, crl.*, 1 as selected
+		$array['selected'] = Db::getInstance()->executeS('SELECT cr.*, crl.*, 1 as selected
 		FROM '._DB_PREFIX_.'cart_rule cr
 		INNER JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)Context::getContext()->language->id.')
 		WHERE cr.id_cart_rule !='.(int)$this->id.'
