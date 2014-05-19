@@ -184,7 +184,7 @@ function doAjaxForgot() {
 }
 
 function displayErrors(errors) {
-	str_errors = '<p><strong>' + (errors.length > 1 ? there_are : there_is) + ' ' + errors.length + ' ' + (errors.length > 1 ? label_errors : label_error) + '</strong></p><ol>';
+	str_errors = '<p><strong>' + (errors.length > 1 ? more_errors : one_error) + '</strong></p><ol>';
 	for (var error in errors) //IE6 bug fix
 		if (error != 'indexOf') str_errors += '<li>' + errors[error] + '</li>';
 	$('#error').html(str_errors + '</ol>').removeClass('hide').fadeIn('slow');

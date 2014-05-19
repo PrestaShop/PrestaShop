@@ -157,6 +157,7 @@ class AdminThemesControllerCore extends AdminController
 		$all_themes = Theme::getThemes();
 		$themes = array();
 		$other_themes = array();
+		$cur_theme = array();
 		foreach ($all_themes as $theme)
 		{
 			if (file_exists(_PS_ALL_THEMES_DIR_.$theme->directory.'/preview.jpg'))
@@ -171,17 +172,19 @@ class AdminThemesControllerCore extends AdminController
 
 					if ($config_file)
 					{
-						$cur_theme = array();
 						$cur_theme['theme_id'] = $theme->id;
 						$xml_theme = @simplexml_load_file($config_file);
-						foreach ($xml_theme->attributes() as $key => $value)
-							$cur_theme['theme_'.$key] = (string)$value;
-						foreach ($xml_theme->author->attributes() as $key => $value)
-							$cur_theme['author_'.$key] = (string)$value;
 
-						if ($cur_theme['theme_name'] == 'default-bootstrap')
+						if ($xml_theme !== false)
 						{
-							$cur_theme['tc'] = Module::isEnabled('themeconfigurator');
+							foreach ($xml_theme->attributes() as $key => $value)
+								$cur_theme['theme_'.$key] = (string)$value;
+
+							foreach ($xml_theme->author->attributes() as $key => $value)
+								$cur_theme['author_'.$key] = (string)$value;
+
+							if ($cur_theme['theme_name'] == 'default-bootstrap')
+								$cur_theme['tc'] = Module::isEnabled('themeconfigurator');
 						}
 					}
 				}
@@ -1685,8 +1688,10 @@ class AdminThemesControllerCore extends AdminController
 					}
 				}
 			}
+
 			if (!is_dir(_PS_ALL_THEMES_DIR_.$new_theme->directory))
-				mkdir(_PS_ALL_THEMES_DIR_.$new_theme->directory);
+				if (!mkdir(_PS_ALL_THEMES_DIR_.$new_theme->directory))
+					return sprintf($this->l('Error while creating %s directory'), _PS_ALL_THEMES_DIR_.$new_theme->directory);
 
 			$new_theme->add();
 

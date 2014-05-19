@@ -247,6 +247,8 @@ class AdminLoginControllerCore extends AdminController
 			if (Mail::Send($employee->id_lang, 'password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
 			{
 				// Update employee only if the mail can be sent
+				Shop::setContext(Shop::CONTEXT_SHOP, (int)min($employee->getAssociatedShops()));
+
 				$result = $employee->update();
 				if (!$result)
 					$this->errors[] = Tools::displayError('An error occurred while attempting to change your password.');

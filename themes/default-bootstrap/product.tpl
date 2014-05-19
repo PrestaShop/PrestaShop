@@ -55,9 +55,9 @@
 				{$confirmation}
 			</p>
 		{/if}
-		<!-- left infos-->  
+		<!-- left infos-->
 		<div class="pb-left-column col-xs-12 col-sm-4 col-md-5">
-			<!-- product img-->        
+			<!-- product img-->
 			<div id="image-block" class="clearfix">
 				{if $product->new}
 					<span class="new-box">
@@ -143,13 +143,13 @@
 				</p>
 			{/if}
 		</div> <!-- end pb-left-column -->
-		<!-- end left infos--> 
+		<!-- end left infos-->
 		<!-- center infos -->
 		<div class="pb-center-column col-xs-12 col-sm-4">
 			{if $product->online_only}
 				<p class="online_only">{l s='Online only'}</p>
 			{/if}
-	
+
 			<h1 itemprop="name">{$product->name|escape:'html':'UTF-8'}</h1>
 			<p id="product_reference"{if empty($product->reference) || !$product->reference} style="display: none;"{/if}>
 				<label>{l s='Model'} </label>
@@ -182,7 +182,7 @@
 						<div class="short_description_pack">
 						<h3>{l s='Pack content'}</h3>
 							{foreach from=$packItems item=packItem}
-							
+
 							<div class="pack_content">
 								{$packItem.pack_quantity} x <a href="{$link->getProductLink($packItem.id_product, $packItem.link_rewrite, $packItem.category)|escape:'html':'UTF-8'}">{$packItem.name|escape:'html':'UTF-8'}</a>
 								<p>{$packItem.description_short}</p>
@@ -204,8 +204,10 @@
 				<!-- availability -->
 				<p id="availability_statut"{if ($product->quantity <= 0 && !$product->available_later && $allow_oosp) || ($product->quantity > 0 && !$product->available_now) || !$product->available_for_order || $PS_CATALOG_MODE} style="display: none;"{/if}>
 					{*<span id="availability_label">{l s='Availability:'}</span>*}
-					<span id="availability_value"{if $product->quantity <= 0 && !$allow_oosp} class="warning_inline"{/if}>{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}</span>				
+					<span id="availability_value"{if $product->quantity <= 0 && !$allow_oosp} class="warning_inline"{/if}>{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}</span>
 				</p>
+				{* eu-legal: Product Availability *}
+				{hook h="displayProductAvailability" id_product=$product->id}
 				<p class="warning_inline" id="last_quantities"{if ($product->quantity > $last_qties || $product->quantity <= 0) || $allow_oosp || !$product->available_for_order || $PS_CATALOG_MODE} style="display: none"{/if} >{l s='Warning: Last items in stock!'}</p>
 			{/if}
 			<p id="availability_date"{if ($product->quantity > 0) || !$product->available_for_order || $PS_CATALOG_MODE || !isset($product->available_date) || $product->available_date < $smarty.now|date_format:'%Y-%m-%d'} style="display: none;"{/if}>
@@ -256,6 +258,8 @@
 											{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
 										{/if}-->
 										<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
+										{* eu-legal: Additional Price Information *}
+										{hook h="displayProductPriceBlock" id_product=$product->id type="price"}
 									{/if}
 								</p>
 								<p id="reduction_percent" {if !$product->specificPrice || $product->specificPrice.reduction_type != 'percentage'} style="display:none;"{/if}>
@@ -274,6 +278,8 @@
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
 										<span id="old_price_display">{if $productPriceWithoutReduction > $productPrice}{convertPrice price=$productPriceWithoutReduction}{/if}</span>
 										<!-- {if $tax_enabled && $display_tax_label == 1}{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if} -->
+										{* bootstrap-legal: Additional Price Information *}
+										{hook h="displayProductPriceBlock" id_product=$product->id type="old_price"}
 									{/if}
 								</p>
 								{if $priceDisplay == 2}
@@ -297,6 +303,8 @@
 							{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
 								{math equation="pprice / punit_price"  pprice=$productPrice  punit_price=$product->unit_price_ratio assign=unit_price}
 								<p class="unit-price"><span id="unit_price_display">{convertPrice price=$unit_price}</span> {l s='per'} {$product->unity|escape:'html':'UTF-8'}</p>
+								{* eu-legal: Additional Price Information *}
+								{hook h="displayProductPriceBlock" id_product=$product->id type="unit_price"}
 							{/if}
 						{/if} {*close if for show price*}
 						<div class="clear"></div>
@@ -442,10 +450,10 @@
 			<!-- Data sheet -->
 			<section class="page-product-box">
 				<h3 class="page-product-heading">{l s='Data sheet'}</h3>
-				<table class="table-data-sheet">			
+				<table class="table-data-sheet">
 					{foreach from=$features item=feature}
 					<tr class="{cycle values="odd,even"}">
-						{if isset($feature.value)}			    
+						{if isset($feature.value)}
 						<td>{$feature.name|escape:'html':'UTF-8'}</td>
 						<td>{$feature.value|escape:'html':'UTF-8'}</td>
 						{/if}
@@ -520,7 +528,7 @@
 							{/foreach}
 						</ul>
 					</div>
-				</div>	
+				</div>
 			</section>
 			<!--end Accessories -->
 		{/if}
@@ -631,7 +639,7 @@
 						</span>
 					</p>
 				</form>
-				<p class="clear required"><sup>*</sup> {l s='required fields'}</p>	
+				<p class="clear required"><sup>*</sup> {l s='required fields'}</p>
 			</section>
 			<!--end Customization -->
 			{/if}
