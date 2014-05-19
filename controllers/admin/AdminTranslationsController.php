@@ -1569,7 +1569,7 @@ class AdminTranslationsControllerCore extends AdminController
 					{
 						$module_name = substr($mail_name, 0, $module_name_pipe_pos);
 						if (!Validate::isModuleName($module_name))
-							throw new PrestaShopException(sprinf(Tools::displayError('Invalid module name "%s"'), Tools::safeOutput($module_name)));
+							throw new PrestaShopException(sprintf(Tools::displayError('Invalid module name "%s"'), Tools::safeOutput($module_name)));
 						$mail_name = substr($mail_name, $module_name_pipe_pos + 1);
 						if (!Validate::isTplName($mail_name))
 							throw new PrestaShopException(sprintf(Tools::displayError('Invalid mail name "%s"'), Tools::safeOutput($mail_name)));
