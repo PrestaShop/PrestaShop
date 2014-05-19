@@ -1227,7 +1227,7 @@ function bindAddonsButtons()
 					{
 						$('#addons_loading').html('');
 						$('#addons_login_div').fadeOut();
-						window.location.href = admin_modules_link + '&conf=32';
+						window.location.href = currentIndex + '&conf=32' + '&token=' + token;
 					}
 					else
 						$('#addons_loading').html(errorLogin);
@@ -1260,7 +1260,7 @@ function bindAddonsButtons()
 					{
 						$('#addons_loading').html('');
 						$('#addons_login_div').fadeOut();
-						window.location.href = admin_modules_link;
+						window.location.href = currentIndex + '&token=' + token;
 					}
 					else
 						$('#addons_loading').html(errorLogin);
