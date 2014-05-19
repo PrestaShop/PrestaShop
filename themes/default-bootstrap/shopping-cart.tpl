@@ -76,6 +76,8 @@
 	{assign var='total_discounts_num' value="{if $total_discounts != 0}1{else}0{/if}"}
 	{assign var='use_show_taxes' value="{if $use_taxes && $show_taxes}2{else}0{/if}"}
 	{assign var='total_wrapping_taxes_num' value="{if $total_wrapping != 0}1{else}0{/if}"}
+	{* eu-legal *}
+	{hook h="displayBeforeShoppingCartBlock"}
 
 	<div id="order-detail-content" class="table_block table-responsive">
 		<table id="cart_summary" class="table table-bordered {if $PS_STOCK_MANAGEMENT}stock-management-on{else}stock-management-off{/if}">
@@ -293,7 +295,7 @@
 				{assign var='have_non_virtual_products' value=false}
 				{foreach $products as $product}
 					{if $product.is_virtual == 0}
-						{assign var='have_non_virtual_products' value=true}						
+						{assign var='have_non_virtual_products' value=true}
 					{/if}
 					{assign var='productId' value=$product.id_product}
 					{assign var='productAttributeId' value=$product.id_product_attribute}

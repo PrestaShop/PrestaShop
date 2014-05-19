@@ -96,7 +96,9 @@
 							{else}
 								<a class="link-button" href="{$link->getPageLink('order', true, NULL, "submitReorder&id_order={$order.id_order}")|escape:'html':'UTF-8'}" title="{l s='Reorder'}">
 							{/if}
-		                        <i class="icon-refresh"></i>{l s='Reorder'}
+								{if $reorderingAllowed}
+									<i class="icon-refresh"></i>{l s='Reorder'}
+								{/if}
 							</a>
 						</td>
 					</tr>
