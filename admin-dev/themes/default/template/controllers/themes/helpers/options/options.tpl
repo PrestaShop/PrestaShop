@@ -58,7 +58,7 @@
 											</div>
 										</div>
 									</div>
-									<img class="img-thumbnail" src="{$theme.preview}" alt="{$theme.name}" />
+									<img class="img-thumbnail" src="{$theme.preview}" alt="{$theme.name}" style="min-width: 180px;" />
 								</div>
 
 							</div>
