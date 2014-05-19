@@ -23,10 +23,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <script type="text/javascript">
-	var there_are = '{l s='There are'}';
-	var there_is = '{l s='There is'}';
-	var label_errors = '{l s='errors'}';
-	var label_error = '{l s='error'}';
+	var one_error = '{l s='There is one error.'}';
+	var more_errors = '{l s='There are several errors.'}';
 </script>
 <div id="login-panel">
 	<div id="login-header">
