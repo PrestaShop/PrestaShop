@@ -141,6 +141,9 @@ class AddressControllerCore extends FrontController
 			if ((int)$country->contains_states && !(int)$address->id_state)
 				$this->errors[] = Tools::displayError('This country requires you to chose a State.');
 
+			if (!$country->active)
+				$this->errors[] = Tools::displayError('This country is not active.');
+
 			$postcode = Tools::getValue('postcode');		
 			/* Check zip code format */
 			if ($country->zip_code_format && !$country->checkZipCode($postcode))

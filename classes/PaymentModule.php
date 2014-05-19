@@ -244,6 +244,8 @@ abstract class PaymentModuleCore extends Module
 					{
 						$address = new Address($id_address);
 						$this->context->country = new Country($address->id_country, $this->context->cart->id_lang);
+						if (!$this->context->country->active)
+							throw new PrestaShopException('The delivery address country is not active.');
 					}
 
 					$carrier = null;
@@ -342,6 +344,9 @@ abstract class PaymentModuleCore extends Module
 			// The country can only change if the address used for the calculation is the delivery address, and if multi-shipping is activated
 			if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery')
 				$this->context->country = $context_country;
+
+			if (!$this->context->country->active)
+				throw new PrestaShopException('The order address country is not active.');
 
 			// Register Payment only if the order status validate the order
 			if ($order_status->logable)
@@ -674,7 +679,7 @@ abstract class PaymentModuleCore extends Module
 						'{invoice_other}' => $invoice->other,
 						'{order_name}' => $order->getUniqReference(),
 						'{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, 1),
-						'{carrier}' => $virtual_product ? Tools::displayError('No carrier') : $carrier->name,
+						'{carrier}' => ($virtual_product || !isset($carrier->name)) ? Tools::displayError('No carrier') : $carrier->name,
 						'{payment}' => Tools::substr($order->payment, 0, 32),
 						'{products}' => $product_list_html,
 						'{products_txt}' => $product_list_txt,
